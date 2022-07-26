@@ -1,0 +1,264 @@
+<div class="row">
+  <form autocomplete="off" [formGroup]="form" id="form">
+    <tabs-list [accordionView]="accordionView" *ngIf="tabs.length > 0">
+      <tab
+        *ngFor="let tab of tabs; let i = index"
+        [name]="tab.name"
+        [template]="tab.template"
+        [title]="tab.title"
+        [hasError]="getTabInvalidStatus(i)"
+      >
+      </tab>
+    </tabs-list>
+    <ng-template #tabContent>
+      <div formGroupName="basicInfo" class="row">
+        <!-- License Number -->
+        <div class="col-md-4 mb-4 position-relative">
+          <label
+            asteriskIfRequired="oldLicenseFullSerial"
+            for="oldLicenseFullSerial"
+            class="form-label"
+            >{{ lang.map.license_number }}</label
+          >
+          <div class="input-group">
+            <input
+              (keydown.enter)="(isEditOrCancel)"
+              formControlName="oldLicenseFullSerial"
+              [readonly]="!isEditOrCancel || !isEditAllowed"
+              type="text"
+              validationClasses="oldLicenseFullSerial"
+              class="form-control"
+              id="oldLicenseFullSerial"
+              trimInput
+            />
+            <button
+              *ngIf="isEditOrCancel && isEditAllowed"
+              type="button"
+              (click)="licenseSearch($event)"
+              class="input-group-text"
+            >
+              <i class="mdi {{ fileIconsEnum.SEARCH }} text-primary"></i>
+            </button>
+            <app-field-error-message
+              controlName="oldLicenseFullSerial"
+            ></app-field-error-message>
+          </div>
+        </div>
+        <!-- Request Type -->
+        <div class="col-md-4 mb-4 position-relative">
+          <label
+            asteriskIfRequired="requestType"
+            for="requestType"
+            class="form-label"
+            >{{ lang.map.request_type }}</label
+          >
+          <ng-select
+            [selectOnTab]="true"
+            labelForId="requestType"
+            [clearable]="true"
+            placeholder="{{ lang.map.select }}"
+            id="requestType"
+            [readonly]="!isEditAllowed"
+            (change)="handleRequestTypeChange($event, true)"
+            [notFoundText]="lang.map.msg_not_found"
+            appendTo="body"
+            validationClasses="requestType"
+            formControlName="requestType"
+          >
+            <ng-option
+              *ngFor="let type of requestTypes"
+              [value]="type.lookupKey"
+              >{{ type.getName() }}</ng-option
+            >
+          </ng-select>
+          <app-field-error-message
+            controlName="category"
+          ></app-field-error-message>
+        </div>
+
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label
+            asteriskIfRequired="externalCooperationAuthority"
+            for="externalCooperationAuthority"
+            class="form-label"
+            >{{ lang.map.external_cooperation_authority }}</label
+          >
+          <ng-select
+            [selectOnTab]="true"
+            labelForId="externalCooperationAuthority"
+            [clearable]="true"
+            placeholder="{{ lang.map.select }}"
+            [readonly]="isCancelRequestType || !isEditAllowed"
+            id="externalCooperationAuthority"
+            [notFoundText]="lang.map.msg_not_found"
+            appendTo="body"
+            validationClasses="externalCooperationAuthority"
+            formControlName="externalCooperationAuthority"
+          >
+            <ng-option
+              [value]="option.id"
+              *ngFor="let option of countries$ | async"
+              >{{ option.getName() }}</ng-option
+            >
+          </ng-select>
+          <app-field-error-message
+            controlName="externalCooperationAuthority"
+          ></app-field-error-message>
+        </div>
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label
+            asteriskIfRequired="externalCooperationAuthority"
+            for="externalCooperationAuthority"
+            class="form-label"
+            >{{ lang.map.lbl_entity_classification }}</label
+          >
+          <input
+            type="text"
+            [readonly]="true"
+            class="form-control"
+            id="entityClassification"
+            formControlName="entityClassification"
+          />
+        </div>
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label
+            asteriskIfRequired="country"
+            for="country"
+            class="form-label"
+            >{{ lang.map.country }}</label
+          >
+          <ng-select
+            [selectOnTab]="true"
+            labelForId="country"
+            [clearable]="true"
+            placeholder="{{ lang.map.select }}"
+            [readonly]="isCancelRequestType || !isEditAllowed"
+            id="country"
+            [notFoundText]="lang.map.msg_not_found"
+            appendTo="body"
+            validationClasses="country"
+            formControlName="country"
+          >
+            <ng-option
+              [value]="option.id"
+              *ngFor="let option of countries$ | async"
+              >{{ option.getName() }}</ng-option
+            >
+          </ng-select>
+          <app-field-error-message
+            controlName="country"
+          ></app-field-error-message>
+        </div>
+
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label
+            asteriskIfRequired="needSubject"
+            for="needSubject"
+            class="form-label"
+            >{{ lang.map.subject_of_need }}</label
+          >
+          <input
+            type="text"
+            validationClasses="needSubject"
+            [readonly]="isCancelRequestType || !isEditAllowed"
+            trimInput
+            class="form-control"
+            id="needSubject"
+            formControlName="needSubject"
+          />
+          <app-field-error-message
+            controlName="needSubject"
+          ></app-field-error-message>
+        </div>
+
+        <div class="mb-4 position-relative">
+          <label for="description" class="form-label">{{
+            lang.map.lbl_description
+          }}</label>
+          <textarea
+            id="description"
+            validationClasses="description"
+            trimInput
+            [readonly]="!isEditAllowed"
+            validationClasses="description"
+            formControlName="description"
+            class="form-control"
+          ></textarea>
+          <app-field-error-message
+            controlName="description"
+          ></app-field-error-message>
+        </div>
+
+        <div class="mb-4 position-relative">
+          <label for="justification" class="form-label">{{
+            lang.map.lbl_justification
+          }}</label>
+          <textarea
+            id="justification"
+            validationClasses="justification"
+            trimInput
+            validationClasses="justification"
+            [readonly]="!isEditAllowed"
+            formControlName="justification"
+            class="form-control"
+          ></textarea>
+          <app-field-error-message
+            controlName="justification"
+          ></app-field-error-message>
+        </div>
+
+        <div class="mb-4 position-relative">
+          <label for="recommendation" class="form-label">{{
+            lang.map.lbl_recommendation
+          }}</label>
+          <textarea
+            id="recommendation"
+            validationClasses="recommendation"
+            trimInput
+            [readonly]="!isEditAllowed"
+            formControlName="recommendation"
+            class="form-control"
+          ></textarea>
+          <app-field-error-message
+            controlName="recommendation"
+          ></app-field-error-message>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #tabContent>
+      <project-needs> </project-needs>
+    </ng-template>
+    <ng-template #tabContent>
+      <div formGroupName="explanation" class="row">
+        <div class="col-sm-12 mb-4 position-relative">
+          <label
+            class="form-label"
+            asteriskIfRequired="specialExplanation"
+            for="specialExplanation"
+            >{{ lang.map.special_explanations }}</label
+          >
+          <textarea
+            name="specialExplanation"
+            formControlName="specialExplanation"
+            validationClasses="specialExplanation"
+            id="specialExplanation"
+            rows="4"
+            class="form-control"
+            [readonly]="readonly"
+            [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
+          ></textarea>
+          <app-field-error-message
+            controlName="specialExplanation"
+          ></app-field-error-message>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #tabContent>
+      <attachments
+        [caseId]="model?.id"
+        [caseType]="model?.caseType"
+        [service]="service.documentService"
+      ></attachments>
+    </ng-template>
+  </form>
+</div>

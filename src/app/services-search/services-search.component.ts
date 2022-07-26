@@ -1,29 +1,29 @@
-import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
-import {FormlyFieldConfig} from '@ngx-formly/core/lib/components/formly.field.config';
-import {LangService} from '@services/lang.service';
-import {InboxService} from '@services/inbox.service';
-import {BehaviorSubject, Subject} from 'rxjs';
-import {filter, map, skip, startWith, takeUntil} from 'rxjs/operators';
-import {EServiceGenericService} from '../generics/e-service-generic-service';
-import {CaseModel} from '../models/case-model';
-import {DialogService} from '@services/dialog.service';
-import {IMenuItem} from '../modules/context-menu/interfaces/i-menu-item';
-import {ToastService} from '@services/toast.service';
-import {DialogRef} from '../shared/models/dialog-ref';
-import {TabComponent} from '../shared/components/tab/tab.component';
-import {EmployeeService} from '@services/employee.service';
-import {CaseTypes} from '../enums/case-types.enum';
-import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {ActivatedRoute, Router} from '@angular/router';
-import {ConfigurationService} from '@app/services/configuration.service';
-import {GeneralSearchCriteriaInterceptor} from '@app/model-interceptors/general-search-criteria-interceptor';
-import {GeneralInterceptor} from '@app/model-interceptors/general-interceptor';
-import {IServiceConstructor} from '@app/interfaces/iservice-constructor';
-import {LicenseService} from '@app/services/license.service';
-import {HasLicenseApproval} from '@app/interfaces/has-license-approval';
-import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
-import {BaseGenericEService} from '@app/generics/base-generic-e-service';
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import { FormlyFieldConfig } from '@ngx-formly/core/lib/components/formly.field.config';
+import { LangService } from '@services/lang.service';
+import { InboxService } from '@services/inbox.service';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { filter, map, skip, startWith, takeUntil } from 'rxjs/operators';
+import { EServiceGenericService } from '../generics/e-service-generic-service';
+import { CaseModel } from '../models/case-model';
+import { DialogService } from '@services/dialog.service';
+import { IMenuItem } from '../modules/context-menu/interfaces/i-menu-item';
+import { ToastService } from '@services/toast.service';
+import { DialogRef } from '../shared/models/dialog-ref';
+import { TabComponent } from '../shared/components/tab/tab.component';
+import { EmployeeService } from '@services/employee.service';
+import { CaseTypes } from '../enums/case-types.enum';
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ConfigurationService } from '@app/services/configuration.service';
+import { GeneralSearchCriteriaInterceptor } from '@app/model-interceptors/general-search-criteria-interceptor';
+import { GeneralInterceptor } from '@app/model-interceptors/general-interceptor';
+import { IServiceConstructor } from '@app/interfaces/iservice-constructor';
+import { LicenseService } from '@app/services/license.service';
+import { HasLicenseApproval } from '@app/interfaces/has-license-approval';
+import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
+import { BaseGenericEService } from '@app/generics/base-generic-e-service';
 
 @Component({
   selector: 'services-search',
@@ -57,14 +57,14 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
 
 
   constructor(public lang: LangService,
-              private toast: ToastService,
-              private router: Router,
-              private activatedRoute: ActivatedRoute,
-              private inboxService: InboxService,
-              private employeeService: EmployeeService,
-              private configService: ConfigurationService,
-              private licenseService: LicenseService,
-              private dialog: DialogService) {
+    private toast: ToastService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private inboxService: InboxService,
+    private employeeService: EmployeeService,
+    private configService: ConfigurationService,
+    private licenseService: LicenseService,
+    private dialog: DialogService) {
   }
 
   ngOnDestroy(): void {
@@ -117,6 +117,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
       .subscribe((service: EServiceGenericService<any>) => {
         // this.updateRoute();
         this.selectedService = service;
+        console.log(this.selectedService);
         this.searchColumns = this.selectedService.searchColumns;
         if (this.employeeService.isExternalUser()) {
           this.searchColumns = this.searchColumns.filter(x => x !== 'organization' && x !== 'organizationId' && x !== 'ouInfo');
@@ -142,7 +143,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
     /*item.open(this.actions, OpenFrom.SEARCH)
      .pipe(switchMap(ref => ref.onAfterClose$))
      .subscribe(() => this.search$.next(null));*/
-    this.router.navigate([item.itemRoute, this.searchState], {queryParams: {item: item.itemDetails}}).then();
+    this.router.navigate([item.itemRoute, this.searchState], { queryParams: { item: item.itemDetails } }).then();
   }
 
   actionManageAttachments(item: CaseModel<any, any>) {
@@ -169,7 +170,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
   }
 
   actionExportLicense(exportedLicenseId: string, caseType: number) {
-    this.licenseService.showLicenseContent({id: exportedLicenseId}, caseType)
+    this.licenseService.showLicenseContent({ id: exportedLicenseId }, caseType)
       .subscribe((blob) => {
         window.open(blob.url);
         this.search$.next(null);
@@ -198,7 +199,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-eye',
         label: 'open_task',
-        data: {hideFromViewer: true},
+        data: { hideFromViewer: true },
         onClick: (item: CaseModel<any, any>) => this.actionOpen(item)
       },
       // view logs
@@ -213,7 +214,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-paperclip',
         label: 'manage_attachments',
-        data: {hideFromViewer: true},
+        data: { hideFromViewer: true },
         show: (item: CaseModel<any, any>) => {
           let caseStatus = item.getCaseStatus();
           return (caseStatus !== CommonCaseStatus.CANCELLED && caseStatus !== CommonCaseStatus.FINAL_APPROVE && caseStatus !== CommonCaseStatus.FINAL_REJECTION);
@@ -227,15 +228,15 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-star-settings',
         label: 'manage_recommendations',
-        data: {hideFromViewer: true},
+        data: { hideFromViewer: true },
         show: (item: CaseModel<any, any>) => {
           return this.employeeService.isInternalUser() &&
             ![CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL,
-              CaseTypes.PARTNER_APPROVAL,
-              CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL,
-              CaseTypes.INTERNAL_PROJECT_LICENSE,
-              CaseTypes.EXTERNAL_PROJECT_MODELS,
-              CaseTypes.URGENT_INTERVENTION_LICENSING].includes(item.caseType);
+            CaseTypes.PARTNER_APPROVAL,
+            CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL,
+            CaseTypes.INTERNAL_PROJECT_LICENSE,
+            CaseTypes.EXTERNAL_PROJECT_MODELS,
+            CaseTypes.URGENT_INTERVENTION_LICENSING].includes(item.caseType);
         },
         onClick: (item: CaseModel<any, any>) => {
           this.actionManageRecommendations(item);
@@ -246,7 +247,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-comment-text-multiple-outline',
         label: 'manage_comments',
-        data: {hideFromViewer: true},
+        data: { hideFromViewer: true },
         show: (item: CaseModel<any, any>) => {
           return this.employeeService.isInternalUser() && item.getCaseStatus() !== CommonCaseStatus.CANCELLED;
         },
@@ -299,7 +300,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
         }
       },
 
-      {type: 'divider'},
+      { type: 'divider' },
       // launch
       {
         type: 'action',
@@ -318,7 +319,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
   }
 
   private fillFormMessage() {
-    this.dialog.error(this.lang.map.at_least_one_field_should_be_filled.change({fields: ''}));
+    this.dialog.error(this.lang.map.at_least_one_field_should_be_filled.change({ fields: '' }));
   }
 
   private prepareCriteriaModel() {
@@ -365,7 +366,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
   }
 
   selectedTabChanged($event: TabComponent) {
-    $event.name === 'result_tab' ? this.serviceControl.disable({emitEvent: false}) : this.serviceControl.enable({emitEvent: false});
+    $event.name === 'result_tab' ? this.serviceControl.disable({ emitEvent: false }) : this.serviceControl.enable({ emitEvent: false });
   }
 
   isConsultationSelected(): boolean {
@@ -374,12 +375,12 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
 
   stringifyDefaultDates(field: FormlyFieldConfig): void {
     this.defaultDates = JSON.stringify(field.fieldGroup!.reduce((prev, item) => {
-      return {...prev, [(item.key as string)]: item.defaultValue};
+      return { ...prev, [(item.key as string)]: item.defaultValue };
     }, {} as any));
   }
 
   private setDefaultDates(): void {
-    let dates = <Record<string, any>> (JSON.parse(this.defaultDates));
+    let dates = <Record<string, any>>(JSON.parse(this.defaultDates));
     Object.keys(dates).forEach((key: string) => {
       let date = dates[key] as any;
       date.singleDate.jsDate = new Date(date.singleDate.jsDate);
@@ -418,7 +419,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
           (key === 'createdOnTo' || key === 'createdOnFrom') ? (control.patchValue({
             dateRange: undefined,
             isRange: false,
-            singleDate: {jsDate: new Date(oldValues[key])}
+            singleDate: { jsDate: new Date(oldValues[key]) }
           })) : control.patchValue(isNaN(Number(oldValues[key])) ? oldValues[key] : Number(oldValues[key]));
         }
       });

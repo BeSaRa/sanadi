@@ -1,4 +1,4 @@
-import {Lookup} from '../models/lookup';
+import { Lookup } from '../models/lookup';
 
 export interface ILookupMap {
   AdminAuditOperation: Lookup[];
@@ -124,4 +124,5 @@ export interface ILookupMap {
   UrgentInterventionRequestType: Lookup[];
   UserType: Lookup[];
   WORK_FIELD: Lookup[];
+  ForeignCountriesProjectsRequestType: Lookup[];
 }

@@ -96,5 +96,6 @@
   "URGENT_INTERVENTION_CLOSURE": "/urgent-intervention-closure",
   "EXTERNAL_PROJECT_IMPLEMENTATION": "/external-project-implementation",
   "FIELD_ASSESSMENT": "/admin/field-assessment",
-  "EXTERNAL_ORG_AFFILIATION_REQUEST": "/external-org-affiliation"
+  "EXTERNAL_ORG_AFFILIATION_REQUEST": "/external-org-affiliation",
+  "FOREIGN_COUNTRIES_PROJECTS": "/foreign-countries-projects"
 }

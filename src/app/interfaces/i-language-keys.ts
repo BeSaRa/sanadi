@@ -1129,4 +1129,11 @@ export interface ILanguageKeys {
   currency_usd: string;
   requester_relation: string;
   requester_name: string;
+  menu_request_to_approve_projects_for_foreign_countries: string;
+  external_cooperation_authority: string;
+  subject_of_need: string;
+  lbl_justification: string;
+  lbl_recommendation: string;
+  lbl_beneficiaries: string;
+  project_needs: string;
 }
