@@ -8,11 +8,12 @@ import { LangService } from '@app/services/lang.service';
 import { DialogService } from '@app/services/dialog.service';
 import { EmployeeService } from '@app/services/employee.service';
 import { ToastService } from '@app/services/toast.service';
-import { switchMap, takeUntil } from 'rxjs/operators';
+import { switchMap, takeUntil, tap } from 'rxjs/operators';
 import { UserClickOn } from '@app/enums/user-click-on.enum';
 import { FollowupStatusEnum } from '@app/enums/status.enum';
 import { SortEvent } from "@contracts/sort-event";
 import { CommonUtils } from "@helpers/common-utils";
+import { CommonService } from "@services/common.service";
 
 @Component({
   selector: 'internal-followup',
@@ -41,6 +42,7 @@ export class InternalFollowupComponent extends AdminGenericComponent<Followup, F
               public lang: LangService,
               private dialog: DialogService,
               public employeeService: EmployeeService,
+              private commonService: CommonService,
               private toast: ToastService) {
     super();
   }
@@ -55,6 +57,10 @@ export class InternalFollowupComponent extends AdminGenericComponent<Followup, F
       .pipe(switchMap(() => {
         return this.service.getFollowupsByType('internal');
       }))
+      .pipe(
+        //@BeSaRa - this antipattern , I made it for reason
+        tap(() => this.commonService.loadCounters().subscribe())
+      )
       .subscribe((list: Followup[]) => {
         this.models = list;
       });

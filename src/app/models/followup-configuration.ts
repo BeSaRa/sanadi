@@ -50,16 +50,16 @@ export class FollowupConfiguration extends BaseModel<FollowupConfiguration, Foll
   buildForm(controls: boolean = false): any {
     const {arName, enName, arDesc, enDesc, followUpType, requestType, responsibleTeamId, concernedTeamId, days} = this;
     return {
-      arName: controls? [arName, [CustomValidators.required] ] : arName ,
-      enName: controls? [enName, [CustomValidators.required] ] : enName ,
-      arDesc: controls? [arDesc, [CustomValidators.required] ] : arDesc ,
-      enDesc: controls? [enDesc, [CustomValidators.required] ] : enDesc ,
-      followUpType: controls? [followUpType, [CustomValidators.required] ] : followUpType ,
-      requestType: controls? [requestType, [CustomValidators.required] ] : requestType ,
-      responsibleTeamId: controls? [{value: responsibleTeamId, disabled: followUpType === FollowUpType.INTERNAL}] : responsibleTeamId ,
-      concernedTeamId: controls? [{value: concernedTeamId, disabled: followUpType === FollowUpType.EXTERNAL}] : concernedTeamId ,
-      days: controls? [days, [CustomValidators.required, CustomValidators.number] ] : days
-    }
+      arName: controls ? [arName, [CustomValidators.required, CustomValidators.pattern('AR_NUM')]] : arName,
+      enName: controls ? [enName, [CustomValidators.required, CustomValidators.pattern('ENG_NUM')]] : enName,
+      arDesc: controls ? [arDesc, [CustomValidators.required, CustomValidators.pattern('AR_NUM')]] : arDesc,
+      enDesc: controls ? [enDesc, [CustomValidators.required, CustomValidators.pattern('ENG_NUM')]] : enDesc,
+      followUpType: controls ? [followUpType, [CustomValidators.required]] : followUpType,
+      requestType: controls ? [requestType, [CustomValidators.required]] : requestType,
+      responsibleTeamId: controls ? [{value: responsibleTeamId, disabled: followUpType === FollowUpType.INTERNAL}] : responsibleTeamId,
+      concernedTeamId: controls ? [{value: concernedTeamId, disabled: followUpType === FollowUpType.EXTERNAL}] : concernedTeamId,
+      days: controls ? [days, [CustomValidators.required, CustomValidators.number]] : days
+    };
   }
 
 

@@ -5,7 +5,7 @@ import { Followup } from '@app/models/followup';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
 import { Subject } from 'rxjs';
 import { LangService } from '@app/services/lang.service';
-import { switchMap, takeUntil } from 'rxjs/operators';
+import { switchMap, takeUntil, tap } from 'rxjs/operators';
 import { UserClickOn } from '@app/enums/user-click-on.enum';
 import { FollowupStatusEnum } from '@app/enums/status.enum';
 import { DialogService } from '@app/services/dialog.service';
@@ -13,6 +13,7 @@ import { ToastService } from '@app/services/toast.service';
 import { EmployeeService } from '@app/services/employee.service';
 import { SortEvent } from "@contracts/sort-event";
 import { CommonUtils } from "@helpers/common-utils";
+import { CommonService } from "@services/common.service";
 
 @Component({
   selector: 'external-followup',
@@ -43,6 +44,7 @@ export class ExternalFollowupComponent extends AdminGenericComponent<Followup, F
               public lang: LangService,
               private dialog: DialogService,
               public employeeService: EmployeeService,
+              private commonService: CommonService,
               private toast: ToastService) {
     super();
   }
@@ -60,6 +62,10 @@ export class ExternalFollowupComponent extends AdminGenericComponent<Followup, F
       .pipe(switchMap((_caseType: number) => {
         return this.service.getFollowupsByType('external');
       }))
+      .pipe(
+        //@BeSaRa - this antipattern , I made it for reason
+        tap(() => this.commonService.loadCounters().subscribe())
+      )
       .subscribe((list: Followup[]) => {
         this.models = list;
       });

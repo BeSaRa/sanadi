@@ -1,3 +1,4 @@
+import { OrganizationUnitFieldPopupComponent } from './popups/organization-unit-field-popup/organization-unit-field-popup.component';
 import {NgModule} from '@angular/core';
 
 import {AdminRoutingModule} from './admin-routing.module';
@@ -63,6 +64,7 @@ import {FollowupConfigurationPopupComponent} from './popups/followup-configurati
 import {UserFollowupPermissionComponent} from './shared/user-followup-permission/user-followup-permission.component';
 import {FieldAssessmentPopupComponent} from './popups/field-assessment-popup/field-assessment-popup.component';
 import {FieldAssessmentComponent} from './pages/field-assessment/field-assessment.component';
+import { OrganizationUnitFieldComponent } from './pages/organization-unit-field/organization-unit-field.component';
 import {AdminLookupPopupComponent} from './popups/admin-lookup-popup/admin-lookup-popup.component';
 import {DacOchaNewComponent} from './pages/dac-ocha-new/dac-ocha-new.component';
 import {DacOchaNewPopupComponent} from './popups/dac-ocha-new-popup/dac-ocha-new-popup.component';
@@ -127,6 +129,8 @@ import {DacOchaNewPopupComponent} from './popups/dac-ocha-new-popup/dac-ocha-new
     UserFollowupPermissionComponent,
     FieldAssessmentPopupComponent,
     FieldAssessmentComponent,
+    OrganizationUnitFieldPopupComponent,
+    OrganizationUnitFieldComponent,
     AdminLookupPopupComponent,
     DacOchaNewComponent,
     DacOchaNewPopupComponent,

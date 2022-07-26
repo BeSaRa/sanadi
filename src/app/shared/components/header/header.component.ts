@@ -1,9 +1,9 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {LangService} from '@app/services/lang.service';
-import {UrlService} from '@app/services/url.service';
-import {SidebarComponent} from '../sidebar/sidebar.component';
-import {EmployeeService} from '@app/services/employee.service';
-import {Subject} from 'rxjs';
+import { Component, Input, OnInit } from '@angular/core';
+import { LangService } from '@app/services/lang.service';
+import { UrlService } from '@app/services/url.service';
+import { SidebarComponent } from '../sidebar/sidebar.component';
+import { EmployeeService } from '@app/services/employee.service';
+import { Subject } from 'rxjs';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -26,6 +26,9 @@ export class HeaderComponent implements OnInit {
 
   toggleLang($event: MouseEvent) {
     $event.preventDefault();
-    this.langService.toggleLanguage().subscribe();
+    this.langService.toggleLanguage().subscribe(() => {
+      console.log(this.employee.hasPermissionTo('EXTERNAL_FOLLOWUP'));
+      console.log(this.employee.hasPermissionTo('INTERNAL_FOLLOWUP'));
+    });
   }
 }

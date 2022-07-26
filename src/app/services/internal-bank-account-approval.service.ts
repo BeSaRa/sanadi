@@ -25,6 +25,7 @@ import {
 import {BankService} from '@services/bank.service';
 import {SelectEmployeePopupComponent} from '@app/projects/popups/select-employee-popup/select-employee-popup.component';
 import {Lookup} from '@app/models/lookup';
+import {CastResponse} from '@decorators/cast-response';
 
 @Injectable({
   providedIn: 'root'
@@ -107,8 +108,36 @@ export class InternalBankAccountApprovalService extends EServiceGenericService<I
         r.bankInfo = (new Bank()).clone(r.bankInfo);
         result.push((new BankAccount()).clone(r));
       });
-      console.log('bankAccounts', result);
       return result;
+    }));
+  }
+
+  @Generator(BankAccount, true, {property: 'rs'})
+  private _loadBankAccountsBasedOnCurrencyAndBank(bankId: number, currencyId: number): Observable<BankAccount[]> {
+    return this.http.get<any>(this.getBankAccountCtrlURLSegment() + '/criteria?bank-id=' + bankId + '&currency=' + currencyId);
+  }
+
+  loadBankAccountsBasedOnCurrencyAndBank(bankId: number, currencyId: number) {
+    return this._loadBankAccountsBasedOnCurrencyAndBank(bankId, currencyId).pipe(map(response => {
+      let result: BankAccount[] = [];
+      response.forEach((r: BankAccount) => {
+        r.bankInfo = (new Bank()).clone(r.bankInfo);
+        result.push((new BankAccount()).clone(r));
+      });
+      return result;
+    }));
+  }
+
+  @CastResponse(() => BankAccount, {unwrap: 'rs', fallback: ''})
+  private _searchForBankAccount(accountNumber: number): Observable<BankAccount> {
+    return this.http.get<any>(this.getBankAccountCtrlURLSegment() + '/account-number?accountNumber=' + accountNumber);
+  }
+
+  searchForBankAccount(accountNumber: number) {
+    return this._searchForBankAccount(accountNumber).pipe(map(response => {
+      response.bankInfo = (new Bank()).clone(response.bankInfo);
+      response.bankCategoryInfo = (new Lookup()).clone(response.bankCategoryInfo);
+      return response;
     }));
   }
 
@@ -116,7 +145,7 @@ export class InternalBankAccountApprovalService extends EServiceGenericService<I
     return this.urlService.URLS.NPO_EMPLOYEE;
   }
 
-  @Generator(NpoEmployee, true, {property: 'rs'})
+  @CastResponse(() => NpoEmployee, {unwrap: 'rs', fallback: ''})
   private _loadOrgNPOEmployees(): Observable<NpoEmployee[]> {
     return this.http.get<any>(this.getNPOEmployeeCtrlURLSegment() + '/composite');
   }
@@ -134,7 +163,7 @@ export class InternalBankAccountApprovalService extends EServiceGenericService<I
     }));
   }
 
-  @Generator(NpoEmployee, true, {property: 'rs'})
+  @CastResponse(() => NpoEmployee, {unwrap: 'rs', fallback: ''})
   private _searchNPOEmployees(qId: string): Observable<NpoEmployee[]> {
     return qId ? this.http.get<any>(this.getNPOEmployeeCtrlURLSegment() + '/criteria?q-id=' + qId) : this.http.get<any>(this.getNPOEmployeeCtrlURLSegment() + '/criteria');
   }
