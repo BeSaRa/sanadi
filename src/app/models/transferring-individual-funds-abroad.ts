@@ -2,6 +2,11 @@ import {CaseModel} from '@app/models/case-model';
 import {TransferringIndividualFundsAbroadService} from '@services/transferring-individual-funds-abroad.service';
 import {TransferringIndividualFundsAbroadInterceptor} from '@app/model-interceptors/transferring-individual-funds-abroad-interceptor';
 import {InterceptModel} from '@decorators/intercept-model';
+import {CaseTypes} from '@app/enums/case-types.enum';
+import {AdminResult} from '@app/models/admin-result';
+import {TransferFundsExecutiveManagement} from '@app/models/transfer-funds-executive-management';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {Validators} from '@angular/forms';
 
 const interceptor = new TransferringIndividualFundsAbroadInterceptor();
 
@@ -11,5 +16,203 @@ const interceptor = new TransferringIndividualFundsAbroadInterceptor();
 })
 
 export class TransferringIndividualFundsAbroad extends CaseModel<TransferringIndividualFundsAbroadService, TransferringIndividualFundsAbroad> {
-    service!: TransferringIndividualFundsAbroadService;
+  service!: TransferringIndividualFundsAbroadService;
+  caseType = CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD;
+  licenseApprovedDate!: string;
+  licenseDuration!: number;
+  licenseStatus!: number;
+  licenseStartDate!: string;
+  licenseEndDate!: string;
+  oldLicenseId!: string;
+  oldLicenseSerial!: number;
+  oldLicenseFullSerial!: string;
+  exportedLicenseFullSerial!: string;
+  exportedLicenseId!: string;
+  exportedLicenseSerial!: number;
+  licenseVSID!: string;
+  customTerms!: string;
+  publicTerms!: string;
+  licenseStatusInfo!: AdminResult;
+  address!: string;
+  arName!: string;
+  beneficiaryCountry!: number;
+  city!: string;
+  country!: number;
+  chiefDecision!: number;
+  chiefJustification!: string;
+  conditionalLicenseIndicator!: boolean;
+  currencyTransferTransactionAmount!: number;
+  currency!: number;
+  detailsAddress!: string;
+  description!: string;
+  domain!: number;
+  email!: string;
+  enName!: string;
+  entityID!: number;
+  headQuarterType!: number;
+  executionCountry!: number;
+  executiveManagementList: TransferFundsExecutiveManagement[] = [];
+  establishmentDate!: string;
+  followUpDate!: string;
+  identificationNumber!: string;
+  jobTitle!: string;
+  mainDACCategory!: number;
+  mainUNOCHACategory!: number;
+  managerDecision!: number;
+  managerJustification!: string;
+  mobileNo!: string;
+  organizationArabicName!: string;
+  organizationEnglishName!: string;
+  organizationEmail!: string;
+  nationality!: number;
+  phone!: string;
+  projectName!: string;
+  projectType!: number;
+  projectTotalCost!: number;
+  projectImplementationPeriod!: number;
+  postalCode!: string;
+  receiverNameLikePassport!: string;
+  receiverEnglishNameLikePassport!: string;
+  receiverJobTitle!: string;
+  receiverIdentificationNumber!: string;
+  receiverPhone1!: string;
+  receiverPhone2!: string;
+  receiverPassportNumber!: string;
+  receiverNationality!: number;
+  region!: string;
+  requestType!: number;
+  reviewerDepartmentDecision!: number;
+  reviewerDepartmentJustification!: string;
+  specialistDecision!: number;
+  specialistJustification!: string;
+  firstSocialMedia!: string;
+  secondSocialMedia!: string;
+  thirdSocialMedia!: string;
+  transferMethod!: number;
+  transferType!: number;
+  transferCountry!: number;
+  transferringEntityName!: string;
+  transferFromIBAN!: string;
+  transfereeIBAN!: string;
+  transfereeType!: number;
+  subject!: string;
+  qatariTransactionAmount!: number;
+  website!: string;
+  managerDecisionInfo!: AdminResult;
+  reviewerDepartmentDecisionInfo!: AdminResult;
+  specialistDecisionInfo!: AdminResult;
+  chiefDecisionInfo!: AdminResult;
+  requestTypeInfo!: AdminResult;
+  transfereeTypeInfo!: AdminResult;
+  domainInfo!: AdminResult;
+  mainDACCategoryInfo!: AdminResult;
+  mainUNOCHACategoryInfo!: AdminResult;
+  beneficiaryCountryInfo!: AdminResult;
+  executionCountryInfo!: AdminResult;
+  countryInfo!: AdminResult;
+  transferCountryInfo!: AdminResult;
+  nationalityInfo!: AdminResult;
+  ReceiverNationalityInfo!: AdminResult;
+  headQuarterTypeInfo!: AdminResult;
+  currencyInfo!: AdminResult;
+  projectTypeInfo!: AdminResult;
+  transferMethodInfo!: AdminResult;
+  transferTypeInfo!: AdminResult;
+  receiverNationalityInfo!: AdminResult;
+
+  buildBasicInfo(controls: boolean = false): any {
+    const {oldLicenseFullSerial, requestType, transfereeType} = this;
+    return {
+      oldLicenseFullSerial: controls ? [oldLicenseFullSerial] : oldLicenseFullSerial,
+      requestType: controls ? [requestType, [CustomValidators.required]] : requestType,
+      transfereeType: controls ? [transfereeType, [CustomValidators.required]] : transfereeType
+    };
+  }
+
+  buildRequesterInfo(controls: boolean = false): any {
+    const {identificationNumber, arName, enName, nationality, address, phone, mobileNo, email} = this;
+    return {
+      identificationNumber: controls ? [identificationNumber, [CustomValidators.required].concat(CustomValidators.commonValidations.qId)] : identificationNumber,
+      arName: controls ? [arName, [CustomValidators.required,
+        CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
+        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
+        CustomValidators.pattern('AR_NUM')]] : arName,
+      enName: controls ? [enName, [CustomValidators.required,
+        CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
+        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
+        CustomValidators.pattern('ENG_NUM')]] : enName,
+      nationality: controls ? [nationality, [CustomValidators.required]] : nationality,
+      address: controls ? [address, [CustomValidators.required]] : address,
+      phone: controls ? [phone, CustomValidators.commonValidations.phone] : phone,
+      mobileNo: controls ? [mobileNo, [CustomValidators.required].concat(CustomValidators.commonValidations.mobileNo)] : mobileNo,
+      email: controls ? [email, CustomValidators.required, Validators.email, CustomValidators.maxLength(CustomValidators.defaultLengths.EMAIL_MAX)] : email
+    };
+  }
+
+  buildReceiverOrganizationInfo(controls: boolean = false): any {
+    const {organizationArabicName, organizationEnglishName, headQuarterType, establishmentDate, country, region, city,
+      detailsAddress, postalCode, website, organizationEmail, firstSocialMedia, secondSocialMedia, thirdSocialMedia} = this;
+    return {
+      organizationArabicName: controls ? [organizationArabicName, [CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
+        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
+        CustomValidators.pattern('AR_NUM')]] : organizationArabicName,
+      organizationEnglishName: controls ? [organizationEnglishName, [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
+        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
+        CustomValidators.pattern('ENG_NUM')]] : organizationEnglishName,
+      headQuarterType: controls ? [headQuarterType] : headQuarterType,
+      establishmentDate: controls ? [establishmentDate] : establishmentDate,
+      country: controls ? [country] : country,
+      region: controls ? [region, [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : region,
+      city: controls ? [city, [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : city,
+      detailsAddress: controls ? [detailsAddress, [CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : detailsAddress,
+      postalCode: controls ? [postalCode, [CustomValidators.number, CustomValidators.maxLength(15)]] : postalCode,
+      website: controls ? [website, [CustomValidators.maxLength(350)]] : website,
+      organizationEmail: controls ? [organizationEmail, [Validators.email, CustomValidators.maxLength(CustomValidators.defaultLengths.EMAIL_MAX)]] : organizationEmail,
+      firstSocialMedia: controls ? [firstSocialMedia, [CustomValidators.maxLength(350)]] : firstSocialMedia,
+      secondSocialMedia: controls ? [secondSocialMedia, [CustomValidators.maxLength(350)]] : secondSocialMedia,
+      thirdSocialMedia: controls ? [thirdSocialMedia, [CustomValidators.maxLength(350)]] : thirdSocialMedia
+    };
+  }
+
+  buildReceiverPersonInfo(controls: boolean = false): any {
+    const {receiverNameLikePassport, receiverEnglishNameLikePassport, receiverJobTitle, receiverNationality,
+      receiverIdentificationNumber, receiverPassportNumber, receiverPhone1, receiverPhone2} = this;
+    return {
+      receiverNameLikePassport: controls ? [receiverNameLikePassport, [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
+        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : receiverNameLikePassport,
+      receiverEnglishNameLikePassport: controls ? [receiverEnglishNameLikePassport, [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
+        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
+        CustomValidators.pattern('ENG_NUM')]] : receiverEnglishNameLikePassport,
+      receiverJobTitle: controls ? [receiverJobTitle, [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : receiverJobTitle,
+      receiverNationality: controls ? [receiverNationality] : receiverNationality,
+      receiverIdentificationNumber: controls ? [receiverIdentificationNumber, [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : receiverIdentificationNumber,
+      receiverPassportNumber: controls ? [receiverPassportNumber, [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : receiverPassportNumber,
+      receiverPhone1: controls ? [receiverPhone1, CustomValidators.commonValidations.phone] : receiverPhone1,
+      receiverPhone2: controls ? [receiverPhone2, CustomValidators.commonValidations.phone] : receiverPhone2,
+    };
+  }
+
+  buildFinancialTransactionInfo(controls: boolean = false): any {
+    const {qatariTransactionAmount, currencyTransferTransactionAmount, currency, transferMethod,
+      transferringEntityName, transferType, transferFromIBAN, transfereeIBAN, transferCountry} = this;
+    return {
+      qatariTransactionAmount: controls ? [qatariTransactionAmount, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(20)]] : qatariTransactionAmount,
+      currencyTransferTransactionAmount: controls ? [currencyTransferTransactionAmount, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(20)]] : currencyTransferTransactionAmount,
+      currency: controls ? [currency, [CustomValidators.required]] : currency,
+      transferMethod: controls ? [transferMethod, [CustomValidators.required]] : transferMethod,
+      transferringEntityName: controls ? [transferringEntityName, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
+        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : transferringEntityName,
+      transferType: controls ? [transferType, [CustomValidators.required]] : transferType,
+      transferFromIBAN: controls ? [transferFromIBAN, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.SWIFT_CODE_MAX)]] : transferFromIBAN,
+      transfereeIBAN: controls ? [transfereeIBAN, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.SWIFT_CODE_MAX)]] : transfereeIBAN,
+      transferCountry: controls ? [transferCountry, [CustomValidators.required]] : transferCountry
+    };
+  }
+
+  buildExplanation(controls: boolean = false): any {
+    const {description} = this;
+    return {
+      description: controls ? [description, [CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)]] : description,
+    }
+  }
 }

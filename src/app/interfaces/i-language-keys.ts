@@ -1,5 +1,20 @@
 export interface ILanguageKeys {
+  transferee_iban: string;
+  transfer_from_iban: string;
+  transfer_method: string;
+  transferring_entity_name: string;
+  transaction_amount_in_transfer_currency: string;
+  qatari_riyal_transaction_amount: string;
+  name_in_English_language_like_passport: string;
+  name_in_local_language_like_passport: string;
+  organization_english_name: string;
+  organization_arabic_name: string;
   selected_bank_account_is_sub_account: string;
+  transferee_type: string;
+  financial_transaction_info: string;
+  receiver_person_info: string;
+  receiver_organization_info: string;
+  requester_info: string;
   forget_password: string;
   you_have_to_select_at_least_one_bank_account: string;
   will_be_canceled_also: string;

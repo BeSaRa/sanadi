@@ -1,5 +1,5 @@
 import {AfterViewInit, ChangeDetectorRef, Component} from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {SaveTypes} from '@app/enums/save-types';
 import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
@@ -14,6 +14,10 @@ import {LicenseService} from '@services/license.service';
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 import {OpenFrom} from '@app/enums/open-from.enum';
 import {EmployeeService} from '@services/employee.service';
+import {Lookup} from '@app/models/lookup';
+import {DatepickerControlsMap, DatepickerOptionsMap} from '@app/types/types';
+import {DateUtils} from '@helpers/date-utils';
+import {FormManager} from '@app/models/form-manager';
 
 @Component({
   selector: 'transferring-individual-funds-abroad',
@@ -22,6 +26,28 @@ import {EmployeeService} from '@services/employee.service';
 })
 export class TransferringIndividualFundsAbroadComponent extends EServicesGenericComponent<TransferringIndividualFundsAbroad, TransferringIndividualFundsAbroadService> implements AfterViewInit {
   form!: FormGroup;
+  fm!: FormManager;
+  requestTypes: Lookup[] = this.lookupService.listByCategory.TransferringIndividualRequestType
+    .sort((a, b) => a.lookupKey - b.lookupKey);
+  transfereeTypes: Lookup[] = this.lookupService.listByCategory.TransfereeType
+    .sort((a, b) => a.lookupKey - b.lookupKey);
+  nationalities: Lookup[] = this.lookupService.listByCategory.Nationality
+    .sort((a, b) => a.lookupKey - b.lookupKey);
+  headQuarterTypes: Lookup[] = this.lookupService.listByCategory.HeadQuarterType
+    .sort((a, b) => a.lookupKey - b.lookupKey);
+  countries: Lookup[] = this.lookupService.listByCategory.Countries
+    .sort((a, b) => a.lookupKey - b.lookupKey);
+  currencies: Lookup[] = this.lookupService.listByCategory.Currency
+    .sort((a, b) => a.lookupKey - b.lookupKey);
+  transferMethods: Lookup[] = this.lookupService.listByCategory.TransferMethod
+    .sort((a, b) => a.lookupKey - b.lookupKey);
+  transferTypes: Lookup[] = this.lookupService.listByCategory.TransferType
+    .sort((a, b) => a.lookupKey - b.lookupKey);
+
+  datepickerControlsMap: DatepickerControlsMap = {};
+  datepickerOptionsMap: DatepickerOptionsMap = {
+    establishmentDate: DateUtils.getDatepickerOptions({disablePeriod: 'future'})
+  };
 
   constructor(public lang: LangService,
               public fb: FormBuilder,
@@ -35,6 +61,34 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     super();
   }
 
+  get basicInfo(): FormGroup {
+    return this.form.get('basicInfo')! as FormGroup;
+  }
+
+  get requesterInfo(): FormGroup {
+    return this.form.get('requesterInfo')! as FormGroup;
+  }
+
+  get receiverOrganizationInfo(): FormGroup {
+    return this.form.get('receiverOrganizationInfo')! as FormGroup;
+  }
+
+  get receiverPersonInfo(): FormGroup {
+    return this.form.get('receiverPersonInfo')! as FormGroup;
+  }
+
+  get financialTransactionInfo(): FormGroup {
+    return this.form.get('financialTransactionInfo')! as FormGroup;
+  }
+
+  get specialExplanation(): FormGroup {
+    return this.form.get('explanation')! as FormGroup;
+  }
+
+  get establishmentDate(): FormControl {
+    return this.form.get('receiverOrganizationInfo.establishmentDate')! as FormControl;
+  }
+
   ngAfterViewInit(): void {
     this.cd.detectChanges();
   }
@@ -46,8 +100,16 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
   _buildForm(): void {
     const model = new TransferringIndividualFundsAbroad();
     this.form = this.fb.group({
-      // add form groups here
+      basicInfo: this.fb.group(model.buildBasicInfo(true)),
+      requesterInfo: this.fb.group(model.buildRequesterInfo(true)),
+      receiverOrganizationInfo: this.fb.group(model.buildReceiverOrganizationInfo(true)),
+      receiverPersonInfo: this.fb.group(model.buildReceiverPersonInfo(true)),
+      financialTransactionInfo: this.fb.group(model.buildFinancialTransactionInfo(true)),
+      explanation: this.fb.group(model.buildExplanation(true))
     });
+
+    this._buildDatepickerControlsMap();
+    this.fm = new FormManager(this.form, this.lang);
   }
 
   _afterBuildForm(): void {
@@ -153,5 +215,15 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
         this.readonly = false;
       }
     }
+  }
+
+  searchForLicense() {
+
+  }
+
+  private _buildDatepickerControlsMap() {
+    this.datepickerControlsMap = {
+      establishmentDate: this.establishmentDate
+    };
   }
 }

@@ -1,1 +1,471 @@
-<p>transferring-individual-funds-abroad works!</p>
+<div class="row">
+  <tabs-list [accordionView]="accordionView">
+    <tab name="basic_info" [hasError]="basicInfo.invalid" [template]="basic_info" [title]="lang.map.lbl_basic_info">
+    </tab>
+    <tab name="requester_info" [hasError]="requesterInfo.invalid" [template]="requester_info"
+         [title]="lang.map.requester_info">
+    </tab>
+    <tab name="receiver_organization_info" [hasError]="receiverOrganizationInfo.invalid"
+         [template]="receiver_organization_info" [title]="lang.map.receiver_organization_info">
+    </tab>
+    <tab name="receiver_person_info" [hasError]="receiverPersonInfo.invalid" [template]="receiver_person_info"
+         [title]="lang.map.receiver_person_info">
+    </tab>
+    <tab name="financial_transaction_info" [hasError]="financialTransactionInfo.invalid"
+         [template]="financial_transaction_info" [title]="lang.map.financial_transaction_info">
+    </tab>
+    <tab [hasError]="specialExplanation.invalid" name="special_explanations" [template]="special_explanations"
+         [title]="lang.map.special_explanations"></tab>
+    <tab name="attachments" *ngIf="!accordionView" [template]="attachmentsTab" [title]="lang.map.attachments"></tab>
+  </tabs-list>
+  <ng-container [formGroup]="form">
+    <ng-container formGroupName="basicInfo">
+      <ng-template #basic_info>
+        <div class="row">
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="requestType"
+                   for="requestType">{{lang.map.request_type}}</label>
+            <ng-select validationClasses="requestType" appendTo="body" [clearable]="false" id="requestType"
+                       formControlName="requestType" [readonly]="(readonly)">
+              <ng-option [value]="option.lookupKey" *ngFor="let option of requestTypes">{{option.getName()}}</ng-option>
+            </ng-select>
+            <app-field-error-message controlName="requestType"></app-field-error-message>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="transfereeType"
+                   for="transfereeType">{{lang.map.transferee_type}}</label>
+            <ng-select validationClasses="transfereeType" appendTo="body" [clearable]="false"
+                       id="transfereeType"
+                       formControlName="transfereeType" [readonly]="(readonly)">
+              <ng-option [value]="option.lookupKey"
+                         *ngFor="let option of transfereeTypes">{{option.getName()}}</ng-option>
+            </ng-select>
+            <app-field-error-message controlName="transfereeType"></app-field-error-message>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="oldLicenseFullSerial"
+                   for="oldLicenseFullSerial">{{lang.map.serial_number}}
+            </label>
+            <div class="input-group">
+              <input (keydown.enter)="searchForLicense()" id="oldLicenseFullSerial"
+                     validationClasses="oldLicenseFullSerial"
+                     formControlName="oldLicenseFullSerial"
+                     class="form-control"
+                     [readonly]="(readonly)">
+              <app-field-error-message controlName="oldLicenseFullSerial"></app-field-error-message>
+              <button (click)="searchForLicense()" class="input-group-text" [disabled]="(readonly)">
+                <i class="mdi mdi-magnify text-primary"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </ng-container>
+    <ng-container formGroupName="requesterInfo">
+      <ng-template #requester_info>
+        <div class="row">
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="arName"
+                   for="arName">{{lang.map.arabic_name}}</label>
+            <input id="arName" validationClasses="arName"
+                   formControlName="arName"
+                   class="form-control" [readonly]="(readonly)">
+            <app-field-error-message controlName="arName"></app-field-error-message>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="enName"
+                   for="enName">{{lang.map.english_name}}</label>
+            <input id="enName" validationClasses="enName"
+                   formControlName="enName"
+                   class="form-control" [readonly]="(readonly)">
+            <app-field-error-message controlName="enName"></app-field-error-message>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="identificationNumber"
+                   for="identificationNumber">{{lang.map.identification_number}}</label>
+            <input id="identificationNumber" validationClasses="identificationNumber"
+                   formControlName="identificationNumber"
+                   class="form-control" [readonly]="(readonly)">
+            <app-field-error-message controlName="identificationNumber"></app-field-error-message>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="email"
+                   for="email">{{lang.map.lbl_email}}</label>
+            <input id="email" validationClasses="email"
+                   formControlName="email"
+                   class="form-control" [readonly]="(readonly)">
+            <app-field-error-message controlName="email"></app-field-error-message>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="phone"
+                   for="phone">{{lang.map.lbl_phone}}</label>
+            <input id="phone" validationClasses="phone"
+                   formControlName="phone"
+                   class="form-control" [readonly]="(readonly)">
+            <app-field-error-message controlName="phone"></app-field-error-message>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="mobileNo"
+                   for="mobileNo">{{lang.map.mobile_number}}</label>
+            <input id="mobileNo" validationClasses="mobileNo"
+                   formControlName="mobileNo"
+                   class="form-control" [readonly]="(readonly)">
+            <app-field-error-message controlName="mobileNo"></app-field-error-message>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="nationality"
+                   for="nationality">{{lang.map.lbl_nationality}}</label>
+            <ng-select validationClasses="nationality" appendTo="body" [clearable]="false"
+                       id="nationality"
+                       formControlName="nationality" [readonly]="(readonly)">
+              <ng-option [value]="option.lookupKey"
+                         *ngFor="let option of nationalities">{{option.getName()}}</ng-option>
+            </ng-select>
+            <app-field-error-message controlName="nationality"></app-field-error-message>
+          </div>
+          <div class="col-md-8 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="address"
+                   for="address">{{lang.map.lbl_address}}</label>
+            <input id="address" validationClasses="address"
+                   formControlName="address"
+                   class="form-control" [readonly]="(readonly)">
+            <app-field-error-message controlName="address"></app-field-error-message>
+          </div>
+        </div>
+      </ng-template>
+    </ng-container>
+    <ng-container formGroupName="receiverOrganizationInfo">
+      <ng-template #receiver_organization_info>
+        <div class="row">
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="organizationArabicName"
+                   for="organizationArabicName">{{lang.map.organization_arabic_name}}</label>
+            <input id="organizationArabicName" validationClasses="organizationArabicName"
+                   formControlName="organizationArabicName"
+                   class="form-control" [readonly]="(readonly)">
+            <app-field-error-message controlName="organizationArabicName"></app-field-error-message>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="organizationEnglishName"
+                   for="organizationEnglishName">{{lang.map.organization_english_name}}</label>
+            <input id="organizationEnglishName" validationClasses="organizationEnglishName"
+                   formControlName="organizationEnglishName"
+                   class="form-control" [readonly]="(readonly)">
+            <app-field-error-message controlName="organizationEnglishName"></app-field-error-message>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="headQuarterType"
+                   for="headQuarterType">{{lang.map.transferee_type}}</label>
+            <ng-select validationClasses="headQuarterType" appendTo="body" [clearable]="false"
+                       id="headQuarterType"
+                       formControlName="headQuarterType" [readonly]="(readonly)">
+              <ng-option [value]="option.lookupKey"
+                         *ngFor="let option of headQuarterTypes">{{option.getName()}}</ng-option>
+            </ng-select>
+            <app-field-error-message controlName="headQuarterType"></app-field-error-message>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label for="establishmentDate" asteriskIfRequired="establishmentDate"
+                   class="form-label">{{lang.map.establishment_date}}</label>
+            <div class="reg-start-date-container">
+              <div class="input-group">
+                <i class="input-group-text mdi mdi-calendar"></i>
+                <div class="form-control"
+                     [ngClass]="{'input-disabled': (readonly)}"
+                     formControlName="establishmentDate"
+                     id="establishmentDate"
+                     (click)="!readonly && dpEstablishmentDate.toggleCalendar()"
+                     #dpEstablishmentDate="angular-mydatepicker"
+                     [options]="datepickerOptionsMap.establishmentDate"
+                     angular-mydatepicker validationClasses="establishmentDate"></div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="country"
+                   for="country">{{lang.map.country}}</label>
+            <ng-select validationClasses="country" appendTo="body" [clearable]="false"
+                       id="country"
+                       formControlName="country" [readonly]="(readonly)">
+              <ng-option [value]="option.lookupKey"
+                         *ngFor="let option of countries">{{option.getName()}}</ng-option>
+            </ng-select>
+            <app-field-error-message controlName="country"></app-field-error-message>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="region"
+                   for="region">{{lang.map.region}}</label>
+            <input id="region" validationClasses="region"
+                   formControlName="region"
+                   class="form-control" [readonly]="(readonly)">
+            <app-field-error-message controlName="region"></app-field-error-message>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="city"
+                   for="city">{{lang.map.city}}</label>
+            <input id="city" validationClasses="city"
+                   formControlName="city"
+                   class="form-control" [readonly]="(readonly)">
+            <app-field-error-message controlName="city"></app-field-error-message>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="detailsAddress"
+                   for="detailsAddress">{{lang.map.lbl_address}}</label>
+            <input id="detailsAddress" validationClasses="detailsAddress"
+                   formControlName="detailsAddress"
+                   class="form-control" [readonly]="(readonly)">
+            <app-field-error-message controlName="detailsAddress"></app-field-error-message>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="postalCode"
+                   for="postalCode">{{lang.map.postal_code}}</label>
+            <input id="postalCode" validationClasses="postalCode"
+                   formControlName="postalCode"
+                   class="form-control" [readonly]="(readonly)">
+            <app-field-error-message controlName="postalCode"></app-field-error-message>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="website"
+                   for="website">{{lang.map.website}}</label>
+            <input id="website" validationClasses="website"
+                   formControlName="website"
+                   class="form-control" [readonly]="(readonly)">
+            <app-field-error-message controlName="website"></app-field-error-message>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="organizationEmail"
+                   for="organizationEmail">{{lang.map.lbl_email}}</label>
+            <input id="organizationEmail" validationClasses="organizationEmail"
+                   formControlName="organizationEmail"
+                   class="form-control" [readonly]="(readonly)">
+            <app-field-error-message controlName="organizationEmail"></app-field-error-message>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="firstSocialMedia"
+                   for="firstSocialMedia">{{lang.map.social_media_1}}</label>
+            <input id="firstSocialMedia" validationClasses="firstSocialMedia"
+                   formControlName="firstSocialMedia"
+                   class="form-control" [readonly]="(readonly)">
+            <app-field-error-message controlName="firstSocialMedia"></app-field-error-message>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="secondSocialMedia"
+                   for="secondSocialMedia">{{lang.map.social_media_2}}</label>
+            <input id="secondSocialMedia" validationClasses="secondSocialMedia"
+                   formControlName="secondSocialMedia"
+                   class="form-control" [readonly]="(readonly)">
+            <app-field-error-message controlName="secondSocialMedia"></app-field-error-message>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="thirdSocialMedia"
+                   for="thirdSocialMedia">{{lang.map.social_media_3}}</label>
+            <input id="thirdSocialMedia" validationClasses="thirdSocialMedia"
+                   formControlName="thirdSocialMedia"
+                   class="form-control" [readonly]="(readonly)">
+            <app-field-error-message controlName="thirdSocialMedia"></app-field-error-message>
+          </div>
+        </div>
+      </ng-template>
+    </ng-container>
+    <ng-container formGroupName="receiverPersonInfo">
+      <ng-template #receiver_person_info>
+        <div class="row">
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="receiverNameLikePassport"
+                   for="receiverNameLikePassport">{{lang.map.name_in_local_language_like_passport}}</label>
+            <input id="receiverNameLikePassport" validationClasses="receiverNameLikePassport"
+                   formControlName="receiverNameLikePassport"
+                   class="form-control" [readonly]="(readonly)">
+            <app-field-error-message controlName="receiverNameLikePassport"></app-field-error-message>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="receiverEnglishNameLikePassport"
+                   for="receiverEnglishNameLikePassport">{{lang.map.name_in_English_language_like_passport}}</label>
+            <input id="receiverEnglishNameLikePassport" validationClasses="receiverEnglishNameLikePassport"
+                   formControlName="receiverEnglishNameLikePassport"
+                   class="form-control" [readonly]="(readonly)">
+            <app-field-error-message controlName="receiverEnglishNameLikePassport"></app-field-error-message>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="receiverJobTitle"
+                   for="receiverJobTitle">{{lang.map.job_title}}</label>
+            <input id="receiverJobTitle" validationClasses="receiverJobTitle"
+                   formControlName="receiverJobTitle"
+                   class="form-control" [readonly]="(readonly)">
+            <app-field-error-message controlName="receiverJobTitle"></app-field-error-message>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="receiverNationality"
+                   for="receiverNationality">{{lang.map.lbl_nationality}}</label>
+            <ng-select validationClasses="receiverNationality" appendTo="body" [clearable]="false"
+                       id="receiverNationality"
+                       formControlName="receiverNationality" [readonly]="(readonly)">
+              <ng-option [value]="option.lookupKey"
+                         *ngFor="let option of nationalities">{{option.getName()}}</ng-option>
+            </ng-select>
+            <app-field-error-message controlName="receiverNationality"></app-field-error-message>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="receiverIdentificationNumber"
+                   for="receiverIdentificationNumber">{{lang.map.identification_number}}</label>
+            <input id="receiverIdentificationNumber" validationClasses="receiverIdentificationNumber"
+                   formControlName="receiverIdentificationNumber"
+                   class="form-control" [readonly]="(readonly)">
+            <app-field-error-message controlName="receiverIdentificationNumber"></app-field-error-message>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="receiverPassportNumber"
+                   for="receiverPassportNumber">{{lang.map.passport_number}}</label>
+            <input id="receiverPassportNumber" validationClasses="receiverPassportNumber"
+                   formControlName="receiverPassportNumber"
+                   class="form-control" [readonly]="(readonly)">
+            <app-field-error-message controlName="receiverPassportNumber"></app-field-error-message>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="receiverPhone1"
+                   for="receiverPhone1">{{lang.map.lbl_phone_1}}</label>
+            <input id="receiverPhone1" validationClasses="receiverPhone1"
+                   formControlName="receiverPhone1"
+                   class="form-control" [readonly]="(readonly)">
+            <app-field-error-message controlName="receiverPhone1"></app-field-error-message>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="receiverPhone2"
+                   for="receiverPhone2">{{lang.map.lbl_phone_2}}</label>
+            <input id="receiverPhone2" validationClasses="receiverPhone2"
+                   formControlName="receiverPhone2"
+                   class="form-control" [readonly]="(readonly)">
+            <app-field-error-message controlName="receiverPhone2"></app-field-error-message>
+          </div>
+        </div>
+      </ng-template>
+    </ng-container>
+    <ng-container formGroupName="financialTransactionInfo">
+      <ng-template #financial_transaction_info>
+        <div class="row">
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="qatariTransactionAmount"
+                   for="qatariTransactionAmount">{{lang.map.qatari_riyal_transaction_amount}}</label>
+            <input id="qatariTransactionAmount" validationClasses="qatariTransactionAmount"
+                   formControlName="qatariTransactionAmount"
+                   class="form-control" [readonly]="(readonly)">
+            <app-field-error-message controlName="qatariTransactionAmount"></app-field-error-message>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="currencyTransferTransactionAmount"
+                   for="currencyTransferTransactionAmount">{{lang.map.transaction_amount_in_transfer_currency}}</label>
+            <input id="currencyTransferTransactionAmount" validationClasses="currencyTransferTransactionAmount"
+                   formControlName="currencyTransferTransactionAmount"
+                   class="form-control" [readonly]="(readonly)">
+            <app-field-error-message controlName="currencyTransferTransactionAmount"></app-field-error-message>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="currency"
+                   for="currency">{{lang.map.currency}}</label>
+            <ng-select validationClasses="currency" appendTo="body" [clearable]="false"
+                       id="currency"
+                       formControlName="currency" [readonly]="(readonly)">
+              <ng-option [value]="option.lookupKey"
+                         *ngFor="let option of currencies">{{option.getName()}}</ng-option>
+            </ng-select>
+            <app-field-error-message controlName="currency"></app-field-error-message>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="transferMethod"
+                   for="transferMethod">{{lang.map.transfer_method}}</label>
+            <ng-select validationClasses="transferMethod" appendTo="body" [clearable]="false"
+                       id="transferMethod"
+                       formControlName="transferMethod" [readonly]="(readonly)">
+              <ng-option [value]="option.lookupKey"
+                         *ngFor="let option of transferMethods">{{option.getName()}}</ng-option>
+            </ng-select>
+            <app-field-error-message controlName="transferMethod"></app-field-error-message>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="transferringEntityName"
+                   for="transferringEntityName">{{lang.map.transferring_entity_name}}</label>
+            <input id="transferringEntityName" validationClasses="transferringEntityName"
+                   formControlName="transferringEntityName"
+                   class="form-control" [readonly]="(readonly)">
+            <app-field-error-message controlName="transferringEntityName"></app-field-error-message>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="transferType"
+                   for="transferType">{{lang.map.transferee_type}}</label>
+            <ng-select validationClasses="transferType" appendTo="body" [clearable]="false"
+                       id="transferType"
+                       formControlName="transferType" [readonly]="(readonly)">
+              <ng-option [value]="option.lookupKey"
+                         *ngFor="let option of transferTypes">{{option.getName()}}</ng-option>
+            </ng-select>
+            <app-field-error-message controlName="transferType"></app-field-error-message>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="transferFromIBAN"
+                   for="transferFromIBAN">{{lang.map.transfer_from_iban}}</label>
+            <input id="transferFromIBAN" validationClasses="transferFromIBAN"
+                   formControlName="transferFromIBAN"
+                   class="form-control" [readonly]="(readonly)">
+            <app-field-error-message controlName="transferFromIBAN"></app-field-error-message>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="transfereeIBAN"
+                   for="transfereeIBAN">{{lang.map.transferee_iban}}</label>
+            <input id="transfereeIBAN" validationClasses="transfereeIBAN"
+                   formControlName="transfereeIBAN"
+                   class="form-control" [readonly]="(readonly)">
+            <app-field-error-message controlName="transfereeIBAN"></app-field-error-message>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="transferCountry"
+                   for="transferCountry">{{lang.map.transferee_type}}</label>
+            <ng-select validationClasses="transferCountry" appendTo="body" [clearable]="false"
+                       id="transferCountry"
+                       formControlName="transferCountry" [readonly]="(readonly)">
+              <ng-option [value]="option.lookupKey"
+                         *ngFor="let option of countries">{{option.getName()}}</ng-option>
+            </ng-select>
+            <app-field-error-message controlName="transferCountry"></app-field-error-message>
+          </div>
+        </div>
+      </ng-template>
+    </ng-container>
+    <ng-container formGroupName="explanation">
+      <ng-template #special_explanations>
+        <div class="row">
+          <div class="col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="description"
+                   for="description">{{lang.map.special_explanations}}</label>
+            <textarea name="description" formControlName="description" validationClasses="description" id="description"
+                      rows="4" class="form-control" [readonly]="(readonly)"></textarea>
+            <app-field-error-message controlName="description"></app-field-error-message>
+          </div>
+        </div>
+      </ng-template>
+    </ng-container>
+  </ng-container>
+  <ng-template #attachmentsTab>
+    <attachments [caseId]="model?.id" [caseType]="model?.caseType"
+                 [service]="service.documentService"></attachments>
+  </ng-template>
+</div>
