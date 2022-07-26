@@ -69,7 +69,7 @@ const routes: Routes = [
     canActivate: [ServicesGuard],
     resolve: { info: ServiceItemResolver },
     data: {
-      permissionKey: EServicePermissions.EMPLOYMENT,
+      permissionKey: EServicePermissions.FOREIGN_COUNTRIES_PROJECTS,
       configPermissionGroup: null,
       checkAnyPermission: false,
       render: ForeignCountriesProjectsComponent.name

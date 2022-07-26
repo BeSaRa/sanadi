@@ -102,13 +102,15 @@ export class ForeignCountriesProjectsComponent
           title: this.lang.map.special_explanations,
           validStatus: () => this.form && this.specialExplanation?.valid,
         },
-        {
+      ];
+      if (!this.accordionView) {
+        this.tabs.push({
           name: 'attachmentsTab',
           template: tabsTemplates[tabsTemplates.length - 1],
           title: this.lang.map.attachments,
           validStatus: () => true,
-        },
-      ];
+        })
+      }
     }, 0);
   }
 
@@ -321,7 +323,6 @@ export class ForeignCountriesProjectsComponent
     throw new Error('Method not implemented.');
   }
   _destroyComponent(): void {
-    throw new Error('Method not implemented.');
   }
   _updateForm(model: ForeignCountriesProjects | undefined): void {
     throw new Error('Method not implemented.');
