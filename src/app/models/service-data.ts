@@ -1,11 +1,11 @@
-import {ServiceDataService} from '../services/service-data.service';
+import {ServiceDataService} from '@services/service-data.service';
 import {BaseModel} from './base-model';
 import {searchFunctionType} from '../types/types';
-import {FactoryService} from '../services/factory.service';
-import {LangService} from '../services/lang.service';
-import {LookupService} from '../services/lookup.service';
+import {FactoryService} from '@services/factory.service';
+import {LangService} from '@services/lang.service';
+import {LookupService} from '@services/lookup.service';
 import {AdminResult} from './admin-result';
-import {INames} from '../interfaces/i-names';
+import {INames} from '@contracts/i-names';
 import {CaseTypes} from '@app/enums/case-types.enum';
 
 export class ServiceData extends BaseModel<ServiceData, ServiceDataService> {
@@ -33,6 +33,7 @@ export class ServiceData extends BaseModel<ServiceData, ServiceDataService> {
   maxTargetAmount!: number;
   maxElementsCount!: number;
   activateDevelopmentField: boolean = false;
+  attachmentID!: number;
   sLA!: number;
   serviceReviewLimit!: number;
   followUp!:boolean;
@@ -63,7 +64,8 @@ export class ServiceData extends BaseModel<ServiceData, ServiceDataService> {
   hasCustomSettings() {
     return this.caseType == CaseTypes.EXTERNAL_PROJECT_MODELS ||
       this.caseType == CaseTypes.URGENT_INTERVENTION_LICENSING ||
-      this.caseType == CaseTypes.COLLECTOR_LICENSING;
+      this.caseType == CaseTypes.COLLECTOR_LICENSING ||
+      this.caseType === CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE;
   }
 
   isExternalProjectModels() {
@@ -76,5 +78,9 @@ export class ServiceData extends BaseModel<ServiceData, ServiceDataService> {
 
   isCollectorLicensing() {
     return this.caseType == CaseTypes.COLLECTOR_LICENSING;
+  }
+
+  isCustomExemption() {
+    return this.caseType == CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE;
   }
 }

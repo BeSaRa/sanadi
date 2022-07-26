@@ -7,6 +7,7 @@ import {Lookup} from './lookup';
 import {FileNetDocument} from '@app/models/file-net-document';
 import {AdminResult} from '@app/models/admin-result';
 import {searchFunctionType} from '@app/types/types';
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
 
 export class AttachmentType extends BaseModel<AttachmentType, AttachmentTypeService> {
   service!: AttachmentTypeService;
@@ -44,5 +45,12 @@ export class AttachmentType extends BaseModel<AttachmentType, AttachmentTypeServ
         id: this.id
       })
     });
+  }
+
+  isActive(): boolean {
+    if (typeof this.status === 'number') {
+      return this.status === CommonStatusEnum.ACTIVATED;
+    }
+    return this.status;
   }
 }
