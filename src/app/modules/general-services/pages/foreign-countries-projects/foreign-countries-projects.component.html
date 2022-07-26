@@ -226,7 +226,13 @@
       </div>
     </ng-template>
     <ng-template #tabContent>
-      <project-needs> </project-needs>
+      <project-needs
+        [caseType]="model?.caseType"
+        [list]="[]"
+        [readonly]="isCancelRequestType || !isEditAllowed"
+        (readyEvent)="projectNeedsTabStatus = $event"
+      >
+      </project-needs>
     </ng-template>
     <ng-template #tabContent>
       <div formGroupName="explanation" class="row">

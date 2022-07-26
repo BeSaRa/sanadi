@@ -1,19 +1,19 @@
-import { HttpClient } from "@angular/common/http";
-import { ComponentFactoryResolver, Injectable } from "@angular/core";
-import { DomSanitizer } from "@angular/platform-browser";
-import { CastResponseContainer } from "@app/decorators/decorators/cast-response";
-import { BaseGenericEService } from "@app/generics/base-generic-e-service";
-import { ILanguageKeys } from "@app/interfaces/i-language-keys";
-import { ForeignCountriesProjects } from "@app/models/foreign-countries-projects";
+import { HttpClient } from '@angular/common/http';
+import { ComponentFactoryResolver, Injectable } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
+import { CastResponseContainer } from '@app/decorators/decorators/cast-response';
+import { BaseGenericEService } from '@app/generics/base-generic-e-service';
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
+import { ForeignCountriesProjects } from '@app/models/foreign-countries-projects';
 import { ForeignCountriesProjectsResult } from '@app/models/foreign-countries-projects-results';
 import { ForeignCountriesProjectsSearchCriteria } from '@app/models/foreign-countries-projects-seach-criteria';
 import { ForeignCountriesProjectsComponent } from '@app/modules/general-services/pages/foreign-countries-projects/foreign-countries-projects.component';
 import { Observable } from 'rxjs';
-import { DialogService } from "./dialog.service";
-import { DynamicOptionsService } from "./dynamic-options.service";
-import { FactoryService } from "./factory.service";
+import { DialogService } from './dialog.service';
+import { DynamicOptionsService } from './dynamic-options.service';
+import { FactoryService } from './factory.service';
 import { LicenseService } from './license.service';
-import { UrlService } from "./url.service";
+import { UrlService } from './url.service';
 
 @CastResponseContainer({
   $default: {
@@ -22,12 +22,12 @@ import { UrlService } from "./url.service";
   },
 })
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class ForeignCountriesProjectsService extends BaseGenericEService<ForeignCountriesProjects> {
-  jsonSearchFile: string = "";
+  jsonSearchFile = 'foreign_countries_projects.json';
   serviceKey: keyof ILanguageKeys =
-    "menu_request_to_approve_projects_for_foreign_countries";
+    'menu_request_to_approve_projects_for_foreign_countries';
   caseStatusIconMap!: Map<number, string>;
   searchColumns: string[] = [];
   constructor(
@@ -40,21 +40,18 @@ export class ForeignCountriesProjectsService extends BaseGenericEService<Foreign
     private license: LicenseService
   ) {
     super();
-    FactoryService.registerService(
-      ForeignCountriesProjectsService.name,
-      this
-    );
+    FactoryService.registerService(ForeignCountriesProjectsService.name, this);
   }
   _getURLSegment(): string {
     return this._getUrlService().URLS.FOREIGN_COUNTRIES_PROJECTS;
   }
-  _getModel() {
+  _getModel(): typeof ForeignCountriesProjects {
     return ForeignCountriesProjects;
   }
   getSearchCriteriaModel<
     S extends ForeignCountriesProjects
   >(): ForeignCountriesProjects {
-    throw new ForeignCountriesProjects();
+    throw new ForeignCountriesProjectsSearchCriteria();
   }
   getCaseComponentName(): string {
     return ForeignCountriesProjectsComponent.name;
@@ -62,7 +59,9 @@ export class ForeignCountriesProjectsService extends BaseGenericEService<Foreign
   _getUrlService(): UrlService {
     return this.urlService;
   }
-  licenseSearch(criteria: Partial<ForeignCountriesProjectsSearchCriteria> = {}): Observable<ForeignCountriesProjectsResult[]> {
+  licenseSearch(
+    criteria: Partial<ForeignCountriesProjectsSearchCriteria> = {}
+  ): Observable<ForeignCountriesProjectsResult[]> {
     return this.license.foreignCountriesProjectsSearch(criteria);
   }
 }

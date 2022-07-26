@@ -11,6 +11,7 @@ import { ForeignCountriesProjectsService } from '@app/services/foreign-countries
 import { CustomValidators } from '@app/validators/custom-validators';
 import { AdminResult } from './admin-result';
 import { CaseModel } from './case-model';
+import { ProjectNeeds } from './project-needs';
 
 // tslint:disable-next-line: variable-name
 const _RequestType = mixinLicenseDurationType(mixinRequestType(CaseModel));
@@ -48,6 +49,7 @@ export class ForeignCountriesProjects
   recommendation!: string;
   entityClassification!: string;
   specialExplanation!: string;
+  projectNeeds!: ProjectNeeds;
 
   getExternalCooperationAuthority(): number {
     return this.externalCooperationAuthority;

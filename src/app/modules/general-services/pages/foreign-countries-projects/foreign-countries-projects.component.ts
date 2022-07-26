@@ -3,6 +3,7 @@ import {
   Component,
   QueryList,
   TemplateRef,
+  ViewChild,
   ViewChildren,
 } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
@@ -17,6 +18,7 @@ import { ForeignCountriesProjects } from '@app/models/foreign-countries-projects
 import { ForeignCountriesProjectsResult } from '@app/models/foreign-countries-projects-results';
 import { ForeignCountriesProjectsSearchCriteria } from '@app/models/foreign-countries-projects-seach-criteria';
 import { Lookup } from '@app/models/lookup';
+import { ProjectNeedsComponent } from '@app/modules/e-services-main/shared/project-needs/project-needs.component';
 import { CountryService } from '@app/services/country.service';
 import { DialogService } from '@app/services/dialog.service';
 import { ForeignCountriesProjectsService } from '@app/services/foreign-countries-projects.service';
@@ -64,6 +66,8 @@ export class ForeignCountriesProjectsComponent
 
   @ViewChildren('tabContent', { read: TemplateRef })
   tabsTemplates!: QueryList<TemplateRef<any>>;
+
+  @ViewChild(ProjectNeedsComponent) projectNeedsComponentRef!: ProjectNeedsComponent;
 
   constructor(
     public lang: LangService,
@@ -299,7 +303,8 @@ export class ForeignCountriesProjectsComponent
       ...this.model,
       ...this.basicInfo.getRawValue(),
       ...this.specialExplanation.getRawValue()
-    })
+    });
+    value.projectNeeds = this.projectNeedsComponentRef.list;
     return value;
   }
   _afterSave(
