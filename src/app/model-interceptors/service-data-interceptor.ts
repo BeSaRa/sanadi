@@ -12,42 +12,63 @@ export class ServiceDataInterceptor {
     model.updatedOnString = DateUtils.getDateStringFromDate(model.updatedOn, 'DEFAULT_DATE_FORMAT');
     model.updatedByInfo = AdminResult.createInstance(model.updatedByInfo);
 
+    let customSettings: ServiceCustomSettings;
     // parse custom settings string to model properties
-    let customSettingsOb = model.customSettings ? JSON.parse(model.customSettings) : new ServiceCustomSettings();
-    model.maxTargetAmount = customSettingsOb.maxTargetAmount!;
-    model.maxElementsCount = customSettingsOb?.maxElementsCount!;
-    model.activateDevelopmentField = customSettingsOb.activateDevelopmentField ? customSettingsOb.activateDevelopmentField : false;
+    try {
+      customSettings = model.customSettings ? JSON.parse(model.customSettings) : {};
+      customSettings = new ServiceCustomSettings().clone(customSettings);
+    }  catch (e) {
+      customSettings = new ServiceCustomSettings();
+    }
+    model.maxTargetAmount = customSettings.maxTargetAmount!;
+    model.maxElementsCount = customSettings.maxElementsCount!;
+    model.activateDevelopmentField = customSettings.activateDevelopmentField || false;
+    model.attachmentID = customSettings.attachmentID!;
 
     return model;
   }
 
   static send(model: Partial<ServiceData>): Partial<ServiceData> {
     model.caseType = Number(model.caseType);
+    ServiceDataInterceptor._setCustomSettingsForSend(model);
+    ServiceDataInterceptor._deleteBeforeSend(model);
+    return model;
+  }
 
-    let customSettings = new ServiceCustomSettings();
+  private static _setCustomSettingsForSend(model: Partial<ServiceData>): void {
     // stringify custom settings object
-    if(!(model as ServiceData).hasCustomSettings()) {
-      model.customSettings = "";
+    let record = (model as ServiceData);
+    if (!(model as ServiceData).hasCustomSettings()) {
+      model.customSettings = '';
     } else {
-      if((model as ServiceData).isUrgentInterventionLicensing()) {
+      let customSettings = new ServiceCustomSettings();
+      if (record.isUrgentInterventionLicensing()) {
         customSettings.maxTargetAmount = model.maxTargetAmount;
         delete customSettings.maxElementsCount;
-        // @ts-ignore
         delete customSettings.activateDevelopmentField;
-      } else if((model as ServiceData).isCollectorLicensing()) {
+        delete customSettings.attachmentID;
+      } else if (record.isCollectorLicensing()) {
         customSettings.maxElementsCount = model.maxElementsCount;
         delete customSettings.maxTargetAmount;
-        // @ts-ignore
         delete customSettings.activateDevelopmentField;
-      } else if((model as ServiceData).isExternalProjectModels()) {
-        customSettings.activateDevelopmentField = model.activateDevelopmentField!;
+        delete customSettings.attachmentID;
+      } else if (record.isExternalProjectModels()) {
+        customSettings.activateDevelopmentField = !!model.activateDevelopmentField;
         delete customSettings.maxTargetAmount;
         delete customSettings.maxElementsCount;
+        delete customSettings.attachmentID;
+      } else if (record.isCustomExemption()) {
+        customSettings.attachmentID = model.attachmentID!;
+        delete customSettings.maxTargetAmount;
+        delete customSettings.maxElementsCount;
+        delete customSettings.activateDevelopmentField;
       }
 
       model.customSettings = JSON.stringify(customSettings);
     }
+  }
 
+  private static _deleteBeforeSend(model: Partial<ServiceData>): void {
     delete model.service;
     delete model.langService;
     delete model.lookupService;
@@ -59,8 +80,6 @@ export class ServiceDataInterceptor {
     delete model.maxTargetAmount;
     delete model.maxElementsCount;
     delete model.activateDevelopmentField;
-
-    return model;
   }
 
 }
