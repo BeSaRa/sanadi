@@ -75,11 +75,6 @@ EmploymentService
       langKey: "employee_data",
       validStatus: () => this.employees.length,
     },
-    // attachments: {
-    //   name: 'attachmentsTab',
-    //   langKey: 'attachments',
-    //   validStatus: () => true
-    // },
   };
   constructor(
     public service: EmploymentService,

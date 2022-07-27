@@ -1,3 +1,4 @@
+import { WFResponseType } from './../enums/wfresponse-type.enum';
 import { Employee } from './employee';
 import { HasLicenseDurationType } from '@contracts/has-license-duration-type';
 import { CaseTypes } from '@app/enums/case-types.enum';
@@ -63,6 +64,6 @@ export class Employment
   }
 
   approve(): DialogRef {
-    return this.service.approve(this)
+    return this.service.approve(this, WFResponseType.APPROVE)
   }
 }

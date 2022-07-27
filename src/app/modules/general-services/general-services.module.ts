@@ -1,3 +1,4 @@
+import { ApproveEmploymentDateComponent } from './popups/approve-employment-date/approve-employment-date.component';
 import { EmploymentComponent } from './pages/employment/employment.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -20,7 +21,8 @@ import { EmploymentApproveComponent } from './popups/employment-approve/employme
     ConsultationComponent,
     InternationalCooperationComponent,
     EmploymentComponent,
-    EmploymentApproveComponent
+    EmploymentApproveComponent,
+    ApproveEmploymentDateComponent
   ],
   imports: [
     CommonModule,

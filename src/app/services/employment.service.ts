@@ -1,3 +1,5 @@
+import { WFResponseType } from './../enums/wfresponse-type.enum';
+import { IMyDateModel } from 'angular-mydatepicker';
 import { JobTitle } from './../models/job-title';
 import { Observable } from 'rxjs';
 import { EmployeeInterceptor } from './../model-interceptors/employee-interceptor';
@@ -55,6 +57,7 @@ export class EmploymentService extends BaseGenericEService<Employment> {
   jsonSearchFile: string = "employment_search-form.json";
   serviceKey: keyof ILanguageKeys = "menu_employment";
   onSubmit: EventEmitter<Partial<Employee>[]> = new EventEmitter();
+  onSetExpirDate: EventEmitter<IMyDateModel> = new EventEmitter();
 
   constructor(
     private urlService: UrlService,
@@ -136,7 +139,10 @@ export class EmploymentService extends BaseGenericEService<Employment> {
     return this.urlService;
   }
 
-  approve(model: Employment): DialogRef {
-    return this.dialog.show(EmploymentApproveComponent, model);
+  approve(model: Employment, action: WFResponseType): DialogRef {
+    return this.dialog.show(EmploymentApproveComponent, {
+      model,
+      action
+    });
   }
 }

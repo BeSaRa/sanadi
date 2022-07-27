@@ -626,6 +626,8 @@ export interface ILanguageKeys {
   occupation: string;
   workplace: string;
   employment_status: string;
+  approval_employment: string;
+  interim_contract_date: string;
   beneficiary_category: string;
   marital_status: string;
   educational_level: string;

@@ -12,7 +12,6 @@
       [template]="employeeInfoTabTemplate"
       [title]="lang.map.employee_data"
     ></tab>
-    <!-- <tab name="attachments" *ngIf="!accordionView" [template]="attachmentsTab" [title]="lang.map.attachments"></tab> -->
   </tabs-list>
 
   <ng-template #basicInfoTabTemplate>
@@ -175,8 +174,4 @@
     </div>
   </ng-template>
 
-  <!-- <ng-template #attachmentsTab>
-    <attachments [caseId]="model?.id" [caseType]="model?.caseType"
-                 [service]="service.documentService"></attachments>
-  </ng-template> -->
 </div>
