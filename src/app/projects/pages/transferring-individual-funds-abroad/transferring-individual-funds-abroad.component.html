@@ -10,18 +10,20 @@
          name="receiver_organization_info">
     </tab>
     <tab *ngIf="isExternalOrganizationTransferee" [template]="executive_management_info"
-         [title]="lang.map.executive_management_info" name="executive_management_info">
+         [title]="lang.map.executive_management_info" name="executive_management_info"
+         [hasError]="(selectedExecutives && selectedExecutives.length === 0) && isExternalOrganizationTransferee">
     </tab>
     <tab *ngIf="isIndividualTransferee" [hasError]="receiverPersonInfo.invalid" [template]="receiver_person_info"
          [title]="lang.map.receiver_person_info" name="receiver_person_info">
     </tab>
     <tab [template]="transfer_purpose_info" [title]="lang.map.transfer_purpose"
-         name="transfer_purpose_info">
+         name="transfer_purpose_info" [hasError]="(selectedPurposes && selectedPurposes.length === 0)">
     </tab>
     <tab [hasError]="financialTransactionInfo.invalid" [template]="financial_transaction_info"
          [title]="lang.map.financial_transaction_info" name="financial_transaction_info">
     </tab>
-    <tab [hasError]="specialExplanation.invalid" [template]="special_explanations" [title]="lang.map.special_explanations"
+    <tab [hasError]="specialExplanation.invalid" [template]="special_explanations"
+         [title]="lang.map.special_explanations"
          name="special_explanations"></tab>
     <tab *ngIf="!accordionView" [template]="attachmentsTab" [title]="lang.map.attachments" name="attachments"></tab>
   </tabs-list>
@@ -166,7 +168,7 @@
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="headQuarterType" class="form-label"
-                   for="headQuarterType">{{lang.map.transferee_type}}</label>
+                   for="headQuarterType">{{lang.map.headquarter_type}}</label>
             <ng-select [clearable]="false" [readonly]="(readonly)" appendTo="body"
                        formControlName="headQuarterType"
                        id="headQuarterType" validationClasses="headQuarterType">
@@ -392,7 +394,7 @@
                 </ng-container>
                 <ng-container cdkColumnDef="nationality">
                   <th *cdkHeaderCellDef cdk-header-cell sortable-header> {{lang.map.lbl_nationality}}</th>
-                  <td *cdkCellDef="let row" cdk-cell> {{row.executiveNationalityInfo.getName()}} </td>
+                  <td *cdkCellDef="let row" cdk-cell> {{row.executiveNationalityInfo?.getName() || ''}} </td>
                 </ng-container>
                 <ng-container cdkColumnDef="identificationNumber">
                   <th *cdkHeaderCellDef cdk-header-cell sortable-header> {{lang.map.identification_number}}</th>
@@ -625,11 +627,11 @@
                 <ng-container cdkColumnDef="projectType">
                   <th *cdkHeaderCellDef cdk-header-cell
                       sortable-header> {{lang.map.project_type}}</th>
-                  <td *cdkCellDef="let row" cdk-cell> {{row.projectTypeInfo.getName()}} </td>
+                  <td *cdkCellDef="let row" cdk-cell> {{row.projectTypeInfo?.getName() || ''}} </td>
                 </ng-container>
                 <ng-container cdkColumnDef="domain">
                   <th *cdkHeaderCellDef cdk-header-cell sortable-header> {{lang.map.domain}}</th>
-                  <td *cdkCellDef="let row" cdk-cell> {{row.domainInfo.getName()}} </td>
+                  <td *cdkCellDef="let row" cdk-cell> {{row.domainInfo?.getName() || ''}} </td>
                 </ng-container>
                 <ng-container cdkColumnDef="totalCost">
                   <th *cdkHeaderCellDef cdk-header-cell sortable-header> {{lang.map.total_cost}}</th>
@@ -637,11 +639,11 @@
                 </ng-container>
                 <ng-container cdkColumnDef="beneficiaryCountry">
                   <th *cdkHeaderCellDef cdk-header-cell sortable-header> {{lang.map.beneficiary_country}}</th>
-                  <td *cdkCellDef="let row" cdk-cell> {{row.beneficiaryCountryInfo.getName()}} </td>
+                  <td *cdkCellDef="let row" cdk-cell> {{row.beneficiaryCountryInfo?.getName() || ''}} </td>
                 </ng-container>
                 <ng-container cdkColumnDef="executionCountry">
                   <th *cdkHeaderCellDef cdk-header-cell sortable-header> {{lang.map.execution_country}}</th>
-                  <td *cdkCellDef="let row" cdk-cell> {{row.executionCountryInfo.getName()}} </td>
+                  <td *cdkCellDef="let row" cdk-cell> {{row.executionCountryInfo?.getName() || ''}} </td>
                 </ng-container>
                 <ng-container cdkColumnDef="actions">
                   <th *cdkHeaderCellDef cdk-header-cell> {{lang.map.lbl_actions}}</th>
@@ -678,7 +680,9 @@
                    for="qatariTransactionAmount">{{lang.map.qatari_riyal_transaction_amount}}</label>
             <input [readonly]="(readonly)" class="form-control"
                    formControlName="qatariTransactionAmount"
-                   id="qatariTransactionAmount" validationClasses="qatariTransactionAmount">
+                   id="qatariTransactionAmount" validationClasses="qatariTransactionAmount"
+                   [mask]="inputMaskPatterns.DECIMAL_WITH_SEPARATOR(2)"
+                   [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR">
             <app-field-error-message controlName="qatariTransactionAmount"></app-field-error-message>
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
@@ -686,7 +690,9 @@
                    for="currencyTransferTransactionAmount">{{lang.map.transaction_amount_in_transfer_currency}}</label>
             <input [readonly]="(readonly)" class="form-control"
                    formControlName="currencyTransferTransactionAmount"
-                   id="currencyTransferTransactionAmount" validationClasses="currencyTransferTransactionAmount">
+                   id="currencyTransferTransactionAmount" validationClasses="currencyTransferTransactionAmount"
+                   [mask]="inputMaskPatterns.DECIMAL_WITH_SEPARATOR(2)"
+                   [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR">
             <app-field-error-message controlName="currencyTransferTransactionAmount"></app-field-error-message>
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">

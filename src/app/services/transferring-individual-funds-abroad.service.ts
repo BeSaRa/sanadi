@@ -10,6 +10,8 @@ import {UrlService} from './url.service';
 import {FactoryService} from '@services/factory.service';
 import {TransferringIndividualFundsAbroadSearchCriteria} from '@app/models/transferring-individual-funds-abroad-search-criteria';
 import {CastResponseContainer} from '@decorators/cast-response';
+import {ExecutiveManagementListInterceptor} from '@app/model-interceptors/executive-management-list-interceptor';
+import {TransferFundsCharityPurposeInterceptor} from '@app/model-interceptors/transfer-funds-charity-purpose-interceptor';
 
 @CastResponseContainer({
   $default: {
@@ -34,6 +36,8 @@ export class TransferringIndividualFundsAbroadService extends BaseGenericEServic
   serviceKey: keyof ILanguageKeys = 'menu_transferring_individual_funds_abroad';
   caseStatusIconMap: Map<number, string> = new Map<number, string>();
   searchColumns: string[] = ['fullSerial', 'fullName', 'subject', 'caseStatus', 'creatorInfo', 'createdOn'];
+  executiveManagementListInterceptor: ExecutiveManagementListInterceptor = new ExecutiveManagementListInterceptor();
+  transferFundsCharityPurposeInterceptor: TransferFundsCharityPurposeInterceptor = new TransferFundsCharityPurposeInterceptor();
 
   _getURLSegment(): string {
     return this.urlService.URLS.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD;

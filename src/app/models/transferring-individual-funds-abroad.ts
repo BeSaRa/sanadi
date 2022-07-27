@@ -8,6 +8,7 @@ import {TransferFundsExecutiveManagement} from '@app/models/transfer-funds-execu
 import {CustomValidators} from '@app/validators/custom-validators';
 import {Validators} from '@angular/forms';
 import {TransferFundsCharityPurpose} from '@app/models/transfer-funds-charity-purpose';
+import {FactoryService} from '@services/factory.service';
 
 const interceptor = new TransferringIndividualFundsAbroadInterceptor();
 
@@ -122,6 +123,12 @@ export class TransferringIndividualFundsAbroad extends CaseModel<TransferringInd
   transferTypeInfo!: AdminResult;
   receiverNationalityInfo!: AdminResult;
 
+  constructor() {
+    super();
+    this.service = FactoryService.getService('TransferringIndividualFundsAbroadService');
+    this.employeeService = FactoryService.getService('EmployeeService');
+  }
+
   buildBasicInfo(controls: boolean = false): any {
     const {oldLicenseFullSerial, requestType, transfereeType} = this;
     return {
@@ -191,8 +198,8 @@ export class TransferringIndividualFundsAbroad extends CaseModel<TransferringInd
       transferringEntityName, transferType, transferFromIBAN, transfereeIBAN, transferCountry
     } = this;
     return {
-      qatariTransactionAmount: controls ? [qatariTransactionAmount, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(20)]] : qatariTransactionAmount,
-      currencyTransferTransactionAmount: controls ? [currencyTransferTransactionAmount, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(20)]] : currencyTransferTransactionAmount,
+      qatariTransactionAmount: controls ? [qatariTransactionAmount, [CustomValidators.required, CustomValidators.decimal(2), CustomValidators.maxLength(20)]] : qatariTransactionAmount,
+      currencyTransferTransactionAmount: controls ? [currencyTransferTransactionAmount, [CustomValidators.required, CustomValidators.decimal(2), CustomValidators.maxLength(20)]] : currencyTransferTransactionAmount,
       currency: controls ? [currency, [CustomValidators.required]] : currency,
       transferMethod: controls ? [transferMethod, [CustomValidators.required]] : transferMethod,
       transferringEntityName: controls ? [transferringEntityName, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),

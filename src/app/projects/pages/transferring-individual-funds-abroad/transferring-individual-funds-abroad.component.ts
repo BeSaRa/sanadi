@@ -27,6 +27,8 @@ import {AdminLookupTypeEnum} from '@app/enums/admin-lookup-type-enum';
 import {AdminLookup} from '@app/models/admin-lookup';
 import {TransferFundsCharityPurpose} from '@app/models/transfer-funds-charity-purpose';
 import {AdminResult} from '@app/models/admin-result';
+import {OrganizationOfficer} from '@app/models/organization-officer';
+import {UrgentJointReliefCampaign} from '@app/models/urgent-joint-relief-campaign';
 
 @Component({
   selector: 'transferring-individual-funds-abroad',
@@ -275,12 +277,17 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
   }
 
   _prepareModel(): TransferringIndividualFundsAbroad | Observable<TransferringIndividualFundsAbroad> {
-    let model = new TransferringIndividualFundsAbroad().clone({
+    return new TransferringIndividualFundsAbroad().clone({
       ...this.model,
-      // form
+      ...this.basicInfo.getRawValue(),
+      ...this.requesterInfo.getRawValue(),
+      ...this.receiverOrganizationInfo.getRawValue(),
+      ...this.receiverPersonInfo.getRawValue(),
+      ...this.financialTransactionInfo.getRawValue(),
+      ...this.specialExplanation.getRawValue(),
+      executiveManagementList: this.selectedExecutives,
+      charityPurposeTransferList: this.selectedPurposes
     });
-
-    return model;
   }
 
   _getNewInstance(): TransferringIndividualFundsAbroad {
@@ -288,7 +295,14 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
-    // add extra validation if exist
+    if(this.isExternalOrganizationTransferee && this.selectedExecutives.length < 1) {
+      this.dialog.error(this.lang.map.you_should_add_at_least_one_person_to_executives_list);
+    }
+
+    if(this.selectedPurposes.length < 1) {
+      this.dialog.error(this.lang.map.you_should_add_at_least_one_purpose_in_purposes);
+    }
+
     return this.form.valid;
   }
 
@@ -399,37 +413,31 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
 
   selectExecutive(event: MouseEvent, model: TransferFundsExecutiveManagement) {
     event.preventDefault();
-    this.selectedExecutive = model;
+    this.selectedExecutive = this.mapExecutiveToForm(model);
     this.executiveManagementForm.patchValue(this.selectedExecutive!);
     this.selectedExecutiveIndex = this.selectedExecutives
       .map(x => x.executiveIdentificationNumber).indexOf(model.executiveIdentificationNumber);
   }
 
   saveExecutive() {
-    const executive = {
-      ...this.selectedExecutive, ...this.executiveManagement.getRawValue()
-    } as TransferFundsExecutiveManagement;
-    executive.executiveNationalityInfo = AdminResult.createInstance(this.nationalities.find(x => x.lookupKey == executive.executiveNationality)!);
-    if (this.selectedExecutives.length === 0) {
-      executive.frontId = 1;
-    } else if (!executive.frontId) {
-      executive.frontId = Math.max(...(this.selectedExecutives.map(x => x.frontId))) + 1;
-    }
+    const executive = this.mapFormToExecutive(this.executiveManagementForm.getRawValue());
     if (!this.selectedExecutive) {
-      if (!this.selectedExecutives.some(p => p.executiveIdentificationNumber === executive.executiveIdentificationNumber)) {
+      if (!this.selectedExecutives.includes(executive)) {
         this.selectedExecutives = this.selectedExecutives.concat(executive);
       } else {
         this.dialog.error(this.lang.map.selected_item_already_exists);
       }
     } else {
-      const tempExecutives = this.selectedExecutives.slice().splice(this.selectedExecutiveIndex!, 1);
-      if (!tempExecutives.some(p => p.executiveIdentificationNumber === executive.executiveIdentificationNumber && p.frontId === executive.frontId)) {
+      let tempExecutives = this.selectedExecutives.slice();
+      tempExecutives = tempExecutives.splice(this.selectedExecutiveIndex!, 1);
+      if (!tempExecutives.map(x => x.executiveIdentificationNumber).includes(executive.executiveIdentificationNumber)) {
         this.selectedExecutives.splice(this.selectedExecutiveIndex!, 1);
         this.selectedExecutives = this.selectedExecutives.concat(executive);
       } else {
         this.dialog.error(this.lang.map.selected_item_already_exists);
       }
     }
+
     this.resetExecutiveForm();
   }
 
@@ -443,6 +451,35 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     event.preventDefault();
     this.selectedExecutives = this.selectedExecutives.filter(x => x.executiveIdentificationNumber != model.executiveIdentificationNumber);
     this.resetExecutiveForm();
+  }
+
+  mapFormToExecutive(form: any): TransferFundsExecutiveManagement {
+    const executive: TransferFundsExecutiveManagement = new TransferFundsExecutiveManagement();
+    executive.nameLikePassport = form.nameLikePassport;
+    executive.enNameLikePassport = form.enNameLikePassport;
+    executive.jobTitle = form.jobTitle;
+    executive.executiveNationality = form.executiveNationality;
+    executive.executiveIdentificationNumber = form.executiveIdentificationNumber;
+    executive.executivephone1 = form.executivephone1;
+    executive.executivephone2 = form.executivephone2;
+    executive.passportNumber = form.passportNumber;
+    executive.executiveNationalityInfo = AdminResult.createInstance(form.executiveNationalityInfo);
+
+    return executive;
+  }
+
+  mapExecutiveToForm(executive: TransferFundsExecutiveManagement): any {
+    return {
+      nameLikePassport: executive.nameLikePassport,
+      enNameLikePassport: executive.enNameLikePassport,
+      jobTitle: executive.jobTitle,
+      executiveNationality: executive.executiveNationality,
+      executiveIdentificationNumber: executive.executiveIdentificationNumber,
+      executivephone1: executive.executivephone1,
+      executivephone2: executive.executivephone2,
+      passportNumber: executive.passportNumber,
+      executiveNationalityInfo: executive.executiveNationalityInfo
+    };
   }
 
   selectPurpose(event: MouseEvent, model: TransferFundsCharityPurpose) {
@@ -522,11 +559,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
         this.isExternalOrganizationTransferee = false;
         this.dontRequireReceiverOrganizationInfoFields();
         this.requireReceiverPersonInfoFields();
-        // hide executive tap
-        // don't require executiveManagementList
-        // hide receiver organization tap
-        // reset receiverOrganizationInfo form
-        // show receiver person tap
+        this.selectedExecutives = [];
       });
   }
 
@@ -538,11 +571,6 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
         this.isExternalOrganizationTransferee = true;
         this.requireReceiverOrganizationInfoFields();
         this.dontRequireReceiverPersonInfoFields();
-        // show executive tap
-        // require executiveManagementList
-        // show receiver organization tap
-        // hide receiver person tap
-        // reset receiverPersonInfo form
       });
   }
 
@@ -552,14 +580,6 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
       .subscribe(_ => {
         this.isIndividualTransferee = false;
         this.isExternalOrganizationTransferee = false;
-        // hide executive tap
-        // don't require executiveManagementList
-        // hide receiver organization tap
-        // don't require receiverOrganizationInfo fields
-        // reset receiverOrganizationInfo form
-        // hide receiver person tap
-        // don't require receiver person fields
-        // reset receiverPersonInfo form
       });
   }
 
@@ -575,9 +595,9 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     this.postalCode.setValidators([CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(15)]);
     this.website.setValidators([CustomValidators.required, CustomValidators.maxLength(350)]);
     this.organizationEmail.setValidators([CustomValidators.required, Validators.email, CustomValidators.maxLength(CustomValidators.defaultLengths.EMAIL_MAX)]);
-    this.firstSocialMedia.setValidators([CustomValidators.required, CustomValidators.maxLength(350)]);
-    this.secondSocialMedia.setValidators([CustomValidators.required, CustomValidators.maxLength(350)]);
-    this.thirdSocialMedia.setValidators([CustomValidators.required, CustomValidators.maxLength(350)]);
+    this.firstSocialMedia.setValidators([CustomValidators.maxLength(350)]);
+    this.secondSocialMedia.setValidators([CustomValidators.maxLength(350)]);
+    this.thirdSocialMedia.setValidators([CustomValidators.maxLength(350)]);
   }
 
   dontRequireReceiverOrganizationInfoFields() {
@@ -595,6 +615,20 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     this.firstSocialMedia.setValidators([CustomValidators.maxLength(350)]);
     this.secondSocialMedia.setValidators([CustomValidators.maxLength(350)]);
     this.thirdSocialMedia.setValidators([CustomValidators.maxLength(350)]);
+    this.organizationArabicName.patchValue(null);
+    this.organizationEnglishName.patchValue(null);
+    this.headQuarterType.patchValue(null);
+    this.establishmentDate.patchValue(null);
+    this.country.patchValue(null);
+    this.region.patchValue(null);
+    this.city.patchValue(null);
+    this.detailsAddress.patchValue(null);
+    this.postalCode.patchValue(null);
+    this.website.patchValue(null);
+    this.organizationEmail.patchValue(null);
+    this.firstSocialMedia.patchValue(null);
+    this.secondSocialMedia.patchValue(null);
+    this.thirdSocialMedia.patchValue(null);
   }
 
   requireReceiverPersonInfoFields() {
@@ -617,6 +651,14 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     this.receiverPassportNumber.setValidators([CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]);
     this.receiverPhone1.setValidators(CustomValidators.commonValidations.phone);
     this.receiverPhone2.setValidators(CustomValidators.commonValidations.phone);
+    this.receiverNameLikePassport.patchValue(null);
+    this.receiverEnglishNameLikePassport.patchValue(null);
+    this.receiverJobTitle.patchValue(null);
+    this.receiverNationality.patchValue(null);
+    this.receiverIdentificationNumber.patchValue(null);
+    this.receiverPassportNumber.patchValue(null);
+    this.receiverPhone1.patchValue(null);
+    this.receiverPhone2.patchValue(null);
   }
 
   loadDacsAndOchas() {
