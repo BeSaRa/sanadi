@@ -1143,4 +1143,5 @@ export interface ILanguageKeys {
   lbl_edit_org_unit_field: string;
   requester_relation: string;
   requester_name: string;
+  notification_request_number: string;
 }
