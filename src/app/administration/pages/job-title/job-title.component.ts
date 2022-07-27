@@ -28,7 +28,6 @@ export class JobTitleComponent extends AdminGenericComponent<JobTitle, JobTitleS
               public service: JobTitleService,
               private dialogService: DialogService,
               private sharedService: SharedService,
-              private jobTitleService: JobTitleService,
               private toast: ToastService) {
     super();
   }
@@ -190,7 +189,7 @@ export class JobTitleComponent extends AdminGenericComponent<JobTitle, JobTitleS
   }
 
   changeStatusBulk($event: MouseEvent, newStatus: CommonStatusEnum): void {
-    const sub = this.jobTitleService.updateStatusBulk(this.selectedRecords.map(item => item.id), newStatus)
+    const sub = this.service.updateStatusBulk(this.selectedRecords.map(item => item.id), newStatus)
       .subscribe((response) => {
         this.sharedService.mapBulkResponseMessages(this.selectedRecords, 'id', response, 'UPDATE')
           .subscribe(() => {
