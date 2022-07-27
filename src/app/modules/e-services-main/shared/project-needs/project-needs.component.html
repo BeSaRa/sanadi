@@ -170,8 +170,8 @@
     <th cdk-header-cell *cdkHeaderCellDef>{{ lang.map.lbl_actions }}</th>
     <td cdk-cell *cdkCellDef="let row; let i = index" class="table-actions">
       <div class="d-flex flex-row">
-        <!-- <button
-          (click)="deleteBankAccount($event, row, i)"
+        <button
+          (click)="deleteRow($event, row, i)"
           class="icon-btn text-primary"
           [disabled]="readonly"
           tooltip="{{ lang.map.btn_delete }}"
@@ -179,7 +179,7 @@
           <i class="mdi mdi-close-box"></i>
         </button>
         <button
-          (click)="editBankAccount($event, row, i)"
+          (click)="editRow($event, row, i)"
           class="icon-btn text-primary"
           [disabled]="readonly"
           tooltip="{{ lang.map.btn_edit }}"
@@ -187,15 +187,15 @@
           <i class="mdi mdi-pen"></i>
         </button>
         <button
-          (click)="view($event, row, i)"
+          (click)="viewRow($event, row, i)"
           class="icon-btn text-primary"
           tooltip="{{ lang.map.view }}"
         >
           <i class="mdi mdi-eye"></i>
-        </button> -->
+        </button>
       </div>
     </td>
-    <td cdk-footer-cell *cdkFooterCellDef>{{ totalCost }}</td>
+    <td cdk-footer-cell *cdkFooterCellDef>{{ totalCost | number }}</td>
   </ng-container>
   <tr cdk-header-row *cdkHeaderRowDef="columns"></tr>
   <tr cdk-row *cdkRowDef="let row; columns: columns"></tr>

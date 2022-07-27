@@ -24,6 +24,7 @@ import { LicenseService } from '@app/services/license.service';
 import { HasLicenseApproval } from '@app/interfaces/has-license-approval';
 import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
 import { BaseGenericEService } from '@app/generics/base-generic-e-service';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'services-search',
@@ -83,6 +84,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
   }
 
   private search(value: Partial<CaseModel<any, any>>) {
+    console.log(value);
     const caseType = (this.selectedService.getSearchCriteriaModel()).caseType;
     let criteria = this.selectedService.getSearchCriteriaModel().clone(value).filterSearchFields(this.fieldsNames);
     criteria.caseType = caseType;
@@ -117,7 +119,6 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
       .subscribe((service: EServiceGenericService<any>) => {
         // this.updateRoute();
         this.selectedService = service;
-        console.log(this.selectedService);
         this.searchColumns = this.selectedService.searchColumns;
         if (this.employeeService.isExternalUser()) {
           this.searchColumns = this.searchColumns.filter(x => x !== 'organization' && x !== 'organizationId' && x !== 'ouInfo');
@@ -331,7 +332,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
       .pipe(skip(1))
       .pipe(filter(_ => this.form.valid))
       .pipe(map(_ => this.prepareCriteriaModel()));
-
+    console.log('333');
     const invalidForm$ = this.search$.pipe(filter(_ => this.form.invalid));
     const validEmptyForm$ = validForm$.pipe(filter(model => !model.criteriaHasValues()));
 

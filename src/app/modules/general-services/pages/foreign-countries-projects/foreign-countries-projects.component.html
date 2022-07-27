@@ -172,20 +172,20 @@
         </div>
 
         <div class="mb-4 position-relative">
-          <label for="description" class="form-label">{{
+          <label for="subject" class="form-label">{{
             lang.map.lbl_description
           }}</label>
           <textarea
-            id="description"
-            validationClasses="description"
+            id="subject"
+            validationClasses="subject"
             trimInput
             [readonly]="!isEditAllowed"
-            validationClasses="description"
-            formControlName="description"
+            validationClasses="subject"
+            formControlName="subject"
             class="form-control"
           ></textarea>
           <app-field-error-message
-            controlName="description"
+            controlName="subject"
           ></app-field-error-message>
         </div>
 
@@ -228,7 +228,7 @@
     <ng-template #tabContent>
       <project-needs
         [caseType]="model?.caseType"
-        [list]="[]"
+        [list]="model?.projectNeeds || []"
         [readonly]="isCancelRequestType || !isEditAllowed"
         (readyEvent)="projectNeedsTabStatus = $event"
       >
@@ -239,22 +239,22 @@
         <div class="col-sm-12 mb-4 position-relative">
           <label
             class="form-label"
-            asteriskIfRequired="specialExplanation"
-            for="specialExplanation"
+            asteriskIfRequired="description"
+            for="description"
             >{{ lang.map.special_explanations }}</label
           >
           <textarea
-            name="specialExplanation"
-            formControlName="specialExplanation"
-            validationClasses="specialExplanation"
-            id="specialExplanation"
+            name="description"
+            formControlName="description"
+            validationClasses="description"
+            id="description"
             rows="4"
             class="form-control"
             [readonly]="readonly"
             [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
           ></textarea>
           <app-field-error-message
-            controlName="specialExplanation"
+            controlName="description"
           ></app-field-error-message>
         </div>
       </div>

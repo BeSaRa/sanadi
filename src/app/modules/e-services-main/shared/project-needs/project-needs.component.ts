@@ -6,6 +6,7 @@ import {
   FormGroup,
 } from '@angular/forms';
 import { CaseTypes } from '@app/enums/case-types.enum';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
 import { ProjectNeed, ProjectNeeds } from '@app/models/project-needs';
 import { DialogService } from '@app/services/dialog.service';
 import { LangService } from '@app/services/lang.service';
@@ -42,6 +43,7 @@ export class ProjectNeedsComponent implements OnInit {
   @Input() caseType?: CaseTypes;
   @Input() set list(list: ProjectNeeds) {
     this._list = list;
+    this.totalCost = list.reduce((p, c) => p + +c.totalCost, 0);
     this.projectNeeds.next(this._list);
   }
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();
@@ -181,18 +183,46 @@ export class ProjectNeedsComponent implements OnInit {
   ) {
     if (record) {
       if (operation === 'ADD') {
-        this.totalCost += +record.totalCost;
         this.list.push(record);
       } else if (operation === 'UPDATE') {
-        this.totalCost += +record.totalCost;
-        this.totalCost -= +this.list[gridIndex].totalCost;
         this.list.splice(gridIndex, 1, record);
       } else if (operation === 'DELETE') {
-        this.totalCost -= +this.list[gridIndex].totalCost;
         this.list.splice(gridIndex, 1);
       }
     }
     this.list = this.list.slice();
     this.projectNeeds.next(this.list);
+  }
+
+  deleteRow($event: MouseEvent, record: ProjectNeed, index: number): any {
+    $event.preventDefault();
+    if (this.readonly) {
+      return;
+    }
+    this.dialogService
+      .confirm(this.lang.map.msg_confirm_delete_selected)
+      .onAfterClose$.pipe(take(1))
+      .subscribe((click: UserClickOn) => {
+        if (click === UserClickOn.YES) {
+          this._updateList(record, 'DELETE', index);
+          this.toastService.success(this.lang.map.msg_delete_success);
+        }
+      });
+  }
+
+  viewRow($event: MouseEvent, record: ProjectNeed, index: number) {
+    $event.preventDefault();
+    this.editRecordIndex = index;
+    this.viewOnly = true;
+    this.recordChanged$.next(record);
+  }
+  editRow($event: MouseEvent, record: ProjectNeed, index: number) {
+    $event.preventDefault();
+    if (this.readonly) {
+      return;
+    }
+    this.editRecordIndex = index;
+    this.viewOnly = false;
+    this.recordChanged$.next(record);
   }
 }

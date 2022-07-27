@@ -40,15 +40,17 @@ export class ForeignCountriesProjects
   caseType: number = CaseTypes.FOREIGN_COUNTRIES_PROJECTS;
   externalCooperationAuthority!: number;
   externalCooperationAuthorityInfo!: AdminResult;
+
   country!: number;
   countryInfo!: AdminResult;
+
   oldLicenseFullSerial!: string;
   needSubject!: string;
   justification!: string;
   description!: string;
   recommendation!: string;
+  subject!: string;
   entityClassification!: string;
-  specialExplanation!: string;
   projectNeeds!: ProjectNeeds;
 
   getExternalCooperationAuthority(): number {
@@ -58,9 +60,9 @@ export class ForeignCountriesProjects
     return this.requestType;
   }
   buildExplanation(controls: boolean = false): any {
-    const { specialExplanation } = this;
+    const { description } = this;
     return {
-      specialExplanation: controls ? [specialExplanation, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : specialExplanation,
+      description: controls ? [description, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : description,
     }
   }
   buildForm(withControls: boolean): IKeyValue {
@@ -70,7 +72,7 @@ export class ForeignCountriesProjects
       externalCooperationAuthority,
       country,
       justification,
-      description,
+      subject,
       recommendation,
       needSubject,
       entityClassification
@@ -89,9 +91,9 @@ export class ForeignCountriesProjects
       needSubject: withControls
         ? [needSubject, [CustomValidators.required]]
         : needSubject,
-      description: withControls
-        ? [description, [CustomValidators.required]]
-        : description,
+      subject: withControls
+        ? [subject, [CustomValidators.required]]
+        : subject,
       justification: withControls
         ? [justification, [CustomValidators.required]]
         : justification,

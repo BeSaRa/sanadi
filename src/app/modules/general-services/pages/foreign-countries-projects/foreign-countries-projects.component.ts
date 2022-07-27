@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   QueryList,
   TemplateRef,
@@ -76,7 +77,8 @@ export class ForeignCountriesProjectsComponent
     private lookupService: LookupService,
     private countryService: CountryService,
     private dialog: DialogService,
-    private licenseService: LicenseService
+    private licenseService: LicenseService,
+    private cd: ChangeDetectorRef
   ) {
     super();
   }
@@ -298,15 +300,14 @@ export class ForeignCountriesProjectsComponent
   _afterLaunch(): void {
     throw new Error('Method not implemented.');
   }
-  _prepareModel():
-    | ForeignCountriesProjects
-    | Observable<ForeignCountriesProjects> {
+  _prepareModel(): ForeignCountriesProjects | Observable<ForeignCountriesProjects> {
     const value = (new ForeignCountriesProjects()).clone({
       ...this.model,
       ...this.basicInfo.getRawValue(),
       ...this.specialExplanation.getRawValue()
     });
     value.projectNeeds = this.projectNeedsComponentRef.list;
+    console.log(value);
     return value;
   }
   _afterSave(
@@ -325,7 +326,12 @@ export class ForeignCountriesProjectsComponent
   _destroyComponent(): void {
   }
   _updateForm(model: ForeignCountriesProjects | undefined): void {
-    throw new Error('Method not implemented.');
+    this.model = model;
+    console.log
+    this.basicInfo.patchValue(this.model?.buildForm(false)!);
+    this.specialExplanation.patchValue(this.model?.buildExplanation(false)!);
+    this.handleRequestTypeChange(this.model?.requestType || 0, false);
+    this.cd.detectChanges();
   }
   _resetForm(): void {
     this.form.reset();

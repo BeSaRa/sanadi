@@ -29,7 +29,13 @@ export class ForeignCountriesProjectsService extends BaseGenericEService<Foreign
   serviceKey: keyof ILanguageKeys =
     'menu_request_to_approve_projects_for_foreign_countries';
   caseStatusIconMap!: Map<number, string>;
-  searchColumns: string[] = [];
+  searchColumns: string[] = [
+    'fullSerial',
+    'caseStatus',
+    'creatorInfo',
+    'createdOn',
+    'subject',
+  ];
   constructor(
     public http: HttpClient,
     public dialog: DialogService,
@@ -51,7 +57,7 @@ export class ForeignCountriesProjectsService extends BaseGenericEService<Foreign
   getSearchCriteriaModel<
     S extends ForeignCountriesProjects
   >(): ForeignCountriesProjects {
-    throw new ForeignCountriesProjectsSearchCriteria();
+    return new ForeignCountriesProjectsSearchCriteria();
   }
   getCaseComponentName(): string {
     return ForeignCountriesProjectsComponent.name;
