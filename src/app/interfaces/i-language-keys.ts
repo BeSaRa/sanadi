@@ -1,4 +1,9 @@
 export interface ILanguageKeys {
+  add_purpose: string;
+  add_executive: string;
+  transfer_purpose: string;
+  execution_period_in_months: string;
+  executive_management_info: string;
   transferee_iban: string;
   transfer_from_iban: string;
   transfer_method: string;

@@ -7,6 +7,7 @@ import {AdminResult} from '@app/models/admin-result';
 import {TransferFundsExecutiveManagement} from '@app/models/transfer-funds-executive-management';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {Validators} from '@angular/forms';
+import {TransferFundsCharityPurpose} from '@app/models/transfer-funds-charity-purpose';
 
 const interceptor = new TransferringIndividualFundsAbroadInterceptor();
 
@@ -52,6 +53,7 @@ export class TransferringIndividualFundsAbroad extends CaseModel<TransferringInd
   headQuarterType!: number;
   executionCountry!: number;
   executiveManagementList: TransferFundsExecutiveManagement[] = [];
+  charityPurposeTransferList: TransferFundsCharityPurpose[] = [];
   establishmentDate!: string;
   followUpDate!: string;
   identificationNumber!: string;
@@ -133,68 +135,61 @@ export class TransferringIndividualFundsAbroad extends CaseModel<TransferringInd
     const {identificationNumber, arName, enName, nationality, address, phone, mobileNo, email} = this;
     return {
       identificationNumber: controls ? [identificationNumber, [CustomValidators.required].concat(CustomValidators.commonValidations.qId)] : identificationNumber,
-      arName: controls ? [arName, [CustomValidators.required,
-        CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
-        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
-        CustomValidators.pattern('AR_NUM')]] : arName,
-      enName: controls ? [enName, [CustomValidators.required,
-        CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
-        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
-        CustomValidators.pattern('ENG_NUM')]] : enName,
+      arName: controls ? [arName, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('AR_NUM')]] : arName,
+      enName: controls ? [enName, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')]] : enName,
       nationality: controls ? [nationality, [CustomValidators.required]] : nationality,
       address: controls ? [address, [CustomValidators.required]] : address,
       phone: controls ? [phone, CustomValidators.commonValidations.phone] : phone,
       mobileNo: controls ? [mobileNo, [CustomValidators.required].concat(CustomValidators.commonValidations.mobileNo)] : mobileNo,
-      email: controls ? [email, CustomValidators.required, Validators.email, CustomValidators.maxLength(CustomValidators.defaultLengths.EMAIL_MAX)] : email
+      email: controls ? [email, [CustomValidators.required, Validators.email, CustomValidators.maxLength(CustomValidators.defaultLengths.EMAIL_MAX)]] : email
     };
   }
 
-  buildReceiverOrganizationInfo(controls: boolean = false): any {
-    const {organizationArabicName, organizationEnglishName, headQuarterType, establishmentDate, country, region, city,
-      detailsAddress, postalCode, website, organizationEmail, firstSocialMedia, secondSocialMedia, thirdSocialMedia} = this;
+  buildRequiredReceiverOrganizationInfo(controls: boolean = false): any {
+    const {
+      organizationArabicName, organizationEnglishName, headQuarterType, establishmentDate, country, region, city,
+      detailsAddress, postalCode, website, organizationEmail, firstSocialMedia, secondSocialMedia, thirdSocialMedia
+    } = this;
     return {
-      organizationArabicName: controls ? [organizationArabicName, [CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
-        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
-        CustomValidators.pattern('AR_NUM')]] : organizationArabicName,
-      organizationEnglishName: controls ? [organizationEnglishName, [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
-        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
-        CustomValidators.pattern('ENG_NUM')]] : organizationEnglishName,
-      headQuarterType: controls ? [headQuarterType] : headQuarterType,
-      establishmentDate: controls ? [establishmentDate] : establishmentDate,
-      country: controls ? [country] : country,
-      region: controls ? [region, [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : region,
-      city: controls ? [city, [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : city,
-      detailsAddress: controls ? [detailsAddress, [CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : detailsAddress,
-      postalCode: controls ? [postalCode, [CustomValidators.number, CustomValidators.maxLength(15)]] : postalCode,
-      website: controls ? [website, [CustomValidators.maxLength(350)]] : website,
-      organizationEmail: controls ? [organizationEmail, [Validators.email, CustomValidators.maxLength(CustomValidators.defaultLengths.EMAIL_MAX)]] : organizationEmail,
-      firstSocialMedia: controls ? [firstSocialMedia, [CustomValidators.maxLength(350)]] : firstSocialMedia,
-      secondSocialMedia: controls ? [secondSocialMedia, [CustomValidators.maxLength(350)]] : secondSocialMedia,
-      thirdSocialMedia: controls ? [thirdSocialMedia, [CustomValidators.maxLength(350)]] : thirdSocialMedia
+      organizationArabicName: controls ? [organizationArabicName, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('AR_NUM')]] : organizationArabicName,
+      organizationEnglishName: controls ? [organizationEnglishName, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')]] : organizationEnglishName,
+      headQuarterType: controls ? [headQuarterType, [CustomValidators.required ]] : headQuarterType,
+      establishmentDate: controls ? [establishmentDate, [CustomValidators.required ]] : establishmentDate,
+      country: controls ? [country, [CustomValidators.required ]] : country,
+      region: controls ? [region, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : region,
+      city: controls ? [city, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : city,
+      detailsAddress: controls ? [detailsAddress, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : detailsAddress,
+      postalCode: controls ? [postalCode, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(15)]] : postalCode,
+      website: controls ? [website, [CustomValidators.required, CustomValidators.maxLength(350)]] : website,
+      organizationEmail: controls ? [organizationEmail, [CustomValidators.required, Validators.email, CustomValidators.maxLength(CustomValidators.defaultLengths.EMAIL_MAX)]] : organizationEmail,
+      firstSocialMedia: controls ? [firstSocialMedia, [CustomValidators.required, CustomValidators.maxLength(350)]] : firstSocialMedia,
+      secondSocialMedia: controls ? [secondSocialMedia, [CustomValidators.required, CustomValidators.maxLength(350)]] : secondSocialMedia,
+      thirdSocialMedia: controls ? [thirdSocialMedia, [CustomValidators.required, CustomValidators.maxLength(350)]] : thirdSocialMedia,
     };
   }
 
-  buildReceiverPersonInfo(controls: boolean = false): any {
-    const {receiverNameLikePassport, receiverEnglishNameLikePassport, receiverJobTitle, receiverNationality,
-      receiverIdentificationNumber, receiverPassportNumber, receiverPhone1, receiverPhone2} = this;
+  buildRequiredReceiverPersonInfo(controls: boolean = false): any {
+    const {
+      receiverNameLikePassport, receiverEnglishNameLikePassport, receiverJobTitle, receiverNationality,
+      receiverIdentificationNumber, receiverPassportNumber, receiverPhone1, receiverPhone2
+    } = this;
     return {
-      receiverNameLikePassport: controls ? [receiverNameLikePassport, [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
-        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : receiverNameLikePassport,
-      receiverEnglishNameLikePassport: controls ? [receiverEnglishNameLikePassport, [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
-        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
-        CustomValidators.pattern('ENG_NUM')]] : receiverEnglishNameLikePassport,
-      receiverJobTitle: controls ? [receiverJobTitle, [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : receiverJobTitle,
-      receiverNationality: controls ? [receiverNationality] : receiverNationality,
-      receiverIdentificationNumber: controls ? [receiverIdentificationNumber, [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : receiverIdentificationNumber,
-      receiverPassportNumber: controls ? [receiverPassportNumber, [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : receiverPassportNumber,
-      receiverPhone1: controls ? [receiverPhone1, CustomValidators.commonValidations.phone] : receiverPhone1,
+      receiverNameLikePassport: controls ? [receiverNameLikePassport, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : receiverNameLikePassport,
+      receiverEnglishNameLikePassport: controls ? [receiverEnglishNameLikePassport, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')]] : receiverEnglishNameLikePassport,
+      receiverJobTitle: controls ? [receiverJobTitle, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : receiverJobTitle,
+      receiverNationality: controls ? [receiverNationality, [CustomValidators.required]] : receiverNationality,
+      receiverIdentificationNumber: controls ? [receiverIdentificationNumber, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : receiverIdentificationNumber,
+      receiverPassportNumber: controls ? [receiverPassportNumber, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : receiverPassportNumber,
+      receiverPhone1: controls ? [receiverPhone1, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : receiverPhone1,
       receiverPhone2: controls ? [receiverPhone2, CustomValidators.commonValidations.phone] : receiverPhone2,
     };
   }
 
   buildFinancialTransactionInfo(controls: boolean = false): any {
-    const {qatariTransactionAmount, currencyTransferTransactionAmount, currency, transferMethod,
-      transferringEntityName, transferType, transferFromIBAN, transfereeIBAN, transferCountry} = this;
+    const {
+      qatariTransactionAmount, currencyTransferTransactionAmount, currency, transferMethod,
+      transferringEntityName, transferType, transferFromIBAN, transfereeIBAN, transferCountry
+    } = this;
     return {
       qatariTransactionAmount: controls ? [qatariTransactionAmount, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(20)]] : qatariTransactionAmount,
       currencyTransferTransactionAmount: controls ? [currencyTransferTransactionAmount, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(20)]] : currencyTransferTransactionAmount,
@@ -213,6 +208,6 @@ export class TransferringIndividualFundsAbroad extends CaseModel<TransferringInd
     const {description} = this;
     return {
       description: controls ? [description, [CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)]] : description,
-    }
+    };
   }
 }
