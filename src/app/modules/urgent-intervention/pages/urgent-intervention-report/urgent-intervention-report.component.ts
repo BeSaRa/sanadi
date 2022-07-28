@@ -181,7 +181,7 @@ export class UrgentInterventionReportComponent extends EServicesGenericComponent
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
     if (!this.requestTypeField.value || ((this.requestTypeField.value === UrgentInterventionAnnouncementRequestType.START || this.requestTypeField.value === UrgentInterventionAnnouncementRequestType.EDIT) && !this.selectedLicense)) {
-      this.dialogService.error(this.lang.map.please_select_license_to_complete_save);
+      this.dialogService.error(this.lang.map.please_select_notification_request_number_to_complete_save);
       return false;
     } else {
       if (saveType === SaveTypes.DRAFT) {

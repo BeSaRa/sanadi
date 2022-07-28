@@ -423,6 +423,7 @@ export interface ILanguageKeys {
   view_license: string;
   license: string;
   please_select_license_to_complete_save: string;
+  please_select_notification_request_number_to_complete_save: string;
   license_status: string;
   office_english_name: string;
   office_arabic_name: string;
