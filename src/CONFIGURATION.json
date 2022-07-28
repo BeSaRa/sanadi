@@ -1,5 +1,5 @@
 {
-  "VERSION": "v1.4.12-rc#5",
+  "VERSION": "v1.4.12-rc#12",
   "ENVIRONMENTS_URLS": {
     "RACA_PROD": "http://VM-P-ES-CB-1.raca.local:9080/eservices/api/",
     "STAGING": "http://eblaepm.no-ip.org:5001/sanadi-services/api/",
@@ -53,7 +53,8 @@
     "MANAGE_DAC_OUCHA_CATEGORIES",
     "ADMIN_ADD_EDIT_BANK",
     "DONOR_MANAGEMENT",
-    "MANAGE_ORG_UNIT_FIELDS"
+    "MANAGE_ORG_UNIT_FIELDS",
+    "FIELD_ASSESSMENT_MANAGEMENT"
   ],
   "MANAGE_ORG_PERMISSIONS_GROUP": [
     "ADMIN_ADD_OU",
@@ -138,5 +139,6 @@
   "MAP_API_KEY": "AIzaSyC--IAJ4X9fxT2y8b6e-ooxxsMjzrwIOJ4",
   "BENEFICIARY_AUDIT_LIMIT": 50,
   "E_SERVICE_ITEM_KEY": "item",
-  "REPORTS_URL": "http://racabi/Reports/"
+  "REPORTS_URL": "http://racabi/Reports/",
+  "RESET_PASSWORD": "https://stgnas.gov.qa/self-service/reset/personal"
 }

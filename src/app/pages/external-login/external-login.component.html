@@ -39,6 +39,9 @@
                 <i class="mdi {{icon}}"></i>
               </button>
             </div>
+            <div class="d-flex justify-content-start  mb-3">
+              <a target="_blank" [href]="config.CONFIG.RESET_PASSWORD">{{lang.map.forget_password}}</a>
+            </div>
             <div class="d-flex flex-row mt-3 mb-3">
               <button tabindex="3" (click)="processLogin()" [disabled]="loginFromExternal.invalid"
                       class="shadow-sm btn d-block btn-primary flex-fill">{{lang.map.btn_login}}</button>
@@ -60,7 +63,8 @@
       </div>
     </div>
     <div class="position-relative w-100 h-100">
-      <div [style.background-image]="loginBackground"  class="position-absolute top-0 start-0 end-0 bottom-0 login-background">
+      <div [style.background-image]="loginBackground"
+           class="position-absolute top-0 start-0 end-0 bottom-0 login-background">
       </div>
     </div>
   </div>

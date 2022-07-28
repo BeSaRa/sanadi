@@ -12,6 +12,7 @@ import {AttachmentTypeServiceDataService} from '@app/services/attachment-type-se
 import {AttachmentTypeServiceData} from '@app/models/attachment-type-service-data';
 import {BackendWithDialogOperationsGenericService} from '@app/generics/backend-with-dialog-operations-generic-service';
 import {ComponentType} from '@angular/cdk/portal';
+import {Generator} from '@decorators/generator';
 
 @Injectable({
   providedIn: 'root'
@@ -48,25 +49,35 @@ export class AttachmentTypeService extends BackendWithDialogOperationsGenericSer
     return this.urlService.URLS.ATTACHMENT_TYPES;
   }
 
+  @Generator(undefined, true, {property: 'rs'})
+  private _loadByServiceId(serviceId: number): Observable<AttachmentType[]> {
+    return this.http.get<AttachmentType[]>(this._getServiceURL() + '/attachment-types/' + serviceId);
+  }
+
+  loadByServiceId(serviceId: number): Observable<AttachmentType[]> {
+    return this._loadByServiceId(serviceId);
+  }
+
   loadTypesByCaseType(caseId: number): Observable<AttachmentTypeServiceData[]> {
     return this.attachmentTypeServiceDataService.getByCaseType(caseId);
   }
-/*
-  openCreateDialog(): DialogRef {
-    return this.dialogService.show<IDialogData<AttachmentType>>(AttachmentTypesPopupComponent, {
-      model: new AttachmentType(),
-      operation: OperationTypes.CREATE
-    });
-  }
 
-  openUpdateDialog(modelId: number): Observable<DialogRef> {
-    return this.getById(modelId).pipe(
-      switchMap((attachmentType: AttachmentType) => {
-        return of(this.dialogService.show<IDialogData<AttachmentType>>(AttachmentTypesPopupComponent, {
-          model: attachmentType,
-          operation: OperationTypes.UPDATE
-        }));
-      })
-    );
-  }*/
+  /*
+    openCreateDialog(): DialogRef {
+      return this.dialogService.show<IDialogData<AttachmentType>>(AttachmentTypesPopupComponent, {
+        model: new AttachmentType(),
+        operation: OperationTypes.CREATE
+      });
+    }
+
+    openUpdateDialog(modelId: number): Observable<DialogRef> {
+      return this.getById(modelId).pipe(
+        switchMap((attachmentType: AttachmentType) => {
+          return of(this.dialogService.show<IDialogData<AttachmentType>>(AttachmentTypesPopupComponent, {
+            model: attachmentType,
+            operation: OperationTypes.UPDATE
+          }));
+        })
+      );
+    }*/
 }

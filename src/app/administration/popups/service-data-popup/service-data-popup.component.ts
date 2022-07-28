@@ -23,6 +23,8 @@ import {ChecklistService} from '@app/services/checklist.service';
 import {ServiceDataService} from '@app/services/service-data.service';
 import {DialogService} from '@app/services/dialog.service';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {AttachmentType} from '@app/models/attachment-type';
+import {AttachmentTypeService} from '@services/attachment-type.service';
 
 @Component({
   selector: 'service-data-popup',
@@ -51,6 +53,8 @@ export class ServiceDataPopupComponent implements OnInit, OnDestroy {
   showMaxTargetAmount = false;
   showMaxElementsCount = false;
   showActivateDevelopmentField = false;
+  showAttachmentTypeField = false;
+  attachmentTypesList: AttachmentType[] = [];
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<ServiceData>,
               private lookupService: LookupService,
@@ -58,6 +62,7 @@ export class ServiceDataPopupComponent implements OnInit, OnDestroy {
               private fb: FormBuilder,
               private toast: ToastService,
               private dialogRef: DialogRef,
+              private attachmentTypeService: AttachmentTypeService,
               private exceptionHandlerService: ExceptionHandlerService,
               private serviceDataStepsService: ServiceDataStepService,
               private checklistService: ChecklistService,
@@ -116,7 +121,8 @@ export class ServiceDataPopupComponent implements OnInit, OnDestroy {
       customSettings: this.fb.group({
         maxTargetAmount: [this.model.maxTargetAmount, [CustomValidators.number]],
         maxElementsCount: [this.model.maxElementsCount, [CustomValidators.number]],
-        activateDevelopmentField: [this.model.activateDevelopmentField]
+        activateDevelopmentField: [this.model.activateDevelopmentField],
+        attachmentID: [this.model.attachmentID]
       })
     });
     this.fm = new FormManager(this.form, this.lang);
@@ -168,6 +174,11 @@ export class ServiceDataPopupComponent implements OnInit, OnDestroy {
       this.maxElementsCount?.setValidators([CustomValidators.required, CustomValidators.number]);
       this.showMaxElementsCount = true;
     }
+    if (this.model.isCustomExemption()) {
+      this.attachmentTypeField?.setValidators([CustomValidators.required]);
+      this.showAttachmentTypeField = true;
+      this.loadAttachmentTypes();
+    }
   }
 
   get followUpStatus(): FormControl {
@@ -180,6 +191,10 @@ export class ServiceDataPopupComponent implements OnInit, OnDestroy {
 
   get maxElementsCount() {
     return this.form.get('customSettings.maxElementsCount');
+  }
+
+  get attachmentTypeField() {
+    return this.form.get('customSettings.attachmentID');
   }
 
   private loadSteps(): void {
@@ -205,7 +220,7 @@ export class ServiceDataPopupComponent implements OnInit, OnDestroy {
       .pipe(exhaustMap((model) => {
         return this.serviceDataStepsService.openEditStepDialog(model).onAfterClose$.pipe(catchError(_ => of(null)));
       }))
-      .subscribe(() => this.reloadSteps())
+      .subscribe(() => this.reloadSteps());
   }
 
   checklist(serviceDataStep: ServiceDataStep, $event: MouseEvent): void {
@@ -237,8 +252,17 @@ export class ServiceDataPopupComponent implements OnInit, OnDestroy {
         return this.serviceData.toggleFollowUpStatus(this.model.id, value).pipe(mapTo(value));
       }))
       .subscribe(res => {
-        this.toast.success(this.lang.map.msg_status_x_updated_success.change({x:this.lang.map.followup}))
-        this.model = this.model.clone({followUp: res})
+        this.toast.success(this.lang.map.msg_status_x_updated_success.change({x: this.lang.map.followup}));
+        this.model = this.model.clone({followUp: res});
       });
   }
+
+  private loadAttachmentTypes() {
+    this.attachmentTypeService.loadByServiceId(this.model.caseType)
+      .pipe(catchError(() => of([] as AttachmentType[])))
+      .subscribe(result => {
+        this.attachmentTypesList = result;
+      });
+  }
+
 }

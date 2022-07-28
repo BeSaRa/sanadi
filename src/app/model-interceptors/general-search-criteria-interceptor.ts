@@ -28,6 +28,7 @@ import {FundraisingInterceptor} from '@app/model-interceptors/fundraising-interc
 import {
   SearchUrgentInterventionReportCriteriaInterceptor
 } from '@app/search-criteria-interceptors/search-urgent-intervention-report-criteria-interceptor';
+import {ProjectModelInterceptor} from '@app/model-interceptors/project-model-interceptor';
 
 const interceptors: Map<number, IModelInterceptor<any>> = new Map<number, IModelInterceptor<any>>();
 
@@ -36,6 +37,7 @@ interceptors.set(CaseTypes.CONSULTATION, new ConsultationSearchCriteriaIntercept
 interceptors.set(CaseTypes.INTERNATIONAL_COOPERATION, new InternationalCooperationSearchCriteriaInterceptor());
 interceptors.set(CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL, new FinalExternalOfficeApprovalSearchCriteriaInterceptor());
 interceptors.set(CaseTypes.PARTNER_APPROVAL, new PartnerApprovalSearchCriteriaInterceptor());
+interceptors.set(CaseTypes.EXTERNAL_PROJECT_MODELS, new ProjectModelInterceptor());
 interceptors.set(CaseTypes.COLLECTION_APPROVAL, new CollectionApprovalSearchCriteriaInterceptor());
 interceptors.set(CaseTypes.COLLECTOR_LICENSING, new CollectorApprovalSearchCriteriaInterceptor());
 interceptors.set(CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN, new UrgentJointReliefCampaignSearchCriteriaInterceptor());
@@ -46,7 +48,7 @@ interceptors.set(CaseTypes.URGENT_INTERVENTION_REPORTING, new SearchUrgentInterv
 export class GeneralSearchCriteriaInterceptor implements IModelInterceptor<ICaseSearchCriteria> {
   // not important we will never use it
   receive(model: ICaseSearchCriteria): ICaseSearchCriteria {
-    const interceptor = interceptors.get(model.caseType!)
+    const interceptor = interceptors.get(model.caseType!);
     return interceptor ? interceptor.receive(interceptor.caseInterceptor ? interceptor.caseInterceptor.receive(model) : model) : identity(model);
   }
 

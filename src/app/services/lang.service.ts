@@ -1,30 +1,32 @@
-import {Inject, Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {UrlService} from './url.service';
-import {BehaviorSubject, Observable, of, Subject, Subscription} from 'rxjs';
-import {Localization} from '../models/localization';
-import {Language} from '../models/language';
-import {IAvailableLanguages} from '../interfaces/i-available-languages';
-import {DOCUMENT} from '@angular/common';
-import {Styles} from '../enums/styles.enum';
-import {delay, exhaustMap, map, switchMap, tap} from 'rxjs/operators';
-import {ILanguageKeys} from '../interfaces/i-language-keys';
-import {DialogService} from './dialog.service';
-import {FactoryService} from './factory.service';
-import {LocalizationPopupComponent} from '../shared/popups/localization-popup/localization-popup.component';
-import {DialogRef} from '../shared/models/dialog-ref';
-import {LocalizationInterceptor} from '../model-interceptors/localization-interceptor';
-import {OperationTypes} from '../enums/operation-types.enum';
-import {IDialogData} from '../interfaces/i-dialog-data';
-import {LangType, LocalizationMap} from '../types/types';
-import {BackendGenericService} from '../generics/backend-generic-service';
-import {ECookieService} from './e-cookie.service';
-import {ConfigurationService} from './configuration.service';
-import {EmployeeService} from './employee.service';
-import {AuthService} from './auth.service';
-import {Generator} from '../decorators/generator';
-import {ILoginData} from '../interfaces/i-login-data';
-import {IDefaultResponse} from '../interfaces/idefault-response';
+import { Inject, Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { UrlService } from './url.service';
+import { BehaviorSubject, Observable, of, Subject, Subscription } from 'rxjs';
+import { Localization } from '../models/localization';
+import { Language } from '../models/language';
+import { IAvailableLanguages } from '@contracts/i-available-languages';
+import { DOCUMENT } from '@angular/common';
+import { Styles } from '../enums/styles.enum';
+import { delay, exhaustMap, map, switchMap, tap } from 'rxjs/operators';
+import { ILanguageKeys } from '@contracts/i-language-keys';
+import { DialogService } from './dialog.service';
+import { FactoryService } from './factory.service';
+import { LocalizationPopupComponent } from '../shared/popups/localization-popup/localization-popup.component';
+import { DialogRef } from '../shared/models/dialog-ref';
+import { LocalizationInterceptor } from '../model-interceptors/localization-interceptor';
+import { OperationTypes } from '../enums/operation-types.enum';
+import { IDialogData } from '@contracts/i-dialog-data';
+import { LangType, LocalizationMap } from '../types/types';
+import { BackendGenericService } from '../generics/backend-generic-service';
+import { ECookieService } from './e-cookie.service';
+import { ConfigurationService } from './configuration.service';
+import { EmployeeService } from './employee.service';
+import { AuthService } from './auth.service';
+import { Generator } from '@decorators/generator';
+import { ILoginData } from '@contracts/i-login-data';
+import { IDefaultResponse } from '@contracts/idefault-response';
+import { UserTypes } from "@app/enums/user-types.enum";
+import { CommonService } from "@services/common.service";
 
 
 @Injectable({
@@ -61,6 +63,7 @@ export class LangService extends BackendGenericService<Localization> {
               private configurationService: ConfigurationService,
               private employeeService: EmployeeService,
               private authService: AuthService,
+              private commonService: CommonService,
               private urlService: UrlService) {
     super();
     FactoryService.registerService('LangService', this);
@@ -103,8 +106,8 @@ export class LangService extends BackendGenericService<Localization> {
     this.map = this.list.reduce<Record<keyof ILanguageKeys, string>>((acc: ILanguageKeys, current: Localization) => {
       const key = current.localizationKey as keyof ILanguageKeys;
       const currentLang = this.languageChange.value.code + 'Name' as keyof Localization;
-      return {...acc, [key]: current[currentLang]} as ILanguageKeys;
-    }, {lang: this.languageChange.value.code} as Record<keyof ILanguageKeys, string>);
+      return { ...acc, [key]: current[currentLang] } as ILanguageKeys;
+    }, { lang: this.languageChange.value.code } as Record<keyof ILanguageKeys, string>);
     return this.map;
   }
 
@@ -112,7 +115,7 @@ export class LangService extends BackendGenericService<Localization> {
   prepareLocalizationMap(): void {
     this.localizationMap = this.list.reduce<LocalizationMap>((acc, current) => {
       const localKey = current.localizationKey as keyof ILanguageKeys;
-      return {...acc, [localKey]: current};
+      return { ...acc, [localKey]: current };
     }, {} as LocalizationMap);
   }
 
@@ -133,7 +136,7 @@ export class LangService extends BackendGenericService<Localization> {
       .pipe(tap(_ => this.changeStatus$.next("Start")))
       .pipe(delay(300))
       .pipe(tap(_ => this.changeStatus$.next("InProgress")))
-      .pipe(exhaustMap(({language, silent}) => {
+      .pipe(exhaustMap(({ language, silent }) => {
         console.log('langDir', language.direction);
         this.changeHTMLDirection(language.direction);
         this.changeStyleHref(language.style);
@@ -163,6 +166,10 @@ export class LangService extends BackendGenericService<Localization> {
         sub = this._changeUserLanguage(code)
           .subscribe((result) => {
             this.authService.isAuthenticatedTrigger$.next(result);
+            if (result.type === UserTypes.INTERNAL) {
+              this.commonService.flags?.externalFollowUpPermission && this.employeeService.addFollowupPermission('EXTERNAL_FOLLOWUP')
+              this.commonService.flags?.internalFollowUpPermission && this.employeeService.addFollowupPermission('INTERNAL_FOLLOWUP')
+            }
             this.changeLanguage(lang);
             subscriber.next(lang);
             subscriber.complete();
@@ -178,7 +185,7 @@ export class LangService extends BackendGenericService<Localization> {
     });
   }
 
-  @Generator(undefined, false, {property: 'rs'})
+  @Generator(undefined, false, { property: 'rs' })
   private _changeUserLanguage(code: string): Observable<ILoginData> {
     return this.http.post<ILoginData>(this.urlService.URLS.AUTHENTICATE.replace('/nas/login', '') + '/lang/' + (code).toUpperCase(), undefined);
   }

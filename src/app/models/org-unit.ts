@@ -13,7 +13,7 @@ import {CustomValidators} from '@app/validators/custom-validators';
 import {Validators} from '@angular/forms';
 import {OrganizationUnitServicesService} from '@app/services/organization-unit-services.service';
 import {OrgUnitService} from '@app/models/org-unit-service';
-import {AdminResult} from '@app/models/admin-result';
+import {OrgStatusEnum} from '@app/enums/status.enum';
 
 export class OrgUnit extends BaseModel<OrgUnit, OrganizationUnitService> {
   phoneNumber1: string | undefined;
@@ -235,4 +235,11 @@ export class OrgUnit extends BaseModel<OrgUnit, OrganizationUnitService> {
     return orgUnitLinkedServicesService.loadLinkedServicesByOrgId(this.id);
   }
 
+  isActive(): boolean {
+    return this.status === OrgStatusEnum.ACTIVE;
+  }
+
+  isRetired(): boolean {
+    return this.status === OrgStatusEnum.RETIRED;
+  }
 }

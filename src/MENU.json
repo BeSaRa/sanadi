@@ -802,7 +802,7 @@
     "path": "/home/administration/field-assessment",
     "icon": "mdi-license",
     "isSvg": false,
-    "permission": "",
+    "permission": "FIELD_ASSESSMENT_MANAGEMENT",
     "permissionGroup": null,
     "parent": 6,
     "group": "administration",
