@@ -83,6 +83,8 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
   isExternalOrganizationTransferee!: boolean;
   isHumanitarian = true;
   isDevelopment = true;
+  addExecutiveFormActive!: boolean;
+  addPurposeFormActive!: boolean;
 
   constructor(public lang: LangService,
               public fb: FormBuilder,
@@ -424,134 +426,6 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     });
   }
 
-  selectExecutive(event: MouseEvent, model: TransferFundsExecutiveManagement) {
-    event.preventDefault();
-    this.selectedExecutive = this.mapExecutiveToForm(model);
-    this.executiveManagementForm.patchValue(this.selectedExecutive!);
-    this.selectedExecutiveIndex = this.selectedExecutives
-      .map(x => x.executiveIdentificationNumber).indexOf(model.executiveIdentificationNumber);
-  }
-
-  saveExecutive() {
-    const executive = this.mapFormToExecutive(this.executiveManagementForm.getRawValue());
-    if (!this.selectedExecutive) {
-      if (!this.selectedExecutives.includes(executive)) {
-        this.selectedExecutives = this.selectedExecutives.concat(executive);
-      } else {
-        this.dialog.error(this.lang.map.selected_item_already_exists);
-      }
-    } else {
-      let tempExecutives = this.selectedExecutives.slice();
-      tempExecutives = tempExecutives.splice(this.selectedExecutiveIndex!, 1);
-      if (!tempExecutives.map(x => x.executiveIdentificationNumber).includes(executive.executiveIdentificationNumber)) {
-        this.selectedExecutives.splice(this.selectedExecutiveIndex!, 1);
-        this.selectedExecutives = this.selectedExecutives.concat(executive);
-      } else {
-        this.dialog.error(this.lang.map.selected_item_already_exists);
-      }
-    }
-
-    this.resetExecutiveForm();
-  }
-
-  resetExecutiveForm() {
-    this.selectedExecutive = null;
-    this.selectedExecutiveIndex = null;
-    this.executiveManagementForm.reset();
-  }
-
-  removeExecutive(event: MouseEvent, model: TransferFundsExecutiveManagement) {
-    event.preventDefault();
-    this.selectedExecutives = this.selectedExecutives.filter(x => x.executiveIdentificationNumber != model.executiveIdentificationNumber);
-    this.resetExecutiveForm();
-  }
-
-  mapFormToExecutive(form: any): TransferFundsExecutiveManagement {
-    const executive: TransferFundsExecutiveManagement = new TransferFundsExecutiveManagement();
-    executive.nameLikePassport = form.nameLikePassport;
-    executive.enNameLikePassport = form.enNameLikePassport;
-    executive.jobTitle = form.jobTitle;
-    executive.executiveNationality = form.executiveNationality;
-    executive.executiveIdentificationNumber = form.executiveIdentificationNumber;
-    executive.executivephone1 = form.executivephone1;
-    executive.executivephone2 = form.executivephone2;
-    executive.passportNumber = form.passportNumber;
-    executive.executiveNationalityInfo = AdminResult.createInstance(form.executiveNationalityInfo);
-
-    return executive;
-  }
-
-  mapExecutiveToForm(executive: TransferFundsExecutiveManagement): any {
-    return {
-      nameLikePassport: executive.nameLikePassport,
-      enNameLikePassport: executive.enNameLikePassport,
-      jobTitle: executive.jobTitle,
-      executiveNationality: executive.executiveNationality,
-      executiveIdentificationNumber: executive.executiveIdentificationNumber,
-      executivephone1: executive.executivephone1,
-      executivephone2: executive.executivephone2,
-      passportNumber: executive.passportNumber,
-      executiveNationalityInfo: executive.executiveNationalityInfo
-    };
-  }
-
-  selectPurpose(event: MouseEvent, model: TransferFundsCharityPurpose) {
-    event.preventDefault();
-    this.selectedPurpose = model;
-    this.transferPurposeForm.patchValue(this.selectedPurpose!);
-    this.selectedPurposeIndex = this.selectedPurposes.indexOf(model);
-  }
-
-  savePurpose() {
-    const purpose = this.transferPurpose.getRawValue() as TransferFundsCharityPurpose;
-    purpose.projectTypeInfo = AdminResult.createInstance(this.projectTypes.find(x => x.lookupKey == purpose.projectType)!);
-    purpose.domainInfo = AdminResult.createInstance(this.domains.find(x => x.lookupKey == purpose.domain)!);
-    purpose.mainUNOCHACategoryInfo = AdminResult.createInstance(this.mainOchas.find(x => x.id == purpose.mainUNOCHACategory)!);
-    purpose.mainDACCategoryInfo = AdminResult.createInstance(this.mainDacs.find(x => x.id == purpose.mainDACCategory)!);
-    purpose.beneficiaryCountryInfo = AdminResult.createInstance(this.countries.find(x => x.id == purpose.beneficiaryCountry)!);
-    purpose.executionCountryInfo = AdminResult.createInstance(this.countries.find(x => x.id == purpose.executionCountry)!);
-    if (!this.selectedPurpose) {
-      if (!this.isDuplicatedPurpose(purpose)) {
-        this.selectedPurposes = this.selectedPurposes.concat(purpose);
-      } else {
-        this.dialog.error(this.lang.map.selected_item_already_exists);
-      }
-    } else {
-      if (!this.selectedPurposes.filter(x => x != purpose).includes(purpose)) {
-        this.selectedPurposes.splice(this.selectedPurposeIndex!, 1);
-        this.selectedPurposes = this.selectedPurposes.concat(purpose);
-      } else {
-        this.dialog.error(this.lang.map.selected_item_already_exists);
-      }
-    }
-
-    this.resetPurposeForm();
-  }
-
-  isDuplicatedPurpose(purpose: TransferFundsCharityPurpose) {
-    return this.selectedPurposes.some(p =>
-      p.projectName === purpose.projectName &&
-      p.projectType === purpose.projectType &&
-      p.totalCost === purpose.totalCost &&
-      p.projectImplementationPeriod === purpose.projectImplementationPeriod &&
-      p.domain === purpose.domain &&
-      p.beneficiaryCountry === purpose.beneficiaryCountry &&
-      p.executionCountry === purpose.executionCountry
-    );
-  }
-
-  resetPurposeForm() {
-    this.selectedPurpose = null;
-    this.selectedPurposeIndex = null;
-    this.transferPurposeForm.reset();
-  }
-
-  removePurpose(event: MouseEvent, model: TransferFundsCharityPurpose) {
-    event.preventDefault();
-    this.selectedPurposes = this.selectedPurposes.filter(x => x != model);
-    this.resetPurposeForm();
-  }
-
   listenToTransfereeTypeChange() {
     this.transfereeType.valueChanges.subscribe(value => {
       if (value === TransfereeTypeEnum.INDIVIDUAL) {
@@ -739,5 +613,203 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     this.mainUNOCHACategory.setValidators([]);
     this.mainUNOCHACategory.updateValueAndValidity();
     this.isHumanitarian = true;
+  }
+
+  // add/edit executive functionality
+  openAddExecutiveForm() {
+    this.addExecutiveFormActive = true;
+  }
+
+  selectExecutive(event: MouseEvent, model: TransferFundsExecutiveManagement) {
+    this.addExecutiveFormActive = true;
+    event.preventDefault();
+    this.selectedExecutive = model;
+    this.executiveManagementForm.patchValue(this.selectedExecutive!);
+    this.selectedExecutiveIndex = this.selectedExecutives
+      .map(x => x.executiveIdentificationNumber).indexOf(model.executiveIdentificationNumber);
+  }
+
+  saveExecutive() {
+    const executive = this.executiveManagementForm.getRawValue();
+    if (!this.selectedExecutive) {
+      if (!this.isExistExecutiveInCaseOfAdd(this.selectedExecutives, executive)) {
+        this.selectedExecutives = this.selectedExecutives.concat(executive);
+        this.resetExecutiveForm();
+        this.addExecutiveFormActive = false;
+      } else {
+        this.dialog.error(this.lang.map.selected_item_already_exists);
+      }
+    } else {
+      if (!this.isExistExecutiveInCaseOfEdit(this.selectedExecutives, executive, this.selectedExecutiveIndex!)) {
+        // this.selectedExecutives.splice(this.selectedExecutiveIndex!, 1);
+        let newList = this.selectedExecutives.slice();
+        newList.splice(this.selectedExecutiveIndex!, 1);
+        newList.splice(this.selectedExecutiveIndex!, 0, executive);
+        this.selectedExecutives = newList;
+        this.resetExecutiveForm();
+        this.addExecutiveFormActive = false;
+      } else {
+        this.dialog.error(this.lang.map.selected_item_already_exists);
+      }
+    }
+  }
+
+  cancelAddExecutive() {
+    this.resetExecutiveForm();
+    this.addExecutiveFormActive = false;
+  }
+
+  isExistExecutiveInCaseOfAdd(selectedExecutives: TransferFundsExecutiveManagement[], toBeAddedExecutive: TransferFundsExecutiveManagement): boolean {
+    return selectedExecutives.some(x => x.executiveIdentificationNumber === toBeAddedExecutive.executiveIdentificationNumber);
+  }
+
+  isExistExecutiveInCaseOfEdit(selectedExecutives: TransferFundsExecutiveManagement[], toBeEditedExecutive: TransferFundsExecutiveManagement, selectedIndex: number): boolean {
+    for (let i = 0; i < selectedExecutives.length; i++) {
+      if(i === selectedIndex) {
+        continue;
+      }
+
+      if(selectedExecutives[i].executiveIdentificationNumber === toBeEditedExecutive.executiveIdentificationNumber) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  resetExecutiveForm() {
+    this.selectedExecutive = null;
+    this.selectedExecutiveIndex = null;
+    this.executiveManagementForm.reset();
+  }
+
+  removeExecutive(event: MouseEvent, model: TransferFundsExecutiveManagement) {
+    event.preventDefault();
+    this.selectedExecutives = this.selectedExecutives.filter(x => x.executiveIdentificationNumber != model.executiveIdentificationNumber);
+    this.resetExecutiveForm();
+  }
+
+  // mapFormToExecutive(form: any): TransferFundsExecutiveManagement {
+  //   const executive: TransferFundsExecutiveManagement = new TransferFundsExecutiveManagement();
+  //   executive.nameLikePassport = form.nameLikePassport;
+  //   executive.enNameLikePassport = form.enNameLikePassport;
+  //   executive.jobTitle = form.jobTitle;
+  //   executive.executiveNationality = form.executiveNationality;
+  //   executive.executiveIdentificationNumber = form.executiveIdentificationNumber;
+  //   executive.executivephone1 = form.executivephone1;
+  //   executive.executivephone2 = form.executivephone2;
+  //   executive.passportNumber = form.passportNumber;
+  //   executive.executiveNationalityInfo = AdminResult.createInstance(form.executiveNationalityInfo);
+  //
+  //   return executive;
+  // }
+  //
+  // mapExecutiveToForm(executive: TransferFundsExecutiveManagement): any {
+  //   return {
+  //     nameLikePassport: executive.nameLikePassport,
+  //     enNameLikePassport: executive.enNameLikePassport,
+  //     jobTitle: executive.jobTitle,
+  //     executiveNationality: executive.executiveNationality,
+  //     executiveIdentificationNumber: executive.executiveIdentificationNumber,
+  //     executivephone1: executive.executivephone1,
+  //     executivephone2: executive.executivephone2,
+  //     passportNumber: executive.passportNumber,
+  //     executiveNationalityInfo: executive.executiveNationalityInfo
+  //   };
+  // }
+
+  // add/edit purpose functionality
+  openAddPurposeForm() {
+    this.addPurposeFormActive = true;
+  }
+
+  selectPurpose(event: MouseEvent, model: TransferFundsCharityPurpose) {
+    event.preventDefault();
+    model = new TransferFundsCharityPurpose().clone(model);
+    this.addPurposeFormActive = true;
+    this.selectedPurpose = model;
+    this.transferPurposeForm.patchValue(this.selectedPurpose!);
+    this.selectedPurposeIndex = this.getSelectedPurposeIndex(this.selectedPurposes, model);
+  }
+
+  getSelectedPurposeIndex(purposes: TransferFundsCharityPurpose[], purpose: TransferFundsCharityPurpose): number | null {
+    for(let i = 0; i < purposes.length; i++) {
+      if(purposes[i].isEqual(purpose)) {
+        return i;
+      }
+    }
+
+    return null;
+  }
+
+  savePurpose() {
+    const purpose = this.setPurposeInfoProperties(new TransferFundsCharityPurpose().clone(this.transferPurpose.getRawValue() as TransferFundsCharityPurpose));
+    if (!this.selectedPurpose) {
+      if (!this.isExistPurposeInCaseOfAdd(this.selectedPurposes, purpose)) {
+        this.selectedPurposes = this.selectedPurposes.concat(purpose);
+        this.resetPurposeForm();
+        this.addPurposeFormActive = false;
+      } else {
+        this.dialog.error(this.lang.map.selected_item_already_exists);
+      }
+    } else {
+      if (!this.isExistPurposeInCaseOfEdit(this.selectedPurposes, purpose, this.selectedPurposeIndex!)) {
+        // this.selectedPurposes.splice(this.selectedPurposeIndex!, 1);
+        let newList = this.selectedPurposes.slice();
+        newList.splice(this.selectedPurposeIndex!, 1);
+        newList.splice(this.selectedPurposeIndex!, 0, purpose);
+        this.selectedPurposes = newList;
+        this.resetPurposeForm();
+        this.addPurposeFormActive = false;
+      } else {
+        this.dialog.error(this.lang.map.selected_item_already_exists);
+      }
+    }
+  }
+
+  setPurposeInfoProperties(purpose: TransferFundsCharityPurpose): TransferFundsCharityPurpose {
+    purpose.projectTypeInfo = AdminResult.createInstance(this.projectTypes.find(x => x.lookupKey == purpose.projectType)!);
+    purpose.domainInfo = AdminResult.createInstance(this.domains.find(x => x.lookupKey == purpose.domain)!);
+    purpose.mainUNOCHACategoryInfo = AdminResult.createInstance(this.mainOchas.find(x => x.id == purpose.mainUNOCHACategory)!);
+    purpose.mainDACCategoryInfo = AdminResult.createInstance(this.mainDacs.find(x => x.id == purpose.mainDACCategory)!);
+    purpose.beneficiaryCountryInfo = AdminResult.createInstance(this.countries.find(x => x.id == purpose.beneficiaryCountry)!);
+    purpose.executionCountryInfo = AdminResult.createInstance(this.countries.find(x => x.id == purpose.executionCountry)!);
+
+    return purpose;
+  }
+
+  cancelAddPurpose() {
+    this.resetPurposeForm();
+    this.addPurposeFormActive = false;
+  }
+
+  isExistPurposeInCaseOfAdd(selectedPurposes: TransferFundsCharityPurpose[], toBeAddedPurpose: TransferFundsCharityPurpose): boolean {
+    return selectedPurposes.some(x =>
+      x.isEqual(toBeAddedPurpose)
+    );
+  }
+
+  isExistPurposeInCaseOfEdit(selectedPurposes: TransferFundsCharityPurpose[], toBeEditedPurpose: TransferFundsCharityPurpose, selectedIndex: number): boolean {
+    for (let i = 0; i < selectedPurposes.length; i++) {
+      if(i === selectedIndex) {
+        continue;
+      }
+
+      if(selectedPurposes[i].isEqual(toBeEditedPurpose)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  resetPurposeForm() {
+    this.selectedPurpose = null;
+    this.selectedPurposeIndex = null;
+    this.transferPurposeForm.reset();
+  }
+
+  removePurpose(event: MouseEvent, model: TransferFundsCharityPurpose) {
+    event.preventDefault();
+    this.selectedPurposes = this.selectedPurposes.filter(x => x.isNotEqual(model));
+    this.resetPurposeForm();
   }
 }
