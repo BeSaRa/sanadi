@@ -21,10 +21,10 @@ import {CustomValidators} from '@app/validators/custom-validators';
 })
 export class ChecklistItemPopupComponent extends AdminGenericDialog<ChecklistItem> {
   form!: FormGroup;
-  fm!: FormManager;
   model!: ChecklistItem;
   operation!: OperationTypes;
   stepId!: number;
+  saveVisible = true;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<ChecklistItem>,
               public fb: FormBuilder,
@@ -49,7 +49,12 @@ export class ChecklistItemPopupComponent extends AdminGenericDialog<ChecklistIte
 
   buildForm(): void {
     this.form = this.fb.group(this.model.buildForm(true));
-    this.fm = new FormManager(this.form, this.lang);
+
+    if (this.operation === OperationTypes.VIEW) {
+      this.form.disable();
+      this.saveVisible = false;
+      this.validateFieldsVisible = false;
+    }
   }
 
   prepareModel(model: ChecklistItem, form: FormGroup): ChecklistItem | Observable<ChecklistItem> {

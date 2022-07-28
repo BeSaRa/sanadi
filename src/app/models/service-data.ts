@@ -7,6 +7,16 @@ import {LookupService} from '@services/lookup.service';
 import {AdminResult} from './admin-result';
 import {INames} from '@contracts/i-names';
 import {CaseTypes} from '@app/enums/case-types.enum';
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import {InterceptModel} from '@decorators/intercept-model';
+import {ServiceDataInterceptor} from '@app/model-interceptors/service-data-interceptor';
+
+const interceptor: ServiceDataInterceptor = new ServiceDataInterceptor();
+
+@InterceptModel({
+  receive: interceptor.receive,
+  send: interceptor.send
+})
 
 export class ServiceData extends BaseModel<ServiceData, ServiceDataService> {
   caseType!: number;
@@ -36,7 +46,7 @@ export class ServiceData extends BaseModel<ServiceData, ServiceDataService> {
   attachmentID!: number;
   sLA!: number;
   serviceReviewLimit!: number;
-  followUp!:boolean;
+  followUp!: boolean;
 
   service: ServiceDataService;
   langService: LangService;
@@ -82,5 +92,9 @@ export class ServiceData extends BaseModel<ServiceData, ServiceDataService> {
 
   isCustomExemption() {
     return this.caseType == CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE;
+  }
+
+  updateStatus(newStatus: CommonStatusEnum): any {
+    return this.service.updateStatus(this.id, newStatus);
   }
 }

@@ -57,4 +57,11 @@ export class ServiceDataStepService extends BackendWithDialogOperationsGenericSe
       operation: OperationTypes.UPDATE
     });
   }
+
+  openViewStepDialog(serviceDataStep: ServiceDataStep): DialogRef {
+    return this.dialog.show<IDialogData<ServiceDataStep>>(ServiceDataStepPopupComponent, {
+      model: serviceDataStep,
+      operation: OperationTypes.VIEW
+    });
+  }
 }

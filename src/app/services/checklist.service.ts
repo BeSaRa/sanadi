@@ -15,10 +15,8 @@ import {ServiceDataStep} from '@app/models/service-data-step';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {Observable, of} from 'rxjs';
 import {Generator} from '@app/decorators/generator';
-import {
-  ChecklistItemPopupComponent
-} from '@app/administration/popups/checklist-item-popup/checklist-item-popup.component';
-import {IChecklistCriteria} from "@app/interfaces/ichecklist-criteria";
+import {ChecklistItemPopupComponent} from '@app/administration/popups/checklist-item-popup/checklist-item-popup.component';
+import {IChecklistCriteria} from '@app/interfaces/ichecklist-criteria';
 
 @Injectable({
   providedIn: 'root'
@@ -59,10 +57,10 @@ export class ChecklistService extends BackendWithDialogOperationsGenericService<
     return this.http.get<ChecklistItem[]>(this._getServiceURL() + '/step/' + stepId);
   }
 
-  openListDialog(serviceDataStep: ServiceDataStep): Observable<DialogRef> {
+  openCheckListDialog(serviceDataStep: ServiceDataStep, readonly: boolean = false): Observable<DialogRef> {
     return of(this.dialog.show<IDialogData<ServiceDataStep>>(ChecklistPopupComponent, {
       model: serviceDataStep,
-      operation: OperationTypes.VIEW
+      operation: readonly ? OperationTypes.VIEW : OperationTypes.UPDATE
     }));
   }
 
@@ -78,6 +76,14 @@ export class ChecklistService extends BackendWithDialogOperationsGenericService<
     return this.dialog.show<IDialogData<ChecklistItem>>(ChecklistItemPopupComponent, {
       model: checklistItem,
       operation: OperationTypes.UPDATE,
+      stepId: stepId
+    });
+  }
+
+  openViewChecklistItemDialog(stepId: number, checklistItem: ChecklistItem): DialogRef {
+    return this.dialog.show<IDialogData<ChecklistItem>>(ChecklistItemPopupComponent, {
+      model: checklistItem,
+      operation: OperationTypes.VIEW,
       stepId: stepId
     });
   }
