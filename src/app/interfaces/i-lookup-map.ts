@@ -124,5 +124,4 @@ export interface ILookupMap {
   UrgentInterventionRequestType: Lookup[];
   UserType: Lookup[];
   WORK_FIELD: Lookup[];
-  ForeignCountriesProjectsRequestType: Lookup[];
 }
