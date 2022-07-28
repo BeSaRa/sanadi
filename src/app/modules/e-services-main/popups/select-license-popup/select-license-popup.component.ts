@@ -62,7 +62,21 @@ export class SelectLicensePopupComponent {
   }
 
   private static _getCaseTypeForViewLicense(caseType: number, requestType: number) {
-    return (caseType === CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL && requestType === ServiceRequestTypes.NEW) ? CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL : caseType;
+    let caseTypeForView;
+    // urgent intervention closure opens the license list from urgent intervention reporting,
+    // so there is no view for urgent intervention closure too
+    switch (caseType) {
+      case CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL:
+        caseTypeForView = (requestType === ServiceRequestTypes.NEW) ? CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL : caseType;
+        break;
+      case CaseTypes.URGENT_INTERVENTION_CLOSURE:
+        caseTypeForView = CaseTypes.URGENT_INTERVENTION_REPORTING;
+        break;
+      default:
+        caseTypeForView = caseType;
+        break;
+    }
+    return caseTypeForView;
   }
 
   selectLicense(license: any): void {

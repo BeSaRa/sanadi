@@ -12,6 +12,7 @@ import {
 } from '@app/modules/general-services/pages/international-cooperation/international-cooperation.component';
 import { EServicesMainModule } from '@app/modules/e-services-main/e-services-main.module';
 import { EmploymentApproveComponent } from './popups/employment-approve/employment-approve.component';
+import { ExternalOrgAffiliationComponent } from './pages/external-org-affiliation/external-org-affiliation.component';
 
 
 @NgModule({
@@ -20,9 +21,10 @@ import { EmploymentApproveComponent } from './popups/employment-approve/employme
     InquiryComponent,
     ConsultationComponent,
     InternationalCooperationComponent,
-    EmploymentComponent,
     EmploymentApproveComponent,
-    ApproveEmploymentDateComponent
+    ApproveEmploymentDateComponent,
+    ExternalOrgAffiliationComponent,
+    EmploymentComponent
   ],
   imports: [
     CommonModule,

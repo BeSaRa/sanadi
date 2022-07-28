@@ -1,17 +1,17 @@
-import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {LangService} from '@app/services/lang.service';
-import {DIALOG_DATA_TOKEN} from '../../tokens/tokens';
-import {Localization} from '@app/models/localization';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {FormManager} from '@app/models/form-manager';
-import {FactoryService} from '@app/services/factory.service';
-import {ToastService} from '@app/services/toast.service';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {IDialogData} from '@app/interfaces/i-dialog-data';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {of, Subject} from 'rxjs';
-import {catchError, exhaustMap, takeUntil} from 'rxjs/operators';
-import {DialogRef} from '../../models/dialog-ref';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { LangService } from '@app/services/lang.service';
+import { DIALOG_DATA_TOKEN } from '../../tokens/tokens';
+import { Localization } from '@app/models/localization';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormManager } from '@app/models/form-manager';
+import { FactoryService } from '@app/services/factory.service';
+import { ToastService } from '@app/services/toast.service';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { IDialogData } from '@app/interfaces/i-dialog-data';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { of, Subject } from 'rxjs';
+import { catchError, exhaustMap, takeUntil } from 'rxjs/operators';
+import { DialogRef } from '../../models/dialog-ref';
 
 @Component({
   selector: 'app-localization-popup',
@@ -71,9 +71,9 @@ export class LocalizationPopupComponent implements OnInit, OnDestroy {
     this.save$
       .pipe(takeUntil(this.destroy$),
         exhaustMap(() => {
-          const localization = (new Localization()).clone({...this.model, ...this.form.value});
+          const localization = (new Localization()).clone({ ...this.model, ...this.form.value });
           return localization.save().pipe(
-            catchError((err) => {
+            catchError((_err) => {
               return of(null);
             })
           );
@@ -83,7 +83,7 @@ export class LocalizationPopupComponent implements OnInit, OnDestroy {
           return;
         }
         const message = this.operation === OperationTypes.CREATE ? this.langService.map.msg_create_x_success : this.langService.map.msg_update_x_success;
-        this.toast.success(message.change({x: local.localizationKey}));
+        this.toast.success(message.change({ x: local.localizationKey }));
         this.model = local;
         this.operation = OperationTypes.UPDATE;
         this.form.get('localizationKey')?.disable();

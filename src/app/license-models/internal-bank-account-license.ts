@@ -3,6 +3,7 @@ import {AdminResult} from '@app/models/admin-result';
 import {Lookup} from '@app/models/lookup';
 import {BankAccount} from '@app/models/bank-account';
 import {Bank} from '@app/models/bank';
+import {NpoEmployee} from '@app/models/npo-employee';
 
 export class InternalBankAccountLicense {
   accountNumber!: string;
@@ -37,6 +38,7 @@ export class InternalBankAccountLicense {
   swiftCode!: string;
   licenseStatusInfo!: Lookup;
   requestTypeInfo!: Lookup;
+  isUpdatedNewAccount!: boolean;
 
   convertToItem(): InternalBankAccountApproval{
     const internalBankAccountApproval = new InternalBankAccountApproval();
@@ -50,12 +52,19 @@ export class InternalBankAccountLicense {
     internalBankAccountApproval.iBan = this.iBan;
     internalBankAccountApproval.accountNumber = this.accountNumber;
     internalBankAccountApproval.swiftCode = this.swiftCode;
+    internalBankAccountApproval.isUpdatedNewAccount = this.isUpdatedNewAccount;
+    internalBankAccountApproval.bankCategoryInfo = this.bankCategoryInfo;
+    internalBankAccountApproval.currencyInfo = this.currencyInfo;
+    internalBankAccountApproval.mainAccountInfo = this.mainAccountInfo;
+    internalBankAccountApproval.bankInfo = this.bankInfo;
+    internalBankAccountApproval.bankCategoryInfo = this.bankCategoryInfo;
     internalBankAccountApproval.internalBankAccountDTOs = this.internalBankAccountDTOs.map((ba: BankAccount) => {
-      return (new BankAccount()).clone({id: ba.id, accountNumber: ba.accountNumber, bankInfo: (new Bank()).clone(ba.bankInfo)})
+      return (new BankAccount()).clone({id: ba.id, accountNumber: ba.accountNumber, isMergeAccount: ba.isMergeAccount, bankInfo: (new Bank()).clone(ba.bankInfo), bankCategoryInfo: (new Lookup()).clone(ba.bankCategoryInfo)})
     });
     internalBankAccountApproval.bankAccountExecutiveManagementDTOs = this.bankAccountExecutiveManagementDTOs.map(x => {
-      x.jobTitleInfo = (new Lookup()).clone(x);
-      return x;
+      let y = new NpoEmployee().clone(x);
+      y.jobTitleInfo = (new Lookup()).clone(y.jobTitleInfo);
+      return y;
     });
 
     return internalBankAccountApproval;

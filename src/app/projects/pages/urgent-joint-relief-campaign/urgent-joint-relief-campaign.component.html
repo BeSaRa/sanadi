@@ -127,7 +127,7 @@
                              style="flex: 1"
                              (change)="onChangeSelectedOrganization($event)"
                              [readonly]="(readonly)">
-                    <ng-option [value]="option.organizationId"
+                    <ng-option [value]="option.id"
                                *ngFor="let option of organizationUnits">{{option.getName()}}</ng-option>
                   </ng-select>
                   <button class="btn btn-link outline-none" style="padding: 0"
@@ -166,6 +166,10 @@
                 <ng-container cdkColumnDef="workStartDate">
                   <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.work_start_date}}</th>
                   <td cdk-cell *cdkCellDef="let row"> {{row.workStartDate | date}} </td>
+                </ng-container>
+                <ng-container cdkColumnDef="decision">
+                  <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.decision}}</th>
+                  <td cdk-cell *cdkCellDef="let row"> {{row.managerDecisionInfo?.getName()}} </td>
                 </ng-container>
                 <ng-container cdkColumnDef="actions">
                   <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>

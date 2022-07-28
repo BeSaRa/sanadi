@@ -12,6 +12,6 @@ export class StageInterceptor implements IModelInterceptor<Stage> {
   }
 
   private static _deleteBeforeSend(model: Partial<Stage>): void {
-
+    delete model.searchFields;
   }
 }

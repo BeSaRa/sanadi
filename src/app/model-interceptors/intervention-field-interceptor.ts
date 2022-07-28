@@ -15,6 +15,7 @@ export class InterventionFieldInterceptor implements IModelInterceptor<Intervent
   }
 
   private static _deleteBeforeSend(model: Partial<InterventionField>): void {
+    delete model.searchFields;
     delete model.mainUNOCHACategoryInfo;
     delete model.subUNOCHACategoryInfo;
   }

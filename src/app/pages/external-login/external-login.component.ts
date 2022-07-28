@@ -1,13 +1,14 @@
-import {Component, HostListener, OnInit} from '@angular/core';
-import {AbstractControl, FormBuilder, FormGroup} from "@angular/forms";
-import {of, Subject} from "rxjs";
-import {LangService} from "@app/services/lang.service";
-import {Router} from "@angular/router";
-import {ECookieService} from "@app/services/e-cookie.service";
-import {ToastService} from "@app/services/toast.service";
-import {AuthService} from "@app/services/auth.service";
-import {CustomValidators} from "@app/validators/custom-validators";
-import {catchError, exhaustMap, mapTo, takeUntil, tap} from "rxjs/operators";
+import { Component, HostListener, OnInit } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup } from "@angular/forms";
+import { of, Subject } from "rxjs";
+import { LangService } from "@app/services/lang.service";
+import { Router } from "@angular/router";
+import { ECookieService } from "@app/services/e-cookie.service";
+import { ToastService } from "@app/services/toast.service";
+import { AuthService } from "@app/services/auth.service";
+import { CustomValidators } from "@app/validators/custom-validators";
+import { catchError, exhaustMap, mapTo, takeUntil, tap } from "rxjs/operators";
+import { ConfigurationService } from "@services/configuration.service";
 
 @Component({
   selector: 'external-login',
@@ -28,6 +29,7 @@ export class ExternalLoginComponent implements OnInit {
   constructor(public lang: LangService,
               private router: Router,
               private fb: FormBuilder,
+              public config: ConfigurationService,
               private eCookieService: ECookieService,
               private toastService: ToastService,
               private authService: AuthService) {

@@ -2,7 +2,7 @@
   <div [formGroup]="form">
     <div class="row">
       <!-- Main UNOCHA category -->
-      <div class="col-sm-12 col-md-4 mb-4 position-relative">
+      <div class="col-sm-12 col-md-4 mb-4 ng-select-wrapper">
         <label asteriskIfRequired="mainUNOCHACategory" for="mainUNOCHACategory"
                class="form-label">{{lang.map.main_unocha_category}}</label>
         <ng-select [selectOnTab]="true" labelForId="mainUNOCHACategory" [clearable]="false"
@@ -73,7 +73,7 @@
                 <grid-actions [record]="row" [actions]="actions" [itemIndex]="i"></grid-actions>
               </td>
             </ng-container>
-            <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="table.columns"></tr>
+            <tr cdk-header-row *cdkHeaderRowDef="table.columns"></tr>
             <tr cdk-row *cdkRowDef="let row; columns: table.columns;" (contextmenu)="menu.open($event , row)"></tr>
             <tr *cdkNoDataRow>
               <td class="text-center" colSpan="100">{{lang.map.msg_no_records_found}}</td>

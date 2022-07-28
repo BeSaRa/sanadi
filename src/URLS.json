@@ -30,6 +30,7 @@
   "TRAINING_PROGRAM": "training/training-program",
   "TRAINING_PROGRAM_BUNDLE": "training/training-program/bundle",
   "TRAINER": "training/trainer",
+  "ADMIN_LOOKUP": "admin/admin-lookup",
   "DAC_OCHA": "admin/work-field",
   "SD_GOAL": "admin/sdg",
   "JOB_TITLE": "admin/job-title",
@@ -92,5 +93,9 @@
   "DONOR": "admin/donor",
   "URGENT_JOINT_RELIEF_CAMPAIGN": "/urgent-joint-relief-campaign",
   "URGENT_INTERVENTION_REPORTING": "/urgent-intervention-announcement",
-  "EXTERNAL_PROJECT_IMPLEMENTATION": "/external-project-implementation"
+  "URGENT_INTERVENTION_CLOSURE": "/urgent-intervention-closure",
+  "EXTERNAL_PROJECT_IMPLEMENTATION": "/external-project-implementation",
+  "FIELD_ASSESSMENT": "/admin/field-assessment",
+  "EXTERNAL_ORG_AFFILIATION_REQUEST": "/external-org-affiliation"
+  
 }

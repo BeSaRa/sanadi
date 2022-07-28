@@ -1,7 +1,19 @@
 export interface ILanguageKeys {
+  selected_bank_account_is_sub_account: string;
+  forget_password: string;
+  you_have_to_select_at_least_one_bank_account: string;
+  will_be_canceled_also: string;
+  will_be_canceled_also_single: string;
+  will_be_merged_also_single: string;
+  will_be_merged_also: string;
+  these_sub_accounts_of_the_selected_account: string;
+  this_sub_account_of_the_selected_account: string;
+  selected_license_info: string;
+  merge_to_account: string;
   select_organization: string;
   send_to_department: string;
   can_be_11_digits: string;
+  duration: string;
   edit_due_date: string;
   terminate_reject_reason: string;
   msg_reject_terminate_successfully: string;
@@ -524,6 +536,7 @@ export interface ILanguageKeys {
   subject: string;
   menu_inquiries_and_complaints: string;
   menu_consultations: string;
+  menu_external_org_affiliation_request: string;
   recommendation_has_been_saved_successfully: string;
   comment_has_been_saved_successfully: string;
   type_your_recommendation: string;
@@ -1003,6 +1016,7 @@ export interface ILanguageKeys {
   project_components: string;
   project_budget: string;
   err_invalid_project_component_total_x: string;
+  err_invalid_total_intervention_cost_x: string;
   send_to_multi_departments: string;
   send_to_structure_expert: string;
   send_to_development_expert: string;
@@ -1106,6 +1120,30 @@ export interface ILanguageKeys {
   description_disbursement_decision: string;
   menu_customs_exemption_service: string;
   msg_service_unavailable: string;
+  lbl_introduction: string;
   employee_with_identification: string;
   is_exist_before: string;
+  lbl_entity_classification: string;
+  menu_urgent_intervention_closure: string;
+  phases_and_outcomes: string;
+  stage: string;
+  intervention_cost: string;
+  output_and_impact_analysis: string;
+  implementation_evaluation: string;
+  evaluation_hub: string;
+  evaluation_result: string;
+  best_practices: string;
+  lessons_learnt: string;
+  statement: string;
+  menu_field_assessment: string;
+  lbl_add_field_assessment: string;
+  lbl_edit_field_assessment: string;
+  type: string;
+  currency_usd: string;
+  org_unit_field:string;
+  lbl_add_org_unit_field: string;
+  lbl_edit_org_unit_field: string;
+  requester_relation: string;
+  requester_name: string;
+  notification_request_number: string;
 }

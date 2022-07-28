@@ -17,8 +17,6 @@ import {DialogService} from "@app/services/dialog.service";
 import {DatepickerOptionsMap, ReadinessStatus} from "@app/types/types";
 import {SaveTypes} from "@app/enums/save-types";
 import {OperationTypes} from "@app/enums/operation-types.enum";
-import {BankAccountComponent} from "@app/modules/office-services/shared/bank-account/bank-account.component";
-import {ExecutiveManagementComponent} from "@app/modules/office-services/shared/executive-management/executive-management.component";
 import {GoalComponent} from "@app/modules/office-services/pages/partner-approval/goal/goal.component";
 import {
   ManagementCouncilComponent
@@ -42,6 +40,8 @@ import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 import {PartnerApprovalSearchCriteria} from '@app/models/PartnerApprovalSearchCriteria';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import { ExecutiveManagementComponent } from '@app/modules/e-services-main/shared/executive-management/executive-management.component';
+import { BankAccountComponent } from '@app/modules/e-services-main/shared/bank-account/bank-account.component';
 
 @Component({
   selector: 'partner-approval',

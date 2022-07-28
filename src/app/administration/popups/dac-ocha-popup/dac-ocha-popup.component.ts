@@ -68,7 +68,7 @@ export class DacOchaPopupComponent extends AdminGenericDialog<DacOcha> {
     this.listenToReloadSubDacOchas();
     this.reloadSubDacOchas$.next();
 
-    this.classification = this.lookupService.listByCategory.ServiceWorkField
+    this.classification = this.lookupService.listByCategory.AdminLookupType
       .find(classification => classification.lookupKey === this.dacOchaTypeId)!;
 
     this._setSelectedTab();

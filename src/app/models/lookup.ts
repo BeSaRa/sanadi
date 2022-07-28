@@ -43,6 +43,10 @@ export class Lookup extends BaseModel<Lookup, any> {
     return this.lookupKey === CommonStatusEnum.RETIRED;
   }
 
+  isActive(): boolean {
+    return !!this.status;
+  }
+
   convertToAdminResult(): AdminResult {
     return AdminResult.createInstance({arName: this.arName, enName: this.enName, id: this.lookupKey});
   }

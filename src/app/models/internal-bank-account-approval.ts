@@ -17,7 +17,7 @@ export class InternalBankAccountApproval extends _RequestType<InternalBankAccoun
   caseType: number = CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL;
   serviceSteps!: string[];
   organizationId!: number;
-  operationType!: number;
+  operationType?: number;
   purpose!: string;
   bankId!: number;
   category!: number;
@@ -44,7 +44,11 @@ export class InternalBankAccountApproval extends _RequestType<InternalBankAccoun
   bankCategoryInfo!: AdminResult;
   mainAccountInfo!: AdminResult;
   currencyInfo!: AdminResult;
+  bankInfo!: AdminResult;
   followUpDate!: string;
+  isUpdatedNewAccount!: boolean;
+  ownerOfMergedBankAccounts!: number;
+  bankAccountSearchCriteria!: string;
 
   service!: InternalBankAccountApprovalService;
 
@@ -55,12 +59,13 @@ export class InternalBankAccountApproval extends _RequestType<InternalBankAccoun
 
   buildBasicInfo(controls: boolean = false): any {
     const {oldLicenseFullSerial, requestType, operationType, purpose, bankId, category,
-      currency, mainAccount, accountNumber, iBan, swiftCode, selectedBankAccountToMerge, selectedResponsiblePerson} = this;
+      currency, mainAccount, accountNumber, iBan, swiftCode, selectedBankAccountToMerge,
+      ownerOfMergedBankAccounts, selectedResponsiblePerson, bankAccountSearchCriteria} = this;
     return {
       oldLicenseFullSerial: controls ? [oldLicenseFullSerial] : oldLicenseFullSerial,
       requestType: controls ? [requestType, [CustomValidators.required]] : requestType,
       operationType: controls ? [operationType, [CustomValidators.required]] : operationType,
-      purpose: controls ? [purpose, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)]] : purpose,
+      purpose: controls ? [purpose, [CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)]] : purpose,
       bankId: controls ? [bankId, [CustomValidators.required]] : bankId,
       category: controls ? [category, [CustomValidators.required]] : category,
       currency: controls ? [currency, [CustomValidators.required]] : currency,
@@ -69,7 +74,9 @@ export class InternalBankAccountApproval extends _RequestType<InternalBankAccoun
       iBan: controls ? [iBan] : iBan,
       swiftCode: controls ? [swiftCode] : swiftCode,
       selectedBankAccountToMerge: controls ? [selectedBankAccountToMerge] : selectedBankAccountToMerge,
-      selectedResponsiblePerson: controls ? [selectedResponsiblePerson] : selectedResponsiblePerson
+      ownerOfMergedBankAccounts: controls ? [ownerOfMergedBankAccounts] : ownerOfMergedBankAccounts,
+      selectedResponsiblePerson: controls ? [selectedResponsiblePerson] : selectedResponsiblePerson,
+      bankAccountSearchCriteria: controls ? [bankAccountSearchCriteria] : bankAccountSearchCriteria
     }
   }
 

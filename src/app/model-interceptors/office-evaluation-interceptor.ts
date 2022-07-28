@@ -15,6 +15,7 @@ export class OfficeEvaluationInterceptor implements IModelInterceptor<OfficeEval
   }
 
   private static _deleteBeforeSend(model: Partial<OfficeEvaluation>): void {
+    delete model.searchFields;
     delete model.evaluationHubInfo;
     delete model.evaluationResultInfo;
   }

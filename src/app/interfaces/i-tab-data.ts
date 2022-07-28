@@ -20,6 +20,11 @@ export interface ITabData {
    * @description Checks if the tab is touched or dirty
    */
   isTouchedOrDirty: () => boolean,
+  /**
+   * @description Get the translated text for given lang key
+   * @param item
+   */
+  getLangText?:(tab: ITabData, item?: any) => string
 
   [index: string]: any;
 }

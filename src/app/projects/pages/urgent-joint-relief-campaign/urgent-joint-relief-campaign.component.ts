@@ -16,7 +16,6 @@ import {DatepickerControlsMap, DatepickerOptionsMap} from '@app/types/types';
 import {DateUtils} from '@helpers/date-utils';
 import {FormManager} from '@app/models/form-manager';
 import {OrganizationUnitService} from '@services/organization-unit.service';
-import {OrgUnit} from '@app/models/org-unit';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
 import {Lookup} from '@app/models/lookup';
 import {Country} from '@app/models/country';
@@ -28,6 +27,7 @@ import {IMyInputFieldChanged} from 'angular-mydatepicker';
 import {ParticipantOrganization} from '@app/models/participant-organization';
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 import {OpenFrom} from '@app/enums/open-from.enum';
+import {OrgUnit} from '@app/models/org-unit';
 
 @Component({
   selector: 'urgent-joint-relief-campaign',
@@ -38,9 +38,9 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
   form!: FormGroup;
   officerForm!: FormGroup;
   fm!: FormManager;
-  organizationUnits: ParticipantOrganization[] = [];
+  organizationUnits: OrgUnit[] = [];
   selectedOrganizationUnits: ParticipantOrganization[] = [];
-  selectedOrg!: ParticipantOrganization;
+  selectedOrg!: OrgUnit;
   selectedOrganizationOfficers: OrganizationOfficer[] = [];
   selectedOfficer!: OrganizationOfficer | null;
   selectedOfficerIndex!: number | null;
@@ -52,7 +52,7 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
     workStartDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
   };
 
-  organizationDisplayedColumns: string[] = ['arName', 'enName', 'donation', 'workStartDate', 'actions'];
+  organizationDisplayedColumns: string[] = ['arName', 'enName', 'donation', 'workStartDate', 'decision', 'actions'];
   organizationOfficerDisplayedColumns: string[] = ['fullName', 'identificationNumber', 'email', 'phoneNumber', 'extraPhoneNumber', 'actions'];
   commonStatusEnum = CommonStatusEnum;
   countries: Country[] = [];
@@ -118,29 +118,25 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
 
   loadOrgUnits() {
     this.orgUnitService.loadComposite().subscribe((list) => {
-      this.organizationUnits = this.mapOrgUnitsToParticipantOrgUnits(list);
-      this.selectedOrganizationUnits = this.setSelectedOrganizations();
+      this.organizationUnits = list;
     });
   }
 
-  mapOrgUnitsToParticipantOrgUnits(orgUnits: OrgUnit[]): ParticipantOrganization[] {
-    return orgUnits.map(x => {
+  mapOrgUnitsToParticipantOrgUnits(orgUnit: any): ParticipantOrganization {
       return new ParticipantOrganization()
         .clone({
-          organizationId: x.id,
-          arabicName: x.arName,
-          englishName: x.enName,
-          donation: this.model?.participatingOrganizaionList.find(xx => xx.organizationId == x.id)?.donation,
-          workStartDate: this.model?.participatingOrganizaionList.find(xx => xx.organizationId == x.id)?.workStartDate
+          organizationId: orgUnit.id,
+          arabicName: orgUnit.arName,
+          englishName: orgUnit.enName,
+          donation: this.model?.participatingOrganizaionList.find(xx => xx.organizationId == orgUnit.id)?.donation,
+          workStartDate: this.model?.participatingOrganizaionList.find(xx => xx.organizationId == orgUnit.id)?.workStartDate
         });
-    });
   }
 
-  setSelectedOrganizations() {
-    return this.organizationUnits
-      .filter(x => this.model?.participatingOrganizaionList
-        .map(xx => xx.organizationId).includes(x.organizationId));
-  }
+  // setSelectedOrganizations() {
+  //   this.model?.participatingOrganizaionList!.forEach(x => x.managerDecisionInfo = (new Lookup()).clone(x.managerDecisionInfo));
+  //   return this.model?.participatingOrganizaionList;
+  // }
 
   setSelectedOfficers() {
     this.selectedOrganizationOfficers = this.model?.organizaionOfficerList
@@ -207,6 +203,8 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
       externalUserData: this.model?.buildExternalUserData(),
       totalCost: this.model?.buildMainInfo()
     });
+
+    this.selectedOrganizationUnits = this.model?.participatingOrganizaionList as ParticipantOrganization[];
   }
 
   _resetForm(): void {
@@ -227,8 +225,8 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
         ...model,
         ...this.externalUserData.getRawValue()
       });
-      model.participatingOrganizaionList.find(x => x.organizationId == this.employeeService.getOrgUnit()!.id)!.donation = this.model?.donation;
-      model.participatingOrganizaionList.find(x => x.organizationId == this.employeeService.getOrgUnit()!.id)!.workStartDate = this.model?.workStartDate;
+      model.participatingOrganizaionList.find(x => x.organizationId == this.employeeService.getOrgUnit()!.id)!.donation = this.externalUserData?.get('donation')?.value!;
+      model.participatingOrganizaionList.find(x => x.organizationId == this.employeeService.getOrgUnit()!.id)!.workStartDate = this.externalUserData?.get('workStartDate')?.value!;
     } else {
       model.participatingOrganizaionList = this.selectedOrganizationUnits;
     }
@@ -288,7 +286,7 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
   }
 
   onChangeSelectedOrganization(val: number) {
-    this.selectedOrg = this.organizationUnits.find(x => x.organizationId == val)!;
+    this.selectedOrg = this.organizationUnits.find(x => x.id == val)!;
   }
 
   addOrganization() {
@@ -297,8 +295,8 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
       return;
     }
 
-    if (!this.selectedOrganizationUnits.includes(this.selectedOrg)) {
-      this.selectedOrganizationUnits = this.selectedOrganizationUnits.concat(this.selectedOrg);
+    if (!this.selectedOrganizationUnits.includes(this.selectedOrganizationUnits.find(x => x.organizationId == this.selectedOrg.id)!)) {
+      this.selectedOrganizationUnits = this.selectedOrganizationUnits.concat(this.mapOrgUnitsToParticipantOrgUnits(this.selectedOrg));
     } else {
       this.dialog.error(this.lang.map.selected_item_already_exists);
     }

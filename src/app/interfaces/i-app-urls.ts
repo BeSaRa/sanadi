@@ -1,4 +1,5 @@
 export interface IAppUrls {
+  ADMIN_LOOKUP: string;
   FOLLOWUP_PERMISSION: string;
   COMMON: string;
   NPO_EMPLOYEE: string;
@@ -91,6 +92,10 @@ export interface IAppUrls {
   DONOR: string;
   URGENT_JOINT_RELIEF_CAMPAIGN: string;
   URGENT_INTERVENTION_REPORTING: string;
+  URGENT_INTERVENTION_CLOSURE: string;
   EXTERNAL_PROJECT_IMPLEMENTATION: string;
+  EXTERNAL_ORG_AFFILIATION_REQUEST: string;
+  FIELD_ASSESSMENT: string;
+
   [index: string]: string;
 }

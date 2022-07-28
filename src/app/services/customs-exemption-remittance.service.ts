@@ -1,4 +1,4 @@
-import {HttpClient, HttpParams} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {ComponentFactoryResolver, Injectable} from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
 import {EServiceGenericService} from '@app/generics/e-service-generic-service';
@@ -18,9 +18,9 @@ import {CaseTypes} from '@app/enums/case-types.enum';
 import {Generator} from '@decorators/generator';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {SelectDocumentPopUpComponent} from '@app/modules/remittances/popups/select-document-pop-up/select-document-pop-up.component';
-import {IDefaultResponse} from '@contracts/idefault-response';
 import {AdminResult} from '@app/models/admin-result';
 import {CustomsExemptionRequestTypes} from '@app/enums/service-request-types';
+import {CommonService} from '@services/common.service';
 
 @Injectable({
   providedIn: 'root',
@@ -38,6 +38,7 @@ export class CustomsExemptionRemittanceService extends EServiceGenericService<Cu
               public domSanitizer: DomSanitizer,
               public cfr: ComponentFactoryResolver,
               public dynamicService: DynamicOptionsService,
+              private commonService: CommonService,
               private urlService: UrlService) {
     super();
     FactoryService.registerService('CustomsExemptionRemittanceService', this);
@@ -115,12 +116,6 @@ export class CustomsExemptionRemittanceService extends EServiceGenericService<Cu
   }
 
   loadReceiverNames(type: number, country: number): Observable<AdminResult[]> {
-    let queryParams = new HttpParams();
-    queryParams = queryParams.append('type', type);
-    queryParams = queryParams.append('country', country);
-    return this.http.get<IDefaultResponse<AdminResult[]>>(this._getURLSegment() + '/agency', {params: queryParams})
-      .pipe(
-        map((result: IDefaultResponse<AdminResult[]>) => result.rs.map(x => AdminResult.createInstance(x)))
-      );
+    return this.commonService.loadAgenciesByAgencyTypeAndCountry(type, country);
   }
 }

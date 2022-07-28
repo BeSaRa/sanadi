@@ -10,9 +10,7 @@ import {PartnerApprovalComponent} from '@app/modules/office-services/pages/partn
 import {
   FinalExternalOfficeApprovalComponent
 } from '@app/modules/office-services/pages/final-external-office-approval/final-external-office-approval.component';
-import {BankAccountComponent} from '@app/modules/office-services/shared/bank-account/bank-account.component';
 import {BankBranchComponent} from '@app/modules/office-services/shared/bank-branch/bank-branch.component';
-import {ExecutiveManagementComponent} from '@app/modules/office-services/shared/executive-management/executive-management.component';
 import {ApprovalReasonComponent} from '@app/modules/office-services/pages/partner-approval/approval-reason/approval-reason.component';
 import {ContactOfficerComponent} from '@app/modules/office-services/pages/partner-approval/contact-officer/contact-officer.component';
 import {GoalComponent} from '@app/modules/office-services/pages/partner-approval/goal/goal.component';
@@ -29,9 +27,7 @@ import {EServicesMainModule} from '@app/modules/e-services-main/e-services-main.
     InitialExternalOfficeApprovalComponent,
     PartnerApprovalComponent,
     FinalExternalOfficeApprovalComponent,
-    BankAccountComponent,
     BankBranchComponent,
-    ExecutiveManagementComponent,
     ApprovalReasonComponent,
     ContactOfficerComponent,
     GoalComponent,

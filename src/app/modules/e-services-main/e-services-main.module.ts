@@ -7,6 +7,8 @@ import {
 } from '@app/modules/e-services-main/popups/filter-inbox-request-popup/filter-inbox-request-popup.component';
 import {SelectTemplatePopupComponent} from '@app/modules/e-services-main/popups/select-template-popup/select-template-popup.component';
 import {SelectedLicenseTableComponent} from '@app/modules/e-services-main/shared/selected-license-table/selected-license-table.component';
+import { BankAccountComponent } from './shared/bank-account/bank-account.component';
+import { ExecutiveManagementComponent } from './shared/executive-management/executive-management.component';
 import { EmployeeFormPopupComponent } from '@app/modules/e-services-main/popups/employee-form-popup/employee-form-popup.component';
 import { EmployeesDataComponent } from './shared/employees-data/employees-data.component';
 
@@ -17,6 +19,9 @@ import { EmployeesDataComponent } from './shared/employees-data/employees-data.c
     SelectedLicenseTableComponent,
     SelectedLicenseTableComponent,
     SelectTemplatePopupComponent,
+    SelectedLicenseTableComponent,
+    BankAccountComponent,
+    ExecutiveManagementComponent,
     EmployeesDataComponent,
     EmployeeFormPopupComponent
   ],
@@ -27,6 +32,8 @@ import { EmployeesDataComponent } from './shared/employees-data/employees-data.c
   exports: [
     SharedModule,
     SelectedLicenseTableComponent,
+    BankAccountComponent,
+    ExecutiveManagementComponent,
     EmployeeFormPopupComponent,
     EmployeesDataComponent
   ]

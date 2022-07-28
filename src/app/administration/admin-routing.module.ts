@@ -1,3 +1,4 @@
+import { OrganizationUnitFieldComponent } from './pages/organization-unit-field/organization-unit-field.component';
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {AdminHomeComponent} from './pages/admin-home/admin-home.component';
@@ -12,17 +13,16 @@ import {ServiceDataComponent} from './pages/service-data/service-data.component'
 import {TeamComponent} from './pages/team/team.component';
 import {CountryComponent} from './pages/country/country.component';
 import {InternalUserComponent} from './pages/internal-user/internal-user.component';
-import {
-  InternalDepartmentComponent,
-} from '@app/administration/pages/internal-department/internal-department.component';
+import {InternalDepartmentComponent,} from '@app/administration/pages/internal-department/internal-department.component';
 import {JobTitleComponent} from '@app/administration/pages/job-title/job-title.component';
-import {DacOchaComponent} from '@app/administration/pages/dac-ocha/dac-ocha.component';
 import {SurveyQuestionComponent} from '@app/administration/pages/survey-question/survey-question.component';
 import {SurveyTemplateComponent} from '@app/administration/pages/survey-template/survey-template.component';
-import {Permissions} from "@app/enums/Permissions";
+import {Permissions} from '@app/enums/Permissions';
 import {SdGoalComponent} from '@app/administration/pages/sd-goal/sd-goal.component';
 import {BankComponent} from '@app/administration/pages/bank/bank.component';
 import {DonorComponent} from '@app/administration/pages/donor/donor.component';
+import {FieldAssessmentComponent} from '@app/administration/pages/field-assessment/field-assessment.component';
+import {DacOchaNewComponent} from '@app/administration/pages/dac-ocha-new/dac-ocha-new.component';
 
 const routes: Routes = [
   {path: '', component: AdminHomeComponent},
@@ -87,7 +87,7 @@ const routes: Routes = [
     data: {permissionKey: 'MANAGE_JOB_TITLES', configPermissionGroup: null, checkAnyPermission: false}
   },
   {
-    path: 'ocha-dac-class', component: DacOchaComponent,
+    path: 'ocha-dac-class', component: DacOchaNewComponent,
     canActivate: [PermissionGuard],
     data: {permissionKey: 'MANAGE_DAC_OUCHA_CATEGORIES', configPermissionGroup: null, checkAnyPermission: false}
   },
@@ -122,7 +122,18 @@ const routes: Routes = [
     canActivate: [PermissionGuard],
     data: {permissionKey: Permissions.DONOR_MANAGEMENT, configPermissionGroup: null, checkAnyPermission: false}
   },
+  {
+    path: 'field-assessment', component: FieldAssessmentComponent,
+    canActivate: [PermissionGuard],
+    data: {permissionKey: Permissions.FIELD_ASSESSMENT, configPermissionGroup: null, checkAnyPermission: false}
+  },
+  {
+    path: 'organization-unit-field', component: OrganizationUnitFieldComponent,
+    canActivate: [PermissionGuard],
+    data: {permissionKey: 'MANAGE_JOB_TITLES', configPermissionGroup: null, checkAnyPermission: false}
+  },
 ];
+
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

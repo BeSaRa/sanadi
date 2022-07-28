@@ -7,16 +7,14 @@ import {DomSanitizer} from '@angular/platform-browser';
 import {DialogService} from '@app/services/dialog.service';
 import {DynamicOptionsService} from '@app/services/dynamic-options.service';
 import {LicenseService} from '@app/services/license.service';
-import {HttpClient, HttpParams} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {IModelInterceptor} from '@app/interfaces/i-model-interceptor';
 import {CommentService} from '@app/services/comment.service';
 import {DocumentService} from '@app/services/document.service';
 import {RecommendationService} from '@app/services/recommendation.service';
 import {SearchService} from '@app/services/search.service';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {
-  ExternalProjectImplementationInterceptor
-} from '@app/model-interceptors/external-project-implementation-interceptor';
+import {ExternalProjectImplementationInterceptor} from '@app/model-interceptors/external-project-implementation-interceptor';
 import {ImplementationTemplate} from '@app/models/implementation-template';
 import {ImplementationTemplateInterceptor} from '@app/model-interceptors/implementation-template-interceptor';
 import {FundingSource} from '@app/models/funding-source';
@@ -24,10 +22,6 @@ import {FundingSourceInterceptor} from '@app/model-interceptors/funding-source-i
 import {Payment} from '@app/models/payment';
 import {PaymentInterceptor} from '@app/model-interceptors/payment-interceptor';
 import {SearchExternalProjectImplementationCriteria} from '@app/models/search-external-project-implementation-criteria';
-import {Observable} from 'rxjs';
-import {AdminResult} from '@app/models/admin-result';
-import {IDefaultResponse} from '@app/interfaces/idefault-response';
-import {map} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -81,16 +75,5 @@ export class ExternalProjectImplementationService extends EServiceGenericService
 
   getSearchCriteriaModel<S extends ExternalProjectImplementation>(): ExternalProjectImplementation {
     return new SearchExternalProjectImplementationCriteria();
-  }
-
-  loadAgenciesByAgencyType(agencyType: number, executionCountry: number): Observable<AdminResult[]> {
-    let queryParams = new HttpParams();
-    queryParams = queryParams.append("type", agencyType);
-    queryParams = queryParams.append("country", executionCountry);
-
-    return this.http.get<IDefaultResponse<AdminResult[]>>(this._getURLSegment() + '/agency', {params: queryParams})
-      .pipe(
-        map((result: IDefaultResponse<AdminResult[]>) => result.rs.map(x => AdminResult.createInstance(x)))
-      )
   }
 }

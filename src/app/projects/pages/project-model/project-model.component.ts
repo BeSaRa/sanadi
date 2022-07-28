@@ -2,32 +2,30 @@ import {Component, ViewChild} from '@angular/core';
 import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn} from '@angular/forms';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {SaveTypes} from '@app/enums/save-types';
-import {EServicesGenericComponent} from "@app/generics/e-services-generic-component";
-import {ProjectModel} from "@app/models/project-model";
+import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
+import {ProjectModel} from '@app/models/project-model';
 import {LangService} from '@app/services/lang.service';
-import {ProjectModelService} from "@app/services/project-model.service";
+import {ProjectModelService} from '@app/services/project-model.service';
 import {Observable, of, Subject} from 'rxjs';
-import {CountryService} from "@app/services/country.service";
-import {Country} from "@app/models/country";
-import {catchError, filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
-import {LookupService} from "@app/services/lookup.service";
-import {Lookup} from "@app/models/lookup";
-import {DacOchaService} from "@app/services/dac-ocha.service";
-import {DacOcha} from "@app/models/dac-ocha";
-import {SDGoalService} from "@app/services/sdgoal.service";
-import {SDGoal} from "@app/models/sdgoal";
-import {ProjectComponent} from "@app/models/project-component";
-import {CustomValidators} from "@app/validators/custom-validators";
-import {ProjectModelTypes} from "@app/enums/project-model-types";
-import {ProjectTypes} from "@app/enums/project-types";
-import {DomainTypes} from "@app/enums/domain-types";
-import {IDacOchaFields} from "@app/interfaces/idac-ocha-fields";
-import {ToastService} from "@app/services/toast.service";
-import {DialogService} from "@app/services/dialog.service";
-import {EmployeeService} from "@app/services/employee.service";
-import {AttachmentsComponent} from "@app/shared/components/attachments/attachments.component";
-import {ProjectModelRequestType} from "@app/enums/project-model-request-type";
-import {UserClickOn} from "@app/enums/user-click-on.enum";
+import {CountryService} from '@app/services/country.service';
+import {Country} from '@app/models/country';
+import {catchError, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
+import {LookupService} from '@app/services/lookup.service';
+import {Lookup} from '@app/models/lookup';
+import {SDGoalService} from '@app/services/sdgoal.service';
+import {SDGoal} from '@app/models/sdgoal';
+import {ProjectComponent} from '@app/models/project-component';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {ProjectModelTypes} from '@app/enums/project-model-types';
+import {ProjectTypes} from '@app/enums/project-types';
+import {DomainTypes} from '@app/enums/domain-types';
+import {IDacOchaFields} from '@app/interfaces/idac-ocha-fields';
+import {ToastService} from '@app/services/toast.service';
+import {DialogService} from '@app/services/dialog.service';
+import {EmployeeService} from '@app/services/employee.service';
+import {AttachmentsComponent} from '@app/shared/components/attachments/attachments.component';
+import {ProjectModelRequestType} from '@app/enums/project-model-request-type';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {OpenFrom} from '@app/enums/open-from.enum';
 import {IKeyValue} from '@app/interfaces/i-key-value';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
@@ -35,6 +33,9 @@ import {CommonUtils} from '@app/helpers/common-utils';
 import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import {DacOchaNewService} from '@services/dac-ocha-new.service';
+import {AdminLookup} from '@app/models/admin-lookup';
+import {AdminLookupTypeEnum} from '@app/enums/admin-lookup-type-enum';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -51,10 +52,10 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   modelTypes: Lookup[] = this.lookupService.listByCategory.TemplateType;
   requestTypes: Lookup[] = this.lookupService.listByCategory.ExternalModelingReqType.slice().sort((a, b) => a.lookupKey - b.lookupKey);
   implementingAgencyTypes: Lookup[] = this.lookupService.listByCategory.ImplementingAgencyType;
-  mainOchaCategories: DacOcha[] = [];
-  subOchaCategories: DacOcha[] = [];
-  mainDacCategories: DacOcha[] = [];
-  subDacCategories: DacOcha[] = [];
+  mainOchaCategories: AdminLookup[] = [];
+  subOchaCategories: AdminLookup[] = [];
+  mainDacCategories: AdminLookup[] = [];
+  subDacCategories: AdminLookup[] = [];
   isDacOchaLoaded: boolean = false;
   goals: SDGoal[] = [];
   loadAttachments: boolean = false;
@@ -137,7 +138,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
               private toast: ToastService,
               private dialog: DialogService,
               public employeeService: EmployeeService,
-              private dacOchaService: DacOchaService,
+              private dacOchaService: DacOchaNewService,
               private lookupService: LookupService,
               private countryService: CountryService,
               private sdgService: SDGoalService,
@@ -227,32 +228,32 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
           this.selectedModel = template;
           this.displayTemplateSerialField = true;
           this.templateSerialControl.setValue(template.templateFullSerial);
-        })
+        });
 
       this.onModelTypeChange();
 
       if (this.model?.domain === DomainTypes.DEVELOPMENT) {
-        this.mainDacCategories = [(new DacOcha()).clone({
+        this.mainDacCategories = [(new AdminLookup()).clone({
           arName: this.model.mainDACCategoryInfo.arName,
           enName: this.model.mainDACCategoryInfo.enName,
           id: this.model.mainDACCategoryInfo.id,
-        })]
-        this.subDacCategories = [(new DacOcha()).clone({
+        })];
+        this.subDacCategories = [(new AdminLookup()).clone({
           arName: this.model.subDACCategoryInfo.arName,
           enName: this.model.subDACCategoryInfo.enName,
           id: this.model.subDACCategoryInfo.id,
-        })]
+        })];
       } else {
-        this.mainOchaCategories = [(new DacOcha()).clone({
+        this.mainOchaCategories = [(new AdminLookup()).clone({
           arName: this.model?.mainUNOCHACategoryInfo.arName,
           enName: this.model?.mainUNOCHACategoryInfo.enName,
           id: this.model?.mainUNOCHACategoryInfo.id,
-        })]
-        this.subOchaCategories = [(new DacOcha()).clone({
+        })];
+        this.subOchaCategories = [(new AdminLookup()).clone({
           arName: this.model?.subUNOCHACategoryInfo.arName,
           enName: this.model?.subUNOCHACategoryInfo.enName,
           id: this.model?.subUNOCHACategoryInfo.id,
-        })]
+        })];
       }
 
     }
@@ -314,7 +315,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       this.service.getTask(this.model.taskDetails.tkiid)
         .subscribe((model) => {
           this.model = model;
-        })
+        });
     } else {
       this.model = model;
     }
@@ -390,27 +391,27 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   }
 
   get basicInfoTab(): FormGroup {
-    return this.form.get('basicInfo') as FormGroup
+    return this.form.get('basicInfo') as FormGroup;
   }
 
   get categoryInfoTab(): FormGroup {
-    return this.form.get('categoryInfo') as FormGroup
+    return this.form.get('categoryInfo') as FormGroup;
   }
 
   get categoryGoalPercentGroup(): FormGroup {
-    return this.form.get('categoryGoalPercentGroup') as FormGroup
+    return this.form.get('categoryGoalPercentGroup') as FormGroup;
   }
 
   get summaryInfoTab(): FormGroup {
-    return this.form.get('summaryInfo') as FormGroup
+    return this.form.get('summaryInfo') as FormGroup;
   }
 
   get summaryPercentGroup(): FormGroup {
-    return this.form.get('summaryPercentGroup') as FormGroup
+    return this.form.get('summaryPercentGroup') as FormGroup;
   }
 
   get descriptionTab(): AbstractControl {
-    return this.form.get('description') as AbstractControl
+    return this.form.get('description') as AbstractControl;
   }
 
   get modelType(): AbstractControl {
@@ -475,7 +476,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     return CustomValidators.validateSum(100, 2,
       ['firstSDGoalPercentage', 'secondSDGoalPercentage', 'thirdSDGoalPercentage'],
       [this.lang.getLocalByKey('first_sd_goal_percentage'), this.lang.getLocalByKey('second_sd_goal_percentage'), this.lang.getLocalByKey('third_sd_goal_percentage')]
-    )
+    );
   }
 
   private loadCountries(): void {
@@ -488,16 +489,20 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     this.sdgService.load().subscribe((goals) => this.goals = goals);
   }
 
-  private loadDacMainOcha(forceLoad: boolean = false): Observable<DacOcha[]> {
+  private loadDacMainOcha(forceLoad: boolean = false): Observable<AdminLookup[]> {
     if (this.isDacOchaLoaded && !forceLoad) {
       return of([]);
     }
 
     return this.dacOchaService
       .load() //TODO: later we can filter the deactivated in case if it is new request
-      .pipe(takeUntil(this.destroy$))
+      .pipe(
+        takeUntil(this.destroy$),
+        map(list => {
+          return list.filter(model => !model.parentId);
+        }))
       .pipe(tap(_ => this.isDacOchaLoaded = true))
-      .pipe(tap(list => this.separateDacFromOcha(list)))
+      .pipe(tap(list => this.separateDacFromOcha(list)));
   }
 
   private loadSubDacOcha(parent: number): void {
@@ -505,7 +510,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       return;
     }
     this.dacOchaService
-      .loadSubDacOchas(parent)
+      .loadByParentId(parent)
       .pipe(takeUntil(this.destroy$))
       .subscribe((list) => {
         this.domain.value === DomainTypes.HUMANITARIAN ? this.subOchaCategories = list : this.subDacCategories = list;
@@ -534,7 +539,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     });
   }
 
-  private separateDacFromOcha(list: DacOcha[]) {
+  private separateDacFromOcha(list: AdminLookup[]) {
     this.mainOchaCategories = list.filter(item => item.type === DomainTypes.HUMANITARIAN); // get ocha
     this.mainDacCategories = list.filter(item => item.type === DomainTypes.DEVELOPMENT); // get dac
   }
@@ -551,7 +556,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       .subscribe((event) => {
         event.operation === OperationTypes.DELETE ? this.removeProjectComponentForm(event.model) : this.createProjectComponentForm(event.model);
         this.projectTotalCostField.setValue(this.model?.getTotalProjectComponentCost(2) ?? 0);
-      })
+      });
   }
 
   private createProjectComponentForm(model: ProjectComponent): void {
@@ -578,7 +583,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
 
   tabHasError(tabName: string): boolean {
     const field = this.form.get(tabName);
-    return !!(field && field.invalid && (field.touched || field.dirty))
+    return !!(field && field.invalid && (field.touched || field.dirty));
   }
 
   onModelTypeChange() {
@@ -612,12 +617,12 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
         'secondSDGoalPercentage',
         'thirdSDGoalPercentage'
       ]);
-      this.setRequiredValidator(['mainUNOCHACategory', 'subUNOCHACategory'])
-      this.sustainabilityItems.setValidators(CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS))
+      this.setRequiredValidator(['mainUNOCHACategory', 'subUNOCHACategory']);
+      this.sustainabilityItems.setValidators(CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS));
       this.displayDevGoals = false;
       this.categoryGoalPercentGroup.setValidators(null);
     } else if (this.domain.value === DomainTypes.DEVELOPMENT) {
-      this.sustainabilityItems.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)])
+      this.sustainabilityItems.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]);
       this.emptyFieldsAndValidation(['mainUNOCHACategory', 'subUNOCHACategory']);
       this.setRequiredValidator(['mainDACCategory', 'subDACCategory', 'firstSDGoal', 'firstSDGoalPercentage']);
       this.setZeroValue(['firstSDGoalPercentage', 'secondSDGoalPercentage', 'thirdSDGoalPercentage']);
@@ -625,7 +630,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       this.categoryGoalPercentGroup.setValidators(this.getPercentageSumValidation());
     } else {
       this.displayDevGoals = false;
-      this.categoryGoalPercentGroup.setValidators(null)
+      this.categoryGoalPercentGroup.setValidators(null);
       this.emptyFieldsAndValidation([
         'mainUNOCHACategory',
         'subUNOCHACategory',
@@ -637,7 +642,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
         'firstSDGoalPercentage',
         'secondSDGoalPercentage',
         'thirdSDGoalPercentage'
-      ])
+      ]);
     }
     this.sustainabilityItems.updateValueAndValidity();
     this.categoryGoalPercentGroup.updateValueAndValidity();
@@ -648,13 +653,17 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   }
 
   onMainDacOchaChanged(): void {
-    let selectedId = this.domain.value === DomainTypes.HUMANITARIAN ? this.mainUNOCHACategory.value : this.mainDACCategory.value
+    let selectedId = this.domain.value === DomainTypes.HUMANITARIAN ? this.mainUNOCHACategory.value : this.mainDACCategory.value;
+    this.subUNOCHACategory.setValue(null);
+    this.subUNOCHACategory.updateValueAndValidity();
+    this.subDACCategory.setValue(null);
+    this.subDACCategory.updateValueAndValidity();
     selectedId ? this.loadSubDacOcha(selectedId) : this.emptySubCategories();
   }
 
   onClickAddProjectComponent(): void {
     this.currentEditedProjectComponent = undefined;
-    this.projectComponentChange$.next({operation: OperationTypes.CREATE, model: new ProjectComponent()})
+    this.projectComponentChange$.next({operation: OperationTypes.CREATE, model: new ProjectComponent()});
   }
 
   onClickEditProjectComponent(model: ProjectComponent): void {
@@ -663,7 +672,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   }
 
   onClickDeleteProjectComponent(model: ProjectComponent): void {
-    this.projectComponentChange$.next({operation: OperationTypes.DELETE, model: model})
+    this.projectComponentChange$.next({operation: OperationTypes.DELETE, model: model});
   }
 
   saveProjectComponent(): void {
@@ -671,11 +680,11 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       return;
     }
     if (this.currentEditedProjectComponent) {
-      this.model && this.model.componentList.splice(this.model.componentList.indexOf(this.currentEditedProjectComponent), 1, (new ProjectComponent()).clone({...this.currentProjectComponent.value}))
+      this.model && this.model.componentList.splice(this.model.componentList.indexOf(this.currentEditedProjectComponent), 1, (new ProjectComponent()).clone({...this.currentProjectComponent.value}));
       this.model && (this.model.componentList = this.model.componentList.slice());
     } else {
-      const list = this.model?.componentList ? this.model?.componentList : []
-      this.model && (this.model.componentList = list.concat(new ProjectComponent().clone({...this.currentProjectComponent.value})))
+      const list = this.model?.componentList ? this.model?.componentList : [];
+      this.model && (this.model.componentList = list.concat(new ProjectComponent().clone({...this.currentProjectComponent.value})));
     }
     this.toast.success(this.lang.map.msg_save_success);
     this.projectTotalCostField.setValue(this.model?.getTotalProjectComponentCost(2) ?? 0);
@@ -721,7 +730,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
               catchError((e) => {
                 return of(null);
               })
-            )
+            );
         } else {
           return this.service.openSelectTemplate(list).onAfterClose$;
         }
@@ -737,16 +746,16 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
                 return this.loadDacMainOcha(true);
               }),
               switchMap(_ => {
-                this.loadSubDacOcha(this.getSelectedMainDacOchId())
+                this.loadSubDacOcha(this.getSelectedMainDacOchId());
                 return of(null);
               })
-            ).subscribe(() => this.onDomainChange())
+            ).subscribe(() => this.onDomainChange());
 
           this._updateForm(result.clone({
             id: undefined,
             templateId: result.id,
             requestType: this.requestType.value,
-          }))
+          }));
         }
       });
   }
@@ -772,7 +781,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     }
     if (isAllowed) {
       let caseStatus = this.model.getCaseStatus();
-        isAllowed = (caseStatus !== CommonCaseStatus.CANCELLED && caseStatus !== CommonCaseStatus.FINAL_APPROVE && caseStatus !== CommonCaseStatus.FINAL_REJECTION);
+      isAllowed = (caseStatus !== CommonCaseStatus.CANCELLED && caseStatus !== CommonCaseStatus.FINAL_APPROVE && caseStatus !== CommonCaseStatus.FINAL_REJECTION);
     }
 
     return !isAllowed;
@@ -785,12 +794,12 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   }
 
   private listenToOptionalGoalsChanges() {
-    const fields: (keyof Pick<IDacOchaFields, "secondSDGoal" | "thirdSDGoal">)[] = ["secondSDGoal", "thirdSDGoal"];
+    const fields: (keyof Pick<IDacOchaFields, 'secondSDGoal' | 'thirdSDGoal'>)[] = ['secondSDGoal', 'thirdSDGoal'];
     fields.forEach((field) => {
       this[field].valueChanges
         .pipe(takeUntil(this.destroy$))
         .pipe(switchMap(value => of(ProjectModelComponent.updatePercentageRequired(this[(field + 'Percentage') as unknown as keyof IDacOchaFields], !!value))))
-        .subscribe()
+        .subscribe();
     });
 
   }

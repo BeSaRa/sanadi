@@ -1,8 +1,8 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
 
-import { UrgentInterventionRoutingModule } from './urgent-intervention-routing.module';
-import { UrgentInterventionComponent } from './urgent-intervention.component';
+import {UrgentInterventionRoutingModule} from './urgent-intervention-routing.module';
+import {UrgentInterventionComponent} from './urgent-intervention.component';
 import {
   UrgentInterventionLicenseComponent
 } from '@app/modules/urgent-intervention/pages/urgent-intervention-license/urgent-intervention-license.component';
@@ -22,6 +22,15 @@ import {
 import {
   InterventionFieldListComponent
 } from '@app/modules/urgent-intervention/shared/intervention-field-list/intervention-field-list.component';
+import {UrgentInterventionClosureComponent} from './pages/urgent-intervention-closure/urgent-intervention-closure.component';
+import {StageListComponent} from './shared/stage-list/stage-list.component';
+import {ResultListComponent} from './shared/result-list/result-list.component';
+import {ImplementationEvaluationListComponent} from './shared/implementation-evaluation-list/implementation-evaluation-list.component';
+import {BestPracticesListComponent} from './shared/best-practices-list/best-practices-list.component';
+import {LessonsLearntListComponent} from './shared/lessons-learnt-list/lessons-learnt-list.component';
+import {
+  UrgentInterventionClosureApproveTaskPopupComponent
+} from './popups/urgent-intervention-closure-approve-task-popup/urgent-intervention-closure-approve-task-popup.component';
 
 
 @NgModule({
@@ -32,7 +41,14 @@ import {
     UrgentInterventionReportComponent,
     ImplementingAgencyListComponent,
     InterventionRegionListComponent,
-    InterventionFieldListComponent
+    InterventionFieldListComponent,
+    UrgentInterventionClosureComponent,
+    StageListComponent,
+    ResultListComponent,
+    ImplementationEvaluationListComponent,
+    BestPracticesListComponent,
+    LessonsLearntListComponent,
+    UrgentInterventionClosureApproveTaskPopupComponent
   ],
   imports: [
     CommonModule,

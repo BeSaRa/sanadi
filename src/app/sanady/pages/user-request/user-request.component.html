@@ -301,6 +301,28 @@
       </div>
       <div class="row">
         <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
+          <label for="benRequestorRelationType" class="form-label"
+                 asteriskIfRequired="benRequestorRelationType">{{langService.map.requester_relation}}</label>
+          <ng-select [selectOnTab]="true" labelForId="benRequestorRelationType" [clearable]="false"
+                     placeholder="{{langService.map.select}}" id="benRequestorRelationType"
+                     [notFoundText]="langService.map.msg_not_found"
+                     [readonly]="readOnly || isPartialRequest" appendTo="body"
+                     (change)="handleRequesterRelationTypeChange($event, true)"
+                     formControlName="benRequestorRelationType" validationClasses="benRequestorRelationType">
+            <ng-option *ngFor="let option of lookup.listByCategory.BenRequestorRelationType" [value]="option.lookupKey">
+              {{option.getName()}}
+            </ng-option>
+          </ng-select>
+          <app-field-error-message controlName="occuptionStatus"></app-field-error-message>
+        </div>
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label for="requestorName" class="form-label"
+                 asteriskIfRequired="requestorName">{{langService.map.requester_name}}</label>
+          <input id="employeer" validationClasses="requestorName" formControlName="requestorName"
+                 maxlength="100" trimInput class="form-control" type="text" [readOnly]="readOnly || isPartialRequest">
+          <app-field-error-message controlName="requestorName"></app-field-error-message>
+        </div>
+        <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
           <label for="occuptionStatus" class="form-label"
                  asteriskIfRequired="occuptionStatus">{{langService.map.employment_status}}</label>
           <ng-select [selectOnTab]="true" labelForId="occuptionStatus" [clearable]="false"
@@ -315,6 +337,8 @@
           </ng-select>
           <app-field-error-message controlName="occuptionStatus"></app-field-error-message>
         </div>
+      </div>
+      <div class="row">
         <div class="col-md-4 col-sm-12 mb-4 position-relative" *ngIf="isBeneficiaryWorking()">
           <label for="occuption" class="form-label"
                  asteriskIfRequired="occuption">{{langService.map.occupation}}</label>

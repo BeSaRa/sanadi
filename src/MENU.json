@@ -185,7 +185,7 @@
     "id": 15,
     "langKey": "menu_user_inbox",
     "path": "/home/user-inbox",
-    "icon": "mdi-inbox",
+    "icon": "mdi-account-outline",
     "isSvg": false,
     "permission": null,
     "permissionGroup": null,
@@ -687,7 +687,7 @@
     "permissionGroup": null,
     "parent": 13,
     "group": "general-services",
-    "itemOrder": 5,
+    "itemOrder": 4,
     "svg": ""
   },
   {
@@ -794,6 +794,58 @@
     "parent": null,
     "group": "main",
     "itemOrder": 13,
+    "svg": null
+  },
+  {
+    "id": 61,
+    "langKey": "menu_field_assessment",
+    "path": "/home/administration/field-assessment",
+    "icon": "mdi-license",
+    "isSvg": false,
+    "permission": "FIELD_ASSESSMENT_MANAGEMENT",
+    "permissionGroup": null,
+    "parent": 6,
+    "group": "administration",
+    "itemOrder": 19,
+    "svg": null
+  },
+  {
+    "id": 62,
+    "langKey": "menu_urgent_intervention_closure",
+    "path": "/home/urgent-intervention/urgent-intervention-closure",
+    "icon": "mdi-license",
+    "isSvg": false,
+    "permission": "URGENT_INTERVENTION_CLOSURE",
+    "permissionGroup": null,
+    "parent": 60,
+    "group": "urgent-intervention",
+    "itemOrder": 3,
+    "svg": null
+  },
+  {
+    "id": 63,
+    "langKey": "menu_external_org_affiliation_request",
+    "path": "/home/general-services/external-org-affiliation",
+    "icon": "mdi-wallet-membership",
+    "isSvg": false,
+    "permission": "EXTERNAL_ORG_AFFILIATION_REQUEST",
+    "permissionGroup": null,
+    "parent": 13,
+    "group": "general-services",
+    "itemOrder": 5,
+    "svg": null
+  },
+  {
+    "id": 64,
+    "langKey": "org_unit_field",
+    "path": "/home/administration/organization-unit-field",
+    "icon": "mdi-focus-field",
+    "isSvg": false,
+    "permission": "MANAGE_ORG_UNIT_FIELDS",
+    "permissionGroup": null,
+    "parent": 6,
+    "group": "administration",
+    "itemOrder": 12,
     "svg": null
   }
 ]

@@ -3,9 +3,9 @@ import {LangService} from '@services/lang.service';
 import {ToastService} from '@services/toast.service';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {ImplementingAgency} from '@app/models/implementing-agency';
-import {of, Subject} from 'rxjs';
+import {Subject} from 'rxjs';
 import {ReadinessStatus} from '@app/types/types';
-import {catchError, filter, map, take, takeUntil, tap} from 'rxjs/operators';
+import {filter, map, take, takeUntil, tap} from 'rxjs/operators';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {DialogService} from '@services/dialog.service';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
@@ -15,7 +15,7 @@ import {CommonUtils} from '@helpers/common-utils';
 import {LookupService} from '@services/lookup.service';
 import {Lookup} from '@app/models/lookup';
 import {AdminResult} from '@app/models/admin-result';
-import {ExternalProjectImplementationService} from '@services/external-project-implementation.service';
+import {CommonService} from '@services/common.service';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -29,7 +29,7 @@ export class ImplementingAgencyListComponent implements OnInit, OnDestroy {
               private toastService: ToastService,
               private dialogService: DialogService,
               private lookupService: LookupService,
-              private externalProjectImplementationService: ExternalProjectImplementationService,
+              private commonService: CommonService,
               private fb: FormBuilder) {
   }
 
@@ -294,11 +294,10 @@ export class ImplementingAgencyListComponent implements OnInit, OnDestroy {
       this.implementingAgencyList = [];
       return;
     }
-    this.externalProjectImplementationService.loadAgenciesByAgencyType(agencyType, this.executionCountry).pipe(
-      catchError(() => of([]))
-    ).subscribe((result) => {
-      this.implementingAgencyList = result;
-    });
+    this.commonService.loadAgenciesByAgencyTypeAndCountry(agencyType, this.executionCountry)
+      .subscribe((result) => {
+        this.implementingAgencyList = result;
+      });
   }
 
   get implementingAgencyTypeField(): FormControl {

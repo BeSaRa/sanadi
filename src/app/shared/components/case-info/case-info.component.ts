@@ -12,6 +12,8 @@ import {ProjectModelService} from '@app/services/project-model.service';
 import {CustomsExemptionRemittance} from '@app/models/customs-exemption-remittance';
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 import {CustomsExemptionRemittanceService} from '@services/customs-exemption-remittance.service';
+import {InternalBankAccountApproval} from '@app/models/internal-bank-account-approval';
+import {BankAccountRequestTypes} from '@app/enums/bank-account-request-types';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -38,7 +40,8 @@ export class CaseInfoComponent {
     CaseTypes.URGENT_INTERVENTION_LICENSING,
     CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN,
     CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL,
-    CaseTypes.EMPLOYMENT
+    CaseTypes.EMPLOYMENT,
+    CaseTypes.URGENT_INTERVENTION_CLOSURE
   ];
 
   // this should be updated when ever you will add a new document service
@@ -59,10 +62,22 @@ export class CaseInfoComponent {
   }
 
   get generatedLicenseNumber(): string {
+    if (!this.model) {
+      return '';
+    }
+    if (this.model.getCaseType() === CaseTypes.URGENT_INTERVENTION_CLOSURE) {
+      return (this.model as LicenseApprovalModel<any, any>).oldLicenseFullSerial || '';
+    }
     return (this.model as LicenseApprovalModel<any, any>).exportedLicenseFullSerial || '';
   }
 
   get generatedLicenseId(): string {
+    if (!this.model) {
+      return '';
+    }
+    if (this.model.getCaseType() === CaseTypes.URGENT_INTERVENTION_CLOSURE) {
+      return (this.model as any).licenseVSID || '';
+    }
     return (this.model as LicenseApprovalModel<any, any>).exportedLicenseId || '';
   }
 
@@ -83,7 +98,11 @@ export class CaseInfoComponent {
   }
 
   isLicenseCase(): boolean {
-    return this.licenseCasList.includes(this.model.getCaseType()) && this.model.getCaseStatus() === CommonCaseStatus.FINAL_APPROVE;
+    if(this.model.caseType === CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL) {
+      return this.licenseCasList.includes(this.model.getCaseType()) && this.model.getCaseStatus() === CommonCaseStatus.FINAL_APPROVE && (this.model as InternalBankAccountApproval).requestType !== BankAccountRequestTypes.CANCEL;
+    } else {
+      return this.licenseCasList.includes(this.model.getCaseType()) && this.model.getCaseStatus() === CommonCaseStatus.FINAL_APPROVE;
+    }
   }
 
   isDocumentCase(): boolean {
