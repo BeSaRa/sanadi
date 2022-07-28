@@ -11,8 +11,9 @@ export class ForeignCountriesProjectsSearchCriteriaInterceptor implements IModel
   }
 
   send(model: Partial<ForeignCountriesProjectsSearchCriteria>): Partial<ForeignCountriesProjectsSearchCriteria> {
-    if (!model.projectName) return model;
+    if (!model.projectName) { return model; }
     model.projectNeeds = [{ projectName: model.projectName }];
+    delete model.projectName;
     return model;
   }
 }
