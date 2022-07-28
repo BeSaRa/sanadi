@@ -43,7 +43,7 @@ export class ProjectNeedsComponent implements OnInit {
   @Input() caseType?: CaseTypes;
   @Input() set list(list: ProjectNeeds) {
     this._list = list;
-    this.totalCost = list.reduce((p, c) => p + +c.totalCost, 0);
+    this.totalCost = list.reduce((p, c) => p + +(c.totalCost || 0), 0);
     this.projectNeeds.next(this._list);
   }
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();

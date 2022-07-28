@@ -26,4 +26,4 @@ export class ProjectNeed extends SearchableCloneable<ProjectNeed> {
 
 }
 
-export type ProjectNeeds = ProjectNeed[];
+export type ProjectNeeds = Partial<ProjectNeed>[];

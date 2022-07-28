@@ -84,7 +84,6 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
   }
 
   private search(value: Partial<CaseModel<any, any>>) {
-    console.log(value);
     const caseType = (this.selectedService.getSearchCriteriaModel()).caseType;
     let criteria = this.selectedService.getSearchCriteriaModel().clone(value).filterSearchFields(this.fieldsNames);
     criteria.caseType = caseType;
@@ -332,7 +331,6 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
       .pipe(skip(1))
       .pipe(filter(_ => this.form.valid))
       .pipe(map(_ => this.prepareCriteriaModel()));
-    console.log('333');
     const invalidForm$ = this.search$.pipe(filter(_ => this.form.invalid));
     const validEmptyForm$ = validForm$.pipe(filter(model => !model.criteriaHasValues()));
 

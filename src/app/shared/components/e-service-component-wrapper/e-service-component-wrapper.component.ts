@@ -100,7 +100,8 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     CaseTypes.INQUIRY,
     CaseTypes.CONSULTATION,
     CaseTypes.INTERNATIONAL_COOPERATION,
-    CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN
+    CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN,
+    CaseTypes.FOREIGN_COUNTRIES_PROJECTS
   ];
 
   finalApproveByMatrixServices: number[] = [
@@ -1008,7 +1009,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
 
   private returnToSpecificOrganizationAction(item: CaseModel<any, any>) {
     item.returnToSpecificOrganization().onAfterClose$.subscribe(noOrganizationsRemaining => {
-      if(!noOrganizationsRemaining) {
+      if (!noOrganizationsRemaining) {
         // reload component
         this.service.getTask(this.info?.taskId!).subscribe(model => {
           this.component.outModel = model;

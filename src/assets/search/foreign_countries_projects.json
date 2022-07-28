@@ -13,7 +13,7 @@
         }
       },
       {
-        "key": "projectNeeds[0].projectName",
+        "key": "projectName",
         "type": "input",
         "label": "project_name",
         "validations": {
