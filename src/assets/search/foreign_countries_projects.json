@@ -13,9 +13,9 @@
         }
       },
       {
-        "key": "subject",
+        "key": "projectNeeds[0].projectName",
         "type": "input",
-        "label": "subject",
+        "label": "project_name",
         "validations": {
           "required": false
         },

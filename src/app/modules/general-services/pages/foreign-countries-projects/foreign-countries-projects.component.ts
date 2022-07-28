@@ -26,6 +26,7 @@ import { ForeignCountriesProjectsService } from '@app/services/foreign-countries
 import { LangService } from '@app/services/lang.service';
 import { LicenseService } from '@app/services/license.service';
 import { LookupService } from '@app/services/lookup.service';
+import { ToastService } from '@app/services/toast.service';
 import { ReadinessStatus } from '@app/types/types';
 import { Observable, of, Subject } from 'rxjs';
 import {
@@ -65,6 +66,7 @@ export class ForeignCountriesProjectsComponent
   selectedLicense?: ForeignCountriesProjects;
   projectNeedsTabStatus: ReadinessStatus = 'READY';
 
+
   @ViewChildren('tabContent', { read: TemplateRef })
   tabsTemplates!: QueryList<TemplateRef<any>>;
 
@@ -78,7 +80,8 @@ export class ForeignCountriesProjectsComponent
     private countryService: CountryService,
     private dialog: DialogService,
     private licenseService: LicenseService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private toast: ToastService
   ) {
     super();
   }
@@ -315,7 +318,15 @@ export class ForeignCountriesProjectsComponent
     saveType: SaveTypes,
     operation: OperationTypes
   ): void {
-    throw new Error('Method not implemented.');
+    this.model = model;
+    if (
+      (operation === OperationTypes.CREATE && saveType === SaveTypes.FINAL) ||
+      (operation === OperationTypes.UPDATE && saveType === SaveTypes.COMMIT)
+    ) {
+      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({ serial: model.fullSerial }));
+    } else {
+      this.toast.success(this.lang.map.request_has_been_saved_successfully);
+    }
   }
   _saveFail(error: any): void {
 
@@ -327,7 +338,6 @@ export class ForeignCountriesProjectsComponent
   }
   _updateForm(model: ForeignCountriesProjects | undefined): void {
     this.model = model;
-    console.log
     this.basicInfo.patchValue(this.model?.buildForm(false)!);
     this.specialExplanation.patchValue(this.model?.buildExplanation(false)!);
     this.handleRequestTypeChange(this.model?.requestType || 0, false);
