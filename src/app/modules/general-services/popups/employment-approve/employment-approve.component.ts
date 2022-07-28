@@ -39,6 +39,7 @@ export class EmploymentApproveComponent implements OnInit, OnDestroy {
     {
       icon: 'calendar',
       langKey: 'btn_delete',
+      show: () => true,
       callback: (e: any, data: any) => {
         return this.dialog.show(ApproveEmploymentDateComponent, {
           model: data,
@@ -46,7 +47,7 @@ export class EmploymentApproveComponent implements OnInit, OnDestroy {
         });
       },
     }
-  ] : []
+  ] : [];
   constructor(
     @Inject(DIALOG_DATA_TOKEN) public data: {
       model: Employment,
