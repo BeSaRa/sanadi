@@ -107,7 +107,7 @@ export class UrgentInterventionClosure extends LicenseApprovalModel<UrgentInterv
       requestType: controls ? [requestType, [CustomValidators.required]] : requestType,
       fullName: controls ? [fullName, [CustomValidators.required, CustomValidators.maxLength(100)]] : fullName,
       year: controls ? [year, [CustomValidators.required, CustomValidators.minLength(4), CustomValidators.maxLength(4), Validators.max(new Date().getFullYear())]] : year,
-      duration: controls ? [duration, [CustomValidators.required, CustomValidators.number]] : duration,
+      duration: controls ? [duration, [CustomValidators.required, CustomValidators.number, Validators.max(30)]] : duration,
       oldLicenseFullSerial: controls ? [oldLicenseFullSerial, [CustomValidators.maxLength(250)]] : oldLicenseFullSerial, // always required as request type is only NEW
       beneficiaryCountry: controls ? [beneficiaryCountry, [CustomValidators.required]] : beneficiaryCountry,
       beneficiaryRegion: controls ? [beneficiaryRegion, [CustomValidators.maxLength(50)]] : beneficiaryRegion,
