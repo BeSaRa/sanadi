@@ -261,6 +261,7 @@ export class UrgentInterventionReportComponent extends EServicesGenericComponent
 
   _resetForm(): void {
     this.form.reset();
+    this.tabIndex$.next(0);
     this.model = this._getNewInstance();
     this.operation = this.operationTypes.CREATE;
     this.setSelectedLicense(undefined, true);
@@ -430,8 +431,8 @@ export class UrgentInterventionReportComponent extends EServicesGenericComponent
   handleChangeExecutionCountry(country: number, userInteraction: boolean) {
     if (userInteraction) {
       this.implementingAgencyListComponentRef.forceClearComponent();
-      this.interventionRegionListComponentRef.forceClearComponent();
-      this.interventionFieldListComponentRef.forceClearComponent();
+      // this.interventionRegionListComponentRef.forceClearComponent();
+      // this.interventionFieldListComponentRef.forceClearComponent();
     }
   }
 
