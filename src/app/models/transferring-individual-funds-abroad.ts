@@ -9,6 +9,7 @@ import {CustomValidators} from '@app/validators/custom-validators';
 import {Validators} from '@angular/forms';
 import {TransferFundsCharityPurpose} from '@app/models/transfer-funds-charity-purpose';
 import {FactoryService} from '@services/factory.service';
+import {IMyDateModel} from 'angular-mydatepicker';
 
 const interceptor = new TransferringIndividualFundsAbroadInterceptor();
 
@@ -55,7 +56,7 @@ export class TransferringIndividualFundsAbroad extends CaseModel<TransferringInd
   executionCountry!: number;
   executiveManagementList: TransferFundsExecutiveManagement[] = [];
   charityPurposeTransferList: TransferFundsCharityPurpose[] = [];
-  establishmentDate!: string;
+  establishmentDate!: string | IMyDateModel;
   followUpDate!: string;
   identificationNumber!: string;
   jobTitle!: string;

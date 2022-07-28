@@ -49,6 +49,8 @@ export class TransferringIndividualFundsAbroadInterceptor implements IModelInter
   }
 
   receive(model: TransferringIndividualFundsAbroad): TransferringIndividualFundsAbroad {
+    let service: TransferringIndividualFundsAbroadService = FactoryService.getService('TransferringIndividualFundsAbroadService');
+    model.establishmentDate = DateUtils.changeDateToDatepicker(model.establishmentDate);
     model.licenseStatusInfo = model.licenseStatusInfo ? AdminResult.createInstance(model.licenseStatusInfo) : AdminResult.createInstance({});
     model.managerDecisionInfo = model.managerDecisionInfo ? AdminResult.createInstance(model.managerDecisionInfo) : AdminResult.createInstance({});
     model.reviewerDepartmentDecisionInfo = model.reviewerDepartmentDecisionInfo ? AdminResult.createInstance(model.reviewerDepartmentDecisionInfo) : AdminResult.createInstance({});
@@ -71,6 +73,15 @@ export class TransferringIndividualFundsAbroadInterceptor implements IModelInter
     model.transferMethodInfo = model.transferMethodInfo ? AdminResult.createInstance(model.transferMethodInfo) : AdminResult.createInstance({});
     model.transferTypeInfo = model.transferTypeInfo ? AdminResult.createInstance(model.transferTypeInfo) : AdminResult.createInstance({});
     model.receiverNationalityInfo = model.receiverNationalityInfo ? AdminResult.createInstance(model.receiverNationalityInfo) : AdminResult.createInstance({});
+
+    if (model.executiveManagementList && model.executiveManagementList.length > 0) {
+      model.executiveManagementList = model.executiveManagementList.map(x => service.executiveManagementListInterceptor.receive(x) as TransferFundsExecutiveManagement);
+    }
+
+    if (model.charityPurposeTransferList && model.charityPurposeTransferList.length > 0) {
+      model.charityPurposeTransferList = model.charityPurposeTransferList.map(x => service.transferFundsCharityPurposeInterceptor.receive(x) as TransferFundsCharityPurpose);
+    }
+
     return model;
   }
 }

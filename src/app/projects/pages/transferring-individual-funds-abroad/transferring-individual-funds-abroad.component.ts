@@ -6,7 +6,7 @@ import {EServicesGenericComponent} from '@app/generics/e-services-generic-compon
 import {TransferringIndividualFundsAbroad} from '@app/models/transferring-individual-funds-abroad';
 import {LangService} from '@app/services/lang.service';
 import {TransferringIndividualFundsAbroadService} from '@services/transferring-individual-funds-abroad.service';
-import {Observable, Subject} from 'rxjs';
+import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {LookupService} from '@services/lookup.service';
 import {DialogService} from '@services/dialog.service';
 import {ToastService} from '@services/toast.service';
@@ -76,6 +76,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
   selectedPurpose!: TransferFundsCharityPurpose | null;
   selectedPurposeIndex!: number | null;
   purposeDisplayedColumns: string[] = ['projectName', 'projectType', 'domain', 'totalCost', 'beneficiaryCountry', 'executionCountry', 'actions'];
+  transfereeTypeChanged: BehaviorSubject<number | null> = new BehaviorSubject<number | null>(null);
   individualTransfereeTypeSelected: Subject<void> = new Subject<void>();
   externalOrganizationTransfereeTypeSelected: Subject<void> = new Subject<void>();
   noTransfereeTypeSelected: Subject<void> = new Subject<void>();
@@ -264,10 +265,11 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
   }
 
   _afterBuildForm(): void {
-    this.listenToTransfereeTypeChange();
-    this.listenToIndividualTransfereeTypeSelected();
     this.listenToExternalOrganizationTransfereeTypeSelected();
+    this.listenToIndividualTransfereeTypeSelected();
     this.listenToNoTransfereeTypeSelected();
+    this.listenToTransfereeSubject();
+    this.listenToTransfereeTypeChange();
     this.handleReadonly();
   }
 
@@ -285,6 +287,10 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
       financialTransactionInfo: this.model?.buildFinancialTransactionInfo(),
       explanation: this.model?.buildExplanation()
     });
+
+    this.selectedExecutives = this.model?.executiveManagementList;
+    this.selectedPurposes = this.model?.charityPurposeTransferList;
+    this.transfereeTypeChanged.next(this.transfereeType.value);
   }
 
   _resetForm(): void {
@@ -343,6 +349,8 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
 
   _afterLaunch(): void {
     this._resetForm();
+    this.selectedExecutives = [];
+    this.selectedPurposes = [];
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
 
@@ -428,6 +436,14 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
 
   listenToTransfereeTypeChange() {
     this.transfereeType.valueChanges.subscribe(value => {
+      this.transfereeTypeChanged.next(value);
+    });
+  }
+
+  listenToTransfereeSubject() {
+    this.transfereeTypeChanged
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(value => {
       if (value === TransfereeTypeEnum.INDIVIDUAL) {
         this.individualTransfereeTypeSelected.next();
       } else if (value === TransfereeTypeEnum.EXTERNAL_ORGANIZATION) {
