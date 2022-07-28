@@ -22,13 +22,12 @@ import {CustomValidators} from '@app/validators/custom-validators';
 import {TransferFundsExecutiveManagement} from '@app/models/transfer-funds-executive-management';
 import {takeUntil} from 'rxjs/operators';
 import {TransfereeTypeEnum} from '@app/enums/transferee-type-enum';
-import {AdminLookupService} from '@services/admin-lookup.service';
 import {AdminLookupTypeEnum} from '@app/enums/admin-lookup-type-enum';
 import {AdminLookup} from '@app/models/admin-lookup';
 import {TransferFundsCharityPurpose} from '@app/models/transfer-funds-charity-purpose';
 import {AdminResult} from '@app/models/admin-result';
-import {OrganizationOfficer} from '@app/models/organization-officer';
-import {UrgentJointReliefCampaign} from '@app/models/urgent-joint-relief-campaign';
+import {DacOchaNewService} from '@services/dac-ocha-new.service';
+import {DomainTypes} from '@app/enums/domain-types';
 
 @Component({
   selector: 'transferring-individual-funds-abroad',
@@ -82,6 +81,8 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
   noTransfereeTypeSelected: Subject<void> = new Subject<void>();
   isIndividualTransferee!: boolean;
   isExternalOrganizationTransferee!: boolean;
+  isHumanitarian = true;
+  isDevelopment = true;
 
   constructor(public lang: LangService,
               public fb: FormBuilder,
@@ -92,7 +93,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
               private toast: ToastService,
               private licenseService: LicenseService,
               private employeeService: EmployeeService,
-              private adminLookupService: AdminLookupService) {
+              private dacOchaNewService: DacOchaNewService) {
     super();
   }
 
@@ -221,6 +222,18 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     return this.form.get('receiverPersonInfo.receiverPhone2')! as FormControl;
   }
 
+  get domain(): FormControl {
+    return this.transferPurposeForm.get('domain')! as FormControl;
+  }
+
+  get mainDACCategory(): FormControl {
+    return this.transferPurposeForm.get('mainDACCategory')! as FormControl;
+  }
+
+  get mainUNOCHACategory(): FormControl {
+    return this.transferPurposeForm.get('mainUNOCHACategory')! as FormControl;
+  }
+
   ngAfterViewInit(): void {
     this.cd.detectChanges();
   }
@@ -230,7 +243,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     this.isExternalUser = this.employeeService.isExternalUser();
     this.buildExecutiveManagementForm();
     this.buildTransferPurposeForm();
-    this.loadDacsAndOchas();
+    this.listenToDomainChanges();
   }
 
   _buildForm(): void {
@@ -402,8 +415,8 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
       projectName: [null, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
       projectType: [null, [CustomValidators.required]],
       domain: [null, [CustomValidators.required]],
-      mainUNOCHACategory: [null, [CustomValidators.required]],
-      mainDACCategory: [null, [CustomValidators.required]],
+      mainUNOCHACategory: [null, []],
+      mainDACCategory: [null, []],
       beneficiaryCountry: [null, [CustomValidators.required]],
       executionCountry: [null, [CustomValidators.required]],
       totalCost: [null, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(20)]],
@@ -661,13 +674,70 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     this.receiverPhone2.patchValue(null);
   }
 
-  loadDacsAndOchas() {
-    this.adminLookupService.loadWorkFieldsByType(AdminLookupTypeEnum.DAC).subscribe(list => {
+  loadDacs() {
+    this.dacOchaNewService.loadByType(AdminLookupTypeEnum.DAC).subscribe(list => {
       this.mainDacs = list;
     });
+  }
 
-    this.adminLookupService.loadWorkFieldsByType(AdminLookupTypeEnum.OCHA).subscribe(list => {
+  loadOchas() {
+    this.dacOchaNewService.loadByType(AdminLookupTypeEnum.OCHA).subscribe(list => {
       this.mainOchas = list;
     });
+  }
+
+  listenToDomainChanges() {
+    this.domain.valueChanges.subscribe(val => {
+      if(val === DomainTypes.HUMANITARIAN) {
+        this.showAndRequireMainUNOCHACategory();
+        this.hideAndDontRequireMainDACCategory();
+        this.loadOchas();
+      } else if (val === DomainTypes.DEVELOPMENT) {
+        this.hideAndDontRequireMainUNOCHACategory();
+        this.showAndRequireMainDACCategory();
+        this.loadDacs();
+      } else {
+        this.showAndDontRequireMainUNOCHACategory();
+        this.showAndDontRequireMainDACCategory();
+      }
+    });
+  }
+
+  showAndRequireMainDACCategory() {
+    this.mainDACCategory.setValidators([CustomValidators.required]);
+    this.mainDACCategory.updateValueAndValidity();
+    this.isDevelopment = true;
+  }
+
+  showAndRequireMainUNOCHACategory() {
+    this.mainUNOCHACategory.setValidators([CustomValidators.required]);
+    this.mainUNOCHACategory.updateValueAndValidity();
+    this.isHumanitarian = true;
+  }
+
+  hideAndDontRequireMainDACCategory() {
+    this.mainDACCategory.patchValue(null);
+    this.mainDACCategory.setValidators([]);
+    this.mainDACCategory.updateValueAndValidity();
+    this.isDevelopment = false;
+  }
+
+  hideAndDontRequireMainUNOCHACategory() {
+    this.mainUNOCHACategory.patchValue(null);
+    this.mainUNOCHACategory.setValidators([]);
+    this.mainUNOCHACategory.updateValueAndValidity();
+    this.isHumanitarian = false;
+  }
+
+  showAndDontRequireMainDACCategory() {
+    this.mainDACCategory.setValidators([]);
+    this.mainDACCategory.updateValueAndValidity();
+    this.isDevelopment = true;
+  }
+
+  showAndDontRequireMainUNOCHACategory() {
+    this.mainUNOCHACategory.setValidators([]);
+    this.mainUNOCHACategory.updateValueAndValidity();
+    this.isHumanitarian = true;
   }
 }

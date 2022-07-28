@@ -528,40 +528,15 @@
               <app-field-error-message controlName="projectType"></app-field-error-message>
             </div>
             <div class="col-md-4 col-sm-12 mb-4 position-relative">
-              <label asteriskIfRequired="domain" class="form-label"
-                     for="domain">{{lang.map.domain}}</label>
-              <ng-select [clearable]="false" [readonly]="(readonly)" appendTo="body"
-                         formControlName="domain"
-                         id="domain" validationClasses="domain">
-                <ng-option *ngFor="let option of domains"
-                           [value]="option.lookupKey">{{option.getName()}}</ng-option>
-              </ng-select>
-              <app-field-error-message controlName="domain"></app-field-error-message>
+              <label asteriskIfRequired="projectImplementationPeriod" class="form-label"
+                     for="projectImplementationPeriod">{{lang.map.execution_period_in_months}}</label>
+              <input [readonly]="(readonly)" class="form-control"
+                     formControlName="projectImplementationPeriod"
+                     id="projectImplementationPeriod" validationClasses="projectImplementationPeriod">
+              <app-field-error-message controlName="projectImplementationPeriod"></app-field-error-message>
             </div>
           </div>
           <div class="row">
-            <div class="col-md-4 col-sm-12 mb-4 position-relative">
-              <label asteriskIfRequired="mainUNOCHACategory" class="form-label"
-                     for="mainUNOCHACategory">{{lang.map.ocha}}</label>
-              <ng-select [clearable]="false" [readonly]="(readonly)" appendTo="body"
-                         formControlName="mainUNOCHACategory"
-                         id="mainUNOCHACategory" validationClasses="mainUNOCHACategory">
-                <ng-option *ngFor="let option of mainOchas"
-                           [value]="option.id">{{option.getName()}}</ng-option>
-              </ng-select>
-              <app-field-error-message controlName="mainUNOCHACategory"></app-field-error-message>
-            </div>
-            <div class="col-md-4 col-sm-12 mb-4 position-relative">
-              <label asteriskIfRequired="mainDACCategory" class="form-label"
-                     for="mainDACCategory">{{lang.map.dac}}</label>
-              <ng-select [clearable]="false" [readonly]="(readonly)" appendTo="body"
-                         formControlName="mainDACCategory"
-                         id="mainDACCategory" validationClasses="mainDACCategory">
-                <ng-option *ngFor="let option of mainDacs"
-                           [value]="option.id">{{option.getName()}}</ng-option>
-              </ng-select>
-              <app-field-error-message controlName="mainDACCategory"></app-field-error-message>
-            </div>
             <div class="col-md-4 col-sm-12 mb-4 position-relative">
               <label asteriskIfRequired="beneficiaryCountry" class="form-label"
                      for="beneficiaryCountry">{{lang.map.beneficiary_country}}</label>
@@ -573,8 +548,6 @@
               </ng-select>
               <app-field-error-message controlName="beneficiaryCountry"></app-field-error-message>
             </div>
-          </div>
-          <div class="row">
             <div class="col-md-4 col-sm-12 mb-4 position-relative">
               <label asteriskIfRequired="executionCountry" class="form-label"
                      for="executionCountry">{{lang.map.execution_country}}</label>
@@ -594,13 +567,40 @@
                      id="totalCost" validationClasses="totalCost">
               <app-field-error-message controlName="totalCost"></app-field-error-message>
             </div>
+          </div>
+          <div class="row">
             <div class="col-md-4 col-sm-12 mb-4 position-relative">
-              <label asteriskIfRequired="projectImplementationPeriod" class="form-label"
-                     for="projectImplementationPeriod">{{lang.map.execution_period_in_months}}</label>
-              <input [readonly]="(readonly)" class="form-control"
-                     formControlName="projectImplementationPeriod"
-                     id="projectImplementationPeriod" validationClasses="projectImplementationPeriod">
-              <app-field-error-message controlName="projectImplementationPeriod"></app-field-error-message>
+              <label asteriskIfRequired="domain" class="form-label"
+                     for="domain">{{lang.map.domain}}</label>
+              <ng-select [clearable]="false" [readonly]="(readonly)" appendTo="body"
+                         formControlName="domain"
+                         id="domain" validationClasses="domain">
+                <ng-option *ngFor="let option of domains"
+                           [value]="option.lookupKey">{{option.getName()}}</ng-option>
+              </ng-select>
+              <app-field-error-message controlName="domain"></app-field-error-message>
+            </div>
+            <div class="col-md-4 col-sm-12 mb-4 position-relative" *ngIf="isHumanitarian">
+              <label asteriskIfRequired="mainUNOCHACategory" class="form-label"
+                     for="mainUNOCHACategory">{{lang.map.ocha}}</label>
+              <ng-select [clearable]="false" [readonly]="(readonly)" appendTo="body"
+                         formControlName="mainUNOCHACategory"
+                         id="mainUNOCHACategory" validationClasses="mainUNOCHACategory">
+                <ng-option *ngFor="let option of mainOchas"
+                           [value]="option.id">{{option.getName()}}</ng-option>
+              </ng-select>
+              <app-field-error-message controlName="mainUNOCHACategory"></app-field-error-message>
+            </div>
+            <div class="col-md-4 col-sm-12 mb-4 position-relative" *ngIf="isDevelopment">
+              <label asteriskIfRequired="mainDACCategory" class="form-label"
+                     for="mainDACCategory">{{lang.map.dac}}</label>
+              <ng-select [clearable]="false" [readonly]="(readonly)" appendTo="body"
+                         formControlName="mainDACCategory"
+                         id="mainDACCategory" validationClasses="mainDACCategory">
+                <ng-option *ngFor="let option of mainDacs"
+                           [value]="option.id">{{option.getName()}}</ng-option>
+              </ng-select>
+              <app-field-error-message controlName="mainDACCategory"></app-field-error-message>
             </div>
           </div>
           <div class="row">
