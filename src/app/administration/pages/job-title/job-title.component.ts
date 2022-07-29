@@ -9,7 +9,7 @@ import { DialogService } from '@app/services/dialog.service';
 import { SharedService } from '@app/services/shared.service';
 import { IGridAction } from '@app/interfaces/i-grid-action';
 import { ToastService } from '@app/services/toast.service';
-import { catchError, exhaustMap, filter, map, switchMap, takeUntil } from 'rxjs/operators';
+import { catchError, exhaustMap, filter, switchMap, takeUntil } from 'rxjs/operators';
 import { of, Subject } from 'rxjs';
 import { CommonStatusEnum } from '@app/enums/common-status.enum';
 import { SortEvent } from '@app/interfaces/sort-event';
@@ -23,6 +23,12 @@ import { DialogRef } from '@app/shared/models/dialog-ref';
   styleUrls: ['./job-title.component.scss']
 })
 export class JobTitleComponent extends AdminGenericComponent<JobTitle, JobTitleService> {
+  afterReload(): void {
+    this.table.selection.clear()
+  }
+
+  filterRetired = true;
+  usePagination = true;
 
   constructor(public lang: LangService,
               public service: JobTitleService,
@@ -152,13 +158,13 @@ export class JobTitleComponent extends AdminGenericComponent<JobTitle, JobTitleS
 
   delete(event: MouseEvent, model: JobTitle): void {
     event.preventDefault();
-    const message = this.lang.map.msg_confirm_delete_x.change({x: model.getName()});
+    const message = this.lang.map.msg_confirm_delete_x.change({ x: model.getName() });
     this.dialogService.confirm(message)
       .onAfterClose$.subscribe((click: UserClickOn) => {
       if (click === UserClickOn.YES) {
         const sub = model.delete().subscribe(() => {
           // @ts-ignore
-          this.toast.success(this.lang.map.msg_delete_x_success.change({x: model.getName()}));
+          this.toast.success(this.lang.map.msg_delete_x_success.change({ x: model.getName() }));
           this.reload$.next(null);
           sub.unsubscribe();
         });
@@ -203,31 +209,11 @@ export class JobTitleComponent extends AdminGenericComponent<JobTitle, JobTitleS
     let updateObservable = model.status == CommonStatusEnum.ACTIVATED ? model.updateStatus(CommonStatusEnum.DEACTIVATED) : model.updateStatus(CommonStatusEnum.ACTIVATED);
     updateObservable.pipe(takeUntil(this.destroy$))
       .subscribe(() => {
-        this.toast.success(this.lang.map.msg_status_x_updated_success.change({x: model.getName()}));
+        this.toast.success(this.lang.map.msg_status_x_updated_success.change({ x: model.getName() }));
         this.reload$.next(null);
       }, () => {
-        this.toast.error(this.lang.map.msg_status_x_updated_fail.change({x: model.getName()}));
+        this.toast.error(this.lang.map.msg_status_x_updated_fail.change({ x: model.getName() }));
         this.reload$.next(null);
       });
-  }
-
-  listenToReload() {
-    this.reload$
-      .pipe(takeUntil((this.destroy$)))
-      .pipe(switchMap(() => {
-        const load = this.useCompositeToLoad ? this.service.loadComposite() : this.service.load();
-        return load.pipe(
-          map(list => {
-            return list.filter(model => {
-              return model.status !== CommonStatusEnum.RETIRED;
-            });
-          }),
-          catchError(_ => of([]))
-        );
-      }))
-      .subscribe((list: JobTitle[]) => {
-        this.models = list;
-        this.table.selection.clear();
-      })
   }
 }
