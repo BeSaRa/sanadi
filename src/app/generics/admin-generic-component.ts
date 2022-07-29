@@ -100,6 +100,7 @@ export abstract class AdminGenericComponent<M extends { id: number }, S extends 
           this.count = list.length;
         }
         this.models = list;
+        this.afterReload();
       })
   }
 
@@ -143,6 +144,10 @@ export abstract class AdminGenericComponent<M extends { id: number }, S extends 
   }
 
   protected _init(): void {
+
+  }
+
+  afterReload(): void {
 
   }
 
