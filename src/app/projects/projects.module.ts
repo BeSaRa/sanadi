@@ -23,6 +23,7 @@ import {
 import {EServicesMainModule} from '@app/modules/e-services-main/e-services-main.module';
 import { SelectEmployeePopupComponent } from './popups/select-employee-popup/select-employee-popup.component';
 import { TransferringIndividualFundsAbroadComponent } from './pages/transferring-individual-funds-abroad/transferring-individual-funds-abroad.component';
+import { TransferFundsAbroadApproveTaskPopupComponent } from './popups/transfer-funds-abroad-approve-task-popup/transfer-funds-abroad-approve-task-popup.component';
 
 
 @NgModule({
@@ -38,7 +39,8 @@ import { TransferringIndividualFundsAbroadComponent } from './pages/transferring
     UrgentJointReliefCampaignOrganizationApproveTaskPopupComponent,
     InternalBankApprovalApproveTaskPopupComponent,
     SelectEmployeePopupComponent,
-    TransferringIndividualFundsAbroadComponent
+    TransferringIndividualFundsAbroadComponent,
+    TransferFundsAbroadApproveTaskPopupComponent
   ],
   imports: [
     CommonModule,

@@ -12,6 +12,11 @@ import {TransferringIndividualFundsAbroadSearchCriteria} from '@app/models/trans
 import {CastResponseContainer} from '@decorators/cast-response';
 import {ExecutiveManagementListInterceptor} from '@app/model-interceptors/executive-management-list-interceptor';
 import {TransferFundsCharityPurposeInterceptor} from '@app/model-interceptors/transfer-funds-charity-purpose-interceptor';
+import {WFResponseType} from '@app/enums/wfresponse-type.enum';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {
+  TransferFundsAbroadApproveTaskPopupComponent
+} from '@app/projects/popups/transfer-funds-abroad-approve-task-popup/transfer-funds-abroad-approve-task-popup.component';
 
 @CastResponseContainer({
   $default: {
@@ -57,5 +62,19 @@ export class TransferringIndividualFundsAbroadService extends BaseGenericEServic
 
   _getUrlService(): UrlService {
     return this.urlService;
+  }
+
+  approveTask(model: TransferringIndividualFundsAbroad, action: WFResponseType): DialogRef {
+    return this.dialog.show(TransferFundsAbroadApproveTaskPopupComponent, {
+      model,
+      action: action
+    });
+  }
+
+  finalApproveTask(model: TransferringIndividualFundsAbroad, action: WFResponseType): DialogRef {
+    return this.dialog.show(TransferFundsAbroadApproveTaskPopupComponent, {
+      model,
+      action: action
+    });
   }
 }

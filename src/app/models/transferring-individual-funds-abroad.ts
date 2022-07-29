@@ -10,6 +10,8 @@ import {Validators} from '@angular/forms';
 import {TransferFundsCharityPurpose} from '@app/models/transfer-funds-charity-purpose';
 import {FactoryService} from '@services/factory.service';
 import {IMyDateModel} from 'angular-mydatepicker';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {WFResponseType} from '@app/enums/wfresponse-type.enum';
 
 const interceptor = new TransferringIndividualFundsAbroadInterceptor();
 
@@ -217,5 +219,26 @@ export class TransferringIndividualFundsAbroad extends CaseModel<TransferringInd
     return {
       description: controls ? [description, [CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)]] : description,
     };
+  }
+
+  buildApprovalForm(controls: boolean = false): any {
+    const {
+      followUpDate,
+      publicTerms,
+      customTerms
+    } = this;
+    return {
+      followUpDate: controls ? [followUpDate, [CustomValidators.required]] : followUpDate,
+      publicTerms: controls ? [{value: publicTerms, disabled: true}] : publicTerms,
+      customTerms: controls ? [customTerms] : customTerms
+    }
+  }
+
+  approve(): DialogRef {
+    return this.service.approveTask(this, WFResponseType.APPROVE);
+  }
+
+  finalApprove(): DialogRef {
+    return this.service.finalApproveTask(this, WFResponseType.FINAL_APPROVE);
   }
 }
