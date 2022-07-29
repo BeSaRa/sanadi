@@ -1,4 +1,6 @@
 import { Observable } from 'rxjs';
+import { Pagination } from "@app/models/pagination";
+import { PaginationContract } from "@contracts/pagination-contract";
 
 export interface CrudServiceInterface<T> {
 
@@ -11,5 +13,11 @@ export interface CrudServiceInterface<T> {
   delete(modelId: number): Observable<boolean>;
 
   getById(modelId: number): Observable<T>;
+
+  loadComposite(): Observable<T[]>
+
+  paginate(options: PaginationContract): Observable<Pagination<T[]>>
+
+  paginateComposite(options: PaginationContract): Observable<Pagination<T[]>>
 
 }

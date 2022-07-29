@@ -1,6 +1,6 @@
-import { BehaviorSubject, of, Subject } from "rxjs";
+import { BehaviorSubject, Observable, of, Subject } from "rxjs";
 import { IMenuItem } from "@app/modules/context-menu/interfaces/i-menu-item";
-import { catchError, exhaustMap, filter, switchMap, takeUntil } from "rxjs/operators";
+import { catchError, exhaustMap, filter, map, switchMap, takeUntil } from "rxjs/operators";
 import { Directive, OnDestroy, OnInit } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import {
@@ -8,7 +8,9 @@ import {
 } from "@app/generics/backend-with-dialog-operations-generic-service";
 import { DialogRef } from "@app/shared/models/dialog-ref";
 import { CrudWithDialogGenericService } from "@app/generics/crud-with-dialog-generic-service";
-import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import { CommonStatusEnum } from '@app/enums/common-status.enum';
+import { PageEvent } from "@contracts/page-event";
+import { CrudServiceInterface } from "@contracts/crud-service-interface";
 
 @Directive()
 export abstract class AdminGenericComponent<M extends { id: number }, S extends BackendWithDialogOperationsGenericService<M> | CrudWithDialogGenericService<M>> implements OnInit, OnDestroy {
@@ -37,6 +39,17 @@ export abstract class AdminGenericComponent<M extends { id: number }, S extends 
   // common status enum
   commonStatusEnum = CommonStatusEnum;
 
+  usePagination: boolean = false;
+  count: number = 0;
+  filterRetired: boolean = false;
+
+  pageEvent: PageEvent = {
+    pageIndex: 0,
+    pageSize: 10,
+    length: 0,
+    previousPageIndex: null
+  }
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
@@ -56,13 +69,36 @@ export abstract class AdminGenericComponent<M extends { id: number }, S extends 
     this.reload$
       .pipe(takeUntil((this.destroy$)))
       .pipe(switchMap(() => {
-        const load = this.useCompositeToLoad ? this.service.loadComposite() : this.service.load();
+        let load: Observable<M[]>
+        let service = this.service as unknown as CrudServiceInterface<M>
+        const paginationOptions = {
+          limit: this.pageEvent.pageSize,
+          offset: (this.pageEvent.pageIndex * this.pageEvent.pageSize)
+        }
+        if (this.usePagination) {
+          load = (this.useCompositeToLoad ? service.paginateComposite(paginationOptions) : service.paginate(paginationOptions))
+            .pipe(map((res) => {
+              this.count = res.count;
+              return res.rs;
+            }))
+        } else {
+          load = this.useCompositeToLoad ? this.service.loadComposite() : this.service.load();
+        }
         return load.pipe(catchError(_ => {
           console.log('Error', _);
           return of([])
         }));
       }))
       .subscribe((list: M[]) => {
+        if (this.filterRetired) {
+          list = list.filter((item) => {
+            const model = item as M & { status: number }
+            return model.status !== CommonStatusEnum.RETIRED
+          })
+        }
+        if (!this.usePagination) {
+          this.count = list.length;
+        }
         this.models = list;
       })
   }
@@ -109,4 +145,12 @@ export abstract class AdminGenericComponent<M extends { id: number }, S extends 
   protected _init(): void {
 
   }
+
+  pageChange($event: PageEvent): void {
+    this.pageEvent = $event
+    if (this.usePagination && this.pageEvent.previousPageIndex !== null) {
+      this.reload$.next(this.reload$.value)
+    }
+  }
+
 }
