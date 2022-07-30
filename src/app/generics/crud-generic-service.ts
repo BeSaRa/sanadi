@@ -170,7 +170,7 @@ export abstract class CrudGenericService<T> implements CrudServiceInterface<T>, 
     fallback: '$pagination'
   })
   private _paginateComposite(options: Partial<PaginationContract>): Observable<Pagination<T[]>> {
-    return this.http.get<Pagination<T[]>>(this._getServiceURL() + '/pg', {
+    return this.http.get<Pagination<T[]>>(this._getServiceURL() + '/composite/pg', {
       params: { ...options }
     })
   }
