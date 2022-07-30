@@ -1,23 +1,28 @@
-import {Injectable} from '@angular/core';
-import {ServiceData} from '../models/service-data';
-import {HttpClient} from '@angular/common/http';
-import {FactoryService} from './factory.service';
-import {UrlService} from './url.service';
-import {DialogRef} from '../shared/models/dialog-ref';
-import {IDialogData} from '@contracts/i-dialog-data';
-import {OperationTypes} from '../enums/operation-types.enum';
-import {Observable, of} from 'rxjs';
-import {DialogService} from './dialog.service';
-import {ServiceDataPopupComponent} from '../administration/popups/service-data-popup/service-data-popup.component';
-import {switchMap} from 'rxjs/operators';
-import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import { Injectable } from '@angular/core';
+import { ServiceData } from '../models/service-data';
+import { HttpClient } from '@angular/common/http';
+import { FactoryService } from './factory.service';
+import { UrlService } from './url.service';
+import { DialogRef } from '../shared/models/dialog-ref';
+import { IDialogData } from '@contracts/i-dialog-data';
+import { OperationTypes } from '../enums/operation-types.enum';
+import { Observable, of } from 'rxjs';
+import { DialogService } from './dialog.service';
+import { ServiceDataPopupComponent } from '../administration/popups/service-data-popup/service-data-popup.component';
+import { switchMap } from 'rxjs/operators';
+import { CommonStatusEnum } from '@app/enums/common-status.enum';
+import { CrudWithDialogGenericService } from "@app/generics/crud-with-dialog-generic-service";
+import { ComponentType } from '@angular/cdk/portal';
 import {CastResponse, CastResponseContainer} from '@decorators/cast-response';
-import {CrudWithDialogGenericService} from '@app/generics/crud-with-dialog-generic-service';
-import {ComponentType} from '@angular/cdk/portal';
+import { Pagination } from "@app/models/pagination";
 
 @CastResponseContainer({
   $default: {
     model: () => ServiceData
+  },
+  $pagination: {
+    model: () => Pagination,
+    shape: { 'rs.*': () => ServiceData }
   }
 })
 @Injectable({
