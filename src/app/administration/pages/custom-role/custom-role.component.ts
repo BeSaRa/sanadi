@@ -21,6 +21,7 @@ import {CommonUtils} from '@app/helpers/common-utils';
   styleUrls: ['./custom-role.component.scss']
 })
 export class CustomRoleComponent extends AdminGenericComponent<CustomRole, CustomRoleService> {
+  usePagination = true;
   constructor(public langService: LangService,
               private dialogService: DialogService,
               public service: CustomRoleService,
@@ -97,7 +98,7 @@ export class CustomRoleComponent extends AdminGenericComponent<CustomRole, Custo
   listenToLoadDone(): void {
     this.service._loadDone$
       .pipe(takeUntil((this.destroy$)))
-      .subscribe((result) => {
+      .subscribe(() => {
         this.table.selection.clear();
       });
   }

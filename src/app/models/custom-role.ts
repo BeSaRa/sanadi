@@ -1,16 +1,24 @@
-import {BaseModel} from './base-model';
-import {CustomRoleService} from '../services/custom-role.service';
-import {Observable} from 'rxjs';
-import {FactoryService} from '../services/factory.service';
-import {LangService} from '../services/lang.service';
-import {INames} from '../interfaces/i-names';
-import {CustomRolePermission} from './custom-role-permission';
-import {Permission} from './permission';
-import {searchFunctionType} from '../types/types';
-import {Lookup} from '@app/models/lookup';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {Validators} from '@angular/forms';
+import { BaseModel } from './base-model';
+import { CustomRoleService } from '@services/custom-role.service';
+import { Observable } from 'rxjs';
+import { FactoryService } from '@services/factory.service';
+import { LangService } from '@services/lang.service';
+import { INames } from '@contracts/i-names';
+import { CustomRolePermission } from './custom-role-permission';
+import { Permission } from './permission';
+import { searchFunctionType } from '../types/types';
+import { Lookup } from '@app/models/lookup';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { Validators } from '@angular/forms';
+import { CustomRoleInterceptor } from "@app/model-interceptors/custom-role-interceptor";
+import { InterceptModel } from "@decorators/intercept-model";
 
+const interceptor = new CustomRoleInterceptor()
+
+@InterceptModel({
+  send: interceptor.send,
+  receive: interceptor.receive
+})
 export class CustomRole extends BaseModel<CustomRole, CustomRoleService> {
   status: boolean = true;
   permissionSet: CustomRolePermission[] = [];
@@ -33,17 +41,17 @@ export class CustomRole extends BaseModel<CustomRole, CustomRoleService> {
   }
 
   buildForm(controls?: boolean): any {
-    const {arName, enName, description, status} = this;
+    const { arName, enName, description, status } = this;
     return {
       arName: controls ? [arName, [
         CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
         Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('AR_NUM')
-      ]]: arName,
+      ]] : arName,
       enName: controls ? [enName, [
         CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
         Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')
-      ]]: enName ,
-      description: controls ? [description, Validators.maxLength(200)]: description,
+      ]] : enName,
+      description: controls ? [description, Validators.maxLength(200)] : description,
       status: controls ? [status] : status
     }
   }
@@ -99,7 +107,7 @@ export class CustomRole extends BaseModel<CustomRole, CustomRoleService> {
   private prepareCustomRolePermissionByPermissionId(): Record<number, CustomRolePermission> {
     return this.permissionSet
       .reduce<Record<number, CustomRolePermission>>((acc, current) => {
-        return {...acc, [current.permissionId]: current};
+        return { ...acc, [current.permissionId]: current };
       }, {});
   }
 
