@@ -67,7 +67,7 @@
               </div>
             </td>
           </ng-container>
-
+          
           <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
           <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
           <tr *cdkNoDataRow>
@@ -75,7 +75,7 @@
           </tr>
         </table>
       </app-table>
-      <app-paginator #paginator [pageSize]="10" [length]="table.dataSource.data.length"></app-paginator>
+      <app-paginator #paginator [length]="count" (pageChange)="pageChange($event)" [backend]="true"></app-paginator>
     </div>
   </div>
 </div>
