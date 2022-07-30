@@ -423,7 +423,7 @@ export class UrgentInterventionReportComponent extends EServicesGenericComponent
   }
 
   private loadCountries(): void {
-    this.countryService.loadCountries()
+    this.countryService.load()
       .pipe(takeUntil(this.destroy$))
       .subscribe((countries) => this.countries = countries);
   }

@@ -1,41 +1,40 @@
-import {Component, ViewChild} from '@angular/core';
-import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn} from '@angular/forms';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {SaveTypes} from '@app/enums/save-types';
-import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
-import {ProjectModel} from '@app/models/project-model';
-import {LangService} from '@app/services/lang.service';
-import {ProjectModelService} from '@app/services/project-model.service';
-import {Observable, of, Subject} from 'rxjs';
-import {CountryService} from '@app/services/country.service';
-import {Country} from '@app/models/country';
-import {catchError, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
-import {LookupService} from '@app/services/lookup.service';
-import {Lookup} from '@app/models/lookup';
-import {SDGoalService} from '@app/services/sdgoal.service';
-import {SDGoal} from '@app/models/sdgoal';
-import {ProjectComponent} from '@app/models/project-component';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {ProjectModelTypes} from '@app/enums/project-model-types';
-import {ProjectTypes} from '@app/enums/project-types';
-import {DomainTypes} from '@app/enums/domain-types';
-import {IDacOchaFields} from '@app/interfaces/idac-ocha-fields';
-import {ToastService} from '@app/services/toast.service';
-import {DialogService} from '@app/services/dialog.service';
-import {EmployeeService} from '@app/services/employee.service';
-import {AttachmentsComponent} from '@app/shared/components/attachments/attachments.component';
-import {ProjectModelRequestType} from '@app/enums/project-model-request-type';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {OpenFrom} from '@app/enums/open-from.enum';
-import {IKeyValue} from '@app/interfaces/i-key-value';
-import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {CommonUtils} from '@app/helpers/common-utils';
-import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
-import {DacOchaNewService} from '@services/dac-ocha-new.service';
-import {AdminLookup} from '@app/models/admin-lookup';
-import {AdminLookupTypeEnum} from '@app/enums/admin-lookup-type-enum';
+import { Component, ViewChild } from '@angular/core';
+import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn } from '@angular/forms';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { SaveTypes } from '@app/enums/save-types';
+import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
+import { ProjectModel } from '@app/models/project-model';
+import { LangService } from '@app/services/lang.service';
+import { ProjectModelService } from '@app/services/project-model.service';
+import { Observable, of, Subject } from 'rxjs';
+import { CountryService } from '@app/services/country.service';
+import { Country } from '@app/models/country';
+import { catchError, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { LookupService } from '@app/services/lookup.service';
+import { Lookup } from '@app/models/lookup';
+import { SDGoalService } from '@app/services/sdgoal.service';
+import { SDGoal } from '@app/models/sdgoal';
+import { ProjectComponent } from '@app/models/project-component';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { ProjectModelTypes } from '@app/enums/project-model-types';
+import { ProjectTypes } from '@app/enums/project-types';
+import { DomainTypes } from '@app/enums/domain-types';
+import { IDacOchaFields } from '@app/interfaces/idac-ocha-fields';
+import { ToastService } from '@app/services/toast.service';
+import { DialogService } from '@app/services/dialog.service';
+import { EmployeeService } from '@app/services/employee.service';
+import { AttachmentsComponent } from '@app/shared/components/attachments/attachments.component';
+import { ProjectModelRequestType } from '@app/enums/project-model-request-type';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { OpenFrom } from '@app/enums/open-from.enum';
+import { IKeyValue } from '@app/interfaces/i-key-value';
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { FileIconsEnum } from '@app/enums/file-extension-mime-types-icons.enum';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
+import { DacOchaNewService } from '@services/dac-ocha-new.service';
+import { AdminLookup } from '@app/models/admin-lookup';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -480,7 +479,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   }
 
   private loadCountries(): void {
-    this.countryService.loadCountries()
+    this.countryService.load()
       .pipe(takeUntil(this.destroy$))
       .subscribe((countries) => this.countries = countries);
   }
@@ -727,7 +726,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
                 }
                 return data;
               }),
-              catchError((e) => {
+              catchError(() => {
                 return of(null);
               })
             );

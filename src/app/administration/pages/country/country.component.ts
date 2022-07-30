@@ -1,59 +1,53 @@
-import {AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {Country} from '@app/models/country';
-import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import {IGridAction} from '@app/interfaces/i-grid-action';
-import {TableComponent} from '@app/shared/components/table/table.component';
-import {BehaviorSubject, Subject, Subscription} from 'rxjs';
-import {LangService} from '@app/services/lang.service';
-import {CountryService} from '@app/services/country.service';
-import {switchMap, takeUntil, tap} from 'rxjs/operators';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {ITableOptions} from '@app/interfaces/i-table-options';
-import {SortEvent} from '@app/interfaces/sort-event';
-import {isEmptyObject} from '@app/helpers/utils';
-import {CommonUtils} from '@app/helpers/common-utils';
-import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {DialogService} from '@app/services/dialog.service';
-import {ToastService} from '@app/services/toast.service';
-import {SharedService} from '@app/services/shared.service';
-import {LookupService} from '@app/services/lookup.service';
-import {CommonStatusEnum} from '@app/enums/common-status.enum';
-import {FilterEventTypes} from '@app/types/types';
+import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
+import { Country } from '@app/models/country';
+import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { IGridAction } from '@app/interfaces/i-grid-action';
+import { TableComponent } from '@app/shared/components/table/table.component';
+import { LangService } from '@app/services/lang.service';
+import { CountryService } from '@app/services/country.service';
+import { takeUntil } from 'rxjs/operators';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { ITableOptions } from '@app/interfaces/i-table-options';
+import { SortEvent } from '@app/interfaces/sort-event';
+import { isEmptyObject } from '@app/helpers/utils';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { DialogService } from '@app/services/dialog.service';
+import { ToastService } from '@app/services/toast.service';
+import { SharedService } from '@app/services/shared.service';
+import { LookupService } from '@app/services/lookup.service';
+import { CommonStatusEnum } from '@app/enums/common-status.enum';
+import { FilterEventTypes } from '@app/types/types';
+import { AdminGenericComponent } from "@app/generics/admin-generic-component";
 
 @Component({
   selector: 'country',
   templateUrl: './country.component.html',
   styleUrls: ['./country.component.scss']
 })
-export class CountryComponent implements OnInit, AfterViewInit, OnDestroy {
-  @Input() headerTitle: keyof ILanguageKeys = {} as keyof ILanguageKeys;
-
-  countries: Country[] = [];
+export class CountryComponent extends AdminGenericComponent<Country, CountryService> implements AfterViewInit {
+  usePagination = true
   actions: IMenuItem<Country>[] = [];
+  displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'riskLevel', 'status', 'statusDateModified', 'actions'];
+  @Input() headerTitle: keyof ILanguageKeys = {} as keyof ILanguageKeys;
   bulkActions: IGridAction[] = [];
   commonStatus = CommonStatusEnum;
-  destroy$: Subject<any> = new Subject<any>();
 
   @ViewChild('table') table!: TableComponent;
 
-  add$ = new Subject<any>();
-  addSubscription!: Subscription;
-  reload$ = new BehaviorSubject<any>(null);
-  reloadSubscription!: Subscription;
-  commonStatusEnum = CommonStatusEnum;
-
   constructor(public langService: LangService,
-              private countryService: CountryService,
+              public service: CountryService,
               private toast: ToastService,
               private dialogService: DialogService,
               private lookupService: LookupService,
               private sharedService: SharedService) {
+    super()
   }
 
   tableOptions: ITableOptions = {
     ready: false,
-    columns: ['rowSelection', 'arName', 'enName', 'riskLevel', 'status', 'statusDateModified', 'actions'],
+    columns: this.displayedColumns,
     searchText: '',
     isSelectedRecords: () => {
       if (!this.tableOptions || !this.tableOptions.ready || !this.table) {
@@ -64,7 +58,7 @@ export class CountryComponent implements OnInit, AfterViewInit, OnDestroy {
     searchCallback: (record: any, searchText: string) => {
       return record.search(searchText);
     },
-    filterCallback: (type: FilterEventTypes = 'OPEN') => {
+    filterCallback: (_type: FilterEventTypes = 'OPEN') => {
     },
     sortingCallbacks: {
       statusDateModified: (a: Country, b: Country, dir: SortEvent): number => {
@@ -82,9 +76,7 @@ export class CountryComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   };
 
-  ngOnInit(): void {
-    this.listenToReload();
-    this.listenToAdd();
+  protected _init(): void {
     this.buildActions();
     this.buildBulkActions();
   }
@@ -95,40 +87,12 @@ export class CountryComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {
-    this.reloadSubscription?.unsubscribe();
-    this.addSubscription?.unsubscribe();
-    this.destroy$.next();
-    this.destroy$.complete();
-    this.destroy$.unsubscribe();
-  }
-
   getTitleText(): (keyof ILanguageKeys) {
     return isEmptyObject(this.headerTitle) ? 'menu_countries' : this.headerTitle;
   }
 
-  listenToReload(): void {
-    this.reloadSubscription = this.reload$.pipe(
-      takeUntil(this.destroy$),
-      switchMap(() => {
-        return this.countryService.loadCountriesComposite();
-      })
-    ).subscribe((countries: Country[]) => {
-      this.countries = countries;
-      this.table.selection.clear();
-    });
-  }
-
-  listenToAdd(): void {
-    this.addSubscription = this.add$.pipe(
-      tap(() => {
-        this.add();
-      })
-    ).subscribe();
-  }
-
   add(): void {
-    const sub = this.countryService.openCreateDialog().subscribe((dialog: DialogRef) => {
+    const sub = this.service.openCreateDialog().subscribe((dialog: DialogRef) => {
       dialog.onAfterClose$.subscribe(() => {
         this.reload$.next(null);
         sub.unsubscribe();
@@ -137,7 +101,7 @@ export class CountryComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   editCountry(country: Country, tab: 'basic' = 'basic'): void {
-    const sub = this.countryService.openUpdateDialog(country.id, tab).subscribe((dialog: DialogRef) => {
+    const sub = this.service.openUpdateDialog(country.id, tab).subscribe((dialog: DialogRef) => {
       dialog.onAfterClose$.subscribe((_) => {
         this.reload$.next(null);
         sub.unsubscribe();
@@ -147,12 +111,12 @@ export class CountryComponent implements OnInit, AfterViewInit, OnDestroy {
 
   deleteCountry(model: Country): void {
     // @ts-ignore
-    this.dialogService.confirm(this.langService.map.msg_confirm_delete_x.change({x: model.getName()})).onAfterClose$
+    this.dialogService.confirm(this.langService.map.msg_confirm_delete_x.change({ x: model.getName() })).onAfterClose$
       .subscribe((click: UserClickOn) => {
         if (click === UserClickOn.YES) {
           const sub = model.delete().subscribe(() => {
             // @ts-ignore
-            this.toast.success(this.langService.map.msg_delete_x_success.change({x: model.getName()}));
+            this.toast.success(this.langService.map.msg_delete_x_success.change({ x: model.getName() }));
             this.reload$.next(null);
             sub.unsubscribe();
           });
@@ -169,7 +133,7 @@ export class CountryComponent implements OnInit, AfterViewInit, OnDestroy {
           const ids = this.table.selection.selected.map((item) => {
             return item.id;
           });
-          const sub = this.countryService.deleteBulk(ids).subscribe((response) => {
+          const sub = this.service.deleteBulk(ids).subscribe((response) => {
             this.sharedService.mapBulkResponseMessages(this.table.selection.selected, 'id', response)
               .subscribe(() => {
                 this.reload$.next(null);
@@ -184,7 +148,7 @@ export class CountryComponent implements OnInit, AfterViewInit, OnDestroy {
   activateCountry(model: Country): void {
     const sub = model.updateStatus(CommonStatusEnum.ACTIVATED).subscribe(() => {
       // @ts-ignore
-      this.toast.success(this.langService.map.msg_update_x_success.change({x: model.getName()}));
+      this.toast.success(this.langService.map.msg_update_x_success.change({ x: model.getName() }));
       this.reload$.next(null);
       sub.unsubscribe();
     });
@@ -193,14 +157,14 @@ export class CountryComponent implements OnInit, AfterViewInit, OnDestroy {
   deactivateCountry(model: Country): void {
     const sub = model.updateStatus(CommonStatusEnum.DEACTIVATED).subscribe(() => {
       // @ts-ignore
-      this.toast.success(this.langService.map.msg_update_x_success.change({x: model.getName()}));
+      this.toast.success(this.langService.map.msg_update_x_success.change({ x: model.getName() }));
       this.reload$.next(null);
       sub.unsubscribe();
     });
   }
 
   changeStatusBulk($event: MouseEvent, newStatus: CommonStatusEnum): void {
-    const sub = this.countryService.updateStatusBulk(this.table.selection.selected.map(item => item.id), newStatus)
+    const sub = this.service.updateStatusBulk(this.table.selection.selected.map(item => item.id), newStatus)
       .subscribe((response) => {
         this.sharedService.mapBulkResponseMessages(this.table.selection.selected, 'id', response, 'UPDATE')
           .subscribe(() => {
@@ -215,10 +179,10 @@ export class CountryComponent implements OnInit, AfterViewInit, OnDestroy {
     model.update()
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
-        this.toast.success(this.langService.map.msg_status_x_updated_success.change({x: model.getName()}));
+        this.toast.success(this.langService.map.msg_status_x_updated_success.change({ x: model.getName() }));
         this.reload$.next(null);
       }, () => {
-        this.toast.error(this.langService.map.msg_status_x_updated_fail.change({x: model.getName()}));
+        this.toast.error(this.langService.map.msg_status_x_updated_fail.change({ x: model.getName() }));
         this.reload$.next(null);
       });
   }
@@ -238,14 +202,14 @@ export class CountryComponent implements OnInit, AfterViewInit, OnDestroy {
       },
       // delete
       /*{
-        type: 'action',
-        icon: 'mdi-close-box',
-        label: 'btn_delete',
-        onClick: (item: Country) => this.deleteCountry(item),
-        show: (item) => {
-          return true
-        }
-      },*/
+       type: 'action',
+       icon: 'mdi-close-box',
+       label: 'btn_delete',
+       onClick: (item: Country) => this.deleteCountry(item),
+       show: (item) => {
+       return true
+       }
+       },*/
       // activate
       {
         type: 'action',
@@ -273,13 +237,13 @@ export class CountryComponent implements OnInit, AfterViewInit, OnDestroy {
     // noinspection JSUnusedLocalSymbols
     this.bulkActions = [
       /*{
-        icon: 'mdi-close-box',
-        langKey: 'btn_delete',
-        callback: ($event: MouseEvent, action: IGridAction) => this.deleteBulk($event),
-        show: (items: Country[]) => {
-          return true;
-        }
-      },*/
+       icon: 'mdi-close-box',
+       langKey: 'btn_delete',
+       callback: ($event: MouseEvent, action: IGridAction) => this.deleteBulk($event),
+       show: (items: Country[]) => {
+       return true;
+       }
+       },*/
       {
         icon: 'mdi-list-status',
         langKey: 'lbl_status',

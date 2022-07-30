@@ -1,25 +1,24 @@
-import {AfterViewInit, ChangeDetectorRef, Component, ViewChild} from '@angular/core';
-import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
-import {LangService} from '@services/lang.service';
-import {ToastService} from '@services/toast.service';
-import {DialogService} from '@services/dialog.service';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {LookupService} from '@services/lookup.service';
-import {EmployeeService} from '@services/employee.service';
-import {LicenseService} from '@services/license.service';
-import {Observable, of, Subject} from 'rxjs';
-import {UrgentInterventionClosure} from '@app/models/urgent-intervention-closure';
-import {UrgentInterventionClosureService} from '@services/urgent-intervention-closure.service';
-import {SaveTypes} from '@app/enums/save-types';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {ILanguageKeys} from '@contracts/i-language-keys';
-import {TabComponent} from '@app/shared/components/tab/tab.component';
-import {ReadinessStatus, TabMap} from '@app/types/types';
-import {ServiceRequestTypes} from '@app/enums/service-request-types';
-import {CommonUtils} from '@helpers/common-utils';
-import {OpenFrom} from '@app/enums/open-from.enum';
-import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
-import {Lookup} from '@app/models/lookup';
+import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
+import { LangService } from '@services/lang.service';
+import { ToastService } from '@services/toast.service';
+import { DialogService } from '@services/dialog.service';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { LookupService } from '@services/lookup.service';
+import { EmployeeService } from '@services/employee.service';
+import { LicenseService } from '@services/license.service';
+import { Observable, of, Subject } from 'rxjs';
+import { UrgentInterventionClosure } from '@app/models/urgent-intervention-closure';
+import { UrgentInterventionClosureService } from '@services/urgent-intervention-closure.service';
+import { SaveTypes } from '@app/enums/save-types';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { TabComponent } from '@app/shared/components/tab/tab.component';
+import { ReadinessStatus, TabMap } from '@app/types/types';
+import { ServiceRequestTypes } from '@app/enums/service-request-types';
+import { CommonUtils } from '@helpers/common-utils';
+import { OpenFrom } from '@app/enums/open-from.enum';
+import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
+import { Lookup } from '@app/models/lookup';
 import {
   ImplementingAgencyListComponent
 } from '@app/modules/urgent-intervention/shared/implementing-agency-list/implementing-agency-list.component';
@@ -29,18 +28,20 @@ import {
 import {
   InterventionFieldListComponent
 } from '@app/modules/urgent-intervention/shared/intervention-field-list/intervention-field-list.component';
-import {catchError, exhaustMap, filter, map, takeUntil, tap} from 'rxjs/operators';
-import {CountryService} from '@services/country.service';
-import {Country} from '@app/models/country';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {StageListComponent} from '@app/modules/urgent-intervention/shared/stage-list/stage-list.component';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {ResultListComponent} from '@app/modules/urgent-intervention/shared/result-list/result-list.component';
+import { catchError, exhaustMap, filter, map, takeUntil, tap } from 'rxjs/operators';
+import { CountryService } from '@services/country.service';
+import { Country } from '@app/models/country';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { StageListComponent } from '@app/modules/urgent-intervention/shared/stage-list/stage-list.component';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { ResultListComponent } from '@app/modules/urgent-intervention/shared/result-list/result-list.component';
 import {
   ImplementationEvaluationListComponent
 } from '@app/modules/urgent-intervention/shared/implementation-evaluation-list/implementation-evaluation-list.component';
-import {UrgentInterventionReportResult} from '@app/models/urgent-intervention-report-result';
-import {BestPracticesListComponent} from '@app/modules/urgent-intervention/shared/best-practices-list/best-practices-list.component';
+import { UrgentInterventionReportResult } from '@app/models/urgent-intervention-report-result';
+import {
+  BestPracticesListComponent
+} from '@app/modules/urgent-intervention/shared/best-practices-list/best-practices-list.component';
 import {Localization} from '@app/models/localization';
 
 @Component({
@@ -427,9 +428,9 @@ export class UrgentInterventionClosureComponent extends EServicesGenericComponen
       this._resetForm();
       this.requestTypeField.setValue(requestTypeValue);
     }
-    if (!requestTypeValue) {
-      requestTypeValue = this.requestTypeField && this.requestTypeField.value;
-    }
+    // if (!requestTypeValue) {
+    //   requestTypeValue = this.requestTypeField && this.requestTypeField.value;
+    // }
 
     this._handleLicenseValidationsByRequestType();
   }
@@ -536,7 +537,7 @@ export class UrgentInterventionClosureComponent extends EServicesGenericComponen
   }
 
   private loadCountries(): void {
-    this.countryService.loadCountries()
+    this.countryService.load()
       .pipe(takeUntil(this.destroy$))
       .subscribe((countries) => this.countriesList = countries);
   }
