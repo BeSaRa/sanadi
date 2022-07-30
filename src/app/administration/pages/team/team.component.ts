@@ -1,27 +1,30 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import {LangService} from '@app/services/lang.service';
-import {BehaviorSubject, Subject, Subscription} from 'rxjs';
-import {switchMap, tap} from 'rxjs/operators';
-import {TeamService} from '@app/services/team.service';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {Team} from '@app/models/team';
-import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import {SortEvent} from '@app/interfaces/sort-event';
-import {isValidValue} from '@app/helpers/utils';
-import {CommonUtils} from '@app/helpers/common-utils';
-import {TableComponent} from '@app/shared/components/table/table.component';
-import {ITableOptions} from '@app/interfaces/i-table-options';
-import {IGridAction} from '@app/interfaces/i-grid-action';
-import {FilterEventTypes} from '@app/types/types';
-import {CommonStatusEnum} from '@app/enums/common-status.enum';
-import {ToastService} from '@app/services/toast.service';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { LangService } from '@app/services/lang.service';
+import { BehaviorSubject, Subject, Subscription } from 'rxjs';
+import { switchMap, tap } from 'rxjs/operators';
+import { TeamService } from '@app/services/team.service';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { Team } from '@app/models/team';
+import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { SortEvent } from '@app/interfaces/sort-event';
+import { isValidValue } from '@app/helpers/utils';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { TableComponent } from '@app/shared/components/table/table.component';
+import { ITableOptions } from '@app/interfaces/i-table-options';
+import { IGridAction } from '@app/interfaces/i-grid-action';
+import { FilterEventTypes } from '@app/types/types';
+import { CommonStatusEnum } from '@app/enums/common-status.enum';
+import { ToastService } from '@app/services/toast.service';
+import { AdminGenericComponent } from "@app/generics/admin-generic-component";
 
 @Component({
   selector: 'team',
   templateUrl: './team.component.html',
   styleUrls: ['./team.component.scss']
 })
-export class TeamComponent implements OnInit, AfterViewInit {
+export class TeamComponent extends AdminGenericComponent<Team, TeamService> implements AfterViewInit {
+  usePagination = true;
+  displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'authName', 'updatedOn', 'status', 'actions'];
   teams: Team[] = [];
   actions: IMenuItem<Team>[] = [];
   bulkActions: IGridAction[] = [];
@@ -35,14 +38,15 @@ export class TeamComponent implements OnInit, AfterViewInit {
   reloadSubscription!: Subscription;
 
   constructor(public langService: LangService,
-              private teamService: TeamService,
+              public service: TeamService,
               private toast: ToastService) {
+    super()
   }
 
   tableOptions: ITableOptions = {
     ready: false,
-    columns: ['rowSelection', 'arName', 'enName', 'authName', 'updatedOn', 'status', 'actions'],
     searchText: '',
+    columns: this.displayedColumns,
     isSelectedRecords: () => {
       if (!this.tableOptions || !this.tableOptions.ready || !this.table) {
         return false;
@@ -52,7 +56,7 @@ export class TeamComponent implements OnInit, AfterViewInit {
     searchCallback: (record: any, searchText: string) => {
       return record.search(searchText);
     },
-    filterCallback: (type: FilterEventTypes = 'OPEN') => {
+    filterCallback: (_type: FilterEventTypes = 'OPEN') => {
     },
     sortingCallbacks: {
       createdBy: (a: Team, b: Team, dir: SortEvent): number => {
@@ -85,9 +89,14 @@ export class TeamComponent implements OnInit, AfterViewInit {
     }
   };
 
-  ngOnInit(): void {
-    this.listenToReload();
-    this.listenToAdd();
+  // ngOnInit(): void {
+  //   // this.listenToReload();
+  //   // this.listenToAdd();
+  //   this.buildActions();
+  //   this.buildBulkActions();
+  // }
+
+  protected _init(): void {
     this.buildActions();
     this.buildBulkActions();
   }
@@ -106,7 +115,7 @@ export class TeamComponent implements OnInit, AfterViewInit {
   listenToReload(): void {
     this.reloadSubscription = this.reload$.pipe(
       switchMap(() => {
-        return this.teamService.loadComposite();
+        return this.service.loadComposite();
       })
     ).subscribe((teams) => {
       this.teams = teams;
@@ -123,7 +132,7 @@ export class TeamComponent implements OnInit, AfterViewInit {
 
 
   add(): void {
-    const sub = this.teamService.openCreateDialog().subscribe((dialog: DialogRef) => {
+    const sub = this.service.openCreateDialog().subscribe((dialog: DialogRef) => {
       dialog.onAfterClose$.subscribe(() => {
         this.reload$.next(null);
         sub.unsubscribe();
@@ -132,7 +141,7 @@ export class TeamComponent implements OnInit, AfterViewInit {
   }
 
   editTeam(team: Team): void {
-    const sub = this.teamService.openUpdateDialog(team.id, false).subscribe((dialog: DialogRef) => {
+    const sub = this.service.openUpdateDialog(team.id, false).subscribe((dialog: DialogRef) => {
       dialog.onAfterClose$.subscribe((_) => {
         this.reload$.next(null);
         sub.unsubscribe();
@@ -141,7 +150,7 @@ export class TeamComponent implements OnInit, AfterViewInit {
   }
 
   viewTeam(team: Team): void {
-    const sub = this.teamService.openUpdateDialog(team.id, true).subscribe((dialog: DialogRef) => {
+    const sub = this.service.openUpdateDialog(team.id, true).subscribe((dialog: DialogRef) => {
       dialog.onAfterClose$.subscribe((_) => {
         sub.unsubscribe();
       });
@@ -198,12 +207,12 @@ export class TeamComponent implements OnInit, AfterViewInit {
   }
 
   toggleStatus(team: Team) {
-    this.teamService.updateStatus(team.id, team.status)
+    this.service.updateStatus(team.id, team.status)
       .subscribe(() => {
-        this.toast.success(this.langService.map.msg_status_x_updated_success.change({x: team.getName()}));
+        this.toast.success(this.langService.map.msg_status_x_updated_success.change({ x: team.getName() }));
         this.reload$.next(null);
       }, () => {
-        this.toast.error(this.langService.map.msg_status_x_updated_fail.change({x: team.getName()}));
+        this.toast.error(this.langService.map.msg_status_x_updated_fail.change({ x: team.getName() }));
         this.reload$.next(null);
       });
   }
