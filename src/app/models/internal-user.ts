@@ -1,16 +1,24 @@
-import {BaseModel} from './base-model';
-import {UserTypes} from '../enums/user-types.enum';
-import {INames} from '../interfaces/i-names';
-import {LangService} from '../services/lang.service';
-import {FactoryService} from '../services/factory.service';
-import {AdminResult} from "@app/models/admin-result";
-import {InternalDepartment} from "@app/models/internal-department";
-import {InternalUserService} from "@app/services/internal-user.service";
-import {CustomValidators} from "@app/validators/custom-validators";
-import {Observable} from "rxjs";
-import {searchFunctionType} from '@app/types/types';
-import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import { BaseModel } from './base-model';
+import { UserTypes } from '../enums/user-types.enum';
+import { INames } from '@contracts/i-names';
+import { LangService } from '@services/lang.service';
+import { FactoryService } from '@services/factory.service';
+import { AdminResult } from "@app/models/admin-result";
+import { InternalDepartment } from "@app/models/internal-department";
+import { InternalUserService } from "@app/services/internal-user.service";
+import { CustomValidators } from "@app/validators/custom-validators";
+import { Observable } from "rxjs";
+import { searchFunctionType } from '@app/types/types';
+import { CommonStatusEnum } from '@app/enums/common-status.enum';
+import { InternalUserInterceptor } from "@app/model-interceptors/internal-user-interceptor";
+import { InterceptModel } from "@decorators/intercept-model";
 
+const interceptor = new InternalUserInterceptor()
+
+@InterceptModel({
+  receive: interceptor.receive,
+  send: interceptor.send
+})
 export class InternalUser extends BaseModel<InternalUser, InternalUserService> {
   service: InternalUserService;
   id!: number;
@@ -117,7 +125,7 @@ export class InternalUser extends BaseModel<InternalUser, InternalUserService> {
   }
 
   updateDefaultDepartment(): Observable<boolean> {
-    return this.service.updateDefaultDepartment({id: this.id, defaultDepartmentId: this.defaultDepartmentId});
+    return this.service.updateDefaultDepartment({ id: this.id, defaultDepartmentId: this.defaultDepartmentId });
   }
 
   isInactive(): boolean {
