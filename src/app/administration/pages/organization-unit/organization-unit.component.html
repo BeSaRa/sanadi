@@ -99,7 +99,7 @@
           <tr cdk-row (contextmenu)="menu.open($event , row)" *cdkRowDef="let row; columns: table.columns;"></tr>
         </table>
       </app-table>
-      <app-paginator #paginator></app-paginator>
+      <app-paginator #paginator [backend]="true" (pageChange)="pageChange($event)" [length]="count"></app-paginator>
       <context-menu-item #menu [actions]="actions"></context-menu-item>
     </div>
   </div>
