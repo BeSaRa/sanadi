@@ -1,4 +1,4 @@
-import { OrganizationUnitField } from "./../../../models/organization-unit-field";
+import { OrganizationUnitField } from "@app/models/organization-unit-field";
 import { Component, ViewChild } from "@angular/core";
 import { AdminGenericComponent } from "@app/generics/admin-generic-component";
 import { OrganizationUnitFieldService } from "@app/services/organization-unit-field.service";
@@ -7,10 +7,9 @@ import { LangService } from "@app/services/lang.service";
 import { DialogService } from "@app/services/dialog.service";
 import { SharedService } from "@app/services/shared.service";
 import { ToastService } from "@app/services/toast.service";
-import { CommonStatusEnum } from "@app/enums/common-status.enum";
 import { TableComponent } from "@app/shared/components/table/table.component";
 import { of, Subject } from "rxjs";
-import { catchError, exhaustMap, filter, map, switchMap, takeUntil } from 'rxjs/operators';
+import { catchError, exhaustMap, filter, switchMap, takeUntil } from 'rxjs/operators';
 import { SortEvent } from "@app/interfaces/sort-event";
 import { CommonUtils } from "@app/helpers/common-utils";
 import { IGridAction } from "@app/interfaces/i-grid-action";
@@ -22,11 +21,10 @@ import { DialogRef } from "@app/shared/models/dialog-ref";
   templateUrl: "./organization-unit-field.component.html",
   styleUrls: ["./organization-unit-field.component.scss"],
 })
-export class OrganizationUnitFieldComponent extends AdminGenericComponent<
-  OrganizationUnitField,
-  OrganizationUnitFieldService>
-{
-  actions: IMenuItem<OrganizationUnitField>[]= [
+export class OrganizationUnitFieldComponent extends AdminGenericComponent<OrganizationUnitField,
+  OrganizationUnitFieldService> {
+  usePagination = true;
+  actions: IMenuItem<OrganizationUnitField>[] = [
     // reload
     {
       type: 'action',
@@ -48,9 +46,9 @@ export class OrganizationUnitFieldComponent extends AdminGenericComponent<
       icon: 'mdi-eye',
       onClick: (item: OrganizationUnitField) => this.view$.next(item)
     },
-    
+
   ];
-  displayedColumns: string[]=['rowSelection', 'arName', 'enName', 'status', 'actions'];
+  displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'status', 'actions'];
   bulkActionsList: IGridAction[] = [
     {
       langKey: 'btn_delete',
@@ -60,9 +58,11 @@ export class OrganizationUnitFieldComponent extends AdminGenericComponent<
       }
     }
   ];
+
   get selectedRecords(): OrganizationUnitField[] {
     return this.table.selection.selected;
   }
+
   sortingCallbacks = {
     statusInfo: (a: OrganizationUnitField, b: OrganizationUnitField, dir: SortEvent): number => {
       let value1 = !CommonUtils.isValidValue(a) ? '' : a.statusInfo?.getName().toLowerCase(),
@@ -77,16 +77,18 @@ export class OrganizationUnitFieldComponent extends AdminGenericComponent<
     private dialogService: DialogService,
     private sharedService: SharedService,
     private toast: ToastService
-  ){
+  ) {
     super();
   };
+
   protected _init(): void {
     this.listenToView();
   }
+
   @ViewChild('table') table!: TableComponent;
   view$: Subject<OrganizationUnitField> = new Subject<OrganizationUnitField>();
- 
-  
+
+
   deleteBulk($event: MouseEvent): void {
     $event.preventDefault();
     if (this.selectedRecords.length > 0) {
@@ -108,6 +110,7 @@ export class OrganizationUnitFieldComponent extends AdminGenericComponent<
       });
     }
   }
+
   listenToView(): void {
     this.view$
       .pipe(takeUntil(this.destroy$))
@@ -131,36 +134,17 @@ export class OrganizationUnitFieldComponent extends AdminGenericComponent<
 
   delete(event: MouseEvent, model: OrganizationUnitField): void {
     event.preventDefault();
-    const message = this.lang.map.msg_confirm_delete_x.change({x: model.getName()});
+    const message = this.lang.map.msg_confirm_delete_x.change({ x: model.getName() });
     this.dialogService.confirm(message)
       .onAfterClose$.subscribe((click: UserClickOn) => {
       if (click === UserClickOn.YES) {
         const sub = model.delete().subscribe(() => {
           // @ts-ignore
-          this.toast.success(this.lang.map.msg_delete_x_success.change({x: model.getName()}));
+          this.toast.success(this.lang.map.msg_delete_x_success.change({ x: model.getName() }));
           this.reload$.next(null);
           sub.unsubscribe();
         });
       }
     });
-  }
-  listenToReload() {
-    this.reload$
-      .pipe(takeUntil((this.destroy$)))
-      .pipe(switchMap(() => {
-        const load = this.useCompositeToLoad ? this.service.loadComposite() : this.service.load();
-        return load.pipe(
-          map(list => {
-            return list.filter(model => {
-              return model.status !== CommonStatusEnum.RETIRED;
-            });
-          }),
-          catchError(_ => of([]))
-        );
-      }))
-      .subscribe((list: OrganizationUnitField[]) => {
-        this.models = list;
-        this.table.selection.clear();
-      })
   }
 }
