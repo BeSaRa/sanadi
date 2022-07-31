@@ -180,7 +180,8 @@
           <label for="directMaleBeneficiaries" asteriskIfRequired="directMaleBeneficiaries"
                  class="form-label">{{lang.map.male_beneficiaries_number}}</label>
           <input formControlName="directMaleBeneficiaries" class="form-control" type="text"
-                 [readonly]="readonly" onlyNumbers
+                 [readonly]="readonly" [mask]="inputMaskPatterns.NUMBER_ONLY"
+                 (change)="handleChangeDirectMaleBeneficiaries($event)"
                  validationClasses="directMaleBeneficiaries" id="directMaleBeneficiaries" trimInput>
           <app-field-error-message controlName="directMaleBeneficiaries"></app-field-error-message>
         </div>
@@ -188,7 +189,8 @@
           <label for="directFemaleBeneficiaries" asteriskIfRequired="directFemaleBeneficiaries"
                  class="form-label">{{lang.map.female_beneficiaries_number}}</label>
           <input formControlName="directFemaleBeneficiaries" class="form-control" type="text"
-                 [readonly]="readonly" onlyNumbers
+                 [readonly]="readonly" [mask]="inputMaskPatterns.NUMBER_ONLY"
+                 (change)="handleChangeDirectFemaleBeneficiaries($event)"
                  validationClasses="directFemaleBeneficiaries" id="directFemaleBeneficiaries" trimInput>
           <app-field-error-message controlName="directFemaleBeneficiaries"></app-field-error-message>
         </div>
@@ -235,59 +237,48 @@
           <app-field-error-message controlName="handicappedFemaleBeneficiary"></app-field-error-message>
         </div>
       </div>
-      <div class="row">
-        <div class="col-sm-12">
-          <h2 class="h6 text-primary">{{lang.map.percentage_of_direct_beneficiaries_by_age_group}}</h2>
-          <hr>
-        </div>
-      </div>
-      <div [formGroup]="form">
-        <div formGroupName="beneficiaryPercentGroup" class="position-relative mb-4">
-          <div class="row" validationGroupClasses>
-            <div class="col-md-3 col-sm-12 mb-4 position-relative">
-              <label class="form-label" asteriskIfRequired="beneficiaries0to5"
-                     for="beneficiaries0to5">{{lang.map.number_of_0_to_5}}</label>
-              <input id="beneficiaries0to5" validationClasses="beneficiaries0to5" formControlName="beneficiaries0to5"
-                     [mask]="inputMaskPatterns.PERCENT" [readonly]="readonly"
-                     [dropSpecialCharacters]="false"
-                     class="form-control">
-              <app-field-error-message controlName="beneficiaries0to5"></app-field-error-message>
-            </div>
-            <div class="col-md-3 col-sm-12 mb-4 position-relative">
-              <label class="form-label" asteriskIfRequired="beneficiaries5to18"
-                     for="beneficiaries5to18">{{lang.map.number_of_5_to_18}}</label>
-              <input id="beneficiaries5to18" validationClasses="beneficiaries5to18"
-                     formControlName="beneficiaries5to18" [readonly]="readonly"
-                     [mask]="inputMaskPatterns.PERCENT"
-                     [dropSpecialCharacters]="false"
-                     class="form-control">
-              <app-field-error-message controlName="beneficiaries5to18"></app-field-error-message>
-            </div>
-            <div class="col-md-3 col-sm-12 mb-4 position-relative">
-              <label class="form-label" asteriskIfRequired="beneficiaries19to60"
-                     for="beneficiaries19to60">{{lang.map.number_of_19_to_60}}</label>
-              <input id="beneficiaries19to60" validationClasses="beneficiaries19to60"
-                     [mask]="inputMaskPatterns.PERCENT" [readonly]="readonly"
-                     [dropSpecialCharacters]="false"
-                     formControlName="beneficiaries19to60"
-                     class="form-control">
-              <app-field-error-message controlName="beneficiaries19to60"></app-field-error-message>
-            </div>
-            <div class="col-md-3 col-sm-12 mb-4 position-relative">
-              <label class="form-label" asteriskIfRequired="beneficiariesOver60"
-                     for="beneficiariesOver60">{{lang.map.number_of_above_60}}</label>
-              <input id="beneficiariesOver60" validationClasses="beneficiariesOver60"
-                     [mask]="inputMaskPatterns.PERCENT" [readonly]="readonly"
-                     [dropSpecialCharacters]="false"
-                     formControlName="beneficiariesOver60"
-                     class="form-control">
-              <app-field-error-message controlName="beneficiariesOver60"></app-field-error-message>
-            </div>
-          </div>
-          <group-error-message></group-error-message>
-        </div>
-      </div>
     </ng-container>
+    <div class="row">
+      <div class="col-sm-12">
+        <h2 class="h6 text-primary">{{lang.map.number_of_direct_beneficiaries_by_age_group}}</h2>
+        <hr>
+      </div>
+    </div>
+    <div formGroupName="beneficiaryByAge" class="position-relative mb-2">
+      <div class="row" validationGroupClasses>
+        <div class="col-md-3 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="beneficiaries0to5"
+                 for="beneficiaries0to5">{{lang.map.number_of_0_to_5}}</label>
+          <input id="beneficiaries0to5" validationClasses="beneficiaries0to5" formControlName="beneficiaries0to5"
+                 [mask]="inputMaskPatterns.NUMBER_ONLY" [readonly]="readonly" class="form-control">
+          <app-field-error-message controlName="beneficiaries0to5"></app-field-error-message>
+        </div>
+        <div class="col-md-3 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="beneficiaries5to18"
+                 for="beneficiaries5to18">{{lang.map.number_of_5_to_18}}</label>
+          <input id="beneficiaries5to18" validationClasses="beneficiaries5to18" formControlName="beneficiaries5to18"
+                 [mask]="inputMaskPatterns.NUMBER_ONLY" [readonly]="readonly" class="form-control">
+          <app-field-error-message controlName="beneficiaries5to18"></app-field-error-message>
+        </div>
+        <div class="col-md-3 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="beneficiaries19to60"
+                 for="beneficiaries19to60">{{lang.map.number_of_19_to_60}}</label>
+          <input id="beneficiaries19to60" validationClasses="beneficiaries19to60"
+                 formControlName="beneficiaries19to60"
+                 [mask]="inputMaskPatterns.NUMBER_ONLY" [readonly]="readonly" class="form-control">
+          <app-field-error-message controlName="beneficiaries19to60"></app-field-error-message>
+        </div>
+        <div class="col-md-3 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="beneficiariesOver60"
+                 for="beneficiariesOver60">{{lang.map.number_of_above_60}}</label>
+          <input id="beneficiariesOver60" validationClasses="beneficiariesOver60"
+                 formControlName="beneficiariesOver60"
+                 [mask]="inputMaskPatterns.NUMBER_ONLY" [readonly]="readonly" class="form-control">
+          <app-field-error-message controlName="beneficiariesOver60"></app-field-error-message>
+        </div>
+      </div>
+      <group-error-message></group-error-message>
+    </div>
   </ng-template>
   <ng-template #entitiesTabTemplate>
     <implementing-agency-list #implementingAgencyListComponent

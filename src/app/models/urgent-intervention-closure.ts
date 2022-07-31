@@ -137,7 +137,7 @@ export class UrgentInterventionClosure extends LicenseApprovalModel<UrgentInterv
     }
   }
 
-  getBeneficiaryPercentFields(controls?: boolean) {
+  getBeneficiaryByAgeFields(controls?: boolean) {
     const {
       beneficiaries0to5,
       beneficiaries5to18,
@@ -145,10 +145,10 @@ export class UrgentInterventionClosure extends LicenseApprovalModel<UrgentInterv
       beneficiariesOver60
     } = this;
     return {
-      beneficiaries0to5: controls ? [beneficiaries0to5, [CustomValidators.required, CustomValidators.decimal(2), Validators.max(100)]] : beneficiaries0to5,
-      beneficiaries5to18: controls ? [beneficiaries5to18, [CustomValidators.required, CustomValidators.decimal(2), Validators.max(100)]] : beneficiaries5to18,
-      beneficiaries19to60: controls ? [beneficiaries19to60, [CustomValidators.required, CustomValidators.decimal(2), Validators.max(100)]] : beneficiaries19to60,
-      beneficiariesOver60: controls ? [beneficiariesOver60, [CustomValidators.required, CustomValidators.decimal(2), Validators.max(100)]] : beneficiariesOver60
+      beneficiaries0to5: controls ? [beneficiaries0to5, [CustomValidators.required, CustomValidators.number]] : beneficiaries0to5,
+      beneficiaries5to18: controls ? [beneficiaries5to18, [CustomValidators.required, CustomValidators.number]] : beneficiaries5to18,
+      beneficiaries19to60: controls ? [beneficiaries19to60, [CustomValidators.required, CustomValidators.number]] : beneficiaries19to60,
+      beneficiariesOver60: controls ? [beneficiariesOver60, [CustomValidators.required, CustomValidators.number]] : beneficiariesOver60
     };
   }
 

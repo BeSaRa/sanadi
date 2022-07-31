@@ -41,6 +41,7 @@ import {
 } from '@app/modules/urgent-intervention/shared/implementation-evaluation-list/implementation-evaluation-list.component';
 import {UrgentInterventionReportResult} from '@app/models/urgent-intervention-report-result';
 import {BestPracticesListComponent} from '@app/modules/urgent-intervention/shared/best-practices-list/best-practices-list.component';
+import {Localization} from '@app/models/localization';
 
 @Component({
   selector: 'urgent-intervention-closure',
@@ -92,7 +93,7 @@ export class UrgentInterventionClosureComponent extends EServicesGenericComponen
       isTouchedOrDirty: () => false,
       show: () => true,
       validStatus: () => {
-        return this.beneficiaryGroup && this.beneficiaryGroup.valid && this.beneficiaryPercentGroup && this.beneficiaryPercentGroup.valid;
+        return this.beneficiaryGroup && this.beneficiaryGroup.valid && this.beneficiaryByAgeGroup && this.beneficiaryByAgeGroup.valid;
       }
     },
     entities: {
@@ -242,19 +243,7 @@ export class UrgentInterventionClosureComponent extends EServicesGenericComponen
     this.form = this.fb.group({
       basicInfo: this.fb.group(objUrgentInterventionClosure.getBasicFormFields(true)),
       beneficiary: this.fb.group(objUrgentInterventionClosure.getBeneficiaryFields(true)),
-      beneficiaryPercentGroup: this.fb.group(objUrgentInterventionClosure.getBeneficiaryPercentFields(true), {
-        validators: CustomValidators.validateSum(100, 2, [
-          'beneficiaries0to5',
-          'beneficiaries5to18',
-          'beneficiaries19to60',
-          'beneficiariesOver60'
-        ], [
-          this.lang.getLocalByKey('number_of_0_to_5'),
-          this.lang.getLocalByKey('number_of_5_to_18'),
-          this.lang.getLocalByKey('number_of_19_to_60'),
-          this.lang.getLocalByKey('number_of_above_60')
-        ])
-      })
+      beneficiaryByAge: this.fb.group(objUrgentInterventionClosure.getBeneficiaryByAgeFields(true)),
     });
     this._setDefaultValues();
   }
@@ -341,7 +330,7 @@ export class UrgentInterventionClosureComponent extends EServicesGenericComponen
       ...this.model,
       ...this.basicInfoTab.getRawValue(),
       ...this.beneficiaryGroup.getRawValue(),
-      ...this.beneficiaryPercentGroup.getRawValue(),
+      ...this.beneficiaryByAgeGroup.getRawValue(),
       interventionFieldList: this.interventionFieldListComponentRef.list,
       interventionRegionList: this.interventionRegionListComponentRef.list,
       implementingAgencyList: this.implementingAgencyListComponentRef.list,
@@ -354,12 +343,43 @@ export class UrgentInterventionClosureComponent extends EServicesGenericComponen
     });
   }
 
+  private _disableDefaults() {
+    [this.executionCountryField, this.executionRegionField, this.beneficiaryCountryField, this.beneficiaryRegionField, this.descriptionField].map(x => x.disable());
+  }
+
   _setDefaultValues(): void {
     this.requestTypeField.setValue(ServiceRequestTypes.NEW);
     this.handleRequestTypeChange(ServiceRequestTypes.NEW, false);
-    [this.executionCountryField, this.executionRegionField, this.beneficiaryCountryField, this.beneficiaryRegionField, this.descriptionField].map(x=>x.disable())
+    this._disableDefaults();
+    this._updateBeneficiaryByAgeGroupValidation();
   }
 
+  private _getBeneficiaryByAgeFieldNames(): string[] {
+    return [
+      'beneficiaries0to5',
+      'beneficiaries5to18',
+      'beneficiaries19to60',
+      'beneficiariesOver60'
+    ];
+  }
+
+  private _getBeneficiaryByAgeFieldLabels(): Localization[] {
+    return [
+      this.lang.getLocalByKey('number_of_0_to_5'),
+      this.lang.getLocalByKey('number_of_5_to_18'),
+      this.lang.getLocalByKey('number_of_19_to_60'),
+      this.lang.getLocalByKey('number_of_above_60')
+    ];
+  }
+
+  private _updateBeneficiaryByAgeGroupValidation(): void {
+    let ageGroupValidations = CustomValidators.validateSum(this._getTotalDirectBeneficiaries(), 0, this._getBeneficiaryByAgeFieldNames(), this._getBeneficiaryByAgeFieldLabels());
+    this.beneficiaryByAgeGroup.clearValidators();
+    this.beneficiaryByAgeGroup.setValidators(ageGroupValidations);
+    this.beneficiaryByAgeGroup.updateValueAndValidity();
+    this.beneficiaryByAgeGroup.markAsTouched();
+    this.beneficiaryByAgeGroup.markAsPristine();
+  }
 
   _resetForm(): void {
     this.form.reset();
@@ -383,11 +403,23 @@ export class UrgentInterventionClosureComponent extends EServicesGenericComponen
     this.form.patchValue({
       basicInfo: model.getBasicFormFields(),
       beneficiary: model.getBeneficiaryFields(),
-      beneficiaryPercentGroup: model.getBeneficiaryPercentFields()
+      beneficiaryByAge: model.getBeneficiaryByAgeFields()
     });
 
     this.handleRequestTypeChange(model.requestType, false);
     this.cd.detectChanges();
+  }
+
+  handleChangeDirectMaleBeneficiaries($event: Event): void {
+    if ($event) {
+      this._updateBeneficiaryByAgeGroupValidation();
+    }
+  }
+
+  handleChangeDirectFemaleBeneficiaries($event: Event): void {
+    if ($event) {
+      this._updateBeneficiaryByAgeGroupValidation();
+    }
   }
 
   handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
@@ -646,7 +678,21 @@ export class UrgentInterventionClosureComponent extends EServicesGenericComponen
     return this.form.get('beneficiary') as FormGroup;
   }
 
-  get beneficiaryPercentGroup(): FormGroup {
-    return this.form.get('beneficiaryPercentGroup') as FormGroup;
+  get directMaleBeneficiariesField(): FormControl {
+    return this.beneficiaryGroup.get('directMaleBeneficiaries') as FormControl;
+  }
+
+  get directFemaleBeneficiariesField(): FormControl {
+    return this.beneficiaryGroup.get('directFemaleBeneficiaries') as FormControl;
+  }
+
+  private _getTotalDirectBeneficiaries(): number {
+    let male = (this.directMaleBeneficiariesField ? this.directMaleBeneficiariesField.value : 0),
+      female = (this.directFemaleBeneficiariesField ? this.directFemaleBeneficiariesField.value : 0);
+    return (Number(male) + Number(female)) ?? 0;
+  }
+
+  get beneficiaryByAgeGroup(): FormGroup {
+    return this.form.get('beneficiaryByAge') as FormGroup;
   }
 }

@@ -367,6 +367,7 @@ export interface ILanguageKeys {
   number_of_5_to_18: string;
   number_of_19_to_60: string;
   number_of_above_60: string;
+  number_of_direct_beneficiaries_by_age_group: string;
   percentage_of_direct_beneficiaries_by_age_group: string;
   female_beneficiaries_number: string;
   male_beneficiaries_number: string;
