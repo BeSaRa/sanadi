@@ -55,7 +55,7 @@ const routes: Routes = [
     }
   },
   {
-    path: 'transferring_individual_funds_abroad', component: EServiceComponentWrapperComponent,
+    path: 'transferring-individual-funds-abroad', component: EServiceComponentWrapperComponent,
     canActivate: [ServicesGuard],
     resolve: {info: ServiceItemResolver},
     data: {
