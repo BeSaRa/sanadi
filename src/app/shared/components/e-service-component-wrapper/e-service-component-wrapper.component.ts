@@ -9,34 +9,34 @@ import {
   ViewChild,
   ViewContainerRef
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { DynamicComponentService } from '@app/services/dynamic-component.service';
-import { EmployeeService } from '@app/services/employee.service';
-import { LangService } from '@app/services/lang.service';
-import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
-import { EServiceGenericService } from '@app/generics/e-service-generic-service';
-import { CaseModel } from '@app/models/case-model';
-import { OpenFrom } from '@app/enums/open-from.enum';
-import { IOpenedInfo } from '@app/interfaces/i-opened-info';
-import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
-import { WFResponseType } from '@app/enums/wfresponse-type.enum';
-import { WFActions } from '@app/enums/wfactions.enum';
-import { CaseTypes } from '@app/enums/case-types.enum';
-import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { ToastService } from '@app/services/toast.service';
-import { InboxService } from '@app/services/inbox.service';
-import { merge, Subject } from 'rxjs';
-import { skip, startWith, takeUntil } from 'rxjs/operators';
-import { TabComponent } from '@app/shared/components/tab/tab.component';
-import { OperationTypes } from '@app/enums/operation-types.enum';
-import { SaveTypes } from '@app/enums/save-types';
-import { IESComponent } from '@app/interfaces/iescomponent';
-import { OrgUser } from '@app/models/org-user';
-import { InternalUser } from '@app/models/internal-user';
-import { ChecklistItem } from '@app/models/checklist-item';
-import { StepCheckListComponent } from '@app/shared/components/step-check-list/step-check-list.component';
-import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
-import { ActionIconsEnum } from '@app/enums/action-icons-enum';
+import {ActivatedRoute, Router} from '@angular/router';
+import {DynamicComponentService} from '@app/services/dynamic-component.service';
+import {EmployeeService} from '@app/services/employee.service';
+import {LangService} from '@app/services/lang.service';
+import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
+import {EServiceGenericService} from '@app/generics/e-service-generic-service';
+import {CaseModel} from '@app/models/case-model';
+import {OpenFrom} from '@app/enums/open-from.enum';
+import {IOpenedInfo} from '@app/interfaces/i-opened-info';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {WFResponseType} from '@app/enums/wfresponse-type.enum';
+import {WFActions} from '@app/enums/wfactions.enum';
+import {CaseTypes} from '@app/enums/case-types.enum';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {ToastService} from '@app/services/toast.service';
+import {InboxService} from '@app/services/inbox.service';
+import {merge, Subject} from 'rxjs';
+import {skip, startWith, takeUntil} from 'rxjs/operators';
+import {TabComponent} from '@app/shared/components/tab/tab.component';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {SaveTypes} from '@app/enums/save-types';
+import {IESComponent} from '@app/interfaces/iescomponent';
+import {OrgUser} from '@app/models/org-user';
+import {InternalUser} from '@app/models/internal-user';
+import {ChecklistItem} from '@app/models/checklist-item';
+import {StepCheckListComponent} from '@app/shared/components/step-check-list/step-check-list.component';
+import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -48,13 +48,13 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
 
 
   constructor(private route: ActivatedRoute,
-    private injector: Injector,
-    private employeeService: EmployeeService,
-    public lang: LangService,
-    private router: Router,
-    private toast: ToastService,
-    private inboxService: InboxService,
-    private cfr: ComponentFactoryResolver) {
+              private injector: Injector,
+              private employeeService: EmployeeService,
+              public lang: LangService,
+              private router: Router,
+              private toast: ToastService,
+              private inboxService: InboxService,
+              private cfr: ComponentFactoryResolver) {
     this.render = this.route.snapshot.data.render as string;
     if (!this.render) {
       throw Error(`Please Provide render property in this route ${route.snapshot.url}`);
@@ -68,10 +68,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
 
   private readonly render: string;
   private componentRef!: ComponentRef<EServicesGenericComponent<CaseModel<any, any>, EServiceGenericService<any>>>;
-  @ViewChild('internalContainer', { read: ViewContainerRef })
+  @ViewChild('internalContainer', {read: ViewContainerRef})
   internalContainer!: ViewContainerRef;
 
-  @ViewChild('externalContainer', { read: ViewContainerRef })
+  @ViewChild('externalContainer', {read: ViewContainerRef})
   externalContainer!: ViewContainerRef;
 
   @ViewChild(StepCheckListComponent)
@@ -398,7 +398,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         show: item => item.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM),
         onClick: (item: CaseModel<any, any>) => this.releaseAction(item)
       },
-      // send to department
+      // send to competent department
       {
         type: 'action',
         icon: 'mdi-send-circle',
@@ -411,7 +411,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.sendToDepartmentAction(item);
         }
       },
-      // send to specific organization
+      // Return to specific organization
       {
         type: 'action',
         icon: 'mdi-send-circle',
@@ -452,7 +452,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.sendToMultiDepartmentsAction(item);
         }
       },
-      // send to single department (Supervision and control, risk and compliance)
+      // send to single department (Supervision and control, risk and compliance, license department)
       {
         type: 'action',
         icon: 'mdi-send-circle',
@@ -461,8 +461,14 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
             || item.getResponses().includes(WFResponseType.PARTNER_APPROVAL_SEND_TO_SINGLE_DEPARTMENT)
             || item.getResponses().includes(WFResponseType.FINAL_EXTERNAL_OFFICE_SEND_TO_SINGLE_DEPARTMENT)
             || item.getResponses().includes(WFResponseType.CUSTOMS_EXEMPTION_SEND_TO_SINGLE_DEPARTMENT));
+          let isSendToLicenseDepartment = item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_CLOSURE_SEND_TO_SINGLE_DEPARTMENT);
 
-          return isSendToRiskAndCompliance ? this.lang.map.send_to_risk_and_compliance_department : this.lang.map.send_to_supervision_and_control_department;
+          if (isSendToRiskAndCompliance) {
+            return this.lang.map.send_to_risk_and_compliance_department;
+          } else if (isSendToLicenseDepartment) {
+            return this.lang.map.send_to_license_department;
+          }
+          return this.lang.map.send_to_supervision_and_control_department;
         },
         askChecklist: true,
         show: (item: CaseModel<any, any>) => {
@@ -1008,7 +1014,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
 
   private returnToSpecificOrganizationAction(item: CaseModel<any, any>) {
     item.returnToSpecificOrganization().onAfterClose$.subscribe(noOrganizationsRemaining => {
-      if(!noOrganizationsRemaining) {
+      if (!noOrganizationsRemaining) {
         // reload component
         this.service.getTask(this.info?.taskId!).subscribe(model => {
           this.component.outModel = model;
