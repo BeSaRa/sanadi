@@ -97,7 +97,7 @@
           >
             <ng-option
               [value]="option.id"
-              *ngFor="let option of countries$ | async"
+              *ngFor="let option of externalCooperations"
               >{{ option.getName() }}</ng-option
             >
           </ng-select>
