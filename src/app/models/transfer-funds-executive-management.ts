@@ -3,7 +3,7 @@ import {AdminResult} from '@app/models/admin-result';
 
 export class TransferFundsExecutiveManagement extends SearchableCloneable<TransferFundsExecutiveManagement>{
   nameLikePassport!: string;
-  enNameLikePassport!: string;
+  englishNameLikePassport!: string;
   jobTitle!: string;
   executiveNationality!: number;
   executiveIdentificationNumber!: string;

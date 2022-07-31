@@ -12,7 +12,10 @@ import {FactoryService} from '@services/factory.service';
 import {IMyDateModel} from 'angular-mydatepicker';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {WFResponseType} from '@app/enums/wfresponse-type.enum';
+import {mixinRequestType} from '@app/mixins/mixin-request-type';
+import {HasRequestType} from '@contracts/has-request-type';
 
+const _RequestType = mixinRequestType(CaseModel);
 const interceptor = new TransferringIndividualFundsAbroadInterceptor();
 
 @InterceptModel({
@@ -20,7 +23,7 @@ const interceptor = new TransferringIndividualFundsAbroadInterceptor();
   send: interceptor.send
 })
 
-export class TransferringIndividualFundsAbroad extends CaseModel<TransferringIndividualFundsAbroadService, TransferringIndividualFundsAbroad> {
+export class TransferringIndividualFundsAbroad extends _RequestType<TransferringIndividualFundsAbroadService, TransferringIndividualFundsAbroad> implements HasRequestType{
   service!: TransferringIndividualFundsAbroadService;
   caseType = CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD;
   licenseApprovedDate!: string;
@@ -188,7 +191,7 @@ export class TransferringIndividualFundsAbroad extends CaseModel<TransferringInd
       receiverEnglishNameLikePassport: controls ? [receiverEnglishNameLikePassport, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')]] : receiverEnglishNameLikePassport,
       receiverJobTitle: controls ? [receiverJobTitle, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : receiverJobTitle,
       receiverNationality: controls ? [receiverNationality, [CustomValidators.required]] : receiverNationality,
-      receiverIdentificationNumber: controls ? [receiverIdentificationNumber, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : receiverIdentificationNumber,
+      receiverIdentificationNumber: controls ? [receiverIdentificationNumber, [CustomValidators.required].concat(CustomValidators.commonValidations.qId)] : receiverIdentificationNumber,
       receiverPassportNumber: controls ? [receiverPassportNumber, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : receiverPassportNumber,
       receiverPhone1: controls ? [receiverPhone1, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : receiverPhone1,
       receiverPhone2: controls ? [receiverPhone2, CustomValidators.commonValidations.phone] : receiverPhone2,

@@ -152,5 +152,4 @@ export class TransferFundsAbroadApproveTaskPopupComponent implements OnInit, OnD
     this.destroy$.complete();
     this.destroy$.unsubscribe();
   }
-
 }

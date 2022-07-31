@@ -1,5 +1,5 @@
 import {AfterViewInit, ChangeDetectorRef, Component} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {SaveTypes} from '@app/enums/save-types';
 import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
@@ -20,7 +20,7 @@ import {DateUtils} from '@helpers/date-utils';
 import {FormManager} from '@app/models/form-manager';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {TransferFundsExecutiveManagement} from '@app/models/transfer-funds-executive-management';
-import {takeUntil} from 'rxjs/operators';
+import {exhaustMap, filter, map, takeUntil, tap} from 'rxjs/operators';
 import {TransfereeTypeEnum} from '@app/enums/transferee-type-enum';
 import {AdminLookupTypeEnum} from '@app/enums/admin-lookup-type-enum';
 import {AdminLookup} from '@app/models/admin-lookup';
@@ -28,6 +28,8 @@ import {TransferFundsCharityPurpose} from '@app/models/transfer-funds-charity-pu
 import {AdminResult} from '@app/models/admin-result';
 import {DacOchaNewService} from '@services/dac-ocha-new.service';
 import {DomainTypes} from '@app/enums/domain-types';
+import {SelectedLicenseInfo} from '@contracts/selected-license-info';
+import {TransferringIndividualFundsAbroadRequestTypeEnum} from '@app/enums/transferring-individual-funds-abroad-request-type-enum';
 
 @Component({
   selector: 'transferring-individual-funds-abroad',
@@ -77,6 +79,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
   selectedPurposeIndex!: number | null;
   purposeDisplayedColumns: string[] = ['projectName', 'projectType', 'domain', 'totalCost', 'beneficiaryCountry', 'executionCountry', 'actions'];
   transfereeTypeChanged: BehaviorSubject<number | null> = new BehaviorSubject<number | null>(null);
+  requestTypeChanged: BehaviorSubject<number | null> = new BehaviorSubject<number | null>(null);
   individualTransfereeTypeSelected: Subject<void> = new Subject<void>();
   externalOrganizationTransfereeTypeSelected: Subject<void> = new Subject<void>();
   noTransfereeTypeSelected: Subject<void> = new Subject<void>();
@@ -86,6 +89,10 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
   isDevelopment = true;
   addExecutiveFormActive!: boolean;
   addPurposeFormActive!: boolean;
+  private displayedColumns: string[] = ['fullSerial', 'status', 'requestTypeInfo', 'actions'];
+  selectedLicenses: TransferringIndividualFundsAbroad[] = [];
+  selectedLicenseDisplayedColumns: string[] = ['serial', 'bankName', 'currency', 'bankCategory'];
+  hasSearchedForLicense = false;
 
   constructor(public lang: LangService,
               public fb: FormBuilder,
@@ -102,6 +109,18 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
 
   get basicInfo(): FormGroup {
     return this.form.get('basicInfo')! as FormGroup;
+  }
+
+  get requestType(): FormControl {
+    return this.form.get('basicInfo.requestType')! as FormControl;
+  }
+
+  get transfereeType(): FormControl {
+    return this.form.get('basicInfo.transfereeType')! as FormControl;
+  }
+
+  get oldLicenseFullSerialField(): AbstractControl {
+    return this.form.get('basicInfo.oldLicenseFullSerial')!;
   }
 
   get requesterInfo(): FormGroup {
@@ -122,10 +141,6 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
 
   get specialExplanation(): FormGroup {
     return this.form.get('explanation')! as FormGroup;
-  }
-
-  get transfereeType(): FormControl {
-    return this.form.get('basicInfo.transfereeType')! as FormControl;
   }
 
   get executiveManagement(): FormGroup {
@@ -270,6 +285,8 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     this.listenToNoTransfereeTypeSelected();
     this.listenToTransfereeSubject();
     this.listenToTransfereeTypeChange();
+    this.listenToRequestTypeSubject();
+    this.listenToRequestTypeChange();
     this.handleReadonly();
   }
 
@@ -291,10 +308,20 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     this.selectedExecutives = this.model?.executiveManagementList;
     this.selectedPurposes = this.model?.charityPurposeTransferList;
     this.transfereeTypeChanged.next(this.transfereeType.value);
+    this.requestTypeChanged.next(this.requestType.value);
   }
 
   _resetForm(): void {
+    // this.requestType.patchValue(null);
+    // this.transfereeType.patchValue(null, {emitEvent: false});
+    // this.oldLicenseFullSerialField.patchValue(null);
+    // this.requesterInfo.reset();
+    // this.financialTransactionInfo.reset();
+    // this.specialExplanation.reset();
     this.form.reset();
+    this.hasSearchedForLicense = false;
+    this.isIndividualTransferee = false;
+    this.isExternalOrganizationTransferee = false;
   }
 
   _prepareModel(): TransferringIndividualFundsAbroad | Observable<TransferringIndividualFundsAbroad> {
@@ -397,8 +424,39 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     }
   }
 
-  searchForLicense() {
+  private validateSingleLicense(license: TransferringIndividualFundsAbroad): Observable<null | SelectedLicenseInfo<TransferringIndividualFundsAbroad, TransferringIndividualFundsAbroad>> {
+    return this.licenseService.validateLicenseByRequestType<TransferringIndividualFundsAbroad>(this.model!.caseType, this.model!.requestType, license.id)
+      .pipe(map(validated => {
+        return (validated ? {
+          selected: validated,
+          details: validated
+        } : null) as (null | SelectedLicenseInfo<TransferringIndividualFundsAbroad, TransferringIndividualFundsAbroad>);
+      }));
+  }
 
+  private openSelectLicense(licenses: TransferringIndividualFundsAbroad[]) {
+    return this.licenseService.openSelectLicenseDialog(licenses, this.model, true, this.displayedColumns).onAfterClose$ as Observable<{ selected: TransferringIndividualFundsAbroad, details: TransferringIndividualFundsAbroad }>;
+  }
+
+  searchForLicense() {
+    this.licenseService
+      .transferringIndividualFundsAbroadSearch<TransferringIndividualFundsAbroad>({fullSerial: this.oldLicenseFullSerialField.value})
+      .pipe(takeUntil(this.destroy$))
+      .pipe(tap(licenses => !licenses.length && this.dialog.info(this.lang.map.no_result_for_your_search_criteria)))
+      .pipe(filter(licenses => !!licenses.length))
+      .pipe(exhaustMap((licenses) => {
+        return licenses.length === 1 ? this.validateSingleLicense(licenses[0]) : this.openSelectLicense(licenses);
+      }))
+      .pipe(
+        filter<null | SelectedLicenseInfo<TransferringIndividualFundsAbroad, TransferringIndividualFundsAbroad>, SelectedLicenseInfo<TransferringIndividualFundsAbroad, TransferringIndividualFundsAbroad>>
+        ((info): info is SelectedLicenseInfo<TransferringIndividualFundsAbroad, TransferringIndividualFundsAbroad> => !!info))
+      .subscribe((_info) => {
+        this.hasSearchedForLicense = true;
+        this.selectedLicenses = [_info.details];
+        _info.details.requestType = this.model?.requestType!;
+        this._updateForm(_info.details);
+        this.oldLicenseFullSerialField.patchValue(_info.details.fullSerial);
+      });
   }
 
   private _buildDatepickerControlsMap() {
@@ -410,7 +468,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
   buildExecutiveManagementForm(): void {
     this.executiveManagementForm = this.fb.group({
       nameLikePassport: [null, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
-      enNameLikePassport: [null, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
+      englishNameLikePassport: [null, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
       jobTitle: [null, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
       executiveNationality: [null, [CustomValidators.required]],
       executiveIdentificationNumber: [null, [CustomValidators.required].concat(CustomValidators.commonValidations.qId)],
@@ -454,12 +512,37 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     });
   }
 
+  listenToRequestTypeChange() {
+    this.requestType.valueChanges.subscribe(value => {
+      this.requestTypeChanged.next(value);
+    });
+  }
+
+  listenToRequestTypeSubject() {
+    this.requestTypeChanged
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(value => {
+        if(value) {
+          this.model!.requestType = value;
+        }
+        if(!value || value === TransferringIndividualFundsAbroadRequestTypeEnum.NEW) {
+          this.disableSearchField();
+        } else {
+          this.enableSearchField();
+        }
+      });
+  }
+
   listenToIndividualTransfereeTypeSelected() {
     this.individualTransfereeTypeSelected
       .pipe(takeUntil(this.destroy$))
       .subscribe(_ => {
-        this.isIndividualTransferee = true;
-        this.isExternalOrganizationTransferee = false;
+        if(!this.isIndividualTransferee) {
+          this.isIndividualTransferee = true;
+        }
+        if(this.isExternalOrganizationTransferee) {
+          this.isExternalOrganizationTransferee = false;
+        }
         this.dontRequireReceiverOrganizationInfoFields();
         this.requireReceiverPersonInfoFields();
         this.selectedExecutives = [];
@@ -470,8 +553,12 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     this.externalOrganizationTransfereeTypeSelected
       .pipe(takeUntil(this.destroy$))
       .subscribe(_ => {
-        this.isIndividualTransferee = false;
-        this.isExternalOrganizationTransferee = true;
+        if(this.isIndividualTransferee) {
+          this.isIndividualTransferee = false;
+        }
+        if(!this.isExternalOrganizationTransferee) {
+          this.isExternalOrganizationTransferee = true;
+        }
         this.requireReceiverOrganizationInfoFields();
         this.dontRequireReceiverPersonInfoFields();
       });
@@ -539,7 +626,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     this.receiverEnglishNameLikePassport.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')]);
     this.receiverJobTitle.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]);
     this.receiverNationality.setValidators([CustomValidators.required]);
-    this.receiverIdentificationNumber.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]);
+    this.receiverIdentificationNumber.setValidators([CustomValidators.required].concat(CustomValidators.commonValidations.qId));
     this.receiverPassportNumber.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]);
     this.receiverPhone1.setValidators([CustomValidators.required].concat(CustomValidators.commonValidations.phone));
     this.receiverPhone2.setValidators(CustomValidators.commonValidations.phone);
@@ -704,35 +791,6 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     this.resetExecutiveForm();
   }
 
-  // mapFormToExecutive(form: any): TransferFundsExecutiveManagement {
-  //   const executive: TransferFundsExecutiveManagement = new TransferFundsExecutiveManagement();
-  //   executive.nameLikePassport = form.nameLikePassport;
-  //   executive.enNameLikePassport = form.enNameLikePassport;
-  //   executive.jobTitle = form.jobTitle;
-  //   executive.executiveNationality = form.executiveNationality;
-  //   executive.executiveIdentificationNumber = form.executiveIdentificationNumber;
-  //   executive.executivephone1 = form.executivephone1;
-  //   executive.executivephone2 = form.executivephone2;
-  //   executive.passportNumber = form.passportNumber;
-  //   executive.executiveNationalityInfo = AdminResult.createInstance(form.executiveNationalityInfo);
-  //
-  //   return executive;
-  // }
-  //
-  // mapExecutiveToForm(executive: TransferFundsExecutiveManagement): any {
-  //   return {
-  //     nameLikePassport: executive.nameLikePassport,
-  //     enNameLikePassport: executive.enNameLikePassport,
-  //     jobTitle: executive.jobTitle,
-  //     executiveNationality: executive.executiveNationality,
-  //     executiveIdentificationNumber: executive.executiveIdentificationNumber,
-  //     executivephone1: executive.executivephone1,
-  //     executivephone2: executive.executivephone2,
-  //     passportNumber: executive.passportNumber,
-  //     executiveNationalityInfo: executive.executiveNationalityInfo
-  //   };
-  // }
-
   // add/edit purpose functionality
   openAddPurposeForm() {
     this.addPurposeFormActive = true;
@@ -827,5 +885,22 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     event.preventDefault();
     this.selectedPurposes = this.selectedPurposes.filter(x => x.isNotEqual(model));
     this.resetPurposeForm();
+  }
+
+  enableSearchField() {
+    this.oldLicenseFullSerialField.enable();
+    this.setOldLicenseFullSerialRequired();
+  }
+
+  disableSearchField() {
+    this.oldLicenseFullSerialField.patchValue(null);
+    this.oldLicenseFullSerialField.disable();
+    this.oldLicenseFullSerialField.setValidators([]);
+    this.oldLicenseFullSerialField.updateValueAndValidity();
+  }
+
+  setOldLicenseFullSerialRequired() {
+    this.oldLicenseFullSerialField.setValidators([CustomValidators.required, CustomValidators.maxLength(50)]);
+    this.oldLicenseFullSerialField.updateValueAndValidity();
   }
 }
