@@ -12,6 +12,7 @@ export class ForeignCountriesProjectsInterceptor implements IModelInterceptor<Fo
     return model;
   }
   receive(model: ForeignCountriesProjects): ForeignCountriesProjects {
+    model.projectNeeds = model.projectNeeds.map(e => (new ProjectNeed()).clone({ ...e }))
     return model;
   }
 }

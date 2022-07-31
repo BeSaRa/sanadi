@@ -114,6 +114,7 @@ export class ProjectNeedsComponent implements OnInit {
   }
   private updateForm(projectNeed: ProjectNeed | undefined): void {
     const projectNeedsFormArray = this.projectNeedsForm;
+    console.log(projectNeed);
     projectNeedsFormArray.clear();
     if (projectNeed) {
       if (this.viewOnly) {
