@@ -98,8 +98,8 @@ export class UrgentInterventionClosureService extends EServiceGenericService<Urg
     return this.licenseService.urgentInterventionClosureSearch(criteria);
   }
 
-  licenseSearchUrgentInterventionReport(criteria: Partial<UrgentInterventionReportSearchCriteria> = {}): Observable<UrgentInterventionReportResult[]> {
-    return this.licenseService.urgentInterventionReportSearch(criteria);
+  licenseSearchUrgentInterventionAnnouncement(criteria: Partial<UrgentInterventionReportSearchCriteria> = {}): Observable<UrgentInterventionReportResult[]> {
+    return this.licenseService.urgentInterventionAnnouncementSearchValidOnly(criteria);
   }
 
   approveTask(model: UrgentInterventionClosure, action: WFResponseType): DialogRef {

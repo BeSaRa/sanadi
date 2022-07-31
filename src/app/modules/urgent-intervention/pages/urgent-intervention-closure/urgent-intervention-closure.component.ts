@@ -535,7 +535,7 @@ export class UrgentInterventionClosureComponent extends EServicesGenericComponen
     if (!id) {
       return;
     }
-    this.licenseService.loadUrgentInterventionReportByLicenseId(id)
+    this.licenseService.loadUrgentInterventionAnnouncementByLicenseId(id)
       .pipe(
         filter(license => !!license),
         takeUntil(this.destroy$)
@@ -552,7 +552,7 @@ export class UrgentInterventionClosureComponent extends EServicesGenericComponen
       .pipe(
         takeUntil(this.destroy$),
         exhaustMap(oldLicenseFullSerial => {
-          return this.service.licenseSearchUrgentInterventionReport({fullSerial: oldLicenseFullSerial})
+          return this.service.licenseSearchUrgentInterventionAnnouncement({fullSerial: oldLicenseFullSerial})
             .pipe(catchError(() => of([])));
         }))
       .pipe(

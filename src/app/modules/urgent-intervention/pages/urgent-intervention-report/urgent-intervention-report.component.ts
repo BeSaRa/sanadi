@@ -399,7 +399,7 @@ export class UrgentInterventionReportComponent extends EServicesGenericComponent
     if (!id) {
       return;
     }
-    this.licenseService.loadUrgentInterventionReportByLicenseId(id)
+    this.licenseService.loadUrgentInterventionAnnouncementByLicenseId(id)
       .pipe(
         filter(license => !!license),
         takeUntil(this.destroy$)

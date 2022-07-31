@@ -76,7 +76,7 @@ export class UrgentInterventionReportingService extends EServiceGenericService<U
   }
 
   licenseSearch(criteria: Partial<UrgentInterventionReportSearchCriteria> = {}): Observable<UrgentInterventionReportResult[]> {
-    return this.licenseService.urgentInterventionReportSearch(criteria);
+    return this.licenseService.urgentInterventionAnnouncementSearch(criteria);
   }
 
   /**

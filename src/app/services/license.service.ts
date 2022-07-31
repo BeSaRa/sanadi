@@ -235,13 +235,18 @@ export class LicenseService {
     property: 'rs',
     interceptReceive: (new UrgentInterventionReportResultInterceptor()).receive
   })
-  private _urgentInterventionReportSearch(criteria: Partial<UrgentInterventionReportSearchCriteria>): Observable<UrgentInterventionReportResult[]> {
-    const orgId = {organizationId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id : undefined}
-    return this.http.post<UrgentInterventionReportResult[]>(this.getServiceUrlByCaseType(CaseTypes.URGENT_INTERVENTION_REPORTING) + '/license/search', {...criteria, ...orgId})
+  private _urgentInterventionAnnouncementSearch(criteria: Partial<UrgentInterventionReportSearchCriteria>, validOnly: boolean = false): Observable<UrgentInterventionReportResult[]> {
+    const orgId = {organizationId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id : undefined},
+      url = this.getServiceUrlByCaseType(CaseTypes.URGENT_INTERVENTION_REPORTING) + '/license/search' + (validOnly ? '-valid' : '');
+    return this.http.post<UrgentInterventionReportResult[]>(url, {...criteria, ...orgId})
   }
 
-  urgentInterventionReportSearch(criteria: Partial<UrgentInterventionReportSearchCriteria>): Observable<UrgentInterventionReportResult[]> {
-    return this._urgentInterventionReportSearch(criteria);
+  urgentInterventionAnnouncementSearch(criteria: Partial<UrgentInterventionReportSearchCriteria>): Observable<UrgentInterventionReportResult[]> {
+    return this._urgentInterventionAnnouncementSearch(criteria);
+  }
+
+  urgentInterventionAnnouncementSearchValidOnly(criteria: Partial<UrgentInterventionReportSearchCriteria>): Observable<UrgentInterventionReportResult[]> {
+    return this._urgentInterventionAnnouncementSearch(criteria, true);
   }
 
   @Generator(UrgentInterventionClosure, true, {
@@ -367,12 +372,12 @@ export class LicenseService {
     property: 'rs',
     interceptReceive: (new UrgentInterventionReportInterceptor()).receive
   })
-  private _loadUrgentInterventionReportByLicenseId(licenseId: string): Observable<UrgentInterventionReport> {
+  private _loadUrgentInterventionAnnouncementByLicenseId(licenseId: string): Observable<UrgentInterventionReport> {
     return this.http.get<UrgentInterventionReport>(this.getServiceUrlByCaseType(CaseTypes.URGENT_INTERVENTION_REPORTING) + '/license/' + licenseId + '/details');
   }
 
-  loadUrgentInterventionReportByLicenseId(licenseId: string): Observable<UrgentInterventionReport> {
-    return this._loadUrgentInterventionReportByLicenseId(licenseId);
+  loadUrgentInterventionAnnouncementByLicenseId(licenseId: string): Observable<UrgentInterventionReport> {
+    return this._loadUrgentInterventionAnnouncementByLicenseId(licenseId);
   }
 
   @Generator(InitialExternalOfficeApproval, false, {
@@ -463,7 +468,7 @@ export class LicenseService {
     property: 'rs',
     interceptReceive: (new UrgentInterventionReportResultInterceptor()).receive
   })
-  _validateUrgentInterventionReportByRequestType<T>(requestType: number, oldLicenseId: string): Observable<T> {
+  _validateUrgentInterventionAnnouncementByRequestType<T>(requestType: number, oldLicenseId: string): Observable<T> {
     return this.http.post<T>(this.getServiceUrlByCaseType(CaseTypes.URGENT_INTERVENTION_REPORTING) + '/draft/validate', {
       requestType,
       oldLicenseId
@@ -506,7 +511,7 @@ export class LicenseService {
     } else if (caseType === CaseTypes.URGENT_INTERVENTION_LICENSING) {
       return this._validateUrgentInterventionLicenseByRequestType(requestType, licenseId);
     } else if (caseType === CaseTypes.URGENT_INTERVENTION_REPORTING) {
-      return this._validateUrgentInterventionReportByRequestType(requestType, licenseId);
+      return this._validateUrgentInterventionAnnouncementByRequestType(requestType, licenseId);
     } else if (caseType === CaseTypes.COLLECTION_APPROVAL) {
       return this._validateCollectionLicenseByRequestType<T>(requestType, licenseId);
     } else if (caseType === CaseTypes.COLLECTOR_LICENSING) {
