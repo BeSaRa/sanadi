@@ -357,6 +357,7 @@ export class UrgentInterventionClosureComponent extends EServicesGenericComponen
   _setDefaultValues(): void {
     this.requestTypeField.setValue(ServiceRequestTypes.NEW);
     this.handleRequestTypeChange(ServiceRequestTypes.NEW, false);
+    [this.executionCountryField, this.executionRegionField, this.beneficiaryCountryField, this.beneficiaryRegionField, this.descriptionField].map(x=>x.disable())
   }
 
 
@@ -621,8 +622,24 @@ export class UrgentInterventionClosureComponent extends EServicesGenericComponen
     return this.basicInfoTab.get('year') as FormControl;
   }
 
+  get beneficiaryCountryField(): FormControl {
+    return this.basicInfoTab.get('beneficiaryCountry') as FormControl;
+  }
+
+  get beneficiaryRegionField(): FormControl {
+    return this.basicInfoTab.get('beneficiaryRegion') as FormControl;
+  }
+
   get executionCountryField(): FormControl {
     return this.basicInfoTab.get('executionCountry') as FormControl;
+  }
+
+  get executionRegionField(): FormControl {
+    return this.basicInfoTab.get('executionRegion') as FormControl;
+  }
+
+  get descriptionField(): FormControl {
+    return this.basicInfoTab.get('projectDescription') as FormControl;
   }
 
   get beneficiaryGroup(): FormGroup {
