@@ -10,7 +10,7 @@
 <div class="dialog-content no-fixed-height" #dialogContent>
   <form style="width: 800px;" novalidate autocomplete="off" [formGroup]="form">
     <div class="row mb-3">
-      <div class="col-sm-12 ">
+      <div class="col-md-6 col-sm-12 ">
         <label asteriskIfRequired="arName" for="arName" class="form-label">{{lang.map.lbl_arabic_name}}</label>
         <input id="arName" validationClasses="arName" formControlName="arName" class="form-control">
         <app-field-error-message controlName="arName"></app-field-error-message>
@@ -18,14 +18,14 @@
       
     </div>
     <div class="row mb-3">
-      <div class="col-sm-12 ">
+      <div class="col-md-6  col-sm-12 ">
         <label asteriskIfRequired="enName" for="enName" class="form-label">{{lang.map.lbl_english_name}}</label>
         <input id="enName" validationClasses="enName" formControlName="enName" class="form-control">
         <app-field-error-message controlName="enName"></app-field-error-message>
       </div>
     </div>
     <div class="row mb-3">
-      <div class="col-sm-12">
+      <div class="col-md-6 col-sm-12 ">
         <div class="row">
           <label asteriskIfRequired="status" for="status" class="form-label">{{lang.map.lbl_status}}</label>
           <div class="mb-3 position-relative ng-select-wrapper">
