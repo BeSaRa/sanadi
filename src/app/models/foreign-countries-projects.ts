@@ -53,6 +53,8 @@ export class ForeignCountriesProjects
   entityClassification!: string;
   projectNeeds!: ProjectNeeds;
 
+
+
   getExternalCooperationAuthority(): number {
     return this.externalCooperationAuthority;
   }

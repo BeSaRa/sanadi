@@ -80,6 +80,9 @@ import { UrgentInterventionClosure } from '@app/models/urgent-intervention-closu
 import { UrgentInterventionClosureInterceptor } from '@app/model-interceptors/urgent-intervention-closure-interceptor';
 import { ForeignCountriesProjectsSearchCriteria } from '@app/models/foreign-countries-projects-seach-criteria';
 import { ForeignCountriesProjectsResult } from '@app/models/foreign-countries-projects-results';
+import { ForeignCountriesProjects } from '@app/models/foreign-countries-projects';
+import { ForeignCountriesProjectsInterceptor } from '@app/model-interceptors/foriegn-countries-projects-interceptor';
+import { ForeignCountriesProjectsResultInterceptor } from '@app/model-interceptors/foreign-countries-projects-result-interceptor';
 
 const collectionInterceptor = new CollectionApprovalInterceptor()
 const collectorInterceptor = new CollectorApprovalInterceptor()
@@ -150,6 +153,9 @@ export class LicenseService {
       case CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST:
         url = this.urlService.URLS.EXTERNAL_ORG_AFFILIATION_REQUEST;
         break;
+      case CaseTypes.FOREIGN_COUNTRIES_PROJECTS:
+        url = this.urlService.URLS.FOREIGN_COUNTRIES_PROJECTS;
+        break;
     }
     return url;
   }
@@ -209,7 +215,7 @@ export class LicenseService {
   }
   @Generator(ForeignCountriesProjectsResult, true, {
     property: 'rs',
-    interceptReceive: (new Object() as { receive: '' }).receive
+    interceptReceive: (new ForeignCountriesProjectsResultInterceptor()).receive
   })
   private _foreignCountriesProjectsSearchCriteria(criteria: Partial<ForeignCountriesProjectsSearchCriteria>): Observable<ForeignCountriesProjectsResult[]> {
     const orgId = { organizationId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id : undefined }
@@ -360,6 +366,16 @@ export class LicenseService {
   })
   private _validateInternalExternalOrgAffiationsLicenseByRequestType<T>(requestType: number, oldLicenseId: string): Observable<T> {
     return this.http.post<T>(this.urlService.URLS.EXTERNAL_ORG_AFFILIATION_REQUEST + '/draft/validate', {
+      requestType,
+      oldLicenseId
+    });
+  }
+  @Generator(ForeignCountriesProjects, false, {
+    property: 'rs',
+    interceptReceive: (new ForeignCountriesProjectsInterceptor()).receive
+  })
+  private _validateForeignCountriesProjectsLicenseByRequestType<T>(requestType: number, oldLicenseId: string): Observable<T> {
+    return this.http.post<T>(this.urlService.URLS.FOREIGN_COUNTRIES_PROJECTS + '/draft/validate', {
       requestType,
       oldLicenseId
     });
@@ -533,10 +549,13 @@ export class LicenseService {
     } else if (caseType === CaseTypes.URGENT_INTERVENTION_CLOSURE) {
       return this._validateUrgentInterventionClosureByRequestType<T>(requestType, licenseId);
     }
+    else if (caseType === CaseTypes.FOREIGN_COUNTRIES_PROJECTS) {
+      return this._validateForeignCountriesProjectsLicenseByRequestType<T>(requestType, licenseId);
+    }
     return of(undefined);
   }
 
-  openSelectLicenseDialog<T>(licenses: (InitialExternalOfficeApprovalResult[] | PartnerApproval[] | ExternalOrgAffiliationResult[] | FinalExternalOfficeApprovalResult[] | InternalProjectLicenseResult[] | UrgentInterventionLicenseResult[] | T[]), caseRecord: any | undefined, select = true, displayedColumns: string[] = []): DialogRef {
+  openSelectLicenseDialog<T>(licenses: (ForeignCountriesProjectsResult[] | InitialExternalOfficeApprovalResult[] | PartnerApproval[] | ExternalOrgAffiliationResult[] | FinalExternalOfficeApprovalResult[] | InternalProjectLicenseResult[] | UrgentInterventionLicenseResult[] | T[]), caseRecord: any | undefined, select = true, displayedColumns: string[] = []): DialogRef {
     return this.dialog.show(SelectLicensePopupComponent, {
       licenses,
       select,

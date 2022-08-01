@@ -63,6 +63,7 @@ export class ForeignCountriesProjectsComponent
   countries$: Observable<Country[]> = this.countryService
     .loadCountries()
     .pipe(takeUntil(this.destroy$), share());
+
   selectedLicense?: ForeignCountriesProjects;
   projectNeedsTabStatus: ReadinessStatus = 'READY';
 
@@ -182,9 +183,7 @@ export class ForeignCountriesProjectsComponent
             this.dialog.info(this.lang.map.no_result_for_your_search_criteria);
           }
         }),
-        // allow only the collection if it has value
         filter((result) => !!result.length),
-        // switch to the dialog ref to use it later and catch the user response
         switchMap((licenses) => {
           if (licenses.length === 1) {
             return this.licenseService
@@ -218,7 +217,6 @@ export class ForeignCountriesProjectsComponent
         }),
         filter<{ selected: any; details: ForeignCountriesProjects }>(
           (selection: { selected: any; details: ForeignCountriesProjects }) => {
-            console.log(selection);
             return (
               selection &&
               selection.selected &&
@@ -266,7 +264,9 @@ export class ForeignCountriesProjectsComponent
   _getNewInstance(): ForeignCountriesProjects {
     return new ForeignCountriesProjects();
   }
-  _initComponent(): void { }
+  _initComponent(): void {
+    this.listenToLicenseSearch();
+  }
   _buildForm(): void {
     const model = this._getNewInstance();
     this.form = this.fb.group({
@@ -298,10 +298,11 @@ export class ForeignCountriesProjectsComponent
     return failedList;
   }
   _beforeLaunch(): boolean | Observable<boolean> {
-    throw new Error('Method not implemented.');
+    return !!this.model && this.form.valid && this.model.canStart();
   }
   _afterLaunch(): void {
-    throw new Error('Method not implemented.');
+    this._resetForm();
+    this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
   _prepareModel(): ForeignCountriesProjects | Observable<ForeignCountriesProjects> {
     const value = (new ForeignCountriesProjects()).clone({
@@ -310,7 +311,6 @@ export class ForeignCountriesProjectsComponent
       ...this.specialExplanation.getRawValue()
     });
     value.projectNeeds = this.projectNeedsComponentRef.list;
-    console.log(value);
     return value;
   }
   _afterSave(

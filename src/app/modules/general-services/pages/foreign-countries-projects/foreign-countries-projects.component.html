@@ -179,7 +179,7 @@
             id="subject"
             validationClasses="subject"
             trimInput
-            [readonly]="!isEditAllowed"
+            [readonly]="isCancelRequestType || !isEditAllowed"
             validationClasses="subject"
             formControlName="subject"
             class="form-control"
@@ -198,7 +198,7 @@
             validationClasses="justification"
             trimInput
             validationClasses="justification"
-            [readonly]="!isEditAllowed"
+            [readonly]="isCancelRequestType || !isEditAllowed"
             formControlName="justification"
             class="form-control"
           ></textarea>
@@ -215,7 +215,7 @@
             id="recommendation"
             validationClasses="recommendation"
             trimInput
-            [readonly]="!isEditAllowed"
+            [readonly]="isCancelRequestType || !isEditAllowed"
             formControlName="recommendation"
             class="form-control"
           ></textarea>

@@ -18,7 +18,7 @@ export class ProjectNeed extends SearchableCloneable<ProjectNeed> {
     return {
       projectName: withControls ? [projectName, [CustomValidators.required]] : projectName,
       projectDescription: withControls ? [projectDescription, [CustomValidators.required]] : projectDescription,
-      totalCost: withControls ? [totalCost, [CustomValidators.required, CustomValidators.number]] : totalCost,
+      totalCost: withControls ? [totalCost, [CustomValidators.required, CustomValidators.decimal(2)]] : totalCost,
       beneficiaries: withControls ? [beneficiaries, [CustomValidators.required]] : beneficiaries,
       goals: withControls ? [goals, [CustomValidators.required]] : goals,
     };
