@@ -20,6 +20,7 @@ import {of} from 'rxjs';
   styleUrls: ['./bank.component.scss']
 })
 export class BankComponent extends AdminGenericComponent<Bank, BankService> implements OnInit {
+  usePagination = true
   actions: IMenuItem<Bank>[] = [];
   displayedColumns: string[] = ['arName', 'enName', 'actions'];
   commonStatusEnum = CommonStatusEnum;
