@@ -1,30 +1,39 @@
-import {Injectable} from '@angular/core';
-import {BackendWithDialogOperationsGenericService} from '@app/generics/backend-with-dialog-operations-generic-service';
-import {FieldAssessment} from '@app/models/field-assessment';
-import {FactoryService} from '@services/factory.service';
-import {HttpClient} from '@angular/common/http';
-import {UrlService} from '@services/url.service';
-import {DialogService} from '@services/dialog.service';
-import {ComponentType} from '@angular/cdk/portal';
-import {FieldAssessmentInterceptor} from '@app/model-interceptors/field-assessment-interceptor';
-import {FieldAssessmentPopupComponent} from '@app/administration/popups/field-assessment-popup/field-assessment-popup.component';
-import {FieldAssessmentTypesEnum} from '@app/enums/field-assessment-types.enum';
-import {Observable, of} from 'rxjs';
-import {Generator} from '@decorators/generator';
-import {CommonStatusEnum} from '@app/enums/common-status.enum';
-import {map, switchMap} from 'rxjs/operators';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {Donor} from '@app/models/donor';
-import {IDialogData} from '@contracts/i-dialog-data';
-import {DonorPopupComponent} from '@app/administration/popups/donor-popup/donor-popup.component';
-import {OperationTypes} from '@app/enums/operation-types.enum';
+import { Injectable } from '@angular/core';
+import { FieldAssessment } from '@app/models/field-assessment';
+import { FactoryService } from '@services/factory.service';
+import { HttpClient } from '@angular/common/http';
+import { UrlService } from '@services/url.service';
+import { DialogService } from '@services/dialog.service';
+import { ComponentType } from '@angular/cdk/portal';
+import {
+  FieldAssessmentPopupComponent
+} from '@app/administration/popups/field-assessment-popup/field-assessment-popup.component';
+import { FieldAssessmentTypesEnum } from '@app/enums/field-assessment-types.enum';
+import { Observable, of } from 'rxjs';
+import { Generator } from '@decorators/generator';
+import { CommonStatusEnum } from '@app/enums/common-status.enum';
+import { map, switchMap } from 'rxjs/operators';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { IDialogData } from '@contracts/i-dialog-data';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { CrudWithDialogGenericService } from "@app/generics/crud-with-dialog-generic-service";
+import { CastResponseContainer } from "@decorators/cast-response";
+import { Pagination } from "@app/models/pagination";
 
+@CastResponseContainer({
+  $default: {
+    model: () => FieldAssessment
+  },
+  $pagination: {
+    model: () => Pagination,
+    shape: { 'rs.*': () => FieldAssessment }
+  }
+})
 @Injectable({
   providedIn: 'root'
 })
-export class FieldAssessmentService extends BackendWithDialogOperationsGenericService<FieldAssessment> {
+export class FieldAssessmentService extends CrudWithDialogGenericService<FieldAssessment> {
   list!: FieldAssessment[];
-  interceptor: FieldAssessmentInterceptor = new FieldAssessmentInterceptor();
 
   constructor(public http: HttpClient,
               private urlService: UrlService,
@@ -41,19 +50,12 @@ export class FieldAssessmentService extends BackendWithDialogOperationsGenericSe
     return FieldAssessment;
   }
 
-  _getReceiveInterceptor(): any {
-    return this.interceptor.receive;
-  }
-
-  _getSendInterceptor(): any {
-    return this.interceptor.send;
-  }
 
   _getServiceURL(): string {
     return this.urlService.URLS.FIELD_ASSESSMENT;
   }
 
-  @Generator(undefined, true, {property: 'rs'})
+  @Generator(undefined, true, { property: 'rs' })
   private _loadByType(type: FieldAssessmentTypesEnum): Observable<FieldAssessment[]> {
     return this.http.get<FieldAssessment[]>(this._getServiceURL() + '/type/' + type);
   }
