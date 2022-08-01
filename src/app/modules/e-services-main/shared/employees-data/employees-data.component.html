@@ -41,7 +41,7 @@
       <td cdk-cell *cdkCellDef="let row">
         <ng-container *ngFor="let btn of actions">
           <a
-            *ngIf="btn.show && btn.show()"
+            *ngIf="btn.show && btn.show(row)"
             href="#"
             (click)="cb($event, btn, row)"
             tooltip="{{ lang.map[btn.langKey] }}"

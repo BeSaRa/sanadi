@@ -40,6 +40,7 @@ export class CaseInfoComponent {
     CaseTypes.URGENT_INTERVENTION_LICENSING,
     CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN,
     CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL,
+    CaseTypes.EMPLOYMENT,
     CaseTypes.URGENT_INTERVENTION_CLOSURE
   ];
 
@@ -116,7 +117,6 @@ export class CaseInfoComponent {
       documentTitle: this.generatedLicenseNumber,
       id: this.generatedLicenseId
     } as InternalProjectLicenseResult;
-
     this.licenseService.showLicenseContent(license, this.model.getCaseType())
       .subscribe((file) => {
         this.sharedService.openViewContentDialog(file, license);
@@ -124,6 +124,7 @@ export class CaseInfoComponent {
   }
 
   viewGeneratedDocument(): void {
+    console.log(this.generatedDocumentId)
     if (!this.generatedDocumentId) {
       return;
     }
@@ -131,6 +132,7 @@ export class CaseInfoComponent {
       documentTitle: this.generatedDocumentNumber,
       bookId: this.generatedDocumentId
     };
+    console.log(document)
 
     this.customsExemptionRemittanceService
       .showDocumentContent(document, this.model.getCaseType())

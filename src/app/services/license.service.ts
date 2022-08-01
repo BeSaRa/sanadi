@@ -128,6 +128,9 @@ export class LicenseService {
       case CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL:
         url = this.urlService.URLS.INTERNAL_BANK_ACCOUNT_APPROVAL;
         break;
+      case CaseTypes.EMPLOYMENT:
+        url = this.urlService.URLS.EMPLOYMENT;
+        break;
       case CaseTypes.URGENT_INTERVENTION_CLOSURE:
         url = this.urlService.URLS.URGENT_INTERVENTION_CLOSURE;
         break;

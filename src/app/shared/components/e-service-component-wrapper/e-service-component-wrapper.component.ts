@@ -639,7 +639,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         label: 'final_Notification',
         askChecklist: true,
         show: (item: CaseModel<any, any>) => {
-          return !item.getResponses().length || item.getResponses().includes(WFResponseType.FINAL_NOTIFICATION);
+          return item.getResponses().includes(WFResponseType.FINAL_NOTIFICATION);
         },
         onClick: (item: CaseModel<any, any>) => {
           this.finalNotification(item);

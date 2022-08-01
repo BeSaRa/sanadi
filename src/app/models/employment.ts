@@ -1,3 +1,4 @@
+import { WFResponseType } from './../enums/wfresponse-type.enum';
 import { Employee } from './employee';
 import { HasLicenseDurationType } from '@contracts/has-license-duration-type';
 import { CaseTypes } from '@app/enums/case-types.enum';
@@ -10,6 +11,8 @@ import { EmploymentService } from "@services/employment.service";
 import { CaseModel } from "@app/models/case-model";
 import { HasRequestType } from "@app/interfaces/has-request-type";
 import { mixinRequestType } from "@app/mixins/mixin-request-type";
+import { CaseModelContract } from "@contracts/case-model-contract";
+import { DialogRef } from '@app/shared/models/dialog-ref';
 
 const _RequestType = mixinLicenseDurationType(mixinRequestType(CaseModel));
 const interceptor = new EmploymentInterceptor();
@@ -20,16 +23,18 @@ const interceptor = new EmploymentInterceptor();
 })
 export class Employment
   extends _RequestType<EmploymentService, Employment>
-  implements HasRequestType, HasLicenseDurationType {
+  implements HasRequestType, HasLicenseDurationType, CaseModelContract<EmploymentService, Employment> {
   service!: EmploymentService;
   caseType: number = CaseTypes.EMPLOYMENT;
   requestType!: number;
   category!: number;
   description: string = "";
   employeeInfoDTOs: Partial<Employee>[] = [];
+  exportedLicenseId!: string;
   oldLicenseId!: string;
   oldLicenseSerial!: number;
   oldLicenseFullSerial!: string;
+
   constructor() {
     super();
     this.service = FactoryService.getService("EmploymentService");
@@ -43,11 +48,12 @@ export class Employment
       description: controls ? [description] : description
     };
   }
+
   setLicense({
-    oldLicenseId,
-    oldLicenseSerial,
-    oldLicenseFullSerial
-  }: {
+               oldLicenseId,
+               oldLicenseSerial,
+               oldLicenseFullSerial
+             }: {
     oldLicenseId: string,
     oldLicenseSerial: number,
     oldLicenseFullSerial: string
@@ -55,5 +61,9 @@ export class Employment
     this.oldLicenseId = oldLicenseId
     this.oldLicenseSerial = oldLicenseSerial
     this.oldLicenseFullSerial = oldLicenseFullSerial
+  }
+
+  approve(): DialogRef {
+    return this.service.approve(this, WFResponseType.APPROVE)
   }
 }
