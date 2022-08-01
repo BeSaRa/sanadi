@@ -24,7 +24,7 @@ import {ActionIconsEnum} from '@app/enums/action-icons-enum';
   styleUrls: ['./donor.component.scss']
 })
 export class DonorComponent extends AdminGenericComponent<Donor, DonorService> {
-
+  usePagination = true
   constructor(public lang: LangService,
               public service: DonorService,
               private dialogService: DialogService,
