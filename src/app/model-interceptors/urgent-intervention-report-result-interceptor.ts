@@ -11,23 +11,35 @@ import {OfficeEvaluation} from '@app/models/office-evaluation';
 import {Stage} from '@app/models/stage';
 import {Result} from '@app/models/result';
 import {ResultInterceptor} from '@app/model-interceptors/result-interceptor';
+import {ImplementingAgencyInterceptor} from '@app/model-interceptors/implementing-agency-interceptor';
+import {InterventionRegionInterceptor} from '@app/model-interceptors/intervention-region-interceptor';
+import {InterventionFieldInterceptor} from '@app/model-interceptors/intervention-field-interceptor';
+import {ImplementingAgency} from '@app/models/implementing-agency';
+import {InterventionRegion} from '@app/models/intervention-region';
+import {InterventionField} from '@app/models/intervention-field';
 
 let lessonsLearnedInterceptor = new LessonsLearnedInterceptor();
 let bestPracticesInterceptor = new BestPracticesInterceptor();
 let officeEvaluationInterceptor = new OfficeEvaluationInterceptor();
 let resultInterceptor = new ResultInterceptor();
 let stageInterceptor = new StageInterceptor();
+let implementingAgencyInterceptor = new ImplementingAgencyInterceptor();
+let interventionRegionInterceptor = new InterventionRegionInterceptor();
+let interventionFieldInterceptor = new InterventionFieldInterceptor();
 
 export class UrgentInterventionReportResultInterceptor implements IModelInterceptor<UrgentInterventionReportResult> {
   receive(model: UrgentInterventionReportResult): UrgentInterventionReportResult {
     model.beneficiaryCountryInfo && (model.beneficiaryCountryInfo = AdminResult.createInstance(model.beneficiaryCountryInfo));
     model.executionCountryInfo && (model.executionCountryInfo = AdminResult.createInstance(model.executionCountryInfo));
     model.ouInfo && (model.ouInfo = AdminResult.createInstance(model.ouInfo));
-    model.bestPracticesList = model.bestPracticesList.map((x: any) => {
-      return bestPracticesInterceptor.receive(x);
+    model.implementingAgencyList = model.implementingAgencyList.map((x: any) => {
+      return implementingAgencyInterceptor.receive(x);
     });
-    model.lessonsLearnedList = model.lessonsLearnedList.map((x: any) => {
-      return lessonsLearnedInterceptor.receive(x);
+    model.interventionRegionList = model.interventionRegionList.map((x: any) => {
+      return interventionRegionInterceptor.receive(x);
+    });
+    model.interventionFieldList = model.interventionFieldList.map((x: any) => {
+      return interventionFieldInterceptor.receive(x);
     });
     model.officeEvaluationList = model.officeEvaluationList.map((x: any) => {
       return officeEvaluationInterceptor.receive(x);
@@ -42,6 +54,9 @@ export class UrgentInterventionReportResultInterceptor implements IModelIntercep
   }
 
   send(model: Partial<UrgentInterventionReportResult>): Partial<UrgentInterventionReportResult> {
+    model.implementingAgencyList = model.implementingAgencyList?.map((x: any) => implementingAgencyInterceptor.send(x) as ImplementingAgency);
+    model.interventionRegionList = model.interventionRegionList?.map((x: any) => interventionRegionInterceptor.send(x) as InterventionRegion);
+    model.interventionFieldList = model.interventionFieldList?.map((x: any) => interventionFieldInterceptor.send(x) as InterventionField);
     model.bestPracticesList = model.bestPracticesList?.map((x: any) => bestPracticesInterceptor.send(x) as BestPractices);
     model.lessonsLearnedList = model.lessonsLearnedList?.map((x: any) => lessonsLearnedInterceptor.send(x) as LessonsLearned);
     model.officeEvaluationList = model.officeEvaluationList?.map((x: any) => officeEvaluationInterceptor.send(x) as OfficeEvaluation);
