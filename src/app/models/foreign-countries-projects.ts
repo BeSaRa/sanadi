@@ -46,6 +46,9 @@ export class ForeignCountriesProjects
   country!: number;
   countryInfo!: AdminResult;
   followUpDate!: string;
+  projectNeeds!: ProjectNeeds;
+  oldLicenseId!: string;
+  oldLicenseSerial!: number;
   oldLicenseFullSerial!: string;
   needSubject!: string;
   justification!: string;
@@ -53,8 +56,6 @@ export class ForeignCountriesProjects
   recommendation!: string;
   subject!: string;
   entityClassification!: string;
-  projectNeeds!: ProjectNeeds;
-
 
 
   getExternalCooperationAuthority(): number {

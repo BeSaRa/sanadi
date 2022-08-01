@@ -232,12 +232,23 @@ export class ForeignCountriesProjectsComponent
   }
   private setSelectedLicense(licenseDetails: ForeignCountriesProjects) {
     this.selectedLicense = licenseDetails;
-    let requestType = this.requestTypeField?.value,
-      result: Partial<ForeignCountriesProjects> = {
-        requestType,
-      };
+    let requestType = this.requestTypeField?.value;
+    let result: Partial<ForeignCountriesProjects> = {
+      requestType,
+    };
+
 
     result.oldLicenseFullSerial = licenseDetails.fullSerial;
+    result.oldLicenseId = licenseDetails.id;
+    result.oldLicenseSerial = licenseDetails.serial;
+
+    result.externalCooperationAuthority = licenseDetails.externalCooperationAuthority;
+    result.needSubject = licenseDetails.needSubject;
+    result.classDescription = licenseDetails.classDescription;
+    result.justification = licenseDetails.justification;
+    result.recommendation = licenseDetails.recommendation;
+    result.projectNeeds = licenseDetails.projectNeeds;
+    result.description = licenseDetails.description;
     result.country = licenseDetails.country;
     result.description = licenseDetails.description;
 
@@ -253,11 +264,6 @@ export class ForeignCountriesProjectsComponent
     }
     if (!requestTypeValue) {
       requestTypeValue = this.requestTypeField && this.requestTypeField.value;
-    }
-    if (this.requestTypeField.value === CollectionRequestType.CANCEL) {
-      this.basicInfo.patchValue(this.model?.buildForm(false)!);
-      this.specialExplanation.patchValue(this.model?.buildExplanation(false)!);
-      this.cd.detectChanges();
     }
   }
   getTabInvalidStatus(i: number): boolean {
