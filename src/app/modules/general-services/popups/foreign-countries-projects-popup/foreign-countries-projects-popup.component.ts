@@ -14,8 +14,9 @@ import { OrganizationUnitService } from '@app/services/organization-unit.service
 import { ToastService } from '@app/services/toast.service';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
+import { validationPatterns } from '@app/validators/validate-fields-status';
 import { Subject } from 'rxjs';
-import { exhaustMap, switchMap, takeUntil, filter, tap } from 'rxjs/operators';
+import { exhaustMap, switchMap, takeUntil, filter, tap, map } from 'rxjs/operators';
 
 @Component({
   selector: 'foreign-countries-projects-popup',
@@ -26,7 +27,7 @@ export class ForeignCountriesProjectsPopupComponent implements OnInit {
 
   private destroy$: Subject<any> = new Subject();
   label: keyof ILanguageKeys;
-  organizations$ = this.OgranizationsService.load().pipe(takeUntil(this.destroy$))
+  organizations$ = this.OgranizationsService.load().pipe(map(e => e.filter(x => !x.orgCode?.match(validationPatterns.AR_ONLY))), takeUntil(this.destroy$))
   selectedLicense!: ForeignCountriesProjects | null;
 
   selectedIndex: number | false = false;
