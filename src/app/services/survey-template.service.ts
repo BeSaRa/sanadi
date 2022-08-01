@@ -1,27 +1,35 @@
-import {ComponentType} from '@angular/cdk/portal';
-import {HttpClient} from '@angular/common/http';
-import {Injectable} from '@angular/core';
-import {BackendWithDialogOperationsGenericService,} from '@app/generics/backend-with-dialog-operations-generic-service';
-import {SurveyTemplate} from '@app/models/survey-template';
-import {DialogService} from './dialog.service';
-import {FactoryService} from '@app/services/factory.service';
-import {UrlService} from '@app/services/url.service';
-import {IModelInterceptor} from '@app/interfaces/i-model-interceptor';
-import {SurveyTemplateInterceptor} from '@app/model-interceptors/survey-template-interceptor';
+import { ComponentType } from '@angular/cdk/portal';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { SurveyTemplate } from '@app/models/survey-template';
+import { DialogService } from './dialog.service';
+import { FactoryService } from '@app/services/factory.service';
+import { UrlService } from '@app/services/url.service';
 import {
   SurveyTemplatePopupComponent,
 } from '@app/administration/popups/survey-template-popup/survey-template-popup.component';
-import {SurveySectionService} from "@app/services/survey-section.service";
-import {SurveyQuestionService} from "@app/services/survey-question.service";
-import {ViewTraineeSurveyComponent} from "@app/shared/popups/view-trainee-survey/view-trainee-survey.component";
-import {DialogRef} from "@app/shared/models/dialog-ref";
+import { SurveySectionService } from "@app/services/survey-section.service";
+import { SurveyQuestionService } from "@app/services/survey-question.service";
+import { ViewTraineeSurveyComponent } from "@app/shared/popups/view-trainee-survey/view-trainee-survey.component";
+import { DialogRef } from "@app/shared/models/dialog-ref";
+import { CrudWithDialogGenericService } from "@app/generics/crud-with-dialog-generic-service";
+import { CastResponseContainer } from "@decorators/cast-response";
+import { Pagination } from "@app/models/pagination";
 
+@CastResponseContainer({
+  $default: {
+    model: () => SurveyTemplate
+  },
+  $pagination: {
+    model: () => Pagination,
+    shape: { 'rs.*': () => SurveyTemplate }
+  }
+})
 @Injectable({
   providedIn: 'root',
 })
-export class SurveyTemplateService extends BackendWithDialogOperationsGenericService<SurveyTemplate> {
+export class SurveyTemplateService extends CrudWithDialogGenericService<SurveyTemplate> {
   list: SurveyTemplate[] = [];
-  interceptor: IModelInterceptor<SurveyTemplate> = new SurveyTemplateInterceptor();
 
   constructor(public dialog: DialogService,
               private _surveyQuestionService: SurveyQuestionService,
@@ -40,16 +48,8 @@ export class SurveyTemplateService extends BackendWithDialogOperationsGenericSer
     return SurveyTemplate;
   }
 
-  _getSendInterceptor() {
-    return this.interceptor.send;
-  }
-
   _getServiceURL(): string {
     return this.urlService.URLS.SURVEY_TEMPLATE;
-  }
-
-  _getReceiveInterceptor() {
-    return this.interceptor.receive;
   }
 
   viewTemplate(template: SurveyTemplate): DialogRef {
