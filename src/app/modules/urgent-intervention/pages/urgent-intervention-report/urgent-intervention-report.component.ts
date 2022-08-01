@@ -253,7 +253,7 @@ export class UrgentInterventionReportComponent extends EServicesGenericComponent
       interventionRegionList: this.interventionRegionListComponentRef.list,
       implementingAgencyList: this.implementingAgencyListComponentRef.list
     });
-    if (this.operation === this.operationTypes.CREATE){
+    if (this.operation === this.operationTypes.CREATE) {
       value.interventionLicenseId = this.service.preValidatedLicenseIdForAddOperation;
     }
     return value;
@@ -531,6 +531,6 @@ export class UrgentInterventionReportComponent extends EServicesGenericComponent
   }
 
   loadLicencesByCriteria(criteria: Partial<UrgentInterventionReportSearchCriteria>): Observable<UrgentInterventionReportResult[]> {
-    return this.service.licenseSearch(criteria);
+    return this.service.licenseSearch(criteria, this.requestTypeField.value);
   }
 }
