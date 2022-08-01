@@ -13,6 +13,7 @@ import {
 import { EServicesMainModule } from '@app/modules/e-services-main/e-services-main.module';
 import { ExternalOrgAffiliationComponent } from './pages/external-org-affiliation/external-org-affiliation.component';
 import { ForeignCountriesProjectsComponent } from './pages/foreign-countries-projects/foreign-countries-projects.component';
+import { ForeignCountriesProjectsPopupComponent } from './popups/foreign-countries-projects-popup/foreign-countries-projects-popup.component';
 
 
 @NgModule({
@@ -24,6 +25,7 @@ import { ForeignCountriesProjectsComponent } from './pages/foreign-countries-pro
     ExternalOrgAffiliationComponent,
     EmploymentComponent,
     ForeignCountriesProjectsComponent,
+    ForeignCountriesProjectsPopupComponent,
   ],
   imports: [
     CommonModule,

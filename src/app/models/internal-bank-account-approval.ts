@@ -1,15 +1,15 @@
-import {mixinRequestType} from '@app/mixins/mixin-request-type';
-import {CaseModel} from '@app/models/case-model';
-import {InternalBankAccountApprovalService} from '@app/services/internal-bank-account-approval.service';
-import {HasRequestType} from '@app/interfaces/has-request-type';
-import {FactoryService} from '@app/services/factory.service';
-import {AdminResult} from '@app/models/admin-result';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {CaseTypes} from '@app/enums/case-types.enum';
-import {BankAccount} from '@app/models/bank-account';
-import {NpoEmployee} from '@app/models/npo-employee';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {WFResponseType} from '@app/enums/wfresponse-type.enum';
+import { mixinRequestType } from '@app/mixins/mixin-request-type';
+import { CaseModel } from '@app/models/case-model';
+import { InternalBankAccountApprovalService } from '@app/services/internal-bank-account-approval.service';
+import { HasRequestType } from '@app/interfaces/has-request-type';
+import { FactoryService } from '@app/services/factory.service';
+import { AdminResult } from '@app/models/admin-result';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { CaseTypes } from '@app/enums/case-types.enum';
+import { BankAccount } from '@app/models/bank-account';
+import { NpoEmployee } from '@app/models/npo-employee';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { WFResponseType } from '@app/enums/wfresponse-type.enum';
 
 const _RequestType = mixinRequestType(CaseModel);
 
@@ -58,9 +58,9 @@ export class InternalBankAccountApproval extends _RequestType<InternalBankAccoun
   }
 
   buildBasicInfo(controls: boolean = false): any {
-    const {oldLicenseFullSerial, requestType, operationType, purpose, bankId, category,
+    const { oldLicenseFullSerial, requestType, operationType, purpose, bankId, category,
       currency, mainAccount, accountNumber, iBan, swiftCode, selectedBankAccountToMerge,
-      ownerOfMergedBankAccounts, selectedResponsiblePerson, bankAccountSearchCriteria} = this;
+      ownerOfMergedBankAccounts, selectedResponsiblePerson, bankAccountSearchCriteria } = this;
     return {
       oldLicenseFullSerial: controls ? [oldLicenseFullSerial] : oldLicenseFullSerial,
       requestType: controls ? [requestType, [CustomValidators.required]] : requestType,
@@ -81,7 +81,7 @@ export class InternalBankAccountApproval extends _RequestType<InternalBankAccoun
   }
 
   buildExplanation(controls: boolean = false): any {
-    const {description} = this;
+    const { description } = this;
     return {
       description: controls ? [description, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)]] : description,
     }
@@ -95,7 +95,4 @@ export class InternalBankAccountApproval extends _RequestType<InternalBankAccoun
     return this.service.approveTask(this, WFResponseType.FINAL_APPROVE);
   }
 
-  // sendToMultiDepartments(): DialogRef {
-  //   return this.inboxService!.sendInternalBankAccountApprovalToDepartment(this.taskDetails.tkiid, this.caseType, false, this);
-  // }
 }

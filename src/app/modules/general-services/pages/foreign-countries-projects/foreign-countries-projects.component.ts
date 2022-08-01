@@ -94,19 +94,19 @@ export class ForeignCountriesProjectsComponent
           name: 'basicInfoTab',
           template: tabsTemplates[0],
           title: this.lang.map.lbl_basic_info,
-          validStatus: () => this.form && this.basicInfo?.valid,
+          validStatus: () => this.isCancelRequestType || (this.form && this.basicInfo?.valid),
         },
         {
           name: 'projectNeedsTab',
           template: tabsTemplates[1],
           title: this.lang.map.project_needs,
-          validStatus: () => this.form && this.specialExplanation?.valid,
+          validStatus: () => this.isCancelRequestType || (this.form && this.projectNeedsComponentRef?.list.length > 0),
         },
         {
           name: 'specialExplanationsTab',
           template: tabsTemplates[2],
           title: this.lang.map.special_explanations,
-          validStatus: () => this.form && this.specialExplanation?.valid,
+          validStatus: () => this.isCancelRequestType || (this.form && this.specialExplanation?.valid),
         },
       ];
       if (!this.accordionView) {
@@ -253,6 +253,11 @@ export class ForeignCountriesProjectsComponent
     }
     if (!requestTypeValue) {
       requestTypeValue = this.requestTypeField && this.requestTypeField.value;
+    }
+    if (this.requestTypeField.value === CollectionRequestType.CANCEL) {
+      this.basicInfo.patchValue(this.model?.buildForm(false)!);
+      this.specialExplanation.patchValue(this.model?.buildExplanation(false)!);
+      this.cd.detectChanges();
     }
   }
   getTabInvalidStatus(i: number): boolean {

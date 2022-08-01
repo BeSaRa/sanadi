@@ -4,7 +4,6 @@ import { ForeignCountriesProjectsResult } from '@app/models/foreign-countries-pr
 
 export class ForeignCountriesProjectsResultInterceptor implements IModelInterceptor<ForeignCountriesProjectsResult> {
   send(model: Partial<ForeignCountriesProjectsResult>): Partial<ForeignCountriesProjectsResult> {
-
     delete model.creatorInfo
     delete model.licenseStatusInfo
     delete model.ouInfo

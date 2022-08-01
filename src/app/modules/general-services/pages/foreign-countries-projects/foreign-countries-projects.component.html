@@ -172,20 +172,20 @@
         </div>
 
         <div class="mb-4 position-relative">
-          <label for="subject" class="form-label">{{
+          <label for="classDescription" class="form-label">{{
             lang.map.lbl_description
           }}</label>
           <textarea
-            id="subject"
-            validationClasses="subject"
+            id="classDescription"
+            validationClasses="classDescription"
             trimInput
             [readonly]="isCancelRequestType || !isEditAllowed"
-            validationClasses="subject"
-            formControlName="subject"
+            validationClasses="classDescription"
+            formControlName="classDescription"
             class="form-control"
           ></textarea>
           <app-field-error-message
-            controlName="subject"
+            controlName="classDescription"
           ></app-field-error-message>
         </div>
 

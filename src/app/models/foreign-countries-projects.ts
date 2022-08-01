@@ -1,5 +1,6 @@
 import { InterceptModel } from '@app/decorators/decorators/intercept-model';
 import { CaseTypes } from '@app/enums/case-types.enum';
+import { WFResponseType } from '@app/enums/wfresponse-type.enum';
 import { HasExternalCooperationAuthority } from '@app/interfaces/has-external-cooperation-authority';
 import { HasRequestType } from '@app/interfaces/has-request-type';
 import { IKeyValue } from '@app/interfaces/i-key-value';
@@ -8,6 +9,7 @@ import { mixinRequestType } from '@app/mixins/mixin-request-type';
 import { ForeignCountriesProjectsInterceptor } from '@app/model-interceptors/foriegn-countries-projects-interceptor';
 import { FactoryService } from '@app/services/factory.service';
 import { ForeignCountriesProjectsService } from '@app/services/foreign-countries-projects.service';
+import { DialogRef } from '@app/shared/models/dialog-ref';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { AdminResult } from './admin-result';
 import { CaseModel } from './case-model';
@@ -40,10 +42,10 @@ export class ForeignCountriesProjects
   caseType: number = CaseTypes.FOREIGN_COUNTRIES_PROJECTS;
   externalCooperationAuthority!: number;
   externalCooperationAuthorityInfo!: AdminResult;
-
+  organizationId!: number;
   country!: number;
   countryInfo!: AdminResult;
-
+  followUpDate!: string;
   oldLicenseFullSerial!: string;
   needSubject!: string;
   justification!: string;
@@ -74,7 +76,7 @@ export class ForeignCountriesProjects
       externalCooperationAuthority,
       country,
       justification,
-      subject,
+      classDescription,
       recommendation,
       needSubject,
       entityClassification
@@ -94,13 +96,16 @@ export class ForeignCountriesProjects
         ? [needSubject, [CustomValidators.required]]
         : needSubject,
       subject: withControls
-        ? [subject, [CustomValidators.required]]
-        : subject,
+        ? [classDescription, [CustomValidators.required]]
+        : classDescription,
       justification: withControls
         ? [justification, [CustomValidators.required]]
         : justification,
       recommendation,
       entityClassification
     };
+  }
+  finalApprove(): DialogRef {
+    return this.service.approveTask(this, WFResponseType.FINAL_APPROVE);
   }
 }
