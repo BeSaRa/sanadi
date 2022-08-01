@@ -24,7 +24,7 @@ import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 export class ServiceDataComponent extends AdminGenericComponent<ServiceData, ServiceDataService> {
   commonStatus = CommonStatusEnum;
   useCompositeToEdit = false;
-
+  usePagination = true;
   constructor(public langService: LangService,
               public service: ServiceDataService,
               private dialogService: DialogService,
