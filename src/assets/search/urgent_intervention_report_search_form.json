@@ -53,31 +53,16 @@
   {
     "fields": [
       {
-        "key": "arName",
+        "key": "interventionName",
         "type": "input",
-        "label": "arabic_name",
+        "label": "intervention_name",
         "validations": {
           "required": false
         },
         "templateOptions": {
-          "maxLength": 50
+          "maxLength": 100
         }
       },
-      {
-        "key": "enName",
-        "type": "input",
-        "label": "english_name",
-        "validations": {
-          "required": false
-        },
-        "templateOptions": {
-          "maxLength": 50
-        }
-      }
-    ]
-  },
-  {
-    "fields": [
       {
         "key": "subject",
         "type": "input",
@@ -88,7 +73,11 @@
         "templateOptions": {
           "maxLength": 100
         }
-      },
+      }
+    ]
+  },
+  {
+    "fields": [
       {
         "key": "organizationId",
         "type": "selectField",
