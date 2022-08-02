@@ -93,7 +93,6 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
     this.customRoleList = data.customRoleList;
     this.orgUnitList = data.orgUnitList;
     this.orgUserPermissions = data.orgUserPermissions;
-    this.list = data.list;
     this.userTypeList = lookupService.listByCategory.OrgUserType;
     this.jobTitleList = lookupService.listByCategory.OrgUserJobTitle;
     this.orgUserStatusList = lookupService.listByCategory.OrgUserStatus;
@@ -173,31 +172,27 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$),
       exhaustMap(() => {
         const orgUser = extender<OrgUser>(OrgUser, {...this.model, ...this.fm.getFormField('basic')?.value});
-        if (!this.isDuplicatedUserMobileNumberOrEmail(orgUser)) {
-          return orgUser.save()
-            .pipe(
-              catchError((err) => {
-                this.exceptionHandlerService.handle(err);
-                return of(null);
-              }),
-              switchMap((savedUser: OrgUser | null) => {
-                if (!savedUser) {
-                  return of(savedUser);
-                }
-                return this.userPermissionService.saveBulkUserPermissions(savedUser.id, this.selectedPermissions)
-                  .pipe(
-                    catchError((err) => {
-                      this.exceptionHandlerService.handle(err);
-                      return of(null);
-                    }),
-                    map(() => {
-                      return savedUser;
-                    })
-                  );
-              }));
-        } else {
-          return of(null);
-        }
+        return orgUser.save()
+          .pipe(
+            catchError((err) => {
+              this.exceptionHandlerService.handle(err);
+              return of(null);
+            }),
+            switchMap((savedUser: OrgUser | null) => {
+              if (!savedUser) {
+                return of(savedUser);
+              }
+              return this.userPermissionService.saveBulkUserPermissions(savedUser.id, this.selectedPermissions)
+                .pipe(
+                  catchError((err) => {
+                    this.exceptionHandlerService.handle(err);
+                    return of(null);
+                  }),
+                  map(() => {
+                    return savedUser;
+                  })
+                );
+            }));
       }),
       switchMap((user) => {
         if (!user) {
@@ -218,34 +213,6 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
       this.model = user;
       this.operation = OperationTypes.UPDATE;
     });
-  }
-
-  isDuplicatedUserMobileNumberOrEmail(orgUser: OrgUser) {
-    let isDuplicatedMobileNumber = false;
-    let isDuplicatedEmail = false;
-    if (this.isDuplicatedUserMobileNumber(orgUser)) {
-      this.toast.error(this.langService.map.phone_number_is_duplicated);
-      isDuplicatedMobileNumber = true;
-    }
-
-    if (this.isDuplicatedUserEmail(orgUser)) {
-      this.toast.error(this.langService.map.email_is_duplicated);
-      isDuplicatedEmail = true;
-    }
-
-    return isDuplicatedMobileNumber || isDuplicatedEmail;
-  }
-
-  isDuplicatedUserMobileNumber(orgUser: OrgUser) {
-    return this.list
-      .filter(user => user.id != orgUser.id)
-      .some(user => user.phoneNumber == orgUser.phoneNumber);
-  }
-
-  isDuplicatedUserEmail(orgUser: OrgUser) {
-    return this.list
-      .filter(user => user.id != orgUser.id)
-      .some(user => user.email == orgUser.email);
   }
 
   onOrgUnitChange(): void {
@@ -269,11 +236,11 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
   }
 
   get customRoleControl(): FormControl {
-    return this.fm.getFormField('permissions.customRoleId') as FormControl
+    return this.fm.getFormField('permissions.customRoleId') as FormControl;
   }
 
   get permissionsControl(): FormControl {
-    return this.fm.getFormField('permissions.permissions') as FormControl
+    return this.fm.getFormField('permissions.permissions') as FormControl;
   }
 
 
@@ -375,6 +342,6 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
   }
 
   onTabChange($event: TabComponent) {
-    this.displaySaveBtn = (!['services', 'teams'].includes($event.name))
+    this.displaySaveBtn = (!['services', 'teams'].includes($event.name));
   }
 }

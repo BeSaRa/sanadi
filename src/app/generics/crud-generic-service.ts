@@ -163,7 +163,10 @@ export abstract class CrudGenericService<T> implements CrudServiceInterface<T>, 
   }
 
   paginate(options: Partial<PaginationContract>): Observable<Pagination<T[]>> {
-    return this._paginate(options)
+    return this._paginate(options).pipe(
+      tap(result => this.list = result.rs),
+      tap(result => this._loadDone$.next(result.rs))
+    );
   }
 
   @CastResponse(undefined, {
@@ -176,7 +179,10 @@ export abstract class CrudGenericService<T> implements CrudServiceInterface<T>, 
   }
 
   paginateComposite(options: Partial<PaginationContract>): Observable<Pagination<T[]>> {
-    return this._paginateComposite(options)
+    return this._paginateComposite(options).pipe(
+      tap(result => this.list = result.rs),
+      tap(result => this._loadDone$.next(result.rs))
+    );
   }
 
 

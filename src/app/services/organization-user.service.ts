@@ -79,8 +79,7 @@ export class OrganizationUserService extends CrudWithDialogGenericService<OrgUse
             operation: OperationTypes.CREATE,
             customRoleList: result.customRoles,
             orgUnitList: result.orgUnits,
-            orgUserPermissions: result.orgUserPermissions,
-            list: this.list
+            orgUserPermissions: result.orgUserPermissions
           }));
         })
       );
@@ -97,8 +96,7 @@ export class OrganizationUserService extends CrudWithDialogGenericService<OrgUse
               operation: OperationTypes.UPDATE,
               customRoleList: result.customRoles,
               orgUnitList: result.orgUnits,
-              orgUserPermissions: result.orgUserPermissions,
-              list: this.list
+              orgUserPermissions: result.orgUserPermissions
             }));
           })
         );
