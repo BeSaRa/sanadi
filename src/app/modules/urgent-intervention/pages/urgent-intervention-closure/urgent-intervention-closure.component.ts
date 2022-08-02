@@ -246,11 +246,11 @@ export class UrgentInterventionClosureComponent extends EServicesGenericComponen
       beneficiary: this.fb.group(objUrgentInterventionClosure.getBeneficiaryFields(true)),
       beneficiaryByAge: this.fb.group(objUrgentInterventionClosure.getBeneficiaryByAgeFields(true)),
     });
-    this._setDefaultValues();
   }
 
   _afterBuildForm(): void {
     this.handleReadonly();
+    this._setDefaultValues();
     if (this.fromDialog) {
       this.loadSelectedLicenseById(this.model!.oldLicenseId, () => {
         this.oldLicenseFullSerialField.updateValueAndValidity();
@@ -347,10 +347,21 @@ export class UrgentInterventionClosureComponent extends EServicesGenericComponen
   private _disableDefaults() {
     [this.executionCountryField, this.executionRegionField, this.beneficiaryCountryField, this.beneficiaryRegionField, this.descriptionField].map(x => x.disable());
   }
+  private _setDefaultZeros() {
+    Object.keys(this.beneficiaryGroup.controls).forEach(key => {
+      this.beneficiaryGroup.get(key)?.setValue(0);
+    });
+    Object.keys(this.beneficiaryByAgeGroup.controls).forEach(key => {
+      this.beneficiaryByAgeGroup.get(key)?.setValue(0);
+    });
+    this.beneficiaryGroup.updateValueAndValidity();
+    this.beneficiaryByAgeGroup.updateValueAndValidity();
+  }
 
   _setDefaultValues(): void {
     this.requestTypeField.setValue(ServiceRequestTypes.NEW);
     this.handleRequestTypeChange(ServiceRequestTypes.NEW, false);
+    this._setDefaultZeros();
     this._disableDefaults();
     this._updateBeneficiaryByAgeGroupValidation();
   }

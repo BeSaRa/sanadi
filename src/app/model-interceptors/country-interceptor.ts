@@ -15,7 +15,7 @@ export class CountryInterceptor implements IModelInterceptor<Country> {
   }
 
   receive(model: Country): Country {
-    console.log({ ...model.statusInfo });
+    // console.log({ ...model.statusInfo });
 
     model.statusDateModifiedString = DateUtils.getDateStringFromDate(model.statusDateModified, 'DEFAULT_DATE_FORMAT');
     model.parentInfo = isValidAdminResult(model.parentInfo) ? AdminResult.createInstance(model.parentInfo) : AdminResult.createInstance({});
