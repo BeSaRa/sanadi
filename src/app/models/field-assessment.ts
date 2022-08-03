@@ -1,15 +1,23 @@
-import {BaseModel} from '@app/models/base-model';
-import {FieldAssessmentService} from '@services/field-assessment.service';
-import {FactoryService} from '@services/factory.service';
-import {LangService} from '@services/lang.service';
-import {INames} from '@contracts/i-names';
-import {AdminResult} from '@app/models/admin-result';
-import {ISearchFieldsMap} from '@app/types/types';
-import {normalSearchFields} from '@helpers/normal-search-fields';
-import {infoSearchFields} from '@helpers/info-search-fields';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import { BaseModel } from '@app/models/base-model';
+import { FieldAssessmentService } from '@services/field-assessment.service';
+import { FactoryService } from '@services/factory.service';
+import { LangService } from '@services/lang.service';
+import { INames } from '@contracts/i-names';
+import { AdminResult } from '@app/models/admin-result';
+import { ISearchFieldsMap } from '@app/types/types';
+import { normalSearchFields } from '@helpers/normal-search-fields';
+import { infoSearchFields } from '@helpers/info-search-fields';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { CommonStatusEnum } from '@app/enums/common-status.enum';
+import { InterceptModel } from "@decorators/intercept-model";
+import { FieldAssessmentInterceptor } from "@app/model-interceptors/field-assessment-interceptor";
 
+const interceptor = new FieldAssessmentInterceptor();
+
+@InterceptModel({
+  send: interceptor.send,
+  receive: interceptor.receive
+})
 export class FieldAssessment extends BaseModel<FieldAssessment, FieldAssessmentService> {
   status!: number;
   statusDateModified!: string;
@@ -38,7 +46,7 @@ export class FieldAssessment extends BaseModel<FieldAssessment, FieldAssessmentS
   }
 
   convertToAdminResult(): AdminResult {
-    return AdminResult.createInstance({arName: this.arName, enName: this.enName, id: this.id});
+    return AdminResult.createInstance({ arName: this.arName, enName: this.enName, id: this.id });
   }
 
   isActive(): boolean {

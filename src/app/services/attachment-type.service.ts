@@ -1,25 +1,35 @@
-import {Injectable} from '@angular/core';
-import {AttachmentType} from '../models/attachment-type';
-import {HttpClient} from '@angular/common/http';
-import {IModelInterceptor} from '../interfaces/i-model-interceptor';
-import {AttachmentTypeInterceptor} from '../model-interceptors/attachment-type-interceptor';
-import {UrlService} from './url.service';
-import {FactoryService} from './factory.service';
-import {DialogService} from './dialog.service';
-import {AttachmentTypesPopupComponent} from '../administration/popups/attachment-types-popup/attachment-types-popup.component';
-import {Observable} from 'rxjs';
-import {AttachmentTypeServiceDataService} from '@app/services/attachment-type-service-data.service';
-import {AttachmentTypeServiceData} from '@app/models/attachment-type-service-data';
-import {BackendWithDialogOperationsGenericService} from '@app/generics/backend-with-dialog-operations-generic-service';
-import {ComponentType} from '@angular/cdk/portal';
-import {Generator} from '@decorators/generator';
+import { Injectable } from '@angular/core';
+import { AttachmentType } from '../models/attachment-type';
+import { HttpClient } from '@angular/common/http';
+import { UrlService } from './url.service';
+import { FactoryService } from './factory.service';
+import { DialogService } from './dialog.service';
+import {
+  AttachmentTypesPopupComponent
+} from '../administration/popups/attachment-types-popup/attachment-types-popup.component';
+import { Observable } from 'rxjs';
+import { AttachmentTypeServiceDataService } from '@app/services/attachment-type-service-data.service';
+import { AttachmentTypeServiceData } from '@app/models/attachment-type-service-data';
+import { ComponentType } from '@angular/cdk/portal';
+import { CrudWithDialogGenericService } from "@app/generics/crud-with-dialog-generic-service";
+import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
+import { Pagination } from "@app/models/pagination";
 
+@CastResponseContainer({
+  $default: {
+    model: () => AttachmentType
+  },
+  $pagination: {
+    model: () => Pagination,
+    shape: { 'rs.*': () => AttachmentType }
+  }
+})
 @Injectable({
   providedIn: 'root'
 })
-export class AttachmentTypeService extends BackendWithDialogOperationsGenericService<AttachmentType> {
+export class AttachmentTypeService extends CrudWithDialogGenericService<AttachmentType> {
   list!: AttachmentType[];
-  interceptor: IModelInterceptor<AttachmentType> = new AttachmentTypeInterceptor();
+
 
   constructor(public http: HttpClient,
               private urlService: UrlService,
@@ -37,19 +47,14 @@ export class AttachmentTypeService extends BackendWithDialogOperationsGenericSer
     return AttachmentType;
   }
 
-  _getReceiveInterceptor(): any {
-    return this.interceptor.receive;
-  }
-
-  _getSendInterceptor(): any {
-    return this.interceptor.send;
-  }
-
   _getServiceURL(): string {
     return this.urlService.URLS.ATTACHMENT_TYPES;
   }
 
-  @Generator(undefined, true, {property: 'rs'})
+  @CastResponse(undefined, {
+    fallback: '$default',
+    unwrap: 'rs'
+  })
   private _loadByServiceId(serviceId: number): Observable<AttachmentType[]> {
     return this.http.get<AttachmentType[]>(this._getServiceURL() + '/attachment-types/' + serviceId);
   }
@@ -61,23 +66,4 @@ export class AttachmentTypeService extends BackendWithDialogOperationsGenericSer
   loadTypesByCaseType(caseId: number): Observable<AttachmentTypeServiceData[]> {
     return this.attachmentTypeServiceDataService.getByCaseType(caseId);
   }
-
-  /*
-    openCreateDialog(): DialogRef {
-      return this.dialogService.show<IDialogData<AttachmentType>>(AttachmentTypesPopupComponent, {
-        model: new AttachmentType(),
-        operation: OperationTypes.CREATE
-      });
-    }
-
-    openUpdateDialog(modelId: number): Observable<DialogRef> {
-      return this.getById(modelId).pipe(
-        switchMap((attachmentType: AttachmentType) => {
-          return of(this.dialogService.show<IDialogData<AttachmentType>>(AttachmentTypesPopupComponent, {
-            model: attachmentType,
-            operation: OperationTypes.UPDATE
-          }));
-        })
-      );
-    }*/
 }

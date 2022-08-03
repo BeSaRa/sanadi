@@ -1,6 +1,4 @@
 import { UrgentInterventionFinancialNotificationService } from './urgent-intervention-financial-notification.service';
-
-
 import {ComponentFactoryResolver, Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {UrlService} from './url.service';
@@ -51,10 +49,12 @@ import {CustomsExemptionRemittanceService} from './customs-exemption-remittance.
 import {BaseGenericEService} from '@app/generics/base-generic-e-service';
 import {UrgentJointReliefCampaignService} from '@services/urgent-joint-relief-campaign.service';
 import {UrgentInterventionReportingService} from '@app/services/urgent-intervention-reporting.service';
-import {ExternalOrgAffiliationService } from './external-org-affiliation.service';
-import { EmploymentService } from '@app/services/employment.service';
+import {ExternalOrgAffiliationService} from './external-org-affiliation.service';
+import {EmploymentService} from '@app/services/employment.service';
 import {ReturnToOrganizationPopupComponent} from '@app/shared/popups/return-to-organization-popup/return-to-organization-popup.component';
 import {UrgentInterventionClosureService} from '@services/urgent-intervention-closure.service';
+import {TransferringIndividualFundsAbroadService} from '@services/transferring-individual-funds-abroad.service';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -85,7 +85,8 @@ export class InboxService {
               private urlService: UrlService,
               private employmentService: EmploymentService,
               private externalOrgAffiliationService: ExternalOrgAffiliationService,
-    private customsExemptionRemittanceService: CustomsExemptionRemittanceService) {
+              private customsExemptionRemittanceService: CustomsExemptionRemittanceService,
+              private transferringIndividualsFundsAbroad: TransferringIndividualFundsAbroadService) {
     FactoryService.registerService('InboxService', this);
     // register all e-services that we need.
     this.services.set(CaseTypes.INQUIRY, this.inquiryService);
@@ -108,6 +109,7 @@ export class InboxService {
     this.services.set(CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST, this.externalOrgAffiliationService);
     this.services.set(CaseTypes.URGENT_INTERVENTION_CLOSURE, this.urgentInterventionClosureService);
     this.services.set(CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION, this.urgentInterventionFinancialNotificationService);
+    this.services.set(CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD, this.transferringIndividualsFundsAbroad);
   }
 
   @Generator(QueryResultSet, false, {property: 'rs', interceptReceive: (new QueryResultSetInterceptor().receive)})
@@ -282,7 +284,8 @@ export class InboxService {
       [CaseTypes.INTERNAL_PROJECT_LICENSE]: WFResponseType.INTERNAL_PROJECT_SEND_TO_MULTI_DEPARTMENTS,
       [CaseTypes.FUNDRAISING_LICENSING]: WFResponseType.FUNDRAISING_LICENSE_SEND_TO_MULTI_DEPARTMENTS,
       [CaseTypes.URGENT_INTERVENTION_LICENSING]: WFResponseType.URGENT_INTERVENTION_LICENSE_SEND_TO_MULTI_DEPARTMENTS,
-      [CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL]: WFResponseType.INTERNAL_BANK_ACCOUNT_APPROVAL_SEND_TO_SINGLE_DEPARTMENT
+      [CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL]: WFResponseType.INTERNAL_BANK_ACCOUNT_APPROVAL_SEND_TO_SINGLE_DEPARTMENT,
+      [CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD]: WFResponseType.TRANSFER_FUND_REQUEST_TO_COMPLIANCE_AND_RISK_DEPARTMENT
     };
 
     // @ts-ignore

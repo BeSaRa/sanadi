@@ -181,7 +181,7 @@ export class UrgentInterventionReportComponent extends EServicesGenericComponent
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
     if (!this.requestTypeField.value || ((this.requestTypeField.value === UrgentInterventionAnnouncementRequestType.START || this.requestTypeField.value === UrgentInterventionAnnouncementRequestType.EDIT) && !this.selectedLicense)) {
-      this.dialogService.error(this.lang.map.please_select_license_to_complete_save);
+      this.dialogService.error(this.lang.map.please_select_notification_request_number_to_complete_save);
       return false;
     } else {
       if (saveType === SaveTypes.DRAFT) {
@@ -253,7 +253,7 @@ export class UrgentInterventionReportComponent extends EServicesGenericComponent
       interventionRegionList: this.interventionRegionListComponentRef.list,
       implementingAgencyList: this.implementingAgencyListComponentRef.list
     });
-    if (this.operation === this.operationTypes.CREATE){
+    if (this.operation === this.operationTypes.CREATE) {
       value.interventionLicenseId = this.service.preValidatedLicenseIdForAddOperation;
     }
     return value;
@@ -261,6 +261,7 @@ export class UrgentInterventionReportComponent extends EServicesGenericComponent
 
   _resetForm(): void {
     this.form.reset();
+    this.tabIndex$.next(0);
     this.model = this._getNewInstance();
     this.operation = this.operationTypes.CREATE;
     this.setSelectedLicense(undefined, true);
@@ -398,7 +399,7 @@ export class UrgentInterventionReportComponent extends EServicesGenericComponent
     if (!id) {
       return;
     }
-    this.licenseService.loadUrgentInterventionReportByLicenseId(id)
+    this.licenseService.loadUrgentInterventionAnnouncementByLicenseId(id)
       .pipe(
         filter(license => !!license),
         takeUntil(this.destroy$)
@@ -422,7 +423,7 @@ export class UrgentInterventionReportComponent extends EServicesGenericComponent
   }
 
   private loadCountries(): void {
-    this.countryService.loadCountries()
+    this.countryService.load()
       .pipe(takeUntil(this.destroy$))
       .subscribe((countries) => this.countries = countries);
   }
@@ -430,8 +431,8 @@ export class UrgentInterventionReportComponent extends EServicesGenericComponent
   handleChangeExecutionCountry(country: number, userInteraction: boolean) {
     if (userInteraction) {
       this.implementingAgencyListComponentRef.forceClearComponent();
-      this.interventionRegionListComponentRef.forceClearComponent();
-      this.interventionFieldListComponentRef.forceClearComponent();
+      // this.interventionRegionListComponentRef.forceClearComponent();
+      // this.interventionFieldListComponentRef.forceClearComponent();
     }
   }
 
@@ -530,6 +531,6 @@ export class UrgentInterventionReportComponent extends EServicesGenericComponent
   }
 
   loadLicencesByCriteria(criteria: Partial<UrgentInterventionReportSearchCriteria>): Observable<UrgentInterventionReportResult[]> {
-    return this.service.licenseSearch(criteria);
+    return this.service.licenseSearch(criteria, this.requestTypeField.value);
   }
 }

@@ -1,16 +1,16 @@
-import {Component} from '@angular/core';
-import {AdminGenericComponent} from '@app/generics/admin-generic-component';
-import {InternalDepartment} from '@app/models/internal-department';
-import {InternalDepartmentService} from '@app/services/internal-department.service';
-import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import {LangService} from '@app/services/lang.service';
-import {catchError, exhaustMap, filter, switchMap, takeUntil} from 'rxjs/operators';
-import {of, Subject} from 'rxjs';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {CommonStatusEnum} from '@app/enums/common-status.enum';
-import {ToastService} from '@app/services/toast.service';
-import {SortEvent} from '@app/interfaces/sort-event';
-import {CommonUtils} from '@app/helpers/common-utils';
+import { Component } from '@angular/core';
+import { AdminGenericComponent } from '@app/generics/admin-generic-component';
+import { InternalDepartment } from '@app/models/internal-department';
+import { InternalDepartmentService } from '@app/services/internal-department.service';
+import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { LangService } from '@app/services/lang.service';
+import { catchError, exhaustMap, filter, switchMap, takeUntil } from 'rxjs/operators';
+import { of, Subject } from 'rxjs';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { CommonStatusEnum } from '@app/enums/common-status.enum';
+import { ToastService } from '@app/services/toast.service';
+import { SortEvent } from '@app/interfaces/sort-event';
+import { CommonUtils } from '@app/helpers/common-utils';
 
 @Component({
   selector: 'internal-department',
@@ -18,6 +18,7 @@ import {CommonUtils} from '@app/helpers/common-utils';
   styleUrls: ['./internal-department.component.scss']
 })
 export class InternalDepartmentComponent extends AdminGenericComponent<InternalDepartment, InternalDepartmentService> {
+  usePagination = true
   searchText = '';
   view$: Subject<InternalDepartment> = new Subject<InternalDepartment>();
   commonStatusEnum = CommonStatusEnum;
@@ -116,10 +117,10 @@ export class InternalDepartmentComponent extends AdminGenericComponent<InternalD
     let updateObservable = model.status == CommonStatusEnum.ACTIVATED ? model.updateStatus(CommonStatusEnum.DEACTIVATED) : model.updateStatus(CommonStatusEnum.ACTIVATED);
     updateObservable.pipe(takeUntil(this.destroy$))
       .subscribe(() => {
-        this.toast.success(this.lang.map.msg_status_x_updated_success.change({x: model.getName()}));
+        this.toast.success(this.lang.map.msg_status_x_updated_success.change({ x: model.getName() }));
         this.reload$.next(null);
       }, () => {
-        this.toast.error(this.lang.map.msg_status_x_updated_fail.change({x: model.getName()}));
+        this.toast.error(this.lang.map.msg_status_x_updated_fail.change({ x: model.getName() }));
         this.reload$.next(null);
       });
   }

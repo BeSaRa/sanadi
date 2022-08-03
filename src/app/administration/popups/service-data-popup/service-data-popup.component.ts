@@ -1,5 +1,5 @@
-import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {iif, of, Subject} from 'rxjs';
+import {Component, Inject} from '@angular/core';
+import {BehaviorSubject, iif, Observable, of, Subject} from 'rxjs';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {ServiceData} from '@app/models/service-data';
@@ -14,9 +14,6 @@ import {DialogRef} from '@app/shared/models/dialog-ref';
 import {ExceptionHandlerService} from '@app/services/exception-handler.service';
 import {Lookup} from '@app/models/lookup';
 import {LookupService} from '@app/services/lookup.service';
-import {CommonUtils} from '@app/helpers/common-utils';
-import {FormManager} from '@app/models/form-manager';
-import {IKeyValue} from '@app/interfaces/i-key-value';
 import {ServiceDataStep} from '@app/models/service-data-step';
 import {ServiceDataStepService} from '@app/services/service-data-step.service';
 import {ChecklistService} from '@app/services/checklist.service';
@@ -25,66 +22,160 @@ import {DialogService} from '@app/services/dialog.service';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {AttachmentType} from '@app/models/attachment-type';
 import {AttachmentTypeService} from '@services/attachment-type.service';
+import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
+import {TabMap} from '@app/types/types';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 
 @Component({
   selector: 'service-data-popup',
   templateUrl: './service-data-popup.component.html',
   styleUrls: ['./service-data-popup.component.scss']
 })
-export class ServiceDataPopupComponent implements OnInit, OnDestroy {
-  private save$: Subject<any> = new Subject<any>();
-  edit$: Subject<ServiceDataStep> = new Subject<ServiceDataStep>();
-  private destroy$: Subject<any> = new Subject<any>();
-  form!: FormGroup;
-  fm!: FormManager;
-  model: ServiceData;
-  operation: OperationTypes;
-  tabsData: IKeyValue = {
-    basic: {name: 'basic'},
-    customSettings: {name: 'customSettings'},
-    steps: {name: 'steps'},
-    followup: {name: 'followup'}
-  };
-  list: ServiceData[] = [];
-  stepsList: ServiceDataStep[] = [];
-  stepsColumns = ['arName', 'enName', 'activityName', 'stepName'];
-  statusList: Lookup[] = [];
-  inputMaskPatterns = CustomValidators.inputMaskPatterns;
-  showMaxTargetAmount = false;
-  showMaxElementsCount = false;
-  showActivateDevelopmentField = false;
-  showAttachmentTypeField = false;
-  attachmentTypesList: AttachmentType[] = [];
+export class ServiceDataPopupComponent extends AdminGenericDialog<ServiceData> {
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<ServiceData>,
               private lookupService: LookupService,
               public lang: LangService,
-              private fb: FormBuilder,
+              public fb: FormBuilder,
               private toast: ToastService,
-              private dialogRef: DialogRef,
+              public dialogRef: DialogRef,
               private attachmentTypeService: AttachmentTypeService,
               private exceptionHandlerService: ExceptionHandlerService,
               private serviceDataStepsService: ServiceDataStepService,
               private checklistService: ChecklistService,
               private serviceData: ServiceDataService,
               private dialog: DialogService) {
+    super();
     this.model = data.model;
     this.operation = data.operation;
     this.list = data.list;
-    this.statusList = lookupService.listByCategory.CommonStatus;
   }
 
-  ngOnInit(): void {
-    this.buildForm();
+  form!: FormGroup;
+  model!: ServiceData;
+  operation: OperationTypes;
+  reloadSteps$: BehaviorSubject<any> = new BehaviorSubject<any>('init');
+  editStep$: Subject<ServiceDataStep> = new Subject<ServiceDataStep>();
+  viewStep$: Subject<ServiceDataStep> = new Subject<ServiceDataStep>();
+  list: ServiceData[] = [];
+  stepsList: ServiceDataStep[] = [];
+  stepsColumns = ['arName', 'enName', 'stepName', 'actions'];
+  statusList: Lookup[] = [];
+  showMaxTargetAmount = false;
+  showMaxElementsCount = false;
+  showActivateDevelopmentField = false;
+  showAttachmentTypeField = false;
+  attachmentTypesList: AttachmentType[] = [];
+  saveVisible = true;
+  tabsData: TabMap = {
+    basic: {
+      name: 'basic',
+      langKey: 'lbl_basic_info',
+      index: 0,
+      show: () => true,
+      isTouchedOrDirty: () => true,
+      validStatus: () => {
+        if (!this.basicInfoGroup) {
+          return false;
+        }
+        if (this.basicInfoGroup.disabled) {
+          return true;
+        }
+        return this.basicInfoGroup.valid;
+      }
+    },
+    steps: {
+      name: 'steps',
+      langKey: 'service_steps',
+      index: 1,
+      show: () => true,
+      isTouchedOrDirty: () => true,
+      validStatus: () => true
+    },
+    customSettings: {
+      name: 'customSettings',
+      langKey: 'custom_settings',
+      index: 2,
+      show: () => {
+        return this.model.hasCustomSettings();
+      },
+      isTouchedOrDirty: () => true,
+      validStatus: () => {
+        if (!this.model.hasCustomSettings()) {
+          return true;
+        }
+        if (!this.customSettingsGroup) {
+          return false;
+        }
+        if (this.customSettingsGroup.disabled) {
+          return true;
+        }
+        return this.customSettingsGroup.valid;
+      }
+    },
+    followup: {
+      name: 'followup',
+      langKey: 'followup_configuration',
+      index: 3,
+      show: () => true,
+      isTouchedOrDirty: () => true,
+      validStatus: () => true
+    }
+  };
+  stepActions: IMenuItem<ServiceDataStep>[] = [
+    // edit
+    {
+      type: 'action',
+      label: 'btn_edit',
+      icon: ActionIconsEnum.EDIT,
+      show: () => this.operation !== OperationTypes.VIEW,
+      onClick: (item: ServiceDataStep) => this.editStep$.next(item)
+    },
+    // view
+    {
+      type: 'action',
+      label: 'view',
+      icon: ActionIconsEnum.VIEW,
+      show: () => this.operation === OperationTypes.VIEW,
+      onClick: (item: ServiceDataStep) => this.viewStep$.next(item)
+    },
+    // check list
+    {
+      type: 'action',
+      label: 'lbl_checklist',
+      icon: ActionIconsEnum.CHECKLIST,
+      onClick: (item: ServiceDataStep) => this.checklist(item)
+    },
+  ];
+
+  setDialogButtonsVisibility(tab: any): void {
+    this.saveVisible = this.operation !== OperationTypes.VIEW && (tab.name && (tab.name === this.tabsData.basic.name || tab.name === this.tabsData.customSettings.name));
+    this.validateFieldsVisible = this.operation !== OperationTypes.VIEW && (tab.name && (tab.name === this.tabsData.basic.name || tab.name === this.tabsData.customSettings.name));
+  }
+
+  get popupTitle(): string {
+    if (this.operation === OperationTypes.CREATE) {
+      return this.lang.map.lbl_add_service;
+    } else if (this.operation === OperationTypes.UPDATE) {
+      return this.lang.map.lbl_edit_service;
+    } else if (this.operation === OperationTypes.VIEW) {
+      return this.lang.map.view;
+    }
+    return '';
+  }
+
+  get readonly(): boolean {
+    return this.operation === OperationTypes.VIEW;
+  }
+
+  initPopup(): void {
+    this.statusList = this.lookupService.listByCategory.CommonStatus;
     this.validateCustomSettingsFields();
-    this.listenToSave();
-    this.listenToEdit();
-    this.reloadSteps();
+    this.listenToReloadSteps();
+    this.listenToEditStep();
+    this.listenToViewStep();
     this.listenToFollowUpStatus();
-  }
-
-  displayFormValidity(elmRefToScroll: HTMLElement) {
-    CommonUtils.displayFormValidity(this.form, elmRefToScroll);
   }
 
   buildForm(): void {
@@ -125,39 +216,34 @@ export class ServiceDataPopupComponent implements OnInit, OnDestroy {
         attachmentID: [this.model.attachmentID]
       })
     });
-    this.fm = new FormManager(this.form, this.lang);
+
+    if (this.readonly) {
+      this.form.disable();
+      this.saveVisible = false;
+      this.validateFieldsVisible = false;
+    }
   }
 
-  saveModel(): void {
-    this.save$.next();
+  beforeSave(model: ServiceData, form: FormGroup): Observable<boolean> | boolean {
+    return form.valid;
   }
 
-  listenToSave(): void {
-    this.save$.pipe(
-      takeUntil(this.destroy$),
-      exhaustMap(() => {
-        const serviceData = extender<ServiceData>(ServiceData, {...this.model, ...this.fm.getForm()?.value.basic, ...this.fm.getForm()?.value.customSettings});
-        return serviceData.save().pipe(
-          catchError((err) => {
-            this.exceptionHandlerService.handle(err);
-            return of(null);
-          })
-        );
-      }),
-    ).subscribe((_serviceData: ServiceData | null) => {
-      if (!_serviceData) {
-        return;
-      }
-      const message = this.operation === OperationTypes.CREATE ? this.lang.map.msg_create_x_success : this.lang.map.msg_update_x_success;
-      this.toast.success(message.change({x: _serviceData.getName()}));
-      this.model = _serviceData;
-      this.operation = OperationTypes.UPDATE;
-      this.dialogRef.close(this.model);
-    });
+  prepareModel(model: ServiceData, form: FormGroup): Observable<ServiceData> | ServiceData {
+    return extender<ServiceData>(ServiceData, {...this.model, ...this.form?.value.basic, ...this.form?.value.customSettings});
   }
 
-  get popupTitle(): string {
-    return this.operation === OperationTypes.CREATE ? this.lang.map.lbl_add_service : this.lang.map.lbl_edit_service;
+  afterSave(model: ServiceData, dialogRef: DialogRef): void {
+    const message = this.operation === OperationTypes.CREATE ? this.lang.map.msg_create_x_success : this.lang.map.msg_update_x_success;
+    this.toast.success(message.change({x: model.getName()}));
+    this.model = model;
+    this.operation = OperationTypes.UPDATE;
+    dialogRef.close(model);
+  }
+
+  saveFail(error: Error): void {
+  }
+
+  destroyPopup(): void {
   }
 
   validateCustomSettingsFields() {
@@ -181,63 +267,65 @@ export class ServiceDataPopupComponent implements OnInit, OnDestroy {
     }
   }
 
+  get basicInfoGroup(): FormGroup {
+    return this.form.get('basic') as FormGroup;
+  }
+
+  get customSettingsGroup(): FormGroup {
+    return this.form.get('customSettings') as FormGroup;
+  }
+
   get followUpStatus(): FormControl {
-    return this.form.get('basic.followUp') as FormControl;
+    return this.basicInfoGroup.get('followUp') as FormControl;
   }
 
   get maxTargetAmount() {
-    return this.form.get('customSettings.maxTargetAmount');
+    return this.customSettingsGroup.get('maxTargetAmount');
   }
 
   get maxElementsCount() {
-    return this.form.get('customSettings.maxElementsCount');
+    return this.customSettingsGroup.get('maxElementsCount');
   }
 
   get attachmentTypeField() {
-    return this.form.get('customSettings.attachmentID');
+    return this.customSettingsGroup.get('attachmentID');
   }
 
-  private loadSteps(): void {
-    this.serviceDataStepsService.stepsByServiceId(this.model.id)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(steps => {
-        this.stepsList = steps;
-      });
+  listenToReloadSteps(): void {
+    this.reloadSteps$.pipe(
+      takeUntil(this.destroy$),
+      switchMap(() => {
+        return this.serviceDataStepsService.stepsByServiceId(this.model.id);
+      })
+    ).subscribe((result: ServiceDataStep[]) => {
+      this.stepsList = result;
+    });
   }
 
-  reloadSteps() {
-    this.loadSteps();
-  }
-
-  editStep(serviceDataStep: ServiceDataStep, event: MouseEvent): void {
-    event.preventDefault();
-    this.edit$.next(serviceDataStep);
-  }
-
-  listenToEdit(): void {
-    this.edit$
+  listenToEditStep(): void {
+    this.editStep$
       .pipe(takeUntil(this.destroy$))
       .pipe(exhaustMap((model) => {
         return this.serviceDataStepsService.openEditStepDialog(model).onAfterClose$.pipe(catchError(_ => of(null)));
       }))
-      .subscribe(() => this.reloadSteps());
+      .subscribe(() => this.reloadSteps$.next(null));
   }
 
-  checklist(serviceDataStep: ServiceDataStep, $event: MouseEvent): void {
-    $event.preventDefault();
-    this.checklistService.openListDialog(serviceDataStep)
+  listenToViewStep(): void {
+    this.viewStep$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(exhaustMap((model) => {
+        return this.serviceDataStepsService.openViewStepDialog(model).onAfterClose$.pipe(catchError(_ => of(null)));
+      }))
+      .subscribe(() => this.reloadSteps$.next(null));
+  }
+
+  checklist(serviceDataStep: ServiceDataStep): void {
+    this.checklistService.openCheckListDialog(serviceDataStep, (this.operation === OperationTypes.VIEW))
       .pipe(takeUntil(this.destroy$))
       .subscribe((dialog: DialogRef) => {
-        dialog.onAfterClose$.subscribe((_) => {
-          // sub.unsubscribe();
-        });
+        dialog.onAfterClose$.subscribe();
       });
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-    this.destroy$.unsubscribe();
   }
 
   private listenToFollowUpStatus() {

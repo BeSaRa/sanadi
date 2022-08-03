@@ -11,55 +11,44 @@
       <div class="col-sm-6 position-relative">
         <label asteriskIfRequired="arName" for="arName"
                class="form-label">{{lang.map.lbl_arabic_name}}</label>
-        <input id="arName"
-               validationClasses="arName"
-               formControlName="arName" class="form-control">
-        <app-field-error-message [control]="fm.getFormField('arName')"></app-field-error-message>
+        <input id="arName" validationClasses="arName"
+               formControlName="arName" class="form-control" trimInput>
+        <app-field-error-message controlName="arName"></app-field-error-message>
       </div>
       <div class="col-sm-6 position-relative">
         <label asteriskIfRequired="enName" for="enName"
                class="form-label">{{lang.map.lbl_english_name}}</label>
-        <input id="enName"
-               validationClasses="enName"
-               formControlName="enName" class="form-control">
-        <app-field-error-message [control]="fm.getFormField('enName')"></app-field-error-message>
+        <input id="enName" validationClasses="enName"
+               formControlName="enName" class="form-control" trimInput>
+        <app-field-error-message controlName="enName"></app-field-error-message>
       </div>
     </div>
     <div class="row mb-3">
       <div class="col-sm-12 position-relative">
         <label asteriskIfRequired="arDesc" for="arDesc"
                class="form-label">{{lang.map.lbl_arabic_description}}</label>
-        <textarea id="arDesc"
-                  validationClasses="arDesc"
-                  formControlName="arDesc"
-                  class="form-control"
-                  rows="3">
+        <textarea id="arDesc" validationClasses="arDesc"
+                  formControlName="arDesc" class="form-control" rows="3" trimInput>
             </textarea>
-        <app-field-error-message [control]="fm.getFormField('arDesc')"></app-field-error-message>
+        <app-field-error-message controlName="arDesc"></app-field-error-message>
       </div>
     </div>
     <div class="row mb-3">
       <div class="col-sm-12 position-relative">
         <label asteriskIfRequired="arDesc" for="enDesc"
                class="form-label">{{lang.map.lbl_english_description}}</label>
-        <textarea id="enDesc"
-                  validationClasses="enDesc"
-                  formControlName="enDesc"
-                  class="form-control"
-                  rows="3">
+        <textarea id="enDesc" validationClasses="enDesc"
+                  formControlName="enDesc" class="form-control" rows="3" trimInput>
             </textarea>
-        <app-field-error-message [control]="fm.getFormField('enDesc')"></app-field-error-message>
+        <app-field-error-message controlName="enDesc"></app-field-error-message>
       </div>
     </div>
     <div class="row mb-3">
       <div class="col-sm-6 position-relative">
         <label asteriskIfRequired="stepOrder" for="stepOrder"
                class="form-label">{{lang.map.lbl_item_order}}</label>
-        <input id="stepOrder"
-               validationClasses="stepOrder"
-               formControlName="stepOrder" class="form-control"
-               maxlength="3"
-               [mask]="inputMaskPatterns.NUMBER_ONLY">
+        <input id="stepOrder" validationClasses="stepOrder"
+               formControlName="stepOrder" class="form-control" maxlength="3" [mask]="inputMaskPatterns.NUMBER_ONLY">
         <app-field-error-message controlName="stepOrder"></app-field-error-message>
       </div>
       <div class="col-sm-6 mb-4 form-check form-switch">
@@ -73,12 +62,12 @@
   </form>
 </div>
 <div class="dialog-actions">
-  <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="fm.displayFormValidity(dialogContent)"
+  <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="displayFormValidity(null, dialogContent)"
           tooltip="{{lang.map.validate_fields}}" class="btn btn-link">
     <i class="mdi mdi-information-outline text-info"></i>
   </button>
   <span class="flex-grow-1"></span>
-  <button [disabled]="form.invalid" (click)="save$.next()"
+  <button *ngIf="saveVisible" [disabled]="form.invalid" (click)="save$.next()"
           class="btn btn-primary">{{lang.map.btn_save}}</button>
   <button [dialogClose]="model" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
 </div>

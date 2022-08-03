@@ -40,26 +40,27 @@
             <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{langService.map.code}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.authName}} </td>
           </ng-container>
-<!--          <ng-container cdkColumnDef="createdOn">-->
-<!--            <th cdk-header-cell sortable-header [sortCallback]="tableOptions.sortingCallbacks.createdOn"-->
-<!--                *cdkHeaderCellDef class="date-column" [sortParamAsFullItem]="true"> {{langService.map.creation_date}}</th>-->
-<!--            <td cdk-cell *cdkCellDef="let row" class="date-column"> {{row.createdOnString}} </td>-->
-<!--          </ng-container>-->
-<!--          <ng-container cdkColumnDef="createdBy">-->
-<!--            <th cdk-header-cell sortable-header [sortCallback]="tableOptions.sortingCallbacks.createdBy"-->
-<!--                *cdkHeaderCellDef [sortParamAsFullItem]="true"> {{langService.map.created_by}}</th>-->
-<!--            <td cdk-cell *cdkCellDef="let row"> {{row.createdByInfo.getName()}} </td>-->
-<!--          </ng-container>-->
+          <!--          <ng-container cdkColumnDef="createdOn">-->
+          <!--            <th cdk-header-cell sortable-header [sortCallback]="tableOptions.sortingCallbacks.createdOn"-->
+          <!--                *cdkHeaderCellDef class="date-column" [sortParamAsFullItem]="true"> {{langService.map.creation_date}}</th>-->
+          <!--            <td cdk-cell *cdkCellDef="let row" class="date-column"> {{row.createdOnString}} </td>-->
+          <!--          </ng-container>-->
+          <!--          <ng-container cdkColumnDef="createdBy">-->
+          <!--            <th cdk-header-cell sortable-header [sortCallback]="tableOptions.sortingCallbacks.createdBy"-->
+          <!--                *cdkHeaderCellDef [sortParamAsFullItem]="true"> {{langService.map.created_by}}</th>-->
+          <!--            <td cdk-cell *cdkCellDef="let row"> {{row.createdByInfo.getName()}} </td>-->
+          <!--          </ng-container>-->
           <ng-container cdkColumnDef="updatedOn">
             <th cdk-header-cell sortable-header [sortCallback]="tableOptions.sortingCallbacks.updatedOn"
-                *cdkHeaderCellDef class="date-column" [sortParamAsFullItem]="true"> {{langService.map.updated_date}}</th>
+                *cdkHeaderCellDef class="date-column"
+                [sortParamAsFullItem]="true"> {{langService.map.updated_date}}</th>
             <td cdk-cell *cdkCellDef="let row" class="date-column"> {{row.updatedOnString}} </td>
           </ng-container>
-<!--          <ng-container cdkColumnDef="updatedBy">-->
-<!--            <th cdk-header-cell sortable-header [sortCallback]="tableOptions.sortingCallbacks.updatedBy"-->
-<!--                *cdkHeaderCellDef [sortParamAsFullItem]="true"> {{langService.map.updated_by}}</th>-->
-<!--            <td cdk-cell *cdkCellDef="let row"> {{row.updatedByInfo.getName()}} </td>-->
-<!--          </ng-container>-->
+          <!--          <ng-container cdkColumnDef="updatedBy">-->
+          <!--            <th cdk-header-cell sortable-header [sortCallback]="tableOptions.sortingCallbacks.updatedBy"-->
+          <!--                *cdkHeaderCellDef [sortParamAsFullItem]="true"> {{langService.map.updated_by}}</th>-->
+          <!--            <td cdk-cell *cdkCellDef="let row"> {{row.updatedByInfo.getName()}} </td>-->
+          <!--          </ng-container>-->
           <ng-container cdkColumnDef="status">
             <th cdk-header-cell sortable-header [sortCallback]="tableOptions.sortingCallbacks.statusInfo"
                 *cdkHeaderCellDef [sortParamAsFullItem]="true"> {{langService.map.lbl_status}}</th>
@@ -79,7 +80,7 @@
               <span class="form-check form-switch switch-action" *ngIf="row.status != commonStatus.RETIRED">
                 <input class="form-check-input" type="checkbox" [checked]="row.status == commonStatus.ACTIVATED"
                        tooltip="{{row.status == commonStatus.ACTIVATED ? langService.map.btn_deactivate : langService.map.btn_activate}}"
-                (change)="toggleStatus(row)">
+                       (change)="toggleStatus(row)">
               </span>
             </td>
           </ng-container>
@@ -89,7 +90,7 @@
             <td colspan="100" class="text-center">{{langService.map.no_records_to_display}}</td>
           </tr>
         </table>
-        <app-paginator #paginator [length]="teams.length"></app-paginator>
+        <app-paginator #paginator [length]="count" [backend]="true" (pageChange)="pageChange($event)"></app-paginator>
       </app-table>
     </div>
   </div>

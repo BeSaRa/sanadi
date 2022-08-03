@@ -29,6 +29,7 @@ import {CaseTypes} from '@app/enums/case-types.enum';
 import {Lookup} from "@app/models/lookup";
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 import {Router} from '@angular/router';
+import {CommonService} from '@services/common.service';
 
 @Component({
   selector: 'team-inbox',
@@ -56,6 +57,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
               private toast: ToastService,
               private router: Router,
               private inboxService: InboxService,
+              private commonService: CommonService,
               public employeeService: EmployeeService) {
     if (this.employeeService.isExternalUser()) {
       this.tableOptions.columns = this.tableOptions.columns.filter(x => x !== 'orgInfo');
@@ -128,6 +130,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
       data = this.inboxService.loadTeamInbox(this.inboxChange$.value?.id!, this.filterCriteria);
     }
     return data
+      .pipe(tap(() => this.commonService.loadCounters().subscribe()))
       // .pipe(tap(val => console.log(val.items)))
       .pipe(tap(result => {
         this.queryResultSet = result;

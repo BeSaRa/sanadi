@@ -11,6 +11,8 @@ import {BehaviorSubject, of, Subject} from 'rxjs';
 import {ChecklistService} from '@app/services/checklist.service';
 import {catchError, exhaustMap, switchMap, takeUntil} from 'rxjs/operators';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 
 @Component({
   selector: 'checklist-popup',
@@ -18,15 +20,6 @@ import {UserClickOn} from '@app/enums/user-click-on.enum';
   styleUrls: ['./checklist-popup.component.scss']
 })
 export class ChecklistPopupComponent implements OnInit {
-  operation: OperationTypes;
-  serviceDataStep!: ServiceDataStep;
-  checklistItems: ChecklistItem[] = [];
-  reload$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
-  add$: Subject<any> = new Subject<any>();
-  edit$: Subject<ChecklistItem> = new Subject<ChecklistItem>();
-  destroy$: Subject<any> = new Subject<any>();
-  displayedColumns: string[] = ['arName', 'enName', 'status', 'actions'];
-  models: ChecklistItem[] = [];
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<ServiceDataStep>,
               public lang: LangService,
@@ -37,10 +30,52 @@ export class ChecklistPopupComponent implements OnInit {
     this.serviceDataStep = data.model;
   }
 
+  operation: OperationTypes;
+  serviceDataStep!: ServiceDataStep;
+  checklistItems: ChecklistItem[] = [];
+  reload$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  add$: Subject<any> = new Subject<any>();
+  edit$: Subject<ChecklistItem> = new Subject<ChecklistItem>();
+  view$: Subject<ChecklistItem> = new Subject<ChecklistItem>();
+  destroy$: Subject<any> = new Subject<any>();
+  displayedColumns: string[] = ['arName', 'enName', 'status', 'actions'];
+  models: ChecklistItem[] = [];
+  actions: IMenuItem<ChecklistItem>[] = [
+    // edit
+    {
+      type: 'action',
+      label: 'btn_edit',
+      icon: ActionIconsEnum.EDIT,
+      show: () => !this.readonly,
+      onClick: (item: ChecklistItem) => this.edit$.next(item)
+    },
+    // view
+    {
+      type: 'action',
+      label: 'view',
+      icon: ActionIconsEnum.VIEW,
+      show: () => this.readonly,
+      onClick: (item: ChecklistItem) => this.view$.next(item)
+    },
+    // delete
+    {
+      type: 'action',
+      label: 'btn_delete',
+      icon: ActionIconsEnum.DELETE,
+      show: () => !this.readonly,
+      onClick: (item: ChecklistItem) => this.delete(item)
+    },
+  ];
+
   ngOnInit(): void {
     this.listenToAdd();
     this.listenToEdit();
+    this.listenToView();
     this.listenToReload();
+  }
+
+  get readonly(): boolean {
+    return this.operation === OperationTypes.VIEW;
   }
 
   listenToAdd() {
@@ -61,9 +96,13 @@ export class ChecklistPopupComponent implements OnInit {
       });
   }
 
-  edit(checklistItem: ChecklistItem, event: MouseEvent) {
-    event.preventDefault();
-    this.edit$.next(checklistItem);
+  listenToView(): void {
+    this.view$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(exhaustMap((checklist) => this.service.openViewChecklistItemDialog(this.serviceDataStep.id, checklist).onAfterClose$))
+      .subscribe(() => {
+        this.reload$.next(null);
+      });
   }
 
   listenToReload() {
@@ -78,8 +117,7 @@ export class ChecklistPopupComponent implements OnInit {
       });
   }
 
-  delete(event: MouseEvent, model: ChecklistItem): void {
-    event.preventDefault();
+  delete(model: ChecklistItem): void {
     // @ts-ignore
     const message = this.lang.map.msg_confirm_delete_x.change({x: model.getName()});
     this.dialogService.confirm(message)

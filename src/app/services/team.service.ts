@@ -1,39 +1,52 @@
-import {Injectable} from '@angular/core';
-import {BackendGenericService} from '../generics/backend-generic-service';
-import {Team} from '../models/team';
-import {HttpClient} from '@angular/common/http';
-import {UrlService} from './url.service';
-import {IModelInterceptor} from '../interfaces/i-model-interceptor';
-import {TeamInterceptor} from '../model-interceptors/team-interceptor';
-import {FactoryService} from './factory.service';
-import {UserService} from './user.service';
-import {forkJoin, Observable, of} from 'rxjs';
-import {InternalUser} from '../models/internal-user';
-import {Generator} from '../decorators/generator';
-import {DialogRef} from '../shared/models/dialog-ref';
-import {IDialogData} from '../interfaces/i-dialog-data';
-import {OperationTypes} from '../enums/operation-types.enum';
-import {DialogService} from './dialog.service';
-import {TeamPopupComponent} from '../administration/popups/team-popup/team-popup.component';
-import {map, switchMap} from 'rxjs/operators';
-import {ITeamCriteria} from '../interfaces/i-team-criteria';
-import {InternalDepartmentService} from './internal-department.service';
-import {InternalDepartment} from '../models/internal-department';
-import {UserTeam} from "@app/models/user-team";
-import {UserTeamService} from "@app/services/user-team.service";
-import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import { Injectable } from '@angular/core';
+import { Team } from '../models/team';
+import { HttpClient } from '@angular/common/http';
+import { UrlService } from './url.service';
+import { FactoryService } from './factory.service';
+import { UserService } from './user.service';
+import { forkJoin, Observable, of } from 'rxjs';
+import { InternalUser } from '../models/internal-user';
+import { DialogRef } from '../shared/models/dialog-ref';
+import { IDialogData } from '@contracts/i-dialog-data';
+import { OperationTypes } from '../enums/operation-types.enum';
+import { DialogService } from './dialog.service';
+import { TeamPopupComponent } from '../administration/popups/team-popup/team-popup.component';
+import { map, switchMap } from 'rxjs/operators';
+import { ITeamCriteria } from '@contracts/i-team-criteria';
+import { InternalDepartmentService } from './internal-department.service';
+import { InternalDepartment } from '../models/internal-department';
+import { UserTeam } from "@app/models/user-team";
+import { UserTeamService } from "@app/services/user-team.service";
+import { CommonStatusEnum } from '@app/enums/common-status.enum';
+import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
+import { Pagination } from "@app/models/pagination";
+import { CrudWithDialogGenericService } from "@app/generics/crud-with-dialog-generic-service";
+import { ComponentType } from '@angular/cdk/portal';
 
+@CastResponseContainer({
+  $default: {
+    model: () => Team,
+  },
+  $pagination: {
+    model: () => Pagination,
+    shape: { 'rs.*': () => Team }
+  }
+})
 @Injectable({
   providedIn: 'root'
 })
-export class TeamService extends BackendGenericService<Team> {
+export class TeamService extends CrudWithDialogGenericService<Team> {
+
+  _getDialogComponent(): ComponentType<any> {
+    throw new Error('Method not implemented.');
+  }
+
   list: Team[] = [];
-  interceptor: Partial<IModelInterceptor<Team>> = new TeamInterceptor();
 
   constructor(public http: HttpClient,
               private userService: UserService,
               private urlService: UrlService,
-              private dialogService: DialogService,
+              public dialog: DialogService,
               private userTeamService: UserTeamService,
               private internalDepartmentService: InternalDepartmentService) {
     super();
@@ -44,29 +57,22 @@ export class TeamService extends BackendGenericService<Team> {
     return Team;
   }
 
-  _getReceiveInterceptor(): any {
-    return this.interceptor.receive;
-  }
-
-  _getSendInterceptor(): any {
-    return this.interceptor.send;
-  }
-
   _getServiceURL(): string {
     return this.urlService.URLS.TEAMS;
   }
 
-  @Generator(undefined, true)
-  loadComposite(): Observable<Team[]> {
-    return this.http.get<Team[]>(this._getServiceURL() + '/composite');
-  }
-
-  @Generator(undefined, false)
+  @CastResponse(undefined, {
+    fallback: '$default',
+    unwrap: 'rs'
+  })
   loadByIdComposite(id: number): Observable<Team> {
     return this.http.get<Team>(this._getServiceURL() + '/' + id + '/composite');
   }
 
-  @Generator(undefined, true)
+  @CastResponse(undefined, {
+    fallback: '$default',
+    unwrap: 'rs'
+  })
   loadByCriteria(criteria: Partial<ITeamCriteria>): Observable<Team[]> {
     return this.http.get<Team[]>(this._getServiceURL() + '/criteria' + this._parseObjectToQueryString(criteria));
   }
@@ -89,7 +95,7 @@ export class TeamService extends BackendGenericService<Team> {
     return this._loadDialogData()
       .pipe(
         switchMap((result) => {
-          return of(this.dialogService.show<IDialogData<Team>>(TeamPopupComponent, {
+          return of(this.dialog.show<IDialogData<Team>>(TeamPopupComponent, {
             model: result.team,
             operation: OperationTypes.CREATE,
             parentDepartmentsList: result.internalDepartments
@@ -102,7 +108,7 @@ export class TeamService extends BackendGenericService<Team> {
     return this._loadDialogData(modelId)
       .pipe(
         switchMap((result) => {
-          return of(this.dialogService.show<IDialogData<Team>>(TeamPopupComponent, {
+          return of(this.dialog.show<IDialogData<Team>>(TeamPopupComponent, {
             model: result.team,
             operation: viewOnly ? OperationTypes.VIEW : OperationTypes.UPDATE,
             parentDepartmentsList: result.internalDepartments

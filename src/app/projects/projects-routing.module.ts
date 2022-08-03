@@ -53,6 +53,17 @@ const routes: Routes = [
       checkAnyPermission: false,
       render: 'UrgentJointReliefCampaignComponent'
     }
+  },
+  {
+    path: 'transferring-individual-funds-abroad', component: EServiceComponentWrapperComponent,
+    canActivate: [ServicesGuard],
+    resolve: {info: ServiceItemResolver},
+    data: {
+      permissionKey: EServicePermissions.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD,
+      configPermissionGroup: null,
+      checkAnyPermission: false,
+      render: 'TransferringIndividualFundsAbroadComponent'
+    }
   }
 ];
 

@@ -49,7 +49,7 @@
             <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
           </tr>
         </table>
-        <app-paginator #paginator [length]="models.length"></app-paginator>
+        <app-paginator #paginator [length]="count" (pageChange)="pageChange($event)" [backend]="true"></app-paginator>
       </app-table>
     </div>
   </div>

@@ -1,0 +1,14 @@
+import {SearchableCloneable} from '@app/models/searchable-cloneable';
+import {AdminResult} from '@app/models/admin-result';
+
+export class TransferFundsExecutiveManagement extends SearchableCloneable<TransferFundsExecutiveManagement>{
+  nameLikePassport!: string;
+  englishNameLikePassport!: string;
+  jobTitle!: string;
+  executiveNationality!: number;
+  executiveIdentificationNumber!: string;
+  executivephone1!: string;
+  executivephone2!: string;
+  passportNumber!: string;
+  executiveNationalityInfo!: AdminResult;
+}

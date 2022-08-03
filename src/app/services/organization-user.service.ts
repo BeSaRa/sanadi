@@ -1,40 +1,46 @@
-import {Injectable} from '@angular/core';
-import {OrgUser} from '../models/org-user';
-import {HttpClient, HttpParams} from '@angular/common/http';
-import {UrlService} from './url.service';
-import {FactoryService} from './factory.service';
-import {OrgUserInterceptor} from '../model-interceptors/org-user-interceptor';
-import {DialogRef} from '../shared/models/dialog-ref';
-import {IDialogData} from '../interfaces/i-dialog-data';
-import {OperationTypes} from '../enums/operation-types.enum';
-import {forkJoin, Observable, of} from 'rxjs';
-import {switchMap} from 'rxjs/operators';
-import {DialogService} from './dialog.service';
+import { Injectable } from '@angular/core';
+import { OrgUser } from '../models/org-user';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { UrlService } from './url.service';
+import { FactoryService } from './factory.service';
+import { DialogRef } from '../shared/models/dialog-ref';
+import { IDialogData } from '@contracts/i-dialog-data';
+import { OperationTypes } from '../enums/operation-types.enum';
+import { forkJoin, Observable, of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+import { DialogService } from './dialog.service';
 import {
   OrganizationUserPopupComponent
 } from '../administration/popups/organization-user-popup/organization-user-popup.component';
-import {CustomRoleService} from './custom-role.service';
-import {Generator} from '../decorators/generator';
-import {IOrgUserCriteria} from '../interfaces/i-org-user-criteria';
-import {isValidValue} from '../helpers/utils';
-import {OrganizationUnitService} from './organization-unit.service';
-import {CustomRole} from '../models/custom-role';
-import {OrgUnit} from '../models/org-unit';
-import {PermissionService} from './permission.service';
-import {OrganizationUserPermissionService} from './organization-user-permission.service';
-import {OrgUserPermission} from '../models/org-user-permission';
-import {AuditLogService} from './audit-log.service';
-import {CommonStatusEnum} from '@app/enums/common-status.enum';
-import {BackendWithDialogOperationsGenericService} from '@app/generics/backend-with-dialog-operations-generic-service';
-import {ComponentType} from '@angular/cdk/portal';
-import {OrgUserStatusEnum} from '@app/enums/status.enum';
+import { CustomRoleService } from './custom-role.service';
+import { IOrgUserCriteria } from '@contracts/i-org-user-criteria';
+import { isValidValue } from '@helpers/utils';
+import { OrganizationUnitService } from './organization-unit.service';
+import { CustomRole } from '../models/custom-role';
+import { OrgUnit } from '../models/org-unit';
+import { PermissionService } from './permission.service';
+import { OrganizationUserPermissionService } from './organization-user-permission.service';
+import { OrgUserPermission } from '../models/org-user-permission';
+import { AuditLogService } from './audit-log.service';
+import { ComponentType } from '@angular/cdk/portal';
+import { OrgUserStatusEnum } from '@app/enums/status.enum';
+import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
+import { CrudWithDialogGenericService } from "@app/generics/crud-with-dialog-generic-service";
 
+@CastResponseContainer({
+  $default: {
+    model: () => OrgUser
+  },
+  $pagination: {
+    model: () => OrgUser,
+    shape: { 'rs.*': () => OrgUser }
+  }
+})
 @Injectable({
   providedIn: 'root'
 })
-export class OrganizationUserService extends BackendWithDialogOperationsGenericService<OrgUser> {
+export class OrganizationUserService extends CrudWithDialogGenericService<OrgUser> {
   list!: OrgUser[];
-  interceptor: OrgUserInterceptor = new OrgUserInterceptor();
 
   constructor(public http: HttpClient,
               private urlService: UrlService,
@@ -73,8 +79,7 @@ export class OrganizationUserService extends BackendWithDialogOperationsGenericS
             operation: OperationTypes.CREATE,
             customRoleList: result.customRoles,
             orgUnitList: result.orgUnits,
-            orgUserPermissions: result.orgUserPermissions,
-            list: this.list
+            orgUserPermissions: result.orgUserPermissions
           }));
         })
       );
@@ -83,7 +88,7 @@ export class OrganizationUserService extends BackendWithDialogOperationsGenericS
   private _openUpdateDialog(orgUserId: number, isCompositeLoad: boolean): Observable<DialogRef> {
     return this._loadInitData(orgUserId).pipe(
       switchMap((result) => {
-        let request = isCompositeLoad  ? this.getByIdComposite(orgUserId) : this.getById(orgUserId);
+        let request = isCompositeLoad ? this.getByIdComposite(orgUserId) : this.getById(orgUserId);
         return request.pipe(
           switchMap((orgUser: OrgUser) => {
             return of(this.dialog.show<IDialogData<OrgUser>>(OrganizationUserPopupComponent, {
@@ -91,8 +96,7 @@ export class OrganizationUserService extends BackendWithDialogOperationsGenericS
               operation: OperationTypes.UPDATE,
               customRoleList: result.customRoles,
               orgUnitList: result.orgUnits,
-              orgUserPermissions: result.orgUserPermissions,
-              list: this.list
+              orgUserPermissions: result.orgUserPermissions
             }));
           })
         );
@@ -128,16 +132,8 @@ export class OrganizationUserService extends BackendWithDialogOperationsGenericS
     return OrgUser;
   }
 
-  _getSendInterceptor(): any {
-    return this.interceptor.send;
-  }
-
   _getServiceURL(): string {
     return this.urlService.URLS.ORG_USER;
-  }
-
-  _getReceiveInterceptor(): any {
-    return this.interceptor.receive;
   }
 
 
@@ -162,7 +158,7 @@ export class OrganizationUserService extends BackendWithDialogOperationsGenericS
    * @description Loads the organization users list by criteria
    * @param criteria: IOrgUserCriteria
    */
-  @Generator(undefined, true)
+  @CastResponse(undefined, { fallback: '$default', unwrap: 'rs' })
   getByCriteria(criteria: IOrgUserCriteria): Observable<OrgUser[]> {
     const queryParams = this._buildCriteriaQueryParams(criteria);
 

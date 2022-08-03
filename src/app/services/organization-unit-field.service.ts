@@ -12,43 +12,53 @@ import { Observable, of } from 'rxjs';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { IDialogData } from '@app/interfaces/i-dialog-data';
 import { OperationTypes } from '@app/enums/operation-types.enum';
-import { OrganizationUnitFieldPopupComponent } from '@app/administration/popups/organization-unit-field-popup/organization-unit-field-popup.component';
+import {
+  OrganizationUnitFieldPopupComponent
+} from '@app/administration/popups/organization-unit-field-popup/organization-unit-field-popup.component';
+import { Pagination } from "@app/models/pagination";
 
 @CastResponseContainer({
   $default: {
-    model: () => OrganizationUnitField,
-    
+    model: () => OrganizationUnitField
+  },
+  $pagination: {
+    model: () => Pagination,
+    shape: { 'rs.*': () => OrganizationUnitField }
   }
 })
 @Injectable({
   providedIn: 'root'
 })
 export class OrganizationUnitFieldService extends CrudWithDialogGenericService<OrganizationUnitField> {
-_getDialogComponent(): ComponentType<any> {
-  return OrganizationUnitFieldPopupComponent;
-}
-_getModel(): new () => OrganizationUnitField {
-  return OrganizationUnitField;
-}
-list: OrganizationUnitField[]=[];
-_getServiceURL(): string {
-  return this.urlService.URLS.ORG_UNIT_FIELD;
-}
+  _getDialogComponent(): ComponentType<any> {
+    return OrganizationUnitFieldPopupComponent;
+  }
 
-constructor(public http: HttpClient,
-  private urlService: UrlService,
-  public dialog: DialogService) {
-  super();
-  FactoryService.registerService('OrganizationUnitFieldService', this);
-}
-openViewDialog(modelId: number): Observable<DialogRef> {
-  return this.getByIdComposite(modelId).pipe(
-    switchMap((organizationUnitField: OrganizationUnitField) => {
-      return of(this.dialog.show<IDialogData<OrganizationUnitField>>(OrganizationUnitFieldPopupComponent, {
-        model: organizationUnitField,
-        operation: OperationTypes.VIEW
-      }));
-    })
-  );
-}
+  _getModel(): new () => OrganizationUnitField {
+    return OrganizationUnitField;
+  }
+
+  list: OrganizationUnitField[] = [];
+
+  _getServiceURL(): string {
+    return this.urlService.URLS.ORG_UNIT_FIELD;
+  }
+
+  constructor(public http: HttpClient,
+              private urlService: UrlService,
+              public dialog: DialogService) {
+    super();
+    FactoryService.registerService('OrganizationUnitFieldService', this);
+  }
+
+  openViewDialog(modelId: number): Observable<DialogRef> {
+    return this.getByIdComposite(modelId).pipe(
+      switchMap((organizationUnitField: OrganizationUnitField) => {
+        return of(this.dialog.show<IDialogData<OrganizationUnitField>>(OrganizationUnitFieldPopupComponent, {
+          model: organizationUnitField,
+          operation: OperationTypes.VIEW
+        }));
+      })
+    );
+  }
 }

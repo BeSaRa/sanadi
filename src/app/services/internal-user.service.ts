@@ -1,29 +1,40 @@
-import {Injectable} from '@angular/core';
-import {InternalUser} from "@app/models/internal-user";
-import {HttpClient} from "@angular/common/http";
-import {InternalUserInterceptor} from "@app/model-interceptors/internal-user-interceptor";
-import {UrlService} from "@app/services/url.service";
-import {BackendWithDialogOperationsGenericService} from "@app/generics/backend-with-dialog-operations-generic-service";
-import {DialogService} from "@app/services/dialog.service";
-import {ComponentType} from "@angular/cdk/overlay";
-import {InternalUserPopupComponent} from "@app/administration/popups/internal-user-popup/internal-user-popup.component";
-import {FactoryService} from "@app/services/factory.service";
-import {Observable, of} from "rxjs";
-import {IDefaultResponse} from "@app/interfaces/idefault-response";
-import {catchError, map, switchMap} from 'rxjs/operators';
-import {BlobModel} from '@app/models/blob-model';
-import {DomSanitizer} from '@angular/platform-browser';
-import {CommonStatusEnum} from '@app/enums/common-status.enum';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {IDialogData} from '@app/interfaces/i-dialog-data';
-import {OperationTypes} from '@app/enums/operation-types.enum';
+import { Injectable } from '@angular/core';
+import { InternalUser } from "@app/models/internal-user";
+import { HttpClient } from "@angular/common/http";
+import { UrlService } from "@app/services/url.service";
+import { DialogService } from "@app/services/dialog.service";
+import { ComponentType } from "@angular/cdk/overlay";
+import {
+  InternalUserPopupComponent
+} from "@app/administration/popups/internal-user-popup/internal-user-popup.component";
+import { FactoryService } from "@app/services/factory.service";
+import { Observable, of } from "rxjs";
+import { IDefaultResponse } from "@app/interfaces/idefault-response";
+import { catchError, map, switchMap } from 'rxjs/operators';
+import { BlobModel } from '@app/models/blob-model';
+import { DomSanitizer } from '@angular/platform-browser';
+import { CommonStatusEnum } from '@app/enums/common-status.enum';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { IDialogData } from '@app/interfaces/i-dialog-data';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { CrudWithDialogGenericService } from "@app/generics/crud-with-dialog-generic-service";
+import { CastResponseContainer } from "@decorators/cast-response";
+import { Pagination } from "@app/models/pagination";
 
+@CastResponseContainer({
+  $default: {
+    model: () => InternalUser
+  },
+  $pagination: {
+    model: () => Pagination,
+    shape: { 'rs.*': () => InternalUser }
+  }
+})
 @Injectable({
   providedIn: 'root'
 })
-export class InternalUserService extends BackendWithDialogOperationsGenericService<InternalUser> {
+export class InternalUserService extends CrudWithDialogGenericService<InternalUser> {
   list: InternalUser[] = [];
-  interceptor: InternalUserInterceptor = new InternalUserInterceptor();
 
   constructor(public http: HttpClient,
               private urlService: UrlService,
@@ -37,16 +48,8 @@ export class InternalUserService extends BackendWithDialogOperationsGenericServi
     return InternalUser;
   }
 
-  _getSendInterceptor() {
-    return this.interceptor.send;
-  }
-
   _getServiceURL(): string {
     return this.urlService.URLS.INTERNAL_USER;
-  }
-
-  _getReceiveInterceptor() {
-    return this.interceptor.receive;
   }
 
   _getDialogComponent(): ComponentType<any> {
@@ -77,7 +80,7 @@ export class InternalUserService extends BackendWithDialogOperationsGenericServi
     }).pipe(
       map(blob => new BlobModel(blob, this.domSanitizer),
         catchError(_ => {
-          return of(new BlobModel(new Blob([], {type: 'error'}), this.domSanitizer));
+          return of(new BlobModel(new Blob([], { type: 'error' }), this.domSanitizer));
         })));
   }
 

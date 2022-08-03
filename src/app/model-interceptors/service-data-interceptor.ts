@@ -1,11 +1,12 @@
 import {ServiceData} from '../models/service-data';
-import {isValidAdminResult} from '../helpers/utils';
+import {isValidAdminResult} from '@helpers/utils';
 import {AdminResult} from '../models/admin-result';
-import {DateUtils} from '../helpers/date-utils';
+import {DateUtils} from '@helpers/date-utils';
 import {ServiceCustomSettings} from '@app/models/service-custom-settings';
+import {IModelInterceptor} from '@contracts/i-model-interceptor';
 
-export class ServiceDataInterceptor {
-  static receive(model: ServiceData): ServiceData {
+export class ServiceDataInterceptor implements IModelInterceptor<ServiceData> {
+  receive(model: ServiceData): ServiceData {
     model.statusInfo = isValidAdminResult(model.statusInfo) ? AdminResult.createInstance(model.statusInfo) : model.statusInfo;
     model.statusDateModifiedString = DateUtils.getDateStringFromDate(model.statusDateModified, 'DEFAULT_DATE_FORMAT');
 
@@ -28,7 +29,7 @@ export class ServiceDataInterceptor {
     return model;
   }
 
-  static send(model: Partial<ServiceData>): Partial<ServiceData> {
+  send(model: Partial<ServiceData>): Partial<ServiceData> {
     model.caseType = Number(model.caseType);
     ServiceDataInterceptor._setCustomSettingsForSend(model);
     ServiceDataInterceptor._deleteBeforeSend(model);

@@ -7,6 +7,8 @@ import { isValidValue } from "@helpers/utils";
 import { CrudServiceInterface } from "@contracts/crud-service-interface";
 import { CastResponse } from "@decorators/cast-response";
 import { GetModelContract } from "@contracts/get-model-contract";
+import { PaginationContract } from "@contracts/pagination-contract";
+import { Pagination } from "@app/models/pagination";
 
 export abstract class CrudGenericService<T> implements CrudServiceInterface<T>, GetModelContract<T> {
   abstract _getModel(): new () => T
@@ -150,6 +152,39 @@ export abstract class CrudGenericService<T> implements CrudServiceInterface<T>, 
   }
 
   abstract _getServiceURL(): string;
+
+  @CastResponse(undefined, {
+    fallback: '$pagination'
+  })
+  private _paginate(options: Partial<PaginationContract>): Observable<Pagination<T[]>> {
+    return this.http.get<Pagination<T[]>>(this._getServiceURL() + '/pg', {
+      params: { ...options }
+    })
+  }
+
+  paginate(options: Partial<PaginationContract>): Observable<Pagination<T[]>> {
+    return this._paginate(options).pipe(
+      tap(result => this.list = result.rs),
+      tap(result => this._loadDone$.next(result.rs))
+    );
+  }
+
+  @CastResponse(undefined, {
+    fallback: '$pagination'
+  })
+  private _paginateComposite(options: Partial<PaginationContract>): Observable<Pagination<T[]>> {
+    return this.http.get<Pagination<T[]>>(this._getServiceURL() + '/composite/pg', {
+      params: { ...options }
+    })
+  }
+
+  paginateComposite(options: Partial<PaginationContract>): Observable<Pagination<T[]>> {
+    return this._paginateComposite(options).pipe(
+      tap(result => this.list = result.rs),
+      tap(result => this._loadDone$.next(result.rs))
+    );
+  }
+
 
   _generateQueryString(queryStringOptions: IKeyValue): string {
     let queryString = '?';

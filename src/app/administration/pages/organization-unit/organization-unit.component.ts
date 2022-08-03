@@ -1,23 +1,23 @@
-import {Component, ViewChild} from '@angular/core';
-import {LangService} from '@app/services/lang.service';
-import {DialogService} from '@app/services/dialog.service';
-import {ToastService} from '@app/services/toast.service';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {takeUntil} from 'rxjs/operators';
-import {OrgUnit} from '@app/models/org-unit';
-import {OrganizationUnitService} from '@app/services/organization-unit.service';
-import {LookupService} from '@app/services/lookup.service';
-import {ConfigurationService} from '@app/services/configuration.service';
-import {IGridAction} from '@app/interfaces/i-grid-action';
-import {EmployeeService} from '@app/services/employee.service';
-import {SharedService} from '@app/services/shared.service';
-import {TableComponent} from '@app/shared/components/table/table.component';
-import {SortEvent} from '@app/interfaces/sort-event';
-import {CommonUtils} from '@app/helpers/common-utils';
-import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import {OrgStatusEnum} from '@app/enums/status.enum';
-import {AdminGenericComponent} from '@app/generics/admin-generic-component';
+import { Component, ViewChild } from '@angular/core';
+import { LangService } from '@app/services/lang.service';
+import { DialogService } from '@app/services/dialog.service';
+import { ToastService } from '@app/services/toast.service';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { takeUntil } from 'rxjs/operators';
+import { OrgUnit } from '@app/models/org-unit';
+import { OrganizationUnitService } from '@app/services/organization-unit.service';
+import { LookupService } from '@app/services/lookup.service';
+import { ConfigurationService } from '@app/services/configuration.service';
+import { IGridAction } from '@app/interfaces/i-grid-action';
+import { EmployeeService } from '@app/services/employee.service';
+import { SharedService } from '@app/services/shared.service';
+import { TableComponent } from '@app/shared/components/table/table.component';
+import { SortEvent } from '@app/interfaces/sort-event';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { OrgStatusEnum } from '@app/enums/status.enum';
+import { AdminGenericComponent } from '@app/generics/admin-generic-component';
 
 @Component({
   selector: 'app-organization-unit',
@@ -25,6 +25,7 @@ import {AdminGenericComponent} from '@app/generics/admin-generic-component';
   styleUrls: ['./organization-unit.component.scss']
 })
 export class OrganizationUnitComponent extends AdminGenericComponent<OrgUnit, OrganizationUnitService> {
+  usePagination = true;
   displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'phoneNumber1', 'email', 'address', 'status', 'statusDateModified', 'actions']; //orgNationality
   xDeleteMessage = this.langService.map.lbl_organization + ', ' +
     this.langService.map.lbl_org_branches + ', ' + this.langService.map.lbl_org_users;
@@ -40,7 +41,7 @@ export class OrganizationUnitComponent extends AdminGenericComponent<OrgUnit, Or
       label: 'btn_edit',
       icon: 'mdi-pen',
       onClick: (item: OrgUnit) => this.edit(item),
-      show: (item: OrgUnit) => {
+      show: () => {
         return this.empService.checkPermissions('ADMIN_EDIT_OU');
       }
     },
@@ -50,7 +51,7 @@ export class OrganizationUnitComponent extends AdminGenericComponent<OrgUnit, Or
       label: 'btn_delete',
       icon: 'mdi-close-box',
       onClick: (item: OrgUnit) => this.deactivate(item),
-      show: (item: OrgUnit) => {
+      show: () => {
         return this.empService.checkPermissions('ADMIN_DELETE_OU');
       }
     },
@@ -168,7 +169,7 @@ export class OrganizationUnitComponent extends AdminGenericComponent<OrgUnit, Or
   listenToLoadDone(): void {
     this.service._loadDone$
       .pipe(takeUntil((this.destroy$)))
-      .subscribe((orgUnits) => {
+      .subscribe(() => {
         this.table.selection.clear();
       });
   }

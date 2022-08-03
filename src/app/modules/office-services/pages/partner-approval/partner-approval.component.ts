@@ -295,7 +295,7 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
 
   private loadCountries() {
     this.countryService
-      .loadCountries()
+      .load()
       .pipe(takeUntil(this.destroy$))
       .subscribe((countries) => this.countries = countries);
   }
@@ -463,7 +463,7 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
                   }
                   return {selected: licenses[0], details: data};
                 }),
-                catchError((e) => {
+                catchError(() => {
                   return of(null);
                 })
               )

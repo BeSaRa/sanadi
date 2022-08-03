@@ -1,17 +1,25 @@
-import {Team} from './team';
-import {BaseModel} from './base-model';
-import {INames} from '../interfaces/i-names';
-import {LangService} from '../services/lang.service';
-import {FactoryService} from '../services/factory.service';
-import {InternalDepartmentService} from '../services/internal-department.service';
-import {Lookup} from '@app/models/lookup';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {Validators} from '@angular/forms';
-import {searchFunctionType} from '@app/types/types';
-import {Observable} from 'rxjs';
-import {BlobModel} from '@app/models/blob-model';
-import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import { Team } from './team';
+import { BaseModel } from './base-model';
+import { INames } from '@contracts/i-names';
+import { LangService } from '@services/lang.service';
+import { FactoryService } from '@services/factory.service';
+import { InternalDepartmentService } from '@services/internal-department.service';
+import { Lookup } from '@app/models/lookup';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { Validators } from '@angular/forms';
+import { searchFunctionType } from '@app/types/types';
+import { Observable } from 'rxjs';
+import { BlobModel } from '@app/models/blob-model';
+import { CommonStatusEnum } from '@app/enums/common-status.enum';
+import { InternalDepartmentInterceptor } from "@app/model-interceptors/internal-department-interceptor";
+import { InterceptModel } from "@decorators/intercept-model";
 
+const interceptor = new InternalDepartmentInterceptor();
+
+@InterceptModel({
+  receive: interceptor.receive,
+  send: interceptor.send
+})
 export class InternalDepartment extends BaseModel<InternalDepartment, InternalDepartmentService> {
   service!: InternalDepartmentService;
   arName!: string;
@@ -102,7 +110,7 @@ export class InternalDepartment extends BaseModel<InternalDepartment, InternalDe
   updateStatus(newStatus: CommonStatusEnum): any {
     return this.service.updateStatus(this.id, newStatus);
   }
-  
+
   isRetired(): boolean {
     return Number(this.status) === CommonStatusEnum.RETIRED;
   }

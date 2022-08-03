@@ -41,7 +41,9 @@ export class CaseInfoComponent {
     CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN,
     CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL,
     CaseTypes.URGENT_INTERVENTION_CLOSURE,
-    CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION
+    CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION,
+    CaseTypes.EMPLOYMENT,
+    CaseTypes.URGENT_INTERVENTION_CLOSURE
   ];
 
   // this should be updated when ever you will add a new document service
@@ -117,7 +119,6 @@ export class CaseInfoComponent {
       documentTitle: this.generatedLicenseNumber,
       id: this.generatedLicenseId
     } as InternalProjectLicenseResult;
-
     this.licenseService.showLicenseContent(license, this.model.getCaseType())
       .subscribe((file) => {
         this.sharedService.openViewContentDialog(file, license);
@@ -125,6 +126,7 @@ export class CaseInfoComponent {
   }
 
   viewGeneratedDocument(): void {
+    console.log(this.generatedDocumentId)
     if (!this.generatedDocumentId) {
       return;
     }
@@ -132,6 +134,7 @@ export class CaseInfoComponent {
       documentTitle: this.generatedDocumentNumber,
       bookId: this.generatedDocumentId
     };
+    console.log(document)
 
     this.customsExemptionRemittanceService
       .showDocumentContent(document, this.model.getCaseType())

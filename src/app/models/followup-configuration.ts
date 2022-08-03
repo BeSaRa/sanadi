@@ -8,6 +8,7 @@ import {Lookup} from './lookup';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {Team} from '@app/models/team';
 import {FollowUpType} from '@app/enums/followUp-type.enum';
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
 
 export class FollowupConfiguration extends BaseModel<FollowupConfiguration, FollowupConfigurationService> {
   service: FollowupConfigurationService;
@@ -37,10 +38,12 @@ export class FollowupConfiguration extends BaseModel<FollowupConfiguration, Foll
   concernedTeamInfo!: Team;
 
   searchFields: { [key: string]: searchFunctionType | string } = {
-    arName: 'arName',
-    enName: 'enName',
+    name: text => this.getName().toLowerCase().indexOf(text) !== -1,
     requestType: text => !this.requestTypeInfo ? false : this.requestTypeInfo.getName().toLowerCase().indexOf(text) !== -1,
     followUpType: text => !this.followUpTypeInfo ? false : this.followUpTypeInfo.getName().toLowerCase().indexOf(text) !== -1,
+    responsibleTeam: text => !this.responsibleTeamInfo ? false : this.responsibleTeamInfo.getName().toLowerCase().indexOf(text) !== -1,
+    concernedTeam: text => !this.concernedTeamInfo ? false : this.concernedTeamInfo.getName().toLowerCase().indexOf(text) !== -1,
+    days: 'days'
   };
 
   getName(): string {
@@ -60,6 +63,10 @@ export class FollowupConfiguration extends BaseModel<FollowupConfiguration, Foll
       concernedTeamId: controls ? [{value: concernedTeamId, disabled: followUpType === FollowUpType.EXTERNAL}] : concernedTeamId,
       days: controls ? [days, [CustomValidators.required, CustomValidators.number]] : days
     };
+  }
+
+  updateStatus(newStatus: CommonStatusEnum): any {
+    return this.service.updateStatus(this.id, newStatus);
   }
 
 

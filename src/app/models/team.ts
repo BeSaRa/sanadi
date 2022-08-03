@@ -1,11 +1,19 @@
-import {INames} from '../interfaces/i-names';
-import {LangService} from '../services/lang.service';
-import {FactoryService} from '../services/factory.service';
-import {BaseModel} from './base-model';
-import {TeamService} from '../services/team.service';
-import {AdminResult} from './admin-result';
-import {searchFunctionType} from '../types/types';
+import { INames } from '@contracts/i-names';
+import { LangService } from '@services/lang.service';
+import { FactoryService } from '@services/factory.service';
+import { BaseModel } from './base-model';
+import { TeamService } from '@services/team.service';
+import { AdminResult } from './admin-result';
+import { searchFunctionType } from '../types/types';
+import { TeamInterceptor } from "@app/model-interceptors/team-interceptor";
+import { InterceptModel } from "@decorators/intercept-model";
 
+const interceptor = new TeamInterceptor();
+
+@InterceptModel({
+  send: interceptor.send,
+  receive: interceptor.receive
+})
 export class Team extends BaseModel<Team, TeamService> {
   authName!: string;
   autoClaim: boolean = false;

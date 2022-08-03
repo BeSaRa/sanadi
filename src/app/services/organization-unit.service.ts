@@ -1,32 +1,35 @@
-import {Injectable} from '@angular/core';
-import {Observable, of, Subject} from 'rxjs';
-import {OrgUnit} from '../models/org-unit';
-import {HttpClient} from '@angular/common/http';
-import {UrlService} from './url.service';
-import {DialogService} from './dialog.service';
-import {BackendGenericService} from '../generics/backend-generic-service';
-import {FactoryService} from './factory.service';
-import {DialogRef} from '../shared/models/dialog-ref';
-import {IDialogData} from '../interfaces/i-dialog-data';
-import {OperationTypes} from '../enums/operation-types.enum';
-import {switchMap} from 'rxjs/operators';
-import {OrganizationUnitInterceptor} from '../model-interceptors/organization-unit-interceptor';
+import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import { OrgUnit } from '../models/org-unit';
+import { HttpClient } from '@angular/common/http';
+import { UrlService } from './url.service';
+import { DialogService } from './dialog.service';
+import { FactoryService } from './factory.service';
+import { DialogRef } from '../shared/models/dialog-ref';
 import {
   OrganizationUnitPopupComponent
 } from '../administration/popups/organization-unit-popup/organization-unit-popup.component';
-import {Generator} from '../decorators/generator';
-import {AuditLogService} from './audit-log.service';
-import {CommonStatusEnum} from '@app/enums/common-status.enum';
-import {BackendWithDialogOperationsGenericService} from '@app/generics/backend-with-dialog-operations-generic-service';
-import {ComponentType} from '@angular/cdk/portal';
-import {OrgStatusEnum} from '@app/enums/status.enum';
+import { AuditLogService } from './audit-log.service';
+import { ComponentType } from '@angular/cdk/portal';
+import { OrgStatusEnum } from '@app/enums/status.enum';
+import { CrudWithDialogGenericService } from "@app/generics/crud-with-dialog-generic-service";
+import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
+import { Pagination } from "@app/models/pagination";
 
+@CastResponseContainer({
+  $default: {
+    model: () => OrgUnit
+  },
+  $pagination: {
+    model: () => Pagination,
+    shape: { 'rs.*': () => OrgUnit }
+  }
+})
 @Injectable({
   providedIn: 'root'
 })
-export class OrganizationUnitService extends BackendWithDialogOperationsGenericService<OrgUnit> {
+export class OrganizationUnitService extends CrudWithDialogGenericService<OrgUnit> {
   list!: OrgUnit[];
-  interceptor: OrganizationUnitInterceptor = new OrganizationUnitInterceptor();
 
   constructor(public http: HttpClient,
               private urlService: UrlService,
@@ -42,14 +45,6 @@ export class OrganizationUnitService extends BackendWithDialogOperationsGenericS
 
   _getModel(): any {
     return OrgUnit;
-  }
-
-  _getSendInterceptor(): any {
-    return this.interceptor.send;
-  }
-
-  _getReceiveInterceptor(): any {
-    return this.interceptor.receive;
   }
 
   _getServiceURL(): string {
@@ -78,7 +73,10 @@ export class OrganizationUnitService extends BackendWithDialogOperationsGenericS
     return this.http.post<boolean>(this._getServiceURL() + '/banner-logo?id=' + id, form);
   }
 
-  @Generator(undefined, true, {property: 'rs'})
+  @CastResponse(undefined, {
+    fallback: '$default',
+    unwrap: 'rs'
+  })
   getOrganizationUnitsByOrgType(orgType: number) {
     if (!orgType) {
       return of([]);

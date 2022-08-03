@@ -1,16 +1,24 @@
-import {BaseModel} from './base-model';
-import {Observable} from 'rxjs';
-import {FactoryService} from '@services/factory.service';
-import {OrganizationUserService} from '@services/organization-user.service';
-import {LangService} from '@services/lang.service';
-import {INames} from '@contracts/i-names';
-import {AdminResult} from './admin-result';
-import {Lookup} from './lookup';
-import {LookupService} from '@services/lookup.service';
-import {searchFunctionType} from '../types/types';
-import {DialogRef} from '../shared/models/dialog-ref';
-import {OrgUserStatusEnum} from '@app/enums/status.enum';
+import { BaseModel } from './base-model';
+import { Observable } from 'rxjs';
+import { FactoryService } from '@services/factory.service';
+import { OrganizationUserService } from '@services/organization-user.service';
+import { LangService } from '@services/lang.service';
+import { INames } from '@contracts/i-names';
+import { AdminResult } from './admin-result';
+import { Lookup } from './lookup';
+import { LookupService } from '@services/lookup.service';
+import { searchFunctionType } from '../types/types';
+import { DialogRef } from '../shared/models/dialog-ref';
+import { OrgUserStatusEnum } from '@app/enums/status.enum';
+import { OrgUserInterceptor } from "@app/model-interceptors/org-user-interceptor";
+import { InterceptModel } from "@decorators/intercept-model";
 
+const interceptor = new OrgUserInterceptor();
+
+@InterceptModel({
+  receive: interceptor.receive,
+  send: interceptor.send
+})
 export class OrgUser extends BaseModel<OrgUser, OrganizationUserService> {
   email: string | undefined;
   statusDateModified: number | undefined;

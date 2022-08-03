@@ -31,6 +31,7 @@ import { UrgentInterventionLicenseComponent } from '@app/modules/urgent-interven
 import { UrgentInterventionClosureComponent } from './../modules/urgent-intervention/pages/urgent-intervention-closure/urgent-intervention-closure.component';
 import { UrgentInterventionFinancialNotificationComponent } from './../modules/urgent-intervention/pages/urgent-intervention-financial-notification/urgent-intervention-financial-notification.component';
 import { EmploymentComponent } from './../modules/general-services/pages/employment/employment.component';
+import { TransferringIndividualFundsAbroadComponent } from './../projects/pages/transferring-individual-funds-abroad/transferring-individual-funds-abroad.component';
 @Injectable({
   providedIn: 'root'
 })
@@ -66,7 +67,7 @@ export class AutoRegisterService {
 
       DynamicComponentService.registerComponent('ExternalOrgAffiliationComponent', ExternalOrgAffiliationComponent);
       DynamicComponentService.registerComponent('UrgentInterventionFinancialNotificationComponent', UrgentInterventionFinancialNotificationComponent);
-
+      DynamicComponentService.registerComponent('TransferringIndividualFundsAbroadComponent', TransferringIndividualFundsAbroadComponent);
     });// just to make sure that service constructed and register all dynamic components
 
 

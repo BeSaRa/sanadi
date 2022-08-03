@@ -1,0 +1,38 @@
+<div
+  class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between"
+>
+  <h1 class="h6 text-white">{{ lang.map.approval_employment }}</h1>
+  <button
+    type="button"
+    class="btn-close btn-close-white"
+    tabindex="-1"
+    dialogClose
+    aria-label="Close"
+  ></button>
+</div>
+<div class="dialog-content no-fixed-height">
+  <app-employees-data
+    #ETable
+    [employees]="employees"
+    [actions]="actions"
+  ></app-employees-data>
+  <div class="row">
+    <div class="col-sm-12 mb-4 position-relative">
+      <label class="form-label" asteriskIfRequired [control]="comment" for="comment">{{lang.map.comment}}</label>
+      <textarea name="comment" [formControl]="comment" validationClasses [control]="comment" id="comment" rows="4"
+                class="form-control"></textarea>
+      <app-field-error-message [control]="comment"></app-field-error-message>
+    </div>
+  </div>
+</div>
+<div class="dialog-actions">
+  <button
+    class="btn btn-primary"
+    (click)="action$.next(null)"
+  >
+    {{ lang.map.approve_task }}
+  </button>
+  <button dialogClose class="btn btn-secondary">
+    {{ lang.map.btn_close }}
+  </button>
+</div>

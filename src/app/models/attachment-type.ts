@@ -1,14 +1,22 @@
-import {BaseModel} from './base-model';
-import {AttachmentTypeService} from '../services/attachment-type.service';
-import {FactoryService} from '../services/factory.service';
-import {INames} from '../interfaces/i-names';
-import {LangService} from '../services/lang.service';
-import {Lookup} from './lookup';
-import {FileNetDocument} from '@app/models/file-net-document';
-import {AdminResult} from '@app/models/admin-result';
-import {searchFunctionType} from '@app/types/types';
-import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import { BaseModel } from './base-model';
+import { AttachmentTypeService } from '@services/attachment-type.service';
+import { FactoryService } from '@services/factory.service';
+import { INames } from '@contracts/i-names';
+import { LangService } from '@services/lang.service';
+import { Lookup } from './lookup';
+import { FileNetDocument } from '@app/models/file-net-document';
+import { AdminResult } from '@app/models/admin-result';
+import { searchFunctionType } from '@app/types/types';
+import { CommonStatusEnum } from '@app/enums/common-status.enum';
+import { AttachmentTypeInterceptor } from "@app/model-interceptors/attachment-type-interceptor";
+import { InterceptModel } from "@decorators/intercept-model";
 
+const interceptor = new AttachmentTypeInterceptor();
+
+@InterceptModel({
+  receive: interceptor.receive,
+  send: interceptor.send
+})
 export class AttachmentType extends BaseModel<AttachmentType, AttachmentTypeService> {
   service!: AttachmentTypeService;
   langService: LangService;

@@ -1,13 +1,21 @@
-import {BaseModel} from './base-model';
-import {CountryService} from '../services/country.service';
-import {FactoryService} from '../services/factory.service';
-import {INames} from '../interfaces/i-names';
-import {LangService} from '../services/lang.service';
-import {AdminResult} from './admin-result';
-import {searchFunctionType} from '../types/types';
-import {CommonStatusEnum} from '@app/enums/common-status.enum';
-import {CommonUtils} from '@app/helpers/common-utils';
+import { BaseModel } from './base-model';
+import { CountryService } from '@services/country.service';
+import { FactoryService } from '@services/factory.service';
+import { INames } from '@contracts/i-names';
+import { LangService } from '@services/lang.service';
+import { AdminResult } from './admin-result';
+import { searchFunctionType } from '../types/types';
+import { CommonStatusEnum } from '@app/enums/common-status.enum';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { CountryInterceptor } from "@app/model-interceptors/country-interceptor";
+import { InterceptModel } from "@decorators/intercept-model";
 
+const interceptor = new CountryInterceptor()
+
+@InterceptModel({
+  send: interceptor.send,
+  receive: interceptor.receive
+})
 export class Country extends BaseModel<Country, CountryService> {
   parentId?: number;
   riskLevel!: number;

@@ -36,5 +36,6 @@ export enum WFResponseType {
   TO_GM = 'toGM',
   FINAL_NOTIFICATION = 'finalNotification',
   INTERNAL_BANK_ACCOUNT_APPROVAL_SEND_TO_SINGLE_DEPARTMENT = 'askSingle:ReviewInternalBankAccountApproval',
-  RETURN_TO_SPECIFIC_ORGANIZATION = 'returnSpecificOrg'
+  RETURN_TO_SPECIFIC_ORGANIZATION = 'returnSpecificOrg',
+  TRANSFER_FUND_REQUEST_TO_COMPLIANCE_AND_RISK_DEPARTMENT = 'askSingle:ReviewTransferringIndividualFundsAbroad'
 }

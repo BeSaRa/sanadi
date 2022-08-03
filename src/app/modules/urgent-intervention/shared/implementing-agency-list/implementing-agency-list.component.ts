@@ -188,6 +188,14 @@ export class ImplementingAgencyListComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$),
       tap(_ => this.form.invalid ? this.displayRequiredFieldsMessage() : true),
       filter(() => this.form.valid),
+      filter(() => {
+        const formValue = this.form.getRawValue();
+        const isDuplicate = this.list.some(x => x.implementingAgency === formValue.implementingAgency && x.implementingAgencyType === formValue.implementingAgencyType);
+        if (isDuplicate) {
+          this.toastService.alert(this.lang.map.msg_duplicated_item);
+        }
+        return !isDuplicate;
+      }),
       map(() => {
         let formValue = this.form.getRawValue();
         let agencyTypeInfo: AdminResult = (this.implementingAgencyTypeList.find(x => x.lookupKey === formValue.implementingAgencyType) ?? new Lookup()).convertToAdminResult();
