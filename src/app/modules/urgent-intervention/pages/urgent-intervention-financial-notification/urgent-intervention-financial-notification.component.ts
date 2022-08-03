@@ -220,7 +220,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
   }
 
   private singleLicenseDetails(license: UrgentInterventionReportResult): Observable<UrgentInterventionReport> {
-    return this.licenseService._loadUrgentInterventionReportByLicenseId(license.id) as Observable<UrgentInterventionReport>;
+    return this.licenseService._loadUrgentInterventionAnnouncementByLicenseId(license.id) as Observable<UrgentInterventionReport>;
   }
   private openSelectLicense(licenses: UrgentInterventionReportResult[]): Observable<undefined | UrgentInterventionReportResult> {
     return this.licenseService.openSelectLicenseDialog(licenses, this.model?.clone({ requestType: this.requestTypeField.value || null }), true, this.service.selectLicenseDisplayColumns)

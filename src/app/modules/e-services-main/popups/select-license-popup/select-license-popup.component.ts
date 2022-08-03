@@ -89,7 +89,7 @@ export class SelectLicensePopupComponent {
           this.dialogRef.close({ selected: license, details: licenseDetails });
         });
     else
-      this.licenseService._loadUrgentInterventionReportByLicenseId(license.id).subscribe((licenseDetails) => {
+      this.licenseService._loadUrgentInterventionAnnouncementByLicenseId(license.id).subscribe((licenseDetails) => {
         if (!licenseDetails) {
           return;
         }
