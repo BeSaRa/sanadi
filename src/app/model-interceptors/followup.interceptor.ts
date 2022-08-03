@@ -2,12 +2,14 @@ import { IModelInterceptor } from "@app/interfaces/i-model-interceptor";
 import { Followup } from "@app/models/followup";
 import { Lookup } from '@app/models/lookup';
 import { DateUtils } from '@app/helpers/date-utils';
+import {AdminResult} from '@app/models/admin-result';
 
 
 export class FollowupInterceptor
   implements IModelInterceptor<Followup> {
   receive(model: Followup): Followup {
-    model.followUpConfigrationInfo = (new Lookup()).clone(model.followUpTypeInfo)
+    model.requestTypeInfo && (model.requestTypeInfo = AdminResult.createInstance(model.requestTypeInfo));
+    model.followUpConfigurationInfo = (new Lookup()).clone(model.followUpTypeInfo)
     model.followUpTypeInfo = (new Lookup()).clone(model.followUpTypeInfo);
     model.serviceInfo = (new Lookup()).clone(model.serviceInfo);
     model.statusInfo = (new Lookup()).clone(model.statusInfo);
@@ -16,7 +18,8 @@ export class FollowupInterceptor
   }
 
   send(model: Partial<Followup>): Partial<Followup> {
-    delete model.followUpConfigrationInfo;
+    delete model.requestTypeInfo;
+    delete model.followUpConfigurationInfo;
     delete model.followUpTypeInfo;
     delete model.serviceInfo;
     delete model.statusInfo;
