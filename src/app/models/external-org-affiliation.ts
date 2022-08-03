@@ -82,7 +82,7 @@ export class ExternalOrgAffiliation extends _RequestType<ExternalOrgAffiliationS
         CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
         Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')]] : enName,
       city: control ? [city, [CustomValidators.required]] : city,
-      website: control ? [website, [Validators.maxLength(350)]] : website,
+      website: control ? [website, [CustomValidators.required, Validators.maxLength(350)]] : website,
       phone: control ? [phone, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : phone,
       fax: control ? [fax, [CustomValidators.required].concat(CustomValidators.commonValidations.fax)] : fax,
       mailBox: control ? [mailBox, [CustomValidators.required, CustomValidators.number, Validators.maxLength(10)]] : mailBox,
