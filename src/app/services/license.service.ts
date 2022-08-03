@@ -144,6 +144,7 @@ export class LicenseService {
         break;
       case CaseTypes.FOREIGN_COUNTRIES_PROJECTS:
         url = this.urlService.URLS.FOREIGN_COUNTRIES_PROJECTS;
+        break;
       case CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD:
         url = this.urlService.URLS.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD;
         break;
