@@ -1,3 +1,7 @@
+import { Observable } from 'rxjs';
+import { UrgentInterventionReportResult } from './../models/urgent-intervention-report-result';
+import { UrgentInterventionReportSearchCriteria } from './../models/urgent-intervention-report-search-criteria';
+import { LicenseService } from './license.service';
 import { EServiceGenericService } from '@app/generics/e-service-generic-service';
 import { FactoryService } from './factory.service';
 import { ComponentFactoryResolver, Injectable } from '@angular/core';
@@ -19,11 +23,14 @@ export class UrgentInterventionFinancialNotificationService extends EServiceGene
   serviceKey: keyof ILanguageKeys = 'menu_urgent_intervention_financial_notification';
   caseStatusIconMap: Map<number, string> = new Map();
   searchColumns: string[] = [];
+  // 'interventionName',
+  selectLicenseDisplayColumns = ['beneficiaryCountry', 'executionCountry', 'subject', 'licenseNumber', 'actions'];
 
   constructor(
     private urlService: UrlService,
     public http: HttpClient,
     public dialog: DialogService,
+    private licenseService: LicenseService,
     public domSanitizer: DomSanitizer,
     public cfr: ComponentFactoryResolver,
     public dynamicService: DynamicOptionsService
@@ -48,5 +55,9 @@ export class UrgentInterventionFinancialNotificationService extends EServiceGene
   }
   getCaseComponentName(): string {
     return 'UrgentInterventionFinancialNotificationComponent';
+  }
+
+  licenseSearch(criteria: Partial<UrgentInterventionReportSearchCriteria> = {}): Observable<UrgentInterventionReportResult[]> {
+    return this.licenseService.urgentInterventionReportSearch(criteria);
   }
 }

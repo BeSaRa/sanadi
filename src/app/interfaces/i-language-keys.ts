@@ -1088,6 +1088,7 @@ export interface ILanguageKeys {
   menu_urgent_intervention_report: string;
   entities: string;
   intervention_fields: string;
+  transfer_data: string;
   intervention_areas: string;
   intervention_name: string;
   entity_type: string;

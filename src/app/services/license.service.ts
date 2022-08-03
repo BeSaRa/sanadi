@@ -384,7 +384,7 @@ export class LicenseService {
     property: 'rs',
     interceptReceive: (new UrgentInterventionReportInterceptor()).receive
   })
-  private _loadUrgentInterventionReportByLicenseId(licenseId: string): Observable<UrgentInterventionReport> {
+  public _loadUrgentInterventionReportByLicenseId(licenseId: string): Observable<UrgentInterventionReport> {
     return this.http.get<UrgentInterventionReport>(this.getServiceUrlByCaseType(CaseTypes.URGENT_INTERVENTION_REPORTING) + '/license/' + licenseId + '/details');
   }
 
@@ -553,7 +553,7 @@ export class LicenseService {
     return of(undefined);
   }
 
-  openSelectLicenseDialog<T>(licenses: (InitialExternalOfficeApprovalResult[] | PartnerApproval[] | ExternalOrgAffiliationResult[] | FinalExternalOfficeApprovalResult[] | InternalProjectLicenseResult[] | UrgentInterventionLicenseResult[] | T[]), caseRecord: any | undefined, select = true, displayedColumns: string[] = []): DialogRef {
+  openSelectLicenseDialog<T>(licenses: (UrgentInterventionReportResult[] | InitialExternalOfficeApprovalResult[] | PartnerApproval[] | ExternalOrgAffiliationResult[] | FinalExternalOfficeApprovalResult[] | InternalProjectLicenseResult[] | UrgentInterventionLicenseResult[] | T[]), caseRecord: any | undefined, select = true, displayedColumns: string[] = []): DialogRef {
     return this.dialog.show(SelectLicensePopupComponent, {
       licenses,
       select,
