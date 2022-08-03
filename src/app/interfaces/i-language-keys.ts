@@ -409,6 +409,7 @@ export interface ILanguageKeys {
   the_domain: string;
   implementation_agency_type: string;
   implementation_period: string;
+  implementation_agency: string;
   execution_info: string;
   execution_country_info: string;
   beneficiary_country_info: string;

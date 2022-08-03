@@ -1,4 +1,6 @@
 import { UrgentInterventionFinancialNotificationInterceptor } from './../model-interceptors/urgent-intervention-financial-notification-interceptor';
+import { TransferringIndividualFundsAbroadInterceptor } from '@app/model-interceptors/transferring-individual-funds-abroad-interceptor';
+import { TransferringIndividualFundsAbroad } from '@app/models/transferring-individual-funds-abroad';
 import { ExternalOrgAffiliation } from '@app/models/external-org-affiliation';
 import { ExternalOrgAffiliationResultInterceptor } from './../model-interceptors/external-org-affiliation-result-interceptor';
 import { ExternalOrgAffiliationInterceptor } from './../model-interceptors/external-org-affiliation-interceptor';
@@ -63,8 +65,6 @@ import { UrgentInterventionReport } from '@app/models/urgent-intervention-report
 import { UrgentInterventionReportInterceptor } from '@app/model-interceptors/urgent-intervention-report-interceptor';
 import { UrgentInterventionClosure } from '@app/models/urgent-intervention-closure';
 import { UrgentInterventionClosureInterceptor } from '@app/model-interceptors/urgent-intervention-closure-interceptor';
-import { TransferringIndividualFundsAbroad } from '@app/models/transferring-individual-funds-abroad';
-import { TransferringIndividualFundsAbroadInterceptor } from '@app/model-interceptors/transferring-individual-funds-abroad-interceptor';
 
 const collectionInterceptor = new CollectionApprovalInterceptor()
 const collectorInterceptor = new CollectorApprovalInterceptor()
@@ -381,7 +381,7 @@ export class LicenseService {
     property: 'rs',
     interceptReceive: (new UrgentInterventionReportInterceptor()).receive
   })
-  public _loadUrgentInterventionAnnouncementByLicenseId(licenseId: string): Observable<UrgentInterventionReport> {
+  private _loadUrgentInterventionAnnouncementByLicenseId(licenseId: string): Observable<UrgentInterventionReport> {
     return this.http.get<UrgentInterventionReport>(this.getServiceUrlByCaseType(CaseTypes.URGENT_INTERVENTION_REPORTING) + '/license/' + licenseId + '/details');
   }
 

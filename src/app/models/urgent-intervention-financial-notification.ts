@@ -23,12 +23,13 @@ export class UrgentInterventionFinancialNotification extends LicenseApprovalMode
   interventionRegionList: InterventionRegion[] = [];
   interventionFieldList: InterventionField[] = [];
   licenseClassName!: string;
+  beneficiaryCountryInfo!: AdminResult;
+  executionCountryInfo!: AdminResult;
+
   implementingAgencyType!: number;
   implementingAgency!: string;
   accountNumber!: number;
   amount!: number;
-  beneficiaryCountryInfo!: AdminResult;
-  executionCountryInfo!: AdminResult;
 
   fullSerial!: string;
   oldLicenseFullSerial!: string;
@@ -45,6 +46,20 @@ export class UrgentInterventionFinancialNotification extends LicenseApprovalMode
     return {
       requestType: control ? [requestType, [CustomValidators.required]] : requestType,
       oldLicenseFullSerial: control ? [oldLicenseFullSerial, [CustomValidators.required]] : oldLicenseFullSerial,
+    }
+  }
+  buildTransferDataForm(control: boolean = false) {
+    const {
+      implementingAgencyType,
+      implementingAgency,
+      accountNumber,
+      amount
+    } = this;
+    return {
+      implementingAgencyType: control ? [implementingAgencyType, [CustomValidators.required]] : implementingAgencyType,
+      implementingAgency: control ? [implementingAgency, [CustomValidators.required]] : implementingAgency,
+      accountNumber: control ? [accountNumber, [CustomValidators.required]] : accountNumber,
+      amount: control ? [amount, [CustomValidators.required]] : amount,
     }
   }
 }

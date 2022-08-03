@@ -3,13 +3,17 @@
     <tab [name]="tabsData.basicInfo.name" [hasError]="getTabInvalidStatus('basicInfo')"
       [template]="basicInfoTabTemplate" [title]="lang.map.lbl_basic_info"></tab>
     <tab [name]="tabsData.interventionAreas.name" [hasError]="getTabInvalidStatus('interventionAreas')"
+      [disabled]="!model?.oldLicenseId"
       [template]="interventionAreasTabTemplate" [title]="lang.map.intervention_areas"></tab>
     <tab [name]="tabsData.interventionFields.name" [hasError]="getTabInvalidStatus('interventionFields')"
+      [disabled]="!model?.oldLicenseId"
       [template]="interventionFieldsTabTemplate" [title]="lang.map.intervention_fields"></tab>
-      <tab [name]="tabsData.transferData.name" [hasError]="getTabInvalidStatus('transferData')"
-        [template]="transferDataTabTemplate" [title]="lang.map.transfer_data"></tab>
+    <tab [name]="tabsData.transferData.name" [hasError]="getTabInvalidStatus('transferData')"
+      [disabled]="!model?.oldLicenseId || !requestTypeField.value"
+      [template]="transferDataTabTemplate" [title]="lang.map.transfer_data"></tab>
     <tab *ngIf="!accordionView" [name]="tabsData.attachments.name" [hasError]="getTabInvalidStatus('attachments')"
-        [template]="attachmentsTab" [title]="lang.map.attachments"></tab>
+      [disabled]="!model?.oldLicenseId"
+      [template]="attachmentsTab" [title]="lang.map.attachments"></tab>
   </tabs-list>
 </div>
 <ng-container [formGroup]="form">
@@ -112,7 +116,83 @@
                              (readyEvent)="interventionFieldsTabStatus = $event"></intervention-field-list>
   </ng-template>
   <ng-template #transferDataTabTemplate>
-asdasd
+    <ng-container formGroupName="transferData">
+      <div class="row">
+        <div class="col-sm-12 col-md-6 mb-4 position-relative" *ngIf="isTransfer">
+          <label for="implementingAgencyType" asteriskIfRequired="implementingAgencyType"
+                class="form-label">{{lang.map.implementation_agency_type}}</label>
+          <ng-select [selectOnTab]="true" labelForId="implementingAgencyType"
+                    placeholder="{{lang.map.select}}" id="implementingAgencyType"
+                    [notFoundText]="lang.map.msg_not_found"
+                    [clearable]="false"
+                    appendTo="body"
+                    (change)="handleImplementingAgencyTypeChanges()"
+                    formControlName="implementingAgencyType"
+                    validationClasses="implementingAgencyType">
+            <ng-option *ngFor="let option of implementingAgencyType" [value]="option.lookupKey">
+              {{ option.getName() }}
+            </ng-option>
+          </ng-select>
+          <app-field-error-message controlName="implementingAgencyType"></app-field-error-message>
+        </div>
+
+        <div class="col-sm-12 col-md-6 mb-4 position-relative" *ngIf="isReceive">
+          <label for="implementingAgencyType" asteriskIfRequired="implementingAgencyType"
+                class="form-label">{{lang.map.account_type}}</label>
+          <ng-select [selectOnTab]="true" labelForId="implementingAgencyType"
+                    placeholder="{{lang.map.select}}" id="implementingAgencyType"
+                    [notFoundText]="lang.map.msg_not_found"
+                    appendTo="body"
+                    formControlName="implementingAgencyType"
+                    (change)="handleImplementingAgencyNameChanges()"
+                    validationClasses="implementingAgencyType">
+            <ng-option *ngFor="let option of accountsTypesList" [value]="option.fnId">
+              {{ option.getName() }}
+            </ng-option>
+          </ng-select>
+          <app-field-error-message controlName="implementingAgency"></app-field-error-message>
+        </div>
+        <div class="col-sm-12 col-md-6 mb-4 position-relative">
+          <label for="implementingAgency" asteriskIfRequired="implementingAgency"
+                class="form-label">{{lang.map.implementation_agency}}</label>
+          <ng-select [selectOnTab]="true" labelForId="implementingAgency"
+                    placeholder="{{lang.map.select}}" id="implementingAgency"
+                    [notFoundText]="lang.map.msg_not_found"
+                    appendTo="body"
+                    formControlName="implementingAgency"
+                    (change)="handleImplementingAgencyNameChanges()"
+                    validationClasses="implementingAgency">
+            <ng-option *ngFor="let option of implementingAgencies" [value]="option.fnId">
+              {{ option.getName() }}
+            </ng-option>
+          </ng-select>
+          <app-field-error-message controlName="implementingAgency"></app-field-error-message>
+        </div>
+
+        <div class="col-sm-12 col-md-6 mb-4 position-relative">
+          <label for="accountNumber" asteriskIfRequired="accountNumber"
+                class="form-label">{{lang.map.account_number}}</label>
+          <ng-select [selectOnTab]="true" labelForId="accountNumber"
+                    placeholder="{{lang.map.select}}" id="accountNumber"
+                    [notFoundText]="lang.map.msg_not_found"
+                    appendTo="body"
+                    formControlName="accountNumber"
+                    validationClasses="accountNumber">
+            <ng-option *ngFor="let option of bankAccountList" [value]="option.id">
+              {{ option.accountNumber }}
+            </ng-option>
+          </ng-select>
+          <app-field-error-message controlName="accountNumber"></app-field-error-message>
+        </div>
+        <div class="col-sm-12 col-md-6 mb-4 position-relative">
+          <label for="amount" asteriskIfRequired="amount"
+            class="form-label">{{lang.map.amount}}</label>
+          <input formControlName="amount" type="number" validationClasses="amount"
+            [onlyInvalid]="false" class="form-control" id="amount" trimInput>
+          <app-field-error-message controlName="amount"></app-field-error-message>
+        </div>
+      </div>
+    </ng-container>
   </ng-template>
   <ng-template #attachmentsTab>
     <attachments [disabled]="isAttachmentReadonly()" [caseId]="model?.id" [caseType]="model?.caseType"

@@ -1,3 +1,6 @@
+import { BankAccount } from '@app/models/bank-account';
+import { AdminResult } from '@app/models/admin-result';
+import { CommonService } from '@services/common.service';
 import { CaseTypes } from '@app/enums/case-types.enum';
 import { UrgentInterventionReport } from '@app/models/urgent-intervention-report';
 import { UrgentInterventionReportSearchCriteria } from './../../../../models/urgent-intervention-report-search-criteria';
@@ -24,6 +27,7 @@ import { UrgentInterventionFinancialNotification } from '@app/models/urgent-inte
 import { UrgentInterventionFinancialNotificationService } from './../../../../services/urgent-intervention-financial-notification.service';
 import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
 import { LookupService } from '@app/services/lookup.service';
+import { ImplementingAgencyTypes } from '@app/enums/implementing-agency-types.enum';
 
 @Component({
   selector: 'app-urgent-intervention-financial-notification',
@@ -32,9 +36,12 @@ import { LookupService } from '@app/services/lookup.service';
 })
 export class UrgentInterventionFinancialNotificationComponent extends EServicesGenericComponent<UrgentInterventionFinancialNotification, UrgentInterventionFinancialNotificationService> {
   requestTypesList: Lookup[] = this.lookupService.listByCategory.UrgentInterventionFinancialRequestType
-  receiverTypes: Lookup[] = this.lookupService.listByCategory.ReceiverType
+  accountsTypesList: any[] = [];
+  implementingAgencyType: Lookup[] = this.lookupService.listByCategory.ImplementingAgencyType
   interventionAreasTabStatus: ReadinessStatus = 'READY';
   interventionFieldsTabStatus: ReadinessStatus = 'READY';
+  implementingAgencies: AdminResult[] = [];
+  bankAccountList: BankAccount[] = [];
   @ViewChild('interventionRegionListComponent') interventionRegionListComponentRef!: InterventionRegionListComponent;
   @ViewChild('interventionFieldListComponent') interventionFieldListComponentRef!: InterventionFieldListComponent;
   licenseSearch$: Subject<string> = new Subject<string>();
@@ -100,7 +107,8 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
     private dialogService: DialogService,
     private licenseService: LicenseService,
     private cd: ChangeDetectorRef,
-    public fb: FormBuilder
+    public fb: FormBuilder,
+    private commonService: CommonService
   ) {
     super();
   }
@@ -121,7 +129,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
     let urgentInterventionFinancialNotification = this._getNewInstance();
     this.form = this.fb.group({
       basicInfo: this.fb.group(urgentInterventionFinancialNotification.buildForm(true)),
-      transferData: this.fb.group({})
+      transferData: this.fb.group(urgentInterventionFinancialNotification.buildTransferDataForm(true))
     })
   }
   _afterBuildForm(): void {
@@ -156,7 +164,6 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
   _destroyComponent(): void {
   }
   _updateForm(model: UrgentInterventionFinancialNotification | undefined): void {
-    console.log(model)
     this.model = model;
     // patch the form here
     if (!model) {
@@ -166,9 +173,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
 
     this.form.patchValue(model.buildForm());
     this.cd.detectChanges();
-    console.log(this.form)
   }
-
 
   licenseSearch($event?: Event): void {
     $event?.preventDefault();
@@ -201,7 +206,6 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
       });
   }
   private setSelectedLicense(licenseDetails: UrgentInterventionReportResult | undefined, ignoreUpdateForm: boolean) {
-    console.log(licenseDetails)
     this.selectedLicense = licenseDetails;
     // update form fields if i have license
     if (licenseDetails && !ignoreUpdateForm) {
@@ -218,9 +222,8 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
       this._updateForm(value);
     }
   }
-
   private singleLicenseDetails(license: UrgentInterventionReportResult): Observable<UrgentInterventionReport> {
-    return this.licenseService._loadUrgentInterventionAnnouncementByLicenseId(license.id) as Observable<UrgentInterventionReport>;
+    return this.licenseService.loadUrgentInterventionAnnouncementByLicenseId(license.id) as Observable<UrgentInterventionReport>;
   }
   private openSelectLicense(licenses: UrgentInterventionReportResult[]): Observable<undefined | UrgentInterventionReportResult> {
     return this.licenseService.openSelectLicenseDialog(licenses, this.model?.clone({ requestType: this.requestTypeField.value || null }), true, this.service.selectLicenseDisplayColumns)
@@ -230,9 +233,6 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
   loadLicencesByCriteria(criteria: Partial<UrgentInterventionReportSearchCriteria>): Observable<UrgentInterventionReportResult[]> {
     return this.service.licenseSearch(criteria);
   }
-
-
-
 
   isEditLicenseAllowed(): boolean {
     // if new or draft record and request type !== new, edit is allowed
@@ -253,6 +253,33 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
     }
     return !isAllowed;
   }
+
+  _handleRequestTypeChange() {
+  }
+  handleImplementingAgencyTypeChanges() {
+    this._loadImplementingAgenciesByAgencyType()
+  }
+  private _loadImplementingAgenciesByAgencyType() {
+    this.commonService.loadAgenciesByAgencyTypeAndCountry(this.implementingAgencyTypeField.value, this.model?.executionCountry || 0)
+      .subscribe((result) => {
+        this.implementingAgencies = [...result]
+      });
+  }
+  handleImplementingAgencyNameChanges() {
+    this._loadImplementingAgenciesAccounts()
+  }
+  private _loadImplementingAgenciesAccounts() {
+    if (this.implementingAgencyTypeField.value == ImplementingAgencyTypes.Partner) {
+      this.licenseService.loadPartnerLicenseByLicenseId(this.implementingAgencyField.value).subscribe(data => {
+        this.bankAccountList = [...data.bankAccountList];
+      })
+    } else {
+      this.licenseService.loadFinalLicenseByLicenseId(this.implementingAgencyField.value).subscribe(data => {
+        this.bankAccountList = [...data.bankAccountList];
+      })
+    }
+  }
+
   get basicInfoTab(): FormGroup {
     return (this.form.get('basicInfo')) as FormGroup;
   }
@@ -264,6 +291,12 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
   }
   get oldLicenseFullSerialField(): FormControl {
     return this.basicInfoTab.get('oldLicenseFullSerial') as FormControl;
+  }
+  get implementingAgencyTypeField(): FormControl {
+    return this.transferDataTab.get('implementingAgencyType') as FormControl;
+  }
+  get implementingAgencyField(): FormControl {
+    return this.transferDataTab.get('implementingAgency') as FormControl;
   }
   get isTransfer() {
     return this.requestTypeField.value == UrgentInterventionFinancialRequestType.Transfer
