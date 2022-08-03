@@ -294,7 +294,7 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
   }
 
   private loadCountries(): void {
-    this.countryService.loadCountries()
+    this.countryService.load()
       .pipe(takeUntil(this.destroy$))
       .subscribe((countries) => this.countriesList = countries)
   }
@@ -367,9 +367,9 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
       this._resetForm();
       this.requestTypeField.setValue(requestTypeValue);
     }
-    if (!requestTypeValue) {
-      requestTypeValue = this.requestTypeField && this.requestTypeField.value;
-    }
+    // if (!requestTypeValue) {
+    //   requestTypeValue = this.requestTypeField && this.requestTypeField.value;
+    // }
     this._handleLicenseValidationsByRequestType();
     this._handleRequestTypeDependentValidations();
   }
@@ -431,7 +431,7 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
                   }
                   return {selected: licenses[0], details: data};
                 }),
-                catchError((e) => {
+                catchError(() => {
                   return of(null);
                 })
               )

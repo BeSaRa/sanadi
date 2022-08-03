@@ -1,23 +1,27 @@
-import {Injectable} from '@angular/core';
-import {CastResponseContainer} from '@decorators/cast-response';
-import {Donor} from '@app/models/donor';
-import {CrudWithDialogGenericService} from '@app/generics/crud-with-dialog-generic-service';
-import {HttpClient} from '@angular/common/http';
-import {UrlService} from '@services/url.service';
-import {DialogService} from '@services/dialog.service';
-import {FactoryService} from '@services/factory.service';
-import {ComponentType} from '@angular/cdk/portal';
-import {DonorPopupComponent} from '@app/administration/popups/donor-popup/donor-popup.component';
-import {CommonStatusEnum} from '@app/enums/common-status.enum';
-import {Observable, of} from 'rxjs';
-import {map, switchMap} from 'rxjs/operators';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {IDialogData} from '@contracts/i-dialog-data';
-import {OperationTypes} from '@app/enums/operation-types.enum';
+import { Injectable } from '@angular/core';
+import { CastResponseContainer } from '@decorators/cast-response';
+import { Donor } from '@app/models/donor';
+import { CrudWithDialogGenericService } from '@app/generics/crud-with-dialog-generic-service';
+import { HttpClient } from '@angular/common/http';
+import { UrlService } from '@services/url.service';
+import { DialogService } from '@services/dialog.service';
+import { FactoryService } from '@services/factory.service';
+import { ComponentType } from '@angular/cdk/portal';
+import { DonorPopupComponent } from '@app/administration/popups/donor-popup/donor-popup.component';
+import { CommonStatusEnum } from '@app/enums/common-status.enum';
+import { Observable, of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { IDialogData } from '@contracts/i-dialog-data';
+import { OperationTypes } from '@app/enums/operation-types.enum';
 
 @CastResponseContainer({
   $default: {
     model: () => Donor
+  },
+  $pagination: {
+    model: () => Donor,
+    shape: { 'rs.*': () => Donor }
   }
 })
 @Injectable({

@@ -1,24 +1,22 @@
-import {Component, ViewChild} from '@angular/core';
-import {OrgUser} from '@app/models/org-user';
-import {catchError, map, switchMap, takeUntil} from 'rxjs/operators';
-import {OrganizationUserService} from '@app/services/organization-user.service';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {LangService} from '@app/services/lang.service';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {DialogService} from '@app/services/dialog.service';
-import {ToastService} from '@app/services/toast.service';
-import {ConfigurationService} from '@app/services/configuration.service';
-import {IGridAction} from '@app/interfaces/i-grid-action';
-import {EmployeeService} from '@app/services/employee.service';
-import {SharedService} from '@app/services/shared.service';
-import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import {CommonStatusEnum} from '@app/enums/common-status.enum';
-import {AdminGenericComponent} from '@app/generics/admin-generic-component';
-import {TableComponent} from '@app/shared/components/table/table.component';
-import {of} from 'rxjs';
-import {SortEvent} from '@app/interfaces/sort-event';
-import {CommonUtils} from '@app/helpers/common-utils';
-import {OrgUserStatusEnum} from '@app/enums/status.enum';
+import { Component, ViewChild } from '@angular/core';
+import { OrgUser } from '@app/models/org-user';
+import { takeUntil } from 'rxjs/operators';
+import { OrganizationUserService } from '@app/services/organization-user.service';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { LangService } from '@app/services/lang.service';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { DialogService } from '@app/services/dialog.service';
+import { ToastService } from '@app/services/toast.service';
+import { ConfigurationService } from '@app/services/configuration.service';
+import { IGridAction } from '@app/interfaces/i-grid-action';
+import { EmployeeService } from '@app/services/employee.service';
+import { SharedService } from '@app/services/shared.service';
+import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { AdminGenericComponent } from '@app/generics/admin-generic-component';
+import { TableComponent } from '@app/shared/components/table/table.component';
+import { SortEvent } from '@app/interfaces/sort-event';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { OrgUserStatusEnum } from '@app/enums/status.enum';
 
 @Component({
   selector: 'app-organization-user',
@@ -26,7 +24,7 @@ import {OrgUserStatusEnum} from '@app/enums/status.enum';
   styleUrls: ['./organization-user.component.scss']
 })
 export class OrganizationUserComponent extends AdminGenericComponent<OrgUser, OrganizationUserService> {
-
+  usePagination = true;
   constructor(public service: OrganizationUserService,
               public langService: LangService,
               private toast: ToastService,
@@ -136,7 +134,7 @@ export class OrganizationUserComponent extends AdminGenericComponent<OrgUser, Or
   listenToLoadDone(): void {
     this.service._loadDone$
       .pipe(takeUntil((this.destroy$)))
-      .subscribe((result) => {
+      .subscribe(() => {
         this.table.selection.clear();
       });
   }

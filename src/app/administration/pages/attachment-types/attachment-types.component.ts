@@ -1,21 +1,21 @@
-import {Component, ViewChild} from '@angular/core';
-import {LangService} from '@app/services/lang.service';
-import {of, Subscription} from 'rxjs';
-import {AttachmentType} from '@app/models/attachment-type';
-import {AttachmentTypeService} from '@app/services/attachment-type.service';
-import {FormControl} from '@angular/forms';
-import {IGridAction} from '@app/interfaces/i-grid-action';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {DialogService} from '@app/services/dialog.service';
-import {SharedService} from '@app/services/shared.service';
-import {ToastService} from '@app/services/toast.service';
-import {catchError, map, switchMap, takeUntil} from 'rxjs/operators';
-import {CommonStatusEnum} from '@app/enums/common-status.enum';
-import {SortEvent} from '@app/interfaces/sort-event';
-import {CommonUtils} from '@app/helpers/common-utils';
-import {TableComponent} from '@app/shared/components/table/table.component';
-import {AdminGenericComponent} from '@app/generics/admin-generic-component';
-import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import { Component, ViewChild } from '@angular/core';
+import { LangService } from '@app/services/lang.service';
+import { Subscription } from 'rxjs';
+import { AttachmentType } from '@app/models/attachment-type';
+import { AttachmentTypeService } from '@app/services/attachment-type.service';
+import { FormControl } from '@angular/forms';
+import { IGridAction } from '@app/interfaces/i-grid-action';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { DialogService } from '@app/services/dialog.service';
+import { SharedService } from '@app/services/shared.service';
+import { ToastService } from '@app/services/toast.service';
+import { takeUntil } from 'rxjs/operators';
+import { CommonStatusEnum } from '@app/enums/common-status.enum';
+import { SortEvent } from '@app/interfaces/sort-event';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { TableComponent } from '@app/shared/components/table/table.component';
+import { AdminGenericComponent } from '@app/generics/admin-generic-component';
+import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
 
 @Component({
   selector: 'attachment-types',
@@ -23,6 +23,7 @@ import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
   styleUrls: ['./attachment-types.component.scss']
 })
 export class AttachmentTypesComponent extends AdminGenericComponent<AttachmentType, AttachmentTypeService> {
+  usePagination = true;
   list: AttachmentType[] = [];
   displayedColumns = ['rowSelection', 'arName', 'enName', 'status', 'actions'];
   reloadSubscription!: Subscription;
@@ -55,25 +56,25 @@ export class AttachmentTypesComponent extends AdminGenericComponent<AttachmentTy
     return this.table.selection.selected;
   }
 
-  listenToReload() {
-    this.reload$
-      .pipe(takeUntil((this.destroy$)))
-      .pipe(switchMap(() => {
-        const load = this.useCompositeToLoad ? this.service.loadComposite() : this.service.load();
-        return load.pipe(
-          map(list => {
-            return list.filter(model => {
-              return +model.status == CommonStatusEnum.ACTIVATED || +model.status == CommonStatusEnum.DEACTIVATED;
-            });
-          }),
-          catchError(_ => of([]))
-        );
-      }))
-      .subscribe((list: AttachmentType[]) => {
-        this.models = list;
-        this.table.selection.clear();
-      });
-  }
+  // listenToReload() {
+  //   this.reload$
+  //     .pipe(takeUntil((this.destroy$)))
+  //     .pipe(switchMap(() => {
+  //       const load = this.useCompositeToLoad ? this.service.loadComposite() : this.service.load();
+  //       return load.pipe(
+  //         map(list => {
+  //           return list.filter(model => {
+  //             return +model.status == CommonStatusEnum.ACTIVATED || +model.status == CommonStatusEnum.DEACTIVATED;
+  //           });
+  //         }),
+  //         catchError(_ => of([]))
+  //       );
+  //     }))
+  //     .subscribe((list: AttachmentType[]) => {
+  //       this.models = list;
+  //       this.table.selection.clear();
+  //     });
+  // }
 
   sortingCallbacks = {
     statusInfo: (a: AttachmentType, b: AttachmentType, dir: SortEvent): number => {

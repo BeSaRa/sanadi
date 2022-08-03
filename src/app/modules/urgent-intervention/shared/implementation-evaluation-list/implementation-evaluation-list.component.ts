@@ -179,6 +179,14 @@ export class ImplementationEvaluationListComponent implements OnInit, OnDestroy 
       takeUntil(this.destroy$),
       tap(_ => this.form.invalid ? this.displayRequiredFieldsMessage() : true),
       filter(() => this.form.valid),
+      filter(() => {
+        const formValue = this.form.getRawValue();
+        const isDuplicate = this.list.some(x => x.evaluationHub === formValue.evaluationHub && x.evaluationResult === formValue.evaluationResult);
+        if (isDuplicate) {
+          this.toastService.alert(this.lang.map.msg_duplicated_item);
+        }
+        return !isDuplicate;
+      }),
       map(() => {
         let formValue = this.form.getRawValue();
         let evaluationHubInfo = this.evaluationHubList.find(x => x.id === formValue.evaluationHub) ?? new AdminResult();

@@ -1,13 +1,21 @@
-import {INames} from '@app/interfaces/i-names';
-import {LangService} from '@app/services/lang.service';
-import {FactoryService} from '@app/services/factory.service';
-import {BaseModel} from '@app/models/base-model';
-import {BankService} from '@app/services/bank.service';
-import {CommonStatusEnum} from '@app/enums/common-status.enum';
-import {Lookup} from '@app/models/lookup';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {searchFunctionType} from '@app/types/types';
+import { INames } from '@app/interfaces/i-names';
+import { LangService } from '@app/services/lang.service';
+import { FactoryService } from '@app/services/factory.service';
+import { BaseModel } from '@app/models/base-model';
+import { BankService } from '@app/services/bank.service';
+import { CommonStatusEnum } from '@app/enums/common-status.enum';
+import { Lookup } from '@app/models/lookup';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { searchFunctionType } from '@app/types/types';
+import { BankInterceptor } from "@app/model-interceptors/bank-interceptor";
+import { InterceptModel } from "@decorators/intercept-model";
 
+const interceptor = new BankInterceptor();
+
+@InterceptModel({
+  receive: interceptor.receive,
+  send: interceptor.send
+})
 export class Bank extends BaseModel<Bank, BankService> {
   service!: BankService;
   status: number = CommonStatusEnum.ACTIVATED;
@@ -54,9 +62,9 @@ export class Bank extends BaseModel<Bank, BankService> {
   }
 
   toggleStatus(): Bank {
-    if(this.status == CommonStatusEnum.ACTIVATED) {
+    if (this.status == CommonStatusEnum.ACTIVATED) {
       this.status = CommonStatusEnum.DEACTIVATED
-    } else if(this.status == CommonStatusEnum.DEACTIVATED) {
+    } else if (this.status == CommonStatusEnum.DEACTIVATED) {
       this.status = CommonStatusEnum.ACTIVATED
     }
 

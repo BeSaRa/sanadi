@@ -23,6 +23,7 @@ import {UrgentInterventionReportSearchCriteria} from '@app/models/urgent-interve
 import {UrgentInterventionReportResult} from '@app/models/urgent-intervention-report-result';
 import {IDefaultResponse} from '@contracts/idefault-response';
 import {map} from 'rxjs/operators';
+import {UrgentInterventionAnnouncementRequestType} from '@app/enums/service-request-types';
 
 @Injectable({
   providedIn: 'root'
@@ -75,8 +76,13 @@ export class UrgentInterventionReportingService extends EServiceGenericService<U
     return new SearchUrgentInterventionReportCriteria();
   }
 
-  licenseSearch(criteria: Partial<UrgentInterventionReportSearchCriteria> = {}): Observable<UrgentInterventionReportResult[]> {
-    return this.licenseService.urgentInterventionReportSearch(criteria);
+  licenseSearch(criteria: Partial<UrgentInterventionReportSearchCriteria>, requestType: UrgentInterventionAnnouncementRequestType): Observable<UrgentInterventionReportResult[]> {
+    if (requestType === UrgentInterventionAnnouncementRequestType.START) {
+      criteria.licenseStatus = 1;
+    } else if (requestType === UrgentInterventionAnnouncementRequestType.EDIT) {
+      criteria.licenseStatus = 2;
+    }
+    return this.licenseService.urgentInterventionAnnouncementSearch(criteria);
   }
 
   /**

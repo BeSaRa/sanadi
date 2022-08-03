@@ -17,6 +17,7 @@ export class InternalBankAccountLicenseInterceptor implements IModelInterceptor<
     model.bankInfo = isValidAdminResult(model.bankInfo) ? AdminResult.createInstance(model.bankInfo) : AdminResult.createInstance({});
     model.licenseStatusInfo = (model.licenseStatusInfo) ? (new Lookup()).clone(model.licenseStatusInfo) : new Lookup();
     model.requestTypeInfo = (model.requestTypeInfo) ? (new Lookup()).clone(model.requestTypeInfo) : new Lookup();
+    model.operationTypeInfo = (model.operationTypeInfo) ? AdminResult.createInstance(model.operationTypeInfo) : AdminResult.createInstance({});
     model.bankAccountExecutiveManagementDTOs ? model.bankAccountExecutiveManagementDTOs = model.bankAccountExecutiveManagementDTOs.map(x => {
       let y = new NpoEmployee().clone(x);
       y.jobTitleInfo = (new Lookup()).clone(y.jobTitleInfo);

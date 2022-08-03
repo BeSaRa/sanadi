@@ -50,7 +50,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   selectedNPOEmployees: NpoEmployee[] = [];
   // oldLicenseFullSerialControl: FormControl = new FormControl();
   selectedResponsiblePersonControl: FormControl = new FormControl();
-  private displayedColumns: string[] = ['fullSerial', 'status', 'requestTypeInfo', 'actions'];
+  private displayedColumns: string[] = ['fullSerial', 'status', 'requestTypeInfo', 'operationTypeInfo', 'actions'];
   selectedAccountsDisplayedColumns: string[] = [];
   selectedAccountsDisplayedColumnsForMerge: string[] = ['accountNumber', 'bankName', 'bankCategory', 'toBeMergedIn', 'actions'];
   selectedAccountsDisplayedColumnsForCancel: string[] = ['accountNumber', 'bankName', 'bankCategory', 'actions'];
@@ -730,11 +730,6 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
       .pipe(tap(licenses => !licenses.length && this.dialog.info(this.lang.map.no_result_for_your_search_criteria)))
       .pipe(filter(licenses => !!licenses.length))
       .pipe(exhaustMap((licenses) => {
-        // if(licenses.length === 1) {
-        //   return this.validateSingleLicense(licenses[0]);
-        // } else {
-        //   return this.openSelectLicense(licenses);
-        // }
         return licenses.length === 1 ? this.validateSingleLicense(licenses[0]) : this.openSelectLicense(licenses);
       }))
       .pipe(

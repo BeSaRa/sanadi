@@ -97,5 +97,6 @@
   "EXTERNAL_PROJECT_IMPLEMENTATION": "/external-project-implementation",
   "FIELD_ASSESSMENT": "/admin/field-assessment",
   "EXTERNAL_ORG_AFFILIATION_REQUEST": "/external-org-affiliation",
-  "FOREIGN_COUNTRIES_PROJECTS": "/foreign-countries-projects"
+  "FOREIGN_COUNTRIES_PROJECTS": "/foreign-countries-projects",
+  "TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD": "/transferring-individual-funds-abroad"
 }

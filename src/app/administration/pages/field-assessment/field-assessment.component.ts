@@ -24,7 +24,7 @@ import {UserClickOn} from '@app/enums/user-click-on.enum';
   styleUrls: ['./field-assessment.component.scss']
 })
 export class FieldAssessmentComponent extends AdminGenericComponent<FieldAssessment, FieldAssessmentService> {
-
+  usePagination = true
   constructor(public lang: LangService,
               public service: FieldAssessmentService,
               private dialogService: DialogService,

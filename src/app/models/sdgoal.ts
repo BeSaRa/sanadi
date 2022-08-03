@@ -1,13 +1,21 @@
-import {BaseModel} from '@app/models/base-model';
-import {SDGoalService} from '@app/services/sdgoal.service';
-import {FactoryService} from '@app/services/factory.service';
-import {INames} from '@app/interfaces/i-names';
-import {LangService} from '@app/services/lang.service';
-import {searchFunctionType} from '@app/types/types';
-import {Lookup} from '@app/models/lookup';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import { BaseModel } from '@app/models/base-model';
+import { SDGoalService } from '@app/services/sdgoal.service';
+import { FactoryService } from '@app/services/factory.service';
+import { INames } from '@app/interfaces/i-names';
+import { LangService } from '@app/services/lang.service';
+import { searchFunctionType } from '@app/types/types';
+import { Lookup } from '@app/models/lookup';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { CommonStatusEnum } from '@app/enums/common-status.enum';
+import { SdGoalInterceptor } from "@app/model-interceptors/sd-goal-interceptor";
+import { InterceptModel } from "@decorators/intercept-model";
 
+const interceptor = new SdGoalInterceptor()
+
+@InterceptModel({
+  receive: interceptor.receive,
+  send: interceptor.send
+})
 export class SDGoal extends BaseModel<SDGoal, SDGoalService> {
   service!: SDGoalService;
   langService!: LangService;

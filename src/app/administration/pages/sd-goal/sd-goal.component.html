@@ -79,7 +79,7 @@
           </tr>
         </table>
       </app-table>
-      <app-paginator #paginator [pageSize]="10" [length]="table.dataSource.data.length"></app-paginator>
+      <app-paginator #paginator (pageChange)="pageChange($event)"  [backend]="true" [length]="count"></app-paginator>
     </div>
   </div>
 </div>

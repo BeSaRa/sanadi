@@ -1,5 +1,27 @@
 export interface ILanguageKeys {
+  you_should_add_at_least_one_purpose_in_purposes: string;
+  you_should_add_at_least_one_person_to_executives_list: string;
+  add_purpose: string;
+  add_executive: string;
+  transfer_purpose: string;
+  execution_period_in_months: string;
+  executive_management_info: string;
+  transferee_iban: string;
+  transfer_from_iban: string;
+  transfer_method: string;
+  transferring_entity_name: string;
+  transaction_amount_in_transfer_currency: string;
+  qatari_riyal_transaction_amount: string;
+  name_in_English_language_like_passport: string;
+  name_in_local_language_like_passport: string;
+  organization_english_name: string;
+  organization_arabic_name: string;
   selected_bank_account_is_sub_account: string;
+  transferee_type: string;
+  financial_transaction_info: string;
+  receiver_person_info: string;
+  receiver_organization_info: string;
+  requester_info: string;
   forget_password: string;
   you_have_to_select_at_least_one_bank_account: string;
   will_be_canceled_also: string;
@@ -10,6 +32,7 @@ export interface ILanguageKeys {
   this_sub_account_of_the_selected_account: string;
   selected_license_info: string;
   merge_to_account: string;
+  menu_transferring_individual_funds_abroad: string;
   select_organization: string;
   send_to_department: string;
   can_be_11_digits: string;
@@ -367,6 +390,7 @@ export interface ILanguageKeys {
   number_of_5_to_18: string;
   number_of_19_to_60: string;
   number_of_above_60: string;
+  number_of_direct_beneficiaries_by_age_group: string;
   percentage_of_direct_beneficiaries_by_age_group: string;
   female_beneficiaries_number: string;
   male_beneficiaries_number: string;
@@ -423,6 +447,7 @@ export interface ILanguageKeys {
   view_license: string;
   license: string;
   please_select_license_to_complete_save: string;
+  please_select_notification_request_number_to_complete_save: string;
   license_status: string;
   office_english_name: string;
   office_arabic_name: string;
@@ -639,6 +664,8 @@ export interface ILanguageKeys {
   occupation: string;
   workplace: string;
   employment_status: string;
+  approval_employment: string;
+  interim_contract_date: string;
   beneficiary_category: string;
   marital_status: string;
   educational_level: string;
@@ -1018,6 +1045,7 @@ export interface ILanguageKeys {
   send_to_multi_departments: string;
   send_to_structure_expert: string;
   send_to_development_expert: string;
+  send_to_license_department: string;
   send_to_supervision_and_control_department: string;
   msg_success_final_approve_task_based_on_matrix_notification: string;
   msg_fail_final_approve_task_based_on_matrix_notification: string;

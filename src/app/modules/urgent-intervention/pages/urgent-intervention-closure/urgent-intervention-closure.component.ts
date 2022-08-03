@@ -1,25 +1,24 @@
-import {AfterViewInit, ChangeDetectorRef, Component, ViewChild} from '@angular/core';
-import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
-import {LangService} from '@services/lang.service';
-import {ToastService} from '@services/toast.service';
-import {DialogService} from '@services/dialog.service';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {LookupService} from '@services/lookup.service';
-import {EmployeeService} from '@services/employee.service';
-import {LicenseService} from '@services/license.service';
-import {Observable, of, Subject} from 'rxjs';
-import {UrgentInterventionClosure} from '@app/models/urgent-intervention-closure';
-import {UrgentInterventionClosureService} from '@services/urgent-intervention-closure.service';
-import {SaveTypes} from '@app/enums/save-types';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {ILanguageKeys} from '@contracts/i-language-keys';
-import {TabComponent} from '@app/shared/components/tab/tab.component';
-import {ReadinessStatus, TabMap} from '@app/types/types';
-import {ServiceRequestTypes} from '@app/enums/service-request-types';
-import {CommonUtils} from '@helpers/common-utils';
-import {OpenFrom} from '@app/enums/open-from.enum';
-import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
-import {Lookup} from '@app/models/lookup';
+import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
+import { LangService } from '@services/lang.service';
+import { ToastService } from '@services/toast.service';
+import { DialogService } from '@services/dialog.service';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { LookupService } from '@services/lookup.service';
+import { EmployeeService } from '@services/employee.service';
+import { LicenseService } from '@services/license.service';
+import { Observable, of, Subject } from 'rxjs';
+import { UrgentInterventionClosure } from '@app/models/urgent-intervention-closure';
+import { UrgentInterventionClosureService } from '@services/urgent-intervention-closure.service';
+import { SaveTypes } from '@app/enums/save-types';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { TabComponent } from '@app/shared/components/tab/tab.component';
+import { ReadinessStatus, TabMap } from '@app/types/types';
+import { ServiceRequestTypes } from '@app/enums/service-request-types';
+import { CommonUtils } from '@helpers/common-utils';
+import { OpenFrom } from '@app/enums/open-from.enum';
+import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
+import { Lookup } from '@app/models/lookup';
 import {
   ImplementingAgencyListComponent
 } from '@app/modules/urgent-intervention/shared/implementing-agency-list/implementing-agency-list.component';
@@ -29,18 +28,21 @@ import {
 import {
   InterventionFieldListComponent
 } from '@app/modules/urgent-intervention/shared/intervention-field-list/intervention-field-list.component';
-import {catchError, exhaustMap, filter, map, takeUntil, tap} from 'rxjs/operators';
-import {CountryService} from '@services/country.service';
-import {Country} from '@app/models/country';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {StageListComponent} from '@app/modules/urgent-intervention/shared/stage-list/stage-list.component';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {ResultListComponent} from '@app/modules/urgent-intervention/shared/result-list/result-list.component';
+import { catchError, exhaustMap, filter, map, takeUntil, tap } from 'rxjs/operators';
+import { CountryService } from '@services/country.service';
+import { Country } from '@app/models/country';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { StageListComponent } from '@app/modules/urgent-intervention/shared/stage-list/stage-list.component';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { ResultListComponent } from '@app/modules/urgent-intervention/shared/result-list/result-list.component';
 import {
   ImplementationEvaluationListComponent
 } from '@app/modules/urgent-intervention/shared/implementation-evaluation-list/implementation-evaluation-list.component';
-import {UrgentInterventionReportResult} from '@app/models/urgent-intervention-report-result';
-import {BestPracticesListComponent} from '@app/modules/urgent-intervention/shared/best-practices-list/best-practices-list.component';
+import { UrgentInterventionReportResult } from '@app/models/urgent-intervention-report-result';
+import {
+  BestPracticesListComponent
+} from '@app/modules/urgent-intervention/shared/best-practices-list/best-practices-list.component';
+import {Localization} from '@app/models/localization';
 
 @Component({
   selector: 'urgent-intervention-closure',
@@ -92,7 +94,7 @@ export class UrgentInterventionClosureComponent extends EServicesGenericComponen
       isTouchedOrDirty: () => false,
       show: () => true,
       validStatus: () => {
-        return this.beneficiaryGroup && this.beneficiaryGroup.valid && this.beneficiaryPercentGroup && this.beneficiaryPercentGroup.valid;
+        return this.beneficiaryGroup && this.beneficiaryGroup.valid && this.beneficiaryByAgeGroup && this.beneficiaryByAgeGroup.valid;
       }
     },
     entities: {
@@ -242,25 +244,13 @@ export class UrgentInterventionClosureComponent extends EServicesGenericComponen
     this.form = this.fb.group({
       basicInfo: this.fb.group(objUrgentInterventionClosure.getBasicFormFields(true)),
       beneficiary: this.fb.group(objUrgentInterventionClosure.getBeneficiaryFields(true)),
-      beneficiaryPercentGroup: this.fb.group(objUrgentInterventionClosure.getBeneficiaryPercentFields(true), {
-        validators: CustomValidators.validateSum(100, 2, [
-          'beneficiaries0to5',
-          'beneficiaries5to18',
-          'beneficiaries19to60',
-          'beneficiariesOver60'
-        ], [
-          this.lang.getLocalByKey('number_of_0_to_5'),
-          this.lang.getLocalByKey('number_of_5_to_18'),
-          this.lang.getLocalByKey('number_of_19_to_60'),
-          this.lang.getLocalByKey('number_of_above_60')
-        ])
-      })
+      beneficiaryByAge: this.fb.group(objUrgentInterventionClosure.getBeneficiaryByAgeFields(true)),
     });
-    this._setDefaultValues();
   }
 
   _afterBuildForm(): void {
     this.handleReadonly();
+    this._setDefaultValues();
     if (this.fromDialog) {
       this.loadSelectedLicenseById(this.model!.oldLicenseId, () => {
         this.oldLicenseFullSerialField.updateValueAndValidity();
@@ -341,7 +331,7 @@ export class UrgentInterventionClosureComponent extends EServicesGenericComponen
       ...this.model,
       ...this.basicInfoTab.getRawValue(),
       ...this.beneficiaryGroup.getRawValue(),
-      ...this.beneficiaryPercentGroup.getRawValue(),
+      ...this.beneficiaryByAgeGroup.getRawValue(),
       interventionFieldList: this.interventionFieldListComponentRef.list,
       interventionRegionList: this.interventionRegionListComponentRef.list,
       implementingAgencyList: this.implementingAgencyListComponentRef.list,
@@ -354,11 +344,54 @@ export class UrgentInterventionClosureComponent extends EServicesGenericComponen
     });
   }
 
+  private _disableDefaults() {
+    [this.executionCountryField, this.executionRegionField, this.beneficiaryCountryField, this.beneficiaryRegionField, this.descriptionField].map(x => x.disable());
+  }
+  private _setDefaultZeros() {
+    Object.keys(this.beneficiaryGroup.controls).forEach(key => {
+      this.beneficiaryGroup.get(key)?.setValue(0);
+    });
+    Object.keys(this.beneficiaryByAgeGroup.controls).forEach(key => {
+      this.beneficiaryByAgeGroup.get(key)?.setValue(0);
+    });
+    this.beneficiaryGroup.updateValueAndValidity();
+    this.beneficiaryByAgeGroup.updateValueAndValidity();
+  }
+
   _setDefaultValues(): void {
     this.requestTypeField.setValue(ServiceRequestTypes.NEW);
     this.handleRequestTypeChange(ServiceRequestTypes.NEW, false);
+    this._setDefaultZeros();
+    this._disableDefaults();
+    this._updateBeneficiaryByAgeGroupValidation();
   }
 
+  private _getBeneficiaryByAgeFieldNames(): string[] {
+    return [
+      'beneficiaries0to5',
+      'beneficiaries5to18',
+      'beneficiaries19to60',
+      'beneficiariesOver60'
+    ];
+  }
+
+  private _getBeneficiaryByAgeFieldLabels(): Localization[] {
+    return [
+      this.lang.getLocalByKey('number_of_0_to_5'),
+      this.lang.getLocalByKey('number_of_5_to_18'),
+      this.lang.getLocalByKey('number_of_19_to_60'),
+      this.lang.getLocalByKey('number_of_above_60')
+    ];
+  }
+
+  private _updateBeneficiaryByAgeGroupValidation(): void {
+    let ageGroupValidations = CustomValidators.validateSum(this._getTotalDirectBeneficiaries(), 0, this._getBeneficiaryByAgeFieldNames(), this._getBeneficiaryByAgeFieldLabels());
+    this.beneficiaryByAgeGroup.clearValidators();
+    this.beneficiaryByAgeGroup.setValidators(ageGroupValidations);
+    this.beneficiaryByAgeGroup.updateValueAndValidity();
+    this.beneficiaryByAgeGroup.markAsTouched();
+    this.beneficiaryByAgeGroup.markAsPristine();
+  }
 
   _resetForm(): void {
     this.form.reset();
@@ -382,11 +415,23 @@ export class UrgentInterventionClosureComponent extends EServicesGenericComponen
     this.form.patchValue({
       basicInfo: model.getBasicFormFields(),
       beneficiary: model.getBeneficiaryFields(),
-      beneficiaryPercentGroup: model.getBeneficiaryPercentFields()
+      beneficiaryByAge: model.getBeneficiaryByAgeFields()
     });
 
     this.handleRequestTypeChange(model.requestType, false);
     this.cd.detectChanges();
+  }
+
+  handleChangeDirectMaleBeneficiaries($event: Event): void {
+    if ($event) {
+      this._updateBeneficiaryByAgeGroupValidation();
+    }
+  }
+
+  handleChangeDirectFemaleBeneficiaries($event: Event): void {
+    if ($event) {
+      this._updateBeneficiaryByAgeGroupValidation();
+    }
   }
 
   handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
@@ -394,9 +439,9 @@ export class UrgentInterventionClosureComponent extends EServicesGenericComponen
       this._resetForm();
       this.requestTypeField.setValue(requestTypeValue);
     }
-    if (!requestTypeValue) {
-      requestTypeValue = this.requestTypeField && this.requestTypeField.value;
-    }
+    // if (!requestTypeValue) {
+    //   requestTypeValue = this.requestTypeField && this.requestTypeField.value;
+    // }
 
     this._handleLicenseValidationsByRequestType();
   }
@@ -503,7 +548,7 @@ export class UrgentInterventionClosureComponent extends EServicesGenericComponen
   }
 
   private loadCountries(): void {
-    this.countryService.loadCountries()
+    this.countryService.load()
       .pipe(takeUntil(this.destroy$))
       .subscribe((countries) => this.countriesList = countries);
   }
@@ -535,7 +580,7 @@ export class UrgentInterventionClosureComponent extends EServicesGenericComponen
     if (!id) {
       return;
     }
-    this.licenseService.loadUrgentInterventionReportByLicenseId(id)
+    this.licenseService.loadUrgentInterventionAnnouncementByLicenseId(id)
       .pipe(
         filter(license => !!license),
         takeUntil(this.destroy$)
@@ -552,7 +597,7 @@ export class UrgentInterventionClosureComponent extends EServicesGenericComponen
       .pipe(
         takeUntil(this.destroy$),
         exhaustMap(oldLicenseFullSerial => {
-          return this.service.licenseSearchUrgentInterventionReport({fullSerial: oldLicenseFullSerial})
+          return this.service.licenseSearchUrgentInterventionAnnouncement({fullSerial: oldLicenseFullSerial})
             .pipe(catchError(() => of([])));
         }))
       .pipe(
@@ -621,15 +666,45 @@ export class UrgentInterventionClosureComponent extends EServicesGenericComponen
     return this.basicInfoTab.get('year') as FormControl;
   }
 
+  get beneficiaryCountryField(): FormControl {
+    return this.basicInfoTab.get('beneficiaryCountry') as FormControl;
+  }
+
+  get beneficiaryRegionField(): FormControl {
+    return this.basicInfoTab.get('beneficiaryRegion') as FormControl;
+  }
+
   get executionCountryField(): FormControl {
     return this.basicInfoTab.get('executionCountry') as FormControl;
+  }
+
+  get executionRegionField(): FormControl {
+    return this.basicInfoTab.get('executionRegion') as FormControl;
+  }
+
+  get descriptionField(): FormControl {
+    return this.basicInfoTab.get('projectDescription') as FormControl;
   }
 
   get beneficiaryGroup(): FormGroup {
     return this.form.get('beneficiary') as FormGroup;
   }
 
-  get beneficiaryPercentGroup(): FormGroup {
-    return this.form.get('beneficiaryPercentGroup') as FormGroup;
+  get directMaleBeneficiariesField(): FormControl {
+    return this.beneficiaryGroup.get('directMaleBeneficiaries') as FormControl;
+  }
+
+  get directFemaleBeneficiariesField(): FormControl {
+    return this.beneficiaryGroup.get('directFemaleBeneficiaries') as FormControl;
+  }
+
+  private _getTotalDirectBeneficiaries(): number {
+    let male = (this.directMaleBeneficiariesField ? this.directMaleBeneficiariesField.value : 0),
+      female = (this.directFemaleBeneficiariesField ? this.directFemaleBeneficiariesField.value : 0);
+    return (Number(male) + Number(female)) ?? 0;
+  }
+
+  get beneficiaryByAgeGroup(): FormGroup {
+    return this.form.get('beneficiaryByAge') as FormGroup;
   }
 }

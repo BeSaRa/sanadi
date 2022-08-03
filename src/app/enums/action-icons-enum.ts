@@ -22,5 +22,6 @@ export enum ActionIconsEnum {
   AID_HELP = 'mdi-handshake',
   SEARCH_USER = 'mdi-account-search',
   DOWNLOAD = 'mdi-download',
-  SPECIAL_NEEDS = 'mdi-human'
+  SPECIAL_NEEDS = 'mdi-human',
+  CHECKLIST = 'mdi-format-list-bulleted-square'
 }

@@ -20,6 +20,7 @@ import { ToastService } from '@app/services/toast.service';
   styleUrls: ['./survey-question.component.scss'],
 })
 export class SurveyQuestionComponent extends AdminGenericComponent<SurveyQuestion, SurveyQuestionService> {
+  usePagination = true
   constructor(public service: SurveyQuestionService,
               private dialog: DialogService,
               private sharedService: SharedService,

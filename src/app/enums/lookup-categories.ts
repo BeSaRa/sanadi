@@ -88,6 +88,10 @@ export enum LookupCategories {
   BankOperationType = 'BankOperationType',
   InternalBankCategory = 'InternalBankCategory',
   RequestTypeNewOnly = 'RequestTypeNewOnly',
+  TransferringIndividualRequestType = 'TransferringIndividualRequestType',
+  TransfereeType = 'TransfereeType',
+  HeadQuarterType = 'HeadQuarterType',
+  TransferMethod = 'TransferMethod',
 
   ORG_UNIT_TYPE_CAT_ID = '1',
   ORG_STATUS_CAT_ID = '2',

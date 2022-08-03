@@ -1,13 +1,22 @@
-import {ServiceDataService} from '@services/service-data.service';
-import {BaseModel} from './base-model';
-import {searchFunctionType} from '../types/types';
-import {FactoryService} from '@services/factory.service';
-import {LangService} from '@services/lang.service';
-import {LookupService} from '@services/lookup.service';
-import {AdminResult} from './admin-result';
-import {INames} from '@contracts/i-names';
-import {CaseTypes} from '@app/enums/case-types.enum';
+import { ServiceDataService } from '@services/service-data.service';
+import { BaseModel } from './base-model';
+import { searchFunctionType } from '../types/types';
+import { FactoryService } from '@services/factory.service';
+import { LangService } from '@services/lang.service';
+import { LookupService } from '@services/lookup.service';
+import { AdminResult } from './admin-result';
+import { INames } from '@contracts/i-names';
+import { CaseTypes } from '@app/enums/case-types.enum';
+import { CommonStatusEnum } from '@app/enums/common-status.enum';
+import { ServiceDataInterceptor } from "@app/model-interceptors/service-data-interceptor";
+import { InterceptModel } from "@decorators/intercept-model";
 
+const interceptor = new ServiceDataInterceptor()
+
+@InterceptModel({
+  send: interceptor.send,
+  receive: interceptor.receive
+})
 export class ServiceData extends BaseModel<ServiceData, ServiceDataService> {
   caseType!: number;
   customSettings!: string;
@@ -36,7 +45,7 @@ export class ServiceData extends BaseModel<ServiceData, ServiceDataService> {
   attachmentID!: number;
   sLA!: number;
   serviceReviewLimit!: number;
-  followUp!:boolean;
+  followUp!: boolean;
 
   service: ServiceDataService;
   langService: LangService;
@@ -82,5 +91,9 @@ export class ServiceData extends BaseModel<ServiceData, ServiceDataService> {
 
   isCustomExemption() {
     return this.caseType == CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE;
+  }
+
+  updateStatus(newStatus: CommonStatusEnum): any {
+    return this.service.updateStatus(this.id, newStatus);
   }
 }

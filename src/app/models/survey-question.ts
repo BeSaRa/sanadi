@@ -1,11 +1,19 @@
-import {BaseModel} from "@app/models/base-model";
-import {SurveyQuestionService} from "@app/services/survey-question.service";
-import {FactoryService} from "@app/services/factory.service";
-import {CustomValidators} from "@app/validators/custom-validators";
-import {LangService} from "@app/services/lang.service";
-import {INames} from "@app/interfaces/i-names";
-import {ILanguageKeys} from "@app/interfaces/i-language-keys";
+import { BaseModel } from "@app/models/base-model";
+import { SurveyQuestionService } from "@app/services/survey-question.service";
+import { FactoryService } from "@app/services/factory.service";
+import { CustomValidators } from "@app/validators/custom-validators";
+import { LangService } from "@app/services/lang.service";
+import { INames } from "@app/interfaces/i-names";
+import { ILanguageKeys } from "@app/interfaces/i-language-keys";
+import { SurveyQuestionInterceptor } from "@app/model-interceptors/survey-question-interceptor";
+import { InterceptModel } from "@decorators/intercept-model";
 
+const interceptor = new SurveyQuestionInterceptor()
+
+@InterceptModel({
+  receive: interceptor.receive,
+  send: interceptor.send
+})
 export class SurveyQuestion extends BaseModel<SurveyQuestion, SurveyQuestionService> {
   service: SurveyQuestionService;
   langService: LangService;
@@ -18,7 +26,7 @@ export class SurveyQuestion extends BaseModel<SurveyQuestion, SurveyQuestionServ
   }
 
   buildForm(controls: boolean) {
-    const {arName, enName, isFreeText} = this;
+    const { arName, enName, isFreeText } = this;
     return {
       arName: controls ? [arName, CustomValidators.required] : arName,
       enName: controls ? [enName, CustomValidators.required] : enName,

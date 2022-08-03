@@ -97,5 +97,7 @@ export interface IAppUrls {
   EXTERNAL_ORG_AFFILIATION_REQUEST: string;
   FIELD_ASSESSMENT: string;
   FOREIGN_COUNTRIES_PROJECTS: string;
+  TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD: string;
+
   [index: string]: string;
 }

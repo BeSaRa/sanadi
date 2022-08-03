@@ -1,20 +1,28 @@
-import {BaseModel} from './base-model';
-import {Observable, of} from 'rxjs';
-import {FactoryService} from '../services/factory.service';
-import {LangService} from '../services/lang.service';
-import {INames} from '../interfaces/i-names';
-import {OrganizationUnitService} from '../services/organization-unit.service';
-import {Lookup} from './lookup';
-import {LookupService} from '../services/lookup.service';
-import {searchFunctionType} from '../types/types';
-import {FileStore} from './file-store';
-import {DialogRef} from '../shared/models/dialog-ref';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {Validators} from '@angular/forms';
-import {OrganizationUnitServicesService} from '@app/services/organization-unit-services.service';
-import {OrgUnitService} from '@app/models/org-unit-service';
-import {OrgStatusEnum} from '@app/enums/status.enum';
+import { BaseModel } from './base-model';
+import { Observable, of } from 'rxjs';
+import { FactoryService } from '@services/factory.service';
+import { LangService } from '@services/lang.service';
+import { INames } from '@contracts/i-names';
+import { OrganizationUnitService } from '@services/organization-unit.service';
+import { Lookup } from './lookup';
+import { LookupService } from '@services/lookup.service';
+import { searchFunctionType } from '../types/types';
+import { FileStore } from './file-store';
+import { DialogRef } from '../shared/models/dialog-ref';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { Validators } from '@angular/forms';
+import { OrganizationUnitServicesService } from '@app/services/organization-unit-services.service';
+import { OrgUnitService } from '@app/models/org-unit-service';
+import { OrgStatusEnum } from '@app/enums/status.enum';
+import { OrganizationUnitInterceptor } from "@app/model-interceptors/organization-unit-interceptor";
+import { InterceptModel } from "@decorators/intercept-model";
 
+const interceptor = new OrganizationUnitInterceptor()
+
+@InterceptModel({
+  receive: interceptor.receive,
+  send: interceptor.send
+})
 export class OrgUnit extends BaseModel<OrgUnit, OrganizationUnitService> {
   phoneNumber1: string | undefined;
   phoneNumber2: string | undefined;

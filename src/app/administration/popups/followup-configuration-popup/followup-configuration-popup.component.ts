@@ -1,20 +1,20 @@
-import { Component, Inject } from '@angular/core';
-import { LangService } from '@app/services/lang.service';
-import { AdminGenericDialog } from '@app/generics/admin-generic-dialog';
-import { FollowupConfiguration } from '@app/models/followup-configuration';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { OperationTypes } from '@app/enums/operation-types.enum';
-import { DialogRef } from '@app/shared/models/dialog-ref';
-import { Observable } from 'rxjs';
-import { IDialogData } from '@app/interfaces/i-dialog-data';
-import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
-import { LookupService } from '@app/services/lookup.service';
-import { Lookup } from '@app/models/lookup';
-import { TeamService } from '@app/services/team.service';
-import { Team } from '@app/models/team';
-import { FollowUpType } from '@app/enums/followUp-type.enum';
-import { CustomValidators } from '@app/validators/custom-validators';
-import { RequestTypeFollowupService } from "@services/request-type-followup.service";
+import {Component, Inject} from '@angular/core';
+import {LangService} from '@app/services/lang.service';
+import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
+import {FollowupConfiguration} from '@app/models/followup-configuration';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {Observable} from 'rxjs';
+import {IDialogData} from '@app/interfaces/i-dialog-data';
+import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
+import {LookupService} from '@app/services/lookup.service';
+import {Lookup} from '@app/models/lookup';
+import {TeamService} from '@app/services/team.service';
+import {Team} from '@app/models/team';
+import {FollowUpType} from '@app/enums/followUp-type.enum';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {RequestTypeFollowupService} from '@services/request-type-followup.service';
 
 @Component({
   selector: 'followup-configuration-popup',
@@ -46,6 +46,10 @@ export class FollowupConfigurationPopupComponent extends AdminGenericDialog<Foll
     this.serviceId = data.serviceId;
     this.caseType = data.caseType;
     this.requestTypes = this.requestTypeFollowupService.serviceRequestTypes[this.caseType] || [this.requestTypeFollowupService.getNewRequestType()];
+  }
+
+  get readonly(): boolean {
+    return this.operation === OperationTypes.VIEW;
   }
 
   initPopup(): void {
@@ -82,7 +86,13 @@ export class FollowupConfigurationPopupComponent extends AdminGenericDialog<Foll
   }
 
   buildForm(): void {
-    this.form = this.fb.group(this.model.buildForm(true))
+    this.form = this.fb.group(this.model.buildForm(true));
+
+    if (this.readonly){
+      this.form.disable();
+      this.saveVisible = false;
+      this.validateFieldsVisible = false;
+    }
   }
 
   loadTeams() {
@@ -122,6 +132,13 @@ export class FollowupConfigurationPopupComponent extends AdminGenericDialog<Foll
   }
 
   get popupTitle(): string {
-    return this.operation === OperationTypes.CREATE ? this.lang.map.followup_configuration_add : this.lang.map.followup_configuration_edit;
+    if (this.operation === OperationTypes.CREATE) {
+      return this.lang.map.followup_configuration_add;
+    } else if (this.operation === OperationTypes.UPDATE) {
+      return this.lang.map.followup_configuration_edit;
+    } else if (this.operation === OperationTypes.VIEW) {
+      return this.lang.map.view;
+    }
+    return '';
   }
 }

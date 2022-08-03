@@ -1,12 +1,8 @@
 import { CommonUtils } from '@app/helpers/common-utils';
-import { ExternalOrgAffiliationResult } from './../../../../models/external-org-affiliation-result';
-import { map } from 'rxjs/operators';
-import { switchMap } from 'rxjs/operators';
-import { ExternalOrgAffiliationSearchCriteria } from './../../../../models/external-org-affiliation-search-criteria';
-import { LicenseService } from './../../../../services/license.service';
-import { filter } from 'rxjs/operators';
-import { catchError } from 'rxjs/operators';
-import { exhaustMap } from 'rxjs/operators';
+import { ExternalOrgAffiliationResult } from '@app/models/external-org-affiliation-result';
+import { catchError, exhaustMap, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { ExternalOrgAffiliationSearchCriteria } from '@app/models/external-org-affiliation-search-criteria';
+import { LicenseService } from '@services/license.service';
 import { Lookup } from '@app/models/lookup';
 import { IKeyValue } from '@app/interfaces/i-key-value';
 import { ReadinessStatus } from '@app/types/types';
@@ -14,11 +10,10 @@ import { ContactOfficer } from '@app/models/contact-officer';
 import { CountryService } from '@app/services/country.service';
 import { Country } from '@app/models/country';
 import { ToastService } from '@app/services/toast.service';
-import { tap, takeUntil } from 'rxjs/operators';
 import { ExternalOrgAffiliation } from '@app/models/external-org-affiliation';
 import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
-import { Component, ViewChild, ChangeDetectorRef, Pipe } from '@angular/core';
-import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
+import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { SaveTypes } from '@app/enums/save-types';
 import { LangService } from '@app/services/lang.service';
@@ -27,9 +22,11 @@ import { ExternalOrgAffiliationService } from '@app/services/external-org-affili
 import { LookupService } from '@app/services/lookup.service';
 import { DialogService } from '@app/services/dialog.service';
 import { AffiliationRequestType } from '@app/enums/AffiliationRequestType.enum';
-import { AffiliationCategory } from '@app/enums/AffiliationCategory.enum';
 import { BankAccountComponent } from '@app/modules/e-services-main/shared/bank-account/bank-account.component';
-import { ExecutiveManagementComponent } from '@app/modules/e-services-main/shared/executive-management/executive-management.component';
+import {
+  ExecutiveManagementComponent
+} from '@app/modules/e-services-main/shared/executive-management/executive-management.component';
+
 @Component({
   selector: 'app-external-org-affiliation',
   templateUrl: './external-org-affiliation.component.html',
@@ -185,7 +182,7 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
     this.model!.contactOfficerDTOs = [];
     this.operation = OperationTypes.CREATE;
   }
-  loadLicencesByCriteria(criteria: (Partial<ExternalOrgAffiliationSearchCriteria> | Partial<ExternalOrgAffiliationSearchCriteria>)): (Observable<ExternalOrgAffiliationResult[]>) {
+  loadLicencesByCriteria(criteria: (Partial<ExternalOrgAffiliationSearchCriteria> )): (Observable<ExternalOrgAffiliationResult[]>) {
     return this.service.licenseSearch(criteria as Partial<ExternalOrgAffiliationSearchCriteria>);
   }
 
@@ -214,7 +211,7 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
                   }
                   return { selected: licenses[0], details: data };
                 }),
-                catchError((e) => {
+                catchError(() => {
                   return of(null);
                 })
               )
@@ -226,7 +223,6 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
         // allow only if the user select license
         filter<{ selected: ExternalOrgAffiliationResult, details: ExternalOrgAffiliation }>
           ((selection: { selected: ExternalOrgAffiliationResult, details: ExternalOrgAffiliation }) => {
-            console.log(selection)
             return (selection && selection.selected instanceof ExternalOrgAffiliationResult && selection.details instanceof ExternalOrgAffiliation)
           }),
         takeUntil(this.destroy$)
@@ -285,7 +281,7 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
     this.dialog.error(this.lang.map.msg_all_required_fields_are_filled);
   }
   private loadCountries(): void {
-    this.countryService.loadCountries()
+    this.countryService.load()
       .pipe(takeUntil(this.destroy$))
       .subscribe((countries) => this.countriesList = countries);
   }
@@ -294,9 +290,9 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
       this._resetForm();
       this.requestTypeField.setValue(requestTypeValue);
     }
-    if (!requestTypeValue) {
-      requestTypeValue = this.requestTypeField && this.requestTypeField.value;
-    }
+    // if (!requestTypeValue) {
+    //   requestTypeValue = this.requestTypeField && this.requestTypeField.value;
+    // }
   }
   isEditOrCancel() {
     return this.isEditRequestType() || this.isCancelRequestType();

@@ -214,7 +214,7 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
   }
 
   private loadCountries(): void {
-    this.countryService.loadCountries()
+    this.countryService.load()
       .pipe(takeUntil(this.destroy$))
       .subscribe((countries) => this.countries = countries)
   }
@@ -333,7 +333,7 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
                   }
                   return {selected: licenses[0], details: data};
                 }),
-                catchError((e) => {
+                catchError(() => {
                   return of(null);
                 })
               )

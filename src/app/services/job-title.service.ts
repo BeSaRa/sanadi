@@ -15,10 +15,15 @@ import { IDialogData } from '@app/interfaces/i-dialog-data';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { CrudWithDialogGenericService } from "@app/generics/crud-with-dialog-generic-service";
 import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
+import { Pagination } from "@app/models/pagination";
 
 @CastResponseContainer({
   $default: {
     model: () => JobTitle
+  },
+  $pagination: {
+    model: () => Pagination,
+    shape: { 'rs.*': () => JobTitle }
   }
 })
 @Injectable({
@@ -32,8 +37,8 @@ export class JobTitleService extends CrudWithDialogGenericService<JobTitle> {
   list: JobTitle[] = [];
 
   constructor(public http: HttpClient,
-    private urlService: UrlService,
-    public dialog: DialogService) {
+              private urlService: UrlService,
+              public dialog: DialogService) {
     super();
     FactoryService.registerService('JobTitleService', this);
   }
@@ -55,6 +60,7 @@ export class JobTitleService extends CrudWithDialogGenericService<JobTitle> {
   getExternalJobTitle(): Observable<JobTitle[]> {
     return this.http.get<JobTitle[]>(this._getServiceURL() + '/external');
   }
+
   @HasInterception
   @CastResponse(undefined, {
     unwrap: 'rs',

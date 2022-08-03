@@ -10,12 +10,16 @@ import {FollowupConfiguration} from '@app/models/followup-configuration';
 import {DialogService} from './dialog.service';
 import {FactoryService} from './factory.service';
 import {UrlService} from './url.service';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {IFollowupCriteria} from '@app/interfaces/ifollowup-criteria';
 import {Generator} from '@app/decorators/generator';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {IDialogData} from '@app/interfaces/i-dialog-data';
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import {switchMap} from 'rxjs/operators';
+import {AidLookup} from '@app/models/aid-lookup';
+import {AidLookupPopupComponent} from '@app/administration/popups/aid-lookup-popup/aid-lookup-popup.component';
 
 @Injectable({
   providedIn: 'root',
@@ -69,7 +73,7 @@ export class FollowupConfigurationService extends BackendWithDialogOperationsGen
       model,
       serviceId: serviceId,
       caseType: caseType
-    })
+    });
   }
 
   addDialogWithDefaults(serviceId: number, caseType: number): DialogRef | Observable<DialogRef> {
@@ -77,12 +81,27 @@ export class FollowupConfigurationService extends BackendWithDialogOperationsGen
       serviceId, caseType);
   }
 
-  activate(followUpConfigurationId: number):Observable<FollowupConfiguration>{
-    return this.http.put<FollowupConfiguration>(this._getServiceURL() + '/' + followUpConfigurationId +'/activate',null)
+  openViewDialog(id: number): Observable<DialogRef> {
+    return this.getById(id).pipe(
+      switchMap((result: FollowupConfiguration) => {
+        return of(this.dialog.show<IDialogData<FollowupConfiguration>>(FollowupConfigurationPopupComponent, {
+          model: result,
+          operation: OperationTypes.VIEW
+        }));
+      })
+    );
   }
 
-  deactivate(followUpConfigurationId: number):Observable<FollowupConfiguration>{
-    return this.http.put<FollowupConfiguration>(this._getServiceURL() + '/' + followUpConfigurationId +'/de-activate',null)
+  updateStatus(id: number, newStatus: CommonStatusEnum) {
+    return newStatus === CommonStatusEnum.ACTIVATED ? this._activate(id) : this._deactivate(id);
+  }
+
+  private _activate(followUpConfigurationId: number): Observable<FollowupConfiguration> {
+    return this.http.put<FollowupConfiguration>(this._getServiceURL() + '/' + followUpConfigurationId + '/activate', null);
+  }
+
+  private _deactivate(followUpConfigurationId: number): Observable<FollowupConfiguration> {
+    return this.http.put<FollowupConfiguration>(this._getServiceURL() + '/' + followUpConfigurationId + '/de-activate', null);
   }
 
 }

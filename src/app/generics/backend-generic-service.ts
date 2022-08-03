@@ -1,14 +1,24 @@
-import {CrudServiceInterface} from '@contracts/crud-service-interface';
-import {iif, Observable, of, Subject} from 'rxjs';
-import {HttpClient} from '@angular/common/http';
-import {map, switchMap, tap} from 'rxjs/operators';
-import {Generator} from '@decorators/generator';
-import {InterceptParam, SendInterceptor} from '@decorators/model-interceptor';
-import {IKeyValue} from '@contracts/i-key-value';
-import {isValidValue} from '@helpers/utils';
-import {IDefaultResponse} from "@app/interfaces/idefault-response";
+import { CrudServiceInterface } from '@contracts/crud-service-interface';
+import { iif, Observable, of, Subject } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { map, switchMap, tap } from 'rxjs/operators';
+import { Generator } from '@decorators/generator';
+import { InterceptParam, SendInterceptor } from '@decorators/model-interceptor';
+import { IKeyValue } from '@contracts/i-key-value';
+import { isValidValue } from '@helpers/utils';
+import { IDefaultResponse } from "@app/interfaces/idefault-response";
+import { PaginationContract } from '@app/contracts/pagination-contract';
+import { Pagination } from '@app/models/pagination';
 
 export abstract class BackendGenericService<T> implements CrudServiceInterface<T> {
+  paginate(options: PaginationContract): Observable<Pagination<T[]>> {
+    throw new Error('Method not implemented.');
+  }
+
+  paginateComposite(options: PaginationContract): Observable<Pagination<T[]>> {
+    throw new Error('Method not implemented.');
+  }
+
   abstract list: T[];
   abstract http: HttpClient;
   _loadDone$: Subject<T[]> = new Subject<T[]>();
@@ -18,18 +28,18 @@ export abstract class BackendGenericService<T> implements CrudServiceInterface<T
   protected _timeRange: number = 15 * 60 * 1000;
   protected _lastLoadTime!: number;
 
-  @Generator(undefined, true, {property: 'rs'})
+  @Generator(undefined, true, { property: 'rs' })
   private _load(): Observable<T[]> {
     return this.http.get<T[]>(this._getServiceURL());
   }
 
   // noinspection JSUnusedLocalSymbols
-  @Generator(undefined, true, {property: 'rs'})
+  @Generator(undefined, true, { property: 'rs' })
   private _loadComposite(options?: any): Observable<T[]> {
     return this.http.get<T[]>(this._getServiceURL() + '/composite');
   }
 
-  @Generator(undefined, false, {property: 'rs'})
+  @Generator(undefined, false, { property: 'rs' })
   private _update(model: T): Observable<T> {
     return this.http.put<T>(this._getServiceURL() + '/full', model);
   }
@@ -65,7 +75,7 @@ export abstract class BackendGenericService<T> implements CrudServiceInterface<T
       .pipe(switchMap(list => iif(() => !!list.length, of(list), this.load(prepare))))
   }
 
-  @Generator(undefined, true, {property: 'rs'})
+  @Generator(undefined, true, { property: 'rs' })
   private _loadActive(): Observable<T[]> {
     return this.http.get<T[]>(this._getServiceURL() + '/active/lookup')
   }
@@ -75,7 +85,7 @@ export abstract class BackendGenericService<T> implements CrudServiceInterface<T
   }
 
   @SendInterceptor()
-  @Generator(undefined, false, {property: 'rs'})
+  @Generator(undefined, false, { property: 'rs' })
   create(@InterceptParam() model: T): Observable<T> {
     return this.http.post<T>(this._getServiceURL() + '/full', model);
   }
@@ -85,7 +95,7 @@ export abstract class BackendGenericService<T> implements CrudServiceInterface<T
   }
 
   deleteBulk(modelIds: any[]): Observable<Record<number, boolean>> {
-    return this.http.request<IDefaultResponse<Record<number, boolean>>>('delete', this._getServiceURL() + '/bulk', {body: modelIds})
+    return this.http.request<IDefaultResponse<Record<number, boolean>>>('delete', this._getServiceURL() + '/bulk', { body: modelIds })
       .pipe(
         map((response: any) => {
           return response.rs;

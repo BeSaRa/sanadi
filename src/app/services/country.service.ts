@@ -1,88 +1,90 @@
-import {HttpClient} from '@angular/common/http';
-import {Injectable} from '@angular/core';
-import {BackendGenericService} from '../generics/backend-generic-service';
-import {Country} from '../models/country';
-import {FactoryService} from './factory.service';
-import {IModelInterceptor} from '../interfaces/i-model-interceptor';
-import {CountryInterceptor} from '../model-interceptors/country-interceptor';
-import {UrlService} from './url.service';
-import {forkJoin, Observable, of} from 'rxjs';
-import {DialogRef} from '../shared/models/dialog-ref';
-import {map, switchMap, tap} from 'rxjs/operators';
-import {IDialogData} from '../interfaces/i-dialog-data';
-import {OperationTypes} from '../enums/operation-types.enum';
-import {Generator} from '../decorators/generator';
-import {DialogService} from './dialog.service';
-import {CountryPopupComponent} from '../administration/popups/country-popup/country-popup.component';
-import {ChangeCountryParentPopupComponent} from '../administration/popups/change-country-parent-popup/change-country-parent-popup.component';
-import {CommonUtils} from '../helpers/common-utils';
-import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Country } from '../models/country';
+import { FactoryService } from './factory.service';
+import { UrlService } from './url.service';
+import { forkJoin, Observable, of } from 'rxjs';
+import { DialogRef } from '../shared/models/dialog-ref';
+import { map, switchMap, tap } from 'rxjs/operators';
+import { IDialogData } from '@contracts/i-dialog-data';
+import { OperationTypes } from '../enums/operation-types.enum';
+import { DialogService } from './dialog.service';
+import { CountryPopupComponent } from '../administration/popups/country-popup/country-popup.component';
+import {
+  ChangeCountryParentPopupComponent
+} from '../administration/popups/change-country-parent-popup/change-country-parent-popup.component';
+import { CommonUtils } from '@helpers/common-utils';
+import { CommonStatusEnum } from '@app/enums/common-status.enum';
+import { CrudWithDialogGenericService } from "@app/generics/crud-with-dialog-generic-service";
+import { ComponentType } from '@angular/cdk/portal';
+import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
 
+@CastResponseContainer({
+  $default: {
+    model: () => Country
+  },
+  $pagination: {
+    model: () => Country,
+    shape: { 'rs.*': () => Country }
+  }
+})
 @Injectable({
   providedIn: 'root'
 })
-export class CountryService extends BackendGenericService<Country> {
+export class CountryService extends CrudWithDialogGenericService<Country> {
+
+  _getDialogComponent(): ComponentType<any> {
+    return CountryPopupComponent
+  }
+
   list: Country[] = [];
-  listCountries: Country[] = [];
-  interceptor: IModelInterceptor<Country> = new CountryInterceptor();
 
   _getModel() {
     return Country;
   }
 
-  _getSendInterceptor() {
-    return this.interceptor.send;
-  }
 
   _getServiceURL(): string {
     return this.urlService.URLS.COUNTRY;
   }
 
-  _getReceiveInterceptor() {
-    return this.interceptor.receive;
-  }
 
   constructor(public http: HttpClient,
               private urlService: UrlService,
-              private dialogService: DialogService,) {
+              public dialog: DialogService) {
     super();
     FactoryService.registerService('CountryService', this);
   }
 
-  @Generator(undefined, true, {property: 'rs'})
+  @CastResponse(undefined, {
+    fallback: '$default',
+    unwrap: 'rs'
+  })
   private _loadCountries(): Observable<Country[]> {
     return this.http.get<Country[]>(this._getServiceURL());
   }
 
-  loadCountries(): Observable<Country[]> {
+  load(): Observable<Country[]> {
     return this._loadCountries()
       .pipe(
         tap((result: Country[]) => {
-          this.listCountries = result;
+          this.list = result;
         })
       )
   }
 
-  @Generator(undefined, true, {property: 'rs'})
-  private _loadCountriesComposite(): Observable<Country[]> {
-    return this.http.get<Country[]>(this._getServiceURL() + '/composite');
-  }
-
-  loadCountriesComposite(): Observable<Country[]> {
-    return this._loadCountriesComposite()
-      .pipe(
-        tap((result: Country[]) => {
-          this.listCountries = result;
-        })
-      )
-  }
-
-  @Generator(undefined, false)
+  @CastResponse(undefined, {
+    fallback: '$default',
+    unwrap: 'rs'
+  })
   loadCountryById(id: number): Observable<Country> {
     return this.http.get<Country>(this._getServiceURL() + '/' + id + '/composite');
   }
 
-  @Generator(undefined, true, {property: 'rs'})
+  @CastResponse(undefined, {
+    fallback: '$default',
+    unwrap: 'rs'
+  })
   loadCountriesByParentId(parentId: number): Observable<Country[]> {
     return this.http.get<Country[]>(this._getServiceURL() + '/cities/' + parentId);
   }
@@ -99,10 +101,10 @@ export class CountryService extends BackendGenericService<Country> {
     return this._loadDialogData()
       .pipe(
         switchMap((result) => {
-          return of(this.dialogService.show<IDialogData<Country>>(CountryPopupComponent, {
+          return of(this.dialog.show<IDialogData<Country>>(CountryPopupComponent, {
             model: result.country,
             operation: OperationTypes.CREATE,
-            parentCountries: this.listCountries
+            parentCountries: this.list
           }))
         })
       );
@@ -112,10 +114,10 @@ export class CountryService extends BackendGenericService<Country> {
     return this._loadDialogData(modelId)
       .pipe(
         switchMap((result) => {
-          return of(this.dialogService.show<IDialogData<Country>>(CountryPopupComponent, {
+          return of(this.dialog.show<IDialogData<Country>>(CountryPopupComponent, {
             model: result.country,
             operation: OperationTypes.UPDATE,
-            parentCountries: this.listCountries,
+            parentCountries: this.list,
             selectedTabName: (CommonUtils.isValidValue(tabName) ? tabName : 'basic')
           }))
         })
@@ -123,13 +125,16 @@ export class CountryService extends BackendGenericService<Country> {
   }
 
   openChangeParentDialog(countriesToChange: Country[]): any {
-    return of(this.dialogService.show(ChangeCountryParentPopupComponent, {
+    return of(this.dialog.show(ChangeCountryParentPopupComponent, {
       countries: countriesToChange,
-      parentCountries: this.listCountries
+      parentCountries: this.list
     }))
   }
 
-  @Generator(undefined, true, {property: 'rs'})
+  @CastResponse(undefined, {
+    fallback: '$default',
+    unwrap: 'rs'
+  })
   updateBulkParents(parentId: number, countriesId: number[]): Observable<Country[]> {
     return this.http.post<Country[]>(this._getServiceURL() + '/cities-update/' + parentId, countriesId);
   }

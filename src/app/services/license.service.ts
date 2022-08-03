@@ -4,44 +4,34 @@ import { ExternalOrgAffiliationInterceptor } from './../model-interceptors/exter
 import { ExternalOrgAffiliationResult } from './../models/external-org-affiliation-result';
 import { ExternalOrgAffiliationSearchCriteria } from './../models/external-org-affiliation-search-criteria';
 import { Injectable } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
-import { FactoryService } from "@app/services/factory.service";
-import { Observable, of } from "rxjs";
-import { InitialExternalOfficeApprovalResult } from "@app/models/initial-external-office-approval-result";
-import { UrlService } from "@app/services/url.service";
-import { Generator } from "@app/decorators/generator";
-import {
-  InitialExternalOfficeApprovalSearchCriteria
-} from "@app/models/initial-external-office-approval-search-criteria";
-import { EmployeeService } from "@app/services/employee.service";
-import { InitialApprovalDocumentInterceptor } from "@app/model-interceptors/initial-approval-document-interceptor";
-import { DialogRef } from "@app/shared/models/dialog-ref";
-import { DialogService } from "@app/services/dialog.service";
-import { SelectLicensePopupComponent } from "@app/modules/e-services-main/popups/select-license-popup/select-license-popup.component";
+import { HttpClient } from '@angular/common/http';
+import { FactoryService } from '@app/services/factory.service';
+import { Observable, of } from 'rxjs';
+import { InitialExternalOfficeApprovalResult } from '@app/models/initial-external-office-approval-result';
+import { UrlService } from '@app/services/url.service';
+import { Generator } from '@app/decorators/generator';
+import { InitialExternalOfficeApprovalSearchCriteria } from '@app/models/initial-external-office-approval-search-criteria';
+import { EmployeeService } from '@app/services/employee.service';
+import { InitialApprovalDocumentInterceptor } from '@app/model-interceptors/initial-approval-document-interceptor';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { DialogService } from '@app/services/dialog.service';
+import { SelectLicensePopupComponent } from '@app/modules/e-services-main/popups/select-license-popup/select-license-popup.component';
 import { FinalExternalOfficeApprovalSearchCriteria } from '@app/models/final-external-office-approval-search-criteria';
-import { catchError, map } from "rxjs/operators";
-import { BlobModel } from "@app/models/blob-model";
-import { DomSanitizer } from "@angular/platform-browser";
-import { CaseTypes } from "@app/enums/case-types.enum";
-import { PartnerApproval } from "@app/models/partner-approval";
-import { PartnerApprovalInterceptor } from "@app/model-interceptors/partner-approval-interceptor";
+import { catchError, map } from 'rxjs/operators';
+import { BlobModel } from '@app/models/blob-model';
+import { DomSanitizer } from '@angular/platform-browser';
+import { CaseTypes } from '@app/enums/case-types.enum';
+import { PartnerApproval } from '@app/models/partner-approval';
+import { PartnerApprovalInterceptor } from '@app/model-interceptors/partner-approval-interceptor';
 import { FinalExternalOfficeApprovalResult } from '@app/models/final-external-office-approval-result';
-import {
-  FinalExternalOfficeApprovalResultInterceptor
-} from '@app/model-interceptors/final-external-office-approval-result-interceptor';
+import { FinalExternalOfficeApprovalResultInterceptor } from '@app/model-interceptors/final-external-office-approval-result-interceptor';
 import { FinalExternalOfficeApproval } from '@app/models/final-external-office-approval';
 import { InitialExternalOfficeApproval } from '@app/models/initial-external-office-approval';
-import {
-  InitialExternalOfficeApprovalInterceptor
-} from '@app/model-interceptors/initial-external-office-approval-interceptor';
-import {
-  FinalExternalOfficeApprovalInterceptor
-} from '@app/model-interceptors/final-external-office-approval-interceptor';
+import { InitialExternalOfficeApprovalInterceptor } from '@app/model-interceptors/initial-external-office-approval-interceptor';
+import { FinalExternalOfficeApprovalInterceptor } from '@app/model-interceptors/final-external-office-approval-interceptor';
 import { InternalProjectLicenseResult } from '@app/models/internal-project-license-result';
 import { InternalProjectLicenseSearchCriteria } from '@app/models/internal-project-license-search-criteria';
-import {
-  InternalProjectLicenseResultInterceptor
-} from '@app/model-interceptors/internal-project-license-result-interceptor';
+import { InternalProjectLicenseResultInterceptor } from '@app/model-interceptors/internal-project-license-result-interceptor';
 import { InternalProjectLicense } from '@app/models/internal-project-license';
 import { InternalProjectLicenseInterceptor } from '@app/model-interceptors/internal-project-license-interceptor';
 import { PartnerApprovalSearchCriteria } from '@app/models/PartnerApprovalSearchCriteria';
@@ -55,34 +45,30 @@ import { UrgentInterventionLicenseResult } from '@app/models/urgent-intervention
 import { UrgentInterventionLicense } from '@app/models/urgent-intervention-license';
 import { UrgentInterventionLicenseInterceptor } from '@app/model-interceptors/urgent-intervention-license-interceptor';
 import { UrgentInterventionLicenseSearchCriteria } from '@app/models/urgent-intervention-license-search-criteria';
-import {
-  UrgentInterventionLicenseResultInterceptor
-} from '@app/model-interceptors/urgent-intervention-license-result-interceptor';
-import { CollectionLicense } from "@app/license-models/collection-license";
-import { CollectionLicenseInterceptor } from "@app/license-interceptors/collection-license-interceptor";
+import { UrgentInterventionLicenseResultInterceptor } from '@app/model-interceptors/urgent-intervention-license-result-interceptor';
+import { CollectionLicense } from '@app/license-models/collection-license';
+import { CollectionLicenseInterceptor } from '@app/license-interceptors/collection-license-interceptor';
 import { CollectorLicense } from '@app/license-models/collector-license';
 import { CollectorLicenseInterceptor } from '@app/license-interceptors/collector-license-interceptor';
 import { InternalBankAccountLicense } from '@app/license-models/internal-bank-account-license';
-import {
-  InternalBankAccountLicenseInterceptor
-} from '@app/license-interceptors/internal-bank-account-license-interceptor';
-import { HasInterception, InterceptionContainer, InterceptParam } from "@decorators/intercept-model";
-import { CollectionApprovalInterceptor } from "@app/model-interceptors/collection-approval-interceptor";
-import { CollectorApprovalInterceptor } from "@app/model-interceptors/collector-approval-interceptor";
+import { InternalBankAccountLicenseInterceptor } from '@app/license-interceptors/internal-bank-account-license-interceptor';
+import { HasInterception, InterceptionContainer, InterceptParam } from '@decorators/intercept-model';
+import { CollectionApprovalInterceptor } from '@app/model-interceptors/collection-approval-interceptor';
+import { CollectorApprovalInterceptor } from '@app/model-interceptors/collector-approval-interceptor';
 import { UrgentInterventionReportSearchCriteria } from '@app/models/urgent-intervention-report-search-criteria';
 import { UrgentInterventionReportResult } from '@app/models/urgent-intervention-report-result';
-import {
-  UrgentInterventionReportResultInterceptor
-} from '@app/model-interceptors/urgent-intervention-report-result-interceptor';
+import { UrgentInterventionReportResultInterceptor } from '@app/model-interceptors/urgent-intervention-report-result-interceptor';
 import { UrgentInterventionReport } from '@app/models/urgent-intervention-report';
 import { UrgentInterventionReportInterceptor } from '@app/model-interceptors/urgent-intervention-report-interceptor';
 import { UrgentInterventionClosure } from '@app/models/urgent-intervention-closure';
 import { UrgentInterventionClosureInterceptor } from '@app/model-interceptors/urgent-intervention-closure-interceptor';
-import { ForeignCountriesProjectsSearchCriteria } from '@app/models/foreign-countries-projects-seach-criteria';
+import { TransferringIndividualFundsAbroad } from '@app/models/transferring-individual-funds-abroad';
+import { TransferringIndividualFundsAbroadInterceptor } from '@app/model-interceptors/transferring-individual-funds-abroad-interceptor';
 import { ForeignCountriesProjectsResult } from '@app/models/foreign-countries-projects-results';
+import { ForeignCountriesProjectsResultInterceptor } from '@app/model-interceptors/foreign-countries-projects-result-interceptor';
+import { ForeignCountriesProjectsSearchCriteria } from '@app/models/foreign-countries-projects-seach-criteria';
 import { ForeignCountriesProjects } from '@app/models/foreign-countries-projects';
 import { ForeignCountriesProjectsInterceptor } from '@app/model-interceptors/foriegn-countries-projects-interceptor';
-import { ForeignCountriesProjectsResultInterceptor } from '@app/model-interceptors/foreign-countries-projects-result-interceptor';
 
 const collectionInterceptor = new CollectionApprovalInterceptor()
 const collectorInterceptor = new CollectorApprovalInterceptor()
@@ -147,6 +133,9 @@ export class LicenseService {
       case CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL:
         url = this.urlService.URLS.INTERNAL_BANK_ACCOUNT_APPROVAL;
         break;
+      case CaseTypes.EMPLOYMENT:
+        url = this.urlService.URLS.EMPLOYMENT;
+        break;
       case CaseTypes.URGENT_INTERVENTION_CLOSURE:
         url = this.urlService.URLS.URGENT_INTERVENTION_CLOSURE;
         break;
@@ -155,6 +144,8 @@ export class LicenseService {
         break;
       case CaseTypes.FOREIGN_COUNTRIES_PROJECTS:
         url = this.urlService.URLS.FOREIGN_COUNTRIES_PROJECTS;
+      case CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD:
+        url = this.urlService.URLS.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD;
         break;
     }
     return url;
@@ -258,9 +249,19 @@ export class LicenseService {
     const orgId = { organizationId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id : undefined }
     return this.http.post<UrgentInterventionReportResult[]>(this.getServiceUrlByCaseType(CaseTypes.URGENT_INTERVENTION_REPORTING) + '/license/search', { ...criteria, ...orgId })
   }
+  // tslint:disable-next-line: max-line-length
+  private _urgentInterventionAnnouncementSearch(criteria: Partial<UrgentInterventionReportSearchCriteria>, validOnly: boolean = false): Observable<UrgentInterventionReportResult[]> {
+    const orgId = { organizationId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id : undefined },
+      url = this.getServiceUrlByCaseType(CaseTypes.URGENT_INTERVENTION_REPORTING) + '/license/search' + (validOnly ? '-valid' : '');
+    return this.http.post<UrgentInterventionReportResult[]>(url, { ...criteria, ...orgId })
+  }
 
-  urgentInterventionReportSearch(criteria: Partial<UrgentInterventionReportSearchCriteria>): Observable<UrgentInterventionReportResult[]> {
-    return this._urgentInterventionReportSearch(criteria);
+  urgentInterventionAnnouncementSearch(criteria: Partial<UrgentInterventionReportSearchCriteria>): Observable<UrgentInterventionReportResult[]> {
+    return this._urgentInterventionAnnouncementSearch(criteria);
+  }
+
+  urgentInterventionAnnouncementSearchValidOnly(criteria: Partial<UrgentInterventionReportSearchCriteria>): Observable<UrgentInterventionReportResult[]> {
+    return this._urgentInterventionAnnouncementSearch(criteria, true);
   }
 
   @Generator(UrgentInterventionClosure, true, {
@@ -396,12 +397,12 @@ export class LicenseService {
     property: 'rs',
     interceptReceive: (new UrgentInterventionReportInterceptor()).receive
   })
-  private _loadUrgentInterventionReportByLicenseId(licenseId: string): Observable<UrgentInterventionReport> {
+  private _loadUrgentInterventionAnnouncementByLicenseId(licenseId: string): Observable<UrgentInterventionReport> {
     return this.http.get<UrgentInterventionReport>(this.getServiceUrlByCaseType(CaseTypes.URGENT_INTERVENTION_REPORTING) + '/license/' + licenseId + '/details');
   }
 
-  loadUrgentInterventionReportByLicenseId(licenseId: string): Observable<UrgentInterventionReport> {
-    return this._loadUrgentInterventionReportByLicenseId(licenseId);
+  loadUrgentInterventionAnnouncementByLicenseId(licenseId: string): Observable<UrgentInterventionReport> {
+    return this._loadUrgentInterventionAnnouncementByLicenseId(licenseId);
   }
 
   @Generator(InitialExternalOfficeApproval, false, {
@@ -492,7 +493,7 @@ export class LicenseService {
     property: 'rs',
     interceptReceive: (new UrgentInterventionReportResultInterceptor()).receive
   })
-  _validateUrgentInterventionReportByRequestType<T>(requestType: number, oldLicenseId: string): Observable<T> {
+  _validateUrgentInterventionAnnouncementByRequestType<T>(requestType: number, oldLicenseId: string): Observable<T> {
     return this.http.post<T>(this.getServiceUrlByCaseType(CaseTypes.URGENT_INTERVENTION_REPORTING) + '/draft/validate', {
       requestType,
       oldLicenseId
@@ -505,6 +506,17 @@ export class LicenseService {
   })
   _validateUrgentInterventionClosureByRequestType<T>(requestType: number, oldLicenseId: string): Observable<T> {
     return this.http.post<T>(this.getServiceUrlByCaseType(CaseTypes.URGENT_INTERVENTION_CLOSURE) + '/draft/validate', {
+      requestType,
+      oldLicenseId
+    });
+  }
+
+  @Generator(TransferringIndividualFundsAbroad, false, {
+    property: 'rs',
+    interceptReceive: (new TransferringIndividualFundsAbroadInterceptor()).receive
+  })
+  _validateTransferIndividualFundsAbroadByRequestType<T>(requestType: number, oldLicenseId: string): Observable<T> {
+    return this.http.post<T>(this.getServiceUrlByCaseType(CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD) + '/draft/validate', {
       requestType,
       oldLicenseId
     });
@@ -535,7 +547,7 @@ export class LicenseService {
     } else if (caseType === CaseTypes.URGENT_INTERVENTION_LICENSING) {
       return this._validateUrgentInterventionLicenseByRequestType(requestType, licenseId);
     } else if (caseType === CaseTypes.URGENT_INTERVENTION_REPORTING) {
-      return this._validateUrgentInterventionReportByRequestType(requestType, licenseId);
+      return this._validateUrgentInterventionAnnouncementByRequestType(requestType, licenseId);
     } else if (caseType === CaseTypes.COLLECTION_APPROVAL) {
       return this._validateCollectionLicenseByRequestType<T>(requestType, licenseId);
     } else if (caseType === CaseTypes.COLLECTOR_LICENSING) {
@@ -548,6 +560,8 @@ export class LicenseService {
       return this._validateInternalExternalOrgAffiationsLicenseByRequestType<T>(requestType, licenseId);
     } else if (caseType === CaseTypes.URGENT_INTERVENTION_CLOSURE) {
       return this._validateUrgentInterventionClosureByRequestType<T>(requestType, licenseId);
+    } else if (caseType === CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD) {
+      return this._validateTransferIndividualFundsAbroadByRequestType<T>(requestType, licenseId);
     }
     else if (caseType === CaseTypes.FOREIGN_COUNTRIES_PROJECTS) {
       return this._validateForeignCountriesProjectsLicenseByRequestType<T>(requestType, licenseId);
@@ -628,5 +642,17 @@ export class LicenseService {
   @HasInterception
   validateMultiLicenseCollector<T>(caseType: number, @InterceptParam() model: T): Observable<any> {
     return this.http.post(this.getServiceUrlByCaseType(caseType) + '/draft/validate', model)
+  }
+
+  @Generator(TransferringIndividualFundsAbroad, true, {
+    property: 'rs',
+    interceptReceive: (new TransferringIndividualFundsAbroadInterceptor).receive
+  })
+  private _transferringIndividualFundsAbroadSearch<C>(model: Partial<C>): Observable<TransferringIndividualFundsAbroad[]> {
+    return this.http.post<TransferringIndividualFundsAbroad[]>(this.urlService.URLS.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD + '/license/search', model)
+  }
+
+  transferringIndividualFundsAbroadSearch<C>(model: Partial<C>): Observable<TransferringIndividualFundsAbroad[]> {
+    return this._transferringIndividualFundsAbroadSearch(model);
   }
 }

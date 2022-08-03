@@ -49,6 +49,10 @@
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.request_type}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.requestTypeInfo?.getName() || ''}} </td>
           </ng-container>
+          <ng-container cdkColumnDef="operationTypeInfo">
+            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.bank_operation_type}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.operationTypeInfo?.getName() || ''}} </td>
+          </ng-container>
           <ng-container cdkColumnDef="status">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.license_status}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.licenseStatusInfo?.getName() || ''}} </td>
