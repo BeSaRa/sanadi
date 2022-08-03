@@ -14,7 +14,6 @@ export class GeneralErrorHandler implements ErrorHandler {
         this.exceptionHandlerService.handle(error);
       });
     } else {
-      console.log(error);
       // @ts-ignore
       (error && error.hasOwnProperty('error') ? error.error : error).message?.indexOf("Cannot read property 'template' of null") === -1 ? console.error(error) : null;
     }

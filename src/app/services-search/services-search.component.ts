@@ -24,7 +24,6 @@ import { LicenseService } from '@app/services/license.service';
 import { HasLicenseApproval } from '@app/interfaces/has-license-approval';
 import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
 import { BaseGenericEService } from '@app/generics/base-generic-e-service';
-import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'services-search',
