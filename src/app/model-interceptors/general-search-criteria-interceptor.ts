@@ -1,34 +1,35 @@
-import {IModelInterceptor} from '@app/interfaces/i-model-interceptor';
-import {InquirySearchCriteria} from '../models/inquiry-search-criteria';
-import {DateUtils} from '@app/helpers/date-utils';
-import {IMyDateModel} from 'angular-mydatepicker';
-import {identity} from 'rxjs';
-import {ICaseSearchCriteria} from '@contracts/icase-search-criteria';
-import {InquirySearchCriteriaInterceptor} from '../search-criteria-interceptors/inquiry-search-criteria-interceptor';
-import {ConsultationSearchCriteriaInterceptor} from '../search-criteria-interceptors/consultation-search-criteria-interceptor';
+import { IModelInterceptor } from '@app/interfaces/i-model-interceptor';
+import { InquirySearchCriteria } from '../models/inquiry-search-criteria';
+import { DateUtils } from '@app/helpers/date-utils';
+import { IMyDateModel } from 'angular-mydatepicker';
+import { identity } from 'rxjs';
+import { ICaseSearchCriteria } from '@contracts/icase-search-criteria';
+import { InquirySearchCriteriaInterceptor } from '../search-criteria-interceptors/inquiry-search-criteria-interceptor';
+import { ConsultationSearchCriteriaInterceptor } from '../search-criteria-interceptors/consultation-search-criteria-interceptor';
 import {
   InternationalCooperationSearchCriteriaInterceptor
 } from '../search-criteria-interceptors/international-cooperation-search-criteria-interceptor';
-import {CaseTypes} from '../enums/case-types.enum';
-import {FactoryService} from '@services/factory.service';
-import {ConfigurationService} from '@services/configuration.service';
+import { CaseTypes } from '../enums/case-types.enum';
+import { FactoryService } from '@services/factory.service';
+import { ConfigurationService } from '@services/configuration.service';
 import {
   FinalExternalOfficeApprovalSearchCriteriaInterceptor
 } from '@app/search-criteria-interceptors/final-external-office-approval-search-criteria-interceptor';
-import {PartnerApprovalSearchCriteriaInterceptor} from '@app/search-criteria-interceptors/partner-approval-search-criteria-interceptor';
+import { PartnerApprovalSearchCriteriaInterceptor } from '@app/search-criteria-interceptors/partner-approval-search-criteria-interceptor';
 import {
   CollectionApprovalSearchCriteriaInterceptor
 } from '@app/search-criteria-interceptors/collection-approval-search-criteria-interceptor';
-import {CollectorApprovalSearchCriteriaInterceptor} from '@app/search-criteria-interceptors/collector-approval-search-criteria-interceptor';
+import { CollectorApprovalSearchCriteriaInterceptor } from '@app/search-criteria-interceptors/collector-approval-search-criteria-interceptor';
 import {
   UrgentJointReliefCampaignSearchCriteriaInterceptor
 } from '@app/search-criteria-interceptors/urgent-joint-relief-campaign-search-criteria-interceptor';
-import {CustomsExemptionRemittanceInterceptor} from '@app/model-interceptors/customs-exemption-remittance-interceptor';
-import {FundraisingInterceptor} from '@app/model-interceptors/fundraising-interceptor';
+import { CustomsExemptionRemittanceInterceptor } from '@app/model-interceptors/customs-exemption-remittance-interceptor';
+import { FundraisingInterceptor } from '@app/model-interceptors/fundraising-interceptor';
 import {
   SearchUrgentInterventionReportCriteriaInterceptor
 } from '@app/search-criteria-interceptors/search-urgent-intervention-report-criteria-interceptor';
-import {ProjectModelInterceptor} from '@app/model-interceptors/project-model-interceptor';
+import { ProjectModelInterceptor } from '@app/model-interceptors/project-model-interceptor';
+import { ForeignCountriesProjectsSearchCriteriaInterceptor } from '@app/search-criteria-interceptors/foreign-countries-projects-seach-criteria-interceptor';
 
 const interceptors: Map<number, IModelInterceptor<any>> = new Map<number, IModelInterceptor<any>>();
 
@@ -44,6 +45,7 @@ interceptors.set(CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN, new UrgentJointReliefCa
 interceptors.set(CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE, new CustomsExemptionRemittanceInterceptor());
 interceptors.set(CaseTypes.FUNDRAISING_LICENSING, new FundraisingInterceptor());
 interceptors.set(CaseTypes.URGENT_INTERVENTION_REPORTING, new SearchUrgentInterventionReportCriteriaInterceptor());
+interceptors.set(CaseTypes.FOREIGN_COUNTRIES_PROJECTS, new ForeignCountriesProjectsSearchCriteriaInterceptor());
 
 export class GeneralSearchCriteriaInterceptor implements IModelInterceptor<ICaseSearchCriteria> {
   // not important we will never use it
