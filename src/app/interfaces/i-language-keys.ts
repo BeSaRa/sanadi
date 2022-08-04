@@ -1166,10 +1166,15 @@ export interface ILanguageKeys {
   lbl_edit_field_assessment: string;
   type: string;
   currency_usd: string;
-  org_unit_field:string;
+  org_unit_field: string;
   lbl_add_org_unit_field: string;
   lbl_edit_org_unit_field: string;
   requester_relation: string;
   requester_name: string;
   notification_request_number: string;
+  menu_vacation: string;
+  vacation_date_from: string;
+  vacation_date_to: string;
+  lbl_add_vacation: string;
+  lbl_edit_vacation: string;
 }
