@@ -100,7 +100,8 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     CaseTypes.INQUIRY,
     CaseTypes.CONSULTATION,
     CaseTypes.INTERNATIONAL_COOPERATION,
-    CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN
+    CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN,
+    CaseTypes.FOREIGN_COUNTRIES_PROJECTS
   ];
 
   finalApproveByMatrixServices: number[] = [

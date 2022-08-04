@@ -98,5 +98,7 @@
   "FIELD_ASSESSMENT": "/admin/field-assessment",
   "EXTERNAL_ORG_AFFILIATION_REQUEST": "/external-org-affiliation",
   "TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD": "/transferring-individual-funds-abroad",
-  "VACATION_DATE": "/admin/vacation"
+  "VACATION_DATE": "/admin/vacation",
+  "FOREIGN_COUNTRIES_PROJECTS": "/foreign-countries-projects",
+  "TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD": "/transferring-individual-funds-abroad"
 }

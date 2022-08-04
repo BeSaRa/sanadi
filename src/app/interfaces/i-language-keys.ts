@@ -1171,6 +1171,13 @@ export interface ILanguageKeys {
   lbl_edit_org_unit_field: string;
   requester_relation: string;
   requester_name: string;
+  menu_request_to_approve_projects_for_foreign_countries: string;
+  external_cooperation_authority: string;
+  subject_of_need: string;
+  lbl_justification: string;
+  lbl_recommendation: string;
+  lbl_beneficiaries: string;
+  project_needs: string;
   notification_request_number: string;
   menu_vacation: string;
   vacation_date_from: string;
