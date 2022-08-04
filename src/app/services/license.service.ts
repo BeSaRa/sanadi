@@ -202,18 +202,6 @@ export class LicenseService {
     return this._externalOrgAffiliationSearchCriteria(criteria);
   }
 
-  // @Generator(ExternalOrgAffiliationResult, true, {
-  //   property: 'rs',
-  //   interceptReceive: (new UrgentInterventionFinancialNotificationInterceptor()).receive
-  // })
-  // private _urgentInterventionFinancialNotificationSearchCriteria(criteria: Partial<ExternalOrgAffiliationSearchCriteria>): Observable<ExternalOrgAffiliationResult[]> {
-  //   const orgId = {organizationId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id : undefined}
-  //   return this.http.post<ExternalOrgAffiliationResult[]>(this.getServiceUrlByCaseType(CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION) + '/license/search', {...criteria, ...orgId})
-  // }
-  // urgentInterventionFinancialNotificationSearch(criteria: Partial<ExternalOrgAffiliationSearchCriteria>): Observable<ExternalOrgAffiliationResult[]> {
-  //   return this._urgentInterventionFinancialNotificationSearchCriteria(criteria);
-  // }
-
   @Generator(InternalProjectLicenseResult, true, {
     property: 'rs',
     interceptReceive: (new InternalProjectLicenseResultInterceptor()).receive

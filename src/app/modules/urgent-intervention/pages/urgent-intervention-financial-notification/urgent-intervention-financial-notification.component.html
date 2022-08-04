@@ -2,17 +2,20 @@
   <tabs-list [accordionView]="accordionView">
     <tab [name]="tabsData.basicInfo.name" [hasError]="getTabInvalidStatus('basicInfo')"
       [template]="basicInfoTabTemplate" [title]="lang.map.lbl_basic_info"></tab>
+    <tab [name]="tabsData.entities.name" [hasError]="getTabInvalidStatus('entities')"
+        [template]="entitiesTabTemplate" [title]="lang.map.entities"
+        [disabled]="!selectedLicense"></tab>
     <tab [name]="tabsData.interventionAreas.name" [hasError]="getTabInvalidStatus('interventionAreas')"
-      [disabled]="!model?.oldLicenseId"
+      [disabled]="!selectedLicense"
       [template]="interventionAreasTabTemplate" [title]="lang.map.intervention_areas"></tab>
     <tab [name]="tabsData.interventionFields.name" [hasError]="getTabInvalidStatus('interventionFields')"
-      [disabled]="!model?.oldLicenseId"
+      [disabled]="!selectedLicense"
       [template]="interventionFieldsTabTemplate" [title]="lang.map.intervention_fields"></tab>
     <tab [name]="tabsData.transferData.name" [hasError]="getTabInvalidStatus('transferData')"
-      [disabled]="!model?.oldLicenseId || !requestTypeField.value"
+      [disabled]="!selectedLicense || !requestTypeField.value"
       [template]="transferDataTabTemplate" [title]="lang.map.transfer_data"></tab>
     <tab *ngIf="!accordionView" [name]="tabsData.attachments.name" [hasError]="getTabInvalidStatus('attachments')"
-      [disabled]="!model?.oldLicenseId"
+      [disabled]="!selectedLicense"
       [template]="attachmentsTab" [title]="lang.map.attachments"></tab>
   </tabs-list>
 </div>
@@ -103,6 +106,14 @@
       </div>
     </ng-container>
   </ng-template>
+  <ng-template #entitiesTabTemplate>
+    <implementing-agency-list #implementingAgencyListComponent
+                              [list]="(!model ? [] : model.implementingAgencyList)"
+                              [executionCountry]="model!.executionCountry"
+                              [readonly]="readonly"
+                              (readyEvent)="entitiesTabStatus = $event">
+    </implementing-agency-list>
+  </ng-template>
   <ng-template #interventionAreasTabTemplate>
     <intervention-region-list #interventionRegionListComponent
                               [list]="(!model ? [] : model.interventionRegionList)"
@@ -135,7 +146,22 @@
           </ng-select>
           <app-field-error-message controlName="implementingAgencyType"></app-field-error-message>
         </div>
-
+        <div class="col-sm-12 col-md-6 mb-4 position-relative">
+          <label for="implementingAgency" asteriskIfRequired="implementingAgency"
+                class="form-label">{{lang.map.implementation_agency}}</label>
+          <ng-select [selectOnTab]="true" labelForId="implementingAgency"
+                    placeholder="{{lang.map.select}}" id="implementingAgency"
+                    [notFoundText]="lang.map.msg_not_found"
+                    appendTo="body"
+                    formControlName="implementingAgency"
+                    (change)="handleImplementingAgencyNameChanges()"
+                    validationClasses="implementingAgency">
+            <ng-option *ngFor="let option of implementingAgencies" [value]="option.fnId">
+              {{ option.getName() }}
+            </ng-option>
+          </ng-select>
+          <app-field-error-message controlName="implementingAgency"></app-field-error-message>
+        </div>
         <div class="col-sm-12 col-md-6 mb-4 position-relative" *ngIf="isReceive">
           <label for="implementingAgencyType" asteriskIfRequired="implementingAgencyType"
                 class="form-label">{{lang.map.account_type}}</label>
@@ -153,23 +179,6 @@
           <app-field-error-message controlName="implementingAgency"></app-field-error-message>
         </div>
         <div class="col-sm-12 col-md-6 mb-4 position-relative">
-          <label for="implementingAgency" asteriskIfRequired="implementingAgency"
-                class="form-label">{{lang.map.implementation_agency}}</label>
-          <ng-select [selectOnTab]="true" labelForId="implementingAgency"
-                    placeholder="{{lang.map.select}}" id="implementingAgency"
-                    [notFoundText]="lang.map.msg_not_found"
-                    appendTo="body"
-                    formControlName="implementingAgency"
-                    (change)="handleImplementingAgencyNameChanges()"
-                    validationClasses="implementingAgency">
-            <ng-option *ngFor="let option of implementingAgencies" [value]="option.fnId">
-              {{ option.getName() }}
-            </ng-option>
-          </ng-select>
-          <app-field-error-message controlName="implementingAgency"></app-field-error-message>
-        </div>
-
-        <div class="col-sm-12 col-md-6 mb-4 position-relative">
           <label for="accountNumber" asteriskIfRequired="accountNumber"
                 class="form-label">{{lang.map.account_number}}</label>
           <ng-select [selectOnTab]="true" labelForId="accountNumber"
@@ -178,7 +187,7 @@
                     appendTo="body"
                     formControlName="accountNumber"
                     validationClasses="accountNumber">
-            <ng-option *ngFor="let option of bankAccountList" [value]="option.id">
+            <ng-option *ngFor="let option of bankAccountList" [value]="option.accountNumber">
               {{ option.accountNumber }}
             </ng-option>
           </ng-select>

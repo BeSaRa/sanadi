@@ -22,7 +22,6 @@ export class UrgentInterventionFinancialNotification extends LicenseApprovalMode
   implementingAgencyList: ImplementingAgency[] = [];
   interventionRegionList: InterventionRegion[] = [];
   interventionFieldList: InterventionField[] = [];
-  licenseClassName!: string;
   beneficiaryCountryInfo!: AdminResult;
   executionCountryInfo!: AdminResult;
 
@@ -35,9 +34,11 @@ export class UrgentInterventionFinancialNotification extends LicenseApprovalMode
   oldLicenseFullSerial!: string;
   constructor() {
     super();
+    this.setService();
+  }
+  setService() {
     this.service = FactoryService.getService('UrgentInterventionFinancialNotificationService');
   }
-
   buildForm(control: boolean = false) {
     const {
       requestType,

@@ -1,3 +1,10 @@
+import { UrgentInterventionFinancialNotificationInterceptor } from './../model-interceptors/urgent-intervention-financial-notification-interceptor';
+import { InterventionRegion } from '@app/models/intervention-region';
+import { InterventionField } from '@app/models/intervention-field';
+import { InterventionFieldInterceptor } from '@app/model-interceptors/intervention-field-interceptor';
+import { InterventionRegionInterceptor } from '@app/model-interceptors/intervention-region-interceptor';
+import { ImplementingAgencyInterceptor } from '@app/model-interceptors/implementing-agency-interceptor';
+import { ImplementingAgency } from '@app/models/implementing-agency';
 import { Observable } from 'rxjs';
 import { UrgentInterventionReportResult } from './../models/urgent-intervention-report-result';
 import { UrgentInterventionReportSearchCriteria } from './../models/urgent-intervention-report-search-criteria';
@@ -13,12 +20,11 @@ import { DialogService } from './dialog.service';
 import { DynamicOptionsService } from './dynamic-options.service';
 import { UrlService } from './url.service';
 import { IModelInterceptor } from '@app/interfaces/i-model-interceptor';
-
 @Injectable({
   providedIn: 'root'
 })
 export class UrgentInterventionFinancialNotificationService extends EServiceGenericService<UrgentInterventionFinancialNotification> {
-  interceptor!: IModelInterceptor<UrgentInterventionFinancialNotification>;
+  interceptor: IModelInterceptor<UrgentInterventionFinancialNotification> = new UrgentInterventionFinancialNotificationInterceptor();
   jsonSearchFile: string = '';
   serviceKey: keyof ILanguageKeys = 'menu_urgent_intervention_financial_notification';
   caseStatusIconMap: Map<number, string> = new Map();
@@ -26,6 +32,9 @@ export class UrgentInterventionFinancialNotificationService extends EServiceGene
   // 'interventionName',
   selectLicenseDisplayColumns = ['beneficiaryCountry', 'executionCountry', 'subject', 'licenseNumber', 'actions'];
 
+  implementingAgencyInterceptor: IModelInterceptor<ImplementingAgency> = new ImplementingAgencyInterceptor();
+  interventionRegionInterceptor: IModelInterceptor<InterventionRegion> = new InterventionRegionInterceptor();
+  interventionFieldInterceptor: IModelInterceptor<InterventionField> = new InterventionFieldInterceptor();
   constructor(
     private urlService: UrlService,
     public http: HttpClient,
