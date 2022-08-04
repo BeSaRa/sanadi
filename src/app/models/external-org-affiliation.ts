@@ -66,7 +66,6 @@ export class ExternalOrgAffiliation extends _RequestType<ExternalOrgAffiliationS
       website,
       email,
       mailBox,
-      description,
       introduction,
       oldLicenseFullSerial
     } = this;
@@ -81,15 +80,21 @@ export class ExternalOrgAffiliation extends _RequestType<ExternalOrgAffiliationS
       enName: control ? [enName, [
         CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
         Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')]] : enName,
-      city: control ? [city, [CustomValidators.required]] : city,
+      city: control ? [city, [CustomValidators.required, CustomValidators.maxLength(100)]] : city,
       website: control ? [website, [CustomValidators.required, Validators.maxLength(350)]] : website,
       phone: control ? [phone, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : phone,
       fax: control ? [fax, [CustomValidators.required].concat(CustomValidators.commonValidations.fax)] : fax,
       mailBox: control ? [mailBox, [CustomValidators.required, CustomValidators.number, Validators.maxLength(10)]] : mailBox,
       email: control ? [email, [CustomValidators.required, CustomValidators.pattern('EMAIL'), CustomValidators.maxLength(100)]] : email,
       introduction: control ? [introduction, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : introduction,
+    }
+  }
+  buildExplanation(control: boolean = false): any {
+    const {
+      description,
+    } = this;
+    return {
       description: control ? [description, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : description
     }
   }
-
 }

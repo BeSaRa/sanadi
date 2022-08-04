@@ -41,6 +41,7 @@ export class CaseInfoComponent {
     CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN,
     CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL,
     CaseTypes.EMPLOYMENT,
+    CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST,
     CaseTypes.URGENT_INTERVENTION_CLOSURE
   ];
 

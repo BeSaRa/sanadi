@@ -1172,4 +1172,5 @@ export interface ILanguageKeys {
   requester_relation: string;
   requester_name: string;
   notification_request_number: string;
+  risk_management_and_compliance_consulting: string;
 }
