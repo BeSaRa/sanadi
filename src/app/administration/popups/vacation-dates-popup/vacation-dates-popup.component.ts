@@ -79,8 +79,10 @@ export class VacationDatesPopupComponent extends AdminGenericDialog<VacationDate
   }
   afterSave(model: VacationDates, dialogRef: DialogRef): void {
     const message = this.operation === OperationTypes.CREATE ? this.lang.map.msg_create_x_success : this.lang.map.msg_update_x_success;
-    console.log(model);
-    this.toast.success(message.change({ x: model.getName() }));
+
+    this.operation === this.operationTypes.CREATE
+      ? this.toast.success(message.change({ x: this.form.controls[this.lang.map.lang + 'Name'].value }))
+      : this.toast.success(message.change({ x: model.getName() }));
     this.model = model;
     this.operation = OperationTypes.UPDATE;
     dialogRef.close(model);
