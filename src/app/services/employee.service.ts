@@ -181,12 +181,6 @@ export class EmployeeService {
   fillCurrentEmployeeData(loginData: ILoginData) {
     this.type = loginData.type;
     this.permissions = loginData.permissionSet.map(permission => (new Permission()).clone(permission));
-    const p = (new Permission()).clone({
-      permissionKey: 'MANAGE_VACTION_DATES',
-      arName: 'اداة الاجازات',
-      enName: 'manage vocations',
-    });
-    this.permissions.push(p);
     this.teams = loginData.teams.map(item => (new Team()).clone(item));
     this.userSecConfig = loginData.userSecConfig;
     this.teams.length ? this.permissions.push((new Permission().clone({
