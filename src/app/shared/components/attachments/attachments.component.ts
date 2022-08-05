@@ -1,19 +1,19 @@
-import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {BehaviorSubject, Observable, of, Subject} from "rxjs";
-import {filter, map, skip, switchMap, takeUntil, tap} from "rxjs/operators";
-import {FileNetDocument} from "@app/models/file-net-document";
-import {LangService} from "@app/services/lang.service";
-import {FormControl} from "@angular/forms";
-import {AttachmentTypeService} from "@app/services/attachment-type.service";
-import {DocumentService} from "@app/services/document.service";
-import {DialogService} from "@app/services/dialog.service";
-import {ConfigurationService} from "@app/services/configuration.service";
-import {UserClickOn} from "@app/enums/user-click-on.enum";
-import {ToastService} from "@app/services/toast.service";
-import {TableComponent} from "@app/shared/components/table/table.component";
-import {AttachmentTypeServiceData} from "@app/models/attachment-type-service-data";
-import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
-import {AdminResult} from "@app/models/admin-result";
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { BehaviorSubject, Observable, of, Subject } from "rxjs";
+import { filter, map, skip, switchMap, takeUntil, tap } from "rxjs/operators";
+import { FileNetDocument } from "@app/models/file-net-document";
+import { LangService } from "@app/services/lang.service";
+import { FormControl } from "@angular/forms";
+import { AttachmentTypeService } from "@app/services/attachment-type.service";
+import { DocumentService } from "@app/services/document.service";
+import { DialogService } from "@app/services/dialog.service";
+import { ConfigurationService } from "@app/services/configuration.service";
+import { UserClickOn } from "@app/enums/user-click-on.enum";
+import { ToastService } from "@app/services/toast.service";
+import { TableComponent } from "@app/shared/components/table/table.component";
+import { AttachmentTypeServiceData } from "@app/models/attachment-type-service-data";
+import { FileIconsEnum } from '@app/enums/file-extension-mime-types-icons.enum';
+import { AdminResult } from "@app/models/admin-result";
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -104,7 +104,10 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
         tap(_ => this.loaded = true),
         // load attachment types related to the service
         switchMap(_ => this.caseType ? this.attachmentTypeService.loadTypesByCaseType(this.caseType) : of([])),
-        tap(types => this.attachmentTypes = types),
+        tap(types => {
+          this.attachmentTypes = types
+          console.log(types);
+        }),
         map<AttachmentTypeServiceData[], FileNetDocument[]>((attachmentTypes) => attachmentTypes.map(type => type.convertToAttachment())),
         tap((attachments) => this.defaultAttachments = attachments.slice()),
         switchMap((types) => this.loadDocumentsByCaseId(types)),
@@ -123,7 +126,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
     // if types gt attachments
     //
     this.loadedAttachments = types.reduce((acc, file) => {
-      return {...acc, [file.attachmentTypeInfo.id!]: file}
+      return { ...acc, [file.attachmentTypeInfo.id!]: file }
     }, {} as Record<number, FileNetDocument>);
 
     const differenceIds = typeIds.filter((id) => !attachmentTypeIds.includes(id))
@@ -161,7 +164,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
       this.dialog.error(
         this.lang.map
           .msg_only_those_files_allowed_to_upload
-          .change({files: this.configurationService.CONFIG.ALLOWED_FILE_TYPES_TO_UPLOAD.join(',')})
+          .change({ files: this.configurationService.CONFIG.ALLOWED_FILE_TYPES_TO_UPLOAD.join(',') })
       );
       input.value = '';
       return;
@@ -186,7 +189,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
         input.value = '';
         this.toast.success(this.lang.map.files_have_been_uploaded_successfully);
         this.loadedAttachments[attachment.attachmentTypeId] = attachment;
-        this.attachments.splice(this.selectedIndex, 1, attachment.clone({attachmentTypeInfo: this.selectedFile?.attachmentTypeInfo}));
+        this.attachments.splice(this.selectedIndex, 1, attachment.clone({ attachmentTypeInfo: this.selectedFile?.attachmentTypeInfo }));
         this.attachments = this.attachments.slice();
       })
   }
@@ -197,7 +200,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
     }
 
     this.dialog
-      .confirm(this.lang.map.msg_confirm_delete_x.change({x: file.documentTitle}))
+      .confirm(this.lang.map.msg_confirm_delete_x.change({ x: file.documentTitle }))
       .onAfterClose$.subscribe((userClick: UserClickOn) => {
       if (userClick !== UserClickOn.YES) {
         return;
@@ -205,7 +208,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
 
       this.service.deleteDocument(file.id)
         .subscribe(() => {
-          this.toast.success(this.lang.map.msg_delete_x_success.change({x: file.documentTitle}));
+          this.toast.success(this.lang.map.msg_delete_x_success.change({ x: file.documentTitle }));
           this.attachments.splice(this.attachments.indexOf(file), 1, (new FileNetDocument()).clone({
             documentTitle: file.documentTitle,
             description: file.description,

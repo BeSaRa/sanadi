@@ -11,13 +11,13 @@
                class="form-label">{{lang.map.lbl_services}}</label>
         <div class="mb-3 position-relative ng-select-wrapper">
           <ng-select
-            labelForId="serviceId"
-            validationClasses="serviceId"
-            formControlName="serviceId"
-            placeholder="{{lang.map.select}}"
-            id="serviceId"
-            appendTo="body"
-            (change)="onServiceChange()">
+                  labelForId="serviceId"
+                  validationClasses="serviceId"
+                  formControlName="serviceId"
+                  placeholder="{{lang.map.select}}"
+                  id="serviceId"
+                  appendTo="body"
+                  (change)="onServiceChange()">
             <ng-option [value]="service.id" *ngFor="let service of services">{{service.getName()}}</ng-option>
           </ng-select>
           <app-field-error-message [control]="fm.getFormField('serviceId')"></app-field-error-message>
@@ -27,14 +27,14 @@
         <label for="userType" asteriskIfRequired="userType"
                class="form-label">{{lang.map.lbl_user_type}}</label>
         <ng-select
-          [selectOnTab]="true"
-          labelForId="userType"
-          validationClasses="userType"
-          [clearable]="false"
-          placeholder="{{lang.map.select}}" id="userType"
-          formControlName="userType"
-          appendTo="body"
-          [ngClass]="fm.getStatusClass('userType')">
+                [selectOnTab]="true"
+                labelForId="userType"
+                validationClasses="userType"
+                [clearable]="false"
+                placeholder="{{lang.map.select}}" id="userType"
+                formControlName="userType"
+                appendTo="body"
+                [ngClass]="fm.getStatusClass('userType')">
           <ng-option *ngFor="let option of attachmentTypeUsersList" [value]="option.lookupKey">
             {{option.getName()}}
           </ng-option>
@@ -50,27 +50,44 @@
                  for="isRequired">{{lang.map.lbl_mandatory}}</label>
         </div>
       </div>
+      <div *ngIf="displayMulti" class="col-sm-6 mb-4 form-check form-switch">
+        <div class="ms-3">
+          <input class="form-check-input" (change)="onMultiChange()" type="checkbox" id="multi" formControlName="multi">
+          <label class="form-check-label"
+                 for="multi">{{lang.map.multi}}</label>
+        </div>
+      </div>
     </div>
     <div class="row mb-3">
-      <div formArrayName="customProperties" *ngIf="customProperties.length > 0">
-        <div class="col-sm-6" *ngFor="let control of customPropertiesArrayForm.controls; index as index ">
+      <div class="col-sm-6 d-flex flex-column" formArrayName="customProperties" *ngIf="customProperties.length > 0">
+        <div *ngFor="let control of customPropertiesArrayForm.controls; index as index ">
           <label asteriskIfRequired [control]="control" [for]="customProperties[index].name"
                  class="form-label">{{getCustomPropertyName(customProperties[index].name)}}</label>
           <div class="mb-3 position-relative ng-select-wrapper">
             <ng-select
-              appendTo="body"
-              [labelForId]="customProperties[index].name"
-              validationClasses
-              [control]="control"
-              [formControlName]="index"
-              placeholder="{{lang.map.select}}"
-              [id]="customProperties[index].name"
-            (change)="onCustomPropertyChange(index)">
-              <ng-option [value]="option[customProperties[index].bindKey]" *ngFor="let option of customProperties[index].values">{{getOptionName(option)}}</ng-option>
+                    appendTo="body"
+                    [labelForId]="customProperties[index].name"
+                    validationClasses
+                    [control]="control"
+                    [formControlName]="index"
+                    placeholder="{{lang.map.select}}"
+                    [id]="customProperties[index].name"
+                    (change)="onCustomPropertyChange(index)">
+              <ng-option [value]="option[customProperties[index].bindKey]"
+                         *ngFor="let option of customProperties[index].values">{{getOptionName(option)}}</ng-option>
             </ng-select>
             <app-field-error-message></app-field-error-message>
           </div>
         </div>
+      </div>
+      <div *ngIf="model.multi" class="col-sm-6 mb-4 position-relative">
+        <label class="form-label" asteriskIfRequired="identifier"
+               for="identifier">{{lang.map.lbl_identifier}}</label>
+        <ng-select validationClasses="identifier" appendTo="body" [clearable]="true" id="identifier"
+                   formControlName="identifier">
+          <ng-option [value]="option.name" *ngFor="let option of tablesIdentifiers">{{option.name}}</ng-option>
+        </ng-select>
+        <app-field-error-message controlName="identifier"></app-field-error-message>
       </div>
     </div>
   </form>

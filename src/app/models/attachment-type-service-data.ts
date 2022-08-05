@@ -1,10 +1,10 @@
-import {BaseModel} from './base-model';
-import {LangService} from '../services/lang.service';
-import {FactoryService} from '../services/factory.service';
-import {AttachmentTypeServiceDataService} from '../services/attachment-type-service-data.service';
-import {AdminResult} from "@app/models/admin-result";
-import {AttachmentType} from "@app/models/attachment-type";
-import {FileNetDocument} from "@app/models/file-net-document";
+import { BaseModel } from './base-model';
+import { LangService } from '@services/lang.service';
+import { FactoryService } from '@services/factory.service';
+import { AttachmentTypeServiceDataService } from '@services/attachment-type-service-data.service';
+import { AdminResult } from "@app/models/admin-result";
+import { AttachmentType } from "@app/models/attachment-type";
+import { FileNetDocument } from "@app/models/file-net-document";
 
 export class AttachmentTypeServiceData extends BaseModel<AttachmentTypeServiceData, AttachmentTypeServiceDataService> {
   service!: AttachmentTypeServiceDataService;
@@ -17,6 +17,8 @@ export class AttachmentTypeServiceData extends BaseModel<AttachmentTypeServiceDa
   caseType!: number;
   serviceInfo!: AdminResult;
   attachmentTypeInfo!: AttachmentType;
+  multi: boolean = false;
+  identifier: string = ''
 
   constructor() {
     super();
