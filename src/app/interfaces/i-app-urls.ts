@@ -98,6 +98,6 @@ export interface IAppUrls {
   FIELD_ASSESSMENT: string;
   FOREIGN_COUNTRIES_PROJECTS: string;
   TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD: string;
-
+  VACATION_DATE: string;
   [index: string]: string;
 }

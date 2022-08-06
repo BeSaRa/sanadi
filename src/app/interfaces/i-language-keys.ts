@@ -1179,4 +1179,9 @@ export interface ILanguageKeys {
   lbl_beneficiaries: string;
   project_needs: string;
   notification_request_number: string;
+  menu_vacation: string;
+  vacation_date_from: string;
+  vacation_date_to: string;
+  lbl_add_vacation: string;
+  lbl_edit_vacation: string;
 }

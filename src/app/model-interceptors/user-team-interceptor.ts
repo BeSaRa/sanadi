@@ -1,6 +1,6 @@
-import {IModelInterceptor} from "@app/interfaces/i-model-interceptor";
-import {UserTeam} from "@app/models/user-team";
-import {AdminResult} from "@app/models/admin-result";
+import { IModelInterceptor } from "@app/interfaces/i-model-interceptor";
+import { UserTeam } from "@app/models/user-team";
+import { AdminResult } from "@app/models/admin-result";
 
 export class UserTeamInterceptor implements IModelInterceptor<UserTeam> {
   send(model: Partial<UserTeam>): Partial<UserTeam> {

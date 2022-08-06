@@ -873,5 +873,18 @@
     "group": "projects",
     "itemOrder": 6,
     "svg": null
+  },
+  {
+    "id": 66,
+    "langKey": "menu_vacation",
+    "path": "/home/administration/vacation-dates",
+    "icon": "mdi-alarm-check ",
+    "isSvg": false,
+    "permission": "MANAGE_VACTION_DATES",
+    "permissionGroup": null,
+    "parent": 6,
+    "group": "administration",
+    "itemOrder": 22,
+    "svg": null
   }
 ]
