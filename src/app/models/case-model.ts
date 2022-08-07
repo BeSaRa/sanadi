@@ -311,7 +311,6 @@ export abstract class CaseModel<S extends EServiceGenericService<T> | BaseGeneri
   complete(): DialogRef {
     return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.COMPLETE, false, this);
   }
-
   approve(): DialogRef {
     return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.APPROVE, false, this);
   }

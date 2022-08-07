@@ -1179,6 +1179,10 @@ export interface ILanguageKeys {
   lbl_beneficiaries: string;
   project_needs: string;
   notification_request_number: string;
+  risk_management_and_compliance_consulting: string;
+  approval_external_org_affiliation: string;
+  conditional_license_indicator: string;
+  follow_up_date: string;
   menu_vacation: string;
   vacation_date_from: string;
   vacation_date_to: string;

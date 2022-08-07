@@ -1,3 +1,6 @@
+import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
+import { OpenFrom } from '@app/enums/open-from.enum';
+import { EmployeeService } from '@app/services/employee.service';
 import { CommonUtils } from '@app/helpers/common-utils';
 import { ExternalOrgAffiliationResult } from '@app/models/external-org-affiliation-result';
 import { catchError, exhaustMap, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
@@ -73,6 +76,11 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
         return this.form && this.form.get('contactOfficer')?.valid;
       }
     },
+    specialExplanation: {
+      name: 'specialExplanationTab',
+      langKey: 'special_explanations',
+      validStatus: () => this.form && this.form.get('explanation')?.valid
+    },
     attachments: {
       name: 'attachmentsTab',
       langKey: 'attachments',
@@ -89,7 +97,8 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
     private licenseService: LicenseService,
     private dialog: DialogService,
     private toast: ToastService,
-    private countryService: CountryService
+    private countryService: CountryService,
+    private employeeService: EmployeeService
   ) {
     super();
   }
@@ -98,7 +107,10 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
     return new ExternalOrgAffiliation();
   }
   _prepareModel(): ExternalOrgAffiliation | Observable<ExternalOrgAffiliation> {
-    const value = (new ExternalOrgAffiliation()).clone({ ...this.model, ...this.form.value.basicInfo });
+    const value = (new ExternalOrgAffiliation()).clone({
+      ...this.model, ...this.form.value.basicInfo,
+      ...this.specialExplanation.getRawValue()
+    });
 
     value.bankAccountDTOs = this.bankAccountComponentRef.list;
     value.executiveManagementDTOs = this.executiveManagementComponentRef.list;
@@ -110,12 +122,15 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
     this.listenToLicenseSearch();
   }
   _buildForm(): void {
+    const model = new ExternalOrgAffiliation();
     this.form = new FormGroup({
-      basicInfo: this.fb.group((new ExternalOrgAffiliation()).getFormFields(true)),
-      contactOfficer: this.fb.group((new ContactOfficer()).getContactOfficerFields(true))
+      basicInfo: this.fb.group(model.getFormFields(true)),
+      contactOfficer: this.fb.group((new ContactOfficer()).getContactOfficerFields(true)),
+      explanation: this.fb.group(model.buildExplanation(true)),
     });
   }
   _afterBuildForm(): void {
+    this.handleReadonly();
   }
   private _getInvalidTabs(): any {
     let failedList: string[] = [];
@@ -172,6 +187,7 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
       (new ContactOfficer().clone(model?.contactOfficerDTOs[0])).getContactOfficerFields(false)
     )
     this.basicTab.patchValue(model?.getFormFields());
+    this.specialExplanation.patchValue(model?.buildExplanation());
     this.handleRequestTypeChange(model?.requestType || 0, false);
     this.cd.detectChanges();
   }
@@ -182,14 +198,17 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
     this.model!.contactOfficerDTOs = [];
     this.operation = OperationTypes.CREATE;
   }
-  loadLicencesByCriteria(criteria: (Partial<ExternalOrgAffiliationSearchCriteria> )): (Observable<ExternalOrgAffiliationResult[]>) {
+  loadLicencesByCriteria(criteria: (Partial<ExternalOrgAffiliationSearchCriteria>)): (Observable<ExternalOrgAffiliationResult[]>) {
     return this.service.licenseSearch(criteria as Partial<ExternalOrgAffiliationSearchCriteria>);
   }
 
   listenToLicenseSearch(): void {
     this.licenseSearch$
       .pipe(exhaustMap(oldLicenseFullSerial => {
-        return this.loadLicencesByCriteria({ fullSerial: oldLicenseFullSerial }).pipe(catchError(() => of([])))
+        return this.loadLicencesByCriteria({
+          fullSerial: oldLicenseFullSerial,
+          licenseStatus: 1
+        }).pipe(catchError(() => of([])))
       }))
       .pipe(
         // display message in case there is no returned license
@@ -239,12 +258,40 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
     }
     this.licenseSearch$.next(value);
   }
+  handleReadonly(): void {
+    // if record is new, no readonly (don't change as default is readonly = false)
+    if (!this.model?.id) {
+      return;
+    }
 
-  isEditAllowed(): boolean {
-    // allow edit if new record or saved as draft
-    return !this.model?.id || (!!this.model?.id && this.model.canCommit());
+    let caseStatus = this.model.getCaseStatus();
+    if (caseStatus == CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.FINAL_REJECTION) {
+      this.readonly = true;
+      return;
+    }
+
+    if (this.openFrom === OpenFrom.USER_INBOX) {
+      if (this.employeeService.isCharityManager()) {
+        this.readonly = false;
+      } else if (this.employeeService.isCharityUser()) {
+        this.readonly = !this.model.isReturned();
+      }
+    } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
+      // after claim, consider it same as user inbox and use same condition
+      if (this.model.taskDetails.isClaimed()) {
+        if (this.employeeService.isCharityManager()) {
+          this.readonly = false;
+        } else if (this.employeeService.isCharityUser()) {
+          this.readonly = !this.model.isReturned();
+        }
+      }
+    } else if (this.openFrom === OpenFrom.SEARCH) {
+      // if saved as draft, then no readonly
+      if (this.model?.canCommit()) {
+        this.readonly = false;
+      }
+    }
   }
-
   private setSelectedLicense(licenseDetails: ExternalOrgAffiliation) {
     this.selectedLicense = licenseDetails;
     let requestType = this.requestTypeField?.value,
@@ -290,9 +337,6 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
       this._resetForm();
       this.requestTypeField.setValue(requestTypeValue);
     }
-    // if (!requestTypeValue) {
-    //   requestTypeValue = this.requestTypeField && this.requestTypeField.value;
-    // }
   }
   isEditOrCancel() {
     return this.isEditRequestType() || this.isCancelRequestType();
@@ -307,6 +351,9 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
   // Get Fields
   get requestTypeField(): FormControl {
     return this.form.get('basicInfo.requestType') as FormControl;
+  }
+  get specialExplanation(): FormGroup {
+    return this.form.get('explanation')! as FormGroup;
   }
   get basicTab(): FormGroup {
     return (this.form.get('basicInfo')) as FormGroup;
