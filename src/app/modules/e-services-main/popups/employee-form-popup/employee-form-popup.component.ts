@@ -143,8 +143,8 @@ export class EmployeeFormPopupComponent implements OnInit {
       ]],
       jobTitleId: [null, CustomValidators.required],
       identificationType: [null, CustomValidators.required],
-      identificationNumber: ["", [CustomValidators.required, CustomValidators.maxLength(50)]],
-      passportNumber: [""],
+      identificationNumber: [null, [CustomValidators.required, CustomValidators.maxLength(50)]],
+      passportNumber: [null],
       gender: [null, CustomValidators.required],
       nationality: [null, CustomValidators.required],
       phone: ["", [CustomValidators.required].concat(CustomValidators.commonValidations.phone)],
@@ -269,10 +269,10 @@ export class EmployeeFormPopupComponent implements OnInit {
     this.passportNumber?.setValidators([]);
     if (this.identificationType.value == IdentificationType.Identification) {
       this.identificationNumber.setValidators([Validators.required, ...CustomValidators.commonValidations.qId]);
-      this.passportNumber.setValue('');
+      this.passportNumber.setValue(null);
     } else {
       this.passportNumber.setValidators([Validators.required, ...CustomValidators.commonValidations.passport]);
-      this.identificationNumber.setValue('');
+      this.identificationNumber.setValue(null);
     }
     this.identificationNumber.updateValueAndValidity();
     this.passportNumber.updateValueAndValidity();
