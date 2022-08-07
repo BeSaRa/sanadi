@@ -41,7 +41,6 @@ export abstract class AdminGenericComponent<M extends { id: number }, S extends 
 
   usePagination: boolean = false;
   count: number = 0;
-  filterRetired: boolean = false;
 
   pageEvent: PageEvent = {
     pageIndex: 0,
@@ -90,12 +89,12 @@ export abstract class AdminGenericComponent<M extends { id: number }, S extends 
         }));
       }))
       .subscribe((list: M[]) => {
-        if (this.filterRetired) {
+        /*if (this.filterRetired) {
           list = list.filter((item) => {
             const model = item as M & { status: number }
             return model.status !== CommonStatusEnum.RETIRED
           })
-        }
+        }*/
         if (!this.usePagination) {
           this.count = list.length;
         }
