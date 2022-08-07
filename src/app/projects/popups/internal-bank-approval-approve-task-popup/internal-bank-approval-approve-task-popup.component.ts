@@ -1,20 +1,20 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {Subject} from 'rxjs';
-import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {WFResponseType} from '@app/enums/wfresponse-type.enum';
-import {FormControl} from '@angular/forms';
-import {DialogService} from '@app/services/dialog.service';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {ToastService} from '@app/services/toast.service';
-import {InboxService} from '@app/services/inbox.service';
-import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
-import {LangService} from '@app/services/lang.service';
-import {CommonUtils} from '@app/helpers/common-utils';
-import {exhaustMap, filter, switchMap, takeUntil, tap} from 'rxjs/operators';
-import {IWFResponse} from '@app/interfaces/i-w-f-response';
-import {InternalBankAccountApproval} from '@app/models/internal-bank-account-approval';
-import {IKeyValue} from '@app/interfaces/i-key-value';
-import {DateUtils} from '@app/helpers/date-utils';
+import { Component, Inject, OnInit } from '@angular/core';
+import { Subject } from 'rxjs';
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
+import { WFResponseType } from '@app/enums/wfresponse-type.enum';
+import { FormControl } from '@angular/forms';
+import { DialogService } from '@app/services/dialog.service';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { ToastService } from '@app/services/toast.service';
+import { InboxService } from '@app/services/inbox.service';
+import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
+import { LangService } from '@app/services/lang.service';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { exhaustMap, filter, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { IWFResponse } from '@app/interfaces/i-w-f-response';
+import { InternalBankAccountApproval } from '@app/models/internal-bank-account-approval';
+import { IKeyValue } from '@app/interfaces/i-key-value';
+import { DateUtils } from '@app/helpers/date-utils';
 
 @Component({
   selector: 'internal-bank-approval-approve-task-popup',
@@ -37,7 +37,7 @@ export class InternalBankApprovalApproveTaskPopupComponent implements OnInit {
   followUpDate: FormControl = new FormControl();
 
   datepickerOptionsMap: IKeyValue = {
-    followUpDate: DateUtils.getDatepickerOptions({disablePeriod: 'past'})
+    followUpDate: DateUtils.getDatepickerOptions({ disablePeriod: 'past' })
   };
 
   constructor(
@@ -106,6 +106,6 @@ export class InternalBankApprovalApproveTaskPopupComponent implements OnInit {
     return this.comment.value ? {
       selectedResponse: this.response,
       comment: this.comment.value
-    } : {selectedResponse: this.response};
+    } : { selectedResponse: this.response };
   }
 }

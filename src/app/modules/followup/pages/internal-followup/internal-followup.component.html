@@ -15,20 +15,24 @@
               </table-header>
             </th>
           </ng-container>
-          <ng-container cdkColumnDef="caseId">
+          <ng-container cdkColumnDef="fullSerial">
             <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.request_number}}</th>
             <td cdk-cell *cdkCellDef="let row">{{row.fullSerial}}</td>
           </ng-container>
+          <ng-container cdkColumnDef="requestType">
+            <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                [sortCallback]="sortCallbacks.requestType">{{lang.map.request_type}}</th>
+            <td cdk-cell *cdkCellDef="let row">{{row.requestTypeInfo?.getName() || ''}}</td>
+          </ng-container>
           <ng-container cdkColumnDef="name">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header
-                [sortParamAsFullItem]="true"
+            <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
                 [sortCallback]="sortCallbacks.name">{{lang.map.name}}</th>
             <td cdk-cell *cdkCellDef="let row">{{row.getName()}}</td>
           </ng-container>
           <ng-container cdkColumnDef="serviceType">
             <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
                 [sortCallback]="sortCallbacks.service">{{lang.map.service_type}}</th>
-            <td cdk-cell *cdkCellDef="let row">{{row.serviceInfo.getName()}}</td>
+            <td cdk-cell *cdkCellDef="let row">{{row.serviceInfo?.getName() || ''}}</td>
           </ng-container>
           <ng-container cdkColumnDef="dueDate">
             <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.dueDate}}</th>
@@ -37,17 +41,19 @@
             </td>
           </ng-container>
           <ng-container cdkColumnDef="createdBy">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.created_by}}</th>
+            <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                [sortCallback]="sortCallbacks.createdBy">{{lang.map.created_by}}</th>
             <td cdk-cell *cdkCellDef="let row">{{row.getCreatedBy()}}</td>
           </ng-container>
           <ng-container cdkColumnDef="status">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.status}}</th>
-            <td cdk-cell *cdkCellDef="let row">{{row.statusInfo.getName()}}</td>
+            <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                [sortCallback]="sortCallbacks.status">{{lang.map.status}}</th>
+            <td cdk-cell *cdkCellDef="let row">{{row.statusInfo?.getName() || ''}}</td>
           </ng-container>
           <ng-container cdkColumnDef="orgInfo">
             <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
                 [sortCallback]="sortCallbacks.organization">{{lang.map.lbl_organization}}</th>
-            <td cdk-cell *cdkCellDef="let row">{{row.orgInfo.getName()}}</td>
+            <td cdk-cell *cdkCellDef="let row">{{row.orgInfo?.getName() || ''}}</td>
           </ng-container>
           <ng-container cdkColumnDef="actions">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>

@@ -1,10 +1,10 @@
 import { EmploymentComponent } from './../modules/general-services/pages/employment/employment.component';
-import {Injectable} from '@angular/core';
-import {DynamicComponentService} from './dynamic-component.service';
-import {TeamService} from './team.service';
-import {CustomEmployeePermission} from '@app/helpers/custom-employee-permission';
-import {InquiryComponent} from '@app/modules/general-services/pages/inquiry/inquiry.component';
-import {ConsultationComponent} from '@app/modules/general-services/pages/consultation/consultation.component';
+import { Injectable } from '@angular/core';
+import { DynamicComponentService } from './dynamic-component.service';
+import { TeamService } from './team.service';
+import { CustomEmployeePermission } from '@app/helpers/custom-employee-permission';
+import { InquiryComponent } from '@app/modules/general-services/pages/inquiry/inquiry.component';
+import { ConsultationComponent } from '@app/modules/general-services/pages/consultation/consultation.component';
 import {
   InternationalCooperationComponent
 } from '@app/modules/general-services/pages/international-cooperation/international-cooperation.component';
@@ -25,13 +25,14 @@ import { CustomsExemptionComponent } from '@app/modules/remittances/pages/custom
 import {
   InternalBankAccountApprovalComponent
 } from '@app/projects/pages/internal-bank-account-approval/internal-bank-account-approval.component';
-import {UrgentJointReliefCampaignComponent} from '@app/projects/pages/urgent-joint-relief-campaign/urgent-joint-relief-campaign.component';
-import {UrgentInterventionReportComponent} from '@app/modules/urgent-intervention/pages/urgent-intervention-report/urgent-intervention-report.component';
+import { UrgentJointReliefCampaignComponent } from '@app/projects/pages/urgent-joint-relief-campaign/urgent-joint-relief-campaign.component';
+import { UrgentInterventionReportComponent } from '@app/modules/urgent-intervention/pages/urgent-intervention-report/urgent-intervention-report.component';
 import {
   UrgentInterventionClosureComponent
 } from '@app/modules/urgent-intervention/pages/urgent-intervention-closure/urgent-intervention-closure.component';
 import { ExternalOrgAffiliationComponent } from './../modules/general-services/pages/external-org-affiliation/external-org-affiliation.component';
 import { UrgentInterventionLicenseComponent } from '@app/modules/urgent-intervention/pages/urgent-intervention-license/urgent-intervention-license.component';
+import { ForeignCountriesProjectsComponent } from '@app/modules/general-services/pages/foreign-countries-projects/foreign-countries-projects.component';
 import {
   TransferringIndividualFundsAbroadComponent
 } from '@app/projects/pages/transferring-individual-funds-abroad/transferring-individual-funds-abroad.component';
@@ -42,7 +43,7 @@ import {
 export class AutoRegisterService {
 
   constructor(private teamService: TeamService,
-              private mapService: MapService) { // teamService is injected because it is used in info request
+    private mapService: MapService) { // teamService is injected because it is used in info request
     this.ngOnInit();
     this.mapService.ping();
   }
@@ -70,6 +71,7 @@ export class AutoRegisterService {
       DynamicComponentService.registerComponent('UrgentInterventionClosureComponent', UrgentInterventionClosureComponent);
 
       DynamicComponentService.registerComponent('ExternalOrgAffiliationComponent', ExternalOrgAffiliationComponent);
+      DynamicComponentService.registerComponent(ForeignCountriesProjectsComponent.name, ForeignCountriesProjectsComponent);
       DynamicComponentService.registerComponent('TransferringIndividualFundsAbroadComponent', TransferringIndividualFundsAbroadComponent);
     });// just to make sure that service constructed and register all dynamic components
 

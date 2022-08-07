@@ -68,6 +68,8 @@ import { OrganizationUnitFieldComponent } from './pages/organization-unit-field/
 import {AdminLookupPopupComponent} from './popups/admin-lookup-popup/admin-lookup-popup.component';
 import {DacOchaNewComponent} from './pages/dac-ocha-new/dac-ocha-new.component';
 import {DacOchaNewPopupComponent} from './popups/dac-ocha-new-popup/dac-ocha-new-popup.component';
+import { VactionDatesComponent } from './pages/vaction-dates/vaction-dates.component';
+import { VacationDatesPopupComponent } from './popups/vacation-dates-popup/vacation-dates-popup.component';
 
 @NgModule({
   declarations: [
@@ -134,6 +136,8 @@ import {DacOchaNewPopupComponent} from './popups/dac-ocha-new-popup/dac-ocha-new
     AdminLookupPopupComponent,
     DacOchaNewComponent,
     DacOchaNewPopupComponent,
+    VactionDatesComponent,
+    VacationDatesPopupComponent,
   ],
   imports: [
     SharedModule,
