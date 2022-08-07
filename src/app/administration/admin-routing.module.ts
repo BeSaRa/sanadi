@@ -137,7 +137,7 @@ const routes: Routes = [
     path: 'vacation-dates', component: VactionDatesComponent,
     canActivate: [PermissionGuard],
     data: {
-      permissionKey: 'MANAGE_VACTION_DATES', configPermissionGroup: null, checkAnyPermission: false
+      permissionKey: 'MANAGE_VACTIONS_DATE', configPermissionGroup: null, checkAnyPermission: false
     }
   }
 ];
