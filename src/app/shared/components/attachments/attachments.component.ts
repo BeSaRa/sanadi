@@ -22,7 +22,10 @@ import { AdminResult } from "@app/models/admin-result";
   styleUrls: ['./attachments.component.scss']
 })
 export class AttachmentsComponent implements OnInit, OnDestroy {
+  // public attachment types
   attachmentTypes: AttachmentTypeServiceData[] = [];
+  multiAttachmentTypes: AttachmentTypeServiceData[] = [];
+
   attachments: FileNetDocument[] = [];
   fileIconsEnum = FileIconsEnum;
   defaultAttachments: FileNetDocument[] = [];
@@ -30,7 +33,8 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
   private loadingStatus: BehaviorSubject<any> = new BehaviorSubject(false);
   // only the true value will emit
   private reload$ = this.loadingStatus.asObservable().pipe(filter(v => !!v));
-  private loadedStatus$: Subject<any> = new Subject<any>();
+
+  loadedStatus$: Subject<any> = new Subject<any>();
   // loaded status to check before load the stuff again
   private loaded: boolean = false;
   @Input()
@@ -76,7 +80,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
               private toast: ToastService,
               private configurationService: ConfigurationService,
               private attachmentTypeService: AttachmentTypeService) {
-
+    this.attachmentTypeService.attachmentsComponent = this;
   }
 
   ngOnDestroy(): void {
@@ -105,10 +109,10 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
         // load attachment types related to the service
         switchMap(_ => this.caseType ? this.attachmentTypeService.loadTypesByCaseType(this.caseType) : of([])),
         tap(types => {
-          this.attachmentTypes = types
-          console.log(types);
+          this.attachmentTypes = types.filter(item => !item.multi);
+          this.multiAttachmentTypes = types.filter(item => item.multi);
         }),
-        map<AttachmentTypeServiceData[], FileNetDocument[]>((attachmentTypes) => attachmentTypes.map(type => type.convertToAttachment())),
+        map<AttachmentTypeServiceData[], FileNetDocument[]>(() => this.attachmentTypes.map(type => type.convertToAttachment())),
         tap((attachments) => this.defaultAttachments = attachments.slice()),
         switchMap((types) => this.loadDocumentsByCaseId(types)),
         takeUntil(this.destroy$)
