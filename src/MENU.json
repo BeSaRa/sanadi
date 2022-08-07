@@ -880,7 +880,7 @@
     "path": "/home/administration/vacation-dates",
     "icon": "mdi-alarm-check ",
     "isSvg": false,
-    "permission": "MANAGE_VACTION_DATES",
+    "permission": "MANAGE_VACTIONS_DATE",
     "permissionGroup": null,
     "parent": 6,
     "group": "administration",
