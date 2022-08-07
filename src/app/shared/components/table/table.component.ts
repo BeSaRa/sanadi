@@ -90,7 +90,7 @@ export class TableComponent implements OnInit, OnDestroy {
   toggleAll(): void {
     const allSelected = this.allSelected();
     if (allSelected) {
-      this.selection.clear();
+      this.clearSelection();
     } else {
       this.dataSource.data.forEach(item => this.selection.select(item));
     }
@@ -143,6 +143,10 @@ export class TableComponent implements OnInit, OnDestroy {
     if (this.selectable) {
       this.selection = new SelectionModel<any>(this.multiSelect);
     }
+  }
+
+  clearSelection(): void {
+    this.selection && this.selection.clear();
   }
 
   /**
