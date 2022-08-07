@@ -1,3 +1,5 @@
+import { WFResponseType } from '@app/enums/wfresponse-type.enum';
+import { DialogRef } from '@app/shared/models/dialog-ref';
 import { ExternalOrgAffiliationResult } from './../models/external-org-affiliation-result';
 import { LicenseService } from './license.service';
 import { Observable } from 'rxjs';
@@ -14,6 +16,7 @@ import { DialogService } from './dialog.service';
 import { DynamicOptionsService } from './dynamic-options.service';
 import { UrlService } from './url.service';
 import { CastResponseContainer } from '@app/decorators/decorators/cast-response';
+import { ExternalOrgAffiliationApprovePopupComponent } from '@app/modules/general-services/popups/external-org-affiliation-approve-popup/external-org-affiliation-approve-popup.component';
 @CastResponseContainer({
   $default: {
     model: () => ExternalOrgAffiliation,
@@ -67,4 +70,10 @@ export class ExternalOrgAffiliationService extends BaseGenericEService<ExternalO
     return this.licenseService.externalOrgAffiliationSearch(criteria);
   }
 
+  approve(model: ExternalOrgAffiliation, action: WFResponseType): DialogRef {
+    return this.dialog.show(ExternalOrgAffiliationApprovePopupComponent, {
+      model,
+      action
+    });
+  }
 }

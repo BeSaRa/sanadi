@@ -1173,4 +1173,7 @@ export interface ILanguageKeys {
   requester_name: string;
   notification_request_number: string;
   risk_management_and_compliance_consulting: string;
+  approval_external_org_affiliation: string;
+  conditional_license_indicator: string;
+  follow_up_date: string;
 }

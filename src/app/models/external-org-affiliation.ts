@@ -1,3 +1,5 @@
+import { IMyDateModel } from 'angular-mydatepicker';
+import { WFResponseType } from '@app/enums/wfresponse-type.enum';
 import { HasLicenseDurationType } from './../interfaces/has-license-duration-type';
 import { Validators } from '@angular/forms';
 import { CustomValidators } from '@app/validators/custom-validators';
@@ -14,6 +16,7 @@ import { CaseModel } from '@app/models/case-model';
 import { mixinRequestType } from '@app/mixins/mixin-request-type';
 import { InterceptModel } from '@decorators/intercept-model';
 import { AdminResult } from './admin-result';
+import { DialogRef } from '@app/shared/models/dialog-ref';
 
 const _RequestType = mixinLicenseDurationType(mixinRequestType(CaseModel));
 const interceptor = new ExternalOrgAffiliationInterceptor();
@@ -43,7 +46,10 @@ export class ExternalOrgAffiliation extends _RequestType<ExternalOrgAffiliationS
   executiveManagementDTOs: ExecutiveManagement[] = [];
   contactOfficerDTOs: ContactOfficer[] = [];
   countryInfo!: AdminResult;
-
+  customTerms!: string;
+  publicTerms!: string;
+  conditionalLicenseIndicator!: boolean;
+  followUpDate!: string | IMyDateModel;
   oldLicenseFullSerial!: string;
   oldLicenseId!: string;
   oldLicenseSerial!: number;
@@ -96,5 +102,22 @@ export class ExternalOrgAffiliation extends _RequestType<ExternalOrgAffiliationS
     return {
       description: control ? [description, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : description
     }
+  }
+  buildApprovalForm(control: boolean = false): any {
+    const {
+      customTerms,
+      publicTerms,
+      conditionalLicenseIndicator,
+      followUpDate
+    } = this;
+    return {
+      customTerms: control ? [customTerms, [CustomValidators.required]] : customTerms,
+      publicTerms: control ? [publicTerms, [CustomValidators.required]] : publicTerms,
+      conditionalLicenseIndicator: control ? [conditionalLicenseIndicator, [CustomValidators.required]] : conditionalLicenseIndicator,
+      followUpDate: control ? [followUpDate, [CustomValidators.required]] : followUpDate
+    }
+  }
+  approve(): DialogRef {
+    return this.service.approve(this, WFResponseType.APPROVE)
   }
 }

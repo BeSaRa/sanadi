@@ -1,3 +1,5 @@
+import { IMyDateModel } from 'angular-mydatepicker';
+import { DateUtils } from '@app/helpers/date-utils';
 import { ContactOfficer } from './../models/contact-officer';
 import { BankAccount } from './../models/bank-account';
 import { ExecutiveManagement } from './../models/executive-management';
@@ -19,6 +21,11 @@ export class ExternalOrgAffiliationInterceptor implements IModelInterceptor<Exte
     })
     model.executiveManagementDTOs = model.executiveManagementDTOs?.map(em => executiveManagementInterceptor.send(em) as ExecutiveManagement)
     model.contactOfficerDTOs = model.contactOfficerDTOs?.map(co => contactOfficerInterceptor.send(co) as ContactOfficer)
+    model.followUpDate = !model.followUpDate
+      ? undefined
+      : DateUtils.changeDateFromDatepicker(
+        model.followUpDate as unknown as IMyDateModel
+      )?.toISOString();
 
     delete model.caseStatusInfo
     delete model.categoryInfo
@@ -29,7 +36,6 @@ export class ExternalOrgAffiliationInterceptor implements IModelInterceptor<Exte
     return model;
   }
   receive(model: ExternalOrgAffiliation): ExternalOrgAffiliation {
-    console.log(model)
     model.bankAccountDTOs = model.bankAccountDTOs?.map(ba => bankAccountInterceptor.receive(new BankAccount().clone(ba)))
     model.executiveManagementDTOs = model.executiveManagementDTOs?.map(em => executiveManagementInterceptor.receive(new ExecutiveManagement().clone(em)))
     model.contactOfficerDTOs = model.contactOfficerDTOs?.map(co => contactOfficerInterceptor.receive(new ContactOfficer().clone(co)))
