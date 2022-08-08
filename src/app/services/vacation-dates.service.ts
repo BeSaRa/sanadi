@@ -28,13 +28,11 @@ import { UrlService } from './url.service';
   providedIn: 'root'
 })
 export class VacationDatesService extends CrudWithDialogGenericService<VacationDates>{
-
-
   list: VacationDates[] = [];
 
   constructor(public dialog: DialogService, public http: HttpClient, private urlService: UrlService) {
     super();
-    FactoryService.registerService(VacationDatesService.name, this);
+    FactoryService.registerService('VacationDatesService', this);
   }
   _getServiceURL(): string {
     return this.urlService.URLS.VACATION_DATE;

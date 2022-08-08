@@ -25,7 +25,7 @@ export class VacationDates extends BaseModel<VacationDates, VacationDatesService
 
   constructor() {
     super();
-    this.service = FactoryService.getService(VacationDatesService.name);
+    this.service = FactoryService.getService('VacationDatesService');
   }
   getName(): string {
     return this[(this.langService.map.lang + 'Name') as keyof INames];

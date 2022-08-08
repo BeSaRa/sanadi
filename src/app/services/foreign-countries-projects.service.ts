@@ -48,7 +48,7 @@ export class ForeignCountriesProjectsService extends BaseGenericEService<Foreign
     private license: LicenseService
   ) {
     super();
-    FactoryService.registerService(ForeignCountriesProjectsService.name, this);
+    FactoryService.registerService('ForeignCountriesProjectsService', this);
   }
   _getURLSegment(): string {
     return this._getUrlService().URLS.FOREIGN_COUNTRIES_PROJECTS;
