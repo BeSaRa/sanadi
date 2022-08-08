@@ -451,6 +451,14 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
         filter<null | SelectedLicenseInfo<TransferringIndividualFundsAbroad, TransferringIndividualFundsAbroad>, SelectedLicenseInfo<TransferringIndividualFundsAbroad, TransferringIndividualFundsAbroad>>
         ((info): info is SelectedLicenseInfo<TransferringIndividualFundsAbroad, TransferringIndividualFundsAbroad> => !!info))
       .subscribe((_info) => {
+        // set oldLicenseId property from validated object id
+        _info.details.oldLicenseId = _info.details.id;
+
+        // delete id property
+        let tempObj = _info.details as any;
+        delete tempObj.id;
+        _info.details = new TransferringIndividualFundsAbroad().clone(tempObj);
+
         this.hasSearchedForLicense = true;
         this.selectedLicenses = [_info.details];
         _info.details.requestType = this.model?.requestType!;
