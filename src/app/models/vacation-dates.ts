@@ -18,7 +18,7 @@ const interceptor = new VacationDatesInerceptor()
 })
 export class VacationDates extends BaseModel<VacationDates, VacationDatesService> {
   service!: VacationDatesService;
-  langService: LangService = FactoryService.getService(LangService.name);
+  langService: LangService = FactoryService.getService('LangService');
   vacationDateFrom!: string | IMyDateModel;
   vacationDateTo!: string | IMyDateModel;
   periodId!: number;
