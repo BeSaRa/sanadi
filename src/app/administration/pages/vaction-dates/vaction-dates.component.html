@@ -8,7 +8,6 @@
   <ng-container *ngIf="table">
     <app-grid-search
       (searchTextEvent)="filterControl.setValue($event)"
-      *ngIf="table.selection && !table.selection.selected.length"
     ></app-grid-search>
   </ng-container>
 </div>
