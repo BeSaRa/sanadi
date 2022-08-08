@@ -17,7 +17,20 @@ import {OrgUnit} from '../models/org-unit';
 import {AuditLogService} from './audit-log.service';
 import {BackendWithDialogOperationsGenericService} from '@app/generics/backend-with-dialog-operations-generic-service';
 import {ComponentType} from '@angular/cdk/portal';
+import {PaginationContract} from '@contracts/pagination-contract';
+import {Pagination} from '@app/models/pagination';
+import {CastResponse, CastResponseContainer} from '@decorators/cast-response';
+import {OrgUser} from '@app/models/org-user';
 
+@CastResponseContainer({
+  $default: {
+    model: () => OrgBranch
+  },
+  $pagination: {
+    model: () => Pagination,
+    shape: {'rs.*': () => OrgBranch}
+  }
+})
 @Injectable({
   providedIn: 'root'
 })
@@ -64,6 +77,27 @@ export class OrganizationBranchService extends BackendWithDialogOperationsGeneri
 
   loadByCriteria(criteria: { 'org-id'?: number, status?: number }): Observable<OrgBranch[]> {
     return this._loadByCriteria(criteria);
+  }
+
+  @CastResponse(undefined, {
+    fallback: '$pagination'
+  })
+  private _loadByCriteriaPaginate(options: Partial<PaginationContract>, criteria: { orgId?: number, status?: number }): Observable<Pagination<OrgBranch[]>> {
+    const queryString = this._generateQueryString(criteria);
+    return this.http.get<Pagination<OrgBranch[]>>(this._getServiceURL() + '/criteria' + queryString, {
+      params: {...options}
+    });
+  }
+
+  loadByCriteriaPaginate(options: Partial<PaginationContract>, criteria: { 'org-id'?: number, status?: number }): Observable<Pagination<OrgBranch[]>> {
+    if (!criteria) {
+      return of({
+        count: 0,
+        rs: [],
+        sc: 200
+      } as Pagination<OrgBranch[]>);
+    }
+    return this._loadByCriteriaPaginate(options, criteria);
   }
 
   openCreateDialog(orgUnit: OrgUnit): DialogRef {

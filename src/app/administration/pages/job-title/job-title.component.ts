@@ -24,10 +24,9 @@ import { DialogRef } from '@app/shared/models/dialog-ref';
 })
 export class JobTitleComponent extends AdminGenericComponent<JobTitle, JobTitleService> {
   afterReload(): void {
-    this.table.selection.clear()
+    this.table && this.table.selection.clear();
   }
 
-  filterRetired = true;
   usePagination = true;
 
   constructor(public lang: LangService,

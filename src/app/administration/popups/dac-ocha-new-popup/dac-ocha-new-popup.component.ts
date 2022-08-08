@@ -1,4 +1,4 @@
-import {AfterViewInit, ChangeDetectorRef, Component, Inject} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, Inject, ViewChild} from '@angular/core';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {IDialogData} from '@contracts/i-dialog-data';
 import {AdminLookup} from '@app/models/admin-lookup';
@@ -24,6 +24,8 @@ import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 import {SortEvent} from '@contracts/sort-event';
 import {CommonUtils} from '@helpers/common-utils';
 import {DateUtils} from '@helpers/date-utils';
+import {PageEvent} from '@contracts/page-event';
+import {TableComponent} from '@app/shared/components/table/table.component';
 
 @Component({
   selector: 'dac-ocha-new-popup',
@@ -31,6 +33,8 @@ import {DateUtils} from '@helpers/date-utils';
   styleUrls: ['./dac-ocha-new-popup.component.scss']
 })
 export class DacOchaNewPopupComponent extends AdminGenericDialog<AdminLookup> implements AfterViewInit {
+  usePagination: boolean = true;
+  count: number = 0;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<AdminLookup>,
               public lang: LangService,
@@ -118,6 +122,7 @@ export class DacOchaNewPopupComponent extends AdminGenericDialog<AdminLookup> im
     }
   ];
   filterControl: FormControl = new FormControl('');
+  @ViewChild('table') table!: TableComponent;
 
   sortingCallbacks = {
     statusInfo: (a: AdminLookup, b: AdminLookup, dir: SortEvent): number => {
@@ -131,6 +136,20 @@ export class DacOchaNewPopupComponent extends AdminGenericDialog<AdminLookup> im
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     }
   };
+
+  pageEvent: PageEvent = {
+    pageIndex: 0,
+    pageSize: 10,
+    length: 0,
+    previousPageIndex: null
+  };
+
+  pageChange($event: PageEvent): void {
+    this.pageEvent = $event;
+    if (this.usePagination && this.pageEvent.previousPageIndex !== null) {
+      this.reloadSubDacOchas$.next(this.reloadSubDacOchas$.value);
+    }
+  }
 
   initPopup(): void {
     this.listenToAddSubDacOcha();
@@ -248,16 +267,25 @@ export class DacOchaNewPopupComponent extends AdminGenericDialog<AdminLookup> im
         filter(() => !this.model.parentId) // only load if it is not children as children will never have grid
       )
       .subscribe(() => {
-        this.dacOchaService.loadByParentId(this.model.id)
-          .pipe(
-            takeUntil(this.destroy$),
-            map(list => {
-              return list.filter(model => {
-                return model.status !== CommonStatusEnum.RETIRED;
-              });
-            }))
+        let load: Observable<AdminLookup[]>;
+        if (this.usePagination) {
+          const paginationOptions = {
+            limit: this.pageEvent.pageSize,
+            offset: (this.pageEvent.pageIndex * this.pageEvent.pageSize)
+          };
+          load = this.dacOchaService.loadByParentIdPaging(paginationOptions, this.model.id)
+            .pipe(map((res) => {
+              this.count = res.count;
+              return res.rs;
+            }));
+        } else {
+          load = this.dacOchaService.loadByParentId(this.model.id);
+        }
+
+        load.pipe(takeUntil(this.destroy$),)
           .subscribe(result => {
             this.subDacOchas = result;
+            this.table && this.table.clearSelection();
           });
       });
   }

@@ -24,7 +24,8 @@ import {UserClickOn} from '@app/enums/user-click-on.enum';
   styleUrls: ['./field-assessment.component.scss']
 })
 export class FieldAssessmentComponent extends AdminGenericComponent<FieldAssessment, FieldAssessmentService> {
-  usePagination = true
+  usePagination = true;
+
   constructor(public lang: LangService,
               public service: FieldAssessmentService,
               private dialogService: DialogService,
@@ -133,6 +134,10 @@ export class FieldAssessmentComponent extends AdminGenericComponent<FieldAssessm
     return this.table.selection.selected;
   }
 
+  afterReload(): void {
+    this.table && this.table.selection.clear();
+  }
+
   listenToView(): void {
     this.view$
       .pipe(takeUntil(this.destroy$))
@@ -202,26 +207,6 @@ export class FieldAssessmentComponent extends AdminGenericComponent<FieldAssessm
         this.toast.error(this.lang.map.msg_status_x_updated_fail.change({x: model.getName()}));
         this.reload$.next(null);
       });
-  }
-
-  listenToReload() {
-    this.reload$
-      .pipe(takeUntil((this.destroy$)))
-      .pipe(switchMap(() => {
-        const load = this.useCompositeToLoad ? this.service.loadComposite() : this.service.load();
-        return load.pipe(
-          map(list => {
-            return list.filter(model => {
-              return model.status !== CommonStatusEnum.RETIRED;
-            });
-          }),
-          catchError(_ => of([]))
-        );
-      }))
-      .subscribe((list: FieldAssessment[]) => {
-        this.models = list;
-        this.table.selection.clear();
-      })
   }
 
 }

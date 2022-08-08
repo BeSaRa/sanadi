@@ -1,16 +1,24 @@
 import {BaseModel} from './base-model';
 import {Observable} from 'rxjs';
-import {INames} from '../interfaces/i-names';
-import {LangService} from '../services/lang.service';
-import {LookupService} from '../services/lookup.service';
-import {FactoryService} from '../services/factory.service';
-import {OrganizationBranchService} from '../services/organization-branch.service';
+import {INames} from '@contracts/i-names';
+import {LangService} from '@services/lang.service';
+import {LookupService} from '@services/lookup.service';
+import {FactoryService} from '@services/factory.service';
+import {OrganizationBranchService} from '@services/organization-branch.service';
 import {Lookup} from './lookup';
 import {searchFunctionType} from '../types/types';
 import {DialogRef} from '../shared/models/dialog-ref';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {Validators} from '@angular/forms';
+import {InterceptModel} from '@decorators/intercept-model';
+import {OrganizationBranchInterceptor} from '@app/model-interceptors/organization-branch-interceptor';
 
+const interceptor = new OrganizationBranchInterceptor();
+
+@InterceptModel({
+  receive: interceptor.receive,
+  send: interceptor.send
+})
 export class OrgBranch extends BaseModel<OrgBranch, OrganizationBranchService> {
   orgId: number | undefined;
   phoneNumber1: string | undefined;

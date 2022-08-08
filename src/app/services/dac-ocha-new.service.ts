@@ -15,6 +15,8 @@ import {Observable, of} from 'rxjs';
 import {switchMap} from 'rxjs/operators';
 import {AdminLookupInterceptor} from '@app/model-interceptors/admin-lookup-interceptor';
 import {DacOchaNewPopupComponent} from '@app/administration/popups/dac-ocha-new-popup/dac-ocha-new-popup.component';
+import {PaginationContract} from '@contracts/pagination-contract';
+import {Pagination} from '@app/models/pagination';
 
 @Injectable({
   providedIn: 'root'
@@ -63,11 +65,19 @@ export class DacOchaNewService extends BackendWithDialogOperationsGenericService
     return this.adminLookupService.loadWorkFieldsByType(dacOchaTypeId);
   }
 
+  loadByTypePaging(options: Partial<PaginationContract>, dacOchaTypeId: AdminLookupTypeEnum): Observable<Pagination<AdminLookup[]>> {
+    return this.adminLookupService.loadWorkFieldsByTypePaging(options,  dacOchaTypeId);
+  }
+
   loadByParentId(parentId: number) {
     if (!parentId) {
       return of([]);
     }
     return this.adminLookupService.loadWorkFieldsByParent(parentId);
+  }
+
+  loadByParentIdPaging(options: Partial<PaginationContract>, parentId: number): Observable<Pagination<AdminLookup[]>> {
+    return this.adminLookupService.loadWorkFieldsByParentPaging(options, parentId);
   }
 
   openCreateDialog(typeId: AdminLookupTypeEnum, parentId?: number): DialogRef {
