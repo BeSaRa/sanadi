@@ -34,7 +34,7 @@ export class ForeignCountriesProjects
   constructor() {
     super();
     this.service = FactoryService.getService(
-      ForeignCountriesProjectsService.name
+      'ForeignCountriesProjectsService'
     );
   }
 

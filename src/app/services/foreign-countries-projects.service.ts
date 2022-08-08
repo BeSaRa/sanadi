@@ -62,7 +62,7 @@ export class ForeignCountriesProjectsService extends BaseGenericEService<Foreign
     return new ForeignCountriesProjectsSearchCriteria();
   }
   getCaseComponentName(): string {
-    return ForeignCountriesProjectsComponent.name;
+    return 'ForeignCountriesProjectsComponent';
   }
   _getUrlService(): UrlService {
     return this.urlService;
