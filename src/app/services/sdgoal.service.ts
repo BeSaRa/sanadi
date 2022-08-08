@@ -47,6 +47,31 @@ export class SDGoalService extends CrudWithDialogGenericService<SDGoal> {
     FactoryService.registerService('SDGoalService', this);
   }
 
+  @CastResponse(undefined, {
+    fallback: '$default',
+    unwrap: 'rs'
+  })
+  private _loadMainSdGoals(): Observable<SDGoal[]> {
+    return this.http.get<SDGoal[]>(this._getServiceURL() + '/main');
+  }
+
+  loadMainSdGoals(): Observable<SDGoal[]> {
+    return this._loadMainSdGoals();
+  }
+
+  @CastResponse(undefined, {
+    fallback: '$pagination'
+  })
+  private _loadMainSdGoalsPaginate(options: Partial<PaginationContract>): Observable<Pagination<SDGoal[]>> {
+    return this.http.get<Pagination<SDGoal[]>>(this._getServiceURL() + '/main', {
+      params: {...options}
+    });
+  }
+
+  loadMainSdGoalsPaginate(options: Partial<PaginationContract>): Observable<Pagination<SDGoal[]>> {
+    return this._loadMainSdGoalsPaginate(options);
+  }
+
   @Generator(undefined, true, { property: 'rs' })
   private _loadSubSdGoals(sdGoalId: number): Observable<SDGoal[]> {
     return this.http.get<SDGoal[]>(this._getServiceURL() + '/sub/' + sdGoalId);

@@ -4,7 +4,6 @@ import {SDGoal} from '@app/models/sdgoal';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {BehaviorSubject, isObservable, Observable, of, Subject} from 'rxjs';
-import {FormManager} from '@app/models/form-manager';
 import {LangService} from '@app/services/lang.service';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {IKeyValue} from '@app/interfaces/i-key-value';
@@ -45,7 +44,6 @@ export class SdGoalPopupComponent extends AdminGenericDialog<SDGoal> {
   }
 
   form!: FormGroup;
-  fm!: FormManager;
   model!: SDGoal;
   operation!: OperationTypes;
   tabsData: IKeyValue = {
@@ -102,7 +100,12 @@ export class SdGoalPopupComponent extends AdminGenericDialog<SDGoal> {
   }
 
   get popupTitle(): string {
-    return this.operation === OperationTypes.CREATE ? this.lang.map.lbl_add_sd_goal : this.lang.map.lbl_edit_sd_goal;
+    if (this.operation === OperationTypes.CREATE){
+      return this.lang.map.lbl_add_sd_goal;
+    } else if (this.operation === OperationTypes.UPDATE){
+      return this.lang.map.lbl_edit_sd_goal
+    }
+    return this.lang.map.view;
   };
 
   initPopup(): void {
@@ -184,7 +187,6 @@ export class SdGoalPopupComponent extends AdminGenericDialog<SDGoal> {
 
   buildForm(): void {
     this.form = this.fb.group(this.model.buildForm(true));
-    this.fm = new FormManager(this.form, this.lang);
   }
 
   delete( model: SDGoal): void {
