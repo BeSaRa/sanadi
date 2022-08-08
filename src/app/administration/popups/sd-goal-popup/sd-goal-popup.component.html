@@ -45,7 +45,7 @@
     <ng-template #subGoalsTabTemplate>
       <div class="row pb-3">
         <app-page-header [pageTitle]="'lbl_sub_sd_goals'" [clickOnReload$]="reloadSubGoals$"
-                         [clickOnNew$]="addSubSdGoal$">
+                         [clickOnNew$]="addSubSdGoal$" [addPermission]="!readonly">
         </app-page-header>
         <ng-container *ngIf="table">
           <app-bulk-actions *ngIf="table.selection && table.selection.selected.length"
@@ -106,7 +106,7 @@
     <i class="mdi mdi-information-outline text-info"></i>
   </button>
   <span class="flex-grow-1"></span>
-  <button [disabled]="form.invalid" (click)="saveSubSdGoal$.next()"
+  <button [disabled]="form.invalid" *ngIf="saveVisible" (click)="saveSubSdGoal$.next()"
           class="btn btn-primary">{{lang.map.btn_save}}</button>
   <button [dialogClose]="model" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
 </div>

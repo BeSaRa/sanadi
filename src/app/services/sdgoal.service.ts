@@ -114,8 +114,12 @@ export class SDGoalService extends CrudWithDialogGenericService<SDGoal> {
     return this.getSubSdGoalDialog(new (this._getModel() as { new(...args: any[]): SDGoal }), OperationTypes.CREATE, parentId);
   }
 
-  subSdGoalEditDialog(model: SDGoal, parentId: number | null): DialogRef {
-    return this.getSubSdGoalDialog(model, OperationTypes.UPDATE, parentId);
+  subSdGoalEditDialog(model: SDGoal): DialogRef {
+    return this.getSubSdGoalDialog(model, OperationTypes.UPDATE, model.parentId);
+  }
+
+  openViewDialog(model: SDGoal): Observable<DialogRef> {
+    return of(this.getSubSdGoalDialog(model, OperationTypes.VIEW, model.parentId));
   }
 
   _getDialogComponent(): ComponentType<any> {

@@ -8,14 +8,15 @@ import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {SharedService} from '@app/services/shared.service';
 import {LangService} from '@app/services/lang.service';
 import {DialogService} from '@app/services/dialog.service';
-import {catchError, exhaustMap, map, switchMap, takeUntil} from 'rxjs/operators';
-import {Observable, of} from 'rxjs';
+import {catchError, exhaustMap, filter, switchMap, takeUntil} from 'rxjs/operators';
+import {of, Subject} from 'rxjs';
 import {ToastService} from '@app/services/toast.service';
 import {TableComponent} from '@app/shared/components/table/table.component';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
 import {SortEvent} from '@app/interfaces/sort-event';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import {DialogRef} from '@app/shared/models/dialog-ref';
 
 @Component({
   selector: 'sd-goal',
@@ -26,6 +27,7 @@ export class SdGoalComponent extends AdminGenericComponent<SDGoal, SDGoalService
   usePagination = true;
   displayedColumns = ['rowSelection', 'arName', 'enName', 'status', 'childCount', 'actions'];
   commonStatusEnum = CommonStatusEnum;
+  view$: Subject<SDGoal> = new Subject<SDGoal>();
   actions: IMenuItem<SDGoal>[] = [
     // edit
     {
@@ -33,6 +35,13 @@ export class SdGoalComponent extends AdminGenericComponent<SDGoal, SDGoalService
       label: 'btn_edit',
       icon: ActionIconsEnum.EDIT,
       onClick: (item: SDGoal) => this.edit$.next(item)
+    },
+    // view
+    {
+      type: 'action',
+      label: 'view',
+      icon: ActionIconsEnum.VIEW,
+      onClick: (item: SDGoal) => this.view$.next(item)
     },
     // delete
     {
@@ -91,8 +100,8 @@ export class SdGoalComponent extends AdminGenericComponent<SDGoal, SDGoalService
     super();
   }
 
-  _init() {
-
+  protected _init(): void {
+    this.listenToView();
   }
 
   get selectedRecords(): SDGoal[] {
@@ -102,8 +111,19 @@ export class SdGoalComponent extends AdminGenericComponent<SDGoal, SDGoalService
   listenToEdit(): void {
     this.edit$
       .pipe(takeUntil(this.destroy$))
-      .pipe(exhaustMap((model) => this.service.subSdGoalEditDialog(model, model.parentId).onAfterClose$))
+      .pipe(exhaustMap((model) => this.service.subSdGoalEditDialog(model).onAfterClose$))
       .subscribe(() => this.reload$.next(null));
+  }
+
+  listenToView(): void {
+    this.view$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(exhaustMap((model) => {
+        return this.service.openViewDialog(model).pipe(catchError(_ => of(null)))
+      }))
+      .pipe(filter((dialog): dialog is DialogRef => !!dialog))
+      .pipe(switchMap(dialog => dialog.onAfterClose$))
+      .subscribe(() => this.reload$.next(null))
   }
 
   /*listenToReload() {

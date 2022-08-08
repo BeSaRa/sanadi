@@ -62,7 +62,9 @@ export class SdGoalPopupComponent extends AdminGenericDialog<SDGoal> {
   displayedColumns = ['arName', 'enName', 'status', 'actions'];
   parentId: number;
   commonStatusEnum = CommonStatusEnum;
+  saveVisible = true;
   @ViewChild('table') table!: TableComponent;
+  readonly: boolean = false;
 
   sortingCallbacks = {
     statusInfo: (a: SDGoal, b: SDGoal, dir: SortEvent): number => {
@@ -70,7 +72,7 @@ export class SdGoalPopupComponent extends AdminGenericDialog<SDGoal> {
         value2 = !CommonUtils.isValidValue(b) ? '' : b.statusInfo?.getName().toLowerCase();
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     }
-  }
+  };
 
   actions: IMenuItem<SDGoal>[] = [
     // edit
@@ -78,16 +80,18 @@ export class SdGoalPopupComponent extends AdminGenericDialog<SDGoal> {
       type: 'action',
       label: 'btn_edit',
       icon: ActionIconsEnum.EDIT,
-      onClick: (item: SDGoal) => this.editSubSdGoal$.next(item)
+      onClick: (item: SDGoal) => this.editSubSdGoal$.next(item),
+      show: (item: SDGoal) => !this.readonly
     },
     // delete
     {
       type: 'action',
       icon: ActionIconsEnum.DELETE,
       label: 'btn_delete',
-      onClick: (item: SDGoal) => this.delete(item)
+      onClick: (item: SDGoal) => this.delete(item),
+      show: (item: SDGoal) => !this.readonly
     }
-  ]
+  ];
 
   usePagination: boolean = true;
   count: number = 0;
@@ -97,13 +101,13 @@ export class SdGoalPopupComponent extends AdminGenericDialog<SDGoal> {
     pageSize: 10,
     length: 0,
     previousPageIndex: null
-  }
+  };
 
   get popupTitle(): string {
-    if (this.operation === OperationTypes.CREATE){
+    if (this.operation === OperationTypes.CREATE) {
       return this.lang.map.lbl_add_sd_goal;
-    } else if (this.operation === OperationTypes.UPDATE){
-      return this.lang.map.lbl_edit_sd_goal
+    } else if (this.operation === OperationTypes.UPDATE) {
+      return this.lang.map.lbl_edit_sd_goal;
     }
     return this.lang.map.view;
   };
@@ -116,9 +120,9 @@ export class SdGoalPopupComponent extends AdminGenericDialog<SDGoal> {
   }
 
   pageChange($event: PageEvent): void {
-    this.pageEvent = $event
+    this.pageEvent = $event;
     if (this.usePagination && this.pageEvent.previousPageIndex !== null) {
-      this.reloadSubGoals$.next(this.reloadSubGoals$.value)
+      this.reloadSubGoals$.next(this.reloadSubGoals$.value);
     }
   }
 
@@ -152,7 +156,7 @@ export class SdGoalPopupComponent extends AdminGenericDialog<SDGoal> {
   listenToEditSubSdGoal(): void {
     this.editSubSdGoal$
       .pipe(takeUntil(this.destroy$))
-      .pipe(exhaustMap((model) => this.model.service.subSdGoalEditDialog(model, this.model.id).onAfterClose$))
+      .pipe(exhaustMap((model) => this.model.service.subSdGoalEditDialog(model).onAfterClose$))
       .subscribe(() => this.reloadSubGoals$.next(null));
   }
 
@@ -186,10 +190,17 @@ export class SdGoalPopupComponent extends AdminGenericDialog<SDGoal> {
   }
 
   buildForm(): void {
+    this.readonly = false;
     this.form = this.fb.group(this.model.buildForm(true));
+    if (this.operation === OperationTypes.VIEW) {
+      this.readonly = true;
+      this.form.disable();
+      this.saveVisible = false;
+      this.validateFieldsVisible = false;
+    }
   }
 
-  delete( model: SDGoal): void {
+  delete(model: SDGoal): void {
     // @ts-ignore
     const message = this.lang.map.msg_confirm_delete_x.change({x: model.getName()});
     this.dialogService.confirm(message)
