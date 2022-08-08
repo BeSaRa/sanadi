@@ -135,7 +135,7 @@ export class FieldAssessmentComponent extends AdminGenericComponent<FieldAssessm
   }
 
   afterReload(): void {
-    this.table && this.table.selection.clear();
+    this.table && this.table.clearSelection();
   }
 
   listenToView(): void {

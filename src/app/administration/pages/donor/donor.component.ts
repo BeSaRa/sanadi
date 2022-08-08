@@ -130,7 +130,7 @@ export class DonorComponent extends AdminGenericComponent<Donor, DonorService> {
   }
 
   afterReload(): void {
-    this.table.selection.clear();
+    this.table && this.table.clearSelection();
   }
 
   listenToView(): void {

@@ -60,7 +60,7 @@ export class TeamComponent extends AdminGenericComponent<Team, TeamService> {
   }
 
   afterReload(): void {
-    this.table.selection.clear();
+    this.table && this.table.clearSelection();
   }
 
   viewTeam(team: Team): void {

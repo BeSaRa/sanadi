@@ -95,7 +95,7 @@ export class SdGoalComponent extends AdminGenericComponent<SDGoal, SDGoalService
   //     }))
   //     .subscribe((list: SDGoal[]) => {
   //       this.models = list;
-  //       this.table.selection.clear();
+  //       this.table && this.table.clearSelection();
   //     })
   // }
 
