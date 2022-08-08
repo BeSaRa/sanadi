@@ -71,7 +71,7 @@ export class AutoRegisterService {
       DynamicComponentService.registerComponent('UrgentInterventionClosureComponent', UrgentInterventionClosureComponent);
 
       DynamicComponentService.registerComponent('ExternalOrgAffiliationComponent', ExternalOrgAffiliationComponent);
-      DynamicComponentService.registerComponent(ForeignCountriesProjectsComponent.name, ForeignCountriesProjectsComponent);
+      DynamicComponentService.registerComponent('ForeignCountriesProjectsComponent', ForeignCountriesProjectsComponent);
       DynamicComponentService.registerComponent('TransferringIndividualFundsAbroadComponent', TransferringIndividualFundsAbroadComponent);
     });// just to make sure that service constructed and register all dynamic components
 
