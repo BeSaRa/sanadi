@@ -7,7 +7,6 @@ import {OrgUser} from '@app/models/org-user';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {IDialogData} from '@app/interfaces/i-dialog-data';
 import {ToastService} from '@app/services/toast.service';
-import {extender} from '@app/helpers/extender';
 import {Lookup} from '@app/models/lookup';
 import {LookupService} from '@app/services/lookup.service';
 import {OrgUnit} from '@app/models/org-unit';
@@ -171,7 +170,8 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
     this.save$.pipe(
       takeUntil(this.destroy$),
       exhaustMap(() => {
-        const orgUser = extender<OrgUser>(OrgUser, {...this.model, ...this.fm.getFormField('basic')?.value});
+        // const orgUser = extender<OrgUser>(OrgUser, {...this.model, ...this.fm.getFormField('basic')?.value});
+        const orgUser = new OrgUser().clone({...this.model, ...this.fm.getFormField('basic')?.value});
         return orgUser.save()
           .pipe(
             catchError((err) => {
