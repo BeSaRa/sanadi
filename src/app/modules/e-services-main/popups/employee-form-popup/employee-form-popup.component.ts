@@ -155,9 +155,9 @@ export class EmployeeFormPopupComponent implements OnInit {
       contractStatus: [null, CustomValidators.required],
       contractType: [null, CustomValidators.required],
       jobContractType: [null, CustomValidators.required],
-      contractExpiryDate: [new Date()],
-      workStartDate: [new Date(), CustomValidators.required],
-      workEndDate: [new Date()],
+      contractExpiryDate: [null],
+      workStartDate: [null, CustomValidators.required],
+      workEndDate: [null],
     });
     this.data.employees.forEach((ei, i) => {
       if (!this.data.employees[i].id) {
