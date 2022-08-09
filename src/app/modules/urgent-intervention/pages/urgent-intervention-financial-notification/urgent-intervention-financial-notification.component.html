@@ -170,9 +170,8 @@
                     [notFoundText]="lang.map.msg_not_found"
                     appendTo="body"
                     formControlName="implementingAgencyType"
-                    (change)="handleImplementingAgencyNameChanges()"
                     validationClasses="implementingAgencyType">
-            <ng-option *ngFor="let option of accountsTypesList" [value]="option.fnId">
+            <ng-option *ngFor="let option of urgentFinancialNotificationAccountType" [value]="option.lookupKey">
               {{ option.getName() }}
             </ng-option>
           </ng-select>

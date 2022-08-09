@@ -29,8 +29,7 @@ export class UrgentInterventionFinancialNotificationService extends EServiceGene
   serviceKey: keyof ILanguageKeys = 'menu_urgent_intervention_financial_notification';
   caseStatusIconMap: Map<number, string> = new Map();
   searchColumns: string[] = [];
-  // 'interventionName',
-  selectLicenseDisplayColumns = ['beneficiaryCountry', 'executionCountry', 'subject', 'licenseNumber', 'actions'];
+  selectLicenseDisplayColumns = ['beneficiaryCountry', 'interventionName', 'executionCountry', 'subject', 'licenseNumber', 'actions'];
 
   implementingAgencyInterceptor: IModelInterceptor<ImplementingAgency> = new ImplementingAgencyInterceptor();
   interventionRegionInterceptor: IModelInterceptor<InterventionRegion> = new InterventionRegionInterceptor();

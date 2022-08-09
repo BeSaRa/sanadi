@@ -1,3 +1,4 @@
+import { switchMap } from 'rxjs/operators';
 import { ImplementingAgencyListComponent } from './../../shared/implementing-agency-list/implementing-agency-list.component';
 import { ToastService } from '@app/services/toast.service';
 import { ServiceRequestTypes } from '@app/enums/service-request-types';
@@ -40,8 +41,10 @@ import { CommonUtils } from '@app/helpers/common-utils';
 })
 export class UrgentInterventionFinancialNotificationComponent extends EServicesGenericComponent<UrgentInterventionFinancialNotification, UrgentInterventionFinancialNotificationService> {
   requestTypesList: Lookup[] = this.lookupService.listByCategory.UrgentInterventionFinancialRequestType
+  implementingAgencyType: Lookup[] = this.lookupService.listByCategory.ImplementingAgencyType;
+  urgentFinancialNotificationAccountType: Lookup[] = this.lookupService.listByCategory.UrgentFinancialNotificationAccountType;
+
   accountsTypesList: any[] = [];
-  implementingAgencyType: Lookup[] = this.lookupService.listByCategory.ImplementingAgencyType
   entitiesTabStatus: ReadinessStatus = 'READY';
   interventionAreasTabStatus: ReadinessStatus = 'READY';
   interventionFieldsTabStatus: ReadinessStatus = 'READY';
@@ -142,6 +145,13 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
   }
   _initComponent(): void {
     this.listenToLicenseSearch();
+    // this.licenseService.loadUrgentInterventionInterventionLicense().pipe(
+    //   switchMap(({ rs }) => {
+    //     return
+    //   })
+    // ).subscribe(data => {
+    //   console.log(data)
+    // })
   }
   _buildForm(): void {
     let urgentInterventionFinancialNotification = this._getNewInstance();
@@ -212,7 +222,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
       return;
     }
 
-    this.form.patchValue(model.buildForm());
+    this.basicInfoTab.patchValue(model.buildForm());
     this.cd.detectChanges();
   }
 
@@ -251,6 +261,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
     // update form fields if i have license
     if (licenseDetails && !ignoreUpdateForm) {
       let value: any = new UrgentInterventionFinancialNotification()
+      value.requestType = this.requestTypeField.value;
       value.oldLicenseFullSerial = licenseDetails.fullSerial;
       value.oldLicenseId = licenseDetails.id;
       value.oldLicenseSerial = licenseDetails.serial;
@@ -267,6 +278,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
       value.description = licenseDetails.description;
       value.beneficiaryCountryInfo = licenseDetails.beneficiaryCountryInfo;
       value.executionCountryInfo = licenseDetails.executionCountryInfo;
+      value.licenseVSID = licenseDetails.vsId;
       this._updateForm(value);
     }
   }

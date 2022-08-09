@@ -24,10 +24,10 @@ export class UrgentInterventionFinancialNotification extends LicenseApprovalMode
   interventionFieldList: InterventionField[] = [];
   beneficiaryCountryInfo!: AdminResult;
   executionCountryInfo!: AdminResult;
-
+  licenseVSID!: string;
   implementingAgencyType!: number;
   implementingAgency!: string;
-  accountNumber!: number;
+  accountNumber!: string;
   amount!: number;
 
   fullSerial!: string;
