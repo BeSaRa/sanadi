@@ -1,26 +1,26 @@
-import { Component } from "@angular/core";
-import { UserClickOn } from "@app/enums/user-click-on.enum";
-import { AdminGenericComponent } from "@app/generics/admin-generic-component";
-import { VacationDates } from "@app/models/vacation-dates";
-import { IMenuItem } from "@app/modules/context-menu/interfaces/i-menu-item";
-import { DialogService } from "@app/services/dialog.service";
-import { LangService } from "@app/services/lang.service";
-import { ToastService } from "@app/services/toast.service";
-import { VacationDatesService } from "@app/services/vacation-dates.service";
-import { DialogRef } from "@app/shared/models/dialog-ref";
-import { of, Subject } from "rxjs";
+import { Component } from '@angular/core';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { AdminGenericComponent } from '@app/generics/admin-generic-component';
+import { VacationDates } from '@app/models/vacation-dates';
+import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { DialogService } from '@app/services/dialog.service';
+import { LangService } from '@app/services/lang.service';
+import { ToastService } from '@app/services/toast.service';
+import { VacationDatesService } from '@app/services/vacation-dates.service';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { of, Subject } from 'rxjs';
 import {
   catchError,
   filter,
   exhaustMap,
   switchMap,
   takeUntil,
-} from "rxjs/operators";
+} from 'rxjs/operators';
 
 @Component({
-  selector: "vaction-dates",
-  templateUrl: "./vaction-dates.component.html",
-  styleUrls: ["./vaction-dates.component.scss"],
+  selector: 'vaction-dates',
+  templateUrl: './vaction-dates.component.html',
+  styleUrls: ['./vaction-dates.component.scss'],
 })
 export class VactionDatesComponent extends AdminGenericComponent<
 VacationDates,
@@ -28,12 +28,12 @@ VacationDatesService
 > {
   actions: IMenuItem<VacationDates>[] = [];
   displayedColumns: string[] = [
-    "rowSelection",
-    "arName",
-    "enName",
-    "vacationDateFrom",
-    "vacationDateTo",
-    "actions",
+    'rowSelection',
+    'arName',
+    'enName',
+    'vacationDateFrom',
+    'vacationDateTo',
+    'actions',
   ];
   view$ = new Subject<VacationDates>();
 
@@ -47,6 +47,18 @@ VacationDatesService
   }
   protected _init(): void {
     this.listenToView();
+  }
+  listenToEdit(): void {
+    this.edit$
+      .pipe(
+        takeUntil(this.destroy$),
+        exhaustMap((model) => this.service.openEditDialog(model))
+      )
+      .pipe(
+        filter((dialog): dialog is DialogRef => !!dialog),
+        switchMap((dialog) => dialog.onAfterClose$)
+      )
+      .subscribe(() => this.reload$.next(null));
   }
   listenToView(): void {
     this.view$

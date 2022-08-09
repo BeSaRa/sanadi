@@ -5,6 +5,7 @@ import { VacationDatesInerceptor } from '@app/model-interceptors/vacation-date-i
 import { FactoryService } from '@app/services/factory.service';
 import { LangService } from '@app/services/lang.service';
 import { VacationDatesService } from '@app/services/vacation-dates.service';
+import { searchFunctionType } from '@app/types/types';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { IMyDateModel } from 'angular-mydatepicker';
 import { BaseModel } from './base-model';
@@ -22,6 +23,12 @@ export class VacationDates extends BaseModel<VacationDates, VacationDatesService
   vacationDateFrom!: string | IMyDateModel;
   vacationDateTo!: string | IMyDateModel;
   periodId!: number;
+  searchFields: { [key: string]: searchFunctionType | string } = {
+    arName: 'arName',
+    enName: 'enName',
+    vacationDateFrom: 'vacationDateFrom',
+    vacationDateTo: 'vacationDateTo'
+  };
 
   constructor() {
     super();
