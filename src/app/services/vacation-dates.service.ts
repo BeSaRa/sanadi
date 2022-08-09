@@ -10,27 +10,31 @@ import { Pagination } from '@app/models/pagination';
 import { VacationDates } from '@app/models/vacation-dates';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { Observable, of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { exhaustMap, map, switchMap } from 'rxjs/operators';
 import { DialogService } from './dialog.service';
 import { FactoryService } from './factory.service';
 import { UrlService } from './url.service';
 
 @CastResponseContainer({
   $default: {
-    model: () => VacationDates
+    model: () => VacationDates,
   },
   $pagination: {
     model: () => Pagination,
-    shape: { 'rs.*': () => VacationDates }
-  }
+    shape: { 'rs.*': () => VacationDates },
+  },
 })
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-export class VacationDatesService extends CrudWithDialogGenericService<VacationDates>{
+export class VacationDatesService extends CrudWithDialogGenericService<VacationDates> {
   list: VacationDates[] = [];
 
-  constructor(public dialog: DialogService, public http: HttpClient, private urlService: UrlService) {
+  constructor(
+    public dialog: DialogService,
+    public http: HttpClient,
+    private urlService: UrlService
+  ) {
     super();
     FactoryService.registerService('VacationDatesService', this);
   }
@@ -47,11 +51,19 @@ export class VacationDatesService extends CrudWithDialogGenericService<VacationD
     return this.http.delete(this._getServiceURL() + '/period/' + periodId);
   }
   openViewDialog(model: VacationDates): Observable<DialogRef> {
-
-    return of(this.dialog.show<IDialogData<VacationDates>>(this._getDialogComponent(), {
-      model,
-      operation: OperationTypes.VIEW
-    }));
-
+    return of(
+      this.dialog.show<IDialogData<VacationDates>>(this._getDialogComponent(), {
+        model,
+        operation: OperationTypes.VIEW,
+      })
+    );
+  }
+  openEditDialog(model: VacationDates): Observable<DialogRef> {
+    return of(
+      this.dialog.show<IDialogData<VacationDates>>(this._getDialogComponent(), {
+        model,
+        operation: OperationTypes.UPDATE,
+      })
+    );
   }
 }
