@@ -379,7 +379,7 @@
               </div>
               <div class="col-md-4 col-sm-12 mb-4 position-relative">
                 <label asteriskIfRequired="executiveIdentificationNumber" class="form-label"
-                       for="executiveIdentificationNumber">{{lang.map.identification_number}}</label>
+                       for="executiveIdentificationNumber">{{lang.map.national_id_number}}</label>
                 <input [readonly]="(readonly)" class="form-control"
                        formControlName="executiveIdentificationNumber"
                        id="executiveIdentificationNumber" validationClasses="executiveIdentificationNumber">
@@ -449,7 +449,7 @@
                   <td *cdkCellDef="let row" cdk-cell> {{row.executiveNationalityInfo?.getName() || ''}} </td>
                 </ng-container>
                 <ng-container cdkColumnDef="identificationNumber">
-                  <th *cdkHeaderCellDef cdk-header-cell sortable-header> {{lang.map.identification_number}}</th>
+                  <th *cdkHeaderCellDef cdk-header-cell sortable-header> {{lang.map.national_id_number}}</th>
                   <td *cdkCellDef="let row" cdk-cell> {{row.executiveIdentificationNumber}} </td>
                 </ng-container>
                 <ng-container cdkColumnDef="actions">
@@ -521,7 +521,7 @@
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="receiverIdentificationNumber" class="form-label"
-                   for="receiverIdentificationNumber">{{lang.map.identification_number}}</label>
+                   for="receiverIdentificationNumber">{{lang.map.national_id_number}}</label>
             <input [readonly]="(readonly)" class="form-control"
                    formControlName="receiverIdentificationNumber"
                    id="receiverIdentificationNumber" validationClasses="receiverIdentificationNumber">

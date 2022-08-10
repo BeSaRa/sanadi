@@ -479,8 +479,8 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
       englishNameLikePassport: [null, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
       jobTitle: [null, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
       executiveNationality: [null, [CustomValidators.required]],
-      executiveIdentificationNumber: [null, [CustomValidators.required].concat(CustomValidators.commonValidations.qId)],
-      passportNumber: [null, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]],
+      executiveIdentificationNumber: [null, [CustomValidators.required, CustomValidators.maxLength(20)]],
+      passportNumber: [null, [CustomValidators.required, ...CustomValidators.commonValidations.passport]],
       executivephone1: [null, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)],
       executivephone2: [null, CustomValidators.commonValidations.phone]
     });
@@ -496,7 +496,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
       beneficiaryCountry: [null, [CustomValidators.required]],
       executionCountry: [null, [CustomValidators.required]],
       totalCost: [null, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(20)]],
-      projectImplementationPeriod: [null, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(5)]]
+      projectImplementationPeriod: [null, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(2)]]
     });
   }
 
@@ -634,8 +634,8 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     this.receiverEnglishNameLikePassport.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')]);
     this.receiverJobTitle.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]);
     this.receiverNationality.setValidators([CustomValidators.required]);
-    this.receiverIdentificationNumber.setValidators([CustomValidators.required].concat(CustomValidators.commonValidations.qId));
-    this.receiverPassportNumber.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]);
+    this.receiverIdentificationNumber.setValidators([CustomValidators.required, CustomValidators.maxLength(20)]);
+    this.receiverPassportNumber.setValidators([CustomValidators.required, ...CustomValidators.commonValidations.passport]);
     this.receiverPhone1.setValidators([CustomValidators.required].concat(CustomValidators.commonValidations.phone));
     this.receiverPhone2.setValidators(CustomValidators.commonValidations.phone);
   }
@@ -645,8 +645,8 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     this.receiverEnglishNameLikePassport.setValidators([CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')]);
     this.receiverJobTitle.setValidators([CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]);
     this.receiverNationality.setValidators([]);
-    this.receiverIdentificationNumber.setValidators([CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]);
-    this.receiverPassportNumber.setValidators([CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]);
+    this.receiverIdentificationNumber.setValidators([CustomValidators.maxLength(20)]);
+    this.receiverPassportNumber.setValidators([...CustomValidators.commonValidations.passport]);
     this.receiverPhone1.setValidators(CustomValidators.commonValidations.phone);
     this.receiverPhone2.setValidators(CustomValidators.commonValidations.phone);
     this.receiverNameLikePassport.patchValue(null);
