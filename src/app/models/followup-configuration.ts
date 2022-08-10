@@ -2,13 +2,15 @@ import {INames} from '@app/interfaces/i-names';
 import {FactoryService} from '@app/services/factory.service';
 import {FollowupConfigurationService} from '@app/services/followup-configuration.service';
 import {LangService} from '@app/services/lang.service';
-import {searchFunctionType} from '@app/types/types';
+import {ISearchFieldsMap} from '@app/types/types';
 import {BaseModel} from './base-model';
 import {Lookup} from './lookup';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {Team} from '@app/models/team';
 import {FollowUpType} from '@app/enums/followUp-type.enum';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import {normalSearchFields} from '@helpers/normal-search-fields';
+import {infoSearchFields} from '@helpers/info-search-fields';
 
 export class FollowupConfiguration extends BaseModel<FollowupConfiguration, FollowupConfigurationService> {
   service: FollowupConfigurationService;
@@ -37,13 +39,10 @@ export class FollowupConfiguration extends BaseModel<FollowupConfiguration, Foll
   responsibleTeamInfo!: Team;
   concernedTeamInfo!: Team;
 
-  searchFields: { [key: string]: searchFunctionType | string } = {
-    name: text => this.getName().toLowerCase().indexOf(text) !== -1,
-    requestType: text => !this.requestTypeInfo ? false : this.requestTypeInfo.getName().toLowerCase().indexOf(text) !== -1,
-    followUpType: text => !this.followUpTypeInfo ? false : this.followUpTypeInfo.getName().toLowerCase().indexOf(text) !== -1,
-    responsibleTeam: text => !this.responsibleTeamInfo ? false : this.responsibleTeamInfo.getName().toLowerCase().indexOf(text) !== -1,
-    concernedTeam: text => !this.concernedTeamInfo ? false : this.concernedTeamInfo.getName().toLowerCase().indexOf(text) !== -1,
-    days: 'days'
+  searchFields: ISearchFieldsMap<FollowupConfiguration> = {
+    ...normalSearchFields(['days']),
+    ...infoSearchFields(['requestTypeInfo', 'followUpTypeInfo', 'responsibleTeamInfo', 'concernedTeamInfo']),
+    name: text => this.getName().toLowerCase().indexOf(text) !== -1
   };
 
   getName(): string {

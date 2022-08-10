@@ -17,6 +17,7 @@ import { Lookup } from "@app/models/lookup";
 import { TeamService } from "@services/team.service";
 import { takeUntil } from "rxjs/operators";
 import { FollowUpType } from "@app/enums/followUp-type.enum";
+import {RequestTypeFollowupService} from '@services/request-type-followup.service';
 
 @Component({
   selector: 'followup-popup',
@@ -38,6 +39,7 @@ export class FollowupPopupComponent extends AdminGenericDialog<Followup> {
     disablePeriod: 'past'
   });
 
+  requestTypes: Lookup[] =  [];
   followUpTypes: Lookup[] = this.lookupService.listByCategory.FollowUpType;
 
   constructor(public fb: FormBuilder,
@@ -46,6 +48,7 @@ export class FollowupPopupComponent extends AdminGenericDialog<Followup> {
               public dialogRef: DialogRef,
               public service: FollowupService,
               private teamService: TeamService,
+              private requestTypeFollowupService: RequestTypeFollowupService,
               public lang: LangService,) {
     super();
   }
@@ -66,6 +69,7 @@ export class FollowupPopupComponent extends AdminGenericDialog<Followup> {
   }
 
   initPopup(): void {
+    this.requestTypes = this.requestTypeFollowupService.serviceRequestTypes[this.case!.caseType] || [this.requestTypeFollowupService.getNewRequestType()];
     this.listenToFollowupTypeChange()
     this.teamService
       .load()
