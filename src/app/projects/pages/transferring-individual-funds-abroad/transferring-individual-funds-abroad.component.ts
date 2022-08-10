@@ -30,6 +30,8 @@ import {DacOchaNewService} from '@services/dac-ocha-new.service';
 import {DomainTypes} from '@app/enums/domain-types';
 import {SelectedLicenseInfo} from '@contracts/selected-license-info';
 import {TransferringIndividualFundsAbroadRequestTypeEnum} from '@app/enums/transferring-individual-funds-abroad-request-type-enum';
+import {CountryService} from '@services/country.service';
+import {Country} from '@app/models/country';
 
 @Component({
   selector: 'transferring-individual-funds-abroad',
@@ -49,8 +51,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     .sort((a, b) => a.lookupKey - b.lookupKey);
   headQuarterTypes: Lookup[] = this.lookupService.listByCategory.HeadQuarterType
     .sort((a, b) => a.lookupKey - b.lookupKey);
-  countries: Lookup[] = this.lookupService.listByCategory.Countries
-    .sort((a, b) => a.lookupKey - b.lookupKey);
+  countries: Country[] = [];
   currencies: Lookup[] = this.lookupService.listByCategory.Currency
     .sort((a, b) => a.lookupKey - b.lookupKey);
   transferMethods: Lookup[] = this.lookupService.listByCategory.TransferMethod
@@ -103,7 +104,8 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
               private toast: ToastService,
               private licenseService: LicenseService,
               private employeeService: EmployeeService,
-              private dacOchaNewService: DacOchaNewService) {
+              private dacOchaNewService: DacOchaNewService,
+              private countryService: CountryService) {
     super();
   }
 
@@ -258,6 +260,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
 
   _initComponent(): void {
     // load initials here
+    this.loadCountries();
     this.isExternalUser = this.employeeService.isExternalUser();
     this.buildExecutiveManagementForm();
     this.buildTransferPurposeForm();
@@ -669,6 +672,12 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     this.dacOchaNewService.loadByType(AdminLookupTypeEnum.OCHA).subscribe(list => {
       this.mainOchas = list;
     });
+  }
+
+  loadCountries() {
+    this.countryService.loadComposite().subscribe((list: Country[]) => {
+      this.countries = list;
+    })
   }
 
   listenToDomainChanges() {

@@ -244,7 +244,7 @@
                        formControlName="country"
                        id="country" validationClasses="country">
               <ng-option *ngFor="let option of countries"
-                         [value]="option.lookupKey">{{option.getName()}}</ng-option>
+                         [value]="option.id">{{option.getName()}}</ng-option>
             </ng-select>
             <app-field-error-message controlName="country"></app-field-error-message>
           </div>
@@ -821,12 +821,12 @@
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="transferCountry" class="form-label"
-                   for="transferCountry">{{lang.map.transferee_type}}</label>
+                   for="transferCountry">{{lang.map.transfer_to_country}}</label>
             <ng-select [clearable]="false" [readonly]="(readonly)" appendTo="body"
                        formControlName="transferCountry"
                        id="transferCountry" validationClasses="transferCountry">
               <ng-option *ngFor="let option of countries"
-                         [value]="option.lookupKey">{{option.getName()}}</ng-option>
+                         [value]="option.id">{{option.getName()}}</ng-option>
             </ng-select>
             <app-field-error-message controlName="transferCountry"></app-field-error-message>
           </div>

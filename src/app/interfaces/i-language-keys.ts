@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  transfer_to_country: string;
   national_id_number: string;
   you_should_add_at_least_one_purpose_in_purposes: string;
   you_should_add_at_least_one_person_to_executives_list: string;
