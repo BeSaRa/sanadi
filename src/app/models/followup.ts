@@ -87,10 +87,10 @@ export class Followup extends BaseModel<Followup, FollowupService> {
       dueDate
     } = this;
     return {
-      arName: controls ? [arName, [CustomValidators.required]] : arName,
-      enName: controls ? [enName, [CustomValidators.required]] : enName,
-      arDesc: controls ? [arDesc, [CustomValidators.required]] : arDesc,
-      enDesc: controls ? [enDesc, [CustomValidators.required]] : enDesc,
+      arName: controls ? [arName, [CustomValidators.required, CustomValidators.pattern('AR_NUM')]] : arName,
+      enName: controls ? [enName, [CustomValidators.required, CustomValidators.pattern('ENG_NUM')]] : enName,
+      arDesc: controls ? [arDesc, [CustomValidators.required, CustomValidators.pattern('AR_NUM')]] : arDesc,
+      enDesc: controls ? [enDesc, [CustomValidators.required, CustomValidators.pattern('ENG_NUM')]] : enDesc,
       followUpType: controls ? [followUpType, [CustomValidators.required]] : followUpType,
       responsibleTeamId: controls ? [{
         value: responsibleTeamId,

@@ -8,7 +8,6 @@ import {IDialogData} from '@app/interfaces/i-dialog-data';
 import {LangService} from '@app/services/lang.service';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {catchError, exhaustMap, filter, mapTo, switchMap, takeUntil, tap} from 'rxjs/operators';
-import {extender} from '@app/helpers/extender';
 import {ToastService} from '@app/services/toast.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {ExceptionHandlerService} from '@app/services/exception-handler.service';
@@ -229,7 +228,8 @@ export class ServiceDataPopupComponent extends AdminGenericDialog<ServiceData> {
   }
 
   prepareModel(model: ServiceData, form: FormGroup): Observable<ServiceData> | ServiceData {
-    return extender<ServiceData>(ServiceData, {...this.model, ...this.form?.value.basic, ...this.form?.value.customSettings});
+    return new ServiceData().clone({...this.model, ...this.form?.value.basic, ...this.form?.value.customSettings});
+    // return extender<ServiceData>(ServiceData, {...this.model, ...this.form?.value.basic, ...this.form?.value.customSettings});
   }
 
   afterSave(model: ServiceData, dialogRef: DialogRef): void {
