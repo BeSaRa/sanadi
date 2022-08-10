@@ -264,8 +264,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
       value.requestType = this.requestTypeField.value;
       value.oldLicenseFullSerial = licenseDetails.fullSerial;
       value.oldLicenseId = licenseDetails.id;
-      value.oldLicenseSerial = licenseDetails.serial;
-      value.fullSerial = null;
+      value.urgentAnnouncementFullSerial = licenseDetails.fullSerial;
       value.interventionFieldList = licenseDetails.interventionFieldList;
       value.interventionRegionList = licenseDetails.interventionRegionList;
       value.implementingAgencyList = licenseDetails.implementingAgencyList;

@@ -1175,4 +1175,5 @@ export interface ILanguageKeys {
   requester_name: string;
   menu_urgent_intervention_financial_notification: string;
   notification_request_number: string;
+  urgent_intervention_declaration_license_number: string;
 }
