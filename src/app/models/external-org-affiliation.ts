@@ -120,4 +120,7 @@ export class ExternalOrgAffiliation extends _RequestType<ExternalOrgAffiliationS
   approve(): DialogRef {
     return this.service.approve(this, WFResponseType.APPROVE)
   }
+  finalApprove(): DialogRef {
+    return this.service.approve(this, WFResponseType.FINAL_APPROVE)
+  }
 }
