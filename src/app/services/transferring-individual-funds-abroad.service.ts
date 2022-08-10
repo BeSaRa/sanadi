@@ -27,6 +27,13 @@ import {
   providedIn: 'root'
 })
 export class TransferringIndividualFundsAbroadService extends BaseGenericEService<TransferringIndividualFundsAbroad> {
+  jsonSearchFile: string = 'transferring-individual-funds-abroad-search.json';
+  serviceKey: keyof ILanguageKeys = 'menu_transferring_individual_funds_abroad';
+  caseStatusIconMap: Map<number, string> = new Map<number, string>();
+  searchColumns: string[] = ['fullSerial', 'arName', 'enName', 'subject', 'caseStatus', 'creatorInfo', 'createdOn'];
+  executiveManagementListInterceptor: ExecutiveManagementListInterceptor = new ExecutiveManagementListInterceptor();
+  transferFundsCharityPurposeInterceptor: TransferFundsCharityPurposeInterceptor = new TransferFundsCharityPurposeInterceptor();
+
   constructor(private urlService: UrlService,
               public domSanitizer: DomSanitizer,
               public cfr: ComponentFactoryResolver,
@@ -36,13 +43,6 @@ export class TransferringIndividualFundsAbroadService extends BaseGenericEServic
     super();
     FactoryService.registerService('TransferringIndividualFundsAbroadService', this);
   }
-
-  jsonSearchFile: string = 'transferring-individual-funds-abroad-search.json';
-  serviceKey: keyof ILanguageKeys = 'menu_transferring_individual_funds_abroad';
-  caseStatusIconMap: Map<number, string> = new Map<number, string>();
-  searchColumns: string[] = ['fullSerial', 'fullName', 'subject', 'caseStatus', 'creatorInfo', 'createdOn'];
-  executiveManagementListInterceptor: ExecutiveManagementListInterceptor = new ExecutiveManagementListInterceptor();
-  transferFundsCharityPurposeInterceptor: TransferFundsCharityPurposeInterceptor = new TransferFundsCharityPurposeInterceptor();
 
   _getURLSegment(): string {
     return this.urlService.URLS.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD;
