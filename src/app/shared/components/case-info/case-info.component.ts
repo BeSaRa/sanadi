@@ -42,7 +42,8 @@ export class CaseInfoComponent {
     CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL,
     CaseTypes.EMPLOYMENT,
     CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST,
-    CaseTypes.URGENT_INTERVENTION_CLOSURE
+    CaseTypes.URGENT_INTERVENTION_CLOSURE,
+    CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD
   ];
 
   // this should be updated when ever you will add a new document service
