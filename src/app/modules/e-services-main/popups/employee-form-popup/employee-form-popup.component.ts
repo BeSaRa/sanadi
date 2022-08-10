@@ -176,6 +176,7 @@ export class EmployeeFormPopupComponent implements OnInit {
         ...this.data.employees[0],
       });
     }
+    console.log(this.form)
   }
   submit() {
     if (!this.isApproval()) {
@@ -204,7 +205,6 @@ export class EmployeeFormPopupComponent implements OnInit {
   }
   setEmployee() {
     if (this.form.valid) {
-      console.log(this.employeesList, this.form.value.passportNumber, this.form.value.identificationNumber)
       if (this.employeesList.findIndex(e => (this.form.value.passportNumber && e.passportNumber == this.form.value.passportNumber) || (this.form.value.identificationNumber && e.identificationNumber == this.form.value.identificationNumber)) != -1) {
         this.dialog.error(this.lang.map.msg_user_identifier_is_already_exist);
         return

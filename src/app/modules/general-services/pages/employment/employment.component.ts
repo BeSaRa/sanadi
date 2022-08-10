@@ -311,7 +311,9 @@ EmploymentService
         if (this.isApproval()) {
           this.employees = [...e];
         } else {
-          this.employees = [...e, ...this.employees];
+          if (this.employees.findIndex(emp => e[0].identificationNumber == emp.identificationNumber || e[0].passportNumber == emp.passportNumber) == -1) {
+            this.employees = [...e, ...this.employees];
+          }
         }
         this.model && (this.model.employeeInfoDTOs = this.employees);
       })
