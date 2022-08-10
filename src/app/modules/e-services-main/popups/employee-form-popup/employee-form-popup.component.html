@@ -142,7 +142,7 @@
           placeholder="{{ lang.map.select }}"
           [notFoundText]="lang.map.msg_not_found"
           appendTo="body"
-          [readonly]="!isEditRequestTypeAllowed || isExternalManagerJobTitle"
+          [readonly]="!isEditRequestTypeAllowed || isExternalManagerJobTitle || !isApproval()"
           id="identificationType"
           formControlName="identificationType"
           validationClasses="identificationType"

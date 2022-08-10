@@ -124,7 +124,11 @@ export class EmployeeFormPopupComponent implements OnInit {
 
   ngOnInit() {
     this._buildForm();
-    this.JobTitleList = this.data.jobTitleList
+    this.JobTitleList = this.data.jobTitleList;
+    if(!this.isApproval()) {
+      this.identificationType.setValue(1);
+      this.handleIdentityNumberValidationsByIdentificationType()
+    }
   }
 
   _buildForm() {

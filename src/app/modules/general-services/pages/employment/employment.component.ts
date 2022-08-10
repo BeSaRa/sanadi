@@ -308,7 +308,7 @@ EmploymentService
         takeUntil(this.destroy$)
       )
       .subscribe((e: Employee[]) => {
-        if (this.isApprova()) {
+        if (this.isApproval()) {
           this.employees = [...e];
         } else {
           this.employees = [...e, ...this.employees];
@@ -324,7 +324,7 @@ EmploymentService
       passportNumber: passportNumber,
     });
   }
-  isApprova() {
+  isApproval() {
     return this.category.value == EmploymentCategory.APPROVAL
   }
   private invalidFormMessage() {

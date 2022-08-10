@@ -120,7 +120,7 @@
           [formGroup]="searchCriteriaForm"
           *ngIf="isCreateOperation()"
         >
-          <div>
+          <div *ngIf="isApproval()">
             <label for="passportNumber" class="form-label">{{
               lang.map.passport_number
             }}</label>
