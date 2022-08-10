@@ -223,7 +223,9 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       {
         type: 'action',
         label: 'btn_save',
-        disabled: (item) => this.component.form.invalid || item?.alreadyStarted(),
+        disabled: (item) => {
+          return (this.component.form.invalid || item?.alreadyStarted()) && !this.canSave()
+        },
         show: (item) => {
           // show if external user or service which are only for internal user
           return !this.internal || this.internalUserServices.includes(item.getCaseType());
@@ -279,7 +281,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         // icon: 'mdi-rocket-launch-outline',
         label: 'btn_save',
         disabled: (item) => {
-          return this.component.form.invalid || item?.alreadyStarted();
+          return (this.component.form.invalid || item?.alreadyStarted()) && !this.canSave();
         },
         show: (item) => {
           // show if external user or service which are only for internal user
@@ -326,6 +328,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     ];
   }
 
+  canSave(): boolean {
+    const isServiceAllow = this.model?.caseType == CaseTypes.EMPLOYMENT
+    return isServiceAllow && this.employeeService.isCharityManager()
+  }
   private launchAction(item: CaseModel<any, any>) {
     item.start()
       .subscribe(_ => {
@@ -381,7 +387,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         type: 'action',
         // icon: 'mdi-rocket-launch-outline',
         label: 'btn_save',
-        disabled: () => this.component.readonly,
+        disabled: () => this.component.readonly && !this.canSave(),
         show: (item) => {
           // show if external user or service which are only for internal user
           return !this.internal || this.internalUserServices.includes(item.getCaseType());

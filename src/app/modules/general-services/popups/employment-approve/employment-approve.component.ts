@@ -38,7 +38,7 @@ export class EmploymentApproveComponent implements OnInit, OnDestroy {
   actions: IGridAction[] = this.internaAndApproval() ? [
     {
       icon: 'calendar',
-      langKey: 'btn_delete',
+      langKey: 'btn_determine_the_end_date_of_the_contract',
       show: () => true,
       callback: (e: any, data: any) => {
         return this.dialog.show(ApproveEmploymentDateComponent, {

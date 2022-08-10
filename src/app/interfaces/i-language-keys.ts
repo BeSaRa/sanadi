@@ -4,6 +4,7 @@ export interface ILanguageKeys {
   add_purpose: string;
   add_executive: string;
   transfer_purpose: string;
+  btn_determine_the_end_date_of_the_contract: string;
   execution_period_in_months: string;
   executive_management_info: string;
   transferee_iban: string;

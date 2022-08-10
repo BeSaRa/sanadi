@@ -111,9 +111,9 @@
             [ngClass]="{isDisabled: !isNewRequestType() && !employees.length}"
             class="btn btn-link outline-none"
             [disabled]="!isNewRequestType() && !employees.length"
-            tooltip="{{lang.map.btn_add}}"
+            tooltip="{{isEditRequestTypeAllowed() && isNewRequestType() ? lang.map.btn_add : lang.map.btn_edit }}"
             (click)="openForm()">
-            <i class="mdi mdi-plus-box"></i></button>
+            <i class="mdi" [class]="isEditRequestTypeAllowed() && isNewRequestType() ? 'mdi-plus-box' : 'mdi-pen'"></i></button>
         </div>
         <form
           class="d-flex align-items-end"

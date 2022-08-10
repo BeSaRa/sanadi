@@ -1,3 +1,4 @@
+import { IMyDateModel } from 'angular-mydatepicker';
 import { WFResponseType } from './../enums/wfresponse-type.enum';
 import { Employee } from './employee';
 import { HasLicenseDurationType } from '@contracts/has-license-duration-type';
@@ -34,7 +35,8 @@ export class Employment
   oldLicenseId!: string;
   oldLicenseSerial!: number;
   oldLicenseFullSerial!: string;
-
+  licenseStartDate!: string | IMyDateModel;
+  licenseEndDate!: string | IMyDateModel;
   constructor() {
     super();
     this.service = FactoryService.getService("EmploymentService");
@@ -48,21 +50,6 @@ export class Employment
       description: controls ? [description] : description
     };
   }
-
-  setLicense({
-               oldLicenseId,
-               oldLicenseSerial,
-               oldLicenseFullSerial
-             }: {
-    oldLicenseId: string,
-    oldLicenseSerial: number,
-    oldLicenseFullSerial: string
-  }) {
-    this.oldLicenseId = oldLicenseId
-    this.oldLicenseSerial = oldLicenseSerial
-    this.oldLicenseFullSerial = oldLicenseFullSerial
-  }
-
   approve(): DialogRef {
     return this.service.approve(this, WFResponseType.APPROVE)
   }

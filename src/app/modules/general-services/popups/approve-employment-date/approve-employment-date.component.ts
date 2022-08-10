@@ -17,7 +17,10 @@ import { Component, Inject, OnInit } from '@angular/core';
 })
 export class ApproveEmploymentDateComponent implements OnInit {
   datepickerOptionsMap: DatepickerOptionsMap = {
-    contractExpiryDate: DateUtils.getDatepickerOptions({
+    licenseStartDate: DateUtils.getDatepickerOptions({
+      disablePeriod: "none",
+    }),
+    licenseEndDate: DateUtils.getDatepickerOptions({
       disablePeriod: "none",
     }),
   };
@@ -25,26 +28,19 @@ export class ApproveEmploymentDateComponent implements OnInit {
   constructor(@Inject(DIALOG_DATA_TOKEN) public data: {
     model: Employee,
     service: EmploymentService
-  }, public lang: LangService) {}
+  }, public lang: LangService) { }
 
   ngOnInit() {
     this.form = new FormGroup({
-      contractExpiryDate: new FormControl(new Date(), [Validators.required])
+      licenseStartDate: new FormControl(null, [Validators.required]),
+      licenseEndDate: new FormControl(null, [Validators.required])
     })
   }
 
   openDateMenu(ref: any) {
     ref.toggleCalendar();
   }
-  onDateChange(event: IMyInputFieldChanged, fromFieldName: string, toFieldName: string): void {
-    DateUtils.setRelatedMinMaxDate({
-      fromFieldName,
-      toFieldName,
-      controlOptionsMap: this.datepickerOptionsMap,
-      controlsMap: {}
-    });
-  }
   setExpirDate() {
-    this.data.service.onSetExpirDate.emit(this.form.value.contractExpiryDate)
+    this.data.service.onSetExpirDate.emit(this.form.value)
   }
 }
