@@ -1,3 +1,4 @@
+import { UrgentFinancialNotificationAccountType } from './../../../../enums/urgent-financial-notification-account-type.enum';
 import { switchMap } from 'rxjs/operators';
 import { ImplementingAgencyListComponent } from './../../shared/implementing-agency-list/implementing-agency-list.component';
 import { ToastService } from '@app/services/toast.service';
@@ -360,6 +361,12 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
     return failedList;
   }
 
+  get boxAccountType() {
+    return this.accountType.value == UrgentFinancialNotificationAccountType.CHARITY_ACCOUNT
+  }
+  get accountType() {
+    return this.transferDataTab.get('accountType') as FormControl;
+  }
   get basicInfoTab(): FormGroup {
     return (this.form.get('basicInfo')) as FormGroup;
   }
