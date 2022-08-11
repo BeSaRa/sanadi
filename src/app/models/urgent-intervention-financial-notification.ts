@@ -55,12 +55,14 @@ export class UrgentInterventionFinancialNotification extends LicenseApprovalMode
   buildTransferDataForm(control: boolean = false) {
     const {
       implementingAgencyType,
+      accountType,
       implementingAgency,
       accountNumber,
       amount
     } = this;
     return {
       implementingAgencyType: control ? [implementingAgencyType, [CustomValidators.required]] : implementingAgencyType,
+      accountType: control ? [accountType, [CustomValidators.required]] : accountType,
       implementingAgency: control ? [implementingAgency, [CustomValidators.required]] : implementingAgency,
       accountNumber: control ? [accountNumber, [CustomValidators.required]] : accountNumber,
       amount: control ? [amount, [CustomValidators.required]] : amount,

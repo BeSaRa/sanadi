@@ -378,7 +378,7 @@ export class LicenseService {
   }
 
   loadUrgentInterventionInterventionLicense() {
-    return this.http.get(this.getServiceUrlByCaseType(CaseTypes.URGENT_INTERVENTION_REPORTING) + '/intervention-license')
+    return this.http.get<any>(this.getServiceUrlByCaseType(CaseTypes.URGENT_INTERVENTION_REPORTING) + '/intervention-license')
   }
   @Generator(InitialExternalOfficeApproval, false, {
     property: 'rs',

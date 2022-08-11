@@ -56,6 +56,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
   licenseSearch$: Subject<string> = new Subject<string>();
   selectedLicense?: UrgentInterventionReportResult;
   loadAttachments: boolean = false;
+  boxAccountNumber = '';
   form!: FormGroup;
   tabsData: TabMap = {
     basicInfo: {
@@ -145,13 +146,6 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
   }
   _initComponent(): void {
     this.listenToLicenseSearch();
-    // this.licenseService.loadUrgentInterventionInterventionLicense().pipe(
-    //   switchMap(({ rs }) => {
-    //     return
-    //   })
-    // ).subscribe(data => {
-    //   console.log(data)
-    // })
   }
   _buildForm(): void {
     let urgentInterventionFinancialNotification = this._getNewInstance();
@@ -192,7 +186,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
       ...this.transferDataTab.getRawValue(),
       interventionFieldList: this.interventionFieldListComponentRef.list,
       interventionRegionList: this.interventionRegionListComponentRef.list,
-      implementingAgencyList: this.interventionRegionListComponentRef.list,
+      implementingAgencyList: this.implementingAgencyListComponentRef.list,
     });
   }
   _afterSave(model: UrgentInterventionFinancialNotification, saveType: SaveTypes, operation: OperationTypes): void {
@@ -256,6 +250,11 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
         this.setSelectedLicense(selection, false);
       });
   }
+  getInterventionLicense() {
+    this.licenseService.loadUrgentInterventionInterventionLicense().subscribe(({ rs }) => {
+      this.boxAccountNumber = rs.accountNumber;
+    })
+  }
   private setSelectedLicense(licenseDetails: UrgentInterventionReportResult | undefined, ignoreUpdateForm: boolean) {
     this.selectedLicense = licenseDetails;
     // update form fields if i have license
@@ -317,6 +316,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
     if (this.isReceive) {
       this.implementingAgencyTypeField.setValue(2)
       this.handleImplementingAgencyTypeChanges();
+      this.getInterventionLicense();
     } else {
       this.implementingAgencyTypeField.setValue(null)
       this.handleImplementingAgencyTypeChanges();

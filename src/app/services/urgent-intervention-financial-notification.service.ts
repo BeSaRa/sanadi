@@ -25,7 +25,7 @@ import { IModelInterceptor } from '@app/interfaces/i-model-interceptor';
 })
 export class UrgentInterventionFinancialNotificationService extends EServiceGenericService<UrgentInterventionFinancialNotification> {
   interceptor: IModelInterceptor<UrgentInterventionFinancialNotification> = new UrgentInterventionFinancialNotificationInterceptor();
-  jsonSearchFile: string = '';
+  jsonSearchFile: string = 'urgent_intervention_financial_search_form.json';
   serviceKey: keyof ILanguageKeys = 'menu_urgent_intervention_financial_notification';
   caseStatusIconMap: Map<number, string> = new Map();
   searchColumns: string[] = [];
