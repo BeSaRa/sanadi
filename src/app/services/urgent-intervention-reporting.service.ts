@@ -96,7 +96,7 @@ export class UrgentInterventionReportingService extends EServiceGenericService<U
     if (!isAddOperation) {
       return of(true);
     }
-    return this.http.get<IDefaultResponse<string | boolean>>(this._getURLSegment() + '/validateAdd')
+    return this.http.get<IDefaultResponse<string | boolean>>(this._getURLSegment() + '/validate-add')
       .pipe(map((response) => {
         this.preValidatedLicenseIdForAddOperation = !!response.rs ? response.rs as string : '';
         return !!response.rs;
