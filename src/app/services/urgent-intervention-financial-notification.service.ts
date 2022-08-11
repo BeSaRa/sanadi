@@ -1,3 +1,4 @@
+import { UrgentInterventionFinancialNotificationSearchCriteria } from './../models/urgent-intervention-financial-notification-search-criteria';
 import { UrgentInterventionFinancialNotificationInterceptor } from './../model-interceptors/urgent-intervention-financial-notification-interceptor';
 import { InterventionRegion } from '@app/models/intervention-region';
 import { InterventionField } from '@app/models/intervention-field';
@@ -28,8 +29,8 @@ export class UrgentInterventionFinancialNotificationService extends EServiceGene
   jsonSearchFile: string = 'urgent_intervention_financial_search_form.json';
   serviceKey: keyof ILanguageKeys = 'menu_urgent_intervention_financial_notification';
   caseStatusIconMap: Map<number, string> = new Map();
-  searchColumns: string[] = [];
-  selectLicenseDisplayColumns = ['beneficiaryCountry',  'executionCountry', 'subject', 'licenseNumber', 'actions'];
+  searchColumns: string[] = ['fullSerial', 'createdOn', 'caseStatus', 'ouInfo', 'subject'];
+  selectLicenseDisplayColumns = ['beneficiaryCountry', 'executionCountry', 'subject', 'licenseNumber', 'actions'];
 
   implementingAgencyInterceptor: IModelInterceptor<ImplementingAgency> = new ImplementingAgencyInterceptor();
   interventionRegionInterceptor: IModelInterceptor<InterventionRegion> = new InterventionRegionInterceptor();
@@ -59,7 +60,7 @@ export class UrgentInterventionFinancialNotificationService extends EServiceGene
     return this.interceptor
   }
   getSearchCriteriaModel<S extends UrgentInterventionFinancialNotification>(): UrgentInterventionFinancialNotification {
-    throw new Error('Method not implemented.');
+    return new UrgentInterventionFinancialNotificationSearchCriteria();
   }
   getCaseComponentName(): string {
     return 'UrgentInterventionFinancialNotificationComponent';

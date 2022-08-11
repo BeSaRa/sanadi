@@ -23,7 +23,7 @@ import { tap, filter, exhaustMap, catchError, takeUntil, map } from 'rxjs/operat
 import { TabMap, ReadinessStatus } from './../../../../types/types';
 import { Lookup } from '@app/models/lookup';
 import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
-import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
+import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { SaveTypes } from '@app/enums/save-types';
 import { LangService } from '@app/services/lang.service';
@@ -57,7 +57,6 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
   licenseSearch$: Subject<string> = new Subject<string>();
   selectedLicense?: UrgentInterventionReportResult;
   loadAttachments: boolean = false;
-  boxAccountNumber = '';
   form!: FormGroup;
   tabsData: TabMap = {
     basicInfo: {
@@ -175,10 +174,11 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
     }
   }
   _beforeLaunch(): boolean | Observable<boolean> {
-    throw new Error('Method not implemented.');
+    return !!this.model && this.form.valid && this.model.canStart();
   }
   _afterLaunch(): void {
-    throw new Error('Method not implemented.');
+    this._resetForm();
+    this.toastService.success(this.lang.map.request_has_been_sent_successfully);
   }
   _prepareModel(): UrgentInterventionFinancialNotification | Observable<UrgentInterventionFinancialNotification> {
     return new UrgentInterventionFinancialNotification().clone({
@@ -205,13 +205,12 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
     console.log('problem in save');
   }
   _launchFail(error: any): void {
-    console.log('problem in fail');
+    console.log('problem in launch');
   }
   _destroyComponent(): void {
   }
   _updateForm(model: UrgentInterventionFinancialNotification | undefined): void {
     this.model = model;
-    // patch the form here
     if (!model) {
       this.cd.detectChanges();
       return;
@@ -253,7 +252,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
   }
   getInterventionLicense() {
     this.licenseService.loadUrgentInterventionInterventionLicense().subscribe(({ rs }) => {
-      this.boxAccountNumber = rs.accountNumber;
+      this.accountNumberField.setValue(rs.accountNumber);
     })
   }
   private setSelectedLicense(licenseDetails: UrgentInterventionReportResult | undefined, ignoreUpdateForm: boolean) {
@@ -314,16 +313,28 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
   }
 
   _handleRequestTypeChange() {
+    this.accountType.setValidators([]);
+    this.accountType.reset();
+    this.resetAccountNumber();
     if (this.isReceive) {
-      this.implementingAgencyTypeField.setValue(2)
+      this.implementingAgencyTypeField.setValue(2);
       this.handleImplementingAgencyTypeChanges();
-      this.getInterventionLicense();
+      this.accountType.setValidators([Validators.required]);
     } else {
-      this.implementingAgencyTypeField.setValue(null)
+      this.implementingAgencyTypeField.setValue(null);
       this.handleImplementingAgencyTypeChanges();
     }
   }
-
+  _handleChangeAccountType() {
+    if (this.boxAccountType) {
+      this.getInterventionLicense();
+    } else {
+      this.resetAccountNumber();
+    }
+  }
+  resetAccountNumber() {
+    this.accountNumberField.reset();
+  }
   handleImplementingAgencyTypeChanges() {
     this._loadImplementingAgenciesByAgencyType()
     this.implementingAgencyField.setValue(null)

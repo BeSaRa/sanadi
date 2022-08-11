@@ -170,6 +170,7 @@
                     placeholder="{{lang.map.select}}" id="accountType"
                     [notFoundText]="lang.map.msg_not_found"
                     appendTo="body"
+                    (change)="_handleChangeAccountType()"
                     formControlName="accountType"
                     validationClasses="accountType">
             <ng-option *ngFor="let option of urgentFinancialNotificationAccountType" [value]="option.lookupKey">
@@ -178,7 +179,7 @@
           </ng-select>
           <app-field-error-message controlName="accountType"></app-field-error-message>
         </div>
-        <div class="col-sm-12 col-md-6 mb-4 position-relative">
+        <div class="col-sm-12 col-md-6 mb-4 position-relative" *ngIf="!boxAccountType">
           <label for="accountNumber" asteriskIfRequired="accountNumber"
                 class="form-label">{{lang.map.account_number}}</label>
           <ng-select [selectOnTab]="true" labelForId="accountNumber"
@@ -194,8 +195,8 @@
           <app-field-error-message controlName="accountNumber"></app-field-error-message>
         </div>
         <div class="col-sm-12 col-md-6 mb-4 position-relative" *ngIf="boxAccountType">
-          <label for="accountNumber" class="form-label">{{lang.map.account_number}}</label>
-          <input [value]="boxAccountNumber" readonly class="form-control" id="accountNumber" trimInput>
+          <label for="boxAccountNumber" class="form-label">{{lang.map.account_number}}</label>
+          <input [value]="accountNumberField.value" readonly class="form-control" id="boxAccountNumber" trimInput>
         </div>
         <div class="col-sm-12 col-md-6 mb-4 position-relative">
           <label for="amount" asteriskIfRequired="amount"

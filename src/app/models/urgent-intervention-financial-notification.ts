@@ -64,7 +64,7 @@ export class UrgentInterventionFinancialNotification extends LicenseApprovalMode
       implementingAgencyType: control ? [implementingAgencyType, [CustomValidators.required]] : implementingAgencyType,
       accountType: control ? [accountType, [CustomValidators.required]] : accountType,
       implementingAgency: control ? [implementingAgency, [CustomValidators.required]] : implementingAgency,
-      accountNumber: control ? [accountNumber, [CustomValidators.required]] : accountNumber,
+      accountNumber: control ? [accountNumber] : accountNumber,
       amount: control ? [amount, [CustomValidators.required]] : amount,
     }
   }

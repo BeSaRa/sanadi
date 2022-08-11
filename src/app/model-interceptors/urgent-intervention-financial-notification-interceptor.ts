@@ -5,7 +5,7 @@ import { InterventionRegion } from '@app/models/intervention-region';
 import { ImplementingAgency } from '@app/models/implementing-agency';
 import { FactoryService } from '@app/services/factory.service';
 import { UrgentInterventionFinancialNotification } from '@app/models/urgent-intervention-financial-notification';
-import {IModelInterceptor} from '@contracts/i-model-interceptor';
+import { IModelInterceptor } from '@contracts/i-model-interceptor';
 
 export class UrgentInterventionFinancialNotificationInterceptor implements IModelInterceptor<UrgentInterventionFinancialNotification> {
   receive(model: UrgentInterventionFinancialNotification): UrgentInterventionFinancialNotification {
@@ -36,6 +36,7 @@ export class UrgentInterventionFinancialNotificationInterceptor implements IMode
     if (model.interventionFieldList && model.interventionFieldList.length > 0) {
       model.interventionFieldList = model.interventionFieldList.map(x => service.interventionFieldInterceptor.send(x) as InterventionField);
     }
+    model.amount && (model.amount = +model.amount);
     delete model.beneficiaryCountryInfo;
     delete model.executionCountryInfo;
     return model;
