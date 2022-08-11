@@ -32,6 +32,8 @@ import {SelectedLicenseInfo} from '@contracts/selected-license-info';
 import {TransferringIndividualFundsAbroadRequestTypeEnum} from '@app/enums/transferring-individual-funds-abroad-request-type-enum';
 import {CountryService} from '@services/country.service';
 import {Country} from '@app/models/country';
+import {InternalProjectLicenseResult} from '@app/models/internal-project-license-result';
+import {SharedService} from '@services/shared.service';
 
 @Component({
   selector: 'transferring-individual-funds-abroad',
@@ -92,7 +94,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
   addPurposeFormActive!: boolean;
   private displayedColumns: string[] = ['fullSerial', 'status', 'requestTypeInfo', 'actions'];
   selectedLicenses: TransferringIndividualFundsAbroad[] = [];
-  selectedLicenseDisplayedColumns: string[] = ['serial', 'bankName', 'currency', 'bankCategory'];
+  selectedLicenseDisplayedColumns: string[] = ['serial', 'requestType', 'licenseStatus', 'actions'];
   hasSearchedForLicense = false;
 
   constructor(public lang: LangService,
@@ -105,7 +107,8 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
               private licenseService: LicenseService,
               private employeeService: EmployeeService,
               private dacOchaNewService: DacOchaNewService,
-              private countryService: CountryService) {
+              private countryService: CountryService,
+              private sharedService: SharedService) {
     super();
   }
 
@@ -467,6 +470,17 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
         _info.details.requestType = this.model?.requestType!;
         this._updateForm(_info.details);
         this.oldLicenseFullSerialField.patchValue(_info.details.fullSerial);
+      });
+  }
+
+  viewSelectedLicense(): void {
+    let license = {
+      documentTitle: this.selectedLicenses[0].fullSerial,
+      id: this.selectedLicenses[0].oldLicenseId
+    } as InternalProjectLicenseResult;
+    this.licenseService.showLicenseContent(license, this.selectedLicenses[0].getCaseType())
+      .subscribe((file) => {
+        this.sharedService.openViewContentDialog(file, license);
       });
   }
 
