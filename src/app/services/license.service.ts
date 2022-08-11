@@ -246,11 +246,6 @@ export class LicenseService {
     property: 'rs',
     interceptReceive: (new UrgentInterventionReportResultInterceptor()).receive
   })
-  private _urgentInterventionReportSearch(criteria: Partial<UrgentInterventionReportSearchCriteria>): Observable<UrgentInterventionReportResult[]> {
-    const orgId = { organizationId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id : undefined }
-    return this.http.post<UrgentInterventionReportResult[]>(this.getServiceUrlByCaseType(CaseTypes.URGENT_INTERVENTION_REPORTING) + '/license/search', { ...criteria, ...orgId })
-  }
-  // tslint:disable-next-line: max-line-length
   private _urgentInterventionAnnouncementSearch(criteria: Partial<UrgentInterventionReportSearchCriteria>, validOnly: boolean = false): Observable<UrgentInterventionReportResult[]> {
     const orgId = { organizationId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id : undefined },
       url = this.getServiceUrlByCaseType(CaseTypes.URGENT_INTERVENTION_REPORTING) + '/license/search' + (validOnly ? '-valid' : '');
