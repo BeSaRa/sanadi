@@ -57,7 +57,6 @@ export class EmploymentService extends BaseGenericEService<Employment> {
   jsonSearchFile: string = "employment_search-form.json";
   serviceKey: keyof ILanguageKeys = "menu_employment";
   onSubmit: EventEmitter<Partial<Employee>[]> = new EventEmitter();
-  onSetExpirDate: EventEmitter<IMyDateModel> = new EventEmitter();
 
   constructor(
     private urlService: UrlService,

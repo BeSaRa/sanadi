@@ -10,19 +10,62 @@
     aria-label="Close"
   ></button>
 </div>
-<div class="dialog-content no-fixed-height">
-  <app-employees-data
-    #ETable
-    [employees]="employees"
-    [actions]="actions"
-  ></app-employees-data>
-  <div class="row">
-    <div class="col-sm-12 mb-4 position-relative">
-      <label class="form-label" asteriskIfRequired [control]="comment" for="comment">{{lang.map.comment}}</label>
-      <textarea name="comment" [formControl]="comment" validationClasses [control]="comment" id="comment" rows="4"
-                class="form-control"></textarea>
-      <app-field-error-message [control]="comment"></app-field-error-message>
+<div class="dialog-content" [ngClass]="isCancelRequestType() || !isApproval() ? 'no-fixed-height min-w400px' : 'w800px'">
+  <form [formGroup]="form" *ngIf="isApproval() && !isCancelRequestType()">
+    <div class="position-relative mb-4">
+      <label
+        for="licenseStartDate"
+        asteriskIfRequired="licenseStartDate"
+        class="form-label"
+        >{{ lang.map.license_start_date }}</label
+      >
+      <div class="input-group">
+        <i class="input-group-text mdi mdi-calendar"></i>
+        <div
+          class="form-control"
+          formControlName="licenseStartDate"
+          id="licenseStartDate"
+          [options]="datepickerOptionsMap.licenseStartDate"
+          (click)="openDateMenu(dplicenseStartDate)"
+          #dplicenseStartDate="angular-mydatepicker"
+          angular-mydatepicker
+          validationClasses="licenseStartDate"
+        ></div>
+        <app-field-error-message
+          controlName="licenseStartDate"
+        ></app-field-error-message>
+      </div>
     </div>
+    <div class="position-relative mb-4" *ngIf="isInterm()">
+      <label
+        for="licenseEndDate"
+        asteriskIfRequired="licenseEndDate"
+        class="form-label"
+        >{{ lang.map.license_end_date }}</label
+      >
+      <div class="input-group">
+        <i class="input-group-text mdi mdi-calendar"></i>
+        <div
+          class="form-control"
+          formControlName="licenseEndDate"
+          id="licenseEndDate"
+          [options]="datepickerOptionsMap.licenseEndDate"
+          (click)="openDateMenu(dplicenseEndDate)"
+          #dplicenseEndDate="angular-mydatepicker"
+          angular-mydatepicker
+          validationClasses="licenseEndDate"
+        ></div>
+        <app-field-error-message
+          controlName="licenseEndDate"
+        ></app-field-error-message>
+      </div>
+    </div>
+  </form>
+  <div class="col-sm-12 mb-4 position-relative">
+    <label class="form-label" asteriskIfRequired [control]="comment" for="comment">{{lang.map.comment}}</label>
+    <textarea name="comment" [formControl]="comment" validationClasses [control]="comment" id="comment" rows="4"
+              class="form-control"></textarea>
+    <app-field-error-message [control]="comment"></app-field-error-message>
   </div>
 </div>
 <div class="dialog-actions">

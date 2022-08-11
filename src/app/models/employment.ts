@@ -1,3 +1,6 @@
+import { ContractTypes } from '@app/enums/contract-types.enum';
+import { EmploymentCategory } from '@app/enums/employment-category.enum';
+import { EmploymentRequestType } from '@app/enums/employment-request-type';
 import { IMyDateModel } from 'angular-mydatepicker';
 import { WFResponseType } from './../enums/wfresponse-type.enum';
 import { Employee } from './employee';
@@ -50,7 +53,27 @@ export class Employment
       description: controls ? [description] : description
     };
   }
+  intirmDateFormBuilder() {
+    const { requestType, licenseStartDate, licenseEndDate } = this;
+    return {
+      licenseStartDate: [licenseStartDate, !this.isApproval() || this.isCancelRequestType() ? [] : Validators.required],
+      licenseEndDate: [licenseEndDate, !this.isInterm() || !this.isApproval() || this.isCancelRequestType() ? [] : Validators.required],
+    };
+  }
   approve(): DialogRef {
     return this.service.approve(this, WFResponseType.APPROVE)
+  }
+  finalApprove(): DialogRef {
+    return this.service.approve(this, WFResponseType.FINAL_APPROVE)
+  }
+
+  isApproval() {
+    return this.category == EmploymentCategory.APPROVAL
+  }
+  isCancelRequestType(): boolean {
+    return this.requestType === EmploymentRequestType.CANCEL;
+  }
+  isInterm() {
+    return this.employeeInfoDTOs[0].contractType == ContractTypes.Interim
   }
 }

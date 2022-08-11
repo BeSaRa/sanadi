@@ -108,7 +108,7 @@
             [ngClass]="{isDisabled: !isNewRequestType() && !employees.length}"
             class="btn btn-link outline-none d-flex align-items-center"
             [disabled]="!isNewRequestType() && !employees.length"
-            tooltip="{{isEditRequestTypeAllowed() && isNewRequestType() ? lang.map.btn_add : lang.map.btn_edit }}"
+            [tooltip]="isEditRequestTypeAllowed() && isNewRequestType() ? lang.map.btn_add : lang.map.btn_edit"
             (click)="openForm()">
             <h1 class="h6 m-0 text-primary d-inline-block me-2">{{isEditRequestTypeAllowed() && isNewRequestType()
               ? lang.map.adding_employees
