@@ -30,6 +30,10 @@ import {DacOchaNewService} from '@services/dac-ocha-new.service';
 import {DomainTypes} from '@app/enums/domain-types';
 import {SelectedLicenseInfo} from '@contracts/selected-license-info';
 import {TransferringIndividualFundsAbroadRequestTypeEnum} from '@app/enums/transferring-individual-funds-abroad-request-type-enum';
+import {CountryService} from '@services/country.service';
+import {Country} from '@app/models/country';
+import {InternalProjectLicenseResult} from '@app/models/internal-project-license-result';
+import {SharedService} from '@services/shared.service';
 
 @Component({
   selector: 'transferring-individual-funds-abroad',
@@ -49,8 +53,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     .sort((a, b) => a.lookupKey - b.lookupKey);
   headQuarterTypes: Lookup[] = this.lookupService.listByCategory.HeadQuarterType
     .sort((a, b) => a.lookupKey - b.lookupKey);
-  countries: Lookup[] = this.lookupService.listByCategory.Countries
-    .sort((a, b) => a.lookupKey - b.lookupKey);
+  countries: Country[] = [];
   currencies: Lookup[] = this.lookupService.listByCategory.Currency
     .sort((a, b) => a.lookupKey - b.lookupKey);
   transferMethods: Lookup[] = this.lookupService.listByCategory.TransferMethod
@@ -91,7 +94,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
   addPurposeFormActive!: boolean;
   private displayedColumns: string[] = ['fullSerial', 'status', 'requestTypeInfo', 'actions'];
   selectedLicenses: TransferringIndividualFundsAbroad[] = [];
-  selectedLicenseDisplayedColumns: string[] = ['serial', 'bankName', 'currency', 'bankCategory'];
+  selectedLicenseDisplayedColumns: string[] = ['serial', 'requestType', 'licenseStatus', 'actions'];
   hasSearchedForLicense = false;
 
   constructor(public lang: LangService,
@@ -103,7 +106,9 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
               private toast: ToastService,
               private licenseService: LicenseService,
               private employeeService: EmployeeService,
-              private dacOchaNewService: DacOchaNewService) {
+              private dacOchaNewService: DacOchaNewService,
+              private countryService: CountryService,
+              private sharedService: SharedService) {
     super();
   }
 
@@ -258,6 +263,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
 
   _initComponent(): void {
     // load initials here
+    this.loadCountries();
     this.isExternalUser = this.employeeService.isExternalUser();
     this.buildExecutiveManagementForm();
     this.buildTransferPurposeForm();
@@ -451,11 +457,30 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
         filter<null | SelectedLicenseInfo<TransferringIndividualFundsAbroad, TransferringIndividualFundsAbroad>, SelectedLicenseInfo<TransferringIndividualFundsAbroad, TransferringIndividualFundsAbroad>>
         ((info): info is SelectedLicenseInfo<TransferringIndividualFundsAbroad, TransferringIndividualFundsAbroad> => !!info))
       .subscribe((_info) => {
+        // set oldLicenseId property from validated object id
+        _info.details.oldLicenseId = _info.details.id;
+
+        // delete id property
+        let tempObj = _info.details as any;
+        delete tempObj.id;
+        _info.details = new TransferringIndividualFundsAbroad().clone(tempObj);
+
         this.hasSearchedForLicense = true;
         this.selectedLicenses = [_info.details];
         _info.details.requestType = this.model?.requestType!;
         this._updateForm(_info.details);
         this.oldLicenseFullSerialField.patchValue(_info.details.fullSerial);
+      });
+  }
+
+  viewSelectedLicense(): void {
+    let license = {
+      documentTitle: this.selectedLicenses[0].fullSerial,
+      id: this.selectedLicenses[0].oldLicenseId
+    } as InternalProjectLicenseResult;
+    this.licenseService.showLicenseContent(license, this.selectedLicenses[0].getCaseType())
+      .subscribe((file) => {
+        this.sharedService.openViewContentDialog(file, license);
       });
   }
 
@@ -471,8 +496,8 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
       englishNameLikePassport: [null, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
       jobTitle: [null, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
       executiveNationality: [null, [CustomValidators.required]],
-      executiveIdentificationNumber: [null, [CustomValidators.required].concat(CustomValidators.commonValidations.qId)],
-      passportNumber: [null, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]],
+      executiveIdentificationNumber: [null, [CustomValidators.required, CustomValidators.maxLength(20)]],
+      passportNumber: [null, [CustomValidators.required, ...CustomValidators.commonValidations.passport]],
       executivephone1: [null, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)],
       executivephone2: [null, CustomValidators.commonValidations.phone]
     });
@@ -488,7 +513,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
       beneficiaryCountry: [null, [CustomValidators.required]],
       executionCountry: [null, [CustomValidators.required]],
       totalCost: [null, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(20)]],
-      projectImplementationPeriod: [null, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(5)]]
+      projectImplementationPeriod: [null, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(2)]]
     });
   }
 
@@ -626,8 +651,8 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     this.receiverEnglishNameLikePassport.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')]);
     this.receiverJobTitle.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]);
     this.receiverNationality.setValidators([CustomValidators.required]);
-    this.receiverIdentificationNumber.setValidators([CustomValidators.required].concat(CustomValidators.commonValidations.qId));
-    this.receiverPassportNumber.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]);
+    this.receiverIdentificationNumber.setValidators([CustomValidators.required, CustomValidators.maxLength(20)]);
+    this.receiverPassportNumber.setValidators([CustomValidators.required, ...CustomValidators.commonValidations.passport]);
     this.receiverPhone1.setValidators([CustomValidators.required].concat(CustomValidators.commonValidations.phone));
     this.receiverPhone2.setValidators(CustomValidators.commonValidations.phone);
   }
@@ -637,8 +662,8 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     this.receiverEnglishNameLikePassport.setValidators([CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')]);
     this.receiverJobTitle.setValidators([CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]);
     this.receiverNationality.setValidators([]);
-    this.receiverIdentificationNumber.setValidators([CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]);
-    this.receiverPassportNumber.setValidators([CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]);
+    this.receiverIdentificationNumber.setValidators([CustomValidators.maxLength(20)]);
+    this.receiverPassportNumber.setValidators([...CustomValidators.commonValidations.passport]);
     this.receiverPhone1.setValidators(CustomValidators.commonValidations.phone);
     this.receiverPhone2.setValidators(CustomValidators.commonValidations.phone);
     this.receiverNameLikePassport.patchValue(null);
@@ -661,6 +686,12 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     this.dacOchaNewService.loadByType(AdminLookupTypeEnum.OCHA).subscribe(list => {
       this.mainOchas = list;
     });
+  }
+
+  loadCountries() {
+    this.countryService.loadComposite().subscribe((list: Country[]) => {
+      this.countries = list;
+    })
   }
 
   listenToDomainChanges() {

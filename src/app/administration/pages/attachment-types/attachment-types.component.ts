@@ -72,7 +72,7 @@ export class AttachmentTypesComponent extends AdminGenericComponent<AttachmentTy
   //     }))
   //     .subscribe((list: AttachmentType[]) => {
   //       this.models = list;
-  //       this.table.selection.clear();
+  //       this.table && this.table.clearSelection();
   //     });
   // }
 

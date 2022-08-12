@@ -143,7 +143,7 @@ export class AidLookupComponent extends AdminGenericComponent<AidLookup, AidLook
       }))
       .subscribe((list: AidLookup[]) => {
         this.models = list;
-        this.table.selection.clear();
+        this.table && this.table.clearSelection();
       })
   }
 

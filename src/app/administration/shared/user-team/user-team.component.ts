@@ -154,7 +154,7 @@ export class UserTeamComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         // TODO: delete anything related to deleted teams from next tab
         const ides = this.teamsTable.selection.selected.map(i => i.id);
-        this.teamsTable.selection.clear();
+        this.teamsTable && this.teamsTable.clearSelection();
         this.userTeamsChanged$.next(this.userTeams.filter(uTeam => !ides.includes(uTeam.id)));
       });
   }

@@ -1,16 +1,15 @@
-import {Component, Inject} from '@angular/core';
+import {Component, Inject, ViewChild} from '@angular/core';
 import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
 import {SDGoal} from '@app/models/sdgoal';
 import {DialogRef} from '@app/shared/models/dialog-ref';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {BehaviorSubject, isObservable, Observable, of, Subject} from 'rxjs';
-import {FormManager} from '@app/models/form-manager';
 import {LangService} from '@app/services/lang.service';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {IKeyValue} from '@app/interfaces/i-key-value';
 import {Lookup} from '@app/models/lookup';
 import {LookupService} from '@app/services/lookup.service';
-import {catchError, exhaustMap, filter, switchMap, takeUntil} from 'rxjs/operators';
+import {catchError, exhaustMap, filter, map, switchMap, takeUntil} from 'rxjs/operators';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {DialogService} from '@app/services/dialog.service';
 import {ToastService} from '@app/services/toast.service';
@@ -19,6 +18,10 @@ import {IDialogData} from '@app/interfaces/i-dialog-data';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
 import {SortEvent} from '@app/interfaces/sort-event';
 import {CommonUtils} from '@app/helpers/common-utils';
+import {PageEvent} from '@contracts/page-event';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import {TableComponent} from '@app/shared/components/table/table.component';
 
 @Component({
   selector: 'sd-goal-popup',
@@ -26,33 +29,6 @@ import {CommonUtils} from '@app/helpers/common-utils';
   styleUrls: ['./sd-goal-popup.component.scss']
 })
 export class SdGoalPopupComponent extends AdminGenericDialog<SDGoal> {
-  form!: FormGroup;
-  fm!: FormManager;
-  model!: SDGoal;
-  operation!: OperationTypes;
-  tabsData: IKeyValue = {
-    basic: {name: 'basic'},
-    subGoals: {name: 'subGoals'}
-  };
-  validToAddSubGoals = false;
-  statuses: Lookup[] = this.lookupService.listByCategory.CommonStatus;
-  destroy$: Subject<void> = new Subject<void>();
-  reloadSubGoals$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
-  addSubSdGoal$: Subject<any> = new Subject<any>();
-  editSubSdGoal$: Subject<SDGoal> = new Subject<SDGoal>();
-  saveSubSdGoal$: Subject<any> = new Subject<any>();
-  subGoals: SDGoal[] = [];
-  subGoalsColumns = ['arName', 'enName', 'status', 'actions'];
-  parentId: number;
-  commonStatusEnum = CommonStatusEnum;
-
-  sortingCallbacks = {
-    statusInfo: (a: SDGoal, b: SDGoal, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a) ? '' : a.statusInfo?.getName().toLowerCase(),
-        value2 = !CommonUtils.isValidValue(b) ? '' : b.statusInfo?.getName().toLowerCase();
-      return CommonUtils.getSortValue(value1, value2, dir.direction);
-    }
-  }
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<SDGoal>,
               public fb: FormBuilder,
@@ -67,8 +43,73 @@ export class SdGoalPopupComponent extends AdminGenericDialog<SDGoal> {
     this.parentId = data.parentId;
   }
 
+  form!: FormGroup;
+  model!: SDGoal;
+  operation!: OperationTypes;
+  tabsData: IKeyValue = {
+    basic: {name: 'basic'},
+    subGoals: {name: 'subGoals'}
+  };
+  validToAddSubGoals = false;
+  statuses: Lookup[] = this.lookupService.listByCategory.CommonStatus;
+  destroy$: Subject<void> = new Subject<void>();
+  filterControl: FormControl = new FormControl('');
+  reloadSubGoals$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  addSubSdGoal$: Subject<any> = new Subject<any>();
+  editSubSdGoal$: Subject<SDGoal> = new Subject<SDGoal>();
+  saveSubSdGoal$: Subject<any> = new Subject<any>();
+  subGoals: SDGoal[] = [];
+  displayedColumns = ['arName', 'enName', 'status', 'actions'];
+  parentId: number;
+  commonStatusEnum = CommonStatusEnum;
+  saveVisible = true;
+  @ViewChild('table') table!: TableComponent;
+  readonly: boolean = false;
+
+  sortingCallbacks = {
+    statusInfo: (a: SDGoal, b: SDGoal, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.statusInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.statusInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    }
+  };
+
+  actions: IMenuItem<SDGoal>[] = [
+    // edit
+    {
+      type: 'action',
+      label: 'btn_edit',
+      icon: ActionIconsEnum.EDIT,
+      onClick: (item: SDGoal) => this.editSubSdGoal$.next(item),
+      show: (item: SDGoal) => !this.readonly
+    },
+    // delete
+    {
+      type: 'action',
+      icon: ActionIconsEnum.DELETE,
+      label: 'btn_delete',
+      onClick: (item: SDGoal) => this.delete(item),
+      show: (item: SDGoal) => !this.readonly
+    }
+  ];
+
+  usePagination: boolean = true;
+  count: number = 0;
+
+  pageEvent: PageEvent = {
+    pageIndex: 0,
+    pageSize: 10,
+    length: 0,
+    previousPageIndex: null
+  };
+
   get popupTitle(): string {
-    return this.operation === OperationTypes.CREATE ? this.lang.map.lbl_add_sd_goal : this.lang.map.lbl_edit_sd_goal;
+    if (this.operation === OperationTypes.CREATE) {
+      return this.lang.map.lbl_add_sd_goal;
+    } else if (this.operation === OperationTypes.UPDATE) {
+      return this.lang.map.lbl_edit_sd_goal;
+    }
+    return this.lang.map.view;
   };
 
   initPopup(): void {
@@ -78,14 +119,30 @@ export class SdGoalPopupComponent extends AdminGenericDialog<SDGoal> {
     this.listenToSaveSubSdGoal();
   }
 
+  pageChange($event: PageEvent): void {
+    this.pageEvent = $event;
+    if (this.usePagination && this.pageEvent.previousPageIndex !== null) {
+      this.reloadSubGoals$.next(this.reloadSubGoals$.value);
+    }
+  }
+
   listenToReloadSubGoals() {
     this.reloadSubGoals$
       .pipe(takeUntil(this.destroy$),
         exhaustMap(() => {
-          return this.operation == OperationTypes.UPDATE ? this.model.loadSubGoals() : of([]);
+          const paginationOptions = {
+            limit: this.pageEvent.pageSize,
+            offset: (this.pageEvent.pageIndex * this.pageEvent.pageSize)
+          };
+          return this.model.loadSubGoalsPaginate(paginationOptions)
+            .pipe(map((res) => {
+              this.count = res.count;
+              return res.rs;
+            }));
         }))
       .subscribe((list: SDGoal[]) => {
         this.subGoals = list;
+        this.table && this.table.clearSelection();
       });
   }
 
@@ -99,7 +156,7 @@ export class SdGoalPopupComponent extends AdminGenericDialog<SDGoal> {
   listenToEditSubSdGoal(): void {
     this.editSubSdGoal$
       .pipe(takeUntil(this.destroy$))
-      .pipe(exhaustMap((model) => this.model.service.subSdGoalEditDialog(model, this.model.id).onAfterClose$))
+      .pipe(exhaustMap((model) => this.model.service.subSdGoalEditDialog(model).onAfterClose$))
       .subscribe(() => this.reloadSubGoals$.next(null));
   }
 
@@ -133,17 +190,17 @@ export class SdGoalPopupComponent extends AdminGenericDialog<SDGoal> {
   }
 
   buildForm(): void {
+    this.readonly = false;
     this.form = this.fb.group(this.model.buildForm(true));
-    this.fm = new FormManager(this.form, this.lang);
+    if (this.operation === OperationTypes.VIEW) {
+      this.readonly = true;
+      this.form.disable();
+      this.saveVisible = false;
+      this.validateFieldsVisible = false;
+    }
   }
 
-  edit(sdGoal: SDGoal, event: MouseEvent) {
-    event.preventDefault();
-    this.editSubSdGoal$.next(sdGoal);
-  }
-
-  delete(event: MouseEvent, model: SDGoal): void {
-    event.preventDefault();
+  delete(model: SDGoal): void {
     // @ts-ignore
     const message = this.lang.map.msg_confirm_delete_x.change({x: model.getName()});
     this.dialogService.confirm(message)

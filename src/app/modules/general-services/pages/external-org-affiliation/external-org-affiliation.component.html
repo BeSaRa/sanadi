@@ -30,6 +30,12 @@
       >
       </tab>
       <tab
+        [hasError]="getTabInvalidStatus('specialExplanation')"
+        [name]="tabsData.specialExplanation.name"
+        [template]="special_explanations"
+        [title]="lang.map.special_explanations"
+      ></tab>
+      <tab
         [name]="tabsData.attachments.name"
         *ngIf="!accordionView"
         [template]="attachmentsTab"
@@ -53,7 +59,7 @@
             [clearable]="true"
             placeholder="{{ lang.map.select }}"
             id="requestType"
-            [readonly]="!isEditAllowed()"
+            [readonly]="readonly"
             (change)="handleRequestTypeChange($event, true)"
             [notFoundText]="lang.map.msg_not_found"
             appendTo="body"
@@ -84,7 +90,7 @@
             [clearable]="true"
             placeholder="{{ lang.map.select }}"
             id="category"
-            [readonly]="isCancelRequestType() || !isEditAllowed()"
+            [readonly]="isCancelRequestType() || readonly"
             [notFoundText]="lang.map.msg_not_found"
             appendTo="body"
             validationClasses="category"
@@ -107,10 +113,10 @@
           <div class="input-group">
             <input (keydown.enter)="isEditOrCancel()"
                     formControlName="oldLicenseFullSerial"
-                    [readonly]="!isEditOrCancel() || !isEditAllowed()"
+                    [readonly]="!isEditOrCancel() || readonly"
                     type="text" validationClasses="oldLicenseFullSerial" class="form-control"
                     id="oldLicenseFullSerial" trimInput>
-            <button *ngIf="isEditOrCancel() && isEditAllowed()" type="button" (click)="licenseSearch($event)"
+            <button *ngIf="isEditOrCancel() && !readonly" type="button" (click)="licenseSearch($event)"
                     class="input-group-text">
               <i class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i></button>
             <app-field-error-message controlName="oldLicenseFullSerial"></app-field-error-message>
@@ -124,7 +130,7 @@
           <input
             id="arName"
             formControlName="arName"
-            [readonly]="isCancelRequestType() || !isEditAllowed()"
+            [readonly]="isCancelRequestType() || readonly"
             validationClasses="arName"
             class="form-control"
           />
@@ -140,7 +146,7 @@
           <input
             id="enName"
             formControlName="enName"
-            [readonly]="isCancelRequestType() || !isEditAllowed()"
+            [readonly]="isCancelRequestType() || readonly"
             validationClasses="enName"
             class="form-control"
           />
@@ -157,7 +163,7 @@
             id="email"
             formControlName="email"
             validationClasses="email"
-            [readonly]="isCancelRequestType() || !isEditAllowed()"
+            [readonly]="isCancelRequestType() || readonly"
             class="form-control"
           />
           <app-field-error-message
@@ -177,7 +183,7 @@
             labelForId="country"
             [clearable]="true"
             placeholder="{{ lang.map.select }}"
-            [readonly]="isCancelRequestType() || !isEditAllowed()"
+            [readonly]="isCancelRequestType() || readonly"
             id="country"
             [notFoundText]="lang.map.msg_not_found"
             appendTo="body"
@@ -202,7 +208,7 @@
           <input
             type="text"
             validationClasses="city"
-            [readonly]="isCancelRequestType() || !isEditAllowed()"
+            [readonly]="isCancelRequestType() || readonly"
             trimInput
             class="form-control"
             id="city"
@@ -218,7 +224,7 @@
           <input
             type="text"
             validationClasses="phone"
-            [readonly]="isCancelRequestType() || !isEditAllowed()"
+            [readonly]="isCancelRequestType() || readonly"
             trimInput
             class="form-control"
             id="phone"
@@ -234,7 +240,7 @@
           <input
             type="text"
             validationClasses="fax"
-            [readonly]="isCancelRequestType() || !isEditAllowed()"
+            [readonly]="isCancelRequestType() || readonly"
             trimInput
             class="form-control"
             id="fax"
@@ -254,7 +260,7 @@
             type="text"
             validationClasses="website"
             class="form-control"
-            [readonly]="isCancelRequestType() || !isEditAllowed()"
+            [readonly]="isCancelRequestType() || readonly"
             trimInput
             id="website"
             formControlName="website"
@@ -275,7 +281,7 @@
             type="text"
             validationClasses="mailBox"
             class="form-control"
-            [readonly]="isCancelRequestType() || !isEditAllowed()"
+            [readonly]="isCancelRequestType() || readonly"
             trimInput
             id="mailBox"
             formControlName="mailBox"
@@ -286,36 +292,21 @@
         </div>
         <!-- Introduction -->
         <div class="mb-4 position-relative">
-          <label for="introduction" class="form-label">{{
+          <label for="introduction" class="form-label"
+          asteriskIfRequired="introduction"
+          >{{
             lang.map.lbl_introduction
           }}</label>
           <textarea
             id="introduction"
             validationClasses="introduction"
-            [readonly]="isCancelRequestType() || !isEditAllowed()"
+            [readonly]="isCancelRequestType() || readonly"
             trimInput
             formControlName="introduction"
             class="form-control"
           ></textarea>
           <app-field-error-message
             controlName="introduction"
-          ></app-field-error-message>
-        </div>
-        <!-- Description -->
-        <div class="mb-4 position-relative">
-          <label for="description" class="form-label">{{
-            lang.map.lbl_description
-          }}</label>
-          <textarea
-            id="description"
-            validationClasses="description"
-            trimInput
-            [readonly]="!isEditAllowed()"
-            formControlName="description"
-            class="form-control"
-          ></textarea>
-          <app-field-error-message
-            controlName="description"
           ></app-field-error-message>
         </div>
       </div>
@@ -326,7 +317,7 @@
         [caseType]="model?.caseType"
         [countriesList]="countriesList"
         [list]="model?.bankAccountDTOs || []"
-        [readonly]="isCancelRequestType() || !isEditAllowed()"
+        [readonly]="isCancelRequestType() || readonly"
         (readyEvent)="bankDetailsTabStatus = $event"
       ></bank-account>
     </ng-template>
@@ -335,7 +326,7 @@
         #managersTab
         [countriesList]="countriesList"
         [list]="model?.executiveManagementDTOs || []"
-        [readonly]="isCancelRequestType() || !isEditAllowed()"
+        [readonly]="isCancelRequestType() || readonly"
         (readyEvent)="managersTabStatus = $event"
       ></executive-management>
     </ng-template>
@@ -354,7 +345,7 @@
             validationClasses="arabicName"
             formControlName="arabicName"
             trimInput
-            [readonly]="isCancelRequestType() || !isEditAllowed()"
+            [readonly]="isCancelRequestType() || readonly"
             class="form-control"
             id="arabicName"
           />
@@ -374,7 +365,7 @@
             type="text"
             validationClasses="englishName"
             formControlName="englishName"
-            [readonly]="isCancelRequestType() || !isEditAllowed()"
+            [readonly]="isCancelRequestType() || readonly"
             trimInput
             class="form-control"
             id="englishName"
@@ -392,7 +383,7 @@
             type="text"
             validationClasses="phone"
             formControlName="phone"
-            [readonly]="isCancelRequestType() || !isEditAllowed()"
+            [readonly]="isCancelRequestType() || readonly"
             trimInput
             class="form-control"
             id="phone"
@@ -413,7 +404,7 @@
             type="text"
             validationClasses="mobileNo"
             formControlName="mobileNo"
-            [readonly]="isCancelRequestType() || !isEditAllowed()"
+            [readonly]="isCancelRequestType() || readonly"
             trimInput
             class="form-control"
             id="mobileNo"
@@ -431,7 +422,7 @@
             type="text"
             formControlName="email"
             validationClasses="email"
-            [readonly]="isCancelRequestType() || !isEditAllowed()"
+            [readonly]="isCancelRequestType() || readonly"
             trimInput
             class="form-control"
             id="email"
@@ -442,6 +433,28 @@
         </div>
       </div>
     </ng-template>
+    <ng-container formGroupName="explanation">
+      <ng-template #special_explanations>
+          <div class="mb-4 position-relative">
+            <label for="description" class="form-label"
+          asteriskIfRequired="description"
+          >{{
+              lang.map.lbl_description
+            }}</label>
+            <textarea
+              id="description"
+              validationClasses="description"
+              trimInput
+              [readonly]="readonly"
+              formControlName="description"
+              class="form-control"
+            ></textarea>
+            <app-field-error-message
+              controlName="description"
+            ></app-field-error-message>
+          </div>
+      </ng-template>
+    </ng-container>
     <ng-template #attachmentsTab>
       <attachments [caseId]="model?.id" [caseType]="model?.caseType"
       [service]="service.documentService"></attachments>

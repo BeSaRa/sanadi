@@ -65,6 +65,11 @@ import { UrgentInterventionReport } from '@app/models/urgent-intervention-report
 import { UrgentInterventionReportInterceptor } from '@app/model-interceptors/urgent-intervention-report-interceptor';
 import { UrgentInterventionClosure } from '@app/models/urgent-intervention-closure';
 import { UrgentInterventionClosureInterceptor } from '@app/model-interceptors/urgent-intervention-closure-interceptor';
+import { ForeignCountriesProjectsResult } from '@app/models/foreign-countries-projects-results';
+import { ForeignCountriesProjectsResultInterceptor } from '@app/model-interceptors/foreign-countries-projects-result-interceptor';
+import { ForeignCountriesProjectsSearchCriteria } from '@app/models/foreign-countries-projects-seach-criteria';
+import { ForeignCountriesProjects } from '@app/models/foreign-countries-projects';
+import { ForeignCountriesProjectsInterceptor } from '@app/model-interceptors/foriegn-countries-projects-interceptor';
 
 const collectionInterceptor = new CollectionApprovalInterceptor()
 const collectorInterceptor = new CollectorApprovalInterceptor()
@@ -141,6 +146,9 @@ export class LicenseService {
       case CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION:
         url = this.urlService.URLS.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION;
         break;
+      case CaseTypes.FOREIGN_COUNTRIES_PROJECTS:
+        url = this.urlService.URLS.FOREIGN_COUNTRIES_PROJECTS;
+        break;
       case CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD:
         url = this.urlService.URLS.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD;
         break;
@@ -201,7 +209,17 @@ export class LicenseService {
   externalOrgAffiliationSearch(criteria: Partial<ExternalOrgAffiliationSearchCriteria>): Observable<ExternalOrgAffiliationResult[]> {
     return this._externalOrgAffiliationSearchCriteria(criteria);
   }
-
+  @Generator(ForeignCountriesProjectsResult, true, {
+    property: 'rs',
+    interceptReceive: (new ForeignCountriesProjectsResultInterceptor()).receive
+  })
+  private _foreignCountriesProjectsSearchCriteria(criteria: Partial<ForeignCountriesProjectsSearchCriteria>): Observable<ForeignCountriesProjectsResult[]> {
+    const orgId = { organizationId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id : undefined }
+    return this.http.post<ForeignCountriesProjectsResult[]>(this.getServiceUrlByCaseType(CaseTypes.FOREIGN_COUNTRIES_PROJECTS) + '/license/search', { ...criteria, ...orgId })
+  }
+  foreignCountriesProjectsSearch(criteria: Partial<ForeignCountriesProjectsSearchCriteria>): Observable<ForeignCountriesProjectsResult[]> {
+    return this._foreignCountriesProjectsSearchCriteria(criteria);
+  }
   @Generator(InternalProjectLicenseResult, true, {
     property: 'rs',
     interceptReceive: (new InternalProjectLicenseResultInterceptor()).receive
@@ -349,6 +367,16 @@ export class LicenseService {
   })
   private _validateInternalExternalOrgAffiationsLicenseByRequestType<T>(requestType: number, oldLicenseId: string): Observable<T> {
     return this.http.post<T>(this.urlService.URLS.EXTERNAL_ORG_AFFILIATION_REQUEST + '/draft/validate', {
+      requestType,
+      oldLicenseId
+    });
+  }
+  @Generator(ForeignCountriesProjects, false, {
+    property: 'rs',
+    interceptReceive: (new ForeignCountriesProjectsInterceptor()).receive
+  })
+  private _validateForeignCountriesProjectsLicenseByRequestType<T>(requestType: number, oldLicenseId: string): Observable<T> {
+    return this.http.post<T>(this.urlService.URLS.FOREIGN_COUNTRIES_PROJECTS + '/draft/validate', {
       requestType,
       oldLicenseId
     });
@@ -549,6 +577,9 @@ export class LicenseService {
       return this._validateUrgentInterventionFinancialNotificationByRequestType<T>(requestType, licenseId);
     } else if (caseType === CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD) {
       return this._validateTransferIndividualFundsAbroadByRequestType<T>(requestType, licenseId);
+    }
+    else if (caseType === CaseTypes.FOREIGN_COUNTRIES_PROJECTS) {
+      return this._validateForeignCountriesProjectsLicenseByRequestType<T>(requestType, licenseId);
     }
     return of(undefined);
   }

@@ -1,4 +1,6 @@
 export interface ILanguageKeys {
+  transfer_to_country: string;
+  national_id_number: string;
   you_should_add_at_least_one_purpose_in_purposes: string;
   you_should_add_at_least_one_person_to_executives_list: string;
   add_purpose: string;
@@ -1168,12 +1170,28 @@ export interface ILanguageKeys {
   lbl_edit_field_assessment: string;
   type: string;
   currency_usd: string;
-  org_unit_field:string;
+  org_unit_field: string;
   lbl_add_org_unit_field: string;
   lbl_edit_org_unit_field: string;
   requester_relation: string;
   requester_name: string;
   menu_urgent_intervention_financial_notification: string;
-  notification_request_number: string;
   urgent_intervention_declaration_license_number: string;
+  menu_request_to_approve_projects_for_foreign_countries: string;
+  external_cooperation_authority: string;
+  subject_of_need: string;
+  lbl_justification: string;
+  lbl_recommendation: string;
+  lbl_beneficiaries: string;
+  project_needs: string;
+  notification_request_number: string;
+  risk_management_and_compliance_consulting: string;
+  approval_external_org_affiliation: string;
+  conditional_license_indicator: string;
+  follow_up_date: string;
+  menu_vacation: string;
+  vacation_date_from: string;
+  vacation_date_to: string;
+  lbl_add_vacation: string;
+  lbl_edit_vacation: string;
 }

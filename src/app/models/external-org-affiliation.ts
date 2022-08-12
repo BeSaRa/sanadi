@@ -1,3 +1,5 @@
+import { IMyDateModel } from 'angular-mydatepicker';
+import { WFResponseType } from '@app/enums/wfresponse-type.enum';
 import { HasLicenseDurationType } from './../interfaces/has-license-duration-type';
 import { Validators } from '@angular/forms';
 import { CustomValidators } from '@app/validators/custom-validators';
@@ -14,6 +16,7 @@ import { CaseModel } from '@app/models/case-model';
 import { mixinRequestType } from '@app/mixins/mixin-request-type';
 import { InterceptModel } from '@decorators/intercept-model';
 import { AdminResult } from './admin-result';
+import { DialogRef } from '@app/shared/models/dialog-ref';
 
 const _RequestType = mixinLicenseDurationType(mixinRequestType(CaseModel));
 const interceptor = new ExternalOrgAffiliationInterceptor();
@@ -43,7 +46,10 @@ export class ExternalOrgAffiliation extends _RequestType<ExternalOrgAffiliationS
   executiveManagementDTOs: ExecutiveManagement[] = [];
   contactOfficerDTOs: ContactOfficer[] = [];
   countryInfo!: AdminResult;
-
+  customTerms!: string;
+  publicTerms!: string;
+  conditionalLicenseIndicator!: boolean;
+  followUpDate!: string | IMyDateModel;
   oldLicenseFullSerial!: string;
   oldLicenseId!: string;
   oldLicenseSerial!: number;
@@ -66,7 +72,6 @@ export class ExternalOrgAffiliation extends _RequestType<ExternalOrgAffiliationS
       website,
       email,
       mailBox,
-      description,
       introduction,
       oldLicenseFullSerial
     } = this;
@@ -81,15 +86,38 @@ export class ExternalOrgAffiliation extends _RequestType<ExternalOrgAffiliationS
       enName: control ? [enName, [
         CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
         Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')]] : enName,
-      city: control ? [city, [CustomValidators.required]] : city,
-      website: control ? [website, [Validators.maxLength(350)]] : website,
+      city: control ? [city, [CustomValidators.required, CustomValidators.maxLength(100)]] : city,
+      website: control ? [website, [CustomValidators.required, Validators.maxLength(350)]] : website,
       phone: control ? [phone, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : phone,
       fax: control ? [fax, [CustomValidators.required].concat(CustomValidators.commonValidations.fax)] : fax,
       mailBox: control ? [mailBox, [CustomValidators.required, CustomValidators.number, Validators.maxLength(10)]] : mailBox,
       email: control ? [email, [CustomValidators.required, CustomValidators.pattern('EMAIL'), CustomValidators.maxLength(100)]] : email,
       introduction: control ? [introduction, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : introduction,
+    }
+  }
+  buildExplanation(control: boolean = false): any {
+    const {
+      description,
+    } = this;
+    return {
       description: control ? [description, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : description
     }
   }
-
+  buildApprovalForm(control: boolean = false): any {
+    const {
+      customTerms,
+      publicTerms,
+      conditionalLicenseIndicator,
+      followUpDate
+    } = this;
+    return {
+      customTerms: control ? [customTerms, [CustomValidators.required]] : customTerms,
+      publicTerms: control ? [publicTerms, [CustomValidators.required]] : publicTerms,
+      conditionalLicenseIndicator: control ? [conditionalLicenseIndicator, [CustomValidators.required]] : conditionalLicenseIndicator,
+      followUpDate: control ? [followUpDate, [CustomValidators.required]] : followUpDate
+    }
+  }
+  approve(): DialogRef {
+    return this.service.approve(this, WFResponseType.APPROVE)
+  }
 }

@@ -206,11 +206,6 @@ export class OrganizationUnitPopupComponent extends AdminGenericDialog<OrgUnit> 
   }
 
   beforeSave(model: OrgUnit, form: FormGroup): boolean | Observable<boolean> {
-    let updatedOrgUnit = this._getUpdatedValues(model, this.form);
-    if (this.isDuplicatedOrganizationNames(updatedOrgUnit)) {
-      return false;
-    }
-
     const invalidTabs = this._getInvalidTabs();
     if (invalidTabs.length > 0) {
       const listHtml = CommonUtils.generateHtmlList(this.langService.map.msg_following_tabs_valid, invalidTabs);
@@ -261,34 +256,6 @@ export class OrganizationUnitPopupComponent extends AdminGenericDialog<OrgUnit> 
   }
 
   saveFail(error: Error): void {
-  }
-
-  isDuplicatedOrganizationNames(orgUnit: OrgUnit) {
-    let isDuplicatedArabicName = false, isDuplicatedEnglishName = false;
-
-    if (this._isDuplicatedOrganizationArabicName(orgUnit)) {
-      this.toast.error(this.langService.map.arabic_name_is_duplicated);
-      isDuplicatedArabicName = true;
-    }
-
-    if (this._isDuplicatedOrganizationEnglishName(orgUnit)) {
-      this.toast.error(this.langService.map.english_name_is_duplicated);
-      isDuplicatedEnglishName = true;
-    }
-
-    return isDuplicatedArabicName || isDuplicatedEnglishName;
-  }
-
-  private _isDuplicatedOrganizationArabicName(orgUnit: OrgUnit) {
-    return this.orgUnitsList
-      .filter(org => org.id != orgUnit.id)
-      .some(org => org.arName == orgUnit.arName);
-  }
-
-  private _isDuplicatedOrganizationEnglishName(orgUnit: OrgUnit) {
-    return this.orgUnitsList
-      .filter(org => org.id != orgUnit.id)
-      .some(org => org.enName == orgUnit.enName);
   }
 
   openFileBrowser($event: MouseEvent): void {

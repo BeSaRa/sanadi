@@ -135,7 +135,7 @@ export class OrganizationUserComponent extends AdminGenericComponent<OrgUser, Or
     this.service._loadDone$
       .pipe(takeUntil((this.destroy$)))
       .subscribe(() => {
-        this.table.selection.clear();
+        this.table && this.table.clearSelection();
       });
   }
 

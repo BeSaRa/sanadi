@@ -86,7 +86,7 @@ export class SurveyQuestionComponent extends AdminGenericComponent<SurveyQuestio
         if (result.result === 'SUCCESS' || result.result === 'PARTIAL_SUCCESS') {
           this.models = this.models.filter(item => !ids.includes(item.id));
         }
-        this.table.selection.clear();
+        this.table && this.table.clearSelection();
       });
   }
 }

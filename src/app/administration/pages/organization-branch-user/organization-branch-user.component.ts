@@ -2,7 +2,7 @@ import {Component, Input, ViewChild} from '@angular/core';
 import {OrgUser} from '@app/models/org-user';
 import {OrganizationUserService} from '@app/services/organization-user.service';
 import {LangService} from '@app/services/lang.service';
-import {switchMap, takeUntil} from 'rxjs/operators';
+import {map, switchMap, takeUntil} from 'rxjs/operators';
 import {OrgBranch} from '@app/models/org-branch';
 import {OrgUnit} from '@app/models/org-unit';
 import {DialogRef} from '@app/shared/models/dialog-ref';
@@ -19,6 +19,8 @@ import {AdminGenericComponent} from '@app/generics/admin-generic-component';
 export class OrganizationBranchUserComponent extends AdminGenericComponent<OrgUser, OrganizationUserService> {
   @Input() organization!: OrgUnit;
   @Input() orgBranch!: OrgBranch;
+
+  usePagination = true;
 
   constructor(public service: OrganizationUserService,
               public langService: LangService,
@@ -47,7 +49,7 @@ export class OrganizationBranchUserComponent extends AdminGenericComponent<OrgUs
       label: 'logs',
       onClick: (item: OrgUser) => this.showAuditLogs(item)
     }
-  ]
+  ];
 
   edit(orgUser: OrgUser, $event?: MouseEvent): void {
     $event?.preventDefault();
@@ -59,10 +61,19 @@ export class OrganizationBranchUserComponent extends AdminGenericComponent<OrgUs
       .pipe(takeUntil(this.destroy$))
       .pipe(
         switchMap(() => {
-          return this.service.getByCriteria({'org-id': this.organization.id, 'org-branch-id': this.orgBranch.id});
+          const paginationOptions = {
+            limit: this.pageEvent.pageSize,
+            offset: (this.pageEvent.pageIndex * this.pageEvent.pageSize)
+          };
+          return this.service.getByCriteriaPaging(paginationOptions, {'org-id': this.organization.id, 'org-branch-id': this.orgBranch.id})
+            .pipe(map((res) => {
+              this.count = res.count;
+              return res.rs;
+            }));
         })
       ).subscribe((users: OrgUser[]) => {
       this.models = users;
+      this.table && this.table.clearSelection();
     });
   }
 

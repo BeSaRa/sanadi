@@ -103,17 +103,18 @@
         class="col-12 mb-2 d-flex justify-content-between align-items-end"
         *ngIf="category.value && requestType.value"
       >
-        <button
-          class="btn btn-primary px-3"
-          [disabled]="!isNewRequestType() && !employees.length"
-          (click)="openForm()"
-        >
-          {{
-            isEditRequestTypeAllowed() && isNewRequestType()
-              ? lang.map.adding_employees
-              : lang.map.employees_details
-          }}
-        </button>
+      <div>
+          <h1 class="h6 text-primary m-0 d-inline-block">{{isEditRequestTypeAllowed() && isNewRequestType()
+            ? lang.map.adding_employees
+            : lang.map.employees_details}}</h1>
+          <button
+            [ngClass]="{isDisabled: !isNewRequestType() && !employees.length}"
+            class="btn btn-link outline-none"
+            [disabled]="!isNewRequestType() && !employees.length"
+            tooltip="{{lang.map.btn_add}}"
+            (click)="openForm()">
+            <i class="mdi mdi-plus-box"></i></button>
+        </div>
         <form
           class="d-flex align-items-end"
           [formGroup]="searchCriteriaForm"

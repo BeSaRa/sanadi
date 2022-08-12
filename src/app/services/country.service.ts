@@ -18,13 +18,14 @@ import { CommonStatusEnum } from '@app/enums/common-status.enum';
 import { CrudWithDialogGenericService } from "@app/generics/crud-with-dialog-generic-service";
 import { ComponentType } from '@angular/cdk/portal';
 import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
+import {Pagination} from '@app/models/pagination';
 
 @CastResponseContainer({
   $default: {
     model: () => Country
   },
   $pagination: {
-    model: () => Country,
+    model: () => Pagination,
     shape: { 'rs.*': () => Country }
   }
 })
