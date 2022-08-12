@@ -1,4 +1,7 @@
+import { ForeignCountriesProjectsComponent } from '@app/modules/general-services/pages/foreign-countries-projects/foreign-countries-projects.component';
+import { UrgentInterventionFinancialNotificationComponent } from './../modules/urgent-intervention/pages/urgent-intervention-financial-notification/urgent-intervention-financial-notification.component';
 import { EmploymentComponent } from './../modules/general-services/pages/employment/employment.component';
+
 import { Injectable } from '@angular/core';
 import { DynamicComponentService } from './dynamic-component.service';
 import { TeamService } from './team.service';
@@ -25,6 +28,7 @@ import { CustomsExemptionComponent } from '@app/modules/remittances/pages/custom
 import {
   InternalBankAccountApprovalComponent
 } from '@app/projects/pages/internal-bank-account-approval/internal-bank-account-approval.component';
+
 import { UrgentJointReliefCampaignComponent } from '@app/projects/pages/urgent-joint-relief-campaign/urgent-joint-relief-campaign.component';
 import { UrgentInterventionReportComponent } from '@app/modules/urgent-intervention/pages/urgent-intervention-report/urgent-intervention-report.component';
 import {
@@ -32,7 +36,6 @@ import {
 } from '@app/modules/urgent-intervention/pages/urgent-intervention-closure/urgent-intervention-closure.component';
 import { ExternalOrgAffiliationComponent } from './../modules/general-services/pages/external-org-affiliation/external-org-affiliation.component';
 import { UrgentInterventionLicenseComponent } from '@app/modules/urgent-intervention/pages/urgent-intervention-license/urgent-intervention-license.component';
-import { ForeignCountriesProjectsComponent } from '@app/modules/general-services/pages/foreign-countries-projects/foreign-countries-projects.component';
 import {
   TransferringIndividualFundsAbroadComponent
 } from '@app/projects/pages/transferring-individual-funds-abroad/transferring-individual-funds-abroad.component';
@@ -71,6 +74,7 @@ export class AutoRegisterService {
       DynamicComponentService.registerComponent('UrgentInterventionClosureComponent', UrgentInterventionClosureComponent);
 
       DynamicComponentService.registerComponent('ExternalOrgAffiliationComponent', ExternalOrgAffiliationComponent);
+      DynamicComponentService.registerComponent('UrgentInterventionFinancialNotificationComponent', UrgentInterventionFinancialNotificationComponent);
       DynamicComponentService.registerComponent('ForeignCountriesProjectsComponent', ForeignCountriesProjectsComponent);
       DynamicComponentService.registerComponent('TransferringIndividualFundsAbroadComponent', TransferringIndividualFundsAbroadComponent);
     });// just to make sure that service constructed and register all dynamic components

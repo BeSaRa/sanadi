@@ -120,6 +120,7 @@ export interface ILookupMap {
   TransferringIndividualRequestType: Lookup[];
   TransferType: Lookup[];
   UrgentInterventionAnnouncementRequestType: Lookup[];
+  UrgentFinancialNotificationAccountType: Lookup[];
   UrgentInterventionFinancialRequestType: Lookup[];
   UrgentInterventionRequestType: Lookup[];
   UserType: Lookup[];

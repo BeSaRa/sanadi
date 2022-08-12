@@ -411,6 +411,7 @@ export interface ILanguageKeys {
   the_domain: string;
   implementation_agency_type: string;
   implementation_period: string;
+  implementation_agency: string;
   execution_info: string;
   execution_country_info: string;
   beneficiary_country_info: string;
@@ -1118,6 +1119,7 @@ export interface ILanguageKeys {
   menu_urgent_intervention_report: string;
   entities: string;
   intervention_fields: string;
+  transfer_data: string;
   intervention_areas: string;
   intervention_name: string;
   entity_type: string;
@@ -1173,6 +1175,8 @@ export interface ILanguageKeys {
   lbl_edit_org_unit_field: string;
   requester_relation: string;
   requester_name: string;
+  menu_urgent_intervention_financial_notification: string;
+  urgent_intervention_declaration_license_number: string;
   menu_request_to_approve_projects_for_foreign_countries: string;
   external_cooperation_authority: string;
   subject_of_need: string;

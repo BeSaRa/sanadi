@@ -1,22 +1,24 @@
-import { ComponentFactoryResolver, Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { UrlService } from './url.service';
-import { Observable, of } from 'rxjs';
-import { QueryResultSet } from '../models/query-result-set';
-import { Generator } from '@decorators/generator';
-import { QueryResultSetInterceptor } from '../model-interceptors/query-result-set-interceptor';
-import { FactoryService } from './factory.service';
-import { IBulkResult } from '@contracts/ibulk-result';
-import { InquiryService } from './inquiry.service';
-import { EServiceGenericService } from '../generics/e-service-generic-service';
-import { DialogService } from './dialog.service';
-import { DialogRef } from '../shared/models/dialog-ref';
-import { BlobModel } from '../models/blob-model';
-import { SendToComponent } from '../shared/popups/send-to-user-popup/send-to.component';
-import { IWFResponse } from '@contracts/i-w-f-response';
-import { IDefaultResponse } from '@contracts/idefault-response';
-import { map } from 'rxjs/operators';
-import { WFResponseType } from '../enums/wfresponse-type.enum';
+import { UrgentInterventionFinancialNotificationService } from './urgent-intervention-financial-notification.service';
+import {ComponentFactoryResolver, Injectable} from '@angular/core';
+import {HttpClient, HttpParams} from '@angular/common/http';
+import {UrlService} from './url.service';
+import {Observable, of} from 'rxjs';
+import {QueryResultSet} from '../models/query-result-set';
+import {Generator} from '@decorators/generator';
+import {QueryResultSetInterceptor} from '../model-interceptors/query-result-set-interceptor';
+import {FactoryService} from './factory.service';
+import {IBulkResult} from '@contracts/ibulk-result';
+import {InquiryService} from './inquiry.service';
+import {EServiceGenericService} from '../generics/e-service-generic-service';
+import {DialogService} from './dialog.service';
+import {DialogRef} from '../shared/models/dialog-ref';
+import {BlobModel} from '../models/blob-model';
+import {SendToComponent} from '../shared/popups/send-to-user-popup/send-to.component';
+import {IWFResponse} from '@contracts/i-w-f-response';
+import {IDefaultResponse} from '@contracts/idefault-response';
+import {map} from 'rxjs/operators';
+import {WFResponseType} from '../enums/wfresponse-type.enum';
+
 import {
   ActionWithCommentPopupComponent
 } from '../shared/popups/action-with-comment-popup/action-with-comment-popup.component';
@@ -62,31 +64,32 @@ export class InboxService {
   services: Map<number, any> = new Map<number, any>();
 
   constructor(private http: HttpClient,
-    private dialog: DialogService,
-    private inquiryService: InquiryService,
-    private consultationService: ConsultationService,
-    private internationalCooperationService: InternationalCooperationService,
-    private initialExternalOfficeApprovalService: InitialExternalOfficeApprovalService,
-    private finalExternalOfficeApprovalService: FinalExternalOfficeApprovalService,
-    private internalProjectLicenseService: InternalProjectLicenseService,
-    private projectModelService: ProjectModelService,
-    private cfr: ComponentFactoryResolver,
-    private exceptionHandlerService: ExceptionHandlerService,
-    private partnerApprovalService: PartnerApprovalService,
-    private collectionApprovalService: CollectionApprovalService,
-    private fundraisingService: FundraisingService,
-    private collectorApprovalService: CollectorApprovalService,
-    private urgentInterventionLicensingService: UrgentInterventionLicensingService,
-    private internalBankAccountApprovalService: InternalBankAccountApprovalService,
-    private urgentJointReliefCampaignService: UrgentJointReliefCampaignService,
-    private urgentInterventionReportingService: UrgentInterventionReportingService,
-    private urgentInterventionClosureService: UrgentInterventionClosureService,
-    private urlService: UrlService,
-    private employmentService: EmploymentService,
-    private externalOrgAffiliationService: ExternalOrgAffiliationService,
-    private customsExemptionRemittanceService: CustomsExemptionRemittanceService,
-    private foreignCountriesProjectService: ForeignCountriesProjectsService,
-    private transferringIndividualsFundsAbroad: TransferringIndividualFundsAbroadService) {
+              private dialog: DialogService,
+              private inquiryService: InquiryService,
+              private consultationService: ConsultationService,
+              private internationalCooperationService: InternationalCooperationService,
+              private initialExternalOfficeApprovalService: InitialExternalOfficeApprovalService,
+              private finalExternalOfficeApprovalService: FinalExternalOfficeApprovalService,
+              private internalProjectLicenseService: InternalProjectLicenseService,
+              private projectModelService: ProjectModelService,
+              private cfr: ComponentFactoryResolver,
+              private exceptionHandlerService: ExceptionHandlerService,
+              private partnerApprovalService: PartnerApprovalService,
+              private collectionApprovalService: CollectionApprovalService,
+              private fundraisingService: FundraisingService,
+              private collectorApprovalService: CollectorApprovalService,
+              private urgentInterventionLicensingService: UrgentInterventionLicensingService,
+              private internalBankAccountApprovalService: InternalBankAccountApprovalService,
+              private urgentJointReliefCampaignService: UrgentJointReliefCampaignService,
+              private urgentInterventionReportingService: UrgentInterventionReportingService,
+              private urgentInterventionClosureService: UrgentInterventionClosureService,
+              private urgentInterventionFinancialNotificationService: UrgentInterventionFinancialNotificationService,
+              private urlService: UrlService,
+              private employmentService: EmploymentService,
+              private externalOrgAffiliationService: ExternalOrgAffiliationService,
+              private customsExemptionRemittanceService: CustomsExemptionRemittanceService,
+              private foreignCountriesProjectService: ForeignCountriesProjectsService,
+              private transferringIndividualsFundsAbroad: TransferringIndividualFundsAbroadService) {
     FactoryService.registerService('InboxService', this);
     // register all e-services that we need.
     this.services.set(CaseTypes.INQUIRY, this.inquiryService);
@@ -108,6 +111,7 @@ export class InboxService {
     this.services.set(CaseTypes.URGENT_INTERVENTION_REPORTING, this.urgentInterventionReportingService);
     this.services.set(CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST, this.externalOrgAffiliationService);
     this.services.set(CaseTypes.URGENT_INTERVENTION_CLOSURE, this.urgentInterventionClosureService);
+    this.services.set(CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION, this.urgentInterventionFinancialNotificationService);
     this.services.set(CaseTypes.FOREIGN_COUNTRIES_PROJECTS, this.foreignCountriesProjectService);
     this.services.set(CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD, this.transferringIndividualsFundsAbroad);
   }

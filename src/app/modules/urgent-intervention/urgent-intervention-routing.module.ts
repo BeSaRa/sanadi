@@ -46,7 +46,19 @@ const routes: Routes = [
       checkAnyPermission: false,
       render: 'UrgentInterventionClosureComponent'
     } as ICustomRouteData
+  },
+  {
+    path: 'urgent-intervention-financial-notification', component: EServiceComponentWrapperComponent,
+    canActivate: [ServicesGuard],
+    resolve: {info: ServiceItemResolver},
+    data: {
+      permissionKey: EServicePermissions.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION,
+      configPermissionGroup: null,
+      checkAnyPermission: false,
+      render: 'UrgentInterventionFinancialNotificationComponent'
+    } as ICustomRouteData
   }
+
 ];
 
 @NgModule({

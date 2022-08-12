@@ -24,6 +24,7 @@ import {UrgentInterventionReportResult} from '@app/models/urgent-intervention-re
 import {IDefaultResponse} from '@contracts/idefault-response';
 import {map} from 'rxjs/operators';
 import {UrgentInterventionAnnouncementRequestType} from '@app/enums/service-request-types';
+import { CastResponse } from '@app/decorators/decorators/cast-response';
 
 @Injectable({
   providedIn: 'root'
