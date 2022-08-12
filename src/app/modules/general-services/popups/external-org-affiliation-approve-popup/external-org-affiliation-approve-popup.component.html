@@ -10,7 +10,7 @@
     aria-label="Close"
   ></button>
 </div>
-<div class="dialog-content no-fixed-height">
+<div class="dialog-content no-fixed-height min-w400px w600px">
   <div class="row">
     <form [formGroup]="approvalForm">
       <div class="col-sm-12 mb-4 position-relative">
@@ -24,7 +24,7 @@
           validationClasses="publicTerms" id="publicTerms" rows="4" class="form-control"></textarea>
       </div>
       <div class="col-sm-12 mb-4 position-relative">
-        <label class="form-label" for="conditionalLicenseIndicator">{{lang.map.conditional_license_indicator}}</label>
+        <label class="form-label me-2" for="conditionalLicenseIndicator">{{lang.map.conditional_license_indicator}}</label>
         <input type="checkbox" formControlName="conditionalLicenseIndicator" id="conditionalLicenseIndicator" class="form-check-input">
       </div>
       <div class="mb-4 position-relative">

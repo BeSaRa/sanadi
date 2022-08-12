@@ -36,6 +36,7 @@ export class ExternalOrgAffiliationInterceptor implements IModelInterceptor<Exte
     return model;
   }
   receive(model: ExternalOrgAffiliation): ExternalOrgAffiliation {
+    model.followUpDate = DateUtils.changeDateToDatepicker(model.followUpDate);
     model.bankAccountDTOs = model.bankAccountDTOs?.map(ba => bankAccountInterceptor.receive(new BankAccount().clone(ba)))
     model.executiveManagementDTOs = model.executiveManagementDTOs?.map(em => executiveManagementInterceptor.receive(new ExecutiveManagement().clone(em)))
     model.contactOfficerDTOs = model.contactOfficerDTOs?.map(co => contactOfficerInterceptor.receive(new ContactOfficer().clone(co)))
