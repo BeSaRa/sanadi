@@ -45,11 +45,11 @@ export class UrgentInterventionFinancialNotification extends LicenseApprovalMode
   buildForm(control: boolean = false) {
     const {
       requestType,
-      oldLicenseFullSerial,
+      urgentAnnouncementFullSerial,
     } = this;
     return {
       requestType: control ? [requestType, [CustomValidators.required]] : requestType,
-      oldLicenseFullSerial: control ? [oldLicenseFullSerial, [CustomValidators.required]] : oldLicenseFullSerial,
+      urgentAnnouncementFullSerial: control ? [urgentAnnouncementFullSerial, [CustomValidators.required]] : urgentAnnouncementFullSerial,
     }
   }
   buildTransferDataForm(control: boolean = false) {
@@ -62,9 +62,9 @@ export class UrgentInterventionFinancialNotification extends LicenseApprovalMode
     } = this;
     return {
       implementingAgencyType: control ? [implementingAgencyType, [CustomValidators.required]] : implementingAgencyType,
-      accountType: control ? [accountType, [CustomValidators.required]] : accountType,
       implementingAgency: control ? [implementingAgency, [CustomValidators.required]] : implementingAgency,
-      accountNumber: control ? [accountNumber] : accountNumber,
+      accountType: control ? [accountType] : accountType,
+      accountNumber: control ? [accountNumber, [CustomValidators.required]] : accountNumber,
       amount: control ? [amount, [CustomValidators.required]] : amount,
     }
   }

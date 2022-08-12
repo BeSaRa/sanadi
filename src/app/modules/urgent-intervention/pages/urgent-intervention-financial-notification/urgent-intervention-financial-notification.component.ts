@@ -57,6 +57,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
   licenseSearch$: Subject<string> = new Subject<string>();
   selectedLicense?: UrgentInterventionReportResult;
   loadAttachments: boolean = false;
+  OperationTypes = OperationTypes;
   form!: FormGroup;
   tabsData: TabMap = {
     basicInfo: {
@@ -66,7 +67,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
       checkTouchedDirty: false,
       isTouchedOrDirty: () => false,
       show: () => true,
-      validStatus: () => this.basicInfoTab.valid && !!this.selectedLicense
+      validStatus: () => this.basicInfoTab.valid && (this.operation != OperationTypes.CREATE || !!this.selectedLicense)
     },
     entities: {
       name: 'entitiesTab',
@@ -153,6 +154,9 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
       basicInfo: this.fb.group(urgentInterventionFinancialNotification.buildForm(true)),
       transferData: this.fb.group(urgentInterventionFinancialNotification.buildTransferDataForm(true))
     })
+    this.form.valueChanges.subscribe((data) => {
+      console.log(this.form, data)
+    })
   }
   _afterBuildForm(): void {
   }
@@ -215,23 +219,35 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
       this.cd.detectChanges();
       return;
     }
-
     this.basicInfoTab.patchValue(model.buildForm());
+    this.transferDataTab.patchValue(model.buildTransferDataForm());
+    if (this.implementingAgencyTypeField.value) {
+      this._loadImplementingAgenciesByAgencyType();
+      this._loadImplementingAgenciesAccounts();
+    }
+    if (this.accountType.value) {
+      if (this.boxAccountType) {
+        this.getInterventionLicense();
+      } else {
+        this._loadImplementingAgenciesAccounts();
+      }
+    }
+
     this.cd.detectChanges();
   }
 
   licenseSearch($event?: Event): void {
     $event?.preventDefault();
-    const value = this.oldLicenseFullSerialField.value && this.oldLicenseFullSerialField.value.trim();
+    const value = this.urgentAnnouncementFullSerialField.value && this.urgentAnnouncementFullSerialField.value.trim();
     this.licenseSearch$.next(value);
   }
   private listenToLicenseSearch() {
     this.licenseSearch$
       .pipe(
         takeUntil(this.destroy$),
-        exhaustMap(oldLicenseFullSerial => {
+        exhaustMap(urgentAnnouncementFullSerialField => {
           return this.loadLicencesByCriteria({
-            fullSerial: oldLicenseFullSerial,
+            fullSerial: urgentAnnouncementFullSerialField,
             licenseStatus: 2
           })
             .pipe(catchError(() => of([])));
@@ -278,6 +294,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
       value.executionCountryInfo = licenseDetails.executionCountryInfo;
       value.licenseVSID = licenseDetails.vsId;
       this._updateForm(value);
+      this._handleRequestTypeChange()
     }
   }
   private singleLicenseDetails(license: UrgentInterventionReportResult): Observable<UrgentInterventionReport> {
@@ -292,10 +309,9 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
     return this.service.licenseSearch(criteria);
   }
 
-  isEditLicenseAllowed(): boolean {
-    // if new or draft record and request type !== new, edit is allowed
+  isEditAllowed(): boolean {
     let isAllowed = !this.model?.id || (!!this.model?.id && this.model.canCommit());
-    return isAllowed;// && CommonUtils.isValidValue(this.requestTypeField.value) && this.requestTypeField.value !== ServiceRequestTypes.NEW;
+    return isAllowed;
   }
   isAttachmentReadonly(): boolean {
     if (!this.model?.id) {
@@ -387,8 +403,8 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
   get requestTypeField() {
     return this.basicInfoTab.get('requestType') as FormControl
   }
-  get oldLicenseFullSerialField(): FormControl {
-    return this.basicInfoTab.get('oldLicenseFullSerial') as FormControl;
+  get urgentAnnouncementFullSerialField(): FormControl {
+    return this.basicInfoTab.get('urgentAnnouncementFullSerial') as FormControl;
   }
   get implementingAgencyTypeField(): FormControl {
     return this.transferDataTab.get('implementingAgencyType') as FormControl;

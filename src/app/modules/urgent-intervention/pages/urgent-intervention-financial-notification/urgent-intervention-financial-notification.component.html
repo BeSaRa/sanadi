@@ -4,18 +4,18 @@
       [template]="basicInfoTabTemplate" [title]="lang.map.lbl_basic_info"></tab>
     <tab [name]="tabsData.entities.name" [hasError]="getTabInvalidStatus('entities')"
         [template]="entitiesTabTemplate" [title]="lang.map.entities"
-        [disabled]="!selectedLicense"></tab>
+        [disabled]="this.operation == OperationTypes.CREATE && !selectedLicense"></tab>
     <tab [name]="tabsData.interventionAreas.name" [hasError]="getTabInvalidStatus('interventionAreas')"
-      [disabled]="!selectedLicense"
+      [disabled]="this.operation == OperationTypes.CREATE && !selectedLicense"
       [template]="interventionAreasTabTemplate" [title]="lang.map.intervention_areas"></tab>
     <tab [name]="tabsData.interventionFields.name" [hasError]="getTabInvalidStatus('interventionFields')"
-      [disabled]="!selectedLicense"
+      [disabled]="this.operation == OperationTypes.CREATE && !selectedLicense"
       [template]="interventionFieldsTabTemplate" [title]="lang.map.intervention_fields"></tab>
     <tab [name]="tabsData.transferData.name" [hasError]="getTabInvalidStatus('transferData')"
-      [disabled]="!selectedLicense || !requestTypeField.value"
+      [disabled]="this.operation == OperationTypes.CREATE && !selectedLicense || !requestTypeField.value"
       [template]="transferDataTabTemplate" [title]="lang.map.transfer_data"></tab>
     <tab *ngIf="!accordionView" [name]="tabsData.attachments.name" [hasError]="getTabInvalidStatus('attachments')"
-      [disabled]="!selectedLicense"
+      [disabled]="this.operation == OperationTypes.CREATE && !selectedLicense"
       [template]="attachmentsTab" [title]="lang.map.attachments"></tab>
   </tabs-list>
 </div>
@@ -31,6 +31,7 @@
                       placeholder="{{lang.map.select}}" id="requestType"
                       [notFoundText]="lang.map.msg_not_found"
                       appendTo="body"
+                      [readonly]="!isEditAllowed()"
                       (change)="_handleRequestTypeChange()"
                       formControlName="requestType"
                       validationClasses="requestType">
@@ -41,18 +42,18 @@
             <app-field-error-message controlName="requestType"></app-field-error-message>
           </div>
           <div class="col-sm-12 col-md-4 mb-4 position-relative">
-            <label for="oldLicenseFullSerial" asteriskIfRequired="oldLicenseFullSerial"
+            <label for="urgentAnnouncementFullSerial" asteriskIfRequired="urgentAnnouncementFullSerial"
                   class="form-label">{{lang.map.urgent_intervention_declaration_license_number}}</label>
             <div class="input-group">
-              <input (keydown.enter)="isEditLicenseAllowed() && licenseSearch($event)"
-                    formControlName="oldLicenseFullSerial"
-                    type="text" [readOnly]="!isEditLicenseAllowed()"
-                    validationClasses="oldLicenseFullSerial" [onlyInvalid]="false" class="form-control"
-                    id="oldLicenseFullSerial" trimInput>
-              <button type="button" (click)="licenseSearch($event)" class="input-group-text">
+              <input (keydown.enter)="isEditAllowed() && licenseSearch($event)"
+                    formControlName="urgentAnnouncementFullSerial"
+                    type="text" [readOnly]="!isEditAllowed()"
+                    validationClasses="urgentAnnouncementFullSerial" [onlyInvalid]="false" class="form-control"
+                    id="urgentAnnouncementFullSerial" trimInput>
+              <button type="button" *ngIf="isEditAllowed()" (click)="licenseSearch($event)" class="input-group-text">
                 <i class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i>
               </button>
-              <app-field-error-message controlName="oldLicenseFullSerial"></app-field-error-message>
+              <app-field-error-message controlName="urgentAnnouncementFullSerial"></app-field-error-message>
             </div>
           </div>
           <div class="col-sm-12 col-md-4 mb-4 position-relative">
@@ -138,6 +139,7 @@
                     [notFoundText]="lang.map.msg_not_found"
                     [clearable]="false"
                     appendTo="body"
+                    [readonly]="!isEditAllowed()"
                     (change)="handleImplementingAgencyTypeChanges()"
                     formControlName="implementingAgencyType"
                     validationClasses="implementingAgencyType">
@@ -153,6 +155,7 @@
           <ng-select [selectOnTab]="true" labelForId="implementingAgency"
                     placeholder="{{lang.map.select}}" id="implementingAgency"
                     [notFoundText]="lang.map.msg_not_found"
+                    [readonly]="!isEditAllowed()"
                     appendTo="body"
                     formControlName="implementingAgency"
                     (change)="handleImplementingAgencyNameChanges()"
@@ -169,6 +172,7 @@
           <ng-select [selectOnTab]="true" labelForId="accountType"
                     placeholder="{{lang.map.select}}" id="accountType"
                     [notFoundText]="lang.map.msg_not_found"
+                    [readonly]="!isEditAllowed()"
                     appendTo="body"
                     (change)="_handleChangeAccountType()"
                     formControlName="accountType"
@@ -185,6 +189,7 @@
           <ng-select [selectOnTab]="true" labelForId="accountNumber"
                     placeholder="{{lang.map.select}}" id="accountNumber"
                     [notFoundText]="lang.map.msg_not_found"
+                    [readonly]="!isEditAllowed()"
                     appendTo="body"
                     formControlName="accountNumber"
                     validationClasses="accountNumber">
@@ -201,8 +206,8 @@
         <div class="col-sm-12 col-md-6 mb-4 position-relative">
           <label for="amount" asteriskIfRequired="amount"
             class="form-label">{{lang.map.amount}}</label>
-          <input formControlName="amount" type="number" validationClasses="amount"
-            [onlyInvalid]="false" class="form-control" id="amount" trimInput>
+            <input formControlName="amount" [readonly]="!isEditAllowed()" type="number"
+            validationClasses="amount" [onlyInvalid]="false" class="form-control" id="amount" trimInput>
           <app-field-error-message controlName="amount"></app-field-error-message>
         </div>
       </div>
