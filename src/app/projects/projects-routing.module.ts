@@ -73,7 +73,7 @@ const routes: Routes = [
       permissionKey: EServicePermissions.GENERAL_ASSOCIATION_MEETING_ATTENDANCE,
       configPermissionGroup: null,
       checkAnyPermission: false,
-      render: 'TransferringIndividualFundsAbroadComponent'
+      render: 'GeneralAssociationMeetingAttendanceComponent'
     }
   }
 ];

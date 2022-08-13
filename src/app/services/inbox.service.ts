@@ -58,6 +58,7 @@ import { TransferringIndividualFundsAbroadService } from '@services/transferring
 import { ForeignCountriesProjectsService } from './foreign-countries-projects.service';
 import { CastResponse } from "@decorators/cast-response";
 import {UrgentInterventionLicenseFollowupService} from '@services/urgent-intervention-license-followup.service';
+import {GeneralAssociationMeetingAttendanceService} from '@services/general-association-meeting-attendance.service';
 
 @Injectable({
   providedIn: 'root'
@@ -92,8 +93,9 @@ export class InboxService {
               private externalOrgAffiliationService: ExternalOrgAffiliationService,
               private customsExemptionRemittanceService: CustomsExemptionRemittanceService,
               private foreignCountriesProjectService: ForeignCountriesProjectsService,
-              private transferringIndividualsFundsAbroad: TransferringIndividualFundsAbroadService,
-              private coordinationWithOrganizationsRequestService:CoordinationWithOrganizationsRequestService) {
+              private transferringIndividualsFundsAbroadService: TransferringIndividualFundsAbroadService,
+              private coordinationWithOrganizationsRequestService:CoordinationWithOrganizationsRequestService,
+              private generalAssociationMeetingAttendanceService: GeneralAssociationMeetingAttendanceService) {
     FactoryService.registerService('InboxService', this);
     // register all e-services that we need.
     this.services.set(CaseTypes.INQUIRY, this.inquiryService);
@@ -117,7 +119,8 @@ export class InboxService {
     this.services.set(CaseTypes.URGENT_INTERVENTION_CLOSURE, this.urgentInterventionClosureService);
     this.services.set(CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION, this.urgentInterventionFinancialNotificationService);
     this.services.set(CaseTypes.FOREIGN_COUNTRIES_PROJECTS, this.foreignCountriesProjectService);
-    this.services.set(CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD, this.transferringIndividualsFundsAbroad);
+    this.services.set(CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD, this.transferringIndividualsFundsAbroadService);
+    this.services.set(CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE, this.generalAssociationMeetingAttendanceService);
     this.services.set(CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST, this.coordinationWithOrganizationsRequestService);
     this.services.set(CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP, this.urgentInterventionLicenseFollowupService);
   }
