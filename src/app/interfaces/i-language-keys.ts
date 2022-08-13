@@ -1194,4 +1194,5 @@ export interface ILanguageKeys {
   vacation_date_to: string;
   lbl_add_vacation: string;
   lbl_edit_vacation: string;
+  ADD_ANNONCEMENT_START_DESC: string; // don't change this as it is mapped to BE response
 }
