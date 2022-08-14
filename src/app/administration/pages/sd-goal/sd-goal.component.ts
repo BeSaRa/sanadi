@@ -1,20 +1,22 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { AdminGenericComponent } from '@app/generics/admin-generic-component';
-import { SDGoal } from '@app/models/sdgoal';
-import { SDGoalService } from '@app/services/sdgoal.service';
-import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
-import { IGridAction } from '@app/interfaces/i-grid-action';
-import { UserClickOn } from '@app/enums/user-click-on.enum';
-import { SharedService } from '@app/services/shared.service';
-import { LangService } from '@app/services/lang.service';
-import { DialogService } from '@app/services/dialog.service';
-import { exhaustMap, takeUntil } from 'rxjs/operators';
-import { of } from 'rxjs';
-import { ToastService } from '@app/services/toast.service';
-import { TableComponent } from '@app/shared/components/table/table.component';
-import { CommonStatusEnum } from '@app/enums/common-status.enum';
-import { SortEvent } from '@app/interfaces/sort-event';
-import { CommonUtils } from '@app/helpers/common-utils';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {AdminGenericComponent} from '@app/generics/admin-generic-component';
+import {SDGoal} from '@app/models/sdgoal';
+import {SDGoalService} from '@app/services/sdgoal.service';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {IGridAction} from '@app/interfaces/i-grid-action';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {SharedService} from '@app/services/shared.service';
+import {LangService} from '@app/services/lang.service';
+import {DialogService} from '@app/services/dialog.service';
+import {catchError, exhaustMap, filter, switchMap, takeUntil} from 'rxjs/operators';
+import {of, Subject} from 'rxjs';
+import {ToastService} from '@app/services/toast.service';
+import {TableComponent} from '@app/shared/components/table/table.component';
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import {SortEvent} from '@app/interfaces/sort-event';
+import {CommonUtils} from '@app/helpers/common-utils';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import {DialogRef} from '@app/shared/models/dialog-ref';
 
 @Component({
   selector: 'sd-goal',
@@ -22,21 +24,64 @@ import { CommonUtils } from '@app/helpers/common-utils';
   styleUrls: ['./sd-goal.component.scss']
 })
 export class SdGoalComponent extends AdminGenericComponent<SDGoal, SDGoalService> implements OnInit {
-  usePagination = true
-  actions: IMenuItem<SDGoal>[] = [];
+  usePagination = true;
   displayedColumns = ['rowSelection', 'arName', 'enName', 'status', 'childCount', 'actions'];
-
+  commonStatusEnum = CommonStatusEnum;
+  view$: Subject<SDGoal> = new Subject<SDGoal>();
+  actions: IMenuItem<SDGoal>[] = [
+    // edit
+    {
+      type: 'action',
+      label: 'btn_edit',
+      icon: ActionIconsEnum.EDIT,
+      onClick: (item: SDGoal) => this.edit$.next(item)
+    },
+    // view
+    {
+      type: 'action',
+      label: 'view',
+      icon: ActionIconsEnum.VIEW,
+      onClick: (item: SDGoal) => this.view$.next(item)
+    },
+    // delete
+    {
+      type: 'action',
+      icon: ActionIconsEnum.DELETE,
+      label: 'btn_delete',
+      onClick: (item: SDGoal) => this.delete(item)
+    },
+    // activate
+    {
+      type: 'action',
+      icon: ActionIconsEnum.STATUS,
+      label: 'btn_activate',
+      onClick: (item: SDGoal) => this.toggleStatus(item),
+      show: (item) => {
+        return !item.status;
+      },
+      displayInGrid: false
+    },
+    // deactivate
+    {
+      type: 'action',
+      icon: ActionIconsEnum.STATUS,
+      label: 'btn_deactivate',
+      onClick: (item: SDGoal) => this.toggleStatus(item),
+      show: (item) => {
+        return !!item.status;
+      },
+      displayInGrid: false
+    }
+  ];
   actionsList: IGridAction[] = [
     {
       langKey: 'btn_delete',
-      icon: 'mdi-close-box',
+      icon: ActionIconsEnum.DELETE,
       callback: ($event: MouseEvent) => {
         this.deleteBulk($event);
       }
     }
   ];
-  commonStatusEnum = CommonStatusEnum;
-
   @ViewChild('table') table!: TableComponent;
 
   sortingCallbacks = {
@@ -45,7 +90,7 @@ export class SdGoalComponent extends AdminGenericComponent<SDGoal, SDGoalService
         value2 = !CommonUtils.isValidValue(b) ? '' : b.statusInfo?.getName().toLowerCase();
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     }
-  }
+  };
 
   constructor(public service: SDGoalService,
               private sharedService: SharedService,
@@ -55,22 +100,63 @@ export class SdGoalComponent extends AdminGenericComponent<SDGoal, SDGoalService
     super();
   }
 
-  ngOnInit() {
-    this.listenToReload();
-    super.listenToAdd();
-    this.listenToEditSubSdGoal();
+  protected _init(): void {
+    this.listenToView();
   }
 
   get selectedRecords(): SDGoal[] {
     return this.table.selection.selected;
   }
 
-  listenToEditSubSdGoal(): void {
+  listenToEdit(): void {
     this.edit$
       .pipe(takeUntil(this.destroy$))
-      .pipe(exhaustMap((model) => this.service.subSdGoalEditDialog(model, model.parentId).onAfterClose$))
+      .pipe(exhaustMap((model) => this.service.subSdGoalEditDialog(model).onAfterClose$))
       .subscribe(() => this.reload$.next(null));
   }
+
+  listenToView(): void {
+    this.view$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(exhaustMap((model) => {
+        return this.service.openViewDialog(model).pipe(catchError(_ => of(null)))
+      }))
+      .pipe(filter((dialog): dialog is DialogRef => !!dialog))
+      .pipe(switchMap(dialog => dialog.onAfterClose$))
+      .subscribe(() => this.reload$.next(null))
+  }
+
+  /*listenToReload() {
+    this.reload$
+      .pipe(takeUntil((this.destroy$)))
+      .pipe(switchMap(() => {
+        let load: Observable<SDGoal[]>;
+        if (this.usePagination) {
+          const paginationOptions = {
+            limit: this.pageEvent.pageSize,
+            offset: (this.pageEvent.pageIndex * this.pageEvent.pageSize)
+          }
+          load = this.service.loadMainSdGoalsPaginate(paginationOptions)
+            .pipe(map((res) => {
+              this.count = res.count;
+              return res.rs;
+            }))
+        } else {
+          load = this.service.loadMainSdGoals();
+        }
+        return load.pipe(catchError(_ => {
+          console.log('Error', _);
+          return of([])
+        }));
+      }))
+      .subscribe((list: SDGoal[]) => {
+        list.map(element => {
+          element.childCount = list.filter(e => e.parentId == element.id).length ?? 0;
+        });
+        this.models = list;
+        this.table && this.table.clearSelection();
+      })
+  }*/
 
   // listenToReload() {
   //   this.reload$
@@ -95,7 +181,7 @@ export class SdGoalComponent extends AdminGenericComponent<SDGoal, SDGoalService
   //     }))
   //     .subscribe((list: SDGoal[]) => {
   //       this.models = list;
-  //       this.table.selection.clear();
+  //       this.table && this.table.clearSelection();
   //     })
   // }
 
@@ -104,10 +190,9 @@ export class SdGoalComponent extends AdminGenericComponent<SDGoal, SDGoalService
     this.edit$.next(sdGoal);
   }
 
-  delete(event: MouseEvent, model: SDGoal): void {
-    event.preventDefault();
+  delete(model: SDGoal): void {
     // @ts-ignore
-    const message = this.lang.map.msg_confirm_delete_x.change({ x: model.getName() });
+    const message = this.lang.map.msg_confirm_delete_x.change({x: model.getName()});
     this.dialogService.confirm(message)
       .onAfterClose$
       .pipe(
@@ -116,7 +201,7 @@ export class SdGoalComponent extends AdminGenericComponent<SDGoal, SDGoalService
           return click === UserClickOn.YES ? model.delete() : of(null);
         }))
       .subscribe(() => {
-        this.toast.success(this.lang.map.msg_delete_x_success.change({ x: model.getName() }));
+        this.toast.success(this.lang.map.msg_delete_x_success.change({x: model.getName()}));
         this.reload$.next(null);
       });
   }
@@ -150,10 +235,10 @@ export class SdGoalComponent extends AdminGenericComponent<SDGoal, SDGoalService
     let updateObservable = model.status == CommonStatusEnum.ACTIVATED ? model.updateStatus(CommonStatusEnum.DEACTIVATED) : model.updateStatus(CommonStatusEnum.ACTIVATED);
     updateObservable.pipe(takeUntil(this.destroy$))
       .subscribe(() => {
-        this.toast.success(this.lang.map.msg_status_x_updated_success.change({ x: model.getName() }));
+        this.toast.success(this.lang.map.msg_status_x_updated_success.change({x: model.getName()}));
         this.reload$.next(null);
       }, () => {
-        this.toast.error(this.lang.map.msg_status_x_updated_fail.change({ x: model.getName() }));
+        this.toast.error(this.lang.map.msg_status_x_updated_fail.change({x: model.getName()}));
         this.reload$.next(null);
       });
   }

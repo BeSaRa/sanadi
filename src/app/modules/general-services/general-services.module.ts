@@ -1,3 +1,4 @@
+import { ExternalOrgAffiliationApprovePopupComponent } from '@app/modules/general-services/popups/external-org-affiliation-approve-popup/external-org-affiliation-approve-popup.component';
 import { EmploymentComponent } from './pages/employment/employment.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -25,6 +26,7 @@ import { ForeignCountriesProjectsPopupComponent } from './popups/foreign-countri
     InternationalCooperationComponent,
     EmploymentApproveComponent,
     ExternalOrgAffiliationComponent,
+    ExternalOrgAffiliationApprovePopupComponent,
     EmploymentComponent,
     ForeignCountriesProjectsComponent,
     ForeignCountriesProjectsPopupComponent,

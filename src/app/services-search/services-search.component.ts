@@ -272,7 +272,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
           if (!item.isFinalApproved()) {
             return false;
           }
-          const caseTypesToPrint = [CaseTypes.URGENT_INTERVENTION_LICENSING, CaseTypes.FUNDRAISING_LICENSING, CaseTypes.URGENT_INTERVENTION_CLOSURE];
+          const caseTypesToPrint = [CaseTypes.URGENT_INTERVENTION_LICENSING, CaseTypes.FUNDRAISING_LICENSING, CaseTypes.URGENT_INTERVENTION_CLOSURE, CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION];
           return caseTypesToPrint.includes(item.getCaseType());
         },
         onClick: (item: CaseModel<any, any>) => {

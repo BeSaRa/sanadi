@@ -2,7 +2,7 @@ import {BaseModel} from '@app/models/base-model';
 import {FollowupService} from '@app/services/followup.service';
 import {LangService} from '@app/services/lang.service';
 import {FactoryService} from '@app/services/factory.service';
-import {ISearchFieldsMap, searchFunctionType} from '@app/types/types';
+import {ISearchFieldsMap} from '@app/types/types';
 import {INames} from '@app/interfaces/i-names';
 import {Lookup} from '@app/models/lookup';
 import {IDescriptions} from '@app/interfaces/I-descriptions';
@@ -63,6 +63,13 @@ export class Followup extends BaseModel<Followup, FollowupService> {
     ...dateSearchFields(['dueDate'])
   };
 
+  followupPopupSearchFields: ISearchFieldsMap<Followup> = {
+    ...normalSearchFields(['caseId']),
+    ...infoSearchFields(['statusInfo', 'requestTypeInfo', 'serviceInfo', 'orgInfo']),
+    ...dateSearchFields(['dueDate']),
+    name: text => this.getName().toLowerCase().indexOf(text) !== -1
+  };
+
   public getName(): string {
     return this[(this.langService.map.lang + 'Name') as keyof INames] || '';
   }
@@ -81,16 +88,18 @@ export class Followup extends BaseModel<Followup, FollowupService> {
       enName,
       arDesc,
       enDesc,
+      requestType,
       followUpType,
       responsibleTeamId,
       concernedTeamId,
       dueDate
     } = this;
     return {
-      arName: controls ? [arName, [CustomValidators.required]] : arName,
-      enName: controls ? [enName, [CustomValidators.required]] : enName,
-      arDesc: controls ? [arDesc, [CustomValidators.required]] : arDesc,
-      enDesc: controls ? [enDesc, [CustomValidators.required]] : enDesc,
+      arName: controls ? [arName, [CustomValidators.required, CustomValidators.pattern('AR_NUM')]] : arName,
+      enName: controls ? [enName, [CustomValidators.required, CustomValidators.pattern('ENG_NUM')]] : enName,
+      arDesc: controls ? [arDesc, [CustomValidators.required, CustomValidators.pattern('AR_NUM')]] : arDesc,
+      enDesc: controls ? [enDesc, [CustomValidators.required, CustomValidators.pattern('ENG_NUM')]] : enDesc,
+      requestType: controls ? [requestType, [CustomValidators.required]] : requestType,
       followUpType: controls ? [followUpType, [CustomValidators.required]] : followUpType,
       responsibleTeamId: controls ? [{
         value: responsibleTeamId,

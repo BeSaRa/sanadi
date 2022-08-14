@@ -5,6 +5,7 @@ import { VacationDatesInerceptor } from '@app/model-interceptors/vacation-date-i
 import { FactoryService } from '@app/services/factory.service';
 import { LangService } from '@app/services/lang.service';
 import { VacationDatesService } from '@app/services/vacation-dates.service';
+import { searchFunctionType } from '@app/types/types';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { IMyDateModel } from 'angular-mydatepicker';
 import { BaseModel } from './base-model';
@@ -18,14 +19,20 @@ const interceptor = new VacationDatesInerceptor()
 })
 export class VacationDates extends BaseModel<VacationDates, VacationDatesService> {
   service!: VacationDatesService;
-  langService: LangService = FactoryService.getService(LangService.name);
+  langService: LangService = FactoryService.getService('LangService');
   vacationDateFrom!: string | IMyDateModel;
   vacationDateTo!: string | IMyDateModel;
   periodId!: number;
+  searchFields: { [key: string]: searchFunctionType | string } = {
+    arName: 'arName',
+    enName: 'enName',
+    vacationDateFrom: 'vacationDateFrom',
+    vacationDateTo: 'vacationDateTo'
+  };
 
   constructor() {
     super();
-    this.service = FactoryService.getService(VacationDatesService.name);
+    this.service = FactoryService.getService('VacationDatesService');
   }
   getName(): string {
     return this[(this.langService.map.lang + 'Name') as keyof INames];

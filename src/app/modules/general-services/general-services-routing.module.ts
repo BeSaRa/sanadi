@@ -72,7 +72,7 @@ const routes: Routes = [
       permissionKey: EServicePermissions.FOREIGN_COUNTRIES_PROJECTS,
       configPermissionGroup: null,
       checkAnyPermission: false,
-      render: ForeignCountriesProjectsComponent.name
+      render: 'ForeignCountriesProjectsComponent'
     }
   }
 

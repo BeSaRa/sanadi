@@ -1,39 +1,39 @@
-import { Injectable } from '@angular/core';
-import { OrgUser } from '../models/org-user';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { UrlService } from './url.service';
-import { FactoryService } from './factory.service';
-import { DialogRef } from '../shared/models/dialog-ref';
-import { IDialogData } from '@contracts/i-dialog-data';
-import { OperationTypes } from '../enums/operation-types.enum';
-import { forkJoin, Observable, of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
-import { DialogService } from './dialog.service';
-import {
-  OrganizationUserPopupComponent
-} from '../administration/popups/organization-user-popup/organization-user-popup.component';
-import { CustomRoleService } from './custom-role.service';
-import { IOrgUserCriteria } from '@contracts/i-org-user-criteria';
-import { isValidValue } from '@helpers/utils';
-import { OrganizationUnitService } from './organization-unit.service';
-import { CustomRole } from '../models/custom-role';
-import { OrgUnit } from '../models/org-unit';
-import { PermissionService } from './permission.service';
-import { OrganizationUserPermissionService } from './organization-user-permission.service';
-import { OrgUserPermission } from '../models/org-user-permission';
-import { AuditLogService } from './audit-log.service';
-import { ComponentType } from '@angular/cdk/portal';
-import { OrgUserStatusEnum } from '@app/enums/status.enum';
-import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
-import { CrudWithDialogGenericService } from "@app/generics/crud-with-dialog-generic-service";
+import {Injectable} from '@angular/core';
+import {OrgUser} from '../models/org-user';
+import {HttpClient, HttpParams} from '@angular/common/http';
+import {UrlService} from './url.service';
+import {FactoryService} from './factory.service';
+import {DialogRef} from '../shared/models/dialog-ref';
+import {IDialogData} from '@contracts/i-dialog-data';
+import {OperationTypes} from '../enums/operation-types.enum';
+import {forkJoin, Observable, of} from 'rxjs';
+import {switchMap} from 'rxjs/operators';
+import {DialogService} from './dialog.service';
+import {OrganizationUserPopupComponent} from '../administration/popups/organization-user-popup/organization-user-popup.component';
+import {CustomRoleService} from './custom-role.service';
+import {IOrgUserCriteria} from '@contracts/i-org-user-criteria';
+import {OrganizationUnitService} from './organization-unit.service';
+import {CustomRole} from '../models/custom-role';
+import {OrgUnit} from '../models/org-unit';
+import {PermissionService} from './permission.service';
+import {OrganizationUserPermissionService} from './organization-user-permission.service';
+import {OrgUserPermission} from '../models/org-user-permission';
+import {AuditLogService} from './audit-log.service';
+import {ComponentType} from '@angular/cdk/portal';
+import {OrgUserStatusEnum} from '@app/enums/status.enum';
+import {CastResponse, CastResponseContainer} from '@decorators/cast-response';
+import {CrudWithDialogGenericService} from '@app/generics/crud-with-dialog-generic-service';
+import {Pagination} from '@app/models/pagination';
+import {PaginationContract} from '@contracts/pagination-contract';
+import {CommonUtils} from '@helpers/common-utils';
 
 @CastResponseContainer({
   $default: {
     model: () => OrgUser
   },
   $pagination: {
-    model: () => OrgUser,
-    shape: { 'rs.*': () => OrgUser }
+    model: () => Pagination,
+    shape: {'rs.*': () => OrgUser}
   }
 })
 @Injectable({
@@ -137,19 +137,22 @@ export class OrganizationUserService extends CrudWithDialogGenericService<OrgUse
   }
 
 
-  private _buildCriteriaQueryParams(criteria: IOrgUserCriteria): HttpParams {
+  private _buildCriteriaQueryParams(criteria: IOrgUserCriteria, pagingOptions?: Partial<PaginationContract>): HttpParams {
     let queryParams = new HttpParams();
 
-    if (isValidValue(criteria.status)) {
+    if (CommonUtils.isValidValue(criteria.status)) {
       queryParams = queryParams.append('status', Number(criteria.status).toString());
     }
-    if (isValidValue(criteria['org-id'])) {
+    if (CommonUtils.isValidValue(criteria['org-id'])) {
       // @ts-ignore
       queryParams = queryParams.append('org-id', criteria['org-id'].toString());
     }
-    if (isValidValue(criteria['org-branch-id'])) {
+    if (CommonUtils.isValidValue(criteria['org-branch-id'])) {
       // @ts-ignore
       queryParams = queryParams.append('org-branch-id', criteria['org-branch-id'].toString());
+    }
+    if (pagingOptions) {
+      queryParams = queryParams.appendAll(pagingOptions);
     }
     return queryParams;
   }
@@ -158,13 +161,33 @@ export class OrganizationUserService extends CrudWithDialogGenericService<OrgUse
    * @description Loads the organization users list by criteria
    * @param criteria: IOrgUserCriteria
    */
-  @CastResponse(undefined, { fallback: '$default', unwrap: 'rs' })
+  @CastResponse(undefined, {fallback: '$default', unwrap: 'rs'})
   getByCriteria(criteria: IOrgUserCriteria): Observable<OrgUser[]> {
     const queryParams = this._buildCriteriaQueryParams(criteria);
 
     return this.http.get<OrgUser[]>(this._getServiceURL() + '/criteria', {
       params: queryParams
     });
+  }
+
+  @CastResponse(undefined, {
+    fallback: '$pagination'
+  })
+  private _getByCriteriaPaging(options: Partial<PaginationContract>, criteria: IOrgUserCriteria): Observable<Pagination<OrgUser[]>> {
+    const queryParams = this._buildCriteriaQueryParams(criteria, options);
+
+    return this.http.get<Pagination<OrgUser[]>>(this._getServiceURL() + '/criteria', {
+      params: queryParams
+    });
+  }
+
+  /**
+   * @description Loads the organization users list by criteria and paging
+   * @param options: Partial<PaginationContract>
+   * @param criteria: IOrgUserCriteria
+   */
+  getByCriteriaPaging(options: Partial<PaginationContract>, criteria: IOrgUserCriteria): Observable<Pagination<OrgUser[]>> {
+    return this._getByCriteriaPaging(options, criteria);
   }
 
   openAuditLogsById(id: number): Observable<DialogRef> {

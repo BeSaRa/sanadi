@@ -75,11 +75,11 @@ export class TransferringIndividualFundsAbroadInterceptor implements IModelInter
     model.receiverNationalityInfo = model.receiverNationalityInfo ? AdminResult.createInstance(model.receiverNationalityInfo) : AdminResult.createInstance({});
 
     if (model.executiveManagementList && model.executiveManagementList.length > 0) {
-      model.executiveManagementList = model.executiveManagementList.map(x => service.executiveManagementListInterceptor.receive(x) as TransferFundsExecutiveManagement);
+      model.executiveManagementList = model.executiveManagementList.map(x => service.executiveManagementListInterceptor.receive(new TransferFundsExecutiveManagement().clone(x)) as TransferFundsExecutiveManagement);
     }
 
     if (model.charityPurposeTransferList && model.charityPurposeTransferList.length > 0) {
-      model.charityPurposeTransferList = model.charityPurposeTransferList.map(x => service.transferFundsCharityPurposeInterceptor.receive(x) as TransferFundsCharityPurpose);
+      model.charityPurposeTransferList = model.charityPurposeTransferList.map(x => service.transferFundsCharityPurposeInterceptor.receive(new TransferFundsCharityPurpose().clone(x)) as TransferFundsCharityPurpose);
     }
 
     return model;

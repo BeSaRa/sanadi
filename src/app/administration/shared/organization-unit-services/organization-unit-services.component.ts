@@ -89,7 +89,7 @@ export class OrganizationUnitServicesComponent implements OnInit {
   loadOrgUnitLinkedServices() {
     this.orgUnit.loadLinkedServices().subscribe(list => {
       this.orgUnitLinkedServices = list;
-      this.table.selection.clear();
+      this.table && this.table.clearSelection();
     });
   }
 

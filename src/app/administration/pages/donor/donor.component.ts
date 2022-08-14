@@ -24,7 +24,8 @@ import {ActionIconsEnum} from '@app/enums/action-icons-enum';
   styleUrls: ['./donor.component.scss']
 })
 export class DonorComponent extends AdminGenericComponent<Donor, DonorService> {
-  usePagination = true
+  usePagination = true;
+
   constructor(public lang: LangService,
               public service: DonorService,
               private dialogService: DialogService,
@@ -128,6 +129,10 @@ export class DonorComponent extends AdminGenericComponent<Donor, DonorService> {
     return this.table.selection.selected;
   }
 
+  afterReload(): void {
+    this.table && this.table.clearSelection();
+  }
+
   listenToView(): void {
     this.view$
       .pipe(takeUntil(this.destroy$))
@@ -197,25 +202,5 @@ export class DonorComponent extends AdminGenericComponent<Donor, DonorService> {
         this.toast.error(this.lang.map.msg_status_x_updated_fail.change({x: model.getName()}));
         this.reload$.next(null);
       });
-  }
-
-  listenToReload() {
-    this.reload$
-      .pipe(takeUntil((this.destroy$)))
-      .pipe(switchMap(() => {
-        const load = this.useCompositeToLoad ? this.service.loadComposite() : this.service.load();
-        return load.pipe(
-          map(list => {
-            return list.filter(model => {
-              return model.status !== CommonStatusEnum.RETIRED;
-            });
-          }),
-          catchError(_ => of([]))
-        );
-      }))
-      .subscribe((list: Donor[]) => {
-        this.models = list;
-        this.table.selection.clear();
-      })
   }
 }

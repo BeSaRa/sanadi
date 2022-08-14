@@ -1,3 +1,4 @@
+import { UrgentInterventionFinancialNotificationComponent } from './pages/urgent-intervention-financial-notification/urgent-intervention-financial-notification.component';
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 
@@ -37,6 +38,7 @@ import {
   declarations: [
     UrgentInterventionComponent,
     UrgentInterventionLicenseComponent,
+    UrgentInterventionFinancialNotificationComponent,
     UrgentInterventionApproveTaskPopupComponent,
     UrgentInterventionReportComponent,
     ImplementingAgencyListComponent,

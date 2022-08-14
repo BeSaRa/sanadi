@@ -151,7 +151,7 @@ export class TransferringIndividualFundsAbroad extends _RequestType<Transferring
       arName: controls ? [arName, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('AR_NUM')]] : arName,
       enName: controls ? [enName, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')]] : enName,
       nationality: controls ? [nationality, [CustomValidators.required]] : nationality,
-      address: controls ? [address, [CustomValidators.required]] : address,
+      address: controls ? [address, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)]] : address,
       phone: controls ? [phone, CustomValidators.commonValidations.phone] : phone,
       mobileNo: controls ? [mobileNo, [CustomValidators.required].concat(CustomValidators.commonValidations.mobileNo)] : mobileNo,
       email: controls ? [email, [CustomValidators.required, Validators.email, CustomValidators.maxLength(CustomValidators.defaultLengths.EMAIL_MAX)]] : email
@@ -192,7 +192,7 @@ export class TransferringIndividualFundsAbroad extends _RequestType<Transferring
       receiverJobTitle: controls ? [receiverJobTitle, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : receiverJobTitle,
       receiverNationality: controls ? [receiverNationality, [CustomValidators.required]] : receiverNationality,
       receiverIdentificationNumber: controls ? [receiverIdentificationNumber, [CustomValidators.required].concat(CustomValidators.commonValidations.qId)] : receiverIdentificationNumber,
-      receiverPassportNumber: controls ? [receiverPassportNumber, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : receiverPassportNumber,
+      receiverPassportNumber: controls ? [receiverPassportNumber, [CustomValidators.required, ...CustomValidators.commonValidations.passport]] : receiverPassportNumber,
       receiverPhone1: controls ? [receiverPhone1, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : receiverPhone1,
       receiverPhone2: controls ? [receiverPhone2, CustomValidators.commonValidations.phone] : receiverPhone2,
     };

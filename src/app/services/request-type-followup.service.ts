@@ -26,7 +26,8 @@ export class RequestTypeFollowupService {
     [CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE]: this.lookupService.listByCategory.CustomsExemptionRequestType,
     [CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL]: this.lookupService.listByCategory.BankRequestType,
     [CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN]: [this.getNewRequestType()],
-    [CaseTypes.URGENT_INTERVENTION_REPORTING]: this.lookupService.listByCategory.ServiceRequestType,
+    [CaseTypes.URGENT_INTERVENTION_REPORTING]: this.lookupService.listByCategory.UrgentInterventionAnnouncementRequestType,
+    [CaseTypes.URGENT_INTERVENTION_CLOSURE]: [this.getNewRequestType()]
   }
 
   constructor(private lookupService: LookupService) {

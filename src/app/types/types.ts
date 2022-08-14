@@ -1,8 +1,8 @@
-import {ILanguageKeys} from '@contracts/i-language-keys';
-import {Localization} from '../models/localization';
-import {IAngularMyDpOptions} from 'angular-mydatepicker';
-import {AbstractControl} from '@angular/forms';
-import {ITabData} from '@app/interfaces/i-tab-data';
+import { ILanguageKeys } from '@contracts/i-language-keys';
+import { Localization } from '../models/localization';
+import { IAngularMyDpOptions } from 'angular-mydatepicker';
+import { AbstractControl } from '@angular/forms';
+import { ITabData } from '@app/interfaces/i-tab-data';
 
 export type  LangType = Record<keyof ILanguageKeys, string>;
 export type LocalizationMap = Record<keyof ILanguageKeys, Localization>;
@@ -50,3 +50,7 @@ type InfoProperty<T> = T extends `${infer S}${info}` ? T : never;
 export type OnlyInfoProperty<T> = {
   [P in InfoProperty<keyof T>]: T[P]
 }
+
+
+export type GridName = string
+export type ItemId = string

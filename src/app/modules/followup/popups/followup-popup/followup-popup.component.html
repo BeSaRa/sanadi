@@ -2,38 +2,38 @@
   <form [formGroup]="form">
     <div class="row">
       <div class="col-md-6 col-sm-12 mb-4 position-relative">
-        <label class="form-label" asteriskIfRequired="arName"
-               for="arName">{{lang.map.arabic_name}}</label>
-        <input id="arName" validationClasses="arName" formControlName="arName" class="form-control">
+        <label class="form-label" asteriskIfRequired="arName" for="arName">{{lang.map.arabic_name}}</label>
+        <input id="arName" validationClasses="arName" formControlName="arName" class="form-control" trimInput>
         <app-field-error-message controlName="arName"></app-field-error-message>
       </div>
       <div class="col-md-6 col-sm-12 mb-4 position-relative">
-        <label class="form-label" asteriskIfRequired="enName"
-               for="enName">{{lang.map.english_name}}</label>
-        <input id="enName" validationClasses="enName" formControlName="enName" class="form-control">
+        <label class="form-label" asteriskIfRequired="enName" for="enName">{{lang.map.english_name}}</label>
+        <input id="enName" validationClasses="enName" formControlName="enName" class="form-control" trimInput>
         <app-field-error-message controlName="enName"></app-field-error-message>
       </div>
     </div>
     <div class="row">
       <div class="col-md-6 col-sm-12 mb-4 position-relative">
+        <label class="form-label" asteriskIfRequired="requestType"
+               for="requestType">{{lang.map.request_type}}</label>
+        <ng-select validationClasses="requestType"
+                   appendTo="body" [clearable]="true"
+                   id="requestType"
+                   formControlName="requestType">
+          <ng-option [value]="option.lookupKey" *ngFor="let option of requestTypes">{{option.getName()}}</ng-option>
+        </ng-select>
+        <app-field-error-message controlName="requestType"></app-field-error-message>
+      </div>
+      <div class="col-md-6 col-sm-12 mb-4 position-relative">
         <label class="form-label" asteriskIfRequired="followUpType"
                for="followUpType">{{lang.map.followup_type}}</label>
-        <ng-select validationClasses="followUpType" appendTo="body" [clearable]="true" id="followUpType"
+        <ng-select validationClasses="followUpType"
+                   appendTo="body" [clearable]="true"
+                   id="followUpType"
                    formControlName="followUpType">
           <ng-option [value]="option.lookupKey" *ngFor="let option of followUpTypes">{{option.getName()}}</ng-option>
         </ng-select>
         <app-field-error-message controlName="followUpType"></app-field-error-message>
-      </div>
-      <div class="col-md-6 col-sm-12 mb-4 position-relative">
-        <label class="form-label" asteriskIfRequired="dueDate"
-               for="dueDate">{{lang.map.dueDate}}</label>
-        <div class="input-group">
-          <i class="input-group-text mdi mdi-calendar"></i>
-          <div class="form-control" formControlName="dueDate"
-               id="dueDate" (click)="dateCtrl.toggleCalendar()" #dateCtrl="angular-mydatepicker"
-               angular-mydatepicker [options]="dateOptions" validationClasses="dueDate"></div>
-          <app-field-error-message controlName="dueDate"></app-field-error-message>
-        </div>
       </div>
     </div>
     <div class="row">
@@ -54,6 +54,19 @@
           <ng-option [value]="option.id" *ngFor="let option of teams">{{option.getName()}}</ng-option>
         </ng-select>
         <app-field-error-message controlName="concernedTeamId"></app-field-error-message>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6 col-sm-12 mb-4 position-relative">
+        <label class="form-label" asteriskIfRequired="dueDate"
+               for="dueDate">{{lang.map.dueDate}}</label>
+        <div class="input-group">
+          <i class="input-group-text mdi mdi-calendar"></i>
+          <div class="form-control" formControlName="dueDate"
+               id="dueDate" (click)="dateCtrl.toggleCalendar()" #dateCtrl="angular-mydatepicker"
+               angular-mydatepicker [options]="dateOptions" validationClasses="dueDate"></div>
+          <app-field-error-message controlName="dueDate"></app-field-error-message>
+        </div>
       </div>
     </div>
     <div class="row">

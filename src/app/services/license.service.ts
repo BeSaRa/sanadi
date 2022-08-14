@@ -1,3 +1,6 @@
+import { UrgentInterventionFinancialNotificationInterceptor } from './../model-interceptors/urgent-intervention-financial-notification-interceptor';
+import { TransferringIndividualFundsAbroadInterceptor } from '@app/model-interceptors/transferring-individual-funds-abroad-interceptor';
+import { TransferringIndividualFundsAbroad } from '@app/models/transferring-individual-funds-abroad';
 import { ExternalOrgAffiliation } from '@app/models/external-org-affiliation';
 import { ExternalOrgAffiliationResultInterceptor } from './../model-interceptors/external-org-affiliation-result-interceptor';
 import { ExternalOrgAffiliationInterceptor } from './../model-interceptors/external-org-affiliation-interceptor';
@@ -62,8 +65,6 @@ import { UrgentInterventionReport } from '@app/models/urgent-intervention-report
 import { UrgentInterventionReportInterceptor } from '@app/model-interceptors/urgent-intervention-report-interceptor';
 import { UrgentInterventionClosure } from '@app/models/urgent-intervention-closure';
 import { UrgentInterventionClosureInterceptor } from '@app/model-interceptors/urgent-intervention-closure-interceptor';
-import { TransferringIndividualFundsAbroad } from '@app/models/transferring-individual-funds-abroad';
-import { TransferringIndividualFundsAbroadInterceptor } from '@app/model-interceptors/transferring-individual-funds-abroad-interceptor';
 import { ForeignCountriesProjectsResult } from '@app/models/foreign-countries-projects-results';
 import { ForeignCountriesProjectsResultInterceptor } from '@app/model-interceptors/foreign-countries-projects-result-interceptor';
 import { ForeignCountriesProjectsSearchCriteria } from '@app/models/foreign-countries-projects-seach-criteria';
@@ -141,6 +142,9 @@ export class LicenseService {
         break;
       case CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST:
         url = this.urlService.URLS.EXTERNAL_ORG_AFFILIATION_REQUEST;
+        break;
+      case CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION:
+        url = this.urlService.URLS.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION;
         break;
       case CaseTypes.FOREIGN_COUNTRIES_PROJECTS:
         url = this.urlService.URLS.FOREIGN_COUNTRIES_PROJECTS;
@@ -246,11 +250,6 @@ export class LicenseService {
     property: 'rs',
     interceptReceive: (new UrgentInterventionReportResultInterceptor()).receive
   })
-  private _urgentInterventionReportSearch(criteria: Partial<UrgentInterventionReportSearchCriteria>): Observable<UrgentInterventionReportResult[]> {
-    const orgId = { organizationId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id : undefined }
-    return this.http.post<UrgentInterventionReportResult[]>(this.getServiceUrlByCaseType(CaseTypes.URGENT_INTERVENTION_REPORTING) + '/license/search', { ...criteria, ...orgId })
-  }
-  // tslint:disable-next-line: max-line-length
   private _urgentInterventionAnnouncementSearch(criteria: Partial<UrgentInterventionReportSearchCriteria>, validOnly: boolean = false): Observable<UrgentInterventionReportResult[]> {
     const orgId = { organizationId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id : undefined },
       url = this.getServiceUrlByCaseType(CaseTypes.URGENT_INTERVENTION_REPORTING) + '/license/search' + (validOnly ? '-valid' : '');
@@ -406,6 +405,9 @@ export class LicenseService {
     return this._loadUrgentInterventionAnnouncementByLicenseId(licenseId);
   }
 
+  loadUrgentInterventionInterventionLicense() {
+    return this.http.get<any>(this.getServiceUrlByCaseType(CaseTypes.URGENT_INTERVENTION_REPORTING) + '/intervention-license')
+  }
   @Generator(InitialExternalOfficeApproval, false, {
     property: 'rs',
     interceptReceive: (new InitialExternalOfficeApprovalInterceptor()).receive
@@ -512,6 +514,16 @@ export class LicenseService {
     });
   }
 
+  @Generator(UrgentInterventionClosure, false, {
+    property: 'rs',
+    interceptReceive: (new UrgentInterventionFinancialNotificationInterceptor()).receive
+  })
+  _validateUrgentInterventionFinancialNotificationByRequestType<T>(requestType: number, oldLicenseId: string): Observable<T> {
+    return this.http.post<T>(this.getServiceUrlByCaseType(CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION) + '/draft/validate', {
+      requestType,
+      oldLicenseId
+    });
+  }
   @Generator(TransferringIndividualFundsAbroad, false, {
     property: 'rs',
     interceptReceive: (new TransferringIndividualFundsAbroadInterceptor()).receive
@@ -561,6 +573,8 @@ export class LicenseService {
       return this._validateInternalExternalOrgAffiationsLicenseByRequestType<T>(requestType, licenseId);
     } else if (caseType === CaseTypes.URGENT_INTERVENTION_CLOSURE) {
       return this._validateUrgentInterventionClosureByRequestType<T>(requestType, licenseId);
+    } else if (caseType === CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION) {
+      return this._validateUrgentInterventionFinancialNotificationByRequestType<T>(requestType, licenseId);
     } else if (caseType === CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD) {
       return this._validateTransferIndividualFundsAbroadByRequestType<T>(requestType, licenseId);
     }
@@ -570,7 +584,7 @@ export class LicenseService {
     return of(undefined);
   }
 
-  openSelectLicenseDialog<T>(licenses: (ForeignCountriesProjectsResult[] | InitialExternalOfficeApprovalResult[] | PartnerApproval[] | ExternalOrgAffiliationResult[] | FinalExternalOfficeApprovalResult[] | InternalProjectLicenseResult[] | UrgentInterventionLicenseResult[] | T[]), caseRecord: any | undefined, select = true, displayedColumns: string[] = []): DialogRef {
+  openSelectLicenseDialog<T>(licenses: (UrgentInterventionReportResult[] | InitialExternalOfficeApprovalResult[] | PartnerApproval[] | ExternalOrgAffiliationResult[] | FinalExternalOfficeApprovalResult[] | InternalProjectLicenseResult[] | UrgentInterventionLicenseResult[] | T[]), caseRecord: any | undefined, select = true, displayedColumns: string[] = []): DialogRef {
     return this.dialog.show(SelectLicensePopupComponent, {
       licenses,
       select,

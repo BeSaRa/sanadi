@@ -24,6 +24,8 @@ export class FollowupInterceptor
     delete model.serviceInfo;
     delete model.statusInfo;
     delete model.orgInfo;
+    delete model.followupPopupSearchFields;
+    delete model.searchFields;
     model.dueDate = DateUtils.getDateStringFromDate(model.dueDate);
     model.responsibleTeamId = model.responsibleTeamId ? model.responsibleTeamId : -1;
     model.concernedTeamId = model.concernedTeamId ? model.concernedTeamId : -1;

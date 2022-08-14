@@ -1,5 +1,5 @@
 {
-  "VERSION": "v1.4.13-rc#2",
+  "VERSION": "v1.4.14-rc#1",
   "ENVIRONMENTS_URLS": {
     "RACA_PROD": "http://VM-P-ES-CB-1.raca.local:9080/eservices/api/",
     "STAGING": "http://eblaepm.no-ip.org:5001/sanadi-services/api/",
@@ -124,7 +124,8 @@
   "URGENT_INTERVENTION_PERMISSIONS_GROUP": [
     "URGENT_INTERVENTION_LICENSING",
     "URGENT_INTERVENTION_REPORTING",
-    "URGENT_INTERVENTION_CLOSURE"
+    "URGENT_INTERVENTION_CLOSURE",
+    "URGENT_INTERVENTION_FINANCIAL_NOTIFICATION"
   ],
   "ALLOWED_FILE_TYPES_TO_UPLOAD": ["PDF"],
   "CHARITY_ORG_TEAM": "Charity Organization",

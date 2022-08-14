@@ -8,7 +8,7 @@ import {ToastService} from '@app/services/toast.service';
 import {OrganizationBranchService} from '@app/services/organization-branch.service';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {DialogRef} from '@app/shared/models/dialog-ref';
-import {exhaustMap, filter, switchMap, takeUntil} from 'rxjs/operators';
+import {exhaustMap, filter, map, switchMap, takeUntil} from 'rxjs/operators';
 import {OrgUnit} from '@app/models/org-unit';
 import {ConfigurationService} from '@app/services/configuration.service';
 import {IGridAction} from '@app/interfaces/i-grid-action';
@@ -25,6 +25,7 @@ import {AdminGenericComponent} from '@app/generics/admin-generic-component';
   styleUrls: ['./organization-branch.component.scss']
 })
 export class OrganizationBranchComponent extends AdminGenericComponent<OrgBranch, OrganizationBranchService> {
+  usePagination = true;
   @Input() organization!: OrgUnit;
   @ViewChild('table') table!: TableComponent;
   displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'phoneNumber1', 'address', 'status', 'statusDateModified', 'actions'];
@@ -113,11 +114,19 @@ export class OrganizationBranchComponent extends AdminGenericComponent<OrgBranch
           if (!this.organization || !this.organization.id) {
             return of([]);
           }
-          return this.service.loadByCriteria({'org-id': this.organization?.id});
+          const paginationOptions = {
+            limit: this.pageEvent.pageSize,
+            offset: (this.pageEvent.pageIndex * this.pageEvent.pageSize)
+          };
+          return this.service.loadByCriteriaPaginate(paginationOptions, {'org-id': this.organization?.id})
+            .pipe(map((res) => {
+              this.count = res.count;
+              return res.rs;
+            }));
         })
       ).subscribe((branches) => {
       this.models = branches;
-      this.table.selection.clear();
+      this.table && this.table.clearSelection();
     });
   }
 

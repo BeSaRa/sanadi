@@ -14,13 +14,14 @@ import { map, switchMap } from 'rxjs/operators';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { IDialogData } from '@contracts/i-dialog-data';
 import { OperationTypes } from '@app/enums/operation-types.enum';
+import {Pagination} from '@app/models/pagination';
 
 @CastResponseContainer({
   $default: {
     model: () => Donor
   },
   $pagination: {
-    model: () => Donor,
+    model: () => Pagination,
     shape: { 'rs.*': () => Donor }
   }
 })

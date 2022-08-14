@@ -14,6 +14,7 @@ import { ComponentType } from '@angular/cdk/portal';
 import { CrudWithDialogGenericService } from "@app/generics/crud-with-dialog-generic-service";
 import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
 import { Pagination } from "@app/models/pagination";
+import { AttachmentsComponent } from "@app/shared/components/attachments/attachments.component";
 
 @CastResponseContainer({
   $default: {
@@ -29,7 +30,7 @@ import { Pagination } from "@app/models/pagination";
 })
 export class AttachmentTypeService extends CrudWithDialogGenericService<AttachmentType> {
   list!: AttachmentType[];
-
+  attachmentsComponent!: AttachmentsComponent
 
   constructor(public http: HttpClient,
               private urlService: UrlService,

@@ -11,13 +11,14 @@ import {
 } from '@app/administration/popups/org-unit-field-popup/org-unit-field-popup.component';
 import { CrudWithDialogGenericService } from "@app/generics/crud-with-dialog-generic-service";
 import { CastResponseContainer } from "@decorators/cast-response";
+import {Pagination} from '@app/models/pagination';
 
 @CastResponseContainer({
   $default: {
     model: () => OrgUnitField
   },
   $pagination: {
-    model: () => OrgUnitField,
+    model: () => Pagination,
     shape: { 'rs.*': () => OrgUnitField }
   }
 })

@@ -15,13 +15,14 @@ import { CustomRolePermissionService } from './custom-role-permission.service';
 import { ComponentType } from '@angular/cdk/portal';
 import { CastResponseContainer } from "@decorators/cast-response";
 import { CrudWithDialogGenericService } from "@app/generics/crud-with-dialog-generic-service";
+import {Pagination} from '@app/models/pagination';
 
 @CastResponseContainer({
   $default: {
     model: () => CustomRole,
   },
   $pagination: {
-    model: () => CustomRole,
+    model: () => Pagination,
     shape: { 'rs.*': () => CustomRole }
   }
 })

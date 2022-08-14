@@ -135,7 +135,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(tap(result => {
         this.queryResultSet = result;
         this.oldQueryResultSet = {...result};
-        this.table.selection.clear();
+        this.table && this.table.clearSelection();
       }));
   }
 

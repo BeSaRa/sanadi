@@ -24,6 +24,7 @@ import {UrgentInterventionReportResult} from '@app/models/urgent-intervention-re
 import {IDefaultResponse} from '@contracts/idefault-response';
 import {map} from 'rxjs/operators';
 import {UrgentInterventionAnnouncementRequestType} from '@app/enums/service-request-types';
+import { CastResponse } from '@app/decorators/decorators/cast-response';
 
 @Injectable({
   providedIn: 'root'
@@ -96,7 +97,7 @@ export class UrgentInterventionReportingService extends EServiceGenericService<U
     if (!isAddOperation) {
       return of(true);
     }
-    return this.http.get<IDefaultResponse<string | boolean>>(this._getURLSegment() + '/validateAdd')
+    return this.http.get<IDefaultResponse<string | boolean>>(this._getURLSegment() + '/validate-add')
       .pipe(map((response) => {
         this.preValidatedLicenseIdForAddOperation = !!response.rs ? response.rs as string : '';
         return !!response.rs;

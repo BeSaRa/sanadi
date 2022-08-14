@@ -113,7 +113,7 @@ export class CertificatesComponent extends AdminGenericComponent<Certificate, Ce
           const sub = this.service.deleteBulk(ids).subscribe((response) => {
             this.sharedService.mapBulkResponseMessages(this.selectedRecords, 'id', response)
               .subscribe(() => {
-                this.table.selection.clear();
+                this.table && this.table.clearSelection();
                 this.reload$.next(null);
                 sub.unsubscribe();
               });
