@@ -147,7 +147,7 @@ export class EmployeeFormPopupComponent implements OnInit {
       ]],
       jobTitleId: [null, CustomValidators.required],
       identificationType: [null, CustomValidators.required],
-      identificationNumber: [null, [CustomValidators.required, CustomValidators.maxLength(50)]],
+      identificationNumber: [null, [CustomValidators.maxLength(50)]],
       passportNumber: [null],
       gender: [null, CustomValidators.required],
       nationality: [null, CustomValidators.required],

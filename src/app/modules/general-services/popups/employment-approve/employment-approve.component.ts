@@ -71,8 +71,8 @@ export class EmploymentApproveComponent implements OnInit, OnDestroy {
       .pipe(tap(invalid => invalid && this.dialog.error(this.lang.map.msg_all_required_fields_are_filled)))
       .pipe(filter(invalid => !invalid))
       .pipe(tap((_) => {
-        this.data.model.licenseEndDate = this.form.value.licenseEndDate
-        this.data.model.licenseStartDate = this.form.value.licenseStartDate
+        this.data.model.licenseStartDate = !!this.form.value.licenseStartDate ? this.form.value.licenseStartDate : this.data.model.licenseStartDate
+        this.data.model.licenseEndDate = !!this.form.value.licenseEndDate ? this.form.value.licenseEndDate : this.data.model.licenseEndDate
       }))
       .pipe(exhaustMap(_ => this.data.model.save()))
       .pipe(switchMap(_ => this.inboxService.takeActionOnTask(this.data.model.taskDetails.tkiid, this.getResponse(), this.data.model.service)))

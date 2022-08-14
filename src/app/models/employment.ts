@@ -54,7 +54,7 @@ export class Employment
     };
   }
   intirmDateFormBuilder() {
-    const { requestType, licenseStartDate, licenseEndDate } = this;
+    const { licenseStartDate, licenseEndDate } = this;
     return {
       licenseStartDate: [licenseStartDate, !this.isApproval() || this.isCancelRequestType() ? [] : Validators.required],
       licenseEndDate: [licenseEndDate, !this.isInterm() || !this.isApproval() || this.isCancelRequestType() ? [] : Validators.required],
