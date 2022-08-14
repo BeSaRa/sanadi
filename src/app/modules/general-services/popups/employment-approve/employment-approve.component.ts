@@ -1,3 +1,5 @@
+import { DatepickerOptionsMap } from '@app/types/types';
+import { DateUtils } from '@app/helpers/date-utils';
 import { Subject } from 'rxjs';
 import { EmploymentRequestType } from './../../../../enums/employment-request-type';
 import { exhaustMap } from 'rxjs/operators';
@@ -10,19 +12,17 @@ import { DialogRef } from './../../../../shared/models/dialog-ref';
 import { WFResponseType } from './../../../../enums/wfresponse-type.enum';
 import { IWFResponse } from './../../../../interfaces/i-w-f-response';
 import { CustomValidators } from './../../../../validators/custom-validators';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { InboxService } from './../../../../services/inbox.service';
 import { switchMap } from 'rxjs/operators';
 import { DialogService } from './../../../../services/dialog.service';
 import { LangService } from './../../../../services/lang.service';
 import { ContractTypes } from './../../../../enums/contract-types.enum';
-import { IGridAction } from './../../../../interfaces/i-grid-action';
 import { Employee } from './../../../../models/employee';
 import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { Employment } from "@app/models/employment";
 import { DIALOG_DATA_TOKEN } from "@app/shared/tokens/tokens";
 import { EmploymentCategory } from '@app/enums/employment-category.enum';
-import { ApproveEmploymentDateComponent } from '../approve-employment-date/approve-employment-date.component';
 
 @Component({
   selector: 'employment-approve',
@@ -35,50 +35,45 @@ export class EmploymentApproveComponent implements OnInit, OnDestroy {
   response: WFResponseType = WFResponseType.APPROVE;
   action$: Subject<any> = new Subject<any>();
   private destroy$: Subject<any> = new Subject();
-  actions: IGridAction[] = this.internaAndApproval() ? [
-    {
-      icon: 'calendar',
-      langKey: 'btn_delete',
-      show: () => true,
-      callback: (e: any, data: any) => {
-        return this.dialog.show(ApproveEmploymentDateComponent, {
-          model: data,
-          service: this.data.model.service
-        });
-      },
-    }
-  ] : [];
+  form!: FormGroup;
+  datepickerOptionsMap: DatepickerOptionsMap = {
+    licenseStartDate: DateUtils.getDatepickerOptions({
+      disablePeriod: "none",
+    }),
+    licenseEndDate: DateUtils.getDatepickerOptions({
+      disablePeriod: "none",
+    }),
+  };
   constructor(
     @Inject(DIALOG_DATA_TOKEN) public data: {
       model: Employment,
       action: WFResponseType
     },
     private inboxService: InboxService,
+    private fb: FormBuilder,
     private dialogRef: DialogRef,
     private toast: ToastService,
     public lang: LangService, private dialog: DialogService) {
     this.response = this.data.action;
     this.employees = data.model.employeeInfoDTOs;
   }
-
   ngOnInit(): void {
     this.listenToAction();
+    this.form = this.fb.group(this.data.model.intirmDateFormBuilder())
     if (this.isCommentRequired()) {
       this.comment.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]);
     }
-    this.data.model.service.onSetExpirDate.subscribe((data) => {
-      this.data.model.employeeInfoDTOs[0].contractExpiryDate = data
-    })
-  }
-  internaAndApproval() {
-    return this.data.model.category == EmploymentCategory.APPROVAL && this.data.model.employeeInfoDTOs[0].contractType == ContractTypes.Interim
   }
   private listenToAction() {
     this.action$
       .pipe(takeUntil(this.destroy$))
-      .pipe(map(_ => this.isCommentRequired() ? this.comment.invalid : false))
+      .pipe(map(_ => (this.isCommentRequired() ? this.comment.invalid : false) || this.form.invalid))
       .pipe(tap(invalid => invalid && this.dialog.error(this.lang.map.msg_all_required_fields_are_filled)))
       .pipe(filter(invalid => !invalid))
+      .pipe(tap((_) => {
+        this.data.model.licenseStartDate = !!this.form.value.licenseStartDate ? this.form.value.licenseStartDate : this.data.model.licenseStartDate
+        this.data.model.licenseEndDate = !!this.form.value.licenseEndDate ? this.form.value.licenseEndDate : this.data.model.licenseEndDate
+      }))
       .pipe(exhaustMap(_ => this.data.model.save()))
       .pipe(switchMap(_ => this.inboxService.takeActionOnTask(this.data.model.taskDetails.tkiid, this.getResponse(), this.data.model.service)))
       .subscribe(() => {
@@ -87,6 +82,9 @@ export class EmploymentApproveComponent implements OnInit, OnDestroy {
       })
   }
 
+  openDateMenu(ref: any) {
+    ref.toggleCalendar();
+  }
   private getResponse(): Partial<IWFResponse> {
     return this.comment.value ? {
       selectedResponse: this.response,
@@ -94,10 +92,18 @@ export class EmploymentApproveComponent implements OnInit, OnDestroy {
     } : { selectedResponse: this.response };
   }
 
+  isNewRequestType(): boolean {
+    return this.data.model.requestType === EmploymentRequestType.NEW;
+  }
   isCancelRequestType(): boolean {
     return this.data.model.requestType === EmploymentRequestType.CANCEL;
   }
-
+  isInterm() {
+    return  this.data.model.employeeInfoDTOs[0].contractType == ContractTypes.Interim
+  }
+  isApproval() {
+    return this.data.model.category == EmploymentCategory.APPROVAL
+  }
   private isCommentRequired(): boolean {
     return this.isCancelRequestType();
   }

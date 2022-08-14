@@ -1,3 +1,4 @@
+import { IdentificationType } from '@app/enums/identification-type.enum';
 import { AdminResult } from './../models/admin-result';
 import { IMyDateModel } from "angular-mydatepicker";
 import { DateUtils } from "./../helpers/date-utils";
@@ -21,6 +22,12 @@ export class EmployeeInterceptor implements IModelInterceptor<Employee> {
       : DateUtils.changeDateFromDatepicker(
         model.workEndDate as unknown as IMyDateModel
       )?.toISOString();
+    if (model.identificationType == IdentificationType.Identification) {
+      delete model.passportNumber
+    } else {
+      delete model.identificationNumber
+    }
+
     delete model.jobTitleInfo
     delete model.contractStatusInfo
     delete model.contractTypeInfo

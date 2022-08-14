@@ -124,7 +124,11 @@ export class EmployeeFormPopupComponent implements OnInit {
 
   ngOnInit() {
     this._buildForm();
-    this.JobTitleList = this.data.jobTitleList
+    this.JobTitleList = this.data.jobTitleList;
+    if (!this.isApproval()) {
+      this.identificationType.setValue(1);
+      this.handleIdentityNumberValidationsByIdentificationType()
+    }
   }
 
   _buildForm() {
@@ -143,7 +147,7 @@ export class EmployeeFormPopupComponent implements OnInit {
       ]],
       jobTitleId: [null, CustomValidators.required],
       identificationType: [null, CustomValidators.required],
-      identificationNumber: [null, [CustomValidators.required, CustomValidators.maxLength(50)]],
+      identificationNumber: [null, [CustomValidators.maxLength(50)]],
       passportNumber: [null],
       gender: [null, CustomValidators.required],
       nationality: [null, CustomValidators.required],
@@ -155,9 +159,9 @@ export class EmployeeFormPopupComponent implements OnInit {
       contractStatus: [null, CustomValidators.required],
       contractType: [null, CustomValidators.required],
       jobContractType: [null, CustomValidators.required],
-      contractExpiryDate: [new Date()],
-      workStartDate: [new Date(), CustomValidators.required],
-      workEndDate: [new Date()],
+      contractExpiryDate: [null],
+      workStartDate: [null, CustomValidators.required],
+      workEndDate: [null],
     });
     this.data.employees.forEach((ei, i) => {
       if (!this.data.employees[i].id) {
@@ -172,6 +176,7 @@ export class EmployeeFormPopupComponent implements OnInit {
         ...this.data.employees[0],
       });
     }
+    console.log(this.form)
   }
   submit() {
     if (!this.isApproval()) {
@@ -200,6 +205,10 @@ export class EmployeeFormPopupComponent implements OnInit {
   }
   setEmployee() {
     if (this.form.valid) {
+      if (this.employeesList.findIndex(e => (this.form.value.passportNumber && e.passportNumber == this.form.value.passportNumber) || (this.form.value.identificationNumber && e.identificationNumber == this.form.value.identificationNumber)) != -1) {
+        this.dialog.error(this.lang.map.msg_user_identifier_is_already_exist);
+        return
+      }
       if (!this.form.value.id) {
         this.employeesList = [
           { ...this.form.value, jobTitleInfo: this.selectedJobTitle, id: --this.starterId },

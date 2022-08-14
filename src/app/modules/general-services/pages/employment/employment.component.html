@@ -104,23 +104,23 @@
         *ngIf="category.value && requestType.value"
       >
       <div>
-          <h1 class="h6 text-primary m-0 d-inline-block">{{isEditRequestTypeAllowed() && isNewRequestType()
-            ? lang.map.adding_employees
-            : lang.map.employees_details}}</h1>
           <button
             [ngClass]="{isDisabled: !isNewRequestType() && !employees.length}"
-            class="btn btn-link outline-none"
+            class="btn btn-link outline-none d-flex align-items-center"
             [disabled]="!isNewRequestType() && !employees.length"
-            tooltip="{{lang.map.btn_add}}"
+            [tooltip]="isEditRequestTypeAllowed() && isNewRequestType() ? lang.map.btn_add : lang.map.btn_edit"
             (click)="openForm()">
-            <i class="mdi mdi-plus-box"></i></button>
+            <h1 class="h6 m-0 text-primary d-inline-block me-2">{{isEditRequestTypeAllowed() && isNewRequestType()
+              ? lang.map.adding_employees
+              : lang.map.employees_details}}</h1>
+            <i class="mdi" [class]="isEditRequestTypeAllowed() && isNewRequestType() ? 'mdi-plus-box' : 'mdi-pen'"></i></button>
         </div>
         <form
           class="d-flex align-items-end"
           [formGroup]="searchCriteriaForm"
           *ngIf="isCreateOperation()"
         >
-          <div>
+          <div *ngIf="isApproval()">
             <label for="passportNumber" class="form-label">{{
               lang.map.passport_number
             }}</label>
