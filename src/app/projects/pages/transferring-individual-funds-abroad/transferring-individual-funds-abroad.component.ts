@@ -835,7 +835,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
   }
 
   saveExecutive() {
-    const executive = this.executiveManagementForm.getRawValue();
+    const executive = new TransferFundsExecutiveManagement().clone(this.executiveManagementForm.getRawValue() as TransferFundsExecutiveManagement);
     if (!this.selectedExecutive) {
       if (!this.isExistExecutiveInCaseOfAdd(this.selectedExecutives, executive)) {
         this.selectedExecutives = this.selectedExecutives.concat(executive);
@@ -918,7 +918,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
   }
 
   savePurpose() {
-    const purpose = this.setPurposeInfoProperties(new TransferFundsCharityPurpose().clone(this.transferPurpose.getRawValue() as TransferFundsCharityPurpose));
+    const purpose = this.setPurposeInfoProperties(new TransferFundsCharityPurpose().clone(this.transferPurposeForm.getRawValue() as TransferFundsCharityPurpose));
     if (!this.selectedPurpose) {
       if (!this.isExistPurposeInCaseOfAdd(this.selectedPurposes, purpose)) {
         this.selectedPurposes = this.selectedPurposes.concat(purpose);

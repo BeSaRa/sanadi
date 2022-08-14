@@ -4,6 +4,7 @@ import {LangService} from '@services/lang.service';
 import {FactoryService} from '@services/factory.service';
 
 export class GeneralAssociationExternalMember extends SearchableCloneable<GeneralAssociationExternalMember>{
+  id?: number;
   arabicName!: string;
   englishName!: string;
   jobTitleId!: number;

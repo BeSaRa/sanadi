@@ -1,6 +1,17 @@
 export interface ILanguageKeys {
   beneficiary_info: string;
   requester_same_as_beneficiary: string;
+  add_general_association_members: string;
+  general_association_members: string;
+  administrative_board_members: string;
+  add_administrative_board_member: string;
+  meeting_periodical: string;
+  meeting_classification: string;
+  meeting_initiator: string;
+  meeting_time: string;
+  meeting_date: string;
+  meeting_location: string;
+  general_association_meeting_type: string;
   transfer_to_country: string;
   national_id_number: string;
   multi: string;

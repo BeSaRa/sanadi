@@ -193,7 +193,7 @@ export class TransferringIndividualFundsAbroad extends _RequestType<Transferring
       receiverEnglishNameLikePassport: controls ? [receiverEnglishNameLikePassport, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')]] : receiverEnglishNameLikePassport,
       receiverJobTitle: controls ? [receiverJobTitle, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : receiverJobTitle,
       receiverNationality: controls ? [receiverNationality, [CustomValidators.required]] : receiverNationality,
-      receiverIdentificationNumber: controls ? [receiverIdentificationNumber, [CustomValidators.required].concat(CustomValidators.commonValidations.qId)] : receiverIdentificationNumber,
+      receiverIdentificationNumber: controls ? [receiverIdentificationNumber, [CustomValidators.required, CustomValidators.maxLength(20)]] : receiverIdentificationNumber,
       receiverPassportNumber: controls ? [receiverPassportNumber, [CustomValidators.required, ...CustomValidators.commonValidations.passport]] : receiverPassportNumber,
       receiverPhone1: controls ? [receiverPhone1, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : receiverPhone1,
       receiverPhone2: controls ? [receiverPhone2, CustomValidators.commonValidations.phone] : receiverPhone2,

@@ -140,5 +140,4 @@ export interface ILookupMap {
   UsageAdjective: Lookup[];
   UserType: Lookup[];
   WORK_FIELD: Lookup[];
-
 }
