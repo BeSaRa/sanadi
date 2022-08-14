@@ -45,7 +45,8 @@ export class CaseInfoComponent {
     CaseTypes.EMPLOYMENT,
     CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST,
     CaseTypes.URGENT_INTERVENTION_CLOSURE,
-    CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD
+    CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD,
+    CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION
   ];
 
   // this should be updated when ever you will add a new document service
