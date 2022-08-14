@@ -106,6 +106,7 @@ import { FollowupPopupComponent } from "@app/modules/followup/popups/followup-po
 import { ReasonPopupComponent } from './popups/reason-popup/reason-popup.component';
 import { ReturnToOrganizationPopupComponent } from './popups/return-to-organization-popup/return-to-organization-popup.component';
 import { MultiAttachmentDirective } from './directives/multi-attachment.directive';
+import { CustomAttachmentPopupComponent } from './popups/custom-attachment-popup/custom-attachment-popup.component';
 
 @NgModule({
   declarations: [
@@ -195,6 +196,7 @@ import { MultiAttachmentDirective } from './directives/multi-attachment.directiv
     ReasonPopupComponent,
     ReturnToOrganizationPopupComponent,
     MultiAttachmentDirective,
+    CustomAttachmentPopupComponent,
   ],
   imports: [
     CommonModule,

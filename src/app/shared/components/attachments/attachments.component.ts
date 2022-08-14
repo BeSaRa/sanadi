@@ -14,6 +14,7 @@ import { TableComponent } from "@app/shared/components/table/table.component";
 import { AttachmentTypeServiceData } from "@app/models/attachment-type-service-data";
 import { FileIconsEnum } from '@app/enums/file-extension-mime-types-icons.enum';
 import { AdminResult } from "@app/models/admin-result";
+import { GridName, ItemId } from "@app/types/types";
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -24,9 +25,12 @@ import { AdminResult } from "@app/models/admin-result";
 export class AttachmentsComponent implements OnInit, OnDestroy {
   // public attachment types
   attachmentTypes: AttachmentTypeServiceData[] = [];
-  multiAttachmentTypes: AttachmentTypeServiceData[] = [];
+  multiAttachmentTypes: Map<GridName, AttachmentTypeServiceData[]> = new Map<GridName, AttachmentTypeServiceData[]>()
 
   attachments: FileNetDocument[] = [];
+
+  multiAttachments: Map<GridName, Map<ItemId, FileNetDocument[]>> = new Map<GridName, Map<ItemId, FileNetDocument[]>>();
+
   fileIconsEnum = FileIconsEnum;
   defaultAttachments: FileNetDocument[] = [];
 
@@ -60,7 +64,8 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
 
   selectedFile?: FileNetDocument;
 
-  private loadedAttachments: Record<number, FileNetDocument> = {};
+  loadedAttachments: Record<number, FileNetDocument> = {};
+
   private selectedIndex!: number;
 
   @Input()
@@ -108,9 +113,16 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
         tap(_ => this.loaded = true),
         // load attachment types related to the service
         switchMap(_ => this.caseType ? this.attachmentTypeService.loadTypesByCaseType(this.caseType) : of([])),
-        tap(types => {
-          this.attachmentTypes = types.filter(item => !item.multi);
-          this.multiAttachmentTypes = types.filter(item => item.multi);
+        tap((types: AttachmentTypeServiceData[]) => {
+          this.multiAttachmentTypes.clear()
+          this.attachmentTypes = types.filter(item => {
+            if (item.multi) {
+              !this.multiAttachmentTypes.has(item.identifier) ?
+                this.multiAttachmentTypes.set(item.identifier, [item]) :
+                (this.multiAttachmentTypes.set(item.identifier, this.multiAttachmentTypes.get(item.identifier)!.concat([item])))
+            }
+            return !item.multi
+          });
         }),
         map<AttachmentTypeServiceData[], FileNetDocument[]>(() => this.attachmentTypes.map(type => type.convertToAttachment())),
         tap((attachments) => this.defaultAttachments = attachments.slice()),
@@ -124,11 +136,9 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
   }
 
   private mergeAttachments(attachments: FileNetDocument[] = [], types: FileNetDocument[]): FileNetDocument[] {
+    this.multiAttachments.clear()
     const typeIds = types.map(type => type.attachmentTypeInfo.id!)
     const attachmentTypeIds = attachments.map(attachment => attachment.attachmentTypeInfo.id!)
-    // if attachments gt types
-    // if types gt attachments
-    //
     this.loadedAttachments = types.reduce((acc, file) => {
       return { ...acc, [file.attachmentTypeInfo.id!]: file }
     }, {} as Record<number, FileNetDocument>);
@@ -140,6 +150,22 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
         attachment.attachmentTypeInfo = AttachmentsComponent.createOtherLookup()
       }
       return attachment
+    }).filter((attachment) => {
+      if (attachment.itemId && attachment.gridName) {
+        if (this.multiAttachments.has(attachment.gridName)) {
+          const grid = this.multiAttachments.get(attachment.gridName)!;
+          if (!grid.has(attachment.itemId)) {
+            grid.set(attachment.itemId, [])
+          }
+          const itemInGrid = grid.get(attachment.itemId)!
+          itemInGrid.push(attachment)
+        } else {
+          this.multiAttachments.set(attachment.gridName, new Map<ItemId, FileNetDocument[]>())
+          const grid = this.multiAttachments.get(attachment.gridName)!
+          grid.set(attachment.itemId, [attachment])
+        }
+      }
+      return !attachment.itemId
     })
 
     return attachments.concat(differenceIds.map(id => this.loadedAttachments[id]))

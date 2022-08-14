@@ -1,20 +1,15 @@
-import {HttpClient, HttpEventType, HttpParams} from '@angular/common/http';
-import {FileNetDocument} from '../models/file-net-document';
-import {Observable} from 'rxjs';
-import {filter, map} from 'rxjs/operators';
-import {Generator} from '../decorators/generator';
-import {BackendServiceModelInterface} from '../interfaces/backend-service-model-interface';
-import {IModelInterceptor} from '../interfaces/i-model-interceptor';
-import {FileNetDocumentInterceptor} from '../model-interceptors/file-net-document-interceptor';
-import {BlobModel} from '../models/blob-model';
-import {DialogRef} from '../shared/models/dialog-ref';
-import {DialogService} from './dialog.service';
-import {ViewDocumentPopupComponent} from '../shared/popups/view-document-popup/view-document-popup.component';
-import {DomSanitizer} from '@angular/platform-browser';
+import { HttpClient, HttpEventType, HttpParams } from '@angular/common/http';
+import { FileNetDocument } from '../models/file-net-document';
+import { Observable } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
+import { BlobModel } from '../models/blob-model';
+import { DialogRef } from '../shared/models/dialog-ref';
+import { DialogService } from './dialog.service';
+import { ViewDocumentPopupComponent } from '../shared/popups/view-document-popup/view-document-popup.component';
+import { DomSanitizer } from '@angular/platform-browser';
+import { CastResponse } from "@decorators/cast-response";
 
-export class DocumentService implements Pick<BackendServiceModelInterface<FileNetDocument>, '_getModel' | '_getInterceptor'> {
-  private interceptor = new FileNetDocumentInterceptor();
-
+export class DocumentService {
   constructor(private service: {
     http: HttpClient,
     _getURLSegment(): string,
@@ -24,14 +19,10 @@ export class DocumentService implements Pick<BackendServiceModelInterface<FileNe
 
   }
 
-  _getModel() {
-    return FileNetDocument;
-  }
-
-  _getInterceptor(): Partial<IModelInterceptor<FileNetDocument>> {
-    return this.interceptor;
-  }
-
+  @CastResponse(() => FileNetDocument, {
+    fallback: '$default',
+    unwrap: 'rs'
+  })
   addSingleDocument(caseId: string,
                     document: FileNetDocument,
                     progressCallback?: (percentage: number) => void): Observable<FileNetDocument> {
@@ -48,12 +39,18 @@ export class DocumentService implements Pick<BackendServiceModelInterface<FileNe
     delete clonedDocument.ouInfo;
     delete clonedDocument.required;
     delete clonedDocument.langService;
+    clonedDocument.itemId = '2e8cbf54-c8b9-4722-8d26-71ad2fd5423d'
+    clonedDocument.gridName = 'collectionItemList'
+
+    clonedDocument.denormalizeItemId && clonedDocument.denormalizeItemId();
+
+    delete clonedDocument.gridName
     if (!clonedDocument.description) {
       delete clonedDocument.description;
     }
     content ? formData.append('content', content) : null;
-    return this.service.http.post<any>(this.service._getURLSegment() + '/' + caseId + '/document', formData, {
-      params: new HttpParams({fromObject: clonedDocument as any}),
+    return this.service.http.post<FileNetDocument>(this.service._getURLSegment() + '/' + caseId + '/document', formData, {
+      params: new HttpParams({ fromObject: clonedDocument as any }),
       reportProgress: true,
       observe: 'events'
     }).pipe(
@@ -85,7 +82,7 @@ export class DocumentService implements Pick<BackendServiceModelInterface<FileNe
     delete clonedDocument.langService;
     clonedDocument.attachmentTypeId = 1;
     return this.service.http.post(this.service._getURLSegment() + '/' + caseId + '/document/bulk', formData, {
-      params: new HttpParams({fromObject: clonedDocument as any}),
+      params: new HttpParams({ fromObject: clonedDocument as any }),
       reportProgress: true,
       observe: 'events'
     }).pipe(
@@ -109,7 +106,10 @@ export class DocumentService implements Pick<BackendServiceModelInterface<FileNe
     return files.length > 1 ? this.addBulkDocuments(caseId, document, files, progressCallback) : this.addSingleDocument(caseId, document, progressCallback);
   }
 
-  @Generator(FileNetDocument, true, {property: 'rs'})
+  @CastResponse(() => FileNetDocument, {
+    fallback: '$default',
+    unwrap: 'rs'
+  })
   private _loadDocuments(caseId: string): Observable<FileNetDocument[]> {
     return this.service.http.get<FileNetDocument[]>(this.service._getURLSegment() + '/' + caseId + '/folder/contained-documents');
   }
