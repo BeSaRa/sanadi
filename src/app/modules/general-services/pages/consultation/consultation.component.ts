@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit} from '@angular/core';
 import {IESComponent} from '@app/interfaces/iescomponent';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {SaveTypes} from '@app/enums/save-types';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {Consultation} from '@app/models/consultation';
@@ -40,7 +40,7 @@ export class ConsultationComponent implements OnInit, OnDestroy, IESComponent<Co
   organizations: OrgUnit[] = [];
   destroy$: Subject<any> = new Subject<any>();
   saveTypes: typeof SaveTypes = SaveTypes;
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   fm!: FormManager;
   categories: Lookup[] = this.lookupService.listByCategory.ConsultationCategory;
   save: Subject<SaveTypes> = new Subject<SaveTypes>();
@@ -93,7 +93,7 @@ export class ConsultationComponent implements OnInit, OnDestroy, IESComponent<Co
 
   constructor(private http: HttpClient,
               public service: ConsultationService,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               private dialog: DialogService,
               private lookupService: LookupService,
               private toast: ToastService,

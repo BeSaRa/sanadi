@@ -3,7 +3,7 @@ import { LangService } from '@app/services/lang.service';
 import { Subscription } from 'rxjs';
 import { AttachmentType } from '@app/models/attachment-type';
 import { AttachmentTypeService } from '@app/services/attachment-type.service';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { IGridAction } from '@app/interfaces/i-grid-action';
 import { UserClickOn } from '@app/enums/user-click-on.enum';
 import { DialogService } from '@app/services/dialog.service';
@@ -27,7 +27,7 @@ export class AttachmentTypesComponent extends AdminGenericComponent<AttachmentTy
   list: AttachmentType[] = [];
   displayedColumns = ['rowSelection', 'arName', 'enName', 'status', 'actions'];
   reloadSubscription!: Subscription;
-  filterControl: FormControl = new FormControl('');
+  filterControl: UntypedFormControl = new UntypedFormControl('');
   commonStatus = CommonStatusEnum;
 
   actionsList: IGridAction[] = [

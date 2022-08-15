@@ -13,9 +13,9 @@ import {
 } from '@angular/core';
 import {CdkPortalOutlet} from '@angular/cdk/portal';
 import {animate, AnimationEvent, state, style, transition, trigger} from '@angular/animations';
-import {ConfigurableFocusTrapFactory} from '@angular/cdk/a11y';
+import { ConfigurableFocusTrap, ConfigurableFocusTrapFactory } from '@angular/cdk/a11y';
 import {DOCUMENT} from '@angular/common';
-import {ConfigurableFocusTrap} from '@angular/cdk/a11y/focus-trap/configurable-focus-trap';
+
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({

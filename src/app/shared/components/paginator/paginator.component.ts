@@ -12,7 +12,7 @@ import {LangService} from '@app/services/lang.service';
 import {debounceTime, distinctUntilChanged, filter, takeUntil} from 'rxjs/operators';
 import {merge, Subject} from 'rxjs';
 import {PageEvent} from '@app/interfaces/page-event';
-import {FormControl} from '@angular/forms';
+import {UntypedFormControl} from '@angular/forms';
 import {CustomValidators} from '@app/validators/custom-validators';
 
 @Component({
@@ -43,8 +43,8 @@ export class PaginatorComponent implements OnInit, OnDestroy {
 
   @Input() small: boolean = true;
 
-  itemsPerPageControl!: FormControl;
-  goToControl!: FormControl;
+  itemsPerPageControl!: UntypedFormControl;
+  goToControl!: UntypedFormControl;
   totalPages: number = 0;
 
   @Input()
@@ -93,8 +93,8 @@ export class PaginatorComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.itemsPerPageControl = new FormControl(this.pageSize);
-    this.goToControl = new FormControl(1, CustomValidators.number);
+    this.itemsPerPageControl = new UntypedFormControl(this.pageSize);
+    this.goToControl = new UntypedFormControl(1, CustomValidators.number);
     this.updatePaginationStatus();
     this.emitPaginationChange(this.previousPageIndex);
     this.listenToLanguageChanges();

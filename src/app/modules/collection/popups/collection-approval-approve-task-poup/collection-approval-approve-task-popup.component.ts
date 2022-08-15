@@ -11,7 +11,7 @@ import {CollectionItem} from "@app/models/collection-item";
 import {exhaustMap, filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
 import {DialogService} from "@app/services/dialog.service";
 import {InboxService} from "@app/services/inbox.service";
-import {FormControl} from "@angular/forms";
+import {UntypedFormControl} from "@angular/forms";
 import {IWFResponse} from "@app/interfaces/i-w-f-response";
 import {DialogRef} from "@app/shared/models/dialog-ref";
 import {ToastService} from "@app/services/toast.service";
@@ -38,7 +38,7 @@ export class CollectionApprovalApproveTaskPopupComponent implements OnInit, OnDe
   response: WFResponseType = WFResponseType.APPROVE;
 
   model: CollectionApproval;
-  comment: FormControl = new FormControl('', [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]);
+  comment: UntypedFormControl = new UntypedFormControl('', [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]);
 
   @ViewChild(ApprovalFormComponent) approvalForm!: ApprovalFormComponent;
 

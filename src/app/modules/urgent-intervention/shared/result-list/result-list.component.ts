@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angula
 import {LangService} from '@services/lang.service';
 import {ToastService} from '@services/toast.service';
 import {DialogService} from '@services/dialog.service';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {ReadinessStatus} from '@app/types/types';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {Subject} from 'rxjs';
@@ -22,7 +22,7 @@ export class ResultListComponent implements OnInit, OnDestroy {
   constructor(public lang: LangService,
               private toastService: ToastService,
               private dialogService: DialogService,
-              private fb: FormBuilder) {
+              private fb: UntypedFormBuilder) {
   }
 
 
@@ -63,9 +63,9 @@ export class ResultListComponent implements OnInit, OnDestroy {
   private currentRecord?: Result;
   private destroy$: Subject<any> = new Subject<any>();
   showForm: boolean = false;
-  filterControl: FormControl = new FormControl('');
+  filterControl: UntypedFormControl = new UntypedFormControl('');
 
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   actions: IMenuItem<Result>[] = [
     // edit
     {
@@ -73,7 +73,7 @@ export class ResultListComponent implements OnInit, OnDestroy {
       icon: ActionIconsEnum.EDIT,
       label: 'btn_edit',
       onClick: (item: Result) => this.edit(item),
-      show: (item: Result) => !this.readonly
+      show: (_item: Result) => !this.readonly
     },
     // delete
     {
@@ -81,7 +81,7 @@ export class ResultListComponent implements OnInit, OnDestroy {
       icon: ActionIconsEnum.DELETE,
       label: 'btn_delete',
       onClick: (item: Result) => this.delete(item),
-      show: (item: Result) => !this.readonly
+      show: (_item: Result) => !this.readonly
     },
     // view
     {
@@ -89,7 +89,7 @@ export class ResultListComponent implements OnInit, OnDestroy {
       icon: ActionIconsEnum.VIEW,
       label: 'view',
       onClick: (item: Result) => this.view(item),
-      show: (item: Result) => this.readonly
+      show: (_item: Result) => this.readonly
     }
   ];
 

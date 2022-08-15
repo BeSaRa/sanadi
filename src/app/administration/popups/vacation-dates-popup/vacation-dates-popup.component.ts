@@ -1,5 +1,5 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { Component, Inject } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { AdminGenericDialog } from '@app/generics/admin-generic-dialog';
 import { DateUtils } from '@app/helpers/date-utils';
@@ -22,7 +22,7 @@ import { catchError, exhaustMap, filter, switchMap } from 'rxjs/operators';
   styleUrls: ['./vacation-dates-popup.component.scss'],
 })
 export class VacationDatesPopupComponent extends AdminGenericDialog<VacationDates> {
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   model!: VacationDates;
   operation: OperationTypes;
   saveVisible = true;
@@ -33,7 +33,7 @@ export class VacationDatesPopupComponent extends AdminGenericDialog<VacationDate
   datepickerControlsMap: DatepickerControlsMap = {};
   constructor(
     public dialogRef: DialogRef,
-    public fb: FormBuilder,
+    public fb: UntypedFormBuilder,
     public lang: LangService,
     @Inject(DIALOG_DATA_TOKEN) data: IDialogData<VacationDates>,
     private toast: ToastService
@@ -106,14 +106,14 @@ export class VacationDatesPopupComponent extends AdminGenericDialog<VacationDate
 
   beforeSave(
     model: VacationDates,
-    form: FormGroup
+    form: UntypedFormGroup
   ): Observable<boolean> | boolean {
     return form.valid;
   }
 
   prepareModel(
     model: VacationDates,
-    form: FormGroup
+    form: UntypedFormGroup
   ): Observable<VacationDates> | VacationDates {
     return new VacationDates().clone({ ...model, ...form.value });
   }

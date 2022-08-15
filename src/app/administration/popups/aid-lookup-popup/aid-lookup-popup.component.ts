@@ -1,5 +1,5 @@
 import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, Inject, ViewChild} from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {LangService} from '@app/services/lang.service';
 import {AidLookup} from '@app/models/aid-lookup';
@@ -22,7 +22,7 @@ import {AidLookupStatusEnum} from '@app/enums/status.enum';
   styleUrls: ['./aid-lookup-popup.component.scss']
 })
 export class AidLookupPopupComponent extends AdminGenericDialog<AidLookup> implements AfterViewInit {
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   model: AidLookup;
   parentId: number;
   operation: OperationTypes;
@@ -45,7 +45,7 @@ export class AidLookupPopupComponent extends AdminGenericDialog<AidLookup> imple
               private lookupService: LookupService,
               public langService: LangService,
               public dialogRef: DialogRef,
-              public fb: FormBuilder,
+              public fb: UntypedFormBuilder,
               private cd: ChangeDetectorRef) {
     super();
     this.model = data.model;
@@ -126,11 +126,11 @@ export class AidLookupPopupComponent extends AdminGenericDialog<AidLookup> imple
     this.form = this.fb.group(model.buildForm(true), {validators: CustomValidators.validateFieldsStatus(['arName', 'enName', 'aidCode', 'aidType', 'status'])});
   }
 
-  beforeSave(model: AidLookup, form: FormGroup): Observable<boolean> | boolean {
+  beforeSave(model: AidLookup, form: UntypedFormGroup): Observable<boolean> | boolean {
     return form.valid;
   }
 
-  prepareModel(model: AidLookup, form: FormGroup): Observable<AidLookup> | AidLookup {
+  prepareModel(model: AidLookup, form: UntypedFormGroup): Observable<AidLookup> | AidLookup {
     return (new AidLookup()).clone({...model, ...form.value});
   }
 

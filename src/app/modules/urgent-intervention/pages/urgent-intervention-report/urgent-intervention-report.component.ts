@@ -5,7 +5,7 @@ import {UrgentInterventionReportingService} from '@services/urgent-intervention-
 import {LangService} from '@services/lang.service';
 import {ToastService} from '@services/toast.service';
 import {DialogService} from '@services/dialog.service';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {LookupService} from '@services/lookup.service';
 import {EmployeeService} from '@services/employee.service';
 import {LicenseService} from '@services/license.service';
@@ -50,7 +50,7 @@ export class UrgentInterventionReportComponent extends EServicesGenericComponent
               public service: UrgentInterventionReportingService,
               private toastService: ToastService,
               private dialogService: DialogService,
-              public fb: FormBuilder,
+              public fb: UntypedFormBuilder,
               private lookupService: LookupService,
               public employeeService: EmployeeService,
               private countryService: CountryService,
@@ -62,7 +62,7 @@ export class UrgentInterventionReportComponent extends EServicesGenericComponent
     this.cd.detectChanges();
   }
 
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   requestTypesList: Lookup[] = this.lookupService.listByCategory.UrgentInterventionAnnouncementRequestType.slice().sort((a, b) => a.lookupKey - b.lookupKey);
 
   loadAttachments: boolean = false;
@@ -161,16 +161,16 @@ export class UrgentInterventionReportComponent extends EServicesGenericComponent
     }
   }
 
-  get requestTypeField(): FormControl {
-    return (this.form?.get('requestType')) as FormControl;
+  get requestTypeField(): UntypedFormControl {
+    return (this.form?.get('requestType')) as UntypedFormControl;
   }
 
-  get oldLicenseFullSerialField(): FormControl {
-    return (this.form?.get('oldLicenseFullSerial')) as FormControl;
+  get oldLicenseFullSerialField(): UntypedFormControl {
+    return (this.form?.get('oldLicenseFullSerial')) as UntypedFormControl;
   }
 
-  get executionCountryField(): FormControl {
-    return (this.form?.get('executionCountry')) as FormControl;
+  get executionCountryField(): UntypedFormControl {
+    return (this.form?.get('executionCountry')) as UntypedFormControl;
   }
 
   licenseSearch($event?: Event): void {

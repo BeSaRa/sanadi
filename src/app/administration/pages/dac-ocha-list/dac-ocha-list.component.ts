@@ -22,7 +22,7 @@ import {IGridAction} from '@contracts/i-grid-action';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {PageEvent} from '@contracts/page-event';
-import {FormControl} from '@angular/forms';
+import {UntypedFormControl} from '@angular/forms';
 import {TableComponent} from '@app/shared/components/table/table.component';
 
 @Component({
@@ -59,7 +59,7 @@ export class DacOchaListComponent implements OnInit, AfterViewInit, OnDestroy {
   // list fo models related to the entity
   models: AdminLookup[] = [];
   // to filter grid models based on what the user type here
-  filterControl: FormControl = new FormControl('');
+  filterControl: UntypedFormControl = new UntypedFormControl('');
 
   ngOnInit(): void {
     this.listenToReload();
@@ -93,7 +93,7 @@ export class DacOchaListComponent implements OnInit, AfterViewInit, OnDestroy {
       type: 'action',
       label: 'btn_delete',
       icon: ActionIconsEnum.DELETE,
-      show: (item) => false,
+      show: (_item) => false,
       onClick: (item) => this.delete(item)
     },
     // edit
@@ -106,7 +106,7 @@ export class DacOchaListComponent implements OnInit, AfterViewInit, OnDestroy {
     // sub dac ocha
     {
       type: 'action',
-      label: (item) => {
+      label: (_item) => {
         return this.lang.map.sub_dac_ochas.change({x: this.getTabLabel(this.dacOchaType)});
       },
       icon: ActionIconsEnum.CHILD_ITEMS,
@@ -150,16 +150,16 @@ export class DacOchaListComponent implements OnInit, AfterViewInit, OnDestroy {
         {
           langKey: 'btn_activate',
           icon: '',
-          callback: ($event: MouseEvent, data?: any) => this.changeStatusBulk($event, CommonStatusEnum.ACTIVATED),
-          show: (items: AdminLookup[]) => {
+          callback: ($event: MouseEvent, _data?: any) => this.changeStatusBulk($event, CommonStatusEnum.ACTIVATED),
+          show: (_items: AdminLookup[]) => {
             return true;
           }
         },
         {
           langKey: 'btn_deactivate',
           icon: '',
-          callback: ($event: MouseEvent, data?: any) => this.changeStatusBulk($event, CommonStatusEnum.DEACTIVATED),
-          show: (items: AdminLookup[]) => {
+          callback: ($event: MouseEvent, _data?: any) => this.changeStatusBulk($event, CommonStatusEnum.DEACTIVATED),
+          show: (_items: AdminLookup[]) => {
             return true;
           }
         }

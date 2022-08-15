@@ -1,5 +1,5 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {DIALOG_DATA_TOKEN} from '../../tokens/tokens';
 import {LangService} from '@app/services/lang.service';
 import {DialogRef} from '../../models/dialog-ref';
@@ -19,7 +19,7 @@ export class RecommendationPopupComponent implements OnInit {
   model?: Recommendation;
   service: RecommendationService;
   caseId: string;
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   customValidators = CustomValidators;
 
   get recommendation(): string {
@@ -29,7 +29,7 @@ export class RecommendationPopupComponent implements OnInit {
   constructor(
     @Inject(DIALOG_DATA_TOKEN) data: { comment: Recommendation, caseId: string, service: RecommendationService },
     public lang: LangService,
-    public fb: FormBuilder,
+    public fb: UntypedFormBuilder,
     private dialogRef: DialogRef,
     private toast: ToastService,
     private employeeService: EmployeeService

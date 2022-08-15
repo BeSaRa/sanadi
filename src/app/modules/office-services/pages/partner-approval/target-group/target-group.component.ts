@@ -1,15 +1,13 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {LangService} from "@app/services/lang.service";
-import {ToastService} from "@app/services/toast.service";
-import {DialogService} from "@app/services/dialog.service";
-import {AbstractControl, FormArray, FormBuilder, FormGroup} from "@angular/forms";
-import {ReadinessStatus} from "@app/types/types";
-import {BehaviorSubject, Subject} from "rxjs";
-import {filter, map, take, takeUntil} from "rxjs/operators";
-import {UserClickOn} from "@app/enums/user-click-on.enum";
-import {TargetGroup} from "@app/models/target-group";
-import {Goal} from "@app/models/goal";
-import {ManagementCouncil} from "@app/models/management-council";
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { LangService } from "@app/services/lang.service";
+import { ToastService } from "@app/services/toast.service";
+import { DialogService } from "@app/services/dialog.service";
+import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
+import { ReadinessStatus } from "@app/types/types";
+import { BehaviorSubject, Subject } from "rxjs";
+import { filter, map, take, takeUntil } from "rxjs/operators";
+import { UserClickOn } from "@app/enums/user-click-on.enum";
+import { TargetGroup } from "@app/models/target-group";
 
 @Component({
   selector: 'target-group',
@@ -21,7 +19,7 @@ export class TargetGroupComponent implements OnInit, OnDestroy {
   constructor(public lang: LangService,
               private toastService: ToastService,
               private dialogService: DialogService,
-              private fb: FormBuilder) {
+              private fb: UntypedFormBuilder) {
   }
 
   private _list: TargetGroup[] = [];
@@ -48,7 +46,7 @@ export class TargetGroupComponent implements OnInit, OnDestroy {
   private current?: TargetGroup;
   private destroy$: Subject<any> = new Subject<any>();
 
-  form!: FormGroup;
+  form!: UntypedFormGroup;
 
   ngOnInit(): void {
     this._handleInitData();
@@ -74,8 +72,8 @@ export class TargetGroupComponent implements OnInit, OnDestroy {
     })
   }
 
-  get targetGroupsFormArray(): FormArray {
-    return (this.form.get('targetGroups')) as FormArray;
+  get targetGroupsFormArray(): UntypedFormArray {
+    return (this.form.get('targetGroups')) as UntypedFormArray;
   }
 
   addAllowed(): boolean {
@@ -139,7 +137,7 @@ export class TargetGroupComponent implements OnInit, OnDestroy {
     validForm$.pipe(
       takeUntil(this.destroy$),
       map(() => {
-        return (this.form.get('targetGroups.0')) as FormArray;
+        return (this.form.get('targetGroups.0')) as UntypedFormArray;
       }),
       map((form) => {
         return (new TargetGroup()).clone({

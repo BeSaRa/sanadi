@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { EServiceGenericService } from "@app/generics/e-service-generic-service";
-import { AbstractControl, FormBuilder, FormGroup } from "@angular/forms";
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
 import { HasLicenseApproval } from "@app/interfaces/has-license-approval";
 import { LangService } from "@app/services/lang.service";
 import { BehaviorSubject, Observable, Subject } from "rxjs";
@@ -34,7 +34,7 @@ export class ApprovalFormComponent implements OnInit, OnDestroy {
   @Input()
   service!: EServiceGenericService<any>
   destroy$: Subject<any> = new Subject();
-  form!: FormGroup
+  form!: UntypedFormGroup
 
   customTerms: CustomTerm[] = [];
 
@@ -67,7 +67,7 @@ export class ApprovalFormComponent implements OnInit, OnDestroy {
   minLicenseMonths!: number;
   maxLicenseMonths!: number;
 
-  constructor(private fb: FormBuilder,
+  constructor(private fb: UntypedFormBuilder,
               private customTermService: CustomTermService,
               private dialog: DialogService,
               private serviceDataService: ServiceDataService,

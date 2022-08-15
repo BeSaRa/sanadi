@@ -1,23 +1,17 @@
 import { WFResponseType } from './../enums/wfresponse-type.enum';
-import { IMyDateModel } from 'angular-mydatepicker';
 import { JobTitle } from './../models/job-title';
 import { Observable } from 'rxjs';
 import { EmployeeInterceptor } from './../model-interceptors/employee-interceptor';
 import { Employee } from './../models/employee';
-import { CastResponseContainer } from "@decorators/cast-response";
-import { FormGroup } from "@angular/forms";
+import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
+import { UntypedFormGroup } from "@angular/forms";
 import { DialogRef } from "@app/shared/models/dialog-ref";
 import { EmploymentSearchCriteria } from "./../models/employment-search-criteria";
 import { FactoryService } from "./factory.service";
 import { Employment } from "./../models/employment";
 import { BaseGenericEService } from "@app/generics/base-generic-e-service";
-import { CastResponse } from "@decorators/cast-response";
 import { HasInterception } from "@decorators/intercept-model";
-import {
-  ComponentFactoryResolver,
-  EventEmitter,
-  Injectable,
-} from "@angular/core";
+import { ComponentFactoryResolver, EventEmitter, Injectable, } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { DomSanitizer } from "@angular/platform-browser";
 import { ILanguageKeys } from "@app/interfaces/i-language-keys";
@@ -74,7 +68,7 @@ export class EmploymentService extends BaseGenericEService<Employment> {
     return "EmploymentComponent";
   }
 
-  openAddNewEmployee(form: FormGroup, employees: Partial<Employee>[], model: Employment | undefined, operation: number, jobTitleList: JobTitle[]): DialogRef {
+  openAddNewEmployee(form: UntypedFormGroup, employees: Partial<Employee>[], model: Employment | undefined, operation: number, jobTitleList: JobTitle[]): DialogRef {
     return this.dialog.show(
       EmployeeFormPopupComponent,
       {

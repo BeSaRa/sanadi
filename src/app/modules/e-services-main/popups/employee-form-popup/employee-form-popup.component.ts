@@ -9,7 +9,7 @@ import { DialogService } from "@app/services/dialog.service";
 import { DatepickerOptionsMap } from "@app/types/types";
 import { DateUtils } from "@app/helpers/date-utils";
 import { LookupService } from "@app/services/lookup.service";
-import { FormGroup, FormBuilder, Validators, FormControl } from "@angular/forms";
+import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl } from "@angular/forms";
 import { LangService } from "@app/services/lang.service";
 import { Component, Inject, OnInit, ViewChild } from "@angular/core";
 import { ContractTypes } from "@app/enums/contract-types.enum";
@@ -31,7 +31,7 @@ import { EmployeesDataComponent } from '../../shared/employees-data/employees-da
 })
 export class EmployeeFormPopupComponent implements OnInit {
   @ViewChild("ETable") ETable!: EmployeesDataComponent;
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   starterId: number = 0;
   employeesList: Partial<Employee>[] = [];
   JobTitleList: JobTitle[] = [];
@@ -107,14 +107,14 @@ export class EmployeeFormPopupComponent implements OnInit {
   ];
   constructor(
     public lang: LangService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private dialog: DialogService,
     private lookupService: LookupService,
     private employeeService: EmployeeService,
     @Inject(DIALOG_DATA_TOKEN)
     public data: {
       service: EmploymentService;
-      parentForm: FormGroup;
+      parentForm: UntypedFormGroup;
       employees: Employee[];
       model: Employment | undefined;
       operation: number,
@@ -340,43 +340,43 @@ export class EmployeeFormPopupComponent implements OnInit {
   }
 
   get contractType() {
-    return this.form.controls.contractType as FormControl
+    return this.form.controls.contractType as UntypedFormControl
   }
   get workStartDate() {
-    return this.form.controls.workStartDate as FormControl
+    return this.form.controls.workStartDate as UntypedFormControl
   }
   get workEndDate() {
-    return this.form.controls.workEndDate as FormControl;
+    return this.form.controls.workEndDate as UntypedFormControl;
   }
   get contractExpiryDate() {
-    return this.form.controls.contractExpiryDate as FormControl;
+    return this.form.controls.contractExpiryDate as UntypedFormControl;
   }
   get officeName() {
-    return this.form.controls.officeName as FormControl;
+    return this.form.controls.officeName as UntypedFormControl;
   }
   get contractStatus() {
-    return this.form.controls.contractStatus as FormControl;
+    return this.form.controls.contractStatus as UntypedFormControl;
   }
   get contractLocationType() {
-    return this.form.controls.contractLocationType as FormControl;
+    return this.form.controls.contractLocationType as UntypedFormControl;
   }
   get category() {
-    return this.data.parentForm.controls.category as FormControl;
+    return this.data.parentForm.controls.category as UntypedFormControl;
   }
   get requestType() {
-    return this.data.parentForm.controls.requestType as FormControl;
+    return this.data.parentForm.controls.requestType as UntypedFormControl;
   }
   get identificationType() {
-    return this.form.controls.identificationType as FormControl;
+    return this.form.controls.identificationType as UntypedFormControl;
   }
   get identificationNumber() {
-    return this.form.controls.identificationNumber as FormControl;
+    return this.form.controls.identificationNumber as UntypedFormControl;
   }
   get passportNumber() {
-    return this.form.controls.passportNumber as FormControl;
+    return this.form.controls.passportNumber as UntypedFormControl;
   }
   get jobTitleId() {
-    return this.form.controls.jobTitleId as FormControl;
+    return this.form.controls.jobTitleId as UntypedFormControl;
   }
   get id() {
     return this.form.controls.id.value;

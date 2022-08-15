@@ -1,7 +1,7 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {LangService} from "@app/services/lang.service";
 import {BehaviorSubject, iif, of, Subject} from "rxjs";
-import {FormControl} from "@angular/forms";
+import {UntypedFormControl} from "@angular/forms";
 import {UserTeam} from "@app/models/user-team";
 import {UserSecurityConfiguration} from "@app/models/user-security-configuration";
 import {TeamSecurityConfiguration} from "@app/models/team-security-configuration";
@@ -25,7 +25,7 @@ import {CommonStatusEnum} from '@app/enums/common-status.enum';
 })
 export class UserSecurityComponent implements OnInit, OnDestroy {
   destroy$: Subject<any> = new Subject<any>();
-  selectedUserTeam: FormControl = new FormControl();
+  selectedUserTeam: UntypedFormControl = new UntypedFormControl();
   commonStatusEnum = CommonStatusEnum;
   private _userTeams: UserTeam[] = [];
   private _operation: BehaviorSubject<OperationTypes> = new BehaviorSubject<OperationTypes>(OperationTypes.CREATE);

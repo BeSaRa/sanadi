@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Followup } from '@app/models/followup';
 import { Team } from '@app/models/team';
 import { LookupService } from '@app/services/lookup.service';
@@ -28,7 +28,7 @@ export class FollowupPopupComponent extends AdminGenericDialog<Followup> {
   @Input()
   case?: CaseModel<any, any>;
 
-  form: FormGroup = new FormGroup({});
+  form: UntypedFormGroup = new UntypedFormGroup({});
   followup!: Followup;
   teams!: Team[];
   model: Followup = new Followup();
@@ -42,7 +42,7 @@ export class FollowupPopupComponent extends AdminGenericDialog<Followup> {
   requestTypes: Lookup[] =  [];
   followUpTypes: Lookup[] = this.lookupService.listByCategory.FollowUpType;
 
-  constructor(public fb: FormBuilder,
+  constructor(public fb: UntypedFormBuilder,
               private lookupService: LookupService,
               private employeeService: EmployeeService,
               public dialogRef: DialogRef,
@@ -61,7 +61,7 @@ export class FollowupPopupComponent extends AdminGenericDialog<Followup> {
     this.hideForm.emit();
   }
 
-  beforeSave(model: Followup, form: FormGroup): Observable<boolean> | boolean {
+  beforeSave(model: Followup, form: UntypedFormGroup): Observable<boolean> | boolean {
     return true;
   }
 
@@ -79,7 +79,7 @@ export class FollowupPopupComponent extends AdminGenericDialog<Followup> {
       })
   }
 
-  prepareModel(model: Followup, form: FormGroup): Observable<Followup> | Followup {
+  prepareModel(model: Followup, form: UntypedFormGroup): Observable<Followup> | Followup {
     const newModel = new Followup().clone({
       ...this.form.getRawValue(),
       custom: true,

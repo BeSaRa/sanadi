@@ -2,7 +2,7 @@ import {AfterViewInit, ChangeDetectorRef, Component} from '@angular/core';
 import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
 import {InternalProjectLicense} from '@app/models/internal-project-license';
 import {InternalProjectLicenseService} from '@app/services/internal-project-license.service';
-import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators} from '@angular/forms';
+import {AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, ValidatorFn, Validators} from '@angular/forms';
 import {IKeyValue} from '@app/interfaces/i-key-value';
 import {LangService} from '@app/services/lang.service';
 import {LookupService} from '@app/services/lookup.service';
@@ -53,11 +53,11 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
               private aidLookupService: AidLookupService,
               private sdGoalService: SDGoalService,
               private licenseService: LicenseService,
-              public fb: FormBuilder) {
+              public fb: UntypedFormBuilder) {
     super();
   }
 
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   operation: OperationTypes = OperationTypes.CREATE;
   readonly: boolean = false;
   validFamilyOrIndividualSwitchMsg: string = '&nbsp;';
@@ -421,144 +421,144 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
     return !isAllowed;
   }
 
-  get basicInfoGroup(): FormGroup {
-    return (this.form.get('basicInfo')) as FormGroup;
+  get basicInfoGroup(): UntypedFormGroup {
+    return (this.form.get('basicInfo')) as UntypedFormGroup;
   }
 
-  get projectCategoryGroup(): FormGroup {
-    return (this.form.get('projectCategory')) as FormGroup;
+  get projectCategoryGroup(): UntypedFormGroup {
+    return (this.form.get('projectCategory')) as UntypedFormGroup;
   }
 
-  get projectCategoryPercentGroup(): FormGroup {
-    return (this.form.get('projectCategoryPercent')) as FormGroup;
+  get projectCategoryPercentGroup(): UntypedFormGroup {
+    return (this.form.get('projectCategoryPercent')) as UntypedFormGroup;
   }
 
-  get projectSummaryGroup(): FormGroup {
-    return (this.form.get('projectSummary')) as FormGroup;
+  get projectSummaryGroup(): UntypedFormGroup {
+    return (this.form.get('projectSummary')) as UntypedFormGroup;
   }
 
-  get beneficiaryAnalysisGroup(): FormGroup {
-    return (this.form.get('beneficiaryAnalysis')) as FormGroup;
+  get beneficiaryAnalysisGroup(): UntypedFormGroup {
+    return (this.form.get('beneficiaryAnalysis')) as UntypedFormGroup;
   }
 
-  get beneficiaryAnalysisIndividualPercentGroup(): FormGroup {
-    return (this.form.get('beneficiaryAnalysisIndividualPercent')) as FormGroup;
+  get beneficiaryAnalysisIndividualPercentGroup(): UntypedFormGroup {
+    return (this.form.get('beneficiaryAnalysisIndividualPercent')) as UntypedFormGroup;
   }
 
-  get projectBudgetGroup(): FormGroup {
-    return (this.form.get('projectBudget')) as FormGroup;
+  get projectBudgetGroup(): UntypedFormGroup {
+    return (this.form.get('projectBudget')) as UntypedFormGroup;
   }
 
-  get projectComponentsFormArray(): FormArray {
-    return (this.form.get('projectComponents')) as FormArray;
+  get projectComponentsFormArray(): UntypedFormArray {
+    return (this.form.get('projectComponents')) as UntypedFormArray;
   }
 
-  get specialExplanationsGroup(): FormGroup {
-    return (this.form.get('specialExplanations')) as FormGroup;
+  get specialExplanationsGroup(): UntypedFormGroup {
+    return (this.form.get('specialExplanations')) as UntypedFormGroup;
   }
 
-  get requestTypeField(): FormControl {
-    return (this.basicInfoGroup?.get('requestType')) as FormControl;
+  get requestTypeField(): UntypedFormControl {
+    return (this.basicInfoGroup?.get('requestType')) as UntypedFormControl;
   }
 
-  get oldLicenseFullSerialField(): FormControl {
-    return (this.basicInfoGroup?.get('oldLicenseFullSerial')) as FormControl;
+  get oldLicenseFullSerialField(): UntypedFormControl {
+    return (this.basicInfoGroup?.get('oldLicenseFullSerial')) as UntypedFormControl;
   }
 
-  get mainCategoryField(): FormControl {
-    return (this.projectCategoryGroup?.get('domain')) as FormControl;
+  get mainCategoryField(): UntypedFormControl {
+    return (this.projectCategoryGroup?.get('domain')) as UntypedFormControl;
   }
 
-  get subCategory1Field(): FormControl {
-    return (this.projectCategoryGroup?.get('firstSubDomain')) as FormControl;
+  get subCategory1Field(): UntypedFormControl {
+    return (this.projectCategoryGroup?.get('firstSubDomain')) as UntypedFormControl;
   }
 
-  get subCategory2Field(): FormControl {
-    return (this.projectCategoryGroup?.get('secondSubDomain')) as FormControl;
+  get subCategory2Field(): UntypedFormControl {
+    return (this.projectCategoryGroup?.get('secondSubDomain')) as UntypedFormControl;
   }
 
-  get firstSDGoalField(): FormControl {
-    return (this.projectCategoryGroup?.get('firstSDGoal')) as FormControl;
+  get firstSDGoalField(): UntypedFormControl {
+    return (this.projectCategoryGroup?.get('firstSDGoal')) as UntypedFormControl;
   }
 
-  get secondSDGoalField(): FormControl {
-    return (this.projectCategoryGroup?.get('secondSDGoal')) as FormControl;
+  get secondSDGoalField(): UntypedFormControl {
+    return (this.projectCategoryGroup?.get('secondSDGoal')) as UntypedFormControl;
   }
 
-  get thirdSDGoalField(): FormControl {
-    return (this.projectCategoryGroup?.get('thirdSDGoal')) as FormControl;
+  get thirdSDGoalField(): UntypedFormControl {
+    return (this.projectCategoryGroup?.get('thirdSDGoal')) as UntypedFormControl;
   }
 
-  get individualBeneficiarySwitchField(): FormControl {
-    return (this.beneficiaryAnalysisGroup?.get('hasIndividualBeneficiaries')) as FormControl;
+  get individualBeneficiarySwitchField(): UntypedFormControl {
+    return (this.beneficiaryAnalysisGroup?.get('hasIndividualBeneficiaries')) as UntypedFormControl;
   }
 
-  get familyBeneficiarySwitchField(): FormControl {
-    return (this.beneficiaryAnalysisGroup?.get('hasFamilyBeneficiaries')) as FormControl;
+  get familyBeneficiarySwitchField(): UntypedFormControl {
+    return (this.beneficiaryAnalysisGroup?.get('hasFamilyBeneficiaries')) as UntypedFormControl;
   }
 
-  get targetedNationalitiesField(): FormControl {
-    return (this.beneficiaryAnalysisGroup?.get('targetedNationalities')) as FormControl;
+  get targetedNationalitiesField(): UntypedFormControl {
+    return (this.beneficiaryAnalysisGroup?.get('targetedNationalities')) as UntypedFormControl;
   }
 
-  get allNationalitiesField(): FormControl {
-    return (this.beneficiaryAnalysisGroup?.get('allNationalities')) as FormControl;
+  get allNationalitiesField(): UntypedFormControl {
+    return (this.beneficiaryAnalysisGroup?.get('allNationalities')) as UntypedFormControl;
   }
 
-  get familyNumberOfTargetedFamiliesField(): FormControl {
-    return (this.beneficiaryAnalysisGroup?.get('beneficiaryFamiliesNumber')) as FormControl;
+  get familyNumberOfTargetedFamiliesField(): UntypedFormControl {
+    return (this.beneficiaryAnalysisGroup?.get('beneficiaryFamiliesNumber')) as UntypedFormControl;
   }
 
-  get familyAverageNumberOfPeopleField(): FormControl {
-    return (this.beneficiaryAnalysisGroup?.get('individualsAverageNumber')) as FormControl;
+  get familyAverageNumberOfPeopleField(): UntypedFormControl {
+    return (this.beneficiaryAnalysisGroup?.get('individualsAverageNumber')) as UntypedFormControl;
   }
 
-  get familyAverageAgeGroupField(): FormControl {
-    return (this.beneficiaryAnalysisGroup?.get('ageAverageCategory')) as FormControl;
+  get familyAverageAgeGroupField(): UntypedFormControl {
+    return (this.beneficiaryAnalysisGroup?.get('ageAverageCategory')) as UntypedFormControl;
   }
 
-  get individualNumberOfDirectBeneficiaryField(): FormControl {
-    return (this.beneficiaryAnalysisGroup?.get('directBeneficiaryNumber')) as FormControl;
+  get individualNumberOfDirectBeneficiaryField(): UntypedFormControl {
+    return (this.beneficiaryAnalysisGroup?.get('directBeneficiaryNumber')) as UntypedFormControl;
   }
 
-  get individualNumberOfInDirectBeneficiaryField(): FormControl {
-    return (this.beneficiaryAnalysisGroup?.get('indirectBeneficiaryNumber')) as FormControl;
+  get individualNumberOfInDirectBeneficiaryField(): UntypedFormControl {
+    return (this.beneficiaryAnalysisGroup?.get('indirectBeneficiaryNumber')) as UntypedFormControl;
   }
 
-  get individualSpecialNeedsBeneficiaryField(): FormControl {
-    return (this.beneficiaryAnalysisGroup?.get('handicappedBeneficiaryNumber')) as FormControl;
+  get individualSpecialNeedsBeneficiaryField(): UntypedFormControl {
+    return (this.beneficiaryAnalysisGroup?.get('handicappedBeneficiaryNumber')) as UntypedFormControl;
   }
 
-  get individual_0To5_Field(): FormControl {
-    return (this.beneficiaryAnalysisIndividualPercentGroup?.get('beneficiaries0to5')) as FormControl;
+  get individual_0To5_Field(): UntypedFormControl {
+    return (this.beneficiaryAnalysisIndividualPercentGroup?.get('beneficiaries0to5')) as UntypedFormControl;
   }
 
-  get individual_5To18_Field(): FormControl {
-    return (this.beneficiaryAnalysisIndividualPercentGroup?.get('beneficiaries5to18')) as FormControl;
+  get individual_5To18_Field(): UntypedFormControl {
+    return (this.beneficiaryAnalysisIndividualPercentGroup?.get('beneficiaries5to18')) as UntypedFormControl;
   }
 
-  get individual_19To60_Field(): FormControl {
-    return (this.beneficiaryAnalysisIndividualPercentGroup?.get('beneficiaries19to60')) as FormControl;
+  get individual_19To60_Field(): UntypedFormControl {
+    return (this.beneficiaryAnalysisIndividualPercentGroup?.get('beneficiaries19to60')) as UntypedFormControl;
   }
 
-  get individual_60Above_Field(): FormControl {
-    return (this.beneficiaryAnalysisIndividualPercentGroup?.get('beneficiariesOver60')) as FormControl;
+  get individual_60Above_Field(): UntypedFormControl {
+    return (this.beneficiaryAnalysisIndividualPercentGroup?.get('beneficiariesOver60')) as UntypedFormControl;
   }
 
-  get deductionPercentField(): FormControl {
-    return (this.projectBudgetGroup?.get('deductionPercent')) as FormControl;
+  get deductionPercentField(): UntypedFormControl {
+    return (this.projectBudgetGroup?.get('deductionPercent')) as UntypedFormControl;
   }
 
-  get projectTotalCostField(): FormControl {
-    return (this.projectBudgetGroup?.get('projectTotalCost')) as FormControl;
+  get projectTotalCostField(): UntypedFormControl {
+    return (this.projectBudgetGroup?.get('projectTotalCost')) as UntypedFormControl;
   }
 
-  get adminTotalDeductionCostField(): FormControl {
-    return (this.projectBudgetGroup?.get('administrativeDeductionAmount')) as FormControl;
+  get adminTotalDeductionCostField(): UntypedFormControl {
+    return (this.projectBudgetGroup?.get('administrativeDeductionAmount')) as UntypedFormControl;
   }
 
-  get targetCostField(): FormControl {
-    return (this.projectBudgetGroup?.get('targetAmount')) as FormControl;
+  get targetCostField(): UntypedFormControl {
+    return (this.projectBudgetGroup?.get('targetAmount')) as UntypedFormControl;
   }
 
   handleReadonly(): void {
@@ -706,14 +706,14 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
     this._checkValidFamilyOrIndividualSwitch();
   }
 
-  private static _setFieldValidation(fieldOrGroup: (FormControl | FormGroup), validations: (ValidatorFn | ValidatorFn[] | null), updateValueAndValidity: boolean = false) {
+  private static _setFieldValidation(fieldOrGroup: (UntypedFormControl | UntypedFormGroup), validations: (ValidatorFn | ValidatorFn[] | null), updateValueAndValidity: boolean = false) {
     fieldOrGroup.setValidators(validations);
     if (updateValueAndValidity) {
       fieldOrGroup.updateValueAndValidity();
     }
   }
 
-  private static _setFieldValue(field: FormControl, value: any, updateValueAndValidity: boolean = false): void {
+  private static _setFieldValue(field: UntypedFormControl, value: any, updateValueAndValidity: boolean = false): void {
     field.setValue(value);
     if (updateValueAndValidity) {
       field.updateValueAndValidity();
@@ -809,7 +809,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
                   }
                   return {selected: licenses[0], details: data};
                 }),
-                catchError((e) => {
+                catchError(() => {
                   return of(null);
                 })
               )
@@ -960,7 +960,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
     validForm$.pipe(
       takeUntil(this.destroy$),
       map(() => {
-        return (this.form.get('projectComponents.0')) as FormArray;
+        return (this.form.get('projectComponents.0')) as UntypedFormArray;
       }),
       map((form) => {
         return (new ProjectComponent()).clone({
@@ -1064,6 +1064,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
     this.targetedNationalitiesField.markAsTouched();
   }
 
+  // noinspection JSUnusedLocalSymbols
   private displayAttachmentsMessage(validAttachments: boolean): void {
     if (!validAttachments) {
       this.dialogService.error(this.lang.map.kindly_check_required_attachments);

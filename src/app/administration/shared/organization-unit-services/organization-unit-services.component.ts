@@ -1,6 +1,6 @@
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {OrgUnit} from '@app/models/org-unit';
-import {FormControl} from '@angular/forms';
+import {UntypedFormControl} from '@angular/forms';
 import {OrgUnitService} from '@app/models/org-unit-service';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 import {IGridAction} from '@app/interfaces/i-grid-action';
@@ -43,9 +43,9 @@ export class OrganizationUnitServicesComponent implements OnInit {
   @ViewChild('table') table!: TableComponent;
   commonStatusEnum = CommonStatusEnum;
   serviceDataList: ServiceData[] = [];
-  selectedOuService: FormControl = new FormControl(null);
+  selectedOuService: UntypedFormControl = new UntypedFormControl(null);
   orgUnitLinkedServices: OrgUnitService[] = [];
-  linkedServicesFilterControl: FormControl = new FormControl('');
+  linkedServicesFilterControl: UntypedFormControl = new UntypedFormControl('');
   linkedServicesDisplayedColumns: string[] = ['rowSelection', 'serviceName', 'actions'];
 
   linkedServicesActions: IMenuItem<OrgUnitService>[] = [
@@ -110,7 +110,7 @@ export class OrganizationUnitServicesComponent implements OnInit {
     });
 
     data.save().pipe(
-      catchError((err) => {
+      catchError(() => {
         return of(null);
       })).subscribe((result: OrgUnitService | null) => {
       if (!result) {
@@ -159,7 +159,7 @@ export class OrganizationUnitServicesComponent implements OnInit {
     }
   }
 
-  toggleLinkedServiceStatus(model: OrgUnitService): void {
+  toggleLinkedServiceStatus(_row: Event): void {
     console.log('toggle status');
   }
 }

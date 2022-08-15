@@ -1,24 +1,24 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {Observable, Subject} from 'rxjs';
-import {ILanguageKeys} from '@contracts/i-language-keys';
-import {WFResponseType} from '@app/enums/wfresponse-type.enum';
-import {AbstractControl, FormBuilder, FormControl, FormGroup} from '@angular/forms';
-import {IKeyValue} from '@contracts/i-key-value';
-import {DateUtils} from '@helpers/date-utils';
-import {DialogService} from '@services/dialog.service';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {ToastService} from '@services/toast.service';
-import {InboxService} from '@services/inbox.service';
-import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
-import {LangService} from '@services/lang.service';
-import {CommonUtils} from '@helpers/common-utils';
-import {exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
-import {IWFResponse} from '@contracts/i-w-f-response';
-import {UrgentJointReliefCampaign} from '@app/models/urgent-joint-relief-campaign';
-import {CustomTerm} from '@app/models/custom-term';
-import {CustomTermPopupComponent} from '@app/shared/popups/custom-term-popup/custom-term-popup.component';
-import {CustomTermService} from '@services/custom-term.service';
-import {ServiceDataService} from '@services/service-data.service';
+import { Component, Inject, OnInit } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
+import { ILanguageKeys } from '@contracts/i-language-keys';
+import { WFResponseType } from '@app/enums/wfresponse-type.enum';
+import { AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { IKeyValue } from '@contracts/i-key-value';
+import { DateUtils } from '@helpers/date-utils';
+import { DialogService } from '@services/dialog.service';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { ToastService } from '@services/toast.service';
+import { InboxService } from '@services/inbox.service';
+import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
+import { LangService } from '@services/lang.service';
+import { CommonUtils } from '@helpers/common-utils';
+import { exhaustMap, filter, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { IWFResponse } from '@contracts/i-w-f-response';
+import { UrgentJointReliefCampaign } from '@app/models/urgent-joint-relief-campaign';
+import { CustomTerm } from '@app/models/custom-term';
+import { CustomTermPopupComponent } from '@app/shared/popups/custom-term-popup/custom-term-popup.component';
+import { CustomTermService } from '@services/custom-term.service';
+import { ServiceDataService } from '@services/service-data.service';
 
 @Component({
   selector: 'urgent-joint-relief-campaign-final-approve-task-popup',
@@ -26,7 +26,7 @@ import {ServiceDataService} from '@services/service-data.service';
   styleUrls: ['./urgent-joint-relief-campaign-final-approve-task-popup.component.scss']
 })
 export class UrgentJointReliefCampaignFinalApproveTaskPopupComponent implements OnInit {
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   private destroy$: Subject<any> = new Subject();
   label: keyof ILanguageKeys;
   customTerms: CustomTerm[] = [];
@@ -38,8 +38,8 @@ export class UrgentJointReliefCampaignFinalApproveTaskPopupComponent implements 
   response: WFResponseType = WFResponseType.FINAL_APPROVE;
 
   model: UrgentJointReliefCampaign;
-  comment: FormControl = new FormControl();
-  followUpDate: FormControl = new FormControl();
+  comment: UntypedFormControl = new UntypedFormControl();
+  followUpDate: UntypedFormControl = new UntypedFormControl();
   minLicenseMonths!: number;
   maxLicenseMonths!: number;
   servicePublicTerms: string = '';
@@ -51,7 +51,7 @@ export class UrgentJointReliefCampaignFinalApproveTaskPopupComponent implements 
   constructor(
     private customTermService: CustomTermService,
     private serviceDataService: ServiceDataService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private dialog: DialogService,
     private dialogRef: DialogRef,
     private toast: ToastService,

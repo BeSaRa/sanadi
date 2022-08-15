@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { LangService } from '@app/services/lang.service';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { AttachmentTypeServiceData } from '@app/models/attachment-type-service-data';
-import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { FormManager } from '@app/models/form-manager';
 import { of, Subject } from 'rxjs';
 import { catchError, exhaustMap, takeUntil } from 'rxjs/operators';
@@ -27,7 +27,7 @@ import { CustomPropertyTypes } from "@app/enums/custom-property-types";
   styleUrls: ['./attachment-type-service-data-popup.component.scss']
 })
 export class AttachmentTypeServiceDataPopupComponent implements OnInit {
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   fm!: FormManager;
   model!: AttachmentTypeServiceData;
   operation!: OperationTypes;
@@ -47,7 +47,7 @@ export class AttachmentTypeServiceDataPopupComponent implements OnInit {
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<AttachmentTypeServiceData>,
               public lang: LangService,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               private exceptionHandlerService: ExceptionHandlerService,
               private servicesService: ServiceDataService,
               private lookupService: LookupService,
@@ -150,14 +150,14 @@ export class AttachmentTypeServiceDataPopupComponent implements OnInit {
           this.tablesIdentifiers = this.tablesIdentifiers.concat(property)
         } else {
           let controlValue = this.customPropertiesKeyValue[property.name] ? this.customPropertiesKeyValue[property.name] : null;
-          this.customPropertiesArrayForm.push(new FormControl(controlValue));
+          this.customPropertiesArrayForm.push(new UntypedFormControl(controlValue));
         }
       });
     });
   }
 
-  get customPropertiesArrayForm(): FormArray {
-    return this.form.get('customProperties') as FormArray;
+  get customPropertiesArrayForm(): UntypedFormArray {
+    return this.form.get('customProperties') as UntypedFormArray;
   }
 
   get multi(): AbstractControl {

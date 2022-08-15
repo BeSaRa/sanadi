@@ -9,7 +9,7 @@ import {LangService} from "@services/lang.service";
 import {CommonUtils} from "@helpers/common-utils";
 import {ILanguageKeys} from "@contracts/i-language-keys";
 import {Subject} from "rxjs";
-import {FormControl} from "@angular/forms";
+import {UntypedFormControl} from "@angular/forms";
 import {exhaustMap, filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
 import {IWFResponse} from "@contracts/i-w-f-response";
 import {UrgentInterventionLicense} from "@app/models/urgent-intervention-license";
@@ -33,7 +33,7 @@ export class UrgentInterventionApproveTaskPopupComponent implements OnInit, Afte
   response: WFResponseType = WFResponseType.APPROVE;
 
   model: UrgentInterventionLicense;
-  comment: FormControl = new FormControl('', [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]);
+  comment: UntypedFormControl = new UntypedFormControl('', [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]);
 
   @ViewChild(ApprovalFormMonthlyComponent) approvalForm!: ApprovalFormMonthlyComponent;
 

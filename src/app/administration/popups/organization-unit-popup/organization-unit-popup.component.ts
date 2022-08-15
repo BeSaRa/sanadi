@@ -1,6 +1,6 @@
 import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, Inject, ViewChild} from '@angular/core';
 import {OperationTypes} from '@app/enums/operation-types.enum';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {OrgUnit} from '@app/models/org-unit';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {IDialogData} from '@app/interfaces/i-dialog-data';
@@ -35,7 +35,7 @@ export class OrganizationUnitPopupComponent extends AdminGenericDialog<OrgUnit> 
   constructor(public dialogRef: DialogRef,
               @Inject(DIALOG_DATA_TOKEN) data: IDialogData<OrgUnit>,
               private lookupService: LookupService,
-              public fb: FormBuilder,
+              public fb: UntypedFormBuilder,
               private cd: ChangeDetectorRef,
               private toast: ToastService,
               public langService: LangService,
@@ -51,7 +51,7 @@ export class OrganizationUnitPopupComponent extends AdminGenericDialog<OrgUnit> 
   @ViewChild('dialogContent') dialogContent!: ElementRef;
   @ViewChild('logoUploader') logoUploader!: ElementRef;
 
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   model!: OrgUnit;
   operation: OperationTypes;
   saveVisible = true;
@@ -173,39 +173,39 @@ export class OrganizationUnitPopupComponent extends AdminGenericDialog<OrgUnit> 
     };
   }
 
-  get basicInfoGroup(): FormGroup {
-    return this.form.get('basic') as FormGroup;
+  get basicInfoGroup(): UntypedFormGroup {
+    return this.form.get('basic') as UntypedFormGroup;
   }
 
-  get advancedGroup(): FormGroup {
-    return this.form.get('advanced') as FormGroup;
+  get advancedGroup(): UntypedFormGroup {
+    return this.form.get('advanced') as UntypedFormGroup;
   }
 
-  get orgCodeField(): FormControl {
-    return this.basicInfoGroup.get('orgCode') as FormControl;
+  get orgCodeField(): UntypedFormControl {
+    return this.basicInfoGroup.get('orgCode') as UntypedFormControl;
   }
 
-  get registryDateField(): FormControl {
-    return this.basicInfoGroup.get('registryDate') as FormControl;
+  get registryDateField(): UntypedFormControl {
+    return this.basicInfoGroup.get('registryDate') as UntypedFormControl;
   }
 
-  get establishmentDateField(): FormControl {
-    return this.advancedGroup.get('establishmentDate') as FormControl;
+  get establishmentDateField(): UntypedFormControl {
+    return this.advancedGroup.get('establishmentDate') as UntypedFormControl;
   }
 
-  get budgetClosureDateField(): FormControl {
-    return this.advancedGroup.get('budgetClosureDate') as FormControl;
+  get budgetClosureDateField(): UntypedFormControl {
+    return this.advancedGroup.get('budgetClosureDate') as UntypedFormControl;
   }
 
-  get arabicBoardMembersField(): FormControl {
-    return this.advancedGroup.get('arabicBoardMembers') as FormControl;
+  get arabicBoardMembersField(): UntypedFormControl {
+    return this.advancedGroup.get('arabicBoardMembers') as UntypedFormControl;
   }
 
-  get englishBoardMembersField(): FormControl {
-    return this.advancedGroup.get('enBoardMembers') as FormControl;
+  get englishBoardMembersField(): UntypedFormControl {
+    return this.advancedGroup.get('enBoardMembers') as UntypedFormControl;
   }
 
-  beforeSave(model: OrgUnit, form: FormGroup): boolean | Observable<boolean> {
+  beforeSave(model: OrgUnit, form: UntypedFormGroup): boolean | Observable<boolean> {
     const invalidTabs = this._getInvalidTabs();
     if (invalidTabs.length > 0) {
       const listHtml = CommonUtils.generateHtmlList(this.langService.map.msg_following_tabs_valid, invalidTabs);
@@ -216,14 +216,14 @@ export class OrganizationUnitPopupComponent extends AdminGenericDialog<OrgUnit> 
     }
   }
 
-  private _getUpdatedValues(model: OrgUnit, form?: FormGroup): OrgUnit {
+  private _getUpdatedValues(model: OrgUnit, form?: UntypedFormGroup): OrgUnit {
     if (!form) {
       form = this.form;
     }
     return (new OrgUnit()).clone({...model, ...form.value.basic, ...form.value.advanced});
   }
 
-  prepareModel(model: OrgUnit, form: FormGroup): OrgUnit | Observable<OrgUnit> {
+  prepareModel(model: OrgUnit, form: UntypedFormGroup): OrgUnit | Observable<OrgUnit> {
     return this._getUpdatedValues(model, form);
   }
 

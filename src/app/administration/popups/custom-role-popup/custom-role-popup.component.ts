@@ -1,5 +1,5 @@
 import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, Inject, ViewChild} from '@angular/core';
-import {AbstractControl, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {LangService} from '@app/services/lang.service';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
@@ -20,6 +20,7 @@ import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {DialogService} from '@app/services/dialog.service';
+import { TabComponent } from "@app/shared/components/tab/tab.component";
 
 @Component({
   selector: 'app-custom-role-popup',
@@ -30,7 +31,7 @@ export class CustomRolePopupComponent extends AdminGenericDialog<CustomRole> imp
   constructor(public dialogRef: DialogRef,
               @Inject(DIALOG_DATA_TOKEN) data: IDialogData<CustomRole>,
               private lookupService: LookupService,
-              public fb: FormBuilder,
+              public fb: UntypedFormBuilder,
               private toast: ToastService,
               private cd: ChangeDetectorRef,
               private dialogService: DialogService,
@@ -47,7 +48,7 @@ export class CustomRolePopupComponent extends AdminGenericDialog<CustomRole> imp
 
   @ViewChild('dialogContent') dialogContent!: ElementRef;
 
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   model: CustomRole;
   operation: OperationTypes;
   saveVisible = true;
@@ -91,19 +92,19 @@ export class CustomRolePopupComponent extends AdminGenericDialog<CustomRole> imp
     return '';
   };
 
-  get basicInfoGroup(): FormGroup {
-    return this.form.get('basic') as FormGroup;
+  get basicInfoGroup(): UntypedFormGroup {
+    return this.form.get('basic') as UntypedFormGroup;
   }
 
   get permissionsGroup(): AbstractControl {
     return this.form.get('permissions') as AbstractControl;
   }
 
-  get statusField(): FormControl {
-    return this.basicInfoGroup.get('status') as FormControl;
+  get statusField(): UntypedFormControl {
+    return this.basicInfoGroup.get('status') as UntypedFormControl;
   }
 
-  setDialogButtonsVisibility(tab: any): void {
+  setDialogButtonsVisibility(_tab: TabComponent): void {
     this.saveVisible = this.operation !== OperationTypes.VIEW;
     this.validateFieldsVisible = this.operation !== OperationTypes.VIEW;
   }
@@ -174,7 +175,7 @@ export class CustomRolePopupComponent extends AdminGenericDialog<CustomRole> imp
     }, [] as number[]);
   }
 
-  beforeSave(model: CustomRole, form: FormGroup): boolean | Observable<boolean> {
+  beforeSave(model: CustomRole, form: UntypedFormGroup): boolean | Observable<boolean> {
     const invalidTabs = this._getInvalidTabs();
     if (invalidTabs.length > 0) {
       const listHtml = CommonUtils.generateHtmlList(this.langService.map.msg_following_tabs_valid, invalidTabs);
@@ -185,7 +186,7 @@ export class CustomRolePopupComponent extends AdminGenericDialog<CustomRole> imp
     }
   }
 
-  private _getUpdatedValues(model: CustomRole, form?: FormGroup): CustomRole {
+  private _getUpdatedValues(model: CustomRole, form?: UntypedFormGroup): CustomRole {
     if (!form) {
       form = this.form;
     }
@@ -195,7 +196,7 @@ export class CustomRolePopupComponent extends AdminGenericDialog<CustomRole> imp
     return customRole;
   }
 
-  prepareModel(model: CustomRole, form: FormGroup): CustomRole | Observable<CustomRole> {
+  prepareModel(model: CustomRole, form: UntypedFormGroup): CustomRole | Observable<CustomRole> {
     return this._getUpdatedValues(model, form);
   }
 

@@ -1,6 +1,6 @@
 import {Component, ElementRef, Inject, ViewChild} from '@angular/core';
 import {LangService} from '@app/services/lang.service';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {FormManager} from '@app/models/form-manager';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {Certificate} from '@app/models/certificate';
@@ -21,7 +21,7 @@ import {catchError, exhaustMap, filter, switchMap, takeUntil} from 'rxjs/operato
   styleUrls: ['./certificate-popup.component.scss']
 })
 export class CertificatePopupComponent extends AdminGenericDialog<Certificate> {
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   fm!: FormManager;
   operation!: OperationTypes;
   model!: Certificate;
@@ -35,7 +35,7 @@ export class CertificatePopupComponent extends AdminGenericDialog<Certificate> {
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<Certificate>,
               public lang: LangService,
-              public fb: FormBuilder,
+              public fb: UntypedFormBuilder,
               public exceptionHandlerService: ExceptionHandlerService,
               public lookupService: LookupService,
               public toast: ToastService,
@@ -65,11 +65,11 @@ export class CertificatePopupComponent extends AdminGenericDialog<Certificate> {
     this.fm = new FormManager(this.form, this.lang);
   }
 
-  beforeSave(model: Certificate, form: FormGroup): Observable<boolean> | boolean {
+  beforeSave(model: Certificate, form: UntypedFormGroup): Observable<boolean> | boolean {
     return form.valid;
   }
 
-  prepareModel(model: Certificate, form: FormGroup): Observable<Certificate> | Certificate {
+  prepareModel(model: Certificate, form: UntypedFormGroup): Observable<Certificate> | Certificate {
     let certificate =  (new Certificate()).clone({...model, ...form.value});
     certificate.file = this.templateFile;
     return certificate;

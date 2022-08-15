@@ -1,31 +1,30 @@
-import {Component, OnInit} from '@angular/core';
-import {LangService} from '@app/services/lang.service';
-import {ToastService} from '@app/services/toast.service';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
-import {LookupService} from '@app/services/lookup.service';
-import {BehaviorSubject, forkJoin, Observable, of, Subject, Subscription} from 'rxjs';
-import {catchError, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
-import {SubventionRequestPartialLog} from '@app/models/subvention-request-partial-log';
-import {SubventionRequestPartialLogService} from '@app/services/subvention-request-partial-log.service';
-import {IMyInputFieldChanged} from 'angular-mydatepicker';
-import {isEmptyObject, printBlobData} from '@app/helpers/utils';
-import {IKeyValue} from '@app/interfaces/i-key-value';
-import {DialogService} from '@app/services/dialog.service';
-import {ISubventionRequestPartialLogCriteria} from '@app/interfaces/i-subvention-request-partial-log-criteria';
+import { Component, OnInit } from '@angular/core';
+import { LangService } from '@app/services/lang.service';
+import { ToastService } from '@app/services/toast.service';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { LookupService } from '@app/services/lookup.service';
+import { BehaviorSubject, forkJoin, Observable, of, Subject, Subscription } from 'rxjs';
+import { catchError, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { SubventionRequestPartialLog } from '@app/models/subvention-request-partial-log';
+import { SubventionRequestPartialLogService } from '@app/services/subvention-request-partial-log.service';
+import { IMyInputFieldChanged } from 'angular-mydatepicker';
+import { isEmptyObject, printBlobData } from '@app/helpers/utils';
+import { IKeyValue } from '@app/interfaces/i-key-value';
+import { DialogService } from '@app/services/dialog.service';
+import { ISubventionRequestPartialLogCriteria } from '@app/interfaces/i-subvention-request-partial-log-criteria';
 import * as dayjs from 'dayjs';
-import {ConfigurationService} from '@app/services/configuration.service';
-import {OrgUnit} from '@app/models/org-unit';
-import {OrgUser} from '@app/models/org-user';
-import {OrganizationUnitService} from '@app/services/organization-unit.service';
-import {ReadModeService} from '@app/services/read-mode.service';
-import {Router} from '@angular/router';
-import {OrganizationUserService} from '@app/services/organization-user.service';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {DateUtils} from '@app/helpers/date-utils';
-import {DatepickerControlsMap, DatepickerOptionsMap} from '@app/types/types';
-import {SubventionRequestAid} from '@app/models/subvention-request-aid';
-import {SortEvent} from '@app/interfaces/sort-event';
-import {CommonUtils} from '@app/helpers/common-utils';
+import { ConfigurationService } from '@app/services/configuration.service';
+import { OrgUnit } from '@app/models/org-unit';
+import { OrgUser } from '@app/models/org-user';
+import { OrganizationUnitService } from '@app/services/organization-unit.service';
+import { ReadModeService } from '@app/services/read-mode.service';
+import { Router } from '@angular/router';
+import { OrganizationUserService } from '@app/services/organization-user.service';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { DateUtils } from '@app/helpers/date-utils';
+import { DatepickerControlsMap, DatepickerOptionsMap } from '@app/types/types';
+import { SortEvent } from '@app/interfaces/sort-event';
+import { CommonUtils } from '@app/helpers/common-utils';
 
 @Component({
   selector: 'app-partial-request-reports',
@@ -37,7 +36,7 @@ export class PartialRequestReportsComponent implements OnInit {
 
   constructor(public langService: LangService,
               private toastService: ToastService,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               private lookupService: LookupService,
               private dialogService: DialogService,
               private readModeService: ReadModeService,
@@ -49,7 +48,7 @@ export class PartialRequestReportsComponent implements OnInit {
   }
 
   tabIndex$: Subject<number> = new Subject<number>();
-  form: FormGroup = {} as FormGroup;
+  form: UntypedFormGroup = {} as UntypedFormGroup;
   private search$: Subject<any> = new Subject<any>();
   reload$: BehaviorSubject<any> = new BehaviorSubject<any>('init');
   searchSubscription!: Subscription;
@@ -65,7 +64,7 @@ export class PartialRequestReportsComponent implements OnInit {
   orgUnitsList: OrgUnit[] = [];
   orgUsersList: OrgUser[] = [];
 
-  filterControl: FormControl = new FormControl('');
+  filterControl: UntypedFormControl = new UntypedFormControl('');
   headerColumn: string[] = ['extra-header'];
   displayedColumns: string[] = ['requestFullSerial', 'requestDate', 'requestedAidCategory', 'requestedAid', 'requestSummary', 'actionType', 'actionDate', 'userOrganization', 'orgUser'];
 
@@ -265,20 +264,20 @@ export class PartialRequestReportsComponent implements OnInit {
       });
   }
 
-  get orgUnitField(): FormControl {
-    return this.form.get('orgId') as FormControl;
+  get orgUnitField(): UntypedFormControl {
+    return this.form.get('orgId') as UntypedFormControl;
   }
 
-  get orgUserField(): FormControl {
-    return this.form.get('orgUserId') as FormControl;
+  get orgUserField(): UntypedFormControl {
+    return this.form.get('orgUserId') as UntypedFormControl;
   }
 
-  get fromDateField(): FormControl {
-    return this.form.get('fromDate') as FormControl;
+  get fromDateField(): UntypedFormControl {
+    return this.form.get('fromDate') as UntypedFormControl;
   }
 
-  get toDateField(): FormControl {
-    return this.form.get('toDate') as FormControl;
+  get toDateField(): UntypedFormControl {
+    return this.form.get('toDate') as UntypedFormControl;
   }
 
 }

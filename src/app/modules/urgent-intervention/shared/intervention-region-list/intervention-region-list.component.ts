@@ -1,18 +1,16 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {ReadinessStatus} from '@app/types/types';
-import {InterventionRegion} from '@app/models/intervention-region';
-import {Subject} from 'rxjs';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
-import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import {ActionIconsEnum} from '@app/enums/action-icons-enum';
-import {filter, map, take, takeUntil, tap} from 'rxjs/operators';
-import {AdminResult} from '@app/models/admin-result';
-import {Lookup} from '@app/models/lookup';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {LangService} from '@services/lang.service';
-import {ToastService} from '@services/toast.service';
-import {DialogService} from '@services/dialog.service';
-import {CustomValidators} from '@app/validators/custom-validators';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { ReadinessStatus } from '@app/types/types';
+import { InterventionRegion } from '@app/models/intervention-region';
+import { Subject } from 'rxjs';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { ActionIconsEnum } from '@app/enums/action-icons-enum';
+import { filter, map, take, takeUntil, tap } from 'rxjs/operators';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { LangService } from '@services/lang.service';
+import { ToastService } from '@services/toast.service';
+import { DialogService } from '@services/dialog.service';
+import { CustomValidators } from '@app/validators/custom-validators';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -25,7 +23,7 @@ export class InterventionRegionListComponent implements OnInit, OnDestroy {
   constructor(public lang: LangService,
               private toastService: ToastService,
               private dialogService: DialogService,
-              private fb: FormBuilder) {
+              private fb: UntypedFormBuilder) {
   }
 
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();
@@ -50,9 +48,9 @@ export class InterventionRegionListComponent implements OnInit, OnDestroy {
   private currentRecord?: InterventionRegion;
   private destroy$: Subject<any> = new Subject<any>();
   showForm: boolean = false;
-  filterControl: FormControl = new FormControl('');
+  filterControl: UntypedFormControl = new UntypedFormControl('');
 
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   customValidators = CustomValidators;
 
   actions: IMenuItem<InterventionRegion>[] = [
@@ -62,7 +60,7 @@ export class InterventionRegionListComponent implements OnInit, OnDestroy {
       icon: ActionIconsEnum.EDIT,
       label: 'btn_edit',
       onClick: (item: InterventionRegion) => this.edit(item),
-      show: (item: InterventionRegion) => !this.readonly
+      show: (_item: InterventionRegion) => !this.readonly
     },
     // delete
     {
@@ -70,7 +68,7 @@ export class InterventionRegionListComponent implements OnInit, OnDestroy {
       icon: ActionIconsEnum.DELETE,
       label: 'btn_delete',
       onClick: (item: InterventionRegion) => this.delete(item),
-      show: (item: InterventionRegion) => !this.readonly
+      show: (_item: InterventionRegion) => !this.readonly
     },
     // view
     {
@@ -78,7 +76,7 @@ export class InterventionRegionListComponent implements OnInit, OnDestroy {
       icon: ActionIconsEnum.VIEW,
       label: 'view',
       onClick: (item: InterventionRegion) => this.view(item),
-      show: (item: InterventionRegion) => this.readonly
+      show: (_item: InterventionRegion) => this.readonly
     }
   ];
 

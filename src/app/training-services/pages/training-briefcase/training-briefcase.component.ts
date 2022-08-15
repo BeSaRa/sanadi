@@ -1,5 +1,5 @@
 import {Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {FormControl} from '@angular/forms';
+import {UntypedFormControl} from '@angular/forms';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {LangService} from '@app/services/lang.service';
 import {BehaviorSubject, Subject} from 'rxjs';
@@ -49,8 +49,8 @@ export class TrainingBriefcaseComponent implements OnInit, OnDestroy {
     {
       icon: 'mdi-download',
       langKey: 'btn_download',
-      callback: ($event: MouseEvent, action: IGridAction) => this.downloadBriefcase($event),
-      show: (items: TrainingProgramBriefcase[]) => {
+      callback: ($event: MouseEvent) => this.downloadBriefcase($event),
+      show: (_items: TrainingProgramBriefcase[]) => {
         return this.bundlesList.length > 0;
       }
     }
@@ -70,7 +70,7 @@ export class TrainingBriefcaseComponent implements OnInit, OnDestroy {
   private _allowedFileExtensions: string[] = [FileExtensionsEnum.PDF, FileExtensionsEnum.PPT, FileExtensionsEnum.PPTX];
   private _allowedVideoFileExtensions: string[] = [FileExtensionsEnum.MKV, FileExtensionsEnum.MP4];
 
-  documentTitleControl = new FormControl('', [CustomValidators.required, CustomValidators.maxLength(50)]);
+  documentTitleControl = new UntypedFormControl('', [CustomValidators.required, CustomValidators.maxLength(50)]);
   trainingProgramBriefcaseItemVsId: string = '';
   isDocumentFileRequired: boolean = false;
 
@@ -248,7 +248,7 @@ export class TrainingBriefcaseComponent implements OnInit, OnDestroy {
       var reader = new FileReader();
       reader.readAsDataURL(files[0]);
 
-      reader.onload = (event) => {
+      reader.onload = (_event) => {
         // @ts-ignore
         this.uploadedFile = files[0];
         this.uploadedFilePath = this.uploadedFile.name;

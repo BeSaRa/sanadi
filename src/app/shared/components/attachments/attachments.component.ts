@@ -3,7 +3,7 @@ import { BehaviorSubject, Observable, of, Subject } from "rxjs";
 import { filter, map, skip, switchMap, takeUntil, tap } from "rxjs/operators";
 import { FileNetDocument } from "@app/models/file-net-document";
 import { LangService } from "@app/services/lang.service";
-import { FormControl } from "@angular/forms";
+import { UntypedFormControl } from "@angular/forms";
 import { AttachmentTypeService } from "@app/services/attachment-type.service";
 import { DocumentService } from "@app/services/document.service";
 import { DialogService } from "@app/services/dialog.service";
@@ -76,7 +76,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
   destroy$: Subject<any> = new Subject<any>();
   displayedColumns: string[] = [/*'rowSelection',*/ 'title', 'type', 'description', 'mandatory', 'date', 'actions'];
 
-  filter: FormControl = new FormControl();
+  filter: UntypedFormControl = new UntypedFormControl();
 
   addOtherAttachments: Subject<null> = new Subject<null>();
 

@@ -2,7 +2,7 @@ import {Component, ElementRef, Inject, ViewChild} from '@angular/core';
 import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
 import {Trainer} from '@app/models/trainer';
 import {DialogRef} from '@app/shared/models/dialog-ref';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {Observable, of, Subject} from 'rxjs';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {IDialogData} from '@app/interfaces/i-dialog-data';
@@ -23,7 +23,7 @@ import {catchError, switchMap, takeUntil} from 'rxjs/operators';
   styleUrls: ['./accredited-trainer-popup.component.scss']
 })
 export class AccreditedTrainerPopupComponent extends AdminGenericDialog<Trainer>{
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   fm!: FormManager;
   operation!: OperationTypes;
   model!: Trainer;
@@ -44,7 +44,7 @@ export class AccreditedTrainerPopupComponent extends AdminGenericDialog<Trainer>
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<Trainer>,
               public lang: LangService,
-              public fb: FormBuilder,
+              public fb: UntypedFormBuilder,
               public exceptionHandlerService: ExceptionHandlerService,
               public lookupService: LookupService,
               public toast: ToastService,
@@ -68,11 +68,11 @@ export class AccreditedTrainerPopupComponent extends AdminGenericDialog<Trainer>
     this.fm = new FormManager(this.form, this.lang);
   }
 
-  beforeSave(model: Trainer, form: FormGroup): Observable<boolean> | boolean {
+  beforeSave(model: Trainer, form: UntypedFormGroup): Observable<boolean> | boolean {
     return form.valid;
   }
 
-  prepareModel(model: Trainer, form: FormGroup): Observable<Trainer> | Trainer {
+  prepareModel(model: Trainer, form: UntypedFormGroup): Observable<Trainer> | Trainer {
     return (new Trainer()).clone({...model, ...form.value});
   }
   afterSave(model: Trainer, dialogRef: DialogRef): void {

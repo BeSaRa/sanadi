@@ -46,7 +46,7 @@ import { tap } from "rxjs/operators";
   ],
   imports: [
     BrowserModule,
-    CookieModule.forRoot(),
+    CookieModule.withOptions(),
     SharedModule,
     AppRoutingModule,
     BrowserAnimationsModule,

@@ -16,7 +16,7 @@ export class EncryptionService {
     return AES.encrypt(JSON.stringify(model), randomPrivateKey).toString() + ':' + randomPrivateKey;
   }
 
-  decrypt<T = any>(encryptedText: string): T {
+  decrypt<T = any>(encryptedText: string | undefined): T {
     if (!encryptedText) {
       return null as unknown as T;
     }

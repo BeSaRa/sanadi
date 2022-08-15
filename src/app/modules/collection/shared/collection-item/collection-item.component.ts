@@ -3,7 +3,7 @@ import {CollectionApproval} from '@app/models/collection-approval';
 import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
 import {exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {CollectionItem} from '@app/models/collection-item';
-import {AbstractControl, FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {LangService} from '@app/services/lang.service';
 import {AppEvents} from '@app/enums/app-events';
 import {DialogService} from '@app/services/dialog.service';
@@ -31,7 +31,7 @@ import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy {
   private displayedColumns: string[] = ['fullSerial', 'status', 'requestTypeInfo', 'licenseDurationTypeInfo', 'ouInfo', 'creatorInfo', 'actions'];
 
-  constructor(private fb: FormBuilder,
+  constructor(private fb: UntypedFormBuilder,
               public lang: LangService,
               private licenseService: LicenseService,
               private sharedService: SharedService,
@@ -51,9 +51,9 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
 
   item?: CollectionItem;
 
-  form!: FormGroup;
+  form!: UntypedFormGroup;
 
-  searchControl: FormControl = new FormControl();
+  searchControl: UntypedFormControl = new UntypedFormControl();
 
   datepickerOptionsMap: DatepickerOptionsMap = {
     licenseEndDate: DateUtils.getDatepickerOptions({disablePeriod: 'past'}),
@@ -261,6 +261,7 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
     this.searchControl.reset();
   }
 
+  // noinspection JSUnusedLocalSymbols
   private listenToDisableSearchField() {
     this._disableSearch
       .pipe(takeUntil(this.destroy$))

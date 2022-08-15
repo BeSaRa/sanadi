@@ -16,7 +16,7 @@ import { ToastService } from '@app/services/toast.service';
 import { ExternalOrgAffiliation } from '@app/models/external-org-affiliation';
 import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
 import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { SaveTypes } from '@app/enums/save-types';
 import { LangService } from '@app/services/lang.service';
@@ -36,7 +36,7 @@ import {
   styleUrls: ['./external-org-affiliation.component.scss']
 })
 export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<ExternalOrgAffiliation, ExternalOrgAffiliationService> {
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   AffiliationRequestType: Lookup[] = this.lookupService.listByCategory.AffiliationRequestType.sort((a, b) => a.lookupKey - b.lookupKey);
   AffiliationCategory: Lookup[] = this.lookupService.listByCategory.AffiliationCategory;
   CurrencyDropDown: Lookup[] = this.lookupService.listByCategory.Currency;
@@ -90,7 +90,7 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
 
   constructor(
     public service: ExternalOrgAffiliationService,
-    public fb: FormBuilder,
+    public fb: UntypedFormBuilder,
     public lang: LangService,
     private cd: ChangeDetectorRef,
     private lookupService: LookupService,
@@ -123,7 +123,7 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
   }
   _buildForm(): void {
     const model = new ExternalOrgAffiliation();
-    this.form = new FormGroup({
+    this.form = new UntypedFormGroup({
       basicInfo: this.fb.group(model.getFormFields(true)),
       contactOfficer: this.fb.group((new ContactOfficer()).getContactOfficerFields(true)),
       explanation: this.fb.group(model.buildExplanation(true)),
@@ -242,6 +242,7 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
         // allow only if the user select license
         filter<{ selected: ExternalOrgAffiliationResult, details: ExternalOrgAffiliation }>
           ((selection: { selected: ExternalOrgAffiliationResult, details: ExternalOrgAffiliation }) => {
+            // noinspection SuspiciousTypeOfGuard
             return (selection && selection.selected instanceof ExternalOrgAffiliationResult && selection.details instanceof ExternalOrgAffiliation)
           }),
         takeUntil(this.destroy$)
@@ -315,7 +316,7 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
     result.mailBox = licenseDetails.mailBox;
     result.description = licenseDetails.description;
     result.introduction = licenseDetails.introduction;
-    result.bankAccountDTOs = licenseDetails.bankAccountDTOs;;
+    result.bankAccountDTOs = licenseDetails.bankAccountDTOs;
     result.executiveManagementDTOs = licenseDetails.executiveManagementDTOs;
     result.contactOfficerDTOs = licenseDetails.contactOfficerDTOs;
 
@@ -324,6 +325,7 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
   getTabInvalidStatus(tabName: string): boolean {
     return !this.tabsData[tabName].validStatus();
   }
+  // noinspection JSUnusedLocalSymbols
   private invalidFormMessage(): void {
     this.dialog.error(this.lang.map.msg_all_required_fields_are_filled);
   }
@@ -349,19 +351,19 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
   }
 
   // Get Fields
-  get requestTypeField(): FormControl {
-    return this.form.get('basicInfo.requestType') as FormControl;
+  get requestTypeField(): UntypedFormControl {
+    return this.form.get('basicInfo.requestType') as UntypedFormControl;
   }
-  get specialExplanation(): FormGroup {
-    return this.form.get('explanation')! as FormGroup;
+  get specialExplanation(): UntypedFormGroup {
+    return this.form.get('explanation')! as UntypedFormGroup;
   }
-  get basicTab(): FormGroup {
-    return (this.form.get('basicInfo')) as FormGroup;
+  get basicTab(): UntypedFormGroup {
+    return (this.form.get('basicInfo')) as UntypedFormGroup;
   }
-  get contactOfficerTab(): FormGroup {
-    return (this.form.get('contactOfficer')) as FormGroup;
+  get contactOfficerTab(): UntypedFormGroup {
+    return (this.form.get('contactOfficer')) as UntypedFormGroup;
   }
-  get oldLicenseFullSerialField(): FormControl {
-    return (this.form.get('basicInfo')?.get('oldLicenseFullSerial')) as FormControl;
+  get oldLicenseFullSerialField(): UntypedFormControl {
+    return (this.form.get('basicInfo')?.get('oldLicenseFullSerial')) as UntypedFormControl;
   }
 }

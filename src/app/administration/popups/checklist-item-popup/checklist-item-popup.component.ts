@@ -1,18 +1,16 @@
-import {Component, Inject} from '@angular/core';
-import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
-import {ChecklistItem} from '@app/models/checklist-item';
-import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
-import {IDialogData} from '@app/interfaces/i-dialog-data';
-import {FormBuilder, FormGroup} from '@angular/forms';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {LangService} from '@app/services/lang.service';
-import {LookupService} from '@app/services/lookup.service';
-import {DialogService} from '@app/services/dialog.service';
-import {ToastService} from '@app/services/toast.service';
-import {FormManager} from '@app/models/form-manager';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {Observable} from 'rxjs';
-import {CustomValidators} from '@app/validators/custom-validators';
+import { Component, Inject } from '@angular/core';
+import { AdminGenericDialog } from '@app/generics/admin-generic-dialog';
+import { ChecklistItem } from '@app/models/checklist-item';
+import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
+import { IDialogData } from '@app/interfaces/i-dialog-data';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { LangService } from '@app/services/lang.service';
+import { LookupService } from '@app/services/lookup.service';
+import { DialogService } from '@app/services/dialog.service';
+import { ToastService } from '@app/services/toast.service';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'checklist-item-popup',
@@ -20,14 +18,14 @@ import {CustomValidators} from '@app/validators/custom-validators';
   styleUrls: ['./checklist-item-popup.component.scss']
 })
 export class ChecklistItemPopupComponent extends AdminGenericDialog<ChecklistItem> {
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   model!: ChecklistItem;
   operation!: OperationTypes;
   stepId!: number;
   saveVisible = true;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<ChecklistItem>,
-              public fb: FormBuilder,
+              public fb: UntypedFormBuilder,
               public dialogRef: DialogRef,
               public lang: LangService,
               private lookupService: LookupService,
@@ -57,13 +55,13 @@ export class ChecklistItemPopupComponent extends AdminGenericDialog<ChecklistIte
     }
   }
 
-  prepareModel(model: ChecklistItem, form: FormGroup): ChecklistItem | Observable<ChecklistItem> {
+  prepareModel(model: ChecklistItem, form: UntypedFormGroup): ChecklistItem | Observable<ChecklistItem> {
     let item = (new ChecklistItem()).clone({...model, ...form.value});
     item.stepId = this.stepId;
     return item;
   }
 
-  beforeSave(model: ChecklistItem, form: FormGroup): boolean | Observable<boolean> {
+  beforeSave(model: ChecklistItem, form: UntypedFormGroup): boolean | Observable<boolean> {
     return form.valid;
   }
 

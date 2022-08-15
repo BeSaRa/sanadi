@@ -1,25 +1,20 @@
 import { DatepickerOptionsMap } from '@app/types/types';
 import { DateUtils } from '@app/helpers/date-utils';
 import { Subject } from 'rxjs';
-import { EmploymentRequestType } from './../../../../enums/employment-request-type';
-import { exhaustMap } from 'rxjs/operators';
-import { tap } from 'rxjs/operators';
-import { filter } from 'rxjs/operators';
-import { map } from 'rxjs/operators';
-import { takeUntil } from 'rxjs/operators';
-import { ToastService } from './../../../../services/toast.service';
-import { DialogRef } from './../../../../shared/models/dialog-ref';
-import { WFResponseType } from './../../../../enums/wfresponse-type.enum';
-import { IWFResponse } from './../../../../interfaces/i-w-f-response';
-import { CustomValidators } from './../../../../validators/custom-validators';
-import { FormControl, FormGroup, Validators, FormBuilder } from '@angular/forms';
-import { InboxService } from './../../../../services/inbox.service';
-import { switchMap } from 'rxjs/operators';
-import { DialogService } from './../../../../services/dialog.service';
-import { LangService } from './../../../../services/lang.service';
-import { ContractTypes } from './../../../../enums/contract-types.enum';
-import { Employee } from './../../../../models/employee';
-import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
+import { EmploymentRequestType } from '@app/enums/employment-request-type';
+import { exhaustMap, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { ToastService } from '@services/toast.service';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { WFResponseType } from '@app/enums/wfresponse-type.enum';
+import { IWFResponse } from '@contracts/i-w-f-response';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { InboxService } from '@services/inbox.service';
+import { DialogService } from '@services/dialog.service';
+import { LangService } from '@services/lang.service';
+import { ContractTypes } from '@app/enums/contract-types.enum';
+import { Employee } from '@app/models/employee';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Employment } from "@app/models/employment";
 import { DIALOG_DATA_TOKEN } from "@app/shared/tokens/tokens";
 import { EmploymentCategory } from '@app/enums/employment-category.enum';
@@ -31,11 +26,11 @@ import { EmploymentCategory } from '@app/enums/employment-category.enum';
 })
 export class EmploymentApproveComponent implements OnInit, OnDestroy {
   employees: Partial<Employee>[] = [];
-  comment: FormControl = new FormControl('', [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]);
+  comment: UntypedFormControl = new UntypedFormControl('', [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]);
   response: WFResponseType = WFResponseType.APPROVE;
   action$: Subject<any> = new Subject<any>();
   private destroy$: Subject<any> = new Subject();
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   datepickerOptionsMap: DatepickerOptionsMap = {
     licenseStartDate: DateUtils.getDatepickerOptions({
       disablePeriod: "none",
@@ -50,7 +45,7 @@ export class EmploymentApproveComponent implements OnInit, OnDestroy {
       action: WFResponseType
     },
     private inboxService: InboxService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private dialogRef: DialogRef,
     private toast: ToastService,
     public lang: LangService, private dialog: DialogService) {

@@ -2,7 +2,7 @@ import {AfterViewInit, Component, Inject, OnInit} from '@angular/core';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {LangService} from '@app/services/lang.service';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {FormManager} from '@app/models/form-manager';
 import {ConfigurationService} from '@app/services/configuration.service';
 import {LookupService} from '@app/services/lookup.service';
@@ -26,7 +26,7 @@ import {AidLookupService} from '@app/services/aid-lookup.service';
 export class FilterRequestPopupComponent implements OnInit, AfterViewInit {
   userClick: typeof UserClickOn = UserClickOn;
   criteria: any;
-  form: FormGroup = {} as FormGroup;
+  form: UntypedFormGroup = {} as UntypedFormGroup;
   fm: FormManager = {} as FormManager;
   years: number[] = this.configurationService.getSearchYears();
   orgList: OrgUnit[] = [];
@@ -34,7 +34,7 @@ export class FilterRequestPopupComponent implements OnInit, AfterViewInit {
   subAidLookupsList: AidLookup[] = [];
 
   constructor(@Inject(DIALOG_DATA_TOKEN) public data: any,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               private dialogRef: DialogRef,
               public langService: LangService,
               public lookupService: LookupService,
@@ -97,8 +97,8 @@ export class FilterRequestPopupComponent implements OnInit, AfterViewInit {
     })
   }
 
-  get requestedAidField(): FormControl {
-    return this.fm.getFormField('aidLookupId') as FormControl;
+  get requestedAidField(): UntypedFormControl {
+    return this.fm.getFormField('aidLookupId') as UntypedFormControl;
   }
 
   handleMainAidChange($event: number) {
@@ -112,7 +112,7 @@ export class FilterRequestPopupComponent implements OnInit, AfterViewInit {
       aidType: AidTypes.MAIN_CATEGORY,
       status: AidLookupStatusEnum.ACTIVE
     }).pipe(
-      catchError(err => of([]))
+      catchError(() => of([]))
     ).subscribe((list) => {
       this.mainAidLookupsList = list;
     });
@@ -129,7 +129,7 @@ export class FilterRequestPopupComponent implements OnInit, AfterViewInit {
       status: AidLookupStatusEnum.ACTIVE,
       parent: mainAidId
     }).pipe(
-      catchError(err => of([]))
+      catchError(() => of([]))
     ).subscribe(list => {
       this.subAidLookupsList = list;
     });

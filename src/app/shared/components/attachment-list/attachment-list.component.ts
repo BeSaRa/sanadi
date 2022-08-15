@@ -4,7 +4,7 @@ import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {SubventionRequest} from '@app/models/subvention-request';
 import {SanadiAttachment} from '@app/models/sanadi-attachment';
 import {CustomValidators} from '@app/validators/custom-validators';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {LookupService} from '@app/services/lookup.service';
 import {AttachmentService} from '@app/services/attachment.service';
 import {ToastService} from '@app/services/toast.service';
@@ -28,7 +28,7 @@ import {AttachmentTypeEnum} from '@app/enums/attachment-type.enum';
 })
 export class AttachmentListComponent implements OnInit, OnDestroy {
   constructor(public langService: LangService,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               private toast: ToastService,
               private dialogService: DialogService,
               public lookupService: LookupService,
@@ -87,11 +87,11 @@ export class AttachmentListComponent implements OnInit, OnDestroy {
   reload$: BehaviorSubject<any> = new BehaviorSubject<any>('init');
   displayedColumns = ['documentTitle', 'attachmentType', 'lastModified', 'actions'];
   headerColumn: string[] = ['extra-header'];
-  filterControl: FormControl = new FormControl('');
+  filterControl: UntypedFormControl = new UntypedFormControl('');
   attachmentTypeEnum = AttachmentTypeEnum;
 
   editItem?: SanadiAttachment;
-  form!: FormGroup;
+  form!: UntypedFormGroup;
 
   @ViewChild('fileUploader') fileUploader!: ElementRef;
 
@@ -103,7 +103,7 @@ export class AttachmentListComponent implements OnInit, OnDestroy {
       label: 'btn_edit',
       onClick: (item: SanadiAttachment) => this.editAttachment(item),
       show: (item: SanadiAttachment) => this.allowEdit(item),
-      disabled: (item: SanadiAttachment) => this.isFormShown()
+      disabled: () => this.isFormShown()
     },
     // delete
     {
@@ -112,7 +112,7 @@ export class AttachmentListComponent implements OnInit, OnDestroy {
       label: 'btn_delete',
       onClick: (item: SanadiAttachment) => this.deleteAttachment(item),
       show: (item: SanadiAttachment) => this.allowDelete(item),
-      disabled: (item: SanadiAttachment) => this.isFormShown()
+      disabled: () => this.isFormShown()
 
     },
     // download
@@ -121,7 +121,7 @@ export class AttachmentListComponent implements OnInit, OnDestroy {
       icon: ActionIconsEnum.DOWNLOAD,
       label: 'btn_download',
       onClick: (item: SanadiAttachment) => item.downloadAttachment(),
-      disabled: (item: SanadiAttachment) => this.isFormShown()
+      disabled: () => this.isFormShown()
     }
   ];
 
@@ -306,7 +306,7 @@ export class AttachmentListComponent implements OnInit, OnDestroy {
     this.editItem = undefined;
   }
 
-  saveAttachment($event: MouseEvent) {
+  saveAttachment(_$event: MouseEvent) {
     if (this.isNewAttachment && (!this.attachedFiles || this.attachedFiles.length === 0)) {
       this.toast.info(this.langService.map.msg_missing_attachment);
       return;

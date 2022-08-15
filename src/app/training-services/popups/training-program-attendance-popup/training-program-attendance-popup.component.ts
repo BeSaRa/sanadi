@@ -7,7 +7,7 @@ import {LangService} from '@app/services/lang.service';
 import {ToastService} from '@app/services/toast.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {DialogService} from '@app/services/dialog.service';
-import {FormBuilder} from '@angular/forms';
+import {UntypedFormBuilder} from '@angular/forms';
 import {Subject} from 'rxjs';
 import {switchMap} from 'rxjs/operators';
 import {TrainingProgramService} from '@app/services/training-program.service';
@@ -30,7 +30,7 @@ export class TrainingProgramAttendancePopupComponent implements OnInit {
               public toast: ToastService,
               public dialogRef: DialogRef,
               public dialogService: DialogService,
-              private formBuilder: FormBuilder,
+              private formBuilder: UntypedFormBuilder,
               private trainingProgramService: TrainingProgramService) {
     this.operation = data.operation;
     this.model = data.model;

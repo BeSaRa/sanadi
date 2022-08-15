@@ -2,7 +2,7 @@ import {Component, Inject} from '@angular/core';
 import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
 import {DacOcha} from '@app/models/dac-ocha';
 import {DialogRef} from '@app/shared/models/dialog-ref';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {FormManager} from '@app/models/form-manager';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
@@ -26,7 +26,7 @@ export class SubDacOchaPopupComponent extends AdminGenericDialog<DacOcha> {
   dacOchaTypeId!: number;
   classification!: Lookup;
   statuses: Lookup[] = this.lookupService.listByCategory.CommonStatus;
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   fm!: FormManager;
   operation!: OperationTypes;
   model!: DacOcha;
@@ -35,7 +35,7 @@ export class SubDacOchaPopupComponent extends AdminGenericDialog<DacOcha> {
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<DacOcha>,
               public lang: LangService,
-              public fb: FormBuilder,
+              public fb: UntypedFormBuilder,
               public exceptionHandlerService: ExceptionHandlerService,
               public lookupService: LookupService,
               public toast: ToastService,
@@ -58,11 +58,11 @@ export class SubDacOchaPopupComponent extends AdminGenericDialog<DacOcha> {
     this.fm = new FormManager(this.form, this.lang);
   }
 
-  beforeSave(model: DacOcha, form: FormGroup): Observable<boolean> | boolean {
+  beforeSave(model: DacOcha, form: UntypedFormGroup): Observable<boolean> | boolean {
     return form.valid;
   }
 
-  prepareModel(model: DacOcha, form: FormGroup): Observable<DacOcha> | DacOcha {
+  prepareModel(model: DacOcha, form: UntypedFormGroup): Observable<DacOcha> | DacOcha {
     model.parentId = this.parentId;
     model.type = this.dacOchaTypeId;
     return (new DacOcha()).clone({...model, ...form.value});

@@ -2,7 +2,7 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { LangService } from '@app/services/lang.service';
 import { DIALOG_DATA_TOKEN } from '../../tokens/tokens';
 import { Localization } from '@app/models/localization';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { FormManager } from '@app/models/form-manager';
 import { FactoryService } from '@app/services/factory.service';
 import { ToastService } from '@app/services/toast.service';
@@ -21,7 +21,7 @@ import { DialogRef } from '../../models/dialog-ref';
 export class LocalizationPopupComponent implements OnInit, OnDestroy {
   private save$: Subject<any> = new Subject<any>();
   private destroy$: Subject<any> = new Subject<any>();
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   model: Localization;
   operation: OperationTypes;
   fm!: FormManager;
@@ -30,7 +30,7 @@ export class LocalizationPopupComponent implements OnInit, OnDestroy {
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<Localization>,
               private toast: ToastService,
               private dialogRef: DialogRef,
-              private fb: FormBuilder) {
+              private fb: UntypedFormBuilder) {
     this.model = data.model;
     this.operation = data.operation;
   }

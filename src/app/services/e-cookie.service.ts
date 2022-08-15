@@ -1,7 +1,8 @@
-import {Injectable} from '@angular/core';
-import {CookieOptions, CookieService, ICookieService} from 'ngx-cookie';
-import {EncryptionService} from './encryption.service';
-import {FactoryService} from './factory.service';
+import { Injectable } from '@angular/core';
+import { CookieOptions, CookieService, ICookieService } from 'ngx-cookie';
+
+import { EncryptionService } from './encryption.service';
+import { FactoryService } from './factory.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,7 @@ export class ECookieService implements ICookieService {
     FactoryService.registerService('ECookieService', this);
   }
 
-  get(key: string): string {
+  get(key: string): string | undefined {
     return this.service.get(key);
   }
 
@@ -53,7 +54,7 @@ export class ECookieService implements ICookieService {
     this.put(this.encryptedKeyPrefix + key + this.encryptedKeyPrefix, this.encryptionService.encrypt(value), options);
   }
 
-  getE(key: string): string {
+  getE(key: string): string | undefined {
     return this.encryptionService.decrypt(this.get(this.encryptedKeyPrefix + key + this.encryptedKeyPrefix));
   }
 
@@ -62,6 +63,6 @@ export class ECookieService implements ICookieService {
   }
 
   getEObject(key: string): object | undefined {
-    return this.encryptionService.decrypt(this.get(this.encryptedKeyPrefix + key + this.encryptedKeyPrefix));
+    return this.encryptionService.decrypt(this.get(this.encryptedKeyPrefix + key + this.encryptedKeyPrefix)!);
   }
 }

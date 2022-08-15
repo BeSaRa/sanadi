@@ -9,7 +9,7 @@ import {SurveyQuestion} from "@app/models/survey-question";
 import {SurveyAnswer} from "@app/models/survey-answer";
 import {of, Subject} from "rxjs";
 import {map, switchMap, takeUntil, tap} from "rxjs/operators";
-import {FormControl} from "@angular/forms";
+import {UntypedFormControl} from "@angular/forms";
 import {CustomValidators} from "@app/validators/custom-validators";
 import {DialogService} from "@app/services/dialog.service";
 import {ToastService} from "@app/services/toast.service";
@@ -52,7 +52,7 @@ export class SurveyViewComponent implements OnInit, OnDestroy {
   surveyAnswersMap: Map<number, SurveyAnswer> = new Map<number, SurveyAnswer>();
 
   private questionsMap: Map<number, SurveyQuestion> = new Map<number, SurveyQuestion>();
-  private controlsMap: Map<number, FormControl> = new Map<number, FormControl>();
+  private controlsMap: Map<number, UntypedFormControl> = new Map<number, UntypedFormControl>();
   private destroy$ = new Subject();
 
 
@@ -92,7 +92,7 @@ export class SurveyViewComponent implements OnInit, OnDestroy {
         this.templateAnswersMap.forEach((item, q) => {
           const answer = answersMap.get(q);
           answersMap.set(q, answer ? answer : item)
-          this.isFreeText(q) ? this.controlsMap.set(q, new FormControl({
+          this.isFreeText(q) ? this.controlsMap.set(q, new UntypedFormControl({
             value: answer ? answer.trainingSurveyAnswerText : '',
             disabled: this.viewOnly
           }, CustomValidators.required)) : null
@@ -165,14 +165,14 @@ export class SurveyViewComponent implements OnInit, OnDestroy {
     this.controlsMap.forEach((control, questionId) => this.listenToFreetextField(questionId, control))
   }
 
-  private listenToFreetextField(questionId: number, control: FormControl) {
+  private listenToFreetextField(questionId: number, control: UntypedFormControl) {
     control
       .valueChanges
       .pipe(takeUntil(this.destroy$))
       .subscribe((value) => this.onFreeTextChanged(questionId, value))
   }
 
-  getFreeTextControl(questionId: number): FormControl {
+  getFreeTextControl(questionId: number): UntypedFormControl {
     return this.controlsMap.get(questionId)!;
   }
 

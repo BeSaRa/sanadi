@@ -3,7 +3,7 @@ import {Subject} from 'rxjs';
 import {ILanguageKeys} from '@contracts/i-language-keys';
 import {InternalBankAccountApproval} from '@app/models/internal-bank-account-approval';
 import {WFResponseType} from '@app/enums/wfresponse-type.enum';
-import {FormControl} from '@angular/forms';
+import {UntypedFormControl} from '@angular/forms';
 import {IKeyValue} from '@contracts/i-key-value';
 import {DateUtils} from '@helpers/date-utils';
 import {DialogService} from '@services/dialog.service';
@@ -34,8 +34,8 @@ export class UrgentJointReliefCampaignInitialApproveTaskPopupComponent implement
   response: WFResponseType = WFResponseType.INITIAL_APPROVE;
 
   model: UrgentJointReliefCampaign;
-  comment: FormControl = new FormControl();
-  followUpDate: FormControl = new FormControl();
+  comment: UntypedFormControl = new UntypedFormControl();
+  followUpDate: UntypedFormControl = new UntypedFormControl();
 
   datepickerOptionsMap: IKeyValue = {
     followUpDate: DateUtils.getDatepickerOptions({disablePeriod: 'past'})

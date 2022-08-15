@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { WFResponseType } from '@app/enums/wfresponse-type.enum';
 import { CommonUtils } from '@app/helpers/common-utils';
 import { DateUtils } from '@app/helpers/date-utils';
@@ -36,9 +36,9 @@ export class ForeignCountriesProjectsPopupComponent implements OnInit {
   response: WFResponseType = WFResponseType.APPROVE;
 
   model: ForeignCountriesProjects;
-  comment: FormControl = new FormControl();
-  followUpDate: FormControl = new FormControl();
-  organizationId: FormControl = new FormControl();
+  comment: UntypedFormControl = new UntypedFormControl();
+  followUpDate: UntypedFormControl = new UntypedFormControl();
+  organizationId: UntypedFormControl = new UntypedFormControl();
   datepickerOptionsMap: IKeyValue = {
     followUpDate: DateUtils.getDatepickerOptions({ disablePeriod: 'past' })
   };

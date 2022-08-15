@@ -4,7 +4,7 @@ import {of, Subject} from 'rxjs';
 import {InternalUser} from '@app/models/internal-user';
 import {OrgUser} from '@app/models/org-user';
 import {Trainer} from '@app/models/trainer';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {FormManager} from '@app/models/form-manager';
 import {catchError, exhaustMap, filter, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {InternalUserService} from '@app/services/internal-user.service';
@@ -47,7 +47,7 @@ export class TrainingProgramTraineePopupComponent implements OnInit, OnDestroy {
   selectedOrganizationUserId?: number;
   selectedOrganizationId?: number;
   trainer!: Trainer;
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   fm!: FormManager;
   genders: Lookup[] = this.lookupService.listByCategory.Gender;
   nationalities: Lookup[] = this.lookupService.listByCategory.Nationality;
@@ -66,7 +66,7 @@ export class TrainingProgramTraineePopupComponent implements OnInit, OnDestroy {
     public lang: LangService,
     public toast: ToastService,
     public dialogRef: DialogRef,
-    public fb: FormBuilder,
+    public fb: UntypedFormBuilder,
     private internalUserService: InternalUserService,
     private organizationUnitService: OrganizationUnitService,
     private organizationUserService: OrganizationUserService,
@@ -240,7 +240,7 @@ export class TrainingProgramTraineePopupComponent implements OnInit, OnDestroy {
             this.traineeService.enrollTrainee(this.trainingProgramId, trainee) :
             this.traineeService.updateTrainee(this.trainingProgramId, trainee);
 
-          return obs.pipe(catchError((err) => {
+          return obs.pipe(catchError(() => {
             return of(null);
           }));
         }),

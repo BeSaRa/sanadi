@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { UserTeam } from "@app/models/user-team";
-import { FormControl } from "@angular/forms";
+import { UntypedFormControl } from "@angular/forms";
 import { LangService } from "@services/lang.service";
 import { FollowupPermissionService } from "@services/followup-permission.service";
 import { InternalUser } from "@app/models/internal-user";
@@ -16,7 +16,7 @@ import { ToastService } from "@services/toast.service";
 })
 export class UserFollowupPermissionComponent implements OnInit {
   displayedColumns: string[] = ['arName', 'enName', 'externalFollowup', 'internalFollowup'];
-  filterControl: FormControl = new FormControl();
+  filterControl: UntypedFormControl = new UntypedFormControl();
   reload$: Subject<number> = new Subject<number>();
   @Input()
   userTeams: UserTeam[] = []

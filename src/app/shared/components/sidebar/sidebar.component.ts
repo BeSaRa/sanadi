@@ -6,7 +6,7 @@ import {MenuItem} from '@app/models/menu-item';
 import {Direction} from '@angular/cdk/bidi';
 import {debounceTime, distinctUntilChanged, takeUntil} from 'rxjs/operators';
 import {LangService} from '@app/services/lang.service';
-import {FormControl} from '@angular/forms';
+import {UntypedFormControl} from '@angular/forms';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {AuthService} from '@app/services/auth.service';
 import {DialogService} from '@app/services/dialog.service';
@@ -49,7 +49,7 @@ export class SidebarComponent implements OnInit {
   items: MenuItem[] = this.menuItemService.parents;
   scrollDirection: Direction = 'ltr';
   destroy$: Subject<any> = new Subject<any>();
-  searchInput: FormControl = new FormControl('');
+  searchInput: UntypedFormControl = new UntypedFormControl('');
   isExternalUser: boolean = this.employeeService.isExternalUser();
 
   @HostBinding('class.sidebar-opened')

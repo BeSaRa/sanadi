@@ -1,35 +1,41 @@
-import { UrgentFinancialNotificationAccountType } from './../../../../enums/urgent-financial-notification-account-type.enum';
-import { switchMap } from 'rxjs/operators';
-import { ImplementingAgencyListComponent } from './../../shared/implementing-agency-list/implementing-agency-list.component';
+import { UrgentFinancialNotificationAccountType } from '@app/enums/urgent-financial-notification-account-type.enum';
+import { catchError, exhaustMap, filter, map, takeUntil, tap } from 'rxjs/operators';
+import {
+  ImplementingAgencyListComponent
+} from './../../shared/implementing-agency-list/implementing-agency-list.component';
 import { ToastService } from '@app/services/toast.service';
 import { ServiceRequestTypes } from '@app/enums/service-request-types';
 import { BankAccount } from '@app/models/bank-account';
 import { AdminResult } from '@app/models/admin-result';
 import { CommonService } from '@services/common.service';
-import { CaseTypes } from '@app/enums/case-types.enum';
 import { UrgentInterventionReport } from '@app/models/urgent-intervention-report';
-import { UrgentInterventionReportSearchCriteria } from './../../../../models/urgent-intervention-report-search-criteria';
-import { UrgentInterventionFinancialRequestType } from './../../../../enums/urgent-intervention-financial-request-type';
+import { UrgentInterventionReportSearchCriteria } from '@app/models/urgent-intervention-report-search-criteria';
+import { UrgentInterventionFinancialRequestType } from '@app/enums/urgent-intervention-financial-request-type';
 import { OpenFrom } from '@app/enums/open-from.enum';
 import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
-import { TabComponent } from './../../../../shared/components/tab/tab.component';
-import { InterventionFieldListComponent } from './../../shared/intervention-field-list/intervention-field-list.component';
-import { InterventionRegionListComponent } from './../../shared/intervention-region-list/intervention-region-list.component';
+import { TabComponent } from '@app/shared/components/tab/tab.component';
+import {
+  InterventionFieldListComponent
+} from './../../shared/intervention-field-list/intervention-field-list.component';
+import {
+  InterventionRegionListComponent
+} from './../../shared/intervention-region-list/intervention-region-list.component';
 import { LicenseService } from '@app/services/license.service';
-import { UrgentInterventionReportingService } from './../../../../services/urgent-intervention-reporting.service';
-import { UrgentInterventionReportResult } from './../../../../models/urgent-intervention-report-result';
-import { DialogService } from './../../../../services/dialog.service';
-import { tap, filter, exhaustMap, catchError, takeUntil, map } from 'rxjs/operators';
-import { TabMap, ReadinessStatus } from './../../../../types/types';
+import { UrgentInterventionReportingService } from '@services/urgent-intervention-reporting.service';
+import { UrgentInterventionReportResult } from '@app/models/urgent-intervention-report-result';
+import { DialogService } from '@services/dialog.service';
+import { ReadinessStatus, TabMap } from '@app/types/types';
 import { Lookup } from '@app/models/lookup';
-import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
-import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
+import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { SaveTypes } from '@app/enums/save-types';
 import { LangService } from '@app/services/lang.service';
-import { Observable, Subject, of } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 import { UrgentInterventionFinancialNotification } from '@app/models/urgent-intervention-financial-notification';
-import { UrgentInterventionFinancialNotificationService } from './../../../../services/urgent-intervention-financial-notification.service';
+import {
+  UrgentInterventionFinancialNotificationService
+} from '@services/urgent-intervention-financial-notification.service';
 import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
 import { LookupService } from '@app/services/lookup.service';
 import { ImplementingAgencyTypes } from '@app/enums/implementing-agency-types.enum';
@@ -58,7 +64,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
   selectedLicense?: UrgentInterventionReportResult;
   loadAttachments: boolean = false;
   OperationTypes = OperationTypes;
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   tabsData: TabMap = {
     basicInfo: {
       name: 'basicInfoTab',
@@ -130,7 +136,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
     private toastService: ToastService,
     private licenseService: LicenseService,
     private cd: ChangeDetectorRef,
-    public fb: FormBuilder,
+    public fb: UntypedFormBuilder,
     private commonService: CommonService
   ) {
     super();
@@ -310,8 +316,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
   }
 
   isEditAllowed(): boolean {
-    let isAllowed = !this.model?.id || (!!this.model?.id && this.model.canCommit());
-    return isAllowed;
+    return !this.model?.id || (!!this.model?.id && this.model.canCommit());
   }
   isAttachmentReadonly(): boolean {
     if (!this.model?.id) {
@@ -392,28 +397,28 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
     return this.accountType.value == UrgentFinancialNotificationAccountType.CHARITY_ACCOUNT
   }
   get accountType() {
-    return this.transferDataTab.get('accountType') as FormControl;
+    return this.transferDataTab.get('accountType') as UntypedFormControl;
   }
-  get basicInfoTab(): FormGroup {
-    return (this.form.get('basicInfo')) as FormGroup;
+  get basicInfoTab(): UntypedFormGroup {
+    return (this.form.get('basicInfo')) as UntypedFormGroup;
   }
-  get transferDataTab(): FormGroup {
-    return (this.form.get('transferData')) as FormGroup;
+  get transferDataTab(): UntypedFormGroup {
+    return (this.form.get('transferData')) as UntypedFormGroup;
   }
   get requestTypeField() {
-    return this.basicInfoTab.get('requestType') as FormControl
+    return this.basicInfoTab.get('requestType') as UntypedFormControl
   }
-  get urgentAnnouncementFullSerialField(): FormControl {
-    return this.basicInfoTab.get('urgentAnnouncementFullSerial') as FormControl;
+  get urgentAnnouncementFullSerialField(): UntypedFormControl {
+    return this.basicInfoTab.get('urgentAnnouncementFullSerial') as UntypedFormControl;
   }
-  get implementingAgencyTypeField(): FormControl {
-    return this.transferDataTab.get('implementingAgencyType') as FormControl;
+  get implementingAgencyTypeField(): UntypedFormControl {
+    return this.transferDataTab.get('implementingAgencyType') as UntypedFormControl;
   }
-  get implementingAgencyField(): FormControl {
-    return this.transferDataTab.get('implementingAgency') as FormControl;
+  get implementingAgencyField(): UntypedFormControl {
+    return this.transferDataTab.get('implementingAgency') as UntypedFormControl;
   }
-  get accountNumberField(): FormControl {
-    return this.transferDataTab.get('accountNumber') as FormControl;
+  get accountNumberField(): UntypedFormControl {
+    return this.transferDataTab.get('accountNumber') as UntypedFormControl;
   }
   get isTransfer() {
     return this.requestTypeField.value == UrgentInterventionFinancialRequestType.Transfer

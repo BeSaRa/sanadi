@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angula
 import {LangService} from '@services/lang.service';
 import {ToastService} from '@services/toast.service';
 import {DialogService} from '@services/dialog.service';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {ReadinessStatus} from '@app/types/types';
 import {Stage} from '@app/models/stage';
 import {Subject} from 'rxjs';
@@ -22,7 +22,7 @@ export class StageListComponent implements OnInit, OnDestroy {
   constructor(public lang: LangService,
               private toastService: ToastService,
               private dialogService: DialogService,
-              private fb: FormBuilder) {
+              private fb: UntypedFormBuilder) {
   }
 
 
@@ -65,9 +65,9 @@ export class StageListComponent implements OnInit, OnDestroy {
   private currentRecord?: Stage;
   private destroy$: Subject<any> = new Subject<any>();
   showForm: boolean = false;
-  filterControl: FormControl = new FormControl('');
+  filterControl: UntypedFormControl = new UntypedFormControl('');
 
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   actions: IMenuItem<Stage>[] = [
     // edit
     {
@@ -75,7 +75,7 @@ export class StageListComponent implements OnInit, OnDestroy {
       icon: ActionIconsEnum.EDIT,
       label: 'btn_edit',
       onClick: (item: Stage) => this.edit(item),
-      show: (item: Stage) => !this.readonly
+      show: (_item: Stage) => !this.readonly
     },
     // delete
     {
@@ -83,7 +83,7 @@ export class StageListComponent implements OnInit, OnDestroy {
       icon: ActionIconsEnum.DELETE,
       label: 'btn_delete',
       onClick: (item: Stage) => this.delete(item),
-      show: (item: Stage) => !this.readonly
+      show: (_item: Stage) => !this.readonly
     },
     // view
     {
@@ -91,7 +91,7 @@ export class StageListComponent implements OnInit, OnDestroy {
       icon: ActionIconsEnum.VIEW,
       label: 'view',
       onClick: (item: Stage) => this.view(item),
-      show: (item: Stage) => this.readonly
+      show: (_item: Stage) => this.readonly
     }
   ];
 
@@ -247,7 +247,7 @@ export class StageListComponent implements OnInit, OnDestroy {
   }
 
   calculateTotalInterventionCost(): number {
-    let total: number = 0;
+    let total: number;
     if (!this.list || this.list.length === 0) {
       total = 0;
     } else {

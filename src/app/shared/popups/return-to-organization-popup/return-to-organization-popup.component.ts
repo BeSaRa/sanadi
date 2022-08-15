@@ -1,5 +1,5 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {Subject} from 'rxjs';
 import {ILanguageKeys} from '@contracts/i-language-keys';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
@@ -21,7 +21,7 @@ import {ValidOrgUnit} from '@app/models/valid-org-unit';
 })
 export class ReturnToOrganizationPopupComponent implements OnInit, OnDestroy {
   organizations: ValidOrgUnit[] = [];
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   done$: Subject<any> = new Subject<any>();
   private destroy$: Subject<any> = new Subject<any>();
   controlName: string = '';
@@ -37,7 +37,7 @@ export class ReturnToOrganizationPopupComponent implements OnInit, OnDestroy {
               private dialogRef: DialogRef,
               private toast: ToastService,
               private urgentJointReliefCampaignService: UrgentJointReliefCampaignService,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               private dialog: DialogService,
               public lang: LangService) { }
 

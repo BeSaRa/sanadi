@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {LangService} from '@services/lang.service';
 import {ToastService} from '@services/toast.service';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {ImplementingAgency} from '@app/models/implementing-agency';
 import {Subject} from 'rxjs';
 import {ReadinessStatus} from '@app/types/types';
@@ -30,7 +30,7 @@ export class ImplementingAgencyListComponent implements OnInit, OnDestroy {
               private dialogService: DialogService,
               private lookupService: LookupService,
               private commonService: CommonService,
-              private fb: FormBuilder) {
+              private fb: UntypedFormBuilder) {
   }
 
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();
@@ -60,9 +60,9 @@ export class ImplementingAgencyListComponent implements OnInit, OnDestroy {
   private currentRecord?: ImplementingAgency;
   private destroy$: Subject<any> = new Subject<any>();
   showForm: boolean = false;
-  filterControl: FormControl = new FormControl('');
+  filterControl: UntypedFormControl = new UntypedFormControl('');
 
-  form!: FormGroup;
+  form!: UntypedFormGroup;
 
   actions: IMenuItem<ImplementingAgency>[] = [
     // edit
@@ -71,7 +71,7 @@ export class ImplementingAgencyListComponent implements OnInit, OnDestroy {
       icon: ActionIconsEnum.EDIT,
       label: 'btn_edit',
       onClick: (item: ImplementingAgency) => this.edit(item),
-      show: (item: ImplementingAgency) => !this.readonly
+      show: (_item: ImplementingAgency) => !this.readonly
     },
     // delete
     {
@@ -79,7 +79,7 @@ export class ImplementingAgencyListComponent implements OnInit, OnDestroy {
       icon: ActionIconsEnum.DELETE,
       label: 'btn_delete',
       onClick: (item: ImplementingAgency) => this.delete(item),
-      show: (item: ImplementingAgency) => !this.readonly
+      show: (_item: ImplementingAgency) => !this.readonly
     },
     // view
     {
@@ -87,7 +87,7 @@ export class ImplementingAgencyListComponent implements OnInit, OnDestroy {
       icon: ActionIconsEnum.VIEW,
       label: 'view',
       onClick: (item: ImplementingAgency) => this.view(item),
-      show: (item: ImplementingAgency) => this.readonly
+      show: (_item: ImplementingAgency) => this.readonly
     }
   ];
 
@@ -308,11 +308,11 @@ export class ImplementingAgencyListComponent implements OnInit, OnDestroy {
       });
   }
 
-  get implementingAgencyTypeField(): FormControl {
-    return this.form.get('implementingAgencyType') as FormControl;
+  get implementingAgencyTypeField(): UntypedFormControl {
+    return this.form.get('implementingAgencyType') as UntypedFormControl;
   }
 
-  get implementingAgencyField(): FormControl {
-    return this.form.get('implementingAgency') as FormControl;
+  get implementingAgencyField(): UntypedFormControl {
+    return this.form.get('implementingAgency') as UntypedFormControl;
   }
 }

@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { ILanguageKeys } from '@app/interfaces/i-language-keys';
 import { WFResponseType } from '@app/enums/wfresponse-type.enum';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { DialogService } from '@app/services/dialog.service';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { ToastService } from '@app/services/toast.service';
@@ -33,8 +33,8 @@ export class InternalBankApprovalApproveTaskPopupComponent implements OnInit {
   response: WFResponseType = WFResponseType.APPROVE;
 
   model: InternalBankAccountApproval;
-  comment: FormControl = new FormControl();
-  followUpDate: FormControl = new FormControl();
+  comment: UntypedFormControl = new UntypedFormControl();
+  followUpDate: UntypedFormControl = new UntypedFormControl();
 
   datepickerOptionsMap: IKeyValue = {
     followUpDate: DateUtils.getDatepickerOptions({ disablePeriod: 'past' })

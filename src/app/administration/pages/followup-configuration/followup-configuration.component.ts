@@ -11,7 +11,7 @@ import {DialogService} from '@app/services/dialog.service';
 import {ToastService} from '@app/services/toast.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {Observable, of, Subject} from 'rxjs';
-import {FormControl} from '@angular/forms';
+import {UntypedFormControl} from '@angular/forms';
 import {SortEvent} from '@contracts/sort-event';
 import {CommonUtils} from '@helpers/common-utils';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
@@ -32,7 +32,7 @@ export class FollowupConfigurationComponent extends AdminGenericComponent<Follow
   }
 
   displayedColumns: string[] = ['name', 'followUpType', 'requestType', 'responsibleTeamId', 'concernedTeamId', 'days', 'actions'];
-  filterControl: FormControl = new FormControl('');
+  filterControl: UntypedFormControl = new UntypedFormControl('');
   add$: Subject<any> = new Subject<any>();
   view$: Subject<any> = new Subject<any>();
   @Input() serviceData!: ServiceData;

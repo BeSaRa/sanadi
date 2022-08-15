@@ -5,7 +5,7 @@ import {EServiceGenericService} from '@app/generics/e-service-generic-service';
 import {InboxService} from '@app/services/inbox.service';
 import {WFResponseType} from '@app/enums/wfresponse-type.enum';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {DialogRef} from '../../models/dialog-ref';
 import {ToastService} from '@app/services/toast.service';
 import {IWFResponse} from '@app/interfaces/i-w-f-response';
@@ -36,7 +36,7 @@ import {DatepickerOptionsMap} from '@app/types/types';
 })
 export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
   label: keyof ILanguageKeys;
-  comment: FormControl = new FormControl('', [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]);
+  comment: UntypedFormControl = new UntypedFormControl('', [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]);
   done$: Subject<any> = new Subject<any>();
   displayLicenseForm: boolean = false;
   licenseFormReadonly: boolean = false;
@@ -51,7 +51,7 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
     CaseTypes.INTERNAL_PROJECT_LICENSE,
     //CaseTypes.URGENT_INTERVENTION_LICENSING
   ]
-  form!: FormGroup;
+  form!: UntypedFormGroup;
 
   private readonly action: WFResponseType;
   private loadedLicense?: LicenseApprovalModel<any, any>;
@@ -74,7 +74,7 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
     private dialogRef: DialogRef,
     private toast: ToastService,
     public lang: LangService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private employeeService: EmployeeService,
     private serviceDataService: ServiceDataService,
     private customTermService: CustomTermService,
@@ -224,20 +224,20 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
       });
   }
 
-  get conditionalLicenseField(): FormControl {
-    return this.form.get('conditionalLicenseIndicator') as FormControl;
+  get conditionalLicenseField(): UntypedFormControl {
+    return this.form.get('conditionalLicenseIndicator') as UntypedFormControl;
   }
 
-  get licenseDurationField(): FormControl {
-    return this.form.get('licenseDuration') as FormControl;
+  get licenseDurationField(): UntypedFormControl {
+    return this.form.get('licenseDuration') as UntypedFormControl;
   }
 
-  get licenseStartDateField(): FormControl {
-    return this.form.get('licenseStartDate') as FormControl;
+  get licenseStartDateField(): UntypedFormControl {
+    return this.form.get('licenseStartDate') as UntypedFormControl;
   }
 
-  get customTermsField(): FormControl {
-    return this.form.get('customTerms') as FormControl;
+  get customTermsField(): UntypedFormControl {
+    return this.form.get('customTerms') as UntypedFormControl;
   }
 
   updateCase(): Observable<any> {

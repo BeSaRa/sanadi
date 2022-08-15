@@ -6,7 +6,7 @@ import {TabMap} from '@app/types/types';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {GdxMojResponse} from '@app/models/gdx-moj-response';
 import {GdxMociResponse} from '@app/models/gdx-moci-response';
-import {FormControl} from '@angular/forms';
+import {UntypedFormControl} from '@angular/forms';
 import {SortEvent} from '@contracts/sort-event';
 import {CommonUtils} from '@helpers/common-utils';
 import {DateUtils} from '@helpers/date-utils';
@@ -88,12 +88,12 @@ export class GdxBeneficiaryIntegrationComponent implements OnInit, OnDestroy {
     mojRelatedParcels: ['parcelNo', 'parcelType', 'ownerName', 'city', 'zone', 'sharesCount'],
     mociRelatedCompanies: ['companyName', 'licenceNumber', 'companyStatus', 'relation', 'relationStatus']
   };
-  filterControlsMap: { [key: string]: FormControl } = {
-    moj: new FormControl(''),
-    moci: new FormControl(''),
-    mojRelatedFlats: new FormControl(''),
-    mojRelatedParcels: new FormControl(''),
-    mociRelatedCompanies: new FormControl('')
+  filterControlsMap: { [key: string]: UntypedFormControl } = {
+    moj: new UntypedFormControl(''),
+    moci: new UntypedFormControl(''),
+    mojRelatedFlats: new UntypedFormControl(''),
+    mojRelatedParcels: new UntypedFormControl(''),
+    mociRelatedCompanies: new UntypedFormControl('')
   };
   sortingCallbacksMap = {
     gdxServiceLog: {
@@ -256,7 +256,7 @@ export class GdxBeneficiaryIntegrationComponent implements OnInit, OnDestroy {
       .pipe(exhaustMap(() => {
         return this.beneficiaryService.addMOJInquiry(this._getGDXCriteria(this.beneficiary!, GdxServicesEnum.MOJ));
       }))
-      .subscribe((result) => {
+      .subscribe(() => {
         this.toast.success(this.langService.map.msg_added_successfully);
         this.loadGDXIntegrationData(GdxServicesEnum.MOJ);
       });
@@ -268,7 +268,7 @@ export class GdxBeneficiaryIntegrationComponent implements OnInit, OnDestroy {
       .pipe(exhaustMap(() => {
         return this.beneficiaryService.addMOCIInquiry(this._getGDXCriteria(this.beneficiary!, GdxServicesEnum.MOCI));
       }))
-      .subscribe((result) => {
+      .subscribe(() => {
         this.toast.success(this.langService.map.msg_added_successfully);
         this.loadGDXIntegrationData(GdxServicesEnum.MOCI);
       });

@@ -1,6 +1,6 @@
 import {Component, Inject} from '@angular/core';
 import {Lookup} from '@app/models/lookup';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {FieldAssessment} from '@app/models/field-assessment';
 import {DialogRef} from '@app/shared/models/dialog-ref';
@@ -21,13 +21,13 @@ import {Observable} from 'rxjs';
 export class FieldAssessmentPopupComponent  extends AdminGenericDialog<FieldAssessment>  {
   typeList: Lookup[] = this.lookupService.listByCategory.FieldAssessment;
   statuses: Lookup[] = this.lookupService.listByCategory.CommonStatus;
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   model!: FieldAssessment;
   operation: OperationTypes;
   saveVisible = true;
 
   constructor(public dialogRef: DialogRef,
-              public fb: FormBuilder,
+              public fb: UntypedFormBuilder,
               public lang: LangService,
               @Inject(DIALOG_DATA_TOKEN) data: IDialogData<FieldAssessment>,
               private dialogService: DialogService,
@@ -50,11 +50,11 @@ export class FieldAssessmentPopupComponent  extends AdminGenericDialog<FieldAsse
     }
   }
 
-  beforeSave(model: FieldAssessment, form: FormGroup): Observable<boolean> | boolean {
+  beforeSave(model: FieldAssessment, form: UntypedFormGroup): Observable<boolean> | boolean {
     return form.valid;
   }
 
-  prepareModel(model: FieldAssessment, form: FormGroup): Observable<FieldAssessment> | FieldAssessment {
+  prepareModel(model: FieldAssessment, form: UntypedFormGroup): Observable<FieldAssessment> | FieldAssessment {
     return (new FieldAssessment()).clone({...model, ...form.value});
   }
 

@@ -1,16 +1,15 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {LangService} from "@app/services/lang.service";
-import {CountryService} from "@app/services/country.service";
-import {ToastService} from "@app/services/toast.service";
-import {DialogService} from "@app/services/dialog.service";
-import {AbstractControl, FormArray, FormBuilder, FormGroup} from "@angular/forms";
-import {ManagementCouncil} from "@app/models/management-council";
-import {Country} from "@app/models/country";
-import {ReadinessStatus} from "@app/types/types";
-import {BehaviorSubject, Subject} from "rxjs";
-import {filter, map, take, takeUntil} from "rxjs/operators";
-import {UserClickOn} from "@app/enums/user-click-on.enum";
-import {JobTitle} from "@app/models/job-title";
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { LangService } from "@app/services/lang.service";
+import { CountryService } from "@app/services/country.service";
+import { ToastService } from "@app/services/toast.service";
+import { DialogService } from "@app/services/dialog.service";
+import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
+import { ManagementCouncil } from "@app/models/management-council";
+import { Country } from "@app/models/country";
+import { ReadinessStatus } from "@app/types/types";
+import { BehaviorSubject, Subject } from "rxjs";
+import { filter, map, take, takeUntil } from "rxjs/operators";
+import { UserClickOn } from "@app/enums/user-click-on.enum";
 
 @Component({
   selector: 'management-council',
@@ -23,7 +22,7 @@ export class ManagementCouncilComponent implements OnInit, OnDestroy {
               private countryService: CountryService,
               private toastService: ToastService,
               private dialogService: DialogService,
-              private fb: FormBuilder) {
+              private fb: UntypedFormBuilder) {
   }
 
   private _list: ManagementCouncil[] = [];
@@ -52,7 +51,7 @@ export class ManagementCouncilComponent implements OnInit, OnDestroy {
   private current?: ManagementCouncil;
   private destroy$: Subject<any> = new Subject<any>();
 
-  form!: FormGroup;
+  form!: UntypedFormGroup;
 
   ngOnInit(): void {
     this.dataSource.next(this.list);
@@ -75,8 +74,8 @@ export class ManagementCouncilComponent implements OnInit, OnDestroy {
     })
   }
 
-  get managementCouncilsFormArray(): FormArray {
-    return (this.form.get('managementCouncils')) as FormArray;
+  get managementCouncilsFormArray(): UntypedFormArray {
+    return (this.form.get('managementCouncils')) as UntypedFormArray;
   }
 
   addAllowed(): boolean {
@@ -147,7 +146,7 @@ export class ManagementCouncilComponent implements OnInit, OnDestroy {
     validForm$.pipe(
       takeUntil(this.destroy$),
       map(() => {
-        return (this.form.get('managementCouncils.0')) as FormArray;
+        return (this.form.get('managementCouncils.0')) as UntypedFormArray;
       }),
       map((form) => {
         return (new ManagementCouncil()).clone({

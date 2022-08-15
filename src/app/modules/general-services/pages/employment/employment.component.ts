@@ -1,4 +1,4 @@
-import { EmploymentSearchCriteria } from './../../../../models/employment-search-criteria';
+import { EmploymentSearchCriteria } from '@app/models/employment-search-criteria';
 import { JobTitleService } from '@app/services/job-title.service';
 import { DateUtils } from '@app/helpers/date-utils';
 import { ToastService } from "@app/services/toast.service";
@@ -9,7 +9,7 @@ import { IKeyValue } from "@app/interfaces/i-key-value";
 import { ILanguageKeys } from "@app/interfaces/i-language-keys";
 import { CaseTypes } from "@app/enums/case-types.enum";
 import { Component, Input, ViewChild } from "@angular/core";
-import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from "@angular/forms";
 import { Observable, of, Subject } from "rxjs";
 import { EmploymentRequestType } from "@app/enums/employment-request-type";
 import { FileIconsEnum } from "@app/enums/file-extension-mime-types-icons.enum";
@@ -26,6 +26,7 @@ import { EmployeesDataComponent } from '@app/modules/e-services-main/shared/empl
 import { catchError, exhaustMap, filter, map, switchMap, takeUntil, tap } from "rxjs/operators";
 import { Employment } from '@app/models/employment';
 import { EmploymentService } from '@app/services/employment.service';
+
 @Component({
   templateUrl: "./employment.component.html",
   styleUrls: ["./employment.component.scss"],
@@ -34,7 +35,7 @@ export class EmploymentComponent extends EServicesGenericComponent<
 Employment,
 EmploymentService
 > {
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   identificationNumberSearch$: Subject<Partial<EmploymentSearchCriteria>> = new Subject<Partial<EmploymentSearchCriteria>>();
 
   employees: Partial<Employee>[] = [];
@@ -48,9 +49,9 @@ EmploymentService
   systemJobTitleList: JobTitle[] = [];
   readonly: boolean = false;
   allowEditRecommendations: boolean = true;
-  searchCriteriaForm: FormGroup = new FormGroup({
-    identificationNumber: new FormControl(''),
-    passportNumber: new FormControl(''),
+  searchCriteriaForm: UntypedFormGroup = new UntypedFormGroup({
+    identificationNumber: new UntypedFormControl(''),
+    passportNumber: new UntypedFormControl(''),
   })
   EmploymentCategory: Lookup[] =
     this.lookupService.listByCategory.EmploymentCategory.slice().sort(
@@ -80,7 +81,7 @@ EmploymentService
     public service: EmploymentService,
     private navigationService: NavigationService,
     private dialog: DialogService,
-    public fb: FormBuilder,
+    public fb: UntypedFormBuilder,
     private jobTitleService: JobTitleService,
     private lookupService: LookupService,
     public lang: LangService,
@@ -344,20 +345,20 @@ EmploymentService
     if (message)
       this.dialog.error(message);
   }
-  get identificationNumber(): FormControl {
-    return this.searchCriteriaForm.get("identificationNumber") as FormControl;
+  get identificationNumber(): UntypedFormControl {
+    return this.searchCriteriaForm.get("identificationNumber") as UntypedFormControl;
   }
-  get passportNumber(): FormControl {
-    return this.searchCriteriaForm.get("passportNumber") as FormControl;
+  get passportNumber(): UntypedFormControl {
+    return this.searchCriteriaForm.get("passportNumber") as UntypedFormControl;
   }
-  get requestType(): FormControl {
-    return this.form.get("requestType") as FormControl;
+  get requestType(): UntypedFormControl {
+    return this.form.get("requestType") as UntypedFormControl;
   }
-  get category(): FormControl {
-    return this.form.get("category") as FormControl;
+  get category(): UntypedFormControl {
+    return this.form.get("category") as UntypedFormControl;
   }
-  get description(): FormControl {
-    return this.form.get("description") as FormControl;
+  get description(): UntypedFormControl {
+    return this.form.get("description") as UntypedFormControl;
   }
   navigateBack(): void {
     this.navigationService.goToBack();

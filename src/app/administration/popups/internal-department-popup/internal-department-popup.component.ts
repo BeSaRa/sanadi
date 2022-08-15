@@ -2,7 +2,7 @@ import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, Inject, ViewChi
 import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
 import {InternalDepartment} from '@app/models/internal-department';
 import {DialogRef} from '@app/shared/models/dialog-ref';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {Observable, of, Subject} from 'rxjs';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {LangService} from '@app/services/lang.service';
@@ -29,7 +29,7 @@ import {FileExtensionsEnum} from '@app/enums/file-extension-mime-types-icons.enu
 })
 export class InternalDepartmentPopupComponent extends AdminGenericDialog<InternalDepartment> implements AfterViewInit{
   statuses: Lookup[] = this.lookupService.listByCategory.CommonStatus;
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   model!: InternalDepartment;
   operation!: OperationTypes;
   operationTypes = OperationTypes;
@@ -51,7 +51,7 @@ export class InternalDepartmentPopupComponent extends AdminGenericDialog<Interna
 
   constructor(
     public dialogRef: DialogRef,
-    public fb: FormBuilder,
+    public fb: UntypedFormBuilder,
     public lang: LangService,
     private cd: ChangeDetectorRef,
     @Inject(DIALOG_DATA_TOKEN) data: IDialogData<InternalDepartment>,
@@ -93,11 +93,11 @@ export class InternalDepartmentPopupComponent extends AdminGenericDialog<Interna
     this.form = this.fb.group(this.model.buildForm(true));
   }
 
-  beforeSave(model: InternalDepartment, form: FormGroup): Observable<boolean> | boolean {
+  beforeSave(model: InternalDepartment, form: UntypedFormGroup): Observable<boolean> | boolean {
     return form.valid;
   }
 
-  prepareModel(model: InternalDepartment, form: FormGroup): Observable<InternalDepartment> | InternalDepartment {
+  prepareModel(model: InternalDepartment, form: UntypedFormGroup): Observable<InternalDepartment> | InternalDepartment {
     return (new InternalDepartment()).clone({...model, ...form.value});
   }
 

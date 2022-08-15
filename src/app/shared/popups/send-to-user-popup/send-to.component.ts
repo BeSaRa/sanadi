@@ -5,7 +5,7 @@ import {InboxService} from '@app/services/inbox.service';
 import {EmployeeService} from '@app/services/employee.service';
 import {TeamService} from '@app/services/team.service';
 import {InternalUser} from '@app/models/internal-user';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {filter, switchMap, take, takeUntil} from 'rxjs/operators';
 import {InternalDepartmentService} from '@app/services/internal-department.service';
@@ -30,7 +30,7 @@ import {CaseModel} from "@app/models/case-model";
 export class SendToComponent implements OnInit, OnDestroy {
   users: InternalUser[] = [];
   departments: InternalDepartment[] = [];
-  group!: FormGroup;
+  group!: UntypedFormGroup;
   done$: Subject<any> = new Subject<any>();
   private destroy$: Subject<any> = new Subject<any>();
   WFResponse: typeof WFResponseType = WFResponseType;
@@ -52,7 +52,7 @@ export class SendToComponent implements OnInit, OnDestroy {
     private employee: EmployeeService,
     private teamService: TeamService,
     private intDepService: InternalDepartmentService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private dialog: DialogService,
     public lang: LangService) {
   }

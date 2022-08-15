@@ -1,21 +1,20 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {of, Subject} from 'rxjs';
-import {FormBuilder, FormGroup} from '@angular/forms';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {FormManager} from '@app/models/form-manager';
-import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
-import {IDialogData} from '@app/interfaces/i-dialog-data';
-import {ToastService} from '@app/services/toast.service';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {ExceptionHandlerService} from '@app/services/exception-handler.service';
-import {Team} from '@app/models/team';
-import {LangService} from '@app/services/lang.service';
-import {FactoryService} from '@app/services/factory.service';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {catchError, exhaustMap, takeUntil} from 'rxjs/operators';
-import {Lookup} from '@app/models/lookup';
-import {LookupService} from '@app/services/lookup.service';
-import {InternalDepartment} from '@app/models/internal-department';
+import { Component, Inject, OnInit } from '@angular/core';
+import { of, Subject } from 'rxjs';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { FormManager } from '@app/models/form-manager';
+import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
+import { IDialogData } from '@app/interfaces/i-dialog-data';
+import { ToastService } from '@app/services/toast.service';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { ExceptionHandlerService } from '@app/services/exception-handler.service';
+import { Team } from '@app/models/team';
+import { LangService } from '@app/services/lang.service';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { catchError, exhaustMap, takeUntil } from 'rxjs/operators';
+import { Lookup } from '@app/models/lookup';
+import { LookupService } from '@app/services/lookup.service';
+import { InternalDepartment } from '@app/models/internal-department';
 
 @Component({
   selector: 'team-popup',
@@ -25,7 +24,7 @@ import {InternalDepartment} from '@app/models/internal-department';
 export class TeamPopupComponent implements OnInit {
   private save$: Subject<any> = new Subject<any>();
   private destroy$: Subject<any> = new Subject<any>();
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   model: Team;
   operation: OperationTypes;
   fm!: FormManager;
@@ -37,10 +36,10 @@ export class TeamPopupComponent implements OnInit {
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<Team>,
               private toast: ToastService,
               private dialogRef: DialogRef,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               public langService: LangService,
               private lookupService: LookupService,
-              private exceptionHandlerService: ExceptionHandlerService) {
+              private _exceptionHandlerService: ExceptionHandlerService) {
     this.model = data.model;
     this.operation = data.operation;
     this.parentDepartmentsList = data.parentDepartmentsList;
@@ -105,7 +104,7 @@ export class TeamPopupComponent implements OnInit {
         exhaustMap(() => {
           const team = (new Team()).clone({...this.model, ...this.form.value});
           return team.save().pipe(
-            catchError((err) => {
+            catchError(() => {
               return of(null);
             })
           );

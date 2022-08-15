@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {LangService} from '@services/lang.service';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {LookupService} from '@services/lookup.service';
 import {DialogService} from '@services/dialog.service';
 import {BehaviorSubject, of, Subject} from 'rxjs';
@@ -35,7 +35,7 @@ export class InquiryLogsComponent implements OnInit, OnDestroy {
   private destroy$: Subject<any> = new Subject<any>();
 
   constructor(public langService: LangService,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               private lookupService: LookupService,
               private dialogService: DialogService,
               private orgUnitService: OrganizationUnitService,
@@ -78,7 +78,7 @@ export class InquiryLogsComponent implements OnInit, OnDestroy {
   organizationsList: OrgUnit[] = [];
   branchList: OrgBranch[] = [];
   userList: OrgUser[] = [];
-  form: FormGroup = {} as FormGroup;
+  form: UntypedFormGroup = {} as UntypedFormGroup;
   logsList: BeneficiarySearchLog[] = [];
   private search$: Subject<any> = new Subject<any>();
   reload$: BehaviorSubject<any> = new BehaviorSubject<any>('init');
@@ -99,7 +99,7 @@ export class InquiryLogsComponent implements OnInit, OnDestroy {
   orgStatusEnum = OrgStatusEnum;
   orgUserStatusEnum = OrgUserStatusEnum;
 
-  filterControl: FormControl = new FormControl('');
+  filterControl: UntypedFormControl = new UntypedFormControl('');
   headerColumn: string[] = ['extra-header'];
   displayedColumns: string[] = ['actionTime', 'organization', 'user']; // add the same columns to searchFields
 
@@ -212,39 +212,39 @@ export class InquiryLogsComponent implements OnInit, OnDestroy {
     });
   }
 
-  get idTypeField(): FormControl {
-    return this.form.get('benIdType') as FormControl;
+  get idTypeField(): UntypedFormControl {
+    return this.form.get('benIdType') as UntypedFormControl;
   }
 
-  get idNumberField(): FormControl {
-    return this.form.get('benIdNumber') as FormControl;
+  get idNumberField(): UntypedFormControl {
+    return this.form.get('benIdNumber') as UntypedFormControl;
   }
 
-  get nationalityField(): FormControl {
-    return this.form.get('benIdNationality') as FormControl;
+  get nationalityField(): UntypedFormControl {
+    return this.form.get('benIdNationality') as UntypedFormControl;
   }
 
-  get fromActionTimeField(): FormControl {
-    return this.form.get('fromActionTime') as FormControl;
+  get fromActionTimeField(): UntypedFormControl {
+    return this.form.get('fromActionTime') as UntypedFormControl;
   }
 
-  get toActionTimeField(): FormControl {
-    return this.form.get('toActionTime') as FormControl;
+  get toActionTimeField(): UntypedFormControl {
+    return this.form.get('toActionTime') as UntypedFormControl;
   }
 
-  get orgUnitField(): FormControl {
-    return this.form.get('orgId') as FormControl;
+  get orgUnitField(): UntypedFormControl {
+    return this.form.get('orgId') as UntypedFormControl;
   }
 
-  get orgBranchField(): FormControl {
-    return this.form.get('orgBranchId') as FormControl;
+  get orgBranchField(): UntypedFormControl {
+    return this.form.get('orgBranchId') as UntypedFormControl;
   }
 
-  get orgUserField(): FormControl {
-    return this.form.get('orgUserId') as FormControl;
+  get orgUserField(): UntypedFormControl {
+    return this.form.get('orgUserId') as UntypedFormControl;
   }
 
-  private static enableFields(fields: FormControl[]) {
+  private static enableFields(fields: UntypedFormControl[]) {
     if (fields.length === 1) {
       fields[0].enable();
       return;
@@ -254,7 +254,7 @@ export class InquiryLogsComponent implements OnInit, OnDestroy {
     }
   }
 
-  private static disableFields(fields: FormControl[], resetValues: boolean = false) {
+  private static disableFields(fields: UntypedFormControl[], resetValues: boolean = false) {
     if (fields.length === 1) {
       fields[0].disable();
       resetValues ? this.resetFields(fields) : null;
@@ -266,7 +266,7 @@ export class InquiryLogsComponent implements OnInit, OnDestroy {
     }
   }
 
-  private static resetFields(fields: FormControl[]) {
+  private static resetFields(fields: UntypedFormControl[]) {
     if (fields.length === 1) {
       fields[0].reset();
       return;
@@ -335,7 +335,7 @@ export class InquiryLogsComponent implements OnInit, OnDestroy {
     this.orgUnitService.loadComposite()
       .pipe(
         takeUntil(this.destroy$),
-        catchError((err) => {
+        catchError(() => {
           return of([]);
         })
       ).subscribe((result) => {
@@ -361,7 +361,7 @@ export class InquiryLogsComponent implements OnInit, OnDestroy {
     this.orgBranchService.loadByCriteria({'org-id': orgUnitId})
       .pipe(
         takeUntil(this.destroy$),
-        catchError((err) => {
+        catchError(() => {
           return of([]);
         })
       ).subscribe((result) => {
@@ -385,7 +385,7 @@ export class InquiryLogsComponent implements OnInit, OnDestroy {
     this.orgUserService.getByCriteria({'org-id': orgUnitId, 'org-branch-id': orgBranchId})
       .pipe(
         takeUntil(this.destroy$),
-        catchError((err) => {
+        catchError(() => {
           return of([]);
         })
       ).subscribe((result) => {

@@ -1,4 +1,4 @@
-import { FormGroup } from "@angular/forms";
+import { UntypedFormGroup } from "@angular/forms";
 
 export class CommonUtils {
   /**
@@ -119,7 +119,7 @@ export class CommonUtils {
    * @param containerRefToScroll
    * Scroll the form to the top of given element
    */
-  static displayFormValidity(form: FormGroup, containerRefToScroll: HTMLElement | string = ''): void {
+  static displayFormValidity(form: UntypedFormGroup, containerRefToScroll: HTMLElement | string = ''): void {
     form.markAllAsTouched();
 
     if (!containerRefToScroll) {

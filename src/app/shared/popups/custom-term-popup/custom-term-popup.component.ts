@@ -1,7 +1,7 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {LangService} from "@app/services/lang.service";
 import {of, Subject} from "rxjs";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
 import {FormManager} from "@app/models/form-manager";
 import {CustomTerm} from "@app/models/custom-term";
 import {ToastService} from "@app/services/toast.service";
@@ -19,13 +19,13 @@ import {DIALOG_DATA_TOKEN} from "@app/shared/tokens/tokens";
 export class CustomTermPopupComponent implements OnInit, OnDestroy {
   private save$: Subject<any> = new Subject<any>();
   private destroy$: Subject<any> = new Subject<any>();
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   model!: CustomTerm;
   fm!: FormManager;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) private data: { model: CustomTerm, caseType: number },
               public lang: LangService, private toast: ToastService,
-              private dialogRef: DialogRef, private fb: FormBuilder,
+              private dialogRef: DialogRef, private fb: UntypedFormBuilder,
               private exceptionHandlerService: ExceptionHandlerService) {
     this.model = data.model
   }

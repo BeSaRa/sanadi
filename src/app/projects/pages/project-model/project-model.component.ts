@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn } from '@angular/forms';
+import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, ValidatorFn } from '@angular/forms';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { SaveTypes } from '@app/enums/save-types';
 import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
@@ -43,7 +43,7 @@ import { AdminLookup } from '@app/models/admin-lookup';
   styleUrls: ['./project-model.component.scss']
 })
 export class ProjectModelComponent extends EServicesGenericComponent<ProjectModel, ProjectModelService> {
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   domainTypes: typeof DomainTypes = DomainTypes;
   countries: Country[] = [];
   domains: Lookup[] = this.lookupService.listByCategory.Domain;
@@ -74,7 +74,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   displayTemplateSerialField: boolean = false;
   displayDevGoals: boolean = false;
 
-  templateSerialControl: FormControl = new FormControl(null);
+  templateSerialControl: UntypedFormControl = new UntypedFormControl(null);
 
   searchTemplate$: Subject<string> = new Subject<string>();
 
@@ -133,7 +133,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   }
 
   constructor(public lang: LangService,
-              public fb: FormBuilder,
+              public fb: UntypedFormBuilder,
               private toast: ToastService,
               private dialog: DialogService,
               public employeeService: EmployeeService,
@@ -385,28 +385,28 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     return this.form.get('componentBudgetInfo')?.get('projectTotalCost') as AbstractControl;
   }
 
-  get componentBudgetArray(): FormArray {
-    return this.form.get('componentBudgetInfo')?.get('componentList') as FormArray;
+  get componentBudgetArray(): UntypedFormArray {
+    return this.form.get('componentBudgetInfo')?.get('componentList') as UntypedFormArray;
   }
 
-  get basicInfoTab(): FormGroup {
-    return this.form.get('basicInfo') as FormGroup;
+  get basicInfoTab(): UntypedFormGroup {
+    return this.form.get('basicInfo') as UntypedFormGroup;
   }
 
-  get categoryInfoTab(): FormGroup {
-    return this.form.get('categoryInfo') as FormGroup;
+  get categoryInfoTab(): UntypedFormGroup {
+    return this.form.get('categoryInfo') as UntypedFormGroup;
   }
 
-  get categoryGoalPercentGroup(): FormGroup {
-    return this.form.get('categoryGoalPercentGroup') as FormGroup;
+  get categoryGoalPercentGroup(): UntypedFormGroup {
+    return this.form.get('categoryGoalPercentGroup') as UntypedFormGroup;
   }
 
-  get summaryInfoTab(): FormGroup {
-    return this.form.get('summaryInfo') as FormGroup;
+  get summaryInfoTab(): UntypedFormGroup {
+    return this.form.get('summaryInfo') as UntypedFormGroup;
   }
 
-  get summaryPercentGroup(): FormGroup {
-    return this.form.get('summaryPercentGroup') as FormGroup;
+  get summaryPercentGroup(): UntypedFormGroup {
+    return this.form.get('summaryPercentGroup') as UntypedFormGroup;
   }
 
   get descriptionTab(): AbstractControl {

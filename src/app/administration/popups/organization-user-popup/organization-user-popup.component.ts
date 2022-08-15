@@ -1,5 +1,5 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {FormManager} from '@app/models/form-manager';
 import {LangService} from '@app/services/lang.service';
@@ -38,7 +38,7 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
   private save$: Subject<any> = new Subject<any>();
   private destroy$: Subject<any> = new Subject<any>();
   list: OrgUser[] = [];
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   model: OrgUser;
   operation: OperationTypes;
   fm!: FormManager;
@@ -85,7 +85,7 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
               private lookupService: LookupService,
               public employeeService: EmployeeService,
               private authService: AuthService,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               private exceptionHandlerService: ExceptionHandlerService) {
     this.model = data.model;
     this.operation = data.operation;
@@ -235,12 +235,12 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
     return this.operation === OperationTypes.CREATE ? this.langService.map.lbl_add_org_user : this.langService.map.lbl_edit_org_user;
   }
 
-  get customRoleControl(): FormControl {
-    return this.fm.getFormField('permissions.customRoleId') as FormControl;
+  get customRoleControl(): UntypedFormControl {
+    return this.fm.getFormField('permissions.customRoleId') as UntypedFormControl;
   }
 
-  get permissionsControl(): FormControl {
-    return this.fm.getFormField('permissions.permissions') as FormControl;
+  get permissionsControl(): UntypedFormControl {
+    return this.fm.getFormField('permissions.permissions') as UntypedFormControl;
   }
 
 

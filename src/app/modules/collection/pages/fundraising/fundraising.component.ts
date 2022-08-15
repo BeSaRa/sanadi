@@ -1,5 +1,5 @@
 import {Component} from "@angular/core";
-import {AbstractControl, FormBuilder, FormControl, FormGroup} from "@angular/forms";
+import {AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from "@angular/forms";
 import {OperationTypes} from "@app/enums/operation-types.enum";
 import {SaveTypes} from "@app/enums/save-types";
 import {CollectionRequestType} from "@app/enums/service-request-types";
@@ -29,14 +29,14 @@ import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 })
 export class FundraisingComponent extends EServicesGenericComponent<Fundraising,
   FundraisingService> {
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   fileIconsEnum = FileIconsEnum;
   licenseSearch$: Subject<string> = new Subject<string>();
   selectedLicense?: Fundraising;
 
   constructor(
     public lang: LangService,
-    public fb: FormBuilder,
+    public fb: UntypedFormBuilder,
     public service: FundraisingService,
     private lookupService: LookupService,
     private dialog: DialogService,
@@ -53,12 +53,12 @@ export class FundraisingComponent extends EServicesGenericComponent<Fundraising,
   licenseDurationTypes: Lookup[] =
     this.lookupService.listByCategory.LicenseDurationType;
 
-  get basicInfo(): FormGroup {
-    return this.form.get("basicInfo")! as FormGroup;
+  get basicInfo(): UntypedFormGroup {
+    return this.form.get("basicInfo")! as UntypedFormGroup;
   }
 
-  get specialExplanation(): FormGroup {
-    return this.form.get("explanation")! as FormGroup;
+  get specialExplanation(): UntypedFormGroup {
+    return this.form.get("explanation")! as UntypedFormGroup;
   }
 
   get requestType(): AbstractControl {
@@ -69,8 +69,8 @@ export class FundraisingComponent extends EServicesGenericComponent<Fundraising,
     return this.form.get("basicInfo.licenseDurationType")!;
   }
 
-  get oldLicenseFullSerialField(): FormControl {
-    return this.form.get("basicInfo.oldLicenseFullSerial") as FormControl;
+  get oldLicenseFullSerialField(): UntypedFormControl {
+    return this.form.get("basicInfo.oldLicenseFullSerial") as UntypedFormControl;
   }
 
   isCancelRequestType(): boolean {

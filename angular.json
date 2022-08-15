@@ -46,7 +46,8 @@
           "options": {
             "allowedCommonJsDependencies": [
               "lodash",
-              "crypto-js"
+              "crypto-js",
+              "dayjs"
             ],
             "outputPath": "dist/sanadi",
             "index": "src/index.html",
@@ -176,6 +177,5 @@
         }
       }
     }
-  },
-  "defaultProject": "sanadi"
+  }
 }

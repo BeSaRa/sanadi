@@ -2,7 +2,7 @@ import {Component, Inject} from '@angular/core';
 import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
 import {TrainingProgram} from '@app/models/training-program';
 import {FormManager} from '@app/models/form-manager';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {OperationTypes} from '@app/enums/operation-types.enum';
@@ -40,7 +40,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   publish$ = new Subject<any>();
   loadTrainers$ = new BehaviorSubject<any>(null);
   loadSelectedTrainers$ = new BehaviorSubject<any>(null);
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   fm!: FormManager;
   operation!: OperationTypes;
   model!: TrainingProgram;
@@ -113,7 +113,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<TrainingProgram>,
               public lang: LangService,
-              public fb: FormBuilder,
+              public fb: UntypedFormBuilder,
               public exceptionHandlerService: ExceptionHandlerService,
               public lookupService: LookupService,
               public toast: ToastService,
@@ -158,7 +158,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   }
 
   getRegistrationStartDateClasses() {
-    let classes = {};
+    let classes
     classes = this.fm.getStatusClass('registerationStartDate');
     if (this.model.status && this.model.status != this.trainingStatus.DATA_ENTERED) {
       classes = {...classes, 'input-disabled': true};
@@ -167,7 +167,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   }
 
   getRegistrationEndTrainingStartTrainingEndDatesClasses(controlName: string) {
-    let classes = {};
+    let classes
     classes = this.fm.getStatusClass(controlName);
     if (this.isCertification || this.operation == OperationTypes.VIEW) {
       classes = {...classes, 'input-disabled': true};
@@ -270,7 +270,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   }
 
   getErrorDatesInPastMessage(isValidTrainingStart: boolean, isValidRegistrationEnd: boolean) {
-    let message = '';
+    let message;
     !isValidTrainingStart ? message = this.lang.map.training_start_date_should_not_be_in_past : message = '';
     !isValidTrainingStart && !isValidRegistrationEnd ? message += ' <br> ' : message += '';
     !isValidRegistrationEnd ? message += this.lang.map.registration_end_date_should_not_be_in_past : message += '';
@@ -429,28 +429,28 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
     };
   }
 
-  get trainingStartDateControl(): FormControl {
-    return this.form.get('startDate') as FormControl;
+  get trainingStartDateControl(): UntypedFormControl {
+    return this.form.get('startDate') as UntypedFormControl;
   }
 
-  get trainingEndDateControl(): FormControl {
-    return this.form.get('endDate') as FormControl;
+  get trainingEndDateControl(): UntypedFormControl {
+    return this.form.get('endDate') as UntypedFormControl;
   }
 
-  get registrationStartDateControl(): FormControl {
-    return this.form.get('registerationStartDate') as FormControl;
+  get registrationStartDateControl(): UntypedFormControl {
+    return this.form.get('registerationStartDate') as UntypedFormControl;
   }
 
-  get registrationClosureDateControl(): FormControl {
-    return this.form.get('registerationClosureDate') as FormControl;
+  get registrationClosureDateControl(): UntypedFormControl {
+    return this.form.get('registerationClosureDate') as UntypedFormControl;
   }
 
-  get sessionStartTimeControl(): FormControl {
-    return this.form.get('sessionStartTime') as FormControl;
+  get sessionStartTimeControl(): UntypedFormControl {
+    return this.form.get('sessionStartTime') as UntypedFormControl;
   }
 
-  get sessionEndTimeControl(): FormControl {
-    return this.form.get('sessionEndTime') as FormControl;
+  get sessionEndTimeControl(): UntypedFormControl {
+    return this.form.get('sessionEndTime') as UntypedFormControl;
   }
 
   buildForm(): void {
@@ -462,11 +462,11 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
     this._buildDatepickerControlsMap();
   }
 
-  beforeSave(model: TrainingProgram, form: FormGroup): Observable<boolean> | boolean {
+  beforeSave(model: TrainingProgram, form: UntypedFormGroup): Observable<boolean> | boolean {
     return form.valid;
   }
 
-  prepareModel(model: TrainingProgram, form: FormGroup): Observable<TrainingProgram> | TrainingProgram {
+  prepareModel(model: TrainingProgram, form: UntypedFormGroup): Observable<TrainingProgram> | TrainingProgram {
     return (new TrainingProgram()).clone({...model, ...form.value});
   }
 

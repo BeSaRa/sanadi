@@ -1,5 +1,5 @@
 import {Directive, ElementRef, HostBinding, Input, OnInit, Optional} from '@angular/core';
-import {ControlContainer, FormGroup} from '@angular/forms';
+import {ControlContainer, UntypedFormGroup} from '@angular/forms';
 import {Subject} from 'rxjs';
 
 @Directive({
@@ -11,7 +11,7 @@ export class ValidationGroupClassesDirective implements OnInit {
   private invalidOnly: boolean = true;
 
   @Input()
-  group!: FormGroup;
+  group!: UntypedFormGroup;
 
   @HostBinding('class.is-valid')
   get checkIsValid(): boolean {
@@ -29,8 +29,8 @@ export class ValidationGroupClassesDirective implements OnInit {
   };
 
 
-  get formGroup(): FormGroup {
-    return (this.group ? this.group : this.parent.control) as FormGroup;
+  get formGroup(): UntypedFormGroup {
+    return (this.group ? this.group : this.parent.control) as UntypedFormGroup;
   }
 
   constructor(private element: ElementRef,

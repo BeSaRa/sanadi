@@ -1,5 +1,5 @@
 import {AfterViewInit, ChangeDetectorRef, Component} from '@angular/core';
-import {AbstractControl, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {SaveTypes} from '@app/enums/save-types';
 import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
@@ -41,9 +41,9 @@ import {SharedService} from '@services/shared.service';
   styleUrls: ['./transferring-individual-funds-abroad.component.scss']
 })
 export class TransferringIndividualFundsAbroadComponent extends EServicesGenericComponent<TransferringIndividualFundsAbroad, TransferringIndividualFundsAbroadService> implements AfterViewInit {
-  form!: FormGroup;
-  executiveManagementForm!: FormGroup;
-  transferPurposeForm!: FormGroup;
+  form!: UntypedFormGroup;
+  executiveManagementForm!: UntypedFormGroup;
+  transferPurposeForm!: UntypedFormGroup;
   fm!: FormManager;
   requestTypes: Lookup[] = this.lookupService.listByCategory.TransferringIndividualRequestType
     .sort((a, b) => a.lookupKey - b.lookupKey);
@@ -98,7 +98,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
   hasSearchedForLicense = false;
 
   constructor(public lang: LangService,
-              public fb: FormBuilder,
+              public fb: UntypedFormBuilder,
               private cd: ChangeDetectorRef,
               public service: TransferringIndividualFundsAbroadService,
               private lookupService: LookupService,
@@ -112,149 +112,149 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     super();
   }
 
-  get basicInfo(): FormGroup {
-    return this.form.get('basicInfo')! as FormGroup;
+  get basicInfo(): UntypedFormGroup {
+    return this.form.get('basicInfo')! as UntypedFormGroup;
   }
 
-  get requestType(): FormControl {
-    return this.form.get('basicInfo.requestType')! as FormControl;
+  get requestType(): UntypedFormControl {
+    return this.form.get('basicInfo.requestType')! as UntypedFormControl;
   }
 
-  get transfereeType(): FormControl {
-    return this.form.get('basicInfo.transfereeType')! as FormControl;
+  get transfereeType(): UntypedFormControl {
+    return this.form.get('basicInfo.transfereeType')! as UntypedFormControl;
   }
 
   get oldLicenseFullSerialField(): AbstractControl {
     return this.form.get('basicInfo.oldLicenseFullSerial')!;
   }
 
-  get requesterInfo(): FormGroup {
-    return this.form.get('requesterInfo')! as FormGroup;
+  get requesterInfo(): UntypedFormGroup {
+    return this.form.get('requesterInfo')! as UntypedFormGroup;
   }
 
-  get receiverOrganizationInfo(): FormGroup {
-    return this.form.get('receiverOrganizationInfo')! as FormGroup;
+  get receiverOrganizationInfo(): UntypedFormGroup {
+    return this.form.get('receiverOrganizationInfo')! as UntypedFormGroup;
   }
 
-  get receiverPersonInfo(): FormGroup {
-    return this.form.get('receiverPersonInfo')! as FormGroup;
+  get receiverPersonInfo(): UntypedFormGroup {
+    return this.form.get('receiverPersonInfo')! as UntypedFormGroup;
   }
 
-  get financialTransactionInfo(): FormGroup {
-    return this.form.get('financialTransactionInfo')! as FormGroup;
+  get financialTransactionInfo(): UntypedFormGroup {
+    return this.form.get('financialTransactionInfo')! as UntypedFormGroup;
   }
 
-  get specialExplanation(): FormGroup {
-    return this.form.get('explanation')! as FormGroup;
+  get specialExplanation(): UntypedFormGroup {
+    return this.form.get('explanation')! as UntypedFormGroup;
   }
 
-  get executiveManagement(): FormGroup {
-    return this.executiveManagementForm! as FormGroup;
+  get executiveManagement(): UntypedFormGroup {
+    return this.executiveManagementForm! as UntypedFormGroup;
   }
 
-  get transferPurpose(): FormGroup {
-    return this.transferPurposeForm! as FormGroup;
+  get transferPurpose(): UntypedFormGroup {
+    return this.transferPurposeForm! as UntypedFormGroup;
   }
 
   // receiver organization fields
-  get organizationArabicName(): FormControl {
-    return this.form.get('receiverOrganizationInfo.organizationArabicName')! as FormControl;
+  get organizationArabicName(): UntypedFormControl {
+    return this.form.get('receiverOrganizationInfo.organizationArabicName')! as UntypedFormControl;
   }
 
-  get organizationEnglishName(): FormControl {
-    return this.form.get('receiverOrganizationInfo.organizationEnglishName')! as FormControl;
+  get organizationEnglishName(): UntypedFormControl {
+    return this.form.get('receiverOrganizationInfo.organizationEnglishName')! as UntypedFormControl;
   }
 
-  get headQuarterType(): FormControl {
-    return this.form.get('receiverOrganizationInfo.headQuarterType')! as FormControl;
+  get headQuarterType(): UntypedFormControl {
+    return this.form.get('receiverOrganizationInfo.headQuarterType')! as UntypedFormControl;
   }
 
-  get establishmentDate(): FormControl {
-    return this.form.get('receiverOrganizationInfo.establishmentDate')! as FormControl;
+  get establishmentDate(): UntypedFormControl {
+    return this.form.get('receiverOrganizationInfo.establishmentDate')! as UntypedFormControl;
   }
 
-  get country(): FormControl {
-    return this.form.get('receiverOrganizationInfo.country')! as FormControl;
+  get country(): UntypedFormControl {
+    return this.form.get('receiverOrganizationInfo.country')! as UntypedFormControl;
   }
 
-  get region(): FormControl {
-    return this.form.get('receiverOrganizationInfo.region')! as FormControl;
+  get region(): UntypedFormControl {
+    return this.form.get('receiverOrganizationInfo.region')! as UntypedFormControl;
   }
 
-  get city(): FormControl {
-    return this.form.get('receiverOrganizationInfo.city')! as FormControl;
+  get city(): UntypedFormControl {
+    return this.form.get('receiverOrganizationInfo.city')! as UntypedFormControl;
   }
 
-  get detailsAddress(): FormControl {
-    return this.form.get('receiverOrganizationInfo.detailsAddress')! as FormControl;
+  get detailsAddress(): UntypedFormControl {
+    return this.form.get('receiverOrganizationInfo.detailsAddress')! as UntypedFormControl;
   }
 
-  get postalCode(): FormControl {
-    return this.form.get('receiverOrganizationInfo.postalCode')! as FormControl;
+  get postalCode(): UntypedFormControl {
+    return this.form.get('receiverOrganizationInfo.postalCode')! as UntypedFormControl;
   }
 
-  get website(): FormControl {
-    return this.form.get('receiverOrganizationInfo.website')! as FormControl;
+  get website(): UntypedFormControl {
+    return this.form.get('receiverOrganizationInfo.website')! as UntypedFormControl;
   }
 
-  get organizationEmail(): FormControl {
-    return this.form.get('receiverOrganizationInfo.organizationEmail')! as FormControl;
+  get organizationEmail(): UntypedFormControl {
+    return this.form.get('receiverOrganizationInfo.organizationEmail')! as UntypedFormControl;
   }
 
-  get firstSocialMedia(): FormControl {
-    return this.form.get('receiverOrganizationInfo.firstSocialMedia')! as FormControl;
+  get firstSocialMedia(): UntypedFormControl {
+    return this.form.get('receiverOrganizationInfo.firstSocialMedia')! as UntypedFormControl;
   }
 
-  get secondSocialMedia(): FormControl {
-    return this.form.get('receiverOrganizationInfo.secondSocialMedia')! as FormControl;
+  get secondSocialMedia(): UntypedFormControl {
+    return this.form.get('receiverOrganizationInfo.secondSocialMedia')! as UntypedFormControl;
   }
 
-  get thirdSocialMedia(): FormControl {
-    return this.form.get('receiverOrganizationInfo.thirdSocialMedia')! as FormControl;
+  get thirdSocialMedia(): UntypedFormControl {
+    return this.form.get('receiverOrganizationInfo.thirdSocialMedia')! as UntypedFormControl;
   }
 
-  get receiverNameLikePassport(): FormControl {
-    return this.form.get('receiverPersonInfo.receiverNameLikePassport')! as FormControl;
+  get receiverNameLikePassport(): UntypedFormControl {
+    return this.form.get('receiverPersonInfo.receiverNameLikePassport')! as UntypedFormControl;
   }
 
-  get receiverEnglishNameLikePassport(): FormControl {
-    return this.form.get('receiverPersonInfo.receiverEnglishNameLikePassport')! as FormControl;
+  get receiverEnglishNameLikePassport(): UntypedFormControl {
+    return this.form.get('receiverPersonInfo.receiverEnglishNameLikePassport')! as UntypedFormControl;
   }
 
-  get receiverJobTitle(): FormControl {
-    return this.form.get('receiverPersonInfo.receiverJobTitle')! as FormControl;
+  get receiverJobTitle(): UntypedFormControl {
+    return this.form.get('receiverPersonInfo.receiverJobTitle')! as UntypedFormControl;
   }
 
-  get receiverNationality(): FormControl {
-    return this.form.get('receiverPersonInfo.receiverNationality')! as FormControl;
+  get receiverNationality(): UntypedFormControl {
+    return this.form.get('receiverPersonInfo.receiverNationality')! as UntypedFormControl;
   }
 
-  get receiverIdentificationNumber(): FormControl {
-    return this.form.get('receiverPersonInfo.receiverIdentificationNumber')! as FormControl;
+  get receiverIdentificationNumber(): UntypedFormControl {
+    return this.form.get('receiverPersonInfo.receiverIdentificationNumber')! as UntypedFormControl;
   }
 
-  get receiverPassportNumber(): FormControl {
-    return this.form.get('receiverPersonInfo.receiverPassportNumber')! as FormControl;
+  get receiverPassportNumber(): UntypedFormControl {
+    return this.form.get('receiverPersonInfo.receiverPassportNumber')! as UntypedFormControl;
   }
 
-  get receiverPhone1(): FormControl {
-    return this.form.get('receiverPersonInfo.receiverPhone1')! as FormControl;
+  get receiverPhone1(): UntypedFormControl {
+    return this.form.get('receiverPersonInfo.receiverPhone1')! as UntypedFormControl;
   }
 
-  get receiverPhone2(): FormControl {
-    return this.form.get('receiverPersonInfo.receiverPhone2')! as FormControl;
+  get receiverPhone2(): UntypedFormControl {
+    return this.form.get('receiverPersonInfo.receiverPhone2')! as UntypedFormControl;
   }
 
-  get domain(): FormControl {
-    return this.transferPurposeForm.get('domain')! as FormControl;
+  get domain(): UntypedFormControl {
+    return this.transferPurposeForm.get('domain')! as UntypedFormControl;
   }
 
-  get mainDACCategory(): FormControl {
-    return this.transferPurposeForm.get('mainDACCategory')! as FormControl;
+  get mainDACCategory(): UntypedFormControl {
+    return this.transferPurposeForm.get('mainDACCategory')! as UntypedFormControl;
   }
 
-  get mainUNOCHACategory(): FormControl {
-    return this.transferPurposeForm.get('mainUNOCHACategory')! as FormControl;
+  get mainUNOCHACategory(): UntypedFormControl {
+    return this.transferPurposeForm.get('mainUNOCHACategory')! as UntypedFormControl;
   }
 
   ngAfterViewInit(): void {

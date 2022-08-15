@@ -4,7 +4,7 @@ import {SurveyTemplateService} from "@app/services/survey-template.service";
 import {SurveyTemplate} from "@app/models/survey-template";
 import {SurveyService} from "@app/services/survey.service";
 import {delay, map, takeUntil, tap} from "rxjs/operators";
-import {FormControl} from "@angular/forms";
+import {UntypedFormControl} from "@angular/forms";
 import {ToastService} from "@app/services/toast.service";
 import {DIALOG_DATA_TOKEN} from "@app/shared/tokens/tokens";
 import {TrainingProgram} from "@app/models/training-program";
@@ -18,7 +18,7 @@ import {Subject} from "rxjs";
 })
 export class SelectProgramSurveyPopupComponent implements OnInit {
   templates: SurveyTemplate[] = [];
-  control: FormControl = new FormControl();
+  control: UntypedFormControl = new UntypedFormControl();
   program!: TrainingProgram;
   selectedTemplate: SurveyTemplate | undefined;
   private destroy$: Subject<any> = new Subject<any>();

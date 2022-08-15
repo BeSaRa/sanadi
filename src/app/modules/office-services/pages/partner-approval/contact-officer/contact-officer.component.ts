@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angula
 import {LangService} from "@app/services/lang.service";
 import {ToastService} from "@app/services/toast.service";
 import {DialogService} from "@app/services/dialog.service";
-import {AbstractControl, FormArray, FormBuilder, FormGroup} from "@angular/forms";
+import {AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup} from "@angular/forms";
 import {ReadinessStatus} from "@app/types/types";
 import {BehaviorSubject, Subject} from "rxjs";
 import {filter, map, take, takeUntil} from "rxjs/operators";
@@ -19,7 +19,7 @@ export class ContactOfficerComponent implements OnInit, OnDestroy {
   constructor(public lang: LangService,
               private toastService: ToastService,
               private dialogService: DialogService,
-              private fb: FormBuilder) {
+              private fb: UntypedFormBuilder) {
   }
 
   private _list: ContactOfficer[] = [];
@@ -47,7 +47,7 @@ export class ContactOfficerComponent implements OnInit, OnDestroy {
   private current?: ContactOfficer;
   private destroy$: Subject<any> = new Subject<any>();
 
-  form!: FormGroup;
+  form!: UntypedFormGroup;
 
   ngOnInit(): void {
     this._handleInitData();
@@ -73,8 +73,8 @@ export class ContactOfficerComponent implements OnInit, OnDestroy {
     })
   }
 
-  get contactOfficersFormArray(): FormArray {
-    return (this.form.get('contactOfficers')) as FormArray;
+  get contactOfficersFormArray(): UntypedFormArray {
+    return (this.form.get('contactOfficers')) as UntypedFormArray;
   }
 
   addAllowed(): boolean {
@@ -138,7 +138,7 @@ export class ContactOfficerComponent implements OnInit, OnDestroy {
     validForm$.pipe(
       takeUntil(this.destroy$),
       map(() => {
-        return (this.form.get('contactOfficers.0')) as FormArray;
+        return (this.form.get('contactOfficers.0')) as UntypedFormArray;
       }),
       map((form) => {
         return (new ContactOfficer()).clone({

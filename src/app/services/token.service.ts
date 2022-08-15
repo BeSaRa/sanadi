@@ -50,7 +50,7 @@ export class TokenService {
     this._excludedTokenUrls = [...new Set(this._excludedTokenUrls.concat(url))];
   }
 
-  getTokenFromStore(): string {
+  getTokenFromStore(): string | undefined {
     return this.eCookieService.getE(this.configurationService.CONFIG.TOKEN_STORE_KEY);
   }
 
@@ -66,7 +66,7 @@ export class TokenService {
         subscriber.next(false);
         subscriber.complete();
       } else {
-        this.setToken(this.getTokenFromStore());
+        this.setToken(this.getTokenFromStore()!);
         innerSub = this.authService.validateToken()
           .pipe(switchMap((loggedIn) => this.commonService.loadCounters().pipe(tap(counters => {
             if (loggedIn.type === UserTypes.INTERNAL) {

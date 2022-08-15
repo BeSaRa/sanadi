@@ -1,5 +1,5 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {isObservable, Observable, of, Subject} from 'rxjs';
 import {WFResponseType} from '@app/enums/wfresponse-type.enum';
@@ -23,14 +23,14 @@ import {OrganizationOfficer} from '@app/models/organization-officer';
   styleUrls: ['./urgent-joint-relief-campaign-organization-approve-task-popup.component.scss']
 })
 export class UrgentJointReliefCampaignOrganizationApproveTaskPopupComponent implements OnInit {
-  comment: FormControl = new FormControl('', [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]);
+  comment: UntypedFormControl = new UntypedFormControl('', [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]);
   done$: Subject<any> = new Subject<any>();
   destroy$: Subject<any> = new Subject<any>();
   customValidators = CustomValidators;
 
   private readonly action: WFResponseType;
   model?: UrgentJointReliefCampaign;
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   selectedOrganizationOfficers: OrganizationOfficer[] = [];
 
   constructor(
@@ -41,12 +41,12 @@ export class UrgentJointReliefCampaignOrganizationApproveTaskPopupComponent impl
       actionType: WFResponseType,
       claimBefore: boolean,
       model: UrgentJointReliefCampaign,
-      externalUserData: {form: FormGroup, organizationOfficers: OrganizationOfficer[]}
+      externalUserData: {form: UntypedFormGroup, organizationOfficers: OrganizationOfficer[]}
     },
     private dialogRef: DialogRef,
     private toast: ToastService,
     public lang: LangService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private employeeService: EmployeeService,
     private serviceDataService: ServiceDataService,
     private dialog: DialogService) {
@@ -62,8 +62,8 @@ export class UrgentJointReliefCampaignOrganizationApproveTaskPopupComponent impl
     this.prepareModel();
   }
 
-  get externalUserData(): FormGroup {
-    return this.form.get('externalUserData')! as FormGroup;
+  get externalUserData(): UntypedFormGroup {
+    return this.form.get('externalUserData')! as UntypedFormGroup;
   }
 
   prepareModel() {

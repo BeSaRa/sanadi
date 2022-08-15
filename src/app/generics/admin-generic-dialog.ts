@@ -1,7 +1,7 @@
 import {Directive, OnDestroy, OnInit} from '@angular/core';
 import {isObservable, Observable, of, Subject} from 'rxjs';
 import {IAdminGenericInterface} from '@app/interfaces/iadmin-generic-interface';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {catchError, exhaustMap, filter, switchMap} from 'rxjs/operators';
@@ -13,9 +13,9 @@ import {BaseModelAdminLookup} from '@app/models/base-model-admin-lookup';
 @Directive()
 export abstract class AdminGenericDialog<M extends BaseModel<any, any> | BaseModelAdminLookup<any, any>> implements OnInit, OnDestroy, IAdminGenericInterface<M> {
   // to be injected from main component
-  abstract fb: FormBuilder;
+  abstract fb: UntypedFormBuilder;
   abstract model: M;
-  abstract form: FormGroup;
+  abstract form: UntypedFormGroup;
   abstract operation: OperationTypes;
   abstract dialogRef: DialogRef;
   destroy$: Subject<any> = new Subject<any>();
@@ -55,17 +55,17 @@ export abstract class AdminGenericDialog<M extends BaseModel<any, any> | BaseMod
    * @description this method invoked before save usually used to validate something before calling save on the model,
    * true to proceed false to prevent save process
    * @param model {M}
-   * @param form {FormGroup}
+   * @param form {UntypedFormGroup}
    * @returns {Observable<boolean>|boolean}
    */
-  abstract beforeSave(model: M, form: FormGroup): Observable<boolean> | boolean;
+  abstract beforeSave(model: M, form: UntypedFormGroup): Observable<boolean> | boolean;
 
   /**
    * @description method to return the model that you need to call save on it
    * @param model
    * @param form
    */
-  abstract prepareModel(model: M, form: FormGroup): Observable<M> | M;
+  abstract prepareModel(model: M, form: UntypedFormGroup): Observable<M> | M;
 
   /**
    * @description when you get any error while save process, usually used to display error messages
@@ -112,10 +112,10 @@ export abstract class AdminGenericDialog<M extends BaseModel<any, any> | BaseMod
 
   /**
    * @description validate main form or given from and display the highlighted errors
-   * @param form {FormGroup|null}
+   * @param form {UntypedFormGroup|null}
    * @param element {HTMLElement|string}
    */
-  displayFormValidity(form?: FormGroup | null, element?: HTMLElement | string): void {
+  displayFormValidity(form?: UntypedFormGroup | null, element?: HTMLElement | string): void {
     if (!form) {
       this.form.markAllAsTouched();
     } else {
@@ -134,7 +134,7 @@ export abstract class AdminGenericDialog<M extends BaseModel<any, any> | BaseMod
   }
 
   // noinspection JSUnusedGlobalSymbols
-  markFormPristine(form?: FormGroup): void {
+  markFormPristine(form?: UntypedFormGroup): void {
     form ? form.markAsPristine() : this.form.markAsPristine();
   }
 }

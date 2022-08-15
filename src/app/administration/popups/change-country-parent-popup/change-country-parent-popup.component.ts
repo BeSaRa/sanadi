@@ -1,16 +1,15 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {Country} from '../../../models/country';
-import {DIALOG_DATA_TOKEN} from '../../../shared/tokens/tokens';
-import {IDialogData} from '../../../interfaces/i-dialog-data';
-import {ToastService} from '../../../services/toast.service';
-import {DialogRef} from '../../../shared/models/dialog-ref';
-import {of, Subject} from 'rxjs';
-import {catchError, exhaustMap, takeUntil} from 'rxjs/operators';
-import {LangService} from '../../../services/lang.service';
-import {FormControl, FormGroup} from '@angular/forms';
-import {CustomValidators} from '../../../validators/custom-validators';
-import {OperationTypes} from '../../../enums/operation-types.enum';
-import {CountryService} from '../../../services/country.service';
+import { Component, Inject, OnInit } from '@angular/core';
+import { Country } from '@app/models/country';
+import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
+import { IDialogData } from '@contracts/i-dialog-data';
+import { ToastService } from '@services/toast.service';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { of, Subject } from 'rxjs';
+import { catchError, exhaustMap, takeUntil } from 'rxjs/operators';
+import { LangService } from '@services/lang.service';
+import { UntypedFormControl } from '@angular/forms';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { CountryService } from '@services/country.service';
 
 @Component({
   selector: 'change-country-parent-popup',
@@ -21,7 +20,7 @@ export class ChangeCountryParentPopupComponent implements OnInit {
   countries: Country[] = [];
   parentCountriesList: Country[] = [];
 
-  parentId: FormControl = new FormControl(null, [CustomValidators.required]);
+  parentId: UntypedFormControl = new UntypedFormControl(null, [CustomValidators.required]);
 
   private save$: Subject<any> = new Subject<any>();
   private destroy$: Subject<any> = new Subject<any>();
@@ -56,7 +55,7 @@ export class ChangeCountryParentPopupComponent implements OnInit {
         exhaustMap(() => {
           return this.countryService.updateBulkParents(this.parentId.value, this.countries.map(x => x.id))
             .pipe(
-              catchError((err) => {
+              catchError(() => {
                 return of(null);
               })
             );

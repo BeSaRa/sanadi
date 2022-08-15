@@ -2,7 +2,7 @@ import {Component, Inject, ViewChild} from '@angular/core';
 import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
 import {SDGoal} from '@app/models/sdgoal';
 import {DialogRef} from '@app/shared/models/dialog-ref';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {BehaviorSubject, isObservable, Observable, of, Subject} from 'rxjs';
 import {LangService} from '@app/services/lang.service';
 import {OperationTypes} from '@app/enums/operation-types.enum';
@@ -31,7 +31,7 @@ import {TableComponent} from '@app/shared/components/table/table.component';
 export class SdGoalPopupComponent extends AdminGenericDialog<SDGoal> {
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<SDGoal>,
-              public fb: FormBuilder,
+              public fb: UntypedFormBuilder,
               public dialogRef: DialogRef,
               public lang: LangService,
               private lookupService: LookupService,
@@ -43,7 +43,7 @@ export class SdGoalPopupComponent extends AdminGenericDialog<SDGoal> {
     this.parentId = data.parentId;
   }
 
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   model!: SDGoal;
   operation!: OperationTypes;
   tabsData: IKeyValue = {
@@ -53,7 +53,7 @@ export class SdGoalPopupComponent extends AdminGenericDialog<SDGoal> {
   validToAddSubGoals = false;
   statuses: Lookup[] = this.lookupService.listByCategory.CommonStatus;
   destroy$: Subject<void> = new Subject<void>();
-  filterControl: FormControl = new FormControl('');
+  filterControl: UntypedFormControl = new UntypedFormControl('');
   reloadSubGoals$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   addSubSdGoal$: Subject<any> = new Subject<any>();
   editSubSdGoal$: Subject<SDGoal> = new Subject<SDGoal>();
@@ -81,7 +81,7 @@ export class SdGoalPopupComponent extends AdminGenericDialog<SDGoal> {
       label: 'btn_edit',
       icon: ActionIconsEnum.EDIT,
       onClick: (item: SDGoal) => this.editSubSdGoal$.next(item),
-      show: (item: SDGoal) => !this.readonly
+      show: (_item: SDGoal) => !this.readonly
     },
     // delete
     {
@@ -89,7 +89,7 @@ export class SdGoalPopupComponent extends AdminGenericDialog<SDGoal> {
       icon: ActionIconsEnum.DELETE,
       label: 'btn_delete',
       onClick: (item: SDGoal) => this.delete(item),
-      show: (item: SDGoal) => !this.readonly
+      show: (_item: SDGoal) => !this.readonly
     }
   ];
 
@@ -216,11 +216,11 @@ export class SdGoalPopupComponent extends AdminGenericDialog<SDGoal> {
       });
   }
 
-  prepareModel(model: SDGoal, form: FormGroup): Observable<SDGoal> | SDGoal {
+  prepareModel(model: SDGoal, form: UntypedFormGroup): Observable<SDGoal> | SDGoal {
     return (new SDGoal()).clone({...model, ...form.value});
   }
 
-  beforeSave(model: SDGoal, form: FormGroup): Observable<boolean> | boolean {
+  beforeSave(model: SDGoal, form: UntypedFormGroup): Observable<boolean> | boolean {
     return form.valid;
   }
 

@@ -1,5 +1,5 @@
 import {Component, Inject} from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
 import {Bank} from '@app/models/bank';
@@ -22,14 +22,14 @@ import {CommonStatusEnum} from '@app/enums/common-status.enum';
 })
 export class BankPopupComponent extends AdminGenericDialog<Bank> {
   model!: Bank;
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   fm!: FormManager;
   operation!: OperationTypes;
   commonStatusEnum = CommonStatusEnum;
   statuses: Lookup[] = this.lookupService.listByCategory.CommonStatus;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<Bank>,
-              public fb: FormBuilder,
+              public fb: UntypedFormBuilder,
               public dialogRef: DialogRef,
               public lang: LangService,
               private lookupService: LookupService,
@@ -53,11 +53,11 @@ export class BankPopupComponent extends AdminGenericDialog<Bank> {
     this.fm = new FormManager(this.form, this.lang);
   }
 
-  prepareModel(model: Bank, form: FormGroup): Bank | Observable<Bank> {
+  prepareModel(model: Bank, form: UntypedFormGroup): Bank | Observable<Bank> {
     return (new Bank()).clone({...model, ...form.value});
   }
 
-  beforeSave(model: Bank, form: FormGroup): boolean | Observable<boolean> {
+  beforeSave(model: Bank, form: UntypedFormGroup): boolean | Observable<boolean> {
     return form.valid;
   }
 

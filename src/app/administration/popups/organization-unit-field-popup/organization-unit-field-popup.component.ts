@@ -1,5 +1,5 @@
-import { Component, Inject, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup } from "@angular/forms";
+import { Component, Inject } from "@angular/core";
+import { UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
 import { OperationTypes } from "@app/enums/operation-types.enum";
 import { AdminGenericDialog } from "@app/generics/admin-generic-dialog";
 import { IDialogData } from "@app/interfaces/i-dialog-data";
@@ -21,12 +21,12 @@ import { Observable } from "rxjs";
 export class OrganizationUnitFieldPopupComponent extends AdminGenericDialog<OrganizationUnitField> {
   statuses: Lookup[] = this.lookupService.listByCategory.CommonStatus;
   model: OrganizationUnitField;
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   operation: OperationTypes;
   saveVisible = true;
   constructor(
     public dialogRef: DialogRef,
-    public fb: FormBuilder,
+    public fb: UntypedFormBuilder,
     public lang: LangService,
     @Inject(DIALOG_DATA_TOKEN) data: IDialogData<OrganizationUnitField>,
     private dialogService: DialogService,
@@ -69,13 +69,13 @@ export class OrganizationUnitFieldPopupComponent extends AdminGenericDialog<Orga
   }
   beforeSave(
     model: OrganizationUnitField,
-    form: FormGroup
+    form: UntypedFormGroup
   ): boolean | Observable<boolean> {
     return form.valid;
   }
   prepareModel(
     model: OrganizationUnitField,
-    form: FormGroup
+    form: UntypedFormGroup
   ): OrganizationUnitField | Observable<OrganizationUnitField> {
     return new OrganizationUnitField().clone({ ...model, ...form.value });
   }

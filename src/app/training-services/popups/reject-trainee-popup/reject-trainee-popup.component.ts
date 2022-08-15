@@ -1,7 +1,7 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {LangService} from '@app/services/lang.service';
 import {CustomValidators} from '@app/validators/custom-validators';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {IDialogData} from '@app/interfaces/i-dialog-data';
 import {catchError, switchMap, takeUntil} from 'rxjs/operators';
@@ -18,7 +18,7 @@ import {UserClickOn} from '@app/enums/user-click-on.enum';
 })
 export class RejectTraineePopupComponent implements OnInit, OnDestroy {
   comment?: string;
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   rejectCandidate$ = new Subject<any>();
   destroy$: Subject<void> = new Subject();
   model!: Trainee;
@@ -27,7 +27,7 @@ export class RejectTraineePopupComponent implements OnInit, OnDestroy {
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<Trainee>,
               public lang: LangService,
-              public fb: FormBuilder,
+              public fb: UntypedFormBuilder,
               public dialogRef: DialogRef,
               public toast: ToastService) {
     this.model = data.model;

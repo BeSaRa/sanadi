@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {AbstractControl, FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {EServicesGenericComponent} from "@app/generics/e-services-generic-component";
 import {InitialExternalOfficeApproval} from "@app/models/initial-external-office-approval";
 import {Observable, of, Subject} from 'rxjs';
@@ -38,7 +38,7 @@ import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 })
 export class InitialExternalOfficeApprovalComponent extends EServicesGenericComponent<InitialExternalOfficeApproval, InitialExternalOfficeApprovalService> {
 
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   requestTypes: Lookup[] = this.lookupService.listByCategory.ServiceRequestType.slice().sort((a, b) => a.lookupKey - b.lookupKey);
   countries: Country[] = []
   licenseSearch$: Subject<string> = new Subject<string>();
@@ -69,7 +69,7 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
     }
   };
 
-  constructor(public fb: FormBuilder,
+  constructor(public fb: UntypedFormBuilder,
               public lang: LangService,
               private lookupService: LookupService,
               private countryService: CountryService,
@@ -209,8 +209,8 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
     return this.form.get('licenseNumber')!
   }
 
-  get oldLicenseFullSerialField(): FormControl {
-    return (this.form.get('oldLicenseFullSerial')) as FormControl;
+  get oldLicenseFullSerialField(): UntypedFormControl {
+    return (this.form.get('oldLicenseFullSerial')) as UntypedFormControl;
   }
 
   private loadCountries(): void {

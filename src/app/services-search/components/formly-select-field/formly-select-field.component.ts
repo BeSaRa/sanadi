@@ -1,8 +1,8 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FieldType} from '@ngx-formly/core';
-import {LangService} from '../../../services/lang.service';
-import {FormControl} from '@angular/forms';
-import {CustomFormlyFieldConfig} from '../../../interfaces/custom-formly-field-config';
+import {LangService} from '@services/lang.service';
+import {UntypedFormControl} from '@angular/forms';
+import {CustomFormlyFieldConfig} from '@contracts/custom-formly-field-config';
 import {Observable, Subject} from 'rxjs';
 
 @Component({
@@ -18,8 +18,8 @@ export class FormlySelectFieldComponent extends FieldType<CustomFormlyFieldConfi
     return this.field.selectOptions?.bindLabel === 'basedOnLanguage' ? (this.lang.map.lang + 'Name') : this.field.selectOptions?.bindLabel!;
   };
 
-  get control(): FormControl {
-    return this.formControl as FormControl;
+  get control(): UntypedFormControl {
+    return this.formControl as UntypedFormControl;
   };
 
   constructor(public lang: LangService) {

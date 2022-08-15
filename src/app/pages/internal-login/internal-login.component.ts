@@ -1,7 +1,7 @@
 import {Component, HostListener, OnInit} from '@angular/core';
 import {LangService} from "@app/services/lang.service";
 import {Router} from "@angular/router";
-import {FormBuilder, FormGroup} from "@angular/forms";
+import {UntypedFormBuilder, UntypedFormGroup} from "@angular/forms";
 import {ECookieService} from "@app/services/e-cookie.service";
 import {ToastService} from "@app/services/toast.service";
 import {AuthService} from "@app/services/auth.service";
@@ -17,7 +17,7 @@ import {catchError, exhaustMap, mapTo, takeUntil, tap} from "rxjs/operators";
 export class InternalLoginComponent implements OnInit {
   icon = 'mdi-eye';
   passwordFieldType = 'password';
-  loginFormInternal: FormGroup = {} as FormGroup;
+  loginFormInternal: UntypedFormGroup = {} as UntypedFormGroup;
   private destroy$: Subject<any> = new Subject<any>();
   private login$: Subject<any> = new Subject<any>();
 
@@ -26,7 +26,7 @@ export class InternalLoginComponent implements OnInit {
 
   constructor(public lang: LangService,
               private router: Router,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               private eCookieService: ECookieService,
               private toastService: ToastService,
               private authService: AuthService) {

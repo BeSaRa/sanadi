@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, Inject, OnInit, ViewChild} from "@angular/core";
-import {FormControl} from "@angular/forms";
+import {UntypedFormControl} from "@angular/forms";
 import {WFResponseType} from "@app/enums/wfresponse-type.enum";
 import {CommonUtils} from "@app/helpers/common-utils";
 import {HasLicenseApproval} from "@app/interfaces/has-license-approval";
@@ -33,7 +33,7 @@ export class FundraisingApproveTaskPopupComponent implements OnInit, AfterViewIn
   response: WFResponseType = WFResponseType.APPROVE;
 
   model: Fundraising;
-  comment: FormControl = new FormControl('', [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]);
+  comment: UntypedFormControl = new UntypedFormControl('', [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]);
 
   @ViewChild(ApprovalFormComponent) approvalForm!: ApprovalFormComponent;
 

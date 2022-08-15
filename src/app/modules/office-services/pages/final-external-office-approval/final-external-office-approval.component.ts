@@ -1,6 +1,6 @@
 import {AfterViewInit, ChangeDetectorRef, Component, ViewChild} from '@angular/core';
 import {Observable, of, Subject} from 'rxjs';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {IKeyValue} from '@app/interfaces/i-key-value';
 import {LangService} from '@app/services/lang.service';
 import {LookupService} from '@app/services/lookup.service';
@@ -45,7 +45,7 @@ import { ExecutiveManagementComponent } from '@app/modules/e-services-main/share
   styleUrls: ['./final-external-office-approval.component.scss']
 })
 export class FinalExternalOfficeApprovalComponent extends EServicesGenericComponent<FinalExternalOfficeApproval, FinalExternalOfficeApprovalService> implements AfterViewInit {
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   fileIconsEnum = FileIconsEnum;
 
   @ViewChild('bankAccountsTab') bankAccountComponentRef!: BankAccountComponent;
@@ -131,7 +131,7 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
               private configurationService: ConfigurationService,
               private toastService: ToastService,
               private countryService: CountryService,
-              public fb: FormBuilder) {
+              public fb: UntypedFormBuilder) {
     super();
   }
 
@@ -159,7 +159,7 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
 
     this.handleReadonly();
     if (this.fromDialog) {
-      let licenseId: string, licenseField: FormControl;
+      let licenseId: string, licenseField: UntypedFormControl;
       if (this.isNewRequestType()) {
         licenseId = this.model?.initialLicenseId!
         licenseField = this.initialLicenseFullSerialField;
@@ -575,44 +575,44 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
     return this.service.licenseSearch({licenseNumber: value});
   }
 
-  get basicTab(): FormGroup {
-    return (this.form.get('basicInfo')) as FormGroup;
+  get basicTab(): UntypedFormGroup {
+    return (this.form.get('basicInfo')) as UntypedFormGroup;
   }
 
-  get requestTypeField(): FormControl {
-    return (this.form.get('basicInfo')?.get('requestType')) as FormControl;
+  get requestTypeField(): UntypedFormControl {
+    return (this.form.get('basicInfo')?.get('requestType')) as UntypedFormControl;
   }
 
-  get initialLicenseNumberField(): FormControl {
-    return (this.form.get('basicInfo')?.get('initialLicenseNumber')) as FormControl;
+  get initialLicenseNumberField(): UntypedFormControl {
+    return (this.form.get('basicInfo')?.get('initialLicenseNumber')) as UntypedFormControl;
   }
 
-  get initialLicenseFullSerialField(): FormControl {
-    return (this.form.get('basicInfo')?.get('initialLicenseFullSerial')) as FormControl;
+  get initialLicenseFullSerialField(): UntypedFormControl {
+    return (this.form.get('basicInfo')?.get('initialLicenseFullSerial')) as UntypedFormControl;
   }
 
-  get oldLicenseFullSerialField(): FormControl {
-    return (this.form.get('basicInfo')?.get('oldLicenseFullSerial')) as FormControl;
+  get oldLicenseFullSerialField(): UntypedFormControl {
+    return (this.form.get('basicInfo')?.get('oldLicenseFullSerial')) as UntypedFormControl;
   }
 
-  get licenseNumberField(): FormControl {
-    return (this.form.get('basicInfo')?.get('licenseNumber')) as FormControl;
+  get licenseNumberField(): UntypedFormControl {
+    return (this.form.get('basicInfo')?.get('licenseNumber')) as UntypedFormControl;
   }
 
-  get countryField(): FormControl {
-    return (this.form.get('basicInfo')?.get('country')) as FormControl;
+  get countryField(): UntypedFormControl {
+    return (this.form.get('basicInfo')?.get('country')) as UntypedFormControl;
   }
 
-  get regionField(): FormControl {
-    return (this.form.get('basicInfo')?.get('region')) as FormControl;
+  get regionField(): UntypedFormControl {
+    return (this.form.get('basicInfo')?.get('region')) as UntypedFormControl;
   }
 
-  get establishmentDateField(): FormControl {
-    return (this.form.get('basicInfo')?.get('establishmentDate')) as FormControl;
+  get establishmentDateField(): UntypedFormControl {
+    return (this.form.get('basicInfo')?.get('establishmentDate')) as UntypedFormControl;
   }
 
-  get specialExplanationField(): FormControl {
-    return (this.form.get('basicInfo')?.get('description')) as FormControl;
+  get specialExplanationField(): UntypedFormControl {
+    return (this.form.get('basicInfo')?.get('description')) as UntypedFormControl;
   }
 
   isAttachmentReadonly(): boolean {

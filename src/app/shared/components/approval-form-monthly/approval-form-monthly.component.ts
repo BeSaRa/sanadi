@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angula
 import {CaseModel} from "@app/models/case-model";
 import {EServiceGenericService} from "@app/generics/e-service-generic-service";
 import {BehaviorSubject, Observable, Subject} from "rxjs";
-import {AbstractControl, FormBuilder, FormGroup} from "@angular/forms";
+import {AbstractControl, UntypedFormBuilder, UntypedFormGroup} from "@angular/forms";
 import {CustomTerm} from "@app/models/custom-term";
 import {IKeyValue} from "@app/interfaces/i-key-value";
 import {DateUtils} from "@app/helpers/date-utils";
@@ -29,7 +29,7 @@ export class ApprovalFormMonthlyComponent implements OnInit, OnDestroy {
   @Input()
   service!: EServiceGenericService<any>
   destroy$: Subject<any> = new Subject();
-  form!: FormGroup
+  form!: UntypedFormGroup
 
   customTerms: CustomTerm[] = [];
 
@@ -59,7 +59,7 @@ export class ApprovalFormMonthlyComponent implements OnInit, OnDestroy {
     followUpDate: DateUtils.getDatepickerOptions({disablePeriod: 'past'})
   };
 
-  constructor(private fb: FormBuilder,
+  constructor(private fb: UntypedFormBuilder,
               private customTermService: CustomTermService,
               private dialog: DialogService,
               private serviceDataService: ServiceDataService,

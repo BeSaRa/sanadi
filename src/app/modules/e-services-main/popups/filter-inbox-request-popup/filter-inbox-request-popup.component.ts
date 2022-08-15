@@ -1,6 +1,6 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {LangService} from '@app/services/lang.service';
@@ -20,7 +20,7 @@ import {IInboxCriteria} from '@app/interfaces/i-inbox-criteria';
 export class FilterInboxRequestPopupComponent implements OnInit {
   userClick: typeof UserClickOn = UserClickOn;
   criteria: Partial<IInboxCriteria>;
-  form: FormGroup = {} as FormGroup;
+  form: UntypedFormGroup = {} as UntypedFormGroup;
 
   datepickerControlsMap: DatepickerControlsMap = {};
   datepickerOptionsMap: DatepickerOptionsMap = {
@@ -29,7 +29,7 @@ export class FilterInboxRequestPopupComponent implements OnInit {
   };
 
   constructor(@Inject(DIALOG_DATA_TOKEN) public data: any,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               private dialogRef: DialogRef,
               public langService: LangService,
               private dialogService: DialogService) {
@@ -65,12 +65,12 @@ export class FilterInboxRequestPopupComponent implements OnInit {
     });
   }
 
-  get createdDateFromControl(): FormControl {
-    return this.form.get('createdDateFrom') as FormControl;
+  get createdDateFromControl(): UntypedFormControl {
+    return this.form.get('createdDateFrom') as UntypedFormControl;
   }
 
-  get createdDateToControl(): FormControl {
-    return this.form.get('createdDateTo') as FormControl;
+  get createdDateToControl(): UntypedFormControl {
+    return this.form.get('createdDateTo') as UntypedFormControl;
   }
 
   get hasFilterCriteria(): boolean {

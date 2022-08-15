@@ -3,7 +3,7 @@ import {SubventionAid} from '@app/models/subvention-aid';
 import {SortEvent} from '@contracts/sort-event';
 import {CommonUtils} from '@helpers/common-utils';
 import {DateUtils} from '@helpers/date-utils';
-import {FormControl} from '@angular/forms';
+import {UntypedFormControl} from '@angular/forms';
 import {LangService} from '@services/lang.service';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {BehaviorSubject, Subject} from 'rxjs';
@@ -48,7 +48,7 @@ export class AidListComponent implements OnInit {
   }
 
   headerColumn: string[] = ['extra-header'];
-  filterControl: FormControl = new FormControl('');
+  filterControl: UntypedFormControl = new UntypedFormControl('');
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
 
   ngOnInit(): void {

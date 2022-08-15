@@ -1,10 +1,10 @@
 import {Component, EventEmitter, HostBinding, Input, OnInit, Output} from '@angular/core';
-import {LangService} from '../../../services/lang.service';
-import {FormControl} from '@angular/forms';
-import {isEmptyObject, objectHasValue} from '../../../helpers/utils';
-import {FilterEventTypes} from '../../../types/types';
-import {DialogService} from '../../../services/dialog.service';
-import {UserClickOn} from '../../../enums/user-click-on.enum';
+import {LangService} from '@services/lang.service';
+import {UntypedFormControl} from '@angular/forms';
+import {isEmptyObject, objectHasValue} from '@helpers/utils';
+import {FilterEventTypes} from '@app/types/types';
+import {DialogService} from '@services/dialog.service';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
 
 @Component({
   selector: 'app-grid-search',
@@ -20,7 +20,7 @@ export class GridSearchComponent implements OnInit {
   @Input() filterButton: boolean = false;
   @Input() filterCriteria: any = {};
 
-  searchText = new FormControl('');
+  searchText = new UntypedFormControl('');
 
   constructor(public langService: LangService,
               private dialogService: DialogService) {
@@ -33,11 +33,11 @@ export class GridSearchComponent implements OnInit {
     return !isEmptyObject(this.filterCriteria) && objectHasValue(this.filterCriteria);
   }
 
-  search($event: KeyboardEvent): void {
+  search(_$event: KeyboardEvent): void {
     this.searchTextEvent.emit(this.searchText.value);
   }
 
-  clearSearch($event: MouseEvent): void {
+  clearSearch(_$event: MouseEvent): void {
     this.searchText.setValue('');
     this.searchTextEvent.emit(this.searchText.value);
   }

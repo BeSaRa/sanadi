@@ -3,7 +3,7 @@ import { LangService } from "@services/lang.service";
 import { DIALOG_DATA_TOKEN } from "@app/shared/tokens/tokens";
 import { FileIconsEnum } from "@app/enums/file-extension-mime-types-icons.enum";
 import { FileNetDocument } from "@app/models/file-net-document";
-import { FormControl } from "@angular/forms";
+import { UntypedFormControl } from "@angular/forms";
 import { CustomAttachmentDataContract } from "@contracts/custom-attachment-data-contract";
 import { AttachmentsComponent } from "@app/shared/components/attachments/attachments.component";
 import { of, Subject } from "rxjs";
@@ -25,7 +25,7 @@ export class CustomAttachmentPopupComponent implements OnInit, OnDestroy {
   disabled: boolean = false;
   fileIconsEnum: typeof FileIconsEnum = FileIconsEnum;
   attachments: FileNetDocument[] = [];
-  filter: FormControl = new FormControl();
+  filter: UntypedFormControl = new UntypedFormControl();
   component!: AttachmentsComponent
   loadStatus$: Subject<Omit<CustomAttachmentDataContract, 'loadStatus$'>>
   destroy$: Subject<void> = new Subject<void>()

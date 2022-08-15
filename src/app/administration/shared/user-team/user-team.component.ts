@@ -1,6 +1,6 @@
 import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {LangService} from "@app/services/lang.service";
-import {FormControl} from "@angular/forms";
+import {UntypedFormControl} from "@angular/forms";
 import {Team} from "@app/models/team";
 import {UserTeam} from "@app/models/user-team";
 import {AdminResult} from "@app/models/admin-result";
@@ -29,8 +29,8 @@ import {CommonStatusEnum} from '@app/enums/common-status.enum';
 export class UserTeamComponent implements OnInit, OnDestroy {
   selectedTeamsIds: number[] = [];
   displayedColumns: string[] = ['checkbox', 'arName', 'enName', 'status', 'actions'];
-  filterControl: FormControl = new FormControl();
-  selectedTeamControl: FormControl = new FormControl();
+  filterControl: UntypedFormControl = new UntypedFormControl();
+  selectedTeamControl: UntypedFormControl = new UntypedFormControl();
   teams: Team[] = [];
   userTeams: UserTeam[] = [];
   commonStatusEnum = CommonStatusEnum;

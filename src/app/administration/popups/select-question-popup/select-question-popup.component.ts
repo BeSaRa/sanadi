@@ -3,7 +3,7 @@ import {LangService} from "@app/services/lang.service";
 import {SurveyQuestion} from "@app/models/survey-question";
 import {DIALOG_DATA_TOKEN} from "@app/shared/tokens/tokens";
 import {DialogRef} from "@app/shared/models/dialog-ref";
-import {FormControl} from "@angular/forms";
+import {UntypedFormControl} from "@angular/forms";
 import {CustomValidators} from "@app/validators/custom-validators";
 
 @Component({
@@ -14,7 +14,7 @@ import {CustomValidators} from "@app/validators/custom-validators";
 export class SelectQuestionPopupComponent {
   questions: SurveyQuestion[] = [];
   selected: number[] = [];
-  control: FormControl = new FormControl(null, CustomValidators.required);
+  control: UntypedFormControl = new UntypedFormControl(null, CustomValidators.required);
 
   constructor(public lang: LangService,
               private dialogRef: DialogRef,

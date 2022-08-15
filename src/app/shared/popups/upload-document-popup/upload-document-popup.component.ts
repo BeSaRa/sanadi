@@ -3,7 +3,7 @@ import {LangService} from '@app/services/lang.service';
 import {DIALOG_DATA_TOKEN} from '../../tokens/tokens';
 import {FileNetDocument} from '@app/models/file-net-document';
 import {DocumentService} from '@app/services/document.service';
-import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
+import {UntypedFormArray, UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {DialogService} from '@app/services/dialog.service';
 import {ToastService} from '@app/services/toast.service';
@@ -25,7 +25,7 @@ import {IDefaultResponse} from '@app/interfaces/idefault-response';
 export class UploadDocumentPopupComponent implements OnInit {
   caseId: string;
   documents: FileNetDocument[] = [];
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   service: DocumentService;
   attachmentTypes: AdminResult[] = [];
   customValidators = CustomValidators;
@@ -37,7 +37,7 @@ export class UploadDocumentPopupComponent implements OnInit {
               private configurationService: ConfigurationService,
               private employeeService: EmployeeService,
               private toast: ToastService,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               // we will remove httpClient after finish the admin part of the attachments types
               private http: HttpClient,
               private urlService: UrlService) {
@@ -51,7 +51,7 @@ export class UploadDocumentPopupComponent implements OnInit {
     this.loadAttachmentType();
   }
 
-  private buildFormRow(): FormGroup {
+  private buildFormRow(): UntypedFormGroup {
     return this.fb.group({
       description: [null],
       documentTitle: [null, [CustomValidators.required, CustomValidators.maxLength(100)]],
@@ -70,8 +70,8 @@ export class UploadDocumentPopupComponent implements OnInit {
     });
   }
 
-  get formArray(): FormArray {
-    return this.form.get('documents') as FormArray;
+  get formArray(): UntypedFormArray {
+    return this.form.get('documents') as UntypedFormArray;
   }
 
   addFormRow(): void {

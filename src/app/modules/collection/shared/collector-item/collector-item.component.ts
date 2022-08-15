@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {LangService} from '@app/services/lang.service';
 import {DialogService} from '@app/services/dialog.service';
 import {exhaustMap, filter, map, skip, switchMap, takeUntil, tap} from 'rxjs/operators';
@@ -50,8 +50,8 @@ export class CollectorItemComponent implements OnInit, AfterViewInit, OnDestroy 
   save$: Subject<null> = new Subject<null>();
   editIndex: number | undefined = undefined;
   item?: CollectorItem;
-  form!: FormGroup;
-  oldLicenseFullSerialControl: FormControl = new FormControl();
+  form!: UntypedFormGroup;
+  oldLicenseFullSerialControl: UntypedFormControl = new UntypedFormControl();
   collectorTypes: Lookup[] = this.lookupService.listByCategory.CollectorType;
   genders: Lookup[] = this.lookupService.listByCategory.Gender;
   nationalities: Lookup[] = this.lookupService.listByCategory.Nationality;
@@ -72,7 +72,7 @@ export class CollectorItemComponent implements OnInit, AfterViewInit, OnDestroy 
       label: 'view',
       icon: ActionIconsEnum.VIEW,
       onClick: (item: CollectorItem, index: number) => this.view$.next({item: item, index: index}),
-      show: (item: CollectorItem) => !this.approvalMode && this.readOnly
+      show: () => !this.approvalMode && this.readOnly
     },
     // edit
     {
@@ -80,8 +80,8 @@ export class CollectorItemComponent implements OnInit, AfterViewInit, OnDestroy 
       label: 'btn_edit',
       icon: ActionIconsEnum.EDIT,
       onClick: (item: CollectorItem, index: number) => this.edit$.next({item: item, index: index}),
-      show: (item: CollectorItem) => !this.approvalMode,
-      disabled: (item: CollectorItem) => this.readOnly
+      show: () => !this.approvalMode,
+      disabled: () => this.readOnly
     },
     // delete
     {
@@ -89,8 +89,8 @@ export class CollectorItemComponent implements OnInit, AfterViewInit, OnDestroy 
       label: 'btn_delete',
       icon: ActionIconsEnum.DELETE_TRASH,
       onClick: (item: CollectorItem, index: number) => this.remove$.next({item: item, index: index}),
-      show: (item: CollectorItem) => !this.approvalMode,
-      disabled: (item: CollectorItem) => this.readOnly
+      show: () => !this.approvalMode,
+      disabled: () => this.readOnly
     },
     // edit approval info (if approval mode)
     {
@@ -98,8 +98,8 @@ export class CollectorItemComponent implements OnInit, AfterViewInit, OnDestroy 
       label: 'edit_approval_info',
       icon: ActionIconsEnum.EDIT,
       onClick: (item: CollectorItem, index: number) => this.approval.emit({item: item, index: index}),
-      show: (item: CollectorItem) => this.approvalMode,
-      disabled: (item: CollectorItem) => this.readOnly
+      show: () => this.approvalMode,
+      disabled: () => this.readOnly
     },
   ];
 
@@ -152,7 +152,7 @@ export class CollectorItemComponent implements OnInit, AfterViewInit, OnDestroy 
 
   maxElementsCount?: number;
 
-  constructor(private fb: FormBuilder,
+  constructor(private fb: UntypedFormBuilder,
               public lang: LangService,
               private dialog: DialogService,
               private lookupService: LookupService,
@@ -265,14 +265,6 @@ export class CollectorItemComponent implements OnInit, AfterViewInit, OnDestroy 
       });
   }
 
-  private listenToDisableSearchField() {
-    this._disableSearch
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((value) => {
-        value ? this.oldLicenseFullSerialField.disable() : this.oldLicenseFullSerialField.enable();
-      });
-  }
-
   private listenToSave(): void {
     this.save$
       .pipe(takeUntil(this.destroy$))
@@ -339,8 +331,8 @@ export class CollectorItemComponent implements OnInit, AfterViewInit, OnDestroy 
     return this.form?.get('licenseEndDate');
   }
 
-  get oldLicenseFullSerialField(): FormControl {
-    return (this.form.get('oldLicenseFullSerial')) as FormControl;
+  get oldLicenseFullSerialField(): UntypedFormControl {
+    return (this.form.get('oldLicenseFullSerial')) as UntypedFormControl;
   }
 
   ngOnDestroy(): void {

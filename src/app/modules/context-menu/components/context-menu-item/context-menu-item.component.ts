@@ -4,22 +4,22 @@ import {
   Inject,
   Input,
   OnDestroy,
-  OnInit, Renderer2,
+  OnInit,
+  Renderer2,
   TemplateRef,
   ViewChild,
   ViewContainerRef,
   ViewEncapsulation
 } from '@angular/core';
-import {Overlay} from '@angular/cdk/overlay';
-import {OverlayRef} from '@angular/cdk/overlay/overlay-ref';
-import {BehaviorSubject, fromEvent, Subject} from 'rxjs';
-import {IMenuItem} from '../../interfaces/i-menu-item';
-import {filter, map, takeUntil} from 'rxjs/operators';
-import {TemplatePortal} from '@angular/cdk/portal';
-import {LangService} from '@app/services/lang.service';
-import {Language} from '@app/models/language';
-import {DOCUMENT} from '@angular/common';
-import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import { Overlay, OverlayRef } from '@angular/cdk/overlay';
+import { BehaviorSubject, fromEvent, Subject } from 'rxjs';
+import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { filter, map, takeUntil } from 'rxjs/operators';
+import { TemplatePortal } from '@angular/cdk/portal';
+import { LangService } from '@app/services/lang.service';
+import { Language } from '@app/models/language';
+import { DOCUMENT } from '@angular/common';
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
 
 @Component({
   selector: 'context-menu-item',
@@ -103,7 +103,7 @@ export class ContextMenuItemComponent implements OnInit, OnDestroy {
 
     this.debugInfo(() => {
       console.log('Open Event fired');
-      console.log({$event, item, itemIndex});
+      console.log({ $event, item, itemIndex });
     });
 
     if (typeof this.prevent !== 'undefined') {
@@ -119,7 +119,7 @@ export class ContextMenuItemComponent implements OnInit, OnDestroy {
         return;
       }
     }
-    this.open$.next({$event: $event, item: item, itemIndex: itemIndex});
+    this.open$.next({ $event: $event, item: item, itemIndex: itemIndex });
   }
 
   private listenToItemChange() {
@@ -140,7 +140,7 @@ export class ContextMenuItemComponent implements OnInit, OnDestroy {
       })))
       .pipe(map((value) => {
         let actionsList: IMenuItem<any>[] = [], canShow = false;
-        value.actions.map((action, index, actions) => {
+        value.actions.map((action, index, _actions) => {
           canShow = !(action.data && action.data.hideFromContext);
           if (canShow) {
             if (this.isAction(action)) {
@@ -155,8 +155,8 @@ export class ContextMenuItemComponent implements OnInit, OnDestroy {
         });
 
         /*value.actions = value.actions.filter(action => {
-          return !(action.data && action.data.hideFromContext);
-        });*/
+         return !(action.data && action.data.hideFromContext);
+         });*/
         value.actions = actionsList;
         return value;
       }))
@@ -238,7 +238,7 @@ export class ContextMenuItemComponent implements OnInit, OnDestroy {
 
   onClick(event: MouseEvent, action: IMenuItem<any>) {
     event.preventDefault();
-    if (this.isActionDisabled(action)){
+    if (this.isActionDisabled(action)) {
       return;
     }
     action.onClick && action.onClick(this.item, this.itemIndex);

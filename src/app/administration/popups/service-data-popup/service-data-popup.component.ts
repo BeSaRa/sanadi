@@ -1,6 +1,6 @@
 import {Component, Inject} from '@angular/core';
 import {BehaviorSubject, iif, Observable, of, Subject} from 'rxjs';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {ServiceData} from '@app/models/service-data';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
@@ -36,7 +36,7 @@ export class ServiceDataPopupComponent extends AdminGenericDialog<ServiceData> {
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<ServiceData>,
               private lookupService: LookupService,
               public lang: LangService,
-              public fb: FormBuilder,
+              public fb: UntypedFormBuilder,
               private toast: ToastService,
               public dialogRef: DialogRef,
               private attachmentTypeService: AttachmentTypeService,
@@ -51,7 +51,7 @@ export class ServiceDataPopupComponent extends AdminGenericDialog<ServiceData> {
     this.list = data.list;
   }
 
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   model!: ServiceData;
   operation: OperationTypes;
   reloadSteps$: BehaviorSubject<any> = new BehaviorSubject<any>('init');
@@ -223,11 +223,11 @@ export class ServiceDataPopupComponent extends AdminGenericDialog<ServiceData> {
     }
   }
 
-  beforeSave(model: ServiceData, form: FormGroup): Observable<boolean> | boolean {
+  beforeSave(model: ServiceData, form: UntypedFormGroup): Observable<boolean> | boolean {
     return form.valid;
   }
 
-  prepareModel(model: ServiceData, form: FormGroup): Observable<ServiceData> | ServiceData {
+  prepareModel(model: ServiceData, form: UntypedFormGroup): Observable<ServiceData> | ServiceData {
     return new ServiceData().clone({...this.model, ...this.form?.value.basic, ...this.form?.value.customSettings});
     // return extender<ServiceData>(ServiceData, {...this.model, ...this.form?.value.basic, ...this.form?.value.customSettings});
   }
@@ -267,16 +267,16 @@ export class ServiceDataPopupComponent extends AdminGenericDialog<ServiceData> {
     }
   }
 
-  get basicInfoGroup(): FormGroup {
-    return this.form.get('basic') as FormGroup;
+  get basicInfoGroup(): UntypedFormGroup {
+    return this.form.get('basic') as UntypedFormGroup;
   }
 
-  get customSettingsGroup(): FormGroup {
-    return this.form.get('customSettings') as FormGroup;
+  get customSettingsGroup(): UntypedFormGroup {
+    return this.form.get('customSettings') as UntypedFormGroup;
   }
 
-  get followUpStatus(): FormControl {
-    return this.basicInfoGroup.get('followUp') as FormControl;
+  get followUpStatus(): UntypedFormControl {
+    return this.basicInfoGroup.get('followUp') as UntypedFormControl;
   }
 
   get maxTargetAmount() {

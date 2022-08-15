@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef} 
 import {LangService} from "@app/services/lang.service";
 import {BehaviorSubject, Subject} from "rxjs";
 import {ILanguageKeys} from "@app/interfaces/i-language-keys";
-import {FormControl} from "@angular/forms";
+import {UntypedFormControl} from "@angular/forms";
 import {FilterEventTypes} from "@app/types/types";
 import {objectHasValue} from "@app/helpers/utils";
 import {UserClickOn} from "@app/enums/user-click-on.enum";
@@ -25,7 +25,7 @@ export class TableHeaderComponent implements OnInit, OnDestroy {
   reload$!: BehaviorSubject<any>;
   @Input()
   tableTitle!: keyof ILanguageKeys;
-  filterControl: FormControl = new FormControl();
+  filterControl: UntypedFormControl = new UntypedFormControl();
   @Output()
   filterClicked: EventEmitter<FilterEventTypes> = new EventEmitter<FilterEventTypes>();
   @Input()

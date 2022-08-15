@@ -1,22 +1,21 @@
-import {Component} from '@angular/core';
-import {AbstractControl, FormBuilder, FormGroup} from '@angular/forms';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {SaveTypes} from '@app/enums/save-types';
-import {EServicesGenericComponent} from "@app/generics/e-services-generic-component";
-import {CollectionApproval} from "@app/models/collection-approval";
-import {CollectionApprovalService} from "@app/services/collection-approval.service";
-import {LangService} from '@app/services/lang.service';
-import {Observable, of} from 'rxjs';
-import {Lookup} from "@app/models/lookup";
-import {LookupService} from "@app/services/lookup.service";
-import {CollectionRequestType} from "@app/enums/service-request-types";
-import {DialogService} from "@app/services/dialog.service";
-import {filter, map, takeUntil, tap} from "rxjs/operators";
-import {ToastService} from "@app/services/toast.service";
-import {OpenFrom} from '@app/enums/open-from.enum';
-import {EmployeeService} from '@app/services/employee.service';
-import {CommonUtils} from '@app/helpers/common-utils';
-import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import { Component } from '@angular/core';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { SaveTypes } from '@app/enums/save-types';
+import { EServicesGenericComponent } from "@app/generics/e-services-generic-component";
+import { CollectionApproval } from "@app/models/collection-approval";
+import { CollectionApprovalService } from "@app/services/collection-approval.service";
+import { LangService } from '@app/services/lang.service';
+import { Observable, of } from 'rxjs';
+import { Lookup } from "@app/models/lookup";
+import { LookupService } from "@app/services/lookup.service";
+import { CollectionRequestType } from "@app/enums/service-request-types";
+import { DialogService } from "@app/services/dialog.service";
+import { filter, map, takeUntil, tap } from "rxjs/operators";
+import { ToastService } from "@app/services/toast.service";
+import { OpenFrom } from '@app/enums/open-from.enum';
+import { EmployeeService } from '@app/services/employee.service';
+import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -31,7 +30,7 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
               private toast: ToastService,
               public service: CollectionApprovalService,
               public employeeService: EmployeeService,
-              public fb: FormBuilder) {
+              public fb: UntypedFormBuilder) {
     super();
   }
 
@@ -40,20 +39,20 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
 
   requestClassifications: Lookup[] = this.lookupService.listByCategory.CollectionClassification;
   licenseDurationTypes: Lookup[] = this.lookupService.listByCategory.LicenseDurationType;
-  form!: FormGroup;
+  form!: UntypedFormGroup;
 
   disableSearchField: boolean = true;
 
-  get basicInfo(): FormGroup {
-    return this.form.get('basicInfo')! as FormGroup;
+  get basicInfo(): UntypedFormGroup {
+    return this.form.get('basicInfo')! as UntypedFormGroup;
   }
 
   get requestType(): AbstractControl {
     return this.form.get('basicInfo.requestType')!;
   }
 
-  get specialExplanation(): FormGroup {
-    return this.form.get('explanation')! as FormGroup;
+  get specialExplanation(): UntypedFormGroup {
+    return this.form.get('explanation')! as UntypedFormGroup;
   }
 
   get licenseDurationType(): AbstractControl {

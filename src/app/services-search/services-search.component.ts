@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { FormlyFieldConfig } from '@ngx-formly/core/lib/components/formly.field.config';
 import { LangService } from '@services/lang.service';
 import { InboxService } from '@services/inbox.service';
@@ -37,10 +37,10 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
 
   searchColumns: string[] = [];
   headerColumn: string[] = ['extra-header'];
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   fields: FormlyFieldConfig[] = [];
   serviceNumbers: number[] = Array.from(this.inboxService.services.keys()).filter(caseType => this.employeeService.userCanManage(caseType));
-  serviceControl: FormControl = new FormControl(this.serviceNumbers[0]);
+  serviceControl: UntypedFormControl = new UntypedFormControl(this.serviceNumbers[0]);
   results: CaseModel<any, any>[] = [];
   actions: IMenuItem<CaseModel<any, any>>[] = [];
   search$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
@@ -75,7 +75,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.form = new FormGroup({});
+    this.form = new UntypedFormGroup({});
     this.reSelectService();
     this.listenToServiceChange(this.serviceControl.value);
     this.listenToSearch();

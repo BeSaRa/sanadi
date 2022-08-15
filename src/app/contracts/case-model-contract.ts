@@ -11,7 +11,7 @@ import { IMenuItem } from "@app/modules/context-menu/interfaces/i-menu-item";
 import { OpenFrom } from "@app/enums/open-from.enum";
 import { LicenseApprovalModel } from "@app/models/license-approval-model";
 import { IBulkResult } from "@contracts/ibulk-result";
-import { FormGroup } from "@angular/forms";
+import { UntypedFormGroup } from "@angular/forms";
 import { OrganizationOfficer } from "@app/models/organization-officer";
 
 export interface CaseModelContract<S, T> {
@@ -139,7 +139,7 @@ export interface CaseModelContract<S, T> {
 
   finalApprove(): DialogRef
 
-  organizationApprove(externalUserData: { form: FormGroup, organizationOfficers: OrganizationOfficer[] }): DialogRef
+  organizationApprove(externalUserData: { form: UntypedFormGroup, organizationOfficers: OrganizationOfficer[] }): DialogRef
 
   validateApprove(): DialogRef
 

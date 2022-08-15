@@ -2,7 +2,7 @@ import { BehaviorSubject, Observable, of, Subject } from "rxjs";
 import { IMenuItem } from "@app/modules/context-menu/interfaces/i-menu-item";
 import { catchError, exhaustMap, filter, map, switchMap, takeUntil } from "rxjs/operators";
 import { Directive, OnDestroy, OnInit } from "@angular/core";
-import { FormControl } from "@angular/forms";
+import { UntypedFormControl } from "@angular/forms";
 import {
   BackendWithDialogOperationsGenericService
 } from "@app/generics/backend-with-dialog-operations-generic-service";
@@ -25,7 +25,7 @@ export abstract class AdminGenericComponent<M extends { id: number }, S extends 
   // list fo models related to the entity
   models: M[] = [];
   // to filter grid models based on what the user type here
-  filterControl: FormControl = new FormControl('');
+  filterControl: UntypedFormControl = new UntypedFormControl('');
   // main service that will serve component needs.
   abstract service: S;
   // grid actions override it if you need to add context-menu on your grid

@@ -1,22 +1,21 @@
-import {Component} from '@angular/core';
-import {CollectorApprovalService} from '@app/services/collector-approval.service';
-import {CollectorApproval} from '@app/models/collector-approval';
-import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
-import {FormGroup, FormBuilder, AbstractControl} from '@angular/forms';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {SaveTypes} from '@app/enums/save-types';
-import {LangService} from '@app/services/lang.service';
-import {Observable, of} from 'rxjs';
-import {Lookup} from '@app/models/lookup';
-import {CollectionRequestType} from '@app/enums/service-request-types';
-import {LookupService} from '@app/services/lookup.service';
-import {filter, map, takeUntil, tap} from 'rxjs/operators';
-import {DialogService} from '@app/services/dialog.service';
-import {ToastService} from '@app/services/toast.service';
-import {OpenFrom} from '@app/enums/open-from.enum';
-import {EmployeeService} from '@app/services/employee.service';
-import {CommonUtils} from '@app/helpers/common-utils';
-import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import { Component } from '@angular/core';
+import { CollectorApprovalService } from '@app/services/collector-approval.service';
+import { CollectorApproval } from '@app/models/collector-approval';
+import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { SaveTypes } from '@app/enums/save-types';
+import { LangService } from '@app/services/lang.service';
+import { Observable, of } from 'rxjs';
+import { Lookup } from '@app/models/lookup';
+import { CollectionRequestType } from '@app/enums/service-request-types';
+import { LookupService } from '@app/services/lookup.service';
+import { filter, map, takeUntil, tap } from 'rxjs/operators';
+import { DialogService } from '@app/services/dialog.service';
+import { ToastService } from '@app/services/toast.service';
+import { OpenFrom } from '@app/enums/open-from.enum';
+import { EmployeeService } from '@app/services/employee.service';
+import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
 
 @Component({
   selector: 'collector-approval',
@@ -24,7 +23,7 @@ import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
   styleUrls: ['./collector-approval.component.scss']
 })
 export class CollectorApprovalComponent extends EServicesGenericComponent<CollectorApproval, CollectorApprovalService> {
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   requestTypes: Lookup[] = this.lookupService.listByCategory.CollectionRequestType
     .sort((a, b) => a.lookupKey - b.lookupKey);
 
@@ -32,7 +31,7 @@ export class CollectorApprovalComponent extends EServicesGenericComponent<Collec
   disableSearchField: boolean = true;
 
   constructor(public lang: LangService,
-              public fb: FormBuilder,
+              public fb: UntypedFormBuilder,
               public service: CollectorApprovalService,
               private lookupService: LookupService,
               private dialog: DialogService,
@@ -41,12 +40,12 @@ export class CollectorApprovalComponent extends EServicesGenericComponent<Collec
     super();
   }
 
-  get basicInfo(): FormGroup {
-    return this.form.get('basicInfo')! as FormGroup;
+  get basicInfo(): UntypedFormGroup {
+    return this.form.get('basicInfo')! as UntypedFormGroup;
   }
 
-  get specialExplanation(): FormGroup {
-    return this.form.get('explanation')! as FormGroup;
+  get specialExplanation(): UntypedFormGroup {
+    return this.form.get('explanation')! as UntypedFormGroup;
   }
 
   get requestType(): AbstractControl {

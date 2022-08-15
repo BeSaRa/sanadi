@@ -1,5 +1,5 @@
 import {Component, Inject} from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {AdminGenericDialog} from "@app/generics/admin-generic-dialog";
 import {SurveySection} from "@app/models/survey-section";
@@ -17,7 +17,7 @@ import {ToastService} from "@app/services/toast.service";
 })
 export class SurveySectionPopupComponent extends AdminGenericDialog<SurveySection> {
   model: SurveySection;
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   operation: OperationTypes = OperationTypes.CREATE;
 
 
@@ -26,7 +26,7 @@ export class SurveySectionPopupComponent extends AdminGenericDialog<SurveySectio
               private toast: ToastService,
               @Inject(DIALOG_DATA_TOKEN)
               private data: IDialogData<SurveySection>,
-              public fb: FormBuilder) {
+              public fb: UntypedFormBuilder) {
     super();
     this.model = data.model;
     this.operation = data.operation;
@@ -46,11 +46,11 @@ export class SurveySectionPopupComponent extends AdminGenericDialog<SurveySectio
     dialogRef.close(model);
   }
 
-  beforeSave(model: SurveySection, form: FormGroup): boolean | Observable<boolean> {
+  beforeSave(model: SurveySection, form: UntypedFormGroup): boolean | Observable<boolean> {
     return this.form.valid;
   }
 
-  prepareModel(model: SurveySection, form: FormGroup): SurveySection | Observable<SurveySection> {
+  prepareModel(model: SurveySection, form: UntypedFormGroup): SurveySection | Observable<SurveySection> {
     return new SurveySection().clone({
       ...this.model,
       ...this.form.value,

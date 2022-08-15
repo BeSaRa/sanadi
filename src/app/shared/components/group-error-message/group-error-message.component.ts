@@ -1,5 +1,5 @@
 import {Component, HostBinding, Input, OnInit, Optional} from '@angular/core';
-import {ControlContainer, FormGroup} from '@angular/forms';
+import {ControlContainer, UntypedFormGroup} from '@angular/forms';
 import {LangService} from '@app/services/lang.service';
 import {CustomValidators} from '@app/validators/custom-validators';
 
@@ -9,7 +9,7 @@ import {CustomValidators} from '@app/validators/custom-validators';
   styleUrls: ['./group-error-message.component.scss']
 })
 export class GroupErrorMessageComponent implements OnInit {
-  @Input() group?: FormGroup;
+  @Input() group?: UntypedFormGroup;
   @HostBinding('class') containerClass = 'invalid-feedback position-absolute';
 
   constructor(private langService: LangService, @Optional() private parent: ControlContainer) { }
@@ -19,7 +19,7 @@ export class GroupErrorMessageComponent implements OnInit {
 
   get errorMessage(): (string | null) {
     if (!this.group && parent) {
-      this.group = this.parent.control as FormGroup;
+      this.group = this.parent.control as UntypedFormGroup;
     }
 
     if (!this.group) {

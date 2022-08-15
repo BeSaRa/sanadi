@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {LangService} from '@app/services/lang.service';
 import {LookupService} from '@app/services/lookup.service';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {DialogService} from '@app/services/dialog.service';
 import {ToastService} from '@app/services/toast.service';
 import {ReadinessStatus} from '@app/types/types';
@@ -28,7 +28,7 @@ export class BeneficiaryIncomeComponent implements OnInit, OnDestroy, AfterViewI
 
   constructor(public lang: LangService,
               private lookupService: LookupService,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               private dialogService: DialogService,
               private toastService: ToastService) {
   }
@@ -53,7 +53,7 @@ export class BeneficiaryIncomeComponent implements OnInit, OnDestroy, AfterViewI
     this.destroy$.unsubscribe();
   }
 
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   @ViewChild('table') table!: TableComponent;
 
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();
@@ -78,7 +78,7 @@ export class BeneficiaryIncomeComponent implements OnInit, OnDestroy, AfterViewI
   incomeTypeList = this.lookupService.listByCategory.BENEFICIARY_INCOME;
   periodicTypeList = this.lookupService.listByCategory.BENEFICIARY_INCOME_PERODIC;
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
-  filterControl: FormControl = new FormControl('');
+  filterControl: UntypedFormControl = new UntypedFormControl('');
   viewOnly: boolean = false;
   customValidators = CustomValidators;
 
@@ -98,7 +98,7 @@ export class BeneficiaryIncomeComponent implements OnInit, OnDestroy, AfterViewI
       icon: ActionIconsEnum.EDIT,
       label: 'btn_edit',
       onClick: (item: BeneficiaryIncome) => this.edit(item),
-      show: (item: BeneficiaryIncome) => !this.readonly
+      show: (_item: BeneficiaryIncome) => !this.readonly
     },
     // delete
     {
@@ -106,7 +106,7 @@ export class BeneficiaryIncomeComponent implements OnInit, OnDestroy, AfterViewI
       icon: ActionIconsEnum.DELETE,
       label: 'btn_delete',
       onClick: (item: BeneficiaryIncome) => this.delete(item),
-      show: (item: BeneficiaryIncome) => !this.readonly
+      show: (_item: BeneficiaryIncome) => !this.readonly
     },
     // view
     {
@@ -114,7 +114,7 @@ export class BeneficiaryIncomeComponent implements OnInit, OnDestroy, AfterViewI
       icon: ActionIconsEnum.VIEW,
       label: 'view',
       onClick: (item: BeneficiaryIncome) => this.view(item),
-      show: (item: BeneficiaryIncome) => this.readonly
+      show: (_item: BeneficiaryIncome) => this.readonly
     }
   ];
 

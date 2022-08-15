@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {LangService} from '@services/lang.service';
 import {ToastService} from '@services/toast.service';
 import {DialogService} from '@services/dialog.service';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {ReadinessStatus} from '@app/types/types';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {of, Subject} from 'rxjs';
@@ -26,7 +26,7 @@ export class LessonsLearntListComponent implements OnInit {
               private toastService: ToastService,
               private dialogService: DialogService,
               private fieldAssessmentService: FieldAssessmentService,
-              private fb: FormBuilder) {
+              private fb: UntypedFormBuilder) {
   }
 
 
@@ -68,11 +68,11 @@ export class LessonsLearntListComponent implements OnInit {
   private currentRecord?: LessonsLearned;
   private destroy$: Subject<any> = new Subject<any>();
   showForm: boolean = false;
-  filterControl: FormControl = new FormControl('');
+  filterControl: UntypedFormControl = new UntypedFormControl('');
 
   lessonsLearntList: AdminResult[] = [];
 
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   actions: IMenuItem<LessonsLearned>[] = [
     // edit
     {
@@ -80,7 +80,7 @@ export class LessonsLearntListComponent implements OnInit {
       icon: ActionIconsEnum.EDIT,
       label: 'btn_edit',
       onClick: (item: LessonsLearned) => this.edit(item),
-      show: (item: LessonsLearned) => !this.readonly
+      show: (_item: LessonsLearned) => !this.readonly
     },
     // delete
     {
@@ -88,7 +88,7 @@ export class LessonsLearntListComponent implements OnInit {
       icon: ActionIconsEnum.DELETE,
       label: 'btn_delete',
       onClick: (item: LessonsLearned) => this.delete(item),
-      show: (item: LessonsLearned) => !this.readonly
+      show: (_item: LessonsLearned) => !this.readonly
     },
     // view
     {
@@ -96,7 +96,7 @@ export class LessonsLearntListComponent implements OnInit {
       icon: ActionIconsEnum.VIEW,
       label: 'view',
       onClick: (item: LessonsLearned) => this.view(item),
-      show: (item: LessonsLearned) => this.readonly
+      show: (_item: LessonsLearned) => this.readonly
     }
   ];
 
@@ -256,7 +256,7 @@ export class LessonsLearntListComponent implements OnInit {
   private loadLessonsLearnt() {
     this.fieldAssessmentService.loadByType(FieldAssessmentTypesEnum.LESSONS_LEARNT)
       .pipe(
-        catchError((err) => of([])),
+        catchError(() => of([])),
         map(result => {
           return result.map(x => x.convertToAdminResult());
         })

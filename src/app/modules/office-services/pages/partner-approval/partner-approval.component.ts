@@ -1,7 +1,7 @@
 import {AfterViewInit, ChangeDetectorRef, Component, ViewChild} from '@angular/core';
 import {LangService} from "@app/services/lang.service";
 import {Observable, of, Subject} from "rxjs";
-import {AbstractControl, FormBuilder, FormControl, FormGroup} from "@angular/forms";
+import {AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from "@angular/forms";
 import {PartnerApproval} from "@app/models/partner-approval";
 import {PartnerApprovalService} from "@app/services/partner-approval.service";
 import {IKeyValue} from "@app/interfaces/i-key-value";
@@ -49,7 +49,7 @@ import { BankAccountComponent } from '@app/modules/e-services-main/shared/bank-a
   styleUrls: ['./partner-approval.component.scss']
 })
 export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerApproval, PartnerApprovalService> implements AfterViewInit {
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   fileIconsEnum = FileIconsEnum;
   serviceRequestTypes = ServiceRequestTypes;
   countries: Country[] = [];
@@ -153,7 +153,7 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
   };
 
   constructor(public lang: LangService, public service: PartnerApprovalService,
-              public fb: FormBuilder, public lookupService: LookupService,
+              public fb: UntypedFormBuilder, public lookupService: LookupService,
               private countryService: CountryService, private dialog: DialogService,
               private toast: ToastService, private toastService: ToastService,
               private licenseService: LicenseService, private cd: ChangeDetectorRef,
@@ -509,32 +509,32 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
     this.licenseSearch$.next(value);
   }
 
-  get basicTab(): FormGroup {
-    return (this.form.get('basic')) as FormGroup;
+  get basicTab(): UntypedFormGroup {
+    return (this.form.get('basic')) as UntypedFormGroup;
   }
 
   get requestType(): AbstractControl {
-    return (this.form.get('basic')?.get('requestType')) as FormControl;
+    return (this.form.get('basic')?.get('requestType')) as UntypedFormControl;
   }
 
   get licenseNumber(): AbstractControl {
-    return (this.form.get('basic')?.get('licenseNumber')) as FormControl;
+    return (this.form.get('basic')?.get('licenseNumber')) as UntypedFormControl;
   }
 
-  get oldLicenseFullSerialField(): FormControl {
-    return (this.form.get('basic')?.get('oldLicenseFullSerial')) as FormControl;
+  get oldLicenseFullSerialField(): UntypedFormControl {
+    return (this.form.get('basic')?.get('oldLicenseFullSerial')) as UntypedFormControl;
   }
 
   get organizationId(): AbstractControl {
-    return (this.form.get('basic')?.get('organizationId')) as FormControl;
+    return (this.form.get('basic')?.get('organizationId')) as UntypedFormControl;
   }
 
-  get country(): FormControl {
-    return (this.form.get('basic')?.get('country')) as FormControl;
+  get country(): UntypedFormControl {
+    return (this.form.get('basic')?.get('country')) as UntypedFormControl;
   }
 
-  get region(): FormControl {
-    return (this.form.get('basic')?.get('region')) as FormControl;
+  get region(): UntypedFormControl {
+    return (this.form.get('basic')?.get('region')) as UntypedFormControl;
   }
 
   isAttachmentReadonly(): boolean {

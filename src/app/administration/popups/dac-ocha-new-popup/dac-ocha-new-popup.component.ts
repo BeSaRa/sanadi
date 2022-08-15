@@ -4,7 +4,7 @@ import {IDialogData} from '@contracts/i-dialog-data';
 import {AdminLookup} from '@app/models/admin-lookup';
 import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
 import {LangService} from '@services/lang.service';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {LookupService} from '@services/lookup.service';
 import {ToastService} from '@services/toast.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
@@ -38,7 +38,7 @@ export class DacOchaNewPopupComponent extends AdminGenericDialog<AdminLookup> im
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<AdminLookup>,
               public lang: LangService,
-              public fb: FormBuilder,
+              public fb: UntypedFormBuilder,
               private cd: ChangeDetectorRef,
               public lookupService: LookupService,
               public toast: ToastService,
@@ -56,7 +56,7 @@ export class DacOchaNewPopupComponent extends AdminGenericDialog<AdminLookup> im
   actionIconsEnum = ActionIconsEnum;
   classification: Lookup;
   statuses: Lookup[] = this.lookupService.listByCategory.CommonStatus;
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   fm!: FormManager;
   operation!: OperationTypes;
   model!: AdminLookup;
@@ -88,7 +88,7 @@ export class DacOchaNewPopupComponent extends AdminGenericDialog<AdminLookup> im
       type: 'action',
       label: 'btn_delete',
       icon: ActionIconsEnum.DELETE,
-      show: (item) => false,
+      show: () => false,
       onClick: (item) => this.delete(item)
     },
     // edit
@@ -121,7 +121,7 @@ export class DacOchaNewPopupComponent extends AdminGenericDialog<AdminLookup> im
       }
     }
   ];
-  filterControl: FormControl = new FormControl('');
+  filterControl: UntypedFormControl = new UntypedFormControl('');
   @ViewChild('table') table!: TableComponent;
 
   sortingCallbacks = {
@@ -190,11 +190,11 @@ export class DacOchaNewPopupComponent extends AdminGenericDialog<AdminLookup> im
     this.fm = new FormManager(this.form, this.lang);
   }
 
-  beforeSave(model: AdminLookup, form: FormGroup): Observable<boolean> | boolean {
+  beforeSave(model: AdminLookup, form: UntypedFormGroup): Observable<boolean> | boolean {
     return form.valid;
   }
 
-  prepareModel(model: AdminLookup, form: FormGroup): Observable<AdminLookup> | AdminLookup {
+  prepareModel(model: AdminLookup, form: UntypedFormGroup): Observable<AdminLookup> | AdminLookup {
     const record = (new AdminLookup()).clone({...model, ...form.value});
     record.type = this.model.type;
     return record;

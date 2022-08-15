@@ -3,7 +3,7 @@ import { EServicesGenericComponent } from '@app/generics/e-services-generic-comp
 import { LangService } from '@services/lang.service';
 import { ToastService } from '@services/toast.service';
 import { DialogService } from '@services/dialog.service';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { LookupService } from '@services/lookup.service';
 import { EmployeeService } from '@services/employee.service';
 import { LicenseService } from '@services/license.service';
@@ -55,7 +55,7 @@ export class UrgentInterventionClosureComponent extends EServicesGenericComponen
               private cd: ChangeDetectorRef,
               private toastService: ToastService,
               private dialogService: DialogService,
-              public fb: FormBuilder,
+              public fb: UntypedFormBuilder,
               public service: UrgentInterventionClosureService,
               private lookupService: LookupService,
               public employeeService: EmployeeService,
@@ -68,7 +68,7 @@ export class UrgentInterventionClosureComponent extends EServicesGenericComponen
     this.cd.detectChanges();
   }
 
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   loadAttachments: boolean = false;
   requestTypesList: Lookup[] = this.lookupService.listByCategory.RequestTypeNewOnly;
   countriesList: Country[] = [];
@@ -543,6 +543,7 @@ export class UrgentInterventionClosureComponent extends EServicesGenericComponen
 
   isEditLicenseAllowed(): boolean {
     // if new or draft record and request type !== new, edit is allowed
+    // noinspection UnnecessaryLocalVariableJS
     let isAllowed = !this.model?.id || (!!this.model?.id && this.model.canCommit());
     return isAllowed;// && CommonUtils.isValidValue(this.requestTypeField.value) && this.requestTypeField.value !== ServiceRequestTypes.NEW;
   }
@@ -650,52 +651,52 @@ export class UrgentInterventionClosureComponent extends EServicesGenericComponen
       .pipe(map((result: ({ selected: UrgentInterventionClosure, details: UrgentInterventionClosure } | undefined)) => result ? result.details : result));
   }
 
-  get basicInfoTab(): FormGroup {
-    return (this.form.get('basicInfo')) as FormGroup;
+  get basicInfoTab(): UntypedFormGroup {
+    return (this.form.get('basicInfo')) as UntypedFormGroup;
   }
 
-  get requestTypeField(): FormControl {
-    return this.basicInfoTab.get('requestType') as FormControl;
+  get requestTypeField(): UntypedFormControl {
+    return this.basicInfoTab.get('requestType') as UntypedFormControl;
   }
 
-  get oldLicenseFullSerialField(): FormControl {
-    return this.basicInfoTab.get('oldLicenseFullSerial') as FormControl;
+  get oldLicenseFullSerialField(): UntypedFormControl {
+    return this.basicInfoTab.get('oldLicenseFullSerial') as UntypedFormControl;
   }
 
-  get yearField(): FormControl {
-    return this.basicInfoTab.get('year') as FormControl;
+  get yearField(): UntypedFormControl {
+    return this.basicInfoTab.get('year') as UntypedFormControl;
   }
 
-  get beneficiaryCountryField(): FormControl {
-    return this.basicInfoTab.get('beneficiaryCountry') as FormControl;
+  get beneficiaryCountryField(): UntypedFormControl {
+    return this.basicInfoTab.get('beneficiaryCountry') as UntypedFormControl;
   }
 
-  get beneficiaryRegionField(): FormControl {
-    return this.basicInfoTab.get('beneficiaryRegion') as FormControl;
+  get beneficiaryRegionField(): UntypedFormControl {
+    return this.basicInfoTab.get('beneficiaryRegion') as UntypedFormControl;
   }
 
-  get executionCountryField(): FormControl {
-    return this.basicInfoTab.get('executionCountry') as FormControl;
+  get executionCountryField(): UntypedFormControl {
+    return this.basicInfoTab.get('executionCountry') as UntypedFormControl;
   }
 
-  get executionRegionField(): FormControl {
-    return this.basicInfoTab.get('executionRegion') as FormControl;
+  get executionRegionField(): UntypedFormControl {
+    return this.basicInfoTab.get('executionRegion') as UntypedFormControl;
   }
 
-  get descriptionField(): FormControl {
-    return this.basicInfoTab.get('projectDescription') as FormControl;
+  get descriptionField(): UntypedFormControl {
+    return this.basicInfoTab.get('projectDescription') as UntypedFormControl;
   }
 
-  get beneficiaryGroup(): FormGroup {
-    return this.form.get('beneficiary') as FormGroup;
+  get beneficiaryGroup(): UntypedFormGroup {
+    return this.form.get('beneficiary') as UntypedFormGroup;
   }
 
-  get directMaleBeneficiariesField(): FormControl {
-    return this.beneficiaryGroup.get('directMaleBeneficiaries') as FormControl;
+  get directMaleBeneficiariesField(): UntypedFormControl {
+    return this.beneficiaryGroup.get('directMaleBeneficiaries') as UntypedFormControl;
   }
 
-  get directFemaleBeneficiariesField(): FormControl {
-    return this.beneficiaryGroup.get('directFemaleBeneficiaries') as FormControl;
+  get directFemaleBeneficiariesField(): UntypedFormControl {
+    return this.beneficiaryGroup.get('directFemaleBeneficiaries') as UntypedFormControl;
   }
 
   private _getTotalDirectBeneficiaries(): number {
@@ -704,7 +705,7 @@ export class UrgentInterventionClosureComponent extends EServicesGenericComponen
     return (Number(male) + Number(female)) ?? 0;
   }
 
-  get beneficiaryByAgeGroup(): FormGroup {
-    return this.form.get('beneficiaryByAge') as FormGroup;
+  get beneficiaryByAgeGroup(): UntypedFormGroup {
+    return this.form.get('beneficiaryByAge') as UntypedFormGroup;
   }
 }

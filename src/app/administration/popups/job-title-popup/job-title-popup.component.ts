@@ -2,7 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { AdminGenericDialog } from '@app/generics/admin-generic-dialog';
 import { JobTitle } from '@app/models/job-title';
 import { DialogRef } from '@app/shared/models/dialog-ref';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { LangService } from '@app/services/lang.service';
 import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
@@ -20,14 +20,14 @@ import { LookupService } from '@app/services/lookup.service';
 })
 export class JobTitlePopupComponent extends AdminGenericDialog<JobTitle> {
   statuses: Lookup[] = this.lookupService.listByCategory.CommonStatus;
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   model!: JobTitle;
   operation: OperationTypes;
   saveVisible = true;
   userTypes: Lookup[] = [];
 
   constructor(public dialogRef: DialogRef,
-    public fb: FormBuilder,
+    public fb: UntypedFormBuilder,
     public lang: LangService,
     @Inject(DIALOG_DATA_TOKEN) data: IDialogData<JobTitle>,
     private dialogService: DialogService,
@@ -51,11 +51,11 @@ export class JobTitlePopupComponent extends AdminGenericDialog<JobTitle> {
     }
   }
 
-  beforeSave(model: JobTitle, form: FormGroup): Observable<boolean> | boolean {
+  beforeSave(model: JobTitle, form: UntypedFormGroup): Observable<boolean> | boolean {
     return form.valid;
   }
 
-  prepareModel(model: JobTitle, form: FormGroup): Observable<JobTitle> | JobTitle {
+  prepareModel(model: JobTitle, form: UntypedFormGroup): Observable<JobTitle> | JobTitle {
     return (new JobTitle()).clone({ ...model, ...form.value });
   }
 

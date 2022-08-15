@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {AbstractControl, FormBuilder, FormGroup} from '@angular/forms';
+import {AbstractControl, UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
 import {CustomsExemptionRemittance} from '@app/models/customs-exemption-remittance';
 import {CustomsExemptionRemittanceService} from '@services/customs-exemption-remittance.service';
@@ -32,7 +32,7 @@ import {AdminResult} from '@app/models/admin-result';
   styleUrls: ['./customs-exemption.component.scss'],
 })
 export class CustomsExemptionComponent extends EServicesGenericComponent<CustomsExemptionRemittance, CustomsExemptionRemittanceService> {
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   fileIconsEnum = FileIconsEnum;
   documentSearchByOrderNo$: Subject<string> = new Subject<string>();
   documentSearchByDocNo$: Subject<string> = new Subject<string>();
@@ -40,7 +40,7 @@ export class CustomsExemptionComponent extends EServicesGenericComponent<Customs
   displayProjectLicenseSearchButton = false;
 
   constructor(public lang: LangService,
-              public fb: FormBuilder,
+              public fb: UntypedFormBuilder,
               public service: CustomsExemptionRemittanceService,
               private lookupService: LookupService,
               private dialog: DialogService,

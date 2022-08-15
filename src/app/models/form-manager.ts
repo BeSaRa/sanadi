@@ -1,22 +1,21 @@
-import {AbstractControl, FormGroup} from '@angular/forms';
-import {LangService} from '../services/lang.service';
-import {ILanguageKeys} from '../interfaces/i-language-keys';
-import {IStatusClasses} from '../interfaces/i-status-classes';
-import {TemplateRef} from '@angular/core';
+import { AbstractControl, UntypedFormGroup } from '@angular/forms';
+import { LangService } from '@services/lang.service';
+import { ILanguageKeys } from '@contracts/i-language-keys';
+import { IStatusClasses } from '@contracts/i-status-classes';
 
 export class FormManager {
 
   mainContentId = 'main-content';
 
-  constructor(private form: FormGroup, private langService: LangService) {
+  constructor(private form: UntypedFormGroup, private langService: LangService) {
   }
 
-  setForm(form: FormGroup): FormManager {
+  setForm(form: UntypedFormGroup): FormManager {
     this.form = form;
     return this;
   }
 
-  getForm(): FormGroup | undefined {
+  getForm(): UntypedFormGroup | undefined {
     return this.form;
   }
 

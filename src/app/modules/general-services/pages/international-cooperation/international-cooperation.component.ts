@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit} from '@angular/core';
 import {SaveTypes} from '@app/enums/save-types';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {FormManager} from '@app/models/form-manager';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {HttpClient} from '@angular/common/http';
 import {DialogService} from '@app/services/dialog.service';
 import {ToastService} from '@app/services/toast.service';
@@ -39,7 +39,7 @@ export class InternationalCooperationComponent implements OnInit, OnDestroy, IES
   departments: InternalDepartment[] = [];
   destroy$: Subject<any> = new Subject<any>();
   fm!: FormManager;
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   save: Subject<SaveTypes> = new Subject<SaveTypes>();
   saveTypes: typeof SaveTypes = SaveTypes;
   operation: OperationTypes = OperationTypes.CREATE;
@@ -94,7 +94,7 @@ export class InternationalCooperationComponent implements OnInit, OnDestroy, IES
   constructor(private http: HttpClient,
               public intDepService: InternalDepartmentService,
               public service: InternationalCooperationService,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               private dialog: DialogService,
               private toast: ToastService,
               private countryService: CountryService,

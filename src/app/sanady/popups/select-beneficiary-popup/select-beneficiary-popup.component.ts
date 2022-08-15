@@ -1,13 +1,12 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {LangService} from '../../../services/lang.service';
-import {Beneficiary} from '../../../models/beneficiary';
-import {UserClickOn} from '../../../enums/user-click-on.enum';
-import {DIALOG_DATA_TOKEN} from '../../../shared/tokens/tokens';
-import {DialogRef} from '../../../shared/models/dialog-ref';
-import {FormControl} from '@angular/forms';
-import {SubventionRequest} from '@app/models/subvention-request';
-import {SortEvent} from '@app/interfaces/sort-event';
-import {CommonUtils} from '@app/helpers/common-utils';
+import { Component, Inject } from '@angular/core';
+import { LangService } from '@services/lang.service';
+import { Beneficiary } from '@app/models/beneficiary';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { UntypedFormControl } from '@angular/forms';
+import { SortEvent } from '@app/interfaces/sort-event';
+import { CommonUtils } from '@app/helpers/common-utils';
 
 @Component({
   selector: 'app-select-beneficiary-popup',
@@ -22,7 +21,7 @@ export class SelectBeneficiaryPopupComponent {
   userClick: typeof UserClickOn = UserClickOn;
   headerColumn: string[] = ['extra-header'];
   displayedColumns: string[] = ['arName', 'enName', 'gender', 'nationality', 'identification',  'sponsors', 'actions'];
-  filterControl: FormControl = new FormControl('');
+  filterControl: UntypedFormControl = new UntypedFormControl('');
 
   sortingCallbacks = {
     gender: (a: Beneficiary, b: Beneficiary, dir: SortEvent): number =>{

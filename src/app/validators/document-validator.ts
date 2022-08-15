@@ -1,5 +1,5 @@
-import {FormGroup, ValidationErrors} from '@angular/forms';
-import {DocumentFieldValidatorInterface} from '../interfaces/document-field-validator-interface';
+import {UntypedFormGroup, ValidationErrors} from '@angular/forms';
+import {DocumentFieldValidatorInterface} from '@contracts/document-field-validator-interface';
 
 const fields: DocumentFieldValidatorInterface = {
   documentTitle: (value: string): boolean => {
@@ -10,7 +10,7 @@ const fields: DocumentFieldValidatorInterface = {
   }
 };
 
-export function documentValidator(control: FormGroup): ValidationErrors | null {
+export function documentValidator(control: UntypedFormGroup): ValidationErrors | null {
   const keys = Object.keys(fields);
   let errors: { [index: string]: boolean } = {};
   keys.forEach(key => {

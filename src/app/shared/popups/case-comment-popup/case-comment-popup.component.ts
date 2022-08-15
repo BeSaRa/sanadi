@@ -3,7 +3,7 @@ import {CaseComment} from '@app/models/case-comment';
 import {DIALOG_DATA_TOKEN} from '../../tokens/tokens';
 import {CommentService} from '@app/services/comment.service';
 import {LangService} from '@app/services/lang.service';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {ToastService} from '@app/services/toast.service';
 import {DialogRef} from '../../models/dialog-ref';
@@ -20,7 +20,7 @@ export class CaseCommentPopupComponent implements OnInit {
   model?: CaseComment;
   service: CommentService;
   caseId: string;
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   editMode: boolean = false;
   customValidators = CustomValidators;
 
@@ -36,7 +36,7 @@ export class CaseCommentPopupComponent implements OnInit {
       editMode: boolean,
     },
     public lang: LangService,
-    public fb: FormBuilder,
+    public fb: UntypedFormBuilder,
     private dialogRef: DialogRef,
     private toast: ToastService,
     private employeeService: EmployeeService

@@ -9,7 +9,7 @@ import {DialogService} from '@app/services/dialog.service';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {PageComponentInterface} from '@app/interfaces/page-component-interface';
 import {searchInObject} from '@app/helpers/utils';
-import {FormControl} from '@angular/forms';
+import {UntypedFormControl} from '@angular/forms';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 
 @Component({
@@ -29,7 +29,7 @@ export class LocalizationComponent implements OnInit, OnDestroy, PageComponentIn
   add$ = new Subject<any>();
   search$: BehaviorSubject<string> = new BehaviorSubject<string>('');
   internalSearch$: BehaviorSubject<string> = new BehaviorSubject<string>('');
-  filterControl: FormControl = new FormControl('');
+  filterControl: UntypedFormControl = new UntypedFormControl('');
 
   constructor(public langService: LangService, private dialogService: DialogService, public toast: ToastService) {
 

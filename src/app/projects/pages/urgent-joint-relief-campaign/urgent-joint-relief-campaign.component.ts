@@ -5,7 +5,7 @@ import {UrgentJointReliefCampaign} from '@app/models/urgent-joint-relief-campaig
 import {UrgentJointReliefCampaignService} from '@services/urgent-joint-relief-campaign.service';
 import {Observable} from 'rxjs';
 import {OperationTypes} from '@app/enums/operation-types.enum';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {LangService} from '@services/lang.service';
 import {LookupService} from '@services/lookup.service';
 import {DialogService} from '@services/dialog.service';
@@ -35,8 +35,8 @@ import {OrgUnit} from '@app/models/org-unit';
   styleUrls: ['./urgent-joint-relief-campaign.component.scss']
 })
 export class UrgentJointReliefCampaignComponent extends EServicesGenericComponent<UrgentJointReliefCampaign, UrgentJointReliefCampaignService> implements AfterViewInit {
-  form!: FormGroup;
-  officerForm!: FormGroup;
+  form!: UntypedFormGroup;
+  officerForm!: UntypedFormGroup;
   fm!: FormManager;
   organizationUnits: OrgUnit[] = [];
   selectedOrganizationUnits: ParticipantOrganization[] = [];
@@ -61,7 +61,7 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
   organizationStepNames: string[] = [CaseStepName.ORG_REV, CaseStepName.ORG_REW, CaseStepName.ORG_MNGR_REV];
 
   constructor(public lang: LangService,
-              public fb: FormBuilder,
+              public fb: UntypedFormBuilder,
               private cd: ChangeDetectorRef,
               public service: UrgentJointReliefCampaignService,
               private lookupService: LookupService,
@@ -78,32 +78,32 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
     this.cd.detectChanges();
   }
 
-  get basicInfo(): FormGroup {
-    return this.form.get('basicInfo')! as FormGroup;
+  get basicInfo(): UntypedFormGroup {
+    return this.form.get('basicInfo')! as UntypedFormGroup;
   }
 
-  get licenseStartDate(): FormControl {
-    return this.form.get('basicInfo.licenseStartDate')! as FormControl;
+  get licenseStartDate(): UntypedFormControl {
+    return this.form.get('basicInfo.licenseStartDate')! as UntypedFormControl;
   }
 
-  get licenseEndDate(): FormControl {
-    return this.form.get('basicInfo.licenseEndDate')! as FormControl;
+  get licenseEndDate(): UntypedFormControl {
+    return this.form.get('basicInfo.licenseEndDate')! as UntypedFormControl;
   }
 
-  get specialExplanation(): FormGroup {
-    return this.form.get('explanation')! as FormGroup;
+  get specialExplanation(): UntypedFormGroup {
+    return this.form.get('explanation')! as UntypedFormGroup;
   }
 
-  get externalUserData(): FormGroup {
-    return this.form.get('externalUserData')! as FormGroup;
+  get externalUserData(): UntypedFormGroup {
+    return this.form.get('externalUserData')! as UntypedFormGroup;
   }
 
-  get organizationOfficer(): FormGroup {
-    return this.officerForm! as FormGroup;
+  get organizationOfficer(): UntypedFormGroup {
+    return this.officerForm! as UntypedFormGroup;
   }
 
-  get selectedOrganizations(): FormControl {
-    return (this.form.get('selectedOrganizations.participatingOrganizaionList')) as FormControl;
+  get selectedOrganizations(): UntypedFormControl {
+    return (this.form.get('selectedOrganizations.participatingOrganizaionList')) as UntypedFormControl;
   }
 
   _initComponent(): void {

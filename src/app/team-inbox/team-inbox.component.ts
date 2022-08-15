@@ -1,35 +1,34 @@
-import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {QueryResultSet} from '../models/query-result-set';
-import {LangService} from '../services/lang.service';
-import {switchMap, take, takeUntil, tap} from 'rxjs/operators';
-import {Team} from '../models/team';
-import {EmployeeService} from '../services/employee.service';
-import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
-import {FormControl} from '@angular/forms';
-import {QueryResult} from '../models/query-result';
-import {InboxService} from '../services/inbox.service';
-import {ToastService} from '../services/toast.service';
-import {IMenuItem} from '../modules/context-menu/interfaces/i-menu-item';
-import {WFResponseType} from '../enums/wfresponse-type.enum';
-import {DialogRef} from '../shared/models/dialog-ref';
-import {OpenFrom} from '../enums/open-from.enum';
-import {CaseModel} from '../models/case-model';
-import {WFActions} from '../enums/wfactions.enum';
-import {IESComponent} from '../interfaces/iescomponent';
-import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {ITableOptions} from '@app/interfaces/i-table-options';
-import {TableComponent} from '@app/shared/components/table/table.component';
-import {FilterEventTypes} from '@app/types/types';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {IPartialRequestCriteria} from '@app/interfaces/i-partial-request-criteria';
-import {IInboxCriteria} from '@app/interfaces/i-inbox-criteria';
-import {CommonUtils} from '@app/helpers/common-utils';
-import {SortEvent} from '@app/interfaces/sort-event';
-import {CaseTypes} from '@app/enums/case-types.enum';
-import {Lookup} from "@app/models/lookup";
-import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
-import {Router} from '@angular/router';
-import {CommonService} from '@services/common.service';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { QueryResultSet } from '../models/query-result-set';
+import { LangService } from '@services/lang.service';
+import { switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { Team } from '../models/team';
+import { EmployeeService } from '@services/employee.service';
+import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
+import { UntypedFormControl } from '@angular/forms';
+import { QueryResult } from '../models/query-result';
+import { InboxService } from '@services/inbox.service';
+import { ToastService } from '@services/toast.service';
+import { IMenuItem } from '../modules/context-menu/interfaces/i-menu-item';
+import { WFResponseType } from '../enums/wfresponse-type.enum';
+import { DialogRef } from '../shared/models/dialog-ref';
+import { CaseModel } from '../models/case-model';
+import { WFActions } from '../enums/wfactions.enum';
+import { IESComponent } from '@contracts/iescomponent';
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
+import { ITableOptions } from '@app/interfaces/i-table-options';
+import { TableComponent } from '@app/shared/components/table/table.component';
+import { FilterEventTypes } from '@app/types/types';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { IPartialRequestCriteria } from '@app/interfaces/i-partial-request-criteria';
+import { IInboxCriteria } from '@app/interfaces/i-inbox-criteria';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { SortEvent } from '@app/interfaces/sort-event';
+import { CaseTypes } from '@app/enums/case-types.enum';
+import { Lookup } from "@app/models/lookup";
+import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
+import { Router } from '@angular/router';
+import { CommonService } from '@services/common.service';
 
 @Component({
   selector: 'team-inbox',
@@ -41,7 +40,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
   inboxChange$: BehaviorSubject<Team | null> = new BehaviorSubject<Team | null>(null);
   teams: Team[] = [];
   destroy$: Subject<any> = new Subject<any>();
-  selectControl: FormControl = new FormControl();
+  selectControl: UntypedFormControl = new UntypedFormControl();
   actions: IMenuItem<QueryResult>[] = [];
 
   @ViewChild('table') table!: TableComponent;
@@ -337,7 +336,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
         return item.open(this.actions, OpenFrom.TEAM_INBOX).pipe(switchMap(ref => ref.onAfterClose$));
       }))
       .subscribe(() => this.reloadSelectedInbox());*/
-    item.claim().subscribe((result) => {
+    item.claim().subscribe(() => {
       this.actionOpen(item);
     })
   }

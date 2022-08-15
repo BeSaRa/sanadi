@@ -17,7 +17,7 @@ import {SubventionResponseService} from '@app/services/subvention-response.servi
 import {BeneficiaryService} from '@app/services/beneficiary.service';
 import {EmployeeService} from '@app/services/employee.service';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import {FormControl} from '@angular/forms';
+import {UntypedFormControl} from '@angular/forms';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 import {SortEvent} from '@app/interfaces/sort-event';
 import {CommonUtils} from '@app/helpers/common-utils';
@@ -47,7 +47,7 @@ export class PartialRequestComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['icons', 'creationDate', 'creationYear', 'organization', 'gender', 'estimatedValue', 'totalAidAmount', 'remainingAmount', 'actions'];//'benCategory', 'requestType',
   headerColumn: string[] = ['extra-header'];
   actionIconsEnum = ActionIconsEnum;
-  filterControl: FormControl = new FormControl('');
+  filterControl: UntypedFormControl = new UntypedFormControl('');
   actions: IMenuItem<SubventionRequestPartial>[] = [
     // show details
     {
@@ -62,7 +62,7 @@ export class PartialRequestComponent implements OnInit, OnDestroy {
       icon: ActionIconsEnum.ADD_SIMPLE,
       label: 'btn_add_partial_request',
       onClick: (item: SubventionRequestPartial) => this.addPartialRequest(item),
-      show: (item) => this.empService.checkPermissions('SUBVENTION_ADD')
+      show: (_item) => this.empService.checkPermissions('SUBVENTION_ADD')
     }
   ];
 

@@ -1,5 +1,5 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {AbstractControl, FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {Observable, Subject} from 'rxjs';
 import {ILanguageKeys} from '@contracts/i-language-keys';
 import {CustomTerm} from '@app/models/custom-term';
@@ -26,7 +26,7 @@ import {CustomTermPopupComponent} from '@app/shared/popups/custom-term-popup/cus
   styleUrls: ['./transfer-funds-abroad-approve-task-popup.component.scss']
 })
 export class TransferFundsAbroadApproveTaskPopupComponent implements OnInit, OnDestroy {
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   private destroy$: Subject<any> = new Subject();
   label: keyof ILanguageKeys;
   customTerms: CustomTerm[] = [];
@@ -49,7 +49,7 @@ export class TransferFundsAbroadApproveTaskPopupComponent implements OnInit, OnD
   constructor(
     private customTermService: CustomTermService,
     private serviceDataService: ServiceDataService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private dialog: DialogService,
     private dialogRef: DialogRef,
     private toast: ToastService,
@@ -68,8 +68,8 @@ export class TransferFundsAbroadApproveTaskPopupComponent implements OnInit, OnD
     return this.form.get('customTerms')!
   }
 
-  get followUpDateField(): FormControl {
-    return this.form.get('followUpDate') as FormControl;
+  get followUpDateField(): UntypedFormControl {
+    return this.form.get('followUpDate') as UntypedFormControl;
   }
 
   ngOnInit(): void {

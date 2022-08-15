@@ -1,30 +1,26 @@
-import {AfterViewInit, Component, Inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {Observable, of, Subject} from 'rxjs';
-import {ILanguageKeys} from '@contracts/i-language-keys';
-import {WFResponseType} from '@app/enums/wfresponse-type.enum';
-import {UrgentInterventionLicense} from '@app/models/urgent-intervention-license';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {UrgentInterventionClosure} from '@app/models/urgent-intervention-closure';
-import {DialogService} from '@services/dialog.service';
-import {ToastService} from '@services/toast.service';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {InboxService} from '@services/inbox.service';
-import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
-import {LangService} from '@services/lang.service';
-import {CommonUtils} from '@helpers/common-utils';
-import {IWFResponse} from '@contracts/i-w-f-response';
-import {exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
-import {ServiceRequestTypes} from '@app/enums/service-request-types';
-import {ApprovalFormMonthlyComponent} from '@app/shared/components/approval-form-monthly/approval-form-monthly.component';
-import {IKeyValue} from '@contracts/i-key-value';
-import {DateUtils} from '@helpers/date-utils';
-import {CustomTerm} from '@app/models/custom-term';
-import {CustomTermPopupComponent} from '@app/shared/popups/custom-term-popup/custom-term-popup.component';
-import {CustomTermService} from '@services/custom-term.service';
-import {ServiceDataService} from '@services/service-data.service';
-import {LicenseApprovalModel} from '@app/models/license-approval-model';
-import {ServiceData} from '@app/models/service-data';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Observable, of, Subject } from 'rxjs';
+import { ILanguageKeys } from '@contracts/i-language-keys';
+import { WFResponseType } from '@app/enums/wfresponse-type.enum';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { UrgentInterventionClosure } from '@app/models/urgent-intervention-closure';
+import { DialogService } from '@services/dialog.service';
+import { ToastService } from '@services/toast.service';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { InboxService } from '@services/inbox.service';
+import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
+import { LangService } from '@services/lang.service';
+import { CommonUtils } from '@helpers/common-utils';
+import { IWFResponse } from '@contracts/i-w-f-response';
+import { exhaustMap, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { IKeyValue } from '@contracts/i-key-value';
+import { DateUtils } from '@helpers/date-utils';
+import { CustomTerm } from '@app/models/custom-term';
+import { CustomTermPopupComponent } from '@app/shared/popups/custom-term-popup/custom-term-popup.component';
+import { CustomTermService } from '@services/custom-term.service';
+import { ServiceDataService } from '@services/service-data.service';
+import { ServiceData } from '@app/models/service-data';
 
 @Component({
   selector: 'urgent-intervention-closure-approve-task-popup',
@@ -42,7 +38,7 @@ export class UrgentInterventionClosureApproveTaskPopupComponent implements OnIni
               public lang: LangService,
               private customTermService: CustomTermService,
               private serviceDataService: ServiceDataService,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               @Inject(DIALOG_DATA_TOKEN) public data: {
                 model: UrgentInterventionClosure,
                 action: WFResponseType
@@ -69,8 +65,8 @@ export class UrgentInterventionClosureApproveTaskPopupComponent implements OnIni
   action$: Subject<any> = new Subject<any>();
   response: WFResponseType = WFResponseType.APPROVE;
   model: UrgentInterventionClosure;
-  form!: FormGroup;
-  comment: FormControl = new FormControl('', [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]);
+  form!: UntypedFormGroup;
+  comment: UntypedFormControl = new UntypedFormControl('', [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]);
   customTerms: CustomTerm[] = [];
 
   datepickerOptionsMap: IKeyValue = {
@@ -177,12 +173,12 @@ export class UrgentInterventionClosureApproveTaskPopupComponent implements OnIni
     }
   }
 
-  get conditionalLicenseField(): FormControl {
-    return this.form.get('conditionalLicenseIndicator') as FormControl;
+  get conditionalLicenseField(): UntypedFormControl {
+    return this.form.get('conditionalLicenseIndicator') as UntypedFormControl;
   }
 
-  get customTermsField(): FormControl {
-    return this.form.get('customTerms') as FormControl;
+  get customTermsField(): UntypedFormControl {
+    return this.form.get('customTerms') as UntypedFormControl;
   }
 
 }

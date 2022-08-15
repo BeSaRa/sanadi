@@ -1,5 +1,5 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup } from "@angular/forms";
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
 import { of, Subject } from "rxjs";
 import { LangService } from "@app/services/lang.service";
 import { Router } from "@angular/router";
@@ -20,7 +20,7 @@ export class ExternalLoginComponent implements OnInit {
   passwordFieldType = 'password';
   private destroy$: Subject<any> = new Subject<any>();
   private login$: Subject<any> = new Subject<any>();
-  loginFromExternal: FormGroup = {} as FormGroup;
+  loginFromExternal: UntypedFormGroup = {} as UntypedFormGroup;
 
   background: string = 'url(assets/images/login-background.png)';
   loginBackground: string = 'url(assets/images/raca-login-background-1.png)';
@@ -28,7 +28,7 @@ export class ExternalLoginComponent implements OnInit {
 
   constructor(public lang: LangService,
               private router: Router,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               public config: ConfigurationService,
               private eCookieService: ECookieService,
               private toastService: ToastService,

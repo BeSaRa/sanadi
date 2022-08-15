@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormControl } from "@angular/forms";
+import { UntypedFormControl } from "@angular/forms";
 import { LangService } from "@services/lang.service";
 import { ReasonContract } from "@contracts/reason-contract";
 import { DIALOG_DATA_TOKEN } from "@app/shared/tokens/tokens";
@@ -13,7 +13,7 @@ import { UserClickOn } from "@app/enums/user-click-on.enum";
   styleUrls: ['./reason-popup.component.scss']
 })
 export class ReasonPopupComponent implements OnInit {
-  control: FormControl = new FormControl()
+  control: UntypedFormControl = new UntypedFormControl()
 
   constructor(public lang: LangService,
               private dialogRef: DialogRef,

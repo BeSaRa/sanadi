@@ -3,7 +3,7 @@ import {LangService} from '@services/lang.service';
 import {UrgentInterventionLicensingService} from '@services/urgent-intervention-licensing.service';
 import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
 import {UrgentInterventionLicense} from '@app/models/urgent-intervention-license';
-import {AbstractControl, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {ToastService} from '@services/toast.service';
 import {IKeyValue} from '@contracts/i-key-value';
 import {ILanguageKeys} from '@contracts/i-language-keys';
@@ -41,7 +41,7 @@ export class UrgentInterventionLicenseComponent extends EServicesGenericComponen
               public service: UrgentInterventionLicensingService,
               private toastService: ToastService,
               private dialogService: DialogService,
-              public fb: FormBuilder,
+              public fb: UntypedFormBuilder,
               private lookupService: LookupService,
               public employeeService: EmployeeService,
               private licenseService: LicenseService,
@@ -49,7 +49,7 @@ export class UrgentInterventionLicenseComponent extends EServicesGenericComponen
     super();
   }
 
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   requestTypesList: Lookup[] = this.lookupService.listByCategory.ServiceRequestType.slice().sort((a, b) => a.lookupKey - b.lookupKey);
   loadAttachments: boolean = false;
 
@@ -259,48 +259,48 @@ export class UrgentInterventionLicenseComponent extends EServicesGenericComponen
     return !isAllowed;
   }
 
-  get basicInfoGroup(): FormGroup {
-    return (this.form.get('basicInfo')) as FormGroup;
+  get basicInfoGroup(): UntypedFormGroup {
+    return (this.form.get('basicInfo')) as UntypedFormGroup;
   }
 
-  get emergencyFundsGroup(): FormGroup {
-    return (this.form.get('emergencyFunds')) as FormGroup;
+  get emergencyFundsGroup(): UntypedFormGroup {
+    return (this.form.get('emergencyFunds')) as UntypedFormGroup;
   }
 
-  get projectSummaryGroup(): FormGroup {
-    return (this.form.get('projectSummary')) as FormGroup;
+  get projectSummaryGroup(): UntypedFormGroup {
+    return (this.form.get('projectSummary')) as UntypedFormGroup;
   }
 
-  get requestTypeField(): FormControl {
-    return (this.basicInfoGroup?.get('requestType')) as FormControl;
+  get requestTypeField(): UntypedFormControl {
+    return (this.basicInfoGroup?.get('requestType')) as UntypedFormControl;
   }
 
-  get yearField(): FormControl {
-    return (this.basicInfoGroup?.get('year')) as FormControl;
+  get yearField(): UntypedFormControl {
+    return (this.basicInfoGroup?.get('year')) as UntypedFormControl;
   }
 
-  get domainField(): FormControl {
-    return (this.basicInfoGroup?.get('domain')) as FormControl;
+  get domainField(): UntypedFormControl {
+    return (this.basicInfoGroup?.get('domain')) as UntypedFormControl;
   }
 
-  get oldLicenseFullSerialField(): FormControl {
-    return (this.basicInfoGroup?.get('oldLicenseFullSerial')) as FormControl;
+  get oldLicenseFullSerialField(): UntypedFormControl {
+    return (this.basicInfoGroup?.get('oldLicenseFullSerial')) as UntypedFormControl;
   }
 
-  get targetAmountField(): FormControl {
-    return (this.emergencyFundsGroup?.get('targetAmount')) as FormControl;
+  get targetAmountField(): UntypedFormControl {
+    return (this.emergencyFundsGroup?.get('targetAmount')) as UntypedFormControl;
   }
 
-  get licenseDurationField(): FormControl {
-    return (this.emergencyFundsGroup?.get('licenseDuration')) as FormControl;
+  get licenseDurationField(): UntypedFormControl {
+    return (this.emergencyFundsGroup?.get('licenseDuration')) as UntypedFormControl;
   }
 
-  get currencyField(): FormControl {
-    return (this.emergencyFundsGroup?.get('currency')) as FormControl;
+  get currencyField(): UntypedFormControl {
+    return (this.emergencyFundsGroup?.get('currency')) as UntypedFormControl;
   }
 
   get specialExplanationsField(): AbstractControl {
-    return (this.form.get('description')) as FormControl;
+    return (this.form.get('description')) as UntypedFormControl;
   }
 
   handleReadonly(): void {
@@ -437,7 +437,7 @@ export class UrgentInterventionLicenseComponent extends EServicesGenericComponen
                   }
                   return {selected: licenses[0], details: data};
                 }),
-                catchError((e) => {
+                catchError(() => {
                   return of(null);
                 })
               )

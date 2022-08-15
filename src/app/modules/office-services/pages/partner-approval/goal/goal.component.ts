@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angula
 import {LangService} from '@app/services/lang.service';
 import {ToastService} from '@app/services/toast.service';
 import {DialogService} from '@app/services/dialog.service';
-import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {ReadinessStatus} from '@app/types/types';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {filter, map, take, takeUntil} from 'rxjs/operators';
@@ -28,7 +28,7 @@ export class GoalComponent implements OnInit, OnDestroy {
               private dialogService: DialogService,
               public lookupService: LookupService,
               private dacOchaService: DacOchaNewService,
-              private fb: FormBuilder) {
+              private fb: UntypedFormBuilder) {
   }
 
   @Input() readonly: boolean = false;
@@ -61,7 +61,7 @@ export class GoalComponent implements OnInit, OnDestroy {
   private changed$: Subject<Goal | null> = new Subject<Goal | null>();
   private current?: Goal;
   private destroy$: Subject<any> = new Subject<any>();
-  form!: FormGroup;
+  form!: UntypedFormGroup;
 
   ngOnInit(): void {
     this._handleInitData();
@@ -154,7 +154,7 @@ export class GoalComponent implements OnInit, OnDestroy {
     validForm$.pipe(
       takeUntil(this.destroy$),
       map(() => {
-        return (this.form.get('goals.0')) as FormArray;
+        return (this.form.get('goals.0')) as UntypedFormArray;
       }),
       map((form) => {
         return (new Goal()).clone({
@@ -291,24 +291,23 @@ export class GoalComponent implements OnInit, OnDestroy {
             }
             return record;
           });
-        })).subscribe(result => {
-      });
+        })).subscribe();
   }
 
-  get goalsFormArray(): FormArray {
-    return (this.form.get('goals')) as FormArray;
+  get goalsFormArray(): UntypedFormArray {
+    return (this.form.get('goals')) as UntypedFormArray;
   }
 
-  get domainField(): FormControl {
-    return this.goalsFormArray.get('0.domain') as FormControl;
+  get domainField(): UntypedFormControl {
+    return this.goalsFormArray.get('0.domain') as UntypedFormControl;
   }
 
-  get mainDACCategoryInfoField(): FormControl {
-    return this.goalsFormArray.get('0.mainDACCategoryInfo') as FormControl;
+  get mainDACCategoryInfoField(): UntypedFormControl {
+    return this.goalsFormArray.get('0.mainDACCategoryInfo') as UntypedFormControl;
   }
 
-  get mainUNOCHACategoryInfoField(): FormControl {
-    return this.goalsFormArray.get('0.mainUNOCHACategoryInfo') as FormControl;
+  get mainUNOCHACategoryInfoField(): UntypedFormControl {
+    return this.goalsFormArray.get('0.mainUNOCHACategoryInfo') as UntypedFormControl;
   }
 
   trackBy(item: AdminResult) {

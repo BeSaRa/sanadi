@@ -25,7 +25,7 @@ import { EncryptionService } from "@app/services/encryption.service";
 import { CaseTypes } from '@app/enums/case-types.enum';
 import { BaseGenericEService } from "@app/generics/base-generic-e-service";
 import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { OrganizationOfficer } from '@app/models/organization-officer';
 
 export abstract class CaseModel<S extends EServiceGenericService<T> | BaseGenericEService<T>, T extends FileNetModel<T>> extends FileNetModel<T> implements ICaseModel <T> {
@@ -323,7 +323,7 @@ export abstract class CaseModel<S extends EServiceGenericService<T> | BaseGeneri
     return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.FINAL_APPROVE, false, this);
   }
 
-  organizationApprove(externalUserData: { form: FormGroup, organizationOfficers: OrganizationOfficer[] }): DialogRef {
+  organizationApprove(externalUserData: { form: UntypedFormGroup, organizationOfficers: OrganizationOfficer[] }): DialogRef {
     return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.ORGANIZATION_APPROVE, false, this);
   }
 

@@ -4,7 +4,7 @@ import { DIALOG_DATA_TOKEN } from "@app/shared/tokens/tokens";
 import { Followup } from "@app/models/followup";
 import { IAngularMyDpOptions } from "angular-mydatepicker";
 import { DateUtils } from "@helpers/date-utils";
-import { FormControl } from "@angular/forms";
+import { UntypedFormControl } from "@angular/forms";
 import { UserClickOn } from "@app/enums/user-click-on.enum";
 import { DialogRef } from "@app/shared/models/dialog-ref";
 import { ToastService } from "@services/toast.service";
@@ -15,7 +15,7 @@ import { ToastService } from "@services/toast.service";
   styleUrls: ['./due-date-update-popup.component.scss']
 })
 export class DueDateUpdatePopupComponent implements OnInit {
-  control: FormControl = new FormControl()
+  control: UntypedFormControl = new UntypedFormControl()
   private action: UserClickOn = UserClickOn.CANCEL
 
   dateOptions: IAngularMyDpOptions = DateUtils.getDatepickerOptions({

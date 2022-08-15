@@ -2,7 +2,7 @@ import {Component, Inject, ViewChild} from '@angular/core';
 import {LangService} from '@app/services/lang.service';
 import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
 import {InternalUser} from '@app/models/internal-user';
-import {AbstractControl, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {IDialogData} from '@app/interfaces/i-dialog-data';
 import {OperationTypes} from '@app/enums/operation-types.enum';
@@ -42,7 +42,7 @@ import {CommonUtils} from '@app/helpers/common-utils';
 export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser> {
   operation: OperationTypes;
   model: InternalUser;
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   departments: InternalDepartment[] = [];
   statusList: Lookup[] = [];
   permissionGroups: CheckGroup<Permission>[] = [];
@@ -53,7 +53,7 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
   displaySaveBtn: boolean = true;
   userDepartments: InternalUserDepartment[] = [];
   displayedColumns: string [] = ['arabicName', 'englishName', 'default', 'actions'];
-  selectedDepartment: FormControl = new FormControl();
+  selectedDepartment: UntypedFormControl = new UntypedFormControl();
   private userDepartmentsChanged$: Subject<InternalUserDepartment[]> = new Subject<InternalUserDepartment[]>();
   private userDepartmentsIds: number[] = [];
   commonStatusEnum = CommonStatusEnum;
@@ -74,7 +74,7 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
   constructor(public dialogRef: DialogRef,
               public lang: LangService,
               private internalDep: InternalDepartmentService,
-              public fb: FormBuilder,
+              public fb: UntypedFormBuilder,
               private sharedService: SharedService,
               private lookupService: LookupService,
               private customRoleService: CustomRoleService,
@@ -212,12 +212,12 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
   private _updatePermissionValidations(forceUpdateValueAndValidation: boolean = false) {
     const value = this.customRoleId?.value;
     if (!value) {
-      (this.userPermissions as FormControl).removeValidators(Validators.requiredTrue);
+      (this.userPermissions as UntypedFormControl).removeValidators(Validators.requiredTrue);
     } else {
-      (this.userPermissions as FormControl).addValidators(Validators.requiredTrue);
+      (this.userPermissions as UntypedFormControl).addValidators(Validators.requiredTrue);
     }
     if (forceUpdateValueAndValidation) {
-      (this.userPermissions as FormControl).updateValueAndValidity();
+      (this.userPermissions as UntypedFormControl).updateValueAndValidity();
     }
   }
 
@@ -248,16 +248,16 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
           const message = (this.operation === OperationTypes.CREATE)
             ? this.lang.map.msg_create_x_success : this.lang.map.msg_update_x_success;
           this.toast.success(message.change({x: model.getName()}));
-          // here i closing the popup after click on save and the operation is update
+          // here I'm closing the popup after click on save and the operation is updating
           this.operation === OperationTypes.UPDATE && dialogRef.close(model);
-          // here i change operation to UPDATE after first save
+          // here I change operation to UPDATE after first save
           this.operation === OperationTypes.CREATE && (this.operation = OperationTypes.UPDATE);
           this.preventUserDomain();
         });
     });
   }
 
-  beforeSave(model: InternalUser, form: FormGroup): boolean | Observable<boolean> {
+  beforeSave(model: InternalUser, form: UntypedFormGroup): boolean | Observable<boolean> {
     if (!form.valid) {
       this.toast.info(this.lang.map.msg_all_required_fields_are_filled);
       return false;
@@ -265,7 +265,7 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
     return true;
   }
 
-  prepareModel(model: InternalUser, form: FormGroup): InternalUser | Observable<InternalUser> {
+  prepareModel(model: InternalUser, form: UntypedFormGroup): InternalUser | Observable<InternalUser> {
     return (new InternalUser()).clone({...model, ...form.get('user')?.value});
   }
 

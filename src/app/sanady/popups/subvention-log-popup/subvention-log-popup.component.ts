@@ -18,7 +18,7 @@ import {SubventionRequest} from '@app/models/subvention-request';
 import {Beneficiary} from '@app/models/beneficiary';
 import {DialogService} from '@app/services/dialog.service';
 import {AuditDetailsPopupComponent} from '@app/sanady/popups/audit-details-popup/audit-details-popup.component';
-import {FormControl} from '@angular/forms';
+import {UntypedFormControl} from '@angular/forms';
 import {SortEvent} from '@app/interfaces/sort-event';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {DateUtils} from '@app/helpers/date-utils';
@@ -72,8 +72,8 @@ export class SubventionLogPopupComponent implements OnInit, OnDestroy {
   auditSubventionAidData: SanadiAuditResult[] = [];
 
   headerColumn: string[] = ['extra-header'];
-  generalFilterControl: FormControl = new FormControl('');
-  auditFilterControl: FormControl = new FormControl('');
+  generalFilterControl: UntypedFormControl = new UntypedFormControl('');
+  auditFilterControl: UntypedFormControl = new UntypedFormControl('');
 
   generalSortingCallbacks = {
     organization: (a: SubventionLog, b: SubventionLog, dir: SortEvent): number => {

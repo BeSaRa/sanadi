@@ -6,7 +6,7 @@ import {concatMap, map, takeUntil, tap} from 'rxjs/operators';
 import {RecommendationService} from '@app/services/recommendation.service';
 import {RecommendationPopupComponent} from '../../popups/recommendation-popup/recommendation-popup.component';
 import {Recommendation} from '@app/models/recommendation';
-import {FormControl} from '@angular/forms';
+import {UntypedFormControl} from '@angular/forms';
 import {CaseModel} from '@app/models/case-model';
 import {AdminResult} from '@app/models/admin-result';
 import {EmployeeService} from '@app/services/employee.service';
@@ -27,7 +27,7 @@ export class RecommendationsComponent implements OnInit, OnDestroy {
   @Input()
   case?: CaseModel<any, any>;
 
-  formControl: FormControl = new FormControl('');
+  formControl: UntypedFormControl = new UntypedFormControl('');
 
   _disabled: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 

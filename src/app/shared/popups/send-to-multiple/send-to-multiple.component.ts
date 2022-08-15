@@ -9,7 +9,7 @@ import {ToastService} from '@app/services/toast.service';
 import {EmployeeService} from '@app/services/employee.service';
 import {TeamService} from '@app/services/team.service';
 import {InternalDepartmentService} from '@app/services/internal-department.service';
-import {AbstractControl, FormBuilder, FormGroup, ValidatorFn} from '@angular/forms';
+import {AbstractControl, UntypedFormBuilder, UntypedFormGroup, ValidatorFn} from '@angular/forms';
 import {DialogService} from '@app/services/dialog.service';
 import {LangService} from '@app/services/lang.service';
 import {InternalUser} from '@app/models/internal-user';
@@ -44,7 +44,7 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
     private employee: EmployeeService,
     private teamService: TeamService,
     private intDepService: InternalDepartmentService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private dialog: DialogService,
     public lang: LangService
   ) {
@@ -55,7 +55,7 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
 
   users: InternalUser[] = [];
   departments: InternalDepartment[] = [];
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   done$: Subject<any> = new Subject<any>();
   private destroy$: Subject<any> = new Subject<any>();
   title: keyof ILanguageKeys = {} as keyof ILanguageKeys;

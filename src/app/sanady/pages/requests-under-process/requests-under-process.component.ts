@@ -11,7 +11,7 @@ import {CustomValidators} from '@app/validators/custom-validators';
 import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 import {SortEvent} from '@app/interfaces/sort-event';
 import {CommonUtils} from '@app/helpers/common-utils';
-import {FormControl} from '@angular/forms';
+import {UntypedFormControl} from '@angular/forms';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 import {ECookieService} from '@services/e-cookie.service';
@@ -50,7 +50,7 @@ export class RequestsUnderProcessComponent implements OnInit, OnDestroy {
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
   displayedColumns: string[] = ['requestFullSerial', 'requestDate', 'organization', 'requestStatus', 'requestedAidAmount', 'actions'];
   fileIconsEnum = FileIconsEnum;
-  filterControl: FormControl = new FormControl('');
+  filterControl: UntypedFormControl = new UntypedFormControl('');
   actions: IMenuItem<SubventionRequest>[] = [
     // print request
     {
@@ -72,7 +72,7 @@ export class RequestsUnderProcessComponent implements OnInit, OnDestroy {
       icon: ActionIconsEnum.EDIT_BOOK,
       label: 'btn_edit',
       onClick: (item: SubventionRequest) => this.editRequest(item),
-      show: (item) => this.empService.checkPermissions('EDIT_SUBVENTION_REQUEST')
+      show: (_item) => this.empService.checkPermissions('EDIT_SUBVENTION_REQUEST')
     },
     // cancel request
     {
@@ -80,7 +80,7 @@ export class RequestsUnderProcessComponent implements OnInit, OnDestroy {
       icon: ActionIconsEnum.CANCEL_BOOK,
       label: 'btn_cancel',
       onClick: (item: SubventionRequest) => this.cancelRequest(item),
-      show: (item) => this.empService.checkPermissions('EDIT_SUBVENTION_REQUEST')
+      show: (_item) => this.empService.checkPermissions('EDIT_SUBVENTION_REQUEST')
     },
     // delete
     {
@@ -96,7 +96,7 @@ export class RequestsUnderProcessComponent implements OnInit, OnDestroy {
       icon: ActionIconsEnum.SEARCH_USER,
       label: 'inquire_beneficiary',
       onClick: (item: SubventionRequest) => this.inquireBeneficiary(item),
-      show: (item: SubventionRequest) => this.empService.checkPermissions('SUBVENTION_AID_SEARCH')
+      show: (_item: SubventionRequest) => this.empService.checkPermissions('SUBVENTION_AID_SEARCH')
     }
   ];
 
@@ -127,7 +127,7 @@ export class RequestsUnderProcessComponent implements OnInit, OnDestroy {
     this.beneficiaryService.getById(request.benId)
       .pipe(
         takeUntil(this.destroy$),
-        catchError((err) => of(null))
+        catchError(() => of(null))
       )
       .subscribe((beneficiary) => {
         if (!beneficiary) {
@@ -175,7 +175,7 @@ export class RequestsUnderProcessComponent implements OnInit, OnDestroy {
       switchMap(() => {
         return this.subventionRequestService.loadUnderProcess()
           .pipe(
-            catchError((err) => of([]))
+            catchError(() => of([]))
           );
       })
     ).subscribe((requests) => {

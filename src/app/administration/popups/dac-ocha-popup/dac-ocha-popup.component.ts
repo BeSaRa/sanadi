@@ -3,7 +3,7 @@ import {FormManager} from '@app/models/form-manager';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {IDialogData} from '@app/interfaces/i-dialog-data';
 import {LangService} from '@app/services/lang.service';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {ExceptionHandlerService} from '@app/services/exception-handler.service';
 import {LookupService} from '@app/services/lookup.service';
 import {ToastService} from '@app/services/toast.service';
@@ -30,7 +30,7 @@ export class DacOchaPopupComponent extends AdminGenericDialog<DacOcha> {
   classification!: Lookup;
   actionIconsEnum = ActionIconsEnum;
   statuses: Lookup[] = this.lookupService.listByCategory.CommonStatus;
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   fm!: FormManager;
   operation!: OperationTypes;
   model!: DacOcha;
@@ -49,7 +49,7 @@ export class DacOchaPopupComponent extends AdminGenericDialog<DacOcha> {
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<DacOcha>,
               public lang: LangService,
-              public fb: FormBuilder,
+              public fb: UntypedFormBuilder,
               public exceptionHandlerService: ExceptionHandlerService,
               public lookupService: LookupService,
               public toast: ToastService,
@@ -87,11 +87,11 @@ export class DacOchaPopupComponent extends AdminGenericDialog<DacOcha> {
     this.fm = new FormManager(this.form, this.lang);
   }
 
-  beforeSave(model: DacOcha, form: FormGroup): Observable<boolean> | boolean {
+  beforeSave(model: DacOcha, form: UntypedFormGroup): Observable<boolean> | boolean {
     return form.valid;
   }
 
-  prepareModel(model: DacOcha, form: FormGroup): Observable<DacOcha> | DacOcha {
+  prepareModel(model: DacOcha, form: UntypedFormGroup): Observable<DacOcha> | DacOcha {
     const dacOcha = (new DacOcha()).clone({...model, ...form.value});
     dacOcha.type = this.dacOchaTypeId;
     return dacOcha;

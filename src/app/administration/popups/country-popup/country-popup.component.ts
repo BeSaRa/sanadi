@@ -9,7 +9,7 @@ import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {IDialogData} from '@app/interfaces/i-dialog-data';
 import {ToastService} from '@app/services/toast.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {LangService} from '@app/services/lang.service';
 import {LookupService} from '@app/services/lookup.service';
 import {Country} from '@app/models/country';
@@ -24,7 +24,7 @@ import {IKeyValue} from '@app/interfaces/i-key-value';
 export class CountryPopupComponent implements OnInit, AfterViewInit {
   private save$: Subject<any> = new Subject<any>();
   private destroy$: Subject<any> = new Subject<any>();
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   model: Country;
   operation: OperationTypes;
   fm!: FormManager;
@@ -43,7 +43,7 @@ export class CountryPopupComponent implements OnInit, AfterViewInit {
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<Country>,
               private toast: ToastService,
               private dialogRef: DialogRef,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               public langService: LangService,
               private lookupService: LookupService) {
     this.model = data.model;
@@ -115,7 +115,7 @@ export class CountryPopupComponent implements OnInit, AfterViewInit {
         exhaustMap(() => {
           const country = (new Country()).clone({...this.model, ...this.fm.getFormField('basic')?.value});
           return country.save().pipe(
-            catchError((err) => {
+            catchError(() => {
               return of(null);
             })
           );

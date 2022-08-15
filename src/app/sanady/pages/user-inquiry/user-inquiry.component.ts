@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {FormManager} from '@app/models/form-manager';
 import {LangService} from '@app/services/lang.service';
 import {BeneficiaryService} from '@app/services/beneficiary.service';
@@ -43,7 +43,7 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
   private search$: Subject<any> = new Subject<any>();
 
 
-  constructor(private fb: FormBuilder,
+  constructor(private fb: UntypedFormBuilder,
               public langService: LangService,
               private dialogService: DialogService,
               public lookupService: LookupService,
@@ -60,7 +60,7 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
     this.prepareLookups();
   }
 
-  form !: FormGroup;
+  form !: UntypedFormGroup;
   fm!: FormManager;
   stringOperators: Lookup[] = this.lookupService.getStringOperators();
   idTypes: Lookup[] = this.lookupService.listByCategory.BenIdType;
@@ -107,7 +107,7 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
   isBenSearchFromRequest: boolean = false;
   searchByNamePermission: boolean = false;
 
-  filterControl: FormControl = new FormControl('');
+  filterControl: UntypedFormControl = new UntypedFormControl('');
   displayedColumns: string[] = ['requestFullSerial', 'requestDate', 'organization', 'requestStatus', 'requestedAidAmount', 'totalApprovedAmount', 'actions'];
   headerColumn: string[] = ['extra-header'];
   fileIconsEnum = FileIconsEnum;
@@ -206,8 +206,8 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
     }, this.identificationsLookup);
   }
 
-  get currentForm(): FormGroup | null {
-    return <FormGroup> this.fm.getFormField(this.displayIdCriteria ? 'searchById' : 'searchByName');
+  get currentForm(): UntypedFormGroup | null {
+    return <UntypedFormGroup> this.fm.getFormField(this.displayIdCriteria ? 'searchById' : 'searchByName');
   }
 
   private buildPageForm(): void {
@@ -255,24 +255,24 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
     });
   }
 
-  get inquiryTypeField(): FormControl {
-    return this.fm.getFormField('inquiryType') as FormControl;
+  get inquiryTypeField(): UntypedFormControl {
+    return this.fm.getFormField('inquiryType') as UntypedFormControl;
   }
 
-  get identificationField(): FormControl {
-    return this.fm.getFormField('searchById.identification') as FormControl;
+  get identificationField(): UntypedFormControl {
+    return this.fm.getFormField('searchById.identification') as UntypedFormControl;
   }
 
-  get idTypeField(): FormControl {
-    return this.fm.getFormField('searchById.idType') as FormControl;
+  get idTypeField(): UntypedFormControl {
+    return this.fm.getFormField('searchById.idType') as UntypedFormControl;
   }
 
-  get idNumberField(): FormControl {
-    return this.fm.getFormField('searchById.idNumber') as FormControl;
+  get idNumberField(): UntypedFormControl {
+    return this.fm.getFormField('searchById.idNumber') as UntypedFormControl;
   }
 
-  get nationalityField(): FormControl {
-    return this.fm.getFormField('searchById.nationality') as FormControl;
+  get nationalityField(): UntypedFormControl {
+    return this.fm.getFormField('searchById.nationality') as UntypedFormControl;
   }
 
   private listenToIdTypeChange() {

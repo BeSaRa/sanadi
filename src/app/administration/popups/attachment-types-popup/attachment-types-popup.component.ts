@@ -1,7 +1,7 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {LangService} from '@app/services/lang.service';
 import {CustomValidators} from '@app/validators/custom-validators';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {FormManager} from '@app/models/form-manager';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {catchError, exhaustMap, takeUntil} from 'rxjs/operators';
@@ -31,7 +31,7 @@ import {EmployeeService} from '@app/services/employee.service';
 })
 export class AttachmentTypesPopupComponent implements OnInit, OnDestroy {
   statuses: Lookup[] = this.lookupService.listByCategory.CommonStatus;
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   fm!: FormManager;
   operation!: OperationTypes;
   model!: AttachmentType;
@@ -53,7 +53,7 @@ export class AttachmentTypesPopupComponent implements OnInit, OnDestroy {
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<AttachmentType>,
               public lang: LangService,
               public employeeService: EmployeeService,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               private exceptionHandlerService: ExceptionHandlerService,
               private lookupService: LookupService,
               private toast: ToastService,

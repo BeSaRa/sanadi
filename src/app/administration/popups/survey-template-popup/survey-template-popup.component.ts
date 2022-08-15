@@ -1,5 +1,5 @@
 import {Component, Inject} from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
 import {SurveyTemplate} from '@app/models/survey-template';
@@ -26,7 +26,7 @@ import {IQuestionSection} from "@app/interfaces/i-question-section";
 })
 export class SurveyTemplatePopupComponent extends AdminGenericDialog<SurveyTemplate> {
   model: SurveyTemplate;
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   operation!: OperationTypes;
   addSection$: Subject<any> = new Subject<any>();
   editSection$: Subject<{ index: number, model: SurveySection }> = new Subject<{ index: number, model: SurveySection }>();
@@ -41,7 +41,7 @@ export class SurveyTemplatePopupComponent extends AdminGenericDialog<SurveyTempl
               @Inject(DIALOG_DATA_TOKEN)
               private data: IDialogData<SurveyTemplate>,
               private dialog: DialogService,
-              public fb: FormBuilder) {
+              public fb: UntypedFormBuilder) {
     super();
     this.model = this.data.model;
     this.operation = this.data.operation;
@@ -66,7 +66,7 @@ export class SurveyTemplatePopupComponent extends AdminGenericDialog<SurveyTempl
     this.dialogRef.close(model);
   }
 
-  beforeSave(model: SurveyTemplate, form: FormGroup): boolean | Observable<boolean> {
+  beforeSave(model: SurveyTemplate, form: UntypedFormGroup): boolean | Observable<boolean> {
     if (!this.model.sectionSet.length) {
       this.dialog.error(this.lang.map.no_sections_to_save_template)
       return false
@@ -78,7 +78,7 @@ export class SurveyTemplatePopupComponent extends AdminGenericDialog<SurveyTempl
     return this.form.valid;
   }
 
-  prepareModel(model: SurveyTemplate, form: FormGroup): SurveyTemplate | Observable<SurveyTemplate> {
+  prepareModel(model: SurveyTemplate, form: UntypedFormGroup): SurveyTemplate | Observable<SurveyTemplate> {
     return new SurveyTemplate().clone({
       ...this.model,
       ...this.form.value,

@@ -1,10 +1,10 @@
-import {OverlayRef} from '@angular/cdk/overlay/overlay-ref';
-import {ToastComponent} from '../components/toast/toast.component';
-import {AnimationEvent} from '@angular/animations';
-import {filter, take} from 'rxjs/operators';
-import {Subject, Subscription} from 'rxjs';
-import {LangService} from '../../services/lang.service';
-import {Language} from '../../models/language';
+import { OverlayRef } from '@angular/cdk/overlay';
+import { ToastComponent } from '../components/toast/toast.component';
+import { AnimationEvent } from '@angular/animations';
+import { filter, take } from 'rxjs/operators';
+import { Subject, Subscription } from 'rxjs';
+import { LangService } from '@services/lang.service';
+import { Language } from '@app/models/language';
 
 export class ToastRef {
   component: ToastComponent | null = null;

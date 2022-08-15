@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {LangService} from '@app/services/lang.service';
 import {ToastService} from '@app/services/toast.service';
 import {DialogService} from '@app/services/dialog.service';
-import {AbstractControl, FormArray, FormBuilder, FormGroup} from '@angular/forms';
+import {AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {DatepickerOptionsMap, ReadinessStatus} from '@app/types/types';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {BankBranch} from '@app/models/bank-branch';
@@ -20,7 +20,7 @@ export class BankBranchComponent implements OnInit {
   constructor(public lang: LangService,
               private toastService: ToastService,
               private dialogService: DialogService,
-              private fb: FormBuilder) {
+              private fb: UntypedFormBuilder) {
   }
 
   private _list: BankBranch[] = [];
@@ -50,7 +50,7 @@ export class BankBranchComponent implements OnInit {
 
   private destroy$: Subject<any> = new Subject<any>();
 
-  form!: FormGroup;
+  form!: UntypedFormGroup;
 
   datepickerOptionsMap: DatepickerOptionsMap = {
     establishmentDate: DateUtils.getDatepickerOptions({disablePeriod: 'future'})
@@ -85,8 +85,8 @@ export class BankBranchComponent implements OnInit {
     return !this.readonly;
   }
 
-  get branchesFormArray(): FormArray {
-    return (this.form.get('branches')) as FormArray;
+  get branchesFormArray(): UntypedFormArray {
+    return (this.form.get('branches')) as UntypedFormArray;
   }
 
   private listenToAdd() {
@@ -152,7 +152,7 @@ export class BankBranchComponent implements OnInit {
     validForm$.pipe(
       takeUntil(this.destroy$),
       map(() => {
-        return (this.form.get('branches.0')) as FormArray;
+        return (this.form.get('branches.0')) as UntypedFormArray;
       }),
       map((form) => {
         return (new BankBranch()).clone({

@@ -1,18 +1,17 @@
-import {Component, Inject} from '@angular/core';
-import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
-import {ServiceDataStep} from '@app/models/service-data-step';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {FormManager} from '@app/models/form-manager';
-import {FormBuilder, FormGroup} from '@angular/forms';
-import {Observable} from 'rxjs';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
-import {IDialogData} from '@app/interfaces/i-dialog-data';
-import {LangService} from '@app/services/lang.service';
-import {LookupService} from '@app/services/lookup.service';
-import {DialogService} from '@app/services/dialog.service';
-import {ToastService} from '@app/services/toast.service';
-import {CustomValidators} from '@app/validators/custom-validators';
+import { Component, Inject } from '@angular/core';
+import { AdminGenericDialog } from '@app/generics/admin-generic-dialog';
+import { ServiceDataStep } from '@app/models/service-data-step';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { FormManager } from '@app/models/form-manager';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
+import { IDialogData } from '@app/interfaces/i-dialog-data';
+import { LangService } from '@app/services/lang.service';
+import { LookupService } from '@app/services/lookup.service';
+import { DialogService } from '@app/services/dialog.service';
+import { ToastService } from '@app/services/toast.service';
 
 @Component({
   selector: 'service-data-step-popup',
@@ -20,13 +19,13 @@ import {CustomValidators} from '@app/validators/custom-validators';
   styleUrls: ['./service-data-step-popup.component.scss']
 })
 export class ServiceDataStepPopupComponent extends AdminGenericDialog<ServiceDataStep>{
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   fm!: FormManager;
   model!: ServiceDataStep;
   operation!: OperationTypes;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<ServiceDataStep>,
-              public fb: FormBuilder,
+              public fb: UntypedFormBuilder,
               public dialogRef: DialogRef,
               public lang: LangService,
               private lookupService: LookupService,
@@ -50,12 +49,12 @@ export class ServiceDataStepPopupComponent extends AdminGenericDialog<ServiceDat
     this.fm = new FormManager(this.form, this.lang);
   }
 
-  prepareModel(model: ServiceDataStep, form: FormGroup): ServiceDataStep | Observable<ServiceDataStep> {
+  prepareModel(model: ServiceDataStep, form: UntypedFormGroup): ServiceDataStep | Observable<ServiceDataStep> {
     let newObj = {arName: form.get('arName')?.value, enName: form.get('enName')?.value, stepSLA: form.get('stepSLA')?.value};
     return (new ServiceDataStep()).clone({...model, ...newObj});
   }
 
-  beforeSave(model: ServiceDataStep, form: FormGroup): boolean | Observable<boolean> {
+  beforeSave(model: ServiceDataStep, form: UntypedFormGroup): boolean | Observable<boolean> {
     return form.valid;
   }
 

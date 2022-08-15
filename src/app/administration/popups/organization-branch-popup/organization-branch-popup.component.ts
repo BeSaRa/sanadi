@@ -1,5 +1,5 @@
 import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, Inject, ViewChild} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {OrgUnit} from '@app/models/org-unit';
 import {OrgBranch} from '@app/models/org-branch';
@@ -24,7 +24,7 @@ export class OrganizationBranchPopupComponent extends AdminGenericDialog<OrgBran
   constructor(public dialogRef: DialogRef,
               @Inject(DIALOG_DATA_TOKEN) data: IDialogData<OrgBranch>,
               private lookupService: LookupService,
-              public fb: FormBuilder,
+              public fb: UntypedFormBuilder,
               private cd: ChangeDetectorRef,
               private toast: ToastService,
               public langService: LangService) {
@@ -35,7 +35,7 @@ export class OrganizationBranchPopupComponent extends AdminGenericDialog<OrgBran
   }
   @ViewChild('dialogContent') dialogContent!: ElementRef;
 
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   model: OrgBranch;
   operation: OperationTypes;
   saveVisible = true;
@@ -88,14 +88,14 @@ export class OrganizationBranchPopupComponent extends AdminGenericDialog<OrgBran
     this.form = this.fb.group(record.buildForm(true), {validators: record.setFormCrossValidations()});
   }
 
-  get isMainField(): FormControl {
-    return this.form.get('isMain') as FormControl;
+  get isMainField(): UntypedFormControl {
+    return this.form.get('isMain') as UntypedFormControl;
   }
 
-  beforeSave(model: OrgBranch, form: FormGroup): boolean | Observable<boolean> {
+  beforeSave(model: OrgBranch, form: UntypedFormGroup): boolean | Observable<boolean> {
     return this.form.valid;
   }
-  prepareModel(model: OrgBranch, form: FormGroup): OrgBranch | Observable<OrgBranch> {
+  prepareModel(model: OrgBranch, form: UntypedFormGroup): OrgBranch | Observable<OrgBranch> {
     return (new OrgBranch()).clone({...model, ...form.value});
   }
   afterSave(model: OrgBranch, dialogRef: DialogRef): void {

@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angula
 import {ReadinessStatus} from '@app/types/types';
 import {InterventionField} from '@app/models/intervention-field';
 import {Subject} from 'rxjs';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 import {filter, map, take, takeUntil, tap} from 'rxjs/operators';
@@ -31,7 +31,7 @@ export class InterventionFieldListComponent implements OnInit, OnDestroy {
               private dialogService: DialogService,
               private lookupService: LookupService,
               private dacOchaService: DacOchaNewService,
-              private fb: FormBuilder) {
+              private fb: UntypedFormBuilder) {
   }
 
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();
@@ -56,12 +56,12 @@ export class InterventionFieldListComponent implements OnInit, OnDestroy {
   private currentRecord?: InterventionField;
   private destroy$: Subject<any> = new Subject<any>();
   showForm: boolean = false;
-  filterControl: FormControl = new FormControl('');
+  filterControl: UntypedFormControl = new UntypedFormControl('');
 
   mainOchaCategories: AdminLookup[] = [];
   subOchaCategories: AdminLookup[] = [];
 
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   actions: IMenuItem<InterventionField>[] = [
     // edit
     {
@@ -69,7 +69,7 @@ export class InterventionFieldListComponent implements OnInit, OnDestroy {
       icon: ActionIconsEnum.EDIT,
       label: 'btn_edit',
       onClick: (item: InterventionField) => this.edit(item),
-      show: (item: InterventionField) => !this.readonly
+      show: (_item: InterventionField) => !this.readonly
     },
     // delete
     {
@@ -77,7 +77,7 @@ export class InterventionFieldListComponent implements OnInit, OnDestroy {
       icon: ActionIconsEnum.DELETE,
       label: 'btn_delete',
       onClick: (item: InterventionField) => this.delete(item),
-      show: (item: InterventionField) => !this.readonly
+      show: (_item: InterventionField) => !this.readonly
     },
     // view
     {
@@ -85,7 +85,7 @@ export class InterventionFieldListComponent implements OnInit, OnDestroy {
       icon: ActionIconsEnum.VIEW,
       label: 'view',
       onClick: (item: InterventionField) => this.view(item),
-      show: (item: InterventionField) => this.readonly
+      show: (_item: InterventionField) => this.readonly
     }
   ];
   sortingCallbacks = {
@@ -311,7 +311,7 @@ export class InterventionFieldListComponent implements OnInit, OnDestroy {
       });
   }
 
-  get subUNOCHACategoryField(): FormControl {
-    return this.form.get('subUNOCHACategory') as FormControl;
+  get subUNOCHACategoryField(): UntypedFormControl {
+    return this.form.get('subUNOCHACategory') as UntypedFormControl;
   }
 }

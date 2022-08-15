@@ -1,11 +1,11 @@
 import {Subject} from "rxjs";
-import {FormBuilder} from "@angular/forms";
+import {UntypedFormBuilder} from "@angular/forms";
 
 export interface IAdminGenericInterface<M> {
 
   save$: Subject<any>;
   destroy$: Subject<any>;
-  fb: FormBuilder;
+  fb: UntypedFormBuilder;
   model: M;
 
   listenToSave(): void

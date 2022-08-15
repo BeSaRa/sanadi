@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {AbstractControl, FormArray, FormBuilder, FormGroup} from '@angular/forms';
+import {AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {LangService} from '@app/services/lang.service';
 import {Country} from '@app/models/country';
 import {CountryService} from '@app/services/country.service';
@@ -26,7 +26,7 @@ export class BankAccountComponent implements OnInit {
               private toastService: ToastService,
               private dialogService: DialogService,
               private lookupService: LookupService,
-              private fb: FormBuilder) {
+              private fb: UntypedFormBuilder) {
   }
 
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();
@@ -61,7 +61,7 @@ export class BankAccountComponent implements OnInit {
   private currentRecord?: BankAccount;
   private destroy$: Subject<any> = new Subject<any>();
 
-  form!: FormGroup;
+  form!: UntypedFormGroup;
 
   ngOnInit(): void {
     this.buildForm();
@@ -91,8 +91,8 @@ export class BankAccountComponent implements OnInit {
     return !this.readonly;
   }
 
-  get bankAccountsFormArray(): FormArray {
-    return (this.form.get('bankAccount')) as FormArray;
+  get bankAccountsFormArray(): UntypedFormArray {
+    return (this.form.get('bankAccount')) as UntypedFormArray;
   }
 
   private listenToAdd() {
@@ -158,7 +158,7 @@ export class BankAccountComponent implements OnInit {
     validForm$.pipe(
       takeUntil(this.destroy$),
       map(() => {
-        return (this.form.get('bankAccount.0')) as FormArray;
+        return (this.form.get('bankAccount.0')) as UntypedFormArray;
       }),
       map((form) => {
         return (new BankAccount()).clone({

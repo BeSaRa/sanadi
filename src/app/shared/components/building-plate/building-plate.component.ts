@@ -1,5 +1,5 @@
 import {Component, HostBinding, Input, OnInit} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, ValidatorFn} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, ValidatorFn} from '@angular/forms';
 import {LangService} from '@app/services/lang.service';
 import {IKeyValue} from '@app/interfaces/i-key-value';
 import {CustomValidators} from '@app/validators/custom-validators';
@@ -15,10 +15,10 @@ import {delay} from 'rxjs/operators';
 export class BuildingPlateComponent implements OnInit {
   @HostBinding('class') classes = 'row justify-content-center';
   constructor(public lang: LangService,
-              private fb: FormBuilder) {
+              private fb: UntypedFormBuilder) {
   }
 
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   private fields: IKeyValue = {
     buildingNo: 'buildingNo',
     street: 'street',
@@ -59,25 +59,25 @@ export class BuildingPlateComponent implements OnInit {
   private onRecordChange() {
     this._record.pipe(
       delay(100)
-    ).subscribe((value) => {
+    ).subscribe(() => {
       this._updateForm();
     })
   }
 
-  get buildingNoField(): FormControl {
-    return this.form.get('buildingNo') as FormControl;
+  get buildingNoField(): UntypedFormControl {
+    return this.form.get('buildingNo') as UntypedFormControl;
   }
 
-  get unitField(): FormControl {
-    return this.form.get('unit') as FormControl;
+  get unitField(): UntypedFormControl {
+    return this.form.get('unit') as UntypedFormControl;
   }
 
-  get zoneField(): FormControl {
-    return this.form.get('zone') as FormControl;
+  get zoneField(): UntypedFormControl {
+    return this.form.get('zone') as UntypedFormControl;
   }
 
-  get streetField(): FormControl {
-    return this.form.get('street') as FormControl;
+  get streetField(): UntypedFormControl {
+    return this.form.get('street') as UntypedFormControl;
   }
 
   isValidForm(): boolean {

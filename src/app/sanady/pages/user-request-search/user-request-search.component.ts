@@ -5,7 +5,7 @@ import {SubventionRequestAid} from '@app/models/subvention-request-aid';
 import {ConfigurationService} from '@app/services/configuration.service';
 import {Lookup} from '@app/models/lookup';
 import {LookupService} from '@app/services/lookup.service';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {StringOperator} from '@app/enums/string-operator.enum';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {BehaviorSubject, of, Subject} from 'rxjs';
@@ -45,7 +45,7 @@ export class UserRequestSearchComponent implements OnInit, AfterViewInit, OnDest
 
   constructor(public langService: LangService,
               private toastService: ToastService,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               private lookupService: LookupService,
               private configurationService: ConfigurationService,
               private dialogService: DialogService,
@@ -89,7 +89,7 @@ export class UserRequestSearchComponent implements OnInit, AfterViewInit, OnDest
   nationalities: Lookup[] = this.lookupService.listByCategory.Nationality;
   requestsStatus: Lookup[] = this.lookupService.listByCategory.SubRequestStatus;
   employmentStatus: Lookup[] = this.lookupService.listByCategory.BenOccuptionStatus;
-  form: FormGroup = {} as FormGroup;
+  form: UntypedFormGroup = {} as UntypedFormGroup;
   stringOperationMap: typeof StringOperator = StringOperator;
   private search$: Subject<any> = new Subject<any>();
   private latestCriteria: Partial<ISubventionRequestCriteria> = {} as Partial<ISubventionRequestCriteria>;
@@ -118,7 +118,7 @@ export class UserRequestSearchComponent implements OnInit, AfterViewInit, OnDest
   };
 
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
-  filterControl: FormControl = new FormControl('');
+  filterControl: UntypedFormControl = new UntypedFormControl('');
   headerColumn: string[] = ['extra-header'];
   displayedColumns: string[] = ['requestFullSerial', 'requestDate', 'organization', 'createdBy', 'requestStatus', 'estimatedAmount', 'requestedAidAmount', 'totalApprovedAmount', 'statusDateModified', 'actions'];
   reload$: BehaviorSubject<any> = new BehaviorSubject<any>('init');
@@ -191,7 +191,7 @@ export class UserRequestSearchComponent implements OnInit, AfterViewInit, OnDest
       label: 'btn_edit',
       onClick: (item: SubventionRequestAid) => this.editRequest(item),
       disabled: (item: SubventionRequestAid) => item.notUnderProcess(),
-      show: (item: SubventionRequestAid) => this.empService.checkPermissions('EDIT_SUBVENTION_REQUEST')
+      show: () => this.empService.checkPermissions('EDIT_SUBVENTION_REQUEST')
     },
     // cancel
     {
@@ -200,7 +200,7 @@ export class UserRequestSearchComponent implements OnInit, AfterViewInit, OnDest
       label: 'btn_cancel',
       onClick: (item: SubventionRequestAid) => this.cancelRequest(item),
       disabled: (item: SubventionRequestAid) => item.notUnderProcess(),
-      show: (item: SubventionRequestAid) => this.empService.checkPermissions('EDIT_SUBVENTION_REQUEST')
+      show: () => this.empService.checkPermissions('EDIT_SUBVENTION_REQUEST')
     },
     // delete
     {
@@ -216,7 +216,7 @@ export class UserRequestSearchComponent implements OnInit, AfterViewInit, OnDest
       icon: ActionIconsEnum.SEARCH_USER,
       label: 'inquire_beneficiary',
       onClick: (item: SubventionRequestAid) => this.inquireBeneficiary(item),
-      show: (item: SubventionRequestAid) => this.empService.checkPermissions('SUBVENTION_AID_SEARCH')
+      show: (_item: SubventionRequestAid) => this.empService.checkPermissions('SUBVENTION_AID_SEARCH')
     },
   ];
 
@@ -318,7 +318,7 @@ export class UserRequestSearchComponent implements OnInit, AfterViewInit, OnDest
       aidType: AidTypes.MAIN_CATEGORY,
       status: AidLookupStatusEnum.ACTIVE
     }).pipe(
-      catchError(err => of([]))
+      catchError(() => of([]))
     ).subscribe((list) => {
       this.mainAidLookupsList = list;
     });
@@ -339,62 +339,62 @@ export class UserRequestSearchComponent implements OnInit, AfterViewInit, OnDest
       status: AidLookupStatusEnum.ACTIVE,
       parent: mainAidId
     }).pipe(
-      catchError(err => of([]))
+      catchError(() => of([]))
     ).subscribe(list => {
       this.aidsSubAidLookupsList = list;
     });
   }
 
-  get arNameOperatorField(): FormControl {
-    return this.form.get('simpleSearch.beneficiary.arName.operator')! as FormControl;
+  get arNameOperatorField(): UntypedFormControl {
+    return this.form.get('simpleSearch.beneficiary.arName.operator')! as UntypedFormControl;
   }
 
-  get enNameOperatorField(): FormControl {
-    return this.form.get('simpleSearch.beneficiary.enName.operator') as FormControl;
+  get enNameOperatorField(): UntypedFormControl {
+    return this.form.get('simpleSearch.beneficiary.enName.operator') as UntypedFormControl;
   }
 
-  get primaryIdTypeField(): FormControl {
-    return this.form.get('simpleSearch.beneficiary.benPrimaryIdType') as FormControl;
+  get primaryIdTypeField(): UntypedFormControl {
+    return this.form.get('simpleSearch.beneficiary.benPrimaryIdType') as UntypedFormControl;
   }
 
-  get secondaryIdTypeField(): FormControl {
-    return this.form.get('simpleSearch.beneficiary.benSecIdType') as FormControl;
+  get secondaryIdTypeField(): UntypedFormControl {
+    return this.form.get('simpleSearch.beneficiary.benSecIdType') as UntypedFormControl;
   }
 
-  get yearField(): FormControl {
-    return this.form.get('simpleSearch.year')! as FormControl;
+  get yearField(): UntypedFormControl {
+    return this.form.get('simpleSearch.year')! as UntypedFormControl;
   }
 
-  get aidsRequestedAidCategoryField(): FormControl {
-    return this.form.get('advancedSearch.aids.aidLookupParentId') as FormControl;
+  get aidsRequestedAidCategoryField(): UntypedFormControl {
+    return this.form.get('advancedSearch.aids.aidLookupParentId') as UntypedFormControl;
   }
 
-  get aidsRequestedAidField(): FormControl {
-    return this.form.get('advancedSearch.aids.aidLookupId') as FormControl;
+  get aidsRequestedAidField(): UntypedFormControl {
+    return this.form.get('advancedSearch.aids.aidLookupId') as UntypedFormControl;
   }
 
-  get creationDateFromField(): FormControl {
-    return this.form.get('advancedSearch.request.creationDateFrom') as FormControl;
+  get creationDateFromField(): UntypedFormControl {
+    return this.form.get('advancedSearch.request.creationDateFrom') as UntypedFormControl;
   }
 
-  get creationDateToField(): FormControl {
-    return this.form.get('advancedSearch.request.creationDateTo') as FormControl;
+  get creationDateToField(): UntypedFormControl {
+    return this.form.get('advancedSearch.request.creationDateTo') as UntypedFormControl;
   }
 
-  get statusDateFromField(): FormControl {
-    return this.form.get('advancedSearch.request.statusDateModifiedFrom') as FormControl;
+  get statusDateFromField(): UntypedFormControl {
+    return this.form.get('advancedSearch.request.statusDateModifiedFrom') as UntypedFormControl;
   }
 
-  get statusDateToField(): FormControl {
-    return this.form.get('advancedSearch.request.statusDateModifiedTo') as FormControl;
+  get statusDateToField(): UntypedFormControl {
+    return this.form.get('advancedSearch.request.statusDateModifiedTo') as UntypedFormControl;
   }
 
-  get primaryIdNumberField(): FormControl {
-    return this.form.get('simpleSearch.beneficiary.benPrimaryIdNumber') as FormControl;
+  get primaryIdNumberField(): UntypedFormControl {
+    return this.form.get('simpleSearch.beneficiary.benPrimaryIdNumber') as UntypedFormControl;
   }
 
-  get secondaryIdNumberField(): FormControl {
-    return this.form.get('simpleSearch.beneficiary.benSecIdNumber') as FormControl;
+  get secondaryIdNumberField(): UntypedFormControl {
+    return this.form.get('simpleSearch.beneficiary.benSecIdNumber') as UntypedFormControl;
   }
 
   isPrimaryIdTypeDisabled(optionValue: number): boolean {

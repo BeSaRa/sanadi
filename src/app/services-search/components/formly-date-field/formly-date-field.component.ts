@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {FieldType} from '@ngx-formly/core';
-import {FormControl} from '@angular/forms';
+import {UntypedFormControl} from '@angular/forms';
 import {IAngularMyDpOptions} from 'angular-mydatepicker';
-import {DateUtils} from '../../../helpers/date-utils';
-import {CustomFormlyFieldConfig} from '../../../interfaces/custom-formly-field-config';
+import {DateUtils} from '@helpers/date-utils';
+import {CustomFormlyFieldConfig} from '@contracts/custom-formly-field-config';
 
 @Component({
   selector: 'formly-date-field',
@@ -15,8 +15,8 @@ export class FormlyDateFieldComponent extends FieldType<CustomFormlyFieldConfig>
     disablePeriod: 'none'
   });
 
-  get control(): FormControl {
-    return this.formControl as FormControl;
+  get control(): UntypedFormControl {
+    return this.formControl as UntypedFormControl;
   }
 
   constructor() {

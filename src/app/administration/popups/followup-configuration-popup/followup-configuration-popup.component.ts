@@ -2,7 +2,7 @@ import {Component, Inject} from '@angular/core';
 import {LangService} from '@app/services/lang.service';
 import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
 import {FollowupConfiguration} from '@app/models/followup-configuration';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {Observable} from 'rxjs';
@@ -24,7 +24,7 @@ import {RequestTypeFollowupService} from '@services/request-type-followup.servic
 export class FollowupConfigurationPopupComponent extends AdminGenericDialog<FollowupConfiguration> {
 
   model: FollowupConfiguration;
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   operation: OperationTypes;
   requestTypes: Lookup[] = []
   followUpTypes: Lookup[] = this.lookupService.listByCategory.FollowUpType;
@@ -33,7 +33,7 @@ export class FollowupConfigurationPopupComponent extends AdminGenericDialog<Foll
   serviceId!: number;
   caseType!: number;
 
-  constructor(public fb: FormBuilder,
+  constructor(public fb: UntypedFormBuilder,
               public dialogRef: DialogRef,
               public lang: LangService,
               private lookupService: LookupService,
@@ -65,11 +65,11 @@ export class FollowupConfigurationPopupComponent extends AdminGenericDialog<Foll
     dialogRef.close();
   }
 
-  beforeSave(model: FollowupConfiguration, form: FormGroup): boolean | Observable<boolean> {
+  beforeSave(model: FollowupConfiguration, form: UntypedFormGroup): boolean | Observable<boolean> {
     return this.form.valid;
   }
 
-  prepareModel(model: FollowupConfiguration, form: FormGroup): FollowupConfiguration | Observable<FollowupConfiguration> {
+  prepareModel(model: FollowupConfiguration, form: UntypedFormGroup): FollowupConfiguration | Observable<FollowupConfiguration> {
     const newModel = new FollowupConfiguration().clone({
       ...this.model,
       ...this.form.getRawValue()

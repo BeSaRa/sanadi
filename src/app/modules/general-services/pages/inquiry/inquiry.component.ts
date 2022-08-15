@@ -6,7 +6,7 @@ import {InternalDepartment} from '@app/models/internal-department';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {exhaustMap, filter, map, takeUntil, tap} from 'rxjs/operators';
 import {FormManager} from '@app/models/form-manager';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {Inquiry} from '@app/models/inquiry';
 import {LookupService} from '@app/services/lookup.service';
 import {Lookup} from '@app/models/lookup';
@@ -38,7 +38,7 @@ export class InquiryComponent implements OnInit, OnDestroy, IESComponent<Inquiry
   departments: InternalDepartment[] = [];
   destroy$: Subject<any> = new Subject<any>();
   fm!: FormManager;
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   categories: Lookup[] = this.lookupService.listByCategory.InquiryCategory;
   save: Subject<SaveTypes> = new Subject<SaveTypes>();
   saveTypes: typeof SaveTypes = SaveTypes;
@@ -95,7 +95,7 @@ export class InquiryComponent implements OnInit, OnDestroy, IESComponent<Inquiry
   constructor(private http: HttpClient,
               public service: InquiryService,
               private intDepService: InternalDepartmentService,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               private dialog: DialogService,
               private lookupService: LookupService,
               public employeeService: EmployeeService,

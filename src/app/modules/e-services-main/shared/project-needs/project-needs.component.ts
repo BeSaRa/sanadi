@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
   AbstractControl,
-  FormArray,
-  FormBuilder,
-  FormGroup,
+  UntypedFormArray,
+  UntypedFormBuilder,
+  UntypedFormGroup,
 } from '@angular/forms';
 import { CaseTypes } from '@app/enums/case-types.enum';
 import { UserClickOn } from '@app/enums/user-click-on.enum';
@@ -26,7 +26,7 @@ export class ProjectNeedsComponent implements OnInit {
   private save$: Subject<any> = new Subject<any>();
 
   totalCost: number = 0;
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   add$: Subject<any> = new Subject<any>();
   columns = [
     'projectName',
@@ -54,7 +54,7 @@ export class ProjectNeedsComponent implements OnInit {
 
   constructor(
     public lang: LangService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private dialogService: DialogService,
     private toastService: ToastService
   ) { }
@@ -66,8 +66,8 @@ export class ProjectNeedsComponent implements OnInit {
     this.listenToSave();
   }
 
-  get projectNeedsForm(): FormArray {
-    return this.form.get('projectNeeds') as FormArray;
+  get projectNeedsForm(): UntypedFormArray {
+    return this.form.get('projectNeeds') as UntypedFormArray;
   }
   // tslint:disable-next-line: adjacent-overload-signatures
   get list(): ProjectNeeds {
@@ -152,7 +152,7 @@ export class ProjectNeedsComponent implements OnInit {
       .pipe(
         takeUntil(this.destroy$),
         map(() => {
-          return this.form.get('projectNeeds.0') as FormArray;
+          return this.form.get('projectNeeds.0') as UntypedFormArray;
         }),
         map((form) => {
           return new ProjectNeed().clone({

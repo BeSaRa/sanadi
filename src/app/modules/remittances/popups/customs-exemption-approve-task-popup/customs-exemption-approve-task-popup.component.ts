@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from "@angular/core";
-import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from "@angular/forms";
 import { ServiceRequestTypes } from "@app/enums/service-request-types";
 import { WFResponseType } from "@app/enums/wfresponse-type.enum";
 import { CommonUtils } from "@app/helpers/common-utils";
@@ -31,8 +31,8 @@ export class CustomsExemptionApproveTaskPopupComponent implements OnInit {
   response: WFResponseType = WFResponseType.APPROVE;
 
   model: CustomsExemptionRemittance;
-  comment: FormControl = new FormControl('', [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]);
-  form!: FormGroup;
+  comment: UntypedFormControl = new UntypedFormControl('', [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]);
+  form!: UntypedFormGroup;
 
   datepickerOptionsMap: IKeyValue = {
     followUpDate: DateUtils.getDatepickerOptions({ disablePeriod: "past" }),
@@ -40,7 +40,7 @@ export class CustomsExemptionApproveTaskPopupComponent implements OnInit {
 
   constructor(
     private dialog: DialogService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private dialogRef: DialogRef,
     private toast: ToastService,
     private inboxService: InboxService,

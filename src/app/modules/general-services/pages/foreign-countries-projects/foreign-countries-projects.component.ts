@@ -7,7 +7,7 @@ import {
   ViewChild,
   ViewChildren,
 } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { SaveTypes } from '@app/enums/save-types';
 import { CollectionRequestType } from '@app/enums/service-request-types';
@@ -46,12 +46,10 @@ import {
   styleUrls: ['./foreign-countries-projects.component.scss'],
 })
 export class ForeignCountriesProjectsComponent
-  extends EServicesGenericComponent<
-  ForeignCountriesProjects,
-  ForeignCountriesProjectsService
-  >
+  extends EServicesGenericComponent<ForeignCountriesProjects,
+    ForeignCountriesProjectsService>
   implements AfterViewInit {
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   tabs: IKeyValue[] = [];
   requestTypes: Lookup[] =
     this.lookupService.listByCategory.CollectionRequestType?.sort(
@@ -75,7 +73,7 @@ export class ForeignCountriesProjectsComponent
 
   constructor(
     public lang: LangService,
-    public fb: FormBuilder,
+    public fb: UntypedFormBuilder,
     public service: ForeignCountriesProjectsService,
     private lookupService: LookupService,
     private countryService: CountryService,
@@ -86,6 +84,7 @@ export class ForeignCountriesProjectsComponent
   ) {
     super();
   }
+
   ngAfterViewInit(): void {
     const tabsTemplates = this.tabsTemplates.toArray();
     setTimeout(() => {
@@ -123,32 +122,39 @@ export class ForeignCountriesProjectsComponent
   get isEditOrCancel(): boolean {
     return this.isEditRequestType || this.isCancelRequestType;
   }
+
   get isEditRequestType(): boolean {
     return (
       this.requestTypeField.value &&
       this.requestTypeField.value === CollectionRequestType.UPDATE
     );
   }
+
   get isCancelRequestType(): boolean {
     return (
       this.requestTypeField.value &&
       this.requestTypeField.value === CollectionRequestType.CANCEL
     );
   }
+
   get isEditAllowed(): boolean {
     return !this.model?.id || (!!this.model?.id && this.model.canCommit());
   }
-  get basicInfo(): FormGroup {
-    return this.form.get('basicInfo') as FormGroup;
+
+  get basicInfo(): UntypedFormGroup {
+    return this.form.get('basicInfo') as UntypedFormGroup;
   }
-  get requestTypeField(): FormControl {
-    return this.basicInfo?.get('requestType') as FormControl;
+
+  get requestTypeField(): UntypedFormControl {
+    return this.basicInfo?.get('requestType') as UntypedFormControl;
   }
-  get oldLicenseFullSerialField(): FormControl {
-    return this.basicInfo?.get('oldLicenseFullSerial') as FormControl;
+
+  get oldLicenseFullSerialField(): UntypedFormControl {
+    return this.basicInfo?.get('oldLicenseFullSerial') as UntypedFormControl;
   }
-  get specialExplanation(): FormGroup {
-    return this.form.get('explanation')! as FormGroup;
+
+  get specialExplanation(): UntypedFormGroup {
+    return this.form.get('explanation')! as UntypedFormGroup;
   }
 
   licenseSearch($event?: Event): void {
@@ -159,15 +165,15 @@ export class ForeignCountriesProjectsComponent
     }
     this.licenseSearch$.next(value);
   }
+
   loadLicencesByCriteria(
-    criteria:
-      | Partial<ForeignCountriesProjectsSearchCriteria>
-      | Partial<ForeignCountriesProjectsSearchCriteria>
+    criteria: Partial<ForeignCountriesProjectsSearchCriteria>
   ): Observable<ForeignCountriesProjectsResult[]> {
     return this.service.licenseSearch(
       criteria as Partial<ForeignCountriesProjectsSearchCriteria>
     );
   }
+
   listenToLicenseSearch(): void {
     this.licenseSearch$
       .pipe(
@@ -199,7 +205,7 @@ export class ForeignCountriesProjectsComponent
                   }
                   return { selected: licenses[0], details: data };
                 }),
-                catchError((e) => {
+                catchError(() => {
                   return of(null);
                 })
               );
@@ -217,6 +223,7 @@ export class ForeignCountriesProjectsComponent
         }),
         filter<{ selected: any; details: ForeignCountriesProjects }>(
           (selection: { selected: any; details: ForeignCountriesProjects }) => {
+            // noinspection SuspiciousTypeOfGuard
             return (
               selection &&
               selection.selected &&
@@ -230,6 +237,7 @@ export class ForeignCountriesProjectsComponent
         this.setSelectedLicense(selection.details);
       });
   }
+
   private setSelectedLicense(licenseDetails: ForeignCountriesProjects) {
     this.selectedLicense = licenseDetails;
     let requestType = this.requestTypeField?.value;
@@ -254,6 +262,7 @@ export class ForeignCountriesProjectsComponent
 
     this._updateForm(new ForeignCountriesProjects().clone(result));
   }
+
   handleRequestTypeChange(
     requestTypeValue: number,
     userInteraction: boolean = false
@@ -262,22 +271,26 @@ export class ForeignCountriesProjectsComponent
       this._resetForm();
       this.requestTypeField.setValue(requestTypeValue);
     }
-    if (!requestTypeValue) {
-      requestTypeValue = this.requestTypeField && this.requestTypeField.value;
-    }
+    // if (!requestTypeValue) {
+    //   requestTypeValue = this.requestTypeField && this.requestTypeField.value;
+    // }
   }
+
   getTabInvalidStatus(i: number): boolean {
     if (i >= 0 && i < this.tabs.length) {
       return !this.tabs[i].validStatus();
     }
     return true;
   }
+
   _getNewInstance(): ForeignCountriesProjects {
     return new ForeignCountriesProjects();
   }
+
   _initComponent(): void {
     this.listenToLicenseSearch();
   }
+
   _buildForm(): void {
     const model = this._getNewInstance();
     this.form = this.fb.group({
@@ -285,7 +298,9 @@ export class ForeignCountriesProjectsComponent
       explanation: this.fb.group(model.buildExplanation(true)),
     });
   }
+
   _afterBuildForm(): void { }
+
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
     if (saveType === SaveTypes.DRAFT) {
       return true;
@@ -299,6 +314,7 @@ export class ForeignCountriesProjectsComponent
     return true;
 
   }
+
   private _getInvalidTabs(): any {
     const failedList: string[] = [];
     for (const tab of this.tabs) {
@@ -308,13 +324,16 @@ export class ForeignCountriesProjectsComponent
     }
     return failedList;
   }
+
   _beforeLaunch(): boolean | Observable<boolean> {
     return !!this.model && this.form.valid && this.model.canStart();
   }
+
   _afterLaunch(): void {
     this._resetForm();
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
+
   _prepareModel(): ForeignCountriesProjects | Observable<ForeignCountriesProjects> {
     const value = (new ForeignCountriesProjects()).clone({
       ...this.model,
@@ -324,6 +343,7 @@ export class ForeignCountriesProjectsComponent
     value.projectNeeds = this.projectNeedsComponentRef.list;
     return value;
   }
+
   _afterSave(
     model: ForeignCountriesProjects,
     saveType: SaveTypes,
@@ -339,14 +359,18 @@ export class ForeignCountriesProjectsComponent
       this.toast.success(this.lang.map.request_has_been_saved_successfully);
     }
   }
+
   _saveFail(error: any): void {
 
   }
+
   _launchFail(error: any): void {
     throw new Error('Method not implemented.');
   }
+
   _destroyComponent(): void {
   }
+
   _updateForm(model: ForeignCountriesProjects | undefined): void {
     this.model = model;
     this.basicInfo.patchValue(this.model?.buildForm(false)!);
@@ -354,6 +378,7 @@ export class ForeignCountriesProjectsComponent
     this.handleRequestTypeChange(this.model?.requestType || 0, false);
     this.cd.detectChanges();
   }
+
   _resetForm(): void {
     this.form.reset();
     this.operation = OperationTypes.CREATE;

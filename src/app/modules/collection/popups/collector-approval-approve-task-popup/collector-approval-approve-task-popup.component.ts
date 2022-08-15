@@ -3,7 +3,7 @@ import {Subject} from 'rxjs';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {WFResponseType} from '@app/enums/wfresponse-type.enum';
 import {CollectorApproval} from '@app/models/collector-approval';
-import {FormControl} from '@angular/forms';
+import {UntypedFormControl} from '@angular/forms';
 import {DialogService} from '@app/services/dialog.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {InboxService} from '@app/services/inbox.service';
@@ -39,7 +39,7 @@ export class CollectorApprovalApproveTaskPopupComponent implements OnInit, OnDes
   response: WFResponseType = WFResponseType.APPROVE;
 
   model: CollectorApproval;
-  comment: FormControl = new FormControl('', [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]);
+  comment: UntypedFormControl = new UntypedFormControl('', [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]);
   @ViewChild(ApprovalFormComponent) approvalForm!: ApprovalFormComponent;
 
   constructor(

@@ -1,17 +1,17 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
-import {Donor} from '@app/models/donor';
-import {Lookup} from '@app/models/lookup';
-import {FormBuilder, FormGroup} from '@angular/forms';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {LookupService} from '@services/lookup.service';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {LangService} from '@services/lang.service';
-import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
-import {IDialogData} from '@contracts/i-dialog-data';
-import {DialogService} from '@services/dialog.service';
-import {ToastService} from '@services/toast.service';
-import {Observable} from 'rxjs';
+import { Component, Inject } from '@angular/core';
+import { AdminGenericDialog } from '@app/generics/admin-generic-dialog';
+import { Donor } from '@app/models/donor';
+import { Lookup } from '@app/models/lookup';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { LookupService } from '@services/lookup.service';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { LangService } from '@services/lang.service';
+import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
+import { IDialogData } from '@contracts/i-dialog-data';
+import { DialogService } from '@services/dialog.service';
+import { ToastService } from '@services/toast.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'donor-popup',
@@ -21,13 +21,13 @@ import {Observable} from 'rxjs';
 export class DonorPopupComponent extends AdminGenericDialog<Donor> {
 
   statuses: Lookup[] = this.lookupService.listByCategory.CommonStatus;
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   model!: Donor;
   operation: OperationTypes;
   saveVisible = true;
 
   constructor(public dialogRef: DialogRef,
-              public fb: FormBuilder,
+              public fb: UntypedFormBuilder,
               public lang: LangService,
               @Inject(DIALOG_DATA_TOKEN) data: IDialogData<Donor>,
               private dialogService: DialogService,
@@ -50,11 +50,11 @@ export class DonorPopupComponent extends AdminGenericDialog<Donor> {
     }
   }
 
-  beforeSave(model: Donor, form: FormGroup): Observable<boolean> | boolean {
+  beforeSave(model: Donor, form: UntypedFormGroup): Observable<boolean> | boolean {
     return form.valid;
   }
 
-  prepareModel(model: Donor, form: FormGroup): Observable<Donor> | Donor {
+  prepareModel(model: Donor, form: UntypedFormGroup): Observable<Donor> | Donor {
     return (new Donor()).clone({...model, ...form.value});
   }
 

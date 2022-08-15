@@ -1,5 +1,5 @@
 import {Directive, EventEmitter, Input, OnDestroy, OnInit} from "@angular/core";
-import {FormBuilder, FormGroup} from "@angular/forms";
+import {UntypedFormBuilder, UntypedFormGroup} from "@angular/forms";
 import {OperationTypes} from "@app/enums/operation-types.enum";
 import {SaveTypes} from "@app/enums/save-types";
 import {IESComponent} from "@app/interfaces/iescomponent";
@@ -54,8 +54,8 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
   formValidity$: Subject<any> = new Subject<any>();
 
   abstract lang: LangService;
-  abstract form: FormGroup;
-  abstract fb: FormBuilder;
+  abstract form: UntypedFormGroup;
+  abstract fb: UntypedFormBuilder;
   abstract service: S;
 
   private saveMethods: Record<SaveTypes, keyof Omit<ICaseModel<M>, 'id'>> = {
@@ -237,7 +237,7 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
   /**
    * @description return here array of forms that you need to make it as touched to display the validation message below it
    */
-  _validateForms(): FormGroup[] {
+  _validateForms(): UntypedFormGroup[] {
     return [this.form]
   }
 

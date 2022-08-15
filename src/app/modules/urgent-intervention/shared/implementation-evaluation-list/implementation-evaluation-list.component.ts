@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angula
 import {LangService} from '@services/lang.service';
 import {ToastService} from '@services/toast.service';
 import {DialogService} from '@services/dialog.service';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {ReadinessStatus} from '@app/types/types';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {of, Subject} from 'rxjs';
@@ -30,7 +30,7 @@ export class ImplementationEvaluationListComponent implements OnInit, OnDestroy 
               private dialogService: DialogService,
               private lookupService: LookupService,
               private fieldAssessmentService: FieldAssessmentService,
-              private fb: FormBuilder) {
+              private fb: UntypedFormBuilder) {
   }
 
 
@@ -75,9 +75,9 @@ export class ImplementationEvaluationListComponent implements OnInit, OnDestroy 
   private currentRecord?: OfficeEvaluation;
   private destroy$: Subject<any> = new Subject<any>();
   showForm: boolean = false;
-  filterControl: FormControl = new FormControl('');
+  filterControl: UntypedFormControl = new UntypedFormControl('');
 
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   actions: IMenuItem<OfficeEvaluation>[] = [
     // edit
     {
@@ -85,7 +85,7 @@ export class ImplementationEvaluationListComponent implements OnInit, OnDestroy 
       icon: ActionIconsEnum.EDIT,
       label: 'btn_edit',
       onClick: (item: OfficeEvaluation) => this.edit(item),
-      show: (item: OfficeEvaluation) => !this.readonly
+      show: (_item: OfficeEvaluation) => !this.readonly
     },
     // delete
     {
@@ -93,7 +93,7 @@ export class ImplementationEvaluationListComponent implements OnInit, OnDestroy 
       icon: ActionIconsEnum.DELETE,
       label: 'btn_delete',
       onClick: (item: OfficeEvaluation) => this.delete(item),
-      show: (item: OfficeEvaluation) => !this.readonly
+      show: (_item: OfficeEvaluation) => !this.readonly
     },
     // view
     {
@@ -101,7 +101,7 @@ export class ImplementationEvaluationListComponent implements OnInit, OnDestroy 
       icon: ActionIconsEnum.VIEW,
       label: 'view',
       onClick: (item: OfficeEvaluation) => this.view(item),
-      show: (item: OfficeEvaluation) => this.readonly
+      show: (_item: OfficeEvaluation) => this.readonly
     }
   ];
 
@@ -284,7 +284,7 @@ export class ImplementationEvaluationListComponent implements OnInit, OnDestroy 
   private loadEvaluationHubs() {
     this.fieldAssessmentService.loadByType(FieldAssessmentTypesEnum.EVALUATION_AXIS)
       .pipe(
-        catchError((err) => of([])),
+        catchError(() => of([])),
         map(result => {
           return result.map(x => x.convertToAdminResult());
         })

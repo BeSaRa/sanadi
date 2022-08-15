@@ -2,7 +2,7 @@ import {AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChil
 import {LangService} from '@app/services/lang.service';
 import {LookupService} from '@app/services/lookup.service';
 import {DialogService} from '@app/services/dialog.service';
-import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {BehaviorSubject, merge, Observable, of, Subject} from 'rxjs';
 import {
   catchError,
@@ -93,7 +93,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
               private navigationService: NavigationService,
               private readModeService: ReadModeService,
               private attachmentService: AttachmentService, // to use in interceptor
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               private empService: EmployeeService,
               private exceptionHandlerService: ExceptionHandlerService,
               private eCookieService: ECookieService) {
@@ -155,7 +155,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
   subventionAidList: SubventionAid[] = [];
   subventionAidDataSource: BehaviorSubject<SubventionAid[]> = new BehaviorSubject<SubventionAid[]>([]);
   attachmentList: SanadiAttachment[] = [];
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   mainAidLookupsList: AidLookup[] = [];
   subAidLookupsList: AidLookup[] = [];
   donorList: Donor[] = [];
@@ -173,7 +173,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       icon: ActionIconsEnum.EDIT,
       label: 'btn_edit',
       onClick: (item: SubventionAid) => this.editAid(item),
-      disabled: (item: SubventionAid) => {
+      disabled: () => {
         return this.readOnly || (!!this.currentRequest && this.isPartialRequest && !this.currentRequest.isUnderProcessing());
       }
     },
@@ -183,7 +183,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       icon: ActionIconsEnum.DELETE,
       label: 'btn_delete',
       onClick: (item: SubventionAid) => this.deleteAid(item),
-      show: (item: SubventionAid) => {
+      show: () => {
         return !this.readOnly && !this.isPartialRequest;
       }
     }
@@ -341,9 +341,9 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     this._buildDatepickerControlsMap();
   }
 
-  private buildRequestStatusTab(request?: SubventionRequest): FormGroup {
+  private buildRequestStatusTab(request?: SubventionRequest): UntypedFormGroup {
     request = request ? request : new SubventionRequest();
-    const group = this.fb.group(request.getStatusFields(true)) as FormGroup;
+    const group = this.fb.group(request.getStatusFields(true)) as UntypedFormGroup;
     this.listenToRequestStatusChange(group);
     this._buildDatepickerControlsMap();
     return group;
@@ -542,7 +542,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
             attachmentList: this.attachmentList
           });
           return this.subventionResponseService.savePartialRequest(data)
-            .pipe(catchError((err) => {
+            .pipe(catchError(() => {
               return of(null);
             }));
         })
@@ -639,7 +639,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
         return value[1].request;
       }),
       exhaustMap((request: SubventionRequest) => {
-        return request.save().pipe(catchError((err) => {
+        return request.save().pipe(catchError(() => {
           return of(null);
         }));
       })
@@ -833,7 +833,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
                   data.beneficiary = this.deleteBeneficiaryIds(data.beneficiary);
                   return data;
                 }),
-                catchError((err) => {
+                catchError(() => {
                   this.currentParamType = this.routeParamTypes.normal;
                   return of(null);
                 })
@@ -1019,7 +1019,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     validForm$.pipe(
       takeUntil(this.destroy$),
       map(() => {
-        return this.aidFormArray.get('0') as FormGroup;
+        return this.aidFormArray.get('0') as UntypedFormGroup;
       }),
       map((form) => {
         return (new SubventionAid()).clone({
@@ -1116,148 +1116,148 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  get aidFormArray(): FormArray {
-    return this.form.get('aidTab') as FormArray;
+  get aidFormArray(): UntypedFormArray {
+    return this.form.get('aidTab') as UntypedFormArray;
   }
 
-  get personalInfoTab(): FormGroup {
-    return this.form.get('personalTab') as FormGroup;
+  get personalInfoTab(): UntypedFormGroup {
+    return this.form.get('personalTab') as UntypedFormGroup;
   }
 
-  get addressTab(): FormGroup {
-    return this.form.get('addressTab') as FormGroup;
+  get addressTab(): UntypedFormGroup {
+    return this.form.get('addressTab') as UntypedFormGroup;
   }
 
-  get requestInfoTab(): FormGroup {
-    return this.form.get('requestInfoTab') as FormGroup;
+  get requestInfoTab(): UntypedFormGroup {
+    return this.form.get('requestInfoTab') as UntypedFormGroup;
   }
 
-  get requestStatusTab(): FormGroup {
-    return this.form.get('requestStatusTab') as FormGroup;
+  get requestStatusTab(): UntypedFormGroup {
+    return this.form.get('requestStatusTab') as UntypedFormGroup;
   }
 
-  get attachmentsTab(): FormGroup {
-    return this.form.get('attachmentsTab') as FormGroup;
+  get attachmentsTab(): UntypedFormGroup {
+    return this.form.get('attachmentsTab') as UntypedFormGroup;
   }
 
-  get dateOfBirthField(): FormControl {
-    return this.personalInfoTab.get('dateOfBirth') as FormControl;
+  get dateOfBirthField(): UntypedFormControl {
+    return this.personalInfoTab.get('dateOfBirth') as UntypedFormControl;
   }
 
-  get creationDateField(): FormControl {
-    return this.requestInfoTab.get('creationDate') as FormControl;
+  get creationDateField(): UntypedFormControl {
+    return this.requestInfoTab.get('creationDate') as UntypedFormControl;
   }
 
-  get requestDateField(): FormControl {
-    return this.requestInfoTab.get('creationDate') as FormControl;
+  get requestDateField(): UntypedFormControl {
+    return this.requestInfoTab.get('creationDate') as UntypedFormControl;
   }
 
-  get requestStatusField(): FormControl {
-    return this.requestStatusTab.get('status') as FormControl;
+  get requestStatusField(): UntypedFormControl {
+    return this.requestStatusTab.get('status') as UntypedFormControl;
   }
 
-  get statusDateModifiedField(): FormControl {
-    return this.requestStatusTab.get('statusDateModified') as FormControl;
+  get statusDateModifiedField(): UntypedFormControl {
+    return this.requestStatusTab.get('statusDateModified') as UntypedFormControl;
   }
 
-  get aidGivenAmountField(): FormControl {
-    return this.aidFormArray.get('0.aidAmount') as FormControl;
+  get aidGivenAmountField(): UntypedFormControl {
+    return this.aidFormArray.get('0.aidAmount') as UntypedFormControl;
   }
 
-  get aidEstimatedAmountField(): FormControl {
-    return this.aidFormArray.get('0.aidSuggestedAmount') as FormControl;
+  get aidEstimatedAmountField(): UntypedFormControl {
+    return this.aidFormArray.get('0.aidSuggestedAmount') as UntypedFormControl;
   }
 
-  get aidInstallmentsCount(): FormControl {
-    return this.aidFormArray.get('0.installmentsCount') as FormControl;
+  get aidInstallmentsCount(): UntypedFormControl {
+    return this.aidFormArray.get('0.installmentsCount') as UntypedFormControl;
   }
 
-  get aidPeriodicType(): FormControl {
-    return this.aidFormArray.get('0.periodicType') as FormControl;
+  get aidPeriodicType(): UntypedFormControl {
+    return this.aidFormArray.get('0.periodicType') as UntypedFormControl;
   }
 
-  get aidApprovalDate(): FormControl {
-    return this.aidFormArray.get('0.approvalDate') as FormControl;
+  get aidApprovalDate(): UntypedFormControl {
+    return this.aidFormArray.get('0.approvalDate') as UntypedFormControl;
   }
 
-  get aidPaymentDate(): FormControl {
-    return this.aidFormArray.get('0.aidStartPayDate') as FormControl;
+  get aidPaymentDate(): UntypedFormControl {
+    return this.aidFormArray.get('0.aidStartPayDate') as UntypedFormControl;
   }
 
-  get aidsRequestedAidField(): FormControl {
-    return this.aidFormArray.get('0.aidLookupId') as FormControl;
+  get aidsRequestedAidField(): UntypedFormControl {
+    return this.aidFormArray.get('0.aidLookupId') as UntypedFormControl;
   }
 
-  get benNationalityField(): FormControl {
-    return this.personalInfoTab.get('benNationality') as FormControl;
+  get benNationalityField(): UntypedFormControl {
+    return this.personalInfoTab.get('benNationality') as UntypedFormControl;
   }
 
-  get primaryIdTypeField(): FormControl {
-    return this.personalInfoTab.get('benPrimaryIdType') as FormControl;
+  get primaryIdTypeField(): UntypedFormControl {
+    return this.personalInfoTab.get('benPrimaryIdType') as UntypedFormControl;
   }
 
-  get primaryIdNumberField(): FormControl {
-    return this.personalInfoTab.get('benPrimaryIdNumber') as FormControl;
+  get primaryIdNumberField(): UntypedFormControl {
+    return this.personalInfoTab.get('benPrimaryIdNumber') as UntypedFormControl;
   }
 
-  get primaryNationalityField(): FormControl {
-    return this.personalInfoTab.get('benPrimaryIdNationality') as FormControl;
+  get primaryNationalityField(): UntypedFormControl {
+    return this.personalInfoTab.get('benPrimaryIdNationality') as UntypedFormControl;
   }
 
-  get secondaryIdTypeField(): FormControl {
-    return this.personalInfoTab.get('benSecIdType') as FormControl;
+  get secondaryIdTypeField(): UntypedFormControl {
+    return this.personalInfoTab.get('benSecIdType') as UntypedFormControl;
   }
 
-  get secondaryIdNumberField(): FormControl {
-    return this.personalInfoTab.get('benSecIdNumber') as FormControl;
+  get secondaryIdNumberField(): UntypedFormControl {
+    return this.personalInfoTab.get('benSecIdNumber') as UntypedFormControl;
   }
 
-  get secondaryNationalityField(): FormControl {
-    return this.personalInfoTab.get('benSecIdNationality') as FormControl;
+  get secondaryNationalityField(): UntypedFormControl {
+    return this.personalInfoTab.get('benSecIdNationality') as UntypedFormControl;
   }
 
-  get arabicNameField(): FormControl {
-    return this.personalInfoTab.get('arName') as FormControl;
+  get arabicNameField(): UntypedFormControl {
+    return this.personalInfoTab.get('arName') as UntypedFormControl;
   }
 
-  get englishNameField(): FormControl {
-    return this.personalInfoTab.get('enName') as FormControl;
+  get englishNameField(): UntypedFormControl {
+    return this.personalInfoTab.get('enName') as UntypedFormControl;
   }
 
-  get beneficiaryRequesterNameField(): FormControl {
-    return this.personalInfoTab.get('requestorName') as FormControl;
+  get beneficiaryRequesterNameField(): UntypedFormControl {
+    return this.personalInfoTab.get('requestorName') as UntypedFormControl;
   }
 
-  get employmentStatusField(): FormControl {
-    return this.personalInfoTab.get('occuptionStatus') as FormControl;
+  get employmentStatusField(): UntypedFormControl {
+    return this.personalInfoTab.get('occuptionStatus') as UntypedFormControl;
   }
 
-  get occupationField(): FormControl {
-    return this.personalInfoTab.get('occuption') as FormControl;
+  get occupationField(): UntypedFormControl {
+    return this.personalInfoTab.get('occuption') as UntypedFormControl;
   }
 
-  get employerField(): FormControl {
-    return this.personalInfoTab.get('employeer') as FormControl;
+  get employerField(): UntypedFormControl {
+    return this.personalInfoTab.get('employeer') as UntypedFormControl;
   }
 
-  get workPlaceField(): FormControl {
-    return this.personalInfoTab.get('employeerAddress') as FormControl;
+  get workPlaceField(): UntypedFormControl {
+    return this.personalInfoTab.get('employeerAddress') as UntypedFormControl;
   }
 
-  get isHandicappedField(): FormControl {
-    return this.personalInfoTab.get('isHandicapped') as FormControl;
+  get isHandicappedField(): UntypedFormControl {
+    return this.personalInfoTab.get('isHandicapped') as UntypedFormControl;
   }
 
-  get requestedAidField(): FormControl {
-    return this.requestInfoTab.get('aidLookupId') as FormControl;
+  get requestedAidField(): UntypedFormControl {
+    return this.requestInfoTab.get('aidLookupId') as UntypedFormControl;
   }
 
-  get allowCompletionField(): FormControl {
-    return this.requestInfoTab.get('allowCompletion') as FormControl;
+  get allowCompletionField(): UntypedFormControl {
+    return this.requestInfoTab.get('allowCompletion') as UntypedFormControl;
   }
 
-  get allowDataSharingField(): FormControl {
-    return this.requestInfoTab.get('allowDataSharing') as FormControl;
+  get allowDataSharingField(): UntypedFormControl {
+    return this.requestInfoTab.get('allowDataSharing') as UntypedFormControl;
   }
 
   get isCurrentRequestPartial(): boolean {
@@ -1319,7 +1319,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       aidType: AidTypes.MAIN_CATEGORY,
       status: AidLookupStatusEnum.ACTIVE
     }).pipe(
-      catchError(err => of([]))
+      catchError(() => of([]))
     ).subscribe((list) => {
       this.mainAidLookupsList = list;
     });
@@ -1328,7 +1328,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
   private loadDonors() {
     this.donorList = [];
     return this.donorService.loadComposite().pipe(
-      catchError(err => of([]))
+      catchError(() => of([]))
     ).subscribe((list) => {
       this.donorList = list;
     });
@@ -1369,11 +1369,11 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       status: AidLookupStatusEnum.ACTIVE,
       parent: mainAidId
     }).pipe(
-      catchError(err => of([]))
+      catchError(() => of([]))
     );
   }
 
-  aidsPeriodicTypeChange(value: number, userInteraction: boolean = false) {
+  aidsPeriodicTypeChange(value: number, _userInteraction: boolean = false) {
     if (value === PeriodicPayment.MONTHLY) {
       this.aidInstallmentsCount?.setValidators([CustomValidators.required, CustomValidators.number, Validators.min(1)]);
       this.aidInstallmentsCount.enable();
@@ -1410,7 +1410,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  private listenToRequestStatusChange(group: FormGroup) {
+  private listenToRequestStatusChange(group: UntypedFormGroup) {
     group.get('status')?.valueChanges
       .pipe(
         pairwise(),
@@ -1747,6 +1747,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     return !tab.validStatus() && tab.isTouchedOrDirty();
   }
 
+  // noinspection JSUnusedLocalSymbols
   private _getInvalidTabs(): any {
     let failedList: string[] = [];
     for (const key in this.tabsData) {

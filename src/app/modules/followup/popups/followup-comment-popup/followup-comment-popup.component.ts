@@ -1,6 +1,6 @@
 import { Component, ElementRef, Inject, ViewChild } from '@angular/core';
 import { AdminGenericDialog } from '@app/generics/admin-generic-dialog';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { OperationTypes } from '@app/enums/operation-types.enum';
@@ -23,7 +23,7 @@ export class FollowupCommentPopupComponent extends AdminGenericDialog<any> {
   model: FollowupComment = new FollowupComment()
   operation!: OperationTypes;
   comments: FollowupComment[] = [];
-  form: FormGroup = new FormGroup({});
+  form: UntypedFormGroup = new UntypedFormGroup({});
   user!: OrgUser | InternalUser;
   followUpId!: number;
   @ViewChild('dialogContent', { read: ElementRef })
@@ -32,7 +32,7 @@ export class FollowupCommentPopupComponent extends AdminGenericDialog<any> {
 
   constructor(public service: FollowupCommentService,
               public dialogRef: DialogRef,
-              public fb: FormBuilder,
+              public fb: UntypedFormBuilder,
               public lang: LangService,
               public employeeService: EmployeeService,
               @Inject(DIALOG_DATA_TOKEN) private followUp: Followup) {
@@ -48,7 +48,7 @@ export class FollowupCommentPopupComponent extends AdminGenericDialog<any> {
     this.reloadComments()
   }
 
-  beforeSave(model: any, form: FormGroup): Observable<boolean> | boolean {
+  beforeSave(model: any, form: UntypedFormGroup): Observable<boolean> | boolean {
     return form.valid;
   }
 
@@ -63,7 +63,7 @@ export class FollowupCommentPopupComponent extends AdminGenericDialog<any> {
     this.reloadComments()
   }
 
-  prepareModel(model: any, form: FormGroup): any {
+  prepareModel(model: any, form: UntypedFormGroup): any {
     this.model.followUpId = this.followUpId;
     return new FollowupComment().clone({
       ...this.model,

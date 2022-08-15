@@ -1,22 +1,19 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {LangService} from '@services/lang.service';
-import {ToastService} from '@services/toast.service';
-import {DialogService} from '@services/dialog.service';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
-import {ReadinessStatus} from '@app/types/types';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {of, Subject} from 'rxjs';
-import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import {ActionIconsEnum} from '@app/enums/action-icons-enum';
-import {catchError, filter, map, take, takeUntil, tap} from 'rxjs/operators';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {BestPractices} from '@app/models/best-practices';
-import {SortEvent} from '@contracts/sort-event';
-import {CommonUtils} from '@helpers/common-utils';
-import {AdminResult} from '@app/models/admin-result';
-import {FieldAssessmentService} from '@services/field-assessment.service';
-import {FieldAssessmentTypesEnum} from '@app/enums/field-assessment-types.enum';
-import {result} from 'lodash';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { LangService } from '@services/lang.service';
+import { ToastService } from '@services/toast.service';
+import { DialogService } from '@services/dialog.service';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { ReadinessStatus } from '@app/types/types';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { of, Subject } from 'rxjs';
+import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { ActionIconsEnum } from '@app/enums/action-icons-enum';
+import { catchError, filter, map, take, takeUntil, tap } from 'rxjs/operators';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { BestPractices } from '@app/models/best-practices';
+import { AdminResult } from '@app/models/admin-result';
+import { FieldAssessmentService } from '@services/field-assessment.service';
+import { FieldAssessmentTypesEnum } from '@app/enums/field-assessment-types.enum';
 
 @Component({
   selector: 'best-practices-list',
@@ -29,7 +26,7 @@ export class BestPracticesListComponent implements OnInit {
               private toastService: ToastService,
               private dialogService: DialogService,
               private fieldAssessmentService: FieldAssessmentService,
-              private fb: FormBuilder) {
+              private fb: UntypedFormBuilder) {
   }
 
 
@@ -71,11 +68,11 @@ export class BestPracticesListComponent implements OnInit {
   private currentRecord?: BestPractices;
   private destroy$: Subject<any> = new Subject<any>();
   showForm: boolean = false;
-  filterControl: FormControl = new FormControl('');
+  filterControl: UntypedFormControl = new UntypedFormControl('');
 
   bestPracticesList: AdminResult[] = [];
 
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   actions: IMenuItem<BestPractices>[] = [
     // edit
     {
@@ -83,7 +80,7 @@ export class BestPracticesListComponent implements OnInit {
       icon: ActionIconsEnum.EDIT,
       label: 'btn_edit',
       onClick: (item: BestPractices) => this.edit(item),
-      show: (item: BestPractices) => !this.readonly
+      show: (_item: BestPractices) => !this.readonly
     },
     // delete
     {
@@ -91,7 +88,7 @@ export class BestPracticesListComponent implements OnInit {
       icon: ActionIconsEnum.DELETE,
       label: 'btn_delete',
       onClick: (item: BestPractices) => this.delete(item),
-      show: (item: BestPractices) => !this.readonly
+      show: (_item: BestPractices) => !this.readonly
     },
     // view
     {
@@ -99,7 +96,7 @@ export class BestPracticesListComponent implements OnInit {
       icon: ActionIconsEnum.VIEW,
       label: 'view',
       onClick: (item: BestPractices) => this.view(item),
-      show: (item: BestPractices) => this.readonly
+      show: (_item: BestPractices) => this.readonly
     }
   ];
 
@@ -259,7 +256,7 @@ export class BestPracticesListComponent implements OnInit {
   private loadBestPractices() {
     this.fieldAssessmentService.loadByType(FieldAssessmentTypesEnum.BEST_PRACTICES)
       .pipe(
-        catchError((err) => of([])),
+        catchError(() => of([])),
         map(result => {
           return result.map(x => x.convertToAdminResult());
         })

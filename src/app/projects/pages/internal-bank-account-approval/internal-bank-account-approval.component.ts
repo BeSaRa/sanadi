@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {AbstractControl, FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {SaveTypes} from '@app/enums/save-types';
 import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
@@ -33,7 +33,7 @@ import {UserClickOn} from '@app/enums/user-click-on.enum';
   styleUrls: ['./internal-bank-account-approval.component.scss']
 })
 export class InternalBankAccountApprovalComponent extends EServicesGenericComponent<InternalBankAccountApproval, InternalBankAccountApprovalService> {
-  form!: FormGroup;
+  form!: UntypedFormGroup;
   requestTypes: Lookup[] = this.lookupService.listByCategory.BankRequestType
     .sort((a, b) => a.lookupKey - b.lookupKey);
 
@@ -49,7 +49,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   selectedLicenses: InternalBankAccountApproval[] = [];
   selectedNPOEmployees: NpoEmployee[] = [];
   // oldLicenseFullSerialControl: FormControl = new FormControl();
-  selectedResponsiblePersonControl: FormControl = new FormControl();
+  selectedResponsiblePersonControl: UntypedFormControl = new UntypedFormControl();
   private displayedColumns: string[] = ['fullSerial', 'status', 'requestTypeInfo', 'operationTypeInfo', 'actions'];
   selectedAccountsDisplayedColumns: string[] = [];
   selectedAccountsDisplayedColumnsForMerge: string[] = ['accountNumber', 'bankName', 'bankCategory', 'toBeMergedIn', 'actions'];
@@ -65,7 +65,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   hasSearchedForLicense = false;
 
   constructor(public lang: LangService,
-              public fb: FormBuilder,
+              public fb: UntypedFormBuilder,
               public service: InternalBankAccountApprovalService,
               private lookupService: LookupService,
               private dialog: DialogService,
@@ -75,12 +75,12 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
     super();
   }
 
-  get basicInfo(): FormGroup {
-    return this.form.get('basicInfo')! as FormGroup;
+  get basicInfo(): UntypedFormGroup {
+    return this.form.get('basicInfo')! as UntypedFormGroup;
   }
 
-  get specialExplanation(): FormGroup {
-    return this.form.get('explanation')! as FormGroup;
+  get specialExplanation(): UntypedFormGroup {
+    return this.form.get('explanation')! as UntypedFormGroup;
   }
 
   get requestType(): AbstractControl {
@@ -119,28 +119,28 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
     return this.form.get('basicInfo.bankAccountSearchCriteria')!;
   }
 
-  get accountNumber(): FormControl {
-    return (this.form.get('basicInfo.accountNumber')) as FormControl;
+  get accountNumber(): UntypedFormControl {
+    return (this.form.get('basicInfo.accountNumber')) as UntypedFormControl;
   }
 
-  get iban(): FormControl {
-    return (this.form.get('basicInfo.iBan')) as FormControl;
+  get iban(): UntypedFormControl {
+    return (this.form.get('basicInfo.iBan')) as UntypedFormControl;
   }
 
-  get swiftCode(): FormControl {
-    return (this.form.get('basicInfo.swiftCode')) as FormControl;
+  get swiftCode(): UntypedFormControl {
+    return (this.form.get('basicInfo.swiftCode')) as UntypedFormControl;
   }
 
-  get selectedBankAccountToMerge(): FormControl {
-    return (this.form.get('basicInfo.selectedBankAccountToMerge')) as FormControl;
+  get selectedBankAccountToMerge(): UntypedFormControl {
+    return (this.form.get('basicInfo.selectedBankAccountToMerge')) as UntypedFormControl;
   }
 
-  get ownerOfMergedBankAccounts(): FormControl {
-    return (this.form.get('basicInfo.ownerOfMergedBankAccounts')) as FormControl;
+  get ownerOfMergedBankAccounts(): UntypedFormControl {
+    return (this.form.get('basicInfo.ownerOfMergedBankAccounts')) as UntypedFormControl;
   }
 
-  get selectedResponsiblePerson(): FormControl {
-    return (this.form.get('basicInfo.selectedResponsiblePerson')) as FormControl;
+  get selectedResponsiblePerson(): UntypedFormControl {
+    return (this.form.get('basicInfo.selectedResponsiblePerson')) as UntypedFormControl;
   }
 
   _getNewInstance(): InternalBankAccountApproval {

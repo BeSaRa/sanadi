@@ -1,6 +1,6 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {LangService} from '@app/services/lang.service';
 import {DialogService} from '@app/services/dialog.service';
@@ -28,7 +28,7 @@ export class FilterTrainingProgramsComponent implements OnInit, OnDestroy {
   destroy$: Subject<any> = new Subject<any>();
   userClick: typeof UserClickOn = UserClickOn;
   criteria: ITrainingProgramCriteria;
-  form: FormGroup = {} as FormGroup;
+  form: UntypedFormGroup = {} as UntypedFormGroup;
 
   datepickerControlsMap: DatepickerControlsMap = {};
 
@@ -47,7 +47,7 @@ export class FilterTrainingProgramsComponent implements OnInit, OnDestroy {
   organizations: OrgUnit[] = [];
 
   constructor(@Inject(DIALOG_DATA_TOKEN) public data: any,
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               private dialogRef: DialogRef,
               public lang: LangService,
               private dialogService: DialogService,
@@ -121,20 +121,20 @@ export class FilterTrainingProgramsComponent implements OnInit, OnDestroy {
       });
   }
 
-  get startFromDateControl(): FormControl {
-    return this.form.get('startFromDate') as FormControl;
+  get startFromDateControl(): UntypedFormControl {
+    return this.form.get('startFromDate') as UntypedFormControl;
   }
 
-  get startToDateControl(): FormControl {
-    return this.form.get('startToDate') as FormControl;
+  get startToDateControl(): UntypedFormControl {
+    return this.form.get('startToDate') as UntypedFormControl;
   }
 
-  get registerationFromDateControl(): FormControl {
-    return this.form.get('registerationFromDate') as FormControl;
+  get registerationFromDateControl(): UntypedFormControl {
+    return this.form.get('registerationFromDate') as UntypedFormControl;
   }
 
-  get registerationToDateControl(): FormControl {
-    return this.form.get('registerationToDate') as FormControl;
+  get registerationToDateControl(): UntypedFormControl {
+    return this.form.get('registerationToDate') as UntypedFormControl;
   }
 
   get hasFilterCriteria(): boolean {

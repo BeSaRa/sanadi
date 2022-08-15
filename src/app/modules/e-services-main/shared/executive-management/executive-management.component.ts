@@ -3,7 +3,7 @@ import {LangService} from '@app/services/lang.service';
 import {CountryService} from '@app/services/country.service';
 import {ToastService} from '@app/services/toast.service';
 import {DialogService} from '@app/services/dialog.service';
-import {AbstractControl, FormArray, FormBuilder, FormGroup} from '@angular/forms';
+import {AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {Country} from '@app/models/country';
 import {ReadinessStatus} from '@app/types/types';
 import {BehaviorSubject, Subject} from 'rxjs';
@@ -23,7 +23,7 @@ export class ExecutiveManagementComponent implements OnInit {
               private countryService: CountryService,
               private toastService: ToastService,
               private dialogService: DialogService,
-              private fb: FormBuilder) {
+              private fb: UntypedFormBuilder) {
   }
 
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();
@@ -54,7 +54,7 @@ export class ExecutiveManagementComponent implements OnInit {
 
   private destroy$: Subject<any> = new Subject<any>();
 
-  form!: FormGroup;
+  form!: UntypedFormGroup;
 
   ngOnInit(): void {
     this.buildForm();
@@ -84,8 +84,8 @@ export class ExecutiveManagementComponent implements OnInit {
     return !this.readonly;
   }
 
-  get managersFormArray(): FormArray {
-    return (this.form.get('managers')) as FormArray;
+  get managersFormArray(): UntypedFormArray {
+    return (this.form.get('managers')) as UntypedFormArray;
   }
 
   private listenToAdd() {
@@ -151,7 +151,7 @@ export class ExecutiveManagementComponent implements OnInit {
     validForm$.pipe(
       takeUntil(this.destroy$),
       map(() => {
-        return (this.form.get('managers.0')) as FormArray;
+        return (this.form.get('managers.0')) as UntypedFormArray;
       }),
       map((form) => {
         return (new ExecutiveManagement()).clone({
