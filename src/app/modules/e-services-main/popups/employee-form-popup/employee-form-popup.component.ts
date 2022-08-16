@@ -204,7 +204,8 @@ export class EmployeeFormPopupComponent implements OnInit {
   }
   setEmployee() {
     if (this.form.valid) {
-      if (this.employeesList.findIndex(e => (this.form.value.passportNumber && e.passportNumber == this.form.value.passportNumber) || (this.form.value.identificationNumber && e.identificationNumber == this.form.value.identificationNumber)) != -1) {
+      const index = this.employeesList.findIndex(e => (this.form.value.passportNumber && e.passportNumber == this.form.value.passportNumber) || (this.form.value.identificationNumber && e.identificationNumber == this.form.value.identificationNumber))
+      if (index != -1 && this.employeesList[index].id != this.form.value.id) {
         this.dialog.error(this.lang.map.msg_user_identifier_is_already_exist);
         return
       }
