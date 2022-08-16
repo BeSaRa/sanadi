@@ -8,7 +8,7 @@ export class GeneralAssociationExternalMember extends SearchableCloneable<Genera
   arabicName!: string;
   englishName!: string;
   jobTitleId!: number;
-  identificationNumber!: string;
+  identificationNumber!: number;
   jobTitleInfo!: AdminResult;
   langService!: LangService;
 

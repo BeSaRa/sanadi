@@ -21,8 +21,7 @@ import {exhaustMap, filter, map, takeUntil, tap} from 'rxjs/operators';
 import {SelectedLicenseInfo} from '@contracts/selected-license-info';
 import {InternalProjectLicenseResult} from '@app/models/internal-project-license-result';
 import {SharedService} from '@services/shared.service';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {AdminResult} from '@app/models/admin-result';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 
 @Component({
   selector: 'general-association-meeting-attendance',
@@ -31,11 +30,11 @@ import {AdminResult} from '@app/models/admin-result';
 })
 export class GeneralAssociationMeetingAttendanceComponent extends EServicesGenericComponent<GeneralAssociationMeetingAttendance, GeneralAssociationMeetingAttendanceService> implements AfterViewInit {
   form!: FormGroup;
-  administrativeBoardMembersForm!: FormGroup;
-  generalAssociationMembersForm!: FormGroup;
   internalMembersForm!: FormGroup;
   fm!: FormManager;
   private displayedColumns: string[] = ['fullSerial', 'status', 'requestTypeInfo', 'actions'];
+  addAdministrativeBoardMembersLabel: keyof ILanguageKeys = 'add_administrative_board_member';
+  addGeneralAssociationMembersLabel: keyof ILanguageKeys = 'add_general_association_members';
 
   selectedLicenses: GeneralAssociationMeetingAttendance[] = [];
   selectedLicenseDisplayedColumns: string[] = ['serial', 'requestType', 'licenseStatus', 'actions'];
@@ -99,8 +98,6 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   _initComponent(): void {
     // load initials here
     this.isExternalUser = this.employeeService.isExternalUser();
-    this.buildAdministrativeBoardMemberForm();
-    this.buildGeneralAssociationMemberForm();
   }
 
   _buildForm(): void {
@@ -236,149 +233,22 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
       });
   }
 
-  // add/edit administrative board members functionality
-  openAddAdministrativeBoardMemberForm() {
-    this.addAdministrativeBoardMemberFormActive = true;
+  onAdministrativeBoardMembersChanged(memberList: GeneralAssociationExternalMember[]) {
+    this.selectedAdministrativeBoardMembers = memberList;
   }
 
-  selectAdministrativeBoardMember(event: MouseEvent, model: GeneralAssociationExternalMember) {
-    this.addAdministrativeBoardMemberFormActive = true;
-    event.preventDefault();
-    this.selectedAdministrativeBoardMember = model;
-    this.administrativeBoardMembersForm.patchValue(this.selectedAdministrativeBoardMember!);
-    this.selectedAdministrativeBoardMemberIndex = this.selectedAdministrativeBoardMembers
-      .map(x => x.identificationNumber).indexOf(model.identificationNumber);
+  onGeneralAssociationMembersChanged(memberList: GeneralAssociationExternalMember[]) {
+    this.selectedGeneralAssociationMembers = memberList;
   }
 
-  saveAdministrativeBoardMember() {
-    const boardMember = new GeneralAssociationExternalMember().clone(this.administrativeBoardMembersForm.getRawValue());
-    if (!this.selectedAdministrativeBoardMember) {
-      if (!this.isExistMemberInCaseOfAdd(this.selectedAdministrativeBoardMembers, boardMember)) {
-        this.selectedAdministrativeBoardMembers = this.selectedAdministrativeBoardMembers.concat(boardMember);
-        this.resetAdministrativeBoardMemberForm();
-        this.addAdministrativeBoardMemberFormActive = false;
-      } else {
-        this.dialog.error(this.lang.map.selected_item_already_exists);
-      }
-    } else {
-      if (!this.isExistMemberInCaseOfEdit(this.selectedAdministrativeBoardMembers, boardMember, this.selectedAdministrativeBoardMemberIndex!)) {
-        let newList = this.selectedAdministrativeBoardMembers.slice();
-        newList.splice(this.selectedAdministrativeBoardMemberIndex!, 1);
-        newList.splice(this.selectedAdministrativeBoardMemberIndex!, 0, boardMember);
-        this.selectedAdministrativeBoardMembers = newList;
-        this.resetAdministrativeBoardMemberForm();
-        this.addAdministrativeBoardMemberFormActive = false;
-      } else {
-        this.dialog.error(this.lang.map.selected_item_already_exists);
-      }
+  getAgendaItemsAsString(agendaItems: string[]): string {
+    return JSON.stringify(agendaItems);
+  }
+
+  getAgendaItemsAsJson(agendaItems: string) {
+    if (agendaItems) {
+      return JSON.parse(agendaItems);
     }
-  }
-
-  cancelAddAdministrativeBoardMember() {
-    this.resetAdministrativeBoardMemberForm();
-    this.addAdministrativeBoardMemberFormActive = false;
-  }
-
-  resetAdministrativeBoardMemberForm() {
-    this.selectedAdministrativeBoardMember = null;
-    this.selectedAdministrativeBoardMemberIndex = null;
-    this.administrativeBoardMembersForm.reset();
-  }
-
-  removeAdministrativeBoardMember(event: MouseEvent, model: GeneralAssociationExternalMember) {
-    event.preventDefault();
-    this.selectedAdministrativeBoardMembers = this.selectedAdministrativeBoardMembers.filter(x => x.identificationNumber != model.identificationNumber);
-    this.resetAdministrativeBoardMemberForm();
-  }
-
-  // add/edit general association members functionality
-  openAddGeneralAssociationMemberForm() {
-    this.addGeneralAssociationMemberFormActive = true;
-  }
-
-  selectGeneralAssociationMember(event: MouseEvent, model: GeneralAssociationExternalMember) {
-    this.addGeneralAssociationMemberFormActive = true;
-    event.preventDefault();
-    this.selectedGeneralAssociationMember = model;
-    this.generalAssociationMembersForm.patchValue(this.selectedGeneralAssociationMember!);
-    this.selectedGeneralAssociationMemberIndex = this.selectedGeneralAssociationMembers
-      .map(x => x.identificationNumber).indexOf(model.identificationNumber);
-  }
-
-  saveGeneralAssociationMember() {
-    const boardMember = new GeneralAssociationExternalMember().clone(this.generalAssociationMembersForm.getRawValue());
-    boardMember.jobTitleInfo = boardMember.jobTitleInfo ? boardMember.jobTitleInfo : AdminResult.createInstance(boardMember.jobTitleInfo);
-    if (!this.selectedGeneralAssociationMember) {
-      if (!this.isExistMemberInCaseOfAdd(this.selectedGeneralAssociationMembers, boardMember)) {
-        this.selectedGeneralAssociationMembers = this.selectedGeneralAssociationMembers.concat(boardMember);
-        this.resetGeneralAssociationMemberForm();
-        this.addGeneralAssociationMemberFormActive = false;
-      } else {
-        this.dialog.error(this.lang.map.selected_item_already_exists);
-      }
-    } else {
-      if (!this.isExistMemberInCaseOfEdit(this.selectedGeneralAssociationMembers, boardMember, this.selectedGeneralAssociationMemberIndex!)) {
-        let newList = this.selectedGeneralAssociationMembers.slice();
-        newList.splice(this.selectedGeneralAssociationMemberIndex!, 1);
-        newList.splice(this.selectedGeneralAssociationMemberIndex!, 0, boardMember);
-        this.selectedGeneralAssociationMembers = newList;
-        this.resetGeneralAssociationMemberForm();
-        this.addGeneralAssociationMemberFormActive = false;
-      } else {
-        this.dialog.error(this.lang.map.selected_item_already_exists);
-      }
-    }
-  }
-
-  cancelAddGeneralAssociationMember() {
-    this.resetGeneralAssociationMemberForm();
-    this.addGeneralAssociationMemberFormActive = false;
-  }
-
-  resetGeneralAssociationMemberForm() {
-    this.selectedGeneralAssociationMember = null;
-    this.selectedGeneralAssociationMemberIndex = null;
-    this.generalAssociationMembersForm.reset();
-  }
-
-  removeGeneralAssociationMember(event: MouseEvent, model: GeneralAssociationExternalMember) {
-    event.preventDefault();
-    this.selectedGeneralAssociationMembers = this.selectedGeneralAssociationMembers.filter(x => x.identificationNumber != model.identificationNumber);
-    this.resetGeneralAssociationMemberForm();
-  }
-
-  isExistMemberInCaseOfAdd(selectedMembers: GeneralAssociationExternalMember[], toBeAddedMember: GeneralAssociationExternalMember): boolean {
-    return selectedMembers.some(x => x.identificationNumber === toBeAddedMember.identificationNumber);
-  }
-
-  isExistMemberInCaseOfEdit(selectedMembers: GeneralAssociationExternalMember[], toBeEditedMember: GeneralAssociationExternalMember, selectedIndex: number): boolean {
-    for (let i = 0; i < selectedMembers.length; i++) {
-      if(i === selectedIndex) {
-        continue;
-      }
-
-      if(selectedMembers[i].identificationNumber === toBeEditedMember.identificationNumber) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  buildAdministrativeBoardMemberForm(): void {
-    this.administrativeBoardMembersForm = this.fb.group({
-      arabicName: [null, [CustomValidators.required, CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX)]],
-      englishName: [null, [CustomValidators.required, CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
-      identificationNumber: [null, [CustomValidators.required].concat(CustomValidators.commonValidations.qId)],
-      jobTitleId: [null, [CustomValidators.required]]
-    });
-  }
-
-  buildGeneralAssociationMemberForm(): void {
-    this.generalAssociationMembersForm = this.fb.group({
-      arabicName: [null, [CustomValidators.required, CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX)]],
-      englishName: [null, [CustomValidators.required, CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]],
-      identificationNumber: [null, [CustomValidators.required].concat(CustomValidators.commonValidations.qId)],
-      jobTitleId: [null, [CustomValidators.required]]
-    });
+    return [];
   }
 }
