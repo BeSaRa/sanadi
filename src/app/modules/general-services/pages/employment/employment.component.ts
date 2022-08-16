@@ -312,7 +312,6 @@ EmploymentService
         if (this.isApproval()) {
           this.employees = [...e];
         } else {
-          console.log(e[0].identificationNumber, this.employees)
           if (this.employees.findIndex(emp => e[0].identificationNumber == emp.identificationNumber) == -1) {
             this.employees = [...e, ...this.employees];
           }
