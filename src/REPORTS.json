@@ -32,11 +32,11 @@
   {
     "id": 7,
     "langKey": "rp_sanady_partial_dashboard",
-    "url": "powerbi:lang:SANADI_Dashboard-Partial"
+    "url": "powerbi:lang:SANADI-Reports:SANADI_Dashboard-Partial"
   },
   {
     "id": 8,
     "langKey": "rp_sanady_full_dashboard",
-    "url": "powerbi:lang:SANADI_Dashboard-Full"
+    "url": "powerbi:lang:SANADI-Reports:SANADI_Dashboard-Full"
   }
 ]
