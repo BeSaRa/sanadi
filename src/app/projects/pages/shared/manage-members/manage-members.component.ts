@@ -32,7 +32,7 @@ export class ManageMembersComponent implements OnInit {
   selectedMemberIndex!: number | null;
   jobTitles!: JobTitle[];
 
-  membersDisplayedColumns: string[] = ['arabicName', 'englishName', 'identificationNumber', 'jobTitle', 'actions'];
+  membersDisplayedColumns: string[] = ['index', 'arabicName', 'englishName', 'identificationNumber', 'jobTitle', 'actions'];
 
   constructor(private dialog: DialogService,
               public lang: LangService,
