@@ -176,7 +176,6 @@ export class EmployeeFormPopupComponent implements OnInit {
         ...this.data.employees[0],
       });
     }
-    console.log(this.form)
   }
   submit() {
     if (!this.isApproval()) {
@@ -330,8 +329,9 @@ export class EmployeeFormPopupComponent implements OnInit {
 
   get isEditRequestTypeAllowed(): boolean {
     return (
-      !this.data.model?.id ||
-      (!!this.data.model?.id && this.data.model.canCommit()) || this.employeeService.isCharityManager()
+      !this.data.model?.id || (!!this.data.model?.id && this.data.model.canCommit())
+      || (this.data.model.isReturned() && (this.employeeService.isCharityManager() || this.employeeService.isCharityUser()))
+      || (!this.data.model.isCancelled() && !this.data.model.isFinalRejection() && !this.data.model.isFinalApproved() && this.employeeService.isCharityManager() && this.data.model.isClaimed())
     ) && !this.cancelRequestType()
   }
 

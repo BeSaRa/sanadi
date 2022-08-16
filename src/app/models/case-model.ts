@@ -203,7 +203,12 @@ export abstract class CaseModel<S extends EServiceGenericService<T> | BaseGeneri
   isReturned(): boolean {
     return this.caseStatus === CommonCaseStatus.RETURNED;
   }
-
+  isCancelled(): boolean {
+    return this.caseStatus === CommonCaseStatus.CANCELLED;
+  }
+  isFinalRejection(): boolean {
+    return this.caseStatus === CommonCaseStatus.FINAL_REJECTION;
+  }
   getCaseType(): number {
     return this.caseType;
   }
