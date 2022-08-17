@@ -25,5 +25,6 @@ export enum ActionIconsEnum {
   SPECIAL_NEEDS = 'mdi-human',
   CHECKLIST = 'mdi-format-list-bulleted-square',
   OPEN_MAIL = 'mdi-email-open',
-  CLOSE_MAIL = 'mdi-email'
+  CLOSE_MAIL = 'mdi-email',
+  TERMINATE = 'mdi-stop'
 }

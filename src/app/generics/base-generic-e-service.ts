@@ -251,6 +251,12 @@ export abstract class BaseGenericEService<T extends { id: string }> {
     return this.http.post<IDefaultResponse<IBulkResult>>(this._getUrlService().URLS.RELEASE_BULK, taskIds).pipe(map(res => res.rs));
   }
 
+  terminateTask(taskId: string): Observable<boolean> {
+    return this.http.post<IDefaultResponse<boolean>>(this._getURLSegment() + '/task/terminate', {}, {
+      params: new HttpParams().set('tkiid ', taskId)
+    }).pipe(map(response => response.rs));
+  }
+
   getTask(taskId: string): Observable<T> {
     return this._getTask(taskId);
   }

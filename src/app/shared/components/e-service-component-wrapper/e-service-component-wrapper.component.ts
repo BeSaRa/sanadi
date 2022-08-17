@@ -9,34 +9,35 @@ import {
   ViewChild,
   ViewContainerRef
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { DynamicComponentService } from '@app/services/dynamic-component.service';
-import { EmployeeService } from '@app/services/employee.service';
-import { LangService } from '@app/services/lang.service';
-import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
-import { EServiceGenericService } from '@app/generics/e-service-generic-service';
-import { CaseModel } from '@app/models/case-model';
-import { OpenFrom } from '@app/enums/open-from.enum';
-import { IOpenedInfo } from '@app/interfaces/i-opened-info';
-import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
-import { WFResponseType } from '@app/enums/wfresponse-type.enum';
-import { WFActions } from '@app/enums/wfactions.enum';
-import { CaseTypes } from '@app/enums/case-types.enum';
-import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { ToastService } from '@app/services/toast.service';
-import { InboxService } from '@app/services/inbox.service';
-import { merge, Subject } from 'rxjs';
-import { skip, startWith, takeUntil } from 'rxjs/operators';
-import { TabComponent } from '@app/shared/components/tab/tab.component';
-import { OperationTypes } from '@app/enums/operation-types.enum';
-import { SaveTypes } from '@app/enums/save-types';
-import { IESComponent } from '@app/interfaces/iescomponent';
-import { OrgUser } from '@app/models/org-user';
-import { InternalUser } from '@app/models/internal-user';
-import { ChecklistItem } from '@app/models/checklist-item';
-import { StepCheckListComponent } from '@app/shared/components/step-check-list/step-check-list.component';
-import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
-import { ActionIconsEnum } from '@app/enums/action-icons-enum';
+import {ActivatedRoute, Router} from '@angular/router';
+import {DynamicComponentService} from '@app/services/dynamic-component.service';
+import {EmployeeService} from '@app/services/employee.service';
+import {LangService} from '@app/services/lang.service';
+import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
+import {EServiceGenericService} from '@app/generics/e-service-generic-service';
+import {CaseModel} from '@app/models/case-model';
+import {OpenFrom} from '@app/enums/open-from.enum';
+import {IOpenedInfo} from '@app/interfaces/i-opened-info';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {WFResponseType} from '@app/enums/wfresponse-type.enum';
+import {WFActions} from '@app/enums/wfactions.enum';
+import {CaseTypes} from '@app/enums/case-types.enum';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {ToastService} from '@app/services/toast.service';
+import {InboxService} from '@app/services/inbox.service';
+import {merge, Subject} from 'rxjs';
+import {skip, startWith, takeUntil} from 'rxjs/operators';
+import {TabComponent} from '@app/shared/components/tab/tab.component';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {SaveTypes} from '@app/enums/save-types';
+import {IESComponent} from '@app/interfaces/iescomponent';
+import {OrgUser} from '@app/models/org-user';
+import {InternalUser} from '@app/models/internal-user';
+import {ChecklistItem} from '@app/models/checklist-item';
+import {StepCheckListComponent} from '@app/shared/components/step-check-list/step-check-list.component';
+import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -224,7 +225,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         type: 'action',
         label: 'btn_save',
         disabled: (item) => {
-          return (this.component.form.invalid || item?.alreadyStarted()) && !this.canSave()
+          return (this.component.form.invalid || item?.alreadyStarted()) && !this.canSave();
         },
         show: (item) => {
           // show if external user or service which are only for internal user
@@ -329,9 +330,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   }
 
   canSave(): boolean {
-    const isServiceAllow = this.model?.caseType == CaseTypes.EMPLOYMENT
-    return (isServiceAllow && this.employeeService.isCharityManager()) || !!((this.employeeService.isCharityManager() || this.employeeService.isCharityUser()) && this.model?.isReturned())
+    const isServiceAllow = this.model?.caseType == CaseTypes.EMPLOYMENT;
+    return (isServiceAllow && this.employeeService.isCharityManager()) || !!((this.employeeService.isCharityManager() || this.employeeService.isCharityUser()) && this.model?.isReturned());
   }
+
   private launchAction(item: CaseModel<any, any>) {
     item.start()
       .subscribe(_ => {
@@ -802,6 +804,14 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         show: (item) => true,
         onClick: (item) => this.markAsUnreadAction(item)
       },
+      // terminate task
+      {
+        type: 'action',
+        icon: ActionIconsEnum.TERMINATE,
+        label: 'terminate_task',
+        show: (item) => !item.isMain(),
+        onClick: (item) => this.terminateTaskAction(item)
+      },
       // back
       {
         type: 'action',
@@ -1068,6 +1078,19 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       this.toast.success(this.lang.map.msg_mark_as_unread_success);
       this.navigateToSamePageThatUserCameFrom();
     });
+  }
+
+  private terminateTaskAction(item: CaseModel<any, any>) {
+    const service = this.inboxService.getService(item.getCaseType());
+    service.dialog.confirm(this.lang.map.msg_confirm_terminate_task).onAfterClose$
+      .subscribe((click: UserClickOn) => {
+        if (click === UserClickOn.YES) {
+          item.terminateTask().subscribe(() => {
+            this.toast.success(this.lang.map.msg_success_terminate_task);
+            this.navigateToSamePageThatUserCameFrom();
+          });
+        }
+      });
   }
 
   private static viewLogsAction(item: CaseModel<any, any>) {

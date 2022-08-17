@@ -27,14 +27,14 @@ import {SearchService} from '@services/search.service';
 import {FormlyFieldConfig} from '@ngx-formly/core/lib/components/formly.field.config';
 import {IFormRowGroup} from '@contracts/iform-row-group';
 import {DynamicOptionsService} from '@services/dynamic-options.service';
-import {FBuilder} from "@helpers/FBuilder";
+import {FBuilder} from '@helpers/FBuilder';
 import {FactoryService} from '@app/services/factory.service';
 import {EmployeeService} from '@app/services/employee.service';
-import {MenuItem} from "@app/models/menu-item";
-import {MenuItemService} from "@app/services/menu-item.service";
-import {IBulkResult} from "@app/interfaces/ibulk-result";
-import {UrlService} from "@app/services/url.service";
-import {IDefaultResponse} from "@app/interfaces/idefault-response";
+import {MenuItem} from '@app/models/menu-item';
+import {MenuItemService} from '@app/services/menu-item.service';
+import {IBulkResult} from '@app/interfaces/ibulk-result';
+import {UrlService} from '@app/services/url.service';
+import {IDefaultResponse} from '@app/interfaces/idefault-response';
 import {FollowupComponent} from '@app/shared/popups/followup/followup.component';
 import {CaseModel} from '@app/models/case-model';
 
@@ -167,7 +167,7 @@ export abstract class EServiceGenericService<T extends { id: string }>
             });
           }
           rows = rows.filter(x => x.fields && x.fields.length > 0);
-          return FBuilder.castFormlyFields(rows)
+          return FBuilder.castFormlyFields(rows);
         })) : of([]);
   }
 
@@ -240,6 +240,12 @@ export abstract class EServiceGenericService<T extends { id: string }>
     }).pipe(map(res => res.rs));
   }
 
+  terminateTask(taskId: string): Observable<boolean> {
+    return this.http.post<IDefaultResponse<boolean>>(this._getURLSegment() + '/task/terminate', {}, {
+      params: new HttpParams().set('tkiid ', taskId)
+    }).pipe(map(response => response.rs));
+  }
+
   getTask(taskId: string): Observable<T> {
     return this._getTask(taskId);
   }
@@ -249,7 +255,7 @@ export abstract class EServiceGenericService<T extends { id: string }>
   }
 
   getMenuItem(): MenuItem {
-    return this.menuItemService.getMenuItemByLangKey(this.serviceKey)!
+    return this.menuItemService.getMenuItemByLangKey(this.serviceKey)!;
   }
 
   abstract _getUrlService(): UrlService

@@ -196,6 +196,10 @@ export abstract class CaseModel<S extends EServiceGenericService<T> | BaseGeneri
     return this.taskDetails.isRead;
   }
 
+  isMain(): boolean {
+    return this.taskDetails.isMain;
+  }
+
   getStatusIcon(): string {
     return this.service.getStatusIcon(this.caseStatus);
   }
@@ -375,6 +379,10 @@ export abstract class CaseModel<S extends EServiceGenericService<T> | BaseGeneri
 
   markAsUnread(): Observable<IBulkResult>  {
     return this.service.markAsReadUnreadBulk([this.taskDetails.tkiid], false);
+  }
+
+  terminateTask(): Observable<boolean>  {
+    return this.inboxService!.terminateTask(this.taskDetails.tkiid, this.caseType);
   }
 
   finalReject(): DialogRef {

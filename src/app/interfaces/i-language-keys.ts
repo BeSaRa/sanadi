@@ -135,6 +135,7 @@ export interface ILanguageKeys {
   followup_comments: string;
   msg_success_terminate_followup: string;
   msg_confirm_terminate_followup: string;
+  msg_confirm_terminate_task: string;
   btn_terminate: string;
   status: string;
   dueDate: string;
@@ -1202,4 +1203,6 @@ export interface ILanguageKeys {
   mark_as_unread: string;
   msg_mark_as_read_success: string;
   msg_mark_as_unread_success: string;
+  terminate_task: string;
+  msg_success_terminate_task: string;
 }

@@ -1,4 +1,4 @@
-import { UrgentInterventionFinancialNotificationService } from './urgent-intervention-financial-notification.service';
+import {UrgentInterventionFinancialNotificationService} from './urgent-intervention-financial-notification.service';
 import {ComponentFactoryResolver, Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {UrlService} from './url.service';
@@ -22,40 +22,41 @@ import {WFResponseType} from '../enums/wfresponse-type.enum';
 import {
   ActionWithCommentPopupComponent
 } from '../shared/popups/action-with-comment-popup/action-with-comment-popup.component';
-import { QueryResult } from '../models/query-result';
-import { ConsultationService } from './consultation.service';
-import { InternationalCooperationService } from './international-cooperation.service';
-import { CaseTypes } from '../enums/case-types.enum';
-import { ExceptionHandlerService } from './exception-handler.service';
-import { InitialExternalOfficeApprovalService } from '@app/services/initial-external-office-approval.service';
-import { PartnerApprovalService } from '@app/services/partner-approval.service';
-import { FinalExternalOfficeApprovalService } from './final-external-office-approval.service';
-import { IInboxCriteria } from '@app/interfaces/i-inbox-criteria';
+import {QueryResult} from '../models/query-result';
+import {ConsultationService} from './consultation.service';
+import {InternationalCooperationService} from './international-cooperation.service';
+import {CaseTypes} from '../enums/case-types.enum';
+import {ExceptionHandlerService} from './exception-handler.service';
+import {InitialExternalOfficeApprovalService} from '@app/services/initial-external-office-approval.service';
+import {PartnerApprovalService} from '@app/services/partner-approval.service';
+import {FinalExternalOfficeApprovalService} from './final-external-office-approval.service';
+import {IInboxCriteria} from '@app/interfaces/i-inbox-criteria';
 import {
   FilterInboxRequestPopupComponent
 } from '@app/modules/e-services-main/popups/filter-inbox-request-popup/filter-inbox-request-popup.component';
-import { DateUtils } from '@app/helpers/date-utils';
-import { CommonUtils } from '@app/helpers/common-utils';
-import { InternalProjectLicenseService } from '@app/services/internal-project-license.service';
-import { SendToMultipleComponent } from '@app/shared/popups/send-to-multiple/send-to-multiple.component';
-import { ProjectModelService } from '@app/services/project-model.service';
-import { Memoize } from 'typescript-memoize';
-import { CaseModel } from '@app/models/case-model';
-import { CollectionApprovalService } from '@app/services/collection-approval.service';
-import { FundraisingService } from './fundraising.service';
-import { CollectorApprovalService } from '@app/services/collector-approval.service';
-import { UrgentInterventionLicensingService } from '@app/services/urgent-intervention-licensing.service';
-import { InternalBankAccountApprovalService } from '@app/services/internal-bank-account-approval.service';
-import { CustomsExemptionRemittanceService } from './customs-exemption-remittance.service';
-import { BaseGenericEService } from '@app/generics/base-generic-e-service';
-import { UrgentJointReliefCampaignService } from '@services/urgent-joint-relief-campaign.service';
-import { UrgentInterventionReportingService } from '@app/services/urgent-intervention-reporting.service';
-import { ExternalOrgAffiliationService } from './external-org-affiliation.service';
-import { EmploymentService } from '@app/services/employment.service';
-import { ReturnToOrganizationPopupComponent } from '@app/shared/popups/return-to-organization-popup/return-to-organization-popup.component';
-import { UrgentInterventionClosureService } from '@services/urgent-intervention-closure.service';
-import { TransferringIndividualFundsAbroadService } from '@services/transferring-individual-funds-abroad.service';
-import { ForeignCountriesProjectsService } from './foreign-countries-projects.service';
+import {DateUtils} from '@app/helpers/date-utils';
+import {CommonUtils} from '@app/helpers/common-utils';
+import {InternalProjectLicenseService} from '@app/services/internal-project-license.service';
+import {SendToMultipleComponent} from '@app/shared/popups/send-to-multiple/send-to-multiple.component';
+import {ProjectModelService} from '@app/services/project-model.service';
+import {Memoize} from 'typescript-memoize';
+import {CaseModel} from '@app/models/case-model';
+import {CollectionApprovalService} from '@app/services/collection-approval.service';
+import {FundraisingService} from './fundraising.service';
+import {CollectorApprovalService} from '@app/services/collector-approval.service';
+import {UrgentInterventionLicensingService} from '@app/services/urgent-intervention-licensing.service';
+import {InternalBankAccountApprovalService} from '@app/services/internal-bank-account-approval.service';
+import {CustomsExemptionRemittanceService} from './customs-exemption-remittance.service';
+import {BaseGenericEService} from '@app/generics/base-generic-e-service';
+import {UrgentJointReliefCampaignService} from '@services/urgent-joint-relief-campaign.service';
+import {UrgentInterventionReportingService} from '@app/services/urgent-intervention-reporting.service';
+import {ExternalOrgAffiliationService} from './external-org-affiliation.service';
+import {EmploymentService} from '@app/services/employment.service';
+import {ReturnToOrganizationPopupComponent} from '@app/shared/popups/return-to-organization-popup/return-to-organization-popup.component';
+import {UrgentInterventionClosureService} from '@services/urgent-intervention-closure.service';
+import {TransferringIndividualFundsAbroadService} from '@services/transferring-individual-funds-abroad.service';
+import {ForeignCountriesProjectsService} from './foreign-countries-projects.service';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -116,11 +117,11 @@ export class InboxService {
     this.services.set(CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD, this.transferringIndividualsFundsAbroad);
   }
 
-  @Generator(QueryResultSet, false, { property: 'rs', interceptReceive: (new QueryResultSetInterceptor().receive) })
+  @Generator(QueryResultSet, false, {property: 'rs', interceptReceive: (new QueryResultSetInterceptor().receive)})
   private _loadUserInbox(options?: any): Observable<QueryResultSet> {
     let objOptions;
     if (!CommonUtils.isEmptyObject(options) && CommonUtils.objectHasValue(options)) {
-      objOptions = { ...options };
+      objOptions = {...options};
 
       if (objOptions.hasOwnProperty('createdDateFrom') && objOptions.createdDateFrom) {
         objOptions.createdDateFrom = DateUtils.setStartOfDay(objOptions.createdDateFrom)?.toISOString();
@@ -131,7 +132,7 @@ export class InboxService {
     }
 
     return this.http.get<QueryResultSet>(this.urlService.URLS.USER_INBOX, {
-      params: (new HttpParams({ fromObject: objOptions || options }))
+      params: (new HttpParams({fromObject: objOptions || options}))
     });
   }
 
@@ -139,11 +140,11 @@ export class InboxService {
     return this._loadUserInbox(options);
   }
 
-  @Generator(QueryResultSet, false, { property: 'rs', interceptReceive: (new QueryResultSetInterceptor().receive) })
+  @Generator(QueryResultSet, false, {property: 'rs', interceptReceive: (new QueryResultSetInterceptor().receive)})
   private _loadTeamInbox(teamId: number, options?: any): Observable<QueryResultSet> {
     let objOptions;
     if (!CommonUtils.isEmptyObject(options) && CommonUtils.objectHasValue(options)) {
-      objOptions = { ...options };
+      objOptions = {...options};
 
       if (objOptions.hasOwnProperty('createdDateFrom') && objOptions.createdDateFrom) {
         objOptions.createdDateFrom = DateUtils.setStartOfDay(objOptions.createdDateFrom)?.toISOString();
@@ -153,7 +154,7 @@ export class InboxService {
       }
     }
     return this.http.get<QueryResultSet>(this.urlService.URLS.TEAMS_INBOX + '/' + teamId, {
-      params: (new HttpParams({ fromObject: objOptions || options }))
+      params: (new HttpParams({fromObject: objOptions || options}))
     });
   }
 
@@ -178,7 +179,7 @@ export class InboxService {
     return service.releaseBulk(taskIds);
   }
 
-  markAsReadUnreadBulk(taskIds: string[], caseType: number, markAsRead: boolean):  Observable<IBulkResult> {
+  markAsReadUnreadBulk(taskIds: string[], caseType: number, markAsRead: boolean): Observable<IBulkResult> {
     const service = this.getService(caseType);
     return service.markAsReadUnreadBulk(taskIds, markAsRead);
   }
@@ -219,6 +220,11 @@ export class InboxService {
       .pipe(map(response => response.rs));
   }
 
+  terminateTask(taskId: string, caseType: number): Observable<boolean> {
+    const service = this.getService(caseType);
+    return service.terminateTask(taskId);
+  }
+
   sendTaskTo(taskId: string, info: Partial<IWFResponse>, service: EServiceGenericService<any> | BaseGenericEService<any>): Observable<boolean> {
     return this.takeActionOnTask(taskId, info, service);
   }
@@ -233,10 +239,10 @@ export class InboxService {
   }
 
   private openSendToDialog(taskId: string,
-    sendToResponse: WFResponseType,
-    service: EServiceGenericService<any>,
-    claimBefore: boolean = false,
-    task?: QueryResult | CaseModel<any, any>): DialogRef {
+                           sendToResponse: WFResponseType,
+                           service: EServiceGenericService<any>,
+                           claimBefore: boolean = false,
+                           task?: QueryResult | CaseModel<any, any>): DialogRef {
 
     return this.dialog.show(SendToComponent,
       {
@@ -250,11 +256,11 @@ export class InboxService {
   }
 
   private openSendToMultipleDialog(taskId: string,
-    sendToResponse: WFResponseType,
-    service: EServiceGenericService<any>,
-    claimBefore: boolean = false,
-    task?: QueryResult | CaseModel<any, any>,
-    extraInfo?: any): DialogRef {
+                                   sendToResponse: WFResponseType,
+                                   service: EServiceGenericService<any>,
+                                   claimBefore: boolean = false,
+                                   task?: QueryResult | CaseModel<any, any>,
+                                   extraInfo?: any): DialogRef {
 
     return this.dialog.show(SendToMultipleComponent,
       {
