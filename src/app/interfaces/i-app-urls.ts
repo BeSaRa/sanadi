@@ -44,6 +44,7 @@ export interface IAppUrls {
   CUSTOM_TERMS: string;
   RELEASE_BULK: string
   CLAIM_BULK: string;
+  READ_BULK: string;
   TEAMS_INBOX: string;
   USER_INBOX: string;
   PERMISSIONS: string;

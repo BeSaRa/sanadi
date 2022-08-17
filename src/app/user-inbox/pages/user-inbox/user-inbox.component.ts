@@ -1,31 +1,32 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { LangService } from '@app/services/lang.service';
-import { InboxService } from '@app/services/inbox.service';
-import { QueryResultSet } from '@app/models/query-result-set';
-import { switchMap, takeUntil, tap } from 'rxjs/operators';
-import { QueryResult } from '@app/models/query-result';
-import { BehaviorSubject, Subject } from 'rxjs';
-import { WFResponseType } from '@app/enums/wfresponse-type.enum';
-import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
-import { ToastService } from '@app/services/toast.service';
-import { DialogRef } from '@app/shared/models/dialog-ref';
-import { EmployeeService } from '@app/services/employee.service';
-import { CaseModel } from '@app/models/case-model';
-import { WFActions } from '@app/enums/wfactions.enum';
-import { ILanguageKeys } from "@app/interfaces/i-language-keys";
-import { ITableOptions } from "@app/interfaces/i-table-options";
-import { FilterEventTypes } from "@app/types/types";
-import { UserClickOn } from "@app/enums/user-click-on.enum";
-import { IPartialRequestCriteria } from "@app/interfaces/i-partial-request-criteria";
-import { CommonUtils } from "@app/helpers/common-utils";
-import { IInboxCriteria } from "@app/interfaces/i-inbox-criteria";
-import { TableComponent } from "@app/shared/components/table/table.component";
-import { SortEvent } from '@app/interfaces/sort-event';
-import { CaseTypes } from "@app/enums/case-types.enum";
-import { Lookup } from "@app/models/lookup";
-import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
-import { Router } from '@angular/router';
-import { CommonService } from "@services/common.service";
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {LangService} from '@app/services/lang.service';
+import {InboxService} from '@app/services/inbox.service';
+import {QueryResultSet} from '@app/models/query-result-set';
+import {switchMap, takeUntil, tap} from 'rxjs/operators';
+import {QueryResult} from '@app/models/query-result';
+import {BehaviorSubject, Subject} from 'rxjs';
+import {WFResponseType} from '@app/enums/wfresponse-type.enum';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {ToastService} from '@app/services/toast.service';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {EmployeeService} from '@app/services/employee.service';
+import {CaseModel} from '@app/models/case-model';
+import {WFActions} from '@app/enums/wfactions.enum';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {ITableOptions} from '@app/interfaces/i-table-options';
+import {FilterEventTypes} from '@app/types/types';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {IPartialRequestCriteria} from '@app/interfaces/i-partial-request-criteria';
+import {CommonUtils} from '@app/helpers/common-utils';
+import {IInboxCriteria} from '@app/interfaces/i-inbox-criteria';
+import {TableComponent} from '@app/shared/components/table/table.component';
+import {SortEvent} from '@app/interfaces/sort-event';
+import {CaseTypes} from '@app/enums/case-types.enum';
+import {Lookup} from '@app/models/lookup';
+import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import {Router} from '@angular/router';
+import {CommonService} from '@services/common.service';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 
 @Component({
   selector: 'app-user-inbox',
@@ -57,7 +58,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
     filterCallback: (type: FilterEventTypes = 'OPEN') => {
       if (type === 'CLEAR') {
         this.filterCriteria = {};
-        this.reloadInbox$.next(null)
+        this.reloadInbox$.next(null);
       } else if (type === 'OPEN') {
         const sub = this.inboxService.openFilterTeamInboxDialog(this.filterCriteria)
           .subscribe((dialog: DialogRef) => {
@@ -66,10 +67,10 @@ export class UserInboxComponent implements OnInit, OnDestroy {
                 return;
               }
               this.filterCriteria = result as Partial<IInboxCriteria>;
-              this.reloadInbox$.next(null)
+              this.reloadInbox$.next(null);
               sub.unsubscribe();
             });
-          })
+          });
       }
     },
     sortingCallbacks: {
@@ -116,7 +117,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
       )
       .subscribe((value) => {
         this.queryResultSet = value;
-        this.oldQueryResultSet = { ...value }
+        this.oldQueryResultSet = {...value};
       });
 
   }
@@ -251,7 +252,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
     /*item.open(this.actions, OpenFrom.USER_INBOX)
      .pipe(switchMap(ref => ref.onAfterClose$))
      .subscribe(() => this.reloadInbox$.next(null));*/
-    this.router.navigate([item.itemRoute], { queryParams: { item: item.itemDetails } }).then();
+    this.router.navigate([item.itemRoute], {queryParams: {item: item.itemDetails}}).then();
   }
 
   actionRelease(item: QueryResult, viewDialogRef?: DialogRef) {
@@ -263,6 +264,32 @@ export class UserInboxComponent implements OnInit, OnDestroy {
           return;
         }
         this.toast.success(this.lang.map.task_have_been_released_successfully);
+        viewDialogRef?.close();
+      });
+  }
+
+  actionMarkAsRead(item: QueryResult, viewDialogRef?: DialogRef) {
+    item.markAsRead()
+      .subscribe((val) => {
+        this.reloadInbox$.next(null);
+        if (val.failedOperations && val.failedOperations.length) {
+          this.toast.error(this.lang.map.something_went_wrong_while_taking_action);
+          return;
+        }
+        this.toast.success(this.lang.map.msg_mark_as_read_success);
+        viewDialogRef?.close();
+      });
+  }
+
+  actionMarkAsUnread(item: QueryResult, viewDialogRef?: DialogRef) {
+    item.markAsUnread()
+      .subscribe((val) => {
+        this.reloadInbox$.next(null);
+        if (val.failedOperations && val.failedOperations.length) {
+          this.toast.error(this.lang.map.something_went_wrong_while_taking_action);
+          return;
+        }
+        this.toast.success(this.lang.map.msg_mark_as_unread_success);
         viewDialogRef?.close();
       });
   }
@@ -288,7 +315,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-eye',
         label: 'open_task',
-        data: { hideFromViewer: true },
+        data: {hideFromViewer: true},
         displayInGrid: true,
         onClick: (item: QueryResult) => this.actionOpen(item)
       },
@@ -300,12 +327,29 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         displayInGrid: true,
         onClick: (item: QueryResult) => this.actionViewLogs(item)
       },
+      // mark as read
+      {
+        type: 'action',
+        icon: ActionIconsEnum.OPEN_MAIL,
+        label: 'mark_as_read',
+        data: {hideFromViewer: true},
+        show: (item: QueryResult) => !item.isRead(),
+        onClick: (item: QueryResult) => this.actionMarkAsRead(item)
+      },
+      // mark as unread
+      {
+        type: 'action',
+        icon: ActionIconsEnum.CLOSE_MAIL,
+        label: 'mark_as_unread',
+        show: (item: QueryResult) => item.isRead(),
+        onClick: (item: QueryResult) => this.actionMarkAsUnread(item)
+      },
       // manage attachments
       {
         type: 'action',
         icon: 'mdi-paperclip',
         label: 'manage_attachments',
-        data: { hideFromViewer: true },
+        data: {hideFromViewer: true},
         show: (item: QueryResult) => {
           let caseStatus = item.getCaseStatus();
           return (caseStatus !== CommonCaseStatus.CANCELLED && caseStatus !== CommonCaseStatus.FINAL_APPROVE && caseStatus !== CommonCaseStatus.FINAL_REJECTION);
@@ -330,7 +374,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-comment-text-multiple-outline',
         label: 'manage_comments',
-        data: { hideFromViewer: true },
+        data: {hideFromViewer: true},
         show: (item: QueryResult) => {
           return this.employeeService.isInternalUser() && item.getCaseStatus() !== CommonCaseStatus.CANCELLED;
         },
@@ -351,7 +395,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => this.actionRelease(item, viewDialogRef)
       },
-      { type: 'divider' },
+      {type: 'divider'},
       // send to department
       {
         type: 'action',
@@ -464,7 +508,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
           this.actionSendToGeneralManager(item, viewDialogRef);
         }
       },
-      { type: 'divider' },
+      {type: 'divider'},
       // complete
       {
         type: 'action',
@@ -571,7 +615,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
       serviceKey = this.inboxService.getService(service).serviceKey;
     } catch (e) {
       console.log(service);
-      return "";
+      return '';
     }
     return this.lang.getLocalByKey(serviceKey).getName();
   }
@@ -582,9 +626,9 @@ export class UserInboxComponent implements OnInit, OnDestroy {
 
   onInboxFiltered($event: Lookup | undefined): void {
     if ($event) {
-      this.queryResultSet!.items = this.oldQueryResultSet!.items.filter((item) => item.riskStatusInfo.lookupKey === $event.lookupKey)
+      this.queryResultSet!.items = this.oldQueryResultSet!.items.filter((item) => item.riskStatusInfo.lookupKey === $event.lookupKey);
     } else {
-      this.queryResultSet!.items = this.oldQueryResultSet!.items
+      this.queryResultSet!.items = this.oldQueryResultSet!.items;
     }
   }
 }

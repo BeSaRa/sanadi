@@ -27,4 +27,11 @@ export class InboxGridActionsComponent {
   onActionClicked(action: IMenuItem<QueryResult>) {
     action.onClick && action.onClick(this.model!);
   }
+
+  canShow(action: IMenuItem<QueryResult>): boolean {
+    if (!this.model){
+      return false;
+    }
+    return !action.show || (action.show && action.show(this.model))
+  }
 }

@@ -178,6 +178,11 @@ export class InboxService {
     return service.releaseBulk(taskIds);
   }
 
+  markAsReadUnreadBulk(taskIds: string[], caseType: number, markAsRead: boolean):  Observable<IBulkResult> {
+    const service = this.getService(caseType);
+    return service.markAsReadUnreadBulk(taskIds, markAsRead);
+  }
+
   openDocumentDialog(caseId: string, caseType: number): DialogRef {
     const service = this.getService(caseType);
     return service.openDocumentDialog(caseId, caseType);

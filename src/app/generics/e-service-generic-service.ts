@@ -1,4 +1,4 @@
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable, of} from 'rxjs';
 import {FileNetDocument} from '../models/file-net-document';
 import {CaseComment} from '../models/case-comment';
@@ -232,6 +232,12 @@ export abstract class EServiceGenericService<T extends { id: string }>
 
   releaseBulk(taskIds: string[]): Observable<IBulkResult> {
     return this.http.post<IDefaultResponse<IBulkResult>>(this._getUrlService().URLS.RELEASE_BULK, taskIds).pipe(map(res => res.rs));
+  }
+
+  markAsReadUnreadBulk(taskIds: string[], markAsRead: boolean): Observable<IBulkResult> {
+    return this.http.post<IDefaultResponse<IBulkResult>>(this._getUrlService().URLS.READ_BULK, taskIds, {
+      params: new HttpParams().set('isRead', markAsRead)
+    }).pipe(map(res => res.rs));
   }
 
   getTask(taskId: string): Observable<T> {

@@ -369,6 +369,14 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         disabled: () => !this.model || !this.model.id,
         onClick: () => this.print()
       },
+      // mark as unread
+      {
+        type: 'action',
+        icon: ActionIconsEnum.CLOSE_MAIL,
+        label: 'mark_as_unread',
+        show: (item) => true,
+        onClick: (item) => this.markAsUnreadAction(item)
+      },
       // back
       {
         type: 'action',
@@ -786,6 +794,14 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         disabled: () => !this.model || !this.model.id,
         onClick: () => this.print()
       },
+      // mark as unread
+      {
+        type: 'action',
+        icon: ActionIconsEnum.CLOSE_MAIL,
+        label: 'mark_as_unread',
+        show: (item) => true,
+        onClick: (item) => this.markAsUnreadAction(item)
+      },
       // back
       {
         type: 'action',
@@ -1044,6 +1060,13 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   private closeAction(item: CaseModel<any, any>) {
     item.close().onAfterClose$.subscribe(actionTaken => {
       actionTaken && this.navigateToSamePageThatUserCameFrom();
+    });
+  }
+
+  private markAsUnreadAction(item: CaseModel<any, any>) {
+    item.markAsUnread().subscribe(() => {
+      this.toast.success(this.lang.map.msg_mark_as_unread_success);
+      this.navigateToSamePageThatUserCameFrom();
     });
   }
 

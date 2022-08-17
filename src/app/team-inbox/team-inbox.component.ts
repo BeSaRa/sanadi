@@ -29,6 +29,7 @@ import { Lookup } from "@app/models/lookup";
 import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
 import { Router } from '@angular/router';
 import { CommonService } from '@services/common.service';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 
 @Component({
   selector: 'team-inbox',
@@ -193,6 +194,32 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
           component.handleReadonly();
         }
         caseViewerComponent && caseViewerComponent.checkForFinalApproveByMatrixNotification();
+      });
+  }
+
+  actionMarkAsRead(item: QueryResult, viewDialogRef?: DialogRef) {
+    item.markAsRead()
+      .subscribe((val) => {
+        this.reloadSelectedInbox();
+        if (val.failedOperations && val.failedOperations.length) {
+          this.toast.error(this.lang.map.something_went_wrong_while_taking_action);
+          return;
+        }
+        this.toast.success(this.lang.map.msg_mark_as_read_success);
+        viewDialogRef?.close();
+      });
+  }
+
+  actionMarkAsUnread(item: QueryResult, viewDialogRef?: DialogRef) {
+    item.markAsUnread()
+      .subscribe((val) => {
+        this.reloadSelectedInbox();
+        if (val.failedOperations && val.failedOperations.length) {
+          this.toast.error(this.lang.map.something_went_wrong_while_taking_action);
+          return;
+        }
+        this.toast.success(this.lang.map.msg_mark_as_unread_success);
+        viewDialogRef?.close();
       });
   }
 
@@ -753,7 +780,26 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionClose(item, viewDialogRef);
         }
-      }
+      },
+      // mark as read
+      {
+        type: 'action',
+        icon: ActionIconsEnum.OPEN_MAIL,
+        label: 'mark_as_read',
+        displayInGrid: false,
+        data: {hideFromViewer: true},
+        show: (item: QueryResult) => !item.isRead(),
+        onClick: (item: QueryResult) => this.actionMarkAsRead(item)
+      },
+      // mark as unread
+      {
+        type: 'action',
+        icon: ActionIconsEnum.CLOSE_MAIL,
+        label: 'mark_as_unread',
+        displayInGrid: false,
+        show: (item: QueryResult) => item.isRead(),
+        onClick: (item: QueryResult) => this.actionMarkAsUnread(item)
+      },
     ];
     this.gridActions = this.actions.filter(action => action.displayInGrid)
   }

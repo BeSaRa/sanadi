@@ -5,6 +5,8 @@ import {AdminResult} from "@app/models/admin-result";
 export class TaskDetails extends Cloneable<TaskDetails> {
   tkiid!: string;
   isAtRisk!: string;
+  isMain!: boolean;
+  isRead!: boolean;
   priority!: number;
   name!: string;
   displayName!: string;

@@ -23,5 +23,7 @@ export enum ActionIconsEnum {
   SEARCH_USER = 'mdi-account-search',
   DOWNLOAD = 'mdi-download',
   SPECIAL_NEEDS = 'mdi-human',
-  CHECKLIST = 'mdi-format-list-bulleted-square'
+  CHECKLIST = 'mdi-format-list-bulleted-square',
+  OPEN_MAIL = 'mdi-email-open',
+  CLOSE_MAIL = 'mdi-email'
 }

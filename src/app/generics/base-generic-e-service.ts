@@ -1,7 +1,7 @@
 import { Observable, of } from "rxjs";
 import { CastResponse } from "@decorators/cast-response";
 import { FactoryService } from "@services/factory.service";
-import { HttpClient } from "@angular/common/http";
+import {HttpClient, HttpParams} from '@angular/common/http';
 import { DialogService } from "@services/dialog.service";
 import { DomSanitizer } from "@angular/platform-browser";
 import { ILanguageKeys } from "@contracts/i-language-keys";
@@ -239,6 +239,12 @@ export abstract class BaseGenericEService<T extends { id: string }> {
 
   claimBulk(taskIds: string[]): Observable<IBulkResult> {
     return this.http.post<IDefaultResponse<IBulkResult>>(this._getUrlService().URLS.CLAIM_BULK, taskIds).pipe(map(res => res.rs));
+  }
+
+  markAsReadUnreadBulk(taskIds: string[], markAsRead: boolean): Observable<IBulkResult> {
+    return this.http.post<IDefaultResponse<IBulkResult>>(this._getUrlService().URLS.READ_BULK, taskIds, {
+      params: new HttpParams().set('isRead', markAsRead)
+    }).pipe(map(res => res.rs));
   }
 
   releaseBulk(taskIds: string[]): Observable<IBulkResult> {

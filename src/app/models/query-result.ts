@@ -134,6 +134,14 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
     return this.service.releaseBulk([this.TKIID], this.BD_CASE_TYPE);
   }
 
+  markAsRead(): Observable<IBulkResult> {
+    return this.service.markAsReadUnreadBulk([this.TKIID], this.BD_CASE_TYPE, true);
+  }
+
+  markAsUnread(): Observable<IBulkResult>  {
+    return this.service.markAsReadUnreadBulk([this.TKIID], this.BD_CASE_TYPE, false);
+  }
+
   manageAttachments(): DialogRef {
     return this.service.openDocumentDialog(this.PI_PARENT_CASE_ID, this.BD_CASE_TYPE);
   }
