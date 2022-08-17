@@ -44,7 +44,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
 
   tableOptions: ITableOptions = {
     ready: false,
-    columns: ['workItemStatus', 'BD_FULL_SERIAL', 'BD_CASE_TYPE', 'ACTIVATED', 'action', 'PI_CREATE', 'PI_DUE', 'fromUserInfo', 'actions'], //'BD_SUBJECT', 'orgInfo',
+    columns: ['workItemStatus', 'BD_FULL_SERIAL', 'BD_CASE_TYPE', 'ACTIVATED', 'action', 'PI_CREATE', 'PI_DUE', 'team', 'fromUserInfo', 'actions'], //'BD_SUBJECT', 'orgInfo',
     searchText: '',
     isSelectedRecords: () => {
       if (!this.tableOptions || !this.tableOptions.ready || !this.table) {
@@ -78,7 +78,12 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         let value1 = !CommonUtils.isValidValue(a) ? '' : a.displayNameInfo?.getName().toLowerCase(),
           value2 = !CommonUtils.isValidValue(b) ? '' : b.displayNameInfo?.getName().toLowerCase();
         return CommonUtils.getSortValue(value1, value2, dir.direction);
-      }
+      },
+      team: (a: QueryResult, b: QueryResult, dir: SortEvent) => {
+        let value1 = !CommonUtils.isValidValue(a) ? '' : a.teamInfo?.getName().toLowerCase(),
+          value2 = !CommonUtils.isValidValue(b) ? '' : b.teamInfo?.getName().toLowerCase();
+        return CommonUtils.getSortValue(value1, value2, dir.direction);
+      },
     }
   };
 

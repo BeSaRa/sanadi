@@ -31,6 +31,8 @@ import {EncryptionService} from "@app/services/encryption.service";
 import {INavigatedItem} from "@app/interfaces/inavigated-item";
 import {CaseTypes} from '@app/enums/case-types.enum';
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import {infoSearchFields} from '@helpers/info-search-fields';
+import {normalSearchFields} from '@helpers/normal-search-fields';
 
 export class QueryResult extends SearchableCloneable<QueryResult> {
   TKIID!: string;
@@ -88,14 +90,8 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
   itemDetails!: string;
 
   searchFields: ISearchFieldsMap<QueryResult> = {
-    BD_FULL_SERIAL: 'BD_FULL_SERIAL',
-    fromUserInfo: (text, model) => model.fromUserInfo && (model.fromUserInfo.getName() + '').toLowerCase().indexOf(text) !== -1,
-    orgInfo: (text, model) => {
-      if (this.employeeService.isExternalUser()) {
-        return false;
-      }
-      return model.orgInfo && (model.orgInfo.getName() + '').toLowerCase().indexOf(text) !== -1;
-    },
+    ...normalSearchFields(['BD_FULL_SERIAL']),
+    ...infoSearchFields(['teamInfo', 'fromUserInfo', 'displayNameInfo']),
     ACTIVATED: (text, model) => {
       let date = (new DatePipe('en')).transform(model.ACTIVATED);
       return date ? date.toLowerCase().indexOf(text) !== -1 : false;
@@ -109,12 +105,10 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
       let date = (new DatePipe('en')).transform(model.PI_CREATE);
       return date ? date.toLowerCase().indexOf(text) !== -1 : false;
     },
-    BD_SUBJECT: 'BD_SUBJECT',
-    /*action: (text, model) => {
-      let local = this.lang.map[model.TAD_DISPLAY_NAME] || model.TAD_DISPLAY_NAME;
-      return local ? local.toLowerCase().indexOf(text) !== -1 : false;
-    },*/
-    action: (text, model) => model.displayNameInfo && (model.displayNameInfo.getName() + '').toLowerCase().indexOf(text) !== -1
+    PI_DUE: (text, model) => {
+      let date = (new DatePipe('en')).transform(model.PI_DUE);
+      return date ? date.toLowerCase().indexOf(text) !== -1 : false;
+    }
   };
 
   constructor() {
