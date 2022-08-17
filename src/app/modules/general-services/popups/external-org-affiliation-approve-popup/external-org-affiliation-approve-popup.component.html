@@ -10,9 +10,9 @@
     aria-label="Close"
   ></button>
 </div>
-<div class="dialog-content no-fixed-height min-w400px w600px">
+<div class="dialog-content" [ngClass]="isCancelRequestType() ? 'no-fixed-height' : 'w800px'">
   <div class="row">
-    <form [formGroup]="approvalForm">
+    <form [formGroup]="approvalForm" *ngIf="!isCancelRequestType()">
       <div class="col-sm-12 mb-4 position-relative">
         <label class="form-label" asteriskIfRequired="customTerms" for="customTerms">{{lang.map.custom_terms}}</label>
         <textarea name="customTerms" formControlName="customTerms"

@@ -12,7 +12,7 @@ import { takeUntil, map, tap, filter, exhaustMap, switchMap } from 'rxjs/operato
 import { CustomValidators } from '@app/validators/custom-validators';
 import { LangService } from '@services/lang.service';
 import { Component, Inject, OnInit } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Subject, of } from 'rxjs';
 import { InboxService } from '@app/services/inbox.service';
 import { AffiliationRequestType } from '@app/enums/AffiliationRequestType.enum';
 
@@ -60,9 +60,11 @@ export class ExternalOrgAffiliationApprovePopupComponent implements OnInit {
       .pipe(tap(invalid => invalid && this.dialog.error(this.lang.map.msg_all_required_fields_are_filled)))
       .pipe(filter(invalid => !invalid))
       .pipe(exhaustMap(_ => {
-        Object.assign(this.data.model, this.approvalForm.value)
-        console.log(this.data.model)
-        return this.data.model.save()
+        if (!this.isCancelRequestType()) {
+          Object.assign(this.data.model, this.approvalForm.value)
+          return this.data.model.save()
+        }
+        return of(true)
       }))
       .pipe(switchMap(_ => this.inboxService.takeActionOnTask(this.data.model.taskDetails.tkiid, this.getResponse(), this.data.model.service)))
       .subscribe(() => {
