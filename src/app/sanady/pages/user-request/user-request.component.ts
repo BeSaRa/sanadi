@@ -221,11 +221,11 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
   private requestStatusArray: SubventionRequestStatus[] = [SubventionRequestStatus.REJECTED, SubventionRequestStatus.SAVED];
   private validateStatus: boolean = true;
 
+  beneficiaryIdTypesEnum = BeneficiaryIdTypes;
   idTypes: Lookup[] = this.lookup.listByCategory.BenIdType;
   displayPrimaryNationality: boolean = false;
   displaySecondaryNationality: boolean = false;
-  primaryNationalityListType: 'normal' | 'gulf' = 'normal';
-  secondaryNationalityListType: 'normal' | 'gulf' = 'normal';
+  displayRequesterNationality: boolean = false;
 
   private idTypesValidationsMap: { [index: number]: any } = {
     [BeneficiaryIdTypes.PASSPORT]: CustomValidators.commonValidations.passport,
@@ -423,19 +423,30 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     this.toggleIsHandicappedReadonly();
   }
 
+  isRequesterSameAsBeneficiary(): boolean {
+    return this.requesterRelationTypeField?.value === BeneficiaryRequesterRelationTypes.SAME_AS_REQUESTER;
+  }
+
   handleRequesterRelationTypeChange(value?: number, userInteraction: boolean = false) {
-    if (userInteraction) {
-      this.beneficiaryRequesterNameField?.setValue('');
-    }
-    if (value === BeneficiaryRequesterRelationTypes.SAME_AS_REQUESTER) {
-      this.beneficiaryRequesterNameField?.removeValidators(CustomValidators.required);
-      this.beneficiaryRequesterNameField?.disable();
-    } else {
-      this.beneficiaryRequesterNameField?.addValidators(CustomValidators.required);
-      this.beneficiaryRequesterNameField?.enable();
-    }
-    this.beneficiaryRequesterNameField.updateValueAndValidity();
-    console.log(this.beneficiaryRequesterNameField.value);
+    let dependentFields = [this.beneficiaryRequesterNameField, this.requesterIdTypeField, this.requesterIdNumberField, this.requesterNationalityField, this.requesterPhoneField];
+    dependentFields.forEach((field: UntypedFormControl) => {
+      if (!field) {
+        return;
+      }
+      if (userInteraction) {
+        field.setValue(null);
+      }
+      if (value === BeneficiaryRequesterRelationTypes.SAME_AS_REQUESTER) {
+        field.removeValidators(CustomValidators.required);
+        field.disable();
+      } else {
+        field.addValidators(CustomValidators.required);
+        field.enable();
+      }
+      field.updateValueAndValidity();
+    });
+
+    this.handleRequesterIdTypeChange(this.requesterIdTypeField.value, userInteraction);
   }
 
   isBeneficiaryWorking() {
@@ -889,6 +900,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
 
   getBeneficiaryData($event?: Event) {
     $event?.preventDefault();
+    $event?.stopPropagation();
     const idType = this.primaryIdTypeField?.value;
     const primaryNumber = this.primaryIdNumberField?.value;
     const nationality = this.primaryNationalityField?.value;
@@ -946,6 +958,10 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       event.stopPropagation();
       return;
     }
+  }
+
+  disableBeneficiarySearch(): boolean {
+    return this.readOnly || this.editMode || this.primaryIdNumberField?.invalid || this.primaryNationalityField?.invalid;
   }
 
   saveAid() {
@@ -1214,6 +1230,26 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
 
   get secondaryNationalityField(): UntypedFormControl {
     return this.personalInfoTab.get('benSecIdNationality') as UntypedFormControl;
+  }
+
+  get requesterRelationTypeField(): UntypedFormControl {
+    return this.personalInfoTab.get('benRequestorRelationType') as UntypedFormControl;
+  }
+
+  get requesterIdTypeField(): UntypedFormControl {
+    return this.personalInfoTab.get('requestorIdType') as UntypedFormControl;
+  }
+
+  get requesterIdNumberField(): UntypedFormControl {
+    return this.personalInfoTab.get('requestorIdNumber') as UntypedFormControl;
+  }
+
+  get requesterNationalityField(): UntypedFormControl {
+    return this.personalInfoTab.get('requestorIdNationality') as UntypedFormControl;
+  }
+
+  get requesterPhoneField(): UntypedFormControl {
+    return this.personalInfoTab.get('requestorPhoneNumber') as UntypedFormControl;
   }
 
   get arabicNameField(): UntypedFormControl {
@@ -1542,22 +1578,29 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     return (idType === BeneficiaryIdTypes.PASSPORT || idType === BeneficiaryIdTypes.GCC_ID);
   }
 
-  private setNationalityVisibility(identification: string, idType: number): boolean {
-    if (!CommonUtils.isValidValue(idType)) {
-      return false;
+  private _getIdTypeField(identification: 'primary' | 'secondary' | 'requester'): UntypedFormControl {
+    if (identification === 'primary') {
+      return this.primaryIdTypeField;
+    } else if (identification === 'secondary') {
+      return this.secondaryIdTypeField;
     }
-    let visibility: boolean = this._canShowNationalityField(idType),
-      nationalityListType: ('normal' | 'gulf') = 'normal';
-    if (idType === BeneficiaryIdTypes.GCC_ID) {
-      nationalityListType = 'gulf';
-    }
+    return this.requesterIdTypeField;
+  }
 
-    if (identification.toLowerCase() === 'primary') {
+  isGCCId(identification: 'primary' | 'secondary' | 'requester'): boolean {
+    const field = this._getIdTypeField(identification);
+    return field && field.value === BeneficiaryIdTypes.GCC_ID;
+  }
+
+  private setNationalityVisibility(identification: 'primary' | 'secondary' | 'requester', idType: number): boolean {
+    let visibility: boolean = this._canShowNationalityField(idType);
+
+    if (identification === 'primary') {
       this.displayPrimaryNationality = visibility;
-      this.primaryNationalityListType = nationalityListType;
-    } else {
+    } else if (identification === 'secondary') {
       this.displaySecondaryNationality = visibility;
-      this.secondaryNationalityListType = nationalityListType;
+    } else if (identification === 'requester') {
+      this.displayRequesterNationality = visibility;
     }
     return visibility;
   }
@@ -1625,6 +1668,31 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  handleRequesterIdTypeChange(value: number, userInteraction: boolean = false): void {
+    if (userInteraction) {
+      this.requesterIdNumberField.setValue(null);
+      this.requesterNationalityField.setValue(UserRequestComponent.getNationalityByIdType(value));
+    }
+
+    this.setNationalityVisibility('requester', value);
+
+    let idValidators: any[] = [], nationalityValidators = null;
+
+    if (CommonUtils.isValidValue(value)) {
+      idValidators = [CustomValidators.required].concat(this.idTypesValidationsMap[value]);
+
+      if (this.displayRequesterNationality) {
+        nationalityValidators = [CustomValidators.required];
+      }
+    }
+
+    this.requesterIdNumberField.setValidators(idValidators);
+    this.requesterIdNumberField.updateValueAndValidity();
+
+    this.requesterNationalityField.setValidators(nationalityValidators);
+    this.requesterNationalityField.updateValueAndValidity();
+  }
+
   beneficiaryPrimaryIdDisabled(nationality: boolean = false): boolean {
     if (this.isPartialRequest) {
       return true;
@@ -1650,6 +1718,17 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         return !!this.currentBeneficiary?.benSecIdType && !!this.currentBeneficiary?.benSecIdNumber;
       }
+    }
+  }
+
+  requesterIdDisabled(nationality: boolean = false): boolean {
+    if (this.isPartialRequest) {
+      return true;
+    } else {
+      if (nationality) {
+        return this.readOnly;
+      }
+      return this.readOnly || this.editMode;
     }
   }
 

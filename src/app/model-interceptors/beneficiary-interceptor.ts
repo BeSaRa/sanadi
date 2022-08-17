@@ -1,6 +1,6 @@
 import {Beneficiary} from '../models/beneficiary';
 import {AdminResult} from '../models/admin-result';
-import {DateUtils} from '../helpers/date-utils';
+import {DateUtils} from '@helpers/date-utils';
 import {FactoryService} from '@app/services/factory.service';
 import {BeneficiaryService} from '@app/services/beneficiary.service';
 import {BeneficiaryObligation} from '@app/models/beneficiary-obligation';
@@ -18,6 +18,7 @@ export class BeneficiaryInterceptor {
     model.educationLevelInfo = AdminResult.createInstance(model.educationLevelInfo);
     model.genderInfo = AdminResult.createInstance(model.genderInfo);
     model.govEmploymentStatusInfo = AdminResult.createInstance(model.govEmploymentStatusInfo);
+    model.govEmploymentTypeInfo = AdminResult.createInstance(model.govEmploymentTypeInfo);
     model.maritalStatusInfo = AdminResult.createInstance(model.maritalStatusInfo);
     model.occuptionStatusInfo = AdminResult.createInstance(model.occuptionStatusInfo);
     model.orgBranchInfo = AdminResult.createInstance(model.orgBranchInfo);
@@ -76,6 +77,7 @@ export class BeneficiaryInterceptor {
     delete model.educationLevelInfo;
     delete model.genderInfo;
     delete model.govEmploymentStatusInfo;
+    delete model.govEmploymentTypeInfo;
     delete model.maritalStatusInfo;
     delete model.occuptionStatusInfo;
     delete model.orgBranchInfo;

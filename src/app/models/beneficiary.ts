@@ -1,17 +1,17 @@
 import {BaseModel} from './base-model';
-import {FactoryService} from '../services/factory.service';
-import {BeneficiaryService} from '../services/beneficiary.service';
+import {FactoryService} from '@services/factory.service';
+import {BeneficiaryService} from '@services/beneficiary.service';
 import {Observable} from 'rxjs';
 import {AdminResult} from './admin-result';
-import {LangService} from '../services/lang.service';
+import {LangService} from '@services/lang.service';
 import {CustomValidators} from '../validators/custom-validators';
 import {Validators} from '@angular/forms';
 import {map} from 'rxjs/operators';
 import {BeneficiarySaveStatus} from '../enums/beneficiary-save-status.enum';
-import {Pair} from '../interfaces/pair';
+import {Pair} from '@contracts/pair';
 import {SubventionRequest} from './subvention-request';
 import {IMyDateModel} from 'angular-mydatepicker';
-import {isValidValue} from '../helpers/utils';
+import {isValidValue} from '@helpers/utils';
 import {ISearchFieldsMap} from '@app/types/types';
 import {normalSearchFields} from '@app/helpers/normal-search-fields';
 import {infoSearchFields} from '@app/helpers/info-search-fields';
@@ -26,6 +26,7 @@ import {BeneficiaryInterceptor} from '@app/model-interceptors/beneficiary-interc
   send: BeneficiaryInterceptor.send
 })
 export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
+  arNameSrc!: string;
   benNationality!: number;
   benPrimaryIdType!: number;
   benPrimaryIdNumber!: string;
@@ -34,6 +35,7 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
   benSecIdNationality!: number;
   benSecIdNumber!: string;
   residenceStatus!: number;
+  benGUID!: number;
   residenceCountry!: number;
   gender!: number;
   dateOfBirth!: IMyDateModel;
@@ -47,6 +49,7 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
   addressStatus!: number;
   addressStatusDateModified!: string;
   occuption!: string;
+  occuptionStatus!: number;
   employeer!: string;
   employeerAddress!: string;
   employeerMobileNumber!: string;
@@ -63,7 +66,6 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
   orgBranchId!: number;
   orgId!: number;
   orgUserId!: number;
-  occuptionStatus!: number;
   streetName!: string;
   addressDescription!: string;
   benNotes!: string;
@@ -76,6 +78,12 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
   employmentStatus!: boolean;
   benRequestorRelationType!: number;
   requestorName!: string;
+  requestorIdType!: number;
+  requestorIdNumber!: string;
+  requestorIdNationality!: number;
+  requestorPhoneNumber!: string;
+  status!: number;
+  statusDateModified!: string;
 
   // not belong to the model
   service: BeneficiaryService;
@@ -90,6 +98,7 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
   educationLevelInfo!: AdminResult;
   genderInfo!: AdminResult;
   govEmploymentStatusInfo!: AdminResult;
+  govEmploymentTypeInfo!: AdminResult;
   maritalStatusInfo!: AdminResult;
   occuptionStatusInfo!: AdminResult;
   orgBranchInfo!: AdminResult;
@@ -189,7 +198,11 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
       employeerAddress,
       isHandicapped,
       benRequestorRelationType,
-      requestorName
+      requestorName,
+      requestorIdType,
+      requestorIdNumber,
+      requestorIdNationality,
+      requestorPhoneNumber
     } = this;
 
     return {
@@ -225,6 +238,10 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
       isHandicapped: controls ? [isHandicapped] : isHandicapped,
       benRequestorRelationType: controls ? [benRequestorRelationType, [CustomValidators.required]] : benRequestorRelationType,
       requestorName: controls ? [requestorName, [CustomValidators.required, CustomValidators.maxLength(100)]] : requestorName,
+      requestorIdType: controls ? [requestorIdType, [CustomValidators.required]] : requestorIdType,
+      requestorIdNumber: controls ? [requestorIdNumber, CustomValidators.required] : requestorIdNumber,
+      requestorIdNationality: controls ? [requestorIdNationality, CustomValidators.required] : requestorIdNationality,
+      requestorPhoneNumber: controls ? [requestorPhoneNumber, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : requestorPhoneNumber
     };
   }
 
