@@ -22,6 +22,7 @@ import {SelectedLicenseInfo} from '@contracts/selected-license-info';
 import {InternalProjectLicenseResult} from '@app/models/internal-project-license-result';
 import {SharedService} from '@services/shared.service';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {CustomValidators} from '@app/validators/custom-validators';
 
 @Component({
   selector: 'general-association-meeting-attendance',
@@ -53,18 +54,16 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   };
 
   isExternalUser!: boolean;
-  addAdministrativeBoardMemberFormActive!: boolean;
-  addGeneralAssociationMemberFormActive!: boolean;
-
-  selectedAdministrativeBoardMember!: GeneralAssociationExternalMember | null;
   selectedAdministrativeBoardMembers: GeneralAssociationExternalMember[] = [];
-  selectedAdministrativeBoardMemberIndex!: number | null;
-
-  selectedGeneralAssociationMember!: GeneralAssociationExternalMember | null;
   selectedGeneralAssociationMembers: GeneralAssociationExternalMember[] = [];
-  selectedGeneralAssociationMemberIndex!: number | null;
 
-  membersDisplayedColumns: string[] = ['arabicName', 'englishName', 'identificationNumber', 'jobTitle', 'actions'];
+  addAgendaFormActive!: boolean;
+  agendaForm!: FormGroup;
+  agendaItems: string[] = [];
+  selectedAgendaItem!: string | null;
+  selectedAgendaItemIndex!: number | null;
+
+  agendaItemsDisplayedColumns: string[] = ['index', 'description', 'actions'];
 
   constructor(public lang: LangService,
               public fb: FormBuilder,
@@ -95,9 +94,14 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     return this.form.get('basicInfo.oldFullSerial')!;
   }
 
+  get agendaItem(): FormControl {
+    return this.agendaForm.get('description')! as FormControl;
+  }
+
   _initComponent(): void {
     // load initials here
     this.isExternalUser = this.employeeService.isExternalUser();
+    this.buildAgendaForm();
   }
 
   _buildForm(): void {
@@ -239,6 +243,83 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
 
   onGeneralAssociationMembersChanged(memberList: GeneralAssociationExternalMember[]) {
     this.selectedGeneralAssociationMembers = memberList;
+  }
+
+  // add agenda items functionality
+  buildAgendaForm(): void {
+    this.agendaForm = this.fb.group({
+      description: [null, [CustomValidators.required, CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX)]]
+    });
+  }
+
+  openAddAgendaForm() {
+    this.addAgendaFormActive = true;
+  }
+
+  selectAgendaItem(event: MouseEvent, item: string) {
+    this.addAgendaFormActive = true;
+    event.preventDefault();
+    this.selectedAgendaItem = item;
+    this.agendaForm.patchValue({description: this.selectedAgendaItem!});
+    this.selectedAgendaItemIndex = this.agendaItems.indexOf(item);
+  }
+
+  saveAgendaItem() {
+    const item = this.agendaItem.value;
+    if (!this.selectedAgendaItem) {
+      if (!this.isExistAgendaItemInCaseOfAdd(this.agendaItems, item)) {
+        this.agendaItems = this.agendaItems.concat(item);
+        this.resetAgendaForm();
+        this.addAgendaFormActive = false;
+      } else {
+        this.dialog.error(this.lang.map.selected_item_already_exists);
+      }
+    } else {
+      if (!this.isExistAgendaItemInCaseOfEdit(this.agendaItems, item, this.selectedAgendaItemIndex!)) {
+        let newList = this.agendaItems.slice();
+        newList.splice(this.selectedAgendaItemIndex!, 1);
+        newList.splice(this.selectedAgendaItemIndex!, 0, item);
+        this.agendaItems = newList;
+        this.resetAgendaForm();
+        this.addAgendaFormActive = false;
+      } else {
+        this.dialog.error(this.lang.map.selected_item_already_exists);
+      }
+    }
+  }
+
+  cancelAddMember() {
+    this.resetAgendaForm();
+    this.addAgendaFormActive = false;
+  }
+
+  resetAgendaForm() {
+    this.selectedAgendaItem = null;
+    this.selectedAgendaItemIndex = null;
+    this.agendaForm.reset();
+  }
+
+  removeMember(event: MouseEvent, item: string) {
+    event.preventDefault();
+    this.agendaItems = this.agendaItems.filter(x => x != item);
+    this.resetAgendaForm();
+  }
+
+  isExistAgendaItemInCaseOfAdd(agendaItems: string[], toBeAddedAgendaItem: string): boolean {
+    return agendaItems.includes(toBeAddedAgendaItem);
+  }
+
+  isExistAgendaItemInCaseOfEdit(agendaItems: string[], toBeEditedAgendaItem: string, selectedIndex: number): boolean {
+    for (let i = 0; i < agendaItems.length; i++) {
+      if (i === selectedIndex) {
+        continue;
+      }
+
+      if (agendaItems[i] === toBeEditedAgendaItem) {
+        return true;
+      }
+    }
+    return false;
   }
 
   getAgendaItemsAsString(agendaItems: string[]): string {
