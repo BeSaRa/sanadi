@@ -337,23 +337,17 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
   }
 
   _prepareModel(): TransferringIndividualFundsAbroad | Observable<TransferringIndividualFundsAbroad> {
-    return this.isCancel ?
-      new TransferringIndividualFundsAbroad().clone({
-        requestType: this.requestType.value,
-        oldLicenseFullSerial: this.oldLicenseFullSerialField.value,
-        oldLicenseId: this.model?.oldLicenseId
-      })
-      : new TransferringIndividualFundsAbroad().clone({
-        ...this.model,
-        ...this.basicInfo.getRawValue(),
-        ...this.requesterInfo.getRawValue(),
-        ...this.receiverOrganizationInfo.getRawValue(),
-        ...this.receiverPersonInfo.getRawValue(),
-        ...this.financialTransactionInfo.getRawValue(),
-        ...this.specialExplanation.getRawValue(),
-        executiveManagementList: this.selectedExecutives,
-        charityPurposeTransferList: this.selectedPurposes
-      });
+    return new TransferringIndividualFundsAbroad().clone({
+      ...this.model,
+      ...this.basicInfo.getRawValue(),
+      ...this.requesterInfo.getRawValue(),
+      ...this.receiverOrganizationInfo.getRawValue(),
+      ...this.receiverPersonInfo.getRawValue(),
+      ...this.financialTransactionInfo.getRawValue(),
+      ...this.specialExplanation.getRawValue(),
+      executiveManagementList: this.selectedExecutives,
+      charityPurposeTransferList: this.selectedPurposes
+    });
   }
 
   _getNewInstance(): TransferringIndividualFundsAbroad {
@@ -579,44 +573,44 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
   }
 
   disableAllFormsInCaseOfCancelRequest() {
-    this.transfereeType.patchValue(null);
+    // this.transfereeType.patchValue(null);
     this.transfereeType.disable();
 
-    this.requesterInfo.reset();
+    // this.requesterInfo.reset();
     this.requesterInfo.disable();
     this.requesterInfo.updateValueAndValidity();
 
-    this.receiverPersonInfo.reset();
+    // this.receiverPersonInfo.reset();
     this.receiverPersonInfo.disable();
     this.receiverPersonInfo.updateValueAndValidity();
 
-    this.receiverOrganizationInfo.reset();
+    // this.receiverOrganizationInfo.reset();
     this.receiverOrganizationInfo.disable();
     this.receiverOrganizationInfo.updateValueAndValidity();
 
-    this.financialTransactionInfo.reset();
+    // this.financialTransactionInfo.reset();
     this.financialTransactionInfo.disable();
     this.financialTransactionInfo.updateValueAndValidity();
 
-    this.specialExplanation.reset();
+    // this.specialExplanation.reset();
     this.specialExplanation.disable();
     this.specialExplanation.updateValueAndValidity();
 
-    this.transferPurposeForm.reset();
+    // this.transferPurposeForm.reset();
     this.transferPurposeForm.disable();
     this.transferPurposeForm.updateValueAndValidity();
 
-    this.executiveManagementForm.reset();
+    // this.executiveManagementForm.reset();
     this.executiveManagementForm.disable();
     this.executiveManagementForm.updateValueAndValidity();
 
-    this.transferPurposeForm.reset();
+    // this.transferPurposeForm.reset();
     this.transferPurposeForm.disable();
     this.transferPurposeForm.updateValueAndValidity();
 
-    this.selectedPurposes = [];
-    this.selectedExecutives = [];
-    this.selectedLicenses = [];
+    // this.selectedPurposes = [];
+    // this.selectedExecutives = [];
+    // this.selectedLicenses = [];
 
     this.form.updateValueAndValidity();
   }
