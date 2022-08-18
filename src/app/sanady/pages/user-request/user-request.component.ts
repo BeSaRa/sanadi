@@ -371,11 +371,11 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
         } else {
           this.currentBeneficiary = undefined;
         }
-        this.updateBeneficiaryFrom(this.currentBeneficiary);
+        this.updateBeneficiaryForm(this.currentBeneficiary);
       });
   }
 
-  private updateBeneficiaryFrom(selectedBeneficiary: undefined | Beneficiary) {
+  private updateBeneficiaryForm(selectedBeneficiary: undefined | Beneficiary) {
     if (!selectedBeneficiary) {
       this.personalInfoTab?.reset();
       this.personalInfoTab?.markAsPristine();
@@ -386,9 +386,13 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     } else {
       this.personalInfoTab?.patchValue(selectedBeneficiary.getPersonalFields());
       this.addressTab?.patchValue(selectedBeneficiary.getAddressFields());
+
+      this.requesterRelationTypeField.setValue(this.isRequesterSameAsBeneficiary());
     }
-    this.handleRequesterRelationTypeChange((selectedBeneficiary ? selectedBeneficiary.benRequestorRelationType : undefined), false);
+    // this.handleRequesterRelationTypeChange((selectedBeneficiary ? selectedBeneficiary.benRequestorRelationType : undefined), false);
+    this.handleRequesterRelationTypeChange();
     this.handleEmploymentStatusChange((selectedBeneficiary ? selectedBeneficiary.occuptionStatus : undefined), false);
+    setTimeout(() => this.toggleRequesterRelationTypeReadonly(), 100);
   }
 
   private updateRequestForm(request: undefined | SubventionRequest) {
@@ -424,10 +428,23 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   isRequesterSameAsBeneficiary(): boolean {
-    return this.requesterRelationTypeField?.value === BeneficiaryRequesterRelationTypes.SAME_AS_REQUESTER;
+    // true = BeneficiaryRequesterRelationTypes.SAME_AS_REQUESTER
+    // false = BeneficiaryRequesterRelationTypes.RELATIVE_TO_REQUESTER
+
+    if (!this.requesterRelationTypeField || !CommonUtils.isValidValue(this.requesterRelationTypeField.value)) {
+      return false;
+    } else {
+      if (typeof this.requesterRelationTypeField.value === 'boolean') {
+        return this.requesterRelationTypeField.value;
+      } else {
+        return this.requesterRelationTypeField.value === BeneficiaryRequesterRelationTypes.SAME_AS_REQUESTER;
+      }
+    }
+
+    // return this.requesterRelationTypeField?.value === BeneficiaryRequesterRelationTypes.SAME_AS_REQUESTER;
   }
 
-  handleRequesterRelationTypeChange(value?: number, userInteraction: boolean = false) {
+  /*handleRequesterRelationTypeChange(value?: number, userInteraction: boolean = false) {
     let dependentFields = [this.beneficiaryRequesterNameField, this.requesterIdTypeField, this.requesterIdNumberField, this.requesterNationalityField, this.requesterPhoneField];
     dependentFields.forEach((field: UntypedFormControl) => {
       if (!field) {
@@ -436,7 +453,32 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       if (userInteraction) {
         field.setValue(null);
       }
-      if (value === BeneficiaryRequesterRelationTypes.SAME_AS_REQUESTER) {
+      if (value) {
+        field.removeValidators(CustomValidators.required);
+        field.disable();
+      } else {
+        field.addValidators(CustomValidators.required);
+        field.enable();
+      }
+      field.updateValueAndValidity();
+    });
+
+    this.handleRequesterIdTypeChange(this.requesterIdTypeField.value, userInteraction);
+  }*/
+
+  handleRequesterRelationTypeChange($event?: any) {
+    // true = BeneficiaryRequesterRelationTypes.SAME_AS_REQUESTER
+    // false = BeneficiaryRequesterRelationTypes.RELATIVE_TO_REQUESTER
+    let userInteraction = !!$event;
+    let dependentFields = [this.beneficiaryRequesterNameField, this.requesterIdTypeField, this.requesterIdNumberField, this.requesterNationalityField, this.requesterPhoneField];
+    dependentFields.forEach((field: UntypedFormControl) => {
+      if (!field) {
+        return;
+      }
+      if (userInteraction) {
+        field.setValue(null);
+      }
+      if (this.isRequesterSameAsBeneficiary()) {
         field.removeValidators(CustomValidators.required);
         field.disable();
       } else {
@@ -799,6 +841,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
         ...this.personalInfoTab?.getRawValue(),
         ...this.addressTab?.value,
         ...this.buildingPlate.getValue(),
+        benRequestorRelationType: this.isRequesterSameAsBeneficiary() ? BeneficiaryRequesterRelationTypes.SAME_AS_REQUESTER : BeneficiaryRequesterRelationTypes.RELATIVE_TO_REQUESTER,
         beneficiaryIncomeSet: !this.beneficiaryIncomeComponentRef ? [] : this.beneficiaryIncomeComponentRef.list,
         beneficiaryObligationSet: !this.beneficiaryObligationComponentRef ? [] : this.beneficiaryObligationComponentRef.list
       });
@@ -1722,14 +1765,15 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   requesterIdDisabled(nationality: boolean = false): boolean {
-    if (this.isPartialRequest) {
+    /*if (this.isPartialRequest) {
       return true;
     } else {
       if (nationality) {
         return this.readOnly;
       }
       return this.readOnly || this.editMode;
-    }
+    }*/
+    return (this.readOnly || this.isPartialRequest) || this.isRequesterSameAsBeneficiary();
   }
 
   // setButtonsVisibility(tab: any): void {
@@ -1796,6 +1840,14 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       this.isHandicappedField?.disable();
     } else {
       this.isHandicappedField?.enable();
+    }
+  }
+
+  private toggleRequesterRelationTypeReadonly(): void {
+    if (this.readOnly || this.isPartialRequest) {
+      this.requesterRelationTypeField?.disable();
+    } else {
+      this.requesterRelationTypeField?.enable();
     }
   }
 

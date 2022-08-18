@@ -1,4 +1,6 @@
 export interface ILanguageKeys {
+  beneficiary_info: string;
+  requester_same_as_beneficiary: string;
   transfer_to_country: string;
   national_id_number: string;
   multi: string;

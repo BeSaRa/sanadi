@@ -35,124 +35,6 @@
   <!--  personal info Tab -->
   <ng-template #personalInfo>
     <div formGroupName="personalTab">
-      <!--Primary Id-->
-      <div class="row">
-        <div class="col-sm-12">
-          <h6 class="text-primary">{{langService.map.beneficiary_primary_id}}</h6>
-          <div class="row">
-            <div class="col-md-4 col-sm-12 mb-4">
-              <label for="benPrimaryIdType" class="form-label"
-                     asteriskIfRequired="benPrimaryIdType">{{langService.map.id_type}}</label>
-              <ng-select [selectOnTab]="true" labelForId="benPrimaryIdType" [clearable]="false"
-                         [readonly]="beneficiaryPrimaryIdDisabled()"
-                         placeholder="{{langService.map.select}}" id="benPrimaryIdType"
-                         [notFoundText]="langService.map.msg_not_found" appendTo="body"
-                         formControlName="benPrimaryIdType" validationClasses="benPrimaryIdType">
-                <ng-option *ngFor="let option of idTypes" [value]="option.lookupKey"
-                           [disabled]="isPrimaryIdTypeDisabled(option.lookupKey)">
-                  {{option.getName()}}
-                </ng-option>
-              </ng-select>
-              <app-field-error-message controlName="benPrimaryIdType"></app-field-error-message>
-            </div>
-            <div class="col-md-4 col-sm-12 mb-4">
-              <label for="benPrimaryIdNumber" class="form-label"
-                     asteriskIfRequired="benPrimaryIdNumber">{{langService.map.id_number}}</label>
-              <div class="input-group has-validation">
-                <input formControlName="benPrimaryIdNumber" id="benPrimaryIdNumber" class="form-control"
-                       type="text" validationClasses="benPrimaryIdNumber"
-                       maxlength="20" trimInput
-                       (keyup.enter)="!disableBeneficiarySearch() && getBeneficiaryData($event)"
-                       [readOnly]="beneficiaryPrimaryIdDisabled()">
-                <button tabindex="-1" type="button"
-                        [disabled]="disableBeneficiarySearch()"
-                        (click)="getBeneficiaryData($event)" class="input-group-text">
-                  <i class="mdi mdi-account-search text-primary"></i>
-                </button>
-                <app-field-error-message controlName="benPrimaryIdNumber"></app-field-error-message>
-              </div>
-            </div>
-            <div class="col-md-4 col-sm-12 mb-4" *ngIf="displayPrimaryNationality">
-              <label for="benPrimaryIdNationality" class="form-label"
-                     asteriskIfRequired="benPrimaryIdNationality">{{isGCCId('primary') ? langService.map.country : langService.map.lbl_nationality}}</label>
-              <ng-select [selectOnTab]="true" labelForId="benPrimaryIdNationality" [clearable]="false"
-                         [readonly]="beneficiaryPrimaryIdDisabled(true)" appendTo="body"
-                         placeholder="{{langService.map.select}}" id="benPrimaryIdNationality"
-                         [notFoundText]="langService.map.msg_not_found" formControlName="benPrimaryIdNationality"
-                         validationClasses="benPrimaryIdNationality">
-                <ng-container *ngIf="!isGCCId('primary')">
-                  <ng-option *ngFor="let option of lookup.listByCategory.Nationality" [value]="option.lookupKey">
-                    {{option.getName()}}
-                  </ng-option>
-                </ng-container>
-                <ng-container *ngIf="isGCCId('primary')">
-                  <ng-option *ngFor="let option of lookup.listByCategory.GulfCountries" [value]="option.lookupKey">
-                    {{option.getName()}}
-                  </ng-option>
-                </ng-container>
-              </ng-select>
-              <app-field-error-message controlName="benPrimaryIdNationality"></app-field-error-message>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!--<hr class="mt-0"/>-->
-      <!--Secondary Id-->
-      <div class="row">
-        <div class="col-sm-12">
-          <h6 class="text-primary">{{langService.map.beneficiary_secondary_id}}</h6>
-          <div class="row">
-            <div class="col-md-4 col-sm-12 mb-4">
-              <label for="benSecIdType" class="form-label"
-                     asteriskIfRequired="benSecIdType">{{langService.map.id_type}}</label>
-              <ng-select [selectOnTab]="true" labelForId="benSecIdType" [clearable]="false"
-                         [readonly]="beneficiarySecondaryIdDisabled()" appendTo="body"
-                         placeholder="{{langService.map.select}}" id="benSecIdType"
-                         validationClasses="benSecIdType"
-                         [notFoundText]="langService.map.msg_not_found" formControlName="benSecIdType">
-                <ng-option value="">{{langService.map.lbl_none}}</ng-option>
-                <ng-option *ngFor="let option of idTypes" [value]="option.lookupKey"
-                           [disabled]="isSecondaryIdTypeDisabled(option.lookupKey)">
-                  {{option.getName()}}
-                </ng-option>
-              </ng-select>
-              <app-field-error-message controlName="benSecIdType"></app-field-error-message>
-            </div>
-            <div class="col-md-4 col-sm-12 mb-4">
-              <label for="benSecIdNumber" class="form-label"
-                     asteriskIfRequired="benSecIdNumber">{{langService.map.id_number}}</label>
-              <input formControlName="benSecIdNumber" id="benSecIdNumber" class="form-control" type="text"
-                     [readOnly]="beneficiarySecondaryIdDisabled()" maxlength="20" trimInput
-                     validationClasses="benSecIdNumber" (keyup)="disableEnter($event)">
-              <app-field-error-message controlName="benSecIdNumber"></app-field-error-message>
-            </div>
-            <div class="col-md-4 col-sm-12 mb-4" *ngIf="displaySecondaryNationality">
-              <label for="benSecIdNationality" class="form-label"
-                     asteriskIfRequired="benSecIdNationality">{{isGCCId('secondary') ? langService.map.country : langService.map.lbl_nationality}}</label>
-              <ng-select [selectOnTab]="true" labelForId="benSecIdNationality" [clearable]="false"
-                         [readonly]="beneficiarySecondaryIdDisabled(true)"
-                         placeholder="{{langService.map.select}}" id="benSecIdNationality"
-                         [notFoundText]="langService.map.msg_not_found"
-                         formControlName="benSecIdNationality" appendTo="body"
-                         validationClasses="benSecIdNationality">
-                <ng-option value="">{{langService.map.lbl_none}}</ng-option>
-                <ng-container *ngIf="!isGCCId('secondary')">
-                  <ng-option *ngFor="let option of lookup.listByCategory.Nationality" [value]="option.lookupKey">
-                    {{option.getName()}}
-                  </ng-option>
-                </ng-container>
-                <ng-container *ngIf="isGCCId('secondary')">
-                  <ng-option *ngFor="let option of lookup.listByCategory.GulfCountries" [value]="option.lookupKey">
-                    {{option.getName()}}
-                  </ng-option>
-                </ng-container>
-              </ng-select>
-              <app-field-error-message controlName="benSecIdNationality"></app-field-error-message>
-            </div>
-          </div>
-        </div>
-      </div>
-      <hr class="mt-0"/>
       <!-- Requester Info-->
       <div class="row">
         <div class="col-sm-12">
@@ -160,18 +42,14 @@
           <div class="row">
             <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
               <label for="benRequestorRelationType" class="form-label"
-                     asteriskIfRequired="benRequestorRelationType">{{langService.map.requester_relation}}</label>
-              <ng-select [selectOnTab]="true" labelForId="benRequestorRelationType" [clearable]="false"
-                         placeholder="{{langService.map.select}}" id="benRequestorRelationType"
-                         [notFoundText]="langService.map.msg_not_found"
-                         [readonly]="readOnly || isPartialRequest" appendTo="body"
-                         (change)="handleRequesterRelationTypeChange($event, true)"
-                         formControlName="benRequestorRelationType" validationClasses="benRequestorRelationType">
-                <ng-option *ngFor="let option of lookup.listByCategory.BenRequestorRelationType"
-                           [value]="option.lookupKey">
-                  {{option.getName()}}
-                </ng-option>
-              </ng-select>
+                     asteriskIfRequired="benRequestorRelationType">{{langService.map.requester_same_as_beneficiary}}</label>
+              <div class="form-check form-switch form-switch-container">
+                <input class="form-check-input" type="checkbox" id="benRequestorRelationType"
+                       formControlName="benRequestorRelationType"
+                       (change)="$event ? handleRequesterRelationTypeChange($event) : null">
+                <label
+                  class="form-check-label">{{isRequesterSameAsBeneficiary() ? langService.map.lbl_yes : langService.map.lbl_no}}</label>
+              </div>
               <app-field-error-message controlName="benRequestorRelationType"></app-field-error-message>
             </div>
             <ng-container *ngIf="!isRequesterSameAsBeneficiary()">
@@ -243,7 +121,137 @@
         </div>
       </div>
       <hr class="mt-0"/>
-
+      <div class="row">
+        <div class="col-sm-12">
+          <h6 class="text-primary">{{langService.map.beneficiary_info}}</h6>
+        </div>
+      </div>
+      <!--Primary Id-->
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="row">
+            <div class="col-md-3 col-sm-12 mb-4">
+              <label class="form-label">{{langService.map.identification}} <span
+                class="text-danger">*</span></label>
+              <span class="form-control">{{langService.map.beneficiary_primary_id}}</span>
+            </div>
+            <div class="col-md-3 col-sm-12 mb-4">
+              <label for="benPrimaryIdType" class="form-label"
+                     asteriskIfRequired="benPrimaryIdType">{{langService.map.id_type}}</label>
+              <ng-select [selectOnTab]="true" labelForId="benPrimaryIdType" [clearable]="false"
+                         [readonly]="beneficiaryPrimaryIdDisabled()"
+                         placeholder="{{langService.map.select}}" id="benPrimaryIdType"
+                         [notFoundText]="langService.map.msg_not_found" appendTo="body"
+                         formControlName="benPrimaryIdType" validationClasses="benPrimaryIdType">
+                <ng-option *ngFor="let option of idTypes" [value]="option.lookupKey"
+                           [disabled]="isPrimaryIdTypeDisabled(option.lookupKey)">
+                  {{option.getName()}}
+                </ng-option>
+              </ng-select>
+              <app-field-error-message controlName="benPrimaryIdType"></app-field-error-message>
+            </div>
+            <div class="col-md-3 col-sm-12 mb-4">
+              <label for="benPrimaryIdNumber" class="form-label"
+                     asteriskIfRequired="benPrimaryIdNumber">{{langService.map.id_number}}</label>
+              <div class="input-group has-validation">
+                <input formControlName="benPrimaryIdNumber" id="benPrimaryIdNumber" class="form-control"
+                       type="text" validationClasses="benPrimaryIdNumber"
+                       maxlength="20" trimInput
+                       (keyup.enter)="!disableBeneficiarySearch() && getBeneficiaryData($event)"
+                       [readOnly]="beneficiaryPrimaryIdDisabled()">
+                <button tabindex="-1" type="button"
+                        [disabled]="disableBeneficiarySearch()"
+                        (click)="getBeneficiaryData($event)" class="input-group-text">
+                  <i class="mdi mdi-account-search text-primary"></i>
+                </button>
+                <app-field-error-message controlName="benPrimaryIdNumber"></app-field-error-message>
+              </div>
+            </div>
+            <div class="col-md-3 col-sm-12 mb-4" *ngIf="displayPrimaryNationality">
+              <label for="benPrimaryIdNationality" class="form-label"
+                     asteriskIfRequired="benPrimaryIdNationality">{{isGCCId('primary') ? langService.map.country : langService.map.lbl_nationality}}</label>
+              <ng-select [selectOnTab]="true" labelForId="benPrimaryIdNationality" [clearable]="false"
+                         [readonly]="beneficiaryPrimaryIdDisabled(true)" appendTo="body"
+                         placeholder="{{langService.map.select}}" id="benPrimaryIdNationality"
+                         [notFoundText]="langService.map.msg_not_found" formControlName="benPrimaryIdNationality"
+                         validationClasses="benPrimaryIdNationality">
+                <ng-container *ngIf="!isGCCId('primary')">
+                  <ng-option *ngFor="let option of lookup.listByCategory.Nationality" [value]="option.lookupKey">
+                    {{option.getName()}}
+                  </ng-option>
+                </ng-container>
+                <ng-container *ngIf="isGCCId('primary')">
+                  <ng-option *ngFor="let option of lookup.listByCategory.GulfCountries" [value]="option.lookupKey">
+                    {{option.getName()}}
+                  </ng-option>
+                </ng-container>
+              </ng-select>
+              <app-field-error-message controlName="benPrimaryIdNationality"></app-field-error-message>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--<hr class="mt-0"/>-->
+      <!--Secondary Id-->
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="row">
+            <div class="col-md-3 col-sm-12 mb-4">
+              <label class="form-label">{{langService.map.identification}} <span
+                class="text-danger">*</span></label>
+              <span class="form-control">{{langService.map.beneficiary_secondary_id}}</span>
+            </div>
+            <div class="col-md-3 col-sm-12 mb-4">
+              <label for="benSecIdType" class="form-label"
+                     asteriskIfRequired="benSecIdType">{{langService.map.id_type}}</label>
+              <ng-select [selectOnTab]="true" labelForId="benSecIdType" [clearable]="false"
+                         [readonly]="beneficiarySecondaryIdDisabled()" appendTo="body"
+                         placeholder="{{langService.map.select}}" id="benSecIdType"
+                         validationClasses="benSecIdType"
+                         [notFoundText]="langService.map.msg_not_found" formControlName="benSecIdType">
+                <ng-option value="">{{langService.map.lbl_none}}</ng-option>
+                <ng-option *ngFor="let option of idTypes" [value]="option.lookupKey"
+                           [disabled]="isSecondaryIdTypeDisabled(option.lookupKey)">
+                  {{option.getName()}}
+                </ng-option>
+              </ng-select>
+              <app-field-error-message controlName="benSecIdType"></app-field-error-message>
+            </div>
+            <div class="col-md-3 col-sm-12 mb-4">
+              <label for="benSecIdNumber" class="form-label"
+                     asteriskIfRequired="benSecIdNumber">{{langService.map.id_number}}</label>
+              <input formControlName="benSecIdNumber" id="benSecIdNumber" class="form-control" type="text"
+                     [readOnly]="beneficiarySecondaryIdDisabled()" maxlength="20" trimInput
+                     validationClasses="benSecIdNumber" (keyup)="disableEnter($event)">
+              <app-field-error-message controlName="benSecIdNumber"></app-field-error-message>
+            </div>
+            <div class="col-md-3 col-sm-12 mb-4" *ngIf="displaySecondaryNationality">
+              <label for="benSecIdNationality" class="form-label"
+                     asteriskIfRequired="benSecIdNationality">{{isGCCId('secondary') ? langService.map.country : langService.map.lbl_nationality}}</label>
+              <ng-select [selectOnTab]="true" labelForId="benSecIdNationality" [clearable]="false"
+                         [readonly]="beneficiarySecondaryIdDisabled(true)"
+                         placeholder="{{langService.map.select}}" id="benSecIdNationality"
+                         [notFoundText]="langService.map.msg_not_found"
+                         formControlName="benSecIdNationality" appendTo="body"
+                         validationClasses="benSecIdNationality">
+                <ng-option value="">{{langService.map.lbl_none}}</ng-option>
+                <ng-container *ngIf="!isGCCId('secondary')">
+                  <ng-option *ngFor="let option of lookup.listByCategory.Nationality" [value]="option.lookupKey">
+                    {{option.getName()}}
+                  </ng-option>
+                </ng-container>
+                <ng-container *ngIf="isGCCId('secondary')">
+                  <ng-option *ngFor="let option of lookup.listByCategory.GulfCountries" [value]="option.lookupKey">
+                    {{option.getName()}}
+                  </ng-option>
+                </ng-container>
+              </ng-select>
+              <app-field-error-message controlName="benSecIdNationality"></app-field-error-message>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr class="mt-0"/>
       <div class="row">
         <div class="col-md-4 col-sm-12 mb-4 position-relative">
           <label for="arName" class="form-label" asteriskIfRequired="arName">{{langService.map.arabic_name}}</label>
@@ -403,9 +411,6 @@
                  maxlength="512" trimInput class="form-control" type="text" [readOnly]="readOnly || isPartialRequest">
           <app-field-error-message controlName="employeerAddress"></app-field-error-message>
         </div>
-      </div>
-      <div class="row">
-
       </div>
       <div class="row">
         <div class="col-sm-12 mb-4 position-relative">
