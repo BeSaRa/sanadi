@@ -17,7 +17,7 @@
          [title]="lang.map.receiver_person_info" name="receiver_person_info">
     </tab>
     <tab [template]="transfer_purpose_info" [title]="lang.map.transfer_purpose"
-         name="transfer_purpose_info" [hasError]="(selectedPurposes && selectedPurposes.length === 0)">
+         name="transfer_purpose_info" [hasError]="(selectedPurposes && selectedPurposes.length === 0 && !isCancel)">
     </tab>
     <tab [hasError]="financialTransactionInfo.invalid" [template]="financial_transaction_info"
          [title]="lang.map.financial_transaction_info" name="financial_transaction_info">
@@ -197,19 +197,34 @@
         <div class="row">
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="organizationArabicName" class="form-label"
-                   for="organizationArabicName">{{lang.map.organization_arabic_name}}</label>
-            <input [readonly]="(readonly)" class="form-control"
-                   formControlName="organizationArabicName"
-                   id="organizationArabicName" validationClasses="organizationArabicName">
-            <app-field-error-message controlName="organizationArabicName"></app-field-error-message>
+                   for="organizationArabicName">{{lang.map.organization_arabic_name}}
+            </label>
+            <div class="input-group">
+              <input (keydown.enter)="searchOrganizations('ar')" [readonly]="(readonly)"
+                     class="form-control"
+                     formControlName="organizationArabicName"
+                     id="organizationArabicName"
+                     validationClasses="organizationArabicName">
+              <app-field-error-message controlName="organizationArabicName"></app-field-error-message>
+              <button (click)="searchOrganizations('ar')" [disabled]="(readonly)" class="input-group-text">
+                <i class="mdi mdi-magnify text-primary"></i>
+              </button>
+            </div>
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="organizationEnglishName" class="form-label"
                    for="organizationEnglishName">{{lang.map.organization_english_name}}</label>
-            <input [readonly]="(readonly)" class="form-control"
-                   formControlName="organizationEnglishName"
-                   id="organizationEnglishName" validationClasses="organizationEnglishName">
-            <app-field-error-message controlName="organizationEnglishName"></app-field-error-message>
+            <div class="input-group">
+              <input (keydown.enter)="searchOrganizations('en')" [readonly]="(readonly)"
+                     class="form-control"
+                     formControlName="organizationEnglishName"
+                     id="organizationEnglishName"
+                     validationClasses="organizationEnglishName">
+              <app-field-error-message controlName="organizationEnglishName"></app-field-error-message>
+              <button (click)="searchOrganizations('en')" [disabled]="(readonly)" class="input-group-text">
+                <i class="mdi mdi-magnify text-primary"></i>
+              </button>
+            </div>
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="headQuarterType" class="form-label"
@@ -489,18 +504,32 @@
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="receiverNameLikePassport" class="form-label"
                    for="receiverNameLikePassport">{{lang.map.name_in_local_language_like_passport}}</label>
-            <input [readonly]="(readonly)" class="form-control"
-                   formControlName="receiverNameLikePassport"
-                   id="receiverNameLikePassport" validationClasses="receiverNameLikePassport">
-            <app-field-error-message controlName="receiverNameLikePassport"></app-field-error-message>
+            <div class="input-group">
+              <input (keydown.enter)="searchPersons('ar')" [readonly]="(readonly)"
+                     class="form-control"
+                     formControlName="receiverNameLikePassport"
+                     id="receiverNameLikePassport"
+                     validationClasses="receiverNameLikePassport">
+              <app-field-error-message controlName="receiverNameLikePassport"></app-field-error-message>
+              <button (click)="searchPersons('ar')" [disabled]="(readonly)" class="input-group-text">
+                <i class="mdi mdi-magnify text-primary"></i>
+              </button>
+            </div>
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="receiverEnglishNameLikePassport" class="form-label"
                    for="receiverEnglishNameLikePassport">{{lang.map.name_in_English_language_like_passport}}</label>
-            <input [readonly]="(readonly)" class="form-control"
-                   formControlName="receiverEnglishNameLikePassport"
-                   id="receiverEnglishNameLikePassport" validationClasses="receiverEnglishNameLikePassport">
-            <app-field-error-message controlName="receiverEnglishNameLikePassport"></app-field-error-message>
+            <div class="input-group">
+              <input (keydown.enter)="searchPersons('en')" [readonly]="(readonly)"
+                     class="form-control"
+                     formControlName="receiverEnglishNameLikePassport"
+                     id="receiverEnglishNameLikePassport"
+                     validationClasses="receiverEnglishNameLikePassport">
+              <app-field-error-message controlName="receiverEnglishNameLikePassport"></app-field-error-message>
+              <button (click)="searchPersons('en')" [disabled]="(readonly)" class="input-group-text">
+                <i class="mdi mdi-magnify text-primary"></i>
+              </button>
+            </div>
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="receiverJobTitle" class="form-label"
@@ -567,7 +596,7 @@
             <div class="col">
               <h1 class="h6 text-primary m-0 d-inline-block">{{lang.map.add_purpose}}</h1>
               <button class="btn btn-link outline-none"
-                      tooltip="{{lang.map.btn_add}}" (click)="openAddPurposeForm()">
+                      tooltip="{{lang.map.btn_add}}" (click)="openAddPurposeForm()" [disabled]="isCancel">
                 <i class="mdi mdi-plus-box"></i></button>
             </div>
           </div>

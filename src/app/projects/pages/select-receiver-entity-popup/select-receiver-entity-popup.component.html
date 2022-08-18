@@ -1,0 +1,52 @@
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
+  <h1 class="h6 text-white">{{lang.map[label]}}</h1>
+  <button type="button" class="btn-close btn-close-white"
+          tabindex="-1" dialogClose aria-label="Close"></button>
+</div>
+<div class="dialog-content no-fixed-height">
+  <app-table #table
+             [data]="data.entities"
+             [columns]="displayedColumns">
+    <table cdk-table [dataSource]="table.dataSource" class="table table-striped table-bordered caption-top">
+      <ng-container cdkColumnDef="organizationArabicName">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.organization_arabic_name}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.organizationArabicName}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="organizationEnglishName">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.organization_english_name}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.organizationEnglishName}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="establishmentDate">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.establishment_date}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.establishmentDate}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="receiverNameLikePassport">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.name_in_local_language_like_passport}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.receiverNameLikePassport}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="receiverEnglishNameLikePassport">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.name_in_English_language_like_passport}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.receiverEnglishNameLikePassport}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="receiverIdentificationNumber">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.national_id_number}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.receiverIdentificationNumber}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="actions">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
+        <td cdk-cell *cdkCellDef="let row; index as itemIndex">
+          <button (click)="selectEntity(row)" *ngIf="data.select" class="btn btn-primary">{{lang.map.select}}</button>
+        </td>
+      </ng-container>
+      <tr *cdkNoDataRow>
+        <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
+      </tr>
+      <tr cdk-header-row *cdkHeaderRowDef="table.columns"></tr>
+      <tr cdk-row *cdkRowDef="let row; columns: table.columns;"></tr>
+    </table>
+  </app-table>
+</div>
+<div class="dialog-actions">
+  <div class="flex-grow-1"></div>
+  <button dialogClose class="btn btn-secondary">{{lang.map.btn_close}}</button>
+</div>

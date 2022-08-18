@@ -9,7 +9,7 @@ import {DynamicOptionsService} from './dynamic-options.service';
 import {UrlService} from './url.service';
 import {FactoryService} from '@services/factory.service';
 import {TransferringIndividualFundsAbroadSearchCriteria} from '@app/models/transferring-individual-funds-abroad-search-criteria';
-import {CastResponseContainer} from '@decorators/cast-response';
+import {CastResponse, CastResponseContainer} from '@decorators/cast-response';
 import {ExecutiveManagementListInterceptor} from '@app/model-interceptors/executive-management-list-interceptor';
 import {TransferFundsCharityPurposeInterceptor} from '@app/model-interceptors/transfer-funds-charity-purpose-interceptor';
 import {WFResponseType} from '@app/enums/wfresponse-type.enum';
@@ -17,6 +17,10 @@ import {DialogRef} from '@app/shared/models/dialog-ref';
 import {
   TransferFundsAbroadApproveTaskPopupComponent
 } from '@app/projects/popups/transfer-funds-abroad-approve-task-popup/transfer-funds-abroad-approve-task-popup.component';
+import {Observable} from 'rxjs';
+import {ReceiverOrganization} from '@app/models/receiver-organization';
+import {SelectReceiverEntityPopupComponent} from '@app/projects/pages/select-receiver-entity-popup/select-receiver-entity-popup.component';
+import {ReceiverPerson} from '@app/models/receiver-person';
 
 @CastResponseContainer({
   $default: {
@@ -75,6 +79,52 @@ export class TransferringIndividualFundsAbroadService extends BaseGenericEServic
     return this.dialog.show(TransferFundsAbroadApproveTaskPopupComponent, {
       model,
       action: action
+    });
+  }
+
+  getTransferringEntityUrl() {
+    return this.urlService.URLS.TRANSFERRING_ENTITY;
+  }
+
+  @CastResponse(() => ReceiverOrganization, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  private _searchReceiverOrganizations(criteria: {arabicName?: string, englishName?: string}): Observable<ReceiverOrganization[]> {
+    const secondPartOfUrl = '/transferring-entity/org?' + (criteria.arabicName ? 'organization-arabic-name=' + criteria.arabicName : 'organization-english-name=' + criteria.englishName);
+    return this.http.get<ReceiverOrganization[]>(this.getTransferringEntityUrl() + secondPartOfUrl);
+  }
+
+  searchReceiverOrganizations(criteria: {arabicName?: string, englishName?: string}): Observable<ReceiverOrganization[]> {
+    return this._searchReceiverOrganizations(criteria);
+  }
+
+  openSelectReceiverOrganizationDialog(receiverOrganizations: ReceiverOrganization[], displayedColumns: string[], select: boolean = true): DialogRef {
+    return this.dialog.show(SelectReceiverEntityPopupComponent, {
+      entities: receiverOrganizations,
+      select,
+      displayedColumns
+    });
+  }
+
+  @CastResponse(() => ReceiverPerson, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  private _searchReceiverPersons(criteria: {localName?: string, englishName?: string}): Observable<ReceiverPerson[]> {
+    const secondPartOfUrl = '/transferring-entity/individual?' + (criteria.localName ? 'receiver-name=' + criteria.localName : 'receiver-english-name=' + criteria.englishName);
+    return this.http.get<ReceiverPerson[]>(this.getTransferringEntityUrl() + secondPartOfUrl);
+  }
+
+  searchReceiverPersons(criteria: {localName?: string, englishName?: string}): Observable<ReceiverPerson[]> {
+    return this._searchReceiverPersons(criteria);
+  }
+
+  openSelectReceiverPersonDialog(receiverPersons: ReceiverPerson[], displayedColumns: string[], select: boolean = true): DialogRef {
+    return this.dialog.show(SelectReceiverEntityPopupComponent, {
+      entities: receiverPersons,
+      select,
+      displayedColumns
     });
   }
 }

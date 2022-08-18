@@ -57,6 +57,7 @@ export class TransferringIndividualFundsAbroad extends _RequestType<Transferring
   email!: string;
   enName!: string;
   entityID!: number;
+  entityType!: number;
   headQuarterType!: number;
   executionCountry!: number;
   executiveManagementList: TransferFundsExecutiveManagement[] = [];

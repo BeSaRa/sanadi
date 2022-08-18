@@ -6,7 +6,7 @@ import {EServicesGenericComponent} from '@app/generics/e-services-generic-compon
 import {TransferringIndividualFundsAbroad} from '@app/models/transferring-individual-funds-abroad';
 import {LangService} from '@app/services/lang.service';
 import {TransferringIndividualFundsAbroadService} from '@services/transferring-individual-funds-abroad.service';
-import {BehaviorSubject, Observable, Subject} from 'rxjs';
+import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
 import {LookupService} from '@services/lookup.service';
 import {DialogService} from '@services/dialog.service';
 import {ToastService} from '@services/toast.service';
@@ -34,6 +34,8 @@ import {CountryService} from '@services/country.service';
 import {Country} from '@app/models/country';
 import {InternalProjectLicenseResult} from '@app/models/internal-project-license-result';
 import {SharedService} from '@services/shared.service';
+import {ReceiverOrganization} from '@app/models/receiver-organization';
+import {ReceiverPerson} from '@app/models/receiver-person';
 
 @Component({
   selector: 'transferring-individual-funds-abroad',
@@ -67,11 +69,15 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
   mainDacs: AdminLookup[] = [];
   mainOchas: AdminLookup[] = [];
 
+  selectReceiverOrganizationDisplayedColumns = ['organizationArabicName', 'organizationEnglishName', 'establishmentDate', 'actions'];
+  selectReceiverPersonDisplayedColumns = ['receiverNameLikePassport', 'receiverEnglishNameLikePassport', 'receiverIdentificationNumber', 'actions'];
+
   datepickerControlsMap: DatepickerControlsMap = {};
   datepickerOptionsMap: DatepickerOptionsMap = {
     establishmentDate: DateUtils.getDatepickerOptions({disablePeriod: 'future'})
   };
 
+  isCancel!: boolean;
   isExternalUser!: boolean;
   selectedExecutives: TransferFundsExecutiveManagement[] = [];
   selectedExecutive!: TransferFundsExecutiveManagement | null;
@@ -331,17 +337,23 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
   }
 
   _prepareModel(): TransferringIndividualFundsAbroad | Observable<TransferringIndividualFundsAbroad> {
-    return new TransferringIndividualFundsAbroad().clone({
-      ...this.model,
-      ...this.basicInfo.getRawValue(),
-      ...this.requesterInfo.getRawValue(),
-      ...this.receiverOrganizationInfo.getRawValue(),
-      ...this.receiverPersonInfo.getRawValue(),
-      ...this.financialTransactionInfo.getRawValue(),
-      ...this.specialExplanation.getRawValue(),
-      executiveManagementList: this.selectedExecutives,
-      charityPurposeTransferList: this.selectedPurposes
-    });
+    return this.isCancel ?
+      new TransferringIndividualFundsAbroad().clone({
+        requestType: this.requestType.value,
+        oldLicenseFullSerial: this.oldLicenseFullSerialField.value,
+        oldLicenseId: this.model?.oldLicenseId
+      })
+      : new TransferringIndividualFundsAbroad().clone({
+        ...this.model,
+        ...this.basicInfo.getRawValue(),
+        ...this.requesterInfo.getRawValue(),
+        ...this.receiverOrganizationInfo.getRawValue(),
+        ...this.receiverPersonInfo.getRawValue(),
+        ...this.financialTransactionInfo.getRawValue(),
+        ...this.specialExplanation.getRawValue(),
+        executiveManagementList: this.selectedExecutives,
+        charityPurposeTransferList: this.selectedPurposes
+      });
   }
 
   _getNewInstance(): TransferringIndividualFundsAbroad {
@@ -349,11 +361,11 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
-    if(this.isExternalOrganizationTransferee && this.selectedExecutives.length < 1) {
+    if (this.isExternalOrganizationTransferee && this.selectedExecutives.length < 1 && !this.isCancel) {
       this.dialog.error(this.lang.map.you_should_add_at_least_one_person_to_executives_list);
     }
 
-    if(this.selectedPurposes.length < 1) {
+    if (this.selectedPurposes.length < 1 && !this.isCancel) {
       this.dialog.error(this.lang.map.you_should_add_at_least_one_purpose_in_purposes);
     }
 
@@ -527,14 +539,14 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     this.transfereeTypeChanged
       .pipe(takeUntil(this.destroy$))
       .subscribe(value => {
-      if (value === TransfereeTypeEnum.INDIVIDUAL) {
-        this.individualTransfereeTypeSelected.next();
-      } else if (value === TransfereeTypeEnum.EXTERNAL_ORGANIZATION) {
-        this.externalOrganizationTransfereeTypeSelected.next();
-      } else {
-        this.noTransfereeTypeSelected.next();
-      }
-    });
+        if (value === TransfereeTypeEnum.INDIVIDUAL) {
+          this.individualTransfereeTypeSelected.next();
+        } else if (value === TransfereeTypeEnum.EXTERNAL_ORGANIZATION) {
+          this.externalOrganizationTransfereeTypeSelected.next();
+        } else {
+          this.noTransfereeTypeSelected.next();
+        }
+      });
   }
 
   listenToRequestTypeChange() {
@@ -547,25 +559,90 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     this.requestTypeChanged
       .pipe(takeUntil(this.destroy$))
       .subscribe(value => {
-        if(value) {
+        if (value) {
           this.model!.requestType = value;
         }
-        if(!value || value === TransferringIndividualFundsAbroadRequestTypeEnum.NEW) {
+        if (!value || value === TransferringIndividualFundsAbroadRequestTypeEnum.NEW) {
+          this.enableAllFormsInCaseOfNotCancelRequest();
           this.disableSearchField();
-        } else {
+          this.isCancel = false;
+        } else if (value === TransferringIndividualFundsAbroadRequestTypeEnum.UPDATE) {
+          this.enableAllFormsInCaseOfNotCancelRequest();
           this.enableSearchField();
+          this.isCancel = false;
+        } else {
+          this.disableAllFormsInCaseOfCancelRequest();
+          this.enableSearchField();
+          this.isCancel = true;
         }
       });
+  }
+
+  disableAllFormsInCaseOfCancelRequest() {
+    this.transfereeType.patchValue(null);
+    this.transfereeType.disable();
+
+    this.requesterInfo.reset();
+    this.requesterInfo.disable();
+    this.requesterInfo.updateValueAndValidity();
+
+    this.receiverPersonInfo.reset();
+    this.receiverPersonInfo.disable();
+    this.receiverPersonInfo.updateValueAndValidity();
+
+    this.receiverOrganizationInfo.reset();
+    this.receiverOrganizationInfo.disable();
+    this.receiverOrganizationInfo.updateValueAndValidity();
+
+    this.financialTransactionInfo.reset();
+    this.financialTransactionInfo.disable();
+    this.financialTransactionInfo.updateValueAndValidity();
+
+    this.specialExplanation.reset();
+    this.specialExplanation.disable();
+    this.specialExplanation.updateValueAndValidity();
+
+    this.transferPurposeForm.reset();
+    this.transferPurposeForm.disable();
+    this.transferPurposeForm.updateValueAndValidity();
+
+    this.executiveManagementForm.reset();
+    this.executiveManagementForm.disable();
+    this.executiveManagementForm.updateValueAndValidity();
+
+    this.transferPurposeForm.reset();
+    this.transferPurposeForm.disable();
+    this.transferPurposeForm.updateValueAndValidity();
+
+    this.selectedPurposes = [];
+    this.selectedExecutives = [];
+    this.selectedLicenses = [];
+
+    this.form.updateValueAndValidity();
+  }
+
+  enableAllFormsInCaseOfNotCancelRequest() {
+    this.transfereeType.enable();
+    this.requesterInfo.enable();
+    this.receiverPersonInfo.enable();
+    this.receiverOrganizationInfo.enable();
+    this.financialTransactionInfo.enable();
+    this.specialExplanation.enable();
+    this.transferPurposeForm.enable();
+    this.executiveManagementForm.enable();
+    this.transferPurposeForm.enable();
+
+    this.form.updateValueAndValidity();
   }
 
   listenToIndividualTransfereeTypeSelected() {
     this.individualTransfereeTypeSelected
       .pipe(takeUntil(this.destroy$))
       .subscribe(_ => {
-        if(!this.isIndividualTransferee) {
+        if (!this.isIndividualTransferee) {
           this.isIndividualTransferee = true;
         }
-        if(this.isExternalOrganizationTransferee) {
+        if (this.isExternalOrganizationTransferee) {
           this.isExternalOrganizationTransferee = false;
         }
         this.dontRequireReceiverOrganizationInfoFields();
@@ -578,10 +655,10 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     this.externalOrganizationTransfereeTypeSelected
       .pipe(takeUntil(this.destroy$))
       .subscribe(_ => {
-        if(this.isIndividualTransferee) {
+        if (this.isIndividualTransferee) {
           this.isIndividualTransferee = false;
         }
-        if(!this.isExternalOrganizationTransferee) {
+        if (!this.isExternalOrganizationTransferee) {
           this.isExternalOrganizationTransferee = true;
         }
         this.requireReceiverOrganizationInfoFields();
@@ -691,12 +768,12 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
   loadCountries() {
     this.countryService.loadComposite().subscribe((list: Country[]) => {
       this.countries = list;
-    })
+    });
   }
 
   listenToDomainChanges() {
     this.domain.valueChanges.subscribe(val => {
-      if(val === DomainTypes.HUMANITARIAN) {
+      if (val === DomainTypes.HUMANITARIAN) {
         this.showAndRequireMainUNOCHACategory();
         this.hideAndDontRequireMainDACCategory();
         this.loadOchas();
@@ -799,11 +876,11 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
 
   isExistExecutiveInCaseOfEdit(selectedExecutives: TransferFundsExecutiveManagement[], toBeEditedExecutive: TransferFundsExecutiveManagement, selectedIndex: number): boolean {
     for (let i = 0; i < selectedExecutives.length; i++) {
-      if(i === selectedIndex) {
+      if (i === selectedIndex) {
         continue;
       }
 
-      if(selectedExecutives[i].executiveIdentificationNumber === toBeEditedExecutive.executiveIdentificationNumber) {
+      if (selectedExecutives[i].executiveIdentificationNumber === toBeEditedExecutive.executiveIdentificationNumber) {
         return true;
       }
     }
@@ -837,8 +914,8 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
   }
 
   getSelectedPurposeIndex(purposes: TransferFundsCharityPurpose[], purpose: TransferFundsCharityPurpose): number | null {
-    for(let i = 0; i < purposes.length; i++) {
-      if(purposes[i].isEqual(purpose)) {
+    for (let i = 0; i < purposes.length; i++) {
+      if (purposes[i].isEqual(purpose)) {
         return i;
       }
     }
@@ -895,11 +972,11 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
 
   isExistPurposeInCaseOfEdit(selectedPurposes: TransferFundsCharityPurpose[], toBeEditedPurpose: TransferFundsCharityPurpose, selectedIndex: number): boolean {
     for (let i = 0; i < selectedPurposes.length; i++) {
-      if(i === selectedIndex) {
+      if (i === selectedIndex) {
         continue;
       }
 
-      if(selectedPurposes[i].isEqual(toBeEditedPurpose)) {
+      if (selectedPurposes[i].isEqual(toBeEditedPurpose)) {
         return true;
       }
     }
@@ -933,5 +1010,60 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
   setOldLicenseFullSerialRequired() {
     this.oldLicenseFullSerialField.setValidators([CustomValidators.required, CustomValidators.maxLength(50)]);
     this.oldLicenseFullSerialField.updateValueAndValidity();
+  }
+
+  private openSelectOrganization(items: ReceiverOrganization[]) {
+    return this.service.openSelectReceiverOrganizationDialog(items, this.selectReceiverOrganizationDisplayedColumns).onAfterClose$ as Observable<ReceiverOrganization>;
+  }
+
+  searchOrganizations(nameLang: string) {
+    const criteria = nameLang === 'en' ? {
+      englishName: this.organizationEnglishName.value === '' ? null : this.organizationEnglishName.value
+    } : {
+      arabicName: this.organizationArabicName.value === '' ? null : this.organizationArabicName.value
+    };
+
+    this.service.searchReceiverOrganizations(criteria)
+      .pipe(tap(items => !items.length && this.dialog.info(this.lang.map.no_result_for_your_search_criteria)))
+      .pipe(filter(members => !!members.length))
+      .pipe(map(items => {
+        return items.map(item => {
+          item.establishmentDate = DateUtils.changeDateToDatepicker(item.establishmentDate);
+          return item;
+        });
+      }))
+      .pipe(exhaustMap((items) => {
+        return items.length === 1 ? of(items[0]) : this.openSelectOrganization(items);
+      }))
+      .subscribe((item) => {
+        this.model!.entityID = item.id;
+        this.receiverOrganizationInfo.patchValue(item);
+      });
+  }
+
+  private openSelectPerson(items: ReceiverPerson[]) {
+    return this.service.openSelectReceiverPersonDialog(items, this.selectReceiverPersonDisplayedColumns).onAfterClose$ as Observable<ReceiverPerson>;
+  }
+
+  searchPersons(nameLang: string) {
+    const criteria = nameLang === 'en' ? {
+      englishName: this.receiverEnglishNameLikePassport.value === '' ? null : this.receiverEnglishNameLikePassport.value
+    } : {
+      localName: this.receiverNameLikePassport.value === '' ? null : this.receiverNameLikePassport.value
+    };
+
+    this.service.searchReceiverPersons(criteria)
+      .pipe(tap(items => !items.length && this.dialog.info(this.lang.map.no_result_for_your_search_criteria)))
+      .pipe(filter(items => !!items.length))
+      .pipe(map(items => {
+        return items.map(item => item);
+      }))
+      .pipe(exhaustMap((items) => {
+        return items.length === 1 ? of(items[0]) : this.openSelectPerson(items);
+      }))
+      .subscribe((item) => {
+        this.model!.entityID = item.id;
+        this.receiverPersonInfo.patchValue(item);
+      });
   }
 }
