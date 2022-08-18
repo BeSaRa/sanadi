@@ -131,6 +131,7 @@ export class FollowupComponent extends AdminGenericComponent<Followup, FollowupS
 
   hideForm() {
     this.showForm = false;
+    this.reload$.next(this.case.id);
   }
 
 }
