@@ -64,7 +64,7 @@ export class Followup extends BaseModel<Followup, FollowupService> {
   };
 
   followupPopupSearchFields: ISearchFieldsMap<Followup> = {
-    ...normalSearchFields(['caseId']),
+    ...normalSearchFields(['fullSerial']),
     ...infoSearchFields(['statusInfo', 'requestTypeInfo', 'serviceInfo', 'orgInfo']),
     ...dateSearchFields(['dueDate']),
     name: text => this.getName().toLowerCase().indexOf(text) !== -1
