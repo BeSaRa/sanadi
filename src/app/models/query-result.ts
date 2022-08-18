@@ -23,12 +23,12 @@ import {LangService} from '@services/lang.service';
 import {EmployeeService} from '@services/employee.service';
 import {OperationTypes} from '../enums/operation-types.enum';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {WFActions} from "../enums/wfactions.enum";
+import {WFActions} from '../enums/wfactions.enum';
 import {LicenseApprovalModel} from '@app/models/license-approval-model';
-import {IKeyValue} from "@app/interfaces/i-key-value";
-import {RiskStatus} from "@app/enums/risk-status";
-import {EncryptionService} from "@app/services/encryption.service";
-import {INavigatedItem} from "@app/interfaces/inavigated-item";
+import {IKeyValue} from '@app/interfaces/i-key-value';
+import {RiskStatus} from '@app/enums/risk-status';
+import {EncryptionService} from '@app/services/encryption.service';
+import {INavigatedItem} from '@app/interfaces/inavigated-item';
 import {CaseTypes} from '@app/enums/case-types.enum';
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 import {infoSearchFields} from '@helpers/info-search-fields';
@@ -108,6 +108,13 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
     PI_DUE: (text, model) => {
       let date = (new DatePipe('en')).transform(model.PI_DUE);
       return date ? date.toLowerCase().indexOf(text) !== -1 : false;
+    },
+    team: (text) => {
+      // search if its team inbox
+      if (this.ASSIGNED_TO_ROLE_DISPLAY_NAME) {
+        return this.teamInfo ? this.teamInfo.getName().toLowerCase().indexOf(text) !== -1 : false;
+      }
+      return false;
     }
   };
 
@@ -132,7 +139,7 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
     return this.service.markAsReadUnreadBulk([this.TKIID], this.BD_CASE_TYPE, true);
   }
 
-  markAsUnread(): Observable<IBulkResult>  {
+  markAsUnread(): Observable<IBulkResult> {
     return this.service.markAsReadUnreadBulk([this.TKIID], this.BD_CASE_TYPE, false);
   }
 
@@ -190,7 +197,7 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
       [CaseTypes.COLLECTOR_LICENSING]: WFResponseType.COLLECTOR_LICENSING_SEND_TO_SINGLE_DEPARTMENT,
       [CaseTypes.URGENT_INTERVENTION_LICENSING]: WFResponseType.URGENT_INTERVENTION_LICENSE_SEND_TO_SINGLE_DEPARTMENT,
       [CaseTypes.FUNDRAISING_LICENSING]: WFResponseType.FUNDRAISING_LICENSE_SEND_TO_SINGLE_DEPARTMENT
-    }
+    };
 
     if (!caseType) {
       caseType = this.BD_CASE_TYPE;
@@ -310,7 +317,7 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
   }
 
   private isAllowedToEditRecommendations(model: CaseModel<any, any>, from: OpenFrom): boolean {
-    return this.employeeService.isInternalUser() && (from === OpenFrom.USER_INBOX || (from === OpenFrom.SEARCH && model.canStart()) || (model.taskDetails.actions.indexOf(WFActions.ACTION_CANCEL_CLAIM) !== -1))
+    return this.employeeService.isInternalUser() && (from === OpenFrom.USER_INBOX || (from === OpenFrom.SEARCH && model.canStart()) || (model.taskDetails.actions.indexOf(WFActions.ACTION_CANCEL_CLAIM) !== -1));
   }
 
   getStatusIcon(): string {
@@ -351,7 +358,7 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
       [RiskStatus.NORMAL]: 'text-success',
       [RiskStatus.AT_RISK]: 'text-warning',
       [RiskStatus.OVER_DUE]: 'text-danger'
-    }
+    };
 
     return color[this.RISK_STATUS];
   }

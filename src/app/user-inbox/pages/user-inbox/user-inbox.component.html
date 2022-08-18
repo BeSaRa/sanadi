@@ -40,11 +40,6 @@
               [sortCallback]="tableOptions.sortingCallbacks.displayNameInfo">{{lang.map.action}}</th>
           <td cdk-cell *cdkCellDef="let row"> {{row.displayNameInfo ? row.displayNameInfo.getName() : ''}} </td>
         </ng-container>
-        <ng-container cdkColumnDef="team">
-          <th cdk-header-cell sortable-header *cdkHeaderCellDef
-              [sortCallback]="tableOptions.sortingCallbacks.displayNameInfo">{{lang.map.lbl_team}}</th>
-          <td cdk-cell *cdkCellDef="let row"> {{ row.teamInfo.getName()}} </td>
-        </ng-container>
         <ng-container cdkColumnDef="PI_CREATE">
           <th cdk-header-cell sortable-header *cdkHeaderCellDef>{{lang.map.creation_date}}</th>
           <td cdk-cell *cdkCellDef="let row"> {{row.PI_CREATE|date}} </td>
