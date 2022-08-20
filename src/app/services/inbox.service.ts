@@ -1,3 +1,4 @@
+import { CoordinationWithOrganizationsRequestService } from '@app/services/coordination-with-organizations-request.service';
 import { UrgentInterventionFinancialNotificationService } from './urgent-intervention-financial-notification.service';
 import { ComponentFactoryResolver, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
@@ -89,7 +90,8 @@ export class InboxService {
               private externalOrgAffiliationService: ExternalOrgAffiliationService,
               private customsExemptionRemittanceService: CustomsExemptionRemittanceService,
               private foreignCountriesProjectService: ForeignCountriesProjectsService,
-              private transferringIndividualsFundsAbroad: TransferringIndividualFundsAbroadService) {
+              private transferringIndividualsFundsAbroad: TransferringIndividualFundsAbroadService,
+              private coordinationWithOrganizationsRequestService:CoordinationWithOrganizationsRequestService) {
     FactoryService.registerService('InboxService', this);
     // register all e-services that we need.
     this.services.set(CaseTypes.INQUIRY, this.inquiryService);
@@ -114,6 +116,7 @@ export class InboxService {
     this.services.set(CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION, this.urgentInterventionFinancialNotificationService);
     this.services.set(CaseTypes.FOREIGN_COUNTRIES_PROJECTS, this.foreignCountriesProjectService);
     this.services.set(CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD, this.transferringIndividualsFundsAbroad);
+    this.services.set(CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST, this.coordinationWithOrganizationsRequestService);
   }
 
   @CastResponse(() => QueryResultSet)
