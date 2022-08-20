@@ -39,10 +39,8 @@ export class CoordinationWithOrganizationsRequest
   caseType: number = CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST;
   fullName!: string;
   domain!: number;
-  subject!: string;
   licenseStartDate!: string | IMyDateModel;
   licenseEndDate!: string | IMyDateModel;
-  creatorDomainName!: string;
   description!: string;
   participatingOrganizaionList: ParticipantOrg[] = [];
   organizaionOfficerList: OrganizationOfficer[] = [];
@@ -76,8 +74,6 @@ export class CoordinationWithOrganizationsRequest
       domain,
       licenseStartDate,
       licenseEndDate,
-      subject,
-      creatorDomainName,
       description,
     } = this;
     return {
@@ -89,8 +85,6 @@ export class CoordinationWithOrganizationsRequest
       licenseEndDate: controls
         ? [licenseEndDate, CustomValidators.required]
         : licenseEndDate,
-      subject: controls ? [subject] : subject,
-      creatorDomainName: controls ? [creatorDomainName] : creatorDomainName,
       description: controls ? [description] : description,
     };
   }
