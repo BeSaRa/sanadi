@@ -12,6 +12,11 @@ import { ExecutiveManagementComponent } from './shared/executive-management/exec
 import { EmployeeFormPopupComponent } from '@app/modules/e-services-main/popups/employee-form-popup/employee-form-popup.component';
 import { EmployeesDataComponent } from './shared/employees-data/employees-data.component';
 import { ProjectNeedsComponent } from './shared/project-needs/project-needs.component';
+import { BuildingAbilityComponent } from './shared/building-ability/building-ability.component';
+import { EffectiveCoordinationCapabilitiesComponent } from './shared/effective-coordination-capabilities/effective-coordination-capabilities.component';
+import { ParticipantOrganizationComponent } from './shared/participant-organization/participant-organization.component';
+import { OrganizaionOfficerComponent } from './shared/organizaion-officer/organizaion-officer.component';
+import { ResearchAndStudiesComponent } from './shared/research-and-studies/research-and-studies.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +30,12 @@ import { ProjectNeedsComponent } from './shared/project-needs/project-needs.comp
     ExecutiveManagementComponent,
     EmployeesDataComponent,
     EmployeeFormPopupComponent,
-    ProjectNeedsComponent
+    ProjectNeedsComponent,
+    BuildingAbilityComponent,
+    EffectiveCoordinationCapabilitiesComponent,
+    ParticipantOrganizationComponent,
+    OrganizaionOfficerComponent,
+    ResearchAndStudiesComponent,
   ],
   imports: [
     CommonModule,
@@ -38,7 +48,12 @@ import { ProjectNeedsComponent } from './shared/project-needs/project-needs.comp
     ExecutiveManagementComponent,
     EmployeeFormPopupComponent,
     EmployeesDataComponent,
-    ProjectNeedsComponent
+    ProjectNeedsComponent,
+    BuildingAbilityComponent,
+    EffectiveCoordinationCapabilitiesComponent,
+    ParticipantOrganizationComponent,
+    OrganizaionOfficerComponent,
+    ResearchAndStudiesComponent,
   ]
 })
 export class EServicesMainModule {

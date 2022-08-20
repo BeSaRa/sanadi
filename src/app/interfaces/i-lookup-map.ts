@@ -125,4 +125,10 @@ export interface ILookupMap {
   UrgentInterventionRequestType: Lookup[];
   UserType: Lookup[];
   WORK_FIELD: Lookup[];
+  TrainingLanguage: Lookup[];
+  CoordinationType: Lookup[];
+  TrainingActivityType: Lookup[];
+  TrainingWay: Lookup[];
+  OrganizationWay: Lookup[];
+  RecommendedWay: Lookup[];
 }
