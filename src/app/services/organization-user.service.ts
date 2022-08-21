@@ -115,15 +115,15 @@ export class OrganizationUserService extends CrudWithDialogGenericService<OrgUse
   updateStatus(id: number, newStatus: CommonStatusEnum) {
     return newStatus === CommonStatusEnum.ACTIVATED ? this.activate(id) : this.deactivate(id);
   }
-
-  private activate(id: number): Observable<any> {
+  @CastResponse('')
+  activate(id: number): Observable<any> {
     return this.http.put<any>(this._getServiceURL() + '/' + id + '/activate', {});
   }
-
+  @CastResponse('')
   deactivate(id: number): Observable<boolean> {
     return this.http.put<boolean>(this._getServiceURL() + '/' + id + '/de-activate', {});
   }
-
+  @CastResponse('')
   deactivateBulk(ids: number[]): Observable<{ [key: number]: boolean }> {
     return this.http.put<{ [key: number]: boolean }>(this._getServiceURL() + '/bulk/de-activate', ids);
   }

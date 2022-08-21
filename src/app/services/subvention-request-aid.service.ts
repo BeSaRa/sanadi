@@ -1,19 +1,29 @@
-import {Injectable} from '@angular/core';
-import {BackendGenericService} from '../generics/backend-generic-service';
-import {SubventionRequestAid} from '../models/subvention-request-aid';
-import {HttpClient, HttpParams} from '@angular/common/http';
-import {UrlService} from './url.service';
-import {Observable} from 'rxjs';
-import {Generator} from '../decorators/generator';
-import {FactoryService} from './factory.service';
-import {ISubventionRequestCriteria} from '../interfaces/i-subvention-request-criteria';
-import {SubventionRequestAidInterceptor} from '../model-interceptors/subvention-request-aid-interceptor';
-import {InterceptParam, SendInterceptor} from '@app/decorators/model-interceptor';
+import { Injectable } from '@angular/core';
+import { SubventionRequestAid } from '../models/subvention-request-aid';
+import { HttpClient } from '@angular/common/http';
+import { UrlService } from './url.service';
+import { Observable } from 'rxjs';
+import { Generator } from '@decorators/generator';
+import { FactoryService } from './factory.service';
+import { ISubventionRequestCriteria } from '@contracts/i-subvention-request-criteria';
+import { CrudGenericService } from "@app/generics/crud-generic-service";
+import { HasInterception, InterceptParam } from "@decorators/intercept-model";
+import { Pagination } from "@app/models/pagination";
+import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
 
+@CastResponseContainer({
+  $default: {
+    model: () => SubventionRequestAid
+  },
+  $pagination: {
+    model: () => Pagination,
+    shape: { 'rs.*': () => SubventionRequestAid }
+  }
+})
 @Injectable({
   providedIn: 'root'
 })
-export class SubventionRequestAidService extends BackendGenericService<SubventionRequestAid> {
+export class SubventionRequestAidService extends CrudGenericService<SubventionRequestAid> {
   list!: SubventionRequestAid[];
 
   constructor(public http: HttpClient, private urlService: UrlService) {
@@ -30,8 +40,8 @@ export class SubventionRequestAidService extends BackendGenericService<Subventio
     return this._loadByBeneficiaryId(id);
   }
 
-  @SendInterceptor()
-  @Generator(undefined, true)
+  @HasInterception
+  @CastResponse(undefined)
   private _loadByCriteria(@InterceptParam() criteria: Partial<ISubventionRequestCriteria>): Observable<SubventionRequestAid[]> {
     return this.http.post<SubventionRequestAid[]>(this.urlService.URLS.SUBVENTION_REQUEST + '/criteria', criteria);
   }
@@ -40,9 +50,9 @@ export class SubventionRequestAidService extends BackendGenericService<Subventio
     return this._loadByCriteria(criteria);
   }
 
-  @SendInterceptor()
+  @HasInterception
   private _loadByCriteriaAsBlob(@InterceptParam() criteria: Partial<ISubventionRequestCriteria>): Observable<Blob> {
-    return this.http.post(this.urlService.URLS.SUBVENTION_REQUEST + '/criteria/export', criteria, {responseType: 'blob'})
+    return this.http.post(this.urlService.URLS.SUBVENTION_REQUEST + '/criteria/export', criteria, { responseType: 'blob' })
   }
 
   loadByCriteriaAsBlob(criteria: Partial<ISubventionRequestCriteria>): Observable<Blob> {
@@ -53,15 +63,7 @@ export class SubventionRequestAidService extends BackendGenericService<Subventio
     return SubventionRequestAid;
   }
 
-  _getSendInterceptor() {
-    return SubventionRequestAidInterceptor.send;
-  }
-
   _getServiceURL(): string {
     return this.urlService.URLS.SUBVENTION_REQUEST_AID;
-  }
-
-  _getReceiveInterceptor() {
-    return SubventionRequestAidInterceptor.receive;
   }
 }

@@ -1,9 +1,9 @@
 import {SubventionRequest} from '../models/subvention-request';
 import {AdminResult} from '../models/admin-result';
-import {DateUtils} from '../helpers/date-utils';
+import {DateUtils} from '@helpers/date-utils';
 
 export class SubventionRequestInterceptor {
-  static receive(model: SubventionRequest): SubventionRequest {
+  receive(model: SubventionRequest): SubventionRequest {
     model.orgBranchInfo = AdminResult.createInstance(model.orgBranchInfo);
     model.orgInfo = AdminResult.createInstance(model.orgInfo);
     model.orgUserInfo = AdminResult.createInstance(model.orgUserInfo);
@@ -19,7 +19,7 @@ export class SubventionRequestInterceptor {
     return model;
   }
 
-  static send(model: any | SubventionRequest): any {
+  send(model: any | SubventionRequest): any {
     model.creationDate = !model.creationDate ? model.creationDate : DateUtils.changeDateFromDatepicker(model.creationDate)?.toISOString();
     model.statusDateModified = !model.statusDateModified ? model.statusDateModified : DateUtils.changeDateFromDatepicker(model.statusDateModified)?.toISOString();
     model.allowDataSharing = model.allowDataSharing ?? false;

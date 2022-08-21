@@ -1,18 +1,18 @@
-import {Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
-import {BlobModel} from '@app/models/blob-model';
-import {SafeResourceUrl} from '@angular/platform-browser';
-import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
-import {IDialogData} from '@app/interfaces/i-dialog-data';
-import {LangService} from '@app/services/lang.service';
-import {BaseModel} from '@app/models/base-model';
-import {BackendGenericService} from '@app/generics/backend-generic-service';
+import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
+import { BlobModel } from '@app/models/blob-model';
+import { SafeResourceUrl } from '@angular/platform-browser';
+import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
+import { IDialogData } from '@app/interfaces/i-dialog-data';
+import { LangService } from '@app/services/lang.service';
+import { BaseModel } from '@app/models/base-model';
+import { CrudGenericService } from "@app/generics/crud-generic-service";
 
 @Component({
   selector: 'trainer-cv-popup',
   templateUrl: './view-document-popup.component.html',
   styleUrls: ['./view-document-popup.component.scss']
 })
-export class ViewDocumentPopupComponent<T, S extends BackendGenericService<T>> implements OnInit {
+export class ViewDocumentPopupComponent<T, S extends CrudGenericService<T>> implements OnInit {
   blob!: BlobModel;
   model!: BaseModel<T, S>;
   resumePath!: SafeResourceUrl;

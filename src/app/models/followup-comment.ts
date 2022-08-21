@@ -1,10 +1,15 @@
-import {BaseModel} from '@app/models/base-model';
-import {LangService} from '@app/services/lang.service';
-import {FactoryService} from '@app/services/factory.service';
-import {FollowupCommentService} from '@app/services/followup-comment.service';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {Lookup} from '@app/models/lookup';
+import { BaseModel } from '@app/models/base-model';
+import { LangService } from '@app/services/lang.service';
+import { FactoryService } from '@app/services/factory.service';
+import { FollowupCommentService } from '@app/services/followup-comment.service';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { Lookup } from '@app/models/lookup';
+import { FollowupCommentInterceptor } from "@app/model-interceptors/followup-comment.interceptor";
+import { InterceptModel } from "@decorators/intercept-model";
 
+const { send, receive } = new FollowupCommentInterceptor();
+
+@InterceptModel({ send, receive })
 export class FollowupComment extends BaseModel<FollowupComment, FollowupCommentService> {
   service: FollowupCommentService;
   langService: LangService;
@@ -27,7 +32,7 @@ export class FollowupComment extends BaseModel<FollowupComment, FollowupCommentS
   public buildForm(controls: boolean = false): any {
     const { comment } = this;
     return {
-      comment: controls? [comment, [CustomValidators.required] ] : comment
+      comment: controls ? [comment, [CustomValidators.required]] : comment
     }
   }
 }

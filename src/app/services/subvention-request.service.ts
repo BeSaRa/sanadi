@@ -1,39 +1,48 @@
-import {HttpClient} from '@angular/common/http';
-import {Injectable} from '@angular/core';
-import {BackendGenericService} from '../generics/backend-generic-service';
-import {SubventionRequest} from '../models/subvention-request';
-import {UrlService} from './url.service';
-import {FactoryService} from './factory.service';
-import {Generator} from '../decorators/generator';
-import {SubventionRequestAid} from '../models/subvention-request-aid';
-import {SubventionRequestAidService} from './subvention-request-aid.service';
-import {Observable, of} from 'rxjs';
-import {SubventionAidService} from './subvention-aid.service';
-import {SubventionRequestInterceptor} from '../model-interceptors/subvention-request-interceptor';
-import {SubventionAid} from '../models/subvention-aid';
-import {ISubventionRequestCriteria} from '../interfaces/i-subvention-request-criteria';
-import {SubventionLogService} from './subvention-log.service';
-import {catchError, map, switchMap} from 'rxjs/operators';
-import {SubventionLog} from '../models/subvention-log';
-import {SubventionLogPopupComponent} from '../sanady/popups/subvention-log-popup/subvention-log-popup.component';
-import {DialogRef} from '../shared/models/dialog-ref';
-import {DialogService} from './dialog.service';
-import {SubventionAidPopupComponent} from '../sanady/popups/subvention-aid-popup/subvention-aid-popup.component';
-import {ReasonPopupComponent} from '../sanady/popups/reason-popup/reason-popup.component';
-import {LangService} from './lang.service';
-import {GeneralInterceptor} from '@app/model-interceptors/general-interceptor';
-import {IDefaultResponse} from '@app/interfaces/idefault-response';
-import {SanadiAuditResult} from '@app/models/sanadi-audit-result';
-import {SanadiAuditResultInterceptor} from '@app/model-interceptors/sanadi-audit-result-interceptor';
-import {Beneficiary} from '@app/models/beneficiary';
-import {HasInterception, InterceptParam} from '@decorators/intercept-model';
-import {BlobModel} from '@app/models/blob-model';
-import {DomSanitizer} from '@angular/platform-browser';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { SubventionRequest } from '../models/subvention-request';
+import { UrlService } from './url.service';
+import { FactoryService } from './factory.service';
+import { SubventionRequestAid } from '../models/subvention-request-aid';
+import { SubventionRequestAidService } from './subvention-request-aid.service';
+import { Observable, of } from 'rxjs';
+import { SubventionAidService } from './subvention-aid.service';
+import { SubventionAid } from '../models/subvention-aid';
+import { ISubventionRequestCriteria } from '@contracts/i-subvention-request-criteria';
+import { SubventionLogService } from './subvention-log.service';
+import { catchError, map, switchMap } from 'rxjs/operators';
+import { SubventionLog } from '../models/subvention-log';
+import { SubventionLogPopupComponent } from '../sanady/popups/subvention-log-popup/subvention-log-popup.component';
+import { DialogRef } from '../shared/models/dialog-ref';
+import { DialogService } from './dialog.service';
+import { SubventionAidPopupComponent } from '../sanady/popups/subvention-aid-popup/subvention-aid-popup.component';
+import { ReasonPopupComponent } from '../sanady/popups/reason-popup/reason-popup.component';
+import { LangService } from './lang.service';
+import { SanadiAuditResult } from '@app/models/sanadi-audit-result';
+import { Beneficiary } from '@app/models/beneficiary';
+import { HasInterception, InterceptParam } from '@decorators/intercept-model';
+import { BlobModel } from '@app/models/blob-model';
+import { DomSanitizer } from '@angular/platform-browser';
+import { CrudGenericService } from "@app/generics/crud-generic-service";
+import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
+import { Pagination } from "@app/models/pagination";
 
+@CastResponseContainer({
+  $default: {
+    model: () => SubventionRequest
+  },
+  _loadSubventionRequestAuditData: {
+    model: () => SanadiAuditResult
+  },
+  $pagination: {
+    model: () => Pagination,
+    shape: { 'rs.*': () => SubventionRequest }
+  }
+})
 @Injectable({
   providedIn: 'root'
 })
-export class SubventionRequestService extends BackendGenericService<SubventionRequest> {
+export class SubventionRequestService extends CrudGenericService<SubventionRequest> {
   list!: SubventionRequest[];
 
   constructor(private urlService: UrlService,
@@ -56,10 +65,6 @@ export class SubventionRequestService extends BackendGenericService<SubventionRe
     return SubventionRequest;
   }
 
-  _getSendInterceptor() {
-    return SubventionRequestInterceptor.send;
-  }
-
   _getServiceURL(): string {
     return this.urlService.URLS.SUBVENTION_REQUEST;
   }
@@ -68,16 +73,12 @@ export class SubventionRequestService extends BackendGenericService<SubventionRe
     return this.urlService.URLS.SUBVENTION_REQUEST_PARTIAL;
   }
 
-  _getReceiveInterceptor() {
-    return SubventionRequestInterceptor.receive;
-  }
-
   loadByBeneficiaryIdAsBlob(beneficiaryId: number): Observable<Blob> {
-    return this.http.get(this._getServiceURL() + '/sub-aids/beneficiary/' + beneficiaryId + '/export?lang=' + this.langService.getPrintingLanguage(), {responseType: 'blob'});
+    return this.http.get(this._getServiceURL() + '/sub-aids/beneficiary/' + beneficiaryId + '/export?lang=' + this.langService.getPrintingLanguage(), { responseType: 'blob' });
   }
 
   loadByRequestIdAsBlob(requestId: number): Observable<Blob> {
-    return this.http.get(this._getServiceURL() + '/' + requestId + '/export?lang=' + this.langService.getPrintingLanguage(), {responseType: 'blob'});
+    return this.http.get(this._getServiceURL() + '/' + requestId + '/export?lang=' + this.langService.getPrintingLanguage(), { responseType: 'blob' });
   }
 
   loadSubventionAidByCriteria(criteria: { benId?: any, requestId?: any }): Observable<SubventionAid[]> {
@@ -93,7 +94,7 @@ export class SubventionRequestService extends BackendGenericService<SubventionRe
     return this.subventionRequestAidService.loadByCriteriaAsBlob(criteria);
   }
 
-  @Generator(undefined, true, {property: 'rs'})
+  @CastResponse(undefined)
   loadUnderProcess(): Observable<SubventionRequest[]> {
     return this.http.get<SubventionRequest[]>(this._getServiceURL() + '/active-requests');
   }
@@ -111,7 +112,7 @@ export class SubventionRequestService extends BackendGenericService<SubventionRe
   }
 
   openAidDialog(requestId: number, isPartial: boolean): Observable<DialogRef> {
-    return this.loadSubventionAidByCriteria({requestId})
+    return this.loadSubventionAidByCriteria({ requestId })
       .pipe(
         switchMap((aidList: SubventionAid[]) => {
           return of(this.dialogService.show<{ aidList: SubventionAid[], isPartial: boolean }>(SubventionAidPopupComponent, {
@@ -139,6 +140,7 @@ export class SubventionRequestService extends BackendGenericService<SubventionRe
     });
   }
 
+  @CastResponse('')
   cancelRequest(requestId: number, reason: string): Observable<boolean> {
     return this.http.put<boolean>(this._getServiceURL() + '/cancel', {
       requestId: requestId,
@@ -146,6 +148,7 @@ export class SubventionRequestService extends BackendGenericService<SubventionRe
     });
   }
 
+  @CastResponse('')
   deleteRequest(requestId: number, reason: string): Observable<boolean> {
     return this.http.put<boolean>(this._getServiceURL() + '/delete', {
       requestId: requestId,
@@ -157,23 +160,23 @@ export class SubventionRequestService extends BackendGenericService<SubventionRe
    * @description Loads the subvention request audit data by request id
    * @param requestId
    */
-  loadSubventionRequestAuditData(requestId: number): Observable<SanadiAuditResult[]> {
-    return this.http.get<IDefaultResponse<SanadiAuditResult[]>>(this._getServiceURL() + '/audit/' + requestId)
-      .pipe(
-        map((result) => {
-          return result.rs.map(data => {
-            let item = Object.assign(new SanadiAuditResult(), data),
-              interceptor = new SanadiAuditResultInterceptor();
-
-            item = GeneralInterceptor.receive(item);
-            item.auditEntity = 'SUBVENTION_REQUEST';
-            return interceptor.receive(item);
-          })
-        })
-      );
+  @CastResponse(() => SanadiAuditResult)
+  private _loadSubventionRequestAuditData(requestId: number): Observable<SanadiAuditResult[]> {
+    return this.http.get<SanadiAuditResult[]>(this._getServiceURL() + '/audit/' + requestId)
   }
 
-  @Generator(undefined, false)
+  /**
+   * @description Loads the subvention request audit data by request id
+   * @param requestId
+   */
+  loadSubventionRequestAuditData(requestId: number): Observable<SanadiAuditResult[]> {
+    return this._loadSubventionRequestAuditData(requestId).pipe(map(result => result.map(item => {
+      item.auditEntity = 'SUBVENTION_REQUEST';
+      return item
+    })))
+  }
+
+  @CastResponse(undefined)
   private _loadSubventionRequestAuditDetails(auditId: number): Observable<SubventionRequest> {
     return this.http.get<SubventionRequest>(this._getServiceURL() + '/audit/updates/' + auditId)
   }
@@ -184,11 +187,11 @@ export class SubventionRequestService extends BackendGenericService<SubventionRe
 
   @HasInterception
   loadDisclosureFormAsBlob(@InterceptParam() beneficiary: Beneficiary): Observable<BlobModel> {
-    return this.http.post(this._getServiceURL() + '/beneficiary/nda-form/export', beneficiary, {responseType: 'blob'})
+    return this.http.post(this._getServiceURL() + '/beneficiary/nda-form/export', beneficiary, { responseType: 'blob' })
       .pipe(
         map(blob => new BlobModel(blob, this.domSanitizer),
           catchError(_ => {
-            return of(new BlobModel(new Blob([], {type: 'error'}), this.domSanitizer));
+            return of(new BlobModel(new Blob([], { type: 'error' }), this.domSanitizer));
           })))
   }
 }

@@ -1,29 +1,27 @@
-import {Injectable} from '@angular/core';
-import {BackendWithDialogOperationsGenericService} from '@app/generics/backend-with-dialog-operations-generic-service';
-import {FactoryService} from '@services/factory.service';
-import {AdminLookupTypeEnum} from '@app/enums/admin-lookup-type-enum';
-import {HttpClient} from '@angular/common/http';
-import {UrlService} from '@services/url.service';
-import {DialogService} from '@services/dialog.service';
-import {AdminLookupService} from '@services/admin-lookup.service';
-import {ComponentType} from '@angular/cdk/portal';
-import {AdminLookup} from '@app/models/admin-lookup';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {IDialogData} from '@contracts/i-dialog-data';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {Observable, of} from 'rxjs';
-import {switchMap} from 'rxjs/operators';
-import {AdminLookupInterceptor} from '@app/model-interceptors/admin-lookup-interceptor';
-import {DacOchaNewPopupComponent} from '@app/administration/popups/dac-ocha-new-popup/dac-ocha-new-popup.component';
-import {PaginationContract} from '@contracts/pagination-contract';
-import {Pagination} from '@app/models/pagination';
+import { Injectable } from '@angular/core';
+import { FactoryService } from '@services/factory.service';
+import { AdminLookupTypeEnum } from '@app/enums/admin-lookup-type-enum';
+import { HttpClient } from '@angular/common/http';
+import { UrlService } from '@services/url.service';
+import { DialogService } from '@services/dialog.service';
+import { AdminLookupService } from '@services/admin-lookup.service';
+import { ComponentType } from '@angular/cdk/portal';
+import { AdminLookup } from '@app/models/admin-lookup';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { IDialogData } from '@contracts/i-dialog-data';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { Observable, of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+import { DacOchaNewPopupComponent } from '@app/administration/popups/dac-ocha-new-popup/dac-ocha-new-popup.component';
+import { PaginationContract } from '@contracts/pagination-contract';
+import { Pagination } from '@app/models/pagination';
+import { CrudWithDialogGenericService } from "@app/generics/crud-with-dialog-generic-service";
 
 @Injectable({
   providedIn: 'root'
 })
-export class DacOchaNewService extends BackendWithDialogOperationsGenericService<AdminLookup> {
+export class DacOchaNewService extends CrudWithDialogGenericService<AdminLookup> {
   list: AdminLookup[] = [];
-  interceptor: AdminLookupInterceptor = new AdminLookupInterceptor();
 
   constructor(public http: HttpClient,
               private urlService: UrlService,
@@ -39,14 +37,6 @@ export class DacOchaNewService extends BackendWithDialogOperationsGenericService
 
   _getDialogComponent(): ComponentType<any> {
     return DacOchaNewPopupComponent;
-  }
-
-  _getReceiveInterceptor(): any {
-    return this.interceptor.receive;
-  }
-
-  _getSendInterceptor(): any {
-    return this.interceptor.send;
   }
 
   _getServiceURL(): string {

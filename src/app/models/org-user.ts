@@ -104,7 +104,7 @@ export class OrgUser extends BaseModel<OrgUser, OrganizationUserService> {
     return false;
   }
 
-  updateStatus(newStatus: CommonStatusEnum): any {
+  updateStatus(newStatus: CommonStatusEnum): Observable<boolean> {
     return this.service.updateStatus(this.id, newStatus);
   }
 

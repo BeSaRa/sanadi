@@ -1,29 +1,39 @@
-import {Injectable} from '@angular/core';
-import {BackendWithDialogOperationsGenericService} from '@app/generics/backend-with-dialog-operations-generic-service';
-import {Certificate} from '@app/models/certificate';
-import {ComponentType} from '@angular/cdk/portal';
-import {CertificateInterceptor} from '@app/model-interceptors/certificate-interceptor';
-import {HttpClient} from '@angular/common/http';
-import {UrlService} from '@app/services/url.service';
-import {DialogService} from '@app/services/dialog.service';
-import {DomSanitizer} from '@angular/platform-browser';
-import {FactoryService} from '@app/services/factory.service';
-import {CertificatePopupComponent} from '@app/training-services/popups/certificate-popup/certificate-popup.component';
-import {Observable, of} from 'rxjs';
-import {catchError, exhaustMap, map, switchMap} from 'rxjs/operators';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {IDialogData} from '@app/interfaces/i-dialog-data';
-import {BlobModel} from '@app/models/blob-model';
-import {ViewDocumentPopupComponent} from '@app/training-services/popups/view-document-popup/view-document-popup.component';
-import {Generator} from '@app/decorators/generator';
+import { Injectable } from '@angular/core';
+import { Certificate } from '@app/models/certificate';
+import { ComponentType } from '@angular/cdk/portal';
+import { HttpClient } from '@angular/common/http';
+import { UrlService } from '@app/services/url.service';
+import { DialogService } from '@app/services/dialog.service';
+import { DomSanitizer } from '@angular/platform-browser';
+import { FactoryService } from '@app/services/factory.service';
+import { CertificatePopupComponent } from '@app/training-services/popups/certificate-popup/certificate-popup.component';
+import { Observable, of } from 'rxjs';
+import { catchError, exhaustMap, map, switchMap } from 'rxjs/operators';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { IDialogData } from '@app/interfaces/i-dialog-data';
+import { BlobModel } from '@app/models/blob-model';
+import {
+  ViewDocumentPopupComponent
+} from '@app/training-services/popups/view-document-popup/view-document-popup.component';
+import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
+import { Pagination } from "@app/models/pagination";
+import { CrudWithDialogGenericService } from "@app/generics/crud-with-dialog-generic-service";
 
+@CastResponseContainer({
+  $default: {
+    model: () => Certificate
+  },
+  $pagination: {
+    model: () => Pagination,
+    shape: { 'rs.*': () => Certificate }
+  }
+})
 @Injectable({
   providedIn: 'root'
 })
-export class CertificateService extends BackendWithDialogOperationsGenericService<Certificate> {
+export class CertificateService extends CrudWithDialogGenericService<Certificate> {
   list: Certificate[] = [];
-  interceptor: CertificateInterceptor = new CertificateInterceptor();
 
   constructor(public http: HttpClient,
               private urlService: UrlService,
@@ -34,7 +44,7 @@ export class CertificateService extends BackendWithDialogOperationsGenericServic
     FactoryService.registerService('CertificateService', this);
   }
 
-  @Generator(undefined, true, {property: 'rs'})
+  @CastResponse(undefined)
   activeCertificates(): Observable<Certificate[]> {
     return this.http.get<Certificate[]>(this._getServiceURL() + '/active');
   }
@@ -134,14 +144,6 @@ export class CertificateService extends BackendWithDialogOperationsGenericServic
 
   _getModel(): any {
     return Certificate;
-  }
-
-  _getReceiveInterceptor(): any {
-    return this.interceptor.receive;
-  }
-
-  _getSendInterceptor(): any {
-    return this.interceptor.send;
   }
 
   _getServiceURL(): string {

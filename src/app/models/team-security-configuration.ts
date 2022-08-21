@@ -1,9 +1,14 @@
-import {BaseModel} from "@app/models/base-model";
-import {TeamSecurityConfigurationService} from "@app/services/team-security-configuration.service";
-import {FactoryService} from "@app/services/factory.service";
-import {AdminResult} from "@app/models/admin-result";
-import {UserSecurityConfiguration} from "@app/models/user-security-configuration";
+import { BaseModel } from "@app/models/base-model";
+import { TeamSecurityConfigurationService } from "@app/services/team-security-configuration.service";
+import { FactoryService } from "@app/services/factory.service";
+import { AdminResult } from "@app/models/admin-result";
+import { UserSecurityConfiguration } from "@app/models/user-security-configuration";
+import { InterceptModel } from "@decorators/intercept-model";
+import { TeamSecurityConfigurationInterceptor } from "@app/model-interceptors/team-security-configuration-interceptor";
 
+const { send, receive } = new TeamSecurityConfigurationInterceptor
+
+@InterceptModel({ send, receive })
 export class TeamSecurityConfiguration extends BaseModel<TeamSecurityConfiguration, TeamSecurityConfigurationService> {
   serviceId!: number;
   caseType!: number;
@@ -23,7 +28,7 @@ export class TeamSecurityConfiguration extends BaseModel<TeamSecurityConfigurati
   }
 
   convertToUserSecurity(generalUserId: number): Partial<UserSecurityConfiguration> {
-    const {teamId, caseType, serviceId} = this;
+    const { teamId, caseType, serviceId } = this;
     return {
       teamId,
       caseType,

@@ -1,16 +1,16 @@
-import {Component} from '@angular/core';
-import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import {TrainingProgram} from '@app/models/training-program';
-import {AdminGenericComponent} from '@app/generics/admin-generic-component';
-import {TrainingProgramService} from '@app/services/training-program.service';
-import {LangService} from '@app/services/lang.service';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {BehaviorSubject, of, Subject} from 'rxjs';
-import {catchError, exhaustMap, filter, switchMap, takeUntil} from 'rxjs/operators';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {TrainingStatus} from '@app/enums/training-status';
-import {TrainingProgramBriefcaseService} from '@app/services/training-program-briefcase.service';
-import {OperationTypes} from '@app/enums/operation-types.enum';
+import { Component } from '@angular/core';
+import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { TrainingProgram } from '@app/models/training-program';
+import { AdminGenericComponent } from '@app/generics/admin-generic-component';
+import { TrainingProgramService } from '@app/services/training-program.service';
+import { LangService } from '@app/services/lang.service';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { BehaviorSubject, of, Subject } from 'rxjs';
+import { catchError, exhaustMap, filter, switchMap, takeUntil } from 'rxjs/operators';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { TrainingStatus } from '@app/enums/training-status';
+import { TrainingProgramBriefcaseService } from '@app/services/training-program-briefcase.service';
+import { OperationTypes } from '@app/enums/operation-types.enum';
 
 @Component({
   selector: 'available-programs',

@@ -1,21 +1,27 @@
-import {HttpClient} from '@angular/common/http';
-import {Injectable} from '@angular/core';
-import {BackendGenericService} from "@app/generics/backend-generic-service";
-import {UserTeam} from "@app/models/user-team";
-import {FactoryService} from "@app/services/factory.service";
-import {IModelInterceptor} from "@app/interfaces/i-model-interceptor";
-import {UserTeamInterceptor} from "@app/model-interceptors/user-team-interceptor";
-import {UrlService} from "@app/services/url.service";
-import {Observable} from "rxjs";
-import {Generator} from "@app/decorators/generator";
-import {map} from "rxjs/operators";
-import {IDefaultResponse} from "@app/interfaces/idefault-response";
-import {InterceptParam, SendInterceptor} from "@app/decorators/model-interceptor";
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { UserTeam } from "@app/models/user-team";
+import { FactoryService } from "@app/services/factory.service";
+import { IModelInterceptor } from "@app/interfaces/i-model-interceptor";
+import { UserTeamInterceptor } from "@app/model-interceptors/user-team-interceptor";
+import { UrlService } from "@app/services/url.service";
+import { Observable } from "rxjs";
+import { Generator } from "@app/decorators/generator";
+import { map } from "rxjs/operators";
+import { IDefaultResponse } from "@app/interfaces/idefault-response";
+import { InterceptParam, SendInterceptor } from "@app/decorators/model-interceptor";
+import { CrudGenericService } from "@app/generics/crud-generic-service";
+import { CastResponseContainer } from "@decorators/cast-response";
 
+@CastResponseContainer({
+  $default: {
+    model: () => UserTeam
+  }
+})
 @Injectable({
   providedIn: 'root'
 })
-export class UserTeamService extends BackendGenericService<UserTeam> {
+export class UserTeamService extends CrudGenericService<UserTeam> {
   list: UserTeam[] = [];
   interceptor: IModelInterceptor<UserTeam> = new UserTeamInterceptor();
 

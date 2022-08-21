@@ -1,15 +1,20 @@
-import {AdminResult} from '@app/models/admin-result';
-import {SubventionAidService} from '@app/services/subvention-aid.service';
-import {FactoryService} from '@app/services/factory.service';
-import {SubventionRequestService} from '@app/services/subvention-request.service';
-import {BeneficiaryService} from '@app/services/beneficiary.service';
-import {SearchableCloneable} from '@app/models/searchable-cloneable';
-import {ISearchFieldsMap} from '@app/types/types';
-import {infoSearchFields} from '@app/helpers/info-search-fields';
-import {normalSearchFields} from '@app/helpers/normal-search-fields';
-import {Observable, of} from 'rxjs';
+import { AdminResult } from '@app/models/admin-result';
+import { SubventionAidService } from '@app/services/subvention-aid.service';
+import { FactoryService } from '@app/services/factory.service';
+import { SubventionRequestService } from '@app/services/subvention-request.service';
+import { BeneficiaryService } from '@app/services/beneficiary.service';
+import { SearchableCloneable } from '@app/models/searchable-cloneable';
+import { ISearchFieldsMap } from '@app/types/types';
+import { infoSearchFields } from '@app/helpers/info-search-fields';
+import { normalSearchFields } from '@app/helpers/normal-search-fields';
+import { Observable, of } from 'rxjs';
+import { InterceptModel } from "@decorators/intercept-model";
+import { SanadiAuditResultInterceptor } from "@app/model-interceptors/sanadi-audit-result-interceptor";
 
-export class SanadiAuditResult extends SearchableCloneable<SanadiAuditResult>{
+const { send, receive } = new SanadiAuditResultInterceptor()
+
+@InterceptModel({ send, receive })
+export class SanadiAuditResult extends SearchableCloneable<SanadiAuditResult> {
   id!: number;
   auditId!: number;
   updatedOn!: string;

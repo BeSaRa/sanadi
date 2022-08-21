@@ -1,20 +1,31 @@
-import {Injectable} from '@angular/core';
-import {FactoryService} from './factory.service';
-import {BackendGenericService} from '../generics/backend-generic-service';
-import {CustomRolePermission} from '../models/custom-role-permission';
-import {HttpClient, HttpParams} from '@angular/common/http';
-import {UrlService} from './url.service';
-import {combineLatest, Observable, of} from 'rxjs';
-import {concatMap, map, mapTo, switchMap} from 'rxjs/operators';
-import {Generator} from '../decorators/generator';
+import { Injectable } from '@angular/core';
+import { FactoryService } from './factory.service';
+import { CustomRolePermission } from '../models/custom-role-permission';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { UrlService } from './url.service';
+import { combineLatest, Observable, of } from 'rxjs';
+import { concatMap, map, mapTo, switchMap } from 'rxjs/operators';
+import { Pagination } from "@app/models/pagination";
+import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
+import { CrudGenericService } from "@app/generics/crud-generic-service";
 
+@CastResponseContainer({
+  $default: {
+    model: () => CustomRolePermission
+  },
+  $pagination: {
+    model: () => Pagination,
+    shape: { 'rs.*': () => CustomRolePermission }
+  }
+})
 @Injectable({
   providedIn: 'root'
 })
-export class CustomRolePermissionService extends BackendGenericService<CustomRolePermission> {
+export class CustomRolePermissionService extends CrudGenericService<CustomRolePermission> {
   list!: CustomRolePermission[];
 
-  constructor(public http: HttpClient, private urlService: UrlService) {
+  constructor(public http: HttpClient,
+              private urlService: UrlService) {
     super();
     FactoryService.registerService('CustomRolePermissionService', this);
   }
@@ -23,22 +34,15 @@ export class CustomRolePermissionService extends BackendGenericService<CustomRol
     return CustomRolePermission;
   }
 
-  _getSendInterceptor(): any {
-    return (model: any) => {
-      delete model.service;
-      return model;
-    };
-  }
-
   _getServiceURL(): string {
     return this.urlService.URLS.CUSTOM_ROLE_PERMISSIONS;
   }
 
-  @Generator(CustomRolePermission, true)
+  @CastResponse(undefined)
   getByCustomRoleId(customRoleId: any | number): Observable<CustomRolePermission[]> {
     return this.http.get<CustomRolePermission[]>(this.urlService.URLS.CUSTOM_ROLE_PERMISSIONS, {
       params: new HttpParams({
-        fromObject: {customRoleId}
+        fromObject: { customRoleId }
       })
     });
   }
@@ -76,8 +80,5 @@ export class CustomRolePermissionService extends BackendGenericService<CustomRol
         return item;
       }));
     });
-  }
-
-  _getReceiveInterceptor(): any {
   }
 }

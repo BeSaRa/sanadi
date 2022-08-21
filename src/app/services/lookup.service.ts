@@ -1,18 +1,18 @@
-import {Injectable} from '@angular/core';
-import {Lookup} from '../models/lookup';
-import {BackendGenericService} from '../generics/backend-generic-service';
-import {HttpClient} from '@angular/common/http';
-import {UrlService} from './url.service';
-import {ILookupMap} from '@contracts/i-lookup-map';
-import {FactoryService} from './factory.service';
-import {ILanguageKeys} from '@contracts/i-language-keys';
-import {LangService} from './lang.service';
-import {CommonUtils} from '@helpers/common-utils';
+import { Injectable } from '@angular/core';
+import { Lookup } from '../models/lookup';
+import { HttpClient } from '@angular/common/http';
+import { UrlService } from './url.service';
+import { ILookupMap } from '@contracts/i-lookup-map';
+import { FactoryService } from './factory.service';
+import { ILanguageKeys } from '@contracts/i-language-keys';
+import { LangService } from './lang.service';
+import { CommonUtils } from '@helpers/common-utils';
+import { CrudGenericService } from "@app/generics/crud-generic-service";
 
 @Injectable({
   providedIn: 'root'
 })
-export class LookupService extends BackendGenericService<Lookup> {
+export class LookupService extends CrudGenericService<Lookup> {
   list!: Lookup[];
   listByCategory!: ILookupMap;
 
@@ -28,10 +28,6 @@ export class LookupService extends BackendGenericService<Lookup> {
   _getModel(): any {
     return Lookup;
   }
-
-  _getSendInterceptor(): any {
-  }
-
   _getServiceURL(): string {
     return this.urlService.URLS.LOOKUPS;
   }
@@ -47,7 +43,7 @@ export class LookupService extends BackendGenericService<Lookup> {
     }
     return lookupList.find(x => x.lookupKey === lookupKey) || null;
   }
-
+  // noinspection JSUnusedGlobalSymbols
   getLookupArrayAsObject(lookupCategory: keyof ILookupMap, keyProperty: string = 'lookupKey'): {[key: string]: Lookup } {
     if (!lookupCategory || !CommonUtils.isValidValue(keyProperty)) {
       return {};
@@ -73,6 +69,7 @@ export class LookupService extends BackendGenericService<Lookup> {
     });
   }
 
+  // noinspection JSUnusedLocalSymbols
   private static _getAllLookupCategoryKeys(lookupMap: ILookupMap, sorted: boolean = false, asLookupInterface: boolean = false) {
     let keys = Object.keys(lookupMap);
     if (sorted) {
@@ -110,6 +107,7 @@ export class LookupService extends BackendGenericService<Lookup> {
     return '{\n' + value.join(',\n') + '\n}';
   }
 
+  // noinspection JSUnusedLocalSymbols
   private static _changeLookupMapToEnum(lookupMap: ILookupMap, showInUpperCase: boolean = true): void {
     for (let cat in lookupMap) {
       let lookupArray: Lookup[] = lookupMap[cat as keyof ILookupMap];

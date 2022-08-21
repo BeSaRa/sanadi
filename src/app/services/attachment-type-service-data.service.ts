@@ -1,32 +1,38 @@
-import {Injectable} from '@angular/core';
-import {BackendGenericService} from '../generics/backend-generic-service';
-import {AttachmentTypeServiceData} from '../models/attachment-type-service-data';
-import {IModelInterceptor} from '../interfaces/i-model-interceptor';
-import {AttachmentTypeServiceDataInterceptor} from '../model-interceptors/attachment-type-service-data-interceptor';
-import {HttpClient} from '@angular/common/http';
-import {UrlService} from './url.service';
-import {DialogService} from './dialog.service';
-import {FactoryService} from './factory.service';
-import {DialogRef} from '../shared/models/dialog-ref';
-import {IDialogData} from '../interfaces/i-dialog-data';
+import { Injectable } from '@angular/core';
+import { AttachmentTypeServiceData } from '../models/attachment-type-service-data';
+import { HttpClient } from '@angular/common/http';
+import { UrlService } from './url.service';
+import { DialogService } from './dialog.service';
+import { FactoryService } from './factory.service';
+import { DialogRef } from '../shared/models/dialog-ref';
+import { IDialogData } from '@contracts/i-dialog-data';
 import {
   AttachmentTypeServiceDataPopupComponent
 } from '../administration/popups/attachment-type-service-data-popup/attachment-type-service-data-popup.component';
-import {OperationTypes} from '../enums/operation-types.enum';
-import {Observable, of} from 'rxjs';
-import {map, switchMap, tap} from 'rxjs/operators';
-import {Generator} from '../decorators/generator';
-import {InterceptParam, SendInterceptor} from '../decorators/model-interceptor';
-import {CustomProperty} from '../models/custom-property';
-import {IDefaultResponse} from '../interfaces/idefault-response';
+import { OperationTypes } from '../enums/operation-types.enum';
+import { Observable, of } from 'rxjs';
+import { map, switchMap, tap } from 'rxjs/operators';
+import { CustomProperty } from '../models/custom-property';
+import { IDefaultResponse } from '@contracts/idefault-response';
+import { CrudGenericService } from "@app/generics/crud-generic-service";
+import { Pagination } from "@app/models/pagination";
+import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
+import { HasInterception, InterceptParam } from "@decorators/intercept-model";
 
+@CastResponseContainer({
+  $default: {
+    model: () => AttachmentTypeServiceData
+  },
+  $pagination: {
+    model: () => Pagination,
+    shape: { 'rs.*': () => AttachmentTypeServiceData }
+  }
+})
 @Injectable({
   providedIn: 'root'
 })
-export class AttachmentTypeServiceDataService extends BackendGenericService<AttachmentTypeServiceData> {
+export class AttachmentTypeServiceDataService extends CrudGenericService<AttachmentTypeServiceData> {
   list!: AttachmentTypeServiceData[];
-  interceptor: IModelInterceptor<AttachmentTypeServiceData> = new AttachmentTypeServiceDataInterceptor();
-
   attachmentTypes: Record<number, {
     time: number; list: AttachmentTypeServiceData[]
   }> = {}
@@ -41,14 +47,6 @@ export class AttachmentTypeServiceDataService extends BackendGenericService<Atta
 
   _getModel(): any {
     return AttachmentTypeServiceData;
-  }
-
-  _getReceiveInterceptor(): any {
-    return this.interceptor.receive;
-  }
-
-  _getSendInterceptor(): any {
-    return this.interceptor.send;
   }
 
   _getServiceURL(): string {
@@ -79,7 +77,7 @@ export class AttachmentTypeServiceDataService extends BackendGenericService<Atta
     );
   }
 
-  @Generator(undefined, true, {property: 'rs'})
+  @CastResponse(undefined)
   private _loadServicesByAttachmentTypeId(attachmentTypeId: number): Observable<AttachmentTypeServiceData[]> {
     return this.http.get<AttachmentTypeServiceData[]>(this._getServiceURL() + 's/' + attachmentTypeId);
   }
@@ -92,21 +90,21 @@ export class AttachmentTypeServiceDataService extends BackendGenericService<Atta
       );
   }
 
-  @SendInterceptor()
-  @Generator(undefined, false, {property: 'rs'})
+  @HasInterception
+  @CastResponse(undefined)
   create(@InterceptParam() model: AttachmentTypeServiceData): Observable<AttachmentTypeServiceData> {
     return this.http.post<AttachmentTypeServiceData>(this._getServiceURL(), model);
   }
 
-  @SendInterceptor()
-  @Generator(undefined, false, {property: 'rs'})
+  @HasInterception
+  @CastResponse(undefined)
   update(@InterceptParam() model: AttachmentTypeServiceData): Observable<AttachmentTypeServiceData> {
     return this.http.put<AttachmentTypeServiceData>(this._getServiceURL(), model);
   }
 
   getCustomProperties(caseType: number): Observable<CustomProperty[]> {
     return this.http.get<IDefaultResponse<CustomProperty[]>>(this._getCustomPropertiesURL() + '/' + caseType)
-      .pipe(map(response => response.rs.map(item => (new CustomProperty()).clone({...item}))));
+      .pipe(map(response => response.rs.map(item => (new CustomProperty()).clone({ ...item }))));
   }
 
   makeGlobal(attachmentTypeId: number): Observable<boolean> {
@@ -114,7 +112,7 @@ export class AttachmentTypeServiceDataService extends BackendGenericService<Atta
       .pipe(map(response => response.rs));
   }
 
-  @Generator(undefined, true)
+  @CastResponse(undefined)
   private _loadByCaseType(caseType: number): Observable<AttachmentTypeServiceData[]> {
     return this.http.get<AttachmentTypeServiceData[]>(this.urlService.URLS.ATTACHMENT_TYPES + '/attachment-service/case-type/' + caseType)
   }
@@ -122,7 +120,7 @@ export class AttachmentTypeServiceDataService extends BackendGenericService<Atta
   loadByCaseType(caseType: number): Observable<AttachmentTypeServiceData[]> {
     return this._loadByCaseType(caseType).pipe(tap(list => {
       if (!this.attachmentTypes[caseType]) {
-        this.attachmentTypes[caseType] = {time: 0, list: []}
+        this.attachmentTypes[caseType] = { time: 0, list: [] }
       }
       this.attachmentTypes[caseType].list = list;
       this.attachmentTypes[caseType].time = Date.now();

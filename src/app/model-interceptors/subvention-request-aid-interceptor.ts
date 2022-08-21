@@ -1,11 +1,11 @@
-import {SubventionRequestAid} from '../models/subvention-request-aid';
-import {AdminResult} from '../models/admin-result';
-import {DateUtils} from '../helpers/date-utils';
-import {ConfigurationService} from '@app/services/configuration.service';
-import {FactoryService} from '@app/services/factory.service';
+import { SubventionRequestAid } from '../models/subvention-request-aid';
+import { AdminResult } from '../models/admin-result';
+import { DateUtils } from '@helpers/date-utils';
+import { ConfigurationService } from '@app/services/configuration.service';
+import { FactoryService } from '@app/services/factory.service';
 
 export class SubventionRequestAidInterceptor {
-  static receive(model: SubventionRequestAid): SubventionRequestAid {
+  receive(model: SubventionRequestAid): SubventionRequestAid {
     model.orgBranchInfo = AdminResult.createInstance(model.orgBranchInfo);
     model.orgUserInfo = AdminResult.createInstance(model.orgUserInfo);
     model.orgInfo = AdminResult.createInstance(model.orgInfo);
@@ -21,7 +21,7 @@ export class SubventionRequestAidInterceptor {
     return model;
   }
 
-  static send(model: SubventionRequestAid | any): (SubventionRequestAid | any) {
+  send(model: SubventionRequestAid | any): (SubventionRequestAid | any) {
     const configurationService: ConfigurationService = FactoryService.getService('ConfigurationService');
     model.creationDateFrom && (model.creationDateFrom = DateUtils.setStartOfDay(model.creationDateFrom).format(configurationService.CONFIG.TIMESTAMP).split(' ').join('T') + 'Z');
     model.creationDateTo && (model.creationDateTo = DateUtils.setEndOfDay(model.creationDateTo).format(configurationService.CONFIG.TIMESTAMP).split(' ').join('T') + 'Z');

@@ -1,19 +1,27 @@
-import {Injectable} from '@angular/core';
-import {FactoryService} from '@app/services/factory.service';
-import {HttpClient} from '@angular/common/http';
-import {UrlService} from '@app/services/url.service';
-import {BackendGenericService} from '@app/generics/backend-generic-service';
-import {OrgUnitService} from '@app/models/org-unit-service';
-import {OrganizationUnitServicesInterceptor} from '@app/model-interceptors/organization-unit-services-interceptor';
-import {Observable, of} from 'rxjs';
-import {Generator} from '@app/decorators/generator';
+import { Injectable } from '@angular/core';
+import { FactoryService } from '@app/services/factory.service';
+import { HttpClient } from '@angular/common/http';
+import { UrlService } from '@app/services/url.service';
+import { OrgUnitService } from '@app/models/org-unit-service';
+import { Observable, of } from 'rxjs';
+import { Pagination } from "@app/models/pagination";
+import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
+import { CrudGenericService } from "@app/generics/crud-generic-service";
 
+@CastResponseContainer({
+  $default: {
+    model: () => OrgUnitService
+  },
+  $pagination: {
+    model: () => Pagination,
+    shape: { 'rs.*': () => OrgUnitService }
+  }
+})
 @Injectable({
   providedIn: 'root'
 })
-export class OrganizationUnitServicesService extends BackendGenericService<OrgUnitService> {
+export class OrganizationUnitServicesService extends CrudGenericService<OrgUnitService> {
   list!: OrgUnitService[];
-  interceptor: OrganizationUnitServicesInterceptor = new OrganizationUnitServicesInterceptor();
 
   constructor(public http: HttpClient,
               private urlService: UrlService) {
@@ -29,15 +37,7 @@ export class OrganizationUnitServicesService extends BackendGenericService<OrgUn
     return OrgUnitService;
   }
 
-  _getReceiveInterceptor(): any {
-    return this.interceptor.receive;
-  }
-
-  _getSendInterceptor(): any {
-    return this.interceptor.send;
-  }
-
-  @Generator(undefined, true, {property: 'rs'})
+  @CastResponse(undefined)
   loadLinkedServicesByOrgId(orgId: number): Observable<OrgUnitService[]> {
     if (!orgId) {
       return of([]);

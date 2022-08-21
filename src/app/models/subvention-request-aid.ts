@@ -1,19 +1,23 @@
-import {AdminResult} from './admin-result';
-import {SubventionApprovedAid} from './subvention-approved-aid';
-import {FactoryService} from '../services/factory.service';
-import {SubventionRequestService} from '../services/subvention-request.service';
-import {isValidValue, printBlobData} from '../helpers/utils';
-import {DialogRef} from '../shared/models/dialog-ref';
-import {ISearchFieldsMap, searchFunctionType} from '../types/types';
-import {Observable} from 'rxjs';
-import {UserClickOn} from '../enums/user-click-on.enum';
-import {take} from 'rxjs/operators';
-import {SubventionRequestStatus} from '@app/enums/status.enum';
-import {dateSearchFields} from '@app/helpers/date-search-fields';
-import {infoSearchFields} from '@app/helpers/info-search-fields';
-import {normalSearchFields} from '@app/helpers/normal-search-fields';
-import {SearchableCloneable} from '@app/models/searchable-cloneable';
+import { AdminResult } from './admin-result';
+import { SubventionApprovedAid } from './subvention-approved-aid';
+import { FactoryService } from '@services/factory.service';
+import { SubventionRequestService } from '@services/subvention-request.service';
+import { isValidValue, printBlobData } from '@helpers/utils';
+import { DialogRef } from '../shared/models/dialog-ref';
+import { ISearchFieldsMap } from '../types/types';
+import { Observable } from 'rxjs';
+import { UserClickOn } from '../enums/user-click-on.enum';
+import { take } from 'rxjs/operators';
+import { SubventionRequestStatus } from '@app/enums/status.enum';
+import { infoSearchFields } from '@app/helpers/info-search-fields';
+import { normalSearchFields } from '@app/helpers/normal-search-fields';
+import { SearchableCloneable } from '@app/models/searchable-cloneable';
+import { SubventionRequestAidInterceptor } from "@app/model-interceptors/subvention-request-aid-interceptor";
+import { InterceptModel } from "@decorators/intercept-model";
 
+const { send, receive } = new SubventionRequestAidInterceptor();
+
+@InterceptModel({ send, receive })
 export class SubventionRequestAid extends SearchableCloneable<SubventionRequestAid> {
 
   constructor() {
@@ -60,7 +64,7 @@ export class SubventionRequestAid extends SearchableCloneable<SubventionRequestA
     ...normalSearchFields(['requestFullSerial', 'creationDateString', 'requestedAidAmount', 'aidTotalPayedAmount'])
   };
 
-  searchFieldsSearch: ISearchFieldsMap<SubventionRequestAid>  = {
+  searchFieldsSearch: ISearchFieldsMap<SubventionRequestAid> = {
     ...infoSearchFields(['orgAndBranchInfo', 'orgUserInfo', 'statusInfo']),
     ...normalSearchFields(['requestFullSerial', 'creationDateString', 'aidSuggestedAmount', 'requestedAidAmount', 'aidTotalPayedAmount', 'statusDateModifiedString'])
   };

@@ -1,27 +1,39 @@
-import {Injectable} from '@angular/core';
-import {BackendWithDialogOperationsGenericService} from '@app/generics/backend-with-dialog-operations-generic-service';
-import {ChecklistItem} from '@app/models/checklist-item';
-import {ComponentType} from '@angular/cdk/overlay';
-import {ChecklistPopupComponent} from '@app/administration/popups/checklist-popup/checklist-popup.component';
-import {HttpClient, HttpParams} from '@angular/common/http';
-import {UrlService} from '@app/services/url.service';
-import {DialogService} from '@app/services/dialog.service';
-import {FactoryService} from '@app/services/factory.service';
-import {IModelInterceptor} from '@app/interfaces/i-model-interceptor';
-import {ChecklistItemInterceptor} from '@app/model-interceptors/checklist-item-interceptor';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {IDialogData} from '@app/interfaces/i-dialog-data';
-import {ServiceDataStep} from '@app/models/service-data-step';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {Observable, of} from 'rxjs';
-import {Generator} from '@app/decorators/generator';
-import {ChecklistItemPopupComponent} from '@app/administration/popups/checklist-item-popup/checklist-item-popup.component';
-import {IChecklistCriteria} from '@app/interfaces/ichecklist-criteria';
+import { Injectable } from '@angular/core';
+import { ChecklistItem } from '@app/models/checklist-item';
+import { ComponentType } from '@angular/cdk/overlay';
+import { ChecklistPopupComponent } from '@app/administration/popups/checklist-popup/checklist-popup.component';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { UrlService } from '@app/services/url.service';
+import { DialogService } from '@app/services/dialog.service';
+import { FactoryService } from '@app/services/factory.service';
+import { IModelInterceptor } from '@app/interfaces/i-model-interceptor';
+import { ChecklistItemInterceptor } from '@app/model-interceptors/checklist-item-interceptor';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { IDialogData } from '@app/interfaces/i-dialog-data';
+import { ServiceDataStep } from '@app/models/service-data-step';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { Observable, of } from 'rxjs';
+import {
+  ChecklistItemPopupComponent
+} from '@app/administration/popups/checklist-item-popup/checklist-item-popup.component';
+import { IChecklistCriteria } from '@app/interfaces/ichecklist-criteria';
+import { CrudWithDialogGenericService } from "@app/generics/crud-with-dialog-generic-service";
+import { Pagination } from "@app/models/pagination";
+import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
 
+@CastResponseContainer({
+  $default: {
+    model: () => ChecklistItem
+  },
+  $pagination: {
+    model: () => Pagination,
+    shape: { 'rs.*': () => ChecklistItem }
+  }
+})
 @Injectable({
   providedIn: 'root'
 })
-export class ChecklistService extends BackendWithDialogOperationsGenericService<ChecklistItem> {
+export class ChecklistService extends CrudWithDialogGenericService<ChecklistItem> {
   list!: ChecklistItem[];
   interceptor: IModelInterceptor<ChecklistItem> = new ChecklistItemInterceptor();
 
@@ -40,19 +52,11 @@ export class ChecklistService extends BackendWithDialogOperationsGenericService<
     return ChecklistItem;
   }
 
-  _getReceiveInterceptor(): any {
-    return this.interceptor.receive;
-  }
-
-  _getSendInterceptor(): any {
-    return this.interceptor.send;
-  }
-
   _getServiceURL(): string {
     return this.urlService.URLS.CHECKLIST;
   }
 
-  @Generator(undefined, true, {property: 'rs'})
+  @CastResponse(undefined)
   getChecklistByStepId(stepId: number): Observable<ChecklistItem[]> {
     return this.http.get<ChecklistItem[]>(this._getServiceURL() + '/step/' + stepId);
   }
@@ -88,7 +92,7 @@ export class ChecklistService extends BackendWithDialogOperationsGenericService<
     });
   }
 
-  @Generator(ChecklistItem, true)
+  @CastResponse(undefined)
   private _criteria(criteria: IChecklistCriteria) {
     return this.http.get(this._getServiceURL() + '/criteria', {
       params: new HttpParams({

@@ -1,12 +1,17 @@
-import {BaseModel} from '@app/models/base-model';
-import {SurveySectionService} from '@app/services/survey-section.service';
-import {FactoryService} from '@app/services/factory.service';
-import {IQuestionSection} from "@app/interfaces/i-question-section";
-import {CustomValidators} from "@app/validators/custom-validators";
-import {INames} from "@app/interfaces/i-names";
-import {LangService} from "@app/services/lang.service";
-import {Observable, of} from "rxjs";
+import { BaseModel } from '@app/models/base-model';
+import { SurveySectionService } from '@app/services/survey-section.service';
+import { FactoryService } from '@app/services/factory.service';
+import { IQuestionSection } from "@app/interfaces/i-question-section";
+import { CustomValidators } from "@app/validators/custom-validators";
+import { INames } from "@app/interfaces/i-names";
+import { LangService } from "@app/services/lang.service";
+import { Observable, of } from "rxjs";
+import { SurveySectionInterceptor } from "@app/model-interceptors/survey-section-interceptor";
+import { InterceptModel } from "@decorators/intercept-model";
 
+const { send, receive } = new SurveySectionInterceptor()
+
+@InterceptModel({ send, receive })
 export class SurveySection extends BaseModel<SurveySection, SurveySectionService> {
   service: SurveySectionService;
   questionSet: IQuestionSection[] = [];
@@ -20,7 +25,7 @@ export class SurveySection extends BaseModel<SurveySection, SurveySectionService
   }
 
   buildForm(controls: boolean) {
-    const {arName, enName} = this;
+    const { arName, enName } = this;
     return {
       arName: controls ? [arName, [CustomValidators.required, CustomValidators.pattern('AR_NUM')]] : arName,
       enName: controls ? [enName, [CustomValidators.required, CustomValidators.pattern('ENG_NUM')]] : enName

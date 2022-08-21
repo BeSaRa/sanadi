@@ -1,35 +1,44 @@
-import {HttpClient, HttpContext, HttpParams} from '@angular/common/http';
-import {Injectable} from '@angular/core';
-import {BackendGenericService} from "@app/generics/backend-generic-service";
-import {Survey} from "@app/models/survey";
-import {FactoryService} from "@app/services/factory.service";
-import {UrlService} from "@app/services/url.service";
-import {IModelInterceptor} from "@app/interfaces/i-model-interceptor";
-import {SurveyInterceptor} from "@app/model-interceptors/survey-interceptor";
-import {Observable} from "rxjs";
-import {IDefaultResponse} from "@app/interfaces/idefault-response";
-import {ISurveyInfo} from "@app/interfaces/isurvey-info";
-import {map} from "rxjs/operators";
-import {SurveyTemplate} from "@app/models/survey-template";
-import {TrainingProgram} from "@app/models/training-program";
-import {TrainingProgramService} from "@app/services/training-program.service";
-import {TrainingProgramInterceptor} from "@app/model-interceptors/training-program-interceptor";
-import {SurveyTemplateInterceptor} from "@app/model-interceptors/survey-template-interceptor";
-import {Generator} from "@app/decorators/generator";
-import {ExceptionHandlerService} from "@app/services/exception-handler.service";
-import {BlobModel} from "@app/models/blob-model";
-import {DomSanitizer} from "@angular/platform-browser";
-import {SURVEY_TOKEN} from "@app/http-context/survey-token";
-import {TokenService} from "@app/services/token.service";
-import {InterceptParam, SendInterceptor} from "@app/decorators/model-interceptor";
+import { HttpClient, HttpContext, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Survey } from "@app/models/survey";
+import { FactoryService } from "@app/services/factory.service";
+import { UrlService } from "@app/services/url.service";
+import { IModelInterceptor } from "@app/interfaces/i-model-interceptor";
+import { SurveyInterceptor } from "@app/model-interceptors/survey-interceptor";
+import { Observable } from "rxjs";
+import { IDefaultResponse } from "@app/interfaces/idefault-response";
+import { ISurveyInfo } from "@app/interfaces/isurvey-info";
+import { map } from "rxjs/operators";
+import { SurveyTemplate } from "@app/models/survey-template";
+import { TrainingProgram } from "@app/models/training-program";
+import { TrainingProgramService } from "@app/services/training-program.service";
+import { SurveyTemplateInterceptor } from "@app/model-interceptors/survey-template-interceptor";
+import { ExceptionHandlerService } from "@app/services/exception-handler.service";
+import { BlobModel } from "@app/models/blob-model";
+import { DomSanitizer } from "@angular/platform-browser";
+import { SURVEY_TOKEN } from "@app/http-context/survey-token";
+import { TokenService } from "@app/services/token.service";
+import { CrudGenericService } from "@app/generics/crud-generic-service";
+import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
+import { Pagination } from "@app/models/pagination";
+import { HasInterception, InterceptParam } from "@decorators/intercept-model";
 
+@CastResponseContainer({
+  $default: {
+    model: () => Survey
+  },
+  $pagination: {
+    model: () => Pagination,
+    shape: { 'rs.*': () => Survey }
+  }
+})
 @Injectable({
   providedIn: 'root'
 })
-export class SurveyService extends BackendGenericService<Survey> {
+export class SurveyService extends CrudGenericService<Survey> {
   list: Survey[] = [];
   interceptor: IModelInterceptor<Survey> = new SurveyInterceptor();
-  trainingProgramInterceptor = new TrainingProgramInterceptor();
+  // trainingProgramInterceptor = new TrainingProgramInterceptor();
   surveyTemplateInterceptor = new SurveyTemplateInterceptor();
 
   constructor(public http: HttpClient,
@@ -64,7 +73,7 @@ export class SurveyService extends BackendGenericService<Survey> {
 
   loadSurveyInfoByToken(token: string, authToken?: string): Observable<ISurveyInfo> {
     const params = new HttpParams({
-      fromObject: {token}
+      fromObject: { token }
     })
     this.exceptionHandlerService.excludeHandlingForMethodURL('GET', this._getServiceURL() + '/fetch/training-program?' + params)
     return this.http.get<IDefaultResponse<ISurveyInfo>>(this._getServiceURL() + '/fetch/training-program', {
@@ -73,17 +82,17 @@ export class SurveyService extends BackendGenericService<Survey> {
     })
       .pipe(map(response => response.rs))
       .pipe(map(info => {
-        info.surveyTemplate = this.surveyTemplateInterceptor.receive(new SurveyTemplate().clone({...info.surveyTemplate}))
-        info.trainingProgram = new TrainingProgram().clone({...info.trainingProgram})
+        info.surveyTemplate = this.surveyTemplateInterceptor.receive(new SurveyTemplate().clone({ ...info.surveyTemplate }))
+        info.trainingProgram = new TrainingProgram().clone({ ...info.trainingProgram })
         return info;
       }))
   }
 
-  @Generator(undefined, true)
+  @CastResponse(undefined)
   private _loadSurveyByTraineeIdAndProgramId(traineeId: number, trainingProgramId: number, authToken?: string): Observable<Survey[]> {
     return this.http.get<Survey[]>(this._getServiceURL() + '/criteria', {
       params: new HttpParams({
-        fromObject: {traineeId, trainingProgramId}
+        fromObject: { traineeId, trainingProgramId }
       }),
       context: (new HttpContext().set(SURVEY_TOKEN, authToken ? authToken : this.tokenService.getToken()))
     })
@@ -100,16 +109,16 @@ export class SurveyService extends BackendGenericService<Survey> {
     }).pipe(map(blob => new BlobModel(blob, this.domSanitizer)));
   }
 
-  @SendInterceptor()
-  @Generator(undefined, false, {property: 'rs'})
+  @HasInterception
+  @CastResponse(undefined)
   create(@InterceptParam() model: Survey, authToken?: string): Observable<Survey> {
     return this.http.post<Survey>(this._getServiceURL() + '/full', model, {
       context: (new HttpContext().set(SURVEY_TOKEN, authToken ? authToken : this.tokenService.getToken()))
     });
   }
 
-  @SendInterceptor()
-  @Generator(undefined, false, {property: 'rs'})
+  @HasInterception
+  @CastResponse(undefined)
   update(@InterceptParam() model: Survey, authToken?: string): Observable<Survey> {
     return this.http.put<Survey>(this._getServiceURL() + '/full', model, {
       context: (new HttpContext().set(SURVEY_TOKEN, authToken ? authToken : this.tokenService.getToken()))

@@ -1,20 +1,28 @@
-import {Injectable} from '@angular/core';
-import {SanadiAttachment} from '../models/sanadi-attachment';
-import {HttpClient} from '@angular/common/http';
-import {FactoryService} from './factory.service';
-import {BackendGenericService} from '../generics/backend-generic-service';
-import {UrlService} from './url.service';
-import {SanadiAttachmentInterceptor} from '../model-interceptors/sanadi-attachment-interceptor';
-import {isEmptyObject} from '../helpers/utils';
-import {Observable, of, Subject} from 'rxjs';
-import {Generator} from '../decorators/generator';
-import {map} from 'rxjs/operators';
-import {InterceptParam, SendInterceptor} from '../decorators/model-interceptor';
+import { Injectable } from '@angular/core';
+import { SanadiAttachment } from '../models/sanadi-attachment';
+import { HttpClient } from '@angular/common/http';
+import { FactoryService } from './factory.service';
+import { UrlService } from './url.service';
+import { Observable, of, Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { CrudGenericService } from "@app/generics/crud-generic-service";
+import { Pagination } from "@app/models/pagination";
+import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
+import { HasInterception, InterceptParam } from "@decorators/intercept-model";
 
+@CastResponseContainer({
+  $default: {
+    model: () => SanadiAttachment
+  },
+  $pagination: {
+    model: () => Pagination,
+    shape: { 'rs.*': () => SanadiAttachment }
+  }
+})
 @Injectable({
   providedIn: 'root'
 })
-export class AttachmentService extends BackendGenericService<SanadiAttachment> {
+export class AttachmentService extends CrudGenericService<SanadiAttachment> {
   list!: SanadiAttachment[];
   _loadDone$!: Subject<SanadiAttachment[]>;
 
@@ -24,12 +32,12 @@ export class AttachmentService extends BackendGenericService<SanadiAttachment> {
     FactoryService.registerService('AttachmentService', this);
   }
 
-  @Generator(undefined, true, {property: 'rs'})
+  @CastResponse(undefined)
   loadByRequestId(requestId: number): Observable<SanadiAttachment[]> {
     return this.http.get<SanadiAttachment[]>(this._getServiceURL() + '/request-id/' + requestId);
   }
 
-  @SendInterceptor()
+  @HasInterception
   saveAttachment(@InterceptParam() attachmentData: SanadiAttachment, attachment: File): Observable<string> {
     if (!attachmentData || (!attachmentData.vsId && !attachment)) {
       return of('MISSING_DATA');
@@ -47,7 +55,7 @@ export class AttachmentService extends BackendGenericService<SanadiAttachment> {
   }
 
   loadByVsIdAsBlob(vsId: string): Observable<Blob> {
-    return this.http.get(this._getServiceURL() + '/content/' + vsId, {responseType: 'blob'});
+    return this.http.get(this._getServiceURL() + '/content/' + vsId, { responseType: 'blob' });
   }
 
   deleteByVsId(vsId: string): Observable<boolean> {
@@ -58,15 +66,7 @@ export class AttachmentService extends BackendGenericService<SanadiAttachment> {
     return SanadiAttachment;
   }
 
-  _getSendInterceptor(): any {
-    return SanadiAttachmentInterceptor.send;
-  }
-
   _getServiceURL(): string {
     return this.urlService.URLS.SANADI_ATTACHMENT;
-  }
-
-  _getReceiveInterceptor(): any {
-    return SanadiAttachmentInterceptor.receive;
   }
 }

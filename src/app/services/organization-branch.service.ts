@@ -1,26 +1,25 @@
-import {Injectable} from '@angular/core';
-import {BackendGenericService} from '../generics/backend-generic-service';
-import {OrgBranch} from '../models/org-branch';
-import {FactoryService} from './factory.service';
-import {HttpClient} from '@angular/common/http';
-import {UrlService} from './url.service';
-import {OrganizationBranchInterceptor} from '../model-interceptors/organization-branch-interceptor';
-import {Observable, of} from 'rxjs';
-import {Generator} from '../decorators/generator';
-import {DialogRef} from '../shared/models/dialog-ref';
-import {IDialogData} from '../interfaces/i-dialog-data';
-import {OperationTypes} from '../enums/operation-types.enum';
-import {switchMap} from 'rxjs/operators';
-import {DialogService} from './dialog.service';
-import {OrganizationBranchPopupComponent} from '../administration/popups/organization-branch-popup/organization-branch-popup.component';
-import {OrgUnit} from '../models/org-unit';
-import {AuditLogService} from './audit-log.service';
-import {BackendWithDialogOperationsGenericService} from '@app/generics/backend-with-dialog-operations-generic-service';
-import {ComponentType} from '@angular/cdk/portal';
-import {PaginationContract} from '@contracts/pagination-contract';
-import {Pagination} from '@app/models/pagination';
-import {CastResponse, CastResponseContainer} from '@decorators/cast-response';
-import {OrgUser} from '@app/models/org-user';
+import { Injectable } from '@angular/core';
+import { OrgBranch } from '../models/org-branch';
+import { FactoryService } from './factory.service';
+import { HttpClient } from '@angular/common/http';
+import { UrlService } from './url.service';
+import { OrganizationBranchInterceptor } from '../model-interceptors/organization-branch-interceptor';
+import { Observable, of } from 'rxjs';
+import { DialogRef } from '../shared/models/dialog-ref';
+import { IDialogData } from '@contracts/i-dialog-data';
+import { OperationTypes } from '../enums/operation-types.enum';
+import { switchMap } from 'rxjs/operators';
+import { DialogService } from './dialog.service';
+import {
+  OrganizationBranchPopupComponent
+} from '../administration/popups/organization-branch-popup/organization-branch-popup.component';
+import { OrgUnit } from '../models/org-unit';
+import { AuditLogService } from './audit-log.service';
+import { ComponentType } from '@angular/cdk/portal';
+import { PaginationContract } from '@contracts/pagination-contract';
+import { Pagination } from '@app/models/pagination';
+import { CastResponse, CastResponseContainer } from '@decorators/cast-response';
+import { CrudWithDialogGenericService } from "@app/generics/crud-with-dialog-generic-service";
 
 @CastResponseContainer({
   $default: {
@@ -28,13 +27,13 @@ import {OrgUser} from '@app/models/org-user';
   },
   $pagination: {
     model: () => Pagination,
-    shape: {'rs.*': () => OrgBranch}
+    shape: { 'rs.*': () => OrgBranch }
   }
 })
 @Injectable({
   providedIn: 'root'
 })
-export class OrganizationBranchService extends BackendWithDialogOperationsGenericService<OrgBranch> {
+export class OrganizationBranchService extends CrudWithDialogGenericService<OrgBranch> {
   list!: OrgBranch[];
   interceptor: OrganizationBranchInterceptor = new OrganizationBranchInterceptor();
 
@@ -54,19 +53,11 @@ export class OrganizationBranchService extends BackendWithDialogOperationsGeneri
     return OrganizationBranchPopupComponent;
   }
 
-  _getSendInterceptor(): any {
-    return this.interceptor.send;
-  }
-
-  _getReceiveInterceptor(): any {
-    return this.interceptor.receive;
-  }
-
   _getServiceURL(): string {
     return this.urlService.URLS.ORGANIZATION_BRANCH;
   }
 
-  @Generator(undefined, true)
+  @CastResponse(undefined)
   private _loadByCriteria(criteria: { orgId?: number, status?: number }): Observable<OrgBranch[]> {
     if (!criteria) {
       return of([]);
@@ -85,7 +76,7 @@ export class OrganizationBranchService extends BackendWithDialogOperationsGeneri
   private _loadByCriteriaPaginate(options: Partial<PaginationContract>, criteria: { orgId?: number, status?: number }): Observable<Pagination<OrgBranch[]>> {
     const queryString = this._generateQueryString(criteria);
     return this.http.get<Pagination<OrgBranch[]>>(this._getServiceURL() + '/criteria' + queryString, {
-      params: {...options}
+      params: { ...options }
     });
   }
 
@@ -120,6 +111,7 @@ export class OrganizationBranchService extends BackendWithDialogOperationsGeneri
     );
   }
 
+  @CastResponse('')
   deactivate(id: number): Observable<boolean> {
     return this.http.put<boolean>(this._getServiceURL() + '/' + id + '/de-activate', {});
   }

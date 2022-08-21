@@ -1,32 +1,38 @@
-import {ComponentType} from '@angular/cdk/portal';
-import {HttpClient, HttpParams} from '@angular/common/http';
-import {Injectable} from '@angular/core';
+import { ComponentType } from '@angular/cdk/portal';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import {
   FollowupConfigurationPopupComponent
 } from '@app/administration/popups/followup-configuration-popup/followup-configuration-popup.component';
-import {BackendWithDialogOperationsGenericService} from '@app/generics/backend-with-dialog-operations-generic-service';
-import {FollowupConfigurationInterceptor} from '@app/model-interceptors/followup-configuration-interceptor';
-import {FollowupConfiguration} from '@app/models/followup-configuration';
-import {DialogService} from './dialog.service';
-import {FactoryService} from './factory.service';
-import {UrlService} from './url.service';
-import {Observable, of} from 'rxjs';
-import {IFollowupCriteria} from '@app/interfaces/ifollowup-criteria';
-import {Generator} from '@app/decorators/generator';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {IDialogData} from '@app/interfaces/i-dialog-data';
-import {CommonStatusEnum} from '@app/enums/common-status.enum';
-import {switchMap} from 'rxjs/operators';
-import {AidLookup} from '@app/models/aid-lookup';
-import {AidLookupPopupComponent} from '@app/administration/popups/aid-lookup-popup/aid-lookup-popup.component';
+import { FollowupConfiguration } from '@app/models/followup-configuration';
+import { DialogService } from './dialog.service';
+import { FactoryService } from './factory.service';
+import { UrlService } from './url.service';
+import { Observable, of } from 'rxjs';
+import { IFollowupCriteria } from '@app/interfaces/ifollowup-criteria';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { IDialogData } from '@app/interfaces/i-dialog-data';
+import { CommonStatusEnum } from '@app/enums/common-status.enum';
+import { switchMap } from 'rxjs/operators';
+import { CrudWithDialogGenericService } from "@app/generics/crud-with-dialog-generic-service";
+import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
+import { Pagination } from "@app/models/pagination";
+
+@CastResponseContainer({
+  $default: {
+    model: () => FollowupConfiguration
+  },
+  $pagination: {
+    model: () => Pagination,
+    shape: { 'rs.*': () => FollowupConfiguration }
+  }
+})
 
 @Injectable({
   providedIn: 'root',
 })
-export class FollowupConfigurationService extends BackendWithDialogOperationsGenericService<FollowupConfiguration> {
-  interceptor: FollowupConfigurationInterceptor = new FollowupConfigurationInterceptor();
-
+export class FollowupConfigurationService extends CrudWithDialogGenericService<FollowupConfiguration> {
   list: FollowupConfiguration[] = [];
 
   constructor(public dialog: DialogService, public http: HttpClient, private urlService: UrlService,
@@ -40,14 +46,6 @@ export class FollowupConfigurationService extends BackendWithDialogOperationsGen
     return FollowupConfigurationPopupComponent;
   }
 
-  _getSendInterceptor() {
-    return this.interceptor.send;
-  }
-
-  _getReceiveInterceptor() {
-    return this.interceptor.receive;
-  }
-
   _getModel() {
     return FollowupConfiguration;
   }
@@ -57,13 +55,13 @@ export class FollowupConfigurationService extends BackendWithDialogOperationsGen
   }
 
   getByCaseType(caseTypeId: number): Observable<FollowupConfiguration[]> {
-    return this.getByCriteria({'case-type': caseTypeId});
+    return this.getByCriteria({ 'case-type': caseTypeId });
   }
 
-  @Generator(undefined, true, {interceptReceive: (new FollowupConfigurationInterceptor().receive), property: 'rs'})
-  getByCriteria(criteria: Partial<IFollowupCriteria>) {
+  @CastResponse(undefined)
+  getByCriteria(criteria: Partial<IFollowupCriteria>): Observable<FollowupConfiguration[]> {
     return this.http.get<FollowupConfiguration[]>(this._getServiceURL() + '/criteria', {
-      params: new HttpParams({fromObject: criteria})
+      params: new HttpParams({ fromObject: criteria })
     });
   }
 
@@ -96,12 +94,14 @@ export class FollowupConfigurationService extends BackendWithDialogOperationsGen
     return newStatus === CommonStatusEnum.ACTIVATED ? this._activate(id) : this._deactivate(id);
   }
 
-  private _activate(followUpConfigurationId: number): Observable<FollowupConfiguration> {
-    return this.http.put<FollowupConfiguration>(this._getServiceURL() + '/' + followUpConfigurationId + '/activate', null);
+  @CastResponse('')
+  private _activate(followUpConfigurationId: number): Observable<boolean> {
+    return this.http.put<boolean>(this._getServiceURL() + '/' + followUpConfigurationId + '/activate', null);
   }
 
-  private _deactivate(followUpConfigurationId: number): Observable<FollowupConfiguration> {
-    return this.http.put<FollowupConfiguration>(this._getServiceURL() + '/' + followUpConfigurationId + '/de-activate', null);
+  @CastResponse('')
+  private _deactivate(followUpConfigurationId: number): Observable<boolean> {
+    return this.http.put<boolean>(this._getServiceURL() + '/' + followUpConfigurationId + '/de-activate', null);
   }
 
 }

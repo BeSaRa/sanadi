@@ -1,18 +1,21 @@
-import {BaseModel} from './base-model';
-import {Observable} from 'rxjs';
-import {FactoryService} from '../services/factory.service';
-import {AidLookupService} from '../services/aid-lookup.service';
-import {INames} from '../interfaces/i-names';
-import {LangService} from '../services/lang.service';
-import {Lookup} from './lookup';
-import {searchFunctionType} from '../types/types';
-import {DialogRef} from '../shared/models/dialog-ref';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {Validators} from '@angular/forms';
-import {AidTypes} from '@app/enums/aid-types.enum';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {AdminResult} from '@app/models/admin-result';
+import { BaseModel } from './base-model';
+import { Observable } from 'rxjs';
+import { FactoryService } from '@services/factory.service';
+import { AidLookupService } from '@services/aid-lookup.service';
+import { INames } from '@contracts/i-names';
+import { LangService } from '@services/lang.service';
+import { Lookup } from './lookup';
+import { searchFunctionType } from '../types/types';
+import { DialogRef } from '../shared/models/dialog-ref';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { Validators } from '@angular/forms';
+import { AdminResult } from '@app/models/admin-result';
+import { AidLookupInterceptor } from "@app/model-interceptors/aid-lookup-interceptor";
+import { InterceptModel } from "@decorators/intercept-model";
 
+const { send, receive } = new AidLookupInterceptor();
+
+@InterceptModel({ send, receive })
 export class AidLookup extends BaseModel<AidLookup, AidLookupService> {
   aidCode!: string;
   category: number | undefined;

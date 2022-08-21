@@ -1,9 +1,17 @@
-import {BaseModel} from "@app/models/base-model";
-import {SurveyService} from "@app/services/survey.service";
-import {FactoryService} from "@app/services/factory.service";
-import {SurveyAnswer} from "@app/models/survey-answer";
-import {Observable} from "rxjs";
+import { BaseModel } from "@app/models/base-model";
+import { SurveyService } from "@app/services/survey.service";
+import { FactoryService } from "@app/services/factory.service";
+import { SurveyAnswer } from "@app/models/survey-answer";
+import { Observable } from "rxjs";
+import { InterceptModel } from "@decorators/intercept-model";
+import { SurveyInterceptor } from "@app/model-interceptors/survey-interceptor";
 
+const { send, receive } = new SurveyInterceptor()
+
+@InterceptModel({
+  receive,
+  send
+})
 export class Survey extends BaseModel<Survey, SurveyService> {
   service: SurveyService;
   trainingProgramId!: number;

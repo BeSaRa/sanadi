@@ -1,14 +1,14 @@
-import {AdminResult} from '../models/admin-result';
-import {DateUtils} from '../helpers/date-utils';
+import { AdminResult } from '../models/admin-result';
+import { DateUtils } from '@helpers/date-utils';
 
 export class SanadiAttachmentInterceptor {
-  static receive(model: any): any {
+  receive(model: any): any {
     model.lastModifiedString = DateUtils.getDateStringFromDate(model.lastModified);
     model.attachmentTypeInfo = AdminResult.createInstance(model.attachmentTypeInfo);
     return model;
   }
 
-  static send(model: any): any {
+  send(model: any): any {
     delete model.attachmentService;
     delete model.lastModifiedString;
     delete model.attachmentTypeInfo;

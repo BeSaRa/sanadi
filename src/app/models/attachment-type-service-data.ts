@@ -5,7 +5,13 @@ import { AttachmentTypeServiceDataService } from '@services/attachment-type-serv
 import { AdminResult } from "@app/models/admin-result";
 import { AttachmentType } from "@app/models/attachment-type";
 import { FileNetDocument } from "@app/models/file-net-document";
+import { AttachmentTypeServiceDataInterceptor } from "@app/model-interceptors/attachment-type-service-data-interceptor";
+import { InterceptModel } from "@decorators/intercept-model";
 
+
+const { send, receive } = new AttachmentTypeServiceDataInterceptor();
+
+@InterceptModel({ send, receive })
 export class AttachmentTypeServiceData extends BaseModel<AttachmentTypeServiceData, AttachmentTypeServiceDataService> {
   service!: AttachmentTypeServiceDataService;
   langService: LangService;

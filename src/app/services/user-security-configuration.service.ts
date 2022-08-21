@@ -1,18 +1,28 @@
-import {HttpClient, HttpParams} from '@angular/common/http';
-import {Injectable} from '@angular/core';
-import {BackendGenericService} from "@app/generics/backend-generic-service";
-import {UserSecurityConfiguration} from "@app/models/user-security-configuration";
-import {UrlService} from "@app/services/url.service";
-import {FactoryService} from "@app/services/factory.service";
-import {IModelInterceptor} from "@app/interfaces/i-model-interceptor";
-import {UserSecurityConfigurationInterceptor} from "@app/model-interceptors/user-security-configuration-interceptor";
-import {Generator} from "@app/decorators/generator";
-import {Observable} from "rxjs";
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { UserSecurityConfiguration } from "@app/models/user-security-configuration";
+import { UrlService } from "@app/services/url.service";
+import { FactoryService } from "@app/services/factory.service";
+import { IModelInterceptor } from "@app/interfaces/i-model-interceptor";
+import { UserSecurityConfigurationInterceptor } from "@app/model-interceptors/user-security-configuration-interceptor";
+import { Observable } from "rxjs";
+import { CrudGenericService } from "@app/generics/crud-generic-service";
+import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
+import { Pagination } from "@app/models/pagination";
 
+@CastResponseContainer({
+  $default: {
+    model: () => UserSecurityConfiguration
+  },
+  $pagination: {
+    model: () => Pagination,
+    shape: { 'rs.*': () => UserSecurityConfiguration }
+  }
+})
 @Injectable({
   providedIn: 'root'
 })
-export class UserSecurityConfigurationService extends BackendGenericService<UserSecurityConfiguration> {
+export class UserSecurityConfigurationService extends CrudGenericService<UserSecurityConfiguration> {
   list: UserSecurityConfiguration[] = [];
   interceptor: IModelInterceptor<UserSecurityConfiguration> = new UserSecurityConfigurationInterceptor();
 
@@ -37,7 +47,7 @@ export class UserSecurityConfigurationService extends BackendGenericService<User
     return this.interceptor.receive;
   }
 
-  @Generator(undefined, true)
+  @CastResponse(undefined)
   private _loadSecurityByTeamId(teamId: number, generalUserId: number): Observable<UserSecurityConfiguration[]> {
     return this.http.get<UserSecurityConfiguration[]>(this._getServiceURL() + '/criteria', {
       params: new HttpParams({
@@ -53,22 +63,22 @@ export class UserSecurityConfigurationService extends BackendGenericService<User
     return this._loadSecurityByTeamId(teamId, generalUserId);
   }
 
-  @Generator(undefined, true)
+  @CastResponse(undefined)
   createBulk(securityConfiguration: Partial<UserSecurityConfiguration>[]): Observable<UserSecurityConfiguration[]> {
     return this.http.post<UserSecurityConfiguration[]>(this._getServiceURL() + '/bulk/full', securityConfiguration)
   }
 
-  @Generator(undefined, true)
+  @CastResponse(undefined)
   createBulkExternal(securityConfigurations: Partial<UserSecurityConfiguration>[]): Observable<UserSecurityConfiguration[]> {
     return this.http.post<UserSecurityConfiguration[]>(this.urlService.URLS.EXTERNAL_USER_SECURITY + '/bulk/full', securityConfigurations)
   }
 
-  @Generator(undefined, true)
+  @CastResponse(undefined)
   updateBulkExternal(securityConfigurations: Partial<UserSecurityConfiguration>[]): Observable<UserSecurityConfiguration[]> {
     return this.http.put<UserSecurityConfiguration[]>(this.urlService.URLS.EXTERNAL_USER_SECURITY + '/bulk/update/full', securityConfigurations)
   }
 
-  @Generator(undefined, true)
+  @CastResponse(undefined)
   deleteBulkExternal(securityConfigurations: Partial<UserSecurityConfiguration>[]): Observable<UserSecurityConfiguration[]> {
     return this.http.delete<UserSecurityConfiguration[]>(this.urlService.URLS.EXTERNAL_USER_SECURITY + '/bulk', {
       body: securityConfigurations.map(i => i.id)

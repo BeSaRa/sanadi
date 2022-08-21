@@ -1,16 +1,23 @@
-import {BaseModel} from '@app/models/base-model';
-import {TrainerService} from '@app/services/trainer.service';
-import {FactoryService} from '@app/services/factory.service';
-import {INames} from '@app/interfaces/i-names';
-import {LangService} from '@app/services/lang.service';
-import {searchFunctionType} from '@app/types/types';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {Validators} from '@angular/forms';
-import {Observable} from 'rxjs';
-import {BlobModel} from '@app/models/blob-model';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {Lookup} from '@app/models/lookup';
+import { BaseModel } from '@app/models/base-model';
+import { TrainerService } from '@app/services/trainer.service';
+import { FactoryService } from '@app/services/factory.service';
+import { INames } from '@app/interfaces/i-names';
+import { LangService } from '@app/services/lang.service';
+import { searchFunctionType } from '@app/types/types';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { Validators } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { BlobModel } from '@app/models/blob-model';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { Lookup } from '@app/models/lookup';
+import { InterceptModel } from "@decorators/intercept-model";
+import { TrainerInterceptor } from "@app/model-interceptors/trainer-interceptor";
 
+const { receive, send } = new TrainerInterceptor()
+
+@InterceptModel({
+  receive, send
+})
 export class Trainer extends BaseModel<Trainer, TrainerService> {
   specialization!: string;
   jobTitle!: string;

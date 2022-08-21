@@ -1,10 +1,17 @@
-import {TrainingProgramBriefcaseService} from '@app/services/training-program-briefcase.service';
-import {SearchableCloneable} from '@app/models/searchable-cloneable';
-import {FactoryService} from '@app/services/factory.service';
-import {LangService} from '@app/services/lang.service';
-import {Localization} from '@app/models/localization';
-import {FileIconsEnum, FileMimeTypesEnum} from '@app/enums/file-extension-mime-types-icons.enum';
+import { TrainingProgramBriefcaseService } from '@app/services/training-program-briefcase.service';
+import { SearchableCloneable } from '@app/models/searchable-cloneable';
+import { FactoryService } from '@app/services/factory.service';
+import { LangService } from '@app/services/lang.service';
+import { Localization } from '@app/models/localization';
+import { FileIconsEnum, FileMimeTypesEnum } from '@app/enums/file-extension-mime-types-icons.enum';
+import { InterceptModel } from "@decorators/intercept-model";
+import { TrainingProgramBriefcaseInterceptor } from "@app/model-interceptors/training-program-briefcase-interceptor";
 
+const { receive, send } = new TrainingProgramBriefcaseInterceptor()
+
+@InterceptModel({
+  receive, send
+})
 export class TrainingProgramBriefcase extends SearchableCloneable<TrainingProgramBriefcase> {
   service!: TrainingProgramBriefcaseService;
   langService!: LangService;

@@ -1,29 +1,37 @@
-import {Injectable} from '@angular/core';
-import {AidLookup} from '../models/aid-lookup';
-import {HttpClient, HttpParams} from '@angular/common/http';
-import {UrlService} from './url.service';
-import {FactoryService} from './factory.service';
-import {Observable, of} from 'rxjs';
-import {DialogRef} from '../shared/models/dialog-ref';
-import {switchMap} from 'rxjs/operators';
-import {IDialogData} from '../interfaces/i-dialog-data';
-import {OperationTypes} from '../enums/operation-types.enum';
-import {DialogService} from './dialog.service';
-import {AidLookupPopupComponent} from '../administration/popups/aid-lookup-popup/aid-lookup-popup.component';
-import {AidLookupInterceptor} from '../model-interceptors/aid-lookup-interceptor';
-import {Generator} from '../decorators/generator';
-import {IAidLookupCriteria} from '../interfaces/i-aid-lookup-criteria';
-import {AuditLogService} from './audit-log.service';
-import {BackendWithDialogOperationsGenericService} from '@app/generics/backend-with-dialog-operations-generic-service';
-import {ComponentType} from '@angular/cdk/portal';
-import {AidLookupStatusEnum} from '@app/enums/status.enum';
+import { Injectable } from '@angular/core';
+import { AidLookup } from '../models/aid-lookup';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { UrlService } from './url.service';
+import { FactoryService } from './factory.service';
+import { Observable, of } from 'rxjs';
+import { DialogRef } from '../shared/models/dialog-ref';
+import { switchMap } from 'rxjs/operators';
+import { IDialogData } from '@contracts/i-dialog-data';
+import { OperationTypes } from '../enums/operation-types.enum';
+import { DialogService } from './dialog.service';
+import { AidLookupPopupComponent } from '../administration/popups/aid-lookup-popup/aid-lookup-popup.component';
+import { IAidLookupCriteria } from '@contracts/i-aid-lookup-criteria';
+import { AuditLogService } from './audit-log.service';
+import { ComponentType } from '@angular/cdk/portal';
+import { AidLookupStatusEnum } from '@app/enums/status.enum';
+import { CrudWithDialogGenericService } from "@app/generics/crud-with-dialog-generic-service";
+import { Pagination } from "@app/models/pagination";
+import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
 
+@CastResponseContainer({
+  $default: {
+    model: () => AidLookup
+  },
+  $pagination: {
+    model: () => Pagination,
+    shape: { 'rs.*': () => AidLookup }
+  }
+})
 @Injectable({
   providedIn: 'root'
 })
-export class AidLookupService extends BackendWithDialogOperationsGenericService<AidLookup> {
+export class AidLookupService extends CrudWithDialogGenericService<AidLookup> {
   list!: AidLookup[];
-  interceptor: AidLookupInterceptor = new AidLookupInterceptor();
 
   constructor(public http: HttpClient,
               private urlService: UrlService,
@@ -41,19 +49,11 @@ export class AidLookupService extends BackendWithDialogOperationsGenericService<
     return AidLookup;
   }
 
-  _getReceiveInterceptor(): any {
-    return this.interceptor.receive;
-  }
-
-  _getSendInterceptor(): any {
-    return this.interceptor.send;
-  }
-
   _getServiceURL(): string {
     return this.urlService.URLS.AID_LOOKUPS;
   }
 
-  @Generator(AidLookup, true)
+  @CastResponse(undefined)
   loadByCriteria(criteria: IAidLookupCriteria): Observable<AidLookup[]> {
     const queryParams = AidLookupService.buildCriteriaQueryParams(criteria);
 

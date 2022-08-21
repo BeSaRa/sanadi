@@ -1,52 +1,63 @@
-import {Injectable} from '@angular/core';
-import {BackendWithDialogOperationsGenericService} from '@app/generics/backend-with-dialog-operations-generic-service';
-import {TrainingProgram} from '@app/models/training-program';
-import {ComponentType} from '@angular/cdk/portal';
+import { Injectable } from '@angular/core';
+import { TrainingProgram } from '@app/models/training-program';
+import { ComponentType } from '@angular/cdk/portal';
 import {
   TrainingProgramPopupComponent
 } from '@app/training-services/popups/training-program-popup/training-program-popup.component';
-import {TrainingProgramInterceptor} from '@app/model-interceptors/training-program-interceptor';
-import {HttpClient, HttpParams} from '@angular/common/http';
-import {UrlService} from '@app/services/url.service';
-import {DialogService} from '@app/services/dialog.service';
-import {FactoryService} from '@app/services/factory.service';
-import {Generator} from '@app/decorators/generator';
-import {Observable, of} from 'rxjs';
-import {CommonUtils} from '@app/helpers/common-utils';
-import {DateUtils} from '@app/helpers/date-utils';
-import {ITrainingProgramCriteria} from '@app/interfaces/i-training-program-criteria';
-import {DialogRef} from '@app/shared/models/dialog-ref';
+import { TrainingProgramInterceptor } from '@app/model-interceptors/training-program-interceptor';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { UrlService } from '@app/services/url.service';
+import { DialogService } from '@app/services/dialog.service';
+import { FactoryService } from '@app/services/factory.service';
+import { Generator } from '@app/decorators/generator';
+import { Observable, of } from 'rxjs';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { DateUtils } from '@app/helpers/date-utils';
+import { ITrainingProgramCriteria } from '@app/interfaces/i-training-program-criteria';
+import { DialogRef } from '@app/shared/models/dialog-ref';
 import {
   FilterTrainingProgramsComponent
 } from '@app/training-services/popups/filter-training-programs/filter-training-programs.component';
-import {formatDate} from '@angular/common';
+import { formatDate } from '@angular/common';
 import {
   TrainingProgramAttendancePopupComponent
 } from '@app/training-services/popups/training-program-attendance-popup/training-program-attendance-popup.component';
-import {exhaustMap, map, switchMap} from 'rxjs/operators';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {IDialogData} from '@app/interfaces/i-dialog-data';
+import { exhaustMap, map, switchMap } from 'rxjs/operators';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { IDialogData } from '@app/interfaces/i-dialog-data';
 import {
   TrainingProgramCandidatesPopupComponent
 } from '@app/training-services/popups/training-program-candidates-popup/training-program-candidates-popup.component';
-import {TraineeService} from '@app/services/trainee.service';
+import { TraineeService } from '@app/services/trainee.service';
 import {
   SelectCertificateTemplatePopupComponent
 } from '@app/training-services/popups/select-certificate-template-popup/select-certificate-template-popup.component';
-import {TrainingProgramBriefcaseService} from '@app/services/training-program-briefcase.service';
-import {CandidatesListTypeEnum} from '@app/enums/candidates-list-type.enum';
-import {CertificateService} from '@app/services/certificate.service';
+import { TrainingProgramBriefcaseService } from '@app/services/training-program-briefcase.service';
+import { CandidatesListTypeEnum } from '@app/enums/candidates-list-type.enum';
+import { CertificateService } from '@app/services/certificate.service';
 import {
   SelectProgramSurveyPopupComponent
 } from "@app/training-services/popups/select-program-survey-popup/select-program-survey-popup.component";
-import {SurveyTemplateService} from "@app/services/survey-template.service";
-import {ViewSurveyPopupComponent} from "@app/shared/popups/view-survey-popup/view-survey-popup.component";
-import {InterceptParam, SendInterceptor} from '@app/decorators/model-interceptor';
+import { SurveyTemplateService } from "@app/services/survey-template.service";
+import { ViewSurveyPopupComponent } from "@app/shared/popups/view-survey-popup/view-survey-popup.component";
+import { InterceptParam, SendInterceptor } from '@app/decorators/model-interceptor';
+import { CastResponseContainer } from "@decorators/cast-response";
+import { Pagination } from "@app/models/pagination";
+import { CrudWithDialogGenericService } from "@app/generics/crud-with-dialog-generic-service";
 
+@CastResponseContainer({
+  $default: {
+    model: () => TrainingProgram
+  },
+  $pagination: {
+    model: () => Pagination,
+    shape: { 'rs.*': () => TrainingProgram }
+  }
+})
 @Injectable({
   providedIn: 'root'
 })
-export class TrainingProgramService extends BackendWithDialogOperationsGenericService<TrainingProgram> {
+export class TrainingProgramService extends CrudWithDialogGenericService<TrainingProgram> {
   list: TrainingProgram[] = [];
   interceptor: TrainingProgramInterceptor = new TrainingProgramInterceptor();
 
@@ -55,17 +66,17 @@ export class TrainingProgramService extends BackendWithDialogOperationsGenericSe
               public dialog: DialogService,
               private certificateService: CertificateService,
               private surveyTemplateService: SurveyTemplateService,
-              private traineeService: TraineeService,
-              private trainingProgramBriefcaseService: TrainingProgramBriefcaseService) {
+              private _traineeService: TraineeService,
+              private _trainingProgramBriefcaseService: TrainingProgramBriefcaseService) {
     super();
     FactoryService.registerService('TrainingProgramService', this);
   }
 
-  @Generator(undefined, true, {property: 'rs'})
+  @Generator(undefined, true, { property: 'rs' })
   filterTrainingPrograms(options?: any): Observable<TrainingProgram[]> {
     let objOptions;
     if (!CommonUtils.isEmptyObject(options) && CommonUtils.objectHasValue(options)) {
-      objOptions = {...options};
+      objOptions = { ...options };
 
       if (objOptions.hasOwnProperty('startFromDate') && objOptions.startFromDate) {
         objOptions.startFromDate = DateUtils.getDateStringFromDate(objOptions.startFromDate);
@@ -85,56 +96,56 @@ export class TrainingProgramService extends BackendWithDialogOperationsGenericSe
     }
 
     return this.http.get<TrainingProgram[]>(this._getServiceURL() + '/criteria', {
-      params: (new HttpParams({fromObject: objOptions as any}))
+      params: (new HttpParams({ fromObject: objOptions as any }))
     });
   }
 
-  @Generator(undefined, false, {property: 'rs'})
+  @Generator(undefined, false, { property: 'rs' })
   approve(trainingId: number) {
-    return this.http.put(this._getServiceURL() + '/approve/' + trainingId, {trainingProgramId: trainingId});
+    return this.http.put(this._getServiceURL() + '/approve/' + trainingId, { trainingProgramId: trainingId });
   }
 
   @SendInterceptor()
-  @Generator(undefined, false, {property: 'rs'})
+  @Generator(undefined, false, { property: 'rs' })
   editAfterPublish(@InterceptParam() model: TrainingProgram): Observable<TrainingProgram> {
     return this.http.put<TrainingProgram>(this._getServiceURL() + '/edit-after-publish', model);
   }
 
   @SendInterceptor()
-  @Generator(undefined, false, {property: 'rs'})
+  @Generator(undefined, false, { property: 'rs' })
   editAfterPublishAndSenMail(@InterceptParam() model: TrainingProgram): Observable<TrainingProgram> {
-    let objOptions = {'with-notification': true};
+    let objOptions = { 'with-notification': true };
     return this.http.put<TrainingProgram>(this._getServiceURL() + '/edit-after-publish', model, {
-      params: (new HttpParams({fromObject: objOptions as any}))
+      params: (new HttpParams({ fromObject: objOptions as any }))
     });
   }
 
-  @Generator(undefined, false, {property: 'rs'})
+  @Generator(undefined, false, { property: 'rs' })
   publish(trainingId: number) {
-    return this.http.put(this._getServiceURL() + '/publish/' + trainingId, {trainingProgramId: trainingId});
+    return this.http.put(this._getServiceURL() + '/publish/' + trainingId, { trainingProgramId: trainingId });
   }
 
-  @Generator(undefined, false, {property: 'rs'})
+  @Generator(undefined, false, { property: 'rs' })
   cancel(trainingId: number) {
-    return this.http.put(this._getServiceURL() + '/cancel/' + trainingId, {trainingProgramId: trainingId});
+    return this.http.put(this._getServiceURL() + '/cancel/' + trainingId, { trainingProgramId: trainingId });
   }
 
-  @Generator(undefined, false, {property: 'rs'})
-  applyAttendance(trainingId: number, traineeList: { first: number, second: boolean}[]) {
+  @Generator(undefined, false, { property: 'rs' })
+  applyAttendance(trainingId: number, traineeList: { first: number, second: boolean }[]) {
     return this.http.put(this._getServiceURL() + '/apply-attendance-trainee/' + trainingId, traineeList);
   }
 
-  @Generator(undefined, true, {property: 'rs'})
+  @Generator(undefined, true, { property: 'rs' })
   loadAvailablePrograms(): Observable<TrainingProgram[]> {
     return this.http.get<TrainingProgram[]>(this._getServiceURL() + '/open-for-registeration');
   }
 
-  @Generator(undefined, true, {property: 'rs'})
+  @Generator(undefined, true, { property: 'rs' })
   loadFinishedPrograms(): Observable<TrainingProgram[]> {
     return this.http.get<TrainingProgram[]>(this._getServiceURL() + '/finished-programs');
   }
 
-  @Generator(undefined, true, {property: 'rs'})
+  @Generator(undefined, true, { property: 'rs' })
   loadCharityPrograms(): Observable<TrainingProgram[]> {
     return this.http.get<TrainingProgram[]>(this._getServiceURL() + '/charity');
   }
@@ -258,8 +269,8 @@ export class TrainingProgramService extends BackendWithDialogOperationsGenericSe
       .pipe(switchMap((program) => {
         return this.surveyTemplateService
           .getById(program.trainingSurveyTemplateId)
-          .pipe(map(template => ({template, program})))
+          .pipe(map(template => ({ template, program })))
       }))
-      .pipe(map(({template, program}) => this.dialog.show(ViewSurveyPopupComponent, {template, program})))
+      .pipe(map(({ template, program }) => this.dialog.show(ViewSurveyPopupComponent, { template, program })))
   }
 }
