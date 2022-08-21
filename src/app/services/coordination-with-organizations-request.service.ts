@@ -13,6 +13,7 @@ import { DynamicOptionsService } from "./dynamic-options.service";
 import { FactoryService } from "./factory.service";
 import { LangService } from "./lang.service";
 import { UrlService } from "./url.service";
+import { SearchService } from './search.service';
 
 @CastResponseContainer({
   $default: {
@@ -40,7 +41,8 @@ export class CoordinationWithOrganizationsRequestService extends BaseGenericESer
   jsonSearchFile: string = "coordination_with_organizations_request_search.json";
   serviceKey: keyof ILanguageKeys = "menu_coordination_with_organizations_request";
   caseStatusIconMap: Map<number, string> = new Map<number, string>();
-  searchColumns: string[] = ["createdOn"];
+  searchService: SearchService = new SearchService(this);
+  searchColumns: string[] = ["fullName,domain,createdOn,createdOnTo"];
   interceptor: IModelInterceptor<CoordinationWithOrganizationsRequest> =
     new CoordinationWithOrganizationsRequestInterceptor();
 

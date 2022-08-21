@@ -13,17 +13,19 @@
       [hasError]="getTabInvalidStatus('specialExplanation')" 
         [template]="specialExplanationTab" [title]="lang.map.special_explanations">
       </tab>
-      <tab  [name]="tabsData.organizationOfficers.name" [template]="organization_officers"
+      <tab
+        *ngIf="isInitialApproved"
+        [name]="tabsData.organizationOfficers.name" [template]="organization_officers"
         [title]="lang.map.organization_officers" [hasError]="getTabInvalidStatus('organizationOfficers')">
       </tab>
-      <tab *ngIf=" isCorrectModelToDisplay(1)" [name]="tabsData.buildingAbilities.name" [template]="building_abilities"
+      <tab *ngIf="isInitialApproved && isCorrectModelToDisplay(1)" [name]="tabsData.buildingAbilities.name" [template]="building_abilities"
         [title]="lang.map.building_abilities" [hasError]="getTabInvalidStatus('buildingAbilities')">
       </tab>
-      <tab *ngIf=" isCorrectModelToDisplay(2)" [name]="tabsData.effectiveCoordinationCapabilities.name"
+      <tab *ngIf="isInitialApproved && isCorrectModelToDisplay(2)" [name]="tabsData.effectiveCoordinationCapabilities.name"
         [template]="effective_coordination_capabilities" [title]="lang.map.effective_coordination_capabilities"
         [hasError]="getTabInvalidStatus('effectiveCoordinationCapabilities')">
       </tab>
-      <tab *ngIf=" isCorrectModelToDisplay(3)" [name]="tabsData.researchAndStudies.name" [template]="research_and_studies"
+      <tab *ngIf="isInitialApproved && isCorrectModelToDisplay(3)" [name]="tabsData.researchAndStudies.name" [template]="research_and_studies"
         [title]="lang.map.research_and_studies" [hasError]="getTabInvalidStatus('researchAndStudies')">
       </tab>
 
