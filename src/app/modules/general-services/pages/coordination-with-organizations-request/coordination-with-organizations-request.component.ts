@@ -65,7 +65,6 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
   };
   isCharityUser!: boolean;
   isLicensingUser!: boolean;
-  isSuperVisor!:boolean;
   isInitialApproved!:boolean;
   isEditLicenseEndDateDisabled(): boolean {
     return false;

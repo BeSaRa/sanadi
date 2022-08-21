@@ -4,7 +4,6 @@ import { CustomValidators } from "@app/validators/custom-validators";
 import { SearchableCloneable } from "./searchable-cloneable";
 
 export class BuildingAbility extends SearchableCloneable<BuildingAbility> {
-  templateId!: string;
   activityName!: string;
   trainingActivityType!: number;
   activityGoal!: string;
