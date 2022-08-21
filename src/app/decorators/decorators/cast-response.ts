@@ -137,6 +137,7 @@ export function CastResponse(
   callback: undefined | string | (() => ClassConstructor<any>),
   options: CastResponseContract = {
     fallback: '$default',
+    unwrap: 'rs'
   }
 ): MethodDecorator {
   return <T extends Object>(
