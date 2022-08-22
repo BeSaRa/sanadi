@@ -1,22 +1,22 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {Observable, of, Subject} from 'rxjs';
-import {WFResponseType} from '@app/enums/wfresponse-type.enum';
-import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
-import {EServiceGenericService} from '@app/generics/e-service-generic-service';
-import {InboxService} from '@services/inbox.service';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {ToastService} from '@services/toast.service';
-import {LangService} from '@services/lang.service';
-import {EmployeeService} from '@services/employee.service';
-import {ServiceDataService} from '@services/service-data.service';
-import {DialogService} from '@services/dialog.service';
-import {filter, map, switchMap} from 'rxjs/operators';
-import {IWFResponse} from '@contracts/i-w-f-response';
-import {TransferringIndividualFundsAbroad} from '@app/models/transferring-individual-funds-abroad';
-import {TransferFundsCharityPurpose} from '@app/models/transfer-funds-charity-purpose';
-import {TransferFundsExecutiveManagement} from '@app/models/transfer-funds-executive-management';
+import { Component, Inject, OnInit } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { Observable, of, Subject } from 'rxjs';
+import { WFResponseType } from '@app/enums/wfresponse-type.enum';
+import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
+import { InboxService } from '@services/inbox.service';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { ToastService } from '@services/toast.service';
+import { LangService } from '@services/lang.service';
+import { EmployeeService } from '@services/employee.service';
+import { ServiceDataService } from '@services/service-data.service';
+import { DialogService } from '@services/dialog.service';
+import { filter, map, switchMap } from 'rxjs/operators';
+import { IWFResponse } from '@contracts/i-w-f-response';
+import { TransferringIndividualFundsAbroad } from '@app/models/transferring-individual-funds-abroad';
+import { TransferFundsCharityPurpose } from '@app/models/transfer-funds-charity-purpose';
+import { TransferFundsExecutiveManagement } from '@app/models/transfer-funds-executive-management';
+import { BaseGenericEService } from "@app/generics/base-generic-e-service";
 
 @Component({
   selector: 'transfer-funds-abroad-complete-task-popup',
@@ -36,7 +36,7 @@ export class TransferFundsAbroadCompleteTaskPopupComponent implements OnInit {
     @Inject(DIALOG_DATA_TOKEN) private data: {
       model: TransferringIndividualFundsAbroad,
       actionType: WFResponseType,
-      service: EServiceGenericService<any>,
+      service: BaseGenericEService<any>,
       form: UntypedFormGroup,
       selectedExecutives: TransferFundsExecutiveManagement[],
       selectedPurposes: TransferFundsCharityPurpose[],
