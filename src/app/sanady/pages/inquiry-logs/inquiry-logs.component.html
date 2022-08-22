@@ -141,7 +141,7 @@
                    validationClasses="orgUserId"
                    formControlName="orgUserId" appendTo="body">
           <ng-option *ngFor="let option of userList"
-                     [disabled]="option.status !== orgUserStatusEnum.ACTIVE" [value]="option.id">
+                     [disabled]="option.status !== commonStatusEnum.ACTIVATED" [value]="option.id">
             {{option.getName()}}
           </ng-option>
         </ng-select>

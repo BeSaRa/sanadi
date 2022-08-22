@@ -22,9 +22,10 @@ import {OrgBranch} from '@app/models/org-branch';
 import {OrgUser} from '@app/models/org-user';
 import {OrganizationUnitService} from '@services/organization-unit.service';
 import {OrganizationBranchService} from '@services/organization-branch.service';
-import {OrgStatusEnum, OrgUserStatusEnum} from '@app/enums/status.enum';
+import {OrgStatusEnum} from '@app/enums/status.enum';
 import {OrganizationUserService} from '@services/organization-user.service';
 import * as dayjs from 'dayjs';
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
 
 @Component({
   selector: 'inquiry-logs',
@@ -97,7 +98,7 @@ export class InquiryLogsComponent implements OnInit, OnDestroy {
   };
 
   orgStatusEnum = OrgStatusEnum;
-  orgUserStatusEnum = OrgUserStatusEnum;
+  commonStatusEnum = CommonStatusEnum;
 
   filterControl: UntypedFormControl = new UntypedFormControl('');
   headerColumn: string[] = ['extra-header'];

@@ -78,7 +78,6 @@ export interface ILookupMap {
   OrgUserActionType: Lookup[];
   OrgUserJobTitle: Lookup[];
   OrgUserPermissionGroup: Lookup[];
-  OrgUserStatus: Lookup[];
   OrgUserType: Lookup[];
   PermissionCategory: Lookup[];
   ProjectLicenseType: Lookup[];
