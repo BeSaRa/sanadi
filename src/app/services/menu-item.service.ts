@@ -2,12 +2,11 @@ import { Injectable } from '@angular/core';
 import { MenuItem } from '../models/menu-item';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Generator } from '@decorators/generator';
 import { tap } from 'rxjs/operators';
-import { MenuItemInterceptor } from '../model-interceptors/menu-item-interceptor';
 import { DomSanitizer } from '@angular/platform-browser';
 import { FactoryService } from './factory.service';
 import { ILanguageKeys } from '@app/interfaces/i-language-keys';
+import { CastResponse } from "@decorators/cast-response";
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +21,7 @@ export class MenuItemService {
     FactoryService.registerService('DomSanitizer', domSanitizer);
   }
 
-  @Generator(MenuItem, true, { property: '', interceptReceive: MenuItemInterceptor.receive })
+  @CastResponse(() => MenuItem, { unwrap: '', fallback: '$default' })
   private _load(): Observable<MenuItem[]> {
     return this.http.get<MenuItem[]>('MENU.json');
   }

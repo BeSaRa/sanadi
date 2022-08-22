@@ -1,11 +1,10 @@
 import { Observable, of } from "rxjs";
 import { CastResponse } from "@decorators/cast-response";
 import { FactoryService } from "@services/factory.service";
-import {HttpClient, HttpParams} from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { DialogService } from "@services/dialog.service";
 import { DomSanitizer } from "@angular/platform-browser";
 import { ILanguageKeys } from "@contracts/i-language-keys";
-import { ComponentFactoryResolver } from "@angular/core";
 import { DynamicOptionsService } from "@services/dynamic-options.service";
 import { MenuItemService } from "@services/menu-item.service";
 import { EmployeeService } from "@services/employee.service";
@@ -33,8 +32,8 @@ import { IDefaultResponse } from "@contracts/idefault-response";
 import { MenuItem } from "../models/menu-item";
 import { UrlService } from "@services/url.service";
 import { HasInterception, InterceptParam } from "@decorators/intercept-model";
-import {CaseModel} from '@app/models/case-model';
-import {FollowupComponent} from '@app/shared/popups/followup/followup.component';
+import { CaseModel } from '@app/models/case-model';
+import { FollowupComponent } from '@app/shared/popups/followup/followup.component';
 
 export abstract class BaseGenericEService<T extends { id: string }> {
   protected constructor() {
@@ -57,7 +56,6 @@ export abstract class BaseGenericEService<T extends { id: string }> {
   abstract dialog: DialogService;
   abstract domSanitizer: DomSanitizer;
   abstract serviceKey: keyof ILanguageKeys;
-  abstract cfr: ComponentFactoryResolver;
   abstract caseStatusIconMap: Map<number, string>;
   abstract searchColumns: string[];
   abstract dynamicService: DynamicOptionsService;

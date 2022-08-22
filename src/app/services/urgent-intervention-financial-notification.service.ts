@@ -1,5 +1,9 @@
-import { UrgentInterventionFinancialNotificationSearchCriteria } from './../models/urgent-intervention-financial-notification-search-criteria';
-import { UrgentInterventionFinancialNotificationInterceptor } from './../model-interceptors/urgent-intervention-financial-notification-interceptor';
+import {
+  UrgentInterventionFinancialNotificationSearchCriteria
+} from './../models/urgent-intervention-financial-notification-search-criteria';
+import {
+  UrgentInterventionFinancialNotificationInterceptor
+} from './../model-interceptors/urgent-intervention-financial-notification-interceptor';
 import { InterventionRegion } from '@app/models/intervention-region';
 import { InterventionField } from '@app/models/intervention-field';
 import { InterventionFieldInterceptor } from '@app/model-interceptors/intervention-field-interceptor';
@@ -10,9 +14,8 @@ import { Observable } from 'rxjs';
 import { UrgentInterventionReportResult } from './../models/urgent-intervention-report-result';
 import { UrgentInterventionReportSearchCriteria } from './../models/urgent-intervention-report-search-criteria';
 import { LicenseService } from './license.service';
-import { EServiceGenericService } from '@app/generics/e-service-generic-service';
 import { FactoryService } from './factory.service';
-import { ComponentFactoryResolver, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { UrgentInterventionFinancialNotification } from '@app/models/urgent-intervention-financial-notification';
 import { HttpClient } from '@angular/common/http';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -21,10 +24,18 @@ import { DialogService } from './dialog.service';
 import { DynamicOptionsService } from './dynamic-options.service';
 import { UrlService } from './url.service';
 import { IModelInterceptor } from '@app/interfaces/i-model-interceptor';
+import { BaseGenericEService } from "@app/generics/base-generic-e-service";
+import { CastResponseContainer } from "@decorators/cast-response";
+
+@CastResponseContainer({
+  $default: {
+    model: () => UrgentInterventionFinancialNotification
+  }
+})
 @Injectable({
   providedIn: 'root'
 })
-export class UrgentInterventionFinancialNotificationService extends EServiceGenericService<UrgentInterventionFinancialNotification> {
+export class UrgentInterventionFinancialNotificationService extends BaseGenericEService<UrgentInterventionFinancialNotification> {
   interceptor: IModelInterceptor<UrgentInterventionFinancialNotification> = new UrgentInterventionFinancialNotificationInterceptor();
   jsonSearchFile: string = 'urgent_intervention_financial_search_form.json';
   serviceKey: keyof ILanguageKeys = 'menu_urgent_intervention_financial_notification';
@@ -41,7 +52,6 @@ export class UrgentInterventionFinancialNotificationService extends EServiceGene
     public dialog: DialogService,
     private licenseService: LicenseService,
     public domSanitizer: DomSanitizer,
-    public cfr: ComponentFactoryResolver,
     public dynamicService: DynamicOptionsService
   ) {
     super()

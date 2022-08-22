@@ -1,22 +1,26 @@
-import {AdminResult} from "./admin-result";
-import {BankAccount} from "./bank-account";
-import {ExecutiveManagement} from "./executive-management";
-import {TargetGroup} from "./target-group";
-import {Goal} from "./goal";
-import {ManagementCouncil} from "./management-council";
-import {ContactOfficer} from "./contact-officer";
-import {ApprovalReason} from "./approval-reason";
-import {PartnerApprovalService} from "../services/partner-approval.service";
-import {FactoryService} from "../services/factory.service";
-import {CustomValidators} from "../validators/custom-validators";
-import {LicenseApprovalModel} from "@app/models/license-approval-model";
-import {DateUtils} from "@app/helpers/date-utils";
-import {CaseTypes} from '@app/enums/case-types.enum';
-import {ISearchFieldsMap} from "@app/types/types";
-import {dateSearchFields} from "@app/helpers/date-search-fields";
-import {infoSearchFields} from "@app/helpers/info-search-fields";
-import {normalSearchFields} from "@app/helpers/normal-search-fields";
+import { AdminResult } from "./admin-result";
+import { BankAccount } from "./bank-account";
+import { ExecutiveManagement } from "./executive-management";
+import { TargetGroup } from "./target-group";
+import { Goal } from "./goal";
+import { ManagementCouncil } from "./management-council";
+import { ContactOfficer } from "./contact-officer";
+import { ApprovalReason } from "./approval-reason";
+import { PartnerApprovalService } from "@services/partner-approval.service";
+import { FactoryService } from "@services/factory.service";
+import { CustomValidators } from "../validators/custom-validators";
+import { LicenseApprovalModel } from "@app/models/license-approval-model";
+import { DateUtils } from "@app/helpers/date-utils";
+import { CaseTypes } from '@app/enums/case-types.enum';
+import { ISearchFieldsMap } from "@app/types/types";
+import { dateSearchFields } from "@app/helpers/date-search-fields";
+import { infoSearchFields } from "@app/helpers/info-search-fields";
+import { normalSearchFields } from "@app/helpers/normal-search-fields";
+import { InterceptModel } from "@decorators/intercept-model";
+import { PartnerApprovalInterceptor } from "@app/model-interceptors/partner-approval-interceptor";
 
+const { send, receive } = new PartnerApprovalInterceptor();
+@InterceptModel({ send, receive })
 export class PartnerApproval extends LicenseApprovalModel<PartnerApprovalService, PartnerApproval> {
   caseType: number = CaseTypes.PARTNER_APPROVAL;
   organizationId!: number;
@@ -68,7 +72,7 @@ export class PartnerApproval extends LicenseApprovalModel<PartnerApprovalService
 
   searchFields: ISearchFieldsMap<PartnerApproval> = {
     ...dateSearchFields(['createdOn']),
-    ...infoSearchFields(['creatorInfo', 'caseStatusInfo', 'countryInfo', 'requestClassificationInfo' , 'ouInfo']),
+    ...infoSearchFields(['creatorInfo', 'caseStatusInfo', 'countryInfo', 'requestClassificationInfo', 'ouInfo']),
     ...normalSearchFields(['subject', 'fullSerial'])
   }
 

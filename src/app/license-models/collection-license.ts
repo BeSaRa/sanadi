@@ -3,9 +3,13 @@ import { FileNetDocument } from "@app/models/file-net-document";
 import { mixinCollectionItemBuildForm } from "@app/mixins/mixin-collection-item-build-form";
 import { HasCollectionItemBuildForm } from "@app/interfaces/has-collection-item-build-form";
 import { CollectionItem } from "@app/models/collection-item";
+import { InterceptModel } from "@decorators/intercept-model";
+import { CollectionLicenseInterceptor } from "@app/license-interceptors/collection-license-interceptor";
 
 const _collectionItemBuildForm = mixinCollectionItemBuildForm(FileNetDocument)
+const { send, receive } = new CollectionLicenseInterceptor()
 
+@InterceptModel({ send, receive })
 export class CollectionLicense extends _collectionItemBuildForm implements HasCollectionItemBuildForm {
   caseStatusInfo!: AdminResult
   chiefDecision!: number

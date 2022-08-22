@@ -1,7 +1,12 @@
 import { AdminResult } from '@app/models/admin-result';
 import { IMyDateModel } from 'angular-mydatepicker';
 import { CollectorItem } from '@app/models/collector-item';
+import { CollectorLicenseInterceptor } from "@app/license-interceptors/collector-license-interceptor";
+import { InterceptModel } from "@decorators/intercept-model";
 
+const { send, receive } = new CollectorLicenseInterceptor();
+
+@InterceptModel({ send, receive })
 export class CollectorLicense {
   arName!: string;
   chiefDecision!: number;

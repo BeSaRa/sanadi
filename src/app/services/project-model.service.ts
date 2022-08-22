@@ -1,29 +1,34 @@
-import {HttpClient} from '@angular/common/http';
-import {ComponentFactoryResolver, Injectable} from '@angular/core';
-import {DomSanitizer} from '@angular/platform-browser';
-import {EServiceGenericService} from "@app/generics/e-service-generic-service";
-import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {IModelInterceptor} from '@app/interfaces/i-model-interceptor';
-import {ProjectModel} from "@app/models/project-model";
-import {DialogService} from './dialog.service';
-import {DynamicOptionsService} from './dynamic-options.service';
-import {ProjectModelInterceptor} from "@app/model-interceptors/project-model-interceptor";
-import {FactoryService} from "@app/services/factory.service";
-import {UrlService} from "@app/services/url.service";
-import {ProjectModelSearchCriteria} from "@app/models/project-model-search-criteria";
-import {Observable, of} from "rxjs";
-import {catchError, map} from "rxjs/operators";
-import {Generator} from "@app/decorators/generator";
-import {DialogRef} from "@app/shared/models/dialog-ref";
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
+import { IModelInterceptor } from '@app/interfaces/i-model-interceptor';
+import { ProjectModel } from "@app/models/project-model";
+import { DialogService } from './dialog.service';
+import { DynamicOptionsService } from './dynamic-options.service';
+import { ProjectModelInterceptor } from "@app/model-interceptors/project-model-interceptor";
+import { FactoryService } from "@app/services/factory.service";
+import { UrlService } from "@app/services/url.service";
+import { ProjectModelSearchCriteria } from "@app/models/project-model-search-criteria";
+import { Observable, of } from "rxjs";
+import { catchError, map } from "rxjs/operators";
+import { DialogRef } from "@app/shared/models/dialog-ref";
 import {
   SelectTemplatePopupComponent
 } from "@app/modules/e-services-main/popups/select-template-popup/select-template-popup.component";
-import {BlobModel} from '@app/models/blob-model';
+import { BlobModel } from '@app/models/blob-model';
+import { BaseGenericEService } from "@app/generics/base-generic-e-service";
+import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
 
+@CastResponseContainer({
+  $default: {
+    model: () => ProjectModel
+  }
+})
 @Injectable({
   providedIn: 'root'
 })
-export class ProjectModelService extends EServiceGenericService<ProjectModel> {
+export class ProjectModelService extends BaseGenericEService<ProjectModel> {
   _getUrlService(): UrlService {
     return this.urlService;
   }
@@ -58,20 +63,19 @@ export class ProjectModelService extends EServiceGenericService<ProjectModel> {
               public dialog: DialogService,
               public domSanitizer: DomSanitizer,
               public dynamicService: DynamicOptionsService,
-              private urlService: UrlService,
-              public cfr: ComponentFactoryResolver) {
+              private urlService: UrlService) {
     super();
     FactoryService.registerService('ProjectModelService', this);
   }
 
-  @Generator(undefined, true)
+  @CastResponse(undefined)
   private _searchTemplateBySerial(serial: string): Observable<ProjectModel[]> {
     return this.http.post<ProjectModel[]>(this._getURLSegment() + '/template/search', {
       templateFullSerial: serial
     })
   }
 
-  @Generator(undefined, false)
+  @CastResponse(undefined)
   private _getTemplateById(id: string): Observable<ProjectModel> {
     return this.http.get<ProjectModel>(this._getURLSegment() + '/template/' + id + '/details')
   }

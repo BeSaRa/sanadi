@@ -7,9 +7,9 @@ import { LicenseService } from '@app/services/license.service';
 import { SharedService } from '@app/services/shared.service';
 import { FileIconsEnum } from '@app/enums/file-extension-mime-types-icons.enum';
 import { InboxService } from '@app/services/inbox.service';
-import { EServiceGenericService } from '@app/generics/e-service-generic-service';
 import { CaseTypes } from '@app/enums/case-types.enum';
 import { ServiceRequestTypes } from '@app/enums/service-request-types';
+import { BaseGenericEService } from "@app/generics/base-generic-e-service";
 
 @Component({
   selector: 'select-license-popup',
@@ -24,12 +24,12 @@ export class SelectLicensePopupComponent {
   caseStatus: number;
   requestType: number;
   fileIconsEnum = FileIconsEnum;
-  caseService?: EServiceGenericService<any>;
+  caseService?: BaseGenericEService<any>;
 
   constructor(public lang: LangService, private dialogRef: DialogRef,
     private licenseService: LicenseService,
     private inboxService: InboxService,
-    private sharedService: SharedService,
+    private _sharedService: SharedService,
     @Inject(DIALOG_DATA_TOKEN) public data: {
       licenses: any[],
       caseRecord: any | undefined,
@@ -102,7 +102,7 @@ export class SelectLicensePopupComponent {
 
     return this.licenseService.showLicenseContent(license, caseType)
       .subscribe((file) => {
-        return this.sharedService.openViewContentDialog(file, license);
+        return this._sharedService.openViewContentDialog(file, license);
       });
   }*/
 }

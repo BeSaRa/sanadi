@@ -1,20 +1,20 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {CaseModel} from '@app/models/case-model';
-import {QueryResult} from '@app/models/query-result';
-import {LangService} from '@app/services/lang.service';
-import {AdminResult} from "@app/models/admin-result";
-import {EServiceGenericService} from '@app/generics/e-service-generic-service';
-import {CaseTypes} from '@app/enums/case-types.enum';
-import {FinalExternalOfficeApprovalResult} from '@app/models/final-external-office-approval-result';
-import {Subject} from 'rxjs';
-import {LicenseService} from '@app/services/license.service';
-import {InternalProjectLicenseResult} from '@app/models/internal-project-license-result';
-import {ProjectModelService} from '@app/services/project-model.service';
-import {BlobModel} from '@app/models/blob-model';
-import {SharedService} from '@app/services/shared.service';
-import {InitialExternalOfficeApprovalResult} from '@app/models/initial-external-office-approval-result';
-import {PartnerApproval} from '@app/models/partner-approval';
-import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { CaseModel } from '@app/models/case-model';
+import { QueryResult } from '@app/models/query-result';
+import { LangService } from '@app/services/lang.service';
+import { AdminResult } from "@app/models/admin-result";
+import { CaseTypes } from '@app/enums/case-types.enum';
+import { FinalExternalOfficeApprovalResult } from '@app/models/final-external-office-approval-result';
+import { Subject } from 'rxjs';
+import { LicenseService } from '@app/services/license.service';
+import { InternalProjectLicenseResult } from '@app/models/internal-project-license-result';
+import { ProjectModelService } from '@app/services/project-model.service';
+import { BlobModel } from '@app/models/blob-model';
+import { SharedService } from '@app/services/shared.service';
+import { InitialExternalOfficeApprovalResult } from '@app/models/initial-external-office-approval-result';
+import { PartnerApproval } from '@app/models/partner-approval';
+import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
+import { BaseGenericEService } from "@app/generics/base-generic-e-service";
 
 @Component({
   selector: 'viewer-case-info',
@@ -29,7 +29,7 @@ export class ViewerCaseInfoComponent implements OnInit, OnDestroy {
   @Input()
   loadedModel!: any;
 
-  @Input() componentService?: EServiceGenericService<any>;
+  @Input() componentService?: BaseGenericEService<any>;
   showManagerRequestStatus: boolean = false;
 
   finalExternalOfficeGeneratedLicense?: FinalExternalOfficeApprovalResult;

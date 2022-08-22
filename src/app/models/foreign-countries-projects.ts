@@ -15,22 +15,13 @@ import { AdminResult } from './admin-result';
 import { CaseModel } from './case-model';
 import { ProjectNeeds } from './project-needs';
 
-// tslint:disable-next-line: variable-name
 const _RequestType = mixinLicenseDurationType(mixinRequestType(CaseModel));
-const interceptor = new ForeignCountriesProjectsInterceptor();
+const { send, receive } = new ForeignCountriesProjectsInterceptor();
 
-@InterceptModel({
-  send: interceptor.send,
-  receive: interceptor.receive
-})
-
-export class ForeignCountriesProjects
-  extends _RequestType<
-  ForeignCountriesProjectsService,
-  ForeignCountriesProjects
-  >
-  implements HasRequestType, HasExternalCooperationAuthority {
+@InterceptModel({ send, receive })
+export class ForeignCountriesProjects extends _RequestType<ForeignCountriesProjectsService, ForeignCountriesProjects> implements HasRequestType, HasExternalCooperationAuthority {
   public service!: ForeignCountriesProjectsService;
+
   constructor() {
     super();
     this.service = FactoryService.getService(
@@ -61,15 +52,18 @@ export class ForeignCountriesProjects
   getExternalCooperationAuthority(): number {
     return this.externalCooperationAuthority;
   }
+
   getRequestType(): number {
     return this.requestType;
   }
+
   buildExplanation(controls: boolean = false): any {
     const { description } = this;
     return {
       description: controls ? [description, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : description,
     }
   }
+
   buildForm(withControls: boolean): IKeyValue {
     const {
       requestType,
@@ -106,6 +100,7 @@ export class ForeignCountriesProjects
       entityClassification
     };
   }
+
   finalApprove(): DialogRef {
     return this.service.approveTask(this, WFResponseType.FINAL_APPROVE);
   }

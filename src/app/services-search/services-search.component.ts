@@ -5,7 +5,6 @@ import { LangService } from '@services/lang.service';
 import { InboxService } from '@services/inbox.service';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { filter, map, skip, startWith, takeUntil } from 'rxjs/operators';
-import { EServiceGenericService } from '../generics/e-service-generic-service';
 import { CaseModel } from '../models/case-model';
 import { DialogService } from '@services/dialog.service';
 import { IMenuItem } from '../modules/context-menu/interfaces/i-menu-item';
@@ -33,7 +32,7 @@ import { BaseGenericEService } from '@app/generics/base-generic-e-service';
 })
 export class ServicesSearchComponent implements OnInit, OnDestroy {
   private destroy$: Subject<any> = new Subject<any>();
-  private selectedService!: EServiceGenericService<any> | BaseGenericEService<any>;
+  private selectedService!: BaseGenericEService<any>;
 
   searchColumns: string[] = [];
   headerColumn: string[] = ['extra-header'];
@@ -114,7 +113,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
       .pipe(filter(val => !!val))
       .pipe(map(val => Number(val)))
       .pipe(map(val => this.inboxService.getService(val)))
-      .subscribe((service: EServiceGenericService<any>) => {
+      .subscribe((service: BaseGenericEService<any>) => {
         // this.updateRoute();
         this.selectedService = service;
         this.searchColumns = this.selectedService.searchColumns;

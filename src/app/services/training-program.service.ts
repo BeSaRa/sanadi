@@ -9,7 +9,6 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { UrlService } from '@app/services/url.service';
 import { DialogService } from '@app/services/dialog.service';
 import { FactoryService } from '@app/services/factory.service';
-import { Generator } from '@app/decorators/generator';
 import { Observable, of } from 'rxjs';
 import { CommonUtils } from '@app/helpers/common-utils';
 import { DateUtils } from '@app/helpers/date-utils';
@@ -40,10 +39,10 @@ import {
 } from "@app/training-services/popups/select-program-survey-popup/select-program-survey-popup.component";
 import { SurveyTemplateService } from "@app/services/survey-template.service";
 import { ViewSurveyPopupComponent } from "@app/shared/popups/view-survey-popup/view-survey-popup.component";
-import { InterceptParam, SendInterceptor } from '@app/decorators/model-interceptor';
-import { CastResponseContainer } from "@decorators/cast-response";
+import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
 import { Pagination } from "@app/models/pagination";
 import { CrudWithDialogGenericService } from "@app/generics/crud-with-dialog-generic-service";
+import { HasInterception, InterceptParam } from "@decorators/intercept-model";
 
 @CastResponseContainer({
   $default: {
@@ -72,7 +71,7 @@ export class TrainingProgramService extends CrudWithDialogGenericService<Trainin
     FactoryService.registerService('TrainingProgramService', this);
   }
 
-  @Generator(undefined, true, { property: 'rs' })
+  @CastResponse(undefined)
   filterTrainingPrograms(options?: any): Observable<TrainingProgram[]> {
     let objOptions;
     if (!CommonUtils.isEmptyObject(options) && CommonUtils.objectHasValue(options)) {
@@ -100,19 +99,19 @@ export class TrainingProgramService extends CrudWithDialogGenericService<Trainin
     });
   }
 
-  @Generator(undefined, false, { property: 'rs' })
+  @CastResponse('')
   approve(trainingId: number) {
     return this.http.put(this._getServiceURL() + '/approve/' + trainingId, { trainingProgramId: trainingId });
   }
 
-  @SendInterceptor()
-  @Generator(undefined, false, { property: 'rs' })
+  @HasInterception
+  @CastResponse(undefined)
   editAfterPublish(@InterceptParam() model: TrainingProgram): Observable<TrainingProgram> {
     return this.http.put<TrainingProgram>(this._getServiceURL() + '/edit-after-publish', model);
   }
 
-  @SendInterceptor()
-  @Generator(undefined, false, { property: 'rs' })
+  @HasInterception
+  @CastResponse(undefined)
   editAfterPublishAndSenMail(@InterceptParam() model: TrainingProgram): Observable<TrainingProgram> {
     let objOptions = { 'with-notification': true };
     return this.http.put<TrainingProgram>(this._getServiceURL() + '/edit-after-publish', model, {
@@ -120,32 +119,32 @@ export class TrainingProgramService extends CrudWithDialogGenericService<Trainin
     });
   }
 
-  @Generator(undefined, false, { property: 'rs' })
+  @CastResponse('')
   publish(trainingId: number) {
     return this.http.put(this._getServiceURL() + '/publish/' + trainingId, { trainingProgramId: trainingId });
   }
 
-  @Generator(undefined, false, { property: 'rs' })
+  @CastResponse('')
   cancel(trainingId: number) {
     return this.http.put(this._getServiceURL() + '/cancel/' + trainingId, { trainingProgramId: trainingId });
   }
 
-  @Generator(undefined, false, { property: 'rs' })
+  @CastResponse('')
   applyAttendance(trainingId: number, traineeList: { first: number, second: boolean }[]) {
     return this.http.put(this._getServiceURL() + '/apply-attendance-trainee/' + trainingId, traineeList);
   }
 
-  @Generator(undefined, true, { property: 'rs' })
+  @CastResponse(undefined)
   loadAvailablePrograms(): Observable<TrainingProgram[]> {
     return this.http.get<TrainingProgram[]>(this._getServiceURL() + '/open-for-registeration');
   }
 
-  @Generator(undefined, true, { property: 'rs' })
+  @CastResponse(undefined)
   loadFinishedPrograms(): Observable<TrainingProgram[]> {
     return this.http.get<TrainingProgram[]>(this._getServiceURL() + '/finished-programs');
   }
 
-  @Generator(undefined, true, { property: 'rs' })
+  @CastResponse(undefined)
   loadCharityPrograms(): Observable<TrainingProgram[]> {
     return this.http.get<TrainingProgram[]>(this._getServiceURL() + '/charity');
   }

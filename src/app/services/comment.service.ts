@@ -1,12 +1,17 @@
-import {Observable} from 'rxjs';
-import {CaseComment} from '../models/case-comment';
-import {HttpClient} from '@angular/common/http';
-import {Generator} from '../decorators/generator';
-import {BackendServiceModelInterface} from '../interfaces/backend-service-model-interface';
-import {IModelInterceptor} from '../interfaces/i-model-interceptor';
-import {CaseCommentInterceptor} from '../model-interceptors/case-comment-interceptor';
-import {InterceptParam, SendInterceptor} from '../decorators/model-interceptor';
+import { Observable } from 'rxjs';
+import { CaseComment } from '../models/case-comment';
+import { HttpClient } from '@angular/common/http';
+import { BackendServiceModelInterface } from '@contracts/backend-service-model-interface';
+import { IModelInterceptor } from '@contracts/i-model-interceptor';
+import { CaseCommentInterceptor } from '../model-interceptors/case-comment-interceptor';
+import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
+import { HasInterception, InterceptParam } from "@decorators/intercept-model";
 
+@CastResponseContainer({
+  $default: {
+    model: () => CaseComment
+  }
+})
 export class CommentService implements Pick<BackendServiceModelInterface<CaseComment>, '_getInterceptor' | '_getModel'> {
   interceptor: CaseCommentInterceptor = new CaseCommentInterceptor();
 
@@ -23,8 +28,8 @@ export class CommentService implements Pick<BackendServiceModelInterface<CaseCom
   }
 
 
-  @SendInterceptor()
-  @Generator(undefined, false, {property: 'rs'})
+  @HasInterception
+  @CastResponse(undefined)
   private _create(caseId: string, @InterceptParam() model: Partial<CaseComment>): Observable<CaseComment> {
     return this.service.http.post<CaseComment>(this.service._getURLSegment() + '/' + caseId + '/comment', model);
   }
@@ -33,8 +38,8 @@ export class CommentService implements Pick<BackendServiceModelInterface<CaseCom
     return this._create(caseId, model);
   }
 
-  @SendInterceptor()
-  @Generator(undefined, false, {property: 'rs'})
+  @HasInterception
+  @CastResponse(undefined)
   private _update(_caseId: string, @InterceptParam() model: Partial<CaseComment>): Observable<CaseComment> {
     return this.service.http.put<CaseComment>(this.service._getURLSegment() + '/comment/', model);
   }
@@ -43,7 +48,7 @@ export class CommentService implements Pick<BackendServiceModelInterface<CaseCom
     return this._update(caseId, model);
   }
 
-  @Generator(undefined, true, {property: 'rs'})
+  @CastResponse(undefined)
   private _load(caseId: string): Observable<CaseComment[]> {
     return this.service.http.get<CaseComment[]>(this.service._getURLSegment() + '/' + caseId + '/comments');
   }

@@ -1,21 +1,21 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {CaseModel} from "@app/models/case-model";
-import {EServiceGenericService} from "@app/generics/e-service-generic-service";
-import {BehaviorSubject, Observable, Subject} from "rxjs";
-import {AbstractControl, UntypedFormBuilder, UntypedFormGroup} from "@angular/forms";
-import {CustomTerm} from "@app/models/custom-term";
-import {IKeyValue} from "@app/interfaces/i-key-value";
-import {DateUtils} from "@app/helpers/date-utils";
-import {CustomTermService} from "@app/services/custom-term.service";
-import {DialogService} from "@app/services/dialog.service";
-import {ServiceDataService} from "@app/services/service-data.service";
-import {LangService} from "@app/services/lang.service";
-import {switchMap, takeUntil, tap} from "rxjs/operators";
-import {CustomTermPopupComponent} from "@app/shared/popups/custom-term-popup/custom-term-popup.component";
-import {HasLicenseDurationMonthly} from "@app/interfaces/has-license-duration-monthly";
-import {HasLicenseApprovalMonthly} from "@app/interfaces/has-license-approval-monthly";
-import {mixinApprovalLicenseWithMonthly} from "@app/mixins/minin-approval-license-with-monthly";
-import {Constructor} from "@app/helpers/constructor";
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { CaseModel } from "@app/models/case-model";
+import { BehaviorSubject, Observable, Subject } from "rxjs";
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
+import { CustomTerm } from "@app/models/custom-term";
+import { IKeyValue } from "@app/interfaces/i-key-value";
+import { DateUtils } from "@app/helpers/date-utils";
+import { CustomTermService } from "@app/services/custom-term.service";
+import { DialogService } from "@app/services/dialog.service";
+import { ServiceDataService } from "@app/services/service-data.service";
+import { LangService } from "@app/services/lang.service";
+import { switchMap, takeUntil, tap } from "rxjs/operators";
+import { CustomTermPopupComponent } from "@app/shared/popups/custom-term-popup/custom-term-popup.component";
+import { HasLicenseDurationMonthly } from "@app/interfaces/has-license-duration-monthly";
+import { HasLicenseApprovalMonthly } from "@app/interfaces/has-license-approval-monthly";
+import { mixinApprovalLicenseWithMonthly } from "@app/mixins/minin-approval-license-with-monthly";
+import { Constructor } from "@app/helpers/constructor";
+import { BaseGenericEService } from "@app/generics/base-generic-e-service";
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -27,7 +27,7 @@ export class ApprovalFormMonthlyComponent implements OnInit, OnDestroy {
   @Input()
   model!: HasLicenseDurationMonthly & CaseModel<any, any>;
   @Input()
-  service!: EServiceGenericService<any>
+  service!: BaseGenericEService<any>
   destroy$: Subject<any> = new Subject();
   form!: UntypedFormGroup
 

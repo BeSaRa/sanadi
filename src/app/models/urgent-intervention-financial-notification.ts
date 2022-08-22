@@ -3,8 +3,10 @@ import { AdminResult } from '@app/models/admin-result';
 import { InterventionField } from './intervention-field';
 import { InterventionRegion } from './intervention-region';
 import { ImplementingAgency } from './implementing-agency';
-import { FactoryService } from './../services/factory.service';
-import { UrgentInterventionFinancialNotificationService } from '../services/urgent-intervention-financial-notification.service';
+import { FactoryService } from '@services/factory.service';
+import {
+  UrgentInterventionFinancialNotificationService
+} from '@services/urgent-intervention-financial-notification.service';
 import { LicenseApprovalModel } from '@app/models/license-approval-model';
 import { CaseTypes } from '../enums/case-types.enum';
 

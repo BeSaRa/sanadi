@@ -9,35 +9,35 @@ import {
   ViewChild,
   ViewContainerRef
 } from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {DynamicComponentService} from '@app/services/dynamic-component.service';
-import {EmployeeService} from '@app/services/employee.service';
-import {LangService} from '@app/services/lang.service';
-import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
-import {EServiceGenericService} from '@app/generics/e-service-generic-service';
-import {CaseModel} from '@app/models/case-model';
-import {OpenFrom} from '@app/enums/open-from.enum';
-import {IOpenedInfo} from '@app/interfaces/i-opened-info';
-import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import {WFResponseType} from '@app/enums/wfresponse-type.enum';
-import {WFActions} from '@app/enums/wfactions.enum';
-import {CaseTypes} from '@app/enums/case-types.enum';
-import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {ToastService} from '@app/services/toast.service';
-import {InboxService} from '@app/services/inbox.service';
-import {merge, Subject} from 'rxjs';
-import {skip, startWith, takeUntil} from 'rxjs/operators';
-import {TabComponent} from '@app/shared/components/tab/tab.component';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {SaveTypes} from '@app/enums/save-types';
-import {IESComponent} from '@app/interfaces/iescomponent';
-import {OrgUser} from '@app/models/org-user';
-import {InternalUser} from '@app/models/internal-user';
-import {ChecklistItem} from '@app/models/checklist-item';
-import {StepCheckListComponent} from '@app/shared/components/step-check-list/step-check-list.component';
-import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
-import {ActionIconsEnum} from '@app/enums/action-icons-enum';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
+import { ActivatedRoute, Router } from '@angular/router';
+import { DynamicComponentService } from '@app/services/dynamic-component.service';
+import { EmployeeService } from '@app/services/employee.service';
+import { LangService } from '@app/services/lang.service';
+import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
+import { CaseModel } from '@app/models/case-model';
+import { OpenFrom } from '@app/enums/open-from.enum';
+import { IOpenedInfo } from '@app/interfaces/i-opened-info';
+import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { WFResponseType } from '@app/enums/wfresponse-type.enum';
+import { WFActions } from '@app/enums/wfactions.enum';
+import { CaseTypes } from '@app/enums/case-types.enum';
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
+import { ToastService } from '@app/services/toast.service';
+import { InboxService } from '@app/services/inbox.service';
+import { merge, Subject } from 'rxjs';
+import { skip, startWith, takeUntil } from 'rxjs/operators';
+import { TabComponent } from '@app/shared/components/tab/tab.component';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { SaveTypes } from '@app/enums/save-types';
+import { IESComponent } from '@app/interfaces/iescomponent';
+import { OrgUser } from '@app/models/org-user';
+import { InternalUser } from '@app/models/internal-user';
+import { ChecklistItem } from '@app/models/checklist-item';
+import { StepCheckListComponent } from '@app/shared/components/step-check-list/step-check-list.component';
+import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
+import { ActionIconsEnum } from '@app/enums/action-icons-enum';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { BaseGenericEService } from "@app/generics/base-generic-e-service";
 import {ITransferIndividualFundsAbroadComplete} from '@contracts/i-transfer-individual-funds-abroad-complete';
 import {ITransferFundsAbroadComponent} from '@contracts/i-transfer-funds-abroad-component';
 
@@ -70,7 +70,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   private addActions: IMenuItem<CaseModel<any, any>>[] = [];
 
   private readonly render: string;
-  private componentRef!: ComponentRef<EServicesGenericComponent<CaseModel<any, any>, EServiceGenericService<any>>>;
+  private componentRef!: ComponentRef<EServicesGenericComponent<CaseModel<any, any>, BaseGenericEService<any>>>;
   @ViewChild('internalContainer', {read: ViewContainerRef})
   internalContainer!: ViewContainerRef;
 
@@ -81,9 +81,9 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   checklistComponent!: StepCheckListComponent;
 
   actions: IMenuItem<CaseModel<any, any>>[] = [];
-  service!: EServiceGenericService<CaseModel<any, any>>;
+  service!: BaseGenericEService<CaseModel<any, any>>;
   model?: CaseModel<any, any>;
-  component!: EServicesGenericComponent<CaseModel<any, any>, EServiceGenericService<CaseModel<any, any>>>;
+  component!: EServicesGenericComponent<CaseModel<any, any>, BaseGenericEService<CaseModel<any, any>>>;
   internal: boolean = this.employeeService.isInternalUser();
   info: IOpenedInfo | null = null;
   destroy$: Subject<any> = new Subject<any>();
@@ -128,7 +128,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     const component = DynamicComponentService.getComponent(this.render);
     const componentFactory = this.cfr.resolveComponentFactory(component);
     this.componentRef = componentFactory.create(this.injector);
-    this.component = this.componentRef.instance as EServicesGenericComponent<CaseModel<any, any>, EServiceGenericService<CaseModel<any, any>>>;
+    this.component = this.componentRef.instance as EServicesGenericComponent<CaseModel<any, any>, BaseGenericEService<CaseModel<any, any>>>;
 
     this.service = this.component.service;
     this.component.accordionView = this.employeeService.isInternalUser();
@@ -378,7 +378,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         type: 'action',
         icon: ActionIconsEnum.CLOSE_MAIL,
         label: 'mark_as_unread',
-        show: (item) => true,
+        show: (_item) => true,
         onClick: (item) => this.markAsUnreadAction(item)
       },
       // back
@@ -803,7 +803,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         type: 'action',
         icon: ActionIconsEnum.CLOSE_MAIL,
         label: 'mark_as_unread',
-        show: (item) => true,
+        show: (_item) => true,
         onClick: (item) => this.markAsUnreadAction(item)
       },
       // terminate task

@@ -1,16 +1,16 @@
-import {HttpClient} from '@angular/common/http';
-import {DialogService} from './dialog.service';
-import {DomSanitizer} from '@angular/platform-browser';
-import {BackendServiceModelInterface} from '../interfaces/backend-service-model-interface';
-import {IModelInterceptor} from '../interfaces/i-model-interceptor';
-import {ActionRegistry} from '../models/action-registry';
-import {ActionRegistryInterceptor} from '../model-interceptors/action-registry-interceptor';
-import {Observable} from 'rxjs';
-import {Generator} from '../decorators/generator';
-import {map} from 'rxjs/operators';
-import {BlobModel} from '../models/blob-model';
-import {AdminResult} from '../models/admin-result';
-import {IDefaultResponse} from '../interfaces/idefault-response';
+import { HttpClient } from '@angular/common/http';
+import { DialogService } from './dialog.service';
+import { DomSanitizer } from '@angular/platform-browser';
+import { BackendServiceModelInterface } from '@contracts/backend-service-model-interface';
+import { IModelInterceptor } from '@contracts/i-model-interceptor';
+import { ActionRegistry } from '../models/action-registry';
+import { ActionRegistryInterceptor } from '../model-interceptors/action-registry-interceptor';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { BlobModel } from '../models/blob-model';
+import { AdminResult } from '../models/admin-result';
+import { IDefaultResponse } from '@contracts/idefault-response';
+import { CastResponse } from "@decorators/cast-response";
 
 export class ActionLogService implements Pick<BackendServiceModelInterface<ActionRegistry>, '_getModel' | '_getInterceptor'> {
   interceptor: ActionRegistryInterceptor = new ActionRegistryInterceptor();
@@ -32,7 +32,7 @@ export class ActionLogService implements Pick<BackendServiceModelInterface<Actio
   }
 
 
-  @Generator(undefined, true, {property: 'rs'})
+  @CastResponse(() => ActionRegistry)
   private _load(caseId: string): Observable<ActionRegistry[]> {
     return this.service.http.get<ActionRegistry[]>(this.service._getURLSegment() + '/' + caseId + '/actions');
   }

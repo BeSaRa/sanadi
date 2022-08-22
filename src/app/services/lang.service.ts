@@ -145,7 +145,6 @@ export class LangService extends CrudGenericService<Localization> {
       .pipe(delay(300))
       .pipe(tap(_ => this.changeStatus$.next("InProgress")))
       .pipe(exhaustMap(({ language, silent }) => {
-        console.log('langDir', language.direction);
         this.changeHTMLDirection(language.direction);
         this.changeStyleHref(language.style);
         this.eCookieService.putEObject(this.configurationService.CONFIG.LANGUAGE_STORE_KEY, language);

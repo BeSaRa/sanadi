@@ -3,7 +3,6 @@ import { SubventionRequestAid } from '../models/subvention-request-aid';
 import { HttpClient } from '@angular/common/http';
 import { UrlService } from './url.service';
 import { Observable } from 'rxjs';
-import { Generator } from '@decorators/generator';
 import { FactoryService } from './factory.service';
 import { ISubventionRequestCriteria } from '@contracts/i-subvention-request-criteria';
 import { CrudGenericService } from "@app/generics/crud-generic-service";
@@ -31,7 +30,7 @@ export class SubventionRequestAidService extends CrudGenericService<SubventionRe
     FactoryService.registerService('SubventionRequestAidService', this);
   }
 
-  @Generator(undefined, true)
+  @CastResponse(undefined)
   private _loadByBeneficiaryId(id: number): Observable<SubventionRequestAid[]> {
     return this.http.get<SubventionRequestAid[]>(this.urlService.URLS.SUBVENTION_REQUEST_AID + '/beneficiary/' + id);
   }

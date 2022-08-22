@@ -1,12 +1,17 @@
-import {HttpClient} from '@angular/common/http';
-import {BackendServiceModelInterface} from '../interfaces/backend-service-model-interface';
-import {Recommendation} from '../models/recommendation';
-import {IModelInterceptor} from '../interfaces/i-model-interceptor';
-import {InterceptParam, SendInterceptor} from '../decorators/model-interceptor';
-import {Generator} from '../decorators/generator';
-import {Observable} from 'rxjs';
-import {RecommendationInterceptor} from '../model-interceptors/recommendation-interceptor';
+import { HttpClient } from '@angular/common/http';
+import { BackendServiceModelInterface } from '@contracts/backend-service-model-interface';
+import { Recommendation } from '../models/recommendation';
+import { IModelInterceptor } from '@contracts/i-model-interceptor';
+import { Observable } from 'rxjs';
+import { RecommendationInterceptor } from '../model-interceptors/recommendation-interceptor';
+import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
+import { HasInterception, InterceptParam } from "@decorators/intercept-model";
 
+@CastResponseContainer({
+  $default: {
+    model: () => Recommendation
+  }
+})
 export class RecommendationService implements Pick<BackendServiceModelInterface<Recommendation>, '_getInterceptor' | '_getModel'> {
   interceptor: RecommendationInterceptor = new RecommendationInterceptor();
 
@@ -22,9 +27,8 @@ export class RecommendationService implements Pick<BackendServiceModelInterface<
     return Recommendation;
   }
 
-
-  @SendInterceptor()
-  @Generator(undefined, false, {property: 'rs'})
+  @HasInterception
+  @CastResponse(undefined)
   private _create(caseId: string, @InterceptParam() model: Partial<Recommendation>): Observable<Recommendation> {
     return this.service.http.post<Recommendation>(this.service._getURLSegment() + '/' + caseId + '/recommendation', model);
   }
@@ -33,8 +37,8 @@ export class RecommendationService implements Pick<BackendServiceModelInterface<
     return this._create(caseId, model);
   }
 
-  @SendInterceptor()
-  @Generator(undefined, false, {property: 'rs'})
+  @HasInterception
+  @CastResponse(undefined)
   private _update(caseId: string, @InterceptParam() model: Partial<Recommendation>): Observable<Recommendation> {
     return this.service.http.put<Recommendation>(this.service._getURLSegment() + '/' + caseId + '/recommendation', model);
   }
@@ -43,7 +47,7 @@ export class RecommendationService implements Pick<BackendServiceModelInterface<
     return this._update(caseId, model);
   }
 
-  @Generator(undefined, true, {property: 'rs'})
+  @CastResponse(undefined)
   private _load(caseId: string): Observable<Recommendation[]> {
     return this.service.http.get<Recommendation[]>(this.service._getURLSegment() + '/' + caseId + '/recommendations');
   }

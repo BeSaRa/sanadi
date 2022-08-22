@@ -6,7 +6,6 @@ import { HttpClient } from '@angular/common/http';
 import { UrlService } from '@app/services/url.service';
 import { FactoryService } from '@app/services/factory.service';
 import { TraineeInterceptor } from '@app/model-interceptors/trainee-interceptor';
-import { Generator } from '@app/decorators/generator';
 import { Observable, of } from 'rxjs';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { IDialogData } from '@app/interfaces/i-dialog-data';
@@ -67,7 +66,7 @@ export class TraineeService extends CrudWithDialogGenericService<Trainee> {
     });
   }
 
-  @Generator(undefined, false, { property: 'rs' })
+  @CastResponse('')
   reject(trainingProgramId: number, traineeId: number, refusalComment: string): Observable<boolean> {
     return this.http.put<boolean>(this._getServiceURL() + '/refuse-trainee',
       { trainingProgramId: trainingProgramId, traineeId: traineeId, refusalComment: refusalComment });

@@ -6,16 +6,20 @@ import { IModelInterceptor } from "@app/interfaces/i-model-interceptor";
 import { UserTeamInterceptor } from "@app/model-interceptors/user-team-interceptor";
 import { UrlService } from "@app/services/url.service";
 import { Observable } from "rxjs";
-import { Generator } from "@app/decorators/generator";
 import { map } from "rxjs/operators";
 import { IDefaultResponse } from "@app/interfaces/idefault-response";
-import { InterceptParam, SendInterceptor } from "@app/decorators/model-interceptor";
 import { CrudGenericService } from "@app/generics/crud-generic-service";
-import { CastResponseContainer } from "@decorators/cast-response";
+import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
+import { Pagination } from "@app/models/pagination";
+import { HasInterception, InterceptParam } from "@decorators/intercept-model";
 
 @CastResponseContainer({
   $default: {
     model: () => UserTeam
+  },
+  $pagination: {
+    model: () => Pagination,
+    shape: { 'rs.*': () => UserTeam }
   }
 })
 @Injectable({
@@ -46,12 +50,12 @@ export class UserTeamService extends CrudGenericService<UserTeam> {
     FactoryService.registerService('UserTeamService', this);
   }
 
-  @Generator(UserTeam, true)
+  @CastResponse(undefined)
   loadUserTeamByUserId(generalUserId: number): Observable<UserTeam[]> {
     return this.http.get<UserTeam[]>(this.urlService.URLS.TEAMS + '/user-teams/' + generalUserId)
   }
 
-  @SendInterceptor()
+  @HasInterception
   createUserTeam(@InterceptParam() userTeam: Partial<UserTeam>): Observable<number> {
     return this.http.post<IDefaultResponse<number>>(this.urlService.URLS.TEAMS + '/add-user', userTeam)
       .pipe(map((res) => res.rs))
@@ -72,6 +76,5 @@ export class UserTeamService extends CrudGenericService<UserTeam> {
     return this.http.put<IDefaultResponse<Record<number, boolean>>>(this.urlService.URLS.TEAMS + '/activate-users/bulk', userTeamsIds)
       .pipe(map(res => res.rs));
   }
-
 
 }

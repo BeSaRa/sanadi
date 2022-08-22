@@ -1,10 +1,10 @@
-import {CaseModel} from '@app/models/case-model';
-import {EServiceGenericService} from '@app/generics/e-service-generic-service';
-import {FileNetModel} from '@app/models/FileNetModel';
-import {Observable} from 'rxjs';
-import {AdminResult} from '@app/models/admin-result';
+import { CaseModel } from '@app/models/case-model';
+import { FileNetModel } from '@app/models/FileNetModel';
+import { Observable } from 'rxjs';
+import { AdminResult } from '@app/models/admin-result';
+import { BaseGenericEService } from "@app/generics/base-generic-e-service";
 
-export abstract class LicenseApprovalModel<S extends EServiceGenericService<M>, M extends FileNetModel<M>> extends CaseModel<S, M> {
+export abstract class LicenseApprovalModel<S extends BaseGenericEService<M>, M extends FileNetModel<M>> extends CaseModel<S, M> {
   licenseNumber!: string;
   licenseDuration!: number;
   licenseStatus!: number;

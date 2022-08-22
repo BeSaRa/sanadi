@@ -1,30 +1,34 @@
-import {UrgentInterventionLicensingService} from '@app/services/urgent-intervention-licensing.service';
-import {CaseTypes} from '@app/enums/case-types.enum';
-import {FactoryService} from '@app/services/factory.service';
-import {ISearchFieldsMap} from '@app/types/types';
-import {dateSearchFields} from '@app/helpers/date-search-fields';
-import {infoSearchFields} from '@app/helpers/info-search-fields';
-import {normalSearchFields} from '@app/helpers/normal-search-fields';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {Domains} from '@app/enums/domains.enum';
-import {LookupService} from '@app/services/lookup.service';
-import {AdminResult} from '@app/models/admin-result';
-import {LangService} from '@app/services/lang.service';
-import {Validators} from '@angular/forms';
-import {EmployeeService} from '@app/services/employee.service';
-import {CaseModel} from "@app/models/case-model";
-import {mixinApprovalLicenseWithMonthly} from "@app/mixins/minin-approval-license-with-monthly";
-import {HasLicenseApprovalMonthly} from "@app/interfaces/has-license-approval-monthly";
-import {mixinRequestType} from "@app/mixins/mixin-request-type";
-import {HasRequestType} from "@app/interfaces/has-request-type";
-import {DialogRef} from "@app/shared/models/dialog-ref";
-import {WFResponseType} from "@app/enums/wfresponse-type.enum";
-import {CurrencyEnum} from "@app/enums/currency-enum";
-import {isValidAdminResult} from "@app/helpers/utils";
-import {DateUtils} from '@app/helpers/date-utils';
+import { UrgentInterventionLicensingService } from '@app/services/urgent-intervention-licensing.service';
+import { CaseTypes } from '@app/enums/case-types.enum';
+import { FactoryService } from '@app/services/factory.service';
+import { ISearchFieldsMap } from '@app/types/types';
+import { dateSearchFields } from '@app/helpers/date-search-fields';
+import { infoSearchFields } from '@app/helpers/info-search-fields';
+import { normalSearchFields } from '@app/helpers/normal-search-fields';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { Domains } from '@app/enums/domains.enum';
+import { LookupService } from '@app/services/lookup.service';
+import { AdminResult } from '@app/models/admin-result';
+import { LangService } from '@app/services/lang.service';
+import { Validators } from '@angular/forms';
+import { EmployeeService } from '@app/services/employee.service';
+import { CaseModel } from "@app/models/case-model";
+import { mixinApprovalLicenseWithMonthly } from "@app/mixins/minin-approval-license-with-monthly";
+import { HasLicenseApprovalMonthly } from "@app/interfaces/has-license-approval-monthly";
+import { mixinRequestType } from "@app/mixins/mixin-request-type";
+import { HasRequestType } from "@app/interfaces/has-request-type";
+import { DialogRef } from "@app/shared/models/dialog-ref";
+import { WFResponseType } from "@app/enums/wfresponse-type.enum";
+import { CurrencyEnum } from "@app/enums/currency-enum";
+import { isValidAdminResult } from "@app/helpers/utils";
+import { DateUtils } from '@app/helpers/date-utils';
+import { InterceptModel } from '@app/decorators/decorators/intercept-model';
+import { UrgentInterventionLicenseInterceptor } from "@app/model-interceptors/urgent-intervention-license-interceptor";
 
 const _ApprovalLicenseWithMonthly = mixinRequestType(mixinApprovalLicenseWithMonthly(CaseModel))
+const { send, receive } = new UrgentInterventionLicenseInterceptor();
 
+@InterceptModel({ send, receive })
 export class UrgentInterventionLicense extends _ApprovalLicenseWithMonthly<UrgentInterventionLicensingService, UrgentInterventionLicense> implements HasLicenseApprovalMonthly, HasRequestType {
   caseType: number = CaseTypes.URGENT_INTERVENTION_LICENSING;
   domain: number = Domains.HUMAN; // fixed value, so info will also be fixed always

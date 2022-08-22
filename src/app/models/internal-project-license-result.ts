@@ -1,6 +1,12 @@
-import {BaseLicense} from '@app/models/base-license';
-import {AdminResult} from '@app/models/admin-result';
+import { BaseLicense } from '@app/models/base-license';
+import { AdminResult } from '@app/models/admin-result';
+import { InterceptModel } from "@decorators/intercept-model";
+import {
+  InternalProjectLicenseResultInterceptor
+} from "@app/model-interceptors/internal-project-license-result-interceptor";
 
+const { send, receive } = new InternalProjectLicenseResultInterceptor();
+@InterceptModel({ send, receive })
 export class InternalProjectLicenseResult extends BaseLicense {
 
   arName!: string;

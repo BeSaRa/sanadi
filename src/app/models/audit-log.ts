@@ -1,5 +1,5 @@
 import {AdminResult} from './admin-result';
-import {isValidValue} from '../helpers/utils';
+import {isValidValue} from '@helpers/utils';
 
 export class AuditLog {
   auditId!: number;

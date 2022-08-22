@@ -4,7 +4,6 @@ import { SubventionRequestPartial } from '../models/subvention-request-partial';
 import { UrlService } from './url.service';
 import { HttpClient } from '@angular/common/http';
 import { LangService } from './lang.service';
-import { Generator } from '@decorators/generator';
 import { Observable, of } from 'rxjs';
 import { IPartialRequestCriteria } from '@contracts/i-partial-request-criteria';
 import { DialogRef } from '../shared/models/dialog-ref';
@@ -17,6 +16,13 @@ import { OrganizationUnitService } from './organization-unit.service';
 import { SubventionResponseService } from './subvention-response.service';
 import { SubventionResponse } from '../models/subvention-response';
 import { CrudGenericService } from "@app/generics/crud-generic-service";
+import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
+
+@CastResponseContainer({
+  $default: {
+    model: () => SubventionRequestPartial
+  }
+})
 
 @Injectable({
   providedIn: 'root'
@@ -36,17 +42,17 @@ export class SubventionRequestPartialService extends CrudGenericService<Subventi
   _getModel() {
     return SubventionRequestPartial;
   }
+
   _getServiceURL(): string {
     return this.urlService.URLS.SUBVENTION_REQUEST_PARTIAL;
   }
 
-  @Generator(undefined, true, {property: 'rs'})
+  @CastResponse(undefined)
   loadPartialRequests(): Observable<SubventionRequestPartial[]> {
     return this.http.get<SubventionRequestPartial[]>(this._getServiceURL() + '/active');
   }
 
-  // @ts-ignore
-  @Generator(undefined, true, {property: 'rs'})
+  @CastResponse(undefined)
   loadPartialRequestsByCriteria(criteria: Partial<IPartialRequestCriteria>): Observable<SubventionRequestPartial[]> {
     return this.http.post<SubventionRequestPartial[]>(this._getServiceURL() + '/criteria', criteria);
   }

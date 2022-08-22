@@ -83,6 +83,7 @@ export class TableHeaderComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.listenToFilterChange();
     this.listenToSort();
+    console.log(this.riskStatus);
   }
 
   private listenToSort() {

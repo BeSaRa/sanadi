@@ -1,14 +1,14 @@
-import {Component, Inject} from '@angular/core';
-import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
-import {EServiceGenericService} from '@app/generics/e-service-generic-service';
-import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {CustomsExemptionRemittance} from '@app/models/customs-exemption-remittance';
-import {InboxService} from '@app/services/inbox.service';
-import {LangService} from '@app/services/lang.service';
-import {SharedService} from '@app/services/shared.service';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
-import {CustomsExemptionRemittanceService} from '@services/customs-exemption-remittance.service';
+import { Component, Inject } from '@angular/core';
+import { FileIconsEnum } from '@app/enums/file-extension-mime-types-icons.enum';
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
+import { CustomsExemptionRemittance } from '@app/models/customs-exemption-remittance';
+import { InboxService } from '@app/services/inbox.service';
+import { LangService } from '@app/services/lang.service';
+import { SharedService } from '@app/services/shared.service';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
+import { CustomsExemptionRemittanceService } from '@services/customs-exemption-remittance.service';
+import { BaseGenericEService } from "@app/generics/base-generic-e-service";
 
 @Component({
   selector: 'select-document-pop-up',
@@ -22,13 +22,13 @@ export class SelectDocumentPopUpComponent {
   caseStatus: number;
   requestType: number;
   fileIconsEnum = FileIconsEnum;
-  caseService?: EServiceGenericService<any>;
+  caseService?: BaseGenericEService<any>;
 
   constructor(public lang: LangService,
               private dialogRef: DialogRef,
               private customsExemptionRemittanceService: CustomsExemptionRemittanceService,
               private inboxService: InboxService,
-              private sharedService: SharedService,
+              private _sharedService: SharedService,
               @Inject(DIALOG_DATA_TOKEN)
               public data: {
                 documents: CustomsExemptionRemittance[];
