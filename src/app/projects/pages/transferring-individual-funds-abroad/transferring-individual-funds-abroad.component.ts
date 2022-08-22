@@ -36,13 +36,14 @@ import {InternalProjectLicenseResult} from '@app/models/internal-project-license
 import {SharedService} from '@services/shared.service';
 import {ReceiverOrganization} from '@app/models/receiver-organization';
 import {ReceiverPerson} from '@app/models/receiver-person';
+import {ITransferFundsAbroadComponent} from '@contracts/i-transfer-funds-abroad-component';
 
 @Component({
   selector: 'transferring-individual-funds-abroad',
   templateUrl: './transferring-individual-funds-abroad.component.html',
   styleUrls: ['./transferring-individual-funds-abroad.component.scss']
 })
-export class TransferringIndividualFundsAbroadComponent extends EServicesGenericComponent<TransferringIndividualFundsAbroad, TransferringIndividualFundsAbroadService> implements AfterViewInit {
+export class TransferringIndividualFundsAbroadComponent extends EServicesGenericComponent<TransferringIndividualFundsAbroad, TransferringIndividualFundsAbroadService> implements AfterViewInit, ITransferFundsAbroadComponent {
   form!: UntypedFormGroup;
   executiveManagementForm!: UntypedFormGroup;
   transferPurposeForm!: UntypedFormGroup;

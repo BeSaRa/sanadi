@@ -38,6 +38,8 @@ import {StepCheckListComponent} from '@app/shared/components/step-check-list/ste
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {ITransferIndividualFundsAbroadComplete} from '@contracts/i-transfer-individual-funds-abroad-complete';
+import {ITransferFundsAbroadComponent} from '@contracts/i-transfer-funds-abroad-component';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -966,10 +968,23 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     });
   }
 
+  isCompleteWithSave(item: CaseModel<any, any>): boolean {
+    return item.caseStatus === CommonCaseStatus.RETURNED;
+  }
+
   private completeAction(item: CaseModel<any, any>) {
-    item.complete().onAfterClose$.subscribe(actionTaken => {
-      actionTaken && this.navigateToSamePageThatUserCameFrom();
-    });
+    if (this.isCompleteWithSave(item)) {
+      const model = item as unknown as ITransferIndividualFundsAbroadComplete;
+      const component = this.component as unknown as ITransferFundsAbroadComponent;
+
+      model.completeWithForm(component.form, component.selectedExecutives, component.selectedPurposes).onAfterClose$.subscribe(actionTaken => {
+        actionTaken && this.navigateToSamePageThatUserCameFrom();
+      });
+    } else {
+      item.complete().onAfterClose$.subscribe(actionTaken => {
+        actionTaken && this.navigateToSamePageThatUserCameFrom();
+      });
+    }
   }
 
   private approveAction(item: CaseModel<any, any>) {

@@ -21,6 +21,12 @@ import {Observable} from 'rxjs';
 import {ReceiverOrganization} from '@app/models/receiver-organization';
 import {SelectReceiverEntityPopupComponent} from '@app/projects/pages/select-receiver-entity-popup/select-receiver-entity-popup.component';
 import {ReceiverPerson} from '@app/models/receiver-person';
+import {
+  TransferFundsAbroadCompleteTaskPopupComponent
+} from '@app/projects/popups/transfer-funds-abroad-complete-task-popup/transfer-funds-abroad-complete-task-popup.component';
+import {UntypedFormGroup} from '@angular/forms';
+import {TransferFundsExecutiveManagement} from '@app/models/transfer-funds-executive-management';
+import {TransferFundsCharityPurpose} from '@app/models/transfer-funds-charity-purpose';
 
 @CastResponseContainer({
   $default: {
@@ -79,6 +85,17 @@ export class TransferringIndividualFundsAbroadService extends BaseGenericEServic
     return this.dialog.show(TransferFundsAbroadApproveTaskPopupComponent, {
       model,
       action: action
+    });
+  }
+
+  completeTask(model: TransferringIndividualFundsAbroad, action: WFResponseType, form: UntypedFormGroup, selectedExecutives: TransferFundsExecutiveManagement[], selectedPurposes: TransferFundsCharityPurpose[]): DialogRef {
+    return this.dialog.show(TransferFundsAbroadCompleteTaskPopupComponent, {
+      model,
+      action: action,
+      service: this,
+      form,
+      selectedExecutives,
+      selectedPurposes
     });
   }
 
