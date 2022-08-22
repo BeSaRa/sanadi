@@ -58,8 +58,8 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
   customTerms: CustomTerm[] = [];
 
   datepickerOptionsMap: DatepickerOptionsMap = {
-    licenseStartDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
-    followUpDate: DateUtils.getDatepickerOptions({disablePeriod: 'past'})
+    licenseStartDate: DateUtils.getDatepickerOptions({disablePeriod: 'none', appendToBody: true}),
+    followUpDate: DateUtils.getDatepickerOptions({disablePeriod: 'past', appendToBody: true})
   };
 
   constructor(
