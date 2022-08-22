@@ -1542,12 +1542,8 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     if (stopRequestStatus.includes(value.first)) {
       this.dialogService.info(this.langService.map[value.first as keyof ILanguageKeys]);
       return 'STOP';
-    } else {
-      if (value.first === BeneficiarySaveStatus.BENEFICIARY_IS_DEAD_SERVICE_NOT_AVAILABLE) {
-        this.toastService.alert(this.langService.map[BeneficiarySaveStatus.BENEFICIARY_IS_DEAD_SERVICE_NOT_AVAILABLE as keyof ILanguageKeys], 5);
-      }
-      return 'CONTINUE';
     }
+    return 'CONTINUE';
   }
 
   private displayBeneficiaryExistsMessage(value: Pair<BeneficiarySaveStatus, Beneficiary> | null): any {
@@ -1555,21 +1551,30 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
-    if (value.first === BeneficiarySaveStatus.EXISTING) {
+    if (value.first === BeneficiarySaveStatus.EXISTING || value.first === BeneficiarySaveStatus.BENEFICIARY_IS_DEAD_SERVICE_NOT_AVAILABLE) {
       let confirmMsg: DialogRef;
-      if (this.empService.checkPermissions('SUBVENTION_AID_SEARCH')) {
-        confirmMsg = this.dialogService.confirmWithTree(this.langService.map.beneficiary_already_exists, {
+      if (value.first === BeneficiarySaveStatus.BENEFICIARY_IS_DEAD_SERVICE_NOT_AVAILABLE) {
+        const msg = this.langService.map[BeneficiarySaveStatus.BENEFICIARY_IS_DEAD_SERVICE_NOT_AVAILABLE as keyof ILanguageKeys] + '<br>' + this.langService.map.msg_confirm_continue;
+        confirmMsg = this.dialogService.confirm(msg, {
           actionBtn: 'btn_continue',
-          thirdBtn: 'btn_save_and_inquire',
           cancelBtn: 'btn_clear',
           showCloseIcon: true
         });
       } else {
-        confirmMsg = this.dialogService.confirm(this.langService.map.beneficiary_already_exists, {
-          actionBtn: 'btn_continue',
-          cancelBtn: 'btn_clear',
-          showCloseIcon: true
-        });
+        if (this.empService.checkPermissions('SUBVENTION_AID_SEARCH')) {
+          confirmMsg = this.dialogService.confirmWithTree(this.langService.map.beneficiary_already_exists, {
+            actionBtn: 'btn_continue',
+            thirdBtn: 'btn_save_and_inquire',
+            cancelBtn: 'btn_clear',
+            showCloseIcon: true
+          });
+        } else {
+          confirmMsg = this.dialogService.confirm(this.langService.map.beneficiary_already_exists, {
+            actionBtn: 'btn_continue',
+            cancelBtn: 'btn_clear',
+            showCloseIcon: true
+          });
+        }
       }
       confirmMsg.onAfterClose$
         .pipe(take(1))

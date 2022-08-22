@@ -20,6 +20,7 @@ import {BeneficiaryIncome} from '@app/models/beneficiary-income';
 import {BenOccupationStatusEnum} from '@app/enums/status.enum';
 import {InterceptModel} from '@decorators/intercept-model';
 import {BeneficiaryInterceptor} from '@app/model-interceptors/beneficiary-interceptor';
+import {BeneficiaryRequesterRelationTypes} from '@app/enums/beneficiary-requester-relation-types';
 
 @InterceptModel({
   receive: BeneficiaryInterceptor.receive,
@@ -76,7 +77,7 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
   beneficiaryObligationSet: BeneficiaryObligation[] = [];
   beneficiaryIncomeSet: BeneficiaryIncome[] = [];
   employmentStatus!: boolean;
-  benRequestorRelationType!: number;
+  benRequestorRelationType: number = BeneficiaryRequesterRelationTypes.SAME_AS_REQUESTER;
   requestorName!: string;
   requestorIdType!: number;
   requestorIdNumber!: string;
