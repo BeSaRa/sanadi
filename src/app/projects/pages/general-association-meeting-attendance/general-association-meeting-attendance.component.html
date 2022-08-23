@@ -118,7 +118,7 @@
                 <div #dpEstablishmentDate="angular-mydatepicker"
                      (click)="!readonly && dpEstablishmentDate.toggleCalendar()"
                      [ngClass]="{'input-disabled': (readonly)}"
-                     [options]="datepickerOptionsMap.meetingDate"
+                     [options]="getDatepickerOptionsMap().meetingDate"
                      angular-mydatepicker
                      class="form-control"
                      formControlName="meetingDate"

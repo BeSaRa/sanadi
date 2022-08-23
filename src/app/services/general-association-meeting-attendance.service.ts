@@ -16,6 +16,7 @@ import {NpoEmployee} from '@app/models/npo-employee';
 import {GeneralAssociationExternalMember} from '@app/models/general-association-external-member';
 import {SelectMemberPopupComponent} from '@app/projects/pages/shared/select-member-popup-component/select-member-popup.component';
 import {DialogRef} from '@app/shared/models/dialog-ref';
+import {GeneralAssociationExternalMemberInterceptor} from '@app/model-interceptors/general-association-external-member-interceptor';
 
 @CastResponseContainer({
   $default: {
@@ -31,6 +32,7 @@ export class GeneralAssociationMeetingAttendanceService extends BaseGenericEServ
   serviceKey: keyof ILanguageKeys = 'menu_general_association_meeting_attendance';
   caseStatusIconMap: Map<number, string> = new Map<number, string>();
   searchColumns: string[] = [];
+  externalMembersInterceptor: GeneralAssociationExternalMemberInterceptor = new GeneralAssociationExternalMemberInterceptor();
 
   constructor(private urlService: UrlService,
               public domSanitizer: DomSanitizer,

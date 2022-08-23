@@ -1,4 +1,7 @@
 export interface ILanguageKeys {
+  you_should_add_at_least_one_item_to_meeting_agenda: string;
+  you_should_add_at_least_one_person_to_general_association_members: string;
+  you_should_add_at_least_one_person_to_administrative_board_members: string;
   beneficiary_info: string;
   requester_same_as_beneficiary: string;
   agenda_items: string;

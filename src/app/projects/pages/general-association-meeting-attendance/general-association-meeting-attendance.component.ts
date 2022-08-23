@@ -23,6 +23,8 @@ import {InternalProjectLicenseResult} from '@app/models/internal-project-license
 import {SharedService} from '@services/shared.service';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {CustomValidators} from '@app/validators/custom-validators';
+import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import {OpenFrom} from '@app/enums/open-from.enum';
 
 @Component({
   selector: 'general-association-meeting-attendance',
@@ -49,9 +51,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     .sort((a, b) => a.lookupKey - b.lookupKey);
 
   datepickerControlsMap: DatepickerControlsMap = {};
-  datepickerOptionsMap: DatepickerOptionsMap = {
-    meetingDate: DateUtils.getDatepickerOptions({disablePeriod: 'past'})
-  };
+  datepickerOptionsMap!: DatepickerOptionsMap;
 
   isExternalUser!: boolean;
   selectedAdministrativeBoardMembers: GeneralAssociationExternalMember[] = [];
@@ -116,19 +116,39 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   }
 
   _afterBuildForm(): void {
-
+    this.handleReadonly();
   }
 
   _updateForm(model: GeneralAssociationMeetingAttendance | undefined): void {
+    if (!model) {
+      return;
+    }
 
+    this.model = new GeneralAssociationMeetingAttendance().clone({...this.model, ...model});
+    this.form.patchValue({
+      basicInfo: this.model?.buildBasicInfo(),
+      explanation: this.model?.buildExplanation()
+    });
+
+    this.selectedAdministrativeBoardMembers = this.model?.administrativeBoardMembers;
+    this.selectedGeneralAssociationMembers = this.model?.generalAssociationMembers;
+    this.agendaItems = this.getAgendaItemsAsJson(this.model?.agenda);
   }
 
   _resetForm(): void {
     this.form.reset();
+    this.hasSearchedForLicense = false;
   }
 
   _prepareModel(): GeneralAssociationMeetingAttendance | Observable<GeneralAssociationMeetingAttendance> {
-    return new GeneralAssociationMeetingAttendance();
+    return new GeneralAssociationMeetingAttendance().clone({
+      ...this.model,
+      ...this.basicInfo.getRawValue(),
+      ...this.specialExplanation.getRawValue(),
+      administrativeBoardMembers: this.selectedAdministrativeBoardMembers,
+      generalAssociationMembers: this.selectedGeneralAssociationMembers,
+      agenda: this.getAgendaItemsAsString(this.agendaItems)
+    });
   }
 
   _getNewInstance(): GeneralAssociationMeetingAttendance {
@@ -136,7 +156,21 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
-    // extra validation here
+    if (this.selectedAdministrativeBoardMembers && this.selectedAdministrativeBoardMembers.length < 1) {
+      this.dialog.error(this.lang.map.you_should_add_at_least_one_person_to_administrative_board_members);
+      return false;
+    }
+
+    if (this.selectedGeneralAssociationMembers && this.selectedGeneralAssociationMembers.length < 1) {
+      this.dialog.error(this.lang.map.you_should_add_at_least_one_person_to_general_association_members);
+      return false;
+    }
+
+    if (this.agendaItems && this.agendaItems.length < 1) {
+      this.dialog.error(this.lang.map.you_should_add_at_least_one_item_to_meeting_agenda);
+      return false;
+    }
+
     return this.form.valid;
   }
 
@@ -162,6 +196,9 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
 
   _afterLaunch(): void {
     this._resetForm();
+    this.selectedAdministrativeBoardMembers = [];
+    this.selectedGeneralAssociationMembers = [];
+    this.agendaItems = [];
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
 
@@ -331,5 +368,49 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
       return JSON.parse(agendaItems);
     }
     return [];
+  }
+
+  handleReadonly(): void {
+    // if record is new, no readonly (don't change as default is readonly = false)
+    if (!this.model?.id) {
+      return;
+    }
+
+    let caseStatus = this.model.getCaseStatus();
+    if (caseStatus == CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.FINAL_REJECTION) {
+      this.readonly = true;
+      return;
+    }
+
+    if (this.openFrom === OpenFrom.USER_INBOX) {
+      if (this.employeeService.isCharityManager()) {
+        this.readonly = false;
+      } else if (this.employeeService.isCharityUser()) {
+        this.readonly = !this.model.isReturned();
+      }
+    } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
+      // after claim, consider it same as user inbox and use same condition
+      if (this.model.taskDetails.isClaimed()) {
+        if (this.employeeService.isCharityManager()) {
+          this.readonly = false;
+        } else if (this.employeeService.isCharityUser()) {
+          this.readonly = !this.model.isReturned();
+        }
+      }
+    } else if (this.openFrom === OpenFrom.SEARCH) {
+      // if saved as draft and opened by creator who is charity user, then no readonly
+      if (this.model?.canCommit()) {
+        this.readonly = false;
+      }
+    }
+  }
+
+  getDatepickerOptionsMap(): DatepickerOptionsMap {
+    return this.operation === OperationTypes.CREATE ? {
+        meetingDate: DateUtils.getDatepickerOptions({disablePeriod: 'past'})
+      } :
+      {
+        meetingDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'})
+      };
   }
 }

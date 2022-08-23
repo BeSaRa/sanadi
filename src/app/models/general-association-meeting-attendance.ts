@@ -10,6 +10,7 @@ import {AdminResult} from '@app/models/admin-result';
 import {GeneralAssociationInternalMember} from '@app/models/general-association-internal-member';
 import {GeneralAssociationExternalMember} from '@app/models/general-association-external-member';
 import {CustomValidators} from '@app/validators/custom-validators';
+import {CaseTypes} from '@app/enums/case-types.enum';
 
 const _RequestType = mixinRequestType(CaseModel);
 const interceptor = new GeneralAssociationMeetingAttendanceInterceptor();
@@ -21,6 +22,7 @@ const interceptor = new GeneralAssociationMeetingAttendanceInterceptor();
 
 export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAssociationMeetingAttendanceService, GeneralAssociationMeetingAttendance> implements HasRequestType {
   service!: GeneralAssociationMeetingAttendanceService;
+  caseType = CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE;
   licenseApprovedDate!: string | IMyDateModel;
   agenda!: string;
   description!: string;
