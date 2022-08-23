@@ -1,3 +1,4 @@
+import { IMyInputFieldChanged } from 'angular-mydatepicker';
 import { DatepickerOptionsMap } from '@app/types/types';
 import { DateUtils } from '@app/helpers/date-utils';
 import { Subject } from 'rxjs';
@@ -87,6 +88,17 @@ export class EmploymentApproveComponent implements OnInit, OnDestroy {
     } : { selectedResponse: this.response };
   }
 
+  onDateChange(event: IMyInputFieldChanged, fromFieldName: string, toFieldName: string): void {
+    DateUtils.setRelatedMinMaxDate({
+      fromFieldName,
+      toFieldName,
+      controlOptionsMap: this.datepickerOptionsMap,
+      controlsMap: {
+        licenseStartDate: this.licenseStartDate,
+        licenseEndDate: this.licenseEndDate
+      }
+    });
+  }
   isNewRequestType(): boolean {
     return this.data.model.requestType === EmploymentRequestType.NEW;
   }
@@ -94,10 +106,16 @@ export class EmploymentApproveComponent implements OnInit, OnDestroy {
     return this.data.model.requestType === EmploymentRequestType.CANCEL;
   }
   isInterm() {
-    return  this.data.model.employeeInfoDTOs[0].contractType == ContractTypes.Interim
+    return this.data.model.employeeInfoDTOs[0].contractType == ContractTypes.Interim
   }
   isApproval() {
     return this.data.model.category == EmploymentCategory.APPROVAL
+  }
+  get licenseStartDate() {
+    return this.form.controls.licenseStartDate as UntypedFormControl
+  }
+  get licenseEndDate() {
+    return this.form.controls.licenseEndDate as UntypedFormControl;
   }
   private isCommentRequired(): boolean {
     return this.isCancelRequestType();
