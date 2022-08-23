@@ -1,22 +1,22 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { LangService } from '@app/services/lang.service';
-import { BeneficiaryObligation } from '@app/models/beneficiary-obligation';
-import { ReadinessStatus } from '@app/types/types';
-import { BehaviorSubject, Subject } from 'rxjs';
-import { AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
-import { LookupService } from '@app/services/lookup.service';
-import { PeriodicPayment, SubAidPeriodicTypeEnum } from '@app/enums/periodic-payment.enum';
-import { CustomValidators } from '@app/validators/custom-validators';
-import { ActionIconsEnum } from '@app/enums/action-icons-enum';
-import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
-import { filter, map, take, takeUntil, tap } from 'rxjs/operators';
-import { UserClickOn } from '@app/enums/user-click-on.enum';
-import { DialogService } from '@app/services/dialog.service';
-import { ToastService } from '@app/services/toast.service';
-import { Lookup } from '@app/models/lookup';
-import { SortEvent } from '@app/interfaces/sort-event';
-import { CommonUtils } from '@app/helpers/common-utils';
-import { Beneficiary } from '@app/models/beneficiary';
+import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {LangService} from '@app/services/lang.service';
+import {BeneficiaryObligation} from '@app/models/beneficiary-obligation';
+import {ReadinessStatus} from '@app/types/types';
+import {BehaviorSubject, Subject} from 'rxjs';
+import {AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
+import {LookupService} from '@app/services/lookup.service';
+import {PeriodicPayment, SubAidPeriodicTypeEnum} from '@app/enums/periodic-payment.enum';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {filter, map, take, takeUntil, tap} from 'rxjs/operators';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {DialogService} from '@app/services/dialog.service';
+import {ToastService} from '@app/services/toast.service';
+import {Lookup} from '@app/models/lookup';
+import {SortEvent} from '@app/interfaces/sort-event';
+import {CommonUtils} from '@app/helpers/common-utils';
+import {Beneficiary} from '@app/models/beneficiary';
 
 @Component({
   selector: 'beneficiary-obligation',
@@ -44,6 +44,7 @@ export class BeneficiaryObligationComponent implements OnInit, OnDestroy, AfterV
     if (this.readonly) {
       this.columns.splice(this.columns.indexOf('actions'), 1);
     }
+    this._setFooterLabelColspan();
   }
 
   ngOnDestroy(): void {
@@ -74,6 +75,7 @@ export class BeneficiaryObligationComponent implements OnInit, OnDestroy, AfterV
   headerColumn: string[] = ['extra-header'];
   columns = ['obligationType', 'periodicType', 'installmentsCount', 'amount', 'actions'];
   footerColumns: string[] = ['totalDebtsLabel', 'totalDebts'];
+  footerLabelColSpan: number = 0;
   obligationTypeList = this.lookupService.listByCategory.BENEFICIARY_OBLIGATION;
   periodicTypeList = this.lookupService.listByCategory.SubAidPeriodicType;
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
@@ -133,6 +135,14 @@ export class BeneficiaryObligationComponent implements OnInit, OnDestroy, AfterV
   buildForm(): void {
     let model = new BeneficiaryObligation().clone(this.currentRecord);
     this.form = this.fb.group(model.buildForm(true));
+  }
+
+  private _setFooterLabelColspan(): void {
+    if (this.readonly) {
+      this.footerLabelColSpan = this.columns.length - 1;
+    } else {
+      this.footerLabelColSpan = this.columns.length - 2;
+    }
   }
 
   isTouchedOrDirty(): boolean {
