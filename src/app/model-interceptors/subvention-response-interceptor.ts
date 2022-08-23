@@ -8,7 +8,7 @@ import { BeneficiaryInterceptor } from './beneficiary-interceptor';
 import { SubventionRequestInterceptor } from './subvention-request-interceptor';
 
 export class SubventionResponseInterceptor {
-  static receive(model: any): any {
+  receive(model: any): any {
     model.attachmentList = model.attachmentList.map((attachment: any) => {
       return (new SanadiAttachmentInterceptor).receive((new SanadiAttachment().clone(attachment)));
     });
@@ -20,7 +20,7 @@ export class SubventionResponseInterceptor {
     return model;
   }
 
-  static send(model: any): any {
+  send(model: any): any {
     model.attachmentList = model.attachmentList.map((attachment: any) => {
       return (new SanadiAttachmentInterceptor).send(attachment);
     });
