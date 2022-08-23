@@ -3,7 +3,6 @@ import { FactoryService } from './factory.service';
 import { HttpClient } from '@angular/common/http';
 import { UrlService } from './url.service';
 import { SubventionResponse } from '../models/subvention-response';
-import { SubventionResponseInterceptor } from '../model-interceptors/subvention-response-interceptor';
 import { Observable } from 'rxjs';
 import { AttachmentService } from './attachment.service';
 import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
@@ -26,23 +25,12 @@ export class SubventionResponseService {
     FactoryService.registerService('SubventionResponseService', this);
   }
 
-  interceptor = new SubventionResponseInterceptor();
-
-
   _getModel(): any {
     return SubventionResponse;
   }
 
-  _getSendInterceptor(): any {
-    return this.interceptor.send;
-  }
-
   _getServiceURL(): string {
     return this.urlService.URLS.SUBVENTION_REQUEST;
-  }
-
-  _getReceiveInterceptor(): any {
-    return this.interceptor.receive;
   }
 
   _getPartialRequestServiceURL(): string {
