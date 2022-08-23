@@ -90,6 +90,7 @@ export abstract class CrudGenericService<T> implements CrudServiceInterface<T>, 
   }
 
   @HasInterception
+  @CastResponse(undefined)
   create(@InterceptParam() model: T): Observable<T> {
     return this.http.post<T>(this._getServiceURL() + '/full', model);
   }
