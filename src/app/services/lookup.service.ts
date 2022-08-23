@@ -22,7 +22,6 @@ export class LookupService extends CrudGenericService<Lookup> {
   }
 
   setLookupsMap(lookupMap: ILookupMap): ILookupMap {
-    console.log({ lookupMap });
     return this.listByCategory = lookupMap;
   }
 
