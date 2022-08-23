@@ -140,10 +140,5 @@ export interface ILookupMap {
   UsageAdjective: Lookup[];
   UserType: Lookup[];
   WORK_FIELD: Lookup[];
-  TrainingLanguage: Lookup[];
-  CoordinationType: Lookup[];
-  TrainingActivityType: Lookup[];
-  TrainingWay: Lookup[];
-  OrganizationWay: Lookup[];
-  RecommendedWay: Lookup[];
+
 }
