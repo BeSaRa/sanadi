@@ -1406,7 +1406,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private loadDonors() {
     this.donorList = [];
-    return this.donorService.loadComposite().pipe(
+    return this.donorService.loadAsLookups().pipe(
       catchError(() => of([]))
     ).subscribe((list) => {
       this.donorList = list;
@@ -1769,7 +1769,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  requesterIdDisabled(nationality: boolean = false): boolean {
+  requesterIdDisabled(_nationality: boolean = false): boolean {
     /*if (this.isPartialRequest) {
       return true;
     } else {

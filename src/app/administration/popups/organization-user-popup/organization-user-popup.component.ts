@@ -245,7 +245,7 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
 
 
   private buildPermissionGroups(): void {
-    combineLatest([this.permissionService.load(), of(this.lookupService.listByCategory.OrgUserPermissionGroup)])
+    combineLatest([this.permissionService.loadAsLookups(), of(this.lookupService.listByCategory.OrgUserPermissionGroup)])
       .pipe(take(1))
       .subscribe((result) => {
         const permissionByGroupId = OrganizationUserPopupComponent.buildPermissionsByGroupId(result[0]);
