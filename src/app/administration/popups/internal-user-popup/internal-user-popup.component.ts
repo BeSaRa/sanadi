@@ -136,7 +136,7 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
 
   private loadPermissions() {
     this.permissionService
-      .load()
+      .loadAsLookups()
       .pipe(takeUntil(this.destroy$))
       .pipe(withLatestFrom(of(this.lookupService.listByCategory.OrgUserPermissionGroup)))
       .pipe(switchMap(([permissions, groups]) => {
