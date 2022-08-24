@@ -1,5 +1,10 @@
+import { InterceptModel } from '@app/decorators/decorators/intercept-model';
+import { ActionRegistryInterceptor } from './../model-interceptors/action-registry-interceptor';
 import {AdminResult} from './admin-result';
 
+const {send, receive} = new ActionRegistryInterceptor();
+
+@InterceptModel({send , receive})
 export class ActionRegistry {
   id!: number;
   caseId!: string;
