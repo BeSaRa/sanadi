@@ -13,9 +13,12 @@ import {DialogService} from '@app/services/dialog.service';
 import {DateUtils} from '@app/helpers/date-utils';
 import {mixinRequestType} from '@app/mixins/mixin-request-type';
 import {HasRequestType} from '@app/interfaces/has-request-type';
+import {InterceptModel} from '@decorators/intercept-model';
+import {CustomsExemptionRemittanceInterceptor} from '@app/model-interceptors/customs-exemption-remittance-interceptor';
 
 const _ApprovalDocument = mixinRequestType(CaseModel);
-
+const { send, receive } = new CustomsExemptionRemittanceInterceptor();
+@InterceptModel({ send, receive })
 export class CustomsExemptionRemittance extends _ApprovalDocument<CustomsExemptionRemittanceService, CustomsExemptionRemittance> implements HasRequestType {
   service: CustomsExemptionRemittanceService;
   id!: string;
