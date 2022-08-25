@@ -73,12 +73,13 @@ export class BeneficiaryService extends CrudGenericService<Beneficiary> {
   }
 
   @HasInterception
-  createWithValidate(@InterceptParam() beneficiary: Partial<Beneficiary>, validate: boolean = true): Observable<Pair<BeneficiarySaveStatus, Beneficiary>> {
+  createWithValidate(@InterceptParam() beneficiary: Partial<Beneficiary>, validate: boolean = true, validateMoph: boolean = true): Observable<Pair<BeneficiarySaveStatus, Beneficiary>> {
     delete beneficiary.id;
+    let params = new HttpParams({
+      fromObject: { 'with-check': validate + '', 'with-moph-check': validateMoph  },
+    });
     return this.http.post<Pair<BeneficiarySaveStatus, Beneficiary>>(this._getServiceURL() + '/validate-save', beneficiary, {
-      params: new HttpParams({
-        fromObject: { 'with-check': validate + '' }
-      })
+      params: params
     }).pipe(map((response: any) => {
       response.rs.second = response.rs.second ? this._getReceiveInterceptor()(new Beneficiary().clone(response.rs.second)) : response.rs.second;
       return response.rs;

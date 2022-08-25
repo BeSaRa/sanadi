@@ -1,15 +1,19 @@
-import {AdminResult} from './admin-result';
-import {FactoryService} from '@services/factory.service';
-import {Observable} from 'rxjs';
-import {DialogRef} from '../shared/models/dialog-ref';
-import {SubventionRequestPartialService} from '@services/subvention-request-partial.service';
-import {BaseModel} from './base-model';
-import {SubventionRequestService} from '@services/subvention-request.service';
-import {isValidValue} from '@helpers/utils';
-import {ISearchFieldsMap} from '@app/types/types';
-import {infoSearchFields} from '@app/helpers/info-search-fields';
-import {normalSearchFields} from '@app/helpers/normal-search-fields';
+import { AdminResult } from './admin-result';
+import { FactoryService } from '@services/factory.service';
+import { Observable } from 'rxjs';
+import { DialogRef } from '../shared/models/dialog-ref';
+import { SubventionRequestPartialService } from '@services/subvention-request-partial.service';
+import { BaseModel } from './base-model';
+import { SubventionRequestService } from '@services/subvention-request.service';
+import { isValidValue } from '@helpers/utils';
+import { ISearchFieldsMap } from '@app/types/types';
+import { infoSearchFields } from '@app/helpers/info-search-fields';
+import { normalSearchFields } from '@app/helpers/normal-search-fields';
+import { SubventionRequestPartialInterceptor } from "@app/model-interceptors/subvention-request-partial-interceptor";
+import { InterceptModel } from "@decorators/intercept-model";
 
+const {send, receive} = new SubventionRequestPartialInterceptor()
+@InterceptModel({send, receive})
 export class SubventionRequestPartial extends BaseModel<SubventionRequestPartial, any> {
 
   requestId!: number;

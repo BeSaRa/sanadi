@@ -138,7 +138,7 @@ export class PartialRequestReportsComponent implements OnInit {
 
   private _loadInitData(): Observable<{ orgUnits: OrgUnit[] }> {
     return forkJoin({
-      orgUnits: this.organizationUnitService.load()
+      orgUnits: this.organizationUnitService.loadAsLookups()
     });
   }
 

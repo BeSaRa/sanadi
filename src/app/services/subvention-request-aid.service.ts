@@ -9,6 +9,7 @@ import { CrudGenericService } from "@app/generics/crud-generic-service";
 import { HasInterception, InterceptParam } from "@decorators/intercept-model";
 import { Pagination } from "@app/models/pagination";
 import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
+import {SubventionRequestAidInterceptor} from '@app/model-interceptors/subvention-request-aid-interceptor';
 
 @CastResponseContainer({
   $default: {
@@ -41,7 +42,7 @@ export class SubventionRequestAidService extends CrudGenericService<SubventionRe
 
   @HasInterception
   @CastResponse(undefined)
-  private _loadByCriteria(@InterceptParam() criteria: Partial<ISubventionRequestCriteria>): Observable<SubventionRequestAid[]> {
+  private _loadByCriteria(@InterceptParam((new SubventionRequestAidInterceptor()).send) criteria: Partial<ISubventionRequestCriteria>): Observable<SubventionRequestAid[]> {
     return this.http.post<SubventionRequestAid[]>(this.urlService.URLS.SUBVENTION_REQUEST + '/criteria', criteria);
   }
 
@@ -50,7 +51,7 @@ export class SubventionRequestAidService extends CrudGenericService<SubventionRe
   }
 
   @HasInterception
-  private _loadByCriteriaAsBlob(@InterceptParam() criteria: Partial<ISubventionRequestCriteria>): Observable<Blob> {
+  private _loadByCriteriaAsBlob(@InterceptParam((new SubventionRequestAidInterceptor()).send) criteria: Partial<ISubventionRequestCriteria>): Observable<Blob> {
     return this.http.post(this.urlService.URLS.SUBVENTION_REQUEST + '/criteria/export', criteria, { responseType: 'blob' })
   }
 

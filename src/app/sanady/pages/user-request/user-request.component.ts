@@ -68,6 +68,7 @@ import {Donor} from '@app/models/donor';
 import {DonorService} from '@services/donor.service';
 import {SharedService} from '@services/shared.service';
 import {BeneficiaryRequesterRelationTypes} from '@app/enums/beneficiary-requester-relation-types';
+import {IDialogButton} from '@contracts/i-dialog-predefined-config';
 
 @Component({
   selector: 'app-user-request',
@@ -219,7 +220,8 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
   readOnly = false;
   isPartialRequest: boolean = false;
   private requestStatusArray: SubventionRequestStatus[] = [SubventionRequestStatus.REJECTED, SubventionRequestStatus.SAVED];
-  private validateStatus: boolean = true;
+  private validateBeneficiary: boolean = true;
+  private validateMophBeneficiary: boolean = true;
 
   beneficiaryIdTypesEnum = BeneficiaryIdTypes;
   idTypes: Lookup[] = this.lookup.listByCategory.BenIdType;
@@ -440,35 +442,9 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
         return this.requesterRelationTypeField.value === BeneficiaryRequesterRelationTypes.SAME_AS_REQUESTER;
       }
     }
-
-    // return this.requesterRelationTypeField?.value === BeneficiaryRequesterRelationTypes.SAME_AS_REQUESTER;
   }
 
-  /*handleRequesterRelationTypeChange(value?: number, userInteraction: boolean = false) {
-    let dependentFields = [this.beneficiaryRequesterNameField, this.requesterIdTypeField, this.requesterIdNumberField, this.requesterNationalityField, this.requesterPhoneField];
-    dependentFields.forEach((field: UntypedFormControl) => {
-      if (!field) {
-        return;
-      }
-      if (userInteraction) {
-        field.setValue(null);
-      }
-      if (value) {
-        field.removeValidators(CustomValidators.required);
-        field.disable();
-      } else {
-        field.addValidators(CustomValidators.required);
-        field.enable();
-      }
-      field.updateValueAndValidity();
-    });
-
-    this.handleRequesterIdTypeChange(this.requesterIdTypeField.value, userInteraction);
-  }*/
-
   handleRequesterRelationTypeChange($event?: any) {
-    // true = BeneficiaryRequesterRelationTypes.SAME_AS_REQUESTER
-    // false = BeneficiaryRequesterRelationTypes.RELATIVE_TO_REQUESTER
     let userInteraction = !!$event;
     let dependentFields = [this.beneficiaryRequesterNameField, this.requesterIdTypeField, this.requesterIdNumberField, this.requesterNationalityField, this.requesterPhoneField];
     dependentFields.forEach((field: UntypedFormControl) => {
@@ -551,55 +527,41 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  private _prepareBeneficiaryAndRequest(): { beneficiary: Beneficiary, request: SubventionRequest } {
+    return {
+      beneficiary: this.prepareBeneficiary(),
+      request: this.prepareRequest(),
+    };
+  }
+
   private listenToSavePartialRequest() {
-    const formStatusPartial$ = this.savePartial$.pipe(
-      // tap(val => console.log(val)),
+    this.savePartial$.pipe(
+      takeUntil(this.destroy$),
       delay(100),
-      map(() => {
-        return this.form?.valid && this.buildingPlate.isValidForm();
+      // validate form and filter invalid requests
+      filter(() => {
+        let isValid = this.form?.valid && this.buildingPlate.isValidForm();
+        if (!isValid) {
+          this.checkFormFieldsCallback();
+        }
+        return isValid;
+      }),
+      // prepare beneficiary and request
+      map(() => this._prepareBeneficiaryAndRequest()),
+      // save request
+      switchMap((value) => {
+        let data: SubventionResponse = new SubventionResponse().clone({
+          request: value.request,
+          beneficiary: value.beneficiary,
+          aidList: this.subventionAidList,
+          attachmentList: this.attachmentList
+        });
+        return this.subventionResponseService.savePartialRequest(data)
+          .pipe(catchError(() => {
+            return of(null);
+          }));
       })
-    );
-
-    // filter invalidForm stream
-    const invalidFormPartial$ = formStatusPartial$.pipe(
-      filter(value => value === false)
-    );
-
-    // if we have invalid forms display dialog to tell the user that is something wrong happened.
-    invalidFormPartial$.pipe(takeUntil(this.destroy$)).subscribe(() => {
-      this.checkFormFieldsCallback();
-    });
-
-    // filter valid form stream
-    const validFormPartial$ = formStatusPartial$.pipe(
-      filter(value => value === true)
-    );
-
-    // prepare the beneficiary/request Models.
-    const requestWithBeneficiaryPartial$ = validFormPartial$.pipe(
-      map(() => {
-        return {
-          beneficiary: this.prepareBeneficiary(),
-          request: this.prepareRequest(),
-        };
-      })
-    );
-
-    requestWithBeneficiaryPartial$
-      .pipe(
-        switchMap((value) => {
-          let data: SubventionResponse = new SubventionResponse().clone({
-            request: value.request,
-            beneficiary: value.beneficiary,
-            aidList: this.subventionAidList,
-            attachmentList: this.attachmentList
-          });
-          return this.subventionResponseService.savePartialRequest(data)
-            .pipe(catchError(() => {
-              return of(null);
-            }));
-        })
-      ).subscribe((response) => {
+    ).subscribe((response) => {
       if (!response) {
         return;
       }
@@ -614,139 +576,130 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private listenToSaveModel() {
     let saveType: string = '';
-    const formAidValid$ = this.save$.pipe(
-      tap(val => saveType = val),
-      tap(_ => !this.validRequestStatus() ? this.displayRequestStatusMessage() : null),
-      filter(_ => this.validRequestStatus()),
-      share()
-    );
-
-    // map formStatus
-    const formStatus$ = formAidValid$.pipe(
-      map(() => {
-        let isValid = this.form?.valid && this.buildingPlate.isValidForm();
-        if (!!this.currentRequest && this.currentRequest.id) {
-          return isValid;
-        }
-        return isValid && (!this.allowDataSharingField.value ? true : !!this.disclosureFile);
-      })
-    );
-
-    // filter invalidForm stream
-    const invalidForm$ = formStatus$.pipe(
-      filter(value => value === false)
-    );
-
-    // if we have invalid forms display dialog to tell the user that is something wrong happened.
-    invalidForm$.pipe(takeUntil(this.destroy$)).subscribe(() => {
-      this.checkFormFieldsCallback();
-    });
-
-    // filter valid form stream
-    const validForm$ = formStatus$.pipe(
-      filter(value => value === true)
-    );
-
-    // prepare the beneficiary/request Models.
-    const requestWithBeneficiary$ = validForm$.pipe(
-      map(() => {
-        return {
-          beneficiary: this.prepareBeneficiary(),
-          request: this.prepareRequest(),
-        };
-      }),
-      switchMap((requestAndBen) => {
-        if (saveType !== this.saveActions.validateAndSave) {
-          return of(requestAndBen);
-        }
-        return this.checkMissingBeneficiaryIncomeObligations(requestAndBen.beneficiary)
-          .pipe(
-            filter(response => response),
-            map(() => requestAndBen)
-          );
-      }),
-      share()
-    );
-
-    const saveBeneficiary$ = requestWithBeneficiary$
+    this.save$
+      .pipe(takeUntil(this.destroy$))
       .pipe(
-        map(value => value.beneficiary),
-        exhaustMap(beneficiary => {
-          return beneficiary.saveWithValidate(this.validateStatus, this.currentRequest).pipe(catchError(() => {
-            return of(null);
-          }));
+        tap(val => saveType = val),
+        // validate request status and aids
+        filter(() => {
+          if (this.validRequestStatus()) {
+            return true;
+          } else {
+            this.displayRequestStatusMessage();
+            return false;
+          }
         }),
-        filter((value) => this.validateBeneficiaryResponse(value) !== 'STOP'),
-        tap((value) => this.displayBeneficiaryExistsMessage(value)),
+        // validate form and filter invalid requests
+        filter(() => {
+          let isValid = this.form?.valid && this.buildingPlate.isValidForm();
+          // if edit mode, validate only form otherwise, validate allowDataSharing and disclosure file
+          if (!!this.currentRequest && this.currentRequest.id) {
+            return isValid;
+          }
+          isValid = isValid && (!this.allowDataSharingField.value ? true : !!this.disclosureFile);
+
+          if (!isValid) {
+            this.checkFormFieldsCallback();
+          }
+          return isValid;
+        })
+      )
+      .pipe(
+        // prepare beneficiary and request
+        map(() => this._prepareBeneficiaryAndRequest()),
+        // check beneficiary obligation and income
+        switchMap((requestAndBen) => {
+          if (saveType !== this.saveActions.validateAndSave) {
+            return of(requestAndBen);
+          }
+          return this.checkMissingBeneficiaryIncomeObligations(requestAndBen.beneficiary)
+            .pipe(
+              filter(response => response),
+              map(() => requestAndBen)
+            );
+        }),
+        // save beneficiary
+        exhaustMap((requestAndBen) => {
+          return requestAndBen.beneficiary.saveWithValidate(this.validateBeneficiary, this.currentRequest, this.validateMophBeneficiary)
+            .pipe(catchError(() => of(null)));
+        }),
+        filter((value) => this.validateBeneficiaryMOPHResponse(value) !== 'STOP'),
+        filter((value) => this.validateBeneficiaryNDAResponse(value) !== 'STOP'),
+        filter((value) => this.validateBeneficiaryExistenceResponse(value) !== 'STOP'),
+        // check if BE returns beneficiary response
         map(value => {
-          return value?.second;
+          return value?.second ?? undefined;
         }),
         filter(value => !!value),
-        tap(beneficiary => this.currentBeneficiary = beneficiary)
-      );
-
-    saveBeneficiary$.pipe(
-      withLatestFrom(requestWithBeneficiary$),
-      map((value) => {
-        value[1].request.benId = value[0]?.id as number;
-        return value[1].request;
+        map((beneficiary) => {
+          this.currentBeneficiary = beneficiary;
+          return beneficiary!;
+        }),
+      ).pipe(
+      // set beneficiary id to request
+      map((value: Beneficiary) => {
+        let request = this.prepareRequest();
+        request.benId = value.id as number;
+        return request;
       }),
+      // save request
       exhaustMap((request: SubventionRequest) => {
         return request.save().pipe(catchError(() => {
           return of(null);
         }));
       })
-    ).subscribe((request) => {
-      if (!request) {
-        return;
-      }
+    )
+      .subscribe((request) => {
+        if (!request) {
+          return;
+        }
 
-      this.uploadDisclosureDocument(request)
-        .subscribe((disclosureAttachmentStatus) => {
-          if (disclosureAttachmentStatus === 'FAILED_DISCLOSURE_ATTACHMENT') {
-            this.dialogService.info(this.langService.map.msg_save_fail_x.change({x: this.langService.map.disclosure_document}));
-          } else if (disclosureAttachmentStatus !== 'NO_DISCLOSURE_ATTACHMENT_NEEDED') {
-            this.disclosureAttachment.vsId = disclosureAttachmentStatus;
-            this.attachmentList.push(this.disclosureAttachment);
-          }
+        this.uploadDisclosureDocument(request)
+          .subscribe((disclosureAttachmentStatus) => {
+            if (disclosureAttachmentStatus === 'FAILED_DISCLOSURE_ATTACHMENT') {
+              this.dialogService.info(this.langService.map.msg_save_fail_x.change({x: this.langService.map.disclosure_document}));
+            } else if (disclosureAttachmentStatus !== 'NO_DISCLOSURE_ATTACHMENT_NEEDED') {
+              this.disclosureAttachment.vsId = disclosureAttachmentStatus;
+              this.attachmentList.push(this.disclosureAttachment);
+            }
 
-          if (this.editMode) {
-            this.dialogService.success(this.langService.map.msg_request_has_been_updated_successfully);
-          } else {
-            this.dialogService.success(this.langService.map.msg_request_has_been_added_successfully.change({serial: request.requestFullSerial}));
-          }
-          this.currentRequest = request.clone();
-          this.editMode = true;
+            if (this.editMode) {
+              this.dialogService.success(this.langService.map.msg_request_has_been_updated_successfully);
+            } else {
+              this.dialogService.success(this.langService.map.msg_request_has_been_added_successfully.change({serial: request.requestFullSerial}));
+            }
+            this.currentRequest = request.clone();
+            this.editMode = true;
 
-          this.toggleAllowCompletionReadonly();
-          this.allowDataSharingField?.disable();
+            this.toggleAllowCompletionReadonly();
+            this.allowDataSharingField?.disable();
 
-          if (!this.currentRequest.isUnderProcessing()) {
-            this.readModeService.setReadOnly(this.currentRequest.id);
-          }
+            if (!this.currentRequest.isUnderProcessing()) {
+              this.readModeService.setReadOnly(this.currentRequest.id);
+            }
 
-          if (!this.requestStatusTab.value) {
-            this.form.setControl('requestStatusTab', this.buildRequestStatusTab(this.currentRequest));
-          }
-          this.form.markAsPristine({onlySelf: true});
+            if (!this.requestStatusTab.value) {
+              this.form.setControl('requestStatusTab', this.buildRequestStatusTab(this.currentRequest));
+            }
+            this.form.markAsPristine({onlySelf: true});
 
-          this.disclosureAttachment = undefined;
+            this.disclosureAttachment = undefined;
 
-          if (saveType === this.saveActions.validateAndSave) {
-            this.requestChanged$.next(this.currentRequest);
-          } else if (saveType === this.saveActions.saveAndInquire) {
-            this.skipConfirmUnsavedChanges = true;
-            const ben = this.prepareBeneficiary();
-            this.eCookieService.putEObject('b_i_d', {
-              idType: ben.benPrimaryIdType,
-              idNumber: ben.benPrimaryIdNumber,
-              nationality: ben.benPrimaryIdNationality
-            });
-            this.router.navigate(['/home/sanady/inquiry']).then();
-          }
-        });
+            if (saveType === this.saveActions.validateAndSave) {
+              this.requestChanged$.next(this.currentRequest);
+            } else if (saveType === this.saveActions.saveAndInquire) {
+              this.skipConfirmUnsavedChanges = true;
+              const ben = this.prepareBeneficiary();
+              this.eCookieService.putEObject('b_i_d', {
+                idType: ben.benPrimaryIdType,
+                idNumber: ben.benPrimaryIdNumber,
+                nationality: ben.benPrimaryIdNationality
+              });
+              this.router.navigate(['/home/sanady/inquiry']).then();
+            }
+          });
 
-    });
+      });
   }
 
   isPrivateIdFieldGroupValid(): boolean {
@@ -1529,7 +1482,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     this.dialogService.error(this.langService.map.msg_approved_request_without_one_aid_at_least);
   }
 
-  private validateBeneficiaryResponse(value: Pair<BeneficiarySaveStatus, Beneficiary> | null): 'STOP' | 'CONTINUE' {
+  private validateBeneficiaryNDAResponse(value: Pair<BeneficiarySaveStatus, Beneficiary> | null): 'STOP' | 'CONTINUE' {
     if (!value) {
       return 'CONTINUE';
     }
@@ -1546,35 +1499,63 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
     return 'CONTINUE';
   }
 
-  private displayBeneficiaryExistsMessage(value: Pair<BeneficiarySaveStatus, Beneficiary> | null): any {
+  private validateBeneficiaryMOPHResponse(value: Pair<BeneficiarySaveStatus, Beneficiary> | null): 'STOP' | 'CONTINUE' {
     if (!value) {
-      return;
+      return 'STOP';
+    }
+    let status: 'STOP' | 'CONTINUE' = 'STOP';
+
+    if (value.first === BeneficiarySaveStatus.BENEFICIARY_IS_DEAD_SERVICE_NOT_AVAILABLE) {
+      status = 'STOP';
+      const msg = this.langService.map[value.first as keyof ILanguageKeys] + '<br>' + this.langService.map.msg_confirm_continue;
+      this.dialogService.confirm(msg, {actionBtn: 'btn_continue', cancelBtn: 'btn_clear', showCloseIcon: true}).onAfterClose$.pipe(take(1))
+        .subscribe((click: UserClickOn) => {
+          if (!CommonUtils.isValidValue(click) || click === UserClickOn.CLOSE) {
+            return;
+          }
+          if (click === UserClickOn.YES) {
+            // continue
+            this.validateMophBeneficiary = false;
+            this.save$.next(this.saveActions.validateAndSave);
+          } else if (click === UserClickOn.NO) {
+            // clear
+            if (this.currentParamType === this.routeParamTypes.normal) {
+              this.beneficiaryChanged$.next(null);
+              this.requestChanged$.next(null);
+
+              this.form.markAsUntouched();
+              this.form.markAsPristine();
+            }
+          }
+        });
+    } else {
+      status = 'CONTINUE';
     }
 
-    if (value.first === BeneficiarySaveStatus.EXISTING || value.first === BeneficiarySaveStatus.BENEFICIARY_IS_DEAD_SERVICE_NOT_AVAILABLE) {
+    return status;
+  }
+
+  private validateBeneficiaryExistenceResponse(value: Pair<BeneficiarySaveStatus, Beneficiary> | null): 'STOP' | 'CONTINUE' {
+    if (!value) {
+      return 'STOP';
+    }
+    let status: 'STOP' | 'CONTINUE' = 'STOP';
+    if (value.first === BeneficiarySaveStatus.EXISTING) {
+      status = 'STOP';
       let confirmMsg: DialogRef;
-      if (value.first === BeneficiarySaveStatus.BENEFICIARY_IS_DEAD_SERVICE_NOT_AVAILABLE) {
-        const msg = this.langService.map[BeneficiarySaveStatus.BENEFICIARY_IS_DEAD_SERVICE_NOT_AVAILABLE as keyof ILanguageKeys] + '<br>' + this.langService.map.msg_confirm_continue;
-        confirmMsg = this.dialogService.confirm(msg, {
+      if (this.empService.checkPermissions('SUBVENTION_AID_SEARCH')) {
+        confirmMsg = this.dialogService.confirmWithTree(this.langService.map.beneficiary_already_exists, {
           actionBtn: 'btn_continue',
+          thirdBtn: 'btn_save_and_inquire',
           cancelBtn: 'btn_clear',
           showCloseIcon: true
         });
       } else {
-        if (this.empService.checkPermissions('SUBVENTION_AID_SEARCH')) {
-          confirmMsg = this.dialogService.confirmWithTree(this.langService.map.beneficiary_already_exists, {
-            actionBtn: 'btn_continue',
-            thirdBtn: 'btn_save_and_inquire',
-            cancelBtn: 'btn_clear',
-            showCloseIcon: true
-          });
-        } else {
-          confirmMsg = this.dialogService.confirm(this.langService.map.beneficiary_already_exists, {
-            actionBtn: 'btn_continue',
-            cancelBtn: 'btn_clear',
-            showCloseIcon: true
-          });
-        }
+        confirmMsg = this.dialogService.confirm(this.langService.map.beneficiary_already_exists, {
+          actionBtn: 'btn_continue',
+          cancelBtn: 'btn_clear',
+          showCloseIcon: true
+        });
       }
       confirmMsg.onAfterClose$
         .pipe(take(1))
@@ -1584,7 +1565,8 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
           }
           if (click === UserClickOn.YES) {
             // continue
-            this.validateStatus = false;
+            this.validateBeneficiary = false;
+            this.validateMophBeneficiary = false;
             this.save$.next(this.saveActions.skipValidateAndSave);
           } else if (click === UserClickOn.NO) {
             // clear
@@ -1597,11 +1579,16 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
             }
           } else if (click === UserClickOn.THIRD_BTN) {
             // save and inquire
-            this.validateStatus = false;
+            this.validateBeneficiary = false;
+            this.validateMophBeneficiary = false;
             this.save$.next(this.saveActions.saveAndInquire);
           }
         });
+    } else {
+      status = 'CONTINUE';
     }
+
+    return status;
   }
 
   setRelatedMinDate(fromFieldName: string, toFieldName: string, disableSameDate: boolean = false): void {
