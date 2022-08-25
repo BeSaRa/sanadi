@@ -24,7 +24,7 @@ export class SubventionResponseInterceptor implements IModelInterceptor<Subventi
 
   send(model: Partial<SubventionResponse>): any {
     model.attachmentList = !model.attachmentList ? [] : model.attachmentList.map((attachment: any) => {
-      return (new SanadiAttachmentInterceptor).send(attachment);
+      return (new SanadiAttachmentInterceptor).send(new SanadiAttachment().clone(attachment));
     });
     model.aidList = !model.aidList ? [] :model.aidList.map((aid: SubventionAid) => {
       return (new SubventionAidInterceptor).send(aid);

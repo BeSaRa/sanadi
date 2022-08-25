@@ -570,7 +570,13 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       this.currentParamType = 'normal';
       this.form.markAsPristine({onlySelf: true});
       this.skipConfirmUnsavedChanges = true;
-      this.router.navigate(['/home/sanady/request/', response.request.id]).then();
+      // keep the original path of partial request page to use in case of back
+      const previousPath = this.navigationService.previousPath;
+      // after adding, open the request as normal
+      this.router.navigate(['/home/sanady/request/', response.request.id]).then(()=> {
+        // update the previous path as partial request page original path
+        this.navigationService.previousPath = previousPath;
+      });
     });
   }
 
