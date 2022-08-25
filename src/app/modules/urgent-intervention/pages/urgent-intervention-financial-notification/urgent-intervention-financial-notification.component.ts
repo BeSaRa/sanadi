@@ -160,9 +160,9 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
       basicInfo: this.fb.group(urgentInterventionFinancialNotification.buildForm(true)),
       transferData: this.fb.group(urgentInterventionFinancialNotification.buildTransferDataForm(true))
     })
-    this.form.valueChanges.subscribe((data) => {
+    /*this.form.valueChanges.subscribe((data) => {
       console.log(this.form, data)
-    })
+    })*/
   }
   _afterBuildForm(): void {
   }
