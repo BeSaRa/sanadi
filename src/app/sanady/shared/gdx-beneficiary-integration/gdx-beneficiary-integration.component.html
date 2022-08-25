@@ -3,6 +3,10 @@
        [title]="langService.map[tabData.moj.langKey]"></tab>
   <tab [name]="tabData.moci.name" [template]="MOCITemplate"
        [title]="langService.map[tabData.moci.langKey]"></tab>
+  <tab [name]="tabData.mawared.name" [template]="MawaredTemplate"
+       [title]="langService.map[tabData.mawared.langKey]"></tab>
+  <tab [name]="tabData.qatarCharity.name" [template]="QatarCharityTemplate"
+       [title]="langService.map[tabData.qatarCharity.langKey]"></tab>
 </tabs-list>
 <ng-template #MOJTemplate>
   <ng-container [ngTemplateOutlet]="gdxServicesLogTableTemplate"
@@ -190,6 +194,12 @@
       </div>
     </div>
   </div>
+</ng-template>
+<ng-template #MawaredTemplate>
+  MAWARED
+</ng-template>
+<ng-template #QatarCharityTemplate>
+  Qatar Charity
 </ng-template>
 
 <ng-template #gdxServicesLogTableTemplate let-add$="add$" let-data="data"

@@ -1137,6 +1137,8 @@ export interface ILanguageKeys {
   integration_moj: string;
   integration_moci: string;
   integration_moph: string;
+  integration_mawared: string;
+  integration_qatar_charity: string;
   date_of_death: string;
   company_info: string;
   relation_status: string;
