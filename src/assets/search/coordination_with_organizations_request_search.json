@@ -1,0 +1,54 @@
+[
+    {
+      "fields": [
+        {
+          "key": "createdOnFrom",
+          "type": "dateField",
+          "label": "creation_date_from",
+          "validations": {
+            "required": false
+          },
+          "dateOptions": {
+            "operator": "-",
+            "defaultValue": "now",
+            "value": "1 year"
+          }
+        },
+        {
+          "key": "createdOnTo",
+          "type": "dateField",
+          "label": "creation_date_to",
+          "validations": {
+            "required": false
+          }
+        }
+      ]
+    },
+    {
+      "fields": [
+        {
+          "key": "fullName",
+          "type": "input",
+          "label": "full_name",
+          "validations": {
+            "required": false
+          },
+          "templateOptions": {
+            "maxLength": 50
+          }
+        },
+        {
+          "key": "Domain",
+          "type": "selectField",
+          "label": "the_domain",
+          "selectOptions": {
+            "options": [],
+            "loader": "lookup.CoordinationType",
+            "bindValue": "lookupKey",
+            "bindLabel": "basedOnLanguage"
+          }
+        }
+      ]
+    }
+  ]
+  

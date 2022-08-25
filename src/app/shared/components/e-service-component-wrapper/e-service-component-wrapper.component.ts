@@ -104,7 +104,8 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     CaseTypes.CONSULTATION,
     CaseTypes.INTERNATIONAL_COOPERATION,
     CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN,
-    CaseTypes.FOREIGN_COUNTRIES_PROJECTS
+    CaseTypes.FOREIGN_COUNTRIES_PROJECTS,
+    CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST,
   ];
 
   finalApproveByMatrixServices: number[] = [
@@ -332,6 +333,9 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   }
 
   canSave(): boolean {
+    if(this.model?.caseType===CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST){
+      return this.employeeService.isInternalUser()||this.employeeService.isCharityUser();
+    }
     const isServiceAllow = this.model?.caseType == CaseTypes.EMPLOYMENT;
     return (isServiceAllow && this.employeeService.isCharityManager()) || !!((this.employeeService.isCharityManager() || this.employeeService.isCharityUser()) && this.model?.isReturned());
   }
@@ -1169,7 +1173,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     }
     let isAllowed = true;
     if (this.component.openFrom === OpenFrom.TEAM_INBOX) {
-      isAllowed = this.component.model.taskDetails.isClaimed();
+      isAllowed = this.component.model.taskDetails?.isClaimed();
     }
     if (isAllowed) {
       let caseStatus = this.component.model.getCaseStatus();

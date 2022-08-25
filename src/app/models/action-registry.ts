@@ -5,6 +5,7 @@ import { ActionRegistryInterceptor } from "@app/model-interceptors/action-regist
 const { send, receive } = new ActionRegistryInterceptor()
 
 @InterceptModel({ send, receive })
+
 export class ActionRegistry {
   id!: number;
   caseId!: string;
