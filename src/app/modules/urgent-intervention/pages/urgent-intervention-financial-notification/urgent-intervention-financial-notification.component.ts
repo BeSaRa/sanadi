@@ -1,53 +1,53 @@
-import { UrgentFinancialNotificationAccountType } from '@app/enums/urgent-financial-notification-account-type.enum';
-import { catchError, exhaustMap, filter, map, takeUntil, tap } from 'rxjs/operators';
+import {UrgentFinancialNotificationAccountType} from '@app/enums/urgent-financial-notification-account-type.enum';
+import {catchError, exhaustMap, filter, map, takeUntil, tap} from 'rxjs/operators';
 import {
   ImplementingAgencyListComponent
 } from './../../shared/implementing-agency-list/implementing-agency-list.component';
-import { ToastService } from '@app/services/toast.service';
-import { ServiceRequestTypes } from '@app/enums/service-request-types';
-import { BankAccount } from '@app/models/bank-account';
-import { AdminResult } from '@app/models/admin-result';
-import { CommonService } from '@services/common.service';
-import { UrgentInterventionReport } from '@app/models/urgent-intervention-report';
-import { UrgentInterventionReportSearchCriteria } from '@app/models/urgent-intervention-report-search-criteria';
-import { UrgentInterventionFinancialRequestType } from '@app/enums/urgent-intervention-financial-request-type';
-import { OpenFrom } from '@app/enums/open-from.enum';
-import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
-import { TabComponent } from '@app/shared/components/tab/tab.component';
+import {ToastService} from '@app/services/toast.service';
+import {ServiceRequestTypes} from '@app/enums/service-request-types';
+import {BankAccount} from '@app/models/bank-account';
+import {AdminResult} from '@app/models/admin-result';
+import {CommonService} from '@services/common.service';
+import {UrgentInterventionReport} from '@app/models/urgent-intervention-report';
+import {UrgentInterventionReportSearchCriteria} from '@app/models/urgent-intervention-report-search-criteria';
+import {UrgentInterventionFinancialRequestType} from '@app/enums/urgent-intervention-financial-request-type';
+import {OpenFrom} from '@app/enums/open-from.enum';
+import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import {TabComponent} from '@app/shared/components/tab/tab.component';
 import {
   InterventionFieldListComponent
 } from './../../shared/intervention-field-list/intervention-field-list.component';
 import {
   InterventionRegionListComponent
 } from './../../shared/intervention-region-list/intervention-region-list.component';
-import { LicenseService } from '@app/services/license.service';
-import { UrgentInterventionReportingService } from '@services/urgent-intervention-reporting.service';
-import { UrgentInterventionReportResult } from '@app/models/urgent-intervention-report-result';
-import { DialogService } from '@services/dialog.service';
-import { ReadinessStatus, TabMap } from '@app/types/types';
-import { Lookup } from '@app/models/lookup';
-import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
-import { OperationTypes } from '@app/enums/operation-types.enum';
-import { SaveTypes } from '@app/enums/save-types';
-import { LangService } from '@app/services/lang.service';
-import { Observable, of, Subject } from 'rxjs';
-import { UrgentInterventionFinancialNotification } from '@app/models/urgent-intervention-financial-notification';
+import {LicenseService} from '@app/services/license.service';
+import {UrgentInterventionReportingService} from '@services/urgent-intervention-reporting.service';
+import {UrgentInterventionReportResult} from '@app/models/urgent-intervention-report-result';
+import {DialogService} from '@services/dialog.service';
+import {ReadinessStatus, TabMap} from '@app/types/types';
+import {Lookup} from '@app/models/lookup';
+import {AfterViewInit, ChangeDetectorRef, Component, ViewChild} from '@angular/core';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {SaveTypes} from '@app/enums/save-types';
+import {LangService} from '@app/services/lang.service';
+import {Observable, of, Subject} from 'rxjs';
+import {UrgentInterventionFinancialNotification} from '@app/models/urgent-intervention-financial-notification';
 import {
   UrgentInterventionFinancialNotificationService
 } from '@services/urgent-intervention-financial-notification.service';
-import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
-import { LookupService } from '@app/services/lookup.service';
-import { ImplementingAgencyTypes } from '@app/enums/implementing-agency-types.enum';
-import { CommonUtils } from '@app/helpers/common-utils';
+import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
+import {LookupService} from '@app/services/lookup.service';
+import {ImplementingAgencyTypes} from '@app/enums/implementing-agency-types.enum';
+import {CommonUtils} from '@app/helpers/common-utils';
 
 @Component({
   selector: 'app-urgent-intervention-financial-notification',
   templateUrl: './urgent-intervention-financial-notification.component.html',
   styleUrls: ['./urgent-intervention-financial-notification.component.scss']
 })
-export class UrgentInterventionFinancialNotificationComponent extends EServicesGenericComponent<UrgentInterventionFinancialNotification, UrgentInterventionFinancialNotificationService> {
-  requestTypesList: Lookup[] = this.lookupService.listByCategory.UrgentInterventionFinancialRequestType
+export class UrgentInterventionFinancialNotificationComponent extends EServicesGenericComponent<UrgentInterventionFinancialNotification, UrgentInterventionFinancialNotificationService> implements AfterViewInit {
+  requestTypesList: Lookup[] = this.lookupService.listByCategory.UrgentInterventionFinancialRequestType;
   implementingAgencyType: Lookup[] = this.lookupService.listByCategory.ImplementingAgencyType;
   urgentFinancialNotificationAccountType: Lookup[] = this.lookupService.listByCategory.UrgentFinancialNotificationAccountType;
 
@@ -127,6 +127,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
       validStatus: () => true
     }
   };
+
   constructor(
     private lookupService: LookupService,
     public urgentInterventionReportingService: UrgentInterventionReportingService,
@@ -141,9 +142,15 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
   ) {
     super();
   }
+
+  ngAfterViewInit(): void {
+    this.cd.detectChanges();
+  }
+
   getTabInvalidStatus(tabName: string): boolean {
     return !this.tabsData[tabName].validStatus();
   }
+
   onTabChange($event: TabComponent) {
     this.loadAttachments = $event.name === this.tabsData.attachments.name;
   }
@@ -151,21 +158,26 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
   _getNewInstance(): UrgentInterventionFinancialNotification {
     return new UrgentInterventionFinancialNotification().clone();
   }
+
   _initComponent(): void {
     this.listenToLicenseSearch();
   }
+
   _buildForm(): void {
     let urgentInterventionFinancialNotification = this._getNewInstance();
     this.form = this.fb.group({
       basicInfo: this.fb.group(urgentInterventionFinancialNotification.buildForm(true)),
       transferData: this.fb.group(urgentInterventionFinancialNotification.buildTransferDataForm(true))
-    })
+    });
     /*this.form.valueChanges.subscribe((data) => {
       console.log(this.form, data)
     })*/
   }
+
   _afterBuildForm(): void {
+    this.cd.detectChanges();
   }
+
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
     if (this.requestTypeField.value !== ServiceRequestTypes.NEW && !this.selectedLicense) {
       this.dialogService.error(this.lang.map.please_select_license_to_complete_save);
@@ -183,13 +195,16 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
       return true;
     }
   }
+
   _beforeLaunch(): boolean | Observable<boolean> {
     return !!this.model && this.form.valid && this.model.canStart();
   }
+
   _afterLaunch(): void {
     this._resetForm();
     this.toastService.success(this.lang.map.request_has_been_sent_successfully);
   }
+
   _prepareModel(): UrgentInterventionFinancialNotification | Observable<UrgentInterventionFinancialNotification> {
     return new UrgentInterventionFinancialNotification().clone({
       ...this.model,
@@ -200,25 +215,30 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
       implementingAgencyList: this.implementingAgencyListComponentRef.list,
     });
   }
+
   _afterSave(model: UrgentInterventionFinancialNotification, saveType: SaveTypes, operation: OperationTypes): void {
     this.model = model;
     if (
       (operation === OperationTypes.CREATE && saveType === SaveTypes.FINAL) ||
       (operation === OperationTypes.UPDATE && saveType === SaveTypes.COMMIT)
     ) {
-      this.dialogService.success(this.lang.map.msg_request_has_been_added_successfully.change({ serial: model.fullSerial }));
+      this.dialogService.success(this.lang.map.msg_request_has_been_added_successfully.change({serial: model.fullSerial}));
     } else {
       this.toastService.success(this.lang.map.request_has_been_saved_successfully);
     }
   }
+
   _saveFail(error: any): void {
     console.log('problem in save');
   }
+
   _launchFail(error: any): void {
     console.log('problem in launch');
   }
+
   _destroyComponent(): void {
   }
+
   _updateForm(model: UrgentInterventionFinancialNotification | undefined): void {
     this.model = model;
     if (!model) {
@@ -247,6 +267,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
     const value = this.urgentAnnouncementFullSerialField.value && this.urgentAnnouncementFullSerialField.value.trim();
     this.licenseSearch$.next(value);
   }
+
   private listenToLicenseSearch() {
     this.licenseSearch$
       .pipe(
@@ -272,16 +293,18 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
         this.setSelectedLicense(selection, false);
       });
   }
+
   getInterventionLicense() {
-    this.licenseService.loadUrgentInterventionInterventionLicense().subscribe(({ rs }) => {
+    this.licenseService.loadUrgentInterventionInterventionLicense().subscribe(({rs}) => {
       this.accountNumberField.setValue(rs.accountNumber);
-    })
+    });
   }
+
   private setSelectedLicense(licenseDetails: UrgentInterventionReportResult | undefined, ignoreUpdateForm: boolean) {
     this.selectedLicense = licenseDetails;
     // update form fields if i have license
     if (licenseDetails && !ignoreUpdateForm) {
-      let value: any = new UrgentInterventionFinancialNotification()
+      let value: any = new UrgentInterventionFinancialNotification();
       value.requestType = this.requestTypeField.value;
       value.oldLicenseFullSerial = licenseDetails.fullSerial;
       value.oldLicenseId = licenseDetails.id;
@@ -300,17 +323,20 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
       value.executionCountryInfo = licenseDetails.executionCountryInfo;
       value.licenseVSID = licenseDetails.vsId;
       this._updateForm(value);
-      this._handleRequestTypeChange()
+      this._handleRequestTypeChange();
     }
   }
+
   private singleLicenseDetails(license: UrgentInterventionReportResult): Observable<UrgentInterventionReport> {
     return this.licenseService.loadUrgentInterventionAnnouncementByLicenseId(license.id) as Observable<UrgentInterventionReport>;
   }
+
   private openSelectLicense(licenses: UrgentInterventionReportResult[]): Observable<undefined | UrgentInterventionReportResult> {
-    return this.licenseService.openSelectLicenseDialog(licenses, this.model?.clone({ requestType: this.requestTypeField.value || null }), true, this.service.selectLicenseDisplayColumns)
+    return this.licenseService.openSelectLicenseDialog(licenses, this.model?.clone({requestType: this.requestTypeField.value || null}), true, this.service.selectLicenseDisplayColumns)
       .onAfterClose$
       .pipe(map((result: ({ selected: UrgentInterventionReportResult, details: UrgentInterventionReportResult } | undefined)) => result ? result.details : result));
   }
+
   loadLicencesByCriteria(criteria: Partial<UrgentInterventionReportSearchCriteria>): Observable<UrgentInterventionReportResult[]> {
     return this.service.licenseSearch(criteria);
   }
@@ -318,6 +344,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
   isEditAllowed(): boolean {
     return !this.model?.id || (!!this.model?.id && this.model.canCommit());
   }
+
   isAttachmentReadonly(): boolean {
     if (!this.model?.id) {
       return false;
@@ -346,6 +373,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
       this.handleImplementingAgencyTypeChanges();
     }
   }
+
   _handleChangeAccountType() {
     if (this.boxAccountType) {
       this.getInterventionLicense();
@@ -353,35 +381,41 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
       this.resetAccountNumber();
     }
   }
+
   resetAccountNumber() {
     this.accountNumberField.reset();
   }
+
   handleImplementingAgencyTypeChanges() {
-    this._loadImplementingAgenciesByAgencyType()
-    this.implementingAgencyField.setValue(null)
-    this.accountNumberField.setValue(null)
+    this._loadImplementingAgenciesByAgencyType();
+    this.implementingAgencyField.setValue(null);
+    this.accountNumberField.setValue(null);
   }
+
   private _loadImplementingAgenciesByAgencyType() {
     this.commonService.loadAgenciesByAgencyTypeAndCountry(this.implementingAgencyTypeField.value, this.model?.executionCountry || 0)
       .subscribe((result) => {
-        this.implementingAgencies = [...result]
+        this.implementingAgencies = [...result];
       });
   }
+
   handleImplementingAgencyNameChanges() {
-    this._loadImplementingAgenciesAccounts()
-    this.accountNumberField.setValue(null)
+    this._loadImplementingAgenciesAccounts();
+    this.accountNumberField.setValue(null);
   }
+
   private _loadImplementingAgenciesAccounts() {
     if (this.implementingAgencyTypeField.value == ImplementingAgencyTypes.Partner) {
       this.licenseService.loadPartnerLicenseByLicenseId(this.implementingAgencyField.value).subscribe(data => {
         this.bankAccountList = [...data.bankAccountList];
-      })
+      });
     } else {
       this.licenseService.loadFinalLicenseByLicenseId(this.implementingAgencyField.value).subscribe(data => {
         this.bankAccountList = [...data.bankAccountList];
-      })
+      });
     }
   }
+
   private _getInvalidTabs(): any {
     let failedList: string[] = [];
     for (const key in this.tabsData) {
@@ -394,37 +428,47 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
   }
 
   get boxAccountType() {
-    return this.accountType.value == UrgentFinancialNotificationAccountType.CHARITY_ACCOUNT
+    return this.accountType.value == UrgentFinancialNotificationAccountType.CHARITY_ACCOUNT;
   }
+
   get accountType() {
     return this.transferDataTab.get('accountType') as UntypedFormControl;
   }
+
   get basicInfoTab(): UntypedFormGroup {
     return (this.form.get('basicInfo')) as UntypedFormGroup;
   }
+
   get transferDataTab(): UntypedFormGroup {
     return (this.form.get('transferData')) as UntypedFormGroup;
   }
+
   get requestTypeField() {
-    return this.basicInfoTab.get('requestType') as UntypedFormControl
+    return this.basicInfoTab.get('requestType') as UntypedFormControl;
   }
+
   get urgentAnnouncementFullSerialField(): UntypedFormControl {
     return this.basicInfoTab.get('urgentAnnouncementFullSerial') as UntypedFormControl;
   }
+
   get implementingAgencyTypeField(): UntypedFormControl {
     return this.transferDataTab.get('implementingAgencyType') as UntypedFormControl;
   }
+
   get implementingAgencyField(): UntypedFormControl {
     return this.transferDataTab.get('implementingAgency') as UntypedFormControl;
   }
+
   get accountNumberField(): UntypedFormControl {
     return this.transferDataTab.get('accountNumber') as UntypedFormControl;
   }
+
   get isTransfer() {
-    return this.requestTypeField.value == UrgentInterventionFinancialRequestType.Transfer
+    return this.requestTypeField.value == UrgentInterventionFinancialRequestType.Transfer;
   }
+
   get isReceive() {
-    return this.requestTypeField.value == UrgentInterventionFinancialRequestType.Receive
+    return this.requestTypeField.value == UrgentInterventionFinancialRequestType.Receive;
   }
 
   _resetForm(): void {

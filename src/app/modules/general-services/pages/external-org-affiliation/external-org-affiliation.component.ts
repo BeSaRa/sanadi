@@ -1,31 +1,31 @@
-import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
-import { OpenFrom } from '@app/enums/open-from.enum';
-import { EmployeeService } from '@app/services/employee.service';
-import { CommonUtils } from '@app/helpers/common-utils';
-import { ExternalOrgAffiliationResult } from '@app/models/external-org-affiliation-result';
-import { catchError, exhaustMap, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
-import { ExternalOrgAffiliationSearchCriteria } from '@app/models/external-org-affiliation-search-criteria';
-import { LicenseService } from '@services/license.service';
-import { Lookup } from '@app/models/lookup';
-import { IKeyValue } from '@app/interfaces/i-key-value';
-import { ReadinessStatus } from '@app/types/types';
-import { ContactOfficer } from '@app/models/contact-officer';
-import { CountryService } from '@app/services/country.service';
-import { Country } from '@app/models/country';
-import { ToastService } from '@app/services/toast.service';
-import { ExternalOrgAffiliation } from '@app/models/external-org-affiliation';
-import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
-import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { OperationTypes } from '@app/enums/operation-types.enum';
-import { SaveTypes } from '@app/enums/save-types';
-import { LangService } from '@app/services/lang.service';
-import { Observable, of, Subject } from 'rxjs';
-import { ExternalOrgAffiliationService } from '@app/services/external-org-affiliation.service';
-import { LookupService } from '@app/services/lookup.service';
-import { DialogService } from '@app/services/dialog.service';
-import { AffiliationRequestType } from '@app/enums/AffiliationRequestType.enum';
-import { BankAccountComponent } from '@app/modules/e-services-main/shared/bank-account/bank-account.component';
+import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import {OpenFrom} from '@app/enums/open-from.enum';
+import {EmployeeService} from '@app/services/employee.service';
+import {CommonUtils} from '@app/helpers/common-utils';
+import {ExternalOrgAffiliationResult} from '@app/models/external-org-affiliation-result';
+import {catchError, exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
+import {ExternalOrgAffiliationSearchCriteria} from '@app/models/external-org-affiliation-search-criteria';
+import {LicenseService} from '@services/license.service';
+import {Lookup} from '@app/models/lookup';
+import {IKeyValue} from '@app/interfaces/i-key-value';
+import {ReadinessStatus} from '@app/types/types';
+import {ContactOfficer} from '@app/models/contact-officer';
+import {CountryService} from '@app/services/country.service';
+import {Country} from '@app/models/country';
+import {ToastService} from '@app/services/toast.service';
+import {ExternalOrgAffiliation} from '@app/models/external-org-affiliation';
+import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
+import {AfterViewInit, ChangeDetectorRef, Component, ViewChild} from '@angular/core';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {SaveTypes} from '@app/enums/save-types';
+import {LangService} from '@app/services/lang.service';
+import {Observable, of, Subject} from 'rxjs';
+import {ExternalOrgAffiliationService} from '@app/services/external-org-affiliation.service';
+import {LookupService} from '@app/services/lookup.service';
+import {DialogService} from '@app/services/dialog.service';
+import {AffiliationRequestType} from '@app/enums/AffiliationRequestType.enum';
+import {BankAccountComponent} from '@app/modules/e-services-main/shared/bank-account/bank-account.component';
 import {
   ExecutiveManagementComponent
 } from '@app/modules/e-services-main/shared/executive-management/executive-management.component';
@@ -35,7 +35,7 @@ import {
   templateUrl: './external-org-affiliation.component.html',
   styleUrls: ['./external-org-affiliation.component.scss']
 })
-export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<ExternalOrgAffiliation, ExternalOrgAffiliationService> {
+export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<ExternalOrgAffiliation, ExternalOrgAffiliationService> implements AfterViewInit {
   form!: UntypedFormGroup;
   AffiliationRequestType: Lookup[] = this.lookupService.listByCategory.AffiliationRequestType.sort((a, b) => a.lookupKey - b.lookupKey);
   AffiliationCategory: Lookup[] = this.lookupService.listByCategory.AffiliationCategory;
@@ -103,9 +103,14 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
     super();
   }
 
+  ngAfterViewInit(): void {
+    this.cd.detectChanges();
+  }
+
   _getNewInstance(): ExternalOrgAffiliation {
     return new ExternalOrgAffiliation();
   }
+
   _prepareModel(): ExternalOrgAffiliation | Observable<ExternalOrgAffiliation> {
     const value = (new ExternalOrgAffiliation()).clone({
       ...this.model, ...this.form.value.basicInfo,
@@ -117,10 +122,12 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
     value.contactOfficerDTOs = [this.contactOfficerTab.value];
     return value;
   }
+
   _initComponent(): void {
     this.loadCountries();
     this.listenToLicenseSearch();
   }
+
   _buildForm(): void {
     const model = new ExternalOrgAffiliation();
     this.form = new UntypedFormGroup({
@@ -129,9 +136,11 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
       explanation: this.fb.group(model.buildExplanation(true)),
     });
   }
+
   _afterBuildForm(): void {
     this.handleReadonly();
   }
+
   private _getInvalidTabs(): any {
     let failedList: string[] = [];
     for (const key in this.tabsData) {
@@ -143,6 +152,7 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
     }
     return failedList;
   }
+
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
     if (saveType === SaveTypes.DRAFT) {
       return true;
@@ -156,41 +166,50 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
       return true;
     }
   }
+
   _afterSave(model: ExternalOrgAffiliation, saveType: SaveTypes, operation: OperationTypes): void {
     this.model = model;
     if (
       (operation === OperationTypes.CREATE && saveType === SaveTypes.FINAL) ||
       (operation === OperationTypes.UPDATE && saveType === SaveTypes.COMMIT)
     ) {
-      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({ serial: model.fullSerial }));
+      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({serial: model.fullSerial}));
     } else {
       this.toast.success(this.lang.map.request_has_been_saved_successfully);
     }
   }
+
   _saveFail(error: any): void {
     console.log('problem on save');
   }
+
   _beforeLaunch(): boolean | Observable<boolean> {
     return !!this.model && this.form.valid && this.model.canStart();
   }
+
   _afterLaunch(): void {
     this._resetForm();
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
+
   _launchFail(error: any): void {
     console.log('problem on lunch');
   }
-  _destroyComponent(): void { }
+
+  _destroyComponent(): void {
+  }
+
   _updateForm(model: ExternalOrgAffiliation | undefined): void {
     this.model = model;
     this.contactOfficerTab.setValue(
       (new ContactOfficer().clone(model?.contactOfficerDTOs[0])).getContactOfficerFields(false)
-    )
+    );
     this.basicTab.patchValue(model?.getFormFields());
     this.specialExplanation.patchValue(model?.buildExplanation());
     this.handleRequestTypeChange(model?.requestType || 0, false);
     this.cd.detectChanges();
   }
+
   _resetForm(): void {
     this.form.reset();
     this.model!.bankAccountDTOs = [];
@@ -198,6 +217,7 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
     this.model!.contactOfficerDTOs = [];
     this.operation = OperationTypes.CREATE;
   }
+
   loadLicencesByCriteria(criteria: (Partial<ExternalOrgAffiliationSearchCriteria>)): (Observable<ExternalOrgAffiliationResult[]>) {
     return this.service.licenseSearch(criteria as Partial<ExternalOrgAffiliationSearchCriteria>);
   }
@@ -208,13 +228,13 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
         return this.loadLicencesByCriteria({
           fullSerial: oldLicenseFullSerial,
           licenseStatus: 1
-        }).pipe(catchError(() => of([])))
+        }).pipe(catchError(() => of([])));
       }))
       .pipe(
         // display message in case there is no returned license
         tap(list => {
           if (!list.length) {
-            this.dialog.info(this.lang.map.no_result_for_your_search_criteria)
+            this.dialog.info(this.lang.map.no_result_for_your_search_criteria);
           }
         }),
         // allow only the collection if it has value
@@ -228,29 +248,30 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
                   if (!data) {
                     return of(null);
                   }
-                  return { selected: licenses[0], details: data };
+                  return {selected: licenses[0], details: data};
                 }),
                 catchError(() => {
                   return of(null);
                 })
-              )
+              );
           } else {
             const displayColumns = this.service.selectLicenseDisplayColumns;
-            return this.licenseService.openSelectLicenseDialog(licenses, this.model?.clone({ requestType: this.requestTypeField.value || null }), true, displayColumns).onAfterClose$
+            return this.licenseService.openSelectLicenseDialog(licenses, this.model?.clone({requestType: this.requestTypeField.value || null}), true, displayColumns).onAfterClose$;
           }
         }),
         // allow only if the user select license
         filter<{ selected: ExternalOrgAffiliationResult, details: ExternalOrgAffiliation }>
-          ((selection: { selected: ExternalOrgAffiliationResult, details: ExternalOrgAffiliation }) => {
-            // noinspection SuspiciousTypeOfGuard
-            return (selection && selection.selected instanceof ExternalOrgAffiliationResult && selection.details instanceof ExternalOrgAffiliation)
-          }),
+        ((selection: { selected: ExternalOrgAffiliationResult, details: ExternalOrgAffiliation }) => {
+          // noinspection SuspiciousTypeOfGuard
+          return (selection && selection.selected instanceof ExternalOrgAffiliationResult && selection.details instanceof ExternalOrgAffiliation);
+        }),
         takeUntil(this.destroy$)
       )
       .subscribe((selection) => {
         this.setSelectedLicense(selection.details);
-      })
+      });
   }
+
   licenseSearch($event?: Event): void {
     $event?.preventDefault();
     let value = '';
@@ -259,6 +280,7 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
     }
     this.licenseSearch$.next(value);
   }
+
   handleReadonly(): void {
     // if record is new, no readonly (don't change as default is readonly = false)
     if (!this.model?.id) {
@@ -293,6 +315,7 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
       }
     }
   }
+
   private setSelectedLicense(licenseDetails: ExternalOrgAffiliation) {
     this.selectedLicense = licenseDetails;
     let requestType = this.requestTypeField?.value,
@@ -322,30 +345,37 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
 
     this._updateForm((new ExternalOrgAffiliation()).clone(result));
   }
+
   getTabInvalidStatus(tabName: string): boolean {
     return !this.tabsData[tabName].validStatus();
   }
+
   // noinspection JSUnusedLocalSymbols
   private invalidFormMessage(): void {
     this.dialog.error(this.lang.map.msg_all_required_fields_are_filled);
   }
+
   private loadCountries(): void {
     this.countryService.load()
       .pipe(takeUntil(this.destroy$))
       .subscribe((countries) => this.countriesList = countries);
   }
+
   handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
     if (userInteraction) {
       this._resetForm();
       this.requestTypeField.setValue(requestTypeValue);
     }
   }
+
   isEditOrCancel() {
     return this.isEditRequestType() || this.isCancelRequestType();
   }
+
   isEditRequestType(): boolean {
-    return this.requestTypeField.value && (this.requestTypeField.value == AffiliationRequestType.UPDATE)
+    return this.requestTypeField.value && (this.requestTypeField.value == AffiliationRequestType.UPDATE);
   }
+
   isCancelRequestType(): boolean {
     return this.requestTypeField.value && (this.requestTypeField.value === AffiliationRequestType.CANCEL);
   }
@@ -354,15 +384,19 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
   get requestTypeField(): UntypedFormControl {
     return this.form.get('basicInfo.requestType') as UntypedFormControl;
   }
+
   get specialExplanation(): UntypedFormGroup {
     return this.form.get('explanation')! as UntypedFormGroup;
   }
+
   get basicTab(): UntypedFormGroup {
     return (this.form.get('basicInfo')) as UntypedFormGroup;
   }
+
   get contactOfficerTab(): UntypedFormGroup {
     return (this.form.get('contactOfficer')) as UntypedFormGroup;
   }
+
   get oldLicenseFullSerialField(): UntypedFormControl {
     return (this.form.get('basicInfo')?.get('oldLicenseFullSerial')) as UntypedFormControl;
   }
