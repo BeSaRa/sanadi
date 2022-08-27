@@ -1,11 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Generator } from '@decorators/generator';
-import { InterceptParam, SendInterceptor } from '@decorators/model-interceptor';
-import { GeneralSearchCriteriaInterceptor } from '../model-interceptors/general-search-criteria-interceptor';
+import { InterceptParam } from '@decorators/intercept-model';
 import { DomSanitizer } from '@angular/platform-browser';
 import { map } from 'rxjs/operators';
 import { BlobModel } from '../models/blob-model';
+import { GeneralSearchCriteriaInterceptor } from "@app/model-interceptors/general-search-criteria-interceptor";
 
 export class SearchService {
   constructor(private service: {
@@ -16,14 +15,12 @@ export class SearchService {
   }) {
   }
 
-  @Generator(undefined, true, {property: 'rs' , interceptReceive: new GeneralSearchCriteriaInterceptor().receive})
-  @SendInterceptor((new GeneralSearchCriteriaInterceptor().send))
-  private _search(@InterceptParam() criteria: Partial<any>): Observable<any> {
+
+  private _search(@InterceptParam(new GeneralSearchCriteriaInterceptor().send) criteria: Partial<any>): Observable<any> {
     return this.service.http.post<any>(this.service._getURLSegment() + '/search', criteria);
   }
 
-  @SendInterceptor((new GeneralSearchCriteriaInterceptor().send))
-  private _exportSearch(@InterceptParam() criteria: Partial<any>): Observable<BlobModel> {
+  private _exportSearch(@InterceptParam(new GeneralSearchCriteriaInterceptor().send) criteria: Partial<any>): Observable<BlobModel> {
     return this.service.http.post(this.service._getURLSegment() + '/search/export', criteria, {
       responseType: 'blob',
       observe: 'body'

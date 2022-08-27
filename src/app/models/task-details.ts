@@ -43,7 +43,7 @@ export class TaskDetails extends Cloneable<TaskDetails> {
   fromUserInfo!: AdminResult;
 
   isClaimed(): boolean {
-    return this.actions.includes(WFActions.ACTION_CANCEL_CLAIM);
+    return this.actions?.includes(WFActions.ACTION_CANCEL_CLAIM);
   }
 
   isNotClaimed(): boolean {

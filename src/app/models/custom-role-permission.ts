@@ -1,8 +1,16 @@
-import {ModelCrudInterface} from '../interfaces/model-crud-interface';
-import {CustomRolePermissionService} from '../services/custom-role-permission.service';
-import {Observable} from 'rxjs';
-import {FactoryService} from '../services/factory.service';
+import { ModelCrudInterface } from '@contracts/model-crud-interface';
+import { CustomRolePermissionService } from '@services/custom-role-permission.service';
+import { Observable } from 'rxjs';
+import { FactoryService } from '@services/factory.service';
+import { InterceptModel } from "@decorators/intercept-model";
 
+@InterceptModel({
+  send: (model: any) => {
+    delete model.service;
+    return model;
+  },
+  receive: (model: CustomRolePermission) => model
+})
 export class CustomRolePermission implements ModelCrudInterface<CustomRolePermission> {
   id!: number;
   permissionId!: number;

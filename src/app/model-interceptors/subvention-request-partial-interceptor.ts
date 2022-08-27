@@ -1,9 +1,9 @@
-import {AdminResult} from '../models/admin-result';
-import {SubventionRequestPartial} from '../models/subvention-request-partial';
-import {DateUtils} from '../helpers/date-utils';
+import { AdminResult } from '../models/admin-result';
+import { SubventionRequestPartial } from '../models/subvention-request-partial';
+import { DateUtils } from '@helpers/date-utils';
 
 export class SubventionRequestPartialInterceptor {
-  static receive(model: SubventionRequestPartial): SubventionRequestPartial {
+  receive(model: SubventionRequestPartial): SubventionRequestPartial {
     model.orgBranchInfo = AdminResult.createInstance(model.orgBranchInfo);
     model.orgInfo = AdminResult.createInstance(model.orgInfo);
     model.statusInfo = AdminResult.createInstance(model.statusInfo);
@@ -13,7 +13,7 @@ export class SubventionRequestPartialInterceptor {
     return model;
   }
 
-  static send(model: any | SubventionRequestPartial): any {
+  send(model: any | SubventionRequestPartial): any {
     delete model.subventionRequestPartialService;
     delete model.orgBranchInfo;
     delete model.orgInfo;

@@ -901,7 +901,20 @@
     "svg": null
   },
   {
-    "id": 66,
+    "id": 69,
+    "langKey": "menu_coordination_with_organizations_request",
+    "path": "/home/general-services/coordination-with-organizations-request",
+    "icon": "mdi-domain",
+    "isSvg": false,
+    "permission": "COORDINATION_WITH_ORGANIZATION_REQUEST",
+    "permissionGroup": null,
+    "parent": 13,
+    "group": "general-services",
+    "itemOrder": 5,
+    "svg": null
+  },
+  {
+    "id": 70,
     "langKey": "menu_charity_organization_update",
     "path": "/home/general-services/charity-organization-update",
     "icon": "mdi-earth",

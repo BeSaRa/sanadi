@@ -29,6 +29,9 @@
           (click)="openDateMenu(dplicenseStartDate)"
           #dplicenseStartDate="angular-mydatepicker"
           angular-mydatepicker
+          (inputFieldChanged)="
+            onDateChange($event, 'licenseStartDate', 'licenseEndDate')
+          "
           validationClasses="licenseStartDate"
         ></div>
         <app-field-error-message
@@ -51,6 +54,9 @@
           id="licenseEndDate"
           [options]="datepickerOptionsMap.licenseEndDate"
           (click)="openDateMenu(dplicenseEndDate)"
+          (inputFieldChanged)="
+            onDateChange($event, 'licenseStartDate', 'licenseEndDate')
+          "
           #dplicenseEndDate="angular-mydatepicker"
           angular-mydatepicker
           validationClasses="licenseEndDate"

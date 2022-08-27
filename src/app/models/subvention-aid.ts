@@ -1,16 +1,21 @@
-import {AdminResult} from './admin-result';
-import {CustomValidators} from '../validators/custom-validators';
-import {SubventionAidService} from '../services/subvention-aid.service';
-import {FactoryService} from '../services/factory.service';
-import {BaseModel} from './base-model';
-import {Observable} from 'rxjs';
-import {Validators} from '@angular/forms';
-import {IMyDateModel} from 'angular-mydatepicker';
-import {isValidValue} from '../helpers/utils';
-import {ISearchFieldsMap} from '@app/types/types';
-import {infoSearchFields} from '@app/helpers/info-search-fields';
-import {normalSearchFields} from '@app/helpers/normal-search-fields';
+import { AdminResult } from './admin-result';
+import { CustomValidators } from '../validators/custom-validators';
+import { SubventionAidService } from '@services/subvention-aid.service';
+import { FactoryService } from '@services/factory.service';
+import { BaseModel } from './base-model';
+import { Observable } from 'rxjs';
+import { Validators } from '@angular/forms';
+import { IMyDateModel } from 'angular-mydatepicker';
+import { isValidValue } from '@helpers/utils';
+import { ISearchFieldsMap } from '@app/types/types';
+import { infoSearchFields } from '@app/helpers/info-search-fields';
+import { normalSearchFields } from '@app/helpers/normal-search-fields';
+import { SubventionAidInterceptor } from "@app/model-interceptors/subvention-aid-interceptor";
+import { InterceptModel } from "@decorators/intercept-model";
 
+const { send, receive } = new SubventionAidInterceptor();
+
+@InterceptModel({ send, receive })
 export class SubventionAid extends BaseModel<SubventionAid, SubventionAidService> {
   installmentsCount: number = 0;
   periodicType!: number;
@@ -52,7 +57,7 @@ export class SubventionAid extends BaseModel<SubventionAid, SubventionAidService
     ...normalSearchFields(['approvalDateString', 'aidSuggestedAmount', 'installmentsCount', 'aidStartPayDateString', 'aidAmount', 'aidPayedAmount'])
   };
   searchFieldsUserRequest: ISearchFieldsMap<SubventionAid> = {
-    ...infoSearchFields([ 'aidLookupParentInfo', 'aidLookupInfo', 'periodicTypeInfo']),
+    ...infoSearchFields(['aidLookupParentInfo', 'aidLookupInfo', 'periodicTypeInfo']),
     ...normalSearchFields(['approvalDateString', 'aidSuggestedAmount', 'installmentsCount', 'aidStartPayDateString', 'aidAmount', 'aidRemainingAmount'])
   };
   searchFieldsPartialRequestDetails: ISearchFieldsMap<SubventionAid> = {

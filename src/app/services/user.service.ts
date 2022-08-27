@@ -1,18 +1,23 @@
-import {Injectable} from '@angular/core';
-import {BackendGenericService} from '../generics/backend-generic-service';
-import {InternalUser} from '../models/internal-user';
-import {InternalUserInterceptor} from '../model-interceptors/internal-user-interceptor';
-import {IModelInterceptor} from '../interfaces/i-model-interceptor';
-import {HttpClient} from '@angular/common/http';
-import {UrlService} from './url.service';
-import {FactoryService} from './factory.service';
-import {Observable} from 'rxjs';
-import {Generator} from '../decorators/generator';
+import { Injectable } from '@angular/core';
+import { InternalUser } from '../models/internal-user';
+import { InternalUserInterceptor } from '../model-interceptors/internal-user-interceptor';
+import { IModelInterceptor } from '@contracts/i-model-interceptor';
+import { HttpClient } from '@angular/common/http';
+import { UrlService } from './url.service';
+import { FactoryService } from './factory.service';
+import { Observable } from 'rxjs';
+import { CrudGenericService } from "@app/generics/crud-generic-service";
+import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
 
+@CastResponseContainer({
+  $default: {
+    model: () => InternalUser
+  }
+})
 @Injectable({
   providedIn: 'root'
 })
-export class UserService extends BackendGenericService<InternalUser> {
+export class UserService extends CrudGenericService<InternalUser> {
   interceptor: IModelInterceptor<InternalUser> = new InternalUserInterceptor();
   list: InternalUser[] = [];
 
@@ -37,7 +42,10 @@ export class UserService extends BackendGenericService<InternalUser> {
     return this.urlService.URLS.INTERNAL_USER;
   }
 
-  @Generator(undefined, true, {property: 'rs'})
+  @CastResponse(undefined, {
+    fallback: '$default',
+    unwrap: 'rs'
+  })
   private _loadTeamMembers(teamId: number): Observable<InternalUser[]> {
     return this.http.get<InternalUser[]>(this.urlService.URLS.TEAMS + '/members/' + teamId);
   }

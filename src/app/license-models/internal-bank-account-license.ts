@@ -1,10 +1,17 @@
-import {InternalBankAccountApproval} from '@app/models/internal-bank-account-approval';
-import {AdminResult} from '@app/models/admin-result';
-import {Lookup} from '@app/models/lookup';
-import {BankAccount} from '@app/models/bank-account';
-import {Bank} from '@app/models/bank';
-import {NpoEmployee} from '@app/models/npo-employee';
+import { InternalBankAccountApproval } from '@app/models/internal-bank-account-approval';
+import { AdminResult } from '@app/models/admin-result';
+import { Lookup } from '@app/models/lookup';
+import { BankAccount } from '@app/models/bank-account';
+import { Bank } from '@app/models/bank';
+import { NpoEmployee } from '@app/models/npo-employee';
+import { InterceptModel } from "@decorators/intercept-model";
+import {
+  InternalBankAccountLicenseInterceptor
+} from "@app/license-interceptors/internal-bank-account-license-interceptor";
 
+const { send, receive } = new InternalBankAccountLicenseInterceptor
+
+@InterceptModel({ send, receive })
 export class InternalBankAccountLicense {
   accountNumber!: string;
   bankAccountExecutiveManagementDTOs!: any[];
@@ -40,7 +47,7 @@ export class InternalBankAccountLicense {
   requestTypeInfo!: Lookup;
   isUpdatedNewAccount!: boolean;
 
-  convertToItem(): InternalBankAccountApproval{
+  convertToItem(): InternalBankAccountApproval {
     const internalBankAccountApproval = new InternalBankAccountApproval();
     internalBankAccountApproval.oldLicenseId = this.id;
     internalBankAccountApproval.oldLicenseFullSerial = this.fullSerial;
@@ -59,7 +66,13 @@ export class InternalBankAccountLicense {
     internalBankAccountApproval.bankInfo = this.bankInfo;
     internalBankAccountApproval.bankCategoryInfo = this.bankCategoryInfo;
     internalBankAccountApproval.internalBankAccountDTOs = this.internalBankAccountDTOs.map((ba: BankAccount) => {
-      return (new BankAccount()).clone({id: ba.id, accountNumber: ba.accountNumber, isMergeAccount: ba.isMergeAccount, bankInfo: (new Bank()).clone(ba.bankInfo), bankCategoryInfo: (new Lookup()).clone(ba.bankCategoryInfo)})
+      return (new BankAccount()).clone({
+        id: ba.id,
+        accountNumber: ba.accountNumber,
+        isMergeAccount: ba.isMergeAccount,
+        bankInfo: (new Bank()).clone(ba.bankInfo),
+        bankCategoryInfo: (new Lookup()).clone(ba.bankCategoryInfo)
+      })
     });
     internalBankAccountApproval.bankAccountExecutiveManagementDTOs = this.bankAccountExecutiveManagementDTOs.map(x => {
       let y = new NpoEmployee().clone(x);

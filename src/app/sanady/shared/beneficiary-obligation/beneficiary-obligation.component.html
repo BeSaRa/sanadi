@@ -112,7 +112,7 @@
             </ng-container>
 
             <ng-container cdkColumnDef="totalDebtsLabel">
-              <td cdk-footer-cell [colSpan]="table.columns.length - 2" class="text-end" *cdkFooterCellDef="let row">
+              <td cdk-footer-cell [colSpan]="footerLabelColSpan" class="text-end" *cdkFooterCellDef="let row">
                 <span><b> {{lang.map.total_debts}}: </b></span>
               </td>
             </ng-container>

@@ -1,27 +1,33 @@
-import {ComponentFactoryResolver, Injectable} from '@angular/core';
-import {EServiceGenericService} from '../generics/e-service-generic-service';
-import {InternationalCooperation} from '../models/international-cooperation';
-import {IModelInterceptor} from '../interfaces/i-model-interceptor';
-import {DocumentService} from './document.service';
-import {CommentService} from './comment.service';
-import {ActionLogService} from './action-log.service';
-import {RecommendationService} from './recommendation.service';
-import {ILanguageKeys} from '../interfaces/i-language-keys';
-import {InternationalCooperationInterceptor} from '../model-interceptors/international-cooperation-interceptor';
-import {UrlService} from './url.service';
-import {DialogService} from './dialog.service';
-import {DomSanitizer} from '@angular/platform-browser';
-import {HttpClient} from '@angular/common/http';
-import {FactoryService} from './factory.service';
-import {SearchService} from './search.service';
-import {InternationalCooperationSearchCriteria} from '../models/international-cooperation-search-criteria';
-import {DynamicOptionsService} from './dynamic-options.service';
-import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import { Injectable } from '@angular/core';
+import { InternationalCooperation } from '../models/international-cooperation';
+import { IModelInterceptor } from '@contracts/i-model-interceptor';
+import { DocumentService } from './document.service';
+import { CommentService } from './comment.service';
+import { ActionLogService } from './action-log.service';
+import { RecommendationService } from './recommendation.service';
+import { ILanguageKeys } from '@contracts/i-language-keys';
+import { InternationalCooperationInterceptor } from '../model-interceptors/international-cooperation-interceptor';
+import { UrlService } from './url.service';
+import { DialogService } from './dialog.service';
+import { DomSanitizer } from '@angular/platform-browser';
+import { HttpClient } from '@angular/common/http';
+import { FactoryService } from './factory.service';
+import { SearchService } from './search.service';
+import { InternationalCooperationSearchCriteria } from '../models/international-cooperation-search-criteria';
+import { DynamicOptionsService } from './dynamic-options.service';
+import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
+import { CastResponseContainer } from "@decorators/cast-response";
+import { BaseGenericEService } from "@app/generics/base-generic-e-service";
 
+@CastResponseContainer({
+  $default: {
+    model: () => InternationalCooperation
+  }
+})
 @Injectable({
   providedIn: 'root'
 })
-export class InternationalCooperationService extends EServiceGenericService<InternationalCooperation> {
+export class InternationalCooperationService extends BaseGenericEService<InternationalCooperation> {
   _getUrlService(): UrlService {
     return this.urlService;
   }
@@ -45,7 +51,6 @@ export class InternationalCooperationService extends EServiceGenericService<Inte
 
   constructor(private urlService: UrlService,
               public dialog: DialogService,
-              public cfr: ComponentFactoryResolver,
               public domSanitizer: DomSanitizer,
               public dynamicService: DynamicOptionsService,
               public http: HttpClient) {

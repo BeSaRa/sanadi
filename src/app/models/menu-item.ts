@@ -6,7 +6,12 @@ import { IAppConfig } from '@contracts/i-app-config';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Cloneable } from "@app/models/cloneable";
 import { Common } from "@app/models/common";
+import { MenuItemInterceptor } from '@app/model-interceptors/menu-item-interceptor';
+import { InterceptModel } from "@decorators/intercept-model";
 
+const { send, receive } = new MenuItemInterceptor();
+
+@InterceptModel({ send, receive })
 export class MenuItem extends Cloneable<MenuItem> {
   id!: number;
   langKey!: keyof ILanguageKeys;

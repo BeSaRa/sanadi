@@ -1,21 +1,31 @@
-import {HttpClient} from '@angular/common/http';
-import {Injectable} from '@angular/core';
-import {BackendGenericService} from "@app/generics/backend-generic-service";
-import {UserTeam} from "@app/models/user-team";
-import {FactoryService} from "@app/services/factory.service";
-import {IModelInterceptor} from "@app/interfaces/i-model-interceptor";
-import {UserTeamInterceptor} from "@app/model-interceptors/user-team-interceptor";
-import {UrlService} from "@app/services/url.service";
-import {Observable} from "rxjs";
-import {Generator} from "@app/decorators/generator";
-import {map} from "rxjs/operators";
-import {IDefaultResponse} from "@app/interfaces/idefault-response";
-import {InterceptParam, SendInterceptor} from "@app/decorators/model-interceptor";
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { UserTeam } from "@app/models/user-team";
+import { FactoryService } from "@app/services/factory.service";
+import { IModelInterceptor } from "@app/interfaces/i-model-interceptor";
+import { UserTeamInterceptor } from "@app/model-interceptors/user-team-interceptor";
+import { UrlService } from "@app/services/url.service";
+import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
+import { IDefaultResponse } from "@app/interfaces/idefault-response";
+import { CrudGenericService } from "@app/generics/crud-generic-service";
+import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
+import { Pagination } from "@app/models/pagination";
+import { HasInterception, InterceptParam } from "@decorators/intercept-model";
 
+@CastResponseContainer({
+  $default: {
+    model: () => UserTeam
+  },
+  $pagination: {
+    model: () => Pagination,
+    shape: { 'rs.*': () => UserTeam }
+  }
+})
 @Injectable({
   providedIn: 'root'
 })
-export class UserTeamService extends BackendGenericService<UserTeam> {
+export class UserTeamService extends CrudGenericService<UserTeam> {
   list: UserTeam[] = [];
   interceptor: IModelInterceptor<UserTeam> = new UserTeamInterceptor();
 
@@ -40,12 +50,12 @@ export class UserTeamService extends BackendGenericService<UserTeam> {
     FactoryService.registerService('UserTeamService', this);
   }
 
-  @Generator(UserTeam, true)
+  @CastResponse(undefined)
   loadUserTeamByUserId(generalUserId: number): Observable<UserTeam[]> {
     return this.http.get<UserTeam[]>(this.urlService.URLS.TEAMS + '/user-teams/' + generalUserId)
   }
 
-  @SendInterceptor()
+  @HasInterception
   createUserTeam(@InterceptParam() userTeam: Partial<UserTeam>): Observable<number> {
     return this.http.post<IDefaultResponse<number>>(this.urlService.URLS.TEAMS + '/add-user', userTeam)
       .pipe(map((res) => res.rs))
@@ -66,6 +76,5 @@ export class UserTeamService extends BackendGenericService<UserTeam> {
     return this.http.put<IDefaultResponse<Record<number, boolean>>>(this.urlService.URLS.TEAMS + '/activate-users/bulk', userTeamsIds)
       .pipe(map(res => res.rs));
   }
-
 
 }

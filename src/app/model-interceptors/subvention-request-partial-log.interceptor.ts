@@ -1,9 +1,9 @@
 import {AdminResult} from '../models/admin-result';
 import {SubventionRequestPartialLog} from '../models/subvention-request-partial-log';
-import {DateUtils} from '../helpers/date-utils';
+import {DateUtils} from '@helpers/date-utils';
 
 export class SubventionRequestPartialLogInterceptor {
-  static receive(model: SubventionRequestPartialLog): SubventionRequestPartialLog {
+  receive(model: SubventionRequestPartialLog): SubventionRequestPartialLog {
     model.orgUserInfo = AdminResult.createInstance(model.orgUserInfo);
     model.orgBranchInfo = AdminResult.createInstance(model.orgBranchInfo);
     model.orgInfo = AdminResult.createInstance(model.orgInfo);
@@ -16,7 +16,7 @@ export class SubventionRequestPartialLogInterceptor {
     return model;
   }
 
-  static send(model: any | SubventionRequestPartialLog): any {
+  send(model: any | SubventionRequestPartialLog): any {
     delete model.subventionRequestPartialLogService;
     delete model.orgBranchInfo;
     delete model.orgInfo;

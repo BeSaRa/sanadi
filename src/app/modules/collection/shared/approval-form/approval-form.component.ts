@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { EServiceGenericService } from "@app/generics/e-service-generic-service";
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
 import { HasLicenseApproval } from "@app/interfaces/has-license-approval";
 import { LangService } from "@app/services/lang.service";
@@ -22,6 +21,7 @@ import { ServiceRequestTypes } from '@app/enums/service-request-types';
 import { CommonUtils } from '@app/helpers/common-utils';
 import { LicenseService } from "@services/license.service";
 import { CaseTypes } from "@app/enums/case-types.enum";
+import { BaseGenericEService } from "@app/generics/base-generic-e-service";
 
 @Component({
   selector: 'approval-form',
@@ -32,7 +32,7 @@ export class ApprovalFormComponent implements OnInit, OnDestroy {
   @Input()
   model!: HasRequestType & HasLicenseDurationType & CaseModel<any, any>;
   @Input()
-  service!: EServiceGenericService<any>
+  service!: BaseGenericEService<any>
   destroy$: Subject<any> = new Subject();
   form!: UntypedFormGroup
 

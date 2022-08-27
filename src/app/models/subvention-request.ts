@@ -1,22 +1,27 @@
-import {Observable} from 'rxjs';
-import {BaseModel} from './base-model';
-import {SubventionRequestService} from '../services/subvention-request.service';
-import {FactoryService} from '../services/factory.service';
-import {SubventionRequestAidService} from '../services/subvention-request-aid.service';
-import {CustomValidators} from '../validators/custom-validators';
-import {SubventionAid} from './subvention-aid';
-import {Validators} from '@angular/forms';
-import {AdminResult} from './admin-result';
-import {isValidValue, printBlobData} from '../helpers/utils';
-import {DialogRef} from '../shared/models/dialog-ref';
-import {searchFunctionType} from '../types/types';
-import {UserClickOn} from '../enums/user-click-on.enum';
-import {take} from 'rxjs/operators';
-import {SubventionRequestStatus} from '@app/enums/status.enum';
-import {ConfigurationService} from '../services/configuration.service';
-import {IMyDateModel} from 'angular-mydatepicker';
-import {DateUtils} from '../helpers/date-utils';
+import { Observable } from 'rxjs';
+import { BaseModel } from './base-model';
+import { SubventionRequestService } from '@services/subvention-request.service';
+import { FactoryService } from '@services/factory.service';
+import { SubventionRequestAidService } from '@services/subvention-request-aid.service';
+import { CustomValidators } from '../validators/custom-validators';
+import { SubventionAid } from './subvention-aid';
+import { Validators } from '@angular/forms';
+import { AdminResult } from './admin-result';
+import { isValidValue, printBlobData } from '@helpers/utils';
+import { DialogRef } from '../shared/models/dialog-ref';
+import { searchFunctionType } from '../types/types';
+import { UserClickOn } from '../enums/user-click-on.enum';
+import { take } from 'rxjs/operators';
+import { SubventionRequestStatus } from '@app/enums/status.enum';
+import { ConfigurationService } from '@services/configuration.service';
+import { IMyDateModel } from 'angular-mydatepicker';
+import { DateUtils } from '@helpers/date-utils';
+import { SubventionRequestInterceptor } from "@app/model-interceptors/subvention-request-interceptor";
+import { InterceptModel } from "@decorators/intercept-model";
 
+const { send, receive } = new SubventionRequestInterceptor()
+
+@InterceptModel({ send, receive })
 export class SubventionRequest extends BaseModel<SubventionRequest, SubventionRequestService> {
   id!: number;
   requestSerial!: number;
@@ -143,7 +148,7 @@ export class SubventionRequest extends BaseModel<SubventionRequest, SubventionRe
   }
 
   getStatusFields(control: boolean = false): any {
-    const {status, statusDateModified, requestNotes} = this;
+    const { status, statusDateModified, requestNotes } = this;
     return {
       status: control ? [status, CustomValidators.required] : status,
       // @ts-ignore

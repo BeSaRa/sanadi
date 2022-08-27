@@ -1,9 +1,9 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {LangService} from '../../../services/lang.service';
-import {DIALOG_DATA_TOKEN} from '../../tokens/tokens';
-import {EServiceGenericService} from '../../../generics/e-service-generic-service';
-import {take} from 'rxjs/operators';
-import {BlobModel} from '../../../models/blob-model';
+import { Component, Inject, OnInit } from '@angular/core';
+import { LangService } from '@services/lang.service';
+import { DIALOG_DATA_TOKEN } from '../../tokens/tokens';
+import { take } from 'rxjs/operators';
+import { BlobModel } from '@app/models/blob-model';
+import { BaseGenericEService } from "@app/generics/base-generic-e-service";
 
 @Component({
   selector: 'action-registry-popup',
@@ -14,7 +14,7 @@ export class ActionRegistryPopupComponent implements OnInit {
 
   constructor(public lang: LangService,
               @Inject(DIALOG_DATA_TOKEN)
-              public data: { service: EServiceGenericService<any>, caseId: string }) {
+              public data: { service: BaseGenericEService<any>, caseId: string }) {
   }
 
   ngOnInit(): void {

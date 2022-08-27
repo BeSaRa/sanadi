@@ -23,6 +23,11 @@ export interface ILookupMap {
   BenOccuptionStatus: Lookup[];
   BenRequestorRelationType: Lookup[];
   BenStatusType: Lookup[];
+  BranchAdjective: Lookup[];
+  BranchCategory: Lookup[];
+  CharityReportStatus: Lookup[];
+  CharityRequestType: Lookup[];
+  CharityWorkArea: Lookup[];
   CollectionClassification: Lookup[];
   CollectionRequestType: Lookup[];
   CollectorRelation: Lookup[];
@@ -34,6 +39,7 @@ export interface ILookupMap {
   ContractLocationType: Lookup[];
   ContractStatus: Lookup[];
   ContractType: Lookup[];
+  CoordinationType: Lookup[];
   Countries: Lookup[];
   Currency: Lookup[];
   CustomsExemptionRequestType: Lookup[];
@@ -72,7 +78,11 @@ export interface ILookupMap {
   LICENSING_AUTHORITY: Lookup[];
   LinkedProject: Lookup[];
   LocalizationModule: Lookup[];
+  MeetingClassification: Lookup[];
+  MeetingType: Lookup[];
+  MembersType: Lookup[];
   Nationality: Lookup[];
+  OrganizationWay: Lookup[];
   OrgStatus: Lookup[];
   OrgUnitType: Lookup[];
   OrgUserActionType: Lookup[];
@@ -84,6 +94,7 @@ export interface ILookupMap {
   ProjectLicenseType: Lookup[];
   ProjectType: Lookup[];
   ReceiverType: Lookup[];
+  RecommendedWay: Lookup[];
   REPORT_WATERMARK: Lookup[];
   ReportStatus: Lookup[];
   RequestClassification: Lookup[];
@@ -114,15 +125,20 @@ export interface ILookupMap {
   TRAINING_SURVEY_ANSWER: Lookup[];
   TRAINING_TRAINEE_STATUS: Lookup[];
   TRAINING_TYPE: Lookup[];
+  TrainingActivityType: Lookup[];
+  TrainingLanguage: Lookup[];
+  TrainingWay: Lookup[];
   TransfereeType: Lookup[];
   TransferMethod: Lookup[];
   TransferringIndividualLicenseStatus: Lookup[];
   TransferringIndividualRequestType: Lookup[];
   TransferType: Lookup[];
-  UrgentInterventionAnnouncementRequestType: Lookup[];
   UrgentFinancialNotificationAccountType: Lookup[];
+  UrgentInterventionAnnouncementRequestType: Lookup[];
   UrgentInterventionFinancialRequestType: Lookup[];
   UrgentInterventionRequestType: Lookup[];
+  UsageAdjective: Lookup[];
   UserType: Lookup[];
   WORK_FIELD: Lookup[];
+
 }

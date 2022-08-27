@@ -9,9 +9,9 @@ import { Lookup } from './lookup';
 import { LookupService } from '@services/lookup.service';
 import { searchFunctionType } from '../types/types';
 import { DialogRef } from '../shared/models/dialog-ref';
-import { OrgUserStatusEnum } from '@app/enums/status.enum';
 import { OrgUserInterceptor } from "@app/model-interceptors/org-user-interceptor";
 import { InterceptModel } from "@decorators/intercept-model";
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
 
 const interceptor = new OrgUserInterceptor();
 
@@ -53,7 +53,7 @@ export class OrgUser extends BaseModel<OrgUser, OrganizationUserService> {
     domainName: 'domainName',
     organization: text => !this.orgUnitInfo ? false : this.orgUnitInfo.getName().toLowerCase().indexOf(text) !== -1,
     branch: text => !this.orgBranchInfo ? false : this.orgBranchInfo.getName().toLowerCase().indexOf(text) !== -1,
-    status: text => !this.getOrgUserStatusLookup() ? false : this.getOrgUserStatusLookup()?.getName().toLowerCase().indexOf(text) !== -1,
+    status: text => !this.getStatusLookup() ? false : this.getStatusLookup()?.getName().toLowerCase().indexOf(text) !== -1,
     statusModifiedDate: 'statusDateModifiedString'
   };
 
@@ -88,8 +88,8 @@ export class OrgUser extends BaseModel<OrgUser, OrganizationUserService> {
     return this[(this.langService.map.lang + 'Name') as keyof INames];
   }
 
-  getOrgUserStatusLookup(): Lookup | null {
-    return this.lookupService.findLookupByLookupKey(this.lookupService.listByCategory.OrgUserStatus, this.status);
+  getStatusLookup(): Lookup | null {
+    return this.lookupService.findLookupByLookupKey(this.lookupService.listByCategory.CommonStatus, this.status);
   }
 
   showAuditLogs(_$event?: MouseEvent): Observable<DialogRef> {
@@ -104,7 +104,7 @@ export class OrgUser extends BaseModel<OrgUser, OrganizationUserService> {
     return false;
   }
 
-  updateStatus(newStatus: OrgUserStatusEnum): any {
+  updateStatus(newStatus: CommonStatusEnum): Observable<boolean> {
     return this.service.updateStatus(this.id, newStatus);
   }
 

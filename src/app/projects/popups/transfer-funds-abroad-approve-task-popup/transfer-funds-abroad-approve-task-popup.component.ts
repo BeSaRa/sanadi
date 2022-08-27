@@ -43,7 +43,7 @@ export class TransferFundsAbroadApproveTaskPopupComponent implements OnInit, OnD
   servicePublicTerms: string = '';
 
   datepickerOptionsMap: IKeyValue = {
-    followUpDate: DateUtils.getDatepickerOptions({disablePeriod: 'past'})
+    followUpDate: DateUtils.getDatepickerOptions({disablePeriod: 'past', appendToBody: true})
   };
 
   constructor(

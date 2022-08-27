@@ -3,7 +3,7 @@ import {AdminResult} from '../models/admin-result';
 import {DateUtils} from '@helpers/date-utils';
 
 export class SubventionAidInterceptor {
-  static receive(model: SubventionAid): SubventionAid {
+  receive(model: SubventionAid): SubventionAid {
     model.approvalDateString = model.approvalDate ? DateUtils.getDateStringFromDate(model.approvalDate) : '';
     model.aidStartPayDateString = model.aidStartPayDate ? DateUtils.getDateStringFromDate(model.aidStartPayDate) : '';
 
@@ -21,7 +21,7 @@ export class SubventionAidInterceptor {
     return model;
   }
 
-  static send(model: any): any {
+  send(model: any): any {
     delete model.service;
     delete model.arName;
     delete model.enName;

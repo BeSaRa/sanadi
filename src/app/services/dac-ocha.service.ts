@@ -1,28 +1,38 @@
-import {Injectable} from '@angular/core';
-import {BackendWithDialogOperationsGenericService} from '@app/generics/backend-with-dialog-operations-generic-service';
-import {DacOcha} from '@app/models/dac-ocha';
-import {ComponentType} from '@angular/cdk/portal';
-import {DacOchaPopupComponent} from '@app/administration/popups/dac-ocha-popup/dac-ocha-popup.component';
-import {FactoryService} from '@app/services/factory.service';
-import {DacOchaInterceptor} from '@app/model-interceptors/dac-ocha-interceptor';
-import {HttpClient} from '@angular/common/http';
-import {UrlService} from '@app/services/url.service';
-import {DialogService} from '@app/services/dialog.service';
-import {Observable, of} from 'rxjs';
-import {map, switchMap, tap} from 'rxjs/operators';
-import {Generator} from '@app/decorators/generator';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {IDialogData} from '@app/interfaces/i-dialog-data';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {SubDacOchaPopupComponent} from '@app/administration/popups/sub-dac-ocha-popup/sub-dac-ocha-popup.component';
-import {CommonStatusEnum} from '@app/enums/common-status.enum';
-import {CommonUtils} from '@app/helpers/common-utils';
-import {AdminLookupTypeEnum} from '@app/enums/admin-lookup-type-enum';
+import { Injectable } from '@angular/core';
+import { DacOcha } from '@app/models/dac-ocha';
+import { ComponentType } from '@angular/cdk/portal';
+import { DacOchaPopupComponent } from '@app/administration/popups/dac-ocha-popup/dac-ocha-popup.component';
+import { FactoryService } from '@app/services/factory.service';
+import { DacOchaInterceptor } from '@app/model-interceptors/dac-ocha-interceptor';
+import { HttpClient } from '@angular/common/http';
+import { UrlService } from '@app/services/url.service';
+import { DialogService } from '@app/services/dialog.service';
+import { Observable, of } from 'rxjs';
+import { map, switchMap, tap } from 'rxjs/operators';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { IDialogData } from '@app/interfaces/i-dialog-data';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { SubDacOchaPopupComponent } from '@app/administration/popups/sub-dac-ocha-popup/sub-dac-ocha-popup.component';
+import { CommonStatusEnum } from '@app/enums/common-status.enum';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { AdminLookupTypeEnum } from '@app/enums/admin-lookup-type-enum';
+import { CrudWithDialogGenericService } from "@app/generics/crud-with-dialog-generic-service";
+import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
+import { Pagination } from '@app/models/pagination';
 
+@CastResponseContainer({
+  $default: {
+    model: () => DacOcha
+  },
+  $pagination: {
+    model: () => Pagination,
+    shape: { 'rs.*': () => DacOcha }
+  }
+})
 @Injectable({
   providedIn: 'root'
 })
-export class DacOchaService extends BackendWithDialogOperationsGenericService<DacOcha> {
+export class DacOchaService extends CrudWithDialogGenericService<DacOcha> {
   list: DacOcha[] = [];
   interceptor: DacOchaInterceptor = new DacOchaInterceptor();
 
@@ -53,7 +63,7 @@ export class DacOchaService extends BackendWithDialogOperationsGenericService<Da
     return this.urlService.URLS.DAC_OCHA;
   }
 
-  @Generator(undefined, true, {property: 'rs'})
+  @CastResponse(undefined)
   private _loadSubDacOchas(dacOchaId: number): Observable<DacOcha[]> {
     return this.http.get<DacOcha[]>(this._getServiceURL() + '/sub/' + dacOchaId);
   }
@@ -66,7 +76,7 @@ export class DacOchaService extends BackendWithDialogOperationsGenericService<Da
       );
   }
 
-  @Generator(undefined, true, {property: 'rs'})
+  @CastResponse(undefined)
   private _loadByType(typeId: number): Observable<DacOcha[]> {
     return this.http.get<DacOcha[]>(this._getServiceURL() + '/type/' + typeId);
   }

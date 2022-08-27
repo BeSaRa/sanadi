@@ -13,26 +13,34 @@ import { DialogService } from './dialog.service';
 import { FactoryService } from './factory.service';
 import { LocalizationPopupComponent } from '../shared/popups/localization-popup/localization-popup.component';
 import { DialogRef } from '../shared/models/dialog-ref';
-import { LocalizationInterceptor } from '../model-interceptors/localization-interceptor';
 import { OperationTypes } from '../enums/operation-types.enum';
 import { IDialogData } from '@contracts/i-dialog-data';
 import { LangType, LocalizationMap } from '../types/types';
-import { BackendGenericService } from '../generics/backend-generic-service';
 import { ECookieService } from './e-cookie.service';
 import { ConfigurationService } from './configuration.service';
 import { EmployeeService } from './employee.service';
 import { AuthService } from './auth.service';
-import { Generator } from '@decorators/generator';
 import { ILoginData } from '@contracts/i-login-data';
 import { IDefaultResponse } from '@contracts/idefault-response';
 import { UserTypes } from "@app/enums/user-types.enum";
 import { CommonService } from "@services/common.service";
+import { CrudGenericService } from "@app/generics/crud-generic-service";
+import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
+import { Pagination } from '@app/models/pagination';
 
-
+@CastResponseContainer({
+  $default: {
+    model: () => Localization
+  },
+  $pagination: {
+    model: () => Pagination,
+    shape: { 'rs.*': () => Localization }
+  }
+})
 @Injectable({
   providedIn: 'root'
 })
-export class LangService extends BackendGenericService<Localization> {
+export class LangService extends CrudGenericService<Localization> {
   list: Localization[] = [];
   private languages: IAvailableLanguages = {
     en: new Language(1, 'English', 'en', 'ltr', Styles.BOOTSTRAP, 'العربية'),
@@ -137,7 +145,6 @@ export class LangService extends BackendGenericService<Localization> {
       .pipe(delay(300))
       .pipe(tap(_ => this.changeStatus$.next("InProgress")))
       .pipe(exhaustMap(({ language, silent }) => {
-        console.log('langDir', language.direction);
         this.changeHTMLDirection(language.direction);
         this.changeStyleHref(language.style);
         this.eCookieService.putEObject(this.configurationService.CONFIG.LANGUAGE_STORE_KEY, language);
@@ -185,7 +192,7 @@ export class LangService extends BackendGenericService<Localization> {
     });
   }
 
-  @Generator(undefined, false, { property: 'rs' })
+  @CastResponse('')
   private _changeUserLanguage(code: string): Observable<ILoginData> {
     return this.http.post<ILoginData>(this.urlService.URLS.AUTHENTICATE.replace('/nas/login', '') + '/lang/' + (code).toUpperCase(), undefined);
   }
@@ -251,15 +258,8 @@ export class LangService extends BackendGenericService<Localization> {
     return Localization;
   }
 
-  _getSendInterceptor(): any {
-    return LocalizationInterceptor.send;
-  }
-
   _getServiceURL(): string {
     return this.urlService.URLS.LANGUAGE;
-  }
-
-  _getReceiveInterceptor(): any {
   }
 
   getLocalizationByKey(key: string): Observable<boolean> {

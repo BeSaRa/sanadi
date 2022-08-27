@@ -1,20 +1,20 @@
-import {Component, ViewChild} from '@angular/core';
-import {LangService} from '@app/services/lang.service';
-import {BehaviorSubject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
-import {TeamService} from '@app/services/team.service';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {Team} from '@app/models/team';
-import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import {SortEvent} from '@app/interfaces/sort-event';
-import {isValidValue} from '@app/helpers/utils';
-import {CommonUtils} from '@app/helpers/common-utils';
-import {TableComponent} from '@app/shared/components/table/table.component';
-import {IGridAction} from '@app/interfaces/i-grid-action';
-import {CommonStatusEnum} from '@app/enums/common-status.enum';
-import {ToastService} from '@app/services/toast.service';
-import {AdminGenericComponent} from '@app/generics/admin-generic-component';
-import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import { Component, ViewChild } from '@angular/core';
+import { LangService } from '@app/services/lang.service';
+import { BehaviorSubject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { TeamService } from '@app/services/team.service';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { Team } from '@app/models/team';
+import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { SortEvent } from '@app/interfaces/sort-event';
+import { isValidValue } from '@app/helpers/utils';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { TableComponent } from '@app/shared/components/table/table.component';
+import { IGridAction } from '@app/interfaces/i-grid-action';
+import { CommonStatusEnum } from '@app/enums/common-status.enum';
+import { ToastService } from '@app/services/toast.service';
+import { AdminGenericComponent } from '@app/generics/admin-generic-component';
+import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 
 @Component({
   selector: 'team',
@@ -119,11 +119,12 @@ export class TeamComponent extends AdminGenericComponent<Team, TeamService> {
 
   toggleStatus(team: Team) {
     this.service.updateStatus(team.id, team.status)
-      .subscribe(() => {
-        this.toast.success(this.langService.map.msg_status_x_updated_success.change({x: team.getName()}));
+      .subscribe((val) => {
+        console.log({ val });
+        this.toast.success(this.langService.map.msg_status_x_updated_success.change({ x: team.getName() }));
         this.reload$.next(null);
       }, () => {
-        this.toast.error(this.langService.map.msg_status_x_updated_fail.change({x: team.getName()}));
+        this.toast.error(this.langService.map.msg_status_x_updated_fail.change({ x: team.getName() }));
         this.reload$.next(null);
       });
   }

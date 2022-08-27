@@ -1,31 +1,40 @@
-import {HttpClient} from '@angular/common/http';
-import {ComponentFactoryResolver, Injectable} from '@angular/core';
-import {DomSanitizer} from '@angular/platform-browser';
-import {EServiceGenericService} from '@app/generics/e-service-generic-service';
-import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {IModelInterceptor} from '@app/interfaces/i-model-interceptor';
-import {CustomsExemptionRemittanceInterceptor} from '@app/model-interceptors/customs-exemption-remittance-interceptor';
-import {CustomsExemptionRemittance} from '@app/models/customs-exemption-remittance';
-import {CustomsExemptionSearchCriteria} from '@app/models/customs-exemption-search-criteria';
-import {Observable, of} from 'rxjs';
-import {DialogService} from './dialog.service';
-import {DynamicOptionsService} from './dynamic-options.service';
-import {FactoryService} from './factory.service';
-import {UrlService} from './url.service';
-import {BlobModel} from '@app/models/blob-model';
-import {catchError, map} from 'rxjs/operators';
-import {CaseTypes} from '@app/enums/case-types.enum';
-import {Generator} from '@decorators/generator';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {SelectDocumentPopUpComponent} from '@app/modules/remittances/popups/select-document-pop-up/select-document-pop-up.component';
-import {AdminResult} from '@app/models/admin-result';
-import {CustomsExemptionRequestTypes} from '@app/enums/service-request-types';
-import {CommonService} from '@services/common.service';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
+import { IModelInterceptor } from '@app/interfaces/i-model-interceptor';
+import {
+  CustomsExemptionRemittanceInterceptor
+} from '@app/model-interceptors/customs-exemption-remittance-interceptor';
+import { CustomsExemptionRemittance } from '@app/models/customs-exemption-remittance';
+import { CustomsExemptionSearchCriteria } from '@app/models/customs-exemption-search-criteria';
+import { Observable, of } from 'rxjs';
+import { DialogService } from './dialog.service';
+import { DynamicOptionsService } from './dynamic-options.service';
+import { FactoryService } from './factory.service';
+import { UrlService } from './url.service';
+import { BlobModel } from '@app/models/blob-model';
+import { catchError, map } from 'rxjs/operators';
+import { CaseTypes } from '@app/enums/case-types.enum';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import {
+  SelectDocumentPopUpComponent
+} from '@app/modules/remittances/popups/select-document-pop-up/select-document-pop-up.component';
+import { AdminResult } from '@app/models/admin-result';
+import { CustomsExemptionRequestTypes } from '@app/enums/service-request-types';
+import { CommonService } from '@services/common.service';
+import { BaseGenericEService } from "@app/generics/base-generic-e-service";
+import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
 
+@CastResponseContainer({
+  $default: {
+    model: () => CustomsExemptionRemittance
+  }
+})
 @Injectable({
   providedIn: 'root',
 })
-export class CustomsExemptionRemittanceService extends EServiceGenericService<CustomsExemptionRemittance> {
+export class CustomsExemptionRemittanceService extends BaseGenericEService<CustomsExemptionRemittance> {
   jsonSearchFile: string = 'customs_exemption_search_form.json';
   interceptor: IModelInterceptor<CustomsExemptionRemittance> = new CustomsExemptionRemittanceInterceptor();
   serviceKey: keyof ILanguageKeys = 'menu_customs_exemption_service';
@@ -36,7 +45,6 @@ export class CustomsExemptionRemittanceService extends EServiceGenericService<Cu
   constructor(public http: HttpClient,
               public dialog: DialogService,
               public domSanitizer: DomSanitizer,
-              public cfr: ComponentFactoryResolver,
               public dynamicService: DynamicOptionsService,
               private commonService: CommonService,
               private urlService: UrlService) {
@@ -68,7 +76,7 @@ export class CustomsExemptionRemittanceService extends EServiceGenericService<Cu
     return this.urlService;
   }
 
-  @Generator(undefined, true, {property: 'rs'})
+  @CastResponse(undefined)
   private _customExemptionDocumentSearch(criteria: Partial<CustomsExemptionSearchCriteria>): Observable<CustomsExemptionRemittance[]> {
     const orgId = {organizationId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id : undefined};
     let url = this._getURLSegment() + '/search';
@@ -83,7 +91,7 @@ export class CustomsExemptionRemittanceService extends EServiceGenericService<Cu
     return this._customExemptionDocumentSearch(criteria);
   }
 
-  showDocumentContent<T extends { bookId: string }>(document: T, caseType: number): Observable<BlobModel> {
+  showDocumentContent<T extends { bookId: string }>(document: T, _caseType: number): Observable<BlobModel> {
     return this.http.get(this._getURLSegment() + '/document/' + document.bookId + '/download', {
       responseType: 'blob'
     }).pipe(
@@ -93,7 +101,7 @@ export class CustomsExemptionRemittanceService extends EServiceGenericService<Cu
         })));
   }
 
-  @Generator(undefined, false, {property: 'rs'})
+  @CastResponse(undefined)
   _validateDocumentByRequestType(requestType: number, exportedBookId: string): Observable<CustomsExemptionRemittance> {
     return this.http.post<CustomsExemptionRemittance>(this._getURLSegment() + '/draft/validate', {
       requestType,

@@ -1,11 +1,18 @@
-import {BaseModel} from '@app/models/base-model';
-import {FactoryService} from '@app/services/factory.service';
-import {LangService} from '@app/services/lang.service';
-import {TraineeService} from '@app/services/trainee.service';
-import {INames} from '@app/interfaces/i-names';
-import {Lookup} from '@app/models/lookup';
-import {searchFunctionType} from '@app/types/types';
+import { BaseModel } from '@app/models/base-model';
+import { FactoryService } from '@app/services/factory.service';
+import { LangService } from '@app/services/lang.service';
+import { TraineeService } from '@app/services/trainee.service';
+import { INames } from '@app/interfaces/i-names';
+import { Lookup } from '@app/models/lookup';
+import { searchFunctionType } from '@app/types/types';
+import { InterceptModel } from "@decorators/intercept-model";
+import { TraineeInterceptor } from "@app/model-interceptors/trainee-interceptor";
 
+const { receive, send } = new TraineeInterceptor()
+
+@InterceptModel({
+  receive, send
+})
 export class Trainee extends BaseModel<Trainee, TraineeService>{
   generalUserId!: number;
   jobType!: number;

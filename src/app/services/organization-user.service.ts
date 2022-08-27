@@ -20,12 +20,12 @@ import {OrganizationUserPermissionService} from './organization-user-permission.
 import {OrgUserPermission} from '../models/org-user-permission';
 import {AuditLogService} from './audit-log.service';
 import {ComponentType} from '@angular/cdk/portal';
-import {OrgUserStatusEnum} from '@app/enums/status.enum';
 import {CastResponse, CastResponseContainer} from '@decorators/cast-response';
 import {CrudWithDialogGenericService} from '@app/generics/crud-with-dialog-generic-service';
 import {Pagination} from '@app/models/pagination';
 import {PaginationContract} from '@contracts/pagination-contract';
 import {CommonUtils} from '@helpers/common-utils';
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
 
 @CastResponseContainer({
   $default: {
@@ -112,18 +112,18 @@ export class OrganizationUserService extends CrudWithDialogGenericService<OrgUse
     return this._openUpdateDialog(model.id, true);
   }
 
-  updateStatus(id: number, newStatus: OrgUserStatusEnum) {
-    return newStatus === OrgUserStatusEnum.ACTIVE ? this.activate(id) : this.deactivate(id);
+  updateStatus(id: number, newStatus: CommonStatusEnum) {
+    return newStatus === CommonStatusEnum.ACTIVATED ? this.activate(id) : this.deactivate(id);
   }
-
-  private activate(id: number): Observable<any> {
+  @CastResponse('')
+  activate(id: number): Observable<any> {
     return this.http.put<any>(this._getServiceURL() + '/' + id + '/activate', {});
   }
-
+  @CastResponse('')
   deactivate(id: number): Observable<boolean> {
     return this.http.put<boolean>(this._getServiceURL() + '/' + id + '/de-activate', {});
   }
-
+  @CastResponse('')
   deactivateBulk(ids: number[]): Observable<{ [key: number]: boolean }> {
     return this.http.put<{ [key: number]: boolean }>(this._getServiceURL() + '/bulk/de-activate', ids);
   }

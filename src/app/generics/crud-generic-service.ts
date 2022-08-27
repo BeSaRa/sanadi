@@ -90,6 +90,7 @@ export abstract class CrudGenericService<T> implements CrudServiceInterface<T>, 
   }
 
   @HasInterception
+  @CastResponse(undefined)
   create(@InterceptParam() model: T): Observable<T> {
     return this.http.post<T>(this._getServiceURL() + '/full', model);
   }
@@ -198,6 +199,14 @@ export abstract class CrudGenericService<T> implements CrudServiceInterface<T>, 
       }
     }
     return queryString.substring(0, queryString.length - 1);
+  }
+
+  @CastResponse(undefined, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  loadAsLookups(): Observable<T[]> {
+    return this.http.get<T[]>(this._getServiceURL() + '/lookup');
   }
 
   _parseObjectToQueryString(data: IKeyValue, myKey?: string): string {

@@ -1,17 +1,26 @@
-import {Injectable} from '@angular/core';
-import {Generator} from '../decorators/generator';
-import {Observable} from 'rxjs';
-import {OrgUserPermission} from '../models/org-user-permission';
-import {BackendGenericService} from '../generics/backend-generic-service';
-import {HttpClient} from '@angular/common/http';
-import {OrgUserPermissionInterceptor} from '../model-interceptors/org-user-permission-interceptor';
-import {FactoryService} from './factory.service';
-import {UrlService} from './url.service';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { OrgUserPermission } from '../models/org-user-permission';
+import { HttpClient } from '@angular/common/http';
+import { FactoryService } from './factory.service';
+import { UrlService } from './url.service';
+import { CrudGenericService } from "@app/generics/crud-generic-service";
+import { Pagination } from "@app/models/pagination";
+import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
 
+@CastResponseContainer({
+  $default: {
+    model: () => OrgUserPermission
+  },
+  $pagination: {
+    model: () => Pagination,
+    shape: { 'rs.*': () => OrgUserPermission }
+  }
+})
 @Injectable({
   providedIn: 'root'
 })
-export class OrganizationUserPermissionService extends BackendGenericService<OrgUserPermission> {
+export class OrganizationUserPermissionService extends CrudGenericService<OrgUserPermission> {
   list!: OrgUserPermission[];
 
   constructor(public http: HttpClient,
@@ -19,8 +28,7 @@ export class OrganizationUserPermissionService extends BackendGenericService<Org
     super();
     FactoryService.registerService('OrganizationUserPermissionService', this);
   }
-
-  @Generator(undefined, true)
+  @CastResponse(undefined)
   loadByUserId(userId: number): Observable<OrgUserPermission[]> {
     return this.http.get<OrgUserPermission[]>(this._getServiceURL() + '/org-user-id/' + userId);
   }
@@ -31,13 +39,6 @@ export class OrganizationUserPermissionService extends BackendGenericService<Org
 
   _getModel(): any {
     return OrgUserPermission;
-  }
-
-  _getReceiveInterceptor(): any {
-    return OrgUserPermissionInterceptor.receive;
-  }
-
-  _getSendInterceptor(): any {
   }
 
   _getServiceURL(): string {

@@ -16,7 +16,7 @@ import { AdminGenericComponent } from '@app/generics/admin-generic-component';
 import { TableComponent } from '@app/shared/components/table/table.component';
 import { SortEvent } from '@app/interfaces/sort-event';
 import { CommonUtils } from '@app/helpers/common-utils';
-import { OrgUserStatusEnum } from '@app/enums/status.enum';
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
 
 @Component({
   selector: 'app-organization-user',
@@ -61,7 +61,7 @@ export class OrganizationUserComponent extends AdminGenericComponent<OrgUser, Or
     }
   }
 
-  orgUserStatusEnum = OrgUserStatusEnum;
+  commonStatusEnum = CommonStatusEnum;
   bulkActionsList: IGridAction[] = [
     {
       langKey: 'btn_delete',
@@ -148,9 +148,10 @@ export class OrganizationUserComponent extends AdminGenericComponent<OrgUser, Or
   }
 
   toggleStatus(model: OrgUser) {
-    let updateObservable = model.status == OrgUserStatusEnum.ACTIVE ? model.updateStatus(OrgUserStatusEnum.INACTIVE) : model.updateStatus(OrgUserStatusEnum.ACTIVE);
+    let updateObservable = model.status == CommonStatusEnum.ACTIVATED ? model.updateStatus(CommonStatusEnum.DEACTIVATED) : model.updateStatus(CommonStatusEnum.ACTIVATED);
     updateObservable.pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
+      .subscribe((value) => {
+        console.log({ value });
         this.toast.success(this.langService.map.msg_status_x_updated_success.change({x: model.getName()}));
         this.reload$.next(null);
       }, () => {

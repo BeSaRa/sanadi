@@ -6,29 +6,31 @@ import {Beneficiary} from '../models/beneficiary';
 import {SubventionRequest} from '../models/subvention-request';
 import {BeneficiaryInterceptor} from './beneficiary-interceptor';
 import {SubventionRequestInterceptor} from './subvention-request-interceptor';
+import {IModelInterceptor} from '@contracts/i-model-interceptor';
+import {SubventionResponse} from '@app/models/subvention-response';
 
-export class SubventionResponseInterceptor {
-  static receive(model: any): any {
+export class SubventionResponseInterceptor implements IModelInterceptor<SubventionResponse> {
+  receive(model: SubventionResponse): any {
     model.attachmentList = model.attachmentList.map((attachment: any) => {
-      return SanadiAttachmentInterceptor.receive((new SanadiAttachment().clone(attachment)));
+      return (new SanadiAttachmentInterceptor).receive((new SanadiAttachment().clone(attachment)));
     });
     model.aidList = model.aidList.map((aid: SubventionAid) => {
-      return SubventionAidInterceptor.receive((new SubventionAid().clone(aid)));
+      return (new SubventionAidInterceptor).receive((new SubventionAid().clone(aid)));
     });
-    model.beneficiary = BeneficiaryInterceptor.receive(new Beneficiary().clone(model.beneficiary));
-    model.request = SubventionRequestInterceptor.receive(new SubventionRequest().clone(model.request));
+    model.beneficiary = (new BeneficiaryInterceptor).receive(new Beneficiary().clone(model.beneficiary));
+    model.request = (new SubventionRequestInterceptor).receive(new SubventionRequest().clone(model.request));
     return model;
   }
 
-  static send(model: any): any {
-    model.attachmentList = model.attachmentList.map((attachment: any) => {
-      return SanadiAttachmentInterceptor.send(attachment);
+  send(model: Partial<SubventionResponse>): any {
+    model.attachmentList = !model.attachmentList ? [] : model.attachmentList.map((attachment: any) => {
+      return (new SanadiAttachmentInterceptor).send(new SanadiAttachment().clone(attachment));
     });
-    model.aidList = model.aidList.map((aid: SubventionAid) => {
-      return SubventionAidInterceptor.send(aid);
+    model.aidList = !model.aidList ? [] :model.aidList.map((aid: SubventionAid) => {
+      return (new SubventionAidInterceptor).send(aid);
     });
-    model.beneficiary = BeneficiaryInterceptor.send(model.beneficiary);
-    model.request = SubventionRequestInterceptor.send(model.request);
+    model.beneficiary = (new BeneficiaryInterceptor).send(model.beneficiary);
+    model.request = (new SubventionRequestInterceptor).send(model.request);
     return model;
   }
 }

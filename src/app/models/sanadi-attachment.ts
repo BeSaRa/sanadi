@@ -1,13 +1,18 @@
-import {SanadiDocument} from './sanadi-document';
-import {Observable} from 'rxjs';
-import {AttachmentService} from '../services/attachment.service';
-import {FactoryService} from '../services/factory.service';
-import {AdminResult} from './admin-result';
-import {printBlobData} from '../helpers/utils';
-import {ISearchFieldsMap} from '@app/types/types';
-import {normalSearchFields} from '@app/helpers/normal-search-fields';
-import {infoSearchFields} from '@app/helpers/info-search-fields';
+import { SanadiDocument } from './sanadi-document';
+import { Observable } from 'rxjs';
+import { AttachmentService } from '@services/attachment.service';
+import { FactoryService } from '@services/factory.service';
+import { AdminResult } from './admin-result';
+import { printBlobData } from '@helpers/utils';
+import { ISearchFieldsMap } from '@app/types/types';
+import { normalSearchFields } from '@app/helpers/normal-search-fields';
+import { infoSearchFields } from '@app/helpers/info-search-fields';
+import { InterceptModel } from "@decorators/intercept-model";
+import { SanadiAttachmentInterceptor } from "@app/model-interceptors/sanadi-attachment-interceptor";
 
+const { send, receive } = new SanadiAttachmentInterceptor();
+
+@InterceptModel({ send, receive })
 export class SanadiAttachment extends SanadiDocument<SanadiAttachment> {
   attachmentType!: number;
   requestId!: number;

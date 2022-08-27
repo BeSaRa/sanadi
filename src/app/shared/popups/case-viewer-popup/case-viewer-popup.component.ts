@@ -1,21 +1,21 @@
-import {AfterViewInit, Component, Inject, NgZone, OnInit, ViewChild, ViewContainerRef} from '@angular/core';
-import {LangService} from '@app/services/lang.service';
-import {Subject} from 'rxjs';
-import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {DIALOG_DATA_TOKEN} from '../../tokens/tokens';
-import {IESComponent} from '@app/interfaces/iescomponent';
-import {SaveTypes} from '@app/enums/save-types';
-import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import {DialogRef} from '../../models/dialog-ref';
-import {take} from 'rxjs/operators';
-import {OpenFrom} from '@app/enums/open-from.enum';
-import {CaseModel} from '@app/models/case-model';
-import {QueryResult} from '@app/models/query-result';
-import {EServiceGenericService} from '@app/generics/e-service-generic-service';
-import {CaseTypes} from '@app/enums/case-types.enum';
-import {InternalProjectLicenseService} from '@app/services/internal-project-license.service';
-import {EmployeeService} from '@app/services/employee.service';
-import {InternalProjectLicense} from '@app/models/internal-project-license';
+import { AfterViewInit, Component, Inject, NgZone, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { LangService } from '@app/services/lang.service';
+import { Subject } from 'rxjs';
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
+import { DIALOG_DATA_TOKEN } from '../../tokens/tokens';
+import { IESComponent } from '@app/interfaces/iescomponent';
+import { SaveTypes } from '@app/enums/save-types';
+import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { DialogRef } from '../../models/dialog-ref';
+import { take } from 'rxjs/operators';
+import { OpenFrom } from '@app/enums/open-from.enum';
+import { CaseModel } from '@app/models/case-model';
+import { QueryResult } from '@app/models/query-result';
+import { CaseTypes } from '@app/enums/case-types.enum';
+import { InternalProjectLicenseService } from '@app/services/internal-project-license.service';
+import { EmployeeService } from '@app/services/employee.service';
+import { InternalProjectLicense } from '@app/models/internal-project-license';
+import { BaseGenericEService } from "@app/generics/base-generic-e-service";
 
 @Component({
   selector: 'case-viewer-popup',
@@ -61,7 +61,7 @@ export class CaseViewerPopupComponent implements OnInit, AfterViewInit {
                 actions: IMenuItem<CaseModel<any, any> | QueryResult>[],
                 openedFrom: OpenFrom,
                 loadedModel: any,
-                componentService: EServiceGenericService<any>
+                componentService: BaseGenericEService<any>
               },
               private zone: NgZone,
               private dialogRef: DialogRef,

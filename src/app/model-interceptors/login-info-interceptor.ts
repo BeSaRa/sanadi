@@ -1,21 +1,21 @@
-import {ILoginInfo} from '../interfaces/i-login-info';
+import {ILoginInfo} from '@contracts/i-login-info';
 import {Localization} from '../models/localization';
 import {Lookup} from '../models/lookup';
-import {ILookupMap} from '../interfaces/i-lookup-map';
+import {ILookupMap} from '@contracts/i-lookup-map';
 import {LocalizationInterceptor} from './localization-interceptor';
 
-export function interceptLoginInfo(model: { rs: ILoginInfo }): ILoginInfo {
-  model.rs.localizationSet = model.rs.localizationSet.map(item => {
+export function interceptLoginInfo(model: ILoginInfo): ILoginInfo {
+  model.localizationSet = model.localizationSet.map(item => {
     return LocalizationInterceptor.receive(Object.assign(new Localization(), item));
   });
 
-  for (const lookupMapKey in model.rs.lookupMap) {
-    if (model.rs.lookupMap.hasOwnProperty(lookupMapKey)) {
+  for (const lookupMapKey in model.lookupMap) {
+    if (model.lookupMap.hasOwnProperty(lookupMapKey)) {
       const key = lookupMapKey as keyof ILookupMap;
-      model.rs.lookupMap[key] = model.rs.lookupMap[key].map((item: any) => {
+      model.lookupMap[key] = model.lookupMap[key].map((item: any) => {
         return Object.assign(new Lookup(), item);
       });
     }
   }
-  return model.rs;
+  return model;
 }

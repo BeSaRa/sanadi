@@ -1,10 +1,16 @@
-import {BaseLicense} from "@app/models/base-license";
-import {AdminResult} from "@app/models/admin-result";
-import {ExecutiveManagement} from '@app/models/executive-management';
-import {BankBranch} from '@app/models/bank-branch';
-import {BankAccount} from '@app/models/bank-account';
-import {CaseTypes} from '@app/enums/case-types.enum';
+import { BaseLicense } from "@app/models/base-license";
+import { AdminResult } from "@app/models/admin-result";
+import { ExecutiveManagement } from '@app/models/executive-management';
+import { BankBranch } from '@app/models/bank-branch';
+import { BankAccount } from '@app/models/bank-account';
+import { CaseTypes } from '@app/enums/case-types.enum';
+import { InterceptModel } from "@decorators/intercept-model";
+import {
+  FinalExternalOfficeApprovalResultInterceptor
+} from "@app/model-interceptors/final-external-office-approval-result-interceptor";
 
+const { send, receive } = new FinalExternalOfficeApprovalResultInterceptor();
+@InterceptModel({ send, receive })
 export class FinalExternalOfficeApprovalResult extends BaseLicense {
   enName!: string;
   arName!: string;

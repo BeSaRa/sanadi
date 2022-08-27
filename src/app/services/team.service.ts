@@ -1,27 +1,27 @@
-import {Injectable} from '@angular/core';
-import {Team} from '../models/team';
-import {HttpClient} from '@angular/common/http';
-import {UrlService} from './url.service';
-import {FactoryService} from './factory.service';
-import {UserService} from './user.service';
-import {forkJoin, Observable, of} from 'rxjs';
-import {InternalUser} from '../models/internal-user';
-import {DialogRef} from '../shared/models/dialog-ref';
-import {IDialogData} from '@contracts/i-dialog-data';
-import {OperationTypes} from '../enums/operation-types.enum';
-import {DialogService} from './dialog.service';
-import {TeamPopupComponent} from '../administration/popups/team-popup/team-popup.component';
-import {map, switchMap} from 'rxjs/operators';
-import {ITeamCriteria} from '@contracts/i-team-criteria';
-import {InternalDepartmentService} from './internal-department.service';
-import {InternalDepartment} from '../models/internal-department';
-import {UserTeam} from '@app/models/user-team';
-import {UserTeamService} from '@app/services/user-team.service';
-import {CommonStatusEnum} from '@app/enums/common-status.enum';
-import {CastResponse, CastResponseContainer} from '@decorators/cast-response';
-import {Pagination} from '@app/models/pagination';
-import {CrudWithDialogGenericService} from '@app/generics/crud-with-dialog-generic-service';
-import {ComponentType} from '@angular/cdk/portal';
+import { Injectable } from '@angular/core';
+import { Team } from '../models/team';
+import { HttpClient } from '@angular/common/http';
+import { UrlService } from './url.service';
+import { FactoryService } from './factory.service';
+import { UserService } from './user.service';
+import { forkJoin, Observable, of } from 'rxjs';
+import { InternalUser } from '../models/internal-user';
+import { DialogRef } from '../shared/models/dialog-ref';
+import { IDialogData } from '@contracts/i-dialog-data';
+import { OperationTypes } from '../enums/operation-types.enum';
+import { DialogService } from './dialog.service';
+import { TeamPopupComponent } from '../administration/popups/team-popup/team-popup.component';
+import { map, switchMap } from 'rxjs/operators';
+import { ITeamCriteria } from '@contracts/i-team-criteria';
+import { InternalDepartmentService } from './internal-department.service';
+import { InternalDepartment } from '../models/internal-department';
+import { UserTeam } from '@app/models/user-team';
+import { UserTeamService } from '@app/services/user-team.service';
+import { CommonStatusEnum } from '@app/enums/common-status.enum';
+import { CastResponse, CastResponseContainer } from '@decorators/cast-response';
+import { Pagination } from '@app/models/pagination';
+import { CrudWithDialogGenericService } from '@app/generics/crud-with-dialog-generic-service';
+import { ComponentType } from '@angular/cdk/portal';
 
 @CastResponseContainer({
   $default: {
@@ -29,7 +29,7 @@ import {ComponentType} from '@angular/cdk/portal';
   },
   $pagination: {
     model: () => Pagination,
-    shape: {'rs.*': () => Team}
+    shape: { 'rs.*': () => Team }
   }
 })
 @Injectable({
@@ -143,15 +143,17 @@ export class TeamService extends CrudWithDialogGenericService<Team> {
     return this.userTeamService.deleteBulk(ids);
   }
 
-  updateStatus(teamId: number, currentStatus: CommonStatusEnum) {
+  updateStatus(teamId: number, currentStatus: CommonStatusEnum): Observable<boolean> {
     return currentStatus === CommonStatusEnum.ACTIVATED ? this._deactivate(teamId) : this._activate(teamId);
   }
 
-  private _activate(teamId: number): Observable<any> {
-    return this.http.put<any>(this._getServiceURL() + '/' + teamId + '/activate', {});
+  @CastResponse(undefined)
+  private _activate(teamId: number): Observable<boolean> {
+    return this.http.put<boolean>(this._getServiceURL() + '/' + teamId + '/activate', {});
   }
 
-  private _deactivate(teamId: number): Observable<any> {
-    return this.http.put<any>(this._getServiceURL() + '/' + teamId + '/de-activate', {});
+  @CastResponse(undefined)
+  private _deactivate(teamId: number): Observable<boolean> {
+    return this.http.put<boolean>(this._getServiceURL() + '/' + teamId + '/de-activate', {});
   }
 }

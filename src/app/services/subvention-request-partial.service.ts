@@ -1,28 +1,33 @@
-import {Injectable} from '@angular/core';
-import {BackendGenericService} from '../generics/backend-generic-service';
-import {FactoryService} from './factory.service';
-import {SubventionRequestPartialInterceptor} from '../model-interceptors/subvention-request-partial-interceptor';
-import {SubventionRequestPartial} from '../models/subvention-request-partial';
-import {UrlService} from './url.service';
-import {HttpClient} from '@angular/common/http';
-import {LangService} from './lang.service';
-import {Generator} from '../decorators/generator';
-import {Observable, of} from 'rxjs';
-import {IPartialRequestCriteria} from '../interfaces/i-partial-request-criteria';
-import {DialogRef} from '../shared/models/dialog-ref';
-import {switchMap} from 'rxjs/operators';
-import {RequestDetailsPopupComponent} from '../sanady/popups/request-details-popup/request-details-popup.component';
-import {DialogService} from './dialog.service';
-import {OrgUnit} from '../models/org-unit';
-import {FilterRequestPopupComponent} from '../sanady/popups/filter-request-popup/filter-request-popup.component';
-import {OrganizationUnitService} from './organization-unit.service';
-import {SubventionResponseService} from './subvention-response.service';
-import {SubventionResponse} from '../models/subvention-response';
+import { Injectable } from '@angular/core';
+import { FactoryService } from './factory.service';
+import { SubventionRequestPartial } from '../models/subvention-request-partial';
+import { UrlService } from './url.service';
+import { HttpClient } from '@angular/common/http';
+import { LangService } from './lang.service';
+import { Observable, of } from 'rxjs';
+import { IPartialRequestCriteria } from '@contracts/i-partial-request-criteria';
+import { DialogRef } from '../shared/models/dialog-ref';
+import { switchMap } from 'rxjs/operators';
+import { RequestDetailsPopupComponent } from '../sanady/popups/request-details-popup/request-details-popup.component';
+import { DialogService } from './dialog.service';
+import { OrgUnit } from '../models/org-unit';
+import { FilterRequestPopupComponent } from '../sanady/popups/filter-request-popup/filter-request-popup.component';
+import { OrganizationUnitService } from './organization-unit.service';
+import { SubventionResponseService } from './subvention-response.service';
+import { SubventionResponse } from '../models/subvention-response';
+import { CrudGenericService } from "@app/generics/crud-generic-service";
+import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
+
+@CastResponseContainer({
+  $default: {
+    model: () => SubventionRequestPartial
+  }
+})
 
 @Injectable({
   providedIn: 'root'
 })
-export class SubventionRequestPartialService extends BackendGenericService<SubventionRequestPartial> {
+export class SubventionRequestPartialService extends CrudGenericService<SubventionRequestPartial> {
   list!: SubventionRequestPartial[];
 
   constructor(private urlService: UrlService,
@@ -38,25 +43,16 @@ export class SubventionRequestPartialService extends BackendGenericService<Subve
     return SubventionRequestPartial;
   }
 
-  _getSendInterceptor() {
-    return SubventionRequestPartialInterceptor.send;
-  }
-
   _getServiceURL(): string {
     return this.urlService.URLS.SUBVENTION_REQUEST_PARTIAL;
   }
 
-  _getReceiveInterceptor() {
-    return SubventionRequestPartialInterceptor.receive;
-  }
-
-  @Generator(undefined, true, {property: 'rs'})
+  @CastResponse(undefined)
   loadPartialRequests(): Observable<SubventionRequestPartial[]> {
     return this.http.get<SubventionRequestPartial[]>(this._getServiceURL() + '/active');
   }
 
-  // @ts-ignore
-  @Generator(undefined, true, {property: 'rs'})
+  @CastResponse(undefined)
   loadPartialRequestsByCriteria(criteria: Partial<IPartialRequestCriteria>): Observable<SubventionRequestPartial[]> {
     return this.http.post<SubventionRequestPartial[]>(this._getServiceURL() + '/criteria', criteria);
   }

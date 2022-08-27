@@ -66,6 +66,24 @@ export class GdxBeneficiaryIntegrationComponent implements OnInit, OnDestroy {
       serviceId: GdxServicesEnum.MOCI + '',
       isLoaded: false
     },
+    mawared: {
+      name: 'mawared',
+      index: 2,
+      langKey: 'integration_mawared',
+      validStatus: () => true,
+      isTouchedOrDirty: () => true,
+      // serviceId: GdxServicesEnum.MAWARED + '',
+      isLoaded: true
+    },
+    qatarCharity: {
+      name: 'qatarCharity',
+      index: 3,
+      langKey: 'integration_qatar_charity',
+      validStatus: () => true,
+      isTouchedOrDirty: () => true,
+      // serviceId: GdxServicesEnum.QATAR_CHARITY + '',
+      isLoaded: true
+    },
   };
   tabIndex$: Subject<number> = new Subject<number>();
 

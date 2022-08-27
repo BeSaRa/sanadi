@@ -1,18 +1,28 @@
-import {HttpClient} from '@angular/common/http';
-import {Injectable} from '@angular/core';
-import {BackendGenericService} from "@app/generics/backend-generic-service";
-import {TeamSecurityConfiguration} from "@app/models/team-security-configuration";
-import {UrlService} from "@app/services/url.service";
-import {FactoryService} from "@app/services/factory.service";
-import {Observable} from "rxjs";
-import {Generator} from "@app/decorators/generator";
-import {IModelInterceptor} from "@app/interfaces/i-model-interceptor";
-import {TeamSecurityConfigurationInterceptor} from "@app/model-interceptors/team-security-configuration-interceptor";
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { TeamSecurityConfiguration } from "@app/models/team-security-configuration";
+import { UrlService } from "@app/services/url.service";
+import { FactoryService } from "@app/services/factory.service";
+import { Observable } from "rxjs";
+import { IModelInterceptor } from "@app/interfaces/i-model-interceptor";
+import { TeamSecurityConfigurationInterceptor } from "@app/model-interceptors/team-security-configuration-interceptor";
+import { CrudGenericService } from "@app/generics/crud-generic-service";
+import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
+import { Pagination } from "@app/models/pagination";
 
+@CastResponseContainer({
+  $default: {
+    model: () => TeamSecurityConfiguration
+  },
+  $pagination: {
+    model: () => Pagination,
+    shape: { 'rs.*': () => TeamSecurityConfiguration }
+  }
+})
 @Injectable({
   providedIn: 'root'
 })
-export class TeamSecurityConfigurationService extends BackendGenericService<TeamSecurityConfiguration> {
+export class TeamSecurityConfigurationService extends CrudGenericService<TeamSecurityConfiguration> {
 
   constructor(public http: HttpClient, private urlService: UrlService) {
     super();
@@ -38,7 +48,7 @@ export class TeamSecurityConfigurationService extends BackendGenericService<Team
     return this.interceptor.receive;
   }
 
-  @Generator(undefined, true)
+  @CastResponse(undefined)
   private _loadSecurityByTeamId(teamId: number): Observable<TeamSecurityConfiguration[]> {
     return this.http.get<TeamSecurityConfiguration[]>(this._getServiceURL() + '/team/' + teamId);
   }

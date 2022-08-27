@@ -6,7 +6,7 @@ import {CaseTypes} from '@app/enums/case-types.enum';
 import {AdminResult} from '@app/models/admin-result';
 import {TransferFundsExecutiveManagement} from '@app/models/transfer-funds-executive-management';
 import {CustomValidators} from '@app/validators/custom-validators';
-import {Validators} from '@angular/forms';
+import {UntypedFormGroup, Validators} from '@angular/forms';
 import {TransferFundsCharityPurpose} from '@app/models/transfer-funds-charity-purpose';
 import {FactoryService} from '@services/factory.service';
 import {IMyDateModel} from 'angular-mydatepicker';
@@ -14,6 +14,7 @@ import {DialogRef} from '@app/shared/models/dialog-ref';
 import {WFResponseType} from '@app/enums/wfresponse-type.enum';
 import {mixinRequestType} from '@app/mixins/mixin-request-type';
 import {HasRequestType} from '@contracts/has-request-type';
+import {ITransferIndividualFundsAbroadComplete} from '@contracts/i-transfer-individual-funds-abroad-complete';
 
 const _RequestType = mixinRequestType(CaseModel);
 const interceptor = new TransferringIndividualFundsAbroadInterceptor();
@@ -23,7 +24,7 @@ const interceptor = new TransferringIndividualFundsAbroadInterceptor();
   send: interceptor.send
 })
 
-export class TransferringIndividualFundsAbroad extends _RequestType<TransferringIndividualFundsAbroadService, TransferringIndividualFundsAbroad> implements HasRequestType{
+export class TransferringIndividualFundsAbroad extends _RequestType<TransferringIndividualFundsAbroadService, TransferringIndividualFundsAbroad> implements HasRequestType, ITransferIndividualFundsAbroadComplete{
   service!: TransferringIndividualFundsAbroadService;
   caseType = CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD;
   licenseApprovedDate!: string;
@@ -244,5 +245,9 @@ export class TransferringIndividualFundsAbroad extends _RequestType<Transferring
 
   finalApprove(): DialogRef {
     return this.service.finalApproveTask(this, WFResponseType.FINAL_APPROVE);
+  }
+
+  completeWithForm(form: UntypedFormGroup, selectedExecutives: TransferFundsExecutiveManagement[], selectedPurposes: TransferFundsCharityPurpose[]): DialogRef {
+    return this.service!.completeTask(this, WFResponseType.COMPLETE, form, selectedExecutives, selectedPurposes);
   }
 }

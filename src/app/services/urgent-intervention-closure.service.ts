@@ -1,50 +1,55 @@
-import {ComponentFactoryResolver, Injectable} from '@angular/core';
-import {EServiceGenericService} from '@app/generics/e-service-generic-service';
-import {UrgentInterventionClosure} from '@app/models/urgent-intervention-closure';
-import {UrlService} from '@services/url.service';
-import {DomSanitizer} from '@angular/platform-browser';
-import {DialogService} from '@services/dialog.service';
-import {DynamicOptionsService} from '@services/dynamic-options.service';
-import {LicenseService} from '@services/license.service';
-import {HttpClient} from '@angular/common/http';
-import {IModelInterceptor} from '@contracts/i-model-interceptor';
-import {ILanguageKeys} from '@contracts/i-language-keys';
-import {SearchUrgentInterventionClosureCriteria} from '@app/models/search-urgent-intervention-closure-criteria';
-import {UrgentInterventionReportSearchCriteria} from '@app/models/urgent-intervention-report-search-criteria';
-import {Observable} from 'rxjs';
-import {UrgentInterventionReportResult} from '@app/models/urgent-intervention-report-result';
-import {UrgentInterventionClosureInterceptor} from '@app/model-interceptors/urgent-intervention-closure-interceptor';
-import {FactoryService} from '@services/factory.service';
-import {ImplementingAgency} from '@app/models/implementing-agency';
-import {ImplementingAgencyInterceptor} from '@app/model-interceptors/implementing-agency-interceptor';
-import {InterventionRegion} from '@app/models/intervention-region';
-import {InterventionRegionInterceptor} from '@app/model-interceptors/intervention-region-interceptor';
-import {InterventionField} from '@app/models/intervention-field';
-import {InterventionFieldInterceptor} from '@app/model-interceptors/intervention-field-interceptor';
-import {OfficeEvaluation} from '@app/models/office-evaluation';
-import {OfficeEvaluationInterceptor} from '@app/model-interceptors/office-evaluation-interceptor';
-import {Result} from '@app/models/result';
-import {ResultInterceptor} from '@app/model-interceptors/result-interceptor';
-import {Stage} from '@app/models/stage';
-import {StageInterceptor} from '@app/model-interceptors/stage-interceptor';
-import {BestPractices} from '@app/models/best-practices';
-import {BestPracticesInterceptor} from '@app/model-interceptors/best-practices-interceptor';
-import {LessonsLearned} from '@app/models/lessons-learned';
-import {LessonsLearnedInterceptor} from '@app/model-interceptors/lessons-learned-interceptor';
-import {WFResponseType} from '@app/enums/wfresponse-type.enum';
-import {DialogRef} from '@app/shared/models/dialog-ref';
+import { Injectable } from '@angular/core';
+import { UrgentInterventionClosure } from '@app/models/urgent-intervention-closure';
+import { UrlService } from '@services/url.service';
+import { DomSanitizer } from '@angular/platform-browser';
+import { DialogService } from '@services/dialog.service';
+import { DynamicOptionsService } from '@services/dynamic-options.service';
+import { LicenseService } from '@services/license.service';
+import { HttpClient } from '@angular/common/http';
+import { IModelInterceptor } from '@contracts/i-model-interceptor';
+import { ILanguageKeys } from '@contracts/i-language-keys';
+import { SearchUrgentInterventionClosureCriteria } from '@app/models/search-urgent-intervention-closure-criteria';
+import { UrgentInterventionReportSearchCriteria } from '@app/models/urgent-intervention-report-search-criteria';
+import { Observable } from 'rxjs';
+import { UrgentInterventionReportResult } from '@app/models/urgent-intervention-report-result';
+import { UrgentInterventionClosureInterceptor } from '@app/model-interceptors/urgent-intervention-closure-interceptor';
+import { FactoryService } from '@services/factory.service';
+import { ImplementingAgency } from '@app/models/implementing-agency';
+import { ImplementingAgencyInterceptor } from '@app/model-interceptors/implementing-agency-interceptor';
+import { InterventionRegion } from '@app/models/intervention-region';
+import { InterventionRegionInterceptor } from '@app/model-interceptors/intervention-region-interceptor';
+import { InterventionField } from '@app/models/intervention-field';
+import { InterventionFieldInterceptor } from '@app/model-interceptors/intervention-field-interceptor';
+import { OfficeEvaluation } from '@app/models/office-evaluation';
+import { OfficeEvaluationInterceptor } from '@app/model-interceptors/office-evaluation-interceptor';
+import { Result } from '@app/models/result';
+import { ResultInterceptor } from '@app/model-interceptors/result-interceptor';
+import { Stage } from '@app/models/stage';
+import { StageInterceptor } from '@app/model-interceptors/stage-interceptor';
+import { BestPractices } from '@app/models/best-practices';
+import { BestPracticesInterceptor } from '@app/model-interceptors/best-practices-interceptor';
+import { LessonsLearned } from '@app/models/lessons-learned';
+import { LessonsLearnedInterceptor } from '@app/model-interceptors/lessons-learned-interceptor';
+import { WFResponseType } from '@app/enums/wfresponse-type.enum';
+import { DialogRef } from '@app/shared/models/dialog-ref';
 import {
   UrgentInterventionClosureApproveTaskPopupComponent
 } from '@app/modules/urgent-intervention/popups/urgent-intervention-closure-approve-task-popup/urgent-intervention-closure-approve-task-popup.component';
+import { BaseGenericEService } from "@app/generics/base-generic-e-service";
+import { CastResponseContainer } from "@decorators/cast-response";
 
+@CastResponseContainer({
+  $default: {
+    model: () => UrgentInterventionClosure
+  }
+})
 @Injectable({
   providedIn: 'root'
 })
-export class UrgentInterventionClosureService extends EServiceGenericService<UrgentInterventionClosure> {
+export class UrgentInterventionClosureService extends BaseGenericEService<UrgentInterventionClosure> {
 
   constructor(private urlService: UrlService,
               public domSanitizer: DomSanitizer,
-              public cfr: ComponentFactoryResolver,
               public dialog: DialogService,
               public dynamicService: DynamicOptionsService,
               private licenseService: LicenseService,

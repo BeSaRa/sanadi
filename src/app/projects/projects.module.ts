@@ -25,6 +25,7 @@ import { SelectEmployeePopupComponent } from './popups/select-employee-popup/sel
 import { TransferringIndividualFundsAbroadComponent } from './pages/transferring-individual-funds-abroad/transferring-individual-funds-abroad.component';
 import { TransferFundsAbroadApproveTaskPopupComponent } from './popups/transfer-funds-abroad-approve-task-popup/transfer-funds-abroad-approve-task-popup.component';
 import { SelectReceiverEntityPopupComponent } from './pages/select-receiver-entity-popup/select-receiver-entity-popup.component';
+import { TransferFundsAbroadCompleteTaskPopupComponent } from './popups/transfer-funds-abroad-complete-task-popup/transfer-funds-abroad-complete-task-popup.component';
 
 
 @NgModule({
@@ -42,7 +43,8 @@ import { SelectReceiverEntityPopupComponent } from './pages/select-receiver-enti
     SelectEmployeePopupComponent,
     TransferringIndividualFundsAbroadComponent,
     TransferFundsAbroadApproveTaskPopupComponent,
-    SelectReceiverEntityPopupComponent
+    SelectReceiverEntityPopupComponent,
+    TransferFundsAbroadCompleteTaskPopupComponent
   ],
   imports: [
     CommonModule,

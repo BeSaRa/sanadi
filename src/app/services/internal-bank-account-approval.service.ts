@@ -1,36 +1,44 @@
-import {HttpClient} from '@angular/common/http';
-import {ComponentFactoryResolver, Injectable} from '@angular/core';
-import {DomSanitizer} from '@angular/platform-browser';
-import {EServiceGenericService} from '@app/generics/e-service-generic-service';
-import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {IModelInterceptor} from '@app/interfaces/i-model-interceptor';
-import {InternalBankAccountApproval} from '@app/models/internal-bank-account-approval';
-import {DialogService} from './dialog.service';
-import {DynamicOptionsService} from './dynamic-options.service';
-import {UrlService} from './url.service';
-import {InternalBankAccountApprovalInterceptor} from '@app/model-interceptors/internal-bank-account-approval-interceptor';
-import {FactoryService} from '@app/services/factory.service';
-import {InternalBankAccountApprovalSearchCriteria} from '@app/models/internal-bank-account-approval-search-criteria';
-import {Generator} from '@app/decorators/generator';
-import {Observable} from 'rxjs';
-import {Bank} from '@app/models/bank';
-import {BankAccount} from '@app/models/bank-account';
-import {map} from 'rxjs/operators';
-import {NpoEmployee} from '@app/models/npo-employee';
-import {WFResponseType} from '@app/enums/wfresponse-type.enum';
-import {DialogRef} from '@app/shared/models/dialog-ref';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
+import { IModelInterceptor } from '@app/interfaces/i-model-interceptor';
+import { InternalBankAccountApproval } from '@app/models/internal-bank-account-approval';
+import { DialogService } from './dialog.service';
+import { DynamicOptionsService } from './dynamic-options.service';
+import { UrlService } from './url.service';
+import {
+  InternalBankAccountApprovalInterceptor
+} from '@app/model-interceptors/internal-bank-account-approval-interceptor';
+import { FactoryService } from '@app/services/factory.service';
+import { InternalBankAccountApprovalSearchCriteria } from '@app/models/internal-bank-account-approval-search-criteria';
+import { Observable } from 'rxjs';
+import { Bank } from '@app/models/bank';
+import { BankAccount } from '@app/models/bank-account';
+import { map } from 'rxjs/operators';
+import { NpoEmployee } from '@app/models/npo-employee';
+import { WFResponseType } from '@app/enums/wfresponse-type.enum';
+import { DialogRef } from '@app/shared/models/dialog-ref';
 import {
   InternalBankApprovalApproveTaskPopupComponent
 } from '@app/projects/popups/internal-bank-approval-approve-task-popup/internal-bank-approval-approve-task-popup.component';
-import {BankService} from '@services/bank.service';
-import {SelectEmployeePopupComponent} from '@app/projects/popups/select-employee-popup/select-employee-popup.component';
-import {Lookup} from '@app/models/lookup';
-import {CastResponse} from '@decorators/cast-response';
+import { BankService } from '@services/bank.service';
+import {
+  SelectEmployeePopupComponent
+} from '@app/projects/popups/select-employee-popup/select-employee-popup.component';
+import { Lookup } from '@app/models/lookup';
+import { CastResponse, CastResponseContainer } from '@decorators/cast-response';
+import { BaseGenericEService } from "@app/generics/base-generic-e-service";
 
+@CastResponseContainer({
+  $default: {
+    model: () => InternalBankAccountApproval
+  }
+})
 @Injectable({
   providedIn: 'root'
 })
-export class InternalBankAccountApprovalService extends EServiceGenericService<InternalBankAccountApproval> {
+export class InternalBankAccountApprovalService extends BaseGenericEService<InternalBankAccountApproval> {
   jsonSearchFile: string = 'internal_bank_account_approval_search.json';
   interceptor: IModelInterceptor<InternalBankAccountApproval> = new InternalBankAccountApprovalInterceptor();
   serviceKey: keyof ILanguageKeys = 'menu_internal_bank_account_approval';
@@ -40,10 +48,9 @@ export class InternalBankAccountApprovalService extends EServiceGenericService<I
   constructor(public http: HttpClient,
               public dialog: DialogService,
               public domSanitizer: DomSanitizer,
-              public cfr: ComponentFactoryResolver,
               public dynamicService: DynamicOptionsService,
               public urlService: UrlService,
-              private bankService: BankService) {
+              private _bankService: BankService) {
     super();
     FactoryService.registerService('InternalBankAccountApprovalService', this);
   }
@@ -76,7 +83,7 @@ export class InternalBankAccountApprovalService extends EServiceGenericService<I
     return this.urlService.URLS.BANK;
   }
 
-  @Generator(Bank, true, {property: 'rs'})
+  @CastResponse(()=> Bank)
   private _loadBanks(): Observable<Bank[]> {
     return this.http.get<any>(this.getBankCtrlURLSegment() + '/composite');
   }
@@ -96,7 +103,7 @@ export class InternalBankAccountApprovalService extends EServiceGenericService<I
     return this.urlService.URLS.BANK_ACCOUNT;
   }
 
-  @Generator(BankAccount, true, {property: 'rs'})
+  @CastResponse(()=> BankAccount)
   private _loadBankAccounts(): Observable<BankAccount[]> {
     return this.http.get<any>(this.getBankAccountCtrlURLSegment() + '/composite');
   }
@@ -112,7 +119,7 @@ export class InternalBankAccountApprovalService extends EServiceGenericService<I
     }));
   }
 
-  @Generator(BankAccount, true, {property: 'rs'})
+  @CastResponse(() => BankAccount)
   private _loadBankAccountsBasedOnCurrencyAndBank(bankId: number, currencyId: number): Observable<BankAccount[]> {
     return this.http.get<any>(this.getBankAccountCtrlURLSegment() + '/criteria?bank-id=' + bankId + '&currency=' + currencyId);
   }
@@ -128,7 +135,7 @@ export class InternalBankAccountApprovalService extends EServiceGenericService<I
     }));
   }
 
-  @CastResponse(() => BankAccount, {unwrap: 'rs', fallback: ''})
+  @CastResponse(() => BankAccount)
   private _searchForBankAccount(accountNumber: number): Observable<BankAccount> {
     return this.http.get<any>(this.getBankAccountCtrlURLSegment() + '/account-number?accountNumber=' + accountNumber);
   }
@@ -145,11 +152,12 @@ export class InternalBankAccountApprovalService extends EServiceGenericService<I
     return this.urlService.URLS.NPO_EMPLOYEE;
   }
 
-  @CastResponse(() => NpoEmployee, {unwrap: 'rs', fallback: ''})
+  @CastResponse(() => NpoEmployee)
   private _loadOrgNPOEmployees(): Observable<NpoEmployee[]> {
-    return this.http.get<any>(this.getNPOEmployeeCtrlURLSegment() + '/composite');
+    return this.http.get<NpoEmployee[]>(this.getNPOEmployeeCtrlURLSegment() + '/composite');
   }
 
+  // noinspection JSUnusedGlobalSymbols
   loadOrgNPOEmployees() {
     return this._loadOrgNPOEmployees().
     pipe(map(response => {
@@ -163,9 +171,9 @@ export class InternalBankAccountApprovalService extends EServiceGenericService<I
     }));
   }
 
-  @CastResponse(() => NpoEmployee, {unwrap: 'rs', fallback: ''})
+  @CastResponse(() => NpoEmployee)
   private _searchNPOEmployees(qId: string): Observable<NpoEmployee[]> {
-    return qId ? this.http.get<any>(this.getNPOEmployeeCtrlURLSegment() + '/criteria?q-id=' + qId) : this.http.get<any>(this.getNPOEmployeeCtrlURLSegment() + '/criteria');
+    return qId ? this.http.get<NpoEmployee[]>(this.getNPOEmployeeCtrlURLSegment() + '/criteria?q-id=' + qId) : this.http.get<any>(this.getNPOEmployeeCtrlURLSegment() + '/criteria');
   }
 
   searchNPOEmployees(qId: string) {

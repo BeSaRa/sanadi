@@ -1,10 +1,15 @@
-import {BaseModel} from '@app/models/base-model';
-import {ServiceDataStepService} from '@app/services/service-data-step.service';
-import {INames} from '@app/interfaces/i-names';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {FactoryService} from '@app/services/factory.service';
-import {LangService} from '@app/services/lang.service';
+import { BaseModel } from '@app/models/base-model';
+import { ServiceDataStepService } from '@app/services/service-data-step.service';
+import { INames } from '@app/interfaces/i-names';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { FactoryService } from '@app/services/factory.service';
+import { LangService } from '@app/services/lang.service';
+import { ServiceDataStepInterceptor } from "@app/model-interceptors/service-data-step-interceptor";
+import { InterceptModel } from "@decorators/intercept-model";
 
+const { send, receive } = new ServiceDataStepInterceptor();
+
+@InterceptModel({ send, receive })
 export class ServiceDataStep extends BaseModel<ServiceDataStep, ServiceDataStepService>{
   service!: ServiceDataStepService;
   langService: LangService;

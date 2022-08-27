@@ -1,9 +1,9 @@
-import {Directive, EventEmitter, Input, OnDestroy, OnInit} from "@angular/core";
-import {UntypedFormBuilder, UntypedFormGroup} from "@angular/forms";
-import {OperationTypes} from "@app/enums/operation-types.enum";
-import {SaveTypes} from "@app/enums/save-types";
-import {IESComponent} from "@app/interfaces/iescomponent";
-import {BehaviorSubject, isObservable, Observable, of, Subject} from "rxjs";
+import { Directive, EventEmitter, Input, OnDestroy, OnInit } from "@angular/core";
+import { UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
+import { OperationTypes } from "@app/enums/operation-types.enum";
+import { SaveTypes } from "@app/enums/save-types";
+import { IESComponent } from "@app/interfaces/iescomponent";
+import { BehaviorSubject, isObservable, Observable, of, Subject } from "rxjs";
 import {
   catchError,
   delay,
@@ -16,24 +16,23 @@ import {
   tap,
   withLatestFrom
 } from "rxjs/operators";
-import {ICaseModel} from "@app/interfaces/icase-model";
-import {EServiceGenericService} from "@app/generics/e-service-generic-service";
-import {LangService} from "@app/services/lang.service";
-import {CaseModel} from "@app/models/case-model";
-import {OpenFrom} from '@app/enums/open-from.enum';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {CaseTypes} from '@app/enums/case-types.enum';
-import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import { ICaseModel } from "@app/interfaces/icase-model";
+import { LangService } from "@app/services/lang.service";
+import { CaseModel } from "@app/models/case-model";
+import { OpenFrom } from '@app/enums/open-from.enum';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { CaseTypes } from '@app/enums/case-types.enum';
+import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
 import { BaseGenericEService } from "@app/generics/base-generic-e-service";
-import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
+import { FileIconsEnum } from '@app/enums/file-extension-mime-types-icons.enum';
 
 @Directive()
-export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S extends EServiceGenericService<M> | BaseGenericEService<M>> implements OnInit, OnDestroy, IESComponent<M> {
+export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S extends  BaseGenericEService<M>> implements OnInit, OnDestroy, IESComponent<M> {
   afterSave$: EventEmitter<M> = new EventEmitter<M>();
   fromWrapperComponent: boolean = false;
   onModelChange$: EventEmitter<M | undefined> = new EventEmitter<M | undefined>();
   accordionView: boolean = false;
-  saveTypes: typeof SaveTypes = SaveTypes;
+  _saveTypes: typeof SaveTypes = SaveTypes;
   save: Subject<SaveTypes> = new Subject<SaveTypes>();
   launch$: Subject<null> = new Subject<null>();
   resetForm$: Subject<null> = new Subject<null>();

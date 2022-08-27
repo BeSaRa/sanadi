@@ -21,7 +21,7 @@ export class ReportService {
 
     reports.forEach(item => {
       ++maxId
-      this.menuService.menuItems.push(MenuItemInterceptor.receive(new MenuItem().clone({
+      this.menuService.menuItems.push((new MenuItemInterceptor).receive(new MenuItem().clone({
         id: maxId,
         parent: reportMenu.id,
         langKey: item.langKey,

@@ -45,6 +45,7 @@ export class BeneficiaryIncomeComponent implements OnInit, OnDestroy, AfterViewI
     if (this.readonly) {
       this.columns.splice(this.columns.indexOf('actions'), 1);
     }
+    this._setFooterLabelColspan();
   }
 
   ngOnDestroy(): void {
@@ -75,6 +76,7 @@ export class BeneficiaryIncomeComponent implements OnInit, OnDestroy, AfterViewI
   headerColumn: string[] = ['extra-header'];
   columns = ['incomeType', 'periodicType', 'amount', 'actions'];
   footerColumns: string[] = ['totalIncomeLabel', 'totalIncome'];
+  footerLabelColSpan: number = 0;
   incomeTypeList = this.lookupService.listByCategory.BENEFICIARY_INCOME;
   periodicTypeList = this.lookupService.listByCategory.BENEFICIARY_INCOME_PERODIC;
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
@@ -134,6 +136,14 @@ export class BeneficiaryIncomeComponent implements OnInit, OnDestroy, AfterViewI
   buildForm(): void {
     let model = new BeneficiaryIncome().clone(this.currentRecord);
     this.form = this.fb.group(model.buildForm(true));
+  }
+
+  private _setFooterLabelColspan(): void {
+    if (this.readonly) {
+      this.footerLabelColSpan = this.columns.length - 1;
+    } else {
+      this.footerLabelColSpan = this.columns.length - 2;
+    }
   }
 
   isTouchedOrDirty(): boolean {

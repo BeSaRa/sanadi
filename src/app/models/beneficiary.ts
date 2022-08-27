@@ -1,29 +1,32 @@
-import {BaseModel} from './base-model';
-import {FactoryService} from '@services/factory.service';
-import {BeneficiaryService} from '@services/beneficiary.service';
-import {Observable} from 'rxjs';
-import {AdminResult} from './admin-result';
-import {LangService} from '@services/lang.service';
-import {CustomValidators} from '../validators/custom-validators';
-import {Validators} from '@angular/forms';
-import {map} from 'rxjs/operators';
-import {BeneficiarySaveStatus} from '../enums/beneficiary-save-status.enum';
-import {Pair} from '@contracts/pair';
-import {SubventionRequest} from './subvention-request';
-import {IMyDateModel} from 'angular-mydatepicker';
-import {isValidValue} from '@helpers/utils';
-import {ISearchFieldsMap} from '@app/types/types';
-import {normalSearchFields} from '@app/helpers/normal-search-fields';
-import {infoSearchFields} from '@app/helpers/info-search-fields';
-import {BeneficiaryObligation} from '@app/models/beneficiary-obligation';
-import {BeneficiaryIncome} from '@app/models/beneficiary-income';
-import {BenOccupationStatusEnum} from '@app/enums/status.enum';
-import {InterceptModel} from '@decorators/intercept-model';
-import {BeneficiaryInterceptor} from '@app/model-interceptors/beneficiary-interceptor';
+import { BaseModel } from './base-model';
+import { FactoryService } from '@services/factory.service';
+import { BeneficiaryService } from '@services/beneficiary.service';
+import { Observable } from 'rxjs';
+import { AdminResult } from './admin-result';
+import { LangService } from '@services/lang.service';
+import { CustomValidators } from '../validators/custom-validators';
+import { Validators } from '@angular/forms';
+import { map } from 'rxjs/operators';
+import { BeneficiarySaveStatus } from '../enums/beneficiary-save-status.enum';
+import { Pair } from '@contracts/pair';
+import { SubventionRequest } from './subvention-request';
+import { IMyDateModel } from 'angular-mydatepicker';
+import { isValidValue } from '@helpers/utils';
+import { ISearchFieldsMap } from '@app/types/types';
+import { normalSearchFields } from '@app/helpers/normal-search-fields';
+import { infoSearchFields } from '@app/helpers/info-search-fields';
+import { BeneficiaryObligation } from '@app/models/beneficiary-obligation';
+import { BeneficiaryIncome } from '@app/models/beneficiary-income';
+import { BenOccupationStatusEnum } from '@app/enums/status.enum';
+import { InterceptModel } from '@decorators/intercept-model';
+import { BeneficiaryInterceptor } from '@app/model-interceptors/beneficiary-interceptor';
+import {BeneficiaryRequesterRelationTypes} from '@app/enums/beneficiary-requester-relation-types';
+
+const { send, receive } = new BeneficiaryInterceptor()
 
 @InterceptModel({
-  receive: BeneficiaryInterceptor.receive,
-  send: BeneficiaryInterceptor.send
+  receive,
+  send
 })
 export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
   arNameSrc!: string;
@@ -76,7 +79,7 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
   beneficiaryObligationSet: BeneficiaryObligation[] = [];
   beneficiaryIncomeSet: BeneficiaryIncome[] = [];
   employmentStatus!: boolean;
-  benRequestorRelationType!: number;
+  benRequestorRelationType: number = BeneficiaryRequesterRelationTypes.SAME_AS_REQUESTER;
   requestorName!: string;
   requestorIdType!: number;
   requestorIdNumber!: string;
@@ -154,8 +157,8 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
     return this.id ? this.update() : this.create();
   }
 
-  createWithValidate(validate: boolean = true): Observable<Pair<BeneficiarySaveStatus, Beneficiary>> {
-    return this.service.createWithValidate(this, validate).pipe(map((value) => {
+  createWithValidate(validate: boolean = true, validateMoph: boolean = true): Observable<Pair<BeneficiarySaveStatus, Beneficiary>> {
+    return this.service.createWithValidate(this, validate, validateMoph).pipe(map((value) => {
       if (value.second) {
         value.second = Object.assign(new Beneficiary, value.second);
       }
@@ -163,10 +166,10 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
     }));
   }
 
-  saveWithValidate(validate: boolean = true, currentRequest: SubventionRequest | undefined): Observable<Pair<BeneficiarySaveStatus, Beneficiary>> {
+  saveWithValidate(validate: boolean = true, currentRequest: SubventionRequest | undefined, validateMoph: boolean = true): Observable<Pair<BeneficiarySaveStatus, Beneficiary>> {
     return currentRequest && currentRequest.id ? this.update().pipe(
-      map(value => ({first: BeneficiarySaveStatus.SAVED, second: value}))
-    ) : this.createWithValidate(validate);
+      map(value => ({ first: BeneficiarySaveStatus.SAVED, second: value }))
+    ) : this.createWithValidate(validate, validateMoph);
   }
 
   update(): Observable<Beneficiary> {

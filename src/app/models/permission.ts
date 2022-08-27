@@ -1,8 +1,8 @@
 import {BaseModel} from './base-model';
 import {Observable} from 'rxjs';
-import {FactoryService} from '../services/factory.service';
-import {LangService} from '../services/lang.service';
-import {INames} from '../interfaces/i-names';
+import {FactoryService} from '@services/factory.service';
+import {LangService} from '@services/lang.service';
+import {INames} from '@contracts/i-names';
 
 export class Permission extends BaseModel<Permission, any> {
   service: any;

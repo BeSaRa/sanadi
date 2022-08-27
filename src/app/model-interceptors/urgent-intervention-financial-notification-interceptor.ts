@@ -1,4 +1,4 @@
-import { UrgentInterventionFinancialNotificationService } from './../services/urgent-intervention-financial-notification.service';
+import { UrgentInterventionFinancialNotificationService } from '@services/urgent-intervention-financial-notification.service';
 import { AdminResult } from '@app/models/admin-result';
 import { InterventionField } from '@app/models/intervention-field';
 import { InterventionRegion } from '@app/models/intervention-region';

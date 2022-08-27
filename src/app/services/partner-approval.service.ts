@@ -1,43 +1,49 @@
-import {ComponentFactoryResolver, Injectable} from '@angular/core';
-import {EServiceGenericService} from "../generics/e-service-generic-service";
-import {PartnerApproval} from "../models/partner-approval";
-import {ActionLogService} from './action-log.service';
-import {CommentService} from "./comment.service";
-import {DialogService} from "./dialog.service";
-import {DocumentService} from "./document.service";
-import {DomSanitizer} from "@angular/platform-browser";
-import {DynamicOptionsService} from "./dynamic-options.service";
-import {HttpClient} from "@angular/common/http";
-import {IModelInterceptor} from "@app/interfaces/i-model-interceptor";
-import {RecommendationService} from "./recommendation.service";
-import {SearchService} from "./search.service";
-import {ILanguageKeys} from "@app/interfaces/i-language-keys";
-import {FactoryService} from "./factory.service";
-import {UrlService} from "./url.service";
-import {PartnerApprovalInterceptor} from "../model-interceptors/partner-approval-interceptor";
-import {Observable} from "rxjs";
-import {LicenseService} from "@app/services/license.service";
-import {BankAccount} from "@app/models/bank-account";
-import {BankAccountInterceptor} from "@app/model-interceptors/bank-account-interceptor";
-import {ExecutiveManagement} from "@app/models/executive-management";
-import {ExecutiveManagementInterceptor} from "@app/model-interceptors/executive-management-interceptor";
-import {PartnerApprovalSearchCriteria} from "@app/models/PartnerApprovalSearchCriteria";
-import {Goal} from "@app/models/goal";
-import {ManagementCouncil} from "@app/models/management-council";
-import {TargetGroup} from "@app/models/target-group";
-import {ContactOfficer} from "@app/models/contact-officer";
-import {ApprovalReason} from "@app/models/approval-reason";
-import {GoalInterceptor} from "@app/model-interceptors/GoalInterceptor";
-import {ManagementCouncilInterceptor} from "@app/model-interceptors/ManagementCouncilInterceptor";
-import {TargetGroupInterceptor} from "@app/model-interceptors/TargetGroupInterceptor";
-import {ContactOfficerInterceptor} from "@app/model-interceptors/ContactOfficerInterceptor";
-import {ApprovalReasonInterceptor} from "@app/model-interceptors/ApprovalReasonInterceptor";
-import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import { Injectable } from '@angular/core';
+import { PartnerApproval } from "../models/partner-approval";
+import { ActionLogService } from './action-log.service';
+import { CommentService } from "./comment.service";
+import { DialogService } from "./dialog.service";
+import { DocumentService } from "./document.service";
+import { DomSanitizer } from "@angular/platform-browser";
+import { DynamicOptionsService } from "./dynamic-options.service";
+import { HttpClient } from "@angular/common/http";
+import { IModelInterceptor } from "@app/interfaces/i-model-interceptor";
+import { RecommendationService } from "./recommendation.service";
+import { SearchService } from "./search.service";
+import { ILanguageKeys } from "@app/interfaces/i-language-keys";
+import { FactoryService } from "./factory.service";
+import { UrlService } from "./url.service";
+import { PartnerApprovalInterceptor } from "../model-interceptors/partner-approval-interceptor";
+import { Observable } from "rxjs";
+import { LicenseService } from "@app/services/license.service";
+import { BankAccount } from "@app/models/bank-account";
+import { BankAccountInterceptor } from "@app/model-interceptors/bank-account-interceptor";
+import { ExecutiveManagement } from "@app/models/executive-management";
+import { ExecutiveManagementInterceptor } from "@app/model-interceptors/executive-management-interceptor";
+import { PartnerApprovalSearchCriteria } from "@app/models/PartnerApprovalSearchCriteria";
+import { Goal } from "@app/models/goal";
+import { ManagementCouncil } from "@app/models/management-council";
+import { TargetGroup } from "@app/models/target-group";
+import { ContactOfficer } from "@app/models/contact-officer";
+import { ApprovalReason } from "@app/models/approval-reason";
+import { GoalInterceptor } from "@app/model-interceptors/GoalInterceptor";
+import { ManagementCouncilInterceptor } from "@app/model-interceptors/ManagementCouncilInterceptor";
+import { TargetGroupInterceptor } from "@app/model-interceptors/TargetGroupInterceptor";
+import { ContactOfficerInterceptor } from "@app/model-interceptors/ContactOfficerInterceptor";
+import { ApprovalReasonInterceptor } from "@app/model-interceptors/ApprovalReasonInterceptor";
+import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
+import { BaseGenericEService } from "@app/generics/base-generic-e-service";
+import { CastResponseContainer } from "@decorators/cast-response";
 
+@CastResponseContainer({
+  $default: {
+    model: () => PartnerApproval
+  }
+})
 @Injectable({
   providedIn: 'root'
 })
-export class PartnerApprovalService extends EServiceGenericService<PartnerApproval> {
+export class PartnerApprovalService extends BaseGenericEService<PartnerApproval> {
   _getUrlService(): UrlService {
     return this.urlService;
   }
@@ -69,7 +75,6 @@ export class PartnerApprovalService extends EServiceGenericService<PartnerApprov
 
   constructor(private urlService: UrlService,
               public domSanitizer: DomSanitizer,
-              public cfr: ComponentFactoryResolver,
               public dialog: DialogService,
               public dynamicService: DynamicOptionsService,
               private licenseService: LicenseService,

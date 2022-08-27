@@ -1,7 +1,6 @@
 import { AdminResult } from './admin-result';
 import { TaskDetails } from './task-details';
 import { FileNetModel } from './FileNetModel';
-import { EServiceGenericService } from '../generics/e-service-generic-service';
 import { Observable } from 'rxjs';
 import { BlobModel } from './blob-model';
 import { DialogRef } from '../shared/models/dialog-ref';
@@ -28,7 +27,7 @@ import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
 import { UntypedFormGroup } from '@angular/forms';
 import { OrganizationOfficer } from '@app/models/organization-officer';
 
-export abstract class CaseModel<S extends EServiceGenericService<T> | BaseGenericEService<T>, T extends FileNetModel<T>> extends FileNetModel<T> implements ICaseModel <T> {
+export abstract class CaseModel<S extends BaseGenericEService<T>, T extends FileNetModel<T>> extends FileNetModel<T> implements ICaseModel <T> {
   serial!: number;
   fullSerial!: string;
   caseState!: number;

@@ -4,7 +4,6 @@ import { catchError, map, switchMap, tap, withLatestFrom } from 'rxjs/operators'
 import { ICredentials } from '@contracts/i-credentials';
 import { HttpClient } from '@angular/common/http';
 import { UrlService } from './url.service';
-import { Generator } from '@decorators/generator';
 import { FactoryService } from './factory.service';
 import { EmployeeService } from './employee.service';
 import { ILoginData } from '@contracts/i-login-data';
@@ -13,6 +12,7 @@ import { InternalUserService } from "@app/services/internal-user.service";
 import { CommonService } from "@services/common.service";
 import { FollowupPermissionService } from "@services/followup-permission.service";
 import { UserTypes } from "@app/enums/user-types.enum";
+import { CastResponse } from "@decorators/cast-response";
 
 @Injectable({
   providedIn: 'root'
@@ -34,18 +34,18 @@ export class AuthService {
     this.init();
   }
 
-  @Generator(undefined, false, { property: 'rs' })
+  @CastResponse('')
   private _externalLogin(credentials: Partial<ICredentials>): Observable<ILoginData> {
     return this.http.post<ILoginData>(this.urlService.URLS.AUTHENTICATE, credentials);
   }
 
 
-  @Generator(undefined, false, { property: 'rs' })
+  @CastResponse('')
   private _internalLogin(credentials: Partial<ICredentials>): Observable<ILoginData> {
     return this.http.post<ILoginData>(this.urlService.URLS.INTERNAL_AUTHENTICATE, credentials);
   }
 
-  @Generator(undefined, false, { property: 'rs' })
+  @CastResponse('')
   private _validateToken(): Observable<ILoginData> {
     return this.http.post<ILoginData>(this.urlService.URLS.VALIDATE_TOKEN, {});
   }

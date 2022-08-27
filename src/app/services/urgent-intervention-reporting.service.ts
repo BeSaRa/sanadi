@@ -1,39 +1,43 @@
-import {ComponentFactoryResolver, Injectable} from '@angular/core';
-import {FactoryService} from '@app/services/factory.service';
-import {EServiceGenericService} from '@app/generics/e-service-generic-service';
-import {UrgentInterventionReport} from '@app/models/urgent-intervention-report';
-import {IModelInterceptor} from '@app/interfaces/i-model-interceptor';
-import {UrlService} from '@app/services/url.service';
-import {DomSanitizer} from '@angular/platform-browser';
-import {DialogService} from '@app/services/dialog.service';
-import {DynamicOptionsService} from '@app/services/dynamic-options.service';
-import {LicenseService} from '@app/services/license.service';
-import {HttpClient} from '@angular/common/http';
-import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {UrgentInterventionReportInterceptor} from '@app/model-interceptors/urgent-intervention-report-interceptor';
-import {SearchUrgentInterventionReportCriteria} from '@app/models/search-urgent-intervention-report-criteria';
-import {InterventionRegion} from '@app/models/intervention-region';
-import {InterventionRegionInterceptor} from '@app/model-interceptors/intervention-region-interceptor';
-import {InterventionField} from '@app/models/intervention-field';
-import {InterventionFieldInterceptor} from '@app/model-interceptors/intervention-field-interceptor';
-import {ImplementingAgency} from '@app/models/implementing-agency';
-import {ImplementingAgencyInterceptor} from '@app/model-interceptors/implementing-agency-interceptor';
-import {Observable, of} from 'rxjs';
-import {UrgentInterventionReportSearchCriteria} from '@app/models/urgent-intervention-report-search-criteria';
-import {UrgentInterventionReportResult} from '@app/models/urgent-intervention-report-result';
-import {IDefaultResponse} from '@contracts/idefault-response';
-import {map} from 'rxjs/operators';
-import {UrgentInterventionAnnouncementRequestType} from '@app/enums/service-request-types';
-import { CastResponse } from '@app/decorators/decorators/cast-response';
+import { Injectable } from '@angular/core';
+import { FactoryService } from '@app/services/factory.service';
+import { UrgentInterventionReport } from '@app/models/urgent-intervention-report';
+import { IModelInterceptor } from '@app/interfaces/i-model-interceptor';
+import { UrlService } from '@app/services/url.service';
+import { DomSanitizer } from '@angular/platform-browser';
+import { DialogService } from '@app/services/dialog.service';
+import { DynamicOptionsService } from '@app/services/dynamic-options.service';
+import { LicenseService } from '@app/services/license.service';
+import { HttpClient } from '@angular/common/http';
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
+import { UrgentInterventionReportInterceptor } from '@app/model-interceptors/urgent-intervention-report-interceptor';
+import { SearchUrgentInterventionReportCriteria } from '@app/models/search-urgent-intervention-report-criteria';
+import { InterventionRegion } from '@app/models/intervention-region';
+import { InterventionRegionInterceptor } from '@app/model-interceptors/intervention-region-interceptor';
+import { InterventionField } from '@app/models/intervention-field';
+import { InterventionFieldInterceptor } from '@app/model-interceptors/intervention-field-interceptor';
+import { ImplementingAgency } from '@app/models/implementing-agency';
+import { ImplementingAgencyInterceptor } from '@app/model-interceptors/implementing-agency-interceptor';
+import { Observable, of } from 'rxjs';
+import { UrgentInterventionReportSearchCriteria } from '@app/models/urgent-intervention-report-search-criteria';
+import { UrgentInterventionReportResult } from '@app/models/urgent-intervention-report-result';
+import { IDefaultResponse } from '@contracts/idefault-response';
+import { map } from 'rxjs/operators';
+import { UrgentInterventionAnnouncementRequestType } from '@app/enums/service-request-types';
+import { CastResponseContainer } from '@app/decorators/decorators/cast-response';
+import { BaseGenericEService } from "@app/generics/base-generic-e-service";
 
+@CastResponseContainer({
+  $default: {
+    model: () => UrgentInterventionReport
+  }
+})
 @Injectable({
   providedIn: 'root'
 })
-export class UrgentInterventionReportingService extends EServiceGenericService<UrgentInterventionReport> {
+export class UrgentInterventionReportingService extends BaseGenericEService<UrgentInterventionReport> {
 
   constructor(private urlService: UrlService,
               public domSanitizer: DomSanitizer,
-              public cfr: ComponentFactoryResolver,
               public dialog: DialogService,
               public dynamicService: DynamicOptionsService,
               private licenseService: LicenseService,

@@ -27,7 +27,7 @@ import {EmployeeService} from '@app/services/employee.service';
 import {AuthService} from '@app/services/auth.service';
 import {ExceptionHandlerService} from '@app/services/exception-handler.service';
 import {TabComponent} from '@app/shared/components/tab/tab.component';
-import {OrgUserStatusEnum} from '@app/enums/status.enum';
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
 
 @Component({
   selector: 'app-organization-user-popup',
@@ -49,7 +49,7 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
   orgUserPermissions: OrgUserPermission[];
   permissionList: Permission[] = [];
   orgBranchList!: OrgBranch[];
-  orgUserStatusList!: Lookup[];
+  statusList!: Lookup[];
 
   selectedRole?: CustomRole;
   permissions!: Record<number, Permission[][]>;
@@ -63,7 +63,7 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
   validateFieldsVisible = true;
 
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
-  orgUserStatusEnum = OrgUserStatusEnum;
+  commonStatusEnum = CommonStatusEnum;
 
   displaySaveBtn: boolean = true;
 
@@ -94,7 +94,7 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
     this.orgUserPermissions = data.orgUserPermissions;
     this.userTypeList = lookupService.listByCategory.OrgUserType;
     this.jobTitleList = lookupService.listByCategory.OrgUserJobTitle;
-    this.orgUserStatusList = lookupService.listByCategory.OrgUserStatus;
+    this.statusList = lookupService.listByCategory.CommonStatus;
     this._setDefaultPermissions();
 
   }

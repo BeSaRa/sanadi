@@ -1,11 +1,19 @@
-import {AdminResult} from "./admin-result";
-import {Cloneable} from "@app/models/cloneable";
-import {Observable} from "rxjs";
-import {FactoryService} from "@app/services/factory.service";
-import {UserTeamService} from "@app/services/user-team.service";
-import {map} from "rxjs/operators";
-import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import { AdminResult } from "./admin-result";
+import { Cloneable } from "@app/models/cloneable";
+import { Observable } from "rxjs";
+import { FactoryService } from "@app/services/factory.service";
+import { UserTeamService } from "@app/services/user-team.service";
+import { map } from "rxjs/operators";
+import { CommonStatusEnum } from '@app/enums/common-status.enum';
+import { InterceptModel } from "@decorators/intercept-model";
+import { UserTeamInterceptor } from "@app/model-interceptors/user-team-interceptor";
 
+const interceptor = new UserTeamInterceptor()
+
+@InterceptModel({
+  receive: interceptor.receive,
+  send: interceptor.send
+})
 export class UserTeam extends Cloneable<UserTeam> {
   id!: number;
   generalUserId!: number;

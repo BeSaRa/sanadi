@@ -1,26 +1,38 @@
-import {HttpClient} from '@angular/common/http';
-import {ComponentFactoryResolver, Injectable} from '@angular/core';
-import {DomSanitizer} from '@angular/platform-browser';
-import {EServiceGenericService} from '@app/generics/e-service-generic-service';
-import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {IModelInterceptor} from '@app/interfaces/i-model-interceptor';
-import {InitialExternalOfficeApproval} from '@app/models/initial-external-office-approval';
-import {DialogService} from './dialog.service';
-import {DynamicOptionsService} from './dynamic-options.service';
-import {InitialExternalOfficeApprovalInterceptor} from '@app/model-interceptors/initial-external-office-approval-interceptor';
-import {FactoryService} from '@app/services/factory.service';
-import {UrlService} from '@app/services/url.service';
-import {LicenseService} from '@app/services/license.service';
-import {InitialExternalOfficeApprovalSearchCriteria} from '@app/models/initial-external-office-approval-search-criteria';
-import {Observable} from 'rxjs';
-import {InitialExternalOfficeApprovalResult} from '@app/models/initial-external-office-approval-result';
-import {SearchInitialExternalOfficeApprovalCriteria} from '@app/models/search-initial-external-office-approval-criteria';
-import {SearchService} from '@app/services/search.service';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
+import { IModelInterceptor } from '@app/interfaces/i-model-interceptor';
+import { InitialExternalOfficeApproval } from '@app/models/initial-external-office-approval';
+import { DialogService } from './dialog.service';
+import { DynamicOptionsService } from './dynamic-options.service';
+import {
+  InitialExternalOfficeApprovalInterceptor
+} from '@app/model-interceptors/initial-external-office-approval-interceptor';
+import { FactoryService } from '@app/services/factory.service';
+import { UrlService } from '@app/services/url.service';
+import { LicenseService } from '@app/services/license.service';
+import {
+  InitialExternalOfficeApprovalSearchCriteria
+} from '@app/models/initial-external-office-approval-search-criteria';
+import { Observable } from 'rxjs';
+import { InitialExternalOfficeApprovalResult } from '@app/models/initial-external-office-approval-result';
+import {
+  SearchInitialExternalOfficeApprovalCriteria
+} from '@app/models/search-initial-external-office-approval-criteria';
+import { SearchService } from '@app/services/search.service';
+import { BaseGenericEService } from "@app/generics/base-generic-e-service";
+import { CastResponseContainer } from "@decorators/cast-response";
 
+@CastResponseContainer({
+  $default: {
+    model: () => InitialExternalOfficeApproval
+  }
+})
 @Injectable({
   providedIn: 'root'
 })
-export class InitialExternalOfficeApprovalService extends EServiceGenericService<InitialExternalOfficeApproval> {
+export class InitialExternalOfficeApprovalService extends BaseGenericEService<InitialExternalOfficeApproval> {
   _getUrlService(): UrlService {
     return this.urlService;
   }
@@ -38,8 +50,7 @@ export class InitialExternalOfficeApprovalService extends EServiceGenericService
               public http: HttpClient,
               public dialog: DialogService,
               public urlService: UrlService,
-              private licenseService: LicenseService,
-              public cfr: ComponentFactoryResolver) {
+              private licenseService: LicenseService) {
     super();
     FactoryService.registerService('InitialExternalOfficeApprovalService', this);
   }

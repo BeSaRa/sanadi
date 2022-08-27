@@ -1,15 +1,15 @@
-import {Injectable} from '@angular/core';
-import {Observable, of} from 'rxjs';
-import {AuditLog} from '../models/audit-log';
-import {isValidValue} from '../helpers/utils';
-import {FactoryService} from './factory.service';
-import {HttpClient} from '@angular/common/http';
-import {AuditLogInterceptor} from '../model-interceptors/audit-log-interceptor';
-import {Generator} from '../decorators/generator';
-import {DialogService} from './dialog.service';
-import {switchMap} from 'rxjs/operators';
-import {AuditLogPopupComponent} from '../administration/popups/audit-log-popup/audit-log-popup.component';
-import {DialogRef} from '../shared/models/dialog-ref';
+import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import { AuditLog } from '../models/audit-log';
+import { isValidValue } from '@helpers/utils';
+import { FactoryService } from './factory.service';
+import { HttpClient } from '@angular/common/http';
+import { AuditLogInterceptor } from '../model-interceptors/audit-log-interceptor';
+import { DialogService } from './dialog.service';
+import { switchMap } from 'rxjs/operators';
+import { AuditLogPopupComponent } from '../administration/popups/audit-log-popup/audit-log-popup.component';
+import { DialogRef } from '../shared/models/dialog-ref';
+import { CastResponse } from "@decorators/cast-response";
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +21,7 @@ export class AuditLogService {
     FactoryService.registerService('AuditLogService', this);
   }
 
-  @Generator(undefined, true, {property: 'rs'})
+  @CastResponse(()=> AuditLog)
   private _loadAuditLogsById(id: number, baseUrl: string): Observable<AuditLog[]> {
     if (!isValidValue(id)) {
       return of([]);

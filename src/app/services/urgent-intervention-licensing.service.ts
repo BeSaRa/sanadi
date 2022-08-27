@@ -1,34 +1,39 @@
-import {ComponentFactoryResolver, Injectable} from '@angular/core';
-import {UrlService} from '@app/services/url.service';
-import {EServiceGenericService} from '@app/generics/e-service-generic-service';
-import {UrgentInterventionLicense} from '@app/models/urgent-intervention-license';
-import {FactoryService} from '@app/services/factory.service';
-import {HttpClient} from '@angular/common/http';
-import {IModelInterceptor} from '@app/interfaces/i-model-interceptor';
-import {UrgentInterventionLicenseInterceptor} from '@app/model-interceptors/urgent-intervention-license-interceptor';
-import {DialogService} from '@app/services/dialog.service';
-import {DomSanitizer} from '@angular/platform-browser';
-import {DynamicOptionsService} from '@app/services/dynamic-options.service';
-import {SearchUrgentInterventionLicenseCriteria} from '@app/models/search-urgent-intervention-license-criteria';
-import {UrgentInterventionLicenseSearchCriteria} from '@app/models/urgent-intervention-license-search-criteria';
-import {Observable} from 'rxjs';
-import {UrgentInterventionLicenseResult} from '@app/models/urgent-intervention-license-result';
-import {LicenseService} from '@app/services/license.service';
-import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {DialogRef} from "@app/shared/models/dialog-ref";
-import {WFResponseType} from "@app/enums/wfresponse-type.enum";
+import { Injectable } from '@angular/core';
+import { UrlService } from '@app/services/url.service';
+import { UrgentInterventionLicense } from '@app/models/urgent-intervention-license';
+import { FactoryService } from '@app/services/factory.service';
+import { HttpClient } from '@angular/common/http';
+import { IModelInterceptor } from '@app/interfaces/i-model-interceptor';
+import { UrgentInterventionLicenseInterceptor } from '@app/model-interceptors/urgent-intervention-license-interceptor';
+import { DialogService } from '@app/services/dialog.service';
+import { DomSanitizer } from '@angular/platform-browser';
+import { DynamicOptionsService } from '@app/services/dynamic-options.service';
+import { SearchUrgentInterventionLicenseCriteria } from '@app/models/search-urgent-intervention-license-criteria';
+import { UrgentInterventionLicenseSearchCriteria } from '@app/models/urgent-intervention-license-search-criteria';
+import { Observable } from 'rxjs';
+import { UrgentInterventionLicenseResult } from '@app/models/urgent-intervention-license-result';
+import { LicenseService } from '@app/services/license.service';
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
+import { DialogRef } from "@app/shared/models/dialog-ref";
+import { WFResponseType } from "@app/enums/wfresponse-type.enum";
 import {
   UrgentInterventionApproveTaskPopupComponent
 } from "@app/modules/urgent-intervention/popups/urgent-intervention-approve-task-popup/urgent-intervention-approve-task-popup.component";
+import { CastResponseContainer } from "@decorators/cast-response";
+import { BaseGenericEService } from "@app/generics/base-generic-e-service";
 
+@CastResponseContainer({
+  $default: {
+    model: () => UrgentInterventionLicense
+  }
+})
 @Injectable({
   providedIn: 'root'
 })
-export class UrgentInterventionLicensingService extends EServiceGenericService<UrgentInterventionLicense> {
+export class UrgentInterventionLicensingService extends BaseGenericEService<UrgentInterventionLicense> {
 
   constructor(private urlService: UrlService,
               public domSanitizer: DomSanitizer,
-              public cfr: ComponentFactoryResolver,
               public dialog: DialogService,
               public dynamicService: DynamicOptionsService,
               private licenseService: LicenseService,

@@ -16,6 +16,7 @@ import { EmploymentApproveComponent } from './popups/employment-approve/employme
 import { ExternalOrgAffiliationComponent } from './pages/external-org-affiliation/external-org-affiliation.component';
 import { ForeignCountriesProjectsComponent } from './pages/foreign-countries-projects/foreign-countries-projects.component';
 import { ForeignCountriesProjectsPopupComponent } from './popups/foreign-countries-projects-popup/foreign-countries-projects-popup.component';
+import { CoordinationWithOrganizationsRequestComponent } from './pages/coordination-with-organizations-request/coordination-with-organizations-request.component';
 import { CharityOrganizationUpdateComponent } from './pages/charity-organization-update/charity-organization-update.component';
 import { OrganizationOfficersComponent } from './shared/organization-officers/organization-officers.component';
 
@@ -32,6 +33,7 @@ import { OrganizationOfficersComponent } from './shared/organization-officers/or
     EmploymentComponent,
     ForeignCountriesProjectsComponent,
     ForeignCountriesProjectsPopupComponent,
+    CoordinationWithOrganizationsRequestComponent,
     CharityOrganizationUpdateComponent,
     OrganizationOfficersComponent,
   ],

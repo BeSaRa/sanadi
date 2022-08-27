@@ -1,8 +1,15 @@
-import {BaseModel} from "@app/models/base-model";
-import {UserSecurityConfigurationService} from "@app/services/user-security-configuration.service";
-import {FactoryService} from "@app/services/factory.service";
-import {AdminResult} from "@app/models/admin-result";
+import { BaseModel } from "@app/models/base-model";
+import { UserSecurityConfigurationService } from "@app/services/user-security-configuration.service";
+import { FactoryService } from "@app/services/factory.service";
+import { AdminResult } from "@app/models/admin-result";
+import { UserSecurityConfigurationInterceptor } from "@app/model-interceptors/user-security-configuration-interceptor";
+import { InterceptModel } from "@decorators/intercept-model";
 
+const { receive, send } = new UserSecurityConfigurationInterceptor()
+
+@InterceptModel({
+  receive, send
+})
 export class UserSecurityConfiguration extends BaseModel<UserSecurityConfiguration, UserSecurityConfigurationService> {
   writeOnly!: true
   serviceId!: number
@@ -13,7 +20,7 @@ export class UserSecurityConfiguration extends BaseModel<UserSecurityConfigurati
   canManage!: boolean;
   generalUserId!: number
   approval!: boolean
-  followUp!:boolean;
+  followUp!: boolean;
 
   teamInfo!: AdminResult;
   serviceInfo!: AdminResult;

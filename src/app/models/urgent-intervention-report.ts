@@ -1,30 +1,28 @@
-import {CaseTypes} from '@app/enums/case-types.enum';
-import {LangService} from '@app/services/lang.service';
-import {EmployeeService} from '@app/services/employee.service';
-import {UrgentInterventionReportingService} from '@app/services/urgent-intervention-reporting.service';
-import {FactoryService} from '@app/services/factory.service';
-import {AdminResult} from '@app/models/admin-result';
-import {ImplementingAgency} from '@app/models/implementing-agency';
-import {InterventionRegion} from '@app/models/intervention-region';
-import {InterventionField} from '@app/models/intervention-field';
-import {ISearchFieldsMap} from '@app/types/types';
-import {dateSearchFields} from '@app/helpers/date-search-fields';
-import {infoSearchFields} from '@app/helpers/info-search-fields';
-import {normalSearchFields} from '@app/helpers/normal-search-fields';
-import {CaseModel} from '@app/models/case-model';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {mixinRequestType} from '@app/mixins/mixin-request-type';
-import {HasRequestType} from '@contracts/has-request-type';
-import {UrgentInterventionClosure} from '@app/models/urgent-intervention-closure';
-import {ServiceRequestTypes} from '@app/enums/service-request-types';
-import {BestPractices} from '@app/models/best-practices';
-import {LessonsLearned} from '@app/models/lessons-learned';
-import {OfficeEvaluation} from '@app/models/office-evaluation';
-import {Result} from '@app/models/result';
-import {Stage} from '@app/models/stage';
+import { CaseTypes } from '@app/enums/case-types.enum';
+import { LangService } from '@app/services/lang.service';
+import { EmployeeService } from '@app/services/employee.service';
+import { UrgentInterventionReportingService } from '@app/services/urgent-intervention-reporting.service';
+import { FactoryService } from '@app/services/factory.service';
+import { AdminResult } from '@app/models/admin-result';
+import { ImplementingAgency } from '@app/models/implementing-agency';
+import { InterventionRegion } from '@app/models/intervention-region';
+import { InterventionField } from '@app/models/intervention-field';
+import { ISearchFieldsMap } from '@app/types/types';
+import { dateSearchFields } from '@app/helpers/date-search-fields';
+import { infoSearchFields } from '@app/helpers/info-search-fields';
+import { normalSearchFields } from '@app/helpers/normal-search-fields';
+import { CaseModel } from '@app/models/case-model';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { mixinRequestType } from '@app/mixins/mixin-request-type';
+import { HasRequestType } from '@contracts/has-request-type';
+import { UrgentInterventionClosure } from '@app/models/urgent-intervention-closure';
+import { InterceptModel } from '@app/decorators/decorators/intercept-model';
+import { UrgentInterventionReportInterceptor } from "@app/model-interceptors/urgent-intervention-report-interceptor";
 
 const _RequestType = mixinRequestType(CaseModel);
+const { send, receive } = new UrgentInterventionReportInterceptor();
 
+@InterceptModel({ send, receive })
 export class UrgentInterventionReport extends _RequestType<UrgentInterventionReportingService, UrgentInterventionReport> implements HasRequestType {
   caseType: number = CaseTypes.URGENT_INTERVENTION_REPORTING;
   serviceSteps: string[] = [];

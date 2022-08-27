@@ -1,27 +1,32 @@
-import {ISearchFieldsMap} from '@app/types/types';
-import {dateSearchFields} from '@helpers/date-search-fields';
-import {infoSearchFields} from '@helpers/info-search-fields';
-import {normalSearchFields} from '@helpers/normal-search-fields';
-import {FactoryService} from '@services/factory.service';
-import {LangService} from '@services/lang.service';
-import {EmployeeService} from '@services/employee.service';
-import {UrgentInterventionClosureService} from '@services/urgent-intervention-closure.service';
-import {AdminResult} from '@app/models/admin-result';
-import {ImplementingAgency} from '@app/models/implementing-agency';
-import {InterventionRegion} from '@app/models/intervention-region';
-import {InterventionField} from '@app/models/intervention-field';
-import {BestPractices} from '@app/models/best-practices';
-import {LessonsLearned} from '@app/models/lessons-learned';
-import {OfficeEvaluation} from '@app/models/office-evaluation';
-import {Result} from '@app/models/result';
-import {Stage} from '@app/models/stage';
-import {CaseTypes} from '@app/enums/case-types.enum';
-import {LicenseApprovalModel} from '@app/models/license-approval-model';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {Validators} from '@angular/forms';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {WFResponseType} from '@app/enums/wfresponse-type.enum';
+import { ISearchFieldsMap } from '@app/types/types';
+import { dateSearchFields } from '@helpers/date-search-fields';
+import { infoSearchFields } from '@helpers/info-search-fields';
+import { normalSearchFields } from '@helpers/normal-search-fields';
+import { FactoryService } from '@services/factory.service';
+import { LangService } from '@services/lang.service';
+import { EmployeeService } from '@services/employee.service';
+import { UrgentInterventionClosureService } from '@services/urgent-intervention-closure.service';
+import { AdminResult } from '@app/models/admin-result';
+import { ImplementingAgency } from '@app/models/implementing-agency';
+import { InterventionRegion } from '@app/models/intervention-region';
+import { InterventionField } from '@app/models/intervention-field';
+import { BestPractices } from '@app/models/best-practices';
+import { LessonsLearned } from '@app/models/lessons-learned';
+import { OfficeEvaluation } from '@app/models/office-evaluation';
+import { Result } from '@app/models/result';
+import { Stage } from '@app/models/stage';
+import { CaseTypes } from '@app/enums/case-types.enum';
+import { LicenseApprovalModel } from '@app/models/license-approval-model';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { Validators } from '@angular/forms';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { WFResponseType } from '@app/enums/wfresponse-type.enum';
+import { InterceptModel } from "@decorators/intercept-model";
+import { UrgentInterventionClosureInterceptor } from "@app/model-interceptors/urgent-intervention-closure-interceptor";
 
+const { send, receive } = new UrgentInterventionClosureInterceptor();
+
+@InterceptModel({ send, receive })
 export class UrgentInterventionClosure extends LicenseApprovalModel<UrgentInterventionClosureService, UrgentInterventionClosure> {
   caseType: number = CaseTypes.URGENT_INTERVENTION_CLOSURE;
   organizationId!: number;

@@ -3,9 +3,6 @@ import { IMenuItem } from "@app/modules/context-menu/interfaces/i-menu-item";
 import { catchError, exhaustMap, filter, map, switchMap, takeUntil } from "rxjs/operators";
 import { Directive, OnDestroy, OnInit } from "@angular/core";
 import { UntypedFormControl } from "@angular/forms";
-import {
-  BackendWithDialogOperationsGenericService
-} from "@app/generics/backend-with-dialog-operations-generic-service";
 import { DialogRef } from "@app/shared/models/dialog-ref";
 import { CrudWithDialogGenericService } from "@app/generics/crud-with-dialog-generic-service";
 import { CommonStatusEnum } from '@app/enums/common-status.enum';
@@ -13,7 +10,7 @@ import { PageEvent } from "@contracts/page-event";
 import { CrudServiceInterface } from "@contracts/crud-service-interface";
 
 @Directive()
-export abstract class AdminGenericComponent<M extends { id: number }, S extends BackendWithDialogOperationsGenericService<M> | CrudWithDialogGenericService<M>> implements OnInit, OnDestroy {
+export abstract class AdminGenericComponent<M extends { id: number }, S extends CrudWithDialogGenericService<M>> implements OnInit, OnDestroy {
   // behavior subject for load the list
   reload$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   // subject for emit clicking on add button

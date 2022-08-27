@@ -1,27 +1,31 @@
-import {CaseTypes} from "@app/enums/case-types.enum";
-import {WFResponseType} from "@app/enums/wfresponse-type.enum";
-import {dateSearchFields} from "@app/helpers/date-search-fields";
-import {infoSearchFields} from "@app/helpers/info-search-fields";
-import {normalSearchFields} from "@app/helpers/normal-search-fields";
-import {HasLicenseApproval} from "@app/interfaces/has-license-approval";
-import {HasRequestType} from "@app/interfaces/has-request-type";
-import {mixinApprovalLicenseWithDuration} from "@app/mixins/mixin-approval-license-with-duration";
-import {mixinRequestType} from "@app/mixins/mixin-request-type";
+import { CaseTypes } from "@app/enums/case-types.enum";
+import { WFResponseType } from "@app/enums/wfresponse-type.enum";
+import { dateSearchFields } from "@app/helpers/date-search-fields";
+import { infoSearchFields } from "@app/helpers/info-search-fields";
+import { normalSearchFields } from "@app/helpers/normal-search-fields";
+import { HasLicenseApproval } from "@app/interfaces/has-license-approval";
+import { HasRequestType } from "@app/interfaces/has-request-type";
+import { mixinApprovalLicenseWithDuration } from "@app/mixins/mixin-approval-license-with-duration";
+import { mixinRequestType } from "@app/mixins/mixin-request-type";
 import {
   FundraisingApproveTaskPopupComponent
 } from "@app/modules/collection/popups/fundraising-approve-task-popup/fundraising-approve-task-popup.component";
-import {DialogService} from "@app/services/dialog.service";
-import {FactoryService} from "@app/services/factory.service";
-import {FundraisingService} from "@app/services/fundraising.service";
-import {DialogRef} from "@app/shared/models/dialog-ref";
-import {ISearchFieldsMap} from "@app/types/types";
-import {CustomValidators} from "@app/validators/custom-validators";
-import {AdminResult} from "./admin-result";
-import {CaseModel} from "./case-model";
-import {TaskDetails} from "./task-details";
+import { DialogService } from "@app/services/dialog.service";
+import { FactoryService } from "@app/services/factory.service";
+import { FundraisingService } from "@app/services/fundraising.service";
+import { DialogRef } from "@app/shared/models/dialog-ref";
+import { ISearchFieldsMap } from "@app/types/types";
+import { CustomValidators } from "@app/validators/custom-validators";
+import { AdminResult } from "./admin-result";
+import { CaseModel } from "./case-model";
+import { TaskDetails } from "./task-details";
+import { InterceptModel } from "@decorators/intercept-model";
+import { FundraisingInterceptor } from "@app/model-interceptors/fundraising-interceptor";
 
 const _ApprovalLicense = mixinApprovalLicenseWithDuration(mixinRequestType(CaseModel));
+const { send, receive } = new FundraisingInterceptor();
 
+@InterceptModel({ send, receive })
 export class Fundraising extends _ApprovalLicense<FundraisingService, Fundraising> implements HasLicenseApproval, HasRequestType {
   service: FundraisingService;
   id!: string;
@@ -124,7 +128,7 @@ export class Fundraising extends _ApprovalLicense<FundraisingService, Fundraisin
   }
 
   buildExplanation(controls: boolean = false): any {
-    const {description} = this;
+    const { description } = this;
     return {
       description: controls ? [description, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : description
     };

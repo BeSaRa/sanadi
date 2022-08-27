@@ -1,15 +1,20 @@
-import {InitialExternalOfficeApprovalService} from "@app/services/initial-external-office-approval.service";
-import {FactoryService} from "@app/services/factory.service";
-import {CustomValidators} from "@app/validators/custom-validators";
-import {LicenseApprovalModel} from '@app/models/license-approval-model';
-import {AdminResult} from "@app/models/admin-result";
-import {CaseTypes} from '@app/enums/case-types.enum';
-import {ISearchFieldsMap} from "@app/types/types";
-import {dateSearchFields} from "@app/helpers/date-search-fields";
-import {infoSearchFields} from "@app/helpers/info-search-fields";
-import {normalSearchFields} from "@app/helpers/normal-search-fields";
+import { InitialExternalOfficeApprovalService } from "@app/services/initial-external-office-approval.service";
+import { FactoryService } from "@app/services/factory.service";
+import { CustomValidators } from "@app/validators/custom-validators";
+import { LicenseApprovalModel } from '@app/models/license-approval-model';
+import { AdminResult } from "@app/models/admin-result";
+import { CaseTypes } from '@app/enums/case-types.enum';
+import { ISearchFieldsMap } from "@app/types/types";
+import { dateSearchFields } from "@app/helpers/date-search-fields";
+import { infoSearchFields } from "@app/helpers/info-search-fields";
+import { normalSearchFields } from "@app/helpers/normal-search-fields";
+import { InterceptModel } from "@decorators/intercept-model";
+import {
+  InitialExternalOfficeApprovalInterceptor
+} from "@app/model-interceptors/initial-external-office-approval-interceptor";
 
-// noinspection JSUnusedGlobalSymbols
+const { send, receive } = new InitialExternalOfficeApprovalInterceptor();
+@InterceptModel({ send, receive })
 export class InitialExternalOfficeApproval extends LicenseApprovalModel<InitialExternalOfficeApprovalService, InitialExternalOfficeApproval> {
   caseType: number = CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL;
   organizationId!: number

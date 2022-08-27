@@ -1,13 +1,22 @@
-import { CustomValidators } from '@app/validators/custom-validators';
-import { AdminResult } from '@app/models/admin-result';
-import { InterventionField } from './intervention-field';
-import { InterventionRegion } from './intervention-region';
-import { ImplementingAgency } from './implementing-agency';
-import { FactoryService } from './../services/factory.service';
-import { UrgentInterventionFinancialNotificationService } from '../services/urgent-intervention-financial-notification.service';
-import { LicenseApprovalModel } from '@app/models/license-approval-model';
-import { CaseTypes } from '../enums/case-types.enum';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {AdminResult} from '@app/models/admin-result';
+import {InterventionField} from './intervention-field';
+import {InterventionRegion} from './intervention-region';
+import {ImplementingAgency} from './implementing-agency';
+import {FactoryService} from '@services/factory.service';
+import {
+  UrgentInterventionFinancialNotificationService
+} from '@services/urgent-intervention-financial-notification.service';
+import {LicenseApprovalModel} from '@app/models/license-approval-model';
+import {CaseTypes} from '../enums/case-types.enum';
+import {
+  UrgentInterventionFinancialNotificationInterceptor
+} from '@app/model-interceptors/urgent-intervention-financial-notification-interceptor';
+import {InterceptModel} from '@decorators/intercept-model';
 
+const {send, receive} = new UrgentInterventionFinancialNotificationInterceptor();
+
+@InterceptModel({send, receive})
 export class UrgentInterventionFinancialNotification extends LicenseApprovalModel<UrgentInterventionFinancialNotificationService, UrgentInterventionFinancialNotification> {
   service!: UrgentInterventionFinancialNotificationService;
   caseType: number = CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION;
@@ -35,13 +44,16 @@ export class UrgentInterventionFinancialNotification extends LicenseApprovalMode
   oldLicenseId!: string;
   fullSerial!: string;
   oldLicenseFullSerial!: string;
+
   constructor() {
     super();
     this.setService();
   }
+
   setService() {
     this.service = FactoryService.getService('UrgentInterventionFinancialNotificationService');
   }
+
   buildForm(control: boolean = false) {
     const {
       requestType,
@@ -50,8 +62,9 @@ export class UrgentInterventionFinancialNotification extends LicenseApprovalMode
     return {
       requestType: control ? [requestType, [CustomValidators.required]] : requestType,
       urgentAnnouncementFullSerial: control ? [urgentAnnouncementFullSerial, [CustomValidators.required]] : urgentAnnouncementFullSerial,
-    }
+    };
   }
+
   buildTransferDataForm(control: boolean = false) {
     const {
       implementingAgencyType,
@@ -66,6 +79,6 @@ export class UrgentInterventionFinancialNotification extends LicenseApprovalMode
       accountType: control ? [accountType] : accountType,
       accountNumber: control ? [accountNumber, [CustomValidators.required]] : accountNumber,
       amount: control ? [amount, [CustomValidators.required]] : amount,
-    }
+    };
   }
 }

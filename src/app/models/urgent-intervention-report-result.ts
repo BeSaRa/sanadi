@@ -1,16 +1,21 @@
-import {AdminResult} from '@app/models/admin-result';
-import {BestPractices} from '@app/models/best-practices';
-import {LessonsLearned} from '@app/models/lessons-learned';
-import {OfficeEvaluation} from '@app/models/office-evaluation';
-import {Stage} from '@app/models/stage';
-import {Result} from './result';
-import {ImplementingAgency} from '@app/models/implementing-agency';
-import {InterventionRegion} from '@app/models/intervention-region';
-import {InterventionField} from '@app/models/intervention-field';
+import { AdminResult } from '@app/models/admin-result';
+import { BestPractices } from '@app/models/best-practices';
+import { LessonsLearned } from '@app/models/lessons-learned';
+import { OfficeEvaluation } from '@app/models/office-evaluation';
+import { Stage } from '@app/models/stage';
+import { Result } from './result';
+import { ImplementingAgency } from '@app/models/implementing-agency';
+import { InterventionRegion } from '@app/models/intervention-region';
+import { InterventionField } from '@app/models/intervention-field';
+import { InterceptModel } from "@decorators/intercept-model";
+import {
+  UrgentInterventionReportResultInterceptor
+} from "@app/model-interceptors/urgent-intervention-report-result-interceptor";
 
+const { send, receive } = new UrgentInterventionReportResultInterceptor()
+
+@InterceptModel({ receive, send })
 export class UrgentInterventionReportResult {
-
-
   id!: string;
   createdOn!: string;
   lastModified!: string;
@@ -40,10 +45,10 @@ export class UrgentInterventionReportResult {
   interventionName!: string;
   projectDescription!: string;
   beneficiaryCountry!: number;
-  beneficiaryRegion!:  string;
+  beneficiaryRegion!: string;
   executionCountry!: number;
-  executionRegion!:  string;
-  description!:  string;
+  executionRegion!: string;
+  description!: string;
   licenseStatus!: number;
   handicappedFemaleBeneficiary!: number;
   handicappedMaleBeneficiary!: number;
@@ -60,8 +65,8 @@ export class UrgentInterventionReportResult {
   customTerms!: string;
   publicTerms!: string;
   implementingAgencyList: ImplementingAgency[] = [];
-  interventionRegionList: InterventionRegion[]= [];
-  interventionFieldList: InterventionField[]= [];
+  interventionRegionList: InterventionRegion[] = [];
+  interventionFieldList: InterventionField[] = [];
   bestPracticesList: BestPractices[] = [];
   lessonsLearnedList: LessonsLearned[] = [];
   officeEvaluationList: OfficeEvaluation[] = [];

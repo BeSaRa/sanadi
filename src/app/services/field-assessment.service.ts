@@ -10,14 +10,13 @@ import {
 } from '@app/administration/popups/field-assessment-popup/field-assessment-popup.component';
 import { FieldAssessmentTypesEnum } from '@app/enums/field-assessment-types.enum';
 import { Observable, of } from 'rxjs';
-import { Generator } from '@decorators/generator';
 import { CommonStatusEnum } from '@app/enums/common-status.enum';
 import { map, switchMap } from 'rxjs/operators';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { IDialogData } from '@contracts/i-dialog-data';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { CrudWithDialogGenericService } from "@app/generics/crud-with-dialog-generic-service";
-import { CastResponseContainer } from "@decorators/cast-response";
+import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
 import { Pagination } from "@app/models/pagination";
 
 @CastResponseContainer({
@@ -55,7 +54,7 @@ export class FieldAssessmentService extends CrudWithDialogGenericService<FieldAs
     return this.urlService.URLS.FIELD_ASSESSMENT;
   }
 
-  @Generator(undefined, true, { property: 'rs' })
+  @CastResponse(undefined)
   private _loadByType(type: FieldAssessmentTypesEnum): Observable<FieldAssessment[]> {
     return this.http.get<FieldAssessment[]>(this._getServiceURL() + '/type/' + type);
   }

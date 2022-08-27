@@ -1,19 +1,23 @@
-import {LicenseApprovalModel} from '@app/models/license-approval-model';
-import {InternalProjectLicenseService} from '@app/services/internal-project-license.service';
-import {FactoryService} from '@app/services/factory.service';
-import {ProjectComponent} from '@app/models/project-component';
-import {CaseTypes} from '@app/enums/case-types.enum';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {CommonUtils} from '@app/helpers/common-utils';
-import {AdminResult} from '@app/models/admin-result';
-import {DateUtils} from '@app/helpers/date-utils';
-import {Validators} from '@angular/forms';
-import {ISearchFieldsMap} from "@app/types/types";
-import {dateSearchFields} from "@app/helpers/date-search-fields";
-import {infoSearchFields} from "@app/helpers/info-search-fields";
-import {normalSearchFields} from "@app/helpers/normal-search-fields";
+import { LicenseApprovalModel } from '@app/models/license-approval-model';
+import { InternalProjectLicenseService } from '@app/services/internal-project-license.service';
+import { FactoryService } from '@app/services/factory.service';
+import { ProjectComponent } from '@app/models/project-component';
+import { CaseTypes } from '@app/enums/case-types.enum';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { AdminResult } from '@app/models/admin-result';
+import { DateUtils } from '@app/helpers/date-utils';
+import { Validators } from '@angular/forms';
+import { ISearchFieldsMap } from "@app/types/types";
+import { dateSearchFields } from "@app/helpers/date-search-fields";
+import { infoSearchFields } from "@app/helpers/info-search-fields";
+import { normalSearchFields } from "@app/helpers/normal-search-fields";
+import { InterceptModel } from '@app/decorators/decorators/intercept-model';
+import { InternalProjectLicenseInterceptor } from "@app/model-interceptors/internal-project-license-interceptor";
 
 
+const { send, receive } = new InternalProjectLicenseInterceptor();
+@InterceptModel({ send, receive })
 export class InternalProjectLicense extends LicenseApprovalModel<InternalProjectLicenseService, InternalProjectLicense> {
   service: InternalProjectLicenseService;
 

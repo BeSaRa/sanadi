@@ -1,14 +1,14 @@
-import {Beneficiary} from '../models/beneficiary';
-import {AdminResult} from '../models/admin-result';
-import {DateUtils} from '@helpers/date-utils';
-import {FactoryService} from '@app/services/factory.service';
-import {BeneficiaryService} from '@app/services/beneficiary.service';
-import {BeneficiaryObligation} from '@app/models/beneficiary-obligation';
-import {BeneficiaryIncome} from '@app/models/beneficiary-income';
-import {CommonUtils} from '@app/helpers/common-utils';
+import { Beneficiary } from '../models/beneficiary';
+import { AdminResult } from '../models/admin-result';
+import { DateUtils } from '@helpers/date-utils';
+import { FactoryService } from '@app/services/factory.service';
+import { BeneficiaryService } from '@app/services/beneficiary.service';
+import { BeneficiaryObligation } from '@app/models/beneficiary-obligation';
+import { BeneficiaryIncome } from '@app/models/beneficiary-income';
+import { CommonUtils } from '@app/helpers/common-utils';
 
 export class BeneficiaryInterceptor {
-  static receive(model: Beneficiary): Beneficiary {
+  receive(model: Beneficiary): Beneficiary {
     model.OccuptionStatusInfo = AdminResult.createInstance(model.OccuptionStatusInfo);
     model.addressStatusInfo = AdminResult.createInstance(model.addressStatusInfo);
     model.benPrimaryIdNationalityInfo = AdminResult.createInstance(model.benPrimaryIdNationalityInfo);
@@ -38,7 +38,7 @@ export class BeneficiaryInterceptor {
     return model;
   }
 
-  static send(model: any): any {
+  send(model: any): any {
     BeneficiaryInterceptor._deleteBeforeSend(model);
 
     model.dateOfBirth = !model.dateOfBirth ? model.dateOfBirth : DateUtils.changeDateFromDatepicker(model.dateOfBirth)?.toISOString();

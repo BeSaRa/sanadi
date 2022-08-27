@@ -3,6 +3,13 @@ import { BankAccount } from './bank-account';
 import { ExecutiveManagement } from './executive-management';
 import { AdminResult } from './admin-result';
 import { BaseLicense } from './base-license';
+import { InterceptModel } from "@decorators/intercept-model";
+import {
+  ExternalOrgAffiliationResultInterceptor
+} from "@app/model-interceptors/external-org-affiliation-result-interceptor";
+
+const { send, receive } = new ExternalOrgAffiliationResultInterceptor();
+@InterceptModel({ send, receive })
 export class ExternalOrgAffiliationResult extends BaseLicense {
   arName!: string;
   bankAccountDTOs: BankAccount[] = [];

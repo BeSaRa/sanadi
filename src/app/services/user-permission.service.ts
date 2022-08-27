@@ -1,9 +1,9 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
-import {UrlService} from "@app/services/url.service";
-import {Observable} from "rxjs";
-import {UserPermission} from "@app/models/user-permission";
-import {Generator} from "@app/decorators/generator";
+import { Injectable } from '@angular/core';
+import { HttpClient } from "@angular/common/http";
+import { UrlService } from "@app/services/url.service";
+import { Observable } from "rxjs";
+import { UserPermission } from "@app/models/user-permission";
+import { CastResponse } from "@decorators/cast-response";
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +17,7 @@ export class UserPermissionService {
     return this.urlService.URLS.INTERNAL_USER_PERMISSIONS;
   }
 
-  @Generator(UserPermission, true)
+  @CastResponse(() => UserPermission)
   private _loadUserPermissions(userId: number): Observable<UserPermission[]> {
     return this.http.get<UserPermission[]>(this._getServiceURL() + '/internal/' + userId)
   }
@@ -35,7 +35,7 @@ export class UserPermissionService {
   }
 
   loadPermissionsAsBlob(internalUserId: number): Observable<Blob> {
-    return this.http.get(this._getServiceURL() + '/export/' + internalUserId, {responseType: 'blob'});
+    return this.http.get(this._getServiceURL() + '/export/' + internalUserId, { responseType: 'blob' });
   }
 
 

@@ -76,6 +76,18 @@ const routes: Routes = [
     }
   },
   {
+    path: 'coordination-with-organizations-request', component: EServiceComponentWrapperComponent,
+    canActivate: [ServicesGuard],
+    resolve: { info: ServiceItemResolver },
+    data: {
+      permissionKey: EServicePermissions.COORDINATION_WITH_ORGANIZATION_REQUEST,
+      configPermissionGroup: null,
+      checkAnyPermission: false,
+      render: 'CoordinationWithOrganizationsRequestComponent'
+    },
+
+  },
+  {
     path: 'charity-organization-update', component: EServiceComponentWrapperComponent,
     canActivate: [ServicesGuard],
     resolve: { info: ServiceItemResolver },

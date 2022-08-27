@@ -1,26 +1,28 @@
-import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
-import {InboxService} from '@app/services/inbox.service';
-import {WFResponseType} from '@app/enums/wfresponse-type.enum';
-import {EServiceGenericService} from '@app/generics/e-service-generic-service';
-import {QueryResult} from '@app/models/query-result';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {ToastService} from '@app/services/toast.service';
-import {EmployeeService} from '@app/services/employee.service';
-import {TeamService} from '@app/services/team.service';
-import {InternalDepartmentService} from '@app/services/internal-department.service';
-import {AbstractControl, UntypedFormBuilder, UntypedFormGroup, ValidatorFn} from '@angular/forms';
-import {DialogService} from '@app/services/dialog.service';
-import {LangService} from '@app/services/lang.service';
-import {InternalUser} from '@app/models/internal-user';
-import {InternalDepartment} from '@app/models/internal-department';
-import {of, Subject} from 'rxjs';
-import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {filter, switchMap, take, takeUntil} from 'rxjs/operators';
-import {ExpertsEnum} from '@app/enums/experts-enum';
-import {CaseModel} from '@app/models/case-model';
-import {InternalBankAccountApprovalReviewDepartments} from '@app/enums/internal-bank-account-approval-review-departments';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
+import { InboxService } from '@app/services/inbox.service';
+import { WFResponseType } from '@app/enums/wfresponse-type.enum';
+import { QueryResult } from '@app/models/query-result';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { ToastService } from '@app/services/toast.service';
+import { EmployeeService } from '@app/services/employee.service';
+import { TeamService } from '@app/services/team.service';
+import { InternalDepartmentService } from '@app/services/internal-department.service';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, ValidatorFn } from '@angular/forms';
+import { DialogService } from '@app/services/dialog.service';
+import { LangService } from '@app/services/lang.service';
+import { InternalUser } from '@app/models/internal-user';
+import { InternalDepartment } from '@app/models/internal-department';
+import { of, Subject } from 'rxjs';
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { filter, switchMap, take, takeUntil } from 'rxjs/operators';
+import { ExpertsEnum } from '@app/enums/experts-enum';
+import { CaseModel } from '@app/models/case-model';
+import {
+  InternalBankAccountApprovalReviewDepartments
+} from '@app/enums/internal-bank-account-approval-review-departments';
+import { BaseGenericEService } from "@app/generics/base-generic-e-service";
 
 @Component({
   selector: 'send-to-multiple',
@@ -34,7 +36,7 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
       inboxService: InboxService,
       taskId: string,
       sendToResponse: WFResponseType,
-      service: EServiceGenericService<any>,
+      service: BaseGenericEService<any>,
       claimBefore: boolean,
       task: QueryResult | CaseModel<any, any>,
       extraInfo: any

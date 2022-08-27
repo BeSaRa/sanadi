@@ -1,11 +1,16 @@
-import {BaseModel} from '@app/models/base-model';
-import {ChecklistService} from '@app/services/checklist.service';
-import {Lookup} from '@app/models/lookup';
-import {INames} from '@app/interfaces/i-names';
-import {FactoryService} from '@app/services/factory.service';
-import {LangService} from '@app/services/lang.service';
-import {CustomValidators} from '@app/validators/custom-validators';
+import { BaseModel } from '@app/models/base-model';
+import { ChecklistService } from '@app/services/checklist.service';
+import { Lookup } from '@app/models/lookup';
+import { INames } from '@app/interfaces/i-names';
+import { FactoryService } from '@app/services/factory.service';
+import { LangService } from '@app/services/lang.service';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { ChecklistItemInterceptor } from '@app/model-interceptors/checklist-item-interceptor';
+import { InterceptModel } from "@decorators/intercept-model";
 
+const { send, receive } = new ChecklistItemInterceptor();
+
+@InterceptModel({ send, receive })
 export class ChecklistItem extends BaseModel<ChecklistItem, ChecklistService> {
   langService: LangService;
   service!: ChecklistService;

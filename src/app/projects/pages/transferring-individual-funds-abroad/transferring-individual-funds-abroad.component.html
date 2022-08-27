@@ -206,7 +206,7 @@
                      id="organizationArabicName"
                      validationClasses="organizationArabicName">
               <app-field-error-message controlName="organizationArabicName"></app-field-error-message>
-              <button (click)="searchOrganizations('ar')" [disabled]="(readonly)" class="input-group-text">
+              <button (click)="searchOrganizations('ar')" [disabled]="(readonly || isCancel)" class="input-group-text">
                 <i class="mdi mdi-magnify text-primary"></i>
               </button>
             </div>
@@ -221,7 +221,7 @@
                      id="organizationEnglishName"
                      validationClasses="organizationEnglishName">
               <app-field-error-message controlName="organizationEnglishName"></app-field-error-message>
-              <button (click)="searchOrganizations('en')" [disabled]="(readonly)" class="input-group-text">
+              <button (click)="searchOrganizations('en')" [disabled]="(readonly || isCancel)" class="input-group-text">
                 <i class="mdi mdi-magnify text-primary"></i>
               </button>
             </div>
@@ -355,7 +355,7 @@
             <div class="col">
               <h1 class="h6 text-primary m-0 d-inline-block">{{lang.map.add_executive}}</h1>
               <button class="btn btn-link outline-none"
-                      tooltip="{{lang.map.btn_add}}" (click)="openAddExecutiveForm()">
+                      tooltip="{{lang.map.btn_add}}" (click)="openAddExecutiveForm()" [disabled]="isCancel">
                 <i class="mdi mdi-plus-box"></i></button>
             </div>
           </div>
@@ -475,11 +475,11 @@
                   <th *cdkHeaderCellDef cdk-header-cell> {{lang.map.lbl_actions}}</th>
                   <td *cdkCellDef="let row" cdk-cell class="table-actions">
                     <div class="d-flex flex-row">
-                      <button (click)="removeExecutive($event, row)" [disabled]="(readonly || addExecutiveFormActive)"
+                      <button (click)="removeExecutive($event, row)" [disabled]="(readonly || addExecutiveFormActive || isCancel)"
                               class="btn btn-link outline-none" tooltip="{{lang.map.btn_remove}}">
                         <i class="mdi mdi-close-box"></i>
                       </button>
-                      <button (click)="selectExecutive($event, row)" [disabled]="(readonly || addExecutiveFormActive)"
+                      <button (click)="selectExecutive($event, row)" [disabled]="(readonly || addExecutiveFormActive || isCancel)"
                               class="btn btn-link outline-none" tooltip="{{lang.map.btn_edit}}">
                         <i class="mdi mdi-pen"></i>
                       </button>
@@ -511,7 +511,7 @@
                      id="receiverNameLikePassport"
                      validationClasses="receiverNameLikePassport">
               <app-field-error-message controlName="receiverNameLikePassport"></app-field-error-message>
-              <button (click)="searchPersons('ar')" [disabled]="(readonly)" class="input-group-text">
+              <button (click)="searchPersons('ar')" [disabled]="(readonly || isCancel)" class="input-group-text">
                 <i class="mdi mdi-magnify text-primary"></i>
               </button>
             </div>
@@ -526,7 +526,7 @@
                      id="receiverEnglishNameLikePassport"
                      validationClasses="receiverEnglishNameLikePassport">
               <app-field-error-message controlName="receiverEnglishNameLikePassport"></app-field-error-message>
-              <button (click)="searchPersons('en')" [disabled]="(readonly)" class="input-group-text">
+              <button (click)="searchPersons('en')" [disabled]="(readonly || isCancel)" class="input-group-text">
                 <i class="mdi mdi-magnify text-primary"></i>
               </button>
             </div>
@@ -745,11 +745,11 @@
                   <th *cdkHeaderCellDef cdk-header-cell> {{lang.map.lbl_actions}}</th>
                   <td *cdkCellDef="let row" cdk-cell class="table-actions">
                     <div class="d-flex flex-row">
-                      <button (click)="removePurpose($event, row)" [disabled]="(readonly || addPurposeFormActive)"
+                      <button (click)="removePurpose($event, row)" [disabled]="(readonly || addPurposeFormActive || isCancel)"
                               class="btn btn-link outline-none" tooltip="{{lang.map.btn_remove}}">
                         <i class="mdi mdi-close-box"></i>
                       </button>
-                      <button (click)="selectPurpose($event, row)" [disabled]="(readonly || addPurposeFormActive)"
+                      <button (click)="selectPurpose($event, row)" [disabled]="(readonly || addPurposeFormActive || isCancel)"
                               class="btn btn-link outline-none" tooltip="{{lang.map.btn_edit}}">
                         <i class="mdi mdi-pen"></i>
                       </button>
