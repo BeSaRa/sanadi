@@ -16,6 +16,8 @@ import { EmploymentApproveComponent } from './popups/employment-approve/employme
 import { ExternalOrgAffiliationComponent } from './pages/external-org-affiliation/external-org-affiliation.component';
 import { ForeignCountriesProjectsComponent } from './pages/foreign-countries-projects/foreign-countries-projects.component';
 import { ForeignCountriesProjectsPopupComponent } from './popups/foreign-countries-projects-popup/foreign-countries-projects-popup.component';
+import { CharityOrganizationUpdateComponent } from './pages/charity-organization-update/charity-organization-update.component';
+import { OrganizationOfficersComponent } from './shared/organization-officers/organization-officers.component';
 
 
 @NgModule({
@@ -30,6 +32,8 @@ import { ForeignCountriesProjectsPopupComponent } from './popups/foreign-countri
     EmploymentComponent,
     ForeignCountriesProjectsComponent,
     ForeignCountriesProjectsPopupComponent,
+    CharityOrganizationUpdateComponent,
+    OrganizationOfficersComponent,
   ],
   imports: [
     CommonModule,

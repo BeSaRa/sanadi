@@ -74,6 +74,18 @@ const routes: Routes = [
       checkAnyPermission: false,
       render: 'ForeignCountriesProjectsComponent'
     }
+  },
+  {
+    path: 'charity-organization-update', component: EServiceComponentWrapperComponent,
+    canActivate: [ServicesGuard],
+    resolve: { info: ServiceItemResolver },
+    data: {
+
+      permissionKey: EServicePermissions.EMPLOYMENT,
+      configPermissionGroup: null,
+      checkAnyPermission: false,
+      render: 'CharityOrganizationUpdateComponent'
+    }
   }
 
 ];

@@ -1207,4 +1207,19 @@ export interface ILanguageKeys {
   msg_mark_as_unread_success: string;
   terminate_task: string;
   msg_success_terminate_task: string;
+  menu_charity_organization_update: string;
+  short_name: string;
+  activity_type: string;
+  publish_date: string;
+  tax_card_number: string;
+  regulating_law: string;
+  meta_data: string;
+  contact_information: string;
+  update_officer: string;
+  facebook: string;
+  twitter: string;
+  snapchat: string;
+  instagram: string;
+  youtube: string;
+  complaince_office_data: string;
 }
