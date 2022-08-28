@@ -30,8 +30,6 @@ export class FollowupConfigurationPopupComponent extends AdminGenericDialog<Foll
   followUpTypes: Lookup[] = this.lookupService.listByCategory.FollowUpType;
   teams!: Team[];
   saveVisible = true;
-  serviceId!: number;
-  caseType!: number;
 
   constructor(public fb: UntypedFormBuilder,
               public dialogRef: DialogRef,
@@ -43,9 +41,7 @@ export class FollowupConfigurationPopupComponent extends AdminGenericDialog<Foll
     super();
     this.model = data.model;
     this.operation = data.operation;
-    this.serviceId = data.serviceId;
-    this.caseType = data.caseType;
-    this.requestTypes = this.requestTypeFollowupService.serviceRequestTypes[this.caseType] || [this.requestTypeFollowupService.getNewRequestType()];
+    this.requestTypes = this.requestTypeFollowupService.serviceRequestTypes[this.model.caseType] || [this.requestTypeFollowupService.getNewRequestType()];
   }
 
   get readonly(): boolean {
@@ -75,8 +71,8 @@ export class FollowupConfigurationPopupComponent extends AdminGenericDialog<Foll
       ...this.form.getRawValue()
     });
     if (this.operation == OperationTypes.CREATE) {
-      newModel.serviceId = this.serviceId;
-      newModel.caseType = this.caseType;
+      newModel.serviceId = this.model.serviceId;
+      newModel.caseType = this.model.caseType;
     }
     return newModel;
   }
