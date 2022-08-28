@@ -12,38 +12,6 @@
     </tabs-list>
     <ng-template #tabContent>
       <div formGroupName="basicInfo" class="row">
-        <!-- License Number -->
-        <div class="col-md-4 mb-4 position-relative">
-          <label
-            asteriskIfRequired="oldLicenseFullSerial"
-            for="oldLicenseFullSerial"
-            class="form-label"
-            >{{ lang.map.license_number }}</label
-          >
-          <div class="input-group">
-            <input
-              (keydown.enter)="(isEditOrCancel)"
-              formControlName="oldLicenseFullSerial"
-              [readonly]="!isEditOrCancel || !isEditAllowed"
-              type="text"
-              validationClasses="oldLicenseFullSerial"
-              class="form-control"
-              id="oldLicenseFullSerial"
-              trimInput
-            />
-            <button
-              *ngIf="isEditOrCancel && isEditAllowed"
-              type="button"
-              (click)="licenseSearch($event)"
-              class="input-group-text"
-            >
-              <i class="mdi {{ fileIconsEnum.SEARCH }} text-primary"></i>
-            </button>
-            <app-field-error-message
-              controlName="oldLicenseFullSerial"
-            ></app-field-error-message>
-          </div>
-        </div>
         <!-- Request Type -->
         <div class="col-md-4 mb-4 position-relative">
           <label
@@ -74,6 +42,38 @@
           <app-field-error-message
             controlName="category"
           ></app-field-error-message>
+        </div>
+        <!-- License Number -->
+        <div class="col-md-4 mb-4 position-relative">
+          <label
+            asteriskIfRequired="oldLicenseFullSerial"
+            for="oldLicenseFullSerial"
+            class="form-label"
+          >{{ lang.map.license_number }}</label
+          >
+          <div class="input-group">
+            <input
+              (keydown.enter)="(isEditOrCancel)"
+              formControlName="oldLicenseFullSerial"
+              [readonly]="!isEditOrCancel || !isEditAllowed"
+              type="text"
+              validationClasses="oldLicenseFullSerial"
+              class="form-control"
+              id="oldLicenseFullSerial"
+              trimInput
+            />
+            <button
+              *ngIf="isEditOrCancel && isEditAllowed"
+              type="button"
+              (click)="licenseSearch($event)"
+              class="input-group-text"
+            >
+              <i class="mdi {{ fileIconsEnum.SEARCH }} text-primary"></i>
+            </button>
+            <app-field-error-message
+              controlName="oldLicenseFullSerial"
+            ></app-field-error-message>
+          </div>
         </div>
 
         <div class="col-sm-6 col-md-4 mb-4 position-relative">
@@ -177,7 +177,6 @@
           }}</label>
           <textarea
             id="classDescription"
-            validationClasses="classDescription"
             trimInput
             [readonly]="isCancelRequestType || !isEditAllowed"
             validationClasses="classDescription"
@@ -197,7 +196,6 @@
             id="justification"
             validationClasses="justification"
             trimInput
-            validationClasses="justification"
             [readonly]="isCancelRequestType || !isEditAllowed"
             formControlName="justification"
             class="form-control"
