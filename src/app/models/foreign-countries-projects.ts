@@ -90,7 +90,7 @@ export class ForeignCountriesProjects extends _RequestType<ForeignCountriesProje
       needSubject: withControls
         ? [needSubject, [CustomValidators.required]]
         : needSubject,
-      subject: withControls
+      classDescription: withControls
         ? [classDescription, [CustomValidators.required]]
         : classDescription,
       justification: withControls
