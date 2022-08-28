@@ -25,9 +25,15 @@ export class RequestTypeFollowupService {
     [CaseTypes.FUNDRAISING_LICENSING]: this.lookupService.listByCategory.CollectionRequestType,
     [CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE]: this.lookupService.listByCategory.CustomsExemptionRequestType,
     [CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL]: this.lookupService.listByCategory.BankRequestType,
-    [CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN]: [this.getNewRequestType()],
+    [CaseTypes.EMPLOYMENT]: this.lookupService.listByCategory.EmploymentRequestType,
+    [CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN]: this.lookupService.listByCategory.RequestTypeNewOnly,
     [CaseTypes.URGENT_INTERVENTION_REPORTING]: this.lookupService.listByCategory.UrgentInterventionAnnouncementRequestType,
-    [CaseTypes.URGENT_INTERVENTION_CLOSURE]: [this.getNewRequestType()]
+    [CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST]: this.lookupService.listByCategory.AffiliationRequestType,
+    [CaseTypes.URGENT_INTERVENTION_CLOSURE]: this.lookupService.listByCategory.RequestTypeNewOnly,
+    [CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION]: this.lookupService.listByCategory.UrgentInterventionFinancialRequestType,
+    [CaseTypes.FOREIGN_COUNTRIES_PROJECTS]: this.lookupService.listByCategory.CollectionRequestType,
+    [CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD]: this.lookupService.listByCategory.TransferringIndividualRequestType,
+    [CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST]: [this.getNewRequestType()],
   }
 
   constructor(private lookupService: LookupService) {
