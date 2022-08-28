@@ -179,7 +179,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
-    if (this.requestTypeField.value !== ServiceRequestTypes.NEW && !this.selectedLicense) {
+    if (!this.selectedLicense) {
       this.dialogService.error(this.lang.map.please_select_license_to_complete_save);
       return false;
     } else {
