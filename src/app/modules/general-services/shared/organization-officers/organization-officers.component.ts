@@ -27,7 +27,7 @@ export class OrganizationOfficersComponent implements OnInit {
   officerForm!: UntypedFormGroup;
   @Input() readonly = false;
   @Input() set list(list: OrganizationOfficer[]) {
-    this.selectedOrganizationOfficers = list;
+    this.selectedOrganizationOfficers = list || [];
   }
   get list(): OrganizationOfficer[] {
     return this.selectedOrganizationOfficers;

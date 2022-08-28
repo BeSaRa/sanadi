@@ -223,10 +223,22 @@
     </ng-template>
     <ng-template #tabContent>
       <organization-officers
+        #officer
         [readonly]="readonly"
         [list]="model!.complianceOfficerList"
       >
       </organization-officers>
+    </ng-template>
+    <ng-template #tabContent>
+      <organization-officers
+        #officer
+        [readonly]="readonly"
+        [list]="model!.charityContactOfficerList"
+      >
+      </organization-officers>
+    </ng-template>
+    <ng-template #tabContent>
+      <charity-branch> </charity-branch>
     </ng-template>
     <ng-template #tabContent> </ng-template>
     <ng-template #tabContent>

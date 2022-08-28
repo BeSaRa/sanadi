@@ -1270,6 +1270,9 @@ export interface ILanguageKeys {
   twitter: string;
   snapchat: string;
   instagram: string;
+  branch_adjective: string;
+  usage_adjective: string;
   youtube: string;
   complaince_office_data: string;
+  liaison_office_data: string;
 }

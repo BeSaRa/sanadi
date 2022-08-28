@@ -7,6 +7,7 @@ import { FactoryService } from '@app/services/factory.service';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { AdminResult } from './admin-result';
 import { CaseModel } from './case-model';
+import { CharityBranch } from './charity-branch';
 import { OrganizationOfficer } from './organization-officer';
 
 const interceptor = new CharityOrganizationUpdateInterceptor();
@@ -55,7 +56,7 @@ CharityOrganizationUpdate
 
   complianceOfficerList!: OrganizationOfficer[];
   charityContactOfficerList!: OrganizationOfficer[];
-
+  charityBranchList!: CharityBranch[];
 
   buildMetaDataForm(controls = true) {
     const {
@@ -119,8 +120,8 @@ CharityOrganizationUpdate
       registrationAuthority: controls
         ? [registrationAuthority, [CustomValidators.required]]
         : registrationAuthority,
-      taxCardNo,
-      unifiedEconomicRecord,
+      taxCardNo: controls ? [taxCardNo] : taxCardNo,
+      unifiedEconomicRecord: controls ? [unifiedEconomicRecord] : unifiedEconomicRecord,
     };
   }
   buildContactInformationForm(controls = true) {

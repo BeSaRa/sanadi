@@ -19,6 +19,7 @@ import { ForeignCountriesProjectsPopupComponent } from './popups/foreign-countri
 import { CoordinationWithOrganizationsRequestComponent } from './pages/coordination-with-organizations-request/coordination-with-organizations-request.component';
 import { CharityOrganizationUpdateComponent } from './pages/charity-organization-update/charity-organization-update.component';
 import { OrganizationOfficersComponent } from './shared/organization-officers/organization-officers.component';
+import { CharityBranchComponent } from './shared/charity-branch/charity-branch.component';
 
 
 @NgModule({
@@ -36,6 +37,7 @@ import { OrganizationOfficersComponent } from './shared/organization-officers/or
     CoordinationWithOrganizationsRequestComponent,
     CharityOrganizationUpdateComponent,
     OrganizationOfficersComponent,
+    CharityBranchComponent,
   ],
   imports: [
     CommonModule,

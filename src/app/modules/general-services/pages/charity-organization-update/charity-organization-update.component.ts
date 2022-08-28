@@ -21,6 +21,7 @@ import { EServicesGenericComponent } from '@app/generics/e-services-generic-comp
 import { IKeyValue } from '@app/interfaces/i-key-value';
 import { AdminLookup } from '@app/models/admin-lookup';
 import { CharityOrganizationUpdate } from '@app/models/charity-organization-update';
+import { OrganizationOfficer } from '@app/models/organization-officer';
 import { AdminLookupService } from '@app/services/admin-lookup.service';
 import { CharityOrganizationUpdateService } from '@app/services/charity-organization-update.service';
 import { DialogService } from '@app/services/dialog.service';
@@ -58,14 +59,20 @@ export class CharityOrganizationUpdateComponent
     { controlName: 'twitter', label: this.lang.map.twitter },
     { controlName: 'instagram', label: this.lang.map.instagram },
     { controlName: 'youTube', label: this.lang.map.youtube },
-    { controlName: 'snapChat', label: this.lang.map.snapchat }
+    { controlName: 'snapChat', label: this.lang.map.snapchat },
   ];
 
-
-  @ViewChild(OrganizationOfficersComponent, { static: true }) organizationRefs!: OrganizationOfficersComponent;
+  internalBranches: IKeyValue[] = [
+    {
+      controlName: ''
+    }
+  ]
 
   @ViewChildren('tabContent', { read: TemplateRef })
   tabsTemplates!: QueryList<TemplateRef<any>>;
+
+  @ViewChildren('officer')
+  organizationRefs!: QueryList<OrganizationOfficersComponent>;
 
   get metaDataForm(): UntypedFormGroup {
     return this.form.get('metaData') as UntypedFormGroup;
@@ -77,8 +84,6 @@ export class CharityOrganizationUpdateComponent
     public lang: LangService,
     public fb: UntypedFormBuilder,
     public service: CharityOrganizationUpdateService,
-    private employeeService: EmployeeService,
-    private dialog: DialogService,
     private adminLookupService: AdminLookupService
   ) {
     super();
@@ -87,7 +92,6 @@ export class CharityOrganizationUpdateComponent
   ngAfterViewInit(): void {
     const tabsTemplates = this.tabsTemplates.toArray();
     setTimeout(() => {
-      console.log(this.organizationRefs)
       this.tabs = [
         {
           name: 'metaDataTab',
@@ -107,6 +111,18 @@ export class CharityOrganizationUpdateComponent
           title: this.lang.map.complaince_office_data,
           validStatus: () => true,
         },
+        {
+          name: 'liaisonOfficerTab',
+          template: tabsTemplates[3],
+          title: this.lang.map.liaison_office_data,
+          validStatus: () => true,
+        },
+        {
+          name: 'banchTab',
+          template: tabsTemplates[4],
+          title: this.lang.map.lbl_branch,
+          validStatus: () => true
+        }
       ];
       if (!this.accordionView) {
         this.tabs.push({
@@ -163,10 +179,11 @@ export class CharityOrganizationUpdateComponent
   _afterLaunch(): void {
     throw new Error('Method not implemented.');
   }
-  _prepareModel():
-    | CharityOrganizationUpdate
-    | Observable<CharityOrganizationUpdate> {
-    console.log(this.form.value);
+  _prepareModel(): CharityOrganizationUpdate | Observable<CharityOrganizationUpdate> {
+    const arr = this.organizationRefs.toArray();
+    const charityOfficers = arr[1].list;
+    const complianceOfficers = arr[0].list;
+
     return new CharityOrganizationUpdate().clone({
       ...this.contactInformationForm.value,
       ...this.metaDataForm.value,
