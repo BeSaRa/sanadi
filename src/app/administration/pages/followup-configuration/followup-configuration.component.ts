@@ -11,7 +11,6 @@ import {DialogService} from '@app/services/dialog.service';
 import {ToastService} from '@app/services/toast.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {Observable, of, Subject} from 'rxjs';
-import {UntypedFormControl} from '@angular/forms';
 import {SortEvent} from '@contracts/sort-event';
 import {CommonUtils} from '@helpers/common-utils';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
@@ -32,12 +31,10 @@ export class FollowupConfigurationComponent extends AdminGenericComponent<Follow
   }
 
   displayedColumns: string[] = ['name', 'followUpType', 'requestType', 'responsibleTeamId', 'concernedTeamId', 'days', 'actions'];
-  filterControl: UntypedFormControl = new UntypedFormControl('');
-  add$: Subject<any> = new Subject<any>();
+
   view$: Subject<any> = new Subject<any>();
   @Input() serviceData!: ServiceData;
   @Input() readonly: boolean = false;
-  commonStatus = CommonStatusEnum;
 
   sortingCallbacks = {
     name: (a: FollowupConfiguration, b: FollowupConfiguration, dir: SortEvent): number => {
@@ -117,31 +114,17 @@ export class FollowupConfigurationComponent extends AdminGenericComponent<Follow
 
   _init() {
     this.listenToView();
-    this.reload$.next(this.serviceData.caseType);
   }
 
   listenToReload() {
     this.reload$
       .pipe(takeUntil((this.destroy$)))
-      .pipe(switchMap((caseType: number) => {
-        return this.service.getByCaseType(caseType);
+      .pipe(switchMap(() => {
+        return this.service.getByCaseType(this.serviceData.caseType);
       }))
       .subscribe((list: FollowupConfiguration[]) => {
         this.models = list;
       });
-  }
-
-  listenToEdit(): void {
-    this.edit$
-      .pipe(takeUntil(this.destroy$))
-      .pipe(exhaustMap((model) => {
-        return (this.useCompositeToEdit ?
-          this.service.editDialogComposite(model).pipe(catchError(_ => of(null))) :
-          this.service.editDialog(model).pipe(catchError(_ => of(null))));
-      }))
-      .pipe(filter((dialog): dialog is DialogRef => !!dialog))
-      .pipe(switchMap(dialog => dialog.onAfterClose$))
-      .subscribe(() => this.reload$.next(this.serviceData.caseType));
   }
 
   listenToView(): void {
@@ -150,21 +133,21 @@ export class FollowupConfigurationComponent extends AdminGenericComponent<Follow
       .pipe(exhaustMap((model) => this.service.openViewDialog(model.id).pipe(catchError(_ => of(null)))))
       .pipe(filter((dialog): dialog is DialogRef => !!dialog))
       .pipe(switchMap(dialog => dialog.onAfterClose$))
-      .subscribe(() => this.reload$.next(this.serviceData.caseType));
+      .subscribe(() => this.reload$.next(null));
   }
 
   listenToAdd(): void {
     this.add$
       .pipe(takeUntil(this.destroy$))
       .pipe(exhaustMap(() => {
-        const result = this.service.addDialogWithDefaults(this.serviceData.id, this.serviceData.caseType);
+        const result = this.service.openCreateDialog(this.serviceData.id, this.serviceData.caseType);
         if (result instanceof DialogRef) {
           return result.onAfterClose$;
         } else {
           return result.pipe(switchMap(ref => ref.onAfterClose$));
         }
       }))
-      .subscribe(() => this.reload$.next(this.serviceData.caseType));
+      .subscribe(() => this.reload$.next(null));
   }
 
   delete(model: FollowupConfiguration) {
@@ -175,7 +158,7 @@ export class FollowupConfigurationComponent extends AdminGenericComponent<Follow
         const sub = model.delete().subscribe(() => {
           // @ts-ignore
           this.toast.success(this.lang.map.msg_delete_x_success.change({x: model.getName()}));
-          this.reload$.next(this.serviceData.caseType);
+          this.reload$.next(null);
           sub.unsubscribe();
         });
       }
@@ -197,13 +180,13 @@ export class FollowupConfigurationComponent extends AdminGenericComponent<Follow
         updateObservable.pipe(takeUntil(this.destroy$))
           .subscribe(() => {
             this.toast.success(this.lang.map.msg_status_x_updated_success.change({x: model.getName()}));
-            this.reload$.next(this.serviceData.caseType);
+            this.reload$.next(null);
           }, () => {
             this.toast.error(this.lang.map.msg_status_x_updated_fail.change({x: model.getName()}));
-            this.reload$.next(this.serviceData.caseType);
+            this.reload$.next(null);
           });
       } else {
-        this.reload$.next(this.serviceData.caseType);
+        this.reload$.next(null);
       }
     });
   }
