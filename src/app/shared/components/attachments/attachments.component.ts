@@ -130,6 +130,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$)
       )
       .subscribe((attachments) => {
+        console.log(this.multiAttachmentTypes);
         this.attachments = attachments;
         this.loadedStatus$.next(true);
       })
