@@ -97,6 +97,16 @@ export class InternalUserService extends CrudWithDialogGenericService<InternalUs
     }));
   }
 
+  openViewDialog(modelId: number): Observable<DialogRef> {
+    return this.getById(modelId).pipe(
+      switchMap((serviceData: InternalUser) => {
+        return of(this.dialog.show<IDialogData<InternalUser>>(InternalUserPopupComponent, {
+          model: serviceData,
+          operation: OperationTypes.VIEW
+        }));
+      })
+    );
+  }
   openUpdateDialog(modelId: number, list: InternalUser[]): Observable<DialogRef> {
     return this.getById(modelId).pipe(
       switchMap((internalUser: InternalUser) => {

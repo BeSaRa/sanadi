@@ -28,7 +28,9 @@ import {CommonStatusEnum} from '@app/enums/common-status.enum';
 })
 export class UserTeamComponent implements OnInit, OnDestroy {
   selectedTeamsIds: number[] = [];
-  displayedColumns: string[] = ['checkbox', 'arName', 'enName', 'status', 'actions'];
+  get displayedColumns() : string[] {
+    return this.readonly ? ['arName', 'enName', 'status'] :  ['checkbox', 'arName', 'enName', 'status', 'actions'];
+  }
   filterControl: UntypedFormControl = new UntypedFormControl();
   selectedTeamControl: UntypedFormControl = new UntypedFormControl();
   teams: Team[] = [];
@@ -36,7 +38,9 @@ export class UserTeamComponent implements OnInit, OnDestroy {
   commonStatusEnum = CommonStatusEnum;
   userTeamsChanged$: Subject<UserTeam[]> = new Subject<UserTeam[]>();
   @Input()
-  operation!: OperationTypes
+  readonly: boolean = false;
+  @Input()
+  operation!: OperationTypes;
   @Input()
   model!: InternalUser | OrgUser;
   @ViewChild(TableComponent)

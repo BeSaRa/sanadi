@@ -3,7 +3,6 @@
     <app-table #table sortableTable [paginator]="paginator"
                [filter]="filterControl.value"
                [useSearchToFilter]="true"
-               [selectable]="true"
                [data]="followupPermissions"
                [columns]="displayedColumns">
       <table cdk-table [dataSource]="table.dataSource" class="table table-striped table-bordered caption-top">
@@ -19,7 +18,7 @@
           <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.internal_followup}}</th>
           <td cdk-cell *cdkCellDef="let row">
             <div class="form-check form-switch">
-              <input type="checkbox" [checked]="row.hasInternal" (change)="updateSwitch(row , 'hasInternal')"
+              <input type="checkbox" [checked]="row.hasInternal" [disabled]="readonly" (change)="updateSwitch(row , 'hasInternal')"
                      class="form-check-input" role="switch">
             </div>
           </td>
@@ -28,7 +27,7 @@
           <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.external_followup}}</th>
           <td cdk-cell *cdkCellDef="let row">
             <div class="form-check form-switch">
-              <input type="checkbox" [checked]="row.hasExternal" (change)="updateSwitch(row, 'hasExternal')"
+              <input type="checkbox" [checked]="row.hasExternal" [disabled]="readonly" (change)="updateSwitch(row, 'hasExternal')"
                      class="form-check-input" role="switch">
             </div>
           </td>
