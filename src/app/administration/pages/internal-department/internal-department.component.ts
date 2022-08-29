@@ -45,26 +45,26 @@ export class InternalDepartmentComponent extends AdminGenericComponent<InternalD
       icon: 'mdi-eye',
       onClick: (item) => this.view$.next(item)
     },
-    // activate
-    {
-      type: 'action',
-      icon: 'mdi-list-status',
-      label: 'btn_activate',
-      onClick: (item) => this.toggleStatus(item),
-      show: (item) => {
-        return item.status === CommonStatusEnum.DEACTIVATED;
-      }
-    },
-    // deactivate
-    {
-      type: 'action',
-      icon: 'mdi-list-status',
-      label: 'btn_deactivate',
-      onClick: (item) => this.toggleStatus(item),
-      show: (item) => {
-        return item.status === CommonStatusEnum.ACTIVATED;
-      }
-    }
+    // // activate
+    // {
+    //   type: 'action',
+    //   icon: 'mdi-list-status',
+    //   label: 'btn_activate',
+    //   onClick: (item) => this.toggleStatus(item),
+    //   show: (item) => {
+    //     return item.status === CommonStatusEnum.DEACTIVATED;
+    //   }
+    // },
+    // // deactivate
+    // {
+    //   type: 'action',
+    //   icon: 'mdi-list-status',
+    //   label: 'btn_deactivate',
+    //   onClick: (item) => this.toggleStatus(item),
+    //   show: (item) => {
+    //     return item.status === CommonStatusEnum.ACTIVATED;
+    //   }
+    // }
   ];
   displayedColumns: string[] = ['arName', 'enName', 'status', 'actions'];
 
