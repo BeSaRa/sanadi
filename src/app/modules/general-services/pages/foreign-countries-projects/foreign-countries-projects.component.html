@@ -18,7 +18,7 @@
             asteriskIfRequired="requestType"
             for="requestType"
             class="form-label"
-            >{{ lang.map.request_type }}</label
+          >{{ lang.map.request_type }}</label
           >
           <ng-select
             [selectOnTab]="true"
@@ -36,7 +36,7 @@
             <ng-option
               *ngFor="let type of requestTypes"
               [value]="type.lookupKey"
-              >{{ type.getName() }}</ng-option
+            >{{ type.getName() }}</ng-option
             >
           </ng-select>
           <app-field-error-message
@@ -81,7 +81,7 @@
             asteriskIfRequired="externalCooperationAuthority"
             for="externalCooperationAuthority"
             class="form-label"
-            >{{ lang.map.external_cooperation_authority }}</label
+          >{{ lang.map.external_cooperation_authority }}</label
           >
           <ng-select
             [selectOnTab]="true"
@@ -98,7 +98,7 @@
             <ng-option
               [value]="option.id"
               *ngFor="let option of externalCooperations"
-              >{{ option.getName() }}</ng-option
+            >{{ option.getName() }}</ng-option
             >
           </ng-select>
           <app-field-error-message
@@ -110,7 +110,7 @@
             asteriskIfRequired="entityClassification"
             for="entityClassification"
             class="form-label"
-            >{{ lang.map.lbl_entity_classification }}</label
+          >{{ lang.map.lbl_entity_classification }}</label
           >
           <input
             type="text"
@@ -125,7 +125,7 @@
             asteriskIfRequired="country"
             for="country"
             class="form-label"
-            >{{ lang.map.country }}</label
+          >{{ lang.map.country }}</label
           >
           <ng-select
             [selectOnTab]="true"
@@ -142,7 +142,7 @@
             <ng-option
               [value]="option.id"
               *ngFor="let option of countries$ | async"
-              >{{ option.getName() }}</ng-option
+            >{{ option.getName() }}</ng-option
             >
           </ng-select>
           <app-field-error-message
@@ -155,10 +155,10 @@
             asteriskIfRequired="needSubject"
             for="needSubject"
             class="form-label"
-            >{{ lang.map.subject_of_need }}</label
+          >{{ lang.map.subject_of_need }}</label
           >
           <input
-            type="text"
+            type="text" maxlength="300"
             validationClasses="needSubject"
             [readonly]="isCancelRequestType || !isEditAllowed"
             trimInput
@@ -174,14 +174,13 @@
         <div class="mb-4 position-relative">
           <label for="classDescription" class="form-label" asteriskIfRequired="classDescription">{{
             lang.map.lbl_description
-          }}</label>
-          <textarea
-            id="classDescription"
-            trimInput
-            [readonly]="isCancelRequestType || !isEditAllowed"
-            validationClasses="classDescription"
-            formControlName="classDescription"
-            class="form-control"
+            }}</label>
+          <textarea id="classDescription"
+                    trimInput [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
+                    [readonly]="isCancelRequestType || !isEditAllowed"
+                    validationClasses="classDescription"
+                    formControlName="classDescription"
+                    class="form-control"
           ></textarea>
           <app-field-error-message
             controlName="classDescription"
@@ -191,14 +190,13 @@
         <div class="mb-4 position-relative">
           <label for="justification" class="form-label" asteriskIfRequired="justification">{{
             lang.map.lbl_justification
-          }}</label>
-          <textarea
-            id="justification"
-            validationClasses="justification"
-            trimInput
-            [readonly]="isCancelRequestType || !isEditAllowed"
-            formControlName="justification"
-            class="form-control"
+            }}</label>
+          <textarea id="justification"
+                    validationClasses="justification"
+                    trimInput [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
+                    [readonly]="isCancelRequestType || !isEditAllowed"
+                    formControlName="justification"
+                    class="form-control"
           ></textarea>
           <app-field-error-message
             controlName="justification"
@@ -208,14 +206,13 @@
         <div class="mb-4 position-relative">
           <label for="recommendation" class="form-label" asteriskIfRequired="recommendation">{{
             lang.map.lbl_recommendation
-          }}</label>
-          <textarea
-            id="recommendation"
-            validationClasses="recommendation"
-            trimInput
-            [readonly]="isCancelRequestType || !isEditAllowed"
-            formControlName="recommendation"
-            class="form-control"
+            }}</label>
+          <textarea id="recommendation"
+                    validationClasses="recommendation"
+                    trimInput [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
+                    [readonly]="isCancelRequestType || !isEditAllowed"
+                    formControlName="recommendation"
+                    class="form-control"
           ></textarea>
           <app-field-error-message
             controlName="recommendation"
@@ -235,12 +232,8 @@
     <ng-template #tabContent>
       <div formGroupName="explanation" class="row">
         <div class="col-sm-12 mb-4 position-relative">
-          <label
-            class="form-label"
-            asteriskIfRequired="description"
-            for="description"
-            >{{ lang.map.special_explanations }}</label
-          >
+          <label class="form-label" asteriskIfRequired="description"
+                 for="description">{{ lang.map.special_explanations }}</label>
           <textarea
             name="description"
             formControlName="description"

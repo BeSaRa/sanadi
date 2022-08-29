@@ -11,13 +11,13 @@
               asteriskIfRequired="projectName"
               for="projectName"
               class="form-label"
-              >{{ lang.map.project_name }}</label
+            >{{ lang.map.project_name }}</label
             >
             <input
               id="projectName"
               validationClasses="projectName"
               formControlName="projectName"
-              trimInput
+              trimInput maxlength="300"
               class="form-control"
             />
             <app-field-error-message
@@ -30,14 +30,14 @@
               asteriskIfRequired="totalCost"
               for="totalCost"
               class="form-label"
-              >{{ lang.map.total_cost }}</label
+            >{{ lang.map.total_cost }}</label
             >
-            <input
-              id="totalCost"
-              validationClasses="totalCost"
-              formControlName="totalCost"
-              trimInput
-              class="form-control"
+            <input id="totalCost"
+                   validationClasses="totalCost"
+                   formControlName="totalCost"
+                   trimInput [mask]="inputMaskPatterns.DECIMAL_WITH_SEPARATOR(2)"
+                   [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR"
+                   class="form-control"
             />
             <app-field-error-message
               controlName="totalCost"
@@ -50,15 +50,14 @@
               class="form-label"
               asteriskIfRequired="projectDescription"
               for="projectDescription"
-              >{{ lang.map.project_description }}</label
+            >{{ lang.map.project_description }}</label
             >
-            <textarea
-              name="projectDescription"
-              formControlName="projectDescription"
-              validationClasses="projectDescription"
-              id="projectDescription"
-              rows="4"
-              class="form-control"
+            <textarea name="projectDescription"
+                      formControlName="projectDescription"
+                      validationClasses="projectDescription"
+                      id="projectDescription"
+                      rows="4" [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
+                      class="form-control"
             ></textarea>
             <app-field-error-message
               controlName="projectDescription"
@@ -70,14 +69,13 @@
           <div class="col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="goals" for="goals">{{
               lang.map.project_goals
-            }}</label>
-            <textarea
-              name="goals"
-              formControlName="goals"
-              validationClasses="goals"
-              id="goals"
-              rows="4"
-              class="form-control"
+              }}</label>
+            <textarea name="goals"
+                      formControlName="goals"
+                      validationClasses="goals"
+                      id="goals"
+                      rows="4" [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
+                      class="form-control"
             ></textarea>
             <app-field-error-message
               controlName="goals"
@@ -91,15 +89,14 @@
               class="form-label"
               asteriskIfRequired="beneficiaries"
               for="beneficiaries"
-              >{{ lang.map.lbl_beneficiaries }}</label
+            >{{ lang.map.lbl_beneficiaries }}</label
             >
-            <textarea
-              name="beneficiaries"
-              formControlName="beneficiaries"
-              validationClasses="beneficiaries"
-              id="beneficiaries"
-              rows="4"
-              class="form-control"
+            <textarea name="beneficiaries"
+                      formControlName="beneficiaries"
+                      validationClasses="beneficiaries"
+                      id="beneficiaries"
+                      rows="4" [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
+                      class="form-control"
             ></textarea>
             <app-field-error-message
               controlName="beneficiaries"
@@ -133,7 +130,6 @@
 ></app-page-header>
 
 <table
-  *ngIf="list.length"
   class="table mt-3 table-striped table-bordered caption-top"
   cdk-table
   [dataSource]="projectNeeds"
@@ -163,8 +159,8 @@
   </ng-container>
   <ng-container cdkColumnDef="totalCost">
     <th cdk-header-cell *cdkHeaderCellDef>{{ lang.map.total_cost }}</th>
-    <td cdk-cell *cdkCellDef="let row">{{ row.totalCost }}</td>
-    <td cdk-footer-cell *cdkFooterCellDef>{{ lang.map.total_cost }}</td>
+    <td cdk-cell class="text-end"
+        *cdkCellDef="let row">{{ (row.totalCost ?? 0) | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</td>
   </ng-container>
   <ng-container cdkColumnDef="actions">
     <th cdk-header-cell *cdkHeaderCellDef>{{ lang.map.lbl_actions }}</th>
@@ -195,12 +191,20 @@
         </button>
       </div>
     </td>
-    <td cdk-footer-cell *cdkFooterCellDef>{{ totalCost | number }}</td>
+  </ng-container>
+  <ng-container cdkColumnDef="totalCostFooterLabel">
+    <td cdk-footer-cell [colSpan]="footerLabelColSpan" class="text-end" *cdkFooterCellDef="let row">
+      <span><b> {{lang.map.total_cost}}: </b></span>
+    </td>
+  </ng-container>
+  <ng-container cdkColumnDef="totalCostFooter">
+    <td cdk-footer-cell class="text-end" *cdkFooterCellDef="let row">
+      <span><b>{{calculateTotalCost() | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR }}</b></span>
+    </td>
   </ng-container>
   <tr cdk-header-row *cdkHeaderRowDef="columns"></tr>
   <tr cdk-row *cdkRowDef="let row; columns: columns"></tr>
-
-  <tr cdk-footer-row *cdkFooterRowDef="columns" class="footer"></tr>
+  <tr cdk-footer-row *cdkFooterRowDef="footerColumns" [hidden]="!list || list.length === 0"></tr>
 
   <tr *cdkNoDataRow>
     <td colspan="100" class="text-center">

@@ -1,24 +1,24 @@
-import { InterceptModel } from '@app/decorators/decorators/intercept-model';
-import { CaseTypes } from '@app/enums/case-types.enum';
-import { WFResponseType } from '@app/enums/wfresponse-type.enum';
-import { HasExternalCooperationAuthority } from '@app/interfaces/has-external-cooperation-authority';
-import { HasRequestType } from '@app/interfaces/has-request-type';
-import { IKeyValue } from '@app/interfaces/i-key-value';
-import { mixinLicenseDurationType } from '@app/mixins/mixin-license-duration';
-import { mixinRequestType } from '@app/mixins/mixin-request-type';
-import { ForeignCountriesProjectsInterceptor } from '@app/model-interceptors/foriegn-countries-projects-interceptor';
-import { FactoryService } from '@app/services/factory.service';
-import { ForeignCountriesProjectsService } from '@app/services/foreign-countries-projects.service';
-import { DialogRef } from '@app/shared/models/dialog-ref';
-import { CustomValidators } from '@app/validators/custom-validators';
-import { AdminResult } from './admin-result';
-import { CaseModel } from './case-model';
-import { ProjectNeeds } from './project-needs';
+import {InterceptModel} from '@app/decorators/decorators/intercept-model';
+import {CaseTypes} from '@app/enums/case-types.enum';
+import {WFResponseType} from '@app/enums/wfresponse-type.enum';
+import {HasExternalCooperationAuthority} from '@app/interfaces/has-external-cooperation-authority';
+import {HasRequestType} from '@app/interfaces/has-request-type';
+import {IKeyValue} from '@app/interfaces/i-key-value';
+import {mixinLicenseDurationType} from '@app/mixins/mixin-license-duration';
+import {mixinRequestType} from '@app/mixins/mixin-request-type';
+import {ForeignCountriesProjectsInterceptor} from '@app/model-interceptors/foriegn-countries-projects-interceptor';
+import {FactoryService} from '@app/services/factory.service';
+import {ForeignCountriesProjectsService} from '@app/services/foreign-countries-projects.service';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {AdminResult} from './admin-result';
+import {CaseModel} from './case-model';
+import {ProjectNeeds} from './project-needs';
 
 const _RequestType = mixinLicenseDurationType(mixinRequestType(CaseModel));
-const { send, receive } = new ForeignCountriesProjectsInterceptor();
+const {send, receive} = new ForeignCountriesProjectsInterceptor();
 
-@InterceptModel({ send, receive })
+@InterceptModel({send, receive})
 export class ForeignCountriesProjects extends _RequestType<ForeignCountriesProjectsService, ForeignCountriesProjects> implements HasRequestType, HasExternalCooperationAuthority {
   public service!: ForeignCountriesProjectsService;
 
@@ -58,10 +58,10 @@ export class ForeignCountriesProjects extends _RequestType<ForeignCountriesProje
   }
 
   buildExplanation(controls: boolean = false): any {
-    const { description } = this;
+    const {description} = this;
     return {
       description: controls ? [description, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : description,
-    }
+    };
   }
 
   buildForm(withControls: boolean): IKeyValue {
@@ -77,26 +77,14 @@ export class ForeignCountriesProjects extends _RequestType<ForeignCountriesProje
       entityClassification
     } = this;
     return {
-      oldLicenseFullSerial: withControls
-        ? [oldLicenseFullSerial]
-        : oldLicenseFullSerial,
-      externalCooperationAuthority: withControls
-        ? [externalCooperationAuthority, [CustomValidators.required]]
-        : externalCooperationAuthority,
-      requestType: withControls
-        ? [requestType, [CustomValidators.required]]
-        : requestType,
+      oldLicenseFullSerial: withControls ? [oldLicenseFullSerial] : oldLicenseFullSerial,
+      externalCooperationAuthority: withControls ? [externalCooperationAuthority, [CustomValidators.required]] : externalCooperationAuthority,
+      requestType: withControls ? [requestType, [CustomValidators.required]] : requestType,
       country: withControls ? [country, [CustomValidators.required]] : country,
-      needSubject: withControls
-        ? [needSubject, [CustomValidators.required]]
-        : needSubject,
-      classDescription: withControls
-        ? [classDescription, [CustomValidators.required]]
-        : classDescription,
-      justification: withControls
-        ? [justification, [CustomValidators.required]]
-        : justification,
-      recommendation,
+      needSubject: withControls ? [needSubject, [CustomValidators.required, CustomValidators.maxLength(300)]] : needSubject,
+      classDescription: withControls ? [classDescription, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : classDescription,
+      justification: withControls ? [justification, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : justification,
+      recommendation: withControls ? [recommendation, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : recommendation,
       entityClassification
     };
   }
