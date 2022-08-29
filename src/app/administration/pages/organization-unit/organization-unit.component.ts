@@ -46,15 +46,13 @@ export class OrganizationUnitComponent extends AdminGenericComponent<OrgUnit, Or
       }
     },
     // delete
-    // {
-    //   type: 'action',
-    //   label: 'btn_delete',
-    //   icon: 'mdi-close-box',
-    //   onClick: (item: OrgUnit) => this.deactivate(item),
-    //   show: () => {
-    //     return this.empService.checkPermissions('ADMIN_DELETE_OU');
-    //   }
-    // },
+    {
+      type: 'action',
+      label: 'btn_delete',
+      icon: 'mdi-close-box',
+      show: () => false,
+      onClick: (item: OrgUnit) => this.deactivate(item)
+    },
     // logs
     {
       type: 'action',
@@ -84,15 +82,16 @@ export class OrganizationUnitComponent extends AdminGenericComponent<OrgUnit, Or
     }
   ];
 
-  // bulkActionsList: IGridAction[] = [
-  //   {
-  //     langKey: 'btn_delete',
-  //     icon: 'mdi-close-box',
-  //     callback: ($event: MouseEvent) => {
-  //       this.deactivateBulk($event);
-  //     }
-  //   }
-  // ];
+  bulkActionsList: IGridAction[] = [
+    {
+      langKey: 'btn_delete',
+      icon: 'mdi-close-box',
+      show: () => false,
+      callback: ($event: MouseEvent) => {
+        this.deactivateBulk($event);
+      }
+    }
+  ];
 
   sortingCallbacks = {
     status: (a: OrgUnit, b: OrgUnit, dir: SortEvent): number => {
