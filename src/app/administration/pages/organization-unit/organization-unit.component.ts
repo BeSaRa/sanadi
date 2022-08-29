@@ -26,7 +26,7 @@ import { AdminGenericComponent } from '@app/generics/admin-generic-component';
 })
 export class OrganizationUnitComponent extends AdminGenericComponent<OrgUnit, OrganizationUnitService> {
   usePagination = true;
-  displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'phoneNumber1', 'email', 'address', 'status', 'statusDateModified', 'actions']; //orgNationality
+  displayedColumns: string[] = ['arName', 'enName', 'phoneNumber1', 'email', 'address', 'status', 'statusDateModified', 'actions']; //orgNationality
   xDeleteMessage = this.langService.map.lbl_organization + ', ' +
     this.langService.map.lbl_org_branches + ', ' + this.langService.map.lbl_org_users;
   orgStatusEnum = OrgStatusEnum;
@@ -46,15 +46,15 @@ export class OrganizationUnitComponent extends AdminGenericComponent<OrgUnit, Or
       }
     },
     // delete
-    {
-      type: 'action',
-      label: 'btn_delete',
-      icon: 'mdi-close-box',
-      onClick: (item: OrgUnit) => this.deactivate(item),
-      show: () => {
-        return this.empService.checkPermissions('ADMIN_DELETE_OU');
-      }
-    },
+    // {
+    //   type: 'action',
+    //   label: 'btn_delete',
+    //   icon: 'mdi-close-box',
+    //   onClick: (item: OrgUnit) => this.deactivate(item),
+    //   show: () => {
+    //     return this.empService.checkPermissions('ADMIN_DELETE_OU');
+    //   }
+    // },
     // logs
     {
       type: 'action',
@@ -84,15 +84,15 @@ export class OrganizationUnitComponent extends AdminGenericComponent<OrgUnit, Or
     }
   ];
 
-  bulkActionsList: IGridAction[] = [
-    {
-      langKey: 'btn_delete',
-      icon: 'mdi-close-box',
-      callback: ($event: MouseEvent) => {
-        this.deactivateBulk($event);
-      }
-    }
-  ];
+  // bulkActionsList: IGridAction[] = [
+  //   {
+  //     langKey: 'btn_delete',
+  //     icon: 'mdi-close-box',
+  //     callback: ($event: MouseEvent) => {
+  //       this.deactivateBulk($event);
+  //     }
+  //   }
+  // ];
 
   sortingCallbacks = {
     status: (a: OrgUnit, b: OrgUnit, dir: SortEvent): number => {
