@@ -29,6 +29,9 @@ import { TransferFundsAbroadCompleteTaskPopupComponent } from './popups/transfer
 import { GeneralAssociationMeetingAttendanceComponent } from './pages/general-association-meeting-attendance/general-association-meeting-attendance.component';
 import { ManageMembersComponent } from './pages/shared/manage-members/manage-members.component';
 import { SelectMemberPopupComponent } from './pages/shared/select-member-popup-component/select-member-popup.component';
+import { ManageInternalUsersComponent } from './pages/shared/manage-internal-users/manage-internal-users.component';
+import { GeneralAssociationMeetingCompleteTaskPopupComponent } from './popups/general-association-meeting-complete-task-popup/general-association-meeting-complete-task-popup.component';
+import { GeneralAssociationMeetingApproveTaskPopupComponent } from './popups/general-association-meeting-approve-task-popup/general-association-meeting-approve-task-popup.component';
 
 
 @NgModule({
@@ -50,7 +53,10 @@ import { SelectMemberPopupComponent } from './pages/shared/select-member-popup-c
     TransferFundsAbroadCompleteTaskPopupComponent,
     GeneralAssociationMeetingAttendanceComponent,
     ManageMembersComponent,
-    SelectMemberPopupComponent
+    SelectMemberPopupComponent,
+    ManageInternalUsersComponent,
+    GeneralAssociationMeetingCompleteTaskPopupComponent,
+    GeneralAssociationMeetingApproveTaskPopupComponent
   ],
   imports: [
     CommonModule,

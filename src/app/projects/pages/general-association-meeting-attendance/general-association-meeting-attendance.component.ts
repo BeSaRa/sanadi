@@ -25,6 +25,7 @@ import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 import {OpenFrom} from '@app/enums/open-from.enum';
+import {GeneralAssociationInternalMember} from '@app/models/general-association-internal-member';
 
 @Component({
   selector: 'general-association-meeting-attendance',
@@ -42,6 +43,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   selectedLicenses: GeneralAssociationMeetingAttendance[] = [];
   selectedLicenseDisplayedColumns: string[] = ['serial', 'requestType', 'licenseStatus', 'actions'];
   hasSearchedForLicense = false;
+  commonCaseStatus = CommonCaseStatus;
 
   requestTypes: Lookup[] = this.lookupService.listByCategory.CollectionRequestType
     .sort((a, b) => a.lookupKey - b.lookupKey);
@@ -56,6 +58,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   isExternalUser!: boolean;
   selectedAdministrativeBoardMembers: GeneralAssociationExternalMember[] = [];
   selectedGeneralAssociationMembers: GeneralAssociationExternalMember[] = [];
+  selectedInternalUsers: GeneralAssociationInternalMember[] = [];
 
   addAgendaFormActive!: boolean;
   agendaForm!: FormGroup;
@@ -111,6 +114,8 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
       explanation: this.fb.group(model.buildExplanation(true))
     });
 
+    this.setDatePeriodValidation();
+
     this._buildDatepickerControlsMap();
     this.fm = new FormManager(this.form, this.lang);
   }
@@ -132,7 +137,22 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
 
     this.selectedAdministrativeBoardMembers = this.model?.administrativeBoardMembers;
     this.selectedGeneralAssociationMembers = this.model?.generalAssociationMembers;
+    this.selectedInternalUsers = this.model?.internalMembersDTO;
     this.agendaItems = this.getAgendaItemsAsJson(this.model?.agenda);
+
+    this.setDatePeriodValidation();
+  }
+
+  private setDatePeriodValidation() {
+    if (this.operation === OperationTypes.CREATE) {
+      this.datepickerOptionsMap = {
+        meetingDate: DateUtils.getDatepickerOptions({disablePeriod: 'past'})
+      };
+    } else {
+      this.datepickerOptionsMap = {
+        meetingDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'})
+      };
+    }
   }
 
   _resetForm(): void {
@@ -147,6 +167,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
       ...this.specialExplanation.getRawValue(),
       administrativeBoardMembers: this.selectedAdministrativeBoardMembers,
       generalAssociationMembers: this.selectedGeneralAssociationMembers,
+      internalMembersDTO: this.selectedInternalUsers,
       agenda: this.getAgendaItemsAsString(this.agendaItems)
     });
   }
@@ -168,6 +189,11 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
 
     if (this.agendaItems && this.agendaItems.length < 1) {
       this.dialog.error(this.lang.map.you_should_add_at_least_one_item_to_meeting_agenda);
+      return false;
+    }
+
+    if(this.isSupervisionAndControlSecretary && this.selectedInternalUsers && this.selectedInternalUsers.length < 1) {
+      this.dialog.error(this.lang.map.you_should_add_at_least_one_member_to_internal_users);
       return false;
     }
 
@@ -280,6 +306,10 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
 
   onGeneralAssociationMembersChanged(memberList: GeneralAssociationExternalMember[]) {
     this.selectedGeneralAssociationMembers = memberList;
+  }
+
+  onInternalMembersChanged(memberList: GeneralAssociationInternalMember[]) {
+    this.selectedInternalUsers = memberList;
   }
 
   // add agenda items functionality
@@ -405,12 +435,20 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     }
   }
 
-  getDatepickerOptionsMap(): DatepickerOptionsMap {
-    return this.operation === OperationTypes.CREATE ? {
-        meetingDate: DateUtils.getDatepickerOptions({disablePeriod: 'past'})
-      } :
-      {
-        meetingDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'})
-      };
+  // getDatepickerOptionsMap(): DatepickerOptionsMap {
+  //   return this.operation === OperationTypes.CREATE ? {
+  //       meetingDate: DateUtils.getDatepickerOptions({disablePeriod: 'past'})
+  //     } :
+  //     {
+  //       meetingDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'})
+  //     };
+  // }
+
+  get isSupervisionAndControlManager(): boolean {
+    return this.employeeService.isSupervisionAndControlManager();
+  }
+
+  get isSupervisionAndControlSecretary(): boolean {
+    return this.employeeService.isSupervisionAndControlSecretary();
   }
 }

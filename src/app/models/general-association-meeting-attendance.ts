@@ -11,6 +11,9 @@ import {GeneralAssociationInternalMember} from '@app/models/general-association-
 import {GeneralAssociationExternalMember} from '@app/models/general-association-external-member';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {CaseTypes} from '@app/enums/case-types.enum';
+import {UntypedFormGroup} from '@angular/forms';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {WFResponseType} from '@app/enums/wfresponse-type.enum';
 
 const _RequestType = mixinRequestType(CaseModel);
 const interceptor = new GeneralAssociationMeetingAttendanceInterceptor();
@@ -75,5 +78,13 @@ export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAss
     return {
       description: controls ? [description, [CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)]] : description,
     };
+  }
+
+  completeWithSave(form: UntypedFormGroup, selectedAdministrativeBoardMembers: GeneralAssociationExternalMember[], selectedGeneralAssociationMembers: GeneralAssociationExternalMember[], agendaItems: string[]): DialogRef {
+    return this.service!.completeTask(this, WFResponseType.COMPLETE, form, selectedAdministrativeBoardMembers, selectedGeneralAssociationMembers, agendaItems);
+  }
+
+  approveWithSave(selectedInternalMembers: GeneralAssociationInternalMember[]): DialogRef {
+    return this.service!.approveTask(this, WFResponseType.APPROVE, selectedInternalMembers);
   }
 }

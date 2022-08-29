@@ -152,7 +152,7 @@ export class ManageMembersComponent implements OnInit {
   }
 
   private openSelectMember(members: GeneralAssociationExternalMember[]) {
-    return this.generalAssociationMeetingService.openSelectMemberDialog(members, true).onAfterClose$ as Observable<GeneralAssociationExternalMember>;
+    return this.generalAssociationMeetingService.openSelectMemberDialog(members, true, false).onAfterClose$ as Observable<GeneralAssociationExternalMember>;
   }
 
   searchMembers() {

@@ -11,15 +11,21 @@ import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
   styleUrls: ['./select-member-popup.component.scss']
 })
 export class SelectMemberPopupComponent{
-  displayedColumns: string[] = ['arabicName', 'englishName', 'identificationNumber', 'jobTitle', 'actions'];
+  displayedColumns: string[] = [];
   label: keyof ILanguageKeys = 'license';
   fileIconsEnum = FileIconsEnum;
 
   constructor(public lang: LangService, private dialogRef: DialogRef,
               @Inject(DIALOG_DATA_TOKEN) public data: {
                 members: any[],
-                select: boolean
+                select: boolean,
+                isInternalMembers: boolean
               }) {
+    if(data.isInternalMembers) {
+      this.displayedColumns = ['arabicName', 'englishName', 'actions'];
+    } else {
+      this.displayedColumns = ['arabicName', 'englishName','identificationNumber', 'jobTitle', 'actions'];
+    }
   }
 
   selectLicense(member: any): void {

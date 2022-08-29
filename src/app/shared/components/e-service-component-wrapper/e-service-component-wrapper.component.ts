@@ -39,6 +39,11 @@ import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {BaseGenericEService} from '@app/generics/base-generic-e-service';
+import {ITransferIndividualFundsAbroadComplete} from '@contracts/i-transfer-individual-funds-abroad-complete';
+import {ITransferFundsAbroadComponent} from '@contracts/i-transfer-funds-abroad-component';
+import {IGeneralAssociationMeetingAttendanceComplete} from '@contracts/i-general-association-meeting-attendance-complete';
+import {IGeneralAssociationMeetingAttendanceComponent} from '@contracts/i-general-association-meeting-attendance-component';
+import {IGeneralAssociationMeetingAttendanceApprove} from '@contracts/i-general-association-meeting-attendance-approve';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -108,6 +113,25 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   ];
   servicesWithNoSaveDraftLaunch: number[] = [
     CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP
+  ];
+
+  completeWithSaveServices: number[] = [
+    CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD,
+    CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE
+  ];
+
+  completeWithSaveStatuses: number[] = [
+    CommonCaseStatus.RETURNED,
+    CommonCaseStatus.UNDER_PROCESSING
+  ];
+
+  approveWithSaveServices: number[] = [
+    CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE
+  ];
+
+  approveWithSaveStatuses: number[] = [
+    CommonCaseStatus.UNDER_PROCESSING,
+    CommonCaseStatus.RETURNED
   ];
 
   finalApproveByMatrixServices: number[] = [
@@ -1015,21 +1039,52 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   }
 
   isCompleteWithSave(item: CaseModel<any, any>): boolean {
-    return item.caseStatus === CommonCaseStatus.RETURNED
-    &&
-     item.caseType !== CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST;
+    return this.completeWithSaveServices.includes(item.getCaseType()) && this.completeWithSaveStatuses.includes(item.caseStatus);
   }
 
   private completeAction(item: CaseModel<any, any>) {
-    item.complete().onAfterClose$.subscribe(actionTaken => {
-      actionTaken && this.navigateToSamePageThatUserCameFrom();
-    });
+    if (this.isCompleteWithSave(item)) {
+      if (item.getCaseType() === CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD) {
+        const model = item as unknown as ITransferIndividualFundsAbroadComplete;
+        const component = this.component as unknown as ITransferFundsAbroadComponent;
+
+        model.completeWithForm(component.form, component.selectedExecutives, component.selectedPurposes).onAfterClose$.subscribe(actionTaken => {
+          actionTaken && this.navigateToSamePageThatUserCameFrom();
+        });
+      } else if (item.getCaseType() === CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE) {
+        const model = item as unknown as IGeneralAssociationMeetingAttendanceComplete;
+        const component = this.component as unknown as IGeneralAssociationMeetingAttendanceComponent;
+
+        model.completeWithSave(component.form, component.selectedAdministrativeBoardMembers, component.selectedGeneralAssociationMembers, component.agendaItems).onAfterClose$.subscribe(actionTaken => {
+          actionTaken && this.navigateToSamePageThatUserCameFrom();
+        });
+      }
+    } else {
+      item.complete().onAfterClose$.subscribe(actionTaken => {
+        actionTaken && this.navigateToSamePageThatUserCameFrom();
+      });
+    }
+  }
+
+  isApproveWithSave(item: CaseModel<any, any>): boolean {
+    return this.approveWithSaveServices.includes(item.getCaseType()) && this.approveWithSaveStatuses.includes(item.caseStatus);
   }
 
   private approveAction(item: CaseModel<any, any>) {
-    item.approve().onAfterClose$.subscribe(actionTaken => {
-      actionTaken && this.navigateToSamePageThatUserCameFrom();
-    });
+    if (this.isApproveWithSave(item)) {
+      if (item.getCaseType() === CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE) {
+        const model = item as unknown as IGeneralAssociationMeetingAttendanceApprove;
+        const component = this.component as unknown as IGeneralAssociationMeetingAttendanceComponent;
+
+        model.approveWithSave(component.selectedInternalUsers).onAfterClose$.subscribe(actionTaken => {
+          actionTaken && this.navigateToSamePageThatUserCameFrom();
+        });
+      }
+    } else {
+      item.approve().onAfterClose$.subscribe(actionTaken => {
+        actionTaken && this.navigateToSamePageThatUserCameFrom();
+      });
+    }
   }
 
   private initialApproveAction(item: CaseModel<any, any>) {

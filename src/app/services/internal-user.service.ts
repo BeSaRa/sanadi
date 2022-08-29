@@ -18,8 +18,9 @@ import { DialogRef } from '@app/shared/models/dialog-ref';
 import { IDialogData } from '@app/interfaces/i-dialog-data';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { CrudWithDialogGenericService } from "@app/generics/crud-with-dialog-generic-service";
-import { CastResponseContainer } from "@decorators/cast-response";
+import {CastResponse, CastResponseContainer} from '@decorators/cast-response';
 import { Pagination } from "@app/models/pagination";
+import {HasInterception} from '@decorators/intercept-model';
 
 @CastResponseContainer({
   $default: {
@@ -116,5 +117,18 @@ export class InternalUserService extends CrudWithDialogGenericService<InternalUs
         }));
       })
     );
+  }
+
+  @HasInterception
+  @CastResponse(() => InternalUser, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  private _searchByArabicOrEnglishName(options?: any): Observable<InternalUser[]> {
+    return this.http.get<InternalUser[]>(this._getServiceURL() + '/search/criteria?arabic-name=' + options.arabicName + '&english-name=' + options.englishName);
+  }
+
+  searchByArabicOrEnglishName(options?: any): Observable<InternalUser[]> {
+    return this._searchByArabicOrEnglishName(options);
   }
 }

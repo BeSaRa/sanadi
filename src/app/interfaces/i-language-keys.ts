@@ -1,4 +1,10 @@
 export interface ILanguageKeys {
+  meeting_points: string;
+  you_should_add_at_least_one_member_to_internal_users: string;
+  can_not_delete_the_decision_maker: string;
+  the_decision_maker: string;
+  add_internal_member: string;
+  internal_members: string;
   you_should_add_at_least_one_item_to_meeting_agenda: string;
   you_should_add_at_least_one_person_to_general_association_members: string;
   you_should_add_at_least_one_person_to_administrative_board_members: string;

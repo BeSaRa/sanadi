@@ -5,6 +5,7 @@ import {FactoryService} from '@services/factory.service';
 import {GeneralAssociationMeetingAttendanceService} from '@services/general-association-meeting-attendance.service';
 import {GeneralAssociationExternalMember} from '@app/models/general-association-external-member';
 import {AdminResult} from '@app/models/admin-result';
+import {GeneralAssociationInternalMember} from '@app/models/general-association-internal-member';
 
 export class GeneralAssociationMeetingAttendanceInterceptor implements IModelInterceptor<GeneralAssociationMeetingAttendance> {
   caseInterceptor?: IModelInterceptor<GeneralAssociationMeetingAttendance> | undefined;
@@ -21,6 +22,9 @@ export class GeneralAssociationMeetingAttendanceInterceptor implements IModelInt
     }
     if (model.generalAssociationMembers && model.generalAssociationMembers.length > 0) {
       model.generalAssociationMembers = model.generalAssociationMembers.map(x => service.externalMembersInterceptor.send(x) as GeneralAssociationExternalMember);
+    }
+    if (model.internalMembersDTO && model.internalMembersDTO.length > 0) {
+      model.internalMembersDTO = model.internalMembersDTO.map(x => service.internalMembersInterceptor.send(x) as GeneralAssociationInternalMember);
     }
     model.meetingDate = DateUtils.getDateStringFromDate(model.meetingDate);
 
@@ -40,6 +44,9 @@ export class GeneralAssociationMeetingAttendanceInterceptor implements IModelInt
     }
     if (model.generalAssociationMembers && model.generalAssociationMembers.length > 0) {
       model.generalAssociationMembers = model.generalAssociationMembers.map(x => service.externalMembersInterceptor.receive(x) as GeneralAssociationExternalMember);
+    }
+    if (model.internalMembersDTO && model.internalMembersDTO.length > 0) {
+      model.internalMembersDTO = model.internalMembersDTO.map(x => service.internalMembersInterceptor.receive(x) as GeneralAssociationInternalMember);
     }
     model.meetingDate = DateUtils.changeDateToDatepicker(model.meetingDate);
 

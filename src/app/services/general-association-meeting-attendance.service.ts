@@ -14,9 +14,19 @@ import {HasInterception} from '@decorators/intercept-model';
 import {Observable} from 'rxjs';
 import {NpoEmployee} from '@app/models/npo-employee';
 import {GeneralAssociationExternalMember} from '@app/models/general-association-external-member';
-import {SelectMemberPopupComponent} from '@app/projects/pages/shared/select-member-popup-component/select-member-popup.component';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {GeneralAssociationExternalMemberInterceptor} from '@app/model-interceptors/general-association-external-member-interceptor';
+import {GeneralAssociationInternalMember} from '@app/models/general-association-internal-member';
+import {SelectMemberPopupComponent} from '@app/projects/pages/shared/select-member-popup-component/select-member-popup.component';
+import {WFResponseType} from '@app/enums/wfresponse-type.enum';
+import {UntypedFormGroup} from '@angular/forms';
+import {
+  GeneralAssociationMeetingCompleteTaskPopupComponent
+} from '@app/projects/popups/general-association-meeting-complete-task-popup/general-association-meeting-complete-task-popup.component';
+import {
+  GeneralAssociationMeetingApproveTaskPopupComponent
+} from '@app/projects/popups/general-association-meeting-approve-task-popup/general-association-meeting-approve-task-popup.component';
+import {GeneralAssociationInternalMemberInterceptor} from '@app/model-interceptors/general-association-internal-member-interceptor';
 
 @CastResponseContainer({
   $default: {
@@ -33,6 +43,7 @@ export class GeneralAssociationMeetingAttendanceService extends BaseGenericEServ
   caseStatusIconMap: Map<number, string> = new Map<number, string>();
   searchColumns: string[] = [];
   externalMembersInterceptor: GeneralAssociationExternalMemberInterceptor = new GeneralAssociationExternalMemberInterceptor();
+  internalMembersInterceptor: GeneralAssociationInternalMemberInterceptor = new GeneralAssociationInternalMemberInterceptor();
 
   constructor(private urlService: UrlService,
               public domSanitizer: DomSanitizer,
@@ -68,10 +79,11 @@ export class GeneralAssociationMeetingAttendanceService extends BaseGenericEServ
     return this._searchNpoEmployees(options);
   }
 
-  openSelectMemberDialog(members: GeneralAssociationExternalMember[], select = true): DialogRef {
+  openSelectMemberDialog(members: GeneralAssociationExternalMember[] | GeneralAssociationInternalMember[], select = true, isInternalMembers: boolean): DialogRef {
     return this.dialog.show(SelectMemberPopupComponent, {
       members,
-      select
+      select,
+      isInternalMembers
     });
   }
 
@@ -99,4 +111,24 @@ export class GeneralAssociationMeetingAttendanceService extends BaseGenericEServ
     return this.urlService;
   }
 
+  completeTask(model: GeneralAssociationMeetingAttendance, action: WFResponseType, form: UntypedFormGroup, selectedAdministrativeBoardMembers: GeneralAssociationExternalMember[], selectedGeneralAssociationMembers: GeneralAssociationExternalMember[], agendaItems: string[]): DialogRef {
+    return this.dialog.show(GeneralAssociationMeetingCompleteTaskPopupComponent, {
+      model,
+      actionType: action,
+      service: this,
+      form,
+      selectedAdministrativeBoardMembers,
+      selectedGeneralAssociationMembers,
+      agendaItems
+    });
+  }
+
+  approveTask(model: GeneralAssociationMeetingAttendance, action: WFResponseType, selectedInternalMembers: GeneralAssociationInternalMember[]): DialogRef {
+    return this.dialog.show(GeneralAssociationMeetingApproveTaskPopupComponent, {
+      model,
+      actionType: action,
+      service: this,
+      selectedInternalMembers
+    });
+  }
 }

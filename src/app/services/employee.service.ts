@@ -80,6 +80,10 @@ export class EmployeeService {
     supervisionAndControlManager: {
       authName: 'Supervision and Control Manager',
       ldapGroupName: 'Supervision_and_Control_Manager'
+    },
+    supervisionAndControlSecretary: {
+      authName: 'Supervision and Control Manager',
+      ldapGroupName: 'Supervision_and_Control_Manager'
     }
   };
 
@@ -312,6 +316,10 @@ export class EmployeeService {
   }
 
   isSupervisionAndControlManager(compareBy: 'authName' | 'ldapGroupName' = 'authName'): boolean {
+    return this._isInTeam(this.userTeamsMap.supervisionAndControlManager, compareBy);
+  }
+
+  isSupervisionAndControlSecretary(compareBy: 'authName' | 'ldapGroupName' = 'authName'): boolean {
     return this._isInTeam(this.userTeamsMap.supervisionAndControlManager, compareBy);
   }
 
