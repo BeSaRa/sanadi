@@ -251,7 +251,7 @@
                   <th *cdkHeaderCellDef cdk-header-cell> {{lang.map.lbl_actions}}</th>
                   <td *cdkCellDef="let row" cdk-cell class="table-actions">
                     <div class="d-flex flex-row">
-                      <button (click)="removeMember($event, row)"
+                      <button (click)="removeAgendaItem($event, row)"
                               [disabled]="(readonly || addAgendaFormActive)"
                               class="btn btn-link outline-none" tooltip="{{lang.map.btn_remove}}">
                         <i class="mdi mdi-close-box"></i>
@@ -279,17 +279,82 @@
     <ng-container>
       <ng-template #internal_users>
         <manage-internal-users (memberListChanged)="onInternalMembersChanged($event)"
-                        [selectedInternalUsers]="selectedInternalUsers"
-                        [isExternalUser]="isExternalUser"
-                        [readonly]="!model?.taskDetails?.isClaimed() || !isSupervisionAndControlSecretary || (model?.getCaseStatus() !== commonCaseStatus.UNDER_PROCESSING && model?.getCaseStatus() !== commonCaseStatus.RETURNED)"></manage-internal-users>
+                               [selectedInternalUsers]="selectedInternalUsers"
+                               [isExternalUser]="isExternalUser"
+                               [readonly]="!model?.taskDetails?.isClaimed() || !isSupervisionAndControlSecretary || (model?.getCaseStatus() !== commonCaseStatus.UNDER_PROCESSING && model?.getCaseStatus() !== commonCaseStatus.RETURNED)"></manage-internal-users>
       </ng-template>
     </ng-container>
     <ng-container>
       <ng-template #meeting_points>
-        <manage-internal-users (memberListChanged)="onInternalMembersChanged($event)"
-                               [selectedInternalUsers]="selectedInternalUsers"
-                               [isExternalUser]="isExternalUser"
-                               [readonly]="!model?.taskDetails?.isClaimed() || !isSupervisionAndControlSecretary || (model?.getCaseStatus() !== commonCaseStatus.UNDER_PROCESSING && model?.getCaseStatus() !== commonCaseStatus.RETURNED)"></manage-internal-users>
+        <div class="row">
+          <div class="col">
+            <h1 class="h6 text-primary m-0 d-inline-block">{{lang.map.main_meeting_points}}</h1>
+            <button class="btn btn-link outline-none"
+                    tooltip="{{lang.map.add_main_meeting_point}}" (click)="addMainItem()">
+              <i class="mdi mdi-plus-box"></i></button>
+          </div>
+          <div class="main-point-container mb-3" [formGroup]="$any(meetingPointsForm)"
+               *ngFor="let mainItem of meetingPointsForm?.controls; let i=index">
+            <div class="row" [formGroupName]="i">
+              <div class="col">
+                <div class="row">
+                  <div class="col-md-4 col-sm-12 mb-4 position-relative">
+                    <label asteriskIfRequired="enName" class="form-label"
+                           [for]="'enName' + i">{{lang.map.main_point_name}}</label>
+                    <input class="form-control"
+                           formControlName="enName"
+                           [id]="'enName' + i" validationClasses="enName">
+                    <app-field-error-message controlName="enName"></app-field-error-message>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <h1 class="h6 text-primary m-0 d-inline-block">{{lang.map.sub_points}}</h1>
+                    <button class="btn btn-link outline-none"
+                            tooltip="{{lang.map.add_sub_meeting_point}}" (click)="addSubItem(i)">
+                      <i class="mdi mdi-plus-box"></i></button>
+                  </div>
+                </div>
+                <div formGroupName="meetingSubItem">
+                  <div *ngFor="let subItem of getSubItems(i)?.controls; let j=index">
+                    <div class="row" [formGroupName]="j">
+                      <div class="col-md-4 col-sm-12 mb-4 position-relative">
+                        <label asteriskIfRequired="enName" class="form-label"
+                               [for]="'enName' + i + j">{{lang.map.lbl_description}}</label>
+                        <input class="form-control"
+                               formControlName="enName"
+                               [id]="'enName' + i + j" validationClasses="enName">
+                        <app-field-error-message controlName="enName"></app-field-error-message>
+                      </div>
+                      <div class="col-md-4 col-sm-12 mb-4 position-relative">
+                        <label asteriskIfRequired="comment" class="form-label"
+                               [for]="'comment' + i + j">{{lang.map.notes}}</label>
+                        <input class="form-control"
+                               formControlName="comment"
+                               [id]="'comment' + i + j" validationClasses="comment">
+                        <app-field-error-message controlName="comment"></app-field-error-message>
+                      </div>
+                      <div class="col-md-4 mt-5 form-check form-switch">
+                        <div class="ms-3">
+                          <input class="form-check-input" type="checkbox" [id]="'respectTerms' + i + j"
+                                 formControlName="respectTerms">
+                          <label class="form-check-label"
+                                 [for]="'respectTerms' + i + j">{{lang.map.lbl_status}}</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 text-center action-container mb-3">
+                <button [disabled]="!meetingPointsForm.valid" (click)="saveMeetingPoints()"
+                        class="btn btn-primary">{{lang.map.save_meeting_points}}</button>
+              </div>
+            </div>
+          </div>
+        </div>
       </ng-template>
     </ng-container>
     <ng-container formGroupName="explanation">

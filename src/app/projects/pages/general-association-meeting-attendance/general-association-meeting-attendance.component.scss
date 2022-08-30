@@ -1,3 +1,10 @@
 .action-container > *:not(:first-child) {
   margin-left: 10px;
 }
+
+.main-point-container {
+  border: 1px solid rgba(154, 38, 75, 0.5);
+  border-radius: 0.25rem;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}

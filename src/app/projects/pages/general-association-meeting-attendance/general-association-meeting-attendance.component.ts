@@ -1,5 +1,5 @@
 import {AfterViewInit, ChangeDetectorRef, Component} from '@angular/core';
-import {AbstractControl, FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormControl, FormGroup, UntypedFormArray} from '@angular/forms';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {SaveTypes} from '@app/enums/save-types';
 import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
@@ -65,8 +65,10 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   agendaItems: string[] = [];
   selectedAgendaItem!: string | null;
   selectedAgendaItemIndex!: number | null;
-
   agendaItemsDisplayedColumns: string[] = ['index', 'description', 'actions'];
+
+  // meeting points form
+  meetingPointsForm!: UntypedFormArray;
 
   constructor(public lang: LangService,
               public fb: FormBuilder,
@@ -105,6 +107,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     // load initials here
     this.isExternalUser = this.employeeService.isExternalUser();
     this.buildAgendaForm();
+    this.buildMeetingPointsForm();
   }
 
   _buildForm(): void {
@@ -366,7 +369,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     this.agendaForm.reset();
   }
 
-  removeMember(event: MouseEvent, item: string) {
+  removeAgendaItem(event: MouseEvent, item: string) {
     event.preventDefault();
     this.agendaItems = this.agendaItems.filter(x => x != item);
     this.resetAgendaForm();
@@ -450,5 +453,53 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
 
   get isSupervisionAndControlSecretary(): boolean {
     return this.employeeService.isSupervisionAndControlSecretary();
+  }
+
+  // meeting points functionality
+  buildMeetingPointsForm(): void {
+    this.meetingPointsForm = this.fb.array([]);
+  }
+
+  get mainItems() : UntypedFormArray {
+    return this.meetingPointsForm as UntypedFormArray
+  }
+
+  newMainItem(): FormGroup {
+    return this.fb.group({
+      enName: [null, [CustomValidators.required]],
+      meetingSubItem: this.fb.array([])
+    })
+  }
+
+  addMainItem() {
+    this.mainItems.push(this.newMainItem());
+  }
+
+  removeMainItem(i:number) {
+    this.mainItems.removeAt(i);
+  }
+
+  getSubItems(index: number) : UntypedFormArray {
+    return this.meetingPointsForm.at(index).get('meetingSubItem') as UntypedFormArray;
+  }
+
+  newSubItem(): FormGroup {
+    return this.fb.group({
+      enName: [null, [CustomValidators.required]],
+      comment: [null, []],
+      respectTerms: [false, []],
+    })
+  }
+
+  addSubItem(index: number) {
+    (this.meetingPointsForm.at(index).get('meetingSubItem') as UntypedFormArray).push(this.newSubItem());
+  }
+
+  removeSubItem(mainItemIndex: number, index: number) {
+    this.getSubItems(mainItemIndex).removeAt(index);
+  }
+
+  saveMeetingPoints() {
+    console.log('form', this.meetingPointsForm);
   }
 }

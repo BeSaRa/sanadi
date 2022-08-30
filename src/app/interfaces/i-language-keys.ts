@@ -1,4 +1,11 @@
 export interface ILanguageKeys {
+  save_meeting_points: string;
+  main_point_name: string;
+  sub_points: string;
+  main_meeting_points: string;
+  add_sub_meeting_point: string;
+  meeting_point_number_x: string;
+  add_main_meeting_point: string;
   meeting_points: string;
   you_should_add_at_least_one_member_to_internal_users: string;
   can_not_delete_the_decision_maker: string;
