@@ -7,9 +7,8 @@ import {LangService} from '@app/services/lang.service';
 import {InternalUserService} from '@app/services/internal-user.service';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 import { Subject, of } from 'rxjs';
-import {exhaustMap, filter, map, mapTo, takeUntil, tap} from 'rxjs/operators';
+import {exhaustMap, filter, takeUntil} from 'rxjs/operators';
 import {DialogService} from '@app/services/dialog.service';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {ToastService} from '@app/services/toast.service';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
 import {SortEvent} from '@app/interfaces/sort-event';
@@ -70,7 +69,6 @@ export class InternalUserComponent extends AdminGenericComponent<InternalUser, I
   ];
 
   constructor(public lang: LangService,
-              private dialog: DialogService,
               private toast: ToastService,
               public service: InternalUserService) {
     super();
