@@ -241,9 +241,15 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
   }
 
   get popupTitle(): string {
-    return this.operation === OperationTypes.CREATE ? this.langService.map.lbl_add_org_user : this.langService.map.lbl_edit_org_user;
+    if (this.operation === OperationTypes.CREATE) {
+      return this.langService.map.lbl_add_org_user;
+    } else if (this.operation === OperationTypes.UPDATE) {
+      return this.langService.map.lbl_edit_org_user;
+    } else if (this.operation === OperationTypes.VIEW) {
+      return this.langService.map.view;
+    }
+    return '';
   }
-
   get customRoleControl(): UntypedFormControl {
     return this.fm.getFormField('permissions.customRoleId') as UntypedFormControl;
   }
