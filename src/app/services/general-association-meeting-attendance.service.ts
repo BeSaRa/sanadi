@@ -10,7 +10,7 @@ import {DynamicOptionsService} from './dynamic-options.service';
 import {UrlService} from './url.service';
 import {FactoryService} from '@services/factory.service';
 import {GeneralAssociationMeetingAttendanceSearchCriteria} from '@app/models/general-association-meeting-attendance-search-criteria';
-import {HasInterception} from '@decorators/intercept-model';
+import {HasInterception, InterceptParam} from '@decorators/intercept-model';
 import {Observable} from 'rxjs';
 import {NpoEmployee} from '@app/models/npo-employee';
 import {GeneralAssociationExternalMember} from '@app/models/general-association-external-member';
@@ -27,6 +27,7 @@ import {
   GeneralAssociationMeetingApproveTaskPopupComponent
 } from '@app/projects/popups/general-association-meeting-approve-task-popup/general-association-meeting-approve-task-popup.component';
 import {GeneralAssociationInternalMemberInterceptor} from '@app/model-interceptors/general-association-internal-member-interceptor';
+import {MeetingAttendanceReport} from '@app/models/meeting-attendance-report';
 
 @CastResponseContainer({
   $default: {
@@ -130,5 +131,18 @@ export class GeneralAssociationMeetingAttendanceService extends BaseGenericEServ
       service: this,
       selectedInternalMembers
     });
+  }
+
+  @HasInterception
+  @CastResponse(() => MeetingAttendanceReport, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  private _addMeetingPoints(@InterceptParam() meetingItems: MeetingAttendanceReport, caseId?: string): Observable<MeetingAttendanceReport> {
+    return this.http.post<MeetingAttendanceReport>(this._getURLSegment() + '/items/add-update/' + caseId, meetingItems);
+  }
+
+  addMeetingPoints(meetingItems: MeetingAttendanceReport, caseId?: string): Observable<MeetingAttendanceReport> {
+    return this._addMeetingPoints(meetingItems, caseId);
   }
 }

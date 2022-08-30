@@ -7,4 +7,42 @@
   border-radius: 0.25rem;
   padding-top: 10px;
   padding-bottom: 10px;
+  position: relative;
+}
+
+.sub-points-container .sub-point-container:not(:first-child) {
+  padding-top: 10px;
+  border-top: 1px solid rgba(154, 38, 75, 0.5);
+}
+
+.sub-points-container .sub-point-container:not(:last-child) {
+  margin-bottom: 1.5rem;
+}
+
+.sub-point-container {
+  position: relative;
+}
+
+.remove-main-item-right {
+  position: absolute;
+  right: -5px;
+  top: 0;
+}
+
+.remove-main-item-left {
+  position: absolute;
+  left: -5px;
+  top: 0;
+}
+
+.remove-sub-item-right {
+  position: absolute;
+  right: 0;
+  top: 25px;
+}
+
+.remove-sub-item-left {
+  position: absolute;
+  left: 0;
+  top: 25px;
 }

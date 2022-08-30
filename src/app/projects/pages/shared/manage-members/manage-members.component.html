@@ -4,7 +4,7 @@
       <div class="col">
         <h1 class="h6 text-primary m-0 d-inline-block">{{lang.map[addLabel]}}</h1>
         <button class="btn btn-link outline-none"
-                tooltip="{{lang.map.btn_add}}" (click)="openAddAdministrativeBoardMemberForm()">
+                tooltip="{{lang.map.btn_add}}" (click)="openAddAdministrativeBoardMemberForm()" [disabled]="(readonly)">
           <i class="mdi mdi-plus-box"></i></button>
       </div>
     </div>

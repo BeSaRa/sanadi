@@ -1,4 +1,9 @@
 export interface ILanguageKeys {
+  respect_terms: string;
+  last_sub_meeting_point_can_not_be_deleted: string;
+  last_main_meeting_point_can_not_be_deleted: string;
+  delete_sub_meeting_point: string;
+  delete_main_meeting_point: string;
   save_meeting_points: string;
   main_point_name: string;
   sub_points: string;
