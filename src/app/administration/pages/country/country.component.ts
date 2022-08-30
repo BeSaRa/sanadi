@@ -1,3 +1,9 @@
+import { filter } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { exhaustMap } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
 import { Country } from '@app/models/country';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
@@ -33,6 +39,7 @@ export class CountryComponent extends AdminGenericComponent<Country, CountryServ
   @Input() headerTitle: keyof ILanguageKeys = {} as keyof ILanguageKeys;
   bulkActions: IGridAction[] = [];
   commonStatus = CommonStatusEnum;
+  view$: Subject<Country> = new Subject<Country>();
 
   @ViewChild('table') table!: TableComponent;
 
@@ -79,6 +86,7 @@ export class CountryComponent extends AdminGenericComponent<Country, CountryServ
   protected _init(): void {
     this.buildActions();
     this.buildBulkActions();
+    this.listenToView();
   }
 
   ngAfterViewInit(): void {
@@ -98,6 +106,17 @@ export class CountryComponent extends AdminGenericComponent<Country, CountryServ
         sub.unsubscribe();
       });
     });
+  }
+
+  listenToView(): void {
+    this.view$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(exhaustMap((model) => {
+        return this.service.openViewDialog(model.id).pipe(catchError(_ => of(null)));
+      }))
+      .pipe(filter((dialog): dialog is DialogRef => !!dialog))
+      .pipe(switchMap(dialog => dialog.onAfterClose$))
+      .subscribe(() => this.reload$.next(null));
   }
 
   editCountry(country: Country, tab: 'basic' = 'basic'): void {
