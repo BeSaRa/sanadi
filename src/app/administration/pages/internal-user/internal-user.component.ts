@@ -8,7 +8,6 @@ import {InternalUserService} from '@app/services/internal-user.service';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 import { Subject, of } from 'rxjs';
 import {exhaustMap, filter, takeUntil} from 'rxjs/operators';
-import {DialogService} from '@app/services/dialog.service';
 import {ToastService} from '@app/services/toast.service';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
 import {SortEvent} from '@app/interfaces/sort-event';

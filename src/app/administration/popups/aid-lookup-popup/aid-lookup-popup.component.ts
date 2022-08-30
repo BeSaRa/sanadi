@@ -1,20 +1,20 @@
-import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, Inject, ViewChild} from '@angular/core';
-import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {LangService} from '@app/services/lang.service';
-import {AidLookup} from '@app/models/aid-lookup';
-import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
-import {IDialogData} from '@app/interfaces/i-dialog-data';
-import {ToastService} from '@app/services/toast.service';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {AidTypes} from '@app/enums/aid-types.enum';
-import {Observable} from 'rxjs';
-import {Lookup} from '@app/models/lookup';
-import {LookupService} from '@app/services/lookup.service';
-import {IKeyValue} from '@app/interfaces/i-key-value';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
-import {AidLookupStatusEnum} from '@app/enums/status.enum';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Inject, ViewChild } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { LangService } from '@app/services/lang.service';
+import { AidLookup } from '@app/models/aid-lookup';
+import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
+import { IDialogData } from '@app/interfaces/i-dialog-data';
+import { ToastService } from '@app/services/toast.service';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { AidTypes } from '@app/enums/aid-types.enum';
+import { Observable } from 'rxjs';
+import { Lookup } from '@app/models/lookup';
+import { LookupService } from '@app/services/lookup.service';
+import { IKeyValue } from '@app/interfaces/i-key-value';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { AdminGenericDialog } from '@app/generics/admin-generic-dialog';
+import { AidLookupStatusEnum } from '@app/enums/status.enum';
 
 @Component({
   selector: 'app-aid-lookup-popup',
@@ -36,17 +36,17 @@ export class AidLookupPopupComponent extends AdminGenericDialog<AidLookup> imple
   @ViewChild('dialogContent') dialogContent!: ElementRef;
 
   tabsData: IKeyValue = {
-    basic: {name: 'basic'},
-    childAids: {name: 'childAids'}
+    basic: { name: 'basic' },
+    childAids: { name: 'childAids' }
   };
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<AidLookup>,
-              private toast: ToastService,
-              private lookupService: LookupService,
-              public langService: LangService,
-              public dialogRef: DialogRef,
-              public fb: UntypedFormBuilder,
-              private cd: ChangeDetectorRef) {
+    private toast: ToastService,
+    private lookupService: LookupService,
+    public langService: LangService,
+    public dialogRef: DialogRef,
+    public fb: UntypedFormBuilder,
+    private cd: ChangeDetectorRef) {
     super();
     this.model = data.model;
     this.parentId = data.parentId;
@@ -60,6 +60,9 @@ export class AidLookupPopupComponent extends AdminGenericDialog<AidLookup> imple
     this.aidLookupStatusList = this.lookupService.listByCategory.AidLookupStatus;
   }
 
+  get readonly(): boolean {
+    return this.operation === OperationTypes.VIEW;
+  }
   ngAfterViewInit(): void {
     if (this.operation === OperationTypes.UPDATE) {
       this.displayFormValidity(null, this.dialogContent.nativeElement);
@@ -71,17 +74,19 @@ export class AidLookupPopupComponent extends AdminGenericDialog<AidLookup> imple
     let title!: string;
     switch (this.aidType) {
       case AidTypes.CLASSIFICATIONS:
-        title = this.operation === OperationTypes.CREATE ? this.langService.map.lbl_add_aid_class : this.langService.map.lbl_edit_aid_class;
+        title = this.operation === OperationTypes.CREATE ?
+          this.langService.map.lbl_add_aid_class :
+          (this.operation === OperationTypes.UPDATE ? this.langService.map.lbl_edit_aid_class : this.langService.map.view);
         break;
       case AidTypes.MAIN_CATEGORY:
         title = this.operation === OperationTypes.CREATE ?
           this.langService.map.lbl_add_aid_main_category :
-          this.langService.map.lbl_edit_aid_main_category;
+          (this.operation === OperationTypes.UPDATE ? this.langService.map.lbl_edit_aid_main_category : this.langService.map.view);
         break;
       case AidTypes.SUB_CATEGORY:
         title = this.operation === OperationTypes.CREATE ?
           this.langService.map.lbl_add_aid_sub_category :
-          this.langService.map.lbl_edit_aid_sub_category;
+          (this.operation === OperationTypes.UPDATE ? this.langService.map.lbl_edit_aid_sub_category : this.langService.map.view);
         break;
     }
     return title;
@@ -115,7 +120,7 @@ export class AidLookupPopupComponent extends AdminGenericDialog<AidLookup> imple
   }
 
   buildForm(): void {
-    let model = (new AidLookup()).clone({...this.model});
+    let model = (new AidLookup()).clone({ ...this.model });
     model.aidType = this.model.aidType || this.aidType;
 
     if (model.aidType === AidTypes.CLASSIFICATIONS) {
@@ -123,7 +128,12 @@ export class AidLookupPopupComponent extends AdminGenericDialog<AidLookup> imple
     } else {
       model.parent = (this.operation === OperationTypes.CREATE) ? this.parentId : this.model.parent;
     }
-    this.form = this.fb.group(model.buildForm(true), {validators: CustomValidators.validateFieldsStatus(['arName', 'enName', 'aidCode', 'aidType', 'status'])});
+    this.form = this.fb.group(model.buildForm(true), { validators: CustomValidators.validateFieldsStatus(['arName', 'enName', 'aidCode', 'aidType', 'status']) });
+    if (this.readonly) {
+      this.form.disable();
+      this.saveVisible = false;
+      this.validateFieldsVisible = false;
+    }
   }
 
   beforeSave(model: AidLookup, form: UntypedFormGroup): Observable<boolean> | boolean {
@@ -131,12 +141,12 @@ export class AidLookupPopupComponent extends AdminGenericDialog<AidLookup> imple
   }
 
   prepareModel(model: AidLookup, form: UntypedFormGroup): Observable<AidLookup> | AidLookup {
-    return (new AidLookup()).clone({...model, ...form.value});
+    return (new AidLookup()).clone({ ...model, ...form.value });
   }
 
   afterSave(model: AidLookup, dialogRef: DialogRef): void {
     const message = this.operation === OperationTypes.CREATE ? this.langService.map.msg_create_x_success : this.langService.map.msg_update_x_success;
-    this.toast.success(message.change({x: model.getName()}));
+    this.toast.success(message.change({ x: model.getName() }));
     this.model = model;
     this.operation = OperationTypes.UPDATE;
     this.checkIfAidTabEnabled();
