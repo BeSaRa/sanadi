@@ -77,11 +77,11 @@
     <ng-template #servicesTabTemplate>
       <div class="col d-flex justify-content-start align-items-center flex-row mb-3">
         <h1 class="h6 text-primary">{{lang.map.lbl_services}}</h1>
-        <div>
+        <div *ngIf="!readonly">
           <button class="btn icon-btn text-primary" [tooltip]="lang.map.btn_reload" (click)="reload()"><i
             class="mdi mdi-reload"></i></button>
         </div>
-        <div>
+        <div *ngIf="!readonly">
           <button (click)="addService()" class="btn icon-btn text-primary" [tooltip]="lang.map.btn_add"><i
             class="mdi mdi-plus-box"></i></button>
         </div>

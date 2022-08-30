@@ -1,3 +1,10 @@
+import { switchMap } from 'rxjs/operators';
+import { filter } from 'rxjs/operators';
+import { DialogRef } from './../../../shared/models/dialog-ref';
+import { of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { exhaustMap } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 import { Component, ViewChild } from '@angular/core';
 import { LangService } from '@app/services/lang.service';
 import { Subscription } from 'rxjs';
@@ -25,33 +32,27 @@ import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
 export class AttachmentTypesComponent extends AdminGenericComponent<AttachmentType, AttachmentTypeService> {
   usePagination = true;
   list: AttachmentType[] = [];
-  displayedColumns = ['rowSelection', 'arName', 'enName', 'status', 'actions'];
+  displayedColumns = ['arName', 'enName', 'status', 'actions'];
   reloadSubscription!: Subscription;
   filterControl: UntypedFormControl = new UntypedFormControl('');
   commonStatus = CommonStatusEnum;
+  view$: Subject<AttachmentType> = new Subject<AttachmentType>();
 
-  actionsList: IGridAction[] = [
-    {
-      langKey: 'btn_delete',
-      icon: 'mdi-close-box',
-      callback: ($event: MouseEvent) => {
-        this.deleteBulk($event);
-      }
-    }
-  ];
   actions: IMenuItem<AttachmentType>[] = [];
   commonStatusEnum = CommonStatusEnum;
 
   @ViewChild('table') table!: TableComponent;
 
   constructor(public lang: LangService,
-              public service: AttachmentTypeService,
-              private dialogService: DialogService,
-              private sharedService: SharedService,
-              private toast: ToastService) {
+    public service: AttachmentTypeService,
+    private dialogService: DialogService,
+    private sharedService: SharedService,
+    private toast: ToastService) {
     super();
   }
-
+  protected _init() {
+    this.listenToView();
+  }
   get selectedRecords(): AttachmentType[] {
     return this.table.selection.selected;
   }
@@ -92,18 +93,29 @@ export class AttachmentTypesComponent extends AdminGenericComponent<AttachmentTy
   delete(event: MouseEvent, model: AttachmentType): void {
     event.preventDefault();
     // @ts-ignore
-    const message = this.lang.map.msg_confirm_delete_x.change({x: model.getName()});
+    const message = this.lang.map.msg_confirm_delete_x.change({ x: model.getName() });
     this.dialogService.confirm(message)
       .onAfterClose$.subscribe((click: UserClickOn) => {
-      if (click === UserClickOn.YES) {
-        const sub = model.delete().subscribe(() => {
-          // @ts-ignore
-          this.toast.success(this.lang.map.msg_delete_x_success.change({x: model.getName()}));
-          this.reload$.next(null);
-          sub.unsubscribe();
-        });
-      }
-    });
+        if (click === UserClickOn.YES) {
+          const sub = model.delete().subscribe(() => {
+            // @ts-ignore
+            this.toast.success(this.lang.map.msg_delete_x_success.change({ x: model.getName() }));
+            this.reload$.next(null);
+            sub.unsubscribe();
+          });
+        }
+      });
+  }
+
+  listenToView(): void {
+    this.view$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(exhaustMap((model) => {
+        return this.service.openViewDialog(model.id).pipe(catchError(_ => of(null)));
+      }))
+      .pipe(filter((dialog): dialog is DialogRef => !!dialog))
+      .pipe(switchMap(dialog => dialog.onAfterClose$))
+      .subscribe(() => this.reload$.next(null));
   }
 
   deleteBulk($event: MouseEvent): void {
@@ -112,19 +124,19 @@ export class AttachmentTypesComponent extends AdminGenericComponent<AttachmentTy
       const message = this.lang.map.msg_confirm_delete_selected;
       this.dialogService.confirm(message)
         .onAfterClose$.subscribe((click: UserClickOn) => {
-        if (click === UserClickOn.YES) {
-          const ids = this.selectedRecords.map((item) => {
-            return item.id;
-          });
-          const sub = this.service.deleteBulk(ids).subscribe((response) => {
-            this.sharedService.mapBulkResponseMessages(this.selectedRecords, 'id', response)
-              .subscribe(() => {
-                this.reload$.next(null);
-                sub.unsubscribe();
-              });
-          });
-        }
-      });
+          if (click === UserClickOn.YES) {
+            const ids = this.selectedRecords.map((item) => {
+              return item.id;
+            });
+            const sub = this.service.deleteBulk(ids).subscribe((response) => {
+              this.sharedService.mapBulkResponseMessages(this.selectedRecords, 'id', response)
+                .subscribe(() => {
+                  this.reload$.next(null);
+                  sub.unsubscribe();
+                });
+            });
+          }
+        });
     }
   }
 
@@ -133,10 +145,10 @@ export class AttachmentTypesComponent extends AdminGenericComponent<AttachmentTy
     model.update()
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
-        this.toast.success(this.lang.map.msg_status_x_updated_success.change({x: model.getName()}));
+        this.toast.success(this.lang.map.msg_status_x_updated_success.change({ x: model.getName() }));
         this.reload$.next(null);
       }, () => {
-        this.toast.error(this.lang.map.msg_status_x_updated_fail.change({x: model.getName()}));
+        this.toast.error(this.lang.map.msg_status_x_updated_fail.change({ x: model.getName() }));
         this.reload$.next(null);
       });
   }
