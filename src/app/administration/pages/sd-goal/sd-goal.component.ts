@@ -25,7 +25,7 @@ import {DialogRef} from '@app/shared/models/dialog-ref';
 })
 export class SdGoalComponent extends AdminGenericComponent<SDGoal, SDGoalService> implements OnInit {
   usePagination = true;
-  displayedColumns = ['rowSelection', 'arName', 'enName', 'status', 'childCount', 'actions'];
+  displayedColumns = ['arName', 'enName', 'status', 'childCount', 'actions'];
   commonStatusEnum = CommonStatusEnum;
   view$: Subject<SDGoal> = new Subject<SDGoal>();
   actions: IMenuItem<SDGoal>[] = [
@@ -42,13 +42,6 @@ export class SdGoalComponent extends AdminGenericComponent<SDGoal, SDGoalService
       label: 'view',
       icon: ActionIconsEnum.VIEW,
       onClick: (item: SDGoal) => this.view$.next(item)
-    },
-    // delete
-    {
-      type: 'action',
-      icon: ActionIconsEnum.DELETE,
-      label: 'btn_delete',
-      onClick: (item: SDGoal) => this.delete(item)
     },
     // activate
     {
@@ -71,15 +64,6 @@ export class SdGoalComponent extends AdminGenericComponent<SDGoal, SDGoalService
         return !!item.status;
       },
       displayInGrid: false
-    }
-  ];
-  actionsList: IGridAction[] = [
-    {
-      langKey: 'btn_delete',
-      icon: ActionIconsEnum.DELETE,
-      callback: ($event: MouseEvent) => {
-        this.deleteBulk($event);
-      }
     }
   ];
   @ViewChild('table') table!: TableComponent;
