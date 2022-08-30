@@ -1,31 +1,34 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {
   AbstractControl,
   UntypedFormArray,
   UntypedFormBuilder,
   UntypedFormGroup,
 } from '@angular/forms';
-import { CaseTypes } from '@app/enums/case-types.enum';
-import { UserClickOn } from '@app/enums/user-click-on.enum';
-import { ProjectNeed, ProjectNeeds } from '@app/models/project-needs';
-import { DialogService } from '@app/services/dialog.service';
-import { LangService } from '@app/services/lang.service';
-import { ToastService } from '@app/services/toast.service';
-import { ReadinessStatus } from '@app/types/types';
-import { BehaviorSubject, Subject } from 'rxjs';
-import { filter, map, take, takeUntil } from 'rxjs/operators';
+import {CaseTypes} from '@app/enums/case-types.enum';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {ProjectNeed, ProjectNeeds} from '@app/models/project-needs';
+import {DialogService} from '@app/services/dialog.service';
+import {LangService} from '@app/services/lang.service';
+import {ToastService} from '@app/services/toast.service';
+import {ReadinessStatus} from '@app/types/types';
+import {BehaviorSubject, Subject} from 'rxjs';
+import {filter, map, take, takeUntil} from 'rxjs/operators';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {BeneficiaryIncomePeriodicEnum} from '@app/enums/periodic-payment.enum';
 
 @Component({
   selector: 'project-needs',
   templateUrl: './project-needs.component.html',
   styleUrls: ['./project-needs.component.scss'],
 })
-export class ProjectNeedsComponent implements OnInit {
+export class ProjectNeedsComponent implements OnInit, AfterViewInit {
   private _list: ProjectNeeds = [];
   private currentRecord?: ProjectNeed;
   private save$: Subject<any> = new Subject<any>();
+  customValidators = CustomValidators;
+  inputMaskPatterns = CustomValidators.inputMaskPatterns;
 
-  totalCost: number = 0;
   form!: UntypedFormGroup;
   add$: Subject<any> = new Subject<any>();
   columns = [
@@ -36,16 +39,19 @@ export class ProjectNeedsComponent implements OnInit {
     'totalCost',
     'actions',
   ];
+  footerColumns: string[] = ['totalCostFooterLabel', 'totalCostFooter'];
+  footerLabelColSpan: number = this.columns.length - 2;
   projectNeeds = new BehaviorSubject<ProjectNeeds>([]);
   editRecordIndex = -1;
 
   @Input() readonly = false;
   @Input() caseType?: CaseTypes;
+
   @Input() set list(list: ProjectNeeds) {
     this._list = list;
-    this.totalCost = list.reduce((p, c) => p + +(c.totalCost || 0), 0);
     this.projectNeeds.next(this._list);
   }
+
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();
   viewOnly = false;
   private recordChanged$: Subject<ProjectNeed | null> =
@@ -57,7 +63,8 @@ export class ProjectNeedsComponent implements OnInit {
     private fb: UntypedFormBuilder,
     private dialogService: DialogService,
     private toastService: ToastService
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
     this.buildForm();
@@ -66,27 +73,44 @@ export class ProjectNeedsComponent implements OnInit {
     this.listenToSave();
   }
 
+  ngAfterViewInit() {
+    this._setFooterLabelColspan();
+  }
+
   get projectNeedsForm(): UntypedFormArray {
     return this.form.get('projectNeeds') as UntypedFormArray;
   }
+
   // tslint:disable-next-line: adjacent-overload-signatures
   get list(): ProjectNeeds {
     return this._list;
   }
+
   isAddingAllowed(): boolean {
     return !this.readonly;
   }
+
   buildForm(): void {
     this.form = this.fb.group({
       projectNeeds: this.fb.array([]),
     });
   }
+
+  private _setFooterLabelColspan(): void {
+    if (this.readonly) {
+      this.footerLabelColSpan = this.columns.length - 1;
+    } else {
+      this.footerLabelColSpan = this.columns.length - 2;
+    }
+  }
+
   save(): void {
     if (this.readonly || this.viewOnly) {
       return;
     }
     this.save$.next();
   }
+
   cancel(): void {
     this.resetForm();
     this.readyEvent.emit('READY');
@@ -98,12 +122,14 @@ export class ProjectNeedsComponent implements OnInit {
     this.projectNeedsForm.markAsUntouched();
     this.projectNeedsForm.markAsPristine();
   }
+
   private listenToAdd(): void {
     this.add$.pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.viewOnly = false;
       this.recordChanged$.next(new ProjectNeed());
     });
   }
+
   private listenToRecordChange(): void {
     this.recordChanged$
       .pipe(takeUntil(this.destroy$))
@@ -112,9 +138,10 @@ export class ProjectNeedsComponent implements OnInit {
         this.updateForm(this.currentRecord);
       });
   }
+
   private updateForm(projectNeed: ProjectNeed | undefined): void {
     const projectNeedsFormArray = this.projectNeedsForm;
-    console.log(projectNeed);
+    // console.log(projectNeed);
     projectNeedsFormArray.clear();
     if (projectNeed) {
       if (this.viewOnly) {
@@ -130,6 +157,7 @@ export class ProjectNeedsComponent implements OnInit {
       this.readyEvent.emit('READY');
     }
   }
+
   private listenToSave() {
     const bankAccountForm$ = this.save$.pipe(
       map(() => {
@@ -177,6 +205,7 @@ export class ProjectNeedsComponent implements OnInit {
         this.recordChanged$.next(null);
       });
   }
+
   private _updateList(
     record: ProjectNeed | null,
     operation: 'ADD' | 'UPDATE' | 'DELETE' | 'NONE',
@@ -217,6 +246,7 @@ export class ProjectNeedsComponent implements OnInit {
     this.viewOnly = true;
     this.recordChanged$.next(record);
   }
+
   editRow($event: MouseEvent, record: ProjectNeed, index: number) {
     $event.preventDefault();
     if (this.readonly) {
@@ -225,5 +255,18 @@ export class ProjectNeedsComponent implements OnInit {
     this.editRecordIndex = index;
     this.viewOnly = false;
     this.recordChanged$.next(record);
+  }
+
+  calculateTotalCost(): number {
+    if (!this.list || this.list.length === 0) {
+      return 0;
+    } else {
+      return this.list.map(x => {
+        if (!x.totalCost) {
+          return 0;
+        }
+        return Number(Number(x.totalCost).toFixed(2));
+      }).reduce((resultSum, a) => resultSum + a, 0);
+    }
   }
 }
