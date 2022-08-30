@@ -70,7 +70,7 @@ export class SelectLicensePopupComponent {
         caseTypeForView = (requestType === ServiceRequestTypes.NEW) ? CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL : caseType;
         break;
       case CaseTypes.URGENT_INTERVENTION_CLOSURE:
-        caseTypeForView = CaseTypes.URGENT_INTERVENTION_REPORTING;
+        caseTypeForView = CaseTypes.URGENT_INTERVENTION_ANNOUNCEMENT;
         break;
       default:
         caseTypeForView = caseType;

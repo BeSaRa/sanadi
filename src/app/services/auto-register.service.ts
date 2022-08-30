@@ -30,7 +30,7 @@ import {
 } from '@app/projects/pages/internal-bank-account-approval/internal-bank-account-approval.component';
 
 import { UrgentJointReliefCampaignComponent } from '@app/projects/pages/urgent-joint-relief-campaign/urgent-joint-relief-campaign.component';
-import { UrgentInterventionReportComponent } from '@app/modules/urgent-intervention/pages/urgent-intervention-report/urgent-intervention-report.component';
+import { UrgentInterventionAnnouncementComponent } from '@app/modules/urgent-intervention/pages/urgent-intervention-announcement/urgent-intervention-announcement.component';
 import {
   UrgentInterventionClosureComponent
 } from '@app/modules/urgent-intervention/pages/urgent-intervention-closure/urgent-intervention-closure.component';
@@ -71,7 +71,7 @@ export class AutoRegisterService {
       DynamicComponentService.registerComponent('InternalBankAccountApprovalComponent', InternalBankAccountApprovalComponent);
       DynamicComponentService.registerComponent('EmploymentComponent', EmploymentComponent);
       DynamicComponentService.registerComponent('UrgentJointReliefCampaignComponent', UrgentJointReliefCampaignComponent);
-      DynamicComponentService.registerComponent('UrgentInterventionReportComponent', UrgentInterventionReportComponent);
+      DynamicComponentService.registerComponent('UrgentInterventionAnnouncementComponent', UrgentInterventionAnnouncementComponent);
       DynamicComponentService.registerComponent('UrgentInterventionClosureComponent', UrgentInterventionClosureComponent);
 
       DynamicComponentService.registerComponent('ExternalOrgAffiliationComponent', ExternalOrgAffiliationComponent);

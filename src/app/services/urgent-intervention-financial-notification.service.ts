@@ -11,8 +11,8 @@ import { InterventionRegionInterceptor } from '@app/model-interceptors/intervent
 import { ImplementingAgencyInterceptor } from '@app/model-interceptors/implementing-agency-interceptor';
 import { ImplementingAgency } from '@app/models/implementing-agency';
 import { Observable } from 'rxjs';
-import { UrgentInterventionReportResult } from './../models/urgent-intervention-report-result';
-import { UrgentInterventionReportSearchCriteria } from './../models/urgent-intervention-report-search-criteria';
+import { UrgentInterventionAnnouncementResult } from '../models/urgent-intervention-announcement-result';
+import { UrgentInterventionAnnouncementSearchCriteria } from '../models/urgent-intervention-announcement-search-criteria';
 import { LicenseService } from './license.service';
 import { FactoryService } from './factory.service';
 import { Injectable } from '@angular/core';
@@ -76,7 +76,7 @@ export class UrgentInterventionFinancialNotificationService extends BaseGenericE
     return 'UrgentInterventionFinancialNotificationComponent';
   }
 
-  licenseSearch(criteria: Partial<UrgentInterventionReportSearchCriteria> = {}): Observable<UrgentInterventionReportResult[]> {
+  licenseSearch(criteria: Partial<UrgentInterventionAnnouncementSearchCriteria> = {}): Observable<UrgentInterventionAnnouncementResult[]> {
     return this.licenseService.urgentInterventionAnnouncementSearch(criteria);
   }
 }

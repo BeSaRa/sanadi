@@ -1,5 +1,5 @@
 import {IModelInterceptor} from '@app/interfaces/i-model-interceptor';
-import {UrgentInterventionReportResult} from '@app/models/urgent-intervention-report-result';
+import {UrgentInterventionAnnouncementResult} from '@app/models/urgent-intervention-announcement-result';
 import {AdminResult} from '@app/models/admin-result';
 import {LessonsLearnedInterceptor} from '@app/model-interceptors/lessons-learned-interceptor';
 import {BestPracticesInterceptor} from '@app/model-interceptors/best-practices-interceptor';
@@ -27,8 +27,8 @@ let implementingAgencyInterceptor = new ImplementingAgencyInterceptor();
 let interventionRegionInterceptor = new InterventionRegionInterceptor();
 let interventionFieldInterceptor = new InterventionFieldInterceptor();
 
-export class UrgentInterventionReportResultInterceptor implements IModelInterceptor<UrgentInterventionReportResult> {
-  receive(model: UrgentInterventionReportResult): UrgentInterventionReportResult {
+export class UrgentInterventionAnnouncementResultInterceptor implements IModelInterceptor<UrgentInterventionAnnouncementResult> {
+  receive(model: UrgentInterventionAnnouncementResult): UrgentInterventionAnnouncementResult {
     model.beneficiaryCountryInfo && (model.beneficiaryCountryInfo = AdminResult.createInstance(model.beneficiaryCountryInfo));
     model.executionCountryInfo && (model.executionCountryInfo = AdminResult.createInstance(model.executionCountryInfo));
     model.ouInfo && (model.ouInfo = AdminResult.createInstance(model.ouInfo));
@@ -53,7 +53,7 @@ export class UrgentInterventionReportResultInterceptor implements IModelIntercep
     return model;
   }
 
-  send(model: Partial<UrgentInterventionReportResult>): Partial<UrgentInterventionReportResult> {
+  send(model: Partial<UrgentInterventionAnnouncementResult>): Partial<UrgentInterventionAnnouncementResult> {
     model.implementingAgencyList = model.implementingAgencyList?.map((x: any) => implementingAgencyInterceptor.send(x) as ImplementingAgency);
     model.interventionRegionList = model.interventionRegionList?.map((x: any) => interventionRegionInterceptor.send(x) as InterventionRegion);
     model.interventionFieldList = model.interventionFieldList?.map((x: any) => interventionFieldInterceptor.send(x) as InterventionField);
@@ -62,11 +62,11 @@ export class UrgentInterventionReportResultInterceptor implements IModelIntercep
     model.officeEvaluationList = model.officeEvaluationList?.map((x: any) => officeEvaluationInterceptor.send(x) as OfficeEvaluation);
     model.resultList = model.resultList?.map((x: any) => resultInterceptor.send(x) as Result);
     model.stageList = model.stageList?.map((x: any) => stageInterceptor.send(x) as Stage);
-    UrgentInterventionReportResultInterceptor._deleteBeforeSend(model);
+    UrgentInterventionAnnouncementResultInterceptor._deleteBeforeSend(model);
     return model;
   }
 
-  private static _deleteBeforeSend(model: Partial<UrgentInterventionReportResult>): void {
+  private static _deleteBeforeSend(model: Partial<UrgentInterventionAnnouncementResult>): void {
     delete model.ouInfo;
     delete model.beneficiaryCountryInfo;
     delete model.executionCountryInfo;

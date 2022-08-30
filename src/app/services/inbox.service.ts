@@ -47,7 +47,7 @@ import { InternalBankAccountApprovalService } from '@app/services/internal-bank-
 import { CustomsExemptionRemittanceService } from './customs-exemption-remittance.service';
 import { BaseGenericEService } from '@app/generics/base-generic-e-service';
 import { UrgentJointReliefCampaignService } from '@services/urgent-joint-relief-campaign.service';
-import { UrgentInterventionReportingService } from '@app/services/urgent-intervention-reporting.service';
+import { UrgentInterventionAnnouncementService } from '@services/urgent-intervention-announcement.service';
 import { ExternalOrgAffiliationService } from './external-org-affiliation.service';
 import { EmploymentService } from '@app/services/employment.service';
 import {
@@ -82,7 +82,7 @@ export class InboxService {
               private urgentInterventionLicensingService: UrgentInterventionLicensingService,
               private internalBankAccountApprovalService: InternalBankAccountApprovalService,
               private urgentJointReliefCampaignService: UrgentJointReliefCampaignService,
-              private urgentInterventionReportingService: UrgentInterventionReportingService,
+              private urgentInterventionAnnouncementService: UrgentInterventionAnnouncementService,
               private urgentInterventionClosureService: UrgentInterventionClosureService,
               private urgentInterventionFinancialNotificationService: UrgentInterventionFinancialNotificationService,
               private urlService: UrlService,
@@ -110,7 +110,7 @@ export class InboxService {
     this.services.set(CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN, this.urgentJointReliefCampaignService);
     this.services.set(CaseTypes.EMPLOYMENT, this.employmentService);
     this.services.set(CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE, this.customsExemptionRemittanceService);
-    this.services.set(CaseTypes.URGENT_INTERVENTION_REPORTING, this.urgentInterventionReportingService);
+    this.services.set(CaseTypes.URGENT_INTERVENTION_ANNOUNCEMENT, this.urgentInterventionAnnouncementService);
     this.services.set(CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST, this.externalOrgAffiliationService);
     this.services.set(CaseTypes.URGENT_INTERVENTION_CLOSURE, this.urgentInterventionClosureService);
     this.services.set(CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION, this.urgentInterventionFinancialNotificationService);

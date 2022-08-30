@@ -8,7 +8,7 @@ import {ConfigurationService} from '@services/configuration.service';
 import {INavigatedItem} from '@contracts/inavigated-item';
 import {tap} from 'rxjs/operators';
 import {CaseTypes} from '@app/enums/case-types.enum';
-import {UrgentInterventionReportingService} from '@services/urgent-intervention-reporting.service';
+import {UrgentInterventionAnnouncementService} from '@services/urgent-intervention-announcement.service';
 import {ILanguageKeys} from '@contracts/i-language-keys';
 
 @Injectable({
@@ -25,7 +25,7 @@ export class PreValidateDataGuard implements CanActivate {
               private router: Router,
               private encrypt: EncryptionService,
               private configService: ConfigurationService,
-              private urgentInterventionReportService: UrgentInterventionReportingService) {
+              private urgentInterventionAnnouncementService: UrgentInterventionAnnouncementService) {
     this.itemKey = configService.CONFIG.E_SERVICE_ITEM_KEY;
   }
 
@@ -57,9 +57,9 @@ export class PreValidateDataGuard implements CanActivate {
   }
 
   preValidateData(): Observable<boolean> {
-    if (this.caseType === CaseTypes.URGENT_INTERVENTION_REPORTING) {
+    if (this.caseType === CaseTypes.URGENT_INTERVENTION_ANNOUNCEMENT) {
       let isAddOperation = !this.hasItemParam() || !this.validItem();
-      return this.urgentInterventionReportService.preValidateAddLicense(isAddOperation);
+      return this.urgentInterventionAnnouncementService.preValidateAddLicense(isAddOperation);
     }
     return of(true);
   }

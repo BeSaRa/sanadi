@@ -1123,6 +1123,7 @@ export interface ILanguageKeys {
   final_Notification: string;
   special_needs_handicap: string;
   menu_urgent_intervention_report: string;
+  menu_urgent_intervention_announcement: string;
   entities: string;
   intervention_fields: string;
   transfer_data: string;

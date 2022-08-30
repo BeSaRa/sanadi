@@ -27,7 +27,7 @@ export class RequestTypeFollowupService {
     [CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL]: this.lookupService.listByCategory.BankRequestType,
     [CaseTypes.EMPLOYMENT]: this.lookupService.listByCategory.EmploymentRequestType,
     [CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN]: this.lookupService.listByCategory.RequestTypeNewOnly,
-    [CaseTypes.URGENT_INTERVENTION_REPORTING]: this.lookupService.listByCategory.UrgentInterventionAnnouncementRequestType,
+    [CaseTypes.URGENT_INTERVENTION_ANNOUNCEMENT]: this.lookupService.listByCategory.UrgentInterventionAnnouncementRequestType,
     [CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST]: this.lookupService.listByCategory.AffiliationRequestType,
     [CaseTypes.URGENT_INTERVENTION_CLOSURE]: this.lookupService.listByCategory.RequestTypeNewOnly,
     [CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION]: this.lookupService.listByCategory.UrgentInterventionFinancialRequestType,

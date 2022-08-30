@@ -8,8 +8,8 @@ import {ServiceRequestTypes} from '@app/enums/service-request-types';
 import {BankAccount} from '@app/models/bank-account';
 import {AdminResult} from '@app/models/admin-result';
 import {CommonService} from '@services/common.service';
-import {UrgentInterventionReport} from '@app/models/urgent-intervention-report';
-import {UrgentInterventionReportSearchCriteria} from '@app/models/urgent-intervention-report-search-criteria';
+import {UrgentInterventionAnnouncement} from '@app/models/urgent-intervention-announcement';
+import {UrgentInterventionAnnouncementSearchCriteria} from '@app/models/urgent-intervention-announcement-search-criteria';
 import {UrgentInterventionFinancialRequestType} from '@app/enums/urgent-intervention-financial-request-type';
 import {OpenFrom} from '@app/enums/open-from.enum';
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
@@ -21,8 +21,8 @@ import {
   InterventionRegionListComponent
 } from './../../shared/intervention-region-list/intervention-region-list.component';
 import {LicenseService} from '@app/services/license.service';
-import {UrgentInterventionReportingService} from '@services/urgent-intervention-reporting.service';
-import {UrgentInterventionReportResult} from '@app/models/urgent-intervention-report-result';
+import {UrgentInterventionAnnouncementService} from '@services/urgent-intervention-announcement.service';
+import {UrgentInterventionAnnouncementResult} from '@app/models/urgent-intervention-announcement-result';
 import {DialogService} from '@services/dialog.service';
 import {ReadinessStatus, TabMap} from '@app/types/types';
 import {Lookup} from '@app/models/lookup';
@@ -61,7 +61,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
   @ViewChild('interventionFieldListComponent') interventionFieldListComponentRef!: InterventionFieldListComponent;
   @ViewChild('implementingAgencyListComponent') implementingAgencyListComponentRef!: ImplementingAgencyListComponent;
   licenseSearch$: Subject<string> = new Subject<string>();
-  selectedLicense?: UrgentInterventionReportResult;
+  selectedLicense?: UrgentInterventionAnnouncementResult;
   loadAttachments: boolean = false;
   OperationTypes = OperationTypes;
   form!: UntypedFormGroup;
@@ -130,7 +130,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
 
   constructor(
     private lookupService: LookupService,
-    public urgentInterventionReportingService: UrgentInterventionReportingService,
+    public urgentInterventionAnnouncementService: UrgentInterventionAnnouncementService,
     public service: UrgentInterventionFinancialNotificationService,
     public lang: LangService,
     private dialogService: DialogService,
@@ -287,7 +287,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
         exhaustMap((licenses) => {
           return licenses.length === 1 ? this.singleLicenseDetails(licenses[0]) : this.openSelectLicense(licenses);
         }),
-        filter((info): info is UrgentInterventionReportResult => !!info),
+        filter((info): info is UrgentInterventionAnnouncementResult => !!info),
       )
       .subscribe((selection) => {
         this.setSelectedLicense(selection, false);
@@ -300,7 +300,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
     });
   }
 
-  private setSelectedLicense(licenseDetails: UrgentInterventionReportResult | undefined, ignoreUpdateForm: boolean) {
+  private setSelectedLicense(licenseDetails: UrgentInterventionAnnouncementResult | undefined, ignoreUpdateForm: boolean) {
     this.selectedLicense = licenseDetails;
     // update form fields if i have license
     if (licenseDetails && !ignoreUpdateForm) {
@@ -327,17 +327,17 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
     }
   }
 
-  private singleLicenseDetails(license: UrgentInterventionReportResult): Observable<UrgentInterventionReport> {
-    return this.licenseService.loadUrgentInterventionAnnouncementByLicenseId(license.id) as Observable<UrgentInterventionReport>;
+  private singleLicenseDetails(license: UrgentInterventionAnnouncementResult): Observable<UrgentInterventionAnnouncement> {
+    return this.licenseService.loadUrgentInterventionAnnouncementByLicenseId(license.id) as Observable<UrgentInterventionAnnouncement>;
   }
 
-  private openSelectLicense(licenses: UrgentInterventionReportResult[]): Observable<undefined | UrgentInterventionReportResult> {
+  private openSelectLicense(licenses: UrgentInterventionAnnouncementResult[]): Observable<undefined | UrgentInterventionAnnouncementResult> {
     return this.licenseService.openSelectLicenseDialog(licenses, this.model?.clone({requestType: this.requestTypeField.value || null}), true, this.service.selectLicenseDisplayColumns)
       .onAfterClose$
-      .pipe(map((result: ({ selected: UrgentInterventionReportResult, details: UrgentInterventionReportResult } | undefined)) => result ? result.details : result));
+      .pipe(map((result: ({ selected: UrgentInterventionAnnouncementResult, details: UrgentInterventionAnnouncementResult } | undefined)) => result ? result.details : result));
   }
 
-  loadLicencesByCriteria(criteria: Partial<UrgentInterventionReportSearchCriteria>): Observable<UrgentInterventionReportResult[]> {
+  loadLicencesByCriteria(criteria: Partial<UrgentInterventionAnnouncementSearchCriteria>): Observable<UrgentInterventionAnnouncementResult[]> {
     return this.service.licenseSearch(criteria);
   }
 

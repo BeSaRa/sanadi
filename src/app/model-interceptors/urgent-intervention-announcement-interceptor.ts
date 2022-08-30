@@ -1,21 +1,21 @@
 import {IModelInterceptor} from '@app/interfaces/i-model-interceptor';
-import {UrgentInterventionReport} from '@app/models/urgent-intervention-report';
+import {UrgentInterventionAnnouncement} from '@app/models/urgent-intervention-announcement';
 import {UrgentInterventionAnnouncementRequestType} from '@app/enums/service-request-types';
 import {FactoryService} from '@app/services/factory.service';
-import {UrgentInterventionReportingService} from '@app/services/urgent-intervention-reporting.service';
+import {UrgentInterventionAnnouncementService} from '@services/urgent-intervention-announcement.service';
 import {ImplementingAgency} from '@app/models/implementing-agency';
 import {InterventionField} from '@app/models/intervention-field';
 import {InterventionRegion} from '@app/models/intervention-region';
 import {ImplementationTemplate} from '@app/models/implementation-template';
 import {AdminResult} from '@app/models/admin-result';
 
-export class UrgentInterventionReportInterceptor implements IModelInterceptor<UrgentInterventionReport> {
-  receive(model: UrgentInterventionReport): UrgentInterventionReport {
+export class UrgentInterventionAnnouncementInterceptor implements IModelInterceptor<UrgentInterventionAnnouncement> {
+  receive(model: UrgentInterventionAnnouncement): UrgentInterventionAnnouncement {
     model.requestTypeInfo && (model.requestTypeInfo = AdminResult.createInstance(model.requestTypeInfo));
     model.beneficiaryCountryInfo && (model.beneficiaryCountryInfo = AdminResult.createInstance(model.beneficiaryCountryInfo));
     model.executionCountryInfo && (model.executionCountryInfo = AdminResult.createInstance(model.executionCountryInfo));
 
-    let service: UrgentInterventionReportingService = FactoryService.getService('UrgentInterventionReportingService');
+    let service: UrgentInterventionAnnouncementService = FactoryService.getService('UrgentInterventionAnnouncementService');
     if (model.implementingAgencyList && model.implementingAgencyList.length > 0) {
       model.implementingAgencyList = model.implementingAgencyList.map(x => service.implementingAgencyInterceptor.receive(new ImplementingAgency().clone(x)));
     }
@@ -28,9 +28,9 @@ export class UrgentInterventionReportInterceptor implements IModelInterceptor<Ur
     return model;
   }
 
-  send(model: Partial<UrgentInterventionReport>): Partial<UrgentInterventionReport> {
+  send(model: Partial<UrgentInterventionAnnouncement>): Partial<UrgentInterventionAnnouncement> {
     if (model.ignoreSendInterceptor) {
-      UrgentInterventionReportInterceptor._deleteBeforeSend(model);
+      UrgentInterventionAnnouncementInterceptor._deleteBeforeSend(model);
       return model;
     }
     if (model.requestType !== UrgentInterventionAnnouncementRequestType.START && model.requestType !== UrgentInterventionAnnouncementRequestType.EDIT) {
@@ -39,7 +39,7 @@ export class UrgentInterventionReportInterceptor implements IModelInterceptor<Ur
       model.interventionFieldList = [];
     }
 
-    let service: UrgentInterventionReportingService = FactoryService.getService('UrgentInterventionReportingService');
+    let service: UrgentInterventionAnnouncementService = FactoryService.getService('UrgentInterventionAnnouncementService');
     if (model.implementingAgencyList && model.implementingAgencyList.length > 0) {
       model.implementingAgencyList = model.implementingAgencyList.map(x => service.implementingAgencyInterceptor.send(x) as ImplementingAgency);
     }
@@ -50,11 +50,11 @@ export class UrgentInterventionReportInterceptor implements IModelInterceptor<Ur
       model.interventionFieldList = model.interventionFieldList.map(x => service.interventionFieldInterceptor.send(x) as InterventionField);
     }
 
-    UrgentInterventionReportInterceptor._deleteBeforeSend(model);
+    UrgentInterventionAnnouncementInterceptor._deleteBeforeSend(model);
     return model;
   }
 
-  private static _deleteBeforeSend(model: Partial<UrgentInterventionReport>): void {
+  private static _deleteBeforeSend(model: Partial<UrgentInterventionAnnouncement>): void {
     delete model.ignoreSendInterceptor;
     delete model.ouInfo;
     delete model.requestTypeInfo;

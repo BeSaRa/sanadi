@@ -50,9 +50,9 @@ import { InternalBankAccountLicense } from '@app/license-models/internal-bank-ac
 import { HasInterception, InterceptionContainer, InterceptParam } from '@decorators/intercept-model';
 import { CollectionApprovalInterceptor } from '@app/model-interceptors/collection-approval-interceptor';
 import { CollectorApprovalInterceptor } from '@app/model-interceptors/collector-approval-interceptor';
-import { UrgentInterventionReportSearchCriteria } from '@app/models/urgent-intervention-report-search-criteria';
-import { UrgentInterventionReportResult } from '@app/models/urgent-intervention-report-result';
-import { UrgentInterventionReport } from '@app/models/urgent-intervention-report';
+import { UrgentInterventionAnnouncementSearchCriteria } from '@app/models/urgent-intervention-announcement-search-criteria';
+import { UrgentInterventionAnnouncementResult } from '@app/models/urgent-intervention-announcement-result';
+import { UrgentInterventionAnnouncement } from '@app/models/urgent-intervention-announcement';
 import { UrgentInterventionClosure } from '@app/models/urgent-intervention-closure';
 import { ForeignCountriesProjectsResult } from '@app/models/foreign-countries-projects-results';
 import { ForeignCountriesProjectsSearchCriteria } from '@app/models/foreign-countries-projects-seach-criteria';
@@ -113,8 +113,8 @@ export class LicenseService {
       case CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN:
         url = this.urlService.URLS.URGENT_JOINT_RELIEF_CAMPAIGN;
         break;
-      case CaseTypes.URGENT_INTERVENTION_REPORTING:
-        url = this.urlService.URLS.URGENT_INTERVENTION_REPORTING;
+      case CaseTypes.URGENT_INTERVENTION_ANNOUNCEMENT:
+        url = this.urlService.URLS.URGENT_INTERVENTION_ANNOUNCEMENT;
         break;
       case CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE:
         url = this.urlService.URLS.CUSTOMS_EXEMPTION_REMITTANCE;
@@ -216,18 +216,18 @@ export class LicenseService {
     return this._urgentInterventionLicenseSearch(criteria);
   }
 
-  @CastResponse(() => UrgentInterventionReportResult)
-  private _urgentInterventionAnnouncementSearch(criteria: Partial<UrgentInterventionReportSearchCriteria>, validOnly: boolean = false): Observable<UrgentInterventionReportResult[]> {
+  @CastResponse(() => UrgentInterventionAnnouncementResult)
+  private _urgentInterventionAnnouncementSearch(criteria: Partial<UrgentInterventionAnnouncementSearchCriteria>, validOnly: boolean = false): Observable<UrgentInterventionAnnouncementResult[]> {
     const orgId = { organizationId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id : undefined },
-      url = this.getServiceUrlByCaseType(CaseTypes.URGENT_INTERVENTION_REPORTING) + '/license/search' + (validOnly ? '-valid' : '');
-    return this.http.post<UrgentInterventionReportResult[]>(url, { ...criteria, ...orgId })
+      url = this.getServiceUrlByCaseType(CaseTypes.URGENT_INTERVENTION_ANNOUNCEMENT) + '/license/search' + (validOnly ? '-valid' : '');
+    return this.http.post<UrgentInterventionAnnouncementResult[]>(url, { ...criteria, ...orgId })
   }
 
-  urgentInterventionAnnouncementSearch(criteria: Partial<UrgentInterventionReportSearchCriteria>): Observable<UrgentInterventionReportResult[]> {
+  urgentInterventionAnnouncementSearch(criteria: Partial<UrgentInterventionAnnouncementSearchCriteria>): Observable<UrgentInterventionAnnouncementResult[]> {
     return this._urgentInterventionAnnouncementSearch(criteria);
   }
 
-  urgentInterventionAnnouncementSearchValidOnly(criteria: Partial<UrgentInterventionReportSearchCriteria>): Observable<UrgentInterventionReportResult[]> {
+  urgentInterventionAnnouncementSearchValidOnly(criteria: Partial<UrgentInterventionAnnouncementSearchCriteria>): Observable<UrgentInterventionAnnouncementResult[]> {
     return this._urgentInterventionAnnouncementSearch(criteria, true);
   }
 
@@ -327,17 +327,17 @@ export class LicenseService {
     return this._loadUrgentInterventionLicenseByLicenseId(licenseId);
   }
 
-  @CastResponse(() => UrgentInterventionReport)
-  private _loadUrgentInterventionAnnouncementByLicenseId(licenseId: string): Observable<UrgentInterventionReport> {
-    return this.http.get<UrgentInterventionReport>(this.getServiceUrlByCaseType(CaseTypes.URGENT_INTERVENTION_REPORTING) + '/license/' + licenseId + '/details');
+  @CastResponse(() => UrgentInterventionAnnouncement)
+  private _loadUrgentInterventionAnnouncementByLicenseId(licenseId: string): Observable<UrgentInterventionAnnouncement> {
+    return this.http.get<UrgentInterventionAnnouncement>(this.getServiceUrlByCaseType(CaseTypes.URGENT_INTERVENTION_ANNOUNCEMENT) + '/license/' + licenseId + '/details');
   }
 
-  loadUrgentInterventionAnnouncementByLicenseId(licenseId: string): Observable<UrgentInterventionReport> {
+  loadUrgentInterventionAnnouncementByLicenseId(licenseId: string): Observable<UrgentInterventionAnnouncement> {
     return this._loadUrgentInterventionAnnouncementByLicenseId(licenseId);
   }
 
   loadUrgentInterventionInterventionLicense() {
-    return this.http.get<any>(this.getServiceUrlByCaseType(CaseTypes.URGENT_INTERVENTION_REPORTING) + '/intervention-license')
+    return this.http.get<any>(this.getServiceUrlByCaseType(CaseTypes.URGENT_INTERVENTION_ANNOUNCEMENT) + '/intervention-license')
   }
 
   @CastResponse(() => InitialExternalOfficeApproval)
@@ -409,9 +409,9 @@ export class LicenseService {
     });
   }
 
-  @CastResponse(() => UrgentInterventionReportResult)
+  @CastResponse(() => UrgentInterventionAnnouncementResult)
   _validateUrgentInterventionAnnouncementByRequestType<T>(requestType: number, oldLicenseId: string): Observable<T> {
-    return this.http.post<T>(this.getServiceUrlByCaseType(CaseTypes.URGENT_INTERVENTION_REPORTING) + '/draft/validate', {
+    return this.http.post<T>(this.getServiceUrlByCaseType(CaseTypes.URGENT_INTERVENTION_ANNOUNCEMENT) + '/draft/validate', {
       requestType,
       oldLicenseId
     });
@@ -462,7 +462,7 @@ export class LicenseService {
       return this._validateInternalProjectLicenseByRequestType(requestType, licenseId);
     } else if (caseType === CaseTypes.URGENT_INTERVENTION_LICENSING) {
       return this._validateUrgentInterventionLicenseByRequestType(requestType, licenseId);
-    } else if (caseType === CaseTypes.URGENT_INTERVENTION_REPORTING) {
+    } else if (caseType === CaseTypes.URGENT_INTERVENTION_ANNOUNCEMENT) {
       return this._validateUrgentInterventionAnnouncementByRequestType(requestType, licenseId);
     } else if (caseType === CaseTypes.COLLECTION_APPROVAL) {
       return this._validateCollectionLicenseByRequestType<T>(requestType, licenseId);
@@ -486,7 +486,7 @@ export class LicenseService {
     return of(undefined);
   }
 
-  openSelectLicenseDialog<T>(licenses: (UrgentInterventionReportResult[] | InitialExternalOfficeApprovalResult[] | PartnerApproval[] | ExternalOrgAffiliationResult[] | FinalExternalOfficeApprovalResult[] | InternalProjectLicenseResult[] | UrgentInterventionLicenseResult[] | T[]), caseRecord: any | undefined, select = true, displayedColumns: string[] = []): DialogRef {
+  openSelectLicenseDialog<T>(licenses: (UrgentInterventionAnnouncementResult[] | InitialExternalOfficeApprovalResult[] | PartnerApproval[] | ExternalOrgAffiliationResult[] | FinalExternalOfficeApprovalResult[] | InternalProjectLicenseResult[] | UrgentInterventionLicenseResult[] | T[]), caseRecord: any | undefined, select = true, displayedColumns: string[] = []): DialogRef {
     return this.dialog.show(SelectLicensePopupComponent, {
       licenses,
       select,

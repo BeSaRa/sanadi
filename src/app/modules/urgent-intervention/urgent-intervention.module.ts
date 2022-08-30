@@ -11,8 +11,8 @@ import {
   UrgentInterventionApproveTaskPopupComponent
 } from '@app/modules/urgent-intervention/popups/urgent-intervention-approve-task-popup/urgent-intervention-approve-task-popup.component';
 import {
-  UrgentInterventionReportComponent
-} from '@app/modules/urgent-intervention/pages/urgent-intervention-report/urgent-intervention-report.component';
+  UrgentInterventionAnnouncementComponent
+} from '@app/modules/urgent-intervention/pages/urgent-intervention-announcement/urgent-intervention-announcement.component';
 import {EServicesMainModule} from '@app/modules/e-services-main/e-services-main.module';
 import {
   ImplementingAgencyListComponent
@@ -40,7 +40,7 @@ import {
     UrgentInterventionLicenseComponent,
     UrgentInterventionFinancialNotificationComponent,
     UrgentInterventionApproveTaskPopupComponent,
-    UrgentInterventionReportComponent,
+    UrgentInterventionAnnouncementComponent,
     ImplementingAgencyListComponent,
     InterventionRegionListComponent,
     InterventionFieldListComponent,

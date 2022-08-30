@@ -1,7 +1,7 @@
 import { CaseTypes } from '@app/enums/case-types.enum';
 import { LangService } from '@app/services/lang.service';
 import { EmployeeService } from '@app/services/employee.service';
-import { UrgentInterventionReportingService } from '@app/services/urgent-intervention-reporting.service';
+import { UrgentInterventionAnnouncementService } from '@services/urgent-intervention-announcement.service';
 import { FactoryService } from '@app/services/factory.service';
 import { AdminResult } from '@app/models/admin-result';
 import { ImplementingAgency } from '@app/models/implementing-agency';
@@ -17,14 +17,14 @@ import { mixinRequestType } from '@app/mixins/mixin-request-type';
 import { HasRequestType } from '@contracts/has-request-type';
 import { UrgentInterventionClosure } from '@app/models/urgent-intervention-closure';
 import { InterceptModel } from '@app/decorators/decorators/intercept-model';
-import { UrgentInterventionReportInterceptor } from "@app/model-interceptors/urgent-intervention-report-interceptor";
+import { UrgentInterventionAnnouncementInterceptor } from "@app/model-interceptors/urgent-intervention-announcement-interceptor";
 
 const _RequestType = mixinRequestType(CaseModel);
-const { send, receive } = new UrgentInterventionReportInterceptor();
+const { send, receive } = new UrgentInterventionAnnouncementInterceptor();
 
 @InterceptModel({ send, receive })
-export class UrgentInterventionReport extends _RequestType<UrgentInterventionReportingService, UrgentInterventionReport> implements HasRequestType {
-  caseType: number = CaseTypes.URGENT_INTERVENTION_REPORTING;
+export class UrgentInterventionAnnouncement extends _RequestType<UrgentInterventionAnnouncementService, UrgentInterventionAnnouncement> implements HasRequestType {
+  caseType: number = CaseTypes.URGENT_INTERVENTION_ANNOUNCEMENT;
   serviceSteps: string[] = [];
   organizationId!: number;
   // requestType!: number;
@@ -51,13 +51,13 @@ export class UrgentInterventionReport extends _RequestType<UrgentInterventionRep
   beneficiaryCountryInfo!: AdminResult;
   executionCountryInfo!: AdminResult;
 
-  service: UrgentInterventionReportingService;
+  service: UrgentInterventionAnnouncementService;
   langService: LangService;
   employeeService: EmployeeService;
 
   ignoreSendInterceptor?: boolean;
 
-  searchFields: ISearchFieldsMap<UrgentInterventionReport> = {
+  searchFields: ISearchFieldsMap<UrgentInterventionAnnouncement> = {
     ...dateSearchFields(['createdOn']),
     ...infoSearchFields(['caseStatusInfo', 'ouInfo']),
     ...normalSearchFields(['fullSerial', 'subject'])
@@ -73,7 +73,7 @@ export class UrgentInterventionReport extends _RequestType<UrgentInterventionRep
 
   constructor() {
     super();
-    this.service = FactoryService.getService('UrgentInterventionReportingService');
+    this.service = FactoryService.getService('UrgentInterventionAnnouncementService');
     this.langService = FactoryService.getService('LangService');
     this.employeeService = FactoryService.getService('EmployeeService');
     this.finalizeSearchFields();

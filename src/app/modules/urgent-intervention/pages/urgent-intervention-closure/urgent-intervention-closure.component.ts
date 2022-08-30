@@ -38,7 +38,7 @@ import { ResultListComponent } from '@app/modules/urgent-intervention/shared/res
 import {
   ImplementationEvaluationListComponent
 } from '@app/modules/urgent-intervention/shared/implementation-evaluation-list/implementation-evaluation-list.component';
-import { UrgentInterventionReportResult } from '@app/models/urgent-intervention-report-result';
+import { UrgentInterventionAnnouncementResult } from '@app/models/urgent-intervention-announcement-result';
 import {
   BestPracticesListComponent
 } from '@app/modules/urgent-intervention/shared/best-practices-list/best-practices-list.component';
@@ -641,11 +641,11 @@ export class UrgentInterventionClosureComponent extends EServicesGenericComponen
     }
   }
 
-  private validateSingleLicense(license: UrgentInterventionReportResult): Observable<undefined | UrgentInterventionClosure> {
+  private validateSingleLicense(license: UrgentInterventionAnnouncementResult): Observable<undefined | UrgentInterventionClosure> {
     return this.licenseService.validateLicenseByRequestType<UrgentInterventionClosure>(this.model!.caseType, this.requestTypeField.value, license.id) as Observable<undefined | UrgentInterventionClosure>;
   }
 
-  private openSelectLicense(licenses: UrgentInterventionReportResult[]): Observable<undefined | UrgentInterventionClosure> {
+  private openSelectLicense(licenses: UrgentInterventionAnnouncementResult[]): Observable<undefined | UrgentInterventionClosure> {
     return this.licenseService.openSelectLicenseDialog(licenses, this.model?.clone({requestType: this.requestTypeField.value || null}), true, this.service.selectLicenseDisplayColumnsReport)
       .onAfterClose$
       .pipe(map((result: ({ selected: UrgentInterventionClosure, details: UrgentInterventionClosure } | undefined)) => result ? result.details : result));

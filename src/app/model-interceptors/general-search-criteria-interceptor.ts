@@ -26,8 +26,8 @@ import {
 import { CustomsExemptionRemittanceInterceptor } from '@app/model-interceptors/customs-exemption-remittance-interceptor';
 import { FundraisingInterceptor } from '@app/model-interceptors/fundraising-interceptor';
 import {
-  SearchUrgentInterventionReportCriteriaInterceptor
-} from '@app/search-criteria-interceptors/search-urgent-intervention-report-criteria-interceptor';
+  SearchUrgentInterventionAnnouncementCriteriaInterceptor
+} from '@app/search-criteria-interceptors/search-urgent-intervention-announcement-criteria-interceptor';
 import { ProjectModelInterceptor } from '@app/model-interceptors/project-model-interceptor';
 import { ForeignCountriesProjectsSearchCriteriaInterceptor } from '@app/search-criteria-interceptors/foreign-countries-projects-seach-criteria-interceptor';
 
@@ -44,7 +44,7 @@ interceptors.set(CaseTypes.COLLECTOR_LICENSING, new CollectorApprovalSearchCrite
 interceptors.set(CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN, new UrgentJointReliefCampaignSearchCriteriaInterceptor());
 interceptors.set(CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE, new CustomsExemptionRemittanceInterceptor());
 interceptors.set(CaseTypes.FUNDRAISING_LICENSING, new FundraisingInterceptor());
-interceptors.set(CaseTypes.URGENT_INTERVENTION_REPORTING, new SearchUrgentInterventionReportCriteriaInterceptor());
+interceptors.set(CaseTypes.URGENT_INTERVENTION_ANNOUNCEMENT, new SearchUrgentInterventionAnnouncementCriteriaInterceptor());
 interceptors.set(CaseTypes.FOREIGN_COUNTRIES_PROJECTS, new ForeignCountriesProjectsSearchCriteriaInterceptor());
 
 export class GeneralSearchCriteriaInterceptor implements IModelInterceptor<ICaseSearchCriteria> {
