@@ -140,6 +140,10 @@
             <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.request_type}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.requestTypeInfo?.getName()}} </td>
           </ng-container>
+          <ng-container cdkColumnDef="domain">
+            <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.domain}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.domain}} </td>
+          </ng-container>
           <tr cdk-header-row *cdkHeaderRowDef="headerColumn"></tr>
           <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="table.columns"></tr>
           <tr cdk-row (contextmenu)="menu.open($event , row)" *cdkRowDef="let row; columns: table.columns;"></tr>

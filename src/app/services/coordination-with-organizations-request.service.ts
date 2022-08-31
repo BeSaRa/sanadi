@@ -1,19 +1,17 @@
-import { CoordinationWithOrganizationsRequestSearchCriteria } from './../models/coordination-with-organizations-request-search-criteria';
 import { HttpClient } from "@angular/common/http";
 import { ComponentFactoryResolver, Injectable } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { CastResponseContainer } from "@app/decorators/decorators/cast-response";
 import { BaseGenericEService } from "@app/generics/base-generic-e-service";
 import { ILanguageKeys } from "@app/interfaces/i-language-keys";
-import { IModelInterceptor } from "@app/interfaces/i-model-interceptor";
-import { CoordinationWithOrganizationsRequestInterceptor } from "@app/model-interceptors/coordination-with-organizations-request-interceptor";
 import { CoordinationWithOrganizationsRequest } from "@app/models/coordination-with-organizations-request";
+import { CoordinationWithOrganizationsRequestSearchCriteria } from './../models/coordination-with-organizations-request-search-criteria';
 import { DialogService } from "./dialog.service";
 import { DynamicOptionsService } from "./dynamic-options.service";
 import { FactoryService } from "./factory.service";
 import { LangService } from "./lang.service";
-import { UrlService } from "./url.service";
 import { SearchService } from './search.service';
+import { UrlService } from "./url.service";
 
 @CastResponseContainer({
   $default: {
@@ -42,9 +40,8 @@ export class CoordinationWithOrganizationsRequestService extends BaseGenericESer
   serviceKey: keyof ILanguageKeys = "menu_coordination_with_organizations_request";
   caseStatusIconMap: Map<number, string> = new Map<number, string>();
   searchService: SearchService = new SearchService(this);
-  searchColumns: string[] = ["fullName,domain,createdOn,createdOnTo"];
-  interceptor: IModelInterceptor<CoordinationWithOrganizationsRequest> =
-    new CoordinationWithOrganizationsRequestInterceptor();
+  searchColumns: string[] = ["fullSerial","fullName","domainInfo","caseStatus","creatorInfo","createdOn"];
+
 
   _getUrlService(): UrlService {
     return this.urlService;
