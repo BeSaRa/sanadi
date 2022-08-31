@@ -1,4 +1,5 @@
 import { DateUtils } from '@app/helpers/date-utils';
+import { isValidAdminResult } from '@app/helpers/utils';
 import { IModelInterceptor } from '@app/interfaces/i-model-interceptor';
 import { AdminResult } from '@app/models/admin-result';
 import { CoordinationWithOrganizationsRequest } from '@app/models/coordination-with-organizations-request';
@@ -82,6 +83,7 @@ export class CoordinationWithOrganizationsRequestInterceptor
     );
     model.taskDetails = new TaskDetails().clone(model.taskDetails);
 
+    model.domainInfo = AdminResult.createInstance(isValidAdminResult(model.domainInfo) ? model.domainInfo : {});
     return model;
   }
 }
