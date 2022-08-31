@@ -18,7 +18,7 @@ import { CommonStatusEnum } from '@app/enums/common-status.enum';
 import { CrudWithDialogGenericService } from "@app/generics/crud-with-dialog-generic-service";
 import { ComponentType } from '@angular/cdk/portal';
 import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
-import {Pagination} from '@app/models/pagination';
+import { Pagination } from '@app/models/pagination';
 
 @CastResponseContainer({
   $default: {
@@ -51,8 +51,8 @@ export class CountryService extends CrudWithDialogGenericService<Country> {
 
 
   constructor(public http: HttpClient,
-              private urlService: UrlService,
-              public dialog: DialogService) {
+    private urlService: UrlService,
+    public dialog: DialogService) {
     super();
     FactoryService.registerService('CountryService', this);
   }
@@ -124,7 +124,19 @@ export class CountryService extends CrudWithDialogGenericService<Country> {
         })
       );
   }
-
+  openViewDialog(modelId: number, tabName: string = 'basic'): Observable<DialogRef> {
+    return this._loadDialogData(modelId)
+      .pipe(
+        switchMap((result) => {
+          return of(this.dialog.show<IDialogData<Country>>(CountryPopupComponent, {
+            model: result.country,
+            operation: OperationTypes.VIEW,
+            parentCountries: this.list,
+            selectedTabName: (CommonUtils.isValidValue(tabName) ? tabName : 'basic')
+          }))
+        })
+      );
+  }
   openChangeParentDialog(countriesToChange: Country[]): any {
     return of(this.dialog.show(ChangeCountryParentPopupComponent, {
       countries: countriesToChange,

@@ -51,7 +51,6 @@ export class ServiceDataComponent extends AdminGenericComponent<ServiceData, Ser
       type: 'action',
       label: 'view',
       icon: ActionIconsEnum.VIEW,
-      show: () => false,
       onClick: (item: ServiceData) => this.view$.next(item)
     },
     // activate

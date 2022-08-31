@@ -19,6 +19,8 @@ export class UserFollowupPermissionComponent implements OnInit {
   filterControl: UntypedFormControl = new UntypedFormControl();
   reload$: Subject<number> = new Subject<number>();
   @Input()
+  readonly: boolean = false;
+  @Input()
   userTeams: UserTeam[] = []
   @Input()
   user!: InternalUser

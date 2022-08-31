@@ -1,3 +1,4 @@
+import { Subject } from 'rxjs';
 import {Component, Input, ViewChild} from '@angular/core';
 import {AidLookup} from '@app/models/aid-lookup';
 import {of} from 'rxjs';
@@ -30,9 +31,9 @@ export class AidLookupComponent extends AdminGenericComponent<AidLookup, AidLook
   @Input() aidType!: number;
   @Input() parentId!: number;
 
-  displayedColumns: string[] = ['rowSelection', 'aidCode', 'arName', 'enName', 'status', 'statusDateModified', 'actions'];
+  displayedColumns: string[] = ['aidCode', 'arName', 'enName', 'status', 'statusDateModified', 'actions'];
   aidLookupStatusEnum = AidLookupStatusEnum;
-
+  view$: Subject<AidLookup> = new Subject<AidLookup>();
   @ViewChild('table') table!: TableComponent;
 
   constructor(public langService: LangService,
@@ -44,6 +45,9 @@ export class AidLookupComponent extends AdminGenericComponent<AidLookup, AidLook
     super();
   }
 
+  protected _init() {
+    this.listenToView();
+  }
   getTitleText(): (keyof ILanguageKeys) {
     let title: keyof ILanguageKeys = 'menu_aid_class';
     switch (this.aidType) {
@@ -76,16 +80,6 @@ export class AidLookupComponent extends AdminGenericComponent<AidLookup, AidLook
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     }
   }
-
-  actionsList: IGridAction[] = [
-    {
-      langKey: 'btn_delete',
-      icon: 'mdi-close-box',
-      callback: ($event: MouseEvent) => {
-        this.deactivateBulk($event);
-      }
-    }
-  ];
 
   actions: IMenuItem<AidLookup>[] = [
     // edit
@@ -145,6 +139,17 @@ export class AidLookupComponent extends AdminGenericComponent<AidLookup, AidLook
         this.models = list;
         this.table && this.table.clearSelection();
       })
+  }
+
+  listenToView(): void {
+    this.view$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(exhaustMap((model) => {
+        return this.service.openViewDialog(model.id, this.aidType).pipe(catchError(_ => of(null)));
+      }))
+      .pipe(filter((dialog): dialog is DialogRef => !!dialog))
+      .pipe(switchMap(dialog => dialog.onAfterClose$))
+      .subscribe(() => this.reload$.next(null));
   }
 
   listenToAdd() {

@@ -1,18 +1,19 @@
+import { switchMap } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import {Component} from '@angular/core';
 import {AdminGenericComponent} from '@app/generics/admin-generic-component';
 import {InternalUser} from '@app/models/internal-user';
 import {LangService} from '@app/services/lang.service';
 import {InternalUserService} from '@app/services/internal-user.service';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import {Subject} from 'rxjs';
-import {exhaustMap, filter, map, mapTo, takeUntil, tap} from 'rxjs/operators';
-import {DialogService} from '@app/services/dialog.service';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
+import { Subject, of } from 'rxjs';
+import {exhaustMap, filter, takeUntil} from 'rxjs/operators';
 import {ToastService} from '@app/services/toast.service';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
 import {SortEvent} from '@app/interfaces/sort-event';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {DialogRef} from '@app/shared/models/dialog-ref';
+import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 
 @Component({
   selector: 'internal-user',
@@ -22,9 +23,8 @@ import {DialogRef} from '@app/shared/models/dialog-ref';
 export class InternalUserComponent extends AdminGenericComponent<InternalUser, InternalUserService> {
   usePagination = true;
   displayedColumns: string[] = ['rowSelection', 'username', 'arName', 'enName', 'defaultDepartment', 'status', 'actions'];
-  // subject for emit clicking on delete button
-  delete$: Subject<InternalUser> = new Subject<InternalUser>();
   commonStatusEnum = CommonStatusEnum;
+  view$: Subject<InternalUser> = new Subject<InternalUser>();
   actions: IMenuItem<InternalUser>[] = [
     {
       type: 'action',
@@ -37,6 +37,13 @@ export class InternalUserComponent extends AdminGenericComponent<InternalUser, I
       label: 'btn_edit',
       icon: 'mdi-account-edit',
       onClick: (user) => this.edit$.next(user)
+    },
+    // view
+    {
+      type: 'action',
+      label: 'view',
+      icon: ActionIconsEnum.VIEW,
+      onClick: (user) => this.view$.next(user)
     },
     // activate
     {
@@ -61,14 +68,13 @@ export class InternalUserComponent extends AdminGenericComponent<InternalUser, I
   ];
 
   constructor(public lang: LangService,
-              private dialog: DialogService,
               private toast: ToastService,
               public service: InternalUserService) {
     super();
   }
 
   protected _init() {
-    this.listenToDelete();
+    this.listenToView();
   }
 
   sortingCallbacks = {
@@ -89,19 +95,14 @@ export class InternalUserComponent extends AdminGenericComponent<InternalUser, I
     }
   };
 
-  listenToDelete() {
-    this.delete$
+  listenToView(): void {
+    this.view$
       .pipe(takeUntil(this.destroy$))
       .pipe(exhaustMap((model) => {
-        return this.dialog.confirm(this.lang.map.msg_confirm_delete_x.change({x: model.getName()}))
-          .onAfterClose$
-          .pipe(map((click: UserClickOn) => {
-            return {model, click};
-          }));
+        return this.service.openViewDialog(model.id).pipe(catchError(_ => of(null)));
       }))
-      .pipe(filter<{ model: InternalUser, click: UserClickOn }>(({click}) => click === UserClickOn.YES))
-      .pipe(exhaustMap(({model}) => model.delete().pipe(mapTo(model))))
-      .pipe(tap(model => this.toast.success(this.lang.map.msg_delete_x_success.change({x: model.getName()}))))
+      .pipe(filter((dialog): dialog is DialogRef => !!dialog))
+      .pipe(switchMap(dialog => dialog.onAfterClose$))
       .subscribe(() => this.reload$.next(null));
   }
 

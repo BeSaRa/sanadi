@@ -65,6 +65,7 @@ export class DacOchaListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.listenToReload();
     this.listenToAdd();
     this.listenToEdit();
+    this.listenToView();
     this.classifications = this.lookupService.listByCategory.AdminLookupType || [];
   }
 
@@ -87,6 +88,8 @@ export class DacOchaListComponent implements OnInit, AfterViewInit, OnDestroy {
   actionIconsEnum = ActionIconsEnum;
   displayedColumns: string[] = ['arName', 'enName', 'status', 'actions'];
   selectedRecords: DacOcha[] = [];
+  view$: Subject<AdminLookup> = new Subject<AdminLookup>();
+
   actions: IMenuItem<AdminLookup>[] = [
     // delete
     {
@@ -192,6 +195,17 @@ export class DacOchaListComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.usePagination && this.pageEvent.previousPageIndex !== null) {
       this.reload$.next(this.reload$.value);
     }
+  }
+
+  listenToView(): void {
+    this.view$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(exhaustMap((model) => {
+        return this.service.openViewDialog(model.id).pipe(catchError(_ => of(null)));
+      }))
+      .pipe(filter((dialog): dialog is DialogRef => !!dialog))
+      .pipe(switchMap(dialog => dialog.onAfterClose$))
+      .subscribe(() => this.reload$.next(null));
   }
 
   getTabLabel(lookupType: AdminLookupTypeEnum): string {

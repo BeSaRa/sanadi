@@ -53,10 +53,10 @@
     </ng-template>
     <ng-template #subDacOchasTabTemplate>
       <div class="row pb-3">
-        <app-page-header [clickOnReload$]="reloadSubDacOchas$" [clickOnNew$]="addSubDacOcha$">
+        <app-page-header *ngIf="!readonly" [clickOnReload$]="reloadSubDacOchas$" [clickOnNew$]="addSubDacOcha$">
         </app-page-header>
         <ng-container>
-          <app-grid-search (searchTextEvent)="filterControl.setValue($event)"></app-grid-search>
+          <app-grid-search class="ms-auto" (searchTextEvent)="filterControl.setValue($event)"></app-grid-search>
         </ng-container>
       </div>
       <div class="row">
@@ -126,7 +126,7 @@
     <i class="mdi mdi-information-outline text-info"></i>
   </button>
   <span class="flex-grow-1"></span>
-  <button [disabled]="form.invalid" *ngIf="saveVisible" (click)="save$.next(null)"
+  <button [disabled]="form.invalid" *ngIf="saveVisible && !readonly" (click)="save$.next(null)"
           class="btn btn-primary">{{lang.map.btn_save}}</button>
   <button [dialogClose]="model" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
 </div>
