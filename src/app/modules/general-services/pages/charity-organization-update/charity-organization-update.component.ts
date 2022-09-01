@@ -1,33 +1,32 @@
 import {
   AfterViewInit,
   Component,
-  OnInit,
   QueryList,
   TemplateRef,
-  ViewChild,
   ViewChildren,
 } from '@angular/core';
 import {
   UntypedFormGroup,
   UntypedFormBuilder,
-  FormGroup,
-  FormBuilder,
+  UntypedFormControl,
 } from '@angular/forms';
 import { AdminLookupTypeEnum } from '@app/enums/admin-lookup-type-enum';
+import { CharityRequestType } from '@app/enums/charity-request-type.enum';
 import { FileExtensionsEnum } from '@app/enums/file-extension-mime-types-icons.enum';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { SaveTypes } from '@app/enums/save-types';
 import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
 import { IKeyValue } from '@app/interfaces/i-key-value';
 import { AdminLookup } from '@app/models/admin-lookup';
+import { CharityOrganization } from '@app/models/charity-organization';
 import { CharityOrganizationUpdate } from '@app/models/charity-organization-update';
-import { OrganizationOfficer } from '@app/models/organization-officer';
 import { AdminLookupService } from '@app/services/admin-lookup.service';
 import { CharityOrganizationUpdateService } from '@app/services/charity-organization-update.service';
-import { DialogService } from '@app/services/dialog.service';
-import { EmployeeService } from '@app/services/employee.service';
+import { CharityOrganizationService } from '@app/services/charity-organization.service';
 import { LangService } from '@app/services/lang.service';
+import { LookupService } from '@app/services/lookup.service';
 import { Observable } from 'rxjs';
+import { share } from 'rxjs/operators';
 import { OrganizationOfficersComponent } from '../../shared/organization-officers/organization-officers.component';
 
 @Component({
@@ -43,10 +42,13 @@ export class CharityOrganizationUpdateComponent
   implements AfterViewInit {
   form!: UntypedFormGroup;
   tabs: IKeyValue[] = [];
+  _tabs: IKeyValue[] = [];
+  charityOrganizations$: Observable<CharityOrganization[]> = this.charityOrganizationService.load().pipe(share());
   logoFile?: File;
   fileExtensionsEnum = FileExtensionsEnum;
   activityTypes: AdminLookup[] = [];
-
+  RequestTypes = CharityRequestType;
+  requestTypes = this.lookupService.listByCategory.CharityRequestType;
   contactInformationInputs: IKeyValue[] = [
     { controlName: 'phone', label: this.lang.map.lbl_phone },
     { controlName: 'email', label: this.lang.map.lbl_email },
@@ -64,9 +66,9 @@ export class CharityOrganizationUpdateComponent
 
   internalBranches: IKeyValue[] = [
     {
-      controlName: ''
-    }
-  ]
+      controlName: '',
+    },
+  ];
 
   @ViewChildren('tabContent', { read: TemplateRef })
   tabsTemplates!: QueryList<TemplateRef<any>>;
@@ -80,11 +82,17 @@ export class CharityOrganizationUpdateComponent
   get contactInformationForm(): UntypedFormGroup {
     return this.form.get('contactInformation') as UntypedFormGroup;
   }
+  get requestTypeForm(): UntypedFormControl {
+    return this.form.get('requestType') as UntypedFormControl;
+
+  }
   constructor(
     public lang: LangService,
     public fb: UntypedFormBuilder,
     public service: CharityOrganizationUpdateService,
-    private adminLookupService: AdminLookupService
+    private adminLookupService: AdminLookupService,
+    private lookupService: LookupService,
+    private charityOrganizationService: CharityOrganizationService
   ) {
     super();
   }
@@ -92,47 +100,96 @@ export class CharityOrganizationUpdateComponent
   ngAfterViewInit(): void {
     const tabsTemplates = this.tabsTemplates.toArray();
     setTimeout(() => {
-      this.tabs = [
+      this._tabs = [
+        {
+          name: 'requestTypeTab',
+          template: tabsTemplates[0],
+          title: this.lang.map.request_type,
+          validStatus: () => true,
+        },
         {
           name: 'metaDataTab',
-          template: tabsTemplates[0],
+          template: tabsTemplates[1],
           title: this.lang.map.meta_data,
           validStatus: () => !!this.form && this.metaDataForm.valid,
+          category: CharityRequestType.META_DATA,
         },
         {
           name: 'contactInformationTab',
-          template: tabsTemplates[1],
+          template: tabsTemplates[2],
           title: this.lang.map.contact_information,
           validStatus: () => !!this.form && this.contactInformationForm.valid,
+          category: CharityRequestType.META_DATA,
         },
         {
           name: 'complainceOfficerTab',
-          template: tabsTemplates[2],
+          template: tabsTemplates[3],
           title: this.lang.map.complaince_office_data,
           validStatus: () => true,
+          category: CharityRequestType.META_DATA,
         },
         {
           name: 'liaisonOfficerTab',
-          template: tabsTemplates[3],
+          template: tabsTemplates[4],
           title: this.lang.map.liaison_office_data,
           validStatus: () => true,
+          category: CharityRequestType.META_DATA,
         },
         {
           name: 'banchTab',
-          template: tabsTemplates[4],
+          template: tabsTemplates[5],
           title: this.lang.map.lbl_branch,
-          validStatus: () => true
-        }
+          validStatus: () => true,
+          category: CharityRequestType.META_DATA,
+        },
+        {
+          name: 'externalBranchTab',
+          template: tabsTemplates[6],
+          title: this.lang.map.external_offices,
+          validStatus: () => true,
+          category: CharityRequestType.META_DATA
+        },
+        {
+          name: 'foundingMembersTab',
+          template: tabsTemplates[7],
+          title: this.lang.map.founding_members,
+          validStatus: () => true,
+          category: CharityRequestType.ADMINISTRATIVE_DATA
+        },
+        {
+          name: 'generalAssemblyMembersTab',
+          template: tabsTemplates[8],
+          title: this.lang.map.general_assembly_members,
+          validStatus: () => true,
+          category: CharityRequestType.ADMINISTRATIVE_DATA
+        },
+        {
+          name: 'boardMembersTab',
+          template: tabsTemplates[9],
+          title: this.lang.map.board_members,
+          validStatus: () => true,
+          category: CharityRequestType.ADMINISTRATIVE_DATA
+        },
       ];
+      this.tabs = [this._tabs[0]];
       if (!this.accordionView) {
-        this.tabs.push({
+        this._tabs.push({
           name: 'attachmentsTab',
           template: tabsTemplates[tabsTemplates.length - 1],
           title: this.lang.map.attachments,
           validStatus: () => true,
         });
+        this.tabs.push(this._tabs[this._tabs.length - 1]);
       }
     }, 0);
+  }
+
+  handleRequestTypeChange(requestType: number): void {
+    this.tabs = this._tabs.filter(e => !e?.category || e.category === requestType);
+  }
+  handleSelectCharityOrganization(id: number, data: CharityOrganization[]) {
+    const chosenModel = data.find(e => e.id === id)!;
+    this._updateForm(chosenModel.toCharityOrganizationUpdate());
   }
   getTabInvalidStatus(i: number): boolean {
     if (i >= 0 && i < this.tabs.length) {
@@ -154,7 +211,7 @@ export class CharityOrganizationUpdateComponent
   _initComponent(): void {
     this.loadActivityTypes();
   }
-  loadActivityTypes() {
+  loadActivityTypes(): void {
     this.adminLookupService
       .load(AdminLookupTypeEnum.ACTIVITY_TYPE)
       .subscribe((list) => {
@@ -166,6 +223,7 @@ export class CharityOrganizationUpdateComponent
     this.form = this.fb.group({
       metaData: this.fb.group(model.buildMetaDataForm()),
       contactInformation: this.fb.group(model.buildContactInformationForm()),
+      ...model.getFirstPageForm()
     });
   }
 
@@ -179,7 +237,9 @@ export class CharityOrganizationUpdateComponent
   _afterLaunch(): void {
     throw new Error('Method not implemented.');
   }
-  _prepareModel(): CharityOrganizationUpdate | Observable<CharityOrganizationUpdate> {
+  _prepareModel():
+    | CharityOrganizationUpdate
+    | Observable<CharityOrganizationUpdate> {
     const arr = this.organizationRefs.toArray();
     const charityOfficers = arr[1].list;
     const complianceOfficers = arr[0].list;
@@ -187,6 +247,8 @@ export class CharityOrganizationUpdateComponent
     return new CharityOrganizationUpdate().clone({
       ...this.contactInformationForm.value,
       ...this.metaDataForm.value,
+      requestType: this.requestTypeForm.value,
+      charityId: this.form.get('charityId')!.value
     });
   }
   _afterSave(
@@ -205,8 +267,17 @@ export class CharityOrganizationUpdateComponent
   _destroyComponent(): void {
     throw new Error('Method not implemented.');
   }
+  patchFrom(model: CharityOrganizationUpdate) {
+    this.model = model;
+    this.metaDataForm.patchValue(model!.buildMetaDataForm());
+    this.contactInformationForm.patchValue(model!.buildContactInformationForm());
+  }
   _updateForm(model: CharityOrganizationUpdate | undefined): void {
-    throw new Error('Method not implemented.');
+    if (!model) return;
+    this.model = model;
+    console.log(this.model.charityBranchList);
+    this.metaDataForm.patchValue(model!.buildMetaDataForm(false));
+    this.contactInformationForm.patchValue(model!.buildContactInformationForm(false));
   }
   _resetForm(): void {
     throw new Error('Method not implemented.');

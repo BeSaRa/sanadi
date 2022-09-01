@@ -20,6 +20,7 @@ import { CoordinationWithOrganizationsRequestComponent } from './pages/coordinat
 import { CharityOrganizationUpdateComponent } from './pages/charity-organization-update/charity-organization-update.component';
 import { OrganizationOfficersComponent } from './shared/organization-officers/organization-officers.component';
 import { CharityBranchComponent } from './shared/charity-branch/charity-branch.component';
+import { MembersComponent } from './shared/members/members.component';
 
 
 @NgModule({
@@ -38,6 +39,7 @@ import { CharityBranchComponent } from './shared/charity-branch/charity-branch.c
     CharityOrganizationUpdateComponent,
     OrganizationOfficersComponent,
     CharityBranchComponent,
+    MembersComponent,
   ],
   imports: [
     CommonModule,

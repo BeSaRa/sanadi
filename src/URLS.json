@@ -104,5 +104,6 @@
   "TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD": "/transferring-individual-funds-abroad",
   "TRANSFERRING_ENTITY": "/admin/transferring-entity",
   "CHARITY_ORGANIMZATION_UPDATE": "/charity-organization-update",
-  "E_COORDINATION_WITH_ORGANIZATION_REQUEST": "/coordination-with-organizations-request"
+  "E_COORDINATION_WITH_ORGANIZATION_REQUEST": "/coordination-with-organizations-request",
+  "CHARITY_ORGANIZATION": "/admin/charity-organization"
 }

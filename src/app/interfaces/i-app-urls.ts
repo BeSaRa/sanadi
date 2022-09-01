@@ -103,5 +103,6 @@ export interface IAppUrls {
   TRANSFERRING_ENTITY: string;
   VACATION_DATE: string;
   CHARITY_ORGANIMZATION_UPDATE: string;
+  CHARITY_ORGANIZATION: string;
   [index: string]: string;
 }

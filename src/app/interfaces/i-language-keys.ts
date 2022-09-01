@@ -1275,4 +1275,9 @@ export interface ILanguageKeys {
   youtube: string;
   complaince_office_data: string;
   liaison_office_data: string;
+  founding_members: string;
+  external_offices: string;
+  general_assembly_members: string;
+  board_members: string;
+  personal_number: string;
 }

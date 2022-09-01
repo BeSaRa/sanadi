@@ -10,6 +10,75 @@
       >
       </tab>
     </tabs-list>
+
+    <ng-template #tabContent>
+      <div class="row">
+        <div class="col-sm-6 col-md-4">
+          <label
+            [asteriskIfRequired]="'requestType'"
+            for="requestType"
+            class="form-label"
+            >{{ lang.map.request_type }}</label
+          >
+          <ng-select
+            [selectOnTab]="true"
+            [labelForId]="'requestType'"
+            [clearable]="true"
+            placeholder="{{ lang.map.select }}"
+            [id]="'requestType'"
+            [notFoundText]="lang.map.msg_not_found"
+            appendTo="body"
+            [validationClasses]="'requestType'"
+            [formControlName]="'requestType'"
+            (change)="handleRequestTypeChange($event)"
+          >
+            <ng-option
+              *ngFor="let type of requestTypes"
+              [disabled]="!type.isActive()"
+              [value]="type.lookupKey"
+              >{{ type.getName() }}</ng-option
+            >
+          </ng-select>
+          <app-field-error-message
+            [controlName]="'requestType'"
+          ></app-field-error-message>
+        </div>
+        <div
+          class="col-sm-6 col-md-4"
+          *ngIf="
+            requestTypeForm.value === RequestTypes.META_DATA &&
+            (charityOrganizations$ | async) as data
+          "
+        >
+          <label
+            [asteriskIfRequired]="'charityId'"
+            for="charityId"
+            class="form-label"
+            >{{ lang.map.organization_field }}</label
+          >
+          <ng-select
+            [selectOnTab]="true"
+            [labelForId]="'charityId'"
+            [clearable]="true"
+            placeholder="{{ lang.map.select }}"
+            [id]="'charityId'"
+            [notFoundText]="lang.map.msg_not_found"
+            appendTo="body"
+            [validationClasses]="'charityId'"
+            [formControlName]="'charityId'"
+            (change)="handleSelectCharityOrganization($event, data)"
+          >
+            <ng-option *ngFor="let type of data" [value]="type.id">{{
+              type.getName()
+            }}</ng-option>
+          </ng-select>
+          <app-field-error-message
+            [controlName]="'charityId'"
+          ></app-field-error-message>
+        </div>
+      </div>
+    </ng-template>
+
     <ng-template #tabContent>
       <div class="row" formGroupName="metaData">
         <div class="col-sm-6 col-md-4 mb-4 position-relative">
@@ -238,9 +307,31 @@
       </organization-officers>
     </ng-template>
     <ng-template #tabContent>
-      <charity-branch> </charity-branch>
+      <charity-branch [list]="model!.charityBranchList" [readonly]="readonly">
+      </charity-branch>
     </ng-template>
-    <ng-template #tabContent> </ng-template>
+    <ng-template #tabContent>
+      <p>outside branch</p>
+    </ng-template>
+    <ng-template #tabContent>
+      <!-- founding members -->
+      <members pageTitle="founding_members"></members>
+    </ng-template>
+
+    <ng-template #tabContent>
+      <!-- General Assembly Members  -->
+      <members pageTitle="general_assembly_members"></members>
+    </ng-template>
+
+    <ng-template #tabContent>
+      <!-- . Board Members  -->
+      <members pageTitle="board_members"></members>
+    </ng-template>
+
+    <ng-template #tabContent>
+      <!-- . Current Executive Management  -->
+    </ng-template>
+
     <ng-template #tabContent>
       <attachments
         [caseId]="model?.id"

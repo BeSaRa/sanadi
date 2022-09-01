@@ -25,7 +25,6 @@ CharityOrganizationUpdate
   );
   caseType: number = CaseTypes.CHARITY_ORGANIZATION_UPDATE;
 
-
   arabicName!: string;
   englishName!: string;
   shortName!: string;
@@ -36,10 +35,11 @@ CharityOrganizationUpdate
   regulatingLaw!: string;
   registrationAuthority!: number;
   publishDate!: string;
+  registrationDate!: string;
   registrationAuthorityInfo!: AdminResult;
   taxCardNo?: string;
   unifiedEconomicRecord?: string;
-
+  charityId!: number;
   phone!: string;
   email!: string;
   website!: string;
@@ -52,12 +52,12 @@ CharityOrganizationUpdate
   instagram!: string;
   snapChat!: string;
   youTube!: string;
-  requestType = 0;
-
+  requestType!: number;
+  establishmentDate!: string;
   complianceOfficerList!: OrganizationOfficer[];
   charityContactOfficerList!: OrganizationOfficer[];
   charityBranchList!: CharityBranch[];
-
+  establishmentID !: string;
   buildMetaDataForm(controls = true) {
     const {
       arabicName,
@@ -71,6 +71,9 @@ CharityOrganizationUpdate
       taxCardNo,
       unifiedEconomicRecord,
       publishDate,
+      registrationDate,
+      establishmentDate,
+      establishmentID
     } = this;
     return {
       publishDate,
@@ -121,7 +124,23 @@ CharityOrganizationUpdate
         ? [registrationAuthority, [CustomValidators.required]]
         : registrationAuthority,
       taxCardNo: controls ? [taxCardNo] : taxCardNo,
-      unifiedEconomicRecord: controls ? [unifiedEconomicRecord] : unifiedEconomicRecord,
+      unifiedEconomicRecord: controls
+        ? [unifiedEconomicRecord]
+        : unifiedEconomicRecord,
+      registrationDate: controls ? [registrationDate] : registrationDate,
+
+      establishmentDate: controls ? [establishmentDate] : establishmentDate,
+    };
+  }
+  getFirstPageForm(controls = true) {
+    const { requestType, charityId } = this;
+    return {
+      requestType: controls
+        ? [requestType, [CustomValidators.required]]
+        : requestType,
+      charityId: controls
+        ? [charityId, [CustomValidators.required]]
+        : charityId,
     };
   }
   buildContactInformationForm(controls = true) {
@@ -140,24 +159,39 @@ CharityOrganizationUpdate
       snapChat,
     } = this;
     return {
-      phone: controls ? [
-        phone,
-        [CustomValidators.required, ...CustomValidators.commonValidations.phone]
-      ] : phone,
-      email: controls ? [
-        email,
-        [CustomValidators.required, CustomValidators.pattern('EMAIL')]
-      ] : email,
+      phone: controls
+        ? [
+          phone,
+          [
+            CustomValidators.required,
+            ...CustomValidators.commonValidations.phone,
+          ],
+        ]
+        : phone,
+      email: controls
+        ? [
+          email,
+          [CustomValidators.required, CustomValidators.pattern('EMAIL')],
+        ]
+        : email,
       website: controls ? [website, [CustomValidators.required]] : website,
-      zoneNumber: controls ? [zoneNumber, [CustomValidators.required]] : zoneNumber,
-      streetNumber: controls ? [streetNumber, [CustomValidators.required]] : streetNumber,
-      buildingNumber: controls ? [buildingNumber, [CustomValidators.required]] : buildingNumber,
+      zoneNumber: controls
+        ? [zoneNumber, [CustomValidators.required]]
+        : zoneNumber,
+      streetNumber: controls
+        ? [streetNumber, [CustomValidators.required]]
+        : streetNumber,
+      buildingNumber: controls
+        ? [buildingNumber, [CustomValidators.required]]
+        : buildingNumber,
       address: controls ? [address, [CustomValidators.required]] : address,
       facebook: controls ? [facebook, [CustomValidators.required]] : facebook,
       twitter: controls ? [twitter, [CustomValidators.required]] : twitter,
-      instagram: controls ? [instagram, [CustomValidators.required]] : instagram,
+      instagram: controls
+        ? [instagram, [CustomValidators.required]]
+        : instagram,
       youTube: controls ? [youTube, [CustomValidators.required]] : youTube,
       snapChat: controls ? [snapChat, [CustomValidators.required]] : snapChat,
-    }
+    };
   }
 }
