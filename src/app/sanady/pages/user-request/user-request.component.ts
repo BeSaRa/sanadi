@@ -1365,7 +1365,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private loadDonors() {
     this.donorList = [];
-    return this.donorService.loadComposite().pipe(
+    return this.donorService.loadAsLookups().pipe(
       catchError(() => of([]))
     ).subscribe((list) => {
       this.donorList = list;
