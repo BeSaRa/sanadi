@@ -103,8 +103,16 @@ export class CountryPopupComponent implements OnInit, AfterViewInit {
     if (this.operation === OperationTypes.UPDATE) {
       this.fm.displayFormValidity();
     }
+    if (this.readonly) {
+      this.form.disable();
+      this.saveVisible = false;
+      this.validateFieldsVisible = false;
+    }
   }
 
+  get readonly(): boolean {
+    return this.operation === OperationTypes.VIEW;
+  }
   saveModel(): void {
     this.save$.next();
   }
@@ -133,7 +141,13 @@ export class CountryPopupComponent implements OnInit, AfterViewInit {
   }
 
   get popupTitle(): string {
-    return this.operation === OperationTypes.CREATE ? this.langService.map.lbl_add_country : this.langService.map.lbl_edit_country;
+    if (this.operation === OperationTypes.CREATE) {
+      return this.langService.map.lbl_add_country;
+    } else if (this.operation === OperationTypes.UPDATE) {
+      return this.langService.map.lbl_edit_country;
+    } else if (this.operation === OperationTypes.VIEW) {
+      return this.langService.map.view;
+    }
+    return '';
   }
-
 }

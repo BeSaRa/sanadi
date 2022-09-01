@@ -16,11 +16,11 @@ export class ProjectNeed extends SearchableCloneable<ProjectNeed> {
   buildForm(withControls = true): IKeyValue {
     const { projectName, projectDescription, totalCost, beneficiaries, goals } = this;
     return {
-      projectName: withControls ? [projectName, [CustomValidators.required]] : projectName,
-      projectDescription: withControls ? [projectDescription, [CustomValidators.required]] : projectDescription,
-      totalCost: withControls ? [totalCost, [CustomValidators.required, CustomValidators.decimal(2)]] : totalCost,
-      beneficiaries: withControls ? [beneficiaries, [CustomValidators.required]] : beneficiaries,
-      goals: withControls ? [goals, [CustomValidators.required]] : goals,
+      projectName: withControls ? [projectName, [CustomValidators.required, CustomValidators.maxLength(300)]] : projectName,
+      projectDescription: withControls ? [projectDescription, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : projectDescription,
+      totalCost: withControls ? [totalCost, [CustomValidators.required, CustomValidators.decimal(2), CustomValidators.maxLength(50)]] : totalCost,
+      beneficiaries: withControls ? [beneficiaries, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : beneficiaries,
+      goals: withControls ? [goals, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : goals,
     };
   }
 

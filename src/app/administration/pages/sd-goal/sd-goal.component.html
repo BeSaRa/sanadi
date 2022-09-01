@@ -2,9 +2,6 @@
   <app-page-header [pageTitle]="'menu_sd_goal'" [clickOnReload$]="reload$" [clickOnNew$]="add$">
   </app-page-header>
   <ng-container *ngIf="table">
-    <app-bulk-actions *ngIf="table.selection && table.selection.selected.length"
-                      [selectedRecords]="table.selection.selected"
-                      [actionsList]="actionsList"></app-bulk-actions>
     <app-grid-search (searchTextEvent)="filterControl.setValue($event)"
                      *ngIf="(table.selection && !table.selection.selected.length)"></app-grid-search>
   </ng-container>
@@ -16,25 +13,10 @@
       <app-table #table [paginator]="paginator"
                  [filter]="filterControl.value"
                  [useSearchToFilter]="true"
-                 [selectable]="true"
                  [columns]="displayedColumns"
                  [data]="models"
                  sortableTable>
         <table class="table table-striped table-bordered caption-top" [dataSource]="table.dataSource" cdk-table>
-          <ng-container cdkColumnDef="rowSelection">
-            <th class="select-all-td" cdk-header-cell *cdkHeaderCellDef>
-              <input type="checkbox" [disabled]="table.filter"
-                     [indeterminate]="table.selection.hasValue() && !table.allSelected()"
-                     (change)="$event ? table.toggleAll() : null"
-                     [checked]="table.selection.hasValue() && table.allSelected()"
-                     class="form-check-input"></th>
-            <td cdk-cell *cdkCellDef="let row">
-              <input type="checkbox"
-                     (click)="$event.stopPropagation()"
-                     [checked]="table.selection.isSelected(row)"
-                     (change)="$event ? table.selection.toggle(row) : null"
-                     class="form-check-input"></td>
-          </ng-container>
           <ng-container cdkColumnDef="enName">
             <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.english_name}}</th>
             <td cdk-cell *cdkCellDef="let row">{{row.enName}}</td>

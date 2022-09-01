@@ -93,7 +93,7 @@ export class MultiAttachmentDirective implements OnInit, OnDestroy {
 
   getItemAttachments(): void {
     const map = this.attachmentComponent.multiAttachments.get(this.identifier)!
-    const attachments = map.get(this.item[this.itemDef] as string) || [];
+    const attachments = map && map.get(this.item[this.itemDef] as string) || [];
     this.attachmentsMap = attachments.reduce((acc, file) => {
       return { ...acc, [file.attachmentTypeInfo.id!]: file }
     }, {})

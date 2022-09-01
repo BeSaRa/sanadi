@@ -51,9 +51,7 @@ export class InternalDepartmentComponent extends AdminGenericComponent<InternalD
       icon: 'mdi-list-status',
       label: 'btn_activate',
       onClick: (item) => this.toggleStatus(item),
-      show: (item) => {
-        return item.status === CommonStatusEnum.DEACTIVATED;
-      }
+      show: () => false
     },
     // deactivate
     {
@@ -61,9 +59,7 @@ export class InternalDepartmentComponent extends AdminGenericComponent<InternalD
       icon: 'mdi-list-status',
       label: 'btn_deactivate',
       onClick: (item) => this.toggleStatus(item),
-      show: (item) => {
-        return item.status === CommonStatusEnum.ACTIVATED;
-      }
+      show: () => false
     }
   ];
   displayedColumns: string[] = ['arName', 'enName', 'status', 'actions'];

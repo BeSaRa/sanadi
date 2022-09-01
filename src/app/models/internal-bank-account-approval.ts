@@ -1,18 +1,22 @@
-import { mixinRequestType } from '@app/mixins/mixin-request-type';
-import { CaseModel } from '@app/models/case-model';
-import { InternalBankAccountApprovalService } from '@app/services/internal-bank-account-approval.service';
-import { HasRequestType } from '@app/interfaces/has-request-type';
-import { FactoryService } from '@app/services/factory.service';
-import { AdminResult } from '@app/models/admin-result';
-import { CustomValidators } from '@app/validators/custom-validators';
-import { CaseTypes } from '@app/enums/case-types.enum';
-import { BankAccount } from '@app/models/bank-account';
-import { NpoEmployee } from '@app/models/npo-employee';
-import { DialogRef } from '@app/shared/models/dialog-ref';
-import { WFResponseType } from '@app/enums/wfresponse-type.enum';
+import {mixinRequestType} from '@app/mixins/mixin-request-type';
+import {CaseModel} from '@app/models/case-model';
+import {InternalBankAccountApprovalService} from '@app/services/internal-bank-account-approval.service';
+import {HasRequestType} from '@app/interfaces/has-request-type';
+import {FactoryService} from '@app/services/factory.service';
+import {AdminResult} from '@app/models/admin-result';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {CaseTypes} from '@app/enums/case-types.enum';
+import {BankAccount} from '@app/models/bank-account';
+import {NpoEmployee} from '@app/models/npo-employee';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {WFResponseType} from '@app/enums/wfresponse-type.enum';
+import {InternalBankAccountApprovalInterceptor} from '@app/model-interceptors/internal-bank-account-approval-interceptor';
+import {InterceptModel} from '@decorators/intercept-model';
 
 const _RequestType = mixinRequestType(CaseModel);
 
+const {send, receive} = new InternalBankAccountApprovalInterceptor();
+@InterceptModel({send, receive})
 export class InternalBankAccountApproval extends _RequestType<InternalBankAccountApprovalService, InternalBankAccountApproval> implements HasRequestType {
   caseType: number = CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL;
   serviceSteps!: string[];

@@ -3,11 +3,10 @@
                    [clickOnNew$]="add$" [addPermission]="empService.checkPermissions('ADMIN_ADD_USER')">
   </app-page-header>
   <ng-container *ngIf="table">
-    <app-bulk-actions *ngIf="table.selection && table.selection.selected.length"
+    <!-- <app-bulk-actions *ngIf="table.selection && table.selection.selected.length"
                       [selectedRecords]="table.selection.selected"
-                      [actionsList]="bulkActionsList"></app-bulk-actions>
-    <app-grid-search *ngIf="(table.selection && !table.selection.selected.length)"
-                     (searchTextEvent)="filterControl.setValue($event)"></app-grid-search>
+                      [actionsList]="bulkActionsList"></app-bulk-actions> -->
+    <app-grid-search (searchTextEvent)="filterControl.setValue($event)"></app-grid-search>
   </ng-container>
 </div>
 <div class="row pt-3">
@@ -16,25 +15,10 @@
       <app-table #table [paginator]="paginator"
                  [filter]="filterControl.value"
                  [useSearchToFilter]="true"
-                 [selectable]="true"
                  [data]="models"
                  [columns]="displayedColumns"
                  sortableTable>
         <table class="table table-striped table-bordered caption-top" cdk-table [dataSource]="table.dataSource">
-          <ng-container cdkColumnDef="rowSelection">
-            <th class="select-all-td" cdk-header-cell *cdkHeaderCellDef>
-              <input type="checkbox" [disabled]="table.filter"
-                     [indeterminate]="table.selection.hasValue() && !table.allSelected()"
-                     (change)="$event ? table.toggleAll() : null"
-                     [checked]="table.selection.hasValue() && table.allSelected()"
-                     class="form-check-input"></th>
-            <td cdk-cell *cdkCellDef="let row">
-              <input type="checkbox"
-                     (click)="$event.stopPropagation()"
-                     [checked]="table.selection.isSelected(row)"
-                     (change)="$event ? table.selection.toggle(row) : null"
-                     class="form-check-input"></td>
-          </ng-container>
           <ng-container cdkColumnDef="domainName">
             <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.login_name}}</th>
             <td cdk-cell *cdkCellDef="let row"><span class="dir-rtl d-inline-block">{{row.domainName}}</span></td>
@@ -75,14 +59,12 @@
             <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_actions}}</th>
             <td cdk-cell *cdkCellDef="let row" class="table-actions">
               <div class="d-flex flex-row">
-                <a href="#" *ngIf="empService.checkPermissions('ADMIN_DELETE_USER')"
-                   (click)="deactivate(row, $event)" tooltip="{{langService.map.btn_delete}}" class="icon-btn">
-                  <i class="mdi mdi-close-box"></i>
-                </a>
                 <a href="#" *ngIf="empService.checkPermissions('ADMIN_EDIT_USER')"
                    (click)="edit(row , $event)" tooltip="{{langService.map.btn_edit}}" class="icon-btn">
                   <i class="mdi mdi-pen"></i>
                 </a>
+                <button (click)="view$.next(row)" class="btn icon-btn"><i class="mdi text-primary mdi-eye"></i>
+                </button>
                 <a href="#" (click)="showAuditLogs(row, $event)" tooltip="{{langService.map.show_logs}}"
                    class="icon-btn">
                   <i class="mdi mdi-history"></i>

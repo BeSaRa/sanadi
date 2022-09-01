@@ -1,3 +1,4 @@
+import { CastResponse } from '@decorators/cast-response';
 import { Injectable } from '@angular/core';
 import { FactoryService } from '@services/factory.service';
 import { AdminLookupTypeEnum } from '@app/enums/admin-lookup-type-enum';
@@ -24,9 +25,9 @@ export class DacOchaNewService extends CrudWithDialogGenericService<AdminLookup>
   list: AdminLookup[] = [];
 
   constructor(public http: HttpClient,
-              private urlService: UrlService,
-              private adminLookupService: AdminLookupService,
-              public dialog: DialogService) {
+    private urlService: UrlService,
+    private adminLookupService: AdminLookupService,
+    public dialog: DialogService) {
     super();
     FactoryService.registerService('DacOchaNewService', this);
   }
@@ -56,7 +57,7 @@ export class DacOchaNewService extends CrudWithDialogGenericService<AdminLookup>
   }
 
   loadByTypePaging(options: Partial<PaginationContract>, dacOchaTypeId: AdminLookupTypeEnum): Observable<Pagination<AdminLookup[]>> {
-    return this.adminLookupService.loadWorkFieldsByTypePaging(options,  dacOchaTypeId);
+    return this.adminLookupService.loadWorkFieldsByTypePaging(options, dacOchaTypeId);
   }
 
   loadByParentId(parentId: number) {
@@ -72,14 +73,29 @@ export class DacOchaNewService extends CrudWithDialogGenericService<AdminLookup>
 
   openCreateDialog(typeId: AdminLookupTypeEnum, parentId?: number): DialogRef {
     return this.dialog.show<IDialogData<AdminLookup>>(DacOchaNewPopupComponent, {
-      model: new AdminLookup().clone({type: typeId, parentId: parentId}),
+      model: new AdminLookup().clone({ type: typeId, parentId: parentId }),
       operation: OperationTypes.CREATE,
       selectedTab: 'basic'
     });
   }
 
+  @CastResponse(() => AdminLookup)
+  private _getByIdCasted(modelId: number) {
+    return this.getById(modelId);
+  }
+  openViewDialog(modelId: number, selectedPopupTab: string = 'basic'): Observable<DialogRef> {
+    return this._getByIdCasted(modelId).pipe(
+      switchMap((item: AdminLookup) => {
+        return of(this.dialog.show<IDialogData<AdminLookup>>(DacOchaNewPopupComponent, {
+          model: item,
+          operation: OperationTypes.VIEW,
+          selectedTab: selectedPopupTab || 'basic'
+        }));
+      })
+    );
+  }
   openUpdateDialog(modelId: number, selectedPopupTab: string = 'basic'): Observable<DialogRef> {
-    return this.getById(modelId).pipe(
+    return this._getByIdCasted(modelId).pipe(
       switchMap((item: AdminLookup) => {
         return of(this.dialog.show<IDialogData<AdminLookup>>(DacOchaNewPopupComponent, {
           model: item,

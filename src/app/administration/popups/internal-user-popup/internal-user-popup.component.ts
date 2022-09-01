@@ -52,7 +52,10 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
   userTeamComponent!: UserTeamComponent;
   displaySaveBtn: boolean = true;
   userDepartments: InternalUserDepartment[] = [];
-  displayedColumns: string [] = ['arabicName', 'englishName', 'default', 'actions'];
+  get displayedColumns(): string [] {
+
+    return this.readonly ? ['arabicName', 'englishName','default'] : ['arabicName', 'englishName', 'default', 'actions']
+  }
   selectedDepartment: UntypedFormControl = new UntypedFormControl();
   private userDepartmentsChanged$: Subject<InternalUserDepartment[]> = new Subject<InternalUserDepartment[]>();
   private userDepartmentsIds: number[] = [];
@@ -207,8 +210,27 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
     if (this.operation === OperationTypes.UPDATE) {
       this._updatePermissionValidations(true);
     }
+    if (this.readonly) {
+      this.form.disable();
+      this.displaySaveBtn = false;
+      this.validateFieldsVisible = false;
+    }
   }
 
+  get readonly(): boolean {
+    return this.operation === OperationTypes.VIEW;
+  }
+
+  get popupTitle(): string {
+    if (this.operation === OperationTypes.CREATE) {
+      return this.lang.map.add_new_internal_user;
+    } else if (this.operation === OperationTypes.UPDATE) {
+      return this.lang.map.edit_internal_user;
+    } else if (this.operation === OperationTypes.VIEW) {
+      return this.lang.map.view;
+    }
+    return '';
+  }
   private _updatePermissionValidations(forceUpdateValueAndValidation: boolean = false) {
     const value = this.customRoleId?.value;
     if (!value) {

@@ -74,7 +74,18 @@ export class AidLookupService extends CrudWithDialogGenericService<AidLookup> {
       })
     );
   }
-
+  openViewDialog(modelId: number, aidType: number): Observable<DialogRef> {
+    return this.getById(modelId).pipe(
+      switchMap((aidLookup: AidLookup) => {
+        return of(this.dialog.show<IDialogData<AidLookup>>(AidLookupPopupComponent, {
+          model: aidLookup,
+          parentId: aidLookup.id,
+          operation: OperationTypes.VIEW,
+          aidType
+        }));
+      })
+    );
+  }
   openCreateDialog(aidType: number, parentId: number): DialogRef {
     return this.dialog.show<IDialogData<AidLookup>>(AidLookupPopupComponent, {
       model: new AidLookup(),

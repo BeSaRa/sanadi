@@ -30,6 +30,8 @@ export class UserSecurityComponent implements OnInit, OnDestroy {
   private _userTeams: UserTeam[] = [];
   private _operation: BehaviorSubject<OperationTypes> = new BehaviorSubject<OperationTypes>(OperationTypes.CREATE);
   @Input()
+  readonly: boolean = false;
+  @Input()
   set operation(value: OperationTypes) {
     this._operation.next(value);
   };

@@ -1,31 +1,31 @@
-import {Injectable} from '@angular/core';
-import {OrgUser} from '../models/org-user';
-import {HttpClient, HttpParams} from '@angular/common/http';
-import {UrlService} from './url.service';
-import {FactoryService} from './factory.service';
-import {DialogRef} from '../shared/models/dialog-ref';
-import {IDialogData} from '@contracts/i-dialog-data';
-import {OperationTypes} from '../enums/operation-types.enum';
-import {forkJoin, Observable, of} from 'rxjs';
-import {switchMap} from 'rxjs/operators';
-import {DialogService} from './dialog.service';
-import {OrganizationUserPopupComponent} from '../administration/popups/organization-user-popup/organization-user-popup.component';
-import {CustomRoleService} from './custom-role.service';
-import {IOrgUserCriteria} from '@contracts/i-org-user-criteria';
-import {OrganizationUnitService} from './organization-unit.service';
-import {CustomRole} from '../models/custom-role';
-import {OrgUnit} from '../models/org-unit';
-import {PermissionService} from './permission.service';
-import {OrganizationUserPermissionService} from './organization-user-permission.service';
-import {OrgUserPermission} from '../models/org-user-permission';
-import {AuditLogService} from './audit-log.service';
-import {ComponentType} from '@angular/cdk/portal';
-import {CastResponse, CastResponseContainer} from '@decorators/cast-response';
-import {CrudWithDialogGenericService} from '@app/generics/crud-with-dialog-generic-service';
-import {Pagination} from '@app/models/pagination';
-import {PaginationContract} from '@contracts/pagination-contract';
-import {CommonUtils} from '@helpers/common-utils';
-import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import { Injectable } from '@angular/core';
+import { OrgUser } from '../models/org-user';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { UrlService } from './url.service';
+import { FactoryService } from './factory.service';
+import { DialogRef } from '../shared/models/dialog-ref';
+import { IDialogData } from '@contracts/i-dialog-data';
+import { OperationTypes } from '../enums/operation-types.enum';
+import { forkJoin, Observable, of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+import { DialogService } from './dialog.service';
+import { OrganizationUserPopupComponent } from '../administration/popups/organization-user-popup/organization-user-popup.component';
+import { CustomRoleService } from './custom-role.service';
+import { IOrgUserCriteria } from '@contracts/i-org-user-criteria';
+import { OrganizationUnitService } from './organization-unit.service';
+import { CustomRole } from '../models/custom-role';
+import { OrgUnit } from '../models/org-unit';
+import { PermissionService } from './permission.service';
+import { OrganizationUserPermissionService } from './organization-user-permission.service';
+import { OrgUserPermission } from '../models/org-user-permission';
+import { AuditLogService } from './audit-log.service';
+import { ComponentType } from '@angular/cdk/portal';
+import { CastResponse, CastResponseContainer } from '@decorators/cast-response';
+import { CrudWithDialogGenericService } from '@app/generics/crud-with-dialog-generic-service';
+import { Pagination } from '@app/models/pagination';
+import { PaginationContract } from '@contracts/pagination-contract';
+import { CommonUtils } from '@helpers/common-utils';
+import { CommonStatusEnum } from '@app/enums/common-status.enum';
 
 @CastResponseContainer({
   $default: {
@@ -33,7 +33,7 @@ import {CommonStatusEnum} from '@app/enums/common-status.enum';
   },
   $pagination: {
     model: () => Pagination,
-    shape: {'rs.*': () => OrgUser}
+    shape: { 'rs.*': () => OrgUser }
   }
 })
 @Injectable({
@@ -43,13 +43,13 @@ export class OrganizationUserService extends CrudWithDialogGenericService<OrgUse
   list!: OrgUser[];
 
   constructor(public http: HttpClient,
-              private urlService: UrlService,
-              public dialog: DialogService,
-              private customRoleService: CustomRoleService,
-              private organizationUnitService: OrganizationUnitService,
-              private permissionService: PermissionService,
-              private orgUserPermissionService: OrganizationUserPermissionService,
-              private auditLogService: AuditLogService) {
+    private urlService: UrlService,
+    public dialog: DialogService,
+    private customRoleService: CustomRoleService,
+    private organizationUnitService: OrganizationUnitService,
+    private permissionService: PermissionService,
+    private orgUserPermissionService: OrganizationUserPermissionService,
+    private auditLogService: AuditLogService) {
     super();
     FactoryService.registerService('OrganizationUserService', this);
   }
@@ -83,6 +83,25 @@ export class OrganizationUserService extends CrudWithDialogGenericService<OrgUse
           }));
         })
       );
+  }
+
+  openViewDialog(orgUserId: number): Observable<DialogRef> {
+    return this._loadInitData(orgUserId).pipe(
+      switchMap((result) => {
+        let request = this.getById(orgUserId);
+        return request.pipe(
+          switchMap((orgUser: OrgUser) => {
+            return of(this.dialog.show<IDialogData<OrgUser>>(OrganizationUserPopupComponent, {
+              model: orgUser,
+              operation: OperationTypes.VIEW,
+              customRoleList: result.customRoles,
+              orgUnitList: result.orgUnits,
+              orgUserPermissions: result.orgUserPermissions
+            }));
+          })
+        );
+      })
+    );
   }
 
   private _openUpdateDialog(orgUserId: number, isCompositeLoad: boolean): Observable<DialogRef> {
@@ -161,7 +180,7 @@ export class OrganizationUserService extends CrudWithDialogGenericService<OrgUse
    * @description Loads the organization users list by criteria
    * @param criteria: IOrgUserCriteria
    */
-  @CastResponse(undefined, {fallback: '$default', unwrap: 'rs'})
+  @CastResponse(undefined, { fallback: '$default', unwrap: 'rs' })
   getByCriteria(criteria: IOrgUserCriteria): Observable<OrgUser[]> {
     const queryParams = this._buildCriteriaQueryParams(criteria);
 

@@ -21,6 +21,7 @@ import { normalSearchFields } from '@app/helpers/normal-search-fields';
 import { BuildingAbility } from './building-ability';
 import { ParticipantOrg } from './participant-org';
 import { CustomValidators } from '@app/validators/custom-validators';
+import { AdminResult } from './admin-result';
 
 const _RequestType = mixinLicenseDurationType(mixinRequestType(CaseModel));
 const interceptor = new CoordinationWithOrganizationsRequestInterceptor();
@@ -48,9 +49,11 @@ export class CoordinationWithOrganizationsRequest
   effectiveCoordinationCapabilities: EffectiveCoordinationCapabilities[] = [];
   researchAndStudies: ResearchAndStudies[] = [];
 
+  domainInfo!: AdminResult
+
   searchFields: ISearchFieldsMap<CoordinationWithOrganizationsRequest> = {
     ...dateSearchFields(['createdOn']),
-    ...infoSearchFields(['creatorInfo', 'caseStatusInfo', 'categoryInfo']),
+    ...infoSearchFields(['domainInfo', 'caseStatusInfo']),
     ...normalSearchFields(['fullName', 'fullSerial']),
   };
   service: CoordinationWithOrganizationsRequestService;

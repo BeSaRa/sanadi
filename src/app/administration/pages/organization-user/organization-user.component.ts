@@ -1,3 +1,7 @@
+import { catchError } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
+import { filter } from 'rxjs/operators';
+import { exhaustMap } from 'rxjs/operators';
 import { Component, ViewChild } from '@angular/core';
 import { OrgUser } from '@app/models/org-user';
 import { takeUntil } from 'rxjs/operators';
@@ -17,6 +21,7 @@ import { TableComponent } from '@app/shared/components/table/table.component';
 import { SortEvent } from '@app/interfaces/sort-event';
 import { CommonUtils } from '@app/helpers/common-utils';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import { Subject, of } from 'rxjs';
 
 @Component({
   selector: 'app-organization-user',
@@ -24,6 +29,7 @@ import {CommonStatusEnum} from '@app/enums/common-status.enum';
   styleUrls: ['./organization-user.component.scss']
 })
 export class OrganizationUserComponent extends AdminGenericComponent<OrgUser, OrganizationUserService> {
+  view$: Subject<OrgUser> = new Subject<OrgUser>();
   usePagination = true;
   constructor(public service: OrganizationUserService,
               public langService: LangService,
@@ -37,11 +43,12 @@ export class OrganizationUserComponent extends AdminGenericComponent<OrgUser, Or
 
   _init() {
     this.listenToLoadDone();
+    this.listenToView()
   }
 
   @ViewChild('table') table!: TableComponent;
 
-  displayedColumns: string[] = ['rowSelection', 'domainName', 'arName', 'enName', 'empNum', 'organization', 'branch', 'status', 'statusDateModified', 'actions'];
+  displayedColumns: string[] = ['domainName', 'arName', 'enName', 'empNum', 'organization', 'branch', 'status', 'statusDateModified', 'actions'];
 
   sortingCallbacks = {
     organization: (a: OrgUser, b: OrgUser, dir: SortEvent): number => {
@@ -63,13 +70,13 @@ export class OrganizationUserComponent extends AdminGenericComponent<OrgUser, Or
 
   commonStatusEnum = CommonStatusEnum;
   bulkActionsList: IGridAction[] = [
-    {
-      langKey: 'btn_delete',
-      icon: 'mdi-close-box',
-      callback: ($event: MouseEvent) => {
-        this.deactivateBulk($event);
-      }
-    }
+    // {
+    //   langKey: 'btn_delete',
+    //   icon: 'mdi-close-box',
+    //   callback: ($event: MouseEvent) => {
+    //     this.deactivateBulk($event);
+    //   }
+    // }
   ];
 
   actions: IMenuItem<OrgUser>[] = [
@@ -138,7 +145,16 @@ export class OrganizationUserComponent extends AdminGenericComponent<OrgUser, Or
         this.table && this.table.clearSelection();
       });
   }
-
+  listenToView(): void {
+    this.view$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(exhaustMap((model) => {
+        return this.service.openViewDialog(model.id).pipe(catchError(_ => of(null)));
+      }))
+      .pipe(filter((dialog): dialog is DialogRef => !!dialog))
+      .pipe(switchMap(dialog => dialog.onAfterClose$))
+      .subscribe(() => this.reload$.next(null));
+  }
   showAuditLogs(user: OrgUser, $event?: MouseEvent): void {
     $event?.preventDefault();
     user.showAuditLogs($event)

@@ -26,7 +26,7 @@ import { AdminGenericComponent } from '@app/generics/admin-generic-component';
 })
 export class OrganizationUnitComponent extends AdminGenericComponent<OrgUnit, OrganizationUnitService> {
   usePagination = true;
-  displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'phoneNumber1', 'email', 'address', 'status', 'statusDateModified', 'actions']; //orgNationality
+  displayedColumns: string[] = ['arName', 'enName', 'phoneNumber1', 'email', 'address', 'status', 'statusDateModified', 'actions']; //orgNationality
   xDeleteMessage = this.langService.map.lbl_organization + ', ' +
     this.langService.map.lbl_org_branches + ', ' + this.langService.map.lbl_org_users;
   orgStatusEnum = OrgStatusEnum;
@@ -50,10 +50,8 @@ export class OrganizationUnitComponent extends AdminGenericComponent<OrgUnit, Or
       type: 'action',
       label: 'btn_delete',
       icon: 'mdi-close-box',
-      onClick: (item: OrgUnit) => this.deactivate(item),
-      show: () => {
-        return this.empService.checkPermissions('ADMIN_DELETE_OU');
-      }
+      show: () => false,
+      onClick: (item: OrgUnit) => this.deactivate(item)
     },
     // logs
     {
@@ -88,6 +86,7 @@ export class OrganizationUnitComponent extends AdminGenericComponent<OrgUnit, Or
     {
       langKey: 'btn_delete',
       icon: 'mdi-close-box',
+      show: () => false,
       callback: ($event: MouseEvent) => {
         this.deactivateBulk($event);
       }

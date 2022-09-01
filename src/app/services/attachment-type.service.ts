@@ -1,3 +1,8 @@
+import { of } from 'rxjs';
+import { OperationTypes } from './../enums/operation-types.enum';
+import { IDialogData } from './../interfaces/i-dialog-data';
+import { DialogRef } from './../shared/models/dialog-ref';
+import { switchMap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { AttachmentType } from '../models/attachment-type';
 import { HttpClient } from '@angular/common/http';
@@ -60,6 +65,16 @@ export class AttachmentTypeService extends CrudWithDialogGenericService<Attachme
     return this.http.get<AttachmentType[]>(this._getServiceURL() + '/attachment-types/' + serviceId);
   }
 
+  openViewDialog(modelId: number): Observable<DialogRef> {
+    return this.getByIdComposite(modelId).pipe(
+      switchMap((serviceData: AttachmentType) => {
+        return of(this.dialog.show<IDialogData<AttachmentType>>(AttachmentTypesPopupComponent, {
+          model: serviceData,
+          operation: OperationTypes.VIEW
+        }));
+      })
+    );
+  }
   loadByServiceId(serviceId: number): Observable<AttachmentType[]> {
     return this._loadByServiceId(serviceId);
   }

@@ -189,7 +189,7 @@
             <div *ngFor="let checkBoxGroup of groups" class="col-sm-12 mb-2">
               <div class="p-2 border border-1">
                 <div class="form-check mb-2 pb-2 border-bottom">
-                  <input [indeterminate]="checkBoxGroup.isIndeterminate()" [checked]="checkBoxGroup.isFull()"
+                  <input [indeterminate]="checkBoxGroup.isIndeterminate()" [disabled]="readonly" [checked]="checkBoxGroup.isFull()"
                          type="checkbox"
                          id="group-id-{{checkBoxGroup.group.id}}" (change)="onGroupClicked(checkBoxGroup)"
                          class="form-check-input cursor-pointer">
@@ -198,7 +198,7 @@
                 </div>
                 <div *ngFor="let row of checkBoxGroup.rows" class="row mx-2">
                   <div *ngFor="let permission of row" class="form-check col-sm-12 col-md-4">
-                    <input type="checkbox" [checked]="checkBoxGroup.isSelected(permission.id)" [value]="permission.id"
+                    <input type="checkbox" [checked]="checkBoxGroup.isSelected(permission.id)" [disabled]="readonly" [value]="permission.id"
                            id="group-permission-id-{{permission.id}}"
                            (change)="onPermissionClicked($event , permission , checkBoxGroup)"
                            class="form-check-input cursor-pointer">
@@ -215,7 +215,7 @@
     </ng-template>
   </form>
   <ng-template #serviceTab>
-    <user-security [operation]="operation" [model]="model"></user-security>
+    <user-security [operation]="operation" [readonly]="readonly" [model]="model"></user-security>
   </ng-template>
 </div>
 <div class="dialog-actions">
@@ -224,7 +224,7 @@
     <i class="mdi mdi-information-outline text-info"></i>
   </button>
   <span class="flex-grow-1"></span>
-  <button [disabled]="form.invalid" *ngIf="displaySaveBtn" (click)="saveModel()"
+  <button [disabled]="form.invalid" *ngIf="displaySaveBtn && !readonly" (click)="saveModel()"
           class="btn btn-primary">{{langService.map.btn_save}}</button>
   <button [dialogClose]="model" class="btn btn-secondary">{{langService.map.btn_cancel}}</button>
 </div>
