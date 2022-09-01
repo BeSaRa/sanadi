@@ -138,7 +138,7 @@ export class OrganizationUnitPopupComponent extends AdminGenericDialog<OrgUnit> 
   }
 
   loadOrgUnitFields() {
-    this.orgUnitFieldService.loadComposite().subscribe(list => {
+    this.orgUnitFieldService.loadAsLookups().subscribe(list => {
       this.orgUnitFieldList = list;
     });
   }
