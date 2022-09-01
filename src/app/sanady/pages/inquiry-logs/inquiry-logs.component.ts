@@ -333,7 +333,7 @@ export class InquiryLogsComponent implements OnInit, OnDestroy {
   }
 
   private loadOrganizations() {
-    this.orgUnitService.loadComposite()
+    this.orgUnitService.loadAsLookups()
       .pipe(
         takeUntil(this.destroy$),
         catchError(() => {
