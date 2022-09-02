@@ -1,4 +1,11 @@
 export interface ILanguageKeys {
+  to_member_task: string;
+  to_member: string;
+  send_to_members_task: string;
+  send_to_members: string;
+  save_general_notes: string;
+  general_notes: string;
+  add_to_general_notes: string;
   respect_terms: string;
   last_sub_meeting_point_can_not_be_deleted: string;
   last_main_meeting_point_can_not_be_deleted: string;

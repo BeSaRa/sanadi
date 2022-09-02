@@ -10,7 +10,6 @@ import {GeneralAssociationInternalMember} from '@app/models/general-association-
 import {InternalUserService} from '@services/internal-user.service';
 import {GeneralAssociationInternalMemberTypeEnum} from '@app/enums/general-association-internal-member-type-enum';
 import {InternalUser} from '@app/models/internal-user';
-import {EmployeeService} from '@services/employee.service';
 import {GeneralAssociationMeetingAttendance} from '@app/models/general-association-meeting-attendance';
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 
@@ -39,8 +38,7 @@ export class ManageInternalUsersComponent implements OnInit {
               public lang: LangService,
               private fb: FormBuilder,
               private generalAssociationMeetingService: GeneralAssociationMeetingAttendanceService,
-              private internalUserService: InternalUserService,
-              private employeeService: EmployeeService) {
+              private internalUserService: InternalUserService) {
 
   }
 
@@ -188,14 +186,6 @@ export class ManageInternalUsersComponent implements OnInit {
   makeDecisionMaker(generalAssociationInternalMember: GeneralAssociationInternalMember): void {
     this.selectedInternalUsers.filter(u => u.memberType === this.internalUserType.IS_DECISION_MAKER).forEach(u => u.memberType = this.internalUserType.IS_NOT_DECISION_MAKER);
     this.selectedInternalUsers.find(u => u.id === generalAssociationInternalMember.id)!.memberType = this.internalUserType.IS_DECISION_MAKER;
-  }
-
-  get isSupervisionAndControlManager(): boolean {
-    return this.employeeService.isSupervisionAndControlManager();
-  }
-
-  get isSupervisionAndControlSecretary(): boolean {
-    return this.employeeService.isSupervisionAndControlSecretary();
   }
 
   get isUnderProcessingLicense() {

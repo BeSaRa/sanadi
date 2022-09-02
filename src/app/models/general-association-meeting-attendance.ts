@@ -14,6 +14,8 @@ import {CaseTypes} from '@app/enums/case-types.enum';
 import {UntypedFormGroup} from '@angular/forms';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {WFResponseType} from '@app/enums/wfresponse-type.enum';
+import {GeneralAssociationMeetingStepNameEnum} from '@app/enums/general-association-meeting-step-name-enum';
+import {IGeneralAssociationMeetingAttendanceSendToMembers} from '@contracts/i-general-association-meeting-attendance-send-to-members';
 
 const _RequestType = mixinRequestType(CaseModel);
 const interceptor = new GeneralAssociationMeetingAttendanceInterceptor();
@@ -23,7 +25,7 @@ const interceptor = new GeneralAssociationMeetingAttendanceInterceptor();
   send: interceptor.send
 })
 
-export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAssociationMeetingAttendanceService, GeneralAssociationMeetingAttendance> implements HasRequestType {
+export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAssociationMeetingAttendanceService, GeneralAssociationMeetingAttendance> implements HasRequestType, IGeneralAssociationMeetingAttendanceSendToMembers {
   service!: GeneralAssociationMeetingAttendanceService;
   caseType = CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE;
   licenseApprovedDate!: string | IMyDateModel;
@@ -87,5 +89,25 @@ export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAss
 
   approveWithSave(selectedInternalMembers: GeneralAssociationInternalMember[]): DialogRef {
     return this.service!.approveTask(this, WFResponseType.APPROVE, selectedInternalMembers);
+  }
+
+  isSupervisionAndControlReviewStep(): boolean {
+    return this.taskDetails?.name === GeneralAssociationMeetingStepNameEnum.SUPERVISION_AND_CONTROL_REVIEW;
+  }
+
+  isSupervisionManagerReviewStep(): boolean {
+    return this.taskDetails?.name === GeneralAssociationMeetingStepNameEnum.SUPERVISION_MANAGER_REVIEW;
+  }
+
+  isDecisionMakerReviewStep(): boolean {
+    return this.taskDetails?.name === GeneralAssociationMeetingStepNameEnum.DECISION_MAKER_REVIEW;
+  }
+
+  isMemberReviewStep(): boolean {
+    return this.taskDetails?.name === GeneralAssociationMeetingStepNameEnum.MEMBER_REVIEW;
+  }
+
+  sendToGeneralMeetingMembers(): DialogRef {
+    return this.inboxService!.takeActionWithComment(this.id, this.caseType, WFResponseType.TO_GENERAL_MEETING_MEMBERS, false, this);
   }
 }

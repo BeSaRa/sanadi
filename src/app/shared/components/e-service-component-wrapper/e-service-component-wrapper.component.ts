@@ -44,6 +44,7 @@ import {ITransferFundsAbroadComponent} from '@contracts/i-transfer-funds-abroad-
 import {IGeneralAssociationMeetingAttendanceComplete} from '@contracts/i-general-association-meeting-attendance-complete';
 import {IGeneralAssociationMeetingAttendanceComponent} from '@contracts/i-general-association-meeting-attendance-component';
 import {IGeneralAssociationMeetingAttendanceApprove} from '@contracts/i-general-association-meeting-attendance-approve';
+import {IGeneralAssociationMeetingAttendanceSendToMembers} from '@contracts/i-general-association-meeting-attendance-send-to-members';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -668,6 +669,19 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.approveAction(item);
         }
       },
+      // send to general meeting members
+      {
+        type: 'action',
+        icon: 'mdi-account-arrow-right',
+        label: 'send_to_members',
+        askChecklist: true,
+        show: (item: CaseModel<any, any>) => {
+          return item.getResponses().includes(WFResponseType.TO_GENERAL_MEETING_MEMBERS);
+        },
+        onClick: (item: CaseModel<any, any>) => {
+          this.sendToGeneralMeetingMembersAction(item);
+        }
+      },
       // initial approve
       {
         type: 'action',
@@ -1085,6 +1099,12 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         actionTaken && this.navigateToSamePageThatUserCameFrom();
       });
     }
+  }
+
+  private sendToGeneralMeetingMembersAction(item: CaseModel<any, any>) {
+    (item as unknown as IGeneralAssociationMeetingAttendanceSendToMembers).sendToGeneralMeetingMembers().onAfterClose$.subscribe(actionTaken => {
+      actionTaken && this.navigateToSamePageThatUserCameFrom();
+    });
   }
 
   private initialApproveAction(item: CaseModel<any, any>) {

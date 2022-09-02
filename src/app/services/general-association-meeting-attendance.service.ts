@@ -28,6 +28,10 @@ import {
 } from '@app/projects/popups/general-association-meeting-approve-task-popup/general-association-meeting-approve-task-popup.component';
 import {GeneralAssociationInternalMemberInterceptor} from '@app/model-interceptors/general-association-internal-member-interceptor';
 import {MeetingAttendanceReport} from '@app/models/meeting-attendance-report';
+import {IWFResponse} from '@contracts/i-w-f-response';
+import {IDefaultResponse} from '@contracts/idefault-response';
+import {map} from 'rxjs/operators';
+import {IGeneralAssociationMeetingProceedSendToMembers} from '@contracts/i-general-association-meeting-proceed-send-to-members';
 
 @CastResponseContainer({
   $default: {
@@ -38,7 +42,7 @@ import {MeetingAttendanceReport} from '@app/models/meeting-attendance-report';
 @Injectable({
   providedIn: 'root'
 })
-export class GeneralAssociationMeetingAttendanceService extends BaseGenericEService<GeneralAssociationMeetingAttendance> {
+export class GeneralAssociationMeetingAttendanceService extends BaseGenericEService<GeneralAssociationMeetingAttendance> implements IGeneralAssociationMeetingProceedSendToMembers{
   jsonSearchFile: string = 'general-association-meeting-attendance.json';
   serviceKey: keyof ILanguageKeys = 'menu_general_association_meeting_attendance';
   caseStatusIconMap: Map<number, string> = new Map<number, string>();
@@ -144,5 +148,22 @@ export class GeneralAssociationMeetingAttendanceService extends BaseGenericEServ
 
   addMeetingPoints(meetingItems: MeetingAttendanceReport, caseId?: string): Observable<MeetingAttendanceReport> {
     return this._addMeetingPoints(meetingItems, caseId);
+  }
+
+  @CastResponse(() => MeetingAttendanceReport, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  private _getMeetingPoints(caseId?: string): Observable<MeetingAttendanceReport> {
+    return this.http.get<MeetingAttendanceReport>(this._getURLSegment() + '/items/' + caseId);
+  }
+
+  getMeetingPoints(caseId?: string): Observable<MeetingAttendanceReport> {
+    return this._getMeetingPoints(caseId);
+  }
+
+  proceedSendToMembers(caseId: string, info: Partial<IWFResponse>): Observable<boolean> {
+    return this.http.post<IDefaultResponse<boolean>>(this._getURLSegment() + '/to-member/' + caseId, info)
+      .pipe(map(response => response.rs));
   }
 }

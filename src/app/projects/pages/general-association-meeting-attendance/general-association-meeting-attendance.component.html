@@ -19,10 +19,13 @@
          *ngIf="!isExternalUser"
          name="internal_users">
     </tab>
-    <tab [hasError]="selectedInternalUsers && selectedInternalUsers.length === 0"
-         [template]="meeting_points" [title]="lang.map.meeting_points"
-         *ngIf="!isExternalUser"
+    <tab [template]="meeting_points" [title]="lang.map.meeting_points"
+         *ngIf="!isExternalUser && (isDecisionMakerReview || isMemberReview)"
          name="meeting_points">
+    </tab>
+    <tab [template]="general_notes" [title]="lang.map.general_notes"
+         *ngIf="!isExternalUser && (isDecisionMakerReview || isMemberReview)"
+         name="general_notes">
     </tab>
     <tab [hasError]="specialExplanation.invalid" [template]="special_explanations"
          [title]="lang.map.special_explanations"
@@ -220,10 +223,10 @@
             </div>
             <div class="row">
               <div class="col-12 text-center action-container mb-3">
-                <button [disabled]="!agendaForm.valid" (click)="saveAgendaItem()"
+                <button [disabled]="!agendaForm?.valid" (click)="saveAgendaItem()"
                         class="btn btn-primary">{{lang.map.btn_save}}</button>
                 <button class="btn btn-secondary"
-                        (click)="cancelAddMember()">{{lang.map.btn_cancel}}</button>
+                        (click)="cancelAddAgendaItem()">{{lang.map.btn_cancel}}</button>
               </div>
             </div>
           </ng-container>
@@ -281,7 +284,7 @@
         <manage-internal-users (memberListChanged)="onInternalMembersChanged($event)"
                                [selectedInternalUsers]="selectedInternalUsers"
                                [isExternalUser]="isExternalUser"
-                               [readonly]="!model?.taskDetails?.isClaimed() || isCancel || !isSupervisionAndControlSecretary || (model?.getCaseStatus() !== commonCaseStatus.UNDER_PROCESSING && model?.getCaseStatus() !== commonCaseStatus.RETURNED)"></manage-internal-users>
+                               [readonly]="!model?.taskDetails?.isClaimed() || isCancel || !isSupervisionAndControlReviewStep || (model?.getCaseStatus() !== commonCaseStatus.UNDER_PROCESSING && model?.getCaseStatus() !== commonCaseStatus.RETURNED)"></manage-internal-users>
       </ng-template>
     </ng-container>
     <ng-container>
@@ -337,7 +340,7 @@
                                  [id]="'enName' + i + j" validationClasses="enName">
                           <app-field-error-message controlName="enName"></app-field-error-message>
                         </div>
-                        <ng-container *ngIf="model?.taskDetails?.name === caseSteps.MEMBER_REVIEW">
+                        <ng-container *ngIf="isMemberReview">
                           <div class="col-md-4 col-sm-12 mb-4 position-relative">
                             <label asteriskIfRequired="comment" class="form-label"
                                    [for]="'comment' + i + j">{{lang.map.notes}}</label>
@@ -364,9 +367,95 @@
           </div>
           <div class="row">
             <div class="col-12 text-center action-container mb-3">
-              <button [disabled]="!meetingPointsForm.valid" (click)="saveMeetingPoints()"
+              <button [disabled]="!meetingPointsForm?.valid" (click)="saveMeetingPoints()"
                       class="btn btn-primary">{{lang.map.save_meeting_points}}</button>
             </div>
+          </div>
+        </div>
+      </ng-template>
+    </ng-container>
+    <ng-container>
+      <ng-template #general_notes [formGroup]="generalNotesForm">
+        <ng-container *ngIf="isMemberReview">
+          <div class="row">
+            <div class="col">
+              <h1 class="h6 text-primary m-0 d-inline-block">{{lang.map.add_to_general_notes}}</h1>
+              <button class="btn btn-link outline-none"
+                      tooltip="{{lang.map.btn_add}}" (click)="openAddGeneralNotesForm()">
+                <i class="mdi mdi-plus-box"></i></button>
+            </div>
+          </div>
+          <ng-container *ngIf="addGeneralNotesFormActive">
+            <div class="row">
+              <div class="col-md-4 col-sm-12 mb-4 position-relative">
+                <label asteriskIfRequired="description" class="form-label"
+                       for="generalNoteDescription">{{lang.map.lbl_description}}</label>
+                <input [readonly]="(readonly && !isMemberReview)" class="form-control"
+                       formControlName="description"
+                       id="generalNoteDescription" validationClasses="description">
+                <app-field-error-message controlName="description"></app-field-error-message>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 text-center action-container mb-3">
+                <button [disabled]="!generalNotesForm?.valid" (click)="saveGeneralNote()"
+                        class="btn btn-primary">{{lang.map.btn_save}}</button>
+                <button class="btn btn-secondary"
+                        (click)="cancelAddGeneralNote()">{{lang.map.btn_cancel}}</button>
+              </div>
+            </div>
+          </ng-container>
+        </ng-container>
+        <div class="row">
+          <div class="col-12">
+            <app-table #table [columns]="generalNotesDisplayedColumns"
+                       [data]="generalNotes" [selectable]="true"
+                       [useSearchToFilter]="true"
+                       sortableTable>
+              <table [dataSource]="table.dataSource" cdk-table
+                     class="table table-striped table-bordered caption-top">
+                <ng-container cdkColumnDef="index">
+                  <th *cdkHeaderCellDef cdk-header-cell
+                      sortable-header> #
+                  </th>
+                  <td *cdkCellDef="let row; let i = index;" cdk-cell> {{i + 1}} </td>
+                </ng-container>
+                <ng-container cdkColumnDef="description">
+                  <th *cdkHeaderCellDef cdk-header-cell
+                      sortable-header> {{lang.map.general_notes}}</th>
+                  <td *cdkCellDef="let row" cdk-cell> {{row}} </td>
+                </ng-container>
+                <ng-container cdkColumnDef="actions">
+                  <th *cdkHeaderCellDef cdk-header-cell> {{lang.map.lbl_actions}}</th>
+                  <td *cdkCellDef="let row" cdk-cell class="table-actions">
+                    <div class="d-flex flex-row">
+                      <button (click)="removeGeneralNote($event, row)"
+                              [disabled]="((readonly && !isMemberReview) || addGeneralNotesFormActive)"
+                              class="btn btn-link outline-none" tooltip="{{lang.map.btn_remove}}">
+                        <i class="mdi mdi-close-box"></i>
+                      </button>
+                      <button (click)="selectGeneralNote($event, row)"
+                              [disabled]="((readonly && !isMemberReview) || addGeneralNotesFormActive)"
+                              class="btn btn-link outline-none" tooltip="{{lang.map.btn_edit}}">
+                        <i class="mdi mdi-pen"></i>
+                      </button>
+                    </div>
+                  </td>
+                </ng-container>
+                <tr *cdkHeaderRowDef="generalNotesDisplayedColumns" cdk-header-row></tr>
+                <tr *cdkRowDef="let row; columns: generalNotesDisplayedColumns;" cdk-row></tr>
+                <!--suppress HtmlUnknownBooleanAttribute -->
+                <tr *cdkNoDataRow>
+                  <td class="text-center" colspan="100">{{lang.map.no_records_to_display}}</td>
+                </tr>
+              </table>
+            </app-table>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12 text-center action-container mb-3">
+            <button [disabled]="generalNotes.length === 0" (click)="saveGeneralNotes()"
+                    class="btn btn-primary">{{lang.map.save_general_notes}}</button>
           </div>
         </div>
       </ng-template>
