@@ -28,7 +28,6 @@ import {
 } from '@app/projects/popups/general-association-meeting-approve-task-popup/general-association-meeting-approve-task-popup.component';
 import {GeneralAssociationInternalMemberInterceptor} from '@app/model-interceptors/general-association-internal-member-interceptor';
 import {MeetingAttendanceReport} from '@app/models/meeting-attendance-report';
-import {IWFResponse} from '@contracts/i-w-f-response';
 import {IDefaultResponse} from '@contracts/idefault-response';
 import {map} from 'rxjs/operators';
 import {IGeneralAssociationMeetingProceedSendToMembers} from '@contracts/i-general-association-meeting-proceed-send-to-members';
@@ -155,15 +154,15 @@ export class GeneralAssociationMeetingAttendanceService extends BaseGenericEServ
     fallback: '$default'
   })
   private _getMeetingPoints(caseId?: string): Observable<MeetingAttendanceReport> {
-    return this.http.get<MeetingAttendanceReport>(this._getURLSegment() + '/items/' + caseId);
+    return this.http.get<MeetingAttendanceReport>(this._getURLSegment() + '/items/user/' + caseId);
   }
 
   getMeetingPoints(caseId?: string): Observable<MeetingAttendanceReport> {
     return this._getMeetingPoints(caseId);
   }
 
-  proceedSendToMembers(caseId: string, info: Partial<IWFResponse>): Observable<boolean> {
-    return this.http.post<IDefaultResponse<boolean>>(this._getURLSegment() + '/to-member/' + caseId, info)
+  proceedSendToMembers(caseId: string): Observable<boolean> {
+    return this.http.post<IDefaultResponse<boolean>>(this._getURLSegment() + '/to-member/' + caseId, undefined)
       .pipe(map(response => response.rs));
   }
 }

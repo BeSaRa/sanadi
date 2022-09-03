@@ -376,7 +376,7 @@
     </ng-container>
     <ng-container>
       <ng-template #general_notes [formGroup]="generalNotesForm">
-        <ng-container *ngIf="isMemberReview">
+        <ng-container *ngIf="isMemberReview || isDecisionMakerReview">
           <div class="row">
             <div class="col">
               <h1 class="h6 text-primary m-0 d-inline-block">{{lang.map.add_to_general_notes}}</h1>
@@ -390,7 +390,7 @@
               <div class="col-md-4 col-sm-12 mb-4 position-relative">
                 <label asteriskIfRequired="description" class="form-label"
                        for="generalNoteDescription">{{lang.map.lbl_description}}</label>
-                <input [readonly]="(readonly && !isMemberReview)" class="form-control"
+                <input [readonly]="(readonly && !isMemberReview && !isDecisionMakerReview)" class="form-control"
                        formControlName="description"
                        id="generalNoteDescription" validationClasses="description">
                 <app-field-error-message controlName="description"></app-field-error-message>
