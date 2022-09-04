@@ -102,8 +102,8 @@
                 [options]="datepickerOptionsMap.suggestedActivityDateTo"
                 (click)="dpsuggestedActivityDateTo.toggleCalendar()"
                 (inputFieldChanged)="onDateChange($event, 'suggestedActivityDateFrom', 'suggestedActivityDateTo')"
-                #dpsuggestedActivityDateTo="angular-mydatepicker"
-                angular-mydatepicker validationClasses="suggestedActivityDateTo">
+                #dpsuggestedActivityDateTo="angular-mydatepicker" angular-mydatepicker
+                validationClasses="suggestedActivityDateTo">
               </div>
               <app-field-error-message controlName="suggestedActivityDateTo"></app-field-error-message>
             </div>
@@ -115,8 +115,7 @@
           <div class="col-12 col-md-4 mb-4 position-relative">
 
             <label asteriskIfRequired="timeFrom" for="timeFrom" class="form-label">{{lang.map.lbl_time_from}}</label>
-            <ng-select
-              [selectOnTab]="true" placeholder="{{ lang.map.select }}" [readonly]="false"
+            <ng-select [selectOnTab]="true" placeholder="{{ lang.map.select }}" [readonly]="false"
               [notFoundText]="lang.map.msg_not_found" appendTo="body" id="timeFrom" validationClasses="timeFrom"
               formControlName="timeFrom">
               <ng-option *ngFor="let option of times" [value]="option.value">{{ option.text }}
@@ -141,7 +140,7 @@
               lang.map.lbl_training_wayes }}</label>
             <ng-select [selectOnTab]="true" placeholder="{{ lang.map.select }}" [readonly]="false"
               [notFoundText]="lang.map.msg_not_found" appendTo="body" id="trainingWay" validationClasses="trainingWay"
-              formControlName="trainingWay">
+              formControlName="trainingWay" (change)="onTranaingWayChange($event)">
               <ng-option *ngFor="let option of trainingWayes" [value]="option.lookupKey">{{ option.getName() }}
               </ng-option>
             </ng-select>
@@ -153,21 +152,23 @@
           <!-- Platform -->
           <div class="col-sm-12 col-md-4 mb-4 position-relative">
             <label asteriskIfRequired="platform" for="platform" class="form-label">{{lang.map.lbl_platform}}</label>
-            <input id="platform" validationClasses="platform" formControlName="platform" trimInput class="form-control">
+            <input id="platform" validationClasses="platform" #platform [readonly]="isRemoteTraining"
+              formControlName="platform" trimInput class="form-control">
             <app-field-error-message controlName="platform"></app-field-error-message>
           </div>
           <!-- Buildings Name -->
           <div class="col-sm-12 col-md-4 mb-4 position-relative">
             <label asteriskIfRequired="buildingsName" for="buildingsName"
               class="form-label">{{lang.map.building_name}}</label>
-            <input id="buildingsName" validationClasses="buildingsName" formControlName="buildingsName" trimInput
-              class="form-control">
+            <input id="buildingsName" #buildingsName [readonly]="isLiveTraining" validationClasses="buildingsName"
+              formControlName="buildingsName" trimInput class="form-control">
             <app-field-error-message controlName="buildingsName"></app-field-error-message>
           </div>
           <!-- Floor No -->
           <div class="col-sm-12 col-md-4 mb-4 position-relative">
             <label asteriskIfRequired="floorNo" for="floorNo" class="form-label">{{lang.map.lbl_floor_No}}</label>
-            <input id="floorNo" validationClasses="floorNo" formControlName="floorNo" trimInput class="form-control">
+            <input id="floorNo" validationClasses="floorNo" #floorNo [readonly]="isLiveTraining"
+              formControlName="floorNo" trimInput class="form-control">
             <app-field-error-message controlName="floorNo"></app-field-error-message>
           </div>
         </div>
@@ -176,39 +177,53 @@
           <!-- Hall Name -->
           <div class="col-sm-12 col-md-4 mb-4 position-relative">
             <label asteriskIfRequired="hallName" for="hallName" class="form-label">{{lang.map.lbl_hall_name}}</label>
-            <input id="hallName" validationClasses="hallName" formControlName="hallName" trimInput class="form-control">
+            <input id="hallName" validationClasses="hallName" #hallName [readonly]="isLiveTraining"
+              formControlName="hallName" trimInput class="form-control">
             <app-field-error-message controlName="hallName"></app-field-error-message>
           </div>
           <!-- Street Name -->
           <div class="col-sm-12 col-md-4 mb-4 position-relative">
             <label asteriskIfRequired="streetName" for="streetName"
               class="form-label">{{lang.map.lbl_street_name}}</label>
-            <input id="streetName" validationClasses="streetName" formControlName="streetName" trimInput
-              class="form-control">
+            <input id="streetName" validationClasses="streetName" #streetName [readonly]="isLiveTraining"
+              formControlName="streetName" trimInput class="form-control">
             <app-field-error-message controlName="streetName"></app-field-error-message>
           </div>
+
+          <!-- Filtration Method -->
+          <div class="col-12 col-md-4 mb-4 position-relative">
+            <label asteriskIfRequired="filtrationMethod" for="filtrationMethod" class="form-label">{{
+              lang.map.lbl_filtration_method }}</label>
+            <ng-select [selectOnTab]="true" placeholder="{{ lang.map.select }}" [readonly]="false"
+              [notFoundText]="lang.map.msg_not_found" appendTo="body" id="filtrationMethod"
+              validationClasses="filtrationMethod" formControlName="filtrationMethod"
+              (change)="onFilterationMethodChange($event)">
+              <ng-option *ngFor="let option of recommendedWayes" [value]="option.lookupKey">{{ option.getName() }}
+              </ng-option>
+            </ng-select>
+            <app-field-error-message controlName="filtrationMethod"></app-field-error-message>
+          </div>
+
+        </div>
+        <div class="row">
           <!-- Email -->
           <div class="col-sm-12 col-md-4 mb-4 position-relative">
             <label asteriskIfRequired="email" for="email" class="form-label">{{lang.map.lbl_email}}</label>
-            <input id="email" validationClasses="email" formControlName="email" trimInput class="form-control">
+            <input id="email"
+            #email
+            [readonly]="isEmailFiltrationMethod"
+            validationClasses="email" formControlName="email" trimInput class="form-control">
             <app-field-error-message controlName="email"></app-field-error-message>
-          </div>
-        </div>
-        <div class="row">
-          <!-- Filtration Method -->
-          <div class="col-sm-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="filtrationMethod" for="filtrationMethod"
-              class="form-label">{{lang.map.lbl_filtration_method}}</label>
-            <input id="filtrationMethod" validationClasses="filtrationMethod" formControlName="filtrationMethod"
-              trimInput class="form-control">
-            <app-field-error-message controlName="filtrationMethod"></app-field-error-message>
           </div>
 
           <!-- Other Filtration Method -->
           <div class="col-sm-12 col-md-4 mb-4 position-relative">
             <label asteriskIfRequired="otherFiltrationMethod" for="otherFiltrationMethod"
               class="form-label">{{lang.map.lbl_other_filtration_method}}</label>
-            <input id="otherFiltrationMethod" validationClasses="otherFiltrationMethod"
+            <input id="otherFiltrationMethod"
+            #otherFiltrationMethod
+            [readonly]="isOtherFiltrationMethod"
+            validationClasses="otherFiltrationMethod"
               formControlName="otherFiltrationMethod" trimInput class="form-control">
             <app-field-error-message controlName="otherFiltrationMethod"></app-field-error-message>
           </div>
@@ -232,8 +247,7 @@
     </ng-container>
   </div>
 </div>
-
-<app-page-header [hidden]="!canUpdate" pageTitle="building_abilities" [clickOnNew$]="add$"
+<app-page-header [hidden]="!canUpdate || !isClaimed" pageTitle="building_abilities" [clickOnNew$]="add$"
   [addPermission]="addAllowed()"></app-page-header>
 
 <table *ngIf="list.length" class="table mt-3 table-striped table-bordered caption-top" cdk-table
@@ -290,21 +304,22 @@
     <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_filtration_method}}</th>
     <td cdk-cell *cdkCellDef="let row"> {{row.filtrationMethod}} </td>
   </ng-container>
- 
- 
+
+
   <ng-container cdkColumnDef="actions">
     <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
     <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
       <div class="d-flex flex-row">
         <button (click)="delete($event, row, i)" class="icon-btn text-primary" [disabled]="readonly"
-          tooltip="{{lang.map.btn_delete}}">
+          [disabled]="!isClaimed" tooltip="{{lang.map.btn_delete}}">
           <i class="mdi mdi-close-box"></i>
         </button>
         <button (click)="edit($event, row, i)" class="icon-btn text-primary" [disabled]="readonly"
-          tooltip="{{lang.map.btn_edit}}">
+          [disabled]="!isClaimed" tooltip="{{lang.map.btn_edit}}">
           <i class="mdi mdi-pen"></i>
         </button>
-        <button (click)="view($event, row, i)" class="icon-btn text-primary" tooltip="{{lang.map.view}}">
+        <button (click)="view($event, row, i)" class="icon-btn text-primary" [disabled]="!isClaimed"
+          tooltip="{{lang.map.view}}">
           <i class="mdi mdi-eye"></i>
         </button>
       </div>

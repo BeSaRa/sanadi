@@ -1,27 +1,27 @@
-import { CoordinationTypes } from './../enums/coordination-types-enum';
-import { IMyDateModel } from 'angular-mydatepicker';
-import { OrganizationOfficer } from '@app/models/organization-officer';
-import { OrgUser } from '@app/models/org-user';
-import { ResearchAndStudies } from './research-and-studies';
-import { EffectiveCoordinationCapabilities } from './effective-coordination-capabilities';
-import { CoordinationWithOrganizationsRequestInterceptor } from './../model-interceptors/coordination-with-organizations-request-interceptor';
+import { Validators } from '@angular/forms';
 import { InterceptModel } from '@app/decorators/decorators/intercept-model';
+import { CaseTypes } from '@app/enums/case-types.enum';
+import { dateSearchFields } from '@app/helpers/date-search-fields';
+import { infoSearchFields } from '@app/helpers/info-search-fields';
+import { normalSearchFields } from '@app/helpers/normal-search-fields';
 import { HasLicenseDurationType } from '@app/interfaces/has-license-duration-type';
 import { HasRequestType } from '@app/interfaces/has-request-type';
 import { mixinLicenseDurationType } from '@app/mixins/mixin-license-duration';
 import { mixinRequestType } from '@app/mixins/mixin-request-type';
+import { OrganizationOfficer } from '@app/models/organization-officer';
 import { CoordinationWithOrganizationsRequestService } from '@app/services/coordination-with-organizations-request.service';
 import { FactoryService } from '@app/services/factory.service';
-import { CaseModel } from './case-model';
-import { CaseTypes } from '@app/enums/case-types.enum';
 import { ISearchFieldsMap } from '@app/types/types';
-import { dateSearchFields } from '@app/helpers/date-search-fields';
-import { infoSearchFields } from '@app/helpers/info-search-fields';
-import { normalSearchFields } from '@app/helpers/normal-search-fields';
-import { BuildingAbility } from './building-ability';
-import { ParticipantOrg } from './participant-org';
 import { CustomValidators } from '@app/validators/custom-validators';
+import { IMyDateModel } from 'angular-mydatepicker';
+import { CoordinationTypes } from './../enums/coordination-types-enum';
+import { CoordinationWithOrganizationsRequestInterceptor } from './../model-interceptors/coordination-with-organizations-request-interceptor';
 import { AdminResult } from './admin-result';
+import { BuildingAbility } from './building-ability';
+import { CaseModel } from './case-model';
+import { EffectiveCoordinationCapabilities } from './effective-coordination-capabilities';
+import { ParticipantOrg } from './participant-org';
+import { ResearchAndStudies } from './research-and-studies';
 
 const _RequestType = mixinLicenseDurationType(mixinRequestType(CaseModel));
 const interceptor = new CoordinationWithOrganizationsRequestInterceptor();
@@ -80,13 +80,21 @@ export class CoordinationWithOrganizationsRequest
       description,
     } = this;
     return {
-      fullName: controls ? [fullName, CustomValidators.required] : fullName,
-      domain: controls ? [domain, CustomValidators.required] : domain,
+      fullName: controls ? [fullName, [Validators.required]
+      .concat(
+        CustomValidators.maxLength(
+          CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+        ),
+        CustomValidators.minLength(
+          CustomValidators.defaultLengths.MIN_LENGTH
+        )
+      )] : fullName,
+      domain: controls ? [domain, [Validators.required]] : domain,
       licenseStartDate: controls
-        ? [licenseStartDate, CustomValidators.required]
+        ? [licenseStartDate, [Validators.required]]
         : licenseStartDate,
       licenseEndDate: controls
-        ? [licenseEndDate, CustomValidators.required]
+        ? [licenseEndDate, [Validators.required]]
         : licenseEndDate,
       description: controls ? [description] : description,
     };

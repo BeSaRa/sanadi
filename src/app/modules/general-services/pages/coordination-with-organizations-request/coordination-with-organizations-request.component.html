@@ -1,16 +1,16 @@
 <div class="d-flex flex-column">
   <form [formGroup]="form" autocomplete="off">
     <tabs-list [accordionView]="accordionView">
-      <tab *ngIf="isLicensingUser" [name]="tabsData.basicInfo.name" [hasError]="getTabInvalidStatus('basicInfo')"
+      <tab *ngIf="true" [name]="tabsData.basicInfo.name" [hasError]="getTabInvalidStatus('basicInfo')"
         [template]="basicInfoTabTemplate" [title]="lang.map.lbl_basic_info"></tab>
       <tab *ngIf="true" [name]="tabsData.participantOrganizations.name"
         [template]="participating_organizaions" [title]="lang.map.participant_organizations"
         [hasError]="getTabInvalidStatus('participantOrganizations')">
       </tab>
-      <tab 
-      *ngIf="isLicensingUser"
+      <tab
+      *ngIf="true"
       [name]="tabsData.specialExplanation.name"
-      [hasError]="getTabInvalidStatus('specialExplanation')" 
+      [hasError]="getTabInvalidStatus('specialExplanation')"
         [template]="specialExplanationTab" [title]="lang.map.special_explanations">
       </tab>
       <tab
@@ -32,13 +32,13 @@
     </tabs-list>
 
     <ng-template #basicInfoTabTemplate>
-      <fieldset [disabled]="readonly">
+      <fieldset [disabled]="!isEditAllowed()">
 
-        <div class="row">
+        <div class="row mb-4">
           <!-- Full Name -->
           <div class="col-sm-12 col-md-6 mb-6 position-relative">
             <label asteriskIfRequired="fullName" for="fullName" class="form-label">{{lang.map.full_name}}</label>
-            <input id="fullName" validationClasses="fullName" 
+            <input id="fullName" validationClasses="fullName"
             [value]="model?.fullName"
             formControlName="fullName" trimInput class="form-control">
             <app-field-error-message controlName="fullName"></app-field-error-message>
@@ -53,8 +53,9 @@
             </ng-select>
             <app-field-error-message controlName="domain"></app-field-error-message>
           </div>
-         
+
         </div>
+
         <!-- License Start Date -->
         <div class="row">
           <div class="col-12 col-md-6 mb-6 position-relative">
@@ -87,18 +88,19 @@
               <app-field-error-message controlName="licenseEndDate"></app-field-error-message>
             </div>
           </div>
-         
-        </div>
 
+        </div>
       </fieldset>
     </ng-template>
     <ng-template #participating_organizaions>
       <participant-organization #participantOrganizations
        [list]="model?.participatingOrganizaionList || []"
         [organizationUnits]="organizationUnits" (readyEvent)="participantOrganizationsTapStatus = $event"
-        [canUpdate]="!isInitialApproved"
+        [canUpdate]="(!isInitialApproved)"
+        [isClaimed]="(isClaimed?? true || isLicensingUser)"
+        (listUpdated)="updateParticopatingOrganizationList()"
         >
-        
+
       </participant-organization>
     </ng-template>
     <ng-template #specialExplanationTab>
@@ -117,6 +119,8 @@
       <organizaion-officer #organizationOfficersTap [list]="model?.organizaionOfficerList || []"
         [organizationUsers]="organizationUsers" (readyEvent)="organizationOfficersTabStatus = $event"
         [canUpdate]="isCharityUser"
+        [isClaimed]="isClaimed?? true"
+        [currentUserOrgId]="currentUserOrgId"
         >
       </organizaion-officer>
 
@@ -127,8 +131,9 @@
     <ng-template #building_abilities>
       <building-ability #buildingAbilityTap [list]="model?.buildingAbilitiesList || []"
         [organizationUnits]="organizationUnits" [trainingTypes]="trainingTypes" [trainingLanguages]="trainingLanguages"
-        [trainingWayes]="trainingWayes" [readonly]=" isEditAllowed()" (readyEvent)="buildingAbilityTabStatus = $event"
+        [trainingWayes]="trainingWayes" [recommendedWayes]="recommendedWayes" [readonly]=" isEditAllowed()" (readyEvent)="buildingAbilityTabStatus = $event"
         [canUpdate]="isCharityUser"
+        [isClaimed]="isClaimed?? true"
         >
       </building-ability>
     </ng-template>
@@ -137,6 +142,7 @@
         [list]="model?.effectiveCoordinationCapabilities || []" [organizationWayes]="organizationWayes"
         [organizationUnits]="organizationUnits" [readonly]=" isEditAllowed()"
         [canUpdate]="isCharityUser"
+        [isClaimed]="isClaimed?? true"
         (readyEvent)="effectiveCoordinationCapabilitiesTabStatus = $event"></effective-coordination-capabilities>
     </ng-template>
 
@@ -144,6 +150,7 @@
       <app-research-and-studies #researchAndStudiesTap [list]="model?.researchAndStudies || []"
         [readonly]=" isEditAllowed()" (readyEvent)="ResearchAndStudiesTabStatus = $event"
         [canUpdate]="isCharityUser"
+        [isClaimed]="isClaimed?? true"
         >
       </app-research-and-studies>
     </ng-template>

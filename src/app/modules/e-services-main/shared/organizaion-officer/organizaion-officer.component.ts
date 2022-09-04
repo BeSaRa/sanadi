@@ -63,6 +63,8 @@ export class OrganizaionOfficerComponent implements OnInit {
   }
   @Input() pageTitleKey: keyof ILanguageKeys = "menu_organization_user";
   @Input()canUpdate:boolean=true;
+  @Input()isClaimed:boolean=false;
+  @Input()currentUserOrgId!:number|undefined;
 
   listDataSource: BehaviorSubject<OrganizationOfficer[]> = new BehaviorSubject<
     OrganizationOfficer[]
@@ -86,9 +88,9 @@ export class OrganizaionOfficerComponent implements OnInit {
     this.listenToRecordChange();
     this.listenToSave();
     this._setComponentReadiness("READY");
-    if(this.canUpdate === false){     
+    if(this.canUpdate === false){
       this.columns= this.columns.slice(0,this.columns.length-1);
-    }   
+    }
   }
 
   ngOnDestroy(): void {
@@ -151,22 +153,22 @@ export class OrganizaionOfficerComponent implements OnInit {
         map(() => {
           return this.form.get(`${this.formArrayName}.0`) as FormArray;
         }),
-        map(() => {          
+        map(() => {
           return new OrganizationOfficer().clone({
             ...this.currentRecord,
-           
+
           });
         })
       )
       .subscribe((model: OrganizationOfficer) => {
         if (!model) {
           return;
-        }       
+        }
         this._updateList(model, "ADD");
         this.toastService.success(this.lang.map.msg_save_success);
       });
   }
-  @ViewChild("selectOrganizations") 
+  @ViewChild("selectOrganizations")
   ngSelectComponentRef!: NgSelectComponent;
   private _updateList(
     record: OrganizationOfficer | null,

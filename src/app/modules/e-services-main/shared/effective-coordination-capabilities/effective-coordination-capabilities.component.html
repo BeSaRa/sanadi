@@ -3,7 +3,7 @@
     <ng-container *ngFor="let control of formArray.controls; let i = index">
       <div [formGroupName]="i">
         <div class="row">
-       
+
           <!-- Event Topic -->
           <div class="col-sm-12 col-md-4 mb-4 position-relative">
             <label asteriskIfRequired="eventTopic" for="eventTopic"
@@ -93,7 +93,7 @@
 
         </div>
         <div class="row">
-          
+
           <!-- Sponsors And Organizing Partners -->
           <div class="col-sm-12 col-md-4 mb-4 position-relative">
             <label asteriskIfRequired="sponsorsAndOrganizingPartners" for="sponsorsAndOrganizingPartners"
@@ -119,7 +119,7 @@
             <app-field-error-message controlName="organizationRequiredRole"></app-field-error-message>
           </div>
         </div>
-       
+
         <div class="d-flex flex-row align-items-center justify-content-center">
           <button (click)="onSave()" [disabled]="readonly" *ngIf="!readonly && !viewOnly"
             class="btn btn-primary m-2">{{(editIndex > -1) ? lang.map.btn_save : lang.map.btn_add}}</button>
@@ -130,8 +130,8 @@
   </div>
 </div>
 
-<app-page-header 
-[hidden]="!canUpdate" pageTitle="effective_coordination_capabilities"
+<app-page-header
+[hidden]="!canUpdate || !isClaimed" pageTitle="effective_coordination_capabilities"
   [clickOnNew$]="add$" [addPermission]="addAllowed()"></app-page-header>
 
 <table *ngIf="list.length" class="table mt-3 table-striped table-bordered caption-top" cdk-table
@@ -190,14 +190,19 @@
     <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
       <div class="d-flex flex-row">
         <button (click)="delete($event, row, i)" class="icon-btn text-primary" [disabled]="readonly"
-          tooltip="{{lang.map.btn_delete}}">
+        [disabled]="!isClaimed"
+        tooltip="{{lang.map.btn_delete}}">
           <i class="mdi mdi-close-box"></i>
         </button>
         <button (click)="edit($event, row, i)" class="icon-btn text-primary" [disabled]="readonly"
-          tooltip="{{lang.map.btn_edit}}">
+        [disabled]="!isClaimed"
+        tooltip="{{lang.map.btn_edit}}">
           <i class="mdi mdi-pen"></i>
         </button>
-        <button (click)="view($event, row, i)" class="icon-btn text-primary" tooltip="{{lang.map.view}}">
+        <button (click)="view($event, row, i)" class="icon-btn text-primary"
+        [disabled]="!isClaimed"
+        tooltip="{{lang.map.view}}">
+
           <i class="mdi mdi-eye"></i>
         </button>
       </div>

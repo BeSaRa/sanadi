@@ -1,4 +1,4 @@
-<div class="row" *ngIf="canUpdate">
+<div class="row" *ngIf="isClaimed && canUpdate">
   <div class="col-md-4">
     <label class="form-label" for="selectedOrg">{{lang.map.menu_organizations}}</label>
     <div style="display: flex">
@@ -23,12 +23,18 @@
     <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.english_name}}</th>
     <td cdk-cell *cdkCellDef="let row"> {{row.englishName}} </td>
   </ng-container>
+  <ng-container cdkColumnDef="managerDecisionInfo">
+    <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.manager_decision}}</th>
+    <td cdk-cell *cdkCellDef="let row"> {{row.managerDecisionInfo?.getName()}} </td>
+  </ng-container>
 
   <ng-container cdkColumnDef="actions"  >
     <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
-    <td cdk-cell *cdkCellDef="let row;let i" class="table-actions">
+    <td cdk-cell *cdkCellDef="let row; let i = index" class="table-actions">
       <div class="d-flex flex-row">
-        <button (click)="delete($event, row,i)" tooltip="{{lang.map.btn_remove}}" class="btn btn-link outline-none">
+        <button (click)="delete($event, row,i)"
+        [disabled]="!isClaimed"
+        tooltip="{{lang.map.btn_remove}}" class="btn btn-link outline-none">
           <i class="mdi mdi-close-box"></i>
         </button>
       </div>

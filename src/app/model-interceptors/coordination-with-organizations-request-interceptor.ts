@@ -19,6 +19,7 @@ export class CoordinationWithOrganizationsRequestInterceptor
     delete model.categoryInfo;
     delete model.ouInfo;
     delete model.employeeService;
+    delete model.domainInfo;
     model.licenseStartDate = !model.licenseStartDate
       ? undefined
       : DateUtils.changeDateFromDatepicker(
@@ -33,6 +34,7 @@ export class CoordinationWithOrganizationsRequestInterceptor
     model.participatingOrganizaionList?.forEach((x) => {
       delete (x as any).searchFields;
       delete (x as any).DisplayedColumns;
+      delete (x as any).managerDecisionInfo;
     });
     model.organizaionOfficerList?.forEach((x) => {
       delete x.langService;
@@ -84,6 +86,10 @@ export class CoordinationWithOrganizationsRequestInterceptor
     model.taskDetails = new TaskDetails().clone(model.taskDetails);
 
     model.domainInfo = AdminResult.createInstance(isValidAdminResult(model.domainInfo) ? model.domainInfo : {});
+
+    model.participatingOrganizaionList.forEach(x=>{
+      x.managerDecisionInfo = AdminResult.createInstance(isValidAdminResult(x.managerDecisionInfo)?x.managerDecisionInfo : {});
+    })
     return model;
   }
 }
