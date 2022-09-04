@@ -1281,4 +1281,16 @@ export interface ILanguageKeys {
   board_members: string;
   personal_number: string;
   executive_managers: string;
+  primary_law: string;
+  date_of_first_issue: string;
+  date_of_last_update: string;
+  main_objectives: string;
+  scope_of_actions: string;
+  classification_of_work_areas: string;
+  classification_of_foreign_aid: string;
+  classification_of_DAC: string;
+  DAC_subclassification: string;
+  OCHA_main_classification: string;
+  OCHA_subclassification: string;
+
 }
