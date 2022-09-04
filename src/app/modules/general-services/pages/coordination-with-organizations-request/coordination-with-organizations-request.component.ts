@@ -126,6 +126,9 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
     return of(this.form.valid);
   }
   _beforeLaunch(): boolean | Observable<boolean> {
+    if (this.organizationOfficerssComponentRef?.list.length < 1) {
+      return false;
+    }
     return true;
   }
   _afterLaunch(): void {

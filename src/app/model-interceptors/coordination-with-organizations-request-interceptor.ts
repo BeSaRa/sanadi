@@ -12,6 +12,14 @@ export class CoordinationWithOrganizationsRequestInterceptor
   send(
     model: Partial<CoordinationWithOrganizationsRequest>
   ): Partial<CoordinationWithOrganizationsRequest> {
+    delete model.service;
+    delete model.taskDetails;
+    delete model.caseStatusInfo;
+    delete model.creatorInfo;
+    delete model.categoryInfo;
+    delete model.ouInfo;
+    delete model.employeeService;
+    delete model.domainInfo;
     model.licenseStartDate = !model.licenseStartDate
       ? undefined
       : DateUtils.changeDateFromDatepicker(
