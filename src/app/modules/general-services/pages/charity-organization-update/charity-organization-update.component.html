@@ -45,10 +45,7 @@
         </div>
         <div
           class="col-sm-6 col-md-4"
-          *ngIf="
-            requestTypeForm.value === RequestTypes.META_DATA &&
-            (charityOrganizations$ | async) as data
-          "
+          *ngIf="charityOrganizations$ | async as data"
         >
           <label
             [asteriskIfRequired]="'charityId'"
@@ -66,7 +63,7 @@
             appendTo="body"
             [validationClasses]="'charityId'"
             [formControlName]="'charityId'"
-            (change)="handleSelectCharityOrganization($event, data)"
+            (change)="handleSelectCharityOrganization($event)"
           >
             <ng-option *ngFor="let type of data" [value]="type.id">{{
               type.getName()
@@ -330,6 +327,12 @@
 
     <ng-template #tabContent>
       <!-- . Current Executive Management  -->
+      <members pageTitle="executive_managers" [extended]="true"></members>
+    </ng-template>
+
+    <ng-template #tabContent>
+      <!-- . Current Executive Management  -->
+      <members pageTitle="executive_managers" [extended]="true"></members>
     </ng-template>
 
     <ng-template #tabContent>

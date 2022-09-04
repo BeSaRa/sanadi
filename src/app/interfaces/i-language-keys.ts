@@ -1280,4 +1280,5 @@ export interface ILanguageKeys {
   general_assembly_members: string;
   board_members: string;
   personal_number: string;
+  executive_managers: string;
 }

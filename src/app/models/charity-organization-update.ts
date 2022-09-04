@@ -6,9 +6,12 @@ import { CharityOrganizationUpdateService } from '@app/services/charity-organiza
 import { FactoryService } from '@app/services/factory.service';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { AdminResult } from './admin-result';
+import { Beneficiary } from './beneficiary';
 import { CaseModel } from './case-model';
 import { CharityBranch } from './charity-branch';
+import { OrgMember } from './org-member';
 import { OrganizationOfficer } from './organization-officer';
+import { RealBeneficiary } from './real-beneficiary';
 
 const interceptor = new CharityOrganizationUpdateInterceptor();
 
@@ -54,10 +57,17 @@ CharityOrganizationUpdate
   youTube!: string;
   requestType!: number;
   establishmentDate!: string;
-  complianceOfficerList!: OrganizationOfficer[];
-  charityContactOfficerList!: OrganizationOfficer[];
-  charityBranchList!: CharityBranch[];
-  establishmentID !: string;
+  complianceOfficerList: OrganizationOfficer[] = [];
+  charityContactOfficerList: OrganizationOfficer[] = [];
+  charityBranchList: CharityBranch[] = [];
+  establishmentID!: string;
+
+  founderMemberList: OrgMember[] = [];
+  generalAssemblyMemberList: OrgMember[] = [];
+  boardMemberList: OrgMember[] = [];
+  currentExecutiveManagementList: OrgMember[] = [];
+  authorizedSignatoryMemberList: OrgMember[] = [];
+  realBeneficiaryList: RealBeneficiary[] = [];
   buildMetaDataForm(controls = true) {
     const {
       arabicName,

@@ -105,5 +105,7 @@
   "TRANSFERRING_ENTITY": "/admin/transferring-entity",
   "CHARITY_ORGANIMZATION_UPDATE": "/charity-organization-update",
   "E_COORDINATION_WITH_ORGANIZATION_REQUEST": "/coordination-with-organizations-request",
-  "CHARITY_ORGANIZATION": "/admin/charity-organization"
+  "CHARITY_ORGANIZATION": "/admin/charity-organization",
+  "MEMBER_ROLES": "/admin/member-role",
+  "REAL_BENEFECIARY": "/admin/real-beneficiary"
 }

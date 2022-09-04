@@ -104,5 +104,7 @@ export interface IAppUrls {
   VACATION_DATE: string;
   CHARITY_ORGANIMZATION_UPDATE: string;
   CHARITY_ORGANIZATION: string;
+  MEMBER_ROLES: string;
+  REAL_BENEFECIARY: string;
   [index: string]: string;
 }

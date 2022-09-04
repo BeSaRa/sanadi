@@ -1,10 +1,13 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { ListModelComponent } from '@app/generics/ListModel-component';
+import { DateUtils } from '@app/helpers/date-utils';
 import { ControlWrapper } from '@app/interfaces/i-control-wrapper';
 import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { Member } from '@app/models/member';
+import { OrgMember } from '@app/models/org-member';
 import { JobTitleService } from '@app/services/job-title.service';
 import { LangService } from '@app/services/lang.service';
+import { DatepickerOptionsMap } from '@app/types/types';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -13,69 +16,62 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './members.component.html',
   styleUrls: ['./members.component.scss'],
 })
-export class MembersComponent implements OnInit {
+export class MembersComponent extends ListModelComponent<OrgMember> {
   @Input() readonly!: boolean;
-  @Input() set list(_list: Member[]) {
+  @Input() set list(_list: OrgMember[]) {
     this._list = _list;
   }
+  @Input() extended = false;
   @Input() pageTitle!: keyof ILanguageKeys;
-  _list: Member[] = [];
-  model: Member = new Member();
   controls = this.getFormControls();
-  form!: UntypedFormGroup;
-  showForm = false;
-  editRecordIndex = -1;
-  add$: Subject<null> = new Subject<null>();
-  save$: Subject<Member> = new Subject<Member>();
-  private destroy$: Subject<any> = new Subject<any>();
-  columns = ['name', 'position', 'personalNumber'];
-  constructor(private fb: UntypedFormBuilder, public lang: LangService, private jobTitleService: JobTitleService) { }
-  ngOnInit(): void {
-    this.form = this.fb.group(this.model.buildForm());
-    this.listenToModelChange();
-    this.listenToAdd();
+  columns = ['fullName', 'identificationNumber', 'jobTitleId'];
+  datepickerOptionsMap: DatepickerOptionsMap = {
+    joinDate: DateUtils.getDatepickerOptions({ disablePeriod: 'future' }),
+  };
+  constructor(
+    private fb: UntypedFormBuilder,
+    public lang: LangService,
+    private jobTitleService: JobTitleService
+  ) {
+    super(OrgMember);
   }
 
   getFormControls(): ControlWrapper[] {
     return [
       {
-        controlName: 'name',
-        label: this.lang.map.name,
+        controlName: 'fullName',
+        label: this.lang.map.full_name,
       },
       {
-        controlName: 'personalNumber',
+        controlName: 'identificationNumber',
         label: this.lang.map.personal_number,
       },
       {
-        controlName: 'position',
+        controlName: 'jobTitleId',
         label: this.lang.map.job_title,
         load$: this.jobTitleService.loadAsLookups(),
-      }
+      },
     ];
   }
-  save(): void {
-    const value = this.form.value;
-    const model = new Member().clone({
-      ...value,
-    });
-    this.save$.next(model);
-  }
-  listenToAdd(): void {
-    this.add$.pipe(takeUntil(this.destroy$)).subscribe(
-      _ => {
-        this.showForm = true;
-      }
-    );
-  }
-
-  listenToModelChange(): void {
-    this.save$.pipe(takeUntil(this.destroy$)).subscribe((model) => {
-      this.model = model;
-      this._list = [...this._list, this.model];
-    });
-  }
-  cancel(): void {
-    this.form.reset();
-    this.showForm = false;
+  protected _initComponent(): void {
+    if (this.extended) {
+      this.form = this.fb.group(this.model.bulildExtendedForm());
+    }
+    else {
+      this.form = this.fb.group(this.model.buildForm());
+    }
+    if (this.extended) {
+      this.controls.push(
+        {
+          controlName: 'email',
+          label: this.lang.map.lbl_email,
+        },
+        {
+          controlName: 'phone',
+          label: this.lang.map.lbl_phone,
+        }
+      );
+      this.columns.push('joinDate', 'email', 'phone')
+    }
   }
 }
