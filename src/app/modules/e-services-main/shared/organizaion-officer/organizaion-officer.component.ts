@@ -36,7 +36,6 @@ export class OrganizaionOfficerComponent implements OnInit {
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();
   filterControl: FormControl = new FormControl("");
 
-  k: OrganizationOfficer[] =[];
   private readonly: boolean = true;
   private save$: Subject<any> = new Subject<any>();
 

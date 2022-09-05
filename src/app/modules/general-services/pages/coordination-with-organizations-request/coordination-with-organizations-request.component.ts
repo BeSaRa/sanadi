@@ -126,14 +126,15 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
     return of(this.form.valid);
   }
   _beforeLaunch(): boolean | Observable<boolean> {
-
     return true;
   }
   _afterLaunch(): void {
     this._resetForm();
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
-  _prepareModel(): CoordinationWithOrganizationsRequest| Observable<CoordinationWithOrganizationsRequest> {
+  _prepareModel():
+    | CoordinationWithOrganizationsRequest
+    | Observable<CoordinationWithOrganizationsRequest> {
     const value = new CoordinationWithOrganizationsRequest().clone({
       ...this.model,
       ...this.form.value,
