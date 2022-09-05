@@ -57,6 +57,7 @@ import { UrgentInterventionClosureService } from '@services/urgent-intervention-
 import { TransferringIndividualFundsAbroadService } from '@services/transferring-individual-funds-abroad.service';
 import { ForeignCountriesProjectsService } from './foreign-countries-projects.service';
 import { CastResponse } from "@decorators/cast-response";
+import {UrgentInterventionLicenseFollowupService} from '@services/urgent-intervention-license-followup.service';
 
 @Injectable({
   providedIn: 'root'
@@ -85,6 +86,7 @@ export class InboxService {
               private urgentInterventionAnnouncementService: UrgentInterventionAnnouncementService,
               private urgentInterventionClosureService: UrgentInterventionClosureService,
               private urgentInterventionFinancialNotificationService: UrgentInterventionFinancialNotificationService,
+              private urgentInterventionLicenseFollowupService: UrgentInterventionLicenseFollowupService,
               private urlService: UrlService,
               private employmentService: EmploymentService,
               private externalOrgAffiliationService: ExternalOrgAffiliationService,
@@ -117,6 +119,7 @@ export class InboxService {
     this.services.set(CaseTypes.FOREIGN_COUNTRIES_PROJECTS, this.foreignCountriesProjectService);
     this.services.set(CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD, this.transferringIndividualsFundsAbroad);
     this.services.set(CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST, this.coordinationWithOrganizationsRequestService);
+    this.services.set(CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP, this.urgentInterventionLicenseFollowupService);
   }
 
   @CastResponse(() => QueryResultSet)

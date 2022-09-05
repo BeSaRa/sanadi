@@ -57,7 +57,18 @@ const routes: Routes = [
       checkAnyPermission: false,
       render: 'UrgentInterventionFinancialNotificationComponent'
     } as ICustomRouteData
-  }
+  },
+  {
+    path: 'urgent-intervention-license-followup', component: EServiceComponentWrapperComponent,
+    canActivate: [ServicesGuard],
+    resolve: {info: ServiceItemResolver},
+    data: {
+      permissionKey: EServicePermissions.URGENT_INTERVENTION_LICENSE_FOLLOWUP,
+      configPermissionGroup: null,
+      checkAnyPermission: false,
+      render: 'UrgentInterventionLicenseFollowupComponent'
+    } as ICustomRouteData
+  },
 
 ];
 

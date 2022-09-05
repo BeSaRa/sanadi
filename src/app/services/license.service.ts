@@ -140,6 +140,9 @@ export class LicenseService {
       case CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD:
         url = this.urlService.URLS.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD;
         break;
+      case CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP:
+        url = this.urlService.URLS.URGENT_INTERVENTION_LICENSE_FOLLOWUP;
+        break;
     }
     return url;
   }

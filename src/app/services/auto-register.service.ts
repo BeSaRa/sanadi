@@ -40,6 +40,9 @@ import {
   TransferringIndividualFundsAbroadComponent
 } from '@app/projects/pages/transferring-individual-funds-abroad/transferring-individual-funds-abroad.component';
 import { CoordinationWithOrganizationsRequestComponent } from '@app/modules/general-services/pages/coordination-with-organizations-request/coordination-with-organizations-request.component';
+import {
+  UrgentInterventionLicenseFollowupComponent
+} from '@app/modules/urgent-intervention/pages/urgent-intervention-license-followup/urgent-intervention-license-followup.component';
 
 @Injectable({
   providedIn: 'root'
@@ -73,6 +76,7 @@ export class AutoRegisterService {
       DynamicComponentService.registerComponent('UrgentJointReliefCampaignComponent', UrgentJointReliefCampaignComponent);
       DynamicComponentService.registerComponent('UrgentInterventionAnnouncementComponent', UrgentInterventionAnnouncementComponent);
       DynamicComponentService.registerComponent('UrgentInterventionClosureComponent', UrgentInterventionClosureComponent);
+      DynamicComponentService.registerComponent('UrgentInterventionLicenseFollowupComponent', UrgentInterventionLicenseFollowupComponent);
 
       DynamicComponentService.registerComponent('ExternalOrgAffiliationComponent', ExternalOrgAffiliationComponent);
       DynamicComponentService.registerComponent('UrgentInterventionFinancialNotificationComponent', UrgentInterventionFinancialNotificationComponent);

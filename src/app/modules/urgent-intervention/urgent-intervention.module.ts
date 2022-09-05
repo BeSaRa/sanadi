@@ -1,4 +1,6 @@
-import { UrgentInterventionFinancialNotificationComponent } from './pages/urgent-intervention-financial-notification/urgent-intervention-financial-notification.component';
+import {
+  UrgentInterventionFinancialNotificationComponent
+} from './pages/urgent-intervention-financial-notification/urgent-intervention-financial-notification.component';
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 
@@ -32,6 +34,13 @@ import {LessonsLearntListComponent} from './shared/lessons-learnt-list/lessons-l
 import {
   UrgentInterventionClosureApproveTaskPopupComponent
 } from './popups/urgent-intervention-closure-approve-task-popup/urgent-intervention-closure-approve-task-popup.component';
+import {
+  UrgentInterventionLicenseFollowupComponent
+} from './pages/urgent-intervention-license-followup/urgent-intervention-license-followup.component';
+import { UrgentInterventionReportListComponent } from './shared/urgent-intervention-report-list/urgent-intervention-report-list.component';
+import { UrgentInterventionReportPopupComponent } from './popups/urgent-intervention-report-popup/urgent-intervention-report-popup.component';
+import { UrgentInterventionAttachmentPopupComponent } from './popups/urgent-intervention-attachment-popup/urgent-intervention-attachment-popup.component';
+import { UrgentInterventionAttachmentApprovalPopupComponent } from './popups/urgent-intervention-attachment-approval-popup/urgent-intervention-attachment-approval-popup.component';
 
 
 @NgModule({
@@ -50,7 +59,12 @@ import {
     ImplementationEvaluationListComponent,
     BestPracticesListComponent,
     LessonsLearntListComponent,
-    UrgentInterventionClosureApproveTaskPopupComponent
+    UrgentInterventionClosureApproveTaskPopupComponent,
+    UrgentInterventionLicenseFollowupComponent,
+    UrgentInterventionReportListComponent,
+    UrgentInterventionReportPopupComponent,
+    UrgentInterventionAttachmentPopupComponent,
+    UrgentInterventionAttachmentApprovalPopupComponent
   ],
   imports: [
     CommonModule,
@@ -58,4 +72,5 @@ import {
     EServicesMainModule,
   ]
 })
-export class UrgentInterventionModule { }
+export class UrgentInterventionModule {
+}

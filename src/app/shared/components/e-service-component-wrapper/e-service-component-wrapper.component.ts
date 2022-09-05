@@ -9,35 +9,35 @@ import {
   ViewChild,
   ViewContainerRef
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { DynamicComponentService } from '@app/services/dynamic-component.service';
-import { EmployeeService } from '@app/services/employee.service';
-import { LangService } from '@app/services/lang.service';
-import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
-import { CaseModel } from '@app/models/case-model';
-import { OpenFrom } from '@app/enums/open-from.enum';
-import { IOpenedInfo } from '@app/interfaces/i-opened-info';
-import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
-import { WFResponseType } from '@app/enums/wfresponse-type.enum';
-import { WFActions } from '@app/enums/wfactions.enum';
-import { CaseTypes } from '@app/enums/case-types.enum';
-import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { ToastService } from '@app/services/toast.service';
-import { InboxService } from '@app/services/inbox.service';
-import { merge, Subject } from 'rxjs';
-import { skip, startWith, takeUntil } from 'rxjs/operators';
-import { TabComponent } from '@app/shared/components/tab/tab.component';
-import { OperationTypes } from '@app/enums/operation-types.enum';
-import { SaveTypes } from '@app/enums/save-types';
-import { IESComponent } from '@app/interfaces/iescomponent';
-import { OrgUser } from '@app/models/org-user';
-import { InternalUser } from '@app/models/internal-user';
-import { ChecklistItem } from '@app/models/checklist-item';
-import { StepCheckListComponent } from '@app/shared/components/step-check-list/step-check-list.component';
-import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
-import { ActionIconsEnum } from '@app/enums/action-icons-enum';
-import { UserClickOn } from '@app/enums/user-click-on.enum';
-import { BaseGenericEService } from "@app/generics/base-generic-e-service";
+import {ActivatedRoute, Router} from '@angular/router';
+import {DynamicComponentService} from '@app/services/dynamic-component.service';
+import {EmployeeService} from '@app/services/employee.service';
+import {LangService} from '@app/services/lang.service';
+import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
+import {CaseModel} from '@app/models/case-model';
+import {OpenFrom} from '@app/enums/open-from.enum';
+import {IOpenedInfo} from '@app/interfaces/i-opened-info';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {WFResponseType} from '@app/enums/wfresponse-type.enum';
+import {WFActions} from '@app/enums/wfactions.enum';
+import {CaseTypes} from '@app/enums/case-types.enum';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {ToastService} from '@app/services/toast.service';
+import {InboxService} from '@app/services/inbox.service';
+import {merge, Subject} from 'rxjs';
+import {skip, startWith, takeUntil} from 'rxjs/operators';
+import {TabComponent} from '@app/shared/components/tab/tab.component';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {SaveTypes} from '@app/enums/save-types';
+import {IESComponent} from '@app/interfaces/iescomponent';
+import {OrgUser} from '@app/models/org-user';
+import {InternalUser} from '@app/models/internal-user';
+import {ChecklistItem} from '@app/models/checklist-item';
+import {StepCheckListComponent} from '@app/shared/components/step-check-list/step-check-list.component';
+import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {BaseGenericEService} from '@app/generics/base-generic-e-service';
 import {ITransferIndividualFundsAbroadComplete} from '@contracts/i-transfer-individual-funds-abroad-complete';
 import {ITransferFundsAbroadComponent} from '@contracts/i-transfer-funds-abroad-component';
 
@@ -106,6 +106,9 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN,
     CaseTypes.FOREIGN_COUNTRIES_PROJECTS,
     CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST,
+  ];
+  servicesWithNoSaveDraftLaunch: number[] = [
+    CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP
   ];
 
   finalApproveByMatrixServices: number[] = [
@@ -228,9 +231,15 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         type: 'action',
         label: 'btn_save',
         disabled: (item) => {
+          if (this.servicesWithNoSaveDraftLaunch.includes(item.getCaseType())) {
+            return true;
+          }
           return (this.component.form.invalid || item?.alreadyStarted()) && !this.canSave();
         },
         show: (item) => {
+          if (this.servicesWithNoSaveDraftLaunch.includes(item.getCaseType())) {
+            return false;
+          }
           // show if external user or service which are only for internal user
           return !this.internal || this.internalUserServices.includes(item.getCaseType());
         },
@@ -242,7 +251,12 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       {
         type: 'action',
         label: 'launch',
-        show: (item: CaseModel<any, any>) => item.canStart(),
+        show: (item: CaseModel<any, any>) => {
+          if (this.servicesWithNoSaveDraftLaunch.includes(item.getCaseType())) {
+            return false;
+          }
+          return item.canStart()
+        },
         onClick: (item: CaseModel<any, any>) => {
           this.launchAction(item);
         }
@@ -285,9 +299,16 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         // icon: 'mdi-rocket-launch-outline',
         label: 'btn_save',
         disabled: (item) => {
+          if (this.servicesWithNoSaveDraftLaunch.includes(item.getCaseType())) {
+            return true;
+          }
           return (this.component.form.invalid || item?.alreadyStarted()) && !this.canSave();
         },
         show: (item) => {
+          if (this.servicesWithNoSaveDraftLaunch.includes(item.getCaseType())) {
+            return false;
+          }
+
           // show if external user or service which are only for internal user
           return !this.internal || this.internalUserServices.includes(item.getCaseType());
         },
@@ -300,6 +321,12 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         type: 'action',
         // icon: 'mdi-rocket-launch-outline',
         label: 'launch',
+        show: (item) => {
+          if (this.servicesWithNoSaveDraftLaunch.includes(item.getCaseType())) {
+            return false;
+          }
+          return true;
+        },
         disabled: (item) => !item?.canStart(),
         onClick: () => {
           this.component.launch();
@@ -310,7 +337,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         type: 'action',
         // icon: 'mdi-rocket-launch-outline',
         label: 'save_as_draft',
-        show: () => {
+        show: (item) => {
+          if (this.servicesWithNoSaveDraftLaunch.includes(item.getCaseType())) {
+            return false;
+          }
           return (!!this.model && !this.excludedDraftTypes.includes(this.model.getCaseType()));
         },
         disabled: item => !item?.canDraft(),
@@ -333,8 +363,11 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   }
 
   canSave(): boolean {
-    if(this.model?.caseType===CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST){
-      return this.employeeService.isInternalUser()||this.employeeService.isCharityUser();
+    if (this.model && this.servicesWithNoSaveDraftLaunch.includes(this.model.caseType)) {
+      return false;
+    }
+    if (this.model?.caseType === CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST) {
+      return this.employeeService.isInternalUser() || this.employeeService.isCharityUser();
     }
     const isServiceAllow = this.model?.caseType == CaseTypes.EMPLOYMENT;
     return (isServiceAllow && this.employeeService.isCharityManager()) || !!((this.employeeService.isCharityManager() || this.employeeService.isCharityUser()) && this.model?.isReturned());
@@ -405,6 +438,9 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         label: 'btn_save',
         disabled: () => this.component.readonly && !this.canSave(),
         show: (item) => {
+          if (this.servicesWithNoSaveDraftLaunch.includes(item.getCaseType())) {
+            return false;
+          }
           // show if external user or service which are only for internal user
           return !this.internal || this.internalUserServices.includes(item.getCaseType());
         },
@@ -484,7 +520,9 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
             || item.getResponses().includes(WFResponseType.PARTNER_APPROVAL_SEND_TO_SINGLE_DEPARTMENT)
             || item.getResponses().includes(WFResponseType.FINAL_EXTERNAL_OFFICE_SEND_TO_SINGLE_DEPARTMENT)
             || item.getResponses().includes(WFResponseType.CUSTOMS_EXEMPTION_SEND_TO_SINGLE_DEPARTMENT)
-            || item.getResponses().includes(WFResponseType.TRANSFER_FUND_REQUEST_TO_COMPLIANCE_AND_RISK_DEPARTMENT));
+            || item.getResponses().includes(WFResponseType.TRANSFER_FUND_REQUEST_TO_COMPLIANCE_AND_RISK_DEPARTMENT)
+            || item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_FOLLOWUP_SEND_TO_SINGLE_DEPARTMENT)
+          );
           let isSendToLicenseDepartment = item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_CLOSURE_SEND_TO_SINGLE_DEPARTMENT);
 
           if (isSendToRiskAndCompliance) {

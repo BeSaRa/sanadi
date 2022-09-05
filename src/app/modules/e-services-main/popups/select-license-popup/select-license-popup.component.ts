@@ -1,15 +1,15 @@
-import { Component, Inject } from '@angular/core';
-import { LangService } from '@app/services/lang.service';
-import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
-import { DialogRef } from '@app/shared/models/dialog-ref';
-import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { LicenseService } from '@app/services/license.service';
-import { SharedService } from '@app/services/shared.service';
-import { FileIconsEnum } from '@app/enums/file-extension-mime-types-icons.enum';
-import { InboxService } from '@app/services/inbox.service';
-import { CaseTypes } from '@app/enums/case-types.enum';
-import { ServiceRequestTypes } from '@app/enums/service-request-types';
-import { BaseGenericEService } from "@app/generics/base-generic-e-service";
+import {Component, Inject} from '@angular/core';
+import {LangService} from '@app/services/lang.service';
+import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {LicenseService} from '@app/services/license.service';
+import {SharedService} from '@app/services/shared.service';
+import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
+import {InboxService} from '@app/services/inbox.service';
+import {CaseTypes} from '@app/enums/case-types.enum';
+import {ServiceRequestTypes} from '@app/enums/service-request-types';
+import {BaseGenericEService} from '@app/generics/base-generic-e-service';
 
 @Component({
   selector: 'select-license-popup',
@@ -27,18 +27,18 @@ export class SelectLicensePopupComponent {
   caseService?: BaseGenericEService<any>;
 
   constructor(public lang: LangService, private dialogRef: DialogRef,
-    private licenseService: LicenseService,
-    private inboxService: InboxService,
-    private _sharedService: SharedService,
-    @Inject(DIALOG_DATA_TOKEN) public data: {
-      licenses: any[],
-      caseRecord: any | undefined,
-      select: boolean,
-      displayedColumns: string[]
-    }) {
+              private licenseService: LicenseService,
+              private inboxService: InboxService,
+              private _sharedService: SharedService,
+              @Inject(DIALOG_DATA_TOKEN) public data: {
+                licenses: any[],
+                caseRecord: any | undefined,
+                select: boolean,
+                displayedColumns: string[]
+              }) {
     this.caseType = this.data.caseRecord?.getCaseType();
     this.caseStatus = this.data.caseRecord?.getCaseStatus();
-    this.requestType = this.data.caseRecord?.getRequestType();
+    this.requestType = this.data.caseRecord?.getRequestType() || -1;
     this.caseService = this.inboxService.getService(this.caseType);
     this.caseTypeViewLicense = SelectLicensePopupComponent._getCaseTypeForViewLicense(this.caseType, this.requestType);
 
@@ -70,6 +70,7 @@ export class SelectLicensePopupComponent {
         caseTypeForView = (requestType === ServiceRequestTypes.NEW) ? CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL : caseType;
         break;
       case CaseTypes.URGENT_INTERVENTION_CLOSURE:
+      case CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP:
         caseTypeForView = CaseTypes.URGENT_INTERVENTION_ANNOUNCEMENT;
         break;
       default:
@@ -80,29 +81,21 @@ export class SelectLicensePopupComponent {
   }
 
   selectLicense(license: any): void {
-    if (this.caseType != CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION)
+    if (this.caseType === CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION || this.caseType ===  CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP) {
+      this.licenseService.loadUrgentInterventionAnnouncementByLicenseId(license.id).subscribe((licenseDetails) => {
+        if (!licenseDetails) {
+          return;
+        }
+        this.dialogRef.close({selected: license, details: licenseDetails});
+      });
+    } else {
       this.licenseService.validateLicenseByRequestType(this.caseType, this.requestType, license.id)
         .subscribe((licenseDetails) => {
           if (!licenseDetails) {
             return;
           }
-          this.dialogRef.close({ selected: license, details: licenseDetails });
+          this.dialogRef.close({selected: license, details: licenseDetails});
         });
-    else
-      this.licenseService.loadUrgentInterventionAnnouncementByLicenseId(license.id).subscribe((licenseDetails) => {
-        if (!licenseDetails) {
-          return;
-        }
-        this.dialogRef.close({ selected: license, details: licenseDetails });
-      });
+    }
   }
-
-  /*viewLicenseAsPDF(license: any) {
-    let caseType = (this.caseType === CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL && this.requestType === ServiceRequestTypes.NEW) ? CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL : this.caseType;
-
-    return this.licenseService.showLicenseContent(license, caseType)
-      .subscribe((file) => {
-        return this._sharedService.openViewContentDialog(file, license);
-      });
-  }*/
 }

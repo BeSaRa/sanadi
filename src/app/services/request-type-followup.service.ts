@@ -34,6 +34,7 @@ export class RequestTypeFollowupService {
     [CaseTypes.FOREIGN_COUNTRIES_PROJECTS]: this.lookupService.listByCategory.CollectionRequestType,
     [CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD]: this.lookupService.listByCategory.TransferringIndividualRequestType,
     [CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST]: [this.getNewRequestType()],
+    [CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP]: [this.getNewRequestType()],
   }
 
   constructor(private lookupService: LookupService) {

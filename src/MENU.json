@@ -912,5 +912,18 @@
     "group": "general-services",
     "itemOrder": 5,
     "svg": null
+  },
+  {
+    "id": 70,
+    "langKey": "menu_urgent_intervention_license_followup",
+    "path": "/home/urgent-intervention/urgent-intervention-license-followup",
+    "icon": "mdi-domain",
+    "isSvg": false,
+    "permission": "URGENT_INTERVENTION_LICENSE_FOLLOWUP",
+    "permissionGroup": null,
+    "parent": 60,
+    "group": "urgent-intervention",
+    "itemOrder": 5,
+    "svg": null
   }
 ]

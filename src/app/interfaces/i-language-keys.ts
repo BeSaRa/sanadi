@@ -53,7 +53,7 @@ export interface ILanguageKeys {
   manually: string;
   external_followup: string;
   internal_followup: string;
-  menu_reports: string
+  menu_reports: string;
   org_reject_task: string;
   please_select_organization_first: string;
   joint_relief_campaign_total_donations: string;
@@ -1248,14 +1248,20 @@ export interface ILanguageKeys {
   lbl_organization_required_role: string;
   effective_coordination_capabilities: string;
   research_and_studies: string;
-  lbl_research_topic:string;
-  lbl_motives_and_reasons:string;
-  lbl_research_and_study_objectives:string;
-  lbl_expected_research_results:string;
-  lbl_general_landmarks:string;
-  lbl_search_start_date:string;
-  lbl_search_submission_deadline:string;
-  lbl_required_role:string;
-  lbl_researcher_definition:string;
-  lbl_financial_cost:string;
+  lbl_research_topic: string;
+  lbl_motives_and_reasons: string;
+  lbl_research_and_study_objectives: string;
+  lbl_expected_research_results: string;
+  lbl_general_landmarks: string;
+  lbl_search_start_date: string;
+  lbl_search_submission_deadline: string;
+  lbl_required_role: string;
+  lbl_researcher_definition: string;
+  lbl_financial_cost: string;
+  menu_urgent_intervention_license_followup: string;
+  reports: string;
+  lbl_add_report: string;
+  lbl_edit_report: string;
+  execution_date: string;
+  approve: string;
 }
