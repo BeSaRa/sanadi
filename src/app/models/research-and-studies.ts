@@ -6,6 +6,7 @@ import { LangService } from '@app/services/lang.service';
 import { SearchableCloneable } from './searchable-cloneable';
 
 export class ResearchAndStudies extends SearchableCloneable<ResearchAndStudies> {
+  organizationId!:number|undefined;
   researchTopic!: string;
   motivesAndReasons!: string;
   researchAndStudyObjectives!: string;
@@ -21,6 +22,7 @@ export class ResearchAndStudies extends SearchableCloneable<ResearchAndStudies> 
   constructor() {
     super();
     this.langService = FactoryService.getService('LangService');
+
   }
 
   get DisplayedColumns(): string[] {

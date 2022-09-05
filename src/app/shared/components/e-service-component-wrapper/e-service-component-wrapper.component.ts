@@ -377,14 +377,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   canOrganizationApprove():boolean{
     if(this.model?.caseType===CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST) {
       const model=this.model as CoordinationWithOrganizationsRequest
-     if(model.organizaionOfficerList.length < 1){
-      return false;
-     }
-     if(model.buildingAbilitiesList.length < 1 &&
-        model.effectiveCoordinationCapabilities.length < 1 &&
-         model.researchAndStudies.length<1){
-      return false
-     }
+   return model.approved
     }
     return true;
   }

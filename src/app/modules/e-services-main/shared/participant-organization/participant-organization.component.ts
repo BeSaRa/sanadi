@@ -62,8 +62,11 @@ export class ParticipantOrganizationComponent implements OnInit {
   >([]);
   columns = this.model.DisplayedColumns;
 
-  @Input()canUpdate:boolean=true;
-  @Input()isClaimed:boolean=false;
+  @Input()canAdd:boolean=true;
+  @Input()canView:boolean=true;
+  @Input()canDelete:boolean=true;
+
+
   private readonly: boolean = true;
   private save$: Subject<any> = new Subject<any>();
 
@@ -81,9 +84,7 @@ export class ParticipantOrganizationComponent implements OnInit {
     this.listenToRecordChange();
     this.listenToSave();
     this._setComponentReadiness('READY');
-    if(this.canUpdate === false){
-      this.model.DisplayedColumns= this.model.DisplayedColumns.slice(0,this.model.DisplayedColumns.length-1);
-    }
+
   }
 
   ngOnDestroy(): void {
@@ -211,6 +212,11 @@ export class ParticipantOrganizationComponent implements OnInit {
           this.toastService.success(this.lang.map.msg_delete_success);
         }
       });
+  }
+  @Output()requestView:EventEmitter<number>=new EventEmitter<number>();
+  view($event: MouseEvent, record: ParticipantOrg): any {
+    $event.preventDefault();
+    this.requestView.emit(record.organizationId);
   }
   sortOrganizations() {
     const propName =
