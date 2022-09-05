@@ -48,11 +48,15 @@ export class BuildingAbilityComponent implements OnInit {
   ) {}
   @Input() formArrayName: string = 'buildingAbilitiesList';
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();
+  @Input() orgId!:number|undefined;
+  allowListUpdate:boolean=true;
 
   private _list: BuildingAbility[] = [];
   @Input() set list(list: BuildingAbility[]) {
-    this._list = list;
-    this.listDataSource.next(this._list);
+    if( this.allowListUpdate === true){
+      this._list = list;
+      this.listDataSource.next(this._list);
+    }
   }
   model: BuildingAbility = new BuildingAbility();
   get list(): BuildingAbility[] {
@@ -132,6 +136,7 @@ export class BuildingAbilityComponent implements OnInit {
   }
   private listenToRecordChange() {
     this.recordChanged$.pipe(takeUntil(this.destroy$)).subscribe((record) => {
+      if(record)record.organizationId=this.orgId;
       this.currentRecord = record || undefined;
       this.updateForm(this.currentRecord);
     });

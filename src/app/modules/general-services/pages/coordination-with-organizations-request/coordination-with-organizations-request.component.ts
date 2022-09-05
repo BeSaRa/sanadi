@@ -39,7 +39,7 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
   CoordinationWithOrganizationsRequestService
 > {
   form!: FormGroup;
-  mainModel!:CoordinationWithOrganizationsRequest;
+  mainModel!: CoordinationWithOrganizationsRequest;
   domains: Lookup[] = this.lookupService.listByCategory.CoordinationType?.sort(
     (a, b) => a?.lookupKey - b?.lookupKey
   );
@@ -71,7 +71,7 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
   isInternalUser!: boolean;
   isLicensingUser!: boolean;
   isInitialApproved!: boolean;
-  currentUserOrgId!:number|undefined;
+  currentUserOrgId!: number | undefined;
   isEditLicenseEndDateDisabled(): boolean {
     return false;
   }
@@ -81,23 +81,21 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
   _getNewInstance(): CoordinationWithOrganizationsRequest {
     return new CoordinationWithOrganizationsRequest();
   }
-  isApproved():boolean{
-    return(
-      ( this.model!.organizaionOfficerList.length > 0) &&
-      (
-        this.model!.buildingAbilitiesList.length > 0 ||
+  isApproved(): boolean {
+    return (
+      this.model!.organizaionOfficerList.length > 0 &&
+      (this.model!.buildingAbilitiesList.length > 0 ||
         this.model!.effectiveCoordinationCapabilities.length > 0 ||
-        this.model!.researchAndStudies.length > 0
-      )
-    )
+        this.model!.researchAndStudies.length > 0)
+    );
   }
 
   _initComponent(): void {
-    this.mainModel=new CoordinationWithOrganizationsRequest()
+    this.mainModel = new CoordinationWithOrganizationsRequest();
     this.isCharityUser = this.employeeService.isCharityUser();
     this.isInternalUser = this.employeeService.isInternalUser();
     this.isLicensingUser = this.employeeService.isLicensingUser();
-    this.currentUserOrgId=this.employeeService.getOrgUnit()?.id
+    this.currentUserOrgId = this.employeeService.getOrgUnit()?.id;
     this.loadOrgUnits();
     this.loadOrgUsers();
   }
@@ -109,21 +107,34 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
   }
   _afterBuildForm(): void {}
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
-    // this.model!.organizaionOfficerList=[...this.mainModel.organizaionOfficerList]
-    // this.model!.buildingAbilitiesList=[...this.mainModel.buildingAbilitiesList]
-    // this.model!.effectiveCoordinationCapabilities=[...this.mainModel.effectiveCoordinationCapabilities]
-    // this.model!.researchAndStudies=[...this.mainModel.researchAndStudies]
+    this.disableListsUpate();
+    this.model!.organizaionOfficerList =
+      this.model!.organizaionOfficerList.concat(
+        this.mainModel.organizaionOfficerList
+      );
+    this.model!.buildingAbilitiesList =
+      this.model!.buildingAbilitiesList.concat(
+        this.mainModel.buildingAbilitiesList
+      );
+    this.model!.effectiveCoordinationCapabilities =
+      this.model!.effectiveCoordinationCapabilities.concat(
+        this.mainModel.effectiveCoordinationCapabilities
+      );
+    this.model!.researchAndStudies = this.model!.researchAndStudies.concat(
+      this.mainModel.researchAndStudies
+    );
     return of(this.form.valid);
   }
   _beforeLaunch(): boolean | Observable<boolean> {
-
     return true;
   }
   _afterLaunch(): void {
     this._resetForm();
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
-  _prepareModel(): CoordinationWithOrganizationsRequest| Observable<CoordinationWithOrganizationsRequest> {
+  _prepareModel():
+    | CoordinationWithOrganizationsRequest
+    | Observable<CoordinationWithOrganizationsRequest> {
     const value = new CoordinationWithOrganizationsRequest().clone({
       ...this.model,
       ...this.form.value,
@@ -135,8 +146,10 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
     saveType: SaveTypes,
     operation: OperationTypes
   ): void {
-    // this.model = this.filterModelByOrgId(this.currentUserOrgId!,this.model);
-    // this.model!.approved=this.isApproved();
+    this.enableListsUpate();
+    this.mainModel = this.prepareMainModel(this.currentUserOrgId!,model);
+    this.model = this.filterModelByOrgId(this.currentUserOrgId!, model);
+    this.model!.approved = this.isApproved();
     if (
       (operation === OperationTypes.CREATE && saveType === SaveTypes.FINAL) ||
       (operation === OperationTypes.UPDATE && saveType === SaveTypes.COMMIT)
@@ -163,15 +176,15 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
     if (!model) {
       return;
     }
-    // this.mainModel=model;
-    // if(this.currentUserOrgId){
-    //   this.model = this.filterModelByOrgId(this.currentUserOrgId,model)!;
-    // }
-    this.model=model;
+    if (this.currentUserOrgId) {
+      this.mainModel = this.prepareMainModel(this.currentUserOrgId,model);
+      this.model = this.filterModelByOrgId(this.currentUserOrgId, model)!;
+    }
+    this.model = model;
 
     this.isInitialApproved = this.model?.isInitialApproved();
     this.form = this.fb.group(model.formBuilder(true));
-    this.model.approved=this.isApproved();
+    this.model.approved = this.isApproved();
   }
   _resetForm(): void {
     this.form.reset();
@@ -274,17 +287,27 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
   }
   // Particpating  Orginzations
 
-  get paticipatingOrgsCanAdd():boolean{
-    return this.isLicensingUser || !!(!this.isInitialApproved && this.isClaimed)
+  get paticipatingOrgsCanAdd(): boolean {
+    return (
+      this.isLicensingUser || !!(!this.isInitialApproved && this.isClaimed)
+    );
   }
-  get paticipatingOrgsCanView():boolean{
-    return this.model?.organizaionOfficerList?.length! >0 ||
-           this.model?.buildingAbilitiesList?.length!>0||
-           this.model?.effectiveCoordinationCapabilities?.length!>0||
-           this.model?.researchAndStudies?.length!>0
+  get paticipatingOrgsCanView(): boolean {
+    return (
+      this.isInternalUser &&
+      (this.model?.organizaionOfficerList?.length! > 0 ||
+        this.model?.buildingAbilitiesList?.length! > 0 ||
+        this.model?.effectiveCoordinationCapabilities?.length! > 0 ||
+        this.model?.researchAndStudies?.length! > 0)
+    );
   }
-  get paticipatingOrgsCanDelete():boolean{
-    return !this.isInitialApproved && this.isInternalUser && (this.isClaimed??false)
+  get paticipatingOrgsCanDelete(): boolean {
+    return (
+      (!this.isInitialApproved &&
+        this.isInternalUser &&
+        (this.isClaimed ?? false)) ||
+      (!this.isInitialApproved && this.isLicensingUser)
+    );
   }
 
   @ViewChild('participantOrganizations')
@@ -294,7 +317,7 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
   organizationUnits: OrgUnit[] = [];
   loadOrgUnits(reset = false) {
     this.orgUnitService
-      .loadAsLookups()
+      .getOrganizationUnitsByStatus(1)
       .pipe(
         map((list) => {
           if (!!reset) {
@@ -322,7 +345,10 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
         );
       });
   }
-
+  updateParticipantOrgs() {
+    this.model!.participatingOrganizaionList =
+      this.participantOrganizationsComponentRef.list;
+  }
 
   // Organization Officers
   organizationOfficersTabStatus: ReadinessStatus = 'READY';
@@ -425,21 +451,83 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
     });
   }
 
-
-  openParticipantOrgPopup(orgId:number){
-    const model=this.filterModelByOrgId(orgId);
-    this.service.openParticipantOrganizationspopup(orgId,model!)
+  openParticipantOrgPopup(orgId: number) {
+    const model = this.filterModelByOrgId(orgId);
+    this.service.openParticipantOrganizationspopup(orgId, model!);
   }
 
-  filterModelByOrgId(orgId:number,updatedModel:CoordinationWithOrganizationsRequest|null=null){
+  filterModelByOrgId(
+    orgId: number,
+    updatedModel: CoordinationWithOrganizationsRequest | null = null
+  ) {
+    const model = updatedModel ? updatedModel :
+    new CoordinationWithOrganizationsRequest().clone(this.model);
 
-    const model=updatedModel? updatedModel:this.model;
-
-    model!.organizaionOfficerList! =model!.organizaionOfficerList.filter(x=>x.organizationId === orgId);
-    model!.buildingAbilitiesList! =model!.buildingAbilitiesList.filter(x=>x.organizationId === orgId);
-    model!.effectiveCoordinationCapabilities! =model!.effectiveCoordinationCapabilities.filter(x=>x.organizationId === orgId);
-    model!.researchAndStudies! =model!.researchAndStudies.filter(x=>x.organizationId === orgId);
+    model!.organizaionOfficerList! = model!.organizaionOfficerList.filter(
+      (x) => x.organizationId === orgId
+    );
+    model!.buildingAbilitiesList! = model!.buildingAbilitiesList.filter(
+      (x) => x.organizationId === orgId
+    );
+    model!.effectiveCoordinationCapabilities! =
+      model!.effectiveCoordinationCapabilities.filter(
+        (x) => x.organizationId === orgId
+      );
+    model!.researchAndStudies! = model!.researchAndStudies.filter(
+      (x) => x.organizationId === orgId
+    );
 
     return model;
+  }
+
+  prepareMainModel(
+    orgId: number,
+    updatedModel: CoordinationWithOrganizationsRequest | null = null
+  ) {
+    if (!updatedModel) return new CoordinationWithOrganizationsRequest();
+    const model = new CoordinationWithOrganizationsRequest().clone(
+      updatedModel
+    );
+
+    model!.organizaionOfficerList! = model!.organizaionOfficerList.filter(
+      (x) => x.organizationId !== orgId
+    );
+    model!.buildingAbilitiesList! = model!.buildingAbilitiesList.filter(
+      (x) => x.organizationId !== orgId
+    );
+    model!.effectiveCoordinationCapabilities! =
+      model!.effectiveCoordinationCapabilities.filter(
+        (x) => x.organizationId !== orgId
+      );
+    model!.researchAndStudies! = model!.researchAndStudies.filter(
+      (x) => x.organizationId !== orgId
+    );
+
+    return model;
+  }
+
+  enableListsUpate(){
+    this.organizationOfficerssComponentRef.allowListUpdate =true;
+    if(this.buildingAbilityComponentRef){
+      this.buildingAbilityComponentRef.allowListUpdate =true;
+    }
+    if(this.effectiveCoordinationCapabilitiesComponentRef){
+      this.effectiveCoordinationCapabilitiesComponentRef.allowListUpdate =true;
+    }
+    if(this.ResearchAndStudiesComponentRef){
+      this.ResearchAndStudiesComponentRef.allowListUpdate =true;
+    }
+  }
+  disableListsUpate(){
+    this.organizationOfficerssComponentRef.allowListUpdate =false;
+    if(this.buildingAbilityComponentRef){
+      this.buildingAbilityComponentRef.allowListUpdate =false;
+    }
+    if(this.effectiveCoordinationCapabilitiesComponentRef){
+      this.effectiveCoordinationCapabilitiesComponentRef.allowListUpdate =false;
+    }
+    if(this.ResearchAndStudiesComponentRef){
+      this.ResearchAndStudiesComponentRef.allowListUpdate =false;
+    }
   }
 }

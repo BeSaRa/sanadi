@@ -337,7 +337,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   canSave(): boolean {
     if(this.model?.caseType===CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST) {
       const model=this.model as CoordinationWithOrganizationsRequest
-      return model.participatingOrganizaionList.length > 0 ? true : false
+      return model.participatingOrganizaionList.length > 0
     }
     const isServiceAllow = this.model?.caseType == CaseTypes.EMPLOYMENT;
     return (isServiceAllow && this.employeeService.isCharityManager()) || !!((this.employeeService.isCharityManager() || this.employeeService.isCharityUser()) && this.model?.isReturned());

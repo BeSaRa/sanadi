@@ -1,30 +1,25 @@
-import { OrganizationOfficer } from "./../../../../models/organization-officer";
-import { map, takeUntil, take } from "rxjs/operators";
 import {
   Component,
   EventEmitter,
   Input,
   OnInit,
   Output,
-  ViewChild,
+  ViewChild
 } from "@angular/core";
 import {
-  AbstractControl,
-  FormArray,
-  FormBuilder,
   FormControl,
-  FormGroup,
-  Validators,
+  FormGroup
 } from "@angular/forms";
+import { UserClickOn } from "@app/enums/user-click-on.enum";
 import { ILanguageKeys } from "@app/interfaces/i-language-keys";
 import { DialogService } from "@app/services/dialog.service";
 import { LangService } from "@app/services/lang.service";
 import { ToastService } from "@app/services/toast.service";
 import { ReadinessStatus } from "@app/types/types";
-import { BehaviorSubject, Subject } from "rxjs";
-import { UserClickOn } from "@app/enums/user-click-on.enum";
-import { CustomValidators } from "@app/validators/custom-validators";
 import { NgSelectComponent } from "@ng-select/ng-select";
+import { BehaviorSubject, Subject } from "rxjs";
+import { map, take, takeUntil, takeWhile,tap } from "rxjs/operators";
+import { OrganizationOfficer } from "./../../../../models/organization-officer";
 
 @Component({
   selector: "organizaion-officer",
@@ -41,7 +36,6 @@ export class OrganizaionOfficerComponent implements OnInit {
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();
   filterControl: FormControl = new FormControl("");
 
-  k: OrganizationOfficer[] =[];
   private readonly: boolean = true;
   private save$: Subject<any> = new Subject<any>();
 
@@ -51,13 +45,17 @@ export class OrganizaionOfficerComponent implements OnInit {
   private currentRecord?: OrganizationOfficer;
   private _list: OrganizationOfficer[] = [];
   @Input() set list(list: OrganizationOfficer[]) {
-    this._list = list;
-    this.listDataSource.next(this._list);
+    if( this.allowListUpdate === true){
+      this._list = list;
+      this.listDataSource.next(this._list);
+    }
   }
   model: OrganizationOfficer = new OrganizationOfficer();
   get list(): OrganizationOfficer[] {
     return this._list;
   }
+
+  allowListUpdate:boolean=true;
   @Input() pageTitleKey: keyof ILanguageKeys = "menu_organization_user";
   @Input()canUpdate:boolean=true;
   @Input()isClaimed:boolean=false;
@@ -65,7 +63,8 @@ export class OrganizaionOfficerComponent implements OnInit {
 
   listDataSource: BehaviorSubject<OrganizationOfficer[]> = new BehaviorSubject<
     OrganizationOfficer[]
-  >([]);
+  >([])
+  ;
   columns = [
     "identificationNumber",
     "fullName",
@@ -152,6 +151,7 @@ export class OrganizaionOfficerComponent implements OnInit {
 
     this.sortOrganizations();
     this.ngSelectComponentRef.handleClearClick();
+
     this.listDataSource.next(this.list);
   }
   delete($event: MouseEvent, record: OrganizationOfficer, index: number): any {
