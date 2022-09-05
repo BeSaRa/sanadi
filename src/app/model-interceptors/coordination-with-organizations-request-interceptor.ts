@@ -12,14 +12,7 @@ export class CoordinationWithOrganizationsRequestInterceptor
   send(
     model: Partial<CoordinationWithOrganizationsRequest>
   ): Partial<CoordinationWithOrganizationsRequest> {
-    delete model.service;
-    delete model.taskDetails;
-    delete model.caseStatusInfo;
-    delete model.creatorInfo;
-    delete model.categoryInfo;
-    delete model.ouInfo;
-    delete model.employeeService;
-    delete model.domainInfo;
+    const orgId=model.employeeService?.getOrgUnit()?.id;
     model.licenseStartDate = !model.licenseStartDate
       ? undefined
       : DateUtils.changeDateFromDatepicker(
@@ -49,6 +42,7 @@ export class CoordinationWithOrganizationsRequestInterceptor
       x.searchSubmissionDeadline = DateUtils.changeDateFromDatepicker(
         x.searchSubmissionDeadline as unknown as IMyDateModel
       )?.toISOString()!;
+      x.organizationId=orgId;
     });
     model.buildingAbilitiesList?.forEach((x) => {
       delete (x as any).searchFields;
@@ -58,6 +52,7 @@ export class CoordinationWithOrganizationsRequestInterceptor
       x.suggestedActivityDateTo = DateUtils.changeDateFromDatepicker(
         x.suggestedActivityDateTo as unknown as IMyDateModel
       )?.toISOString()!;
+      x.organizationId=orgId;
     });
     model.effectiveCoordinationCapabilities?.forEach((x) => {
       delete x.langService;
@@ -66,6 +61,7 @@ export class CoordinationWithOrganizationsRequestInterceptor
       x.eventStartDate = DateUtils.changeDateFromDatepicker(
         x.eventStartDate as unknown as IMyDateModel
       )?.toISOString()!;
+      x.organizationId=orgId;
     });
 
 
