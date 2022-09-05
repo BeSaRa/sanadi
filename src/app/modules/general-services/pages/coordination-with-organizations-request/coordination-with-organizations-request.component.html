@@ -3,30 +3,30 @@
     <tabs-list [accordionView]="accordionView">
       <tab *ngIf="true" [name]="tabsData.basicInfo.name" [hasError]="getTabInvalidStatus('basicInfo')"
         [template]="basicInfoTabTemplate" [title]="lang.map.lbl_basic_info"></tab>
-      <tab *ngIf="true" [name]="tabsData.participantOrganizations.name"
-        [template]="participating_organizaions" [title]="lang.map.participant_organizations"
-        [hasError]="getTabInvalidStatus('participantOrganizations')">
-      </tab>
-      <tab
-      *ngIf="true"
-      [name]="tabsData.specialExplanation.name"
-      [hasError]="getTabInvalidStatus('specialExplanation')"
+
+      <tab *ngIf="true" [name]="tabsData.specialExplanation.name" [hasError]="getTabInvalidStatus('specialExplanation')"
         [template]="specialExplanationTab" [title]="lang.map.special_explanations">
       </tab>
-      <tab
-        *ngIf="isInitialApproved"
-        [name]="tabsData.organizationOfficers.name" [template]="organization_officers"
+
+      <tab *ngIf="true" [name]="tabsData.participantOrganizations.name" [template]="participating_organizaions"
+        [title]="lang.map.participant_organizations" [hasError]="getTabInvalidStatus('participantOrganizations')">
+      </tab>
+
+      <tab *ngIf="!isInternalUser" [name]="tabsData.organizationOfficers.name" [template]="organization_officers"
         [title]="lang.map.organization_officers" [hasError]="getTabInvalidStatus('organizationOfficers')">
       </tab>
-      <tab *ngIf="isInitialApproved && isCorrectModelToDisplay(1)" [name]="tabsData.buildingAbilities.name" [template]="building_abilities"
-        [title]="lang.map.building_abilities" [hasError]="getTabInvalidStatus('buildingAbilities')">
+      <tab *ngIf="!isInternalUser && isCorrectModelToDisplay(1)" [name]="tabsData.buildingAbilities.name"
+        [template]="building_abilities" [title]="lang.map.building_abilities"
+        [hasError]="getTabInvalidStatus('buildingAbilities')">
       </tab>
-      <tab *ngIf="isInitialApproved && isCorrectModelToDisplay(2)" [name]="tabsData.effectiveCoordinationCapabilities.name"
-        [template]="effective_coordination_capabilities" [title]="lang.map.effective_coordination_capabilities"
+      <tab *ngIf="!isInternalUser && isCorrectModelToDisplay(2)"
+        [name]="tabsData.effectiveCoordinationCapabilities.name" [template]="effective_coordination_capabilities"
+        [title]="lang.map.effective_coordination_capabilities"
         [hasError]="getTabInvalidStatus('effectiveCoordinationCapabilities')">
       </tab>
-      <tab *ngIf="isInitialApproved && isCorrectModelToDisplay(3)" [name]="tabsData.researchAndStudies.name" [template]="research_and_studies"
-        [title]="lang.map.research_and_studies" [hasError]="getTabInvalidStatus('researchAndStudies')">
+      <tab *ngIf="!isInternalUser && isCorrectModelToDisplay(3)" [name]="tabsData.researchAndStudies.name"
+        [template]="research_and_studies" [title]="lang.map.research_and_studies"
+        [hasError]="getTabInvalidStatus('researchAndStudies')">
       </tab>
 
     </tabs-list>
@@ -38,9 +38,8 @@
           <!-- Full Name -->
           <div class="col-sm-12 col-md-6 mb-6 position-relative">
             <label asteriskIfRequired="fullName" for="fullName" class="form-label">{{lang.map.full_name}}</label>
-            <input id="fullName" validationClasses="fullName"
-            [value]="model?.fullName"
-            formControlName="fullName" trimInput class="form-control">
+            <input id="fullName" validationClasses="fullName" [value]="model?.fullName" formControlName="fullName"
+              trimInput class="form-control">
             <app-field-error-message controlName="fullName"></app-field-error-message>
           </div>
           <!-- Domain -->
@@ -61,11 +60,10 @@
           <div class="col-12 col-md-6 mb-6 position-relative">
             <label for="licenseStartDate" asteriskIfRequired="licenseStartDate"
               class="form-label">{{lang.map.license_start_date}}</label>
-            <div class="input-group" >
+            <div class="input-group">
               <i class="input-group-text mdi mdi-calendar"></i>
               <div class="form-control" formControlName="licenseStartDate" id="licenseStartDate"
-                [options]="datepickerOptionsMap.licenseStartDate"
-                 [ngClass]="{'input-disabled': !isEditAllowed()}"
+                [options]="datepickerOptionsMap.licenseStartDate" [ngClass]="{'input-disabled': !isEditAllowed()}"
                 (click)="openDateMenu(dpLicenseStartDate)"
                 (inputFieldChanged)="onDateChange($event, 'licenseStartDate', 'licenseEndDate')"
                 #dpLicenseStartDate="angular-mydatepicker" angular-mydatepicker validationClasses="licenseStartDate">
@@ -80,8 +78,7 @@
             <div class="input-group">
               <i class="input-group-text mdi mdi-calendar"></i>
               <div class="form-control" formControlName="licenseEndDate" id="licenseEndDate"
-                [options]="datepickerOptionsMap.licenseEndDate"
-                [ngClass]="{'input-disabled': !isEditAllowed()}"
+                [options]="datepickerOptionsMap.licenseEndDate" [ngClass]="{'input-disabled': !isEditAllowed()}"
                 (click)="openDateMenu(dpLicenseEndDate)"
                 (inputFieldChanged)="onDateChange($event, 'licenseStartDate', 'licenseEndDate')"
                 #dpLicenseEndDate="angular-mydatepicker" angular-mydatepicker validationClasses="licenseEndDate"></div>
@@ -92,17 +89,7 @@
         </div>
       </fieldset>
     </ng-template>
-    <ng-template #participating_organizaions>
-      <participant-organization #participantOrganizations
-       [list]="model?.participatingOrganizaionList || []"
-        [organizationUnits]="organizationUnits" (readyEvent)="participantOrganizationsTapStatus = $event"
-        [canUpdate]="(!isInitialApproved)"
-        [isClaimed]="(isClaimed?? true || isLicensingUser)"
-        (listUpdated)="updateParticopatingOrganizationList()"
-        >
 
-      </participant-organization>
-    </ng-template>
     <ng-template #specialExplanationTab>
       <div class="row">
         <div class="col-sm-12 mb-4 position-relative">
@@ -115,13 +102,21 @@
         </div>
       </div>
     </ng-template>
+    <ng-template #participating_organizaions>
+      <participant-organization #participantOrganizations [list]="model?.participatingOrganizaionList || []"
+        [organizationUnits]="organizationUnits" (readyEvent)="participantOrganizationsTapStatus = $event"
+        [canAdd]="paticipatingOrgsCanAdd"
+        [canView]="paticipatingOrgsCanView"
+        [canDelete]="paticipatingOrgsCanDelete"
+        (requestView)="openParticipantOrgPopup($event)"
+        >
+
+      </participant-organization>
+    </ng-template>
     <ng-template #organization_officers>
       <organizaion-officer #organizationOfficersTap [list]="model?.organizaionOfficerList || []"
         [organizationUsers]="organizationUsers" (readyEvent)="organizationOfficersTabStatus = $event"
-        [canUpdate]="isCharityUser"
-        [isClaimed]="isClaimed?? true"
-        [currentUserOrgId]="currentUserOrgId"
-        >
+        [canUpdate]="isCharityUser" [isClaimed]="isClaimed?? true" [currentUserOrgId]="currentUserOrgId">
       </organizaion-officer>
 
     </ng-template>
@@ -131,27 +126,22 @@
     <ng-template #building_abilities>
       <building-ability #buildingAbilityTap [list]="model?.buildingAbilitiesList || []"
         [organizationUnits]="organizationUnits" [trainingTypes]="trainingTypes" [trainingLanguages]="trainingLanguages"
-        [trainingWayes]="trainingWayes" [recommendedWayes]="recommendedWayes" [readonly]=" isEditAllowed()" (readyEvent)="buildingAbilityTabStatus = $event"
-        [canUpdate]="isCharityUser"
-        [isClaimed]="isClaimed?? true"
-        >
+        [trainingWayes]="trainingWayes" [recommendedWayes]="recommendedWayes" [readonly]=" isEditAllowed()"
+        (readyEvent)="buildingAbilityTabStatus = $event" [canUpdate]="isCharityUser" [isClaimed]="isClaimed?? true">
       </building-ability>
     </ng-template>
     <ng-template #effective_coordination_capabilities>
       <effective-coordination-capabilities #effectiveCoordinationCapabilitiesTap
         [list]="model?.effectiveCoordinationCapabilities || []" [organizationWayes]="organizationWayes"
-        [organizationUnits]="organizationUnits" [readonly]=" isEditAllowed()"
-        [canUpdate]="isCharityUser"
-        [isClaimed]="isClaimed?? true"
-        (readyEvent)="effectiveCoordinationCapabilitiesTabStatus = $event"></effective-coordination-capabilities>
+        [organizationUnits]="organizationUnits" [readonly]=" isEditAllowed()" [canUpdate]="isCharityUser"
+        [isClaimed]="isClaimed?? true" (readyEvent)="effectiveCoordinationCapabilitiesTabStatus = $event">
+      </effective-coordination-capabilities>
     </ng-template>
 
     <ng-template #research_and_studies>
       <app-research-and-studies #researchAndStudiesTap [list]="model?.researchAndStudies || []"
-        [readonly]=" isEditAllowed()" (readyEvent)="ResearchAndStudiesTabStatus = $event"
-        [canUpdate]="isCharityUser"
-        [isClaimed]="isClaimed?? true"
-        >
+        [readonly]=" isEditAllowed()" (readyEvent)="ResearchAndStudiesTabStatus = $event" [canUpdate]="isCharityUser"
+        [isClaimed]="isClaimed?? true">
       </app-research-and-studies>
     </ng-template>
 

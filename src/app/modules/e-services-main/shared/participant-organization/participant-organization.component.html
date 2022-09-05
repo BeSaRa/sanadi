@@ -1,4 +1,4 @@
-<div class="row" *ngIf="isClaimed && canUpdate">
+<div class="row" *ngIf="canAdd">
   <div class="col-md-4">
     <label class="form-label" for="selectedOrg">{{lang.map.menu_organizations}}</label>
     <div style="display: flex">
@@ -25,18 +25,24 @@
   </ng-container>
   <ng-container cdkColumnDef="managerDecisionInfo">
     <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.manager_decision}}</th>
-    <td cdk-cell *cdkCellDef="let row"> {{row.managerDecisionInfo?.getName()}} </td>
+    <td cdk-cell *cdkCellDef="let row"> {{row.managerDecisionInfo?.getName() }} </td>
   </ng-container>
 
   <ng-container cdkColumnDef="actions"  >
-    <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
+    <th [hidden]="!canView && !canDelete" cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
     <td cdk-cell *cdkCellDef="let row; let i = index" class="table-actions">
       <div class="d-flex flex-row">
+        <button (click)="view($event, row)"
+        [hidden]="!canView"
+        tooltip="{{lang.map.view}}" class="btn btn-link outline-none">
+          <i class="mdi mdi-eye"></i>
+        </button>
         <button (click)="delete($event, row,i)"
-        [disabled]="!isClaimed"
+        [hidden]="!canDelete"
         tooltip="{{lang.map.btn_remove}}" class="btn btn-link outline-none">
           <i class="mdi mdi-close-box"></i>
         </button>
+
       </div>
     </td>
   </ng-container>

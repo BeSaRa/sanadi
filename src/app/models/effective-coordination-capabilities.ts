@@ -6,6 +6,7 @@ import { Validators } from '@angular/forms';
 import { CustomValidators } from '@app/validators/custom-validators';
 
 export class EffectiveCoordinationCapabilities extends SearchableCloneable<EffectiveCoordinationCapabilities> {
+  organizationId!:number|undefined;
   eventTopic!: string;
   motivesAndRationale!: string;
   eventObjectives!: string;

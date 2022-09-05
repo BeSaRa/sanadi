@@ -49,6 +49,7 @@ export class CoordinationWithOrganizationsRequest
   effectiveCoordinationCapabilities: EffectiveCoordinationCapabilities[] = [];
   researchAndStudies: ResearchAndStudies[] = [];
 
+  approved=false;
   domainInfo!: AdminResult
 
   searchFields: ISearchFieldsMap<CoordinationWithOrganizationsRequest> = {

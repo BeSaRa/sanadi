@@ -39,6 +39,7 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
   CoordinationWithOrganizationsRequestService
 > {
   form!: FormGroup;
+  mainModel!:CoordinationWithOrganizationsRequest;
   domains: Lookup[] = this.lookupService.listByCategory.CoordinationType?.sort(
     (a, b) => a?.lookupKey - b?.lookupKey
   );
@@ -80,8 +81,19 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
   _getNewInstance(): CoordinationWithOrganizationsRequest {
     return new CoordinationWithOrganizationsRequest();
   }
+  isApproved():boolean{
+    return(
+      ( this.model!.organizaionOfficerList.length > 0) &&
+      (
+        this.model!.buildingAbilitiesList.length > 0 ||
+        this.model!.effectiveCoordinationCapabilities.length > 0 ||
+        this.model!.researchAndStudies.length > 0
+      )
+    )
+  }
 
   _initComponent(): void {
+    this.mainModel=new CoordinationWithOrganizationsRequest()
     this.isCharityUser = this.employeeService.isCharityUser();
     this.isInternalUser = this.employeeService.isInternalUser();
     this.isLicensingUser = this.employeeService.isLicensingUser();
@@ -97,32 +109,25 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
   }
   _afterBuildForm(): void {}
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
+    // this.model!.organizaionOfficerList=[...this.mainModel.organizaionOfficerList]
+    // this.model!.buildingAbilitiesList=[...this.mainModel.buildingAbilitiesList]
+    // this.model!.effectiveCoordinationCapabilities=[...this.mainModel.effectiveCoordinationCapabilities]
+    // this.model!.researchAndStudies=[...this.mainModel.researchAndStudies]
     return of(this.form.valid);
   }
   _beforeLaunch(): boolean | Observable<boolean> {
-    if (this.organizationOfficerssComponentRef?.list.length < 1) {
-      return false;
-    }
+
     return true;
   }
   _afterLaunch(): void {
     this._resetForm();
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
-  _prepareModel():
-    | CoordinationWithOrganizationsRequest
-    | Observable<CoordinationWithOrganizationsRequest> {
+  _prepareModel(): CoordinationWithOrganizationsRequest| Observable<CoordinationWithOrganizationsRequest> {
     const value = new CoordinationWithOrganizationsRequest().clone({
       ...this.model,
       ...this.form.value,
     });
-    value.participatingOrganizaionList =
-      this.participantOrganizationsComponentRef?.list;
-    value.organizaionOfficerList = this.organizationOfficerssComponentRef?.list;
-    value.buildingAbilitiesList = this.buildingAbilityComponentRef?.list;
-    value.effectiveCoordinationCapabilities =
-      this.effectiveCoordinationCapabilitiesComponentRef?.list;
-    value.researchAndStudies = this.ResearchAndStudiesComponentRef?.list;
     return value;
   }
   _afterSave(
@@ -130,7 +135,8 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
     saveType: SaveTypes,
     operation: OperationTypes
   ): void {
-    this.model = model;
+    // this.model = this.filterModelByOrgId(this.currentUserOrgId!,this.model);
+    // this.model!.approved=this.isApproved();
     if (
       (operation === OperationTypes.CREATE && saveType === SaveTypes.FINAL) ||
       (operation === OperationTypes.UPDATE && saveType === SaveTypes.COMMIT)
@@ -157,9 +163,15 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
     if (!model) {
       return;
     }
-    this.model = model;
+    // this.mainModel=model;
+    // if(this.currentUserOrgId){
+    //   this.model = this.filterModelByOrgId(this.currentUserOrgId,model)!;
+    // }
+    this.model=model;
+
     this.isInitialApproved = this.model?.isInitialApproved();
     this.form = this.fb.group(model.formBuilder(true));
+    this.model.approved=this.isApproved();
   }
   _resetForm(): void {
     this.form.reset();
@@ -261,6 +273,20 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
     return !this.tabsData[tabName].validStatus();
   }
   // Particpating  Orginzations
+
+  get paticipatingOrgsCanAdd():boolean{
+    return this.isLicensingUser || !!(!this.isInitialApproved && this.isClaimed)
+  }
+  get paticipatingOrgsCanView():boolean{
+    return this.model?.organizaionOfficerList?.length! >0 ||
+           this.model?.buildingAbilitiesList?.length!>0||
+           this.model?.effectiveCoordinationCapabilities?.length!>0||
+           this.model?.researchAndStudies?.length!>0
+  }
+  get paticipatingOrgsCanDelete():boolean{
+    return !this.isInitialApproved && this.isInternalUser && (this.isClaimed??false)
+  }
+
   @ViewChild('participantOrganizations')
   participantOrganizationsComponentRef!: ParticipantOrganizationComponent;
   participantOrganizationsTapStatus: ReadinessStatus = 'READY';
@@ -296,10 +322,7 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
         );
       });
   }
-  updateParticopatingOrganizationList() {
-    this.model!.participatingOrganizaionList =
-      this.participantOrganizationsComponentRef?.list;
-  }
+
 
   // Organization Officers
   organizationOfficersTabStatus: ReadinessStatus = 'READY';
@@ -402,7 +425,21 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
     });
   }
 
-  listenToModelChange() {
-    this.modelChange$.pipe(map((model) => console.log(model)));
+
+  openParticipantOrgPopup(orgId:number){
+    const model=this.filterModelByOrgId(orgId);
+    this.service.openParticipantOrganizationspopup(orgId,model!)
+  }
+
+  filterModelByOrgId(orgId:number,updatedModel:CoordinationWithOrganizationsRequest|null=null){
+
+    const model=updatedModel? updatedModel:this.model;
+
+    model!.organizaionOfficerList! =model!.organizaionOfficerList.filter(x=>x.organizationId === orgId);
+    model!.buildingAbilitiesList! =model!.buildingAbilitiesList.filter(x=>x.organizationId === orgId);
+    model!.effectiveCoordinationCapabilities! =model!.effectiveCoordinationCapabilities.filter(x=>x.organizationId === orgId);
+    model!.researchAndStudies! =model!.researchAndStudies.filter(x=>x.organizationId === orgId);
+
+    return model;
   }
 }
