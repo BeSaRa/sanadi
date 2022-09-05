@@ -66,9 +66,7 @@ export class BuildingAbility extends SearchableCloneable<BuildingAbility> {
               CustomValidators.maxLength(
                 CustomValidators.defaultLengths.ENGLISH_NAME_MAX
               ),
-              CustomValidators.minLength(
-                CustomValidators.defaultLengths.MIN_LENGTH
-              )
+
             ),
           ]
         : activityName,
@@ -82,9 +80,7 @@ export class BuildingAbility extends SearchableCloneable<BuildingAbility> {
               CustomValidators.maxLength(
                 CustomValidators.defaultLengths.ENGLISH_NAME_MAX
               ),
-              CustomValidators.minLength(
-                CustomValidators.defaultLengths.MIN_LENGTH
-              )
+
             ),
           ]
         : activityGoal,
@@ -93,9 +89,7 @@ export class BuildingAbility extends SearchableCloneable<BuildingAbility> {
           CustomValidators.maxLength(
             CustomValidators.defaultLengths.EXPLANATIONS
           ),
-          CustomValidators.minLength(
-            CustomValidators.defaultLengths.MIN_LENGTH
-          )
+
         )]
         : trainingActivityMainAxes,
       trainingLanguage: controls
@@ -119,9 +113,7 @@ export class BuildingAbility extends SearchableCloneable<BuildingAbility> {
               CustomValidators.maxLength(
                 CustomValidators.defaultLengths.ENGLISH_NAME_MAX
               ),
-              CustomValidators.minLength(
-                CustomValidators.defaultLengths.MIN_LENGTH
-              )
+
             ),
           ]
         : targetGroupNature,

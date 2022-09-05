@@ -108,6 +108,7 @@
         [canAdd]="paticipatingOrgsCanAdd"
         [canView]="paticipatingOrgsCanView"
         [canDelete]="paticipatingOrgsCanDelete"
+        (listUpdated)="updateParticipantOrgs()"
         (requestView)="openParticipantOrgPopup($event)"
         >
 
@@ -115,6 +116,7 @@
     </ng-template>
     <ng-template #organization_officers>
       <organizaion-officer #organizationOfficersTap [list]="model?.organizaionOfficerList || []"
+
         [organizationUsers]="organizationUsers" (readyEvent)="organizationOfficersTabStatus = $event"
         [canUpdate]="isCharityUser" [isClaimed]="isClaimed?? true" [currentUserOrgId]="currentUserOrgId">
       </organizaion-officer>
@@ -125,7 +127,9 @@
 
     <ng-template #building_abilities>
       <building-ability #buildingAbilityTap [list]="model?.buildingAbilitiesList || []"
-        [organizationUnits]="organizationUnits" [trainingTypes]="trainingTypes" [trainingLanguages]="trainingLanguages"
+        [organizationUnits]="organizationUnits" [trainingTypes]="trainingTypes"
+        [orgId]="currentUserOrgId"
+        [trainingLanguages]="trainingLanguages"
         [trainingWayes]="trainingWayes" [recommendedWayes]="recommendedWayes" [readonly]=" isEditAllowed()"
         (readyEvent)="buildingAbilityTabStatus = $event" [canUpdate]="isCharityUser" [isClaimed]="isClaimed?? true">
       </building-ability>
@@ -134,13 +138,16 @@
       <effective-coordination-capabilities #effectiveCoordinationCapabilitiesTap
         [list]="model?.effectiveCoordinationCapabilities || []" [organizationWayes]="organizationWayes"
         [organizationUnits]="organizationUnits" [readonly]=" isEditAllowed()" [canUpdate]="isCharityUser"
+        [orgId]="currentUserOrgId"
         [isClaimed]="isClaimed?? true" (readyEvent)="effectiveCoordinationCapabilitiesTabStatus = $event">
       </effective-coordination-capabilities>
     </ng-template>
 
     <ng-template #research_and_studies>
       <app-research-and-studies #researchAndStudiesTap [list]="model?.researchAndStudies || []"
-        [readonly]=" isEditAllowed()" (readyEvent)="ResearchAndStudiesTabStatus = $event" [canUpdate]="isCharityUser"
+        [readonly]=" isEditAllowed()" (readyEvent)="ResearchAndStudiesTabStatus = $event"
+        [orgId]="currentUserOrgId"
+        [canUpdate]="isCharityUser"
         [isClaimed]="isClaimed?? true">
       </app-research-and-studies>
     </ng-template>

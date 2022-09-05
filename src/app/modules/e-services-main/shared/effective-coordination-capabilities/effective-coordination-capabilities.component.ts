@@ -29,11 +29,16 @@ export class EffectiveCoordinationCapabilitiesComponent implements OnInit {
   ) {}
   formArrayName: string = "effectiveCoordinationCapabilities";
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();
+  @Input() orgId!:number|undefined;
+
+  allowListUpdate:boolean=true;
 
   private _list: EffectiveCoordinationCapabilities[] = [];
   @Input() set list(list: EffectiveCoordinationCapabilities[]) {
-    this._list = list;
-    this.listDataSource.next(this._list);
+    if( this.allowListUpdate === true){
+      this._list = list;
+      this.listDataSource.next(this._list);
+    }
   }
   model: EffectiveCoordinationCapabilities = new EffectiveCoordinationCapabilities();
   get list(): EffectiveCoordinationCapabilities[] {
@@ -100,6 +105,7 @@ export class EffectiveCoordinationCapabilitiesComponent implements OnInit {
     this.recordChanged$
       .pipe(takeUntil(this.destroy$))
       .subscribe((record) => {
+        if(record)record.organizationId=this.orgId;
         this.currentRecord = record || undefined;
         this.updateForm(this.currentRecord);
       });
