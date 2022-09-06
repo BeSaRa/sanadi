@@ -1,3 +1,4 @@
+import { CoordinationWithOrganizationsRequest } from '@app/models/coordination-with-organizations-request';
 import {
   AfterViewInit,
   Component,
@@ -363,16 +364,20 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   }
 
   canSave(): boolean {
-    if (this.model && this.servicesWithNoSaveDraftLaunch.includes(this.model.caseType)) {
-      return false;
-    }
-    if (this.model?.caseType === CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST) {
-      return this.employeeService.isInternalUser() || this.employeeService.isCharityUser();
+    if(this.model?.caseType===CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST) {
+      const model=this.model as CoordinationWithOrganizationsRequest
+      return model.participatingOrganizaionList.length > 0
     }
     const isServiceAllow = this.model?.caseType == CaseTypes.EMPLOYMENT;
     return (isServiceAllow && this.employeeService.isCharityManager()) || !!((this.employeeService.isCharityManager() || this.employeeService.isCharityUser()) && this.model?.isReturned());
   }
-
+  canOrganizationApprove():boolean{
+    if(this.model?.caseType===CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST) {
+      const model=this.model as CoordinationWithOrganizationsRequest
+   return model.approved
+    }
+    return true;
+  }
   private launchAction(item: CaseModel<any, any>) {
     item.start()
       .subscribe(_ => {
@@ -660,6 +665,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         icon: 'mdi-check-bold',
         label: 'org_approve_task',
         askChecklist: true,
+        disabled: () =>  !this.canOrganizationApprove(),
         show: (item: CaseModel<any, any>) => {
           return item.getResponses().includes(WFResponseType.ORGANIZATION_APPROVE);
         },
@@ -1011,7 +1017,9 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   }
 
   isCompleteWithSave(item: CaseModel<any, any>): boolean {
-    return item.caseStatus === CommonCaseStatus.RETURNED;
+    return item.caseStatus === CommonCaseStatus.RETURNED
+    &&
+     item.caseType !== CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST;
   }
 
   private completeAction(item: CaseModel<any, any>) {
@@ -1204,7 +1212,9 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   isAllowedToEditRecommendations(model: CaseModel<any, any>, from: OpenFrom): boolean {
     return this.employeeService.isInternalUser() && (from === OpenFrom.USER_INBOX || (from === OpenFrom.SEARCH && model.canStart()) || (model.taskDetails && model.taskDetails.actions && model.taskDetails.actions.indexOf(WFActions.ACTION_CANCEL_CLAIM) !== -1));
   }
-
+  isClaimed(model: CaseModel<any, any>){
+    return model.taskDetails && model.taskDetails.actions && model.taskDetails.actions.indexOf(WFActions.ACTION_CANCEL_CLAIM) !== -1
+  }
   isAttachmentReadonly(): boolean {
     if (!this.component.model?.id) {
       return false;

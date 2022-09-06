@@ -1,5 +1,5 @@
-<div class="row" *ngIf="canUpdate">
-  <div class="col-md-4">
+<div class="row" *ngIf="isClaimed && canUpdate">
+  <div class="col-md-4 mb-4">
     <label class="form-label"
            for="selectedOrg">{{lang.map.organization_officers}}</label>
     <div style="display: flex">
@@ -10,20 +10,20 @@
                  ng-model="selectedOrg"
                  style="flex: 1"
                  (change)="onChangeRecord($event)"
-                 
+
                  >
         <ng-option [value]="option.identificationNumber"
                    *ngFor="let option of organizationUsers">{{option.fullName}}</ng-option>
       </ng-select>
       <button class="btn btn-link outline-none" style="padding: 0"
-              tooltip="{{lang.map.btn_add}}" (click)="onSave()" 
+              tooltip="{{lang.map.btn_add}}" (click)="onSave()"
               [disabled]="allowAdd()" >
         <i class="mdi mdi-plus-box"></i></button>
     </div>
   </div>
 </div>
 
-<div class="row">
+<div >
   <table *ngIf="list.length" cdk-table [dataSource]="listDataSource"
     class="table table-striped table-bordered caption-top">
     <ng-container cdkColumnDef="identificationNumber">
@@ -46,14 +46,17 @@
       <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_extra_phone_number}}</th>
       <td cdk-cell *cdkCellDef="let row"><span class="user-select-all">{{row.extraPhone}}</span></td>
     </ng-container>
-  
-    
-   
+
+
+
     <ng-container cdkColumnDef="actions">
       <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
-      <td cdk-cell *cdkCellDef="let row;let i" class="table-actions">
+      <td cdk-cell *cdkCellDef="let row;let i=index" class="table-actions">
         <div class="d-flex flex-row">
-          <button (click)="delete($event, row,i)" tooltip="{{lang.map.btn_remove}}" class="btn btn-link outline-none">
+          <button (click)="delete($event, row,i)"
+          [hidden]="row.organizationId !== currentUserOrgId"
+          [disabled]="!isClaimed"
+          tooltip="{{lang.map.btn_remove}}" class="btn btn-link outline-none">
             <i class="mdi mdi-close-box"></i>
           </button>
         </div>

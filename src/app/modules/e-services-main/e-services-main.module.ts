@@ -17,6 +17,7 @@ import { EffectiveCoordinationCapabilitiesComponent } from './shared/effective-c
 import { ParticipantOrganizationComponent } from './shared/participant-organization/participant-organization.component';
 import { OrganizaionOfficerComponent } from './shared/organizaion-officer/organizaion-officer.component';
 import { ResearchAndStudiesComponent } from './shared/research-and-studies/research-and-studies.component';
+import { ParticipantOrganizationsPopupComponent } from './popups/participant-organizations-popup/participant-organizations-popup.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { ResearchAndStudiesComponent } from './shared/research-and-studies/resea
     ParticipantOrganizationComponent,
     OrganizaionOfficerComponent,
     ResearchAndStudiesComponent,
+    ParticipantOrganizationsPopupComponent
   ],
   imports: [
     CommonModule,
@@ -54,6 +56,7 @@ import { ResearchAndStudiesComponent } from './shared/research-and-studies/resea
     ParticipantOrganizationComponent,
     OrganizaionOfficerComponent,
     ResearchAndStudiesComponent,
+    ParticipantOrganizationsPopupComponent
   ]
 })
 export class EServicesMainModule {

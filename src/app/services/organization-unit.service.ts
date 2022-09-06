@@ -84,6 +84,15 @@ export class OrganizationUnitService extends CrudWithDialogGenericService<OrgUni
     return this.http.get<OrgUnit[]>(this._getServiceURL() + '/org-unit-type' + '?orgUnitType[]=' + orgType);
   }
 
+  @CastResponse(undefined, {
+    fallback: '$default',
+    unwrap: 'rs'
+  })
+  getOrganizationUnitsByStatus(status: number) {
+
+    return this.http.get<OrgUnit[]>(this._getServiceURL() + '/status/' + status);
+  }
+
   openAuditLogsById(id: number): Observable<DialogRef> {
     return this.auditLogService.openAuditLogsDialog(id, this._getServiceURL());
   }
