@@ -43,7 +43,7 @@
         "key": "competentDepartmentID",
         "selectOptions": {
           "options": [],
-          "loader": "department.loadDepartments",
+          "loader": "department.loadAsLookups",
           "bindValue": "id",
           "bindLabel": "basedOnLanguage"
         }

@@ -105,7 +105,9 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
       new CoordinationWithOrganizationsRequest().formBuilder(true)
     );
   }
-  _afterBuildForm(): void {}
+  _afterBuildForm(): void {
+
+  }
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
     this.disableListsUpate();
     this.model!.organizaionOfficerList =
@@ -166,7 +168,9 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
   _saveFail(error: any): void {
     console.log(error);
   }
-  _launchFail(error: any): void {}
+  _launchFail(error: any): void {
+
+  }
   _destroyComponent(): void {
     this.destroy$.next();
     this.destroy$.complete();
@@ -376,14 +380,15 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
               })
             );
           });
-          return list;
-        })
-      )
-      .subscribe((list) => {
-        this.organizationUsers = list.sort((a, b) =>
-          a.fullName < b.fullName ? -1 : 1
-        );
-      });
+        return list;
+      })
+    )
+    .subscribe((list) => {
+
+      this.organizationUsers = list.sort((a, b) =>
+        a.fullName < b.fullName ? -1 : 1
+      );
+    });
   }
 
   // building Abilities
@@ -398,6 +403,7 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
   }
 
   isEditAllowed(): boolean {
+
     return (
       !this.model?.id ||
       (!!this.model?.id && this.model.canCommit()) ||

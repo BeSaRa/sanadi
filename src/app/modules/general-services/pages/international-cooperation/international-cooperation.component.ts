@@ -130,7 +130,7 @@ export class InternationalCooperationComponent implements OnInit, OnDestroy, IES
   }
 
   private loadDepartments(): void {
-    this.intDepService.loadDepartments()
+    this.intDepService.loadAsLookups()
       .pipe(takeUntil(this.destroy$))
       .subscribe(deps => this.departments = deps);
   }
@@ -262,8 +262,7 @@ export class InternationalCooperationComponent implements OnInit, OnDestroy, IES
   }
 
   private loadCountries() {
-    this.countryService
-      .load()
+    this.countryService.loadAsLookups()
       .pipe(takeUntil(this.destroy$))
       .subscribe((countries) => this.countries = countries);
   }

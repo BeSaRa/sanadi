@@ -356,7 +356,7 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
   }
 
   private loadCountries(): void {
-    this.countryService.load()
+    this.countryService.loadAsLookups()
       .pipe(takeUntil(this.destroy$))
       .subscribe((countries) => this.countriesList = countries);
   }
