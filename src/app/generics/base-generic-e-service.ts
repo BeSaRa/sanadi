@@ -251,7 +251,7 @@ export abstract class BaseGenericEService<T extends { id: string }> {
 
   terminateTask(taskId: string): Observable<boolean> {
     return this.http.post<IDefaultResponse<boolean>>(this._getURLSegment() + '/task/terminate', {}, {
-      params: new HttpParams().set('tkiid ', taskId)
+      params: new HttpParams().set('tkiid', taskId)
     }).pipe(map(response => response.rs));
   }
 
