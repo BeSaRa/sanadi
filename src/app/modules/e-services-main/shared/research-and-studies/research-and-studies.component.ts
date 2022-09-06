@@ -49,6 +49,8 @@ export class ResearchAndStudiesComponent implements OnInit {
   @Input() readonly: boolean = false;
   @Input() pageTitleKey: keyof ILanguageKeys = 'research_and_studies';
   @Input() canUpdate:boolean=true;
+  @Input()isClaimed:boolean=false;
+
   listDataSource: BehaviorSubject<ResearchAndStudies[]> = new BehaviorSubject<
     ResearchAndStudies[]
   >([]);
@@ -83,9 +85,9 @@ export class ResearchAndStudiesComponent implements OnInit {
     this.listenToRecordChange();
     this.listenToSave();
     this._setComponentReadiness('READY');
-    if(this.canUpdate === false){     
+    if(this.canUpdate === false){
       this.columns= this.columns.slice(0,this.model.DisplayedColumns.length-1);
-    } 
+    }
   }
 
   ngOnDestroy(): void {
@@ -119,7 +121,7 @@ export class ResearchAndStudiesComponent implements OnInit {
       } else {
         this._setComponentReadiness('NOT_READY');
       }
-      formArray.push(this.fb.group(model.BuildForm(true)));
+      formArray.push(this.fb.group(new ResearchAndStudies().clone(model).BuildForm(true)));
       if (this.readonly || this.viewOnly) {
         this.formArray.disable();
       }

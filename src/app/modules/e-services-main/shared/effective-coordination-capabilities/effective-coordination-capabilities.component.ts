@@ -65,6 +65,7 @@ export class EffectiveCoordinationCapabilitiesComponent implements OnInit {
     eventStartDate: DateUtils.getDatepickerOptions({ disablePeriod: "past" }),
   };
   @Input()canUpdate:boolean=true;
+  @Input()isClaimed:boolean=false;
   get formArray(): FormArray {
     return this.form.get(this.formArrayName) as FormArray;
   }
@@ -74,9 +75,9 @@ export class EffectiveCoordinationCapabilitiesComponent implements OnInit {
     this.listenToRecordChange();
     this.listenToSave();
     this._setComponentReadiness("READY");
-    if(this.canUpdate === false){     
+    if(this.canUpdate === false){
       this.columns= this.columns.slice(0,this.columns.length-1);
-    }   
+    }
   }
 
   ngOnDestroy(): void {
@@ -112,7 +113,7 @@ export class EffectiveCoordinationCapabilitiesComponent implements OnInit {
       } else {
         this._setComponentReadiness("NOT_READY");
       }
-      formArray.push(this.fb.group(model.BuildForm(true)));
+      formArray.push(this.fb.group(new EffectiveCoordinationCapabilities().clone(model).BuildForm(true)));
       if (this.readonly || this.viewOnly) {
         this.formArray.disable();
       }
@@ -181,9 +182,9 @@ export class EffectiveCoordinationCapabilitiesComponent implements OnInit {
       }
     }
 
-    this.list = this.list.slice();    
+    this.list = this.list.slice();
     this.listDataSource.next(this.list);
-    
+
   }
   addAllowed(): boolean {
     return !this.readonly;

@@ -1,20 +1,20 @@
-import { CustomValidators } from '../validators/custom-validators';
-import { SearchableCloneable } from '@app/models/searchable-cloneable';
-import { Lookup } from '@app/models/lookup';
 import { Validators } from '@angular/forms';
+import { AdminResult } from '@app/models/admin-result';
+import { SearchableCloneable } from '@app/models/searchable-cloneable';
+import { CustomValidators } from '../validators/custom-validators';
 
 export class ParticipantOrg extends SearchableCloneable<ParticipantOrg> {
   organizationId!: number;
   arabicName!: string;
   englishName!: string;
 
-  managerDecisionInfo!: Lookup;
+  managerDecisionInfo!: AdminResult;
 
   constructor() {
     super();
   }
 
-  DisplayedColumns = ['arName', 'enName', 'actions'];
+  DisplayedColumns = ['arName', 'enName', 'managerDecisionInfo','actions'];
 
   BuildForm(controls?: boolean) {
     const { organizationId, arabicName, englishName } = this;

@@ -36,7 +36,7 @@ export class ParticipantOrganizationComponent implements OnInit {
     private dialogService: DialogService,
     private fb: FormBuilder
   ) {
-   
+
   }
 
   @Input() formArrayName: string = 'participatingOrganizaionList';
@@ -44,7 +44,7 @@ export class ParticipantOrganizationComponent implements OnInit {
     return this.form.get(this.formArrayName) as FormArray;
   }
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();
-
+  @Output() listUpdated= new EventEmitter();
   private _list: ParticipantOrg[] = [];
   @Input() set list(list: ParticipantOrg[]) {
     this._list = list;
@@ -63,6 +63,7 @@ export class ParticipantOrganizationComponent implements OnInit {
   columns = this.model.DisplayedColumns;
 
   @Input()canUpdate:boolean=true;
+  @Input()isClaimed:boolean=false;
   private readonly: boolean = true;
   private save$: Subject<any> = new Subject<any>();
 
@@ -80,9 +81,9 @@ export class ParticipantOrganizationComponent implements OnInit {
     this.listenToRecordChange();
     this.listenToSave();
     this._setComponentReadiness('READY');
-    if(this.canUpdate === false){     
+    if(this.canUpdate === false){
       this.model.DisplayedColumns= this.model.DisplayedColumns.slice(0,this.model.DisplayedColumns.length-1);
-    }   
+    }
   }
 
   ngOnDestroy(): void {
@@ -180,14 +181,13 @@ export class ParticipantOrganizationComponent implements OnInit {
           (orgUnit) => orgUnit.id !== record.organizationId
         );
       } else if (operation === 'DELETE') {
-        this.list.splice(gridIndex, 1);
-        this.organizationUnits.push(
-          new OrgUnit().clone({
-            id: record.organizationId,
-            enName: record.englishName,
-            arName: record.arabicName,
-          })
-        );
+        this.list.splice(gridIndex,1);
+        const orgUnit=new OrgUnit().clone({
+          id: record.organizationId,
+          enName: record.englishName,
+          arName: record.arabicName,
+        })
+        this.organizationUnits.push(orgUnit)
       }
     }
 
@@ -195,6 +195,8 @@ export class ParticipantOrganizationComponent implements OnInit {
     this.listDataSource.next(this.list);
     this.ngSelectComponentRef.handleClearClick();
     this.sortOrganizations();
+    this.listUpdated.emit();
+
   }
   delete($event: MouseEvent, record: ParticipantOrg, index: number): any {
     $event.preventDefault();
@@ -205,6 +207,7 @@ export class ParticipantOrganizationComponent implements OnInit {
       .subscribe((click: UserClickOn) => {
         if (click === UserClickOn.YES) {
           this._updateList(record, 'DELETE', index);
+
           this.toastService.success(this.lang.map.msg_delete_success);
         }
       });
@@ -214,5 +217,5 @@ export class ParticipantOrganizationComponent implements OnInit {
       this.lang.getCurrentLanguage().name === 'English' ? 'enName' : 'arName';
     this.organizationUnits.sort((a, b) => (a[propName] < b[propName] ? -1 : 1));
   }
-  
+
 }
