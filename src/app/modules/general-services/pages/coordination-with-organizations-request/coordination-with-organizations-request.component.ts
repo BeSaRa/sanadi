@@ -290,6 +290,7 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
   get paticipatingOrgsCanAdd(): boolean {
     return (
       this.isLicensingUser || !!(!this.isInitialApproved && this.model?.isClaimed())
+
     );
   }
   get paticipatingOrgsCanView(): boolean {
@@ -306,6 +307,7 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
       (!this.isInitialApproved &&
         this.isInternalUser &&
         (this.model?.isClaimed() ?? false)) ||
+
       (!this.isInitialApproved && this.isLicensingUser)
     );
   }
