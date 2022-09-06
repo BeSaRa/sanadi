@@ -35,7 +35,7 @@ export class InternalProjectLicenseService extends BaseGenericEService<InternalP
   _getUrlService(): UrlService {
     return this.urlService;
   }
-  searchColumns: string[] = ['fullSerial', 'createdOn', 'caseStatus', 'projectName', 'ouInfo'];
+  searchColumns: string[] = ['fullSerial', 'requestTypeInfo', 'createdOn', 'caseStatus', 'projectName', 'ouInfo'];
   selectLicenseDisplayColumns: string[] = ['arName', 'enName', 'fullSerial', 'status', 'endDate', 'actions'];
   caseStatusIconMap: Map<number, string> = new Map<number, string>();
   interceptor: IModelInterceptor<InternalProjectLicense> = new InternalProjectLicenseInterceptor();

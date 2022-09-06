@@ -85,7 +85,7 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
 
   searchFields: ISearchFieldsMap<ProjectModel> = {
     ...dateSearchFields(['createdOn']),
-    ...infoSearchFields(['creatorInfo', 'caseStatusInfo', 'projectTypeInfo', 'requestTypeInfo', 'templateTypeInfo']),
+    ...infoSearchFields(['requestTypeInfo', 'creatorInfo', 'caseStatusInfo', 'projectTypeInfo', 'requestTypeInfo', 'templateTypeInfo']),
     ...normalSearchFields(['projectName', 'fullSerial'])
   }
 

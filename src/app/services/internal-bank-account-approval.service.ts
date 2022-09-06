@@ -43,7 +43,7 @@ export class InternalBankAccountApprovalService extends BaseGenericEService<Inte
   interceptor: IModelInterceptor<InternalBankAccountApproval> = new InternalBankAccountApprovalInterceptor();
   serviceKey: keyof ILanguageKeys = 'menu_internal_bank_account_approval';
   caseStatusIconMap: Map<number, string> = new Map<number, string>();
-  searchColumns: string[] = ['fullSerial', 'subject', 'caseStatus', 'ouInfo', 'creatorInfo', 'createdOn'];
+  searchColumns: string[] = ['fullSerial', 'requestTypeInfo', 'subject', 'caseStatus', 'ouInfo', 'creatorInfo', 'createdOn'];
 
   constructor(public http: HttpClient,
               public dialog: DialogService,

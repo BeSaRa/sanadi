@@ -40,7 +40,7 @@ export class TransferringIndividualFundsAbroadService extends BaseGenericEServic
   jsonSearchFile: string = 'transferring-individual-funds-abroad-search.json';
   serviceKey: keyof ILanguageKeys = 'menu_transferring_individual_funds_abroad';
   caseStatusIconMap: Map<number, string> = new Map<number, string>();
-  searchColumns: string[] = ['fullSerial', 'arName', 'enName', 'subject', 'caseStatus', 'creatorInfo', 'createdOn'];
+  searchColumns: string[] = ['fullSerial', 'requestTypeInfo', 'arName', 'enName', 'subject', 'caseStatus', 'creatorInfo', 'createdOn'];
   executiveManagementListInterceptor: ExecutiveManagementListInterceptor = new ExecutiveManagementListInterceptor();
   transferFundsCharityPurposeInterceptor: TransferFundsCharityPurposeInterceptor = new TransferFundsCharityPurposeInterceptor();
 

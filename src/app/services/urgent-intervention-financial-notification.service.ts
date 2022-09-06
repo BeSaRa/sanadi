@@ -40,7 +40,7 @@ export class UrgentInterventionFinancialNotificationService extends BaseGenericE
   jsonSearchFile: string = 'urgent_intervention_financial_search_form.json';
   serviceKey: keyof ILanguageKeys = 'menu_urgent_intervention_financial_notification';
   caseStatusIconMap: Map<number, string> = new Map();
-  searchColumns: string[] = ['fullSerial', 'createdOn', 'caseStatus', 'ouInfo', 'subject'];
+  searchColumns: string[] = ['fullSerial', 'requestTypeInfo', 'createdOn', 'caseStatus', 'ouInfo', 'subject'];
   selectLicenseDisplayColumns = ['beneficiaryCountry', 'executionCountry', 'subject', 'licenseNumber', 'actions'];
 
   implementingAgencyInterceptor: IModelInterceptor<ImplementingAgency> = new ImplementingAgencyInterceptor();

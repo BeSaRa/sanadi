@@ -28,7 +28,7 @@ export class CollectorApprovalService extends BaseGenericEService<CollectorAppro
   jsonSearchFile: string = 'collector_approval_form.json';
   serviceKey: keyof ILanguageKeys = 'menu_collector_approval';
   caseStatusIconMap: Map<number, string> = new Map<number, string>();
-  searchColumns: string[] = ['fullSerial', 'subject', 'caseStatus', 'ouInfo', 'creatorInfo', 'createdOn'];
+  searchColumns: string[] = ['fullSerial', 'requestTypeInfo', 'subject', 'caseStatus', 'ouInfo', 'creatorInfo', 'createdOn'];
 
   constructor(
     public http: HttpClient,

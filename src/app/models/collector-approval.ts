@@ -55,7 +55,7 @@ export class CollectorApproval extends _RequestType<CollectorApprovalService, Co
   searchFields: ISearchFieldsMap<CollectorApproval> = {
     ...normalSearchFields(['fullSerial', 'subject']),
     ...dateSearchFields(['createdOn']),
-    ...infoSearchFields(['caseStatusInfo', 'creatorInfo', 'ouInfo'])
+    ...infoSearchFields(['requestTypeInfo','caseStatusInfo', 'creatorInfo', 'ouInfo'])
   }
 
   service: CollectorApprovalService;

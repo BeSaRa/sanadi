@@ -42,7 +42,7 @@ export class InitialExternalOfficeApprovalService extends BaseGenericEService<In
   interceptor: IModelInterceptor<InitialExternalOfficeApproval> = new InitialExternalOfficeApprovalInterceptor();
   serviceKey: keyof ILanguageKeys = 'menu_initial_external_office_approval';
   caseStatusIconMap: Map<number, string> = new Map<number, string>();
-  searchColumns: string[] = ['fullSerial', 'subject', 'createdOn', 'caseStatus', 'ouInfo', 'creatorInfo'];
+  searchColumns: string[] = ['fullSerial', 'requestTypeInfo', 'subject', 'createdOn', 'caseStatus', 'ouInfo', 'creatorInfo'];
   searchService: SearchService = new SearchService(this);
 
   constructor(public dynamicService: DynamicOptionsService,

@@ -58,7 +58,7 @@ export class UrgentInterventionClosureService extends BaseGenericEService<Urgent
     FactoryService.registerService('UrgentInterventionClosureService', this);
   }
 
-  searchColumns: string[] = ['fullSerial', 'subject', 'createdOn', 'caseStatus', 'ouInfo'];
+  searchColumns: string[] = ['fullSerial', 'requestTypeInfo', 'subject', 'createdOn', 'caseStatus', 'ouInfo'];
   selectLicenseDisplayColumns: string[] = [];
   selectLicenseDisplayColumnsReport: string[] = ['beneficiaryCountry', 'executionCountry', 'subject', 'fullSerial', 'actions'];
   serviceKey: keyof ILanguageKeys = 'menu_urgent_intervention_closure';
