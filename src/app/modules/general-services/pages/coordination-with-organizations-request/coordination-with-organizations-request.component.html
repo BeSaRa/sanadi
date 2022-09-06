@@ -1,14 +1,14 @@
 <div class="d-flex flex-column">
   <form [formGroup]="form" autocomplete="off">
     <tabs-list [accordionView]="accordionView">
-      <tab *ngIf="true" [name]="tabsData.basicInfo.name" [hasError]="getTabInvalidStatus('basicInfo')"
+      <tab [name]="tabsData.basicInfo.name" [hasError]="getTabInvalidStatus('basicInfo')"
         [template]="basicInfoTabTemplate" [title]="lang.map.lbl_basic_info"></tab>
 
-      <tab *ngIf="true" [name]="tabsData.specialExplanation.name" [hasError]="getTabInvalidStatus('specialExplanation')"
+      <tab [name]="tabsData.specialExplanation.name" [hasError]="getTabInvalidStatus('specialExplanation')"
         [template]="specialExplanationTab" [title]="lang.map.special_explanations">
       </tab>
 
-      <tab *ngIf="true" [name]="tabsData.participantOrganizations.name" [template]="participating_organizaions"
+      <tab [name]="tabsData.participantOrganizations.name" [template]="participating_organizaions"
         [title]="lang.map.participant_organizations" [hasError]="getTabInvalidStatus('participantOrganizations')">
       </tab>
 

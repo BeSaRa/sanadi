@@ -507,7 +507,9 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
   }
 
   enableListsUpate(){
-    this.organizationOfficerssComponentRef.allowListUpdate =true;
+    if( this.organizationOfficerssComponentRef){
+      this.organizationOfficerssComponentRef.allowListUpdate =true;
+    }
     if(this.buildingAbilityComponentRef){
       this.buildingAbilityComponentRef.allowListUpdate =true;
     }
@@ -519,7 +521,9 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
     }
   }
   disableListsUpate(){
-    this.organizationOfficerssComponentRef.allowListUpdate =false;
+    if( this.organizationOfficerssComponentRef){
+      this.organizationOfficerssComponentRef.allowListUpdate =false;
+    }
     if(this.buildingAbilityComponentRef){
       this.buildingAbilityComponentRef.allowListUpdate =false;
     }
