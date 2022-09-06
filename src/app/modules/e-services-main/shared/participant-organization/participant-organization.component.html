@@ -1,5 +1,5 @@
 <div class="row" *ngIf="canAdd">
-  <div class="col-md-4">
+  <div class="col-md-4 mb-4">
     <label class="form-label" for="selectedOrg">{{lang.map.menu_organizations}}</label>
     <div style="display: flex">
       <ng-select #selectOrganizations appendTo="body" [clearable]="true" id="selectedOrg" ng-model="selectedOrg"
