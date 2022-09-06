@@ -75,7 +75,7 @@ export class UserTeamComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadTeams();
     this.listenToUserTeamsChange();
-    if (this.operation === OperationTypes.UPDATE) {
+    if (this.operation !== OperationTypes.CREATE) {
       this.loadUserTeams();
     }
   }
