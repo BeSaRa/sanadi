@@ -62,7 +62,7 @@ export class PartnerApprovalService extends BaseGenericEService<PartnerApproval>
   contactOfficerInterceptor: IModelInterceptor<ContactOfficer> = new ContactOfficerInterceptor();
   approvalReasonInterceptor: IModelInterceptor<ApprovalReason> = new ApprovalReasonInterceptor();
   jsonSearchFile: string = 'partner_approval_search_form.json';
-  searchColumns: string[] = ['fullSerial', 'subject', 'createdOn', 'caseStatus', 'ouInfo', 'countryInfo', 'requestClassificationInfo', 'creatorInfo'];
+  searchColumns: string[] = ['fullSerial', 'requestTypeInfo', 'subject', 'createdOn', 'caseStatus', 'ouInfo', 'countryInfo', 'requestClassificationInfo', 'creatorInfo'];
   serviceKey: keyof ILanguageKeys = "menu_partner_approval";
   selectLicenseDisplayColumns = ['arName', 'enName', 'licenseNumber', 'status', 'endDate', 'actions'];
 

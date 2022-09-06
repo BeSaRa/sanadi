@@ -1,0 +1,27 @@
+[
+  {
+    "fields": [
+      {
+        "key": "createdOnFrom",
+        "type": "dateField",
+        "label": "creation_date_from",
+        "validations": {
+          "required": false
+        },
+        "dateOptions": {
+          "operator": "-",
+          "defaultValue": "now",
+          "value": "1 year"
+        }
+      },
+      {
+        "key": "createdOnTo",
+        "type": "dateField",
+        "label": "creation_date_to",
+        "validations": {
+          "required": false
+        }
+      }
+    ]
+  }
+]

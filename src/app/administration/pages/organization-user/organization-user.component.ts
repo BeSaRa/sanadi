@@ -166,8 +166,7 @@ export class OrganizationUserComponent extends AdminGenericComponent<OrgUser, Or
   toggleStatus(model: OrgUser) {
     let updateObservable = model.status == CommonStatusEnum.ACTIVATED ? model.updateStatus(CommonStatusEnum.DEACTIVATED) : model.updateStatus(CommonStatusEnum.ACTIVATED);
     updateObservable.pipe(takeUntil(this.destroy$))
-      .subscribe((value) => {
-        console.log({ value });
+      .subscribe((_value) => {
         this.toast.success(this.langService.map.msg_status_x_updated_success.change({x: model.getName()}));
         this.reload$.next(null);
       }, () => {

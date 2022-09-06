@@ -42,7 +42,7 @@ export class FinalExternalOfficeApprovalService extends BaseGenericEService<Fina
     return this.urlService;
   }
 
-  searchColumns: string[] = ['fullSerial', 'subject', 'createdOn', 'caseStatus', 'ouInfo', 'creatorInfo'];
+  searchColumns: string[] = ['fullSerial', 'requestTypeInfo', 'subject', 'createdOn', 'caseStatus', 'ouInfo', 'creatorInfo'];
   caseStatusIconMap: Map<number, string> = new Map<number, string>();
   interceptor: IModelInterceptor<FinalExternalOfficeApproval> = new FinalExternalOfficeApprovalInterceptor();
   bankAccountInterceptor: IModelInterceptor<BankAccount> = new BankAccountInterceptor();

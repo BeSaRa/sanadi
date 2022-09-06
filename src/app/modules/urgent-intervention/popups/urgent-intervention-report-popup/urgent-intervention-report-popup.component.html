@@ -1,0 +1,73 @@
+<div class="dialog-toolbar bg-primary d-flex justify-content-between">
+  <h1 class="h6 text-white">{{popupTitle}}</h1>
+  <div>
+    <button type="button" class="btn btn-fullscreen btn-close-white icon-btn"
+            tabindex="-1" aria-label="Fullscreen" fullscreenBtn></button>
+    <button type="button" class="btn-close btn-close-white"
+            tabindex="-1" [dialogClose]="model" aria-label="Close"></button>
+  </div>
+</div>
+<div class="dialog-content" #dialogContent>
+  <form class="w800px" novalidate autocomplete="off" [formGroup]="form">
+    <div class="row">
+      <div class="col-sm-6 mb-4 position-relative">
+        <label asteriskIfRequired="arName" for="arName" class="form-label">{{lang.map.lbl_arabic_name}}</label>
+        <input id="arName" validationClasses="arName" formControlName="arName" class="form-control">
+        <app-field-error-message controlName="arName"></app-field-error-message>
+      </div>
+      <div class="col-sm-6 mb-4 position-relative">
+        <label asteriskIfRequired="enName" for="enName" class="form-label">{{lang.map.lbl_english_name}}</label>
+        <input id="enName" validationClasses="enName" formControlName="enName" class="form-control">
+        <app-field-error-message controlName="enName"></app-field-error-message>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6 mb-4 position-relative">
+        <label asteriskIfRequired="executionDate" for="executionDate"
+               class="form-label">{{lang.map.execution_date}}</label>
+        <div class="input-group">
+          <i class="input-group-text mdi mdi-calendar"></i>
+          <div class="form-control" formControlName="executionDate"
+               id="executionDate" [options]="datepickerOptionsMap.executionDate"
+               [ngClass]="{'input-disabled': true}"
+               #dpExecutionDate="angular-mydatepicker"
+               (click)="!readonly && dpExecutionDate.toggleCalendar()"
+               angular-mydatepicker validationClasses="executionDate"></div>
+          <app-field-error-message controlName="executionDate"></app-field-error-message>
+        </div>
+      </div>
+      <div class="col-sm-6 mb-4 position-relative">
+        <label asteriskIfRequired="dueDate" for="dueDate" class="form-label">{{lang.map.due_date}}</label>
+        <div class="input-group">
+          <i class="input-group-text mdi mdi-calendar"></i>
+          <div class="form-control" formControlName="dueDate"
+               id="dueDate" [options]="datepickerOptionsMap.dueDate"
+               [ngClass]="{'input-disabled': true}"
+               #dpDueDate="angular-mydatepicker"
+               (click)="!readonly && dpDueDate.toggleCalendar()"
+               angular-mydatepicker validationClasses="dueDate"></div>
+          <app-field-error-message controlName="dueDate"></app-field-error-message>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 mb-4 position-relative">
+        <label asteriskIfRequired="notes" for="notes" class="form-label">{{lang.map.notes}}</label>
+        <textarea id="notes" rows="3" validationClasses="notes" trimInput
+                  formControlName="notes" class="form-control"
+                  [maxlength]="customValidators.defaultLengths.EXPLANATIONS"></textarea>
+        <app-field-error-message controlName="notes"></app-field-error-message>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="dialog-actions">
+  <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="displayFormValidity(null, dialogContent)"
+          tooltip="{{lang.map.validate_fields}}" class="btn btn-link">
+    <i class="mdi mdi-information-outline text-info"></i>
+  </button>
+  <span class="flex-grow-1"></span>
+  <button [disabled]="form.invalid" *ngIf="saveVisible" (click)="save$.next(null)"
+          class="btn btn-primary">{{lang.map.btn_save}}</button>
+  <button [dialogClose]="model" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
+</div>

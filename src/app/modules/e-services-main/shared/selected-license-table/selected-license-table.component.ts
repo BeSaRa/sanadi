@@ -53,8 +53,8 @@ export class SelectedLicenseTableComponent {
       icon: FileIconsEnum.PDF,
       onClick: (item: any) => this.viewLicenseAsPDF(item),
       show: (item: any) => {
-        // urgent intervention reporting(announcement) does not have content to view
-        return (this.caseTypeViewLicense !== CaseTypes.URGENT_INTERVENTION_REPORTING);
+        // urgent intervention announcement does not have content to view
+        return (this.caseTypeViewLicense !== CaseTypes.URGENT_INTERVENTION_ANNOUNCEMENT);
       }
     },
     // remove license/document

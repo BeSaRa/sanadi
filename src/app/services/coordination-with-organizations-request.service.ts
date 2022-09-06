@@ -5,6 +5,7 @@ import { CastResponseContainer } from "@app/decorators/decorators/cast-response"
 import { BaseGenericEService } from "@app/generics/base-generic-e-service";
 import { ILanguageKeys } from "@app/interfaces/i-language-keys";
 import { CoordinationWithOrganizationsRequest } from "@app/models/coordination-with-organizations-request";
+import { ParticipantOrganizationsPopupComponent } from "@app/modules/e-services-main/popups/participant-organizations-popup/participant-organizations-popup.component";
 import { CoordinationWithOrganizationsRequestSearchCriteria } from './../models/coordination-with-organizations-request-search-criteria';
 import { DialogService } from "./dialog.service";
 import { DynamicOptionsService } from "./dynamic-options.service";
@@ -61,5 +62,13 @@ export class CoordinationWithOrganizationsRequestService extends BaseGenericESer
       "CoordinationWithOrganizationsRequestService",
       this
     );
+  }
+
+  openParticipantOrganizationspopup(orgId:number,model:CoordinationWithOrganizationsRequest){
+    this.dialog.show(ParticipantOrganizationsPopupComponent,{
+      service: this,
+      orgId,
+      model
+    }, { fullscreen: true })
   }
 }

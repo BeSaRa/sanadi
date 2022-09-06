@@ -92,8 +92,7 @@ export class RacaMapsComponent implements OnDestroy, OnInit {
           this.loaded = true;
           return true
         }),
-        catchError((e) => {
-          console.log(e);
+        catchError((_e) => {
           return of(false)
         })
       )

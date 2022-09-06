@@ -4,7 +4,7 @@
       <div class="mb-4 ng-select-wrapper flex-grow-1 ">
         <label for="teamSecurity">{{lang.map.select_team}}</label>
         <ng-select [formControl]="selectedUserTeam" [selectOnTab]="true" labelForId="teamSecurity"
-                   [clearable]="true"
+                   [clearable]="true" [readonly]="readonly"
                    placeholder="{{lang.map.select}}" id="teamSecurity"
                    [notFoundText]="lang.map.msg_not_found">
           <ng-option *ngFor="let team of userTeams" [value]="team.teamId"
@@ -31,8 +31,8 @@
           <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_search}}</th>
           <td cdk-cell *cdkCellDef="let row">
             <div *ngIf="canManage(row)" class="form-check form-switch">
-              <input [disabled]="readonly" (change)="toggleUserSecurity(row , 'canManage')" type="checkbox" [checked]="row.canManage"
-                     class="form-check-input" [disabled]="!isSelectedUserTeamActive">
+              <input (change)="toggleUserSecurity(row , 'canManage')" type="checkbox" [checked]="row.canManage"
+                     class="form-check-input" [disabled]="readonly || !isSelectedUserTeamActive">
             </div>
           </td>
         </ng-container>
@@ -40,8 +40,8 @@
           <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.menu_team_inbox}}</th>
           <td cdk-cell *cdkCellDef="let row">
             <div *ngIf="canView(row)" class="form-check form-switch">
-              <input (change)="toggleUserSecurity(row , 'canView')" [disabled]="readonly" type="checkbox" [checked]="row.canView"
-                     class="form-check-input" [disabled]="!isSelectedUserTeamActive">
+              <input (change)="toggleUserSecurity(row , 'canView')" type="checkbox" [checked]="row.canView"
+                     class="form-check-input" [disabled]="readonly || !isSelectedUserTeamActive">
             </div>
           </td>
         </ng-container>
@@ -49,8 +49,8 @@
           <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.btn_add}}</th>
           <td cdk-cell *cdkCellDef="let row">
             <div *ngIf="canAdd(row)" class="form-check form-switch">
-              <input (change)="toggleUserSecurity(row , 'canAdd')" [disabled]="readonly" type="checkbox" [checked]="row.canAdd"
-                     class="form-check-input" [disabled]="!isSelectedUserTeamActive">
+              <input (change)="toggleUserSecurity(row , 'canAdd')" type="checkbox" [checked]="row.canAdd"
+                     class="form-check-input" [disabled]="readonly || !isSelectedUserTeamActive">
             </div>
           </td>
         </ng-container>
@@ -58,8 +58,8 @@
           <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.approve_inbox}}</th>
           <td cdk-cell *cdkCellDef="let row">
             <div class="form-check form-switch">
-              <input (change)="toggleUserSecurity(row , 'approval')" [disabled]="readonly" type="checkbox" [checked]="row.approval"
-                     class="form-check-input" [disabled]="!isSelectedUserTeamActive">
+              <input (change)="toggleUserSecurity(row , 'approval')" type="checkbox" [checked]="row.approval"
+                     class="form-check-input" [disabled]="readonly || !isSelectedUserTeamActive">
             </div>
           </td>
         </ng-container>
@@ -67,8 +67,8 @@
           <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.followup}}</th>
           <td cdk-cell *cdkCellDef="let row">
             <div class="form-check form-switch">
-              <input (change)="toggleUserSecurity(row , 'followUp')" [disabled]="readonly" type="checkbox" [checked]="row.followUp"
-                     class="form-check-input" [disabled]="!isSelectedUserTeamActive">
+              <input (change)="toggleUserSecurity(row , 'followUp')" type="checkbox" [checked]="row.followUp"
+                     class="form-check-input" [disabled]="readonly || !isSelectedUserTeamActive">
             </div>
           </td>
         </ng-container>

@@ -14,6 +14,7 @@ import {AdminResult} from '@app/models/admin-result';
 
 export class UrgentInterventionClosureInterceptor implements IModelInterceptor<UrgentInterventionClosure> {
   receive(model: UrgentInterventionClosure): UrgentInterventionClosure {
+    model.requestTypeInfo && (model.requestTypeInfo = AdminResult.createInstance(model.requestTypeInfo));
     model.beneficiaryCountryInfo && (model.beneficiaryCountryInfo = AdminResult.createInstance(model.beneficiaryCountryInfo));
     model.executionCountryInfo && (model.executionCountryInfo = AdminResult.createInstance(model.executionCountryInfo));
     let service: UrgentInterventionClosureService = FactoryService.getService('UrgentInterventionClosureService');
@@ -76,6 +77,7 @@ export class UrgentInterventionClosureInterceptor implements IModelInterceptor<U
 
   private static _deleteBeforeSend(model: Partial<UrgentInterventionClosure>): void {
     delete model.searchFields;
+    delete model.requestTypeInfo;
     delete model.beneficiaryCountryInfo;
     delete model.executionCountryInfo;
   }

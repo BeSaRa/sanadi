@@ -65,7 +65,7 @@ export class FinalExternalOfficeApproval extends LicenseApprovalModel<FinalExter
 
   searchFields: ISearchFieldsMap<FinalExternalOfficeApproval> = {
     ...dateSearchFields(['createdOn']),
-    ...infoSearchFields(['creatorInfo', 'caseStatusInfo', 'ouInfo']),
+    ...infoSearchFields(['requestTypeInfo', 'creatorInfo', 'caseStatusInfo', 'ouInfo']),
     ...normalSearchFields(['subject', 'fullSerial'])
   }
 

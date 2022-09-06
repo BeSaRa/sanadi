@@ -12,14 +12,7 @@
             <app-field-error-message controlName="researchTopic"></app-field-error-message>
           </div>
 
-          <!-- Research And Study Objectives -->
-          <div class="col-sm-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="researchAndStudyObjectives" for="researchAndStudyObjectives"
-              class="form-label">{{lang.map.lbl_research_and_study_objectives}}</label>
-            <input id="researchAndStudyObjectives" validationClasses="researchAndStudyObjectives"
-              formControlName="researchAndStudyObjectives" trimInput class="form-control">
-            <app-field-error-message controlName="researchAndStudyObjectives"></app-field-error-message>
-          </div>
+
 
           <!-- Search Start Date -->
           <div class="col-12 col-md-4 mb-4 position-relative">
@@ -35,10 +28,9 @@
               <app-field-error-message controlName="searchStartDate"></app-field-error-message>
             </div>
           </div>
-        </div>
-        <div class="row">
-          <!-- Search Submission Deadline -->
-          <div class="col-12 col-md-4 mb-4 position-relative">
+
+           <!-- Search Submission Deadline -->
+           <div class="col-12 col-md-4 mb-4 position-relative">
             <label for="searchSubmissionDeadline" asteriskIfRequired="searchSubmissionDeadline"
               class="form-label">{{lang.map.lbl_search_submission_deadline}}</label>
             <div class="input-group">
@@ -47,12 +39,15 @@
                 [options]="datepickerOptionsMap.searchSubmissionDeadline"
                 (click)="dpsearchSubmissionDeadline.toggleCalendar()"
                 (inputFieldChanged)="onDateChange($event, 'searchStartDate', 'searchSubmissionDeadline')"
-                #dpsearchSubmissionDeadline="angular-mydatepicker"
-                angular-mydatepicker validationClasses="searchSubmissionDeadline">
+                #dpsearchSubmissionDeadline="angular-mydatepicker" angular-mydatepicker
+                validationClasses="searchSubmissionDeadline">
               </div>
               <app-field-error-message controlName="searchSubmissionDeadline"></app-field-error-message>
             </div>
           </div>
+        </div>
+        <div class="row">
+
           <!-- Required Role -->
           <div class="col-sm-12 col-md-4 mb-4 position-relative">
             <label asteriskIfRequired="requiredRole" for="requiredRole"
@@ -72,6 +67,14 @@
         </div>
         <div class="row">
 
+           <!-- Research And Study Objectives -->
+          <div class="col-12 mb-4 position-relative">
+            <label asteriskIfRequired="researchAndStudyObjectives" for="researchAndStudyObjectives" class="form-label">{{
+              lang.map.lbl_research_and_study_objectives }}</label>
+            <textarea rows="5" id="researchAndStudyObjectives" validationClasses="researchAndStudyObjectives"
+              formControlName="researchAndStudyObjectives" class="form-control" trimInput></textarea>
+            <app-field-error-message controlName="researchAndStudyObjectives"></app-field-error-message>
+          </div>
 
           <!-- Motives And Reasons -->
           <div class="col-12 mb-4 position-relative">
@@ -117,9 +120,7 @@
   </div>
 </div>
 
-<app-page-header
-
-[hidden]="!canUpdate" pageTitle="research_and_studies" [clickOnNew$]="add$"
+<app-page-header [hidden]="!canUpdate || !isClaimed" pageTitle="research_and_studies" [clickOnNew$]="add$"
   [addPermission]="addAllowed()"></app-page-header>
 
 <table *ngIf="list.length" class="table mt-3 table-striped table-bordered caption-top" cdk-table
@@ -163,14 +164,15 @@
     <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
       <div class="d-flex flex-row">
         <button (click)="delete($event, row, i)" class="icon-btn text-primary" [disabled]="readonly"
-          tooltip="{{lang.map.btn_delete}}">
+          [disabled]="!isClaimed" tooltip="{{lang.map.btn_delete}}">
           <i class="mdi mdi-close-box"></i>
         </button>
         <button (click)="edit($event, row, i)" class="icon-btn text-primary" [disabled]="readonly"
-          tooltip="{{lang.map.btn_edit}}">
+          [disabled]="!isClaimed" tooltip="{{lang.map.btn_edit}}">
           <i class="mdi mdi-pen"></i>
         </button>
-        <button (click)="view($event, row, i)" class="icon-btn text-primary" tooltip="{{lang.map.view}}">
+        <button (click)="view($event, row, i)" class="icon-btn text-primary" [disabled]="!isClaimed"
+          tooltip="{{lang.map.view}}">
           <i class="mdi mdi-eye"></i>
         </button>
       </div>

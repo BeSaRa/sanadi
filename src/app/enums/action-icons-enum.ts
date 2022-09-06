@@ -26,5 +26,8 @@ export enum ActionIconsEnum {
   CHECKLIST = 'mdi-format-list-bulleted-square',
   OPEN_MAIL = 'mdi-email-open',
   CLOSE_MAIL = 'mdi-email',
-  TERMINATE = 'mdi-stop'
+  TERMINATE = 'mdi-stop',
+  ATTACHMENT = 'mdi-attachment',
+  LAUNCH = 'mdi-rocket-launch-outline',
+  APPROVE = 'mdi-check-decagram-outline'
 }

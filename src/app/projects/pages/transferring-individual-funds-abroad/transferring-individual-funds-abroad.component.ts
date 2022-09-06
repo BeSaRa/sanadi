@@ -269,7 +269,6 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
   }
 
   _initComponent(): void {
-    // load initials here
     this.loadCountries();
     this.isExternalUser = this.employeeService.isExternalUser();
     this.buildExecutiveManagementForm();
@@ -761,7 +760,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
   }
 
   loadCountries() {
-    this.countryService.loadComposite().subscribe((list: Country[]) => {
+    this.countryService.loadAsLookups().subscribe((list: Country[]) => {
       this.countries = list;
     });
   }

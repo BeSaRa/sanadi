@@ -39,8 +39,8 @@ export function validateSum(expectedSum: number, numberOfPlaces: number, fields:
     let sum = 0;
     fields.map((fieldName: string) => {
       let control = formGroup.get(fieldName), value = control?.value || 0;
-      if (value && CommonUtils.isValidValue(value) && isNaN(value)) {
-        return numberOfPlaces === 0 ? Number(value) : Number(Number(value).toFixed(numberOfPlaces));
+      if (value && CommonUtils.isValidValue(value) && !isNaN(value)) {
+        value = (numberOfPlaces === 0 ? Number(value) : Number(Number(value).toFixed(numberOfPlaces)));
       }
       sum += value;
       return fieldName;

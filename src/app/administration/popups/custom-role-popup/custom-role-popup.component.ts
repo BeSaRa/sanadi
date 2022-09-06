@@ -115,7 +115,7 @@ export class CustomRolePopupComponent extends AdminGenericDialog<CustomRole> imp
   }
 
   private buildGroups() {
-    combineLatest([this.permissionService.load(), of(this.lookupService.listByCategory.OrgUserPermissionGroup)])
+    combineLatest([this.permissionService.loadAsLookups(), of(this.lookupService.listByCategory.OrgUserPermissionGroup)])
       .pipe(take(1))
       .subscribe((result) => {
         const permissionByGroupId = CustomRolePopupComponent.buildPermissionsByGroupId(result[0]);

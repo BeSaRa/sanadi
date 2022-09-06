@@ -9,9 +9,9 @@ import { HttpClient } from '@angular/common/http';
 import { IModelInterceptor } from '@contracts/i-model-interceptor';
 import { ILanguageKeys } from '@contracts/i-language-keys';
 import { SearchUrgentInterventionClosureCriteria } from '@app/models/search-urgent-intervention-closure-criteria';
-import { UrgentInterventionReportSearchCriteria } from '@app/models/urgent-intervention-report-search-criteria';
+import { UrgentInterventionAnnouncementSearchCriteria } from '@app/models/urgent-intervention-announcement-search-criteria';
 import { Observable } from 'rxjs';
-import { UrgentInterventionReportResult } from '@app/models/urgent-intervention-report-result';
+import { UrgentInterventionAnnouncementResult } from '@app/models/urgent-intervention-announcement-result';
 import { UrgentInterventionClosureInterceptor } from '@app/model-interceptors/urgent-intervention-closure-interceptor';
 import { FactoryService } from '@services/factory.service';
 import { ImplementingAgency } from '@app/models/implementing-agency';
@@ -58,7 +58,7 @@ export class UrgentInterventionClosureService extends BaseGenericEService<Urgent
     FactoryService.registerService('UrgentInterventionClosureService', this);
   }
 
-  searchColumns: string[] = ['fullSerial', 'subject', 'createdOn', 'caseStatus', 'ouInfo'];
+  searchColumns: string[] = ['fullSerial', 'requestTypeInfo', 'subject', 'createdOn', 'caseStatus', 'ouInfo'];
   selectLicenseDisplayColumns: string[] = [];
   selectLicenseDisplayColumnsReport: string[] = ['beneficiaryCountry', 'executionCountry', 'subject', 'fullSerial', 'actions'];
   serviceKey: keyof ILanguageKeys = 'menu_urgent_intervention_closure';
@@ -103,7 +103,7 @@ export class UrgentInterventionClosureService extends BaseGenericEService<Urgent
     return this.licenseService.urgentInterventionClosureSearch(criteria);
   }
 
-  licenseSearchUrgentInterventionAnnouncement(criteria: Partial<UrgentInterventionReportSearchCriteria> = {}): Observable<UrgentInterventionReportResult[]> {
+  licenseSearchUrgentInterventionAnnouncement(criteria: Partial<UrgentInterventionAnnouncementSearchCriteria> = {}): Observable<UrgentInterventionAnnouncementResult[]> {
     return this.licenseService.urgentInterventionAnnouncementSearchValidOnly(criteria);
   }
 

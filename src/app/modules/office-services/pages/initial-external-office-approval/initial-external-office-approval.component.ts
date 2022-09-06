@@ -214,13 +214,13 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
   }
 
   private loadCountries(): void {
-    this.countryService.load()
+    this.countryService.loadAsLookups()
       .pipe(takeUntil(this.destroy$))
       .subscribe((countries) => this.countries = countries)
   }
 
   private loadOrganizations() {
-    this.orgService.load()
+    this.orgService.loadAsLookups()
       .pipe(takeUntil(this.destroy$))
       .subscribe((organizations) => {
         this.organizations = organizations;

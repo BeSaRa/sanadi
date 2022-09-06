@@ -19,7 +19,7 @@ import {
 } from '@app/projects/popups/transfer-funds-abroad-approve-task-popup/transfer-funds-abroad-approve-task-popup.component';
 import {Observable} from 'rxjs';
 import {ReceiverOrganization} from '@app/models/receiver-organization';
-import {SelectReceiverEntityPopupComponent} from '@app/projects/pages/select-receiver-entity-popup/select-receiver-entity-popup.component';
+import {SelectReceiverEntityPopupComponent} from '@app/projects/popups/select-receiver-entity-popup/select-receiver-entity-popup.component';
 import {ReceiverPerson} from '@app/models/receiver-person';
 import {
   TransferFundsAbroadCompleteTaskPopupComponent
@@ -40,7 +40,7 @@ export class TransferringIndividualFundsAbroadService extends BaseGenericEServic
   jsonSearchFile: string = 'transferring-individual-funds-abroad-search.json';
   serviceKey: keyof ILanguageKeys = 'menu_transferring_individual_funds_abroad';
   caseStatusIconMap: Map<number, string> = new Map<number, string>();
-  searchColumns: string[] = ['fullSerial', 'arName', 'enName', 'subject', 'caseStatus', 'creatorInfo', 'createdOn'];
+  searchColumns: string[] = ['fullSerial', 'requestTypeInfo', 'arName', 'enName', 'subject', 'caseStatus', 'creatorInfo', 'createdOn'];
   executiveManagementListInterceptor: ExecutiveManagementListInterceptor = new ExecutiveManagementListInterceptor();
   transferFundsCharityPurposeInterceptor: TransferFundsCharityPurposeInterceptor = new TransferFundsCharityPurposeInterceptor();
 

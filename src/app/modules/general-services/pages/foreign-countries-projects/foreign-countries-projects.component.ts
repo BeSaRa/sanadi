@@ -59,7 +59,7 @@ export class ForeignCountriesProjectsComponent
     this.lookupService.listByCategory.ContractLocationType;
   licenseSearch$: Subject<string> = new Subject<string>();
   countries$: Observable<Country[]> = this.countryService
-    .load()
+    .loadAsLookups()
     .pipe(takeUntil(this.destroy$), share());
 
   selectedLicense?: ForeignCountriesProjects;

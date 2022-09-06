@@ -78,7 +78,7 @@
         "key": "competentDepartmentID",
         "selectOptions": {
           "options": [],
-          "loader": "organization.loadComposite",
+          "loader": "organization.loadAsLookups",
           "bindValue": "id",
           "bindLabel": "basedOnLanguage"
         }

@@ -1,9 +1,10 @@
-import { Validators } from "@angular/forms";
-import { AdminResult } from "@app/models/admin-result";
-import { CustomValidators } from "@app/validators/custom-validators";
-import { SearchableCloneable } from "./searchable-cloneable";
+import { Validators } from '@angular/forms';
+import { AdminResult } from '@app/models/admin-result';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { SearchableCloneable } from './searchable-cloneable';
 
 export class BuildingAbility extends SearchableCloneable<BuildingAbility> {
+  organizationId!:number|undefined;
   activityName!: string;
   trainingActivityType!: number;
   activityGoal!: string;
@@ -22,7 +23,7 @@ export class BuildingAbility extends SearchableCloneable<BuildingAbility> {
   floorNo!: string;
   hallName!: string;
   streetName!: string;
-  filtrationMethod!: string;
+  filtrationMethod!: number;
   email!: string;
   otherFiltrationMethod!: string;
   trainingActivityTypeInfo!: AdminResult;
@@ -65,32 +66,66 @@ export class BuildingAbility extends SearchableCloneable<BuildingAbility> {
               CustomValidators.maxLength(
                 CustomValidators.defaultLengths.ENGLISH_NAME_MAX
               ),
-              CustomValidators.minLength(
-                CustomValidators.defaultLengths.MIN_LENGTH
-              )
+
             ),
           ]
         : activityName,
       trainingActivityType: controls
-        ? [trainingActivityType, Validators.required]
+        ? [trainingActivityType, [Validators.required]]
         : trainingActivityType,
       activityGoal: controls
-        ? [activityGoal, Validators.required]
+        ? [
+            activityGoal,
+            [Validators.required].concat(
+              CustomValidators.maxLength(
+                CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+              ),
+
+            ),
+          ]
         : activityGoal,
       trainingActivityMainAxes: controls
-        ? [trainingActivityMainAxes, Validators.required]
+        ? [trainingActivityMainAxes, [Validators.required].concat(
+          CustomValidators.maxLength(
+            CustomValidators.defaultLengths.EXPLANATIONS
+          ),
+
+        )]
         : trainingActivityMainAxes,
       trainingLanguage: controls
         ? [trainingLanguage, Validators.required]
         : trainingLanguage,
-      otherLanguage: controls ? [otherLanguage] : otherLanguage,
+      otherLanguage: controls
+        ? [
+            otherLanguage,
+            [
+              CustomValidators.minLength(2),
+              CustomValidators.maxLength(
+                CustomValidators.defaultLengths.SWIFT_CODE_MAX
+              ),
+            ],
+          ]
+        : otherLanguage,
       targetGroupNature: controls
-        ? [targetGroupNature, Validators.required]
+        ? [
+            targetGroupNature,
+            [Validators.required].concat(
+              CustomValidators.maxLength(
+                CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+              ),
+
+            ),
+          ]
         : targetGroupNature,
       participantsMaximumNumber: controls
         ? [
             participantsMaximumNumber,
-            [Validators.required].concat(CustomValidators.number),
+            [Validators.required].concat(
+              CustomValidators.number,
+              CustomValidators.maxLength(
+                CustomValidators.defaultLengths.SWIFT_CODE_MAX
+              )
+            ),
           ]
         : participantsMaximumNumber,
       suggestedActivityDateFrom: controls
@@ -100,41 +135,104 @@ export class BuildingAbility extends SearchableCloneable<BuildingAbility> {
         ? [suggestedActivityDateTo, Validators.required]
         : suggestedActivityDateTo,
       timeFrom: controls ? [timeFrom, Validators.required] : timeFrom,
-      timeTo: controls ? [timeTo, Validators.required]:timeTo,
-      trainingWay: controls ? [trainingWay, Validators.required] : trainingWay,
-      platform: controls ? [platform] : platform,
-      buildingsName: controls ? [buildingsName] : buildingsName,
-      floorNo: controls ? [floorNo] : floorNo,
-      hallName: controls ? [hallName] : hallName,
-      streetName: controls ? [streetName] : streetName,
+      timeTo: controls ? [timeTo, Validators.required] : timeTo,
+      trainingWay: controls
+        ? [trainingWay, [Validators.required]]
+        : trainingWay,
+      platform: controls
+        ? [
+            platform,
+            [
+              CustomValidators.maxLength(
+                CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+              ),
+            ],
+          ]
+        : platform,
+      buildingsName: controls
+        ? [
+            buildingsName,
+            [
+              CustomValidators.maxLength(
+                CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+              ),
+            ],
+          ]
+        : buildingsName,
+      floorNo: controls
+        ? [
+            floorNo,
+            [
+              CustomValidators.maxLength(
+                CustomValidators.defaultLengths.SWIFT_CODE_MAX
+              ),
+            ],
+          ]
+        : floorNo,
+      hallName: controls
+        ? [
+            hallName,
+            [
+              CustomValidators.maxLength(
+                CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+              ),
+            ],
+          ]
+        : hallName,
+      streetName: controls
+        ? [
+            streetName,
+            [
+              CustomValidators.maxLength(
+                CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+              ),
+            ],
+          ]
+        : streetName,
       filtrationMethod: controls
-        ? [filtrationMethod, Validators.required]
+        ? [
+            filtrationMethod,
+            [Validators.required],
+          ]
         : filtrationMethod,
       email: controls
-        ? [email, [Validators.email].concat(CustomValidators.maxLength(50))]
+        ? [
+            email,
+            [Validators.email].concat(
+              CustomValidators.maxLength(
+                CustomValidators.defaultLengths.EMAIL_MAX
+              )
+            ),
+          ]
         : email,
       otherFiltrationMethod: controls
-        ? [otherFiltrationMethod]
+        ? [
+            otherFiltrationMethod,
+            [
+              CustomValidators.maxLength(
+                CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+              ),
+            ],
+          ]
         : otherFiltrationMethod,
     };
   }
   get DisplayedColumns(): string[] {
     return [
-      "activityName",
-      "trainingActivityType",
-      "activityGoal",
-      "trainingActivityMainAxes",
-      "trainingLanguage",
-      "targetGroupNature",
-      "participantsMaximumNumber",
-      "suggestedActivityDateFrom",
-      "suggestedActivityDateTo",
-      "timeFrom",
-      "timeTo",
-      "trainingWay",
-      "filtrationMethod",
-      "actions",
+      'activityName',
+      'trainingActivityType',
+      'activityGoal',
+      'trainingActivityMainAxes',
+      'trainingLanguage',
+      'targetGroupNature',
+      'participantsMaximumNumber',
+      'suggestedActivityDateFrom',
+      'suggestedActivityDateTo',
+      'timeFrom',
+      'timeTo',
+      'trainingWay',
+      'filtrationMethod',
+      'actions',
     ];
   }
- 
 }

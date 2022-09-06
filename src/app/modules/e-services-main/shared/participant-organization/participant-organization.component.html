@@ -1,5 +1,5 @@
-<div class="row" *ngIf="canUpdate">
-  <div class="col-md-4">
+<div class="row" *ngIf="canAdd">
+  <div class="col-md-4 mb-4">
     <label class="form-label" for="selectedOrg">{{lang.map.menu_organizations}}</label>
     <div style="display: flex">
       <ng-select #selectOrganizations appendTo="body" [clearable]="true" id="selectedOrg" ng-model="selectedOrg"
@@ -23,14 +23,26 @@
     <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.english_name}}</th>
     <td cdk-cell *cdkCellDef="let row"> {{row.englishName}} </td>
   </ng-container>
+  <ng-container cdkColumnDef="managerDecisionInfo">
+    <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.manager_decision}}</th>
+    <td cdk-cell *cdkCellDef="let row"> {{row.managerDecisionInfo?.getName() }} </td>
+  </ng-container>
 
   <ng-container cdkColumnDef="actions"  >
-    <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
-    <td cdk-cell *cdkCellDef="let row;let i" class="table-actions">
+    <th [hidden]="!canView && !canDelete" cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
+    <td cdk-cell *cdkCellDef="let row;  let i = index " class="table-actions">
       <div class="d-flex flex-row">
-        <button (click)="delete($event, row,i)" tooltip="{{lang.map.btn_remove}}" class="btn btn-link outline-none">
+        <button (click)="view($event, row)"
+        [hidden]="!canView"
+        tooltip="{{lang.map.view}}" class="btn btn-link outline-none">
+          <i class="mdi mdi-eye"></i>
+        </button>
+        <button (click)="delete($event, row,i)"
+        [hidden]="!canDelete"
+        tooltip="{{lang.map.btn_remove}}" class="btn btn-link outline-none">
           <i class="mdi mdi-close-box"></i>
         </button>
+
       </div>
     </td>
   </ng-container>

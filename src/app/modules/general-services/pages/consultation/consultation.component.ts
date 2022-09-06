@@ -126,7 +126,7 @@ export class ConsultationComponent implements OnInit, OnDestroy, IESComponent<Co
   }
 
   private loadDepartments(): void {
-    this.intDepService.loadDepartments()
+    this.intDepService.loadAsLookups()
       .pipe(takeUntil(this.destroy$))
       .subscribe(deps => this.departments = deps);
   }

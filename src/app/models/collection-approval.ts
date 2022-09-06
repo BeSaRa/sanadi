@@ -64,7 +64,7 @@ export class CollectionApproval extends _RequestType<CollectionApprovalService, 
   searchFields: ISearchFieldsMap<CollectionApproval> = {
     ...normalSearchFields(['fullSerial', 'subject']),
     ...dateSearchFields(['createdOn']),
-    ...infoSearchFields(['creatorInfo', 'ouInfo', 'caseStatusInfo', 'requestClassificationInfo'])
+    ...infoSearchFields(['requestTypeInfo', 'creatorInfo', 'ouInfo', 'caseStatusInfo', 'requestClassificationInfo'])
   }
 
   constructor() {

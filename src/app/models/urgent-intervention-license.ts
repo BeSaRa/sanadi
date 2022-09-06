@@ -84,7 +84,7 @@ export class UrgentInterventionLicense extends _ApprovalLicenseWithMonthly<Urgen
 
   searchFields: ISearchFieldsMap<UrgentInterventionLicense> = {
     ...infoSearchFields(['caseStatusInfo', 'projectNameInfo', 'ouInfo']),
-    ...normalSearchFields(['fullSerial', 'subject']),
+    ...normalSearchFields(['requestTypeInfo', 'fullSerial', 'subject']),
     ...dateSearchFields(['createdOn'])
   }
 

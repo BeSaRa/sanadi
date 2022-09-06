@@ -121,7 +121,7 @@ export class InquiryComponent implements OnInit, OnDestroy, IESComponent<Inquiry
   }
 
   private loadDepartments(): void {
-    this.intDepService.loadDepartments()
+    this.intDepService.loadAsLookups()
       .pipe(takeUntil(this.destroy$))
       .subscribe(deps => this.departments = deps);
   }

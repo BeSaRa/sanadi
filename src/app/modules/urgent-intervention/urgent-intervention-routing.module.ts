@@ -23,16 +23,16 @@ const routes: Routes = [
     }
   },
   {
-    path: 'urgent-intervention-report', component: EServiceComponentWrapperComponent,
+    path: 'urgent-intervention-announcement', component: EServiceComponentWrapperComponent,
     canActivate: [ServicesGuard, PreValidateDataGuard],
     resolve: {info: ServiceItemResolver},
     runGuardsAndResolvers: 'always',
     data: {
-      permissionKey: EServicePermissions.URGENT_INTERVENTION_REPORTING,
+      permissionKey: EServicePermissions.URGENT_INTERVENTION_ANNOUNCEMENT,
       configPermissionGroup: null,
       checkAnyPermission: false,
-      render: 'UrgentInterventionReportComponent',
-      caseType: CaseTypes.URGENT_INTERVENTION_REPORTING,
+      render: 'UrgentInterventionAnnouncementComponent',
+      caseType: CaseTypes.URGENT_INTERVENTION_ANNOUNCEMENT,
       preValidateFailMsgKey: 'msg_add_intervention_license_first'
     } as ICustomRouteData
   },
@@ -57,7 +57,18 @@ const routes: Routes = [
       checkAnyPermission: false,
       render: 'UrgentInterventionFinancialNotificationComponent'
     } as ICustomRouteData
-  }
+  },
+  {
+    path: 'urgent-intervention-license-followup', component: EServiceComponentWrapperComponent,
+    canActivate: [ServicesGuard],
+    resolve: {info: ServiceItemResolver},
+    data: {
+      permissionKey: EServicePermissions.URGENT_INTERVENTION_LICENSE_FOLLOWUP,
+      configPermissionGroup: null,
+      checkAnyPermission: false,
+      render: 'UrgentInterventionLicenseFollowupComponent'
+    } as ICustomRouteData
+  },
 
 ];
 

@@ -72,7 +72,7 @@ export class PartnerApproval extends LicenseApprovalModel<PartnerApprovalService
 
   searchFields: ISearchFieldsMap<PartnerApproval> = {
     ...dateSearchFields(['createdOn']),
-    ...infoSearchFields(['creatorInfo', 'caseStatusInfo', 'countryInfo', 'requestClassificationInfo', 'ouInfo']),
+    ...infoSearchFields(['requestTypeInfo', 'creatorInfo', 'caseStatusInfo', 'countryInfo', 'requestClassificationInfo', 'ouInfo']),
     ...normalSearchFields(['subject', 'fullSerial'])
   }
 

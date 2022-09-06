@@ -12,13 +12,6 @@ export class CoordinationWithOrganizationsRequestInterceptor
   send(
     model: Partial<CoordinationWithOrganizationsRequest>
   ): Partial<CoordinationWithOrganizationsRequest> {
-    delete model.service;
-    delete model.taskDetails;
-    delete model.caseStatusInfo;
-    delete model.creatorInfo;
-    delete model.categoryInfo;
-    delete model.ouInfo;
-    delete model.employeeService;
     model.licenseStartDate = !model.licenseStartDate
       ? undefined
       : DateUtils.changeDateFromDatepicker(
@@ -33,6 +26,7 @@ export class CoordinationWithOrganizationsRequestInterceptor
     model.participatingOrganizaionList?.forEach((x) => {
       delete (x as any).searchFields;
       delete (x as any).DisplayedColumns;
+      delete (x as any).managerDecisionInfo;
     });
     model.organizaionOfficerList?.forEach((x) => {
       delete x.langService;
@@ -66,10 +60,16 @@ export class CoordinationWithOrganizationsRequestInterceptor
       )?.toISOString()!;
     });
 
-    model.researchAndStudies?.forEach((x) => {
-      delete x.langService;
-      delete (x as any).searchFields;
-    });
+
+    delete model.service;
+    delete model.taskDetails;
+    delete model.caseStatusInfo;
+    delete model.creatorInfo;
+    delete model.categoryInfo;
+    delete model.ouInfo;
+    delete model.employeeService;
+    delete model.domainInfo;
+    delete model.approved;
     return model;
   }
   receive(
@@ -83,7 +83,12 @@ export class CoordinationWithOrganizationsRequestInterceptor
     );
     model.taskDetails = new TaskDetails().clone(model.taskDetails);
 
+    model.requestTypeInfo && (model.requestTypeInfo = AdminResult.createInstance(model.requestTypeInfo));
     model.domainInfo = AdminResult.createInstance(isValidAdminResult(model.domainInfo) ? model.domainInfo : {});
+
+    model.participatingOrganizaionList.forEach(x=>{
+      x.managerDecisionInfo = AdminResult.createInstance(isValidAdminResult(x.managerDecisionInfo)?x.managerDecisionInfo : {});
+    })
     return model;
   }
 }

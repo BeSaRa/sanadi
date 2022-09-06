@@ -4,11 +4,10 @@ import { Employment } from '@app/models/employment';
 import { EmployeeInterceptor } from "./employee-interceptor";
 import { IModelInterceptor } from "@contracts/i-model-interceptor";
 import { Employee } from '@app/models/employee';
+import {AdminResult} from '@app/models/admin-result';
 
 const employeeInterceptor = new EmployeeInterceptor();
-export class EmploymentInterceptor
-  implements IModelInterceptor<Employment>
-{
+export class EmploymentInterceptor implements IModelInterceptor<Employment> {
   send(model: any) {
     model.licenseStartDate = !model.licenseStartDate
       ? undefined
@@ -23,15 +22,21 @@ export class EmploymentInterceptor
     model.employeeInfoDTOs = model.employeeInfoDTOs.map((ei: any) => {
       return employeeInterceptor.send(ei) as unknown as Employee;
     });
+    EmploymentInterceptor._deleteBeforeSend(model);
     return model;
   }
 
   receive(model: Employment): Employment {
+    model.requestTypeInfo && (model.requestTypeInfo = AdminResult.createInstance(model.requestTypeInfo));
     model.licenseStartDate = DateUtils.changeDateToDatepicker(model.licenseStartDate);
     model.licenseEndDate = DateUtils.changeDateToDatepicker(model.licenseEndDate);
     model.employeeInfoDTOs = model.employeeInfoDTOs.map(ei => {
       return employeeInterceptor.receive(new Employee().clone(ei));
     })
     return model;
+  }
+
+  private static _deleteBeforeSend(model: any){
+    delete model.requestTypeInfo;
   }
 }

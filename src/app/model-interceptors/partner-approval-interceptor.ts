@@ -18,6 +18,7 @@ import { CommonUtils } from '@app/helpers/common-utils';
 export class PartnerApprovalInterceptor implements IModelInterceptor<PartnerApproval> {
   receive(model: PartnerApproval): PartnerApproval {
     model.taskDetails = (new TaskDetails()).clone(model.taskDetails);
+    model.requestTypeInfo && (model.requestTypeInfo = AdminResult.createInstance(model.requestTypeInfo));
     model.caseStatusInfo = AdminResult.createInstance(model.caseStatusInfo);
     model.creatorInfo = AdminResult.createInstance(model.creatorInfo);
     model.ouInfo = AdminResult.createInstance(model.ouInfo);
@@ -85,6 +86,7 @@ export class PartnerApprovalInterceptor implements IModelInterceptor<PartnerAppr
 
     delete model.service;
     delete model.taskDetails;
+    delete model.requestTypeInfo;
     delete model.caseStatusInfo;
     delete model.creatorInfo;
     delete model.ouInfo;

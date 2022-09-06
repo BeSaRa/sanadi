@@ -47,7 +47,7 @@ import { InternalBankAccountApprovalService } from '@app/services/internal-bank-
 import { CustomsExemptionRemittanceService } from './customs-exemption-remittance.service';
 import { BaseGenericEService } from '@app/generics/base-generic-e-service';
 import { UrgentJointReliefCampaignService } from '@services/urgent-joint-relief-campaign.service';
-import { UrgentInterventionReportingService } from '@app/services/urgent-intervention-reporting.service';
+import { UrgentInterventionAnnouncementService } from '@services/urgent-intervention-announcement.service';
 import { ExternalOrgAffiliationService } from './external-org-affiliation.service';
 import { EmploymentService } from '@app/services/employment.service';
 import {
@@ -57,6 +57,7 @@ import { UrgentInterventionClosureService } from '@services/urgent-intervention-
 import { TransferringIndividualFundsAbroadService } from '@services/transferring-individual-funds-abroad.service';
 import { ForeignCountriesProjectsService } from './foreign-countries-projects.service';
 import { CastResponse } from "@decorators/cast-response";
+import {UrgentInterventionLicenseFollowupService} from '@services/urgent-intervention-license-followup.service';
 
 @Injectable({
   providedIn: 'root'
@@ -82,9 +83,10 @@ export class InboxService {
               private urgentInterventionLicensingService: UrgentInterventionLicensingService,
               private internalBankAccountApprovalService: InternalBankAccountApprovalService,
               private urgentJointReliefCampaignService: UrgentJointReliefCampaignService,
-              private urgentInterventionReportingService: UrgentInterventionReportingService,
+              private urgentInterventionAnnouncementService: UrgentInterventionAnnouncementService,
               private urgentInterventionClosureService: UrgentInterventionClosureService,
               private urgentInterventionFinancialNotificationService: UrgentInterventionFinancialNotificationService,
+              private urgentInterventionLicenseFollowupService: UrgentInterventionLicenseFollowupService,
               private urlService: UrlService,
               private employmentService: EmploymentService,
               private externalOrgAffiliationService: ExternalOrgAffiliationService,
@@ -110,13 +112,14 @@ export class InboxService {
     this.services.set(CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN, this.urgentJointReliefCampaignService);
     this.services.set(CaseTypes.EMPLOYMENT, this.employmentService);
     this.services.set(CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE, this.customsExemptionRemittanceService);
-    this.services.set(CaseTypes.URGENT_INTERVENTION_REPORTING, this.urgentInterventionReportingService);
+    this.services.set(CaseTypes.URGENT_INTERVENTION_ANNOUNCEMENT, this.urgentInterventionAnnouncementService);
     this.services.set(CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST, this.externalOrgAffiliationService);
     this.services.set(CaseTypes.URGENT_INTERVENTION_CLOSURE, this.urgentInterventionClosureService);
     this.services.set(CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION, this.urgentInterventionFinancialNotificationService);
     this.services.set(CaseTypes.FOREIGN_COUNTRIES_PROJECTS, this.foreignCountriesProjectService);
     this.services.set(CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD, this.transferringIndividualsFundsAbroad);
     this.services.set(CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST, this.coordinationWithOrganizationsRequestService);
+    this.services.set(CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP, this.urgentInterventionLicenseFollowupService);
   }
 
   @CastResponse(() => QueryResultSet)

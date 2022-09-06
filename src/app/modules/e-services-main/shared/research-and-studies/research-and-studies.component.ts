@@ -36,11 +36,15 @@ export class ResearchAndStudiesComponent implements OnInit {
   ) {}
   @Input() formArrayName: string = 'researchAndStudies';
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();
+  @Input() orgId!:number|undefined;
 
+  allowListUpdate:boolean=true;
   private _list: ResearchAndStudies[] = [];
   @Input() set list(list: ResearchAndStudies[]) {
-    this._list = list;
-    this.listDataSource.next(this._list);
+    if( this.allowListUpdate === true){
+      this._list = list;
+      this.listDataSource.next(this._list);
+    }
   }
   model: ResearchAndStudies = new ResearchAndStudies();
   get list(): ResearchAndStudies[] {
@@ -49,6 +53,8 @@ export class ResearchAndStudiesComponent implements OnInit {
   @Input() readonly: boolean = false;
   @Input() pageTitleKey: keyof ILanguageKeys = 'research_and_studies';
   @Input() canUpdate:boolean=true;
+  @Input()isClaimed:boolean=false;
+
   listDataSource: BehaviorSubject<ResearchAndStudies[]> = new BehaviorSubject<
     ResearchAndStudies[]
   >([]);
@@ -83,9 +89,9 @@ export class ResearchAndStudiesComponent implements OnInit {
     this.listenToRecordChange();
     this.listenToSave();
     this._setComponentReadiness('READY');
-    if(this.canUpdate === false){     
+    if(this.canUpdate === false){
       this.columns= this.columns.slice(0,this.model.DisplayedColumns.length-1);
-    } 
+    }
   }
 
   ngOnDestroy(): void {
@@ -106,6 +112,7 @@ export class ResearchAndStudiesComponent implements OnInit {
   }
   private listenToRecordChange() {
     this.recordChanged$.pipe(takeUntil(this.destroy$)).subscribe((record) => {
+      if(record)record.organizationId=this.orgId;
       this.currentRecord = record || undefined;
       this.updateForm(this.currentRecord);
     });
@@ -119,7 +126,7 @@ export class ResearchAndStudiesComponent implements OnInit {
       } else {
         this._setComponentReadiness('NOT_READY');
       }
-      formArray.push(this.fb.group(model.BuildForm(true)));
+      formArray.push(this.fb.group(new ResearchAndStudies().clone(model).BuildForm(true)));
       if (this.readonly || this.viewOnly) {
         this.formArray.disable();
       }

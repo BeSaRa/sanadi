@@ -1,34 +1,34 @@
-import { WFResponseType } from './../enums/wfresponse-type.enum';
-import { JobTitle } from './../models/job-title';
-import { Observable } from 'rxjs';
-import { EmployeeInterceptor } from './../model-interceptors/employee-interceptor';
-import { Employee } from './../models/employee';
-import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
-import { UntypedFormGroup } from "@angular/forms";
-import { DialogRef } from "@app/shared/models/dialog-ref";
-import { EmploymentSearchCriteria } from "./../models/employment-search-criteria";
-import { FactoryService } from "./factory.service";
-import { Employment } from "./../models/employment";
-import { BaseGenericEService } from "@app/generics/base-generic-e-service";
-import { HasInterception } from "@decorators/intercept-model";
-import { ComponentFactoryResolver, EventEmitter, Injectable, } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { DomSanitizer } from "@angular/platform-browser";
-import { ILanguageKeys } from "@app/interfaces/i-language-keys";
-import { DialogService } from "./dialog.service";
-import { DynamicOptionsService } from "./dynamic-options.service";
-import { UrlService } from "./url.service";
+import {WFResponseType} from './../enums/wfresponse-type.enum';
+import {JobTitle} from './../models/job-title';
+import {Observable} from 'rxjs';
+import {EmployeeInterceptor} from './../model-interceptors/employee-interceptor';
+import {Employee} from './../models/employee';
+import {CastResponse, CastResponseContainer} from '@decorators/cast-response';
+import {UntypedFormGroup} from '@angular/forms';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {EmploymentSearchCriteria} from './../models/employment-search-criteria';
+import {FactoryService} from './factory.service';
+import {Employment} from './../models/employment';
+import {BaseGenericEService} from '@app/generics/base-generic-e-service';
+import {HasInterception} from '@decorators/intercept-model';
+import {ComponentFactoryResolver, EventEmitter, Injectable,} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {DomSanitizer} from '@angular/platform-browser';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {DialogService} from './dialog.service';
+import {DynamicOptionsService} from './dynamic-options.service';
+import {UrlService} from './url.service';
 import {
   EmployeeFormPopupComponent
 } from '@app/modules/e-services-main/popups/employee-form-popup/employee-form-popup.component';
 import {
   EmploymentApproveComponent
-} from "@app/modules/general-services/popups/employment-approve/employment-approve.component";
+} from '@app/modules/general-services/popups/employment-approve/employment-approve.component';
 
 const Empinterceptor = new EmployeeInterceptor();
 
 @CastResponseContainer({
-  $employee: { model: () => Employee },
+  $employee: {model: () => Employee},
   $default: {
     model: () => Employment
   },
@@ -37,19 +37,13 @@ const Empinterceptor = new EmployeeInterceptor();
   }
 })
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class EmploymentService extends BaseGenericEService<Employment> {
-  searchColumns: string[] = [
-    "fullSerial",
-    "caseStatus",
-    "subject",
-    "creatorInfo",
-    "createdOn"
-  ];
+  searchColumns: string[] = ['fullSerial', 'requestTypeInfo', 'caseStatus', 'subject', 'creatorInfo', 'createdOn'];
   caseStatusIconMap: Map<number, string> = new Map<number, string>([]);
-  jsonSearchFile: string = "employment_search-form.json";
-  serviceKey: keyof ILanguageKeys = "menu_employment";
+  jsonSearchFile: string = 'employment_search-form.json';
+  serviceKey: keyof ILanguageKeys = 'menu_employment';
   onSubmit: EventEmitter<Partial<Employee>[]> = new EventEmitter();
 
   constructor(
@@ -61,11 +55,11 @@ export class EmploymentService extends BaseGenericEService<Employment> {
     public dynamicService: DynamicOptionsService
   ) {
     super();
-    FactoryService.registerService("EmploymentService", this);
+    FactoryService.registerService('EmploymentService', this);
   }
 
   getCaseComponentName(): string {
-    return "EmploymentComponent";
+    return 'EmploymentComponent';
   }
 
   openAddNewEmployee(form: UntypedFormGroup, employees: Partial<Employee>[], model: Employment | undefined, operation: number, jobTitleList: JobTitle[]): DialogRef {
@@ -79,7 +73,7 @@ export class EmploymentService extends BaseGenericEService<Employment> {
         operation,
         jobTitleList
       },
-      { fullscreen: true }
+      {fullscreen: true}
     );
   }
 
@@ -94,7 +88,7 @@ export class EmploymentService extends BaseGenericEService<Employment> {
       'q-id=' + criteria.identificationNumber +
       '&passport-number=' + criteria.passportNumber +
       '&is-manger=' + criteria.isManager
-    )
+    );
   }
 
   @HasInterception
@@ -104,16 +98,16 @@ export class EmploymentService extends BaseGenericEService<Employment> {
   })
   bulkValidate(employees: Partial<Employee>[]): Observable<any> {
     const employeesList = employees.map((e: any) => {
-      const fakeObj = { ...e };
+      const fakeObj = {...e};
       const emp = {
         ...Empinterceptor.send(fakeObj),
         qId: fakeObj.identificationType == 1 ? e.identificationNumber : '-1',
         passportNumber: fakeObj.identificationType == 2 ? fakeObj.passportNumber : null
-      }
-      delete emp.identificationNumber
-      return emp
-    })
-    return this.http.post<any>(this.urlService.URLS.NPO_EMPLOYEE + '/bulk/validate', employeesList)
+      };
+      delete emp.identificationNumber;
+      return emp;
+    });
+    return this.http.post<any>(this.urlService.URLS.NPO_EMPLOYEE + '/bulk/validate', employeesList);
   }
 
   _getURLSegment(): string {

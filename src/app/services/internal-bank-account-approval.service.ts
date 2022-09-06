@@ -43,7 +43,7 @@ export class InternalBankAccountApprovalService extends BaseGenericEService<Inte
   interceptor: IModelInterceptor<InternalBankAccountApproval> = new InternalBankAccountApprovalInterceptor();
   serviceKey: keyof ILanguageKeys = 'menu_internal_bank_account_approval';
   caseStatusIconMap: Map<number, string> = new Map<number, string>();
-  searchColumns: string[] = ['fullSerial', 'subject', 'caseStatus', 'ouInfo', 'creatorInfo', 'createdOn'];
+  searchColumns: string[] = ['fullSerial', 'requestTypeInfo', 'subject', 'caseStatus', 'ouInfo', 'creatorInfo', 'createdOn'];
 
   constructor(public http: HttpClient,
               public dialog: DialogService,
@@ -79,33 +79,13 @@ export class InternalBankAccountApprovalService extends BaseGenericEService<Inte
     return this.urlService;
   }
 
-  getBankCtrlURLSegment(): string {
-    return this.urlService.URLS.BANK;
-  }
-
-  @CastResponse(()=> Bank)
-  private _loadBanks(): Observable<Bank[]> {
-    return this.http.get<any>(this.getBankCtrlURLSegment() + '/composite');
-  }
-
-  loadBanks() {
-    return this._loadBanks().pipe(map(response => {
-      let result: Bank[] = [];
-      response.forEach((r: any) => {
-        result.push((new Bank()).clone(r));
-      });
-      console.log('banks', result);
-      return result;
-    }));
-  }
-
   getBankAccountCtrlURLSegment(): string {
     return this.urlService.URLS.BANK_ACCOUNT;
   }
 
   @CastResponse(()=> BankAccount)
   private _loadBankAccounts(): Observable<BankAccount[]> {
-    return this.http.get<any>(this.getBankAccountCtrlURLSegment() + '/composite');
+    return this.http.get<any>(this.getBankAccountCtrlURLSegment() + '/lookup');
   }
 
   loadBankAccounts() {

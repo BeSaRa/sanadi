@@ -73,7 +73,7 @@ export class UrgentInterventionClosure extends LicenseApprovalModel<UrgentInterv
 
   searchFields: ISearchFieldsMap<UrgentInterventionClosure> = {
     ...dateSearchFields(['createdOn']),
-    ...infoSearchFields(['caseStatusInfo', 'ouInfo']),
+    ...infoSearchFields(['requestTypeInfo', 'caseStatusInfo', 'ouInfo']),
     ...normalSearchFields(['fullSerial', 'subject'])
   };
 

@@ -123,7 +123,7 @@ export class InternalProjectLicense extends LicenseApprovalModel<InternalProject
 
   searchFields: ISearchFieldsMap<InternalProjectLicense> = {
     ...dateSearchFields(['createdOn']),
-    ...infoSearchFields(['creatorInfo', 'caseStatusInfo', 'projectNameInfo', 'ouInfo']),
+    ...infoSearchFields(['requestTypeInfo', 'creatorInfo', 'caseStatusInfo', 'projectNameInfo', 'ouInfo']),
     ...normalSearchFields(['subject', 'fullSerial'])
   }
 

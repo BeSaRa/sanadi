@@ -53,7 +53,7 @@ export interface ILanguageKeys {
   manually: string;
   external_followup: string;
   internal_followup: string;
-  menu_reports: string
+  menu_reports: string;
   org_reject_task: string;
   please_select_organization_first: string;
   joint_relief_campaign_total_donations: string;
@@ -1123,6 +1123,7 @@ export interface ILanguageKeys {
   final_Notification: string;
   special_needs_handicap: string;
   menu_urgent_intervention_report: string;
+  menu_urgent_intervention_announcement: string;
   entities: string;
   intervention_fields: string;
   transfer_data: string;

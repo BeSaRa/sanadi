@@ -32,6 +32,7 @@ export class InternalProjectLicenseInterceptor implements IModelInterceptor<Inte
       model.componentList = model.componentList.map(x => internalProjectLicenseService.projectComponentInterceptor.receive(new ProjectComponent().clone(x)));
     }
 
+    model.requestTypeInfo && (model.requestTypeInfo = AdminResult.createInstance(model.requestTypeInfo));
     model.ouInfo = AdminResult.createInstance(isValidAdminResult(model.ouInfo) ? model.ouInfo : {});
     model.caseStatusInfo = AdminResult.createInstance(isValidAdminResult(model.caseStatusInfo) ? model.caseStatusInfo : {});
     model.creatorInfo = AdminResult.createInstance(isValidAdminResult(model.creatorInfo) ? model.creatorInfo : {});
@@ -92,6 +93,7 @@ export class InternalProjectLicenseInterceptor implements IModelInterceptor<Inte
     delete model.service;
     delete model.employeeService;
     delete model.taskDetails;
+    delete model.requestTypeInfo;
     delete model.caseStatusInfo;
     delete model.creatorInfo;
     delete model.projectNameInfo;

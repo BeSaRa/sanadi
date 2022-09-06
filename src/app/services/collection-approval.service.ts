@@ -27,7 +27,7 @@ export class CollectionApprovalService extends BaseGenericEService<CollectionApp
   jsonSearchFile: string = 'collection_approval_search.json';
   serviceKey: keyof ILanguageKeys = 'menu_collection_services_approval';
   caseStatusIconMap: Map<number, string> = new Map<number, string>();
-  searchColumns: string[] = ['fullSerial', 'subject', 'caseStatus', 'requestClassificationInfo', 'creatorInfo', 'ouInfo', 'createdOn'];
+  searchColumns: string[] = ['fullSerial', 'requestTypeInfo', 'subject', 'caseStatus', 'requestClassificationInfo', 'creatorInfo', 'ouInfo', 'createdOn'];
 
   _getModel() {
     return CollectionApproval;

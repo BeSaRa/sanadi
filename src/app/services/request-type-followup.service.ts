@@ -27,13 +27,14 @@ export class RequestTypeFollowupService {
     [CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL]: this.lookupService.listByCategory.BankRequestType,
     [CaseTypes.EMPLOYMENT]: this.lookupService.listByCategory.EmploymentRequestType,
     [CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN]: this.lookupService.listByCategory.RequestTypeNewOnly,
-    [CaseTypes.URGENT_INTERVENTION_REPORTING]: this.lookupService.listByCategory.UrgentInterventionAnnouncementRequestType,
+    [CaseTypes.URGENT_INTERVENTION_ANNOUNCEMENT]: this.lookupService.listByCategory.UrgentInterventionAnnouncementRequestType,
     [CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST]: this.lookupService.listByCategory.AffiliationRequestType,
     [CaseTypes.URGENT_INTERVENTION_CLOSURE]: this.lookupService.listByCategory.RequestTypeNewOnly,
     [CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION]: this.lookupService.listByCategory.UrgentInterventionFinancialRequestType,
     [CaseTypes.FOREIGN_COUNTRIES_PROJECTS]: this.lookupService.listByCategory.CollectionRequestType,
     [CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD]: this.lookupService.listByCategory.TransferringIndividualRequestType,
     [CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST]: [this.getNewRequestType()],
+    [CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP]: [this.getNewRequestType()],
   }
 
   constructor(private lookupService: LookupService) {

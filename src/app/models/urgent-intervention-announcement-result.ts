@@ -9,13 +9,13 @@ import { InterventionRegion } from '@app/models/intervention-region';
 import { InterventionField } from '@app/models/intervention-field';
 import { InterceptModel } from "@decorators/intercept-model";
 import {
-  UrgentInterventionReportResultInterceptor
-} from "@app/model-interceptors/urgent-intervention-report-result-interceptor";
+  UrgentInterventionAnnouncementResultInterceptor
+} from "@app/model-interceptors/urgent-intervention-announcement-result-interceptor";
 
-const { send, receive } = new UrgentInterventionReportResultInterceptor()
+const { send, receive } = new UrgentInterventionAnnouncementResultInterceptor()
 
 @InterceptModel({ receive, send })
-export class UrgentInterventionReportResult {
+export class UrgentInterventionAnnouncementResult {
   id!: string;
   createdOn!: string;
   lastModified!: string;

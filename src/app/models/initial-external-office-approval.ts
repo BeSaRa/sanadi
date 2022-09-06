@@ -45,7 +45,7 @@ export class InitialExternalOfficeApproval extends LicenseApprovalModel<InitialE
   service: InitialExternalOfficeApprovalService;
   searchFields: ISearchFieldsMap<InitialExternalOfficeApproval> = {
     ...dateSearchFields(['createdOn']),
-    ...infoSearchFields(['creatorInfo', 'caseStatusInfo', 'ouInfo']),
+    ...infoSearchFields(['requestTypeInfo', 'creatorInfo', 'caseStatusInfo', 'ouInfo']),
     ...normalSearchFields(['subject', 'fullSerial'])
   }
 

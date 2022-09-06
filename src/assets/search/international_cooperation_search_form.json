@@ -32,7 +32,7 @@
         "key": "competentDepartmentID",
         "selectOptions": {
           "options": [],
-          "loader": "department.loadDepartments",
+          "loader": "department.loadAsLookups",
           "bindValue": "id",
           "bindLabel": "basedOnLanguage"
         }
@@ -43,7 +43,7 @@
         "key": "country",
         "selectOptions": {
           "options": [],
-          "loader": "country.load",
+          "loader": "country.loadAsLookups",
           "bindValue": "id",
           "bindLabel": "basedOnLanguage"
         }

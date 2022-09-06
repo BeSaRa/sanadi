@@ -30,7 +30,7 @@ import {
 } from '@app/projects/pages/internal-bank-account-approval/internal-bank-account-approval.component';
 
 import { UrgentJointReliefCampaignComponent } from '@app/projects/pages/urgent-joint-relief-campaign/urgent-joint-relief-campaign.component';
-import { UrgentInterventionReportComponent } from '@app/modules/urgent-intervention/pages/urgent-intervention-report/urgent-intervention-report.component';
+import { UrgentInterventionAnnouncementComponent } from '@app/modules/urgent-intervention/pages/urgent-intervention-announcement/urgent-intervention-announcement.component';
 import {
   UrgentInterventionClosureComponent
 } from '@app/modules/urgent-intervention/pages/urgent-intervention-closure/urgent-intervention-closure.component';
@@ -40,6 +40,9 @@ import {
   TransferringIndividualFundsAbroadComponent
 } from '@app/projects/pages/transferring-individual-funds-abroad/transferring-individual-funds-abroad.component';
 import { CoordinationWithOrganizationsRequestComponent } from '@app/modules/general-services/pages/coordination-with-organizations-request/coordination-with-organizations-request.component';
+import {
+  UrgentInterventionLicenseFollowupComponent
+} from '@app/modules/urgent-intervention/pages/urgent-intervention-license-followup/urgent-intervention-license-followup.component';
 import { CharityOrganizationUpdateComponent } from '@app/modules/general-services/pages/charity-organization-update/charity-organization-update.component';
 
 @Injectable({
@@ -72,8 +75,9 @@ export class AutoRegisterService {
       DynamicComponentService.registerComponent('InternalBankAccountApprovalComponent', InternalBankAccountApprovalComponent);
       DynamicComponentService.registerComponent('EmploymentComponent', EmploymentComponent);
       DynamicComponentService.registerComponent('UrgentJointReliefCampaignComponent', UrgentJointReliefCampaignComponent);
-      DynamicComponentService.registerComponent('UrgentInterventionReportComponent', UrgentInterventionReportComponent);
+      DynamicComponentService.registerComponent('UrgentInterventionAnnouncementComponent', UrgentInterventionAnnouncementComponent);
       DynamicComponentService.registerComponent('UrgentInterventionClosureComponent', UrgentInterventionClosureComponent);
+      DynamicComponentService.registerComponent('UrgentInterventionLicenseFollowupComponent', UrgentInterventionLicenseFollowupComponent);
 
       DynamicComponentService.registerComponent('ExternalOrgAffiliationComponent', ExternalOrgAffiliationComponent);
       DynamicComponentService.registerComponent('UrgentInterventionFinancialNotificationComponent', UrgentInterventionFinancialNotificationComponent);

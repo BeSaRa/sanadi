@@ -84,7 +84,7 @@
         "label": "execution_country",
         "selectOptions": {
           "options": [],
-          "loader": "country.loadCountries",
+          "loader": "country.loadAsLookups",
           "bindValue": "id",
           "bindLabel": "basedOnLanguage"
         }
@@ -95,7 +95,7 @@
         "label": "beneficiary_country",
         "selectOptions": {
           "options": [],
-          "loader": "country.loadCountries",
+          "loader": "country.loadAsLookups",
           "bindValue": "id",
           "bindLabel": "basedOnLanguage"
         }

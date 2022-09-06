@@ -26,6 +26,7 @@ import {NpoEmployee} from '@app/models/npo-employee';
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 import {OpenFrom} from '@app/enums/open-from.enum';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {BankService} from '@services/bank.service';
 
 @Component({
   selector: 'internal-bank-account-approval',
@@ -71,6 +72,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
               private dialog: DialogService,
               private toast: ToastService,
               private licenseService: LicenseService,
+              private bankService: BankService,
               private employeeService: EmployeeService) {
     super();
   }
@@ -291,7 +293,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   }
 
   loadBanks() {
-    this.service.loadBanks().subscribe(list => {
+    this.bankService.loadAsLookups().subscribe(list => {
       this.banks = list;
     });
   }

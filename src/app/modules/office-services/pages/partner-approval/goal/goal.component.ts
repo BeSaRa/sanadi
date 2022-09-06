@@ -277,7 +277,7 @@ export class GoalComponent implements OnInit, OnDestroy {
   }
 
   private loadOCHADACClassifications() {
-    return this.dacOchaService.load()
+    return this.dacOchaService.loadAsLookups()
       .pipe(
         map(list => {
           return list.filter(model => !model.parentId);

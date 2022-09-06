@@ -12,9 +12,12 @@ export class ForeignCountriesProjectsInterceptor implements IModelInterceptor<Fo
     model.projectNeeds?.forEach((e: Partial<ProjectNeed>) => {
       delete e.searchFields;
     });
+
+    delete model.requestTypeInfo;
     return model;
   }
   receive(model: ForeignCountriesProjects): ForeignCountriesProjects {
+    model.requestTypeInfo && (model.requestTypeInfo = AdminResult.createInstance(model.requestTypeInfo));
     model.projectNeeds = model.projectNeeds.map(e => (new ProjectNeed()).clone({ ...e }));
 
     return model;

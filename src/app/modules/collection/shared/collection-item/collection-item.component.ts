@@ -398,7 +398,7 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
       .pipe(map(_ => !(!this.latitude.value || !this.longitude.value))) // if no lat/lng return false
       .pipe(tap(validLatLong => !validLatLong && this.longitudeLatitudeInvalidMessage()))
       .pipe(filter((val) => val)) // allow only the valid form
-      .pipe(tap(_ => console.log(this.model.requestType, CollectionRequestType.NEW)))
+      // .pipe(tap(_ => console.log(this.model.requestType, CollectionRequestType.NEW)))
       .pipe(map(_ => ((this.model.requestType !== CollectionRequestType.NEW) ? this.oldLicenseFullSerial.value : true)))
       .pipe(tap(validSelected => (!validSelected && this.selectedLicenseInvalidMessage())))
       .pipe(filter((val) => val)); // allow only the valid form

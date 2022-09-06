@@ -1,5 +1,5 @@
 import {Component, Inject} from '@angular/core';
-import { ILanguageKeys } from '@app/interfaces/i-language-keys';
+import { ILanguageKeys } from '@contracts/i-language-keys';
 import {LangService} from '@services/lang.service';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {DialogRef} from '@app/shared/models/dialog-ref';

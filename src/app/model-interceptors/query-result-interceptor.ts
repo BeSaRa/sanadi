@@ -1,6 +1,6 @@
-import {IModelInterceptor} from '../interfaces/i-model-interceptor';
-import {QueryResult} from '../models/query-result';
-import {AdminResult} from '../models/admin-result';
+import { IModelInterceptor } from '@contracts/i-model-interceptor';
+import { QueryResult } from '../models/query-result';
+import { AdminResult } from '../models/admin-result';
 
 export class QueryResultInterceptor implements IModelInterceptor<QueryResult> {
   send(model: Partial<QueryResult>): Partial<QueryResult> {
@@ -20,7 +20,7 @@ export class QueryResultInterceptor implements IModelInterceptor<QueryResult> {
     try {
       model.setItemRoute();
     } catch (e) {
-      console.log('model without his Service', model);
+
     }
     return model;
   }

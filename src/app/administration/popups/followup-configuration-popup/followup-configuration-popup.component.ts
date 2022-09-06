@@ -15,6 +15,7 @@ import {Team} from '@app/models/team';
 import {FollowUpType} from '@app/enums/followUp-type.enum';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {RequestTypeFollowupService} from '@services/request-type-followup.service';
+import {CaseTypes} from '@app/enums/case-types.enum';
 
 @Component({
   selector: 'followup-configuration-popup',
@@ -26,10 +27,15 @@ export class FollowupConfigurationPopupComponent extends AdminGenericDialog<Foll
   model: FollowupConfiguration;
   form!: UntypedFormGroup;
   operation: OperationTypes;
-  requestTypes: Lookup[] = []
+  requestTypes: Lookup[] = [];
   followUpTypes: Lookup[] = this.lookupService.listByCategory.FollowUpType;
   teams!: Team[];
   saveVisible = true;
+  internalFollowupServices: CaseTypes[] = [
+    CaseTypes.INQUIRY,
+    CaseTypes.CONSULTATION,
+    CaseTypes.INTERNATIONAL_COOPERATION
+  ];
 
   constructor(public fb: UntypedFormBuilder,
               public dialogRef: DialogRef,
@@ -42,6 +48,12 @@ export class FollowupConfigurationPopupComponent extends AdminGenericDialog<Foll
     this.model = data.model;
     this.operation = data.operation;
     this.requestTypes = this.requestTypeFollowupService.serviceRequestTypes[this.model.caseType] || [this.requestTypeFollowupService.getNewRequestType()];
+    if (this.isInternalFollowupService(this.model.caseType)) {
+      this.followUpTypes = this.followUpTypes.filter(x => x.lookupKey === FollowUpType.INTERNAL);
+      if (this.operation === OperationTypes.CREATE) {
+        this.model.followUpType = FollowUpType.INTERNAL;
+      }
+    }
   }
 
   get readonly(): boolean {
@@ -84,7 +96,7 @@ export class FollowupConfigurationPopupComponent extends AdminGenericDialog<Foll
   buildForm(): void {
     this.form = this.fb.group(this.model.buildForm(true));
 
-    if (this.readonly){
+    if (this.readonly) {
       this.form.disable();
       this.saveVisible = false;
       this.validateFieldsVisible = false;
@@ -112,11 +124,11 @@ export class FollowupConfigurationPopupComponent extends AdminGenericDialog<Foll
   private listenToFollowUpTypeChange() {
     this.followUpType.valueChanges.subscribe(value => {
       if (value === FollowUpType.INTERNAL) {
-        this.responsibleTeam.setValue('')
+        this.responsibleTeam.setValue('');
         this.responsibleTeam.disable();
         this.concernedTeam.enable();
       } else {
-        this.concernedTeam.setValue('')
+        this.concernedTeam.setValue('');
         this.concernedTeam.disable();
         this.responsibleTeam.enable();
       }
@@ -124,7 +136,7 @@ export class FollowupConfigurationPopupComponent extends AdminGenericDialog<Foll
       this.concernedTeam.updateValueAndValidity();
       this.responsibleTeam.setValidators(value === FollowUpType.EXTERNAL ? [CustomValidators.required] : []);
       this.responsibleTeam.updateValueAndValidity();
-    })
+    });
   }
 
   get popupTitle(): string {
@@ -136,5 +148,9 @@ export class FollowupConfigurationPopupComponent extends AdminGenericDialog<Foll
       return this.lang.map.view;
     }
     return '';
+  }
+
+  private isInternalFollowupService(caseType: number): boolean {
+    return this.internalFollowupServices.includes(caseType);
   }
 }

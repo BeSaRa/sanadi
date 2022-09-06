@@ -294,8 +294,7 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
   }
 
   private loadCountries() {
-    this.countryService
-      .load()
+    this.countryService.loadAsLookups()
       .pipe(takeUntil(this.destroy$))
       .subscribe((countries) => this.countries = countries);
   }
@@ -321,7 +320,7 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
   }
 
   private loadOrganizations() {
-    this.orgService.load()
+    this.orgService.loadAsLookups()
       .pipe(takeUntil(this.destroy$))
       .subscribe((organizations) => {
         this.organizations = organizations;
