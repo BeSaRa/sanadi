@@ -19,7 +19,7 @@ import {
 } from '@app/projects/popups/transfer-funds-abroad-approve-task-popup/transfer-funds-abroad-approve-task-popup.component';
 import {Observable} from 'rxjs';
 import {ReceiverOrganization} from '@app/models/receiver-organization';
-import {SelectReceiverEntityPopupComponent} from '@app/projects/pages/select-receiver-entity-popup/select-receiver-entity-popup.component';
+import {SelectReceiverEntityPopupComponent} from '@app/projects/popups/select-receiver-entity-popup/select-receiver-entity-popup.component';
 import {ReceiverPerson} from '@app/models/receiver-person';
 import {
   TransferFundsAbroadCompleteTaskPopupComponent

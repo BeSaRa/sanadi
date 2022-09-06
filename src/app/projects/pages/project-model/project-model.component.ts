@@ -479,13 +479,13 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   }
 
   private loadCountries(): void {
-    this.countryService.load()
+    this.countryService.loadAsLookups()
       .pipe(takeUntil(this.destroy$))
       .subscribe((countries) => this.countries = countries);
   }
 
   private loadGoals(): void {
-    this.sdgService.load().subscribe((goals) => this.goals = goals);
+    this.sdgService.loadAsLookups().subscribe((goals) => this.goals = goals);
   }
 
   private loadDacMainOcha(forceLoad: boolean = false): Observable<AdminLookup[]> {
@@ -494,7 +494,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     }
 
     return this.dacOchaService
-      .load() //TODO: later we can filter the deactivated in case if it is new request
+      .loadAsLookups() //TODO: later we can filter the deactivated in case if it is new request
       .pipe(
         takeUntil(this.destroy$),
         map(list => {

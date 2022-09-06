@@ -879,7 +879,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
   }
 
   loadGoalsList(): void {
-    this.sdGoalService.load()
+    this.sdGoalService.loadAsLookups()
       .subscribe((data) => {
         this.goalsList = data;
       })

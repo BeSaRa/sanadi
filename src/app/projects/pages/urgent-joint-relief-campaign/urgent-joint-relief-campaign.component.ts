@@ -117,7 +117,7 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
   }
 
   loadOrgUnits() {
-    this.orgUnitService.loadComposite().subscribe((list) => {
+    this.orgUnitService.loadAsLookups().subscribe((list) => {
       this.organizationUnits = list;
     });
   }
@@ -144,7 +144,7 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
   }
 
   loadCountries() {
-    this.countryService.loadComposite().subscribe((list) => {
+    this.countryService.loadAsLookups().subscribe((list) => {
       this.countries = list;
     });
   }
