@@ -30,7 +30,7 @@
 
   <ng-container cdkColumnDef="actions"  >
     <th [hidden]="!canView && !canDelete" cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
-    <td cdk-cell *cdkCellDef="let row;  let i = index = index" class="table-actions">
+    <td cdk-cell *cdkCellDef="let row;  let i = index " class="table-actions">
       <div class="d-flex flex-row">
         <button (click)="view($event, row)"
         [hidden]="!canView"
