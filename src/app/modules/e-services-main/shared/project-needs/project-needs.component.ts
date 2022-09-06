@@ -1,21 +1,15 @@
-import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {
-  AbstractControl,
-  UntypedFormArray,
-  UntypedFormBuilder,
-  UntypedFormGroup,
-} from '@angular/forms';
-import {CaseTypes} from '@app/enums/case-types.enum';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {ProjectNeed, ProjectNeeds} from '@app/models/project-needs';
-import {DialogService} from '@app/services/dialog.service';
-import {LangService} from '@app/services/lang.service';
-import {ToastService} from '@app/services/toast.service';
-import {ReadinessStatus} from '@app/types/types';
-import {BehaviorSubject, Subject} from 'rxjs';
-import {filter, map, take, takeUntil} from 'rxjs/operators';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {BeneficiaryIncomePeriodicEnum} from '@app/enums/periodic-payment.enum';
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, } from '@angular/forms';
+import { CaseTypes } from '@app/enums/case-types.enum';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { ProjectNeed, ProjectNeeds } from '@app/models/project-needs';
+import { DialogService } from '@app/services/dialog.service';
+import { LangService } from '@app/services/lang.service';
+import { ToastService } from '@app/services/toast.service';
+import { ReadinessStatus } from '@app/types/types';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { filter, map, take, takeUntil } from 'rxjs/operators';
+import { CustomValidators } from '@app/validators/custom-validators';
 
 @Component({
   selector: 'project-needs',
@@ -141,7 +135,7 @@ export class ProjectNeedsComponent implements OnInit, AfterViewInit {
 
   private updateForm(projectNeed: ProjectNeed | undefined): void {
     const projectNeedsFormArray = this.projectNeedsForm;
-    // console.log(projectNeed);
+
     projectNeedsFormArray.clear();
     if (projectNeed) {
       if (this.viewOnly) {

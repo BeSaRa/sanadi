@@ -1,6 +1,6 @@
 import { OrgUnit } from '../models/org-unit';
-import { hasValidLength, isValidValue } from '../helpers/utils';
-import { DateUtils } from '../helpers/date-utils';
+import { hasValidLength, isValidValue } from '@helpers/utils';
+import { DateUtils } from '@helpers/date-utils';
 import { IModelInterceptor } from '@app/interfaces/i-model-interceptor';
 
 export class OrganizationUnitInterceptor implements IModelInterceptor<OrgUnit> {
@@ -15,7 +15,7 @@ export class OrganizationUnitInterceptor implements IModelInterceptor<OrgUnit> {
         model.arabicBoardMembers = JSON.parse(model.arabicBoardMembers);
       }
     } catch (e) {
-      console.log('model.arabicBoardMembers has parsing problem');
+
       model.arabicBoardMembers = []
     }
     try {
@@ -23,7 +23,7 @@ export class OrganizationUnitInterceptor implements IModelInterceptor<OrgUnit> {
         model.enBoardMembers = JSON.parse(model.enBoardMembers);
       }
     } catch (e) {
-      console.log('model.enBoardMembers has parsing problem');
+
       model.enBoardMembers = []
     }
 
