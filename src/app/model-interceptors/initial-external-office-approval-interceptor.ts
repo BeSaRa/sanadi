@@ -19,6 +19,7 @@ export class InitialExternalOfficeApprovalInterceptor implements IModelIntercept
 
   receive(model: InitialExternalOfficeApproval): InitialExternalOfficeApproval {
     model.taskDetails = (new TaskDetails()).clone(model.taskDetails);
+    model.requestTypeInfo && (model.requestTypeInfo = AdminResult.createInstance(model.requestTypeInfo));
     model.caseStatusInfo = AdminResult.createInstance(model.caseStatusInfo);
     model.creatorInfo = AdminResult.createInstance(model.creatorInfo);
     model.ouInfo = AdminResult.createInstance(model.ouInfo);
@@ -49,5 +50,6 @@ export class InitialExternalOfficeApprovalInterceptor implements IModelIntercept
     delete model.generalManagerDecisionInfo;
     delete model.reviewerDepartmentDecisionInfo;
     delete model.deductionPercent;
+    delete model.requestTypeInfo;
   }
 }

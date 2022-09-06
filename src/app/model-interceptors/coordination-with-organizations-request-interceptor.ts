@@ -69,7 +69,7 @@ export class CoordinationWithOrganizationsRequestInterceptor
     delete model.ouInfo;
     delete model.employeeService;
     delete model.domainInfo;
-    delete model.approved
+    delete model.approved;
     return model;
   }
   receive(
@@ -83,6 +83,7 @@ export class CoordinationWithOrganizationsRequestInterceptor
     );
     model.taskDetails = new TaskDetails().clone(model.taskDetails);
 
+    model.requestTypeInfo && (model.requestTypeInfo = AdminResult.createInstance(model.requestTypeInfo));
     model.domainInfo = AdminResult.createInstance(isValidAdminResult(model.domainInfo) ? model.domainInfo : {});
 
     model.participatingOrganizaionList.forEach(x=>{

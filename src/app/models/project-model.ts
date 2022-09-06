@@ -11,8 +11,12 @@ import {dateSearchFields} from "@app/helpers/date-search-fields";
 import {infoSearchFields} from "@app/helpers/info-search-fields";
 import {normalSearchFields} from "@app/helpers/normal-search-fields";
 import {CaseTypes} from '@app/enums/case-types.enum';
+import {ProjectModelInterceptor} from '@app/model-interceptors/project-model-interceptor';
+import {InterceptModel} from '@decorators/intercept-model';
 
 // noinspection JSUnusedGlobalSymbols
+const {send, receive} = new ProjectModelInterceptor();
+@InterceptModel({send, receive})
 export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
   caseType: number = CaseTypes.EXTERNAL_PROJECT_MODELS;
   organizationId!: number;

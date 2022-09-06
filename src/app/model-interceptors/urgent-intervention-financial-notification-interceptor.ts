@@ -9,6 +9,7 @@ import { IModelInterceptor } from '@contracts/i-model-interceptor';
 
 export class UrgentInterventionFinancialNotificationInterceptor implements IModelInterceptor<UrgentInterventionFinancialNotification> {
   receive(model: UrgentInterventionFinancialNotification): UrgentInterventionFinancialNotification {
+    model.requestTypeInfo && (model.requestTypeInfo = AdminResult.createInstance(model.requestTypeInfo));
     model.beneficiaryCountryInfo && (model.beneficiaryCountryInfo = AdminResult.createInstance(model.beneficiaryCountryInfo));
     model.executionCountryInfo && (model.executionCountryInfo = AdminResult.createInstance(model.executionCountryInfo));
 
@@ -37,6 +38,7 @@ export class UrgentInterventionFinancialNotificationInterceptor implements IMode
       model.interventionFieldList = model.interventionFieldList.map(x => service.interventionFieldInterceptor.send(x) as InterventionField);
     }
     model.amount && (model.amount = +model.amount);
+    delete model.requestTypeInfo;
     delete model.beneficiaryCountryInfo;
     delete model.executionCountryInfo;
     return model;

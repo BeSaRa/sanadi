@@ -4,6 +4,7 @@ import {DateUtils} from '@helpers/date-utils';
 import {FactoryService} from '@services/factory.service';
 import {EmployeeService} from '@services/employee.service';
 import {ParticipantOrganization} from '@app/models/participant-organization';
+import {AdminResult} from '@app/models/admin-result';
 
 export class UrgentJointReliefCampaignInterceptor implements IModelInterceptor<UrgentJointReliefCampaign> {
   send(model: Partial<UrgentJointReliefCampaign>): Partial<UrgentJointReliefCampaign> {
@@ -31,6 +32,7 @@ export class UrgentJointReliefCampaignInterceptor implements IModelInterceptor<U
 
     delete model.donation;
     delete model.workStartDate;
+    delete model.requestTypeInfo;
     return model;
   }
 
@@ -38,6 +40,7 @@ export class UrgentJointReliefCampaignInterceptor implements IModelInterceptor<U
     const employeeService = FactoryService.getService('EmployeeService') as EmployeeService;
     model.licenseStartDate = DateUtils.changeDateToDatepicker(model.licenseStartDate);
     model.licenseEndDate = DateUtils.changeDateToDatepicker(model.licenseEndDate);
+    model.requestTypeInfo && (model.requestTypeInfo = AdminResult.createInstance(model.requestTypeInfo));
 
     // to set donation and workStartDate for login user's organization
     if(employeeService.isExternalUser()) {

@@ -7,7 +7,8 @@ import { ContactOfficerInterceptor } from './ContactOfficerInterceptor';
 import { ExecutiveManagementInterceptor } from './executive-management-interceptor';
 import { BankAccountInterceptor } from './bank-account-interceptor';
 import { ExternalOrgAffiliation } from './../models/external-org-affiliation';
-import { IModelInterceptor } from './../interfaces/i-model-interceptor';
+import { IModelInterceptor } from '@contracts/i-model-interceptor';
+import {AdminResult} from '@app/models/admin-result';
 
 const bankAccountInterceptor = new BankAccountInterceptor();
 const executiveManagementInterceptor = new ExecutiveManagementInterceptor();
@@ -36,6 +37,7 @@ export class ExternalOrgAffiliationInterceptor implements IModelInterceptor<Exte
     return model;
   }
   receive(model: ExternalOrgAffiliation): ExternalOrgAffiliation {
+    model.requestTypeInfo && (model.requestTypeInfo = AdminResult.createInstance(model.requestTypeInfo));
     model.followUpDate = DateUtils.changeDateToDatepicker(model.followUpDate);
     model.bankAccountDTOs = model.bankAccountDTOs?.map(ba => bankAccountInterceptor.receive(new BankAccount().clone(ba)))
     model.executiveManagementDTOs = model.executiveManagementDTOs?.map(em => executiveManagementInterceptor.receive(new ExecutiveManagement().clone(em)))
