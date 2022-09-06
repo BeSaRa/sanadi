@@ -319,7 +319,7 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
   organizationUnits: OrgUnit[] = [];
   loadOrgUnits(reset = false) {
     this.orgUnitService
-      .getOrganizationUnitsByStatus(1)
+      .getActiveOrgUnits()
       .pipe(
         map((list) => {
           if (!!reset) {
