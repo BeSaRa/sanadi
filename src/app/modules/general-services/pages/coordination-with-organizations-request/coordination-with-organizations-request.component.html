@@ -118,7 +118,7 @@
       <organizaion-officer #organizationOfficersTap [list]="model?.organizaionOfficerList || []"
 
         [organizationUsers]="organizationUsers" (readyEvent)="organizationOfficersTabStatus = $event"
-        [canUpdate]="isCharityUser" [isClaimed]="isClaimed?? true" [currentUserOrgId]="currentUserOrgId">
+        [canUpdate]="isCharityUser" [isClaimed]="model?.isClaimed()?? true" [currentUserOrgId]="currentUserOrgId">
       </organizaion-officer>
 
     </ng-template>
@@ -131,7 +131,7 @@
         [orgId]="currentUserOrgId"
         [trainingLanguages]="trainingLanguages"
         [trainingWayes]="trainingWayes" [recommendedWayes]="recommendedWayes" [readonly]=" isEditAllowed()"
-        (readyEvent)="buildingAbilityTabStatus = $event" [canUpdate]="isCharityUser" [isClaimed]="isClaimed?? true">
+        (readyEvent)="buildingAbilityTabStatus = $event" [canUpdate]="isCharityUser" [isClaimed]="model?.isClaimed()?? true">
       </building-ability>
     </ng-template>
     <ng-template #effective_coordination_capabilities>
@@ -139,7 +139,7 @@
         [list]="model?.effectiveCoordinationCapabilities || []" [organizationWayes]="organizationWayes"
         [organizationUnits]="organizationUnits" [readonly]=" isEditAllowed()" [canUpdate]="isCharityUser"
         [orgId]="currentUserOrgId"
-        [isClaimed]="isClaimed?? true" (readyEvent)="effectiveCoordinationCapabilitiesTabStatus = $event">
+        [isClaimed]="model?.isClaimed()?? true" (readyEvent)="effectiveCoordinationCapabilitiesTabStatus = $event">
       </effective-coordination-capabilities>
     </ng-template>
 
@@ -148,7 +148,7 @@
         [readonly]=" isEditAllowed()" (readyEvent)="ResearchAndStudiesTabStatus = $event"
         [orgId]="currentUserOrgId"
         [canUpdate]="isCharityUser"
-        [isClaimed]="isClaimed?? true">
+        [isClaimed]="model?.isClaimed()?? true">
       </app-research-and-studies>
     </ng-template>
 
