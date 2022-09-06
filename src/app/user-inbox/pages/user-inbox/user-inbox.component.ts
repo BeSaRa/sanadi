@@ -614,7 +614,6 @@ export class UserInboxComponent implements OnInit, OnDestroy {
     try {
       serviceKey = this.inboxService.getService(service).serviceKey;
     } catch (e) {
-      console.log(service);
       return '';
     }
     return this.lang.getLocalByKey(serviceKey).getName();
