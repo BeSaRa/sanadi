@@ -1300,4 +1300,10 @@ export interface ILanguageKeys {
   id_date: string;
   id_expiry_date: string;
   real_benefeciaries: string;
+  menu_urgent_intervention_license_followup: string;
+  execution_date: string;
+  reports: string;
+  lbl_edit_report: string;
+  lbl_add_report: string;
+  approve: string;
 }

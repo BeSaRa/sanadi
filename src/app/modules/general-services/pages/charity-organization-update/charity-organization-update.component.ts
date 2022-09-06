@@ -291,7 +291,7 @@ export class CharityOrganizationUpdateComponent
   }
   loadActivityTypes(): void {
     this.adminLookupService
-      .loadAsLookup(AdminLookupTypeEnum.ACTIVITY_TYPE)
+      .loadAsLookups(AdminLookupTypeEnum.ACTIVITY_TYPE)
       .subscribe((list) => {
         this.activityTypes = list;
       });
