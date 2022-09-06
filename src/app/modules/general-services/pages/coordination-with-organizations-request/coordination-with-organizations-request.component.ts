@@ -401,7 +401,7 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
     return (
       !this.model?.id ||
       (!!this.model?.id && this.model.canCommit()) ||
-      this.employeeService.isLicensingUser()
+      (this.employeeService.isLicensingUser() && !this.isInitialApproved )
     );
   }
 
