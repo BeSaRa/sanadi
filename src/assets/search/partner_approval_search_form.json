@@ -58,7 +58,7 @@
         "label": "lbl_organization",
         "selectOptions": {
           "options": [],
-          "loader": "organization.load",
+          "loader": "organization.loadAsLookups",
           "bindValue": "id",
           "bindLabel": "basedOnLanguage"
         }
@@ -98,7 +98,7 @@
         },
         "selectOptions": {
           "options": [],
-          "loader": "country.load",
+          "loader": "country.loadAsLookups",
           "bindValue": "id",
           "bindLabel": "basedOnLanguage"
         }
