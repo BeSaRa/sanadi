@@ -218,7 +218,7 @@ export class UserSecurityComponent implements OnInit, OnDestroy {
     this._operation
       .pipe(takeUntil(this.destroy$))
       .pipe(distinctUntilChanged())
-      .pipe(filter(val => val === OperationTypes.UPDATE && this.model.isExternal()))
+      .pipe(filter(val => val !== OperationTypes.CREATE && this.model.isExternal()))
       .subscribe(() => {
         this.loadTeamsAndSecurity();
       })
