@@ -549,7 +549,7 @@ export class UrgentInterventionClosureComponent extends EServicesGenericComponen
   }
 
   private loadCountries(): void {
-    this.countryService.load()
+    this.countryService.loadAsLookups()
       .pipe(takeUntil(this.destroy$))
       .subscribe((countries) => this.countriesList = countries);
   }

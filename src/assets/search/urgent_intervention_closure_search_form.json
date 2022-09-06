@@ -69,7 +69,7 @@
         "label": "lbl_organization",
         "selectOptions": {
           "options": [],
-          "loader": "organization.load",
+          "loader": "organization.loadAsLookups",
           "bindValue": "id",
           "bindLabel": "basedOnLanguage"
         }
