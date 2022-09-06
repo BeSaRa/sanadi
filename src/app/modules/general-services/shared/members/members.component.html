@@ -2,8 +2,9 @@
   <div
     *ngFor="let control of controls"
     class="col-sm-6 col-md-4 mb-4 position-relative"
+    [ngSwitch]="control.type"
   >
-    <ng-container *ngIf="!!control.load || !!control.load$; else normalInput">
+    <ng-container *ngSwitchCase="'dropdown'">
       <div>
         <label
           [asteriskIfRequired]="control.controlName"
@@ -23,7 +24,9 @@
           [formControlName]="control.controlName"
         >
           <ng-option
-            *ngFor="let type of control.load$ | async"
+            *ngFor="
+              let type of control.load$ ? (control.load$ | async) : control.load
+            "
             [value]="type.id"
             >{{ type.getName() }}</ng-option
           >
@@ -33,7 +36,7 @@
         ></app-field-error-message>
       </div>
     </ng-container>
-    <ng-template #normalInput>
+    <ng-container *ngSwitchCase="'text'">
       <label
         [asteriskIfRequired]="control.controlName"
         [for]="control.controlName"
@@ -51,31 +54,33 @@
       <app-field-error-message
         [controlName]="control.controlName"
       ></app-field-error-message>
-    </ng-template>
-  </div>
-  <div class="col-sm-6 col-md-4 mb-4 position-relative">
-    <label
-      asteriskIfRequired="joinDate"
-      for="joinDate"
-      class="form-label"
-      validationClasses="joinDate"
-      >{{ lang.map.date }}</label
-    >
-    <div class="input-group">
-      <i class="input-group-text mdi mdi-calendar"></i>
-      <div
-        class="form-control"
-        formControlName="joinDate"
-        [ngClass]="{ 'input-disabled': readonly }"
-        id="joinDate"
-        [options]="datepickerOptionsMap.joinDate"
-        (click)="!readonly && dpjoinDate.toggleCalendar()"
-        #dpjoinDate="angular-mydatepicker"
-        angular-mydatepicker
-        validationClasses="joinDate"
-      ></div>
-      <app-field-error-message controlName="joinDate"></app-field-error-message>
-    </div>
+    </ng-container>
+    <ng-container *ngSwitchCase="'date'">
+      <label
+        [asteriskIfRequired]="control.controlName"
+        [for]="control.controlName"
+        class="form-label"
+        [validationClasses]="control.controlName"
+        >{{ lang.map.date }}</label
+      >
+      <div class="input-group">
+        <i class="input-group-text mdi mdi-calendar"></i>
+        <div
+          class="form-control"
+          [formControlName]="control.controlName"
+          [ngClass]="{ 'input-disabled': readonly }"
+          [id]="control.controlName"
+          [options]="datepickerOptionsMap[control.controlName]"
+          (click)="!readonly && dp.toggleCalendar()"
+          #dp="angular-mydatepicker"
+          angular-mydatepicker
+          [validationClasses]="control.controlName"
+        ></div>
+        <app-field-error-message
+          [controlName]="control.controlName"
+        ></app-field-error-message>
+      </div>
+    </ng-container>
   </div>
   <div class="d-flex flex-row align-items-center justify-content-center">
     <button
@@ -120,12 +125,12 @@
           </th>
           <td cdk-cell *cdkCellDef="let row">{{ row.fullName }}</td>
         </ng-container>
-        <ng-container cdkColumnDef="identificationNumber">
+        <ng-container cdkColumnDef="qid">
           <th cdk-header-cell sortable-header *cdkHeaderCellDef>
             {{ lang.map.personal_number }}
           </th>
           <td cdk-cell *cdkCellDef="let row">
-            {{ row.identificationNumber }}
+            {{ row.qid }}
           </td>
         </ng-container>
         <ng-container cdkColumnDef="jobTitleId">
@@ -157,10 +162,14 @@
           <th cdk-header-cell *cdkHeaderCellDef>
             {{ lang.map.lbl_actions }}
           </th>
-          <td cdk-cell *cdkCellDef="let row" class="table-actions">
-            <!-- <div class="d-flex flex-row">
+          <td
+            cdk-cell
+            *cdkCellDef="let row; let i = index"
+            class="table-actions"
+          >
+            <div class="d-flex flex-row">
               <button
-                (click)="removeOfficer($event, row)"
+                (click)="removeOne($event, row, i)"
                 tooltip="{{ lang.map.btn_remove }}"
                 class="btn btn-link outline-none"
                 [disabled]="readonly"
@@ -168,14 +177,14 @@
                 <i class="mdi mdi-close-box"></i>
               </button>
               <button
-                (click)="selectOfficer($event, row)"
+                (click)="selectOne($event, row, i)"
                 tooltip="{{ lang.map.btn_edit }}"
                 class="btn btn-link outline-none"
                 [disabled]="readonly"
               >
                 <i class="mdi mdi-pen"></i>
               </button>
-            </div> -->
+            </div>
           </td>
         </ng-container>
         <tr cdk-header-row *cdkHeaderRowDef="columns"></tr>

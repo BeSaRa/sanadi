@@ -5,4 +5,5 @@ export interface ControlWrapper {
   label: string;
   load?: any[];
   load$?: Observable<any[]>;
+  type: 'text' | 'dropdown' | 'date';
 }

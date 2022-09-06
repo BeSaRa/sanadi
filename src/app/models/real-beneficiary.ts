@@ -1,6 +1,16 @@
+import { InterceptModel } from '@app/decorators/decorators/intercept-model';
+import { RealBeneficiaryInterceptor } from '@app/model-interceptors/real-beneficiary-interceptors';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { IMyDateModel } from 'angular-mydatepicker';
 import { AdminResult } from './admin-result';
 import { SearchableCloneable } from './searchable-cloneable';
 
+const { receive, send } = new RealBeneficiaryInterceptor()
+
+
+@InterceptModel({
+  receive, send
+})
 export class RealBeneficiary extends SearchableCloneable<RealBeneficiary> {
   updatedBy!: number;
   clientData!: string;
@@ -8,7 +18,7 @@ export class RealBeneficiary extends SearchableCloneable<RealBeneficiary> {
   orgId!: number;
   arName!: string;
   enName!: string;
-  birthDate!: string;
+  birthDate!: string | IMyDateModel;
   birthLocation!: string;
   nationality!: number;
   zoneNumber!: string;
@@ -17,15 +27,129 @@ export class RealBeneficiary extends SearchableCloneable<RealBeneficiary> {
   address!: string;
   qid!: string;
   passportNumber!: string;
-  iDDate!: string;
-  passportDate!: string;
-  iDExpiryDate!: string;
-  passportExpiryDate!: string;
-  startDate!: string;
-  lastUpdateDate!: string;
+  iDDate!: string | IMyDateModel;
+  passportDate!: string | IMyDateModel;
+  iDExpiryDate!: string | IMyDateModel;
+  passportExpiryDate!: string | IMyDateModel;
+  startDate!: string | IMyDateModel;
+  lastUpdateDate!: string | IMyDateModel;
   id!: number;
-  iddate!: string;
-  idexpiryDate!: string;
+  iddate!: string | IMyDateModel;
+  idexpiryDate!: string | IMyDateModel;
   nationalityInfo!: AdminResult;
 
+  buildForm(controls = true) {
+    const {
+      arName,
+      enName,
+      birthDate,
+      birthLocation,
+      nationality,
+      address,
+      streetNumber,
+      zoneNumber,
+      buildingNumber,
+      qid,
+      passportNumber,
+      iDDate,
+      idexpiryDate,
+      passportDate,
+      iDExpiryDate,
+      startDate,
+      lastUpdateDate,
+    } = this;
+    return {
+      arName: controls
+        ? [
+          arName,
+          [
+            CustomValidators.required,
+            CustomValidators.maxLength(
+              CustomValidators.defaultLengths.ARABIC_NAME_MAX
+            ),
+            CustomValidators.pattern('AR_ONLY'),
+            CustomValidators.minLength(
+              CustomValidators.defaultLengths.MIN_LENGTH
+            ),
+          ],
+        ]
+        : arName,
+      enName: controls
+        ? [
+          enName,
+          [
+            CustomValidators.required,
+            CustomValidators.maxLength(
+              CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+            ),
+            CustomValidators.pattern('ENG_ONLY'),
+            CustomValidators.minLength(
+              CustomValidators.defaultLengths.MIN_LENGTH
+            ),
+          ],
+        ]
+        : enName,
+      birthDate: controls
+        ? [birthDate, [CustomValidators.required]]
+        : birthDate,
+      birthLocation: controls
+        ? [
+          birthLocation,
+          [
+            CustomValidators.required,
+            CustomValidators.minLength(
+              CustomValidators.defaultLengths.MIN_LENGTH
+            ),
+          ],
+        ]
+        : birthLocation,
+      nationality: controls
+        ? [nationality, [CustomValidators.required]]
+        : nationality,
+      address: controls
+        ? [
+          address,
+          [
+            CustomValidators.required,
+            CustomValidators.minLength(
+              CustomValidators.defaultLengths.MIN_LENGTH
+            ),
+          ],
+        ]
+        : address,
+      streetNumber: controls
+        ? [streetNumber, [CustomValidators.required]]
+        : streetNumber,
+      zoneNumber: controls
+        ? [zoneNumber, [CustomValidators.required]]
+        : zoneNumber,
+      buildingNumber: controls
+        ? [buildingNumber, [CustomValidators.required]]
+        : buildingNumber,
+      qid: controls
+        ? [
+          qid, CustomValidators.commonValidations.qId
+        ]
+        : qid,
+      passportNumber: controls
+        ? [passportNumber, [CustomValidators.required]]
+        : passportNumber,
+      iDDate: controls ? [iDDate, [CustomValidators.required]] : iDDate,
+      idexpiryDate: controls
+        ? [idexpiryDate, [CustomValidators.required]]
+        : idexpiryDate,
+      passportDate: controls
+        ? [passportDate, [CustomValidators.required]]
+        : passportDate,
+      iDExpiryDate: controls
+        ? [iDExpiryDate, [CustomValidators.required]]
+        : iDExpiryDate,
+      startDate: controls
+        ? [startDate, [CustomValidators.required]]
+        : startDate,
+      lastUpdateDate: controls
+        ? [lastUpdateDate, [CustomValidators.required]]
+        : lastUpdateDate,
+    };
+  }
 }

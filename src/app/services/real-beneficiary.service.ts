@@ -1,7 +1,7 @@
 import { ComponentType } from '@angular/cdk/portal';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CastResponseContainer } from '@app/decorators/decorators/cast-response';
+import { CastResponse, CastResponseContainer } from '@app/decorators/decorators/cast-response';
 import { CrudWithDialogGenericService } from '@app/generics/crud-with-dialog-generic-service';
 import { Pagination } from '@app/models/pagination';
 import { RealBeneficiary } from '@app/models/real-beneficiary';
@@ -36,8 +36,9 @@ export class RealBeneficiaryService extends CrudWithDialogGenericService<RealBen
   _getServiceURL(): string {
     return this.urlService.URLS.REAL_BENEFECIARY;
   }
+  @CastResponse(undefined)
   getRealBenficiaryOfCharity(id: number) {
-    return this.http.get(this._getServiceURL + '/charity' + id);
+    return this.http.get<RealBeneficiary[]>(this._getServiceURL() + '/charity/' + id);
   }
 
 }

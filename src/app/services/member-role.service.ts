@@ -1,14 +1,15 @@
 import { ComponentType } from '@angular/cdk/portal';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CastResponseContainer } from '@app/decorators/decorators/cast-response';
+import { CastResponse, CastResponseContainer } from '@app/decorators/decorators/cast-response';
 import { CrudWithDialogGenericService } from '@app/generics/crud-with-dialog-generic-service';
 import { MemberRole } from '@app/models/member-role';
+import { OrgMember } from '@app/models/org-member';
 import { Pagination } from '@app/models/pagination';
 import { DialogService } from './dialog.service';
 import { FactoryService } from './factory.service';
 import { UrlService } from './url.service';
-
+import { map } from 'rxjs/operators';
 @CastResponseContainer({
   $default: {
     model: () => MemberRole,
@@ -36,8 +37,10 @@ export class MemberRoleService extends CrudWithDialogGenericService<MemberRole> 
   _getServiceURL(): string {
     return this.urlService.URLS.MEMBER_ROLES;
   }
+
+  @CastResponse(undefined)
   getMembersOfCharity(id: number) {
-    return this.http.get(this._getServiceURL() + '/charity/' + id + '/members');
+    return this.http.get<{ [key: string]: { orgMember: OrgMember }[] }>(this._getServiceURL() + '/charity/' + id + '/members');
   }
 
 }

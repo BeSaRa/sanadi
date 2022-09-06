@@ -12,20 +12,28 @@ import {
 } from '@angular/forms';
 import { AdminLookupTypeEnum } from '@app/enums/admin-lookup-type-enum';
 import { CharityRequestType } from '@app/enums/charity-request-type.enum';
+import { CharityRole } from '@app/enums/charity-role.enum';
 import { FileExtensionsEnum } from '@app/enums/file-extension-mime-types-icons.enum';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { SaveTypes } from '@app/enums/save-types';
 import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
+import { DateUtils } from '@app/helpers/date-utils';
 import { IKeyValue } from '@app/interfaces/i-key-value';
 import { AdminLookup } from '@app/models/admin-lookup';
 import { CharityOrganization } from '@app/models/charity-organization';
 import { CharityOrganizationUpdate } from '@app/models/charity-organization-update';
+import { FinalExternalOfficeApprovalResult } from '@app/models/final-external-office-approval-result';
+import { OrgMember } from '@app/models/org-member';
+import { RealBeneficiary } from '@app/models/real-beneficiary';
 import { AdminLookupService } from '@app/services/admin-lookup.service';
 import { CharityOrganizationUpdateService } from '@app/services/charity-organization-update.service';
 import { CharityOrganizationService } from '@app/services/charity-organization.service';
+import { FinalExternalOfficeApprovalService } from '@app/services/final-external-office-approval.service';
 import { LangService } from '@app/services/lang.service';
 import { LookupService } from '@app/services/lookup.service';
 import { MemberRoleService } from '@app/services/member-role.service';
+import { RealBeneficiaryService } from '@app/services/real-beneficiary.service';
+import { DatepickerOptionsMap } from '@app/types/types';
 import { Observable } from 'rxjs';
 import { share } from 'rxjs/operators';
 import { OrganizationOfficersComponent } from '../../shared/organization-officers/organization-officers.component';
@@ -50,6 +58,8 @@ export class CharityOrganizationUpdateComponent
   fileExtensionsEnum = FileExtensionsEnum;
   activityTypes: AdminLookup[] = [];
   RequestTypes = CharityRequestType;
+  members?: { [key: string]: OrgMember[] };
+  realBenefeciaries?: RealBeneficiary[] = [];
   requestTypes = this.lookupService.listByCategory.CharityRequestType;
   contactInformationInputs: IKeyValue[] = [
     { controlName: 'phone', label: this.lang.map.lbl_phone },
@@ -65,19 +75,30 @@ export class CharityOrganizationUpdateComponent
     { controlName: 'youTube', label: this.lang.map.youtube },
     { controlName: 'snapChat', label: this.lang.map.snapchat },
   ];
+  datepickerOptionsMap: DatepickerOptionsMap = {
+    firstReleaseDate: DateUtils.getDatepickerOptions({ disablePeriod: 'future' }),
+    lastUpdateDate: DateUtils.getDatepickerOptions({ disablePeriod: 'future' })
+  }
 
   internalBranches: IKeyValue[] = [
     {
       controlName: '',
     },
   ];
-
+  externalOfficesColumns = [
+    'externalOfficeName',
+    'country',
+    'region',
+    'establishmentDate',
+    'actions',
+  ];
+  externalOffices$?: Observable<FinalExternalOfficeApprovalResult[]>;
   @ViewChildren('tabContent', { read: TemplateRef })
   tabsTemplates!: QueryList<TemplateRef<any>>;
 
   @ViewChildren('officer')
   organizationRefs!: QueryList<OrganizationOfficersComponent>;
-
+  charityRoles = CharityRole;
   get metaDataForm(): UntypedFormGroup {
     return this.form.get('metaData') as UntypedFormGroup;
   }
@@ -92,9 +113,11 @@ export class CharityOrganizationUpdateComponent
     public fb: UntypedFormBuilder,
     public service: CharityOrganizationUpdateService,
     private adminLookupService: AdminLookupService,
-    private lookupService: LookupService,
+    public lookupService: LookupService,
     private charityOrganizationService: CharityOrganizationService,
-    private memberRoleService: MemberRoleService
+    private memberRoleService: MemberRoleService,
+    private finalOfficeApproval: FinalExternalOfficeApprovalService,
+    private realBeneficiaryService: RealBeneficiaryService
   ) {
     super();
   }
@@ -186,6 +209,20 @@ export class CharityOrganizationUpdateComponent
           validStatus: () => true,
           category: CharityRequestType.ADMINISTRATIVE_DATA,
         },
+        {
+          name: 'realBenefeciariesTab',
+          template: tabsTemplates[12],
+          title: this.lang.map.real_benefeciaries,
+          validStatus: () => true,
+          category: CharityRequestType.ADMINISTRATIVE_DATA,
+        },
+        {
+          name: 'primaryLawTab',
+          template: tabsTemplates[13],
+          title: this.lang.map.primary_law,
+          validStatus: () => true,
+          category: CharityRequestType.GOVERANCE_DOCUMENTS
+        }
       ];
       this.tabs = [this._tabs[0]];
       if (!this.accordionView) {
@@ -212,11 +249,24 @@ export class CharityOrganizationUpdateComponent
       model.subscribe((model) => {
         this._updateForm(model.toCharityOrganizationUpdate());
       });
-    }
-    else if (requestType === this.RequestTypes.ADMINISTRATIVE_DATA) {
-      this.memberRoleService.getMembersOfCharity(id).subscribe(m => {
-        console.log(m)
-      })
+      this.externalOffices$ = this.finalOfficeApproval.licenseSearch({
+        organizationId: id,
+      });
+    } else if (requestType === this.RequestTypes.ADMINISTRATIVE_DATA) {
+      this.memberRoleService.getMembersOfCharity(id).subscribe((m) => {
+        this.members = Object.entries(m).reduce((prev, [key, value]) => {
+          if (!Array.isArray(value)) {
+            return prev;
+          }
+          return {
+            ...prev,
+            [key]: value.map((x) => x.orgMember),
+          };
+        }, {});
+        this.realBeneficiaryService.getRealBenficiaryOfCharity(id).subscribe(e => {
+          this.realBenefeciaries = e;
+        })
+      });
     }
   }
   getTabInvalidStatus(i: number): boolean {
@@ -241,7 +291,7 @@ export class CharityOrganizationUpdateComponent
   }
   loadActivityTypes(): void {
     this.adminLookupService
-      .load(AdminLookupTypeEnum.ACTIVITY_TYPE)
+      .loadAsLookup(AdminLookupTypeEnum.ACTIVITY_TYPE)
       .subscribe((list) => {
         this.activityTypes = list;
       });
@@ -251,8 +301,10 @@ export class CharityOrganizationUpdateComponent
     this.form = this.fb.group({
       metaData: this.fb.group(model.buildMetaDataForm()),
       contactInformation: this.fb.group(model.buildContactInformationForm()),
+      primaryLaw: this.fb.group(model.buildPrimaryLawForm()),
       ...model.getFirstPageForm(),
     });
+    console.log(this.form.get('primaryLaw.goals'))
   }
 
   _afterBuildForm(): void { }
@@ -278,6 +330,9 @@ export class CharityOrganizationUpdateComponent
       requestType: this.requestTypeForm.value,
       charityId: this.form.get('charityId')!.value,
     });
+  }
+  selectExternalOffice(event: any, row: FinalExternalOfficeApprovalResult) {
+    this.service.openExternalOfficePopup(row);
   }
   _afterSave(
     model: CharityOrganizationUpdate,

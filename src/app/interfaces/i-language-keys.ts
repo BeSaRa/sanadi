@@ -1287,10 +1287,16 @@ export interface ILanguageKeys {
   main_objectives: string;
   scope_of_actions: string;
   classification_of_work_areas: string;
+  birth_location: string;
+  passport_date: string;
+  start_date: string;
+  first_realase_date: string;
   classification_of_foreign_aid: string;
   classification_of_DAC: string;
   DAC_subclassification: string;
   OCHA_main_classification: string;
   OCHA_subclassification: string;
-
+  id_date: string;
+  id_expiry_date: string;
+  real_benefeciaries: string;
 }

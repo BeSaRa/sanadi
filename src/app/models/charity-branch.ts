@@ -23,6 +23,7 @@ export class CharityBranch extends SearchableCloneable<CharityBranch> {
   tempId!: number;
   branchContactOfficer: OrganizationOfficer[] = [];
 
+
   buildForm(controls = true) {
     const {
       address,

@@ -20,11 +20,12 @@ export class MembersComponent extends ListModelComponent<OrgMember> {
   @Input() readonly!: boolean;
   @Input() set list(_list: OrgMember[]) {
     this._list = _list;
+    console.log(_list);
   }
   @Input() extended = false;
   @Input() pageTitle!: keyof ILanguageKeys;
   controls = this.getFormControls();
-  columns = ['fullName', 'identificationNumber', 'jobTitleId'];
+  columns = ['fullName', 'qid', 'jobTitleId'];
   datepickerOptionsMap: DatepickerOptionsMap = {
     joinDate: DateUtils.getDatepickerOptions({ disablePeriod: 'future' }),
   };
@@ -41,23 +42,25 @@ export class MembersComponent extends ListModelComponent<OrgMember> {
       {
         controlName: 'fullName',
         label: this.lang.map.full_name,
+        type: 'text',
       },
       {
-        controlName: 'identificationNumber',
+        controlName: 'qid',
         label: this.lang.map.personal_number,
+        type: 'text',
       },
       {
         controlName: 'jobTitleId',
         label: this.lang.map.job_title,
         load$: this.jobTitleService.loadAsLookups(),
+        type: 'dropdown',
       },
     ];
   }
   protected _initComponent(): void {
     if (this.extended) {
       this.form = this.fb.group(this.model.bulildExtendedForm());
-    }
-    else {
+    } else {
       this.form = this.fb.group(this.model.buildForm());
     }
     if (this.extended) {
@@ -65,13 +68,21 @@ export class MembersComponent extends ListModelComponent<OrgMember> {
         {
           controlName: 'email',
           label: this.lang.map.lbl_email,
+          type: 'text',
         },
         {
           controlName: 'phone',
           label: this.lang.map.lbl_phone,
+          type: 'text',
+        },
+        {
+          controlName: 'joinDate',
+          label: this.lang.map.date,
+          type: 'date',
         }
       );
-      this.columns.push('joinDate', 'email', 'phone')
+      this.columns.push('joinDate', 'email', 'phone');
     }
+    this.columns.push('actions');
   }
 }

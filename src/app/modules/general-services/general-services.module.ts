@@ -21,6 +21,9 @@ import { CharityOrganizationUpdateComponent } from './pages/charity-organization
 import { OrganizationOfficersComponent } from './shared/organization-officers/organization-officers.component';
 import { CharityBranchComponent } from './shared/charity-branch/charity-branch.component';
 import { MembersComponent } from './shared/members/members.component';
+import { RealBeneficiariesComponent } from './shared/real-beneficiaries/real-beneficiaries.component';
+import { ExternalOfficesPopupComponent } from './popups/external-offices-popup/external-offices-popup.component';
+import { OfficeServicesModule } from '../office-services/office-services.module';
 
 
 @NgModule({
@@ -40,11 +43,14 @@ import { MembersComponent } from './shared/members/members.component';
     OrganizationOfficersComponent,
     CharityBranchComponent,
     MembersComponent,
+    RealBeneficiariesComponent,
+    ExternalOfficesPopupComponent,
   ],
   imports: [
     CommonModule,
     EServicesMainModule,
     GeneralServicesRoutingModule,
+    OfficeServicesModule
   ]
 })
 export class GeneralServicesModule { }

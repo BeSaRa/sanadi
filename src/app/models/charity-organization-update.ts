@@ -5,6 +5,7 @@ import { CharityOrganizationUpdateInterceptor } from '@app/model-interceptors/ch
 import { CharityOrganizationUpdateService } from '@app/services/charity-organization-update.service';
 import { FactoryService } from '@app/services/factory.service';
 import { CustomValidators } from '@app/validators/custom-validators';
+import { IMyDate } from 'angular-mydatepicker';
 import { AdminResult } from './admin-result';
 import { Beneficiary } from './beneficiary';
 import { CaseModel } from './case-model';
@@ -20,8 +21,8 @@ const interceptor = new CharityOrganizationUpdateInterceptor();
   receive: interceptor.receive,
 })
 export class CharityOrganizationUpdate extends CaseModel<
-CharityOrganizationUpdateService,
-CharityOrganizationUpdate
+  CharityOrganizationUpdateService,
+  CharityOrganizationUpdate
 > {
   service: CharityOrganizationUpdateService = FactoryService.getService(
     'CharityOrganizationUpdateService'
@@ -68,6 +69,12 @@ CharityOrganizationUpdate
   currentExecutiveManagementList: OrgMember[] = [];
   authorizedSignatoryMemberList: OrgMember[] = [];
   realBeneficiaryList: RealBeneficiary[] = [];
+  firstReleaseDate!: string | IMyDate;
+  lastUpdateDate!: string | IMyDate;
+  goals!: string;
+  charityWorkArea!: number;
+  charityWorkAreaInfo!: AdminResult;
+
   buildMetaDataForm(controls = true) {
     const {
       arabicName,
@@ -83,7 +90,7 @@ CharityOrganizationUpdate
       publishDate,
       registrationDate,
       establishmentDate,
-      establishmentID
+      establishmentID,
     } = this;
     return {
       publishDate,
@@ -202,6 +209,15 @@ CharityOrganizationUpdate
         : instagram,
       youTube: controls ? [youTube, [CustomValidators.required]] : youTube,
       snapChat: controls ? [snapChat, [CustomValidators.required]] : snapChat,
+    };
+  }
+  buildPrimaryLawForm(controls = true) {
+    const { firstReleaseDate, lastUpdateDate, goals, charityWorkArea } = this;
+    return {
+      firstReleaseDate: controls ? [firstReleaseDate, [CustomValidators.required]] : firstReleaseDate,
+      lastUpdateDate: controls ? [lastUpdateDate, [CustomValidators.required]] : lastUpdateDate,
+      goals: controls ? [goals, [CustomValidators.required]] : goals,
+      charityWorkArea: controls ? [charityWorkArea, [CustomValidators.required]] : charityWorkArea,
     };
   }
 }

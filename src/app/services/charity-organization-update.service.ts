@@ -5,6 +5,8 @@ import { CastResponseContainer } from '@app/decorators/decorators/cast-response'
 import { BaseGenericEService } from '@app/generics/base-generic-e-service';
 import { ILanguageKeys } from '@app/interfaces/i-language-keys';
 import { CharityOrganizationUpdate } from '@app/models/charity-organization-update';
+import { FinalExternalOfficeApprovalResult } from '@app/models/final-external-office-approval-result';
+import { ExternalOfficesPopupComponent } from '@app/modules/general-services/popups/external-offices-popup/external-offices-popup.component';
 import { DialogService } from './dialog.service';
 import { DynamicOptionsService } from './dynamic-options.service';
 import { FactoryService } from './factory.service';
@@ -51,5 +53,8 @@ export class CharityOrganizationUpdateService extends BaseGenericEService<Charit
   }
   _getUrlService(): UrlService {
     return this.urlService;
+  }
+  openExternalOfficePopup(office: FinalExternalOfficeApprovalResult) {
+    return this.dialog.show(ExternalOfficesPopupComponent, office);
   }
 }

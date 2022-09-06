@@ -27,26 +27,29 @@ export class CharityBranchComponent extends ListModelComponent<CharityBranch> {
     'buildingNumber',
   ];
   controls: ControlWrapper[] = [
-    { controlName: 'fullName', label: this.lang.map.full_name },
+    { controlName: 'fullName', type: 'text', label: this.lang.map.full_name },
     {
       controlName: 'category',
       label: this.lang.map.type,
       load: this.lookupService.listByCategory.BranchCategory,
+      type: 'dropdown'
     },
     {
       controlName: 'branchAdjective',
       label: this.lang.map.branch_adjective,
       load: this.lookupService.listByCategory.BranchAdjective,
+      type: 'dropdown'
     },
     {
       controlName: 'usageAdjective',
       label: this.lang.map.usage_adjective,
       load: this.lookupService.listByCategory.UsageAdjective,
+      type: 'dropdown'
     },
-    { controlName: 'address', label: this.lang.map.lbl_address },
-    { controlName: 'streetNumber', label: this.lang.map.lbl_street },
-    { controlName: 'buildingNumber', label: this.lang.map.building_number },
-    { controlName: 'zoneNumber', label: this.lang.map.lbl_zone },
+    { controlName: 'address', label: this.lang.map.lbl_address, type: 'text' },
+    { controlName: 'streetNumber', label: this.lang.map.lbl_street, type: 'text' },
+    { controlName: 'buildingNumber', label: this.lang.map.building_number, type: 'text' },
+    { controlName: 'zoneNumber', label: this.lang.map.lbl_zone, type: 'text' },
   ];
 
   constructor(
