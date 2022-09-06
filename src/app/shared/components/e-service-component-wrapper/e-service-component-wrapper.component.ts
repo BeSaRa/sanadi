@@ -157,7 +157,6 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       this.model!.setInboxService(this.inboxService);
     }
     this.component.allowEditRecommendations = this.isAllowedToEditRecommendations(this.model!, this.info?.openFrom ? this.info.openFrom : OpenFrom.ADD_SCREEN);
-    this.component.isClaimed = this.isClaimed(this.model!);
     // listen to model change
     this.listenToModelChange();
     this.listenToAfterSave();
@@ -944,7 +943,6 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       this.actions = this.translateActions(this.actions);
       this.component.readonly = true;
       this.component.allowEditRecommendations = false;
-      this.component.isClaimed = false;
     });
   }
 
@@ -955,7 +953,6 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       this.displayRightActions(OpenFrom.USER_INBOX);
       this.actions = this.translateActions(this.actions);
       this.component.allowEditRecommendations = this.internal;
-      this.component.isClaimed = true;
       const component = (this.component as IESComponent<any>);
       if (component.handleReadonly && typeof component.handleReadonly === 'function') {
         component.handleReadonly();

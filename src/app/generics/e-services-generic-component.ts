@@ -40,7 +40,6 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
   openFrom: OpenFrom = OpenFrom.ADD_SCREEN;
   readonly: boolean = false;
   allowEditRecommendations?: boolean | undefined;
-  isClaimed?:boolean | undefined;
   operationTypes: typeof OperationTypes = OperationTypes;
   operation: OperationTypes = OperationTypes.CREATE;
   modelChange$: BehaviorSubject<M | undefined> = new BehaviorSubject<M | undefined>(this._getNewInstance());
