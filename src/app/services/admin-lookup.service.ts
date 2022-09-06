@@ -132,6 +132,18 @@ export class AdminLookupService implements CrudServiceAdminLookupContract<AdminL
     return this._loadAdminLookupDataComposite(typeId);
   }
 
+  @CastResponse(() => AdminLookup, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  loadAsLookups(typeId: AdminLookupTypeEnum) {
+    if (!typeId) {
+      return of([]);
+    }
+    return this.http.get<AdminLookup[]>(this._getServiceURLByType(typeId) + '/lookup')
+      .pipe((catchError((_) => of([]))));
+  }
+
   @CastResponse(undefined, {
     fallback: '$pagination'
   })
