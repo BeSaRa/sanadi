@@ -1,3 +1,7 @@
+import { normalSearchFields } from '@app/helpers/normal-search-fields';
+import { infoSearchFields } from '@app/helpers/info-search-fields';
+import { dateSearchFields } from '@app/helpers/date-search-fields';
+import { ISearchFieldsMap } from './../types/types';
 import { ContractTypes } from '@app/enums/contract-types.enum';
 import { EmploymentCategory } from '@app/enums/employment-category.enum';
 import { EmploymentRequestType } from '@app/enums/employment-request-type';
@@ -35,14 +39,28 @@ export class Employment
   description: string = "";
   employeeInfoDTOs: Partial<Employee>[] = [];
   exportedLicenseId!: string;
+  subject!: string;
   oldLicenseId!: string;
   oldLicenseSerial!: number;
   oldLicenseFullSerial!: string;
   licenseStartDate!: string | IMyDateModel;
   licenseEndDate!: string | IMyDateModel;
+  searchFields: ISearchFieldsMap<Employment> = {
+    ...dateSearchFields(['createdOn']),
+    ...infoSearchFields(['caseStatusInfo', 'creatorInfo']),
+    ...normalSearchFields(['fullSerial', 'subject'])
+  };
   constructor() {
     super();
     this.service = FactoryService.getService("EmploymentService");
+    this.finalizeSearchFields();
+  }
+  finalizeSearchFields(): void {
+    if (this.employeeService.isExternalUser()) {
+      delete this.searchFields.ouInfo;
+      delete this.searchFields.organizationId;
+      delete this.searchFields.organization;
+    }
   }
 
   formBuilder(controls?: boolean) {

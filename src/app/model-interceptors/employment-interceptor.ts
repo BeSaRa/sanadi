@@ -38,5 +38,6 @@ export class EmploymentInterceptor implements IModelInterceptor<Employment> {
 
   private static _deleteBeforeSend(model: any){
     delete model.requestTypeInfo;
+    delete model.searchFields;
   }
 }
