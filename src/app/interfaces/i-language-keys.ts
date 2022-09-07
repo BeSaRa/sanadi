@@ -1,4 +1,8 @@
 export interface ILanguageKeys {
+  meeting_member_name: string;
+  view_members_comments: string;
+  members_comments: string;
+  manage_member_tasks: string;
   to_member_task: string;
   to_member: string;
   send_to_members_task: string;

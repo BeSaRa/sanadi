@@ -4,4 +4,6 @@ import {GeneralAssociationExternalMember} from '@app/models/general-association-
 
 export interface IGeneralAssociationMeetingAttendanceComplete {
   completeWithSave(form: UntypedFormGroup, administrativeBoardMembers: GeneralAssociationExternalMember[], generalAssociationMembers: GeneralAssociationExternalMember[], agendaItems: string[]): DialogRef;
+  isMemberReviewStep(): boolean;
+  memberCanNotComplete(): DialogRef;
 }

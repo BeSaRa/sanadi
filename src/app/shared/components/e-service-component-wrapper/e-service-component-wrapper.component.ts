@@ -44,7 +44,7 @@ import {ITransferFundsAbroadComponent} from '@contracts/i-transfer-funds-abroad-
 import {IGeneralAssociationMeetingAttendanceComplete} from '@contracts/i-general-association-meeting-attendance-complete';
 import {IGeneralAssociationMeetingAttendanceComponent} from '@contracts/i-general-association-meeting-attendance-component';
 import {IGeneralAssociationMeetingAttendanceApprove} from '@contracts/i-general-association-meeting-attendance-approve';
-import {IGeneralAssociationMeetingAttendanceSendToMembers} from '@contracts/i-general-association-meeting-attendance-send-to-members';
+import {IGeneralAssociationMeetingAttendanceSpecialActions} from '@contracts/i-general-association-meeting-attendance-special-actions';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -387,7 +387,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   }
 
   canSave(): boolean {
-    if(this.model?.caseType===CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST) {
+    if (this.model?.caseType === CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST) {
       const model=this.model as CoordinationWithOrganizationsRequest
       return model.participatingOrganizaionList.length > 0
     }
@@ -1056,6 +1056,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     return this.completeWithSaveServices.includes(item.getCaseType()) && this.completeWithSaveStatuses.includes(item.caseStatus);
   }
 
+  isCompleteDependOnCondition(condition: () => boolean): boolean {
+    return condition();
+  }
+
   private completeAction(item: CaseModel<any, any>) {
     if (this.isCompleteWithSave(item)) {
       if (item.getCaseType() === CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD) {
@@ -1073,11 +1077,22 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           actionTaken && this.navigateToSamePageThatUserCameFrom();
         });
       }
+    } else if (this.cantCompleteFromMemberReviewStep(item)) {
+      const model = item as unknown as IGeneralAssociationMeetingAttendanceComplete;
+
+      model.memberCanNotComplete();
     } else {
       item.complete().onAfterClose$.subscribe(actionTaken => {
         actionTaken && this.navigateToSamePageThatUserCameFrom();
       });
     }
+  }
+
+  cantCompleteFromMemberReviewStep(item: CaseModel<any, any>): boolean {
+    const model = item as unknown as IGeneralAssociationMeetingAttendanceComplete;
+    const component = this.component as unknown as IGeneralAssociationMeetingAttendanceComponent;
+
+    return model.isMemberReviewStep() && component.meetingPointsForm.invalid;
   }
 
   isApproveWithSave(item: CaseModel<any, any>): boolean {
@@ -1102,7 +1117,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   }
 
   private sendToGeneralMeetingMembersAction(item: CaseModel<any, any>) {
-    (item as unknown as IGeneralAssociationMeetingAttendanceSendToMembers).sendToGeneralMeetingMembers().onAfterClose$.subscribe(actionTaken => {
+    (item as unknown as IGeneralAssociationMeetingAttendanceSpecialActions).sendToGeneralMeetingMembers().onAfterClose$.subscribe(actionTaken => {
       actionTaken && this.navigateToSamePageThatUserCameFrom();
     });
   }

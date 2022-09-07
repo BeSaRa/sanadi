@@ -32,6 +32,7 @@ import { SelectMemberPopupComponent } from './pages/shared/select-member-popup-c
 import { ManageInternalUsersComponent } from './pages/shared/manage-internal-users/manage-internal-users.component';
 import { GeneralAssociationMeetingCompleteTaskPopupComponent } from './popups/general-association-meeting-complete-task-popup/general-association-meeting-complete-task-popup.component';
 import { GeneralAssociationMeetingApproveTaskPopupComponent } from './popups/general-association-meeting-approve-task-popup/general-association-meeting-approve-task-popup.component';
+import { MeetingPointMembersCommentsPopupComponent } from './popups/meeting-point-members-comments-popup/meeting-point-members-comments-popup.component';
 
 
 @NgModule({
@@ -56,7 +57,8 @@ import { GeneralAssociationMeetingApproveTaskPopupComponent } from './popups/gen
     SelectMemberPopupComponent,
     ManageInternalUsersComponent,
     GeneralAssociationMeetingCompleteTaskPopupComponent,
-    GeneralAssociationMeetingApproveTaskPopupComponent
+    GeneralAssociationMeetingApproveTaskPopupComponent,
+    MeetingPointMembersCommentsPopupComponent
   ],
   imports: [
     CommonModule,

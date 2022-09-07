@@ -15,7 +15,8 @@ import {UntypedFormGroup} from '@angular/forms';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {WFResponseType} from '@app/enums/wfresponse-type.enum';
 import {GeneralAssociationMeetingStepNameEnum} from '@app/enums/general-association-meeting-step-name-enum';
-import {IGeneralAssociationMeetingAttendanceSendToMembers} from '@contracts/i-general-association-meeting-attendance-send-to-members';
+import {IGeneralAssociationMeetingAttendanceSpecialActions} from '@contracts/i-general-association-meeting-attendance-special-actions';
+import {IGeneralAssociationMeetingAttendanceComplete} from '@contracts/i-general-association-meeting-attendance-complete';
 
 const _RequestType = mixinRequestType(CaseModel);
 const interceptor = new GeneralAssociationMeetingAttendanceInterceptor();
@@ -25,7 +26,7 @@ const interceptor = new GeneralAssociationMeetingAttendanceInterceptor();
   send: interceptor.send
 })
 
-export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAssociationMeetingAttendanceService, GeneralAssociationMeetingAttendance> implements HasRequestType, IGeneralAssociationMeetingAttendanceSendToMembers {
+export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAssociationMeetingAttendanceService, GeneralAssociationMeetingAttendance> implements HasRequestType, IGeneralAssociationMeetingAttendanceSpecialActions, IGeneralAssociationMeetingAttendanceComplete {
   service!: GeneralAssociationMeetingAttendanceService;
   caseType = CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE;
   licenseApprovedDate!: string | IMyDateModel;
@@ -48,6 +49,7 @@ export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAss
   specialistJustification!: string;
   subject!: string;
   year!: number;
+  isSendToMember!: boolean;
   generalAssociationMembers: GeneralAssociationExternalMember[] = [];
   administrativeBoardMembers: GeneralAssociationExternalMember[] = [];
   internalMembersDTO: GeneralAssociationInternalMember[] = [];
@@ -62,7 +64,17 @@ export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAss
   }
 
   buildBasicInfo(controls: boolean = false): any {
-    const {oldLicenseFullSerial, requestType, meetingType, location, meetingDate, meetingTime, meetingInitiator, meetingClassification, periodical} = this;
+    const {
+      oldLicenseFullSerial,
+      requestType,
+      meetingType,
+      location,
+      meetingDate,
+      meetingTime,
+      meetingInitiator,
+      meetingClassification,
+      periodical
+    } = this;
     return {
       oldLicenseFullSerial: controls ? [oldLicenseFullSerial] : oldLicenseFullSerial,
       requestType: controls ? [requestType, [CustomValidators.required]] : requestType,
@@ -109,5 +121,17 @@ export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAss
 
   sendToGeneralMeetingMembers(): DialogRef {
     return this.inboxService!.takeActionWithComment(this.id, this.caseType, WFResponseType.TO_GENERAL_MEETING_MEMBERS, false, this);
+  }
+
+  memberCanNotComplete(): DialogRef {
+    return this.inboxService!.completeCanNotBeCompleted();
+  }
+
+  canEditMeetingPoints(): boolean {
+    return !this.isSendToMember && this.isDecisionMakerReviewStep() || this.isMemberReviewStep();
+  }
+
+  isSentToMember(): boolean {
+    return this.isSendToMember;
   }
 }

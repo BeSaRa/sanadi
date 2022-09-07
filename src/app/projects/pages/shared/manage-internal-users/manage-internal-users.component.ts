@@ -12,6 +12,7 @@ import {GeneralAssociationInternalMemberTypeEnum} from '@app/enums/general-assoc
 import {InternalUser} from '@app/models/internal-user';
 import {GeneralAssociationMeetingAttendance} from '@app/models/general-association-meeting-attendance';
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import {GeneralAssociationMeetingStepNameEnum} from '@app/enums/general-association-meeting-step-name-enum';
 
 @Component({
   selector: 'manage-internal-users',
@@ -22,6 +23,7 @@ export class ManageInternalUsersComponent implements OnInit {
   @Input() internalMembersForm!: FormGroup;
   @Input() isExternalUser!: boolean;
   @Input() readonly!: boolean;
+  @Input() caseStepName!: string;
   @Input() model!: GeneralAssociationMeetingAttendance;
   @Input() selectedInternalUsers: GeneralAssociationInternalMember[] = [];
   @Output() memberListChanged: EventEmitter<GeneralAssociationInternalMember[]> = new EventEmitter<GeneralAssociationInternalMember[]>();
@@ -190,5 +192,9 @@ export class ManageInternalUsersComponent implements OnInit {
 
   get isUnderProcessingLicense() {
     return this.model.getCaseStatus() === CommonCaseStatus.UNDER_PROCESSING;
+  }
+
+  isSupervisionAndControlReview() {
+    return this.caseStepName === GeneralAssociationMeetingStepNameEnum.SUPERVISION_AND_CONTROL_REVIEW;
   }
 }

@@ -28,9 +28,13 @@ import {
 } from '@app/projects/popups/general-association-meeting-approve-task-popup/general-association-meeting-approve-task-popup.component';
 import {GeneralAssociationInternalMemberInterceptor} from '@app/model-interceptors/general-association-internal-member-interceptor';
 import {MeetingAttendanceReport} from '@app/models/meeting-attendance-report';
-import {IDefaultResponse} from '@contracts/idefault-response';
-import {map} from 'rxjs/operators';
 import {IGeneralAssociationMeetingProceedSendToMembers} from '@contracts/i-general-association-meeting-proceed-send-to-members';
+import {GeneralMeetingAttendanceNote} from '@app/models/general-meeting-attendance-note';
+import {MeetingMemberTaskStatus} from '@app/models/meeting-member-task-status';
+import {MeetingPointMemberComment} from '@app/models/meeting-point-member-comment';
+import {
+  MeetingPointMembersCommentsPopupComponent
+} from '@app/projects/popups/meeting-point-members-comments-popup/meeting-point-members-comments-popup.component';
 
 @CastResponseContainer({
   $default: {
@@ -153,16 +157,74 @@ export class GeneralAssociationMeetingAttendanceService extends BaseGenericEServ
     unwrap: 'rs',
     fallback: '$default'
   })
-  private _getMeetingPoints(caseId?: string): Observable<MeetingAttendanceReport> {
+  private _getMeetingPointsForDecisionMaker(caseId?: string): Observable<MeetingAttendanceReport> {
+    return this.http.get<MeetingAttendanceReport>(this._getURLSegment() + '/items/' + caseId);
+  }
+
+  getMeetingPointsForDecisionMaker(caseId?: string): Observable<MeetingAttendanceReport> {
+    return this._getMeetingPointsForDecisionMaker(caseId);
+  }
+
+  @CastResponse(() => MeetingAttendanceReport, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  private _getMeetingPointsForMember(caseId?: string): Observable<MeetingAttendanceReport> {
     return this.http.get<MeetingAttendanceReport>(this._getURLSegment() + '/items/user/' + caseId);
   }
 
-  getMeetingPoints(caseId?: string): Observable<MeetingAttendanceReport> {
-    return this._getMeetingPoints(caseId);
+  getMeetingPointsForMember(caseId?: string): Observable<MeetingAttendanceReport> {
+    return this._getMeetingPointsForMember(caseId);
   }
 
   proceedSendToMembers(caseId: string): Observable<boolean> {
-    return this.http.post<IDefaultResponse<boolean>>(this._getURLSegment() + '/to-member/' + caseId, undefined)
-      .pipe(map(response => response.rs));
+    return this.http.post<boolean>(this._getURLSegment() + '/to-member/' + caseId, undefined);
+  }
+
+  @HasInterception
+  @CastResponse(() => GeneralMeetingAttendanceNote, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  private _addMeetingGeneralNotes(@InterceptParam() meetingItems: GeneralMeetingAttendanceNote[], caseId?: string): Observable<GeneralMeetingAttendanceNote[]> {
+    return this.http.post<GeneralMeetingAttendanceNote[]>(this._getURLSegment() + '/' + caseId + '/meeting-comments', meetingItems);
+  }
+
+  addMeetingGeneralNotes(meetingNotes: GeneralMeetingAttendanceNote[], caseId?: string): Observable<GeneralMeetingAttendanceNote[]> {
+    return this._addMeetingGeneralNotes(meetingNotes, caseId);
+  }
+
+  @CastResponse(() => GeneralMeetingAttendanceNote, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  private _getMeetingGeneralNotes(memberId: number, caseId?: string): Observable<GeneralMeetingAttendanceNote[]> {
+    return this.http.get<GeneralMeetingAttendanceNote[]>(this._getURLSegment() + '/' + memberId + '/meeting-comments/' + caseId);
+  }
+
+  getMeetingGeneralNotes(memberId: number, caseId?: string): Observable<GeneralMeetingAttendanceNote[]> {
+    return this._getMeetingGeneralNotes(memberId, caseId);
+  }
+
+  @CastResponse(() => MeetingMemberTaskStatus, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  private _getMemberTaskStatus(caseId?: string): Observable<MeetingMemberTaskStatus[]> {
+    return this.http.get<MeetingMemberTaskStatus[]>(this._getURLSegment() + '/{caseId}/' + 'filling-out-task?caseId=' + caseId);
+  }
+
+  getMemberTaskStatus(caseId?: string): Observable<MeetingMemberTaskStatus[]> {
+    return this._getMemberTaskStatus(caseId);
+  }
+
+  terminateMemberTask(taskId?: string): Observable<boolean> {
+    return this.http.post<boolean>(this._getURLSegment() + '/task/terminate?tkiid=' + taskId, undefined);
+  }
+
+  openViewPointMembersCommentsDialog(membersComments: MeetingPointMemberComment[]): DialogRef {
+    return this.dialog.show(MeetingPointMembersCommentsPopupComponent, {
+      membersComments
+    });
   }
 }

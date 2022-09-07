@@ -54,7 +54,7 @@ export class ManageMembersComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.jobTitleService.loadComposite()
+    this.jobTitleService.loadAsLookups()
       .subscribe(list => {
         this.jobTitles = list;
       });

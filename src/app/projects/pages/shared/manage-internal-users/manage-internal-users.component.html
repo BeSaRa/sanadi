@@ -1,6 +1,6 @@
 <ng-container [formGroup]="internalMembersForm">
   <ng-container *ngIf="!isExternalUser">
-    <div class="row">
+    <div class="row" *ngIf="isSupervisionAndControlReview()">
       <div class="col">
         <h1 class="h6 text-primary m-0 d-inline-block">{{lang.map.add_internal_member}}</h1>
         <button class="btn btn-link outline-none"

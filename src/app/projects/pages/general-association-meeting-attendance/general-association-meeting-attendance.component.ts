@@ -30,6 +30,9 @@ import {MeetingAttendanceReport} from '@app/models/meeting-attendance-report';
 import {TransferringIndividualFundsAbroadRequestTypeEnum} from '@app/enums/transferring-individual-funds-abroad-request-type-enum';
 import {MeetingAttendanceSubItem} from '@app/models/meeting-attendance-sub-item';
 import {MeetingAttendanceMainItem} from '@app/models/meeting-attendance-main-item';
+import {GeneralMeetingAttendanceNote} from '@app/models/general-meeting-attendance-note';
+import {MeetingMemberTaskStatus} from '@app/models/meeting-member-task-status';
+import {MeetingPointMemberComment} from '@app/models/meeting-point-member-comment';
 
 @Component({
   selector: 'general-association-meeting-attendance',
@@ -75,13 +78,17 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
 
   addGeneralNotesFormActive!: boolean;
   generalNotesForm!: FormGroup;
-  generalNotes: string[] = [];
-  selectedGeneralNote!: string | null;
+  generalNotes: GeneralMeetingAttendanceNote[] = [];
+  selectedGeneralNote!: GeneralMeetingAttendanceNote | null;
   selectedGeneralNoteIndex!: number | null;
-  generalNotesDisplayedColumns: string[] = ['index', 'description', 'actions'];
+  generalNotesDisplayedColumns: string[] = ['index', 'comment', 'actions'];
+
+  userCommentsDisplayedColumns: string[] = ['index','arName', 'enName', 'status', 'actions'];
+  meetingUserTaskStatus: MeetingMemberTaskStatus[] = [];
 
   isMemberReview!: boolean;
   isDecisionMakerReview!: boolean;
+  memberId!: number;
 
   // meeting points form
   meetingPointsForm!: UntypedFormGroup;
@@ -152,13 +159,14 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     return this.agendaForm?.get('description')! as FormControl;
   }
 
-  get generalNote(): FormControl {
-    return this.generalNotesForm?.get('description')! as FormControl;
+  get generalNote(): FormGroup {
+    return this.generalNotesForm?.value as FormGroup;
   }
 
   _initComponent(): void {
     // load initials here
     this.isExternalUser = this.employeeService.isExternalUser();
+    this.memberId = this.employeeService.getCurrentUser()?.generalUserId!;
     this.buildAgendaForm();
     this.buildGeneralNotesForm();
     // this.initMeetingPointsForm();
@@ -204,17 +212,46 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     this.requestTypeChanged.next(this.requestType.value);
 
     // update meeting form
-    this.service.getMeetingPoints(this.model?.id).subscribe(meetingReport => {
-      if (this.isMemberReview || (this.isDecisionMakerReview && meetingReport && meetingReport.meetingMainItem.length > 0)) {
-        // get meeting attendance report
-        this.updateMeetingPointsForm(meetingReport);
-        // update meeting points form
-      } else {
-        this.buildMeetingPointsForm();
-      }
+    this.setMeetingPointsForm();
+
+    this.service.getMeetingGeneralNotes(this.memberId, this.model?.id).subscribe(notes => {
+      this.generalNotes = notes;
     });
+
+    if(this.model?.isSentToMember() && this.model?.isDecisionMakerReviewStep()) {
+      this.service.getMemberTaskStatus(this.model?.id).subscribe(membersStatus => {
+        this.meetingUserTaskStatus = membersStatus.map(x => new MeetingMemberTaskStatus().clone(x));
+      });
+    }
+
     this.isMemberReview = this.model?.isMemberReviewStep()!;
     this.isDecisionMakerReview = this.model?.isDecisionMakerReviewStep()!;
+  }
+
+  setMeetingPointsForm() {
+    if(this.model?.isDecisionMakerReviewStep()) {
+      this.service.getMeetingPointsForDecisionMaker(this.model?.id).subscribe(meetingReport => {
+        if (this.isMemberReview || (this.isDecisionMakerReview && meetingReport && meetingReport.meetingMainItem.length > 0)) {
+          // get meeting attendance report
+          this.updateMeetingPointsForm(meetingReport);
+          // update meeting points form
+        } else {
+          this.buildMeetingPointsForm();
+        }
+      });
+    }
+
+    if(this.model?.isMemberReviewStep()) {
+      this.service.getMeetingPointsForMember(this.model?.id).subscribe(meetingReport => {
+        if (this.isMemberReview || (this.isDecisionMakerReview && meetingReport && meetingReport.meetingMainItem.length > 0)) {
+          // get meeting attendance report
+          this.updateMeetingPointsForm(meetingReport);
+          // update meeting points form
+        } else {
+          this.buildMeetingPointsForm();
+        }
+      });
+    }
   }
 
   private setDatePeriodValidation() {
@@ -552,7 +589,10 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   // add general notes functionality
   buildGeneralNotesForm(): void {
     this.generalNotesForm = this.fb.group({
-      description: [null, [CustomValidators.required, CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX)]]
+      id: [],
+      caseID: [],
+      memberID: [],
+      comment: [null, [CustomValidators.required, CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX)]]
     });
   }
 
@@ -560,16 +600,18 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     this.addGeneralNotesFormActive = true;
   }
 
-  selectGeneralNote(event: MouseEvent, item: string) {
+  selectGeneralNote(event: MouseEvent, item: GeneralMeetingAttendanceNote) {
     this.addGeneralNotesFormActive = true;
     event.preventDefault();
     this.selectedGeneralNote = item;
-    this.generalNotesForm.patchValue({description: this.selectedGeneralNote!});
+    this.generalNotesForm.patchValue(item);
     this.selectedGeneralNoteIndex = this.generalNotes.indexOf(item);
   }
 
   saveGeneralNote() {
-    const item = this.generalNote.value;
+    const item = new GeneralMeetingAttendanceNote().clone({...new GeneralMeetingAttendanceNote(), ...this.generalNote});
+    item.caseID = item?.caseID ? item.caseID : this.model!.id;
+    item.memberID = item?.memberID ? item.memberID : this.memberId;
     if (!this.selectedGeneralNote) {
       if (!this.isExistGeneralNoteInCaseOfAdd(this.generalNotes, item)) {
         this.generalNotes = this.generalNotes.concat(item);
@@ -603,23 +645,23 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     this.generalNotesForm.reset();
   }
 
-  removeGeneralNote(event: MouseEvent, item: string) {
+  removeGeneralNote(event: MouseEvent, item: GeneralMeetingAttendanceNote) {
     event.preventDefault();
-    this.generalNotes = this.generalNotes.filter(x => x != item);
+    this.generalNotes = this.generalNotes.filter(x => x.id ? x.id !== item.id : x.comment !== item.comment);
     this.resetGeneralNotesForm();
   }
 
-  isExistGeneralNoteInCaseOfAdd(generalNotes: string[], toBeAddedGeneralNote: string): boolean {
-    return generalNotes.includes(toBeAddedGeneralNote);
+  isExistGeneralNoteInCaseOfAdd(generalNotes: GeneralMeetingAttendanceNote[], toBeAddedGeneralNote: GeneralMeetingAttendanceNote): boolean {
+    return generalNotes.map(x => x.comment).includes(toBeAddedGeneralNote.comment);
   }
 
-  isExistGeneralNoteInCaseOfEdit(generalNotes: string[], toBeEditedGeneralNote: string, selectedIndex: number): boolean {
+  isExistGeneralNoteInCaseOfEdit(generalNotes: GeneralMeetingAttendanceNote[], toBeEditedGeneralNote: GeneralMeetingAttendanceNote, selectedIndex: number): boolean {
     for (let i = 0; i < generalNotes.length; i++) {
       if (i === selectedIndex) {
         continue;
       }
 
-      if (generalNotes[i] === toBeEditedGeneralNote) {
+      if (generalNotes[i].comment === toBeEditedGeneralNote.comment) {
         return true;
       }
     }
@@ -692,7 +734,10 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     return this.fb.group({
       id: [mainItem.id],
       enName: [mainItem.enName, [CustomValidators.required, CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]],
-      meetingSubItem: this.fb.array(mainItem.meetingSubItem ? [...mainItem.meetingSubItem.map(x => this.newSubItem(x))] : [this.newSubItem()])
+      meetingSubItem: this.fb.array(mainItem.meetingSubItem ? [...mainItem.meetingSubItem.map(x => this.newSubItem(x))] : [this.newSubItem()]),
+      caseID: [mainItem.caseID],
+      memberID: [mainItem.memberID],
+      status: [mainItem.status],
     });
   }
 
@@ -712,12 +757,23 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     return this.mainItems.at(index)?.get('meetingSubItem') as UntypedFormArray;
   }
 
+  getMembersComments(mainItemIndex: number, index: number): MeetingPointMemberComment[] {
+    let mainItem = this.mainItems.at(mainItemIndex);
+    let subItem = (mainItem.get('meetingSubItem') as UntypedFormArray).at(index) as FormGroup;
+    return subItem.get('membersComments')?.value as MeetingPointMemberComment[];
+  }
+
   newSubItem(subItem: MeetingAttendanceSubItem = new MeetingAttendanceSubItem()): FormGroup {
     return this.fb.group({
       id: [subItem.id],
       enName: [subItem.enName, [CustomValidators.required, CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]],
       comment: [subItem.comment, this.isMemberReview ? [CustomValidators.required, CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)] : []],
-      respectTerms: [subItem.respectTerms, []]
+      respectTerms: [subItem.respectTerms, []],
+      mainItemID: [subItem.mainItemID],
+      memberID: [subItem.memberID],
+      status: [subItem.status],
+      membersComments: [subItem.userComments],
+      selected: []
     });
   }
 
@@ -731,6 +787,11 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
       return;
     }
     this.getSubItems(mainItemIndex).removeAt(index);
+  }
+
+  viewMeetingPointMembersComments(mainItemIndex: number, subItemIndex: number) {
+    const membersComments = this.getMembersComments(mainItemIndex, subItemIndex);
+    this.service.openViewPointMembersCommentsDialog(membersComments);
   }
 
   getRemoveMainItemClass() {
@@ -760,6 +821,18 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   }
 
   saveGeneralNotes() {
-    console.log('general notes', this.generalNotes);
+    const meetingGeneralNotes = this.generalNotes.map(x => {
+      return new GeneralMeetingAttendanceNote().clone(x);
+    });
+    this.service.addMeetingGeneralNotes(meetingGeneralNotes, this.model?.id).subscribe(ret => {
+      this.dialog.success('general notes added successfully');
+      this.generalNotes = ret.map(x => {
+        return new GeneralMeetingAttendanceNote().clone(x);
+      })
+    });
+  }
+
+  terminateUserTask(event: MouseEvent, item: MeetingMemberTaskStatus) {
+    this.service.terminateMemberTask(item.tkiid).subscribe(ret => console.log('after terminate task', ret));
   }
 }
