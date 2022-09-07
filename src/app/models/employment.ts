@@ -47,7 +47,7 @@ export class Employment
   licenseEndDate!: string | IMyDateModel;
   searchFields: ISearchFieldsMap<Employment> = {
     ...dateSearchFields(['createdOn']),
-    ...infoSearchFields(['caseStatusInfo', 'creatorInfo']),
+    ...infoSearchFields(['caseStatusInfo', 'requestTypeInfo', 'creatorInfo']),
     ...normalSearchFields(['fullSerial', 'subject'])
   };
   constructor() {

@@ -69,7 +69,7 @@ export class ExternalOrgAffiliation extends _RequestType<ExternalOrgAffiliationS
   }
   searchFields: ISearchFieldsMap<ExternalOrgAffiliation> = {
     ...dateSearchFields(['createdOn']),
-    ...infoSearchFields(['caseStatusInfo', 'creatorInfo']),
+    ...infoSearchFields(['caseStatusInfo', 'requestTypeInfo', 'creatorInfo']),
     ...normalSearchFields(['fullSerial', 'subject'])
   };
   getFormFields(control: boolean = false): any {

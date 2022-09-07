@@ -52,7 +52,7 @@ export class UrgentInterventionFinancialNotification extends LicenseApprovalMode
 
   searchFields: ISearchFieldsMap<UrgentInterventionFinancialNotification> = {
     ...dateSearchFields(['createdOn']),
-    ...infoSearchFields(['caseStatusInfo', 'ouInfo']),
+    ...infoSearchFields(['caseStatusInfo', 'requestTypeInfo', 'ouInfo']),
     ...normalSearchFields(['fullSerial', 'subject'])
   };
   constructor() {
