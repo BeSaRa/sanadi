@@ -41,7 +41,7 @@ export class CoordinationWithOrganizationsRequestService extends BaseGenericESer
   serviceKey: keyof ILanguageKeys = "menu_coordination_with_organizations_request";
   caseStatusIconMap: Map<number, string> = new Map<number, string>();
   searchService: SearchService = new SearchService(this);
-  searchColumns: string[] = ["fullSerial","fullName","domainInfo","caseStatus","creatorInfo","createdOn"];
+  searchColumns: string[] = ["fullSerial","fullName","domainInfo","caseStatus","createdOn"];
 
 
   _getUrlService(): UrlService {

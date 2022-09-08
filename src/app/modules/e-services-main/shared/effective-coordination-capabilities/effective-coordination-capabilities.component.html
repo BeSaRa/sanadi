@@ -170,7 +170,7 @@
   </ng-container>
   <ng-container cdkColumnDef="organizationWay">
     <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_organization_way}}</th>
-    <td cdk-cell *cdkCellDef="let row"> {{row.organizationWay}} </td>
+    <td cdk-cell *cdkCellDef="let row"> {{row.organizationWayInfo?.getName()}} </td>
   </ng-container>
   <ng-container cdkColumnDef="sponsorsAndOrganizingPartners">
     <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_sponsors_and_organizing_partners}}</th>
