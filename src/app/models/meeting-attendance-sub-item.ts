@@ -5,10 +5,10 @@ export class MeetingAttendanceSubItem extends SearchableCloneable<MeetingAttenda
   id!:number;
   enName!: string;
   comment!: string;
-  respectTerms!: boolean | number;
-  userComments!: MeetingPointMemberComment[];
+  respectTerms?: boolean | number;
+  userComments?: MeetingPointMemberComment[];
   mainItemID!: number;
   memberID!: number;
   status!: number;
-  selected!: boolean;
+  selected?: boolean;
 }

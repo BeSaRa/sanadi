@@ -35,6 +35,8 @@ import {MeetingPointMemberComment} from '@app/models/meeting-point-member-commen
 import {
   MeetingPointMembersCommentsPopupComponent
 } from '@app/projects/popups/meeting-point-members-comments-popup/meeting-point-members-comments-popup.component';
+import {BlobModel} from '@app/models/blob-model';
+import {map} from 'rxjs/operators';
 
 @CastResponseContainer({
   $default: {
@@ -45,7 +47,7 @@ import {
 @Injectable({
   providedIn: 'root'
 })
-export class GeneralAssociationMeetingAttendanceService extends BaseGenericEService<GeneralAssociationMeetingAttendance> implements IGeneralAssociationMeetingProceedSendToMembers{
+export class GeneralAssociationMeetingAttendanceService extends BaseGenericEService<GeneralAssociationMeetingAttendance> implements IGeneralAssociationMeetingProceedSendToMembers {
   jsonSearchFile: string = 'general-association-meeting-attendance.json';
   serviceKey: keyof ILanguageKeys = 'menu_general_association_meeting_attendance';
   caseStatusIconMap: Map<number, string> = new Map<number, string>();
@@ -218,13 +220,29 @@ export class GeneralAssociationMeetingAttendanceService extends BaseGenericEServ
     return this._getMemberTaskStatus(caseId);
   }
 
-  terminateMemberTask(taskId?: string): Observable<boolean> {
-    return this.http.post<boolean>(this._getURLSegment() + '/task/terminate?tkiid=' + taskId, undefined);
+  terminateMemberTask(pId?: string): Observable<boolean> {
+    return this.http.post<boolean>(this._getURLSegment() + '/task/terminate?pid=' + pId, undefined);
   }
 
   openViewPointMembersCommentsDialog(membersComments: MeetingPointMemberComment[]): DialogRef {
     return this.dialog.show(MeetingPointMembersCommentsPopupComponent, {
       membersComments
     });
+  }
+
+  @HasInterception
+  @CastResponse(() => MeetingAttendanceReport, {
+    unwrap: '',
+    fallback: '$default'
+  })
+  _generateReport(caseId: string, @InterceptParam() report: MeetingAttendanceReport, @InterceptParam() meetingComments: GeneralMeetingAttendanceNote[]): Observable<BlobModel> {
+    let model = {meetingMainItem: report.meetingMainItem, meetingComment: meetingComments};
+    return this.http.post(this._getURLSegment() + '/custom-report/' + caseId + '/export', model,
+      {responseType: 'blob', observe: 'body'})
+      .pipe(map(result => new BlobModel(result, this.domSanitizer)));
+  }
+
+  generateReport(caseId: string, report: MeetingAttendanceReport, meetingComments: GeneralMeetingAttendanceNote[]) {
+    return this._generateReport(caseId, report, meetingComments);
   }
 }

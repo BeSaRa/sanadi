@@ -1,4 +1,6 @@
 export interface ILanguageKeys {
+  generate_final_report: string;
+  add_to_final_report: string;
   meeting_member_name: string;
   view_members_comments: string;
   members_comments: string;

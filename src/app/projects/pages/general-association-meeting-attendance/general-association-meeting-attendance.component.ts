@@ -83,7 +83,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   selectedGeneralNoteIndex!: number | null;
   generalNotesDisplayedColumns: string[] = ['index', 'comment', 'actions'];
 
-  userCommentsDisplayedColumns: string[] = ['index','arName', 'enName', 'status', 'actions'];
+  userCommentsDisplayedColumns: string[] = ['index', 'arName', 'enName', 'status', 'actions'];
   meetingUserTaskStatus: MeetingMemberTaskStatus[] = [];
 
   isMemberReview!: boolean;
@@ -218,10 +218,8 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
       this.generalNotes = notes;
     });
 
-    if(this.model?.isSentToMember() && this.model?.isDecisionMakerReviewStep()) {
-      this.service.getMemberTaskStatus(this.model?.id).subscribe(membersStatus => {
-        this.meetingUserTaskStatus = membersStatus.map(x => new MeetingMemberTaskStatus().clone(x));
-      });
+    if (this.model?.isSentToMember() && this.model?.isDecisionMakerReviewStep()) {
+      this.loadMembersTaskStatus();
     }
 
     this.isMemberReview = this.model?.isMemberReviewStep()!;
@@ -229,7 +227,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   }
 
   setMeetingPointsForm() {
-    if(this.model?.isDecisionMakerReviewStep()) {
+    if (this.model?.isDecisionMakerReviewStep()) {
       this.service.getMeetingPointsForDecisionMaker(this.model?.id).subscribe(meetingReport => {
         if (this.isMemberReview || (this.isDecisionMakerReview && meetingReport && meetingReport.meetingMainItem.length > 0)) {
           // get meeting attendance report
@@ -241,7 +239,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
       });
     }
 
-    if(this.model?.isMemberReviewStep()) {
+    if (this.model?.isMemberReviewStep()) {
       this.service.getMeetingPointsForMember(this.model?.id).subscribe(meetingReport => {
         if (this.isMemberReview || (this.isDecisionMakerReview && meetingReport && meetingReport.meetingMainItem.length > 0)) {
           // get meeting attendance report
@@ -760,7 +758,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   getMembersComments(mainItemIndex: number, index: number): MeetingPointMemberComment[] {
     let mainItem = this.mainItems.at(mainItemIndex);
     let subItem = (mainItem.get('meetingSubItem') as UntypedFormArray).at(index) as FormGroup;
-    return subItem.get('membersComments')?.value as MeetingPointMemberComment[];
+    return subItem.get('userComments')?.value as MeetingPointMemberComment[];
   }
 
   newSubItem(subItem: MeetingAttendanceSubItem = new MeetingAttendanceSubItem()): FormGroup {
@@ -772,7 +770,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
       mainItemID: [subItem.mainItemID],
       memberID: [subItem.memberID],
       status: [subItem.status],
-      membersComments: [subItem.userComments],
+      userComments: [subItem.userComments],
       selected: []
     });
   }
@@ -820,6 +818,30 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     });
   }
 
+  generateFinalReport() {
+    let report = this.getSelectedMeetingPoints(new MeetingAttendanceReport().clone(this.meetingPointsForm.value));
+
+    if (report.meetingMainItem.length === 0) {
+      this.dialog.error('You have to add at least one meeting point');
+      return;
+    }
+
+    this.service.generateReport(this.model?.id!, report, this.generalNotes)
+      .subscribe(blob => {
+        window.open(blob.url);
+      });
+  }
+
+  getSelectedMeetingPoints(report: MeetingAttendanceReport): MeetingAttendanceReport {
+    console.log('form before select selected', this.meetingPointsForm.value);
+    report.meetingMainItem = report.meetingMainItem.map(mainItem => {
+      mainItem.meetingSubItem = mainItem.meetingSubItem.filter(subItem => subItem.selected);
+      return mainItem;
+    }).filter(mainItem => mainItem.meetingSubItem.length > 0);
+    console.log('form after select selected', this.meetingPointsForm.value);
+    return report;
+  }
+
   saveGeneralNotes() {
     const meetingGeneralNotes = this.generalNotes.map(x => {
       return new GeneralMeetingAttendanceNote().clone(x);
@@ -828,11 +850,19 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
       this.dialog.success('general notes added successfully');
       this.generalNotes = ret.map(x => {
         return new GeneralMeetingAttendanceNote().clone(x);
-      })
+      });
     });
   }
 
   terminateUserTask(event: MouseEvent, item: MeetingMemberTaskStatus) {
-    this.service.terminateMemberTask(item.tkiid).subscribe(ret => console.log('after terminate task', ret));
+    this.service.terminateMemberTask(item.pId).subscribe(_ => {
+      this.loadMembersTaskStatus();
+    });
+  }
+
+  loadMembersTaskStatus() {
+    this.service.getMemberTaskStatus(this.model?.id).subscribe(membersStatus => {
+      this.meetingUserTaskStatus = [...membersStatus.map(x => new MeetingMemberTaskStatus().clone(x)).slice()];
+    });
   }
 }

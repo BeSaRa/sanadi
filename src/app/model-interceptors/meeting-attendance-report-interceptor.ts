@@ -12,19 +12,16 @@ export class MeetingAttendanceReportInterceptor implements IModelInterceptor<Mee
 
   send(model: Partial<MeetingAttendanceReport>): Partial<MeetingAttendanceReport> {
     let mainItemInterceptor = new MeetingAttendanceMainItemInterceptor();
-    let subItemInterceptor = new MeetingAttendanceSubItemInterceptor();
-    let memberCommentInterceptor = new MeetingPointMemberCommentInterceptor();
     delete model.searchFields;
     model.meetingMainItem = model.meetingMainItem?.map(x => {
-      let meetingMainItem = new MeetingAttendanceMainItem().clone(mainItemInterceptor.send(x)) as MeetingAttendanceMainItem;
-      meetingMainItem.meetingSubItem = meetingMainItem.meetingSubItem?.map(sub => {
-        let meetingSubItem = new MeetingAttendanceSubItem().clone(subItemInterceptor.send(sub)) as MeetingAttendanceSubItem;
-        meetingSubItem.userComments = meetingSubItem.userComments?.map(comment => {
-          return new MeetingPointMemberComment().clone(memberCommentInterceptor.send(comment)) as MeetingPointMemberComment;
-        });
-        return meetingSubItem;
-      });
-      return meetingMainItem;
+      return new MeetingAttendanceMainItem().clone(mainItemInterceptor.send(x)) as MeetingAttendanceMainItem;
+      // meetingMainItem.meetingSubItem = meetingMainItem.meetingSubItem?.map(sub => {
+      //   let meetingSubItem = new MeetingAttendanceSubItem().clone(subItemInterceptor.send(sub)) as MeetingAttendanceSubItem;
+      //   meetingSubItem.userComments = meetingSubItem.userComments?.map(comment => {
+      //     return new MeetingPointMemberComment().clone(memberCommentInterceptor.send(comment)) as MeetingPointMemberComment;
+      //   });
+      //   return meetingSubItem;
+      // });
     });
 
     return model;

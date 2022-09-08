@@ -375,6 +375,14 @@
                               {{lang.map.view_members_comments}}
                             </button>
                           </div>
+                          <div class="col-md-4 form-check form-switch" style="margin-top: 40px;" *ngIf="isDecisionMakerReview && model?.isSentToMember()">
+                            <div class="ms-3">
+                              <input class="form-check-input" type="checkbox" [id]="'select' + i + j"
+                                     formControlName="selected">
+                              <label class="form-check-label"
+                                     [for]="'select' + i + j">{{lang.map.add_to_final_report}}</label>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -387,6 +395,12 @@
             <div class="col-12 text-center action-container mb-3">
               <button [disabled]="!meetingPointsForm?.valid" (click)="saveMeetingPoints()"
                       class="btn btn-primary">{{lang.map.save_meeting_points}}</button>
+            </div>
+          </div>
+          <div class="row" *ngIf="this.model?.isSentToMember() && this.model?.isDecisionMakerReviewStep()">
+            <div class="col-12 text-center action-container mb-3">
+              <button [disabled]="!meetingPointsForm?.valid" (click)="generateFinalReport()"
+                      class="btn btn-primary">{{lang.map.generate_final_report}}</button>
             </div>
           </div>
         </div>
