@@ -1,10 +1,21 @@
+import { BuildingAbilityInterceptor } from './../model-interceptors/building-ability-interceptor';
 import { Validators } from '@angular/forms';
+import { dateSearchFields } from '@app/helpers/date-search-fields';
+import { infoSearchFields } from '@app/helpers/info-search-fields';
+import { normalSearchFields } from '@app/helpers/normal-search-fields';
 import { AdminResult } from '@app/models/admin-result';
+import { EmployeeService } from '@app/services/employee.service';
+import { FactoryService } from '@app/services/factory.service';
+import { ISearchFieldsMap } from '@app/types/types';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { SearchableCloneable } from './searchable-cloneable';
+import { InterceptModel } from '@app/decorators/decorators/intercept-model';
 
+const { send, receive } = new BuildingAbilityInterceptor();
+
+@InterceptModel({ send, receive })
 export class BuildingAbility extends SearchableCloneable<BuildingAbility> {
-  organizationId!:number|undefined;
+  organizationId!: number | undefined;
   activityName!: string;
   trainingActivityType!: number;
   activityGoal!: string;
@@ -32,6 +43,41 @@ export class BuildingAbility extends SearchableCloneable<BuildingAbility> {
 
   constructor() {
     super();
+    this.employeeService = FactoryService.getService('EmployeeService');
+  }
+
+  employeeService: EmployeeService;
+  searchFields: ISearchFieldsMap<BuildingAbility> = {
+    ...dateSearchFields([
+      'suggestedActivityDateFrom',
+      'suggestedActivityDateTo',
+    ]),
+    ...infoSearchFields([
+      'trainingActivityTypeInfo',
+      'trainingLanguageInfo',
+      'trainingWayInfo',
+    ]),
+    ...normalSearchFields([
+      'activityName',
+      'activityGoal',
+      'trainingActivityMainAxes',
+      'targetGroupNature',
+      'timeFrom',
+      'timeTo',
+      'platform',
+      'buildingsName',
+      'floorNo',
+      'hallName',
+      'streetName',
+      'email',
+    ]),
+  };
+  finalizeSearchFields(): void {
+    if (this.employeeService.isExternalUser()) {
+      delete this.searchFields.ouInfo;
+      delete this.searchFields.organizationId;
+      delete this.searchFields.organization;
+    }
   }
 
   formBuilder(controls?: boolean) {
@@ -65,8 +111,7 @@ export class BuildingAbility extends SearchableCloneable<BuildingAbility> {
             [Validators.required].concat(
               CustomValidators.maxLength(
                 CustomValidators.defaultLengths.ENGLISH_NAME_MAX
-              ),
-
+              )
             ),
           ]
         : activityName,
@@ -79,18 +124,19 @@ export class BuildingAbility extends SearchableCloneable<BuildingAbility> {
             [Validators.required].concat(
               CustomValidators.maxLength(
                 CustomValidators.defaultLengths.ENGLISH_NAME_MAX
-              ),
-
+              )
             ),
           ]
         : activityGoal,
       trainingActivityMainAxes: controls
-        ? [trainingActivityMainAxes, [Validators.required].concat(
-          CustomValidators.maxLength(
-            CustomValidators.defaultLengths.EXPLANATIONS
-          ),
-
-        )]
+        ? [
+            trainingActivityMainAxes,
+            [Validators.required].concat(
+              CustomValidators.maxLength(
+                CustomValidators.defaultLengths.EXPLANATIONS
+              )
+            ),
+          ]
         : trainingActivityMainAxes,
       trainingLanguage: controls
         ? [trainingLanguage, Validators.required]
@@ -112,8 +158,7 @@ export class BuildingAbility extends SearchableCloneable<BuildingAbility> {
             [Validators.required].concat(
               CustomValidators.maxLength(
                 CustomValidators.defaultLengths.ENGLISH_NAME_MAX
-              ),
-
+              )
             ),
           ]
         : targetGroupNature,
@@ -190,10 +235,7 @@ export class BuildingAbility extends SearchableCloneable<BuildingAbility> {
           ]
         : streetName,
       filtrationMethod: controls
-        ? [
-            filtrationMethod,
-            [Validators.required],
-          ]
+        ? [filtrationMethod, [Validators.required]]
         : filtrationMethod,
       email: controls
         ? [
@@ -231,7 +273,6 @@ export class BuildingAbility extends SearchableCloneable<BuildingAbility> {
       'timeFrom',
       'timeTo',
       'trainingWay',
-      'filtrationMethod',
       'actions',
     ];
   }

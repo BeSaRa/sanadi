@@ -1,12 +1,22 @@
+import { EffectiveCoordinationInterceptor } from './../model-interceptors/effective-coordination-interceptor';
 import { AdminResult } from './admin-result';
 import { FactoryService } from '@app/services/factory.service';
 import { LangService } from '@app/services/lang.service';
 import { SearchableCloneable } from './searchable-cloneable';
 import { Validators } from '@angular/forms';
 import { CustomValidators } from '@app/validators/custom-validators';
+import { EmployeeService } from '@app/services/employee.service';
+import { ISearchFieldsMap } from '@app/types/types';
+import { dateSearchFields } from '@app/helpers/date-search-fields';
+import { infoSearchFields } from '@app/helpers/info-search-fields';
+import { normalSearchFields } from '@app/helpers/normal-search-fields';
+import { InterceptModel } from '@app/decorators/decorators/intercept-model';
 
+const { send, receive } = new EffectiveCoordinationInterceptor();
+
+@InterceptModel({ send, receive })
 export class EffectiveCoordinationCapabilities extends SearchableCloneable<EffectiveCoordinationCapabilities> {
-  organizationId!:number|undefined;
+  organizationId!: number | undefined;
   eventTopic!: string;
   motivesAndRationale!: string;
   eventObjectives!: string;
@@ -24,7 +34,34 @@ export class EffectiveCoordinationCapabilities extends SearchableCloneable<Effec
 
   constructor() {
     super();
+
+    this.employeeService = FactoryService.getService('EmployeeService');
     this.langService = FactoryService.getService('LangService');
+  }
+
+  employeeService: EmployeeService;
+  searchFields: ISearchFieldsMap<EffectiveCoordinationCapabilities> = {
+    ...dateSearchFields(['eventStartDate']),
+    ...infoSearchFields(['organizationWayInfo']),
+    ...normalSearchFields([
+      'eventTopic',
+      'motivesAndRationale',
+      'eventObjectives',
+      'expectedOutcomes',
+      'axes',
+      'daysNumber',
+      'hoursNumber',
+      'sponsorsAndOrganizingPartners',
+      'financialAllotment',
+      'organizationRequiredRole',
+    ]),
+  };
+  finalizeSearchFields(): void {
+    if (this.employeeService.isExternalUser()) {
+      delete this.searchFields.ouInfo;
+      delete this.searchFields.organizationId;
+      delete this.searchFields.organization;
+    }
   }
   get DisplayedColumns(): string[] {
     return [

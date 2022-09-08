@@ -51,19 +51,27 @@ export class CoordinationWithOrganizationsRequest
 
   approved=false;
   domainInfo!: AdminResult
-
   searchFields: ISearchFieldsMap<CoordinationWithOrganizationsRequest> = {
     ...dateSearchFields(['createdOn']),
     ...infoSearchFields(['domainInfo', 'caseStatusInfo']),
     ...normalSearchFields(['fullName', 'fullSerial']),
   };
+  finalizeSearchFields(): void {
+    if (this.employeeService.isExternalUser()) {
+      delete this.searchFields.ouInfo;
+      delete this.searchFields.organizationId;
+      delete this.searchFields.organization;
+    }
+  }
   service: CoordinationWithOrganizationsRequestService;
   constructor() {
     super();
     this.service = FactoryService.getService(
       'CoordinationWithOrganizationsRequestService'
     );
+    this.filterSearchFields();
   }
+
   isArrayRequired(type: CoordinationTypes): boolean {
     if (this.id) {
       if (this.domain === type) {

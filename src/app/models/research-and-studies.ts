@@ -1,28 +1,61 @@
+import { ResearchAndStudiesInterceptor } from './../model-interceptors/research-and-studies-interceptor';
 import { AdminResult } from '@app/models/admin-result';
 import { CustomValidators } from './../validators/custom-validators';
 import { Validators } from '@angular/forms';
 import { FactoryService } from '@app/services/factory.service';
 import { LangService } from '@app/services/lang.service';
 import { SearchableCloneable } from './searchable-cloneable';
+import { EmployeeService } from '@app/services/employee.service';
+import { ISearchFieldsMap } from '@app/types/types';
+import { dateSearchFields } from '@app/helpers/date-search-fields';
+import { infoSearchFields } from '@app/helpers/info-search-fields';
+import { normalSearchFields } from '@app/helpers/normal-search-fields';
+import { InterceptModel } from '@app/decorators/decorators/intercept-model';
 
+const { send, receive } = new ResearchAndStudiesInterceptor();
+
+@InterceptModel({ send, receive })
 export class ResearchAndStudies extends SearchableCloneable<ResearchAndStudies> {
-  organizationId!:number|undefined;
+  organizationId!: number | undefined;
   researchTopic!: string;
   motivesAndReasons!: string;
   researchAndStudyObjectives!: string;
   expectedResearchResults!: string;
   generalLandmarks!: string;
-  searchStartDate!: string;
-  searchSubmissionDeadline!: string;
   requiredRole!: string;
   researcherDefinition!: string;
   financialCost!: number;
+  searchStartDate!: string;
+  searchSubmissionDeadline!: string;
   langService?: LangService;
 
   constructor() {
     super();
+    this.employeeService = FactoryService.getService('EmployeeService');
     this.langService = FactoryService.getService('LangService');
+  }
 
+  employeeService: EmployeeService;
+  searchFields: ISearchFieldsMap<ResearchAndStudies> = {
+    ...dateSearchFields(['searchStartDate', 'searchSubmissionDeadline']),
+    ...infoSearchFields([]),
+    ...normalSearchFields([
+      'researchTopic',
+      'motivesAndReasons',
+      'researchAndStudyObjectives',
+      'expectedResearchResults',
+      'generalLandmarks',
+      'requiredRole',
+      'researcherDefinition',
+      'financialCost',
+    ]),
+  };
+  finalizeSearchFields(): void {
+    if (this.employeeService.isExternalUser()) {
+      delete this.searchFields.ouInfo;
+      delete this.searchFields.organizationId;
+      delete this.searchFields.organization;
+    }
   }
 
   get DisplayedColumns(): string[] {
