@@ -41,6 +41,7 @@ export class UrgentInterventionFinancialNotificationInterceptor implements IMode
     delete model.requestTypeInfo;
     delete model.beneficiaryCountryInfo;
     delete model.executionCountryInfo;
+    delete model.searchFields;
     return model;
   }
 }

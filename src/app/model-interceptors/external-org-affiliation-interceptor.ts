@@ -34,6 +34,7 @@ export class ExternalOrgAffiliationInterceptor implements IModelInterceptor<Exte
     delete model.creatorInfo
     delete model.ouInfo
     delete model.requestTypeInfo
+    delete model.searchFields;
     return model;
   }
   receive(model: ExternalOrgAffiliation): ExternalOrgAffiliation {
