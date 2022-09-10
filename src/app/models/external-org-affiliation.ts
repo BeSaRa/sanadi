@@ -1,3 +1,6 @@
+import { normalSearchFields } from '@app/helpers/normal-search-fields';
+import { dateSearchFields } from '@app/helpers/date-search-fields';
+import { ISearchFieldsMap } from './../types/types';
 import { IMyDateModel } from 'angular-mydatepicker';
 import { WFResponseType } from '@app/enums/wfresponse-type.enum';
 import { Validators } from '@angular/forms';
@@ -16,6 +19,7 @@ import { mixinRequestType } from '@app/mixins/mixin-request-type';
 import { InterceptModel } from '@decorators/intercept-model';
 import { AdminResult } from './admin-result';
 import { DialogRef } from '@app/shared/models/dialog-ref';
+import {infoSearchFields} from '@app/helpers/info-search-fields';
 
 const _RequestType = mixinLicenseDurationType(mixinRequestType(CaseModel));
 const { send, receive } = new ExternalOrgAffiliationInterceptor();
@@ -30,6 +34,7 @@ export class ExternalOrgAffiliation extends _RequestType<ExternalOrgAffiliationS
   arName!: string;
   enName!: string
   country!: number;
+  subject!: string;
   city!: string;
   phone!: string;
   fax!: string;
@@ -52,9 +57,21 @@ export class ExternalOrgAffiliation extends _RequestType<ExternalOrgAffiliationS
   constructor() {
     super();
     this.service = FactoryService.getService('ExternalOrgAffiliationService');
+    this.finalizeSearchFields();
   }
 
-
+  finalizeSearchFields(): void {
+    if (this.employeeService.isExternalUser()) {
+      delete this.searchFields.ouInfo;
+      delete this.searchFields.organizationId;
+      delete this.searchFields.organization;
+    }
+  }
+  searchFields: ISearchFieldsMap<ExternalOrgAffiliation> = {
+    ...dateSearchFields(['createdOn']),
+    ...infoSearchFields(['caseStatusInfo', 'requestTypeInfo', 'creatorInfo']),
+    ...normalSearchFields(['fullSerial', 'subject'])
+  };
   getFormFields(control: boolean = false): any {
     const {
       requestType,
