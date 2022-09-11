@@ -258,7 +258,7 @@
   </ng-container>
   <ng-container cdkColumnDef="trainingActivityType">
     <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.training_activity_type}}</th>
-    <td cdk-cell *cdkCellDef="let row"> {{row.trainingActivityType}} </td>
+    <td cdk-cell *cdkCellDef="let row"> {{row.trainingActivityTypeInfo?.getName()}} </td>
   </ng-container>
   <ng-container cdkColumnDef="activityGoal">
     <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.activity_goal}}</th>
@@ -270,7 +270,7 @@
   </ng-container>
   <ng-container cdkColumnDef="trainingLanguage">
     <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.training_language}}</th>
-    <td cdk-cell *cdkCellDef="let row"> {{row.trainingLanguage}} </td>
+    <td cdk-cell *cdkCellDef="let row"> {{row.trainingLanguageInfo?.getName()}} </td>
   </ng-container>
   <ng-container cdkColumnDef="targetGroupNature">
     <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_target_group_nature}}</th>
@@ -289,21 +289,18 @@
     <td cdk-cell *cdkCellDef="let row"> {{row.suggestedActivityDateTo|date}} </td>
   </ng-container>
   <ng-container cdkColumnDef="timeFrom">
-    <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_time_from}}/th>
-    <td cdk-cell *cdkCellDef="let row"> {{row.timeFrom}} </td>
+    <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_time_from}}</th>
+    <td cdk-cell *cdkCellDef="let row"> {{row.timeFrom | date:'hh:mm'}} </td>
   </ng-container>
   <ng-container cdkColumnDef="timeTo">
     <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_time_to}}</th>
-    <td cdk-cell *cdkCellDef="let row"> {{row.timeTo}} </td>
+    <td cdk-cell *cdkCellDef="let row"> {{row.timeTo | date:'hh:mm'}} </td>
   </ng-container>
   <ng-container cdkColumnDef="trainingWay">
     <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_training_way}}</th>
-    <td cdk-cell *cdkCellDef="let row"> {{row.trainingWay}} </td>
+    <td cdk-cell *cdkCellDef="let row"> {{row.trainingWayInfo?.getName()}} </td>
   </ng-container>
-  <ng-container cdkColumnDef="filtrationMethod">
-    <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_filtration_method}}</th>
-    <td cdk-cell *cdkCellDef="let row"> {{row.filtrationMethod}} </td>
-  </ng-container>
+
 
 
   <ng-container cdkColumnDef="actions">

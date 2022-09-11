@@ -1,5 +1,7 @@
+import { DatepickerControlsMap } from './../../../../types/types';
 import { Component, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, UntypedFormControl } from '@angular/forms';
+import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { SaveTypes } from '@app/enums/save-types';
 import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
@@ -63,23 +65,30 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
     this.lookupService.listByCategory.OrganizationWay?.sort(
       (a, b) => a?.lookupKey - b?.lookupKey
     );
-  datepickerOptionsMap: DatepickerOptionsMap = {
-    licenseStartDate: DateUtils.getDatepickerOptions({ disablePeriod: 'past' }),
-    licenseEndDate: DateUtils.getDatepickerOptions({ disablePeriod: 'past' }),
-  };
+
   isCharityUser!: boolean;
   isInternalUser!: boolean;
   isLicensingUser!: boolean;
   isInitialApproved!: boolean;
   currentUserOrgId!: number | undefined;
+  datepickerOptionsMap: DatepickerOptionsMap = {};
+  datepickerControlsMap: DatepickerControlsMap = {};
   isEditLicenseEndDateDisabled(): boolean {
-    return false;
+    return this.isLicensingUser && !this.isInitialApproved;
   }
   isCorrectModelToDisplay(type: CoordinationTypes): boolean {
     return this.model?.domain === type;
   }
   _getNewInstance(): CoordinationWithOrganizationsRequest {
-    return new CoordinationWithOrganizationsRequest();
+    return new CoordinationWithOrganizationsRequest().clone({
+      fullName:'',
+      domain:0,
+      buildingAbilitiesList:[],
+      participatingOrganizaionList:[],
+      organizaionOfficerList:[],
+      effectiveCoordinationCapabilities:[],
+      researchAndStudies:[],
+    });
   }
   isApproved(): boolean {
     return (
@@ -98,6 +107,14 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
     this.currentUserOrgId = this.employeeService.getOrgUnit()?.id;
     this.loadOrgUnits();
     this.loadOrgUsers();
+    this.datepickerOptionsMap = {
+      licenseStartDate: DateUtils.getDatepickerOptions({
+        disablePeriod: !this.isLicensingUser ? 'none' : 'past',
+      }),
+      licenseEndDate: DateUtils.getDatepickerOptions({
+        disablePeriod: !this.isLicensingUser ? 'none' : 'past',
+      }),
+    };
   }
 
   _buildForm(): void {
@@ -105,8 +122,26 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
       new CoordinationWithOrganizationsRequest().formBuilder(true)
     );
   }
-  _afterBuildForm(): void {
 
+  private _buildDatepickerControlsMap(): void {
+    this.datepickerControlsMap = {
+      licenseStartDate: this.licenseStartDate,
+      licenseEndDate: this.licenseEndDate,
+    };
+  }
+
+  _afterBuildForm(): void {
+    this._buildDatepickerControlsMap();
+    if (this.buildingAbilityComponentRef) {
+      this.model!.buildingAbilitiesList = this.buildingAbilityComponentRef.list;
+    }
+    if (this.effectiveCoordinationCapabilitiesComponentRef) {
+      this.model!.effectiveCoordinationCapabilities =
+        this.effectiveCoordinationCapabilitiesComponentRef.list;
+    }
+    if (this.ResearchAndStudiesComponentRef) {
+      this.model!.researchAndStudies = this.ResearchAndStudiesComponentRef.list;
+    }
   }
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
     this.disableListsUpate();
@@ -125,6 +160,33 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
     this.model!.researchAndStudies = this.model!.researchAndStudies.concat(
       this.mainModel.researchAndStudies
     );
+
+    if (this.model!.participatingOrganizaionList.length < 1) {
+      this.dialog.error(this.lang.map.participant_organizations_required);
+      return false;
+    }
+    if (!this.isInternalUser) {
+      if (
+        this.organizationOfficerssComponentRef &&
+        this.organizationOfficerssComponentRef.list.length < 1
+      ) {
+        this.dialog.error(this.lang.map.organization_officers_required);
+        return false;
+      }
+
+      if (this.buildingAbilityComponentRef?.list.length < 1) {
+        this.dialog.error(this.lang.map.building_abilities_required);
+        return false;
+      }
+      if (this.effectiveCoordinationCapabilitiesComponentRef?.list.length < 1) {
+        this.dialog.error(this.lang.map.effective_coordination_required);
+        return false;
+      }
+      if (this.ResearchAndStudiesComponentRef?.list.length < 1) {
+        this.dialog.error(this.lang.map.research_and_studies_required);
+        return false;
+      }
+    }
     return of(this.form.valid);
   }
   _beforeLaunch(): boolean | Observable<boolean> {
@@ -149,7 +211,7 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
     operation: OperationTypes
   ): void {
     this.enableListsUpate();
-    this.mainModel = this.prepareMainModel(this.currentUserOrgId!,model);
+    this.mainModel = this.prepareMainModel(this.currentUserOrgId!, model);
     this.model = this.filterModelByOrgId(this.currentUserOrgId!, model);
     this.model!.approved = this.isApproved();
     if (
@@ -168,9 +230,7 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
   _saveFail(error: any): void {
     console.log(error);
   }
-  _launchFail(error: any): void {
-
-  }
+  _launchFail(error: any): void {}
   _destroyComponent(): void {
     this.destroy$.next();
     this.destroy$.complete();
@@ -181,17 +241,22 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
       return;
     }
     if (this.currentUserOrgId) {
-      this.mainModel = this.prepareMainModel(this.currentUserOrgId,model);
+      this.mainModel = this.prepareMainModel(this.currentUserOrgId, model);
       this.model = this.filterModelByOrgId(this.currentUserOrgId, model)!;
+    } else {
+      this.model = model;
     }
-    this.model = model;
+    this.form = this.fb.group(model.formBuilder(true));
 
     this.isInitialApproved = this.model?.isInitialApproved();
-    this.form = this.fb.group(model.formBuilder(true));
     this.model.approved = this.isApproved();
+  }
+  get fullNameInput() {
+    return this.form.controls['fullName'];
   }
   _resetForm(): void {
     this.form.reset();
+    this.model = this._getNewInstance();
     this.participantOrganizationsComponentRef.list! = [];
     this.organizationOfficerssComponentRef?.list != [];
     this.buildingAbilityComponentRef?.list != [];
@@ -199,6 +264,7 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
     this.ResearchAndStudiesComponentRef?.list != [];
     this.loadOrgUnits(true);
   }
+
   tabsData: IKeyValue = {
     basicInfo: {
       name: 'basicInfoTab',
@@ -219,40 +285,29 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
       name: 'organizationOfficersTap',
       langKey: 'organization_officers',
       validStatus: () => {
-        return (
-          this.organizationOfficersTabStatus === 'READY' &&
-          this.model?.organizaionOfficerList?.length! > 0
-        );
+       return this.model!.organizaionOfficerList.length > 0;
+
       },
     },
     buildingAbilities: {
       name: 'buildingAbilitiesTap',
       langKey: 'building_abilities',
       validStatus: () => {
-        return (
-          this.organizationOfficersTabStatus === 'READY' &&
-          this.model?.buildingAbilitiesList?.length! > 0
-        );
+        return this.model!.buildingAbilitiesList.length > 0
       },
     },
     effectiveCoordinationCapabilities: {
       name: 'effectiveCoordinationCapabilitiesTap',
       langKey: 'effective_coordination_capabilities',
       validStatus: () => {
-        return (
-          this.organizationOfficersTabStatus === 'READY' &&
-          this.model?.effectiveCoordinationCapabilities?.length! > 0
-        );
+        return this.model!.effectiveCoordinationCapabilities.length > 0
       },
     },
     researchAndStudies: {
       name: 'researchAndStudiesTap',
       langKey: 'research_and_studies',
       validStatus: () => {
-        return (
-          this.organizationOfficersTabStatus === 'READY' &&
-          this.model?.researchAndStudies?.length! > 0
-        );
+        return this.model!.researchAndStudies.length > 0
       },
     },
     attachments: {
@@ -293,8 +348,8 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
 
   get paticipatingOrgsCanAdd(): boolean {
     return (
-      this.isLicensingUser || !!(!this.isInitialApproved && this.model?.isClaimed())
-
+      (this.isLicensingUser && !this.isInitialApproved) ||
+      !!(!this.isInitialApproved && this.model?.isClaimed())
     );
   }
   get paticipatingOrgsCanView(): boolean {
@@ -311,7 +366,6 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
       (!this.isInitialApproved &&
         this.isInternalUser &&
         (this.model?.isClaimed() ?? false)) ||
-
       (!this.isInitialApproved && this.isLicensingUser)
     );
   }
@@ -380,15 +434,14 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
               })
             );
           });
-        return list;
-      })
-    )
-    .subscribe((list) => {
-
-      this.organizationUsers = list.sort((a, b) =>
-        a.fullName < b.fullName ? -1 : 1
-      );
-    });
+          return list;
+        })
+      )
+      .subscribe((list) => {
+        this.organizationUsers = list.sort((a, b) =>
+          a.fullName < b.fullName ? -1 : 1
+        );
+      });
   }
 
   // building Abilities
@@ -403,11 +456,10 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
   }
 
   isEditAllowed(): boolean {
-
     return (
       !this.model?.id ||
       (!!this.model?.id && this.model.canCommit()) ||
-      (this.employeeService.isLicensingUser() && !this.isInitialApproved )
+      (this.employeeService.isLicensingUser() && !this.isInitialApproved)
     );
   }
 
@@ -452,10 +504,7 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
       fromFieldName,
       toFieldName,
       controlOptionsMap: this.datepickerOptionsMap,
-      controlsMap: {
-        licenseStartDate: this.licenseStartDate,
-        licenseEndDate: this.licenseEndDate,
-      },
+      controlsMap: this.datepickerControlsMap,
     });
   }
 
@@ -468,8 +517,9 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
     orgId: number,
     updatedModel: CoordinationWithOrganizationsRequest | null = null
   ) {
-    const model = updatedModel ? updatedModel :
-    new CoordinationWithOrganizationsRequest().clone(this.model);
+    const model = updatedModel
+      ? updatedModel
+      : new CoordinationWithOrganizationsRequest().clone(this.model);
 
     model!.organizaionOfficerList! = model!.organizaionOfficerList.filter(
       (x) => x.organizationId === orgId
@@ -514,32 +564,33 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
     return model;
   }
 
-  enableListsUpate(){
-    if( this.organizationOfficerssComponentRef){
-      this.organizationOfficerssComponentRef.allowListUpdate =true;
+  enableListsUpate() {
+    if (this.organizationOfficerssComponentRef) {
+      this.organizationOfficerssComponentRef.allowListUpdate = true;
     }
-    if(this.buildingAbilityComponentRef){
-      this.buildingAbilityComponentRef.allowListUpdate =true;
+    if (this.buildingAbilityComponentRef) {
+      this.buildingAbilityComponentRef.allowListUpdate = true;
     }
-    if(this.effectiveCoordinationCapabilitiesComponentRef){
-      this.effectiveCoordinationCapabilitiesComponentRef.allowListUpdate =true;
+    if (this.effectiveCoordinationCapabilitiesComponentRef) {
+      this.effectiveCoordinationCapabilitiesComponentRef.allowListUpdate = true;
     }
-    if(this.ResearchAndStudiesComponentRef){
-      this.ResearchAndStudiesComponentRef.allowListUpdate =true;
+    if (this.ResearchAndStudiesComponentRef) {
+      this.ResearchAndStudiesComponentRef.allowListUpdate = true;
     }
   }
-  disableListsUpate(){
-    if( this.organizationOfficerssComponentRef){
-      this.organizationOfficerssComponentRef.allowListUpdate =false;
+  disableListsUpate() {
+    if (this.organizationOfficerssComponentRef) {
+      this.organizationOfficerssComponentRef.allowListUpdate = false;
     }
-    if(this.buildingAbilityComponentRef){
-      this.buildingAbilityComponentRef.allowListUpdate =false;
+    if (this.buildingAbilityComponentRef) {
+      this.buildingAbilityComponentRef.allowListUpdate = false;
     }
-    if(this.effectiveCoordinationCapabilitiesComponentRef){
-      this.effectiveCoordinationCapabilitiesComponentRef.allowListUpdate =false;
+    if (this.effectiveCoordinationCapabilitiesComponentRef) {
+      this.effectiveCoordinationCapabilitiesComponentRef.allowListUpdate =
+        false;
     }
-    if(this.ResearchAndStudiesComponentRef){
-      this.ResearchAndStudiesComponentRef.allowListUpdate =false;
+    if (this.ResearchAndStudiesComponentRef) {
+      this.ResearchAndStudiesComponentRef.allowListUpdate = false;
     }
   }
 }

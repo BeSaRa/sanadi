@@ -1264,4 +1264,10 @@ export interface ILanguageKeys {
   lbl_edit_report: string;
   execution_date: string;
   approve: string;
+  participant_organizations_required:string;
+  organization_officers_required: string;
+  model_required: string;
+  building_abilities_required: string;
+  effective_coordination_required: string;
+  research_and_studies_required: string;
 }
