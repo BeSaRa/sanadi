@@ -20,11 +20,11 @@
          name="internal_users">
     </tab>
     <tab [template]="meeting_points" [title]="lang.map.meeting_points"
-         *ngIf="!isExternalUser && (isDecisionMakerReview || isMemberReview)"
+         *ngIf="!isExternalUser && (isDecisionMakerReview || isMemberReview || isManagerFinalReview)"
          name="meeting_points">
     </tab>
     <tab [template]="general_notes" [title]="lang.map.general_notes"
-         *ngIf="!isExternalUser && this.model?.isMemberReviewStep() || this.model?.isDecisionMakerReviewStep()"
+         *ngIf="isDecisionMakerReview || isMemberReview || isManagerFinalReview"
          name="general_notes">
     </tab>
     <tab [template]="manage_members_tasks" [title]="lang.map.manage_member_tasks"
@@ -295,9 +295,9 @@
     <ng-container>
       <ng-template #meeting_points>
         <div class="row">
-          <div class="col">
+          <div class="col-md-12">
             <div class="row">
-              <div class="col">
+              <div class="col-md-12">
                 <h1 class="h6 text-primary m-0 d-inline-block">{{lang.map.main_meeting_points}}</h1>
                 <button class="btn btn-link outline-none"
                         [disabled]="!this.model?.canEditMeetingPoints()"
@@ -307,80 +307,89 @@
             </div>
             <div class="row" [formGroup]="meetingPointsForm"
                  *ngFor="let mainItem of mainItems?.controls; let i=index">
-              <div class="col main-point-container mb-3" formGroupName="meetingMainItem">
-                <button class="btn btn-link outline-none"
-                        [disabled]="!this.model?.canEditMeetingPoints()"
-                        [ngClass]="getRemoveMainItemClass()"
-                        tooltip="{{lang.map.delete_main_meeting_point}}" (click)="removeMainItem(i)">
-                  <i class="mdi mdi-close-circle"></i></button>
-                <div class="row" [formGroupName]="i">
-                  <div class="col">
-                    <div class="row">
-                      <div class="col-md-4 col-sm-12 mb-4 position-relative">
-                        <label asteriskIfRequired="enName" class="form-label"
-                               [for]="'enName' + i">{{lang.map.main_point_name}}</label>
-                        <input class="form-control"
-                               [readonly]="!this.model?.canEditMeetingPoints()"
-                               formControlName="enName"
-                               [id]="'enName' + i" validationClasses="enName">
-                        <app-field-error-message controlName="enName"></app-field-error-message>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col">
-                        <h1 class="h6 text-primary m-0 d-inline-block">{{lang.map.sub_points}}</h1>
-                        <button class="btn btn-link outline-none"
-                                [disabled]="!this.model?.canEditMeetingPoints()"
-                                tooltip="{{lang.map.add_sub_meeting_point}}" (click)="addSubItem(i)">
-                          <i class="mdi mdi-plus-box"></i></button>
-                      </div>
-                    </div>
-                    <div formGroupName="meetingSubItem" class="sub-points-container">
-                      <div *ngFor="let subItem of getSubItems(i)?.controls; let j=index" class="sub-point-container">
-                        <button class="btn btn-link outline-none"
-                                [disabled]="!this.model?.canEditMeetingPoints()"
-                                [ngClass]="getRemoveSubItemClass()"
-                                tooltip="{{lang.map.delete_sub_meeting_point}}" (click)="removeSubItem(i, j)">
-                          <i class="mdi mdi-close-circle"></i></button>
-                        <div class="row" [formGroupName]="j">
-                          <div class="col-md-4 col-sm-12 position-relative">
-                            <label asteriskIfRequired="enName" class="form-label"
-                                   [for]="'enName' + i + j">{{lang.map.lbl_description}}</label>
-                            <input class="form-control"
-                                   [readonly]="!this.model?.canEditMeetingPoints()"
-                                   formControlName="enName"
-                                   [id]="'enName' + i + j" validationClasses="enName">
-                            <app-field-error-message controlName="enName"></app-field-error-message>
-                          </div>
-                          <ng-container *ngIf="isMemberReview">
-                            <div class="col-md-4 col-sm-12 position-relative">
-                              <label asteriskIfRequired="comment" class="form-label"
-                                     [for]="'comment' + i + j">{{lang.map.notes}}</label>
+              <div class="col-md-12 mb-3" formGroupName="meetingMainItem">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="main-point-container">
+                      <button class="btn btn-link outline-none"
+                              [disabled]="!this.model?.canEditMeetingPoints()"
+                              [ngClass]="getRemoveMainItemClass()"
+                              tooltip="{{lang.map.delete_main_meeting_point}}" (click)="removeMainItem(i)">
+                        <i class="mdi mdi-close-circle"></i></button>
+                      <div class="row" [formGroupName]="i">
+                        <div class="col-md-12">
+                          <div class="row">
+                            <div class="col-md-4 col-sm-12 mb-4 position-relative">
+                              <label asteriskIfRequired="enName" class="form-label"
+                                     [for]="'enName' + i">{{lang.map.main_point_name}}</label>
                               <input class="form-control"
-                                     formControlName="comment"
-                                     [id]="'comment' + i + j" validationClasses="comment">
-                              <app-field-error-message controlName="comment"></app-field-error-message>
+                                     [readonly]="!this.model?.canEditMeetingPoints()"
+                                     formControlName="enName"
+                                     [id]="'enName' + i" validationClasses="enName">
+                              <app-field-error-message controlName="enName"></app-field-error-message>
                             </div>
-                            <div class="col-md-4 form-check form-switch" style="margin-top: 2.25rem !important;">
-                              <div class="ms-3">
-                                <input class="form-check-input" type="checkbox" [id]="'respectTerms' + i + j"
-                                       formControlName="respectTerms">
-                                <label class="form-check-label"
-                                       [for]="'respectTerms' + i + j">{{lang.map.respect_terms}}</label>
-                              </div>
-                            </div>
-                          </ng-container>
-                          <div class="col-md-4 col-sm-12 position-relative" style="margin-top: 32px;" *ngIf="isDecisionMakerReview && model?.isSentToMember()">
-                            <button class="btn btn-primary" (click)="viewMeetingPointMembersComments(i, j)">
-                              {{lang.map.view_members_comments}}
-                            </button>
                           </div>
-                          <div class="col-md-4 form-check form-switch" style="margin-top: 40px;" *ngIf="isDecisionMakerReview && model?.isSentToMember()">
-                            <div class="ms-3">
-                              <input class="form-check-input" type="checkbox" [id]="'select' + i + j"
-                                     formControlName="selected">
-                              <label class="form-check-label"
-                                     [for]="'select' + i + j">{{lang.map.add_to_final_report}}</label>
+                          <div class="row">
+                            <div class="col">
+                              <h1 class="h6 text-primary m-0 d-inline-block">{{lang.map.sub_points}}</h1>
+                              <button class="btn btn-link outline-none"
+                                      [disabled]="!this.model?.canEditMeetingPoints()"
+                                      tooltip="{{lang.map.add_sub_meeting_point}}" (click)="addSubItem(i)">
+                                <i class="mdi mdi-plus-box"></i></button>
+                            </div>
+                          </div>
+                          <div formGroupName="meetingSubItem" class="sub-points-container">
+                            <div *ngFor="let subItem of getSubItems(i)?.controls; let j=index"
+                                 class="sub-point-container">
+                              <button class="btn btn-link outline-none"
+                                      [disabled]="!this.model?.canEditMeetingPoints()"
+                                      [ngClass]="getRemoveSubItemClass()"
+                                      tooltip="{{lang.map.delete_sub_meeting_point}}" (click)="removeSubItem(i, j)">
+                                <i class="mdi mdi-close-circle"></i></button>
+                              <div class="row" [formGroupName]="j">
+                                <div class="col-md-4 col-sm-12 position-relative">
+                                  <label asteriskIfRequired="enName" class="form-label"
+                                         [for]="'enName' + i + j">{{lang.map.lbl_description}}</label>
+                                  <input class="form-control"
+                                         [readonly]="!this.model?.canEditMeetingPoints()"
+                                         formControlName="enName"
+                                         [id]="'enName' + i + j" validationClasses="enName">
+                                  <app-field-error-message controlName="enName"></app-field-error-message>
+                                </div>
+                                <ng-container *ngIf="isMemberReview">
+                                  <div class="col-md-4 col-sm-12 position-relative">
+                                    <label asteriskIfRequired="comment" class="form-label"
+                                           [for]="'comment' + i + j">{{lang.map.notes}}</label>
+                                    <input class="form-control"
+                                           formControlName="comment"
+                                           [id]="'comment' + i + j" validationClasses="comment">
+                                    <app-field-error-message controlName="comment"></app-field-error-message>
+                                  </div>
+                                  <div class="col-md-4 form-check form-switch" style="margin-top: 2.25rem !important;">
+                                    <div class="ms-3">
+                                      <input class="form-check-input" type="checkbox" [id]="'respectTerms' + i + j"
+                                             formControlName="respectTerms">
+                                      <label class="form-check-label"
+                                             [for]="'respectTerms' + i + j">{{lang.map.respect_terms}}</label>
+                                    </div>
+                                  </div>
+                                </ng-container>
+                                <div class="col-md-4 col-sm-12 position-relative" style="margin-top: 32px;"
+                                     *ngIf="(isDecisionMakerReview && model?.isSentToMember()) || isManagerFinalReview ">
+                                  <button class="btn btn-primary" (click)="viewMeetingPointMembersComments(i, j)">
+                                    {{lang.map.view_members_comments}}
+                                  </button>
+                                </div>
+                                <div class="col-md-4 form-check form-switch" style="margin-top: 40px;"
+                                     *ngIf="isDecisionMakerReview && model?.isSentToMember()">
+                                  <div class="ms-3">
+                                    <input class="form-check-input" type="checkbox" [id]="'select' + i + j"
+                                           formControlName="selected">
+                                    <label class="form-check-label"
+                                           [for]="'select' + i + j">{{lang.map.add_to_final_report}}</label>
+                                  </div>
+                                </div>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -391,16 +400,31 @@
               </div>
             </div>
           </div>
-          <div class="row" *ngIf="this.model?.canEditMeetingPoints()">
-            <div class="col-12 text-center action-container mb-3">
-              <button [disabled]="!meetingPointsForm?.valid" (click)="saveMeetingPoints()"
-                      class="btn btn-primary">{{lang.map.save_meeting_points}}</button>
+          <div class="col-md-12">
+            <div class="row" *ngIf="this.model?.canEditMeetingPoints()">
+              <div class="col-12 text-center action-container mb-3">
+                <button [disabled]="!meetingPointsForm?.valid" (click)="saveMeetingPoints()"
+                        class="btn btn-primary">{{lang.map.save_meeting_points}}</button>
+              </div>
             </div>
-          </div>
-          <div class="row" *ngIf="this.model?.isSentToMember() && this.model?.isDecisionMakerReviewStep()">
-            <div class="col-12 text-center action-container mb-3">
-              <button [disabled]="!meetingPointsForm?.valid" (click)="generateFinalReport()"
-                      class="btn btn-primary">{{lang.map.generate_final_report}}</button>
+            <div class="row" *ngIf="this.model?.isSentToMember() && this.model?.isDecisionMakerReviewStep()">
+              <div class="col-12 text-center action-container mb-3">
+                <button [disabled]="!meetingPointsForm?.valid" (click)="generateFinalReport()"
+                        class="btn btn-primary">{{lang.map.import_report_summary}}</button>
+
+                <input class="input-file" type="file" #finalReportUploader [hidden]="true"
+                       (change)="onReportSelected($event)"
+                       [accept]="finalReportExtensions.join(',')">
+                <button class="btn btn-primary"
+                        (click)="openFileBrowser($event)">
+                  {{lang.map.upload_final_report}}
+                </button>
+                <button class="btn btn-primary" style="margin-right: 10px; margin-left: 10px"
+                        *ngIf="model?.meetingReportID"
+                        (click)="viewFinalReport$.next()">
+                  {{lang.map.generate_final_report}}
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -484,7 +508,7 @@
             </app-table>
           </div>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="isMemberReview || isDecisionMakerReview">
           <div class="col-12 text-center action-container mb-3">
             <button [disabled]="generalNotes.length === 0" (click)="saveGeneralNotes()"
                     class="btn btn-primary">{{lang.map.save_general_notes}}</button>

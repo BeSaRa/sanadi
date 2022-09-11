@@ -1,4 +1,7 @@
 export interface ILanguageKeys {
+  import_report_summary: string;
+  upload_final_report: string;
+  file_have_been_uploaded_successfully: string;
   generate_final_report: string;
   add_to_final_report: string;
   meeting_member_name: string;

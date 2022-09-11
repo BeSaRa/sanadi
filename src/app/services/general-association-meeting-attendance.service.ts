@@ -242,7 +242,35 @@ export class GeneralAssociationMeetingAttendanceService extends BaseGenericEServ
       .pipe(map(result => new BlobModel(result, this.domSanitizer)));
   }
 
-  generateReport(caseId: string, report: MeetingAttendanceReport, meetingComments: GeneralMeetingAttendanceNote[]) {
+  generateReport(caseId: string, report: MeetingAttendanceReport, meetingComments: GeneralMeetingAttendanceNote[]): Observable<BlobModel> {
     return this._generateReport(caseId, report, meetingComments);
+  }
+
+  uploadFinalReport(caseId: string, documentTitle: string, finalReport: File): Observable<string> {
+    const formData = new FormData();
+    formData.append('content', finalReport);
+    return this.http.post<string>(this._getURLSegment() + '/' + caseId + '/final-report', formData).pipe(
+      map((response: any) => {
+        return response.rs;
+      })
+    );
+  }
+
+  @CastResponse(() => BlobModel, {
+    unwrap: '',
+    fallback: '$default'
+  })
+  _getFinalReport(documentId: string): Observable<BlobModel> {
+    return this.http.post(this._getURLSegment() + '/' + documentId + '/document', undefined,
+      {responseType: 'blob', observe: 'body'})
+      .pipe(map(result => new BlobModel(result, this.domSanitizer)));
+  }
+
+  getFinalReport(documentId: string): Observable<BlobModel> {
+    return this.documentService.downloadDocument(documentId);
+  }
+
+  downloadFinalReport(documentId: string): Observable<BlobModel> {
+    return this.documentService.downloadDocument(documentId);
   }
 }

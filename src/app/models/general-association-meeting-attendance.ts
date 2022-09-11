@@ -115,6 +115,10 @@ export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAss
     return this.taskDetails?.name === GeneralAssociationMeetingStepNameEnum.DECISION_MAKER_REVIEW;
   }
 
+  isManagerFinalReviewStep(): boolean {
+    return this.taskDetails?.name === GeneralAssociationMeetingStepNameEnum.MANAGER_FINAL_REVIEW;
+  }
+
   isMemberReviewStep(): boolean {
     return this.taskDetails?.name === GeneralAssociationMeetingStepNameEnum.MEMBER_REVIEW;
   }

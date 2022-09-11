@@ -1,4 +1,4 @@
-import {AfterViewInit, ChangeDetectorRef, Component} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, ViewChild} from '@angular/core';
 import {AbstractControl, FormBuilder, FormControl, FormGroup, UntypedFormArray, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {SaveTypes} from '@app/enums/save-types';
@@ -6,7 +6,7 @@ import {EServicesGenericComponent} from '@app/generics/e-services-generic-compon
 import {GeneralAssociationMeetingAttendance} from '@app/models/general-association-meeting-attendance';
 import {LangService} from '@app/services/lang.service';
 import {GeneralAssociationMeetingAttendanceService} from '@services/general-association-meeting-attendance.service';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
 import {LookupService} from '@services/lookup.service';
 import {DialogService} from '@services/dialog.service';
 import {ToastService} from '@services/toast.service';
@@ -17,7 +17,7 @@ import {DateUtils} from '@helpers/date-utils';
 import {EmployeeService} from '@services/employee.service';
 import {GeneralAssociationExternalMember} from '@app/models/general-association-external-member';
 import {Lookup} from '@app/models/lookup';
-import {exhaustMap, filter, map, takeUntil, tap} from 'rxjs/operators';
+import {catchError, exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {SelectedLicenseInfo} from '@contracts/selected-license-info';
 import {InternalProjectLicenseResult} from '@app/models/internal-project-license-result';
 import {SharedService} from '@services/shared.service';
@@ -46,6 +46,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   private displayedColumns: string[] = ['fullSerial', 'status', 'requestTypeInfo', 'actions'];
   addAdministrativeBoardMembersLabel: keyof ILanguageKeys = 'add_administrative_board_member';
   addGeneralAssociationMembersLabel: keyof ILanguageKeys = 'add_general_association_members';
+  importFinalReport$: Subject<void> = new Subject<void>();
 
   selectedLicenses: GeneralAssociationMeetingAttendance[] = [];
   selectedLicenseDisplayedColumns: string[] = ['serial', 'requestType', 'licenseStatus', 'actions'];
@@ -88,10 +89,15 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
 
   isMemberReview!: boolean;
   isDecisionMakerReview!: boolean;
+  isManagerFinalReview!: boolean;
   memberId!: number;
 
   // meeting points form
   meetingPointsForm!: UntypedFormGroup;
+  finalReportFile: any;
+  finalReportExtensions: string[] = ['.pdf', '.doc', '.docx'];
+  viewFinalReport$: Subject<void> = new Subject<void>();
+  @ViewChild('finalReportUploader') finalReportUploader!: ElementRef;
 
   constructor(public lang: LangService,
               public fb: FormBuilder,
@@ -169,6 +175,8 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     this.memberId = this.employeeService.getCurrentUser()?.generalUserId!;
     this.buildAgendaForm();
     this.buildGeneralNotesForm();
+    this.listenToImportFinalReport();
+    this.listenToDownloadFinalReport();
     // this.initMeetingPointsForm();
   }
 
@@ -224,12 +232,13 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
 
     this.isMemberReview = this.model?.isMemberReviewStep()!;
     this.isDecisionMakerReview = this.model?.isDecisionMakerReviewStep()!;
+    this.isManagerFinalReview = this.model?.isManagerFinalReviewStep()!;
   }
 
   setMeetingPointsForm() {
-    if (this.model?.isDecisionMakerReviewStep()) {
+    if (this.model?.isDecisionMakerReviewStep() || this.model?.isManagerFinalReviewStep()) {
       this.service.getMeetingPointsForDecisionMaker(this.model?.id).subscribe(meetingReport => {
-        if (this.isMemberReview || (this.isDecisionMakerReview && meetingReport && meetingReport.meetingMainItem.length > 0)) {
+        if (this.isMemberReview || ((this.isDecisionMakerReview || this.isManagerFinalReview) && meetingReport && meetingReport.meetingMainItem.length > 0)) {
           // get meeting attendance report
           this.updateMeetingPointsForm(meetingReport);
           // update meeting points form
@@ -863,6 +872,72 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   loadMembersTaskStatus() {
     this.service.getMemberTaskStatus(this.model?.id).subscribe(membersStatus => {
       this.meetingUserTaskStatus = [...membersStatus.map(x => new MeetingMemberTaskStatus().clone(x)).slice()];
+    });
+  }
+
+  // import report summary functionality
+  listenToImportFinalReport() {
+    const documentTitle = 'test-title';
+    this.importFinalReport$.pipe(
+      takeUntil(this.destroy$),
+      switchMap(() => {
+        return this.service.uploadFinalReport(this.model?.id!, documentTitle, this.finalReportFile).pipe(
+          catchError(_ => of(null))
+        );
+      })
+    ).subscribe((vsId) => {
+      if (vsId) {
+        this.toast.success(this.lang.map.file_have_been_uploaded_successfully);
+      }
+    });
+  }
+
+  openFileBrowser($event: MouseEvent): void {
+    $event?.stopPropagation();
+    $event?.preventDefault();
+    this.finalReportUploader?.nativeElement.click();
+  }
+
+  onReportSelected($event: Event): void {
+    this.saveReportAfterSelect($event);
+  }
+
+  saveReportAfterSelect($event: Event) {
+    let files = ($event.target as HTMLInputElement).files;
+    if (files && files[0]) {
+      const extension = files[0].name.getExtension().toLowerCase();
+      if (this.finalReportExtensions.indexOf(extension) === -1) {
+        this.dialog.error(this.lang.map.msg_invalid_format_allowed_formats.change({formats: this.finalReportExtensions.join(', ')}));
+        this._clearReportUploader();
+        return;
+      }
+
+      let reader = new FileReader();
+      reader.readAsDataURL(files[0]);
+
+      reader.onload = () => {
+        // @ts-ignore
+        this.finalReportFile = files[0];
+
+        // save final report
+        this.importFinalReport$.next();
+      };
+    }
+  }
+
+  private _clearReportUploader(): void {
+    this.finalReportFile = null;
+    this.finalReportUploader.nativeElement.value = '';
+  }
+
+  listenToDownloadFinalReport() {
+    this.viewFinalReport$.pipe(
+      takeUntil(this.destroy$),
+      switchMap(() => {
+        return this.service?.downloadFinalReport(this.model?.meetingReportID!)!;
+      })
+    ).subscribe(blob => {
+      window.open(blob.url);
     });
   }
 }
