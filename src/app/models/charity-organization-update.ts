@@ -13,6 +13,7 @@ import { CharityBranch } from './charity-branch';
 import { OrgMember } from './org-member';
 import { OrganizationOfficer } from './organization-officer';
 import { RealBeneficiary } from './real-beneficiary';
+import { WorkArea } from './work-area';
 
 const interceptor = new CharityOrganizationUpdateInterceptor();
 
@@ -74,7 +75,10 @@ export class CharityOrganizationUpdate extends CaseModel<
   goals!: string;
   charityWorkArea!: number;
   charityWorkAreaInfo!: AdminResult;
+  country!: number;
+  domain!: number;
 
+  workAreaObjectList: WorkArea[] = [];
   buildMetaDataForm(controls = true) {
     const {
       arabicName,
@@ -212,12 +216,14 @@ export class CharityOrganizationUpdate extends CaseModel<
     };
   }
   buildPrimaryLawForm(controls = true) {
-    const { firstReleaseDate, lastUpdateDate, goals, charityWorkArea } = this;
+    const { domain, country, firstReleaseDate, lastUpdateDate, goals, charityWorkArea } = this;
     return {
       firstReleaseDate: controls ? [firstReleaseDate, [CustomValidators.required]] : firstReleaseDate,
       lastUpdateDate: controls ? [lastUpdateDate, [CustomValidators.required]] : lastUpdateDate,
       goals: controls ? [goals, [CustomValidators.required]] : goals,
       charityWorkArea: controls ? [charityWorkArea, [CustomValidators.required]] : charityWorkArea,
+      country: controls ? [country, [CustomValidators.required]] : country,
+      domain: controls ? [domain, [CustomValidators.required]] : domain,
     };
   }
 }

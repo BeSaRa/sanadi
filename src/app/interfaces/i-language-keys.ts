@@ -1306,4 +1306,13 @@ export interface ILanguageKeys {
   lbl_edit_report: string;
   lbl_add_report: string;
   approve: string;
+  work_areas: string;
+  classification: string;
+  bylaws: string;
+  risk_reports: string;
+  risk_type: string;
+  risk_mitigation_measures: string;
+  feedback: string;
+  coordination_and_support_reports: string;
+  reports_received_from_organization: string;
 }

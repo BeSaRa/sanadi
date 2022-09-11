@@ -22,11 +22,14 @@
           appendTo="body"
           [validationClasses]="control.controlName"
           [formControlName]="control.controlName"
+          (change)="control.onChange?.($event)"
         >
           <ng-option
-            *ngFor="let type of control.load"
+            *ngFor="
+              let type of control.load ? control.load : (control.load$ | async)
+            "
             [disabled]="!type.isActive()"
-            [value]="type.id"
+            [value]="type[control.dropdownValue!]"
             >{{ type.getName() }}</ng-option
           >
         </ng-select>
@@ -55,18 +58,6 @@
       ></app-field-error-message>
     </ng-container>
   </div>
-  <div class="row">
-    <div class="col-sm-12">
-      <h2 class="h6 text-primary">{{ lang.map.organization_officers }}</h2>
-      <hr />
-    </div>
-    <organization-officers
-      [readonly]="readonly"
-      [list]="model.branchContactOfficer"
-    >
-    </organization-officers>
-  </div>
-  <hr />
 
   <div class="d-flex flex-row align-items-center justify-content-center">
     <button
@@ -85,7 +76,7 @@
 
 <app-page-header
   [hidden]="showForm"
-  pageTitle="lbl_branch"
+  pageTitle="work_areas"
   [clickOnNew$]="add$"
   [addPermission]="!readonly"
 ></app-page-header>
@@ -104,37 +95,23 @@
         [dataSource]="table.dataSource"
         class="table table-striped table-bordered caption-top"
       >
-        <ng-container cdkColumnDef="fullName">
+        <ng-container cdkColumnDef="arabicName">
           <th cdk-header-cell sortable-header *cdkHeaderCellDef>
-            {{ lang.map.full_name }}
+            {{ lang.map.arabic_name }}
           </th>
-          <td cdk-cell *cdkCellDef="let row">{{ row.fullName }}</td>
+          <td cdk-cell *cdkCellDef="let row">{{ row.arabicName }}</td>
         </ng-container>
-        <ng-container cdkColumnDef="address">
+        <ng-container cdkColumnDef="englishName">
           <th cdk-header-cell sortable-header *cdkHeaderCellDef>
-            {{ lang.map.lbl_address }}
+            {{ lang.map.english_name }}
           </th>
-          <td cdk-cell *cdkCellDef="let row">
-            {{ row.address }}
-          </td>
+          <td cdk-cell *cdkCellDef="let row">{{ row.englishName }}</td>
         </ng-container>
-        <ng-container cdkColumnDef="streetNumber">
+        <ng-container cdkColumnDef="country">
           <th cdk-header-cell sortable-header *cdkHeaderCellDef>
-            {{ lang.map.lbl_street }}
+            {{ lang.map.country }}
           </th>
-          <td cdk-cell *cdkCellDef="let row">{{ row.streetNumber }}</td>
-        </ng-container>
-        <ng-container cdkColumnDef="buildingNumber">
-          <th cdk-header-cell sortable-header *cdkHeaderCellDef>
-            {{ lang.map.building_number }}
-          </th>
-          <td cdk-cell *cdkCellDef="let row">{{ row.buildingNumber }}</td>
-        </ng-container>
-        <ng-container cdkColumnDef="zoneNumber">
-          <th cdk-header-cell sortable-header *cdkHeaderCellDef>
-            {{ lang.map.lbl_zone }}
-          </th>
-          <td cdk-cell *cdkCellDef="let row">{{ row.zoneNumber }}</td>
+          <td cdk-cell *cdkCellDef="let row">{{ row.country }}</td>
         </ng-container>
         <ng-container cdkColumnDef="actions">
           <th cdk-header-cell *cdkHeaderCellDef>

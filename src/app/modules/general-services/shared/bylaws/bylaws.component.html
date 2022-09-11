@@ -22,11 +22,14 @@
           appendTo="body"
           [validationClasses]="control.controlName"
           [formControlName]="control.controlName"
+          (change)="control.onChange?.($event)"
         >
           <ng-option
-            *ngFor="let type of control.load"
+            *ngFor="
+              let type of control.load ? control.load : (control.load$ | async)
+            "
             [disabled]="!type.isActive()"
-            [value]="type.id"
+            [value]="type[control.dropdownValue!]"
             >{{ type.getName() }}</ng-option
           >
         </ng-select>
@@ -54,19 +57,34 @@
         [controlName]="control.controlName"
       ></app-field-error-message>
     </ng-container>
+
+    <ng-container *ngSwitchCase="'date'">
+      <label
+        [asteriskIfRequired]="control.controlName"
+        [for]="control.controlName"
+        class="form-label"
+        [validationClasses]="control.controlName"
+        >{{ control.label }}</label
+      >
+      <div class="input-group">
+        <i class="input-group-text mdi mdi-calendar"></i>
+        <div
+          class="form-control"
+          [formControlName]="control.controlName"
+          [ngClass]="{ 'input-disabled': readonly }"
+          [id]="control.controlName"
+          [options]="datepickerOptionsMap[control.controlName]"
+          (click)="!readonly && dp.toggleCalendar()"
+          #dp="angular-mydatepicker"
+          angular-mydatepicker
+          [validationClasses]="control.controlName"
+        ></div>
+        <app-field-error-message
+          [controlName]="control.controlName"
+        ></app-field-error-message>
+      </div>
+    </ng-container>
   </div>
-  <div class="row">
-    <div class="col-sm-12">
-      <h2 class="h6 text-primary">{{ lang.map.organization_officers }}</h2>
-      <hr />
-    </div>
-    <organization-officers
-      [readonly]="readonly"
-      [list]="model.branchContactOfficer"
-    >
-    </organization-officers>
-  </div>
-  <hr />
 
   <div class="d-flex flex-row align-items-center justify-content-center">
     <button
@@ -85,7 +103,7 @@
 
 <app-page-header
   [hidden]="showForm"
-  pageTitle="lbl_branch"
+  pageTitle="bylaws"
   [clickOnNew$]="add$"
   [addPermission]="!readonly"
 ></app-page-header>
@@ -110,31 +128,23 @@
           </th>
           <td cdk-cell *cdkCellDef="let row">{{ row.fullName }}</td>
         </ng-container>
-        <ng-container cdkColumnDef="address">
+        <ng-container cdkColumnDef="category">
           <th cdk-header-cell sortable-header *cdkHeaderCellDef>
-            {{ lang.map.lbl_address }}
+            {{ lang.map.classification }}
           </th>
-          <td cdk-cell *cdkCellDef="let row">
-            {{ row.address }}
-          </td>
+          <td cdk-cell *cdkCellDef="let row">{{ row.category }}</td>
         </ng-container>
-        <ng-container cdkColumnDef="streetNumber">
+        <ng-container cdkColumnDef="firstReleaseDate">
           <th cdk-header-cell sortable-header *cdkHeaderCellDef>
-            {{ lang.map.lbl_street }}
+            {{ lang.map.first_realase_date }}
           </th>
-          <td cdk-cell *cdkCellDef="let row">{{ row.streetNumber }}</td>
+          <td cdk-cell *cdkCellDef="let row">{{ row.firstReleaseDate }}</td>
         </ng-container>
-        <ng-container cdkColumnDef="buildingNumber">
+        <ng-container cdkColumnDef="lastUpdateDate">
           <th cdk-header-cell sortable-header *cdkHeaderCellDef>
-            {{ lang.map.building_number }}
+            {{ lang.map.date_of_last_update }}
           </th>
-          <td cdk-cell *cdkCellDef="let row">{{ row.buildingNumber }}</td>
-        </ng-container>
-        <ng-container cdkColumnDef="zoneNumber">
-          <th cdk-header-cell sortable-header *cdkHeaderCellDef>
-            {{ lang.map.lbl_zone }}
-          </th>
-          <td cdk-cell *cdkCellDef="let row">{{ row.zoneNumber }}</td>
+          <td cdk-cell *cdkCellDef="let row">{{ row.lastUpdateDate }}</td>
         </ng-container>
         <ng-container cdkColumnDef="actions">
           <th cdk-header-cell *cdkHeaderCellDef>

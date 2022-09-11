@@ -521,7 +521,7 @@
                 *ngFor="
                   let type of lookupService.listByCategory.CharityWorkArea
                 "
-                [value]="type.id"
+                [value]="type.lookupKey"
                 >{{ type.getName() }}</ng-option
               >
             </ng-select>
@@ -530,6 +530,37 @@
             ></app-field-error-message>
           </div>
         </div>
+
+        <!-- <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <div>
+            <label
+              asteriskIfRequired="country"
+              for="requestType"
+              class="form-label"
+              >{{ lang.map.work_area }}</label
+            >
+            <ng-select
+              [selectOnTab]="true"
+              labelForId="country"
+              [clearable]="true"
+              placeholder="{{ lang.map.select }}"
+              id="country"
+              [notFoundText]="lang.map.msg_not_found"
+              appendTo="body"
+              validationClasses="country"
+              formControlName="country"
+            >
+              <ng-option
+                *ngFor="let type of countries$ | async"
+                [value]="type.id"
+                >{{ type.getName() }}</ng-option
+              >
+            </ng-select>
+            <app-field-error-message
+              controlName="country"
+            ></app-field-error-message>
+          </div>
+        </div> -->
 
         <div class="mb-4 position-relative">
           <label asteriskIfRequired="goals" for="goals" class="form-label">{{
@@ -549,6 +580,42 @@
           ></app-field-error-message> -->
         </div>
       </div>
+    </ng-template>
+    <ng-template #tabContent>
+      <foreign-aid-classifications [readonly]="readonly">
+      </foreign-aid-classifications>
+    </ng-template>
+    <ng-template #tabContent>
+      <work-areas [readonly]="readonly"> </work-areas>
+    </ng-template>
+    <ng-template #tabContent>
+      <bylaws [readonly]="readonly"> </bylaws>
+    </ng-template>
+    <ng-template #tabContent>
+      <charity-reports
+        [readonly]="readonly"
+        [list]="riskCharityReport"
+        pageTitle="risk_reports"
+      >
+      </charity-reports>
+    </ng-template>
+
+    <ng-template #tabContent>
+      <charity-reports
+        [readonly]="readonly"
+        [list]="supportCharityReport"
+        pageTitle="coordination_and_support_reports"
+      >
+      </charity-reports>
+    </ng-template>
+
+    <ng-template #tabContent>
+      <charity-reports
+        [list]="incomingCharityReport"
+        [readonly]="readonly"
+        pageTitle="reports_received_from_organization"
+      >
+      </charity-reports>
     </ng-template>
     <ng-template #tabContent>
       <attachments

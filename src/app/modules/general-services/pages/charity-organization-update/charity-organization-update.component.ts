@@ -11,6 +11,7 @@ import {
   UntypedFormControl,
 } from '@angular/forms';
 import { AdminLookupTypeEnum } from '@app/enums/admin-lookup-type-enum';
+import { CharityReportType } from '@app/enums/charity-report-type.enum';
 import { CharityRequestType } from '@app/enums/charity-request-type.enum';
 import { CharityRole } from '@app/enums/charity-role.enum';
 import { FileExtensionsEnum } from '@app/enums/file-extension-mime-types-icons.enum';
@@ -22,12 +23,15 @@ import { IKeyValue } from '@app/interfaces/i-key-value';
 import { AdminLookup } from '@app/models/admin-lookup';
 import { CharityOrganization } from '@app/models/charity-organization';
 import { CharityOrganizationUpdate } from '@app/models/charity-organization-update';
+import { CharityReport } from '@app/models/charity-report';
 import { FinalExternalOfficeApprovalResult } from '@app/models/final-external-office-approval-result';
 import { OrgMember } from '@app/models/org-member';
 import { RealBeneficiary } from '@app/models/real-beneficiary';
 import { AdminLookupService } from '@app/services/admin-lookup.service';
 import { CharityOrganizationUpdateService } from '@app/services/charity-organization-update.service';
 import { CharityOrganizationService } from '@app/services/charity-organization.service';
+import { CharityReportService } from '@app/services/charity-report.service';
+import { CountryService } from '@app/services/country.service';
 import { FinalExternalOfficeApprovalService } from '@app/services/final-external-office-approval.service';
 import { LangService } from '@app/services/lang.service';
 import { LookupService } from '@app/services/lookup.service';
@@ -59,6 +63,7 @@ export class CharityOrganizationUpdateComponent
   activityTypes: AdminLookup[] = [];
   RequestTypes = CharityRequestType;
   members?: { [key: string]: OrgMember[] };
+  charityReports: CharityReport[] = [];
   realBenefeciaries?: RealBeneficiary[] = [];
   requestTypes = this.lookupService.listByCategory.CharityRequestType;
   contactInformationInputs: IKeyValue[] = [
@@ -92,6 +97,7 @@ export class CharityOrganizationUpdateComponent
     'establishmentDate',
     'actions',
   ];
+  countries$ = this.countryService.loadAsLookups()
   externalOffices$?: Observable<FinalExternalOfficeApprovalResult[]>;
   @ViewChildren('tabContent', { read: TemplateRef })
   tabsTemplates!: QueryList<TemplateRef<any>>;
@@ -108,6 +114,17 @@ export class CharityOrganizationUpdateComponent
   get requestTypeForm(): UntypedFormControl {
     return this.form.get('requestType') as UntypedFormControl;
   }
+  get riskCharityReport() {
+    return this.charityReports.filter(cp => cp.reportType === CharityReportType.RISK)
+  }
+
+  get supportCharityReport() {
+    return this.charityReports.filter(cp => cp.reportType === CharityReportType.SUPPORT)
+  }
+
+  get incomingCharityReport() {
+    return this.charityReports.filter(cp => cp.reportType === CharityReportType.INCOMING)
+  }
   constructor(
     public lang: LangService,
     public fb: UntypedFormBuilder,
@@ -117,7 +134,9 @@ export class CharityOrganizationUpdateComponent
     private charityOrganizationService: CharityOrganizationService,
     private memberRoleService: MemberRoleService,
     private finalOfficeApproval: FinalExternalOfficeApprovalService,
-    private realBeneficiaryService: RealBeneficiaryService
+    private realBeneficiaryService: RealBeneficiaryService,
+    private countryService: CountryService,
+    private charityReportService: CharityReportService
   ) {
     super();
   }
@@ -222,6 +241,50 @@ export class CharityOrganizationUpdateComponent
           title: this.lang.map.primary_law,
           validStatus: () => true,
           category: CharityRequestType.GOVERANCE_DOCUMENTS
+        },
+        {
+          name: 'classifcationOfAidTab',
+          template: tabsTemplates[14],
+          title: this.lang.map.classification_of_foreign_aid,
+          validStatus: () => true,
+          category: CharityRequestType.GOVERANCE_DOCUMENTS,
+        },
+        {
+          name: 'workAreasTab',
+          template: tabsTemplates[15],
+          title: this.lang.map.work_areas,
+          validStatus: () => true,
+          category: CharityRequestType.GOVERANCE_DOCUMENTS,
+        },
+        {
+          name: 'byLawsTab',
+          template: tabsTemplates[16],
+          title: this.lang.map.bylaws,
+          validStatus: () => true,
+          category: CharityRequestType.GOVERANCE_DOCUMENTS,
+        },
+        {
+          name: 'riskReportsTab',
+          template: tabsTemplates[17],
+          title: this.lang.map.risk_reports,
+          validStatus: () => true,
+          category: CharityRequestType.COORDINATION_AND_CONTROL_REPORTS
+        },
+
+        {
+          name: 'coordinationAndSupportsTab',
+          template: tabsTemplates[18],
+          title: this.lang.map.coordination_and_support_reports,
+          validStatus: () => true,
+          category: CharityRequestType.COORDINATION_AND_CONTROL_REPORTS
+        },
+
+        {
+          name: 'organizationsReportTab',
+          template: tabsTemplates[19],
+          title: this.lang.map.reports_received_from_organization,
+          validStatus: () => true,
+          category: CharityRequestType.COORDINATION_AND_CONTROL_REPORTS
         }
       ];
       this.tabs = [this._tabs[0]];
@@ -266,6 +329,16 @@ export class CharityOrganizationUpdateComponent
         this.realBeneficiaryService.getRealBenficiaryOfCharity(id).subscribe(e => {
           this.realBenefeciaries = e;
         })
+      });
+    }
+    else if (requestType === this.RequestTypes.GOVERANCE_DOCUMENTS) {
+      this.form.get('primaryLaw.charityWorkArea')!.patchValue(1);
+      console.log({ x: this.form.get('primaryLaw.charityWorkArea') })
+    }
+    else if (requestType === this.RequestTypes.COORDINATION_AND_CONTROL_REPORTS) {
+      this.charityReportService.getByCharityId(id).subscribe(m => {
+        this.charityReports = m;
+        console.log({ m })
       });
     }
   }

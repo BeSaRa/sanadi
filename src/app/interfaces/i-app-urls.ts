@@ -108,5 +108,8 @@ export interface IAppUrls {
   CHARITY_ORGANIZATION: string;
   MEMBER_ROLES: string;
   REAL_BENEFECIARY: string;
+  CHARITY_REPORT: string;
+  CHARITY_DECISION: string;
+
   [index: string]: string;
 }

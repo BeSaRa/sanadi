@@ -171,5 +171,5 @@ export enum LookupCategories {
   BENEFICIARY_OBLIGATION_CAT_ID = '40',
   BENEFICIARY_INCOME_CAT_ID = '41',
   BENEFICIARY_INCOME_PERIODIC_CAT_ID = '42',
-
+  CharityReportStatus = '194'
 }

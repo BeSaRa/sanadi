@@ -16,7 +16,6 @@ import { takeUntil } from 'rxjs/operators';
 export class CharityBranchComponent extends ListModelComponent<CharityBranch> {
   @Input() readonly!: boolean;
   @Input() set list(_list: CharityBranch[]) {
-    console.log({ _list });
     this._list = _list;
   }
   columns = [
