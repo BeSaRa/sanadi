@@ -1,3 +1,10 @@
+import { ResearchAndStudies } from '@app/models/research-and-studies';
+import { ParticipantOrg } from '@app/models/participant-org';
+import { ParticipatingOrgInterceptor } from './participating-org-interceptor';
+import { ResearchAndStudiesInterceptor } from './research-and-studies-interceptor';
+import { EffectiveCoordinationCapabilities } from '@app/models/effective-coordination-capabilities';
+import { BuildingAbility } from './../models/building-ability';
+import { BuildingAbilityInterceptor } from './building-ability-interceptor';
 import { DateUtils } from '@app/helpers/date-utils';
 import { isValidAdminResult } from '@app/helpers/utils';
 import { IModelInterceptor } from '@app/interfaces/i-model-interceptor';
@@ -5,61 +12,59 @@ import { AdminResult } from '@app/models/admin-result';
 import { CoordinationWithOrganizationsRequest } from '@app/models/coordination-with-organizations-request';
 import { TaskDetails } from '@app/models/task-details';
 import { IMyDateModel } from 'angular-mydatepicker';
+import { EffectiveCoordinationInterceptor } from './effective-coordination-interceptor';
 
+const participatingOrgInterceptor = new ParticipatingOrgInterceptor();
+const buildinAbilityInterceptor = new BuildingAbilityInterceptor();
+const effectiveCoordinationInterceptor = new EffectiveCoordinationInterceptor();
+const researchAndStudiesInterceptor = new ResearchAndStudiesInterceptor();
 export class CoordinationWithOrganizationsRequestInterceptor
   implements IModelInterceptor<CoordinationWithOrganizationsRequest>
 {
   send(
     model: Partial<CoordinationWithOrganizationsRequest>
   ): Partial<CoordinationWithOrganizationsRequest> {
-    model.licenseStartDate = !model.licenseStartDate
-      ? undefined
-      : DateUtils.changeDateFromDatepicker(
-          model.licenseStartDate as unknown as IMyDateModel
-        )?.toISOString();
+    model.licenseStartDate &&
+      (model.licenseStartDate = DateUtils.changeDateFromDatepicker(
+        model.licenseStartDate as unknown as IMyDateModel
+      )?.toISOString());
 
-    model.licenseEndDate = !model.licenseEndDate
-      ? undefined
-      : DateUtils.changeDateFromDatepicker(
-          model.licenseEndDate as unknown as IMyDateModel
-        )?.toISOString();
-    model.participatingOrganizaionList?.forEach((x) => {
-      delete (x as any).searchFields;
-      delete (x as any).DisplayedColumns;
-      delete (x as any).managerDecisionInfo;
-    });
+    model.licenseEndDate &&
+      (model.licenseEndDate = DateUtils.changeDateFromDatepicker(
+        model.licenseEndDate as unknown as IMyDateModel
+      )?.toISOString());
+
+    model.participatingOrganizaionList &&
+      (model.participatingOrganizaionList =
+        model.participatingOrganizaionList.map((item) => {
+          return participatingOrgInterceptor.send(
+            item
+          ) as unknown as ParticipantOrg;
+        }));
     model.organizaionOfficerList?.forEach((x) => {
       delete x.langService;
       delete (x as any).searchFields;
     });
-    model.researchAndStudies?.forEach((x) => {
-      delete x.langService;
-      delete (x as any).searchFields;
-      x.searchStartDate = DateUtils.changeDateFromDatepicker(
-        x.searchStartDate as unknown as IMyDateModel
-      )?.toISOString()!;
-      x.searchSubmissionDeadline = DateUtils.changeDateFromDatepicker(
-        x.searchSubmissionDeadline as unknown as IMyDateModel
-      )?.toISOString()!;
-    });
-    model.buildingAbilitiesList?.forEach((x) => {
-      delete (x as any).searchFields;
-      x.suggestedActivityDateFrom = DateUtils.changeDateFromDatepicker(
-        x.suggestedActivityDateFrom as unknown as IMyDateModel
-      )?.toISOString()!;
-      x.suggestedActivityDateTo = DateUtils.changeDateFromDatepicker(
-        x.suggestedActivityDateTo as unknown as IMyDateModel
-      )?.toISOString()!;
-    });
-    model.effectiveCoordinationCapabilities?.forEach((x) => {
-      delete x.langService;
-      delete (x as any).searchFields;
-      delete (x as any).searchFields;
-      x.eventStartDate = DateUtils.changeDateFromDatepicker(
-        x.eventStartDate as unknown as IMyDateModel
-      )?.toISOString()!;
-    });
 
+    model.buildingAbilitiesList &&
+      (model.buildingAbilitiesList = model.buildingAbilitiesList.map((item) => {
+        return buildinAbilityInterceptor.send(
+          item
+        ) as unknown as BuildingAbility;
+      }));
+    model.effectiveCoordinationCapabilities &&
+      (model.effectiveCoordinationCapabilities =
+        model.effectiveCoordinationCapabilities.map((item) => {
+          return effectiveCoordinationInterceptor.send(
+            item
+          ) as unknown as EffectiveCoordinationCapabilities;
+        }));
+    model.researchAndStudies &&
+      (model.researchAndStudies = model.researchAndStudies.map((item) => {
+        return researchAndStudiesInterceptor.send(
+          item
+        ) as unknown as ResearchAndStudies;
+      }));
 
     delete model.service;
     delete model.taskDetails;
@@ -83,12 +88,32 @@ export class CoordinationWithOrganizationsRequestInterceptor
     );
     model.taskDetails = new TaskDetails().clone(model.taskDetails);
 
-    model.requestTypeInfo && (model.requestTypeInfo = AdminResult.createInstance(model.requestTypeInfo));
-    model.domainInfo = AdminResult.createInstance(isValidAdminResult(model.domainInfo) ? model.domainInfo : {});
+    model.requestTypeInfo &&
+      (model.requestTypeInfo = AdminResult.createInstance(
+        model.requestTypeInfo
+      ));
+    model.domainInfo = AdminResult.createInstance(
+      isValidAdminResult(model.domainInfo) ? model.domainInfo : {}
+    );
 
-    model.participatingOrganizaionList.forEach(x=>{
-      x.managerDecisionInfo = AdminResult.createInstance(isValidAdminResult(x.managerDecisionInfo)?x.managerDecisionInfo : {});
-    })
+    model.participatingOrganizaionList = model.participatingOrganizaionList.map(
+      (item) => {
+        return participatingOrgInterceptor.receive(
+          new ParticipantOrg().clone(item)
+        );
+      }
+    );
+    model.buildingAbilitiesList = model.buildingAbilitiesList.map((item) => {
+      return buildinAbilityInterceptor.receive(
+        new BuildingAbility().clone(item)
+      );
+    });
+    model.effectiveCoordinationCapabilities =
+      model.effectiveCoordinationCapabilities.map((item) => {
+        return effectiveCoordinationInterceptor.receive(
+          new EffectiveCoordinationCapabilities().clone(item)
+        );
+      });
     return model;
   }
 }
