@@ -51,7 +51,7 @@ export class GeneralAssociationMeetingAttendanceService extends BaseGenericEServ
   jsonSearchFile: string = 'general-association-meeting-attendance.json';
   serviceKey: keyof ILanguageKeys = 'menu_general_association_meeting_attendance';
   caseStatusIconMap: Map<number, string> = new Map<number, string>();
-  searchColumns: string[] = [];
+  searchColumns: string[] = ['fullSerial', 'requestTypeInfo', 'caseStatus', 'subject', 'ouInfo', 'createdOn'];
   externalMembersInterceptor: GeneralAssociationExternalMemberInterceptor = new GeneralAssociationExternalMemberInterceptor();
   internalMembersInterceptor: GeneralAssociationInternalMemberInterceptor = new GeneralAssociationInternalMemberInterceptor();
 

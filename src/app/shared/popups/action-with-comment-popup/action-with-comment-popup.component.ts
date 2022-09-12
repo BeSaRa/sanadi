@@ -27,7 +27,6 @@ import {CustomTermPopupComponent} from '@app/shared/popups/custom-term-popup/cus
 import {CaseModel} from '@app/models/case-model';
 import {DatepickerOptionsMap} from '@app/types/types';
 import {BaseGenericEService} from '@app/generics/base-generic-e-service';
-import {IGeneralAssociationMeetingProceedSendToMembers} from '@contracts/i-general-association-meeting-proceed-send-to-members';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -193,11 +192,7 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
       switchMap(_ => this.displayLicenseForm ? this.updateCase() : of(null)),
       // filter(_ => false),
       switchMap(() => {
-        if(this.data.task.getCaseType() === CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE && this.action === WFResponseType.TO_GENERAL_MEETING_MEMBERS) {
-          return (this.data.service as unknown as IGeneralAssociationMeetingProceedSendToMembers).proceedSendToMembers(this.data.taskId, responseInfo);
-        } else {
-          return this.data.inboxService.takeActionOnTask(this.data.taskId, responseInfo, this.data.service)
-        }
+        return this.data.inboxService.takeActionOnTask(this.data.taskId, responseInfo, this.data.service)
       })
     )
   }

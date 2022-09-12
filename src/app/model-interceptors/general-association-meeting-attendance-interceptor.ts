@@ -16,6 +16,7 @@ export class GeneralAssociationMeetingAttendanceInterceptor implements IModelInt
     delete model.meetingTypeInfo;
     delete model.meetingClassificationInfo;
     delete model.managerDecisionInfo;
+    delete model.requestTypeInfo;
 
     if (model.administrativeBoardMembers && model.administrativeBoardMembers.length > 0) {
       model.administrativeBoardMembers = model.administrativeBoardMembers.map(x => service.externalMembersInterceptor.send(x) as GeneralAssociationExternalMember);
@@ -49,6 +50,7 @@ export class GeneralAssociationMeetingAttendanceInterceptor implements IModelInt
       model.internalMembersDTO = model.internalMembersDTO.map(x => service.internalMembersInterceptor.receive(x) as GeneralAssociationInternalMember);
     }
     model.meetingDate = DateUtils.changeDateToDatepicker(model.meetingDate);
+    model.requestTypeInfo = model.requestTypeInfo ? AdminResult.createInstance(model.requestTypeInfo) : AdminResult.createInstance({});
 
     return model;
   }

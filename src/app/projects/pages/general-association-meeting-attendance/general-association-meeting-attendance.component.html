@@ -341,11 +341,6 @@
                           <div formGroupName="meetingSubItem" class="sub-points-container">
                             <div *ngFor="let subItem of getSubItems(i)?.controls; let j=index"
                                  class="sub-point-container">
-                              <button class="btn btn-link outline-none"
-                                      [disabled]="!this.model?.canEditMeetingPoints()"
-                                      [ngClass]="getRemoveSubItemClass()"
-                                      tooltip="{{lang.map.delete_sub_meeting_point}}" (click)="removeSubItem(i, j)">
-                                <i class="mdi mdi-close-circle"></i></button>
                               <div class="row" [formGroupName]="j">
                                 <div class="col-md-4 col-sm-12 position-relative">
                                   <label asteriskIfRequired="enName" class="form-label"
@@ -390,6 +385,11 @@
                                   </div>
                                 </div>
                               </div>
+                              <button class="btn btn-link outline-none"
+                                      [disabled]="!this.model?.canEditMeetingPoints()"
+                                      [ngClass]="getRemoveSubItemClass()"
+                                      tooltip="{{lang.map.delete_sub_meeting_point}}" (click)="removeSubItem(i, j)">
+                                <i class="mdi mdi-close-circle"></i></button>
                             </div>
                           </div>
                         </div>
@@ -453,7 +453,7 @@
               </div>
             </div>
             <div class="row">
-              <div class="col-12 text-center action-container mb-3">
+              <div class="col-12 text-center action-container mb-3 in-page-dialog-actions">
                 <button [disabled]="!generalNotesForm?.valid" (click)="saveGeneralNote()"
                         class="btn btn-primary">{{lang.map.btn_save}}</button>
                 <button class="btn btn-secondary"
@@ -508,7 +508,7 @@
             </app-table>
           </div>
         </div>
-        <div class="row" *ngIf="isMemberReview || isDecisionMakerReview">
+        <div class="row" *ngIf="isMemberReview">
           <div class="col-12 text-center action-container mb-3">
             <button [disabled]="generalNotes.length === 0" (click)="saveGeneralNotes()"
                     class="btn btn-primary">{{lang.map.save_general_notes}}</button>

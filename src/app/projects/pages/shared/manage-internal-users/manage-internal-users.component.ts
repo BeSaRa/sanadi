@@ -197,4 +197,8 @@ export class ManageInternalUsersComponent implements OnInit {
   isSupervisionAndControlReview() {
     return this.caseStepName === GeneralAssociationMeetingStepNameEnum.SUPERVISION_AND_CONTROL_REVIEW;
   }
+
+  isSupervisionAndControlRework() {
+    return this.caseStepName === GeneralAssociationMeetingStepNameEnum.SUPERVISION_AND_CONTROL_REWORK;
+  }
 }

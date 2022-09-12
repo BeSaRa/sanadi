@@ -1,10 +1,10 @@
 <ng-container [formGroup]="internalMembersForm">
   <ng-container *ngIf="!isExternalUser">
-    <div class="row" *ngIf="isSupervisionAndControlReview()">
+    <div class="row" *ngIf="isSupervisionAndControlReview() || isSupervisionAndControlRework()">
       <div class="col">
         <h1 class="h6 text-primary m-0 d-inline-block">{{lang.map.add_internal_member}}</h1>
         <button class="btn btn-link outline-none"
-                tooltip="{{lang.map.btn_add}}" (click)="openAddAdministrativeBoardMemberForm()" [disabled]="(readonly)">
+                tooltip="{{lang.map.btn_add}}" (click)="openAddAdministrativeBoardMemberForm()" [disabled]="(readonly && !isSupervisionAndControlRework())">
           <i class="mdi mdi-plus-box"></i></button>
       </div>
     </div>
@@ -13,7 +13,7 @@
         <div class="col-md-4 col-sm-12 mb-4 position-relative">
           <label asteriskIfRequired="arabicName" class="form-label"
                  for="arabicName">{{lang.map.arabic_name}}</label>
-          <input [readonly]="(readonly)" class="form-control"
+          <input [readonly]="(readonly && !isSupervisionAndControlRework())" class="form-control"
                  formControlName="arabicName"
                  id="arabicName" validationClasses="arabicName">
           <app-field-error-message controlName="arabicName"></app-field-error-message>
@@ -21,7 +21,7 @@
         <div class="col-md-4 col-sm-12 mb-4 position-relative">
           <label asteriskIfRequired="englishName" class="form-label"
                  for="englishName">{{lang.map.english_name}}</label>
-          <input [readonly]="(readonly)" class="form-control" formControlName="englishName"
+          <input [readonly]="(readonly && !isSupervisionAndControlRework())" class="form-control" formControlName="englishName"
                  id="englishName" validationClasses="englishName">
           <app-field-error-message controlName="englishName"></app-field-error-message>
         </div>

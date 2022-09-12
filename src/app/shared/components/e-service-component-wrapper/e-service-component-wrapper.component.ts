@@ -1056,10 +1056,6 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     return this.completeWithSaveServices.includes(item.getCaseType()) && this.completeWithSaveStatuses.includes(item.caseStatus);
   }
 
-  isCompleteDependOnCondition(condition: () => boolean): boolean {
-    return condition();
-  }
-
   private completeAction(item: CaseModel<any, any>) {
     if (this.isCompleteWithSave(item)) {
       if (item.getCaseType() === CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD) {
@@ -1077,7 +1073,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           actionTaken && this.navigateToSamePageThatUserCameFrom();
         });
       }
-    } else if (this.cantCompleteFromMemberReviewStep(item)) {
+    } else if (item.getCaseType() === CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE && this.cantCompleteFromMemberReviewStep(item)) {
       const model = item as unknown as IGeneralAssociationMeetingAttendanceComplete;
 
       model.memberCanNotComplete();
@@ -1117,9 +1113,16 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   }
 
   private sendToGeneralMeetingMembersAction(item: CaseModel<any, any>) {
-    (item as unknown as IGeneralAssociationMeetingAttendanceSpecialActions).sendToGeneralMeetingMembers().onAfterClose$.subscribe(actionTaken => {
-      actionTaken && this.navigateToSamePageThatUserCameFrom();
-    });
+    const service = this.inboxService.getService(item.getCaseType());
+    service.dialog.confirm(this.lang.map.msg_confirm_send_to_members).onAfterClose$
+      .subscribe((click: UserClickOn) => {
+        if (click === UserClickOn.YES) {
+          (item as unknown as IGeneralAssociationMeetingAttendanceSpecialActions).proceedSendToMembers(item.id).subscribe(() => {
+            this.toast.success(this.lang.map.msg_success_send_to_members);
+            this.navigateToSamePageThatUserCameFrom();
+          });
+        }
+      });
   }
 
   private initialApproveAction(item: CaseModel<any, any>) {

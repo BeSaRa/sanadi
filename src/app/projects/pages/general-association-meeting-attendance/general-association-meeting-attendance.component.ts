@@ -822,7 +822,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     this.service.addMeetingPoints(model, this.model?.id).subscribe(ret => {
       if (ret) {
         this.updateMeetingPointsForm(ret);
-        this.dialog.success('meeting points added successfully');
+        this.dialog.success(this.lang.map.meeting_points_saved_successfully);
       }
     });
   }
@@ -831,7 +831,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     let report = this.getSelectedMeetingPoints(new MeetingAttendanceReport().clone(this.meetingPointsForm.value));
 
     if (report.meetingMainItem.length === 0) {
-      this.dialog.error('You have to add at least one meeting point');
+      this.dialog.error(this.lang.map.you_have_to_add_at_least_one_meeting_point);
       return;
     }
 
@@ -842,12 +842,10 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   }
 
   getSelectedMeetingPoints(report: MeetingAttendanceReport): MeetingAttendanceReport {
-    console.log('form before select selected', this.meetingPointsForm.value);
     report.meetingMainItem = report.meetingMainItem.map(mainItem => {
       mainItem.meetingSubItem = mainItem.meetingSubItem.filter(subItem => subItem.selected);
       return mainItem;
     }).filter(mainItem => mainItem.meetingSubItem.length > 0);
-    console.log('form after select selected', this.meetingPointsForm.value);
     return report;
   }
 
@@ -856,7 +854,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
       return new GeneralMeetingAttendanceNote().clone(x);
     });
     this.service.addMeetingGeneralNotes(meetingGeneralNotes, this.model?.id).subscribe(ret => {
-      this.dialog.success('general notes added successfully');
+      this.dialog.success(this.lang.map.general_notes_saved_successfully);
       this.generalNotes = ret.map(x => {
         return new GeneralMeetingAttendanceNote().clone(x);
       });
@@ -865,6 +863,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
 
   terminateUserTask(event: MouseEvent, item: MeetingMemberTaskStatus) {
     this.service.terminateMemberTask(item.pId).subscribe(_ => {
+      this.dialog.success(this.lang.map.member_task_terminated_successfully);
       this.loadMembersTaskStatus();
     });
   }

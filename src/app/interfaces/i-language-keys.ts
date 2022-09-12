@@ -1,4 +1,10 @@
 export interface ILanguageKeys {
+  you_have_to_add_at_least_one_meeting_point:string;
+  member_task_terminated_successfully: string;
+  general_notes_saved_successfully: string;
+  meeting_points_saved_successfully: string;
+  msg_success_send_to_members: string;
+  msg_confirm_send_to_members: string;
   import_report_summary: string;
   upload_final_report: string;
   file_have_been_uploaded_successfully: string;

@@ -17,6 +17,7 @@ import {WFResponseType} from '@app/enums/wfresponse-type.enum';
 import {GeneralAssociationMeetingStepNameEnum} from '@app/enums/general-association-meeting-step-name-enum';
 import {IGeneralAssociationMeetingAttendanceSpecialActions} from '@contracts/i-general-association-meeting-attendance-special-actions';
 import {IGeneralAssociationMeetingAttendanceComplete} from '@contracts/i-general-association-meeting-attendance-complete';
+import {Observable} from 'rxjs';
 
 const _RequestType = mixinRequestType(CaseModel);
 const interceptor = new GeneralAssociationMeetingAttendanceInterceptor();
@@ -50,6 +51,7 @@ export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAss
   subject!: string;
   year!: number;
   isSendToMember!: boolean;
+  organizationId!: number;
   generalAssociationMembers: GeneralAssociationExternalMember[] = [];
   administrativeBoardMembers: GeneralAssociationExternalMember[] = [];
   internalMembersDTO: GeneralAssociationInternalMember[] = [];
@@ -123,6 +125,10 @@ export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAss
     return this.taskDetails?.name === GeneralAssociationMeetingStepNameEnum.MEMBER_REVIEW;
   }
 
+  isSupervisionAndControlStep(): boolean {
+    return this.taskDetails?.name === GeneralAssociationMeetingStepNameEnum.SUPERVISION_AND_CONTROL_REWORK;
+  }
+
   sendToGeneralMeetingMembers(): DialogRef {
     return this.inboxService!.takeActionWithComment(this.id, this.caseType, WFResponseType.TO_GENERAL_MEETING_MEMBERS, false, this);
   }
@@ -137,5 +143,9 @@ export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAss
 
   isSentToMember(): boolean {
     return this.isSendToMember;
+  }
+
+  proceedSendToMembers(caseId: string): Observable<boolean> {
+    return this.service.proceedSendToMembers(caseId);
   }
 }
