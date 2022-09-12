@@ -1,3 +1,4 @@
+import { NpoManagementService } from './npo-management.service';
 import { CoordinationWithOrganizationsRequestService } from '@app/services/coordination-with-organizations-request.service';
 import { UrgentInterventionFinancialNotificationService } from './urgent-intervention-financial-notification.service';
 import { ComponentFactoryResolver, Injectable } from '@angular/core';
@@ -87,6 +88,7 @@ export class InboxService {
               private urgentInterventionClosureService: UrgentInterventionClosureService,
               private urgentInterventionFinancialNotificationService: UrgentInterventionFinancialNotificationService,
               private urgentInterventionLicenseFollowupService: UrgentInterventionLicenseFollowupService,
+              private npoManagementService: NpoManagementService,
               private urlService: UrlService,
               private employmentService: EmploymentService,
               private externalOrgAffiliationService: ExternalOrgAffiliationService,
@@ -120,6 +122,7 @@ export class InboxService {
     this.services.set(CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD, this.transferringIndividualsFundsAbroad);
     this.services.set(CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST, this.coordinationWithOrganizationsRequestService);
     this.services.set(CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP, this.urgentInterventionLicenseFollowupService);
+    this.services.set(CaseTypes.NPO_MANAGEMENT, this.npoManagementService);
   }
 
   @CastResponse(() => QueryResultSet)

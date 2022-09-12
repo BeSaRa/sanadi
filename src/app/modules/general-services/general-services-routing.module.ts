@@ -86,6 +86,17 @@ const routes: Routes = [
       render: 'CoordinationWithOrganizationsRequestComponent'
     }
   },
+  {
+    path: 'npo_management', component: EServiceComponentWrapperComponent,
+    canActivate: [ServicesGuard],
+    resolve: {info: ServiceItemResolver},
+    data: {
+      permissionKey: EServicePermissions.NPO_MANAGEMENT,
+      configPermissionGroup: null,
+      checkAnyPermission: false,
+      render: 'NpoManagementComponent'
+    }
+  },
 
 ];
 

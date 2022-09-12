@@ -925,5 +925,18 @@
     "group": "urgent-intervention",
     "itemOrder": 5,
     "svg": null
+  },
+  {
+    "id": 71,
+    "langKey": "menu_npo_management",
+    "path": "/home/general-services/npo_management",
+    "icon": "mdi-domain",
+    "isSvg": false,
+    "permission": "NPO_MANAGEMENT",
+    "permissionGroup": null,
+    "parent": 13,
+    "group": "general-services",
+    "itemOrder": 6,
+    "svg": null
   }
 ]

@@ -143,6 +143,9 @@ export class LicenseService {
       case CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP:
         url = this.urlService.URLS.URGENT_INTERVENTION_LICENSE_FOLLOWUP;
         break;
+      case CaseTypes.NPO_MANAGEMENT:
+        url = this.urlService.URLS.NPO_MANAGEMENT;
+        break;
     }
     return url;
   }

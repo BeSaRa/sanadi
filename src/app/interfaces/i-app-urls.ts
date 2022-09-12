@@ -104,5 +104,6 @@ export interface IAppUrls {
   TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD: string;
   TRANSFERRING_ENTITY: string;
   VACATION_DATE: string;
+  NPO_MANAGEMENT: string;
   [index: string]: string;
 }

@@ -105,6 +105,6 @@
   "FOREIGN_COUNTRIES_PROJECTS": "/foreign-countries-projects",
   "TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD": "/transferring-individual-funds-abroad",
   "TRANSFERRING_ENTITY": "/admin/transferring-entity",
-  "E_COORDINATION_WITH_ORGANIZATION_REQUEST": "/coordination-with-organizations-request"
-
+  "E_COORDINATION_WITH_ORGANIZATION_REQUEST": "/coordination-with-organizations-request",
+  "NPO_MANAGEMENT": "/npo-management"
 }

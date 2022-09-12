@@ -1,3 +1,4 @@
+import { NpoManagementComponent } from './../modules/general-services/pages/npo-management/npo-management.component';
 import { ForeignCountriesProjectsComponent } from '@app/modules/general-services/pages/foreign-countries-projects/foreign-countries-projects.component';
 import { UrgentInterventionFinancialNotificationComponent } from './../modules/urgent-intervention/pages/urgent-intervention-financial-notification/urgent-intervention-financial-notification.component';
 import { EmploymentComponent } from '../modules/general-services/pages/employment/employment.component';
@@ -83,7 +84,7 @@ export class AutoRegisterService {
       DynamicComponentService.registerComponent('ForeignCountriesProjectsComponent', ForeignCountriesProjectsComponent);
       DynamicComponentService.registerComponent('TransferringIndividualFundsAbroadComponent', TransferringIndividualFundsAbroadComponent);
       DynamicComponentService.registerComponent('CoordinationWithOrganizationsRequestComponent', CoordinationWithOrganizationsRequestComponent);
-
+      DynamicComponentService.registerComponent('NpoManagementComponent', NpoManagementComponent);
     });// just to make sure that service constructed and register all dynamic components
 
 

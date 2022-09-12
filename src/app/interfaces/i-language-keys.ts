@@ -1270,4 +1270,5 @@ export interface ILanguageKeys {
   building_abilities_required: string;
   effective_coordination_required: string;
   research_and_studies_required: string;
+  menu_npo_management: string;
 }

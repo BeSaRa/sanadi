@@ -1,3 +1,4 @@
+import { NpoManagementComponent } from './pages/npo-management/npo-management.component';
 import { ExternalOrgAffiliationApprovePopupComponent } from '@app/modules/general-services/popups/external-org-affiliation-approve-popup/external-org-affiliation-approve-popup.component';
 import { EmploymentComponent } from './pages/employment/employment.component';
 import { NgModule } from '@angular/core';
@@ -32,6 +33,7 @@ import { CoordinationWithOrganizationsRequestComponent } from './pages/coordinat
     ForeignCountriesProjectsComponent,
     ForeignCountriesProjectsPopupComponent,
     CoordinationWithOrganizationsRequestComponent,
+    NpoManagementComponent
   ],
   imports: [
     CommonModule,
