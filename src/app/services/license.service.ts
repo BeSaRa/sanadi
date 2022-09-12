@@ -59,7 +59,6 @@ import { ForeignCountriesProjectsSearchCriteria } from '@app/models/foreign-coun
 import { ForeignCountriesProjects } from '@app/models/foreign-countries-projects';
 import { CastResponse } from "@decorators/cast-response";
 import {GeneralAssociationMeetingAttendance} from '@app/models/general-association-meeting-attendance';
-import {GeneralAssociationMeetingAttendanceInterceptor} from '@app/model-interceptors/general-association-meeting-attendance-interceptor';
 
 const collectionInterceptor = new CollectionApprovalInterceptor()
 const collectorInterceptor = new CollectorApprovalInterceptor()
@@ -504,12 +503,13 @@ export class LicenseService {
     return of(undefined);
   }
 
-  openSelectLicenseDialog<T>(licenses: (UrgentInterventionAnnouncementResult[] | InitialExternalOfficeApprovalResult[] | PartnerApproval[] | ExternalOrgAffiliationResult[] | FinalExternalOfficeApprovalResult[] | InternalProjectLicenseResult[] | UrgentInterventionLicenseResult[] | T[]), caseRecord: any | undefined, select = true, displayedColumns: string[] = []): DialogRef {
+  openSelectLicenseDialog<T>(licenses: (UrgentInterventionAnnouncementResult[] | InitialExternalOfficeApprovalResult[] | PartnerApproval[] | ExternalOrgAffiliationResult[] | FinalExternalOfficeApprovalResult[] | InternalProjectLicenseResult[] | UrgentInterventionLicenseResult[] | T[]), caseRecord: any | undefined, select = true, displayedColumns: string[] = [], isNotLicense: boolean = false): DialogRef {
     return this.dialog.show(SelectLicensePopupComponent, {
       licenses,
       select,
       caseRecord,
-      displayedColumns
+      displayedColumns,
+      isNotLicense
     });
   }
 
@@ -581,7 +581,7 @@ export class LicenseService {
 
   @CastResponse(() => GeneralAssociationMeetingAttendance)
   private _generalAssociationMeetingAttendanceSearch<C>(model: Partial<C>): Observable<GeneralAssociationMeetingAttendance[]> {
-    return this.http.post<GeneralAssociationMeetingAttendance[]>(this.urlService.URLS.GENERAL_ASSOCIATION_MEETING_ATTENDANCE + '/license/search', model)
+    return this.http.post<GeneralAssociationMeetingAttendance[]>(this.urlService.URLS.GENERAL_ASSOCIATION_MEETING_ATTENDANCE + '/search', model)
   }
 
   generalAssociationMeetingAttendanceSearch<C>(model: Partial<C>): Observable<GeneralAssociationMeetingAttendance[]> {

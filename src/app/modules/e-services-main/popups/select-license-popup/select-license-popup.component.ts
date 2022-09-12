@@ -34,7 +34,8 @@ export class SelectLicensePopupComponent {
                 licenses: any[],
                 caseRecord: any | undefined,
                 select: boolean,
-                displayedColumns: string[]
+                displayedColumns: string[],
+                isNotLicense: boolean
               }) {
     this.caseType = this.data.caseRecord?.getCaseType();
     this.caseStatus = this.data.caseRecord?.getCaseStatus();

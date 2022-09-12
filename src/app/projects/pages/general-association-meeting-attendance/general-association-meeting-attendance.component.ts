@@ -157,10 +157,6 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     return this.form?.get('explanation')! as FormGroup;
   }
 
-  get oldFullSerialField(): AbstractControl {
-    return this.form?.get('basicInfo.oldFullSerial')!;
-  }
-
   get agendaItem(): FormControl {
     return this.agendaForm?.get('description')! as FormControl;
   }
@@ -440,7 +436,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   }
 
   private validateSingleLicense(license: GeneralAssociationMeetingAttendance): Observable<null | SelectedLicenseInfo<GeneralAssociationMeetingAttendance, GeneralAssociationMeetingAttendance>> {
-    return this.licenseService.validateLicenseByRequestType<GeneralAssociationMeetingAttendance>(this.model!.caseType, this.model!.requestType, license.id)
+    return this.service.validateLicenseByRequestType(this.model!.requestType, license.fullSerial)
       .pipe(map(validated => {
         return (validated ? {
           selected: validated,
@@ -450,12 +446,12 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   }
 
   private openSelectLicense(licenses: GeneralAssociationMeetingAttendance[]) {
-    return this.licenseService.openSelectLicenseDialog(licenses, this.model, true, this.displayedColumns).onAfterClose$ as Observable<{ selected: GeneralAssociationMeetingAttendance, details: GeneralAssociationMeetingAttendance }>;
+    return this.licenseService.openSelectLicenseDialog(licenses, this.model, true, this.displayedColumns, true).onAfterClose$ as Observable<{ selected: GeneralAssociationMeetingAttendance, details: GeneralAssociationMeetingAttendance }>;
   }
 
   searchForLicense() {
     this.licenseService
-      .generalAssociationMeetingAttendanceSearch<GeneralAssociationMeetingAttendance>({fullSerial: this.oldFullSerialField.value})
+      .generalAssociationMeetingAttendanceSearch<GeneralAssociationMeetingAttendance>({fullSerial: this.oldLicenseFullSerialField.value})
       .pipe(takeUntil(this.destroy$))
       .pipe(tap(licenses => !licenses.length && this.dialog.info(this.lang.map.no_result_for_your_search_criteria)))
       .pipe(filter(licenses => !!licenses.length))
@@ -478,7 +474,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
         this.selectedLicenses = [_info.details];
         _info.details.requestType = this.model?.requestType!;
         this._updateForm(_info.details);
-        this.oldFullSerialField.patchValue(_info.details.fullSerial);
+        this.oldLicenseFullSerialField.patchValue(_info.details.fullSerial);
       });
   }
 

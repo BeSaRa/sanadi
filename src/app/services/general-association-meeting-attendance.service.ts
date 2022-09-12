@@ -273,4 +273,14 @@ export class GeneralAssociationMeetingAttendanceService extends BaseGenericEServ
   downloadFinalReport(documentId: string): Observable<BlobModel> {
     return this.documentService.downloadDocument(documentId);
   }
+
+  @CastResponse(() => GeneralAssociationMeetingAttendance)
+  _validateGeneralAssociationMeetingAttendanceByRequestType(requestType: number, fullSerial: string): Observable<GeneralAssociationMeetingAttendance> {
+    let criteriaObject = {requestType: requestType, oldFullSerial: fullSerial}
+    return this.http.post<GeneralAssociationMeetingAttendance>(this._getURLSegment() + '/draft/validate', criteriaObject);
+  }
+
+  validateLicenseByRequestType(requestType: number, licenseId: string): Observable<GeneralAssociationMeetingAttendance> {
+    return this._validateGeneralAssociationMeetingAttendanceByRequestType(requestType, licenseId);
+  }
 }

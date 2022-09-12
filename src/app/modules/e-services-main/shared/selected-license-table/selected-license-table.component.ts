@@ -31,6 +31,7 @@ export class SelectedLicenseTableComponent {
   @Input() columns: string[] = ['arName', 'enName', 'licenseNumber', 'status', 'endDate', 'actions'];
   @Input() ignoreDelete: boolean = false;
   @Input() allowSelect: boolean = false;
+  @Input() isNotLicense: boolean = false;
   @Output() selectCallback: EventEmitter<any> = new EventEmitter<any>();
   @Output() clearLicense: EventEmitter<any> = new EventEmitter<any>();
 
