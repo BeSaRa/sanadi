@@ -11,6 +11,7 @@ import {
   UntypedFormControl,
 } from '@angular/forms';
 import { AdminLookupTypeEnum } from '@app/enums/admin-lookup-type-enum';
+import { CharityDecisionType } from '@app/enums/charity-decision-type.enum';
 import { CharityReportType } from '@app/enums/charity-report-type.enum';
 import { CharityRequestType } from '@app/enums/charity-request-type.enum';
 import { CharityRole } from '@app/enums/charity-role.enum';
@@ -21,6 +22,7 @@ import { EServicesGenericComponent } from '@app/generics/e-services-generic-comp
 import { DateUtils } from '@app/helpers/date-utils';
 import { IKeyValue } from '@app/interfaces/i-key-value';
 import { AdminLookup } from '@app/models/admin-lookup';
+import { CharityDecision } from '@app/models/charity-decision';
 import { CharityOrganization } from '@app/models/charity-organization';
 import { CharityOrganizationUpdate } from '@app/models/charity-organization-update';
 import { CharityReport } from '@app/models/charity-report';
@@ -28,6 +30,7 @@ import { FinalExternalOfficeApprovalResult } from '@app/models/final-external-of
 import { OrgMember } from '@app/models/org-member';
 import { RealBeneficiary } from '@app/models/real-beneficiary';
 import { AdminLookupService } from '@app/services/admin-lookup.service';
+import { CharityDecisionService } from '@app/services/charity-decision.service';
 import { CharityOrganizationUpdateService } from '@app/services/charity-organization-update.service';
 import { CharityOrganizationService } from '@app/services/charity-organization.service';
 import { CharityReportService } from '@app/services/charity-report.service';
@@ -64,6 +67,7 @@ export class CharityOrganizationUpdateComponent
   RequestTypes = CharityRequestType;
   members?: { [key: string]: OrgMember[] };
   charityReports: CharityReport[] = [];
+  charityDecisions: CharityDecision[] = [];
   realBenefeciaries?: RealBeneficiary[] = [];
   requestTypes = this.lookupService.listByCategory.CharityRequestType;
   contactInformationInputs: IKeyValue[] = [
@@ -125,6 +129,12 @@ export class CharityOrganizationUpdateComponent
   get incomingCharityReport() {
     return this.charityReports.filter(cp => cp.reportType === CharityReportType.INCOMING)
   }
+  get incomingCharityDecisions() {
+    return this.charityDecisions.filter(cd => cd.decisionType === CharityDecisionType.INCOMING)
+  }
+  get outgoingCharityDecisions() {
+    return this.charityDecisions.filter(cd => cd.decisionType === CharityDecisionType.OUTGOING)
+  }
   constructor(
     public lang: LangService,
     public fb: UntypedFormBuilder,
@@ -136,7 +146,8 @@ export class CharityOrganizationUpdateComponent
     private finalOfficeApproval: FinalExternalOfficeApprovalService,
     private realBeneficiaryService: RealBeneficiaryService,
     private countryService: CountryService,
-    private charityReportService: CharityReportService
+    private charityReportService: CharityReportService,
+    private charityDecisionService: CharityDecisionService
   ) {
     super();
   }
@@ -285,6 +296,20 @@ export class CharityOrganizationUpdateComponent
           title: this.lang.map.reports_received_from_organization,
           validStatus: () => true,
           category: CharityRequestType.COORDINATION_AND_CONTROL_REPORTS
+        },
+        {
+          name: 'outgoingDecisionsTab',
+          template: tabsTemplates[20],
+          title: this.lang.map.decisions_by_organizations,
+          validStatus: () => true,
+          category: CharityRequestType.APPROVE_MEASURES_AND_PENALTIES
+        },
+        {
+          name: 'internalDecisionsTab',
+          template: tabsTemplates[21],
+          title: this.lang.map.internal_decisions,
+          validStatus: () => true,
+          category: CharityRequestType.APPROVE_MEASURES_AND_PENALTIES
         }
       ];
       this.tabs = [this._tabs[0]];
@@ -338,8 +363,12 @@ export class CharityOrganizationUpdateComponent
     else if (requestType === this.RequestTypes.COORDINATION_AND_CONTROL_REPORTS) {
       this.charityReportService.getByCharityId(id).subscribe(m => {
         this.charityReports = m;
-        console.log({ m })
       });
+    }
+    else if (requestType === this.RequestTypes.APPROVE_MEASURES_AND_PENALTIES) {
+      this.charityDecisionService.getByCharityId(id).subscribe(m => {
+        this.charityDecisions = m;
+      })
     }
   }
   getTabInvalidStatus(i: number): boolean {
@@ -374,10 +403,9 @@ export class CharityOrganizationUpdateComponent
     this.form = this.fb.group({
       metaData: this.fb.group(model.buildMetaDataForm()),
       contactInformation: this.fb.group(model.buildContactInformationForm()),
-      primaryLaw: this.fb.group(model.buildPrimaryLawForm()),
-      ...model.getFirstPageForm(),
+/*       primaryLaw: this.fb.group(model.buildPrimaryLawForm()),
+ */      ...model.getFirstPageForm(),
     });
-    console.log(this.form.get('primaryLaw.goals'))
   }
 
   _afterBuildForm(): void { }
@@ -402,6 +430,8 @@ export class CharityOrganizationUpdateComponent
       ...this.metaDataForm.value,
       requestType: this.requestTypeForm.value,
       charityId: this.form.get('charityId')!.value,
+      charityBranchList: charityOfficers,
+      complianceOfficerList: complianceOfficers
     });
   }
   selectExternalOffice(event: any, row: FinalExternalOfficeApprovalResult) {

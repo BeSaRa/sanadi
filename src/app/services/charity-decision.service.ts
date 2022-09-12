@@ -1,7 +1,7 @@
 import { ComponentType } from '@angular/cdk/portal';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CastResponseContainer } from '@app/decorators/decorators/cast-response';
+import { CastResponse, CastResponseContainer } from '@app/decorators/decorators/cast-response';
 import { CrudWithDialogGenericService } from '@app/generics/crud-with-dialog-generic-service';
 import { CharityDecision } from '@app/models/charity-decision';
 import { Pagination } from '@app/models/pagination';
@@ -35,6 +35,11 @@ export class CharityDecisionService extends CrudWithDialogGenericService<Charity
   }
   _getServiceURL(): string {
     return this.urlService.URLS.CHARITY_DECISION;
+  }
+
+  @CastResponse(undefined)
+  getByCharityId(id: number) {
+    return this.http.get<CharityDecision[]>(this._getServiceURL() + '/charity/' + id)
   }
 
 }

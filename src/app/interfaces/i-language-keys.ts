@@ -1315,4 +1315,6 @@ export interface ILanguageKeys {
   feedback: string;
   coordination_and_support_reports: string;
   reports_received_from_organization: string;
+  decisions_by_organizations: string;
+  internal_decisions: string;
 }

@@ -43,9 +43,6 @@ export class CharityDecision extends BaseModel<
       generalDate: controls
         ? [generalDate, [CustomValidators.required]]
         : generalDate,
-      decisionType: controls
-        ? [decisionType, [CustomValidators.required]]
-        : decisionType,
       subject: controls ? [subject, [CustomValidators.required]] : subject,
       organization: controls
         ? [organization, [CustomValidators.required]]

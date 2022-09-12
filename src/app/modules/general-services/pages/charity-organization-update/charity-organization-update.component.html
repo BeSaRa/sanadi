@@ -618,6 +618,23 @@
       </charity-reports>
     </ng-template>
     <ng-template #tabContent>
+      <charity-decisions
+        [readonly]="readonly"
+        [list]="outgoingCharityDecisions"
+        pageTitle="decisions_by_organizations"
+      >
+      </charity-decisions>
+    </ng-template>
+
+    <ng-template #tabContent>
+      <charity-decisions
+        [readonly]="readonly"
+        pageTitle="internal_decisions"
+        [list]="incomingCharityDecisions"
+      >
+      </charity-decisions>
+    </ng-template>
+    <ng-template #tabContent>
       <attachments
         [caseId]="model?.id"
         [caseType]="model?.caseType"

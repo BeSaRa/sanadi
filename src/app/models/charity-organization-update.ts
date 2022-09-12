@@ -133,7 +133,6 @@ export class CharityOrganizationUpdate extends CaseModel<
       shortName: controls
         ? [shortName, [CustomValidators.required]]
         : shortName,
-      logoId: controls ? [logoId, [CustomValidators.required]] : logoId,
       activityType: controls
         ? [activityType, [CustomValidators.required]]
         : activityType,
