@@ -39,8 +39,6 @@ import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {BaseGenericEService} from '@app/generics/base-generic-e-service';
-import {ITransferIndividualFundsAbroadComplete} from '@contracts/i-transfer-individual-funds-abroad-complete';
-import {ITransferFundsAbroadComponent} from '@contracts/i-transfer-funds-abroad-component';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -1023,18 +1021,9 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   }
 
   private completeAction(item: CaseModel<any, any>) {
-    if (this.isCompleteWithSave(item)) {
-      const model = item as unknown as ITransferIndividualFundsAbroadComplete;
-      const component = this.component as unknown as ITransferFundsAbroadComponent;
-
-      model.completeWithForm(component.form, component.selectedExecutives, component.selectedPurposes).onAfterClose$.subscribe(actionTaken => {
-        actionTaken && this.navigateToSamePageThatUserCameFrom();
-      });
-    } else {
-      item.complete().onAfterClose$.subscribe(actionTaken => {
-        actionTaken && this.navigateToSamePageThatUserCameFrom();
-      });
-    }
+    item.complete().onAfterClose$.subscribe(actionTaken => {
+      actionTaken && this.navigateToSamePageThatUserCameFrom();
+    });
   }
 
   private approveAction(item: CaseModel<any, any>) {
