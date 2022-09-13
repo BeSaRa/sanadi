@@ -50,16 +50,16 @@
             <app-field-error-message controlName="requestType"></app-field-error-message>
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
-            <label asteriskIfRequired="oldLicenseFullSerial" class="form-label"
-                   for="oldLicenseFullSerial">{{lang.map.serial_number}}
+            <label asteriskIfRequired="oldFullSerial" class="form-label"
+                   for="oldFullSerial">{{lang.map.serial_number}}
             </label>
             <div class="input-group">
               <input (keydown.enter)="searchForLicense()" [readonly]="(readonly)"
                      class="form-control"
-                     formControlName="oldLicenseFullSerial"
-                     id="oldLicenseFullSerial"
-                     validationClasses="oldLicenseFullSerial">
-              <app-field-error-message controlName="oldLicenseFullSerial"></app-field-error-message>
+                     formControlName="oldFullSerial"
+                     id="oldFullSerial"
+                     validationClasses="oldFullSerial">
+              <app-field-error-message controlName="oldFullSerial"></app-field-error-message>
               <button (click)="searchForLicense()" [disabled]="(readonly)" class="input-group-text">
                 <i class="mdi mdi-magnify text-primary"></i>
               </button>
@@ -86,16 +86,16 @@
                   </ng-container>
                   <ng-container cdkColumnDef="licenseStatus">
                     <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.lbl_status}}</th>
-                    <td cdk-cell *cdkCellDef="let row"> {{row.licenseStatusInfo.getName()}} </td>
+                    <td cdk-cell *cdkCellDef="let row"> {{row.caseStatusInfo.getName()}} </td>
                   </ng-container>
-                  <ng-container cdkColumnDef="actions">
-                    <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
-                    <td cdk-cell *cdkCellDef="let row">
-                      <a type="button" [tooltip]="lang.map.view" (click)="viewSelectedLicense()">
-                        <i class="mdi mdi-file-pdf-box text-primary"></i>
-                      </a>
-                    </td>
-                  </ng-container>
+<!--                  <ng-container cdkColumnDef="actions">-->
+<!--                    <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>-->
+<!--                    <td cdk-cell *cdkCellDef="let row">-->
+<!--                      <a type="button" [tooltip]="lang.map.view" (click)="viewSelectedLicense()">-->
+<!--                        <i class="mdi mdi-file-pdf-box text-primary"></i>-->
+<!--                      </a>-->
+<!--                    </td>-->
+<!--                  </ng-container>-->
                   <tr cdk-header-row *cdkHeaderRowDef="selectedLicenseDisplayedColumns"></tr>
                   <tr cdk-row *cdkRowDef="let row; columns: selectedLicenseDisplayedColumns;"></tr>
                   <!--suppress HtmlUnknownBooleanAttribute -->

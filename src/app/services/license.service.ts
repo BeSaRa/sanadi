@@ -503,12 +503,13 @@ export class LicenseService {
     return of(undefined);
   }
 
-  openSelectLicenseDialog<T>(licenses: (UrgentInterventionAnnouncementResult[] | InitialExternalOfficeApprovalResult[] | PartnerApproval[] | ExternalOrgAffiliationResult[] | FinalExternalOfficeApprovalResult[] | InternalProjectLicenseResult[] | UrgentInterventionLicenseResult[] | T[]), caseRecord: any | undefined, select = true, displayedColumns: string[] = [], isNotLicense: boolean = false): DialogRef {
+  openSelectLicenseDialog<T>(licenses: (UrgentInterventionAnnouncementResult[] | InitialExternalOfficeApprovalResult[] | PartnerApproval[] | ExternalOrgAffiliationResult[] | FinalExternalOfficeApprovalResult[] | InternalProjectLicenseResult[] | UrgentInterventionLicenseResult[] | T[]), caseRecord: any | undefined, select = true, displayedColumns: string[] = [], oldFullSerial?: string, isNotLicense: boolean = false): DialogRef {
     return this.dialog.show(SelectLicensePopupComponent, {
       licenses,
       select,
       caseRecord,
       displayedColumns,
+      oldFullSerial,
       isNotLicense
     });
   }

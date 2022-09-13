@@ -27,7 +27,7 @@ import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 import {OpenFrom} from '@app/enums/open-from.enum';
 import {GeneralAssociationInternalMember} from '@app/models/general-association-internal-member';
 import {MeetingAttendanceReport} from '@app/models/meeting-attendance-report';
-import {TransferringIndividualFundsAbroadRequestTypeEnum} from '@app/enums/transferring-individual-funds-abroad-request-type-enum';
+import {GeneralAssociationMeetingRequestTypeEnum} from '@app/enums/general-association-meeting-request-type-enum';
 import {MeetingAttendanceSubItem} from '@app/models/meeting-attendance-sub-item';
 import {MeetingAttendanceMainItem} from '@app/models/meeting-attendance-main-item';
 import {GeneralMeetingAttendanceNote} from '@app/models/general-meeting-attendance-note';
@@ -49,7 +49,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   importFinalReport$: Subject<void> = new Subject<void>();
 
   selectedLicenses: GeneralAssociationMeetingAttendance[] = [];
-  selectedLicenseDisplayedColumns: string[] = ['serial', 'requestType', 'licenseStatus', 'actions'];
+  selectedLicenseDisplayedColumns: string[] = ['serial', 'requestType', 'licenseStatus'];
   hasSearchedForLicense = false;
   commonCaseStatus = CommonCaseStatus;
   isCancel!: boolean;
@@ -121,7 +121,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   }
 
   get oldLicenseFullSerialField(): AbstractControl {
-    return this.form?.get('basicInfo.oldLicenseFullSerial')!;
+    return this.form?.get('basicInfo.oldFullSerial')!;
   }
 
   get meetingDate(): FormControl {
@@ -229,6 +229,19 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     this.isMemberReview = this.model?.isMemberReviewStep()!;
     this.isDecisionMakerReview = this.model?.isDecisionMakerReviewStep()!;
     this.isManagerFinalReview = this.model?.isManagerFinalReviewStep()!;
+
+    if(this.requestType.value !== GeneralAssociationMeetingRequestTypeEnum.NEW && this.model?.oldFullSerial) {
+      this.service.validateLicenseByRequestType(this.model!.requestType, this.model.oldFullSerial)
+        .pipe(map(validated => {
+          return (validated ? {
+            selected: validated,
+            details: validated
+          } : null) as (null | SelectedLicenseInfo<GeneralAssociationMeetingAttendance, GeneralAssociationMeetingAttendance>);
+        })).subscribe(ret => {
+          this.selectedLicenses = [ret?.details!];
+        this.hasSearchedForLicense = true;
+      })
+    }
   }
 
   setMeetingPointsForm() {
@@ -367,11 +380,11 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
         if (value) {
           this.model!.requestType = value;
         }
-        if (!value || value === TransferringIndividualFundsAbroadRequestTypeEnum.NEW) {
+        if (!value || value === GeneralAssociationMeetingRequestTypeEnum.NEW) {
           this.enableAllFormsInCaseOfNotCancelRequest();
           this.disableSearchField();
           this.isCancel = false;
-        } else if (value === TransferringIndividualFundsAbroadRequestTypeEnum.UPDATE) {
+        } else if (value === GeneralAssociationMeetingRequestTypeEnum.UPDATE) {
           this.enableAllFormsInCaseOfNotCancelRequest();
           this.enableSearchField();
           this.isCancel = false;
@@ -446,7 +459,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   }
 
   private openSelectLicense(licenses: GeneralAssociationMeetingAttendance[]) {
-    return this.licenseService.openSelectLicenseDialog(licenses, this.model, true, this.displayedColumns, true).onAfterClose$ as Observable<{ selected: GeneralAssociationMeetingAttendance, details: GeneralAssociationMeetingAttendance }>;
+    return this.licenseService.openSelectLicenseDialog(licenses, this.model, true, this.displayedColumns, this.oldLicenseFullSerialField.value, true).onAfterClose$ as Observable<{ selected: GeneralAssociationMeetingAttendance, details: GeneralAssociationMeetingAttendance }>;
   }
 
   searchForLicense() {
@@ -463,7 +476,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
         ((info): info is SelectedLicenseInfo<GeneralAssociationMeetingAttendance, GeneralAssociationMeetingAttendance> => !!info))
       .subscribe((_info) => {
         // set oldLicenseId property from validated object id
-        _info.details.oldFullSerial = _info.details.id;
+        _info.details.oldFullSerial = _info.details.fullSerial;
 
         // delete id property
         let tempObj = _info.details as any;

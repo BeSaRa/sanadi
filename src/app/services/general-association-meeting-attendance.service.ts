@@ -275,12 +275,12 @@ export class GeneralAssociationMeetingAttendanceService extends BaseGenericEServ
   }
 
   @CastResponse(() => GeneralAssociationMeetingAttendance)
-  _validateGeneralAssociationMeetingAttendanceByRequestType(requestType: number, fullSerial: string): Observable<GeneralAssociationMeetingAttendance> {
-    let criteriaObject = {requestType: requestType, oldFullSerial: fullSerial}
+  _validateGeneralAssociationMeetingAttendanceByRequestType(requestType: number, oldFullSerial: string): Observable<GeneralAssociationMeetingAttendance> {
+    let criteriaObject = {requestType: requestType, oldFullSerial: oldFullSerial}
     return this.http.post<GeneralAssociationMeetingAttendance>(this._getURLSegment() + '/draft/validate', criteriaObject);
   }
 
-  validateLicenseByRequestType(requestType: number, licenseId: string): Observable<GeneralAssociationMeetingAttendance> {
-    return this._validateGeneralAssociationMeetingAttendanceByRequestType(requestType, licenseId);
+  validateLicenseByRequestType(requestType: number, oldFullSerial: string): Observable<GeneralAssociationMeetingAttendance> {
+    return this._validateGeneralAssociationMeetingAttendanceByRequestType(requestType, oldFullSerial);
   }
 }

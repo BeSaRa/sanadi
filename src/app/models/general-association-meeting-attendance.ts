@@ -67,7 +67,7 @@ export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAss
 
   buildBasicInfo(controls: boolean = false): any {
     const {
-      oldLicenseFullSerial,
+      oldFullSerial,
       requestType,
       meetingType,
       location,
@@ -78,7 +78,7 @@ export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAss
       periodical
     } = this;
     return {
-      oldLicenseFullSerial: controls ? [oldLicenseFullSerial] : oldLicenseFullSerial,
+      oldFullSerial: controls ? [oldFullSerial] : oldFullSerial,
       requestType: controls ? [requestType, [CustomValidators.required]] : requestType,
       meetingType: controls ? [meetingType, [CustomValidators.required]] : meetingType,
       location: controls ? [location, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : location,
