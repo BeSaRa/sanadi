@@ -1216,6 +1216,7 @@ export interface ILanguageKeys {
   add_building_ability: string;
   activity_name: string;
   training_activity_type: string;
+  activity_type: string;
   activity_goal: string;
   lbl_training_activit_main_axes: string;
   lbl_other_language: string;
@@ -1271,4 +1272,17 @@ export interface ILanguageKeys {
   effective_coordination_required: string;
   research_and_studies_required: string;
   menu_npo_management: string;
+  lbl_contact_info: string;
+  lbl_national_address: string;
+  lbl_founder_members: string;
+  lbl_real_beneficiary: string;
+  lbl_registration_number: string;
+  lbl_clearance_name: string;
+  lbl_clearance_type: string;
+  lbl_disbandment_type: string;
+  lbl_facebook: string;
+  lbl_twitter: string;
+  lbl_instagram: string;
+  lbl_snapchat: string;
+  lbl_youtube: string;
 }

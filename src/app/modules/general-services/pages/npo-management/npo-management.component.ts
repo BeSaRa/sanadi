@@ -1,19 +1,31 @@
+import { CountryService } from './../../../../services/country.service';
+import { Country } from './../../../../models/country';
+import { BankAccountComponent } from './../../../e-services-main/shared/bank-account/bank-account.component';
+import { ReadinessStatus } from './../../../../types/types';
+import { ContactOfficer } from './../../../../models/contact-officer';
+import { ILanguageKeys } from './../../../../interfaces/i-language-keys';
+import { IKeyValue } from './../../../../interfaces/i-key-value';
+import { AdminLookup } from './../../../../models/admin-lookup';
+import { Lookup } from './../../../../models/lookup';
+import { LookupService } from './../../../../services/lookup.service';
 import { ServiceRequestTypes } from './../../../../enums/service-request-types';
 import { OpenFrom } from './../../../../enums/open-from.enum';
 import { CommonCaseStatus } from './../../../../enums/common-case-status.enum';
 import { ToastService } from './../../../../services/toast.service';
 import { DialogService } from './../../../../services/dialog.service';
-import { tap, filter } from 'rxjs/operators';
+import { tap, filter, takeUntil } from 'rxjs/operators';
 import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
 import { NpoManagementService } from './../../../../services/npo-management.service';
 import { NpoManagement } from './../../../../models/npo-management';
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { UntypedFormGroup, UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { SaveTypes } from '@app/enums/save-types';
 import { LangService } from '@app/services/lang.service';
 import { Observable, of } from 'rxjs';
 import { EmployeeService } from '@app/services/employee.service';
+import { AdminLookupService } from '@app/services/admin-lookup.service';
+import { AdminLookupTypeEnum } from '@app/enums/admin-lookup-type-enum';
 
 @Component({
   selector: 'app-npo-management',
@@ -24,18 +36,69 @@ export class NpoManagementComponent extends EServicesGenericComponent<
 NpoManagement,
 NpoManagementService
 > {
+  countriesList: Country[] = [];
+  NPORequestTypesList: Lookup[] = this.lookupService.listByCategory.NPORequestType;
+  activityTypesList: AdminLookup[] = [];
+  // Clearance Type & Disbandment Type
+  NPODecisionsList: Lookup[] = this.lookupService.listByCategory.NPODecisions;
+  // TODO! fill this list after done from admin
+  registrationAuthoritiesList = []
   form!: UntypedFormGroup;
+  bankDetailsTabStatus: ReadinessStatus = 'READY';
+  @ViewChild('bankAccountsTab') bankAccountComponentRef!: BankAccountComponent;
+
+  tabsData: IKeyValue = {
+    basicInfo: {
+      name: "basicInfoTab",
+      langKey: "lbl_basic_info" as keyof ILanguageKeys,
+      validStatus: () => this.form.valid,
+    },
+    contectInfo: {
+      name: "contectInfoTab",
+      langKey: "lbl_contact_info" as keyof ILanguageKeys,
+      validStatus: () => this.form.valid,
+    },
+    nationalAddress: {
+      name: "nationalAddressTab",
+      langKey: "lbl_national_address" as keyof ILanguageKeys,
+      validStatus: () => this.form.valid,
+    },
+    founderMember: {
+      name: "founderMemberTab",
+      langKey: "lbl_founder_members" as keyof ILanguageKeys,
+      validStatus: () => this.form.valid,
+    },
+    contactOfficer: {
+      name: "contactOfficerTab",
+      langKey: "contact_officers" as keyof ILanguageKeys,
+      validStatus: () => this.form.valid,
+    },
+    bankAccount: {
+      name: "bankAccountTab",
+      langKey: "bank_accounts" as keyof ILanguageKeys,
+      validStatus: () => {
+        return !this.bankAccountComponentRef || (this.bankDetailsTabStatus === 'READY' && this.bankAccountComponentRef.list.length > 0);
+      }
+    },
+    realBeneficiary: {
+      name: "realBeneficiaryTab",
+      langKey: "lbl_real_beneficiary" as keyof ILanguageKeys,
+      validStatus: () => this.form.valid,
+    },
+  };
   constructor(
     public service: NpoManagementService,
+    private lookupService: LookupService,
     public fb: UntypedFormBuilder,
     private toast: ToastService,
+    private adminLookupService: AdminLookupService,
     private cd: ChangeDetectorRef,
+    private countryService: CountryService,
     private dialog: DialogService,
     private employeeService: EmployeeService,
     public lang: LangService) {
     super();
   }
-
   handleReadonly(): void {
     // if record is new, no readonly (don't change as default is readonly = false)
     if (!this.model?.id) {
@@ -74,11 +137,19 @@ NpoManagementService
     return new NpoManagement();
   }
   _initComponent(): void {
+    this.loadCountries();
     this._buildForm();
+    this.adminLookupService.loadAsLookups(AdminLookupTypeEnum.ACTIVITY_TYPE).subscribe((data: never[] | AdminLookup[]) => {
+      this.activityTypesList = data;
+    })
   }
   _buildForm(): void {
-    const model = new NpoManagement();
+    const model = new NpoManagement().buildForm(true);
     this.form = new UntypedFormGroup({
+      basicInfo: this.fb.group(model.basicInfo),
+      contectInfo: this.fb.group(model.contectInfo),
+      nationalAddress: this.fb.group(model.nationalAddress),
+      contactOfficer: this.fb.group((new ContactOfficer()).getContactOfficerFields(true)),
     });
   }
   _afterBuildForm(): void {
@@ -97,9 +168,11 @@ NpoManagementService
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
   _prepareModel(): NpoManagement | Observable<NpoManagement> {
-    return new NpoManagement().clone({
+    const value = new NpoManagement().clone({
       ...this.model,
     })
+    value.bankAccountList = this.bankAccountComponentRef.list;
+    return value;
   }
   private _updateModelAfterSave(model: NpoManagement): void {
     if ((this.openFrom === OpenFrom.USER_INBOX || this.openFrom === OpenFrom.TEAM_INBOX) && this.model?.taskDetails && this.model.taskDetails.tkiid) {
@@ -147,6 +220,11 @@ NpoManagementService
       this.requestTypeField.setValue(requestTypeValue);
     }
   }
+  private loadCountries(): void {
+    this.countryService.loadAsLookups()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((countries) => this.countriesList = countries);
+  }
   private invalidFormMessage() {
     this.dialog.error(this.lang.map.msg_all_required_fields_are_filled);
   }
@@ -163,6 +241,19 @@ NpoManagementService
     this.operation = this.operationTypes.CREATE;
     this._setDefaultValues();
   }
+  getTabInvalidStatus(tabName: string): boolean {
+    return !this.tabsData[tabName].validStatus();
+  }
   _destroyComponent(): void {
+  }
+
+  get basicInfo() {
+    return this.form.get('basicInfo') as UntypedFormGroup;
+  }
+  get contectInfo() {
+    return this.form.get('contectInfo') as UntypedFormGroup;
+  }
+  get nationalAddress() {
+    return this.form.get('nationalAddress') as UntypedFormGroup;
   }
 }
