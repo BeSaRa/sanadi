@@ -321,6 +321,19 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     this.selectedPurposes = this.model?.charityPurposeTransferList;
     this.transfereeTypeChanged.next(this.transfereeType.value);
     this.requestTypeChanged.next(this.requestType.value);
+
+    if(this.requestType.value !== TransferringIndividualFundsAbroadRequestTypeEnum.NEW && this.model?.oldLicenseId) {
+      this.licenseService.validateLicenseByRequestType(this.model?.caseType, this.model!.requestType, this.model.oldLicenseId)
+        .pipe(map(validated => {
+          return (validated ? {
+            selected: validated,
+            details: validated
+          } : null) as (null | SelectedLicenseInfo<TransferringIndividualFundsAbroad, TransferringIndividualFundsAbroad>);
+        })).subscribe(ret => {
+        this.selectedLicenses = [ret?.details!];
+        this.hasSearchedForLicense = true;
+      })
+    }
   }
 
   _resetForm(): void {
@@ -482,7 +495,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
   viewSelectedLicense(): void {
     let license = {
       documentTitle: this.selectedLicenses[0].fullSerial,
-      id: this.selectedLicenses[0].oldLicenseId
+      id: this.selectedLicenses[0].id
     } as InternalProjectLicenseResult;
     this.licenseService.showLicenseContent(license, this.selectedLicenses[0].getCaseType())
       .subscribe((file) => {
