@@ -103,6 +103,7 @@ export interface IAppUrls {
   FOREIGN_COUNTRIES_PROJECTS: string;
   TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD: string;
   TRANSFERRING_ENTITY: string;
+  GENERAL_ASSOCIATION_MEETING_ATTENDANCE: string;
   VACATION_DATE: string;
   NPO_MANAGEMENT: string;
   [index: string]: string;

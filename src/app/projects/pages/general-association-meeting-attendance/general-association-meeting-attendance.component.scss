@@ -1,0 +1,58 @@
+.action-container > *:not(:first-child) {
+  margin-left: 10px;
+}
+
+.main-point-container {
+  border: 1px solid rgba(154, 38, 75, 0.5);
+  border-radius: 0.25rem;
+  padding: 10px 16px;
+  position: relative;
+}
+
+.sub-points-container .sub-point-container:not(:first-child) {
+  padding-top: 10px;
+  border-top: 1px solid rgba(154, 38, 75, 0.5);
+}
+
+.sub-points-container .sub-point-container:not(:last-child) {
+  margin-bottom: 1.5rem;
+}
+
+.sub-points-container .sub-point-container:last-child {
+  margin-bottom: 1rem;
+}
+
+.sub-point-container {
+  position: relative;
+}
+
+.remove-main-item-right {
+  position: absolute;
+  right: -5px;
+  top: 0;
+}
+
+.remove-main-item-left {
+  position: absolute;
+  left: -5px;
+  top: 0;
+}
+
+.remove-sub-item-right {
+  position: absolute;
+  right: 0;
+  top: 36px;
+  padding: 0;
+}
+
+.remove-sub-item-left {
+  position: absolute;
+  left: 0;
+  top: 36px;
+  padding: 0;
+}
+
+.in-page-dialog-actions button:last-child {
+  margin-left: 10px;
+  margin-right: 10px;
+}

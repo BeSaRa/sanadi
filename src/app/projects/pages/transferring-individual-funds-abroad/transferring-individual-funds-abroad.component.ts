@@ -321,6 +321,19 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     this.selectedPurposes = this.model?.charityPurposeTransferList;
     this.transfereeTypeChanged.next(this.transfereeType.value);
     this.requestTypeChanged.next(this.requestType.value);
+
+    if(this.requestType.value !== TransferringIndividualFundsAbroadRequestTypeEnum.NEW && this.model?.oldLicenseId) {
+      this.licenseService.validateLicenseByRequestType(this.model?.caseType, this.model!.requestType, this.model.oldLicenseId)
+        .pipe(map(validated => {
+          return (validated ? {
+            selected: validated,
+            details: validated
+          } : null) as (null | SelectedLicenseInfo<TransferringIndividualFundsAbroad, TransferringIndividualFundsAbroad>);
+        })).subscribe(ret => {
+        this.selectedLicenses = [ret?.details!];
+        this.hasSearchedForLicense = true;
+      })
+    }
   }
 
   _resetForm(): void {
@@ -482,7 +495,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
   viewSelectedLicense(): void {
     let license = {
       documentTitle: this.selectedLicenses[0].fullSerial,
-      id: this.selectedLicenses[0].oldLicenseId
+      id: this.selectedLicenses[0].id
     } as InternalProjectLicenseResult;
     this.licenseService.showLicenseContent(license, this.selectedLicenses[0].getCaseType())
       .subscribe((file) => {
@@ -835,7 +848,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
   }
 
   saveExecutive() {
-    const executive = this.executiveManagementForm.getRawValue();
+    const executive = new TransferFundsExecutiveManagement().clone(this.executiveManagementForm.getRawValue() as TransferFundsExecutiveManagement);
     if (!this.selectedExecutive) {
       if (!this.isExistExecutiveInCaseOfAdd(this.selectedExecutives, executive)) {
         this.selectedExecutives = this.selectedExecutives.concat(executive);
@@ -918,7 +931,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
   }
 
   savePurpose() {
-    const purpose = this.setPurposeInfoProperties(new TransferFundsCharityPurpose().clone(this.transferPurpose.getRawValue() as TransferFundsCharityPurpose));
+    const purpose = this.setPurposeInfoProperties(new TransferFundsCharityPurpose().clone(this.transferPurposeForm.getRawValue() as TransferFundsCharityPurpose));
     if (!this.selectedPurpose) {
       if (!this.isExistPurposeInCaseOfAdd(this.selectedPurposes, purpose)) {
         this.selectedPurposes = this.selectedPurposes.concat(purpose);

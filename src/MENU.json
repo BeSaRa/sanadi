@@ -928,6 +928,19 @@
   },
   {
     "id": 71,
+    "langKey": "menu_general_association_meeting_attendance",
+    "path": "/home/projects/general-association-meeting-attendance",
+    "icon": "mdi-account-group",
+    "isSvg": false,
+    "permission": "GENERAL_ASSOCIATION_MEETING_ATTENDANCE",
+    "permissionGroup": null,
+    "parent": 32,
+    "group": "projects",
+    "itemOrder": 7,
+    "svg": null
+  },
+  {
+    "id": 71,
     "langKey": "menu_npo_management",
     "path": "/home/general-services/npo_management",
     "icon": "mdi-domain",

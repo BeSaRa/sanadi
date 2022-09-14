@@ -26,6 +26,13 @@ import { TransferringIndividualFundsAbroadComponent } from './pages/transferring
 import { TransferFundsAbroadApproveTaskPopupComponent } from './popups/transfer-funds-abroad-approve-task-popup/transfer-funds-abroad-approve-task-popup.component';
 import { SelectReceiverEntityPopupComponent } from './popups/select-receiver-entity-popup/select-receiver-entity-popup.component';
 import { TransferFundsAbroadCompleteTaskPopupComponent } from './popups/transfer-funds-abroad-complete-task-popup/transfer-funds-abroad-complete-task-popup.component';
+import { GeneralAssociationMeetingAttendanceComponent } from './pages/general-association-meeting-attendance/general-association-meeting-attendance.component';
+import { ManageMembersComponent } from './pages/shared/manage-members/manage-members.component';
+import { SelectMemberPopupComponent } from './pages/shared/select-member-popup-component/select-member-popup.component';
+import { ManageInternalUsersComponent } from './pages/shared/manage-internal-users/manage-internal-users.component';
+import { GeneralAssociationMeetingCompleteTaskPopupComponent } from './popups/general-association-meeting-complete-task-popup/general-association-meeting-complete-task-popup.component';
+import { GeneralAssociationMeetingApproveTaskPopupComponent } from './popups/general-association-meeting-approve-task-popup/general-association-meeting-approve-task-popup.component';
+import { MeetingPointMembersCommentsPopupComponent } from './popups/meeting-point-members-comments-popup/meeting-point-members-comments-popup.component';
 
 
 @NgModule({
@@ -44,7 +51,14 @@ import { TransferFundsAbroadCompleteTaskPopupComponent } from './popups/transfer
     TransferringIndividualFundsAbroadComponent,
     TransferFundsAbroadApproveTaskPopupComponent,
     SelectReceiverEntityPopupComponent,
-    TransferFundsAbroadCompleteTaskPopupComponent
+    TransferFundsAbroadCompleteTaskPopupComponent,
+    GeneralAssociationMeetingAttendanceComponent,
+    ManageMembersComponent,
+    SelectMemberPopupComponent,
+    ManageInternalUsersComponent,
+    GeneralAssociationMeetingCompleteTaskPopupComponent,
+    GeneralAssociationMeetingApproveTaskPopupComponent,
+    MeetingPointMembersCommentsPopupComponent
   ],
   imports: [
     CommonModule,

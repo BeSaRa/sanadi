@@ -53,9 +53,13 @@
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.bank_operation_type}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.operationTypeInfo?.getName() || ''}} </td>
           </ng-container>
-          <ng-container cdkColumnDef="status">
+          <ng-container cdkColumnDef="status" *ngIf="!isNotLicense">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.license_status}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.licenseStatusInfo?.getName() || ''}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="status" *ngIf="isNotLicense">
+            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.status}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.caseStatusInfo?.getName() || ''}} </td>
           </ng-container>
           <ng-container cdkColumnDef="endDate">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.license_end_date}}</th>

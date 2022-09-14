@@ -92,6 +92,8 @@ export enum LookupCategories {
   TransfereeType = 'TransfereeType',
   HeadQuarterType = 'HeadQuarterType',
   TransferMethod = 'TransferMethod',
+  MeetingType = 'MeetingType',
+  MeetingClassification = 'MeetingClassification',
 
   ORG_UNIT_TYPE_CAT_ID = '1',
   ORG_STATUS_CAT_ID = '2',

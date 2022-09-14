@@ -1,7 +1,7 @@
 import { NpoManagementService } from './npo-management.service';
 import { CoordinationWithOrganizationsRequestService } from '@app/services/coordination-with-organizations-request.service';
 import { UrgentInterventionFinancialNotificationService } from './urgent-intervention-financial-notification.service';
-import { ComponentFactoryResolver, Injectable } from '@angular/core';
+import { Injectable, ComponentFactoryResolver } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { UrlService } from './url.service';
 import { Observable, of } from 'rxjs';
@@ -30,35 +30,35 @@ import { InitialExternalOfficeApprovalService } from '@app/services/initial-exte
 import { PartnerApprovalService } from '@app/services/partner-approval.service';
 import { FinalExternalOfficeApprovalService } from './final-external-office-approval.service';
 import { IInboxCriteria } from '@app/interfaces/i-inbox-criteria';
+
 import {
   FilterInboxRequestPopupComponent
 } from '@app/modules/e-services-main/popups/filter-inbox-request-popup/filter-inbox-request-popup.component';
-import { DateUtils } from '@app/helpers/date-utils';
-import { CommonUtils } from '@app/helpers/common-utils';
-import { InternalProjectLicenseService } from '@app/services/internal-project-license.service';
-import { SendToMultipleComponent } from '@app/shared/popups/send-to-multiple/send-to-multiple.component';
-import { ProjectModelService } from '@app/services/project-model.service';
-import { Memoize } from 'typescript-memoize';
-import { CaseModel } from '@app/models/case-model';
-import { CollectionApprovalService } from '@app/services/collection-approval.service';
-import { FundraisingService } from './fundraising.service';
-import { CollectorApprovalService } from '@app/services/collector-approval.service';
-import { UrgentInterventionLicensingService } from '@app/services/urgent-intervention-licensing.service';
-import { InternalBankAccountApprovalService } from '@app/services/internal-bank-account-approval.service';
-import { CustomsExemptionRemittanceService } from './customs-exemption-remittance.service';
-import { BaseGenericEService } from '@app/generics/base-generic-e-service';
-import { UrgentJointReliefCampaignService } from '@services/urgent-joint-relief-campaign.service';
-import { UrgentInterventionAnnouncementService } from '@services/urgent-intervention-announcement.service';
-import { ExternalOrgAffiliationService } from './external-org-affiliation.service';
-import { EmploymentService } from '@app/services/employment.service';
-import {
-  ReturnToOrganizationPopupComponent
-} from '@app/shared/popups/return-to-organization-popup/return-to-organization-popup.component';
-import { UrgentInterventionClosureService } from '@services/urgent-intervention-closure.service';
-import { TransferringIndividualFundsAbroadService } from '@services/transferring-individual-funds-abroad.service';
-import { ForeignCountriesProjectsService } from './foreign-countries-projects.service';
-import { CastResponse } from "@decorators/cast-response";
+import {DateUtils} from '@app/helpers/date-utils';
+import {CommonUtils} from '@app/helpers/common-utils';
+import {InternalProjectLicenseService} from '@app/services/internal-project-license.service';
+import {SendToMultipleComponent} from '@app/shared/popups/send-to-multiple/send-to-multiple.component';
+import {ProjectModelService} from '@app/services/project-model.service';
+import {Memoize} from 'typescript-memoize';
+import {CaseModel} from '@app/models/case-model';
+import {CollectionApprovalService} from '@app/services/collection-approval.service';
+import {FundraisingService} from './fundraising.service';
+import {CollectorApprovalService} from '@app/services/collector-approval.service';
+import {UrgentInterventionLicensingService} from '@app/services/urgent-intervention-licensing.service';
+import {InternalBankAccountApprovalService} from '@app/services/internal-bank-account-approval.service';
+import {CustomsExemptionRemittanceService} from './customs-exemption-remittance.service';
+import {BaseGenericEService} from '@app/generics/base-generic-e-service';
+import {UrgentJointReliefCampaignService} from '@services/urgent-joint-relief-campaign.service';
+import {UrgentInterventionAnnouncementService} from '@services/urgent-intervention-announcement.service';
+import {ExternalOrgAffiliationService} from './external-org-affiliation.service';
+import {EmploymentService} from '@app/services/employment.service';
+import {ReturnToOrganizationPopupComponent} from '@app/shared/popups/return-to-organization-popup/return-to-organization-popup.component';
+import {UrgentInterventionClosureService} from '@services/urgent-intervention-closure.service';
+import {TransferringIndividualFundsAbroadService} from '@services/transferring-individual-funds-abroad.service';
+import {ForeignCountriesProjectsService} from './foreign-countries-projects.service';
+import {CastResponse} from '@decorators/cast-response';
 import {UrgentInterventionLicenseFollowupService} from '@services/urgent-intervention-license-followup.service';
+import {GeneralAssociationMeetingAttendanceService} from '@services/general-association-meeting-attendance.service';
 
 @Injectable({
   providedIn: 'root'
@@ -94,8 +94,9 @@ export class InboxService {
               private externalOrgAffiliationService: ExternalOrgAffiliationService,
               private customsExemptionRemittanceService: CustomsExemptionRemittanceService,
               private foreignCountriesProjectService: ForeignCountriesProjectsService,
-              private transferringIndividualsFundsAbroad: TransferringIndividualFundsAbroadService,
-              private coordinationWithOrganizationsRequestService:CoordinationWithOrganizationsRequestService) {
+              private transferringIndividualsFundsAbroadService: TransferringIndividualFundsAbroadService,
+              private coordinationWithOrganizationsRequestService:CoordinationWithOrganizationsRequestService,
+              private generalAssociationMeetingAttendanceService: GeneralAssociationMeetingAttendanceService) {
     FactoryService.registerService('InboxService', this);
     // register all e-services that we need.
     this.services.set(CaseTypes.INQUIRY, this.inquiryService);
@@ -119,7 +120,8 @@ export class InboxService {
     this.services.set(CaseTypes.URGENT_INTERVENTION_CLOSURE, this.urgentInterventionClosureService);
     this.services.set(CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION, this.urgentInterventionFinancialNotificationService);
     this.services.set(CaseTypes.FOREIGN_COUNTRIES_PROJECTS, this.foreignCountriesProjectService);
-    this.services.set(CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD, this.transferringIndividualsFundsAbroad);
+    this.services.set(CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD, this.transferringIndividualsFundsAbroadService);
+    this.services.set(CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE, this.generalAssociationMeetingAttendanceService);
     this.services.set(CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST, this.coordinationWithOrganizationsRequestService);
     this.services.set(CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP, this.urgentInterventionLicenseFollowupService);
     this.services.set(CaseTypes.NPO_MANAGEMENT, this.npoManagementService);
@@ -348,6 +350,10 @@ export class InboxService {
       claimBefore,
       task
     });
+  }
+
+  completeCanNotBeCompleted(): DialogRef {
+    return this.dialog.error("Can/'t Be Completed");
   }
 
   openReturnToSpecificOrganization(caseId: string, task?: QueryResult | CaseModel<any, any>): DialogRef {
