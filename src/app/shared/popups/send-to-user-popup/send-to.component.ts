@@ -103,7 +103,7 @@ export class SendToComponent implements OnInit, OnDestroy {
   }
 
   loadDepartments(): void {
-    this.intDepService.loadDepartments()
+    this.intDepService.loadAsLookups()
       .pipe(takeUntil(this.destroy$))
       .subscribe(deps => this.departments = deps.filter(dep => dep.id !== this.employee.getInternalDepartment()?.id));
   }

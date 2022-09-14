@@ -199,13 +199,13 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
   }
 
   loadDepartments(): void {
-    this.intDepService.loadDepartments()
+    this.intDepService.loadAsLookups()
       .pipe(takeUntil(this.destroy$))
       .subscribe(deps => this.departments = deps.filter(dep => dep.id !== this.employee.getInternalDepartment()?.id));
   }
 
   loadInternalBankAccountApprovalDepartments(): void {
-    this.intDepService.loadDepartments()
+    this.intDepService.loadAsLookups()
       .pipe(takeUntil(this.destroy$))
       .subscribe(deps => this.departments = deps.filter(dep => this.internalBankAccountApprovalDepartments.includes(dep.mainTeam.authName as InternalBankAccountApprovalReviewDepartments)));
   }
