@@ -7,6 +7,7 @@ import { LangService } from "@app/services/lang.service";
 import { FileIconsEnum, FileMimeTypesEnum } from '@app/enums/file-extension-mime-types-icons.enum';
 import { InterceptModel } from "@decorators/intercept-model";
 import { FileNetDocumentInterceptor } from "@app/model-interceptors/file-net-document-interceptor";
+import { AttachmentTypeServiceData } from "@app/models/attachment-type-service-data";
 
 const interceptor = new FileNetDocumentInterceptor()
 
@@ -38,6 +39,8 @@ export class FileNetDocument extends FileNetModel<FileNetDocument> {
   attachmentTypeInfo!: AdminResult;
   langService: LangService;
   gridName?: string;
+  // to be filled manually not from interceptor
+  attachmentTypeServiceData?: AttachmentTypeServiceData
 
   constructor() {
     super();
@@ -75,6 +78,23 @@ export class FileNetDocument extends FileNetModel<FileNetDocument> {
   denormalizeItemId(): void {
     if (this.itemId) {
       this.itemId = this.gridName + '|' + this.itemId
+    }
+  }
+
+  setAttachmentTypeServiceData(type: AttachmentTypeServiceData): this {
+    this.attachmentTypeServiceData = type;
+    return this
+  }
+
+  notMatchExpression(properties: Record<string, any>): boolean {
+    if (this.attachmentTypeServiceData && this.attachmentTypeServiceData.parsedCustomProperties) {
+      const expression = this.attachmentTypeServiceData.parsedCustomProperties;
+      const keys = Object.keys(expression)
+      return keys.some(key => {
+        return expression[key] !== properties[key]
+      })
+    } else {
+      return false
     }
   }
 }

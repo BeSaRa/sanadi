@@ -17,7 +17,6 @@ import { OpenFrom } from '@app/enums/open-from.enum';
 import { EmployeeService } from '@app/services/employee.service';
 import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
 
-// noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
   selector: 'collection-approval',
   templateUrl: './collection-approval.component.html',
@@ -42,6 +41,12 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
   form!: UntypedFormGroup;
 
   disableSearchField: boolean = true;
+
+  formProperties = {
+    requestType: () => {
+      return this.getObservableField('requestType')
+    }
+  }
 
   get basicInfo(): UntypedFormGroup {
     return this.form.get('basicInfo')! as UntypedFormGroup;
@@ -129,7 +134,7 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
       (operation === OperationTypes.CREATE && saveType === SaveTypes.FINAL) ||
       (operation === OperationTypes.UPDATE && saveType === SaveTypes.COMMIT)
     ) {
-      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({serial: model.fullSerial}));
+      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({ serial: model.fullSerial }));
     } else {
       this.toast.success(this.lang.map.request_has_been_saved_successfully);
     }
@@ -270,8 +275,8 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
   }
 
   /*isEditLicenseAllowed(): boolean {
-    // if new or draft record and request type !== new, edit is allowed
-    let isAllowed = !this.model?.id || (!!this.model?.id && this.model.canCommit());
-    return isAllowed && CommonUtils.isValidValue(this.requestType.value) && this.requestType.value !== CollectionRequestType.NEW;
-  }*/
+   // if new or draft record and request type !== new, edit is allowed
+   let isAllowed = !this.model?.id || (!!this.model?.id && this.model.canCommit());
+   return isAllowed && CommonUtils.isValidValue(this.requestType.value) && this.requestType.value !== CollectionRequestType.NEW;
+   }*/
 }
