@@ -35,6 +35,8 @@ import { GdxMojResponse } from '@app/models/gdx-moj-response';
 import { GdxMociResponse } from '@app/models/gdx-moci-response';
 import { CrudGenericService } from "@app/generics/crud-generic-service";
 import { Pagination } from '@app/models/pagination';
+import {GdxMawaredResponse} from '@app/models/gdx-mawared-response';
+import {GdxGarsiaPensionResponse} from '@app/models/gdx-garsia-pension-response';
 
 const beneficiarySearchLogCriteriaInterceptor = new BeneficiarySearchLogCriteriaInterceptor();
 
@@ -180,5 +182,21 @@ export class BeneficiaryService extends CrudGenericService<Beneficiary> {
   })
   addMOCIInquiry(criteria: IGdxCriteria) {
     return this.http.post<GdxMociResponse[]>(this._getServiceURL() + '/gdx/moci/commercial-record', criteria);
+  }
+
+  @CastResponse(() => GdxMawaredResponse, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  addMAWAREDInquiry(criteria: IGdxCriteria) {
+    return this.http.post<GdxMawaredResponse[]>(this._getServiceURL() + '/gdx/mawared/last-salary', criteria);
+  }
+
+  @CastResponse(() => GdxGarsiaPensionResponse, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  addGarsiaInquiry(criteria: IGdxCriteria) {
+    return this.http.post<GdxGarsiaPensionResponse[]>(this._getServiceURL() + '/gdx/garsia/pension', criteria);
   }
 }

@@ -1197,9 +1197,11 @@ export interface ILanguageKeys {
   integration_moci: string;
   integration_moph: string;
   integration_mawared: string;
+  integration_garsia: string;
   integration_qatar_charity: string;
   date_of_death: string;
   company_info: string;
+  garsia_pensions: string;
   relation_status: string;
   parcel_number: string;
   parcel_type: string;
@@ -1345,4 +1347,21 @@ export interface ILanguageKeys {
   lbl_youtube: string;
   clearance_date: string;
   disbandment_date: string;
+  payments: string;
+  month: string;
+  first_join_date: string;
+  end_of_service_date: string;
+  pension_deserve_date: string;
+  final_service_period_days: string;
+  final_service_period_months: string;
+  final_service_period_years: string;
+  deserved_amount: string;
+  first_month: string;
+  first_payment: string;
+  second_month: string;
+  second_payment: string;
+  third_month: string;
+  third_payment: string;
+  entity_id: string;
+  employees: string;
 }
