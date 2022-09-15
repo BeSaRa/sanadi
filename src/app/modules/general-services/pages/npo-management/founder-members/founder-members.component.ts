@@ -1,3 +1,5 @@
+import { DateUtils } from './../../../../../helpers/date-utils';
+import { DatepickerOptionsMap } from './../../../../../types/types';
 import { LookupService } from './../../../../../services/lookup.service';
 import { Lookup } from './../../../../../models/lookup';
 import { JobTitleService } from './../../../../../services/job-title.service';
@@ -56,6 +58,11 @@ export class FounderMembersComponent implements OnInit, OnDestroy {
 
   form!: UntypedFormGroup;
 
+  datepickerOptionsMap: DatepickerOptionsMap = {
+    joinDate: DateUtils.getDatepickerOptions({
+      disablePeriod: "none",
+    }),
+  }
   ngOnInit(): void {
     this._jb.loadAsLookups().subscribe((data) => {
       this.jobTitleAdminLookup = data;
@@ -222,6 +229,9 @@ export class FounderMembersComponent implements OnInit, OnDestroy {
     this.readyEvent.emit(readyStatus);
   }
 
+  openDateMenu(ref: any) {
+    ref.toggleCalendar();
+  }
   forceClearComponent() {
     this.cancel();
     this.list = [];
