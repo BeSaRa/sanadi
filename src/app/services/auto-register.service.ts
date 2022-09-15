@@ -1,5 +1,9 @@
-import { ForeignCountriesProjectsComponent } from '@app/modules/general-services/pages/foreign-countries-projects/foreign-countries-projects.component';
-import { UrgentInterventionFinancialNotificationComponent } from './../modules/urgent-intervention/pages/urgent-intervention-financial-notification/urgent-intervention-financial-notification.component';
+import {
+  ForeignCountriesProjectsComponent
+} from '@app/modules/general-services/pages/foreign-countries-projects/foreign-countries-projects.component';
+import {
+  UrgentInterventionFinancialNotificationComponent
+} from './../modules/urgent-intervention/pages/urgent-intervention-financial-notification/urgent-intervention-financial-notification.component';
 import { EmploymentComponent } from '../modules/general-services/pages/employment/employment.component';
 
 import { Injectable } from '@angular/core';
@@ -30,12 +34,18 @@ import {
 } from '@app/projects/pages/internal-bank-account-approval/internal-bank-account-approval.component';
 
 import { UrgentJointReliefCampaignComponent } from '@app/projects/pages/urgent-joint-relief-campaign/urgent-joint-relief-campaign.component';
-import { UrgentInterventionAnnouncementComponent } from '@app/modules/urgent-intervention/pages/urgent-intervention-announcement/urgent-intervention-announcement.component';
+import {
+  UrgentInterventionAnnouncementComponent
+} from '@app/modules/urgent-intervention/pages/urgent-intervention-announcement/urgent-intervention-announcement.component';
 import {
   UrgentInterventionClosureComponent
 } from '@app/modules/urgent-intervention/pages/urgent-intervention-closure/urgent-intervention-closure.component';
-import { ExternalOrgAffiliationComponent } from './../modules/general-services/pages/external-org-affiliation/external-org-affiliation.component';
-import { UrgentInterventionLicenseComponent } from '@app/modules/urgent-intervention/pages/urgent-intervention-license/urgent-intervention-license.component';
+import {
+  ExternalOrgAffiliationComponent
+} from './../modules/general-services/pages/external-org-affiliation/external-org-affiliation.component';
+import {
+  UrgentInterventionLicenseComponent
+} from '@app/modules/urgent-intervention/pages/urgent-intervention-license/urgent-intervention-license.component';
 import {
   TransferringIndividualFundsAbroadComponent
 } from '@app/projects/pages/transferring-individual-funds-abroad/transferring-individual-funds-abroad.component';
@@ -43,6 +53,9 @@ import { CoordinationWithOrganizationsRequestComponent } from '@app/modules/gene
 import {
   UrgentInterventionLicenseFollowupComponent
 } from '@app/modules/urgent-intervention/pages/urgent-intervention-license-followup/urgent-intervention-license-followup.component';
+import {
+  GeneralAssociationMeetingAttendanceComponent
+} from '@app/projects/pages/general-association-meeting-attendance/general-association-meeting-attendance.component';
 import { CharityOrganizationUpdateComponent } from '@app/modules/general-services/pages/charity-organization-update/charity-organization-update.component';
 
 @Injectable({
@@ -84,7 +97,7 @@ export class AutoRegisterService {
       DynamicComponentService.registerComponent('ForeignCountriesProjectsComponent', ForeignCountriesProjectsComponent);
       DynamicComponentService.registerComponent('TransferringIndividualFundsAbroadComponent', TransferringIndividualFundsAbroadComponent);
       DynamicComponentService.registerComponent('CoordinationWithOrganizationsRequestComponent', CoordinationWithOrganizationsRequestComponent);
-
+      DynamicComponentService.registerComponent('GeneralAssociationMeetingAttendanceComponent', GeneralAssociationMeetingAttendanceComponent);
       DynamicComponentService.registerComponent('CharityOrganizationUpdateComponent', CharityOrganizationUpdateComponent);
     });// just to make sure that service constructed and register all dynamic components
 

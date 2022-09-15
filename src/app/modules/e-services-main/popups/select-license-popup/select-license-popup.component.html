@@ -89,7 +89,8 @@
   <selected-license-table [caseType]="caseType" [ignoreDelete]="true"
                           [caseTypeViewLicense]="caseTypeViewLicense"
                           [licenseList]="data.licenses" [columns]="displayedColumns"
-                          [allowSelect]="data.select" (selectCallback)="selectLicense($event)">
+                          [allowSelect]="data.select" (selectCallback)="selectLicense($event)"
+                          [isNotLicense]="data.isNotLicense">
   </selected-license-table>
 </div>
 <div class="dialog-actions">

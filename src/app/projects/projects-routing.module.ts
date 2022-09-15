@@ -64,6 +64,17 @@ const routes: Routes = [
       checkAnyPermission: false,
       render: 'TransferringIndividualFundsAbroadComponent'
     }
+  },
+  {
+    path: 'general-association-meeting-attendance', component: EServiceComponentWrapperComponent,
+    canActivate: [ServicesGuard],
+    resolve: {info: ServiceItemResolver},
+    data: {
+      permissionKey: EServicePermissions.GENERAL_ASSOCIATION_MEETING_ATTENDANCE,
+      configPermissionGroup: null,
+      checkAnyPermission: false,
+      render: 'GeneralAssociationMeetingAttendanceComponent'
+    }
   }
 ];
 

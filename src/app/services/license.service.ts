@@ -58,6 +58,7 @@ import { ForeignCountriesProjectsResult } from '@app/models/foreign-countries-pr
 import { ForeignCountriesProjectsSearchCriteria } from '@app/models/foreign-countries-projects-seach-criteria';
 import { ForeignCountriesProjects } from '@app/models/foreign-countries-projects';
 import { CastResponse } from "@decorators/cast-response";
+import {GeneralAssociationMeetingAttendance} from '@app/models/general-association-meeting-attendance';
 
 const collectionInterceptor = new CollectionApprovalInterceptor()
 const collectorInterceptor = new CollectorApprovalInterceptor()
@@ -142,6 +143,9 @@ export class LicenseService {
         break;
       case CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP:
         url = this.urlService.URLS.URGENT_INTERVENTION_LICENSE_FOLLOWUP;
+        break;
+      case CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE:
+        url = this.urlService.URLS.GENERAL_ASSOCIATION_MEETING_ATTENDANCE;
         break;
     }
     return url;
@@ -444,6 +448,14 @@ export class LicenseService {
     });
   }
 
+  @CastResponse(() => GeneralAssociationMeetingAttendance)
+  _validateGeneralAssociationMeetingAttendanceByRequestType<T>(requestType: number, oldLicenseId: string): Observable<T> {
+    return this.http.post<T>(this.getServiceUrlByCaseType(CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE) + '/draft/validate', {
+      requestType,
+      oldLicenseId
+    });
+  }
+
   @CastResponse(() => CollectionLicense)
   private _validateCollectionLicenseByRequestType<T>(requestType: number, oldLicenseId: string): Observable<T> {
     return this.http.post<T>(this.getServiceUrlByCaseType(CaseTypes.COLLECTION_APPROVAL) + '/draft/validate', {
@@ -485,16 +497,20 @@ export class LicenseService {
       return this._validateTransferIndividualFundsAbroadByRequestType<T>(requestType, licenseId);
     } else if (caseType === CaseTypes.FOREIGN_COUNTRIES_PROJECTS) {
       return this._validateForeignCountriesProjectsLicenseByRequestType<T>(requestType, licenseId);
+    } else if (caseType === CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE) {
+      return this._validateGeneralAssociationMeetingAttendanceByRequestType<T>(requestType, licenseId);
     }
     return of(undefined);
   }
 
-  openSelectLicenseDialog<T>(licenses: (UrgentInterventionAnnouncementResult[] | InitialExternalOfficeApprovalResult[] | PartnerApproval[] | ExternalOrgAffiliationResult[] | FinalExternalOfficeApprovalResult[] | InternalProjectLicenseResult[] | UrgentInterventionLicenseResult[] | T[]), caseRecord: any | undefined, select = true, displayedColumns: string[] = []): DialogRef {
+  openSelectLicenseDialog<T>(licenses: (UrgentInterventionAnnouncementResult[] | InitialExternalOfficeApprovalResult[] | PartnerApproval[] | ExternalOrgAffiliationResult[] | FinalExternalOfficeApprovalResult[] | InternalProjectLicenseResult[] | UrgentInterventionLicenseResult[] | T[]), caseRecord: any | undefined, select = true, displayedColumns: string[] = [], oldFullSerial?: string, isNotLicense: boolean = false): DialogRef {
     return this.dialog.show(SelectLicensePopupComponent, {
       licenses,
       select,
       caseRecord,
-      displayedColumns
+      displayedColumns,
+      oldFullSerial,
+      isNotLicense
     });
   }
 
@@ -562,5 +578,14 @@ export class LicenseService {
 
   transferringIndividualFundsAbroadSearch<C>(model: Partial<C>): Observable<TransferringIndividualFundsAbroad[]> {
     return this._transferringIndividualFundsAbroadSearch(model);
+  }
+
+  @CastResponse(() => GeneralAssociationMeetingAttendance)
+  private _generalAssociationMeetingAttendanceSearch<C>(model: Partial<C>): Observable<GeneralAssociationMeetingAttendance[]> {
+    return this.http.post<GeneralAssociationMeetingAttendance[]>(this.urlService.URLS.GENERAL_ASSOCIATION_MEETING_ATTENDANCE + '/search', model)
+  }
+
+  generalAssociationMeetingAttendanceSearch<C>(model: Partial<C>): Observable<GeneralAssociationMeetingAttendance[]> {
+    return this._generalAssociationMeetingAttendanceSearch(model);
   }
 }

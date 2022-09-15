@@ -5,6 +5,8 @@
        [title]="langService.map[tabData.moci.langKey]"></tab>
   <tab [name]="tabData.mawared.name" [template]="MawaredTemplate"
        [title]="langService.map[tabData.mawared.langKey]"></tab>
+  <tab [name]="tabData.garsia.name" [template]="GarsiaTemplate"
+       [title]="langService.map[tabData.garsia.langKey]"></tab>
   <tab [name]="tabData.qatarCharity.name" [template]="QatarCharityTemplate"
        [title]="langService.map[tabData.qatarCharity.langKey]"></tab>
 </tabs-list>
@@ -69,7 +71,7 @@
       </div>
     </div>
   </div>
-  <div>
+  <div id="mojParcelsContainer">
     <h6 class="text-primary">{{langService.map.parcels_info}}</h6>
     <hr class="mt-0">
     <div class="row">
@@ -196,7 +198,228 @@
   </div>
 </ng-template>
 <ng-template #MawaredTemplate>
-  MAWARED
+  <ng-container [ngTemplateOutlet]="gdxServicesLogTableTemplate"
+                [ngTemplateOutletContext]="{add$: addMawared$, reload$: reloadMawared$, data: mawaredLogs, displayColumns: displayColumnsMap.gdxServiceLog,
+                                            filterControl: filterControlsMap.mawared, actionsList: actionsMap.gdxServiceLog, selectedRecord: selectedRecordMap.mawared}">
+  </ng-container>
+  <div id="mawaredRelatedDataContainer">
+    <h6 class="text-primary">{{langService.map.employees}}</h6>
+    <hr class="mt-0">
+    <div class="row">
+      <div class="col-12">
+        <div class="table-responsive">
+          <app-table #mawaredRelatedDataTable sortableTable [paginator]="mawaredRelatedDataPaginator"
+                     [data]="mawaredRelatedDataList"
+                     [columns]="displayColumnsMap.mawaredRelatedData"
+                     [filter]="filterControlsMap.mawaredRelatedData.value" [useSearchToFilter]="true">
+            <table class="table table-striped table-bordered caption-top" cdk-table
+                   [dataSource]="mawaredRelatedDataTable.dataSource">
+              <ng-container cdkColumnDef="extra-header">
+                <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+                  <table-header tableTitle="employees"
+                                [sort]="mawaredRelatedDataTable.dataSource.sort"
+                                (textChange)="filterControlsMap.mawaredRelatedData.setValue($event)">
+                  </table-header>
+                </th>
+              </ng-container>
+              <ng-container cdkColumnDef="empNameAr">
+                <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.arabic_name}}</th>
+                <td cdk-cell *cdkCellDef="let row"><span>{{row.empNameAr}}</span></td>
+              </ng-container>
+              <ng-container cdkColumnDef="empNameEn">
+                <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.english_name}}</th>
+                <td cdk-cell *cdkCellDef="let row"><span>{{row.empNameEn}}</span></td>
+              </ng-container>
+              <ng-container cdkColumnDef="empQID">
+                <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.lbl_qid}}</th>
+                <td cdk-cell *cdkCellDef="let row"><span>{{row.empQID}}</span></td>
+              </ng-container>
+              <ng-container cdkColumnDef="entityName">
+                <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.entity_name}}</th>
+                <td cdk-cell *cdkCellDef="let row"><span>{{row.entityName}}</span></td>
+              </ng-container>
+              <ng-container cdkColumnDef="entityId">
+                <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.entity_id}}</th>
+                <td cdk-cell *cdkCellDef="let row"><span>{{row.entityId}}</span></td>
+              </ng-container>
+              <ng-container cdkColumnDef="firstMonth">
+                <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.first_month}}</th>
+                <td cdk-cell *cdkCellDef="let row"><span>{{row.firstMonth}}</span></td>
+              </ng-container>
+              <ng-container cdkColumnDef="firstPayment">
+                <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.first_payment}}</th>
+                <td cdk-cell *cdkCellDef="let row" class="text-end"><span>{{(row.firstPayment ? row.firstPayment + '' : '') | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span></td>
+              </ng-container>
+              <ng-container cdkColumnDef="secondMonth">
+                <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.second_month}}</th>
+                <td cdk-cell *cdkCellDef="let row"><span>{{row.secondMonth}}</span></td>
+              </ng-container>
+              <ng-container cdkColumnDef="secondPayment">
+                <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.second_payment}}</th>
+                <td cdk-cell *cdkCellDef="let row" class="text-end"><span>{{(row.secondPayment ? row.secondPayment + '' : '') | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span></td>
+              </ng-container>
+              <ng-container cdkColumnDef="thirdMonth">
+                <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.third_month}}</th>
+                <td cdk-cell *cdkCellDef="let row"><span>{{row.thirdMonth}}</span></td>
+              </ng-container>
+              <ng-container cdkColumnDef="thirdPayment">
+                <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.third_payment}}</th>
+                <td cdk-cell *cdkCellDef="let row" class="text-end"><span>{{(row.thirdPayment ? row.thirdPayment + '' : '') | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span></td>
+              </ng-container>
+
+              <tr cdk-header-row *cdkHeaderRowDef="headerColumn"></tr>
+              <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="mawaredRelatedDataTable.columns"></tr>
+              <tr cdk-row *cdkRowDef="let row; columns: mawaredRelatedDataTable.columns;"
+                  (contextmenu)="mawaredRelatedDataMenu.open($event , row)"></tr>
+              <tr *cdkNoDataRow>
+                <td colspan="100" class="text-center">{{langService.map.no_records_to_display}}</td>
+              </tr>
+            </table>
+            <app-paginator #mawaredRelatedDataPaginator [length]="(mawaredRelatedDataList.length || 0)"></app-paginator>
+          </app-table>
+          <context-menu-item #mawaredRelatedDataMenu [actions]="actionsMap.mawaredRelatedData"></context-menu-item>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template #GarsiaTemplate>
+  <ng-container [ngTemplateOutlet]="gdxServicesLogTableTemplate"
+                [ngTemplateOutletContext]="{add$: addGarsia$, reload$: reloadGarsia$, data: garsiaLogs, displayColumns: displayColumnsMap.gdxServiceLog,
+                                            filterControl: filterControlsMap.garsia, actionsList: actionsMap.gdxServiceLog, selectedRecord: selectedRecordMap.garsia}">
+  </ng-container>
+  <div id="garsiaPensionsContainer">
+    <h6 class="text-primary">{{langService.map.garsia_pensions}}</h6>
+    <hr class="mt-0">
+    <div class="row">
+      <div class="col-12">
+        <app-table #garsiaPensionTable sortableTable [paginator]="garsiaPensionPaginator" [data]="garsiaRelatedDataList"
+                   [columns]="displayColumnsMap.garsiaRelatedPensions"
+                   [filter]="filterControlsMap.garsiaRelatedPensions.value" [useSearchToFilter]="true">
+          <table class="table table-striped table-bordered caption-top" cdk-table
+                 [dataSource]="garsiaPensionTable.dataSource">
+            <ng-container cdkColumnDef="extra-header">
+              <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+                <table-header tableTitle="garsia_pensions"
+                              [sort]="garsiaPensionTable.dataSource.sort"
+                              (textChange)="filterControlsMap.garsiaRelatedPensions.setValue($event)">
+                </table-header>
+              </th>
+            </ng-container>
+            <ng-container cdkColumnDef="pensionArName">
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.arabic_name}}</th>
+              <td cdk-cell *cdkCellDef="let row"><span>{{row.pensionArName}}</span></td>
+            </ng-container>
+            <ng-container cdkColumnDef="pensionEmployer">
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.employer}}</th>
+              <td cdk-cell *cdkCellDef="let row"><span>{{row.pensionEmployer}}</span></td>
+            </ng-container>
+            <ng-container cdkColumnDef="pensionStatus">
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.status}}</th>
+              <td cdk-cell *cdkCellDef="let row"><span>{{row.pensionStatus}}</span></td>
+            </ng-container>
+            <ng-container cdkColumnDef="firstJoinDate">
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.first_join_date}}</th>
+              <td cdk-cell *cdkCellDef="let row"><span>{{row.firstJoinDate | date}}</span></td>
+            </ng-container>
+            <ng-container cdkColumnDef="endOfServiceDate">
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.end_of_service_date}}</th>
+              <td cdk-cell *cdkCellDef="let row"><span>{{row.endOfServiceDate | date}}</span></td>
+            </ng-container>
+            <ng-container cdkColumnDef="finalServicePeriodYears">
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.final_service_period_years}}</th>
+              <td cdk-cell *cdkCellDef="let row"><span>{{row.finalServicePeriodYears}}</span></td>
+            </ng-container>
+            <ng-container cdkColumnDef="finalServicePeriodMonths">
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.final_service_period_months}}</th>
+              <td cdk-cell *cdkCellDef="let row"><span>{{row.finalServicePeriodMonths}}</span></td>
+            </ng-container>
+            <ng-container cdkColumnDef="finalServicePeriodDays">
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.final_service_period_days}}</th>
+              <td cdk-cell *cdkCellDef="let row"><span>{{row.finalServicePeriodDays}}</span></td>
+            </ng-container>
+            <ng-container cdkColumnDef="pensionDeserveDate">
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.pension_deserve_date}}</th>
+              <td cdk-cell *cdkCellDef="let row"><span>{{row.pensionDeserveDate | date}}</span></td>
+            </ng-container>
+            <ng-container cdkColumnDef="totalPensionDeserved">
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.deserved_amount}}</th>
+              <td cdk-cell *cdkCellDef="let row" class="text-end"><span>{{(row.totalPensionDeserved ? row.totalPensionDeserved + '' : '') | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span></td>
+            </ng-container>
+            <ng-container cdkColumnDef="actions">
+              <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_actions}}</th>
+              <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">
+                <grid-actions [actions]="actionsMap.garsiaRelatedPensions" [record]="row" [itemIndex]="itemIndex">
+
+                </grid-actions>
+              </td>
+            </ng-container>
+
+            <tr cdk-header-row *cdkHeaderRowDef="headerColumn"></tr>
+            <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="garsiaPensionTable.columns"></tr>
+            <tr cdk-row *cdkRowDef="let row; columns: garsiaPensionTable.columns;"
+                (contextmenu)="garsiaPensionMenu.open($event , row)"
+                [ngClass]="{'selected-row': selectedGarsiaPension && selectedGarsiaPension.dummyIdentifier === row.dummyIdentifier}"></tr>
+            <tr *cdkNoDataRow>
+              <td colspan="100" class="text-center">{{langService.map.no_records_to_display}}</td>
+            </tr>
+          </table>
+          <app-paginator #garsiaPensionPaginator [length]="(garsiaRelatedDataList.length || 0)"></app-paginator>
+        </app-table>
+        <context-menu-item #garsiaPensionMenu [actions]="actionsMap.garsiaRelatedPensions"></context-menu-item>
+      </div>
+    </div>
+  </div>
+  <div id="garsiaPensionPaymentsContainer">
+    <h6 class="text-primary">{{langService.map.payments}}</h6>
+    <hr class="mt-0">
+    <div class="row">
+      <div class="col-12">
+        <app-table #garsiaPensionPaymentTable sortableTable [paginator]="garsiaPensionPaymentPaginator"
+                   [data]="selectedGarsiaPensionList"
+                   [columns]="displayColumnsMap.garsiaRelatedPensionPayments"
+                   [filter]="filterControlsMap.garsiaRelatedPensionPayments.value" [useSearchToFilter]="true">
+          <table class="table table-striped table-bordered caption-top" cdk-table
+                 [dataSource]="garsiaPensionPaymentTable.dataSource">
+            <ng-container cdkColumnDef="extra-header">
+              <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+                <table-header tableTitle="payments"
+                              [sort]="garsiaPensionPaymentTable.dataSource.sort"
+                              (textChange)="filterControlsMap.garsiaRelatedPensionPayments.setValue($event)">
+                </table-header>
+              </th>
+            </ng-container>
+            <ng-container cdkColumnDef="payAccountNum">
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.account_number}}</th>
+              <td cdk-cell *cdkCellDef="let row"><span>{{row.payAccountNum}}</span></td>
+            </ng-container>
+            <ng-container cdkColumnDef="payMonth">
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.month}}</th>
+              <td cdk-cell *cdkCellDef="let row"><span>{{row.payMonth}}</span></td>
+            </ng-container>
+            <ng-container cdkColumnDef="payYear">
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.year}}</th>
+              <td cdk-cell *cdkCellDef="let row"><span>{{row.payYear}}</span></td>
+            </ng-container>
+            <ng-container cdkColumnDef="payValue">
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.amount}}</th>
+              <td cdk-cell *cdkCellDef="let row"><span>{{(row.payValue ? row.payValue + '' : '') | mask: inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span></td>
+            </ng-container>
+
+            <tr cdk-header-row *cdkHeaderRowDef="headerColumn"></tr>
+            <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="garsiaPensionPaymentTable.columns"></tr>
+            <tr cdk-row *cdkRowDef="let row; columns: garsiaPensionPaymentTable.columns;"
+                (contextmenu)="garsiaPensionPaymentMenu.open($event , row)"></tr>
+            <tr *cdkNoDataRow>
+              <td colspan="100" class="text-center">{{langService.map.no_records_to_display}}</td>
+            </tr>
+          </table>
+          <app-paginator #garsiaPensionPaymentPaginator></app-paginator>
+        </app-table>
+        <context-menu-item #garsiaPensionPaymentMenu [actions]="actionsMap.garsiaPensionPayments"></context-menu-item>
+      </div>
+    </div>
+  </div>
 </ng-template>
 <ng-template #QatarCharityTemplate>
   Qatar Charity

@@ -10,6 +10,7 @@ import {InboxService} from '@app/services/inbox.service';
 import {CaseTypes} from '@app/enums/case-types.enum';
 import {ServiceRequestTypes} from '@app/enums/service-request-types';
 import {BaseGenericEService} from '@app/generics/base-generic-e-service';
+import {GeneralAssociationMeetingAttendanceService} from '@services/general-association-meeting-attendance.service';
 
 @Component({
   selector: 'select-license-popup',
@@ -26,6 +27,8 @@ export class SelectLicensePopupComponent {
   fileIconsEnum = FileIconsEnum;
   caseService?: BaseGenericEService<any>;
 
+  // generalAssociationService: GeneralAssociationMeetingAttendanceService;
+
   constructor(public lang: LangService, private dialogRef: DialogRef,
               private licenseService: LicenseService,
               private inboxService: InboxService,
@@ -34,7 +37,8 @@ export class SelectLicensePopupComponent {
                 licenses: any[],
                 caseRecord: any | undefined,
                 select: boolean,
-                displayedColumns: string[]
+                displayedColumns: string[],
+                isNotLicense: boolean
               }) {
     this.caseType = this.data.caseRecord?.getCaseType();
     this.caseStatus = this.data.caseRecord?.getCaseStatus();
@@ -81,7 +85,14 @@ export class SelectLicensePopupComponent {
   }
 
   selectLicense(license: any): void {
-    if (this.caseType === CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION || this.caseType ===  CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP) {
+    if (this.caseType === CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE) {
+      (this.caseService as GeneralAssociationMeetingAttendanceService).validateLicenseByRequestType(this.requestType, license.fullSerial).subscribe((licenseDetails) => {
+        if (!licenseDetails) {
+          return;
+        }
+        this.dialogRef.close({selected: license, details: licenseDetails});
+      });
+    } else if (this.caseType === CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION || this.caseType === CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP) {
       this.licenseService.loadUrgentInterventionAnnouncementByLicenseId(license.id).subscribe((licenseDetails) => {
         if (!licenseDetails) {
           return;

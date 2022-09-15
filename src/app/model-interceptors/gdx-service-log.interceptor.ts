@@ -7,9 +7,13 @@ import {GdxServicesEnum} from '@app/enums/gdx-services.enum';
 import {GdxMociResponseInterceptor} from '@app/model-interceptors/gdx-moci-response-interceptor';
 import {GdxMojResponseInterceptor} from '@app/model-interceptors/gdx-moj-response-interceptor';
 import {GdxMociResponse} from '@app/models/gdx-moci-response';
+import {GdxGarsiaPensionResponseInterceptor} from '@app/model-interceptors/gdx-garsia-pension-response-interceptor';
+import {GdxMawaredResponseInterceptor} from '@app/model-interceptors/gdx-mawared-response-interceptor.interceptor';
 
 const gdxMojResponseInterceptor = new GdxMojResponseInterceptor();
 const gdxMociResponseInterceptor = new GdxMociResponseInterceptor();
+const gdxMawaredResponseInterceptor = new GdxMawaredResponseInterceptor();
+const gdxGarsiaPensionResponseInterceptor = new GdxGarsiaPensionResponseInterceptor();
 
 export class GdxServiceLogInterceptor implements IModelInterceptor<GdxServiceLog> {
   receive(model: GdxServiceLog): GdxServiceLog {
@@ -58,6 +62,12 @@ export class GdxServiceLogInterceptor implements IModelInterceptor<GdxServiceLog
         model.gdxServiceResponseList = model.gdxServiceResponseList.map((x) => {
           return gdxMociResponseInterceptor.receive(new GdxMociResponse().clone(x));
         });
+        break;
+      case GdxServicesEnum.MAWARED:
+        model.gdxServiceResponseParsed = gdxMawaredResponseInterceptor.receive(model.gdxServiceResponseParsed);
+        break;
+      case GdxServicesEnum.GARSIA:
+        model.gdxServiceResponseParsed = gdxGarsiaPensionResponseInterceptor.receive(model.gdxServiceResponseParsed);
         break;
       default:
         break;
