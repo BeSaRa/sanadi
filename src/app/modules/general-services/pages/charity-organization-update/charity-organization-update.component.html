@@ -679,6 +679,76 @@
       >
       </charity-decisions>
     </ng-template>
+
+    <ng-template #tabContent>
+      <div class="row">
+        <div class="col-12">
+          <app-table
+            #table
+            [useSearchToFilter]="true"
+            [selectable]="true"
+            [data]="organizationMeetings$ | async"
+            [columns]="organizationMeetingsColumns"
+            sortableTable
+          >
+            <table
+              cdk-table
+              [dataSource]="table.dataSource"
+              class="table table-striped table-bordered caption-top"
+            >
+              <ng-container cdkColumnDef="meetingDate">
+                <th cdk-header-cell sortable-header *cdkHeaderCellDef>
+                  {{ lang.map.meeting_date }}
+                </th>
+                <td cdk-cell *cdkCellDef="let row">
+                  {{ toDate(row.meetingDate) }}
+                </td>
+              </ng-container>
+
+              <ng-container cdkColumnDef="location">
+                <th cdk-header-cell sortable-header *cdkHeaderCellDef>
+                  {{ lang.map.meeting_location }}
+                </th>
+                <td cdk-cell *cdkCellDef="let row">
+                  {{ row.location }}
+                </td>
+              </ng-container>
+
+              <ng-container cdkColumnDef="meetingType">
+                <th cdk-header-cell sortable-header *cdkHeaderCellDef>
+                  {{ lang.map.general_association_meeting_type }}
+                </th>
+                <td cdk-cell *cdkCellDef="let row">
+                  {{ row.meetingTypeInfo.getName() }}
+                </td>
+              </ng-container>
+              <!-- <ng-container cdkColumnDef="establishmentDate">
+                <th cdk-header-cell sortable-header *cdkHeaderCellDef>
+                  {{ lang.map.establishment_date }}
+                </th>
+                <td cdk-cell *cdkCellDef="let row">
+                  {{ row.establishmentDate }}
+                </td>
+              </ng-container> -->
+
+              <tr
+                cdk-header-row
+                *cdkHeaderRowDef="organizationMeetingsColumns"
+              ></tr>
+              <tr
+                cdk-row
+                *cdkRowDef="let row; columns: organizationMeetingsColumns"
+              ></tr>
+              <tr *cdkNoDataRow>
+                <td colspan="100" class="text-center">
+                  {{ lang.map.no_records_to_display }}
+                </td>
+              </tr>
+            </table>
+          </app-table>
+        </div>
+      </div>
+    </ng-template>
     <ng-template #tabContent>
       <attachments
         [caseId]="model?.id"

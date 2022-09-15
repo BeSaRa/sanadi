@@ -1401,4 +1401,5 @@ export interface ILanguageKeys {
   decisions_by_organizations: string;
   internal_decisions: string;
   establishment_id: string;
+  meeting: string;
 }

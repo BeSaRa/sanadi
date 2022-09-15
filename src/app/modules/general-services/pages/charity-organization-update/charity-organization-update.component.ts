@@ -17,7 +17,9 @@ import { CharityReportType } from '@app/enums/charity-report-type.enum';
 import { CharityRequestType } from '@app/enums/charity-request-type.enum';
 import { CharityRole } from '@app/enums/charity-role.enum';
 import { CharityWorkArea } from '@app/enums/charity-work-area.enum';
+import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
 import { FileExtensionsEnum } from '@app/enums/file-extension-mime-types-icons.enum';
+import { OpenFrom } from '@app/enums/open-from.enum';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { SaveTypes } from '@app/enums/save-types';
 import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
@@ -31,6 +33,7 @@ import { CharityOrganization } from '@app/models/charity-organization';
 import { CharityOrganizationUpdate } from '@app/models/charity-organization-update';
 import { CharityReport } from '@app/models/charity-report';
 import { FinalExternalOfficeApprovalResult } from '@app/models/final-external-office-approval-result';
+import { GeneralAssociationMeetingAttendance } from '@app/models/general-association-meeting-attendance';
 import { OrgMember } from '@app/models/org-member';
 import { RealBeneficiary } from '@app/models/real-beneficiary';
 import { AdminLookupService } from '@app/services/admin-lookup.service';
@@ -39,14 +42,18 @@ import { CharityOrganizationUpdateService } from '@app/services/charity-organiza
 import { CharityOrganizationService } from '@app/services/charity-organization.service';
 import { CharityReportService } from '@app/services/charity-report.service';
 import { CountryService } from '@app/services/country.service';
+import { DialogService } from '@app/services/dialog.service';
 import { EmployeeService } from '@app/services/employee.service';
 import { FinalExternalOfficeApprovalService } from '@app/services/final-external-office-approval.service';
+import { GeneralAssociationMeetingAttendanceService } from '@app/services/general-association-meeting-attendance.service';
 import { GoveranceDocumentService } from '@app/services/governance-document.service';
 import { LangService } from '@app/services/lang.service';
 import { LookupService } from '@app/services/lookup.service';
 import { MemberRoleService } from '@app/services/member-role.service';
 import { RealBeneficiaryService } from '@app/services/real-beneficiary.service';
+import { ToastService } from '@app/services/toast.service';
 import { DatepickerOptionsMap } from '@app/types/types';
+import { IMyDateModel } from 'angular-mydatepicker';
 import { Observable } from 'rxjs';
 import { share, map, take } from 'rxjs/operators';
 import { OrganizationOfficersComponent } from '../../shared/organization-officers/organization-officers.component';
@@ -84,7 +91,7 @@ export class CharityOrganizationUpdateComponent
   charityReports: CharityReport[] = [];
   charityDecisions: CharityDecision[] = [];
   realBenefeciaries?: RealBeneficiary[] = [];
-  requestTypes = this.lookupService.listByCategory.CharityRequestType;
+  requestTypes = this.lookupService.listByCategory.CharityRequestType.sort((a, b) => a.lookupKey - b.lookupKey);
   contactInformationInputs: ControlWrapper[] = [
     { type: 'text', controlName: 'phone', label: this.lang.map.lbl_phone },
     { type: 'text', controlName: 'email', label: this.lang.map.lbl_email },
@@ -118,8 +125,14 @@ export class CharityOrganizationUpdateComponent
     'establishmentDate',
     'actions',
   ];
+  organizationMeetingsColumns = [
+    'meetingDate',
+    'location',
+    'meetingType',
+  ]
   countries$ = this.countryService.loadAsLookups();
   externalOffices$?: Observable<FinalExternalOfficeApprovalResult[]>;
+  organizationMeetings$?: Observable<GeneralAssociationMeetingAttendance[]>;
   @ViewChildren('tabContent', { read: TemplateRef })
   tabsTemplates!: QueryList<TemplateRef<any>>;
 
@@ -186,7 +199,11 @@ export class CharityOrganizationUpdateComponent
     }
     return [];
   }
+
   constructor(
+    private meetingService: GeneralAssociationMeetingAttendanceService,
+    private dialog: DialogService,
+    private toast: ToastService,
     private cd: ChangeDetectorRef,
     public lang: LangService,
     public fb: UntypedFormBuilder,
@@ -365,6 +382,13 @@ export class CharityOrganizationUpdateComponent
           validStatus: () => true,
           category: CharityRequestType.APPROVE_MEASURES_AND_PENALTIES,
         },
+        {
+          name: 'generalAssocationMeetingsTab',
+          template: tabsTemplates[22],
+          title: this.lang.map.meeting,
+          category: CharityRequestType.GOVERANCE_DOCUMENTS,
+          validStatus: () => true
+        }
       ];
       this.tabs = [this._tabs[0]];
       if (!this.accordionView) {
@@ -379,6 +403,40 @@ export class CharityOrganizationUpdateComponent
       this._updateForm(this.model);
     }, 0);
   }
+  handleReadonly(): void {
+    // if record is new, no readonly (don't change as default is readonly = false)
+    if (!this.model?.id) {
+      return;
+    }
+
+    let caseStatus = this.model.getCaseStatus();
+    if (caseStatus == CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.FINAL_REJECTION) {
+      this.readonly = true;
+      return;
+    }
+
+    if (this.openFrom === OpenFrom.USER_INBOX) {
+      if (this.employeeService.isCharityManager()) {
+        this.readonly = false;
+      } else if (this.employeeService.isCharityUser()) {
+        this.readonly = !this.model.isReturned();
+      }
+    } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
+      // after claim, consider it same as user inbox and use same condition
+      if (this.model.taskDetails.isClaimed()) {
+        if (this.employeeService.isCharityManager()) {
+          this.readonly = false;
+        } else if (this.employeeService.isCharityUser()) {
+          this.readonly = !this.model.isReturned();
+        }
+      }
+    } else if (this.openFrom === OpenFrom.SEARCH) {
+      // if saved as draft and opened by creator who is charity user, then no readonly
+      if (this.model?.canCommit()) {
+        this.readonly = false;
+      }
+    }
+  }
 
   handleRequestTypeChange(requestType: number): void {
     this.tabs = this._tabs.filter(
@@ -391,6 +449,9 @@ export class CharityOrganizationUpdateComponent
     } else {
       this._buildForm(requestType);
     }
+  }
+  toDate(date: IMyDateModel) {
+    return DateUtils.getDateStringFromDate(date);
   }
   toCharityOrganizationOrgMember(member: OrgMember): OrgMember {
     const {
@@ -512,7 +573,8 @@ export class CharityOrganizationUpdateComponent
       this.charityWorkAreaField!.patchValue(CharityWorkArea.INSIDE);
       this.goveranceDocumentService.getByCharityId(id).subscribe(m => {
         this._updateForm(m[0].toCharityOrgnizationUpdate());
-      })
+      });
+      this.organizationMeetings$ = this.meetingService.search({ organizationId: id });
     } else if (
       requestType === this.RequestTypes.COORDINATION_AND_CONTROL_REPORTS
     ) {
@@ -590,7 +652,9 @@ export class CharityOrganizationUpdateComponent
       primaryLaw: this.fb.group(model.buildPrimaryLawForm()),
     });
   }
-  _afterBuildForm(): void { }
+  _afterBuildForm(): void {
+    this.handleReadonly();
+  }
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
     return true;
   }
@@ -598,7 +662,9 @@ export class CharityOrganizationUpdateComponent
     return true
   }
   _afterLaunch(): void {
-    throw new Error('Method not implemented.');
+
+    this._resetForm();
+    this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
   _prepareModel():
     | CharityOrganizationUpdate
@@ -693,6 +759,14 @@ export class CharityOrganizationUpdateComponent
     operation: OperationTypes
   ): void {
     this.model = model;
+    if (
+      (operation === OperationTypes.CREATE && saveType === SaveTypes.FINAL) ||
+      (operation === OperationTypes.UPDATE && saveType === SaveTypes.COMMIT)
+    ) {
+      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({ serial: model.fullSerial }));
+    } else {
+      this.toast.success(this.lang.map.request_has_been_saved_successfully);
+    }
   }
   _saveFail(error: any): void { }
   _launchFail(error: any): void {
@@ -720,6 +794,7 @@ export class CharityOrganizationUpdateComponent
       this.externalOffices$ = this.finalOfficeApproval.licenseSearch({
         organizationId: this.model.charityId,
       });
+      this.organizationMeetings$ = this.meetingService.search({ organizationId: this.model.charityId });
     }
     if ((this.requestTypeForm.value || this.model.requestType) === this.RequestTypes.META_DATA) {
       this.metaDataForm.patchValue(model!.buildMetaDataForm(false));
