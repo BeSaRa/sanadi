@@ -153,7 +153,7 @@
           ></app-field-error-message>
         </div>
         <!-- Activity Type -->
-        <div class="col-12 col-md-4 mb-4 position-relative">
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
           <label asteriskIfRequired="activityType" for="activityType" class="form-label">{{
             lang.map.activity_type }}</label>
           <ng-select [selectOnTab]="true" placeholder="{{ lang.map.select }}"
@@ -165,7 +165,7 @@
           <app-field-error-message controlName="activityType"></app-field-error-message>
         </div>
         <!-- Clearance Type -->
-        <div class="col-12 col-md-4 mb-4 position-relative">
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
           <label asteriskIfRequired="clearanceType" for="clearanceType" class="form-label">{{
             lang.map.lbl_clearance_type }}</label>
           <ng-select [selectOnTab]="true" placeholder="{{ lang.map.select }}"
@@ -177,7 +177,7 @@
           <app-field-error-message controlName="clearanceType"></app-field-error-message>
         </div>
         <!-- Disbandment Type -->
-        <div class="col-12 col-md-4 mb-4 position-relative">
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
           <label asteriskIfRequired="disbandmentType" for="disbandmentType" class="form-label">{{
             lang.map.lbl_disbandment_type }}</label>
           <ng-select [selectOnTab]="true" placeholder="{{ lang.map.select }}"
@@ -187,6 +187,81 @@
             </ng-option>
           </ng-select>
           <app-field-error-message controlName="disbandmentType"></app-field-error-message>
+        </div>
+        <!-- establishment date -->
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label
+            for="establishmentDate"
+            asteriskIfRequired="establishmentDate"
+            class="form-label"
+            >{{ lang.map.establishment_date }}</label
+          >
+          <div class="input-group">
+            <i class="input-group-text mdi mdi-calendar"></i>
+            <div
+              class="form-control"
+              formControlName="establishmentDate"
+              id="establishmentDate"
+              [options]="datepickerOptionsMap.establishmentDate"
+              (click)="openDateMenu(dpestablishmentDate)"
+              #dpestablishmentDate="angular-mydatepicker"
+              angular-mydatepicker
+              validationClasses="establishmentDate"
+            ></div>
+            <app-field-error-message
+              controlName="establishmentDate"
+            ></app-field-error-message>
+          </div>
+        </div>
+        <!-- disbandment date -->
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label
+            for="disbandmentDate"
+            asteriskIfRequired="disbandmentDate"
+            class="form-label"
+            >{{ lang.map.disbandment_date }}</label
+          >
+          <div class="input-group">
+            <i class="input-group-text mdi mdi-calendar"></i>
+            <div
+              class="form-control"
+              formControlName="disbandmentDate"
+              id="disbandmentDate"
+              [options]="datepickerOptionsMap.disbandmentDate"
+              (click)="openDateMenu(dpdisbandmentDate)"
+              #dpdisbandmentDate="angular-mydatepicker"
+              angular-mydatepicker
+              validationClasses="disbandmentDate"
+            ></div>
+            <app-field-error-message
+              controlName="disbandmentDate"
+            ></app-field-error-message>
+          </div>
+        </div>
+        <!-- clearance date -->
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label
+            for="clearanceDate"
+            asteriskIfRequired="clearanceDate"
+            class="form-label"
+            >{{ lang.map.clearance_date }}</label
+          >
+          <div class="input-group">
+            <i class="input-group-text mdi mdi-calendar"></i>
+            <div
+              class="form-control"
+              formControlName="clearanceDate"
+              id="clearanceDate"
+              [options]="datepickerOptionsMap.clearanceDate"
+              (click)="openDateMenu(dpclearanceDate)"
+              #dpclearanceDate="angular-mydatepicker"
+              angular-mydatepicker
+              validationClasses="clearanceDate"
+            ></div>
+            <app-field-error-message
+              controlName="clearanceDate"
+            ></app-field-error-message>
+          </div>
         </div>
       </div>
     </form>
@@ -400,9 +475,17 @@
   </ng-template>
 
   <ng-template #founderMemberTabTemplate>
+    <founder-members #founderMemberTab
+      [list]="model?.founderMemberList || []"
+      (readyEvent)="founderMemberTabStatus = $event">
+    </founder-members>
   </ng-template>
 
   <ng-template #contactOfficerTabTemplate>
+    <npo-contact-officer #contactOfficersTab
+      [list]="model?.contactOfficerList || []"
+      (readyEvent)="contactOfficersTabStatus = $event">
+    </npo-contact-officer>
   </ng-template>
 
   <ng-template #bankAccountTabTemplate>

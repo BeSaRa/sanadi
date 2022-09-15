@@ -1343,4 +1343,6 @@ export interface ILanguageKeys {
   lbl_instagram: string;
   lbl_snapchat: string;
   lbl_youtube: string;
+  clearance_date: string;
+  disbandment_date: string;
 }

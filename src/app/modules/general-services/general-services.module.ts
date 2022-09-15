@@ -18,6 +18,8 @@ import { ExternalOrgAffiliationComponent } from './pages/external-org-affiliatio
 import { ForeignCountriesProjectsComponent } from './pages/foreign-countries-projects/foreign-countries-projects.component';
 import { ForeignCountriesProjectsPopupComponent } from './popups/foreign-countries-projects-popup/foreign-countries-projects-popup.component';
 import { CoordinationWithOrganizationsRequestComponent } from './pages/coordination-with-organizations-request/coordination-with-organizations-request.component';
+import { NpoContactOfficerComponent } from './pages/npo-management/npo-contact-officer/npo-contact-officer.component';
+import { FounderMembersComponent } from './pages/npo-management/founder-members/founder-members.component';
 
 
 @NgModule({
@@ -27,13 +29,15 @@ import { CoordinationWithOrganizationsRequestComponent } from './pages/coordinat
     ConsultationComponent,
     InternationalCooperationComponent,
     EmploymentApproveComponent,
+    NpoContactOfficerComponent,
     ExternalOrgAffiliationComponent,
     ExternalOrgAffiliationApprovePopupComponent,
     EmploymentComponent,
     ForeignCountriesProjectsComponent,
     ForeignCountriesProjectsPopupComponent,
     CoordinationWithOrganizationsRequestComponent,
-    NpoManagementComponent
+    NpoManagementComponent,
+    FounderMembersComponent
   ],
   imports: [
     CommonModule,

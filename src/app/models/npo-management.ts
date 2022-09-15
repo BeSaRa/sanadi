@@ -36,7 +36,6 @@ export class NpoManagement
   registrationAuthority!: number;
   clearanceType!: number;
   disbandmentType!: number;
-  // TODO: add dates to the UI
   registrationDate!: Date | IMyDateModel;
   establishmentDate!: Date | IMyDateModel;
   disbandmentDate!: Date | IMyDateModel;

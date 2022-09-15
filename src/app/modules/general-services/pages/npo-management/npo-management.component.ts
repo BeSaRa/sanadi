@@ -1,8 +1,11 @@
+import { FounderMembersComponent } from './founder-members/founder-members.component';
+import { NpoContactOfficerComponent } from './npo-contact-officer/npo-contact-officer.component';
+import { IMyInputFieldChanged } from 'angular-mydatepicker';
+import { DateUtils } from './../../../../helpers/date-utils';
 import { CountryService } from './../../../../services/country.service';
 import { Country } from './../../../../models/country';
 import { BankAccountComponent } from './../../../e-services-main/shared/bank-account/bank-account.component';
-import { ReadinessStatus } from './../../../../types/types';
-import { ContactOfficer } from './../../../../models/contact-officer';
+import { ReadinessStatus, DatepickerOptionsMap } from './../../../../types/types';
 import { ILanguageKeys } from './../../../../interfaces/i-language-keys';
 import { IKeyValue } from './../../../../interfaces/i-key-value';
 import { AdminLookup } from './../../../../models/admin-lookup';
@@ -37,7 +40,7 @@ NpoManagement,
 NpoManagementService
 > {
   countriesList: Country[] = [];
-  NPORequestTypesList: Lookup[] = this.lookupService.listByCategory.NPORequestType;
+  NPORequestTypesList: Lookup[] = this.lookupService.listByCategory.NPORequestType.slice().sort((a, b) => a.lookupKey - b.lookupKey);
   activityTypesList: AdminLookup[] = [];
   // Clearance Type & Disbandment Type
   NPODecisionsList: Lookup[] = this.lookupService.listByCategory.NPODecisions;
@@ -45,7 +48,12 @@ NpoManagementService
   registrationAuthoritiesList = []
   form!: UntypedFormGroup;
   bankDetailsTabStatus: ReadinessStatus = 'READY';
+  contactOfficersTabStatus: ReadinessStatus = 'READY';
+  founderMemberTabStatus: ReadinessStatus = 'READY';
+
   @ViewChild('bankAccountsTab') bankAccountComponentRef!: BankAccountComponent;
+  @ViewChild('contactOfficersTab') contactOfficerComponentRef!: NpoContactOfficerComponent;
+  @ViewChild('founderMemberTab') founderMemberComponentRef!: FounderMembersComponent;
 
   tabsData: IKeyValue = {
     basicInfo: {
@@ -66,12 +74,16 @@ NpoManagementService
     founderMember: {
       name: "founderMemberTab",
       langKey: "lbl_founder_members" as keyof ILanguageKeys,
-      validStatus: () => this.form.valid,
+      validStatus: () => {
+        return !this.founderMemberComponentRef || (this.founderMemberTabStatus === 'READY' && this.founderMemberComponentRef.list.length > 0);
+      }
     },
     contactOfficer: {
       name: "contactOfficerTab",
       langKey: "contact_officers" as keyof ILanguageKeys,
-      validStatus: () => this.form.valid,
+      validStatus: () => {
+        return !this.contactOfficerComponentRef || (this.contactOfficersTabStatus === 'READY' && this.contactOfficerComponentRef.list.length > 0);
+      }
     },
     bankAccount: {
       name: "bankAccountTab",
@@ -85,6 +97,17 @@ NpoManagementService
       langKey: "lbl_real_beneficiary" as keyof ILanguageKeys,
       validStatus: () => this.form.valid,
     },
+  };
+  datepickerOptionsMap: DatepickerOptionsMap = {
+    establishmentDate: DateUtils.getDatepickerOptions({
+      disablePeriod: "none",
+    }),
+    disbandmentDate: DateUtils.getDatepickerOptions({
+      disablePeriod: "none",
+    }),
+    clearanceDate: DateUtils.getDatepickerOptions({
+      disablePeriod: "none",
+    }),
   };
   constructor(
     public service: NpoManagementService,
@@ -149,7 +172,6 @@ NpoManagementService
       basicInfo: this.fb.group(model.basicInfo),
       contectInfo: this.fb.group(model.contectInfo),
       nationalAddress: this.fb.group(model.nationalAddress),
-      contactOfficer: this.fb.group((new ContactOfficer()).getContactOfficerFields(true)),
     });
   }
   _afterBuildForm(): void {
@@ -229,7 +251,7 @@ NpoManagementService
     this.dialog.error(this.lang.map.msg_all_required_fields_are_filled);
   }
   get requestTypeField(): UntypedFormControl {
-    return this.form.get('requestType') as UntypedFormControl;
+    return this.basicInfo.get('requestType') as UntypedFormControl;
   }
   _setDefaultValues(): void {
     this.requestTypeField.setValue(ServiceRequestTypes.NEW);
@@ -244,9 +266,22 @@ NpoManagementService
   getTabInvalidStatus(tabName: string): boolean {
     return !this.tabsData[tabName].validStatus();
   }
+  openDateMenu(ref: any) {
+    ref.toggleCalendar();
+  }
   _destroyComponent(): void {
   }
-
+  onDateChange(event: IMyInputFieldChanged, fromFieldName: string, toFieldName: string): void {
+    DateUtils.setRelatedMinMaxDate({
+      fromFieldName,
+      toFieldName,
+      controlOptionsMap: this.datepickerOptionsMap,
+      controlsMap: {
+        // licenseStartDate: this.licenseStartDate,
+        // licenseEndDate: this.licenseEndDate
+      }
+    });
+  }
   get basicInfo() {
     return this.form.get('basicInfo') as UntypedFormGroup;
   }
