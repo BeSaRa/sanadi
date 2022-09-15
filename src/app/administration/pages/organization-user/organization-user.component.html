@@ -1,6 +1,6 @@
 <div class="row">
   <app-page-header pageTitle="menu_organization_user" [clickOnReload$]="reload$"
-                   [clickOnNew$]="add$" [addPermission]="empService.checkPermissions('ADMIN_ADD_USER')">
+                   [clickOnNew$]="add$" [addPermission]="empService.checkPermissions(permissionsEnum.ADD_ORG_USER)">
   </app-page-header>
   <ng-container *ngIf="table">
     <!-- <app-bulk-actions *ngIf="table.selection && table.selection.selected.length"
