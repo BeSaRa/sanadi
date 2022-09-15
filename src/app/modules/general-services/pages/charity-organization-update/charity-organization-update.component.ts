@@ -28,6 +28,7 @@ import { DateUtils } from '@app/helpers/date-utils';
 import { ControlWrapper } from '@app/interfaces/i-control-wrapper';
 import { IKeyValue } from '@app/interfaces/i-key-value';
 import { AdminLookup } from '@app/models/admin-lookup';
+import { BlobModel } from '@app/models/blob-model';
 import { CharityDecision } from '@app/models/charity-decision';
 import { CharityOrganization } from '@app/models/charity-organization';
 import { CharityOrganizationUpdate } from '@app/models/charity-organization-update';
@@ -84,6 +85,7 @@ export class CharityOrganizationUpdateComponent
       )
     );
   logoFile?: File;
+  loadedLogo?: BlobModel;
   fileExtensionsEnum = FileExtensionsEnum;
   activityTypes: AdminLookup[] = [];
   RequestTypes = CharityRequestType;
@@ -525,6 +527,7 @@ export class CharityOrganizationUpdateComponent
       passportNumber,
     });
   }
+
   handleSelectCharityOrganization(id: number): void {
     if (!id) {
       return;
@@ -535,6 +538,13 @@ export class CharityOrganizationUpdateComponent
       const model = this.charityOrganizationService.getById(id);
       model.subscribe((m) => {
         this._updateForm(m.toCharityOrganizationUpdate());
+        this.charityOrganizationService.getLogoBy({ charityId: id }).subscribe(logo => {
+          if (logo.blob.size === 0) {
+            this.loadedLogo = undefined;
+            return;
+          }
+          this.loadedLogo = logo;
+        });
       });
       this.externalOffices$ = this.finalOfficeApproval.licenseSearch({
         organizationId: id,
@@ -656,7 +666,7 @@ export class CharityOrganizationUpdateComponent
     this.handleReadonly();
   }
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
-    return true;
+    return this.form.valid;
   }
   _beforeLaunch(): boolean | Observable<boolean> {
     return true
@@ -767,13 +777,18 @@ export class CharityOrganizationUpdateComponent
     } else {
       this.toast.success(this.lang.map.request_has_been_saved_successfully);
     }
+    if (this.logoFile) {
+      this.charityOrganizationService.saveLogo(this.model.charityId, this.logoFile!).subscribe(id => {
+        console.log(id);
+        this.model!.logoId = id;
+        this.model?.save().subscribe();
+      });
+    }
   }
   _saveFail(error: any): void { }
   _launchFail(error: any): void {
-    throw new Error('Method not implemented.');
   }
   _destroyComponent(): void {
-    throw new Error('Method not implemented.');
   }
   patchFrom(model: CharityOrganizationUpdate) {
     this.model = model;
@@ -795,6 +810,15 @@ export class CharityOrganizationUpdateComponent
         organizationId: this.model.charityId,
       });
       this.organizationMeetings$ = this.meetingService.search({ organizationId: this.model.charityId });
+    }
+    if (this.model.logoId) {
+      this.charityOrganizationService.getLogoBy({ id: this.model.logoId }).subscribe(logo => {
+        if (logo.blob.size === 0) {
+          this.loadedLogo = undefined;
+          return;
+        }
+        this.loadedLogo = logo;
+      });
     }
     if ((this.requestTypeForm.value || this.model.requestType) === this.RequestTypes.META_DATA) {
       this.metaDataForm.patchValue(model!.buildMetaDataForm(false));

@@ -16,6 +16,7 @@
           [selectOnTab]="true"
           [labelForId]="control.controlName"
           [clearable]="true"
+          [readonly]="readonly"
           placeholder="{{ lang.map.select }}"
           [id]="control.controlName"
           [notFoundText]="lang.map.msg_not_found"
@@ -47,6 +48,7 @@
       <input
         type="text"
         class="form-control"
+        [readonly]="readonly"
         [id]="control.controlName"
         [formControlName]="control.controlName"
       />
@@ -69,6 +71,7 @@
           class="form-control"
           [formControlName]="control.controlName"
           [ngClass]="{ 'input-disabled': readonly }"
+          [disabled]="readonly"
           [id]="control.controlName"
           [options]="datepickerOptionsMap[control.controlName]"
           (click)="!readonly && dp.toggleCalendar()"

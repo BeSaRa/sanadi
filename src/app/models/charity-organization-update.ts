@@ -38,7 +38,7 @@ export class CharityOrganizationUpdate extends CaseModel<
   arabicName = '';
   englishName = '';
   shortName!: string;
-  logoId!: number;
+  logoId!: string;
   activityType!: number;
   activityTypeInfo!: AdminResult;
   createdOn!: string;

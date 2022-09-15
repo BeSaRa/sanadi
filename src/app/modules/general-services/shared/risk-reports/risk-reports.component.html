@@ -15,6 +15,7 @@
         <ng-select
           [selectOnTab]="true"
           [labelForId]="control.controlName"
+          [readonly]="readonly"
           [clearable]="true"
           placeholder="{{ lang.map.select }}"
           [id]="control.controlName"
@@ -46,6 +47,7 @@
         >{{ control.label }}</label
       >
       <input
+        [readonly]="readonly"
         type="text"
         class="form-control"
         [id]="control.controlName"
@@ -71,6 +73,7 @@
           class="form-control"
           [formControlName]="control.controlName"
           [ngClass]="{ 'input-disabled': readonly }"
+          [disabled]="readonly"
           [id]="control.controlName"
           [options]="datepickerOptionsMap[control.controlName]"
           (click)="!readonly && dp.toggleCalendar()"

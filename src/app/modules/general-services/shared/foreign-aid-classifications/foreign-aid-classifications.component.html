@@ -13,6 +13,7 @@
           >{{ control.label }}</label
         >
         <ng-select
+          [readonly]="readonly"
           [selectOnTab]="true"
           [labelForId]="control.controlName"
           [clearable]="true"
@@ -47,6 +48,7 @@
       >
       <input
         type="text"
+        [readonly]="readonly"
         class="form-control"
         [id]="control.controlName"
         [formControlName]="control.controlName"

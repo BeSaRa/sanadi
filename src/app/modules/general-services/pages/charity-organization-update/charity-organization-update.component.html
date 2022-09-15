@@ -26,6 +26,7 @@
             [clearable]="true"
             placeholder="{{ lang.map.select }}"
             [id]="'requestType'"
+            [readonly]="readonly"
             [notFoundText]="lang.map.msg_not_found"
             appendTo="body"
             [validationClasses]="'requestType'"
@@ -59,6 +60,7 @@
           <ng-select
             [selectOnTab]="true"
             [labelForId]="'charityId'"
+            [readonly]="readonly"
             [clearable]="true"
             placeholder="{{ lang.map.select }}"
             [id]="'charityId'"
@@ -94,6 +96,7 @@
             id="englishName"
             validationClasses="englishName"
             formControlName="englishName"
+            [readonly]="readonly"
           />
           <app-field-error-message
             controlName="englishName"
@@ -108,6 +111,7 @@
           >
           <input
             validationClasses="arabicName"
+            [readonly]="readonly"
             type="text"
             class="form-control"
             id="arabicName"
@@ -127,6 +131,7 @@
             >{{ lang.map.short_name }}</label
           >
           <input
+            [readonly]="readonly"
             type="text"
             class="form-control"
             id="shortName"
@@ -145,6 +150,7 @@
             >{{ lang.map.activity_type }}</label
           >
           <ng-select
+            [readonly]="readonly"
             [selectOnTab]="true"
             labelForId="activityType"
             [clearable]="true"
@@ -183,8 +189,9 @@
         <div class="col-sm-6 col-md-4 mb-4 position-relative">
           <file-uploader
             labelKey="logo"
-            [isRequired]="false"
+            [isRequired]="true"
             [showFilePreview]="true"
+            [loadedFile]="loadedLogo"
             (fileUploadEvent)="setLogoFile($event)"
             [allowedExtensions]="[
               fileExtensionsEnum.PNG,
@@ -228,6 +235,7 @@
             class="form-control"
             id="unifiedEconomicRecord"
             formControlName="unifiedEconomicRecord"
+            [readonly]="readonly"
           />
         </div>
 
@@ -239,6 +247,7 @@
             type="text"
             class="form-control"
             id="taxCardNo"
+            [readonly]="readonly"
             formControlName="taxCardNo"
           />
         </div>
@@ -254,6 +263,7 @@
             type="text"
             class="form-control"
             id="regulatingLaw"
+            [readonly]="readonly"
             validationClasses="regulatingLaw"
             formControlName="regulatingLaw"
           />
@@ -274,6 +284,7 @@
             type="text"
             class="form-control"
             id="establishmentID"
+            [readonly]="readonly"
             validationClasses="establishmentID"
             formControlName="establishmentID"
           />
@@ -299,6 +310,7 @@
           >
           <input
             type="text"
+            [readonly]="readonly"
             class="form-control"
             [id]="input.controlName"
             [formControlName]="input.controlName"
@@ -492,6 +504,7 @@
               (click)="!readonly && dp1.toggleCalendar()"
               #dp1="angular-mydatepicker"
               angular-mydatepicker
+              [disabled]="readonly"
               validationClasses="firstReleaseDate"
             ></div>
             <app-field-error-message
@@ -518,6 +531,7 @@
               (click)="!readonly && dp.toggleCalendar()"
               #dp="angular-mydatepicker"
               angular-mydatepicker
+              [disabled]="readonly"
               validationClasses="lastUpdateDate"
             ></div>
             <app-field-error-message
@@ -537,6 +551,7 @@
               [selectOnTab]="true"
               labelForId="charityWorkArea"
               [clearable]="true"
+              [readonly]="readonly"
               placeholder="{{ lang.map.select }}"
               id="charityWorkArea"
               [notFoundText]="lang.map.msg_not_found"
@@ -598,6 +613,7 @@
             trimInput
             [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
             class="form-control"
+            [readonly]="readonly"
             validationClasses="goals"
             formControlName="goals"
           ></textarea

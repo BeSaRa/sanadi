@@ -13,6 +13,7 @@
           >{{ control.label }}</label
         >
         <ng-select
+          [readonly]="readonly"
           [selectOnTab]="true"
           [labelForId]="control.controlName"
           [clearable]="true"
@@ -49,6 +50,7 @@
         type="text"
         class="form-control"
         [id]="control.controlName"
+        [readonly]="readonly"
         [formControlName]="control.controlName"
       />
 
@@ -68,6 +70,7 @@
       <div class="input-group">
         <i class="input-group-text mdi mdi-calendar"></i>
         <div
+          [disabled]="readonly"
           class="form-control"
           [formControlName]="control.controlName"
           [ngClass]="{ 'input-disabled': readonly }"
