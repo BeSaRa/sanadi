@@ -94,7 +94,7 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
   }
 
   private loadDepartments(): void {
-    this.internalDep.load()
+    this.internalDep.loadAsLookups()
       .pipe(takeUntil(this.destroy$))
       .subscribe((departments) => {
         this.departments = departments;
@@ -166,8 +166,7 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
   }
 
   private loadCustomRoles() {
-    this.customRoleService
-      .loadComposite()
+    this.customRoleService.loadAsLookups()
       .pipe(takeUntil(this.destroy$))
       .subscribe((roles) => this.customRoles = roles);
   }

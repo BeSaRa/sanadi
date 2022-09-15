@@ -96,7 +96,7 @@ export class UserSecurityComponent implements OnInit, OnDestroy {
 
   private loadTeamsAndSecurity(): void {
     this.teamService
-      .loadIfNotExists()
+      .loadAsLookups()
       .pipe(tap(teams => this.teams = teams))
       .pipe(map(teams => teams.filter(team => this.configService.CONFIG.CHARITY_ORG_TEAM === team.authName)[0]))
       .subscribe((team) => {
