@@ -20,6 +20,7 @@ import { ForeignCountriesProjectsPopupComponent } from './popups/foreign-countri
 import { CoordinationWithOrganizationsRequestComponent } from './pages/coordination-with-organizations-request/coordination-with-organizations-request.component';
 import { NpoContactOfficerComponent } from './pages/npo-management/npo-contact-officer/npo-contact-officer.component';
 import { FounderMembersComponent } from './pages/npo-management/founder-members/founder-members.component';
+import { RealBeneficiaryComponent } from './pages/npo-management/real-beneficiary/real-beneficiary.component';
 
 
 @NgModule({
@@ -37,7 +38,8 @@ import { FounderMembersComponent } from './pages/npo-management/founder-members/
     ForeignCountriesProjectsPopupComponent,
     CoordinationWithOrganizationsRequestComponent,
     NpoManagementComponent,
-    FounderMembersComponent
+    FounderMembersComponent,
+    RealBeneficiaryComponent
   ],
   imports: [
     CommonModule,

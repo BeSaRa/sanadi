@@ -1,3 +1,4 @@
+import { RealBeneficiaryComponent } from './real-beneficiary/real-beneficiary.component';
 import { FounderMembersComponent } from './founder-members/founder-members.component';
 import { NpoContactOfficerComponent } from './npo-contact-officer/npo-contact-officer.component';
 import { IMyInputFieldChanged } from 'angular-mydatepicker';
@@ -50,10 +51,12 @@ NpoManagementService
   bankDetailsTabStatus: ReadinessStatus = 'READY';
   contactOfficersTabStatus: ReadinessStatus = 'READY';
   founderMemberTabStatus: ReadinessStatus = 'READY';
+  realBeneficiaryTabStatus: ReadinessStatus = 'READY';
 
   @ViewChild('bankAccountsTab') bankAccountComponentRef!: BankAccountComponent;
   @ViewChild('contactOfficersTab') contactOfficerComponentRef!: NpoContactOfficerComponent;
   @ViewChild('founderMemberTab') founderMemberComponentRef!: FounderMembersComponent;
+  @ViewChild('realBeneficiaryTab') realBeneficiaryComponentRef!: RealBeneficiaryComponent;
 
   tabsData: IKeyValue = {
     basicInfo: {
@@ -95,7 +98,9 @@ NpoManagementService
     realBeneficiary: {
       name: "realBeneficiaryTab",
       langKey: "lbl_real_beneficiary" as keyof ILanguageKeys,
-      validStatus: () => this.form.valid,
+      validStatus: () => {
+        return !this.realBeneficiaryComponentRef || (this.realBeneficiaryTabStatus === 'READY' && this.realBeneficiaryComponentRef.list.length > 0);
+      }
     },
   };
   datepickerOptionsMap: DatepickerOptionsMap = {

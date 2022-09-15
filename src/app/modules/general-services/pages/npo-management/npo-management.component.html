@@ -500,5 +500,9 @@
   </ng-template>
 
   <ng-template #realBeneficiaryTabTemplate>
+    <real-beneficiary #realBeneficiaryTab
+    [list]="model?.realBeneficiaryList || []"
+    (readyEvent)="realBeneficiaryTabStatus = $event">
+    </real-beneficiary>
   </ng-template>
 </div>

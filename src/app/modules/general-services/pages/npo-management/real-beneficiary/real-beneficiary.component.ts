@@ -1,9 +1,5 @@
-import { DateUtils } from './../../../../../helpers/date-utils';
-import { DatepickerOptionsMap } from './../../../../../types/types';
-import { LookupService } from './../../../../../services/lookup.service';
-import { Lookup } from './../../../../../models/lookup';
-import { JobTitleService } from './../../../../../services/job-title.service';
 import { JobTitle } from './../../../../../models/job-title';
+import { JobTitleService } from '@services/job-title.service';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { LangService } from "@app/services/lang.service";
 import { ToastService } from "@app/services/toast.service";
@@ -13,31 +9,27 @@ import { ReadinessStatus } from "@app/types/types";
 import { BehaviorSubject, Subject } from "rxjs";
 import { filter, map, take, takeUntil } from "rxjs/operators";
 import { UserClickOn } from "@app/enums/user-click-on.enum";
-import { FounderMembers } from "@app/models/founder-members";
+import { RealBeneficiary } from "@app/models/real-beneficiary";
 
 @Component({
-  selector: 'founder-members',
-  templateUrl: './founder-members.component.html',
-  styleUrls: ['./founder-members.component.scss']
+  selector: 'real-beneficiary',
+  templateUrl: './real-beneficiary.component.html',
+  styleUrls: ['./real-beneficiary.component.scss']
 })
-export class FounderMembersComponent implements OnInit, OnDestroy {
-  nationalityList: Lookup[] = this.lookupService.listByCategory.Nationality;
-  jobTitleAdminLookup: JobTitle[] = [];
+export class RealBeneficiaryComponent implements OnInit, OnDestroy {
   constructor(public lang: LangService,
     private toastService: ToastService,
-    private lookupService: LookupService,
     private dialogService: DialogService,
-    private _jb: JobTitleService,
     private fb: UntypedFormBuilder) {
   }
 
-  private _list: FounderMembers[] = [];
-  @Input() set list(list: FounderMembers[]) {
+  private _list: RealBeneficiary[] = [];
+  @Input() set list(list: RealBeneficiary[]) {
     this._list = list;
     this.dataSource.next(this._list);
   }
 
-  get list(): FounderMembers[] {
+  get list(): RealBeneficiary[] {
     return this._list;
   }
 
@@ -45,28 +37,20 @@ export class FounderMembersComponent implements OnInit, OnDestroy {
 
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();
 
-  dataSource: BehaviorSubject<FounderMembers[]> = new BehaviorSubject<FounderMembers[]>([]);
-  columns = ['idNumber', 'fullName', 'email', 'phone', 'extraPhone', 'actions'];
+  dataSource: BehaviorSubject<RealBeneficiary[]> = new BehaviorSubject<RealBeneficiary[]>([]);
+  columns = ['actions'];
 
   editIndex: number = -1;
   add$: Subject<any> = new Subject<any>();
   private save$: Subject<any> = new Subject<any>();
 
-  private changed$: Subject<FounderMembers | null> = new Subject<FounderMembers | null>();
-  private current?: FounderMembers;
+  private changed$: Subject<RealBeneficiary | null> = new Subject<RealBeneficiary | null>();
+  private current?: RealBeneficiary;
   private destroy$: Subject<any> = new Subject<any>();
 
   form!: UntypedFormGroup;
 
-  datepickerOptionsMap: DatepickerOptionsMap = {
-    joinDate: DateUtils.getDatepickerOptions({
-      disablePeriod: "none",
-    }),
-  }
   ngOnInit(): void {
-    this._jb.loadAsLookups().subscribe((data) => {
-      this.jobTitleAdminLookup = data;
-    })
     this._handleInitData();
     this.buildForm();
     this.listenToAdd();
@@ -86,12 +70,12 @@ export class FounderMembersComponent implements OnInit, OnDestroy {
 
   private buildForm() {
     this.form = this.fb.group({
-      founderMembers: this.fb.array([])
+      realBeneficiary: this.fb.array([])
     })
   }
 
-  get founderMembersFormArray(): UntypedFormArray {
-    return (this.form.get('founderMembers')) as UntypedFormArray;
+  get realBeneficiaryFormArray(): UntypedFormArray {
+    return (this.form.get('realBeneficiary')) as UntypedFormArray;
   }
 
   addAllowed(): boolean {
@@ -101,28 +85,28 @@ export class FounderMembersComponent implements OnInit, OnDestroy {
   private listenToAdd() {
     this.add$.pipe(takeUntil(this.destroy$))
       .subscribe(() => {
-        this.changed$.next(new FounderMembers())
+        this.changed$.next(new RealBeneficiary())
       })
   }
 
   private listenToChange() {
     this.changed$.pipe(takeUntil(this.destroy$))
-      .subscribe(member => {
+      .subscribe(beneficiary => {
         if (this.readonly) {
           return;
         }
-        this.current = member || undefined;
+        this.current = beneficiary || undefined;
         this.updateForm(this.current);
       })
   }
 
-  private updateForm(record: FounderMembers | undefined) {
-    const founderMembersFormArray = this.founderMembersFormArray;
-    founderMembersFormArray.clear();
+  private updateForm(record: RealBeneficiary | undefined) {
+    const realBeneficiaryFormArray = this.realBeneficiaryFormArray;
+    realBeneficiaryFormArray.clear();
 
     if (record) {
       this._setComponentReadiness('NOT_READY');
-      founderMembersFormArray.push(this.fb.group((record.getFounderMembersFields(true))));
+      realBeneficiaryFormArray.push(this.fb.group((record.getRealBeneficiaryFields(true))));
     } else {
       this._setComponentReadiness('READY');
     }
@@ -137,7 +121,7 @@ export class FounderMembersComponent implements OnInit, OnDestroy {
 
   private listenToSave() {
     const form$ = this.save$.pipe(map(() => {
-      return this.form.get('founderMembers.0') as AbstractControl;
+      return this.form.get('realBeneficiary.0') as AbstractControl;
     }));
 
     const validForm$ = form$.pipe(filter((form) => form.valid));
@@ -148,33 +132,33 @@ export class FounderMembersComponent implements OnInit, OnDestroy {
         .onAfterClose$
         .pipe(take(1))
         .subscribe(() => {
-          this.form.get('founderMembers')?.markAllAsTouched();
+          this.form.get('realBeneficiary')?.markAllAsTouched();
         });
     });
 
     validForm$.pipe(
       takeUntil(this.destroy$),
       map(() => {
-        return (this.form.get('founderMembers.0')) as UntypedFormArray;
+        return (this.form.get('realBeneficiary.0')) as UntypedFormArray;
       }),
       map((form) => {
-        return (new FounderMembers()).clone({
+        return (new RealBeneficiary()).clone({
           ...this.current, ...form.getRawValue()
         });
       })
-    ).subscribe((member: FounderMembers) => {
-      if (!member) {
+    ).subscribe((realBeneficiary: RealBeneficiary) => {
+      if (!realBeneficiary) {
         return;
       }
 
-      this._updateList(member, (this.editIndex > -1 ? 'UPDATE' : 'ADD'), this.editIndex);
+      this._updateList(realBeneficiary, (this.editIndex > -1 ? 'UPDATE' : 'ADD'), this.editIndex);
       this.toastService.success(this.lang.map.msg_save_success);
       this.editIndex = -1;
       this.changed$.next(null);
     });
   }
 
-  private _updateList(record: (FounderMembers | null), operation: 'ADD' | 'UPDATE' | 'DELETE' | 'NONE', gridIndex: number = -1) {
+  private _updateList(record: (RealBeneficiary | null), operation: 'ADD' | 'UPDATE' | 'DELETE' | 'NONE', gridIndex: number = -1) {
     if (record) {
       if (operation === 'ADD') {
         this.list.push(record);
@@ -188,7 +172,7 @@ export class FounderMembersComponent implements OnInit, OnDestroy {
     this.dataSource.next(this.list);
   }
 
-  edit($event: MouseEvent, record: FounderMembers, index: number) {
+  edit($event: MouseEvent, record: RealBeneficiary, index: number) {
     $event.preventDefault();
     if (this.readonly) {
       return;
@@ -197,7 +181,7 @@ export class FounderMembersComponent implements OnInit, OnDestroy {
     this.changed$.next(record);
   }
 
-  delete($event: MouseEvent, record: FounderMembers, index: number): any {
+  delete($event: MouseEvent, record: RealBeneficiary, index: number): any {
     $event.preventDefault();
     if (this.readonly) {
       return;
@@ -220,25 +204,19 @@ export class FounderMembersComponent implements OnInit, OnDestroy {
   }
 
   private resetForm() {
-    this.founderMembersFormArray.clear();
-    this.founderMembersFormArray.markAsUntouched();
-    this.founderMembersFormArray.markAsPristine();
+    this.realBeneficiaryFormArray.clear();
+    this.realBeneficiaryFormArray.markAsUntouched();
+    this.realBeneficiaryFormArray.markAsPristine();
   }
 
   private _setComponentReadiness(readyStatus: ReadinessStatus) {
     this.readyEvent.emit(readyStatus);
   }
 
-  openDateMenu(ref: any) {
-    ref.toggleCalendar();
-  }
   forceClearComponent() {
     this.cancel();
     this.list = [];
     this._updateList(null, 'NONE');
     this._setComponentReadiness('READY');
-  }
-  searchNgSelect(term: string, item: any): boolean {
-    return item.ngSelectSearch(term);
   }
 }

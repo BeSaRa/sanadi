@@ -1,3 +1,6 @@
+import { NpoContactOfficer } from '@app/models/npo-contact-officer';
+import { FounderMembers } from '@app/models/founder-members';
+import { RealBeneficiary } from './real-beneficiary';
 import { DateUtils } from './../helpers/date-utils';
 import { Validators } from '@angular/forms';
 import { BankAccount } from './bank-account';
@@ -61,10 +64,10 @@ export class NpoManagement
   fax!: string;
   hotline!: string;
   // readonly info
-  contactOfficerList: [] = [];
-  founderMemberList: [] = [];
+  contactOfficerList: NpoContactOfficer[] = [];
+  founderMemberList: FounderMembers[] = [];
   bankAccountList: BankAccount[] = [];
-  realBeneficiaryList: [] = [];
+  realBeneficiaryList: RealBeneficiary[] = [];
 
   subject!: string;
   fullSerial!: string;

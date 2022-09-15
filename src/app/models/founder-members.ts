@@ -12,7 +12,7 @@ export class FounderMembers extends SearchableCloneable<FounderMembers>{
   extraPhone!: string;
   joinDate!: Date | IMyDateModel;
   nationality!: number;
-  getContactOfficerFields(control: boolean): any {
+  getFounderMembersFields(control: boolean): any {
     const { identificationNumber,
       fullName,
       jobTitleId,
