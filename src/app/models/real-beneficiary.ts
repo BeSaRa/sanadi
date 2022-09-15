@@ -14,9 +14,13 @@ const { receive, send } = new RealBeneficiaryInterceptor()
 export class RealBeneficiary extends SearchableCloneable<RealBeneficiary> {
   updatedBy!: number;
   clientData!: string;
+  objectDBId!: number;
   orgType!: number;
   orgId!: number;
   arName!: string;
+  arabicName!: string;
+  englishName!: string;
+  identificationNumber!: string;
   enName!: string;
   birthDate!: string | IMyDateModel;
   birthLocation!: string;
@@ -40,8 +44,8 @@ export class RealBeneficiary extends SearchableCloneable<RealBeneficiary> {
 
   buildForm(controls = true) {
     const {
-      arName,
-      enName,
+      arabicName,
+      englishName,
       birthDate,
       birthLocation,
       nationality,
@@ -49,7 +53,7 @@ export class RealBeneficiary extends SearchableCloneable<RealBeneficiary> {
       streetNumber,
       zoneNumber,
       buildingNumber,
-      qid,
+      identificationNumber,
       passportNumber,
       iDDate,
       idexpiryDate,
@@ -59,9 +63,9 @@ export class RealBeneficiary extends SearchableCloneable<RealBeneficiary> {
       lastUpdateDate,
     } = this;
     return {
-      arName: controls
+      arabicName: controls
         ? [
-          arName,
+          arabicName,
           [
             CustomValidators.required,
             CustomValidators.maxLength(
@@ -73,10 +77,10 @@ export class RealBeneficiary extends SearchableCloneable<RealBeneficiary> {
             ),
           ],
         ]
-        : arName,
-      enName: controls
+        : arabicName,
+      englishName: controls
         ? [
-          enName,
+          englishName,
           [
             CustomValidators.required,
             CustomValidators.maxLength(
@@ -88,7 +92,7 @@ export class RealBeneficiary extends SearchableCloneable<RealBeneficiary> {
             ),
           ],
         ]
-        : enName,
+        : englishName,
       birthDate: controls
         ? [birthDate, [CustomValidators.required]]
         : birthDate,
@@ -126,11 +130,11 @@ export class RealBeneficiary extends SearchableCloneable<RealBeneficiary> {
       buildingNumber: controls
         ? [buildingNumber, [CustomValidators.required]]
         : buildingNumber,
-      qid: controls
+      identificationNumber: controls
         ? [
-          qid, CustomValidators.commonValidations.qId
+          identificationNumber, CustomValidators.commonValidations.qId
         ]
-        : qid,
+        : identificationNumber,
       passportNumber: controls
         ? [passportNumber, [CustomValidators.required]]
         : passportNumber,

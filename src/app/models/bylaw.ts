@@ -1,11 +1,15 @@
+import { DateUtils } from '@app/helpers/date-utils';
 import { CustomValidators } from '@app/validators/custom-validators';
+import { IMyDateModel } from 'angular-mydatepicker';
 import { SearchableCloneable } from './searchable-cloneable';
 
 export class Bylaw extends SearchableCloneable<Bylaw> {
   fullName!: string;
   category!: number;
-  firstReleaseDate!: string;
-  lastUpdateDate!: string;
+  firstReleaseDate!: string | IMyDateModel;
+  lastUpdateDate!: string | IMyDateModel;
+  id!: number;
+  objectDBId?: number;
 
   buildForm(controls = true) {
     const { fullName, firstReleaseDate, lastUpdateDate, category } = this;
@@ -15,5 +19,15 @@ export class Bylaw extends SearchableCloneable<Bylaw> {
       lastUpdateDate: controls ? [lastUpdateDate, [CustomValidators.required]] : lastUpdateDate,
       category: controls ? [category, [CustomValidators.required]] : category,
     };
+  }
+  toCharityOrgnizationUpdate() {
+    const { id, fullName, firstReleaseDate, lastUpdateDate, category } = this;
+    return new Bylaw().clone({
+      objectDBId: id,
+      firstReleaseDate: DateUtils.getDateStringFromDate(firstReleaseDate),
+      fullName,
+      lastUpdateDate: DateUtils.getDateStringFromDate(lastUpdateDate),
+      category
+    })
   }
 }

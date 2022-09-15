@@ -1,6 +1,7 @@
 import { FormControl } from '@angular/forms';
 import { InterceptModel } from '@app/decorators/decorators/intercept-model';
 import { CaseTypes } from '@app/enums/case-types.enum';
+import { DateUtils } from '@app/helpers/date-utils';
 import { CharityOrganizationUpdateInterceptor } from '@app/model-interceptors/charity-organization-update-interceptor';
 import { CharityOrganizationUpdateService } from '@app/services/charity-organization-update.service';
 import { FactoryService } from '@app/services/factory.service';
@@ -8,8 +9,12 @@ import { CustomValidators } from '@app/validators/custom-validators';
 import { IMyDate } from 'angular-mydatepicker';
 import { AdminResult } from './admin-result';
 import { Beneficiary } from './beneficiary';
+import { Bylaw } from './bylaw';
 import { CaseModel } from './case-model';
 import { CharityBranch } from './charity-branch';
+import { CharityDecision } from './charity-decision';
+import { CharityReport } from './charity-report';
+import { ForeignAidClassification } from './foreign-aid-classification';
 import { OrgMember } from './org-member';
 import { OrganizationOfficer } from './organization-officer';
 import { RealBeneficiary } from './real-beneficiary';
@@ -30,8 +35,8 @@ export class CharityOrganizationUpdate extends CaseModel<
   );
   caseType: number = CaseTypes.CHARITY_ORGANIZATION_UPDATE;
 
-  arabicName!: string;
-  englishName!: string;
+  arabicName = '';
+  englishName = '';
   shortName!: string;
   logoId!: number;
   activityType!: number;
@@ -77,8 +82,18 @@ export class CharityOrganizationUpdate extends CaseModel<
   charityWorkAreaInfo!: AdminResult;
   country!: number;
   domain!: number;
+  ouInfo!: AdminResult;
 
   workAreaObjectList: WorkArea[] = [];
+  wFClassificationList!: ForeignAidClassification[];
+  byLawList!: Bylaw[];
+
+  riskReportList: CharityReport[] = [];
+  coordinationSupportReport: CharityReport[] = [];
+  incomingReportList: CharityReport[] = [];
+
+  incomingDecisionList: CharityDecision[] = [];
+  outgoingDecisionList: CharityDecision[] = [];
   buildMetaDataForm(controls = true) {
     const {
       arabicName,
@@ -86,7 +101,6 @@ export class CharityOrganizationUpdate extends CaseModel<
       shortName,
       logoId,
       activityType,
-      createdOn,
       regulatingLaw,
       registrationAuthority,
       taxCardNo,
@@ -94,7 +108,7 @@ export class CharityOrganizationUpdate extends CaseModel<
       publishDate,
       registrationDate,
       establishmentDate,
-      establishmentID,
+      establishmentID
     } = this;
     return {
       publishDate,
@@ -136,7 +150,6 @@ export class CharityOrganizationUpdate extends CaseModel<
       activityType: controls
         ? [activityType, [CustomValidators.required]]
         : activityType,
-      createdOn,
       regulatingLaw: controls
         ? [regulatingLaw, [CustomValidators.required]]
         : regulatingLaw,
@@ -150,6 +163,7 @@ export class CharityOrganizationUpdate extends CaseModel<
       registrationDate: controls ? [registrationDate] : registrationDate,
 
       establishmentDate: controls ? [establishmentDate] : establishmentDate,
+      establishmentID: controls ? [establishmentID] : establishmentID
     };
   }
   getFirstPageForm(controls = true) {
@@ -161,6 +175,7 @@ export class CharityOrganizationUpdate extends CaseModel<
       charityId: controls
         ? [charityId, [CustomValidators.required]]
         : charityId,
+
     };
   }
   buildContactInformationForm(controls = true) {
@@ -217,12 +232,10 @@ export class CharityOrganizationUpdate extends CaseModel<
   buildPrimaryLawForm(controls = true) {
     const { domain, country, firstReleaseDate, lastUpdateDate, goals, charityWorkArea } = this;
     return {
-      firstReleaseDate: controls ? [firstReleaseDate, [CustomValidators.required]] : firstReleaseDate,
-      lastUpdateDate: controls ? [lastUpdateDate, [CustomValidators.required]] : lastUpdateDate,
+      firstReleaseDate: controls ? [firstReleaseDate, [CustomValidators.required]] : DateUtils.changeDateToDatepicker(firstReleaseDate),
+      lastUpdateDate: controls ? [lastUpdateDate, [CustomValidators.required]] : DateUtils.changeDateToDatepicker(lastUpdateDate),
       goals: controls ? [goals, [CustomValidators.required]] : goals,
       charityWorkArea: controls ? [charityWorkArea, [CustomValidators.required]] : charityWorkArea,
-      country: controls ? [country, [CustomValidators.required]] : country,
-      domain: controls ? [domain, [CustomValidators.required]] : domain,
     };
   }
 }

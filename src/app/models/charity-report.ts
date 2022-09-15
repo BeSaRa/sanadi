@@ -34,6 +34,7 @@ export class CharityReport extends BaseModel<
   riskMitigationMeasures!: string;
   riskType!: number;
   id!: number;
+  objectDBId?: number;
   categoryInfo!: AdminResult;
   reportStatusInfo!: AdminResult;
   riskTypeInfo!: AdminResult;
@@ -52,12 +53,47 @@ export class CharityReport extends BaseModel<
     } = this;
     return {
       fullName: controls ? [fullName, [CustomValidators.required]] : fullName,
-      generalDate: controls ? [generalDate, [CustomValidators.required]] : generalDate,
+      generalDate: controls
+        ? [generalDate, [CustomValidators.required]]
+        : generalDate,
       riskType: controls ? [riskType, [CustomValidators.required]] : riskType,
       category: controls ? [category, [CustomValidators.required]] : category,
-      riskMitigationMeasures: controls ? [riskMitigationMeasures, [CustomValidators.required]] : riskMitigationMeasures,
+      riskMitigationMeasures: controls
+        ? [riskMitigationMeasures, [CustomValidators.required]]
+        : riskMitigationMeasures,
       feedback: controls ? [feedback, [CustomValidators.required]] : feedback,
-      reportStatus: controls ? [reportStatus, [CustomValidators.required]] : reportStatus,
+      reportStatus: controls
+        ? [reportStatus, [CustomValidators.required]]
+        : reportStatus,
     };
+  }
+
+  toCharityOrganizationUpdate() {
+    const {
+      id,
+      fullName,
+      subject,
+      generalDate,
+      category,
+      feedback,
+      procedures,
+      reportStatus,
+      riskType,
+      riskMitigationMeasures,
+      reportType
+    } = this;
+    return new CharityReport().clone({
+      objectDBId: id,
+      fullName,
+      reportType,
+      subject,
+      generalDate,
+      category,
+      feedback,
+      procedures,
+      reportStatus,
+      riskType,
+      riskMitigationMeasures,
+    });
   }
 }

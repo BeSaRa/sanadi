@@ -1,8 +1,9 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { ListModelComponent } from '@app/generics/ListModel-component';
 import { ControlWrapper } from '@app/interfaces/i-control-wrapper';
 import { CharityBranch } from '@app/models/charity-branch';
+import { OrganizaionOfficerComponent } from '@app/modules/e-services-main/shared/organizaion-officer/organizaion-officer.component';
 import { LangService } from '@app/services/lang.service';
 import { LookupService } from '@app/services/lookup.service';
 import { Subject } from 'rxjs';
@@ -16,7 +17,17 @@ import { takeUntil } from 'rxjs/operators';
 export class CharityBranchComponent extends ListModelComponent<CharityBranch> {
   @Input() readonly!: boolean;
   @Input() set list(_list: CharityBranch[]) {
+
     this._list = _list;
+  }
+  get list(): CharityBranch[] {
+    const branches = [...this._list];
+    branches.forEach(e => {
+      e.branchContactOfficer.forEach(bco => {
+        bco.identificationNumber = bco.qid;
+      })
+    })
+    return branches;
   }
   columns = [
     'fullName',
@@ -63,5 +74,4 @@ export class CharityBranchComponent extends ListModelComponent<CharityBranch> {
     this.model = model;
     this.form = this.fb.group(model.buildForm());
   }
-
 }

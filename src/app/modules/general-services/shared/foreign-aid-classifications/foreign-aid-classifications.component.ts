@@ -1,11 +1,13 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { AdminLookupTypeEnum } from '@app/enums/admin-lookup-type-enum';
+import { CharityWorkArea } from '@app/enums/charity-work-area.enum';
 import { DomainTypes } from '@app/enums/domain-types';
 import { ListModelComponent } from '@app/generics/ListModel-component';
 import { ControlWrapper } from '@app/interfaces/i-control-wrapper';
 import { ForeignAidClassification } from '@app/models/foreign-aid-classification';
 import { AdminLookupService } from '@app/services/admin-lookup.service';
+import { AidLookupService } from '@app/services/aid-lookup.service';
 import { DacOchaNewService } from '@app/services/dac-ocha-new.service';
 import { LangService } from '@app/services/lang.service';
 import { LookupService } from '@app/services/lookup.service';
@@ -17,17 +19,17 @@ import { Observable } from 'rxjs';
   templateUrl: './foreign-aid-classifications.component.html',
   styleUrls: ['./foreign-aid-classifications.component.scss'],
 })
-export class ForeignAidClassificationsComponent extends ListModelComponent<ForeignAidClassification> {
+export class ForeignAidClassificationsComponent
+  extends ListModelComponent<ForeignAidClassification>
+  implements OnChanges {
+  get list() {
+    return this._list;
+  }
   handleGoveranceDomainChange = (id: number | string) => {
-    console.log(id);
-    console.log(this.baseControls);
     if (id === DomainTypes.DEVELOPMENT) {
       this.controls = [...this.baseControls, ...this.developmentControls];
       this.form = this.fb.group({
-        governanceDomain: [
-          id,
-          [CustomValidators.required],
-        ],
+        domain: [id, [CustomValidators.required]],
         mainDACCategory: [
           this.model.mainDACCategory,
           [CustomValidators.required],
@@ -40,10 +42,7 @@ export class ForeignAidClassificationsComponent extends ListModelComponent<Forei
     } else {
       this.controls = [...this.baseControls, ...this.humanitirianControls];
       this.form = this.fb.group({
-        governanceDomain: [
-          id,
-          [CustomValidators.required],
-        ],
+        domain: [id, [CustomValidators.required]],
         mainUNOCHACategory: [
           this.model.mainUNOCHACategory,
           [CustomValidators.required],
@@ -59,7 +58,7 @@ export class ForeignAidClassificationsComponent extends ListModelComponent<Forei
     private fb: UntypedFormBuilder,
     private lookupService: LookupService,
     public lang: LangService,
-    private adminLookupService: AdminLookupService,
+    private aidService: AidLookupService,
     private dacOchaNewService: DacOchaNewService
   ) {
     super(ForeignAidClassification);
@@ -68,11 +67,12 @@ export class ForeignAidClassificationsComponent extends ListModelComponent<Forei
     this._list = _list;
   }
   @Input() readonly!: boolean;
+  @Input() charityWorkArea!: number;
   form!: UntypedFormGroup;
 
   baseControls: ControlWrapper[] = [
     {
-      controlName: 'governanceDomain',
+      controlName: 'domain',
       type: 'dropdown',
       load: this.lookupService.listByCategory.Domain,
       label: this.lang.map.domain,
@@ -82,8 +82,11 @@ export class ForeignAidClassificationsComponent extends ListModelComponent<Forei
   ];
   controls = this.baseControls;
   private handleOCHAOrDAC = (id: string | number) => {
-    this.controls[2].load$ = this.dacOchaNewService.loadByParentId(id as number);
-  }
+    const addOne = this.charityWorkArea === CharityWorkArea.BOTH ? 1 : 0;
+    this.controls[2 + addOne].load$ = this.dacOchaNewService.loadByParentId(
+      id as number
+    );
+  };
   developmentControls: ControlWrapper[] = [
     {
       controlName: 'mainDACCategory',
@@ -91,7 +94,7 @@ export class ForeignAidClassificationsComponent extends ListModelComponent<Forei
       load$: this.dacOchaNewService.loadByType(AdminLookupTypeEnum.DAC),
       label: this.lang.map.classification_of_DAC,
       dropdownValue: 'id',
-      onChange: this.handleOCHAOrDAC
+      onChange: this.handleOCHAOrDAC,
     },
     {
       controlName: 'subDACCategory',
@@ -108,8 +111,7 @@ export class ForeignAidClassificationsComponent extends ListModelComponent<Forei
       load$: this.dacOchaNewService.loadByType(AdminLookupTypeEnum.OCHA),
       label: this.lang.map.OCHA_main_classification,
       dropdownValue: 'id',
-      onChange: this.handleOCHAOrDAC
-
+      onChange: this.handleOCHAOrDAC,
     },
     {
       controlName: 'subUNOCHACategory',
@@ -119,14 +121,52 @@ export class ForeignAidClassificationsComponent extends ListModelComponent<Forei
       dropdownValue: 'id',
     },
   ];
-  columns = ['actions'];
+  columns = ['aidClassification', 'domain', 'mainUNOCHACategory', 'subUNOCHACategory', 'mainDACCategory', 'subDACCategory', 'actions'];
 
   protected _initComponent(): void {
-    this.form = this.fb.group({
-      governanceDomain: [
-        this.model.governanceDomain,
+    this.controls = this.baseControls;
+    let fg: any = {
+      domain: [
+        this.model.domain,
         [CustomValidators.required],
       ],
-    });
+    };
+    if (this.charityWorkArea === CharityWorkArea.OUTSIDE) {
+      fg = {
+        aidClassification: [
+          this.model.aidClassification,
+          [CustomValidators.required],
+        ],
+      };
+      this.controls = [
+        {
+          controlName: 'aidClassification',
+          type: 'dropdown',
+          label: this.lang.map.menu_aid_class,
+          load$: this.aidService.loadAsLookups(),
+          dropdownValue: 'id',
+        },
+      ];
+    }
+    if (this.charityWorkArea === CharityWorkArea.BOTH) {
+      fg = {
+        ...fg,
+        aidClassification: [
+          this.model.aidClassification,
+          [CustomValidators.required],
+        ],
+      };
+      this.controls.push({
+        controlName: 'aidClassification',
+        type: 'dropdown',
+        label: this.lang.map.menu_aid_class,
+        load$: this.aidService.loadAsLookups(),
+      });
+    }
+    this.form = this.fb.group(fg);
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.charityWorkArea?.firstChange) return;
+    this._initComponent();
   }
 }

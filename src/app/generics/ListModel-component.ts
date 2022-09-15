@@ -19,9 +19,6 @@ export abstract class ListModelComponent<T extends Cloneable<T>>
   constructor(private TCreator: new () => T) {
     this.model = new this.TCreator();
   }
-  get list(): T[] {
-    return this._list;
-  }
   ngOnInit(): void {
     this.listenToAdd();
     this.listenToModelChange();

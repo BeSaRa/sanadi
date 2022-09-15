@@ -28,7 +28,6 @@
             *ngFor="
               let type of control.load ? control.load : (control.load$ | async)
             "
-            [disabled]="!type.isActive()"
             [value]="type[control.dropdownValue!]"
             >{{ type.getName() }}</ng-option
           >
@@ -95,6 +94,47 @@
         [dataSource]="table.dataSource"
         class="table table-striped table-bordered caption-top"
       >
+        <ng-container cdkColumnDef="aidClassification">
+          <th cdk-header-cell sortable-header *cdkHeaderCellDef>
+            {{ lang.map.classification_of_foreign_aid }}
+          </th>
+          <td cdk-cell *cdkCellDef="let row">{{ row.aidClassification }}</td>
+        </ng-container>
+
+        <ng-container cdkColumnDef="domain">
+          <th cdk-header-cell sortable-header *cdkHeaderCellDef>
+            {{ lang.map.domain }}
+          </th>
+          <td cdk-cell *cdkCellDef="let row">{{ row.domain }}</td>
+        </ng-container>
+
+        <ng-container cdkColumnDef="mainUNOCHACategory">
+          <th cdk-header-cell sortable-header *cdkHeaderCellDef>
+            {{ lang.map.main_unocha_category }}
+          </th>
+          <td cdk-cell *cdkCellDef="let row">{{ row.mainUNOCHACategory }}</td>
+        </ng-container>
+
+        <ng-container cdkColumnDef="subUNOCHACategory">
+          <th cdk-header-cell sortable-header *cdkHeaderCellDef>
+            {{ lang.map.sub_unocha_category }}
+          </th>
+          <td cdk-cell *cdkCellDef="let row">{{ row.subUNOCHACategory }}</td>
+        </ng-container>
+
+        <ng-container cdkColumnDef="mainDACCategory">
+          <th cdk-header-cell sortable-header *cdkHeaderCellDef>
+            {{ lang.map.main_dac_category }}
+          </th>
+          <td cdk-cell *cdkCellDef="let row">{{ row.mainDACCategory }}</td>
+        </ng-container>
+        <ng-container cdkColumnDef="subDACCategory">
+          <th cdk-header-cell sortable-header *cdkHeaderCellDef>
+            {{ lang.map.sub_dac_category }}
+          </th>
+          <td cdk-cell *cdkCellDef="let row">{{ row.subDACCategory }}</td>
+        </ng-container>
+
         <ng-container cdkColumnDef="actions">
           <th cdk-header-cell *cdkHeaderCellDef>
             {{ lang.map.lbl_actions }}

@@ -20,15 +20,17 @@ export class MembersComponent extends ListModelComponent<OrgMember> {
   @Input() readonly!: boolean;
   @Input() set list(_list: OrgMember[]) {
     this._list = _list;
-    console.log(_list);
   }
   @Input() extended = false;
   @Input() pageTitle!: keyof ILanguageKeys;
   controls = this.getFormControls();
-  columns = ['fullName', 'qid', 'jobTitleId'];
+  columns = ['fullName', 'identificationNumber', 'jobTitleId'];
   datepickerOptionsMap: DatepickerOptionsMap = {
     joinDate: DateUtils.getDatepickerOptions({ disablePeriod: 'future' }),
   };
+  get list() {
+    return this._list;
+  }
   constructor(
     private fb: UntypedFormBuilder,
     public lang: LangService,
@@ -45,7 +47,7 @@ export class MembersComponent extends ListModelComponent<OrgMember> {
         type: 'text',
       },
       {
-        controlName: 'qid',
+        controlName: 'identificationNumber',
         label: this.lang.map.personal_number,
         type: 'text',
       },

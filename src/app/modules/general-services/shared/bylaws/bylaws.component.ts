@@ -15,7 +15,9 @@ import { DatepickerOptionsMap } from '@app/types/types';
   styleUrls: ['./bylaws.component.scss']
 })
 export class BylawsComponent extends ListModelComponent<Bylaw> {
-
+  get list() {
+    return this._list;
+  }
   @Input() set list(_list: Bylaw[]) {
     this._list = _list;
   }

@@ -18,6 +18,10 @@ export class RealBeneficiariesComponent extends ListModelComponent<RealBeneficia
   @Input() set list(_list: RealBeneficiary[]) {
     this._list = _list;
   }
+  get list() {
+    return this._list;
+
+  }
   constructor(public lang: LangService, private fb: UntypedFormBuilder, private lookupService: LookupService) {
     super(RealBeneficiary);
   }
@@ -31,8 +35,8 @@ export class RealBeneficiariesComponent extends ListModelComponent<RealBeneficia
     lastUpdateDate: DateUtils.getDatepickerOptions({ disablePeriod: 'past' }),
   };
   controls: ControlWrapper[] = [
-    { controlName: 'arName', label: this.lang.map.arabic_name, type: 'text' },
-    { controlName: 'enName', label: this.lang.map.english_name, type: 'text' },
+    { controlName: 'arabicName', label: this.lang.map.arabic_name, type: 'text' },
+    { controlName: 'englishName', label: this.lang.map.english_name, type: 'text' },
     {
       controlName: 'birthDate',
       label: this.lang.map.date_of_birth,
@@ -67,7 +71,7 @@ export class RealBeneficiariesComponent extends ListModelComponent<RealBeneficia
       label: this.lang.map.passport_number,
       type: 'text',
     },
-    { controlName: 'qid', label: this.lang.map.lbl_qid, type: 'text' },
+    { controlName: 'identificationNumber', label: this.lang.map.lbl_qid, type: 'text' },
     { controlName: 'iDDate', label: this.lang.map.id_date, type: 'date' },
 
     {
@@ -88,7 +92,7 @@ export class RealBeneficiariesComponent extends ListModelComponent<RealBeneficia
       type: 'date',
     },
   ];
-  columns = ['arName', 'enName', 'birthDate', 'birthLocation', 'actions']
+  columns = ['arabicName', 'englishName', 'birthDate', 'birthLocation', 'actions']
 
   protected _initComponent(): void {
     this.form = this.fb.group(this.model.buildForm());

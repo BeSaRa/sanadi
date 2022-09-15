@@ -12,6 +12,9 @@ import { LangService } from '@app/services/lang.service';
   styleUrls: ['./work-areas.component.scss']
 })
 export class WorkAreasComponent extends ListModelComponent<WorkArea> {
+  get list() {
+    return this._list;
+  }
   @Input() set list(_list: WorkArea[]) {
     this._list = _list;
   }

@@ -57,7 +57,8 @@ import { UrgentInterventionClosureService } from '@services/urgent-intervention-
 import { TransferringIndividualFundsAbroadService } from '@services/transferring-individual-funds-abroad.service';
 import { ForeignCountriesProjectsService } from './foreign-countries-projects.service';
 import { CastResponse } from "@decorators/cast-response";
-import {UrgentInterventionLicenseFollowupService} from '@services/urgent-intervention-license-followup.service';
+import { UrgentInterventionLicenseFollowupService } from '@services/urgent-intervention-license-followup.service';
+import { CharityOrganizationUpdateService } from './charity-organization-update.service';
 
 @Injectable({
   providedIn: 'root'
@@ -66,34 +67,35 @@ export class InboxService {
   services: Map<number, any> = new Map<number, any>();
 
   constructor(private http: HttpClient,
-              private dialog: DialogService,
-              private inquiryService: InquiryService,
-              private consultationService: ConsultationService,
-              private internationalCooperationService: InternationalCooperationService,
-              private initialExternalOfficeApprovalService: InitialExternalOfficeApprovalService,
-              private finalExternalOfficeApprovalService: FinalExternalOfficeApprovalService,
-              private internalProjectLicenseService: InternalProjectLicenseService,
-              private projectModelService: ProjectModelService,
-              private cfr: ComponentFactoryResolver,
-              private exceptionHandlerService: ExceptionHandlerService,
-              private partnerApprovalService: PartnerApprovalService,
-              private collectionApprovalService: CollectionApprovalService,
-              private fundraisingService: FundraisingService,
-              private collectorApprovalService: CollectorApprovalService,
-              private urgentInterventionLicensingService: UrgentInterventionLicensingService,
-              private internalBankAccountApprovalService: InternalBankAccountApprovalService,
-              private urgentJointReliefCampaignService: UrgentJointReliefCampaignService,
-              private urgentInterventionAnnouncementService: UrgentInterventionAnnouncementService,
-              private urgentInterventionClosureService: UrgentInterventionClosureService,
-              private urgentInterventionFinancialNotificationService: UrgentInterventionFinancialNotificationService,
-              private urgentInterventionLicenseFollowupService: UrgentInterventionLicenseFollowupService,
-              private urlService: UrlService,
-              private employmentService: EmploymentService,
-              private externalOrgAffiliationService: ExternalOrgAffiliationService,
-              private customsExemptionRemittanceService: CustomsExemptionRemittanceService,
-              private foreignCountriesProjectService: ForeignCountriesProjectsService,
-              private transferringIndividualsFundsAbroad: TransferringIndividualFundsAbroadService,
-              private coordinationWithOrganizationsRequestService:CoordinationWithOrganizationsRequestService) {
+    private dialog: DialogService,
+    private inquiryService: InquiryService,
+    private consultationService: ConsultationService,
+    private internationalCooperationService: InternationalCooperationService,
+    private initialExternalOfficeApprovalService: InitialExternalOfficeApprovalService,
+    private finalExternalOfficeApprovalService: FinalExternalOfficeApprovalService,
+    private internalProjectLicenseService: InternalProjectLicenseService,
+    private projectModelService: ProjectModelService,
+    private cfr: ComponentFactoryResolver,
+    private exceptionHandlerService: ExceptionHandlerService,
+    private partnerApprovalService: PartnerApprovalService,
+    private collectionApprovalService: CollectionApprovalService,
+    private fundraisingService: FundraisingService,
+    private collectorApprovalService: CollectorApprovalService,
+    private urgentInterventionLicensingService: UrgentInterventionLicensingService,
+    private internalBankAccountApprovalService: InternalBankAccountApprovalService,
+    private urgentJointReliefCampaignService: UrgentJointReliefCampaignService,
+    private urgentInterventionAnnouncementService: UrgentInterventionAnnouncementService,
+    private urgentInterventionClosureService: UrgentInterventionClosureService,
+    private urgentInterventionFinancialNotificationService: UrgentInterventionFinancialNotificationService,
+    private urgentInterventionLicenseFollowupService: UrgentInterventionLicenseFollowupService,
+    private urlService: UrlService,
+    private employmentService: EmploymentService,
+    private externalOrgAffiliationService: ExternalOrgAffiliationService,
+    private customsExemptionRemittanceService: CustomsExemptionRemittanceService,
+    private foreignCountriesProjectService: ForeignCountriesProjectsService,
+    private transferringIndividualsFundsAbroad: TransferringIndividualFundsAbroadService,
+    private charityUpdateService: CharityOrganizationUpdateService,
+    private coordinationWithOrganizationsRequestService: CoordinationWithOrganizationsRequestService) {
     FactoryService.registerService('InboxService', this);
     // register all e-services that we need.
     this.services.set(CaseTypes.INQUIRY, this.inquiryService);
@@ -120,6 +122,7 @@ export class InboxService {
     this.services.set(CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD, this.transferringIndividualsFundsAbroad);
     this.services.set(CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST, this.coordinationWithOrganizationsRequestService);
     this.services.set(CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP, this.urgentInterventionLicenseFollowupService);
+    this.services.set(CaseTypes.CHARITY_ORGANIZATION_UPDATE, this.charityUpdateService);
   }
 
   @CastResponse(() => QueryResultSet)
@@ -244,10 +247,10 @@ export class InboxService {
   }
 
   private openSendToDialog(taskId: string,
-                           sendToResponse: WFResponseType,
-                           service: BaseGenericEService<any>,
-                           claimBefore: boolean = false,
-                           task?: QueryResult | CaseModel<any, any>): DialogRef {
+    sendToResponse: WFResponseType,
+    service: BaseGenericEService<any>,
+    claimBefore: boolean = false,
+    task?: QueryResult | CaseModel<any, any>): DialogRef {
 
     return this.dialog.show(SendToComponent,
       {
@@ -261,11 +264,11 @@ export class InboxService {
   }
 
   private openSendToMultipleDialog(taskId: string,
-                                   sendToResponse: WFResponseType,
-                                   service: BaseGenericEService<any>,
-                                   claimBefore: boolean = false,
-                                   task?: QueryResult | CaseModel<any, any>,
-                                   extraInfo?: any): DialogRef {
+    sendToResponse: WFResponseType,
+    service: BaseGenericEService<any>,
+    claimBefore: boolean = false,
+    task?: QueryResult | CaseModel<any, any>,
+    extraInfo?: any): DialogRef {
 
     return this.dialog.show(SendToMultipleComponent,
       {

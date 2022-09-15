@@ -111,5 +111,6 @@
   "CHARITY_REPORT": "/admin/charity-report",
   "CHARITY_DECISION": "/admin/charity-decision",
   "MEMBER_ROLES": "/admin/member-role",
+  "GOVERNANCE_DOCUMENT": "/admin/governance-document",
   "REAL_BENEFECIARY": "/admin/real-beneficiary"
 }

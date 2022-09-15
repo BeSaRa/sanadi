@@ -1,4 +1,5 @@
 import { InterceptModel } from '@app/decorators/decorators/intercept-model';
+import { DateUtils } from '@app/helpers/date-utils';
 import { CharityDecisionInterceptor } from '@app/model-interceptors/charity-Decision-interceptor';
 import { CharityDecisionService } from '@app/services/charity-decision.service';
 import { FactoryService } from '@app/services/factory.service';
@@ -26,15 +27,12 @@ export class CharityDecision extends BaseModel<
   decisionType!: number;
   subject!: string;
   organization!: string;
-
+  id!: number;
+  objectDBId?: number;
+  category?: number;
   buildForm(controls = true) {
-    const {
-      referenceNumber,
-      generalDate,
-      decisionType,
-      subject,
-      organization,
-    } = this;
+    const { referenceNumber, generalDate, category, subject, organization } =
+      this;
 
     return {
       referenceNumber: controls
@@ -47,6 +45,28 @@ export class CharityDecision extends BaseModel<
       organization: controls
         ? [organization, [CustomValidators.required]]
         : organization,
+      category: controls ? [category, [CustomValidators.required]] : category,
     };
+  }
+  toCharityOrganizationUpdate() {
+    const {
+      id,
+      referenceNumber,
+      subject,
+      decisionType,
+      generalDate,
+      category,
+      organization,
+    } = this;
+    return new CharityDecision().clone({
+      objectDBId: id,
+      referenceNumber,
+      subject,
+      generalDate: DateUtils.getDateStringFromDate(generalDate),
+      category,
+
+      decisionType,
+      organization,
+    });
   }
 }

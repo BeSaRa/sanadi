@@ -125,12 +125,12 @@
           </th>
           <td cdk-cell *cdkCellDef="let row">{{ row.fullName }}</td>
         </ng-container>
-        <ng-container cdkColumnDef="qid">
+        <ng-container cdkColumnDef="identificationNumber">
           <th cdk-header-cell sortable-header *cdkHeaderCellDef>
             {{ lang.map.personal_number }}
           </th>
           <td cdk-cell *cdkCellDef="let row">
-            {{ row.qid }}
+            {{ row.identificationNumber }}
           </td>
         </ng-container>
         <ng-container cdkColumnDef="jobTitleId">

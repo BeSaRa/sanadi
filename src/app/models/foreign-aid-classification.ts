@@ -10,5 +10,29 @@ export class ForeignAidClassification extends SearchableCloneable<ForeignAidClas
   subDACCategory!: number;
   subUNOCHACategory!: number;
   id!: number;
+  objectDBId?: number;
+  domain?: number;
 
+  toCharityOrgnizationUpdate() {
+    const {
+      id,
+      charityWorkArea,
+      aidClassification,
+      governanceDomain,
+      mainDACCategory,
+      mainUNOCHACategory,
+      subDACCategory,
+      subUNOCHACategory,
+    } = this;
+    return new ForeignAidClassification().clone({
+      objectDBId: id,
+      domain: governanceDomain,
+      charityWorkArea,
+      aidClassification,
+      mainDACCategory,
+      mainUNOCHACategory,
+      subDACCategory,
+      subUNOCHACategory,
+    });
+  }
 }

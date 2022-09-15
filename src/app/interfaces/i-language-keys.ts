@@ -1323,4 +1323,5 @@ export interface ILanguageKeys {
   reports_received_from_organization: string;
   decisions_by_organizations: string;
   internal_decisions: string;
+  establishment_id: string;
 }

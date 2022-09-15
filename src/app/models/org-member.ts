@@ -4,18 +4,20 @@ import { SearchableCloneable } from './searchable-cloneable';
 
 export class OrgMember extends SearchableCloneable<OrgMember> {
   objectDBId!: number;
-  qid!: string;
+  qid?: string;
+  identificationNumber!: string;
   fullName!: string;
+  id!: number;
   jobTitleId!: number;
-  email!: string;
-  phone!: string;
-  joinDate!: string;
+  email: string | null = null;
+  phone: string | null = null;
+  joinDate: string | null = null;
   nationality!: number;
   extraPhone!: string;
   jobTitleInfo!: AdminResult;
   nationalityInfo!: AdminResult;
   buildForm(controls = true) {
-    const { fullName, qid, jobTitleId } = this;
+    const { fullName, identificationNumber, jobTitleId } = this;
     return {
       fullName: controls
         ? [
@@ -28,9 +30,9 @@ export class OrgMember extends SearchableCloneable<OrgMember> {
           ],
         ]
         : fullName,
-      qid: controls
-        ? [qid, [CustomValidators.required]]
-        : qid,
+      identificationNumber: controls
+        ? [identificationNumber, [CustomValidators.required]]
+        : identificationNumber,
       jobTitleId: controls ? [jobTitleId, [CustomValidators.required]] : jobTitleId,
     };
   }

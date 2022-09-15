@@ -18,6 +18,9 @@ import { DatepickerOptionsMap } from '@app/types/types';
   styleUrls: ['./risk-reports.component.scss'],
 })
 export class CharityReportsComponent extends ListModelComponent<CharityReport> {
+  get list() {
+    return this._list;
+  }
   @Input() set list(_list: CharityReport[]) {
     this._list = _list;
   }

@@ -9,6 +9,8 @@ export class CharityReportInterceptor implements IModelInterceptor<CharityReport
     delete model.categoryInfo;
     delete model.riskTypeInfo;
     delete model.reportStatusInfo;
+    delete model.service;
+    delete model.langService;
     return model;
   }
   receive(model: CharityReport): CharityReport {

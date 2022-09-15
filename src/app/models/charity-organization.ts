@@ -15,8 +15,8 @@ const interceptor = new CharityOrganizationInterceptor();
   send: interceptor.send,
 })
 export class CharityOrganization extends BaseModel<
-CharityOrganization,
-CharityOrganizationService
+  CharityOrganization,
+  CharityOrganizationService
 > {
   service: CharityOrganizationService = FactoryService.getService(
     'CharityOrganizationService'
@@ -118,7 +118,7 @@ CharityOrganizationService
       charityBranchList: branchList,
       charityContactOfficerList: contactOfficer,
       complianceOfficerList: complianceOfficer,
-
+      registrationDate
     });
     return model;
   }
