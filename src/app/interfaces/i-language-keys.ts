@@ -1,5 +1,5 @@
 export interface ILanguageKeys {
-  you_have_to_add_at_least_one_meeting_point:string;
+  you_have_to_add_at_least_one_meeting_point: string;
   member_task_terminated_successfully: string;
   general_notes_saved_successfully: string;
   meeting_points_saved_successfully: string;
@@ -1325,7 +1325,7 @@ export interface ILanguageKeys {
   lbl_edit_report: string;
   execution_date: string;
   approve: string;
-  participant_organizations_required:string;
+  participant_organizations_required: string;
   organization_officers_required: string;
   model_required: string;
   building_abilities_required: string;
@@ -1364,4 +1364,11 @@ export interface ILanguageKeys {
   third_payment: string;
   entity_id: string;
   employees: string;
+  last_update_date: string;
+  the_date_when_a_person_became_a_real_beneficiary: string;
+  passport_expiry_date: string;
+  passport_date: string;
+  id_expiry_date: string;
+  id_date: string;
+  birth_location: string;
 }

@@ -229,14 +229,14 @@ export class FounderMembersComponent implements OnInit, OnDestroy {
     this.readyEvent.emit(readyStatus);
   }
 
-  openDateMenu(ref: any) {
-    ref.toggleCalendar();
-  }
   forceClearComponent() {
     this.cancel();
     this.list = [];
     this._updateList(null, 'NONE');
     this._setComponentReadiness('READY');
+  }
+  openDateMenu(ref: any) {
+    ref.toggleCalendar();
   }
   searchNgSelect(term: string, item: any): boolean {
     return item.ngSelectSearch(term);

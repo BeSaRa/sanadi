@@ -3,7 +3,329 @@
     <ng-container *ngFor="let _ of realBeneficiaryFormArray.controls; let i = index">
       <div [formGroupName]="i">
         <div class="row">
-
+          <!-- identification number -->
+          <div class="col-md-4 mb-4 position-relative">
+            <label asteriskIfRequired="identificationNumber" for="identificationNumber" class="form-label">{{lang.map.identification_number}}</label>
+            <input formControlName="identificationNumber" type="text"
+                   validationClasses="identificationNumber" trimInput class="form-control" id="identificationNumber">
+            <app-field-error-message controlName="identificationNumber"></app-field-error-message>
+          </div>
+          <!-- ar name -->
+          <div class="col-md-4 mb-4 position-relative">
+            <label asteriskIfRequired="arabicName" for="arabicName" class="form-label">{{
+              lang.map.lbl_arabic_name
+            }}</label>
+            <input
+              id="arabicName"
+              formControlName="arabicName"
+              validationClasses="arabicName"
+              class="form-control"
+            />
+            <app-field-error-message
+              controlName="arabicName"
+            ></app-field-error-message>
+          </div>
+          <!-- en name -->
+          <div class="col-md-4 mb-4 position-relative">
+            <label asteriskIfRequired="englishName" for="englishName" class="form-label">{{
+              lang.map.lbl_english_name
+            }}</label>
+            <input
+              id="englishName"
+              formControlName="englishName"
+              validationClasses="englishName"
+              class="form-control"
+            />
+            <app-field-error-message
+              controlName="englishName"
+            ></app-field-error-message>
+          </div>
+          <!-- zone number -->
+          <div class="col-md-4 mb-4 position-relative">
+            <label asteriskIfRequired="zoneNumber" for="zoneNumber" class="form-label">{{
+              lang.map.lbl_zone
+            }}</label>
+            <input
+              id="zoneNumber"
+              formControlName="zoneNumber"
+              validationClasses="zoneNumber"
+              class="form-control"
+            />
+            <app-field-error-message
+              controlName="zoneNumber"
+            ></app-field-error-message>
+          </div>
+          <!-- street_number -->
+          <div class="col-md-4 mb-4 position-relative">
+            <label asteriskIfRequired="streetNumber" for="streetNumber" class="form-label">{{
+              lang.map.lbl_street
+            }}</label>
+            <input
+              id="streetNumber"
+              formControlName="streetNumber"
+              validationClasses="streetNumber"
+              class="form-control"
+            />
+            <app-field-error-message
+              controlName="streetNumber"
+            ></app-field-error-message>
+          </div>
+          <!-- building number -->
+          <div class="col-md-4 mb-4 position-relative">
+            <label asteriskIfRequired="buildingNumber" for="buildingNumber" class="form-label">{{
+              lang.map.building_number
+            }}</label>
+            <input
+              id="buildingNumber"
+              formControlName="buildingNumber"
+              validationClasses="buildingNumber"
+              class="form-control"
+            />
+            <app-field-error-message
+              controlName="buildingNumber"
+            ></app-field-error-message>
+          </div>
+          <!-- birth location -->
+          <div class="col-md-4 mb-4 position-relative">
+            <label asteriskIfRequired="birthLocation" for="birthLocation" class="form-label">{{
+              lang.map.birth_location
+            }}</label>
+            <input
+              id="birthLocation"
+              formControlName="birthLocation"
+              validationClasses="birthLocation"
+              class="form-control"
+            />
+            <app-field-error-message
+              controlName="birthLocation"
+            ></app-field-error-message>
+          </div>
+          <!-- passport number -->
+          <div class="col-md-4 mb-4 position-relative">
+            <label asteriskIfRequired="passportNumber" for="passportNumber" class="form-label">{{
+              lang.map.passport_number
+            }}</label>
+            <input
+              id="passportNumber"
+              formControlName="passportNumber"
+              validationClasses="passportNumber"
+              class="form-control"
+            />
+            <app-field-error-message
+              controlName="passportNumber"
+            ></app-field-error-message>
+          </div>
+          <!-- nationality -->
+          <div class="col-md-4 mb-4 position-relative">
+            <label for="nationality" asteriskIfRequired="nationality"
+              class="form-label">{{lang.map.lbl_nationality}}</label>
+            <ng-select [selectOnTab]="true" [items]="nationalityList" labelForId="nationality"
+              bindValue="lookupKey" [clearable]="true"
+              [searchFn]="searchNgSelect"
+              placeholder="{{lang.map.select}}" id="nationality"
+              [notFoundText]="lang.map.msg_not_found"
+              formControlName="nationality" validationClasses="nationality">
+              <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+                <span class="custom-option" [ngOptionHighlight]="search">{{item.getName()}}</span>
+              </ng-template>
+              <ng-template ng-label-tmp let-item="item" let-clear="clear">
+                <span class="ng-value-label">{{item.getName()}}</span>
+                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+              </ng-template>
+              <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                <div class="ng-value" *ngFor="let item of (items ? items.slice(0,2): [])">
+                  <span class="ng-value-label">{{item.getName()}}</span>
+                  <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                </div>
+                <div class="ng-value" *ngIf="items.length > 2">
+                  <span class="ng-value-label">{{items.length - 2}} more...</span>
+                </div>
+              </ng-template>
+            </ng-select>
+              <app-field-error-message controlName="nationality"></app-field-error-message>
+          </div>
+          <!-- birth date -->
+          <div class="col-md-4 mb-4 position-relative">
+            <label
+              for="birthDate"
+              asteriskIfRequired="birthDate"
+              class="form-label"
+              >{{ lang.map.date_of_birth }}</label
+            >
+            <div class="input-group">
+              <i class="input-group-text mdi mdi-calendar"></i>
+              <div
+                class="form-control"
+                formControlName="birthDate"
+                id="birthDate"
+                [options]="datepickerOptionsMap.birthDate"
+                (click)="openDateMenu(dpbirthDate)"
+                #dpbirthDate="angular-mydatepicker"
+                angular-mydatepicker
+                validationClasses="birthDate"
+              ></div>
+              <app-field-error-message
+                controlName="birthDate"
+              ></app-field-error-message>
+            </div>
+          </div>
+          <!-- iDDate -->
+          <div class="col-md-4 mb-4 position-relative">
+            <label
+              for="iDDate"
+              asteriskIfRequired="iDDate"
+              class="form-label"
+              >{{ lang.map.id_date }}</label
+            >
+            <div class="input-group">
+              <i class="input-group-text mdi mdi-calendar"></i>
+              <div
+                class="form-control"
+                formControlName="iDDate"
+                id="iDDate"
+                [options]="datepickerOptionsMap.iDDate"
+                (click)="openDateMenu(dpiDDate)"
+                #dpiDDate="angular-mydatepicker"
+                angular-mydatepicker
+                validationClasses="iDDate"
+              ></div>
+              <app-field-error-message
+                controlName="iDDate"
+              ></app-field-error-message>
+            </div>
+          </div>
+          <!-- id expiry date -->
+          <div class="col-md-4 mb-4 position-relative">
+            <label
+              for="iDExpiryDate"
+              asteriskIfRequired="iDExpiryDate"
+              class="form-label"
+              >{{ lang.map.id_expiry_date }}</label
+            >
+            <div class="input-group">
+              <i class="input-group-text mdi mdi-calendar"></i>
+              <div
+                class="form-control"
+                formControlName="iDExpiryDate"
+                id="iDExpiryDate"
+                [options]="datepickerOptionsMap.iDExpiryDate"
+                (click)="openDateMenu(dpiDExpiryDate)"
+                #dpiDExpiryDate="angular-mydatepicker"
+                angular-mydatepicker
+                validationClasses="iDExpiryDate"
+              ></div>
+              <app-field-error-message
+                controlName="iDExpiryDate"
+              ></app-field-error-message>
+            </div>
+          </div>
+          <!-- passport date -->
+          <div class="col-md-6 mb-4 position-relative">
+            <label
+              for="passportDate"
+              asteriskIfRequired="passportDate"
+              class="form-label"
+              >{{ lang.map.passport_date }}</label
+            >
+            <div class="input-group">
+              <i class="input-group-text mdi mdi-calendar"></i>
+              <div
+                class="form-control"
+                formControlName="passportDate"
+                id="passportDate"
+                [options]="datepickerOptionsMap.passportDate"
+                (click)="openDateMenu(dppassportDate)"
+                #dppassportDate="angular-mydatepicker"
+                angular-mydatepicker
+                validationClasses="passportDate"
+              ></div>
+              <app-field-error-message
+                controlName="passportDate"
+              ></app-field-error-message>
+            </div>
+          </div>
+          <!-- passport expiry date -->
+          <div class="col-md-6 mb-4 position-relative">
+            <label
+              for="passportExpiryDate"
+              asteriskIfRequired="passportExpiryDate"
+              class="form-label"
+              >{{ lang.map.passport_expiry_date }}</label
+            >
+            <div class="input-group">
+              <i class="input-group-text mdi mdi-calendar"></i>
+              <div
+                class="form-control"
+                formControlName="passportExpiryDate"
+                id="passportExpiryDate"
+                [options]="datepickerOptionsMap.passportExpiryDate"
+                (click)="openDateMenu(dppassportExpiryDate)"
+                #dppassportExpiryDate="angular-mydatepicker"
+                angular-mydatepicker
+                validationClasses="passportExpiryDate"
+              ></div>
+              <app-field-error-message
+                controlName="passportExpiryDate"
+              ></app-field-error-message>
+            </div>
+          </div>
+          <!-- start date -->
+          <div class="col-md-6 mb-4 position-relative">
+            <label
+              for="startDate"
+              asteriskIfRequired="startDate"
+              class="form-label"
+              >{{ lang.map.the_date_when_a_person_became_a_real_beneficiary }}</label
+            >
+            <div class="input-group">
+              <i class="input-group-text mdi mdi-calendar"></i>
+              <div
+                class="form-control"
+                formControlName="startDate"
+                id="startDate"
+                [options]="datepickerOptionsMap.startDate"
+                (click)="openDateMenu(dpstartDate)"
+                #dpstartDate="angular-mydatepicker"
+                angular-mydatepicker
+                validationClasses="startDate"
+              ></div>
+              <app-field-error-message
+                controlName="startDate"
+              ></app-field-error-message>
+            </div>
+          </div>
+          <!-- last update date -->
+          <div class="col-md-6 mb-4 position-relative">
+            <label
+              for="lastUpdateDate"
+              asteriskIfRequired="lastUpdateDate"
+              class="form-label"
+              >{{ lang.map.last_update_date }}</label
+            >
+            <div class="input-group">
+              <i class="input-group-text mdi mdi-calendar"></i>
+              <div
+                class="form-control"
+                formControlName="lastUpdateDate"
+                id="lastUpdateDate"
+                [options]="datepickerOptionsMap.lastUpdateDate"
+                (click)="openDateMenu(dplastUpdateDate)"
+                #dplastUpdateDate="angular-mydatepicker"
+                angular-mydatepicker
+                validationClasses="lastUpdateDate"
+              ></div>
+              <app-field-error-message
+                controlName="lastUpdateDate"
+              ></app-field-error-message>
+            </div>
+          </div>
+          <div class="mb-4 position-relative">
+            <label for="address" class="form-label">{{lang.map.lbl_address}}</label>
+            <textarea id="address" validationClasses="address" trimInput
+                      formControlName="address" class="form-control">
+            </textarea>
+            <app-field-error-message controlName="address"></app-field-error-message>
+          </div>
         </div>
         <div class="d-flex flex-row align-items-center justify-content-center">
           <button (click)="save()" [disabled]="readonly"

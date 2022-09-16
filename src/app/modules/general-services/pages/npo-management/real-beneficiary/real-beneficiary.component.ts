@@ -1,3 +1,7 @@
+import { LookupService } from './../../../../../services/lookup.service';
+import { DateUtils } from './../../../../../helpers/date-utils';
+import { DatepickerOptionsMap } from './../../../../../types/types';
+import { Lookup } from './../../../../../models/lookup';
 import { JobTitle } from './../../../../../models/job-title';
 import { JobTitleService } from '@services/job-title.service';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
@@ -17,8 +21,34 @@ import { RealBeneficiary } from "@app/models/real-beneficiary";
   styleUrls: ['./real-beneficiary.component.scss']
 })
 export class RealBeneficiaryComponent implements OnInit, OnDestroy {
+  nationalityList: Lookup[] = this.lookupService.listByCategory.Nationality;
+  datepickerOptionsMap: DatepickerOptionsMap = {
+    birthDate: DateUtils.getDatepickerOptions({
+      disablePeriod: "none",
+    }),
+    iDDate: DateUtils.getDatepickerOptions({
+      disablePeriod: "none",
+    }),
+    iDExpiryDate: DateUtils.getDatepickerOptions({
+      disablePeriod: "none",
+    }),
+    passportDate: DateUtils.getDatepickerOptions({
+      disablePeriod: "none",
+    }),
+    passportExpiryDate: DateUtils.getDatepickerOptions({
+      disablePeriod: "none",
+    }),
+    startDate: DateUtils.getDatepickerOptions({
+      disablePeriod: "none",
+    }),
+    lastUpdateDate: DateUtils.getDatepickerOptions({
+      disablePeriod: "none",
+    })
+  }
+
   constructor(public lang: LangService,
     private toastService: ToastService,
+    private lookupService: LookupService,
     private dialogService: DialogService,
     private fb: UntypedFormBuilder) {
   }
@@ -218,5 +248,11 @@ export class RealBeneficiaryComponent implements OnInit, OnDestroy {
     this.list = [];
     this._updateList(null, 'NONE');
     this._setComponentReadiness('READY');
+  }
+  openDateMenu(ref: any) {
+    ref.toggleCalendar();
+  }
+  searchNgSelect(term: string, item: any): boolean {
+    return item.ngSelectSearch(term);
   }
 }
