@@ -93,7 +93,7 @@ const routes: Routes = [
     resolve: { info: ServiceItemResolver },
     data: {
 
-      permissionKey: EServicePermissions.EMPLOYMENT,
+      permissionKey: EServicePermissions.CHARITY_ORGANIMZATION_UPDATE,
       configPermissionGroup: null,
       checkAnyPermission: false,
       render: 'CharityOrganizationUpdateComponent'
