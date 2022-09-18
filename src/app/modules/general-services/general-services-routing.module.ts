@@ -92,8 +92,7 @@ const routes: Routes = [
     canActivate: [ServicesGuard],
     resolve: { info: ServiceItemResolver },
     data: {
-
-      permissionKey: EServicePermissions.CHARITY_ORGANIMZATION_UPDATE,
+      permissionKey: EServicePermissions.CHARITY_ORGANIZATION_UPDATE,
       configPermissionGroup: null,
       checkAnyPermission: false,
       render: 'CharityOrganizationUpdateComponent'

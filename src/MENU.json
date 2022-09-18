@@ -945,7 +945,7 @@
     "path": "/home/general-services/charity-organization-update",
     "icon": "mdi-earth",
     "isSvg": true,
-    "permission": "CHARITY_ORGANIMZATION_UPDATE",
+    "permission": "CHARITY_ORGANIZATION_UPDATE",
     "permissionGroup": null,
     "parent": 13,
     "group": "general-services",

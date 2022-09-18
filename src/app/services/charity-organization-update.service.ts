@@ -41,7 +41,7 @@ export class CharityOrganizationUpdateService extends BaseGenericEService<Charit
     FactoryService.registerService('CharityOrganizationUpdateService', this);
   }
   _getURLSegment(): string {
-    return this._getUrlService().URLS.CHARITY_ORGANIMZATION_UPDATE;
+    return this._getUrlService().URLS.CHARITY_ORGANIZATION_UPDATE;
   }
   _getModel() {
     return CharityOrganizationUpdate;
