@@ -1,11 +1,11 @@
-import {Component, Input, OnDestroy, OnInit, Optional} from '@angular/core';
-import {TableService} from '@app/services/table.service';
-import {BehaviorSubject, isObservable, Observable, Subject, Subscription} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
-import {TableDataSource} from '../../models/table-data-source';
-import {PaginatorComponent} from '../paginator/paginator.component';
-import {SortableTableDirective} from '../../directives/sortable-table.directive';
-import {SelectionModel} from '@angular/cdk/collections';
+import { Component, Input, OnDestroy, OnInit, Optional } from '@angular/core';
+import { TableService } from '@app/services/table.service';
+import { BehaviorSubject, isObservable, Observable, Subject, Subscription } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { TableDataSource } from '../../models/table-data-source';
+import { PaginatorComponent } from '../paginator/paginator.component';
+import { SortableTableDirective } from '../../directives/sortable-table.directive';
+import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
   selector: 'app-table',
@@ -72,7 +72,7 @@ export class TableComponent implements OnInit, OnDestroy {
   }
 
   constructor(private service: TableService,
-              @Optional() private sortable: SortableTableDirective) {
+    @Optional() private sortable: SortableTableDirective) {
   }
 
   ngOnInit(): void {

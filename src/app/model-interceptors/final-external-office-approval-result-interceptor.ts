@@ -1,11 +1,12 @@
-import {IModelInterceptor} from "@app/interfaces/i-model-interceptor";
-import {AdminResult} from "@app/models/admin-result";
-import {FinalExternalOfficeApprovalResult} from '@app/models/final-external-office-approval-result';
-import {FactoryService} from '@app/services/factory.service';
-import {FinalExternalOfficeApprovalService} from '@app/services/final-external-office-approval.service';
-import {BankAccount} from '@app/models/bank-account';
-import {BankBranch} from '@app/models/bank-branch';
-import {ExecutiveManagement} from '@app/models/executive-management';
+import { IModelInterceptor } from "@app/interfaces/i-model-interceptor";
+import { AdminResult } from "@app/models/admin-result";
+import { FinalExternalOfficeApprovalResult } from '@app/models/final-external-office-approval-result';
+import { FactoryService } from '@app/services/factory.service';
+import { FinalExternalOfficeApprovalService } from '@app/services/final-external-office-approval.service';
+import { BankAccount } from '@app/models/bank-account';
+import { BankBranch } from '@app/models/bank-branch';
+import { ExecutiveManagement } from '@app/models/executive-management';
+import { DateUtils } from '@app/helpers/date-utils';
 
 export class FinalExternalOfficeApprovalResultInterceptor implements IModelInterceptor<FinalExternalOfficeApprovalResult> {
   receive(model: FinalExternalOfficeApprovalResult): FinalExternalOfficeApprovalResult {
@@ -20,7 +21,7 @@ export class FinalExternalOfficeApprovalResultInterceptor implements IModelInter
     model.requestTypeInfo = AdminResult.createInstance(model.requestTypeInfo);
     model.reviewerDepartmentDecisionInfo = AdminResult.createInstance(model.reviewerDepartmentDecisionInfo);
     model.specialistDecisionInfo = AdminResult.createInstance(model.specialistDecisionInfo);
-
+    model.establishmentDate = DateUtils.getDateStringFromDate(model.establishmentDate);
     let service = FactoryService.getService<FinalExternalOfficeApprovalService>('FinalExternalOfficeApprovalService');
     model.bankAccountList = model.bankAccountList.map(x => service.bankAccountInterceptor.receive(new BankAccount().clone(x)));
     model.executiveManagementList = model.executiveManagementList.map(x => service.executiveManagementInterceptor.receive(new ExecutiveManagement().clone(x)));

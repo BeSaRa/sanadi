@@ -1,11 +1,11 @@
-import {CollectionViewer, DataSource} from '@angular/cdk/collections';
-import {BehaviorSubject, combineLatest, merge, Observable, of, Subject, Subscription} from 'rxjs';
-import {map} from 'rxjs/operators';
-import {SortableTableDirective} from '../directives/sortable-table.directive';
-import {SortEvent} from '@app/interfaces/sort-event';
-import {_isNumberValue} from '@angular/cdk/coercion';
-import {PaginatorComponent} from '../components/paginator/paginator.component';
-import {PageEvent} from '@app/interfaces/page-event';
+import { CollectionViewer, DataSource } from '@angular/cdk/collections';
+import { BehaviorSubject, combineLatest, merge, Observable, of, Subject, Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { SortableTableDirective } from '../directives/sortable-table.directive';
+import { SortEvent } from '@app/interfaces/sort-event';
+import { _isNumberValue } from '@angular/cdk/coercion';
+import { PaginatorComponent } from '../components/paginator/paginator.component';
+import { PageEvent } from '@app/interfaces/page-event';
 
 export class TableDataSource extends DataSource<any> {
   _data: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
@@ -105,7 +105,9 @@ export class TableDataSource extends DataSource<any> {
     if (!this.sort) {
       return data;
     }
-    return this.sortData(data.slice(), this.sort);
+    if (Array.isArray(data))
+      return this.sortData(data.slice(), this.sort);
+    return data;
   }
 
   sortingDataAccessor(data: any, sortHeaderId: string): string | number {

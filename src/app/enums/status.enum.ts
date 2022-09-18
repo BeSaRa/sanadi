@@ -31,3 +31,7 @@ export enum BenOccupationStatusEnum {
   NOT_WORKING = 2
 }
 
+export enum RiskStatusEnum {
+  ACTIVE = 1,
+  INACTIVE
+}

@@ -4,14 +4,14 @@ import {
 import {
   UrgentInterventionFinancialNotificationComponent
 } from './../modules/urgent-intervention/pages/urgent-intervention-financial-notification/urgent-intervention-financial-notification.component';
-import {EmploymentComponent} from '../modules/general-services/pages/employment/employment.component';
+import { EmploymentComponent } from '../modules/general-services/pages/employment/employment.component';
 
-import {Injectable} from '@angular/core';
-import {DynamicComponentService} from './dynamic-component.service';
-import {TeamService} from './team.service';
-import {CustomEmployeePermission} from '@app/helpers/custom-employee-permission';
-import {InquiryComponent} from '@app/modules/general-services/pages/inquiry/inquiry.component';
-import {ConsultationComponent} from '@app/modules/general-services/pages/consultation/consultation.component';
+import { Injectable } from '@angular/core';
+import { DynamicComponentService } from './dynamic-component.service';
+import { TeamService } from './team.service';
+import { CustomEmployeePermission } from '@app/helpers/custom-employee-permission';
+import { InquiryComponent } from '@app/modules/general-services/pages/inquiry/inquiry.component';
+import { ConsultationComponent } from '@app/modules/general-services/pages/consultation/consultation.component';
 import {
   InternationalCooperationComponent
 } from '@app/modules/general-services/pages/international-cooperation/international-cooperation.component';
@@ -21,19 +21,19 @@ import {
 import {
   FinalExternalOfficeApprovalComponent
 } from '@app/modules/office-services/pages/final-external-office-approval/final-external-office-approval.component';
-import {PartnerApprovalComponent} from '@app/modules/office-services/pages/partner-approval/partner-approval.component';
-import {InternalProjectLicenseComponent} from '@app/projects/pages/internal-project-license/internal-project-license.component';
-import {ProjectModelComponent} from '@app/projects/pages/project-model/project-model.component';
-import {CollectionApprovalComponent} from '@app/modules/collection/pages/collection-services-approval/collection-approval.component';
-import {MapService} from '@app/services/map.service';
-import {FundraisingComponent} from '@app/modules/collection/pages/fundraising/fundraising.component';
-import {CollectorApprovalComponent} from '@app/modules/collection/pages/collector-approval/collector-approval.component';
-import {CustomsExemptionComponent} from '@app/modules/remittances/pages/customs-exemption/customs-exemption.component';
+import { PartnerApprovalComponent } from '@app/modules/office-services/pages/partner-approval/partner-approval.component';
+import { InternalProjectLicenseComponent } from '@app/projects/pages/internal-project-license/internal-project-license.component';
+import { ProjectModelComponent } from '@app/projects/pages/project-model/project-model.component';
+import { CollectionApprovalComponent } from '@app/modules/collection/pages/collection-services-approval/collection-approval.component';
+import { MapService } from '@app/services/map.service';
+import { FundraisingComponent } from '@app/modules/collection/pages/fundraising/fundraising.component';
+import { CollectorApprovalComponent } from '@app/modules/collection/pages/collector-approval/collector-approval.component';
+import { CustomsExemptionComponent } from '@app/modules/remittances/pages/customs-exemption/customs-exemption.component';
 import {
   InternalBankAccountApprovalComponent
 } from '@app/projects/pages/internal-bank-account-approval/internal-bank-account-approval.component';
 
-import {UrgentJointReliefCampaignComponent} from '@app/projects/pages/urgent-joint-relief-campaign/urgent-joint-relief-campaign.component';
+import { UrgentJointReliefCampaignComponent } from '@app/projects/pages/urgent-joint-relief-campaign/urgent-joint-relief-campaign.component';
 import {
   UrgentInterventionAnnouncementComponent
 } from '@app/modules/urgent-intervention/pages/urgent-intervention-announcement/urgent-intervention-announcement.component';
@@ -56,6 +56,7 @@ import {
 import {
   GeneralAssociationMeetingAttendanceComponent
 } from '@app/projects/pages/general-association-meeting-attendance/general-association-meeting-attendance.component';
+import { CharityOrganizationUpdateComponent } from '@app/modules/general-services/pages/charity-organization-update/charity-organization-update.component';
 
 @Injectable({
   providedIn: 'root'
@@ -97,6 +98,7 @@ export class AutoRegisterService {
       DynamicComponentService.registerComponent('TransferringIndividualFundsAbroadComponent', TransferringIndividualFundsAbroadComponent);
       DynamicComponentService.registerComponent('CoordinationWithOrganizationsRequestComponent', CoordinationWithOrganizationsRequestComponent);
       DynamicComponentService.registerComponent('GeneralAssociationMeetingAttendanceComponent', GeneralAssociationMeetingAttendanceComponent);
+      DynamicComponentService.registerComponent('CharityOrganizationUpdateComponent', CharityOrganizationUpdateComponent);
     });// just to make sure that service constructed and register all dynamic components
 
 

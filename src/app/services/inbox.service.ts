@@ -1,60 +1,61 @@
-import {CoordinationWithOrganizationsRequestService} from '@app/services/coordination-with-organizations-request.service';
-import {UrgentInterventionFinancialNotificationService} from './urgent-intervention-financial-notification.service';
-import {ComponentFactoryResolver, Injectable} from '@angular/core';
-import {HttpClient, HttpParams} from '@angular/common/http';
-import {UrlService} from './url.service';
-import {Observable, of} from 'rxjs';
-import {QueryResultSet} from '../models/query-result-set';
-import {FactoryService} from './factory.service';
-import {IBulkResult} from '@contracts/ibulk-result';
-import {InquiryService} from './inquiry.service';
-import {DialogService} from './dialog.service';
-import {DialogRef} from '../shared/models/dialog-ref';
-import {BlobModel} from '../models/blob-model';
-import {SendToComponent} from '../shared/popups/send-to-user-popup/send-to.component';
-import {IWFResponse} from '@contracts/i-w-f-response';
-import {IDefaultResponse} from '@contracts/idefault-response';
-import {map} from 'rxjs/operators';
-import {WFResponseType} from '../enums/wfresponse-type.enum';
+import { CoordinationWithOrganizationsRequestService } from '@app/services/coordination-with-organizations-request.service';
+import { UrgentInterventionFinancialNotificationService } from './urgent-intervention-financial-notification.service';
+import { ComponentFactoryResolver, Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { UrlService } from './url.service';
+import { Observable, of } from 'rxjs';
+import { QueryResultSet } from '../models/query-result-set';
+import { FactoryService } from './factory.service';
+import { IBulkResult } from '@contracts/ibulk-result';
+import { InquiryService } from './inquiry.service';
+import { DialogService } from './dialog.service';
+import { DialogRef } from '../shared/models/dialog-ref';
+import { BlobModel } from '../models/blob-model';
+import { SendToComponent } from '../shared/popups/send-to-user-popup/send-to.component';
+import { IWFResponse } from '@contracts/i-w-f-response';
+import { IDefaultResponse } from '@contracts/idefault-response';
+import { map } from 'rxjs/operators';
+import { WFResponseType } from '../enums/wfresponse-type.enum';
 
-import {ActionWithCommentPopupComponent} from '../shared/popups/action-with-comment-popup/action-with-comment-popup.component';
-import {QueryResult} from '../models/query-result';
-import {ConsultationService} from './consultation.service';
-import {InternationalCooperationService} from './international-cooperation.service';
-import {CaseTypes} from '../enums/case-types.enum';
-import {ExceptionHandlerService} from './exception-handler.service';
-import {InitialExternalOfficeApprovalService} from '@app/services/initial-external-office-approval.service';
-import {PartnerApprovalService} from '@app/services/partner-approval.service';
-import {FinalExternalOfficeApprovalService} from './final-external-office-approval.service';
-import {IInboxCriteria} from '@app/interfaces/i-inbox-criteria';
+import { ActionWithCommentPopupComponent } from '../shared/popups/action-with-comment-popup/action-with-comment-popup.component';
+import { QueryResult } from '../models/query-result';
+import { ConsultationService } from './consultation.service';
+import { InternationalCooperationService } from './international-cooperation.service';
+import { CaseTypes } from '../enums/case-types.enum';
+import { ExceptionHandlerService } from './exception-handler.service';
+import { InitialExternalOfficeApprovalService } from '@app/services/initial-external-office-approval.service';
+import { PartnerApprovalService } from '@app/services/partner-approval.service';
+import { FinalExternalOfficeApprovalService } from './final-external-office-approval.service';
+import { IInboxCriteria } from '@app/interfaces/i-inbox-criteria';
 import {
   FilterInboxRequestPopupComponent
 } from '@app/modules/e-services-main/popups/filter-inbox-request-popup/filter-inbox-request-popup.component';
-import {DateUtils} from '@app/helpers/date-utils';
-import {CommonUtils} from '@app/helpers/common-utils';
-import {InternalProjectLicenseService} from '@app/services/internal-project-license.service';
-import {SendToMultipleComponent} from '@app/shared/popups/send-to-multiple/send-to-multiple.component';
-import {ProjectModelService} from '@app/services/project-model.service';
-import {Memoize} from 'typescript-memoize';
-import {CaseModel} from '@app/models/case-model';
-import {CollectionApprovalService} from '@app/services/collection-approval.service';
-import {FundraisingService} from './fundraising.service';
-import {CollectorApprovalService} from '@app/services/collector-approval.service';
-import {UrgentInterventionLicensingService} from '@app/services/urgent-intervention-licensing.service';
-import {InternalBankAccountApprovalService} from '@app/services/internal-bank-account-approval.service';
-import {CustomsExemptionRemittanceService} from './customs-exemption-remittance.service';
-import {BaseGenericEService} from '@app/generics/base-generic-e-service';
-import {UrgentJointReliefCampaignService} from '@services/urgent-joint-relief-campaign.service';
-import {UrgentInterventionAnnouncementService} from '@services/urgent-intervention-announcement.service';
-import {ExternalOrgAffiliationService} from './external-org-affiliation.service';
-import {EmploymentService} from '@app/services/employment.service';
-import {ReturnToOrganizationPopupComponent} from '@app/shared/popups/return-to-organization-popup/return-to-organization-popup.component';
-import {UrgentInterventionClosureService} from '@services/urgent-intervention-closure.service';
-import {TransferringIndividualFundsAbroadService} from '@services/transferring-individual-funds-abroad.service';
-import {ForeignCountriesProjectsService} from './foreign-countries-projects.service';
-import {CastResponse} from '@decorators/cast-response';
-import {UrgentInterventionLicenseFollowupService} from '@services/urgent-intervention-license-followup.service';
-import {GeneralAssociationMeetingAttendanceService} from '@services/general-association-meeting-attendance.service';
+import { DateUtils } from '@app/helpers/date-utils';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { InternalProjectLicenseService } from '@app/services/internal-project-license.service';
+import { SendToMultipleComponent } from '@app/shared/popups/send-to-multiple/send-to-multiple.component';
+import { ProjectModelService } from '@app/services/project-model.service';
+import { Memoize } from 'typescript-memoize';
+import { CaseModel } from '@app/models/case-model';
+import { CollectionApprovalService } from '@app/services/collection-approval.service';
+import { FundraisingService } from './fundraising.service';
+import { CollectorApprovalService } from '@app/services/collector-approval.service';
+import { UrgentInterventionLicensingService } from '@app/services/urgent-intervention-licensing.service';
+import { InternalBankAccountApprovalService } from '@app/services/internal-bank-account-approval.service';
+import { CustomsExemptionRemittanceService } from './customs-exemption-remittance.service';
+import { BaseGenericEService } from '@app/generics/base-generic-e-service';
+import { UrgentJointReliefCampaignService } from '@services/urgent-joint-relief-campaign.service';
+import { UrgentInterventionAnnouncementService } from '@services/urgent-intervention-announcement.service';
+import { ExternalOrgAffiliationService } from './external-org-affiliation.service';
+import { EmploymentService } from '@app/services/employment.service';
+import { ReturnToOrganizationPopupComponent } from '@app/shared/popups/return-to-organization-popup/return-to-organization-popup.component';
+import { UrgentInterventionClosureService } from '@services/urgent-intervention-closure.service';
+import { TransferringIndividualFundsAbroadService } from '@services/transferring-individual-funds-abroad.service';
+import { ForeignCountriesProjectsService } from './foreign-countries-projects.service';
+import { CastResponse } from '@decorators/cast-response';
+import { UrgentInterventionLicenseFollowupService } from '@services/urgent-intervention-license-followup.service';
+import { GeneralAssociationMeetingAttendanceService } from '@services/general-association-meeting-attendance.service';
+import { CharityOrganizationUpdateService } from './charity-organization-update.service';
 
 @Injectable({
   providedIn: 'root'
@@ -63,35 +64,36 @@ export class InboxService {
   services: Map<number, any> = new Map<number, any>();
 
   constructor(private http: HttpClient,
-              private dialog: DialogService,
-              private inquiryService: InquiryService,
-              private consultationService: ConsultationService,
-              private internationalCooperationService: InternationalCooperationService,
-              private initialExternalOfficeApprovalService: InitialExternalOfficeApprovalService,
-              private finalExternalOfficeApprovalService: FinalExternalOfficeApprovalService,
-              private internalProjectLicenseService: InternalProjectLicenseService,
-              private projectModelService: ProjectModelService,
-              private cfr: ComponentFactoryResolver,
-              private exceptionHandlerService: ExceptionHandlerService,
-              private partnerApprovalService: PartnerApprovalService,
-              private collectionApprovalService: CollectionApprovalService,
-              private fundraisingService: FundraisingService,
-              private collectorApprovalService: CollectorApprovalService,
-              private urgentInterventionLicensingService: UrgentInterventionLicensingService,
-              private internalBankAccountApprovalService: InternalBankAccountApprovalService,
-              private urgentJointReliefCampaignService: UrgentJointReliefCampaignService,
-              private urgentInterventionAnnouncementService: UrgentInterventionAnnouncementService,
-              private urgentInterventionClosureService: UrgentInterventionClosureService,
-              private urgentInterventionFinancialNotificationService: UrgentInterventionFinancialNotificationService,
-              private urgentInterventionLicenseFollowupService: UrgentInterventionLicenseFollowupService,
-              private urlService: UrlService,
-              private employmentService: EmploymentService,
-              private externalOrgAffiliationService: ExternalOrgAffiliationService,
-              private customsExemptionRemittanceService: CustomsExemptionRemittanceService,
-              private foreignCountriesProjectService: ForeignCountriesProjectsService,
-              private transferringIndividualsFundsAbroadService: TransferringIndividualFundsAbroadService,
-              private coordinationWithOrganizationsRequestService:CoordinationWithOrganizationsRequestService,
-              private generalAssociationMeetingAttendanceService: GeneralAssociationMeetingAttendanceService) {
+    private dialog: DialogService,
+    private inquiryService: InquiryService,
+    private consultationService: ConsultationService,
+    private internationalCooperationService: InternationalCooperationService,
+    private initialExternalOfficeApprovalService: InitialExternalOfficeApprovalService,
+    private finalExternalOfficeApprovalService: FinalExternalOfficeApprovalService,
+    private internalProjectLicenseService: InternalProjectLicenseService,
+    private projectModelService: ProjectModelService,
+    private cfr: ComponentFactoryResolver,
+    private exceptionHandlerService: ExceptionHandlerService,
+    private partnerApprovalService: PartnerApprovalService,
+    private collectionApprovalService: CollectionApprovalService,
+    private fundraisingService: FundraisingService,
+    private collectorApprovalService: CollectorApprovalService,
+    private urgentInterventionLicensingService: UrgentInterventionLicensingService,
+    private internalBankAccountApprovalService: InternalBankAccountApprovalService,
+    private urgentJointReliefCampaignService: UrgentJointReliefCampaignService,
+    private urgentInterventionAnnouncementService: UrgentInterventionAnnouncementService,
+    private urgentInterventionClosureService: UrgentInterventionClosureService,
+    private urgentInterventionFinancialNotificationService: UrgentInterventionFinancialNotificationService,
+    private urgentInterventionLicenseFollowupService: UrgentInterventionLicenseFollowupService,
+    private urlService: UrlService,
+    private employmentService: EmploymentService,
+    private externalOrgAffiliationService: ExternalOrgAffiliationService,
+    private customsExemptionRemittanceService: CustomsExemptionRemittanceService,
+    private foreignCountriesProjectService: ForeignCountriesProjectsService,
+    private transferringIndividualsFundsAbroadService: TransferringIndividualFundsAbroadService,
+    private charityUpdateService: CharityOrganizationUpdateService,
+    private coordinationWithOrganizationsRequestService: CoordinationWithOrganizationsRequestService,
+    private generalAssociationMeetingAttendanceService: GeneralAssociationMeetingAttendanceService) {
     FactoryService.registerService('InboxService', this);
     // register all e-services that we need.
     this.services.set(CaseTypes.INQUIRY, this.inquiryService);
@@ -119,6 +121,7 @@ export class InboxService {
     this.services.set(CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE, this.generalAssociationMeetingAttendanceService);
     this.services.set(CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST, this.coordinationWithOrganizationsRequestService);
     this.services.set(CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP, this.urgentInterventionLicenseFollowupService);
+    this.services.set(CaseTypes.CHARITY_ORGANIZATION_UPDATE, this.charityUpdateService);
   }
 
   @CastResponse(() => QueryResultSet)
@@ -243,10 +246,10 @@ export class InboxService {
   }
 
   private openSendToDialog(taskId: string,
-                           sendToResponse: WFResponseType,
-                           service: BaseGenericEService<any>,
-                           claimBefore: boolean = false,
-                           task?: QueryResult | CaseModel<any, any>): DialogRef {
+    sendToResponse: WFResponseType,
+    service: BaseGenericEService<any>,
+    claimBefore: boolean = false,
+    task?: QueryResult | CaseModel<any, any>): DialogRef {
 
     return this.dialog.show(SendToComponent,
       {
@@ -260,11 +263,11 @@ export class InboxService {
   }
 
   private openSendToMultipleDialog(taskId: string,
-                                   sendToResponse: WFResponseType,
-                                   service: BaseGenericEService<any>,
-                                   claimBefore: boolean = false,
-                                   task?: QueryResult | CaseModel<any, any>,
-                                   extraInfo?: any): DialogRef {
+    sendToResponse: WFResponseType,
+    service: BaseGenericEService<any>,
+    claimBefore: boolean = false,
+    task?: QueryResult | CaseModel<any, any>,
+    extraInfo?: any): DialogRef {
 
     return this.dialog.show(SendToMultipleComponent,
       {
