@@ -1,3 +1,6 @@
+import { AttachmentsComponent } from '@app/shared/components/attachments/attachments.component';
+import { CommonCaseStatus } from './../../../../enums/common-case-status.enum';
+import { OpenFrom } from './../../../../enums/open-from.enum';
 import { EmploymentSearchCriteria } from '@app/models/employment-search-criteria';
 import { JobTitleService } from '@app/services/job-title.service';
 import { DateUtils } from '@app/helpers/date-utils';
@@ -41,6 +44,9 @@ EmploymentService
   employees: Partial<Employee>[] = [];
   fileIconsEnum = FileIconsEnum;
   caseType: number = CaseTypes.EMPLOYMENT;
+
+  @ViewChild(AttachmentsComponent)
+  attachmentComponent!: AttachmentsComponent;
 
   @ViewChild("ETable") ETable!: EmployeesDataComponent;
   @Input()
@@ -122,30 +128,32 @@ EmploymentService
     if (this.operation == OperationTypes.CREATE) this.setDefaultValues();
   }
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
-    return of(this.form.valid)
-      .pipe(tap((valid) => !valid && this.invalidFormMessage()))
-      .pipe(filter((valid) => valid))
-      .pipe(map((_) => !!(this.model && this.model.employeeInfoDTOs.length)))
-      .pipe(tap(
-        (hasEmployeeItems) => !hasEmployeeItems && this.invalidItemMessage()
-      ))
-      .pipe(filter((valid) => valid))
-      .pipe(
-        switchMap(() => {
-          if (this.isNewRequestType())
-            return this.service.bulkValidate(this.employees)
-          return of({})
-        }),
-        tap(
-          (data) => {
-            this.dublicateIdintifierMessage(data)
-          }
-        ),
-        map(_map => {
-          delete _map.size
-          return Object.keys(_map).filter(k => _map[k]).length == 0
-        }),
-      )
+    const validAttachments$ = this.attachmentComponent.attachments.length ? of(true) : this.attachmentComponent.reload();
+
+    return (this.model?.id ? validAttachments$ : of(this.form.valid)
+    .pipe(tap((valid) => !valid && this.invalidFormMessage()))
+    .pipe(filter((valid) => valid))
+    .pipe(map((_) => !!(this.model && this.model.employeeInfoDTOs.length)))
+    .pipe(tap(
+      (hasEmployeeItems) => !hasEmployeeItems && this.invalidItemMessage()
+    ))
+    .pipe(filter((valid) => valid))
+    .pipe(
+      switchMap(() => {
+        if (this.isNewRequestType())
+          return this.service.bulkValidate(this.employees)
+        return of({})
+      }),
+      tap(
+        (data) => {
+          this.dublicateIdintifierMessage(data)
+        }
+      ),
+      map(_map => {
+        delete _map.size
+        return Object.keys(_map).filter(k => _map[k]).length == 0
+      }),
+    ));
   }
   _beforeLaunch(): boolean | Observable<boolean> {
     if (this.model && !this.model.employeeInfoDTOs.length) {
@@ -182,6 +190,22 @@ EmploymentService
       this.toast.success(this.lang.map.request_has_been_saved_successfully);
     }
   }
+  isAttachmentReadonly(): boolean {
+    if (!this.model?.id) {
+      return false;
+    }
+    let isAllowed = true;
+    if (this.openFrom === OpenFrom.TEAM_INBOX) {
+      isAllowed = this.model.taskDetails.isClaimed();
+    }
+    if (isAllowed) {
+      let caseStatus = this.model.getCaseStatus();
+      isAllowed = (caseStatus !== CommonCaseStatus.CANCELLED && caseStatus !== CommonCaseStatus.FINAL_APPROVE && caseStatus !== CommonCaseStatus.FINAL_REJECTION);
+    }
+
+    return !isAllowed;
+  }
+
   _saveFail(error: any): void {
     this.employees = [...this.employees.map(e => {
       return {

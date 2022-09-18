@@ -182,8 +182,11 @@
     </div>
   </ng-template>
   <ng-template #attachmentsTab>
-    <attachments [caseId]="model?.id" [caseType]="model?.caseType"
-    [service]="service.documentService"></attachments>
+    <attachments
+      [caseId]="model?.id" [disabled]="isAttachmentReadonly()"
+      [caseType]="model?.caseType"
+      [service]="service.documentService"
+    ></attachments>
   </ng-template>
 
 </div>
