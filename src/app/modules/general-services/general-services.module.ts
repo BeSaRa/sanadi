@@ -22,6 +22,18 @@ import { CoordinationWithOrganizationsRequestComponent } from './pages/coordinat
 import { NpoContactOfficerComponent } from './pages/npo-management/npo-contact-officer/npo-contact-officer.component';
 import { FounderMembersComponent } from './pages/npo-management/founder-members/founder-members.component';
 import { RealBeneficiaryComponent } from './pages/npo-management/real-beneficiary/real-beneficiary.component';
+import { CharityOrganizationUpdateComponent } from './pages/charity-organization-update/charity-organization-update.component';
+import { OrganizationOfficersComponent } from './shared/organization-officers/organization-officers.component';
+import { CharityBranchComponent } from './shared/charity-branch/charity-branch.component';
+import { MembersComponent } from './shared/members/members.component';
+import { RealBeneficiariesComponent } from './shared/real-beneficiaries/real-beneficiaries.component';
+import { ExternalOfficesPopupComponent } from './popups/external-offices-popup/external-offices-popup.component';
+import { OfficeServicesModule } from '../office-services/office-services.module';
+import { ForeignAidClassificationsComponent } from './shared/foreign-aid-classifications/foreign-aid-classifications.component';
+import { WorkAreasComponent } from './shared/work-areas/work-areas.component';
+import { BylawsComponent } from './shared/bylaws/bylaws.component';
+import { CharityReportsComponent } from './shared/risk-reports/risk-reports.component';
+import { CharityDecisionsComponent } from './shared/charity-decisions/charity-decisions.component';
 
 
 @NgModule({
@@ -41,12 +53,24 @@ import { RealBeneficiaryComponent } from './pages/npo-management/real-beneficiar
     NpoManagementComponent,
     FounderMembersComponent,
     RealBeneficiaryComponent,
-    NpoBankAccountComponent
+    NpoBankAccountComponent,
+    CharityOrganizationUpdateComponent,
+    OrganizationOfficersComponent,
+    CharityBranchComponent,
+    MembersComponent,
+    RealBeneficiariesComponent,
+    ExternalOfficesPopupComponent,
+    ForeignAidClassificationsComponent,
+    WorkAreasComponent,
+    BylawsComponent,
+    CharityReportsComponent,
+    CharityDecisionsComponent,
   ],
   imports: [
     CommonModule,
     EServicesMainModule,
     GeneralServicesRoutingModule,
+    OfficeServicesModule
   ]
 })
 export class GeneralServicesModule { }

@@ -1,27 +1,24 @@
-import { catchError } from 'rxjs/operators';
-import { switchMap } from 'rxjs/operators';
-import { filter } from 'rxjs/operators';
-import { exhaustMap } from 'rxjs/operators';
-import { Component, ViewChild } from '@angular/core';
-import { OrgUser } from '@app/models/org-user';
-import { takeUntil } from 'rxjs/operators';
-import { OrganizationUserService } from '@app/services/organization-user.service';
-import { DialogRef } from '@app/shared/models/dialog-ref';
-import { LangService } from '@app/services/lang.service';
-import { UserClickOn } from '@app/enums/user-click-on.enum';
-import { DialogService } from '@app/services/dialog.service';
-import { ToastService } from '@app/services/toast.service';
-import { ConfigurationService } from '@app/services/configuration.service';
-import { IGridAction } from '@app/interfaces/i-grid-action';
-import { EmployeeService } from '@app/services/employee.service';
-import { SharedService } from '@app/services/shared.service';
-import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
-import { AdminGenericComponent } from '@app/generics/admin-generic-component';
-import { TableComponent } from '@app/shared/components/table/table.component';
-import { SortEvent } from '@app/interfaces/sort-event';
-import { CommonUtils } from '@app/helpers/common-utils';
+import {catchError, exhaustMap, filter, switchMap, takeUntil} from 'rxjs/operators';
+import {Component, ViewChild} from '@angular/core';
+import {OrgUser} from '@app/models/org-user';
+import {OrganizationUserService} from '@app/services/organization-user.service';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {LangService} from '@app/services/lang.service';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {DialogService} from '@app/services/dialog.service';
+import {ToastService} from '@app/services/toast.service';
+import {ConfigurationService} from '@app/services/configuration.service';
+import {IGridAction} from '@app/interfaces/i-grid-action';
+import {EmployeeService} from '@app/services/employee.service';
+import {SharedService} from '@app/services/shared.service';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {AdminGenericComponent} from '@app/generics/admin-generic-component';
+import {TableComponent} from '@app/shared/components/table/table.component';
+import {SortEvent} from '@app/interfaces/sort-event';
+import {CommonUtils} from '@app/helpers/common-utils';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
-import { Subject, of } from 'rxjs';
+import {of, Subject} from 'rxjs';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 
 @Component({
   selector: 'app-organization-user',
@@ -31,6 +28,7 @@ import { Subject, of } from 'rxjs';
 export class OrganizationUserComponent extends AdminGenericComponent<OrgUser, OrganizationUserService> {
   view$: Subject<OrgUser> = new Subject<OrgUser>();
   usePagination = true;
+
   constructor(public service: OrganizationUserService,
               public langService: LangService,
               private toast: ToastService,
@@ -43,7 +41,7 @@ export class OrganizationUserComponent extends AdminGenericComponent<OrgUser, Or
 
   _init() {
     this.listenToLoadDone();
-    this.listenToView()
+    this.listenToView();
   }
 
   @ViewChild('table') table!: TableComponent;
@@ -66,7 +64,7 @@ export class OrganizationUserComponent extends AdminGenericComponent<OrgUser, Or
         value2 = !CommonUtils.isValidValue(b) ? '' : b.statusInfo?.getName().toLowerCase();
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     }
-  }
+  };
 
   commonStatusEnum = CommonStatusEnum;
   bulkActionsList: IGridAction[] = [
@@ -80,11 +78,51 @@ export class OrganizationUserComponent extends AdminGenericComponent<OrgUser, Or
   ];
 
   actions: IMenuItem<OrgUser>[] = [
+    // edit
     {
       type: 'action',
-      icon: 'mdi-account-edit',
       label: 'btn_edit',
-      onClick: item => this.edit(item),
+      icon: ActionIconsEnum.EDIT,
+      onClick: item => this.edit$.next(item),
+      show: () => this.empService.checkPermissions(this.permissionsEnum.EDIT_ORG_USER)
+    },
+    // view
+    {
+      type: 'action',
+      label: 'view',
+      icon: ActionIconsEnum.VIEW,
+      onClick: item => this.view$.next(item)
+    },
+    // logs
+    {
+      type: 'action',
+      icon: ActionIconsEnum.HISTORY,
+      label: 'show_logs',
+      onClick: (item) => this.showAuditLogs(item)
+    },
+    // activate
+    {
+      type: 'action',
+      icon: ActionIconsEnum.STATUS,
+      label: 'btn_activate',
+      onClick: (item) => this.toggleStatus(item),
+      displayInGrid: false,
+      show: (item) => {
+        return this.empService.checkPermissions(this.permissionsEnum.EDIT_ORG_USER)
+          && (item.status !== CommonStatusEnum.RETIRED && item.status === CommonStatusEnum.DEACTIVATED);
+      }
+    },
+    // deactivate
+    {
+      type: 'action',
+      icon: ActionIconsEnum.STATUS,
+      label: 'btn_deactivate',
+      onClick: (item) => this.toggleStatus(item),
+      displayInGrid: false,
+      show: (item) => {
+        return this.empService.checkPermissions(this.permissionsEnum.EDIT_ORG_USER)
+          && (item.status !== CommonStatusEnum.RETIRED && item.status === CommonStatusEnum.ACTIVATED);
+      }
     }
   ];
 
@@ -145,6 +183,7 @@ export class OrganizationUserComponent extends AdminGenericComponent<OrgUser, Or
         this.table && this.table.clearSelection();
       });
   }
+
   listenToView(): void {
     this.view$
       .pipe(takeUntil(this.destroy$))
@@ -155,6 +194,7 @@ export class OrganizationUserComponent extends AdminGenericComponent<OrgUser, Or
       .pipe(switchMap(dialog => dialog.onAfterClose$))
       .subscribe(() => this.reload$.next(null));
   }
+
   showAuditLogs(user: OrgUser, $event?: MouseEvent): void {
     $event?.preventDefault();
     user.showAuditLogs($event)

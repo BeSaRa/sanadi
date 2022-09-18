@@ -108,6 +108,7 @@ import { ReturnToOrganizationPopupComponent } from './popups/return-to-organizat
 import { MultiAttachmentDirective } from './directives/multi-attachment.directive';
 import { CustomAttachmentPopupComponent } from './popups/custom-attachment-popup/custom-attachment-popup.component';
 
+
 @NgModule({
   declarations: [
     FooterComponent,
@@ -284,7 +285,7 @@ import { CustomAttachmentPopupComponent } from './popups/custom-attachment-popup
     DatePipe,
     FollowupComponent,
     FollowupPopupComponent,
-    MultiAttachmentDirective
+    MultiAttachmentDirective,
   ]
 })
 export class SharedModule {

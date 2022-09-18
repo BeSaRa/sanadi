@@ -89,7 +89,7 @@ export class UserTeamComponent implements OnInit, OnDestroy {
   }
 
   loadTeams(): void {
-    this.teamService.loadIfNotExists()
+    this.teamService.loadAsLookups()
       .pipe(takeUntil(this.destroy$))
       .pipe(map(result => {
         return this.model.isInternal() ? result.filter(item => item.parentDeptId > -1) : result;

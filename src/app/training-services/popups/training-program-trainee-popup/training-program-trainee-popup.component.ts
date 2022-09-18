@@ -157,7 +157,7 @@ export class TrainingProgramTraineePopupComponent implements OnInit, OnDestroy {
     this.loadAuthorityUsers$
       .pipe(takeUntil(this.destroy$))
       .pipe(exhaustMap(() => {
-        return this.internalUserService.loadComposite();
+        return this.internalUserService.loadAsLookups();
       }))
       .subscribe((users) => {
         this.authorityUsers = users;
@@ -168,7 +168,7 @@ export class TrainingProgramTraineePopupComponent implements OnInit, OnDestroy {
     this.loadOrganizations$
       .pipe(takeUntil(this.destroy$))
       .pipe(exhaustMap(() => {
-        return this.organizationUnitService.loadComposite();
+        return this.organizationUnitService.loadAsLookups();
       }))
       .subscribe((organizations) => {
         this.organizations = organizations;
@@ -224,7 +224,7 @@ export class TrainingProgramTraineePopupComponent implements OnInit, OnDestroy {
         this.form.reset();
         const user = this.organizationUsers.find(x => x.id == this.selectedOrganizationUserId)!;
         this.mapUserToForm(user);
-        console.log('selected org user', this.selectedOrganizationUserId);
+        // console.log('selected org user', this.selectedOrganizationUserId);
       });
   }
 

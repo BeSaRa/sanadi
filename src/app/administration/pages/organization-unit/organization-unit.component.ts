@@ -1,23 +1,24 @@
-import { Component, ViewChild } from '@angular/core';
-import { LangService } from '@app/services/lang.service';
-import { DialogService } from '@app/services/dialog.service';
-import { ToastService } from '@app/services/toast.service';
-import { UserClickOn } from '@app/enums/user-click-on.enum';
-import { DialogRef } from '@app/shared/models/dialog-ref';
-import { takeUntil } from 'rxjs/operators';
-import { OrgUnit } from '@app/models/org-unit';
-import { OrganizationUnitService } from '@app/services/organization-unit.service';
-import { LookupService } from '@app/services/lookup.service';
-import { ConfigurationService } from '@app/services/configuration.service';
-import { IGridAction } from '@app/interfaces/i-grid-action';
-import { EmployeeService } from '@app/services/employee.service';
-import { SharedService } from '@app/services/shared.service';
-import { TableComponent } from '@app/shared/components/table/table.component';
-import { SortEvent } from '@app/interfaces/sort-event';
-import { CommonUtils } from '@app/helpers/common-utils';
-import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
-import { OrgStatusEnum } from '@app/enums/status.enum';
-import { AdminGenericComponent } from '@app/generics/admin-generic-component';
+import {Component, ViewChild} from '@angular/core';
+import {LangService} from '@app/services/lang.service';
+import {DialogService} from '@app/services/dialog.service';
+import {ToastService} from '@app/services/toast.service';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {takeUntil} from 'rxjs/operators';
+import {OrgUnit} from '@app/models/org-unit';
+import {OrganizationUnitService} from '@app/services/organization-unit.service';
+import {LookupService} from '@app/services/lookup.service';
+import {ConfigurationService} from '@app/services/configuration.service';
+import {IGridAction} from '@app/interfaces/i-grid-action';
+import {EmployeeService} from '@app/services/employee.service';
+import {SharedService} from '@app/services/shared.service';
+import {TableComponent} from '@app/shared/components/table/table.component';
+import {SortEvent} from '@app/interfaces/sort-event';
+import {CommonUtils} from '@app/helpers/common-utils';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {OrgStatusEnum} from '@app/enums/status.enum';
+import {AdminGenericComponent} from '@app/generics/admin-generic-component';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 
 @Component({
   selector: 'app-organization-unit',
@@ -39,45 +40,39 @@ export class OrganizationUnitComponent extends AdminGenericComponent<OrgUnit, Or
     {
       type: 'action',
       label: 'btn_edit',
-      icon: 'mdi-pen',
-      onClick: (item: OrgUnit) => this.edit(item),
-      show: () => {
-        return this.empService.checkPermissions('ADMIN_EDIT_OU');
-      }
-    },
-    // delete
-    {
-      type: 'action',
-      label: 'btn_delete',
-      icon: 'mdi-close-box',
-      show: () => false,
-      onClick: (item: OrgUnit) => this.deactivate(item)
+      icon: ActionIconsEnum.EDIT,
+      onClick: (item: OrgUnit) => this.edit$.next(item),
+      show: () => this.empService.checkPermissions(this.permissionsEnum.EDIT_ORGANIZATION)
     },
     // logs
     {
       type: 'action',
-      icon: 'mdi-view-list-outline',
-      label: 'logs',
+      icon: ActionIconsEnum.HISTORY,
+      label: 'show_logs',
       onClick: (item: OrgUnit) => this.showAuditLogs(item)
     },
     // activate
     {
       type: 'action',
-      icon: 'mdi-list-status',
+      icon: ActionIconsEnum.STATUS,
       label: 'btn_activate',
       onClick: (item: OrgUnit) => this.toggleStatus(item),
+      displayInGrid: false,
       show: (item) => {
-        return item.status !== OrgStatusEnum.RETIRED && item.status === OrgStatusEnum.INACTIVE;
+        return this.empService.checkPermissions(this.permissionsEnum.EDIT_ORGANIZATION)
+          && (item.status !== OrgStatusEnum.RETIRED && item.status === OrgStatusEnum.INACTIVE);
       }
     },
     // deactivate
     {
       type: 'action',
-      icon: 'mdi-list-status',
+      icon: ActionIconsEnum.STATUS,
       label: 'btn_deactivate',
       onClick: (item: OrgUnit) => this.toggleStatus(item),
+      displayInGrid: false,
       show: (item) => {
-        return item.status !== OrgStatusEnum.RETIRED && item.status === OrgStatusEnum.ACTIVE;
+        return this.empService.checkPermissions(this.permissionsEnum.EDIT_ORGANIZATION)
+          && (item.status !== OrgStatusEnum.RETIRED && item.status === OrgStatusEnum.ACTIVE);
       }
     }
   ];
@@ -99,7 +94,7 @@ export class OrganizationUnitComponent extends AdminGenericComponent<OrgUnit, Or
         value2 = !CommonUtils.isValidValue(b) ? '' : b.getOrgStatusLookup()?.getName().toLowerCase();
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     }
-  }
+  };
 
   get selectedRecords(): OrgUnit[] {
     return this.table.selection.selected;

@@ -81,7 +81,7 @@ export class OrganizationUnitServicesComponent implements OnInit {
   }
 
   loadServicesDataList() {
-    this.serviceDataService.loadComposite().subscribe(list => {
+    this.serviceDataService.loadAsLookups().subscribe(list => {
       this.serviceDataList = list;
     });
   }

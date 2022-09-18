@@ -64,8 +64,8 @@ export class OrganizationUserService extends CrudWithDialogGenericService<OrgUse
     orgUserPermissions: OrgUserPermission[]
   }> {
     return forkJoin({
-      customRoles: this.customRoleService.load(),
-      orgUnits: this.organizationUnitService.load(),
+      customRoles: this.customRoleService.loadAsLookups(),
+      orgUnits: this.organizationUnitService.loadAsLookups(),
       orgUserPermissions: !userId ? of([]) : this.orgUserPermissionService.loadByUserId(userId)
     });
   }

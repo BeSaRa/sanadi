@@ -1,19 +1,17 @@
-import { switchMap } from 'rxjs/operators';
-import { catchError } from 'rxjs/operators';
+import {catchError, exhaustMap, filter, switchMap, takeUntil} from 'rxjs/operators';
 import {Component} from '@angular/core';
 import {AdminGenericComponent} from '@app/generics/admin-generic-component';
 import {InternalUser} from '@app/models/internal-user';
 import {LangService} from '@app/services/lang.service';
 import {InternalUserService} from '@app/services/internal-user.service';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import { Subject, of } from 'rxjs';
-import {exhaustMap, filter, takeUntil} from 'rxjs/operators';
+import {of, Subject} from 'rxjs';
 import {ToastService} from '@app/services/toast.service';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
 import {SortEvent} from '@app/interfaces/sort-event';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {DialogRef} from '@app/shared/models/dialog-ref';
-import { ActionIconsEnum } from '@app/enums/action-icons-enum';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 
 @Component({
   selector: 'internal-user',
@@ -26,17 +24,12 @@ export class InternalUserComponent extends AdminGenericComponent<InternalUser, I
   commonStatusEnum = CommonStatusEnum;
   view$: Subject<InternalUser> = new Subject<InternalUser>();
   actions: IMenuItem<InternalUser>[] = [
-    {
-      type: 'action',
-      label: 'btn_reload',
-      icon: 'mdi-reload',
-      onClick: _ => this.reload$.next(null),
-    },
+    // edit
     {
       type: 'action',
       label: 'btn_edit',
-      icon: 'mdi-account-edit',
-      onClick: (user) => this.edit$.next(user)
+      icon: ActionIconsEnum.EDIT,
+      onClick: (user) => this.edit(user)
     },
     // view
     {
@@ -50,6 +43,7 @@ export class InternalUserComponent extends AdminGenericComponent<InternalUser, I
       type: 'action',
       icon: 'mdi-list-status',
       label: 'btn_activate',
+      displayInGrid: false,
       onClick: (item) => this.toggleStatus(item),
       show: (item) => {
         return item.status === CommonStatusEnum.DEACTIVATED;
@@ -60,6 +54,7 @@ export class InternalUserComponent extends AdminGenericComponent<InternalUser, I
       type: 'action',
       icon: 'mdi-list-status',
       label: 'btn_deactivate',
+      displayInGrid: false,
       onClick: (item) => this.toggleStatus(item),
       show: (item) => {
         return item.status === CommonStatusEnum.ACTIVATED;

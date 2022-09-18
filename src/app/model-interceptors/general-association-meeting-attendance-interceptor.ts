@@ -1,11 +1,11 @@
-import {IModelInterceptor} from '@contracts/i-model-interceptor';
-import {GeneralAssociationMeetingAttendance} from '@app/models/general-association-meeting-attendance';
-import {DateUtils} from '@helpers/date-utils';
-import {FactoryService} from '@services/factory.service';
-import {GeneralAssociationMeetingAttendanceService} from '@services/general-association-meeting-attendance.service';
-import {GeneralAssociationExternalMember} from '@app/models/general-association-external-member';
-import {AdminResult} from '@app/models/admin-result';
-import {GeneralAssociationInternalMember} from '@app/models/general-association-internal-member';
+import { IModelInterceptor } from '@contracts/i-model-interceptor';
+import { GeneralAssociationMeetingAttendance } from '@app/models/general-association-meeting-attendance';
+import { DateUtils } from '@helpers/date-utils';
+import { FactoryService } from '@services/factory.service';
+import { GeneralAssociationMeetingAttendanceService } from '@services/general-association-meeting-attendance.service';
+import { GeneralAssociationExternalMember } from '@app/models/general-association-external-member';
+import { AdminResult } from '@app/models/admin-result';
+import { GeneralAssociationInternalMember } from '@app/models/general-association-internal-member';
 
 export class GeneralAssociationMeetingAttendanceInterceptor implements IModelInterceptor<GeneralAssociationMeetingAttendance> {
   caseInterceptor?: IModelInterceptor<GeneralAssociationMeetingAttendance> | undefined;
@@ -51,7 +51,7 @@ export class GeneralAssociationMeetingAttendanceInterceptor implements IModelInt
     }
     model.meetingDate = DateUtils.changeDateToDatepicker(model.meetingDate);
     model.requestTypeInfo = model.requestTypeInfo ? AdminResult.createInstance(model.requestTypeInfo) : AdminResult.createInstance({});
-
+    model.meetingTypeInfo = AdminResult.createInstance(model.meetingTypeInfo || {});
     return model;
   }
 }

@@ -142,4 +142,5 @@ export interface ILookupMap {
   WORK_FIELD: Lookup[];
   NPORequestType: Lookup[];
   NPODecisions: Lookup[];
+  OrgMemberRole: Lookup[];
 }
