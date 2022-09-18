@@ -1,3 +1,4 @@
+import { TabComponent } from './../../../../shared/components/tab/tab.component';
 import { AttachmentsComponent } from '@app/shared/components/attachments/attachments.component';
 import { CommonCaseStatus } from './../../../../enums/common-case-status.enum';
 import { OpenFrom } from './../../../../enums/open-from.enum';
@@ -59,6 +60,8 @@ EmploymentService
     identificationNumber: new UntypedFormControl(''),
     passportNumber: new UntypedFormControl(''),
   })
+  loadAttachments: boolean = false;
+
   EmploymentCategory: Lookup[] =
     this.lookupService.listByCategory.EmploymentCategory.slice().sort(
       (a, b) => a.lookupKey - b.lookupKey
@@ -204,6 +207,10 @@ EmploymentService
     }
 
     return !isAllowed;
+  }
+
+  onTabChange($event: TabComponent) {
+    this.loadAttachments = $event.name === this.tabsData.attachments.name;
   }
 
   _saveFail(error: any): void {

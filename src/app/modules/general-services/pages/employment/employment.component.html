@@ -1,5 +1,5 @@
 <div class="d-flex flex-column">
-  <tabs-list [accordionView]="accordionView">
+  <tabs-list [accordionView]="accordionView" (onTabChange)="onTabChange($event)">
     <tab
       [name]="tabsData.basicInfo.name"
       [hasError]="getTabInvalidStatus('basicInfo')"
@@ -182,11 +182,9 @@
     </div>
   </ng-template>
   <ng-template #attachmentsTab>
-    <attachments
-      [caseId]="model?.id" [disabled]="isAttachmentReadonly()"
-      [caseType]="model?.caseType"
-      [service]="service.documentService"
-    ></attachments>
+    <attachments [disabled]="isAttachmentReadonly()" [caseId]="model?.id" [caseType]="model?.caseType"
+                 [service]="service.documentService"
+                 [load]="loadAttachments"></attachments>
   </ng-template>
 
 </div>
