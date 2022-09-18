@@ -1371,4 +1371,5 @@ export interface ILanguageKeys {
   id_expiry_date: string;
   id_date: string;
   birth_location: string;
+  registration_authority: string;
 }

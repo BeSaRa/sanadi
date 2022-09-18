@@ -1,11 +1,10 @@
+import { NpoBankAccountComponent } from './npo-bank-account/npo-bank-account.component';
 import { RealBeneficiaryComponent } from './real-beneficiary/real-beneficiary.component';
 import { FounderMembersComponent } from './founder-members/founder-members.component';
 import { NpoContactOfficerComponent } from './npo-contact-officer/npo-contact-officer.component';
 import { IMyInputFieldChanged } from 'angular-mydatepicker';
 import { DateUtils } from './../../../../helpers/date-utils';
 import { CountryService } from './../../../../services/country.service';
-import { Country } from './../../../../models/country';
-import { BankAccountComponent } from './../../../e-services-main/shared/bank-account/bank-account.component';
 import { ReadinessStatus, DatepickerOptionsMap } from './../../../../types/types';
 import { ILanguageKeys } from './../../../../interfaces/i-language-keys';
 import { IKeyValue } from './../../../../interfaces/i-key-value';
@@ -17,11 +16,11 @@ import { OpenFrom } from './../../../../enums/open-from.enum';
 import { CommonCaseStatus } from './../../../../enums/common-case-status.enum';
 import { ToastService } from './../../../../services/toast.service';
 import { DialogService } from './../../../../services/dialog.service';
-import { tap, filter, takeUntil } from 'rxjs/operators';
+import { tap, filter } from 'rxjs/operators';
 import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
 import { NpoManagementService } from './../../../../services/npo-management.service';
 import { NpoManagement } from './../../../../models/npo-management';
-import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
+import { Component, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { UntypedFormGroup, UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { SaveTypes } from '@app/enums/save-types';
@@ -30,6 +29,7 @@ import { Observable, of } from 'rxjs';
 import { EmployeeService } from '@app/services/employee.service';
 import { AdminLookupService } from '@app/services/admin-lookup.service';
 import { AdminLookupTypeEnum } from '@app/enums/admin-lookup-type-enum';
+import { NPORequestType } from '@app/enums/npo-requestType.enum';
 
 @Component({
   selector: 'app-npo-management',
@@ -40,7 +40,6 @@ export class NpoManagementComponent extends EServicesGenericComponent<
 NpoManagement,
 NpoManagementService
 > {
-  countriesList: Country[] = [];
   NPORequestTypesList: Lookup[] = this.lookupService.listByCategory.NPORequestType.slice().sort((a, b) => a.lookupKey - b.lookupKey);
   activityTypesList: AdminLookup[] = [];
   // Clearance Type & Disbandment Type
@@ -53,7 +52,7 @@ NpoManagementService
   founderMemberTabStatus: ReadinessStatus = 'READY';
   realBeneficiaryTabStatus: ReadinessStatus = 'READY';
 
-  @ViewChild('bankAccountsTab') bankAccountComponentRef!: BankAccountComponent;
+  @ViewChild('bankAccountsTab') bankAccountComponentRef!: NpoBankAccountComponent;
   @ViewChild('contactOfficersTab') contactOfficerComponentRef!: NpoContactOfficerComponent;
   @ViewChild('founderMemberTab') founderMemberComponentRef!: FounderMembersComponent;
   @ViewChild('realBeneficiaryTab') realBeneficiaryComponentRef!: RealBeneficiaryComponent;
@@ -67,11 +66,6 @@ NpoManagementService
     contectInfo: {
       name: "contectInfoTab",
       langKey: "lbl_contact_info" as keyof ILanguageKeys,
-      validStatus: () => this.form.valid,
-    },
-    nationalAddress: {
-      name: "nationalAddressTab",
-      langKey: "lbl_national_address" as keyof ILanguageKeys,
       validStatus: () => this.form.valid,
     },
     founderMember: {
@@ -113,6 +107,9 @@ NpoManagementService
     clearanceDate: DateUtils.getDatepickerOptions({
       disablePeriod: "none",
     }),
+    registrationDate: DateUtils.getDatepickerOptions({
+      disablePeriod: "none",
+    }),
   };
   constructor(
     public service: NpoManagementService,
@@ -128,6 +125,11 @@ NpoManagementService
     super();
   }
   handleReadonly(): void {
+    if (this.requestTypeField.value == NPORequestType.Cancel || this.requestTypeField.value == NPORequestType.Clearance || this.requestTypeField.value == NPORequestType.Disbandment) {
+      this.readonly = true;
+    } else {
+      this.readonly = false;
+    }
     // if record is new, no readonly (don't change as default is readonly = false)
     if (!this.model?.id) {
       return;
@@ -165,7 +167,6 @@ NpoManagementService
     return new NpoManagement();
   }
   _initComponent(): void {
-    this.loadCountries();
     this._buildForm();
     this.adminLookupService.loadAsLookups(AdminLookupTypeEnum.ACTIVITY_TYPE).subscribe((data: never[] | AdminLookup[]) => {
       this.activityTypesList = data;
@@ -176,7 +177,6 @@ NpoManagementService
     this.form = new UntypedFormGroup({
       basicInfo: this.fb.group(model.basicInfo),
       contectInfo: this.fb.group(model.contectInfo),
-      nationalAddress: this.fb.group(model.nationalAddress),
     });
   }
   _afterBuildForm(): void {
@@ -246,11 +246,7 @@ NpoManagementService
       this._resetForm();
       this.requestTypeField.setValue(requestTypeValue);
     }
-  }
-  private loadCountries(): void {
-    this.countryService.loadAsLookups()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((countries) => this.countriesList = countries);
+    this.handleReadonly();
   }
   private invalidFormMessage() {
     this.dialog.error(this.lang.map.msg_all_required_fields_are_filled);
@@ -287,13 +283,22 @@ NpoManagementService
       }
     });
   }
+  get isRegistrationAuthority() {
+    return false
+  }
+  get isNew() {
+    return this.requestTypeField.value == NPORequestType.New
+  }
+  get isClearance() {
+    return this.requestTypeField.value == NPORequestType.Clearance
+  }
+  get isDisbandment() {
+    return this.requestTypeField.value == NPORequestType.Disbandment
+  }
   get basicInfo() {
     return this.form.get('basicInfo') as UntypedFormGroup;
   }
   get contectInfo() {
     return this.form.get('contectInfo') as UntypedFormGroup;
-  }
-  get nationalAddress() {
-    return this.form.get('nationalAddress') as UntypedFormGroup;
   }
 }

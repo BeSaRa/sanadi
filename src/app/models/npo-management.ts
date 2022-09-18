@@ -1,9 +1,9 @@
+import { NpoBankAccount } from './npo-bank-account';
 import { NpoContactOfficer } from '@app/models/npo-contact-officer';
 import { FounderMembers } from '@app/models/founder-members';
 import { RealBeneficiary } from './real-beneficiary';
 import { DateUtils } from './../helpers/date-utils';
 import { Validators } from '@angular/forms';
-import { BankAccount } from './bank-account';
 import { IMyDateModel } from 'angular-mydatepicker';
 import { CustomValidators } from './../validators/custom-validators';
 import { FactoryService } from './../services/factory.service';
@@ -36,16 +36,17 @@ export class NpoManagement
   englishName!: string;
 
   activityType!: number;
-  registrationAuthority!: number;
   clearanceType!: number;
   disbandmentType!: number;
-  registrationDate!: Date | IMyDateModel;
   establishmentDate!: Date | IMyDateModel;
   disbandmentDate!: Date | IMyDateModel;
   clearanceDate!: Date | IMyDateModel;
+  // TODO!: have to complete from the admin
+  registrationAuthority!: number;
+  registrationDate!: Date | IMyDateModel;
+  registrationNumber!: string;
 
   clearanceName!: string;
-  registrationNumber!: string;
   unifiedEconomicRecord!: string;
   // contact info
   phone!: string;
@@ -66,7 +67,7 @@ export class NpoManagement
   // readonly info
   contactOfficerList: NpoContactOfficer[] = [];
   founderMemberList: FounderMembers[] = [];
-  bankAccountList: BankAccount[] = [];
+  bankAccountList: NpoBankAccount[] = [];
   realBeneficiaryList: RealBeneficiary[] = [];
 
   subject!: string;
@@ -102,6 +103,7 @@ export class NpoManagement
       establishmentDate,
       disbandmentDate,
       clearanceDate,
+      registrationDate,
       //
       email, phone,
       //
@@ -147,12 +149,11 @@ export class NpoManagement
         establishmentDate: controls ? [DateUtils.changeDateToDatepicker(establishmentDate), [CustomValidators.required]] : DateUtils.changeDateToDatepicker(establishmentDate),
         disbandmentDate: controls ? [DateUtils.changeDateToDatepicker(disbandmentDate), [CustomValidators.required]] : DateUtils.changeDateToDatepicker(disbandmentDate),
         clearanceDate: controls ? [DateUtils.changeDateToDatepicker(clearanceDate), [CustomValidators.required]] : DateUtils.changeDateToDatepicker(clearanceDate),
+        registrationDate: controls ? [DateUtils.changeDateToDatepicker(registrationDate), [CustomValidators.required]] : DateUtils.changeDateToDatepicker(registrationDate),
       },
       contectInfo: {
         email: controls ? [email, [CustomValidators.required, CustomValidators.maxLength(50), CustomValidators.pattern('EMAIL')]] : email,
         phone: controls ? [phone, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : phone,
-      },
-      nationalAddress: {
         zoneNumber: controls ? [zoneNumber, [CustomValidators.required, CustomValidators.maxLength(200)]] : zoneNumber,
         streetNumber: controls ? [streetNumber, [CustomValidators.required, CustomValidators.maxLength(200)]] : streetNumber,
         buildingNumber: controls ? [buildingNumber, [CustomValidators.required, CustomValidators.maxLength(200)]] : buildingNumber,
