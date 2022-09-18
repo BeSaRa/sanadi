@@ -11,8 +11,8 @@
                        [notFoundText]="lang.map.msg_not_found"
                        [readonly]="readonly" appendTo="body"
                        formControlName="bankId" validationClasses="bankId">
-              <ng-option *ngFor="let option of bankList" [value]="option">
-                {{option}}
+              <ng-option *ngFor="let option of bankList" [value]="option.lookupKey">
+                {{option.getName()}}
               </ng-option>
             </ng-select>
             <app-field-error-message controlName="bankId"></app-field-error-message>
@@ -20,7 +20,7 @@
           <!-- Account Number -->
           <div class="col-sm-12 col-md-6 mb-4 position-relative">
             <label asteriskIfRequired="accountNumber" for="accountNumber" class="form-label">{{lang.map.account_number}}</label>
-            <input id="accountNumber" validationClasses="accountNumber"
+            <input id="accountNumber" [readonly]="readonly" validationClasses="accountNumber"
                    formControlName="accountNumber" trimInput class="form-control">
             <app-field-error-message controlName="accountNumber"></app-field-error-message>
           </div>
@@ -29,7 +29,7 @@
           <!-- IBAN -->
           <div class="col-sm-12 col-md-6 mb-4 position-relative">
             <label asteriskIfRequired="iBan" for="iBan" class="form-label">{{lang.map.iban}}</label>
-            <input id="iBan" validationClasses="iBan"
+            <input id="iBan" validationClasses="iBan" [readonly]="readonly"
                    formControlName="iBan" trimInput class="form-control">
             <app-field-error-message controlName="iBan"></app-field-error-message>
           </div>
@@ -65,10 +65,6 @@
 
 <table *ngIf="list.length" class="table mt-3 table-striped table-bordered caption-top" cdk-table
        [dataSource]="listDataSource">
-  <ng-container cdkColumnDef="bankName">
-    <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.bank_name}}</th>
-    <td cdk-cell *cdkCellDef="let row"> {{row.bankName}} </td>
-  </ng-container>
   <ng-container cdkColumnDef="accountNumber">
     <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.account_number}}</th>
     <td cdk-cell *cdkCellDef="let row"> {{row.accountNumber}} </td>
@@ -76,10 +72,6 @@
   <ng-container cdkColumnDef="iBan">
     <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.iban}}</th>
     <td cdk-cell *cdkCellDef="let row"> {{row.iBan}} </td>
-  </ng-container>
-  <ng-container cdkColumnDef="swiftCode">
-    <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.swift_code}}</th>
-    <td cdk-cell *cdkCellDef="let row"> {{row.swiftCode}} </td>
   </ng-container>
   <ng-container cdkColumnDef="actions">
     <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>

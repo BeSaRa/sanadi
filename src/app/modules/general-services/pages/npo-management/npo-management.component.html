@@ -330,6 +330,9 @@
   <ng-template #contectInfoTabTemplate>
     <form [formGroup]="contectInfo" autocomplete="off">
       <div class="row">
+        <div>
+          <h5>{{lang.map.lbl_contact_info}}</h5>
+        </div>
         <!-- Email -->
         <div class="col-sm-12 col-md-6 mb-4 position-relative">
           <label asteriskIfRequired="email" for="email" class="form-label">{{lang.map.lbl_email}}</label>
@@ -342,6 +345,9 @@
                 for="phone">{{lang.map.lbl_phone}}</label>
           <input id="phone" validationClasses="phone" [readonly]="readonly" formControlName="phone" class="form-control">
           <app-field-error-message controlName="phone"></app-field-error-message>
+        </div>
+        <div class="mt-2">
+          <h5>{{lang.map.lbl_national_address}}</h5>
         </div>
         <!-- zone number -->
         <div class="col-sm-6 col-md-4 mb-4 position-relative">
@@ -547,6 +553,7 @@
       [caseType]="model?.caseType"
       [readonly]="readonly"
       [list]="model?.bankAccountList || []"
+      [bankList]="bankList"
       (readyEvent)="bankDetailsTabStatus = $event"
       ></npo-bank-account>
   </ng-template>

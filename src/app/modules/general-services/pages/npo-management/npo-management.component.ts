@@ -1,10 +1,10 @@
+import { BankService } from '@services/bank.service';
 import { NpoBankAccountComponent } from './npo-bank-account/npo-bank-account.component';
 import { RealBeneficiaryComponent } from './real-beneficiary/real-beneficiary.component';
 import { FounderMembersComponent } from './founder-members/founder-members.component';
 import { NpoContactOfficerComponent } from './npo-contact-officer/npo-contact-officer.component';
 import { IMyInputFieldChanged } from 'angular-mydatepicker';
 import { DateUtils } from './../../../../helpers/date-utils';
-import { CountryService } from './../../../../services/country.service';
 import { ReadinessStatus, DatepickerOptionsMap } from './../../../../types/types';
 import { ILanguageKeys } from './../../../../interfaces/i-language-keys';
 import { IKeyValue } from './../../../../interfaces/i-key-value';
@@ -20,7 +20,7 @@ import { tap, filter } from 'rxjs/operators';
 import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
 import { NpoManagementService } from './../../../../services/npo-management.service';
 import { NpoManagement } from './../../../../models/npo-management';
-import { Component, ChangeDetectorRef, ViewChild } from '@angular/core';
+import { Component, ChangeDetectorRef, ViewChild, Input } from '@angular/core';
 import { UntypedFormGroup, UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { SaveTypes } from '@app/enums/save-types';
@@ -42,6 +42,7 @@ NpoManagementService
 > {
   NPORequestTypesList: Lookup[] = this.lookupService.listByCategory.NPORequestType.slice().sort((a, b) => a.lookupKey - b.lookupKey);
   activityTypesList: AdminLookup[] = [];
+  bankList: Lookup[]= [];
   // Clearance Type & Disbandment Type
   NPODecisionsList: Lookup[] = this.lookupService.listByCategory.NPODecisions;
   // TODO! fill this list after done from admin
@@ -118,7 +119,7 @@ NpoManagementService
     private toast: ToastService,
     private adminLookupService: AdminLookupService,
     private cd: ChangeDetectorRef,
-    private countryService: CountryService,
+    private bankService: BankService,
     private dialog: DialogService,
     private employeeService: EmployeeService,
     public lang: LangService) {
@@ -168,6 +169,9 @@ NpoManagementService
   }
   _initComponent(): void {
     this._buildForm();
+    this.bankService.getBankLookup().subscribe((data) => {
+      this.bankList = data;
+    })
     this.adminLookupService.loadAsLookups(AdminLookupTypeEnum.ACTIVITY_TYPE).subscribe((data: never[] | AdminLookup[]) => {
       this.activityTypesList = data;
     })

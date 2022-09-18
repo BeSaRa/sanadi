@@ -18,7 +18,7 @@ import { CaseTypes } from '@app/enums/case-types.enum';
   styleUrls: ['./npo-bank-account.component.scss']
 })
 export class NpoBankAccountComponent implements OnInit {
-
+  @Input() bankList: Lookup[]= [];
   constructor(public lang: LangService,
     private toastService: ToastService,
     private dialogService: DialogService,
@@ -40,7 +40,6 @@ export class NpoBankAccountComponent implements OnInit {
 
   @Input() readonly: boolean = false;
   @Input() caseType?: CaseTypes;
-  bankList = [];
   currenciesList: Lookup[] = this.lookupService.listByCategory.Currency;
   caseTypes = CaseTypes;
 
