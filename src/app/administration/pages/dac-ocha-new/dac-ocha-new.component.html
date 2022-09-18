@@ -1,18 +1,32 @@
 <div class="row pb-3">
-  <app-page-header [pageTitle]="'menu_dac_ocha'" [clickOnReload$]="reload$" [clickOnNew$]="add$">
+  <app-page-header [customTemplate]="headerTemplate">
   </app-page-header>
   <ng-container >
-    <app-grid-search (searchTextEvent)="filterControl.setValue($event)"></app-grid-search>
+    <app-grid-search (searchTextEvent)="filterRecords($event)"></app-grid-search>
   </ng-container>
 </div>
+
+<ng-template #headerTemplate>
+  <div class="align-items-center">
+    <h1 class="h6 text-primary m-0 d-inline-block">{{lang.map.menu_dac_ocha}}</h1>
+    <button class="btn btn-link outline-none"
+            tooltip="{{lang.map.btn_add}}" (click)="addCallback()">
+      <i class="mdi mdi-plus-box"></i></button>
+    <button class="btn btn-link"
+            tooltip="{{lang.map.btn_reload}}" (click)="reloadCallback()">
+      <i class="mdi mdi-reload"></i></button>
+  </div>
+</ng-template>
 
 <tabs-list (onTabChange)="tabChanged($event)">
   <tab [name]="tabsData.ocha.name" [template]="ochaTabTemplate" [title]="getTabLabel(adminLookupTypeEnum.OCHA)"></tab>
   <tab [name]="tabsData.dac.name" [template]="dacTabTemplate" [title]="getTabLabel(adminLookupTypeEnum.DAC)"></tab>
 </tabs-list>
 <ng-template #dacTabTemplate>
-  <dac-ocha-list #dacListComponent [dacOchaType]="adminLookupTypeEnum.DAC" (onReady)="contentLoaded$.next($event)"></dac-ocha-list>
+  <dac-ocha-list #dacListComponent [dacOchaType]="adminLookupTypeEnum.DAC"
+                 (onReady)="setListComponent($event, dacListComponent)"></dac-ocha-list>
 </ng-template>
 <ng-template #ochaTabTemplate>
-  <dac-ocha-list #ochaListComponent [dacOchaType]="adminLookupTypeEnum.OCHA" (onReady)="contentLoaded$.next($event)"></dac-ocha-list>
+  <dac-ocha-list #ochaListComponent [dacOchaType]="adminLookupTypeEnum.OCHA"
+                 (onReady)="setListComponent($event, ochaListComponent)"></dac-ocha-list>
 </ng-template>
