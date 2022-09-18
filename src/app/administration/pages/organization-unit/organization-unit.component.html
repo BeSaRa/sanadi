@@ -1,6 +1,6 @@
 <div class="row pb-3">
   <app-page-header pageTitle="menu_organizations" [clickOnReload$]="reload$"
-                   [clickOnNew$]="add$" [addPermission]="empService.checkPermissions('ADMIN_ADD_OU')"
+                   [clickOnNew$]="add$" [addPermission]="empService.checkPermissions(permissionsEnum.ADD_ORGANIZATION)"
   ></app-page-header>
   <ng-container *ngIf="table">
     <!-- <app-bulk-actions *ngIf="table.selection && table.selection.selected.length"
@@ -55,27 +55,16 @@
           </ng-container>
           <ng-container cdkColumnDef="actions">
             <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_actions}}</th>
-            <td cdk-cell *cdkCellDef="let row" class="table-actions">
-              <div class="d-flex flex-row">
-                <!-- <a href="#" *ngIf="empService.checkPermissions('ADMIN_DELETE_OU')"
-                   (click)="deactivate(row, $event)" tooltip="{{langService.map.btn_delete}}" class="icon-btn">
-                  <i class="mdi mdi-close-box"></i>
-                </a> -->
-                <a href="#" *ngIf="empService.checkPermissions('ADMIN_EDIT_OU')"
-                   (click)="edit(row , $event)" tooltip="{{langService.map.btn_edit}}" class="icon-btn">
-                  <i class="mdi mdi-pen"></i>
-                </a>
-                <a href="#" (click)="showAuditLogs(row, $event)" tooltip="{{langService.map.show_logs}}"
-                   class="icon-btn">
-                  <i class="mdi mdi-history"></i>
-                </a>
-                <span class="form-check form-switch switch-action" *ngIf="row.status != orgStatusEnum.RETIRED"
+            <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">
+              <grid-actions [record]="row" [actions]="actions" [itemIndex]="itemIndex">
+                <span afterTemplate class="form-check form-switch switch-action"
+                      *ngIf="empService.checkPermissions(permissionsEnum.EDIT_ORGANIZATION) && row.status != orgStatusEnum.RETIRED"
                       style="top: auto">
-                <input class="form-check-input" type="checkbox" [checked]="row.status == orgStatusEnum.ACTIVE"
-                       tooltip="{{row.status == orgStatusEnum.ACTIVE ? langService.map.btn_deactivate : langService.map.btn_activate}}"
-                       (change)="toggleStatus(row)">
-              </span>
-              </div>
+                  <input class="form-check-input" type="checkbox" [checked]="row.status == orgStatusEnum.ACTIVE"
+                         tooltip="{{row.status == orgStatusEnum.ACTIVE ? langService.map.btn_deactivate : langService.map.btn_activate}}"
+                         (change)="toggleStatus(row)">
+                </span>
+              </grid-actions>
             </td>
           </ng-container>
           <tr *cdkNoDataRow>

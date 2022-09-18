@@ -537,7 +537,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   }
 
   private loadSelectedOrganizations(): void {
-    this.organizationUnitService.load()
+    this.organizationUnitService.loadAsLookups()
       .pipe(takeUntil(this.destroy$))
       .subscribe(organizations => {
         this.selectedOrganizations = organizations.filter(element => this.model.targetOrganizationListIds.includes(element.id));
@@ -581,7 +581,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
 
   private loadTrainers(): void {
     this.loadTrainers$.subscribe(() => {
-      this.trainerService.load()
+      this.trainerService.loadAsLookups()
         .pipe(takeUntil(this.destroy$))
         .subscribe(trainers => {
           this.trainers = trainers;
