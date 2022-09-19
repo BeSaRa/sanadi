@@ -1,9 +1,9 @@
 import {Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {DIALOG_DATA_TOKEN} from '../../tokens/tokens';
-import {FileNetDocument} from '../../../models/file-net-document';
-import {BlobModel} from '../../../models/blob-model';
+import {FileNetDocument} from '@app/models/file-net-document';
+import {BlobModel} from '@app/models/blob-model';
 import {DOCUMENT} from '@angular/common';
-import {LangService} from '../../../services/lang.service';
+import {LangService} from '@services/lang.service';
 
 @Component({
   selector: 'app-view-document-popup',

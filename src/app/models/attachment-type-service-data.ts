@@ -26,6 +26,9 @@ export class AttachmentTypeServiceData extends BaseModel<AttachmentTypeServiceDa
   multi: boolean = false;
   identifier: string = ''
 
+  // temp properties
+  parsedCustomProperties?: Record<string, any>
+
   constructor() {
     super();
     this.service = FactoryService.getService('AttachmentTypeServiceDataService');

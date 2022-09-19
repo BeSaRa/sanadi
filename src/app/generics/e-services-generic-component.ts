@@ -1,5 +1,5 @@
 import { Directive, EventEmitter, Input, OnDestroy, OnInit } from "@angular/core";
-import { UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from "@angular/forms";
 import { OperationTypes } from "@app/enums/operation-types.enum";
 import { SaveTypes } from "@app/enums/save-types";
 import { IESComponent } from "@app/interfaces/iescomponent";
@@ -10,7 +10,7 @@ import {
   exhaustMap,
   filter,
   map,
-  skip,
+  skip, startWith,
   switchMap,
   takeUntil,
   tap,
@@ -27,7 +27,7 @@ import { BaseGenericEService } from "@app/generics/base-generic-e-service";
 import { FileIconsEnum } from '@app/enums/file-extension-mime-types-icons.enum';
 
 @Directive()
-export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S extends  BaseGenericEService<M>> implements OnInit, OnDestroy, IESComponent<M> {
+export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S extends BaseGenericEService<M>> implements OnInit, OnDestroy, IESComponent<M> {
   afterSave$: EventEmitter<M> = new EventEmitter<M>();
   fromWrapperComponent: boolean = false;
   onModelChange$: EventEmitter<M | undefined> = new EventEmitter<M | undefined>();
@@ -51,6 +51,8 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
   fileIconsEnum = FileIconsEnum;
 
   formValidity$: Subject<any> = new Subject<any>();
+
+  formProperties: Record<string, () => Observable<any>> = {}
 
   abstract lang: LangService;
   abstract form: UntypedFormGroup;
@@ -97,7 +99,7 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
   _saveModel(model: M, saveType: SaveTypes): Observable<{ saveType: SaveTypes, model: M }> {
     const modelInstance = model as unknown as CaseModel<any, any>;
     const type = (!modelInstance.canSave() && saveType === SaveTypes.FINAL) ? SaveTypes.COMMIT : saveType;
-    return model[this.saveMethods[type]]().pipe(map(m => ({saveType: type, model: m})));
+    return model[this.saveMethods[type]]().pipe(map(m => ({ saveType: type, model: m })));
   }
 
   _listenToSave(): void {
@@ -122,7 +124,7 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
           return this._saveModel(model, saveType).pipe(catchError(error => {
             // handle the errors came from backend
             this._saveFail(error);
-            return of({saveType: saveType, model: null});
+            return of({ saveType: saveType, model: null });
           }))
         }),
         // allow only success save
@@ -201,7 +203,7 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
         } else if (element instanceof HTMLElement) {
           ele = element;
         }
-        ele?.scrollTo({top: 0, behavior: "smooth"});
+        ele?.scrollTo({ top: 0, behavior: "smooth" });
       })
   }
 
@@ -242,5 +244,12 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
 
   launch(): void {
     this.launch$.next(null);
+  }
+
+  getObservableField(getterName: string, modelProperty?: string): Observable<any> {
+    modelProperty = modelProperty ? modelProperty : getterName;
+    const currentModel = (this.model as Record<string, any>)
+    const value = currentModel.hasOwnProperty(modelProperty) ? currentModel[modelProperty] : null;
+    return (this[getterName as keyof EServicesGenericComponent<any, any>] as unknown as UntypedFormControl).valueChanges.pipe(startWith<any,any>(value))
   }
 }

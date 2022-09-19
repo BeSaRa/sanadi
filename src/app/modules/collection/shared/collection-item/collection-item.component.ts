@@ -1,27 +1,27 @@
-import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
-import {CollectionApproval} from '@app/models/collection-approval';
-import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
-import {exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
-import {CollectionItem} from '@app/models/collection-item';
-import {AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import {LangService} from '@app/services/lang.service';
-import {AppEvents} from '@app/enums/app-events';
-import {DialogService} from '@app/services/dialog.service';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {ICoordinates} from '@app/interfaces/ICoordinates';
-import {LicenseService} from '@app/services/license.service';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {CollectionLicense} from '@app/license-models/collection-license';
-import {HasCollectionItemBuildForm} from '@app/interfaces/has-collection-item-build-form';
-import {CollectionRequestType} from '@app/enums/service-request-types';
-import {BuildingPlateComponent} from '@app/shared/components/building-plate/building-plate.component';
-import {SharedService} from '@app/services/shared.service';
-import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import {ActionIconsEnum} from '@app/enums/action-icons-enum';
-import {DatepickerOptionsMap} from '@app/types/types';
-import {DateUtils} from '@app/helpers/date-utils';
-import {LicenseDurationType} from '@app/enums/license-duration-type';
-import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { CollectionApproval } from '@app/models/collection-approval';
+import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
+import { exhaustMap, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { CollectionItem } from '@app/models/collection-item';
+import { AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { LangService } from '@app/services/lang.service';
+import { AppEvents } from '@app/enums/app-events';
+import { DialogService } from '@app/services/dialog.service';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { ICoordinates } from '@app/interfaces/ICoordinates';
+import { LicenseService } from '@app/services/license.service';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { CollectionLicense } from '@app/license-models/collection-license';
+import { HasCollectionItemBuildForm } from '@app/interfaces/has-collection-item-build-form';
+import { CollectionRequestType } from '@app/enums/service-request-types';
+import { BuildingPlateComponent } from '@app/shared/components/building-plate/building-plate.component';
+import { SharedService } from '@app/services/shared.service';
+import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { ActionIconsEnum } from '@app/enums/action-icons-enum';
+import { DatepickerOptionsMap } from '@app/types/types';
+import { DateUtils } from '@app/helpers/date-utils';
+import { LicenseDurationType } from '@app/enums/license-duration-type';
+import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
 
 @Component({
   selector: 'collection-item',
@@ -40,6 +40,9 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
 
   @Input()
   model!: CollectionApproval;
+
+  @Input()
+  formProperties: Record<string, () => Observable<any>> = {}
   destroy$: Subject<any> = new Subject<any>();
   add$: Subject<any> = new Subject<any>();
   edit$: Subject<{ item: CollectionItem, index: number }> = new Subject<{ item: CollectionItem, index: number }>();
@@ -56,7 +59,7 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
   searchControl: UntypedFormControl = new UntypedFormControl();
 
   datepickerOptionsMap: DatepickerOptionsMap = {
-    licenseEndDate: DateUtils.getDatepickerOptions({disablePeriod: 'past'}),
+    licenseEndDate: DateUtils.getDatepickerOptions({ disablePeriod: 'past' }),
   };
   viewOnly: boolean = false;
 
@@ -66,7 +69,7 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
       type: 'action',
       label: 'view',
       icon: ActionIconsEnum.VIEW,
-      onClick: (item: CollectionItem, index: number) => this.view$.next({item: item, index: index}),
+      onClick: (item: CollectionItem, index: number) => this.view$.next({ item: item, index: index }),
       show: (_item: CollectionItem) => !this.approvalMode && this.readOnly
     },
     // edit
@@ -74,7 +77,7 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
       type: 'action',
       label: 'btn_edit',
       icon: ActionIconsEnum.EDIT,
-      onClick: (item: CollectionItem, index: number) => this.edit$.next({item: item, index: index}),
+      onClick: (item: CollectionItem, index: number) => this.edit$.next({ item: item, index: index }),
       show: (_item: CollectionItem) => !this.approvalMode,
       disabled: (_item: CollectionItem) => this.readOnly
     },
@@ -83,7 +86,7 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
       type: 'action',
       label: 'btn_delete',
       icon: ActionIconsEnum.DELETE_TRASH,
-      onClick: (item: CollectionItem, index: number) => this.remove$.next({item: item, index: index}),
+      onClick: (item: CollectionItem, index: number) => this.remove$.next({ item: item, index: index }),
       show: (_item: CollectionItem) => !this.approvalMode,
       disabled: (_item: CollectionItem) => this.readOnly
     },
@@ -92,7 +95,7 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
       type: 'action',
       label: 'edit_approval_info',
       icon: ActionIconsEnum.EDIT,
-      onClick: (item: CollectionItem, index: number) => this.approval.emit({item: item, index: index}),
+      onClick: (item: CollectionItem, index: number) => this.approval.emit({ item: item, index: index }),
       show: (_item: CollectionItem) => this.approvalMode,
       disabled: (_item: CollectionItem) => this.readOnly
     },
@@ -229,7 +232,7 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
       .pipe(takeUntil(this.destroy$))
       .pipe(switchMap(info => {
         return this.dialog
-          .confirm(this.lang.map.msg_confirm_delete_x.change({x: info.item.identificationNumber}))
+          .confirm(this.lang.map.msg_confirm_delete_x.change({ x: info.item.identificationNumber }))
           .onAfterClose$.pipe(map((click: UserClickOn) => {
             return {
               index: info.index,
@@ -359,7 +362,7 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
       .pipe(filter((license) => {
         let isAlreadyAdded = this.isLicenseAlreadyAdded(license);
         if (isAlreadyAdded) {
-          this.dialog.info(this.lang.map.x_already_exists.change({x: this.lang.map.license}));
+          this.dialog.info(this.lang.map.x_already_exists.change({ x: this.lang.map.license }));
         }
         return !isAlreadyAdded;
       }))
@@ -381,7 +384,7 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
   openMapMarker() {
     (this.item!).openMap(this.isCancelRequestType() || this.readOnly || this.viewOnly)
       .onAfterClose$
-      .subscribe(({click, value}: { click: UserClickOn, value: ICoordinates }) => {
+      .subscribe(({ click, value }: { click: UserClickOn, value: ICoordinates }) => {
         if (click === UserClickOn.YES) {
           this.item!.latitude = value.latitude;
           this.item!.longitude = value.longitude;
@@ -478,11 +481,11 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
     if (this.readOnly || this.viewOnly || !this.model.requestType || this.model.requestType === CollectionRequestType.NEW) {
       isAllowed = false;
     } else if (!this.model?.id || (!!this.model?.id && this.model.canCommit()) || !this.item!.itemId) {
-      isAllowed=  true;
+      isAllowed = true;
     }
     !isAllowed ? this.searchControl.disable() : this.searchControl.enable();
     this.searchControl.setValidators(!isAllowed ? [] : CustomValidators.required);
-    this.oldLicenseFullSerial.setValidators(!isAllowed ?  [] : CustomValidators.required);
+    this.oldLicenseFullSerial.setValidators(!isAllowed ? [] : CustomValidators.required);
     this.searchControl.updateValueAndValidity();
     this.oldLicenseFullSerial.updateValueAndValidity();
     return isAllowed;

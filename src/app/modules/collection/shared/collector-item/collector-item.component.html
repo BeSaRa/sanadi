@@ -181,7 +181,13 @@
       <ng-container cdkColumnDef="actions">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
         <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">
-          <grid-actions [record]="row" [actions]="actions" [itemIndex]="itemIndex"></grid-actions>
+          <grid-actions [record]="row" [actions]="actions" [itemIndex]="itemIndex">
+            <button multiAttachment [formObservables]="formProperties" [model]="model" [item]="row"
+                    identifier="collectorItemList"
+                    class="btn text-primary icon-btn">
+              <i class="mdi mdi-attachment"></i>
+            </button>
+          </grid-actions>
           <!--<div *ngIf="!approvalMode" class="d-flex">
             <button (click)="edit$.next({item: row , index: itemIndex})" [tooltip]="lang.map.btn_edit"
                     class="btn icon-btn" [disabled]="readOnly">

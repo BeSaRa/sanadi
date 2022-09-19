@@ -151,6 +151,8 @@ export class CollectorItemComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   maxElementsCount?: number;
+  @Input()
+  formProperties: Record<string, () => Observable<any>> = {}
 
   constructor(private fb: UntypedFormBuilder,
               public lang: LangService,

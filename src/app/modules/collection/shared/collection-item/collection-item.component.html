@@ -149,7 +149,8 @@
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
         <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">
           <grid-actions [record]="row" [actions]="actions" [itemIndex]="itemIndex">
-            <button multiAttachment [model]="model" [item]="row" identifier="collectionItemList"
+            <button multiAttachment [formObservables]="formProperties" [model]="model" [item]="row"
+                    identifier="collectionItemList"
                     class="btn text-primary icon-btn">
               <i class="mdi mdi-attachment"></i>
             </button>
