@@ -30,6 +30,13 @@ export class CollectorApprovalComponent extends EServicesGenericComponent<Collec
   licenseDurationTypes: Lookup[] = this.lookupService.listByCategory.LicenseDurationType;
   disableSearchField: boolean = true;
 
+
+  formProperties = {
+    requestType: () => {
+      return this.getObservableField('requestType')
+    }
+  }
+
   constructor(public lang: LangService,
               public fb: UntypedFormBuilder,
               public service: CollectorApprovalService,

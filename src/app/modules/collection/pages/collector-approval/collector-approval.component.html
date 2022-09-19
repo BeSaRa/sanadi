@@ -36,7 +36,9 @@
           </div>
         </div>
         <div class="row">
-          <collector-item (formOpenedStatus)="collectorItemFormStatusChanged($event)"
+          <collector-item
+                          [formProperties]="formProperties"
+                          (formOpenedStatus)="collectorItemFormStatusChanged($event)"
                           [disableAdd]="basicInfo.invalid || readonly"
                           [readOnly]="(readonly)"
                           [licenseDurationType]="licenseDurationType.value"
