@@ -10,13 +10,6 @@
     <ng-container formGroupName="basicInfo">
       <ng-template #basic_info>
         <div class="row">
-          <button multiAttachment [formObservables]="formProperties" [model]="model" [item]="{itemId:'welcome'}"
-                  identifier="collectionItemList"
-                  class="btn text-primary icon-btn">
-            <i class="mdi mdi-attachment"></i>
-          </button>
-        </div>
-        <div class="row">
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="requestType"
                    for="requestType">{{lang.map.request_type}}</label>
