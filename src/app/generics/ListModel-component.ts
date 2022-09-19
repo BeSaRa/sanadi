@@ -50,7 +50,7 @@ export abstract class ListModelComponent<T extends Cloneable<T>>
         this._list = [...this._list];
         this.editRecordIndex = -1;
       }
-      this.showForm = false;
+      this.cancel();
     });
   }
   save(): void {
