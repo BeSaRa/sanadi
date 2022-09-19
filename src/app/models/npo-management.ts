@@ -1,3 +1,4 @@
+import { AdminResult } from './admin-result';
 import { NpoBankAccount } from './npo-bank-account';
 import { NpoContactOfficer } from '@app/models/npo-contact-officer';
 import { FounderMembers } from '@app/models/founder-members';
@@ -38,12 +39,12 @@ export class NpoManagement
   activityType!: number;
   clearanceType!: number;
   disbandmentType!: number;
-  establishmentDate!: Date | IMyDateModel;
-  disbandmentDate!: Date | IMyDateModel;
-  clearanceDate!: Date | IMyDateModel;
+  establishmentDate!: string | IMyDateModel;
+  disbandmentDate!: string | IMyDateModel;
+  clearanceDate!: string | IMyDateModel;
   // TODO!: have to complete from the admin
   registrationAuthority!: number;
-  registrationDate!: Date | IMyDateModel;
+  registrationDate!: string | IMyDateModel;
   registrationNumber!: string;
 
   clearanceName!: string;
@@ -73,6 +74,13 @@ export class NpoManagement
   subject!: string;
   fullSerial!: string;
   oldLicenseFullSerial!: string;
+
+  activityTypeInfo!: AdminResult;
+  nationalityInfo!: AdminResult;
+  clearanceInfo!: AdminResult;
+  disbandmentInfo!: AdminResult;
+  registrationAuthorityInfo!: AdminResult;
+
   searchFields: ISearchFieldsMap<NpoManagement> = {
   };
   constructor() {
@@ -106,7 +114,6 @@ export class NpoManagement
       registrationDate,
       //
       email, phone,
-      //
       zoneNumber,
       streetNumber,
       buildingNumber,
@@ -129,27 +136,17 @@ export class NpoManagement
         englishName: controls ? [englishName, [
           CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
           Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')]] : englishName,
-        clearanceName: controls ? [clearanceName, [CustomValidators.required, Validators.maxLength(150),
-        Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : clearanceName,
-        registrationNumber: controls ? [registrationNumber, [CustomValidators.required, Validators.maxLength(150),
-        Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : registrationNumber,
         unifiedEconomicRecord: controls ? [unifiedEconomicRecord, [Validators.maxLength(150)]] : unifiedEconomicRecord,
-        activityType: controls
-          ? [activityType, [Validators.required]]
-          : activityType,
-        registrationAuthority: controls
-          ? [registrationAuthority, []]
-          : registrationAuthority,
-        clearanceType: controls
-          ? [clearanceType, [Validators.required]]
-          : clearanceType,
-        disbandmentType: controls
-          ? [disbandmentType, [Validators.required]]
-          : disbandmentType,
-        establishmentDate: controls ? [DateUtils.changeDateToDatepicker(establishmentDate), [CustomValidators.required]] : DateUtils.changeDateToDatepicker(establishmentDate),
-        disbandmentDate: controls ? [DateUtils.changeDateToDatepicker(disbandmentDate), [CustomValidators.required]] : DateUtils.changeDateToDatepicker(disbandmentDate),
-        clearanceDate: controls ? [DateUtils.changeDateToDatepicker(clearanceDate), [CustomValidators.required]] : DateUtils.changeDateToDatepicker(clearanceDate),
-        registrationDate: controls ? [DateUtils.changeDateToDatepicker(registrationDate), [CustomValidators.required]] : DateUtils.changeDateToDatepicker(registrationDate),
+        activityType: controls ? [activityType, [Validators.required]] : activityType,
+        registrationNumber: controls ? [registrationNumber, []] : registrationNumber,
+        registrationAuthority: controls ? [registrationAuthority, []] : registrationAuthority,
+        clearanceName: controls ? [clearanceName, []] : clearanceName,
+        clearanceType: controls ? [clearanceType, []] : clearanceType,
+        clearanceDate: controls ? [DateUtils.changeDateToDatepicker(clearanceDate), []] : DateUtils.changeDateToDatepicker(clearanceDate),
+        disbandmentType: controls ? [disbandmentType, []] : disbandmentType,
+        disbandmentDate: controls ? [DateUtils.changeDateToDatepicker(disbandmentDate), []] : DateUtils.changeDateToDatepicker(disbandmentDate),
+        establishmentDate: controls ? [DateUtils.changeDateToDatepicker(establishmentDate), []] : DateUtils.changeDateToDatepicker(establishmentDate),
+        registrationDate: controls ? [DateUtils.changeDateToDatepicker(registrationDate), []] : DateUtils.changeDateToDatepicker(registrationDate),
       },
       contectInfo: {
         email: controls ? [email, [CustomValidators.required, CustomValidators.maxLength(50), CustomValidators.pattern('EMAIL')]] : email,

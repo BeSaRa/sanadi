@@ -11,7 +11,7 @@
                        [notFoundText]="lang.map.msg_not_found"
                        [readonly]="readonly" appendTo="body"
                        formControlName="bankId" validationClasses="bankId">
-              <ng-option *ngFor="let option of bankList" [value]="option.lookupKey">
+              <ng-option *ngFor="let option of bankList" [value]="option.id">
                 {{option.getName()}}
               </ng-option>
             </ng-select>

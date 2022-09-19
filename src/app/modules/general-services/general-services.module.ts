@@ -21,7 +21,6 @@ import { ForeignCountriesProjectsPopupComponent } from './popups/foreign-countri
 import { CoordinationWithOrganizationsRequestComponent } from './pages/coordination-with-organizations-request/coordination-with-organizations-request.component';
 import { NpoContactOfficerComponent } from './pages/npo-management/npo-contact-officer/npo-contact-officer.component';
 import { FounderMembersComponent } from './pages/npo-management/founder-members/founder-members.component';
-import { RealBeneficiaryComponent } from './pages/npo-management/real-beneficiary/real-beneficiary.component';
 import { CharityOrganizationUpdateComponent } from './pages/charity-organization-update/charity-organization-update.component';
 import { OrganizationOfficersComponent } from './shared/organization-officers/organization-officers.component';
 import { CharityBranchComponent } from './shared/charity-branch/charity-branch.component';
@@ -52,7 +51,6 @@ import { CharityDecisionsComponent } from './shared/charity-decisions/charity-de
     CoordinationWithOrganizationsRequestComponent,
     NpoManagementComponent,
     FounderMembersComponent,
-    RealBeneficiaryComponent,
     NpoBankAccountComponent,
     CharityOrganizationUpdateComponent,
     OrganizationOfficersComponent,

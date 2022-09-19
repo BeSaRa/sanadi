@@ -1,13 +1,17 @@
+import { AdminResult } from './admin-result';
 import { CustomValidators } from "@app/validators/custom-validators";
 import { SearchableCloneable } from "@app/models/searchable-cloneable";
 
 export class NpoContactOfficer extends SearchableCloneable<NpoContactOfficer>{
+  officerId!: number;
   identificationNumber!: string;
   fullName!: string;
   email!: string;
   phone!: string;
   extraPhone!: string;
   jobTitleId!: number;
+
+  jobInfo!: AdminResult;
 
   getContactOfficerFields(control: boolean): any {
     const { identificationNumber, fullName, email, phone, extraPhone, jobTitleId } = this;

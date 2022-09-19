@@ -1,3 +1,4 @@
+import { AdminResult } from './admin-result';
 import { DateUtils } from './../helpers/date-utils';
 import { IMyDateModel } from 'angular-mydatepicker';
 import { CustomValidators } from "@app/validators/custom-validators";
@@ -10,8 +11,10 @@ export class FounderMembers extends SearchableCloneable<FounderMembers>{
   email!: string;
   phone!: string;
   extraPhone!: string;
-  joinDate!: Date | IMyDateModel;
+  joinDate!: string | IMyDateModel;
   nationality!: number;
+  jobTitleInfo!: AdminResult;
+  nationalityInfo!: AdminResult;
   getFounderMembersFields(control: boolean): any {
     const { identificationNumber,
       fullName,
@@ -25,7 +28,7 @@ export class FounderMembers extends SearchableCloneable<FounderMembers>{
     return {
       identificationNumber: control ? [identificationNumber, [CustomValidators.required, ...CustomValidators.commonValidations.qId]] : identificationNumber,
       fullName: control ? [fullName, [CustomValidators.required, CustomValidators.maxLength(300),
-        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : fullName,
+      CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : fullName,
       email: control ? [email, [CustomValidators.required, CustomValidators.pattern('EMAIL')]] : email,
       phone: control ? [phone, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : phone,
       extraPhone: control ? [extraPhone, CustomValidators.commonValidations.phone] : extraPhone,

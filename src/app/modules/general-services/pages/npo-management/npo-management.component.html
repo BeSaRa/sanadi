@@ -1,5 +1,5 @@
 <div class="d-flex flex-column">
-  <tabs-list [accordionView]="accordionView">
+  <tabs-list [accordionView]="accordionView" (onTabChange)="onTabChange($event)">
     <tab
       [name]="tabsData.basicInfo.name"
       [hasError]="getTabInvalidStatus('basicInfo')"
@@ -35,6 +35,13 @@
     [hasError]="getTabInvalidStatus('realBeneficiary')"
     [template]="realBeneficiaryTabTemplate"
     [title]="lang.map.lbl_real_beneficiary"
+  ></tab>
+  <tab
+    [name]="tabsData.attachments.name"
+    *ngIf="!accordionView"
+    [template]="attachmentsTab"
+    [title]="lang.map.attachments"
+    [hasError]="getTabInvalidStatus('attachments')"
   ></tab>
   </tabs-list>
 
@@ -203,7 +210,7 @@
             [readonly]="readonly"
             [notFoundText]="lang.map.msg_not_found" appendTo="body" id="activityType"
             validationClasses="activityType" formControlName="activityType">
-            <ng-option *ngFor="let option of activityTypesList" [value]="option">{{ option.getName() }}
+            <ng-option *ngFor="let option of activityTypesList" [value]="option.id">{{ option.getName() }}
             </ng-option>
           </ng-select>
           <app-field-error-message controlName="activityType"></app-field-error-message>
@@ -241,7 +248,7 @@
           <ng-select [selectOnTab]="true" placeholder="{{ lang.map.select }}"
             [notFoundText]="lang.map.msg_not_found" appendTo="body" id="disbandmentType"
             validationClasses="disbandmentType" formControlName="disbandmentType">
-            <ng-option *ngFor="let option of NPODecisionsList" [value]="option">{{ option.getName() }}
+            <ng-option *ngFor="let option of NPODecisionsList" [value]="option.lookupKey">{{ option.getName() }}
             </ng-option>
           </ng-select>
           <app-field-error-message controlName="disbandmentType"></app-field-error-message>
@@ -278,7 +285,7 @@
           <ng-select [selectOnTab]="true" placeholder="{{ lang.map.select }}"
             [notFoundText]="lang.map.msg_not_found" appendTo="body" id="clearanceType"
             validationClasses="clearanceType" formControlName="clearanceType">
-            <ng-option *ngFor="let option of NPODecisionsList" [value]="option">{{ option.getName() }}
+            <ng-option *ngFor="let option of NPODecisionsList" [value]="option.lookupKey">{{ option.getName() }}
             </ng-option>
           </ng-select>
           <app-field-error-message controlName="clearanceType"></app-field-error-message>
@@ -331,7 +338,7 @@
     <form [formGroup]="contectInfo" autocomplete="off">
       <div class="row">
         <div>
-          <h5>{{lang.map.lbl_contact_info}}</h5>
+          <h6>{{lang.map.lbl_contact_info}}</h6>
         </div>
         <!-- Email -->
         <div class="col-sm-12 col-md-6 mb-4 position-relative">
@@ -347,7 +354,7 @@
           <app-field-error-message controlName="phone"></app-field-error-message>
         </div>
         <div class="mt-2">
-          <h5>{{lang.map.lbl_national_address}}</h5>
+          <h6>{{lang.map.lbl_national_address}}</h6>
         </div>
         <!-- zone number -->
         <div class="col-sm-6 col-md-4 mb-4 position-relative">
@@ -559,9 +566,16 @@
   </ng-template>
 
   <ng-template #realBeneficiaryTabTemplate>
-    <real-beneficiary #realBeneficiaryTab
-    [list]="model?.realBeneficiaryList || []"
-    (readyEvent)="realBeneficiaryTabStatus = $event">
-    </real-beneficiary>
+    <real-beneficiaries
+      #realBeneficiaryTab
+      [list]="model?.realBeneficiaryList || []"
+      [readonly]="readonly"
+    ></real-beneficiaries>
   </ng-template>
+  <ng-template #attachmentsTab>
+    <attachments [disabled]="isAttachmentReadonly()" [caseId]="model?.id" [caseType]="model?.caseType"
+                 [service]="service.documentService"
+                 [load]="loadAttachments"></attachments>
+  </ng-template>
+
 </div>

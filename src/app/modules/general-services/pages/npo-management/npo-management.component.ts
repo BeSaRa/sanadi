@@ -1,6 +1,9 @@
+import { CommonUtils } from './../../../../helpers/common-utils';
+import { CustomValidators } from './../../../../validators/custom-validators';
+import { TabComponent } from './../../../../shared/components/tab/tab.component';
+import { RealBeneficiariesComponent } from './../../shared/real-beneficiaries/real-beneficiaries.component';
 import { BankService } from '@services/bank.service';
 import { NpoBankAccountComponent } from './npo-bank-account/npo-bank-account.component';
-import { RealBeneficiaryComponent } from './real-beneficiary/real-beneficiary.component';
 import { FounderMembersComponent } from './founder-members/founder-members.component';
 import { NpoContactOfficerComponent } from './npo-contact-officer/npo-contact-officer.component';
 import { IMyInputFieldChanged } from 'angular-mydatepicker';
@@ -21,7 +24,7 @@ import { EServicesGenericComponent } from '@app/generics/e-services-generic-comp
 import { NpoManagementService } from './../../../../services/npo-management.service';
 import { NpoManagement } from './../../../../models/npo-management';
 import { Component, ChangeDetectorRef, ViewChild, Input } from '@angular/core';
-import { UntypedFormGroup, UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, UntypedFormControl, Validators } from '@angular/forms';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { SaveTypes } from '@app/enums/save-types';
 import { LangService } from '@app/services/lang.service';
@@ -42,7 +45,7 @@ NpoManagementService
 > {
   NPORequestTypesList: Lookup[] = this.lookupService.listByCategory.NPORequestType.slice().sort((a, b) => a.lookupKey - b.lookupKey);
   activityTypesList: AdminLookup[] = [];
-  bankList: Lookup[]= [];
+  bankList: Lookup[] = [];
   // Clearance Type & Disbandment Type
   NPODecisionsList: Lookup[] = this.lookupService.listByCategory.NPODecisions;
   // TODO! fill this list after done from admin
@@ -56,18 +59,18 @@ NpoManagementService
   @ViewChild('bankAccountsTab') bankAccountComponentRef!: NpoBankAccountComponent;
   @ViewChild('contactOfficersTab') contactOfficerComponentRef!: NpoContactOfficerComponent;
   @ViewChild('founderMemberTab') founderMemberComponentRef!: FounderMembersComponent;
-  @ViewChild('realBeneficiaryTab') realBeneficiaryComponentRef!: RealBeneficiaryComponent;
+  @ViewChild('realBeneficiaryTab') RealBeneficiariesComponentRef!: RealBeneficiariesComponent;
 
   tabsData: IKeyValue = {
     basicInfo: {
       name: "basicInfoTab",
       langKey: "lbl_basic_info" as keyof ILanguageKeys,
-      validStatus: () => this.form.valid,
+      validStatus: () => this.basicInfo.valid,
     },
     contectInfo: {
       name: "contectInfoTab",
       langKey: "lbl_contact_info" as keyof ILanguageKeys,
-      validStatus: () => this.form.valid,
+      validStatus: () => this.contectInfo.valid,
     },
     founderMember: {
       name: "founderMemberTab",
@@ -94,10 +97,16 @@ NpoManagementService
       name: "realBeneficiaryTab",
       langKey: "lbl_real_beneficiary" as keyof ILanguageKeys,
       validStatus: () => {
-        return !this.realBeneficiaryComponentRef || (this.realBeneficiaryTabStatus === 'READY' && this.realBeneficiaryComponentRef.list.length > 0);
+        return !this.RealBeneficiariesComponentRef || (this.realBeneficiaryTabStatus === 'READY' && this.RealBeneficiariesComponentRef.list.length > 0);
       }
     },
+    attachments: {
+      name: 'attachmentsTab',
+      langKey: 'attachments',
+      validStatus: () => true
+    },
   };
+  loadAttachments: boolean = false;
   datepickerOptionsMap: DatepickerOptionsMap = {
     establishmentDate: DateUtils.getDatepickerOptions({
       disablePeriod: "none",
@@ -187,9 +196,24 @@ NpoManagementService
     console.log('_afterBuildForm')
   }
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
-    return of(this.form.valid)
-      .pipe(tap((valid) => !valid && this.invalidFormMessage()))
-      .pipe(filter((valid) => valid))
+    const invalidTabs = this._getInvalidTabs();
+    if (invalidTabs.length > 0) {
+      const listHtml = CommonUtils.generateHtmlList(this.lang.map.msg_following_tabs_valid, invalidTabs);
+      this.dialog.error(listHtml.outerHTML);
+      return false;
+    }
+    return true;
+  }
+  private _getInvalidTabs(): any {
+    let failedList: string[] = [];
+    for (const key in this.tabsData) {
+      // if (!(this.tabsData[key].formStatus() && this.tabsData[key].listStatus())) {
+      if (!(this.tabsData[key].validStatus())) {
+        // @ts-ignore
+        failedList.push(this.lang.map[this.tabsData[key].langKey]);
+      }
+    }
+    return failedList;
   }
   _beforeLaunch(): boolean | Observable<boolean> {
     return !!this.model && this.form.valid && this.model.canStart();
@@ -201,8 +225,13 @@ NpoManagementService
   _prepareModel(): NpoManagement | Observable<NpoManagement> {
     const value = new NpoManagement().clone({
       ...this.model,
+      ...this.basicInfo.value,
+      ...this.contectInfo.value
     })
     value.bankAccountList = this.bankAccountComponentRef.list;
+    value.contactOfficerList = this.contactOfficerComponentRef.list;
+    value.founderMemberList = this.founderMemberComponentRef.list;
+    value.realBeneficiaryList = this.RealBeneficiariesComponentRef.list;
     return value;
   }
   private _updateModelAfterSave(model: NpoManagement): void {
@@ -247,16 +276,14 @@ NpoManagementService
   }
   handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
     if (userInteraction) {
+      this.setFieldsValidation();
       this._resetForm();
       this.requestTypeField.setValue(requestTypeValue);
+      this.handleReadonly();
     }
-    this.handleReadonly();
   }
   private invalidFormMessage() {
     this.dialog.error(this.lang.map.msg_all_required_fields_are_filled);
-  }
-  get requestTypeField(): UntypedFormControl {
-    return this.basicInfo.get('requestType') as UntypedFormControl;
   }
   _setDefaultValues(): void {
     this.requestTypeField.setValue(ServiceRequestTypes.NEW);
@@ -267,6 +294,24 @@ NpoManagementService
     this.model = this._getNewInstance();
     this.operation = this.operationTypes.CREATE;
     this._setDefaultValues();
+  }
+  isAttachmentReadonly(): boolean {
+    if (!this.model?.id) {
+      return false;
+    }
+    let isAllowed = true;
+    if (this.openFrom === OpenFrom.TEAM_INBOX) {
+      isAllowed = this.model.taskDetails.isClaimed();
+    }
+    if (isAllowed) {
+      let caseStatus = this.model.getCaseStatus();
+      isAllowed = (caseStatus !== CommonCaseStatus.CANCELLED && caseStatus !== CommonCaseStatus.FINAL_APPROVE && caseStatus !== CommonCaseStatus.FINAL_REJECTION);
+    }
+
+    return !isAllowed;
+  }
+  onTabChange($event: TabComponent) {
+    this.loadAttachments = $event.name === this.tabsData.attachments.name;
   }
   getTabInvalidStatus(tabName: string): boolean {
     return !this.tabsData[tabName].validStatus();
@@ -287,6 +332,39 @@ NpoManagementService
       }
     });
   }
+  setFieldsValidation() {
+    this.disbandmentTypeField?.setValidators([]);
+    this.disbandmentDateField?.setValidators([]);
+    this.clearanceTypeField?.setValidators([]);
+    this.clearanceNameField?.setValidators([]);
+    this.clearanceDateField?.setValidators([]);
+    this.registrationAuthorityField?.setValidators([]);
+    this.registrationDateField?.setValidators([]);
+    this.registrationNumberField?.setValidators([]);
+    this.establishmentDateField?.setValidators([]);
+    if (this.isClearance) {
+      this.clearanceTypeField.setValidators([Validators.required])
+      this.clearanceNameField.setValidators([CustomValidators.required, Validators.maxLength(150),
+      Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)])
+      this.clearanceDateField.setValidators([CustomValidators.required])
+    }
+    if (this.isDisbandment) {
+      this.disbandmentTypeField.setValidators([CustomValidators.required])
+      this.disbandmentDateField.setValidators([CustomValidators.required])
+    }
+    if (this.isNew) {
+      // this.registrationAuthorityField.setValidators([])
+      this.registrationDateField.setValidators([CustomValidators.required])
+      this.registrationNumberField.setValidators([
+        CustomValidators.required, Validators.maxLength(150),
+        Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)
+      ])
+      this.establishmentDateField.setValidators([CustomValidators.required])
+    }
+    if (this.isRegistrationAuthority) {
+
+    }
+  }
   get isRegistrationAuthority() {
     return false
   }
@@ -299,10 +377,43 @@ NpoManagementService
   get isDisbandment() {
     return this.requestTypeField.value == NPORequestType.Disbandment
   }
+
   get basicInfo() {
     return this.form.get('basicInfo') as UntypedFormGroup;
   }
   get contectInfo() {
     return this.form.get('contectInfo') as UntypedFormGroup;
   }
+
+  get requestTypeField(): UntypedFormControl {
+    return this.basicInfo.get('requestType') as UntypedFormControl;
+  }
+  get establishmentDateField() {
+    return this.basicInfo.get('establishmentDate') as UntypedFormControl;
+  }
+  get registrationAuthorityField() {
+    return this.basicInfo.get('registrationAuthority') as UntypedFormControl;
+  }
+  get registrationDateField() {
+    return this.basicInfo.get('registrationDate') as UntypedFormControl;
+  }
+  get disbandmentTypeField() {
+    return this.basicInfo.get('disbandmentType') as UntypedFormControl;
+  }
+  get disbandmentDateField() {
+    return this.basicInfo.get('disbandmentDate') as UntypedFormControl;
+  }
+  get clearanceTypeField() {
+    return this.basicInfo.get('clearanceType') as UntypedFormControl;
+  }
+  get clearanceNameField() {
+    return this.basicInfo.get('clearanceName') as UntypedFormControl;
+  }
+  get clearanceDateField() {
+    return this.basicInfo.get('clearanceDate') as UntypedFormControl;
+  }
+  get registrationNumberField() {
+    return this.basicInfo.get('registrationNumber') as UntypedFormControl;
+  }
+
 }

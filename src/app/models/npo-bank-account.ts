@@ -1,3 +1,4 @@
+import { AdminResult } from './admin-result';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { SearchableCloneable } from '@app/models/searchable-cloneable';
 
@@ -6,7 +7,8 @@ export class NpoBankAccount extends SearchableCloneable<NpoBankAccount> {
   accountNumber!: string;
   bankId!: number;
   iBan!: string;
-
+  bankInfo!: AdminResult;
+  currencyInfo!: AdminResult;
   constructor() {
     super();
   }
