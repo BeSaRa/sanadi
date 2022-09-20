@@ -231,6 +231,7 @@
               id="establishmentDate"
               [options]="datepickerOptionsMap.establishmentDate"
               (click)="openDateMenu(dpestablishmentDate)"
+              (inputFieldChanged)="onDateChange($event)"
               #dpestablishmentDate="angular-mydatepicker"
               angular-mydatepicker
               [readonly]="!isNew"

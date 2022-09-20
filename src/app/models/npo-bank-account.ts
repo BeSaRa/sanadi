@@ -6,7 +6,7 @@ export class NpoBankAccount extends SearchableCloneable<NpoBankAccount> {
   currency!: number;
   accountNumber!: string;
   bankId!: number;
-  iBan!: string;
+  iban!: string;
   bankInfo!: AdminResult;
   currencyInfo!: AdminResult;
   constructor() {
@@ -17,13 +17,13 @@ export class NpoBankAccount extends SearchableCloneable<NpoBankAccount> {
     const {
       currency,
       accountNumber,
-      iBan,
+      iban,
       bankId
     } = this;
     return {
       bankId: control ? [bankId, [CustomValidators.required]] : bankId,
       accountNumber: control ? [accountNumber, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.SWIFT_CODE_MAX)]] : accountNumber,
-      iBan: control ? [iBan, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.SWIFT_CODE_MAX)]] : iBan,
+      iban: control ? [iban, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.SWIFT_CODE_MAX)]] : iban,
       currency: control ? [currency, [CustomValidators.required]] : currency
     };
   }

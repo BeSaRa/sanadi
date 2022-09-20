@@ -9,15 +9,21 @@ import { DialogService } from './dialog.service';
 import { DynamicOptionsService } from './dynamic-options.service';
 import { UrlService } from './url.service';
 import { SearchNpoManagementCriteria } from '@app/models/search-npo-management-criteria';
+import { CastResponseContainer } from '@app/decorators/decorators/cast-response';
 
+@CastResponseContainer({
+  $default: {
+    model: () => NpoManagement
+  }
+})
 @Injectable({
   providedIn: 'root'
 })
 export class NpoManagementService extends BaseGenericEService<NpoManagement> {
 
-  jsonSearchFile: string = '';
+  jsonSearchFile: string = 'npo_manamement_search.json';
   caseStatusIconMap: Map<number, string> = new Map<number, string>();
-  searchColumns: string[] = [];
+  searchColumns: string[] = ['fullSerial', 'createdOn', 'creatorInfo', 'caseStatus', 'subject', 'ouInfo'];
   serviceKey: keyof ILanguageKeys = 'menu_npo_management';
 
   constructor(

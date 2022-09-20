@@ -109,7 +109,7 @@ NpoManagementService
   loadAttachments: boolean = false;
   datepickerOptionsMap: DatepickerOptionsMap = {
     establishmentDate: DateUtils.getDatepickerOptions({
-      disablePeriod: "none",
+      disablePeriod: 'future'
     }),
     disbandmentDate: DateUtils.getDatepickerOptions({
       disablePeriod: "none",
@@ -118,7 +118,7 @@ NpoManagementService
       disablePeriod: "none",
     }),
     registrationDate: DateUtils.getDatepickerOptions({
-      disablePeriod: "none",
+      disablePeriod: 'future'
     }),
   };
   constructor(
@@ -226,7 +226,9 @@ NpoManagementService
     const value = new NpoManagement().clone({
       ...this.model,
       ...this.basicInfo.value,
-      ...this.contectInfo.value
+      ...this.contectInfo.value,
+      // TODO!: fix this when finising the related admin page
+      registrationAuthority: 0
     })
     value.bankAccountList = this.bankAccountComponentRef.list;
     value.contactOfficerList = this.contactOfficerComponentRef.list;
@@ -262,13 +264,15 @@ NpoManagementService
     console.log('problem in launch');
   }
   _updateForm(model: NpoManagement | undefined): void {
-    this.model = model;
     if (!model) {
       this.cd.detectChanges();
       return;
     }
-    // patch the form here
+    this.model = model;
+    const formModel = model.buildForm();
     this.form.patchValue({
+      basicInfo: formModel.basicInfo,
+      contectInfo: formModel.contectInfo
     });
 
     this.handleRequestTypeChange(model.requestType, false);
@@ -281,9 +285,6 @@ NpoManagementService
       this.requestTypeField.setValue(requestTypeValue);
       this.handleReadonly();
     }
-  }
-  private invalidFormMessage() {
-    this.dialog.error(this.lang.map.msg_all_required_fields_are_filled);
   }
   _setDefaultValues(): void {
     this.requestTypeField.setValue(ServiceRequestTypes.NEW);
@@ -321,14 +322,23 @@ NpoManagementService
   }
   _destroyComponent(): void {
   }
-  onDateChange(event: IMyInputFieldChanged, fromFieldName: string, toFieldName: string): void {
-    DateUtils.setRelatedMinMaxDate({
-      fromFieldName,
-      toFieldName,
+  onDateChange(event: IMyInputFieldChanged): void {
+    DateUtils.setRelatedMinDate({
+      fromFieldName: 'establishmentDate',
+      toFieldName: 'clearanceDate',
       controlOptionsMap: this.datepickerOptionsMap,
       controlsMap: {
-        // licenseStartDate: this.licenseStartDate,
-        // licenseEndDate: this.licenseEndDate
+        licenseStartDate: this.establishmentDateField,
+        licenseEndDate: this.clearanceDateField
+      }
+    });
+    DateUtils.setRelatedMinDate({
+      fromFieldName: 'establishmentDate',
+      toFieldName: 'disbandmentDate',
+      controlOptionsMap: this.datepickerOptionsMap,
+      controlsMap: {
+        licenseStartDate: this.establishmentDateField,
+        licenseEndDate: this.disbandmentDateField
       }
     });
   }
