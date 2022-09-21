@@ -17,6 +17,7 @@
               lang.map.training_activity_type }}</label>
             <ng-select [selectOnTab]="true" placeholder="{{ lang.map.select }}" [readonly]="false"
               [notFoundText]="lang.map.msg_not_found" appendTo="body" id="trainingActivityType"
+              labelForId="trainingActivityType"
               validationClasses="trainingActivityType" formControlName="trainingActivityType">
               <ng-option *ngFor="let option of trainingTypes" [value]="option.lookupKey">{{ option.getName() }}
               </ng-option>
@@ -40,6 +41,7 @@
               lang.map.training_languages }}</label>
             <ng-select [selectOnTab]="true" placeholder="{{ lang.map.select }}" [readonly]="false"
               [notFoundText]="lang.map.msg_not_found" appendTo="body" id="trainingLanguage"
+              labelForId="trainingLanguage"
               validationClasses="trainingLanguage" formControlName="trainingLanguage"
               (change)="onTranaingLangaugeChange($event)">
               <ng-option *ngFor="let option of trainingLanguages" [value]="option.lookupKey">{{ option.getName() }}
@@ -117,6 +119,7 @@
             <label asteriskIfRequired="timeFrom" for="timeFrom" class="form-label">{{lang.map.lbl_time_from}}</label>
             <ng-select [selectOnTab]="true" placeholder="{{ lang.map.select }}" [readonly]="false"
               [notFoundText]="lang.map.msg_not_found" appendTo="body" id="timeFrom" validationClasses="timeFrom"
+              labelForId="timeFrom"
               formControlName="timeFrom">
               <ng-option *ngFor="let option of times" [value]="option.value">{{ option.text }}
               </ng-option>
@@ -128,7 +131,8 @@
             <label asteriskIfRequired="timeTo" for="timeTo" class="form-label">{{lang.map.lbl_time_to}}</label>
             <ng-select [selectOnTab]="true" placeholder="{{ lang.map.select }}" [readonly]="false"
               [notFoundText]="lang.map.msg_not_found" appendTo="body" id="timeTo" validationClasses="timeTo"
-              formControlName="timeTo">
+              formControlName="timeTo"
+              labelForId="timeTo">
               <ng-option *ngFor="let option of times" [value]="option.value">{{ option.text }}
               </ng-option>
             </ng-select>
@@ -139,7 +143,9 @@
             <label asteriskIfRequired="trainingWay" for="trainingWay" class="form-label">{{
               lang.map.lbl_training_wayes }}</label>
             <ng-select [selectOnTab]="true" placeholder="{{ lang.map.select }}" [readonly]="false"
-              [notFoundText]="lang.map.msg_not_found" appendTo="body" id="trainingWay" validationClasses="trainingWay"
+              [notFoundText]="lang.map.msg_not_found" appendTo="body" id="trainingWay"
+              labelForId="trainingWay"
+              validationClasses="trainingWay"
               formControlName="trainingWay" (change)="onTranaingWayChange($event)">
               <ng-option *ngFor="let option of trainingWayes" [value]="option.lookupKey">{{ option.getName() }}
               </ng-option>
@@ -197,7 +203,8 @@
             <ng-select [selectOnTab]="true" placeholder="{{ lang.map.select }}" [readonly]="false"
               [notFoundText]="lang.map.msg_not_found" appendTo="body" id="filtrationMethod"
               validationClasses="filtrationMethod" formControlName="filtrationMethod"
-              (change)="onFilterationMethodChange($event)">
+              (change)="onFilterationMethodChange($event)"
+              labelForId="filtrationMethod">
               <ng-option *ngFor="let option of recommendedWayes" [value]="option.lookupKey">{{ option.getName() }}
               </ng-option>
             </ng-select>
@@ -248,9 +255,11 @@
   </div>
 </div>
 <app-page-header [hidden]="!canUpdate || !isClaimed" pageTitle="building_abilities" [clickOnNew$]="add$"
-  [addPermission]="addAllowed()"></app-page-header>
+  [addPermission]="addAllowed() "
 
-<table *ngIf="list.length" class="table mt-3 table-striped table-bordered caption-top" cdk-table
+  ></app-page-header>
+
+<table  class="table mt-3 table-striped table-bordered caption-top" cdk-table
   [dataSource]="listDataSource">
   <ng-container cdkColumnDef="activityName">
     <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.activity_name}}</th>
@@ -290,11 +299,11 @@
   </ng-container>
   <ng-container cdkColumnDef="timeFrom">
     <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_time_from}}</th>
-    <td cdk-cell *cdkCellDef="let row"> {{row.timeFrom | date:'hh:mm'}} </td>
+    <td cdk-cell *cdkCellDef="let row"> {{row.timeFrom | date:'hh:mm' }} </td>
   </ng-container>
   <ng-container cdkColumnDef="timeTo">
     <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_time_to}}</th>
-    <td cdk-cell *cdkCellDef="let row"> {{row.timeTo | date:'hh:mm'}} </td>
+    <td cdk-cell *cdkCellDef="let row"> {{row.timeTo | date:'hh:mm' }} </td>
   </ng-container>
   <ng-container cdkColumnDef="trainingWay">
     <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_training_way}}</th>
@@ -308,14 +317,14 @@
     <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
       <div class="d-flex flex-row">
         <button (click)="delete($event, row, i)" class="icon-btn text-primary" [disabled]="readonly"
-          [disabled]="!isClaimed" tooltip="{{lang.map.btn_delete}}">
+          [disabled]="!isClaimed || formOpend" tooltip="{{lang.map.btn_delete}}">
           <i class="mdi mdi-close-box"></i>
         </button>
         <button (click)="edit($event, row, i)" class="icon-btn text-primary" [disabled]="readonly"
-          [disabled]="!isClaimed" tooltip="{{lang.map.btn_edit}}">
+          [disabled]="!isClaimed || formOpend" tooltip="{{lang.map.btn_edit}}">
           <i class="mdi mdi-pen"></i>
         </button>
-        <button (click)="view($event, row, i)" class="icon-btn text-primary" [disabled]="!isClaimed"
+        <button (click)="view($event, row, i)" class="icon-btn text-primary" [disabled]="!isClaimed || formOpend"
           tooltip="{{lang.map.view}}">
           <i class="mdi mdi-eye"></i>
         </button>

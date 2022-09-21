@@ -10,6 +10,9 @@ export class BuildingAbilityInterceptor implements IModelInterceptor<BuildingAbi
   send(model: Partial<BuildingAbility>): Partial<BuildingAbility> {
     delete model.searchFields;
     delete model.employeeService;
+    delete model.trainingWayInfo;
+    delete model.trainingActivityTypeInfo;
+    delete model.trainingLanguageInfo;
       model.suggestedActivityDateFrom =  !model.suggestedActivityDateFrom
       ? undefined
       : DateUtils.changeDateFromDatepicker(

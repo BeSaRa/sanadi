@@ -123,7 +123,7 @@
 <app-page-header [hidden]="!canUpdate || !isClaimed" pageTitle="research_and_studies" [clickOnNew$]="add$"
   [addPermission]="addAllowed()"></app-page-header>
 
-<table *ngIf="list.length" class="table mt-3 table-striped table-bordered caption-top" cdk-table
+<table  class="table mt-3 table-striped table-bordered caption-top" cdk-table
   [dataSource]="listDataSource">
   <ng-container cdkColumnDef="researchTopic">
     <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_research_topic}}</th>
@@ -164,14 +164,14 @@
     <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
       <div class="d-flex flex-row">
         <button (click)="delete($event, row, i)" class="icon-btn text-primary" [disabled]="readonly"
-          [disabled]="!isClaimed" tooltip="{{lang.map.btn_delete}}">
+          [disabled]="!isClaimed || formOpend" tooltip="{{lang.map.btn_delete}}">
           <i class="mdi mdi-close-box"></i>
         </button>
         <button (click)="edit($event, row, i)" class="icon-btn text-primary" [disabled]="readonly"
-          [disabled]="!isClaimed" tooltip="{{lang.map.btn_edit}}">
+          [disabled]="!isClaimed || formOpend" tooltip="{{lang.map.btn_edit}}">
           <i class="mdi mdi-pen"></i>
         </button>
-        <button (click)="view($event, row, i)" class="icon-btn text-primary" [disabled]="!isClaimed"
+        <button (click)="view($event, row, i)" class="icon-btn text-primary" [disabled]="!isClaimed || formOpend"
           tooltip="{{lang.map.view}}">
           <i class="mdi mdi-eye"></i>
         </button>
