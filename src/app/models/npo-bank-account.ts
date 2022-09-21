@@ -3,6 +3,7 @@ import { CustomValidators } from '@app/validators/custom-validators';
 import { SearchableCloneable } from '@app/models/searchable-cloneable';
 
 export class NpoBankAccount extends SearchableCloneable<NpoBankAccount> {
+  objectDBId!: number;
   currency!: number;
   accountNumber!: string;
   bankId!: number;

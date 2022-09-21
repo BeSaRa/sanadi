@@ -1,3 +1,4 @@
+import { Bank } from './../../../../../models/bank';
 import { NpoBankAccount } from './../../../../../models/npo-bank-account';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
@@ -18,7 +19,6 @@ import { CaseTypes } from '@app/enums/case-types.enum';
   styleUrls: ['./npo-bank-account.component.scss']
 })
 export class NpoBankAccountComponent implements OnInit {
-  @Input() bankList: Lookup[]= [];
   constructor(public lang: LangService,
     private toastService: ToastService,
     private dialogService: DialogService,
@@ -40,6 +40,7 @@ export class NpoBankAccountComponent implements OnInit {
 
   @Input() readonly: boolean = false;
   @Input() caseType?: CaseTypes;
+  @Input() bankList: Bank[] = [];
   currenciesList: Lookup[] = this.lookupService.listByCategory.Currency;
   caseTypes = CaseTypes;
 

@@ -35,36 +35,36 @@ export class NpoManagement
   requestType!: number;
   arabicName!: string;
   englishName!: string;
-
+  objectDBId!: number;
+  unifiedEconomicRecord!: string;
   activityType!: number;
-  clearanceType!: number;
-  disbandmentType!: number;
   establishmentDate!: string | IMyDateModel;
-  disbandmentDate!: string | IMyDateModel;
-  clearanceDate!: string | IMyDateModel;
   // TODO!: have to complete from the admin
   registrationAuthority!: number;
   registrationDate!: string | IMyDateModel;
   registrationNumber!: string;
-
+  disbandmentType!: number;
+  disbandmentDate!: string | IMyDateModel;
+  clearanceDate!: string | IMyDateModel;
+  clearanceType!: number;
   clearanceName!: string;
-  unifiedEconomicRecord!: string;
+
   // contact info
   phone!: string;
   email!: string;
   // national number
+  fax!: string;
+  hotline!: string;
+  website!: string;
   zoneNumber!: string;
   streetNumber!: string;
   buildingNumber!: string;
   address!: string;
-  website!: string;
   facebook!: string;
   twitter!: string;
   instagram!: string;
   snapChat!: string;
   youTube!: string;
-  fax!: string;
-  hotline!: string;
   // readonly info
   contactOfficerList: NpoContactOfficer[] = [];
   founderMemberList: FounderMembers[] = [];

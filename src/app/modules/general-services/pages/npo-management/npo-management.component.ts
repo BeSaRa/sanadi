@@ -1,3 +1,13 @@
+import { NpoBankAccount } from './../../../../models/npo-bank-account';
+import { NpoContactOfficer } from '@app/models/npo-contact-officer';
+import { FounderMembers } from '@app/models/founder-members';
+import { RealBeneficiary } from '@app/models/real-beneficiary';
+import { Beneficiary } from '@app/models/beneficiary';
+import { NpoData } from './../../../../models/npo-data';
+import { NpoDataService } from './../../../../services/npo-data.service';
+import { NpoManagement } from './../../../../models/npo-management';
+import { OrgUnit } from './../../../../models/org-unit';
+import { OrganizationUnitService } from './../../../../services/organization-unit.service';
 import { CommonUtils } from './../../../../helpers/common-utils';
 import { CustomValidators } from './../../../../validators/custom-validators';
 import { TabComponent } from './../../../../shared/components/tab/tab.component';
@@ -19,11 +29,9 @@ import { OpenFrom } from './../../../../enums/open-from.enum';
 import { CommonCaseStatus } from './../../../../enums/common-case-status.enum';
 import { ToastService } from './../../../../services/toast.service';
 import { DialogService } from './../../../../services/dialog.service';
-import { tap, filter } from 'rxjs/operators';
 import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
 import { NpoManagementService } from './../../../../services/npo-management.service';
-import { NpoManagement } from './../../../../models/npo-management';
-import { Component, ChangeDetectorRef, ViewChild, Input } from '@angular/core';
+import { Component, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { UntypedFormGroup, UntypedFormBuilder, UntypedFormControl, Validators } from '@angular/forms';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { SaveTypes } from '@app/enums/save-types';
@@ -33,6 +41,7 @@ import { EmployeeService } from '@app/services/employee.service';
 import { AdminLookupService } from '@app/services/admin-lookup.service';
 import { AdminLookupTypeEnum } from '@app/enums/admin-lookup-type-enum';
 import { NPORequestType } from '@app/enums/npo-requestType.enum';
+import { Bank } from '@app/models/bank';
 
 @Component({
   selector: 'app-npo-management',
@@ -45,17 +54,18 @@ NpoManagementService
 > {
   NPORequestTypesList: Lookup[] = this.lookupService.listByCategory.NPORequestType.slice().sort((a, b) => a.lookupKey - b.lookupKey);
   activityTypesList: AdminLookup[] = [];
-  bankList: Lookup[] = [];
+  bankList: Bank[] = [];
+  NpoList: NpoData[] = [];
   // Clearance Type & Disbandment Type
   NPODecisionsList: Lookup[] = this.lookupService.listByCategory.NPODecisions;
   // TODO! fill this list after done from admin
   registrationAuthoritiesList = []
   form!: UntypedFormGroup;
+  npoIdField: UntypedFormControl = new UntypedFormControl();
   bankDetailsTabStatus: ReadinessStatus = 'READY';
   contactOfficersTabStatus: ReadinessStatus = 'READY';
   founderMemberTabStatus: ReadinessStatus = 'READY';
   realBeneficiaryTabStatus: ReadinessStatus = 'READY';
-
   @ViewChild('bankAccountsTab') bankAccountComponentRef!: NpoBankAccountComponent;
   @ViewChild('contactOfficersTab') contactOfficerComponentRef!: NpoContactOfficerComponent;
   @ViewChild('founderMemberTab') founderMemberComponentRef!: FounderMembersComponent;
@@ -128,6 +138,8 @@ NpoManagementService
     private toast: ToastService,
     private adminLookupService: AdminLookupService,
     private cd: ChangeDetectorRef,
+    private _ou: OrganizationUnitService,
+    private npoDataService: NpoDataService,
     private bankService: BankService,
     private dialog: DialogService,
     private employeeService: EmployeeService,
@@ -178,12 +190,20 @@ NpoManagementService
   }
   _initComponent(): void {
     this._buildForm();
-    this.bankService.getBankLookup().subscribe((data) => {
+    this.npoDataService.loadAsLookups().subscribe(data => {
+      this.NpoList = data
+    })
+    this.bankService.loadAsLookups().subscribe((data) => {
       this.bankList = data;
     })
     this.adminLookupService.loadAsLookups(AdminLookupTypeEnum.ACTIVITY_TYPE).subscribe((data: never[] | AdminLookup[]) => {
       this.activityTypesList = data;
     })
+    if (this.isRegistrationAuthority) {
+      this.npoIdField.setValue(
+        8 // TODO!: set regestered user id
+      )
+    }
   }
   _buildForm(): void {
     const model = new NpoManagement().buildForm(true);
@@ -281,9 +301,13 @@ NpoManagementService
   handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
     if (userInteraction) {
       this.setFieldsValidation();
-      this._resetForm();
       this.requestTypeField.setValue(requestTypeValue);
       this.handleReadonly();
+      if (this.isNew) {
+        this._resetForm();
+      } else if (this.npoIdField.value) {
+        this.loadOrganizationData()
+      }
     }
   }
   _setDefaultValues(): void {
@@ -310,6 +334,79 @@ NpoManagementService
     }
 
     return !isAllowed;
+  }
+  loadOrganizationData() {
+    this.npoDataService.loadCompositeById(this.npoIdField.value)
+      .subscribe((data: any) => {
+        console.log(data)
+        this.setSelectedLicense(data)
+      })
+  }
+
+  private setSelectedLicense(details: NpoData) {
+    if (details) {
+      let value: any = new NpoManagement();
+      value.requestType = this.requestTypeField.value;
+      value.objectDBId = details.id;
+      value.arabicName = details.arName;
+      value.englishName = details.enName;
+      value.unifiedEconomicRecord = details.unifiedEconomicRecord;
+      value.activityType = details.activityType;
+      value.establishmentDate = details.establishmentDate;
+      value.registrationAuthority = details.registrationAuthority;
+      value.registrationDate = details.registrationDate;
+      value.registrationNumber = details.registrationNumber;
+      value.disbandmentType = details.disbandmentType;
+      value.disbandmentDate = details.disbandmentDate;
+      value.clearanceDate = details.clearanceDate;
+      value.clearanceType = details.clearanceType;
+      value.clearanceName = details.clearanceName;
+      value.phone = details.phone;
+      value.email = details.email;
+      value.fax = details.fax;
+      value.hotline = details.hotline;
+      value.website = details.website;
+      value.zoneNumber = details.zoneNumber;
+      value.streetNumber = details.streetNumber;
+      value.buildingNumber = details.buildingNumber;
+      value.address = details.address;
+      value.facebook = details.facebook;
+      value.twitter = details.twitter;
+      value.instagram = details.instagram;
+      value.snapChat = details.snapChat;
+      value.youTube = details.youTube;
+
+      value.bankAccountList = details.bankAccountList.map((ba: any) => {
+        const ob = new NpoBankAccount().clone(ba);
+        ob.iban = ba.iBAN;
+        ob.objectDBId = ba.id;
+        return ob;
+      });
+      value.contactOfficerList = details.contactOfficerList.map((co: any) => {
+        const ob = new NpoContactOfficer().clone(co);
+        ob.officerId = co.id;
+        ob.identificationNumber = co.qid;
+        return ob;
+      });
+      value.founderMemberList = details.founderList.map((f: any) => {
+        const ob = new FounderMembers().clone(f);
+        ob.objectDBId = f.id;
+        ob.identificationNumber = f.qid;
+        return ob;
+      });
+      value.realBeneficiaryList = details.beneficiaryList.map((rb: any) => {
+        const ob = new RealBeneficiary().clone(rb);
+        ob.objectDBId = rb.id;
+        ob.arabicName = rb.arName;
+        ob.englishName = rb.enName;
+        ob.identificationNumber = rb.qid;
+        return ob;
+      });
+
+      this._updateForm(value);
+      this.setFieldsValidation();
+      this.handleReadonly();
+    }
   }
   onTabChange($event: TabComponent) {
     this.loadAttachments = $event.name === this.tabsData.attachments.name;
@@ -344,14 +441,23 @@ NpoManagementService
   }
   setFieldsValidation() {
     this.disbandmentTypeField?.setValidators([]);
+    this.disbandmentTypeField.reset()
     this.disbandmentDateField?.setValidators([]);
+    this.disbandmentDateField.reset()
     this.clearanceTypeField?.setValidators([]);
+    this.clearanceTypeField.reset()
     this.clearanceNameField?.setValidators([]);
+    this.clearanceNameField.reset()
     this.clearanceDateField?.setValidators([]);
+    this.clearanceDateField.reset()
     this.registrationAuthorityField?.setValidators([]);
+    this.registrationAuthorityField.reset()
     this.registrationDateField?.setValidators([]);
+    this.registrationDateField.reset()
     this.registrationNumberField?.setValidators([]);
+    this.registrationNumberField.reset()
     this.establishmentDateField?.setValidators([]);
+    this.establishmentDateField.reset()
     if (this.isClearance) {
       this.clearanceTypeField.setValidators([Validators.required])
       this.clearanceNameField.setValidators([CustomValidators.required, Validators.maxLength(150),
@@ -376,7 +482,7 @@ NpoManagementService
     }
   }
   get isRegistrationAuthority() {
-    return false
+    return true
   }
   get isNew() {
     return this.requestTypeField.value == NPORequestType.New
@@ -386,6 +492,9 @@ NpoManagementService
   }
   get isDisbandment() {
     return this.requestTypeField.value == NPORequestType.Disbandment
+  }
+  get isLicensingUser() {
+    return this.employeeService.isLicensingUser()
   }
 
   get basicInfo() {

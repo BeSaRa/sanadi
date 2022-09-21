@@ -5,6 +5,7 @@ import { CustomValidators } from "@app/validators/custom-validators";
 import { SearchableCloneable } from "@app/models/searchable-cloneable";
 
 export class FounderMembers extends SearchableCloneable<FounderMembers>{
+  objectDBId!: number;
   identificationNumber!: string;
   fullName!: string;
   jobTitleId!: number;

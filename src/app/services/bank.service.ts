@@ -42,12 +42,4 @@ export class BankService extends CrudWithDialogGenericService<Bank> {
     FactoryService.registerService('BankService', this);
   }
 
-  @CastResponse(() => Bank, {
-    unwrap: 'rs',
-    fallback: '$default'
-  })
-  getBankLookup() {
-    return this.http.get<Lookup[]>(this._getServiceURL() + '/lookup');
-  }
-
 }

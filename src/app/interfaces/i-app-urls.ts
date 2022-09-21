@@ -113,5 +113,6 @@ export interface IAppUrls {
   CHARITY_REPORT: string;
   CHARITY_DECISION: string;
   GOVERNANCE_DOCUMENT: string;
+  NPO_DATA: string;
   [index: string]: string;
 }
