@@ -469,6 +469,9 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           if (this.servicesWithNoSaveDraftLaunch.includes(item.getCaseType())) {
             return false;
           }
+          if(item.caseType === CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST){
+            return !item.isInitialApproved() || !this.internal
+          }
           // show if external user or service which are only for internal user
           return !this.internal || this.internalUserServices.includes(item.getCaseType());
         },
@@ -508,6 +511,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           return item.getResponses().includes(WFResponseType.RETURN_TO_SPECIFIC_ORGANIZATION);
         },
         onClick: (item: CaseModel<any, any>) => {
+
           this.returnToSpecificOrganizationAction(item);
         }
       },

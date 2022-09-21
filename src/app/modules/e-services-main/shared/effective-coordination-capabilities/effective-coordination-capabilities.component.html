@@ -26,6 +26,7 @@
               lang.map.lbl_organization_way }}</label>
             <ng-select [selectOnTab]="true" placeholder="{{ lang.map.select }}" [readonly]="false"
               [notFoundText]="lang.map.msg_not_found" appendTo="body" id="organizationWay"
+              labelForId="organizationWay"
               validationClasses="organizationWay" formControlName="organizationWay">
               <ng-option *ngFor="let option of organizationWayes" [value]="option.lookupKey">{{ option.getName() }}
               </ng-option>
@@ -134,7 +135,7 @@
 [hidden]="!canUpdate || !isClaimed" pageTitle="effective_coordination_capabilities"
   [clickOnNew$]="add$" [addPermission]="addAllowed()"></app-page-header>
 
-<table *ngIf="list.length" class="table mt-3 table-striped table-bordered caption-top" cdk-table
+<table  class="table mt-3 table-striped table-bordered caption-top" cdk-table
   [dataSource]="listDataSource">
   <ng-container cdkColumnDef="eventTopic">
     <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_event_topic}}</th>
@@ -190,17 +191,17 @@
     <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
       <div class="d-flex flex-row">
         <button (click)="delete($event, row, i)" class="icon-btn text-primary" [disabled]="readonly"
-        [disabled]="!isClaimed"
+        [disabled]="!isClaimed || formOpend"
         tooltip="{{lang.map.btn_delete}}">
           <i class="mdi mdi-close-box"></i>
         </button>
         <button (click)="edit($event, row, i)" class="icon-btn text-primary" [disabled]="readonly"
-        [disabled]="!isClaimed"
+        [disabled]="!isClaimed || formOpend"
         tooltip="{{lang.map.btn_edit}}">
           <i class="mdi mdi-pen"></i>
         </button>
         <button (click)="view($event, row, i)" class="icon-btn text-primary"
-        [disabled]="!isClaimed"
+        [disabled]="!isClaimed || formOpend"
         tooltip="{{lang.map.view}}">
 
           <i class="mdi mdi-eye"></i>

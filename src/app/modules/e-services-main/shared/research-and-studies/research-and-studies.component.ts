@@ -1,8 +1,6 @@
 import {
-  Component,
-  EventEmitter, Input,
-  OnInit,
-  Output
+  Component, Input,
+  OnInit
 } from '@angular/core';
 import {
   AbstractControl,
@@ -17,7 +15,7 @@ import { ResearchAndStudies } from '@app/models/research-and-studies';
 import { DialogService } from '@app/services/dialog.service';
 import { LangService } from '@app/services/lang.service';
 import { ToastService } from '@app/services/toast.service';
-import { DatepickerOptionsMap, ReadinessStatus } from '@app/types/types';
+import { DatepickerOptionsMap } from '@app/types/types';
 import { IMyInputFieldChanged } from 'angular-mydatepicker';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { filter, map, take, takeUntil } from 'rxjs/operators';
@@ -35,7 +33,6 @@ export class ResearchAndStudiesComponent implements OnInit {
     private fb: FormBuilder
   ) {}
   @Input() formArrayName: string = 'researchAndStudies';
-  @Output() readyEvent = new EventEmitter<ReadinessStatus>();
   @Input() orgId!:number|undefined;
 
   allowListUpdate:boolean=true;
@@ -70,7 +67,7 @@ export class ResearchAndStudiesComponent implements OnInit {
   private currentRecord?: ResearchAndStudies;
 
   private destroy$: Subject<any> = new Subject<any>();
-
+  formOpend=false;
   form!: FormGroup;
 
   datepickerOptionsMap: DatepickerOptionsMap = {
@@ -88,7 +85,6 @@ export class ResearchAndStudiesComponent implements OnInit {
     this.listenToAdd();
     this.listenToRecordChange();
     this.listenToSave();
-    this._setComponentReadiness('READY');
     if(this.canUpdate === false){
       this.columns= this.columns.slice(0,this.model.DisplayedColumns.length-1);
     }
@@ -107,6 +103,7 @@ export class ResearchAndStudiesComponent implements OnInit {
   private listenToAdd() {
     this.add$.pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.viewOnly = false;
+      this.formOpend=true;
       this.recordChanged$.next(new ResearchAndStudies());
     });
   }
@@ -121,22 +118,14 @@ export class ResearchAndStudiesComponent implements OnInit {
     const formArray = this.formArray;
     formArray.clear();
     if (model) {
-      if (this.viewOnly) {
-        this._setComponentReadiness('READY');
-      } else {
-        this._setComponentReadiness('NOT_READY');
-      }
+
       formArray.push(this.fb.group(new ResearchAndStudies().clone(model).BuildForm(true)));
       if (this.readonly || this.viewOnly) {
         this.formArray.disable();
       }
-    } else {
-      this._setComponentReadiness('READY');
     }
   }
-  private _setComponentReadiness(readyStatus: ReadinessStatus) {
-    this.readyEvent.emit(readyStatus);
-  }
+
   private listenToSave() {
     const form$ = this.save$.pipe(
       map(() => {
@@ -162,10 +151,12 @@ export class ResearchAndStudiesComponent implements OnInit {
           return this.form.get(`${this.formArrayName}.0`) as FormArray;
         }),
         map((form) => {
-          return new ResearchAndStudies().clone({
+          const model= new ResearchAndStudies().clone({
             ...this.currentRecord,
             ...form.getRawValue(),
           });
+          this.formOpend=false;
+          return model;
         })
       )
       .subscribe((model: ResearchAndStudies) => {
@@ -202,7 +193,7 @@ export class ResearchAndStudiesComponent implements OnInit {
     this.listDataSource.next(this.list);
   }
   addAllowed(): boolean {
-    return !this.readonly;
+    return !this.readonly && !this.formOpend;
   }
   onSave() {
     if (this.readonly || this.viewOnly) {
@@ -212,16 +203,17 @@ export class ResearchAndStudiesComponent implements OnInit {
   }
   onCancel() {
     this.resetForm();
-    this._setComponentReadiness('READY');
     this.editIndex = -1;
   }
   private resetForm() {
+    this.formOpend=false;
     this.formArray.clear();
     this.formArray.markAsUntouched();
     this.formArray.markAsPristine();
   }
   view($event: MouseEvent, record: ResearchAndStudies, index: number) {
     $event.preventDefault();
+    this.formOpend=true;
     this.editIndex = index;
     this.viewOnly = true;
     this.recordChanged$.next(record);
@@ -247,6 +239,7 @@ export class ResearchAndStudiesComponent implements OnInit {
     if (this.readonly) {
       return;
     }
+    this.formOpend=true;
     this.editIndex = index;
     this.viewOnly = false;
     this.recordChanged$.next(record);

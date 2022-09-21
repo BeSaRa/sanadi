@@ -1,12 +1,7 @@
-import { RecommendedWay } from './../../../../enums/recommended-way.enum';
 import {
   Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-  ViewChild,
+  ElementRef, Input,
+  OnInit, ViewChild
 } from '@angular/core';
 import {
   AbstractControl,
@@ -15,7 +10,7 @@ import {
   FormGroup,
   UntypedFormArray,
   UntypedFormControl,
-  UntypedFormGroup,
+  UntypedFormGroup
 } from '@angular/forms';
 import { TrainingWay } from '@app/enums/training-way.enum';
 import { UserClickOn } from '@app/enums/user-click-on.enum';
@@ -25,12 +20,13 @@ import { Lookup } from '@app/models/lookup';
 import { OrgUnit } from '@app/models/org-unit';
 import { DialogService } from '@app/services/dialog.service';
 import { LangService } from '@app/services/lang.service';
+import { LookupService } from '@app/services/lookup.service';
 import { ToastService } from '@app/services/toast.service';
-import { DatepickerOptionsMap, ReadinessStatus } from '@app/types/types';
-import { NgSelectComponent } from '@ng-select/ng-select';
+import { DatepickerOptionsMap } from '@app/types/types';
 import { IMyInputFieldChanged } from 'angular-mydatepicker';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { filter, map, take, takeUntil } from 'rxjs/operators';
+import { RecommendedWay } from './../../../../enums/recommended-way.enum';
 import { TrainingLanguage } from './../../../../enums/training-language-enum';
 import { BuildingAbility } from './../../../../models/building-ability';
 
@@ -44,16 +40,16 @@ export class BuildingAbilityComponent implements OnInit {
     public lang: LangService,
     private toastService: ToastService,
     private dialogService: DialogService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private lookup: LookupService
   ) {}
   @Input() formArrayName: string = 'buildingAbilitiesList';
-  @Output() readyEvent = new EventEmitter<ReadinessStatus>();
-  @Input() orgId!:number|undefined;
-  allowListUpdate:boolean=true;
+  @Input() orgId!: number | undefined;
+  allowListUpdate: boolean = true;
 
   private _list: BuildingAbility[] = [];
   @Input() set list(list: BuildingAbility[]) {
-    if( this.allowListUpdate === true){
+    if (this.allowListUpdate === true) {
       this._list = list;
       this.listDataSource.next(this._list);
     }
@@ -80,7 +76,7 @@ export class BuildingAbilityComponent implements OnInit {
   private currentRecord?: BuildingAbility;
 
   private destroy$: Subject<any> = new Subject<any>();
-
+  formOpend=false;
   form!: FormGroup;
   @Input() organizationUnits: OrgUnit[] = [];
   @Input() trainingTypes: Lookup[] = [];
@@ -108,7 +104,6 @@ export class BuildingAbilityComponent implements OnInit {
     this.listenToAdd();
     this.listenToRecordChange();
     this.listenToSave();
-    this._setComponentReadiness('READY');
     if (this.canUpdate === false) {
       this.columns = this.columns.slice(
         0,
@@ -129,14 +124,17 @@ export class BuildingAbilityComponent implements OnInit {
     });
   }
   private listenToAdd() {
+
     this.add$.pipe(takeUntil(this.destroy$)).subscribe(() => {
+
       this.viewOnly = false;
+      this.formOpend=true;
       this.recordChanged$.next(new BuildingAbility());
     });
   }
   private listenToRecordChange() {
     this.recordChanged$.pipe(takeUntil(this.destroy$)).subscribe((record) => {
-      if(record)record.organizationId=this.orgId;
+      if (record) record.organizationId = this.orgId;
       this.currentRecord = record || undefined;
       this.updateForm(this.currentRecord);
     });
@@ -145,24 +143,15 @@ export class BuildingAbilityComponent implements OnInit {
     const formArray = this.formArray;
     formArray.clear();
     if (model) {
-      if (this.viewOnly) {
-        this._setComponentReadiness('READY');
-      } else {
-        this._setComponentReadiness('NOT_READY');
-      }
-
-
-      formArray.push(this.fb.group(new BuildingAbility().clone(model).formBuilder(true)));
+      formArray.push(
+        this.fb.group(new BuildingAbility().clone(model).formBuilder(true))
+      );
       if (this.readonly || this.viewOnly) {
         this.formArray.disable();
       }
-    } else {
-      this._setComponentReadiness('READY');
     }
   }
-  private _setComponentReadiness(readyStatus: ReadinessStatus) {
-    this.readyEvent.emit(readyStatus);
-  }
+
   private listenToSave() {
     const form$ = this.save$.pipe(
       map(() => {
@@ -188,10 +177,13 @@ export class BuildingAbilityComponent implements OnInit {
           return this.form.get(`${this.formArrayName}.0`) as FormArray;
         }),
         map((form) => {
-          return new BuildingAbility().clone({
+          const model = new BuildingAbility().clone({
             ...this.currentRecord,
             ...form.getRawValue(),
           });
+          this._updateLookups(model);
+          this.formOpend=false;
+          return model;
         })
       )
       .subscribe((model: BuildingAbility) => {
@@ -208,6 +200,19 @@ export class BuildingAbilityComponent implements OnInit {
         this.viewOnly = false;
         this.recordChanged$.next(null);
       });
+  }
+  private _updateLookups(model: BuildingAbility) {
+    model.trainingActivityTypeInfo =
+      this.lookup.listByCategory.TrainingActivityType.find(
+        (x) => x.lookupKey === model.trainingActivityType
+      )!.convertToAdminResult();
+    model.trainingLanguageInfo =
+      this.lookup.listByCategory.TrainingLanguage.find(
+        (x) => x.lookupKey === model.trainingLanguage
+      )!.convertToAdminResult();
+    model.trainingWayInfo = this.lookup.listByCategory.TrainingWay.find(
+      (x) => x.lookupKey === model.trainingWay
+    )!.convertToAdminResult();
   }
   private _updateList(
     record: BuildingAbility | null,
@@ -228,7 +233,7 @@ export class BuildingAbilityComponent implements OnInit {
     this.listDataSource.next(this.list);
   }
   addAllowed(): boolean {
-    return !this.readonly;
+    return !this.readonly && !this.formOpend;
   }
   onSave() {
     if (this.readonly || this.viewOnly) {
@@ -238,16 +243,17 @@ export class BuildingAbilityComponent implements OnInit {
   }
   onCancel() {
     this.resetForm();
-    this._setComponentReadiness('READY');
     this.editIndex = -1;
   }
   private resetForm() {
+    this.formOpend=false;
     this.formArray.clear();
     this.formArray.markAsUntouched();
     this.formArray.markAsPristine();
   }
   view($event: MouseEvent, record: BuildingAbility, index: number) {
     $event.preventDefault();
+    this.formOpend=true;
     this.editIndex = index;
     this.viewOnly = true;
     this.recordChanged$.next(record);
@@ -270,6 +276,7 @@ export class BuildingAbilityComponent implements OnInit {
   }
   edit($event: MouseEvent, record: BuildingAbility, index: number) {
     $event.preventDefault();
+    this.formOpend=true;
     if (this.readonly) {
       return;
     }
@@ -296,16 +303,16 @@ export class BuildingAbilityComponent implements OnInit {
   @ViewChild('hallName') hallNameRef!: ElementRef;
   @ViewChild('streetName') streetNameRef!: ElementRef;
 
-  onTranaingWayChange(trainingWay:TrainingWay){
-    if(trainingWay === TrainingWay.LIVE){
+  onTranaingWayChange(trainingWay: TrainingWay) {
+    if (trainingWay === TrainingWay.LIVE) {
       this.platformRef.nativeElement.value = '';
-    }else{
+    } else {
       this.buildingsNameRef.nativeElement.value = '';
       this.floorNoRef.nativeElement.value = '';
       this.hallNameRef.nativeElement.value = '';
       this.streetNameRef.nativeElement.value = '';
     }
-    this.model!.trainingWay= trainingWay
+    this.model!.trainingWay = trainingWay;
   }
   get isRemoteTraining() {
     return this.model.trainingWay === TrainingWay.REMOTE ? false : true;
@@ -316,13 +323,14 @@ export class BuildingAbilityComponent implements OnInit {
 
   @ViewChild('email') emailRef!: ElementRef;
   @ViewChild('otherFiltrationMethod') otherFiltrationMethodRef!: ElementRef;
-  onFilterationMethodChange(recommendedWay:RecommendedWay){
-    if(recommendedWay === RecommendedWay.EMAIL){
+  onFilterationMethodChange(recommendedWay: RecommendedWay) {
+    if (recommendedWay === RecommendedWay.EMAIL) {
       this.otherFiltrationMethodRef.nativeElement.value = '';
-    }else{
+    } else {
       this.emailRef.nativeElement.value = '';
     }
-    this.model!.filtrationMethod= recommendedWay
+    this.model!.filtrationMethod = recommendedWay;
+
   }
 
   get isEmailFiltrationMethod() {
@@ -363,198 +371,200 @@ export class BuildingAbilityComponent implements OnInit {
   }
 
   date = new Date();
+
+
   times = [
     {
       text: '00 : 00 AM',
-      value: new Date(this.date.setUTCHours(0, 0)).toISOString(),
+      value: new Date(this.date.setHours(0, 0)).toISOString(),
     },
     {
       text: '00 : 30 AM',
-      value: new Date(this.date.setUTCHours(0, 30)).toISOString(),
+      value: new Date(this.date.setHours(0, 30)).toISOString(),
     },
     {
       text: '01 : 00 AM',
-      value: new Date(this.date.setUTCHours(1, 0)).toISOString(),
+      value: new Date(this.date.setHours(1, 0)).toISOString(),
     },
     {
       text: '01 : 30 AM',
-      value: new Date(this.date.setUTCHours(1, 30)).toISOString(),
+      value: new Date(this.date.setHours(1, 30)).toISOString(),
     },
     {
       text: '02 : 00 AM',
-      value: new Date(this.date.setUTCHours(2, 0)).toISOString(),
+      value: new Date(this.date.setHours(2, 0)).toISOString(),
     },
     {
       text: '02 : 30 AM',
-      value: new Date(this.date.setUTCHours(2, 30)).toISOString(),
+      value: new Date(this.date.setHours(2, 30)).toISOString(),
     },
     {
       text: '03 : 00 AM',
-      value: new Date(this.date.setUTCHours(3, 0)).toISOString(),
+      value: new Date(this.date.setHours(3, 0)).toISOString(),
     },
     {
       text: '03 : 30 AM',
-      value: new Date(this.date.setUTCHours(3, 30)).toISOString(),
+      value: new Date(this.date.setHours(3, 30)).toISOString(),
     },
     {
       text: '04 : 00 AM',
-      value: new Date(this.date.setUTCHours(4, 0)).toISOString(),
+      value: new Date(this.date.setHours(4, 0)).toISOString(),
     },
     {
       text: '04 : 30 AM',
-      value: new Date(this.date.setUTCHours(4, 30)).toISOString(),
+      value: new Date(this.date.setHours(4, 30)).toISOString(),
     },
     {
       text: '05 : 00 AM',
-      value: new Date(this.date.setUTCHours(5, 0)).toISOString(),
+      value: new Date(this.date.setHours(5, 0)).toISOString(),
     },
     {
       text: '05 : 30 AM',
-      value: new Date(this.date.setUTCHours(5, 30)).toISOString(),
+      value: new Date(this.date.setHours(5, 30)).toISOString(),
     },
     {
       text: '06 : 00 AM',
-      value: new Date(this.date.setUTCHours(6, 0)).toISOString(),
+      value: new Date(this.date.setHours(6, 0)).toISOString(),
     },
     {
       text: '06 : 30 AM',
-      value: new Date(this.date.setUTCHours(6, 30)).toISOString(),
+      value: new Date(this.date.setHours(6, 30)).toISOString(),
     },
     {
       text: '07 : 00 AM',
-      value: new Date(this.date.setUTCHours(7, 0)).toISOString(),
+      value: new Date(this.date.setHours(7, 0)).toISOString(),
     },
     {
       text: '07 : 30 AM',
-      value: new Date(this.date.setUTCHours(7, 30)).toISOString(),
+      value: new Date(this.date.setHours(7, 30)).toISOString(),
     },
     {
       text: '08 : 00 AM',
-      value: new Date(this.date.setUTCHours(8, 0)).toISOString(),
+      value: new Date(this.date.setHours(8, 0)).toISOString(),
     },
     {
       text: '08 : 30 AM',
-      value: new Date(this.date.setUTCHours(8, 30)).toISOString(),
+      value: new Date(this.date.setHours(8, 30)).toISOString(),
     },
     {
       text: '09 : 00 AM',
-      value: new Date(this.date.setUTCHours(9, 0)).toISOString(),
+      value: new Date(this.date.setHours(9, 0)).toISOString(),
     },
     {
       text: '09 : 30 AM',
-      value: new Date(this.date.setUTCHours(9, 30)).toISOString(),
+      value: new Date(this.date.setHours(9, 30)).toISOString(),
     },
     {
       text: '10 : 00 AM',
-      value: new Date(this.date.setUTCHours(10, 0)).toISOString(),
+      value: new Date(this.date.setHours(10, 0)).toISOString(),
     },
     {
       text: '10 : 30 AM',
-      value: new Date(this.date.setUTCHours(10, 30)).toISOString(),
+      value: new Date(this.date.setHours(10, 30)).toISOString(),
     },
     {
       text: '11 : 00 AM',
-      value: new Date(this.date.setUTCHours(11, 0)).toISOString(),
+      value: new Date(this.date.setHours(11, 0)).toISOString(),
     },
     {
       text: '11 : 30 AM',
-      value: new Date(this.date.setUTCHours(11, 30)).toISOString(),
+      value: new Date(this.date.setHours(11, 30)).toISOString(),
     },
     {
       text: '12 : 00 PM',
-      value: new Date(this.date.setUTCHours(12, 0)).toISOString(),
+      value: new Date(this.date.setHours(12, 0)).toISOString(),
     },
     {
       text: '12 : 30 PM',
-      value: new Date(this.date.setUTCHours(12, 30)).toISOString(),
+      value: new Date(this.date.setHours(12, 30)).toISOString(),
     },
     {
       text: '01 : 00 PM',
-      value: new Date(this.date.setUTCHours(1, 0)).toISOString(),
+      value: new Date(this.date.setHours(1, 0)).toISOString(),
     },
     {
       text: '01 : 30 PM',
-      value: new Date(this.date.setUTCHours(1, 30)).toISOString(),
+      value: new Date(this.date.setHours(1, 30)).toISOString(),
     },
     {
       text: '02 : 00 PM',
-      value: new Date(this.date.setUTCHours(2, 0)).toISOString(),
+      value: new Date(this.date.setHours(2, 0)).toISOString(),
     },
     {
       text: '02 : 30 PM',
-      value: new Date(this.date.setUTCHours(2, 30)).toISOString(),
+      value: new Date(this.date.setHours(2, 30)).toISOString(),
     },
     {
       text: '03 : 00 PM',
-      value: new Date(this.date.setUTCHours(3, 0)).toISOString(),
+      value: new Date(this.date.setHours(3, 0)).toISOString(),
     },
     {
       text: '03 : 30 PM',
-      value: new Date(this.date.setUTCHours(3, 30)).toISOString(),
+      value: new Date(this.date.setHours(3, 30)).toISOString(),
     },
     {
       text: '04 : 00 PM',
-      value: new Date(this.date.setUTCHours(4, 0)).toISOString(),
+      value: new Date(this.date.setHours(4, 0)).toISOString(),
     },
     {
       text: '04 : 30 PM',
-      value: new Date(this.date.setUTCHours(4, 30)).toISOString(),
+      value: new Date(this.date.setHours(4, 30)).toISOString(),
     },
     {
       text: '05 : 00 PM',
-      value: new Date(this.date.setUTCHours(5, 0)).toISOString(),
+      value: new Date(this.date.setHours(5, 0)).toISOString(),
     },
     {
       text: '05 : 30 PM',
-      value: new Date(this.date.setUTCHours(5, 30)).toISOString(),
+      value: new Date(this.date.setHours(5, 30)).toISOString(),
     },
     {
       text: '06 : 00 PM',
-      value: new Date(this.date.setUTCHours(6, 0)).toISOString(),
+      value: new Date(this.date.setHours(6, 0)).toISOString(),
     },
     {
       text: '06 : 30 PM',
-      value: new Date(this.date.setUTCHours(6, 30)).toISOString(),
+      value: new Date(this.date.setHours(6, 30)).toISOString(),
     },
     {
       text: '07 : 00 PM',
-      value: new Date(this.date.setUTCHours(7, 0)).toISOString(),
+      value: new Date(this.date.setHours(7, 0)).toISOString(),
     },
     {
       text: '07 : 30 PM',
-      value: new Date(this.date.setUTCHours(7, 30)).toISOString(),
+      value: new Date(this.date.setHours(7, 30)).toISOString(),
     },
     {
       text: '08 : 00 PM',
-      value: new Date(this.date.setUTCHours(8, 0)).toISOString(),
+      value: new Date(this.date.setHours(8, 0)).toISOString(),
     },
     {
       text: '08 : 30 PM',
-      value: new Date(this.date.setUTCHours(8, 30)).toISOString(),
+      value: new Date(this.date.setHours(8, 30)).toISOString(),
     },
     {
       text: '09 : 00 PM',
-      value: new Date(this.date.setUTCHours(9, 0)).toISOString(),
+      value: new Date(this.date.setHours(9, 0)).toISOString(),
     },
     {
       text: '09 : 30 PM',
-      value: new Date(this.date.setUTCHours(9, 30)).toISOString(),
+      value: new Date(this.date.setHours(9, 30)).toISOString(),
     },
     {
       text: '10 : 00 PM',
-      value: new Date(this.date.setUTCHours(10, 0)).toISOString(),
+      value: new Date(this.date.setHours(10, 0)).toISOString(),
     },
     {
       text: '10 : 30 PM',
-      value: new Date(this.date.setUTCHours(10, 30)).toISOString(),
+      value: new Date(this.date.setHours(10, 30)).toISOString(),
     },
     {
       text: '11 : 00 PM',
-      value: new Date(this.date.setUTCHours(11, 0)).toISOString(),
+      value: new Date(this.date.setHours(11, 0)).toISOString(),
     },
     {
       text: '11 : 30 PM',
-      value: new Date(this.date.setUTCHours(11, 30)).toISOString(),
+      value: new Date(this.date.setHours(11, 30)).toISOString(),
     },
   ];
 }

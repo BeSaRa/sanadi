@@ -24,7 +24,7 @@
 </div>
 
 <div >
-  <table *ngIf="list.length" cdk-table [dataSource]="listDataSource"
+  <table cdk-table [dataSource]="listDataSource"
     class="table table-striped table-bordered caption-top">
     <ng-container cdkColumnDef="identificationNumber">
       <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.login_name}}</th>
