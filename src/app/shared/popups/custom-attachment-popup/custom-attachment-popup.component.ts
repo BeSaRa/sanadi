@@ -90,7 +90,8 @@ export class CustomAttachmentPopupComponent implements OnInit, OnDestroy {
             attachmentTypeId: this.selectedFile?.attachmentTypeId,
             required: this.selectedFile?.required,
             files: input.files!,
-            itemId: this.identifier + '|' + this.itemId
+            itemId: this.itemId,
+            gridName: this.identifier
           }))
       }))
       .pipe(takeUntil(this.destroy$))

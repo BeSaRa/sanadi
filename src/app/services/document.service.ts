@@ -39,8 +39,6 @@ export class DocumentService {
     delete clonedDocument.ouInfo;
     delete clonedDocument.required;
     delete clonedDocument.langService;
-    clonedDocument.itemId = '2e8cbf54-c8b9-4722-8d26-71ad2fd5423d'
-    clonedDocument.gridName = 'collectionItemList'
 
     clonedDocument.denormalizeItemId && clonedDocument.denormalizeItemId();
 

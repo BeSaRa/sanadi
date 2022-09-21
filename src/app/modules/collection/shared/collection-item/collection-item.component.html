@@ -150,7 +150,7 @@
         <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">
           <grid-actions [record]="row" [actions]="actions" [itemIndex]="itemIndex">
             <button multiAttachment [formObservables]="formProperties" [model]="model" [item]="row"
-                    identifier="collectionItemList"
+                    identifier="collectionItemList" tooltip="{{lang.map.attachments}}"
                     class="btn text-primary icon-btn">
               <i class="mdi mdi-attachment"></i>
             </button>
