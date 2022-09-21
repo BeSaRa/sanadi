@@ -380,7 +380,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         label: 'btn_reset',
         show: () => (!this.model?.id),
         onClick: () => {
-          this.component.resetForm$.next(null);
+          this.component.resetForm$.next(true);
         }
       }
     ];

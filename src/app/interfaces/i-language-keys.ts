@@ -1402,4 +1402,5 @@ export interface ILanguageKeys {
   internal_decisions: string;
   establishment_id: string;
   meeting: string;
+  msg_confirm_reset_form: string;
 }
