@@ -44,6 +44,7 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
   formValidity$: Subject<any> = new Subject<any>();
 
   formProperties: Record<string, () => Observable<any>> = {};
+  requestType$: BehaviorSubject<number | null> = new BehaviorSubject<number | null>(null);
 
   abstract lang: LangService;
   abstract form: UntypedFormGroup;
@@ -157,6 +158,7 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
         if (userClick === UserClickOn.YES){
           this.operation = OperationTypes.CREATE;
           this._resetForm();
+          this.requestType$.next(null);
         }
       });
   }
@@ -257,5 +259,17 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
 
   confirmResetForm(): DialogRef {
     return this.service.dialog.confirm(this.lang.map.msg_confirm_reset_form);
+  }
+
+  confirmChangeRequestType(userInteraction: boolean): Observable<UserClickOn> {
+    if (!userInteraction){
+      return of(UserClickOn.YES);
+    } else {
+      if (!this.requestType$.value) {
+        return of(UserClickOn.YES);
+      } else {
+        return this.confirmResetForm().onAfterClose$;
+      }
+    }
   }
 }
