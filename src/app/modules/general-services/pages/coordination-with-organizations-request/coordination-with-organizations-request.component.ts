@@ -255,7 +255,7 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
 
   _initComponent(): void {
     this.mainModel = new CoordinationWithOrganizationsRequest();
-    this.isCharityUser = this.employeeService.isCharityUser();
+    this.isCharityUser = this.employeeService.isCharityUser() || this.employeeService.isCharityManager();
     this.isInternalUser = this.employeeService.isInternalUser();
     this.isLicensingUser = this.employeeService.isLicensingUser();
     this.currentUserOrgId = this.employeeService.getOrgUnit()?.id;
