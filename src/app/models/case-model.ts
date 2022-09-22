@@ -259,9 +259,6 @@ export abstract class CaseModel<S extends BaseGenericEService<T>, T extends File
   sendToDepartment(): DialogRef {
     return this.inboxService!.sendToDepartment(this.taskDetails.tkiid, this.caseType, false, this);
   }
-  sendToNpoManagement(): DialogRef {
-    return this.inboxService!.sendToNpoManagement(this.taskDetails.tkiid, this.caseType, false, this);
-  }
   sendToMultiDepartments(): DialogRef {
     return this.inboxService!.sendToMultiDepartments(this.taskDetails.tkiid, this.caseType, false, this);
   }
@@ -279,8 +276,8 @@ export abstract class CaseModel<S extends BaseGenericEService<T>, T extends File
       [CaseTypes.URGENT_INTERVENTION_LICENSING]: WFResponseType.URGENT_INTERVENTION_LICENSE_SEND_TO_SINGLE_DEPARTMENT,
       [CaseTypes.URGENT_INTERVENTION_CLOSURE]: WFResponseType.URGENT_INTERVENTION_CLOSURE_SEND_TO_SINGLE_DEPARTMENT,
       [CaseTypes.FUNDRAISING_LICENSING]: WFResponseType.FUNDRAISING_LICENSE_SEND_TO_SINGLE_DEPARTMENT,
-      [CaseTypes.NPO_MANAGEMENT]: WFResponseType.REVIEW_NPO_MANAGEMENT,
-      [CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD]: WFResponseType.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD_SEND_TO_SINGLE_DEPARTMENT
+      [CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD]: WFResponseType.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD_SEND_TO_SINGLE_DEPARTMENT,
+      [CaseTypes.NPO_MANAGEMENT]: WFResponseType.REVIEW_NPO_MANAGEMENT
     }
 
     if (!caseType) {

@@ -545,11 +545,14 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
             || item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_FOLLOWUP_SEND_TO_SINGLE_DEPARTMENT)
           );
           let isSendToLicenseDepartment = item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_CLOSURE_SEND_TO_SINGLE_DEPARTMENT);
+          let isSendToDpoManagement = item.getResponses().includes(WFResponseType.REVIEW_NPO_MANAGEMENT);
 
           if (isSendToRiskAndCompliance) {
             return this.lang.map.send_to_risk_and_compliance_department;
           } else if (isSendToLicenseDepartment) {
             return this.lang.map.send_to_license_department;
+          } else if (isSendToDpoManagement) {
+            return this.lang.map.send_to_npo_management;
           }
           return this.lang.map.send_to_supervision_and_control_department;
         },
@@ -565,8 +568,9 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
             || item.getResponses().includes(WFResponseType.FUNDRAISING_LICENSE_SEND_TO_SINGLE_DEPARTMENT)
             || item.getResponses().includes(WFResponseType.CUSTOMS_EXEMPTION_SEND_TO_SINGLE_DEPARTMENT)
             || item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_CLOSURE_SEND_TO_SINGLE_DEPARTMENT)
-            || item.getResponses().includes(WFResponseType.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD_SEND_TO_SINGLE_DEPARTMENT);
-        },
+            || item.getResponses().includes(WFResponseType.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD_SEND_TO_SINGLE_DEPARTMENT)
+            || item.getResponses().includes(WFResponseType.REVIEW_NPO_MANAGEMENT);
+          },
         onClick: (item: CaseModel<any, any>) => {
           this.sendToSingleDepartmentAction(item);
         }
@@ -660,19 +664,6 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         },
         onClick: (item: CaseModel<any, any>) => {
           this.approveAction(item);
-        }
-      },
-      // send to npo management
-      {
-        type: 'action',
-        icon: 'mdi-send-circle',
-        label: 'send_to_npo_management',
-        askChecklist: true,
-        show: (item: CaseModel<any, any>) => {
-          return item.getResponses().includes(WFResponseType.REVIEW_NPO_MANAGEMENT);
-        },
-        onClick: (item: CaseModel<any, any>) => {
-          this.sendToNpoManagementAction(item);
         }
       },
       // send to general meeting members
@@ -1009,7 +1000,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     });
   }
   private sendToNpoManagementAction(item: CaseModel<any, any>) {
-    item.sendToNpoManagement().onAfterClose$.subscribe((actionTaken) => {
+    item.sendToMultiDepartments().onAfterClose$.subscribe((actionTaken) => {
       actionTaken && this.navigateToSamePageThatUserCameFrom();
     });
   }

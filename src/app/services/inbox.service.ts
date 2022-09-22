@@ -1,3 +1,4 @@
+import { GeneralAssociationMeetingAttendanceService } from '@services/general-association-meeting-attendance.service';
 import { CoordinationWithOrganizationsRequestService } from '@app/services/coordination-with-organizations-request.service';
 import { ComponentFactoryResolver, Injectable } from '@angular/core';
 import { UrgentInterventionFinancialNotificationService } from '@services/urgent-intervention-financial-notification.service';
@@ -54,7 +55,6 @@ import { TransferringIndividualFundsAbroadService } from '@services/transferring
 import { ForeignCountriesProjectsService } from './foreign-countries-projects.service';
 import { CastResponse } from '@decorators/cast-response';
 import { UrgentInterventionLicenseFollowupService } from '@services/urgent-intervention-license-followup.service';
-import { GeneralAssociationMeetingAttendanceService } from '@services/general-association-meeting-attendance.service';
 import { CharityOrganizationUpdateService } from './charity-organization-update.service';
 
 @Injectable({
@@ -302,17 +302,14 @@ export class InboxService {
     const service = this.getService(caseType);
     return this.openSendToDialog(taskId, WFResponseType.TO_COMPETENT_DEPARTMENT, service, claimBefore, task);
   }
-  sendToNpoManagement(taskId: string, caseType: number, claimBefore: boolean = false, task?: QueryResult | CaseModel<any, any>): DialogRef {
-    const service = this.getService(caseType);
-    return this.openSendToDialog(taskId, WFResponseType.REVIEW_NPO_MANAGEMENT, service, claimBefore, task);
-  }
   getAskWFResponseByCaseType(caseType: number): WFResponseType {
     let servicesMap = {
       [CaseTypes.INTERNAL_PROJECT_LICENSE]: WFResponseType.INTERNAL_PROJECT_SEND_TO_MULTI_DEPARTMENTS,
       [CaseTypes.FUNDRAISING_LICENSING]: WFResponseType.FUNDRAISING_LICENSE_SEND_TO_MULTI_DEPARTMENTS,
       [CaseTypes.URGENT_INTERVENTION_LICENSING]: WFResponseType.URGENT_INTERVENTION_LICENSE_SEND_TO_MULTI_DEPARTMENTS,
       [CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL]: WFResponseType.INTERNAL_BANK_ACCOUNT_APPROVAL_SEND_TO_MULTI_DEPARTMENTS,
-      [CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD]: WFResponseType.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD_SEND_TO_SINGLE_DEPARTMENT
+      [CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD]: WFResponseType.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD_SEND_TO_SINGLE_DEPARTMENT,
+      [CaseTypes.NPO_MANAGEMENT]: WFResponseType.REVIEW_NPO_MANAGEMENT
     };
 
     // @ts-ignore
