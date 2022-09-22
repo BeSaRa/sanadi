@@ -1,18 +1,19 @@
-import { Lookup } from '@app/models/lookup';
-import { filter, map, takeUntil,take } from 'rxjs/operators';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, UntypedFormControl } from '@angular/forms';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { DateUtils } from '@app/helpers/date-utils';
 import { ILanguageKeys } from '@app/interfaces/i-language-keys';
 import { EffectiveCoordinationCapabilities } from '@app/models/effective-coordination-capabilities';
+import { Lookup } from '@app/models/lookup';
+import { OrgUnit } from '@app/models/org-unit';
 import { DialogService } from '@app/services/dialog.service';
 import { LangService } from '@app/services/lang.service';
+import { LookupService } from '@app/services/lookup.service';
 import { ToastService } from '@app/services/toast.service';
-import { DatepickerOptionsMap, ReadinessStatus } from '@app/types/types';
-import { BehaviorSubject, Subject } from 'rxjs';
-import { UserClickOn } from '@app/enums/user-click-on.enum';
-import { OrgUnit } from '@app/models/org-unit';
-import { DateUtils } from '@app/helpers/date-utils';
+import { DatepickerOptionsMap } from '@app/types/types';
 import { IMyInputFieldChanged } from 'angular-mydatepicker';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { filter, map, take, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'effective-coordination-capabilities',
@@ -26,9 +27,9 @@ export class EffectiveCoordinationCapabilitiesComponent implements OnInit {
     private toastService: ToastService,
     private dialogService: DialogService,
     private fb: FormBuilder,
+    private lookup:LookupService
   ) {}
   formArrayName: string = "effectiveCoordinationCapabilities";
-  @Output() readyEvent = new EventEmitter<ReadinessStatus>();
   @Input() orgId!:number|undefined;
 
   allowListUpdate:boolean=true;
@@ -55,7 +56,7 @@ export class EffectiveCoordinationCapabilitiesComponent implements OnInit {
   editIndex: number = -1;
   viewOnly: boolean = false;
   private save$: Subject<any> = new Subject<any>();
-
+  formOpend=false;
   add$: Subject<any> = new Subject<any>();
   private recordChanged$: Subject<EffectiveCoordinationCapabilities | null> =
     new Subject<EffectiveCoordinationCapabilities | null>();
@@ -79,7 +80,7 @@ export class EffectiveCoordinationCapabilitiesComponent implements OnInit {
     this.listenToAdd();
     this.listenToRecordChange();
     this.listenToSave();
-    this._setComponentReadiness("READY");
+
     if(this.canUpdate === false){
       this.columns= this.columns.slice(0,this.columns.length-1);
     }
@@ -98,6 +99,7 @@ export class EffectiveCoordinationCapabilitiesComponent implements OnInit {
   private listenToAdd() {
     this.add$.pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.viewOnly = false;
+      this.formOpend=true;
       this.recordChanged$.next(new EffectiveCoordinationCapabilities());
     });
   }
@@ -114,22 +116,14 @@ export class EffectiveCoordinationCapabilitiesComponent implements OnInit {
     const formArray = this.formArray;
     formArray.clear();
     if (model) {
-      if (this.viewOnly) {
-        this._setComponentReadiness("READY");
-      } else {
-        this._setComponentReadiness("NOT_READY");
-      }
+
       formArray.push(this.fb.group(new EffectiveCoordinationCapabilities().clone(model).BuildForm(true)));
       if (this.readonly || this.viewOnly) {
         this.formArray.disable();
       }
-    } else {
-      this._setComponentReadiness("READY");
     }
   }
-  private _setComponentReadiness(readyStatus: ReadinessStatus) {
-    this.readyEvent.emit(readyStatus);
-  }
+
   private listenToSave() {
     const form$ = this.save$.pipe(
       map(() => {
@@ -155,10 +149,14 @@ export class EffectiveCoordinationCapabilitiesComponent implements OnInit {
           return this.form.get(`${this.formArrayName}.0`) as FormArray;
         }),
         map((form) => {
-          return new EffectiveCoordinationCapabilities().clone({
+          const model=  new EffectiveCoordinationCapabilities().clone({
             ...this.currentRecord,
             ...form.getRawValue(),
-          });
+          })
+          model.organizationWayInfo =
+          this.lookup.listByCategory.OrganizationWay.find(x=>x.lookupKey === model.organizationWay)!.convertToAdminResult()
+          this.formOpend=false;
+          return model;
         })
       )
       .subscribe((model: EffectiveCoordinationCapabilities) => {
@@ -193,7 +191,7 @@ export class EffectiveCoordinationCapabilitiesComponent implements OnInit {
 
   }
   addAllowed(): boolean {
-    return !this.readonly;
+    return !this.readonly && !this.formOpend;
   }
   onSave() {
     if (this.readonly || this.viewOnly) {
@@ -203,16 +201,17 @@ export class EffectiveCoordinationCapabilitiesComponent implements OnInit {
   }
   onCancel() {
     this.resetForm();
-    this._setComponentReadiness('READY');
     this.editIndex = -1;
   }
   private resetForm() {
+    this.formOpend=false;
     this.formArray.clear();
     this.formArray.markAsUntouched();
     this.formArray.markAsPristine();
   }
   view($event: MouseEvent, record: EffectiveCoordinationCapabilities, index: number) {
     $event.preventDefault();
+    this.formOpend=true;
     this.editIndex = index;
     this.viewOnly = true;
     this.recordChanged$.next(record);
@@ -238,6 +237,7 @@ export class EffectiveCoordinationCapabilitiesComponent implements OnInit {
     if (this.readonly) {
       return;
     }
+    this.formOpend=true;
     this.editIndex = index;
     this.viewOnly = false;
     this.recordChanged$.next(record);
