@@ -61,6 +61,7 @@ export class RealBeneficiary extends SearchableCloneable<RealBeneficiary> {
       iDExpiryDate,
       startDate,
       lastUpdateDate,
+      passportExpiryDate
     } = this;
     return {
       arabicName: controls
@@ -154,6 +155,7 @@ export class RealBeneficiary extends SearchableCloneable<RealBeneficiary> {
       lastUpdateDate: controls
         ? [lastUpdateDate, [CustomValidators.required]]
         : lastUpdateDate,
+      passportExpiryDate: controls ? [passportExpiryDate, [CustomValidators.required]] : passportExpiryDate
     };
   }
 }
