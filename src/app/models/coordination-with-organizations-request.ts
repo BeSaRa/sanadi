@@ -1,4 +1,4 @@
-import { Validators } from '@angular/forms';
+import { UntypedFormGroup, Validators } from '@angular/forms';
 import { InterceptModel } from '@app/decorators/decorators/intercept-model';
 import { CaseTypes } from '@app/enums/case-types.enum';
 import { dateSearchFields } from '@app/helpers/date-search-fields';
@@ -22,6 +22,8 @@ import { CaseModel } from './case-model';
 import { EffectiveCoordinationCapabilities } from './effective-coordination-capabilities';
 import { ParticipantOrg } from './participant-org';
 import { ResearchAndStudies } from './research-and-studies';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { WFResponseType } from '@app/enums/wfresponse-type.enum';
 
 const _RequestType = mixinLicenseDurationType(mixinRequestType(CaseModel));
 const interceptor = new CoordinationWithOrganizationsRequestInterceptor();
@@ -49,8 +51,8 @@ export class CoordinationWithOrganizationsRequest
   effectiveCoordinationCapabilities: EffectiveCoordinationCapabilities[] = [];
   researchAndStudies: ResearchAndStudies[] = [];
 
-  approved=false;
-  domainInfo!: AdminResult
+  approved = false;
+  domainInfo!: AdminResult;
   searchFields: ISearchFieldsMap<CoordinationWithOrganizationsRequest> = {
     ...dateSearchFields(['createdOn']),
     ...infoSearchFields(['domainInfo', 'caseStatusInfo']),
@@ -81,23 +83,22 @@ export class CoordinationWithOrganizationsRequest
     return false;
   }
   formBuilder(controls?: boolean) {
-    const {
-      fullName,
-      domain,
-      licenseStartDate,
-      licenseEndDate,
-      description,
-    } = this;
+    const { fullName, domain, licenseStartDate, licenseEndDate, description } =
+      this;
     return {
-      fullName: controls ? [fullName, [Validators.required]
-      .concat(
-        CustomValidators.maxLength(
-          CustomValidators.defaultLengths.ENGLISH_NAME_MAX
-        ),
-        CustomValidators.minLength(
-          CustomValidators.defaultLengths.MIN_LENGTH
-        )
-      )] : fullName,
+      fullName: controls
+        ? [
+            fullName,
+            [Validators.required].concat(
+              CustomValidators.maxLength(
+                CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+              ),
+              CustomValidators.minLength(
+                CustomValidators.defaultLengths.MIN_LENGTH
+              )
+            ),
+          ]
+        : fullName,
       domain: controls ? [domain, [Validators.required]] : domain,
       licenseStartDate: controls
         ? [licenseStartDate, [Validators.required]]
@@ -107,5 +108,33 @@ export class CoordinationWithOrganizationsRequest
         : licenseEndDate,
       description: controls ? [description] : description,
     };
+  }
+  // buildApprovalForm(control: boolean = false): any {
+  //   const {
+  //     customTerms,
+  //     publicTerms,
+  //     conditionalLicenseIndicator,
+  //     followUpDate
+  //   } = this;
+  //   return {
+  //     customTerms: control ? [customTerms, [CustomValidators.required]] : customTerms,
+  //     publicTerms: control ? [publicTerms, [CustomValidators.required]] : publicTerms,
+  //     conditionalLicenseIndicator: control ? [conditionalLicenseIndicator, [CustomValidators.required]] : conditionalLicenseIndicator,
+  //     followUpDate: control ? [followUpDate, [CustomValidators.required]] : followUpDate
+  //   }
+  // }
+
+  organizationApprove(externalUserData: {
+    form: UntypedFormGroup;
+    organizationOfficers: OrganizationOfficer[];
+  }): DialogRef {
+    return this.service.organizationApprove(
+      this.taskDetails.tkiid,
+      this.caseType,
+      WFResponseType.ORGANIZATION_APPROVE,
+      false,
+      this,
+      externalUserData
+    );
   }
 }
