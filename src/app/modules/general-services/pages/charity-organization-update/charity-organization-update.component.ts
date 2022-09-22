@@ -441,7 +441,7 @@ export class CharityOrganizationUpdateComponent
     }
   }
 
-  handleRequestTypeChange(requestType: number | null, userInteraction: boolean = false): void {
+  handleRequestTypeChange(requestType: number, userInteraction: boolean = false): void {
     of(userInteraction)
       .pipe(
         takeUntil(this.destroy$),
@@ -450,6 +450,7 @@ export class CharityOrganizationUpdateComponent
         if (clickOn === UserClickOn.YES) {
           if (userInteraction) {
             this.resetForm$.next();
+            this.requestTypeForm.setValue(requestType);
           }
           this.requestType$.next(requestType);
           this.tabs = this._tabs.filter(
@@ -653,7 +654,7 @@ export class CharityOrganizationUpdateComponent
         this.activityTypes = list;
       });
   }
-  _buildForm(requestType: number | null = null): void {
+  _buildForm(requestType?: number): void {
     const model = this._getNewInstance().clone({
       requestType,
     });
@@ -691,7 +692,7 @@ export class CharityOrganizationUpdateComponent
   }
   _afterLaunch(): void {
 
-    this._resetForm();
+    this.resetForm$.next();
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
   _prepareModel():
@@ -852,6 +853,5 @@ export class CharityOrganizationUpdateComponent
 
   _resetForm(): void {
     this.form.reset();
-    this.handleRequestTypeChange(null);
   }
 }

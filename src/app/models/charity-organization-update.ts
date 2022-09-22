@@ -62,7 +62,7 @@ export class CharityOrganizationUpdate extends CaseModel<
   instagram!: string;
   snapChat!: string;
   youTube!: string;
-  requestType!: number | null;
+  requestType!: number;
   establishmentDate!: string;
   complianceOfficerList: OrganizationOfficer[] = [];
   charityContactOfficerList: OrganizationOfficer[] = [];
