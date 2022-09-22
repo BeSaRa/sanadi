@@ -104,7 +104,7 @@ export class FollowupConfigurationPopupComponent extends AdminGenericDialog<Foll
   }
 
   loadTeams() {
-    this.teamService.load().subscribe(value => {
+    this.teamService.loadAsLookups().subscribe(value => {
       this.teams = value;
     });
   }
