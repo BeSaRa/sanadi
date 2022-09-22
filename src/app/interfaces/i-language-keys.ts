@@ -1359,6 +1359,7 @@ export interface ILanguageKeys {
   OCHA_subclassification: string;
   id_date: string;
   id_expiry_date: string;
+  passport_expiry_date: string;
   real_benefeciaries: string;
   menu_urgent_intervention_license_followup: string;
   execution_date: string;
