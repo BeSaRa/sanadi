@@ -1,3 +1,5 @@
+import { DialogRef } from './../shared/models/dialog-ref';
+import { WFResponseType } from '@app/enums/wfresponse-type.enum';
 import { AdminResult } from './admin-result';
 import { NpoBankAccount } from './npo-bank-account';
 import { NpoContactOfficer } from '@app/models/npo-contact-officer';
@@ -48,7 +50,7 @@ export class NpoManagement
   clearanceDate!: string | IMyDateModel;
   clearanceType!: number;
   clearanceName!: string;
-
+  followUpDate!: string | IMyDateModel;
   // contact info
   phone!: string;
   email!: string;
@@ -165,5 +167,16 @@ export class NpoManagement
         hotline: controls ? [hotline, [CustomValidators.number, Validators.maxLength(10)]] : hotline
       },
     };
+  }
+  buildApprovalForm(control: boolean = false): any {
+    const {
+      followUpDate
+    } = this;
+    return {
+      followUpDate: control ? [followUpDate, [CustomValidators.required]] : followUpDate
+    }
+  }
+  approve(): DialogRef {
+    return this.service.approve(this, WFResponseType.APPROVE)
   }
 }

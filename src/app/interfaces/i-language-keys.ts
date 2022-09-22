@@ -1256,6 +1256,7 @@ export interface ILanguageKeys {
   notification_request_number: string;
   risk_management_and_compliance_consulting: string;
   approval_external_org_affiliation: string;
+  approval_npo_management: string;
   conditional_license_indicator: string;
   follow_up_date: string;
   menu_vacation: string;
@@ -1422,4 +1423,5 @@ export interface ILanguageKeys {
   internal_decisions: string;
   establishment_id: string;
   meeting: string;
+  send_to_npo_management: string;
 }

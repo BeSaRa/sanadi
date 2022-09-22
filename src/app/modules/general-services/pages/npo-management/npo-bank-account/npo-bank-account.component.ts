@@ -45,7 +45,7 @@ export class NpoBankAccountComponent implements OnInit {
   caseTypes = CaseTypes;
 
   listDataSource: BehaviorSubject<NpoBankAccount[]> = new BehaviorSubject<NpoBankAccount[]>([]);
-  columns = ['accountNumber', 'iBan', 'actions'];
+  columns = ['accountNumber', 'iban', 'actions'];
 
   editRecordIndex: number = -1;
   viewOnly: boolean = false;

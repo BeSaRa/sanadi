@@ -302,7 +302,10 @@ export class InboxService {
     const service = this.getService(caseType);
     return this.openSendToDialog(taskId, WFResponseType.TO_COMPETENT_DEPARTMENT, service, claimBefore, task);
   }
-
+  sendToNpoManagement(taskId: string, caseType: number, claimBefore: boolean = false, task?: QueryResult | CaseModel<any, any>): DialogRef {
+    const service = this.getService(caseType);
+    return this.openSendToDialog(taskId, WFResponseType.REVIEW_NPO_MANAGEMENT, service, claimBefore, task);
+  }
   getAskWFResponseByCaseType(caseType: number): WFResponseType {
     let servicesMap = {
       [CaseTypes.INTERNAL_PROJECT_LICENSE]: WFResponseType.INTERNAL_PROJECT_SEND_TO_MULTI_DEPARTMENTS,

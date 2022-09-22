@@ -1,3 +1,6 @@
+import { NpoManagementApprovePopupComponent } from './../modules/general-services/popups/npo-management-approve-popup/npo-management-approve-popup.component';
+import { DialogRef } from './../shared/models/dialog-ref';
+import { WFResponseType } from '@app/enums/wfresponse-type.enum';
 import { FactoryService } from './factory.service';
 import { NpoManagement } from './../models/npo-management';
 import { BaseGenericEService } from '@app/generics/base-generic-e-service';
@@ -50,5 +53,11 @@ export class NpoManagementService extends BaseGenericEService<NpoManagement> {
   }
   getCaseComponentName(): string {
     return 'NpoManagementComponent';
+  }
+  approve(model: NpoManagement, action: WFResponseType): DialogRef {
+    return this.dialog.show(NpoManagementApprovePopupComponent, {
+      model,
+      action
+    });
   }
 }

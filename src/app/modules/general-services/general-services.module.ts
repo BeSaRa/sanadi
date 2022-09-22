@@ -1,3 +1,4 @@
+import { NpoManagementApprovePopupComponent } from './popups/npo-management-approve-popup/npo-management-approve-popup.component';
 import { NpoBankAccountComponent } from './pages/npo-management/npo-bank-account/npo-bank-account.component';
 import { NpoManagementComponent } from './pages/npo-management/npo-management.component';
 import { ExternalOrgAffiliationApprovePopupComponent } from '@app/modules/general-services/popups/external-org-affiliation-approve-popup/external-org-affiliation-approve-popup.component';
@@ -45,6 +46,7 @@ import { CharityDecisionsComponent } from './shared/charity-decisions/charity-de
     NpoContactOfficerComponent,
     ExternalOrgAffiliationComponent,
     ExternalOrgAffiliationApprovePopupComponent,
+    NpoManagementApprovePopupComponent,
     EmploymentComponent,
     ForeignCountriesProjectsComponent,
     ForeignCountriesProjectsPopupComponent,

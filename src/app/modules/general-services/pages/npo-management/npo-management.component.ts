@@ -2,12 +2,9 @@ import { NpoBankAccount } from './../../../../models/npo-bank-account';
 import { NpoContactOfficer } from '@app/models/npo-contact-officer';
 import { FounderMembers } from '@app/models/founder-members';
 import { RealBeneficiary } from '@app/models/real-beneficiary';
-import { Beneficiary } from '@app/models/beneficiary';
 import { NpoData } from './../../../../models/npo-data';
 import { NpoDataService } from './../../../../services/npo-data.service';
 import { NpoManagement } from './../../../../models/npo-management';
-import { OrgUnit } from './../../../../models/org-unit';
-import { OrganizationUnitService } from './../../../../services/organization-unit.service';
 import { CommonUtils } from './../../../../helpers/common-utils';
 import { CustomValidators } from './../../../../validators/custom-validators';
 import { TabComponent } from './../../../../shared/components/tab/tab.component';
@@ -36,7 +33,7 @@ import { UntypedFormGroup, UntypedFormBuilder, UntypedFormControl, Validators } 
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { SaveTypes } from '@app/enums/save-types';
 import { LangService } from '@app/services/lang.service';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { EmployeeService } from '@app/services/employee.service';
 import { AdminLookupService } from '@app/services/admin-lookup.service';
 import { AdminLookupTypeEnum } from '@app/enums/admin-lookup-type-enum';
@@ -138,7 +135,6 @@ NpoManagementService
     private toast: ToastService,
     private adminLookupService: AdminLookupService,
     private cd: ChangeDetectorRef,
-    private _ou: OrganizationUnitService,
     private npoDataService: NpoDataService,
     private bankService: BankService,
     private dialog: DialogService,
@@ -305,7 +301,7 @@ NpoManagementService
       this.handleReadonly();
       if (this.isNew) {
         this._resetForm();
-      } else if (this.npoIdField.value) {
+      } else if (this.requestTypeField.value && this.npoIdField.value) {
         this.loadOrganizationData()
       }
     }
@@ -338,7 +334,6 @@ NpoManagementService
   loadOrganizationData() {
     this.npoDataService.loadCompositeById(this.npoIdField.value)
       .subscribe((data: any) => {
-        console.log(data)
         this.setSelectedLicense(data)
       })
   }
@@ -377,29 +372,64 @@ NpoManagementService
       value.youTube = details.youTube;
 
       value.bankAccountList = details.bankAccountList.map((ba: any) => {
-        const ob = new NpoBankAccount().clone(ba);
-        ob.iban = ba.iBAN;
-        ob.objectDBId = ba.id;
+        const ob = new NpoBankAccount().clone({
+          objectDBId: ba.id,
+          iban: ba.iBAN,
+          currency: ba.currency,
+          accountNumber: ba.accountNumber,
+          bankId: ba.bankId
+        });
         return ob;
       });
       value.contactOfficerList = details.contactOfficerList.map((co: any) => {
-        const ob = new NpoContactOfficer().clone(co);
-        ob.officerId = co.id;
-        ob.identificationNumber = co.qid;
+        const ob = new NpoContactOfficer().clone({
+          officerId: co.id,
+          identificationNumber: co.qid,
+          fullName: co.fullName,
+          email: co.email,
+          phone: co.phone,
+          extraPhone: co.extraPhone,
+          jobTitleId: co.jobTitleId,
+        });
         return ob;
       });
       value.founderMemberList = details.founderList.map((f: any) => {
-        const ob = new FounderMembers().clone(f);
-        ob.objectDBId = f.id;
-        ob.identificationNumber = f.qid;
+        const ob = new FounderMembers().clone({
+          objectDBId: f.id,
+          identificationNumber: f.qid,
+          fullName: f.fullName,
+          jobTitleId: f.jobTitleId,
+          email: f.email,
+          phone: f.phone,
+          extraPhone: f.extraPhone,
+          joinDate: f.joinDate,
+          nationality: f.nationality,
+        });
         return ob;
       });
       value.realBeneficiaryList = details.beneficiaryList.map((rb: any) => {
-        const ob = new RealBeneficiary().clone(rb);
-        ob.objectDBId = rb.id;
-        ob.arabicName = rb.arName;
-        ob.englishName = rb.enName;
-        ob.identificationNumber = rb.qid;
+        const ob = new RealBeneficiary().clone({
+          objectDBId: rb.id,
+          arabicName: rb.arName,
+          englishName: rb.enName,
+          identificationNumber: rb.qid,
+          birthDate: rb.birthDate,
+          birthLocation: rb.birthLocation,
+          nationality: rb.nationality,
+          zoneNumber: rb.zoneNumber,
+          streetNumber: rb.streetNumber,
+          buildingNumber: rb.buildingNumber,
+          address: rb.address,
+          passportNumber: rb.passportNumber,
+          iDDate: rb.iDDate,
+          passportDate: rb.passportDate,
+          iDExpiryDate: rb.iDExpiryDate,
+          passportExpiryDate: rb.passportExpiryDate,
+          startDate: rb.startDate,
+          lastUpdateDate: rb.lastUpdateDate,
+          iddate: rb.iddate,
+          idexpiryDate: rb.idexpiryDate,
+        });
         return ob;
       });
 
@@ -450,14 +480,26 @@ NpoManagementService
     this.clearanceNameField.reset()
     this.clearanceDateField?.setValidators([]);
     this.clearanceDateField.reset()
+
     this.registrationAuthorityField?.setValidators([]);
+    const registrationAuthority = this.registrationAuthorityField.value;
     this.registrationAuthorityField.reset()
+    this.registrationAuthorityField.setValue(registrationAuthority)
+
     this.registrationDateField?.setValidators([]);
+    const registrationDate = this.registrationDateField.value;
     this.registrationDateField.reset()
+    this.registrationDateField.setValue(registrationDate)
+
     this.registrationNumberField?.setValidators([]);
+    const registrationNumber = this.registrationNumberField.value;
     this.registrationNumberField.reset()
+    this.registrationNumberField.setValue(registrationNumber)
+
     this.establishmentDateField?.setValidators([]);
+    const establishmentDate = this.establishmentDateField.value;
     this.establishmentDateField.reset()
+    this.establishmentDateField.setValue(establishmentDate);
     if (this.isClearance) {
       this.clearanceTypeField.setValidators([Validators.required])
       this.clearanceNameField.setValidators([CustomValidators.required, Validators.maxLength(150),
@@ -476,9 +518,6 @@ NpoManagementService
         Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)
       ])
       this.establishmentDateField.setValidators([CustomValidators.required])
-    }
-    if (this.isRegistrationAuthority) {
-
     }
   }
   get isRegistrationAuthority() {

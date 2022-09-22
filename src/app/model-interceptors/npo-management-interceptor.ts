@@ -24,11 +24,12 @@ export class NpoManagementInterceptor implements IModelInterceptor<NpoManagement
     model.clearanceInfo && (model.clearanceInfo = AdminResult.createInstance(model.clearanceInfo));
     model.disbandmentInfo && (model.disbandmentInfo = AdminResult.createInstance(model.disbandmentInfo));
     model.registrationAuthorityInfo && (model.registrationAuthorityInfo = AdminResult.createInstance(model.registrationAuthorityInfo));
-
+    console.log()
     model.establishmentDate = DateUtils.changeDateToDatepicker(model.establishmentDate);
     model.disbandmentDate = DateUtils.changeDateToDatepicker(model.disbandmentDate);
     model.clearanceDate = DateUtils.changeDateToDatepicker(model.clearanceDate);
     model.registrationDate = DateUtils.changeDateToDatepicker(model.registrationDate);
+    model.followUpDate = DateUtils.changeDateToDatepicker(model.followUpDate);
 
     model.contactOfficerList = model.contactOfficerList.map(ei => {
       return contactOffercireInter.receive(new NpoContactOfficer().clone(ei));
@@ -67,6 +68,12 @@ export class NpoManagementInterceptor implements IModelInterceptor<NpoManagement
       : DateUtils.changeDateFromDatepicker(
         model.registrationDate as unknown as IMyDateModel
       )?.toISOString();
+    model.followUpDate = !model.followUpDate
+      ? undefined
+      : DateUtils.changeDateFromDatepicker(
+        model.followUpDate as unknown as IMyDateModel
+      )?.toISOString();
+
 
     model.contactOfficerList = model.contactOfficerList.map((ei: any) => {
       return contactOffercireInter.send(ei) as unknown as NpoContactOfficer;

@@ -1,4 +1,10 @@
 import { CoordinationWithOrganizationsRequest } from '@app/models/coordination-with-organizations-request';
+import { IGeneralAssociationMeetingAttendanceSpecialActions } from '@contracts/i-general-association-meeting-attendance-special-actions';
+import { IGeneralAssociationMeetingAttendanceApprove } from '@contracts/i-general-association-meeting-attendance-approve';
+import { IGeneralAssociationMeetingAttendanceComponent } from '@contracts/i-general-association-meeting-attendance-component';
+import { IGeneralAssociationMeetingAttendanceComplete } from '@contracts/i-general-association-meeting-attendance-complete';
+import { ITransferFundsAbroadComponent } from '@contracts/i-transfer-funds-abroad-component';
+import { ITransferIndividualFundsAbroadComplete } from '@contracts/i-transfer-individual-funds-abroad-complete';
 import {
   AfterViewInit,
   Component,
@@ -39,12 +45,6 @@ import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {BaseGenericEService} from '@app/generics/base-generic-e-service';
-import {ITransferIndividualFundsAbroadComplete} from '@contracts/i-transfer-individual-funds-abroad-complete';
-import {ITransferFundsAbroadComponent} from '@contracts/i-transfer-funds-abroad-component';
-import {IGeneralAssociationMeetingAttendanceComplete} from '@contracts/i-general-association-meeting-attendance-complete';
-import {IGeneralAssociationMeetingAttendanceComponent} from '@contracts/i-general-association-meeting-attendance-component';
-import {IGeneralAssociationMeetingAttendanceApprove} from '@contracts/i-general-association-meeting-attendance-approve';
-import {IGeneralAssociationMeetingAttendanceSpecialActions} from '@contracts/i-general-association-meeting-attendance-special-actions';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -111,6 +111,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN,
     CaseTypes.FOREIGN_COUNTRIES_PROJECTS,
     CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST,
+    CaseTypes.NPO_MANAGEMENT,
   ];
   servicesWithNoSaveDraftLaunch: number[] = [
     CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP
@@ -669,6 +670,19 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.approveAction(item);
         }
       },
+      // send to npo management
+      {
+        type: 'action',
+        icon: 'mdi-send-circle',
+        label: 'send_to_npo_management',
+        askChecklist: true,
+        show: (item: CaseModel<any, any>) => {
+          return item.getResponses().includes(WFResponseType.REVIEW_NPO_MANAGEMENT);
+        },
+        onClick: (item: CaseModel<any, any>) => {
+          this.sendToNpoManagementAction(item);
+        }
+      },
       // send to general meeting members
       {
         type: 'action',
@@ -1002,7 +1016,11 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       actionTaken && this.navigateToSamePageThatUserCameFrom();
     });
   }
-
+  private sendToNpoManagementAction(item: CaseModel<any, any>) {
+    item.sendToNpoManagement().onAfterClose$.subscribe((actionTaken) => {
+      actionTaken && this.navigateToSamePageThatUserCameFrom();
+    });
+  }
   private sendToMultiDepartmentsAction(item: CaseModel<any, any>) {
     item.sendToMultiDepartments().onAfterClose$.subscribe((actionTaken) => {
       actionTaken && this.navigateToSamePageThatUserCameFrom();
