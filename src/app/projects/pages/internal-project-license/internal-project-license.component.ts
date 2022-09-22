@@ -2,7 +2,15 @@ import {AfterViewInit, ChangeDetectorRef, Component} from '@angular/core';
 import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
 import {InternalProjectLicense} from '@app/models/internal-project-license';
 import {InternalProjectLicenseService} from '@app/services/internal-project-license.service';
-import {AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, ValidatorFn, Validators} from '@angular/forms';
+import {
+  AbstractControl,
+  UntypedFormArray,
+  UntypedFormBuilder,
+  UntypedFormControl,
+  UntypedFormGroup,
+  ValidatorFn,
+  Validators
+} from '@angular/forms';
 import {IKeyValue} from '@app/interfaces/i-key-value';
 import {LangService} from '@app/services/lang.service';
 import {LookupService} from '@app/services/lookup.service';
@@ -185,7 +193,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
           this.lang.getLocalByKey('first_sd_goal_percentage'),
           this.lang.getLocalByKey('second_sd_goal_percentage'),
           this.lang.getLocalByKey('third_sd_goal_percentage')
-        ])
+        ]);
     } else if (groupName === 'beneficiaryAnalysisIndividualPercent') {
       validators = CustomValidators.validateSum(100, 2,
         [
@@ -300,7 +308,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
       this.service.getTask(this.model.taskDetails.tkiid)
         .subscribe((model) => {
           this.model = model;
-        })
+        });
     } else {
       this.model = model;
     }
@@ -324,7 +332,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
   }
 
   _afterLaunch(): void {
-    this._resetForm();
+    this.resetForm$.next();
     this.toastService.success(this.lang.map.request_has_been_sent_successfully);
   }
 
@@ -416,7 +424,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
     }
     if (isAllowed) {
       let caseStatus = this.model.getCaseStatus();
-        isAllowed = (caseStatus !== CommonCaseStatus.CANCELLED && caseStatus !== CommonCaseStatus.FINAL_APPROVE && caseStatus !== CommonCaseStatus.FINAL_REJECTION);
+      isAllowed = (caseStatus !== CommonCaseStatus.CANCELLED && caseStatus !== CommonCaseStatus.FINAL_APPROVE && caseStatus !== CommonCaseStatus.FINAL_REJECTION);
     }
     return !isAllowed;
   }
@@ -620,36 +628,45 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
   }
 
   handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
-    if (userInteraction) {
-      this._resetForm();
-      this.requestTypeField.setValue(requestTypeValue);
-    }
-    if (!requestTypeValue) {
-      requestTypeValue = this.requestTypeField && this.requestTypeField.value;
-    }
-    this._handleRequestTypeDependentControls();
+    of(userInteraction).pipe(
+      takeUntil(this.destroy$),
+      switchMap(() => this.confirmChangeRequestType(userInteraction))
+    ).subscribe((clickOn: UserClickOn) => {
+      if (clickOn === UserClickOn.YES) {
+        this.requestType$.next(requestTypeValue);
 
-    // if no requestType or (requestType = new)
-    // if new record or draft, reset license and its validations
-    // also reset the values in model
-    if (!requestTypeValue || (requestTypeValue === ServiceRequestTypes.NEW)) {
-      if (!this.model?.id || this.model.canCommit()) {
-        this.oldLicenseFullSerialField.reset();
-        this.oldLicenseFullSerialField.setValidators([]);
-        this.setSelectedLicense(undefined, true);
-
-        if (this.model) {
-          this.model.licenseNumber = '';
-          this.model.licenseDuration = 0;
-          this.model.licenseStartDate = '';
+        if (userInteraction) {
+          this._resetForm();
+          this.requestTypeField.setValue(requestTypeValue);
         }
+
+        this._handleRequestTypeDependentControls();
+
+        // if no requestType or (requestType = new)
+        // if new record or draft, reset license and its validations
+        // also reset the values in model
+        if (!requestTypeValue || (requestTypeValue === ServiceRequestTypes.NEW)) {
+          if (!this.model?.id || this.model.canCommit()) {
+            this.oldLicenseFullSerialField.reset();
+            this.oldLicenseFullSerialField.setValidators([]);
+            this.setSelectedLicense(undefined, true);
+
+            if (this.model) {
+              this.model.licenseNumber = '';
+              this.model.licenseDuration = 0;
+              this.model.licenseStartDate = '';
+            }
+          }
+        } else {
+          this.oldLicenseFullSerialField.setValidators([CustomValidators.required, (control) => {
+            return this.selectedLicense && this.selectedLicense?.fullSerial === control.value ? null : {select_license: true};
+          }]);
+        }
+        this.oldLicenseFullSerialField.updateValueAndValidity();
+      } else {
+        this.requestTypeField.setValue(this.requestType$.value);
       }
-    } else {
-      this.oldLicenseFullSerialField.setValidators([CustomValidators.required, (control) => {
-        return this.selectedLicense && this.selectedLicense?.fullSerial === control.value ? null : {select_license: true}
-      }]);
-    }
-    this.oldLicenseFullSerialField.updateValueAndValidity();
+    });
   }
 
   handleChangeMainCategory(value: number, forceResetSubValue: boolean = false): void {
@@ -774,7 +791,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
         this.setSelectedLicense(license, true);
 
         callback && callback();
-      })
+      });
   }
 
   licenseSearch($event?: Event): void {
@@ -791,7 +808,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
     this.licenseSearch$
       .pipe(exhaustMap(oldLicenseFullSerial => {
         return this.loadLicencesByCriteria({fullSerial: oldLicenseFullSerial})
-          .pipe(catchError(() => of([])))
+          .pipe(catchError(() => of([])));
       }))
       .pipe(
         // display message in case there is no returned license
@@ -812,7 +829,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
                 catchError(() => {
                   return of(null);
                 })
-              )
+              );
           } else {
             return this.licenseService.openSelectLicenseDialog(licenses, this.model?.clone({requestType: this.requestTypeField.value || null})).onAfterClose$;
           }
@@ -826,7 +843,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
       )
       .subscribe((selection) => {
         this.setSelectedLicense(selection.details, false);
-      })
+      });
   }
 
   private setSelectedLicense(licenseDetails: InternalProjectLicense | undefined, ignoreUpdateForm: boolean) {
@@ -882,7 +899,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
     this.sdGoalService.loadAsLookups()
       .subscribe((data) => {
         this.goalsList = data;
-      })
+      });
   }
 
   private _getInvalidTabs(): any {
@@ -1002,7 +1019,7 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
   }
 
   addProjectComponent() {
-    this.addProjectComponent$.next()
+    this.addProjectComponent$.next();
   }
 
   deleteProjectComponent($event: MouseEvent, record: ProjectComponent, index: number): any {
