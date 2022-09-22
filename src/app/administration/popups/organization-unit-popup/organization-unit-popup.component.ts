@@ -132,7 +132,7 @@ export class OrganizationUnitPopupComponent extends AdminGenericDialog<OrgUnit> 
     this.orgUnitsList = this.orgUnitService.list;
     this.orgUnitTypesList = this.lookupService.listByCategory.OrgUnitType;
     this.orgUnitStatusList = this.lookupService.listByCategory.OrgStatus;
-    this.cityList = this.lookupService.listByCategory.Countries;
+    this.cityList = this.lookupService.listByCategory.Cities;
     this.licensingAuthorityList = this.lookupService.listByCategory.LICENSING_AUTHORITY;
     this.workFieldList = this.lookupService.listByCategory.WORK_FIELD;
   }

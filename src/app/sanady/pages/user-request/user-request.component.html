@@ -460,7 +460,7 @@
                        [notFoundText]="langService.map.msg_not_found"
                        [readonly]="readOnly || isPartialRequest" appendTo="body"
                        formControlName="residenceCountry" validationClasses="residenceCountry">
-              <ng-option *ngFor="let option of lookup.listByCategory.Countries" [value]="option.lookupKey">
+              <ng-option *ngFor="let option of lookup.listByCategory.Cities" [value]="option.lookupKey">
                 {{option.getName()}}
               </ng-option>
             </ng-select>

@@ -49,7 +49,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   domains: Lookup[] = this.lookupService.listByCategory.Domain;
   projectTypes: Lookup[] = this.lookupService.listByCategory.ProjectType;
   modelTypes: Lookup[] = this.lookupService.listByCategory.TemplateType;
-  requestTypes: Lookup[] = this.lookupService.listByCategory.ExternalModelingReqType.slice().sort((a, b) => a.lookupKey - b.lookupKey);
+  requestTypes: Lookup[] = this.lookupService.listByCategory.ProjectModelingReqType.slice().sort((a, b) => a.lookupKey - b.lookupKey);
   implementingAgencyTypes: Lookup[] = this.lookupService.listByCategory.ImplementingAgencyType;
   mainOchaCategories: AdminLookup[] = [];
   subOchaCategories: AdminLookup[] = [];
