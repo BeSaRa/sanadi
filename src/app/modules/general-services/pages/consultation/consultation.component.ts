@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit} from '@angular/core';
 import {IESComponent} from '@app/interfaces/iescomponent';
 import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {SaveTypes} from '@app/enums/save-types';
-import {BehaviorSubject, Observable, Subject} from 'rxjs';
+import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
 import {Consultation} from '@app/models/consultation';
 import {FormManager} from '@app/models/form-manager';
 import {Lookup} from '@app/models/lookup';
@@ -12,7 +12,7 @@ import {DialogService} from '@app/services/dialog.service';
 import {ToastService} from '@app/services/toast.service';
 import {LangService} from '@app/services/lang.service';
 import {ConsultationService} from '@app/services/consultation.service';
-import {exhaustMap, filter, map, takeUntil, tap} from 'rxjs/operators';
+import {exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {OrgUnit} from '@app/models/org-unit';
 import {OrganizationUnitService} from '@app/services/organization-unit.service';
 import {InternalDepartment} from '@app/models/internal-department';
@@ -26,6 +26,8 @@ import {IKeyValue} from '@app/interfaces/i-key-value';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {NavigationService} from "@app/services/navigation.service";
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {DialogRef} from '@app/shared/models/dialog-ref';
 
 @Component({
   selector: 'consultation',
@@ -47,6 +49,7 @@ export class ConsultationComponent implements OnInit, OnDestroy, IESComponent<Co
   model?: Consultation;
   operation: OperationTypes = OperationTypes.CREATE;
   openFrom: OpenFrom = OpenFrom.ADD_SCREEN;
+  resetForm$: Subject<boolean> = new Subject<boolean>();
   public isInternalUser: boolean = this.employeeService.isInternalUser();
   private outModelChange$: BehaviorSubject<Consultation> = new BehaviorSubject<Consultation>(null as unknown as Consultation);
 
@@ -114,6 +117,7 @@ export class ConsultationComponent implements OnInit, OnDestroy, IESComponent<Co
     }
     this.buildForm();
     this.listenToSave();
+    this._listenToResetForm();
     this.listenToModelChange();
     this.listenToOutModelChange();
     this.setDefaultValuesForExternalUser();
@@ -190,9 +194,7 @@ export class ConsultationComponent implements OnInit, OnDestroy, IESComponent<Co
     this.model?.start().subscribe(_ => {
       if (this.model) {
         this.model.caseStatus = CommonCaseStatus.UNDER_PROCESSING;
-        this.resetForm();
-        this.model = new Consultation();
-        this.operation = OperationTypes.CREATE;
+        this.resetForm$.next();
       }
       this.toast.success(this.lang.map.request_has_been_sent_successfully);
       this.changeModel.next(this.model);
@@ -297,6 +299,8 @@ export class ConsultationComponent implements OnInit, OnDestroy, IESComponent<Co
 
   resetForm(): void {
     this.form.reset();
+    this.model = new Consultation();
+    this.operation = OperationTypes.CREATE;
     this.setDefaultValuesForExternalUser();
   }
 
@@ -343,5 +347,29 @@ export class ConsultationComponent implements OnInit, OnDestroy, IESComponent<Co
 
   navigateBack(): void {
     this.navigationService.goToBack();
+  }
+
+  confirmResetForm(): DialogRef {
+    return this.service.dialog.confirm(this.lang.map.msg_confirm_reset_form);
+  }
+
+  private _listenToResetForm(): void {
+    this.resetForm$
+      .pipe(
+        takeUntil(this.destroy$),
+        switchMap((needConfirmation) => {
+          if (needConfirmation){
+            return this.confirmResetForm().onAfterClose$;
+          } else {
+            return of(UserClickOn.YES);
+          }
+        })
+      )
+      .subscribe((userClick: UserClickOn) => {
+        if (userClick === UserClickOn.YES){
+          this.operation = OperationTypes.CREATE;
+          this.resetForm();
+        }
+      });
   }
 }

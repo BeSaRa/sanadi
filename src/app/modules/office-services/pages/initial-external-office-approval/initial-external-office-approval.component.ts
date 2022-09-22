@@ -30,6 +30,7 @@ import {
 } from '@app/models/initial-external-office-approval-search-criteria';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
 
 @Component({
   selector: 'initial-external-office-approval',
@@ -179,7 +180,7 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
   }
 
   _afterLaunch(): void {
-    this._resetForm();
+    this.resetForm$.next();
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
 
@@ -244,68 +245,46 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
   }
 
   handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
-    if (userInteraction) {
-      this._resetForm();
-      this.requestType.setValue(requestTypeValue);
-    }
-    if (!requestTypeValue) {
-      requestTypeValue = this.requestType && this.requestType.value;
-    }
-    this._handleRequestTypeDependentControls();
-
-    // if no requestType or (requestType = new)
-    // if new record or draft, reset license and its validations
-    // also reset the values in model
-    if (!requestTypeValue || (requestTypeValue === ServiceRequestTypes.NEW)) {
-      if (!this.model?.id || this.model.canCommit()) {
-        this.oldLicenseFullSerialField.reset();
-        this.oldLicenseFullSerialField.setValidators([]);
-        this.setSelectedLicense(undefined, true);
-
-        if (this.model) {
-          this.model.licenseNumber = '';
-          this.model.licenseDuration = 0;
-          this.model.licenseStartDate = '';
+    of(userInteraction)
+      .pipe(
+        takeUntil(this.destroy$),
+        switchMap(() => this.confirmChangeRequestType(userInteraction))
+      ).subscribe((clickOn: UserClickOn) => {
+      if (clickOn === UserClickOn.YES) {
+        if (userInteraction) {
+          this.resetForm$.next();
+          this.requestType.setValue(requestTypeValue);
         }
-      }
-    } else {
-      this.oldLicenseFullSerialField.setValidators([CustomValidators.required, (control) => {
-        return this.selectedLicense && this.selectedLicense?.fullSerial === control.value ? null : {select_license: true}
-      }]);
-    }
-    this.oldLicenseFullSerialField.updateValueAndValidity();
-  }
+        this.requestType$.next(requestTypeValue);
+        this._handleRequestTypeDependentControls();
 
-  /*listenToRequestTypeChange(): void {
-    this.requestType?.valueChanges.pipe(
-      delay(50),
-      takeUntil(this.destroy$)
-    ).subscribe(requestTypeValue => {
-      this._handleRequestTypeDependentControls();
+        // if no requestType or (requestType = new)
+        // if new record or draft, reset license and its validations
+        // also reset the values in model
+        if (!requestTypeValue || (requestTypeValue === ServiceRequestTypes.NEW)) {
+          if (!this.model?.id || this.model.canCommit()) {
+            this.oldLicenseFullSerialField.reset();
+            this.oldLicenseFullSerialField.setValidators([]);
+            this.setSelectedLicense(undefined, true);
 
-      // if no requestType or (requestType = new)
-      // if new record or draft, reset license and its validations
-      // also reset the values in model
-      if (!requestTypeValue || (requestTypeValue === ServiceRequestTypes.NEW)) {
-        if (!this.model?.id || this.model.canCommit()) {
-          this.oldLicenseFullSerialField.reset();
-          this.oldLicenseFullSerialField.setValidators([]);
-          this.setSelectedLicense(undefined, true);
-
-          if (this.model) {
-            this.model.licenseNumber = '';
-            this.model.licenseDuration = 0;
-            this.model.licenseStartDate = '';
+            if (this.model) {
+              this.model.licenseNumber = '';
+              this.model.licenseDuration = 0;
+              this.model.licenseStartDate = '';
+            }
           }
+        } else {
+          this.oldLicenseFullSerialField.setValidators([CustomValidators.required, (control) => {
+            return this.selectedLicense && this.selectedLicense?.fullSerial === control.value ? null : {select_license: true}
+          }]);
         }
+        this.oldLicenseFullSerialField.updateValueAndValidity();
+
       } else {
-        this.oldLicenseFullSerialField.setValidators([CustomValidators.required, (control) => {
-          return this.selectedLicense && this.selectedLicense?.fullSerial === control.value ? null : {select_license: true}
-        }]);
+        this.requestType.setValue(this.requestType$.value);
       }
-      this.oldLicenseFullSerialField.updateValueAndValidity();
     });
-  }*/
+  }
 
   loadLicencesByCriteria(criteria: Partial<InitialExternalOfficeApprovalSearchCriteria>): Observable<InitialExternalOfficeApprovalResult[]> {
     return this.service.licenseSearch(criteria);
@@ -389,30 +368,7 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
   }
 
   private _handleRequestTypeDependentControls(): void {
-    /*let requestType = this.requestType.value;
-    // if no request type selected, disable license, country, region
-    // otherwise enable/disable license, country and region according to request type
 
-
-    if (!CommonUtils.isValidValue(requestType) || this.readonly) {
-      this.country.disable();
-      this.region.disable();
-      return;
-    }
-
-    if (requestType === ServiceRequestTypes.NEW) {
-      this.licenseNumber.disable();
-    } else {
-      this.licenseNumber.enable();
-    }
-
-    if (requestType === ServiceRequestTypes.RENEW || requestType === ServiceRequestTypes.EXTEND || requestType === ServiceRequestTypes.CANCEL) {
-      this.country.disable();
-      this.region.disable();
-    } else {
-      this.country.enable();
-      this.region.enable();
-    }*/
   }
 
   private loadSelectedLicenseById(id: string, callback?: any): void {

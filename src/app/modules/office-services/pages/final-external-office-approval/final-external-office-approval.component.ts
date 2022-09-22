@@ -35,8 +35,9 @@ import {InitialExternalOfficeApprovalSearchCriteria} from '@app/models/initial-e
 import {FinalExternalOfficeApprovalSearchCriteria} from '@app/models/final-external-office-approval-search-criteria';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
-import { BankAccountComponent } from '@app/modules/e-services-main/shared/bank-account/bank-account.component';
-import { ExecutiveManagementComponent } from '@app/modules/e-services-main/shared/executive-management/executive-management.component';
+import {BankAccountComponent} from '@app/modules/e-services-main/shared/bank-account/bank-account.component';
+import {ExecutiveManagementComponent} from '@app/modules/e-services-main/shared/executive-management/executive-management.component';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -161,7 +162,7 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
     if (this.fromDialog) {
       let licenseId: string, licenseField: UntypedFormControl;
       if (this.isNewRequestType()) {
-        licenseId = this.model?.initialLicenseId!
+        licenseId = this.model?.initialLicenseId!;
         licenseField = this.initialLicenseFullSerialField;
       } else {
         licenseId = this.model?.oldLicenseId!;
@@ -210,7 +211,7 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
   }
 
   _afterLaunch(): void {
-    this._resetForm();
+    this.resetForm$.next();
     this.toastService.success(this.lang.map.request_has_been_sent_successfully);
   }
 
@@ -235,7 +236,7 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
       this.service.getTask(this.model.taskDetails.tkiid)
         .subscribe((model) => {
           this.model = model;
-        })
+        });
     } else {
       this.model = model;
     }
@@ -296,7 +297,7 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
   private loadCountries(): void {
     this.countryService.loadAsLookups()
       .pipe(takeUntil(this.destroy$))
-      .subscribe((countries) => this.countriesList = countries)
+      .subscribe((countries) => this.countriesList = countries);
   }
 
   private setDefaultValuesForExternalUser(): void {
@@ -316,7 +317,7 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
     this.initialLicenseFullSerialField?.setValidators([]);
     this.oldLicenseFullSerialField?.setValidators([]);
 
-    // if no requestType
+    // if no requestType.
     // if new record or draft, reset license and its validations
     // also reset the values in model
     if (!CommonUtils.isValidValue(this.requestTypeField?.value)) {
@@ -335,12 +336,12 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
       if (this.isNewRequestType()) {
         this.oldLicenseFullSerialField?.setValue(null);
         this.initialLicenseFullSerialField?.setValidators([CustomValidators.required, (control) => {
-          return this.selectedLicense && this.selectedLicense?.fullSerial === control.value ? null : {select_license: true}
+          return this.selectedLicense && this.selectedLicense?.fullSerial === control.value ? null : {select_license: true};
         }]);
       } else {
         this.initialLicenseFullSerialField?.setValue(null);
         this.oldLicenseFullSerialField?.setValidators([CustomValidators.required, (control) => {
-          return this.selectedLicense && this.selectedLicense?.fullSerial === control.value ? null : {select_license: true}
+          return this.selectedLicense && this.selectedLicense?.fullSerial === control.value ? null : {select_license: true};
         }]);
       }
     }
@@ -350,39 +351,28 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
   }
 
   private _handleRequestTypeDependentValidations(): void {
-    /*if (this.operation === OperationTypes.UPDATE) {
 
-    }
-
-    /*if (this.requestTypeField.value === this.serviceRequestTypes.EXTEND || this.requestTypeField.value === this.serviceRequestTypes.CANCEL) {
-      this.basicTab.disable();
-      this.specialExplanationField.enable();
-    } else {
-      this.basicTab.enable();
-    }*/
   }
 
   handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
-    if (userInteraction) {
-      this._resetForm();
-      this.requestTypeField.setValue(requestTypeValue);
-    }
-    // if (!requestTypeValue) {
-    //   requestTypeValue = this.requestTypeField && this.requestTypeField.value;
-    // }
-    this._handleLicenseValidationsByRequestType();
-    this._handleRequestTypeDependentValidations();
-  }
+    of(userInteraction).pipe(
+      takeUntil(this.destroy$),
+      switchMap(() => this.confirmChangeRequestType(userInteraction))
+    ).subscribe((clickOn: UserClickOn) => {
+      if (clickOn === UserClickOn.YES) {
+        if (userInteraction) {
+          this.resetForm$.next();
+          this.requestTypeField.setValue(requestTypeValue);
+        }
 
-  /*listenToRequestTypeChange(): void {
-    this.requestTypeField?.valueChanges.pipe(
-      takeUntil(this.destroy$)
-    ).subscribe(_ => {
-
-      this._handleLicenseValidationsByRequestType();
-      this._handleRequestTypeDependentValidations();
+        this._handleLicenseValidationsByRequestType();
+        this._handleRequestTypeDependentValidations();
+        this.requestType$.next(requestTypeValue);
+      } else {
+        this.requestTypeField.setValue(this.requestType$.value);
+      }
     });
-  }*/
+  }
 
   licenseSearch($event?: Event): void {
     $event?.preventDefault();
@@ -405,17 +395,18 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
       return this.service.licenseSearch(criteria as Partial<FinalExternalOfficeApprovalSearchCriteria>);
     }
   }
+
   listenToLicenseSearch(): void {
     this.licenseSearch$
       .pipe(exhaustMap(oldLicenseFullSerial => {
         return this.loadLicencesByCriteria({fullSerial: oldLicenseFullSerial})
-          .pipe(catchError(() => of([])))
+          .pipe(catchError(() => of([])));
       }))
       .pipe(
         // display message in case there is no returned license
         tap(list => {
           if (!list.length) {
-            this.dialogService.info(this.lang.map.no_result_for_your_search_criteria)
+            this.dialogService.info(this.lang.map.no_result_for_your_search_criteria);
           }
         }),
         // allow only the collection if it has value
@@ -434,10 +425,10 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
                 catchError(() => {
                   return of(null);
                 })
-              )
+              );
           } else {
             const displayColumns = this.isNewRequestType() ? this.initialApprovalService.selectLicenseDisplayColumns : this.service.selectLicenseDisplayColumns;
-            return this.licenseService.openSelectLicenseDialog(licenses, this.model?.clone({requestType: this.requestTypeField.value || null}), true, displayColumns).onAfterClose$
+            return this.licenseService.openSelectLicenseDialog(licenses, this.model?.clone({requestType: this.requestTypeField.value || null}), true, displayColumns).onAfterClose$;
           }
         }),
         // allow only if the user select license
@@ -449,7 +440,7 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
       )
       .subscribe((selection) => {
         this.setSelectedLicense(selection.details, false);
-      })
+      });
   }
 
   private setSelectedLicense(licenseDetails: InitialExternalOfficeApproval | FinalExternalOfficeApproval | undefined, ignoreUpdateForm: boolean) {
@@ -515,7 +506,7 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
         this.setSelectedLicense(license, true);
 
         callback && callback();
-      })
+      });
   }
 
   handleReadonly(): void {
@@ -664,7 +655,7 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
   }
 
   isNewRequestType(): boolean {
-    return this.requestTypeField.value && (this.requestTypeField.value === ServiceRequestTypes.NEW)
+    return this.requestTypeField.value && (this.requestTypeField.value === ServiceRequestTypes.NEW);
   }
 
   isRenewOrUpdateRequestType(): boolean {
@@ -672,7 +663,7 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
   }
 
   isExtendOrCancelRequestType(): boolean {
-    return this.requestTypeField.value && (this.requestTypeField.value === ServiceRequestTypes.EXTEND || this.requestTypeField.value === ServiceRequestTypes.CANCEL)
+    return this.requestTypeField.value && (this.requestTypeField.value === ServiceRequestTypes.EXTEND || this.requestTypeField.value === ServiceRequestTypes.CANCEL);
   }
 
   onTabChange($event: TabComponent) {

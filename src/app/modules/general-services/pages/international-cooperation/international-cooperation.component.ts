@@ -1,13 +1,13 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit} from '@angular/core';
 import {SaveTypes} from '@app/enums/save-types';
-import {BehaviorSubject, Observable, Subject} from 'rxjs';
+import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
 import {FormManager} from '@app/models/form-manager';
 import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {HttpClient} from '@angular/common/http';
 import {DialogService} from '@app/services/dialog.service';
 import {ToastService} from '@app/services/toast.service';
 import {LangService} from '@app/services/lang.service';
-import {exhaustMap, filter, map, takeUntil, tap} from 'rxjs/operators';
+import {exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {IESComponent} from '@app/interfaces/iescomponent';
 import {InternationalCooperation} from '@app/models/international-cooperation';
 import {InternationalCooperationService} from '@app/services/international-cooperation.service';
@@ -21,8 +21,10 @@ import {OpenFrom} from '@app/enums/open-from.enum';
 import {EmployeeService} from '@app/services/employee.service';
 import {IKeyValue} from '@app/interfaces/i-key-value';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {NavigationService} from "@app/services/navigation.service";
+import {NavigationService} from '@app/services/navigation.service';
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -45,6 +47,7 @@ export class InternationalCooperationComponent implements OnInit, OnDestroy, IES
   operation: OperationTypes = OperationTypes.CREATE;
   openFrom: OpenFrom = OpenFrom.ADD_SCREEN;
   model?: InternationalCooperation;
+  resetForm$: Subject<boolean> = new Subject<boolean>();
   private outModelChange$: BehaviorSubject<InternationalCooperation> = new BehaviorSubject<InternationalCooperation>(null as unknown as InternationalCooperation);
 
   @Input()
@@ -112,6 +115,7 @@ export class InternationalCooperationComponent implements OnInit, OnDestroy, IES
     this.loadDepartments();
     this.buildForm();
     this.listenToSave();
+    this._listenToResetForm();
     this.listenToModelChange();
     this.listenToOutModelChange();
     this.loadCountries();
@@ -172,7 +176,7 @@ export class InternationalCooperationComponent implements OnInit, OnDestroy, IES
       takeUntil(this.destroy$),
       exhaustMap((fromValues) => {
         const model = (new InternationalCooperation()).clone({...this.model, ...fromValues});
-        return model.save().pipe(takeUntil(this.destroy$), tap(model => this.saveMessage(model)))
+        return model.save().pipe(takeUntil(this.destroy$), tap(model => this.saveMessage(model)));
       })
     ).subscribe((model) => {
       this.changeModel.next(model);
@@ -241,9 +245,7 @@ export class InternationalCooperationComponent implements OnInit, OnDestroy, IES
     this.model?.start().subscribe(_ => {
       if (this.model) {
         this.model.caseStatus = CommonCaseStatus.UNDER_PROCESSING;
-        this.form.reset();
-        this.model = new InternationalCooperation();
-        this.operation = OperationTypes.CREATE;
+        this.resetForm$.next();
       }
       this.toast.success(this.lang.map.request_has_been_sent_successfully);
       this.changeModel.next(this.model);
@@ -288,12 +290,42 @@ export class InternationalCooperationComponent implements OnInit, OnDestroy, IES
     }
     if (isAllowed) {
       let caseStatus = this.model.getCaseStatus();
-        isAllowed = (caseStatus !== CommonCaseStatus.CANCELLED && caseStatus !== CommonCaseStatus.FINAL_APPROVE && caseStatus !== CommonCaseStatus.FINAL_REJECTION);
+      isAllowed = (caseStatus !== CommonCaseStatus.CANCELLED && caseStatus !== CommonCaseStatus.FINAL_APPROVE && caseStatus !== CommonCaseStatus.FINAL_REJECTION);
     }
     return !isAllowed;
   }
 
   navigateBack(): void {
     this.navigationService.goToBack();
+  }
+
+  resetForm(): void {
+    this.form.reset();
+    this.model = new InternationalCooperation();
+    this.operation = OperationTypes.CREATE;
+  }
+
+  confirmResetForm(): DialogRef {
+    return this.service.dialog.confirm(this.lang.map.msg_confirm_reset_form);
+  }
+
+  private _listenToResetForm(): void {
+    this.resetForm$
+      .pipe(
+        takeUntil(this.destroy$),
+        switchMap((needConfirmation) => {
+          if (needConfirmation) {
+            return this.confirmResetForm().onAfterClose$;
+          } else {
+            return of(UserClickOn.YES);
+          }
+        })
+      )
+      .subscribe((userClick: UserClickOn) => {
+        if (userClick === UserClickOn.YES) {
+          this.operation = OperationTypes.CREATE;
+          this.resetForm();
+        }
+      });
   }
 }
