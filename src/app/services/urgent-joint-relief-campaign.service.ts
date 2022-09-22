@@ -33,6 +33,7 @@ import {OrgUnit} from '@app/models/org-unit';
 import {ValidOrgUnit} from '@app/models/valid-org-unit';
 import {ParticipantOrganization} from '@app/models/participant-organization';
 import {Lookup} from '@app/models/lookup';
+import { IReturnToOrganizationService } from '@app/interfaces/i-return-to-organization-service-interface';
 
 @CastResponseContainer({
   $default: {
@@ -46,7 +47,8 @@ import {Lookup} from '@app/models/lookup';
 @Injectable({
   providedIn: 'root'
 })
-export class UrgentJointReliefCampaignService extends BaseGenericEService<UrgentJointReliefCampaign> {
+export class UrgentJointReliefCampaignService extends BaseGenericEService<UrgentJointReliefCampaign>
+implements IReturnToOrganizationService {
   jsonSearchFile: string = 'urgent_joint_relief_campaign_search.json';
   interceptor: IModelInterceptor<UrgentJointReliefCampaign> = new UrgentJointReliefCampaignInterceptor();
   serviceKey: keyof ILanguageKeys = 'menu_urgent_joint_relief_campaign';

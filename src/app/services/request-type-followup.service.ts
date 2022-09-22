@@ -17,7 +17,7 @@ export class RequestTypeFollowupService {
     [CaseTypes.PARTNER_APPROVAL]: this.lookupService.listByCategory.ServiceRequestType,
     [CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL]: this.lookupService.listByCategory.ServiceRequestType,
     [CaseTypes.INTERNAL_PROJECT_LICENSE]: this.lookupService.listByCategory.ServiceRequestTypeNoRenew,
-    [CaseTypes.EXTERNAL_PROJECT_MODELS]: this.lookupService.listByCategory.ExternalModelingReqType,
+    [CaseTypes.EXTERNAL_PROJECT_MODELS]: this.lookupService.listByCategory.ProjectModelingReqType,
     [CaseTypes.URGENT_INTERVENTION_LICENSING]: this.lookupService.listByCategory.ServiceRequestType,
     [CaseTypes.EXTERNAL_PROJECT_IMPLEMENTATION]: [this.getNewRequestType()],
     [CaseTypes.COLLECTION_APPROVAL]: this.lookupService.listByCategory.CollectionRequestType,

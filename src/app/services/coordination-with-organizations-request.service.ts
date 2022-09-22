@@ -4,8 +4,14 @@ import { DomSanitizer } from "@angular/platform-browser";
 import { CastResponseContainer } from "@app/decorators/decorators/cast-response";
 import { BaseGenericEService } from "@app/generics/base-generic-e-service";
 import { ILanguageKeys } from "@app/interfaces/i-language-keys";
+import { IReturnToOrganizationService } from "@app/interfaces/i-return-to-organization-service-interface";
+import { IDefaultResponse } from "@app/interfaces/idefault-response";
 import { CoordinationWithOrganizationsRequest } from "@app/models/coordination-with-organizations-request";
+import { OrgUnit } from "@app/models/org-unit";
+import { ValidOrgUnit } from "@app/models/valid-org-unit";
 import { ParticipantOrganizationsPopupComponent } from "@app/modules/e-services-main/popups/participant-organizations-popup/participant-organizations-popup.component";
+import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
 import { CoordinationWithOrganizationsRequestSearchCriteria } from './../models/coordination-with-organizations-request-search-criteria';
 import { DialogService } from "./dialog.service";
 import { DynamicOptionsService } from "./dynamic-options.service";
@@ -22,7 +28,9 @@ import { UrlService } from "./url.service";
 @Injectable({
   providedIn: "root",
 })
-export class CoordinationWithOrganizationsRequestService extends BaseGenericEService<CoordinationWithOrganizationsRequest> {
+export class CoordinationWithOrganizationsRequestService extends
+ BaseGenericEService<CoordinationWithOrganizationsRequest>
+ implements IReturnToOrganizationService {
   _getURLSegment(): string {
     return this.urlService.URLS.E_COORDINATION_WITH_ORGANIZATION_REQUEST;
   }
@@ -70,5 +78,16 @@ export class CoordinationWithOrganizationsRequestService extends BaseGenericESer
       orgId,
       model
     }, { fullscreen: true })
+  }
+  returnToOrganization(caseId: number, orgId: number): Observable<OrgUnit[]> {
+    return this.http.get<IDefaultResponse<OrgUnit[]>>(this._getURLSegment() + '/task/' + caseId + '/' + orgId)
+      .pipe(map(response => response.rs));
+  }
+
+  getToReturnValidOrganizations(caseId: number): Observable<ValidOrgUnit[]> {
+    return this.http.get<IDefaultResponse<ValidOrgUnit[]>>(this._getURLSegment() + '/valid/org/' + caseId)
+      .pipe(map(response => {
+        return response.rs.map(x => (new ValidOrgUnit()).clone(x));
+      }));
   }
 }

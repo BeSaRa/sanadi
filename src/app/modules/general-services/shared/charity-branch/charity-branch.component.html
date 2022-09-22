@@ -8,7 +8,7 @@
       <div>
         <label
           [asteriskIfRequired]="control.controlName"
-          for="requestType"
+          [for]="control.controlName"
           class="form-label"
           >{{ control.label }}</label
         >
@@ -73,7 +73,7 @@
   <div class="d-flex flex-row align-items-center justify-content-center">
     <button
       (click)="save()"
-      [disabled]="readonly"
+      [disabled]="!form.valid"
       *ngIf="!readonly"
       class="btn btn-primary m-2"
     >

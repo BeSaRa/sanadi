@@ -1,30 +1,21 @@
-import { Directive, EventEmitter, Input, OnDestroy, OnInit } from "@angular/core";
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from "@angular/forms";
-import { OperationTypes } from "@app/enums/operation-types.enum";
-import { SaveTypes } from "@app/enums/save-types";
-import { IESComponent } from "@app/interfaces/iescomponent";
-import { BehaviorSubject, isObservable, Observable, of, Subject } from "rxjs";
-import {
-  catchError,
-  delay,
-  exhaustMap,
-  filter,
-  map,
-  skip, startWith,
-  switchMap,
-  takeUntil,
-  tap,
-  withLatestFrom
-} from "rxjs/operators";
-import { ICaseModel } from "@app/interfaces/icase-model";
-import { LangService } from "@app/services/lang.service";
-import { CaseModel } from "@app/models/case-model";
-import { OpenFrom } from '@app/enums/open-from.enum';
-import { CustomValidators } from '@app/validators/custom-validators';
-import { CaseTypes } from '@app/enums/case-types.enum';
-import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
-import { BaseGenericEService } from "@app/generics/base-generic-e-service";
-import { FileIconsEnum } from '@app/enums/file-extension-mime-types-icons.enum';
+import {Directive, EventEmitter, Input, OnDestroy, OnInit} from '@angular/core';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {SaveTypes} from '@app/enums/save-types';
+import {IESComponent} from '@app/interfaces/iescomponent';
+import {BehaviorSubject, isObservable, Observable, of, Subject} from 'rxjs';
+import {catchError, delay, exhaustMap, filter, map, skip, startWith, switchMap, takeUntil, tap, withLatestFrom} from 'rxjs/operators';
+import {ICaseModel} from '@app/interfaces/icase-model';
+import {LangService} from '@app/services/lang.service';
+import {CaseModel} from '@app/models/case-model';
+import {OpenFrom} from '@app/enums/open-from.enum';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {CaseTypes} from '@app/enums/case-types.enum';
+import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import {BaseGenericEService} from '@app/generics/base-generic-e-service';
+import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {DialogRef} from '@app/shared/models/dialog-ref';
 
 @Directive()
 export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S extends BaseGenericEService<M>> implements OnInit, OnDestroy, IESComponent<M> {
@@ -35,7 +26,7 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
   _saveTypes: typeof SaveTypes = SaveTypes;
   save: Subject<SaveTypes> = new Subject<SaveTypes>();
   launch$: Subject<null> = new Subject<null>();
-  resetForm$: Subject<null> = new Subject<null>();
+  resetForm$: Subject<boolean> = new Subject<boolean>();
   fromDialog: boolean = false;
   openFrom: OpenFrom = OpenFrom.ADD_SCREEN;
   readonly: boolean = false;
@@ -44,7 +35,7 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
   operation: OperationTypes = OperationTypes.CREATE;
   modelChange$: BehaviorSubject<M | undefined> = new BehaviorSubject<M | undefined>(this._getNewInstance());
   destroy$: Subject<any> = new Subject<any>();
-  model?: M
+  model?: M;
   customValidators = CustomValidators;
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
   caseTypes = CaseTypes;
@@ -52,7 +43,8 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
 
   formValidity$: Subject<any> = new Subject<any>();
 
-  formProperties: Record<string, () => Observable<any>> = {}
+  formProperties: Record<string, () => Observable<any>> = {};
+  requestType$: BehaviorSubject<number | null> = new BehaviorSubject<number | null>(null);
 
   abstract lang: LangService;
   abstract form: UntypedFormGroup;
@@ -60,9 +52,9 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
   abstract service: S;
 
   private saveMethods: Record<SaveTypes, keyof Omit<ICaseModel<M>, 'id'>> = {
-    [SaveTypes.FINAL]: "save",
-    [SaveTypes.COMMIT]: "commit",
-    [SaveTypes.DRAFT]: "draft"
+    [SaveTypes.FINAL]: 'save',
+    [SaveTypes.COMMIT]: 'commit',
+    [SaveTypes.DRAFT]: 'draft'
   };
 
   ngOnDestroy(): void {
@@ -83,7 +75,7 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
       .pipe(tap(_ => this._listenToValidateForms()))
       .pipe(delay(0))// delay
       .pipe(tap(_ => this._afterBuildForm()))
-      .subscribe()
+      .subscribe();
   }
 
   @Input()
@@ -99,7 +91,7 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
   _saveModel(model: M, saveType: SaveTypes): Observable<{ saveType: SaveTypes, model: M }> {
     const modelInstance = model as unknown as CaseModel<any, any>;
     const type = (!modelInstance.canSave() && saveType === SaveTypes.FINAL) ? SaveTypes.COMMIT : saveType;
-    return model[this.saveMethods[type]]().pipe(map(m => ({ saveType: type, model: m })));
+    return model[this.saveMethods[type]]().pipe(map(m => ({saveType: type, model: m})));
   }
 
   _listenToSave(): void {
@@ -124,18 +116,18 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
           return this._saveModel(model, saveType).pipe(catchError(error => {
             // handle the errors came from backend
             this._saveFail(error);
-            return of({ saveType: saveType, model: null });
-          }))
+            return of({saveType: saveType, model: null});
+          }));
         }),
         // allow only success save
         filter((model: { saveType: SaveTypes, model: M | null }): model is { saveType: SaveTypes, model: M } => !!model.model)
       )
       .pipe(takeUntil(this.destroy$))
       .subscribe((result) => {
-        this._afterSave(result.model, result.saveType, this.operation)
+        this._afterSave(result.model, result.saveType, this.operation);
         this.operation = OperationTypes.UPDATE;
         this.afterSave$.emit(result.model);
-      })
+      });
   }
 
   _listenToModelChange(): void {
@@ -147,15 +139,27 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
       }))
       .subscribe((model) => {
         model && this._updateForm(model);
-      })
+      });
   }
 
   _listenToResetForm(): void {
     this.resetForm$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        this.operation = OperationTypes.CREATE;
-        this._resetForm();
+      .pipe(
+        takeUntil(this.destroy$),
+        switchMap((needConfirmation) => {
+          if (needConfirmation){
+            return this.confirmResetForm().onAfterClose$;
+          } else {
+            return of(UserClickOn.YES);
+          }
+        })
+      )
+      .subscribe((userClick: UserClickOn) => {
+        if (userClick === UserClickOn.YES){
+          this.operation = OperationTypes.CREATE;
+          this._resetForm();
+          this.requestType$.next(null);
+        }
       });
   }
 
@@ -164,10 +168,10 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
       .pipe(
         switchMap(_ => {
           const result = this._beforeLaunch();
-          return isObservable(result) ? result : of(result)
+          return isObservable(result) ? result : of(result);
         }),
         exhaustMap(_ => {
-          const model = this.model as unknown as CaseModel<any, any>
+          const model = this.model as unknown as CaseModel<any, any>;
           return model.start().pipe(catchError(error => {
             this._launchFail(error);
             return of(false);
@@ -182,7 +186,7 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
         (this.model as unknown as CaseModel<any, any>).caseStatus = CommonCaseStatus.UNDER_PROCESSING;
         this._afterLaunch();
         this.onModelChange$.emit(this._getNewInstance());
-      })
+      });
   }
 
   _listenToValidateForms(): void {
@@ -203,8 +207,8 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
         } else if (element instanceof HTMLElement) {
           ele = element;
         }
-        ele?.scrollTo({ top: 0, behavior: "smooth" });
-      })
+        ele?.scrollTo({top: 0, behavior: 'smooth'});
+      });
   }
 
   abstract _getNewInstance(): M;
@@ -239,7 +243,7 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
    * @description return here array of forms that you need to make it as touched to display the validation message below it
    */
   _validateForms(): UntypedFormGroup[] {
-    return [this.form]
+    return [this.form];
   }
 
   launch(): void {
@@ -248,8 +252,24 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
 
   getObservableField(getterName: string, modelProperty?: string): Observable<any> {
     modelProperty = modelProperty ? modelProperty : getterName;
-    const currentModel = (this.model as Record<string, any>)
+    const currentModel = (this.model as Record<string, any>);
     const value = currentModel.hasOwnProperty(modelProperty) ? currentModel[modelProperty] : null;
-    return (this[getterName as keyof EServicesGenericComponent<any, any>] as unknown as UntypedFormControl).valueChanges.pipe(startWith<any,any>(value))
+    return (this[getterName as keyof EServicesGenericComponent<any, any>] as unknown as UntypedFormControl).valueChanges.pipe(startWith<any, any>(value));
+  }
+
+  confirmResetForm(): DialogRef {
+    return this.service.dialog.confirm(this.lang.map.msg_confirm_reset_form);
+  }
+
+  confirmChangeRequestType(userInteraction: boolean): Observable<UserClickOn> {
+    if (!userInteraction){
+      return of(UserClickOn.YES);
+    } else {
+      if (!this.requestType$.value) {
+        return of(UserClickOn.YES);
+      } else {
+        return this.confirmResetForm().onAfterClose$;
+      }
+    }
   }
 }

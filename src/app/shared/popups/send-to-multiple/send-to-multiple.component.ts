@@ -70,7 +70,7 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
     WFResponseType.INTERNAL_PROJECT_SEND_TO_MULTI_DEPARTMENTS,
     WFResponseType.FUNDRAISING_LICENSE_SEND_TO_MULTI_DEPARTMENTS,
     WFResponseType.URGENT_INTERVENTION_LICENSE_SEND_TO_MULTI_DEPARTMENTS,
-    WFResponseType.INTERNAL_BANK_ACCOUNT_APPROVAL_SEND_TO_SINGLE_DEPARTMENT
+    WFResponseType.INTERNAL_BANK_ACCOUNT_APPROVAL_SEND_TO_MULTI_DEPARTMENTS
   ];
   multiSendToUserWFResponseList = [
     WFResponseType.INTERNAL_PROJECT_SEND_TO_EXPERT
@@ -89,7 +89,7 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
   private _loadInitData(): void {
     if (this.isSendToDepartments()) {
       this.title = 'send_to_multi_departments';
-      if(this.data.sendToResponse === WFResponseType.INTERNAL_BANK_ACCOUNT_APPROVAL_SEND_TO_SINGLE_DEPARTMENT) {
+      if(this.data.sendToResponse === WFResponseType.INTERNAL_BANK_ACCOUNT_APPROVAL_SEND_TO_MULTI_DEPARTMENTS) {
         this.loadInternalBankAccountApprovalDepartments();
       } else {
         this.loadDepartments();

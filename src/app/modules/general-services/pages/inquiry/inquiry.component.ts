@@ -3,8 +3,8 @@ import {HttpClient} from '@angular/common/http';
 import {LangService} from '@app/services/lang.service';
 import {InternalDepartmentService} from '@app/services/internal-department.service';
 import {InternalDepartment} from '@app/models/internal-department';
-import {BehaviorSubject, Observable, Subject} from 'rxjs';
-import {exhaustMap, filter, map, takeUntil, tap} from 'rxjs/operators';
+import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
+import {exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {FormManager} from '@app/models/form-manager';
 import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {Inquiry} from '@app/models/inquiry';
@@ -21,8 +21,10 @@ import {OpenFrom} from '@app/enums/open-from.enum';
 import {EmployeeService} from '@app/services/employee.service';
 import {IKeyValue} from '@app/interfaces/i-key-value';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {NavigationService} from "@app/services/navigation.service";
+import {NavigationService} from '@app/services/navigation.service';
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -45,6 +47,7 @@ export class InquiryComponent implements OnInit, OnDestroy, IESComponent<Inquiry
   operation: OperationTypes = OperationTypes.CREATE;
   openFrom: OpenFrom = OpenFrom.ADD_SCREEN;
   model?: Inquiry;
+  resetForm$: Subject<boolean> = new Subject<boolean>();
   private outModelChange$: BehaviorSubject<Inquiry> = new BehaviorSubject<Inquiry>(null as unknown as Inquiry);
 
   @Input()
@@ -109,6 +112,7 @@ export class InquiryComponent implements OnInit, OnDestroy, IESComponent<Inquiry
     this.service.ping();
     this.loadDepartments();
     this.buildForm();
+    this._listenToResetForm();
     this.listenToSave();
     this.listenToModelChange();
     this.listenToOutModelChange();
@@ -238,9 +242,7 @@ export class InquiryComponent implements OnInit, OnDestroy, IESComponent<Inquiry
     this.model?.start().subscribe(_ => {
       if (this.model) {
         this.model.caseStatus = CommonCaseStatus.UNDER_PROCESSING;
-        this.form.reset();
-        this.model = new Inquiry();
-        this.operation = OperationTypes.CREATE;
+        this.resetForm$.next();
       }
       this.toast.success(this.lang.map.request_has_been_sent_successfully);
       this.changeModel.next(this.model);
@@ -286,5 +288,35 @@ export class InquiryComponent implements OnInit, OnDestroy, IESComponent<Inquiry
 
   navigateBack(): void {
     this.navigationService.goToBack();
+  }
+
+  resetForm(): void {
+    this.form.reset();
+    this.model = new Inquiry();
+    this.operation = OperationTypes.CREATE;
+  }
+
+  confirmResetForm(): DialogRef {
+    return this.service.dialog.confirm(this.lang.map.msg_confirm_reset_form);
+  }
+
+  private _listenToResetForm(): void {
+    this.resetForm$
+      .pipe(
+        takeUntil(this.destroy$),
+        switchMap((needConfirmation) => {
+          if (needConfirmation){
+            return this.confirmResetForm().onAfterClose$;
+          } else {
+            return of(UserClickOn.YES);
+          }
+        })
+      )
+      .subscribe((userClick: UserClickOn) => {
+        if (userClick === UserClickOn.YES){
+          this.operation = OperationTypes.CREATE;
+          this.resetForm();
+        }
+      });
   }
 }

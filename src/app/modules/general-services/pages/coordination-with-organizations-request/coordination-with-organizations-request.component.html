@@ -46,7 +46,8 @@
           <div class="col-12 col-md-6 mb-6 position-relative">
             <label asteriskIfRequired="domain" for="domain" class="form-label">{{ lang.map.domain }}</label>
             <ng-select [selectOnTab]="true" placeholder="{{ lang.map.select }}" [readonly]="!isEditAllowed()"
-              [notFoundText]="lang.map.msg_not_found" appendTo="body" id="domain" validationClasses="domain"
+              [notFoundText]="lang.map.msg_not_found" appendTo="body"  id="domain" validationClasses="domain"
+              labelForId="domain"
               formControlName="domain">
               <ng-option
               [disabled]="!isEditAllowed()" *ngFor="let option of domains" [value]="option.lookupKey">{{ option.getName() }}</ng-option>
@@ -132,7 +133,7 @@
         [orgId]="currentUserOrgId"
         [trainingLanguages]="trainingLanguages"
         [trainingWayes]="trainingWayes" [recommendedWayes]="recommendedWayes" [readonly]=" isEditAllowed()"
-        (readyEvent)="buildingAbilityTabStatus = $event" [canUpdate]="isCharityUser" [isClaimed]="model?.isClaimed()?? true">
+        [canUpdate]="isCharityUser" [isClaimed]="model?.isClaimed()?? true">
       </building-ability>
     </ng-template>
     <ng-template #effective_coordination_capabilities>
@@ -140,13 +141,13 @@
         [list]="model?.effectiveCoordinationCapabilities || []" [organizationWayes]="organizationWayes"
         [organizationUnits]="organizationUnits" [readonly]=" isEditAllowed()" [canUpdate]="isCharityUser"
         [orgId]="currentUserOrgId"
-        [isClaimed]="model?.isClaimed()?? true" (readyEvent)="effectiveCoordinationCapabilitiesTabStatus = $event">
+        [isClaimed]="model?.isClaimed()?? true" >
       </effective-coordination-capabilities>
     </ng-template>
 
     <ng-template #research_and_studies>
       <app-research-and-studies #researchAndStudiesTap [list]="model?.researchAndStudies || []"
-        [readonly]=" isEditAllowed()" (readyEvent)="ResearchAndStudiesTabStatus = $event"
+        [readonly]=" isEditAllowed()"
         [orgId]="currentUserOrgId"
         [canUpdate]="isCharityUser"
         [isClaimed]="model?.isClaimed()?? true">

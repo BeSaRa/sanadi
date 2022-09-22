@@ -381,7 +381,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         label: 'btn_reset',
         show: () => (!this.model?.id),
         onClick: () => {
-          this.component.resetForm$.next(null);
+          this.component.resetForm$.next(true);
         }
       }
     ];
@@ -470,6 +470,9 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           if (this.servicesWithNoSaveDraftLaunch.includes(item.getCaseType())) {
             return false;
           }
+          if(item.caseType === CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST){
+            return !item.isInitialApproved() || !this.internal
+          }
           // show if external user or service which are only for internal user
           return !this.internal || this.internalUserServices.includes(item.getCaseType());
         },
@@ -509,6 +512,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           return item.getResponses().includes(WFResponseType.RETURN_TO_SPECIFIC_ORGANIZATION);
         },
         onClick: (item: CaseModel<any, any>) => {
+
           this.returnToSpecificOrganizationAction(item);
         }
       },
@@ -521,20 +525,8 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         show: (item: CaseModel<any, any>) => {
           return item.getResponses().includes(WFResponseType.INTERNAL_PROJECT_SEND_TO_MULTI_DEPARTMENTS)
             || item.getResponses().includes(WFResponseType.FUNDRAISING_LICENSE_SEND_TO_MULTI_DEPARTMENTS)
-            || item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_LICENSE_SEND_TO_MULTI_DEPARTMENTS);
-        },
-        onClick: (item: CaseModel<any, any>) => {
-          this.sendToMultiDepartmentsAction(item);
-        }
-      },
-      // send to specific department
-      {
-        type: 'action',
-        icon: 'mdi-send-circle',
-        label: 'send_to_department',
-        askChecklist: true,
-        show: (item: CaseModel<any, any>) => {
-          return item.getResponses().includes(WFResponseType.INTERNAL_BANK_ACCOUNT_APPROVAL_SEND_TO_SINGLE_DEPARTMENT);
+            || item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_LICENSE_SEND_TO_MULTI_DEPARTMENTS)
+            || item.getResponses().includes(WFResponseType.INTERNAL_BANK_ACCOUNT_APPROVAL_SEND_TO_MULTI_DEPARTMENTS);
         },
         onClick: (item: CaseModel<any, any>) => {
           this.sendToMultiDepartmentsAction(item);
@@ -549,7 +541,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
             || item.getResponses().includes(WFResponseType.PARTNER_APPROVAL_SEND_TO_SINGLE_DEPARTMENT)
             || item.getResponses().includes(WFResponseType.FINAL_EXTERNAL_OFFICE_SEND_TO_SINGLE_DEPARTMENT)
             || item.getResponses().includes(WFResponseType.CUSTOMS_EXEMPTION_SEND_TO_SINGLE_DEPARTMENT)
-            || item.getResponses().includes(WFResponseType.TRANSFER_FUND_REQUEST_TO_COMPLIANCE_AND_RISK_DEPARTMENT)
+            || item.getResponses().includes(WFResponseType.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD_SEND_TO_SINGLE_DEPARTMENT)
             || item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_FOLLOWUP_SEND_TO_SINGLE_DEPARTMENT)
           );
           let isSendToLicenseDepartment = item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_CLOSURE_SEND_TO_SINGLE_DEPARTMENT);
@@ -573,7 +565,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
             || item.getResponses().includes(WFResponseType.FUNDRAISING_LICENSE_SEND_TO_SINGLE_DEPARTMENT)
             || item.getResponses().includes(WFResponseType.CUSTOMS_EXEMPTION_SEND_TO_SINGLE_DEPARTMENT)
             || item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_CLOSURE_SEND_TO_SINGLE_DEPARTMENT)
-            || item.getResponses().includes(WFResponseType.TRANSFER_FUND_REQUEST_TO_COMPLIANCE_AND_RISK_DEPARTMENT);
+            || item.getResponses().includes(WFResponseType.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD_SEND_TO_SINGLE_DEPARTMENT);
         },
         onClick: (item: CaseModel<any, any>) => {
           this.sendToSingleDepartmentAction(item);

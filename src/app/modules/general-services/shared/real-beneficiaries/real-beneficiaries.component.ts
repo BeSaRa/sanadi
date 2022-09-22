@@ -28,7 +28,7 @@ export class RealBeneficiariesComponent extends ListModelComponent<RealBeneficia
   datepickerOptionsMap: DatepickerOptionsMap = {
     birthDate: DateUtils.getDatepickerOptions({ disablePeriod: 'future' }),
     iDDate: DateUtils.getDatepickerOptions({ disablePeriod: 'future' }),
-    idexpiryDate: DateUtils.getDatepickerOptions({ disablePeriod: 'past' }),
+    passportExpiryDate: DateUtils.getDatepickerOptions({ disablePeriod: 'past' }),
     iDExpiryDate: DateUtils.getDatepickerOptions({ disablePeriod: 'past' }),
     passportDate: DateUtils.getDatepickerOptions({ disablePeriod: 'future' }),
     startDate: DateUtils.getDatepickerOptions({ disablePeriod: 'past' }),
@@ -75,8 +75,8 @@ export class RealBeneficiariesComponent extends ListModelComponent<RealBeneficia
     { controlName: 'iDDate', label: this.lang.map.id_date, type: 'date' },
 
     {
-      controlName: 'idexpiryDate',
-      label: this.lang.map.id_expiry_date,
+      controlName: 'passportExpiryDate',
+      label: this.lang.map.passport_expiry_date,
       type: 'date',
     },
 
@@ -102,10 +102,9 @@ export class RealBeneficiariesComponent extends ListModelComponent<RealBeneficia
     row.startDate = DateUtils.changeDateToDatepicker(row.startDate);
     row.iDDate = DateUtils.changeDateToDatepicker(row.iDDate);
     row.iDExpiryDate = DateUtils.changeDateToDatepicker(row.iDExpiryDate);
-    row.idexpiryDate = DateUtils.changeDateToDatepicker(row.idexpiryDate);
+    row.passportExpiryDate = DateUtils.changeDateToDatepicker(row.passportExpiryDate);
     row.passportDate = DateUtils.changeDateToDatepicker(row.passportDate);
     row.lastUpdateDate = DateUtils.changeDateToDatepicker(row.lastUpdateDate);
-    row.passportExpiryDate = DateUtils.changeDateToDatepicker(row.passportExpiryDate);
     this.form.patchValue(row);
   }
   _beforeAdd(row: RealBeneficiary): RealBeneficiary {
@@ -114,10 +113,9 @@ export class RealBeneficiariesComponent extends ListModelComponent<RealBeneficia
     row.startDate = DateUtils.getDateStringFromDate(row.startDate);
     row.iDDate = DateUtils.getDateStringFromDate(row.iDDate);
     row.iDExpiryDate = DateUtils.getDateStringFromDate(row.iDExpiryDate);
-    row.idexpiryDate = DateUtils.getDateStringFromDate(row.idexpiryDate);
+    row.passportExpiryDate = DateUtils.getDateStringFromDate(row.passportExpiryDate);
     row.passportDate = DateUtils.getDateStringFromDate(row.passportDate);
     row.lastUpdateDate = DateUtils.getDateStringFromDate(row.lastUpdateDate);
-    row.passportExpiryDate = DateUtils.getDateStringFromDate(row.passportExpiryDate);
     return row;
   }
 }

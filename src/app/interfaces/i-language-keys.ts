@@ -1356,6 +1356,9 @@ export interface ILanguageKeys {
   DAC_subclassification: string;
   OCHA_main_classification: string;
   OCHA_subclassification: string;
+  id_date: string;
+  id_expiry_date: string;
+  passport_expiry_date: string;
   real_benefeciaries: string;
   menu_urgent_intervention_license_followup: string;
   execution_date: string;
@@ -1404,10 +1407,7 @@ export interface ILanguageKeys {
   employees: string;
   last_update_date: string;
   the_date_when_a_person_became_a_real_beneficiary: string;
-  passport_expiry_date: string;
   passport_date: string;
-  id_expiry_date: string;
-  id_date: string;
   birth_location: string;
   registration_authority: string;
   work_areas: string;
@@ -1424,4 +1424,5 @@ export interface ILanguageKeys {
   establishment_id: string;
   meeting: string;
   send_to_npo_management: string;
+  msg_confirm_reset_form: string;
 }

@@ -25,9 +25,12 @@ export interface ILookupMap {
   BenStatusType: Lookup[];
   BranchAdjective: Lookup[];
   BranchCategory: Lookup[];
+  CharityDecisionType: Lookup[];
   CharityReportStatus: Lookup[];
+  CharityReportType: Lookup[];
   CharityRequestType: Lookup[];
   CharityWorkArea: Lookup[];
+  Cities: Lookup[];
   CollectionClassification: Lookup[];
   CollectionRequestType: Lookup[];
   CollectorRelation: Lookup[];
@@ -40,7 +43,6 @@ export interface ILookupMap {
   ContractStatus: Lookup[];
   ContractType: Lookup[];
   CoordinationType: Lookup[];
-  Countries: Lookup[];
   Currency: Lookup[];
   CustomsExemptionRequestType: Lookup[];
   Domain: Lookup[];
@@ -49,7 +51,6 @@ export interface ILookupMap {
   ErrorCodes: Lookup[];
   EvaluationResult: Lookup[];
   Experts: Lookup[];
-  ExternalModelingReqType: Lookup[];
   ExternalServiceRequestType: Lookup[];
   FieldAssessment: Lookup[];
   FollowUpStatus: Lookup[];
@@ -68,6 +69,7 @@ export interface ILookupMap {
   InternalBankStatus: Lookup[];
   InternalDepStatus: Lookup[];
   InternalDepType: Lookup[];
+  InternalProjectClassification: Lookup[];
   InternalProjectType: Lookup[];
   InternalUserJobTitle: Lookup[];
   JobContractType: Lookup[];
@@ -79,20 +81,27 @@ export interface ILookupMap {
   LinkedProject: Lookup[];
   LocalizationModule: Lookup[];
   MeetingClassification: Lookup[];
+  MeetingReplyStatus: Lookup[];
   MeetingType: Lookup[];
   MembersType: Lookup[];
   Nationality: Lookup[];
+  NPOCurrency: Lookup[];
+  NPODecisions: Lookup[];
+  NPORequestType: Lookup[];
+  NPOStatus: Lookup[];
   OrganizationWay: Lookup[];
+  OrgMemberRole: Lookup[];
   OrgStatus: Lookup[];
   OrgUnitType: Lookup[];
   OrgUserActionType: Lookup[];
   OrgUserJobTitle: Lookup[];
   OrgUserPermissionGroup: Lookup[];
-  OrgUserStatus: Lookup[];
   OrgUserType: Lookup[];
   PermissionCategory: Lookup[];
   ProjectLicenseType: Lookup[];
+  ProjectModelingReqType: Lookup[];
   ProjectType: Lookup[];
+  ProjectWorkArea: Lookup[];
   ReceiverType: Lookup[];
   RecommendedWay: Lookup[];
   REPORT_WATERMARK: Lookup[];
@@ -140,7 +149,4 @@ export interface ILookupMap {
   UsageAdjective: Lookup[];
   UserType: Lookup[];
   WORK_FIELD: Lookup[];
-  NPORequestType: Lookup[];
-  NPODecisions: Lookup[];
-  OrgMemberRole: Lookup[];
 }
