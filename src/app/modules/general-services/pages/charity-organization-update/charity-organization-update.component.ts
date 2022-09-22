@@ -22,6 +22,7 @@ import { FileExtensionsEnum } from '@app/enums/file-extension-mime-types-icons.e
 import { OpenFrom } from '@app/enums/open-from.enum';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { SaveTypes } from '@app/enums/save-types';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
 import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
 import { ListModelComponent } from '@app/generics/ListModel-component';
 import { DateUtils } from '@app/helpers/date-utils';
@@ -55,8 +56,8 @@ import { RealBeneficiaryService } from '@app/services/real-beneficiary.service';
 import { ToastService } from '@app/services/toast.service';
 import { DatepickerOptionsMap } from '@app/types/types';
 import { IMyDateModel } from 'angular-mydatepicker';
-import { Observable } from 'rxjs';
-import { share, map, take } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { share, map, take, switchMap, takeUntil } from 'rxjs/operators';
 import { OrganizationOfficersComponent } from '../../shared/organization-officers/organization-officers.component';
 
 @Component({
@@ -440,17 +441,34 @@ export class CharityOrganizationUpdateComponent
     }
   }
 
-  handleRequestTypeChange(requestType: number): void {
-    this.tabs = this._tabs.filter(
-      (e) => !e?.category || e.category === requestType
-    );
-    if (requestType === this.RequestTypes.META_DATA) {
-      this._buildMetaDataForm(requestType);
-    } else if (requestType === this.RequestTypes.GOVERANCE_DOCUMENTS) {
-      this._buildPrimaryLawForm(requestType);
-    } else {
-      this._buildForm(requestType);
-    }
+  handleRequestTypeChange(requestType: number | null, userInteraction: boolean = false): void {
+    of(userInteraction)
+      .pipe(
+        takeUntil(this.destroy$),
+        switchMap(() => this.confirmChangeRequestType(userInteraction))
+      ).subscribe((clickOn: UserClickOn) => {
+        if (clickOn === UserClickOn.YES) {
+          if (userInteraction) {
+            this.resetForm$.next();
+          }
+          this.requestType$.next(requestType);
+          this.tabs = this._tabs.filter(
+            (e) => !e?.category || e.category === requestType
+          );
+          if (requestType === this.RequestTypes.META_DATA) {
+            this._buildMetaDataForm(requestType);
+          } else if (requestType === this.RequestTypes.GOVERANCE_DOCUMENTS) {
+            this._buildPrimaryLawForm(requestType);
+          } else {
+            this._buildForm(requestType);
+          }
+        }
+        else {
+          this.requestTypeForm.setValue(this.requestType$.value);
+        }
+      })
+
+
   }
   toDate(date: IMyDateModel) {
     return DateUtils.getDateStringFromDate(date);
@@ -635,7 +653,7 @@ export class CharityOrganizationUpdateComponent
         this.activityTypes = list;
       });
   }
-  _buildForm(requestType?: number): void {
+  _buildForm(requestType: number | null = null): void {
     const model = this._getNewInstance().clone({
       requestType,
     });
@@ -834,6 +852,6 @@ export class CharityOrganizationUpdateComponent
 
   _resetForm(): void {
     this.form.reset();
-    this.handleRequestTypeChange(-1);
+    this.handleRequestTypeChange(null);
   }
 }
