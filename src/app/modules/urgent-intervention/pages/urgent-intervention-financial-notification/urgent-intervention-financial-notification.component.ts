@@ -176,7 +176,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
     })*/
   }
 
-  _afterBuildForm(): void {
+  _afterBuildForm() : void {
     this.cd.detectChanges();
   }
 
