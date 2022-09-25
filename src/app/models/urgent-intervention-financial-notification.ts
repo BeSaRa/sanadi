@@ -79,7 +79,7 @@ export class UrgentInterventionFinancialNotification extends LicenseApprovalMode
     } = this;
     return {
       requestType: control ? [requestType, [CustomValidators.required]] : requestType,
-      urgentAnnouncementFullSerial: control ? [urgentAnnouncementFullSerial, [CustomValidators.required]] : urgentAnnouncementFullSerial,
+      urgentAnnouncementFullSerial: control ? [urgentAnnouncementFullSerial, [CustomValidators.required, CustomValidators.maxLength(250)]] : urgentAnnouncementFullSerial,
     };
   }
 
