@@ -1,45 +1,46 @@
-import {UrgentFinancialNotificationAccountType} from '@app/enums/urgent-financial-notification-account-type.enum';
-import {catchError, exhaustMap, filter, map, takeUntil, tap} from 'rxjs/operators';
+import { CustomValidators } from './../../../../validators/custom-validators';
+import { UrgentInterventionAnnouncementSearchCriteria } from '@app/models/urgent-intervention-announcement-search-criteria';
+import { UrgentInterventionAnnouncementService } from '@services/urgent-intervention-announcement.service';
+import { UrgentInterventionAnnouncementResult } from '@app/models/urgent-intervention-announcement-result';
+import { UrgentFinancialNotificationAccountType } from '@app/enums/urgent-financial-notification-account-type.enum';
+import { catchError, exhaustMap, filter, map, takeUntil, tap } from 'rxjs/operators';
 import {
   ImplementingAgencyListComponent
 } from './../../shared/implementing-agency-list/implementing-agency-list.component';
-import {ToastService} from '@app/services/toast.service';
-import {ServiceRequestTypes} from '@app/enums/service-request-types';
-import {BankAccount} from '@app/models/bank-account';
-import {AdminResult} from '@app/models/admin-result';
-import {CommonService} from '@services/common.service';
-import {UrgentInterventionAnnouncement} from '@app/models/urgent-intervention-announcement';
-import {UrgentInterventionAnnouncementSearchCriteria} from '@app/models/urgent-intervention-announcement-search-criteria';
-import {UrgentInterventionFinancialRequestType} from '@app/enums/urgent-intervention-financial-request-type';
-import {OpenFrom} from '@app/enums/open-from.enum';
-import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
-import {TabComponent} from '@app/shared/components/tab/tab.component';
+import { ToastService } from '@app/services/toast.service';
+import { ServiceRequestTypes } from '@app/enums/service-request-types';
+import { BankAccount } from '@app/models/bank-account';
+import { AdminResult } from '@app/models/admin-result';
+import { CommonService } from '@services/common.service';
+import { UrgentInterventionFinancialRequestType } from '@app/enums/urgent-intervention-financial-request-type';
+import { OpenFrom } from '@app/enums/open-from.enum';
+import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
+import { TabComponent } from '@app/shared/components/tab/tab.component';
 import {
   InterventionFieldListComponent
 } from './../../shared/intervention-field-list/intervention-field-list.component';
 import {
   InterventionRegionListComponent
 } from './../../shared/intervention-region-list/intervention-region-list.component';
-import {LicenseService} from '@app/services/license.service';
-import {UrgentInterventionAnnouncementService} from '@services/urgent-intervention-announcement.service';
-import {UrgentInterventionAnnouncementResult} from '@app/models/urgent-intervention-announcement-result';
-import {DialogService} from '@services/dialog.service';
-import {ReadinessStatus, TabMap} from '@app/types/types';
-import {Lookup} from '@app/models/lookup';
-import {AfterViewInit, ChangeDetectorRef, Component, ViewChild} from '@angular/core';
-import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {SaveTypes} from '@app/enums/save-types';
-import {LangService} from '@app/services/lang.service';
-import {Observable, of, Subject} from 'rxjs';
-import {UrgentInterventionFinancialNotification} from '@app/models/urgent-intervention-financial-notification';
+import { LicenseService } from '@app/services/license.service';
+import { DialogService } from '@services/dialog.service';
+import { ReadinessStatus, TabMap } from '@app/types/types';
+import { Lookup } from '@app/models/lookup';
+import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { SaveTypes } from '@app/enums/save-types';
+import { LangService } from '@app/services/lang.service';
+import { Observable, of, Subject } from 'rxjs';
+import { UrgentInterventionFinancialNotification } from '@app/models/urgent-intervention-financial-notification';
 import {
   UrgentInterventionFinancialNotificationService
 } from '@services/urgent-intervention-financial-notification.service';
-import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
-import {LookupService} from '@app/services/lookup.service';
-import {ImplementingAgencyTypes} from '@app/enums/implementing-agency-types.enum';
-import {CommonUtils} from '@app/helpers/common-utils';
+import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
+import { LookupService } from '@app/services/lookup.service';
+import { ImplementingAgencyTypes } from '@app/enums/implementing-agency-types.enum';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { UrgentInterventionAnnouncement } from '@app/models/urgent-intervention-announcement';
 
 @Component({
   selector: 'app-urgent-intervention-financial-notification',
@@ -169,6 +170,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
       basicInfo: this.fb.group(urgentInterventionFinancialNotification.buildForm(true)),
       transferData: this.fb.group(urgentInterventionFinancialNotification.buildTransferDataForm(true))
     });
+    this.setLicenseValidations()
     /*this.form.valueChanges.subscribe((data) => {
       console.log(this.form, data)
     })*/
@@ -222,7 +224,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
       (operation === OperationTypes.CREATE && saveType === SaveTypes.FINAL) ||
       (operation === OperationTypes.UPDATE && saveType === SaveTypes.COMMIT)
     ) {
-      this.dialogService.success(this.lang.map.msg_request_has_been_added_successfully.change({serial: model.fullSerial}));
+      this.dialogService.success(this.lang.map.msg_request_has_been_added_successfully.change({ serial: model.fullSerial }));
     } else {
       this.toastService.success(this.lang.map.request_has_been_saved_successfully);
     }
@@ -295,7 +297,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
   }
 
   getInterventionLicense() {
-    this.licenseService.loadUrgentInterventionInterventionLicense().subscribe(({rs}) => {
+    this.licenseService.loadUrgentInterventionInterventionLicense().subscribe(({ rs }) => {
       this.accountNumberField.setValue(rs.accountNumber);
     });
   }
@@ -332,7 +334,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
   }
 
   private openSelectLicense(licenses: UrgentInterventionAnnouncementResult[]): Observable<undefined | UrgentInterventionAnnouncementResult> {
-    return this.licenseService.openSelectLicenseDialog(licenses, this.model?.clone({requestType: this.requestTypeField.value || null}), true, this.service.selectLicenseDisplayColumns)
+    return this.licenseService.openSelectLicenseDialog(licenses, this.model?.clone({ requestType: this.requestTypeField.value || null }), true, this.service.selectLicenseDisplayColumns)
       .onAfterClose$
       .pipe(map((result: ({ selected: UrgentInterventionAnnouncementResult, details: UrgentInterventionAnnouncementResult } | undefined)) => result ? result.details : result));
   }
@@ -374,6 +376,12 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
     }
   }
 
+  private setLicenseValidations(): void {
+    this.urgentAnnouncementFullSerialField.setValidators([CustomValidators.required, (control) => {
+      return this.selectedLicense && this.selectedLicense?.fullSerial === control.value ? null : { select_license: true };
+    }]);
+    this.urgentAnnouncementFullSerialField.updateValueAndValidity();
+  }
   _handleChangeAccountType() {
     if (this.boxAccountType) {
       this.getInterventionLicense();
