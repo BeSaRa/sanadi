@@ -1,3 +1,15 @@
+import { MembersComponent } from './shared/members/members.component';
+import { CharityBranchComponent } from './shared/charity-branch/charity-branch.component';
+import { OrganizationOfficersComponent } from './shared/organization-officers/organization-officers.component';
+import { CharityOrganizationUpdateComponent } from '@app/modules/general-services/pages/charity-organization-update/charity-organization-update.component';
+import { ExternalOfficesPopupComponent } from '@app/modules/general-services/popups/external-offices-popup/external-offices-popup.component';
+import { ForeignAidClassificationsComponent } from './shared/foreign-aid-classifications/foreign-aid-classifications.component';
+import { BylawsComponent } from './shared/bylaws/bylaws.component';
+import { CharityDecisionsComponent } from './shared/charity-decisions/charity-decisions.component';
+import { NpoManagementComponent } from './pages/npo-management/npo-management.component';
+import { NpoManagementApprovePopupComponent } from './popups/npo-management-approve-popup/npo-management-approve-popup.component';
+import { CoordinationWithOrganizationsRequestComponent } from '@app/modules/general-services/pages/coordination-with-organizations-request/coordination-with-organizations-request.component';
+import { NpoBankAccountComponent } from './pages/npo-management/npo-bank-account/npo-bank-account.component';
 import { ExternalOrgAffiliationApprovePopupComponent } from '@app/modules/general-services/popups/external-org-affiliation-approve-popup/external-org-affiliation-approve-popup.component';
 import { EmploymentComponent } from './pages/employment/employment.component';
 import { NgModule } from '@angular/core';
@@ -16,19 +28,12 @@ import { EmploymentApproveComponent } from './popups/employment-approve/employme
 import { ExternalOrgAffiliationComponent } from './pages/external-org-affiliation/external-org-affiliation.component';
 import { ForeignCountriesProjectsComponent } from './pages/foreign-countries-projects/foreign-countries-projects.component';
 import { ForeignCountriesProjectsPopupComponent } from './popups/foreign-countries-projects-popup/foreign-countries-projects-popup.component';
-import { CoordinationWithOrganizationsRequestComponent } from './pages/coordination-with-organizations-request/coordination-with-organizations-request.component';
-import { CharityOrganizationUpdateComponent } from './pages/charity-organization-update/charity-organization-update.component';
-import { OrganizationOfficersComponent } from './shared/organization-officers/organization-officers.component';
-import { CharityBranchComponent } from './shared/charity-branch/charity-branch.component';
-import { MembersComponent } from './shared/members/members.component';
+import { NpoContactOfficerComponent } from './pages/npo-management/npo-contact-officer/npo-contact-officer.component';
+import { FounderMembersComponent } from './pages/npo-management/founder-members/founder-members.component';
 import { RealBeneficiariesComponent } from './shared/real-beneficiaries/real-beneficiaries.component';
-import { ExternalOfficesPopupComponent } from './popups/external-offices-popup/external-offices-popup.component';
 import { OfficeServicesModule } from '../office-services/office-services.module';
-import { ForeignAidClassificationsComponent } from './shared/foreign-aid-classifications/foreign-aid-classifications.component';
 import { WorkAreasComponent } from './shared/work-areas/work-areas.component';
-import { BylawsComponent } from './shared/bylaws/bylaws.component';
 import { CharityReportsComponent } from './shared/risk-reports/risk-reports.component';
-import { CharityDecisionsComponent } from './shared/charity-decisions/charity-decisions.component';
 
 
 @NgModule({
@@ -38,12 +43,17 @@ import { CharityDecisionsComponent } from './shared/charity-decisions/charity-de
     ConsultationComponent,
     InternationalCooperationComponent,
     EmploymentApproveComponent,
+    NpoContactOfficerComponent,
     ExternalOrgAffiliationComponent,
     ExternalOrgAffiliationApprovePopupComponent,
+    NpoManagementApprovePopupComponent,
     EmploymentComponent,
     ForeignCountriesProjectsComponent,
     ForeignCountriesProjectsPopupComponent,
     CoordinationWithOrganizationsRequestComponent,
+    NpoManagementComponent,
+    FounderMembersComponent,
+    NpoBankAccountComponent,
     CharityOrganizationUpdateComponent,
     OrganizationOfficersComponent,
     CharityBranchComponent,

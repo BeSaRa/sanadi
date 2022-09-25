@@ -105,6 +105,7 @@ export interface IAppUrls {
   TRANSFERRING_ENTITY: string;
   GENERAL_ASSOCIATION_MEETING_ATTENDANCE: string;
   VACATION_DATE: string;
+  NPO_MANAGEMENT: string;
   CHARITY_ORGANIZATION_UPDATE: string;
   CHARITY_ORGANIZATION: string;
   MEMBER_ROLES: string;
@@ -112,5 +113,6 @@ export interface IAppUrls {
   CHARITY_REPORT: string;
   CHARITY_DECISION: string;
   GOVERNANCE_DOCUMENT: string;
+  NPO_DATA: string;
   [index: string]: string;
 }

@@ -104,6 +104,7 @@ export class JobTitleService extends CrudWithDialogGenericService<JobTitle> {
       );
   }
 
+
   openViewDialog(modelId: number): Observable<DialogRef> {
     return this.getByIdComposite(modelId).pipe(
       switchMap((jobTitle: JobTitle) => {

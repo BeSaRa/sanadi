@@ -33,6 +33,7 @@ export class RequestTypeFollowupService {
     [CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION]: this.lookupService.listByCategory.UrgentInterventionFinancialRequestType,
     [CaseTypes.FOREIGN_COUNTRIES_PROJECTS]: this.lookupService.listByCategory.CollectionRequestType,
     [CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD]: this.lookupService.listByCategory.TransferringIndividualRequestType,
+    [CaseTypes.NPO_MANAGEMENT]: this.lookupService.listByCategory.NPORequestType,
     [CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST]: [this.getNewRequestType()],
     [CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP]: [this.getNewRequestType()],
   }

@@ -96,6 +96,9 @@ export class RealBeneficiariesComponent extends ListModelComponent<RealBeneficia
 
   protected _initComponent(): void {
     this.form = this.fb.group(this.model.buildForm());
+    this.form.valueChanges.subscribe((data) => {
+      console.log(this.form)
+    })
   }
   _selectOne(row: RealBeneficiary): void {
     row.birthDate = DateUtils.changeDateToDatepicker(row.birthDate);

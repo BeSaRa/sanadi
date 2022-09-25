@@ -1,6 +1,8 @@
+import { GeneralAssociationMeetingAttendanceService } from '@services/general-association-meeting-attendance.service';
 import { CoordinationWithOrganizationsRequestService } from '@app/services/coordination-with-organizations-request.service';
-import { UrgentInterventionFinancialNotificationService } from './urgent-intervention-financial-notification.service';
 import { ComponentFactoryResolver, Injectable } from '@angular/core';
+import { UrgentInterventionFinancialNotificationService } from '@services/urgent-intervention-financial-notification.service';
+import { NpoManagementService } from './npo-management.service';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { UrlService } from './url.service';
 import { Observable, of } from 'rxjs';
@@ -16,7 +18,6 @@ import { IWFResponse } from '@contracts/i-w-f-response';
 import { IDefaultResponse } from '@contracts/idefault-response';
 import { map } from 'rxjs/operators';
 import { WFResponseType } from '../enums/wfresponse-type.enum';
-
 import { ActionWithCommentPopupComponent } from '../shared/popups/action-with-comment-popup/action-with-comment-popup.component';
 import { QueryResult } from '../models/query-result';
 import { ConsultationService } from './consultation.service';
@@ -54,7 +55,6 @@ import { TransferringIndividualFundsAbroadService } from '@services/transferring
 import { ForeignCountriesProjectsService } from './foreign-countries-projects.service';
 import { CastResponse } from '@decorators/cast-response';
 import { UrgentInterventionLicenseFollowupService } from '@services/urgent-intervention-license-followup.service';
-import { GeneralAssociationMeetingAttendanceService } from '@services/general-association-meeting-attendance.service';
 import { CharityOrganizationUpdateService } from './charity-organization-update.service';
 
 @Injectable({
@@ -85,14 +85,15 @@ export class InboxService {
     private urgentInterventionClosureService: UrgentInterventionClosureService,
     private urgentInterventionFinancialNotificationService: UrgentInterventionFinancialNotificationService,
     private urgentInterventionLicenseFollowupService: UrgentInterventionLicenseFollowupService,
+    private npoManagementService: NpoManagementService,
     private urlService: UrlService,
     private employmentService: EmploymentService,
     private externalOrgAffiliationService: ExternalOrgAffiliationService,
     private customsExemptionRemittanceService: CustomsExemptionRemittanceService,
     private foreignCountriesProjectService: ForeignCountriesProjectsService,
     private transferringIndividualsFundsAbroadService: TransferringIndividualFundsAbroadService,
-    private charityUpdateService: CharityOrganizationUpdateService,
     private coordinationWithOrganizationsRequestService: CoordinationWithOrganizationsRequestService,
+    private charityUpdateService: CharityOrganizationUpdateService,
     private generalAssociationMeetingAttendanceService: GeneralAssociationMeetingAttendanceService) {
     FactoryService.registerService('InboxService', this);
     // register all e-services that we need.
@@ -121,6 +122,7 @@ export class InboxService {
     this.services.set(CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE, this.generalAssociationMeetingAttendanceService);
     this.services.set(CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST, this.coordinationWithOrganizationsRequestService);
     this.services.set(CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP, this.urgentInterventionLicenseFollowupService);
+    this.services.set(CaseTypes.NPO_MANAGEMENT, this.npoManagementService);
     this.services.set(CaseTypes.CHARITY_ORGANIZATION_UPDATE, this.charityUpdateService);
   }
 
@@ -300,14 +302,14 @@ export class InboxService {
     const service = this.getService(caseType);
     return this.openSendToDialog(taskId, WFResponseType.TO_COMPETENT_DEPARTMENT, service, claimBefore, task);
   }
-
   getAskWFResponseByCaseType(caseType: number): WFResponseType {
     let servicesMap = {
       [CaseTypes.INTERNAL_PROJECT_LICENSE]: WFResponseType.INTERNAL_PROJECT_SEND_TO_MULTI_DEPARTMENTS,
       [CaseTypes.FUNDRAISING_LICENSING]: WFResponseType.FUNDRAISING_LICENSE_SEND_TO_MULTI_DEPARTMENTS,
       [CaseTypes.URGENT_INTERVENTION_LICENSING]: WFResponseType.URGENT_INTERVENTION_LICENSE_SEND_TO_MULTI_DEPARTMENTS,
       [CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL]: WFResponseType.INTERNAL_BANK_ACCOUNT_APPROVAL_SEND_TO_MULTI_DEPARTMENTS,
-      [CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD]: WFResponseType.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD_SEND_TO_SINGLE_DEPARTMENT
+      [CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD]: WFResponseType.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD_SEND_TO_SINGLE_DEPARTMENT,
+      [CaseTypes.NPO_MANAGEMENT]: WFResponseType.REVIEW_NPO_MANAGEMENT
     };
 
     // @ts-ignore
