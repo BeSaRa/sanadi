@@ -1,3 +1,4 @@
+import { UserClickOn } from './../../../../enums/user-click-on.enum';
 import { TabComponent } from './../../../../shared/components/tab/tab.component';
 import { AttachmentsComponent } from '@app/shared/components/attachments/attachments.component';
 import { CommonCaseStatus } from './../../../../enums/common-case-status.enum';
@@ -126,7 +127,6 @@ EmploymentService
   }
   _afterBuildForm(): void {
     this.handleCategoryChange();
-    this.handleRequestTypeChange();
     this.handleDescriptionChange();
     if (this.operation == OperationTypes.CREATE) this.setDefaultValues();
   }
@@ -134,29 +134,29 @@ EmploymentService
     const validAttachments$ = this.attachmentComponent.attachments.length ? of(true) : this.attachmentComponent.reload();
 
     return (this.model?.id ? validAttachments$ : of(this.form.valid)
-    .pipe(tap((valid) => !valid && this.invalidFormMessage()))
-    .pipe(filter((valid) => valid))
-    .pipe(map((_) => !!(this.model && this.model.employeeInfoDTOs.length)))
-    .pipe(tap(
-      (hasEmployeeItems) => !hasEmployeeItems && this.invalidItemMessage()
-    ))
-    .pipe(filter((valid) => valid))
-    .pipe(
-      switchMap(() => {
-        if (this.isNewRequestType())
-          return this.service.bulkValidate(this.employees)
-        return of({})
-      }),
-      tap(
-        (data) => {
-          this.dublicateIdintifierMessage(data)
-        }
-      ),
-      map(_map => {
-        delete _map.size
-        return Object.keys(_map).filter(k => _map[k]).length == 0
-      }),
-    ));
+      .pipe(tap((valid) => !valid && this.invalidFormMessage()))
+      .pipe(filter((valid) => valid))
+      .pipe(map((_) => !!(this.model && this.model.employeeInfoDTOs.length)))
+      .pipe(tap(
+        (hasEmployeeItems) => !hasEmployeeItems && this.invalidItemMessage()
+      ))
+      .pipe(filter((valid) => valid))
+      .pipe(
+        switchMap(() => {
+          if (this.isNewRequestType())
+            return this.service.bulkValidate(this.employees)
+          return of({})
+        }),
+        tap(
+          (data) => {
+            this.dublicateIdintifierMessage(data)
+          }
+        ),
+        map(_map => {
+          delete _map.size
+          return Object.keys(_map).filter(k => _map[k]).length == 0
+        }),
+      ));
   }
   _beforeLaunch(): boolean | Observable<boolean> {
     if (this.model && !this.model.employeeInfoDTOs.length) {
@@ -165,7 +165,7 @@ EmploymentService
     return true;
   }
   _afterLaunch(): void {
-    this._resetForm();
+    this.resetForm$.next();
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
   _prepareModel(): Employment | Observable<Employment> {
@@ -241,6 +241,7 @@ EmploymentService
     this.model = model;
     this.employees = [...model.employeeInfoDTOs];
     this.form = this.fb.group(model.formBuilder(true));
+    this.handleRequestTypeChange(model.requestType, false);
   }
   _resetForm(): void {
     this.form.reset();
@@ -248,7 +249,7 @@ EmploymentService
     this.setDefaultValues();
   }
   private setDefaultValues(): void {
-    this.requestType.patchValue(EmploymentRequestType.NEW);
+    this.requestTypeField.patchValue(EmploymentRequestType.NEW);
     this.category.patchValue(EmploymentCategory.NOTIFICATION);
   }
   isEditRequestTypeAllowed(): boolean {
@@ -265,20 +266,29 @@ EmploymentService
       .pipe(takeUntil(this.destroy$))
       .subscribe((val: EmploymentCategory) => {
         this.model!.category = val;
-        this.requestType.setValue(null);
-        this.model!.requestType = EmploymentRequestType.NEW;
+        this.requestTypeField.setValue(null);
+        this.handleRequestTypeChange(EmploymentRequestType.NEW, false);
         this.model!.employeeInfoDTOs = [];
         this.employees = [];
       });
   }
-  handleRequestTypeChange() {
-    this.requestType.valueChanges
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((val: EmploymentRequestType) => {
-        this.model!.requestType = val;
-        this.model!.employeeInfoDTOs = [];
-        this.employees = [];
-      });
+  handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false) {
+    of(userInteraction).pipe(
+      takeUntil(this.destroy$),
+      switchMap(() => this.confirmChangeRequestType(userInteraction))
+    ).subscribe((clickOn: UserClickOn) => {
+      if (clickOn === UserClickOn.YES) {
+        if (userInteraction) {
+          this.resetForm$.next();
+          this.requestTypeField.setValue(requestTypeValue);
+          this.model!.employeeInfoDTOs = [];
+          this.employees = [];
+        }
+        this.requestType$.next(requestTypeValue);
+      } else {
+        this.requestTypeField.setValue(this.requestType$.value);
+      }
+    });
   }
   handleDescriptionChange() {
     this.description.valueChanges
@@ -301,7 +311,7 @@ EmploymentService
   }
 
   isNewRequestType(): boolean {
-    return this.requestType.value === EmploymentRequestType.NEW
+    return this.requestTypeField.value === EmploymentRequestType.NEW
   }
   isCreateOperation() {
     return this.operation === OperationTypes.CREATE
@@ -387,7 +397,7 @@ EmploymentService
   get passportNumber(): UntypedFormControl {
     return this.searchCriteriaForm.get("passportNumber") as UntypedFormControl;
   }
-  get requestType(): UntypedFormControl {
+  get requestTypeField(): UntypedFormControl {
     return this.form.get("requestType") as UntypedFormControl;
   }
   get category(): UntypedFormControl {

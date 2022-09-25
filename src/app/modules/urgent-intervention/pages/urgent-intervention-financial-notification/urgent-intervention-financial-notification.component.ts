@@ -1,9 +1,10 @@
+import { UserClickOn } from './../../../../enums/user-click-on.enum';
 import { CustomValidators } from './../../../../validators/custom-validators';
 import { UrgentInterventionAnnouncementSearchCriteria } from '@app/models/urgent-intervention-announcement-search-criteria';
 import { UrgentInterventionAnnouncementService } from '@services/urgent-intervention-announcement.service';
 import { UrgentInterventionAnnouncementResult } from '@app/models/urgent-intervention-announcement-result';
 import { UrgentFinancialNotificationAccountType } from '@app/enums/urgent-financial-notification-account-type.enum';
-import { catchError, exhaustMap, filter, map, takeUntil, tap } from 'rxjs/operators';
+import { catchError, exhaustMap, filter, map, takeUntil, tap, switchMap } from 'rxjs/operators';
 import {
   ImplementingAgencyListComponent
 } from './../../shared/implementing-agency-list/implementing-agency-list.component';
@@ -203,7 +204,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
   }
 
   _afterLaunch(): void {
-    this._resetForm();
+    this.resetForm$.next();
     this.toastService.success(this.lang.map.request_has_been_sent_successfully);
   }
 
@@ -262,6 +263,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
     }
 
     this.cd.detectChanges();
+    this._handleRequestTypeChange(model.requestType, false);
   }
 
   licenseSearch($event?: Event): void {
@@ -324,8 +326,8 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
       value.beneficiaryCountryInfo = licenseDetails.beneficiaryCountryInfo;
       value.executionCountryInfo = licenseDetails.executionCountryInfo;
       value.licenseVSID = licenseDetails.vsId;
+      this._handleRequestTypeChange(value.requestType, false);
       this._updateForm(value);
-      this._handleRequestTypeChange();
     }
   }
 
@@ -362,18 +364,30 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
     return !isAllowed;
   }
 
-  _handleRequestTypeChange() {
-    this.accountType.setValidators([]);
-    this.accountType.reset();
-    this.resetAccountNumber();
-    if (this.isReceive) {
-      this.implementingAgencyTypeField.setValue(2);
-      this.handleImplementingAgencyTypeChanges();
-      this.accountType.setValidators([Validators.required]);
-    } else {
-      this.implementingAgencyTypeField.setValue(null);
-      this.handleImplementingAgencyTypeChanges();
-    }
+  _handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false) {
+    of(userInteraction).pipe(
+      takeUntil(this.destroy$),
+      switchMap(() => this.confirmChangeRequestType(userInteraction))
+    ).subscribe((clickOn: UserClickOn) => {
+      if (clickOn === UserClickOn.YES) {
+        if (userInteraction) {
+          this.accountType.setValidators([]);
+          this.accountType.reset();
+          this.resetAccountNumber();
+          if (this.isReceive) {
+            this.implementingAgencyTypeField.setValue(2);
+            this.handleImplementingAgencyTypeChanges();
+            this.accountType.setValidators([Validators.required]);
+          } else {
+            this.implementingAgencyTypeField.setValue(null);
+            this.handleImplementingAgencyTypeChanges();
+          }
+        }
+        this.requestType$.next(requestTypeValue);
+      } else {
+        this.requestTypeField.setValue(this.requestType$.value);
+      }
+    });
   }
 
   private setLicenseValidations(): void {
