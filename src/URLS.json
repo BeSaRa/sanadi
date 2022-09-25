@@ -107,11 +107,13 @@
   "TRANSFERRING_ENTITY": "/admin/transferring-entity",
   "CHARITY_ORGANIZATION_UPDATE": "/charity-organization-update",
   "E_COORDINATION_WITH_ORGANIZATION_REQUEST": "/coordination-with-organizations-request",
+  "GENERAL_ASSOCIATION_MEETING_ATTENDANCE": "/general-association-meeting-attendance",
   "CHARITY_ORGANIZATION": "/admin/charity-organization",
   "CHARITY_REPORT": "/admin/charity-report",
   "CHARITY_DECISION": "/admin/charity-decision",
   "MEMBER_ROLES": "/admin/member-role",
   "GOVERNANCE_DOCUMENT": "/admin/governance-document",
   "REAL_BENEFECIARY": "/admin/real-beneficiary",
-  "GENERAL_ASSOCIATION_MEETING_ATTENDANCE": "/general-association-meeting-attendance"
+  "NPO_MANAGEMENT": "/npo-management",
+  "NPO_DATA": "/admin/npo-data"
 }

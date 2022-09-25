@@ -1256,6 +1256,7 @@ export interface ILanguageKeys {
   notification_request_number: string;
   risk_management_and_compliance_consulting: string;
   approval_external_org_affiliation: string;
+  approval_npo_management: string;
   conditional_license_indicator: string;
   follow_up_date: string;
   menu_vacation: string;
@@ -1276,6 +1277,7 @@ export interface ILanguageKeys {
   add_building_ability: string;
   activity_name: string;
   training_activity_type: string;
+  activity_type: string;
   activity_goal: string;
   lbl_training_activit_main_axes: string;
   lbl_other_language: string;
@@ -1320,7 +1322,6 @@ export interface ILanguageKeys {
   lbl_financial_cost: string;
   menu_charity_organization_update: string;
   short_name: string;
-  activity_type: string;
   publish_date: string;
   tax_card_number: string;
   regulating_law: string;
@@ -1348,8 +1349,6 @@ export interface ILanguageKeys {
   main_objectives: string;
   scope_of_actions: string;
   classification_of_work_areas: string;
-  birth_location: string;
-  passport_date: string;
   start_date: string;
   first_realase_date: string;
   classification_of_foreign_aid: string;
@@ -1373,6 +1372,22 @@ export interface ILanguageKeys {
   building_abilities_required: string;
   effective_coordination_required: string;
   research_and_studies_required: string;
+  menu_npo_management: string;
+  lbl_contact_info: string;
+  lbl_national_address: string;
+  lbl_founder_members: string;
+  lbl_real_beneficiary: string;
+  lbl_registration_number: string;
+  lbl_clearance_name: string;
+  lbl_clearance_type: string;
+  lbl_disbandment_type: string;
+  lbl_facebook: string;
+  lbl_twitter: string;
+  lbl_instagram: string;
+  lbl_snapchat: string;
+  lbl_youtube: string;
+  clearance_date: string;
+  disbandment_date: string;
   payments: string;
   month: string;
   first_join_date: string;
@@ -1390,6 +1405,11 @@ export interface ILanguageKeys {
   third_payment: string;
   entity_id: string;
   employees: string;
+  last_update_date: string;
+  the_date_when_a_person_became_a_real_beneficiary: string;
+  passport_date: string;
+  birth_location: string;
+  registration_authority: string;
   work_areas: string;
   classification: string;
   bylaws: string;
@@ -1403,5 +1423,6 @@ export interface ILanguageKeys {
   internal_decisions: string;
   establishment_id: string;
   meeting: string;
+  send_to_npo_management: string;
   msg_confirm_reset_form: string;
 }

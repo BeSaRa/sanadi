@@ -1,4 +1,10 @@
 import { CoordinationWithOrganizationsRequest } from '@app/models/coordination-with-organizations-request';
+import { IGeneralAssociationMeetingAttendanceSpecialActions } from '@contracts/i-general-association-meeting-attendance-special-actions';
+import { IGeneralAssociationMeetingAttendanceApprove } from '@contracts/i-general-association-meeting-attendance-approve';
+import { IGeneralAssociationMeetingAttendanceComponent } from '@contracts/i-general-association-meeting-attendance-component';
+import { IGeneralAssociationMeetingAttendanceComplete } from '@contracts/i-general-association-meeting-attendance-complete';
+import { ITransferFundsAbroadComponent } from '@contracts/i-transfer-funds-abroad-component';
+import { ITransferIndividualFundsAbroadComplete } from '@contracts/i-transfer-individual-funds-abroad-complete';
 import {
   AfterViewInit,
   Component,
@@ -39,12 +45,6 @@ import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {BaseGenericEService} from '@app/generics/base-generic-e-service';
-import {ITransferIndividualFundsAbroadComplete} from '@contracts/i-transfer-individual-funds-abroad-complete';
-import {ITransferFundsAbroadComponent} from '@contracts/i-transfer-funds-abroad-component';
-import {IGeneralAssociationMeetingAttendanceComplete} from '@contracts/i-general-association-meeting-attendance-complete';
-import {IGeneralAssociationMeetingAttendanceComponent} from '@contracts/i-general-association-meeting-attendance-component';
-import {IGeneralAssociationMeetingAttendanceApprove} from '@contracts/i-general-association-meeting-attendance-approve';
-import {IGeneralAssociationMeetingAttendanceSpecialActions} from '@contracts/i-general-association-meeting-attendance-special-actions';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -111,6 +111,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN,
     CaseTypes.FOREIGN_COUNTRIES_PROJECTS,
     CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST,
+    CaseTypes.NPO_MANAGEMENT,
   ];
   servicesWithNoSaveDraftLaunch: number[] = [
     CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP
@@ -544,11 +545,14 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
             || item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_FOLLOWUP_SEND_TO_SINGLE_DEPARTMENT)
           );
           let isSendToLicenseDepartment = item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_CLOSURE_SEND_TO_SINGLE_DEPARTMENT);
+          let isSendToDpoManagement = item.getResponses().includes(WFResponseType.REVIEW_NPO_MANAGEMENT);
 
           if (isSendToRiskAndCompliance) {
             return this.lang.map.send_to_risk_and_compliance_department;
           } else if (isSendToLicenseDepartment) {
             return this.lang.map.send_to_license_department;
+          } else if (isSendToDpoManagement) {
+            return this.lang.map.send_to_npo_management;
           }
           return this.lang.map.send_to_supervision_and_control_department;
         },
@@ -564,8 +568,9 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
             || item.getResponses().includes(WFResponseType.FUNDRAISING_LICENSE_SEND_TO_SINGLE_DEPARTMENT)
             || item.getResponses().includes(WFResponseType.CUSTOMS_EXEMPTION_SEND_TO_SINGLE_DEPARTMENT)
             || item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_CLOSURE_SEND_TO_SINGLE_DEPARTMENT)
-            || item.getResponses().includes(WFResponseType.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD_SEND_TO_SINGLE_DEPARTMENT);
-        },
+            || item.getResponses().includes(WFResponseType.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD_SEND_TO_SINGLE_DEPARTMENT)
+            || item.getResponses().includes(WFResponseType.REVIEW_NPO_MANAGEMENT);
+          },
         onClick: (item: CaseModel<any, any>) => {
           this.sendToSingleDepartmentAction(item);
         }
@@ -994,7 +999,6 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       actionTaken && this.navigateToSamePageThatUserCameFrom();
     });
   }
-
   private sendToMultiDepartmentsAction(item: CaseModel<any, any>) {
     item.sendToMultiDepartments().onAfterClose$.subscribe((actionTaken) => {
       actionTaken && this.navigateToSamePageThatUserCameFrom();

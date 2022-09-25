@@ -73,7 +73,6 @@ export abstract class ListModelComponent<T extends Cloneable<T>>
     this.form.patchValue(row);
   }
   removeOne(event: any, row: T, index: number) {
-
     this._list = this._list.filter((_, idx) => idx !== index);
   }
 }

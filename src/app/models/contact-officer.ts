@@ -1,3 +1,4 @@
+import { AdminResult } from './admin-result';
 import {CustomValidators} from "@app/validators/custom-validators";
 import {SearchableCloneable} from "@app/models/searchable-cloneable";
 

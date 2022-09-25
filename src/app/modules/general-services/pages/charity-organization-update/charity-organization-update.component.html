@@ -31,7 +31,7 @@
             appendTo="body"
             [validationClasses]="'requestType'"
             [formControlName]="'requestType'"
-            (change)="handleRequestTypeChange($event)"
+            (change)="handleRequestTypeChange($event, true)"
           >
             <ng-option
               *ngFor="let type of requestTypes"

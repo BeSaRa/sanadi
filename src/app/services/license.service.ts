@@ -58,7 +58,7 @@ import { ForeignCountriesProjectsResult } from '@app/models/foreign-countries-pr
 import { ForeignCountriesProjectsSearchCriteria } from '@app/models/foreign-countries-projects-seach-criteria';
 import { ForeignCountriesProjects } from '@app/models/foreign-countries-projects';
 import { CastResponse } from "@decorators/cast-response";
-import {GeneralAssociationMeetingAttendance} from '@app/models/general-association-meeting-attendance';
+import { GeneralAssociationMeetingAttendance } from '@app/models/general-association-meeting-attendance';
 
 const collectionInterceptor = new CollectionApprovalInterceptor()
 const collectorInterceptor = new CollectorApprovalInterceptor()
@@ -77,10 +77,10 @@ const collectorInterceptor = new CollectorApprovalInterceptor()
 export class LicenseService {
 
   constructor(private http: HttpClient,
-              public urlService: UrlService,
-              private dialog: DialogService,
-              public domSanitizer: DomSanitizer,
-              private employeeService: EmployeeService) {
+    public urlService: UrlService,
+    private dialog: DialogService,
+    public domSanitizer: DomSanitizer,
+    private employeeService: EmployeeService) {
     FactoryService.registerService('LicenseService', this);
   }
 
@@ -146,6 +146,9 @@ export class LicenseService {
         break;
       case CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE:
         url = this.urlService.URLS.GENERAL_ASSOCIATION_MEETING_ATTENDANCE;
+        break;
+      case CaseTypes.NPO_MANAGEMENT:
+        url = this.urlService.URLS.NPO_MANAGEMENT;
         break;
     }
     return url;
