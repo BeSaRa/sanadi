@@ -999,11 +999,6 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       actionTaken && this.navigateToSamePageThatUserCameFrom();
     });
   }
-  private sendToNpoManagementAction(item: CaseModel<any, any>) {
-    item.sendToMultiDepartments().onAfterClose$.subscribe((actionTaken) => {
-      actionTaken && this.navigateToSamePageThatUserCameFrom();
-    });
-  }
   private sendToMultiDepartmentsAction(item: CaseModel<any, any>) {
     item.sendToMultiDepartments().onAfterClose$.subscribe((actionTaken) => {
       actionTaken && this.navigateToSamePageThatUserCameFrom();

@@ -24,7 +24,7 @@ export class NpoManagementInterceptor implements IModelInterceptor<NpoManagement
     model.clearanceInfo && (model.clearanceInfo = AdminResult.createInstance(model.clearanceInfo));
     model.disbandmentInfo && (model.disbandmentInfo = AdminResult.createInstance(model.disbandmentInfo));
     model.registrationAuthorityInfo && (model.registrationAuthorityInfo = AdminResult.createInstance(model.registrationAuthorityInfo));
-    console.log()
+
     model.establishmentDate = DateUtils.changeDateToDatepicker(model.establishmentDate);
     model.disbandmentDate = DateUtils.changeDateToDatepicker(model.disbandmentDate);
     model.clearanceDate = DateUtils.changeDateToDatepicker(model.clearanceDate);
