@@ -77,13 +77,13 @@ export class CharityOrganizationUpdateComponent
   charityOrganizations$: Observable<CharityOrganization[]> =
     this.charityOrganizationService.loadAsLookups().pipe(
       share(),
-      map((e) =>
+      /* map((e) =>
         e.filter((x) =>
           this.employeeService.isCharityUser()
             ? x.id === this.employeeService.getUser()?.orgId
             : true
         )
-      )
+      ) */
     );
   logoFile?: File;
   loadedLogo?: BlobModel;
