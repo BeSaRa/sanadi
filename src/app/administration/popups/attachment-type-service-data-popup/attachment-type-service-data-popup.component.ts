@@ -80,6 +80,10 @@ export class AttachmentTypeServiceDataPopupComponent implements OnInit {
       this.displayFormValidity();
       this.serviceIdField.disable();
     }
+
+    if (this.readonly) {
+      this.form.disable();
+    }
   }
 
   get serviceIdField(): UntypedFormControl {
@@ -96,8 +100,19 @@ export class AttachmentTypeServiceDataPopupComponent implements OnInit {
   }
 
   get popupTitle(): string {
-    return this.operation === OperationTypes.CREATE ? this.lang.map.lbl_add_service : this.lang.map.lbl_edit_service;
+    if (this.operation === OperationTypes.CREATE) {
+      return this.lang.map.lbl_add_service;
+    } else if (this.operation === OperationTypes.UPDATE) {
+      return this.lang.map.lbl_edit_service;
+    } else if (this.operation === OperationTypes.VIEW) {
+      return this.lang.map.view;
+    }
+    return '';
   };
+
+  get readonly(): boolean {
+    return this.operation === OperationTypes.VIEW;
+  }
 
   isExistingService(serviceId: number): boolean {
     return this.existingList.map(x => x.serviceId).includes(serviceId);

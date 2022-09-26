@@ -79,6 +79,18 @@ export class AttachmentTypeServiceDataService extends CrudGenericService<Attachm
     );
   }
 
+  openViewServiceDialog(attachmentTypeServiceDataId: number, list: AttachmentTypeServiceData[]): Observable<DialogRef> {
+    return this.getById(attachmentTypeServiceDataId).pipe(
+      switchMap((attachmentTypeServiceData: AttachmentTypeServiceData) => {
+        return of(this.dialogService.show<IDialogData<AttachmentTypeServiceData>>(AttachmentTypeServiceDataPopupComponent, {
+          model: attachmentTypeServiceData,
+          operation: OperationTypes.VIEW,
+          existingList: list
+        }));
+      })
+    );
+  }
+
   @CastResponse(undefined)
   private _loadServicesByAttachmentTypeId(attachmentTypeId: number): Observable<AttachmentTypeServiceData[]> {
     return this.http.get<AttachmentTypeServiceData[]>(this._getServiceURL() + 's/' + attachmentTypeId);

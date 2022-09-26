@@ -66,7 +66,7 @@
               appendTo="body"
               [labelForId]="customProperties[index].name"
               validationClasses
-              [control]="control"
+              [control]="control" [readonly]="readonly"
               [formControlName]="index"
               placeholder="{{lang.map.select}}"
               [id]="customProperties[index].name"
@@ -91,12 +91,12 @@
   </form>
 </div>
 <div class="dialog-actions">
-  <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="displayFormValidity(null, dialogContent)"
+  <button tabindex="-1" *ngIf="validateFieldsVisible && !readonly" (click)="displayFormValidity(null, dialogContent)"
           tooltip="{{lang.map.validate_fields}}" class="btn btn-link">
     <i class="mdi mdi-information-outline text-info"></i>
   </button>
   <span class="flex-grow-1"></span>
-  <button [disabled]="form.invalid" *ngIf="saveVisible" (click)="saveModel()"
+  <button [disabled]="form.invalid" *ngIf="saveVisible && !readonly" (click)="saveModel()"
           class="btn btn-primary">{{lang.map.btn_save}}</button>
   <button [dialogClose]="model" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
 </div>

@@ -21,6 +21,8 @@ import {AttachmentTypeServiceDataService} from '@app/services/attachment-type-se
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {DialogService} from '@app/services/dialog.service';
 import {EmployeeService} from '@app/services/employee.service';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 
 @Component({
   selector: 'attachment-types-popup',
@@ -43,12 +45,9 @@ export class AttachmentTypesPopupComponent implements OnInit, OnDestroy {
   };
   services: ServiceData[] = [];
 
-  list: AttachmentTypeServiceData[] = [];
+  serviceDataList: AttachmentTypeServiceData[] = [];
 
-  get columns() {
-    return this.readonly ? ['arName', 'enName', 'isActive'] : ['arName', 'enName', 'isActive', 'actions'];
-
-  }
+  serviceDataColumns: string[] = ['arName', 'enName', 'isActive', 'actions'];
 
   validToAddServices = false;
 
@@ -80,6 +79,33 @@ export class AttachmentTypesPopupComponent implements OnInit, OnDestroy {
     }
   }
 
+  serviceDataActions: IMenuItem<AttachmentTypeServiceData>[] = [
+    // edit
+    {
+      type: 'action',
+      label: 'btn_edit',
+      icon: ActionIconsEnum.EDIT,
+      show: (item) => !this.readonly,
+      onClick: (item) => this.editServiceData(item)
+    },
+    // delete
+    {
+      type: 'action',
+      label: 'btn_delete',
+      icon: ActionIconsEnum.DELETE,
+      show: (item) => !this.readonly,
+      onClick: (item) => this.deleteServiceData(item)
+    },
+    // view
+    {
+      type: 'action',
+      label: 'view',
+      icon: ActionIconsEnum.VIEW,
+      show: (item) => this.readonly,
+      onClick: (item) => this.viewServiceData(item)
+    },
+  ];
+
   get readonly(): boolean {
     return this.operation === OperationTypes.VIEW;
   }
@@ -105,8 +131,6 @@ export class AttachmentTypesPopupComponent implements OnInit, OnDestroy {
     }
     if (this.readonly) {
       this.form.disable();
-      this.saveVisible = false;
-      this.validateFieldsVisible = false;
     }
   }
 
@@ -154,7 +178,7 @@ export class AttachmentTypesPopupComponent implements OnInit, OnDestroy {
         if (operationBeforeSave == OperationTypes.UPDATE) {
           this.dialogRef.close(this.model);
         }
-        if (attachmentTypeHasChangedToGlobal && this.list.length > 0) {
+        if (attachmentTypeHasChangedToGlobal && this.serviceDataList.length > 0) {
           this.makeAttachmentTypeGlobal$.next(attachmentType.id);
         }
       });
@@ -164,7 +188,7 @@ export class AttachmentTypesPopupComponent implements OnInit, OnDestroy {
     this.attachmentTypeServiceDataService.loadServicesByAttachmentTypeId(this.model.id)
       .pipe(takeUntil(this.destroy$))
       .subscribe(services => {
-        this.list = services;
+        this.serviceDataList = services;
       });
   }
 
@@ -172,16 +196,16 @@ export class AttachmentTypesPopupComponent implements OnInit, OnDestroy {
     this.loadServiceData();
   }
 
-  addService(): void {
-    const sub = this.attachmentTypeServiceDataService.openCreateServiceDialog(this.model.id, this.list).onAfterClose$.subscribe(() => {
+  addServiceData(): void {
+    const sub = this.attachmentTypeServiceDataService.openCreateServiceDialog(this.model.id, this.serviceDataList).onAfterClose$.subscribe(() => {
       this.reload();
       sub.unsubscribe();
     });
   }
 
-  edit(attachmentTypeServiceData: AttachmentTypeServiceData, $event: MouseEvent): void {
-    $event.preventDefault();
-    const sub = this.attachmentTypeServiceDataService.openUpdateServiceDialog(attachmentTypeServiceData.id, this.list).subscribe((dialog: DialogRef) => {
+  editServiceData(attachmentTypeServiceData: AttachmentTypeServiceData, $event?: MouseEvent): void {
+    $event?.preventDefault();
+    const sub = this.attachmentTypeServiceDataService.openUpdateServiceDialog(attachmentTypeServiceData.id, this.serviceDataList).subscribe((dialog: DialogRef) => {
       dialog.onAfterClose$.subscribe((_) => {
         this.reload();
         sub.unsubscribe();
@@ -189,8 +213,18 @@ export class AttachmentTypesPopupComponent implements OnInit, OnDestroy {
     });
   }
 
-  delete(event: MouseEvent, model: AttachmentTypeServiceData): void {
-    event.preventDefault();
+  viewServiceData(attachmentTypeServiceData: AttachmentTypeServiceData, $event?: MouseEvent): void {
+    $event?.preventDefault();
+    const sub = this.attachmentTypeServiceDataService.openViewServiceDialog(attachmentTypeServiceData.id, this.serviceDataList).subscribe((dialog: DialogRef) => {
+      dialog.onAfterClose$.subscribe((_) => {
+        // this.reload();
+        sub.unsubscribe();
+      });
+    });
+  }
+
+  deleteServiceData(model: AttachmentTypeServiceData, event?: MouseEvent): void {
+    event?.preventDefault();
     // @ts-ignore
     const message = this.lang.map.msg_confirm_delete_x.change({x: model.serviceInfo.getName()});
     this.dialogService.confirm(message)
@@ -217,7 +251,7 @@ export class AttachmentTypesPopupComponent implements OnInit, OnDestroy {
         }))
         .subscribe((success: boolean) => {
           if (success) {
-            this.list = [];
+            this.serviceDataList = [];
           }
         });
     });
@@ -227,5 +261,10 @@ export class AttachmentTypesPopupComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
     this.destroy$.unsubscribe();
+  }
+
+  setDialogButtonsVisibility(tab: any): void {
+    this.saveVisible = (tab.name && tab.name === this.tabsData.basic.name);
+    this.validateFieldsVisible = (tab.name && tab.name === this.tabsData.basic.name);
   }
 }
