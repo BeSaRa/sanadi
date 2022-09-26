@@ -1,3 +1,4 @@
+import { UserClickOn } from './../../../../enums/user-click-on.enum';
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 import {OpenFrom} from '@app/enums/open-from.enum';
 import {EmployeeService} from '@app/services/employee.service';
@@ -188,7 +189,7 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
   }
 
   _afterLaunch(): void {
-    this._resetForm();
+    this.resetForm$.next();
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
 
@@ -362,10 +363,20 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
   }
 
   handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
-    if (userInteraction) {
-      this._resetForm();
-      this.requestTypeField.setValue(requestTypeValue);
-    }
+    of(userInteraction).pipe(
+      takeUntil(this.destroy$),
+      switchMap(() => this.confirmChangeRequestType(userInteraction))
+    ).subscribe((clickOn: UserClickOn) => {
+      if (clickOn === UserClickOn.YES) {
+        if (userInteraction) {
+          this.resetForm$.next();
+          this.requestTypeField.setValue(requestTypeValue);
+        }
+        this.requestType$.next(requestTypeValue);
+      } else {
+        this.requestTypeField.setValue(this.requestType$.value);
+      }
+    });
   }
 
   isEditOrCancel() {

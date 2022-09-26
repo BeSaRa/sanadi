@@ -1,3 +1,5 @@
+import { UserClickOn } from './../../../../enums/user-click-on.enum';
+import { takeUntil, switchMap } from 'rxjs/operators';
 import { NpoBankAccount } from './../../../../models/npo-bank-account';
 import { NpoContactOfficer } from '@app/models/npo-contact-officer';
 import { FounderMembers } from '@app/models/founder-members';
@@ -33,7 +35,7 @@ import { UntypedFormGroup, UntypedFormBuilder, UntypedFormControl, Validators } 
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { SaveTypes } from '@app/enums/save-types';
 import { LangService } from '@app/services/lang.service';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { EmployeeService } from '@app/services/employee.service';
 import { AdminLookupService } from '@app/services/admin-lookup.service';
 import { AdminLookupTypeEnum } from '@app/enums/admin-lookup-type-enum';
@@ -235,7 +237,7 @@ NpoManagementService
     return !!this.model && this.form.valid && this.model.canStart();
   }
   _afterLaunch(): void {
-    this._resetForm();
+    this.resetForm$.next();
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
   _prepareModel(): NpoManagement | Observable<NpoManagement> {
@@ -291,20 +293,30 @@ NpoManagementService
       contectInfo: formModel.contectInfo
     });
 
-    this.handleRequestTypeChange(model.requestType, false);
     this.cd.detectChanges();
+    this.handleRequestTypeChange(model.requestType, false);
   }
   handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
-    if (userInteraction) {
-      this.setFieldsValidation();
-      this.requestTypeField.setValue(requestTypeValue);
-      this.handleReadonly();
-      if (this.isNew) {
-        this._resetForm();
-      } else if (this.requestTypeField.value && this.npoIdField.value) {
-        this.loadOrganizationData()
+    of(userInteraction).pipe(
+      takeUntil(this.destroy$),
+      switchMap(() => this.confirmChangeRequestType(userInteraction))
+    ).subscribe((clickOn: UserClickOn) => {
+      if (clickOn === UserClickOn.YES) {
+        if (userInteraction) {
+          this.setFieldsValidation();
+          this.requestTypeField.setValue(requestTypeValue);
+          this.handleReadonly();
+          if (this.isNew) {
+            this._resetForm();
+          } else if (this.requestTypeField.value && this.npoIdField.value) {
+            this.loadOrganizationData()
+          }
+        }
+        this.requestType$.next(requestTypeValue);
+      } else {
+        this.requestTypeField.setValue(this.requestType$.value);
       }
-    }
+    });
   }
   _setDefaultValues(): void {
     this.requestTypeField.setValue(ServiceRequestTypes.NEW);

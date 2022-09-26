@@ -66,6 +66,7 @@
               [readonly]="!isEditRequestTypeAllowed()"
               [notFoundText]="lang.map.msg_not_found"
               appendTo="body"
+              (change)="handleRequestTypeChange($event, true);"
               id="requestType"
               validationClasses="requestType"
               formControlName="requestType"
@@ -108,7 +109,7 @@
     <div class="row">
       <div
         class="col-12 mb-2 d-flex justify-content-between align-items-end"
-        *ngIf="category.value && requestType.value"
+        *ngIf="category.value && requestTypeField.value"
       >
       <div>
           <button
