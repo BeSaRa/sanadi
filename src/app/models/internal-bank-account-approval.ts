@@ -12,6 +12,10 @@ import {DialogRef} from '@app/shared/models/dialog-ref';
 import {WFResponseType} from '@app/enums/wfresponse-type.enum';
 import {InternalBankAccountApprovalInterceptor} from '@app/model-interceptors/internal-bank-account-approval-interceptor';
 import {InterceptModel} from '@decorators/intercept-model';
+import {ISearchFieldsMap} from '@app/types/types';
+import {dateSearchFields} from '@helpers/date-search-fields';
+import {infoSearchFields} from '@helpers/info-search-fields';
+import {normalSearchFields} from '@helpers/normal-search-fields';
 
 const _RequestType = mixinRequestType(CaseModel);
 
@@ -55,6 +59,20 @@ export class InternalBankAccountApproval extends _RequestType<InternalBankAccoun
   bankAccountSearchCriteria!: string;
 
   service!: InternalBankAccountApprovalService;
+
+  searchFields: ISearchFieldsMap<InternalBankAccountApproval> = {
+    ...dateSearchFields(['createdOn']),
+    ...infoSearchFields(['caseStatusInfo', 'requestTypeInfo']),
+    ...normalSearchFields(['fullSerial', 'subject'])
+  };
+
+  finalizeSearchFields(): void {
+    if (this.employeeService.isExternalUser()) {
+      delete this.searchFields.ouInfo;
+      delete this.searchFields.organizationId;
+      delete this.searchFields.organization;
+    }
+  }
 
   constructor() {
     super();
