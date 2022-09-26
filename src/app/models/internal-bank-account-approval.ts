@@ -62,7 +62,7 @@ export class InternalBankAccountApproval extends _RequestType<InternalBankAccoun
 
   searchFields: ISearchFieldsMap<InternalBankAccountApproval> = {
     ...dateSearchFields(['createdOn']),
-    ...infoSearchFields(['caseStatusInfo', 'requestTypeInfo']),
+    ...infoSearchFields(['caseStatusInfo', 'requestTypeInfo', 'ouInfo', 'creatorInfo']),
     ...normalSearchFields(['fullSerial', 'subject'])
   };
 
