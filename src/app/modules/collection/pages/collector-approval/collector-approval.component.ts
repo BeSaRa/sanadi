@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import { CollectorApprovalService } from '@app/services/collector-approval.service';
 import { CollectorApproval } from '@app/models/collector-approval';
 import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
@@ -17,6 +17,7 @@ import { OpenFrom } from '@app/enums/open-from.enum';
 import { EmployeeService } from '@app/services/employee.service';
 import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {CollectorItemComponent} from '@app/modules/collection/shared/collector-item/collector-item.component';
 
 @Component({
   selector: 'collector-approval',
@@ -30,7 +31,7 @@ export class CollectorApprovalComponent extends EServicesGenericComponent<Collec
 
   licenseDurationTypes: Lookup[] = this.lookupService.listByCategory.LicenseDurationType;
   disableSearchField: boolean = true;
-
+  @ViewChild('nested_collector') nestedCollector!: CollectorItemComponent
 
   formProperties = {
     requestType: () => {
@@ -152,6 +153,7 @@ export class CollectorApprovalComponent extends EServicesGenericComponent<Collec
   _resetForm(): void {
     this.form.reset();
     this.disableSearchField = true;
+    this.nestedCollector.cancel();
     this.model && (this.model.collectorItemList = [])
     this.operation = OperationTypes.CREATE;
   }

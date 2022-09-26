@@ -38,14 +38,15 @@
         </div>
         <div class="row">
           <collector-item
-                          [formProperties]="formProperties"
-                          (formOpenedStatus)="collectorItemFormStatusChanged($event)"
-                          [disableAdd]="basicInfo.invalid || readonly"
-                          [readOnly]="(readonly)"
-                          [licenseDurationType]="licenseDurationType.value"
-                          (eventHappened)="checkDisableFields()"
-                          [requestType]="requestType.value"
-                          [model]="model!"></collector-item>
+            #nested_collector
+            [formProperties]="formProperties"
+            (formOpenedStatus)="collectorItemFormStatusChanged($event)"
+            [disableAdd]="basicInfo.invalid || readonly"
+            [readOnly]="(readonly)"
+            [licenseDurationType]="licenseDurationType.value"
+            (eventHappened)="checkDisableFields()"
+            [requestType]="requestType.value"
+            [model]="model!"></collector-item>
           <!--[disableSearch]="!isEditLicenseAllowed()"-->
         </div>
       </ng-template>
