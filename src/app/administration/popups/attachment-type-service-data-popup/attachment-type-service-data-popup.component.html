@@ -59,9 +59,9 @@
     <div class="row mb-3">
       <div class="col-sm-6 d-flex flex-column" formArrayName="customProperties" *ngIf="customProperties.length > 0">
         <div *ngFor="let control of customPropertiesArrayForm.controls; index as index ">
-          <label asteriskIfRequired [control]="control" [for]="customProperties[index].name"
-                 class="form-label">{{getCustomPropertyName(customProperties[index].name)}}</label>
           <div class="mb-3 position-relative ng-select-wrapper">
+            <label asteriskIfRequired [control]="control" [for]="customProperties[index].name"
+                   class="form-label">{{getCustomPropertyName(customProperties[index].name)}}</label>
             <ng-select
               appendTo="body"
               [labelForId]="customProperties[index].name"
