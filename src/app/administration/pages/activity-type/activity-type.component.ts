@@ -4,7 +4,6 @@ import { AdminGenericComponent } from '@app/generics/admin-generic-component';
 import { AdminLookup } from '@app/models/admin-lookup';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
 import { ActivityTypeService } from '@app/services/activity-type.service';
-import { AdminLookupService } from '@app/services/admin-lookup.service';
 import { DialogService } from '@app/services/dialog.service';
 import { LangService } from '@app/services/lang.service';
 import { ToastService } from '@app/services/toast.service';
@@ -29,7 +28,6 @@ export class ActivityTypeComponent extends AdminGenericComponent<
 > {
   actions: IMenuItem<AdminLookup>[] = [];
   displayedColumns: string[] = [
-    'rowSelection',
     'arName',
     'enName',
     'status',

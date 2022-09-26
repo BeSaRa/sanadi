@@ -28,29 +28,6 @@
         [dataSource]="table.dataSource"
         class="table table-striped table-bordered caption-top"
       >
-        <ng-container cdkColumnDef="rowSelection">
-          <th class="select-all-td" cdk-header-cell *cdkHeaderCellDef>
-            <input
-              type="checkbox"
-              [disabled]="table.filter"
-              [indeterminate]="
-                table.selection.hasValue() && !table.allSelected()
-              "
-              (change)="$event ? table.toggleAll() : null"
-              [checked]="table.selection.hasValue() && table.allSelected()"
-              class="form-check-input"
-            />
-          </th>
-          <td cdk-cell *cdkCellDef="let row">
-            <input
-              type="checkbox"
-              (click)="$event.stopPropagation()"
-              [checked]="table.selection.isSelected(row)"
-              (change)="$event ? table.selection.toggle(row) : null"
-              class="form-check-input"
-            />
-          </td>
-        </ng-container>
         <ng-container cdkColumnDef="arName">
           <th cdk-header-cell sortable-header *cdkHeaderCellDef>
             {{ lang.map.arabic_name }}
