@@ -1425,4 +1425,5 @@ export interface ILanguageKeys {
   meeting: string;
   send_to_npo_management: string;
   msg_confirm_reset_form: string;
+  organization: string;
 }
