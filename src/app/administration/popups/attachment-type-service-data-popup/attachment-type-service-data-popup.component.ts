@@ -1,25 +1,25 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { LangService } from '@app/services/lang.service';
-import { OperationTypes } from '@app/enums/operation-types.enum';
-import { AttachmentTypeServiceData } from '@app/models/attachment-type-service-data';
-import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { FormManager } from '@app/models/form-manager';
-import { of, Subject } from 'rxjs';
-import { catchError, exhaustMap, takeUntil } from 'rxjs/operators';
-import { ExceptionHandlerService } from '@app/services/exception-handler.service';
-import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
-import { IDialogData } from '@app/interfaces/i-dialog-data';
-import { ServiceDataService } from '@app/services/service-data.service';
-import { ServiceData } from '@app/models/service-data';
-import { CustomValidators } from '@app/validators/custom-validators';
-import { LookupService } from '@app/services/lookup.service';
-import { Lookup } from '@app/models/lookup';
-import { ToastService } from '@app/services/toast.service';
-import { AttachmentTypeServiceDataService } from '@app/services/attachment-type-service-data.service';
-import { DialogRef } from '@app/shared/models/dialog-ref';
-import { CustomProperty } from '@app/models/custom-property';
-import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { CustomPropertyTypes } from "@app/enums/custom-property-types";
+import {Component, Inject, OnInit} from '@angular/core';
+import {LangService} from '@app/services/lang.service';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {AttachmentTypeServiceData} from '@app/models/attachment-type-service-data';
+import {AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+import {of, Subject} from 'rxjs';
+import {catchError, exhaustMap, takeUntil} from 'rxjs/operators';
+import {ExceptionHandlerService} from '@app/services/exception-handler.service';
+import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
+import {IDialogData} from '@app/interfaces/i-dialog-data';
+import {ServiceDataService} from '@app/services/service-data.service';
+import {ServiceData} from '@app/models/service-data';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {LookupService} from '@app/services/lookup.service';
+import {Lookup} from '@app/models/lookup';
+import {ToastService} from '@app/services/toast.service';
+import {AttachmentTypeServiceDataService} from '@app/services/attachment-type-service-data.service';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {CustomProperty} from '@app/models/custom-property';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {CustomPropertyTypes} from '@app/enums/custom-property-types';
+import {CommonUtils} from '@helpers/common-utils';
 
 @Component({
   selector: 'attachment-type-service-data-popup',
@@ -28,7 +28,6 @@ import { CustomPropertyTypes } from "@app/enums/custom-property-types";
 })
 export class AttachmentTypeServiceDataPopupComponent implements OnInit {
   form!: UntypedFormGroup;
-  fm!: FormManager;
   model!: AttachmentTypeServiceData;
   operation!: OperationTypes;
   validateFieldsVisible = true;
@@ -37,7 +36,7 @@ export class AttachmentTypeServiceDataPopupComponent implements OnInit {
   attachmentTypeUsersList: Lookup[];
   private save$: Subject<any> = new Subject<any>();
   private destroy$: Subject<any> = new Subject<any>();
-  attachmentTypeId!: number;
+  existingList: AttachmentTypeServiceData[] = [];
   customProperties$: Subject<CustomProperty[]> = new Subject<CustomProperty[]>();
   customProperties: CustomProperty[] = [];
   selectedService!: ServiceData;
@@ -56,7 +55,7 @@ export class AttachmentTypeServiceDataPopupComponent implements OnInit {
               private dialogRef: DialogRef) {
     this.operation = data.operation;
     this.model = data.model;
-    this.attachmentTypeId = data.attachmentTypeId;
+    this.existingList = data.existingList;
     this.attachmentTypeUsersList = lookupService.listByCategory.UserType;
   }
 
@@ -76,11 +75,15 @@ export class AttachmentTypeServiceDataPopupComponent implements OnInit {
       identifier: [this.model.identifier],
       customProperties: this.fb.array([])
     });
-    this.fm = new FormManager(this.form, this.lang);
 
     if (this.operation === OperationTypes.UPDATE) {
-      this.fm.displayFormValidity();
+      this.displayFormValidity();
+      this.serviceIdField.disable();
     }
+  }
+
+  get serviceIdField(): UntypedFormControl {
+    return this.form.get('serviceId') as UntypedFormControl;
   }
 
   private loadServices(): void {
@@ -96,8 +99,12 @@ export class AttachmentTypeServiceDataPopupComponent implements OnInit {
     return this.operation === OperationTypes.CREATE ? this.lang.map.lbl_add_service : this.lang.map.lbl_edit_service;
   };
 
+  isExistingService(serviceId: number): boolean {
+    return this.existingList.map(x => x.serviceId).includes(serviceId);
+  }
+
   saveModel(): void {
-    this.selectedService = this.services.find(s => s.id === this.form.get('serviceId')?.value)!;
+    this.selectedService = this.services.find(s => s.id === this.serviceIdField?.value)!;
     this.save$.next();
   }
 
@@ -106,13 +113,13 @@ export class AttachmentTypeServiceDataPopupComponent implements OnInit {
       .pipe(takeUntil(this.destroy$),
         exhaustMap(() => {
           let attachmentTypeServiceData = (new AttachmentTypeServiceData()).clone({
-            ...this.model, ...this.fm.getForm()?.value,
+            ...this.model, ...this.form.value,
             caseType: this.selectedService.caseType
           });
-          attachmentTypeServiceData = this.mapAttachmentTypeServiceDataToSend(attachmentTypeServiceData, this.attachmentTypeId, this.customPropertiesKeyValue);
+          attachmentTypeServiceData = this.mapAttachmentTypeServiceDataToSend(attachmentTypeServiceData, this.customPropertiesKeyValue);
           return attachmentTypeServiceData.save().pipe(
             catchError((err) => {
-              this.exceptionHandlerService.handle(err);
+              // this.exceptionHandlerService.handle(err);
               return of(null);
             }));
         }))
@@ -122,7 +129,7 @@ export class AttachmentTypeServiceDataPopupComponent implements OnInit {
         }
         const message = this.operation === OperationTypes.CREATE ? this.lang.map.msg_create_x_success : this.lang.map.msg_update_x_success;
         // @ts-ignore
-        this.toast.success(message.change({ x: this.selectedService.getName() }));
+        this.toast.success(message.change({x: this.selectedService.getName()}));
         this.model = attachmentTypeServiceData;
         this.operation = OperationTypes.UPDATE;
         this.dialogRef.close(this.model);
@@ -130,7 +137,7 @@ export class AttachmentTypeServiceDataPopupComponent implements OnInit {
   }
 
   onServiceChange() {
-    this.selectedService = this.services.find(s => s.id === this.form.get('serviceId')?.value)!;
+    this.selectedService = this.services.find(s => s.id === this.serviceIdField?.value)!;
     if (this.selectedService?.caseType) {
       this.attachmentTypeServiceDataService.getCustomProperties(this.selectedService.caseType).pipe(
         takeUntil(this.destroy$)
@@ -147,7 +154,7 @@ export class AttachmentTypeServiceDataPopupComponent implements OnInit {
       properties.forEach((property) => {
         if (property.type === CustomPropertyTypes.TABLE) {
           this.displayMulti = true;
-          this.tablesIdentifiers = this.tablesIdentifiers.concat(property)
+          this.tablesIdentifiers = this.tablesIdentifiers.concat(property);
         } else {
           let controlValue = this.customPropertiesKeyValue[property.name] ? this.customPropertiesKeyValue[property.name] : null;
           this.customPropertiesArrayForm.push(new UntypedFormControl(controlValue));
@@ -161,7 +168,7 @@ export class AttachmentTypeServiceDataPopupComponent implements OnInit {
   }
 
   get multi(): AbstractControl {
-    return this.form.get('multi') as AbstractControl
+    return this.form.get('multi') as AbstractControl;
   }
 
   getOptionName(option: any): string {
@@ -199,8 +206,7 @@ export class AttachmentTypeServiceDataPopupComponent implements OnInit {
     return {};
   }
 
-  mapAttachmentTypeServiceDataToSend(attachmentTypeServiceData: AttachmentTypeServiceData, attachmentTypeId: number, customPropertiesJson: { [key: string]: number }): AttachmentTypeServiceData {
-    attachmentTypeServiceData.attachmentTypeId = attachmentTypeId;
+  mapAttachmentTypeServiceDataToSend(attachmentTypeServiceData: AttachmentTypeServiceData, customPropertiesJson: { [key: string]: number }): AttachmentTypeServiceData {
     attachmentTypeServiceData.customProperties = this.getCustomPropertiesAsString(customPropertiesJson);
     return attachmentTypeServiceData;
   }
@@ -217,6 +223,10 @@ export class AttachmentTypeServiceDataPopupComponent implements OnInit {
   }
 
   onMultiChange(): void {
-    this.model.multi = this.multi.value
+    this.model.multi = this.multi.value;
+  }
+
+  displayFormValidity(form?: UntypedFormGroup | null, element?: HTMLElement | string): void {
+    CommonUtils.displayFormValidity((form || this.form), element);
   }
 }

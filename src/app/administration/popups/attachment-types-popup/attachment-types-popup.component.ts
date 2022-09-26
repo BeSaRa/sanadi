@@ -171,7 +171,7 @@ export class AttachmentTypesPopupComponent implements OnInit, OnDestroy {
   }
 
   addService(): void {
-    const sub = this.attachmentTypeServiceDataService.openCreateServiceDialog(this.model.id).onAfterClose$.subscribe(() => {
+    const sub = this.attachmentTypeServiceDataService.openCreateServiceDialog(this.model.id, this.list).onAfterClose$.subscribe(() => {
       this.reload();
       sub.unsubscribe();
     });
@@ -179,7 +179,7 @@ export class AttachmentTypesPopupComponent implements OnInit, OnDestroy {
 
   edit(attachmentTypeServiceData: AttachmentTypeServiceData, $event: MouseEvent): void {
     $event.preventDefault();
-    const sub = this.attachmentTypeServiceDataService.openUpdateServiceDialog(attachmentTypeServiceData.id, this.model.id).subscribe((dialog: DialogRef) => {
+    const sub = this.attachmentTypeServiceDataService.openUpdateServiceDialog(attachmentTypeServiceData.id, this.list).subscribe((dialog: DialogRef) => {
       dialog.onAfterClose$.subscribe((_) => {
         this.reload();
         sub.unsubscribe();
