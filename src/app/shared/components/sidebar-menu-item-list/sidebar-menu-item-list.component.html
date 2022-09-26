@@ -21,6 +21,8 @@
           </div>
         </div>
         <span [title]="item.langKey|translate:lang.map.lang" class="flex-grow-1 sidebar-menu-item-text text-truncate"
+              [class.pe-4]="level === 1 && item.children.length && !hasCounter(item.counter)"
+              [class.pe-5]="level === 1 && item.children.length && hasCounter(item.counter)"
               [innerHTML]="item.langKey|translate:lang.map.lang|highlight:_searchText"></span>
         <span *ngIf="hasCounter(item.counter)"
               class="badge rounded-pill position-absolute badge-translate-middle-x bg-warning">{{getCounter(item.counter)}}</span>
