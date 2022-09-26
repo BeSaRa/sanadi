@@ -15,6 +15,7 @@
                    for="requestType">{{lang.map.request_type}}</label>
             <ng-select [selectOnTab]="true" [clearable]="false" placeholder="{{lang.map.select}}"
                        [notFoundText]="lang.map.msg_not_found"
+                       (change)="handleRequestTypeChange($event, true)"
                        validationClasses="requestType" appendTo="body" id="requestType"
                        formControlName="requestType" [readonly]="!isEditRequestTypeAllowed()">
               <ng-option [value]="option.lookupKey" *ngFor="let option of requestTypes">{{option.getName()}}</ng-option>

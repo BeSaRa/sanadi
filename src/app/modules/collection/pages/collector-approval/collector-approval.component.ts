@@ -10,12 +10,13 @@ import { Observable, of } from 'rxjs';
 import { Lookup } from '@app/models/lookup';
 import { CollectionRequestType } from '@app/enums/service-request-types';
 import { LookupService } from '@app/services/lookup.service';
-import { filter, map, takeUntil, tap } from 'rxjs/operators';
+import {filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
 import { DialogService } from '@app/services/dialog.service';
 import { ToastService } from '@app/services/toast.service';
 import { OpenFrom } from '@app/enums/open-from.enum';
 import { EmployeeService } from '@app/services/employee.service';
 import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
 
 @Component({
   selector: 'collector-approval',
@@ -80,7 +81,6 @@ export class CollectorApprovalComponent extends EServicesGenericComponent<Collec
   }
 
   _afterBuildForm(): void {
-    this.listenToRequestTypeChanges()
     this.checkDisableFields();
     this.listenToDurationChanges();
     this.handleReadonly();
@@ -102,7 +102,7 @@ export class CollectorApprovalComponent extends EServicesGenericComponent<Collec
   }
 
   _afterLaunch(): void {
-    this._resetForm();
+    this.resetForm$.next();
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
 
@@ -151,6 +151,7 @@ export class CollectorApprovalComponent extends EServicesGenericComponent<Collec
 
   _resetForm(): void {
     this.form.reset();
+    this.disableSearchField = true;
     this.model && (this.model.collectorItemList = [])
     this.operation = OperationTypes.CREATE;
   }
@@ -163,14 +164,28 @@ export class CollectorApprovalComponent extends EServicesGenericComponent<Collec
     this.model?.collectorItemList.length ? this.disableFields() : this.enableFields();
   }
 
-  private listenToRequestTypeChanges() {
-    this.requestType
-      .valueChanges
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((val: CollectionRequestType) => {
-        this.disableSearchField = val === CollectionRequestType.NEW;
-        this.model!.requestType = val;
-      })
+  handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
+    of(userInteraction).pipe(
+      takeUntil(this.destroy$),
+      switchMap(() => this.confirmChangeRequestType(userInteraction))
+    ).subscribe((clickOn: UserClickOn) => {
+      if (clickOn === UserClickOn.YES) {
+        if (userInteraction) {
+          this.resetForm$.next();
+          this.requestType.setValue(requestTypeValue);
+        }
+        if(!requestTypeValue) {
+          requestTypeValue = this.requestType && this.requestType.value;
+        }
+
+        this.disableSearchField = requestTypeValue === CollectionRequestType.NEW;
+        this.model!.requestType = requestTypeValue;
+
+        this.requestType$.next(requestTypeValue);
+      } else {
+        this.requestType.setValue(this.requestType$.value);
+      }
+    });
   }
 
   private listenToDurationChanges() {
