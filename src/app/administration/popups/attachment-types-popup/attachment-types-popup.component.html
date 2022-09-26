@@ -42,7 +42,8 @@
                    for="status">{{lang.map.lbl_status}}</label>
           </div>
         </div>
-        <div class="col-sm-6 mt-4 form-check form-switch" *ngIf="employeeService.checkPermissions('CONTROL_ATTACHMENTS_PUBLISH_STATUS')">
+        <div class="col-sm-6 mt-4 form-check form-switch"
+             *ngIf="employeeService.checkPermissions('CONTROL_ATTACHMENTS_PUBLISH_STATUS')">
           <div class="ms-3">
             <input class="form-check-input" type="checkbox" id="global" formControlName="global">
             <label class="form-check-label"
@@ -86,6 +87,11 @@
                 <ng-container cdkColumnDef="arName">
                   <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.arabic_name}}</th>
                   <td cdk-cell *cdkCellDef="let row">{{row.serviceInfo.arName}}</td>
+                </ng-container>
+                <ng-container cdkColumnDef="userType">
+                  <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
+                      [sortCallback]="sortingCallbacks.userType">{{lang.map.lbl_user_type}}</th>
+                  <td cdk-cell *cdkCellDef="let row">{{row.userTypeInfo ? row.userTypeInfo.getName() : ''}}</td>
                 </ng-container>
                 <ng-container cdkColumnDef="isActive">
                   <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.lbl_required}}</th>

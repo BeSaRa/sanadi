@@ -23,6 +23,8 @@ import {DialogService} from '@app/services/dialog.service';
 import {EmployeeService} from '@app/services/employee.service';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import {SortEvent} from '@contracts/sort-event';
+import {CommonUtils} from '@helpers/common-utils';
 
 @Component({
   selector: 'attachment-types-popup',
@@ -47,7 +49,7 @@ export class AttachmentTypesPopupComponent implements OnInit, OnDestroy {
 
   serviceDataList: AttachmentTypeServiceData[] = [];
 
-  serviceDataColumns: string[] = ['arName', 'enName', 'isActive', 'actions'];
+  serviceDataColumns: string[] = ['arName', 'enName', 'userType', 'isActive', 'actions'];
 
   validToAddServices = false;
 
@@ -105,6 +107,14 @@ export class AttachmentTypesPopupComponent implements OnInit, OnDestroy {
       onClick: (item) => this.viewServiceData(item)
     },
   ];
+
+  sortingCallbacks = {
+    userType: (a: AttachmentTypeServiceData, b: AttachmentTypeServiceData, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.userTypeInfo.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.userTypeInfo.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+  }
 
   get readonly(): boolean {
     return this.operation === OperationTypes.VIEW;
