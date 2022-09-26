@@ -51,7 +51,8 @@ export class AttachmentType extends BaseModel<AttachmentType, AttachmentTypeServ
         arName: this.arName,
         enName: this.enName,
         id: this.id
-      })
+      }),
+      attachmentTypeStatus: this.isActive()
     });
   }
 

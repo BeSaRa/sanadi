@@ -43,6 +43,7 @@ export class FileNetDocument extends FileNetModel<FileNetDocument> {
   employeeService: EmployeeService;
   // to be filled manually not from interceptor
   attachmentTypeServiceData?: AttachmentTypeServiceData;
+  attachmentTypeStatus!: boolean;
 
   constructor() {
     super();

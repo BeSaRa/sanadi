@@ -68,7 +68,7 @@ export class CustomAttachmentPopupComponent implements OnInit, OnDestroy {
   }
 
   canChangePublished(attachment: FileNetDocument): boolean {
-    if (this.employeeService.isExternalUser()) {
+    if (!attachment.attachmentTypeStatus || this.employeeService.isExternalUser()) {
       return false;
     }
     return !attachment.id;
@@ -115,7 +115,7 @@ export class CustomAttachmentPopupComponent implements OnInit, OnDestroy {
   }
 
   deleteFile(file: FileNetDocument): void {
-    if (!file.id) {
+    if (this.isDisabledActionButtons(file, 'delete')) {
       return;
     }
 
@@ -142,7 +142,7 @@ export class CustomAttachmentPopupComponent implements OnInit, OnDestroy {
   }
 
   uploadAttachment(row: FileNetDocument, uploader: HTMLInputElement): void {
-    if (this.disabled) {
+    if (this.isDisabledActionButtons(row, 'upload')) {
       return;
     }
     uploader.click();
@@ -155,7 +155,7 @@ export class CustomAttachmentPopupComponent implements OnInit, OnDestroy {
   }
 
   viewFile(file: FileNetDocument): void {
-    if (!file.id) {
+    if (this.isDisabledActionButtons(file, 'view')) {
       return;
     }
     this.model.service.documentService.downloadDocument(file.id)
@@ -171,5 +171,33 @@ export class CustomAttachmentPopupComponent implements OnInit, OnDestroy {
       .subscribe((data) => {
         this.assignNeededData(data);
       });
+  }
+
+  handleChangePublished(attachment: FileNetDocument, $event?: MouseEvent): void {
+    if (this.disabled || !attachment.attachmentTypeStatus) {
+      $event?.preventDefault();
+      return;
+    } else {
+      attachment.isPublished = !attachment.isPublished;
+    }
+  }
+
+  canShowActionButtons(attachment: FileNetDocument, buttonType: 'view' | 'delete' | 'upload' | 'publish') {
+    // if attachment is already saved, show buttons
+    // otherwise, show only if attachment type is active
+    return attachment.id ? true : (attachment.attachmentTypeStatus);
+  }
+
+  isDisabledActionButtons(attachment: FileNetDocument, buttonType: 'view' | 'delete' | 'upload' | 'publish') {
+    if (buttonType === 'view') {
+      return !attachment.id;
+    } else if (buttonType === 'delete') {
+      return this.disabled || !attachment.attachmentTypeStatus || !attachment.id;
+    } else if (buttonType === 'upload') {
+      return this.disabled || !attachment.attachmentTypeStatus;
+    } else if (buttonType === 'publish'){
+      return this.disabled;
+    }
+    return true;
   }
 }
