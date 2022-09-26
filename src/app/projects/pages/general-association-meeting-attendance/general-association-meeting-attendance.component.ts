@@ -6,7 +6,7 @@ import {EServicesGenericComponent} from '@app/generics/e-services-generic-compon
 import {GeneralAssociationMeetingAttendance} from '@app/models/general-association-meeting-attendance';
 import {LangService} from '@app/services/lang.service';
 import {GeneralAssociationMeetingAttendanceService} from '@services/general-association-meeting-attendance.service';
-import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
+import {Observable, of, Subject} from 'rxjs';
 import {LookupService} from '@services/lookup.service';
 import {DialogService} from '@services/dialog.service';
 import {ToastService} from '@services/toast.service';
@@ -33,6 +33,7 @@ import {MeetingAttendanceMainItem} from '@app/models/meeting-attendance-main-ite
 import {GeneralMeetingAttendanceNote} from '@app/models/general-meeting-attendance-note';
 import {MeetingMemberTaskStatus} from '@app/models/meeting-member-task-status';
 import {MeetingPointMemberComment} from '@app/models/meeting-point-member-comment';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
 
 @Component({
   selector: 'general-association-meeting-attendance',
@@ -68,7 +69,6 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   selectedAdministrativeBoardMembers: GeneralAssociationExternalMember[] = [];
   selectedGeneralAssociationMembers: GeneralAssociationExternalMember[] = [];
   selectedInternalUsers: GeneralAssociationInternalMember[] = [];
-  requestTypeChanged: BehaviorSubject<number | null> = new BehaviorSubject<number | null>(null);
 
   addAgendaFormActive!: boolean;
   agendaForm!: FormGroup;
@@ -190,9 +190,6 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   }
 
   _afterBuildForm(): void {
-    this.listenToRequestTypeSubject();
-    this.listenToRequestTypeChange();
-
     this.handleReadonly();
   }
 
@@ -213,7 +210,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     this.agendaItems = this.getAgendaItemsAsJson(this.model?.agenda);
 
     this.setDatePeriodValidation();
-    this.requestTypeChanged.next(this.requestType.value);
+    this.handleRequestTypeChange(this.requestType.value, false);
 
     // update meeting form
     this.setMeetingPointsForm();
@@ -284,6 +281,9 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
 
   _resetForm(): void {
     this.form.reset();
+    this.selectedAdministrativeBoardMembers = [];
+    this.selectedGeneralAssociationMembers = [];
+    this.agendaItems = [];
     this.hasSearchedForLicense = false;
   }
 
@@ -348,10 +348,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   }
 
   _afterLaunch(): void {
-    this._resetForm();
-    this.selectedAdministrativeBoardMembers = [];
-    this.selectedGeneralAssociationMembers = [];
-    this.agendaItems = [];
+    this.resetForm$.next();
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
 
@@ -367,24 +364,27 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     this.cd.detectChanges();
   }
 
-  listenToRequestTypeChange() {
-    this.requestType.valueChanges.subscribe(value => {
-      this.requestTypeChanged.next(value);
-    });
-  }
-
-  listenToRequestTypeSubject() {
-    this.requestTypeChanged
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(value => {
-        if (value) {
-          this.model!.requestType = value;
+  handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
+    of(userInteraction).pipe(
+      takeUntil(this.destroy$),
+      switchMap(() => this.confirmChangeRequestType(userInteraction))
+    ).subscribe((clickOn: UserClickOn) => {
+      if (clickOn === UserClickOn.YES) {
+        if (userInteraction) {
+          this.resetForm$.next();
+          this.requestType.setValue(requestTypeValue);
         }
-        if (!value || value === GeneralAssociationMeetingRequestTypeEnum.NEW) {
+        if(!requestTypeValue) {
+          requestTypeValue = this.requestType && this.requestType.value;
+        }
+        if (requestTypeValue) {
+          this.model!.requestType = requestTypeValue;
+        }
+        if (!requestTypeValue || requestTypeValue === GeneralAssociationMeetingRequestTypeEnum.NEW) {
           this.enableAllFormsInCaseOfNotCancelRequest();
           this.disableSearchField();
           this.isCancel = false;
-        } else if (value === GeneralAssociationMeetingRequestTypeEnum.UPDATE) {
+        } else if (requestTypeValue === GeneralAssociationMeetingRequestTypeEnum.UPDATE) {
           this.enableAllFormsInCaseOfNotCancelRequest();
           this.enableSearchField();
           this.isCancel = false;
@@ -393,7 +393,12 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
           this.enableSearchField();
           this.isCancel = true;
         }
-      });
+
+        this.requestType$.next(requestTypeValue);
+      } else {
+        this.requestType.setValue(this.requestType$.value);
+      }
+    });
   }
 
   enableAllFormsInCaseOfNotCancelRequest() {
