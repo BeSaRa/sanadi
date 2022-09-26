@@ -964,5 +964,18 @@
     "group": "general-services",
     "itemOrder": 6,
     "svg": null
+  },
+  {
+    "id": 74,
+    "langKey": "menu_activity_type",
+    "path": "/home/administration/activity-types",
+    "icon": "mdi-apple-keyboard-command",
+    "isSvg": false,
+    "permission": "MANAGE_ADMIN_LOOKUP",
+    "permissionGroup": null,
+    "parent": 6,
+    "group": "administration",
+    "itemOrder": 22,
+    "svg": null
   }
 ]

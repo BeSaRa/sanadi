@@ -61,7 +61,7 @@ export class AdminLookupService implements CrudServiceAdminLookupContract<AdminL
     return this.urlService.URLS.ADMIN_LOOKUP;
   }
 
-  private _getServiceURLByType(typeId: AdminLookupTypeEnum) {
+  public _getServiceURLByType(typeId: AdminLookupTypeEnum) {
     let url: string = this._getServiceURL();
     switch (typeId) {
       case AdminLookupTypeEnum.DAC_OCHA:
