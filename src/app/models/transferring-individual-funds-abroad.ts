@@ -15,6 +15,10 @@ import {WFResponseType} from '@app/enums/wfresponse-type.enum';
 import {mixinRequestType} from '@app/mixins/mixin-request-type';
 import {HasRequestType} from '@contracts/has-request-type';
 import {ITransferIndividualFundsAbroadComplete} from '@contracts/i-transfer-individual-funds-abroad-complete';
+import {ISearchFieldsMap} from '@app/types/types';
+import {dateSearchFields} from '@helpers/date-search-fields';
+import {infoSearchFields} from '@helpers/info-search-fields';
+import {normalSearchFields} from '@helpers/normal-search-fields';
 
 const _RequestType = mixinRequestType(CaseModel);
 const interceptor = new TransferringIndividualFundsAbroadInterceptor();
@@ -130,6 +134,20 @@ export class TransferringIndividualFundsAbroad extends _RequestType<Transferring
   transferMethodInfo!: AdminResult;
   transferTypeInfo!: AdminResult;
   receiverNationalityInfo!: AdminResult;
+
+  searchFields: ISearchFieldsMap<TransferringIndividualFundsAbroad> = {
+    ...dateSearchFields(['createdOn']),
+    ...infoSearchFields(['caseStatusInfo', 'requestTypeInfo', 'ouInfo', 'creatorInfo']),
+    ...normalSearchFields(['fullSerial', 'subject', 'arName', 'enName'])
+  };
+
+  finalizeSearchFields(): void {
+    if (this.employeeService.isExternalUser()) {
+      delete this.searchFields.ouInfo;
+      delete this.searchFields.organizationId;
+      delete this.searchFields.organization;
+    }
+  }
 
   constructor() {
     super();
