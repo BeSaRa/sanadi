@@ -20,7 +20,7 @@ import {DateUtils} from '@helpers/date-utils';
 import {FormManager} from '@app/models/form-manager';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {TransferFundsExecutiveManagement} from '@app/models/transfer-funds-executive-management';
-import {exhaustMap, filter, map, takeUntil, tap} from 'rxjs/operators';
+import {exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {TransfereeTypeEnum} from '@app/enums/transferee-type-enum';
 import {AdminLookupTypeEnum} from '@app/enums/admin-lookup-type-enum';
 import {AdminLookup} from '@app/models/admin-lookup';
@@ -37,6 +37,7 @@ import {SharedService} from '@services/shared.service';
 import {ReceiverOrganization} from '@app/models/receiver-organization';
 import {ReceiverPerson} from '@app/models/receiver-person';
 import {ITransferFundsAbroadComponent} from '@contracts/i-transfer-funds-abroad-component';
+import {UserClickOn} from '@app/enums/user-click-on.enum'
 
 @Component({
   selector: 'transferring-individual-funds-abroad',
@@ -89,7 +90,6 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
   selectedPurposeIndex!: number | null;
   purposeDisplayedColumns: string[] = ['projectName', 'projectType', 'domain', 'totalCost', 'beneficiaryCountry', 'executionCountry', 'actions'];
   transfereeTypeChanged: BehaviorSubject<number | null> = new BehaviorSubject<number | null>(null);
-  requestTypeChanged: BehaviorSubject<number | null> = new BehaviorSubject<number | null>(null);
   individualTransfereeTypeSelected: Subject<void> = new Subject<void>();
   externalOrganizationTransfereeTypeSelected: Subject<void> = new Subject<void>();
   noTransfereeTypeSelected: Subject<void> = new Subject<void>();
@@ -297,8 +297,6 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     this.listenToNoTransfereeTypeSelected();
     this.listenToTransfereeSubject();
     this.listenToTransfereeTypeChange();
-    this.listenToRequestTypeSubject();
-    this.listenToRequestTypeChange();
     this.handleReadonly();
   }
 
@@ -320,7 +318,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     this.selectedExecutives = this.model?.executiveManagementList;
     this.selectedPurposes = this.model?.charityPurposeTransferList;
     this.transfereeTypeChanged.next(this.transfereeType.value);
-    this.requestTypeChanged.next(this.requestType.value);
+    this.handleRequestTypeChange(this.requestType.value, false);
 
     if(this.requestType.value !== TransferringIndividualFundsAbroadRequestTypeEnum.NEW && this.model?.oldLicenseId) {
       this.licenseService.validateLicenseByRequestType(this.model?.caseType, this.model!.requestType, this.model.oldLicenseId)
@@ -556,24 +554,27 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
       });
   }
 
-  listenToRequestTypeChange() {
-    this.requestType.valueChanges.subscribe(value => {
-      this.requestTypeChanged.next(value);
-    });
-  }
-
-  listenToRequestTypeSubject() {
-    this.requestTypeChanged
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(value => {
-        if (value) {
-          this.model!.requestType = value;
+  handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
+    of(userInteraction).pipe(
+      takeUntil(this.destroy$),
+      switchMap(() => this.confirmChangeRequestType(userInteraction))
+    ).subscribe((clickOn: UserClickOn) => {
+      if (clickOn === UserClickOn.YES) {
+        if (userInteraction) {
+          this.resetForm$.next();
+          this.requestType.setValue(requestTypeValue);
         }
-        if (!value || value === TransferringIndividualFundsAbroadRequestTypeEnum.NEW) {
+        if(!requestTypeValue) {
+          requestTypeValue = this.requestType && this.requestType.value;
+        }
+        if (requestTypeValue) {
+          this.model!.requestType = requestTypeValue;
+        }
+        if (!requestTypeValue || requestTypeValue === TransferringIndividualFundsAbroadRequestTypeEnum.NEW) {
           this.enableAllFormsInCaseOfNotCancelRequest();
           this.disableSearchField();
           this.isCancel = false;
-        } else if (value === TransferringIndividualFundsAbroadRequestTypeEnum.UPDATE) {
+        } else if (requestTypeValue === TransferringIndividualFundsAbroadRequestTypeEnum.UPDATE) {
           this.enableAllFormsInCaseOfNotCancelRequest();
           this.enableSearchField();
           this.isCancel = false;
@@ -582,7 +583,12 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
           this.enableSearchField();
           this.isCancel = true;
         }
-      });
+
+        this.requestType$.next(requestTypeValue);
+      } else {
+        this.requestType.setValue(this.requestType$.value);
+      }
+    });
   }
 
   disableAllFormsInCaseOfCancelRequest() {
