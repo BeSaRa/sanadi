@@ -1474,4 +1474,5 @@ export interface ILanguageKeys {
   lbl_edit_menu_item: string;
   err_invalid_URL: string;
   validate_URL: string;
+  published: string;
 }

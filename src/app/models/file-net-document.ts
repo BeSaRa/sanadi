@@ -1,15 +1,16 @@
-import { FileNetModel } from './FileNetModel';
-import { FactoryService } from '@services/factory.service';
-import { DialogService } from '@services/dialog.service';
-import { ILanguageKeys } from "@app/interfaces/i-language-keys";
-import { AdminResult } from "@app/models/admin-result";
-import { LangService } from "@app/services/lang.service";
-import { FileIconsEnum, FileMimeTypesEnum } from '@app/enums/file-extension-mime-types-icons.enum';
-import { InterceptModel } from "@decorators/intercept-model";
-import { FileNetDocumentInterceptor } from "@app/model-interceptors/file-net-document-interceptor";
-import { AttachmentTypeServiceData } from "@app/models/attachment-type-service-data";
+import {FileNetModel} from './FileNetModel';
+import {FactoryService} from '@services/factory.service';
+import {DialogService} from '@services/dialog.service';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {AdminResult} from '@app/models/admin-result';
+import {LangService} from '@app/services/lang.service';
+import {FileIconsEnum, FileMimeTypesEnum} from '@app/enums/file-extension-mime-types-icons.enum';
+import {InterceptModel} from '@decorators/intercept-model';
+import {FileNetDocumentInterceptor} from '@app/model-interceptors/file-net-document-interceptor';
+import {AttachmentTypeServiceData} from '@app/models/attachment-type-service-data';
+import {EmployeeService} from '@services/employee.service';
 
-const interceptor = new FileNetDocumentInterceptor()
+const interceptor = new FileNetDocumentInterceptor();
 
 @InterceptModel({
   send: interceptor.send,
@@ -39,13 +40,15 @@ export class FileNetDocument extends FileNetModel<FileNetDocument> {
   attachmentTypeInfo!: AdminResult;
   langService: LangService;
   gridName?: string;
+  employeeService: EmployeeService;
   // to be filled manually not from interceptor
-  attachmentTypeServiceData?: AttachmentTypeServiceData
+  attachmentTypeServiceData?: AttachmentTypeServiceData;
 
   constructor() {
     super();
     this.dialog = FactoryService.getService('DialogService');
     this.langService = FactoryService.getService('LangService');
+    this.employeeService = FactoryService.getService('EmployeeService');
   }
 
   isPdfItem(): boolean {
@@ -61,40 +64,48 @@ export class FileNetDocument extends FileNetModel<FileNetDocument> {
   }
 
   getInternalExternalTooltip(): keyof ILanguageKeys {
-    return this.isInternal ? "internal" : "external";
+    return this.isInternal ? 'internal' : 'external';
   }
 
   getRequiredTranslate(): string {
-    return this.langService.getLocalByKey(this.required ? 'lbl_yes' : 'lbl_no').getName()
+    return this.langService.getLocalByKey(this.required ? 'lbl_yes' : 'lbl_no').getName();
+  }
+
+  getPublishedTranslate(): string {
+    if (this.employeeService.isExternalUser() && !this.id) {
+      return 'N/A'; // this.langService.map.btn_yes;
+    } else {
+      return this.langService.getLocalByKey(this.isPublished ? 'lbl_yes' : 'lbl_no').getName();
+    }
   }
 
   normalizeItemId(): void {
     if (this.itemId) {
-      this.gridName = this.itemId.split('|').shift()
-      this.itemId = this.itemId.split('|').pop()!
+      this.gridName = this.itemId.split('|').shift();
+      this.itemId = this.itemId.split('|').pop()!;
     }
   }
 
   denormalizeItemId(): void {
     if (this.itemId) {
-      this.itemId = this.gridName + '|' + this.itemId
+      this.itemId = this.gridName + '|' + this.itemId;
     }
   }
 
   setAttachmentTypeServiceData(type: AttachmentTypeServiceData): this {
     this.attachmentTypeServiceData = type;
-    return this
+    return this;
   }
 
   notMatchExpression(properties: Record<string, any>): boolean {
     if (this.attachmentTypeServiceData && this.attachmentTypeServiceData.parsedCustomProperties) {
       const expression = this.attachmentTypeServiceData.parsedCustomProperties;
-      const keys = Object.keys(expression)
+      const keys = Object.keys(expression);
       return keys.some(key => {
-        return expression[key] !== properties[key]
-      })
+        return expression[key] !== properties[key];
+      });
     } else {
-      return false
+      return false;
     }
   }
 }
