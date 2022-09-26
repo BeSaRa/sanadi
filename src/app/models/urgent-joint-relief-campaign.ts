@@ -13,6 +13,10 @@ import {OrganizationOfficer} from '@app/models/organization-officer';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {WFResponseType} from '@app/enums/wfresponse-type.enum';
 import {UntypedFormGroup} from '@angular/forms';
+import {ISearchFieldsMap} from '@app/types/types';
+import {dateSearchFields} from '@helpers/date-search-fields';
+import {infoSearchFields} from '@helpers/info-search-fields';
+import {normalSearchFields} from '@helpers/normal-search-fields';
 
 const interceptor = new UrgentJointReliefCampaignInterceptor();
 
@@ -55,6 +59,20 @@ export class UrgentJointReliefCampaign extends CaseModel<UrgentJointReliefCampai
   donation!: number;
   workStartDate!: string | IMyDateModel;
   employeeService!: EmployeeService;
+
+  searchFields: ISearchFieldsMap<UrgentJointReliefCampaign> = {
+    ...dateSearchFields(['createdOn']),
+    ...infoSearchFields(['caseStatusInfo', 'requestTypeInfo', 'ouInfo', 'creatorInfo']),
+    ...normalSearchFields(['fullSerial', 'subject'])
+  };
+
+  finalizeSearchFields(): void {
+    if (this.employeeService.isExternalUser()) {
+      delete this.searchFields.ouInfo;
+      delete this.searchFields.organizationId;
+      delete this.searchFields.organization;
+    }
+  }
 
   constructor() {
     super();
