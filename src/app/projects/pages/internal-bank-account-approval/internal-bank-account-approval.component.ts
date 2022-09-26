@@ -15,7 +15,7 @@ import {Bank} from '@app/models/bank';
 import {BankAccount} from '@app/models/bank-account';
 import {BankCategory} from '@app/enums/bank-category.enum';
 import {CustomValidators} from '@app/validators/custom-validators';
-import {exhaustMap, filter, map, takeUntil, tap} from 'rxjs/operators';
+import {exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {SelectedLicenseInfo} from '@app/interfaces/selected-license-info';
 import {LicenseService} from '@app/services/license.service';
 import {InternalBankAccountLicense} from '@app/license-models/internal-bank-account-license';
@@ -165,7 +165,6 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
     this.listenToBankCategoryChange();
     this.listenToBankIdChange();
     this.listenToCurrencyChange();
-    this.listenToRequestTypeChanges();
     this.listenToOperationTypeChanges();
     this.loadBanks();
     this.loadBankAccounts();
@@ -203,7 +202,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   }
 
   _afterLaunch(): void {
-    this._resetForm();
+    this.resetForm$.next();
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
 
@@ -334,17 +333,6 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
     }
   }
 
-  private listenToRequestTypeChanges() {
-    this.requestType
-      .valueChanges
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((val: number) => {
-        this.model!.requestType = val;
-        // this.toggleRequestType(val);
-        this.requestTypeOrOperationTypeChanged();
-      });
-  }
-
   private listenToOperationTypeChanges() {
     this.operationType
       .valueChanges
@@ -352,7 +340,18 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
       .subscribe((val: number) => {
         this.model!.operationType = val;
         // this.toggleOperationType(val);
-        this.requestTypeOrOperationTypeChanged();
+
+        this.selectedBankAccounts = [];
+        this.bankAccountSearchCriteriaField.patchValue(null);
+        if (this.requestType.value === BankAccountRequestTypes.NEW) {
+          this.onSelectNewRequestType();
+        } else if (this.requestType.value === BankAccountRequestTypes.UPDATE) {
+          this.onSelectUpdateRequestType();
+        } else if (this.requestType.value === BankAccountRequestTypes.CANCEL) {
+          this.onSelectCancelRequestType();
+        } else if (this.requestType.value == null) {
+          this.onSelectNoneRequestType();
+        }
       });
   }
 
@@ -376,6 +375,41 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
     } else if (this.requestType.value == null) {
       this.onSelectNoneRequestType();
     }
+  }
+
+  handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
+    of(userInteraction).pipe(
+      takeUntil(this.destroy$),
+      switchMap(() => this.confirmChangeRequestType(userInteraction))
+    ).subscribe((clickOn: UserClickOn) => {
+      if (clickOn === UserClickOn.YES) {
+        if (userInteraction) {
+          this.resetForm$.next();
+          this.requestType.setValue(requestTypeValue);
+        }
+        if(!requestTypeValue) {
+          requestTypeValue = this.requestType && this.requestType.value;
+        }
+        if (requestTypeValue) {
+          this.model!.requestType = requestTypeValue;
+        }
+        this.selectedBankAccounts = [];
+        this.bankAccountSearchCriteriaField.patchValue(null);
+        if (this.requestType.value === BankAccountRequestTypes.NEW) {
+          this.onSelectNewRequestType();
+        } else if (this.requestType.value === BankAccountRequestTypes.UPDATE) {
+          this.onSelectUpdateRequestType();
+        } else if (this.requestType.value === BankAccountRequestTypes.CANCEL) {
+          this.onSelectCancelRequestType();
+        } else if (this.requestType.value == null) {
+          this.onSelectNoneRequestType();
+        }
+
+        this.requestType$.next(requestTypeValue);
+      } else {
+        this.requestType.setValue(this.requestType$.value);
+      }
+    });
   }
 
   onSelectNewRequestType() {
