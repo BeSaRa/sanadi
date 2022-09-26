@@ -220,8 +220,8 @@ export class GeneralAssociationMeetingAttendanceService extends BaseGenericEServ
     return this._getMemberTaskStatus(caseId);
   }
 
-  terminateMemberTask(pId?: string): Observable<boolean> {
-    return this.http.post<boolean>(this._getURLSegment() + '/task/terminate?pid=' + pId, undefined);
+  terminateMemberTask(taskId?: string): Observable<boolean> {
+    return this.http.post<boolean>(this._getURLSegment() + '/task/terminate?tkiid=' + taskId, undefined);
   }
 
   openViewPointMembersCommentsDialog(membersComments: MeetingPointMemberComment[]): DialogRef {

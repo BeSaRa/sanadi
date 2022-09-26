@@ -876,7 +876,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   }
 
   terminateUserTask(event: MouseEvent, item: MeetingMemberTaskStatus) {
-    this.service.terminateMemberTask(item.pId).subscribe(_ => {
+    this.service.terminateMemberTask(item.tkiid).subscribe(_ => {
       this.dialog.success(this.lang.map.member_task_terminated_successfully);
       this.loadMembersTaskStatus();
     });
