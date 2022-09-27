@@ -13,12 +13,10 @@ import {
   map,
   pairwise,
   pluck,
-  share,
   switchMap,
   take,
   takeUntil,
-  tap,
-  withLatestFrom
+  tap
 } from 'rxjs/operators';
 import {BeneficiaryService} from '@app/services/beneficiary.service';
 import {Beneficiary} from '@app/models/beneficiary';
@@ -47,7 +45,6 @@ import {SubventionResponseService} from '@app/services/subvention-response.servi
 import {SubventionResponse} from '@app/models/subvention-response';
 import {SanadiAttachment} from '@app/models/sanadi-attachment';
 import {AttachmentService} from '@app/services/attachment.service';
-import {ExceptionHandlerService} from '@app/services/exception-handler.service';
 import {AidTypes} from '@app/enums/aid-types.enum';
 import {ECookieService} from '@app/services/e-cookie.service';
 import {DateUtils} from '@app/helpers/date-utils';
@@ -68,7 +65,6 @@ import {Donor} from '@app/models/donor';
 import {DonorService} from '@services/donor.service';
 import {SharedService} from '@services/shared.service';
 import {BeneficiaryRequesterRelationTypes} from '@app/enums/beneficiary-requester-relation-types';
-import {IDialogButton} from '@contracts/i-dialog-predefined-config';
 
 @Component({
   selector: 'app-user-request',
@@ -96,7 +92,6 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
               private attachmentService: AttachmentService, // to use in interceptor
               private fb: UntypedFormBuilder,
               private empService: EmployeeService,
-              private exceptionHandlerService: ExceptionHandlerService,
               private eCookieService: ECookieService) {
 
   }

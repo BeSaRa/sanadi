@@ -10,7 +10,6 @@ import {CustomValidators} from '@app/validators/custom-validators';
 import {catchError, exhaustMap, filter, mapTo, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {ToastService} from '@app/services/toast.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
-import {ExceptionHandlerService} from '@app/services/exception-handler.service';
 import {Lookup} from '@app/models/lookup';
 import {LookupService} from '@app/services/lookup.service';
 import {ServiceDataStep} from '@app/models/service-data-step';
@@ -40,7 +39,6 @@ export class ServiceDataPopupComponent extends AdminGenericDialog<ServiceData> {
               private toast: ToastService,
               public dialogRef: DialogRef,
               private attachmentTypeService: AttachmentTypeService,
-              private exceptionHandlerService: ExceptionHandlerService,
               private serviceDataStepsService: ServiceDataStepService,
               private checklistService: ChecklistService,
               private serviceData: ServiceDataService,
