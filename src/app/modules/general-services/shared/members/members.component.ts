@@ -87,4 +87,13 @@ export class MembersComponent extends ListModelComponent<OrgMember> {
     }
     this.columns.push('actions');
   }
+  _selectOne(row: OrgMember): void {
+    const _row = { ...row };
+    (_row.joinDate && (_row.joinDate = DateUtils.changeDateToDatepicker(_row.joinDate)));
+    this.form.patchValue(_row);
+  }
+  _beforeAdd(row: OrgMember): OrgMember {
+    (row.joinDate && (row.joinDate = DateUtils.getDateStringFromDate(row.joinDate)));
+    return row;
+  }
 }

@@ -17,7 +17,7 @@ import { map } from 'rxjs/operators';
   $pagination: {
     model: () => Pagination,
     shape: { 'rs.*': () => MemberRole },
-  },
+  }
 })
 @Injectable({
   providedIn: 'root',
