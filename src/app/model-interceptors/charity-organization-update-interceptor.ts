@@ -4,14 +4,27 @@ import { AdminResult } from '@app/models/admin-result';
 import { CharityDecision } from '@app/models/charity-decision';
 import { CharityOrganizationUpdate } from '@app/models/charity-organization-update';
 import { CharityReport } from '@app/models/charity-report';
+import { OrgMember } from '@app/models/org-member';
+import { RealBeneficiary } from '@app/models/real-beneficiary';
 import { CharityDecisionInterceptor } from './charity-Decision-interceptor';
 import { CharityReportInterceptor } from './charity-report-interceptor';
+import { OrgMemberInterceptor } from './org-member-interceptor';
+import { RealBeneficiaryInterceptor } from './real-beneficiary-interceptors';
 
 export class CharityOrganizationUpdateInterceptor implements IModelInterceptor<CharityOrganizationUpdate> {
   caseInterceptor?: IModelInterceptor<CharityOrganizationUpdate> | undefined;
   send(model: Partial<CharityOrganizationUpdate>): Partial<CharityOrganizationUpdate> {
     const charityReportInterceptor = new CharityReportInterceptor();
     const charityDecisionInterceptor = new CharityDecisionInterceptor();
+    const realBeneficiaryInterceptor = new RealBeneficiaryInterceptor();
+    const membersInterceptor = new OrgMemberInterceptor();
+    model.realBeneficiaryList = model.realBeneficiaryList?.map(e => realBeneficiaryInterceptor.send(e) as RealBeneficiary);
+    model.boardMemberList = model.boardMemberList?.map(e => membersInterceptor.send(e) as OrgMember);
+    model.authorizedSignatoryMemberList = model.authorizedSignatoryMemberList?.map(e => membersInterceptor.send(e) as OrgMember);
+    model.founderMemberList = model.founderMemberList?.map(e => membersInterceptor.send(e) as OrgMember);
+    model.generalAssemblyMemberList = model.generalAssemblyMemberList?.map(e => membersInterceptor.send(e) as OrgMember);
+    model.currentExecutiveManagementList = model.currentExecutiveManagementList?.map(e => membersInterceptor.send(e) as OrgMember);
+
     model.riskReportList = model.riskReportList?.map(e => charityReportInterceptor.send(e) as CharityReport);
     model.coordinationSupportReport = model.coordinationSupportReport?.map(e => charityReportInterceptor.send(e) as CharityReport);
     model.incomingReportList = model.incomingReportList?.map(e => charityReportInterceptor.send(e) as CharityReport);

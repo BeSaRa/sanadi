@@ -144,9 +144,9 @@
         </ng-container>
         <ng-container *ngIf="extended" cdkColumnDef="joinDate">
           <th cdk-header-cell sortable-header *cdkHeaderCellDef>
-            {{ lang.map.date }}
+            {{ lang.map.first_join_date }}
           </th>
-          <td cdk-cell *cdkCellDef="let row">{{ row.joinDate | date }}</td>
+          <td cdk-cell *cdkCellDef="let row">{{ row.joinDate }}</td>
         </ng-container>
         <ng-container *ngIf="extended" cdkColumnDef="email">
           <th cdk-header-cell sortable-header *cdkHeaderCellDef>

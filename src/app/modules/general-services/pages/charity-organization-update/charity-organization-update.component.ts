@@ -493,7 +493,7 @@ export class CharityOrganizationUpdateComponent
       jobTitleId,
       email,
       phone,
-      joinDate,
+      joinDate: DateUtils.getDateStringFromDate(joinDate),
       nationality,
       extraPhone,
     });
