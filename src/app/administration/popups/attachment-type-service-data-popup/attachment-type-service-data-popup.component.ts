@@ -79,6 +79,7 @@ export class AttachmentTypeServiceDataPopupComponent implements OnInit {
     if (this.operation === OperationTypes.UPDATE) {
       this.displayFormValidity();
       this.serviceIdField.disable();
+      this._setIdentifierValidations();
     }
 
     if (this.readonly) {
@@ -88,6 +89,10 @@ export class AttachmentTypeServiceDataPopupComponent implements OnInit {
 
   get serviceIdField(): UntypedFormControl {
     return this.form.get('serviceId') as UntypedFormControl;
+  }
+
+  get identifierField(): UntypedFormControl {
+    return this.form.get('identifier') as UntypedFormControl;
   }
 
   private loadServices(): void {
@@ -239,9 +244,20 @@ export class AttachmentTypeServiceDataPopupComponent implements OnInit {
 
   onMultiChange(): void {
     this.model.multi = this.multi.value;
+    this.identifierField.setValue(null);
+    this._setIdentifierValidations();
   }
 
   displayFormValidity(form?: UntypedFormGroup | null, element?: HTMLElement | string): void {
     CommonUtils.displayFormValidity((form || this.form), element);
+  }
+
+  private _setIdentifierValidations() {
+    if (this.model.multi) {
+      this.identifierField.addValidators(CustomValidators.required);
+    } else {
+      this.identifierField.removeValidators(CustomValidators.required);
+    }
+    this.identifierField.updateValueAndValidity();
   }
 }
