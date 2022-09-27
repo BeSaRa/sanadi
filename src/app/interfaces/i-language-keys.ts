@@ -1426,4 +1426,5 @@ export interface ILanguageKeys {
   send_to_npo_management: string;
   msg_confirm_reset_form: string;
   organization: string;
+  registration_date: string;
 }
