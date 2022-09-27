@@ -35,6 +35,7 @@ export class CharityBranchComponent extends ListModelComponent<CharityBranch> {
     'streetNumber',
     'zoneNumber',
     'buildingNumber',
+    'actions'
   ];
   controls: ControlWrapper[] = [
     { controlName: 'fullName', type: 'text', label: this.lang.map.full_name },
