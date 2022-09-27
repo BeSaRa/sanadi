@@ -123,25 +123,25 @@ export class CharityOrganizationUpdate extends CaseModel<
         ]
         : englishName,
       shortName: controls
-        ? [shortName, [CustomValidators.required]]
+        ? [shortName, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.SWIFT_CODE_MAX)]]
         : shortName,
       activityType: controls
         ? [activityType, [CustomValidators.required]]
         : activityType,
       regulatingLaw: controls
-        ? [regulatingLaw, [CustomValidators.required]]
+        ? [regulatingLaw, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]]
         : regulatingLaw,
       registrationAuthority: controls
         ? [registrationAuthority, [CustomValidators.required]]
         : registrationAuthority,
-      taxCardNo: controls ? [taxCardNo] : taxCardNo,
+      taxCardNo: controls ? [taxCardNo, [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : taxCardNo,
       unifiedEconomicRecord: controls
-        ? [unifiedEconomicRecord]
+        ? [unifiedEconomicRecord, [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]]
         : unifiedEconomicRecord,
       registrationDate: controls ? [registrationDate] : registrationDate,
 
-      establishmentDate: controls ? [establishmentDate] : establishmentDate,
-      establishmentID: controls ? [establishmentID] : establishmentID
+      establishmentDate: controls ? [establishmentDate,] : establishmentDate,
+      establishmentID: controls ? [establishmentID, [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : establishmentID
     };
   }
   getFirstPageForm(controls = true) {
