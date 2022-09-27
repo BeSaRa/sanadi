@@ -114,34 +114,12 @@ export class CharityOrganizationUpdate extends CaseModel<
       publishDate,
       arabicName: controls
         ? [
-          arabicName,
-          [
-            CustomValidators.minLength(
-              CustomValidators.defaultLengths.MIN_LENGTH
-            ),
-
-            CustomValidators.required,
-            CustomValidators.maxLength(
-              CustomValidators.defaultLengths.ARABIC_NAME_MAX
-            ),
-            CustomValidators.pattern('AR_ONLY'),
-          ],
+          arabicName
         ]
         : arabicName,
       englishName: controls
         ? [
           englishName,
-          [
-            CustomValidators.minLength(
-              CustomValidators.defaultLengths.MIN_LENGTH
-            ),
-
-            CustomValidators.required,
-            CustomValidators.maxLength(
-              CustomValidators.defaultLengths.ENGLISH_NAME_MAX
-            ),
-            CustomValidators.pattern('ENG_ONLY'),
-          ],
         ]
         : englishName,
       shortName: controls
@@ -220,13 +198,13 @@ export class CharityOrganizationUpdate extends CaseModel<
         ? [buildingNumber, [CustomValidators.required]]
         : buildingNumber,
       address: controls ? [address, [CustomValidators.required]] : address,
-      facebook: controls ? [facebook, [CustomValidators.required]] : facebook,
-      twitter: controls ? [twitter, [CustomValidators.required]] : twitter,
+      facebook: controls ? [facebook,] : facebook,
+      twitter: controls ? [twitter,] : twitter,
       instagram: controls
-        ? [instagram, [CustomValidators.required]]
+        ? [instagram,]
         : instagram,
-      youTube: controls ? [youTube, [CustomValidators.required]] : youTube,
-      snapChat: controls ? [snapChat, [CustomValidators.required]] : snapChat,
+      youTube: controls ? [youTube,] : youTube,
+      snapChat: controls ? [snapChat,] : snapChat,
     };
   }
   buildPrimaryLawForm(controls = true) {
