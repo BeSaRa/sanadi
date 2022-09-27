@@ -25,7 +25,6 @@ import {OrganizationUserPermissionService} from '@app/services/organization-user
 import {IKeyValue} from '@app/interfaces/i-key-value';
 import {EmployeeService} from '@app/services/employee.service';
 import {AuthService} from '@app/services/auth.service';
-import {ExceptionHandlerService} from '@app/services/exception-handler.service';
 import {TabComponent} from '@app/shared/components/tab/tab.component';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
 
@@ -85,8 +84,7 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
               private lookupService: LookupService,
               public employeeService: EmployeeService,
               private authService: AuthService,
-              private fb: UntypedFormBuilder,
-              private exceptionHandlerService: ExceptionHandlerService) {
+              private fb: UntypedFormBuilder) {
     this.model = data.model;
     this.operation = data.operation;
     this.customRoleList = data.customRoleList;
@@ -183,8 +181,7 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
         const orgUser = new OrgUser().clone({...this.model, ...this.fm.getFormField('basic')?.value});
         return orgUser.save()
           .pipe(
-            catchError((err) => {
-              this.exceptionHandlerService.handle(err);
+            catchError(() => {
               return of(null);
             }),
             switchMap((savedUser: OrgUser | null) => {
@@ -193,8 +190,7 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
               }
               return this.userPermissionService.saveBulkUserPermissions(savedUser.id, this.selectedPermissions)
                 .pipe(
-                  catchError((err) => {
-                    this.exceptionHandlerService.handle(err);
+                  catchError(() => {
                     return of(null);
                   }),
                   map(() => {
