@@ -88,7 +88,7 @@ const routes: Routes = [
 
   },
   {
-    path: 'npo_management', component: EServiceComponentWrapperComponent,
+    path: 'npo-management', component: EServiceComponentWrapperComponent,
     canActivate: [ServicesGuard],
     resolve: {info: ServiceItemResolver},
     data: {
@@ -108,7 +108,18 @@ const routes: Routes = [
       checkAnyPermission: false,
       render: 'CharityOrganizationUpdateComponent'
     }
-  }
+  },
+  {
+    path: 'awareness-activity-suggestion', component: EServiceComponentWrapperComponent,
+    canActivate: [ServicesGuard],
+    resolve: {info: ServiceItemResolver},
+    data: {
+      permissionKey: EServicePermissions.AWARENESS_ACTIVITY_SUGGESTION,
+      configPermissionGroup: null,
+      checkAnyPermission: false,
+      render: 'AwarenessActivitySuggestionComponent'
+    }
+  },
 
 ];
 

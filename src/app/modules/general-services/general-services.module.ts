@@ -1,3 +1,4 @@
+import { AwarenessActivitySuggestionComponent } from './pages/awareness-activity-suggestion/awareness-activity-suggestion.component';
 import { MembersComponent } from './shared/members/members.component';
 import { CharityBranchComponent } from './shared/charity-branch/charity-branch.component';
 import { OrganizationOfficersComponent } from './shared/organization-officers/organization-officers.component';
@@ -65,6 +66,7 @@ import { CharityReportsComponent } from './shared/risk-reports/risk-reports.comp
     BylawsComponent,
     CharityReportsComponent,
     CharityDecisionsComponent,
+    AwarenessActivitySuggestionComponent
   ],
   imports: [
     CommonModule,

@@ -150,6 +150,9 @@ export class LicenseService {
       case CaseTypes.NPO_MANAGEMENT:
         url = this.urlService.URLS.NPO_MANAGEMENT;
         break;
+      case CaseTypes.AWARENESS_ACTIVITY_SUGGESTION:
+        url = this.urlService.URLS.AWARENESS_ACTIVITY_SUGGESTION;
+        break;
     }
     return url;
   }

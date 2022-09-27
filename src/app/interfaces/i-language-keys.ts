@@ -1024,6 +1024,7 @@ export interface ILanguageKeys {
   executive_management: string;
   target_groups: string;
   contact_officers: string;
+  contact_officer: string;
   approval_reasons: string;
   request_classification: string;
   headquarter_type: string;
@@ -1426,4 +1427,8 @@ export interface ILanguageKeys {
   send_to_npo_management: string;
   msg_confirm_reset_form: string;
   organization: string;
+  menu_awareness_activity_suggestion: string;
+  lbl_data_of_applicant: string;
+  lbl_activity_data: string;
+  expected_date: string;
 }

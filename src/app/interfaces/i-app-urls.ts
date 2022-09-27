@@ -114,5 +114,6 @@ export interface IAppUrls {
   CHARITY_DECISION: string;
   GOVERNANCE_DOCUMENT: string;
   NPO_DATA: string;
+  AWARENESS_ACTIVITY_SUGGESTION: string;
   [index: string]: string;
 }
