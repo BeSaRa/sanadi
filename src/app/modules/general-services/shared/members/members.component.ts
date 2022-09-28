@@ -7,6 +7,7 @@ import { ILanguageKeys } from '@app/interfaces/i-language-keys';
 import { OrgMember } from '@app/models/org-member';
 import { JobTitleService } from '@app/services/job-title.service';
 import { LangService } from '@app/services/lang.service';
+import { ToastService } from '@app/services/toast.service';
 import { DatepickerOptionsMap } from '@app/types/types';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -34,7 +35,8 @@ export class MembersComponent extends ListModelComponent<OrgMember> {
   constructor(
     private fb: UntypedFormBuilder,
     public lang: LangService,
-    private jobTitleService: JobTitleService
+    private jobTitleService: JobTitleService,
+    private toastr: ToastService
   ) {
     super(OrgMember);
   }
@@ -92,7 +94,11 @@ export class MembersComponent extends ListModelComponent<OrgMember> {
     (_row.joinDate && (_row.joinDate = DateUtils.changeDateToDatepicker(_row.joinDate)));
     this.form.patchValue(_row);
   }
-  _beforeAdd(row: OrgMember): OrgMember {
+  _beforeAdd(row: OrgMember): OrgMember | null {
+    if (this._list.findIndex(e => e.identificationNumber === row.identificationNumber) !== -1) {
+      this.toastr.error(this.lang.map.msg_duplicated_item);
+      return null;
+    }
     (row.joinDate && (row.joinDate = DateUtils.getDateStringFromDate(row.joinDate)));
     return row;
   }
