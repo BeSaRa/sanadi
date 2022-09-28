@@ -60,7 +60,7 @@ export abstract class ListModelComponent<T extends Cloneable<T>>
     });
     this.save$.next(model);
   }
-  cancel(): void {
+  cancel(model: T | null = null): void {
     this.form.reset();
     this.showForm = false;
   }

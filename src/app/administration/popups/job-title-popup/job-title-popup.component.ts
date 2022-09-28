@@ -24,7 +24,7 @@ export class JobTitlePopupComponent extends AdminGenericDialog<JobTitle> {
   model!: JobTitle;
   operation: OperationTypes;
   saveVisible = true;
-  userTypes: Lookup[] = [];
+  userTypes: Lookup[] = this.lookupService.listByCategory.UserType;
 
   constructor(public dialogRef: DialogRef,
     public fb: UntypedFormBuilder,
@@ -39,7 +39,7 @@ export class JobTitlePopupComponent extends AdminGenericDialog<JobTitle> {
   }
 
   initPopup(): void {
-    this.userTypes = this.lookupService.listByCategory.UserType;
+
   }
 
   buildForm(): void {

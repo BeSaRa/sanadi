@@ -17,9 +17,12 @@ const interceptor: JobTitleInterceptor = new JobTitleInterceptor()
   send: interceptor.send
 })
 export class JobTitle extends BaseModel<JobTitle, JobTitleService> {
-  type!: number;
+  jobType!: number;
+  isSystem!: boolean;
   status!: number;
   statusInfo!: Lookup;
+
+  // extra properties
   service!: JobTitleService;
   langService: LangService;
   searchFields: { [key: string]: searchFunctionType | string } = {
@@ -59,7 +62,7 @@ export class JobTitle extends BaseModel<JobTitle, JobTitleService> {
       arName,
       enName,
       status,
-      type
+      jobType
     } = this;
     return {
       arName: controls ? [arName, [
@@ -75,7 +78,7 @@ export class JobTitle extends BaseModel<JobTitle, JobTitleService> {
         CustomValidators.pattern('ENG_NUM_ONE_ENG')
       ]] : enName,
       status: controls ? [status, [CustomValidators.required]] : status,
-      type: controls ? [type, [CustomValidators.required]] : type
+      jobType: controls ? [jobType, [CustomValidators.required]] : jobType
     }
   }
 }
