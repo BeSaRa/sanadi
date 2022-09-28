@@ -1,7 +1,7 @@
+import {CoordinationWithOrganizationsRequestService} from '@app/services/coordination-with-organizations-request.service';
 import {Component, Inject, OnInit} from '@angular/core';
-import {AbstractControl, FormControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {CustomValidators} from '@app/validators/custom-validators';
-import {WFResponseType} from '@app/enums/wfresponse-type.enum';
 import {of, Subject} from 'rxjs';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {LangService} from '@services/lang.service';
@@ -9,9 +9,12 @@ import {DialogService} from '@services/dialog.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {ToastService} from '@services/toast.service';
 import {InboxService} from '@services/inbox.service';
-import {exhaustMap, filter, switchMap, takeUntil, tap} from 'rxjs/operators';
+import {exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {IWFResponse} from '@contracts/i-w-f-response';
 import {CoordinationWithOrganizationsRequest} from '@app/models/coordination-with-organizations-request';
+import {ParticipantOrg} from '@app/models/participant-org';
+import {EmployeeService} from '@services/employee.service';
+import {WFResponseType} from '@app/enums/wfresponse-type.enum';
 
 @Component({
   selector: 'coordination-with-org-popup',
@@ -22,29 +25,34 @@ export class CoordinationWithOrgPopupComponent implements OnInit {
 
   comment: UntypedFormControl = new UntypedFormControl('',
     [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]);
-  response: WFResponseType = WFResponseType.APPROVE;
+  response: WFResponseType = WFResponseType.ORGANIZATION_APPROVE;
   action$: Subject<any> = new Subject<any>();
+  currentOrganization!: ParticipantOrg;
   approvalForm!: UntypedFormGroup;
 
   private destroy$: Subject<any> = new Subject();
+
   constructor(
     @Inject(DIALOG_DATA_TOKEN) public data: {
+      service: CoordinationWithOrganizationsRequestService,
       model: CoordinationWithOrganizationsRequest,
-      action: WFResponseType
+      action: WFResponseType,
+
     },
     public lang: LangService,
     private dialog: DialogService,
     private dialogRef: DialogRef,
     private toast: ToastService,
     private inboxService: InboxService,
+    private employeeService: EmployeeService,
     private fb: UntypedFormBuilder
   ) {
-    this.response = this.data.action;
-    this.approvalForm = this.fb.group({
-      customTerms:this.fb.control(''),
-      publicTerms:this.fb.control(''),
+    this.currentOrganization = this.data.model.participatingOrganizaionList
+      .find(x => x.organizationId === employeeService.getOrgUnit()?.id)!;
+    this.approvalForm = this.fb.group(this.currentOrganization.buildApprovalForm(true));
+    console.log(this.response);
+    console.log(this.getResponse());
 
-  })
   }
 
   ngOnInit() {
@@ -52,38 +60,46 @@ export class CoordinationWithOrgPopupComponent implements OnInit {
 
   }
 
-  private _listenToAction() {
-    this.action$
-      .pipe(takeUntil(this.destroy$))
-      .pipe(tap(invalid => invalid && this.dialog.error(this.lang.map.msg_all_required_fields_are_filled)))
-      .pipe(filter(invalid => !invalid))
-      .pipe(exhaustMap(_ => {
-
-         this.data.model.save()
-        return of(true)
-      }))
-      .pipe(switchMap(_ => this.inboxService.takeActionOnTask(this.data.model.taskDetails.tkiid, this.getResponse(),
-        this.data.model.service)))
-      .subscribe(() => {
-        this.toast.success(this.lang.map.process_has_been_done_successfully);
-        this.dialogRef.close(true);
-      })
-  }
-
-  private getResponse(): Partial<IWFResponse> {
-    return this.comment.value ? {
-      selectedResponse: this.response,
-      comment: this.comment.value
-    } : { selectedResponse: this.response };
-  }
-
-
-
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
     this.destroy$.unsubscribe();
   }
 
+  isEditAllowed() {
+    return true;
+  }
 
+  private _listenToAction() {
+    this.action$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(map(_ => (this.isCommentRequired() ? this.comment.invalid : false) || this.approvalForm.invalid))
+
+      .pipe(tap(invalid => {
+        invalid && this.dialog.error(this.lang.map.msg_all_required_fields_are_filled);
+        this.approvalForm.markAllAsTouched();
+      }))
+      .pipe(filter(invalid => !invalid))
+      .pipe(tap(_ => {
+        this.currentOrganization.organizationOfficerName = this.approvalForm.value.organizationOfficerName;
+        this.currentOrganization.value = this.approvalForm.value.value;
+      }))
+      .pipe(exhaustMap(_ => this.data.model.save()))
+      // .pipe(switchMap(_ => this.inboxService.takeActionOnTask(this.data.model.taskDetails.tkiid, this.getResponse(),
+      //   this.data.model.service)))
+      .subscribe(() => {
+        this.toast.success(this.lang.map.process_has_been_done_successfully);
+        this.dialogRef.close(true);
+      });
+  }
+
+  private getResponse(): Partial<IWFResponse> {
+    return this.comment.value ? {
+      selectedResponse: this.response,
+      comment: this.comment.value
+    } : {selectedResponse: this.response};
+  }
+  private isCommentRequired(): boolean {
+    return false;
+  }
 }

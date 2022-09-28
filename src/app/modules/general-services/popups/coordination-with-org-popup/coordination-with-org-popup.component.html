@@ -1,43 +1,43 @@
-<div
-  class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between"
->
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
   <h1 class="h6 text-white">{{ lang.map.org_approve_task }}</h1>
-  <button
-    type="button"
-    class="btn-close btn-close-white"
-    tabindex="-1"
-    dialogClose
-    aria-label="Close"
-  ></button>
+  <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose aria-label="Close"></button>
 </div>
-<div class="dialog-content w800px" >
-  <div class="row">
-    <form [formGroup]="approvalForm" >
-      <div class="col-sm-12 mb-4 position-relative">
-        <label class="form-label" asteriskIfRequired="customTerms" for="customTerms">{{lang.map.custom_terms}}</label>
-        <input name="customTerms" formControlName="customTerms"
-                  validationClasses="customTerms" id="customTerms"  class="form-control"/>
+<div class="dialog-content no-fixed-height w800px">
+  <form [formGroup]="approvalForm">
+    <div class="row">
+      <div class="col-sm-6 mb-4 ">
+        <label asteriskIfRequired="organizationOfficerName" for="organizationOfficerName" class="form-label">
+          {{ lang.map.organization_officers }}</label>
+        <ng-select [selectOnTab]="true" placeholder="{{ lang.map.select }}" [readonly]="!isEditAllowed()"
+                   [notFoundText]="lang.map.msg_not_found" appendTo="body"  id="organizationOfficerName" validationClasses="organizationOfficerName"
+                   labelForId="organizationOfficerName"
+                   formControlName="organizationOfficerName">
+          <ng-option
+            [disabled]="!isEditAllowed()" *ngFor="let option of  data.service.orgUsers"
+            [value]="option.fullName">{{ option.fullName }}</ng-option>
+        </ng-select>
+        <app-field-error-message controlName="organizationOfficerName"></app-field-error-message>
       </div>
-      <div class="col-sm-12 mb-4 position-relative">
-        <label class="form-label" asteriskIfRequired="publicTerms" for="publicTerms">{{lang.map.public_terms}}</label>
-        <input name="publicTerms" formControlName="publicTerms"
-                  validationClasses="publicTerms" id="publicTerms"  class="form-control"/>
-      </div>
+      <div class="col-sm-6 mb-4 ">
+        <label class="form-label" asteriskIfRequired="value" for="value">{{lang.map.participant_organizations}}</label>
+        <input name="value" formControlName="value" validationClasses="value" id="value"
+          class="form-control" />
+        <app-field-error-message controlName="value"></app-field-error-message>
 
-    </form>
-    <div class="col-sm-12 mb-4 position-relative">
-      <label class="form-label" asteriskIfRequired [control]="comment" for="comment">{{lang.map.comment}}</label>
-      <textarea name="comment" [formControl]="comment" validationClasses [control]="comment" id="comment" rows="4"
-                class="form-control"></textarea>
-      <app-field-error-message [control]="comment"></app-field-error-message>
+      </div>
     </div>
+  </form>
+
+  <div class="col-sm-12 mb-4 position-relative">
+    <label class="form-label" asteriskIfRequired [control]="comment" for="comment">{{lang.map.comment}}</label>
+    <textarea name="comment" [formControl]="comment" validationClasses [control]="comment" id="comment" rows="4"
+      class="form-control"></textarea>
+    <app-field-error-message [control]="comment"></app-field-error-message>
   </div>
 </div>
+
 <div class="dialog-actions">
-  <button
-    class="btn btn-primary"
-    (click)="action$.next(null)"
-  >
+  <button class="btn btn-primary" (click)="action$.next(null)">
     {{ lang.map.approve_task }}
   </button>
   <button dialogClose class="btn btn-secondary">

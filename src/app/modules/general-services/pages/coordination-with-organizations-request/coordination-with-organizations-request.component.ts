@@ -32,6 +32,9 @@ import {OrganizaionOfficerComponent} from './../../../e-services-main/shared/org
 import {
   ParticipantOrganizationComponent
 } from './../../../e-services-main/shared/participant-organization/participant-organization.component';
+import { OpenFrom } from '@app/enums/open-from.enum';
+import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
+import { TabComponent } from '@app/shared/components/tab/tab.component';
 
 @Component({
   selector: 'app-coordination-with-organizations-request',
@@ -174,16 +177,18 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
         return this.model!.researchAndStudies.length > 0;
       },
     },
-    attachments: {
-      name: 'attachmentsTab',
-      langKey: 'attachments',
-      validStatus: () => true,
-    },
+
     specialExplanation: {
       name: 'specialExplanationTab',
       langKey: 'special_explanations',
       validStatus: () => true,
     },
+    attachments: {
+      name: 'attachmentsTab',
+      langKey: 'attachments',
+      validStatus: () => true,
+    },
+
   };
 
   @ViewChild('participantOrganizations')
@@ -482,7 +487,7 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
         })
       )
       .subscribe((list) => {
-        this.organizationUsers = list.sort((a, b) =>
+        this.service.setOrgUsers = list.sort((a, b) =>
           a.fullName < b.fullName ? -1 : 1
         );
       });
@@ -598,4 +603,23 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
     }
   }
 
+  loadAttachments: boolean = false;
+  isAttachmentReadonly(): boolean {
+    if (!this.model?.id) {
+      return false;
+    }
+    let isAllowed = true;
+    if (this.openFrom === OpenFrom.TEAM_INBOX) {
+      isAllowed = this.model.taskDetails.isClaimed();
+    }
+    if (isAllowed) {
+      let caseStatus = this.model.getCaseStatus();
+      isAllowed = (caseStatus !== CommonCaseStatus.CANCELLED && caseStatus !== CommonCaseStatus.FINAL_APPROVE && caseStatus !== CommonCaseStatus.FINAL_REJECTION);
+    }
+
+    return !isAllowed;
+  }
+  onTabChange($event: TabComponent) {
+    this.loadAttachments = $event.name === this.tabsData.attachments.name;
+  }
 }

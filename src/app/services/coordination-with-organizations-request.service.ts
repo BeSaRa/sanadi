@@ -71,7 +71,13 @@ export class CoordinationWithOrganizationsRequestService
   _getUrlService(): UrlService {
     return this.urlService;
   }
-
+  set setOrgUsers(value:OrganizationOfficer[]){
+    this._orgUsers=value
+  }
+  get orgUsers(){
+    return this._orgUsers;
+  }
+  private _orgUsers:OrganizationOfficer[]=[];
   constructor(
     public domSanitizer: DomSanitizer,
     public lang: LangService,
@@ -137,12 +143,8 @@ export class CoordinationWithOrganizationsRequestService
     ) as InboxService;
     return this.dialog.show(CoordinationWithOrgPopupComponent, {
       service: this,
-      inboxService: inboxService,
-      taskId,
       actionType,
-      claimBefore,
       model,
-      externalUserData,
     });
   }
 }
