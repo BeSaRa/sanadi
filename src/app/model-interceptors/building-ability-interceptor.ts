@@ -30,6 +30,12 @@ export class BuildingAbilityInterceptor implements IModelInterceptor<BuildingAbi
     model.trainingActivityTypeInfo= AdminResult.createInstance(isValidAdminResult(model.trainingActivityTypeInfo)? model.trainingActivityTypeInfo :{});
     model.trainingLanguageInfo= AdminResult.createInstance(isValidAdminResult(model.trainingLanguageInfo)? model.trainingLanguageInfo :{});
     model.trainingWayInfo= AdminResult.createInstance(isValidAdminResult(model.trainingWayInfo)? model.trainingWayInfo :{});
+    model.suggestedActivityDateFrom = DateUtils.changeDateToDatepicker(
+      model.suggestedActivityDateFrom
+    );
+    model.suggestedActivityDateTo = DateUtils.changeDateToDatepicker(
+      model.suggestedActivityDateTo
+    );
     return model;
   }
 }

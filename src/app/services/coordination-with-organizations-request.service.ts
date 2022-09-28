@@ -1,32 +1,34 @@
-import { HttpClient } from '@angular/common/http';
-import { ComponentFactoryResolver, Injectable } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
-import { CastResponseContainer } from '@app/decorators/decorators/cast-response';
-import { BaseGenericEService } from '@app/generics/base-generic-e-service';
-import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { IReturnToOrganizationService } from '@app/interfaces/i-return-to-organization-service-interface';
-import { IDefaultResponse } from '@app/interfaces/idefault-response';
-import { CoordinationWithOrganizationsRequest } from '@app/models/coordination-with-organizations-request';
-import { OrgUnit } from '@app/models/org-unit';
-import { ValidOrgUnit } from '@app/models/valid-org-unit';
-import { ParticipantOrganizationsPopupComponent } from '@app/modules/e-services-main/popups/participant-organizations-popup/participant-organizations-popup.component';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { CoordinationWithOrganizationsRequestSearchCriteria } from './../models/coordination-with-organizations-request-search-criteria';
-import { DialogService } from './dialog.service';
-import { DynamicOptionsService } from './dynamic-options.service';
-import { FactoryService } from './factory.service';
-import { LangService } from './lang.service';
-import { SearchService } from './search.service';
-import { UrlService } from './url.service';
-import { ExternalOrgAffiliation } from '@app/models/external-org-affiliation';
-import { WFResponseType } from '@app/enums/wfresponse-type.enum';
-import { DialogRef } from '@app/shared/models/dialog-ref';
-import { ExternalOrgAffiliationApprovePopupComponent } from '@app/modules/general-services/popups/external-org-affiliation-approve-popup/external-org-affiliation-approve-popup.component';
-import { CoordinationWithOrgPopupComponent } from '@app/modules/general-services/popups/coordination-with-org-popup/coordination-with-org-popup.component';
-import { InboxService } from './inbox.service';
-import { UntypedFormGroup } from '@angular/forms';
-import { OrganizationOfficer } from '@app/models/organization-officer';
+import {HttpClient} from '@angular/common/http';
+import {ComponentFactoryResolver, Injectable} from '@angular/core';
+import {DomSanitizer} from '@angular/platform-browser';
+import {CastResponseContainer} from '@app/decorators/decorators/cast-response';
+import {BaseGenericEService} from '@app/generics/base-generic-e-service';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {IReturnToOrganizationService} from '@app/interfaces/i-return-to-organization-service-interface';
+import {IDefaultResponse} from '@app/interfaces/idefault-response';
+import {CoordinationWithOrganizationsRequest} from '@app/models/coordination-with-organizations-request';
+import {OrgUnit} from '@app/models/org-unit';
+import {ValidOrgUnit} from '@app/models/valid-org-unit';
+import {
+  ParticipantOrganizationsPopupComponent
+} from '@app/modules/e-services-main/popups/participant-organizations-popup/participant-organizations-popup.component';
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
+import {CoordinationWithOrganizationsRequestSearchCriteria} from './../models/coordination-with-organizations-request-search-criteria';
+import {DialogService} from './dialog.service';
+import {DynamicOptionsService} from './dynamic-options.service';
+import {FactoryService} from './factory.service';
+import {LangService} from './lang.service';
+import {SearchService} from './search.service';
+import {UrlService} from './url.service';
+import {WFResponseType} from '@app/enums/wfresponse-type.enum';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {
+  CoordinationWithOrgPopupComponent
+} from '@app/modules/general-services/popups/coordination-with-org-popup/coordination-with-org-popup.component';
+import {InboxService} from './inbox.service';
+import {UntypedFormGroup} from '@angular/forms';
+import {OrganizationOfficer} from '@app/models/organization-officer';
 
 @CastResponseContainer({
   $default: {
@@ -38,22 +40,7 @@ import { OrganizationOfficer } from '@app/models/organization-officer';
 })
 export class CoordinationWithOrganizationsRequestService
   extends BaseGenericEService<CoordinationWithOrganizationsRequest>
-  implements IReturnToOrganizationService
-{
-  _getURLSegment(): string {
-    return this.urlService.URLS.E_COORDINATION_WITH_ORGANIZATION_REQUEST;
-  }
-  _getModel() {
-    return CoordinationWithOrganizationsRequest;
-  }
-  getSearchCriteriaModel<
-    S extends CoordinationWithOrganizationsRequest
-  >(): CoordinationWithOrganizationsRequest {
-    return new CoordinationWithOrganizationsRequestSearchCriteria();
-  }
-  getCaseComponentName(): string {
-    return 'CoordinationWithOrganizationsRequest';
-  }
+  implements IReturnToOrganizationService {
   jsonSearchFile: string =
     'coordination_with_organizations_request_search.json';
   serviceKey: keyof ILanguageKeys =
@@ -68,16 +55,6 @@ export class CoordinationWithOrganizationsRequestService
     'createdOn',
   ];
 
-  _getUrlService(): UrlService {
-    return this.urlService;
-  }
-  set setOrgUsers(value:OrganizationOfficer[]){
-    this._orgUsers=value
-  }
-  get orgUsers(){
-    return this._orgUsers;
-  }
-  private _orgUsers:OrganizationOfficer[]=[];
   constructor(
     public domSanitizer: DomSanitizer,
     public lang: LangService,
@@ -94,6 +71,67 @@ export class CoordinationWithOrganizationsRequestService
     );
   }
 
+  set setOrgUsers(value: OrganizationOfficer[]) {
+    this._orgUsers = value;
+  }
+
+  private _orgUsers: OrganizationOfficer[] = [];
+
+  get orgUsers() {
+    return this._orgUsers;
+  }
+
+  private _mainModel!: CoordinationWithOrganizationsRequest;
+
+  get mainModel() {
+    return this._mainModel;
+  }
+
+  set mainModel(value: CoordinationWithOrganizationsRequest) {
+    this._mainModel = value;
+  }
+
+  _getURLSegment(): string {
+    return this.urlService.URLS.E_COORDINATION_WITH_ORGANIZATION_REQUEST;
+  }
+
+  _getModel() {
+    return CoordinationWithOrganizationsRequest;
+  }
+
+  getSearchCriteriaModel<S extends CoordinationWithOrganizationsRequest>(): CoordinationWithOrganizationsRequest {
+    return new CoordinationWithOrganizationsRequestSearchCriteria();
+  }
+
+  getCaseComponentName(): string {
+    return 'CoordinationWithOrganizationsRequest';
+  }
+
+  _getUrlService(): UrlService {
+    return this.urlService;
+  }
+
+  prepareModelBeforeSave(model: CoordinationWithOrganizationsRequest) {
+    if (this.mainModel) {
+      model.organizaionOfficerList =
+        model.organizaionOfficerList.concat(
+          this.mainModel.organizaionOfficerList
+        );
+      model.buildingAbilitiesList =
+        model.buildingAbilitiesList.concat(
+          this.mainModel.buildingAbilitiesList
+        );
+      model.effectiveCoordinationCapabilities =
+        model.effectiveCoordinationCapabilities.concat(
+          this.mainModel.effectiveCoordinationCapabilities
+        );
+      model.researchAndStudies = model.researchAndStudies.concat(
+        this.mainModel.researchAndStudies
+      );
+    }
+    return model;
+  }
+
   openParticipantOrganizationspopup(
     orgId: number,
     model: CoordinationWithOrganizationsRequest
@@ -105,9 +143,10 @@ export class CoordinationWithOrganizationsRequestService
         orgId,
         model,
       },
-      { fullscreen: true }
+      {fullscreen: true}
     );
   }
+
   returnToOrganization(caseId: number, orgId: number): Observable<OrgUnit[]> {
     return this.http
       .get<IDefaultResponse<OrgUnit[]>>(
@@ -127,6 +166,7 @@ export class CoordinationWithOrganizationsRequestService
         })
       );
   }
+
   organizationApprove(
     taskId: string,
     caseType: number,
@@ -147,4 +187,6 @@ export class CoordinationWithOrganizationsRequestService
       model,
     });
   }
+
+
 }

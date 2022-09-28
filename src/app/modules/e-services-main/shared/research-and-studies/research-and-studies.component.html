@@ -23,6 +23,7 @@
               <div class="form-control" formControlName="searchStartDate" id="searchStartDate"
                 [options]="datepickerOptionsMap.searchStartDate" (click)="dpsearchStartDate.toggleCalendar()"
                 (inputFieldChanged)="onDateChange($event, 'searchStartDate', 'searchSubmissionDeadline')"
+                [ngClass]="{'input-disabled': viewOnly}"
                 #dpsearchStartDate="angular-mydatepicker" angular-mydatepicker validationClasses="searchStartDate">
               </div>
               <app-field-error-message controlName="searchStartDate"></app-field-error-message>
@@ -39,6 +40,7 @@
                 [options]="datepickerOptionsMap.searchSubmissionDeadline"
                 (click)="dpsearchSubmissionDeadline.toggleCalendar()"
                 (inputFieldChanged)="onDateChange($event, 'searchStartDate', 'searchSubmissionDeadline')"
+                [ngClass]="{'input-disabled': viewOnly}"
                 #dpsearchSubmissionDeadline="angular-mydatepicker" angular-mydatepicker
                 validationClasses="searchSubmissionDeadline">
               </div>
@@ -163,15 +165,17 @@
     <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
     <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
       <div class="d-flex flex-row">
-        <button (click)="delete($event, row, i)" class="icon-btn text-primary" [disabled]="readonly"
+        <button (click)="delete($event, row, i)" class="icon-btn text-primary"
+        [hidden]="!canUpdate"
           [disabled]="!isClaimed || formOpend" tooltip="{{lang.map.btn_delete}}">
           <i class="mdi mdi-close-box"></i>
         </button>
-        <button (click)="edit($event, row, i)" class="icon-btn text-primary" [disabled]="readonly"
+        <button (click)="edit($event, row, i)" class="icon-btn text-primary"
+        [hidden]="!canUpdate"
           [disabled]="!isClaimed || formOpend" tooltip="{{lang.map.btn_edit}}">
           <i class="mdi mdi-pen"></i>
         </button>
-        <button (click)="view($event, row, i)" class="icon-btn text-primary" [disabled]="!isClaimed || formOpend"
+        <button (click)="view($event, row, i)" class="icon-btn text-primary" [disabled]="formOpend"
           tooltip="{{lang.map.view}}">
           <i class="mdi mdi-eye"></i>
         </button>

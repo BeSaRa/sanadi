@@ -50,8 +50,7 @@ export class CoordinationWithOrgPopupComponent implements OnInit {
     this.currentOrganization = this.data.model.participatingOrganizaionList
       .find(x => x.organizationId === employeeService.getOrgUnit()?.id)!;
     this.approvalForm = this.fb.group(this.currentOrganization.buildApprovalForm(true));
-    console.log(this.response);
-    console.log(this.getResponse());
+
 
   }
 
@@ -81,12 +80,13 @@ export class CoordinationWithOrgPopupComponent implements OnInit {
       }))
       .pipe(filter(invalid => !invalid))
       .pipe(tap(_ => {
+        this.data.model= this.data.service.prepareModelBeforeSave(this.data.model)
         this.currentOrganization.organizationOfficerName = this.approvalForm.value.organizationOfficerName;
         this.currentOrganization.value = this.approvalForm.value.value;
       }))
       .pipe(exhaustMap(_ => this.data.model.save()))
-      // .pipe(switchMap(_ => this.inboxService.takeActionOnTask(this.data.model.taskDetails.tkiid, this.getResponse(),
-      //   this.data.model.service)))
+      .pipe(switchMap(_ => this.inboxService.takeActionOnTask(this.data.model.taskDetails.tkiid, this.getResponse(),
+        this.data.model.service)))
       .subscribe(() => {
         this.toast.success(this.lang.map.process_has_been_done_successfully);
         this.dialogRef.close(true);

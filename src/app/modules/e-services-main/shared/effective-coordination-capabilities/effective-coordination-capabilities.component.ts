@@ -81,9 +81,7 @@ export class EffectiveCoordinationCapabilitiesComponent implements OnInit {
     this.listenToRecordChange();
     this.listenToSave();
 
-    if(this.canUpdate === false){
-      this.columns= this.columns.slice(0,this.columns.length-1);
-    }
+
   }
 
   ngOnDestroy(): void {
@@ -107,7 +105,7 @@ export class EffectiveCoordinationCapabilitiesComponent implements OnInit {
     this.recordChanged$
       .pipe(takeUntil(this.destroy$))
       .subscribe((record) => {
-        if(record)record.organizationId=this.orgId;
+        if(record && this.orgId)record.organizationId=this.orgId;
         this.currentRecord = record || undefined;
         this.updateForm(this.currentRecord);
       });

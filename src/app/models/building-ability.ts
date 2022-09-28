@@ -10,6 +10,7 @@ import { ISearchFieldsMap } from '@app/types/types';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { SearchableCloneable } from './searchable-cloneable';
 import { InterceptModel } from '@app/decorators/decorators/intercept-model';
+import { IMyDateModel } from 'angular-mydatepicker';
 
 const { send, receive } = new BuildingAbilityInterceptor();
 
@@ -24,8 +25,8 @@ export class BuildingAbility extends SearchableCloneable<BuildingAbility> {
   otherLanguage!: string;
   targetGroupNature!: string;
   participantsMaximumNumber!: number;
-  suggestedActivityDateFrom!: string;
-  suggestedActivityDateTo!: string;
+  suggestedActivityDateFrom!: string| IMyDateModel;
+  suggestedActivityDateTo!: string| IMyDateModel;
   timeFrom!: string;
   timeTo!: string;
   trainingWay!: number;
