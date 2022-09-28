@@ -109,20 +109,6 @@ export class CoordinationWithOrganizationsRequest
       description: controls ? [description] : description,
     };
   }
-  // buildApprovalForm(control: boolean = false): any {
-  //   const {
-  //     customTerms,
-  //     publicTerms,
-  //     conditionalLicenseIndicator,
-  //     followUpDate
-  //   } = this;
-  //   return {
-  //     customTerms: control ? [customTerms, [CustomValidators.required]] : customTerms,
-  //     publicTerms: control ? [publicTerms, [CustomValidators.required]] : publicTerms,
-  //     conditionalLicenseIndicator: control ? [conditionalLicenseIndicator, [CustomValidators.required]] : conditionalLicenseIndicator,
-  //     followUpDate: control ? [followUpDate, [CustomValidators.required]] : followUpDate
-  //   }
-  // }
 
   organizationApprove(externalUserData: {
     form: UntypedFormGroup;
