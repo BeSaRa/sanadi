@@ -9,7 +9,6 @@ import {OperationTypes} from '@app/enums/operation-types.enum';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {IDialogData} from '@app/interfaces/i-dialog-data';
 import {LangService} from '@app/services/lang.service';
-import {ExceptionHandlerService} from '@app/services/exception-handler.service';
 import {LookupService} from '@app/services/lookup.service';
 import {ToastService} from '@app/services/toast.service';
 import {DialogService} from '@app/services/dialog.service';
@@ -114,7 +113,6 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<TrainingProgram>,
               public lang: LangService,
               public fb: UntypedFormBuilder,
-              public exceptionHandlerService: ExceptionHandlerService,
               public lookupService: LookupService,
               public toast: ToastService,
               public dialogRef: DialogRef,

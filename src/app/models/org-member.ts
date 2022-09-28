@@ -1,7 +1,14 @@
+import { InterceptModel } from '@app/decorators/decorators/intercept-model';
+import { OrgMemberInterceptor } from '@app/model-interceptors/org-member-interceptor';
 import { CustomValidators } from '@app/validators/custom-validators';
+import { IMyDateModel } from 'angular-mydatepicker';
 import { AdminResult } from './admin-result';
 import { SearchableCloneable } from './searchable-cloneable';
+const { send, receive } = new OrgMemberInterceptor();
 
+@InterceptModel({
+  receive, send
+})
 export class OrgMember extends SearchableCloneable<OrgMember> {
   objectDBId!: number;
   qid?: string;
@@ -11,7 +18,7 @@ export class OrgMember extends SearchableCloneable<OrgMember> {
   jobTitleId!: number;
   email: string | null = null;
   phone: string | null = null;
-  joinDate: string | null = null;
+  joinDate: string | null | IMyDateModel = null;
   nationality!: number;
   extraPhone!: string;
   jobTitleInfo!: AdminResult;

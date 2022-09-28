@@ -14,7 +14,6 @@ import {Observable, of} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {FileStore} from '@app/models/file-store';
 import {DialogService} from '@app/services/dialog.service';
-import {ExceptionHandlerService} from '@app/services/exception-handler.service';
 import {DateUtils} from '@app/helpers/date-utils';
 import {FileExtensionsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 import {OrgUnitField} from '@app/models/org-unit-field';
@@ -41,7 +40,6 @@ export class OrganizationUnitPopupComponent extends AdminGenericDialog<OrgUnit> 
               public langService: LangService,
               private dialogService: DialogService,
               private orgUnitService: OrganizationUnitService,
-              private exceptionHandlerService: ExceptionHandlerService,
               private orgUnitFieldService: OrgUnitFieldService) {
     super();
     this.operation = data.operation;
@@ -242,7 +240,6 @@ export class OrganizationUnitPopupComponent extends AdminGenericDialog<OrgUnit> 
     model.saveLogo(this.logoFile)
       .pipe(
         catchError((err) => {
-          this.exceptionHandlerService.handle(err);
           return of(null);
         })
       )
