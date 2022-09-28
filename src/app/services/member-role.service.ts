@@ -18,12 +18,7 @@ import { Observable } from 'rxjs';
   $pagination: {
     model: () => Pagination,
     shape: { 'rs.*': () => MemberRole },
-<<<<<<< HEAD
-  },
-
-=======
   }
->>>>>>> 8f0beda5e06d0e0f15436dca626c60b986b098fc
 })
 @Injectable({
   providedIn: 'root',

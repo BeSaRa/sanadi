@@ -79,7 +79,7 @@ export class MembersComponent extends ListModelComponent<OrgMember> {
         },
         {
           controlName: 'joinDate',
-          label: this.lang.map.date,
+          label: this.lang.map.first_join_date,
           type: 'date',
         }
       );

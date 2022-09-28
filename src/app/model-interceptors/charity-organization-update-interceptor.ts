@@ -35,7 +35,24 @@ export class CharityOrganizationUpdateInterceptor implements IModelInterceptor<C
     return model;
   }
   receive(model: CharityOrganizationUpdate): CharityOrganizationUpdate {
+    const charityReportInterceptor = new CharityReportInterceptor();
+    const charityDecisionInterceptor = new CharityDecisionInterceptor();
+    const realBeneficiaryInterceptor = new RealBeneficiaryInterceptor();
+    const membersInterceptor = new OrgMemberInterceptor();
     model.ouInfo = AdminResult.createInstance(model.ouInfo);
+
+    model.realBeneficiaryList = model.realBeneficiaryList?.map(e => realBeneficiaryInterceptor.receive(e) as RealBeneficiary);
+    model.boardMemberList = model.boardMemberList?.map(e => membersInterceptor.receive(e) as OrgMember);
+    model.authorizedSignatoryMemberList = model.authorizedSignatoryMemberList?.map(e => membersInterceptor.receive(e) as OrgMember);
+    model.founderMemberList = model.founderMemberList?.map(e => membersInterceptor.receive(e) as OrgMember);
+    model.generalAssemblyMemberList = model.generalAssemblyMemberList?.map(e => membersInterceptor.receive(e) as OrgMember);
+    model.currentExecutiveManagementList = model.currentExecutiveManagementList?.map(e => membersInterceptor.receive(e) as OrgMember);
+
+    model.riskReportList = model.riskReportList?.map(e => charityReportInterceptor.receive(e) as CharityReport);
+    model.coordinationSupportReport = model.coordinationSupportReport?.map(e => charityReportInterceptor.receive(e) as CharityReport);
+    model.incomingReportList = model.incomingReportList?.map(e => charityReportInterceptor.receive(e) as CharityReport);
+    model.incomingDecisionList = model.incomingDecisionList?.map(e => charityDecisionInterceptor.receive(e) as CharityDecision);
+    model.outgoingDecisionList = model.outgoingDecisionList?.map(e => charityDecisionInterceptor.receive(e) as CharityDecision);
     return model;
   }
 }

@@ -140,7 +140,9 @@
           <th cdk-header-cell sortable-header *cdkHeaderCellDef>
             {{ lang.map.job_title }}
           </th>
-          <td cdk-cell *cdkCellDef="let row">{{ row.jobTitleId }}</td>
+          <td cdk-cell *cdkCellDef="let row">
+            {{ row?.jobTitleInfo?.getName() || row.jobTitleId }}
+          </td>
         </ng-container>
         <ng-container *ngIf="extended" cdkColumnDef="joinDate">
           <th cdk-header-cell sortable-header *cdkHeaderCellDef>

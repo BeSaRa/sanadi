@@ -29,6 +29,7 @@ import { DateUtils } from '@app/helpers/date-utils';
 import { ControlWrapper } from '@app/interfaces/i-control-wrapper';
 import { IKeyValue } from '@app/interfaces/i-key-value';
 import { AdminLookup } from '@app/models/admin-lookup';
+import { AdminResult } from '@app/models/admin-result';
 import { BlobModel } from '@app/models/blob-model';
 import { CharityDecision } from '@app/models/charity-decision';
 import { CharityOrganization } from '@app/models/charity-organization';
@@ -485,6 +486,7 @@ export class CharityOrganizationUpdateComponent
       joinDate,
       nationality,
       fullName,
+      jobTitleInfo
     } = member;
     return new OrgMember().clone({
       objectDBId: id,
@@ -496,6 +498,7 @@ export class CharityOrganizationUpdateComponent
       joinDate: DateUtils.getDateStringFromDate(joinDate),
       nationality,
       extraPhone,
+      jobTitleInfo: AdminResult.createInstance(jobTitleInfo)
     });
   }
   toCharityOrganizationRealBenficiary(
