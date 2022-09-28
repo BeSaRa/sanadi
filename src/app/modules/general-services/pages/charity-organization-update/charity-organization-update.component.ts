@@ -309,7 +309,7 @@ export class CharityOrganizationUpdateComponent
         {
           name: 'authorizedMembersTab',
           template: tabsTemplates[11],
-          title: this.lang.map.board_members,
+          title: this.lang.map.authrized_members,
           validStatus: () => true,
           category: CharityRequestType.ADMINISTRATIVE_DATA,
         },
@@ -577,7 +577,7 @@ export class CharityOrganizationUpdateComponent
           return {
             ...prev,
             [key]: value.map((x) =>
-              this.toCharityOrganizationOrgMember(x.orgMember)
+              this.toCharityOrganizationOrgMember(x)
             ),
           };
         }, {});

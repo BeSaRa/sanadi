@@ -108,40 +108,73 @@ export class CharityOrganizationUpdate extends CaseModel<
       publishDate,
       registrationDate,
       establishmentDate,
-      establishmentID
+      establishmentID,
     } = this;
     return {
       publishDate,
-      arabicName: controls
-        ? [
-          arabicName
-        ]
-        : arabicName,
-      englishName: controls
-        ? [
-          englishName,
-        ]
-        : englishName,
+      arabicName: controls ? [arabicName] : arabicName,
+      englishName: controls ? [englishName] : englishName,
       shortName: controls
-        ? [shortName, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.SWIFT_CODE_MAX)]]
+        ? [
+          shortName,
+          [
+            CustomValidators.required,
+            CustomValidators.maxLength(
+              CustomValidators.defaultLengths.SWIFT_CODE_MAX
+            ),
+          ],
+        ]
         : shortName,
       activityType: controls
         ? [activityType, [CustomValidators.required]]
         : activityType,
       regulatingLaw: controls
-        ? [regulatingLaw, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]]
+        ? [
+          regulatingLaw,
+          [
+            CustomValidators.required,
+            CustomValidators.maxLength(
+              CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+            ),
+          ],
+        ]
         : regulatingLaw,
       registrationAuthority: controls
         ? [registrationAuthority, [CustomValidators.required]]
         : registrationAuthority,
-      taxCardNo: controls ? [taxCardNo, [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : taxCardNo,
+      taxCardNo: controls
+        ? [
+          taxCardNo,
+          [
+            CustomValidators.maxLength(
+              CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+            ),
+          ],
+        ]
+        : taxCardNo,
       unifiedEconomicRecord: controls
-        ? [unifiedEconomicRecord, [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]]
+        ? [
+          unifiedEconomicRecord,
+          [
+            CustomValidators.maxLength(
+              CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+            ),
+          ],
+        ]
         : unifiedEconomicRecord,
       registrationDate: controls ? [registrationDate] : registrationDate,
 
-      establishmentDate: controls ? [establishmentDate,] : establishmentDate,
-      establishmentID: controls ? [establishmentID, [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : establishmentID
+      establishmentDate: controls ? [establishmentDate] : establishmentDate,
+      establishmentID: controls
+        ? [
+          establishmentID,
+          [
+            CustomValidators.maxLength(
+              CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+            ),
+          ],
+        ]
+        : establishmentID,
     };
   }
   getFirstPageForm(controls = true) {
@@ -153,7 +186,6 @@ export class CharityOrganizationUpdate extends CaseModel<
       charityId: controls
         ? [charityId, [CustomValidators.required]]
         : charityId,
-
     };
   }
   buildContactInformationForm(controls = true) {
@@ -184,36 +216,87 @@ export class CharityOrganizationUpdate extends CaseModel<
       email: controls
         ? [
           email,
-          [CustomValidators.required, CustomValidators.pattern('EMAIL')],
+          [
+            CustomValidators.required,
+            CustomValidators.pattern('EMAIL'),
+            CustomValidators.maxLength(
+              CustomValidators.defaultLengths.EMAIL_MAX
+            ),
+          ],
         ]
         : email,
       website: controls ? [website, [CustomValidators.required]] : website,
       zoneNumber: controls
-        ? [zoneNumber, [CustomValidators.required]]
+        ? [
+          zoneNumber,
+          [
+            CustomValidators.required,
+            CustomValidators.maxLength(
+              5
+            ),
+          ],
+        ]
         : zoneNumber,
       streetNumber: controls
-        ? [streetNumber, [CustomValidators.required]]
+        ? [
+          streetNumber,
+          [
+            CustomValidators.required,
+            CustomValidators.maxLength(
+              5
+            ),
+          ],
+        ]
         : streetNumber,
       buildingNumber: controls
-        ? [buildingNumber, [CustomValidators.required]]
+        ? [
+          buildingNumber,
+          [
+            CustomValidators.required,
+            CustomValidators.maxLength(
+              5
+            ),
+          ],
+        ]
         : buildingNumber,
-      address: controls ? [address, [CustomValidators.required]] : address,
-      facebook: controls ? [facebook,] : facebook,
-      twitter: controls ? [twitter,] : twitter,
-      instagram: controls
-        ? [instagram,]
-        : instagram,
-      youTube: controls ? [youTube,] : youTube,
-      snapChat: controls ? [snapChat,] : snapChat,
+      address: controls
+        ? [
+          address,
+          [
+            CustomValidators.required,
+            CustomValidators.maxLength(
+              CustomValidators.defaultLengths.ADDRESS_MAX
+            ),
+          ],
+        ]
+        : address,
+      facebook: controls ? [facebook] : facebook,
+      twitter: controls ? [twitter] : twitter,
+      instagram: controls ? [instagram] : instagram,
+      youTube: controls ? [youTube] : youTube,
+      snapChat: controls ? [snapChat] : snapChat,
     };
   }
   buildPrimaryLawForm(controls = true) {
-    const { domain, country, firstReleaseDate, lastUpdateDate, goals, charityWorkArea } = this;
+    const {
+      domain,
+      country,
+      firstReleaseDate,
+      lastUpdateDate,
+      goals,
+      charityWorkArea,
+    } = this;
     return {
-      firstReleaseDate: controls ? [firstReleaseDate, [CustomValidators.required]] : DateUtils.changeDateToDatepicker(firstReleaseDate),
-      lastUpdateDate: controls ? [lastUpdateDate, [CustomValidators.required]] : DateUtils.changeDateToDatepicker(lastUpdateDate),
+      firstReleaseDate: controls
+        ? [firstReleaseDate, [CustomValidators.required]]
+        : DateUtils.changeDateToDatepicker(firstReleaseDate),
+      lastUpdateDate: controls
+        ? [lastUpdateDate, [CustomValidators.required]]
+        : DateUtils.changeDateToDatepicker(lastUpdateDate),
       goals: controls ? [goals, [CustomValidators.required]] : goals,
-      charityWorkArea: controls ? [charityWorkArea, [CustomValidators.required]] : charityWorkArea,
+      charityWorkArea: controls
+        ? [charityWorkArea, [CustomValidators.required]]
+        : charityWorkArea,
     };
   }
 }
