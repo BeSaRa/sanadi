@@ -166,7 +166,6 @@ export class CoordinationWithOrganizationsRequestService
         })
       );
   }
-
   organizationApprove(
     taskId: string,
     caseType: number,
