@@ -868,6 +868,7 @@ export interface ILanguageKeys {
   lbl_phone_extension: string;
   lbl_user_type: string;
   lbl_job_title: string;
+  job_type: string;
   lbl_org_unit: string;
   lbl_branch: string;
   err_number_only: string;
