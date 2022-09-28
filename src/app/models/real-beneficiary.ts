@@ -105,6 +105,7 @@ export class RealBeneficiary extends SearchableCloneable<RealBeneficiary> {
             CustomValidators.minLength(
               CustomValidators.defaultLengths.MIN_LENGTH
             ),
+            CustomValidators.maxLength(50)
           ],
         ]
         : birthLocation,
@@ -119,17 +120,18 @@ export class RealBeneficiary extends SearchableCloneable<RealBeneficiary> {
             CustomValidators.minLength(
               CustomValidators.defaultLengths.MIN_LENGTH
             ),
+            CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)
           ],
         ]
         : address,
       streetNumber: controls
-        ? [streetNumber, [CustomValidators.required]]
+        ? [streetNumber, [CustomValidators.required, CustomValidators.maxLength(5)]]
         : streetNumber,
       zoneNumber: controls
-        ? [zoneNumber, [CustomValidators.required]]
+        ? [zoneNumber, [CustomValidators.required, CustomValidators.maxLength(5)]]
         : zoneNumber,
       buildingNumber: controls
-        ? [buildingNumber, [CustomValidators.required]]
+        ? [buildingNumber, [CustomValidators.required, CustomValidators.maxLength(5)]]
         : buildingNumber,
       identificationNumber: controls
         ? [
@@ -137,7 +139,7 @@ export class RealBeneficiary extends SearchableCloneable<RealBeneficiary> {
         ]
         : identificationNumber,
       passportNumber: controls
-        ? [passportNumber, [CustomValidators.required]]
+        ? [passportNumber, [CustomValidators.required, , CustomValidators.maxLength(20)]]
         : passportNumber,
       iDDate: controls ? [iDDate, [CustomValidators.required]] : iDDate,
       // idexpiryDate: controls
