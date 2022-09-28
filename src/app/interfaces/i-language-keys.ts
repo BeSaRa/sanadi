@@ -1428,5 +1428,6 @@ export interface ILanguageKeys {
   msg_confirm_reset_form: string;
   organization: string;
   registration_date: string;
+  issuer: string;
   authrized_members: string;
 }

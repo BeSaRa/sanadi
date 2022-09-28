@@ -39,8 +39,8 @@ export class CharityOrganizationUpdateInterceptor implements IModelInterceptor<C
     const charityDecisionInterceptor = new CharityDecisionInterceptor();
     const realBeneficiaryInterceptor = new RealBeneficiaryInterceptor();
     const membersInterceptor = new OrgMemberInterceptor();
-    model.ouInfo = AdminResult.createInstance(model.ouInfo);
 
+    model.ouInfo = AdminResult.createInstance(model.ouInfo);
     model.realBeneficiaryList = model.realBeneficiaryList?.map(e => realBeneficiaryInterceptor.receive(e) as RealBeneficiary);
     model.boardMemberList = model.boardMemberList?.map(e => membersInterceptor.receive(e) as OrgMember);
     model.authorizedSignatoryMemberList = model.authorizedSignatoryMemberList?.map(e => membersInterceptor.receive(e) as OrgMember);
