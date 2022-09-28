@@ -13,14 +13,14 @@ import {
   uniqueValidator as unique,
   validationPatterns
 } from './validate-fields-status';
-import {AbstractControl, ValidatorFn, Validators} from '@angular/forms';
-import {IKeyValue} from '../interfaces/i-key-value';
-import {IValidationInfo} from '../interfaces/i-validation-info';
-import {anyFieldsHasLength} from './any-fields-has-length';
-import {documentValidator as attachment} from './document-validator';
-import {CommonUtils} from '@app/helpers/common-utils';
-import {timeLaterThanOther} from './time-later-than-other';
-import {timeEarlierThanOther} from './time-earlier-than-other';
+import { AbstractControl, ValidatorFn, Validators } from '@angular/forms';
+import { IKeyValue } from '../interfaces/i-key-value';
+import { IValidationInfo } from '../interfaces/i-validation-info';
+import { anyFieldsHasLength } from './any-fields-has-length';
+import { documentValidator as attachment } from './document-validator';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { timeLaterThanOther } from './time-later-than-other';
+import { timeEarlierThanOther } from './time-earlier-than-other';
 
 const defaultLengths = {
   MIN_LENGTH: 3,
@@ -33,7 +33,8 @@ const defaultLengths = {
   QID_MAX: 11,
   SWIFT_CODE_MAX: 50,
   DECIMAL_PLACES: 2,
-  EXPLANATIONS: 1200
+  EXPLANATIONS: 1200,
+  _500: 500
 };
 
 const commonValidations = {
@@ -77,14 +78,14 @@ const inputMaskPatterns = {
 };
 
 const errorKeys: IKeyValue = {
-  required: {key: 'err_required_field', replaceValues: null},
-  requiredArray: {key: 'err_required_field', replaceValues: null},
-  email: {key: 'err_invalid_email', replaceValues: null},
-  number: {key: 'err_number_only', replaceValues: null},
+  required: { key: 'err_required_field', replaceValues: null },
+  requiredArray: { key: 'err_required_field', replaceValues: null },
+  email: { key: 'err_invalid_email', replaceValues: null },
+  number: { key: 'err_number_only', replaceValues: null },
   decimal: {
     key: 'err_number_decimal_x_places',
     replaceValues: (message: string, errorValue: any, fieldLabelKey: string): string => {
-      return message.change({x: errorValue.numberOfPlaces});
+      return message.change({ x: errorValue.numberOfPlaces });
     }
   },
   /*negativeDecimal: {
@@ -96,64 +97,64 @@ const errorKeys: IKeyValue = {
   minlength: {
     key: 'err_specific_min_length',
     replaceValues: (message: string, errorValue: any, fieldLabelKey: string): string => {
-      return message.change({field: fieldLabelKey, length: errorValue.requiredLength});
+      return message.change({ field: fieldLabelKey, length: errorValue.requiredLength });
     }
   },
   maxlength: {
     key: 'err_specific_max_length',
     replaceValues: (message: string, errorValue: any, fieldLabelText: string): string => {
-      return message.change({field: fieldLabelText, length: errorValue.requiredLength});
+      return message.change({ field: fieldLabelText, length: errorValue.requiredLength });
     }
   },
   min: {
     key: 'err_min_number',
     replaceValues: (message: string, errorValue: any, fieldLabelKey: string): string => {
-      return message.change({min: errorValue.min});
+      return message.change({ min: errorValue.min });
     }
   },
   max: {
     key: 'err_max_number',
     replaceValues: (message: string, errorValue: any, fieldLabelKey: string): string => {
-      return message.change({max: errorValue.max});
+      return message.change({ max: errorValue.max });
     }
   },
-  ENG_NUM: {key: 'err_english_num_only', replaceValues: null},
-  AR_NUM: {key: 'err_arabic_num_only', replaceValues: null},
-  ENG_ONLY: {key: 'err_english_only', replaceValues: null},
-  AR_ONLY: {key: 'err_arabic_only', replaceValues: null},
-  ENG_NUM_ONLY: {key: 'err_english_num_only', replaceValues: null},
-  AR_NUM_ONLY: {key: 'err_arabic_num_only', replaceValues: null},
-  ENG_NUM_ONE_ENG: {key: 'err_english_num_one_eng', replaceValues: null},
-  AR_NUM_ONE_AR: {key: 'err_arabic_num_one_ar', replaceValues: null},
-  ENG_AR_ONLY: {key: 'err_english_arabic_only', replaceValues: null},
-  ENG_AR_NUM_ONLY: {key: 'err_english_arabic_num_only', replaceValues: null},
-  PASSPORT: {key: 'err_invalid_passport_format', replaceValues: null},
-  EMAIL: {key: 'err_invalid_email', replaceValues: null},
-  PHONE_NUMBER: {key: 'err_invalid_phone_number', replaceValues: null},
-  keyExists: {key: 'localization_key_already_exists', replaceValues: null},
+  ENG_NUM: { key: 'err_english_num_only', replaceValues: null },
+  AR_NUM: { key: 'err_arabic_num_only', replaceValues: null },
+  ENG_ONLY: { key: 'err_english_only', replaceValues: null },
+  AR_ONLY: { key: 'err_arabic_only', replaceValues: null },
+  ENG_NUM_ONLY: { key: 'err_english_num_only', replaceValues: null },
+  AR_NUM_ONLY: { key: 'err_arabic_num_only', replaceValues: null },
+  ENG_NUM_ONE_ENG: { key: 'err_english_num_one_eng', replaceValues: null },
+  AR_NUM_ONE_AR: { key: 'err_arabic_num_one_ar', replaceValues: null },
+  ENG_AR_ONLY: { key: 'err_english_arabic_only', replaceValues: null },
+  ENG_AR_NUM_ONLY: { key: 'err_english_arabic_num_only', replaceValues: null },
+  PASSPORT: { key: 'err_invalid_passport_format', replaceValues: null },
+  EMAIL: { key: 'err_invalid_email', replaceValues: null },
+  PHONE_NUMBER: { key: 'err_invalid_phone_number', replaceValues: null },
+  keyExists: { key: 'localization_key_already_exists', replaceValues: null },
   atLeastOneRequired: {
     key: 'at_least_one_field_should_be_filled',
     replaceValues: (message: string, errorValue: any, fieldLabelKey: string): string => {
-      return message.change({fields: '( ' + errorValue.join(', ') + ') '});
+      return message.change({ fields: '( ' + errorValue.join(', ') + ') ' });
     }
   },
-  format: {key: 'err_invalid_format', replaceValues: null},
+  format: { key: 'err_invalid_format', replaceValues: null },
   maxDate: {
     key: 'err_max_date',
     replaceValues: (message: string, errorValue: any, fieldLabelText: string): string => {
-      return message.change({maxDate: errorValue.requiredMaxDate});
+      return message.change({ maxDate: errorValue.requiredMaxDate });
     }
   },
   minDate: {
     key: 'err_min_date',
     replaceValues: (message: string, errorValue: any, fieldLabelText: string): string => {
-      return message.change({minDate: errorValue.requiredMinDate});
+      return message.change({ minDate: errorValue.requiredMinDate });
     }
   },
-  unique: {key: 'err_unique_field', replaceValues: null},
-  NUM_HYPHEN_COMMA: {key: 'err_num_hyphen_comma'},
-  select_license: {key: 'err_missing_license', replaceValues: null},
-  select_document: {key: 'err_missing_document', replaceValues: null},
+  unique: { key: 'err_unique_field', replaceValues: null },
+  NUM_HYPHEN_COMMA: { key: 'err_num_hyphen_comma' },
+  select_license: { key: 'err_missing_license', replaceValues: null },
+  select_document: { key: 'err_missing_document', replaceValues: null },
   invalid_sum_total: {
     key: 'err_invalid_sum_total',
     replaceValues: (message: string, errorValue: any, fieldLabelKey: string): string => {
@@ -163,8 +164,8 @@ const errorKeys: IKeyValue = {
       });
     }
   },
-  invalidLaterTime: {key: 'err_invalid_later_time', replaceValues: null},
-  invalidEarlierTime: {key: 'err_invalid_earlier_time', replaceValues: null}
+  invalidLaterTime: { key: 'err_invalid_later_time', replaceValues: null },
+  invalidEarlierTime: { key: 'err_invalid_earlier_time', replaceValues: null }
 };
 
 function getValidationData(control: AbstractControl, errorName: string): IValidationInfo {
