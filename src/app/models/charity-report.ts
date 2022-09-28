@@ -52,16 +52,34 @@ export class CharityReport extends BaseModel<
       reportStatus,
     } = this;
     return {
-      fullName: controls ? [fullName, [CustomValidators.required]] : fullName,
+      fullName: controls
+        ? [
+          fullName,
+          [
+            CustomValidators.required,
+            CustomValidators.maxLength(
+              CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+            ),
+          ],
+        ]
+        : fullName,
       generalDate: controls
         ? [generalDate, [CustomValidators.required]]
         : generalDate,
       riskType: controls ? [riskType, [CustomValidators.required]] : riskType,
       category: controls ? [category, [CustomValidators.required]] : category,
       riskMitigationMeasures: controls
-        ? [riskMitigationMeasures, [CustomValidators.required]]
+        ? [
+          riskMitigationMeasures,
+          [CustomValidators.required, CustomValidators.maxLength(1000)],
+        ]
         : riskMitigationMeasures,
-      feedback: controls ? [feedback, [CustomValidators.required]] : feedback,
+      feedback: controls
+        ? [
+          feedback,
+          [CustomValidators.required, CustomValidators.maxLength(1000)],
+        ]
+        : feedback,
       reportStatus: controls
         ? [reportStatus, [CustomValidators.required]]
         : reportStatus,
@@ -80,7 +98,7 @@ export class CharityReport extends BaseModel<
       reportStatus,
       riskType,
       riskMitigationMeasures,
-      reportType
+      reportType,
     } = this;
     return new CharityReport().clone({
       objectDBId: id,
