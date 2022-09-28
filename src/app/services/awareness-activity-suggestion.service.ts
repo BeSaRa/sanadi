@@ -1,3 +1,4 @@
+import { SearchAwarenessActivitySuggestionCriteria } from './../models/search-awareness-activity-suggestion-criteria';
 import { FactoryService } from './factory.service';
 import { BaseGenericEService } from '@app/generics/base-generic-e-service';
 import { AwarenessActivitySuggestion } from './../models/awareness-activity-suggestion';
@@ -46,7 +47,7 @@ export class AwarenessActivitySuggestionService extends BaseGenericEService<Awar
     return AwarenessActivitySuggestion
   }
   getSearchCriteriaModel<S extends AwarenessActivitySuggestion>(): AwarenessActivitySuggestion {
-    throw new Error('Method not implemented.');
+    return new SearchAwarenessActivitySuggestionCriteria();
   }
   getCaseComponentName(): string {
     return 'AwarenessActivitySuggestionComponent'

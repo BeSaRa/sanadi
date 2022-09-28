@@ -1,3 +1,5 @@
+import { AdminResult } from '@app/models/admin-result';
+import { AdminLookup } from './admin-lookup';
 import { CustomValidators } from './../validators/custom-validators';
 import { IMyDateModel } from 'angular-mydatepicker';
 import { AwarenessActivitySuggestionInterceptor } from './../model-interceptors/awareness-activity-suggestion';
@@ -35,7 +37,6 @@ export class AwarenessActivitySuggestion
   description!: string;
 
   identificationNumber!: string;
-  arName!: string;
   enName!: string;
   jobTitle!: string;
   address!: string;
@@ -53,6 +54,7 @@ export class AwarenessActivitySuggestion
   subject!: string;
   expectedDate!: string | IMyDateModel;
   goal!: string;
+  activityName!: string;
 
   searchFields: ISearchFieldsMap<AwarenessActivitySuggestion> = {
     ...dateSearchFields(['createdOn']),
@@ -77,7 +79,6 @@ export class AwarenessActivitySuggestion
       requestType, description,
 
       identificationNumber,
-      arName,
       enName,
       jobTitle,
       address,
@@ -94,19 +95,18 @@ export class AwarenessActivitySuggestion
       agreementWithRACA,
       subject,
       expectedDate,
-      goal
+      goal,
+      activityName,
+
+      oldLicenseFullSerial
     } = this;
     return {
       requestType: controls ? [requestType, Validators.required] : requestType,
+      oldLicenseFullSerial: controls ? [oldLicenseFullSerial] : oldLicenseFullSerial,
       description: controls ? [description, Validators.required] : description,
       dataOfApplicant: {
         identificationNumber: controls ? [identificationNumber, CustomValidators.maxLength(20)] : identificationNumber,
-        arName: controls ? [arName, [
-          CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
-          Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('AR_NUM')]] : arName,
-        enName: controls ? [enName, [
-          CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
-          Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')]] : enName,
+        enName: controls ? [enName, [CustomValidators.required, Validators.maxLength(300)]] : enName,
         jobTitle: controls ? [jobTitle, [Validators.required, CustomValidators.maxLength(100)]] : jobTitle,
         address: controls ? [address, [Validators.required, CustomValidators.maxLength(100)]] : address,
         email: controls ? [email, [CustomValidators.required, CustomValidators.pattern('EMAIL'), CustomValidators.maxLength(100)]] : email,
@@ -115,15 +115,15 @@ export class AwarenessActivitySuggestion
       },
       contactOfficer: {
         contactQID: controls ? [contactQID, CustomValidators.maxLength(20)] : contactQID,
-        contactName: controls ? [contactName, [
-          CustomValidators.required, Validators.maxLength(300), Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : contactName,
+        contactName: controls ? [contactName, [CustomValidators.required, Validators.maxLength(300)]] : contactName,
         contactEmail: controls ? [contactEmail, [CustomValidators.required, CustomValidators.pattern('EMAIL'), CustomValidators.maxLength(100)]] : contactEmail,
         contactPhone: controls ? [contactPhone, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : contactPhone,
         contactExtraPhone: controls ? [contactExtraPhone, CustomValidators.commonValidations.phone] : contactExtraPhone,
       },
       activity: {
+        activityName: controls ? [activityName, [Validators.required, Validators.maxLength(300)]] : activityName,
         agreementWithRACA: controls ? [agreementWithRACA] : agreementWithRACA,
-        subject: controls ? [subject, [Validators.required, CustomValidators.maxLength(100)]] : subject,
+        subject: controls ? [subject, [Validators.required]] : subject,
         expectedDate: controls ? [expectedDate, [Validators.required]] : expectedDate,
         goal: controls ? [goal, [Validators.required]] : goal,
       },

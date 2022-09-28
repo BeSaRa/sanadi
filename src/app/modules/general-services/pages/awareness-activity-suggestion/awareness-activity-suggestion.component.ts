@@ -1,11 +1,12 @@
+import { Lookup } from '@app/models/lookup';
 import { DatepickerOptionsMap } from './../../../../types/types';
 import { DateUtils } from './../../../../helpers/date-utils';
 import { EmployeeService } from './../../../../services/employee.service';
 import { TabComponent } from './../../../../shared/components/tab/tab.component';
 import { CommonCaseStatus } from './../../../../enums/common-case-status.enum';
-import { ServiceRequestTypes } from './../../../../enums/service-request-types';
+import { CollectionRequestType, ServiceRequestTypes } from './../../../../enums/service-request-types';
 import { UserClickOn } from './../../../../enums/user-click-on.enum';
-import { takeUntil, switchMap } from 'rxjs/operators';
+import { takeUntil, switchMap, exhaustMap, catchError, tap, filter, map } from 'rxjs/operators';
 import { OpenFrom } from './../../../../enums/open-from.enum';
 import { IKeyValue } from './../../../../interfaces/i-key-value';
 import { ILanguageKeys } from '@contracts/i-language-keys';
@@ -21,7 +22,7 @@ import { UntypedFormGroup, UntypedFormBuilder, UntypedFormControl } from '@angul
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { SaveTypes } from '@app/enums/save-types';
 import { LangService } from '@app/services/lang.service';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-awareness-activity-suggestion',
@@ -32,7 +33,8 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
 AwarenessActivitySuggestion,
 AwarenessActivitySuggestionService
 > {
-
+  collectionRequestType: Lookup[] = this.lookupService.listByCategory.CollectionRequestType.sort((a, b) => a.lookupKey - b.lookupKey)
+  licenseSearch$: Subject<string> = new Subject<string>();
   form!: UntypedFormGroup;
 
   tabsData: IKeyValue = {
@@ -119,12 +121,14 @@ AwarenessActivitySuggestionService
     return new AwarenessActivitySuggestion();
   }
   _initComponent(): void {
+    this.listenToLicenseSearch();
   }
   _buildForm(): void {
     const model = new AwarenessActivitySuggestion().formBuilder(true)
     this.form = this.fb.group({
       requestType: model.requestType,
       description: model.description,
+      oldLicenseFullSerial: model.oldLicenseFullSerial,
       dataOfApplicant: this.fb.group(model.dataOfApplicant),
       contactOfficer: this.fb.group(model.contactOfficer),
       activity: this.fb.group(model.activity),
@@ -163,6 +167,11 @@ AwarenessActivitySuggestionService
   _prepareModel(): AwarenessActivitySuggestion | Observable<AwarenessActivitySuggestion> {
     const value = new AwarenessActivitySuggestion().clone({
       ...this.model,
+      requestType: this.form.value.requestType,
+      description: this.form.value.description,
+      ...this.form.value.contactOfficer,
+      ...this.form.value.activity,
+      ...this.form.value.dataOfApplicant,
     })
     return value;
   }
@@ -200,11 +209,21 @@ AwarenessActivitySuggestionService
     }
     this.model = model;
     const formModel = model.formBuilder();
+    console.log(formModel)
     this.form.patchValue({
+      requestType: formModel.requestType,
+      description: formModel.description,
+      oldLicenseFullSerial: formModel.oldLicenseFullSerial,
+      dataOfApplicant: formModel.dataOfApplicant,
+      contactOfficer: formModel.contactOfficer,
+      activity: formModel.activity,
     });
 
     this.cd.detectChanges();
     this.handleRequestTypeChange(model.requestType, false);
+  }
+  get userOrgName() {
+    return this.employeeService.getOrgUnit()?.getName()
   }
   handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
     of(userInteraction).pipe(
@@ -254,9 +273,71 @@ AwarenessActivitySuggestionService
   }
   _destroyComponent(): void {
   }
+  licenseSearch($event?: Event): void {
+    $event?.preventDefault();
+    let value = '';
+    if (this.requestTypeField.valid) {
+      value = this.oldLicenseFullSerialField.value;
+    }
+    this.licenseSearch$.next(value);
+  }
+  listenToLicenseSearch(): void {
+    // this.licenseSearch$
+    // .pipe(exhaustMap(oldLicenseFullSerial => {
+    // return this.loadLicencesByCriteria({
+    //   fullSerial: oldLicenseFullSerial,
+    //   licenseStatus: 1
+    // }).pipe(catchError(() => of([])));
+    // }))
+    // .pipe(
+    //   // display message in case there is no returned license
+    //   tap(list => {
+    //     if (!list.length) {
+    //       this.dialog.info(this.lang.map.no_result_for_your_search_criteria);
+    //     }
+    //   }),
+    //   // allow only the collection if it has value
+    //   filter(result => !!result.length),
+    //   // switch to the dialog ref to use it later and catch the user response
+    //   switchMap(licenses => {
+    //     if (licenses.length === 1) {
+    //       return this.licenseService.validateLicenseByRequestType(this.model!.getCaseType(), this.requestTypeField.value, licenses[0].id)
+    //         .pipe(
+    //           map((data) => {
+    //             if (!data) {
+    //               return of(null);
+    //             }
+    //             return {selected: licenses[0], details: data};
+    //           }),
+    //           catchError(() => {
+    //             return of(null);
+    //           })
+    //         );
+    //     } else {
+    //       const displayColumns = this.service.selectLicenseDisplayColumns;
+    //       return this.licenseService.openSelectLicenseDialog(licenses, this.model?.clone({requestType: this.requestTypeField.value || null}), true, displayColumns).onAfterClose$;
+    //     }
+    //   }),
+    //   // allow only if the user select license
+    //   filter<{ selected: ExternalOrgAffiliationResult, details: ExternalOrgAffiliation }>
+    //   ((selection: { selected: ExternalOrgAffiliationResult, details: ExternalOrgAffiliation }) => {
+    //     // noinspection SuspiciousTypeOfGuard
+    //     return (selection && selection.selected instanceof ExternalOrgAffiliationResult && selection.details instanceof ExternalOrgAffiliation);
+    //   }),
+    //   takeUntil(this.destroy$)
+    // )
+    // .subscribe((selection) => {
+    //   this.setSelectedLicense(selection.details);
+    // });
+  }
+  setSelectedLicense() {
 
+  }
   openDateMenu(ref: any) {
     ref.toggleCalendar();
+  }
+  isEditOrCancel() {
+    return this.requestTypeField.value == CollectionRequestType.UPDATE || this.requestTypeField.value == CollectionRequestType.CANCEL
   }
 
   get dataOfApplicant(): UntypedFormGroup {
@@ -274,5 +355,8 @@ AwarenessActivitySuggestionService
   }
   get specialExplanationsField(): UntypedFormControl {
     return this.form.get('description') as UntypedFormControl;
+  }
+  get oldLicenseFullSerialField(): UntypedFormControl {
+    return this.form.get('oldLicenseFullSerial') as UntypedFormControl;
   }
 }
