@@ -34,11 +34,14 @@ export class OrgMember extends SearchableCloneable<OrgMember> {
             CustomValidators.minLength(
               CustomValidators.defaultLengths.MIN_LENGTH
             ),
+            CustomValidators.maxLength(
+              CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+            )
           ],
         ]
         : fullName,
       identificationNumber: controls
-        ? [identificationNumber, [CustomValidators.required]]
+        ? [identificationNumber, CustomValidators.commonValidations.qId]
         : identificationNumber,
       jobTitleId: controls ? [jobTitleId, [CustomValidators.required]] : jobTitleId,
     };
