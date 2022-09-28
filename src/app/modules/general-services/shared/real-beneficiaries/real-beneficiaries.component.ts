@@ -18,6 +18,7 @@ export class RealBeneficiariesComponent extends ListModelComponent<RealBeneficia
   @Input() set list(_list: RealBeneficiary[]) {
     this._list = _list;
   }
+  @Input() isQatari = false;
   get list() {
     return this._list;
 
@@ -71,18 +72,18 @@ export class RealBeneficiariesComponent extends ListModelComponent<RealBeneficia
       label: this.lang.map.passport_number,
       type: 'text',
     },
-    { controlName: 'identificationNumber', label: this.lang.map.lbl_qid, type: 'text' },
-    { controlName: 'iDDate', label: this.lang.map.id_date, type: 'date' },
 
+    { controlName: 'passportDate', label: this.lang.map.passport_date, type: 'date' },
     {
       controlName: 'passportExpiryDate',
       label: this.lang.map.passport_expiry_date,
       type: 'date',
     },
+    { controlName: 'identificationNumber', label: this.lang.map.lbl_qid, type: 'text' },
+    { controlName: 'iDDate', label: this.lang.map.id_date, type: 'date' },
 
     { controlName: 'iDExpiryDate', label: this.lang.map.id_expiry_date, type: 'date' },
 
-    { controlName: 'passportDate', label: this.lang.map.passport_date, type: 'date' },
 
     { controlName: 'startDate', label: this.lang.map.start_date, type: 'date' },
 
@@ -96,9 +97,7 @@ export class RealBeneficiariesComponent extends ListModelComponent<RealBeneficia
 
   protected _initComponent(): void {
     this.form = this.fb.group(this.model.buildForm());
-    this.form.valueChanges.subscribe((data) => {
-      console.log(this.form)
-    })
+
   }
   _selectOne(row: RealBeneficiary): void {
     row.birthDate = DateUtils.changeDateToDatepicker(row.birthDate);

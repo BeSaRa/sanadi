@@ -155,6 +155,7 @@ export class CharityOrganizationUpdateComponent
   @ViewChildren('reportList')
   reportRefs!: QueryList<any>;
   charityRoles = CharityRole;
+
   get metaDataForm(): UntypedFormGroup {
     return this.form.get('metaData') as UntypedFormGroup;
   }
@@ -327,6 +328,7 @@ export class CharityOrganizationUpdateComponent
           title: this.lang.map.primary_law,
           validStatus: () => this.primaryLawForm.valid,
           category: CharityRequestType.GOVERANCE_DOCUMENTS,
+          order: 1,
         },
         {
           name: 'classifcationOfAidTab',
@@ -334,6 +336,7 @@ export class CharityOrganizationUpdateComponent
           title: this.lang.map.classification_of_foreign_aid,
           validStatus: () => true,
           category: CharityRequestType.GOVERANCE_DOCUMENTS,
+          order: 3,
         },
         {
           name: 'workAreasTab',
@@ -341,6 +344,8 @@ export class CharityOrganizationUpdateComponent
           title: this.lang.map.work_areas,
           validStatus: () => true,
           category: CharityRequestType.GOVERANCE_DOCUMENTS,
+          order: 4,
+
         },
         {
           name: 'byLawsTab',
@@ -348,6 +353,7 @@ export class CharityOrganizationUpdateComponent
           title: this.lang.map.bylaws,
           validStatus: () => true,
           category: CharityRequestType.GOVERANCE_DOCUMENTS,
+          order: 2
         },
         {
           name: 'riskReportsTab',
@@ -461,6 +467,7 @@ export class CharityOrganizationUpdateComponent
             this._buildMetaDataForm(requestType);
           } else if (requestType === this.RequestTypes.GOVERANCE_DOCUMENTS) {
             this._buildPrimaryLawForm(requestType);
+            this.tabs.sort((a, b) => a.order - b.order);
           } else {
             this._buildForm(requestType);
           }

@@ -42,7 +42,7 @@ export class RealBeneficiary extends SearchableCloneable<RealBeneficiary> {
   idexpiryDate!: string | IMyDateModel;
   nationalityInfo!: AdminResult;
 
-  buildForm(controls = true) {
+  buildForm(controls = true, isQatari = false) {
     const {
       arabicName,
       englishName,
@@ -135,7 +135,7 @@ export class RealBeneficiary extends SearchableCloneable<RealBeneficiary> {
         : buildingNumber,
       identificationNumber: controls
         ? [
-          identificationNumber, CustomValidators.commonValidations.qId
+          identificationNumber, [CustomValidators.required, ...CustomValidators.commonValidations.qId]
         ]
         : identificationNumber,
       passportNumber: controls
