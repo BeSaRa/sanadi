@@ -1430,4 +1430,5 @@ export interface ILanguageKeys {
   registration_date: string;
   issuer: string;
   authrized_members: string;
+  report_date: string;
 }
