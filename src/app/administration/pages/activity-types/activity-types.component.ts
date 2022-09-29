@@ -20,8 +20,8 @@ import {
 
 @Component({
   selector: 'activity-types',
-  templateUrl: './actiity-types.component.html',
-  styleUrls: ['./actiity-types.component.scss'],
+  templateUrl: './activity-types.component.html',
+  styleUrls: ['./activity-types.component.scss'],
 })
 export class ActivityTypeComponent extends AdminGenericComponent<
   AdminLookup,

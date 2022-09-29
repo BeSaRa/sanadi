@@ -70,7 +70,7 @@ import { VactionDatesComponent } from './pages/vaction-dates/vaction-dates.compo
 import { VacationDatesPopupComponent } from './popups/vacation-dates-popup/vacation-dates-popup.component';
 import { DacOchaListComponent } from './pages/dac-ocha-list/dac-ocha-list.component';
 import { AdminLookupComponent } from './pages/admin-lookup/admin-lookup.component';
-import { ActivityTypeComponent } from './pages/actiity-types/actiity-types.component';
+import { ActivityTypeComponent } from './pages/activity-types/activity-types.component';
 import { ActivityTypesPopupComponent } from './popups/activity-types-popup/activity-types-popup.component';
 
 @NgModule({
