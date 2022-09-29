@@ -1,6 +1,5 @@
 import {Component} from '@angular/core';
 import {LangService} from '@services/lang.service';
-import {DacOchaNewService} from '@services/dac-ocha-new.service';
 import {LookupService} from '@services/lookup.service';
 import {TabMap} from '@app/types/types';
 import {AdminLookupTypeEnum} from '@app/enums/admin-lookup-type-enum';
@@ -17,7 +16,6 @@ import {Subject} from 'rxjs';
 export class AdminLookupComponent {
 
   constructor(public lang: LangService,
-              public service: DacOchaNewService,
               public lookupService: LookupService) {
   }
 
@@ -60,8 +58,8 @@ export class AdminLookupComponent {
   selectedWorkFieldTabIndex$: Subject<number> = new Subject<number>();
 
   adminLookupTypeEnum = AdminLookupTypeEnum;
-  activeType: AdminLookupTypeEnum = AdminLookupTypeEnum.WORK_FIELD;
-  listComponentMap: Map<AdminLookupTypeEnum, any> = new Map<AdminLookupTypeEnum, any>();
+  activeLookupType: AdminLookupTypeEnum = AdminLookupTypeEnum.WORK_FIELD;
+  lookupComponentsMap: Map<AdminLookupTypeEnum, any> = new Map<AdminLookupTypeEnum, any>();
 
   getTabLabel(lookupType: AdminLookupTypeEnum): string {
     if (lookupType === AdminLookupTypeEnum.WORK_FIELD) {
@@ -72,10 +70,10 @@ export class AdminLookupComponent {
 
   tabChanged(tab: TabComponent) {
     const tabData = this._findTabByTabName(tab);
-    this.activeType = tabData && tabData.lookupType;
+    this.activeLookupType = tabData && tabData.lookupType;
     // if workField tab is selected, select ocha by default
-    if (this.activeType === AdminLookupTypeEnum.WORK_FIELD) {
-      this.activeType = AdminLookupTypeEnum.OCHA;
+    if (this.activeLookupType === AdminLookupTypeEnum.WORK_FIELD) {
+      this.activeLookupType = AdminLookupTypeEnum.OCHA;
       this.selectedWorkFieldTabIndex$.next(0);
     } else {
       this.reloadCallback();
@@ -83,33 +81,33 @@ export class AdminLookupComponent {
     }
   }
 
-  setListComponent(type: AdminLookupTypeEnum, componentRef: any) {
+  setLookupComponentMap(type: AdminLookupTypeEnum, componentRef: any) {
     if (!type) {
       return;
     }
-    this.listComponentMap.set(type, componentRef);
+    this.lookupComponentsMap.set(type, componentRef);
     if (type === AdminLookupTypeEnum.WORK_FIELD) {
-      this.activeType = type;
+      this.activeLookupType = type;
     }
   }
 
   addCallback() {
-    if (!this.activeType) {
+    if (!this.activeLookupType) {
       return;
     }
-    this.listComponentMap.get(this.activeType) && this.listComponentMap.get(this.activeType)!.add$.next();
+    this.lookupComponentsMap.get(this.activeLookupType) && this.lookupComponentsMap.get(this.activeLookupType)!.add$.next();
   }
 
   reloadCallback() {
-    if (!this.activeType) {
+    if (!this.activeLookupType) {
       return;
     }
-    this.listComponentMap.get(this.activeType) && this.listComponentMap.get(this.activeType)!.reload$.next(null);
+    this.lookupComponentsMap.get(this.activeLookupType) && this.lookupComponentsMap.get(this.activeLookupType)!.reload$.next(null);
   }
 
   filterRecords(searchText: string) {
     this.filterControl.setValue(searchText);
-    this.listComponentMap.get(this.activeType) && this.listComponentMap.get(this.activeType)!.filterControl.setValue(searchText);
+    this.lookupComponentsMap.get(this.activeLookupType) && this.lookupComponentsMap.get(this.activeLookupType)!.filterControl.setValue(searchText);
   }
 
   private _findTabByTabName(tab: TabComponent): ITabData | undefined {

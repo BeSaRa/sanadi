@@ -1,10 +1,10 @@
-import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {AdminLookupTypeEnum} from '@app/enums/admin-lookup-type-enum';
 import {AdminLookup} from '@app/models/admin-lookup';
 import {LangService} from '@services/lang.service';
 import {catchError, exhaustMap, filter, map, switchMap, takeUntil} from 'rxjs/operators';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
-import {BehaviorSubject, of, Subject} from 'rxjs';
+import {of, Subject} from 'rxjs';
 import {SortEvent} from '@contracts/sort-event';
 import {CommonUtils} from '@helpers/common-utils';
 import {DateUtils} from '@helpers/date-utils';
@@ -14,25 +14,22 @@ import {DialogService} from '@services/dialog.service';
 import {SharedService} from '@services/shared.service';
 import {ToastService} from '@services/toast.service';
 import {LookupService} from '@services/lookup.service';
-import {Lookup} from '@app/models/lookup';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
-import {DacOcha} from '@app/models/dac-ocha';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 import {IGridAction} from '@contracts/i-grid-action';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {PageEvent} from '@contracts/page-event';
-import {UntypedFormControl} from '@angular/forms';
 import {TableComponent} from '@app/shared/components/table/table.component';
+import {AdminGenericComponent} from '@app/generics/admin-generic-component';
 
 @Component({
   selector: 'dac-ocha-list',
   templateUrl: './dac-ocha-list.component.html',
   styleUrls: ['./dac-ocha-list.component.scss']
 })
-export class DacOchaListComponent implements OnInit, AfterViewInit, OnDestroy {
+export class DacOchaListComponent extends AdminGenericComponent<AdminLookup, DacOchaNewService> implements AfterViewInit {
 
-  @Input() dacOchaType!: AdminLookupTypeEnum;
+  @Input() adminLookupType!: AdminLookupTypeEnum;
   @Output() onReady: EventEmitter<AdminLookupTypeEnum> = new EventEmitter<AdminLookupTypeEnum>();
 
   constructor(public lang: LangService,
@@ -42,52 +39,27 @@ export class DacOchaListComponent implements OnInit, AfterViewInit, OnDestroy {
               private sharedService: SharedService,
               private toast: ToastService,
               public lookupService: LookupService) {
+    super();
   }
 
   usePagination = true;
   filterRetired = true;
-  count: number = 0;
 
-  // behavior subject for load the list
-  reload$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
-  // subject for emit clicking on add button
-  add$: Subject<any> = new Subject<any>();
-  // subject for emit clicking on edit button
-  edit$: Subject<AdminLookup> = new Subject<AdminLookup>();
-  // using this subject later to unsubscribe from any subscription
-  destroy$: Subject<any> = new Subject<any>();
-  // list fo models related to the entity
-  models: AdminLookup[] = [];
-  // to filter grid models based on what the user type here
-  filterControl: UntypedFormControl = new UntypedFormControl('');
-
-  ngOnInit(): void {
-    this.listenToReload();
-    this.listenToAdd();
-    this.listenToEdit();
+  _init(): void {
     this.listenToView();
-    this.classifications = this.lookupService.listByCategory.AdminLookupType || [];
   }
 
   ngAfterViewInit(): void {
     setTimeout(()=> {
-      this.onReady.emit(this.dacOchaType);
+      this.onReady.emit(this.adminLookupType);
     }, 100)
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-    this.destroy$.unsubscribe();
   }
 
   @ViewChild('table') table!: TableComponent;
   selectedPopupTabName: string = 'basic';
-  classifications!: Lookup[];
   commonStatusEnum = CommonStatusEnum;
   actionIconsEnum = ActionIconsEnum;
   displayedColumns: string[] = ['arName', 'enName', 'status', 'actions'];
-  selectedRecords: DacOcha[] = [];
   view$: Subject<AdminLookup> = new Subject<AdminLookup>();
 
   actions: IMenuItem<AdminLookup>[] = [
@@ -110,7 +82,7 @@ export class DacOchaListComponent implements OnInit, AfterViewInit, OnDestroy {
     {
       type: 'action',
       label: (_item) => {
-        return this.lang.map.sub_dac_ochas.change({x: this.getTabLabel(this.dacOchaType)});
+        return this.lang.map.sub_dac_ochas.change({x: this.getTabLabel(this.adminLookupType)});
       },
       icon: ActionIconsEnum.CHILD_ITEMS,
       onClick: (item) => this.showChildren(item)
@@ -183,33 +155,8 @@ export class DacOchaListComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   };
 
-  pageEvent: PageEvent = {
-    pageIndex: 0,
-    pageSize: 10,
-    length: 0,
-    previousPageIndex: null
-  };
-
-  pageChange($event: PageEvent): void {
-    this.pageEvent = $event;
-    if (this.usePagination && this.pageEvent.previousPageIndex !== null) {
-      this.reload$.next(this.reload$.value);
-    }
-  }
-
-  listenToView(): void {
-    this.view$
-      .pipe(takeUntil(this.destroy$))
-      .pipe(exhaustMap((model) => {
-        return this.service.openViewDialog(model.id).pipe(catchError(_ => of(null)));
-      }))
-      .pipe(filter((dialog): dialog is DialogRef => !!dialog))
-      .pipe(switchMap(dialog => dialog.onAfterClose$))
-      .subscribe(() => this.reload$.next(null));
-  }
-
   getTabLabel(lookupType: AdminLookupTypeEnum): string {
-    return this.classifications.find(classification => classification.lookupKey === lookupType)?.getName() || '';
+    return (this.lookupService.listByCategory.AdminLookupType || []).find(classification => classification.lookupKey === lookupType)?.getName() || '';
   }
 
   listenToReload() {
@@ -220,7 +167,7 @@ export class DacOchaListComponent implements OnInit, AfterViewInit, OnDestroy {
           limit: this.pageEvent.pageSize,
           offset: (this.pageEvent.pageIndex * this.pageEvent.pageSize)
         };
-        return this.service.loadByTypePaging(paginationOptions, this.dacOchaType)
+        return this.service.loadByTypePaging(paginationOptions, this.adminLookupType)
           .pipe(
             map((res) => {
               this.count = res.count;
@@ -247,13 +194,13 @@ export class DacOchaListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   afterReload() {
-    this.table.selection?.clear();
+    this.table.clearSelection();
   }
 
   listenToAdd(): void {
     this.add$
       .pipe(takeUntil(this.destroy$))
-      .pipe(exhaustMap(() => this.service.openCreateDialog(this.dacOchaType).onAfterClose$))
+      .pipe(exhaustMap(() => this.service.openCreateDialog(this.adminLookupType).onAfterClose$))
       .subscribe(() => this.reload$.next(null));
   }
 
@@ -274,6 +221,17 @@ export class DacOchaListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.edit$.next(item);
   }
 
+  listenToView(): void {
+    this.view$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(exhaustMap((model) => {
+        return this.service.openViewDialog(model.id).pipe(catchError(_ => of(null)));
+      }))
+      .pipe(filter((dialog): dialog is DialogRef => !!dialog))
+      .pipe(switchMap(dialog => dialog.onAfterClose$))
+      .subscribe(() => this.reload$.next(null));
+  }
+
   showChildren(item: AdminLookup, $event?: Event): void {
     $event?.preventDefault();
     this.selectedPopupTabName = 'children';
@@ -281,12 +239,12 @@ export class DacOchaListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   changeStatusBulk($event: MouseEvent, newStatus: CommonStatusEnum): void {
-    if (!this.selectedRecords || this.selectedRecords.length === 0) {
+    if (!this.table.selection || this.table.selection.selected.length === 0) {
       return;
     }
-    const sub = this.adminLookupService.updateStatusBulk(this.selectedRecords.map(item => item.id), this.dacOchaType, newStatus)
+    const sub = this.adminLookupService.updateStatusBulk(this.table.selection.selected.map(item => item.id), this.adminLookupType, newStatus)
       .subscribe((response) => {
-        this.sharedService.mapBulkResponseMessages(this.selectedRecords, 'id', response, 'UPDATE')
+        this.sharedService.mapBulkResponseMessages(this.table.selection.selected, 'id', response, 'UPDATE')
           .subscribe(() => {
             this.reload$.next(null);
             sub.unsubscribe();
@@ -312,7 +270,7 @@ export class DacOchaListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.dialogService.confirm(message)
       .onAfterClose$.subscribe((click: UserClickOn) => {
       if (click === UserClickOn.YES) {
-        const sub = model.delete(this.dacOchaType).subscribe(() => {
+        const sub = model.delete(this.adminLookupType).subscribe(() => {
           // @ts-ignore
           this.toast.success(this.lang.map.msg_delete_x_success.change({x: model.getName()}));
           this.reload$.next(null);
@@ -324,18 +282,17 @@ export class DacOchaListComponent implements OnInit, AfterViewInit, OnDestroy {
 
   deleteBulk($event: MouseEvent): void {
     $event.preventDefault();
-    if (this.selectedRecords.length > 0) {
+    if (this.table.selection.selected.length > 0) {
       const message = this.lang.map.msg_confirm_delete_selected;
       this.dialogService.confirm(message)
         .onAfterClose$.subscribe((click: UserClickOn) => {
         if (click === UserClickOn.YES) {
-          const ids = this.selectedRecords.map((item) => {
+          const ids = this.table.selection.selected.map((item) => {
             return item.id;
           });
           const sub = this.service.deleteBulk(ids).subscribe((response) => {
-            this.sharedService.mapBulkResponseMessages(this.selectedRecords, 'id', response)
+            this.sharedService.mapBulkResponseMessages(this.table.selection.selected, 'id', response)
               .subscribe(() => {
-                this.selectedRecords = [];
                 this.reload$.next(null);
                 sub.unsubscribe();
               });

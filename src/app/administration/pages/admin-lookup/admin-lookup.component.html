@@ -31,12 +31,12 @@
 </ng-template>
 
 <ng-template #ochaTemplate>
-  <dac-ocha-list #ochaListComponent [dacOchaType]="adminLookupTypeEnum.OCHA"
-                 (onReady)="setListComponent($event, ochaListComponent)"></dac-ocha-list>
+  <dac-ocha-list #ochaListComponent [adminLookupType]="adminLookupTypeEnum.OCHA"
+                 (onReady)="setLookupComponentMap($event, ochaListComponent)"></dac-ocha-list>
 </ng-template>
 <ng-template #dacTemplate>
-  <dac-ocha-list #dacListComponent [dacOchaType]="adminLookupTypeEnum.DAC"
-                 (onReady)="setListComponent($event, dacListComponent)"></dac-ocha-list>
+  <dac-ocha-list #dacListComponent [adminLookupType]="adminLookupTypeEnum.DAC"
+                 (onReady)="setLookupComponentMap($event, dacListComponent)"></dac-ocha-list>
 </ng-template>
 <!--<ng-template #activityTypeTemplate>
 
