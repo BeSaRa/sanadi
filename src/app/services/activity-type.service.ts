@@ -38,7 +38,7 @@ export class ActivityTypeService extends CrudWithDialogGenericService<AdminLooku
     return AdminLookup;
   }
   _getServiceURL(): string {
-    return this.adminLookupService._getServiceURLByType(AdminLookupTypeEnum.ACTIVITY_TYPE);
+    return this.adminLookupService.getServiceURLByType(AdminLookupTypeEnum.ACTIVITY_TYPE);
   }
   openViewDialog(model: AdminLookup): Observable<DialogRef> {
     return of(
