@@ -184,7 +184,8 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
   }
 
   exportSearchResult(): void {
-    const criteria = this.selectedService.getSearchCriteriaModel().clone(this.form.value).filterSearchFields(this.fieldsNames);
+    let criteria = this.selectedService.getSearchCriteriaModel().clone(this.form.value).filterSearchFields(this.fieldsNames);
+    criteria = this.normalizeSearchCriteria(criteria);
     this.selectedService
       .exportSearch(criteria)
       .subscribe((blob) => window.open(blob.url));
