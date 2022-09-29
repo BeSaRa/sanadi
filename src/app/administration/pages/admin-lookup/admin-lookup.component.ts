@@ -1,12 +1,12 @@
-import {Component} from '@angular/core';
-import {LangService} from '@services/lang.service';
-import {LookupService} from '@services/lookup.service';
-import {TabMap} from '@app/types/types';
-import {AdminLookupTypeEnum} from '@app/enums/admin-lookup-type-enum';
-import {ITabData} from '@contracts/i-tab-data';
-import {TabComponent} from '@app/shared/components/tab/tab.component';
-import {UntypedFormControl} from '@angular/forms';
-import {Subject} from 'rxjs';
+import { Component } from '@angular/core';
+import { LangService } from '@services/lang.service';
+import { LookupService } from '@services/lookup.service';
+import { TabMap } from '@app/types/types';
+import { AdminLookupTypeEnum } from '@app/enums/admin-lookup-type-enum';
+import { ITabData } from '@contracts/i-tab-data';
+import { TabComponent } from '@app/shared/components/tab/tab.component';
+import { UntypedFormControl } from '@angular/forms';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'admin-lookup',
@@ -16,7 +16,7 @@ import {Subject} from 'rxjs';
 export class AdminLookupComponent {
 
   constructor(public lang: LangService,
-              public lookupService: LookupService) {
+    public lookupService: LookupService) {
   }
 
   filterControl: UntypedFormControl = new UntypedFormControl('');
@@ -46,14 +46,14 @@ export class AdminLookupComponent {
       validStatus: () => true,
       isTouchedOrDirty: () => true,
     },
-    /*activityType: {
+    activityType: {
       name: 'activityType',
       index: 2,
       langKey: 'activity_type',
       lookupType: AdminLookupTypeEnum.ACTIVITY_TYPE,
       validStatus: () => true,
       isTouchedOrDirty: () => true,
-    }*/
+    }
   };
   selectedWorkFieldTabIndex$: Subject<number> = new Subject<number>();
 
@@ -75,7 +75,11 @@ export class AdminLookupComponent {
     if (this.activeLookupType === AdminLookupTypeEnum.WORK_FIELD) {
       this.activeLookupType = AdminLookupTypeEnum.OCHA;
       this.selectedWorkFieldTabIndex$.next(0);
-    } else {
+    }
+    else if (this.activeLookupType === AdminLookupTypeEnum.ACTIVITY_TYPE) {
+      this.setLookupComponentMap()
+    }
+    else {
       this.reloadCallback();
       this.filterRecords(this.filterControl.value);
     }
@@ -95,6 +99,7 @@ export class AdminLookupComponent {
     if (!this.activeLookupType) {
       return;
     }
+
     this.lookupComponentsMap.get(this.activeLookupType) && this.lookupComponentsMap.get(this.activeLookupType)!.add$.next();
   }
 
