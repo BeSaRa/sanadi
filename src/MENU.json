@@ -380,8 +380,8 @@
   },
   {
     "id": 31,
-    "langKey": "menu_dac_ocha",
-    "path": "/home/administration/ocha-dac-class",
+    "langKey": "menu_admin_lookups",
+    "path": "/home/administration/lookups",
     "icon": "mdi-border-all",
     "isSvg": false,
     "permission": "MANAGE_ADMIN_LOOKUP",

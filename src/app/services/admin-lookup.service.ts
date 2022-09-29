@@ -64,7 +64,7 @@ export class AdminLookupService implements CrudServiceAdminLookupContract<AdminL
   private _getServiceURLByType(typeId: AdminLookupTypeEnum) {
     let url: string = this._getServiceURL();
     switch (typeId) {
-      case AdminLookupTypeEnum.DAC_OCHA:
+      case AdminLookupTypeEnum.WORK_FIELD:
       case AdminLookupTypeEnum.DAC:
       case AdminLookupTypeEnum.OCHA:
         url += '/work-field';
@@ -220,7 +220,7 @@ export class AdminLookupService implements CrudServiceAdminLookupContract<AdminL
     if (!parentId) {
       return of([]);
     }
-    return this.http.get<AdminLookup[]>(this._getServiceURLByType(AdminLookupTypeEnum.DAC_OCHA) + '/sub/' + parentId)
+    return this.http.get<AdminLookup[]>(this._getServiceURLByType(AdminLookupTypeEnum.WORK_FIELD) + '/sub/' + parentId)
       .pipe((catchError((_) => of([]))));
   }
 
@@ -232,7 +232,7 @@ export class AdminLookupService implements CrudServiceAdminLookupContract<AdminL
     fallback: '$pagination'
   })
   private _loadWorkFieldsByParentPaging(options: Partial<PaginationContract>, parentId: number): Observable<Pagination<AdminLookup[]>> {
-    return this.http.get<Pagination<AdminLookup[]>>(this._getServiceURLByType(AdminLookupTypeEnum.DAC_OCHA) + '/sub/' + parentId, {
+    return this.http.get<Pagination<AdminLookup[]>>(this._getServiceURLByType(AdminLookupTypeEnum.WORK_FIELD) + '/sub/' + parentId, {
       params: options
     }).pipe((catchError((_) => {
       return of({
