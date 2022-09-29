@@ -24,7 +24,7 @@ export class BeneficiaryInterceptor {
     model.orgBranchInfo = AdminResult.createInstance(model.orgBranchInfo);
     model.orgInfo = AdminResult.createInstance(model.orgInfo);
     model.orgUserInfo = AdminResult.createInstance(model.orgUserInfo);
-    model.residenceCountryInfo = AdminResult.createInstance(model.residenceCountryInfo);
+    model.residenceCityInfo = AdminResult.createInstance(model.residenceCityInfo);
     model.residenceStatusInfo = AdminResult.createInstance(model.residenceStatusInfo);
     model.benNationalityInfo = AdminResult.createInstance(model.benNationalityInfo);
 
@@ -83,7 +83,7 @@ export class BeneficiaryInterceptor {
     delete model.orgBranchInfo;
     delete model.orgInfo;
     delete model.orgUserInfo;
-    delete model.residenceCountryInfo;
+    delete model.residenceCityInfo;
     delete model.residenceStatusInfo;
     delete model.benNationalityInfo;
     delete model.dateOfBirthString;
