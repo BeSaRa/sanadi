@@ -11,7 +11,6 @@ export class AwarenessActivitySuggestionInterceptor implements IModelInterceptor
 
   send(model: any) {
     (model.expectedDate && (model.expectedDate = DateUtils.getDateStringFromDate(model.expectedDate)))
-    console.log(model);
     AwarenessActivitySuggestionInterceptor._deleteBeforeSend(model);
     return model;
   }
