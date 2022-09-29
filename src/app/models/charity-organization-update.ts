@@ -134,8 +134,7 @@ export class CharityOrganizationUpdate extends CaseModel<
           [
             CustomValidators.required,
             CustomValidators.maxLength(
-              CustomValidators.defaultLengths.ENGLISH_NAME_MAX
-            ),
+              300),
           ],
         ]
         : regulatingLaw,
@@ -147,8 +146,7 @@ export class CharityOrganizationUpdate extends CaseModel<
           taxCardNo,
           [
             CustomValidators.maxLength(
-              CustomValidators.defaultLengths.ENGLISH_NAME_MAX
-            ),
+              300),
           ],
         ]
         : taxCardNo,
@@ -157,7 +155,7 @@ export class CharityOrganizationUpdate extends CaseModel<
           unifiedEconomicRecord,
           [
             CustomValidators.maxLength(
-              CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+              300
             ),
           ],
         ]
@@ -170,7 +168,7 @@ export class CharityOrganizationUpdate extends CaseModel<
           establishmentID,
           [
             CustomValidators.maxLength(
-              CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+              300
             ),
           ],
         ]
@@ -225,7 +223,7 @@ export class CharityOrganizationUpdate extends CaseModel<
           ],
         ]
         : email,
-      website: controls ? [website, [CustomValidators.required]] : website,
+      website: controls ? [website, [CustomValidators.required, CustomValidators.maxLength(200)]] : website,
       zoneNumber: controls
         ? [
           zoneNumber,
