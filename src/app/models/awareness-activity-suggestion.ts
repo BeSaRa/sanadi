@@ -1,3 +1,4 @@
+import { WFResponseType } from './../enums/wfresponse-type.enum';
 import { AdminResult } from '@app/models/admin-result';
 import { AdminLookup } from './admin-lookup';
 import { CustomValidators } from './../validators/custom-validators';
@@ -18,6 +19,7 @@ import { CaseModel } from "@app/models/case-model";
 import { HasRequestType } from "@app/interfaces/has-request-type";
 import { mixinRequestType } from "@app/mixins/mixin-request-type";
 import { CaseModelContract } from "@contracts/case-model-contract";
+import { DialogRef } from '@app/shared/models/dialog-ref';
 
 const _RequestType = mixinLicenseDurationType(mixinRequestType(CaseModel));
 const interceptor = new AwarenessActivitySuggestionInterceptor();
@@ -35,6 +37,8 @@ export class AwarenessActivitySuggestion
   licenseApprovedDate!: string | IMyDateModel;
   oldLicenseFullSerial!: string;
   description!: string;
+
+  followUpDate!: string | IMyDateModel;
 
   identificationNumber!: string;
   enName!: string;
@@ -128,5 +132,17 @@ export class AwarenessActivitySuggestion
         goal: controls ? [goal, [Validators.required]] : goal,
       },
     };
+  }
+
+  buildApprovalForm(control: boolean = false): any {
+    const {
+      followUpDate
+    } = this;
+    return {
+      followUpDate: control ? [followUpDate, [CustomValidators.required]] : followUpDate
+    }
+  }
+  approve(): DialogRef {
+    return this.service.approve(this, WFResponseType.APPROVE)
   }
 }

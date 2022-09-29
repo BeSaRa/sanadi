@@ -1,3 +1,6 @@
+import { AwarenessActivitySuggestionApprovalComponent } from './../modules/general-services/popups/awareness-activity-suggestion-approval/awareness-activity-suggestion-approval.component';
+import { DialogRef } from './../shared/models/dialog-ref';
+import { WFResponseType } from './../enums/wfresponse-type.enum';
 import { SearchAwarenessActivitySuggestionCriteria } from './../models/search-awareness-activity-suggestion-criteria';
 import { FactoryService } from './factory.service';
 import { BaseGenericEService } from '@app/generics/base-generic-e-service';
@@ -51,5 +54,11 @@ export class AwarenessActivitySuggestionService extends BaseGenericEService<Awar
   }
   getCaseComponentName(): string {
     return 'AwarenessActivitySuggestionComponent'
+  }
+  approve(model: AwarenessActivitySuggestion, action: WFResponseType): DialogRef {
+    return this.dialog.show(AwarenessActivitySuggestionApprovalComponent, {
+      model,
+      action
+    });
   }
 }

@@ -1,3 +1,4 @@
+import { AwarenessActivitySuggestionApprovalComponent } from './popups/awareness-activity-suggestion-approval/awareness-activity-suggestion-approval.component';
 import { AwarenessActivitySuggestionComponent } from './pages/awareness-activity-suggestion/awareness-activity-suggestion.component';
 import { MembersComponent } from './shared/members/members.component';
 import { CharityBranchComponent } from './shared/charity-branch/charity-branch.component';
@@ -66,7 +67,8 @@ import { CharityReportsComponent } from './shared/risk-reports/risk-reports.comp
     BylawsComponent,
     CharityReportsComponent,
     CharityDecisionsComponent,
-    AwarenessActivitySuggestionComponent
+    AwarenessActivitySuggestionComponent,
+    AwarenessActivitySuggestionApprovalComponent
   ],
   imports: [
     CommonModule,

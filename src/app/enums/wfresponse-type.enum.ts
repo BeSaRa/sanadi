@@ -41,4 +41,5 @@ export enum WFResponseType {
   TO_GENERAL_MEETING_MEMBERS = 'toMember',
   REVIEW_NPO_MANAGEMENT = 'askSingle:ReviewNPOManagement',
   TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD_SEND_TO_SINGLE_DEPARTMENT = 'askSingle:ReviewTransferringIndividualFundsAbroad',
+  REVIEW_AWARENESS_ACTIVITY_SUGGESTION = 'ask:ReviewAwarenessActivitySuggestion'
 }
