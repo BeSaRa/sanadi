@@ -22,9 +22,9 @@ import {SdGoalComponent} from '@app/administration/pages/sd-goal/sd-goal.compone
 import {BankComponent} from '@app/administration/pages/bank/bank.component';
 import {DonorComponent} from '@app/administration/pages/donor/donor.component';
 import {FieldAssessmentComponent} from '@app/administration/pages/field-assessment/field-assessment.component';
-import {DacOchaNewComponent} from '@app/administration/pages/dac-ocha-new/dac-ocha-new.component';
 import {VactionDatesComponent} from './pages/vaction-dates/vaction-dates.component';
 import {PermissionGroup} from '@app/enums/permission-group';
+import {AdminLookupComponent} from '@app/administration/pages/admin-lookup/admin-lookup.component';
 
 const routes: Routes = [
   {path: '', component: AdminHomeComponent},
@@ -89,7 +89,7 @@ const routes: Routes = [
     data: {permissionKey: Permissions.MANAGE_JOB_TITLES, configPermissionGroup: null, checkAnyPermission: false}
   },
   {
-    path: 'ocha-dac-class', component: DacOchaNewComponent,
+    path: 'lookups', component: AdminLookupComponent,
     canActivate: [PermissionGuard],
     data: {permissionKey: Permissions.ADMIN_LOOKUP, configPermissionGroup: null, checkAnyPermission: false}
   },

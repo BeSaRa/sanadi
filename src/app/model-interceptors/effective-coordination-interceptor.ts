@@ -34,6 +34,9 @@ export class EffectiveCoordinationInterceptor
         ? model.organizationWayInfo
         : {}
     );
+    model.eventStartDate = DateUtils.changeDateToDatepicker(
+      model.eventStartDate
+    );
     return model;
   }
 }

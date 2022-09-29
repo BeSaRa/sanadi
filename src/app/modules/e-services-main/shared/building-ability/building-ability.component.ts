@@ -1,8 +1,4 @@
-import {
-  Component,
-  ElementRef, Input,
-  OnInit, ViewChild
-} from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import {
   AbstractControl,
   FormArray,
@@ -10,7 +6,7 @@ import {
   FormGroup,
   UntypedFormArray,
   UntypedFormControl,
-  UntypedFormGroup
+  UntypedFormGroup,
 } from '@angular/forms';
 import { TrainingWay } from '@app/enums/training-way.enum';
 import { UserClickOn } from '@app/enums/user-click-on.enum';
@@ -76,7 +72,7 @@ export class BuildingAbilityComponent implements OnInit {
   private currentRecord?: BuildingAbility;
 
   private destroy$: Subject<any> = new Subject<any>();
-  formOpend=false;
+  formOpend = false;
   form!: FormGroup;
   @Input() organizationUnits: OrgUnit[] = [];
   @Input() trainingTypes: Lookup[] = [];
@@ -104,12 +100,7 @@ export class BuildingAbilityComponent implements OnInit {
     this.listenToAdd();
     this.listenToRecordChange();
     this.listenToSave();
-    if (this.canUpdate === false) {
-      this.columns = this.columns.slice(
-        0,
-        this.model.DisplayedColumns.length - 1
-      );
-    }
+
   }
 
   ngOnDestroy(): void {
@@ -124,17 +115,15 @@ export class BuildingAbilityComponent implements OnInit {
     });
   }
   private listenToAdd() {
-
     this.add$.pipe(takeUntil(this.destroy$)).subscribe(() => {
-
       this.viewOnly = false;
-      this.formOpend=true;
+      this.formOpend = true;
       this.recordChanged$.next(new BuildingAbility());
     });
   }
   private listenToRecordChange() {
     this.recordChanged$.pipe(takeUntil(this.destroy$)).subscribe((record) => {
-      if (record) record.organizationId = this.orgId;
+      if (record && this.orgId) record.organizationId = this.orgId;
       this.currentRecord = record || undefined;
       this.updateForm(this.currentRecord);
     });
@@ -182,7 +171,7 @@ export class BuildingAbilityComponent implements OnInit {
             ...form.getRawValue(),
           });
           this._updateLookups(model);
-          this.formOpend=false;
+          this.formOpend = false;
           return model;
         })
       )
@@ -246,14 +235,14 @@ export class BuildingAbilityComponent implements OnInit {
     this.editIndex = -1;
   }
   private resetForm() {
-    this.formOpend=false;
+    this.formOpend = false;
     this.formArray.clear();
     this.formArray.markAsUntouched();
     this.formArray.markAsPristine();
   }
   view($event: MouseEvent, record: BuildingAbility, index: number) {
     $event.preventDefault();
-    this.formOpend=true;
+    this.formOpend = true;
     this.editIndex = index;
     this.viewOnly = true;
     this.recordChanged$.next(record);
@@ -276,7 +265,7 @@ export class BuildingAbilityComponent implements OnInit {
   }
   edit($event: MouseEvent, record: BuildingAbility, index: number) {
     $event.preventDefault();
-    this.formOpend=true;
+    this.formOpend = true;
     if (this.readonly) {
       return;
     }
@@ -330,7 +319,6 @@ export class BuildingAbilityComponent implements OnInit {
       this.emailRef.nativeElement.value = '';
     }
     this.model!.filtrationMethod = recommendedWay;
-
   }
 
   get isEmailFiltrationMethod() {
@@ -371,7 +359,6 @@ export class BuildingAbilityComponent implements OnInit {
   }
 
   date = new Date();
-
 
   times = [
     {

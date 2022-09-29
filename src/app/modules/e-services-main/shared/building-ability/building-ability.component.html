@@ -87,6 +87,7 @@
               <div class="form-control" formControlName="suggestedActivityDateFrom" id="suggestedActivityDateFrom"
                 [options]="datepickerOptionsMap.suggestedActivityDateFrom"
                 (click)="dpsuggestedActivityDateFrom.toggleCalendar()"
+                [ngClass]="{'input-disabled': viewOnly}"
                 (inputFieldChanged)="onDateChange($event, 'suggestedActivityDateFrom', 'suggestedActivityDateTo')"
                 #dpsuggestedActivityDateFrom="angular-mydatepicker" angular-mydatepicker
                 validationClasses="suggestedActivityDateFrom">
@@ -103,6 +104,7 @@
               <div class="form-control" formControlName="suggestedActivityDateTo" id="suggestedActivityDateTo"
                 [options]="datepickerOptionsMap.suggestedActivityDateTo"
                 (click)="dpsuggestedActivityDateTo.toggleCalendar()"
+                [ngClass]="{'input-disabled': viewOnly}"
                 (inputFieldChanged)="onDateChange($event, 'suggestedActivityDateFrom', 'suggestedActivityDateTo')"
                 #dpsuggestedActivityDateTo="angular-mydatepicker" angular-mydatepicker
                 validationClasses="suggestedActivityDateTo">
@@ -317,14 +319,18 @@
     <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
       <div class="d-flex flex-row">
         <button (click)="delete($event, row, i)" class="icon-btn text-primary" [disabled]="readonly"
+        [hidden]="!canUpdate"
           [disabled]="!isClaimed || formOpend" tooltip="{{lang.map.btn_delete}}">
           <i class="mdi mdi-close-box"></i>
         </button>
         <button (click)="edit($event, row, i)" class="icon-btn text-primary" [disabled]="readonly"
+        [hidden]="!canUpdate"
           [disabled]="!isClaimed || formOpend" tooltip="{{lang.map.btn_edit}}">
           <i class="mdi mdi-pen"></i>
         </button>
-        <button (click)="view($event, row, i)" class="icon-btn text-primary" [disabled]="!isClaimed || formOpend"
+        <button (click)="view($event, row, i)"
+        [disabled]="formOpend"
+         class="icon-btn text-primary"
           tooltip="{{lang.map.view}}">
           <i class="mdi mdi-eye"></i>
         </button>

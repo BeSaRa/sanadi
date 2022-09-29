@@ -36,7 +36,6 @@ import {InternalDepartmentComponent} from './pages/internal-department/internal-
 import {InternalDepartmentPopupComponent,} from './popups/internal-department-popup/internal-department-popup.component';
 import {JobTitleComponent} from './pages/job-title/job-title.component';
 import {JobTitlePopupComponent} from './popups/job-title-popup/job-title-popup.component';
-import {DacOchaComponent} from './pages/dac-ocha/dac-ocha.component';
 import {DacOchaPopupComponent} from './popups/dac-ocha-popup/dac-ocha-popup.component';
 import {SubDacOchaPopupComponent} from './popups/sub-dac-ocha-popup/sub-dac-ocha-popup.component';
 import {UserTeamComponent} from './shared/user-team/user-team.component';
@@ -66,11 +65,11 @@ import {FieldAssessmentPopupComponent} from './popups/field-assessment-popup/fie
 import {FieldAssessmentComponent} from './pages/field-assessment/field-assessment.component';
 import {OrganizationUnitFieldComponent} from './pages/organization-unit-field/organization-unit-field.component';
 import {AdminLookupPopupComponent} from './popups/admin-lookup-popup/admin-lookup-popup.component';
-import {DacOchaNewComponent} from './pages/dac-ocha-new/dac-ocha-new.component';
 import {DacOchaNewPopupComponent} from './popups/dac-ocha-new-popup/dac-ocha-new-popup.component';
 import {VactionDatesComponent} from './pages/vaction-dates/vaction-dates.component';
 import {VacationDatesPopupComponent} from './popups/vacation-dates-popup/vacation-dates-popup.component';
 import {DacOchaListComponent} from './pages/dac-ocha-list/dac-ocha-list.component';
+import {AdminLookupComponent} from './pages/admin-lookup/admin-lookup.component';
 
 @NgModule({
   declarations: [
@@ -105,7 +104,6 @@ import {DacOchaListComponent} from './pages/dac-ocha-list/dac-ocha-list.componen
     InternalDepartmentPopupComponent,
     JobTitleComponent,
     JobTitlePopupComponent,
-    DacOchaComponent,
     DacOchaPopupComponent,
     SubDacOchaPopupComponent,
     UserTeamComponent,
@@ -135,11 +133,11 @@ import {DacOchaListComponent} from './pages/dac-ocha-list/dac-ocha-list.componen
     OrganizationUnitFieldPopupComponent,
     OrganizationUnitFieldComponent,
     AdminLookupPopupComponent,
-    DacOchaNewComponent,
     DacOchaNewPopupComponent,
     VactionDatesComponent,
     VacationDatesPopupComponent,
     DacOchaListComponent,
+    AdminLookupComponent,
   ],
   imports: [
     SharedModule,

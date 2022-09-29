@@ -281,6 +281,7 @@ EmploymentService
         if (userInteraction) {
           this.resetForm$.next();
           this.requestTypeField.setValue(requestTypeValue);
+          this.model!.requestType = requestTypeValue;
           this.model!.employeeInfoDTOs = [];
           this.employees = [];
         }

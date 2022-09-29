@@ -45,15 +45,15 @@ export class DacOchaNewService extends CrudWithDialogGenericService<AdminLookup>
   }
 
   load() {
-    return this.adminLookupService.loadComposite(AdminLookupTypeEnum.DAC_OCHA);
+    return this.adminLookupService.loadComposite(AdminLookupTypeEnum.WORK_FIELD);
   }
 
   loadComposite() {
-    return this.adminLookupService.loadComposite(AdminLookupTypeEnum.DAC_OCHA);
+    return this.adminLookupService.loadComposite(AdminLookupTypeEnum.WORK_FIELD);
   }
 
   loadAsLookups() {
-    return this.adminLookupService.loadAsLookups(AdminLookupTypeEnum.DAC_OCHA);
+    return this.adminLookupService.loadAsLookups(AdminLookupTypeEnum.WORK_FIELD);
   }
 
   loadByType(dacOchaTypeId: AdminLookupTypeEnum) {

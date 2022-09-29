@@ -11,6 +11,7 @@ import { dateSearchFields } from '@app/helpers/date-search-fields';
 import { infoSearchFields } from '@app/helpers/info-search-fields';
 import { normalSearchFields } from '@app/helpers/normal-search-fields';
 import { InterceptModel } from '@app/decorators/decorators/intercept-model';
+import { IMyDateModel } from 'angular-mydatepicker';
 
 const { send, receive } = new EffectiveCoordinationInterceptor();
 
@@ -22,7 +23,7 @@ export class EffectiveCoordinationCapabilities extends SearchableCloneable<Effec
   eventObjectives!: string;
   expectedOutcomes!: string;
   axes!: string;
-  eventStartDate!: string;
+  eventStartDate!: string | IMyDateModel;
   daysNumber!: number;
   hoursNumber!: number;
   organizationWay!: number;
