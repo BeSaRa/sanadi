@@ -76,9 +76,6 @@ export class AdminLookupComponent {
       this.activeLookupType = AdminLookupTypeEnum.OCHA;
       this.selectedWorkFieldTabIndex$.next(0);
     }
-    else if (this.activeLookupType === AdminLookupTypeEnum.ACTIVITY_TYPE) {
-      this.setLookupComponentMap()
-    }
     else {
       this.reloadCallback();
       this.filterRecords(this.filterControl.value);
