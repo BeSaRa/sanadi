@@ -85,9 +85,6 @@ export class ResearchAndStudiesComponent implements OnInit {
     this.listenToAdd();
     this.listenToRecordChange();
     this.listenToSave();
-    if(this.canUpdate === false){
-      this.columns= this.columns.slice(0,this.model.DisplayedColumns.length-1);
-    }
   }
 
   ngOnDestroy(): void {
@@ -109,7 +106,7 @@ export class ResearchAndStudiesComponent implements OnInit {
   }
   private listenToRecordChange() {
     this.recordChanged$.pipe(takeUntil(this.destroy$)).subscribe((record) => {
-      if(record)record.organizationId=this.orgId;
+      if(record && this.orgId)record.organizationId=this.orgId;
       this.currentRecord = record || undefined;
       this.updateForm(this.currentRecord);
     });

@@ -34,6 +34,7 @@ import { RealBeneficiariesComponent } from './shared/real-beneficiaries/real-ben
 import { OfficeServicesModule } from '../office-services/office-services.module';
 import { WorkAreasComponent } from './shared/work-areas/work-areas.component';
 import { CharityReportsComponent } from './shared/risk-reports/risk-reports.component';
+import { CoordinationWithOrgPopupComponent } from './popups/coordination-with-org-popup/coordination-with-org-popup.component';
 
 
 @NgModule({
@@ -65,6 +66,8 @@ import { CharityReportsComponent } from './shared/risk-reports/risk-reports.comp
     BylawsComponent,
     CharityReportsComponent,
     CharityDecisionsComponent,
+    CoordinationWithOrgPopupComponent
+
   ],
   imports: [
     CommonModule,

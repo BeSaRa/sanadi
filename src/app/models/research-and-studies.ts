@@ -11,6 +11,7 @@ import { dateSearchFields } from '@app/helpers/date-search-fields';
 import { infoSearchFields } from '@app/helpers/info-search-fields';
 import { normalSearchFields } from '@app/helpers/normal-search-fields';
 import { InterceptModel } from '@app/decorators/decorators/intercept-model';
+import { IMyDateModel } from 'angular-mydatepicker';
 
 const { send, receive } = new ResearchAndStudiesInterceptor();
 
@@ -25,8 +26,8 @@ export class ResearchAndStudies extends SearchableCloneable<ResearchAndStudies> 
   requiredRole!: string;
   researcherDefinition!: string;
   financialCost!: number;
-  searchStartDate!: string;
-  searchSubmissionDeadline!: string;
+  searchStartDate!: string | IMyDateModel;
+  searchSubmissionDeadline!: string | IMyDateModel;
   langService?: LangService;
 
   constructor() {

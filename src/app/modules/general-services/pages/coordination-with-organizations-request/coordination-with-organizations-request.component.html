@@ -28,7 +28,8 @@
         [template]="research_and_studies" [title]="lang.map.research_and_studies"
         [hasError]="getTabInvalidStatus('researchAndStudies')">
       </tab>
-
+      <tab *ngIf="!accordionView" [name]="tabsData.attachments.name" [hasError]="getTabInvalidStatus('attachments')"
+      [template]="attachmentsTab" [title]="lang.map.attachments"></tab>
     </tabs-list>
 
     <ng-template #basicInfoTabTemplate>
@@ -98,7 +99,8 @@
           <label class="form-label" asteriskIfRequired="description"
             for="description">{{lang.map.special_explanations}}</label>
           <textarea name="description" formControlName="description" validationClasses="description" id="description"
-            rows="4" class="form-control" [readOnly]="(readonly)"
+            rows="4" class="form-control" [readOnly]="!isEditAllowed()"
+            [disabled]="!isEditAllowed()"
             [maxlength]="customValidators.defaultLengths.EXPLANATIONS"></textarea>
           <app-field-error-message controlName="description"></app-field-error-message>
         </div>
@@ -119,7 +121,7 @@
     <ng-template #organization_officers>
       <organizaion-officer #organizationOfficersTap [list]="model?.organizaionOfficerList || []"
 
-        [organizationUsers]="organizationUsers" (readyEvent)="organizationOfficersTabStatus = $event"
+        [organizationUsers]="service.orgUsers" (readyEvent)="organizationOfficersTabStatus = $event"
         [canUpdate]="isCharityUser" [isClaimed]="model?.isClaimed()?? true" [currentUserOrgId]="currentUserOrgId">
       </organizaion-officer>
 
@@ -155,4 +157,10 @@
     </ng-template>
 
   </form>
+
+  <ng-template #attachmentsTab>
+    <attachments [disabled]="isAttachmentReadonly()" [caseId]="model?.id" [caseType]="model?.caseType"
+                 [service]="service.documentService"
+                 [load]="loadAttachments"></attachments>
+  </ng-template>
 </div>

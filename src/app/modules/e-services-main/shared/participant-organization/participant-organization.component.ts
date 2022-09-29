@@ -84,7 +84,6 @@ export class ParticipantOrganizationComponent implements OnInit {
     this.listenToRecordChange();
     this.listenToSave();
     this._setComponentReadiness('READY');
-
   }
 
   ngOnDestroy(): void {
@@ -223,5 +222,7 @@ export class ParticipantOrganizationComponent implements OnInit {
       this.lang.getCurrentLanguage().name === 'English' ? 'enName' : 'arName';
     this.organizationUnits.sort((a, b) => (a[propName] < b[propName] ? -1 : 1));
   }
-
+  calculateTotalParticipatingValue(){
+    return this.list.map(x=>Number(x.value??0)).reduce((a,b)=>a+b,0)
+  }
 }

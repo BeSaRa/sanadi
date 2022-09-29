@@ -1427,4 +1427,7 @@ export interface ILanguageKeys {
   send_to_npo_management: string;
   msg_confirm_reset_form: string;
   organization: string;
+  request_state:string;
+  participating_value:string;
+  total_coordination_request_value:string;
 }
