@@ -29,7 +29,7 @@
         {
           "key": "fullName",
           "type": "input",
-          "label": "full_name",
+          "label": "campaign_name",
           "validations": {
             "required": false
           },

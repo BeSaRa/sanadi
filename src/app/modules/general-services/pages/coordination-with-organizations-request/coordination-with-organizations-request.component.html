@@ -36,9 +36,9 @@
       <fieldset [disabled]="!isEditAllowed()">
 
         <div class="row mb-4">
-          <!-- Full Name -->
+          <!-- Campaign Name -->
           <div class="col-sm-12 col-md-6 mb-6 position-relative">
-            <label asteriskIfRequired="fullName" for="fullName" class="form-label">{{lang.map.full_name}}</label>
+            <label asteriskIfRequired="fullName" for="fullName" class="form-label">{{lang.map.campaign_name}}</label>
             <input id="fullName" validationClasses="fullName" [value]="model?.fullName" formControlName="fullName"
               trimInput class="form-control">
             <app-field-error-message controlName="fullName"></app-field-error-message>

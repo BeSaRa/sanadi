@@ -371,6 +371,10 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
     return this.serviceControl.value === CaseTypes.CONSULTATION;
   }
 
+  isCoordinationWithOrganizationSelected(): boolean {
+    return this.serviceControl.value === CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST;
+  }
+
   stringifyDefaultDates(field: FormlyFieldConfig): void {
     this.defaultDates = JSON.stringify(field.fieldGroup!.reduce((prev, item) => {
       return { ...prev, [(item.key as string)]: item.defaultValue };

@@ -77,7 +77,8 @@
             </td>
           </ng-container>
           <ng-container cdkColumnDef="fullName">
-            <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.full_name}}</th>
+            <th cdk-header-cell sortable-header
+                *cdkHeaderCellDef> {{isCoordinationWithOrganizationSelected() ? lang.map.campaign_name : lang.map.full_name}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.fullName}} </td>
           </ng-container>
           <ng-container cdkColumnDef="arName">
