@@ -3,6 +3,24 @@
     <div class="col-md-4 col-sm-12 mb-4 position-relative">
       <label
         class="form-label"
+        asteriskIfRequired="identificationNumber"
+        for="identificationNumber"
+        >{{ lang.map.identification_number }}</label
+      >
+      <input
+        id="identificationNumber"
+        validationClasses="identificationNumber"
+        formControlName="identificationNumber"
+        class="form-control"
+        [readonly]="readonly"
+      />
+      <app-field-error-message
+        controlName="identificationNumber"
+      ></app-field-error-message>
+    </div>
+    <div class="col-md-4 col-sm-12 mb-4 position-relative">
+      <label
+        class="form-label"
         asteriskIfRequired="officerFullName"
         for="officerFullName"
         >{{ lang.map.full_name }}</label

@@ -18,6 +18,7 @@ export class OrganizationOfficersComponent implements OnInit {
   selectedOfficerIndex!: number | null;
   organizationOfficerDisplayedColumns: string[] = [
     'fullName',
+    'identificationNumber',
     'email',
     'phoneNumber',
     'extraPhoneNumber',
@@ -29,7 +30,11 @@ export class OrganizationOfficersComponent implements OnInit {
     this.selectedOrganizationOfficers = list || [];
   }
   get list(): OrganizationOfficer[] {
-    return this.selectedOrganizationOfficers;
+    const officers = [...this.selectedOrganizationOfficers];
+    officers.forEach(e => {
+      e.identificationNumber = e.qid;
+    })
+    return officers;
   }
 
   constructor(
@@ -44,7 +49,12 @@ export class OrganizationOfficersComponent implements OnInit {
   }
   buildOfficerForm(): void {
     this.officerForm = this.fb.group({
-
+      identificationNumber: [
+        null,
+        [CustomValidators.required].concat(
+          CustomValidators.commonValidations.qId
+        ),
+      ],
       officerFullName: [
         null,
         [
@@ -87,9 +97,17 @@ export class OrganizationOfficersComponent implements OnInit {
     );
     officer.organizationId = this.employeeService.getOrgUnit()?.id!;
     if (!this.selectedOfficer) {
-      this.selectedOrganizationOfficers =
-        this.selectedOrganizationOfficers.concat(officer);
-      this.resetOfficerForm();
+      if (
+        this.selectedOrganizationOfficers.findIndex(
+          (e) => e.identificationNumber === officer.identificationNumber
+        ) === -1
+      ) {
+        this.selectedOrganizationOfficers =
+          this.selectedOrganizationOfficers.concat(officer);
+        this.resetOfficerForm();
+        return;
+      }
+      this.dialog.error(this.lang.map.selected_item_already_exists);
       return;
 
     }
@@ -129,6 +147,7 @@ export class OrganizationOfficersComponent implements OnInit {
   }
   mapOrganizationOfficerToForm(officer: OrganizationOfficer): any {
     return {
+      identificationNumber: officer.identificationNumber,
       officerFullName: officer.fullName,
       email: officer.email,
       officerPhone: officer.phone,
