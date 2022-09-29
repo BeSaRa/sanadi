@@ -107,6 +107,7 @@ export class CustomAttachmentPopupComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((document) => {
         const attachment = document as FileNetDocument;
+        attachment.attachmentTypeStatus =  this.selectedFile?.attachmentTypeStatus!;
         input.value = '';
         this.toast.success(this.lang.map.files_have_been_uploaded_successfully);
         this.attachments.splice(this.selectedIndex, 1, attachment.clone({attachmentTypeInfo: this.selectedFile?.attachmentTypeInfo}));
@@ -134,7 +135,8 @@ export class CustomAttachmentPopupComponent implements OnInit, OnDestroy {
             description: file.description,
             attachmentTypeId: file.attachmentTypeId,
             attachmentTypeInfo: file.attachmentTypeInfo,
-            required: file.required
+            required: file.required,
+            attachmentTypeStatus: file.attachmentTypeStatus
           }));
           this.attachments = this.attachments.slice();
         });
