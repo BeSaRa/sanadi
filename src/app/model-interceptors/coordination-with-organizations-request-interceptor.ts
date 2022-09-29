@@ -114,6 +114,12 @@ export class CoordinationWithOrganizationsRequestInterceptor
           new EffectiveCoordinationCapabilities().clone(item)
         );
       });
+    model.researchAndStudies =
+      model.researchAndStudies.map((item) => {
+        return researchAndStudiesInterceptor.receive(
+          new ResearchAndStudies().clone(item)
+        );
+      });
     return model;
   }
 }

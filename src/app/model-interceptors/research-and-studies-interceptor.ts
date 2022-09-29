@@ -1,9 +1,11 @@
 import { ResearchAndStudies } from './../models/research-and-studies';
-import { IModelInterceptor } from "@app/interfaces/i-model-interceptor";
+import { IModelInterceptor } from '@app/interfaces/i-model-interceptor';
 import { DateUtils } from '@app/helpers/date-utils';
 import { IMyDateModel } from 'angular-mydatepicker';
 
-export class ResearchAndStudiesInterceptor implements IModelInterceptor<ResearchAndStudies>{
+export class ResearchAndStudiesInterceptor
+  implements IModelInterceptor<ResearchAndStudies>
+{
   caseInterceptor?: IModelInterceptor<ResearchAndStudies> | undefined;
   send(model: Partial<ResearchAndStudies>): Partial<ResearchAndStudies> {
     delete model.langService;
@@ -18,9 +20,15 @@ export class ResearchAndStudiesInterceptor implements IModelInterceptor<Research
         model.searchSubmissionDeadline as unknown as IMyDateModel
       )?.toISOString());
 
-      return model;
+    return model;
   }
   receive(model: ResearchAndStudies): ResearchAndStudies {
+    model.searchStartDate = DateUtils.changeDateToDatepicker(
+      model.searchStartDate
+    );
+    model.searchSubmissionDeadline = DateUtils.changeDateToDatepicker(
+      model.searchSubmissionDeadline
+    );
     return model;
   }
 }

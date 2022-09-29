@@ -506,8 +506,8 @@ export interface ILanguageKeys {
   add_sub_dac_ocha: string;
   edit_dac_ocha: string;
   add_dac_ocha: string;
-  // work_field_classification: string;
   menu_dac_ocha: string;
+  menu_admin_lookups: string;
   lbl_add_job_title: string;
   lbl_edit_job_title: string;
   menu_job_title: string;
@@ -1431,4 +1431,7 @@ export interface ILanguageKeys {
   issuer: string;
   authrized_members: string;
   report_date: string;
+  request_state: string;
+  participating_value: string;
+  total_coordination_request_value: string;
 }

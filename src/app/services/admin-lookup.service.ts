@@ -61,10 +61,10 @@ export class AdminLookupService implements CrudServiceAdminLookupContract<AdminL
     return this.urlService.URLS.ADMIN_LOOKUP;
   }
 
-  private _getServiceURLByType(typeId: AdminLookupTypeEnum) {
+  public getServiceURLByType(typeId: AdminLookupTypeEnum) {
     let url: string = this._getServiceURL();
     switch (typeId) {
-      case AdminLookupTypeEnum.DAC_OCHA:
+      case AdminLookupTypeEnum.WORK_FIELD:
       case AdminLookupTypeEnum.DAC:
       case AdminLookupTypeEnum.OCHA:
         url += '/work-field';
@@ -108,7 +108,7 @@ export class AdminLookupService implements CrudServiceAdminLookupContract<AdminL
     if (!typeId) {
       return of([]);
     }
-    return this.http.get<AdminLookup[]>(this._getServiceURLByType(typeId) + '/composite')
+    return this.http.get<AdminLookup[]>(this.getServiceURLByType(typeId) + '/composite')
       .pipe((catchError((_) => of([]))));
   }
 
@@ -124,7 +124,7 @@ export class AdminLookupService implements CrudServiceAdminLookupContract<AdminL
     if (!typeId) {
       return of([]);
     }
-    return this.http.get<AdminLookup[]>(this._getServiceURLByType(typeId) + '/composite')
+    return this.http.get<AdminLookup[]>(this.getServiceURLByType(typeId) + '/composite')
       .pipe((catchError((_) => of([]))));
   }
 
@@ -140,7 +140,7 @@ export class AdminLookupService implements CrudServiceAdminLookupContract<AdminL
     if (!typeId) {
       return of([]);
     }
-    return this.http.get<AdminLookup[]>(this._getServiceURLByType(typeId) + '/lookup')
+    return this.http.get<AdminLookup[]>(this.getServiceURLByType(typeId) + '/lookup')
       .pipe((catchError((_) => of([]))));
   }
 
@@ -148,7 +148,7 @@ export class AdminLookupService implements CrudServiceAdminLookupContract<AdminL
     fallback: '$pagination'
   })
   private _paginate(options: Partial<PaginationContract>, typeId: AdminLookupTypeEnum): Observable<Pagination<AdminLookup[]>> {
-    return this.http.get<Pagination<AdminLookup[]>>(this._getServiceURLByType(typeId) + '/composite/pg', {
+    return this.http.get<Pagination<AdminLookup[]>>(this.getServiceURLByType(typeId) + '/composite/pg', {
       params: { ...options }
     });
   }
@@ -161,7 +161,7 @@ export class AdminLookupService implements CrudServiceAdminLookupContract<AdminL
     fallback: '$pagination'
   })
   private _paginateComposite(options: Partial<PaginationContract>, typeId: AdminLookupTypeEnum): Observable<Pagination<AdminLookup[]>> {
-    return this.http.get<Pagination<AdminLookup[]>>(this._getServiceURLByType(typeId) + '/composite/pg', {
+    return this.http.get<Pagination<AdminLookup[]>>(this.getServiceURLByType(typeId) + '/composite/pg', {
       params: { ...options }
     });
   }
@@ -178,7 +178,7 @@ export class AdminLookupService implements CrudServiceAdminLookupContract<AdminL
     if (!typeId) {
       return of([]);
     }
-    return this.http.get<AdminLookup[]>(this._getServiceURLByType(typeId) + '/type/' + typeId)
+    return this.http.get<AdminLookup[]>(this.getServiceURLByType(typeId) + '/type/' + typeId)
       .pipe((catchError((_) => of([]))));
   }
 
@@ -190,7 +190,7 @@ export class AdminLookupService implements CrudServiceAdminLookupContract<AdminL
     fallback: '$pagination'
   })
   private _loadWorkFieldsByTypePaging(options: Partial<PaginationContract>, typeId: AdminLookupTypeEnum): Observable<Pagination<AdminLookup[]>> {
-    return this.http.get<Pagination<AdminLookup[]>>(this._getServiceURLByType(typeId) + '/type/' + typeId, {
+    return this.http.get<Pagination<AdminLookup[]>>(this.getServiceURLByType(typeId) + '/type/' + typeId, {
       params: options
     }).pipe((catchError((_) => {
       return of({
@@ -220,7 +220,7 @@ export class AdminLookupService implements CrudServiceAdminLookupContract<AdminL
     if (!parentId) {
       return of([]);
     }
-    return this.http.get<AdminLookup[]>(this._getServiceURLByType(AdminLookupTypeEnum.DAC_OCHA) + '/sub/' + parentId)
+    return this.http.get<AdminLookup[]>(this.getServiceURLByType(AdminLookupTypeEnum.WORK_FIELD) + '/sub/' + parentId)
       .pipe((catchError((_) => of([]))));
   }
 
@@ -232,7 +232,7 @@ export class AdminLookupService implements CrudServiceAdminLookupContract<AdminL
     fallback: '$pagination'
   })
   private _loadWorkFieldsByParentPaging(options: Partial<PaginationContract>, parentId: number): Observable<Pagination<AdminLookup[]>> {
-    return this.http.get<Pagination<AdminLookup[]>>(this._getServiceURLByType(AdminLookupTypeEnum.DAC_OCHA) + '/sub/' + parentId, {
+    return this.http.get<Pagination<AdminLookup[]>>(this.getServiceURLByType(AdminLookupTypeEnum.WORK_FIELD) + '/sub/' + parentId, {
       params: options
     }).pipe((catchError((_) => {
       return of({
@@ -276,7 +276,7 @@ export class AdminLookupService implements CrudServiceAdminLookupContract<AdminL
     unwrap: 'rs'
   })
   create(@InterceptParam() model: AdminLookup, typeId: AdminLookupTypeEnum): Observable<AdminLookup> {
-    return this.http.post<AdminLookup>(this._getServiceURLByType(model.type) + '/full', model);
+    return this.http.post<AdminLookup>(this.getServiceURLByType(model.type) + '/full', model);
   }
 
   @CastResponse(() => AdminLookup, {
@@ -293,11 +293,11 @@ export class AdminLookupService implements CrudServiceAdminLookupContract<AdminL
   }
 
   delete(modelId: number, typeId: AdminLookupTypeEnum): Observable<boolean> {
-    return this.http.delete<boolean>(this._getServiceURLByType(typeId) + '/' + modelId);
+    return this.http.delete<boolean>(this.getServiceURLByType(typeId) + '/' + modelId);
   }
 
   deleteBulk(modelIds: any[], typeId: AdminLookupTypeEnum): Observable<Record<number, boolean>> {
-    return this.http.request<IDefaultResponse<Record<number, boolean>>>('delete', this._getServiceURLByType(typeId) + '/bulk', { body: modelIds })
+    return this.http.request<IDefaultResponse<Record<number, boolean>>>('delete', this.getServiceURLByType(typeId) + '/bulk', { body: modelIds })
       .pipe(
         map((response: any) => {
           return response.rs;
@@ -314,15 +314,15 @@ export class AdminLookupService implements CrudServiceAdminLookupContract<AdminL
   }
 
   private _activate(id: number, typeId: AdminLookupTypeEnum): Observable<any> {
-    return this.http.put<any>(this._getServiceURLByType(typeId) + '/' + id + '/activate', {});
+    return this.http.put<any>(this.getServiceURLByType(typeId) + '/' + id + '/activate', {});
   }
 
   private _deactivate(id: number, typeId: AdminLookupTypeEnum): Observable<any> {
-    return this.http.put<any>(this._getServiceURLByType(typeId) + '/' + id + '/de-activate', {});
+    return this.http.put<any>(this.getServiceURLByType(typeId) + '/' + id + '/de-activate', {});
   }
 
   private _activateBulk(recordIds: number[], typeId: AdminLookupTypeEnum) {
-    return this.http.put(this._getServiceURLByType(typeId) + '/bulk/activate', recordIds)
+    return this.http.put(this.getServiceURLByType(typeId) + '/bulk/activate', recordIds)
       .pipe(
         map((response: any) => {
           return response.rs;
@@ -331,7 +331,7 @@ export class AdminLookupService implements CrudServiceAdminLookupContract<AdminL
   }
 
   private _deactivateBulk(recordIds: number[], typeId: AdminLookupTypeEnum) {
-    return this.http.put(this._getServiceURLByType(typeId) + '/bulk/de-activate', recordIds)
+    return this.http.put(this.getServiceURLByType(typeId) + '/bulk/de-activate', recordIds)
       .pipe(
         map((response: any) => {
           return response.rs;

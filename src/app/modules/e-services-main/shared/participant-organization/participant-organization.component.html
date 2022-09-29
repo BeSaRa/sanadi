@@ -1,5 +1,15 @@
+<div class="row">
+  <div class="col-md-6 col-sm-12 mb-4 ">
+    <label class="form-label"
+           for="totalCost">{{lang.map.total_coordination_request_value}}</label>
+    <input  [readonly]="true"
+          [value]="calculateTotalParticipatingValue()"
+            id="totalCost"
+           class="form-control">
+  </div>
+</div>
 <div class="row" *ngIf="canAdd">
-  <div class="col-md-4 mb-4">
+  <div class="col-md-6 col-sm-12 mb-4">
     <label class="form-label" for="selectedOrg">{{lang.map.menu_organizations}}</label>
     <div style="display: flex">
       <ng-select #selectOrganizations appendTo="body" [clearable]="true" id="selectedOrg" ng-model="selectedOrg"
@@ -27,8 +37,11 @@
     <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.english_name}}</th>
     <td cdk-cell *cdkCellDef="let row"> {{row.englishName}} </td>
   </ng-container>
-  <ng-container cdkColumnDef="managerDecisionInfo">
-    <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.manager_decision}}</th>
+  <ng-container cdkColumnDef="value">
+    <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.participating_value}}</th>
+    <td cdk-cell *cdkCellDef="let row"> {{row.value }} </td>
+  </ng-container><ng-container cdkColumnDef="managerDecisionInfo">
+    <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.request_state}}</th>
     <td cdk-cell *cdkCellDef="let row"> {{row.managerDecisionInfo?.getName() }} </td>
   </ng-container>
 
