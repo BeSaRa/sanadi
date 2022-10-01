@@ -1,3 +1,4 @@
+import { ValidatorFn } from '@angular/forms';
 import { InterceptModel } from '@app/decorators/decorators/intercept-model';
 import { RealBeneficiaryInterceptor } from '@app/model-interceptors/real-beneficiary-interceptors';
 import { CustomValidators } from '@app/validators/custom-validators';
@@ -42,7 +43,7 @@ export class RealBeneficiary extends SearchableCloneable<RealBeneficiary> {
   idexpiryDate!: string | IMyDateModel;
   nationalityInfo!: AdminResult;
 
-  buildForm(controls = true, isQatari = false) {
+  buildForm(controls = true) {
     const {
       arabicName,
       englishName,
@@ -159,5 +160,19 @@ export class RealBeneficiary extends SearchableCloneable<RealBeneficiary> {
         : lastUpdateDate,
       passportExpiryDate: controls ? [passportExpiryDate, [CustomValidators.required]] : passportExpiryDate
     };
+  }
+  getPassportValidation(): ValidatorFn[][] {
+    return [
+      [CustomValidators.required, CustomValidators.maxLength(20)],
+      [CustomValidators.required],
+      [CustomValidators.required],
+    ];
+  }
+  getIdValidation(): ValidatorFn[][] {
+    return [
+      [CustomValidators.required, ...CustomValidators.commonValidations.qId],
+      [CustomValidators.required],
+      [CustomValidators.required],
+    ]
   }
 }

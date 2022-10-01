@@ -1435,4 +1435,6 @@ export interface ILanguageKeys {
   participating_value: string;
   total_coordination_request_value: string;
   meeting_members_count: string;
+  date_becoming_real_benefeciary: string;
+  date_of_last_update_real_benefeciary: string;
 }
