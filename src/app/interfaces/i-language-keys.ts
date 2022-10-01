@@ -1,4 +1,9 @@
 export interface ILanguageKeys {
+  exit_mechanism: string;
+  number_of_beneficiaries: string;
+  beneficiary_families_count: string;
+  indirect_beneficiary_count: string;
+  direct_beneficiary_count: string;
   you_have_to_add_at_least_one_meeting_point: string;
   member_task_terminated_successfully: string;
   general_notes_saved_successfully: string;

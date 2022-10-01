@@ -416,58 +416,30 @@
         </div>
         <div class="row">
           <div class="col-sm-12">
-            <h2 class="h6 text-primary">{{lang.map.direct_beneficiary_count_by_gender}}</h2>
+            <h2 class="h6 text-primary">{{lang.map.number_of_beneficiaries}}</h2>
             <hr>
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
-            <label class="form-label" asteriskIfRequired="directMaleBeneficiaries"
-                   for="directMaleBeneficiaries">{{lang.map.male_beneficiaries_number}}</label>
-            <input id="directMaleBeneficiaries" validationClasses="directMaleBeneficiaries"
+            <label class="form-label" asteriskIfRequired="directBeneficiaryNumber"
+                   for="directBeneficiaryNumber">{{lang.map.direct_beneficiary_count}}</label>
+            <input id="directBeneficiaryNumber" validationClasses="directBeneficiaryNumber"
                    onlyNumbers
-                   formControlName="directMaleBeneficiaries" class="form-control">
-            <app-field-error-message controlName="directMaleBeneficiaries"></app-field-error-message>
+                   formControlName="directBeneficiaryNumber" class="form-control">
+            <app-field-error-message controlName="directBeneficiaryNumber"></app-field-error-message>
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
-            <label class="form-label" asteriskIfRequired="directFemaleBeneficiaries"
-                   for="directFemaleBeneficiaries">{{lang.map.female_beneficiaries_number}}</label>
-            <input onlyNumbers id="directFemaleBeneficiaries" validationClasses="directFemaleBeneficiaries"
-                   formControlName="directFemaleBeneficiaries" class="form-control">
-            <app-field-error-message controlName="directFemaleBeneficiaries"></app-field-error-message>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-12">
-            <h2 class="h6 text-primary">{{lang.map.indirect_beneficiary_count_by_gender}}</h2>
-            <hr>
+            <label class="form-label" asteriskIfRequired="indirectBeneficiaryNumber"
+                   for="indirectBeneficiaryNumber">{{lang.map.indirect_beneficiary_count}}</label>
+            <input onlyNumbers id="indirectBeneficiaryNumber" validationClasses="indirectBeneficiaryNumber"
+                   formControlName="indirectBeneficiaryNumber" class="form-control">
+            <app-field-error-message controlName="indirectBeneficiaryNumber"></app-field-error-message>
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
-            <label class="form-label" asteriskIfRequired="indirectMaleBeneficiaries"
-                   for="indirectMaleBeneficiaries">{{lang.map.male_beneficiaries_number}}</label>
-            <input id="indirectMaleBeneficiaries" validationClasses="indirectMaleBeneficiaries"
-                   onlyNumbers
-                   formControlName="indirectMaleBeneficiaries" class="form-control">
-            <app-field-error-message controlName="indirectMaleBeneficiaries"></app-field-error-message>
-          </div>
-          <div class="col-md-4 col-sm-12 mb-4 position-relative">
-            <label class="form-label" asteriskIfRequired="indirectFemaleBeneficiaries"
-                   for="indirectFemaleBeneficiaries">{{lang.map.female_beneficiaries_number}}</label>
-            <input id="indirectFemaleBeneficiaries" validationClasses="indirectFemaleBeneficiaries"
-                   onlyNumbers
-                   formControlName="indirectFemaleBeneficiaries" class="form-control">
-            <app-field-error-message controlName="indirectFemaleBeneficiaries"></app-field-error-message>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-12">
-            <h2 class="h6 text-primary">{{lang.map.number_of_beneficiaries_with_special_needs}}</h2>
-            <hr>
-          </div>
-          <div class="col-md-4 col-sm-12 mb-4 position-relative">
-            <label class="form-label" asteriskIfRequired="handicappedBeneficiaryNumber"
-                   for="handicappedBeneficiaryNumber">{{lang.map.number_of_beneficiaries_with_special_needs}}</label>
-            <input id="handicappedBeneficiaryNumber" onlyNumbers validationClasses="handicappedBeneficiaryNumber"
-                   formControlName="handicappedBeneficiaryNumber" class="form-control">
-            <app-field-error-message controlName="handicappedBeneficiaryNumber"></app-field-error-message>
+            <label class="form-label" asteriskIfRequired="beneficiaryFamiliesNumber"
+                   for="beneficiaryFamiliesNumber">{{lang.map.beneficiary_families_count}}</label>
+            <input onlyNumbers id="beneficiaryFamiliesNumber" validationClasses="beneficiaryFamiliesNumber"
+                   formControlName="beneficiaryFamiliesNumber" class="form-control">
+            <app-field-error-message controlName="beneficiaryFamiliesNumber"></app-field-error-message>
           </div>
         </div>
         <div class="row">
@@ -571,6 +543,17 @@
                       validationClasses="sustainabilityItems" id="sustainabilityItems" rows="4"
                       class="form-control"></textarea>
             <app-field-error-message controlName="sustainabilityItems"></app-field-error-message>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12 mb-4 position-relative">
+            <label class="form-label" for="exitMechanism"
+                   asteriskIfRequired="exitMechanism">{{lang.map.exit_mechanism}}</label>
+            <textarea name="exitMechanism" formControlName="exitMechanism"
+                      [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
+                      validationClasses="exitMechanism" id="exitMechanism" rows="4"
+                      class="form-control"></textarea>
+            <app-field-error-message controlName="exitMechanism"></app-field-error-message>
           </div>
         </div>
       </fieldset>

@@ -46,12 +46,12 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
   outputs!: string;
   successItems!: string;
   sustainabilityItems!: string;
+  exitMechanism!: string;
   expectedResults!: string;
   expectedImpact!: string;
-  directMaleBeneficiaries: number = 0;
-  directFemaleBeneficiaries: number = 0;
-  indirectMaleBeneficiaries: number = 0;
-  indirectFemaleBeneficiaries: number = 0;
+  directBeneficiaryNumber: number = 0;
+  indirectBeneficiaryNumber: number = 0;
+  beneficiaryFamiliesNumber: number = 0;
   beneficiaries0to5: number = 0;
   beneficiaries5to18: number = 0;
   beneficiaries19to60: number = 0;
@@ -60,7 +60,6 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
   description!: string;
   year!: number;
   needsAssessment!: string;
-  handicappedBeneficiaryNumber: number = 0;
   templateSerial!: number;
   templateFullSerial!: string;
   templateId!: string;
@@ -184,30 +183,28 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
     const {
       needsAssessment,
       goals,
-      directFemaleBeneficiaries,
-      directMaleBeneficiaries,
-      indirectFemaleBeneficiaries,
-      indirectMaleBeneficiaries,
-      handicappedBeneficiaryNumber,
+      directBeneficiaryNumber,
+      indirectBeneficiaryNumber,
+      beneficiaryFamiliesNumber,
       successItems,
       outputs,
       expectedImpact,
       expectedResults,
-      sustainabilityItems
+      sustainabilityItems,
+      exitMechanism
     } = this;
     return {
       needsAssessment: controls ? [needsAssessment, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : needsAssessment,
       goals: controls ? [goals, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : goals,
-      handicappedBeneficiaryNumber: controls ? [handicappedBeneficiaryNumber, [CustomValidators.required, CustomValidators.maxLength(20)]] : handicappedBeneficiaryNumber,
-      directFemaleBeneficiaries: controls ? [directFemaleBeneficiaries, [CustomValidators.required, CustomValidators.maxLength(20)]] : directFemaleBeneficiaries,
-      directMaleBeneficiaries: controls ? [directMaleBeneficiaries, [CustomValidators.required, CustomValidators.maxLength(20)]] : directMaleBeneficiaries,
-      indirectFemaleBeneficiaries: controls ? [indirectFemaleBeneficiaries, [CustomValidators.required, CustomValidators.maxLength(20)]] : indirectFemaleBeneficiaries,
-      indirectMaleBeneficiaries: controls ? [indirectMaleBeneficiaries, [CustomValidators.required, CustomValidators.maxLength(20)]] : indirectMaleBeneficiaries,
+      directBeneficiaryNumber: controls ? [directBeneficiaryNumber, [CustomValidators.required, CustomValidators.maxLength(20)]] : directBeneficiaryNumber,
+      indirectBeneficiaryNumber: controls ? [indirectBeneficiaryNumber, [CustomValidators.required, CustomValidators.maxLength(20)]] : indirectBeneficiaryNumber,
+      beneficiaryFamiliesNumber: controls ? [beneficiaryFamiliesNumber, [CustomValidators.required, CustomValidators.maxLength(20)]] : beneficiaryFamiliesNumber,
       successItems: controls ? [successItems, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : successItems,
       outputs: controls ? [outputs, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : outputs,
       expectedImpact: controls ? [expectedImpact, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : expectedImpact,
       expectedResults: controls ? [expectedResults, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : expectedResults,
-      sustainabilityItems: controls ? [sustainabilityItems, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : sustainabilityItems
+      sustainabilityItems: controls ? [sustainabilityItems, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : sustainabilityItems,
+      exitMechanism: controls ? [exitMechanism, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : exitMechanism
     }
   }
 
