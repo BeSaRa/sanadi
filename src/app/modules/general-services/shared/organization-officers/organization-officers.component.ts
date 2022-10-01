@@ -30,11 +30,8 @@ export class OrganizationOfficersComponent implements OnInit {
     this.selectedOrganizationOfficers = list || [];
   }
   get list(): OrganizationOfficer[] {
-    const officers = [...this.selectedOrganizationOfficers];
-    officers.forEach(e => {
-      e.identificationNumber = e.qid;
-    })
-    return officers;
+
+    return this.selectedOrganizationOfficers;
   }
 
   constructor(

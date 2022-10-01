@@ -48,6 +48,7 @@ import { CountryService } from '@app/services/country.service';
 import { DialogService } from '@app/services/dialog.service';
 import { EmployeeService } from '@app/services/employee.service';
 import { FinalExternalOfficeApprovalService } from '@app/services/final-external-office-approval.service';
+import { FollowupDateService } from '@app/services/follow-up-date.service';
 import { GeneralAssociationMeetingAttendanceService } from '@app/services/general-association-meeting-attendance.service';
 import { GoveranceDocumentService } from '@app/services/governance-document.service';
 import { LangService } from '@app/services/lang.service';
@@ -133,6 +134,7 @@ export class CharityOrganizationUpdateComponent
     'meetingDate',
     'location',
     'meetingType',
+    'meetingCount',
   ]
   countries$ = this.countryService.loadAsLookups();
   externalOffices$?: Observable<FinalExternalOfficeApprovalResult[]>;
@@ -467,6 +469,7 @@ export class CharityOrganizationUpdateComponent
             this._buildMetaDataForm(requestType);
           } else if (requestType === this.RequestTypes.GOVERANCE_DOCUMENTS) {
             this._buildPrimaryLawForm(requestType);
+            this.tabs = this.tabs.filter(e => ((!e?.order) || e.order <= 2));
             this.tabs.sort((a, b) => a.order - b.order);
           } else {
             this._buildForm(requestType);
@@ -766,6 +769,7 @@ export class CharityOrganizationUpdateComponent
       incomingDecisionList = arr[1].list || [];
     }
     return new CharityOrganizationUpdate().clone({
+      ...this.model,
       ...metaDataValue,
       requestType: this.requestTypeForm.value,
       charityId: this.form.get('charityId')!.value,
@@ -829,6 +833,7 @@ export class CharityOrganizationUpdateComponent
   _updateForm(model: CharityOrganizationUpdate | undefined): void {
     if (!model) return;
     this.model = model;
+
     if (this.model.requestType) {
       this.requestTypeForm.patchValue(this.model.requestType);
       this.handleRequestTypeChange(this.model.requestType);

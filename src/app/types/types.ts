@@ -3,8 +3,10 @@ import { Localization } from '../models/localization';
 import { IAngularMyDpOptions } from 'angular-mydatepicker';
 import { AbstractControl } from '@angular/forms';
 import { ITabData } from '@app/interfaces/i-tab-data';
+import { ForeignCountriesProjects } from '@app/models/foreign-countries-projects';
+import { CharityOrganizationUpdate } from '@app/models/charity-organization-update';
 
-export type  LangType = Record<keyof ILanguageKeys, string>;
+export type LangType = Record<keyof ILanguageKeys, string>;
 export type LocalizationMap = Record<keyof ILanguageKeys, Localization>;
 
 export type customValidationTypes =
@@ -54,3 +56,5 @@ export type OnlyInfoProperty<T> = {
 
 export type GridName = string
 export type ItemId = string
+
+export type FollowUpDateModels = ForeignCountriesProjects | CharityOrganizationUpdate;

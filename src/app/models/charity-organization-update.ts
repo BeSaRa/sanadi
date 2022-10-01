@@ -1,14 +1,16 @@
-import { FormControl } from '@angular/forms';
 import { InterceptModel } from '@app/decorators/decorators/intercept-model';
 import { CaseTypes } from '@app/enums/case-types.enum';
+import { WFResponseType } from '@app/enums/wfresponse-type.enum';
 import { DateUtils } from '@app/helpers/date-utils';
+import { HasFollowUpDate } from '@app/interfaces/has-follow-up-date';
 import { CharityOrganizationUpdateInterceptor } from '@app/model-interceptors/charity-organization-update-interceptor';
 import { CharityOrganizationUpdateService } from '@app/services/charity-organization-update.service';
 import { FactoryService } from '@app/services/factory.service';
+import { FollowupDateService } from '@app/services/follow-up-date.service';
+import { DialogRef } from '@app/shared/models/dialog-ref';
 import { CustomValidators } from '@app/validators/custom-validators';
-import { IMyDate } from 'angular-mydatepicker';
+import { IMyDate, IMyDateModel } from 'angular-mydatepicker';
 import { AdminResult } from './admin-result';
-import { Beneficiary } from './beneficiary';
 import { Bylaw } from './bylaw';
 import { CaseModel } from './case-model';
 import { CharityBranch } from './charity-branch';
@@ -29,12 +31,14 @@ const interceptor = new CharityOrganizationUpdateInterceptor();
 export class CharityOrganizationUpdate extends CaseModel<
   CharityOrganizationUpdateService,
   CharityOrganizationUpdate
-> {
+> implements HasFollowUpDate {
   service: CharityOrganizationUpdateService = FactoryService.getService(
     'CharityOrganizationUpdateService'
   );
+  followUpService: FollowupDateService = FactoryService.getService('FollowupDateService')
   caseType: number = CaseTypes.CHARITY_ORGANIZATION_UPDATE;
 
+  followUpDate!: string | IMyDateModel;
   arabicName = '';
   englishName = '';
   shortName!: string;
@@ -296,5 +300,9 @@ export class CharityOrganizationUpdate extends CaseModel<
         ? [charityWorkArea, [CustomValidators.required]]
         : charityWorkArea,
     };
+  }
+
+  complete(): DialogRef {
+    return this.followUpService.finalApproveTask(this, WFResponseType.COMPLETE);
   }
 }

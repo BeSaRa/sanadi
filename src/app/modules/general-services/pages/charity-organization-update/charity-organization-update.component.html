@@ -623,8 +623,7 @@
           ></app-field-error-message> -->
         </div>
       </div>
-    </ng-template>
-    <ng-template #tabContent>
+      <hr />
       <foreign-aid-classifications
         #goverList
         *ngIf="!!charityWorkAreaField.value"
@@ -633,8 +632,7 @@
         [list]="model?.wFClassificationList || []"
       >
       </foreign-aid-classifications>
-    </ng-template>
-    <ng-template #tabContent>
+      <hr />
       <work-areas
         #goverList
         [readonly]="readonly"
@@ -642,6 +640,8 @@
       >
       </work-areas>
     </ng-template>
+    <ng-template #tabContent> </ng-template>
+    <ng-template #tabContent> </ng-template>
     <ng-template #tabContent>
       <bylaws #goverList [readonly]="readonly" [list]="model?.byLawList || []">
       </bylaws>
@@ -738,15 +738,15 @@
                   {{ row.meetingTypeInfo.getName() }}
                 </td>
               </ng-container>
-              <!-- <ng-container cdkColumnDef="establishmentDate">
+
+              <ng-container cdkColumnDef="meetingCount">
                 <th cdk-header-cell sortable-header *cdkHeaderCellDef>
-                  {{ lang.map.establishment_date }}
+                  {{ lang.map.meeting_members_count }}
                 </th>
                 <td cdk-cell *cdkCellDef="let row">
-                  {{ row.establishmentDate }}
+                  {{ row.internalMembersDTO.length }}
                 </td>
-              </ng-container> -->
-
+              </ng-container>
               <tr
                 cdk-header-row
                 *cdkHeaderRowDef="organizationMeetingsColumns"

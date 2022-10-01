@@ -1,14 +1,35 @@
+import { InterceptModel } from '@app/decorators/decorators/intercept-model';
+import { ForeignAidClassificationInterceptor } from '@app/model-interceptors/foreign-aid-classification-interceptor';
 import { CustomValidators } from '@app/validators/custom-validators';
+import { AdminResult } from './admin-result';
 import { SearchableCloneable } from './searchable-cloneable';
+
+const { send, receive } = new ForeignAidClassificationInterceptor();
+
+@InterceptModel({
+  receive,
+  send
+})
 
 export class ForeignAidClassification extends SearchableCloneable<ForeignAidClassification> {
   charityWorkArea!: number;
   aidClassification!: number;
+  aidClassificationInfo!: AdminResult;
   governanceDomain!: number;
+  governanceDomainInfo!: AdminResult;
+
   mainDACCategory!: number;
+  mainDACCategoryInfo!: AdminResult;
+
   mainUNOCHACategory!: number;
+  mainUNOCHACategoryInfo!: AdminResult;
+
   subDACCategory!: number;
+  subDACCategoryInfo!: AdminResult;
+
   subUNOCHACategory!: number;
+  subUNOCHACategoryInfo!: AdminResult;
+
   id!: number;
   objectDBId?: number;
   domain?: number;
@@ -23,6 +44,13 @@ export class ForeignAidClassification extends SearchableCloneable<ForeignAidClas
       mainUNOCHACategory,
       subDACCategory,
       subUNOCHACategory,
+      subDACCategoryInfo,
+      mainDACCategoryInfo,
+      governanceDomainInfo,
+      aidClassificationInfo,
+      subUNOCHACategoryInfo,
+      mainUNOCHACategoryInfo,
+
     } = this;
     return new ForeignAidClassification().clone({
       objectDBId: id,
@@ -33,6 +61,13 @@ export class ForeignAidClassification extends SearchableCloneable<ForeignAidClas
       mainUNOCHACategory,
       subDACCategory,
       subUNOCHACategory,
+      subDACCategoryInfo,
+      mainDACCategoryInfo,
+      governanceDomainInfo,
+      aidClassificationInfo,
+      subUNOCHACategoryInfo,
+      mainUNOCHACategoryInfo,
+
     });
   }
 }

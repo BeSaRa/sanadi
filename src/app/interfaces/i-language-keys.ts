@@ -1434,4 +1434,5 @@ export interface ILanguageKeys {
   request_state: string;
   participating_value: string;
   total_coordination_request_value: string;
+  meeting_members_count: string;
 }
