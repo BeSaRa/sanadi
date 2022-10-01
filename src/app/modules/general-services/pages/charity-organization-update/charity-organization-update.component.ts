@@ -37,6 +37,7 @@ import { CharityOrganizationUpdate } from '@app/models/charity-organization-upda
 import { CharityReport } from '@app/models/charity-report';
 import { FinalExternalOfficeApprovalResult } from '@app/models/final-external-office-approval-result';
 import { GeneralAssociationMeetingAttendance } from '@app/models/general-association-meeting-attendance';
+import { JobTitle } from '@app/models/job-title';
 import { OrgMember } from '@app/models/org-member';
 import { RealBeneficiary } from '@app/models/real-beneficiary';
 import { AdminLookupService } from '@app/services/admin-lookup.service';
@@ -51,6 +52,7 @@ import { FinalExternalOfficeApprovalService } from '@app/services/final-external
 import { FollowupDateService } from '@app/services/follow-up-date.service';
 import { GeneralAssociationMeetingAttendanceService } from '@app/services/general-association-meeting-attendance.service';
 import { GoveranceDocumentService } from '@app/services/governance-document.service';
+import { JobTitleService } from '@app/services/job-title.service';
 import { LangService } from '@app/services/lang.service';
 import { LookupService } from '@app/services/lookup.service';
 import { MemberRoleService } from '@app/services/member-role.service';
@@ -136,9 +138,10 @@ export class CharityOrganizationUpdateComponent
     'meetingType',
     'meetingCount',
   ]
-  countries$ = this.countryService.loadAsLookups();
+  countries$ = this.countryService.loadAsLookups().pipe(share());
   externalOffices$?: Observable<FinalExternalOfficeApprovalResult[]>;
   organizationMeetings$?: Observable<GeneralAssociationMeetingAttendance[]>;
+  jobTitles!: JobTitle[];
   @ViewChildren('tabContent', { read: TemplateRef })
   tabsTemplates!: QueryList<TemplateRef<any>>;
 
@@ -207,6 +210,12 @@ export class CharityOrganizationUpdateComponent
     return [];
   }
 
+  private _loadJobTitles() {
+    this.jobTitleService.loadAsLookups().pipe(share()).subscribe(e => {
+      this.jobTitles = [...e];
+    })
+  }
+
   constructor(
     private meetingService: GeneralAssociationMeetingAttendanceService,
     private dialog: DialogService,
@@ -225,9 +234,11 @@ export class CharityOrganizationUpdateComponent
     private charityReportService: CharityReportService,
     private charityDecisionService: CharityDecisionService,
     private employeeService: EmployeeService,
-    private goveranceDocumentService: GoveranceDocumentService
+    private goveranceDocumentService: GoveranceDocumentService,
+    private jobTitleService: JobTitleService
   ) {
     super();
+    this._loadJobTitles();
   }
 
   ngAfterViewInit(): void {

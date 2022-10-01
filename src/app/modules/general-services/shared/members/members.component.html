@@ -28,7 +28,7 @@
             *ngFor="
               let type of control.load$ ? (control.load$ | async) : control.load
             "
-            [value]="type.id"
+            [value]="type[control.dropdownValue!]"
             >{{ type.getName() }}</ng-option
           >
         </ng-select>

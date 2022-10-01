@@ -228,7 +228,7 @@ export class CharityOrganizationUpdate extends CaseModel<
           ],
         ]
         : email,
-      website: controls ? [website, [CustomValidators.required, CustomValidators.maxLength(200)]] : website,
+      website: controls ? [website, [CustomValidators.required, CustomValidators.maxLength(200), CustomValidators.pattern('WEBSITE')]] : website,
       zoneNumber: controls
         ? [
           zoneNumber,
@@ -274,10 +274,10 @@ export class CharityOrganizationUpdate extends CaseModel<
         ]
         : address,
       facebook: controls ? [facebook, [CustomValidators.pattern('WEBSITE')]] : facebook,
-      twitter: controls ? [twitter] : twitter,
-      instagram: controls ? [instagram] : instagram,
-      youTube: controls ? [youTube] : youTube,
-      snapChat: controls ? [snapChat] : snapChat,
+      twitter: controls ? [twitter, [CustomValidators.pattern('WEBSITE')]] : twitter,
+      instagram: controls ? [instagram, [CustomValidators.pattern('WEBSITE')]] : instagram,
+      youTube: controls ? [youTube, [CustomValidators.pattern('WEBSITE')]] : youTube,
+      snapChat: controls ? [snapChat, [CustomValidators.pattern('WEBSITE')]] : snapChat,
     };
   }
   buildPrimaryLawForm(controls = true) {

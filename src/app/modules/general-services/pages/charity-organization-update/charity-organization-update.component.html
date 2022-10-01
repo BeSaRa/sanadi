@@ -433,6 +433,8 @@
     <ng-template #tabContent>
       <!-- founding members -->
       <members
+        [jobTitles]="jobTitles"
+        *ngIf="!!jobTitles"
         #adminList
         [list]="model?.founderMemberList || []"
         pageTitle="founding_members"
@@ -442,6 +444,8 @@
     <ng-template #tabContent>
       <!-- General Assembly Members  -->
       <members
+        [jobTitles]="jobTitles"
+        *ngIf="!!jobTitles"
         #adminList
         [list]="model?.generalAssemblyMemberList || []"
         pageTitle="general_assembly_members"
@@ -451,6 +455,8 @@
     <ng-template #tabContent>
       <!-- . Board Members  -->
       <members
+        [jobTitles]="jobTitles"
+        *ngIf="!!jobTitles"
         #adminList
         [list]="model?.boardMemberList || []"
         pageTitle="board_members"
@@ -460,6 +466,8 @@
     <ng-template #tabContent>
       <!-- . Current Executive Management  -->
       <members
+        [jobTitles]="jobTitles"
+        *ngIf="!!jobTitles"
         #adminList
         pageTitle="executive_managers"
         [list]="model?.currentExecutiveManagementList || []"
@@ -470,6 +478,8 @@
     <ng-template #tabContent>
       <!-- . Current Executive Management  -->
       <members
+        [jobTitles]="jobTitles"
+        *ngIf="!!jobTitles"
         #adminList
         [list]="model?.authorizedSignatoryMemberList || []"
         pageTitle="executive_managers"

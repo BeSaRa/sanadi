@@ -1,16 +1,15 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { Component, Input } from '@angular/core';
+import { UntypedFormBuilder } from '@angular/forms';
 import { ListModelComponent } from '@app/generics/ListModel-component';
 import { DateUtils } from '@app/helpers/date-utils';
 import { ControlWrapper } from '@app/interfaces/i-control-wrapper';
 import { ILanguageKeys } from '@app/interfaces/i-language-keys';
+import { AdminResult } from '@app/models/admin-result';
+import { JobTitle } from '@app/models/job-title';
 import { OrgMember } from '@app/models/org-member';
-import { JobTitleService } from '@app/services/job-title.service';
 import { LangService } from '@app/services/lang.service';
 import { ToastService } from '@app/services/toast.service';
 import { DatepickerOptionsMap } from '@app/types/types';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'members',
@@ -24,7 +23,8 @@ export class MembersComponent extends ListModelComponent<OrgMember> {
   }
   @Input() extended = false;
   @Input() pageTitle!: keyof ILanguageKeys;
-  controls = this.getFormControls();
+  @Input() jobTitles: JobTitle[] = [];
+  controls!: ControlWrapper[];
   columns = ['fullName', 'identificationNumber', 'jobTitleId'];
   datepickerOptionsMap: DatepickerOptionsMap = {
     joinDate: DateUtils.getDatepickerOptions({ disablePeriod: 'future' }),
@@ -35,12 +35,10 @@ export class MembersComponent extends ListModelComponent<OrgMember> {
   constructor(
     private fb: UntypedFormBuilder,
     public lang: LangService,
-    private jobTitleService: JobTitleService,
     private toastr: ToastService
   ) {
     super(OrgMember);
   }
-
   getFormControls(): ControlWrapper[] {
     return [
       {
@@ -56,12 +54,14 @@ export class MembersComponent extends ListModelComponent<OrgMember> {
       {
         controlName: 'jobTitleId',
         label: this.lang.map.job_title,
-        load$: this.jobTitleService.loadAsLookups(),
+        load: this.jobTitles,
+        dropdownValue: 'id',
         type: 'dropdown',
       },
     ];
   }
   protected _initComponent(): void {
+    this.controls = this.getFormControls();
     if (this.extended) {
       this.form = this.fb.group(this.model.bulildExtendedForm());
     } else {
@@ -99,6 +99,9 @@ export class MembersComponent extends ListModelComponent<OrgMember> {
       this.toastr.error(this.lang.map.msg_duplicated_item);
       return null;
     }
+
+    const jobTitle = this.jobTitles.find(e => e.id === row.jobTitleId);
+    row.jobTitleInfo = AdminResult.createInstance({ ...jobTitle });
     (row.joinDate && (row.joinDate = DateUtils.getDateStringFromDate(row.joinDate)));
     return row;
   }
