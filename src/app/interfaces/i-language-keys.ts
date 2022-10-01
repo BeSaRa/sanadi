@@ -1437,4 +1437,7 @@ export interface ILanguageKeys {
   meeting_members_count: string;
   date_becoming_real_benefeciary: string;
   date_of_last_update_real_benefeciary: string;
+  internal_branches: string;
+  internal_branches_officers: string;
+  err_invalid_website: string;
 }

@@ -115,7 +115,7 @@ export class CharityOrganizationUpdate extends CaseModel<
       establishmentID,
     } = this;
     return {
-      publishDate,
+      publishDate: controls ? [publishDate] : publishDate,
       arabicName: controls ? [arabicName] : arabicName,
       englishName: controls ? [englishName] : englishName,
       shortName: controls
@@ -171,8 +171,9 @@ export class CharityOrganizationUpdate extends CaseModel<
         ? [
           establishmentID,
           [
+            CustomValidators.required,
             CustomValidators.maxLength(
-              300
+              20
             ),
           ],
         ]
@@ -272,7 +273,7 @@ export class CharityOrganizationUpdate extends CaseModel<
           ],
         ]
         : address,
-      facebook: controls ? [facebook] : facebook,
+      facebook: controls ? [facebook, [CustomValidators.pattern('WEBSITE')]] : facebook,
       twitter: controls ? [twitter] : twitter,
       instagram: controls ? [instagram] : instagram,
       youTube: controls ? [youTube] : youTube,

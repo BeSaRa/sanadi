@@ -271,7 +271,7 @@ export class CharityOrganizationUpdateComponent
         {
           name: 'banchTab',
           template: tabsTemplates[5],
-          title: this.lang.map.lbl_branch,
+          title: this.lang.map.internal_branches,
           validStatus: () => true,
           category: CharityRequestType.META_DATA,
         },

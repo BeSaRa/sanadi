@@ -131,6 +131,7 @@ const errorKeys: IKeyValue = {
   PASSPORT: { key: 'err_invalid_passport_format', replaceValues: null },
   EMAIL: { key: 'err_invalid_email', replaceValues: null },
   PHONE_NUMBER: { key: 'err_invalid_phone_number', replaceValues: null },
+  WEBSITE: { key: 'err_invalid_website', replaceValues: null },
   keyExists: { key: 'localization_key_already_exists', replaceValues: null },
   atLeastOneRequired: {
     key: 'at_least_one_field_should_be_filled',
