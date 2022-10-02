@@ -31,6 +31,7 @@ export class CharityOrganizationUpdateService extends BaseGenericEService<Charit
   caseStatusIconMap: Map<number, string> = new Map();
   searchColumns: string[] = ['fullSerial', 'createdOn', 'caseStatus', 'subject', 'ouInfo'];
   constructor(
+    // For complete the request with a follow up
     private _: FollowupDateService,
     public http: HttpClient,
     public cfr: ComponentFactoryResolver,

@@ -32,6 +32,7 @@ export class ForeignCountriesProjectsService extends BaseGenericEService<Foreign
   searchColumns: string[] = ['fullSerial', 'requestTypeInfo', 'caseStatus', 'creatorInfo', 'createdOn', 'subject'];
 
   constructor(
+    // For complete the request with a follow up
     private _: FollowupDateService,
     public http: HttpClient,
     public dialog: DialogService,
