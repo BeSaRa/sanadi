@@ -306,4 +306,7 @@ export class CharityOrganizationUpdate extends CaseModel<
   complete(): DialogRef {
     return this.followUpService.finalApproveTask(this, WFResponseType.COMPLETE);
   }
+  validateReject(): DialogRef {
+    return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.VALIDATE_REJECT, false, this, 'reject_reason');
+  }
 }
