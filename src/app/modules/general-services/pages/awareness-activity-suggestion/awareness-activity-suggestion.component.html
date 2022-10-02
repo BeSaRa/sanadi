@@ -90,6 +90,7 @@
     <h5 class="text-primary">{{ lang.map.lbl_activity_data }}</h5>
     <form [formGroup]="activity" autocomplete="off">
       <div class="row">
+        <!-- agreementWithRACA -->
         <!-- organization -->
         <div class="col-sm-6 col-md-4 mb-4 position-relative">
           <label for="organization" class="form-label">{{
@@ -133,7 +134,7 @@
               formControlName="expectedDate"
               id="expectedDate"
               [options]="datepickerOptionsMap.expectedDate"
-              (click)="readonly && openDateMenu(dpexpectedDate)"
+              (click)="!readonly && openDateMenu(dpexpectedDate)"
               #dpexpectedDate="angular-mydatepicker"
               angular-mydatepicker
               validationClasses="expectedDate"
@@ -158,90 +159,6 @@
             validationClasses="subject" [readonly]="readonly" formControlName="subject"
             trimInput class="form-control"></textarea>
           <app-field-error-message controlName="subject"></app-field-error-message>
-        </div>
-      </div>
-    </form>
-  </ng-template>
-  <ng-template #contactOfficerTabTemplate>
-    <form [formGroup]="contactOfficer" autocomplete="off">
-      <div class="row">
-        <!-- agreementWithRACA -->
-        <!-- contact QID -->
-        <div class="col-sm-6 col-md-4 mb-4 position-relative">
-          <label asteriskIfRequired="contactQID" for="contactQID" class="form-label">{{
-            lang.map.identification_number
-          }}</label>
-          <input
-            id="contactQID"
-            formControlName="contactQID"
-            [readonly]="readonly"
-            validationClasses="contactQID"
-            class="form-control"
-          />
-          <app-field-error-message
-            controlName="contactQID"
-          ></app-field-error-message>
-        </div>
-        <!-- contact Name -->
-        <div class="col-sm-6 col-md-4 mb-4 position-relative">
-          <label asteriskIfRequired="contactName" for="contactName" class="form-label">{{
-            lang.map.full_name
-          }}</label>
-          <input
-            id="contactName"
-            formControlName="contactName"
-            [readonly]="readonly"
-            validationClasses="contactName"
-            class="form-control"
-          />
-          <app-field-error-message
-            controlName="contactName"
-          ></app-field-error-message>
-        </div>
-        <!-- contactEmail -->
-        <div class="col-sm-6 col-md-4 mb-4 position-relative">
-          <label class="form-label" asteriskIfRequired="contactEmail" for="contactEmail">{{lang.map.lbl_email}}</label>
-          <input validationClasses="contactEmail" [readonly]="readonly" formControlName="contactEmail" type="text" id="contactEmail" class="form-control">
-          <app-field-error-message controlName="contactEmail"></app-field-error-message>
-        </div>
-        <!-- contact Phone -->
-        <div class="col-sm-12 col-md-6 mb-4 position-relative">
-          <label asteriskIfRequired="contactPhone" for="contactPhone" class="form-label">{{
-            lang.map.lbl_phone
-          }}</label>
-          <input
-            type="text"
-            validationClasses="contactPhone"
-            formControlName="contactPhone"
-            [readonly]="readonly"
-            trimInput
-            class="form-control"
-            id="contactPhone"
-          />
-          <app-field-error-message
-            controlName="contactPhone"
-          ></app-field-error-message>
-        </div>
-        <!-- contact Extra Phone -->
-        <div class="col-sm-12 col-md-6 mb-4 position-relative">
-          <label
-            asteriskIfRequired="contactExtraPhone"
-            for="contactExtraPhone"
-            class="form-label"
-            >{{ lang.map.lbl_extra_phone_number }}</label
-          >
-          <input
-            type="text"
-            validationClasses="contactExtraPhone"
-            formControlName="contactExtraPhone"
-            [readonly]="readonly"
-            trimInput
-            class="form-control"
-            id="contactExtraPhone"
-          />
-          <app-field-error-message
-            controlName="contactExtraPhone"
-          ></app-field-error-message>
         </div>
       </div>
     </form>
@@ -361,6 +278,94 @@
           ></textarea>
           <app-field-error-message
             controlName="address"
+          ></app-field-error-message>
+        </div>
+      </div>
+    </form>
+  </ng-template>
+  <ng-template #contactOfficerTabTemplate>
+    <form [formGroup]="contactOfficer" autocomplete="off">
+      <div class="row">
+        <!-- contact QID -->
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="contactQID" for="contactQID" class="form-label">{{
+            lang.map.identification_number
+          }}</label>
+          <div class="input-group">
+            <input
+              id="contactQID"
+              formControlName="contactQID"
+              [readonly]="readonly || isSameAsApplican"
+              validationClasses="contactQID"
+              class="form-control"
+            />
+            <button *ngIf="!readonly" [tooltip]="lang.map.same_as_applicant" (click)="toggleContactOffecorInfo($event)" type="button" class="input-group-text bg-primary text-white">
+              <i class="mdi mdi-equal"></i>
+            </button>
+          </div>
+          <app-field-error-message
+            controlName="contactQID"
+          ></app-field-error-message>
+        </div>
+        <!-- contact Name -->
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="contactName" for="contactName" class="form-label">{{
+            lang.map.full_name
+          }}</label>
+          <input
+            id="contactName"
+            formControlName="contactName"
+            [readonly]="readonly || isSameAsApplican"
+            validationClasses="contactName"
+            class="form-control"
+          />
+          <app-field-error-message
+            controlName="contactName"
+          ></app-field-error-message>
+        </div>
+        <!-- contactEmail -->
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="contactEmail" for="contactEmail">{{lang.map.lbl_email}}</label>
+          <input validationClasses="contactEmail" [readonly]="readonly || isSameAsApplican" formControlName="contactEmail" type="text" id="contactEmail" class="form-control">
+          <app-field-error-message controlName="contactEmail"></app-field-error-message>
+        </div>
+        <!-- contact Phone -->
+        <div class="col-sm-12 col-md-6 mb-4 position-relative">
+          <label asteriskIfRequired="contactPhone" for="contactPhone" class="form-label">{{
+            lang.map.lbl_phone
+          }}</label>
+          <input
+            type="text"
+            validationClasses="contactPhone"
+            formControlName="contactPhone"
+            [readonly]="readonly || isSameAsApplican"
+            trimInput
+            class="form-control"
+            id="contactPhone"
+          />
+          <app-field-error-message
+            controlName="contactPhone"
+          ></app-field-error-message>
+        </div>
+        <!-- contact Extra Phone -->
+        <div class="col-sm-12 col-md-6 mb-4 position-relative">
+          <label
+            asteriskIfRequired="contactExtraPhone"
+            for="contactExtraPhone"
+            class="form-label"
+            >{{ lang.map.lbl_extra_phone_number }}</label
+          >
+          <input
+            type="text"
+            validationClasses="contactExtraPhone"
+            formControlName="contactExtraPhone"
+            [readonly]="readonly || isSameAsApplican"
+            trimInput
+            class="form-control"
+            id="contactExtraPhone"
+          />
+          <app-field-error-message
+            controlName="contactExtraPhone"
           ></app-field-error-message>
         </div>
       </div>

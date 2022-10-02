@@ -1435,4 +1435,6 @@ export interface ILanguageKeys {
   request_state:string;
   participating_value:string;
   total_coordination_request_value:string;
+  approval_awareness_activity_suggestion:string;
+  same_as_applicant: string;
 }

@@ -1,3 +1,5 @@
+import { SearchAwarenessActivitySuggestionCriteria } from './../models/search-awareness-activity-suggestion-criteria';
+import { AwarenessActivitySuggestion } from './../models/awareness-activity-suggestion';
 import { TransferringIndividualFundsAbroad } from '@app/models/transferring-individual-funds-abroad';
 import { ExternalOrgAffiliation } from '@app/models/external-org-affiliation';
 import { ExternalOrgAffiliationResult } from './../models/external-org-affiliation-result';
@@ -197,6 +199,16 @@ export class LicenseService {
 
   externalOrgAffiliationSearch(criteria: Partial<ExternalOrgAffiliationSearchCriteria>): Observable<ExternalOrgAffiliationResult[]> {
     return this._externalOrgAffiliationSearchCriteria(criteria);
+  }
+
+  @CastResponse(() => ExternalOrgAffiliationResult)
+  private _awarenessActivitySuggestionSearchCriteria(criteria: Partial<SearchAwarenessActivitySuggestionCriteria>): Observable<AwarenessActivitySuggestion[]> {
+    const orgId = { organizationId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id : undefined }
+    return this.http.post<AwarenessActivitySuggestion[]>(this.getServiceUrlByCaseType(CaseTypes.AWARENESS_ACTIVITY_SUGGESTION) + '/license/search', { ...criteria, ...orgId })
+  }
+
+  awarenessActivitySuggestionSearch(criteria: Partial<SearchAwarenessActivitySuggestionCriteria>): Observable<AwarenessActivitySuggestion[]> {
+    return this._awarenessActivitySuggestionSearchCriteria(criteria);
   }
 
   @CastResponse(() => ForeignCountriesProjectsResult)
@@ -509,7 +521,7 @@ export class LicenseService {
     return of(undefined);
   }
 
-  openSelectLicenseDialog<T>(licenses: (UrgentInterventionAnnouncementResult[] | InitialExternalOfficeApprovalResult[] | PartnerApproval[] | ExternalOrgAffiliationResult[] | FinalExternalOfficeApprovalResult[] | InternalProjectLicenseResult[] | UrgentInterventionLicenseResult[] | T[]), caseRecord: any | undefined, select = true, displayedColumns: string[] = [], oldFullSerial?: string, isNotLicense: boolean = false): DialogRef {
+  openSelectLicenseDialog<T>(licenses: (AwarenessActivitySuggestion[] | UrgentInterventionAnnouncementResult[] | InitialExternalOfficeApprovalResult[] | PartnerApproval[] | ExternalOrgAffiliationResult[] | FinalExternalOfficeApprovalResult[] | InternalProjectLicenseResult[] | UrgentInterventionLicenseResult[] | T[]), caseRecord: any | undefined, select = true, displayedColumns: string[] = [], oldFullSerial?: string, isNotLicense: boolean = false): DialogRef {
     return this.dialog.show(SelectLicensePopupComponent, {
       licenses,
       select,

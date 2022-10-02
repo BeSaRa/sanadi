@@ -1,3 +1,5 @@
+import { LicenseService } from '@app/services/license.service';
+import { SearchAwarenessActivitySuggestionCriteria } from './../../../../models/search-awareness-activity-suggestion-criteria';
 import { Lookup } from '@app/models/lookup';
 import { DatepickerOptionsMap } from './../../../../types/types';
 import { DateUtils } from './../../../../helpers/date-utils';
@@ -36,7 +38,7 @@ AwarenessActivitySuggestionService
   collectionRequestType: Lookup[] = this.lookupService.listByCategory.CollectionRequestType.sort((a, b) => a.lookupKey - b.lookupKey)
   licenseSearch$: Subject<string> = new Subject<string>();
   form!: UntypedFormGroup;
-
+  isSameAsApplican = false;
   tabsData: IKeyValue = {
     basicInfo: {
       name: "basicInfoTab",
@@ -79,7 +81,8 @@ AwarenessActivitySuggestionService
     private toast: ToastService,
     private cd: ChangeDetectorRef,
     private dialog: DialogService,
-    private employeeService: EmployeeService
+    private employeeService: EmployeeService,
+    private licenseService: LicenseService
   ) {
     super()
   }
@@ -132,6 +135,17 @@ AwarenessActivitySuggestionService
       dataOfApplicant: this.fb.group(model.dataOfApplicant),
       contactOfficer: this.fb.group(model.contactOfficer),
       activity: this.fb.group(model.activity),
+    });
+    this.dataOfApplicant.valueChanges.subscribe(data => {
+      if (this.isSameAsApplican) {
+        this.contactOfficer.patchValue({
+          contactQID: data.identificationNumber,
+          contactName: data.enName,
+          contactEmail: data.email,
+          contactPhone: data.phone,
+          contactExtraPhone: data.mobileNo,
+        })
+      }
     })
   }
   _afterBuildForm(): void {
@@ -209,7 +223,6 @@ AwarenessActivitySuggestionService
     }
     this.model = model;
     const formModel = model.formBuilder();
-    console.log(formModel)
     this.form.patchValue({
       requestType: formModel.requestType,
       description: formModel.description,
@@ -281,54 +294,65 @@ AwarenessActivitySuggestionService
     }
     this.licenseSearch$.next(value);
   }
+  toggleContactOffecorInfo(e: any) {
+    this.isSameAsApplican = !this.isSameAsApplican
+    if (this.isSameAsApplican) {
+      this.contactOfficer.patchValue({
+        contactQID: this.dataOfApplicant.value.identificationNumber,
+        contactName: this.dataOfApplicant.value.enName,
+        contactEmail: this.dataOfApplicant.value.email,
+        contactPhone: this.dataOfApplicant.value.phone,
+        contactExtraPhone: this.dataOfApplicant.value.mobileNo,
+      })
+    }
+  }
+  loadLicencesByCriteria(criteria: (Partial<SearchAwarenessActivitySuggestionCriteria>)): (Observable<AwarenessActivitySuggestion[]>) {
+    return this.service.licenseSearch(criteria as Partial<SearchAwarenessActivitySuggestionCriteria>);
+  }
   listenToLicenseSearch(): void {
-    // this.licenseSearch$
-    // .pipe(exhaustMap(oldLicenseFullSerial => {
-    // return this.loadLicencesByCriteria({
-    //   fullSerial: oldLicenseFullSerial,
-    //   licenseStatus: 1
-    // }).pipe(catchError(() => of([])));
-    // }))
-    // .pipe(
-    //   // display message in case there is no returned license
-    //   tap(list => {
-    //     if (!list.length) {
-    //       this.dialog.info(this.lang.map.no_result_for_your_search_criteria);
-    //     }
-    //   }),
-    //   // allow only the collection if it has value
-    //   filter(result => !!result.length),
-    //   // switch to the dialog ref to use it later and catch the user response
-    //   switchMap(licenses => {
-    //     if (licenses.length === 1) {
-    //       return this.licenseService.validateLicenseByRequestType(this.model!.getCaseType(), this.requestTypeField.value, licenses[0].id)
-    //         .pipe(
-    //           map((data) => {
-    //             if (!data) {
-    //               return of(null);
-    //             }
-    //             return {selected: licenses[0], details: data};
-    //           }),
-    //           catchError(() => {
-    //             return of(null);
-    //           })
-    //         );
-    //     } else {
-    //       const displayColumns = this.service.selectLicenseDisplayColumns;
-    //       return this.licenseService.openSelectLicenseDialog(licenses, this.model?.clone({requestType: this.requestTypeField.value || null}), true, displayColumns).onAfterClose$;
-    //     }
-    //   }),
-    //   // allow only if the user select license
-    //   filter<{ selected: ExternalOrgAffiliationResult, details: ExternalOrgAffiliation }>
-    //   ((selection: { selected: ExternalOrgAffiliationResult, details: ExternalOrgAffiliation }) => {
-    //     // noinspection SuspiciousTypeOfGuard
-    //     return (selection && selection.selected instanceof ExternalOrgAffiliationResult && selection.details instanceof ExternalOrgAffiliation);
-    //   }),
-    //   takeUntil(this.destroy$)
-    // )
-    // .subscribe((selection) => {
-    //   this.setSelectedLicense(selection.details);
-    // });
+    this.licenseSearch$
+    .pipe(exhaustMap(oldLicenseFullSerial => {
+    return this.loadLicencesByCriteria({
+      fullSerial: oldLicenseFullSerial
+    }).pipe(catchError(() => of([])));
+    }))
+    .pipe(
+      // display message in case there is no returned license
+      tap(list => {
+        if (!list.length) {
+          this.dialog.info(this.lang.map.no_result_for_your_search_criteria);
+        }
+      }),
+      // allow only the collection if it has value
+      filter(result => !!result.length),
+      // switch to the dialog ref to use it later and catch the user response
+      switchMap(licenses => {
+        if (licenses.length === 1) {
+          return this.licenseService.validateLicenseByRequestType(this.model!.getCaseType(), this.requestTypeField.value, licenses[0].id)
+            .pipe(
+              map((data) => {
+                if (!data) {
+                  return of(null);
+                }
+                return {selected: licenses[0], details: data};
+              }),
+              catchError(() => {
+                return of(null);
+              })
+            );
+        } else {
+          const displayColumns = this.service.selectLicenseDisplayColumns;
+          // TODO!:check licence type
+          return this.licenseService.openSelectLicenseDialog(licenses, this.model?.clone({requestType: this.requestTypeField.value || null}), true, displayColumns).onAfterClose$;
+        }
+      }),
+      // allow only if the user select license
+      takeUntil(this.destroy$)
+    )
+    .subscribe((selection) => {
+      console.log(selection)
+      // this.setSelectedLicense(selection.details);
+    });
   }
   setSelectedLicense() {
 

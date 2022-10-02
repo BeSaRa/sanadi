@@ -6,11 +6,14 @@ export class AwarenessActivitySuggestionInterceptor implements IModelInterceptor
   receive(model: AwarenessActivitySuggestion): AwarenessActivitySuggestion {
 
     model.expectedDate = DateUtils.changeDateToDatepicker(model.expectedDate);
+    model.followUpDate = DateUtils.changeDateToDatepicker(model.followUpDate);
+
     return model;
   }
 
   send(model: any) {
-    (model.expectedDate && (model.expectedDate = DateUtils.getDateStringFromDate(model.expectedDate)))
+    (model.expectedDate && (model.expectedDate = DateUtils.getDateStringFromDate(model.expectedDate)));
+    (model.followUpDate && (model.followUpDate = DateUtils.getDateStringFromDate(model.followUpDate)));
     AwarenessActivitySuggestionInterceptor._deleteBeforeSend(model);
     return model;
   }

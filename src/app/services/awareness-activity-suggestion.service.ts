@@ -1,3 +1,5 @@
+import { Observable } from 'rxjs';
+import { LicenseService } from '@app/services/license.service';
 import { AwarenessActivitySuggestionApprovalComponent } from './../modules/general-services/popups/awareness-activity-suggestion-approval/awareness-activity-suggestion-approval.component';
 import { DialogRef } from './../shared/models/dialog-ref';
 import { WFResponseType } from './../enums/wfresponse-type.enum';
@@ -34,7 +36,8 @@ export class AwarenessActivitySuggestionService extends BaseGenericEService<Awar
     public http: HttpClient,
     public dialog: DialogService,
     public domSanitizer: DomSanitizer,
-    public dynamicService: DynamicOptionsService
+    public dynamicService: DynamicOptionsService,
+    private licenseService: LicenseService
   ) {
     super();
     FactoryService.registerService('AwarenessActivitySuggestionService', this)
@@ -55,6 +58,10 @@ export class AwarenessActivitySuggestionService extends BaseGenericEService<Awar
   getCaseComponentName(): string {
     return 'AwarenessActivitySuggestionComponent'
   }
+  licenseSearch(criteria: Partial<SearchAwarenessActivitySuggestionCriteria> = {}): Observable<AwarenessActivitySuggestion[]> {
+    return this.licenseService.awarenessActivitySuggestionSearch(criteria);
+  }
+
   approve(model: AwarenessActivitySuggestion, action: WFResponseType): DialogRef {
     return this.dialog.show(AwarenessActivitySuggestionApprovalComponent, {
       model,
