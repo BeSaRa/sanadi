@@ -30,6 +30,7 @@ export class AwarenessActivitySuggestionService extends BaseGenericEService<Awar
   serviceKey: keyof ILanguageKeys = 'menu_awareness_activity_suggestion';
   caseStatusIconMap: Map<number, string> = new Map();
   searchColumns: string[] = ['fullSerial', 'createdOn', 'creatorInfo', 'caseStatus', 'subject', 'ouInfo'];
+  selectLicenseDisplayColumns: string[] = ['enName', 'licenseNumber', 'status', 'actions'];
 
   constructor(
     private urlService: UrlService,

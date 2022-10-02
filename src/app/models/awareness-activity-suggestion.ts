@@ -1,6 +1,5 @@
+import { AdminResult } from './admin-result';
 import { WFResponseType } from './../enums/wfresponse-type.enum';
-import { AdminResult } from '@app/models/admin-result';
-import { AdminLookup } from './admin-lookup';
 import { CustomValidators } from './../validators/custom-validators';
 import { IMyDateModel } from 'angular-mydatepicker';
 import { AwarenessActivitySuggestionInterceptor } from './../model-interceptors/awareness-activity-suggestion';
@@ -34,8 +33,6 @@ export class AwarenessActivitySuggestion
   service!: AwarenessActivitySuggestionService;
   caseType: number = CaseTypes.AWARENESS_ACTIVITY_SUGGESTION;
   requestType!: number;
-  licenseApprovedDate!: string | IMyDateModel;
-  oldLicenseFullSerial!: string;
   description!: string;
 
   followUpDate!: string | IMyDateModel;
@@ -54,12 +51,16 @@ export class AwarenessActivitySuggestion
   contactPhone!: string;
   contactExtraPhone!: string;
 
-  agreementWithRACA: boolean = false;
+  agreementWithRACA!: boolean | number;
   subject!: string;
   expectedDate!: string | IMyDateModel;
   goal!: string;
   activityName!: string;
 
+  oldLicenseFullSerial!: string;
+  oldLicenseId!: string;
+  oldLicenseSerial!: number;
+  ouInfo!: AdminResult;
   searchFields: ISearchFieldsMap<AwarenessActivitySuggestion> = {
     ...dateSearchFields(['createdOn']),
     ...infoSearchFields(['caseStatusInfo', 'creatorInfo', 'ouInfo']),
@@ -126,10 +127,11 @@ export class AwarenessActivitySuggestion
       },
       activity: {
         activityName: controls ? [activityName, [Validators.required, Validators.maxLength(300)]] : activityName,
-        agreementWithRACA: controls ? [agreementWithRACA] : agreementWithRACA,
+        agreementWithRACA: controls ? [agreementWithRACA, Validators.required] : agreementWithRACA,
         subject: controls ? [subject, [Validators.required]] : subject,
         expectedDate: controls ? [expectedDate, [Validators.required]] : expectedDate,
         goal: controls ? [goal, [Validators.required]] : goal,
+        linkedProject: controls ? [goal, [Validators.required]] : goal
       },
     };
   }

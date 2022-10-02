@@ -7,6 +7,7 @@ export class AwarenessActivitySuggestionInterceptor implements IModelInterceptor
 
     model.expectedDate = DateUtils.changeDateToDatepicker(model.expectedDate);
     model.followUpDate = DateUtils.changeDateToDatepicker(model.followUpDate);
+    model.agreementWithRACA = model.agreementWithRACA ? 1 : 2;
 
     return model;
   }
@@ -14,6 +15,7 @@ export class AwarenessActivitySuggestionInterceptor implements IModelInterceptor
   send(model: any) {
     (model.expectedDate && (model.expectedDate = DateUtils.getDateStringFromDate(model.expectedDate)));
     (model.followUpDate && (model.followUpDate = DateUtils.getDateStringFromDate(model.followUpDate)));
+    model.agreementWithRACA = (model.agreementWithRACA == 1)
     AwarenessActivitySuggestionInterceptor._deleteBeforeSend(model);
     return model;
   }

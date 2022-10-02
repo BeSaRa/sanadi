@@ -467,6 +467,14 @@ export class LicenseService {
   }
 
   @CastResponse(() => GeneralAssociationMeetingAttendance)
+  _validateAwarenessActivitySuggestionByRequestType<T>(requestType: number, oldLicenseId: string): Observable<T> {
+    return this.http.post<T>(this.getServiceUrlByCaseType(CaseTypes.AWARENESS_ACTIVITY_SUGGESTION) + '/draft/validate', {
+      requestType,
+      oldLicenseId
+    });
+  }
+
+  @CastResponse(() => GeneralAssociationMeetingAttendance)
   _validateGeneralAssociationMeetingAttendanceByRequestType<T>(requestType: number, oldLicenseId: string): Observable<T> {
     return this.http.post<T>(this.getServiceUrlByCaseType(CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE) + '/draft/validate', {
       requestType,
@@ -517,6 +525,8 @@ export class LicenseService {
       return this._validateForeignCountriesProjectsLicenseByRequestType<T>(requestType, licenseId);
     } else if (caseType === CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE) {
       return this._validateGeneralAssociationMeetingAttendanceByRequestType<T>(requestType, licenseId);
+    } else if (caseType === CaseTypes.AWARENESS_ACTIVITY_SUGGESTION) {
+      return this._validateAwarenessActivitySuggestionByRequestType<T>(requestType, licenseId);
     }
     return of(undefined);
   }

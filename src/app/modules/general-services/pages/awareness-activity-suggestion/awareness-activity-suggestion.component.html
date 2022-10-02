@@ -92,7 +92,7 @@
       <div class="row">
         <!-- agreementWithRACA -->
         <!-- organization -->
-        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+        <div class="col-md-6 mb-4 position-relative">
           <label for="organization" class="form-label">{{
             lang.map.lbl_organization
           }}</label>
@@ -104,7 +104,7 @@
           />
         </div>
         <!-- activity Name -->
-        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+        <div class="col-md-6 mb-4 position-relative">
           <label asteriskIfRequired="activityName" for="activityName" class="form-label">{{
             lang.map.activity_name
           }}</label>
@@ -120,7 +120,7 @@
           ></app-field-error-message>
         </div>
         <!-- expected Date -->
-        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+        <div class="col-md-6 mb-4 position-relative">
           <label
             for="expectedDate"
             asteriskIfRequired="expectedDate"
@@ -143,6 +143,36 @@
               controlName="expectedDate"
             ></app-field-error-message>
           </div>
+        </div>
+        <!-- organization have agreement with RACA -->
+        <div class="col-md-6 mb-4 position-relative">
+          <label
+            for="agreementWithRACA"
+            asteriskIfRequired="agreementWithRACA"
+            class="form-label"
+            >{{ lang.map.does_organization_have_agreement_with_RACA }}</label
+          >
+          <ng-select
+            [selectOnTab]="true"
+            labelForId="agreementWithRACA"
+            [clearable]="true"
+            placeholder="{{ lang.map.select }}"
+            id="agreementWithRACA"
+            [readonly]="readonly"
+            [notFoundText]="lang.map.msg_not_found"
+            appendTo="body"
+            validationClasses="agreementWithRACA"
+            formControlName="agreementWithRACA"
+          >
+          <ng-option
+              *ngFor="let type of linkedProject"
+              [value]="type.lookupKey"
+              >{{ type.getName() }}</ng-option
+            >
+          </ng-select>
+          <app-field-error-message
+            controlName="agreementWithRACA"
+          ></app-field-error-message>
         </div>
         <!-- goal -->
         <div class="mb-4 position-relative">

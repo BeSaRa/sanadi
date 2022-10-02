@@ -36,8 +36,12 @@ AwarenessActivitySuggestion,
 AwarenessActivitySuggestionService
 > {
   collectionRequestType: Lookup[] = this.lookupService.listByCategory.CollectionRequestType.sort((a, b) => a.lookupKey - b.lookupKey)
+  linkedProject: Lookup[] = this.lookupService.listByCategory.LinkedProject.sort((a, b) => a.lookupKey - b.lookupKey)
+
+
   licenseSearch$: Subject<string> = new Subject<string>();
   form!: UntypedFormGroup;
+  selectedLicense?: AwarenessActivitySuggestion;
   isSameAsApplican = false;
   tabsData: IKeyValue = {
     basicInfo: {
@@ -236,7 +240,10 @@ AwarenessActivitySuggestionService
     this.handleRequestTypeChange(model.requestType, false);
   }
   get userOrgName() {
-    return this.employeeService.getOrgUnit()?.getName()
+    if (this.model!.ouInfo)
+      return this.model!.ouInfo.getName()
+    else
+      return this.employeeService.getOrgUnit()?.getName()
   }
   handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
     of(userInteraction).pipe(
@@ -245,6 +252,7 @@ AwarenessActivitySuggestionService
     ).subscribe((clickOn: UserClickOn) => {
       if (clickOn === UserClickOn.YES) {
         if (userInteraction) {
+          this.resetForm$.next();
           this.requestTypeField.setValue(requestTypeValue);
         }
         this.requestType$.next(requestTypeValue);
@@ -311,51 +319,85 @@ AwarenessActivitySuggestionService
   }
   listenToLicenseSearch(): void {
     this.licenseSearch$
-    .pipe(exhaustMap(oldLicenseFullSerial => {
-    return this.loadLicencesByCriteria({
-      fullSerial: oldLicenseFullSerial
-    }).pipe(catchError(() => of([])));
-    }))
-    .pipe(
-      // display message in case there is no returned license
-      tap(list => {
-        if (!list.length) {
-          this.dialog.info(this.lang.map.no_result_for_your_search_criteria);
-        }
-      }),
-      // allow only the collection if it has value
-      filter(result => !!result.length),
-      // switch to the dialog ref to use it later and catch the user response
-      switchMap(licenses => {
-        if (licenses.length === 1) {
-          return this.licenseService.validateLicenseByRequestType(this.model!.getCaseType(), this.requestTypeField.value, licenses[0].id)
-            .pipe(
-              map((data) => {
-                if (!data) {
+      .pipe(exhaustMap(oldLicenseFullSerial => {
+        return this.loadLicencesByCriteria({
+          fullSerial: oldLicenseFullSerial
+        }).pipe(catchError(() => of([])));
+      }))
+      .pipe(
+        // display message in case there is no returned license
+        tap(list => {
+          if (!list.length) {
+            this.dialog.info(this.lang.map.no_result_for_your_search_criteria);
+          }
+        }),
+        // allow only the collection if it has value
+        filter(result => !!result.length),
+        // switch to the dialog ref to use it later and catch the user response
+        switchMap(licenses => {
+          if (licenses.length === 1) {
+            return this.licenseService.validateLicenseByRequestType(this.model!.getCaseType(), this.requestTypeField.value, licenses[0].id)
+              .pipe(
+                map((data) => {
+                  if (!data) {
+                    return of(null);
+                  }
+                  return { selected: licenses[0], details: data };
+                }),
+                catchError(() => {
                   return of(null);
-                }
-                return {selected: licenses[0], details: data};
-              }),
-              catchError(() => {
-                return of(null);
-              })
-            );
-        } else {
-          const displayColumns = this.service.selectLicenseDisplayColumns;
-          // TODO!:check licence type
-          return this.licenseService.openSelectLicenseDialog(licenses, this.model?.clone({requestType: this.requestTypeField.value || null}), true, displayColumns).onAfterClose$;
-        }
-      }),
-      // allow only if the user select license
-      takeUntil(this.destroy$)
-    )
-    .subscribe((selection) => {
-      console.log(selection)
-      // this.setSelectedLicense(selection.details);
-    });
+                })
+              );
+          } else {
+            const displayColumns = this.service.selectLicenseDisplayColumns;
+            return this.licenseService.openSelectLicenseDialog(licenses, this.model?.clone({ requestType: this.requestTypeField.value || null }), true, displayColumns).onAfterClose$;
+          }
+        }),
+        // allow only if the user select license
+        takeUntil(this.destroy$)
+      )
+      .subscribe((selection) => {
+        this.setSelectedLicense(selection.details);
+      });
   }
-  setSelectedLicense() {
 
+  private setSelectedLicense(licenseDetails: AwarenessActivitySuggestion) {
+    this.selectedLicense = licenseDetails;
+    let requestType = this.requestTypeField?.value,
+      result: Partial<AwarenessActivitySuggestion> = {
+        requestType
+      };
+
+    result.oldLicenseFullSerial = licenseDetails.fullSerial;
+    result.oldLicenseId = licenseDetails.id;
+    result.oldLicenseSerial = licenseDetails.serial;
+
+    result.enName = licenseDetails.enName;
+    result.phone = licenseDetails.phone;
+    result.email = licenseDetails.email;
+    result.description = licenseDetails.description;
+
+    result.expectedDate = DateUtils.changeDateToDatepicker(licenseDetails.expectedDate);
+
+    result.identificationNumber = licenseDetails.identificationNumber;
+    result.enName = licenseDetails.enName;
+    result.jobTitle = licenseDetails.jobTitle;
+    result.address = licenseDetails.address;
+    result.email = licenseDetails.email;
+    result.phone = licenseDetails.phone;
+    result.mobileNo = licenseDetails.mobileNo;
+
+    result.contactQID = licenseDetails.contactQID;
+    result.contactName = licenseDetails.contactName;
+    result.contactEmail = licenseDetails.contactEmail;
+    result.contactPhone = licenseDetails.contactPhone;
+    result.contactExtraPhone = licenseDetails.contactExtraPhone;
+
+    result.agreementWithRACA = licenseDetails.agreementWithRACA;
+    result.subject = licenseDetails.subject;
+    result.goal = licenseDetails.goal;
+    result.activityName = licenseDetails.activityName;
+    this._updateForm((new AwarenessActivitySuggestion()).clone(result));
   }
   openDateMenu(ref: any) {
     ref.toggleCalendar();

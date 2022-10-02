@@ -1437,4 +1437,5 @@ export interface ILanguageKeys {
   total_coordination_request_value:string;
   approval_awareness_activity_suggestion:string;
   same_as_applicant: string;
+  does_organization_have_agreement_with_RACA: string;
 }
