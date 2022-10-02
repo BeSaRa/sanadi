@@ -15,6 +15,8 @@ import {ToastService} from '@services/toast.service';
 import {DialogService} from '@services/dialog.service';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {EmployeeService} from '@services/employee.service';
+import {OrgUser} from '@app/models/org-user';
+import {InternalUser} from '@app/models/internal-user';
 
 @Component({
   selector: 'custom-attachment-popup',
@@ -194,12 +196,21 @@ export class CustomAttachmentPopupComponent implements OnInit, OnDestroy {
     if (buttonType === 'view') {
       return !attachment.id;
     } else if (buttonType === 'delete') {
-      return this.disabled || !attachment.attachmentTypeStatus || !attachment.id;
+      return this.disabled || !attachment.attachmentTypeStatus || !attachment.id || !this._isCreatedByCurrentUser(attachment);
     } else if (buttonType === 'upload') {
       return this.disabled || !attachment.attachmentTypeStatus;
     } else if (buttonType === 'publish'){
       return this.disabled;
     }
     return true;
+  }
+
+  private _isCreatedByCurrentUser(attachment: FileNetDocument) {
+    let user = this.employeeService.getCurrentUser();
+    if (this.employeeService.isExternalUser()) {
+      return ('' + ((user as OrgUser).qid ?? '')).trim() === attachment.createdBy;
+    } else {
+      return (user as InternalUser).domainName === attachment.createdBy;
+    }
   }
 }

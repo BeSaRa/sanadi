@@ -16,6 +16,8 @@ import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 import {AdminResult} from '@app/models/admin-result';
 import {GridName, ItemId} from '@app/types/types';
 import {EmployeeService} from '@services/employee.service';
+import {OrgUser} from '@app/models/org-user';
+import {InternalUser} from '@app/models/internal-user';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -152,7 +154,8 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
         attachment.attachmentTypeInfo = AttachmentsComponent.createOtherLookup();
         attachment.attachmentTypeStatus = true;
       } else {
-        attachment.attachmentTypeStatus = types.find(x => x.attachmentTypeId === attachment.attachmentTypeId)!.attachmentTypeStatus;
+        const type = types.find(x => x.attachmentTypeId === attachment.attachmentTypeId);
+        attachment.attachmentTypeStatus = type ? type.attachmentTypeStatus : false;
       }
       return attachment;
     }).filter((attachment) => {
@@ -224,7 +227,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
       .subscribe((attachment) => {
         input.value = '';
         this.toast.success(this.lang.map.files_have_been_uploaded_successfully);
-        attachment.attachmentTypeStatus =  this.selectedFile?.attachmentTypeStatus!;
+        attachment.attachmentTypeStatus = this.selectedFile?.attachmentTypeStatus!;
         this.loadedAttachments[attachment.attachmentTypeId] = attachment;
         this.attachments.splice(this.selectedIndex, 1, attachment.clone({attachmentTypeInfo: this.selectedFile?.attachmentTypeInfo}));
         this.attachments = this.attachments.slice();
@@ -361,12 +364,21 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
     if (buttonType === 'view') {
       return !attachment.id;
     } else if (buttonType === 'delete') {
-      return this.disabled || !attachment.attachmentTypeStatus || !attachment.id;
+      return this.disabled || !attachment.attachmentTypeStatus || !attachment.id || !this._isCreatedByCurrentUser(attachment);
     } else if (buttonType === 'upload') {
       return this.disabled || !attachment.attachmentTypeStatus;
-    } else if (buttonType === 'publish'){
+    } else if (buttonType === 'publish') {
       return this.disabled;
     }
     return true;
+  }
+
+  private _isCreatedByCurrentUser(attachment: FileNetDocument) {
+    let user = this.employeeService.getCurrentUser();
+    if (this.employeeService.isExternalUser()) {
+      return ('' + ((user as OrgUser).qid ?? '')).trim() === attachment.createdBy;
+    } else {
+      return (user as InternalUser).domainName === attachment.createdBy;
+    }
   }
 }
