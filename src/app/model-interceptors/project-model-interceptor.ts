@@ -15,7 +15,6 @@ export class ProjectModelInterceptor implements IModelInterceptor<ProjectModel> 
     delete model.projectTypeInfo;
     delete model.beneficiaryCountryInfo;
     delete model.executionCountryInfo;
-    delete model.implementingAgencyTypeInfo;
     delete model.domainInfo;
     delete model.mainUNOCHACategoryInfo;
     delete model.subUNOCHACategoryInfo;
@@ -39,7 +38,6 @@ export class ProjectModelInterceptor implements IModelInterceptor<ProjectModel> 
     model.projectTypeInfo = AdminResult.createInstance(model.projectTypeInfo);
     model.beneficiaryCountryInfo = AdminResult.createInstance(model.beneficiaryCountryInfo);
     model.executionCountryInfo = AdminResult.createInstance(model.executionCountryInfo);
-    model.implementingAgencyTypeInfo = AdminResult.createInstance(model.implementingAgencyTypeInfo);
     model.domainInfo = AdminResult.createInstance(model.domainInfo);
     model.mainUNOCHACategoryInfo = AdminResult.createInstance(model.mainUNOCHACategoryInfo);
     model.subUNOCHACategoryInfo = AdminResult.createInstance(model.subUNOCHACategoryInfo);

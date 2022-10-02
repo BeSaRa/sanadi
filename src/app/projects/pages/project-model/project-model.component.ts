@@ -155,8 +155,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
 
   _buildForm(): void {
     let model = (new ProjectModel()).clone({
-      requestType: this.requestTypes[0].lookupKey,
-      implementingAgencyType: this.implementingAgencyTypes[0].lookupKey
+      requestType: this.requestTypes[0].lookupKey
     });
 
     this.form = this.fb.group({

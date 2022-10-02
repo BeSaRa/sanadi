@@ -29,8 +29,6 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
   beneficiaryRegion!: string;
   executionCountry!: number;
   executionRegion!: string;
-  implementingAgencyType!: number;
-  implementationPeriod!: number;
   domain!: number;
   mainUNOCHACategory!: number;
   subUNOCHACategory!: number;
@@ -58,7 +56,6 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
   beneficiariesOver60: number = 0;
   projectTotalCost!: number;
   description!: string;
-  year!: number;
   needsAssessment!: string;
   templateSerial!: number;
   templateFullSerial!: string;
@@ -70,7 +67,6 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
   templateStatusInfo!: AdminResult;
   beneficiaryCountryInfo!: AdminResult;
   executionCountryInfo!: AdminResult;
-  implementingAgencyTypeInfo!: AdminResult;
   domainInfo!: AdminResult;
   mainUNOCHACategoryInfo!: AdminResult;
   subUNOCHACategoryInfo!: AdminResult;
@@ -111,10 +107,7 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
       beneficiaryCountry,
       beneficiaryRegion,
       executionCountry,
-      executionRegion,
-      implementingAgencyType,
-      year,
-      implementationPeriod
+      executionRegion
     } = this;
     return {
       requestType: controls ? [requestType, CustomValidators.required] : requestType,
@@ -135,10 +128,7 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
       beneficiaryCountry: controls ? [beneficiaryCountry, CustomValidators.required] : beneficiaryCountry,
       beneficiaryRegion: controls ? [beneficiaryRegion, [CustomValidators.required, CustomValidators.maxLength(250)]] : beneficiaryRegion,
       executionCountry: controls ? [executionCountry, CustomValidators.required] : executionCountry,
-      executionRegion: controls ? [executionRegion, [CustomValidators.required, CustomValidators.maxLength(250)]] : executionRegion,
-      implementingAgencyType: controls ? [implementingAgencyType, CustomValidators.required] : implementingAgencyType,
-      year: controls ? [year, [CustomValidators.required, CustomValidators.maxLength(4)]] : year,
-      implementationPeriod: controls ? [implementationPeriod, [CustomValidators.required, CustomValidators.maxLength(4)]] : implementationPeriod
+      executionRegion: controls ? [executionRegion, [CustomValidators.required, CustomValidators.maxLength(250)]] : executionRegion
     }
   }
 
