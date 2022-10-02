@@ -17,6 +17,7 @@ import { CaseTypes } from "@app/enums/case-types.enum";
 import { EServicePermissions } from "@app/enums/e-service-permissions";
 import { ConfigurationService } from "@app/services/configuration.service";
 import { Permissions } from "@app/enums/Permissions";
+import { Profile } from '@app/models/profile';
 
 @Injectable({
   providedIn: 'root'
@@ -30,6 +31,7 @@ export class EmployeeService {
   private permissions?: Permission[];
   private permissionMap: Map<string, Permission> = new Map<string, Permission>();
   private type!: UserTypes;
+  private profile?: Profile;
 
   public internalDepartments?: InternalDepartment[];
   public teams: Team[] = [];
@@ -96,12 +98,14 @@ export class EmployeeService {
     this.orgUser = (new OrgUser()).clone(loginData.orgUser);
     this.orgBranch = (new OrgBranch()).clone(loginData.orgBranch);
     this.orgUnit = (new OrgUnit()).clone(loginData.orgUnit);
+    this.profile = (new Profile()).clone(loginData.profile);
   }
 
   clear(): void {
     this.orgBranch = undefined;
     this.orgUnit = undefined;
     this.orgUser = undefined;
+    this.profile = undefined;
     this.permissions = undefined;
     this.internalUser = undefined;
     this.internalDepartment = undefined;
@@ -124,6 +128,10 @@ export class EmployeeService {
 
   getPermissions(): Permission[] {
     return this.permissions || [];
+  }
+
+  getProfile(): Profile | undefined {
+    return this.profile;
   }
 
   private preparePermissionMap() {
