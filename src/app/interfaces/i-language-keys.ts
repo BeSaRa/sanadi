@@ -1440,4 +1440,5 @@ export interface ILanguageKeys {
   internal_branches: string;
   internal_branches_officers: string;
   err_invalid_website: string;
+  report_title: string;
 }

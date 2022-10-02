@@ -1,10 +1,10 @@
 <form class="row" [formGroup]="form" *ngIf="showForm">
   <div
     *ngFor="let control of controls"
-    class="col-sm-6 col-md-4 mb-4 position-relative"
+    class="col-sm-6 col-md-4"
     [ngSwitch]="control.type"
   >
-    <div *ngIf="control.isDisplayed">
+    <div *ngIf="control.isDisplayed" class="mb-4 position-relative">
       <ng-container *ngSwitchCase="'dropdown'">
         <div>
           <label

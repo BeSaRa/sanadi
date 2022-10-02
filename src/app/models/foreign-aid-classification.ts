@@ -19,16 +19,16 @@ export class ForeignAidClassification extends SearchableCloneable<ForeignAidClas
   governanceDomainInfo!: AdminResult;
 
   mainDACCategory!: number;
-  mainDACCategoryInfo!: AdminResult;
+  mainDACInfo!: AdminResult;
 
   mainUNOCHACategory!: number;
-  mainUNOCHACategoryInfo!: AdminResult;
+  mainUNOCHAInfo!: AdminResult;
 
   subDACCategory!: number;
-  subDACCategoryInfo!: AdminResult;
+  subDACInfo!: AdminResult;
 
   subUNOCHACategory!: number;
-  subUNOCHACategoryInfo!: AdminResult;
+  subUNOCHAInfo!: AdminResult;
 
   id!: number;
   objectDBId?: number;
@@ -44,12 +44,12 @@ export class ForeignAidClassification extends SearchableCloneable<ForeignAidClas
       mainUNOCHACategory,
       subDACCategory,
       subUNOCHACategory,
-      subDACCategoryInfo,
-      mainDACCategoryInfo,
       governanceDomainInfo,
       aidClassificationInfo,
-      subUNOCHACategoryInfo,
-      mainUNOCHACategoryInfo,
+      mainDACInfo,
+      mainUNOCHAInfo,
+      subDACInfo,
+      subUNOCHAInfo
 
     } = this;
     return new ForeignAidClassification().clone({
@@ -61,12 +61,12 @@ export class ForeignAidClassification extends SearchableCloneable<ForeignAidClas
       mainUNOCHACategory,
       subDACCategory,
       subUNOCHACategory,
-      subDACCategoryInfo,
-      mainDACCategoryInfo,
       governanceDomainInfo,
       aidClassificationInfo,
-      subUNOCHACategoryInfo,
-      mainUNOCHACategoryInfo,
+      mainDACInfo,
+      mainUNOCHAInfo,
+      subDACInfo,
+      subUNOCHAInfo
 
     });
   }

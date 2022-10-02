@@ -53,7 +53,7 @@ export class CharityDecision extends BaseModel<
           [
             CustomValidators.required,
             CustomValidators.maxLength(
-              CustomValidators.defaultLengths.ADDRESS_MAX
+              300
             ),
           ],
         ]

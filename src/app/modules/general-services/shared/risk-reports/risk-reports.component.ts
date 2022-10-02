@@ -44,7 +44,7 @@ export class CharityReportsComponent extends ListModelComponent<CharityReport> {
     {
       controlName: 'fullName',
       type: 'text',
-      label: this.lang.map.full_name,
+      label: this.lang.map.report_title,
     },
     {
       controlName: 'generalDate',

@@ -132,7 +132,9 @@
           <th cdk-header-cell sortable-header *cdkHeaderCellDef>
             {{ lang.map.classification }}
           </th>
-          <td cdk-cell *cdkCellDef="let row">{{ row.category }}</td>
+          <td cdk-cell *cdkCellDef="let row">
+            {{ row?.categoryInfo?.getName() || row.category }}
+          </td>
         </ng-container>
         <ng-container cdkColumnDef="firstReleaseDate">
           <th cdk-header-cell sortable-header *cdkHeaderCellDef>

@@ -582,38 +582,6 @@
             ></app-field-error-message>
           </div>
         </div>
-
-        <!-- <div class="col-sm-6 col-md-4 mb-4 position-relative">
-          <div>
-            <label
-              asteriskIfRequired="country"
-              for="requestType"
-              class="form-label"
-              >{{ lang.map.work_area }}</label
-            >
-            <ng-select
-              [selectOnTab]="true"
-              labelForId="country"
-              [clearable]="true"
-              placeholder="{{ lang.map.select }}"
-              id="country"
-              [notFoundText]="lang.map.msg_not_found"
-              appendTo="body"
-              validationClasses="country"
-              formControlName="country"
-            >
-              <ng-option
-                *ngFor="let type of countries$ | async"
-                [value]="type.id"
-                >{{ type.getName() }}</ng-option
-              >
-            </ng-select>
-            <app-field-error-message
-              controlName="country"
-            ></app-field-error-message>
-          </div>
-        </div> -->
-
         <div class="mb-4 position-relative">
           <label asteriskIfRequired="goals" for="goals" class="form-label">{{
             lang.map.goals
@@ -626,11 +594,7 @@
             [readonly]="readonly"
             validationClasses="goals"
             formControlName="goals"
-          ></textarea
-          ><!--
-          <app-field-error-message
-            controlName="goals"
-          ></app-field-error-message> -->
+          ></textarea>
         </div>
       </div>
       <hr />
@@ -644,6 +608,8 @@
       </foreign-aid-classifications>
       <hr />
       <work-areas
+        *ngIf="!!countries"
+        [countries]="countries"
         #goverList
         [readonly]="readonly"
         [list]="model?.workAreaObjectList || []"

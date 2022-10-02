@@ -35,6 +35,7 @@ import { CharityDecision } from '@app/models/charity-decision';
 import { CharityOrganization } from '@app/models/charity-organization';
 import { CharityOrganizationUpdate } from '@app/models/charity-organization-update';
 import { CharityReport } from '@app/models/charity-report';
+import { Country } from '@app/models/country';
 import { FinalExternalOfficeApprovalResult } from '@app/models/final-external-office-approval-result';
 import { GeneralAssociationMeetingAttendance } from '@app/models/general-association-meeting-attendance';
 import { JobTitle } from '@app/models/job-title';
@@ -138,7 +139,7 @@ export class CharityOrganizationUpdateComponent
     'meetingType',
     'meetingCount',
   ]
-  countries$ = this.countryService.loadAsLookups().pipe(share());
+  countries!: Country[];
   externalOffices$?: Observable<FinalExternalOfficeApprovalResult[]>;
   organizationMeetings$?: Observable<GeneralAssociationMeetingAttendance[]>;
   jobTitles!: JobTitle[];
@@ -215,6 +216,11 @@ export class CharityOrganizationUpdateComponent
       this.jobTitles = [...e];
     })
   }
+  private _loadCountries() {
+    this.countryService.loadAsLookups().subscribe(e => {
+      this.countries = [...e];
+    })
+  }
 
   constructor(
     private meetingService: GeneralAssociationMeetingAttendanceService,
@@ -239,6 +245,7 @@ export class CharityOrganizationUpdateComponent
   ) {
     super();
     this._loadJobTitles();
+    this._loadCountries();
   }
 
   ngAfterViewInit(): void {

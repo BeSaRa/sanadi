@@ -38,12 +38,14 @@ export class RealBeneficiariesComponent extends ListModelComponent<RealBeneficia
       this.passportColumns.forEach((controlName, idx) => {
         this.form.get(controlName)?.removeValidators(this.model.getIdValidation()[idx]);
         this.form.get(controlName)?.updateValueAndValidity();
+        this.form.get(controlName)?.reset();
       });
     }
     else {
       this.idColumns.forEach((controlName, idx) => {
         this.form.get(controlName)?.removeValidators(this.model.getIdValidation()[idx]);
         this.form.get(controlName)?.updateValueAndValidity();
+        this.form.get(controlName)?.reset();
       });
 
       this.passportColumns.forEach((controlName, idx) => {

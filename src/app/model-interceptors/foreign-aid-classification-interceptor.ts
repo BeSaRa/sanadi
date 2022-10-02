@@ -4,22 +4,22 @@ import { IModelInterceptor } from '@contracts/i-model-interceptor';
 
 export class ForeignAidClassificationInterceptor implements IModelInterceptor<ForeignAidClassification> {
   receive(model: ForeignAidClassification): ForeignAidClassification {
-    model.aidClassificationInfo = AdminResult.createInstance(model.aidClassificationInfo)
-    model.governanceDomainInfo = AdminResult.createInstance(model.governanceDomainInfo)
-    model.mainDACCategoryInfo = AdminResult.createInstance(model.mainDACCategoryInfo)
-    model.mainUNOCHACategoryInfo = AdminResult.createInstance(model.mainUNOCHACategoryInfo)
-    model.subDACCategoryInfo = AdminResult.createInstance(model.subDACCategoryInfo)
-    model.subUNOCHACategoryInfo = AdminResult.createInstance(model.subUNOCHACategoryInfo)
+    model.aidClassificationInfo = AdminResult.createInstance(model.aidClassificationInfo);
+    model.governanceDomainInfo = AdminResult.createInstance(model.governanceDomainInfo);
+    model.mainDACInfo = AdminResult.createInstance(model.mainDACInfo);
+    model.mainUNOCHAInfo = AdminResult.createInstance(model.mainUNOCHAInfo);
+    model.subDACInfo = AdminResult.createInstance(model.subDACInfo);
+    model.subUNOCHAInfo = AdminResult.createInstance(model.subUNOCHAInfo);
     return model;
   }
 
   send(model: Partial<ForeignAidClassification>): Partial<ForeignAidClassification> {
-    delete model.aidClassificationInfo
-    delete model.governanceDomainInfo
-    delete model.mainDACCategoryInfo
-    delete model.mainUNOCHACategoryInfo
-    delete model.subDACCategoryInfo
-    delete model.subUNOCHACategoryInfo
+    delete model.aidClassificationInfo;
+    delete model.governanceDomainInfo;
+    delete model.mainDACInfo;
+    delete model.mainUNOCHAInfo;
+    delete model.subDACInfo;
+    delete model.subUNOCHAInfo;
     return model;
   }
 }
