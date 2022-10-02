@@ -21,8 +21,8 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
   caseType: number = CaseTypes.EXTERNAL_PROJECT_MODELS;
   organizationId!: number;
   requestType!: number;
+  isConstructional: boolean = false;
   projectType!: number;
-  templateType!: number;
   projectName!: string;
   projectDescription!: string;
   beneficiaryCountry!: number;
@@ -67,7 +67,6 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
   componentList!: ProjectComponent[];
   requestTypeInfo!: AdminResult;
   projectTypeInfo!: AdminResult;
-  templateTypeInfo!: AdminResult;
   templateStatusInfo!: AdminResult;
   beneficiaryCountryInfo!: AdminResult;
   executionCountryInfo!: AdminResult;
@@ -84,7 +83,7 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
 
   searchFields: ISearchFieldsMap<ProjectModel> = {
     ...dateSearchFields(['createdOn']),
-    ...infoSearchFields(['requestTypeInfo', 'creatorInfo', 'caseStatusInfo', 'projectTypeInfo', 'requestTypeInfo', 'templateTypeInfo']),
+    ...infoSearchFields(['requestTypeInfo', 'creatorInfo', 'caseStatusInfo', 'projectTypeInfo', 'requestTypeInfo']),
     ...normalSearchFields(['projectName', 'fullSerial'])
   }
 
@@ -106,6 +105,7 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
     const {
       projectType,
       requestType,
+      isConstructional,
       projectName,
       projectDescription,
       beneficiaryCountry,
@@ -114,12 +114,11 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
       executionRegion,
       implementingAgencyType,
       year,
-      implementationPeriod,
-      templateType
+      implementationPeriod
     } = this;
     return {
       requestType: controls ? [requestType, CustomValidators.required] : requestType,
-      templateType: controls ? [templateType, CustomValidators.required] : templateType,
+      isConstructional: controls ? [isConstructional] : isConstructional,
       projectType: controls ? [projectType, CustomValidators.required] : projectType,
       projectName: controls ? [projectName,
         [

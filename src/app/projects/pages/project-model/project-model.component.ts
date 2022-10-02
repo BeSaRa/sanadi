@@ -16,8 +16,6 @@ import { SDGoalService } from '@app/services/sdgoal.service';
 import { SDGoal } from '@app/models/sdgoal';
 import { ProjectComponent } from '@app/models/project-component';
 import { CustomValidators } from '@app/validators/custom-validators';
-import { ProjectModelTypes } from '@app/enums/project-model-types';
-import { ProjectTypes } from '@app/enums/project-types';
 import { DomainTypes } from '@app/enums/domain-types';
 import { IDacOchaFields } from '@app/interfaces/idac-ocha-fields';
 import { ToastService } from '@app/services/toast.service';
@@ -48,7 +46,6 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   countries: Country[] = [];
   domains: Lookup[] = this.lookupService.listByCategory.Domain;
   projectTypes: Lookup[] = this.lookupService.listByCategory.ProjectType;
-  modelTypes: Lookup[] = this.lookupService.listByCategory.TemplateType;
   requestTypes: Lookup[] = this.lookupService.listByCategory.ProjectModelingReqType.slice().sort((a, b) => a.lookupKey - b.lookupKey);
   implementingAgencyTypes: Lookup[] = this.lookupService.listByCategory.ImplementingAgencyType;
   mainOchaCategories: AdminLookup[] = [];
@@ -70,7 +67,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   attachmentComponent!: AttachmentsComponent;
 
   selectedModel?: ProjectModel;
-  displayedColumns: string[] = ['domainInfo', 'projectTypeInfo', 'templateStatusInfo', 'createdBy', 'createdOn', 'templateTypeInfo'];
+  displayedColumns: string[] = ['domainInfo', 'projectTypeInfo', 'templateStatusInfo', 'createdBy', 'createdOn'];
   displayTemplateSerialField: boolean = false;
   displayDevGoals: boolean = false;
 
@@ -228,8 +225,6 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
           this.displayTemplateSerialField = true;
           this.templateSerialControl.setValue(template.templateFullSerial);
         });
-
-      this.onModelTypeChange();
 
       if (this.model?.domain === DomainTypes.DEVELOPMENT) {
         this.mainDacCategories = [(new AdminLookup()).clone({
@@ -413,10 +408,6 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     return this.form.get('description') as AbstractControl;
   }
 
-  get modelType(): AbstractControl {
-    return this.basicInfoTab.get('templateType') as AbstractControl;
-  }
-
   get projectType(): AbstractControl {
     return this.basicInfoTab.get('projectType') as AbstractControl;
   }
@@ -583,24 +574,6 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   tabHasError(tabName: string): boolean {
     const field = this.form.get(tabName);
     return !!(field && field.invalid && (field.touched || field.dirty));
-  }
-
-  onModelTypeChange() {
-    if (this.modelType.value === ProjectModelTypes.SECTORAL_AGGREGATING_MODEL) {
-      //TODO: there is one more condition here related if the admin allowed option to give the user ability to select Structural
-      this.projectType.setValue(ProjectTypes.SOFTWARE);
-      this.projectType.disable({emitEvent: false});
-      this.domain.setValue(DomainTypes.HUMANITARIAN);
-      this.domain.disable();
-    } else if (this.modelType.value === ProjectModelTypes.PROJECT_MODEL) {
-      this.projectType.enable({emitEvent: false});
-      this.domain.enable();
-    } else {
-      this.projectType.enable({emitEvent: false});
-      this.projectType.setValue(null);
-      this.domain.enable();
-    }
-    this.onDomainChange();
   }
 
   onDomainChange() {

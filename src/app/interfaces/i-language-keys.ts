@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  constructional: string;
   exit_mechanism: string;
   number_of_beneficiaries: string;
   beneficiary_families_count: string;

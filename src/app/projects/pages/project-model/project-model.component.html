@@ -46,18 +46,6 @@
               <app-field-error-message [control]="templateSerialControl"></app-field-error-message>
             </div>
           </div>
-          <div class="col-md-4 col-sm-12 mb-4 position-relative">
-            <label class="form-label" asteriskIfRequired="templateType"
-                   for="templateType">{{lang.map.model_type}}</label>
-            <ng-select [readonly]="readonly" (change)="onModelTypeChange()" validationClasses="templateType"
-                       appendTo="body"
-                       [clearable]="true"
-                       id="templateType"
-                       formControlName="templateType">
-              <ng-option [value]="option.lookupKey" *ngFor="let option of modelTypes">{{option.getName()}}</ng-option>
-            </ng-select>
-            <app-field-error-message controlName="templateType"></app-field-error-message>
-          </div>
           <div *ngIf="!displayTemplateSerialField" class="col-md-4 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="projectType"
                    for="projectType">{{lang.map.project_type}}</label>
@@ -68,6 +56,14 @@
               <ng-option [value]="option.lookupKey" *ngFor="let option of projectTypes">{{option.getName()}}</ng-option>
             </ng-select>
             <app-field-error-message controlName="projectType"></app-field-error-message>
+          </div>
+          <div *ngIf="!displayTemplateSerialField" class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="projectName"
+                   for="projectName">{{lang.map.project_name}}</label>
+            <!--suppress XmlDuplicatedId -->
+            <input id="projectName" validationClasses="projectName" formControlName="projectName"
+                   class="form-control">
+            <app-field-error-message [ignoreTop]="true" controlName="projectName"></app-field-error-message>
           </div>
         </div>
         <div *ngIf="selectedModel" class="row">
@@ -102,10 +98,6 @@
                 <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.creation_date}}</th>
                 <td cdk-cell *cdkCellDef="let row"> {{row.createdOn|date}} </td>
               </ng-container>
-              <ng-container cdkColumnDef="templateTypeInfo">
-                <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.model_type}}</th>
-                <td cdk-cell *cdkCellDef="let row"> {{row.templateTypeInfo.getName()}} </td>
-              </ng-container>
               <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
               <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
             </table>
@@ -125,12 +117,20 @@
               </ng-select>
               <app-field-error-message [ignoreTop]="true" controlName="projectType"></app-field-error-message>
             </div>
-            <div class="mb-3">
+            <div class="mb-4" *ngIf="displayTemplateSerialField">
               <label class="form-label" asteriskIfRequired="projectName"
                      for="projectName">{{lang.map.project_name}}</label>
+              <!--suppress XmlDuplicatedId -->
               <input id="projectName" validationClasses="projectName" formControlName="projectName"
                      class="form-control">
               <app-field-error-message [ignoreTop]="true" controlName="projectName"></app-field-error-message>
+            </div>
+            <div class="col-md-4 col-sm-12 mb-4 form-check form-switch form-switch-reduce-margin-left">
+              <div class="ms-3">
+                <input class="form-check-input" type="checkbox" id="isConstructional" formControlName="isConstructional">
+                <label class="form-check-label"
+                       for="isConstructional">{{lang.map.constructional}}</label>
+              </div>
             </div>
           </div>
           <div class="col-md-8 col-sm-12 mb-4 position-relative">
@@ -138,7 +138,7 @@
                    for="projectDescription">{{lang.map.project_description}}</label>
             <textarea name="projectDescription" validationClasses="projectDescription"
                       [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
-                      formControlName="projectDescription" id="projectDescription" rows="6"
+                      formControlName="projectDescription" id="projectDescription" rows="5"
                       class="form-control"></textarea>
             <app-field-error-message [ignoreTop]="true" controlName="projectDescription"></app-field-error-message>
           </div>

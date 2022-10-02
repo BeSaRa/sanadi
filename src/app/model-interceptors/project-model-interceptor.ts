@@ -11,7 +11,6 @@ export class ProjectModelInterceptor implements IModelInterceptor<ProjectModel> 
       return item;
     });
     delete model.requestTypeInfo;
-    delete model.templateTypeInfo;
     delete model.templateStatusInfo;
     delete model.projectTypeInfo;
     delete model.beneficiaryCountryInfo;
@@ -36,7 +35,6 @@ export class ProjectModelInterceptor implements IModelInterceptor<ProjectModel> 
     model.taskDetails = (new TaskDetails()).clone(model.taskDetails);
     model.ouInfo = AdminResult.createInstance(model.ouInfo);
     model.requestTypeInfo = AdminResult.createInstance(model.requestTypeInfo);
-    model.templateTypeInfo = AdminResult.createInstance(model.templateTypeInfo);
     model.templateStatusInfo = AdminResult.createInstance(model.templateStatusInfo);
     model.projectTypeInfo = AdminResult.createInstance(model.projectTypeInfo);
     model.beneficiaryCountryInfo = AdminResult.createInstance(model.beneficiaryCountryInfo);
