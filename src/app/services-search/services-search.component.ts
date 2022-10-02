@@ -184,7 +184,8 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
   }
 
   exportSearchResult(): void {
-    const criteria = this.selectedService.getSearchCriteriaModel().clone(this.form.value).filterSearchFields(this.fieldsNames);
+    let criteria = this.selectedService.getSearchCriteriaModel().clone(this.form.value).filterSearchFields(this.fieldsNames);
+    criteria = this.normalizeSearchCriteria(criteria);
     this.selectedService
       .exportSearch(criteria)
       .subscribe((blob) => window.open(blob.url));
@@ -368,6 +369,10 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
 
   isConsultationSelected(): boolean {
     return this.serviceControl.value === CaseTypes.CONSULTATION;
+  }
+
+  isCoordinationWithOrganizationSelected(): boolean {
+    return this.serviceControl.value === CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST;
   }
 
   stringifyDefaultDates(field: FormlyFieldConfig): void {
