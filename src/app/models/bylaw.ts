@@ -1,11 +1,13 @@
 import { DateUtils } from '@app/helpers/date-utils';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { IMyDateModel } from 'angular-mydatepicker';
+import { AdminResult } from './admin-result';
 import { SearchableCloneable } from './searchable-cloneable';
 
 export class Bylaw extends SearchableCloneable<Bylaw> {
   fullName!: string;
   category!: number;
+  categoryInfo!: AdminResult;
   firstReleaseDate!: string | IMyDateModel;
   lastUpdateDate!: string | IMyDateModel;
   id!: number;

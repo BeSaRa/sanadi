@@ -10,6 +10,7 @@ import { CharityReport } from '@app/models/charity-report';
 import { AdminLookupService } from '@app/services/admin-lookup.service';
 import { LangService } from '@app/services/lang.service';
 import { LookupService } from '@app/services/lookup.service';
+import { ToastService } from '@app/services/toast.service';
 import { DatepickerOptionsMap } from '@app/types/types';
 
 @Component({
@@ -43,30 +44,12 @@ export class CharityReportsComponent extends ListModelComponent<CharityReport> {
     {
       controlName: 'fullName',
       type: 'text',
-      label: this.lang.map.full_name,
+      label: this.lang.map.report_title,
     },
     {
       controlName: 'generalDate',
       type: 'date',
-      label: this.lang.map.date,
-    },
-    {
-      controlName: 'riskType',
-      label: this.lang.map.risk_type,
-      type: 'dropdown',
-      load$: this.adminLookupService.loadAsLookups(
-        AdminLookupTypeEnum.RISK_TYPE
-      ),
-      dropdownValue: 'id',
-    },
-    {
-      controlName: 'category',
-      label: this.lang.map.classification,
-      type: 'dropdown',
-      load$: this.adminLookupService.loadAsLookups(
-        AdminLookupTypeEnum.RISK_CLASSIFICATION
-      ),
-      dropdownValue: 'id',
+      label: this.lang.map.report_date,
     },
     {
       controlName: 'riskMitigationMeasures',
@@ -90,11 +73,16 @@ export class CharityReportsComponent extends ListModelComponent<CharityReport> {
     private fb: UntypedFormBuilder,
     public lang: LangService,
     private adminLookupService: AdminLookupService,
-    private lookupService: LookupService
+    private lookupService: LookupService,
+    private toastr: ToastService
   ) {
     super(CharityReport);
   }
-  _beforeAdd(model: CharityReport): CharityReport {
+  _beforeAdd(model: CharityReport): CharityReport | null {
+    if (this._list.findIndex(e => e.fullName === model.fullName) !== -1) {
+      this.toastr.alert(this.lang.map.msg_duplicated_item)
+      return null;
+    }
     model.generalDate = DateUtils.getDateStringFromDate(model.generalDate!)!;
     return model;
   }
@@ -103,5 +91,40 @@ export class CharityReportsComponent extends ListModelComponent<CharityReport> {
   }
   protected _initComponent(): void {
     this.form = this.fb.group(this.model.buildForm());
+    if (this.pageTitle === 'risk_reports') {
+      this.controls.push({
+        controlName: 'riskType',
+        label: this.lang.map.risk_type,
+        type: 'dropdown',
+        load$: this.adminLookupService.loadAsLookups(
+          AdminLookupTypeEnum.RISK_TYPE
+        ),
+        dropdownValue: 'id',
+      },
+
+        {
+          controlName: 'category',
+          label: this.lang.map.classification,
+          type: 'dropdown',
+          load$: this.adminLookupService.loadAsLookups(
+            AdminLookupTypeEnum.RISK_CLASSIFICATION
+          ),
+          dropdownValue: 'id',
+        },
+      );
+    }
+    if (this.pageTitle === 'coordination_and_support_reports') {
+      this.controls.push(
+        {
+          controlName: 'category',
+          label: this.lang.map.classification,
+          type: 'dropdown',
+          load$: this.adminLookupService.loadAsLookups(
+            AdminLookupTypeEnum.RISK_CLASSIFICATION
+          ),
+          dropdownValue: 'id',
+        },)
+    }
+
   }
 }

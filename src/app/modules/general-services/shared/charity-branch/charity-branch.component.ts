@@ -23,7 +23,7 @@ export class CharityBranchComponent extends ListModelComponent<CharityBranch> {
   get list(): CharityBranch[] {
     const branches = [...this._list];
     branches.forEach(e => {
-      e.branchContactOfficer.forEach(bco => {
+      e.branchContactOfficer?.forEach(bco => {
         bco.identificationNumber = bco.qid;
       })
     })
@@ -35,6 +35,7 @@ export class CharityBranchComponent extends ListModelComponent<CharityBranch> {
     'streetNumber',
     'zoneNumber',
     'buildingNumber',
+    'actions'
   ];
   controls: ControlWrapper[] = [
     { controlName: 'fullName', type: 'text', label: this.lang.map.full_name },

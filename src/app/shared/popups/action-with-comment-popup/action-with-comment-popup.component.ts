@@ -1,32 +1,32 @@
-import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {LangService} from '@app/services/lang.service';
-import {DIALOG_DATA_TOKEN} from '../../tokens/tokens';
-import {InboxService} from '@app/services/inbox.service';
-import {WFResponseType} from '@app/enums/wfresponse-type.enum';
-import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
-import {DialogRef} from '../../models/dialog-ref';
-import {ToastService} from '@app/services/toast.service';
-import {IWFResponse} from '@app/interfaces/i-w-f-response';
-import {QueryResult} from '@app/models/query-result';
-import {isObservable, Observable, of, Subject} from 'rxjs';
-import {filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
-import {CaseTypes} from '@app/enums/case-types.enum';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {DateUtils} from '@app/helpers/date-utils';
-import {LicenseApprovalModel} from '@app/models/license-approval-model';
-import {ServiceDataService} from '@app/services/service-data.service';
-import {ServiceData} from '@app/models/service-data';
-import {CommonUtils} from '@app/helpers/common-utils';
-import {ServiceRequestTypes} from '@app/enums/service-request-types';
-import {EmployeeService} from '@app/services/employee.service';
-import {CustomTerm} from '@app/models/custom-term';
-import {CustomTermService} from '@app/services/custom-term.service';
-import {DialogService} from '@app/services/dialog.service';
-import {CustomTermPopupComponent} from '@app/shared/popups/custom-term-popup/custom-term-popup.component';
-import {CaseModel} from '@app/models/case-model';
-import {DatepickerOptionsMap} from '@app/types/types';
-import {BaseGenericEService} from '@app/generics/base-generic-e-service';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { LangService } from '@app/services/lang.service';
+import { DIALOG_DATA_TOKEN } from '../../tokens/tokens';
+import { InboxService } from '@app/services/inbox.service';
+import { WFResponseType } from '@app/enums/wfresponse-type.enum';
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { DialogRef } from '../../models/dialog-ref';
+import { ToastService } from '@app/services/toast.service';
+import { IWFResponse } from '@app/interfaces/i-w-f-response';
+import { QueryResult } from '@app/models/query-result';
+import { isObservable, Observable, of, Subject } from 'rxjs';
+import { filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { CaseTypes } from '@app/enums/case-types.enum';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { DateUtils } from '@app/helpers/date-utils';
+import { LicenseApprovalModel } from '@app/models/license-approval-model';
+import { ServiceDataService } from '@app/services/service-data.service';
+import { ServiceData } from '@app/models/service-data';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { ServiceRequestTypes } from '@app/enums/service-request-types';
+import { EmployeeService } from '@app/services/employee.service';
+import { CustomTerm } from '@app/models/custom-term';
+import { CustomTermService } from '@app/services/custom-term.service';
+import { DialogService } from '@app/services/dialog.service';
+import { CustomTermPopupComponent } from '@app/shared/popups/custom-term-popup/custom-term-popup.component';
+import { CaseModel } from '@app/models/case-model';
+import { DatepickerOptionsMap } from '@app/types/types';
+import { BaseGenericEService } from '@app/generics/base-generic-e-service';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -43,7 +43,7 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
   destroy$: Subject<any> = new Subject<any>();
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
   customValidators = CustomValidators;
-
+  commentLabel: keyof ILanguageKeys = 'comment';
   private specialApproveServices: number[] = [
     CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL,
     CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL,
@@ -58,8 +58,8 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
   customTerms: CustomTerm[] = [];
 
   datepickerOptionsMap: DatepickerOptionsMap = {
-    licenseStartDate: DateUtils.getDatepickerOptions({disablePeriod: 'none', appendToBody: true}),
-    followUpDate: DateUtils.getDatepickerOptions({disablePeriod: 'past', appendToBody: true})
+    licenseStartDate: DateUtils.getDatepickerOptions({ disablePeriod: 'none', appendToBody: true }),
+    followUpDate: DateUtils.getDatepickerOptions({ disablePeriod: 'past', appendToBody: true })
   };
 
   constructor(
@@ -69,7 +69,8 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
       actionType: WFResponseType,
       taskId: string,
       task: QueryResult | CaseModel<any, any>,
-      claimBefore: boolean
+      claimBefore: boolean,
+      commentLabel: keyof ILanguageKeys
     },
     private dialogRef: DialogRef,
     private toast: ToastService,
@@ -86,6 +87,9 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
       this.label = ((CommonUtils.changeCamelToSnakeCase(this.data.actionType) + '_task') as unknown as keyof ILanguageKeys);
     }
     this.action = this.data.actionType;
+    if (data.commentLabel) {
+      this.commentLabel = data.commentLabel;
+    }
   }
 
   ngOnInit(): void {
@@ -97,7 +101,7 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
         service,
         license
       })))))
-      .subscribe(({license, service}) => {
+      .subscribe(({ license, service }) => {
         this.loadedLicense = license;
         this.displayCustomForm(license);
         this.buildForm();
@@ -131,10 +135,10 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
 
   buildForm() {
     let controls: any = {
-      licenseStartDate: [{value: '', disabled: this.loadedLicense?.requestType === ServiceRequestTypes.UPDATE}],
-      licenseDuration: [{value: null, disabled: this.loadedLicense?.requestType === ServiceRequestTypes.UPDATE},
-        [CustomValidators.required, CustomValidators.number]],
-      publicTerms: [{value: '', disabled: true}, [CustomValidators.required]],
+      licenseStartDate: [{ value: '', disabled: this.loadedLicense?.requestType === ServiceRequestTypes.UPDATE }],
+      licenseDuration: [{ value: null, disabled: this.loadedLicense?.requestType === ServiceRequestTypes.UPDATE },
+      [CustomValidators.required, CustomValidators.number]],
+      publicTerms: [{ value: '', disabled: true }, [CustomValidators.required]],
       customTerms: ['', [CustomValidators.required]],
       conditionalLicenseIndicator: [false],
       followUpDate: ['', [CustomValidators.required, CustomValidators.minDate(new Date())]],
@@ -265,7 +269,7 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
       }
       let fields = Object.keys(this.form.value).concat(['id']);
       return Object.keys(data).filter(field => fields.includes(field)).reduce((acc, field) => {
-        return {...acc, [field]: data[field], ignoreSendInterceptor: true};
+        return { ...acc, [field]: data[field], ignoreSendInterceptor: true };
       }, {});
     }) : of(null);
   }
@@ -288,7 +292,7 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
   }
 
   openAddCustomTermDialog() {
-    const customTerm = new CustomTerm().clone({caseType: this.data.task.getCaseType()});
+    const customTerm = new CustomTerm().clone({ caseType: this.data.task.getCaseType() });
     this.dialog.show(CustomTermPopupComponent, {
       model: customTerm
     }).onAfterClose$

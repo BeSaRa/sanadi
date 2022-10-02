@@ -113,7 +113,9 @@
           <th cdk-header-cell sortable-header *cdkHeaderCellDef>
             {{ lang.map.country }}
           </th>
-          <td cdk-cell *cdkCellDef="let row">{{ row.country }}</td>
+          <td cdk-cell *cdkCellDef="let row">
+            {{ row?.countryInfo?.getName() || row.country }}
+          </td>
         </ng-container>
         <ng-container cdkColumnDef="actions">
           <th cdk-header-cell *cdkHeaderCellDef>

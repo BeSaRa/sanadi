@@ -70,6 +70,13 @@ export class CharityDecisionsComponent extends ListModelComponent<CharityDecisio
   }
 
   protected _initComponent(): void {
+    if (!this.inside) {
+      this.controls.push({
+        controlName: 'organization',
+        label: this.lang.map.issuer,
+        type: 'text'
+      });
+    }
     this.form = this.fb.group(this.model.buildForm());
   }
   _beforeAdd(model: CharityDecision): CharityDecision {

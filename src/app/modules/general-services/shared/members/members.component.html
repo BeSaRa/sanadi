@@ -28,7 +28,7 @@
             *ngFor="
               let type of control.load$ ? (control.load$ | async) : control.load
             "
-            [value]="type.id"
+            [value]="type[control.dropdownValue!]"
             >{{ type.getName() }}</ng-option
           >
         </ng-select>
@@ -63,7 +63,7 @@
         [for]="control.controlName"
         class="form-label"
         [validationClasses]="control.controlName"
-        >{{ lang.map.date }}</label
+        >{{ control.label }}</label
       >
       <div class="input-group">
         <i class="input-group-text mdi mdi-calendar"></i>
@@ -140,7 +140,9 @@
           <th cdk-header-cell sortable-header *cdkHeaderCellDef>
             {{ lang.map.job_title }}
           </th>
-          <td cdk-cell *cdkCellDef="let row">{{ row.jobTitleId }}</td>
+          <td cdk-cell *cdkCellDef="let row">
+            {{ row?.jobTitleInfo?.getName() || row.jobTitleId }}
+          </td>
         </ng-container>
         <ng-container *ngIf="extended" cdkColumnDef="joinDate">
           <th cdk-header-cell sortable-header *cdkHeaderCellDef>

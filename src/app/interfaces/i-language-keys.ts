@@ -1427,7 +1427,19 @@ export interface ILanguageKeys {
   send_to_npo_management: string;
   msg_confirm_reset_form: string;
   organization: string;
-  request_state:string;
-  participating_value:string;
-  total_coordination_request_value:string;
+  registration_date: string;
+  issuer: string;
+  authrized_members: string;
+  report_date: string;
+  request_state: string;
+  participating_value: string;
+  total_coordination_request_value: string;
+  meeting_members_count: string;
+  date_becoming_real_benefeciary: string;
+  date_of_last_update_real_benefeciary: string;
+  internal_branches: string;
+  internal_branches_officers: string;
+  err_invalid_website: string;
+  report_title: string;
+  reject_reason: string;
 }

@@ -11,6 +11,7 @@ import { ExternalOfficesPopupComponent } from '@app/modules/general-services/pop
 import { DialogService } from './dialog.service';
 import { DynamicOptionsService } from './dynamic-options.service';
 import { FactoryService } from './factory.service';
+import { FollowupDateService } from './follow-up-date.service';
 import { UrlService } from './url.service';
 
 @CastResponseContainer({
@@ -30,6 +31,8 @@ export class CharityOrganizationUpdateService extends BaseGenericEService<Charit
   caseStatusIconMap: Map<number, string> = new Map();
   searchColumns: string[] = ['fullSerial', 'createdOn', 'caseStatus', 'subject', 'ouInfo'];
   constructor(
+    // For complete the request with a follow up
+    private _: FollowupDateService,
     public http: HttpClient,
     public cfr: ComponentFactoryResolver,
     public dynamicService: DynamicOptionsService,

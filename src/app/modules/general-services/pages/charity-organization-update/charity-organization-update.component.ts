@@ -29,13 +29,16 @@ import { DateUtils } from '@app/helpers/date-utils';
 import { ControlWrapper } from '@app/interfaces/i-control-wrapper';
 import { IKeyValue } from '@app/interfaces/i-key-value';
 import { AdminLookup } from '@app/models/admin-lookup';
+import { AdminResult } from '@app/models/admin-result';
 import { BlobModel } from '@app/models/blob-model';
 import { CharityDecision } from '@app/models/charity-decision';
 import { CharityOrganization } from '@app/models/charity-organization';
 import { CharityOrganizationUpdate } from '@app/models/charity-organization-update';
 import { CharityReport } from '@app/models/charity-report';
+import { Country } from '@app/models/country';
 import { FinalExternalOfficeApprovalResult } from '@app/models/final-external-office-approval-result';
 import { GeneralAssociationMeetingAttendance } from '@app/models/general-association-meeting-attendance';
+import { JobTitle } from '@app/models/job-title';
 import { OrgMember } from '@app/models/org-member';
 import { RealBeneficiary } from '@app/models/real-beneficiary';
 import { AdminLookupService } from '@app/services/admin-lookup.service';
@@ -47,8 +50,10 @@ import { CountryService } from '@app/services/country.service';
 import { DialogService } from '@app/services/dialog.service';
 import { EmployeeService } from '@app/services/employee.service';
 import { FinalExternalOfficeApprovalService } from '@app/services/final-external-office-approval.service';
+import { FollowupDateService } from '@app/services/follow-up-date.service';
 import { GeneralAssociationMeetingAttendanceService } from '@app/services/general-association-meeting-attendance.service';
 import { GoveranceDocumentService } from '@app/services/governance-document.service';
+import { JobTitleService } from '@app/services/job-title.service';
 import { LangService } from '@app/services/lang.service';
 import { LookupService } from '@app/services/lookup.service';
 import { MemberRoleService } from '@app/services/member-role.service';
@@ -132,10 +137,12 @@ export class CharityOrganizationUpdateComponent
     'meetingDate',
     'location',
     'meetingType',
+    'meetingCount',
   ]
-  countries$ = this.countryService.loadAsLookups();
+  countries!: Country[];
   externalOffices$?: Observable<FinalExternalOfficeApprovalResult[]>;
   organizationMeetings$?: Observable<GeneralAssociationMeetingAttendance[]>;
+  jobTitles!: JobTitle[];
   @ViewChildren('tabContent', { read: TemplateRef })
   tabsTemplates!: QueryList<TemplateRef<any>>;
 
@@ -154,6 +161,7 @@ export class CharityOrganizationUpdateComponent
   @ViewChildren('reportList')
   reportRefs!: QueryList<any>;
   charityRoles = CharityRole;
+
   get metaDataForm(): UntypedFormGroup {
     return this.form.get('metaData') as UntypedFormGroup;
   }
@@ -203,6 +211,17 @@ export class CharityOrganizationUpdateComponent
     return [];
   }
 
+  private _loadJobTitles() {
+    this.jobTitleService.loadAsLookups().pipe(share()).subscribe(e => {
+      this.jobTitles = [...e];
+    })
+  }
+  private _loadCountries() {
+    this.countryService.loadAsLookups().subscribe(e => {
+      this.countries = [...e];
+    })
+  }
+
   constructor(
     private meetingService: GeneralAssociationMeetingAttendanceService,
     private dialog: DialogService,
@@ -221,9 +240,12 @@ export class CharityOrganizationUpdateComponent
     private charityReportService: CharityReportService,
     private charityDecisionService: CharityDecisionService,
     private employeeService: EmployeeService,
-    private goveranceDocumentService: GoveranceDocumentService
+    private goveranceDocumentService: GoveranceDocumentService,
+    private jobTitleService: JobTitleService
   ) {
     super();
+    this._loadJobTitles();
+    this._loadCountries();
   }
 
   ngAfterViewInit(): void {
@@ -267,7 +289,7 @@ export class CharityOrganizationUpdateComponent
         {
           name: 'banchTab',
           template: tabsTemplates[5],
-          title: this.lang.map.lbl_branch,
+          title: this.lang.map.internal_branches,
           validStatus: () => true,
           category: CharityRequestType.META_DATA,
         },
@@ -309,7 +331,7 @@ export class CharityOrganizationUpdateComponent
         {
           name: 'authorizedMembersTab',
           template: tabsTemplates[11],
-          title: this.lang.map.board_members,
+          title: this.lang.map.authrized_members,
           validStatus: () => true,
           category: CharityRequestType.ADMINISTRATIVE_DATA,
         },
@@ -326,6 +348,7 @@ export class CharityOrganizationUpdateComponent
           title: this.lang.map.primary_law,
           validStatus: () => this.primaryLawForm.valid,
           category: CharityRequestType.GOVERANCE_DOCUMENTS,
+          order: 1,
         },
         {
           name: 'classifcationOfAidTab',
@@ -333,6 +356,7 @@ export class CharityOrganizationUpdateComponent
           title: this.lang.map.classification_of_foreign_aid,
           validStatus: () => true,
           category: CharityRequestType.GOVERANCE_DOCUMENTS,
+          order: 3,
         },
         {
           name: 'workAreasTab',
@@ -340,6 +364,8 @@ export class CharityOrganizationUpdateComponent
           title: this.lang.map.work_areas,
           validStatus: () => true,
           category: CharityRequestType.GOVERANCE_DOCUMENTS,
+          order: 4,
+
         },
         {
           name: 'byLawsTab',
@@ -347,6 +373,7 @@ export class CharityOrganizationUpdateComponent
           title: this.lang.map.bylaws,
           validStatus: () => true,
           category: CharityRequestType.GOVERANCE_DOCUMENTS,
+          order: 2
         },
         {
           name: 'riskReportsTab',
@@ -460,6 +487,8 @@ export class CharityOrganizationUpdateComponent
             this._buildMetaDataForm(requestType);
           } else if (requestType === this.RequestTypes.GOVERANCE_DOCUMENTS) {
             this._buildPrimaryLawForm(requestType);
+            this.tabs = this.tabs.filter(e => ((!e?.order) || e.order <= 2));
+            this.tabs.sort((a, b) => a.order - b.order);
           } else {
             this._buildForm(requestType);
           }
@@ -485,6 +514,7 @@ export class CharityOrganizationUpdateComponent
       joinDate,
       nationality,
       fullName,
+      jobTitleInfo
     } = member;
     return new OrgMember().clone({
       objectDBId: id,
@@ -496,6 +526,7 @@ export class CharityOrganizationUpdateComponent
       joinDate: DateUtils.getDateStringFromDate(joinDate),
       nationality,
       extraPhone,
+      jobTitleInfo: AdminResult.createInstance(jobTitleInfo)
     });
   }
   toCharityOrganizationRealBenficiary(
@@ -577,7 +608,7 @@ export class CharityOrganizationUpdateComponent
           return {
             ...prev,
             [key]: value.map((x) =>
-              this.toCharityOrganizationOrgMember(x.orgMember)
+              this.toCharityOrganizationOrgMember(x)
             ),
           };
         }, {});
@@ -756,6 +787,7 @@ export class CharityOrganizationUpdateComponent
       incomingDecisionList = arr[1].list || [];
     }
     return new CharityOrganizationUpdate().clone({
+      ...this.model,
       ...metaDataValue,
       requestType: this.requestTypeForm.value,
       charityId: this.form.get('charityId')!.value,
@@ -819,6 +851,7 @@ export class CharityOrganizationUpdateComponent
   _updateForm(model: CharityOrganizationUpdate | undefined): void {
     if (!model) return;
     this.model = model;
+
     if (this.model.requestType) {
       this.requestTypeForm.patchValue(this.model.requestType);
       this.handleRequestTypeChange(this.model.requestType);

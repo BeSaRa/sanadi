@@ -1,0 +1,16 @@
+import { IModelInterceptor } from '@app/interfaces/i-model-interceptor';
+import { GoveranceDocument } from '@app/models/goverance-document';
+import { ForeignAidClassificationInterceptor } from './foreign-aid-classification-interceptor';
+
+export class GoveranceDocumentInterceptor implements IModelInterceptor<GoveranceDocument>{
+  receive(model: GoveranceDocument): GoveranceDocument {
+    console.log({ model });
+    const foreignAidClassificationInterceptor = new ForeignAidClassificationInterceptor();
+    model.wfClassificationList = model.wfClassificationList.map(e => foreignAidClassificationInterceptor.receive(e));
+    return model;
+  }
+
+  send(model: Partial<GoveranceDocument>): Partial<GoveranceDocument> {
+    return model;
+  }
+}

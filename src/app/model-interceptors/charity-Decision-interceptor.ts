@@ -11,7 +11,7 @@ export class CharityDecisionInterceptor implements IModelInterceptor<CharityDeci
     return model;
   }
   receive(model: CharityDecision): CharityDecision {
-
+    model.generalDate = DateUtils.getDateStringFromDate(model.generalDate);
     return model;
   }
 }

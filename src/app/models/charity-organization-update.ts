@@ -1,14 +1,16 @@
-import { FormControl } from '@angular/forms';
 import { InterceptModel } from '@app/decorators/decorators/intercept-model';
 import { CaseTypes } from '@app/enums/case-types.enum';
+import { WFResponseType } from '@app/enums/wfresponse-type.enum';
 import { DateUtils } from '@app/helpers/date-utils';
+import { HasFollowUpDate } from '@app/interfaces/has-follow-up-date';
 import { CharityOrganizationUpdateInterceptor } from '@app/model-interceptors/charity-organization-update-interceptor';
 import { CharityOrganizationUpdateService } from '@app/services/charity-organization-update.service';
 import { FactoryService } from '@app/services/factory.service';
+import { FollowupDateService } from '@app/services/follow-up-date.service';
+import { DialogRef } from '@app/shared/models/dialog-ref';
 import { CustomValidators } from '@app/validators/custom-validators';
-import { IMyDate } from 'angular-mydatepicker';
+import { IMyDate, IMyDateModel } from 'angular-mydatepicker';
 import { AdminResult } from './admin-result';
-import { Beneficiary } from './beneficiary';
 import { Bylaw } from './bylaw';
 import { CaseModel } from './case-model';
 import { CharityBranch } from './charity-branch';
@@ -29,12 +31,14 @@ const interceptor = new CharityOrganizationUpdateInterceptor();
 export class CharityOrganizationUpdate extends CaseModel<
   CharityOrganizationUpdateService,
   CharityOrganizationUpdate
-> {
+> implements HasFollowUpDate {
   service: CharityOrganizationUpdateService = FactoryService.getService(
     'CharityOrganizationUpdateService'
   );
+  followUpService: FollowupDateService = FactoryService.getService('FollowupDateService')
   caseType: number = CaseTypes.CHARITY_ORGANIZATION_UPDATE;
 
+  followUpDate!: string | IMyDateModel;
   arabicName = '';
   englishName = '';
   shortName!: string;
@@ -108,62 +112,72 @@ export class CharityOrganizationUpdate extends CaseModel<
       publishDate,
       registrationDate,
       establishmentDate,
-      establishmentID
+      establishmentID,
     } = this;
     return {
-      publishDate,
-      arabicName: controls
-        ? [
-          arabicName,
-          [
-            CustomValidators.minLength(
-              CustomValidators.defaultLengths.MIN_LENGTH
-            ),
-
-            CustomValidators.required,
-            CustomValidators.maxLength(
-              CustomValidators.defaultLengths.ARABIC_NAME_MAX
-            ),
-            CustomValidators.pattern('AR_ONLY'),
-          ],
-        ]
-        : arabicName,
-      englishName: controls
-        ? [
-          englishName,
-          [
-            CustomValidators.minLength(
-              CustomValidators.defaultLengths.MIN_LENGTH
-            ),
-
-            CustomValidators.required,
-            CustomValidators.maxLength(
-              CustomValidators.defaultLengths.ENGLISH_NAME_MAX
-            ),
-            CustomValidators.pattern('ENG_ONLY'),
-          ],
-        ]
-        : englishName,
+      publishDate: controls ? [publishDate] : publishDate,
+      arabicName: controls ? [arabicName] : arabicName,
+      englishName: controls ? [englishName] : englishName,
       shortName: controls
-        ? [shortName, [CustomValidators.required]]
+        ? [
+          shortName,
+          [
+            CustomValidators.required,
+            CustomValidators.maxLength(
+              CustomValidators.defaultLengths.SWIFT_CODE_MAX
+            ),
+          ],
+        ]
         : shortName,
       activityType: controls
         ? [activityType, [CustomValidators.required]]
         : activityType,
       regulatingLaw: controls
-        ? [regulatingLaw, [CustomValidators.required]]
+        ? [
+          regulatingLaw,
+          [
+            CustomValidators.required,
+            CustomValidators.maxLength(
+              300),
+          ],
+        ]
         : regulatingLaw,
       registrationAuthority: controls
         ? [registrationAuthority, [CustomValidators.required]]
         : registrationAuthority,
-      taxCardNo: controls ? [taxCardNo] : taxCardNo,
+      taxCardNo: controls
+        ? [
+          taxCardNo,
+          [
+            CustomValidators.maxLength(
+              300),
+          ],
+        ]
+        : taxCardNo,
       unifiedEconomicRecord: controls
-        ? [unifiedEconomicRecord]
+        ? [
+          unifiedEconomicRecord,
+          [
+            CustomValidators.maxLength(
+              300
+            ),
+          ],
+        ]
         : unifiedEconomicRecord,
       registrationDate: controls ? [registrationDate] : registrationDate,
 
       establishmentDate: controls ? [establishmentDate] : establishmentDate,
-      establishmentID: controls ? [establishmentID] : establishmentID
+      establishmentID: controls
+        ? [
+          establishmentID,
+          [
+            CustomValidators.required,
+            CustomValidators.maxLength(
+              20
+            ),
+          ],
+        ]
+        : establishmentID,
     };
   }
   getFirstPageForm(controls = true) {
@@ -175,7 +189,6 @@ export class CharityOrganizationUpdate extends CaseModel<
       charityId: controls
         ? [charityId, [CustomValidators.required]]
         : charityId,
-
     };
   }
   buildContactInformationForm(controls = true) {
@@ -206,36 +219,94 @@ export class CharityOrganizationUpdate extends CaseModel<
       email: controls
         ? [
           email,
-          [CustomValidators.required, CustomValidators.pattern('EMAIL')],
+          [
+            CustomValidators.required,
+            CustomValidators.pattern('EMAIL'),
+            CustomValidators.maxLength(
+              CustomValidators.defaultLengths.EMAIL_MAX
+            ),
+          ],
         ]
         : email,
-      website: controls ? [website, [CustomValidators.required]] : website,
+      website: controls ? [website, [CustomValidators.required, CustomValidators.maxLength(200), CustomValidators.pattern('WEBSITE')]] : website,
       zoneNumber: controls
-        ? [zoneNumber, [CustomValidators.required]]
+        ? [
+          zoneNumber,
+          [
+            CustomValidators.required,
+            CustomValidators.maxLength(
+              5
+            ),
+          ],
+        ]
         : zoneNumber,
       streetNumber: controls
-        ? [streetNumber, [CustomValidators.required]]
+        ? [
+          streetNumber,
+          [
+            CustomValidators.required,
+            CustomValidators.maxLength(
+              5
+            ),
+          ],
+        ]
         : streetNumber,
       buildingNumber: controls
-        ? [buildingNumber, [CustomValidators.required]]
+        ? [
+          buildingNumber,
+          [
+            CustomValidators.required,
+            CustomValidators.maxLength(
+              5
+            ),
+          ],
+        ]
         : buildingNumber,
-      address: controls ? [address, [CustomValidators.required]] : address,
-      facebook: controls ? [facebook, [CustomValidators.required]] : facebook,
-      twitter: controls ? [twitter, [CustomValidators.required]] : twitter,
-      instagram: controls
-        ? [instagram, [CustomValidators.required]]
-        : instagram,
-      youTube: controls ? [youTube, [CustomValidators.required]] : youTube,
-      snapChat: controls ? [snapChat, [CustomValidators.required]] : snapChat,
+      address: controls
+        ? [
+          address,
+          [
+            CustomValidators.required,
+            CustomValidators.maxLength(
+              CustomValidators.defaultLengths.ADDRESS_MAX
+            ),
+          ],
+        ]
+        : address,
+      facebook: controls ? [facebook, [CustomValidators.pattern('WEBSITE')]] : facebook,
+      twitter: controls ? [twitter, [CustomValidators.pattern('WEBSITE')]] : twitter,
+      instagram: controls ? [instagram, [CustomValidators.pattern('WEBSITE')]] : instagram,
+      youTube: controls ? [youTube, [CustomValidators.pattern('WEBSITE')]] : youTube,
+      snapChat: controls ? [snapChat, [CustomValidators.pattern('WEBSITE')]] : snapChat,
     };
   }
   buildPrimaryLawForm(controls = true) {
-    const { domain, country, firstReleaseDate, lastUpdateDate, goals, charityWorkArea } = this;
+    const {
+      domain,
+      country,
+      firstReleaseDate,
+      lastUpdateDate,
+      goals,
+      charityWorkArea,
+    } = this;
     return {
-      firstReleaseDate: controls ? [firstReleaseDate, [CustomValidators.required]] : DateUtils.changeDateToDatepicker(firstReleaseDate),
-      lastUpdateDate: controls ? [lastUpdateDate, [CustomValidators.required]] : DateUtils.changeDateToDatepicker(lastUpdateDate),
+      firstReleaseDate: controls
+        ? [firstReleaseDate, [CustomValidators.required]]
+        : DateUtils.changeDateToDatepicker(firstReleaseDate),
+      lastUpdateDate: controls
+        ? [lastUpdateDate, [CustomValidators.required]]
+        : DateUtils.changeDateToDatepicker(lastUpdateDate),
       goals: controls ? [goals, [CustomValidators.required]] : goals,
-      charityWorkArea: controls ? [charityWorkArea, [CustomValidators.required]] : charityWorkArea,
+      charityWorkArea: controls
+        ? [charityWorkArea, [CustomValidators.required]]
+        : charityWorkArea,
     };
+  }
+
+  complete(): DialogRef {
+    return this.followUpService.finalApproveTask(this, WFResponseType.COMPLETE);
+  }
+  validateReject(): DialogRef {
+    return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.VALIDATE_REJECT, false, this, 'reject_reason');
   }
 }

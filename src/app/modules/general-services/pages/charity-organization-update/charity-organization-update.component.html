@@ -96,7 +96,7 @@
             id="englishName"
             validationClasses="englishName"
             formControlName="englishName"
-            [readonly]="readonly"
+            [readonly]="true"
           />
           <app-field-error-message
             controlName="englishName"
@@ -111,7 +111,7 @@
           >
           <input
             validationClasses="arabicName"
-            [readonly]="readonly"
+            [readonly]="true"
             type="text"
             class="form-control"
             id="arabicName"
@@ -175,7 +175,7 @@
 
         <div class="col-sm-6 col-md-4 mb-4 position-relative">
           <label for="registrationDate" class="form-label">{{
-            lang.map.creation_date
+            lang.map.registration_date
           }}</label>
           <input
             type="text"
@@ -433,6 +433,8 @@
     <ng-template #tabContent>
       <!-- founding members -->
       <members
+        [jobTitles]="jobTitles"
+        *ngIf="!!jobTitles"
         #adminList
         [list]="model?.founderMemberList || []"
         pageTitle="founding_members"
@@ -442,6 +444,8 @@
     <ng-template #tabContent>
       <!-- General Assembly Members  -->
       <members
+        [jobTitles]="jobTitles"
+        *ngIf="!!jobTitles"
         #adminList
         [list]="model?.generalAssemblyMemberList || []"
         pageTitle="general_assembly_members"
@@ -451,6 +455,8 @@
     <ng-template #tabContent>
       <!-- . Board Members  -->
       <members
+        [jobTitles]="jobTitles"
+        *ngIf="!!jobTitles"
         #adminList
         [list]="model?.boardMemberList || []"
         pageTitle="board_members"
@@ -460,6 +466,8 @@
     <ng-template #tabContent>
       <!-- . Current Executive Management  -->
       <members
+        [jobTitles]="jobTitles"
+        *ngIf="!!jobTitles"
         #adminList
         pageTitle="executive_managers"
         [list]="model?.currentExecutiveManagementList || []"
@@ -470,6 +478,8 @@
     <ng-template #tabContent>
       <!-- . Current Executive Management  -->
       <members
+        [jobTitles]="jobTitles"
+        *ngIf="!!jobTitles"
         #adminList
         [list]="model?.authorizedSignatoryMemberList || []"
         pageTitle="executive_managers"
@@ -572,38 +582,6 @@
             ></app-field-error-message>
           </div>
         </div>
-
-        <!-- <div class="col-sm-6 col-md-4 mb-4 position-relative">
-          <div>
-            <label
-              asteriskIfRequired="country"
-              for="requestType"
-              class="form-label"
-              >{{ lang.map.work_area }}</label
-            >
-            <ng-select
-              [selectOnTab]="true"
-              labelForId="country"
-              [clearable]="true"
-              placeholder="{{ lang.map.select }}"
-              id="country"
-              [notFoundText]="lang.map.msg_not_found"
-              appendTo="body"
-              validationClasses="country"
-              formControlName="country"
-            >
-              <ng-option
-                *ngFor="let type of countries$ | async"
-                [value]="type.id"
-                >{{ type.getName() }}</ng-option
-              >
-            </ng-select>
-            <app-field-error-message
-              controlName="country"
-            ></app-field-error-message>
-          </div>
-        </div> -->
-
         <div class="mb-4 position-relative">
           <label asteriskIfRequired="goals" for="goals" class="form-label">{{
             lang.map.goals
@@ -616,15 +594,10 @@
             [readonly]="readonly"
             validationClasses="goals"
             formControlName="goals"
-          ></textarea
-          ><!--
-          <app-field-error-message
-            controlName="goals"
-          ></app-field-error-message> -->
+          ></textarea>
         </div>
       </div>
-    </ng-template>
-    <ng-template #tabContent>
+      <hr />
       <foreign-aid-classifications
         #goverList
         *ngIf="!!charityWorkAreaField.value"
@@ -633,15 +606,18 @@
         [list]="model?.wFClassificationList || []"
       >
       </foreign-aid-classifications>
-    </ng-template>
-    <ng-template #tabContent>
+      <hr />
       <work-areas
+        *ngIf="!!countries"
+        [countries]="countries"
         #goverList
         [readonly]="readonly"
         [list]="model?.workAreaObjectList || []"
       >
       </work-areas>
     </ng-template>
+    <ng-template #tabContent> </ng-template>
+    <ng-template #tabContent> </ng-template>
     <ng-template #tabContent>
       <bylaws #goverList [readonly]="readonly" [list]="model?.byLawList || []">
       </bylaws>
@@ -738,15 +714,15 @@
                   {{ row.meetingTypeInfo.getName() }}
                 </td>
               </ng-container>
-              <!-- <ng-container cdkColumnDef="establishmentDate">
+
+              <ng-container cdkColumnDef="meetingCount">
                 <th cdk-header-cell sortable-header *cdkHeaderCellDef>
-                  {{ lang.map.establishment_date }}
+                  {{ lang.map.meeting_members_count }}
                 </th>
                 <td cdk-cell *cdkCellDef="let row">
-                  {{ row.establishmentDate }}
+                  {{ row.internalMembersDTO.length }}
                 </td>
-              </ng-container> -->
-
+              </ng-container>
               <tr
                 cdk-header-row
                 *cdkHeaderRowDef="organizationMeetingsColumns"
