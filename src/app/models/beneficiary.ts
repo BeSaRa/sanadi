@@ -39,7 +39,7 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
   benSecIdNumber!: string;
   residenceStatus!: number;
   benGUID!: number;
-  residenceCountry!: number;
+  residenceCity!: number;
   gender!: number;
   dateOfBirth!: IMyDateModel;
   educationLevel!: number;
@@ -107,7 +107,7 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
   orgBranchInfo!: AdminResult;
   orgInfo!: AdminResult;
   orgUserInfo!: AdminResult;
-  residenceCountryInfo!: AdminResult;
+  residenceCityInfo!: AdminResult;
   residenceStatusInfo!: AdminResult;
   benNationalityInfo!: AdminResult;
   dateOfBirthString: string | undefined;
@@ -250,12 +250,12 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
 
   getAddressFields(control: boolean = false): any {
     const {
-      residenceCountry,
+      residenceCity,
       addressDescription
     } = this;
 
     return {
-      residenceCountry: control ? [residenceCountry, CustomValidators.required] : residenceCountry,
+      residenceCity: control ? [residenceCity, CustomValidators.required] : residenceCity,
       addressDescription: control ? [addressDescription, [Validators.maxLength(3000)]] : addressDescription
     };
   }
