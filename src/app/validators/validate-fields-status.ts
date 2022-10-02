@@ -1,11 +1,11 @@
-import {AbstractControl, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
-import {hasValidLength, isValidValue} from '../helpers/utils';
-import {customValidationTypes} from '../types/types';
+import { AbstractControl, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { hasValidLength, isValidValue } from '../helpers/utils';
+import { customValidationTypes } from '../types/types';
 import * as dayjs from 'dayjs';
-import {FactoryService} from '../services/factory.service';
-import {ConfigurationService} from '../services/configuration.service';
-import {some as _some} from 'lodash';
-import {CommonUtils} from '@app/helpers/common-utils';
+import { FactoryService } from '../services/factory.service';
+import { ConfigurationService } from '../services/configuration.service';
+import { some as _some } from 'lodash';
+import { CommonUtils } from '@app/helpers/common-utils';
 
 export const validationPatterns: any = {
   ENG_NUM: new RegExp(/^[a-zA-Z0-9\- ]+$/),
@@ -22,7 +22,9 @@ export const validationPatterns: any = {
   EMAIL: new RegExp(/(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)])/),
   NUM_HYPHEN_COMMA: new RegExp('^(?=.*?[1-9])[0-9-,._]+$'),
   // PHONE_NUMBER: new RegExp('^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$','gmi')
-  PHONE_NUMBER: new RegExp(/^[+]?[0-9]+$/)
+  PHONE_NUMBER: new RegExp(/^[+]?[0-9]+$/),
+  WEBSITE: new RegExp(/[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/, 'ig')
+
 };
 
 export function validateFieldsStatus(fields: string[]): ValidatorFn {
@@ -30,7 +32,7 @@ export function validateFieldsStatus(fields: string[]): ValidatorFn {
     const isInvalid = fields.some((fieldName: string) => {
       return formGroup.get(fieldName)?.invalid;
     });
-    return isInvalid ? {required: true} : null;
+    return isInvalid ? { required: true } : null;
   };
 }
 
@@ -47,7 +49,7 @@ export function validateSum(expectedSum: number, numberOfPlaces: number, fields:
     });
     sum = (numberOfPlaces === 0) ? sum : Number(sum.toFixed(numberOfPlaces));
     expectedSum = (numberOfPlaces === 0) ? expectedSum : Number(expectedSum.toFixed(numberOfPlaces));
-    return (expectedSum === sum) ? null : {invalid_sum_total: {fields, fieldLocalizationMap, expectedSum}};
+    return (expectedSum === sum) ? null : { invalid_sum_total: { fields, fieldLocalizationMap, expectedSum } };
   };
 }
 
@@ -56,7 +58,7 @@ export function numberValidator(control: AbstractControl): ValidationErrors | nu
     return null;
   }
   const isValid = (/^[0-9\u0660-\u0669]+$/g).test(control.value);
-  return !isValid ? {number: true} : null;
+  return !isValid ? { number: true } : null;
 }
 
 export function decimalValidator(numberOfPlaces: number = 2): ValidatorFn {// , allowNegative: boolean = false
@@ -70,7 +72,7 @@ export function decimalValidator(numberOfPlaces: number = 2): ValidatorFn {// , 
 
     let decimalPattern = `^([0-9\u0660-\u0669]*)(\.[0-9\u0660-\u0669]{1,${numberOfPlaces}})?$`;
     const isValid = new RegExp(decimalPattern).test(control.value);
-    return isValid ? null : {decimal: {numberOfPlaces: numberOfPlaces}};
+    return isValid ? null : { decimal: { numberOfPlaces: numberOfPlaces } };
 
     /*let decimalPattern = `^([0-9\u0660-\u0669]*)(\.[0-9\u0660-\u0669]{1,${numberOfPlaces}})?$`,
       negativeDecimalPattern = `^-?([0-9\u0660-\u0669]*)(\.[0-9\u0660-\u0669]{1,${numberOfPlaces}})?$`,
@@ -99,7 +101,7 @@ export function maxlengthValidator(maxLength: number): ValidatorFn {
       valueLength = control.value.length;
     }
     isInvalid = (valueLength > maxLength);
-    return isInvalid ? {maxlength: {requiredLength: maxLength, actualLength: valueLength}} : null;
+    return isInvalid ? { maxlength: { requiredLength: maxLength, actualLength: valueLength } } : null;
   };
 }
 
@@ -122,16 +124,16 @@ export function minlengthValidator(minLength: number): ValidatorFn {
       valueLength = control.value.length;
     }
     isInvalid = (valueLength < minLength);
-    return isInvalid ? {minlength: {requiredLength: minLength, actualLength: valueLength}} : null;
+    return isInvalid ? { minlength: { requiredLength: minLength, actualLength: valueLength } } : null;
   };
 }
 
 export function requiredValidator(control: AbstractControl): ValidationErrors | null {
-  return !isValidValue(control.value) ? {required: true} : null;
+  return !isValidValue(control.value) ? { required: true } : null;
 }
 
 export function requiredArrayValidator(control: AbstractControl): ValidationErrors | null {
-  return (!isValidValue(control.value) || control.value.length === 0) ? {requiredArray: true} : null;
+  return (!isValidValue(control.value) || control.value.length === 0) ? { requiredArray: true } : null;
 }
 
 export function patternValidator(patternName: customValidationTypes): ValidatorFn {
@@ -228,6 +230,6 @@ export function uniqueValidator<T>(data: T[], property: keyof T, editObj: T): Va
       }
       return (row[property] + '').toLowerCase() === control.value.toLowerCase();
     });
-    return unique ? {unique: {value: control.value}} : null;
+    return unique ? { unique: { value: control.value } } : null;
   });
 }

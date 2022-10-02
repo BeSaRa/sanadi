@@ -36,12 +36,28 @@ export class CharityDecision extends BaseModel<
 
     return {
       referenceNumber: controls
-        ? [referenceNumber, [CustomValidators.required]]
+        ? [
+          referenceNumber,
+          [
+            CustomValidators.required,
+            CustomValidators.maxLength(CustomValidators.defaultLengths._500),
+          ],
+        ]
         : referenceNumber,
       generalDate: controls
         ? [generalDate, [CustomValidators.required]]
         : generalDate,
-      subject: controls ? [subject, [CustomValidators.required]] : subject,
+      subject: controls
+        ? [
+          subject,
+          [
+            CustomValidators.required,
+            CustomValidators.maxLength(
+              300
+            ),
+          ],
+        ]
+        : subject,
       organization: controls
         ? [organization, [CustomValidators.required]]
         : organization,

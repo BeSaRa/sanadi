@@ -1,3 +1,4 @@
+import { ValidatorFn } from '@angular/forms';
 import { InterceptModel } from '@app/decorators/decorators/intercept-model';
 import { RealBeneficiaryInterceptor } from '@app/model-interceptors/real-beneficiary-interceptors';
 import { CustomValidators } from '@app/validators/custom-validators';
@@ -105,6 +106,7 @@ export class RealBeneficiary extends SearchableCloneable<RealBeneficiary> {
             CustomValidators.minLength(
               CustomValidators.defaultLengths.MIN_LENGTH
             ),
+            CustomValidators.maxLength(50)
           ],
         ]
         : birthLocation,
@@ -119,25 +121,26 @@ export class RealBeneficiary extends SearchableCloneable<RealBeneficiary> {
             CustomValidators.minLength(
               CustomValidators.defaultLengths.MIN_LENGTH
             ),
+            CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)
           ],
         ]
         : address,
       streetNumber: controls
-        ? [streetNumber, [CustomValidators.required]]
+        ? [streetNumber, [CustomValidators.required, CustomValidators.maxLength(5)]]
         : streetNumber,
       zoneNumber: controls
-        ? [zoneNumber, [CustomValidators.required]]
+        ? [zoneNumber, [CustomValidators.required, CustomValidators.maxLength(5)]]
         : zoneNumber,
       buildingNumber: controls
-        ? [buildingNumber, [CustomValidators.required]]
+        ? [buildingNumber, [CustomValidators.required, CustomValidators.maxLength(5)]]
         : buildingNumber,
       identificationNumber: controls
         ? [
-          identificationNumber, CustomValidators.commonValidations.qId
+          identificationNumber, [CustomValidators.required, ...CustomValidators.commonValidations.qId]
         ]
         : identificationNumber,
       passportNumber: controls
-        ? [passportNumber, [CustomValidators.required]]
+        ? [passportNumber, [CustomValidators.required, , CustomValidators.maxLength(20)]]
         : passportNumber,
       iDDate: controls ? [iDDate, [CustomValidators.required]] : iDDate,
       // idexpiryDate: controls
@@ -157,5 +160,19 @@ export class RealBeneficiary extends SearchableCloneable<RealBeneficiary> {
         : lastUpdateDate,
       passportExpiryDate: controls ? [passportExpiryDate, [CustomValidators.required]] : passportExpiryDate
     };
+  }
+  getPassportValidation(): ValidatorFn[][] {
+    return [
+      [CustomValidators.required, CustomValidators.maxLength(20)],
+      [CustomValidators.required],
+      [CustomValidators.required],
+    ];
+  }
+  getIdValidation(): ValidatorFn[][] {
+    return [
+      [CustomValidators.required, ...CustomValidators.commonValidations.qId],
+      [CustomValidators.required],
+      [CustomValidators.required],
+    ]
   }
 }

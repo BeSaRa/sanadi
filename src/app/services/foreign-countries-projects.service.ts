@@ -1,25 +1,20 @@
-import {HttpClient} from '@angular/common/http';
-import {ComponentFactoryResolver, Injectable} from '@angular/core';
-import {DomSanitizer} from '@angular/platform-browser';
-import {CastResponseContainer} from '@app/decorators/decorators/cast-response';
-import {WFResponseType} from '@app/enums/wfresponse-type.enum';
-import {BaseGenericEService} from '@app/generics/base-generic-e-service';
-import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {ForeignCountriesProjects} from '@app/models/foreign-countries-projects';
-import {ForeignCountriesProjectsResult} from '@app/models/foreign-countries-projects-results';
-import {ForeignCountriesProjectsSearchCriteria} from '@app/models/foreign-countries-projects-seach-criteria';
-import {
-  ForeignCountriesProjectsComponent
-} from '@app/modules/general-services/pages/foreign-countries-projects/foreign-countries-projects.component';
-import {
-  ForeignCountriesProjectsPopupComponent
-} from '@app/modules/general-services/popups/foreign-countries-projects-popup/foreign-countries-projects-popup.component';
-import {Observable} from 'rxjs';
-import {DialogService} from './dialog.service';
-import {DynamicOptionsService} from './dynamic-options.service';
-import {FactoryService} from './factory.service';
-import {LicenseService} from './license.service';
-import {UrlService} from './url.service';
+import { HttpClient } from '@angular/common/http';
+import { ComponentFactoryResolver, Injectable } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
+import { CastResponseContainer } from '@app/decorators/decorators/cast-response';
+import { WFResponseType } from '@app/enums/wfresponse-type.enum';
+import { BaseGenericEService } from '@app/generics/base-generic-e-service';
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
+import { ForeignCountriesProjects } from '@app/models/foreign-countries-projects';
+import { ForeignCountriesProjectsResult } from '@app/models/foreign-countries-projects-results';
+import { ForeignCountriesProjectsSearchCriteria } from '@app/models/foreign-countries-projects-seach-criteria';
+import { Observable } from 'rxjs';
+import { DialogService } from './dialog.service';
+import { DynamicOptionsService } from './dynamic-options.service';
+import { FactoryService } from './factory.service';
+import { FollowupDateService } from './follow-up-date.service';
+import { LicenseService } from './license.service';
+import { UrlService } from './url.service';
 
 @CastResponseContainer({
   $default: {
@@ -37,6 +32,8 @@ export class ForeignCountriesProjectsService extends BaseGenericEService<Foreign
   searchColumns: string[] = ['fullSerial', 'requestTypeInfo', 'caseStatus', 'creatorInfo', 'createdOn', 'subject'];
 
   constructor(
+    // For complete the request with a follow up
+    private _: FollowupDateService,
     public http: HttpClient,
     public dialog: DialogService,
     public domSanitizer: DomSanitizer,
@@ -75,10 +72,10 @@ export class ForeignCountriesProjectsService extends BaseGenericEService<Foreign
     return this.license.foreignCountriesProjectsSearch(criteria);
   }
 
-  approveTask(model: ForeignCountriesProjects, action: WFResponseType) {
+  /* approveTask(model: ForeignCountriesProjects, action: WFResponseType) {
     return this.dialog.show(ForeignCountriesProjectsPopupComponent, {
       model,
       action
     });
-  }
+  } */
 }

@@ -7,7 +7,8 @@ import { SearchableCloneable } from './searchable-cloneable';
 const { send, receive } = new OrgMemberInterceptor();
 
 @InterceptModel({
-  receive, send
+  receive,
+  send,
 })
 export class OrgMember extends SearchableCloneable<OrgMember> {
   objectDBId!: number;
@@ -34,13 +35,18 @@ export class OrgMember extends SearchableCloneable<OrgMember> {
             CustomValidators.minLength(
               CustomValidators.defaultLengths.MIN_LENGTH
             ),
+            CustomValidators.maxLength(
+              CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+            ),
           ],
         ]
         : fullName,
       identificationNumber: controls
-        ? [identificationNumber, [CustomValidators.required]]
+        ? [identificationNumber, CustomValidators.commonValidations.qId]
         : identificationNumber,
-      jobTitleId: controls ? [jobTitleId, [CustomValidators.required]] : jobTitleId,
+      jobTitleId: controls
+        ? [jobTitleId, [CustomValidators.required]]
+        : jobTitleId,
     };
   }
   bulildExtendedForm(controls = true) {
@@ -49,8 +55,29 @@ export class OrgMember extends SearchableCloneable<OrgMember> {
     return {
       ...form,
       joinDate: controls ? [joinDate, [CustomValidators.required]] : joinDate,
-      email: controls ? [email, [CustomValidators.required, CustomValidators.pattern('EMAIL')]] : email,
-      phone: controls ? [phone, [CustomValidators.required]] : phone,
-    }
+      email: controls
+        ? [
+          email,
+          [
+            CustomValidators.required,
+            CustomValidators.pattern('EMAIL'),
+            CustomValidators.maxLength(
+              CustomValidators.defaultLengths.SWIFT_CODE_MAX
+            ),
+          ],
+        ]
+        : email,
+      phone: controls
+        ? [
+          phone,
+          [
+            CustomValidators.required,
+            CustomValidators.maxLength(
+              CustomValidators.defaultLengths.PHONE_NUMBER_MAX
+            ),
+          ],
+        ]
+        : phone,
+    };
   }
 }

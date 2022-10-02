@@ -30,11 +30,8 @@ export class OrganizationOfficersComponent implements OnInit {
     this.selectedOrganizationOfficers = list || [];
   }
   get list(): OrganizationOfficer[] {
-    const officers = [...this.selectedOrganizationOfficers];
-    officers.forEach(e => {
-      e.identificationNumber = e.qid;
-    })
-    return officers;
+
+    return this.selectedOrganizationOfficers;
   }
 
   constructor(
@@ -109,6 +106,7 @@ export class OrganizationOfficersComponent implements OnInit {
       }
       this.dialog.error(this.lang.map.selected_item_already_exists);
       return;
+
     }
     const notExisted = !this.selectedOrganizationOfficers
       .filter((x) => x.identificationNumber !== officer.identificationNumber)

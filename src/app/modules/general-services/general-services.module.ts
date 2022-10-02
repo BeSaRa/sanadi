@@ -29,7 +29,6 @@ import { EServicesMainModule } from '@app/modules/e-services-main/e-services-mai
 import { EmploymentApproveComponent } from './popups/employment-approve/employment-approve.component';
 import { ExternalOrgAffiliationComponent } from './pages/external-org-affiliation/external-org-affiliation.component';
 import { ForeignCountriesProjectsComponent } from './pages/foreign-countries-projects/foreign-countries-projects.component';
-import { ForeignCountriesProjectsPopupComponent } from './popups/foreign-countries-projects-popup/foreign-countries-projects-popup.component';
 import { NpoContactOfficerComponent } from './pages/npo-management/npo-contact-officer/npo-contact-officer.component';
 import { FounderMembersComponent } from './pages/npo-management/founder-members/founder-members.component';
 import { RealBeneficiariesComponent } from './shared/real-beneficiaries/real-beneficiaries.component';
@@ -37,6 +36,7 @@ import { OfficeServicesModule } from '../office-services/office-services.module'
 import { WorkAreasComponent } from './shared/work-areas/work-areas.component';
 import { CharityReportsComponent } from './shared/risk-reports/risk-reports.component';
 import { CoordinationWithOrgPopupComponent } from './popups/coordination-with-org-popup/coordination-with-org-popup.component';
+import { FollowupDateApprovePopupComponent } from './popups/follow-up-date-approve-popup/follow-up-date-approve-popup.component';
 
 
 @NgModule({
@@ -52,7 +52,7 @@ import { CoordinationWithOrgPopupComponent } from './popups/coordination-with-or
     NpoManagementApprovePopupComponent,
     EmploymentComponent,
     ForeignCountriesProjectsComponent,
-    ForeignCountriesProjectsPopupComponent,
+    FollowupDateApprovePopupComponent,
     CoordinationWithOrganizationsRequestComponent,
     NpoManagementComponent,
     FounderMembersComponent,

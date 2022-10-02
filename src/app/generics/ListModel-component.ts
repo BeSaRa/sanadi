@@ -36,12 +36,16 @@ export abstract class ListModelComponent<T extends Cloneable<T>>
       this.model = new this.TCreator();
     });
   }
-  _beforeAdd(model: T) {
+  _beforeAdd(model: T): T | null {
     return model;
   }
   listenToModelChange(): void {
     this.save$.pipe(takeUntil(this.destroy$)).subscribe((model) => {
-      this.model = this._beforeAdd(model);
+      const _model = this._beforeAdd(model);
+      if (!_model) {
+        return;
+      }
+      this.model = _model;
       if (this.editRecordIndex === -1) {
         this._list = [...this._list, this.model];
       }

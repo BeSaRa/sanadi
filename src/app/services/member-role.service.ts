@@ -10,6 +10,7 @@ import { DialogService } from './dialog.service';
 import { FactoryService } from './factory.service';
 import { UrlService } from './url.service';
 import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 @CastResponseContainer({
   $default: {
     model: () => MemberRole,
@@ -38,9 +39,20 @@ export class MemberRoleService extends CrudWithDialogGenericService<MemberRole> 
     return this.urlService.URLS.MEMBER_ROLES;
   }
 
-  @CastResponse(undefined)
-  getMembersOfCharity(id: number) {
-    return this.http.get<{ [key: string]: { orgMember: OrgMember }[] }>(this._getServiceURL() + '/charity/' + id + '/members');
+  getMembersOfCharity(id: number): Observable<{ [key: string]: OrgMember[] }> {
+    return this.http.get<{ [key: string]: { orgMember: OrgMember }[] }>(this._getServiceURL() + '/charity/' + id + '/members').pipe(
+      map(x =>
+        Object.entries(x.rs).reduce((pv, [key, value]) => {
+          if (!Array.isArray(value)) {
+            return pv;
+          }
+          return {
+            ...pv,
+            [key]: value.map(e => e.orgMember)
+          }
+        }, {})
+      )
+    );
   }
 
 }

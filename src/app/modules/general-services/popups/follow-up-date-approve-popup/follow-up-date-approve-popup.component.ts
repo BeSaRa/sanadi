@@ -8,34 +8,34 @@ import { ILanguageKeys } from '@app/interfaces/i-language-keys';
 import { IWFResponse } from '@app/interfaces/i-w-f-response';
 import { ForeignCountriesProjects } from '@app/models/foreign-countries-projects';
 import { DialogService } from '@app/services/dialog.service';
+import { FollowupDateService } from '@app/services/follow-up-date.service';
 import { InboxService } from '@app/services/inbox.service';
 import { LangService } from '@app/services/lang.service';
 import { OrganizationUnitService } from '@app/services/organization-unit.service';
 import { ToastService } from '@app/services/toast.service';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
-import { validationPatterns } from '@app/validators/validate-fields-status';
+import { FollowUpDateModels } from '@app/types/types';
 import { Subject } from 'rxjs';
 import { exhaustMap, switchMap, takeUntil, filter, tap, map } from 'rxjs/operators';
 
+
 @Component({
-  selector: 'foreign-countries-projects-popup',
-  templateUrl: './foreign-countries-projects-popup.component.html',
-  styleUrls: ['./foreign-countries-projects-popup.component.scss']
+  selector: 'follow-up-date-approve-popup',
+  templateUrl: './follow-up-date-approve-popup.component.html',
+  styleUrls: ['./follow-up-date-approve-popup.component.scss']
 })
-export class ForeignCountriesProjectsPopupComponent implements OnInit {
+export class FollowupDateApprovePopupComponent implements OnInit {
 
   private destroy$: Subject<any> = new Subject();
   label: keyof ILanguageKeys;
-  organizations$ = this.OgranizationsService.load().pipe(map(e => e.filter(x => !x.orgCode?.match(validationPatterns.AR_ONLY))), takeUntil(this.destroy$))
-  selectedLicense!: ForeignCountriesProjects | null;
+  selectedLicense!: FollowUpDateModels | null;
 
   selectedIndex: number | false = false;
   action$: Subject<any> = new Subject<any>();
 
   response: WFResponseType = WFResponseType.APPROVE;
-
-  model: ForeignCountriesProjects;
+  model: FollowUpDateModels;
   comment: UntypedFormControl = new UntypedFormControl();
   followUpDate: UntypedFormControl = new UntypedFormControl();
   organizationId: UntypedFormControl = new UntypedFormControl();
@@ -49,11 +49,10 @@ export class ForeignCountriesProjectsPopupComponent implements OnInit {
     private toast: ToastService,
     private inboxService: InboxService,
     @Inject(DIALOG_DATA_TOKEN) public data: {
-      model: ForeignCountriesProjects,
-      action: WFResponseType
+      model: FollowUpDateModels;
+      action: WFResponseType;
     },
-    public lang: LangService,
-    private OgranizationsService: OrganizationUnitService
+    public lang: LangService
   ) {
     this.label = ((CommonUtils.changeCamelToSnakeCase(this.data.action) + '_task') as unknown as keyof ILanguageKeys);
     this.response = this.data.action;
@@ -72,7 +71,7 @@ export class ForeignCountriesProjectsPopupComponent implements OnInit {
 
     this.listenToAction();
   }
-  saveLicenseInfo(license: ForeignCountriesProjects) {
+  saveLicenseInfo(license: FollowUpDateModels) {
     this.model.followUpDate = license.followUpDate;
     this.model.organizationId = license.organizationId;
   }
@@ -89,14 +88,13 @@ export class ForeignCountriesProjectsPopupComponent implements OnInit {
       .pipe(filter(invalid => !invalid))
       .pipe(exhaustMap(_ => {
         this.model.followUpDate = DateUtils.getDateStringFromDate(this.followUpDate.value);
-        this.model.organizationId = this.organizationId.value;
         return this.model.save();
       }))
       .pipe(switchMap(_ => this.inboxService.takeActionOnTask(this.data.model.taskDetails.tkiid, this.getResponse(), this.model.service)))
       .subscribe(() => {
         this.toast.success(this.lang.map.process_has_been_done_successfully);
         this.dialogRef.close(true);
-      })
+      });
   }
 
   private displayInvalidItemMessages() {

@@ -1432,10 +1432,22 @@ export interface ILanguageKeys {
   lbl_data_of_applicant: string;
   lbl_activity_data: string;
   expected_date: string;
-  request_state:string;
-  participating_value:string;
-  total_coordination_request_value:string;
-  approval_awareness_activity_suggestion:string;
+  request_state: string;
+  participating_value: string;
+  total_coordination_request_value: string;
+  approval_awareness_activity_suggestion: string;
   same_as_applicant: string;
   does_organization_have_agreement_with_RACA: string;
+  registration_date: string;
+  issuer: string;
+  authrized_members: string;
+  report_date: string;
+  meeting_members_count: string;
+  date_becoming_real_benefeciary: string;
+  date_of_last_update_real_benefeciary: string;
+  internal_branches: string;
+  internal_branches_officers: string;
+  err_invalid_website: string;
+  report_title: string;
+  reject_reason: string;
 }

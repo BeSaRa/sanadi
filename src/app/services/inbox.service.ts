@@ -57,6 +57,7 @@ import { ForeignCountriesProjectsService } from './foreign-countries-projects.se
 import { CastResponse } from '@decorators/cast-response';
 import { UrgentInterventionLicenseFollowupService } from '@services/urgent-intervention-license-followup.service';
 import { CharityOrganizationUpdateService } from './charity-organization-update.service';
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
 
 @Injectable({
   providedIn: 'root'
@@ -344,7 +345,7 @@ export class InboxService {
     return this.takeActionOnTask(taskId, {}, service);
   }
 
-  takeActionWithComment(taskId: string, caseType: number, actionType: WFResponseType, claimBefore: boolean = false, task?: QueryResult | CaseModel<any, any>): DialogRef {
+  takeActionWithComment(taskId: string, caseType: number, actionType: WFResponseType, claimBefore: boolean = false, task?: QueryResult | CaseModel<any, any>, commentLabel: keyof ILanguageKeys = 'comment'): DialogRef {
     const service = this.getService(caseType);
     return this.dialog.show(ActionWithCommentPopupComponent, {
       service,
@@ -352,7 +353,8 @@ export class InboxService {
       taskId,
       actionType,
       claimBefore,
-      task
+      task,
+      commentLabel
     });
   }
 

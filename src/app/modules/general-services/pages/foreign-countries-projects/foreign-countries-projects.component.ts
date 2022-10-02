@@ -22,6 +22,7 @@ import { Lookup } from '@app/models/lookup';
 import { ProjectNeedsComponent } from '@app/modules/e-services-main/shared/project-needs/project-needs.component';
 import { CountryService } from '@app/services/country.service';
 import { DialogService } from '@app/services/dialog.service';
+import { FollowupDateService } from '@app/services/follow-up-date.service';
 import { ForeignCountriesProjectsService } from '@app/services/foreign-countries-projects.service';
 import { LangService } from '@app/services/lang.service';
 import { LicenseService } from '@app/services/license.service';
@@ -80,7 +81,8 @@ export class ForeignCountriesProjectsComponent
     private dialog: DialogService,
     private licenseService: LicenseService,
     private cd: ChangeDetectorRef,
-    private toast: ToastService
+    private toast: ToastService,
+
   ) {
     super();
   }

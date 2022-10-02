@@ -1,9 +1,17 @@
+import { InterceptModel } from '@app/decorators/decorators/intercept-model';
+import { GoveranceDocumentInterceptor } from '@app/model-interceptors/goverence-document-interceptor';
 import { Bylaw } from './bylaw';
 import { CharityOrganizationUpdate } from './charity-organization-update';
 import { ForeignAidClassification } from './foreign-aid-classification';
 import { SearchableCloneable } from './searchable-cloneable';
 import { WorkArea } from './work-area';
 
+const { send, receive } = new GoveranceDocumentInterceptor();
+
+@InterceptModel({
+  send,
+  receive
+})
 export class GoveranceDocument extends SearchableCloneable<GoveranceDocument> {
   charityId!: number;
   charityWorkArea!: number;

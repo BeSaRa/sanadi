@@ -126,13 +126,13 @@
       >
         <ng-container cdkColumnDef="fullName">
           <th cdk-header-cell sortable-header *cdkHeaderCellDef>
-            {{ lang.map.full_name }}
+            {{ lang.map.report_title }}
           </th>
           <td cdk-cell *cdkCellDef="let row">{{ row.fullName }}</td>
         </ng-container>
         <ng-container cdkColumnDef="generalDate">
           <th cdk-header-cell sortable-header *cdkHeaderCellDef>
-            {{ lang.map.date }}
+            {{ lang.map.report_date }}
           </th>
           <td cdk-cell *cdkCellDef="let row">{{ row.generalDate }}</td>
         </ng-container>
