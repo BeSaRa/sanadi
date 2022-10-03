@@ -977,5 +977,19 @@
     "group": "general-services",
     "itemOrder": 6,
     "svg": null
+  },
+
+  {
+    "id": 75,
+    "langKey": "menu_profile",
+    "path": "/home/administration/profiles",
+    "icon": "mdi-account",
+    "isSvg": false,
+    "permission": "MANAGE_VACATIONS_DATE",
+    "permissionGroup": null,
+    "parent": 6,
+    "group": "administration",
+    "itemOrder": 25,
+    "svg": null
   }
 ]
