@@ -36,6 +36,7 @@ import { ExternalLoginComponent } from './pages/external-login/external-login.co
 import { ReportService } from "@services/report.service";
 import { ReportContract } from "@contracts/report-contract";
 import { tap } from "rxjs/operators";
+import { ProfileService } from './services/profile.service';
 
 @NgModule({
   declarations: [
@@ -77,6 +78,7 @@ import { tap } from "rxjs/operators";
         CustomRoleService,
         OrganizationBranchService,
         OrganizationUserService,
+        ProfileService,
         AidLookupService,
         OrganizationUnitService]
     },
@@ -92,16 +94,16 @@ export class AppModule {
   static http: HttpClient;
 
   static AppInit(http: HttpClient,
-                 configurationService: ConfigurationService,
-                 urlService: UrlService,
-                 langService: LangService,
-                 infoService: InfoService,
-                 lookupService: LookupService,
-                 tokenService: TokenService,
-                 authService: AuthService,
-                 menuItemService: MenuItemService,
-                 autoRegister: AutoRegisterService,
-                 reportService: ReportService): () => Promise<unknown> {
+    configurationService: ConfigurationService,
+    urlService: UrlService,
+    langService: LangService,
+    infoService: InfoService,
+    lookupService: LookupService,
+    tokenService: TokenService,
+    authService: AuthService,
+    menuItemService: MenuItemService,
+    autoRegister: AutoRegisterService,
+    reportService: ReportService): () => Promise<unknown> {
     AppModule.http = http;
     autoRegister.ping();
     return () => {

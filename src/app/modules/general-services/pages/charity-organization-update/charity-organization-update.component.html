@@ -44,13 +44,7 @@
             [controlName]="'requestType'"
           ></app-field-error-message>
         </div>
-        <div
-          class="col-sm-6 col-md-4"
-          *ngIf="
-            requestTypeForm.value !== null &&
-            (charityOrganizations$ | async) as data
-          "
-        >
+        <div class="col-sm-6 col-md-4" *ngIf="requestTypeForm.value !== null">
           <label
             [asteriskIfRequired]="'charityId'"
             for="charityId"
@@ -70,9 +64,11 @@
             [formControlName]="'charityId'"
             (change)="handleSelectCharityOrganization($event)"
           >
-            <ng-option *ngFor="let type of data" [value]="type.id">{{
-              type.getName()
-            }}</ng-option>
+            <ng-option
+              *ngFor="let type of charityOrganizations"
+              [value]="type.id"
+              >{{ type.getName() }}</ng-option
+            >
           </ng-select>
           <app-field-error-message
             [controlName]="'charityId'"
