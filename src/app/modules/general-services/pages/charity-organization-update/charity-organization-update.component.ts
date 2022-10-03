@@ -526,8 +526,8 @@ export class CharityOrganizationUpdateComponent
           this.requestTypeForm.setValue(this.requestType$.value);
         }
 
-        if (this.employeeService.isExternalUser()) {
-          const id = this.charityOrganizations[0].id;
+        if (this.employeeService.isExternalUser() && !this.readonly) {
+          const id = this.charityOrganizations[0]?.id;
           this.form.get('charityId')?.patchValue(id);
           this.handleSelectCharityOrganization(id)
           this.form.get('charityId')?.disable();

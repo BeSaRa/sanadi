@@ -524,7 +524,6 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         label: 'send_to_multi_departments',
         askChecklist: true,
         show: (item: CaseModel<any, any>) => {
-          console.log(item.getResponses())
           return item.getResponses().includes(WFResponseType.INTERNAL_PROJECT_SEND_TO_MULTI_DEPARTMENTS)
             || item.getResponses().includes(WFResponseType.FUNDRAISING_LICENSE_SEND_TO_MULTI_DEPARTMENTS)
             || item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_LICENSE_SEND_TO_MULTI_DEPARTMENTS)
@@ -572,7 +571,9 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
             || item.getResponses().includes(WFResponseType.CUSTOMS_EXEMPTION_SEND_TO_SINGLE_DEPARTMENT)
             || item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_CLOSURE_SEND_TO_SINGLE_DEPARTMENT)
             || item.getResponses().includes(WFResponseType.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD_SEND_TO_SINGLE_DEPARTMENT)
-            || item.getResponses().includes(WFResponseType.REVIEW_NPO_MANAGEMENT);
+            || item.getResponses().includes(WFResponseType.REVIEW_NPO_MANAGEMENT)
+            || item.getResponses().includes(WFResponseType.SEND_TO_DEPARTMENT_CHARITY_ORGANIZATION_UPDATE)
+            ;
         },
         onClick: (item: CaseModel<any, any>) => {
           this.sendToSingleDepartmentAction(item);
