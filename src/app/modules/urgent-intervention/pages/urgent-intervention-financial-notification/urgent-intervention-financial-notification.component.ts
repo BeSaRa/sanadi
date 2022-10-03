@@ -76,7 +76,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
       checkTouchedDirty: false,
       isTouchedOrDirty: () => false,
       show: () => true,
-      validStatus: () => this.basicInfoTab.valid && (this.operation != OperationTypes.CREATE || !!this.selectedLicense)
+      validStatus: () => this.basicInfoTab.valid
     },
     entities: {
       name: 'entitiesTab',
