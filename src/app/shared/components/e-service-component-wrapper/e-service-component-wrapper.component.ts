@@ -524,6 +524,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         label: 'send_to_multi_departments',
         askChecklist: true,
         show: (item: CaseModel<any, any>) => {
+          console.log(item.getResponses())
           return item.getResponses().includes(WFResponseType.INTERNAL_PROJECT_SEND_TO_MULTI_DEPARTMENTS)
             || item.getResponses().includes(WFResponseType.FUNDRAISING_LICENSE_SEND_TO_MULTI_DEPARTMENTS)
             || item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_LICENSE_SEND_TO_MULTI_DEPARTMENTS)

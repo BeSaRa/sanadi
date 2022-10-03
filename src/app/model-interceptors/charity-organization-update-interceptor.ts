@@ -56,7 +56,7 @@ export class CharityOrganizationUpdateInterceptor implements IModelInterceptor<C
     (model.registrationDate && (model.registrationDate = DateUtils.getDateStringFromDate(model.registrationDate)));
     (model.establishmentDate && (model.establishmentDate = DateUtils.getDateStringFromDate(model.establishmentDate)));
 
-    model.wFClassificationList = model.wFClassificationList.map(e => foreignAidClassificationInterceptor.receive(e));
+    model.wFClassificationList = model.wFClassificationList?.map(e => foreignAidClassificationInterceptor.receive(e));
     model.realBeneficiaryList = model.realBeneficiaryList?.map(e => realBeneficiaryInterceptor.receive(e) as RealBeneficiary);
     model.boardMemberList = model.boardMemberList?.map(e => membersInterceptor.receive(e) as OrgMember);
     model.authorizedSignatoryMemberList = model.authorizedSignatoryMemberList?.map(e => membersInterceptor.receive(e) as OrgMember);
