@@ -15,7 +15,7 @@ export class CommonService {
   flags?: Common['flags']
 
   constructor(private http: HttpClient,
-              private urlService: UrlService) {
+    private urlService: UrlService) {
   }
 
   _getURLSegment(): string {
@@ -52,10 +52,12 @@ export class CommonService {
     let queryParams = new HttpParams();
     queryParams = queryParams.append('type', agencyType);
     queryParams = queryParams.append('country', executionCountry);
-
     return this.http.get(this._getURLSegment() + '/agency', { params: queryParams })
       .pipe(
         catchError((_err: any) => of([])),
+        tap((d) =>
+          console.log(d)
+        ),
         map((result: any) => result.rs.map((x: AdminResult) => AdminResult.createInstance(x)))
       );
   }

@@ -1,3 +1,5 @@
+import { AdminResult } from './../../../../models/admin-result';
+import { ImplementingAgency } from './../../../../models/implementing-agency';
 import { UserClickOn } from './../../../../enums/user-click-on.enum';
 import { CustomValidators } from './../../../../validators/custom-validators';
 import { UrgentInterventionAnnouncementSearchCriteria } from '@app/models/urgent-intervention-announcement-search-criteria';
@@ -9,9 +11,7 @@ import {
   ImplementingAgencyListComponent
 } from './../../shared/implementing-agency-list/implementing-agency-list.component';
 import { ToastService } from '@app/services/toast.service';
-import { ServiceRequestTypes } from '@app/enums/service-request-types';
 import { BankAccount } from '@app/models/bank-account';
-import { AdminResult } from '@app/models/admin-result';
 import { CommonService } from '@services/common.service';
 import { UrgentInterventionFinancialRequestType } from '@app/enums/urgent-intervention-financial-request-type';
 import { OpenFrom } from '@app/enums/open-from.enum';
@@ -57,7 +57,8 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
   entitiesTabStatus: ReadinessStatus = 'READY';
   interventionAreasTabStatus: ReadinessStatus = 'READY';
   interventionFieldsTabStatus: ReadinessStatus = 'READY';
-  implementingAgencies: AdminResult[] = [];
+  implementingAgencies: ImplementingAgency[] = [];
+  implementingAgenciesAdminRes: AdminResult[] = [];
   bankAccountList: BankAccount[] = [];
   @ViewChild('interventionRegionListComponent') interventionRegionListComponentRef!: InterventionRegionListComponent;
   @ViewChild('interventionFieldListComponent') interventionFieldListComponentRef!: InterventionFieldListComponent;
@@ -415,10 +416,14 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
   }
 
   private _loadImplementingAgenciesByAgencyType() {
-    this.commonService.loadAgenciesByAgencyTypeAndCountry(this.implementingAgencyTypeField.value, this.model?.executionCountry || 0)
-      .subscribe((result) => {
-        this.implementingAgencies = [...result];
-      });
+    if (this.isReceive) {
+      this.commonService.loadAgenciesByAgencyTypeAndCountry(this.implementingAgencyTypeField.value, this.model?.executionCountry || 0)
+        .subscribe((result) => {
+          this.implementingAgenciesAdminRes = [...result];
+        });
+    } else {
+      this.implementingAgencies = (this.model?.implementingAgencyList || []).filter(ia => ia.implementingAgencyType == this.implementingAgencyTypeField.value)
+    }
   }
 
   handleImplementingAgencyNameChanges() {
