@@ -278,6 +278,41 @@
             </div>
           </ng-container>
         </div>
+        <div class="row">
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="internalProjectClassification"
+                   for="internalProjectClassification">{{lang.map.execution_field}}</label>
+            <ng-select (change)="onRequestTypeChange()" [readonly]="readonly" validationClasses="internalProjectClassification"
+                       appendTo="body" [clearable]="true"
+                       id="internalProjectClassification"
+                       formControlName="internalProjectClassification">
+              <ng-option [value]="option.lookupKey" *ngFor="let option of internalProjectClassifications">{{option.getName()}}</ng-option>
+            </ng-select>
+            <app-field-error-message controlName="internalProjectClassification"></app-field-error-message>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="sanadiDomain"
+                   for="sanadiDomain">{{lang.map.execution_field}}</label>
+            <ng-select (change)="onRequestTypeChange()" [readonly]="readonly" validationClasses="sanadiDomain"
+                       appendTo="body" [clearable]="true"
+                       id="sanadiDomain"
+                       formControlName="sanadiDomain">
+              <ng-option [value]="option.id" *ngFor="let option of sanadiDomains">{{option.getName()}}</ng-option>
+            </ng-select>
+            <app-field-error-message controlName="sanadiDomain"></app-field-error-message>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="sanadiMainClassification"
+                   for="sanadiMainClassification">{{lang.map.execution_field}}</label>
+            <ng-select (change)="onRequestTypeChange()" [readonly]="readonly" validationClasses="sanadiMainClassification"
+                       appendTo="body" [clearable]="true"
+                       id="sanadiMainClassification"
+                       formControlName="sanadiMainClassification">
+              <ng-option [value]="option.id" *ngFor="let option of sanadiMainClassifications">{{option.getName()}}</ng-option>
+            </ng-select>
+            <app-field-error-message controlName="sanadiMainClassification"></app-field-error-message>
+          </div>
+        </div>
         <div *ngIf="displayDevGoals" class="row">
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="firstSDGoal"
