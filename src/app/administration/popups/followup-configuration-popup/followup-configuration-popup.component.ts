@@ -16,6 +16,7 @@ import {FollowUpType} from '@app/enums/followUp-type.enum';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {RequestTypeFollowupService} from '@services/request-type-followup.service';
 import {CaseTypes} from '@app/enums/case-types.enum';
+import {ToastService} from '@services/toast.service';
 
 @Component({
   selector: 'followup-configuration-popup',
@@ -41,6 +42,7 @@ export class FollowupConfigurationPopupComponent extends AdminGenericDialog<Foll
               public dialogRef: DialogRef,
               public lang: LangService,
               private lookupService: LookupService,
+              private toast: ToastService,
               private teamService: TeamService,
               private requestTypeFollowupService: RequestTypeFollowupService,
               @Inject(DIALOG_DATA_TOKEN) private data: IDialogData<FollowupConfiguration>) {
@@ -70,6 +72,8 @@ export class FollowupConfigurationPopupComponent extends AdminGenericDialog<Foll
   }
 
   afterSave(model: FollowupConfiguration, dialogRef: DialogRef): void {
+    const message = this.operation === OperationTypes.CREATE ? this.lang.map.msg_create_x_success : this.lang.map.msg_update_x_success;
+    this.toast.success(message.change({x: model.getName()}));
     dialogRef.close();
   }
 
