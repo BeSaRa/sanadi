@@ -144,6 +144,19 @@
           </div>
         </div>
         <div class="row">
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="projectWorkArea"
+                   for="projectWorkArea">{{lang.map.execution_field}}</label>
+            <ng-select (change)="onRequestTypeChange()" [readonly]="readonly" validationClasses="projectWorkArea"
+                       appendTo="body" [clearable]="true"
+                       id="projectWorkArea"
+                       formControlName="projectWorkArea">
+              <ng-option [value]="option.lookupKey" *ngFor="let option of projectWorkAreas">{{option.getName()}}</ng-option>
+            </ng-select>
+            <app-field-error-message controlName="projectWorkArea"></app-field-error-message>
+          </div>
+        </div>
+        <div class="row">
           <div class="col-sm-12">
             <h2 class="h6 text-primary">{{lang.map.beneficiary_country_info}}</h2>
             <hr>

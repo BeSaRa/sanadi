@@ -29,7 +29,11 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
   beneficiaryRegion!: string;
   executionCountry!: number;
   executionRegion!: string;
+  projectWorkArea!: string;
   domain!: number;
+  internalProjectClassification!: number;
+  sanadiDomain!: number;
+  sanadiMainClassification!: number;
   mainUNOCHACategory!: number;
   subUNOCHACategory!: number;
   mainDACCategory!: number;
@@ -67,7 +71,11 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
   templateStatusInfo!: AdminResult;
   beneficiaryCountryInfo!: AdminResult;
   executionCountryInfo!: AdminResult;
+  projectWorkAreaInfo!: AdminResult;
   domainInfo!: AdminResult;
+  internalProjectClassificationInfo!: AdminResult;
+  sanadiDomainInfo!: AdminResult;
+  sanadiMainClassificationInfo!: AdminResult;
   mainUNOCHACategoryInfo!: AdminResult;
   subUNOCHACategoryInfo!: AdminResult;
   mainDACCategoryInfo!: AdminResult;
@@ -104,6 +112,7 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
       isConstructional,
       projectName,
       projectDescription,
+      projectWorkArea,
       beneficiaryCountry,
       beneficiaryRegion,
       executionCountry,
@@ -125,6 +134,7 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
         CustomValidators.required,
         CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]
       ] : projectDescription,
+      projectWorkArea: controls ? [projectWorkArea, CustomValidators.required] : projectWorkArea,
       beneficiaryCountry: controls ? [beneficiaryCountry, CustomValidators.required] : beneficiaryCountry,
       beneficiaryRegion: controls ? [beneficiaryRegion, [CustomValidators.required, CustomValidators.maxLength(250)]] : beneficiaryRegion,
       executionCountry: controls ? [executionCountry, CustomValidators.required] : executionCountry,
@@ -141,7 +151,10 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
       subUNOCHACategory,
       firstSDGoal,
       secondSDGoal,
-      thirdSDGoal
+      thirdSDGoal,
+      internalProjectClassification,
+      sanadiDomain,
+      sanadiMainClassification
     } = this;
     return {
       domain: controls ? [domain, CustomValidators.required] : domain,
@@ -151,7 +164,10 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
       subUNOCHACategory: controls ? [subUNOCHACategory] : subUNOCHACategory,
       firstSDGoal: controls ? [firstSDGoal] : firstSDGoal,
       secondSDGoal: controls ? [secondSDGoal] : secondSDGoal,
-      thirdSDGoal: controls ? [thirdSDGoal] : thirdSDGoal
+      thirdSDGoal: controls ? [thirdSDGoal] : thirdSDGoal,
+      internalProjectClassification: controls ? [internalProjectClassification] : internalProjectClassification,
+      sanadiDomain: controls ? [sanadiDomain] : sanadiDomain,
+      sanadiMainClassification: controls ? [sanadiMainClassification] : sanadiMainClassification
     }
   }
 

@@ -33,6 +33,8 @@ import { DialogRef } from '@app/shared/models/dialog-ref';
 import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
 import { DacOchaNewService } from '@services/dac-ocha-new.service';
 import { AdminLookup } from '@app/models/admin-lookup';
+import {AidLookupService} from '@services/aid-lookup.service';
+import {AidLookup} from '@app/models/aid-lookup';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -47,7 +49,10 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   domains: Lookup[] = this.lookupService.listByCategory.Domain;
   projectTypes: Lookup[] = this.lookupService.listByCategory.ProjectType;
   requestTypes: Lookup[] = this.lookupService.listByCategory.ProjectModelingReqType.slice().sort((a, b) => a.lookupKey - b.lookupKey);
-  implementingAgencyTypes: Lookup[] = this.lookupService.listByCategory.ImplementingAgencyType;
+  projectWorkAreas: Lookup[] = this.lookupService.listByCategory.ProjectWorkArea;
+  internalProjectClassifications: Lookup[] = this.lookupService.listByCategory.InternalProjectClassification;
+  sanadiDomains: AidLookup[] = [];
+  sanadiMainClassifications: AidLookup[] = [];
   mainOchaCategories: AdminLookup[] = [];
   subOchaCategories: AdminLookup[] = [];
   mainDacCategories: AdminLookup[] = [];
@@ -138,7 +143,8 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
               private lookupService: LookupService,
               private countryService: CountryService,
               private sdgService: SDGoalService,
-              public service: ProjectModelService) {
+              public service: ProjectModelService,
+              private aidLookupService: AidLookupService) {
     super();
   }
 
@@ -147,6 +153,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   }
 
   _initComponent(): void {
+    this.loadSanadiDomains();
     this.loadCountries();
     this.loadGoals();
     this.listenToProjectComponentChange();
@@ -375,6 +382,10 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     return this.form.get('basicInfo')?.get('requestType') as AbstractControl;
   }
 
+  get projectWorkArea(): AbstractControl {
+    return this.form.get('basicInfo')?.get('projectWorkArea') as AbstractControl;
+  }
+
   get projectTotalCostField(): AbstractControl {
     return this.form.get('componentBudgetInfo')?.get('projectTotalCost') as AbstractControl;
   }
@@ -389,6 +400,18 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
 
   get categoryInfoTab(): UntypedFormGroup {
     return this.form.get('categoryInfo') as UntypedFormGroup;
+  }
+
+  get internalProjectClassification(): AbstractControl {
+    return this.categoryInfoTab.get('internalProjectClassification') as AbstractControl;
+  }
+
+  get sanadiDomain(): AbstractControl {
+    return this.categoryInfoTab.get('sanadiDomain') as AbstractControl;
+  }
+
+  get sanadiMainClassification(): AbstractControl {
+    return this.categoryInfoTab.get('sanadiMainClassification') as AbstractControl;
   }
 
   get categoryGoalPercentGroup(): UntypedFormGroup {
@@ -795,5 +818,17 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
           this.loadCountries();
         });
       });
+  }
+
+  loadSanadiDomains() {
+    this.aidLookupService.loadByCriteria({parent: null}).subscribe(list => {
+      this.sanadiDomains = list;
+    })
+  }
+
+  loadSanadiMainClassification(parentId: number) {
+    this.aidLookupService.loadByCriteria({parent: parentId}).subscribe(list => {
+      this.sanadiMainClassifications = list;
+    })
   }
 }

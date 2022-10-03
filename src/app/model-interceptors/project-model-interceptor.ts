@@ -27,6 +27,10 @@ export class ProjectModelInterceptor implements IModelInterceptor<ProjectModel> 
     delete model.creatorInfo;
     delete model.taskDetails;
     delete model.ouInfo;
+    delete model.projectWorkAreaInfo;
+    delete model.internalProjectClassificationInfo;
+    delete model.sanadiDomainInfo;
+    delete model.sanadiMainClassificationInfo;
     return model;
   }
 
@@ -48,6 +52,10 @@ export class ProjectModelInterceptor implements IModelInterceptor<ProjectModel> 
     model.thirdSDGoalInfo = AdminResult.createInstance(model.thirdSDGoalInfo);
     model.caseStatusInfo = AdminResult.createInstance(model.caseStatusInfo);
     model.creatorInfo = AdminResult.createInstance(model.creatorInfo);
+    model.projectWorkAreaInfo = AdminResult.createInstance(model.projectWorkAreaInfo);
+    model.internalProjectClassificationInfo = AdminResult.createInstance(model.internalProjectClassificationInfo);
+    model.sanadiDomainInfo = AdminResult.createInstance(model.sanadiDomainInfo);
+    model.sanadiMainClassificationInfo = AdminResult.createInstance(model.sanadiMainClassificationInfo);
     return model;
   }
 }
