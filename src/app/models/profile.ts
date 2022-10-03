@@ -4,7 +4,7 @@ import { FactoryService } from '@app/services/factory.service';
 import { ProfileService } from '@app/services/profile.service';
 import { IMyDateModel } from 'angular-mydatepicker';
 import { BaseModel } from './base-model';
-import { ProfielDetails } from './profile-details';
+import { ProfileDetails } from './profile-details';
 
 const { receive, send } = new ProfileInterceptor();
 
@@ -21,6 +21,6 @@ export class Profile extends BaseModel<Profile, ProfileService> {
   status!: number;
   statusDateModified!: string | IMyDateModel;
   email!: string;
-  profileDetails!: ProfielDetails;
+  profileDetails!: ProfileDetails;
 
 }

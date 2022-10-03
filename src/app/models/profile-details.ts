@@ -1,6 +1,6 @@
 import { Cloneable } from './cloneable';
 
-export class ProfielDetails extends Cloneable<ProfielDetails> {
+export class ProfileDetails extends Cloneable<ProfileDetails> {
   arName!: string;
   enName!: string;
   profileId!: number;
