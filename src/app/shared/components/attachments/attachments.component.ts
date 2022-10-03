@@ -83,6 +83,8 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
 
   addOtherAttachments: Subject<null> = new Subject<null>();
 
+  allAttachmentTypesByCase: AttachmentTypeServiceData[] = [];
+
   constructor(public lang: LangService,
               private dialog: DialogService,
               private toast: ToastService,
@@ -118,6 +120,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
         // load attachment types related to the service
         switchMap(_ => this.caseType ? this.attachmentTypeService.loadTypesByCaseType(this.caseType) : of([])),
         tap((types: AttachmentTypeServiceData[]) => {
+          this.allAttachmentTypesByCase = types;
           this.multiAttachmentTypes.clear();
           this.attachmentTypes = types.filter(item => {
             if (item.multi) {
@@ -154,8 +157,8 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
         attachment.attachmentTypeInfo = AttachmentsComponent.createOtherLookup();
         attachment.attachmentTypeStatus = true;
       } else {
-        const type = types.find(x => x.attachmentTypeId === attachment.attachmentTypeId);
-        attachment.attachmentTypeStatus = type ? type.attachmentTypeStatus : false;
+        const type = this.allAttachmentTypesByCase.find(x => x.attachmentTypeId === attachment.attachmentTypeId);
+        attachment.attachmentTypeStatus = type ? type.attachmentTypeInfo.isActive() : false;
       }
       return attachment;
     }).filter((attachment) => {
