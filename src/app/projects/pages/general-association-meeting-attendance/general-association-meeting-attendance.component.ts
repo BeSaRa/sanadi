@@ -91,6 +91,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   isDecisionMakerReview!: boolean;
   isManagerFinalReview!: boolean;
   memberId!: number;
+  hoursList = DateUtils.getHoursList();
 
   // meeting points form
   meetingPointsForm!: UntypedFormGroup;
