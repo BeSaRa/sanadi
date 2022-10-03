@@ -79,17 +79,7 @@ export class CharityOrganizationUpdateComponent
   form!: UntypedFormGroup;
   tabs: IKeyValue[] = [];
   _tabs: IKeyValue[] = [];
-  charityOrganizations$: Observable<CharityOrganization[]> =
-    this.charityOrganizationService.loadAsLookups().pipe(
-      share(),
-      /* map((e) =>
-        e.filter((x) =>
-          this.employeeService.isCharityUser()
-            ? x.id === this.employeeService.getUser()?.orgId
-            : true
-        )
-      ) */
-    );
+  charityOrganizations: CharityOrganization[] = [];
   logoFile?: File;
   loadedLogo?: BlobModel;
   fileExtensionsEnum = FileExtensionsEnum;
@@ -211,15 +201,28 @@ export class CharityOrganizationUpdateComponent
     return [];
   }
 
-  private _loadJobTitles() {
+  private _loadJobTitles(): void {
     this.jobTitleService.loadAsLookups().pipe(share()).subscribe(e => {
       this.jobTitles = [...e];
-    })
+    });
   }
-  private _loadCountries() {
+  private _loadCountries(): void {
     this.countryService.loadAsLookups().subscribe(e => {
       this.countries = [...e];
-    })
+    });
+  }
+  private _loadCharities(): void {
+    this.charityOrganizationService.loadAsLookups().pipe(
+      map((e) =>
+        e.filter((x) =>
+          this.employeeService.isExternalUser()
+            ? x.id === this.employeeService.getProfile()?.profileDetails.entityId
+            : true
+        )
+      )
+    ).subscribe(e => {
+      this.charityOrganizations = e;
+    });
   }
 
   constructor(
@@ -246,6 +249,7 @@ export class CharityOrganizationUpdateComponent
     super();
     this._loadJobTitles();
     this._loadCountries();
+    this._loadCharities();
   }
 
   ngAfterViewInit(): void {
@@ -495,6 +499,14 @@ export class CharityOrganizationUpdateComponent
         }
         else {
           this.requestTypeForm.setValue(this.requestType$.value);
+        }
+
+        if (this.employeeService.isExternalUser()) {
+          const id = this.charityOrganizations[0].id;
+          this.form.get('charityId')?.patchValue(id);
+          this.handleSelectCharityOrganization(id)
+          this.form.get('charityId')?.disable();
+
         }
       })
 
