@@ -827,8 +827,13 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   }
 
   loadSanadiMainClassification(parentId: number) {
-    this.aidLookupService.loadByCriteria({parent: parentId}).subscribe(list => {
-      this.sanadiMainClassifications = list;
-    })
+    this.sanadiMainClassification.setValue(null);
+    if(!parentId) {
+      this.sanadiMainClassifications = [];
+    } else {
+      this.aidLookupService.loadByCriteria({parent: parentId}).subscribe(list => {
+        this.sanadiMainClassifications = list;
+      });
+    }
   }
 }

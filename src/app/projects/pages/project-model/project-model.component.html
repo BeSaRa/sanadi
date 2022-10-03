@@ -23,11 +23,14 @@
     <ng-container formGroupName="basicInfo">
       <fieldset [disabled]="readonly">
         <div class="row">
-          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
             <label class="form-label" asteriskIfRequired="requestType"
                    for="requestType">{{lang.map.request_type}}</label>
             <ng-select (change)="onRequestTypeChange()" [readonly]="readonly" validationClasses="requestType"
                        appendTo="body" [clearable]="true"
+                       labelForId="requestType"
+                       placeholder="{{lang.map.select}}"
+                       [notFoundText]="lang.map.msg_not_found"
                        id="requestType"
                        formControlName="requestType">
               <ng-option [value]="option.lookupKey" *ngFor="let option of requestTypes">{{option.getName()}}</ng-option>
@@ -46,11 +49,15 @@
               <app-field-error-message [control]="templateSerialControl"></app-field-error-message>
             </div>
           </div>
-          <div *ngIf="!displayTemplateSerialField" class="col-md-4 col-sm-12 mb-4 position-relative">
+          <div *ngIf="!displayTemplateSerialField" class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
             <label class="form-label" asteriskIfRequired="projectType"
                    for="projectType">{{lang.map.project_type}}</label>
             <!--suppress XmlDuplicatedId -->
-            <ng-select [readonly]="readonly" validationClasses="projectType" appendTo="body" [clearable]="true"
+            <ng-select [readonly]="readonly" validationClasses="projectType"
+                       appendTo="body" [clearable]="true"
+                       labelForId="projectType"
+                       placeholder="{{lang.map.select}}"
+                       [notFoundText]="lang.map.msg_not_found"
                        id="projectType"
                        formControlName="projectType">
               <ng-option [value]="option.lookupKey" *ngFor="let option of projectTypes">{{option.getName()}}</ng-option>
@@ -104,12 +111,17 @@
           </app-table>
         </div>
         <div class="row">
-          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
             <div class="mb-4" *ngIf="displayTemplateSerialField">
               <label class="form-label" asteriskIfRequired="projectType"
                      for="projectType">{{lang.map.project_type}}</label>
               <!--suppress XmlDuplicatedId -->
-              <ng-select [readonly]="readonly" validationClasses="projectType" appendTo="body" [clearable]="true"
+              <ng-select [readonly]="readonly" validationClasses="projectType"
+                         appendTo="body"
+                         labelForId="projectType"
+                         placeholder="{{lang.map.select}}"
+                         [notFoundText]="lang.map.msg_not_found"
+                         [clearable]="true"
                          id="projectType"
                          formControlName="projectType">
                 <ng-option [value]="option.lookupKey"
@@ -144,11 +156,16 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
             <label class="form-label" asteriskIfRequired="projectWorkArea"
                    for="projectWorkArea">{{lang.map.execution_field}}</label>
-            <ng-select (change)="onRequestTypeChange()" [readonly]="readonly" validationClasses="projectWorkArea"
-                       appendTo="body" [clearable]="true"
+            <ng-select [readonly]="readonly"
+                       validationClasses="projectWorkArea"
+                       appendTo="body"
+                       labelForId="projectWorkArea"
+                       placeholder="{{lang.map.select}}"
+                       [notFoundText]="lang.map.msg_not_found"
+                       [clearable]="true"
                        id="projectWorkArea"
                        formControlName="projectWorkArea">
               <ng-option [value]="option.lookupKey" *ngFor="let option of projectWorkAreas">{{option.getName()}}</ng-option>
@@ -167,7 +184,11 @@
                 <label class="form-label" asteriskIfRequired="beneficiaryCountry"
                        for="beneficiaryCountry">{{lang.map.country}}</label>
                 <ng-select [readonly]="readonly" validationClasses="beneficiaryCountry"
-                           appendTo="body" [clearable]="true"
+                           appendTo="body"
+                           labelForId="beneficiaryCountry"
+                           placeholder="{{lang.map.select}}"
+                           [notFoundText]="lang.map.msg_not_found"
+                           [clearable]="true"
                            id="beneficiaryCountry" formControlName="beneficiaryCountry">
                   <ng-option [value]="option.id" *ngFor="let option of countries"
                              [disabled]="!option.isActive()">{{option.getName()}}</ng-option>
@@ -191,11 +212,17 @@
             <h2 class="h6 text-primary">{{lang.map.execution_country_info}}</h2>
             <hr>
           </div>
-          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
             <label class="form-label" asteriskIfRequired="executionCountry"
                    for="executionCountry">{{lang.map.country}}</label>
-            <ng-select [readonly]="readonly" validationClasses="executionCountry" appendTo="body" [clearable]="true"
-                       id="executionCountry" formControlName="executionCountry">
+            <ng-select [readonly]="readonly" validationClasses="executionCountry"
+                       appendTo="body"
+                       labelForId="executionCountry"
+                       placeholder="{{lang.map.select}}"
+                       [notFoundText]="lang.map.msg_not_found"
+                       [clearable]="true"
+                       id="executionCountry"
+                       formControlName="executionCountry">
               <ng-option [value]="option.id" *ngFor="let option of countries"
                          [disabled]="!option.isActive()">{{option.getName()}}</ng-option>
             </ng-select>
@@ -216,10 +243,15 @@
     <ng-container formGroupName="categoryInfo">
       <fieldset [disabled]="readonly">
         <div class="row">
-          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
             <label class="form-label" asteriskIfRequired="domain"
                    for="domain">{{lang.map.the_domain}}</label>
-            <ng-select [readonly]="readonly" (change)="onDomainChange()" validationClasses="domain" appendTo="body"
+            <ng-select [readonly]="readonly" (change)="onDomainChange()"
+                       validationClasses="domain"
+                       appendTo="body"
+                       labelForId="domain"
+                       placeholder="{{lang.map.select}}"
+                       [notFoundText]="lang.map.msg_not_found"
                        [clearable]="true"
                        id="domain"
                        formControlName="domain">
@@ -228,11 +260,15 @@
             <app-field-error-message controlName="domain"></app-field-error-message>
           </div>
           <ng-container *ngIf="domain.value === domainTypes.DEVELOPMENT" id="DACCategory">
-            <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
               <label class="form-label" asteriskIfRequired="mainDACCategory"
                      for="mainDACCategory">{{lang.map.main_dac_category}}</label>
-              <ng-select [readonly]="readonly" (change)="onMainDacOchaChanged()" validationClasses="mainDACCategory"
+              <ng-select [readonly]="readonly" (change)="onMainDacOchaChanged()"
+                         validationClasses="mainDACCategory"
                          appendTo="body"
+                         labelForId="mainDACCategory"
+                         placeholder="{{lang.map.select}}"
+                         [notFoundText]="lang.map.msg_not_found"
                          [clearable]="true" id="mainDACCategory"
                          formControlName="mainDACCategory">
                 <ng-option *ngFor="let option of mainDacCategories" [value]="option.id"
@@ -240,10 +276,15 @@
               </ng-select>
               <app-field-error-message controlName="mainDACCategory"></app-field-error-message>
             </div>
-            <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
               <label class="form-label" asteriskIfRequired="subDACCategory"
                      for="subDACCategory">{{lang.map.sub_dac_category}}</label>
-              <ng-select [readonly]="readonly" validationClasses="subDACCategory" appendTo="body" [clearable]="true"
+              <ng-select [readonly]="readonly" validationClasses="subDACCategory"
+                         appendTo="body"
+                         labelForId="subDACCategory"
+                         placeholder="{{lang.map.select}}"
+                         [notFoundText]="lang.map.msg_not_found"
+                         [clearable]="true"
                          id="subDACCategory"
                          formControlName="subDACCategory">
                 <ng-option *ngFor="let option of subDacCategories" [value]="option.id"
@@ -253,11 +294,15 @@
             </div>
           </ng-container>
           <ng-container *ngIf="domain.value === domainTypes.HUMANITARIAN" id="UNOCHACategory">
-            <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
               <label class="form-label" asteriskIfRequired="mainUNOCHACategory"
                      for="mainUNOCHACategory">{{lang.map.main_unocha_category}}</label>
-              <ng-select [readonly]="readonly" (change)="onMainDacOchaChanged()" validationClasses="mainUNOCHACategory"
+              <ng-select [readonly]="readonly" (change)="onMainDacOchaChanged()"
+                         validationClasses="mainUNOCHACategory"
                          appendTo="body"
+                         labelForId="mainUNOCHACategory"
+                         placeholder="{{lang.map.select}}"
+                         [notFoundText]="lang.map.msg_not_found"
                          [clearable]="true" id="mainUNOCHACategory"
                          formControlName="mainUNOCHACategory">
                 <ng-option *ngFor="let option of mainOchaCategories" [value]="option.id"
@@ -265,10 +310,15 @@
               </ng-select>
               <app-field-error-message controlName="mainUNOCHACategory"></app-field-error-message>
             </div>
-            <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
               <label class="form-label" asteriskIfRequired="subUNOCHACategory"
                      for="subUNOCHACategory">{{lang.map.sub_unocha_category}}</label>
-              <ng-select [readonly]="readonly" validationClasses="subUNOCHACategory" appendTo="body" [clearable]="true"
+              <ng-select [readonly]="readonly" validationClasses="subUNOCHACategory"
+                         appendTo="body"
+                         labelForId="subUNOCHACategory"
+                         placeholder="{{lang.map.select}}"
+                         [notFoundText]="lang.map.msg_not_found"
+                         [clearable]="true"
                          id="subUNOCHACategory"
                          formControlName="subUNOCHACategory">
                 <ng-option *ngFor="let option of subOchaCategories" [value]="option.id"
@@ -279,33 +329,46 @@
           </ng-container>
         </div>
         <div class="row">
-          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
             <label class="form-label" asteriskIfRequired="internalProjectClassification"
-                   for="internalProjectClassification">{{lang.map.execution_field}}</label>
-            <ng-select (change)="onRequestTypeChange()" [readonly]="readonly" validationClasses="internalProjectClassification"
+                   for="internalProjectClassification">{{lang.map.internal_project_classification}}</label>
+            <ng-select [readonly]="readonly"
+                       validationClasses="internalProjectClassification"
                        appendTo="body" [clearable]="true"
+                       labelForId="internalProjectClassification"
+                       placeholder="{{lang.map.select}}"
+                       [notFoundText]="lang.map.msg_not_found"
                        id="internalProjectClassification"
                        formControlName="internalProjectClassification">
               <ng-option [value]="option.lookupKey" *ngFor="let option of internalProjectClassifications">{{option.getName()}}</ng-option>
             </ng-select>
             <app-field-error-message controlName="internalProjectClassification"></app-field-error-message>
           </div>
-          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
             <label class="form-label" asteriskIfRequired="sanadiDomain"
-                   for="sanadiDomain">{{lang.map.execution_field}}</label>
-            <ng-select (change)="onRequestTypeChange()" [readonly]="readonly" validationClasses="sanadiDomain"
-                       appendTo="body" [clearable]="true"
+                   for="sanadiDomain">{{lang.map.sanadi_classification}}</label>
+            <ng-select (change)="loadSanadiMainClassification($event)" [readonly]="readonly" validationClasses="sanadiDomain"
+                       appendTo="body"
+                       labelForId="sanadiDomain"
+                       placeholder="{{lang.map.select}}"
+                       [notFoundText]="lang.map.msg_not_found"
+                       [clearable]="true"
                        id="sanadiDomain"
                        formControlName="sanadiDomain">
               <ng-option [value]="option.id" *ngFor="let option of sanadiDomains">{{option.getName()}}</ng-option>
             </ng-select>
             <app-field-error-message controlName="sanadiDomain"></app-field-error-message>
           </div>
-          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
             <label class="form-label" asteriskIfRequired="sanadiMainClassification"
-                   for="sanadiMainClassification">{{lang.map.execution_field}}</label>
-            <ng-select (change)="onRequestTypeChange()" [readonly]="readonly" validationClasses="sanadiMainClassification"
-                       appendTo="body" [clearable]="true"
+                   for="sanadiMainClassification">{{lang.map.sanadi_main_classification}}</label>
+            <ng-select [readonly]="readonly"
+                       validationClasses="sanadiMainClassification"
+                       appendTo="body"
+                       labelForId="sanadiMainClassification"
+                       placeholder="{{lang.map.select}}"
+                       [notFoundText]="lang.map.msg_not_found"
+                       [clearable]="true"
                        id="sanadiMainClassification"
                        formControlName="sanadiMainClassification">
               <ng-option [value]="option.id" *ngFor="let option of sanadiMainClassifications">{{option.getName()}}</ng-option>
@@ -314,10 +377,15 @@
           </div>
         </div>
         <div *ngIf="displayDevGoals" class="row">
-          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
             <label class="form-label" asteriskIfRequired="firstSDGoal"
                    for="firstSDGoal">{{lang.map.first_sd_goal}}</label>
-            <ng-select [readonly]="readonly" validationClasses="firstSDGoal" appendTo="body" [clearable]="true"
+            <ng-select [readonly]="readonly" validationClasses="firstSDGoal"
+                       appendTo="body"
+                       labelForId="firstSDGoal"
+                       placeholder="{{lang.map.select}}"
+                       [notFoundText]="lang.map.msg_not_found"
+                       [clearable]="true"
                        id="firstSDGoal"
                        formControlName="firstSDGoal">
               <ng-option *ngFor="let option of goals" [value]="option.id"
@@ -325,10 +393,15 @@
             </ng-select>
             <app-field-error-message controlName="firstSDGoal"></app-field-error-message>
           </div>
-          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
             <label class="form-label" asteriskIfRequired="secondSDGoal"
                    for="secondSDGoal">{{lang.map.second_sd_goal}}</label>
-            <ng-select [readonly]="readonly" validationClasses="secondSDGoal" appendTo="body" [clearable]="true"
+            <ng-select [readonly]="readonly" validationClasses="secondSDGoal"
+                       appendTo="body"
+                       labelForId="secondSDGoal"
+                       placeholder="{{lang.map.select}}"
+                       [notFoundText]="lang.map.msg_not_found"
+                       [clearable]="true"
                        id="secondSDGoal"
                        formControlName="secondSDGoal">
 
@@ -338,10 +411,15 @@
             </ng-select>
             <app-field-error-message controlName="secondSDGoal"></app-field-error-message>
           </div>
-          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
             <label class="form-label" asteriskIfRequired="thirdSDGoal"
                    for="thirdSDGoal">{{lang.map.third_sd_goal}}</label>
-            <ng-select [readonly]="readonly" validationClasses="thirdSDGoal" appendTo="body" [clearable]="true"
+            <ng-select [readonly]="readonly" validationClasses="thirdSDGoal"
+                       appendTo="body"
+                       labelForId="thirdSDGoal"
+                       placeholder="{{lang.map.select}}"
+                       [notFoundText]="lang.map.msg_not_found"
+                       [clearable]="true"
                        id="thirdSDGoal"
                        formControlName="thirdSDGoal">
 

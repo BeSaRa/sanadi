@@ -1,4 +1,7 @@
 export interface ILanguageKeys {
+  sanadi_main_classification: string;
+  sanadi_classification: string;
+  internal_project_classification: string;
   execution_field: string;
   constructional: string;
   exit_mechanism: string;
