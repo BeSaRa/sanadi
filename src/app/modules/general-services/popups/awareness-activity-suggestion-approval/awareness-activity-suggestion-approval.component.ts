@@ -1,28 +1,27 @@
-import { NpoManagement } from './../../../../models/npo-management';
-import { DatepickerOptionsMap } from '@app/types/types';
-import { DateUtils } from '@app/helpers/date-utils';
-import { IWFResponse } from '@app/interfaces/i-w-f-response';
-import { ToastService } from '@app/services/toast.service';
-import { DialogRef } from '@app/shared/models/dialog-ref';
-import { UntypedFormControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { ExternalOrgAffiliation } from '@app/models/external-org-affiliation';
-import { WFResponseType } from '@app/enums/wfresponse-type.enum';
-import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
-import { DialogService } from '@app/services/dialog.service';
+import { AffiliationRequestType } from './../../../../enums/AffiliationRequestType.enum';
+import { IWFResponse } from './../../../../interfaces/i-w-f-response';
 import { takeUntil, map, tap, filter, exhaustMap, switchMap } from 'rxjs/operators';
-import { CustomValidators } from '@app/validators/custom-validators';
-import { LangService } from '@services/lang.service';
-import { Component, Inject, OnInit } from '@angular/core';
-import { Subject, of } from 'rxjs';
 import { InboxService } from '@app/services/inbox.service';
-import { AffiliationRequestType } from '@app/enums/AffiliationRequestType.enum';
+import { ToastService } from './../../../../services/toast.service';
+import { DialogRef } from './../../../../shared/models/dialog-ref';
+import { DialogService } from './../../../../services/dialog.service';
+import { AwarenessActivitySuggestion } from './../../../../models/awareness-activity-suggestion';
+import { LangService } from './../../../../services/lang.service';
+import { DIALOG_DATA_TOKEN } from './../../../../shared/tokens/tokens';
+import { DateUtils } from './../../../../helpers/date-utils';
+import { DatepickerOptionsMap } from './../../../../types/types';
+import { Subject, of } from 'rxjs';
+import { WFResponseType } from './../../../../enums/wfresponse-type.enum';
+import { UntypedFormControl, UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
+import { CustomValidators } from './../../../../validators/custom-validators';
+import { Component, Inject, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-npo-management-approve-popup',
-  templateUrl: './npo-management-approve-popup.component.html',
-  styleUrls: ['./npo-management-approve-popup.component.scss']
+  selector: 'app-awareness-activity-suggestion-approval',
+  templateUrl: './awareness-activity-suggestion-approval.component.html',
+  styleUrls: ['./awareness-activity-suggestion-approval.component.css']
 })
-export class NpoManagementApprovePopupComponent implements OnInit {
+export class AwarenessActivitySuggestionApprovalComponent implements OnInit {
   comment: UntypedFormControl = new UntypedFormControl('', [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]);
   response: WFResponseType = WFResponseType.APPROVE;
   action$: Subject<any> = new Subject<any>();
@@ -33,7 +32,7 @@ export class NpoManagementApprovePopupComponent implements OnInit {
   private destroy$: Subject<any> = new Subject();
   constructor(
     @Inject(DIALOG_DATA_TOKEN) public data: {
-      model: NpoManagement,
+      model: AwarenessActivitySuggestion,
       action: WFResponseType
     },
     public lang: LangService,
@@ -95,5 +94,4 @@ export class NpoManagementApprovePopupComponent implements OnInit {
     this.destroy$.complete();
     this.destroy$.unsubscribe();
   }
-
 }

@@ -1,3 +1,4 @@
+import { AwarenessActivitySuggestionComponent } from './../modules/general-services/pages/awareness-activity-suggestion/awareness-activity-suggestion.component';
 import { ForeignCountriesProjectsComponent } from '@app/modules/general-services/pages/foreign-countries-projects/foreign-countries-projects.component';
 import { UrgentInterventionFinancialNotificationComponent } from './../modules/urgent-intervention/pages/urgent-intervention-financial-notification/urgent-intervention-financial-notification.component';
 import { EmploymentComponent } from './../modules/general-services/pages/employment/employment.component';
@@ -95,6 +96,7 @@ export class AutoRegisterService {
       DynamicComponentService.registerComponent('GeneralAssociationMeetingAttendanceComponent', GeneralAssociationMeetingAttendanceComponent);
       DynamicComponentService.registerComponent('CharityOrganizationUpdateComponent', CharityOrganizationUpdateComponent);
       DynamicComponentService.registerComponent('NpoManagementComponent', NpoManagementComponent);
+      DynamicComponentService.registerComponent('AwarenessActivitySuggestionComponent', AwarenessActivitySuggestionComponent);
     });// just to make sure that service constructed and register all dynamic components
 
 

@@ -1,3 +1,5 @@
+import { SearchAwarenessActivitySuggestionCriteria } from './../models/search-awareness-activity-suggestion-criteria';
+import { AwarenessActivitySuggestion } from './../models/awareness-activity-suggestion';
 import { TransferringIndividualFundsAbroad } from '@app/models/transferring-individual-funds-abroad';
 import { ExternalOrgAffiliation } from '@app/models/external-org-affiliation';
 import { ExternalOrgAffiliationResult } from './../models/external-org-affiliation-result';
@@ -150,6 +152,9 @@ export class LicenseService {
       case CaseTypes.NPO_MANAGEMENT:
         url = this.urlService.URLS.NPO_MANAGEMENT;
         break;
+      case CaseTypes.AWARENESS_ACTIVITY_SUGGESTION:
+        url = this.urlService.URLS.AWARENESS_ACTIVITY_SUGGESTION;
+        break;
     }
     return url;
   }
@@ -194,6 +199,16 @@ export class LicenseService {
 
   externalOrgAffiliationSearch(criteria: Partial<ExternalOrgAffiliationSearchCriteria>): Observable<ExternalOrgAffiliationResult[]> {
     return this._externalOrgAffiliationSearchCriteria(criteria);
+  }
+
+  @CastResponse(() => ExternalOrgAffiliationResult)
+  private _awarenessActivitySuggestionSearchCriteria(criteria: Partial<SearchAwarenessActivitySuggestionCriteria>): Observable<AwarenessActivitySuggestion[]> {
+    const orgId = { organizationId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id : undefined }
+    return this.http.post<AwarenessActivitySuggestion[]>(this.getServiceUrlByCaseType(CaseTypes.AWARENESS_ACTIVITY_SUGGESTION) + '/license/search', { ...criteria, ...orgId })
+  }
+
+  awarenessActivitySuggestionSearch(criteria: Partial<SearchAwarenessActivitySuggestionCriteria>): Observable<AwarenessActivitySuggestion[]> {
+    return this._awarenessActivitySuggestionSearchCriteria(criteria);
   }
 
   @CastResponse(() => ForeignCountriesProjectsResult)
@@ -452,6 +467,14 @@ export class LicenseService {
   }
 
   @CastResponse(() => GeneralAssociationMeetingAttendance)
+  _validateAwarenessActivitySuggestionByRequestType<T>(requestType: number, oldLicenseId: string): Observable<T> {
+    return this.http.post<T>(this.getServiceUrlByCaseType(CaseTypes.AWARENESS_ACTIVITY_SUGGESTION) + '/draft/validate', {
+      requestType,
+      oldLicenseId
+    });
+  }
+
+  @CastResponse(() => GeneralAssociationMeetingAttendance)
   _validateGeneralAssociationMeetingAttendanceByRequestType<T>(requestType: number, oldLicenseId: string): Observable<T> {
     return this.http.post<T>(this.getServiceUrlByCaseType(CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE) + '/draft/validate', {
       requestType,
@@ -502,11 +525,13 @@ export class LicenseService {
       return this._validateForeignCountriesProjectsLicenseByRequestType<T>(requestType, licenseId);
     } else if (caseType === CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE) {
       return this._validateGeneralAssociationMeetingAttendanceByRequestType<T>(requestType, licenseId);
+    } else if (caseType === CaseTypes.AWARENESS_ACTIVITY_SUGGESTION) {
+      return this._validateAwarenessActivitySuggestionByRequestType<T>(requestType, licenseId);
     }
     return of(undefined);
   }
 
-  openSelectLicenseDialog<T>(licenses: (UrgentInterventionAnnouncementResult[] | InitialExternalOfficeApprovalResult[] | PartnerApproval[] | ExternalOrgAffiliationResult[] | FinalExternalOfficeApprovalResult[] | InternalProjectLicenseResult[] | UrgentInterventionLicenseResult[] | T[]), caseRecord: any | undefined, select = true, displayedColumns: string[] = [], oldFullSerial?: string, isNotLicense: boolean = false): DialogRef {
+  openSelectLicenseDialog<T>(licenses: (AwarenessActivitySuggestion[] | UrgentInterventionAnnouncementResult[] | InitialExternalOfficeApprovalResult[] | PartnerApproval[] | ExternalOrgAffiliationResult[] | FinalExternalOfficeApprovalResult[] | InternalProjectLicenseResult[] | UrgentInterventionLicenseResult[] | T[]), caseRecord: any | undefined, select = true, displayedColumns: string[] = [], oldFullSerial?: string, isNotLicense: boolean = false): DialogRef {
     return this.dialog.show(SelectLicensePopupComponent, {
       licenses,
       select,

@@ -1,3 +1,6 @@
+import { normalSearchFields } from '@app/helpers/normal-search-fields';
+import { infoSearchFields } from '@app/helpers/info-search-fields';
+import { dateSearchFields } from '@app/helpers/date-search-fields';
 import { DialogRef } from './../shared/models/dialog-ref';
 import { WFResponseType } from '@app/enums/wfresponse-type.enum';
 import { AdminResult } from './admin-result';
@@ -84,6 +87,9 @@ export class NpoManagement
   registrationAuthorityInfo!: AdminResult;
 
   searchFields: ISearchFieldsMap<NpoManagement> = {
+    ...dateSearchFields(['createdOn']),
+    ...infoSearchFields(['creatorInfo', 'ouInfo']),
+    ...normalSearchFields(['fullSerial', 'subject'])
   };
   constructor() {
     super();
