@@ -1,3 +1,5 @@
+import { AwarenessActivitySuggestionApprovalComponent } from './popups/awareness-activity-suggestion-approval/awareness-activity-suggestion-approval.component';
+import { AwarenessActivitySuggestionComponent } from './pages/awareness-activity-suggestion/awareness-activity-suggestion.component';
 import { MembersComponent } from './shared/members/members.component';
 import { CharityBranchComponent } from './shared/charity-branch/charity-branch.component';
 import { OrganizationOfficersComponent } from './shared/organization-officers/organization-officers.component';
@@ -66,8 +68,9 @@ import { FollowupDateApprovePopupComponent } from './popups/follow-up-date-appro
     BylawsComponent,
     CharityReportsComponent,
     CharityDecisionsComponent,
-    CoordinationWithOrgPopupComponent
-
+    CoordinationWithOrgPopupComponent,
+    AwarenessActivitySuggestionComponent,
+    AwarenessActivitySuggestionApprovalComponent
   ],
   imports: [
     CommonModule,

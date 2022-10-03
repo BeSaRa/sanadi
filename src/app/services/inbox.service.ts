@@ -1,3 +1,4 @@
+import { AwarenessActivitySuggestionService } from './awareness-activity-suggestion.service';
 import { GeneralAssociationMeetingAttendanceService } from '@services/general-association-meeting-attendance.service';
 import { CoordinationWithOrganizationsRequestService } from '@app/services/coordination-with-organizations-request.service';
 import { ComponentFactoryResolver, Injectable } from '@angular/core';
@@ -95,6 +96,7 @@ export class InboxService {
     private transferringIndividualsFundsAbroadService: TransferringIndividualFundsAbroadService,
     private coordinationWithOrganizationsRequestService: CoordinationWithOrganizationsRequestService,
     private charityUpdateService: CharityOrganizationUpdateService,
+    private awarenessActivitySuggestionService: AwarenessActivitySuggestionService,
     private generalAssociationMeetingAttendanceService: GeneralAssociationMeetingAttendanceService) {
     FactoryService.registerService('InboxService', this);
     // register all e-services that we need.
@@ -125,6 +127,7 @@ export class InboxService {
     this.services.set(CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP, this.urgentInterventionLicenseFollowupService);
     this.services.set(CaseTypes.NPO_MANAGEMENT, this.npoManagementService);
     this.services.set(CaseTypes.CHARITY_ORGANIZATION_UPDATE, this.charityUpdateService);
+    this.services.set(CaseTypes.AWARENESS_ACTIVITY_SUGGESTION, this.awarenessActivitySuggestionService);
   }
 
   @CastResponse(() => QueryResultSet)
@@ -310,7 +313,9 @@ export class InboxService {
       [CaseTypes.URGENT_INTERVENTION_LICENSING]: WFResponseType.URGENT_INTERVENTION_LICENSE_SEND_TO_MULTI_DEPARTMENTS,
       [CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL]: WFResponseType.INTERNAL_BANK_ACCOUNT_APPROVAL_SEND_TO_MULTI_DEPARTMENTS,
       [CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD]: WFResponseType.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD_SEND_TO_SINGLE_DEPARTMENT,
-      [CaseTypes.NPO_MANAGEMENT]: WFResponseType.REVIEW_NPO_MANAGEMENT
+      [CaseTypes.NPO_MANAGEMENT]: WFResponseType.REVIEW_NPO_MANAGEMENT,
+      [CaseTypes.AWARENESS_ACTIVITY_SUGGESTION]: WFResponseType.AWARENESS_ACTIVITY_SUGGESTION_SEND_TO_MULTI_DEPARTMENTS,
+
     };
 
     // @ts-ignore

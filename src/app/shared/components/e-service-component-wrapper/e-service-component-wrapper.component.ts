@@ -527,7 +527,8 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           return item.getResponses().includes(WFResponseType.INTERNAL_PROJECT_SEND_TO_MULTI_DEPARTMENTS)
             || item.getResponses().includes(WFResponseType.FUNDRAISING_LICENSE_SEND_TO_MULTI_DEPARTMENTS)
             || item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_LICENSE_SEND_TO_MULTI_DEPARTMENTS)
-            || item.getResponses().includes(WFResponseType.INTERNAL_BANK_ACCOUNT_APPROVAL_SEND_TO_MULTI_DEPARTMENTS);
+            || item.getResponses().includes(WFResponseType.INTERNAL_BANK_ACCOUNT_APPROVAL_SEND_TO_MULTI_DEPARTMENTS)
+            || item.getResponses().includes(WFResponseType.AWARENESS_ACTIVITY_SUGGESTION_SEND_TO_MULTI_DEPARTMENTS)
         },
         onClick: (item: CaseModel<any, any>) => {
           this.sendToMultiDepartmentsAction(item);
