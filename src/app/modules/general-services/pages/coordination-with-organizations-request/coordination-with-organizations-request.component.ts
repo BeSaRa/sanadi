@@ -229,7 +229,6 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
       createdByUserType: 0,
       createdOn: '',
       creatorInfo: undefined,
-      id: '',
       lastModified: '',
       lastModifier: '',
       ouInfo: undefined,
