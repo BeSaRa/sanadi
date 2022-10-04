@@ -162,6 +162,10 @@ export class AttachmentTypeServiceDataPopupComponent implements OnInit {
       this.attachmentTypeServiceDataService.getCustomProperties(this.selectedService.caseType).pipe(
         takeUntil(this.destroy$)
       ).subscribe(customProperties => {
+        this.displayMulti = false;
+        this.multiField.setValue(false);
+        this.onMultiChange();
+        this.customPropertiesKeyValue = {};
         this.customProperties$.next(customProperties);
       });
     }
@@ -187,7 +191,7 @@ export class AttachmentTypeServiceDataPopupComponent implements OnInit {
     return this.form.get('customProperties') as UntypedFormArray;
   }
 
-  get multi(): AbstractControl {
+  get multiField(): AbstractControl {
     return this.form.get('multi') as AbstractControl;
   }
 
@@ -243,7 +247,7 @@ export class AttachmentTypeServiceDataPopupComponent implements OnInit {
   }
 
   onMultiChange(): void {
-    this.model.multi = this.multi.value;
+    this.model.multi = this.multiField.value;
     this.identifierField.setValue(null);
     this._setIdentifierValidations();
   }
