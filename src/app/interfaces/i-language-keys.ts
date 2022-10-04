@@ -1450,4 +1450,5 @@ export interface ILanguageKeys {
   err_invalid_website: string;
   report_title: string;
   reject_reason: string;
+  all_employees: string;
 }
