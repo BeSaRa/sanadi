@@ -294,6 +294,10 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
     return this.attachments.some(attachment => attachment.required && !attachment.id);
   }
 
+  hasRequiredAttachmentsAvailable(): boolean {
+    return !(this.attachments.some(attachment => attachment.required && !attachment.id));
+  }
+
   forceReload() {
     this.loaded = false;
     this.loadingStatus.next(true);

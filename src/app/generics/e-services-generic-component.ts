@@ -16,6 +16,8 @@ import {BaseGenericEService} from '@app/generics/base-generic-e-service';
 import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {DialogRef} from '@app/shared/models/dialog-ref';
+import {FactoryService} from '@services/factory.service';
+import {AttachmentTypeService} from '@services/attachment-type.service';
 
 @Directive()
 export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S extends BaseGenericEService<M>> implements OnInit, OnDestroy, IESComponent<M> {
@@ -147,7 +149,7 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
       .pipe(
         takeUntil(this.destroy$),
         switchMap((needConfirmation) => {
-          if (needConfirmation){
+          if (needConfirmation) {
             return this.confirmResetForm().onAfterClose$;
           } else {
             return of(UserClickOn.YES);
@@ -155,7 +157,7 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
         })
       )
       .subscribe((userClick: UserClickOn) => {
-        if (userClick === UserClickOn.YES){
+        if (userClick === UserClickOn.YES) {
           this.operation = OperationTypes.CREATE;
           this._resetForm();
           this.requestType$.next(null);
@@ -248,6 +250,46 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
 
   launch(): void {
     this.launch$.next(null);
+  }
+
+  showMissingRequiredAttachmentsDialog() {
+    this.service.dialog.info(this.lang.map.msg_launch_missing_mandatory_attachments);
+  }
+
+  launchNew(): Observable<any> {
+    let service = FactoryService.getService<AttachmentTypeService>('AttachmentTypeService');
+    return of(service.attachmentsComponent)
+      .pipe(
+        takeUntil(this.destroy$),
+        switchMap(_ => {
+          const result = this._beforeLaunch();
+          return isObservable(result) ? result : of(result);
+        }),
+        // check missing required attachments in attachments component
+        switchMap(_ => {
+          if (!service.attachmentsComponent) {
+            return of(true);
+          }
+          return of(service.attachmentsComponent.hasRequiredAttachmentsAvailable());
+        }),
+        filter((hasValidAttachments) => {
+          if (!hasValidAttachments) {
+            this.showMissingRequiredAttachmentsDialog();
+            return false;
+          }
+          return true;
+        }),
+        exhaustMap(_ => {
+          const model = this.model as unknown as CaseModel<any, any>;
+          return model.start().pipe(catchError(error => {
+            this._launchFail(error);
+            return of(false);
+          }));
+        }),
+        filter<boolean | null, boolean>((value): value is boolean => {
+          return !!value;
+        }),
+      );
   }
 
   getObservableField(getterName: string, modelProperty?: string): Observable<any> {
