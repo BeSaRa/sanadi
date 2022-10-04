@@ -279,7 +279,10 @@ EmploymentService
     ).subscribe((clickOn: UserClickOn) => {
       if (clickOn === UserClickOn.YES) {
         if (userInteraction) {
+          let cat = this.category.value;
+
           this.resetForm$.next();
+          this.category.setValue(cat);
           this.requestTypeField.setValue(requestTypeValue);
           this.model!.requestType = requestTypeValue;
           this.model!.employeeInfoDTOs = [];
