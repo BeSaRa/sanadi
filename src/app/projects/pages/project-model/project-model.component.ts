@@ -35,6 +35,8 @@ import { DacOchaNewService } from '@services/dac-ocha-new.service';
 import { AdminLookup } from '@app/models/admin-lookup';
 import {AidLookupService} from '@services/aid-lookup.service';
 import {AidLookup} from '@app/models/aid-lookup';
+import {ExecutionFields} from '@app/enums/execution-fields';
+import {IInternalExternalExecutionFields} from '@contracts/iinternal-external-execution-fields';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -75,6 +77,8 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   displayedColumns: string[] = ['domainInfo', 'projectTypeInfo', 'templateStatusInfo', 'createdBy', 'createdOn'];
   displayTemplateSerialField: boolean = false;
   displayDevGoals: boolean = false;
+  isOutsideQatarWorkArea: boolean = false;
+  isDevelopmentField: boolean = false;
 
   templateSerialControl: UntypedFormControl = new UntypedFormControl(null);
 
@@ -529,7 +533,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       });
   }
 
-  private emptyFieldsAndValidation(fields: (keyof IDacOchaFields)[]): void {
+  private emptyFieldsAndValidation(fields: (keyof IDacOchaFields)[] | (keyof IInternalExternalExecutionFields)[]): void {
     fields.forEach((field) => {
       this[field].setValidators(null);
       this[field].setValue(null);
@@ -537,7 +541,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     });
   }
 
-  private setRequiredValidator(fields: (keyof IDacOchaFields)[]) {
+  private setRequiredValidator(fields: (keyof IDacOchaFields)[] | (keyof IInternalExternalExecutionFields)[]) {
     fields.forEach((field) => {
       this[field].setValidators(CustomValidators.required);
       this[field].updateValueAndValidity();
@@ -640,6 +644,29 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     }
     this.sustainabilityItems.updateValueAndValidity();
     this.categoryGoalPercentGroup.updateValueAndValidity();
+  }
+
+  onExecutionFieldChange() {
+    if(this.projectWorkArea.value === ExecutionFields.OutsideQatar) {
+      this.isOutsideQatarWorkArea = true;
+      this.emptyFieldsAndValidation(['internalProjectClassification', 'sanadiDomain', 'sanadiMainClassification']);
+    } else {
+      this.emptyFieldsAndValidation(['firstSDGoal', 'secondSDGoal', 'thirdSDGoal']);
+      this.emptyDomainField();
+      this.isOutsideQatarWorkArea = false;
+      this.setRequiredValidator(['internalProjectClassification', 'sanadiDomain', 'sanadiMainClassification']);
+
+      this.sustainabilityItems.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]);
+      this.setZeroValue(['firstSDGoalPercentage', 'secondSDGoalPercentage', 'thirdSDGoalPercentage']);
+      this.displayDevGoals = false;
+      this.categoryGoalPercentGroup.setValidators(this.getPercentageSumValidation());
+    }
+  }
+
+  emptyDomainField() {
+    this.domain.setValidators(null);
+    this.domain.setValue(null);
+    this.domain.updateValueAndValidity();
   }
 
   getSelectedMainDacOchId(): number {
