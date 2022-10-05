@@ -982,7 +982,7 @@
     "id": 75,
     "langKey": "menu_items",
     "path": "/home/administration/menu-item-list",
-    "icon": "mdi-alarm-check ",
+    "icon": "mdi-menu ",
     "isSvg": false,
     "permission": "MANAGE_MENU_ITEM",
     "permissionGroup": null,
