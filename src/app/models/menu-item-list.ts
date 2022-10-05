@@ -1,4 +1,3 @@
-import { IMyDateModel } from 'angular-mydatepicker';
 import { InterceptModel } from '@app/decorators/decorators/intercept-model';
 import { CommonStatusEnum } from '@app/enums/common-status.enum';
 import { infoSearchFields } from '@app/helpers/info-search-fields';
@@ -30,7 +29,6 @@ export class MenuItemList extends BaseModel<MenuItemList, MenuItemListService> {
   parentMenuItemId: number|null =null;
   langService: LangService;
   statusInfo!: Lookup;
-  statusDateModified?: string | IMyDateModel = undefined;
 
   service!: MenuItemListService;
 
@@ -38,6 +36,10 @@ export class MenuItemList extends BaseModel<MenuItemList, MenuItemListService> {
     ...normalSearchFields(['arName', 'enName', 'menuURL']),
     ...infoSearchFields(['statusInfo']),
   };
+
+
+
+  parentId: any;
   constructor() {
     super();
     this.langService = FactoryService.getService('LangService');
