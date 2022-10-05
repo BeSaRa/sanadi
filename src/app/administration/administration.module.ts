@@ -36,8 +36,6 @@ import { InternalDepartmentComponent } from './pages/internal-department/interna
 import { InternalDepartmentPopupComponent, } from './popups/internal-department-popup/internal-department-popup.component';
 import { JobTitleComponent } from './pages/job-title/job-title.component';
 import { JobTitlePopupComponent } from './popups/job-title-popup/job-title-popup.component';
-import { DacOchaPopupComponent } from './popups/dac-ocha-popup/dac-ocha-popup.component';
-import { SubDacOchaPopupComponent } from './popups/sub-dac-ocha-popup/sub-dac-ocha-popup.component';
 import { UserTeamComponent } from './shared/user-team/user-team.component';
 import { UserSecurityComponent } from './shared/user-security/user-security.component';
 import { SurveyQuestionComponent } from './pages/survey-question/survey-question.component';
@@ -106,8 +104,6 @@ import { ActivityTypesPopupComponent } from './popups/activity-types-popup/activ
     InternalDepartmentPopupComponent,
     JobTitleComponent,
     JobTitlePopupComponent,
-    DacOchaPopupComponent,
-    SubDacOchaPopupComponent,
     UserTeamComponent,
     UserSecurityComponent,
     SurveyQuestionComponent,
