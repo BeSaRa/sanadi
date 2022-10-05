@@ -1,5 +1,8 @@
-import {OrganizationUnitFieldPopupComponent} from './popups/organization-unit-field-popup/organization-unit-field-popup.component';
-import {NgModule} from '@angular/core';
+import { MenuSubListItemPopupComponent } from './popups/menu-sub-list-item-popup/menu-sub-list-item-popup.component';
+import { MenuItemListPopupComponent } from './popups/menu-item-list-popup/menu-item-list-popup.component';
+import { MenuItemListComponent } from './pages/menu-item-list/menu-item-list.component';
+import { OrganizationUnitFieldPopupComponent } from './popups/organization-unit-field-popup/organization-unit-field-popup.component';
+import { NgModule } from '@angular/core';
 
 import {AdminRoutingModule} from './admin-routing.module';
 import {AdminHomeComponent} from './pages/admin-home/admin-home.component';
@@ -142,6 +145,9 @@ import {AdminLookupComponent} from './pages/admin-lookup/admin-lookup.component'
     ActivityTypesPopupComponent,
     AdminLookupListComponent,
     AdminLookupComponent,
+    MenuItemListComponent,
+    MenuItemListPopupComponent,
+    MenuSubListItemPopupComponent
   ],
   imports: [
     SharedModule,

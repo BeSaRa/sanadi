@@ -1454,4 +1454,16 @@ export interface ILanguageKeys {
   lbl_add_x: string;
   lbl_edit_x: string;
   lbl_children_x: string;
+  menu_items: string;
+  menu_type: string;
+  menu_view: string;
+  menu_order: string;
+  menu_URL: string;
+  main_list: string;
+  link_settings: string;
+  sub_lists: string;
+  lbl_add_menu_item: string;
+  lbl_edit_menu_item: string;
+  err_invalid_URL: string;
+  validate_URL: string;
 }
