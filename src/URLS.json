@@ -117,5 +117,6 @@
   "NPO_MANAGEMENT": "/npo-management",
   "NPO_DATA": "/admin/npo-data",
   "PROFILE": "​/admin​/profile",
-  "AWARENESS_ACTIVITY_SUGGESTION": "/awareness-activity-suggestion"
+  "AWARENESS_ACTIVITY_SUGGESTION": "/awareness-activity-suggestion",
+  "MENU_ITEM_LIST": "/admin/menu-item"
 }

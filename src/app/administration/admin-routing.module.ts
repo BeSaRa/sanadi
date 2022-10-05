@@ -1,3 +1,4 @@
+import { MenuItemListComponent } from './pages/menu-item-list/menu-item-list.component';
 import {OrganizationUnitFieldComponent} from './pages/organization-unit-field/organization-unit-field.component';
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
@@ -134,6 +135,13 @@ const routes: Routes = [
   },
   {
     path: 'vacation-dates', component: VactionDatesComponent,
+    canActivate: [PermissionGuard],
+    data: {
+      permissionKey: Permissions.VACATIONS_DATE, configPermissionGroup: null, checkAnyPermission: false
+    }
+  },
+  {
+    path: 'menu-item-list', component: MenuItemListComponent,
     canActivate: [PermissionGuard],
     data: {
       permissionKey: Permissions.VACATIONS_DATE, configPermissionGroup: null, checkAnyPermission: false
