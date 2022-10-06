@@ -42,7 +42,7 @@ export class OrgMember extends SearchableCloneable<OrgMember> {
         ]
         : fullName,
       identificationNumber: controls
-        ? [identificationNumber, CustomValidators.commonValidations.qId]
+        ? [identificationNumber, [CustomValidators.required, ...CustomValidators.commonValidations.qId]]
         : identificationNumber,
       jobTitleId: controls
         ? [jobTitleId, [CustomValidators.required]]
