@@ -144,9 +144,16 @@
             {{ row?.jobTitleInfo?.getName() || row.jobTitleId }}
           </td>
         </ng-container>
-        <ng-container *ngIf="extended" cdkColumnDef="joinDate">
+        <ng-container
+          *ngIf="extended || pageTitle === 'board_members'"
+          cdkColumnDef="joinDate"
+        >
           <th cdk-header-cell sortable-header *cdkHeaderCellDef>
-            {{ lang.map.job_title_occupied_date }}
+            {{
+              pageTitle === 'board_members'
+                ? lang.map.first_join_date
+                : lang.map.job_title_occupied_date
+            }}
           </th>
           <td cdk-cell *cdkCellDef="let row">{{ row.joinDate }}</td>
         </ng-container>

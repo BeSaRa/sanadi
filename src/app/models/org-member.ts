@@ -49,6 +49,16 @@ export class OrgMember extends SearchableCloneable<OrgMember> {
         : jobTitleId,
     };
   }
+  buildExtendedBoardMembersForm(controls = true) {
+
+    const form = this.buildForm(controls);
+    const { joinDate } = this;
+    return {
+      ...form,
+      joinDate: controls ? [joinDate, [CustomValidators.required]] : joinDate,
+
+    };
+  }
   bulildExtendedForm(controls = true) {
     const form = this.buildForm(controls);
     const { joinDate, email, phone } = this;
