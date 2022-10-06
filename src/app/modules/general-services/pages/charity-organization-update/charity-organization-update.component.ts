@@ -211,13 +211,13 @@ export class CharityOrganizationUpdateComponent
   }
   private _loadCharities(): void {
     this.charityOrganizationService.loadAsLookups().pipe(
-      map((e) =>
+      /* map((e) =>
         e.filter((x) =>
           this.employeeService.isExternalUser()
             ? x.id === this.employeeService.getProfile()?.profileDetails.entityId
             : true
         )
-      )
+      ) */
     ).subscribe(e => {
       this.charityOrganizations = e;
     });
