@@ -1,4 +1,5 @@
 import { MenuItemListComponent } from './pages/menu-item-list/menu-item-list.component';
+import { MenuItemListComponent } from './pages/menu-item-list/menu-item-list.component';
 import {OrganizationUnitFieldComponent} from './pages/organization-unit-field/organization-unit-field.component';
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
