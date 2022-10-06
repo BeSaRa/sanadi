@@ -1,1 +1,39 @@
-<p>profile-popup works!</p>
+<div class="dialog-toolbar bg-primary d-flex justify-content-between">
+  <h1 class="h6 text-white">{{ lang.map.menu_profile }}</h1>
+  <div>
+    <button
+      type="button"
+      class="btn btn-fullscreen btn-close-white icon-btn"
+      tabindex="-1"
+      aria-label="Fullscreen"
+      fullscreenBtn
+    ></button>
+    <button
+      type="button"
+      class="btn-close btn-close-white"
+      tabindex="-1"
+      [dialogClose]="model"
+      aria-label="Close"
+    ></button>
+  </div>
+</div>
+<div class="dialog-content" #dialogContent>
+  <form style="width: 800px" novalidate autocomplete="off" [formGroup]="form">
+    <div class="row">
+      <div class="col-sm-6 mb-4 position-relative">
+        <label for="arName" asteriskIfRequired="arName" class="form-label">{{
+          lang.map.lbl_arabic_name
+        }}</label>
+        <input id="arName" formControlName="arName" class="form-control" />
+        <app-field-error-message controlName="arName"></app-field-error-message>
+      </div>
+      <div class="col-sm-6 mb-4 position-relative">
+        <label for="enName" asteriskIfRequired="enName" class="form-label">{{
+          lang.map.lbl_english_name
+        }}</label>
+        <input id="enName" formControlName="enName" class="form-control" />
+        <app-field-error-message controlName="enName"></app-field-error-message>
+      </div>
+    </div>
+  </form>
+</div>

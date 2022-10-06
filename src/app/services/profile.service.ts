@@ -1,6 +1,7 @@
 import { ComponentType } from '@angular/cdk/portal';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { ProfilePopupComponent } from '@app/administration/popups/profile-popup/profile-popup.component';
 import { CastResponseContainer } from '@app/decorators/decorators/cast-response';
 import { CrudWithDialogGenericService } from '@app/generics/crud-with-dialog-generic-service';
 import { Pagination } from '@app/models/pagination';
@@ -28,7 +29,7 @@ export class ProfileService extends CrudWithDialogGenericService<Profile>{
     FactoryService.registerService('ProfileService', this);
   }
   _getDialogComponent(): ComponentType<any> {
-    throw new Error('Method not implemented.');
+    return ProfilePopupComponent;
   }
   _getModel(): new () => Profile {
     return Profile;
