@@ -1418,6 +1418,7 @@ export interface ILanguageKeys {
   risk_reports: string;
   risk_type: string;
   risk_mitigation_measures: string;
+  risk_classification: string;
   feedback: string;
   coordination_and_support_reports: string;
   reports_received_from_organization: string;

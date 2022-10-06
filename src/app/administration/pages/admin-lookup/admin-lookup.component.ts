@@ -9,6 +9,7 @@ import {TabComponent} from '@app/shared/components/tab/tab.component';
 import {ITabData} from '@contracts/i-tab-data';
 import {CommonUtils} from '@helpers/common-utils';
 
+// noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
   selector: 'admin-lookup',
   templateUrl: './admin-lookup.component.html',
@@ -52,6 +53,14 @@ export class AdminLookupComponent {
       index: 2,
       langKey: 'activity_type',
       lookupType: AdminLookupTypeEnum.ACTIVITY_TYPE,
+      validStatus: () => true,
+      isTouchedOrDirty: () => true
+    },
+    riskClassification: {
+      name: 'riskClassification',
+      index: 3,
+      langKey: 'risk_classification',
+      lookupType: AdminLookupTypeEnum.RISK_CLASSIFICATION,
       validStatus: () => true,
       isTouchedOrDirty: () => true
     }
