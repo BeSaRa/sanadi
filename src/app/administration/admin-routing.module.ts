@@ -25,6 +25,7 @@ import { FieldAssessmentComponent } from '@app/administration/pages/field-assess
 import { VactionDatesComponent } from './pages/vaction-dates/vaction-dates.component';
 import { PermissionGroup } from '@app/enums/permission-group';
 import { AdminLookupComponent } from '@app/administration/pages/admin-lookup/admin-lookup.component';
+import { ProfilesComponent } from './pages/profiles/profiles.component';
 
 const routes: Routes = [
   { path: '', component: AdminHomeComponent },
@@ -140,7 +141,7 @@ const routes: Routes = [
     }
   },
   {
-    path: 'profiles', component: VactionDatesComponent,
+    path: 'profiles', component: ProfilesComponent,
     canActivate: [PermissionGuard],
     data: {
       permissionKey: Permissions.VACATIONS_DATE, configPermissionGroup: null, checkAnyPermission: false

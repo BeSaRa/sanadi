@@ -72,6 +72,7 @@ import { DacOchaListComponent } from './pages/dac-ocha-list/dac-ocha-list.compon
 import { AdminLookupComponent } from './pages/admin-lookup/admin-lookup.component';
 import { ActivityTypeComponent } from './pages/activity-types/activity-types.component';
 import { ActivityTypesPopupComponent } from './popups/activity-types-popup/activity-types-popup.component';
+import { ProfilesComponent } from './pages/profiles/profiles.component';
 
 @NgModule({
   declarations: [
@@ -142,6 +143,7 @@ import { ActivityTypesPopupComponent } from './popups/activity-types-popup/activ
     AdminLookupComponent,
     ActivityTypeComponent,
     ActivityTypesPopupComponent,
+    ProfilesComponent,
   ],
   imports: [
     SharedModule,
