@@ -1454,4 +1454,7 @@ export interface ILanguageKeys {
   lbl_add_x: string;
   lbl_edit_x: string;
   lbl_children_x: string;
+  email_for_working_authority: string;
+  phone_for_working_authority: string;
+  job_title_occupied_date: string;
 }

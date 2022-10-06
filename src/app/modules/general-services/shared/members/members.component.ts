@@ -71,17 +71,17 @@ export class MembersComponent extends ListModelComponent<OrgMember> {
       this.controls.push(
         {
           controlName: 'email',
-          label: this.lang.map.lbl_email,
+          label: this.lang.map.email_for_working_authority,
           type: 'text',
         },
         {
           controlName: 'phone',
-          label: this.lang.map.lbl_phone,
+          label: this.lang.map.phone_for_working_authority,
           type: 'text',
         },
         {
           controlName: 'joinDate',
-          label: this.lang.map.first_join_date,
+          label: this.lang.map.job_title_occupied_date,
           type: 'date',
         }
       );

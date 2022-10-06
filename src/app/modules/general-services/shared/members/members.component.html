@@ -146,19 +146,19 @@
         </ng-container>
         <ng-container *ngIf="extended" cdkColumnDef="joinDate">
           <th cdk-header-cell sortable-header *cdkHeaderCellDef>
-            {{ lang.map.first_join_date }}
+            {{ lang.map.job_title_occupied_date }}
           </th>
           <td cdk-cell *cdkCellDef="let row">{{ row.joinDate }}</td>
         </ng-container>
         <ng-container *ngIf="extended" cdkColumnDef="email">
           <th cdk-header-cell sortable-header *cdkHeaderCellDef>
-            {{ lang.map.lbl_email }}
+            {{ lang.map.email_for_working_authority }}
           </th>
           <td cdk-cell *cdkCellDef="let row">{{ row.email }}</td>
         </ng-container>
         <ng-container *ngIf="extended" cdkColumnDef="phone">
           <th cdk-header-cell sortable-header *cdkHeaderCellDef>
-            {{ lang.map.lbl_phone }}
+            {{ lang.map.phone_for_working_authority }}
           </th>
           <td cdk-cell *cdkCellDef="let row">{{ row.phone }}</td>
         </ng-container>
