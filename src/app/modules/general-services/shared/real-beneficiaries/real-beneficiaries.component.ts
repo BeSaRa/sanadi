@@ -115,18 +115,7 @@ export class RealBeneficiariesComponent extends ListModelComponent<RealBeneficia
       load: this.lookupService.listByCategory.Nationality,
       onChange: this._handleChangeNationality
     },
-    {
-      isDisplayed: true,
-      controlName: 'address',
-      label: this.lang.map.lbl_address,
-      type: 'text',
-    },
-    {
-      isDisplayed: true,
-      controlName: 'streetNumber',
-      label: this.lang.map.lbl_street,
-      type: 'text',
-    },
+
     {
       isDisplayed: true,
       controlName: 'zoneNumber',
@@ -135,10 +124,25 @@ export class RealBeneficiariesComponent extends ListModelComponent<RealBeneficia
     },
     {
       isDisplayed: true,
+      controlName: 'streetNumber',
+      label: this.lang.map.lbl_street,
+      type: 'text',
+    },
+
+    {
+      isDisplayed: true,
       controlName: 'buildingNumber',
       label: this.lang.map.building_number,
       type: 'text',
     },
+    {
+      isDisplayed: true,
+      controlName: 'address',
+      label: this.lang.map.lbl_address,
+      type: 'text',
+    },
+
+
 
     {
       isDisplayed: true,
@@ -200,6 +204,7 @@ export class RealBeneficiariesComponent extends ListModelComponent<RealBeneficia
 
   protected _initComponent(): void {
     this.form = this.fb.group(this.model.buildForm());
+    this.form.get('lastUpdateDate')?.disable();
   }
   _selectOne(_row: RealBeneficiary): void {
     const row = { ..._row };
@@ -215,7 +220,8 @@ export class RealBeneficiariesComponent extends ListModelComponent<RealBeneficia
     this.form.patchValue(row);
   }
   _beforeAdd(row: RealBeneficiary): RealBeneficiary | null {
-    const field = (row.nationality === this.QATARI_NATIONALITY) ? 'identificationNumber' : 'passportNumber';
+    const natinoality = this.lookupService.listByCategory.Nationality.find(e => e.id === row.nationality);
+    const field = (natinoality?.lookupKey === this.QATARI_NATIONALITY) ? 'identificationNumber' : 'passportNumber';
     if (this._list.findIndex((e) => e[field] === row[field]) !== -1) {
       this.toast.alert(this.lang.map.msg_duplicated_item)
       return null;
