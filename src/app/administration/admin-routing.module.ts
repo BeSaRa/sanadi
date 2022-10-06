@@ -27,6 +27,7 @@ import {VactionDatesComponent} from './pages/vaction-dates/vaction-dates.compone
 import {PermissionGroup} from '@app/enums/permission-group';
 import {AdminLookupOldComponent} from '@app/administration/pages/admin-lookup-old/admin-lookup-old.component';
 import {AdminLookupComponent} from '@app/administration/pages/admin-lookup/admin-lookup.component';
+import { AdminLookupOldComponent } from './pages/admin-lookup-old/admin-lookup-old.component';
 
 const routes: Routes = [
   {path: '', component: AdminHomeComponent},
