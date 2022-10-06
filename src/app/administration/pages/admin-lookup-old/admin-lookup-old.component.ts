@@ -1,23 +1,23 @@
-import {Component} from '@angular/core';
-import {LangService} from '@services/lang.service';
-import {LookupService} from '@services/lookup.service';
-import {UntypedFormControl} from '@angular/forms';
-import {TabMap} from '@app/types/types';
-import {AdminLookupTypeEnum} from '@app/enums/admin-lookup-type-enum';
-import {Subject} from 'rxjs';
-import {TabComponent} from '@app/shared/components/tab/tab.component';
-import {ITabData} from '@contracts/i-tab-data';
+import { Component } from '@angular/core';
+import { LangService } from '@services/lang.service';
+import { LookupService } from '@services/lookup.service';
+import { TabMap } from '@app/types/types';
+import { AdminLookupTypeEnum } from '@app/enums/admin-lookup-type-enum';
+import { ITabData } from '@contracts/i-tab-data';
+import { TabComponent } from '@app/shared/components/tab/tab.component';
+import { UntypedFormControl } from '@angular/forms';
+import { Subject } from 'rxjs';
 import {CommonUtils} from '@helpers/common-utils';
 
 @Component({
-  selector: 'admin-lookup',
-  templateUrl: './admin-lookup.component.html',
-  styleUrls: ['./admin-lookup.component.scss']
+  selector: 'admin-lookup-old',
+  templateUrl: './admin-lookup-old.component.html',
+  styleUrls: ['./admin-lookup-old.component.scss']
 })
-export class AdminLookupComponent {
+export class AdminLookupOldComponent {
 
   constructor(public lang: LangService,
-              public lookupService: LookupService) {
+    public lookupService: LookupService) {
   }
 
   filterControl: UntypedFormControl = new UntypedFormControl('');
@@ -29,7 +29,7 @@ export class AdminLookupComponent {
       langKey: 'work_field',
       lookupType: AdminLookupTypeEnum.WORK_FIELD,
       validStatus: () => true,
-      isTouchedOrDirty: () => true
+      isTouchedOrDirty: () => true,
     },
     ocha: {
       name: 'OCHA',
@@ -37,7 +37,7 @@ export class AdminLookupComponent {
       langKey: 'ocha',
       lookupType: AdminLookupTypeEnum.OCHA,
       validStatus: () => true,
-      isTouchedOrDirty: () => true
+      isTouchedOrDirty: () => true,
     },
     dac: {
       name: 'DAC',
@@ -45,7 +45,7 @@ export class AdminLookupComponent {
       langKey: 'dac',
       lookupType: AdminLookupTypeEnum.DAC,
       validStatus: () => true,
-      isTouchedOrDirty: () => true
+      isTouchedOrDirty: () => true,
     },
     activityType: {
       name: 'activityType',
@@ -53,7 +53,7 @@ export class AdminLookupComponent {
       langKey: 'activity_type',
       lookupType: AdminLookupTypeEnum.ACTIVITY_TYPE,
       validStatus: () => true,
-      isTouchedOrDirty: () => true
+      isTouchedOrDirty: () => true,
     }
   };
   selectedWorkFieldTabIndex$: Subject<number> = new Subject<number>();
@@ -88,13 +88,13 @@ export class AdminLookupComponent {
       return;
     }
     this.lookupComponentsMap.set(type, componentRef);
-    if (type === AdminLookupTypeEnum.OCHA) {
-      this.activeLookupType = AdminLookupTypeEnum.OCHA;
+    if (type === AdminLookupTypeEnum.WORK_FIELD) {
+      this.activeLookupType = type;
     }
   }
 
   addCallback() {
-    if (!CommonUtils.isValidValue(this.activeLookupType)) {
+    if (!this.activeLookupType) {
       return;
     }
 
@@ -116,5 +116,4 @@ export class AdminLookupComponent {
   private _findTabByTabName(tab: TabComponent): ITabData | undefined {
     return Object.values(this.tabsData).find(tabData => tabData.name === tab.name);
   }
-
 }

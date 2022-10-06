@@ -1451,4 +1451,7 @@ export interface ILanguageKeys {
   report_title: string;
   reject_reason: string;
   all_employees: string;
+  lbl_add_x: string;
+  lbl_edit_x: string;
+  lbl_children_x: string;
 }

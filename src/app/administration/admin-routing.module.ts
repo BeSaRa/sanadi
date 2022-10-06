@@ -24,6 +24,7 @@ import {DonorComponent} from '@app/administration/pages/donor/donor.component';
 import {FieldAssessmentComponent} from '@app/administration/pages/field-assessment/field-assessment.component';
 import {VactionDatesComponent} from './pages/vaction-dates/vaction-dates.component';
 import {PermissionGroup} from '@app/enums/permission-group';
+import {AdminLookupOldComponent} from '@app/administration/pages/admin-lookup-old/admin-lookup-old.component';
 import {AdminLookupComponent} from '@app/administration/pages/admin-lookup/admin-lookup.component';
 
 const routes: Routes = [
@@ -90,6 +91,11 @@ const routes: Routes = [
   },
   {
     path: 'lookups', component: AdminLookupComponent,
+    canActivate: [PermissionGuard],
+    data: {permissionKey: Permissions.ADMIN_LOOKUP, configPermissionGroup: null, checkAnyPermission: false}
+  },
+  {
+    path: 'lookups-old', component: AdminLookupOldComponent,
     canActivate: [PermissionGuard],
     data: {permissionKey: Permissions.ADMIN_LOOKUP, configPermissionGroup: null, checkAnyPermission: false}
   },
