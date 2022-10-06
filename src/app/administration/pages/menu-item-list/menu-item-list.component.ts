@@ -151,17 +151,8 @@ export class MenuItemListComponent
         this.reload$.next(null);
       });
   }
-  actions: IMenuItem<MenuItemList>[] = [
-    // reload
-    {
-      type: 'action',
-      label: 'btn_reload',
-      icon: 'mdi-reload',
-      onClick: (_) => this.reload$.next(null),
-    },
 
-  ];
-  commandActions: IMenuItem<MenuItemList>[] = [
+  actions: IMenuItem<MenuItemList>[] = [
     // edit
     {
       type: 'action',
@@ -219,9 +210,5 @@ export class MenuItemListComponent
       ],
     },
   ];
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-    this.destroy$.unsubscribe();
-  }
+
 }

@@ -150,7 +150,7 @@ const routes: Routes = [
     path: 'menu-item-list', component: MenuItemListComponent,
     canActivate: [PermissionGuard],
     data: {
-      permissionKey: Permissions.VACATIONS_DATE, configPermissionGroup: null, checkAnyPermission: false
+      permissionKey: Permissions.MENU_ITEM_LIST, configPermissionGroup: null, checkAnyPermission: false
     }
   }
 ];
