@@ -73,6 +73,7 @@ import { AdminLookupComponent } from './pages/admin-lookup/admin-lookup.componen
 import { ActivityTypeComponent } from './pages/activity-types/activity-types.component';
 import { ActivityTypesPopupComponent } from './popups/activity-types-popup/activity-types-popup.component';
 import { ProfilesComponent } from './pages/profiles/profiles.component';
+import { ProfilePopupComponent } from './popups/profile-popup/profile-popup.component';
 
 @NgModule({
   declarations: [
@@ -144,6 +145,7 @@ import { ProfilesComponent } from './pages/profiles/profiles.component';
     ActivityTypeComponent,
     ActivityTypesPopupComponent,
     ProfilesComponent,
+    ProfilePopupComponent,
   ],
   imports: [
     SharedModule,
