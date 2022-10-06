@@ -116,6 +116,6 @@
   "REAL_BENEFECIARY": "/admin/real-beneficiary",
   "NPO_MANAGEMENT": "/npo-management",
   "NPO_DATA": "/admin/npo-data",
-  "PROFILE": "​/admin​/profile",
+  "PROFILE": "/admin/profile",
   "AWARENESS_ACTIVITY_SUGGESTION": "/awareness-activity-suggestion"
 }
