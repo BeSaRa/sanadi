@@ -1,6 +1,9 @@
 import { MenuSubListItemPopupComponent } from './popups/menu-sub-list-item-popup/menu-sub-list-item-popup.component';
 import { MenuItemListPopupComponent } from './popups/menu-item-list-popup/menu-item-list-popup.component';
 import { MenuItemListComponent } from './pages/menu-item-list/menu-item-list.component';
+import { MenuSubListItemPopupComponent } from './popups/menu-sub-list-item-popup/menu-sub-list-item-popup.component';
+import { MenuItemListPopupComponent } from './popups/menu-item-list-popup/menu-item-list-popup.component';
+import { MenuItemListComponent } from './pages/menu-item-list/menu-item-list.component';
 import { OrganizationUnitFieldPopupComponent } from './popups/organization-unit-field-popup/organization-unit-field-popup.component';
 import { NgModule } from '@angular/core';
 
