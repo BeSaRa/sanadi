@@ -69,6 +69,7 @@ export abstract class ListModelComponent<T extends Cloneable<T>>
     this.showForm = false;
   }
   selectOne(event: any, row: T, index: number) {
+    this.model = this._list[index];
     this.editRecordIndex = index;
     this.showForm = true;
     this._selectOne(row);

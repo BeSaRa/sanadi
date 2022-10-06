@@ -17,16 +17,11 @@ import { takeUntil } from 'rxjs/operators';
 export class CharityBranchComponent extends ListModelComponent<CharityBranch> {
   @Input() readonly!: boolean;
   @Input() set list(_list: CharityBranch[]) {
-
     this._list = _list;
   }
+  @ViewChild('org_officers') org!: OrganizaionOfficerComponent;
   get list(): CharityBranch[] {
     const branches = [...this._list];
-    branches.forEach(e => {
-      e.branchContactOfficer?.forEach(bco => {
-        bco.identificationNumber = bco.qid;
-      })
-    })
     return branches;
   }
   columns = [
@@ -74,5 +69,9 @@ export class CharityBranchComponent extends ListModelComponent<CharityBranch> {
     const model = new CharityBranch();
     this.model = model;
     this.form = this.fb.group(model.buildForm());
+  }
+  _beforeAdd(model: CharityBranch): CharityBranch | null {
+    model.branchContactOfficer = this.org.list;
+    return model;
   }
 }

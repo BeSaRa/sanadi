@@ -2,6 +2,7 @@ import { DateUtils } from '@app/helpers/date-utils';
 import { IModelInterceptor } from '@app/interfaces/i-model-interceptor';
 import { AdminResult } from '@app/models/admin-result';
 import { Bylaw } from '@app/models/bylaw';
+import { CharityBranch } from '@app/models/charity-branch';
 import { CharityDecision } from '@app/models/charity-decision';
 import { CharityOrganizationUpdate } from '@app/models/charity-organization-update';
 import { CharityReport } from '@app/models/charity-report';
@@ -10,6 +11,7 @@ import { OrgMember } from '@app/models/org-member';
 import { OrganizationOfficer } from '@app/models/organization-officer';
 import { RealBeneficiary } from '@app/models/real-beneficiary';
 import { ByLawInterceptor } from './bylaw-interceptor';
+import { CharityBranchInterceptor } from './charity-branch-interceptor';
 import { CharityDecisionInterceptor } from './charity-Decision-interceptor';
 import { CharityReportInterceptor } from './charity-report-interceptor';
 import { ForeignAidClassificationInterceptor } from './foreign-aid-classification-interceptor';
@@ -30,6 +32,9 @@ export class CharityOrganizationUpdateInterceptor implements IModelInterceptor<C
     const membersInterceptor = new OrgMemberInterceptor();
     const bylawInterceptor = new ByLawInterceptor()
     const organizationOfficer = new OrganizationOfficerInterceptor();
+    const charityBranchInterceptor = new CharityBranchInterceptor();
+    model.charityBranchList = model.charityBranchList?.map(e => charityBranchInterceptor.send(e) as CharityBranch);
+
     model.realBeneficiaryList = model.realBeneficiaryList?.map(e => realBeneficiaryInterceptor.send(e) as RealBeneficiary);
     model.boardMemberList = model.boardMemberList?.map(e => membersInterceptor.send(e) as OrgMember);
     model.authorizedSignatoryMemberList = model.authorizedSignatoryMemberList?.map(e => membersInterceptor.send(e) as OrgMember);
@@ -59,6 +64,7 @@ export class CharityOrganizationUpdateInterceptor implements IModelInterceptor<C
     const membersInterceptor = new OrgMemberInterceptor();
     const organizationOfficer = new OrganizationOfficerInterceptor();
     const foreignAidClassificationInterceptor = new ForeignAidClassificationInterceptor();
+    const charityBranchInterceptor = new CharityBranchInterceptor();
     model.ouInfo = AdminResult.createInstance(model.ouInfo);
     (model.assignDate && (model.assignDate = DateUtils.getDateStringFromDate(model.assignDate)));
     (model.publishDate && (model.publishDate = DateUtils.getDateStringFromDate(model.publishDate)));
@@ -66,7 +72,7 @@ export class CharityOrganizationUpdateInterceptor implements IModelInterceptor<C
     (model.firstReleaseDate && (model.firstReleaseDate = DateUtils.getDateStringFromDate(model.firstReleaseDate)));
     (model.registrationDate && (model.registrationDate = DateUtils.getDateStringFromDate(model.registrationDate)));
     (model.establishmentDate && (model.establishmentDate = DateUtils.getDateStringFromDate(model.establishmentDate)));
-
+    model.charityBranchList = model.charityBranchList?.map(e => charityBranchInterceptor.receive(e));
     model.wFClassificationList = model.wFClassificationList?.map(e => foreignAidClassificationInterceptor.receive(e));
     model.realBeneficiaryList = model.realBeneficiaryList?.map(e => realBeneficiaryInterceptor.receive(e) as RealBeneficiary);
     model.boardMemberList = model.boardMemberList?.map(e => membersInterceptor.receive(e) as OrgMember);

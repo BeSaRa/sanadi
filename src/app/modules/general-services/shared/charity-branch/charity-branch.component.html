@@ -63,8 +63,9 @@
       <hr />
     </div>
     <organization-officers
+      #org_officers
       [readonly]="readonly"
-      [list]="model.branchContactOfficer"
+      [list]="model.branchContactOfficer || []"
     >
     </organization-officers>
   </div>
