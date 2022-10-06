@@ -37,13 +37,13 @@ export class CharityBranch extends SearchableCloneable<CharityBranch> {
     } = this;
 
     return {
-      address: controls ? [address, [CustomValidators.required]] : address,
+      address: controls ? [address, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)]] : address,
       branchAdjective: controls
         ? [branchAdjective, [CustomValidators.required]]
         : branchAdjective,
       branchContactOfficer: controls,
       buildingNumber: controls
-        ? [buildingNumber, [CustomValidators.required]]
+        ? [buildingNumber, [CustomValidators.required, CustomValidators.maxLength(5)]]
         : buildingNumber,
       category: controls ? [category, [CustomValidators.required]] : category,
       fullName: controls
@@ -54,17 +54,18 @@ export class CharityBranch extends SearchableCloneable<CharityBranch> {
             CustomValidators.minLength(
               CustomValidators.defaultLengths.MIN_LENGTH
             ),
+            CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX)
           ],
         ]
         : fullName,
       zoneNumber: controls
-        ? [zoneNumber, [CustomValidators.required]]
+        ? [zoneNumber, [CustomValidators.required, CustomValidators.maxLength(5)]]
         : zoneNumber,
       usageAdjective: controls
         ? [usageAdjective, [CustomValidators.required]]
         : usageAdjective,
       streetNumber: controls
-        ? [streetNumber, [CustomValidators.required]]
+        ? [streetNumber, [CustomValidators.required, CustomValidators.maxLength(5)]]
         : streetNumber,
     };
   }
