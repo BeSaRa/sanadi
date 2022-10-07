@@ -133,6 +133,6 @@
   "REPORTS_URL": "http://racabi/Reports/",
   "RESET_PASSWORD": "https://stgnas.gov.qa/self-service/reset/personal",
   "LOGIN_BACKGROUND_FALLBACK": "login-background.png",
-  "LOGIN_BACKGROUND_INTERNAL": "raca-login-background-1.png",
-  "LOGIN_BACKGROUND_EXTERNAL": "raca-login-background-1.png"
+  "LOGIN_BACKGROUND_INTERNAL": "raca-login-background-2.jpg",
+  "LOGIN_BACKGROUND_EXTERNAL": "raca-login-background-2.jpg"
 }
