@@ -109,7 +109,7 @@ export class MembersComponent extends ListModelComponent<OrgMember> {
     this.form.patchValue(_row);
   }
   _beforeAdd(row: OrgMember): OrgMember | null {
-    if (this._list.findIndex(e => e.identificationNumber === row.identificationNumber) !== -1) {
+    if (this._list.findIndex(e => e.identificationNumber === row.identificationNumber) !== -1 && (this.editRecordIndex === -1)) {
       this.toastr.error(this.lang.map.msg_duplicated_item);
       return null;
     }

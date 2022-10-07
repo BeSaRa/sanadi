@@ -78,7 +78,7 @@ export class RealBeneficiariesComponent extends ListModelComponent<RealBeneficia
     iDExpiryDate: DateUtils.getDatepickerOptions({ disablePeriod: 'past' }),
     passportDate: DateUtils.getDatepickerOptions({ disablePeriod: 'future' }),
     startDate: DateUtils.getDatepickerOptions({ disablePeriod: 'past' }),
-    lastUpdateDate: DateUtils.getDatepickerOptions({ disablePeriod: 'past' }),
+    lastUpdateDate: DateUtils.getDatepickerOptions({ disablePeriod: 'none' }),
   };
   idColumns = ['identificationNumber', 'iDDate', 'iDExpiryDate'];
   passportColumns = ['passportNumber', 'passportDate', 'passportExpiryDate'];
@@ -217,13 +217,14 @@ export class RealBeneficiariesComponent extends ListModelComponent<RealBeneficia
     );
     row.passportDate = DateUtils.changeDateToDatepicker(row.passportDate);
     row.lastUpdateDate = DateUtils.changeDateToDatepicker(row.lastUpdateDate);
+    this._handleChangeNationality(row.nationality);
     this.form.patchValue(row);
   }
   _beforeAdd(row: RealBeneficiary): RealBeneficiary | null {
     const natinoality = this.lookupService.listByCategory.Nationality.find(e => e.id === row.nationality);
     const field = (natinoality?.lookupKey === this.QATARI_NATIONALITY) ? 'identificationNumber' : 'passportNumber';
-    if (this._list.findIndex((e) => e[field] === row[field]) !== -1) {
-      this.toast.alert(this.lang.map.msg_duplicated_item)
+    if (this._list.findIndex((e) => e[field] === row[field]) !== -1 && (this.editRecordIndex === -1)) {
+      this.toast.alert(this.lang.map.msg_duplicated_item);
       return null;
     }
     row.birthDate = DateUtils.getDateStringFromDate(row.birthDate);

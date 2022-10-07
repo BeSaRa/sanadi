@@ -79,8 +79,8 @@ export class CharityReportsComponent extends ListModelComponent<CharityReport> {
     super(CharityReport);
   }
   _beforeAdd(model: CharityReport): CharityReport | null {
-    if (this._list.findIndex(e => e.fullName === model.fullName) !== -1) {
-      this.toastr.alert(this.lang.map.msg_duplicated_item)
+    if (this._list.findIndex(e => e.fullName === model.fullName) !== -1 && (this.editRecordIndex === -1)) {
+      this.toastr.alert(this.lang.map.msg_duplicated_item);
       return null;
     }
     model.generalDate = DateUtils.getDateStringFromDate(model.generalDate!)!;
