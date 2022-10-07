@@ -1,14 +1,14 @@
-import { Component, HostListener, OnInit } from '@angular/core';
-import { AbstractControl, UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
-import { of, Subject } from "rxjs";
-import { LangService } from "@app/services/lang.service";
-import { Router } from "@angular/router";
-import { ECookieService } from "@app/services/e-cookie.service";
-import { ToastService } from "@app/services/toast.service";
-import { AuthService } from "@app/services/auth.service";
-import { CustomValidators } from "@app/validators/custom-validators";
-import { catchError, exhaustMap, mapTo, takeUntil, tap } from "rxjs/operators";
-import { ConfigurationService } from "@services/configuration.service";
+import {Component, HostListener, OnInit} from '@angular/core';
+import {AbstractControl, UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
+import {of, Subject} from 'rxjs';
+import {LangService} from '@app/services/lang.service';
+import {Router} from '@angular/router';
+import {ECookieService} from '@app/services/e-cookie.service';
+import {ToastService} from '@app/services/toast.service';
+import {AuthService} from '@app/services/auth.service';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {catchError, exhaustMap, mapTo, takeUntil, tap} from 'rxjs/operators';
+import {ConfigurationService} from '@services/configuration.service';
 
 @Component({
   selector: 'external-login',
@@ -22,14 +22,14 @@ export class ExternalLoginComponent implements OnInit {
   private login$: Subject<any> = new Subject<any>();
   loginFromExternal: UntypedFormGroup = {} as UntypedFormGroup;
 
-  background: string = 'url(assets/images/login-background.png)';
-  loginBackground: string = 'url(assets/images/raca-login-background-1.png)';
+  background: string = 'url(assets/images/' + this.configService.CONFIG.LOGIN_BACKGROUND_FALLBACK + ')';
+  loginBackground: string = 'url(assets/images/' + this.configService.CONFIG.LOGIN_BACKGROUND_EXTERNAL + ')';
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
 
   constructor(public lang: LangService,
               private router: Router,
               private fb: UntypedFormBuilder,
-              public config: ConfigurationService,
+              public configService: ConfigurationService,
               private eCookieService: ECookieService,
               private toastService: ToastService,
               private authService: AuthService) {
@@ -97,7 +97,7 @@ export class ExternalLoginComponent implements OnInit {
 
   @HostListener('window:keydown.f1')
   switchLoginPage() {
-    this.router.navigate(['/login']).then()
+    this.router.navigate(['/login']).then();
     return false;
   }
 
