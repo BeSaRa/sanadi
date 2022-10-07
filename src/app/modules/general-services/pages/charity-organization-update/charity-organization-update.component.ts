@@ -222,6 +222,10 @@ export class CharityOrganizationUpdateComponent
       this.charityOrganizations = e;
     });
   }
+  private _filterExternalUserRequestTypes() {
+    const notAllowedForExternalUser = [this.RequestTypes.COORDINATION_AND_CONTROL_REPORTS, this.RequestTypes.APPROVE_MEASURES_AND_PENALTIES];
+    this.requestTypes = this.requestTypes.filter(e => !notAllowedForExternalUser.includes(e.lookupKey));
+  }
   private _loadEmployees(charityId: number): void {
     this.allEmployeesOfOrganization$ = this.npoEmployeeService.getByOrganizationId(charityId);
   }
@@ -453,6 +457,9 @@ export class CharityOrganizationUpdateComponent
     private npoEmployeeService: NpoEmployeeService
   ) {
     super();
+    if (this.employeeService.isExternalUser()) {
+      this._filterExternalUserRequestTypes();
+    }
   }
 
   ngAfterViewInit(): void {
