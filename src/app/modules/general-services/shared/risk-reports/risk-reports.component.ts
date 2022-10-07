@@ -66,7 +66,7 @@ export class CharityReportsComponent extends ListModelComponent<CharityReport> {
       type: 'dropdown',
       label: this.lang.map.status,
       load: this.lookupService.listByCategory.CharityReportStatus,
-      dropdownValue: 'lookupkey',
+      dropdownValue: 'lookupKey',
     },
   ];
   constructor(
