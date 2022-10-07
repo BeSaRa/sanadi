@@ -30,36 +30,7 @@ export class CharityDecisionsComponent extends ListModelComponent<CharityDecisio
     generalDate: DateUtils.getDatepickerOptions({ disablePeriod: 'none' })
   };
 
-  controls: ControlWrapper[] = [
-    {
-      controlName: 'referenceNumber',
-      label: this.lang.map.project_reference_number,
-      type: 'text',
-    },
-    {
-      controlName: 'generalDate',
-      label: this.lang.map.date,
-      type: 'date',
-    },
-    {
-      controlName: 'subject',
-      label: this.lang.map.subject,
-      type: 'text',
-    },
-    {
-      controlName: 'category',
-      label: this.lang.map.main_category,
-      type: 'dropdown',
-      dropdownValue: 'id',
-      load$: this.inside
-        ? this.adminLookupService.loadAsLookups(
-          AdminLookupTypeEnum.PENALTIES_DECISION
-        )
-        : this.adminLookupService.loadAsLookups(
-          AdminLookupTypeEnum.RESOLUTIONS_ISSUED
-        ),
-    },
-  ];
+  controls: ControlWrapper[] = [];
   columns = ['referenceNumber', 'generalDate', 'subject', 'actions'];
   constructor(
     private adminLookupService: AdminLookupService,
@@ -70,6 +41,36 @@ export class CharityDecisionsComponent extends ListModelComponent<CharityDecisio
   }
 
   protected _initComponent(): void {
+    this.controls = [
+      {
+        controlName: 'referenceNumber',
+        label: this.lang.map.project_reference_number,
+        type: 'text',
+      },
+      {
+        controlName: 'generalDate',
+        label: this.lang.map.date,
+        type: 'date',
+      },
+      {
+        controlName: 'subject',
+        label: this.lang.map.subject,
+        type: 'text',
+      },
+      {
+        controlName: 'category',
+        label: this.lang.map.main_category,
+        type: 'dropdown',
+        dropdownValue: 'id',
+        load$: this.inside
+          ? this.adminLookupService.loadAsLookups(
+            AdminLookupTypeEnum.PENALTIES_DECISION
+          )
+          : this.adminLookupService.loadAsLookups(
+            AdminLookupTypeEnum.RESOLUTIONS_ISSUED
+          ),
+      },
+    ];
     if (!this.inside) {
       this.controls.push({
         controlName: 'organization',
