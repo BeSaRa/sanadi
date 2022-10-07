@@ -44,7 +44,7 @@ export class CharityDecisionsComponent extends ListModelComponent<CharityDecisio
     this.controls = [
       {
         controlName: 'referenceNumber',
-        label: this.lang.map.project_reference_number,
+        label: this.lang.map.decision_reference_number,
         type: 'text',
       },
       {
@@ -59,7 +59,7 @@ export class CharityDecisionsComponent extends ListModelComponent<CharityDecisio
       },
       {
         controlName: 'category',
-        label: this.lang.map.main_category,
+        label: this.lang.map.decision_category,
         type: 'dropdown',
         dropdownValue: 'id',
         load$: this.inside

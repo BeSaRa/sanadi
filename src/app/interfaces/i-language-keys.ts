@@ -1457,4 +1457,6 @@ export interface ILanguageKeys {
   email_for_working_authority: string;
   phone_for_working_authority: string;
   job_title_occupied_date: string;
+  decision_category: string;
+  decision_reference_number: string;
 }
