@@ -131,5 +131,8 @@
   "BENEFICIARY_AUDIT_LIMIT": 50,
   "E_SERVICE_ITEM_KEY": "item",
   "REPORTS_URL": "http://racabi/Reports/",
-  "RESET_PASSWORD": "https://stgnas.gov.qa/self-service/reset/personal"
+  "RESET_PASSWORD": "https://stgnas.gov.qa/self-service/reset/personal",
+  "LOGIN_BACKGROUND_FALLBACK": "login-background.png",
+  "LOGIN_BACKGROUND_INTERNAL": "raca-login-background-2.jpg",
+  "LOGIN_BACKGROUND_EXTERNAL": "raca-login-background-2.jpg"
 }
