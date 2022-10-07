@@ -927,6 +927,7 @@ export class CharityOrganizationUpdateComponent
   }
 
   _resetForm(): void {
+    this.handleRequestTypeChange(undefined!);
     this.form.reset();
   }
 }
