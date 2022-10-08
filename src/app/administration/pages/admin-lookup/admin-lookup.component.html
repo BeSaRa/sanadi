@@ -26,6 +26,8 @@
        [title]="getTabLabel(adminLookupTypeEnum.RISK_CLASSIFICATION)"></tab>
   <tab [name]="tabsData.coordinationAndSupportClassification.name" [template]="coordinationAndSupportClassificationTemplate"
        [title]="getTabLabel(adminLookupTypeEnum.COORDINATION_SUPPORT_CLASSIFICATION)"></tab>
+  <tab [name]="tabsData.resolutionsIssued.name" [template]="resolutionsIssuedTemplate"
+       [title]="getTabLabel(adminLookupTypeEnum.RESOLUTIONS_ISSUED)"></tab>
 </tabs-list>
 
 <ng-template #workFieldTemplate>
@@ -58,5 +60,10 @@
 <ng-template #coordinationAndSupportClassificationTemplate>
   <admin-lookup-list #coordinationAndSupportClassificationComponent [adminLookupTypeId]="adminLookupTypeEnum.COORDINATION_SUPPORT_CLASSIFICATION"
                      (onReady)="setLookupComponentMap($event, coordinationAndSupportClassificationComponent)">
+  </admin-lookup-list>
+</ng-template>
+<ng-template #resolutionsIssuedTemplate>
+  <admin-lookup-list #resolutionsIssuedComponent [adminLookupTypeId]="adminLookupTypeEnum.RESOLUTIONS_ISSUED"
+                     (onReady)="setLookupComponentMap($event, resolutionsIssuedComponent)">
   </admin-lookup-list>
 </ng-template>

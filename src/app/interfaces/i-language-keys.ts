@@ -1460,4 +1460,5 @@ export interface ILanguageKeys {
   lookup_activity_type: string; // don't delete or change because it's map for lookup
   lookup_risk_classification: string; // don't delete or change because it's map for lookup
   lookup_coordination_support_classification: string; // don't delete or change because it's map for lookup
+  lookup_resolutions_issued: string; // don't delete or change because it's map for lookup
 }

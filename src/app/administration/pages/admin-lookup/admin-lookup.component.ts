@@ -71,6 +71,14 @@ export class AdminLookupComponent {
       lookupType: AdminLookupTypeEnum.COORDINATION_SUPPORT_CLASSIFICATION,
       validStatus: () => true,
       isTouchedOrDirty: () => true
+    },
+    resolutionsIssued: {
+      name: 'resolutionsIssued',
+      index: 5,
+      langKey: 'lookup_resolutions_issued',
+      lookupType: AdminLookupTypeEnum.RESOLUTIONS_ISSUED,
+      validStatus: () => true,
+      isTouchedOrDirty: () => true
     }
   };
   selectedWorkFieldTabIndex$: Subject<number> = new Subject<number>();
