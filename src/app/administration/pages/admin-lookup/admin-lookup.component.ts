@@ -79,6 +79,14 @@ export class AdminLookupComponent {
       lookupType: AdminLookupTypeEnum.RESOLUTIONS_ISSUED,
       validStatus: () => true,
       isTouchedOrDirty: () => true
+    },
+    penaltiesDecisions: {
+      name: 'penaltiesDecisions',
+      index: 6,
+      langKey: 'lookup_penalties_decisions',
+      lookupType: AdminLookupTypeEnum.PENALTIES_DECISION,
+      validStatus: () => true,
+      isTouchedOrDirty: () => true
     }
   };
   selectedWorkFieldTabIndex$: Subject<number> = new Subject<number>();

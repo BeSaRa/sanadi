@@ -28,6 +28,8 @@
        [title]="getTabLabel(adminLookupTypeEnum.COORDINATION_SUPPORT_CLASSIFICATION)"></tab>
   <tab [name]="tabsData.resolutionsIssued.name" [template]="resolutionsIssuedTemplate"
        [title]="getTabLabel(adminLookupTypeEnum.RESOLUTIONS_ISSUED)"></tab>
+  <tab [name]="tabsData.penaltiesDecisions.name" [template]="penaltiesDecisionsTemplate"
+       [title]="getTabLabel(adminLookupTypeEnum.PENALTIES_DECISION)"></tab>
 </tabs-list>
 
 <ng-template #workFieldTemplate>
@@ -65,5 +67,10 @@
 <ng-template #resolutionsIssuedTemplate>
   <admin-lookup-list #resolutionsIssuedComponent [adminLookupTypeId]="adminLookupTypeEnum.RESOLUTIONS_ISSUED"
                      (onReady)="setLookupComponentMap($event, resolutionsIssuedComponent)">
+  </admin-lookup-list>
+</ng-template>
+<ng-template #penaltiesDecisionsTemplate>
+  <admin-lookup-list #penaltiesDecisionsComponent [adminLookupTypeId]="adminLookupTypeEnum.PENALTIES_DECISION"
+                     (onReady)="setLookupComponentMap($event, penaltiesDecisionsComponent)">
   </admin-lookup-list>
 </ng-template>
