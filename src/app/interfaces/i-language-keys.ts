@@ -1476,4 +1476,6 @@ export interface ILanguageKeys {
   validate_URL: string;
   published: string;
   msg_launch_missing_mandatory_attachments: string;
+  attachment_other: string;
+  attachment_other_desc: string;
 }

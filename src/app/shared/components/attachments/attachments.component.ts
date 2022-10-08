@@ -154,7 +154,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
 
     attachments = attachments.map(attachment => {
       if (attachment.attachmentTypeId === -1) {
-        attachment.attachmentTypeInfo = AttachmentsComponent.createOtherLookup();
+        attachment.attachmentTypeInfo = this.createOtherLookup();
         attachment.attachmentTypeStatus = true;
       } else {
         const type = this.allAttachmentTypesByCase.find(x => x.attachmentTypeId === attachment.attachmentTypeId);
@@ -325,22 +325,18 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
       });
   }
 
-  private static createOtherLookup(): AdminResult {
+  private createOtherLookup(): AdminResult {
     return AdminResult.createInstance({
-      arName: 'اخري',
-      enName: 'Other',
+      arName: this.lang.getArabicLocalByKey('attachment_other'),
+      enName: this.lang.getEnglishLocalByKey('attachment_other'),
     });
   }
 
   private createOtherAttachment(): FileNetDocument {
-    const descriptions = {
-      en: 'A special type of attachment whose name has not been specified',
-      ar: 'نوع خاص من المرفقات لم يتم تحديد مسمي له '
-    };
     return new FileNetDocument().clone({
-      attachmentTypeInfo: AttachmentsComponent.createOtherLookup(),
+      attachmentTypeInfo: this.createOtherLookup(),
       attachmentTypeId: -1,
-      description: descriptions[this.lang.map.lang as keyof typeof descriptions],
+      description: this.lang.map.attachment_other_desc,
       attachmentTypeStatus: true
     });
   }
