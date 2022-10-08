@@ -27,7 +27,7 @@ export class AdminLookupComponent {
     workField: {
       name: 'workField',
       index: -1,
-      langKey: 'work_field',
+      langKey: 'lookup_work_field',
       lookupType: AdminLookupTypeEnum.WORK_FIELD,
       validStatus: () => true,
       isTouchedOrDirty: () => true
@@ -35,7 +35,7 @@ export class AdminLookupComponent {
     ocha: {
       name: 'OCHA',
       index: 0,
-      langKey: 'ocha',
+      langKey: 'lookup_ocha',
       lookupType: AdminLookupTypeEnum.OCHA,
       validStatus: () => true,
       isTouchedOrDirty: () => true
@@ -43,7 +43,7 @@ export class AdminLookupComponent {
     dac: {
       name: 'DAC',
       index: 1,
-      langKey: 'dac',
+      langKey: 'lookup_dac',
       lookupType: AdminLookupTypeEnum.DAC,
       validStatus: () => true,
       isTouchedOrDirty: () => true
@@ -51,7 +51,7 @@ export class AdminLookupComponent {
     activityType: {
       name: 'activityType',
       index: 2,
-      langKey: 'activity_type',
+      langKey: 'lookup_activity_type',
       lookupType: AdminLookupTypeEnum.ACTIVITY_TYPE,
       validStatus: () => true,
       isTouchedOrDirty: () => true
@@ -59,8 +59,16 @@ export class AdminLookupComponent {
     riskClassification: {
       name: 'riskClassification',
       index: 3,
-      langKey: 'risk_classification',
+      langKey: 'lookup_risk_classification',
       lookupType: AdminLookupTypeEnum.RISK_CLASSIFICATION,
+      validStatus: () => true,
+      isTouchedOrDirty: () => true
+    },
+    coordinationAndSupportClassification: {
+      name: 'coordinationAndSupportClassification',
+      index: 4,
+      langKey: 'lookup_coordination_support_classification',
+      lookupType: AdminLookupTypeEnum.COORDINATION_SUPPORT_CLASSIFICATION,
       validStatus: () => true,
       isTouchedOrDirty: () => true
     }

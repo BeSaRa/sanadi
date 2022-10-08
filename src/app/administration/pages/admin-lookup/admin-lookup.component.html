@@ -24,6 +24,8 @@
        [title]="getTabLabel(adminLookupTypeEnum.ACTIVITY_TYPE)"></tab>
   <tab [name]="tabsData.riskClassification.name" [template]="riskClassificationTemplate"
        [title]="getTabLabel(adminLookupTypeEnum.RISK_CLASSIFICATION)"></tab>
+  <tab [name]="tabsData.coordinationAndSupportClassification.name" [template]="coordinationAndSupportClassificationTemplate"
+       [title]="getTabLabel(adminLookupTypeEnum.COORDINATION_SUPPORT_CLASSIFICATION)"></tab>
 </tabs-list>
 
 <ng-template #workFieldTemplate>
@@ -51,5 +53,10 @@
 <ng-template #riskClassificationTemplate>
   <admin-lookup-list #riskClassificationComponent [adminLookupTypeId]="adminLookupTypeEnum.RISK_CLASSIFICATION"
                      (onReady)="setLookupComponentMap($event, riskClassificationComponent)">
+  </admin-lookup-list>
+</ng-template>
+<ng-template #coordinationAndSupportClassificationTemplate>
+  <admin-lookup-list #coordinationAndSupportClassificationComponent [adminLookupTypeId]="adminLookupTypeEnum.COORDINATION_SUPPORT_CLASSIFICATION"
+                     (onReady)="setLookupComponentMap($event, coordinationAndSupportClassificationComponent)">
   </admin-lookup-list>
 </ng-template>

@@ -1418,7 +1418,6 @@ export interface ILanguageKeys {
   risk_reports: string;
   risk_type: string;
   risk_mitigation_measures: string;
-  risk_classification: string;
   feedback: string;
   coordination_and_support_reports: string;
   reports_received_from_organization: string;
@@ -1455,4 +1454,10 @@ export interface ILanguageKeys {
   lbl_add_x: string;
   lbl_edit_x: string;
   lbl_children_x: string;
+  lookup_work_field: string; // don't delete or change because it's map for lookup
+  lookup_dac: string; // don't delete or change because it's map for lookup
+  lookup_ocha: string; // don't delete or change because it's map for lookup
+  lookup_activity_type: string; // don't delete or change because it's map for lookup
+  lookup_risk_classification: string; // don't delete or change because it's map for lookup
+  lookup_coordination_support_classification: string; // don't delete or change because it's map for lookup
 }
