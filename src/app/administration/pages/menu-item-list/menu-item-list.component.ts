@@ -6,6 +6,7 @@ import { AdminGenericComponent } from '@app/generics/admin-generic-component';
 import { CommonUtils } from '@app/helpers/common-utils';
 import { IGridAction } from '@app/interfaces/i-grid-action';
 import { SortEvent } from '@app/interfaces/sort-event';
+import { AdminLookup } from '@app/models/admin-lookup';
 import { MenuItemList } from '@app/models/menu-item-list';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
 import { DialogService } from '@app/services/dialog.service';
@@ -56,6 +57,7 @@ export class MenuItemListComponent
   }
 
   @ViewChild('table') table!: TableComponent;
+  selectedPopupTabName: string = 'basic';
   afterReload(): void {
     this.table && this.table.clearSelection();
   }
@@ -160,6 +162,15 @@ export class MenuItemListComponent
       icon: 'mdi-pen',
       onClick: (item: MenuItemList) => this.edit$.next(item),
     },
+     // sub childrin
+     {
+      type: 'action',
+      label: (_item) => {
+        return this.lang.map.sub_lists;
+      },
+      icon: ActionIconsEnum.CHILD_ITEMS,
+      onClick: (item) => this.showChildren(item)
+    },
     // view
     {
       type: 'action',
@@ -176,7 +187,11 @@ export class MenuItemListComponent
       onClick: (item) => this.delete(item)
     },
   ];
-
+  showChildren(item: MenuItemList, $event?: Event): void {
+    $event?.preventDefault();
+    this.selectedPopupTabName = 'sub';
+    this.service.openEditDialog(item,this.selectedPopupTabName);
+  }
   bulkActionsList: IGridAction[] = [
     {
       langKey: 'btn_delete',

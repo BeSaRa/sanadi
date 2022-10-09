@@ -9,7 +9,7 @@
 </div>
 <div class="dialog-content" #dialogContent>
   <form class="w800px" novalidate autocomplete="off" [formGroup]="form">
-    <tabs-list>
+    <tabs-list [tabByIndex$]="selectedTabIndex$">
       <tab [name]="tabsData.main.name" [template]="mainDataTabTemplate" [title]="lang.map.main_list"
         [hasError]="fm.getFieldInvalidStatus('main')"></tab>
       <tab [name]="tabsData.linkSettings.name" [template]="linkSettingsTabTemplate" [title]="lang.map.link_settings">

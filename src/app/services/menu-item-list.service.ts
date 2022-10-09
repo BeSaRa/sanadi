@@ -71,11 +71,12 @@ export class MenuItemListService extends CrudWithDialogGenericService<MenuItemLi
       })
     );
   }
-  openEditDialog(model: MenuItemList): Observable<DialogRef> {
+  openEditDialog(model: MenuItemList, selectedPopupTab: string = 'basic'): Observable<DialogRef> {
     return of(
       this.dialog.show<IDialogData<MenuItemList>>(this._getDialogComponent(), {
         model,
         operation: OperationTypes.UPDATE,
+        selectedTab: selectedPopupTab || 'basic'
       })
     );
   }

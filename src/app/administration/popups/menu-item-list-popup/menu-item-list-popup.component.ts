@@ -44,6 +44,9 @@ export class MenuItemListPopupComponent extends AdminGenericDialog<MenuItemList>
   pageEvent: any;
   count: any;
   subList: MenuItemList[]=[];
+  selectedTabIndex$: Subject<number> = new Subject<number>();
+  defaultSelectedTab: string = 'main';
+
   get readonly(): boolean {
     return this.operation === OperationTypes.VIEW;
   }
@@ -71,6 +74,10 @@ export class MenuItemListPopupComponent extends AdminGenericDialog<MenuItemList>
     super();
     this.model = data.model;
     this.operation = data.operation;
+    this.defaultSelectedTab = data.selectedTab?? 'main';
+
+    console.log(this.defaultSelectedTab);
+
   }
 
   initPopup(): void {
@@ -258,6 +265,15 @@ export class MenuItemListPopupComponent extends AdminGenericDialog<MenuItemList>
 
   ngAfterViewInit() {
     this.cd.detectChanges();
+    this._setDefaultSelectedTab()
+  }
+  private _setDefaultSelectedTab(): void {
+    setTimeout(() => {
+      if (this.tabsData.hasOwnProperty(this.defaultSelectedTab) && this.tabsData[this.defaultSelectedTab]) {
+        const index =this.defaultSelectedTab === 'main' ? 0 :2;
+        this.selectedTabIndex$.next(index);
+      }
+    });
   }
   get selectedRecords(): MenuItemList[] {
     return this.table.selection.selected;
