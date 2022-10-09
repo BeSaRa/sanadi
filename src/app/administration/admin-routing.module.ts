@@ -1,5 +1,4 @@
 import { MenuItemListComponent } from './pages/menu-item-list/menu-item-list.component';
-import { MenuItemListComponent } from './pages/menu-item-list/menu-item-list.component';
 import {OrganizationUnitFieldComponent} from './pages/organization-unit-field/organization-unit-field.component';
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
@@ -26,7 +25,6 @@ import {DonorComponent} from '@app/administration/pages/donor/donor.component';
 import {FieldAssessmentComponent} from '@app/administration/pages/field-assessment/field-assessment.component';
 import {VactionDatesComponent} from './pages/vaction-dates/vaction-dates.component';
 import {PermissionGroup} from '@app/enums/permission-group';
-import {AdminLookupOldComponent} from '@app/administration/pages/admin-lookup-old/admin-lookup-old.component';
 import {AdminLookupComponent} from '@app/administration/pages/admin-lookup/admin-lookup.component';
 import { AdminLookupOldComponent } from './pages/admin-lookup-old/admin-lookup-old.component';
 
