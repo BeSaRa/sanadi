@@ -56,9 +56,9 @@ export class MenuItemListService extends CrudWithDialogGenericService<MenuItemLi
     super();
     FactoryService.registerService('MenuItemListService', this);
   }
-  openCreateDialog(model:MenuItemList): DialogRef {
+  openCreateDialog(id:number): DialogRef {
     return this.dialog.show<IDialogData<MenuItemList>>(this._getSubListComponent(), {
-      model: new MenuItemList().clone({parentMenuItemId:model.id}),
+      model: new MenuItemList().clone({parentMenuItemId:id}),
       operation: OperationTypes.CREATE,
 
     });

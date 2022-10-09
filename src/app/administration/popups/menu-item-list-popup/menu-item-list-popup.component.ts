@@ -24,6 +24,7 @@ import { MenuItemListService } from '@app/services/menu-item-list.service';
 import { TableComponent } from '@app/shared/components/table/table.component';
 import { SharedService } from '@app/services/shared.service';
 import { IGridAction } from '@app/interfaces/i-grid-action';
+import { TabComponent } from '@app/shared/components/tab/tab.component';
 
 @Component({
   selector: 'app-menu-item-list-popup',
@@ -96,6 +97,11 @@ export class MenuItemListPopupComponent extends AdminGenericDialog<MenuItemList>
       this.saveVisible = false;
       this.validateFieldsVisible = false;
     }
+  }
+
+  setDialogButtonsVisibility(tab: any): void {
+    this.saveVisible = (tab.name && tab.name === this.tabsData.main.name);
+    this.validateFieldsVisible = (tab.name && tab.name === this.tabsData.main.name);
   }
   beforeSave(model: MenuItemList, form: UntypedFormGroup): Observable<boolean> | boolean {
     return form.valid;
@@ -237,7 +243,7 @@ export class MenuItemListPopupComponent extends AdminGenericDialog<MenuItemList>
   listenToAddSubList() {
     this.addSubList$
       .pipe(takeUntil(this.destroy$))
-      .pipe(exhaustMap(() => this.menuListItemService.openCreateDialog(this.model).onAfterClose$))
+      .pipe(exhaustMap(() => this.menuListItemService.openCreateDialog(this.model.id).onAfterClose$))
       .subscribe(() => this.reloadSubList$.next(null));
   }
 
