@@ -1454,6 +1454,14 @@ export interface ILanguageKeys {
   lbl_add_x: string;
   lbl_edit_x: string;
   lbl_children_x: string;
+  lookup_work_field: string; // don't delete or change because it's map for lookup
+  lookup_dac: string; // don't delete or change because it's map for lookup
+  lookup_ocha: string; // don't delete or change because it's map for lookup
+  lookup_activity_type: string; // don't delete or change because it's map for lookup
+  lookup_risk_classification: string; // don't delete or change because it's map for lookup
+  lookup_coordination_support_classification: string; // don't delete or change because it's map for lookup
+  lookup_resolutions_issued: string; // don't delete or change because it's map for lookup
+  lookup_penalties_decisions: string; // don't delete or change because it's map for lookup
   menu_items: string;
   menu_type: string;
   menu_view: string;

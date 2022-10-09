@@ -35,4 +35,7 @@ export interface IAppConfig {
   E_SERVICE_ITEM_KEY: string;
   REPORTS_URL: string;
   RESET_PASSWORD: string;
+  LOGIN_BACKGROUND_FALLBACK: string;
+  LOGIN_BACKGROUND_INTERNAL: string;
+  LOGIN_BACKGROUND_EXTERNAL: string;
 }

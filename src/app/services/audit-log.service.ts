@@ -15,7 +15,7 @@ import { CastResponse } from "@decorators/cast-response";
   providedIn: 'root'
 })
 export class AuditLogService {
-
+  interceptor = new AuditLogInterceptor();
   constructor(public http: HttpClient,
               private dialogService: DialogService) {
     FactoryService.registerService('AuditLogService', this);
@@ -49,10 +49,10 @@ export class AuditLogService {
   }
 
   _getSendInterceptor(): any {
-    return AuditLogInterceptor.send;
+    return this.interceptor.send;
   }
 
   _getReceiveInterceptor(): any {
-    return AuditLogInterceptor.receive;
+    return this.interceptor.receive;
   }
 }
