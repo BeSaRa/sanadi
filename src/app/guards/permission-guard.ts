@@ -4,8 +4,9 @@ import {DialogService} from '@services/dialog.service';
 import {Injectable} from '@angular/core';
 import {EmployeeService} from '@services/employee.service';
 import {LangService} from '@services/lang.service';
-import {ConfigurationService} from '@services/configuration.service';
 import {CommonUtils} from '@app/helpers/common-utils';
+import {PermissionGroupsEnum} from '@app/enums/permission-groups-enum';
+import {StaticAppResourcesService} from '@services/static-app-resources.service';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +15,7 @@ export class PermissionGuard implements CanActivate {
   constructor(private empService: EmployeeService,
               private dialogService: DialogService,
               private langService: LangService,
-              private configService: ConfigurationService) {
+              private staticResourcesService: StaticAppResourcesService) {
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> | boolean {
@@ -23,8 +24,7 @@ export class PermissionGuard implements CanActivate {
       checkAnyPermission: boolean = route.data.checkAnyPermission,
       permissions: string | string[] = '';
     if (CommonUtils.isValidValue(permissionGroup)) {
-      // @ts-ignore
-      permissions = this.configService.CONFIG[permissionGroup] || '';
+      permissions = this.staticResourcesService.getPermissionsListByGroup(permissionGroup as unknown as PermissionGroupsEnum) || '';
     }
     if (CommonUtils.isValidValue(permissionKey)) {
       if (typeof permissionKey === 'string') {

@@ -8,6 +8,7 @@ import { switchMap, tap } from "rxjs/operators";
 import { CommonService } from "@services/common.service";
 import { UserTypes } from "@app/enums/user-types.enum";
 import { EmployeeService } from "@services/employee.service";
+import {PermissionsEnum} from '@app/enums/permissions-enum';
 
 @Injectable({
   providedIn: 'root'
@@ -70,8 +71,8 @@ export class TokenService {
         innerSub = this.authService.validateToken()
           .pipe(switchMap((loggedIn) => this.commonService.loadCounters().pipe(tap(counters => {
             if (loggedIn.type === UserTypes.INTERNAL) {
-              counters.flags && counters.flags.externalFollowUpPermission && this.employeeService.addFollowupPermission('EXTERNAL_FOLLOWUP')
-              counters.flags && counters.flags.internalFollowUpPermission && this.employeeService.addFollowupPermission('INTERNAL_FOLLOWUP')
+              counters.flags && counters.flags.externalFollowUpPermission && this.employeeService.addFollowupPermission(PermissionsEnum.EXTERNAL_FOLLOWUP)
+              counters.flags && counters.flags.internalFollowUpPermission && this.employeeService.addFollowupPermission(PermissionsEnum.INTERNAL_FOLLOWUP)
             }
           }))))
           .subscribe(() => {

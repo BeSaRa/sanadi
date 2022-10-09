@@ -4,7 +4,7 @@ import { UrgentInterventionComponent } from './urgent-intervention.component';
 import {EServiceComponentWrapperComponent} from '@app/shared/components/e-service-component-wrapper/e-service-component-wrapper.component';
 import {ServicesGuard} from '@app/guards/services.guard';
 import {ServiceItemResolver} from '@app/resolvers/service-item.resolver';
-import {EServicePermissions} from '@app/enums/e-service-permissions';
+import {EServicePermissionsEnum} from '@app/enums/e-service-permissions-enum';
 import {PreValidateDataGuard} from '@app/guards/pre-validate-data.guard';
 import {CaseTypes} from '@app/enums/case-types.enum';
 import {ICustomRouteData} from '@contracts/i-custom-route-data';
@@ -16,7 +16,7 @@ const routes: Routes = [
     canActivate: [ServicesGuard],
     resolve: {info: ServiceItemResolver},
     data: {
-      permissionKey: EServicePermissions.URGENT_INTERVENTION_LICENSING,
+      permissionKey: EServicePermissionsEnum.URGENT_INTERVENTION_LICENSING,
       configPermissionGroup: null,
       checkAnyPermission: false,
       render: 'UrgentInterventionLicenseComponent'
@@ -28,7 +28,7 @@ const routes: Routes = [
     resolve: {info: ServiceItemResolver},
     runGuardsAndResolvers: 'always',
     data: {
-      permissionKey: EServicePermissions.URGENT_INTERVENTION_ANNOUNCEMENT,
+      permissionKey: EServicePermissionsEnum.URGENT_INTERVENTION_ANNOUNCEMENT,
       configPermissionGroup: null,
       checkAnyPermission: false,
       render: 'UrgentInterventionAnnouncementComponent',
@@ -41,7 +41,7 @@ const routes: Routes = [
     canActivate: [ServicesGuard],
     resolve: {info: ServiceItemResolver},
     data: {
-      permissionKey: EServicePermissions.URGENT_INTERVENTION_CLOSURE,
+      permissionKey: EServicePermissionsEnum.URGENT_INTERVENTION_CLOSURE,
       configPermissionGroup: null,
       checkAnyPermission: false,
       render: 'UrgentInterventionClosureComponent'
@@ -52,7 +52,7 @@ const routes: Routes = [
     canActivate: [ServicesGuard],
     resolve: {info: ServiceItemResolver},
     data: {
-      permissionKey: EServicePermissions.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION,
+      permissionKey: EServicePermissionsEnum.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION,
       configPermissionGroup: null,
       checkAnyPermission: false,
       render: 'UrgentInterventionFinancialNotificationComponent'
@@ -63,7 +63,7 @@ const routes: Routes = [
     canActivate: [ServicesGuard],
     resolve: {info: ServiceItemResolver},
     data: {
-      permissionKey: EServicePermissions.URGENT_INTERVENTION_LICENSE_FOLLOWUP,
+      permissionKey: EServicePermissionsEnum.URGENT_INTERVENTION_LICENSE_FOLLOWUP,
       configPermissionGroup: null,
       checkAnyPermission: false,
       render: 'UrgentInterventionLicenseFollowupComponent'

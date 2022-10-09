@@ -71,7 +71,6 @@
               "src/assets",
               "src/CONFIGURATION.json",
               "src/URLS.json",
-              "src/MENU.json",
               "src/REPORTS.json"
             ],
             "styles": [

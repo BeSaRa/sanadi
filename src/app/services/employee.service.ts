@@ -1,23 +1,25 @@
-import { Injectable } from '@angular/core';
-import { FactoryService } from './factory.service';
-import { OrgUser } from '../models/org-user';
-import { OrgBranch } from '../models/org-branch';
-import { OrgUnit } from '../models/org-unit';
-import { Permission } from '../models/permission';
-import { isValidValue } from '@helpers/utils';
-import { ILoginData } from '@contracts/i-login-data';
-import { UserTypes } from '../enums/user-types.enum';
-import { InternalUser } from '../models/internal-user';
-import { InternalDepartment } from '../models/internal-department';
-import { Team } from '../models/team';
-import { CommonUtils } from '@app/helpers/common-utils';
-import { IUserSecurity } from "@app/interfaces/iuser-security";
-import { UserSecurityConfiguration } from "@app/models/user-security-configuration";
-import { CaseTypes } from "@app/enums/case-types.enum";
-import { EServicePermissions } from "@app/enums/e-service-permissions";
-import { ConfigurationService } from "@app/services/configuration.service";
-import { Permissions } from "@app/enums/Permissions";
-import { Profile } from '@app/models/profile';
+import {Injectable} from '@angular/core';
+import {FactoryService} from './factory.service';
+import {OrgUser} from '../models/org-user';
+import {OrgBranch} from '../models/org-branch';
+import {OrgUnit} from '../models/org-unit';
+import {Permission} from '../models/permission';
+import {isValidValue} from '@helpers/utils';
+import {ILoginData} from '@contracts/i-login-data';
+import {UserTypes} from '../enums/user-types.enum';
+import {InternalUser} from '../models/internal-user';
+import {InternalDepartment} from '../models/internal-department';
+import {Team} from '../models/team';
+import {CommonUtils} from '@app/helpers/common-utils';
+import {IUserSecurity} from '@app/interfaces/iuser-security';
+import {UserSecurityConfiguration} from '@app/models/user-security-configuration';
+import {CaseTypes} from '@app/enums/case-types.enum';
+import {EServicePermissionsEnum} from '@app/enums/e-service-permissions-enum';
+import {ConfigurationService} from '@app/services/configuration.service';
+import {PermissionsEnum} from '@app/enums/permissions-enum';
+import {Profile} from '@app/models/profile';
+import {PermissionGroupsEnum} from '@app/enums/permission-groups-enum';
+import {StaticAppResourcesService} from '@services/static-app-resources.service';
 
 @Injectable({
   providedIn: 'root'
@@ -89,7 +91,8 @@ export class EmployeeService {
     }
   };
 
-  constructor(private configService: ConfigurationService) {
+  constructor(private configService: ConfigurationService,
+              private staticResourcesService: StaticAppResourcesService) {
     FactoryService.registerService('EmployeeService', this);
   }
 
@@ -143,7 +146,7 @@ export class EmployeeService {
    * to check for one permission
    * @param permissionKey
    */
-  hasPermissionTo(permissionKey: Permissions | string): boolean {
+  hasPermissionTo(permissionKey: PermissionsEnum | string): boolean {
     return this.permissionMap.has(permissionKey.toLowerCase());
   }
 
@@ -196,7 +199,7 @@ export class EmployeeService {
     this.teams = loginData.teams.map(item => (new Team()).clone(item));
     this.userSecConfig = loginData.userSecConfig;
     this.teams.length ? this.permissions.push((new Permission().clone({
-      permissionKey: 'TEAM_INBOX'
+      permissionKey: EServicePermissionsEnum.TEAM_INBOX
     }))) : null;
 
     // add static team called all with id -1 to load all teams items
@@ -208,11 +211,17 @@ export class EmployeeService {
       }), ...this.teams];
     }
 
-    this.configService.CONFIG.GIVE_USERS_PERMISSIONS && this.configService.CONFIG.GIVE_USERS_PERMISSIONS.forEach((permission) => {
+    let userForcedPermissions = this.staticResourcesService.getPermissionsListByGroup(PermissionGroupsEnum.GIVE_USERS_PERMISSIONS) as string[];
+    if (this.configService.CONFIG.GIVE_USERS_PERMISSIONS && this.configService.CONFIG.GIVE_USERS_PERMISSIONS.length > 0){
+      userForcedPermissions = this.configService.CONFIG.GIVE_USERS_PERMISSIONS
+    }
+
+    (userForcedPermissions ?? []).forEach((permission) => {
       this.permissions?.push(new Permission().clone({
         permissionKey: permission
       }));
     })
+
     this.setUserData(loginData);
     this.preparePermissionMap();
     this.prepareUserSecurityMap();
@@ -368,7 +377,7 @@ export class EmployeeService {
     securityArray.forEach((item) => {
       if (this.type == UserTypes.EXTERNAL && item.followUp && !hasFollowupPermission) {
         this.permissionMap?.set('external_followup', new Permission().clone({
-          permissionKey: "EXTERNAL_FOLLOWUP"
+          permissionKey: PermissionsEnum.EXTERNAL_FOLLOWUP
         }))
         hasFollowupPermission = true;
       }
@@ -413,8 +422,8 @@ export class EmployeeService {
         canSearch = this.userCanManage(key);
       }
     });
-    canSearch && this.permissionMap.set(EServicePermissions.E_SERVICES_SEARCH.toLowerCase(), new Permission().clone({
-      permissionKey: EServicePermissions.E_SERVICES_SEARCH
+    canSearch && this.permissionMap.set(EServicePermissionsEnum.E_SERVICES_SEARCH.toLowerCase(), new Permission().clone({
+      permissionKey: EServicePermissionsEnum.E_SERVICES_SEARCH
     }))
   }
 

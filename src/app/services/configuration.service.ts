@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {IAppConfig} from '../interfaces/i-app-config';
+import {IAppConfig} from '@contracts/i-app-config';
 import {FactoryService} from './factory.service';
 import {range} from 'lodash';
 
@@ -59,9 +59,5 @@ export class ConfigurationService {
 
   private static getYearsStart(startYear: number) {
     return range(startYear, ConfigurationService.CURRENT_FULL_YEAR + 1);
-  }
-
-  getPermissionGroup(groupName: string): string[] {
-    return this.CONFIG[groupName as keyof IAppConfig] as string[] || [];
   }
 }

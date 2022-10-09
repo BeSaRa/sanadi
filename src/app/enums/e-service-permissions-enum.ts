@@ -1,4 +1,6 @@
-export enum EServicePermissions {
+export enum EServicePermissionsEnum {
+  TEAM_INBOX = 'TEAM_INBOX', // it is not related to case type
+
   // e-service permissions permission name should be same name as CaseType enum
   INQUIRY = 'INQUIRY',
   CONSULTATION = 'CONSULTATION',

@@ -6,34 +6,34 @@ import {AccreditedTrainerComponent} from '@app/training-services/pages/accredite
 import {TrainingProgramComponent} from '@app/training-services/pages/training-program/training-program.component';
 import {AvailableProgramsComponent} from '@app/training-services/pages/available-programs/available-programs.component';
 import {CertificatesComponent} from '@app/training-services/pages/certificates/certificates.component';
-import {PermissionGroup} from "@app/enums/permission-group";
-import {Permissions} from '@app/enums/Permissions';
+import {PermissionGroupsEnum} from "@app/enums/permission-groups-enum";
+import {PermissionsEnum} from '@app/enums/permissions-enum';
 
 const routes: Routes = [
   {path: '', component: TrainingServicesComponent},
   {
     path: 'trainer', component: AccreditedTrainerComponent,
     canActivate: [PermissionGuard],
-    data: {permissionKey: Permissions.TRAINING_ADD_TRAINEE, configPermissionGroup: null, checkAnyPermission: false}
+    data: {permissionKey: PermissionsEnum.TRAINING_ADD_TRAINEE, configPermissionGroup: null, checkAnyPermission: false}
   },
   {
     path: 'program', component: TrainingProgramComponent,
     canActivate: [PermissionGuard],
     data: {
       permissionKey: null,
-      configPermissionGroup: PermissionGroup.TRAINING_PROGRAMS_MENU_ITEM_GROUP,
+      configPermissionGroup: PermissionGroupsEnum.TRAINING_PROGRAMS_MENU_ITEM_GROUP,
       checkAnyPermission: true
     }
   },
   {
     path: 'available-programs', component: AvailableProgramsComponent,
     canActivate: [PermissionGuard],
-    data: {permissionKey: Permissions.TRAINING_CHARITY_MANAGEMENT, configPermissionGroup: null, checkAnyPermission: false}
+    data: {permissionKey: PermissionsEnum.TRAINING_CHARITY_MANAGEMENT, configPermissionGroup: null, checkAnyPermission: false}
   },
   {
     path: 'certificate-templates', component: CertificatesComponent,
     canActivate: [PermissionGuard],
-    data: {permissionKey: Permissions.TRAINING_CERTIFICATE_TEMPLATE, configPermissionGroup: null, checkAnyPermission: false}
+    data: {permissionKey: PermissionsEnum.TRAINING_CERTIFICATE_TEMPLATE, configPermissionGroup: null, checkAnyPermission: false}
   }
 ];
 
