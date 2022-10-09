@@ -488,17 +488,6 @@
       <fieldset [disabled]="readonly">
         <div class="row">
           <div class="col-sm-12 mb-4 position-relative">
-            <label class="form-label" asteriskIfRequired="needsAssessment"
-                   for="needsAssessment">{{lang.map.project_needs_assessment}}</label>
-            <textarea name="needsAssessment" formControlName="needsAssessment"
-                      [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
-                      validationClasses="needsAssessment" id="needsAssessment" rows="4"
-                      class="form-control"></textarea>
-            <app-field-error-message controlName="needsAssessment"></app-field-error-message>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-12 mb-4 position-relative">
             <label class="form-label" for="goals" asteriskIfRequired="goals">{{lang.map.project_goals}}</label>
             <textarea name="goals" formControlName="goals" validationClasses="goals" id="goals"
                       [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
@@ -541,7 +530,7 @@
           </div>
         </div>
         <div [formGroup]="form">
-          <div formGroupName="summaryPercentGroup" class="position-relative mb-4">
+          <div formGroupName="summaryPercentGroup" class="position-relative">
             <div class="row" validationGroupClasses>
               <div class="col-md-3 col-sm-12 mb-4 position-relative">
                 <label class="form-label" asteriskIfRequired="beneficiaries0to5"
@@ -584,6 +573,17 @@
               </div>
             </div>
             <group-error-message></group-error-message>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="needsAssessment"
+                   for="needsAssessment">{{lang.map.project_needs_assessment}}</label>
+            <textarea name="needsAssessment" formControlName="needsAssessment"
+                      [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
+                      validationClasses="needsAssessment" id="needsAssessment" rows="4"
+                      class="form-control"></textarea>
+            <app-field-error-message controlName="needsAssessment"></app-field-error-message>
           </div>
         </div>
         <div class="row">
@@ -638,13 +638,20 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-sm-12 mb-4 position-relative">
+          <div class="col-sm-4 mb-4 position-relative">
             <label class="form-label" for="exitMechanism"
                    asteriskIfRequired="exitMechanism">{{lang.map.exit_mechanism}}</label>
-            <textarea name="exitMechanism" formControlName="exitMechanism"
-                      [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
-                      validationClasses="exitMechanism" id="exitMechanism" rows="4"
-                      class="form-control"></textarea>
+            <ng-select [readonly]="readonly" validationClasses="exitMechanism"
+                       appendTo="body"
+                       labelForId="exitMechanism"
+                       placeholder="{{lang.map.select}}"
+                       [notFoundText]="lang.map.msg_not_found"
+                       [clearable]="true"
+                       id="exitMechanism"
+                       formControlName="exitMechanism">
+              <ng-option *ngFor="let option of exitMechanisms" [value]="option.id"
+                         [disabled]="!option.isActive()">{{option.getName()}}</ng-option>
+            </ng-select>
             <app-field-error-message controlName="exitMechanism"></app-field-error-message>
           </div>
         </div>

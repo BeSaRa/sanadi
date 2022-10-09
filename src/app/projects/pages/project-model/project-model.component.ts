@@ -37,6 +37,8 @@ import {AidLookupService} from '@services/aid-lookup.service';
 import {AidLookup} from '@app/models/aid-lookup';
 import {ExecutionFields} from '@app/enums/execution-fields';
 import {IInternalExternalExecutionFields} from '@contracts/iinternal-external-execution-fields';
+import {AdminLookupService} from '@services/admin-lookup.service';
+import {AdminLookupTypeEnum} from '@app/enums/admin-lookup-type-enum';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -59,6 +61,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   subOchaCategories: AdminLookup[] = [];
   mainDacCategories: AdminLookup[] = [];
   subDacCategories: AdminLookup[] = [];
+  exitMechanisms: AdminLookup[] = [];
   isDacOchaLoaded: boolean = false;
   goals: SDGoal[] = [];
   loadAttachments: boolean = false;
@@ -148,7 +151,8 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
               private countryService: CountryService,
               private sdgService: SDGoalService,
               public service: ProjectModelService,
-              private aidLookupService: AidLookupService) {
+              private aidLookupService: AidLookupService,
+              private adminLookupService: AdminLookupService) {
     super();
   }
 
@@ -157,6 +161,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   }
 
   _initComponent(): void {
+    this.loadExitMechanisms();
     this.loadSanadiDomains();
     this.loadCountries();
     this.loadGoals();
@@ -853,7 +858,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     })
   }
 
-  loadSanadiMainClassification(parentId: number) {
+  loadSanadiMainClassification(parentId: number): void {
     this.sanadiMainClassification.setValue(null);
     if(!parentId) {
       this.sanadiMainClassifications = [];
@@ -862,5 +867,11 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
         this.sanadiMainClassifications = list;
       });
     }
+  }
+
+  loadExitMechanisms(): void {
+    this.adminLookupService.load(AdminLookupTypeEnum.EXIT_MECHANISM).subscribe(list => {
+      this.exitMechanisms = list;
+    })
   }
 }

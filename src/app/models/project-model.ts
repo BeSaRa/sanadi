@@ -48,7 +48,7 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
   outputs!: string;
   successItems!: string;
   sustainabilityItems!: string;
-  exitMechanism!: string;
+  exitMechanism!: number;
   expectedResults!: string;
   expectedImpact!: string;
   directBeneficiaryNumber: number = 0;
@@ -209,7 +209,7 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
       expectedImpact: controls ? [expectedImpact, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : expectedImpact,
       expectedResults: controls ? [expectedResults, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : expectedResults,
       sustainabilityItems: controls ? [sustainabilityItems, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : sustainabilityItems,
-      exitMechanism: controls ? [exitMechanism, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : exitMechanism
+      exitMechanism: controls ? [exitMechanism, [CustomValidators.required]] : exitMechanism
     }
   }
 
