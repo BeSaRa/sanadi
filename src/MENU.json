@@ -977,5 +977,18 @@
     "group": "general-services",
     "itemOrder": 6,
     "svg": null
+  },
+  {
+    "id": 75,
+    "langKey": "menu_items",
+    "path": "/home/administration/menu-item-list",
+    "icon": "mdi-menu ",
+    "isSvg": false,
+    "permission": "MANAGE_MENU_ITEM",
+    "permissionGroup": null,
+    "parent": 6,
+    "group": "administration",
+    "itemOrder": 22,
+    "svg": null
   }
 ]

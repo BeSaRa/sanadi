@@ -1462,4 +1462,16 @@ export interface ILanguageKeys {
   lookup_coordination_support_classification: string; // don't delete or change because it's map for lookup
   lookup_resolutions_issued: string; // don't delete or change because it's map for lookup
   lookup_penalties_decisions: string; // don't delete or change because it's map for lookup
+  menu_items: string;
+  menu_type: string;
+  menu_view: string;
+  menu_order: string;
+  menu_URL: string;
+  main_list: string;
+  link_settings: string;
+  sub_lists: string;
+  lbl_add_menu_item: string;
+  lbl_edit_menu_item: string;
+  err_invalid_URL: string;
+  validate_URL: string;
 }
