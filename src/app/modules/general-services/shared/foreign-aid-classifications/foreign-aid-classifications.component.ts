@@ -5,6 +5,7 @@ import { CharityWorkArea } from '@app/enums/charity-work-area.enum';
 import { DomainTypes } from '@app/enums/domain-types';
 import { ListModelComponent } from '@app/generics/ListModel-component';
 import { ControlWrapper } from '@app/interfaces/i-control-wrapper';
+import { AdminResult } from '@app/models/admin-result';
 import { ForeignAidClassification } from '@app/models/foreign-aid-classification';
 import { AdminLookupService } from '@app/services/admin-lookup.service';
 import { AidLookupService } from '@app/services/aid-lookup.service';
@@ -25,6 +26,7 @@ export class ForeignAidClassificationsComponent
   get list() {
     return this._list;
   }
+
   handleGoveranceDomainChange = (id: number | string) => {
     if (id === DomainTypes.DEVELOPMENT) {
       this.controls = [...this.baseControls, ...this.developmentControls];
@@ -168,5 +170,11 @@ export class ForeignAidClassificationsComponent
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.charityWorkArea?.firstChange) return;
     this._initComponent();
+  }
+  _beforeAdd(model: ForeignAidClassification): ForeignAidClassification | null {
+    /* model.aidClassificationInfo = AdminResult.createInstance({
+      ...this.
+      }) */
+    return model;
   }
 }
