@@ -56,6 +56,7 @@
                            [disableAdd]="basicInfo.invalid || readonly"
                            [readOnly]="(readonly)"
                            (eventHappened)="checkDisableFields()"
+                           (attachmentHandlerEmitter)="registerAttachmentHandler($event)"
                            [model]="model!"></collection-item>
           <!--[disableSearch]="!isEditLicenseAllowed()"-->
         </div>

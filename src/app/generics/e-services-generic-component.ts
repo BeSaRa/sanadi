@@ -1,4 +1,4 @@
-import {Directive, EventEmitter, Input, OnDestroy, OnInit} from '@angular/core';
+import {Directive, EventEmitter, Input, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {SaveTypes} from '@app/enums/save-types';
@@ -18,6 +18,8 @@ import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {FactoryService} from '@services/factory.service';
 import {AttachmentTypeService} from '@services/attachment-type.service';
+import {HasAttachmentHandlerDirective} from '@app/shared/directives/has-attachment-handler.directive';
+import {AttachmentHandlerDirective} from '@app/shared/directives/attachment-handler.directive';
 
 @Directive()
 export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S extends BaseGenericEService<M>> implements OnInit, OnDestroy, IESComponent<M> {
@@ -47,6 +49,8 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
 
   formProperties: Record<string, () => Observable<any>> = {};
   requestType$: BehaviorSubject<number | null> = new BehaviorSubject<number | null>(null);
+
+  attachmentHandlers: HasAttachmentHandlerDirective[] = [];
 
   abstract lang: LangService;
   abstract form: UntypedFormGroup;
@@ -252,8 +256,25 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
     this.launch$.next(null);
   }
 
-  showMissingRequiredAttachmentsDialog() {
+  displayMissingRequiredAttachmentsDialog() {
     this.service.dialog.info(this.lang.map.msg_launch_missing_mandatory_attachments);
+  }
+
+  registerAttachmentHandler(attachmentHandlerDirective: AttachmentHandlerDirective): void {
+    this.attachmentHandlers.push(attachmentHandlerDirective);
+  }
+
+  hasMissingRequiredMultiAttachments(): boolean {
+    return false;
+  }
+
+  hasMissingRequiredAttachments(): Observable<boolean> {
+    let service = FactoryService.getService<AttachmentTypeService>('AttachmentTypeService');
+    return of(false).pipe(
+      switchMap(() => {
+        return of(service.attachmentsComponent.hasMissingRequiredAttachments() || this.hasMissingRequiredMultiAttachments());
+      })
+    );
   }
 
   launchNew(): Observable<any> {
@@ -270,16 +291,16 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
           if (!service.attachmentsComponent) {
             return of(true);
           }
-          return of(service.attachmentsComponent.hasRequiredAttachmentsAvailable());
+          return this.hasMissingRequiredAttachments();
         }),
-        filter((hasValidAttachments) => {
-          if (!hasValidAttachments) {
-            this.showMissingRequiredAttachmentsDialog();
+        filter((isMissingRequiredAttachments) => {
+          if (isMissingRequiredAttachments) {
+            this.displayMissingRequiredAttachmentsDialog();
             return false;
           }
           return true;
         }),
-        exhaustMap(_ => {
+        /*exhaustMap(_ => {
           const model = this.model as unknown as CaseModel<any, any>;
           return model.start().pipe(catchError(error => {
             this._launchFail(error);
@@ -288,7 +309,7 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
         }),
         filter<boolean | null, boolean>((value): value is boolean => {
           return !!value;
-        }),
+        }),*/
       );
   }
 

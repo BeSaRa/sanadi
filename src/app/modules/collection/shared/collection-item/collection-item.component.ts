@@ -1,34 +1,36 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { CollectionApproval } from '@app/models/collection-approval';
-import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
-import { exhaustMap, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
-import { CollectionItem } from '@app/models/collection-item';
-import { AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { LangService } from '@app/services/lang.service';
-import { AppEvents } from '@app/enums/app-events';
-import { DialogService } from '@app/services/dialog.service';
-import { UserClickOn } from '@app/enums/user-click-on.enum';
-import { ICoordinates } from '@app/interfaces/ICoordinates';
-import { LicenseService } from '@app/services/license.service';
-import { CustomValidators } from '@app/validators/custom-validators';
-import { CollectionLicense } from '@app/license-models/collection-license';
-import { HasCollectionItemBuildForm } from '@app/interfaces/has-collection-item-build-form';
-import { CollectionRequestType } from '@app/enums/service-request-types';
-import { BuildingPlateComponent } from '@app/shared/components/building-plate/building-plate.component';
-import { SharedService } from '@app/services/shared.service';
-import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
-import { ActionIconsEnum } from '@app/enums/action-icons-enum';
-import { DatepickerOptionsMap } from '@app/types/types';
-import { DateUtils } from '@app/helpers/date-utils';
-import { LicenseDurationType } from '@app/enums/license-duration-type';
-import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
+import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {CollectionApproval} from '@app/models/collection-approval';
+import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
+import {exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
+import {CollectionItem} from '@app/models/collection-item';
+import {AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+import {LangService} from '@app/services/lang.service';
+import {AppEvents} from '@app/enums/app-events';
+import {DialogService} from '@app/services/dialog.service';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {ICoordinates} from '@app/interfaces/ICoordinates';
+import {LicenseService} from '@app/services/license.service';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {CollectionLicense} from '@app/license-models/collection-license';
+import {HasCollectionItemBuildForm} from '@app/interfaces/has-collection-item-build-form';
+import {CollectionRequestType} from '@app/enums/service-request-types';
+import {BuildingPlateComponent} from '@app/shared/components/building-plate/building-plate.component';
+import {SharedService} from '@app/services/shared.service';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import {DatepickerOptionsMap} from '@app/types/types';
+import {DateUtils} from '@app/helpers/date-utils';
+import {LicenseDurationType} from '@app/enums/license-duration-type';
+import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import {AttachmentHandlerDirective} from '@app/shared/directives/attachment-handler.directive';
+import {HasAttachmentHandlerDirective} from '@app/shared/directives/has-attachment-handler.directive';
 
 @Component({
   selector: 'collection-item',
   templateUrl: './collection-item.component.html',
   styleUrls: ['./collection-item.component.scss']
 })
-export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy {
+export class CollectionItemComponent extends HasAttachmentHandlerDirective implements OnInit, AfterViewInit, OnDestroy {
   private displayedColumns: string[] = ['fullSerial', 'status', 'requestTypeInfo', 'licenseDurationTypeInfo', 'ouInfo', 'creatorInfo', 'actions'];
 
   constructor(private fb: UntypedFormBuilder,
@@ -36,7 +38,13 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
               private licenseService: LicenseService,
               private sharedService: SharedService,
               private dialog: DialogService) {
+    super();
   }
+
+  @ViewChild(AttachmentHandlerDirective) attachmentHandlerDirective?: AttachmentHandlerDirective;
+
+  @Output()
+  attachmentHandlerEmitter: EventEmitter<AttachmentHandlerDirective> = new EventEmitter<AttachmentHandlerDirective>();
 
   @Input()
   model!: CollectionApproval;
@@ -182,6 +190,8 @@ export class CollectionItemComponent implements OnInit, AfterViewInit, OnDestroy
     if (this.model.getCaseStatus() !== CommonCaseStatus.FINAL_APPROVE) {
       this.columns.splice(this.columns.indexOf('exportedLicenseFullSerial'), 1);
     }
+    console.log(this.attachmentHandlerDirective);
+    this.attachmentHandlerEmitter.emit(this.attachmentHandlerDirective);
   }
 
   ngOnDestroy(): void {

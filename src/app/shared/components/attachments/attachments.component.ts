@@ -159,6 +159,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
       } else {
         const type = this.allAttachmentTypesByCase.find(x => x.attachmentTypeId === attachment.attachmentTypeId);
         attachment.attachmentTypeStatus = type ? type.attachmentTypeInfo.isActive() : false;
+        attachment.required = type ? type.isRequired : false;
       }
       return attachment;
     }).filter((attachment) => {
@@ -294,8 +295,8 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
     return this.attachments.some(attachment => attachment.required && !attachment.id);
   }
 
-  hasRequiredAttachmentsAvailable(): boolean {
-    return !(this.attachments.some(attachment => attachment.required && !attachment.id));
+  hasMissingRequiredAttachments(): boolean {
+    return this.attachments.some(attachment => attachment.required && !attachment.id);
   }
 
   forceReload() {

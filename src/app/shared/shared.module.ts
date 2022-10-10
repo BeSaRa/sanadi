@@ -107,7 +107,7 @@ import { ReasonPopupComponent } from './popups/reason-popup/reason-popup.compone
 import { ReturnToOrganizationPopupComponent } from './popups/return-to-organization-popup/return-to-organization-popup.component';
 import { MultiAttachmentDirective } from './directives/multi-attachment.directive';
 import { CustomAttachmentPopupComponent } from './popups/custom-attachment-popup/custom-attachment-popup.component';
-
+import { AttachmentHandlerDirective } from './directives/attachment-handler.directive';
 
 @NgModule({
   declarations: [
@@ -198,6 +198,7 @@ import { CustomAttachmentPopupComponent } from './popups/custom-attachment-popup
     ReturnToOrganizationPopupComponent,
     MultiAttachmentDirective,
     CustomAttachmentPopupComponent,
+    AttachmentHandlerDirective
   ],
   imports: [
     CommonModule,
@@ -286,6 +287,7 @@ import { CustomAttachmentPopupComponent } from './popups/custom-attachment-popup
     FollowupComponent,
     FollowupPopupComponent,
     MultiAttachmentDirective,
+    AttachmentHandlerDirective,
   ]
 })
 export class SharedModule {

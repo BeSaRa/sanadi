@@ -410,14 +410,15 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     this.component.launchNew().pipe(
       takeUntil(this.destroy$),
     ).subscribe(() => {
-      if (redirectOnSuccess) {
+      this.toast.success(this.lang.map.request_has_been_sent_successfully);
+      /*if (redirectOnSuccess) {
         this.toast.success(this.lang.map.request_has_been_sent_successfully);
         this.navigateToSamePageThatUserCameFrom();
       } else {
         (this.component.model as unknown as CaseModel<any, any>).caseStatus = CommonCaseStatus.UNDER_PROCESSING;
         this.component._afterLaunch();
         this.component.onModelChange$.emit(this.component._getNewInstance());
-      }
+      }*/
     });
   }
 
