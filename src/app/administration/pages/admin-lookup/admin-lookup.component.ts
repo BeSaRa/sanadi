@@ -143,8 +143,8 @@ export class AdminLookupComponent {
     return this.lookupService.listByCategory.AdminLookupType.find(lookup => lookup.lookupKey === lookupType)?.getName() || '';
   }
 
-  canShowTab(tab: ITabData): boolean{
-    if (!('show' in this.tabsData[tab.name])){
+  canShowTab(tab: ITabData): boolean {
+    if (!('show' in this.tabsData[tab.name])) {
       return true;
     }
     return this.tabsData[tab.name].show!();
@@ -152,7 +152,10 @@ export class AdminLookupComponent {
 
   tabChanged(tab: TabComponent) {
     const tabData = this._findTabByTabName(tab);
-    this.activeLookupType = tabData && tabData.lookupType;
+    if (!tabData) {
+      return;
+    }
+    this.activeLookupType = tabData.lookupType;
     // if workField tab is selected, select ocha by default
     if (this.activeLookupType === AdminLookupTypeEnum.WORK_FIELD) {
       this.activeLookupType = AdminLookupTypeEnum.OCHA;
@@ -170,6 +173,7 @@ export class AdminLookupComponent {
     this.lookupComponentsMap.set(type, componentRef);
     if (type === AdminLookupTypeEnum.OCHA) {
       this.activeLookupType = AdminLookupTypeEnum.OCHA;
+      this.reloadCallback(); // load the first tab manually
     }
   }
 
