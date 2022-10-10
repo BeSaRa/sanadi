@@ -1458,10 +1458,15 @@ export interface ILanguageKeys {
   lookup_dac: string; // don't delete or change because it's map for lookup
   lookup_ocha: string; // don't delete or change because it's map for lookup
   lookup_activity_type: string; // don't delete or change because it's map for lookup
+  lookup_template_indicator: string; // don't delete or change because it's map for lookup
+  lookup_exit_mechanism: string; // don't delete or change because it's map for lookup
+  lookup_by_laws_classification: string; // don't delete or change because it's map for lookup
+  lookup_risk_type: string; // don't delete or change because it's map for lookup
   lookup_risk_classification: string; // don't delete or change because it's map for lookup
   lookup_coordination_support_classification: string; // don't delete or change because it's map for lookup
   lookup_resolutions_issued: string; // don't delete or change because it's map for lookup
   lookup_penalties_decisions: string; // don't delete or change because it's map for lookup
+  lookup_general_process_classification: string; // don't delete or change because it's map for lookup
   menu_items: string;
   menu_type: string;
   menu_view: string;
