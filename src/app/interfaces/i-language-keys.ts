@@ -1459,4 +1459,7 @@ export interface ILanguageKeys {
   job_title_occupied_date: string;
   decision_category: string;
   decision_reference_number: string;
+  report_subject: string;
+  bylaw_name: string;
+
 }

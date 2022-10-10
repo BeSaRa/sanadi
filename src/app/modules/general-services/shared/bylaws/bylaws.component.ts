@@ -44,7 +44,7 @@ export class BylawsComponent extends ListModelComponent<Bylaw> {
       this.controls = [
         {
           controlName: 'fullName',
-          label: this.lang.map.full_name,
+          label: this.lang.map.bylaw_name,
           type: 'text'
         },
         {

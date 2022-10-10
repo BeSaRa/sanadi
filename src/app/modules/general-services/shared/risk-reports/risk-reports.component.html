@@ -136,12 +136,12 @@
           </th>
           <td cdk-cell *cdkCellDef="let row">{{ row.generalDate }}</td>
         </ng-container>
-        <ng-container cdkColumnDef="riskMitigationMeasures">
+        <ng-container cdkColumnDef="reportStatus">
           <th cdk-header-cell sortable-header *cdkHeaderCellDef>
-            {{ lang.map.risk_mitigation_measures }}
+            {{ lang.map.status }}
           </th>
           <td cdk-cell *cdkCellDef="let row">
-            {{ row.riskMitigationMeasures }}
+            {{ row?.reportStatusInfo?.getName() || '' }}
           </td>
         </ng-container>
         <ng-container cdkColumnDef="feedback">

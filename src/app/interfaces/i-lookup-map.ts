@@ -28,7 +28,7 @@ export interface ILookupMap {
   CharityDecisionType: Lookup[];
   CharityReportStatus: Lookup[];
   CharityReportType: Lookup[];
-  CharityRequestType: Lookup[];
+  CharityUpdateSection: Lookup[];
   CharityWorkArea: Lookup[];
   Cities: Lookup[];
   CollectionClassification: Lookup[];
