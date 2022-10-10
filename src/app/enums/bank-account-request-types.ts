@@ -1,5 +1,7 @@
+import {AllRequestTypesEnum} from '@app/enums/all-request-types-enum';
+
 export enum BankAccountRequestTypes {
-  NEW = 1,
-  UPDATE = 2,
-  CANCEL = 3
+  NEW = AllRequestTypesEnum.NEW,
+  UPDATE = AllRequestTypesEnum.UPDATE,
+  CANCEL = AllRequestTypesEnum.CANCEL
 }
