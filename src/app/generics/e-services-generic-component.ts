@@ -301,7 +301,7 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
           }
           return true;
         }),
-        /*exhaustMap(_ => {
+        exhaustMap(_ => {
           const model = this.model as unknown as CaseModel<any, any>;
           return model.start().pipe(catchError(error => {
             this._launchFail(error);
@@ -310,7 +310,7 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
         }),
         filter<boolean | null, boolean>((value): value is boolean => {
           return !!value;
-        }),*/
+        }),
       );
   }
 
