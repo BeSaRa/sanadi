@@ -7,6 +7,7 @@ export interface ILookupMap {
   AffiliationRequestType: Lookup[];
   AidLookupStatus: Lookup[];
   AidType: Lookup[];
+  AllRequestTypes: Lookup[];
   ApprovalDecision: Lookup[];
   ATTACHMENT_TYPE: Lookup[];
   BankCategory: Lookup[];
@@ -45,6 +46,8 @@ export interface ILookupMap {
   CoordinationType: Lookup[];
   Currency: Lookup[];
   CustomsExemptionRequestType: Lookup[];
+  DeductionRatioItemArea: Lookup[];
+  DeductionRatioItemPermitType: Lookup[];
   Domain: Lookup[];
   EmploymentCategory: Lookup[];
   EmploymentRequestType: Lookup[];
@@ -84,6 +87,8 @@ export interface ILookupMap {
   MeetingReplyStatus: Lookup[];
   MeetingType: Lookup[];
   MembersType: Lookup[];
+  MenuType: Lookup[];
+  MenuView: Lookup[];
   Nationality: Lookup[];
   NPOCurrency: Lookup[];
   NPODecisions: Lookup[];
@@ -96,8 +101,8 @@ export interface ILookupMap {
   OrgUserActionType: Lookup[];
   OrgUserJobTitle: Lookup[];
   OrgUserPermissionGroup: Lookup[];
-  OrgUserType: Lookup[];
   PermissionCategory: Lookup[];
+  ProfileType: Lookup[];
   ProjectLicenseType: Lookup[];
   ProjectModelingReqType: Lookup[];
   ProjectType: Lookup[];

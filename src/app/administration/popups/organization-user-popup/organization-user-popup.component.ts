@@ -41,7 +41,6 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
   model: OrgUser;
   operation: OperationTypes;
   fm!: FormManager;
-  userTypeList: Lookup[];
   jobTitleList: Lookup[];
   customRoleList: CustomRole[];
   orgUnitList: OrgUnit[];
@@ -50,7 +49,6 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
   orgBranchList!: OrgBranch[];
   statusList!: Lookup[];
 
-  selectedRole?: CustomRole;
   permissions!: Record<number, Permission[][]>;
   selectedPermissions: number[] = [];
   groups: CheckGroup<Permission>[] = [];
@@ -90,7 +88,6 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
     this.customRoleList = data.customRoleList;
     this.orgUnitList = data.orgUnitList;
     this.orgUserPermissions = data.orgUserPermissions;
-    this.userTypeList = lookupService.listByCategory.OrgUserType;
     this.jobTitleList = lookupService.listByCategory.OrgUserJobTitle;
     this.statusList = lookupService.listByCategory.CommonStatus;
     this._setDefaultPermissions();
@@ -122,7 +119,6 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
       basic: this.fb.group({
         orgId: [this.model.orgId, CustomValidators.required],
         orgBranchId: [this.model.orgBranchId, [CustomValidators.required]],
-        userType: [this.model.userType, CustomValidators.required],
         arName: [this.model.arName, [
           CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
           Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('AR_NUM')
@@ -147,7 +143,7 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
       }, {
         validators: CustomValidators.validateFieldsStatus([
           'arName', 'enName', 'empNum', 'qid', 'phoneNumber', 'phoneExtension',
-          'officialPhoneNumber', 'email', 'userType', 'jobTitle', 'orgId', 'orgBranchId', 'status'
+          'officialPhoneNumber', 'email', 'jobTitle', 'orgId', 'orgBranchId', 'status'
         ])
       }),
       permissions: this.fb.group({

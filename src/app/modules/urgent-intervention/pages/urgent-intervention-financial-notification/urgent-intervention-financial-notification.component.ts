@@ -491,11 +491,11 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
   }
 
   get isTransfer() {
-    return this.requestTypeField.value == UrgentInterventionFinancialRequestType.Transfer;
+    return this.requestTypeField.value == UrgentInterventionFinancialRequestType.TRANSFER;
   }
 
   get isReceive() {
-    return this.requestTypeField.value == UrgentInterventionFinancialRequestType.Receive;
+    return this.requestTypeField.value == UrgentInterventionFinancialRequestType.RECEIVE;
   }
 
   _resetForm(): void {

@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {LangService} from '@app/services/lang.service';
 import {DialogService} from '@app/services/dialog.service';
@@ -28,13 +28,18 @@ import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 import {CollectionItem} from '@app/models/collection-item';
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import {HasAttachmentHandlerDirective} from '@app/shared/directives/has-attachment-handler.directive';
+import { AttachmentHandlerDirective } from '@app/shared/directives/attachment-handler.directive';
 
 @Component({
   selector: 'collector-item',
   templateUrl: './collector-item.component.html',
   styleUrls: ['./collector-item.component.scss']
 })
-export class CollectorItemComponent implements OnInit, AfterViewInit, OnDestroy {
+export class CollectorItemComponent extends HasAttachmentHandlerDirective implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild(AttachmentHandlerDirective) attachmentHandlerDirective?: AttachmentHandlerDirective;
+  @Output() attachmentHandlerEmitter: EventEmitter<AttachmentHandlerDirective> = new EventEmitter<AttachmentHandlerDirective>();
+
   private displayedColumns: string[] = ['fullSerial', 'status', 'requestTypeInfo', 'licenseDurationTypeInfo', 'actions'];
 
   @Input()
@@ -162,6 +167,7 @@ export class CollectorItemComponent implements OnInit, AfterViewInit, OnDestroy 
               private licenseService: LicenseService,
               private serviceDataService: ServiceDataService,
               private sharedService: SharedService) {
+    super();
   }
 
   ngOnInit(): void {
@@ -197,6 +203,7 @@ export class CollectorItemComponent implements OnInit, AfterViewInit, OnDestroy 
     if (this.model.getCaseStatus() !== CommonCaseStatus.FINAL_APPROVE) {
       this.columns.splice(this.columns.indexOf('exportedLicenseFullSerial'), 1);
     }
+    this.attachmentHandlerEmitter.emit(this.attachmentHandlerDirective);
   }
 
   private buildForm(): void {

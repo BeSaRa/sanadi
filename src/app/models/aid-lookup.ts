@@ -12,6 +12,7 @@ import { Validators } from '@angular/forms';
 import { AdminResult } from '@app/models/admin-result';
 import { AidLookupInterceptor } from "@app/model-interceptors/aid-lookup-interceptor";
 import { InterceptModel } from "@decorators/intercept-model";
+import {AidLookupStatusEnum} from '@app/enums/status.enum';
 
 const { send, receive } = new AidLookupInterceptor();
 
@@ -19,7 +20,7 @@ const { send, receive } = new AidLookupInterceptor();
 export class AidLookup extends BaseModel<AidLookup, AidLookupService> {
   aidCode!: string;
   category: number | undefined;
-  status: number | undefined;
+  status: number | undefined = AidLookupStatusEnum.ACTIVE;
   statusDateModified: number | undefined;
   aidType: number | undefined;
   aidTypeInfo: Lookup | undefined;

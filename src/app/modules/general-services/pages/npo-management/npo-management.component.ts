@@ -145,7 +145,7 @@ NpoManagementService
     super();
   }
   handleReadonly(): void {
-    if (this.requestTypeField.value == NPORequestType.Cancel || this.requestTypeField.value == NPORequestType.Clearance || this.requestTypeField.value == NPORequestType.Disbandment) {
+    if (this.requestTypeField.value == NPORequestType.CANCEL || this.requestTypeField.value == NPORequestType.CLEARANCE || this.requestTypeField.value == NPORequestType.DISBANDMENT) {
       this.readonly = true;
     } else {
       this.readonly = false;
@@ -536,13 +536,13 @@ NpoManagementService
     return true
   }
   get isNew() {
-    return this.requestTypeField.value == NPORequestType.New
+    return this.requestTypeField.value == NPORequestType.NEW
   }
   get isClearance() {
-    return this.requestTypeField.value == NPORequestType.Clearance
+    return this.requestTypeField.value == NPORequestType.CLEARANCE
   }
   get isDisbandment() {
-    return this.requestTypeField.value == NPORequestType.Disbandment
+    return this.requestTypeField.value == NPORequestType.DISBANDMENT
   }
   get isLicensingUser() {
     return this.employeeService.isLicensingUser()

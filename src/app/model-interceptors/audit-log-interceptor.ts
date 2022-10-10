@@ -1,10 +1,10 @@
 import {AuditLog} from '../models/audit-log';
 import {AdminResult} from '../models/admin-result';
-import {DateUtils} from '../helpers/date-utils';
+import {DateUtils} from '@helpers/date-utils';
+import {IModelInterceptor} from '@contracts/i-model-interceptor';
 
-export class AuditLogInterceptor {
-
-  static receive(model: AuditLog): AuditLog {
+export class AuditLogInterceptor implements IModelInterceptor<AuditLog>{
+  receive(model: AuditLog): AuditLog {
     model.orgInfo = AdminResult.createInstance(model.orgInfo);
     model.orgBranchInfo = AdminResult.createInstance(model.orgBranchInfo);
     model.orgUserInfo = AdminResult.createInstance(model.orgUserInfo);
@@ -15,7 +15,7 @@ export class AuditLogInterceptor {
     return model;
   }
 
-  static send(model: any): any {
+  send(model: Partial<AuditLog>): Partial<AuditLog> {
     delete model.statusDateModifiedString;
     delete model.updatedOnString;
     return model;

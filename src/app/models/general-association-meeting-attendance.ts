@@ -67,11 +67,7 @@ export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAss
   searchFields: ISearchFieldsMap<GeneralAssociationMeetingAttendance> = {
     ...dateSearchFields(['createdOn']),
     ...infoSearchFields(['caseStatusInfo', 'requestTypeInfo', 'ouInfo', 'creatorInfo']),
-    ...normalSearchFields(['fullSerial']),
-    subject: (text) => {
-      console.log('textttttt', text, this.subject);
-      return this.subject.toLowerCase().indexOf(text) > -1
-    }
+    ...normalSearchFields(['fullSerial', 'subject'])
   };
 
   finalizeSearchFields(): void {

@@ -1,19 +1,22 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { LangService } from "@services/lang.service";
-import { DIALOG_DATA_TOKEN } from "@app/shared/tokens/tokens";
-import { FileIconsEnum } from "@app/enums/file-extension-mime-types-icons.enum";
-import { FileNetDocument } from "@app/models/file-net-document";
-import { UntypedFormControl } from "@angular/forms";
-import { CustomAttachmentDataContract } from "@contracts/custom-attachment-data-contract";
-import { AttachmentsComponent } from "@app/shared/components/attachments/attachments.component";
-import { of, Subject } from "rxjs";
-import { map, switchMap, takeUntil } from "rxjs/operators";
-import { AttachmentTypeServiceData } from "@app/models/attachment-type-service-data";
-import { CaseModel } from "@app/models/case-model";
-import { ConfigurationService } from "@services/configuration.service";
-import { ToastService } from "@services/toast.service";
-import { DialogService } from "@services/dialog.service";
-import { UserClickOn } from "@app/enums/user-click-on.enum";
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {LangService} from '@services/lang.service';
+import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
+import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
+import {FileNetDocument} from '@app/models/file-net-document';
+import {UntypedFormControl} from '@angular/forms';
+import {CustomAttachmentDataContract} from '@contracts/custom-attachment-data-contract';
+import {AttachmentsComponent} from '@app/shared/components/attachments/attachments.component';
+import {of, Subject} from 'rxjs';
+import {map, switchMap, takeUntil} from 'rxjs/operators';
+import {AttachmentTypeServiceData} from '@app/models/attachment-type-service-data';
+import {CaseModel} from '@app/models/case-model';
+import {ConfigurationService} from '@services/configuration.service';
+import {ToastService} from '@services/toast.service';
+import {DialogService} from '@services/dialog.service';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {EmployeeService} from '@services/employee.service';
+import {OrgUser} from '@app/models/org-user';
+import {InternalUser} from '@app/models/internal-user';
 
 @Component({
   selector: 'custom-attachment-popup',
@@ -21,16 +24,16 @@ import { UserClickOn } from "@app/enums/user-click-on.enum";
   styleUrls: ['./custom-attachment-popup.component.scss']
 })
 export class CustomAttachmentPopupComponent implements OnInit, OnDestroy {
-  displayedColumns: string[] = ['title', 'type', 'description', 'mandatory', 'date', 'actions'];
+  displayedColumns: string[] = ['title', 'type', 'description', 'mandatory', 'isPublished', 'date', 'actions'];
   disabled: boolean = false;
   fileIconsEnum: typeof FileIconsEnum = FileIconsEnum;
   attachments: FileNetDocument[] = [];
   filter: UntypedFormControl = new UntypedFormControl();
-  component!: AttachmentsComponent
-  loadStatus$: Subject<Omit<CustomAttachmentDataContract, 'loadStatus$'>>
-  destroy$: Subject<void> = new Subject<void>()
-  attachmentsTypes: AttachmentTypeServiceData[] = []
-  model!: CaseModel<any, any>
+  component!: AttachmentsComponent;
+  loadStatus$: Subject<Omit<CustomAttachmentDataContract, 'loadStatus$'>>;
+  destroy$: Subject<void> = new Subject<void>();
+  attachmentsTypes: AttachmentTypeServiceData[] = [];
+  model!: CaseModel<any, any>;
   identifier!: string;
   itemId!: string;
   selectedFile!: FileNetDocument;
@@ -40,29 +43,37 @@ export class CustomAttachmentPopupComponent implements OnInit, OnDestroy {
               private configurationService: ConfigurationService,
               private toast: ToastService,
               private dialog: DialogService,
+              private employeeService: EmployeeService,
               @Inject(DIALOG_DATA_TOKEN)
               public data: CustomAttachmentDataContract) {
-    this.loadStatus$ = this.data.loadStatus$
-    this.assignNeededData(this.data)
+    this.loadStatus$ = this.data.loadStatus$;
+    this.assignNeededData(this.data);
   }
 
   private assignNeededData(data: Omit<CustomAttachmentDataContract, 'loadStatus$'>): void {
     this.attachments = data.attachments;
-    this.component = data.component
-    this.attachmentsTypes = data.attachmentsTypes
-    this.model = data.model
-    this.identifier = data.identifier
-    this.itemId = data.itemId
+    this.component = data.component;
+    this.attachmentsTypes = data.attachmentsTypes;
+    this.model = data.model;
+    this.identifier = data.identifier;
+    this.itemId = data.itemId;
   }
 
   ngOnDestroy(): void {
-    this.destroy$.next()
-    this.destroy$.complete()
-    this.destroy$.unsubscribe()
+    this.destroy$.next();
+    this.destroy$.complete();
+    this.destroy$.unsubscribe();
   }
 
   ngOnInit(): void {
-    this.listenToLoadStatus()
+    this.listenToLoadStatus();
+  }
+
+  canChangePublished(attachment: FileNetDocument): boolean {
+    if (!attachment.attachmentTypeStatus || this.employeeService.isExternalUser()) {
+      return false;
+    }
+    return !attachment.id;
   }
 
   uploaderFileChange($event: Event): void {
@@ -74,7 +85,7 @@ export class CustomAttachmentPopupComponent implements OnInit, OnDestroy {
       this.dialog.error(
         this.lang.map
           .msg_only_those_files_allowed_to_upload
-          .change({ files: this.configurationService.CONFIG.ALLOWED_FILE_TYPES_TO_UPLOAD.join(',') })
+          .change({files: this.configurationService.CONFIG.ALLOWED_FILE_TYPES_TO_UPLOAD.join(',')})
       );
       input.value = '';
       return;
@@ -91,26 +102,28 @@ export class CustomAttachmentPopupComponent implements OnInit, OnDestroy {
             required: this.selectedFile?.required,
             files: input.files!,
             itemId: this.itemId,
-            gridName: this.identifier
-          }))
+            gridName: this.identifier,
+            isPublished: this.employeeService.isExternalUser() ? true : this.selectedFile?.isPublished
+          }));
       }))
       .pipe(takeUntil(this.destroy$))
       .subscribe((document) => {
-        const attachment = document as FileNetDocument
+        const attachment = document as FileNetDocument;
+        attachment.attachmentTypeStatus =  this.selectedFile?.attachmentTypeStatus!;
         input.value = '';
         this.toast.success(this.lang.map.files_have_been_uploaded_successfully);
-        this.attachments.splice(this.selectedIndex, 1, attachment.clone({ attachmentTypeInfo: this.selectedFile?.attachmentTypeInfo }));
+        this.attachments.splice(this.selectedIndex, 1, attachment.clone({attachmentTypeInfo: this.selectedFile?.attachmentTypeInfo}));
         this.attachments = this.attachments.slice();
-      })
+      });
   }
 
   deleteFile(file: FileNetDocument): void {
-    if (!file.id) {
+    if (this.isDisabledActionButtons(file, 'delete')) {
       return;
     }
 
     this.dialog
-      .confirm(this.lang.map.msg_confirm_delete_x.change({ x: file.documentTitle }))
+      .confirm(this.lang.map.msg_confirm_delete_x.change({x: file.documentTitle}))
       .onAfterClose$.subscribe((userClick: UserClickOn) => {
       if (userClick !== UserClickOn.YES) {
         return;
@@ -118,34 +131,35 @@ export class CustomAttachmentPopupComponent implements OnInit, OnDestroy {
 
       this.model.service.documentService.deleteDocument(file.id)
         .subscribe(() => {
-          this.toast.success(this.lang.map.msg_delete_x_success.change({ x: file.documentTitle }));
+          this.toast.success(this.lang.map.msg_delete_x_success.change({x: file.documentTitle}));
           this.attachments.splice(this.attachments.indexOf(file), 1, (new FileNetDocument()).clone({
             documentTitle: file.documentTitle,
             description: file.description,
             attachmentTypeId: file.attachmentTypeId,
             attachmentTypeInfo: file.attachmentTypeInfo,
-            required: file.required
-          }))
+            required: file.required,
+            attachmentTypeStatus: file.attachmentTypeStatus
+          }));
           this.attachments = this.attachments.slice();
-        })
+        });
     });
   }
 
   uploadAttachment(row: FileNetDocument, uploader: HTMLInputElement): void {
-    if (this.disabled) {
+    if (this.isDisabledActionButtons(row, 'upload')) {
       return;
     }
     uploader.click();
-    this.selectedFile = row
+    this.selectedFile = row;
     this.selectedIndex = this.attachments.indexOf(row);
   }
 
   reload(): void {
-    this.component.forceReload()
+    this.component.forceReload();
   }
 
   viewFile(file: FileNetDocument): void {
-    if (!file.id) {
+    if (this.isDisabledActionButtons(file, 'view')) {
       return;
     }
     this.model.service.documentService.downloadDocument(file.id)
@@ -159,7 +173,44 @@ export class CustomAttachmentPopupComponent implements OnInit, OnDestroy {
     this.loadStatus$
       .pipe(takeUntil(this.destroy$))
       .subscribe((data) => {
-        this.assignNeededData(data)
-      })
+        this.assignNeededData(data);
+      });
+  }
+
+  handleChangePublished(attachment: FileNetDocument, $event?: MouseEvent): void {
+    if (this.disabled || !attachment.attachmentTypeStatus) {
+      $event?.preventDefault();
+      return;
+    } else {
+      attachment.isPublished = !attachment.isPublished;
+    }
+  }
+
+  canShowActionButtons(attachment: FileNetDocument, buttonType: 'view' | 'delete' | 'upload' | 'publish') {
+    // if attachment is already saved, show buttons
+    // otherwise, show only if attachment type is active
+    return attachment.id ? true : (attachment.attachmentTypeStatus);
+  }
+
+  isDisabledActionButtons(attachment: FileNetDocument, buttonType: 'view' | 'delete' | 'upload' | 'publish') {
+    if (buttonType === 'view') {
+      return !attachment.id;
+    } else if (buttonType === 'delete') {
+      return this.disabled || !attachment.attachmentTypeStatus || !attachment.id || !this._isCreatedByCurrentUser(attachment);
+    } else if (buttonType === 'upload') {
+      return this.disabled || !attachment.attachmentTypeStatus;
+    } else if (buttonType === 'publish'){
+      return this.disabled;
+    }
+    return true;
+  }
+
+  private _isCreatedByCurrentUser(attachment: FileNetDocument) {
+    let user = this.employeeService.getCurrentUser();
+    if (this.employeeService.isExternalUser()) {
+      return ('' + ((user as OrgUser).qid ?? '')).trim() === attachment.createdBy;
+    } else {
+      return (user as InternalUser).domainName === attachment.createdBy;
+    }
   }
 }

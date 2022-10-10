@@ -118,7 +118,8 @@
       <div *ngFor="let checkBoxGroup of permissionGroups" class="col-sm-12 mb-2">
         <div class="p-2 border border-1">
           <div class="form-check mb-2 pb-2 border-bottom">
-            <input [indeterminate]="checkBoxGroup.isIndeterminate()" [disabled]="readonly" [checked]="checkBoxGroup.isFull()"
+            <input [indeterminate]="checkBoxGroup.isIndeterminate()" [disabled]="readonly"
+                   [checked]="checkBoxGroup.isFull()"
                    type="checkbox"
                    id="group-id-{{checkBoxGroup.group.id}}" (change)="groupHandler.onGroupClicked(checkBoxGroup)"
                    class="form-check-input cursor-pointer">
@@ -127,7 +128,8 @@
           </div>
           <div *ngFor="let row of checkBoxGroup.rows" class="row mx-2">
             <div *ngFor="let permission of row" class="form-check col-sm-12 col-md-4">
-              <input type="checkbox" [disabled]="readonly" [checked]="checkBoxGroup.isSelected(permission.id)" [value]="permission.id"
+              <input type="checkbox" [disabled]="readonly" [checked]="checkBoxGroup.isSelected(permission.id)"
+                     [value]="permission.id"
                      id="group-permission-id-{{permission.id}}"
                      (change)="groupHandler.onCheckBoxClicked(permission , $event , checkBoxGroup)"
                      class="form-check-input cursor-pointer">
@@ -144,7 +146,7 @@
   </ng-template>
   <ng-template #serviceTab>
     <user-security [operation]="operation" [model]="model" [readonly]="readonly"
-      [userTeams]="(userTeamComponent?.userTeams||[])"></user-security>
+                   [userTeams]="(userTeamComponent?.userTeams||[])"></user-security>
   </ng-template>
   <ng-template #departmentsTab>
     <div class="row" *ngIf="!readonly">
@@ -154,8 +156,11 @@
             <label for="department">{{lang.map.select_department}}</label>
             <ng-select [formControl]="selectedDepartment" appendTo="body" [clearable]="true"
                        id="department">
-              <ng-option [disabled]="isDepExists(dep) || dep.status !== commonStatusEnum.ACTIVATED" [value]="dep"
-                         *ngFor="let dep of departments">{{dep.getName()}}</ng-option>
+              <ng-container *ngFor="let dep of departments">
+                <ng-option *ngIf="!isDepExists(dep) && dep.status === commonStatusEnum.ACTIVATED" [value]="dep">
+                  {{dep.getName()}}
+                </ng-option>
+              </ng-container>
             </ng-select>
           </div>
           <button [disabled]="!selectedDepartment.value" (click)="addDepartment()"
@@ -182,8 +187,8 @@
               <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.default_dep}}</th>
               <td cdk-cell *cdkCellDef="let row">
                 <div class="form-switch form-check">
-                  <input #input [disabled]="canNotToggleItOff(row)" (change)="toggleDefaultDepartment(row , input)"
-                         class="form-check-input" type="checkbox" [disabled]="readonly"
+                  <input #input [disabled]="readonly || canNotToggleItOff(row)" (change)="toggleDefaultDepartment(row , input)"
+                         class="form-check-input" type="checkbox"
                          [checked]="model.defaultDepartmentId === row.internalDepartmentId">
                 </div>
               </td>
@@ -193,7 +198,7 @@
               <td cdk-cell *cdkCellDef="let row; index as itemIndex">
                 <button [disabled]="canNotDeleteDepartment(row)" (click)="deleteDepartment(row)"
                         class="btn p-0 icon-btn"><i
-                        class="mdi text-primary mdi-delete"></i>
+                  class="mdi text-primary mdi-delete"></i>
                 </button>
               </td>
             </ng-container>
@@ -210,8 +215,8 @@
   </ng-template>
   <ng-template #followupTab>
     <user-followup-permission [user]="model"
-      [readonly]="readonly"
-      [userTeams]="(userTeamComponent?.userTeams||[])"></user-followup-permission>
+                              [readonly]="readonly"
+                              [userTeams]="(userTeamComponent?.userTeams||[])"></user-followup-permission>
   </ng-template>
 </div>
 <div class="dialog-actions">

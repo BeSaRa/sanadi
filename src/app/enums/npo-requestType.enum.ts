@@ -1,7 +1,9 @@
+import {AllRequestTypesEnum} from '@app/enums/all-request-types-enum';
+
 export enum NPORequestType {
-  New = 1,
-  Update,
-  Cancel,
-  Disbandment,
-  Clearance
+  NEW = AllRequestTypesEnum.NEW,
+  UPDATE = AllRequestTypesEnum.UPDATE,
+  CANCEL = AllRequestTypesEnum.CANCEL,
+  DISBANDMENT = AllRequestTypesEnum.DISBANDMENT,
+  CLEARANCE = AllRequestTypesEnum.CLEARANCE
 }

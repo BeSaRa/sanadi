@@ -1,21 +1,21 @@
-import { Component } from '@angular/core';
-import { AbstractControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { OperationTypes } from '@app/enums/operation-types.enum';
-import { SaveTypes } from '@app/enums/save-types';
-import { EServicesGenericComponent } from "@app/generics/e-services-generic-component";
-import { CollectionApproval } from "@app/models/collection-approval";
-import { CollectionApprovalService } from "@app/services/collection-approval.service";
-import { LangService } from '@app/services/lang.service';
-import { Observable, of } from 'rxjs';
-import { Lookup } from "@app/models/lookup";
-import { LookupService } from "@app/services/lookup.service";
-import { CollectionRequestType } from "@app/enums/service-request-types";
-import { DialogService } from "@app/services/dialog.service";
-import { filter, map, takeUntil, tap } from "rxjs/operators";
-import { ToastService } from "@app/services/toast.service";
-import { OpenFrom } from '@app/enums/open-from.enum';
-import { EmployeeService } from '@app/services/employee.service';
-import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
+import {Component} from '@angular/core';
+import {AbstractControl, UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {SaveTypes} from '@app/enums/save-types';
+import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
+import {CollectionApproval} from '@app/models/collection-approval';
+import {CollectionApprovalService} from '@app/services/collection-approval.service';
+import {LangService} from '@app/services/lang.service';
+import {Observable, of} from 'rxjs';
+import {Lookup} from '@app/models/lookup';
+import {LookupService} from '@app/services/lookup.service';
+import {CollectionRequestType} from '@app/enums/service-request-types';
+import {DialogService} from '@app/services/dialog.service';
+import {filter, map, takeUntil, tap} from 'rxjs/operators';
+import {ToastService} from '@app/services/toast.service';
+import {OpenFrom} from '@app/enums/open-from.enum';
+import {EmployeeService} from '@app/services/employee.service';
+import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 
 @Component({
   selector: 'collection-approval',
@@ -44,9 +44,9 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
 
   formProperties = {
     requestType: () => {
-      return this.getObservableField('requestType')
+      return this.getObservableField('requestType');
     }
-  }
+  };
 
   get basicInfo(): UntypedFormGroup {
     return this.form.get('basicInfo')! as UntypedFormGroup;
@@ -61,15 +61,15 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
   }
 
   get licenseDurationType(): AbstractControl {
-    return this.form.get('basicInfo.licenseDurationType')!
+    return this.form.get('basicInfo.licenseDurationType')!;
   }
 
   get requestClassification(): AbstractControl {
-    return this.form.get('basicInfo.requestClassification')!
+    return this.form.get('basicInfo.requestClassification')!;
   }
 
   _getNewInstance(): CollectionApproval {
-    return new CollectionApproval()
+    return new CollectionApproval();
   }
 
   _initComponent(): void {
@@ -78,12 +78,12 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
 
   _buildForm(): void {
     // 1 - implement all model properties [done]
-    const model = new CollectionApproval()
+    const model = new CollectionApproval();
     // 2 - create the form controls for the model
     this.form = this.fb.group({
       basicInfo: this.fb.group(model.buildBasicInfo(true)),
       explanation: this.fb.group(model.buildExplanation(true))
-    })
+    });
     // 3 - draw the screen controls
   }
 
@@ -101,18 +101,18 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
       .pipe(tap(valid => !valid && this.invalidFormMessage()))
       .pipe(filter(valid => valid))
       .pipe(map(_ => !!(this.model && this.model.collectionItemList.length)))
-      .pipe(tap(hasCollectionItems => !hasCollectionItems && this.invalidItemMessage()))
+      .pipe(tap(hasCollectionItems => !hasCollectionItems && this.invalidItemMessage()));
   }
 
   _beforeLaunch(): boolean | Observable<boolean> {
     if (this.model && !this.model.collectionItemList.length) {
       this.invalidItemMessage();
     }
-    return true
+    return true;
   }
 
   private invalidItemMessage() {
-    this.dialog.error(this.lang.map.please_add_collection_items_to_proceed)
+    this.dialog.error(this.lang.map.please_add_collection_items_to_proceed);
   }
 
   _afterLaunch(): void {
@@ -125,7 +125,7 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
       ...this.model,
       ...this.basicInfo.getRawValue(),
       ...this.specialExplanation.getRawValue()
-    })
+    });
   }
 
   _afterSave(model: CollectionApproval, saveType: SaveTypes, operation: OperationTypes): void {
@@ -134,7 +134,7 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
       (operation === OperationTypes.CREATE && saveType === SaveTypes.FINAL) ||
       (operation === OperationTypes.UPDATE && saveType === SaveTypes.COMMIT)
     ) {
-      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({ serial: model.fullSerial }));
+      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({serial: model.fullSerial}));
     } else {
       this.toast.success(this.lang.map.request_has_been_saved_successfully);
     }
@@ -161,12 +161,12 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
     this.form.patchValue({
       basicInfo: model?.buildBasicInfo(),
       explanation: model?.buildExplanation()
-    })
+    });
   }
 
   _resetForm(): void {
     this.form.reset();
-    this.model && (this.model.collectionItemList = [])
+    this.model && (this.model.collectionItemList = []);
     this.operation = OperationTypes.CREATE;
     this.setDefaultValues();
     this.checkDisableFields();
@@ -183,9 +183,9 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
       .valueChanges
       .pipe(takeUntil(this.destroy$))
       .subscribe((val: CollectionRequestType) => {
-        this.disableSearchField = val === CollectionRequestType.NEW
+        this.disableSearchField = val === CollectionRequestType.NEW;
         this.model!.requestType = val;
-      })
+      });
   }
 
   checkDisableFields(): void {
@@ -218,7 +218,7 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
       .pipe(takeUntil(this.destroy$))
       .subscribe((value) => {
         this.model && (this.model.requestClassification = value);
-      })
+      });
   }
 
   private listenToDurationChanges() {
@@ -227,7 +227,7 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
       .pipe(takeUntil(this.destroy$))
       .subscribe((value) => {
         this.model && (this.model.licenseDurationType = value);
-      })
+      });
   }
 
   isEditRequestTypeAllowed(): boolean {
@@ -273,10 +273,4 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
   isNewRequestType(): boolean {
     return this.requestType.value && (this.requestType.value === CollectionRequestType.NEW);
   }
-
-  /*isEditLicenseAllowed(): boolean {
-   // if new or draft record and request type !== new, edit is allowed
-   let isAllowed = !this.model?.id || (!!this.model?.id && this.model.canCommit());
-   return isAllowed && CommonUtils.isValidValue(this.requestType.value) && this.requestType.value !== CollectionRequestType.NEW;
-   }*/
 }

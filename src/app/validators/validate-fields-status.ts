@@ -23,7 +23,8 @@ export const validationPatterns: any = {
   NUM_HYPHEN_COMMA: new RegExp('^(?=.*?[1-9])[0-9-,._]+$'),
   // PHONE_NUMBER: new RegExp('^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$','gmi')
   PHONE_NUMBER: new RegExp(/^[+]?[0-9]+$/),
-  WEBSITE: new RegExp(/[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/, 'ig')
+  WEBSITE: new RegExp(/[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/, 'ig'),
+  URL: new RegExp( 'http(s)?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}', 'ig')
 
 };
 

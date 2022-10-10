@@ -25,6 +25,7 @@ export type customValidationTypes =
   | 'NUM_HYPHEN_COMMA'
   | 'PHONE_NUMBER'
   | 'WEBSITE'
+  | 'URL'
   ;
 
 export type searchFunctionType<T = any> = (text: string, model: T) => boolean;

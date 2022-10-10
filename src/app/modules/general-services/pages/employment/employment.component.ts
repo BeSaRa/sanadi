@@ -92,6 +92,16 @@ EmploymentService
       validStatus: () => true
     },
   };
+
+  formProperties = {
+    requestType: () => {
+      return this.getObservableField('requestTypeField', 'requestType');
+    },
+    category: () => {
+      return this.getObservableField('category', 'category');
+    }
+  };
+
   constructor(
     public service: EmploymentService,
     private navigationService: NavigationService,

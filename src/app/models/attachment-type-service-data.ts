@@ -22,6 +22,7 @@ export class AttachmentTypeServiceData extends BaseModel<AttachmentTypeServiceDa
   customProperties: string = '';
   caseType!: number;
   serviceInfo!: AdminResult;
+  userTypeInfo!: AdminResult;
   attachmentTypeInfo!: AttachmentType;
   multi: boolean = false;
   identifier: string = ''

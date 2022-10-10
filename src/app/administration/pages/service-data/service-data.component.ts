@@ -15,7 +15,9 @@ import {SharedService} from '@services/shared.service';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 import {DateUtils} from '@helpers/date-utils';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import {AidLookupStatusEnum} from '@app/enums/status.enum';
 
+// noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
   selector: 'service-data',
   templateUrl: './service-data.component.html',
@@ -61,7 +63,7 @@ export class ServiceDataComponent extends AdminGenericComponent<ServiceData, Ser
       displayInGrid: false,
       onClick: (item: ServiceData) => this.toggleStatus(item),
       show: (item) => {
-        return item.status === CommonStatusEnum.DEACTIVATED;
+        return item.status !== AidLookupStatusEnum.RETIRED && item.status === CommonStatusEnum.DEACTIVATED;
       }
     },
     // deactivate
@@ -72,7 +74,7 @@ export class ServiceDataComponent extends AdminGenericComponent<ServiceData, Ser
       displayInGrid: false,
       onClick: (item: ServiceData) => this.toggleStatus(item),
       show: (item) => {
-        return item.status === CommonStatusEnum.ACTIVATED;
+        return item.status !== AidLookupStatusEnum.RETIRED && item.status === CommonStatusEnum.ACTIVATED;
       }
     }
   ];
@@ -111,7 +113,7 @@ export class ServiceDataComponent extends AdminGenericComponent<ServiceData, Ser
   }
 
   toggleStatus(model: ServiceData) {
-    let updateObservable = model.status == CommonStatusEnum.ACTIVATED ? model.updateStatus(CommonStatusEnum.DEACTIVATED) : model.updateStatus(CommonStatusEnum.ACTIVATED);
+    let updateObservable = model.updateStatus(model.status);
     updateObservable.pipe(takeUntil(this.destroy$))
       .subscribe(() => {
         this.toast.success(this.langService.map.msg_status_x_updated_success.change({x: model.getName()}));

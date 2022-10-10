@@ -85,7 +85,7 @@
   </fieldset>
 </form>
 <div class="row mt-2">
-  <app-table #table [columns]="columns" [data]="model.collectionItemList">
+  <app-table #table attachmentHandler [columns]="columns" [data]="model.collectionItemList">
     <table cdk-table [dataSource]="table.dataSource" class="table border border-1">
       <ng-container cdkColumnDef="identificationNumber">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.identification_number}}</th>

@@ -79,7 +79,7 @@ export class AdminLookupListComponent implements OnInit, AfterViewInit, OnDestro
   displayedColumns: string[] = ['arName', 'enName', 'status', 'actions'];
   models: AdminLookup[] = [];
   view$: Subject<AdminLookup> = new Subject<AdminLookup>();
-  reload$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  reload$: BehaviorSubject<any> = new BehaviorSubject<any>('init');
   add$: Subject<any> = new Subject<any>();
   edit$: Subject<AdminLookup> = new Subject<AdminLookup>();
   destroy$: Subject<any> = new Subject<any>();
@@ -209,7 +209,10 @@ export class AdminLookupListComponent implements OnInit, AfterViewInit, OnDestro
 
   listenToReload() {
     this.reload$
-      .pipe(takeUntil(this.destroy$))
+      .pipe(
+        takeUntil(this.destroy$),
+        filter((val) => val !== 'init')
+      )
       .pipe(
         map(() => {
           let request = this.parentId ? this._getSubRecordsRequest() : this._getMainRecordsRequest();

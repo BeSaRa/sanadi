@@ -57,21 +57,35 @@ export class AttachmentTypeServiceDataService extends CrudGenericService<Attachm
     return this.urlService.URLS.ATTACHMENT_TYPES_CUSTOM_PROPERTIES;
   }
 
-  openCreateServiceDialog(attachmentTypeId: number): DialogRef {
+  openCreateServiceDialog(attachmentTypeId: number, list: AttachmentTypeServiceData[]): DialogRef {
     return this.dialogService.show<IDialogData<AttachmentTypeServiceData>>(AttachmentTypeServiceDataPopupComponent, {
-      model: new AttachmentTypeServiceData(),
+      model: new AttachmentTypeServiceData().clone({
+        attachmentTypeId: attachmentTypeId
+      }),
       operation: OperationTypes.CREATE,
-      attachmentTypeId: attachmentTypeId
+      existingList: list
     });
   }
 
-  openUpdateServiceDialog(modelId: number, attachmentTypeId: number): Observable<DialogRef> {
-    return this.getById(modelId).pipe(
+  openUpdateServiceDialog(attachmentTypeServiceDataId: number, list: AttachmentTypeServiceData[]): Observable<DialogRef> {
+    return this.getById(attachmentTypeServiceDataId).pipe(
       switchMap((attachmentTypeServiceData: AttachmentTypeServiceData) => {
         return of(this.dialogService.show<IDialogData<AttachmentTypeServiceData>>(AttachmentTypeServiceDataPopupComponent, {
           model: attachmentTypeServiceData,
           operation: OperationTypes.UPDATE,
-          attachmentTypeId: attachmentTypeId
+          existingList: list
+        }));
+      })
+    );
+  }
+
+  openViewServiceDialog(attachmentTypeServiceDataId: number, list: AttachmentTypeServiceData[]): Observable<DialogRef> {
+    return this.getById(attachmentTypeServiceDataId).pipe(
+      switchMap((attachmentTypeServiceData: AttachmentTypeServiceData) => {
+        return of(this.dialogService.show<IDialogData<AttachmentTypeServiceData>>(AttachmentTypeServiceDataPopupComponent, {
+          model: attachmentTypeServiceData,
+          operation: OperationTypes.VIEW,
+          existingList: list
         }));
       })
     );
