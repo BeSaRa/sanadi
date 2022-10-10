@@ -16,7 +16,7 @@
           placeholder="{{lang.map.select}}"
           id="serviceId"
           appendTo="body"
-          (change)="onServiceChange()">
+          (change)="handleServiceChange(true)">
           <ng-option [value]="service.id" *ngFor="let service of services"
                      [disabled]="this.isExistingService(service.id)">{{service.getName()}}</ng-option>
         </ng-select>

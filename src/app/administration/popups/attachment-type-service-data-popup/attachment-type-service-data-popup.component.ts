@@ -156,16 +156,18 @@ export class AttachmentTypeServiceDataPopupComponent implements OnInit {
       });
   }
 
-  onServiceChange() {
+  handleServiceChange(userInteraction: boolean = false) {
     this.selectedService = this.services.find(s => s.id === this.serviceIdField?.value)!;
     if (this.selectedService?.caseType) {
       this.attachmentTypeServiceDataService.getCustomProperties(this.selectedService.caseType).pipe(
         takeUntil(this.destroy$)
       ).subscribe(customProperties => {
-        this.displayMulti = false;
-        this.multiField.setValue(false);
-        this.onMultiChange();
-        this.customPropertiesKeyValue = {};
+        if (userInteraction){
+          this.displayMulti = false;
+          this.multiField.setValue(false);
+          this.onMultiChange();
+          this.customPropertiesKeyValue = {};
+        }
         this.customProperties$.next(customProperties);
       });
     }
@@ -236,7 +238,7 @@ export class AttachmentTypeServiceDataPopupComponent implements OnInit {
   }
 
   showCustomPropertyControls() {
-    this.onServiceChange();
+    this.handleServiceChange();
     this.customPropertiesKeyValue = this.getCustomPropertiesAsJson(this.model.customProperties);
   }
 
