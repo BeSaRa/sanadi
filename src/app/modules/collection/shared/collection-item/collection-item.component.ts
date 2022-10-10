@@ -190,7 +190,6 @@ export class CollectionItemComponent extends HasAttachmentHandlerDirective imple
     if (this.model.getCaseStatus() !== CommonCaseStatus.FINAL_APPROVE) {
       this.columns.splice(this.columns.indexOf('exportedLicenseFullSerial'), 1);
     }
-    console.log(this.attachmentHandlerDirective);
     this.attachmentHandlerEmitter.emit(this.attachmentHandlerDirective);
   }
 

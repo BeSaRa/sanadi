@@ -273,9 +273,4 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
   isNewRequestType(): boolean {
     return this.requestType.value && (this.requestType.value === CollectionRequestType.NEW);
   }
-
-  hasMissingRequiredMultiAttachments(): boolean {
-    return !!(this.attachmentHandlers && this.attachmentHandlers.length
-      && this.attachmentHandlers.some(validator => validator.hasMissingRequiredAttachments()));
-  }
 }

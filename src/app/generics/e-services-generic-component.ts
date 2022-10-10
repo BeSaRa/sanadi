@@ -265,7 +265,8 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
   }
 
   hasMissingRequiredMultiAttachments(): boolean {
-    return false;
+    return !!(this.attachmentHandlers && this.attachmentHandlers.length
+      && this.attachmentHandlers.some(validator => validator.hasMissingRequiredAttachments()));
   }
 
   hasMissingRequiredAttachments(): Observable<boolean> {
