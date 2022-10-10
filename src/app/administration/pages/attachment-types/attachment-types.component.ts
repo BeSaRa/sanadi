@@ -1,28 +1,22 @@
-import { switchMap } from 'rxjs/operators';
-import { filter } from 'rxjs/operators';
-import { DialogRef } from './../../../shared/models/dialog-ref';
-import { of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-import { exhaustMap } from 'rxjs/operators';
-import { Subject } from 'rxjs';
-import { Component, ViewChild } from '@angular/core';
-import { LangService } from '@app/services/lang.service';
-import { Subscription } from 'rxjs';
-import { AttachmentType } from '@app/models/attachment-type';
-import { AttachmentTypeService } from '@app/services/attachment-type.service';
-import { UntypedFormControl } from '@angular/forms';
-import { IGridAction } from '@app/interfaces/i-grid-action';
-import { UserClickOn } from '@app/enums/user-click-on.enum';
-import { DialogService } from '@app/services/dialog.service';
-import { SharedService } from '@app/services/shared.service';
-import { ToastService } from '@app/services/toast.service';
-import { takeUntil } from 'rxjs/operators';
-import { CommonStatusEnum } from '@app/enums/common-status.enum';
-import { SortEvent } from '@app/interfaces/sort-event';
-import { CommonUtils } from '@app/helpers/common-utils';
-import { TableComponent } from '@app/shared/components/table/table.component';
-import { AdminGenericComponent } from '@app/generics/admin-generic-component';
-import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import {catchError, exhaustMap, filter, switchMap, takeUntil} from 'rxjs/operators';
+import {DialogRef} from './../../../shared/models/dialog-ref';
+import {of, Subject, Subscription} from 'rxjs';
+import {Component, ViewChild} from '@angular/core';
+import {LangService} from '@app/services/lang.service';
+import {AttachmentType} from '@app/models/attachment-type';
+import {AttachmentTypeService} from '@app/services/attachment-type.service';
+import {UntypedFormControl} from '@angular/forms';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {DialogService} from '@app/services/dialog.service';
+import {SharedService} from '@app/services/shared.service';
+import {ToastService} from '@app/services/toast.service';
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import {SortEvent} from '@app/interfaces/sort-event';
+import {CommonUtils} from '@app/helpers/common-utils';
+import {TableComponent} from '@app/shared/components/table/table.component';
+import {AdminGenericComponent} from '@app/generics/admin-generic-component';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 
 @Component({
   selector: 'attachment-types',
@@ -38,7 +32,44 @@ export class AttachmentTypesComponent extends AdminGenericComponent<AttachmentTy
   commonStatus = CommonStatusEnum;
   view$: Subject<AttachmentType> = new Subject<AttachmentType>();
 
-  actions: IMenuItem<AttachmentType>[] = [];
+  actions: IMenuItem<AttachmentType>[] = [
+    // edit
+    {
+      type: 'action',
+      label: 'btn_edit',
+      icon: ActionIconsEnum.EDIT,
+      onClick: (item: AttachmentType) => this.edit$.next(item)
+    },
+    // view
+    {
+      type: 'action',
+      icon: ActionIconsEnum.VIEW,
+      label: 'view',
+      onClick: (item: AttachmentType) => this.view$.next(item)
+    },
+    // activate
+    {
+      type: 'action',
+      icon: ActionIconsEnum.STATUS,
+      label: 'btn_activate',
+      onClick: (item: AttachmentType) => this.toggleStatus(item),
+      displayInGrid: false,
+      show: (item) => {
+        return item.status !== CommonStatusEnum.RETIRED && item.status === CommonStatusEnum.DEACTIVATED;
+      }
+    },
+    // deactivate
+    {
+      type: 'action',
+      icon: ActionIconsEnum.STATUS,
+      label: 'btn_deactivate',
+      onClick: (item: AttachmentType) => this.toggleStatus(item),
+      displayInGrid: false,
+      show: (item) => {
+        return item.status !== CommonStatusEnum.RETIRED && item.status === CommonStatusEnum.ACTIVATED;
+      }
+    }
+  ];
   commonStatusEnum = CommonStatusEnum;
 
   @ViewChild('table') table!: TableComponent;
@@ -50,32 +81,13 @@ export class AttachmentTypesComponent extends AdminGenericComponent<AttachmentTy
     private toast: ToastService) {
     super();
   }
+
   protected _init() {
     this.listenToView();
   }
   get selectedRecords(): AttachmentType[] {
     return this.table.selection.selected;
   }
-
-  // listenToReload() {
-  //   this.reload$
-  //     .pipe(takeUntil((this.destroy$)))
-  //     .pipe(switchMap(() => {
-  //       const load = this.useCompositeToLoad ? this.service.loadComposite() : this.service.load();
-  //       return load.pipe(
-  //         map(list => {
-  //           return list.filter(model => {
-  //             return +model.status == CommonStatusEnum.ACTIVATED || +model.status == CommonStatusEnum.DEACTIVATED;
-  //           });
-  //         }),
-  //         catchError(_ => of([]))
-  //       );
-  //     }))
-  //     .subscribe((list: AttachmentType[]) => {
-  //       this.models = list;
-  //       this.table && this.table.clearSelection();
-  //     });
-  // }
 
   sortingCallbacks = {
     statusInfo: (a: AttachmentType, b: AttachmentType, dir: SortEvent): number => {
@@ -85,13 +97,8 @@ export class AttachmentTypesComponent extends AdminGenericComponent<AttachmentTy
     }
   };
 
-  edit(attachmentType: AttachmentType, event: MouseEvent) {
-    event.preventDefault();
-    this.edit$.next(attachmentType);
-  }
-
-  delete(event: MouseEvent, model: AttachmentType): void {
-    event.preventDefault();
+  delete(model: AttachmentType, event?: MouseEvent): void {
+    event?.preventDefault();
     // @ts-ignore
     const message = this.lang.map.msg_confirm_delete_x.change({ x: model.getName() });
     this.dialogService.confirm(message)
