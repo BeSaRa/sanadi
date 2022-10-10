@@ -348,7 +348,7 @@ export class CharityOrganizationUpdateComponent
         title: this.lang.map.primary_law,
         validStatus: () => this.primaryLawForm.valid,
         category: CharityRequestType.GOVERANCE_DOCUMENTS,
-        order: 1,
+        order: 0,
       },
       {
         name: 'classifcationOfAidTab',
@@ -417,7 +417,8 @@ export class CharityOrganizationUpdateComponent
         template: tabsTemplates[22],
         title: this.lang.map.meeting,
         category: CharityRequestType.GOVERANCE_DOCUMENTS,
-        validStatus: () => true
+        validStatus: () => true,
+        order: 1,
       },
       {
 
@@ -685,8 +686,8 @@ export class CharityOrganizationUpdateComponent
       this.goveranceDocumentService.getByCharityId(id).subscribe(m => {
         this._updateForm(m[0].toCharityOrgnizationUpdate());
       });
-      this.organizationMeetings$ = this.meetingService.search({ organizationId: id });
-    } else if (
+/*       this.organizationMeetings$ = this.meetingService.search({ organizationId: id });
+ */    } else if (
       updateSection === this.RequestTypes.COORDINATION_AND_CONTROL_REPORTS
     ) {
       this.charityReportService.getByCharityId(id).subscribe((m) => {
@@ -917,8 +918,8 @@ export class CharityOrganizationUpdateComponent
       this.externalOffices$ = this.finalOfficeApproval.licenseSearch({
         organizationId: this.model.charityId,
       });
-      this.organizationMeetings$ = this.meetingService.search({ organizationId: this.model.charityId });
-    }
+/*       this.organizationMeetings$ = this.meetingService.search({ organizationId: this.model.charityId });
+ */    }
     if (this.model.logoId) {
       this.charityOrganizationService.getLogoBy({ id: this.model.logoId }).subscribe(logo => {
         if (logo.blob.size === 0) {
