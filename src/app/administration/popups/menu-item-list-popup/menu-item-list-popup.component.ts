@@ -1,30 +1,29 @@
-import { HttpClient } from '@angular/common/http';
-import { DialogService } from './../../../services/dialog.service';
-import { MenuItemList } from './../../../models/menu-item-list';
-import { ChangeDetectorRef, Component, Inject, OnInit, ViewChild } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { Lookup } from '@app/models/lookup';
-import { OperationTypes } from '@app/enums/operation-types.enum';
-import { IDialogData } from '@app/interfaces/i-dialog-data';
-import { LangService } from '@app/services/lang.service';
-import { LookupService } from '@app/services/lookup.service';
-import { ToastService } from '@app/services/toast.service';
-import { DialogRef } from '@app/shared/models/dialog-ref';
-import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
-import { AdminGenericDialog } from '@app/generics/admin-generic-dialog';
-import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
-import { IKeyValue } from '@app/interfaces/i-key-value';
-import { FormManager } from '@app/models/form-manager';
-import { ActionIconsEnum } from '@app/enums/action-icons-enum';
-import { CommonStatusEnum } from '@app/enums/common-status.enum';
-import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
-import { UserClickOn } from '@app/enums/user-click-on.enum';
-import { takeUntil, exhaustMap, filter, map, tap, catchError } from 'rxjs/operators';
-import { MenuItemListService } from '@app/services/menu-item-list.service';
-import { TableComponent } from '@app/shared/components/table/table.component';
-import { SharedService } from '@app/services/shared.service';
-import { IGridAction } from '@app/interfaces/i-grid-action';
-import { TabComponent } from '@app/shared/components/tab/tab.component';
+import {HttpClient} from '@angular/common/http';
+import {DialogService} from '@services/dialog.service';
+import {MenuItemList} from '@app/models/menu-item-list';
+import {ChangeDetectorRef, Component, Inject, ViewChild} from '@angular/core';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+import {Lookup} from '@app/models/lookup';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {IDialogData} from '@app/interfaces/i-dialog-data';
+import {LangService} from '@app/services/lang.service';
+import {LookupService} from '@app/services/lookup.service';
+import {ToastService} from '@app/services/toast.service';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
+import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
+import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
+import {IKeyValue} from '@app/interfaces/i-key-value';
+import {FormManager} from '@app/models/form-manager';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {catchError, exhaustMap, takeUntil, tap} from 'rxjs/operators';
+import {MenuItemListService} from '@app/services/menu-item-list.service';
+import {TableComponent} from '@app/shared/components/table/table.component';
+import {SharedService} from '@app/services/shared.service';
+import {IGridAction} from '@app/interfaces/i-grid-action';
 
 @Component({
   selector: 'app-menu-item-list-popup',
@@ -52,13 +51,7 @@ export class MenuItemListPopupComponent extends AdminGenericDialog<MenuItemList>
     return this.operation === OperationTypes.VIEW;
   }
   filterControl: UntypedFormControl = new UntypedFormControl('');
-  displayedColumns: string[] = [
-    'rowSelection',
-    'arName',
-    'enName',
-    'status',
-    'actions',
-  ];;
+  displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'status', 'actions',];
   constructor(
     public dialogRef: DialogRef,
     public fb: UntypedFormBuilder,
