@@ -10,7 +10,8 @@
                    placeholder="{{lang.map.select}}" id="evaluationHub"
                    [notFoundText]="lang.map.msg_not_found"
                    formControlName="evaluationHub" validationClasses="evaluationHub">
-          <ng-option *ngFor="let option of evaluationHubList" [value]="option.id">
+          <ng-option *ngFor="let option of evaluationHubList" [value]="option.id"
+                     [disabled]="!option.disabled">
             {{option.getName()}}
           </ng-option>
         </ng-select>

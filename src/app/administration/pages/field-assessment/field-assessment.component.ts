@@ -39,7 +39,7 @@ export class FieldAssessmentComponent extends AdminGenericComponent<FieldAssessm
   }
 
   @ViewChild('table') table!: TableComponent;
-  displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'type', 'status','statusDateModified', 'actions'];
+  displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'type', 'status', 'statusDateModified', 'actions'];
 
   view$: Subject<FieldAssessment> = new Subject<FieldAssessment>();
   actions: IMenuItem<FieldAssessment>[] = [
@@ -55,6 +55,7 @@ export class FieldAssessmentComponent extends AdminGenericComponent<FieldAssessm
       type: 'action',
       label: 'btn_delete',
       icon: ActionIconsEnum.DELETE,
+      show: () => false,
       onClick: (item: FieldAssessment) => this.delete(item)
     },
     // view
@@ -89,6 +90,7 @@ export class FieldAssessmentComponent extends AdminGenericComponent<FieldAssessm
     {
       langKey: 'btn_delete',
       icon: 'mdi-close-box',
+      show: () => false,
       callback: ($event: MouseEvent) => {
         this.deleteBulk($event);
       }
@@ -128,7 +130,7 @@ export class FieldAssessmentComponent extends AdminGenericComponent<FieldAssessm
         value2 = !CommonUtils.isValidValue(b) ? '' : b.statusInfo?.getName().toLowerCase();
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     }
-  }
+  };
 
   get selectedRecords(): FieldAssessment[] {
     return this.table.selection.selected;
@@ -142,11 +144,11 @@ export class FieldAssessmentComponent extends AdminGenericComponent<FieldAssessm
     this.view$
       .pipe(takeUntil(this.destroy$))
       .pipe(exhaustMap((model) => {
-        return this.service.openViewDialog(model.id).pipe(catchError(_ => of(null)))
+        return this.service.openViewDialog(model.id).pipe(catchError(_ => of(null)));
       }))
       .pipe(filter((dialog): dialog is DialogRef => !!dialog))
       .pipe(switchMap(dialog => dialog.onAfterClose$))
-      .subscribe(() => this.reload$.next(null))
+      .subscribe(() => this.reload$.next(null));
   }
 
   delete(model: FieldAssessment): void {
