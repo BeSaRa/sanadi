@@ -118,7 +118,8 @@
                        [notFoundText]="lang.map.msg_not_found"
                        [readonly]="(isExtendOrCancelRequestType() || readonly)"
                        formControlName="domain" validationClasses="domain">
-              <ng-option *ngFor="let option of mainCategoriesList" [value]="option.id">
+              <ng-option *ngFor="let option of mainCategoriesList" [value]="option.id"
+                         [disabled]="!option.isActive()">
                 {{option.getName()}}
               </ng-option>
             </ng-select>
@@ -133,7 +134,8 @@
                        [notFoundText]="lang.map.msg_not_found"
                        [readonly]="(isExtendOrCancelRequestType() || readonly)"
                        formControlName="firstSubDomain" validationClasses="firstSubDomain">
-              <ng-option *ngFor="let option of subCategories1List" [value]="option.id">
+              <ng-option *ngFor="let option of subCategories1List" [value]="option.id"
+                         [disabled]="!option.isActive()">
                 {{option.getName()}}
               </ng-option>
             </ng-select>
@@ -147,7 +149,8 @@
                        [notFoundText]="lang.map.msg_not_found"
                        [readonly]="(isExtendOrCancelRequestType() || readonly)"
                        formControlName="secondSubDomain" validationClasses="secondSubDomain">
-              <ng-option *ngFor="let option of subCategories2List" [value]="option.id">
+              <ng-option *ngFor="let option of subCategories2List" [value]="option.id"
+                         [disabled]="!option.isActive()">
                 {{option.getName()}}
               </ng-option>
             </ng-select>
