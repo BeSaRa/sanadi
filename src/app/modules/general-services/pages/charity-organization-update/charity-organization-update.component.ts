@@ -482,7 +482,7 @@ export class CharityOrganizationUpdateComponent
     }
 
     let caseStatus = this.model.getCaseStatus();
-    if (caseStatus == CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.FINAL_REJECTION) {
+    if (caseStatus == CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.FINAL_REJECTION || this.employeeService.getInternalDepartment()?.code === 'LCN') {
       this.readonly = true;
       return;
     }
