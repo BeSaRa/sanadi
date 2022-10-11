@@ -1,21 +1,22 @@
-import { Component, ViewChild } from '@angular/core';
-import { AdminGenericComponent } from '@app/generics/admin-generic-component';
-import { JobTitle } from '@app/models/job-title';
-import { JobTitleService } from '@app/services/job-title.service';
-import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
-import { LangService } from '@app/services/lang.service';
-import { UserClickOn } from '@app/enums/user-click-on.enum';
-import { DialogService } from '@app/services/dialog.service';
-import { SharedService } from '@app/services/shared.service';
-import { IGridAction } from '@app/interfaces/i-grid-action';
-import { ToastService } from '@app/services/toast.service';
-import { catchError, exhaustMap, filter, switchMap, takeUntil } from 'rxjs/operators';
-import { of, Subject } from 'rxjs';
-import { CommonStatusEnum } from '@app/enums/common-status.enum';
-import { SortEvent } from '@app/interfaces/sort-event';
-import { CommonUtils } from '@app/helpers/common-utils';
-import { TableComponent } from '@app/shared/components/table/table.component';
-import { DialogRef } from '@app/shared/models/dialog-ref';
+import {Component, ViewChild} from '@angular/core';
+import {AdminGenericComponent} from '@app/generics/admin-generic-component';
+import {JobTitle} from '@app/models/job-title';
+import {JobTitleService} from '@app/services/job-title.service';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {LangService} from '@app/services/lang.service';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {DialogService} from '@app/services/dialog.service';
+import {SharedService} from '@app/services/shared.service';
+import {IGridAction} from '@app/interfaces/i-grid-action';
+import {ToastService} from '@app/services/toast.service';
+import {catchError, exhaustMap, filter, switchMap, takeUntil} from 'rxjs/operators';
+import {of, Subject} from 'rxjs';
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import {SortEvent} from '@app/interfaces/sort-event';
+import {CommonUtils} from '@app/helpers/common-utils';
+import {TableComponent} from '@app/shared/components/table/table.component';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 
 @Component({
   selector: 'job-title',
@@ -46,45 +47,47 @@ export class JobTitleComponent extends AdminGenericComponent<JobTitle, JobTitleS
 
   commonStatusEnum = CommonStatusEnum;
   actions: IMenuItem<JobTitle>[] = [
-    // reload
-    {
-      type: 'action',
-      label: 'btn_reload',
-      icon: 'mdi-reload',
-      onClick: _ => this.reload$.next(null),
-    },
     // edit
     {
       type: 'action',
       label: 'btn_edit',
-      icon: 'mdi-pen',
+      icon: ActionIconsEnum.EDIT,
       onClick: (item: JobTitle) => this.edit$.next(item)
+    },
+    // delete
+    {
+      type: 'action',
+      label: 'btn_delete',
+      icon: ActionIconsEnum.DELETE,
+      onClick: (item: JobTitle) => this.delete(item)
     },
     // view
     {
       type: 'action',
       label: 'view',
-      icon: 'mdi-eye',
+      icon: ActionIconsEnum.VIEW,
       onClick: (item: JobTitle) => this.view$.next(item)
     },
     // activate
     {
       type: 'action',
-      icon: 'mdi-list-status',
+      icon: ActionIconsEnum.STATUS,
       label: 'btn_activate',
       onClick: (item: JobTitle) => this.toggleStatus(item),
+      displayInGrid: false,
       show: (item) => {
-        return item.status === CommonStatusEnum.DEACTIVATED;
+        return item.status !== CommonStatusEnum.RETIRED && item.status === CommonStatusEnum.DEACTIVATED;
       }
     },
     // deactivate
     {
       type: 'action',
-      icon: 'mdi-list-status',
+      icon: ActionIconsEnum.STATUS,
       label: 'btn_deactivate',
       onClick: (item: JobTitle) => this.toggleStatus(item),
+      displayInGrid: false,
       show: (item) => {
-        return item.status === CommonStatusEnum.ACTIVATED;
+        return item.status !== CommonStatusEnum.RETIRED && item.status === CommonStatusEnum.ACTIVATED;
       }
     }
   ];
@@ -155,8 +158,8 @@ export class JobTitleComponent extends AdminGenericComponent<JobTitle, JobTitleS
     this.view$.next(jobTitle);
   }
 
-  delete(event: MouseEvent, model: JobTitle): void {
-    event.preventDefault();
+  delete(model: JobTitle, event?: MouseEvent): void {
+    event?.preventDefault();
     const message = this.lang.map.msg_confirm_delete_x.change({ x: model.getName() });
     this.dialogService.confirm(message)
       .onAfterClose$.subscribe((click: UserClickOn) => {
