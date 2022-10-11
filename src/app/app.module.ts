@@ -88,7 +88,6 @@ import {ProfileService} from '@services/profile.service';
 })
 export class AppModule {
   static CONFIG_FILE = 'CONFIGURATION.json';
-  static URLS_FILE = 'URLS.json';
   static http: HttpClient;
 
   static AppInit(http: HttpClient,
@@ -106,8 +105,8 @@ export class AppModule {
     autoRegister.ping();
     return () => {
       return forkJoin({
-        urls: AppModule.loadResource<IAppUrls>(AppModule.URLS_FILE),
-        config: AppModule.loadResource<IAppConfig>(AppModule.CONFIG_FILE)
+        config: AppModule.loadResource<IAppConfig>(AppModule.CONFIG_FILE),
+        urls: urlService.loadUrls(),
       })
         .toPromise().then((latest) => {
 
