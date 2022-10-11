@@ -244,10 +244,10 @@ export class OrgUnit extends BaseModel<OrgUnit, OrganizationUnitService> {
   }
 
   isActive(): boolean {
-    return this.status === OrgStatusEnum.ACTIVE;
+    return Number(this.status) === OrgStatusEnum.ACTIVE;
   }
 
   isRetired(): boolean {
-    return this.status === OrgStatusEnum.RETIRED;
+    return Number(this.status) === OrgStatusEnum.RETIRED;
   }
 }

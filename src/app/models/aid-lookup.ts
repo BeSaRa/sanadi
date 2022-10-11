@@ -102,7 +102,7 @@ export class AidLookup extends BaseModel<AidLookup, AidLookupService> {
   }
 
   isActive(): boolean {
-    return this.status === AidLookupStatusEnum.ACTIVE;
+    return Number(this.status) === AidLookupStatusEnum.ACTIVE;
   }
 
   convertToAdminResult(): AdminResult {
