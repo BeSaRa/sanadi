@@ -18,7 +18,7 @@
           asteriskIfRequired="arabicName"
           for="arabicName"
           class="form-label"
-          >{{ lang.map.lbl_arabic_name }}</label
+        >{{ lang.map.lbl_arabic_name }}</label
         >
         <input
           id="arabicName"
@@ -36,7 +36,7 @@
           asteriskIfRequired="englishName"
           for="englishName"
           class="form-label"
-          >{{ lang.map.lbl_english_name }}</label
+        >{{ lang.map.lbl_english_name }}</label
         >
         <input
           id="englishName"
@@ -52,7 +52,7 @@
       <div class="col-sm-6 col-md-4 mb-4 position-relative">
         <label asteriskIfRequired="phone" for="phone" class="form-label">{{
           lang.map.lbl_phone
-        }}</label>
+          }}</label>
         <input
           id="phone"
           validationClasses="phone"
@@ -67,7 +67,7 @@
           asteriskIfRequired="officeName"
           for="officeName"
           class="form-label"
-          >{{ lang.map.office_name }}</label
+        >{{ lang.map.office_name }}</label
         >
         <input
           id="officeName"
@@ -85,7 +85,7 @@
           asteriskIfRequired="department"
           for="department"
           class="form-label"
-          >{{ lang.map.department }}</label
+        >{{ lang.map.department }}</label
         >
         <input
           id="department"
@@ -99,32 +99,19 @@
         ></app-field-error-message>
       </div>
       <div class="col-sm-6 col-md-4 mb-4 position-relative ng-select-wrapper">
-        <label
-          asteriskIfRequired="jobTitleId"
-          for="jobTitleId"
-          labelForId="jobTitleId"
-          class="form-label"
-          >{{ lang.map.job_title }}</label
-        >
-        <ng-select
-          [selectOnTab]="true"
-          [clearable]="true"
-          placeholder="{{ lang.map.select }}"
-          [notFoundText]="lang.map.msg_not_found"
-          appendTo="body"
-          [readonly]="!isEditRequestTypeAllowed || (isApproval() && (!isNewRequestType() || !canDraftModel()))"
-          id="jobTitleId"
-          validationClasses="jobTitleId"
-          formControlName="jobTitleId"
-          (change)="handleJobTitleChange()"
-        >
-          <ng-option *ngFor="let option of JobTitleList" [value]="option.id">{{
-            option.getName()
-          }}</ng-option>
+        <label asteriskIfRequired="jobTitleId" for="jobTitleId" labelForId="jobTitleId"
+               class="form-label">{{ lang.map.job_title }}</label>
+        <ng-select [selectOnTab]="true" [clearable]="true"
+                   placeholder="{{ lang.map.select }}"
+                   [notFoundText]="lang.map.msg_not_found"
+                   appendTo="body" id="jobTitleId"
+                   [readonly]="!isEditRequestTypeAllowed || (isApproval() && (!isNewRequestType() || !canDraftModel()))"
+                   validationClasses="jobTitleId"
+                   formControlName="jobTitleId" (change)="handleJobTitleChange()">
+          <ng-option *ngFor="let option of JobTitleList" [value]="option.id"
+                     [disabled]="!option.isActive()">{{option.getName()}}</ng-option>
         </ng-select>
-        <app-field-error-message
-          controlName="jobTitleId"
-        ></app-field-error-message>
+        <app-field-error-message controlName="jobTitleId"></app-field-error-message>
       </div>
 
 
@@ -134,7 +121,7 @@
           for="identificationType"
           labelForId="identificationType"
           class="form-label"
-          >{{ lang.map.identification_type }}</label
+        >{{ lang.map.identification_type }}</label
         >
         <ng-select
           [selectOnTab]="true"
@@ -151,7 +138,7 @@
           <ng-option
             *ngFor="let option of IdentificationTypeList"
             [value]="option.lookupKey"
-            >{{ option.getName() }}</ng-option
+          >{{ option.getName() }}</ng-option
           >
         </ng-select>
         <app-field-error-message
@@ -167,7 +154,7 @@
           asteriskIfRequired="identificationNumber"
           for="identificationNumber"
           class="form-label"
-          >{{ lang.map.identification_number }}</label
+        >{{ lang.map.identification_number }}</label
         >
         <input
           id="identificationNumber"
@@ -191,7 +178,7 @@
           asteriskIfRequired="passportNumber"
           for="passportNumber"
           class="form-label"
-          >{{ lang.map.passport_number }}</label
+        >{{ lang.map.passport_number }}</label
         >
         <input
           id="passportNumber"
@@ -214,7 +201,7 @@
           for="gender"
           labelForId="gender"
           class="form-label"
-          >{{ lang.map.gender }}</label
+        >{{ lang.map.gender }}</label
         >
         <ng-select
           [selectOnTab]="true"
@@ -230,7 +217,7 @@
           <ng-option
             *ngFor="let option of GenderList"
             [value]="option.lookupKey"
-            >{{ option.getName() }}</ng-option
+          >{{ option.getName() }}</ng-option
           >
         </ng-select>
         <app-field-error-message controlName="gender"></app-field-error-message>
@@ -241,7 +228,7 @@
           for="nationality"
           labelForId="nationality"
           class="form-label"
-          >{{ lang.map.lbl_nationality }}</label
+        >{{ lang.map.lbl_nationality }}</label
         >
         <ng-select
           [selectOnTab]="true"
@@ -257,7 +244,7 @@
           <ng-option
             *ngFor="let option of NationalityList"
             [value]="option.lookupKey"
-            >{{ option.getName() }}</ng-option
+          >{{ option.getName() }}</ng-option
           >
         </ng-select>
         <app-field-error-message
@@ -270,7 +257,7 @@
           for="contractLocationType"
           labelForId="contractLocationType"
           class="form-label"
-          >{{ lang.map.contract_location_type }}</label
+        >{{ lang.map.contract_location_type }}</label
         >
         <ng-select
           [selectOnTab]="true"
@@ -287,7 +274,7 @@
           <ng-option
             *ngFor="let option of ContractLocationTypeList"
             [value]="option.lookupKey"
-            >{{ option.getName() }}</ng-option
+          >{{ option.getName() }}</ng-option
           >
         </ng-select>
         <app-field-error-message
@@ -299,7 +286,7 @@
           asteriskIfRequired="contractLocation"
           for="contractLocation"
           class="form-label"
-          >{{ lang.map.contract_location }}</label
+        >{{ lang.map.contract_location }}</label
         >
         <input
           id="contractLocation"
@@ -318,7 +305,7 @@
           for="contractType"
           labelForId="contractType"
           class="form-label"
-          >{{ lang.map.contract_type }}</label
+        >{{ lang.map.contract_type }}</label
         >
         <ng-select
           [selectOnTab]="true"
@@ -335,7 +322,7 @@
           <ng-option
             *ngFor="let option of ContractTypeList"
             [value]="option.lookupKey"
-            >{{ option.getName() }}</ng-option
+          >{{ option.getName() }}</ng-option
           >
         </ng-select>
         <app-field-error-message
@@ -348,7 +335,7 @@
           for="jobContractType"
           labelForId="jobContractType"
           class="form-label"
-          >{{ lang.map.job_contract_type }}</label
+        >{{ lang.map.job_contract_type }}</label
         >
         <ng-select
           [selectOnTab]="true"
@@ -364,7 +351,7 @@
           <ng-option
             *ngFor="let option of JobContractTypeList"
             [value]="option.lookupKey"
-            >{{ option.getName() }}</ng-option
+          >{{ option.getName() }}</ng-option
           >
         </ng-select>
         <app-field-error-message
@@ -377,7 +364,7 @@
           for="contractStatus"
           labelForId="contractStatus"
           class="form-label"
-          >{{ lang.map.contract_status }}</label
+        >{{ lang.map.contract_status }}</label
         >
         <ng-select
           [selectOnTab]="true"
@@ -394,7 +381,7 @@
           <ng-option
             *ngFor="let option of ContractStatusList"
             [value]="option.lookupKey"
-            >{{ option.getName() }}</ng-option
+          >{{ option.getName() }}</ng-option
           >
         </ng-select>
         <app-field-error-message
@@ -406,7 +393,7 @@
           for="workStartDate"
           asteriskIfRequired="workStartDate"
           class="form-label"
-          >{{ lang.map.work_start_date }}</label
+        >{{ lang.map.work_start_date }}</label
         >
         <div class="input-group">
           <i class="input-group-text mdi mdi-calendar"></i>
@@ -433,7 +420,7 @@
           for="workEndDate"
           asteriskIfRequired="workEndDate"
           class="form-label"
-          >{{ lang.map.work_end_date }}</label
+        >{{ lang.map.work_end_date }}</label
         >
         <div class="input-group">
           <i class="input-group-text mdi mdi-calendar"></i>
@@ -460,7 +447,7 @@
           for="contractExpiryDate"
           asteriskIfRequired="contractExpiryDate"
           class="form-label"
-          >{{ lang.map.contract_expiry_date }}</label
+        >{{ lang.map.contract_expiry_date }}</label
         >
         <div class="input-group">
           <i class="input-group-text mdi mdi-calendar"></i>
