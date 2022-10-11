@@ -5,6 +5,7 @@ import { DateUtils } from '@app/helpers/date-utils';
 import { HasFollowUpDate } from '@app/interfaces/has-follow-up-date';
 import { CharityOrganizationUpdateInterceptor } from '@app/model-interceptors/charity-organization-update-interceptor';
 import { CharityOrganizationUpdateService } from '@app/services/charity-organization-update.service';
+import { EmployeeService } from '@app/services/employee.service';
 import { FactoryService } from '@app/services/factory.service';
 import { FollowupDateService } from '@app/services/follow-up-date.service';
 import { DialogRef } from '@app/shared/models/dialog-ref';
@@ -35,7 +36,8 @@ export class CharityOrganizationUpdate extends CaseModel<
   service: CharityOrganizationUpdateService = FactoryService.getService(
     'CharityOrganizationUpdateService'
   );
-  followUpService: FollowupDateService = FactoryService.getService('FollowupDateService')
+  employeeService: EmployeeService = FactoryService.getService('EmployeeService');
+  followUpService: FollowupDateService = FactoryService.getService('FollowupDateService');
   caseType: number = CaseTypes.CHARITY_ORGANIZATION_UPDATE;
 
   followUpDate!: string | IMyDateModel;
@@ -304,6 +306,9 @@ export class CharityOrganizationUpdate extends CaseModel<
   }
 
   complete(): DialogRef {
+    if (this.employeeService.isExternalUser()) {
+      return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.COMPLETE, false, this);
+    }
     return this.followUpService.finalApproveTask(this, WFResponseType.COMPLETE);
   }
   validateReject(): DialogRef {
