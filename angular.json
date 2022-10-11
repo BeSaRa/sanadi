@@ -70,8 +70,7 @@
               },
               "src/assets",
               "src/CONFIGURATION.json",
-              "src/URLS.json",
-              "src/REPORTS.json"
+              "src/URLS.json"
             ],
             "styles": [
               "src/styles.scss"

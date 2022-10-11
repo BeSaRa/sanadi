@@ -5,6 +5,8 @@ import {PermissionGroupsEnum} from '@app/enums/permission-groups-enum';
 import {PermissionsGroupMap} from '@app/resources/permission-groups';
 import {FactoryService} from '@services/factory.service';
 import {PermissionGroupsMapResponseType} from '@app/types/types';
+import {reportsMenuList} from '@app/resources/reports-menu-list';
+import {ReportContract} from '@contracts/report-contract';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +20,10 @@ export class StaticAppResourcesService {
 
   getMenuList(): Observable<any[]> {
     return of(navigationMenuList);
+  }
+
+  getReportsMenuList(): Observable<ReportContract[]> {
+    return of(reportsMenuList as ReportContract[]);
   }
 
   getPermissionsListByGroup(groupName: PermissionGroupsEnum): PermissionGroupsMapResponseType {

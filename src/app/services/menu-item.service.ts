@@ -25,7 +25,6 @@ export class MenuItemService {
 
   @CastResponse(() => MenuItem, { unwrap: '', fallback: '$default' })
   private _load(): Observable<MenuItem[]> {
-    // return this.http.get<MenuItem[]>('MENU.json');
     return this.staticResourcesService.getMenuList();
   }
 

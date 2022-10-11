@@ -1,15 +1,22 @@
-import { Injectable } from '@angular/core';
-import { ReportContract } from "@contracts/report-contract";
-import { MenuItemService } from "@services/menu-item.service";
-import { MenuItem } from "@app/models/menu-item";
-import { MenuItemInterceptor } from "@app/model-interceptors/menu-item-interceptor";
+import {Injectable} from '@angular/core';
+import {ReportContract} from '@contracts/report-contract';
+import {MenuItemService} from '@services/menu-item.service';
+import {MenuItem} from '@app/models/menu-item';
+import {MenuItemInterceptor} from '@app/model-interceptors/menu-item-interceptor';
+import {Observable} from 'rxjs';
+import {StaticAppResourcesService} from '@services/static-app-resources.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ReportService {
 
-  constructor(private menuService: MenuItemService) { }
+  constructor(private menuService: MenuItemService,
+              private staticResourcesService: StaticAppResourcesService ) { }
+
+  loadReportsMenu(): Observable<ReportContract[]> {
+    return this.staticResourcesService.getReportsMenuList();
+  }
 
   prepareReportsMenu(reports: ReportContract[]): void {
     let maxId = this.getMaxId(this.menuService.menuItems)
