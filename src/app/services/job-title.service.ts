@@ -52,7 +52,6 @@ export class JobTitleService extends CrudWithDialogGenericService<JobTitle> {
     return this.urlService.URLS.JOB_TITLE;
   }
 
-  @HasInterception
   @CastResponse(undefined, {
     unwrap: 'rs',
     fallback: '$default'
@@ -61,7 +60,6 @@ export class JobTitleService extends CrudWithDialogGenericService<JobTitle> {
     return this.http.get<JobTitle[]>(this._getServiceURL() + '/external');
   }
 
-  @HasInterception
   @CastResponse(undefined, {
     unwrap: 'rs',
     fallback: '$default'
