@@ -66,7 +66,7 @@ export class CharityOrganizationUpdate extends CaseModel<
   instagram!: string;
   snapChat!: string;
   youTube!: string;
-  requestType!: number;
+  updateSection!: number;
   establishmentDate!: string;
   complianceOfficerList: OrganizationOfficer[] = [];
   charityContactOfficerList: OrganizationOfficer[] = [];
@@ -181,11 +181,11 @@ export class CharityOrganizationUpdate extends CaseModel<
     };
   }
   getFirstPageForm(controls = true) {
-    const { requestType, charityId } = this;
+    const { updateSection, charityId } = this;
     return {
-      requestType: controls
-        ? [requestType, [CustomValidators.required]]
-        : requestType,
+      updateSection: controls
+        ? [updateSection, [CustomValidators.required]]
+        : updateSection,
       charityId: controls
         ? [charityId, [CustomValidators.required]]
         : charityId,

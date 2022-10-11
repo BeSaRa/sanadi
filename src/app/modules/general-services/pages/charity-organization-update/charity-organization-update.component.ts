@@ -39,6 +39,7 @@ import { Country } from '@app/models/country';
 import { FinalExternalOfficeApprovalResult } from '@app/models/final-external-office-approval-result';
 import { GeneralAssociationMeetingAttendance } from '@app/models/general-association-meeting-attendance';
 import { JobTitle } from '@app/models/job-title';
+import { Lookup } from '@app/models/lookup';
 import { NpoEmployee } from '@app/models/npo-employee';
 import { OrgMember } from '@app/models/org-member';
 import { RealBeneficiary } from '@app/models/real-beneficiary';
@@ -92,7 +93,7 @@ export class CharityOrganizationUpdateComponent
   charityDecisions: CharityDecision[] = [];
   realBenefeciaries?: RealBeneficiary[] = [];
   allEmployeesOfOrganization$?: Observable<NpoEmployee[]>;
-  requestTypes = this.lookupService.listByCategory.CharityRequestType.sort((a, b) => a.lookupKey - b.lookupKey);
+  requestTypes = this.lookupService.listByCategory.CharityUpdateSection.sort((a, b) => a.lookupKey - b.lookupKey);
   contactInformationInputs: ControlWrapper[] = [];
   datepickerOptionsMap: DatepickerOptionsMap = {
     firstReleaseDate: DateUtils.getDatepickerOptions({
@@ -160,7 +161,7 @@ export class CharityOrganizationUpdateComponent
     return this.form.get('primaryLaw') as UntypedFormGroup;
   }
   get requestTypeForm(): UntypedFormControl {
-    return this.form.get('requestType') as UntypedFormControl;
+    return this.form.get('updateSection') as UntypedFormControl;
   }
   get charityWorkAreaField(): UntypedFormControl {
     return this.form.get('primaryLaw.charityWorkArea')! as UntypedFormControl;
@@ -209,6 +210,10 @@ export class CharityOrganizationUpdateComponent
       this.countries = [...e];
     });
   }
+  private _setModelNames(charity: CharityOrganization) {
+    this.model!.arabicName = charity!.arName;
+    this.model!.englishName = charity!.enName;
+  }
   private _loadCharities(): void {
     this.charityOrganizationService.loadAsLookups().pipe(
       /* map((e) =>
@@ -221,6 +226,10 @@ export class CharityOrganizationUpdateComponent
     ).subscribe(e => {
       this.charityOrganizations = e;
     });
+  }
+  private _filterExternalUserRequestTypes() {
+    const notAllowedForExternalUser = [this.RequestTypes.COORDINATION_AND_CONTROL_REPORTS, this.RequestTypes.APPROVE_MEASURES_AND_PENALTIES];
+    this.requestTypes = this.requestTypes.filter(e => !notAllowedForExternalUser.includes(e.lookupKey));
   }
   private _loadEmployees(charityId: number): void {
     this.allEmployeesOfOrganization$ = this.npoEmployeeService.getByOrganizationId(charityId);
@@ -339,7 +348,7 @@ export class CharityOrganizationUpdateComponent
         title: this.lang.map.primary_law,
         validStatus: () => this.primaryLawForm.valid,
         category: CharityRequestType.GOVERANCE_DOCUMENTS,
-        order: 1,
+        order: 0,
       },
       {
         name: 'classifcationOfAidTab',
@@ -408,7 +417,8 @@ export class CharityOrganizationUpdateComponent
         template: tabsTemplates[22],
         title: this.lang.map.meeting,
         category: CharityRequestType.GOVERANCE_DOCUMENTS,
-        validStatus: () => true
+        validStatus: () => true,
+        order: 1,
       },
       {
 
@@ -453,6 +463,9 @@ export class CharityOrganizationUpdateComponent
     private npoEmployeeService: NpoEmployeeService
   ) {
     super();
+    if (this.employeeService.isExternalUser()) {
+      this._filterExternalUserRequestTypes();
+    }
   }
 
   ngAfterViewInit(): void {
@@ -497,7 +510,7 @@ export class CharityOrganizationUpdateComponent
     }
   }
 
-  handleRequestTypeChange(requestType: number, userInteraction: boolean = false): void {
+  handleRequestTypeChange(updateSection: number, userInteraction: boolean = false): void {
     of(userInteraction)
       .pipe(
         takeUntil(this.destroy$),
@@ -506,20 +519,20 @@ export class CharityOrganizationUpdateComponent
         if (clickOn === UserClickOn.YES) {
           if (userInteraction) {
             this.resetForm$.next();
-            this.requestTypeForm.setValue(requestType);
+            this.requestTypeForm.setValue(updateSection);
           }
-          this.requestType$.next(requestType);
+          this.requestType$.next(updateSection);
           this.tabs = this._tabs.filter(
-            (e) => !e?.category || e.category === requestType
+            (e) => !e?.category || e.category === updateSection
           );
-          if (requestType === this.RequestTypes.META_DATA) {
-            this._buildMetaDataForm(requestType);
-          } else if (requestType === this.RequestTypes.GOVERANCE_DOCUMENTS) {
-            this._buildPrimaryLawForm(requestType);
+          if (updateSection === this.RequestTypes.META_DATA) {
+            this._buildMetaDataForm(updateSection);
+          } else if (updateSection === this.RequestTypes.GOVERANCE_DOCUMENTS) {
+            this._buildPrimaryLawForm(updateSection);
             this.tabs = this.tabs.filter(e => ((!e?.order) || e.order <= 2));
             this.tabs.sort((a, b) => a.order - b.order);
           } else {
-            this._buildForm(requestType);
+            this._buildForm(updateSection);
           }
         }
         else {
@@ -619,9 +632,10 @@ export class CharityOrganizationUpdateComponent
     if (!id) {
       return;
     }
-
-    const requestType = this.requestTypeForm.value;
-    if (requestType === this.RequestTypes.META_DATA) {
+    const charity = this.charityOrganizations.find(e => e.id === id)!;
+    console.log({ charity })
+    const updateSection = this.requestTypeForm.value;
+    if (updateSection === this.RequestTypes.META_DATA) {
       const model = this.charityOrganizationService.getById(id);
       model.subscribe((m) => {
         this._updateForm(m.toCharityOrganizationUpdate());
@@ -636,7 +650,7 @@ export class CharityOrganizationUpdateComponent
       this.externalOffices$ = this.finalOfficeApproval.licenseSearch({
         organizationId: id,
       });
-    } else if (requestType === this.RequestTypes.ADMINISTRATIVE_DATA) {
+    } else if (updateSection === this.RequestTypes.ADMINISTRATIVE_DATA) {
       this.memberRoleService.getMembersOfCharity(id).subscribe((m) => {
         this.members = Object.entries(m).reduce((prev, [key, value]) => {
           if (!Array.isArray(value)) {
@@ -663,18 +677,18 @@ export class CharityOrganizationUpdateComponent
               authorizedSignatoryMemberList: this.listMembers(CharityRole.AUTHORIZED_MEMBERS),
               currentExecutiveManagementList: this.listMembers(CharityRole.CURRENT_EXECUTIVE_MANAGEMENT),
               realBeneficiaryList: this.realBenefeciaries
-            })
+            });
           });
       });
 
-    } else if (requestType === this.RequestTypes.GOVERANCE_DOCUMENTS) {
+    } else if (updateSection === this.RequestTypes.GOVERANCE_DOCUMENTS) {
       this.charityWorkAreaField!.patchValue(CharityWorkArea.INSIDE);
       this.goveranceDocumentService.getByCharityId(id).subscribe(m => {
         this._updateForm(m[0].toCharityOrgnizationUpdate());
       });
-      this.organizationMeetings$ = this.meetingService.search({ organizationId: id });
-    } else if (
-      requestType === this.RequestTypes.COORDINATION_AND_CONTROL_REPORTS
+/*       this.organizationMeetings$ = this.meetingService.search({ organizationId: id });
+ */    } else if (
+      updateSection === this.RequestTypes.COORDINATION_AND_CONTROL_REPORTS
     ) {
       this.charityReportService.getByCharityId(id).subscribe((m) => {
         this.charityReports = m.map(e => new CharityReport().clone({ ...e }).toCharityOrganizationUpdate());
@@ -685,7 +699,7 @@ export class CharityOrganizationUpdateComponent
         })
       });
     } else if (
-      requestType === this.RequestTypes.APPROVE_MEASURES_AND_PENALTIES
+      updateSection === this.RequestTypes.APPROVE_MEASURES_AND_PENALTIES
     ) {
       this.charityDecisionService.getByCharityId(id).subscribe((m) => {
         this.charityDecisions = m.map(e => new CharityDecision().clone({ ...e }).toCharityOrganizationUpdate());
@@ -695,6 +709,7 @@ export class CharityOrganizationUpdateComponent
         });
       });
     }
+    this._setModelNames(charity);
   }
   getTabInvalidStatus(i: number): boolean {
     if (i >= 0 && i < this.tabs.length) {
@@ -727,17 +742,17 @@ export class CharityOrganizationUpdateComponent
         this.activityTypes = list;
       });
   }
-  _buildForm(requestType?: number): void {
+  _buildForm(updateSection?: number): void {
     const model = this._getNewInstance().clone({
-      requestType,
+      updateSection,
     });
     this.form = this.fb.group({
       ...model.getFirstPageForm(),
     });
   }
-  _buildMetaDataForm(requestType: number): void {
+  _buildMetaDataForm(updateSection: number): void {
     const model = this._getNewInstance().clone({
-      requestType,
+      updateSection,
     });
     this.form = this.fb.group({
       metaData: this.fb.group(model.buildMetaDataForm()),
@@ -745,9 +760,9 @@ export class CharityOrganizationUpdateComponent
       ...model.getFirstPageForm(),
     });
   }
-  _buildPrimaryLawForm(requestType: number) {
+  _buildPrimaryLawForm(updateSection: number) {
     const model = this._getNewInstance().clone({
-      requestType,
+      updateSection,
     });
     this.form = this.fb.group({
       ...model.getFirstPageForm(),
@@ -831,7 +846,7 @@ export class CharityOrganizationUpdateComponent
     return new CharityOrganizationUpdate().clone({
       ...this.model,
       ...metaDataValue,
-      requestType: this.requestTypeForm.value,
+      updateSection: this.requestTypeForm.value,
       charityId: this.form.get('charityId')!.value,
       charityContactOfficerList: charityOfficers,
       complianceOfficerList: complianceOfficers,
@@ -894,17 +909,17 @@ export class CharityOrganizationUpdateComponent
     if (!model) return;
     this.model = model;
 
-    if (this.model.requestType) {
-      this.requestTypeForm.patchValue(this.model.requestType);
-      this.handleRequestTypeChange(this.model.requestType);
+    if (this.model.updateSection) {
+      this.requestTypeForm.patchValue(this.model.updateSection);
+      this.handleRequestTypeChange(this.model.updateSection);
     }
     if (this.model.charityId) {
       this.form.get('charityId')?.patchValue(this.model.charityId);
       this.externalOffices$ = this.finalOfficeApproval.licenseSearch({
         organizationId: this.model.charityId,
       });
-      this.organizationMeetings$ = this.meetingService.search({ organizationId: this.model.charityId });
-    }
+/*       this.organizationMeetings$ = this.meetingService.search({ organizationId: this.model.charityId });
+ */    }
     if (this.model.logoId) {
       this.charityOrganizationService.getLogoBy({ id: this.model.logoId }).subscribe(logo => {
         if (logo.blob.size === 0) {
@@ -914,19 +929,20 @@ export class CharityOrganizationUpdateComponent
         this.loadedLogo = logo;
       });
     }
-    if ((this.requestTypeForm.value || this.model.requestType) === this.RequestTypes.META_DATA) {
+    if (this.requestTypeForm.value || (this.model.updateSection === this.RequestTypes.META_DATA)) {
       this.metaDataForm.patchValue(model!.buildMetaDataForm(false));
       this.contactInformationForm.patchValue(
         model!.buildContactInformationForm(false)
       );
     }
-    else if ((this.requestTypeForm.value || this.model.requestType) === this.RequestTypes.GOVERANCE_DOCUMENTS) {
+    else if (this.requestTypeForm.value || (this.model.updateSection === this.RequestTypes.GOVERANCE_DOCUMENTS)) {
       this.primaryLawForm.patchValue(model!.buildPrimaryLawForm(false));
     }
     this.cd.detectChanges();
   }
 
   _resetForm(): void {
+    this.handleRequestTypeChange(undefined!);
     this.form.reset();
   }
 }

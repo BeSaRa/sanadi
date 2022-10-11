@@ -48,6 +48,7 @@ export class CharityReport extends BaseModel<
       riskType,
       category,
       riskMitigationMeasures,
+      subject,
       feedback,
       reportStatus,
     } = this;
@@ -66,14 +67,6 @@ export class CharityReport extends BaseModel<
       generalDate: controls
         ? [generalDate, [CustomValidators.required]]
         : generalDate,
-      riskType: controls ? [riskType, [CustomValidators.required]] : riskType,
-      category: controls ? [category, [CustomValidators.required]] : category,
-      riskMitigationMeasures: controls
-        ? [
-          riskMitigationMeasures,
-          [CustomValidators.required, CustomValidators.maxLength(1000)],
-        ]
-        : riskMitigationMeasures,
       feedback: controls
         ? [
           feedback,
@@ -86,6 +79,35 @@ export class CharityReport extends BaseModel<
     };
   }
 
+  buildRiskForm(controls = true) {
+    const mainForm = this.buildForm();
+    const { riskType, riskMitigationMeasures, category } = this;
+    return {
+      ...mainForm,
+      category: controls ? [category, [CustomValidators.required]] : category,
+      riskMitigationMeasures: controls
+        ? [
+          riskMitigationMeasures,
+          [CustomValidators.required, CustomValidators.maxLength(1000)],
+        ]
+        : riskMitigationMeasures,
+      riskType: controls ? [riskType, [CustomValidators.required]] : riskType,
+    };
+
+  }
+  buildSupportForm(controls = true) {
+    const mainForm = this.buildForm();
+    const { category, subject } = this;
+    return {
+      ...mainForm,
+      category: controls ? [category, [CustomValidators.required]] : category,
+      subject: controls ? [subject, [CustomValidators.required, CustomValidators.maxLength(1000)]] : subject,
+    };
+  }
+  buildFormWithSubject() {
+    const { category, ...form } = this.buildSupportForm();
+    return form;
+  }
   toCharityOrganizationUpdate() {
     const {
       id,

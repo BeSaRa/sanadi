@@ -1454,6 +1454,14 @@ export interface ILanguageKeys {
   lbl_add_x: string;
   lbl_edit_x: string;
   lbl_children_x: string;
+  email_for_working_authority: string;
+  phone_for_working_authority: string;
+  job_title_occupied_date: string;
+  decision_category: string;
+  decision_reference_number: string;
+  report_subject: string;
+  bylaw_name: string;
+
   lookup_work_field: string; // don't delete or change because it's map for lookup
   lookup_dac: string; // don't delete or change because it's map for lookup
   lookup_ocha: string; // don't delete or change because it's map for lookup

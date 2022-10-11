@@ -97,7 +97,7 @@ export class OrganizationOfficersComponent implements OnInit {
       if (
         this.selectedOrganizationOfficers.findIndex(
           (e) => e.identificationNumber === officer.identificationNumber
-        ) === -1
+        ) === -1 && (this.selectedOfficerIndex === null)
       ) {
         this.selectedOrganizationOfficers =
           this.selectedOrganizationOfficers.concat(officer);

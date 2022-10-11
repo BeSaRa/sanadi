@@ -42,11 +42,21 @@ export class OrgMember extends SearchableCloneable<OrgMember> {
         ]
         : fullName,
       identificationNumber: controls
-        ? [identificationNumber, CustomValidators.commonValidations.qId]
+        ? [identificationNumber, [CustomValidators.required, ...CustomValidators.commonValidations.qId]]
         : identificationNumber,
       jobTitleId: controls
         ? [jobTitleId, [CustomValidators.required]]
         : jobTitleId,
+    };
+  }
+  buildExtendedBoardMembersForm(controls = true) {
+
+    const form = this.buildForm(controls);
+    const { joinDate } = this;
+    return {
+      ...form,
+      joinDate: controls ? [joinDate, [CustomValidators.required]] : joinDate,
+
     };
   }
   bulildExtendedForm(controls = true) {
