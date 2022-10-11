@@ -71,6 +71,7 @@ export class FieldAssessmentComponent extends AdminGenericComponent<FieldAssessm
       icon: 'mdi-list-status',
       label: 'btn_activate',
       onClick: (item: FieldAssessment) => this.toggleStatus(item),
+      displayInGrid: false,
       show: (item) => {
         return item.status === CommonStatusEnum.DEACTIVATED;
       }
@@ -81,6 +82,7 @@ export class FieldAssessmentComponent extends AdminGenericComponent<FieldAssessm
       icon: 'mdi-list-status',
       label: 'btn_deactivate',
       onClick: (item: FieldAssessment) => this.toggleStatus(item),
+      displayInGrid: false,
       show: (item) => {
         return item.status === CommonStatusEnum.ACTIVATED;
       }
