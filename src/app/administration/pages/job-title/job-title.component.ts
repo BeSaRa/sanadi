@@ -148,16 +148,6 @@ export class JobTitleComponent extends AdminGenericComponent<JobTitle, JobTitleS
       .subscribe(() => this.reload$.next(null))
   }
 
-  edit(jobTitle: JobTitle, event: MouseEvent) {
-    event.preventDefault();
-    this.edit$.next(jobTitle);
-  }
-
-  view(jobTitle: JobTitle, event: MouseEvent) {
-    event.preventDefault();
-    this.view$.next(jobTitle);
-  }
-
   delete(model: JobTitle, event?: MouseEvent): void {
     event?.preventDefault();
     const message = this.lang.map.msg_confirm_delete_x.change({ x: model.getName() });
