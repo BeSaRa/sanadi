@@ -15,6 +15,8 @@ export type LocalizationMap = Record<keyof ILanguageKeys, Localization>;
 export type PermissionGroupsMapType = { [key in PermissionGroupsEnum]: (PermissionsEnum[] | EServicePermissionsEnum[] | string[]) };
 export type PermissionGroupsMapResponseType = (PermissionsEnum[] | EServicePermissionsEnum[] | string[]);
 
+export type ConfigurationMergingScope = 'limited' | 'extended' | 'open';
+
 export type customValidationTypes =
   'ENG_NUM'
   | 'AR_NUM'

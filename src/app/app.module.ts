@@ -5,12 +5,11 @@ import {AppComponent} from './app.component';
 import {HomeComponent} from './pages/home/home.component';
 import {SharedModule} from './shared/shared.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {HttpClient, HttpClientJsonpModule, HttpClientModule} from '@angular/common/http';
-import {forkJoin, Observable} from 'rxjs';
+import {HttpClientJsonpModule, HttpClientModule} from '@angular/common/http';
+import {forkJoin} from 'rxjs';
 import {IAppConfig} from '@contracts/i-app-config';
 import {ConfigurationService} from '@services/configuration.service';
 import {UrlService} from '@services/url.service';
-import {IAppUrls} from '@contracts/i-app-urls';
 import {httpInterceptors} from './http-interceptors/http-interceptors';
 import {LangService} from '@services/lang.service';
 import './helpers/protoypes/custom-prototypes';
@@ -53,17 +52,16 @@ import {ProfileService} from '@services/profile.service';
     HttpClientModule,
     HttpClientJsonpModule,
     ReactiveFormsModule,
-    FormlyModule.forRoot({ extras: { lazyRender: true } }),
+    FormlyModule.forRoot({extras: {lazyRender: true}}),
     FormlyBootstrapModule
   ],
   providers: [
-    { provide: ErrorHandler, useClass: GeneralErrorHandler },
+    {provide: ErrorHandler, useClass: GeneralErrorHandler},
     {
       provide: APP_INITIALIZER,
       useFactory: AppModule.AppInit,
       multi: true,
       deps: [
-        HttpClient,
         ConfigurationService,
         UrlService,
         LangService,
@@ -87,30 +85,25 @@ import {ProfileService} from '@services/profile.service';
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  static CONFIG_FILE = 'CONFIGURATION.json';
-  static http: HttpClient;
-
-  static AppInit(http: HttpClient,
-    configurationService: ConfigurationService,
-    urlService: UrlService,
-    langService: LangService,
-    infoService: InfoService,
-    lookupService: LookupService,
-    tokenService: TokenService,
-    authService: AuthService,
-    menuItemService: MenuItemService,
-    autoRegister: AutoRegisterService,
-    reportService: ReportService): () => Promise<unknown> {
-    AppModule.http = http;
+  static AppInit(configurationService: ConfigurationService,
+                 urlService: UrlService,
+                 langService: LangService,
+                 infoService: InfoService,
+                 lookupService: LookupService,
+                 tokenService: TokenService,
+                 authService: AuthService,
+                 menuItemService: MenuItemService,
+                 autoRegister: AutoRegisterService,
+                 reportService: ReportService): () => Promise<unknown> {
     autoRegister.ping();
     return () => {
       return forkJoin({
-        config: AppModule.loadResource<IAppConfig>(AppModule.CONFIG_FILE),
+        configFile: configurationService.loadConfiguration(),
         urls: urlService.loadUrls(),
       })
         .toPromise().then((latest) => {
-
-          configurationService.setConfigurations(latest.config);
+          let finalConfig: IAppConfig = configurationService.mergeConfigurations(latest.configFile);
+          configurationService.setConfigurations(finalConfig);
           urlService.prepareUrls(latest.urls);
           return infoService.load().toPromise().then((infoResult: ILoginInfo) => {
             langService.list = infoResult.localizationSet;
@@ -128,9 +121,5 @@ export class AppModule {
           });
         });
     };
-  }
-
-  static loadResource<T>(fileName: string): Observable<T> {
-    return AppModule.http.get<T>(fileName);
   }
 }
