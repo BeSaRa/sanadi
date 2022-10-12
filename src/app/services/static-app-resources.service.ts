@@ -56,6 +56,10 @@ export class StaticAppResourcesService {
     return [];
   }
 
+  getConfigurablePropertiesForConsole(): { scope: string, properties: string[] } {
+    return {scope: this._mergingScope, properties: this._mergingProperties.sort()};
+  }
+
   getUrls(): Observable<IAppUrls> {
     return of(urlsList as unknown as IAppUrls);
   }

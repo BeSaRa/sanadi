@@ -1,3 +1,6 @@
+import {FactoryService} from '@services/factory.service';
+import {StaticAppResourcesService} from '@services/static-app-resources.service';
+
 String.prototype.change = function(): string {
   if (!arguments.length) {
     return String(this);
@@ -22,4 +25,9 @@ String.prototype.change = function(): string {
 String.prototype.getExtension = function (): string {
   const name: string = String(this);
   return name.substring(name.lastIndexOf('.'));
+}
+
+Window.prototype.getConfigMergeProperties = function (): {scope: string, properties: string[]} {
+  const service = FactoryService.getService<StaticAppResourcesService>('StaticAppResourcesService');
+  return !service ? {} as any : service.getConfigurablePropertiesForConsole();
 }
