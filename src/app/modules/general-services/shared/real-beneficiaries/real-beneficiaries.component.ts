@@ -18,8 +18,8 @@ import { CustomValidators } from '@app/validators/custom-validators';
 })
 export class RealBeneficiariesComponent extends ListModelComponent<RealBeneficiary> {
   QATARI_NATIONALITY = 1;
-  private _handleChangeNationality = (id: string | number) => {
-    const natinoality = this.lookupService.listByCategory.Nationality.find(e => e.id === id);
+  private _handleChangeNationality = (lookupKey: string | number) => {
+    const natinoality = this.lookupService.listByCategory.Nationality.find(e => e.lookupKey === lookupKey);
     this.controls.map(e => {
       if (this.idColumns.includes(e.controlName)) {
         e.isDisplayed = natinoality?.lookupKey === this.QATARI_NATIONALITY;
