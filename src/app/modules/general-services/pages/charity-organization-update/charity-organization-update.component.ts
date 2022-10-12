@@ -25,6 +25,7 @@ import { SaveTypes } from '@app/enums/save-types';
 import { UserClickOn } from '@app/enums/user-click-on.enum';
 import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
 import { ListModelComponent } from '@app/generics/ListModel-component';
+import { CommonUtils } from '@app/helpers/common-utils';
 import { DateUtils } from '@app/helpers/date-utils';
 import { ControlWrapper } from '@app/interfaces/i-control-wrapper';
 import { IKeyValue } from '@app/interfaces/i-key-value';
@@ -546,6 +547,7 @@ export class CharityOrganizationUpdateComponent
           this.form.get('charityId')?.disable();
 
         }
+        CommonUtils.displayFormValidity(this.form, 'main-content')
       })
 
 
