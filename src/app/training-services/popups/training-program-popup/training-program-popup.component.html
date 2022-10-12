@@ -6,7 +6,7 @@
   </div>
 </div>
 <div class="dialog-content" #dialogContent>
-  <form style="width: 800px;" novalidate autocomplete="off" [formGroup]="form">
+  <form class="w800px" novalidate autocomplete="off" [formGroup]="form">
     <tabs-list [tabByIndex$]="tabIndex$">
       <tab [name]="tabsData.basic.name" [template]="basicTabTemplate" [title]="lang.map.lbl_basic_info"
            [hasError]="form.invalid"></tab>
@@ -49,9 +49,11 @@
             <label asteriskIfRequired="trainingType" for="trainingType"
                    class="form-label">{{lang.map.training_type_name}}</label>
             <div class="position-relative ng-select-wrapper">
-              <ng-select validationClasses="trainingType"
+              <ng-select validationClasses="trainingType" labelForId="trainingType"
+                         placeholder="{{lang.map.select}}"
+                         [notFoundText]="lang.map.msg_not_found"
                          formControlName="trainingType"
-                         id="trainingType">
+                         id="trainingType" appendTo="body">
                 <ng-option [value]="trainingType.lookupKey" *ngFor="let trainingType of trainingTypes"
                            [disabled]="!trainingType.status">{{trainingType.getName()}}</ng-option>
               </ng-select>
@@ -124,9 +126,11 @@
             <label asteriskIfRequired="trainingLang" for="trainingLang"
                    class="form-label">{{lang.map.training_languages}}</label>
             <div class="position-relative ng-select-wrapper">
-              <ng-select validationClasses="trainingLang"
+              <ng-select validationClasses="trainingLang" labelForId="trainingLang"
+                         placeholder="{{lang.map.select}}"
+                         [notFoundText]="lang.map.msg_not_found"
                          formControlName="trainingLang"
-                         id="trainingLang">
+                         id="trainingLang" appendTo="body">
                 <ng-option [value]="trainingLanguage.lookupKey" *ngFor="let trainingLanguage of trainingLanguages"
                            [disabled]="!trainingLanguage.status">{{trainingLanguage.getName()}}</ng-option>
               </ng-select>
@@ -207,9 +211,11 @@
             <label asteriskIfRequired="sessionStartTime" for="sessionStartTime"
                    class="form-label">{{lang.map.session_start_time}}</label>
             <div class="position-relative ng-select-wrapper">
-              <ng-select validationClasses="sessionStartTime"
+              <ng-select validationClasses="sessionStartTime" labelForId="sessionStartTime"
+                         placeholder="{{lang.map.select}}"
+                         [notFoundText]="lang.map.msg_not_found"
                          formControlName="sessionStartTime"
-                         id="sessionStartTime"
+                         id="sessionStartTime" appendTo="body"
               (change)="trainingStartTimeChange()">
                 <ng-option [value]="hour.val" *ngFor="let hour of hoursList">{{hour.key}}</ng-option>
               </ng-select>
@@ -222,9 +228,11 @@
             <label asteriskIfRequired="sessionEndTime" for="sessionEndTime"
                    class="form-label">{{lang.map.session_end_time}}</label>
             <div class="position-relative ng-select-wrapper">
-              <ng-select validationClasses="sessionEndTime"
+              <ng-select validationClasses="sessionEndTime" labelForId="sessionEndTime"
+                         placeholder="{{lang.map.select}}"
+                         [notFoundText]="lang.map.msg_not_found"
                          formControlName="sessionEndTime"
-                         id="sessionEndTime"
+                         id="sessionEndTime" appendTo="body"
               (change)="trainingEndTimeChange()">
                 <ng-option [value]="hour.val" *ngFor="let hour of hoursList">{{hour.key}}</ng-option>
               </ng-select>
@@ -257,9 +265,11 @@
             <label asteriskIfRequired="attendenceMethod" for="attendenceMethod"
                    class="form-label">{{lang.map.attendance_method}}</label>
             <div class="position-relative ng-select-wrapper">
-              <ng-select validationClasses="attendenceMethod"
+              <ng-select validationClasses="attendenceMethod" labelForId="attendenceMethod"
+                         placeholder="{{lang.map.select}}"
+                         [notFoundText]="lang.map.msg_not_found"
                          formControlName="attendenceMethod"
-                         id="attendenceMethod">
+                         id="attendenceMethod" appendTo="body">
                 <ng-option [value]="attendanceMethod.lookupKey" *ngFor="let attendanceMethod of attendanceMethods"
                            [disabled]="!attendanceMethod.status">{{attendanceMethod.getName()}}</ng-option>
               </ng-select>
@@ -272,10 +282,12 @@
             <label asteriskIfRequired="targetAudienceListIds" for="targetAudienceListIds"
                    class="form-label">{{lang.map.target_audience}}</label>
             <div class="position-relative ng-select-wrapper">
-              <ng-select validationClasses="targetAudienceListIds"
+              <ng-select validationClasses="targetAudienceListIds" labelForId="targetAudienceListIds"
+                         placeholder="{{lang.map.select}}"
+                         [notFoundText]="lang.map.msg_not_found"
                          formControlName="targetAudienceListIds"
                          id="targetAudienceListIds"
-                         [multiple]="true">
+                         [multiple]="true" appendTo="body">
                 <ng-option [value]="targetAudience.lookupKey" *ngFor="let targetAudience of targetAudienceList"
                            [disabled]="!targetAudience.status">{{targetAudience.getName()}}</ng-option>
               </ng-select>
@@ -345,8 +357,9 @@
               <label for="organizationTypeId"
                      class="form-label">{{lang.map.training_program_organization_types}}</label>
               <div class="mb-3 position-relative ng-select-wrapper">
-                <ng-select
+                <ng-select labelForId="organizationTypeId"
                   placeholder="{{lang.map.select}}"
+                  [notFoundText]="lang.map.msg_not_found"
                   [(ngModel)]="selectedOrganizationType"
                   [ngModelOptions]="{standalone: true}"
                   id="organizationTypeId"
@@ -361,8 +374,9 @@
               <label for="organizationId"
                      class="form-label">{{lang.map.training_program_organizations}}</label>
               <div class="mb-3 position-relative ng-select-wrapper">
-                <ng-select
+                <ng-select labelForId="organizationId"
                   placeholder="{{lang.map.select}}"
+                  [notFoundText]="lang.map.msg_not_found"
                   [(ngModel)]="selectedOrganization"
                   [ngModelOptions]="{standalone: true}"
                   id="organizationId"
@@ -441,6 +455,7 @@
                 <ng-select
                   labelForId="trainerId"
                   placeholder="{{lang.map.select}}"
+                  [notFoundText]="lang.map.msg_not_found"
                   [(ngModel)]="selectedTrainer"
                   [ngModelOptions]="{standalone: true}"
                   id="trainerId"
