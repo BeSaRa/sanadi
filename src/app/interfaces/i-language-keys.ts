@@ -1,4 +1,10 @@
 export interface ILanguageKeys {
+  you_should_add_at_least_one_foreign_project_need: string;
+  project_model_foreign_countries_projects: string;
+  you_should_add_at_least_one_evaluation_indicator: string;
+  percentage: string;
+  indicator: string;
+  project_evaluation_indicators: string;
   sanadi_main_classification: string;
   sanadi_classification: string;
   internal_project_classification: string;

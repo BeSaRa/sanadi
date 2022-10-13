@@ -1,13 +1,24 @@
-import {IModelInterceptor} from "@app/interfaces/i-model-interceptor";
-import {ProjectModel} from "@app/models/project-model";
-import {ProjectComponent} from "@app/models/project-component";
-import {AdminResult} from "@app/models/admin-result";
+import {IModelInterceptor} from '@app/interfaces/i-model-interceptor';
+import {ProjectModel} from '@app/models/project-model';
+import {ProjectComponent} from '@app/models/project-component';
+import {AdminResult} from '@app/models/admin-result';
 import {TaskDetails} from '@app/models/task-details';
+import {EvaluationIndicator} from '@app/models/evaluation-indicator';
+import {ProjectModelForeignCountriesProject} from '@app/models/project-model-foreign-countries-project';
 
 export class ProjectModelInterceptor implements IModelInterceptor<ProjectModel> {
   send(model: Partial<ProjectModel>): Partial<ProjectModel> {
     model.componentList = model.componentList?.map(item => {
       delete (item as Partial<ProjectComponent>).searchFields;
+      return item;
+    });
+    model.evaluationIndicatorList = model.evaluationIndicatorList?.map(item => {
+      delete item.indicatorInfo;
+      delete (item as Partial<EvaluationIndicator>).searchFields;
+      return item;
+    });
+    model.foreignCountriesProjectList = model.foreignCountriesProjectList?.map(item => {
+      delete (item as Partial<ProjectModelForeignCountriesProject>).searchFields;
       return item;
     });
     delete model.requestTypeInfo;
@@ -56,6 +67,12 @@ export class ProjectModelInterceptor implements IModelInterceptor<ProjectModel> 
     model.internalProjectClassificationInfo = AdminResult.createInstance(model.internalProjectClassificationInfo);
     model.sanadiDomainInfo = AdminResult.createInstance(model.sanadiDomainInfo);
     model.sanadiMainClassificationInfo = AdminResult.createInstance(model.sanadiMainClassificationInfo);
+    model.evaluationIndicatorList = model.evaluationIndicatorList.map(item => {
+      return new EvaluationIndicator().clone(item);
+    });
+    model.foreignCountriesProjectList = model.foreignCountriesProjectList.map(item => {
+      return new ProjectModelForeignCountriesProject().clone(item);
+    });
     return model;
   }
 }

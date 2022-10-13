@@ -1,21 +1,24 @@
-import {CaseModel} from "@app/models/case-model";
-import {ProjectModelService} from "@app/services/project-model.service";
-import {AdminResult} from "@app/models/admin-result";
-import {ProjectComponent} from "@app/models/project-component";
-import {FactoryService} from "@app/services/factory.service";
-import {CustomValidators} from "@app/validators/custom-validators";
-import {CommonUtils} from "@app/helpers/common-utils";
+import {CaseModel} from '@app/models/case-model';
+import {ProjectModelService} from '@app/services/project-model.service';
+import {AdminResult} from '@app/models/admin-result';
+import {ProjectComponent} from '@app/models/project-component';
+import {FactoryService} from '@app/services/factory.service';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {CommonUtils} from '@app/helpers/common-utils';
 import {Validators} from '@angular/forms';
-import {ISearchFieldsMap} from "@app/types/types";
-import {dateSearchFields} from "@app/helpers/date-search-fields";
-import {infoSearchFields} from "@app/helpers/info-search-fields";
-import {normalSearchFields} from "@app/helpers/normal-search-fields";
+import {ISearchFieldsMap} from '@app/types/types';
+import {dateSearchFields} from '@app/helpers/date-search-fields';
+import {infoSearchFields} from '@app/helpers/info-search-fields';
+import {normalSearchFields} from '@app/helpers/normal-search-fields';
 import {CaseTypes} from '@app/enums/case-types.enum';
 import {ProjectModelInterceptor} from '@app/model-interceptors/project-model-interceptor';
 import {InterceptModel} from '@decorators/intercept-model';
+import {EvaluationIndicator} from '@app/models/evaluation-indicator';
+import {ProjectModelForeignCountriesProject} from '@app/models/project-model-foreign-countries-project';
 
 // noinspection JSUnusedGlobalSymbols
 const {send, receive} = new ProjectModelInterceptor();
+
 @InterceptModel({send, receive})
 export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
   caseType: number = CaseTypes.EXTERNAL_PROJECT_MODELS;
@@ -65,6 +68,8 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
   templateFullSerial!: string;
   templateId!: string;
   templateStatus!: number;
+  evaluationIndicatorList: EvaluationIndicator[] = [];
+  foreignCountriesProjectList: ProjectModelForeignCountriesProject[] = [];
   componentList!: ProjectComponent[];
   requestTypeInfo!: AdminResult;
   projectTypeInfo!: AdminResult;
@@ -89,7 +94,7 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
     ...dateSearchFields(['createdOn']),
     ...infoSearchFields(['requestTypeInfo', 'creatorInfo', 'caseStatusInfo', 'projectTypeInfo', 'requestTypeInfo']),
     ...normalSearchFields(['projectName', 'fullSerial'])
-  }
+  };
 
   constructor() {
     super();
@@ -139,7 +144,7 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
       beneficiaryRegion: controls ? [beneficiaryRegion, [CustomValidators.required, CustomValidators.maxLength(250)]] : beneficiaryRegion,
       executionCountry: controls ? [executionCountry, CustomValidators.required] : executionCountry,
       executionRegion: controls ? [executionRegion, [CustomValidators.required, CustomValidators.maxLength(250)]] : executionRegion
-    }
+    };
   }
 
   buildCategoryTab(controls: boolean = false): any {
@@ -168,7 +173,7 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
       internalProjectClassification: controls ? [internalProjectClassification] : internalProjectClassification,
       sanadiDomain: controls ? [sanadiDomain] : sanadiDomain,
       sanadiMainClassification: controls ? [sanadiMainClassification] : sanadiMainClassification
-    }
+    };
   }
 
   buildCategoryGoalPercentGroup(controls: boolean = false): any {
@@ -181,7 +186,7 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
       firstSDGoalPercentage: controls ? [firstSDGoalPercentage, [CustomValidators.decimal(2), Validators.max(100)]] : firstSDGoalPercentage,
       secondSDGoalPercentage: controls ? [secondSDGoalPercentage, [CustomValidators.decimal(2), Validators.max(100)]] : secondSDGoalPercentage,
       thirdSDGoalPercentage: controls ? [thirdSDGoalPercentage, [CustomValidators.decimal(2), Validators.max(100)]] : thirdSDGoalPercentage
-    }
+    };
   }
 
   buildSummaryTab(controls: boolean = false): any {
@@ -210,7 +215,15 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
       expectedResults: controls ? [expectedResults, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : expectedResults,
       sustainabilityItems: controls ? [sustainabilityItems, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : sustainabilityItems,
       exitMechanism: controls ? [exitMechanism, [CustomValidators.required]] : exitMechanism
-    }
+    };
+  }
+
+  buildEvaluationIndicatorForm(): any {
+    return {
+      indicator: [null, [CustomValidators.required]],
+      percentage: [null, [CustomValidators.required]],
+      notes: [null]
+    };
   }
 
   buildSummaryPercentGroup(controls: boolean = false): any {
@@ -225,7 +238,7 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
       beneficiaries5to18: controls ? [beneficiaries5to18, [CustomValidators.required, CustomValidators.decimal(2), Validators.max(100)]] : beneficiaries5to18,
       beneficiaries19to60: controls ? [beneficiaries19to60, [CustomValidators.required, CustomValidators.decimal(2), Validators.max(100)]] : beneficiaries19to60,
       beneficiariesOver60: controls ? [beneficiariesOver60, [CustomValidators.required, CustomValidators.decimal(2), Validators.max(100)]] : beneficiariesOver60
-    }
+    };
   }
 
   getTotalProjectComponentCost(numberOfDecimalPlaces: number = 2): number {
