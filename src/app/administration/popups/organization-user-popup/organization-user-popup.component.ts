@@ -27,6 +27,8 @@ import {EmployeeService} from '@app/services/employee.service';
 import {AuthService} from '@app/services/auth.service';
 import {TabComponent} from '@app/shared/components/tab/tab.component';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import {JobTitle} from '@app/models/job-title';
+import {JobTitleService} from '@services/job-title.service';
 
 @Component({
   selector: 'app-organization-user-popup',
@@ -41,7 +43,7 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
   model: OrgUser;
   operation: OperationTypes;
   fm!: FormManager;
-  jobTitleList: Lookup[];
+  jobTitleList: JobTitle[] = [];
   customRoleList: CustomRole[];
   orgUnitList: OrgUnit[];
   orgUserPermissions: OrgUserPermission[];
@@ -82,13 +84,13 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
               private lookupService: LookupService,
               public employeeService: EmployeeService,
               private authService: AuthService,
+              private jobTitleService: JobTitleService,
               private fb: UntypedFormBuilder) {
     this.model = data.model;
     this.operation = data.operation;
     this.customRoleList = data.customRoleList;
     this.orgUnitList = data.orgUnitList;
     this.orgUserPermissions = data.orgUserPermissions;
-    this.jobTitleList = lookupService.listByCategory.OrgUserJobTitle;
     this.statusList = lookupService.listByCategory.CommonStatus;
     this._setDefaultPermissions();
 
@@ -112,6 +114,7 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
     this.buildForm();
     this._saveModel();
     this.listenToCustomRoleChange();
+    this._loadJobTitles();
   }
 
   buildForm(): void {
@@ -350,5 +353,16 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
 
   onTabChange($event: TabComponent) {
     this.displaySaveBtn = (!['services', 'teams'].includes($event.name));
+  }
+
+  private _loadJobTitles(): void {
+    this.jobTitleService.loadAsLookups()
+      .pipe(
+        takeUntil(this.destroy$),
+        catchError(() => {
+          return of([]);
+        })
+      )
+      .subscribe((result)=> this.jobTitleList = result);
   }
 }
