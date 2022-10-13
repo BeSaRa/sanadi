@@ -3,22 +3,22 @@ import { CommonStatusEnum } from '@app/enums/common-status.enum';
 import { infoSearchFields } from '@app/helpers/info-search-fields';
 import { normalSearchFields } from '@app/helpers/normal-search-fields';
 import { INames } from '@app/interfaces/i-names';
-import { MenuItemListInterceptor } from '@app/model-interceptors/menu-item-list-interceptor';
+import { CustomMenuInterceptor } from '@app/model-interceptors/custom-menu-interceptor';
 import { FactoryService } from '@app/services/factory.service';
 import { LangService } from '@app/services/lang.service';
 import { ISearchFieldsMap } from '@app/types/types';
 import { CustomValidators } from '@app/validators/custom-validators';
-import { MenuItemListService } from './../services/menu-item-list.service';
+import { CustomMenuService } from '@services/custom-menu.service';
 import { BaseModel } from './base-model';
 import { Lookup } from './lookup';
 
-const interceptor = new MenuItemListInterceptor();
+const interceptor = new CustomMenuInterceptor();
 
 @InterceptModel({
   receive: interceptor.receive,
   send: interceptor.send
 })
-export class MenuItemList extends BaseModel<MenuItemList, MenuItemListService> {
+export class CustomMenu extends BaseModel<CustomMenu, CustomMenuService> {
 
   status!: number;
   menuOrder!: number;
@@ -30,9 +30,9 @@ export class MenuItemList extends BaseModel<MenuItemList, MenuItemListService> {
   langService: LangService;
   statusInfo!: Lookup;
 
-  service!: MenuItemListService;
+  service!: CustomMenuService;
 
-  searchFields: ISearchFieldsMap<MenuItemList> = {
+  searchFields: ISearchFieldsMap<CustomMenu> = {
     ...normalSearchFields(['arName', 'enName', 'menuURL']),
     ...infoSearchFields(['statusInfo']),
   };
@@ -43,7 +43,7 @@ export class MenuItemList extends BaseModel<MenuItemList, MenuItemListService> {
   constructor() {
     super();
     this.langService = FactoryService.getService('LangService');
-    this.service = FactoryService.getService('MenuItemListService');
+    this.service = FactoryService.getService('CustomMenuService');
   }
 
   getName(): string {

@@ -1,4 +1,4 @@
-import { MenuItemListComponent } from './pages/menu-item-list/menu-item-list.component';
+import { CustomMenuComponent } from './pages/custom-menu/custom-menu.component';
 import {OrganizationUnitFieldComponent} from './pages/organization-unit-field/organization-unit-field.component';
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
@@ -147,7 +147,7 @@ const routes: Routes = [
     }
   },
   {
-    path: 'menu-item-list', component: MenuItemListComponent,
+    path: 'menu-items', component: CustomMenuComponent,
     canActivate: [PermissionGuard],
     data: {
       permissionKey: PermissionsEnum.MANAGE_CUSTOM_MENU_ITEM, configPermissionGroup: null, checkAnyPermission: false

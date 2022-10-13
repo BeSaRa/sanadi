@@ -1,6 +1,6 @@
 import {HttpClient} from '@angular/common/http';
 import {DialogService} from '@services/dialog.service';
-import {MenuItemList} from '@app/models/menu-item-list';
+import {CustomMenu} from '@app/models/custom-menu';
 import {ChangeDetectorRef, Component, Inject, ViewChild} from '@angular/core';
 import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {Lookup} from '@app/models/lookup';
@@ -20,20 +20,22 @@ import {CommonStatusEnum} from '@app/enums/common-status.enum';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {catchError, exhaustMap, takeUntil, tap} from 'rxjs/operators';
-import {MenuItemListService} from '@app/services/menu-item-list.service';
+import {CustomMenuService} from '@services/custom-menu.service';
 import {TableComponent} from '@app/shared/components/table/table.component';
 import {SharedService} from '@app/services/shared.service';
 import {IGridAction} from '@app/interfaces/i-grid-action';
+import {MenuView} from '@app/enums/menu-view.enum';
+import {TabMap} from '@app/types/types';
 
 @Component({
-  selector: 'app-menu-item-list-popup',
-  templateUrl: './menu-item-list-popup.component.html',
-  styleUrls: ['./menu-item-list-popup.component.css'],
+  selector: 'app-custom-menu-popup',
+  templateUrl: './custom-menu-popup.component.html',
+  styleUrls: ['./custom-menu-popup.component.css'],
 })
-export class MenuItemListPopupComponent extends AdminGenericDialog<MenuItemList> {
+export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> {
   form!: UntypedFormGroup;
   fm!: FormManager;
-  model!: MenuItemList;
+  model!: CustomMenu;
   operation: OperationTypes;
   saveVisible = true;
   statuses: Lookup[] = this.lookupService.listByCategory.CommonStatus;
@@ -43,34 +45,34 @@ export class MenuItemListPopupComponent extends AdminGenericDialog<MenuItemList>
   usePagination: any;
   pageEvent: any;
   count: any;
-  subList: MenuItemList[]=[];
+  subList: CustomMenu[] = [];
   selectedTabIndex$: Subject<number> = new Subject<number>();
-  defaultSelectedTab: string = 'main';
+  defaultSelectedTab: string = 'basic';
 
   get readonly(): boolean {
     return this.operation === OperationTypes.VIEW;
   }
+
   filterControl: UntypedFormControl = new UntypedFormControl('');
   displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'status', 'actions',];
+
   constructor(
     public dialogRef: DialogRef,
     public fb: UntypedFormBuilder,
     public lang: LangService,
-    @Inject(DIALOG_DATA_TOKEN) data: IDialogData<MenuItemList>,
+    @Inject(DIALOG_DATA_TOKEN) data: IDialogData<CustomMenu>,
     private toast: ToastService,
     private lookupService: LookupService,
-    private menuListItemService:MenuItemListService,
+    private menuListItemService: CustomMenuService,
     private cd: ChangeDetectorRef,
-    private dialogService:DialogService,
+    private dialogService: DialogService,
     private sharedService: SharedService,
-    private http:HttpClient
+    private http: HttpClient
   ) {
     super();
     this.model = data.model;
     this.operation = data.operation;
-    this.defaultSelectedTab = data.selectedTab?? 'main';
-
-    console.log(this.defaultSelectedTab);
+    this.defaultSelectedTab = data.selectedTab ?? 'basic';
 
   }
 
@@ -93,25 +95,31 @@ export class MenuItemListPopupComponent extends AdminGenericDialog<MenuItemList>
   }
 
   setDialogButtonsVisibility(tab: any): void {
-    this.saveVisible = (tab.name && tab.name === this.tabsData.main.name);
-    this.validateFieldsVisible = (tab.name && tab.name === this.tabsData.main.name);
+    this.saveVisible = (tab.name && tab.name === this.tabsData.basic.name);
+    this.validateFieldsVisible = (tab.name && tab.name === this.tabsData.basic.name);
   }
-  beforeSave(model: MenuItemList, form: UntypedFormGroup): Observable<boolean> | boolean {
+
+  getTabInvalidStatus(tabName: string): boolean {
+    return !this.tabsData[tabName].validStatus();
+  }
+
+  beforeSave(model: CustomMenu, form: UntypedFormGroup): Observable<boolean> | boolean {
     return form.valid;
   }
 
-  prepareModel(model: MenuItemList, form: UntypedFormGroup): Observable<MenuItemList> | MenuItemList {
-    return (new MenuItemList()).clone({ ...model, ...form.value });
+  prepareModel(model: CustomMenu, form: UntypedFormGroup): Observable<CustomMenu> | CustomMenu {
+    return (new CustomMenu()).clone({...model, ...form.value});
   }
 
-  afterSave(model: MenuItemList, dialogRef: DialogRef): void {
+  afterSave(model: CustomMenu, dialogRef: DialogRef): void {
     const message = this.operation === OperationTypes.CREATE ? this.lang.map.msg_create_x_success : this.lang.map.msg_update_x_success;
     this.operation === this.operationTypes.CREATE
-      ? this.toast.success(message.change({ x: this.form.controls[this.lang.map.lang + 'Name'].value }))
-      : this.toast.success(message.change({ x: model.getName() }));
+      ? this.toast.success(message.change({x: this.form.controls[this.lang.map.lang + 'Name'].value}))
+      : this.toast.success(message.change({x: model.getName()}));
     this.model = model;
     this.operation = OperationTypes.UPDATE;
   }
+
   saveFail(error: Error): void {
   }
 
@@ -131,16 +139,33 @@ export class MenuItemListPopupComponent extends AdminGenericDialog<MenuItemList>
     this.destroy$.complete();
     this.destroy$.unsubscribe();
   }
-  tabsData: IKeyValue = {
-    main: { name: 'main' },
-    linkSettings: { name: 'linkSettings' },
-    sub: { name: 'sub' }
+
+  tabsData: TabMap = {
+    basic: {
+      name: 'basic',
+      langKey: 'lbl_basic_info',
+      index: 0,
+      validStatus: () => {
+        return this.form && this.form.valid;
+      },
+      isTouchedOrDirty: () => true
+    },
+    linkSettings: {name: 'linkSettings', langKey: 'link_settings', index: 1, validStatus: () => true, isTouchedOrDirty: () => true},
+    sub: {name: 'sub', langKey: 'sub_lists', index: 2, validStatus: () => true, isTouchedOrDirty: () => true}
   };
   @ViewChild('table') table!: TableComponent;
 
   addSubList$: Subject<any> = new Subject<any>();
   reloadSubList$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
-  actions: IMenuItem<MenuItemList>[] = [
+  actions: IMenuItem<CustomMenu>[] = [
+    // edit
+    {
+      type: 'action',
+      label: 'btn_edit',
+      icon: ActionIconsEnum.EDIT,
+      show: () => !this.readonly,
+      onClick: (item) => this.edit(item)
+    },
     // view
     {
       type: 'action',
@@ -157,21 +182,13 @@ export class MenuItemListPopupComponent extends AdminGenericDialog<MenuItemList>
       show: () => !this.readonly,
       onClick: (item) => this.delete(item)
     },
-    // edit
-    {
-      type: 'action',
-      label: 'btn_edit',
-      icon: ActionIconsEnum.EDIT,
-      show: () => !this.readonly,
-      onClick: (item) => this.edit(item)
-    },
     // activate
     {
       type: 'action',
       icon: ActionIconsEnum.STATUS,
       label: 'btn_activate',
       displayInGrid: false,
-      onClick: (item: MenuItemList) => this.toggleStatus(item),
+      onClick: (item: CustomMenu) => this.toggleStatus(item),
       show: (item) => {
         return item.status === CommonStatusEnum.DEACTIVATED;
       }
@@ -182,13 +199,14 @@ export class MenuItemListPopupComponent extends AdminGenericDialog<MenuItemList>
       icon: ActionIconsEnum.STATUS,
       label: 'btn_deactivate',
       displayInGrid: false,
-      onClick: (item: MenuItemList) => this.toggleStatus(item),
+      onClick: (item: CustomMenu) => this.toggleStatus(item),
       show: (item) => {
         return item.status === CommonStatusEnum.ACTIVATED;
       }
     }
   ];
-  view(item: MenuItemList): void {
+
+  view(item: CustomMenu): void {
     const sub = this.menuListItemService.openSubListViewDialog(item).subscribe((dialog: DialogRef) => {
       dialog.onAfterClose$.subscribe((_) => {
         this.reloadSubList$.next(null);
@@ -196,7 +214,8 @@ export class MenuItemListPopupComponent extends AdminGenericDialog<MenuItemList>
       });
     });
   }
-  edit(item: MenuItemList): void {
+
+  edit(item: CustomMenu): void {
     const sub = this.menuListItemService.openSubListEditDialog(item).subscribe((dialog: DialogRef) => {
       dialog.onAfterClose$.subscribe((_) => {
         this.reloadSubList$.next(null);
@@ -205,32 +224,32 @@ export class MenuItemListPopupComponent extends AdminGenericDialog<MenuItemList>
     });
   }
 
-  toggleStatus(model: MenuItemList) {
+  toggleStatus(model: CustomMenu) {
     let updateObservable = model.status == CommonStatusEnum.ACTIVATED ? model.updateStatus(CommonStatusEnum.DEACTIVATED) : model.updateStatus(CommonStatusEnum.ACTIVATED);
     updateObservable.pipe(takeUntil(this.destroy$))
       .subscribe(() => {
-        this.toast.success(this.lang.map.msg_status_x_updated_success.change({ x: model.getName() }));
+        this.toast.success(this.lang.map.msg_status_x_updated_success.change({x: model.getName()}));
         this.reloadSubList$.next(null);
       }, () => {
-        this.toast.error(this.lang.map.msg_status_x_updated_fail.change({ x: model.getName() }));
+        this.toast.error(this.lang.map.msg_status_x_updated_fail.change({x: model.getName()}));
         this.reloadSubList$.next(null);
       });
   }
 
-  delete(model: MenuItemList): void {
+  delete(model: CustomMenu): void {
     // @ts-ignore
-    const message = this.lang.map.msg_confirm_delete_x.change({ x: model.getName() });
+    const message = this.lang.map.msg_confirm_delete_x.change({x: model.getName()});
     this.dialogService.confirm(message)
       .onAfterClose$.subscribe((click: UserClickOn) => {
-        if (click === UserClickOn.YES) {
-          const sub = model.delete().subscribe(() => {
-            // @ts-ignore
-            this.toast.success(this.lang.map.msg_delete_x_success.change({ x: model.getName() }));
-            this.reloadSubList$.next(null);
-            sub.unsubscribe();
-          });
-        }
-      });
+      if (click === UserClickOn.YES) {
+        const sub = model.delete().subscribe(() => {
+          // @ts-ignore
+          this.toast.success(this.lang.map.msg_delete_x_success.change({x: model.getName()}));
+          this.reloadSubList$.next(null);
+          sub.unsubscribe();
+        });
+      }
+    });
   }
 
   listenToAddSubList() {
@@ -244,19 +263,18 @@ export class MenuItemListPopupComponent extends AdminGenericDialog<MenuItemList>
     this.reloadSubList$
       .pipe(
         takeUntil(this.destroy$),
-
       )
       .subscribe(() => {
-        if(this.model.id){
-          let load: Observable<MenuItemList[]>;
-        load = this.menuListItemService.loadByParentIdPaging( this.model.id)
+        if (this.model.id) {
+          let load: Observable<CustomMenu[]>;
+          load = this.menuListItemService.loadByParentIdPaging(this.model.id);
 
 
-        load.pipe(takeUntil(this.destroy$),)
-          .subscribe(result => {
-            this.subList = result;
-            this.table && this.table.clearSelection();
-          });
+          load.pipe(takeUntil(this.destroy$),)
+            .subscribe(result => {
+              this.subList = result;
+              this.table && this.table.clearSelection();
+            });
         }
 
       });
@@ -264,19 +282,22 @@ export class MenuItemListPopupComponent extends AdminGenericDialog<MenuItemList>
 
   ngAfterViewInit() {
     this.cd.detectChanges();
-    this._setDefaultSelectedTab()
+    this._setDefaultSelectedTab();
   }
+
   private _setDefaultSelectedTab(): void {
     setTimeout(() => {
       if (this.tabsData.hasOwnProperty(this.defaultSelectedTab) && this.tabsData[this.defaultSelectedTab]) {
-        const index =this.defaultSelectedTab === 'main' ? 0 :2;
+        const index = this.defaultSelectedTab === 'basic' ? 0 : 2;
         this.selectedTabIndex$.next(index);
       }
     });
   }
-  get selectedRecords(): MenuItemList[] {
+
+  get selectedRecords(): CustomMenu[] {
     return this.table.selection.selected;
   }
+
   deleteBulk($event: MouseEvent): void {
     $event.preventDefault();
     if (this.selectedRecords.length > 0) {
@@ -309,6 +330,7 @@ export class MenuItemListPopupComponent extends AdminGenericDialog<MenuItemList>
           });
       });
   }
+
   bulkActionsList: IGridAction[] = [
     {
       langKey: 'btn_delete',
@@ -326,7 +348,7 @@ export class MenuItemListPopupComponent extends AdminGenericDialog<MenuItemList>
           icon: '',
           callback: ($event: MouseEvent, _data?: any) =>
             this.changeStatusBulk($event, CommonStatusEnum.ACTIVATED),
-          show: (_items: MenuItemList[]) => {
+          show: (_items: CustomMenu[]) => {
             return true;
           },
         },
@@ -335,28 +357,45 @@ export class MenuItemListPopupComponent extends AdminGenericDialog<MenuItemList>
           icon: '',
           callback: ($event: MouseEvent, _data?: any) =>
             this.changeStatusBulk($event, CommonStatusEnum.DEACTIVATED),
-          show: (_items: MenuItemList[]) => {
+          show: (_items: CustomMenu[]) => {
             return true;
           },
         },
       ],
     },
   ];
-  get menuURLControl():UntypedFormControl{
-    return this.form.controls.menuURL as UntypedFormControl
+
+  get menuURLControl(): UntypedFormControl {
+    return this.form.controls.menuURL as UntypedFormControl;
   }
-  isValidURL :boolean =false
-  checkURL(){
-   const sub= this.http.get<any>(this.menuURLControl.value).pipe(
-      tap(()=>this.isValidURL = true),
-      catchError(_=>{
-        this.isValidURL = false
-        this.dialogService.error(this.lang.map.err_invalid_URL)
+
+  get statusControl(): UntypedFormControl {
+    return this.form.get('status') as UntypedFormControl;
+  }
+
+  get menuViewControl(): UntypedFormControl {
+    return this.form.get('menuView') as UntypedFormControl;
+  }
+
+  isValidURL: boolean = false;
+
+  checkURL() {
+    const sub = this.http.get<any>(this.menuURLControl.value).pipe(
+      tap(() => this.isValidURL = true),
+      catchError(_ => {
+        this.isValidURL = false;
+        this.dialogService.error(this.lang.map.err_invalid_URL);
         return of();
       })
+    ).subscribe(() => sub.unsubscribe());
 
-    ).subscribe(()=>   sub.unsubscribe());
+  }
 
+  getTranslatedStatus() {
+    return !!this.statusControl.value ? this.lang.map.lbl_active : this.lang.map.lbl_inactive;
+  }
 
+  getTranslatedMenuView() {
+    return !!this.menuViewControl.value ? this.lang.map.private_menu : this.lang.map.public_menu;
   }
 }

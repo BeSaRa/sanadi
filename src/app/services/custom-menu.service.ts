@@ -1,4 +1,4 @@
-import { MenuSubListItemPopupComponent } from './../administration/popups/menu-sub-list-item-popup/menu-sub-list-item-popup.component';
+import { CustomSubMenuPopupComponent } from '../administration/popups/custom-sub-menu-popup/custom-sub-menu-popup.component';
 import { ComponentType } from '@angular/cdk/portal';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -7,13 +7,13 @@ import { CommonStatusEnum } from '@app/enums/common-status.enum';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { CrudWithDialogGenericService } from '@app/generics/crud-with-dialog-generic-service';
 import { IDialogData } from '@app/interfaces/i-dialog-data';
-import { MenuItemListInterceptor } from '@app/model-interceptors/menu-item-list-interceptor';
+import { CustomMenuInterceptor } from '@app/model-interceptors/custom-menu-interceptor';
 import { Pagination } from '@app/models/pagination';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { Observable, of } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
-import { MenuItemListPopupComponent } from './../administration/popups/menu-item-list-popup/menu-item-list-popup.component';
-import { MenuItemList } from './../models/menu-item-list';
+import { CustomMenuPopupComponent } from '../administration/popups/custom-menu-popup/custom-menu-popup.component';
+import { CustomMenu } from '../models/custom-menu';
 import { AdminLookupService } from './admin-lookup.service';
 import { DialogService } from './dialog.service';
 import { FactoryService } from './factory.service';
@@ -21,30 +21,30 @@ import { UrlService } from './url.service';
 
 @CastResponseContainer({
   $default: {
-    model: () => MenuItemList,
+    model: () => CustomMenu,
   },
   $pagination: {
     model: () => Pagination,
-    shape: { 'rs.*': () => MenuItemList },
+    shape: { 'rs.*': () => CustomMenu },
   },
 })
 @Injectable({
   providedIn: 'root',
 })
-export class MenuItemListService extends CrudWithDialogGenericService<MenuItemList> {
+export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> {
   _getDialogComponent(): ComponentType<any> {
-    return MenuItemListPopupComponent;
+    return CustomMenuPopupComponent;
   }
 
-  _getModel(): new () => MenuItemList {
-    return MenuItemList;
+  _getModel(): new () => CustomMenu {
+    return CustomMenu;
   }
-  list: MenuItemList[] = [];
+  list: CustomMenu[] = [];
   _getServiceURL(): string {
     return this.urlService.URLS.MENU_ITEM_LIST;
   }
   private _getSubListComponent(){
-    return MenuSubListItemPopupComponent;
+    return CustomSubMenuPopupComponent;
   }
 
   constructor(
@@ -54,43 +54,43 @@ export class MenuItemListService extends CrudWithDialogGenericService<MenuItemLi
     private adminLookupService: AdminLookupService,
   ) {
     super();
-    FactoryService.registerService('MenuItemListService', this);
+    FactoryService.registerService('CustomMenuService', this);
   }
   openCreateDialog(id:number): DialogRef {
-    return this.dialog.show<IDialogData<MenuItemList>>(this._getSubListComponent(), {
-      model: new MenuItemList().clone({parentMenuItemId:id}),
+    return this.dialog.show<IDialogData<CustomMenu>>(this._getSubListComponent(), {
+      model: new CustomMenu().clone({parentMenuItemId:id}),
       operation: OperationTypes.CREATE,
 
     });
   }
-  openViewDialog(model: MenuItemList): Observable<DialogRef> {
+  openViewDialog(model: CustomMenu): Observable<DialogRef> {
     return of(
-      this.dialog.show<IDialogData<MenuItemList>>(this._getDialogComponent(), {
+      this.dialog.show<IDialogData<CustomMenu>>(this._getDialogComponent(), {
         model,
         operation: OperationTypes.VIEW,
       })
     );
   }
-  openEditDialog(model: MenuItemList, selectedPopupTab: string = 'basic'): Observable<DialogRef> {
+  openEditDialog(model: CustomMenu, selectedPopupTab: string = 'basic'): Observable<DialogRef> {
     return of(
-      this.dialog.show<IDialogData<MenuItemList>>(this._getDialogComponent(), {
+      this.dialog.show<IDialogData<CustomMenu>>(this._getDialogComponent(), {
         model,
         operation: OperationTypes.UPDATE,
         selectedTab: selectedPopupTab || 'basic'
       })
     );
   }
-  openSubListViewDialog(model: MenuItemList): Observable<DialogRef> {
+  openSubListViewDialog(model: CustomMenu): Observable<DialogRef> {
     return of(
-      this.dialog.show<IDialogData<MenuItemList>>(this._getSubListComponent(), {
+      this.dialog.show<IDialogData<CustomMenu>>(this._getSubListComponent(), {
         model,
         operation: OperationTypes.VIEW,
       })
     );
   }
-  openSubListEditDialog(model: MenuItemList): Observable<DialogRef> {
+  openSubListEditDialog(model: CustomMenu): Observable<DialogRef> {
     return of(
-      this.dialog.show<IDialogData<MenuItemList>>(this._getSubListComponent(), {
+      this.dialog.show<IDialogData<CustomMenu>>(this._getSubListComponent(), {
         model,
         operation: OperationTypes.UPDATE,
       })
@@ -144,13 +144,13 @@ export class MenuItemListService extends CrudWithDialogGenericService<MenuItemLi
         })
       );
   }
-  @CastResponse(() => MenuItemList, {
+  @CastResponse(() => CustomMenu, {
     fallback: '$default',
     unwrap: 'rs'
   })
-  loadByParentIdPaging( parentId: number): Observable<MenuItemList[]> {
+  loadByParentIdPaging( parentId: number): Observable<CustomMenu[]> {
     return this.http
-    .post<MenuItemList[]>(this._getServiceURL() + '/filter',{
+    .post<CustomMenu[]>(this._getServiceURL() + '/filter',{
       parentMenuItemId: parentId
     })
   }
@@ -158,10 +158,10 @@ export class MenuItemListService extends CrudWithDialogGenericService<MenuItemLi
     fallback: '$default',
     unwrap: 'rs'
   })
-  private _loadMain(): Observable<MenuItemList[]> {
-    return this.http.get<MenuItemList[]>(this._getServiceURL()+ '/main');
+  private _loadMain(): Observable<CustomMenu[]> {
+    return this.http.get<CustomMenu[]>(this._getServiceURL()+ '/main');
   }
-  load(prepare?: boolean): Observable<MenuItemList[]> {
+  load(prepare?: boolean): Observable<CustomMenu[]> {
     return this._loadMain()
       .pipe(
         tap(result => this.list = result),

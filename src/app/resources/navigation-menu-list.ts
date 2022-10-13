@@ -986,8 +986,8 @@ export const navigationMenuList = [
   {
     id: 75,
     langKey: 'menu_items',
-    path: '/home/administration/menu-item-list',
-    icon: 'mdi-menu ',
+    path: '/home/administration/menu-items',
+    icon: 'mdi-menu',
     isSvg: false,
     permission: PermissionsEnum.MANAGE_CUSTOM_MENU_ITEM,
     permissionGroup: null,
