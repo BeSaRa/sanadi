@@ -87,45 +87,11 @@ export class TeamComponent extends AdminGenericComponent<Team, TeamService> {
         label: 'view',
         onClick: (item: Team) => this.viewTeam(item),
         show: () => true
-      },
-      // activate
-      {
-        type: 'action',
-        icon: ActionIconsEnum.STATUS,
-        label: 'btn_activate',
-        onClick: (item: Team) => this.toggleStatus(item),
-        show: (item) => {
-          return item.status === CommonStatusEnum.DEACTIVATED;
-        },
-        displayInGrid: false
-      },
-      // deactivate
-      {
-        type: 'action',
-        icon: ActionIconsEnum.STATUS,
-        label: 'btn_deactivate',
-        onClick: (item: Team) => this.toggleStatus(item),
-        show: (item) => {
-          return item.status === CommonStatusEnum.ACTIVATED;
-        },
-        displayInGrid: false
       }
     ];
   }
 
   private buildBulkActions() {
     this.bulkActions = [];
-  }
-
-  toggleStatus(team: Team) {
-    this.service.updateStatus(team.id, team.status)
-      .subscribe((val) => {
-        console.log({ val });
-        this.toast.success(this.langService.map.msg_status_x_updated_success.change({ x: team.getName() }));
-        this.reload$.next(null);
-      }, () => {
-        this.toast.error(this.langService.map.msg_status_x_updated_fail.change({ x: team.getName() }));
-        this.reload$.next(null);
-      });
   }
 }
