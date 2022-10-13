@@ -78,4 +78,12 @@ export class OrganizationUnitField extends BaseModel<
       status: controls ? [status, [CustomValidators.required]] : status,
     };
   }
+
+  updateStatus(newStatus: CommonStatusEnum): any {
+    return this.service.updateStatus(this.id, newStatus);
+  }
+
+  isActive(): boolean {
+    return Number(this.status) === CommonStatusEnum.ACTIVATED;
+  }
 }
