@@ -15,7 +15,6 @@ export interface IAppConfig {
   SEARCH_YEARS_START: number;
   SEARCH_YEARS_BY: string;
   LANGUAGE_STORE_KEY: string;
-  ALLOWED_FILE_TYPES_TO_UPLOAD: string[];
   CHARITY_ORG_TEAM: string;
   GIVE_USERS_PERMISSIONS: string[];// will be used to override the default forced extra permissions for user
   BENEFICIARY_AUDIT_LIMIT: number;

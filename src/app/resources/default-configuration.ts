@@ -17,7 +17,6 @@ export const defaultConfiguration: Partial<IAppConfig> = {
   SEARCH_YEARS_BY: 'RANGE',
   TIMESTAMP: 'YYYY-MM-DD HH:mm:ss',
   DATEPICKER_FORMAT: 'YYYY-MM-DD',
-  ALLOWED_FILE_TYPES_TO_UPLOAD: ['PDF'],
   CHARITY_ORG_TEAM: 'Charity Organization',
   GIVE_USERS_PERMISSIONS: [],
   MAP_API_KEY: 'AIzaSyC--IAJ4X9fxT2y8b6e-ooxxsMjzrwIOJ4',

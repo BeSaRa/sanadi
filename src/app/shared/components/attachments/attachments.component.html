@@ -97,6 +97,7 @@
       </tr>
     </table>
   </app-table>
-  <input type="file" (change)="uploaderFileChange($event)" #uploader id="attachmentUploader" class="visually-hidden">
+  <input type="file" (change)="uploaderFileChange($event)" #uploader id="attachmentUploader" class="visually-hidden"
+         [accept]="allowedExtensions.join(',')">
   <app-paginator #paginator></app-paginator>
 </div>

@@ -9,7 +9,7 @@
       <div [formGroupName]="i" class="d-flex flex-column border-bottom mb-4 pb-4">
         <div class="d-flex flex-row mb-4">
           <div class="d-flex align-items-end justify-content-start">
-            <input #file id="file_{{i}}" accept="application/pdf" (change)="fileChange($event,i)" type="file"
+            <input #file id="file_{{i}}" [accept]="allowedExtensions.join(',')" (change)="fileChange($event,i)" type="file"
                    class="visually-hidden">
             <label for="file_{{i}}" [class.btn-primary]="file.value" [class.btn-secondary]="!file.value"
                    [tooltip]="lang.map.upload_file" class="btn flex-shrink-0"><i class="mdi mdi-upload"></i></label>
