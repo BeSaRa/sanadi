@@ -635,7 +635,6 @@ export class CharityOrganizationUpdateComponent
       return;
     }
     const charity = this.charityOrganizations.find(e => e.id === id)!;
-    console.log({ charity })
     const updateSection = this.requestTypeForm.value;
     if (updateSection === this.RequestTypes.META_DATA) {
       const model = this.charityOrganizationService.getById(id);
@@ -888,9 +887,8 @@ export class CharityOrganizationUpdateComponent
       this.toast.success(this.lang.map.request_has_been_saved_successfully);
     }
     if (this.logoFile) {
-      this.charityOrganizationService.saveLogo(this.model.charityId, this.logoFile!).subscribe(id => {
-        console.log(id);
-        this.model!.logoId = id;
+      this.service.saveLogo(this.model.id, this.logoFile!).subscribe(id => {
+        this.model!.logoFnId = id;
         this.model?.save().subscribe();
       });
     }
@@ -923,8 +921,8 @@ export class CharityOrganizationUpdateComponent
       this.organizationMeetings$ = this.meetingService.getMeetingsByCharityId(this.model.charityId);
 
     }
-    if (this.model.logoId) {
-      this.charityOrganizationService.getLogoBy({ id: this.model.logoId }).subscribe(logo => {
+    if (this.model.logoFnId) {
+      this.service.getLogo(this.model.logoFnId).subscribe(logo => {
         if (logo.blob.size === 0) {
           this.loadedLogo = undefined;
           return;

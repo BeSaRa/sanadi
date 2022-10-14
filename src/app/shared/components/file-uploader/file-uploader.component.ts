@@ -1,12 +1,12 @@
-import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {LangService} from '@app/services/lang.service';
-import {DialogService} from '@app/services/dialog.service';
-import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {interval, Observable, Subject} from 'rxjs';
-import {concatMap, filter, map, takeUntil, tap} from 'rxjs/operators';
-import {AdminResult} from '@app/models/admin-result';
-import {BlobModel} from '@app/models/blob-model';
-import {SafeResourceUrl} from '@angular/platform-browser';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { LangService } from '@app/services/lang.service';
+import { DialogService } from '@app/services/dialog.service';
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
+import { interval, Observable, Subject } from 'rxjs';
+import { concatMap, filter, map, takeUntil, tap } from 'rxjs/operators';
+import { AdminResult } from '@app/models/admin-result';
+import { BlobModel } from '@app/models/blob-model';
+import { SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'file-uploader',
@@ -29,6 +29,7 @@ export class FileUploaderComponent implements OnInit {
   @Input() allowedExtensions: string[] = [];
   @Input() allowMultiple: boolean = false;
   @Input() allowRemoveLoadedFile: boolean = false;
+  @Input() readonly = false;
 
   /**
    * @description shows the uploaded file name if single file
@@ -66,7 +67,7 @@ export class FileUploaderComponent implements OnInit {
   }
 
   constructor(public lang: LangService,
-              private dialogService: DialogService) {
+    private dialogService: DialogService) {
   }
 
   ngOnInit(): void {
@@ -86,7 +87,7 @@ export class FileUploaderComponent implements OnInit {
 
   private _verifyFile(file: File) {
     const extension = file.name.getExtension().toLowerCase(),
-      invalidMessage = this.lang.map.msg_invalid_file_format + '<br/>' + this.lang.map.msg_allowed_formats.change({formats: this.allowedExtensions.join(', ')});
+      invalidMessage = this.lang.map.msg_invalid_file_format + '<br/>' + this.lang.map.msg_allowed_formats.change({ formats: this.allowedExtensions.join(', ') });
 
     if (!this.allowedExtensions.includes(extension)) {
       this.dialogService.error(invalidMessage);
@@ -144,24 +145,24 @@ export class FileUploaderComponent implements OnInit {
           })
         })
       ).subscribe({
-      complete: () => {
-        if (failedFilesCount > 0) {
-          const invalidMessage = this.lang.map.msg_some_files_invalid_file_format + '<br/>' + this.lang.map.msg_allowed_formats.change({formats: this.allowedExtensions.join(', ')});
-          this.dialogService.error(invalidMessage);
-        }
+        complete: () => {
+          if (failedFilesCount > 0) {
+            const invalidMessage = this.lang.map.msg_some_files_invalid_file_format + '<br/>' + this.lang.map.msg_allowed_formats.change({ formats: this.allowedExtensions.join(', ') });
+            this.dialogService.error(invalidMessage);
+          }
 
-        if (failedFilesCount === fileList.length) {
-          this._clearFileUploader();
-          this._emitFileChangeEvent(undefined);
-        } else {
-          this.uploadedFileName = AdminResult.createInstance({
-            arName: this.lang.getArabicLocalByKey('x_files_chosen').change({count: this.uploadedFilesCount < 5 ? this.uploadedFilesCount : '5+'}),
-            enName: this.lang.getEnglishLocalByKey('x_files_chosen').change({count: this.uploadedFilesCount < 5 ? this.uploadedFilesCount : '5+'}),
-          });
-          this._emitFileChangeEvent(this.uploadedFiles);
+          if (failedFilesCount === fileList.length) {
+            this._clearFileUploader();
+            this._emitFileChangeEvent(undefined);
+          } else {
+            this.uploadedFileName = AdminResult.createInstance({
+              arName: this.lang.getArabicLocalByKey('x_files_chosen').change({ count: this.uploadedFilesCount < 5 ? this.uploadedFilesCount : '5+' }),
+              enName: this.lang.getEnglishLocalByKey('x_files_chosen').change({ count: this.uploadedFilesCount < 5 ? this.uploadedFilesCount : '5+' }),
+            });
+            this._emitFileChangeEvent(this.uploadedFiles);
+          }
         }
-      }
-    })
+      })
   }
 
   onFileSelected($event: Event): void {
