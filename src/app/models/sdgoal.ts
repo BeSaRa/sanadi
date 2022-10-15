@@ -78,4 +78,8 @@ export class SDGoal extends BaseModel<SDGoal, SDGoalService> {
   updateStatus(newStatus: CommonStatusEnum): any {
     return this.service.updateStatus(this.id, newStatus);
   }
+
+  isActive(): boolean {
+    return this.status === CommonStatusEnum.ACTIVATED;
+  }
 }

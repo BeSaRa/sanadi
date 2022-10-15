@@ -109,6 +109,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   validateStartTrainingAndEndRegistrationDates$: Subject<void> = new Subject<void>();
   isValidPastTrainingStartDate$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   isValidPastRegistrationEndDate$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  internalUserControls: UntypedFormControl[] = [];
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<TrainingProgram>,
               public lang: LangService,
@@ -427,6 +428,38 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
     };
   }
 
+  get trainingTopicsControl(): UntypedFormControl {
+    return this.form.get('trainingTopics') as UntypedFormControl;
+  }
+
+  get durationInDaysControl(): UntypedFormControl {
+    return this.form.get('durationInDays') as UntypedFormControl;
+  }
+
+  get durationInHoursControl(): UntypedFormControl {
+    return this.form.get('durationInHours') as UntypedFormControl;
+  }
+
+  get averageDurationInHoursControl(): UntypedFormControl {
+    return this.form.get('averageDurationInHours') as UntypedFormControl;
+  }
+
+  get trainingLangControl(): UntypedFormControl {
+    return this.form.get('trainingLang') as UntypedFormControl;
+  }
+
+  get numberOfSeatsControl(): UntypedFormControl {
+    return this.form.get('numberOfSeats') as UntypedFormControl;
+  }
+
+  get totalTrainingCostControl(): UntypedFormControl {
+    return this.form.get('totalTrainingCost') as UntypedFormControl;
+  }
+
+  get commentsControl(): UntypedFormControl {
+    return this.form.get('comments') as UntypedFormControl;
+  }
+
   get trainingStartDateControl(): UntypedFormControl {
     return this.form.get('startDate') as UntypedFormControl;
   }
@@ -458,6 +491,24 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
       this.applyValidationForPastDatesOnAllDateInputs();
     }
     this._buildDatepickerControlsMap();
+    this._handleInternalUserValidations();
+  }
+
+  private _handleInternalUserValidations(): void {
+    this.internalUserControls = [
+      this.trainingTopicsControl,
+      this.durationInDaysControl,
+      this.durationInHoursControl,
+      this.averageDurationInHoursControl,
+      this.trainingLangControl,
+      this.numberOfSeatsControl,
+      this.totalTrainingCostControl,
+      this.commentsControl
+    ];
+    this.internalUserControls.forEach((control)=> {
+      control.removeValidators(CustomValidators.required);
+      control.updateValueAndValidity();
+    })
   }
 
   beforeSave(model: TrainingProgram, form: UntypedFormGroup): Observable<boolean> | boolean {
@@ -599,6 +650,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   }
 
   saveDisabled() {
+    console.log(this.form.controls);
     return this.form.invalid || this.model.targetOrganizationListIds.length <= 0 || this.model.trainerListIds.length <= 0;
   }
 

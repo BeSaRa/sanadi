@@ -7,12 +7,11 @@ import {UntypedFormControl} from '@angular/forms';
 import {AttachmentTypeService} from '@app/services/attachment-type.service';
 import {DocumentService} from '@app/services/document.service';
 import {DialogService} from '@app/services/dialog.service';
-import {ConfigurationService} from '@app/services/configuration.service';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {ToastService} from '@app/services/toast.service';
 import {TableComponent} from '@app/shared/components/table/table.component';
 import {AttachmentTypeServiceData} from '@app/models/attachment-type-service-data';
-import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
+import {FileExtensionsEnum, FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 import {AdminResult} from '@app/models/admin-result';
 import {GridName, ItemId} from '@app/types/types';
 import {EmployeeService} from '@services/employee.service';
@@ -68,6 +67,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
   selectedFile?: FileNetDocument;
 
   loadedAttachments: Record<number, FileNetDocument> = {};
+  allowedExtensions: string[] = [FileExtensionsEnum.PDF];
 
   private selectedIndex!: number;
 
@@ -89,7 +89,6 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
               private dialog: DialogService,
               private toast: ToastService,
               private employeeService: EmployeeService,
-              private configurationService: ConfigurationService,
               private attachmentTypeService: AttachmentTypeService) {
     this.attachmentTypeService.attachmentsComponent = this;
   }
@@ -206,7 +205,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
       this.dialog.error(
         this.lang.map
           .msg_only_those_files_allowed_to_upload
-          .change({files: this.configurationService.CONFIG.ALLOWED_FILE_TYPES_TO_UPLOAD.join(',')})
+          .change({files: this.allowedExtensions.join(',')})
       );
       input.value = '';
       return;

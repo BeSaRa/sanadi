@@ -1491,5 +1491,7 @@ export interface ILanguageKeys {
   msg_launch_missing_mandatory_attachments: string;
   attachment_other: string;
   attachment_other_desc: string;
+  public_menu: string;
+  private_menu: string;
   procedures: string;
 }

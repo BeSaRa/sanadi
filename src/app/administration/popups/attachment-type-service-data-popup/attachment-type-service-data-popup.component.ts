@@ -20,6 +20,7 @@ import {CustomProperty} from '@app/models/custom-property';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {CustomPropertyTypes} from '@app/enums/custom-property-types';
 import {CommonUtils} from '@helpers/common-utils';
+import {UserTypes} from '@app/enums/user-types.enum';
 
 @Component({
   selector: 'attachment-type-service-data-popup',
@@ -56,7 +57,7 @@ export class AttachmentTypeServiceDataPopupComponent implements OnInit {
     this.operation = data.operation;
     this.model = data.model;
     this.existingList = data.existingList;
-    this.attachmentTypeUsersList = lookupService.listByCategory.UserType;
+    this.attachmentTypeUsersList = lookupService.listByCategory.UserType.filter(x => x.lookupKey !== UserTypes.INTEGRATION_USER);
   }
 
   ngOnInit(): void {

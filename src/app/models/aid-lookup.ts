@@ -101,7 +101,11 @@ export class AidLookup extends BaseModel<AidLookup, AidLookupService> {
     return this.service.openAuditLogsById(this.id);
   }
 
+  isActive(): boolean {
+    return Number(this.status) === AidLookupStatusEnum.ACTIVE;
+  }
+
   convertToAdminResult(): AdminResult {
-    return AdminResult.createInstance({arName: this.arName, enName: this.enName, id: this.id, parent: this.parent});
+    return AdminResult.createInstance({arName: this.arName, enName: this.enName, id: this.id, parent: this.parent, status: this.status, disabled: !this.isActive()});
   }
 }

@@ -10,6 +10,7 @@ export class AdminResult {
   lookupKey?: number;
   status?: number; // used when changing lookup/database record to admin-result
   fnId?: string;
+  disabled?: boolean; // used when changing lookup/database record to admin-result and bind to disabled property for dropdown
 
   private langService: LangService;
 

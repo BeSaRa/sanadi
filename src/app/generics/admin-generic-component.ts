@@ -8,7 +8,7 @@ import { CrudWithDialogGenericService } from "@app/generics/crud-with-dialog-gen
 import { CommonStatusEnum } from '@app/enums/common-status.enum';
 import { PageEvent } from "@contracts/page-event";
 import { CrudServiceInterface } from "@contracts/crud-service-interface";
-import {Permissions} from '@app/enums/Permissions';
+import {PermissionsEnum} from '@app/enums/permissions-enum';
 
 @Directive()
 export abstract class AdminGenericComponent<M extends { id: number }, S extends CrudWithDialogGenericService<M>> implements OnInit, OnDestroy {
@@ -37,7 +37,7 @@ export abstract class AdminGenericComponent<M extends { id: number }, S extends 
   // common status enum
   commonStatusEnum = CommonStatusEnum;
   // permissions enum
-  permissionsEnum = Permissions;
+  permissionsEnum = PermissionsEnum;
 
   usePagination: boolean = false;
   count: number = 0;

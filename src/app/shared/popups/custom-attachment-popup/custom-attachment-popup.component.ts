@@ -1,7 +1,7 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {LangService} from '@services/lang.service';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
-import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
+import {FileExtensionsEnum, FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 import {FileNetDocument} from '@app/models/file-net-document';
 import {UntypedFormControl} from '@angular/forms';
 import {CustomAttachmentDataContract} from '@contracts/custom-attachment-data-contract';
@@ -10,7 +10,6 @@ import {of, Subject} from 'rxjs';
 import {map, switchMap, takeUntil} from 'rxjs/operators';
 import {AttachmentTypeServiceData} from '@app/models/attachment-type-service-data';
 import {CaseModel} from '@app/models/case-model';
-import {ConfigurationService} from '@services/configuration.service';
 import {ToastService} from '@services/toast.service';
 import {DialogService} from '@services/dialog.service';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
@@ -38,9 +37,9 @@ export class CustomAttachmentPopupComponent implements OnInit, OnDestroy {
   itemId!: string;
   selectedFile!: FileNetDocument;
   selectedIndex!: number;
+  allowedExtensions: string[] = [FileExtensionsEnum.PDF];
 
   constructor(public lang: LangService,
-              private configurationService: ConfigurationService,
               private toast: ToastService,
               private dialog: DialogService,
               private employeeService: EmployeeService,
@@ -85,7 +84,7 @@ export class CustomAttachmentPopupComponent implements OnInit, OnDestroy {
       this.dialog.error(
         this.lang.map
           .msg_only_those_files_allowed_to_upload
-          .change({files: this.configurationService.CONFIG.ALLOWED_FILE_TYPES_TO_UPLOAD.join(',')})
+          .change({files: this.allowedExtensions.join(',')})
       );
       input.value = '';
       return;

@@ -115,16 +115,4 @@ export class InternalDepartmentService extends CrudWithDialogGenericService<Inte
           return of(new BlobModel(new Blob([], { type: 'error' }), this.domSanitizer));
         })));
   }
-
-  updateStatus(departmentId: number, newStatus: CommonStatusEnum) {
-    return newStatus === CommonStatusEnum.ACTIVATED ? this._activate(departmentId) : this._deactivate(departmentId);
-  }
-
-  private _activate(departmentId: number): Observable<any> {
-    return this.http.put<any>(this._getServiceURL() + '/' + departmentId + '/activate', {});
-  }
-
-  private _deactivate(departmentId: number): Observable<any> {
-    return this.http.put<any>(this._getServiceURL() + '/' + departmentId + '/de-activate', {});
-  }
 }

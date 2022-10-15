@@ -4,7 +4,7 @@ import { ServicesGuard } from "@app/guards/services.guard";
 import { ServiceItemResolver } from "@app/resolvers/service-item.resolver";
 import { EServiceComponentWrapperComponent } from "@app/shared/components/e-service-component-wrapper/e-service-component-wrapper.component";
 import { RemittanceComponent } from "./remittance.component";
-import {EServicePermissions} from '@app/enums/e-service-permissions';
+import {EServicePermissionsEnum} from '@app/enums/e-service-permissions-enum';
 
 const routes: Routes = [
   { path: "", component: RemittanceComponent },
@@ -14,7 +14,7 @@ const routes: Routes = [
     canActivate: [ServicesGuard],
     resolve: { info: ServiceItemResolver },
     data: {
-      permissionKey: EServicePermissions.CUSTOMS_EXEMPTION_REMITTANCE,
+      permissionKey: EServicePermissionsEnum.CUSTOMS_EXEMPTION_REMITTANCE,
       configPermissionGroup: null,
       checkAnyPermission: false,
       render: "CustomsExemptionComponent",

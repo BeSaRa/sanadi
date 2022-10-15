@@ -1,14 +1,15 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot, UrlTree} from '@angular/router';
 import {Observable, of} from 'rxjs';
-import {EmployeeService} from "@app/services/employee.service";
-import {DialogService} from "@app/services/dialog.service";
-import {LangService} from "@app/services/lang.service";
-import {ConfigurationService} from "@app/services/configuration.service";
-import {CommonUtils} from "@app/helpers/common-utils";
-import {switchMap, tap} from "rxjs/operators";
-import {INavigatedItem} from "@app/interfaces/inavigated-item";
-import {EncryptionService} from "@app/services/encryption.service";
+import {EmployeeService} from '@app/services/employee.service';
+import {DialogService} from '@app/services/dialog.service';
+import {LangService} from '@app/services/lang.service';
+import {CommonUtils} from '@app/helpers/common-utils';
+import {switchMap, tap} from 'rxjs/operators';
+import {INavigatedItem} from '@app/interfaces/inavigated-item';
+import {EncryptionService} from '@app/services/encryption.service';
+import {PermissionGroupsEnum} from '@app/enums/permission-groups-enum';
+import {StaticAppResourcesService} from '@services/static-app-resources.service';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +22,7 @@ export class ServicesGuard implements CanActivate {
               private dialogService: DialogService,
               private langService: LangService,
               private encrypt: EncryptionService,
-              private configService: ConfigurationService) {
+              private staticResourcesService: StaticAppResourcesService) {
   }
 
   canActivate(
@@ -33,8 +34,7 @@ export class ServicesGuard implements CanActivate {
       checkAnyPermission: boolean = route.data.checkAnyPermission,
       permissions: string | string[] = '';
     if (CommonUtils.isValidValue(permissionGroup)) {
-      // @ts-ignore
-      permissions = this.configService.CONFIG[permissionGroup] || '';
+      permissions = this.staticResourcesService.getPermissionsListByGroup(permissionGroup as unknown as PermissionGroupsEnum) || '';
     }
     if (CommonUtils.isValidValue(permissionKey)) {
       if (typeof permissionKey === 'string') {

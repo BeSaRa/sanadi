@@ -1,14 +1,16 @@
 import {Injectable} from '@angular/core';
 import {FactoryService} from './factory.service';
 import {ConfigurationService} from './configuration.service';
-import {IAppUrls} from '../interfaces/i-app-urls';
-import {forEach as _forEach, some as _some} from 'lodash';
+import {IAppUrls} from '@contracts/i-app-urls';
+import {Observable} from 'rxjs';
+import {StaticAppResourcesService} from '@services/static-app-resources.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UrlService {
-  constructor(private config: ConfigurationService) {
+  constructor(private config: ConfigurationService,
+              private staticResourcesService: StaticAppResourcesService) {
     FactoryService.registerService('UrlService', this);
   }
 
@@ -32,16 +34,22 @@ export class UrlService {
     return UrlService.hasPrefixSlash(url) ? UrlService.removePrefixSlash((url + '').substr(1, (url + '').length)) : url;
   }
 
+  loadUrls(): Observable<IAppUrls> {
+    return this.staticResourcesService.getUrls();
+  }
+
   public prepareUrls(urls: IAppUrls): IAppUrls {
     this.URLS.BASE_URL = UrlService.removeTrailingSlash(this.config.BASE_URL);
-    _forEach(urls, (url: string, key: string) => {
-      return key !== 'BASE_URL' && (this.URLS[key] = this.addBaseUrl(url));
-    });
+    for (const key in urls) {
+      if (urls[key] !== 'BASE_URL') {
+        this.URLS[key] = this.addBaseUrl(urls[key]);
+      }
+    }
     return this.URLS;
   }
 
   private addBaseUrl(url: string): string {
-    const external = _some(this.config.CONFIG.EXTERNAL_PROTOCOLS, (protocol) => {
+    const external = (this.config.CONFIG.EXTERNAL_PROTOCOLS ?? []).some((protocol) => {
       return url.toLowerCase().indexOf(protocol) === 0;
     });
     return external ? url : this.URLS.BASE_URL + '/' + UrlService.removePrefixSlash(url);

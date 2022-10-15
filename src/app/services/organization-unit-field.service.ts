@@ -16,6 +16,7 @@ import {
   OrganizationUnitFieldPopupComponent
 } from '@app/administration/popups/organization-unit-field-popup/organization-unit-field-popup.component';
 import { Pagination } from "@app/models/pagination";
+import {CommonStatusEnum} from '@app/enums/common-status.enum';
 
 @CastResponseContainer({
   $default: {
@@ -60,5 +61,17 @@ export class OrganizationUnitFieldService extends CrudWithDialogGenericService<O
         }));
       })
     );
+  }
+
+  updateStatus(modelId: number, newStatus: CommonStatusEnum) {
+    return newStatus === CommonStatusEnum.ACTIVATED ? this._activate(modelId) : this._deactivate(modelId);
+  }
+
+  private _activate(modelId: number): Observable<any> {
+    return this.http.put<any>(this._getServiceURL() + '/' + modelId + '/activate', {});
+  }
+
+  private _deactivate(modelId: number): Observable<any> {
+    return this.http.put<any>(this._getServiceURL() + '/' + modelId + '/de-activate', {});
   }
 }

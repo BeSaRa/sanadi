@@ -1,12 +1,13 @@
-import { Injectable } from '@angular/core';
-import { MenuItem } from '../models/menu-item';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
-import { DomSanitizer } from '@angular/platform-browser';
-import { FactoryService } from './factory.service';
-import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { CastResponse } from "@decorators/cast-response";
+import {Injectable} from '@angular/core';
+import {MenuItem} from '../models/menu-item';
+import {HttpClient} from '@angular/common/http';
+import {Observable} from 'rxjs';
+import {tap} from 'rxjs/operators';
+import {DomSanitizer} from '@angular/platform-browser';
+import {FactoryService} from './factory.service';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {CastResponse} from '@decorators/cast-response';
+import {StaticAppResourcesService} from '@services/static-app-resources.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,14 +17,15 @@ export class MenuItemService {
   parents!: MenuItem[];
   private children: Map<number, MenuItem[]> = new Map<number, MenuItem[]>();
 
-  constructor(public http: HttpClient, private domSanitizer: DomSanitizer) {
+  constructor(public http: HttpClient, private domSanitizer: DomSanitizer,
+              private staticResourcesService: StaticAppResourcesService) {
     FactoryService.registerService('MenuItemService', this);
     FactoryService.registerService('DomSanitizer', domSanitizer);
   }
 
   @CastResponse(() => MenuItem, { unwrap: '', fallback: '$default' })
   private _load(): Observable<MenuItem[]> {
-    return this.http.get<MenuItem[]>('MENU.json');
+    return this.staticResourcesService.getMenuList();
   }
 
   load(prepare: boolean = true): Observable<MenuItem[]> {

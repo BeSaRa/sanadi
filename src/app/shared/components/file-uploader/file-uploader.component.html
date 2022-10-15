@@ -9,7 +9,7 @@
     #fileUploader
     [hidden]="true"
     (change)="onFileSelected($event)"
-    [accept]="allowedExtensions"
+    [accept]="allowedExtensions.join(',')"
     [multiple]="allowMultiple"
   />
   <div class="col-sm-12">

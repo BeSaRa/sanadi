@@ -4,7 +4,7 @@ import {OfficeServicesComponent} from './office-services.component';
 import {EServiceComponentWrapperComponent} from '@app/shared/components/e-service-component-wrapper/e-service-component-wrapper.component';
 import {ServicesGuard} from '@app/guards/services.guard';
 import {ServiceItemResolver} from '@app/resolvers/service-item.resolver';
-import {EServicePermissions} from '@app/enums/e-service-permissions';
+import {EServicePermissionsEnum} from '@app/enums/e-service-permissions-enum';
 
 const routes: Routes = [
   {path: '', component: OfficeServicesComponent},
@@ -14,7 +14,7 @@ const routes: Routes = [
     canActivate: [ServicesGuard],
     resolve: {info: ServiceItemResolver},
     data: {
-      permissionKey: EServicePermissions.PARTNER_APPROVAL,
+      permissionKey: EServicePermissionsEnum.PARTNER_APPROVAL,
       configPermissionGroup: null,
       checkAnyPermission: false,
       render: 'PartnerApprovalComponent'
@@ -26,7 +26,7 @@ const routes: Routes = [
     canActivate: [ServicesGuard],
     resolve: {info: ServiceItemResolver},
     data: {
-      permissionKey: EServicePermissions.INITIAL_EXTERNAL_OFFICE_APPROVAL,
+      permissionKey: EServicePermissionsEnum.INITIAL_EXTERNAL_OFFICE_APPROVAL,
       configPermissionGroup: null,
       checkAnyPermission: false,
       render: 'InitialExternalOfficeApprovalComponent'
@@ -38,7 +38,7 @@ const routes: Routes = [
     canActivate: [ServicesGuard],
     resolve: {info: ServiceItemResolver},
     data: {
-      permissionKey: EServicePermissions.FINAL_EXTERNAL_OFFICE_APPROVAL,
+      permissionKey: EServicePermissionsEnum.FINAL_EXTERNAL_OFFICE_APPROVAL,
       configPermissionGroup: null,
       checkAnyPermission: false,
       render: 'FinalExternalOfficeApprovalComponent'

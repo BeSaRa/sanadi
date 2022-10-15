@@ -5,9 +5,17 @@ import { AbstractControl } from '@angular/forms';
 import { ITabData } from '@app/interfaces/i-tab-data';
 import { ForeignCountriesProjects } from '@app/models/foreign-countries-projects';
 import { CharityOrganizationUpdate } from '@app/models/charity-organization-update';
+import {PermissionGroupsEnum} from '@app/enums/permission-groups-enum';
+import {PermissionsEnum} from '@app/enums/permissions-enum';
+import {EServicePermissionsEnum} from '@app/enums/e-service-permissions-enum';
 
 export type LangType = Record<keyof ILanguageKeys, string>;
 export type LocalizationMap = Record<keyof ILanguageKeys, Localization>;
+
+export type PermissionGroupsMapType = { [key in PermissionGroupsEnum]: (PermissionsEnum[] | EServicePermissionsEnum[] | string[]) };
+export type PermissionGroupsMapResponseType = (PermissionsEnum[] | EServicePermissionsEnum[] | string[]);
+
+export type ConfigurationMergingScope = 'limited' | 'extended' | 'open';
 
 export type customValidationTypes =
   'ENG_NUM'

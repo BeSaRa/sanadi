@@ -13,6 +13,7 @@ import { CommonService } from "@services/common.service";
 import { FollowupPermissionService } from "@services/followup-permission.service";
 import { UserTypes } from "@app/enums/user-types.enum";
 import { CastResponse } from "@decorators/cast-response";
+import {PermissionsEnum} from '@app/enums/permissions-enum';
 
 @Injectable({
   providedIn: 'root'
@@ -79,8 +80,8 @@ export class AuthService {
   login(credential: Partial<ICredentials>, external: boolean): Observable<ILoginData> {
     return this._login(credential, external).pipe(switchMap((loggedIn) => this.commonService.loadCounters().pipe(tap(counters => {
       if (loggedIn.type === UserTypes.INTERNAL) {
-        counters.flags && counters.flags.externalFollowUpPermission && this.employeeService.addFollowupPermission('EXTERNAL_FOLLOWUP')
-        counters.flags && counters.flags.internalFollowUpPermission && this.employeeService.addFollowupPermission('INTERNAL_FOLLOWUP')
+        counters.flags && counters.flags.externalFollowUpPermission && this.employeeService.addFollowupPermission(PermissionsEnum.EXTERNAL_FOLLOWUP)
+        counters.flags && counters.flags.internalFollowUpPermission && this.employeeService.addFollowupPermission(PermissionsEnum.INTERNAL_FOLLOWUP)
       }
     })).pipe(map(_ => loggedIn))))
   }

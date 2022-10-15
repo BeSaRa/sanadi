@@ -107,10 +107,6 @@ export class InternalDepartment extends BaseModel<InternalDepartment, InternalDe
     return this.getName().toLowerCase().indexOf(searchText.toLowerCase()) > -1;
   }
 
-  updateStatus(newStatus: CommonStatusEnum): any {
-    return this.service.updateStatus(this.id, newStatus);
-  }
-
   isRetired(): boolean {
     return Number(this.status) === CommonStatusEnum.RETIRED;
   }

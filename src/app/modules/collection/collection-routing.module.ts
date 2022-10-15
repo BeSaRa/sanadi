@@ -6,7 +6,7 @@ import {
 } from "@app/shared/components/e-service-component-wrapper/e-service-component-wrapper.component";
 import {ServicesGuard} from "@app/guards/services.guard";
 import {ServiceItemResolver} from "@app/resolvers/service-item.resolver";
-import {EServicePermissions} from '@app/enums/e-service-permissions';
+import {EServicePermissionsEnum} from '@app/enums/e-service-permissions-enum';
 
 const routes: Routes = [
   {path: '', component: CollectionComponent},
@@ -16,7 +16,7 @@ const routes: Routes = [
     canActivate: [ServicesGuard],
     resolve: {info: ServiceItemResolver},
     data: {
-      permissionKey: EServicePermissions.COLLECTION_APPROVAL,
+      permissionKey: EServicePermissionsEnum.COLLECTION_APPROVAL,
       configPermissionGroup: null, checkAnyPermission: false,
       render: 'CollectionApprovalComponent'
     }
@@ -27,7 +27,7 @@ const routes: Routes = [
     canActivate: [ServicesGuard],
     resolve: {info: ServiceItemResolver},
     data: {
-      permissionKey: EServicePermissions.FUNDRAISING_LICENSING,
+      permissionKey: EServicePermissionsEnum.FUNDRAISING_LICENSING,
       configPermissionGroup: null, checkAnyPermission: false,
       render: 'FundraisingComponent'
     }
@@ -38,7 +38,7 @@ const routes: Routes = [
     canActivate: [ServicesGuard],
     resolve: {info: ServiceItemResolver},
     data: {
-      permissionKey: EServicePermissions.COLLECTOR_LICENSING,
+      permissionKey: EServicePermissionsEnum.COLLECTOR_LICENSING,
       configPermissionGroup: null, checkAnyPermission: false,
       render: 'CollectorApprovalComponent'
     }

@@ -54,7 +54,7 @@ export class AdminLookup extends BaseModelAdminLookup<AdminLookup, AdminLookupSe
   }
 
   convertToAdminResult(): AdminResult {
-    return AdminResult.createInstance({ arName: this.arName, enName: this.enName, id: this.id, status: this.status });
+    return AdminResult.createInstance({ arName: this.arName, enName: this.enName, id: this.id, status: this.status, disabled: !this.isActive() });
   }
 
   isInactive(): boolean {
