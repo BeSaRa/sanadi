@@ -13,7 +13,11 @@
     [multiple]="allowMultiple"
   />
   <div class="col-sm-12">
-    <button class="btn btn-primary mb-3" (click)="openFileBrowser($event)">
+    <button
+      class="btn btn-primary mb-3"
+      [disabled]="readonly"
+      (click)="openFileBrowser($event)"
+    >
       {{ lang.map[fileInputKey] }}
     </button>
     <div *ngIf="showFileName">
