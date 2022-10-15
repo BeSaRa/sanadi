@@ -1,4 +1,6 @@
 export interface ILanguageKeys {
+  address_details: string;
+  project_addresses: string;
   you_should_add_at_least_one_foreign_project_need: string;
   project_model_foreign_countries_projects: string;
   you_should_add_at_least_one_evaluation_indicator: string;

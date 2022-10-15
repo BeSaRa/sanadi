@@ -44,6 +44,9 @@ import {AdminResult} from '@app/models/admin-result';
 import {ProjectModelForeignCountriesProject} from '@app/models/project-model-foreign-countries-project';
 import {ForeignCountriesProjectsNeed} from '@app/models/foreign-countries-projects-need';
 import {ForeignCountriesProjectsService} from '@services/foreign-countries-projects.service';
+import {ProjectAddress} from '@app/models/project-address';
+import {ICoordinates} from '@contracts/ICoordinates';
+import {CollectionItem} from '@app/models/collection-item';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -68,6 +71,13 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   pMForeignCountriesProjects: ProjectModelForeignCountriesProject[] = [];
   foreignCountriesProjectsNeeds: ForeignCountriesProjectsNeed[] = [];
   pMForeignCountriesProjectsDisplayedColumns: string[] = ['index', 'projectName', 'notes', 'actions'];
+
+  projectAddressForm!: UntypedFormGroup;
+  addProjectAddressFormActive!: boolean;
+  selectedProjectAddress!: ProjectAddress | null;
+  selectedProjectAddressIndex!: number | null;
+  projectAddresses: ProjectAddress[] = [];
+  projectAddressesDisplayedColumns: string[] = ['index', 'beneficiaryRegion', 'address', 'location', 'actions'];
 
   domainTypes: typeof DomainTypes = DomainTypes;
   countries: Country[] = [];
@@ -144,28 +154,34 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       index: 4,
       validStatus: () => (this.model && this.evaluationIndicators && this.evaluationIndicators.length > 0)
     },
+    projectAddresses: {
+      name: 'projectAddressesTab',
+      langKey: 'project_addresses',
+      index: 5,
+      validStatus: () => (this.model && this.projectAddresses && this.projectAddresses.length > 0)
+    },
     foreignCountriesProjects: {
       name: 'foreignCountriesProjectsTab',
       langKey: 'project_model_foreign_countries_projects',
-      index: 5,
+      index: 6,
       validStatus: () => (this.model && this.pMForeignCountriesProjects && this.pMForeignCountriesProjects.length > 0)
     },
     specialExplanations: {
       name: 'specialExplanationsTab',
       langKey: 'special_explanations',
-      index: 6,
+      index: 7,
       validStatus: () => this.descriptionTab.valid
     },
     comments: {
       name: 'commentsTab',
       langKey: 'comments',
-      index: 7,
+      index: 8,
       validStatus: () => true
     },
     attachments: {
       name: 'attachmentsTab',
       langKey: 'attachments',
-      index: 8,
+      index: 9,
       validStatus: () => true
     }
   };
@@ -197,6 +213,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   _initComponent(): void {
     this.loadIndicators();
     this.buildEvaluationIndicatorForm();
+    this.buildProjectAddressForm();
     this.buildForeignCountriesProjectForm();
     this.loadExitMechanisms();
     this.loadSanadiDomains();
@@ -548,6 +565,14 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     return this.summaryInfoTab.get('sustainabilityItems') as AbstractControl;
   }
 
+  get longitude(): AbstractControl {
+    return this.projectAddressForm.get('longitude')!;
+  }
+
+  get latitude(): AbstractControl {
+    return this.projectAddressForm.get('latitude')!;
+  }
+
   getPercentageSumValidation(): ValidatorFn {
     return CustomValidators.validateSum(100, 2,
       ['firstSDGoalPercentage', 'secondSDGoalPercentage', 'thirdSDGoalPercentage'],
@@ -781,7 +806,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     this._resetForm();
     this.requestType.setValue(value);
 
-    this.displayTemplateSerialField = this.requestType.value === ProjectModelRequestType.EDIT;
+    this.displayTemplateSerialField = this.requestType.value === ProjectModelRequestType.UPDATE;
     this.templateSerialControl.setValidators(CustomValidators.required);
   }
 
@@ -947,7 +972,6 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     });
   }
 
-
   buildEvaluationIndicatorForm(): void {
     this.evaluationIndicatorForm = this.fb.group({
       indicator: [null, [CustomValidators.required]],
@@ -960,6 +984,15 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     this.pMForeignCountriesProjectForm = this.fb.group({
       objectDBId: [null, [CustomValidators.required]],
       notes: [null]
+    });
+  }
+
+  buildProjectAddressForm(): void {
+    this.projectAddressForm = this.fb.group({
+      beneficiaryRegion: [null, [CustomValidators.required]],
+      address: [null],
+      latitude: [{value: null, disabled: true}, [CustomValidators.required]],
+      longitude: [{value: null, disabled: true}, [CustomValidators.required]]
     });
   }
 
@@ -1117,5 +1150,106 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       }
     }
     return false;
+  }
+
+  ///////// project addresses functionality
+  openAddProjectAddressForm() {
+    this.addProjectAddressFormActive = true;
+    this.selectedProjectAddress = new ProjectAddress();
+  }
+
+  _saveProjectAddress(projectAddress: ProjectAddress) {
+    if (this.selectedProjectAddressIndex === null) {
+      if (!this.isExistProjectAddressInCaseOfAdd(this.projectAddresses, projectAddress)) {
+        this.projectAddresses = this.projectAddresses.concat(projectAddress);
+        this.resetProjectAddressForm();
+        this.addProjectAddressFormActive = false;
+      } else {
+        this.dialog.error(this.lang.map.selected_item_already_exists);
+      }
+    } else {
+      if (!this.isExistProjectAddressInCaseOfEdit(this.projectAddresses, projectAddress, this.selectedProjectAddressIndex!)) {
+        let newList = this.projectAddresses.slice();
+        newList.splice(this.selectedProjectAddressIndex!, 1);
+        newList.splice(this.selectedProjectAddressIndex!, 0, projectAddress);
+        this.projectAddresses = newList;
+        this.resetProjectAddressForm();
+        this.addProjectAddressFormActive = false;
+      } else {
+        this.dialog.error(this.lang.map.selected_item_already_exists);
+      }
+    }
+  }
+
+  selectProjectAddress(event: MouseEvent, model: ProjectAddress) {
+    this.addProjectAddressFormActive = true;
+    event.preventDefault();
+    this.selectedProjectAddress = model;
+    this.projectAddressForm.patchValue(this.selectedProjectAddress!);
+    this.selectedProjectAddressIndex = this.projectAddresses
+      .findIndex(x => x.beneficiaryRegion === model.beneficiaryRegion && x.address === model.address);
+  }
+
+  saveProjectAddress() {
+    console.log('form', this.projectAddressForm);
+    const projectAddress = new ProjectAddress().clone(this.projectAddressForm.getRawValue());
+
+    this._saveProjectAddress(projectAddress);
+  }
+
+  cancelAddProjectAddress() {
+    this.resetProjectAddressForm();
+    this.addProjectAddressFormActive = false;
+  }
+
+  resetProjectAddressForm() {
+    this.selectedProjectAddress = null;
+    this.selectedProjectAddressIndex = null;
+    this.projectAddressForm.reset();
+  }
+
+  removeProjectAddress(event: MouseEvent, model: ProjectAddress) {
+    event.preventDefault();
+    this.projectAddresses = this.projectAddresses.filter(x => !(x.beneficiaryRegion === model.beneficiaryRegion && x.address === model.address));
+    this.resetProjectAddressForm();
+  }
+
+  isExistProjectAddressInCaseOfAdd(projectAddresses: ProjectAddress[], toBeAddedProjectAddress: ProjectAddress): boolean {
+    return projectAddresses.some(x => x.beneficiaryRegion === toBeAddedProjectAddress.beneficiaryRegion && x.address === toBeAddedProjectAddress.address);
+  }
+
+  isExistProjectAddressInCaseOfEdit(projectAddresses: ProjectAddress[], toBeEditedProjectAddress: ProjectAddress, selectedIndex: number): boolean {
+    for (let i = 0; i < projectAddresses.length; i++) {
+      if (i === selectedIndex) {
+        continue;
+      }
+
+      if (projectAddresses[i].beneficiaryRegion === toBeEditedProjectAddress.beneficiaryRegion && projectAddresses[i].address === toBeEditedProjectAddress.address) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  ///////// location implementation
+  openMapMarker() {
+    (this.selectedProjectAddress!).openMap(this.readonly)
+      .onAfterClose$
+      .subscribe(({ click, value }: { click: UserClickOn, value: ICoordinates }) => {
+        if (click === UserClickOn.YES) {
+          this.selectedProjectAddress!.latitude = value.latitude;
+          this.selectedProjectAddress!.longitude = value.longitude;
+          this.latitude.patchValue(value.latitude);
+          this.longitude.patchValue(value.longitude);
+        }
+      });
+  }
+
+  openLocationMap(item: CollectionItem) {
+    item.openMap(true);
+  }
+
+  isDisabledSaveAddress() {
+    return this.projectAddressForm.invalid || !CommonUtils.isValidValue(this.latitude.value) || !CommonUtils.isValidValue(this.longitude.value)
   }
 }
