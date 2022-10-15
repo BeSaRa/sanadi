@@ -17,23 +17,197 @@
     ></button>
   </div>
 </div>
-<div class="dialog-content" #dialogContent>
-  <form style="width: 800px" novalidate autocomplete="off" [formGroup]="form">
-    <div class="row">
-      <div class="col-sm-6 mb-4 position-relative">
-        <label for="arName" asteriskIfRequired="arName" class="form-label">{{
-          lang.map.lbl_arabic_name
-        }}</label>
-        <input id="arName" formControlName="arName" class="form-control" />
-        <app-field-error-message controlName="arName"></app-field-error-message>
+<div class="dialog-content" #content>
+  <tabs-list (onTabChange)="onTabChange($event)">
+    <tab
+      [name]="tabsData.basic.name"
+      [hasError]="tabsData.basic.validate()"
+      [template]="basicInfoTab"
+      [title]="lang.map.lbl_basic_info"
+    ></tab>
+  </tabs-list>
+  <ng-template #basicInfoTab [formGroup]="form">
+    <form
+      style="width: 800px"
+      novalidate
+      formGroupName="basicInfo"
+      autocomplete="off"
+    >
+      <div class="row">
+        <div class="col-sm-6 mb-4 position-relative">
+          <label for="arName" asteriskIfRequired="arName" class="form-label">{{
+            lang.map.lbl_arabic_name
+          }}</label>
+          <input
+            id="arName"
+            validationClasses="arName"
+            formControlName="arName"
+            class="form-control"
+          />
+          <app-field-error-message
+            controlName="arName"
+          ></app-field-error-message>
+        </div>
+        <div class="col-sm-6 mb-4 position-relative">
+          <label
+            for="enName"
+            asteriskIfRequired="enName"
+            validationClasses="enName"
+            class="form-label"
+            >{{ lang.map.lbl_english_name }}</label
+          >
+          <input id="enName" formControlName="enName" class="form-control" />
+          <app-field-error-message
+            controlName="enName"
+          ></app-field-error-message>
+        </div>
+        <div class="col-md-6 col-sm-12 mb-4 position-relative">
+          <label
+            class="form-label"
+            asteriskIfRequired="status"
+            for="profileType"
+            >{{ lang.map.lbl_profile_type }}</label
+          >
+          <ng-select
+            [selectOnTab]="true"
+            labelForId="profileType"
+            [clearable]="false"
+            placeholder="{{ lang.map.select }}"
+            id="profileType"
+            [notFoundText]="lang.map.msg_not_found"
+            formControlName="profileType"
+            validationClasses="profileType"
+          >
+            <ng-option value="">{{ lang.map.lbl_none }}</ng-option>
+            <ng-option
+              *ngFor="let option of profileTypes"
+              [value]="option.lookupKey"
+              [disabled]="option.isRetiredCommonStatus()"
+            >
+              {{ option.getName() }}
+            </ng-option>
+          </ng-select>
+          <app-field-error-message
+            controlName="profileType"
+          ></app-field-error-message>
+        </div>
+        <div class="col-sm-6 mb-4 position-relative">
+          <label for="arDesc" asteriskIfRequired="arDesc" class="form-label">{{
+            lang.map.lbl_description
+          }}</label>
+          <input
+            id="arDesc"
+            validationClasses="arDesc"
+            formControlName="arDesc"
+            class="form-control"
+          />
+          <app-field-error-message
+            controlName="arDesc"
+          ></app-field-error-message>
+        </div>
+
+        <div class="col-sm-6 mb-4 position-relative">
+          <label
+            for="profileCode"
+            asteriskIfRequired="profileCode"
+            class="form-label"
+            >{{ lang.map.lbl_profile_code }}</label
+          >
+          <input
+            id="profileCode"
+            formControlName="profileCode"
+            class="form-control"
+            validationClasses="profileCode"
+          />
+          <app-field-error-message
+            controlName="profileCode"
+          ></app-field-error-message>
+        </div>
+        <div class="col-md-6 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="status" for="status">{{
+            lang.map.lbl_status
+          }}</label>
+          <ng-select
+            [selectOnTab]="true"
+            labelForId="status"
+            [clearable]="false"
+            placeholder="{{ lang.map.select }}"
+            id="status"
+            [notFoundText]="lang.map.msg_not_found"
+            formControlName="status"
+            validationClasses="status"
+          >
+            <ng-option value="">{{ lang.map.lbl_none }}</ng-option>
+            <ng-option
+              *ngFor="let option of status"
+              [value]="option.lookupKey"
+              [disabled]="option.isRetiredCommonStatus()"
+            >
+              {{ option.getName() }}
+            </ng-option>
+          </ng-select>
+          <app-field-error-message
+            controlName="status"
+          ></app-field-error-message>
+        </div>
+        <div class="col-md-6 col-sm-12 mb-4 position-relative">
+          <label
+            class="form-label"
+            asteriskIfRequired="registrationAuthority"
+            for="registrationAuthority"
+            >{{ lang.map.lbl_registration_authority }}</label
+          >
+          <ng-select
+            [selectOnTab]="true"
+            labelForId="registrationAuthority"
+            [clearable]="false"
+            placeholder="{{ lang.map.select }}"
+            id="registrationAuthority"
+            [notFoundText]="lang.map.msg_not_found"
+            formControlName="registrationAuthority"
+            validationClasses="registrationAuthority"
+          >
+            <ng-option value="">{{ lang.map.lbl_none }}</ng-option>
+            <ng-option *ngFor="let option of status" [value]="option.lookupKey">
+              {{ option.getName() }}
+            </ng-option>
+          </ng-select>
+          <app-field-error-message
+            controlName="registrationAuthority"
+          ></app-field-error-message>
+        </div>
+        <div class="col-sm-6 mb-4 position-relative">
+          <label for="email" asteriskIfRequired="email" class="form-label">{{
+            lang.map.lbl_email
+          }}</label>
+          <input
+            id="email"
+            formControlName="email"
+            validationClasses="email"
+            class="form-control"
+          />
+          <app-field-error-message
+            controlName="email"
+          ></app-field-error-message>
+        </div>
       </div>
-      <div class="col-sm-6 mb-4 position-relative">
-        <label for="enName" asteriskIfRequired="enName" class="form-label">{{
-          lang.map.lbl_english_name
-        }}</label>
-        <input id="enName" formControlName="enName" class="form-control" />
-        <app-field-error-message controlName="enName"></app-field-error-message>
-      </div>
-    </div>
-  </form>
+    </form>
+  </ng-template>
+</div>
+<div class="dialog-actions">
+  <button
+    tabindex="-1"
+    (click)="displayFormValidity(null, content)"
+    tooltip="{{ lang.map.validate_fields }}"
+    class="btn btn-link"
+  >
+    <i class="mdi mdi-information-outline text-info"></i>
+  </button>
+  <div class="flex-grow-1"></div>
+  <button (click)="save$.next(null)" class="btn btn-primary">
+    {{ lang.map.btn_save }}
+  </button>
+  <button [dialogClose]="model" class="btn btn-secondary">
+    {{ lang.map.btn_close }}
+  </button>
 </div>

@@ -1451,4 +1451,8 @@ export interface ILanguageKeys {
   report_title: string;
   reject_reason: string;
   menu_profile: string;
+  lbl_profile_type: string;
+  lbl_profile_code: string;
+  lbl_registration_authority: string;
 }
+
