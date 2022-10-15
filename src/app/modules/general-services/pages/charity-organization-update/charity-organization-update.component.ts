@@ -920,6 +920,7 @@ export class CharityOrganizationUpdateComponent
       });
       this.organizationMeetings$ = this.meetingService.getMeetingsByCharityId(this.model.charityId);
 
+      this._loadEmployees(this.model.charityId);
     }
     if (this.model.logoFnId) {
       this.service.getLogo(this.model.logoFnId).subscribe(logo => {
