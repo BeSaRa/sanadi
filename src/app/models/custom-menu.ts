@@ -106,7 +106,6 @@ export class CustomMenu extends BaseModel<CustomMenu, CustomMenuService> {
         ? [
             menuURL,
             [
-              CustomValidators.pattern('URL'),
               CustomValidators.maxLength(350),
             ],
           ]
