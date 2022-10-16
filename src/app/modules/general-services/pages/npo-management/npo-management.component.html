@@ -344,7 +344,9 @@
   </ng-template>
 
   <ng-template #founderMemberTabTemplate>
-    <founder-members #founderMemberTab [list]="model?.founderMemberList || []"
+    <founder-members
+      [readonly]="readonly"
+      #founderMemberTab [list]="model?.founderMemberList || []"
       (readyEvent)="founderMemberTabStatus = $event">
     </founder-members>
   </ng-template>
