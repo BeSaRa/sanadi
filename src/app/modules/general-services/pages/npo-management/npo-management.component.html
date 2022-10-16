@@ -223,6 +223,32 @@
             class="form-control">
           <app-field-error-message controlName="phone"></app-field-error-message>
         </div>
+        <!-- fax -->
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="fax" for="fax" class="form-label">{{
+            lang.map.fax_number
+            }}</label>
+          <input id="fax" [readonly]="readonly" formControlName="fax" validationClasses="fax" class="form-control" />
+          <app-field-error-message controlName="fax"></app-field-error-message>
+        </div>
+        <!-- hotline -->
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="hotline" for="hotline" class="form-label">{{
+            lang.map.hotline
+            }}</label>
+          <input id="hotline" [readonly]="readonly" formControlName="hotline" validationClasses="hotline"
+            class="form-control" />
+          <app-field-error-message controlName="hotline"></app-field-error-message>
+        </div>
+        <!-- website -->
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="website" for="website" class="form-label">{{
+            lang.map.website
+            }}</label>
+          <input id="website" [readonly]="readonly" formControlName="website" validationClasses="website"
+            class="form-control" />
+          <app-field-error-message controlName="website"></app-field-error-message>
+        </div>
         <div class="mt-2">
           <h6>{{lang.map.lbl_national_address}}</h6>
         </div>
@@ -254,30 +280,17 @@
           <app-field-error-message controlName="buildingNumber"></app-field-error-message>
         </div>
         <!-- address -->
-        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+        <div class="col-12 mb-4 position-relative">
           <label asteriskIfRequired="address" for="address" class="form-label">{{
             lang.map.lbl_address
             }}</label>
-          <input id="address" [readonly]="readonly" formControlName="address" validationClasses="address"
-            class="form-control" />
+          <textarea id="address" [readonly]="readonly" validationClasses="address" trimInput formControlName="address"
+            class="form-control">
+          </textarea>
           <app-field-error-message controlName="address"></app-field-error-message>
         </div>
-        <!-- fax -->
-        <div class="col-sm-6 col-md-4 mb-4 position-relative">
-          <label asteriskIfRequired="fax" for="fax" class="form-label">{{
-            lang.map.fax_number
-            }}</label>
-          <input id="fax" [readonly]="readonly" formControlName="fax" validationClasses="fax" class="form-control" />
-          <app-field-error-message controlName="fax"></app-field-error-message>
-        </div>
-        <!-- website -->
-        <div class="col-sm-6 col-md-4 mb-4 position-relative">
-          <label asteriskIfRequired="website" for="website" class="form-label">{{
-            lang.map.website
-            }}</label>
-          <input id="website" [readonly]="readonly" formControlName="website" validationClasses="website"
-            class="form-control" />
-          <app-field-error-message controlName="website"></app-field-error-message>
+        <div class="mt-2">
+          <h6>{{lang.map.social_media_1.slice(0, -1)}}</h6>
         </div>
         <!-- facebook -->
         <div class="col-sm-6 col-md-4 mb-4 position-relative">
@@ -324,17 +337,7 @@
             class="form-control" />
           <app-field-error-message controlName="youTube"></app-field-error-message>
         </div>
-        <!-- hotline -->
-        <div class="col-sm-6 col-md-4 mb-4 position-relative">
-          <label asteriskIfRequired="hotline" for="hotline" class="form-label">{{
-            lang.map.hotline
-            }}</label>
-          <input id="hotline" [readonly]="readonly" formControlName="hotline" validationClasses="hotline"
-            class="form-control" />
-          <app-field-error-message controlName="hotline"></app-field-error-message>
-        </div>
         <div class="col-12">
-          <h6>{{lang.map.contact_officers}}</h6>
           <npo-contact-officer #contactOfficersTab [list]="model?.contactOfficerList || []"
             (readyEvent)="contactOfficersTabStatus = $event">
           </npo-contact-officer>
@@ -344,9 +347,7 @@
   </ng-template>
 
   <ng-template #founderMemberTabTemplate>
-    <founder-members
-      [readonly]="readonly"
-      #founderMemberTab [list]="model?.founderMemberList || []"
+    <founder-members [readonly]="readonly" #founderMemberTab [list]="model?.founderMemberList || []"
       (readyEvent)="founderMemberTabStatus = $event">
     </founder-members>
   </ng-template>
