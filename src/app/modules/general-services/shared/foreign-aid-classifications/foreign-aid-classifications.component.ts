@@ -126,7 +126,7 @@ export class ForeignAidClassificationsComponent
   columns = ['aidClassification', 'domain', 'mainUNOCHACategory', 'subUNOCHACategory', 'mainDACCategory', 'subDACCategory', 'actions'];
 
   protected _initComponent(): void {
-    this.controls = this.baseControls;
+    this.controls = [...this.baseControls];
     let fg: any = {
       domain: [
         this.model.domain,

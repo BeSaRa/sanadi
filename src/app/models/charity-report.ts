@@ -97,15 +97,16 @@ export class CharityReport extends BaseModel<
   }
   buildSupportForm(controls = true) {
     const mainForm = this.buildForm();
-    const { category, subject } = this;
+    const { category, subject, procedures } = this;
     return {
       ...mainForm,
       category: controls ? [category, [CustomValidators.required]] : category,
       subject: controls ? [subject, [CustomValidators.required, CustomValidators.maxLength(1000)]] : subject,
+      procedures: controls ? [procedures, [CustomValidators.required, CustomValidators.maxLength(1000)]] : procedures
     };
   }
   buildFormWithSubject() {
-    const { category, ...form } = this.buildSupportForm();
+    const { category, procedures, ...form } = this.buildSupportForm();
     return form;
   }
   toCharityOrganizationUpdate() {

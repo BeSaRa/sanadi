@@ -25,6 +25,7 @@ import { SaveTypes } from '@app/enums/save-types';
 import { UserClickOn } from '@app/enums/user-click-on.enum';
 import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
 import { ListModelComponent } from '@app/generics/ListModel-component';
+import { CommonUtils } from '@app/helpers/common-utils';
 import { DateUtils } from '@app/helpers/date-utils';
 import { ControlWrapper } from '@app/interfaces/i-control-wrapper';
 import { IKeyValue } from '@app/interfaces/i-key-value';
@@ -482,7 +483,7 @@ export class CharityOrganizationUpdateComponent
     }
 
     let caseStatus = this.model.getCaseStatus();
-    if (caseStatus == CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.FINAL_REJECTION) {
+    if (caseStatus == CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.FINAL_REJECTION || this.employeeService.getInternalDepartment()?.code === 'LCN') {
       this.readonly = true;
       return;
     }
@@ -546,6 +547,7 @@ export class CharityOrganizationUpdateComponent
           this.form.get('charityId')?.disable();
 
         }
+        CommonUtils.displayFormValidity(this.form, 'main-content')
       })
 
 
@@ -633,7 +635,6 @@ export class CharityOrganizationUpdateComponent
       return;
     }
     const charity = this.charityOrganizations.find(e => e.id === id)!;
-    console.log({ charity })
     const updateSection = this.requestTypeForm.value;
     if (updateSection === this.RequestTypes.META_DATA) {
       const model = this.charityOrganizationService.getById(id);
@@ -686,8 +687,8 @@ export class CharityOrganizationUpdateComponent
       this.goveranceDocumentService.getByCharityId(id).subscribe(m => {
         this._updateForm(m[0].toCharityOrgnizationUpdate());
       });
-/*       this.organizationMeetings$ = this.meetingService.search({ organizationId: id });
- */    } else if (
+      this.organizationMeetings$ = this.meetingService.getMeetingsByCharityId(id);
+    } else if (
       updateSection === this.RequestTypes.COORDINATION_AND_CONTROL_REPORTS
     ) {
       this.charityReportService.getByCharityId(id).subscribe((m) => {
@@ -886,9 +887,8 @@ export class CharityOrganizationUpdateComponent
       this.toast.success(this.lang.map.request_has_been_saved_successfully);
     }
     if (this.logoFile) {
-      this.charityOrganizationService.saveLogo(this.model.charityId, this.logoFile!).subscribe(id => {
-        console.log(id);
-        this.model!.logoId = id;
+      this.service.saveLogo(this.model.id, this.logoFile!).subscribe(id => {
+        this.model!.logoFnId = id;
         this.model?.save().subscribe();
       });
     }
@@ -918,10 +918,12 @@ export class CharityOrganizationUpdateComponent
       this.externalOffices$ = this.finalOfficeApproval.licenseSearch({
         organizationId: this.model.charityId,
       });
-/*       this.organizationMeetings$ = this.meetingService.search({ organizationId: this.model.charityId });
- */    }
-    if (this.model.logoId) {
-      this.charityOrganizationService.getLogoBy({ id: this.model.logoId }).subscribe(logo => {
+      this.organizationMeetings$ = this.meetingService.getMeetingsByCharityId(this.model.charityId);
+
+      this._loadEmployees(this.model.charityId);
+    }
+    if (this.model.logoFnId) {
+      this.service.getLogo(this.model.logoFnId).subscribe(logo => {
         if (logo.blob.size === 0) {
           this.loadedLogo = undefined;
           return;
@@ -930,8 +932,8 @@ export class CharityOrganizationUpdateComponent
       });
     }
     if (this.requestTypeForm.value || (this.model.updateSection === this.RequestTypes.META_DATA)) {
-      this.metaDataForm.patchValue(model!.buildMetaDataForm(false));
-      this.contactInformationForm.patchValue(
+      this.metaDataForm?.patchValue(model!.buildMetaDataForm(false));
+      this.contactInformationForm?.patchValue(
         model!.buildContactInformationForm(false)
       );
     }
