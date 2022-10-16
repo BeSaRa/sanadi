@@ -2,7 +2,7 @@
   <label class="form-label">{{lang.map[labelKey]}}<span class="text-danger"
                                                                   *ngIf="isRequired"> * </span></label>
   <input type="file" class="input-file" #fileUploader [hidden]="true" (change)="onFileSelected($event)"
-         [accept]="allowedExtensions" [multiple]="allowMultiple">
+         [accept]="allowedExtensions.join(',')" [multiple]="allowMultiple">
   <div class="col-sm-12">
     <button class="btn btn-primary mb-3"
             (click)="openFileBrowser($event)">{{lang.map[fileInputKey]}}</button>

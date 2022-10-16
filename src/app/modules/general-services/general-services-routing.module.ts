@@ -4,7 +4,7 @@ import { GeneralServicesComponent } from './general-services.component';
 import { EServiceComponentWrapperComponent } from '@app/shared/components/e-service-component-wrapper/e-service-component-wrapper.component';
 import { ServicesGuard } from '@app/guards/services.guard';
 import { ServiceItemResolver } from '@app/resolvers/service-item.resolver';
-import { EServicePermissions } from '@app/enums/e-service-permissions';
+import { EServicePermissionsEnum } from '@app/enums/e-service-permissions-enum';
 import { ForeignCountriesProjectsComponent } from './pages/foreign-countries-projects/foreign-countries-projects.component';
 
 const routes: Routes = [
@@ -14,7 +14,7 @@ const routes: Routes = [
     canActivate: [ServicesGuard],
     resolve: { info: ServiceItemResolver },
     data: {
-      permissionKey: EServicePermissions.INQUIRY,
+      permissionKey: EServicePermissionsEnum.INQUIRY,
       configPermissionGroup: null,
       checkAnyPermission: false,
       render: 'InquiryComponent'
@@ -25,7 +25,7 @@ const routes: Routes = [
     canActivate: [ServicesGuard],
     resolve: { info: ServiceItemResolver },
     data: {
-      permissionKey: EServicePermissions.CONSULTATION,
+      permissionKey: EServicePermissionsEnum.CONSULTATION,
       configPermissionGroup: null,
       checkAnyPermission: false,
       render: 'ConsultationComponent'
@@ -36,7 +36,7 @@ const routes: Routes = [
     canActivate: [ServicesGuard],
     resolve: { info: ServiceItemResolver },
     data: {
-      permissionKey: EServicePermissions.EXTERNAL_ORG_AFFILIATION_REQUEST,
+      permissionKey: EServicePermissionsEnum.EXTERNAL_ORG_AFFILIATION_REQUEST,
       configPermissionGroup: null,
       checkAnyPermission: false,
       render: 'ExternalOrgAffiliationComponent'
@@ -47,7 +47,7 @@ const routes: Routes = [
     canActivate: [ServicesGuard],
     resolve: { info: ServiceItemResolver },
     data: {
-      permissionKey: EServicePermissions.INTERNATIONAL_COOPERATION,
+      permissionKey: EServicePermissionsEnum.INTERNATIONAL_COOPERATION,
       configPermissionGroup: null,
       checkAnyPermission: false,
       render: 'InternationalCooperationComponent'
@@ -58,7 +58,7 @@ const routes: Routes = [
     canActivate: [ServicesGuard],
     resolve: { info: ServiceItemResolver },
     data: {
-      permissionKey: EServicePermissions.EMPLOYMENT,
+      permissionKey: EServicePermissionsEnum.EMPLOYMENT,
       configPermissionGroup: null,
       checkAnyPermission: false,
       render: 'EmploymentComponent'
@@ -69,7 +69,7 @@ const routes: Routes = [
     canActivate: [ServicesGuard],
     resolve: { info: ServiceItemResolver },
     data: {
-      permissionKey: EServicePermissions.FOREIGN_COUNTRIES_PROJECTS,
+      permissionKey: EServicePermissionsEnum.FOREIGN_COUNTRIES_PROJECTS,
       configPermissionGroup: null,
       checkAnyPermission: false,
       render: 'ForeignCountriesProjectsComponent'
@@ -80,7 +80,7 @@ const routes: Routes = [
     canActivate: [ServicesGuard],
     resolve: { info: ServiceItemResolver },
     data: {
-      permissionKey: EServicePermissions.COORDINATION_WITH_ORGANIZATION_REQUEST,
+      permissionKey: EServicePermissionsEnum.COORDINATION_WITH_ORGANIZATION_REQUEST,
       configPermissionGroup: null,
       checkAnyPermission: false,
       render: 'CoordinationWithOrganizationsRequestComponent'
@@ -92,7 +92,7 @@ const routes: Routes = [
     canActivate: [ServicesGuard],
     resolve: {info: ServiceItemResolver},
     data: {
-      permissionKey: EServicePermissions.NPO_MANAGEMENT,
+      permissionKey: EServicePermissionsEnum.NPO_MANAGEMENT,
       configPermissionGroup: null,
       checkAnyPermission: false,
       render: 'NpoManagementComponent'
@@ -103,7 +103,7 @@ const routes: Routes = [
     canActivate: [ServicesGuard],
     resolve: { info: ServiceItemResolver },
     data: {
-      permissionKey: EServicePermissions.CHARITY_ORGANIZATION_UPDATE,
+      permissionKey: EServicePermissionsEnum.CHARITY_ORGANIZATION_UPDATE,
       configPermissionGroup: null,
       checkAnyPermission: false,
       render: 'CharityOrganizationUpdateComponent'
@@ -114,7 +114,7 @@ const routes: Routes = [
     canActivate: [ServicesGuard],
     resolve: {info: ServiceItemResolver},
     data: {
-      permissionKey: EServicePermissions.AWARENESS_ACTIVITY_SUGGESTION,
+      permissionKey: EServicePermissionsEnum.AWARENESS_ACTIVITY_SUGGESTION,
       configPermissionGroup: null,
       checkAnyPermission: false,
       render: 'AwarenessActivitySuggestionComponent'

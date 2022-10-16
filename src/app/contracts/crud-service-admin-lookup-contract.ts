@@ -14,7 +14,11 @@ export interface CrudServiceAdminLookupContract<T> {
 
   getById(modelId: number, typeId: AdminLookupTypeEnum): Observable<T>;
 
-  paginate(options: PaginationContract, typeId: AdminLookupTypeEnum): Observable<Pagination<T[]>>
+  paginate(options: PaginationContract, typeId: AdminLookupTypeEnum): Observable<Pagination<T[]>>;
 
-  paginateComposite(options: PaginationContract, typeId: AdminLookupTypeEnum): Observable<Pagination<T[]>>
+  paginateComposite(options: PaginationContract, typeId: AdminLookupTypeEnum): Observable<Pagination<T[]>>;
+
+  loadByParentId(typeId: AdminLookupTypeEnum, parentId: number): Observable<T[]>;
+
+  loadByParentIdPaging(options: PaginationContract, typeId: AdminLookupTypeEnum, parentId: number): Observable<Pagination<T[]>>;
 }

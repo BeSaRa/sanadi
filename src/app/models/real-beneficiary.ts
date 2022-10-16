@@ -156,7 +156,7 @@ export class RealBeneficiary extends SearchableCloneable<RealBeneficiary> {
         ? [startDate, [CustomValidators.required]]
         : startDate,
       lastUpdateDate: controls
-        ? [lastUpdateDate, [CustomValidators.required]]
+        ? [lastUpdateDate,]
         : lastUpdateDate,
       passportExpiryDate: controls ? [passportExpiryDate, [CustomValidators.required]] : passportExpiryDate
     };

@@ -1454,5 +1454,48 @@ export interface ILanguageKeys {
   lbl_profile_type: string;
   lbl_profile_code: string;
   lbl_registration_authority: string;
+  all_employees: string;
+  lbl_add_x: string;
+  lbl_edit_x: string;
+  lbl_children_x: string;
+  email_for_working_authority: string;
+  phone_for_working_authority: string;
+  job_title_occupied_date: string;
+  decision_category: string;
+  decision_reference_number: string;
+  report_subject: string;
+  bylaw_name: string;
+
+  lookup_work_field: string; // don't delete or change because it's map for lookup
+  lookup_dac: string; // don't delete or change because it's map for lookup
+  lookup_ocha: string; // don't delete or change because it's map for lookup
+  lookup_activity_type: string; // don't delete or change because it's map for lookup
+  lookup_template_indicator: string; // don't delete or change because it's map for lookup
+  lookup_exit_mechanism: string; // don't delete or change because it's map for lookup
+  lookup_by_laws_classification: string; // don't delete or change because it's map for lookup
+  lookup_risk_type: string; // don't delete or change because it's map for lookup
+  lookup_risk_classification: string; // don't delete or change because it's map for lookup
+  lookup_coordination_support_classification: string; // don't delete or change because it's map for lookup
+  lookup_resolutions_issued: string; // don't delete or change because it's map for lookup
+  lookup_penalties_decisions: string; // don't delete or change because it's map for lookup
+  lookup_general_process_classification: string; // don't delete or change because it's map for lookup
+  menu_items: string;
+  menu_type: string;
+  menu_view: string;
+  menu_order: string;
+  menu_URL: string;
+  main_list: string;
+  link_settings: string;
+  sub_lists: string;
+  lbl_add_menu_item: string;
+  lbl_edit_menu_item: string;
+  err_invalid_URL: string;
+  validate_URL: string;
+  published: string;
+  msg_launch_missing_mandatory_attachments: string;
+  attachment_other: string;
+  attachment_other_desc: string;
+  public_menu: string;
+  private_menu: string;
 }
 

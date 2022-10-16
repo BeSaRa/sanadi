@@ -179,7 +179,7 @@
               formControlName="registrationDate"
               id="registrationDate"
               [options]="datepickerOptionsMap.registrationDate"
-              (click)="!isNew && openDateMenu(dpregistrationDate)"
+              (click)="isNew && openDateMenu(dpregistrationDate)"
               #dpregistrationDate="angular-mydatepicker"
               angular-mydatepicker
               validationClasses="registrationDate"
@@ -249,7 +249,7 @@
               formControlName="establishmentDate"
               id="establishmentDate"
               [options]="datepickerOptionsMap.establishmentDate"
-              (click)="!isNew && openDateMenu(dpestablishmentDate)"
+              (click)="isNew && openDateMenu(dpestablishmentDate)"
               (inputFieldChanged)="onDateChange($event)"
               #dpestablishmentDate="angular-mydatepicker"
               angular-mydatepicker

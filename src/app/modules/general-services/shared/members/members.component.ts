@@ -64,28 +64,42 @@ export class MembersComponent extends ListModelComponent<OrgMember> {
     this.controls = this.getFormControls();
     if (this.extended) {
       this.form = this.fb.group(this.model.bulildExtendedForm());
-    } else {
+    } else if (this.pageTitle === 'board_members') {
+      this.form = this.fb.group(this.model.buildExtendedBoardMembersForm());
+    }
+    else {
       this.form = this.fb.group(this.model.buildForm());
     }
     if (this.extended) {
       this.controls.push(
         {
           controlName: 'email',
-          label: this.lang.map.lbl_email,
+          label: this.lang.map.email_for_working_authority,
           type: 'text',
         },
         {
           controlName: 'phone',
-          label: this.lang.map.lbl_phone,
+          label: this.lang.map.phone_for_working_authority,
           type: 'text',
         },
+        {
+          controlName: 'joinDate',
+          label: this.lang.map.job_title_occupied_date,
+          type: 'date',
+        }
+      );
+      this.columns.push('joinDate', 'email', 'phone');
+    }
+    else if (this.pageTitle === 'board_members') {
+
+      this.controls.push(
         {
           controlName: 'joinDate',
           label: this.lang.map.first_join_date,
           type: 'date',
         }
       );
-      this.columns.push('joinDate', 'email', 'phone');
+      this.columns.push('joinDate');
     }
     this.columns.push('actions');
   }
@@ -95,7 +109,7 @@ export class MembersComponent extends ListModelComponent<OrgMember> {
     this.form.patchValue(_row);
   }
   _beforeAdd(row: OrgMember): OrgMember | null {
-    if (this._list.findIndex(e => e.identificationNumber === row.identificationNumber) !== -1) {
+    if (this._list.findIndex(e => e.identificationNumber === row.identificationNumber) !== -1 && (this.editRecordIndex === -1)) {
       this.toastr.error(this.lang.map.msg_duplicated_item);
       return null;
     }

@@ -11,6 +11,7 @@ import { CommonStatusEnum } from '@app/enums/common-status.enum';
 import { ToastService } from '@app/services/toast.service';
 import { SortEvent } from '@app/interfaces/sort-event';
 import { CommonUtils } from '@app/helpers/common-utils';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 
 @Component({
   selector: 'internal-department',
@@ -24,42 +25,19 @@ export class InternalDepartmentComponent extends AdminGenericComponent<InternalD
   commonStatusEnum = CommonStatusEnum;
 
   actions: IMenuItem<InternalDepartment>[] = [
-    // reload
-    {
-      type: 'action',
-      label: 'btn_reload',
-      icon: 'mdi-reload',
-      onClick: _ => this.reload$.next(null),
-    },
     // edit
     {
       type: 'action',
       label: 'btn_edit',
-      icon: 'mdi-pen',
+      icon: ActionIconsEnum.EDIT,
       onClick: (item) => this.edit$.next(item)
     },
     // view
     {
       type: 'action',
       label: 'view',
-      icon: 'mdi-eye',
+      icon: ActionIconsEnum.VIEW,
       onClick: (item) => this.view$.next(item)
-    },
-    // activate
-    {
-      type: 'action',
-      icon: 'mdi-list-status',
-      label: 'btn_activate',
-      onClick: (item) => this.toggleStatus(item),
-      show: () => false
-    },
-    // deactivate
-    {
-      type: 'action',
-      icon: 'mdi-list-status',
-      label: 'btn_deactivate',
-      onClick: (item) => this.toggleStatus(item),
-      show: () => false
     }
   ];
   displayedColumns: string[] = ['arName', 'enName', 'status', 'actions'];
@@ -95,29 +73,7 @@ export class InternalDepartmentComponent extends AdminGenericComponent<InternalD
       .subscribe(() => this.reload$.next(null))
   }
 
-  edit(department: InternalDepartment, event: MouseEvent) {
-    event.preventDefault();
-    this.edit$.next(department);
-  }
-
-  view(department: InternalDepartment, event: MouseEvent) {
-    event.preventDefault();
-    this.view$.next(department);
-  }
-
   filterCallback = (record: any, searchText: string) => {
     return record.search(searchText);
-  }
-
-  toggleStatus(model: InternalDepartment) {
-    let updateObservable = model.status == CommonStatusEnum.ACTIVATED ? model.updateStatus(CommonStatusEnum.DEACTIVATED) : model.updateStatus(CommonStatusEnum.ACTIVATED);
-    updateObservable.pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        this.toast.success(this.lang.map.msg_status_x_updated_success.change({ x: model.getName() }));
-        this.reload$.next(null);
-      }, () => {
-        this.toast.error(this.lang.map.msg_status_x_updated_fail.change({ x: model.getName() }));
-        this.reload$.next(null);
-      });
   }
 }

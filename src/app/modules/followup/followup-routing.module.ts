@@ -3,20 +3,20 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { PermissionGuard } from '@app/guards/permission-guard';
 import { InternalFollowupComponent } from '@app/modules/followup/pages/internal-followup/internal-followup.component';
-import { Permissions } from "@app/enums/Permissions";
+import { PermissionsEnum } from "@app/enums/permissions-enum";
 
 const routes: Routes = [
   {
     path: 'external-followup',
     component: ExternalFollowupComponent,
     canActivate: [PermissionGuard],
-    data: { permissionKey: Permissions.EXTERNAL_FOLLOWUP, configPermissionGroup: null, checkAnyPermission: false }
+    data: { permissionKey: PermissionsEnum.EXTERNAL_FOLLOWUP, configPermissionGroup: null, checkAnyPermission: false }
   },
   {
     path: 'internal-followup',
     component: InternalFollowupComponent,
     canActivate: [PermissionGuard],
-    data: { permissionKey: Permissions.INTERNAL_FOLLOWUP, configPermissionGroup: null, checkAnyPermission: false }
+    data: { permissionKey: PermissionsEnum.INTERNAL_FOLLOWUP, configPermissionGroup: null, checkAnyPermission: false }
   }
 ];
 

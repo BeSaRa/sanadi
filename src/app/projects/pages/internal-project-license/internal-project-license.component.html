@@ -118,7 +118,8 @@
                        [notFoundText]="lang.map.msg_not_found"
                        [readonly]="(isExtendOrCancelRequestType() || readonly)"
                        formControlName="domain" validationClasses="domain">
-              <ng-option *ngFor="let option of mainCategoriesList" [value]="option.id">
+              <ng-option *ngFor="let option of mainCategoriesList" [value]="option.id"
+                         [disabled]="!option.isActive()">
                 {{option.getName()}}
               </ng-option>
             </ng-select>
@@ -133,7 +134,8 @@
                        [notFoundText]="lang.map.msg_not_found"
                        [readonly]="(isExtendOrCancelRequestType() || readonly)"
                        formControlName="firstSubDomain" validationClasses="firstSubDomain">
-              <ng-option *ngFor="let option of subCategories1List" [value]="option.id">
+              <ng-option *ngFor="let option of subCategories1List" [value]="option.id"
+                         [disabled]="!option.isActive()">
                 {{option.getName()}}
               </ng-option>
             </ng-select>
@@ -147,7 +149,8 @@
                        [notFoundText]="lang.map.msg_not_found"
                        [readonly]="(isExtendOrCancelRequestType() || readonly)"
                        formControlName="secondSubDomain" validationClasses="secondSubDomain">
-              <ng-option *ngFor="let option of subCategories2List" [value]="option.id">
+              <ng-option *ngFor="let option of subCategories2List" [value]="option.id"
+                         [disabled]="!option.isActive()">
                 {{option.getName()}}
               </ng-option>
             </ng-select>
@@ -164,7 +167,7 @@
                        [readonly]="(isExtendOrCancelRequestType() || readonly)"
                        formControlName="firstSDGoal" validationClasses="firstSDGoal">
               <ng-option *ngFor="let option of goalsList"
-                         [disabled]="secondSDGoalField.value === option.id || thirdSDGoalField.value === option.id"
+                         [disabled]="!option.isActive() || secondSDGoalField.value === option.id || thirdSDGoalField.value === option.id"
                          [value]="option.id">
                 {{option.getName()}}
               </ng-option>
@@ -180,7 +183,7 @@
                        [readonly]="(isExtendOrCancelRequestType() || readonly)"
                        formControlName="secondSDGoal" validationClasses="secondSDGoal">
               <ng-option *ngFor="let option of goalsList"
-                         [disabled]="firstSDGoalField.value === option.id || thirdSDGoalField.value === option.id"
+                         [disabled]="!option.isActive() || firstSDGoalField.value === option.id || thirdSDGoalField.value === option.id"
                          [value]="option.id">
                 {{option.getName()}}
               </ng-option>
@@ -196,7 +199,7 @@
                        [readonly]="(isExtendOrCancelRequestType() || readonly)"
                        formControlName="thirdSDGoal" validationClasses="thirdSDGoal">
               <ng-option *ngFor="let option of goalsList"
-                         [disabled]="firstSDGoalField.value === option.id || secondSDGoalField.value === option.id"
+                         [disabled]="!option.isActive() || firstSDGoalField.value === option.id || secondSDGoalField.value === option.id"
                          [value]="option.id">
                 {{option.getName()}}
               </ng-option>

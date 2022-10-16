@@ -1,6 +1,8 @@
+import { CustomSubMenuPopupComponent } from './popups/custom-sub-menu-popup/custom-sub-menu-popup.component';
+import { CustomMenuPopupComponent } from './popups/custom-menu-popup/custom-menu-popup.component';
+import { CustomMenuComponent } from './pages/custom-menu/custom-menu.component';
 import { OrganizationUnitFieldPopupComponent } from './popups/organization-unit-field-popup/organization-unit-field-popup.component';
 import { NgModule } from '@angular/core';
-
 import { AdminRoutingModule } from './admin-routing.module';
 import { AdminHomeComponent } from './pages/admin-home/admin-home.component';
 import { SharedModule } from '../shared/shared.module';
@@ -36,8 +38,6 @@ import { InternalDepartmentComponent } from './pages/internal-department/interna
 import { InternalDepartmentPopupComponent, } from './popups/internal-department-popup/internal-department-popup.component';
 import { JobTitleComponent } from './pages/job-title/job-title.component';
 import { JobTitlePopupComponent } from './popups/job-title-popup/job-title-popup.component';
-import { DacOchaPopupComponent } from './popups/dac-ocha-popup/dac-ocha-popup.component';
-import { SubDacOchaPopupComponent } from './popups/sub-dac-ocha-popup/sub-dac-ocha-popup.component';
 import { UserTeamComponent } from './shared/user-team/user-team.component';
 import { UserSecurityComponent } from './shared/user-security/user-security.component';
 import { SurveyQuestionComponent } from './pages/survey-question/survey-question.component';
@@ -69,11 +69,11 @@ import { DacOchaNewPopupComponent } from './popups/dac-ocha-new-popup/dac-ocha-n
 import { VactionDatesComponent } from './pages/vaction-dates/vaction-dates.component';
 import { VacationDatesPopupComponent } from './popups/vacation-dates-popup/vacation-dates-popup.component';
 import { DacOchaListComponent } from './pages/dac-ocha-list/dac-ocha-list.component';
-import { AdminLookupComponent } from './pages/admin-lookup/admin-lookup.component';
+import { AdminLookupOldComponent } from './pages/admin-lookup-old/admin-lookup-old.component';
 import { ActivityTypeComponent } from './pages/activity-types/activity-types.component';
 import { ActivityTypesPopupComponent } from './popups/activity-types-popup/activity-types-popup.component';
-import { ProfilesComponent } from './pages/profiles/profiles.component';
-import { ProfilePopupComponent } from './popups/profile-popup/profile-popup.component';
+import { AdminLookupListComponent } from './pages/admin-lookup-list/admin-lookup-list.component';
+import { AdminLookupComponent } from './pages/admin-lookup/admin-lookup.component';
 
 @NgModule({
   declarations: [
@@ -108,8 +108,6 @@ import { ProfilePopupComponent } from './popups/profile-popup/profile-popup.comp
     InternalDepartmentPopupComponent,
     JobTitleComponent,
     JobTitlePopupComponent,
-    DacOchaPopupComponent,
-    SubDacOchaPopupComponent,
     UserTeamComponent,
     UserSecurityComponent,
     SurveyQuestionComponent,
@@ -141,11 +139,14 @@ import { ProfilePopupComponent } from './popups/profile-popup/profile-popup.comp
     VactionDatesComponent,
     VacationDatesPopupComponent,
     DacOchaListComponent,
-    AdminLookupComponent,
+    AdminLookupOldComponent,
     ActivityTypeComponent,
     ActivityTypesPopupComponent,
-    ProfilesComponent,
-    ProfilePopupComponent,
+    AdminLookupListComponent,
+    AdminLookupComponent,
+    CustomMenuComponent,
+    CustomMenuPopupComponent,
+    CustomSubMenuPopupComponent
   ],
   imports: [
     SharedModule,

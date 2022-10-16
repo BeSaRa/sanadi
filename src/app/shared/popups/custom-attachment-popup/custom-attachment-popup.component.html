@@ -48,6 +48,23 @@
           <th cdk-header-cell class="bg-primary text-white" *cdkHeaderCellDef> {{lang.map.lbl_mandatory}}</th>
           <td cdk-cell *cdkCellDef="let row"> {{row.getRequiredTranslate()}} </td>
         </ng-container>
+        <ng-container cdkColumnDef="isPublished">
+          <th cdk-header-cell class="bg-primary text-white" *cdkHeaderCellDef> {{lang.map.published}}</th>
+          <td cdk-cell *cdkCellDef="let row">
+            <span *ngIf="!canChangePublished(row)">{{row.getPublishedTranslate()}}</span>
+            <span *ngIf="canChangePublished(row)" class="form-check form-switch switch-action"
+                  style="top: auto">
+                  <input class="form-check-input" type="checkbox" [checked]="row.isPublished"
+                         (change)="row.isPublished = !row.isPublished">
+                </span>
+            <span *ngIf="canChangePublished(row)" class="form-check form-switch switch-action" style="top: auto">
+              <input class="form-check-input" type="checkbox" [checked]="row.isPublished"
+                     [disabled]="isDisabledActionButtons(row, 'publish')"
+                     *ngIf="canShowActionButtons(row, 'publish')"
+                     (click)="!disabled && handleChangePublished(row, $event)">
+            </span>
+          </td>
+        </ng-container>
         <ng-container cdkColumnDef="date">
           <th cdk-header-cell class="bg-primary text-white" *cdkHeaderCellDef> {{lang.map.creation_date}}</th>
           <td cdk-cell *cdkCellDef="let row"> {{row.createdOn|date: 'mediumDate' }} </td>
@@ -57,19 +74,23 @@
               *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
           <td cdk-cell *cdkCellDef="let row; index as itemIndex">
             <div class="d-flex gap-2">
-              <button [disabled]="disabled" [tooltip]="row.id ? lang.map.update_file : lang.map.upload_file"
+              <button [disabled]="isDisabledActionButtons(row, 'upload')"
+                      [tooltip]="row.id ? lang.map.update_file : lang.map.upload_file"
                       (click)="uploadAttachment(row , uploader)"
                       [class.btn-success]="row.id"
+                      *ngIf="canShowActionButtons(row, 'upload')"
                       class="btn btn-sm shadow-sm btn-secondary d-flex align-items-center justify-content-start">
                 <i [class.mdi-progress-upload]="row.id" [class.mdi-upload]="!row.id" class="mdi mdi-upload"></i>
               </button>
               <button [tooltip]="lang.map.view" (click)="viewFile(row)"
-                      [disabled]="!row.id"
+                      [disabled]="isDisabledActionButtons(row, 'view')"
+                      *ngIf="canShowActionButtons(row, 'view')"
                       class="btn btn-sm shadow-sm btn-info d-flex align-items-center justify-content-start">
                 <i [class.mdi-eye-off]="!row.id" [class.mdi-eye]="row.id" class="mdi text-white"></i>
               </button>
               <button [tooltip]="lang.map.btn_delete" (click)="deleteFile(row)"
-                      [disabled]="disabled"
+                      [disabled]="isDisabledActionButtons(row, 'delete')"
+                      *ngIf="canShowActionButtons(row, 'delete')"
                       class="btn btn-sm shadow-sm btn-danger d-flex align-items-center justify-content-start">
                 <i [class.mdi-delete-off]="!row.id" [class.mdi-delete]="row.id" class="mdi"></i>
               </button>
@@ -83,7 +104,8 @@
         </tr>
       </table>
     </app-table>
-    <input type="file" (change)="uploaderFileChange($event)" #uploader class="visually-hidden">
+    <input type="file" (change)="uploaderFileChange($event)" #uploader class="visually-hidden"
+           [accept]="allowedExtensions.join(',')">
     <app-paginator #paginator></app-paginator>
   </div>
 </div>

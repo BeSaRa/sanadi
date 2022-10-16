@@ -92,6 +92,16 @@ EmploymentService
       validStatus: () => true
     },
   };
+
+  formProperties = {
+    requestType: () => {
+      return this.getObservableField('requestTypeField', 'requestType');
+    },
+    category: () => {
+      return this.getObservableField('category', 'category');
+    }
+  };
+
   constructor(
     public service: EmploymentService,
     private navigationService: NavigationService,
@@ -279,7 +289,10 @@ EmploymentService
     ).subscribe((clickOn: UserClickOn) => {
       if (clickOn === UserClickOn.YES) {
         if (userInteraction) {
+          let cat = this.category.value;
+
           this.resetForm$.next();
+          this.category.setValue(cat);
           this.requestTypeField.setValue(requestTypeValue);
           this.model!.requestType = requestTypeValue;
           this.model!.employeeInfoDTOs = [];

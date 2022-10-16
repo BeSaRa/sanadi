@@ -1,7 +1,11 @@
 import {Injectable} from '@angular/core';
-import {IAppConfig} from '../interfaces/i-app-config';
+import {IAppConfig} from '@contracts/i-app-config';
 import {FactoryService} from './factory.service';
 import {range} from 'lodash';
+import {Observable} from 'rxjs';
+import {StaticAppResourcesService} from '@services/static-app-resources.service';
+import {HttpClient} from '@angular/common/http';
+import {ConfigurationMergingScope} from '@app/types/types';
 
 @Injectable({
   providedIn: 'root'
@@ -11,8 +15,50 @@ export class ConfigurationService {
   public CONFIG = {} as IAppConfig;
   static CURRENT_FULL_YEAR = (new Date()).getFullYear();
 
-  constructor() {
+  constructor(private http: HttpClient,
+              private staticResourcesService: StaticAppResourcesService) {
     FactoryService.registerService('ConfigurationService', this);
+  }
+
+  /**
+   * @description Loads the configuration from CONFIGURATION.json to override the default application configuration
+   */
+  loadConfiguration(): Observable<IAppConfig> {
+    return this.http.get<IAppConfig>('CONFIGURATION.json');
+  }
+
+  /**
+   * @description Merge the default application configuration with overridden configuration
+   * @param overridingConfig
+   */
+  mergeConfigurations(overridingConfig: Partial<IAppConfig>): IAppConfig {
+    const mergingScope: ConfigurationMergingScope = this.staticResourcesService.getConfigurationMergeScope();
+    let finalConfig: IAppConfig = this.staticResourcesService.getDefaultConfiguration() as IAppConfig;
+
+    /**
+     * if mergingScope = 'open', set all properties of final configuration as merge-able. Should be done after assigning final configuration
+     * if mergingScope = 'limited | extended', set configurable properties as merge-able. Should be done after assigning final configuration
+     */
+
+    if (mergingScope === 'open') {
+      for (const overrideKey in overridingConfig) {
+        // @ts-ignore
+        finalConfig[overrideKey] = overridingConfig[overrideKey];
+      }
+      this.staticResourcesService.setConfigurationMergingProperties(Object.keys(finalConfig)); // always set after finalConfig is set
+    } else {
+      const configurableProperties: string[] = this.staticResourcesService.getConfigurableProperties();
+
+      for (const overrideKey in overridingConfig) {
+        if (configurableProperties.includes(overrideKey)) {
+          // @ts-ignore
+          finalConfig[overrideKey] = overridingConfig[overrideKey];
+        }
+      }
+
+      this.staticResourcesService.setConfigurationMergingProperties(configurableProperties);
+    }
+    return finalConfig;
   }
 
   public setConfigurations(configurations: IAppConfig): ConfigurationService {
@@ -59,9 +105,5 @@ export class ConfigurationService {
 
   private static getYearsStart(startYear: number) {
     return range(startYear, ConfigurationService.CURRENT_FULL_YEAR + 1);
-  }
-
-  getPermissionGroup(groupName: string): string[] {
-    return this.CONFIG[groupName as keyof IAppConfig] as string[] || [];
   }
 }

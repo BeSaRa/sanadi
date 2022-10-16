@@ -2,12 +2,13 @@ import { LangService } from '@services/lang.service';
 import { FactoryService } from '@services/factory.service';
 import { ILanguageKeys } from '@contracts/i-language-keys';
 import { ConfigurationService } from '@services/configuration.service';
-import { IAppConfig } from '@contracts/i-app-config';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Cloneable } from "@app/models/cloneable";
 import { Common } from "@app/models/common";
 import { MenuItemInterceptor } from '@app/model-interceptors/menu-item-interceptor';
 import { InterceptModel } from "@decorators/intercept-model";
+import {PermissionGroupsEnum} from '@app/enums/permission-groups-enum';
+import {StaticAppResourcesService} from '@services/static-app-resources.service';
 
 const { send, receive } = new MenuItemInterceptor();
 
@@ -37,12 +38,14 @@ export class MenuItem extends Cloneable<MenuItem> {
   caseType?: number;
   counter?: keyof Common['counters']
   private domSanitizer: DomSanitizer;
+  private resourcesService: StaticAppResourcesService;
 
   constructor() {
     super()
     this.langService = FactoryService.getService('LangService');
     this.configService = FactoryService.getService('ConfigurationService');
     this.domSanitizer = FactoryService.getService('DomSanitizer');
+    this.resourcesService = FactoryService.getService('StaticAppResourcesService');
   }
 
   getName(): string {
@@ -58,7 +61,7 @@ export class MenuItem extends Cloneable<MenuItem> {
   }
 
   preparePermissionList(): void {
-    this.permissionList = this.permissionGroup ? (this.configService.CONFIG[this.permissionGroup as keyof IAppConfig] as string[] || []) : [];
+    this.permissionList = this.resourcesService.getPermissionsListByGroup(this.permissionGroup as PermissionGroupsEnum);
   }
 
   getPermissions(): string[] | string {

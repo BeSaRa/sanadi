@@ -1,5 +1,7 @@
-import { UserClickOn } from './../../../../enums/user-click-on.enum';
-import { CustomValidators } from './../../../../validators/custom-validators';
+import { AdminResult } from '@app/models/admin-result';
+import { ImplementingAgency } from '@app/models/implementing-agency';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { CustomValidators } from '@app/validators/custom-validators';
 import { UrgentInterventionAnnouncementSearchCriteria } from '@app/models/urgent-intervention-announcement-search-criteria';
 import { UrgentInterventionAnnouncementService } from '@services/urgent-intervention-announcement.service';
 import { UrgentInterventionAnnouncementResult } from '@app/models/urgent-intervention-announcement-result';
@@ -9,9 +11,7 @@ import {
   ImplementingAgencyListComponent
 } from './../../shared/implementing-agency-list/implementing-agency-list.component';
 import { ToastService } from '@app/services/toast.service';
-import { ServiceRequestTypes } from '@app/enums/service-request-types';
 import { BankAccount } from '@app/models/bank-account';
-import { AdminResult } from '@app/models/admin-result';
 import { CommonService } from '@services/common.service';
 import { UrgentInterventionFinancialRequestType } from '@app/enums/urgent-intervention-financial-request-type';
 import { OpenFrom } from '@app/enums/open-from.enum';
@@ -57,7 +57,8 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
   entitiesTabStatus: ReadinessStatus = 'READY';
   interventionAreasTabStatus: ReadinessStatus = 'READY';
   interventionFieldsTabStatus: ReadinessStatus = 'READY';
-  implementingAgencies: AdminResult[] = [];
+  implementingAgencies: ImplementingAgency[] = [];
+  implementingAgenciesAdminRes: AdminResult[] = [];
   bankAccountList: BankAccount[] = [];
   @ViewChild('interventionRegionListComponent') interventionRegionListComponentRef!: InterventionRegionListComponent;
   @ViewChild('interventionFieldListComponent') interventionFieldListComponentRef!: InterventionFieldListComponent;
@@ -75,7 +76,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
       checkTouchedDirty: false,
       isTouchedOrDirty: () => false,
       show: () => true,
-      validStatus: () => this.basicInfoTab.valid && (this.operation != OperationTypes.CREATE || !!this.selectedLicense)
+      validStatus: () => this.basicInfoTab.valid
     },
     entities: {
       name: 'entitiesTab',
@@ -263,7 +264,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
     }
 
     this.cd.detectChanges();
-    this._handleRequestTypeChange(model.requestType, false);
+    this.handleRequestTypeChange(model.requestType, false);
   }
 
   licenseSearch($event?: Event): void {
@@ -326,7 +327,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
       value.beneficiaryCountryInfo = licenseDetails.beneficiaryCountryInfo;
       value.executionCountryInfo = licenseDetails.executionCountryInfo;
       value.licenseVSID = licenseDetails.vsId;
-      this._handleRequestTypeChange(value.requestType, false);
+      this.handleRequestTypeChange(value.requestType, false);
       this._updateForm(value);
     }
   }
@@ -364,7 +365,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
     return !isAllowed;
   }
 
-  _handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false) {
+  handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false) {
     of(userInteraction).pipe(
       takeUntil(this.destroy$),
       switchMap(() => this.confirmChangeRequestType(userInteraction))
@@ -415,10 +416,14 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
   }
 
   private _loadImplementingAgenciesByAgencyType() {
-    this.commonService.loadAgenciesByAgencyTypeAndCountry(this.implementingAgencyTypeField.value, this.model?.executionCountry || 0)
-      .subscribe((result) => {
-        this.implementingAgencies = [...result];
-      });
+    if (this.isReceive) {
+      this.commonService.loadAgenciesByAgencyTypeAndCountry(this.implementingAgencyTypeField.value, this.model?.executionCountry || 0)
+        .subscribe((result) => {
+          this.implementingAgenciesAdminRes = [...result];
+        });
+    } else {
+      this.implementingAgencies = (this.model?.implementingAgencyList || []).filter(ia => ia.implementingAgencyType == this.implementingAgencyTypeField.value)
+    }
   }
 
   handleImplementingAgencyNameChanges() {
@@ -486,11 +491,11 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
   }
 
   get isTransfer() {
-    return this.requestTypeField.value == UrgentInterventionFinancialRequestType.Transfer;
+    return this.requestTypeField.value == UrgentInterventionFinancialRequestType.TRANSFER;
   }
 
   get isReceive() {
-    return this.requestTypeField.value == UrgentInterventionFinancialRequestType.Receive;
+    return this.requestTypeField.value == UrgentInterventionFinancialRequestType.RECEIVE;
   }
 
   _resetForm(): void {

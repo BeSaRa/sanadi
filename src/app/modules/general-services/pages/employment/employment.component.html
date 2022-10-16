@@ -178,6 +178,9 @@
           #ETable
           [employees]="employees"
           [actions]="[]"
+          [model]="model!"
+          [formProperties]="formProperties"
+          (attachmentHandlerEmitter)="registerAttachmentHandler($event)"
         ></app-employees-data>
       </div>
     </div>

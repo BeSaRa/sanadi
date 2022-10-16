@@ -27,6 +27,7 @@ import { CommonService } from "@services/common.service";
 import { CrudGenericService } from "@app/generics/crud-generic-service";
 import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
 import { Pagination } from '@app/models/pagination';
+import {PermissionsEnum} from '@app/enums/permissions-enum';
 
 @CastResponseContainer({
   $default: {
@@ -174,8 +175,8 @@ export class LangService extends CrudGenericService<Localization> {
           .subscribe((result) => {
             this.authService.isAuthenticatedTrigger$.next(result);
             if (result.type === UserTypes.INTERNAL) {
-              this.commonService.flags?.externalFollowUpPermission && this.employeeService.addFollowupPermission('EXTERNAL_FOLLOWUP')
-              this.commonService.flags?.internalFollowUpPermission && this.employeeService.addFollowupPermission('INTERNAL_FOLLOWUP')
+              this.commonService.flags?.externalFollowUpPermission && this.employeeService.addFollowupPermission(PermissionsEnum.EXTERNAL_FOLLOWUP)
+              this.commonService.flags?.internalFollowUpPermission && this.employeeService.addFollowupPermission(PermissionsEnum.INTERNAL_FOLLOWUP)
             }
             this.changeLanguage(lang);
             subscriber.next(lang);

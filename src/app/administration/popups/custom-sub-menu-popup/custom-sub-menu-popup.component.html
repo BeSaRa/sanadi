@@ -1,0 +1,85 @@
+<div class="dialog-toolbar bg-primary d-flex justify-content-between">
+  <h1 class="h6 text-white">{{popupTitle}}</h1>
+  <div>
+    <button type="button" class="btn btn-fullscreen btn-close-white icon-btn" tabindex="-1" aria-label="Fullscreen"
+            fullscreenBtn></button>
+    <button type="button" class="btn-close btn-close-white" tabindex="-1" [dialogClose]="model"
+            aria-label="Close"></button>
+  </div>
+</div>
+<div class="dialog-content" #dialogContent>
+  <form class="w800px" novalidate autocomplete="off" [formGroup]="form">
+    <div class="row">
+      <div class="col-sm-6 mb-4 position-relative">
+        <label asteriskIfRequired="arName" for="sub-arName" class="form-label">{{lang.map.lbl_arabic_name}}</label>
+        <input id="sub-arName" validationClasses="arName" formControlName="arName" class="form-control">
+        <app-field-error-message controlName="arName"></app-field-error-message>
+      </div>
+      <div class="col-sm-6 mb-4 position-relative">
+        <label asteriskIfRequired="enName" for="sub-enName" class="form-label">{{lang.map.lbl_english_name}}</label>
+        <input id="sub-enName" validationClasses="enName" formControlName="enName" class="form-control">
+        <app-field-error-message controlName="enName"></app-field-error-message>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6 mb-4 position-relative">
+        <label asteriskIfRequired="menuOrder" for="sub-menuOrder" class="form-label">{{lang.map.menu_order}}</label>
+        <input id="sub-menuOrder" validationClasses="menuOrder" formControlName="menuOrder" class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY">
+        <app-field-error-message controlName="menuOrder"></app-field-error-message>
+      </div>
+
+      <div class="col-sm-6 mb-4 ng-select-wrapper">
+        <label asteriskIfRequired="menuType" for="sub-menuType" class="form-label">{{lang.map.menu_type}}</label>
+        <div class="mb-3 position-relative ng-select-wrapper">
+          <ng-select validationClasses="menuType" labelForId="sub-menuType" placeholder="{{lang.map.select}}"
+                     [notFoundText]="lang.map.msg_not_found" formControlName="menuType" id="sub-menuType"
+                     appendTo="body">
+            <ng-option [value]="option.lookupKey" *ngFor="let option of menuTypes">
+              {{option.getName()}}</ng-option>
+          </ng-select>
+          <app-field-error-message controlName="menuType"></app-field-error-message>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6 mb-4 ng-select-wrapper">
+        <label asteriskIfRequired="userType" for="userType" class="form-label">{{lang.map.lbl_user_type}}</label>
+        <ng-select validationClasses="userType" labelForId="userType" placeholder="{{lang.map.select}}"
+                   [notFoundText]="lang.map.msg_not_found" formControlName="userType" id="userType" appendTo="body">
+          <ng-option [value]="option.lookupKey" *ngFor="let option of userTypes">
+            {{option.getName()}}</ng-option>
+        </ng-select>
+        <app-field-error-message controlName="userType"></app-field-error-message>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-6 mb-4 position-relative">
+        <label for="status" class="form-label" asteriskIfRequired="status">{{lang.map.lbl_status}}</label>
+        <div class="form-check form-switch form-switch-container">
+          <input class="form-check-input" type="checkbox" id="status" formControlName="status">
+          <label class="form-check-label" for="status">{{getTranslatedStatus()}}</label>
+        </div>
+        <app-field-error-message controlName="status"></app-field-error-message>
+      </div>
+      <div class="col-sm-6 mb-4 position-relative">
+        <label for="menuView" class="form-label" asteriskIfRequired="menuView">{{lang.map.menu_view}}</label>
+        <div class="form-check form-switch form-switch-container">
+          <input class="form-check-input" type="checkbox" id="menuView" formControlName="menuView">
+          <label class="form-check-label" for="menuView">{{getTranslatedMenuView()}}</label>
+        </div>
+        <app-field-error-message controlName="menuView"></app-field-error-message>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="dialog-actions">
+  <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="displayFormValidity(null, dialogContent)"
+          tooltip="{{lang.map.validate_fields}}" class="btn btn-link">
+    <i class="mdi mdi-information-outline text-info"></i>
+  </button>
+  <span class="flex-grow-1"></span>
+  <button [disabled]="form.invalid" *ngIf="saveVisible" (click)="save$.next(null)"
+          class="btn btn-primary">{{lang.map.btn_save}}</button>
+  <button [dialogClose]="model" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
+</div>

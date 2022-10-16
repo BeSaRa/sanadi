@@ -1,5 +1,5 @@
 <app-table
-  #table
+  #table attachmentHandler
   [paginator]="paginator"
   [data]="employees"
   [columns]="displayedColumns"
@@ -33,7 +33,16 @@
       </th>
       <td cdk-cell *cdkCellDef="let row">{{ getGenderName(row.gender) }}</td>
     </ng-container>
-
+    <ng-container cdkColumnDef="attachment">
+      <th cdk-header-cell *cdkHeaderCellDef class="table-actions"></th>
+      <td cdk-cell *cdkCellDef="let row" class="table-actions">
+        <button multiAttachment [formObservables]="formProperties" [model]="model" [item]="row"
+                identifier="employeeInfoDTOs" tooltip="{{lang.map.attachments}}"
+                class="btn text-primary icon-btn">
+          <i class="mdi mdi-attachment"></i>
+        </button>
+      </td>
+    </ng-container>
     <ng-container cdkColumnDef="actions" *ngIf="actions.length">
       <th cdk-header-cell *cdkHeaderCellDef>
         {{ lang.map.lbl_actions }}

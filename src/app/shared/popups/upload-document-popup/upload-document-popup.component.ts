@@ -7,7 +7,6 @@ import {UntypedFormArray, UntypedFormBuilder, UntypedFormGroup} from '@angular/f
 import {CustomValidators} from '@app/validators/custom-validators';
 import {DialogService} from '@app/services/dialog.service';
 import {ToastService} from '@app/services/toast.service';
-import {ConfigurationService} from '@app/services/configuration.service';
 import {interval, Subject} from 'rxjs';
 import {concatMap, map, takeUntil, tap} from 'rxjs/operators';
 import {DialogRef} from '../../models/dialog-ref';
@@ -16,6 +15,7 @@ import {HttpClient} from '@angular/common/http';
 import {UrlService} from '@app/services/url.service';
 import {AdminResult} from '@app/models/admin-result';
 import {IDefaultResponse} from '@app/interfaces/idefault-response';
+import {FileExtensionsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 
 @Component({
   selector: 'app-upload-document-popup',
@@ -29,12 +29,12 @@ export class UploadDocumentPopupComponent implements OnInit {
   service: DocumentService;
   attachmentTypes: AdminResult[] = [];
   customValidators = CustomValidators;
+  allowedExtensions = [FileExtensionsEnum.PDF];
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: { caseId: string, service: DocumentService },
               public lang: LangService,
               private dialog: DialogService,
               private dialogRef: DialogRef,
-              private configurationService: ConfigurationService,
               private employeeService: EmployeeService,
               private toast: ToastService,
               private fb: UntypedFormBuilder,
@@ -98,7 +98,7 @@ export class UploadDocumentPopupComponent implements OnInit {
       this.dialog.error(
         this.lang.map
           .msg_only_those_files_allowed_to_upload
-          .change({files: this.configurationService.CONFIG.ALLOWED_FILE_TYPES_TO_UPLOAD.join(',')})
+          .change({files: this.allowedExtensions.join(',')})
       );
     }
 

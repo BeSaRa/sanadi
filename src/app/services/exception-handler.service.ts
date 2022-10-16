@@ -47,6 +47,12 @@ export class ExceptionHandlerService {
     this.excludedUrls.set(url, url);
   }
 
+  removeExcludeHandlingForURL(url: string): void {
+    if (this.excludedUrls.has(url)) {
+      this.excludedUrls.delete(url);
+    }
+  }
+
   excludeHandlingForMethodURL(method: string, url: string) {
     this.excludedMethodWithURL.set(method.toUpperCase() + url, url);
   }

@@ -18,8 +18,8 @@ import { CustomValidators } from '@app/validators/custom-validators';
 })
 export class RealBeneficiariesComponent extends ListModelComponent<RealBeneficiary> {
   QATARI_NATIONALITY = 1;
-  private _handleChangeNationality = (id: string | number) => {
-    const natinoality = this.lookupService.listByCategory.Nationality.find(e => e.id === id);
+  private _handleChangeNationality = (lookupKey: string | number) => {
+    const natinoality = this.lookupService.listByCategory.Nationality.find(e => e.lookupKey === lookupKey);
     this.controls.map(e => {
       if (this.idColumns.includes(e.controlName)) {
         e.isDisplayed = natinoality?.lookupKey === this.QATARI_NATIONALITY;
@@ -78,7 +78,7 @@ export class RealBeneficiariesComponent extends ListModelComponent<RealBeneficia
     iDExpiryDate: DateUtils.getDatepickerOptions({ disablePeriod: 'past' }),
     passportDate: DateUtils.getDatepickerOptions({ disablePeriod: 'future' }),
     startDate: DateUtils.getDatepickerOptions({ disablePeriod: 'past' }),
-    lastUpdateDate: DateUtils.getDatepickerOptions({ disablePeriod: 'past' }),
+    lastUpdateDate: DateUtils.getDatepickerOptions({ disablePeriod: 'none' }),
   };
   idColumns = ['identificationNumber', 'iDDate', 'iDExpiryDate'];
   passportColumns = ['passportNumber', 'passportDate', 'passportExpiryDate'];
@@ -115,18 +115,7 @@ export class RealBeneficiariesComponent extends ListModelComponent<RealBeneficia
       load: this.lookupService.listByCategory.Nationality,
       onChange: this._handleChangeNationality
     },
-    {
-      isDisplayed: true,
-      controlName: 'address',
-      label: this.lang.map.lbl_address,
-      type: 'text',
-    },
-    {
-      isDisplayed: true,
-      controlName: 'streetNumber',
-      label: this.lang.map.lbl_street,
-      type: 'text',
-    },
+
     {
       isDisplayed: true,
       controlName: 'zoneNumber',
@@ -135,10 +124,25 @@ export class RealBeneficiariesComponent extends ListModelComponent<RealBeneficia
     },
     {
       isDisplayed: true,
+      controlName: 'streetNumber',
+      label: this.lang.map.lbl_street,
+      type: 'text',
+    },
+
+    {
+      isDisplayed: true,
       controlName: 'buildingNumber',
       label: this.lang.map.building_number,
       type: 'text',
     },
+    {
+      isDisplayed: true,
+      controlName: 'address',
+      label: this.lang.map.lbl_address,
+      type: 'text',
+    },
+
+
 
     {
       isDisplayed: true,
@@ -200,6 +204,7 @@ export class RealBeneficiariesComponent extends ListModelComponent<RealBeneficia
 
   protected _initComponent(): void {
     this.form = this.fb.group(this.model.buildForm());
+    this.form.get('lastUpdateDate')?.disable();
   }
   _selectOne(_row: RealBeneficiary): void {
     const row = { ..._row };
@@ -212,12 +217,14 @@ export class RealBeneficiariesComponent extends ListModelComponent<RealBeneficia
     );
     row.passportDate = DateUtils.changeDateToDatepicker(row.passportDate);
     row.lastUpdateDate = DateUtils.changeDateToDatepicker(row.lastUpdateDate);
+    this._handleChangeNationality(row.nationality);
     this.form.patchValue(row);
   }
   _beforeAdd(row: RealBeneficiary): RealBeneficiary | null {
-    const field = (row.nationality === this.QATARI_NATIONALITY) ? 'identificationNumber' : 'passportNumber';
-    if (this._list.findIndex((e) => e[field] === row[field]) !== -1) {
-      this.toast.alert(this.lang.map.msg_duplicated_item)
+    const natinoality = this.lookupService.listByCategory.Nationality.find(e => e.id === row.nationality);
+    const field = (natinoality?.lookupKey === this.QATARI_NATIONALITY) ? 'identificationNumber' : 'passportNumber';
+    if (this._list.findIndex((e) => e[field] === row[field]) !== -1 && (this.editRecordIndex === -1)) {
+      this.toast.alert(this.lang.map.msg_duplicated_item);
       return null;
     }
     row.birthDate = DateUtils.getDateStringFromDate(row.birthDate);

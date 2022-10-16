@@ -1,4 +1,6 @@
+import {AllRequestTypesEnum} from '@app/enums/all-request-types-enum';
+
 export enum UrgentInterventionFinancialRequestType {
-  Transfer = 1,
-  Receive
+  TRANSFER = AllRequestTypesEnum.TRANSFER,
+  RECEIVE = AllRequestTypesEnum.RECEIVE
 }

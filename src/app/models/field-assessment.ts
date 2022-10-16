@@ -46,7 +46,7 @@ export class FieldAssessment extends BaseModel<FieldAssessment, FieldAssessmentS
   }
 
   convertToAdminResult(): AdminResult {
-    return AdminResult.createInstance({ arName: this.arName, enName: this.enName, id: this.id });
+    return AdminResult.createInstance({ arName: this.arName, enName: this.enName, id: this.id, status: this.status, disabled: !this.isActive() });
   }
 
   isActive(): boolean {

@@ -1,7 +1,6 @@
-import { Subject } from 'rxjs';
+import {of, Subject} from 'rxjs';
 import {Component, Input, ViewChild} from '@angular/core';
 import {AidLookup} from '@app/models/aid-lookup';
-import {of} from 'rxjs';
 import {LangService} from '@app/services/lang.service';
 import {DialogService} from '@app/services/dialog.service';
 import {ToastService} from '@app/services/toast.service';
@@ -13,7 +12,6 @@ import {AidTypes} from '@app/enums/aid-types.enum';
 import {IAidLookupCriteria} from '@app/interfaces/i-aid-lookup-criteria';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {ConfigurationService} from '@app/services/configuration.service';
-import {IGridAction} from '@app/interfaces/i-grid-action';
 import {SharedService} from '@app/services/shared.service';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 import {SortEvent} from '@app/interfaces/sort-event';
@@ -21,7 +19,9 @@ import {CommonUtils} from '@app/helpers/common-utils';
 import {AidLookupStatusEnum} from '@app/enums/status.enum';
 import {TableComponent} from '@app/shared/components/table/table.component';
 import {AdminGenericComponent} from '@app/generics/admin-generic-component';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 
+// noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
   selector: 'app-aid-lookup',
   templateUrl: './aid-lookup.component.html',
@@ -86,29 +86,37 @@ export class AidLookupComponent extends AdminGenericComponent<AidLookup, AidLook
     {
       type: 'action',
       label: 'btn_edit',
-      icon: 'mdi-pen',
+      icon: ActionIconsEnum.EDIT,
       onClick: (item: AidLookup) => this.edit(item, undefined)
     },
     // delete
     {
       type: 'action',
-      icon: 'mdi-close-box',
+      icon: ActionIconsEnum.DELETE,
       label: 'btn_delete',
-      onClick: (item: AidLookup) => this.deactivate(item)
+      onClick: (item: AidLookup) => this.remove(item)
+    },
+    // view
+    {
+      type: 'action',
+      icon: ActionIconsEnum.VIEW,
+      label: 'view',
+      onClick: (item: AidLookup) => this.view$.next(item)
     },
     // logs
     {
       type: 'action',
-      icon: 'mdi-view-list-outline',
+      icon: ActionIconsEnum.HISTORY,
       label: 'logs',
       onClick: (item: AidLookup) => this.showAuditLogs(item)
     },
     // activate
     {
       type: 'action',
-      icon: 'mdi-list-status',
+      icon: ActionIconsEnum.STATUS,
       label: 'btn_activate',
       onClick: (item: AidLookup) => this.toggleStatus(item),
+      displayInGrid: false,
       show: (item) => {
         return item.status !== AidLookupStatusEnum.RETIRED && item.status === AidLookupStatusEnum.INACTIVE;
       }
@@ -116,9 +124,10 @@ export class AidLookupComponent extends AdminGenericComponent<AidLookup, AidLook
     // deactivate
     {
       type: 'action',
-      icon: 'mdi-list-status',
+      icon: ActionIconsEnum.STATUS,
       label: 'btn_deactivate',
       onClick: (item: AidLookup) => this.toggleStatus(item),
+      displayInGrid: false,
       show: (item) => {
         return item.status !== AidLookupStatusEnum.RETIRED && item.status === AidLookupStatusEnum.ACTIVE;
       }
@@ -173,14 +182,14 @@ export class AidLookupComponent extends AdminGenericComponent<AidLookup, AidLook
     this.edit$.next(aidLookup);
   }
 
-  deactivate(aidLookup: AidLookup, $event?: MouseEvent): void {
+  remove(aidLookup: AidLookup, $event?: MouseEvent): void {
     $event?.preventDefault();
     const sub = this.dialogService.confirm(this.langService.map.msg_confirm_delete_x.change({x: aidLookup.aidCode}))
       .onAfterClose$
       .subscribe((click: UserClickOn) => {
         sub.unsubscribe();
         if (click === UserClickOn.YES) {
-          aidLookup.deactivate().subscribe(() => {
+          aidLookup.delete().subscribe(() => {
             this.toast.success(this.langService.map.msg_delete_x_success.change({x: aidLookup.aidCode}));
             this.reload$.next(null);
           });

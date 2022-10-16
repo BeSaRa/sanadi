@@ -4,6 +4,8 @@ import { IMyDateModel } from 'angular-mydatepicker';
 import { AdminResult } from './admin-result';
 import { SearchableCloneable } from './searchable-cloneable';
 
+
+
 export class Bylaw extends SearchableCloneable<Bylaw> {
   fullName!: string;
   category!: number;

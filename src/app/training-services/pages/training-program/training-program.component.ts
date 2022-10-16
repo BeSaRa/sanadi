@@ -22,7 +22,7 @@ import {TrainingProgramBriefcaseService} from '@app/services/training-program-br
 import {IMyDateModel} from 'angular-mydatepicker';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {EmployeeService} from "@app/services/employee.service";
-import {Permissions} from "@app/enums/Permissions";
+import {PermissionsEnum} from "@app/enums/permissions-enum";
 
 @Component({
   selector: 'training-program',
@@ -61,7 +61,7 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
   filterCriteria: Partial<ITrainingProgramCriteria> = {};
   trainingStatus = TrainingStatus;
   certification$: Subject<TrainingProgram> = new Subject<TrainingProgram>();
-  permissions: typeof Permissions = Permissions;
+  permissions: typeof PermissionsEnum = PermissionsEnum;
 
   constructor(public lang: LangService,
               public service: TrainingProgramService,

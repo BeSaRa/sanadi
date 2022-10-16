@@ -283,4 +283,6 @@ export class GeneralAssociationMeetingAttendanceService extends BaseGenericEServ
   validateLicenseByRequestType(requestType: number, oldFullSerial: string): Observable<GeneralAssociationMeetingAttendance> {
     return this._validateGeneralAssociationMeetingAttendanceByRequestType(requestType, oldFullSerial);
   }
+
+  
 }

@@ -46,6 +46,7 @@
             [licenseDurationType]="licenseDurationType.value"
             (eventHappened)="checkDisableFields()"
             [requestType]="requestType.value"
+            (attachmentHandlerEmitter)="registerAttachmentHandler($event)"
             [model]="model!"></collector-item>
           <!--[disableSearch]="!isEditLicenseAllowed()"-->
         </div>

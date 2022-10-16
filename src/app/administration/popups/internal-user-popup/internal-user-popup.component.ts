@@ -34,6 +34,7 @@ import {InternalUserService} from '@app/services/internal-user.service';
 import {BlobModel} from '@app/models/blob-model';
 import {CommonUtils} from '@app/helpers/common-utils';
 
+// noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
   selector: 'internal-user-popup',
   templateUrl: './internal-user-popup.component.html',
@@ -344,6 +345,7 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
             enName: dep.enName,
           })
         })]);
+        this.userDepartmentsIds.push(dep.id);
         this.selectedDepartment.patchValue(null);
 
         if (this.userDepartments.length === 1) {
@@ -360,6 +362,7 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
       .subscribe(() => {
         this.toast.success(this.lang.map.msg_delete_x_success.change({x: userDep.departmentInfo.getName()}));
         this.userDepartments = this.userDepartments.filter(item => item.id !== userDep.id);
+        this.userDepartmentsIds = this.userDepartmentsIds.filter(item => item != userDep.internalDepartmentId);
       });
   }
 

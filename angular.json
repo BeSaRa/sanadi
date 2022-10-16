@@ -69,10 +69,7 @@
                 "output": "assets/style/"
               },
               "src/assets",
-              "src/CONFIGURATION.json",
-              "src/URLS.json",
-              "src/MENU.json",
-              "src/REPORTS.json"
+              "src/CONFIGURATION.json"
             ],
             "styles": [
               "src/styles.scss"

@@ -8,6 +8,7 @@ import {AuthService} from "@app/services/auth.service";
 import {of, Subject} from "rxjs";
 import {CustomValidators} from "@app/validators/custom-validators";
 import {catchError, exhaustMap, mapTo, takeUntil, tap} from "rxjs/operators";
+import {ConfigurationService} from '@services/configuration.service';
 
 @Component({
   selector: 'internal-login',
@@ -21,12 +22,13 @@ export class InternalLoginComponent implements OnInit {
   private destroy$: Subject<any> = new Subject<any>();
   private login$: Subject<any> = new Subject<any>();
 
-  background: string = 'url(assets/images/login-background.png)';
-  loginBackground: string = 'url(assets/images/raca-login-background-1.png)';
+  background: string = 'url(assets/images/' + this.configService.CONFIG.LOGIN_BACKGROUND_FALLBACK + ')';
+  loginBackground: string = 'url(assets/images/' + this.configService.CONFIG.LOGIN_BACKGROUND_INTERNAL + ')';
 
   constructor(public lang: LangService,
               private router: Router,
               private fb: UntypedFormBuilder,
+              private configService: ConfigurationService,
               private eCookieService: ECookieService,
               private toastService: ToastService,
               private authService: AuthService) {

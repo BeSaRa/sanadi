@@ -32,7 +32,7 @@
                   ? (control.load$ | async)
                   : control.load
               "
-              [value]="type.id"
+              [value]="type.lookupKey"
               >{{ type.getName() }}</ng-option
             >
           </ng-select>
