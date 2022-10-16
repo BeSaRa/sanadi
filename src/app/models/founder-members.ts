@@ -1,6 +1,4 @@
 import { AdminResult } from './admin-result';
-import { DateUtils } from './../helpers/date-utils';
-import { IMyDateModel } from 'angular-mydatepicker';
 import { CustomValidators } from "@app/validators/custom-validators";
 import { SearchableCloneable } from "@app/models/searchable-cloneable";
 
@@ -12,7 +10,6 @@ export class FounderMembers extends SearchableCloneable<FounderMembers>{
   email!: string;
   phone!: string;
   extraPhone!: string;
-  joinDate!: string | IMyDateModel;
   nationality!: number;
   jobTitleInfo!: AdminResult;
   nationalityInfo!: AdminResult;
@@ -23,19 +20,17 @@ export class FounderMembers extends SearchableCloneable<FounderMembers>{
       email,
       phone,
       extraPhone,
-      joinDate,
       nationality } = this;
 
     return {
       identificationNumber: control ? [identificationNumber, [CustomValidators.required, ...CustomValidators.commonValidations.qId]] : identificationNumber,
       fullName: control ? [fullName, [CustomValidators.required, CustomValidators.maxLength(300),
       CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : fullName,
-      email: control ? [email, [CustomValidators.required, CustomValidators.pattern('EMAIL')]] : email,
+      email: control ? [email, [CustomValidators.required, CustomValidators.pattern('EMAIL'), CustomValidators.maxLength(50)]] : email,
       phone: control ? [phone, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : phone,
       extraPhone: control ? [extraPhone, CustomValidators.commonValidations.phone] : extraPhone,
       jobTitleId: control ? [jobTitleId, [CustomValidators.required]] : jobTitleId,
       nationality: control ? [nationality, [CustomValidators.required]] : nationality,
-      joinDate: control ? [DateUtils.changeDateToDatepicker(joinDate), [CustomValidators.required]] : DateUtils.changeDateToDatepicker(joinDate),
     };
   }
 }

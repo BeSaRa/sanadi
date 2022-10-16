@@ -11,7 +11,7 @@ import { DialogService } from "@app/services/dialog.service";
 import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
 import { ReadinessStatus } from "@app/types/types";
 import { BehaviorSubject, Subject } from "rxjs";
-import { filter, map, take, takeUntil } from "rxjs/operators";
+import { filter, map, take, takeUntil, tap } from "rxjs/operators";
 import { UserClickOn } from "@app/enums/user-click-on.enum";
 import { FounderMembers } from "@app/models/founder-members";
 
@@ -142,6 +142,7 @@ export class FounderMembersComponent implements OnInit, OnDestroy {
 
     const validForm$ = form$.pipe(filter((form) => form.valid));
     const invalidForm$ = form$.pipe(filter((form) => form.invalid));
+
     invalidForm$.pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.dialogService
         .error(this.lang.map.msg_all_required_fields_are_filled)
@@ -154,6 +155,17 @@ export class FounderMembersComponent implements OnInit, OnDestroy {
 
     validForm$.pipe(
       takeUntil(this.destroy$),
+      filter((form) => {
+        const valid = this._list.findIndex(f => f.identificationNumber == form.value.identificationNumber) == -1;
+        !valid && this.dialogService
+          .error(this.lang.map.msg_user_identifier_is_already_exist)
+          .onAfterClose$
+          .pipe(take(1))
+          .subscribe(() => {
+            this.form.get('founderMembers')?.markAllAsTouched();
+          });
+        return valid
+      }),
       map(() => {
         return (this.form.get('founderMembers.0')) as UntypedFormArray;
       }),

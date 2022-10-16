@@ -79,20 +79,13 @@ NpoManagementService
     contectInfo: {
       name: "contectInfoTab",
       langKey: "lbl_contact_info" as keyof ILanguageKeys,
-      validStatus: () => this.contectInfo.valid,
+      validStatus: () => this.contectInfo.valid && (!this.contactOfficerComponentRef || (this.contactOfficersTabStatus === 'READY' && this.contactOfficerComponentRef.list.length > 0)),
     },
     founderMember: {
       name: "founderMemberTab",
       langKey: "lbl_founder_members" as keyof ILanguageKeys,
       validStatus: () => {
         return !this.founderMemberComponentRef || (this.founderMemberTabStatus === 'READY' && this.founderMemberComponentRef.list.length > 0);
-      }
-    },
-    contactOfficer: {
-      name: "contactOfficerTab",
-      langKey: "contact_officers" as keyof ILanguageKeys,
-      validStatus: () => {
-        return !this.contactOfficerComponentRef || (this.contactOfficersTabStatus === 'READY' && this.contactOfficerComponentRef.list.length > 0);
       }
     },
     bankAccount: {
@@ -414,7 +407,6 @@ NpoManagementService
           email: f.email,
           phone: f.phone,
           extraPhone: f.extraPhone,
-          joinDate: f.joinDate,
           nationality: f.nationality,
         });
         return ob;
@@ -523,7 +515,7 @@ NpoManagementService
       this.disbandmentDateField.setValidators([CustomValidators.required])
     }
     if (this.isNew) {
-      // this.registrationAuthorityField.setValidators([])
+      this.registrationAuthorityField.setValidators([CustomValidators.required])
       this.registrationDateField.setValidators([CustomValidators.required])
       this.registrationNumberField.setValidators([
         CustomValidators.required, Validators.maxLength(150),

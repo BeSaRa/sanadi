@@ -144,7 +144,7 @@ export class NpoManagement
         englishName: controls ? [englishName, [
           CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
           Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')]] : englishName,
-        unifiedEconomicRecord: controls ? [unifiedEconomicRecord, [Validators.maxLength(150)]] : unifiedEconomicRecord,
+        unifiedEconomicRecord: controls ? [unifiedEconomicRecord, [Validators.required, Validators.maxLength(150)]] : unifiedEconomicRecord,
         activityType: controls ? [activityType, [Validators.required]] : activityType,
         registrationNumber: controls ? [registrationNumber, []] : registrationNumber,
         registrationAuthority: controls ? [registrationAuthority, []] : registrationAuthority,

@@ -1,3 +1,4 @@
+import { CurrencyEnum } from '@app/enums/currency-enum';
 import { Bank } from './../../../../../models/bank';
 import { NpoBankAccount } from './../../../../../models/npo-bank-account';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
@@ -94,7 +95,9 @@ export class NpoBankAccountComponent implements OnInit {
     this.add$.pipe(takeUntil(this.destroy$))
       .subscribe(() => {
         this.viewOnly = false;
-        this.recordChanged$.next(new NpoBankAccount());
+        const modal = new NpoBankAccount();
+        modal.currency = CurrencyEnum.UNITED_STATE_DOLLAR;
+        this.recordChanged$.next();
       });
   }
 
