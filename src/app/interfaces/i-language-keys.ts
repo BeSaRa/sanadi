@@ -1497,5 +1497,6 @@ export interface ILanguageKeys {
   attachment_other_desc: string;
   public_menu: string;
   private_menu: string;
+  procedures: string;
 }
 
