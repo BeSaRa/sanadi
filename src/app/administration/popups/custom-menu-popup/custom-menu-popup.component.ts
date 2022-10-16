@@ -13,19 +13,19 @@ import {DialogRef} from '@app/shared/models/dialog-ref';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
 import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
-import {IKeyValue} from '@app/interfaces/i-key-value';
 import {FormManager} from '@app/models/form-manager';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {catchError, exhaustMap, takeUntil, tap} from 'rxjs/operators';
+import {catchError, exhaustMap, filter, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {CustomMenuService} from '@services/custom-menu.service';
 import {TableComponent} from '@app/shared/components/table/table.component';
 import {SharedService} from '@app/services/shared.service';
 import {IGridAction} from '@app/interfaces/i-grid-action';
-import {MenuView} from '@app/enums/menu-view.enum';
 import {TabMap} from '@app/types/types';
+import {ExceptionHandlerService} from '@services/exception-handler.service';
+import {CommonUtils} from '@helpers/common-utils';
 
 @Component({
   selector: 'app-custom-menu-popup',
@@ -67,6 +67,7 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> {
     private cd: ChangeDetectorRef,
     private dialogService: DialogService,
     private sharedService: SharedService,
+    private exceptionHandlerService: ExceptionHandlerService,
     private http: HttpClient
   ) {
     super();
@@ -380,15 +381,29 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> {
   isValidURL: boolean = false;
 
   checkURL() {
-    const sub = this.http.get<any>(this.menuURLControl.value).pipe(
-      tap(() => this.isValidURL = true),
-      catchError(_ => {
-        this.isValidURL = false;
-        this.dialogService.error(this.lang.map.err_invalid_URL);
-        return of();
-      })
-    ).subscribe(() => sub.unsubscribe());
-
+    of(this.menuURLControl.value)
+      .pipe(
+        takeUntil(this.destroy$),
+        filter(value => CommonUtils.isValidValue(value)),
+        // set the url to exclude list to skip exception handling
+        tap(() => {
+          this.exceptionHandlerService.excludeHandlingForURL(this.menuURLControl.value);
+        }),
+        switchMap(() => this.http.get<any>(this.menuURLControl.value)),
+        catchError(() => {
+          // remove the url from exclude list
+          this.exceptionHandlerService.removeExcludeHandlingForURL(this.menuURLControl.value);
+          this.isValidURL = false;
+          this.dialogService.error(this.lang.map.err_invalid_URL);
+          return of('INVALID_URL');
+        })
+      ).subscribe((result) => {
+      // remove the url from exclude list
+      this.exceptionHandlerService.removeExcludeHandlingForURL(this.menuURLControl.value);
+      if (result !== 'INVALID_URL') {
+        this.isValidURL = true;
+      }
+    });
   }
 
   getTranslatedStatus() {
