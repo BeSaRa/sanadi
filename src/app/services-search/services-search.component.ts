@@ -175,14 +175,6 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
       });
   }
 
-  actionLaunch(item: CaseModel<any, any>, dialogRef?: DialogRef) {
-    item.start().subscribe(_ => {
-      this.toast.success(this.lang.map.request_has_been_sent_successfully);
-      dialogRef?.close();
-      this.search$.next(null);
-    });
-  }
-
   exportSearchResult(): void {
     let criteria = this.selectedService.getSearchCriteriaModel().clone(this.form.value).filterSearchFields(this.fieldsNames);
     criteria = this.normalizeSearchCriteria(criteria);
@@ -296,18 +288,6 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
         },
         onClick: (item: CaseModel<any, any>) => {
           this.actionAddFollowup(item);
-        }
-      },
-
-      { type: 'divider' },
-      // launch
-      {
-        type: 'action',
-        icon: 'mdi-rocket-launch-outline',
-        label: 'launch',
-        show: (item: CaseModel<any, any>) => item.canStart(),
-        onClick: (item: CaseModel<any, any>, dialogRef: DialogRef) => {
-          this.actionLaunch(item, dialogRef);
         }
       }
     ];
