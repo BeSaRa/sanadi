@@ -303,12 +303,8 @@ export class CharityOrganizationUpdate extends CaseModel<
         : charityWorkArea,
     };
   }
-
-  complete(): DialogRef {
-    if (this.employeeService.isExternalUser()) {
-      return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.COMPLETE, false, this);
-    }
-    return this.followUpService.finalApproveTask(this, WFResponseType.COMPLETE);
+  validateApprove(): DialogRef {
+    return this.followUpService.finalApproveTask(this, WFResponseType.VALIDATE_APPROVE);
   }
   validateReject(): DialogRef {
     return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.VALIDATE_REJECT, false, this, 'reject_reason');

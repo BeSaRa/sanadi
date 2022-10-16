@@ -932,8 +932,8 @@ export class CharityOrganizationUpdateComponent
       });
     }
     if (this.requestTypeForm.value || (this.model.updateSection === this.RequestTypes.META_DATA)) {
-      this.metaDataForm.patchValue(model!.buildMetaDataForm(false));
-      this.contactInformationForm.patchValue(
+      this.metaDataForm?.patchValue(model!.buildMetaDataForm(false));
+      this.contactInformationForm?.patchValue(
         model!.buildContactInformationForm(false)
       );
     }
