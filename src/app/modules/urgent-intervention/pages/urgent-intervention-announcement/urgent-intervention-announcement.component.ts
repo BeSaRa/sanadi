@@ -18,7 +18,7 @@ import {Lookup} from '@app/models/lookup';
 import {TabComponent} from '@app/shared/components/tab/tab.component';
 import {OpenFrom} from '@app/enums/open-from.enum';
 import {Country} from '@app/models/country';
-import {catchError, exhaustMap, filter, map, takeUntil, tap} from 'rxjs/operators';
+import {catchError, exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {CountryService} from '@services/country.service';
 import {
@@ -36,6 +36,7 @@ import {CustomValidators} from '@app/validators/custom-validators';
 import {UrgentInterventionAnnouncementSearchCriteria} from '@app/models/urgent-intervention-announcement-search-criteria';
 import {UrgentInterventionAnnouncementResult} from '@app/models/urgent-intervention-announcement-result';
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -225,7 +226,7 @@ export class UrgentInterventionAnnouncementComponent extends EServicesGenericCom
   }
 
   _afterLaunch(): void {
-    this._resetForm();
+    this.resetForm$.next();
     this.toastService.success(this.lang.map.request_has_been_sent_successfully);
   }
 
@@ -353,13 +354,23 @@ export class UrgentInterventionAnnouncementComponent extends EServicesGenericCom
   }
 
   handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
-    if (userInteraction) {
-      this._resetForm();
-      this.requestTypeField.setValue(requestTypeValue);
-    }
+    of(userInteraction).pipe(
+      takeUntil(this.destroy$),
+      switchMap(() => this.confirmChangeRequestType(userInteraction))
+    ).subscribe((clickOn: UserClickOn) => {
+      if (clickOn === UserClickOn.YES) {
+        if (userInteraction) {
+          this.resetForm$.next();
+          this.requestTypeField.setValue(requestTypeValue);
+        }
+        this.requestType$.next(requestTypeValue);
 
-    this._handleRequestTypeDependentControls();
-    this._handleLicenseValidationsByRequestType();
+        this._handleRequestTypeDependentControls();
+        this._handleLicenseValidationsByRequestType();
+      } else {
+        this.requestTypeField.setValue(this.requestType$.value);
+      }
+    });
   }
 
   private _handleRequestTypeDependentControls(): void {

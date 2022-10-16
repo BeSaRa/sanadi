@@ -7,29 +7,29 @@ import {
   ViewChild,
   ViewChildren,
 } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { OperationTypes } from '@app/enums/operation-types.enum';
-import { SaveTypes } from '@app/enums/save-types';
-import { CollectionRequestType } from '@app/enums/service-request-types';
-import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
-import { CommonUtils } from '@app/helpers/common-utils';
-import { IKeyValue } from '@app/interfaces/i-key-value';
-import { Country } from '@app/models/country';
-import { ForeignCountriesProjects } from '@app/models/foreign-countries-projects';
-import { ForeignCountriesProjectsResult } from '@app/models/foreign-countries-projects-results';
-import { ForeignCountriesProjectsSearchCriteria } from '@app/models/foreign-countries-projects-seach-criteria';
-import { Lookup } from '@app/models/lookup';
-import { ProjectNeedsComponent } from '@app/modules/e-services-main/shared/project-needs/project-needs.component';
-import { CountryService } from '@app/services/country.service';
-import { DialogService } from '@app/services/dialog.service';
-import { FollowupDateService } from '@app/services/follow-up-date.service';
-import { ForeignCountriesProjectsService } from '@app/services/foreign-countries-projects.service';
-import { LangService } from '@app/services/lang.service';
-import { LicenseService } from '@app/services/license.service';
-import { LookupService } from '@app/services/lookup.service';
-import { ToastService } from '@app/services/toast.service';
-import { ReadinessStatus } from '@app/types/types';
-import { Observable, of, Subject } from 'rxjs';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {SaveTypes} from '@app/enums/save-types';
+import {CollectionRequestType} from '@app/enums/service-request-types';
+import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
+import {CommonUtils} from '@app/helpers/common-utils';
+import {IKeyValue} from '@app/interfaces/i-key-value';
+import {Country} from '@app/models/country';
+import {ForeignCountriesProjects} from '@app/models/foreign-countries-projects';
+import {ForeignCountriesProjectsResult} from '@app/models/foreign-countries-projects-results';
+import {ForeignCountriesProjectsSearchCriteria} from '@app/models/foreign-countries-projects-seach-criteria';
+import {Lookup} from '@app/models/lookup';
+import {ProjectNeedsComponent} from '@app/modules/e-services-main/shared/project-needs/project-needs.component';
+import {CountryService} from '@app/services/country.service';
+import {DialogService} from '@app/services/dialog.service';
+import {FollowupDateService} from '@app/services/follow-up-date.service';
+import {ForeignCountriesProjectsService} from '@app/services/foreign-countries-projects.service';
+import {LangService} from '@app/services/lang.service';
+import {LicenseService} from '@app/services/license.service';
+import {LookupService} from '@app/services/lookup.service';
+import {ToastService} from '@app/services/toast.service';
+import {ReadinessStatus} from '@app/types/types';
+import {Observable, of, Subject} from 'rxjs';
 import {
   catchError,
   exhaustMap,
@@ -40,34 +40,28 @@ import {
   takeUntil,
   tap,
 } from 'rxjs/operators';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
 
 @Component({
   selector: 'app-foreign-countries-projects',
   templateUrl: './foreign-countries-projects.component.html',
   styleUrls: ['./foreign-countries-projects.component.scss'],
 })
-export class ForeignCountriesProjectsComponent
-  extends EServicesGenericComponent<ForeignCountriesProjects,
-    ForeignCountriesProjectsService>
+export class ForeignCountriesProjectsComponent extends EServicesGenericComponent<ForeignCountriesProjects, ForeignCountriesProjectsService>
   implements AfterViewInit {
   form!: UntypedFormGroup;
   tabs: IKeyValue[] = [];
-  requestTypes: Lookup[] =
-    this.lookupService.listByCategory.CollectionRequestType?.sort(
-      (a, b) => a.lookupKey - b.lookupKey
-    );
-  externalCooperations: Lookup[] =
-    this.lookupService.listByCategory.ContractLocationType;
+  requestTypes: Lookup[] = this.lookupService.listByCategory.CollectionRequestType?.sort((a, b) => a.lookupKey - b.lookupKey);
+  externalCooperations: Lookup[] = this.lookupService.listByCategory.ContractLocationType;
   licenseSearch$: Subject<string> = new Subject<string>();
-  countries$: Observable<Country[]> = this.countryService
-    .loadAsLookups()
+  countries$: Observable<Country[]> = this.countryService.loadAsLookups()
     .pipe(takeUntil(this.destroy$), share());
 
   selectedLicense?: ForeignCountriesProjects;
   projectNeedsTabStatus: ReadinessStatus = 'READY';
 
 
-  @ViewChildren('tabContent', { read: TemplateRef })
+  @ViewChildren('tabContent', {read: TemplateRef})
   tabsTemplates!: QueryList<TemplateRef<any>>;
 
   @ViewChild(ProjectNeedsComponent) projectNeedsComponentRef!: ProjectNeedsComponent;
@@ -82,7 +76,6 @@ export class ForeignCountriesProjectsComponent
     private licenseService: LicenseService,
     private cd: ChangeDetectorRef,
     private toast: ToastService,
-
   ) {
     super();
   }
@@ -116,7 +109,7 @@ export class ForeignCountriesProjectsComponent
           template: tabsTemplates[tabsTemplates.length - 1],
           title: this.lang.map.attachments,
           validStatus: () => true,
-        })
+        });
       }
     }, 0);
   }
@@ -205,7 +198,7 @@ export class ForeignCountriesProjectsComponent
                   if (!data) {
                     return of(null);
                   }
-                  return { selected: licenses[0], details: data };
+                  return {selected: licenses[0], details: data};
                 }),
                 catchError(() => {
                   return of(null);
@@ -265,17 +258,22 @@ export class ForeignCountriesProjectsComponent
     this._updateForm(new ForeignCountriesProjects().clone(result));
   }
 
-  handleRequestTypeChange(
-    requestTypeValue: number,
-    userInteraction: boolean = false
-  ): void {
-    if (userInteraction) {
-      this._resetForm();
-      this.requestTypeField.setValue(requestTypeValue);
-    }
-    // if (!requestTypeValue) {
-    //   requestTypeValue = this.requestTypeField && this.requestTypeField.value;
-    // }
+  handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
+    of(userInteraction)
+      .pipe(
+        takeUntil(this.destroy$),
+        switchMap(() => this.confirmChangeRequestType(userInteraction))
+      ).subscribe((clickOn: UserClickOn) => {
+      if (clickOn === UserClickOn.YES) {
+        if (userInteraction) {
+          this.resetForm$.next();
+          this.requestTypeField.setValue(requestTypeValue);
+        }
+        this.requestType$.next(requestTypeValue);
+      } else {
+        this.requestTypeField.setValue(this.requestType$.value);
+      }
+    });
   }
 
   getTabInvalidStatus(i: number): boolean {
@@ -301,7 +299,8 @@ export class ForeignCountriesProjectsComponent
     });
   }
 
-  _afterBuildForm(): void { }
+  _afterBuildForm(): void {
+  }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
     if (saveType === SaveTypes.DRAFT) {
@@ -332,7 +331,7 @@ export class ForeignCountriesProjectsComponent
   }
 
   _afterLaunch(): void {
-    this._resetForm();
+    this.resetForm$.next();
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
 
@@ -356,7 +355,7 @@ export class ForeignCountriesProjectsComponent
       (operation === OperationTypes.CREATE && saveType === SaveTypes.FINAL) ||
       (operation === OperationTypes.UPDATE && saveType === SaveTypes.COMMIT)
     ) {
-      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({ serial: model.fullSerial }));
+      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({serial: model.fullSerial}));
     } else {
       this.toast.success(this.lang.map.request_has_been_saved_successfully);
     }

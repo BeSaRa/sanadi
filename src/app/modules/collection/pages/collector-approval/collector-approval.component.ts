@@ -176,9 +176,6 @@ export class CollectorApprovalComponent extends EServicesGenericComponent<Collec
           this.resetForm$.next();
           this.requestType.setValue(requestTypeValue);
         }
-        if(!requestTypeValue) {
-          requestTypeValue = this.requestType && this.requestType.value;
-        }
 
         this.disableSearchField = requestTypeValue === CollectionRequestType.NEW;
         this.model!.requestType = requestTypeValue;

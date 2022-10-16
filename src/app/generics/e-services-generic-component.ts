@@ -326,8 +326,7 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
   }
 
   confirmChangeRequestType(userInteraction: boolean): Observable<UserClickOn> {
-    return of(UserClickOn.YES);
-    /*if (!userInteraction){
+    if (!userInteraction) {
       return of(UserClickOn.YES);
     } else {
       if (!this.requestType$.value) {
@@ -335,6 +334,6 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
       } else {
         return this.confirmResetForm().onAfterClose$;
       }
-    }*/
+    }
   }
 }

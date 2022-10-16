@@ -633,12 +633,11 @@ export class InternalProjectLicenseComponent extends EServicesGenericComponent<I
       switchMap(() => this.confirmChangeRequestType(userInteraction))
     ).subscribe((clickOn: UserClickOn) => {
       if (clickOn === UserClickOn.YES) {
-        this.requestType$.next(requestTypeValue);
-
         if (userInteraction) {
-          this._resetForm();
+          this.resetForm$.next();
           this.requestTypeField.setValue(requestTypeValue);
         }
+        this.requestType$.next(requestTypeValue);
 
         this._handleRequestTypeDependentControls();
 
