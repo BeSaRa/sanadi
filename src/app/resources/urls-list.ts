@@ -1,4 +1,4 @@
-import {IAppUrls} from '@contracts/i-app-urls';
+import { IAppUrls } from '@contracts/i-app-urls';
 
 export const urlsList = {
   // BASE_URL: '', // it will be overridden from CONFIGURATION
@@ -120,6 +120,7 @@ export const urlsList = {
   NPO_MANAGEMENT: '/npo-management',
   NPO_DATA: '/admin/npo-data',
   PROFILE: '/admin/profile',
+  PROFILE_SERVICE: '/admin/profile-service',
   AWARENESS_ACTIVITY_SUGGESTION: '/awareness-activity-suggestion',
   MENU_ITEM_LIST: '/admin/menu-item'
 };

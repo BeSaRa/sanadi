@@ -1498,5 +1498,6 @@ export interface ILanguageKeys {
   public_menu: string;
   private_menu: string;
   procedures: string;
+  lbl_profile_id: string;
 }
 

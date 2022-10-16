@@ -6,7 +6,9 @@ import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
 import { LangService } from '@app/services/lang.service';
 import { ProfileService } from '@app/services/profile.service';
 import { ToastService } from '@app/services/toast.service';
-import { takeUntil } from 'rxjs/operators';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { Observable, of, Subject } from 'rxjs';
+import { catchError, exhaustMap, filter, switchMap, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'profiles',
@@ -16,25 +18,60 @@ import { takeUntil } from 'rxjs/operators';
 export class ProfilesComponent extends AdminGenericComponent<Profile, ProfileService> {
   actions: IMenuItem<Profile>[] = [];
   displayedColumns: string[] = ['arName', 'enName', 'status', 'actions'];
-
+  view$: Subject<Profile> = new Subject<Profile>();
   constructor(public service: ProfileService, public lang: LangService, private toast: ToastService) {
     super();
   }
-
-  afterReload(): void {
-    console.log(this.models);
-
+  protected _init(): void {
+    this.listenToView();
   }
-  public view(row: Profile, event: MouseEvent) {
-
+  listenToView(): void {
+    this.view$
+      .pipe(
+        takeUntil(this.destroy$),
+        exhaustMap((model) => {
+          return this.service
+            .openViewDialog(model)
+            .pipe(catchError((_) => of(null)));
+        })
+      )
+      .pipe(
+        filter((dialog): dialog is DialogRef => !!dialog),
+        switchMap((dialog) => dialog.onAfterClose$)
+      )
+      .subscribe(() => this.reload$.next(null));
   }
-  public delete(event: MouseEvent, row: Profile) {
-
+  listenToEdit(): void {
+    this.edit$
+      .pipe(
+        takeUntil(this.destroy$),
+        exhaustMap((model) => this.service.openEditDialog(model))
+      )
+      .pipe(
+        filter((dialog): dialog is DialogRef => !!dialog),
+        switchMap((dialog) => dialog.onAfterClose$)
+      )
+      .subscribe(() => this.reload$.next(null));
   }
-  public edit(row: Profile, event: MouseEvent,) {
-
+  public view(row: Profile, event: MouseEvent): void {
+    event.preventDefault();
+    this.view$.next(row);
   }
-  public toggleStatus(model: Profile) {
+  public edit(row: Profile, event: MouseEvent): void {
+    event.preventDefault();
+    this.edit$.next(row);
+  }
+  public toggleStatus(model: Profile): void {
+    let observable: Observable<Object>;
+    if (model.status === 1) {
+      observable = this.service.deActivate(model.id);
+    }
+    else {
+      observable = this.service.activate(model.id);
+    }
+    observable.subscribe(e => {
+      this.reload$.next(null);
+    });
 
   }
 
