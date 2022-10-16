@@ -29,7 +29,7 @@ export const urlsList = {
   TEAM_SECURITY: '/admin/team-sec-config',
   USER_SECURITY: '/admin/user-sec-config',
   EXTERNAL_USER_SECURITY: '/admin/org-user-service-permission',
-  PROJECT_MODELING: '/external-project-modeling',
+  PROJECT_MODELING: '/project-modeling',
   TRAINING_PROGRAM: 'training/training-program',
   TRAINING_PROGRAM_BUNDLE: 'training/training-program/bundle',
   TRAINER: 'training/trainer',
