@@ -132,7 +132,6 @@
             <label class="form-label" asteriskIfRequired="projectWorkArea"
                    for="projectWorkArea">{{lang.map.execution_field}}</label>
             <ng-select [readonly]="readonly"
-                       (change)="onExecutionFieldChange()"
                        validationClasses="projectWorkArea"
                        appendTo="body"
                        labelForId="projectWorkArea"
@@ -176,7 +175,7 @@
                            [notFoundText]="lang.map.msg_not_found"
                            [clearable]="true"
                            id="beneficiaryCountry" formControlName="beneficiaryCountry">
-                  <ng-option [value]="option.id" *ngFor="let option of countries"
+                  <ng-option [value]="option.id" *ngFor="let option of countriesAvailableForSelection"
                              [disabled]="!option.isActive()">{{option.getName()}}</ng-option>
                 </ng-select>
                 <app-field-error-message controlName="beneficiaryCountry"></app-field-error-message>
@@ -209,7 +208,7 @@
                        [clearable]="true"
                        id="executionCountry"
                        formControlName="executionCountry">
-              <ng-option [value]="option.id" *ngFor="let option of countries"
+              <ng-option [value]="option.id" *ngFor="let option of countriesAvailableForSelection"
                          [disabled]="!option.isActive()">{{option.getName()}}</ng-option>
             </ng-select>
             <app-field-error-message controlName="executionCountry"></app-field-error-message>
@@ -314,7 +313,7 @@
             </div>
           </ng-container>
         </div>
-        <div class="row" *ngIf="!isOutsideQatarWorkArea && projectWorkArea.value">
+        <div class="row" *ngIf="projectWorkArea.value && !isOutsideQatarWorkArea">
           <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
             <label class="form-label" asteriskIfRequired="internalProjectClassification"
                    for="internalProjectClassification">{{lang.map.internal_project_classification}}</label>
@@ -716,12 +715,12 @@
           <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
           <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
             <div class="d-flex flex-row">
-              <button (click)="onClickDeleteProjectComponent(row)" class="icon-btn text-primary"
+              <button (click)="onClickDeleteProjectComponent(row)" class="btn btn-link outline-none"
                       [disabled]="readonly"
                       tooltip="{{lang.map.btn_delete}}">
                 <i class="mdi mdi-close-box"></i>
               </button>
-              <button (click)="onClickEditProjectComponent(row)" class="icon-btn text-primary"
+              <button (click)="onClickEditProjectComponent(row)" class="btn btn-link outline-none"
                       [disabled]="readonly"
                       tooltip="{{lang.map.btn_edit}}">
                 <i class="mdi mdi-pen"></i>

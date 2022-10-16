@@ -15,6 +15,7 @@ import {ProjectModelInterceptor} from '@app/model-interceptors/project-model-int
 import {InterceptModel} from '@decorators/intercept-model';
 import {EvaluationIndicator} from '@app/models/evaluation-indicator';
 import {ProjectModelForeignCountriesProject} from '@app/models/project-model-foreign-countries-project';
+import {ProjectAddress} from '@app/models/project-address';
 
 // noinspection JSUnusedGlobalSymbols
 const {send, receive} = new ProjectModelInterceptor();
@@ -70,6 +71,7 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
   templateStatus!: number;
   evaluationIndicatorList: EvaluationIndicator[] = [];
   foreignCountriesProjectList: ProjectModelForeignCountriesProject[] = [];
+  projectAddressList: ProjectAddress[] = [];
   componentList!: ProjectComponent[];
   requestTypeInfo!: AdminResult;
   projectTypeInfo!: AdminResult;

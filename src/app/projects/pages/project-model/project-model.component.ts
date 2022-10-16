@@ -47,6 +47,8 @@ import {ForeignCountriesProjectsService} from '@services/foreign-countries-proje
 import {ProjectAddress} from '@app/models/project-address';
 import {ICoordinates} from '@contracts/ICoordinates';
 import {CollectionItem} from '@app/models/collection-item';
+import {ServiceDataService} from '@services/service-data.service';
+import {CaseTypes} from '@app/enums/case-types.enum';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -81,6 +83,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
 
   domainTypes: typeof DomainTypes = DomainTypes;
   countries: Country[] = [];
+  countriesAvailableForSelection: Country[] = [];
   domains: Lookup[] = this.lookupService.listByCategory.Domain;
   projectTypes: Lookup[] = this.lookupService.listByCategory.ProjectType;
   requestTypes: Lookup[] = this.lookupService.listByCategory.ProjectModelingReqType.slice().sort((a, b) => a.lookupKey - b.lookupKey);
@@ -97,6 +100,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   goals: SDGoal[] = [];
   loadAttachments: boolean = false;
   fileIconsEnum = FileIconsEnum;
+  qatarId!: number;
 
   projectComponentChange$: Subject<{ operation: OperationTypes, model: ProjectComponent }> = new Subject<{ operation: OperationTypes, model: ProjectComponent }>();
   projectListColumns: string[] = ['componentName', 'details', 'totalCost', 'actions'];
@@ -202,7 +206,8 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
               public service: ProjectModelService,
               private aidLookupService: AidLookupService,
               private adminLookupService: AdminLookupService,
-              private foreignCountriesProjectsService: ForeignCountriesProjectsService) {
+              private foreignCountriesProjectsService: ForeignCountriesProjectsService,
+              private serviceDataService: ServiceDataService) {
     super();
   }
 
@@ -211,6 +216,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   }
 
   _initComponent(): void {
+    this.getQatarId();
     this.loadIndicators();
     this.buildEvaluationIndicatorForm();
     this.buildProjectAddressForm();
@@ -221,6 +227,14 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     this.loadGoals();
     this.listenToProjectComponentChange();
     this.listenToTemplateSearch();
+  }
+
+  getQatarId() {
+    this.serviceDataService.loadByCaseType(CaseTypes.EXTERNAL_PROJECT_MODELS).subscribe(serviceData => {
+      let settings: { QatarId: number } = JSON.parse(serviceData.customSettings);
+      this.qatarId = settings.QatarId;
+      console.log('qatarId', this.qatarId);
+    });
   }
 
   _buildForm(): void {
@@ -380,6 +394,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       projectTotalCost: this.projectTotalCostField.value,
       evaluationIndicatorList: this.evaluationIndicators,
       foreignCountriesProjectList: this.pMForeignCountriesProjects,
+      projectAddressList: this.projectAddresses,
       description: this.descriptionTab.value
     });
   }
@@ -422,6 +437,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
 
   _updateForm(model: ProjectModel): void {
     this.model = model;
+    this.listenToExecutionFieldChange();
     this.form.patchValue({
       basicInfo: model.buildBasicInfoTab(false),
       categoryInfo: model.buildCategoryTab(false),
@@ -435,8 +451,9 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       description: model.description
     });
 
-    this.evaluationIndicators = this.model.evaluationIndicatorList;
-    this.pMForeignCountriesProjects = this.model.foreignCountriesProjectList;
+    this.evaluationIndicators = this.model?.evaluationIndicatorList;
+    this.pMForeignCountriesProjects = this.model?.foreignCountriesProjectList;
+    this.projectAddresses = this.model?.projectAddressList;
   }
 
   _resetForm(): void {
@@ -461,6 +478,10 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
 
   get beneficiaryCountry(): AbstractControl {
     return this.form.get('basicInfo')?.get('beneficiaryCountry') as AbstractControl;
+  }
+
+  get executionCountry(): AbstractControl {
+    return this.form.get('basicInfo')?.get('executionCountry') as AbstractControl;
   }
 
   get projectWorkArea(): AbstractControl {
@@ -583,7 +604,10 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   private loadCountries(): void {
     this.countryService.loadAsLookups()
       .pipe(takeUntil(this.destroy$))
-      .subscribe((countries) => this.countries = countries);
+      .subscribe((countries) => {
+        this.countries = countries;
+        this.countriesAvailableForSelection = this.countries;
+      });
   }
 
   private loadGoals(): void {
@@ -731,21 +755,44 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     this.categoryGoalPercentGroup.updateValueAndValidity();
   }
 
-  onExecutionFieldChange() {
-    if (this.projectWorkArea.value === ExecutionFields.OutsideQatar) {
-      this.isOutsideQatarWorkArea = true;
-      this.emptyFieldsAndValidation(['internalProjectClassification', 'sanadiDomain', 'sanadiMainClassification']);
-    } else {
-      this.emptyFieldsAndValidation(['firstSDGoal', 'secondSDGoal', 'thirdSDGoal']);
-      this.emptyDomainField();
-      this.isOutsideQatarWorkArea = false;
-      this.setRequiredValidator(['internalProjectClassification', 'sanadiDomain', 'sanadiMainClassification']);
+  listenToExecutionFieldChange() {
+    this.projectWorkArea.valueChanges.subscribe(val => {
+      if (val === ExecutionFields.OutsideQatar) {
+        this.removeQatarFromCountries();
+        this.isOutsideQatarWorkArea = true;
+        this.emptyFieldsAndValidation(['internalProjectClassification', 'sanadiDomain', 'sanadiMainClassification']);
+      } else if (this.projectWorkArea.value === ExecutionFields.InsideQatar) {
+        this.applyNotOutsideQatarChanges();
+        this.setQatarAsTheOnlyChoiceInCountries();
+      } else {
+        this.countriesAvailableForSelection = this.countries;
+        this.applyNotOutsideQatarChanges();
+      }
+    })
+  }
 
-      this.sustainabilityItems.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]);
-      this.setZeroValue(['firstSDGoalPercentage', 'secondSDGoalPercentage', 'thirdSDGoalPercentage']);
-      this.displayDevGoals = false;
-      this.categoryGoalPercentGroup.setValidators(this.getPercentageSumValidation());
-    }
+  applyNotOutsideQatarChanges() {
+    this.emptyFieldsAndValidation(['firstSDGoal', 'secondSDGoal', 'thirdSDGoal']);
+    this.emptyDomainField();
+    this.isOutsideQatarWorkArea = false;
+    this.setRequiredValidator(['internalProjectClassification', 'sanadiDomain', 'sanadiMainClassification']);
+
+    this.sustainabilityItems.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]);
+    this.setZeroValue(['firstSDGoalPercentage', 'secondSDGoalPercentage', 'thirdSDGoalPercentage']);
+    this.displayDevGoals = false;
+    this.categoryGoalPercentGroup.setValidators(this.getPercentageSumValidation());
+  }
+
+  setQatarAsTheOnlyChoiceInCountries() {
+    this.countriesAvailableForSelection = this.countries.filter(x => x.id === this.qatarId);
+    this.beneficiaryCountry.patchValue(null);
+    this.executionCountry.patchValue(null);
+  }
+
+  removeQatarFromCountries() {
+    this.countriesAvailableForSelection = this.countries.filter(x => x.id !== this.qatarId);
+    this.beneficiaryCountry.patchValue(null);
+    this.executionCountry.patchValue(null);
   }
 
   emptyDomainField() {
@@ -1235,7 +1282,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   openMapMarker() {
     (this.selectedProjectAddress!).openMap(this.readonly)
       .onAfterClose$
-      .subscribe(({ click, value }: { click: UserClickOn, value: ICoordinates }) => {
+      .subscribe(({click, value}: { click: UserClickOn, value: ICoordinates }) => {
         if (click === UserClickOn.YES) {
           this.selectedProjectAddress!.latitude = value.latitude;
           this.selectedProjectAddress!.longitude = value.longitude;
@@ -1250,6 +1297,6 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   }
 
   isDisabledSaveAddress() {
-    return this.projectAddressForm.invalid || !CommonUtils.isValidValue(this.latitude.value) || !CommonUtils.isValidValue(this.longitude.value)
+    return this.projectAddressForm.invalid || !CommonUtils.isValidValue(this.latitude.value) || !CommonUtils.isValidValue(this.longitude.value);
   }
 }

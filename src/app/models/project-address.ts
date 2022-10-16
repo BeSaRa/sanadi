@@ -9,8 +9,8 @@ export class ProjectAddress extends SearchableCloneable<ProjectAddress> {
   latitude!: string;
   longitude!: string;
   location!: string;
-  mapService: MapService;
-  defaultLatLng: google.maps.LatLngLiteral = {
+  mapService?: MapService;
+  defaultLatLng?: google.maps.LatLngLiteral = {
     lat: 25.3266204,
     lng: 51.5310087
   }
@@ -32,10 +32,10 @@ export class ProjectAddress extends SearchableCloneable<ProjectAddress> {
   }
 
   openMap(viewOnly: boolean = false): DialogRef {
-    return this.mapService.openMap({
+    return this.mapService!.openMap({
       viewOnly,
       zoom: 18,
-      center: this.hasMarker() ? this.getLngLat() : this.defaultLatLng,
+      center: this.hasMarker() ? this.getLngLat() : this.defaultLatLng!,
       marker: this.hasMarker() ? this.getLngLat() : undefined
     })
   }
