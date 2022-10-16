@@ -27,6 +27,7 @@ import {CustomValidators} from '@app/validators/custom-validators';
 import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 import {ServiceDataService} from '@services/service-data.service';
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -176,7 +177,7 @@ export class UrgentInterventionLicenseComponent extends EServicesGenericComponen
   }
 
   _afterLaunch(): void {
-    this._resetForm();
+    this.resetForm$.next();
     this.toastService.success(this.lang.map.request_has_been_sent_successfully);
   }
 
@@ -351,13 +352,23 @@ export class UrgentInterventionLicenseComponent extends EServicesGenericComponen
   }
 
   handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
-    if (userInteraction) {
-      this._resetForm();
-      this.requestTypeField.setValue(requestTypeValue);
-    }
+    of(userInteraction).pipe(
+      takeUntil(this.destroy$),
+      switchMap(() => this.confirmChangeRequestType(userInteraction))
+    ).subscribe((clickOn: UserClickOn) => {
+      if (clickOn === UserClickOn.YES) {
+        if (userInteraction) {
+          this.resetForm$.next();
+          this.requestTypeField.setValue(requestTypeValue);
+        }
+        this.requestType$.next(requestTypeValue);
 
-    this._handleRequestTypeDependentControls();
-    this._handleLicenseValidationsByRequestType();
+        this._handleRequestTypeDependentControls();
+        this._handleLicenseValidationsByRequestType();
+      } else {
+        this.requestTypeField.setValue(this.requestType$.value);
+      }
+    });
   }
 
   private _handleRequestTypeDependentControls(): void {

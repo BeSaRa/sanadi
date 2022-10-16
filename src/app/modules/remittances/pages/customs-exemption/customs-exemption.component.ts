@@ -10,7 +10,7 @@ import {Observable, of, Subject} from 'rxjs';
 import {LookupService} from '@app/services/lookup.service';
 import {Lookup} from '@app/models/lookup';
 import {CustomsExemptionRequestTypes} from '@app/enums/service-request-types';
-import {catchError, exhaustMap, filter, map, takeUntil, tap} from 'rxjs/operators';
+import {catchError, exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {ReceiverTypes} from '@app/enums/receiver-type.enum';
 import {LinkedProjectTypes} from '@app/enums/linked-project-type.enum';
 import {CustomValidators} from '@app/validators/custom-validators';
@@ -25,6 +25,7 @@ import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 import {AdminResult} from '@app/models/admin-result';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
 
 @Component({
   selector: 'customs-exemption',
@@ -262,7 +263,7 @@ export class CustomsExemptionComponent extends EServicesGenericComponent<Customs
   }
 
   _afterLaunch(): void {
-    this._resetForm();
+    this.resetForm$.next();
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
 
@@ -416,30 +417,37 @@ export class CustomsExemptionComponent extends EServicesGenericComponent<Customs
   }
 
   handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
-    if (userInteraction) {
-      this._resetForm();
-      this.requestType.setValue(requestTypeValue);
-    }
-    if (!requestTypeValue) {
-      requestTypeValue = this.requestType && this.requestType.value;
-    }
+    of(userInteraction).pipe(
+      takeUntil(this.destroy$),
+      switchMap(() => this.confirmChangeRequestType(userInteraction))
+    ).subscribe((clickOn: UserClickOn) => {
+      if (clickOn === UserClickOn.YES) {
+        if (userInteraction) {
+          this.resetForm$.next();
+          this.requestType.setValue(requestTypeValue);
+        }
+        this.requestType$.next(requestTypeValue);
 
-    // if no requestType or (requestType = new)
-    // if new record or draft, reset order no and document no and its validations
-    if (!requestTypeValue || requestTypeValue === CustomsExemptionRequestTypes.NEW) {
-      if (!this.model?.id || this.model.canCommit()) {
-        this.orderNumberField.reset();
-        this.documentNumberField.reset();
+        // if no requestType or (requestType = new)
+        // if new record or draft, reset order no and document no and its validations
+        if (!requestTypeValue || requestTypeValue === CustomsExemptionRequestTypes.NEW) {
+          if (!this.model?.id || this.model.canCommit()) {
+            this.orderNumberField.reset();
+            this.documentNumberField.reset();
 
-        this._handleOrderNumberValidators(false);
-        this._handleDocumentNumberValidators(false);
+            this._handleOrderNumberValidators(false);
+            this._handleDocumentNumberValidators(false);
 
-        this.setSelectedDocument(undefined, true);
+            this.setSelectedDocument(undefined, true);
+          }
+        } else {
+          this._handleOrderNumberValidators(true);
+          this._handleDocumentNumberValidators(true);
+        }
+      } else {
+        this.requestType.setValue(this.requestType$.value);
       }
-    } else {
-      this._handleOrderNumberValidators(true);
-      this._handleDocumentNumberValidators(true);
-    }
+    });
   }
 
   handleCountryChange(value: number, userInteraction: boolean = false): void {

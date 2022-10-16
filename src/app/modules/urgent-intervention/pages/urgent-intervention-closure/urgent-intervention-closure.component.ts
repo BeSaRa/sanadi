@@ -28,7 +28,7 @@ import {
 import {
   InterventionFieldListComponent
 } from '@app/modules/urgent-intervention/shared/intervention-field-list/intervention-field-list.component';
-import { catchError, exhaustMap, filter, map, takeUntil, tap } from 'rxjs/operators';
+import {catchError, exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
 import { CountryService } from '@services/country.service';
 import { Country } from '@app/models/country';
 import { DialogRef } from '@app/shared/models/dialog-ref';
@@ -43,6 +43,7 @@ import {
   BestPracticesListComponent
 } from '@app/modules/urgent-intervention/shared/best-practices-list/best-practices-list.component';
 import {Localization} from '@app/models/localization';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
 
 @Component({
   selector: 'urgent-intervention-closure',
@@ -259,7 +260,7 @@ export class UrgentInterventionClosureComponent extends EServicesGenericComponen
   }
 
   _afterLaunch(): void {
-    this._resetForm();
+    this.resetForm$.next();
     this.toastService.success(this.lang.map.request_has_been_sent_successfully);
   }
 
@@ -435,15 +436,22 @@ export class UrgentInterventionClosureComponent extends EServicesGenericComponen
   }
 
   handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
-    if (userInteraction) {
-      this._resetForm();
-      this.requestTypeField.setValue(requestTypeValue);
-    }
-    // if (!requestTypeValue) {
-    //   requestTypeValue = this.requestTypeField && this.requestTypeField.value;
-    // }
+    of(userInteraction).pipe(
+      takeUntil(this.destroy$),
+      switchMap(() => this.confirmChangeRequestType(userInteraction))
+    ).subscribe((clickOn: UserClickOn) => {
+      if (clickOn === UserClickOn.YES) {
+        if (userInteraction) {
+          this.resetForm$.next();
+          this.requestTypeField.setValue(requestTypeValue);
+        }
+        this.requestType$.next(requestTypeValue);
 
-    this._handleLicenseValidationsByRequestType();
+        this._handleLicenseValidationsByRequestType();
+      } else {
+        this.requestTypeField.setValue(this.requestType$.value);
+      }
+    });
   }
 
   private _handleLicenseValidationsByRequestType(): void {
