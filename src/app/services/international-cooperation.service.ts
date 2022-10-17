@@ -60,7 +60,7 @@ export class InternationalCooperationService extends BaseGenericEService<Interna
   }
 
   getCaseComponentName(): string {
-    return 'InternationalCooperationComponent';
+    return 'InternationalCooperationOldComponent';
   }
 
   _getURLSegment(): string {

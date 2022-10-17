@@ -31,8 +31,8 @@ import {InquiryOldComponent} from '@app/modules/general-services/pages/inquiry-o
 import {ConsultationOldComponent} from '@app/modules/general-services/pages/consultation-old/consultation-old.component';
 import {ConsultationComponent} from './pages/consultation/consultation.component';
 import {
-  InternationalCooperationComponent
-} from '@app/modules/general-services/pages/international-cooperation/international-cooperation.component';
+  InternationalCooperationOldComponent
+} from '@app/modules/general-services/pages/international-cooperation-old/international-cooperation-old.component';
 import {EServicesMainModule} from '@app/modules/e-services-main/e-services-main.module';
 import {EmploymentApproveComponent} from './popups/employment-approve/employment-approve.component';
 import {ExternalOrgAffiliationComponent} from './pages/external-org-affiliation/external-org-affiliation.component';
@@ -54,7 +54,7 @@ import {InquiryComponent} from './pages/inquiry/inquiry.component';
     InquiryOldComponent,
     ConsultationComponent,
     ConsultationOldComponent,
-    InternationalCooperationComponent,
+    InternationalCooperationOldComponent,
     EmploymentApproveComponent,
     NpoContactOfficerComponent,
     ExternalOrgAffiliationComponent,

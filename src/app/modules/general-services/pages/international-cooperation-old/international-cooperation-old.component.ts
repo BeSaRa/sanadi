@@ -28,11 +28,11 @@ import {UserClickOn} from '@app/enums/user-click-on.enum';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
-  selector: 'international-cooperation',
-  templateUrl: './international-cooperation.component.html',
-  styleUrls: ['./international-cooperation.component.scss']
+  selector: 'international-cooperation-old',
+  templateUrl: './international-cooperation-old.component.html',
+  styleUrls: ['./international-cooperation-old.component.scss']
 })
-export class InternationalCooperationComponent implements OnInit, OnDestroy, IESComponent<InternationalCooperation> {
+export class InternationalCooperationOldComponent implements OnInit, OnDestroy, IESComponent<InternationalCooperation> {
   afterSave$: EventEmitter<InternationalCooperation> = new EventEmitter<InternationalCooperation>();
   fromWrapperComponent: boolean = false;
   onModelChange$: EventEmitter<InternationalCooperation | undefined> = new EventEmitter<InternationalCooperation | undefined>();

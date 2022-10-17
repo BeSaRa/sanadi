@@ -50,7 +50,7 @@ const routes: Routes = [
       permissionKey: EServicePermissionsEnum.INTERNATIONAL_COOPERATION,
       configPermissionGroup: null,
       checkAnyPermission: false,
-      render: 'InternationalCooperationComponent'
+      render: 'InternationalCooperationOldComponent'
     }
   },
   {
