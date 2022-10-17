@@ -28,7 +28,7 @@
     <tab
       *ngIf="showServicesTab"
       [name]="tabsData.services.name"
-      [hasError]="tabsData.services.validate()"
+      [hasError]="false"
       [template]="linkServices"
       [title]="lang.map.link_services"
     >
@@ -255,7 +255,24 @@
                   {{ row.serviceDataInfo.getName() }}
                 </td>
               </ng-container>
-
+              <ng-container cdkColumnDef="actions">
+                <th cdk-header-cell *cdkHeaderCellDef>
+                  {{ lang.map.lbl_actions }}
+                </th>
+                <td cdk-cell *cdkCellDef="let row" class="table-actions">
+                  <div class="d-flex flex-row">
+                    <a
+                      *ngIf="operation !== OperationTypes.VIEW"
+                      href="#"
+                      (click)="delete($event, row)"
+                      tooltip="{{ lang.map.btn_delete }}"
+                      class="icon-btn"
+                    >
+                      <i class="mdi mdi-close-box"></i>
+                    </a>
+                  </div>
+                </td>
+              </ng-container>
               <tr cdk-header-row *cdkHeaderRowDef="profileServicesColumns"></tr>
               <tr
                 cdk-row
@@ -280,7 +297,7 @@
               lang.map.service_name
             }}</label>
             <ng-select
-              (change)="handleChosenServicesChange($event)"
+              [formControl]="servicesControl"
               [selectOnTab]="true"
               labelForId="serviceId"
               [clearable]="false"
@@ -296,7 +313,10 @@
           </div>
           <div class="col-md-3">
             <button
-              [disabled]="operation === OperationTypes.VIEW"
+              [disabled]="
+                operation === OperationTypes.VIEW ||
+                servicesControl.value?.length === 0
+              "
               (click)="addServices()"
               class="btn btn-primary"
               tooltip="{{ lang.map.lbl_add_services_to_profile }}"
