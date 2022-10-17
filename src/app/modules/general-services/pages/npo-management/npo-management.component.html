@@ -338,6 +338,7 @@
           <app-field-error-message controlName="youTube"></app-field-error-message>
         </div>
         <div class="col-12">
+          <h6>{{lang.map.contact_officers}}</h6>
           <npo-contact-officer #contactOfficersTab [list]="model?.contactOfficerList || []"
             (readyEvent)="contactOfficersTabStatus = $event">
           </npo-contact-officer>
