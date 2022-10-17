@@ -45,7 +45,7 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
   licenseSearch$: Subject<string> = new Subject<string>();
   selectedLicense?: InitialExternalOfficeApproval;
   organizations: OrgUnit[] = [];
-  fileIconsEnum = FileIconsEnum;
+  loadAttachments: boolean = false;
 
   tabsData: IKeyValue = {
     basicInfo: {

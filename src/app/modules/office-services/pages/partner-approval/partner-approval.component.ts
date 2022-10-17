@@ -47,7 +47,6 @@ import {UserClickOn} from '@app/enums/user-click-on.enum';
 })
 export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerApproval, PartnerApprovalService> implements AfterViewInit {
   form!: UntypedFormGroup;
-  fileIconsEnum = FileIconsEnum;
   serviceRequestTypes = ServiceRequestTypes;
   countries: Country[] = [];
   requestTypes: Lookup[] = this.lookupService.listByCategory.ServiceRequestType.slice().sort((a, b) => a.lookupKey - b.lookupKey);
@@ -64,6 +63,7 @@ export class PartnerApprovalComponent extends EServicesGenericComponent<PartnerA
   targetGroupsTabStatus: ReadinessStatus = 'READY';
   contactOfficersTabStatus: ReadinessStatus = 'READY';
   approvalReasonsTabStatus: ReadinessStatus = 'READY';
+  loadAttachments: boolean = false;
 
   @ViewChild('bankAccountsTab') bankAccountComponentRef!: BankAccountComponent;
   @ViewChild('goalsTab') goalComponentRef!: GoalComponent;
