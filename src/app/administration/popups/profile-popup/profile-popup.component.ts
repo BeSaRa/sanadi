@@ -77,18 +77,17 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> {
     if (this.operation) {
       this.profileTypeField.disable();
     }
-    /*     this.profileServiceSerice.getServicesByProfile(1).subscribe(console.log); */
+    this.profileServiceSerice.getServicesByProfile(1).subscribe(console.log);
   }
   handleProfileType(profileType: number) {
     console.log({ profileType });
     if (profileType === ProfileTypes.CHARITY || profileType === ProfileTypes.INSTITUTION) {
       this.showRaca = true;
-      this.registrationAuthorityField?.patchValue('raca');
+      this.registrationAuthorityField?.patchValue(-1);
       this.registrationAuthorityField?.disable();
     }
     else {
       this.showRaca = false;
-
       this.registrationAuthorityField?.reset();
       this.registrationAuthorityField?.enable();
     }

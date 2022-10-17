@@ -7,6 +7,8 @@ export class ProfileInterceptor implements IModelInterceptor<Profile> {
   send(model: Partial<Profile>): Partial<Profile> {
     delete model.service;
     delete model.statusInfo;
+    if (model.registrationAuthority === -1) delete model.registrationAuthority;
+
     return model;
   }
   receive(model: Profile): Profile {

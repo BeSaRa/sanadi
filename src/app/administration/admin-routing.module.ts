@@ -158,7 +158,7 @@ const routes: Routes = [
     path: 'profiles', component: ProfilesComponent,
     canActivate: [PermissionGuard],
     data: {
-      permissionKey: PermissionsEnum.MANAGE_CUSTOM_MENU_ITEM, configPermissionGroup: null, checkAnyPermission: false
+      permissionKey: PermissionsEnum.MANAGE_PROFILE, configPermissionGroup: null, checkAnyPermission: false
     }
   }
 ];
