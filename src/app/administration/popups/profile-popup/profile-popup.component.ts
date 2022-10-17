@@ -167,7 +167,6 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> {
     });
   }
   saveFail(error: Error): void {
-    throw new Error('Method not implemented.');
   }
   buildForm(): void {
     this.form = this.fb.group({
