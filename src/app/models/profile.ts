@@ -22,5 +22,5 @@ export class Profile extends BaseModel<Profile, ProfileService> {
   statusDateModified!: string | IMyDateModel;
   email!: string;
   profileDetails!: ProfileDetails;
-
+  profileType!: number;
 }
