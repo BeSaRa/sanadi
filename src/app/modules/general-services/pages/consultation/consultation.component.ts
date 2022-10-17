@@ -106,7 +106,6 @@ export class ConsultationComponent extends EServicesGenericComponent<Consultatio
   }
 
   private _updateModelAfterSave(model: Consultation): void {
-    debugger
     if ((this.openFrom === OpenFrom.USER_INBOX || this.openFrom === OpenFrom.TEAM_INBOX) && this.model?.taskDetails && this.model.taskDetails.tkiid) {
       this.service.getTask(this.model.taskDetails.tkiid)
         .subscribe((model) => {
