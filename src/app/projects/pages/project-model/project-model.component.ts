@@ -117,6 +117,8 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   displayDevGoals: boolean = false;
   isOutsideQatarWorkArea: boolean = false;
   isDevelopmentField: boolean = false;
+  isCharityProfile: boolean = false;
+  isInstitutionProfile: boolean = false;
 
   templateSerialControl: UntypedFormControl = new UntypedFormControl(null);
 
@@ -216,6 +218,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   }
 
   _initComponent(): void {
+    this.setUserProfiles();
     this.getQatarId();
     this.loadIndicators();
     this.buildEvaluationIndicatorForm();
@@ -227,6 +230,11 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     this.loadGoals();
     this.listenToProjectComponentChange();
     this.listenToTemplateSearch();
+  }
+
+  setUserProfiles(): void {
+    this.isCharityProfile = this.employeeService.isCharityProfile();
+    this.isInstitutionProfile = this.employeeService.isInstitutionProfile();
   }
 
   getQatarId() {
@@ -734,11 +742,9 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
         'thirdSDGoalPercentage'
       ]);
       this.setRequiredValidator(['mainUNOCHACategory', 'subUNOCHACategory']);
-      this.sustainabilityItems.setValidators(CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS));
       this.displayDevGoals = false;
       this.categoryGoalPercentGroup.setValidators(null);
     } else if (this.domain.value === DomainTypes.DEVELOPMENT) {
-      this.sustainabilityItems.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]);
       this.emptyFieldsAndValidation(['mainUNOCHACategory', 'subUNOCHACategory']);
       this.setRequiredValidator(['mainDACCategory', 'subDACCategory', 'firstSDGoal', 'firstSDGoalPercentage']);
       this.setZeroValue(['firstSDGoalPercentage', 'secondSDGoalPercentage', 'thirdSDGoalPercentage']);
@@ -760,7 +766,6 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
         'thirdSDGoalPercentage'
       ]);
     }
-    this.sustainabilityItems.updateValueAndValidity();
     this.categoryGoalPercentGroup.updateValueAndValidity();
   }
 
@@ -786,7 +791,6 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     this.isOutsideQatarWorkArea = false;
     this.setRequiredValidator(['internalProjectClassification', 'sanadiDomain', 'sanadiMainClassification']);
 
-    this.sustainabilityItems.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]);
     this.setZeroValue(['firstSDGoalPercentage', 'secondSDGoalPercentage', 'thirdSDGoalPercentage']);
     this.displayDevGoals = false;
     this.categoryGoalPercentGroup.setValidators(this.getPercentageSumValidation());
