@@ -175,7 +175,7 @@
             validationClasses="registrationAuthority"
           >
             <ng-option value="">{{ lang.map.lbl_none }}</ng-option>
-            <ng-option *ngIf="showRaca" value="-1">{{
+            <ng-option *ngIf="showRaca" [value]="-1">{{
               lang.map.lbl_raca
             }}</ng-option>
             <ng-option
@@ -213,7 +213,12 @@
           <label for="profileId" class="form-label">{{
             lang.map.lbl_profile_id
           }}</label>
-          <input id="profileId" class="form-control" [value]="'123'" />
+          <input
+            id="profileId"
+            class="form-control"
+            [value]="model.id"
+            [readonly]="true"
+          />
         </div>
         <div class="col-sm-12">
           <h2 class="h6 text-primary">{{ lang.map.linked_services }}</h2>

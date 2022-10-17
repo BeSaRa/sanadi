@@ -74,26 +74,18 @@
 
         <ng-container cdkColumnDef="actions">
           <th cdk-header-cell *cdkHeaderCellDef>{{ lang.map.lbl_actions }}</th>
-          <td cdk-cell *cdkCellDef="let row" class="table-actions">
-            <div class="d-flex flex-row">
-              <a
-                href="#"
-                (click)="view(row, $event)"
-                tooltip="{{ lang.map.view }}"
-                class="icon-btn"
-              >
-                <i class="mdi mdi-eye"></i>
-              </a>
-              <a
-                href="#"
-                (click)="edit(row, $event)"
-                tooltip="{{ lang.map.btn_edit }}"
-                class="icon-btn"
-              >
-                <i class="mdi mdi-pen"></i>
-              </a>
-
+          <td
+            cdk-cell
+            *cdkCellDef="let row; index as itemIndex"
+            class="table-actions"
+          >
+            <grid-actions
+              [record]="row"
+              [actions]="actions"
+              [itemIndex]="itemIndex"
+            >
               <span
+                afterTemplate
                 class="form-check form-switch switch-action"
                 *ngIf="row.status != commonStatusEnum.RETIRED"
                 style="top: auto"
@@ -110,7 +102,7 @@
                   (change)="toggleStatus(row)"
                 />
               </span>
-            </div>
+            </grid-actions>
           </td>
         </ng-container>
         <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>

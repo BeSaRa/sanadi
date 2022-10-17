@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 import { CommonStatusEnum } from '@app/enums/common-status.enum';
 import { AdminGenericComponent } from '@app/generics/admin-generic-component';
 import { Profile } from '@app/models/profile';
@@ -16,7 +17,31 @@ import { catchError, exhaustMap, filter, switchMap, takeUntil } from 'rxjs/opera
   styleUrls: ['./profiles.component.scss']
 })
 export class ProfilesComponent extends AdminGenericComponent<Profile, ProfileService> {
-  actions: IMenuItem<Profile>[] = [];
+  actions: IMenuItem<Profile>[] = [
+    {
+      type: 'action',
+      label: 'btn_edit',
+      icon: ActionIconsEnum.EDIT,
+      onClick: (item: Profile) => this.edit$.next(item)
+    },
+    {
+      type: 'action',
+      label: 'view',
+      icon: ActionIconsEnum.VIEW,
+      onClick: (item: Profile) => this.view$.next(item)
+    },
+    {
+
+      type: 'action',
+      icon: ActionIconsEnum.STATUS,
+      label: 'btn_activate',
+      onClick: (item: Profile) => this.toggleStatus(item),
+      displayInGrid: false,
+      show: (item) => {
+        return item.status !== CommonStatusEnum.RETIRED && item.status === CommonStatusEnum.DEACTIVATED;
+      }
+    }
+  ];
   displayedColumns: string[] = ['arName', 'enName', 'status', 'actions'];
   view$: Subject<Profile> = new Subject<Profile>();
   constructor(public service: ProfileService, public lang: LangService, private toast: ToastService) {
@@ -31,7 +56,7 @@ export class ProfilesComponent extends AdminGenericComponent<Profile, ProfileSer
         takeUntil(this.destroy$),
         exhaustMap((model) => {
           return this.service
-            .openViewDialog(model)
+            .openViewDialog(model.id)
             .pipe(catchError((_) => of(null)));
         })
       )
@@ -40,26 +65,6 @@ export class ProfilesComponent extends AdminGenericComponent<Profile, ProfileSer
         switchMap((dialog) => dialog.onAfterClose$)
       )
       .subscribe(() => this.reload$.next(null));
-  }
-  listenToEdit(): void {
-    this.edit$
-      .pipe(
-        takeUntil(this.destroy$),
-        exhaustMap((model) => this.service.openEditDialog(model))
-      )
-      .pipe(
-        filter((dialog): dialog is DialogRef => !!dialog),
-        switchMap((dialog) => dialog.onAfterClose$)
-      )
-      .subscribe(() => this.reload$.next(null));
-  }
-  public view(row: Profile, event: MouseEvent): void {
-    event.preventDefault();
-    this.view$.next(row);
-  }
-  public edit(row: Profile, event: MouseEvent): void {
-    event.preventDefault();
-    this.edit$.next(row);
   }
   public toggleStatus(model: Profile): void {
     let observable: Observable<Object>;

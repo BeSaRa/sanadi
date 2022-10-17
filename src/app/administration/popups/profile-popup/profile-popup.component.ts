@@ -70,11 +70,14 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> {
   onTabChange($event: TabComponent) {
   }
   initPopup(): void {
+    console.log(this.profileTypes);
     this.service.getByProfileType(ProfileTypes.REGISTERED_ENTITES).subscribe(e => {
       this.registrationAuthorities = e;
     });
     if (this.operation) {
       this.profileTypeField.disable();
+      this.getServices(this.model.id);
+      this.showServicesTab = true;
     }
   }
   handleProfileType(profileType: number) {
@@ -108,11 +111,14 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> {
     this.model = model;
     this.showServicesTab = true;
     this.operation = OperationTypes.UPDATE;
+    this.getServices(model.id);
 
-    this.profileServiceSerice.getServicesByProfile(model.id).subscribe(e => {
+  }
+  getServices(id: number) {
+
+    this.profileServiceSerice.getServicesByProfile(id).subscribe(e => {
       this.profileServices = e;
     });
-
   }
   beforeSave(
     model: Profile,
@@ -139,6 +145,9 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> {
     });
     if (this.operation === OperationTypes.VIEW) {
       this.form.disable();
+    }
+    if (this.model?.profileType) {
+      this.handleProfileType(this.model.profileType);
     }
   }
 }

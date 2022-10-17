@@ -48,8 +48,8 @@ export class ProfileService extends CrudWithDialogGenericService<Profile>{
   deActivate(id: number) {
     return this.http.put(this._getServiceURL() + `/${id}/de-activate`, {});
   }
-  openViewDialog(_model: Profile): Observable<DialogRef> {
-    return this.getByIdComposite(_model.id).pipe(
+  openViewDialog(modelId: number): Observable<DialogRef> {
+    return this.getByIdComposite(modelId).pipe(
       switchMap((model: Profile) => {
         return of(this.dialog.show<IDialogData<Profile>>(this._getDialogComponent(), {
           model,

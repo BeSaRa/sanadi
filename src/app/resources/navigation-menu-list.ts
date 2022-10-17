@@ -1002,7 +1002,7 @@ export const navigationMenuList = [
     path: '/home/administration/profiles',
     icon: 'mdi-account',
     isSvg: false,
-    permission: PermissionsEnum.MANAGE_CUSTOM_MENU_ITEM,
+    permission: PermissionsEnum.MANAGE_PROFILE,
     permissionGroup: null,
     parent: 6,
     group: 'administration',
