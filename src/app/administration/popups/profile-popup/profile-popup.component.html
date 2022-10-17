@@ -51,6 +51,7 @@
             validationClasses="arName"
             formControlName="arName"
             class="form-control"
+            trimInput
           />
           <app-field-error-message
             controlName="arName"
@@ -64,7 +65,12 @@
             class="form-label"
             >{{ lang.map.lbl_english_name }}</label
           >
-          <input id="enName" formControlName="enName" class="form-control" />
+          <input
+            id="enName"
+            trimInput
+            formControlName="enName"
+            class="form-control"
+          />
           <app-field-error-message
             controlName="enName"
           ></app-field-error-message>
@@ -104,6 +110,7 @@
             lang.map.lbl_description
           }}</label>
           <input
+            trimInput
             id="arDesc"
             validationClasses="arDesc"
             formControlName="arDesc"
@@ -122,6 +129,7 @@
             >{{ lang.map.lbl_profile_code }}</label
           >
           <input
+            trimInput
             id="profileCode"
             formControlName="profileCode"
             class="form-control"
@@ -194,6 +202,7 @@
             lang.map.lbl_email
           }}</label>
           <input
+            trimInput
             id="email"
             formControlName="email"
             validationClasses="email"
