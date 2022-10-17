@@ -54,6 +54,9 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> {
       this.services = x;
     })
   }
+  get OperationTypes() {
+    return OperationTypes;
+  }
   get basicInfoForm(): AbstractControl | null {
     return this.form.get('basicInfo');
   }
