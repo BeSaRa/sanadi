@@ -46,6 +46,7 @@ import {CharityReportsComponent} from './shared/risk-reports/risk-reports.compon
 import {CoordinationWithOrgPopupComponent} from './popups/coordination-with-org-popup/coordination-with-org-popup.component';
 import {FollowupDateApprovePopupComponent} from './popups/follow-up-date-approve-popup/follow-up-date-approve-popup.component';
 import {InquiryComponent} from './pages/inquiry/inquiry.component';
+import {InternationalCooperationComponent} from './pages/international-cooperation/international-cooperation.component';
 
 
 @NgModule({
@@ -81,7 +82,8 @@ import {InquiryComponent} from './pages/inquiry/inquiry.component';
     CoordinationWithOrgPopupComponent,
     AwarenessActivitySuggestionComponent,
     AwarenessActivitySuggestionApprovalComponent,
-    InquiryComponent
+    InquiryComponent,
+    InternationalCooperationComponent
   ],
   imports: [
     CommonModule,
