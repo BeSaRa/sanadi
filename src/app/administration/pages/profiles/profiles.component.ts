@@ -17,6 +17,7 @@ import { catchError, exhaustMap, filter, switchMap, takeUntil } from 'rxjs/opera
   styleUrls: ['./profiles.component.scss']
 })
 export class ProfilesComponent extends AdminGenericComponent<Profile, ProfileService> {
+  usePagination = true;
   actions: IMenuItem<Profile>[] = [
     {
       type: 'action',
