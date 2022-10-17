@@ -32,7 +32,7 @@
                        [notFoundText]="lang.map.msg_not_found"
                        appendTo="body"
                        [readonly]="!isEditAllowed()"
-                       (change)="_handleRequestTypeChange($event, true)"
+                       (change)="handleRequestTypeChange($event, true)"
                        formControlName="requestType"
                        validationClasses="requestType">
               <ng-option *ngFor="let option of requestTypesList" [value]="option.lookupKey">

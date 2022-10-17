@@ -97,15 +97,13 @@ export class OrganizationOfficersComponent implements OnInit {
       if (
         this.selectedOrganizationOfficers.findIndex(
           (e) => e.identificationNumber === officer.identificationNumber
-        ) === -1 && (this.selectedOfficerIndex === null)
+        ) === -1
       ) {
         this.selectedOrganizationOfficers =
           this.selectedOrganizationOfficers.concat(officer);
         this.resetOfficerForm();
         return;
       }
-      this.dialog.error(this.lang.map.selected_item_already_exists);
-      return;
 
     }
     const notExisted = !this.selectedOrganizationOfficers

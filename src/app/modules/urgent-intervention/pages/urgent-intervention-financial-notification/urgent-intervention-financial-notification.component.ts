@@ -1,7 +1,7 @@
-import { AdminResult } from './../../../../models/admin-result';
-import { ImplementingAgency } from './../../../../models/implementing-agency';
-import { UserClickOn } from './../../../../enums/user-click-on.enum';
-import { CustomValidators } from './../../../../validators/custom-validators';
+import { AdminResult } from '@app/models/admin-result';
+import { ImplementingAgency } from '@app/models/implementing-agency';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { CustomValidators } from '@app/validators/custom-validators';
 import { UrgentInterventionAnnouncementSearchCriteria } from '@app/models/urgent-intervention-announcement-search-criteria';
 import { UrgentInterventionAnnouncementService } from '@services/urgent-intervention-announcement.service';
 import { UrgentInterventionAnnouncementResult } from '@app/models/urgent-intervention-announcement-result';
@@ -264,7 +264,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
     }
 
     this.cd.detectChanges();
-    this._handleRequestTypeChange(model.requestType, false);
+    this.handleRequestTypeChange(model.requestType, false);
   }
 
   licenseSearch($event?: Event): void {
@@ -327,7 +327,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
       value.beneficiaryCountryInfo = licenseDetails.beneficiaryCountryInfo;
       value.executionCountryInfo = licenseDetails.executionCountryInfo;
       value.licenseVSID = licenseDetails.vsId;
-      this._handleRequestTypeChange(value.requestType, false);
+      this.handleRequestTypeChange(value.requestType, false);
       this._updateForm(value);
     }
   }
@@ -365,7 +365,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
     return !isAllowed;
   }
 
-  _handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false) {
+  handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false) {
     of(userInteraction).pipe(
       takeUntil(this.destroy$),
       switchMap(() => this.confirmChangeRequestType(userInteraction))

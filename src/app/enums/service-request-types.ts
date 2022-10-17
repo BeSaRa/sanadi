@@ -1,17 +1,17 @@
 import {AllRequestTypesEnum} from '@app/enums/all-request-types-enum';
 
 export enum ServiceRequestTypes {
-  NEW = 1,
-  RENEW = 2,
-  EXTEND = 3,
-  UPDATE = 4,
-  CANCEL = 5
+  NEW = AllRequestTypesEnum.NEW,
+  RENEW = AllRequestTypesEnum.RENEW,
+  EXTEND = AllRequestTypesEnum.EXTEND,
+  UPDATE = AllRequestTypesEnum.UPDATE,
+  CANCEL = AllRequestTypesEnum.CANCEL
 }
 
 export enum CollectionRequestType {
-  NEW = 1,
-  UPDATE = 4,
-  CANCEL = 5
+  NEW = AllRequestTypesEnum.NEW,
+  UPDATE = AllRequestTypesEnum.UPDATE,
+  CANCEL = AllRequestTypesEnum.CANCEL
 }
 
 export enum UrgentInterventionAnnouncementRequestType {
@@ -21,6 +21,6 @@ export enum UrgentInterventionAnnouncementRequestType {
 }
 
 export enum CustomsExemptionRequestTypes {
-  NEW = 1,
-  CANCEL = 5
+  NEW = AllRequestTypesEnum.NEW,
+  CANCEL = AllRequestTypesEnum.CANCEL
 }

@@ -1,11 +1,17 @@
+import { InterceptModel } from '@app/decorators/decorators/intercept-model';
 import { DateUtils } from '@app/helpers/date-utils';
+import { ByLawInterceptor } from '@app/model-interceptors/bylaw-interceptor';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { IMyDateModel } from 'angular-mydatepicker';
 import { AdminResult } from './admin-result';
 import { SearchableCloneable } from './searchable-cloneable';
 
 
-
+const { send, receive } = new ByLawInterceptor();
+@InterceptModel({
+  receive,
+  send
+})
 export class Bylaw extends SearchableCloneable<Bylaw> {
   fullName!: string;
   category!: number;

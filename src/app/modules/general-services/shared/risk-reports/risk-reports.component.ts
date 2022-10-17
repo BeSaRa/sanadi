@@ -135,6 +135,10 @@ export class CharityReportsComponent extends ListModelComponent<CharityReport> {
         controlName: 'subject',
         type: 'text',
         label: this.lang.map.report_subject,
+      }, {
+        controlName: 'procedures',
+        type: 'text',
+        label: this.lang.map.procedures
       }
       );
     }

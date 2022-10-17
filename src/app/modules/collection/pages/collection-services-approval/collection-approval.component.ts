@@ -11,11 +11,12 @@ import {Lookup} from '@app/models/lookup';
 import {LookupService} from '@app/services/lookup.service';
 import {CollectionRequestType} from '@app/enums/service-request-types';
 import {DialogService} from '@app/services/dialog.service';
-import {filter, map, takeUntil, tap} from 'rxjs/operators';
+import {filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {ToastService} from '@app/services/toast.service';
 import {OpenFrom} from '@app/enums/open-from.enum';
 import {EmployeeService} from '@app/services/employee.service';
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
 
 @Component({
   selector: 'collection-approval',
@@ -89,7 +90,7 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
 
   _afterBuildForm(): void {
     this.setDefaultValues();
-    this.listenToRequestTypeChanges();
+    // this.listenToRequestTypeChanges();
     this.checkDisableFields();
     this.listenToDurationChanges();
     this.listenToRequestClassificationChanges();
@@ -116,7 +117,7 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
   }
 
   _afterLaunch(): void {
-    this._resetForm();
+    this.resetForm$.next();
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
 
@@ -162,6 +163,7 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
       basicInfo: model?.buildBasicInfo(),
       explanation: model?.buildExplanation()
     });
+    this.handleRequestTypeChange(model.requestType, false);
   }
 
   _resetForm(): void {
@@ -175,7 +177,28 @@ export class CollectionApprovalComponent extends EServicesGenericComponent<Colle
   private setDefaultValues(): void {
     if (this.operation === OperationTypes.CREATE) {
       this.requestType.patchValue(this.requestTypes[0].lookupKey);
+      this.handleRequestTypeChange(this.requestTypes[0].lookupKey, false);
     }
+  }
+
+  handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
+    of(userInteraction).pipe(
+      takeUntil(this.destroy$),
+      switchMap(() => this.confirmChangeRequestType(userInteraction))
+    ).subscribe((clickOn: UserClickOn) => {
+      if (clickOn === UserClickOn.YES) {
+        if (userInteraction) {
+          this.resetForm$.next();
+          this.requestType.setValue(requestTypeValue);
+        }
+        this.requestType$.next(requestTypeValue);
+
+        this.disableSearchField = requestTypeValue === CollectionRequestType.NEW;
+        this.model!.requestType = requestTypeValue;
+      } else {
+        this.requestType.setValue(this.requestType$.value);
+      }
+    });
   }
 
   private listenToRequestTypeChanges() {
