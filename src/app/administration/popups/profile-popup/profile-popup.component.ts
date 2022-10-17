@@ -16,6 +16,9 @@ import { TabComponent } from '@app/shared/components/tab/tab.component';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { ServiceDataService } from '@app/services/service-data.service';
+import { ServiceData } from '@app/models/service-data';
 
 @Component({
   selector: 'profile-popup',
@@ -26,6 +29,7 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> {
   model!: Profile;
   form!: UntypedFormGroup;
   operation!: OperationTypes;
+
   tabsData: IKeyValue = {
     basic: {
       name: 'basic', validate:
@@ -39,10 +43,17 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> {
   showServicesTab = false;
   profileTypes = this.lookupService.listByCategory.ProfileType.sort((a, b) => a.lookupKey - b.lookupKey);
   status = this.lookupService.listByCategory.CommonStatus.filter(e => !e.isRetiredCommonStatus());
-  profileServicesColumns = ['profile', 'service'];
+  profileServicesColumns = ['service'];
   profileServices: ProfileServiceModel[] = [];
   showRaca = false;
+  services: ServiceData[] = [];
   registrationAuthorities: Profile[] = [];
+  addedServices: string[] = [];
+  _loadServices() {
+    return this.serviceData.loadAsLookups().subscribe(x => {
+      this.services = x;
+    })
+  }
   get basicInfoForm(): AbstractControl | null {
     return this.form.get('basicInfo');
   }
@@ -60,7 +71,8 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> {
     private toast: ToastService,
     public lang: LangService,
     private profileServiceSerice: ProfileServiceService,
-    private service: ProfileService
+    private service: ProfileService,
+    private serviceData: ServiceDataService
   ) {
     super();
     this.model = new Profile().clone({ ...data.model });
@@ -70,13 +82,13 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> {
   onTabChange($event: TabComponent) {
   }
   initPopup(): void {
-    console.log(this.profileTypes);
     this.service.getByProfileType(ProfileTypes.REGISTERED_ENTITES).subscribe(e => {
       this.registrationAuthorities = e;
     });
     if (this.operation) {
       this.profileTypeField.disable();
       this.getServices(this.model.id);
+      this._loadServices();
       this.showServicesTab = true;
     }
   }
@@ -112,7 +124,7 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> {
     this.showServicesTab = true;
     this.operation = OperationTypes.UPDATE;
     this.getServices(model.id);
-
+    this._loadServices();
   }
   getServices(id: number) {
 
@@ -149,5 +161,20 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> {
     if (this.model?.profileType) {
       this.handleProfileType(this.model.profileType);
     }
+
+  }
+  handleChosenServicesChange(event: string[]) {
+    this.addedServices = event;
+  }
+  addServices() {
+    const _services = this.addedServices.map(e => new ProfileServiceModel().clone({
+      profileId: this.model.id,
+      serviceId: +e
+    }));
+    this.profileServiceSerice.createBulk(_services).subscribe(e => {
+      this.getServices(this.model.id);
+      this.toast.success(this.lang.map.services_add_successfully);
+      this.addedServices = [];
+    });
   }
 }

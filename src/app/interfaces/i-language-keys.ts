@@ -1499,5 +1499,7 @@ export interface ILanguageKeys {
   private_menu: string;
   procedures: string;
   lbl_profile_id: string;
+  lbl_add_services_to_profile: string;
+  services_add_successfully: string;
 }
 

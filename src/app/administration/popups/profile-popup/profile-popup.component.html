@@ -238,20 +238,12 @@
               [dataSource]="table.dataSource"
               class="table table-striped table-bordered caption-top"
             >
-              <ng-container cdkColumnDef="profile">
-                <th cdk-header-cell sortable-header *cdkHeaderCellDef>
-                  {{ lang.map.lbl_profile_id }}
-                </th>
-                <td cdk-cell *cdkCellDef="let row">
-                  {{ row.profileId }}
-                </td>
-              </ng-container>
               <ng-container cdkColumnDef="service">
                 <th cdk-header-cell sortable-header *cdkHeaderCellDef>
                   {{ lang.map.service_name }}
                 </th>
                 <td cdk-cell *cdkCellDef="let row">
-                  {{ row.serviceId }}
+                  {{ row.serviceDataInfo.getName() }}
                 </td>
               </ng-container>
 
@@ -267,6 +259,41 @@
               </tr>
             </table>
           </app-table>
+        </div>
+
+        <div class="col-sm-12 mt-5">
+          <h2 class="h6 text-primary">{{ lang.map.lbl_add_service }}</h2>
+          <hr />
+        </div>
+        <div class="row align-items-center">
+          <div class="col-md-9 col-sm-12 mb-4 position-relative">
+            <label class="form-label" for="serviceId">{{
+              lang.map.service_name
+            }}</label>
+            <ng-select
+              (change)="handleChosenServicesChange($event)"
+              [selectOnTab]="true"
+              labelForId="serviceId"
+              [clearable]="false"
+              placeholder="{{ lang.map.select }}"
+              id="serviceId"
+              [notFoundText]="lang.map.msg_not_found"
+              [multiple]="true"
+            >
+              <ng-option *ngFor="let option of services" [value]="option.id">
+                {{ option.getName() }}
+              </ng-option>
+            </ng-select>
+          </div>
+          <div class="col-md-3">
+            <button
+              (click)="addServices()"
+              class="btn btn-primary"
+              tooltip="{{ lang.map.lbl_add_services_to_profile }}"
+            >
+              {{ lang.map.lbl_add_service }}
+            </button>
+          </div>
         </div>
       </div>
     </div>
