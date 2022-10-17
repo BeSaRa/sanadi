@@ -85,7 +85,7 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> {
   onTabChange($event: TabComponent) {
   }
   initPopup(): void {
-    this.service.getByProfileType(ProfileTypes.REGISTERED_ENTITES).subscribe(e => {
+    this.service.getByProfileType(ProfileTypes.REGISTERED_ENTITIES).subscribe(e => {
       this.registrationAuthorities = e;
     });
     if (this.operation) {
