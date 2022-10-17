@@ -1468,6 +1468,10 @@ export interface ILanguageKeys {
   err_invalid_website: string;
   report_title: string;
   reject_reason: string;
+  menu_profile: string;
+  lbl_profile_type: string;
+  lbl_profile_code: string;
+  lbl_registration_authority: string;
   all_employees: string;
   lbl_add_x: string;
   lbl_edit_x: string;
@@ -1512,4 +1516,8 @@ export interface ILanguageKeys {
   public_menu: string;
   private_menu: string;
   procedures: string;
+  lbl_profile_id: string;
+  lbl_add_services_to_profile: string;
+  services_add_successfully: string;
 }
+
