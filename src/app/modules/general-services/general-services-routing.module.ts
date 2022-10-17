@@ -28,7 +28,7 @@ const routes: Routes = [
       permissionKey: EServicePermissionsEnum.CONSULTATION,
       configPermissionGroup: null,
       checkAnyPermission: false,
-      render: 'ConsultationComponent'
+      render: 'ConsultationOldComponent'
     }
   },
   {

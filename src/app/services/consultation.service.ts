@@ -62,7 +62,7 @@ export class ConsultationService extends BaseGenericEService<Consultation> {
 
 
   getCaseComponentName(): string {
-    return 'ConsultationComponent';
+    return 'ConsultationOldComponent';
   }
 
   _getInterceptor(): Partial<IModelInterceptor<Consultation>> {

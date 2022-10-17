@@ -30,11 +30,11 @@ import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 
 @Component({
-  selector: 'consultation',
-  templateUrl: './consultation.component.html',
-  styleUrls: ['./consultation.component.scss']
+  selector: 'consultation-old',
+  templateUrl: './consultation-old.component.html',
+  styleUrls: ['./consultation-old.component.scss']
 })
-export class ConsultationComponent implements OnInit, OnDestroy, IESComponent<Consultation> {
+export class ConsultationOldComponent implements OnInit, OnDestroy, IESComponent<Consultation> {
   fromWrapperComponent: boolean = false;
   onModelChange$: EventEmitter<Consultation | undefined> = new EventEmitter<Consultation | undefined>();
   accordionView: boolean = false;

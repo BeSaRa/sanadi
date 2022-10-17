@@ -21,7 +21,7 @@ import { GeneralServicesRoutingModule } from './general-services-routing.module'
 import { GeneralServicesComponent } from './general-services.component';
 import { SharedModule } from '@app/shared/shared.module';
 import { InquiryComponent } from '@app/modules/general-services/pages/inquiry/inquiry.component';
-import { ConsultationComponent } from '@app/modules/general-services/pages/consultation/consultation.component';
+import { ConsultationOldComponent } from '@app/modules/general-services/pages/consultation-old/consultation-old.component';
 import {
   InternationalCooperationComponent
 } from '@app/modules/general-services/pages/international-cooperation/international-cooperation.component';
@@ -43,7 +43,7 @@ import { FollowupDateApprovePopupComponent } from './popups/follow-up-date-appro
   declarations: [
     GeneralServicesComponent,
     InquiryComponent,
-    ConsultationComponent,
+    ConsultationOldComponent,
     InternationalCooperationComponent,
     EmploymentApproveComponent,
     NpoContactOfficerComponent,

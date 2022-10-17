@@ -14,7 +14,7 @@ import {DynamicComponentService} from './dynamic-component.service';
 import {TeamService} from './team.service';
 import {CustomEmployeePermission} from '@app/helpers/custom-employee-permission';
 import {InquiryComponent} from '@app/modules/general-services/pages/inquiry/inquiry.component';
-import {ConsultationComponent} from '@app/modules/general-services/pages/consultation/consultation.component';
+import {ConsultationOldComponent} from '@app/modules/general-services/pages/consultation-old/consultation-old.component';
 import {
   InternationalCooperationComponent
 } from '@app/modules/general-services/pages/international-cooperation/international-cooperation.component';
@@ -81,7 +81,7 @@ export class AutoRegisterService {
     new DynamicComponentService(() => {
       // any Dynamic Components will be register here.
       DynamicComponentService.registerComponent('InquiryComponent', InquiryComponent);
-      DynamicComponentService.registerComponent('ConsultationComponent', ConsultationComponent);
+      DynamicComponentService.registerComponent('ConsultationOldComponent', ConsultationOldComponent);
       DynamicComponentService.registerComponent('InternationalCooperationComponent', InternationalCooperationComponent);
       DynamicComponentService.registerComponent('InitialExternalOfficeApprovalComponent', InitialExternalOfficeApprovalComponent);
       DynamicComponentService.registerComponent('FinalExternalOfficeApprovalComponent', FinalExternalOfficeApprovalComponent);
