@@ -29,7 +29,7 @@ import {AdminResult} from '@app/models/admin-result';
 import {DacOchaNewService} from '@services/dac-ocha-new.service';
 import {DomainTypes} from '@app/enums/domain-types';
 import {SelectedLicenseInfo} from '@contracts/selected-license-info';
-import {TransferringIndividualFundsAbroadRequestTypeEnum} from '@app/enums/transferring-individual-funds-abroad-request-type-enum';
+import {TransferringIndividualFundsAbroadRequestTypeEnum} from '@app/enums/service-request-types';
 import {CountryService} from '@services/country.service';
 import {Country} from '@app/models/country';
 import {InternalProjectLicenseResult} from '@app/models/internal-project-license-result';

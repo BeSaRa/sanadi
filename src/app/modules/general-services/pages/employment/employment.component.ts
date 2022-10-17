@@ -16,7 +16,7 @@ import { CaseTypes } from "@app/enums/case-types.enum";
 import { Component, Input, ViewChild } from "@angular/core";
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from "@angular/forms";
 import { Observable, of, Subject } from "rxjs";
-import { EmploymentRequestType } from "@app/enums/employment-request-type";
+import { EmploymentRequestType } from "@app/enums/service-request-types";
 import { FileIconsEnum } from "@app/enums/file-extension-mime-types-icons.enum";
 import { SaveTypes } from "@app/enums/save-types";
 import { Employee } from '@app/models/employee';

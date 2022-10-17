@@ -6,7 +6,7 @@ import {BankAccount} from '@app/models/bank-account';
 import {isValidAdminResult} from '@app/helpers/utils';
 import {NpoEmployee} from '@app/models/npo-employee';
 import {Lookup} from '@app/models/lookup';
-import {BankAccountRequestTypes} from '@app/enums/bank-account-request-types';
+import {BankAccountRequestTypes} from '@app/enums/service-request-types';
 import {BankAccountOperationTypes} from '@app/enums/bank-account-operation-types';
 
 export class InternalBankAccountApprovalInterceptor implements IModelInterceptor<InternalBankAccountApproval> {

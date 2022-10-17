@@ -22,7 +22,7 @@ import {ToastService} from '@app/services/toast.service';
 import {DialogService} from '@app/services/dialog.service';
 import {EmployeeService} from '@app/services/employee.service';
 import {AttachmentsComponent} from '@app/shared/components/attachments/attachments.component';
-import {ProjectModelRequestType} from '@app/enums/project-model-request-type';
+import {ProjectModelRequestType} from '@app/enums/service-request-types';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {OpenFrom} from '@app/enums/open-from.enum';
 import {IKeyValue} from '@app/interfaces/i-key-value';

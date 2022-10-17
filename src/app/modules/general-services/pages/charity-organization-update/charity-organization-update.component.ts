@@ -348,7 +348,7 @@ export class CharityOrganizationUpdateComponent
         template: tabsTemplates[13],
         title: this.lang.map.primary_law,
         validStatus: () => this.primaryLawForm.valid,
-        category: CharityRequestType.GOVERANCE_DOCUMENTS,
+        category: CharityRequestType.GOVERNANCE_DOCUMENTS,
         order: 0,
       },
       {
@@ -356,7 +356,7 @@ export class CharityOrganizationUpdateComponent
         template: tabsTemplates[14],
         title: this.lang.map.classification_of_foreign_aid,
         validStatus: () => true,
-        category: CharityRequestType.GOVERANCE_DOCUMENTS,
+        category: CharityRequestType.GOVERNANCE_DOCUMENTS,
         order: 3,
       },
       {
@@ -364,7 +364,7 @@ export class CharityOrganizationUpdateComponent
         template: tabsTemplates[15],
         title: this.lang.map.work_areas,
         validStatus: () => true,
-        category: CharityRequestType.GOVERANCE_DOCUMENTS,
+        category: CharityRequestType.GOVERNANCE_DOCUMENTS,
         order: 4,
 
       },
@@ -373,7 +373,7 @@ export class CharityOrganizationUpdateComponent
         template: tabsTemplates[16],
         title: this.lang.map.bylaws,
         validStatus: () => true,
-        category: CharityRequestType.GOVERANCE_DOCUMENTS,
+        category: CharityRequestType.GOVERNANCE_DOCUMENTS,
         order: 2
       },
       {
@@ -417,7 +417,7 @@ export class CharityOrganizationUpdateComponent
         name: 'generalAssocationMeetingsTab',
         template: tabsTemplates[22],
         title: this.lang.map.meeting,
-        category: CharityRequestType.GOVERANCE_DOCUMENTS,
+        category: CharityRequestType.GOVERNANCE_DOCUMENTS,
         validStatus: () => true,
         order: 1,
       },
@@ -528,7 +528,7 @@ export class CharityOrganizationUpdateComponent
           );
           if (updateSection === this.RequestTypes.META_DATA) {
             this._buildMetaDataForm(updateSection);
-          } else if (updateSection === this.RequestTypes.GOVERANCE_DOCUMENTS) {
+          } else if (updateSection === this.RequestTypes.GOVERNANCE_DOCUMENTS) {
             this._buildPrimaryLawForm(updateSection);
             this.tabs = this.tabs.filter(e => ((!e?.order) || e.order <= 2));
             this.tabs.sort((a, b) => a.order - b.order);
@@ -682,7 +682,7 @@ export class CharityOrganizationUpdateComponent
           });
       });
 
-    } else if (updateSection === this.RequestTypes.GOVERANCE_DOCUMENTS) {
+    } else if (updateSection === this.RequestTypes.GOVERNANCE_DOCUMENTS) {
       this.charityWorkAreaField!.patchValue(CharityWorkArea.INSIDE);
       this.goveranceDocumentService.getByCharityId(id).subscribe(m => {
         this._updateForm(m[0].toCharityOrgnizationUpdate());
@@ -826,7 +826,7 @@ export class CharityOrganizationUpdateComponent
       authorizedSignatoryMemberList = arr[4].list || [];
       realBeneficiaryList = arr[5].list || [];
     }
-    else if (this.requestTypeForm.value === this.RequestTypes.GOVERANCE_DOCUMENTS) {
+    else if (this.requestTypeForm.value === this.RequestTypes.GOVERNANCE_DOCUMENTS) {
       const arr = this.goverRefs.toArray();
       primaryLawValue = { ...this.primaryLawForm.value };
       wFClassificationList = arr[0].list || [];
@@ -937,7 +937,7 @@ export class CharityOrganizationUpdateComponent
         model!.buildContactInformationForm(false)
       );
     }
-    else if (this.requestTypeForm.value || (this.model.updateSection === this.RequestTypes.GOVERANCE_DOCUMENTS)) {
+    else if (this.requestTypeForm.value || (this.model.updateSection === this.RequestTypes.GOVERNANCE_DOCUMENTS)) {
       this.primaryLawForm.patchValue(model!.buildPrimaryLawForm(false));
     }
     this.cd.detectChanges();

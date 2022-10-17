@@ -1,19 +1,19 @@
-import { AffiliationRequestType } from './../../../../enums/AffiliationRequestType.enum';
-import { IWFResponse } from './../../../../interfaces/i-w-f-response';
+import { AffiliationRequestType } from '@app/enums/service-request-types';
+import { IWFResponse } from '@contracts/i-w-f-response';
 import { takeUntil, map, tap, filter, exhaustMap, switchMap } from 'rxjs/operators';
 import { InboxService } from '@app/services/inbox.service';
-import { ToastService } from './../../../../services/toast.service';
-import { DialogRef } from './../../../../shared/models/dialog-ref';
-import { DialogService } from './../../../../services/dialog.service';
-import { AwarenessActivitySuggestion } from './../../../../models/awareness-activity-suggestion';
-import { LangService } from './../../../../services/lang.service';
-import { DIALOG_DATA_TOKEN } from './../../../../shared/tokens/tokens';
-import { DateUtils } from './../../../../helpers/date-utils';
-import { DatepickerOptionsMap } from './../../../../types/types';
+import { ToastService } from '@services/toast.service';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { DialogService } from '@services/dialog.service';
+import { AwarenessActivitySuggestion } from '@app/models/awareness-activity-suggestion';
+import { LangService } from '@services/lang.service';
+import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
+import { DateUtils } from '@helpers/date-utils';
+import { DatepickerOptionsMap } from '@app/types/types';
 import { Subject, of } from 'rxjs';
-import { WFResponseType } from './../../../../enums/wfresponse-type.enum';
+import { WFResponseType } from '@app/enums/wfresponse-type.enum';
 import { UntypedFormControl, UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
-import { CustomValidators } from './../../../../validators/custom-validators';
+import { CustomValidators } from '@app/validators/custom-validators';
 import { Component, Inject, OnInit } from '@angular/core';
 
 @Component({
