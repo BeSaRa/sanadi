@@ -101,7 +101,7 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> {
     this.operation === this.operationTypes.CREATE
       ? this.toast.success(
         message.change({
-          x: this.form.controls[this.lang.map.lang + 'Name'].value,
+          x: this.basicInfoForm?.get(this.lang.map.lang + 'Name')?.value || '',
         })
       )
       : this.toast.success(message.change({ x: model.getName() }));
