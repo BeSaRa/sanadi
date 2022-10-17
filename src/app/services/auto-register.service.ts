@@ -13,7 +13,6 @@ import {Injectable} from '@angular/core';
 import {DynamicComponentService} from './dynamic-component.service';
 import {TeamService} from './team.service';
 import {CustomEmployeePermission} from '@app/helpers/custom-employee-permission';
-import {InquiryOldComponent} from '@app/modules/general-services/pages/inquiry-old/inquiry-old.component';
 import {
   InternationalCooperationComponent
 } from '@app/modules/general-services/pages/international-cooperation/international-cooperation.component';
@@ -65,6 +64,7 @@ import {
 } from '@app/modules/general-services/pages/charity-organization-update/charity-organization-update.component';
 import {PermissionsEnum} from '@app/enums/permissions-enum';
 import {ConsultationComponent} from '@app/modules/general-services/pages/consultation/consultation.component';
+import {InquiryComponent} from '@app/modules/general-services/pages/inquiry/inquiry.component';
 
 @Injectable({
   providedIn: 'root'
@@ -80,7 +80,7 @@ export class AutoRegisterService {
   private ngOnInit(): void {
     new DynamicComponentService(() => {
       // any Dynamic Components will be register here.
-      DynamicComponentService.registerComponent('InquiryOldComponent', InquiryOldComponent);
+      DynamicComponentService.registerComponent('InquiryComponent', InquiryComponent);
       DynamicComponentService.registerComponent('ConsultationComponent', ConsultationComponent);
       DynamicComponentService.registerComponent('InternationalCooperationComponent', InternationalCooperationComponent);
       DynamicComponentService.registerComponent('InitialExternalOfficeApprovalComponent', InitialExternalOfficeApprovalComponent);

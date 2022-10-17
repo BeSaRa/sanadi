@@ -17,7 +17,7 @@ const routes: Routes = [
       permissionKey: EServicePermissionsEnum.INQUIRY,
       configPermissionGroup: null,
       checkAnyPermission: false,
-      render: 'InquiryOldComponent'
+      render: 'InquiryComponent'
     }
   },
   {
