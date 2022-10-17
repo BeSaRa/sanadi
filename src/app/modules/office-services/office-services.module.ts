@@ -11,13 +11,13 @@ import {
   FinalExternalOfficeApprovalComponent
 } from '@app/modules/office-services/pages/final-external-office-approval/final-external-office-approval.component';
 import { BankBranchComponent } from '@app/modules/office-services/shared/bank-branch/bank-branch.component';
-import { ApprovalReasonComponent } from '@app/modules/office-services/pages/partner-approval/approval-reason/approval-reason.component';
-import { ContactOfficerComponent } from '@app/modules/office-services/pages/partner-approval/contact-officer/contact-officer.component';
-import { GoalComponent } from '@app/modules/office-services/pages/partner-approval/goal/goal.component';
+import { ApprovalReasonComponent } from '@app/modules/office-services/shared/approval-reason/approval-reason.component';
+import { ContactOfficerComponent } from '@app/modules/office-services/shared/contact-officer/contact-officer.component';
+import { GoalComponent } from '@app/modules/office-services/shared/goal/goal.component';
 import {
   ManagementCouncilComponent
-} from '@app/modules/office-services/pages/partner-approval/management-council/management-council.component';
-import { TargetGroupComponent } from '@app/modules/office-services/pages/partner-approval/target-group/target-group.component';
+} from '@app/modules/office-services/shared/management-council/management-council.component';
+import { TargetGroupComponent } from '@app/modules/office-services/shared/target-group/target-group.component';
 import { EServicesMainModule } from '@app/modules/e-services-main/e-services-main.module';
 
 
