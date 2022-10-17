@@ -35,7 +35,7 @@
           <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
             <label class="form-label" asteriskIfRequired="requestType"
                    for="requestType">{{lang.map.request_type}}</label>
-            <ng-select (change)="onRequestTypeChange()" [readonly]="readonly" validationClasses="requestType"
+            <ng-select (change)="handleRequestTypeChange($event, true)" [readonly]="readonly" validationClasses="requestType"
                        appendTo="body" [clearable]="true"
                        labelForId="requestType"
                        placeholder="{{lang.map.select}}"

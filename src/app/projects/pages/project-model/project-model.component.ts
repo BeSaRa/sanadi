@@ -237,10 +237,15 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     });
   }
 
+  private setDefaultValues(): void {
+    if (this.operation === OperationTypes.CREATE) {
+      this.requestType.patchValue(this.requestTypes[0].lookupKey);
+      this.handleRequestTypeChange(this.requestTypes[0].lookupKey, false);
+    }
+  }
+
   _buildForm(): void {
-    let model = (new ProjectModel()).clone({
-      requestType: this.requestTypes[0].lookupKey
-    });
+    let model = this._getNewInstance();
 
     this.form = this.fb.group({
       basicInfo: this.fb.group(model.buildBasicInfoTab(true)),
@@ -269,6 +274,8 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       }),
       description: this.fb.control(model.description, CustomValidators.required)
     });
+
+    this.listenToExecutionFieldChange();
   }
 
   handleReadonly(): void {
@@ -298,6 +305,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   }
 
   _afterBuildForm(): void {
+    this.setDefaultValues();
     this.listenToOptionalGoalsChanges();
     // setTimeout(() => {
     this.handleReadonly();
@@ -379,7 +387,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   }
 
   _afterLaunch(): void {
-    this._resetForm();
+    this.resetForm$.next();
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
 
@@ -437,7 +445,6 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
 
   _updateForm(model: ProjectModel): void {
     this.model = model;
-    this.listenToExecutionFieldChange();
     this.form.patchValue({
       basicInfo: model.buildBasicInfoTab(false),
       categoryInfo: model.buildCategoryTab(false),
@@ -454,6 +461,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     this.evaluationIndicators = this.model?.evaluationIndicatorList;
     this.pMForeignCountriesProjects = this.model?.foreignCountriesProjectList;
     this.projectAddresses = this.model?.projectAddressList;
+    this.handleRequestTypeChange(model.requestType, false);
   }
 
   _resetForm(): void {
@@ -466,6 +474,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     this.selectedModel = undefined;
     this.displayTemplateSerialField = false;
     this.cancelProjectComponent();
+    this.setDefaultValues();
   }
 
   /**
@@ -848,13 +857,23 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     this.componentBudgetArray.removeAt(0);
   }
 
-  onRequestTypeChange() {
-    const value = this.requestType.value;
-    this._resetForm();
-    this.requestType.setValue(value);
-
-    this.displayTemplateSerialField = this.requestType.value === ProjectModelRequestType.UPDATE;
-    this.templateSerialControl.setValidators(CustomValidators.required);
+  handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
+    of(userInteraction).pipe(
+      takeUntil(this.destroy$),
+      switchMap(() => this.confirmChangeRequestType(userInteraction))
+    ).subscribe((clickOn: UserClickOn) => {
+      if (clickOn === UserClickOn.YES) {
+        if (userInteraction) {
+          this.resetForm$.next();
+          this.requestType.setValue(requestTypeValue);
+        }
+        this.requestType$.next(requestTypeValue);
+        this.displayTemplateSerialField = requestTypeValue === ProjectModelRequestType.UPDATE;
+        this.templateSerialControl.setValidators(CustomValidators.required);
+      } else {
+        this.requestType.setValue(this.requestType$.value);
+      }
+    });
   }
 
   searchForTemplate() {
