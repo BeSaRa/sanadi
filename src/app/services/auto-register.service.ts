@@ -14,7 +14,6 @@ import {DynamicComponentService} from './dynamic-component.service';
 import {TeamService} from './team.service';
 import {CustomEmployeePermission} from '@app/helpers/custom-employee-permission';
 import {InquiryComponent} from '@app/modules/general-services/pages/inquiry/inquiry.component';
-import {ConsultationOldComponent} from '@app/modules/general-services/pages/consultation-old/consultation-old.component';
 import {
   InternationalCooperationComponent
 } from '@app/modules/general-services/pages/international-cooperation/international-cooperation.component';
@@ -65,6 +64,7 @@ import {
   CharityOrganizationUpdateComponent
 } from '@app/modules/general-services/pages/charity-organization-update/charity-organization-update.component';
 import {PermissionsEnum} from '@app/enums/permissions-enum';
+import {ConsultationComponent} from '@app/modules/general-services/pages/consultation/consultation.component';
 
 @Injectable({
   providedIn: 'root'
@@ -81,7 +81,7 @@ export class AutoRegisterService {
     new DynamicComponentService(() => {
       // any Dynamic Components will be register here.
       DynamicComponentService.registerComponent('InquiryComponent', InquiryComponent);
-      DynamicComponentService.registerComponent('ConsultationOldComponent', ConsultationOldComponent);
+      DynamicComponentService.registerComponent('ConsultationComponent', ConsultationComponent);
       DynamicComponentService.registerComponent('InternationalCooperationComponent', InternationalCooperationComponent);
       DynamicComponentService.registerComponent('InitialExternalOfficeApprovalComponent', InitialExternalOfficeApprovalComponent);
       DynamicComponentService.registerComponent('FinalExternalOfficeApprovalComponent', FinalExternalOfficeApprovalComponent);
