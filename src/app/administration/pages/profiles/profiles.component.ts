@@ -67,16 +67,9 @@ export class ProfilesComponent extends AdminGenericComponent<Profile, ProfileSer
       .subscribe(() => this.reload$.next(null));
   }
   public toggleStatus(model: Profile): void {
-    let observable: Observable<Object>;
-    if (model.status === 1) {
-      observable = this.service.deActivate(model.id);
-    }
-    else {
-      observable = this.service.activate(model.id);
-    }
-    observable.subscribe(e => {
+    model.updateStatus(model.id, model.status).subscribe(() => {
       this.reload$.next(null);
-    });
+    })
 
   }
 

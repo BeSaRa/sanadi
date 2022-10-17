@@ -1,4 +1,5 @@
 import { InterceptModel } from '@app/decorators/decorators/intercept-model';
+import { CommonStatusEnum } from '@app/enums/common-status.enum';
 import { infoSearchFields } from '@app/helpers/info-search-fields';
 import { INames } from '@app/interfaces/i-names';
 import { ProfileInterceptor } from '@app/model-interceptors/profile-interceptor';
@@ -117,5 +118,11 @@ export class Profile extends BaseModel<Profile, ProfileService> {
         ]
         : email,
     };
+  }
+  updateStatus(profileId: number, status: CommonStatusEnum) {
+    if (status === CommonStatusEnum.ACTIVATED) {
+      return this.service.deActivate(profileId);
+    }
+    return this.service.activate(profileId);
   }
 }

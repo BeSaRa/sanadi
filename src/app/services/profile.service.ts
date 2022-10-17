@@ -58,7 +58,7 @@ export class ProfileService extends CrudWithDialogGenericService<Profile>{
       })
     );
   }
-  openEditDialog(_model: Profile): Observable<DialogRef> {
+  /* openEditDialog(_model: Profile): Observable<DialogRef> {
     return this.getByIdComposite(_model.id).pipe(
       switchMap((model: Profile) => {
         return of(this.dialog.show<IDialogData<Profile>>(this._getDialogComponent(), {
@@ -67,7 +67,7 @@ export class ProfileService extends CrudWithDialogGenericService<Profile>{
         }));
       })
     );
-  }
+  } */
   @CastResponse(undefined)
   getByProfileType(profileType: number) {
     const query = new HttpParams().append('profile-type', profileType);

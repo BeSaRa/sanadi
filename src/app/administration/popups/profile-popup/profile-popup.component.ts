@@ -78,7 +78,7 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> {
     private serviceData: ServiceDataService
   ) {
     super();
-    this.model = new Profile().clone({ ...data.model });
+    this.model = data.model;
     this.operation = data.operation;
   }
 
