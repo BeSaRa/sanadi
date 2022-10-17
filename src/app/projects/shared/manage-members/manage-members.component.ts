@@ -7,7 +7,7 @@ import {JobTitle} from '@app/models/job-title';
 import {JobTitleService} from '@services/job-title.service';
 import {AdminResult} from '@app/models/admin-result';
 import {CustomValidators} from '@app/validators/custom-validators';
-import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {ILanguageKeys} from '@contracts/i-language-keys';
 import {exhaustMap, filter, map, tap} from 'rxjs/operators';
 import {Observable, of} from 'rxjs';
 import {GeneralAssociationMeetingAttendanceService} from '@services/general-association-meeting-attendance.service';
