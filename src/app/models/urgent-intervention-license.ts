@@ -6,7 +6,7 @@ import { dateSearchFields } from '@app/helpers/date-search-fields';
 import { infoSearchFields } from '@app/helpers/info-search-fields';
 import { normalSearchFields } from '@app/helpers/normal-search-fields';
 import { CustomValidators } from '@app/validators/custom-validators';
-import { Domains } from '@app/enums/domains.enum';
+import { DomainTypes } from '@app/enums/domain-types';
 import { LookupService } from '@app/services/lookup.service';
 import { AdminResult } from '@app/models/admin-result';
 import { LangService } from '@app/services/lang.service';
@@ -31,7 +31,7 @@ const { send, receive } = new UrgentInterventionLicenseInterceptor();
 @InterceptModel({ send, receive })
 export class UrgentInterventionLicense extends _ApprovalLicenseWithMonthly<UrgentInterventionLicensingService, UrgentInterventionLicense> implements HasLicenseApprovalMonthly, HasRequestType {
   caseType: number = CaseTypes.URGENT_INTERVENTION_LICENSING;
-  domain: number = Domains.HUMAN; // fixed value, so info will also be fixed always
+  domain: number = DomainTypes.HUMANITARIAN; // fixed value, so info will also be fixed always
   licenseDuration: number = 12; // fixed value
   currency: number = CurrencyEnum.UNITED_STATE_DOLLAR; // fixed value
   serviceSteps: string[] = [];
