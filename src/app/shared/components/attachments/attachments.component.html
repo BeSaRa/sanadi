@@ -1,15 +1,18 @@
 <div>
-  <div class="d-flex flex-row justify-content-start align-items-center mb-3">
-    <h1 class="h6 text-primary">{{lang.map.attachments}}</h1>
-    <div>
-      <button [tooltip]="lang.map.btn_reload" (click)="forceReload()" class="btn text-primary icon-btn">
-        <i class="mdi mdi-reload"></i>
-      </button>
-      <button [disabled]="disabled" (click)="addOtherAttachments.next()" [tooltip]="lang.map.btn_add"
-              class="btn text-primary icon-btn">
-        <i class="mdi mdi-plus-box"></i>
-      </button>
-    </div>
+  <div class="row pb-3">
+    <app-page-header [customTemplate]="headerTemplate"></app-page-header>
+    <ng-template #headerTemplate>
+      <div class="align-items-center">
+        <h1 class="h6 text-primary m-0 d-inline-block">{{lang.map.attachments}}</h1>
+        <button class="btn btn-link outline-none" tooltip="{{ lang.map.btn_add }}"
+                [disabled]="disabled" (click)="addOtherAttachments.next()">
+          <i class="mdi mdi-plus-box"></i>
+        </button>
+        <button class="btn btn-link" tooltip="{{ lang.map.btn_reload }}" (click)="forceReload()">
+          <i class="mdi mdi-reload"></i>
+        </button>
+      </div>
+    </ng-template>
   </div>
   <app-table [selectable]="true" #table sortableTable [paginator]="paginator"
              [filter]="filter.value"

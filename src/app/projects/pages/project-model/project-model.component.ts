@@ -1,40 +1,54 @@
-import { Component, ViewChild } from '@angular/core';
-import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, ValidatorFn } from '@angular/forms';
-import { OperationTypes } from '@app/enums/operation-types.enum';
-import { SaveTypes } from '@app/enums/save-types';
-import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
-import { ProjectModel } from '@app/models/project-model';
-import { LangService } from '@app/services/lang.service';
-import { ProjectModelService } from '@app/services/project-model.service';
-import { Observable, of, Subject } from 'rxjs';
-import { CountryService } from '@app/services/country.service';
-import { Country } from '@app/models/country';
-import { catchError, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
-import { LookupService } from '@app/services/lookup.service';
-import { Lookup } from '@app/models/lookup';
-import { SDGoalService } from '@app/services/sdgoal.service';
-import { SDGoal } from '@app/models/sdgoal';
-import { ProjectComponent } from '@app/models/project-component';
-import { CustomValidators } from '@app/validators/custom-validators';
-import { ProjectModelTypes } from '@app/enums/project-model-types';
-import { ProjectTypes } from '@app/enums/project-types';
-import { DomainTypes } from '@app/enums/domain-types';
-import { IDacOchaFields } from '@app/interfaces/idac-ocha-fields';
-import { ToastService } from '@app/services/toast.service';
-import { DialogService } from '@app/services/dialog.service';
-import { EmployeeService } from '@app/services/employee.service';
-import { AttachmentsComponent } from '@app/shared/components/attachments/attachments.component';
-import { ProjectModelRequestType } from '@app/enums/project-model-request-type';
-import { UserClickOn } from '@app/enums/user-click-on.enum';
-import { OpenFrom } from '@app/enums/open-from.enum';
-import { IKeyValue } from '@app/interfaces/i-key-value';
-import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { CommonUtils } from '@app/helpers/common-utils';
-import { FileIconsEnum } from '@app/enums/file-extension-mime-types-icons.enum';
-import { DialogRef } from '@app/shared/models/dialog-ref';
-import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
-import { DacOchaNewService } from '@services/dac-ocha-new.service';
-import { AdminLookup } from '@app/models/admin-lookup';
+import {Component, ViewChild} from '@angular/core';
+import {AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, ValidatorFn} from '@angular/forms';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {SaveTypes} from '@app/enums/save-types';
+import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
+import {ProjectModel} from '@app/models/project-model';
+import {LangService} from '@app/services/lang.service';
+import {ProjectModelService} from '@app/services/project-model.service';
+import {Observable, of, Subject} from 'rxjs';
+import {CountryService} from '@app/services/country.service';
+import {Country} from '@app/models/country';
+import {catchError, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
+import {LookupService} from '@app/services/lookup.service';
+import {Lookup} from '@app/models/lookup';
+import {SDGoalService} from '@app/services/sdgoal.service';
+import {SDGoal} from '@app/models/sdgoal';
+import {ProjectComponent} from '@app/models/project-component';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {DomainTypes} from '@app/enums/domain-types';
+import {IDacOchaFields} from '@app/interfaces/idac-ocha-fields';
+import {ToastService} from '@app/services/toast.service';
+import {DialogService} from '@app/services/dialog.service';
+import {EmployeeService} from '@app/services/employee.service';
+import {AttachmentsComponent} from '@app/shared/components/attachments/attachments.component';
+import {ProjectModelRequestType} from '@app/enums/project-model-request-type';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {OpenFrom} from '@app/enums/open-from.enum';
+import {IKeyValue} from '@app/interfaces/i-key-value';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {CommonUtils} from '@app/helpers/common-utils';
+import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import {DacOchaNewService} from '@services/dac-ocha-new.service';
+import {AdminLookup} from '@app/models/admin-lookup';
+import {AidLookupService} from '@services/aid-lookup.service';
+import {AidLookup} from '@app/models/aid-lookup';
+import {ExecutionFields} from '@app/enums/execution-fields';
+import {IInternalExternalExecutionFields} from '@contracts/iinternal-external-execution-fields';
+import {AdminLookupService} from '@services/admin-lookup.service';
+import {AdminLookupTypeEnum} from '@app/enums/admin-lookup-type-enum';
+import {EvaluationIndicator} from '@app/models/evaluation-indicator';
+import {AdminResult} from '@app/models/admin-result';
+import {ProjectModelForeignCountriesProject} from '@app/models/project-model-foreign-countries-project';
+import {ForeignCountriesProjectsNeed} from '@app/models/foreign-countries-projects-need';
+import {ForeignCountriesProjectsService} from '@services/foreign-countries-projects.service';
+import {ProjectAddress} from '@app/models/project-address';
+import {ICoordinates} from '@contracts/ICoordinates';
+import {CollectionItem} from '@app/models/collection-item';
+import {ServiceDataService} from '@services/service-data.service';
+import {CaseTypes} from '@app/enums/case-types.enum';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -44,21 +58,49 @@ import { AdminLookup } from '@app/models/admin-lookup';
 })
 export class ProjectModelComponent extends EServicesGenericComponent<ProjectModel, ProjectModelService> {
   form!: UntypedFormGroup;
+  evaluationIndicatorForm!: UntypedFormGroup;
+  addIndicatorFormActive!: boolean;
+  selectedEvaluationIndicator!: EvaluationIndicator | null;
+  selectedIndicatorIndex!: number | null;
+  evaluationIndicators: EvaluationIndicator[] = [];
+  indicators: AdminLookup[] = [];
+  indicatorsDisplayedColumns: string[] = ['index', 'indicator', 'percentage', 'notes', 'actions'];
+
+  pMForeignCountriesProjectForm!: UntypedFormGroup;
+  addPMForeignCountriesProjectFormActive!: boolean;
+  selectedPMForeignCountriesProject!: ProjectModelForeignCountriesProject | null;
+  selectedPMForeignCountriesProjectIndex!: number | null;
+  pMForeignCountriesProjects: ProjectModelForeignCountriesProject[] = [];
+  foreignCountriesProjectsNeeds: ForeignCountriesProjectsNeed[] = [];
+  pMForeignCountriesProjectsDisplayedColumns: string[] = ['index', 'projectName', 'notes', 'actions'];
+
+  projectAddressForm!: UntypedFormGroup;
+  addProjectAddressFormActive!: boolean;
+  selectedProjectAddress!: ProjectAddress | null;
+  selectedProjectAddressIndex!: number | null;
+  projectAddresses: ProjectAddress[] = [];
+  projectAddressesDisplayedColumns: string[] = ['index', 'beneficiaryRegion', 'address', 'location', 'actions'];
+
   domainTypes: typeof DomainTypes = DomainTypes;
   countries: Country[] = [];
+  countriesAvailableForSelection: Country[] = [];
   domains: Lookup[] = this.lookupService.listByCategory.Domain;
   projectTypes: Lookup[] = this.lookupService.listByCategory.ProjectType;
-  modelTypes: Lookup[] = this.lookupService.listByCategory.TemplateType;
   requestTypes: Lookup[] = this.lookupService.listByCategory.ProjectModelingReqType.slice().sort((a, b) => a.lookupKey - b.lookupKey);
-  implementingAgencyTypes: Lookup[] = this.lookupService.listByCategory.ImplementingAgencyType;
+  projectWorkAreas: Lookup[] = this.lookupService.listByCategory.ProjectWorkArea;
+  internalProjectClassifications: Lookup[] = this.lookupService.listByCategory.InternalProjectClassification;
+  sanadiDomains: AidLookup[] = [];
+  sanadiMainClassifications: AidLookup[] = [];
   mainOchaCategories: AdminLookup[] = [];
   subOchaCategories: AdminLookup[] = [];
   mainDacCategories: AdminLookup[] = [];
   subDacCategories: AdminLookup[] = [];
+  exitMechanisms: AdminLookup[] = [];
   isDacOchaLoaded: boolean = false;
   goals: SDGoal[] = [];
   loadAttachments: boolean = false;
   fileIconsEnum = FileIconsEnum;
+  qatarId!: number;
 
   projectComponentChange$: Subject<{ operation: OperationTypes, model: ProjectComponent }> = new Subject<{ operation: OperationTypes, model: ProjectComponent }>();
   projectListColumns: string[] = ['componentName', 'details', 'totalCost', 'actions'];
@@ -70,9 +112,13 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   attachmentComponent!: AttachmentsComponent;
 
   selectedModel?: ProjectModel;
-  displayedColumns: string[] = ['domainInfo', 'projectTypeInfo', 'templateStatusInfo', 'createdBy', 'createdOn', 'templateTypeInfo'];
+  displayedColumns: string[] = ['domainInfo', 'projectTypeInfo', 'templateStatusInfo', 'createdBy', 'createdOn'];
   displayTemplateSerialField: boolean = false;
   displayDevGoals: boolean = false;
+  isOutsideQatarWorkArea: boolean = false;
+  isDevelopmentField: boolean = false;
+  isCharityProfile: boolean = false;
+  isInstitutionProfile: boolean = false;
 
   templateSerialControl: UntypedFormControl = new UntypedFormControl(null);
 
@@ -108,22 +154,40 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       index: 3,
       validStatus: () => (this.model && this.model.componentList && this.model.componentList.length > 0) && this.projectTotalCostField && this.projectTotalCostField.value > 0
     },
+    evaluationIndicators: {
+      name: 'evaluationIndicatorsTab',
+      langKey: 'project_evaluation_indicators',
+      index: 4,
+      validStatus: () => (this.model && this.evaluationIndicators && this.evaluationIndicators.length > 0)
+    },
+    projectAddresses: {
+      name: 'projectAddressesTab',
+      langKey: 'project_addresses',
+      index: 5,
+      validStatus: () => (this.model && this.projectAddresses && this.projectAddresses.length > 0)
+    },
+    foreignCountriesProjects: {
+      name: 'foreignCountriesProjectsTab',
+      langKey: 'project_model_foreign_countries_projects',
+      index: 6,
+      validStatus: () => (this.model && this.pMForeignCountriesProjects && this.pMForeignCountriesProjects.length > 0)
+    },
     specialExplanations: {
       name: 'specialExplanationsTab',
       langKey: 'special_explanations',
-      index: 4,
+      index: 7,
       validStatus: () => this.descriptionTab.valid
     },
     comments: {
       name: 'commentsTab',
       langKey: 'comments',
-      index: 5,
+      index: 8,
       validStatus: () => true
     },
     attachments: {
       name: 'attachmentsTab',
       langKey: 'attachments',
-      index: 6,
+      index: 9,
       validStatus: () => true
     }
   };
@@ -141,7 +205,11 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
               private lookupService: LookupService,
               private countryService: CountryService,
               private sdgService: SDGoalService,
-              public service: ProjectModelService) {
+              public service: ProjectModelService,
+              private aidLookupService: AidLookupService,
+              private adminLookupService: AdminLookupService,
+              private foreignCountriesProjectsService: ForeignCountriesProjectsService,
+              private serviceDataService: ServiceDataService) {
     super();
   }
 
@@ -150,17 +218,42 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   }
 
   _initComponent(): void {
+    this.setUserProfiles();
+    this.getQatarId();
+    this.loadIndicators();
+    this.buildEvaluationIndicatorForm();
+    this.buildProjectAddressForm();
+    this.buildForeignCountriesProjectForm();
+    this.loadExitMechanisms();
+    this.loadSanadiDomains();
     this.loadCountries();
     this.loadGoals();
     this.listenToProjectComponentChange();
     this.listenToTemplateSearch();
   }
 
-  _buildForm(): void {
-    let model = (new ProjectModel()).clone({
-      requestType: this.requestTypes[0].lookupKey,
-      implementingAgencyType: this.implementingAgencyTypes[0].lookupKey
+  setUserProfiles(): void {
+    this.isCharityProfile = this.employeeService.isCharityProfile();
+    this.isInstitutionProfile = this.employeeService.isInstitutionProfile();
+  }
+
+  getQatarId() {
+    this.serviceDataService.loadByCaseType(CaseTypes.EXTERNAL_PROJECT_MODELS).subscribe(serviceData => {
+      let settings: { QatarId: number } = JSON.parse(serviceData.customSettings);
+      this.qatarId = settings.QatarId;
+      console.log('qatarId', this.qatarId);
     });
+  }
+
+  private setDefaultValues(): void {
+    if (this.operation === OperationTypes.CREATE) {
+      this.requestType.patchValue(this.requestTypes[0].lookupKey);
+      this.handleRequestTypeChange(this.requestTypes[0].lookupKey, false);
+    }
+  }
+
+  _buildForm(): void {
+    let model = this._getNewInstance();
 
     this.form = this.fb.group({
       basicInfo: this.fb.group(model.buildBasicInfoTab(true)),
@@ -189,6 +282,8 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       }),
       description: this.fb.control(model.description, CustomValidators.required)
     });
+
+    this.listenToExecutionFieldChange();
   }
 
   handleReadonly(): void {
@@ -218,6 +313,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   }
 
   _afterBuildForm(): void {
+    this.setDefaultValues();
     this.listenToOptionalGoalsChanges();
     // setTimeout(() => {
     this.handleReadonly();
@@ -228,8 +324,6 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
           this.displayTemplateSerialField = true;
           this.templateSerialControl.setValue(template.templateFullSerial);
         });
-
-      this.onModelTypeChange();
 
       if (this.model?.domain === DomainTypes.DEVELOPMENT) {
         this.mainDacCategories = [(new AdminLookup()).clone({
@@ -254,7 +348,6 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
           id: this.model?.subUNOCHACategoryInfo.id,
         })];
       }
-
     }
     // })
   }
@@ -262,6 +355,16 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
     if (saveType === SaveTypes.DRAFT) {
       return true;
+    }
+
+    if (this.evaluationIndicators && this.evaluationIndicators.length < 1) {
+      this.dialog.error(this.lang.map.you_should_add_at_least_one_evaluation_indicator);
+      return false;
+    }
+
+    if (this.pMForeignCountriesProjects && this.pMForeignCountriesProjects.length < 1) {
+      this.dialog.error(this.lang.map.you_should_add_at_least_one_foreign_project_need);
+      return false;
     }
 
     const invalidTabs = this._getInvalidTabs();
@@ -292,7 +395,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   }
 
   _afterLaunch(): void {
-    this._resetForm();
+    this.resetForm$.next();
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
 
@@ -305,6 +408,9 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       ...this.summaryInfoTab.getRawValue(),
       ...this.summaryPercentGroup.getRawValue(),
       projectTotalCost: this.projectTotalCostField.value,
+      evaluationIndicatorList: this.evaluationIndicators,
+      foreignCountriesProjectList: this.pMForeignCountriesProjects,
+      projectAddressList: this.projectAddresses,
       description: this.descriptionTab.value
     });
   }
@@ -359,6 +465,11 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       },
       description: model.description
     });
+
+    this.evaluationIndicators = this.model?.evaluationIndicatorList;
+    this.pMForeignCountriesProjects = this.model?.foreignCountriesProjectList;
+    this.projectAddresses = this.model?.projectAddressList;
+    this.handleRequestTypeChange(model.requestType, false);
   }
 
   _resetForm(): void {
@@ -371,6 +482,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     this.selectedModel = undefined;
     this.displayTemplateSerialField = false;
     this.cancelProjectComponent();
+    this.setDefaultValues();
   }
 
   /**
@@ -379,6 +491,18 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
 
   get requestType(): AbstractControl {
     return this.form.get('basicInfo')?.get('requestType') as AbstractControl;
+  }
+
+  get beneficiaryCountry(): AbstractControl {
+    return this.form.get('basicInfo')?.get('beneficiaryCountry') as AbstractControl;
+  }
+
+  get executionCountry(): AbstractControl {
+    return this.form.get('basicInfo')?.get('executionCountry') as AbstractControl;
+  }
+
+  get projectWorkArea(): AbstractControl {
+    return this.form.get('basicInfo')?.get('projectWorkArea') as AbstractControl;
   }
 
   get projectTotalCostField(): AbstractControl {
@@ -397,6 +521,18 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     return this.form.get('categoryInfo') as UntypedFormGroup;
   }
 
+  get internalProjectClassification(): AbstractControl {
+    return this.categoryInfoTab.get('internalProjectClassification') as AbstractControl;
+  }
+
+  get sanadiDomain(): AbstractControl {
+    return this.categoryInfoTab.get('sanadiDomain') as AbstractControl;
+  }
+
+  get sanadiMainClassification(): AbstractControl {
+    return this.categoryInfoTab.get('sanadiMainClassification') as AbstractControl;
+  }
+
   get categoryGoalPercentGroup(): UntypedFormGroup {
     return this.form.get('categoryGoalPercentGroup') as UntypedFormGroup;
   }
@@ -411,10 +547,6 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
 
   get descriptionTab(): AbstractControl {
     return this.form.get('description') as AbstractControl;
-  }
-
-  get modelType(): AbstractControl {
-    return this.basicInfoTab.get('templateType') as AbstractControl;
   }
 
   get projectType(): AbstractControl {
@@ -471,6 +603,14 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     return this.summaryInfoTab.get('sustainabilityItems') as AbstractControl;
   }
 
+  get longitude(): AbstractControl {
+    return this.projectAddressForm.get('longitude')!;
+  }
+
+  get latitude(): AbstractControl {
+    return this.projectAddressForm.get('latitude')!;
+  }
+
   getPercentageSumValidation(): ValidatorFn {
     return CustomValidators.validateSum(100, 2,
       ['firstSDGoalPercentage', 'secondSDGoalPercentage', 'thirdSDGoalPercentage'],
@@ -481,7 +621,10 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   private loadCountries(): void {
     this.countryService.loadAsLookups()
       .pipe(takeUntil(this.destroy$))
-      .subscribe((countries) => this.countries = countries);
+      .subscribe((countries) => {
+        this.countries = countries;
+        this.countriesAvailableForSelection = this.countries;
+      });
   }
 
   private loadGoals(): void {
@@ -516,7 +659,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       });
   }
 
-  private emptyFieldsAndValidation(fields: (keyof IDacOchaFields)[]): void {
+  private emptyFieldsAndValidation(fields: (keyof IDacOchaFields)[] | (keyof IInternalExternalExecutionFields)[]): void {
     fields.forEach((field) => {
       this[field].setValidators(null);
       this[field].setValue(null);
@@ -524,7 +667,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     });
   }
 
-  private setRequiredValidator(fields: (keyof IDacOchaFields)[]) {
+  private setRequiredValidator(fields: (keyof IDacOchaFields)[] | (keyof IInternalExternalExecutionFields)[]) {
     fields.forEach((field) => {
       this[field].setValidators(CustomValidators.required);
       this[field].updateValueAndValidity();
@@ -585,24 +728,6 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     return !!(field && field.invalid && (field.touched || field.dirty));
   }
 
-  onModelTypeChange() {
-    if (this.modelType.value === ProjectModelTypes.SECTORAL_AGGREGATING_MODEL) {
-      //TODO: there is one more condition here related if the admin allowed option to give the user ability to select Structural
-      this.projectType.setValue(ProjectTypes.SOFTWARE);
-      this.projectType.disable({emitEvent: false});
-      this.domain.setValue(DomainTypes.HUMANITARIAN);
-      this.domain.disable();
-    } else if (this.modelType.value === ProjectModelTypes.PROJECT_MODEL) {
-      this.projectType.enable({emitEvent: false});
-      this.domain.enable();
-    } else {
-      this.projectType.enable({emitEvent: false});
-      this.projectType.setValue(null);
-      this.domain.enable();
-    }
-    this.onDomainChange();
-  }
-
   onDomainChange() {
     this.loadDacMainOcha().subscribe();
     if (this.domain.value === DomainTypes.HUMANITARIAN) {
@@ -617,11 +742,9 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
         'thirdSDGoalPercentage'
       ]);
       this.setRequiredValidator(['mainUNOCHACategory', 'subUNOCHACategory']);
-      this.sustainabilityItems.setValidators(CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS));
       this.displayDevGoals = false;
       this.categoryGoalPercentGroup.setValidators(null);
     } else if (this.domain.value === DomainTypes.DEVELOPMENT) {
-      this.sustainabilityItems.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]);
       this.emptyFieldsAndValidation(['mainUNOCHACategory', 'subUNOCHACategory']);
       this.setRequiredValidator(['mainDACCategory', 'subDACCategory', 'firstSDGoal', 'firstSDGoalPercentage']);
       this.setZeroValue(['firstSDGoalPercentage', 'secondSDGoalPercentage', 'thirdSDGoalPercentage']);
@@ -643,8 +766,52 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
         'thirdSDGoalPercentage'
       ]);
     }
-    this.sustainabilityItems.updateValueAndValidity();
     this.categoryGoalPercentGroup.updateValueAndValidity();
+  }
+
+  listenToExecutionFieldChange() {
+    this.projectWorkArea.valueChanges.subscribe(val => {
+      if (val === ExecutionFields.OutsideQatar) {
+        this.removeQatarFromCountries();
+        this.isOutsideQatarWorkArea = true;
+        this.emptyFieldsAndValidation(['internalProjectClassification', 'sanadiDomain', 'sanadiMainClassification']);
+      } else if (this.projectWorkArea.value === ExecutionFields.InsideQatar) {
+        this.applyNotOutsideQatarChanges();
+        this.setQatarAsTheOnlyChoiceInCountries();
+      } else {
+        this.countriesAvailableForSelection = this.countries;
+        this.applyNotOutsideQatarChanges();
+      }
+    })
+  }
+
+  applyNotOutsideQatarChanges() {
+    this.emptyFieldsAndValidation(['firstSDGoal', 'secondSDGoal', 'thirdSDGoal']);
+    this.emptyDomainField();
+    this.isOutsideQatarWorkArea = false;
+    this.setRequiredValidator(['internalProjectClassification', 'sanadiDomain', 'sanadiMainClassification']);
+
+    this.setZeroValue(['firstSDGoalPercentage', 'secondSDGoalPercentage', 'thirdSDGoalPercentage']);
+    this.displayDevGoals = false;
+    this.categoryGoalPercentGroup.setValidators(this.getPercentageSumValidation());
+  }
+
+  setQatarAsTheOnlyChoiceInCountries() {
+    this.countriesAvailableForSelection = this.countries.filter(x => x.id === this.qatarId);
+    this.beneficiaryCountry.patchValue(null);
+    this.executionCountry.patchValue(null);
+  }
+
+  removeQatarFromCountries() {
+    this.countriesAvailableForSelection = this.countries.filter(x => x.id !== this.qatarId);
+    this.beneficiaryCountry.patchValue(null);
+    this.executionCountry.patchValue(null);
+  }
+
+  emptyDomainField() {
+    this.domain.setValidators(null);
+    this.domain.setValue(null);
+    this.domain.updateValueAndValidity();
   }
 
   getSelectedMainDacOchId(): number {
@@ -694,13 +861,23 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     this.componentBudgetArray.removeAt(0);
   }
 
-  onRequestTypeChange() {
-    const value = this.requestType.value;
-    this._resetForm();
-    this.requestType.setValue(value);
-
-    this.displayTemplateSerialField = this.requestType.value === ProjectModelRequestType.EDIT;
-    this.templateSerialControl.setValidators(CustomValidators.required);
+  handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
+    of(userInteraction).pipe(
+      takeUntil(this.destroy$),
+      switchMap(() => this.confirmChangeRequestType(userInteraction))
+    ).subscribe((clickOn: UserClickOn) => {
+      if (clickOn === UserClickOn.YES) {
+        if (userInteraction) {
+          this.resetForm$.next();
+          this.requestType.setValue(requestTypeValue);
+        }
+        this.requestType$.next(requestTypeValue);
+        this.displayTemplateSerialField = requestTypeValue === ProjectModelRequestType.UPDATE;
+        this.templateSerialControl.setValidators(CustomValidators.required);
+      } else {
+        this.requestType.setValue(this.requestType$.value);
+      }
+    });
   }
 
   searchForTemplate() {
@@ -823,5 +1000,326 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
           this.loadCountries();
         });
       });
+  }
+
+  loadSanadiDomains() {
+    this.aidLookupService.loadByCriteria({parent: null}).subscribe(list => {
+      this.sanadiDomains = list;
+    });
+  }
+
+  loadSanadiMainClassification(parentId: number): void {
+    this.sanadiMainClassification.setValue(null);
+    if (!parentId) {
+      this.sanadiMainClassifications = [];
+    } else {
+      this.aidLookupService.loadByCriteria({parent: parentId}).subscribe(list => {
+        this.sanadiMainClassifications = list;
+      });
+    }
+  }
+
+  loadExitMechanisms(): void {
+    this.adminLookupService.load(AdminLookupTypeEnum.EXIT_MECHANISM).subscribe(list => {
+      this.exitMechanisms = list;
+    });
+  }
+
+  loadIndicators(): void {
+    this.adminLookupService.load(AdminLookupTypeEnum.TEMPLATE_INDICATOR).subscribe(list => {
+      this.indicators = list;
+    });
+  }
+
+  loadForeignCountriesProjectsNeeds(): void {
+    let countryId = this.beneficiaryCountry.value;
+    if (!countryId) {
+      this.foreignCountriesProjectsNeeds = [];
+      this.pMForeignCountriesProjectForm.patchValue({objectDBId: null});
+    }
+    this.foreignCountriesProjectsService.loadForeignCountriesProjectsNeeds(countryId).subscribe(list => {
+      this.foreignCountriesProjectsNeeds = list;
+    });
+  }
+
+  buildEvaluationIndicatorForm(): void {
+    this.evaluationIndicatorForm = this.fb.group({
+      indicator: [null, [CustomValidators.required]],
+      percentage: [null, [CustomValidators.required, CustomValidators.decimal(2)]],
+      notes: [null]
+    });
+  }
+
+  buildForeignCountriesProjectForm(): void {
+    this.pMForeignCountriesProjectForm = this.fb.group({
+      objectDBId: [null, [CustomValidators.required]],
+      notes: [null]
+    });
+  }
+
+  buildProjectAddressForm(): void {
+    this.projectAddressForm = this.fb.group({
+      beneficiaryRegion: [null, [CustomValidators.required]],
+      address: [null],
+      latitude: [{value: null, disabled: true}, [CustomValidators.required]],
+      longitude: [{value: null, disabled: true}, [CustomValidators.required]]
+    });
+  }
+
+  ///////// indicators functionality
+  openAddIndicatorForm() {
+    this.addIndicatorFormActive = true;
+  }
+
+  selectIndicator(event: MouseEvent, model: EvaluationIndicator) {
+    this.addIndicatorFormActive = true;
+    event.preventDefault();
+    this.selectedEvaluationIndicator = model;
+    this.evaluationIndicatorForm.patchValue(this.selectedEvaluationIndicator!);
+    this.selectedIndicatorIndex = this.evaluationIndicators
+      .findIndex(x => x.indicator === model.indicator && x.percentage === model.percentage && x.notes === model.notes);
+  }
+
+  _saveIndicator(evaluationIndicator: EvaluationIndicator) {
+    if (!this.selectedEvaluationIndicator) {
+      if (!this.isExistIndicatorInCaseOfAdd(this.evaluationIndicators, evaluationIndicator)) {
+        this.evaluationIndicators = this.evaluationIndicators.concat(evaluationIndicator);
+        this.resetEvaluationIndicatorForm();
+        this.addIndicatorFormActive = false;
+      } else {
+        this.dialog.error(this.lang.map.selected_item_already_exists);
+      }
+    } else {
+      if (!this.isExistIndicatorInCaseOfEdit(this.evaluationIndicators, evaluationIndicator, this.selectedIndicatorIndex!)) {
+        let newList = this.evaluationIndicators.slice();
+        newList.splice(this.selectedIndicatorIndex!, 1);
+        newList.splice(this.selectedIndicatorIndex!, 0, evaluationIndicator);
+        this.evaluationIndicators = newList;
+        this.resetEvaluationIndicatorForm();
+        this.addIndicatorFormActive = false;
+      } else {
+        this.dialog.error(this.lang.map.selected_item_already_exists);
+      }
+    }
+  }
+
+  saveIndicator() {
+    const evaluationIndicator = new EvaluationIndicator().clone(this.evaluationIndicatorForm.getRawValue());
+    evaluationIndicator.indicatorInfo = evaluationIndicator.indicatorInfo ? evaluationIndicator.indicatorInfo : AdminResult.createInstance(this.indicators.find(x => x.id === evaluationIndicator.indicator)!);
+
+    this._saveIndicator(evaluationIndicator);
+  }
+
+  cancelAddIndicator() {
+    this.resetEvaluationIndicatorForm();
+    this.addIndicatorFormActive = false;
+  }
+
+  resetEvaluationIndicatorForm() {
+    this.selectedEvaluationIndicator = null;
+    this.selectedIndicatorIndex = null;
+    this.evaluationIndicatorForm.reset();
+  }
+
+  removeIndicator(event: MouseEvent, model: EvaluationIndicator) {
+    event.preventDefault();
+    this.evaluationIndicators = this.evaluationIndicators.filter(x => !(x.indicator === model.indicator && x.percentage === model.percentage && x.notes === model.notes));
+    this.resetEvaluationIndicatorForm();
+  }
+
+  isExistIndicatorInCaseOfAdd(evaluationIndicators: EvaluationIndicator[], toBeAddedIndicator: EvaluationIndicator): boolean {
+    return evaluationIndicators.some(x => x.indicator === toBeAddedIndicator.indicator && x.percentage === toBeAddedIndicator.percentage && x.notes === toBeAddedIndicator.notes);
+  }
+
+  isExistIndicatorInCaseOfEdit(evaluationIndicators: EvaluationIndicator[], toBeEditedIndicator: EvaluationIndicator, selectedIndex: number): boolean {
+    for (let i = 0; i < evaluationIndicators.length; i++) {
+      if (i === selectedIndex) {
+        continue;
+      }
+
+      if (evaluationIndicators[i].indicator === toBeEditedIndicator.indicator && evaluationIndicators[i].percentage === toBeEditedIndicator.percentage && evaluationIndicators[i].notes === toBeEditedIndicator.notes) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  ///////// foreign countries project functionality
+  openAddPMForeignCountriesProjectForm() {
+    this.addPMForeignCountriesProjectFormActive = true;
+  }
+
+  selectPMForeignCountriesProject(event: MouseEvent, model: ProjectModelForeignCountriesProject) {
+    this.addPMForeignCountriesProjectFormActive = true;
+    event.preventDefault();
+    this.selectedPMForeignCountriesProject = model;
+    this.pMForeignCountriesProjectForm.patchValue(this.selectedPMForeignCountriesProject!);
+    this.selectedPMForeignCountriesProjectIndex = this.pMForeignCountriesProjects
+      .findIndex(x => x.objectDBId === model.objectDBId && x.notes === model.notes);
+  }
+
+  _savePMForeignCountriesProject(projectModelForeignCountriesProject: ProjectModelForeignCountriesProject) {
+    if (!this.selectedPMForeignCountriesProject) {
+      if (!this.isExistPMForeignCountriesProjectInCaseOfAdd(this.pMForeignCountriesProjects, projectModelForeignCountriesProject)) {
+        this.pMForeignCountriesProjects = this.pMForeignCountriesProjects.concat(projectModelForeignCountriesProject);
+        this.resetPMForeignCountriesProjectForm();
+        this.addPMForeignCountriesProjectFormActive = false;
+      } else {
+        this.dialog.error(this.lang.map.selected_item_already_exists);
+      }
+    } else {
+      if (!this.isExistPMForeignCountriesProjectInCaseOfEdit(this.pMForeignCountriesProjects, projectModelForeignCountriesProject, this.selectedPMForeignCountriesProjectIndex!)) {
+        let newList = this.pMForeignCountriesProjects.slice();
+        newList.splice(this.selectedPMForeignCountriesProjectIndex!, 1);
+        newList.splice(this.selectedPMForeignCountriesProjectIndex!, 0, projectModelForeignCountriesProject);
+        this.pMForeignCountriesProjects = newList;
+        this.resetPMForeignCountriesProjectForm();
+        this.addPMForeignCountriesProjectFormActive = false;
+      } else {
+        this.dialog.error(this.lang.map.selected_item_already_exists);
+      }
+    }
+  }
+
+  savePMForeignCountriesProject() {
+    const pMForeignCountriesProject = new ProjectModelForeignCountriesProject().clone(this.pMForeignCountriesProjectForm.getRawValue());
+    pMForeignCountriesProject.projectName = (this.foreignCountriesProjectsNeeds.find(x => x.id === pMForeignCountriesProject.objectDBId)! as any).projectName;
+
+    this._savePMForeignCountriesProject(pMForeignCountriesProject);
+  }
+
+  cancelAddPMForeignCountriesProject() {
+    this.resetPMForeignCountriesProjectForm();
+    this.addPMForeignCountriesProjectFormActive = false;
+  }
+
+  resetPMForeignCountriesProjectForm() {
+    this.selectedPMForeignCountriesProject = null;
+    this.selectedPMForeignCountriesProjectIndex = null;
+    this.pMForeignCountriesProjectForm.reset();
+  }
+
+  removePMForeignCountriesProject(event: MouseEvent, model: ProjectModelForeignCountriesProject) {
+    event.preventDefault();
+    this.pMForeignCountriesProjects = this.pMForeignCountriesProjects.filter(x => !(x.objectDBId === model.objectDBId && x.notes === model.notes));
+    this.resetPMForeignCountriesProjectForm();
+  }
+
+  isExistPMForeignCountriesProjectInCaseOfAdd(list: ProjectModelForeignCountriesProject[], toBeAddedItem: ProjectModelForeignCountriesProject): boolean {
+    return list.some(x => x.objectDBId === toBeAddedItem.objectDBId && x.notes === toBeAddedItem.notes);
+  }
+
+  isExistPMForeignCountriesProjectInCaseOfEdit(list: ProjectModelForeignCountriesProject[], toBeEditedItem: ProjectModelForeignCountriesProject, selectedIndex: number): boolean {
+    for (let i = 0; i < list.length; i++) {
+      if (i === selectedIndex) {
+        continue;
+      }
+
+      if (list[i].objectDBId === toBeEditedItem.objectDBId && list[i].notes === toBeEditedItem.notes) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  ///////// project addresses functionality
+  openAddProjectAddressForm() {
+    this.addProjectAddressFormActive = true;
+    this.selectedProjectAddress = new ProjectAddress();
+  }
+
+  _saveProjectAddress(projectAddress: ProjectAddress) {
+    if (this.selectedProjectAddressIndex === null) {
+      if (!this.isExistProjectAddressInCaseOfAdd(this.projectAddresses, projectAddress)) {
+        this.projectAddresses = this.projectAddresses.concat(projectAddress);
+        this.resetProjectAddressForm();
+        this.addProjectAddressFormActive = false;
+      } else {
+        this.dialog.error(this.lang.map.selected_item_already_exists);
+      }
+    } else {
+      if (!this.isExistProjectAddressInCaseOfEdit(this.projectAddresses, projectAddress, this.selectedProjectAddressIndex!)) {
+        let newList = this.projectAddresses.slice();
+        newList.splice(this.selectedProjectAddressIndex!, 1);
+        newList.splice(this.selectedProjectAddressIndex!, 0, projectAddress);
+        this.projectAddresses = newList;
+        this.resetProjectAddressForm();
+        this.addProjectAddressFormActive = false;
+      } else {
+        this.dialog.error(this.lang.map.selected_item_already_exists);
+      }
+    }
+  }
+
+  selectProjectAddress(event: MouseEvent, model: ProjectAddress) {
+    this.addProjectAddressFormActive = true;
+    event.preventDefault();
+    this.selectedProjectAddress = model;
+    this.projectAddressForm.patchValue(this.selectedProjectAddress!);
+    this.selectedProjectAddressIndex = this.projectAddresses
+      .findIndex(x => x.beneficiaryRegion === model.beneficiaryRegion && x.address === model.address);
+  }
+
+  saveProjectAddress() {
+    console.log('form', this.projectAddressForm);
+    const projectAddress = new ProjectAddress().clone(this.projectAddressForm.getRawValue());
+
+    this._saveProjectAddress(projectAddress);
+  }
+
+  cancelAddProjectAddress() {
+    this.resetProjectAddressForm();
+    this.addProjectAddressFormActive = false;
+  }
+
+  resetProjectAddressForm() {
+    this.selectedProjectAddress = null;
+    this.selectedProjectAddressIndex = null;
+    this.projectAddressForm.reset();
+  }
+
+  removeProjectAddress(event: MouseEvent, model: ProjectAddress) {
+    event.preventDefault();
+    this.projectAddresses = this.projectAddresses.filter(x => !(x.beneficiaryRegion === model.beneficiaryRegion && x.address === model.address));
+    this.resetProjectAddressForm();
+  }
+
+  isExistProjectAddressInCaseOfAdd(projectAddresses: ProjectAddress[], toBeAddedProjectAddress: ProjectAddress): boolean {
+    return projectAddresses.some(x => x.beneficiaryRegion === toBeAddedProjectAddress.beneficiaryRegion && x.address === toBeAddedProjectAddress.address);
+  }
+
+  isExistProjectAddressInCaseOfEdit(projectAddresses: ProjectAddress[], toBeEditedProjectAddress: ProjectAddress, selectedIndex: number): boolean {
+    for (let i = 0; i < projectAddresses.length; i++) {
+      if (i === selectedIndex) {
+        continue;
+      }
+
+      if (projectAddresses[i].beneficiaryRegion === toBeEditedProjectAddress.beneficiaryRegion && projectAddresses[i].address === toBeEditedProjectAddress.address) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  ///////// location implementation
+  openMapMarker() {
+    (this.selectedProjectAddress!).openMap(this.readonly)
+      .onAfterClose$
+      .subscribe(({click, value}: { click: UserClickOn, value: ICoordinates }) => {
+        if (click === UserClickOn.YES) {
+          this.selectedProjectAddress!.latitude = value.latitude;
+          this.selectedProjectAddress!.longitude = value.longitude;
+          this.latitude.patchValue(value.latitude);
+          this.longitude.patchValue(value.longitude);
+        }
+      });
+  }
+
+  openLocationMap(item: CollectionItem) {
+    item.openMap(true);
+  }
+
+  isDisabledSaveAddress() {
+    return this.projectAddressForm.invalid || !CommonUtils.isValidValue(this.latitude.value) || !CommonUtils.isValidValue(this.longitude.value);
   }
 }

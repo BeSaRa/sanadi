@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { LangService } from "@app/services/lang.service";
-import { ToastService } from "@app/services/toast.service";
-import { DialogService } from "@app/services/dialog.service";
+import { LangService } from "@services/lang.service";
+import { ToastService } from "@services/toast.service";
+import { DialogService } from "@services/dialog.service";
 import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
 import { ReadinessStatus } from "@app/types/types";
 import { BehaviorSubject, Subject } from "rxjs";

@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {LangService} from '@app/services/lang.service';
-import {ToastService} from '@app/services/toast.service';
-import {DialogService} from '@app/services/dialog.service';
+import {LangService} from '@services/lang.service';
+import {ToastService} from '@services/toast.service';
+import {DialogService} from '@services/dialog.service';
 import {AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {ReadinessStatus} from '@app/types/types';
 import {BehaviorSubject, Subject} from 'rxjs';
@@ -10,8 +10,8 @@ import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {Goal} from '@app/models/goal';
 import {Lookup} from '@app/models/lookup';
 import {CustomValidators} from '@app/validators/custom-validators';
-import {LookupService} from '@app/services/lookup.service';
-import {Domains} from '@app/enums/domains.enum';
+import {LookupService} from '@services/lookup.service';
+import {DomainTypes} from '@app/enums/domain-types';
 import {AdminResult} from '@app/models/admin-result';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
 import {DacOchaNewService} from '@services/dac-ocha-new.service';
@@ -252,12 +252,12 @@ export class GoalComponent implements OnInit, OnDestroy {
     this.domainField?.valueChanges
       .pipe(takeUntil(this.destroy$))
       .subscribe((value) => {
-        if (value === Domains.DEVELOPMENT) {
+        if (value === DomainTypes.DEVELOPMENT) {
           this.displayByDomain = 'DAC';
           this.mainDACCategoryInfoField.setValidators([CustomValidators.required]);
           this.mainUNOCHACategoryInfoField.setValidators([]);
           this.mainUNOCHACategoryInfoField.setValue(null);
-        } else if (value === Domains.HUMAN) {
+        } else if (value === DomainTypes.HUMANITARIAN) {
           this.displayByDomain = 'OCHA';
           this.mainUNOCHACategoryInfoField.setValidators([CustomValidators.required]);
           this.mainDACCategoryInfoField.setValidators([]);
@@ -284,9 +284,9 @@ export class GoalComponent implements OnInit, OnDestroy {
         }),
         map(result => {
           return result.filter(record => {
-            if (record.type === Domains.HUMAN) {
+            if (record.type === DomainTypes.HUMANITARIAN) {
               this.mainUNOCHACategoriesList.push(record.convertToAdminResult());
-            } else if (record.type === Domains.DEVELOPMENT) {
+            } else if (record.type === DomainTypes.DEVELOPMENT) {
               this.mainDACCategoriesList.push(record.convertToAdminResult());
             }
             return record;

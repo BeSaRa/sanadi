@@ -1,20 +1,20 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {LangService} from "@app/services/lang.service";
-import {ToastService} from "@app/services/toast.service";
-import {DialogService} from "@app/services/dialog.service";
+import {LangService} from "@services/lang.service";
+import {ToastService} from "@services/toast.service";
+import {DialogService} from "@services/dialog.service";
 import {AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup} from "@angular/forms";
 import {ReadinessStatus} from "@app/types/types";
 import {BehaviorSubject, Subject} from "rxjs";
 import {filter, map, take, takeUntil} from "rxjs/operators";
 import {UserClickOn} from "@app/enums/user-click-on.enum";
-import {ContactOfficer} from "@app/models/contact-officer";
+import {ApprovalReason} from "@app/models/approval-reason";
 
 @Component({
-  selector: 'contact-officer',
-  templateUrl: './contact-officer.component.html',
-  styleUrls: ['./contact-officer.component.scss']
+  selector: 'approval-reason',
+  templateUrl: './approval-reason.component.html',
+  styleUrls: ['./approval-reason.component.scss']
 })
-export class ContactOfficerComponent implements OnInit, OnDestroy {
+export class ApprovalReasonComponent implements OnInit, OnDestroy {
 
   constructor(public lang: LangService,
               private toastService: ToastService,
@@ -22,29 +22,28 @@ export class ContactOfficerComponent implements OnInit, OnDestroy {
               private fb: UntypedFormBuilder) {
   }
 
-  private _list: ContactOfficer[] = [];
-  @Input() set list(list: ContactOfficer[]) {
+  private _list: ApprovalReason[] = [];
+  @Input() set list(list: ApprovalReason[]) {
     this._list = list;
     this.dataSource.next(this._list);
   }
 
-  get list(): ContactOfficer[] {
+  get list(): ApprovalReason[] {
     return this._list;
   }
-
   @Input() readonly : boolean = false;
 
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();
 
-  dataSource: BehaviorSubject<ContactOfficer[]> = new BehaviorSubject<ContactOfficer[]>([]);
-  columns = ['arabicName', 'englishName', 'email', 'phone', 'mobileNo', 'actions'];
+  dataSource: BehaviorSubject<ApprovalReason[]> = new BehaviorSubject<ApprovalReason[]>([]);
+  columns = ['projects', 'research', 'fieldVisit', 'description', 'actions'];
 
   editIndex: number = -1;
   add$: Subject<any> = new Subject<any>();
   private save$: Subject<any> = new Subject<any>();
 
-  private changed$: Subject<ContactOfficer | null> = new Subject<ContactOfficer | null>();
-  private current?: ContactOfficer;
+  private changed$: Subject<ApprovalReason | null> = new Subject<ApprovalReason | null>();
+  private current?: ApprovalReason;
   private destroy$: Subject<any> = new Subject<any>();
 
   form!: UntypedFormGroup;
@@ -69,12 +68,12 @@ export class ContactOfficerComponent implements OnInit, OnDestroy {
 
   private buildForm() {
     this.form = this.fb.group({
-      contactOfficers: this.fb.array([])
+      approvalReasons: this.fb.array([])
     })
   }
 
-  get contactOfficersFormArray(): UntypedFormArray {
-    return (this.form.get('contactOfficers')) as UntypedFormArray;
+  get approvalReasonsFormArray(): UntypedFormArray {
+    return (this.form.get('approvalReasons')) as UntypedFormArray;
   }
 
   addAllowed(): boolean {
@@ -84,28 +83,28 @@ export class ContactOfficerComponent implements OnInit, OnDestroy {
   private listenToAdd() {
     this.add$.pipe(takeUntil(this.destroy$))
       .subscribe(() => {
-        this.changed$.next(new ContactOfficer())
+        this.changed$.next(new ApprovalReason())
       })
   }
 
   private listenToChange() {
     this.changed$.pipe(takeUntil(this.destroy$))
-      .subscribe(contact => {
+      .subscribe(approvalReason => {
         if (this.readonly) {
           return;
         }
-        this.current = contact || undefined;
+        this.current = approvalReason || undefined;
         this.updateForm(this.current);
       })
   }
 
-  private updateForm(record: ContactOfficer | undefined) {
-    const contactOfficersFormArray = this.contactOfficersFormArray;
-    contactOfficersFormArray.clear();
+  private updateForm(record: ApprovalReason | undefined) {
+    const approvalReasonsFormArray = this.approvalReasonsFormArray;
+    approvalReasonsFormArray.clear();
 
     if (record) {
       this._setComponentReadiness('NOT_READY');
-      contactOfficersFormArray.push(this.fb.group((record.getContactOfficerFields(true))));
+      approvalReasonsFormArray.push(this.fb.group((record.getApprovalReasonFields(true))));
     } else {
       this._setComponentReadiness('READY');
     }
@@ -120,7 +119,7 @@ export class ContactOfficerComponent implements OnInit, OnDestroy {
 
   private listenToSave() {
     const form$ = this.save$.pipe(map(() => {
-      return this.form.get('contactOfficers.0') as AbstractControl;
+      return this.form.get('approvalReasons.0') as AbstractControl;
     }));
 
     const validForm$ = form$.pipe(filter((form) => form.valid));
@@ -131,33 +130,33 @@ export class ContactOfficerComponent implements OnInit, OnDestroy {
         .onAfterClose$
         .pipe(take(1))
         .subscribe(() => {
-          this.form.get('contactOfficers')?.markAllAsTouched();
+          this.form.get('approvalReasons')?.markAllAsTouched();
         });
     });
 
     validForm$.pipe(
       takeUntil(this.destroy$),
       map(() => {
-        return (this.form.get('contactOfficers.0')) as UntypedFormArray;
+        return (this.form.get('approvalReasons.0')) as UntypedFormArray;
       }),
       map((form) => {
-        return (new ContactOfficer()).clone({
+        return (new ApprovalReason()).clone({
           ...this.current, ...form.getRawValue()
         });
       })
-    ).subscribe((contactOfficer: ContactOfficer) => {
-      if (!contactOfficer) {
+    ).subscribe((approvalReason: ApprovalReason) => {
+      if (!approvalReason) {
         return;
       }
 
-      this._updateList(contactOfficer, (this.editIndex > -1 ? 'UPDATE' : 'ADD'), this.editIndex);
+      this._updateList(approvalReason, (this.editIndex > -1 ? 'UPDATE' : 'ADD'), this.editIndex);
       this.toastService.success(this.lang.map.msg_save_success);
       this.editIndex = -1;
       this.changed$.next(null);
     });
   }
 
-  private _updateList(record: (ContactOfficer | null), operation: 'ADD' | 'UPDATE' | 'DELETE' | 'NONE', gridIndex: number = -1) {
+  private _updateList(record: (ApprovalReason | null), operation: 'ADD' | 'UPDATE' | 'DELETE' | 'NONE', gridIndex: number = -1) {
     if (record) {
       if (operation === 'ADD') {
         this.list.push(record);
@@ -171,7 +170,7 @@ export class ContactOfficerComponent implements OnInit, OnDestroy {
     this.dataSource.next(this.list);
   }
 
-  edit($event: MouseEvent, record: ContactOfficer, index: number) {
+  edit($event: MouseEvent, record: ApprovalReason, index: number) {
     $event.preventDefault();
     if (this.readonly) {
       return;
@@ -180,7 +179,7 @@ export class ContactOfficerComponent implements OnInit, OnDestroy {
     this.changed$.next(record);
   }
 
-  delete($event: MouseEvent, record: ContactOfficer, index: number): any {
+  delete($event: MouseEvent, record: ApprovalReason, index: number): any {
     $event.preventDefault();
     if (this.readonly) {
       return;
@@ -203,9 +202,9 @@ export class ContactOfficerComponent implements OnInit, OnDestroy {
   }
 
   private resetForm() {
-    this.contactOfficersFormArray.clear();
-    this.contactOfficersFormArray.markAsUntouched();
-    this.contactOfficersFormArray.markAsPristine();
+    this.approvalReasonsFormArray.clear();
+    this.approvalReasonsFormArray.markAsUntouched();
+    this.approvalReasonsFormArray.markAsPristine();
   }
 
   private _setComponentReadiness(readyStatus: ReadinessStatus) {

@@ -16,7 +16,7 @@
       <form [formGroup]="form" autocomplete="off">
         <div class="row">
           <!-- Competent Department -->
-          <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <div class="col-sm-12 col-md-4 mb-4 ng-select-wrapper">
             <label asteriskIfRequired="competentDepartmentID" for="competentDepartmentID"
                    class="form-label">{{lang.map.competent_dep}}</label>
             <ng-select [selectOnTab]="true" labelForId="competentDepartmentID" [clearable]="true"
@@ -31,7 +31,7 @@
             <app-field-error-message controlName="competentDepartmentID"></app-field-error-message>
           </div>
           <!-- Country -->
-          <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <div class="col-sm-12 col-md-4 mb-4 ng-select-wrapper">
             <label asteriskIfRequired="country" for="country" class="form-label">{{lang.map.country}}</label>
             <ng-select [selectOnTab]="true" labelForId="country" [clearable]="true"
                        placeholder="{{lang.map.select}}" id="country"
@@ -59,8 +59,10 @@
           </div>
           <!-- Organization -->
           <div class="col-sm-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="organization" for="organization" class="form-label">{{lang.map.lbl_organization}}</label>
-            <input id="organization" validationClasses="organization" formControlName="organization" trimInput class="form-control">
+            <label asteriskIfRequired="organization" for="organization"
+                   class="form-label">{{lang.map.lbl_organization}}</label>
+            <input id="organization" validationClasses="organization" formControlName="organization" trimInput
+                   class="form-control">
             <app-field-error-message controlName="organization"></app-field-error-message>
           </div>
           <!-- Mobile Number -->
@@ -73,9 +75,11 @@
         <div class="row">
           <!-- Request Body -->
           <div class="col-12 mb-4 position-relative">
-            <label asteriskIfRequired="requestBody" for="requestBody" class="form-label">{{lang.map.request_body}}</label>
+            <label asteriskIfRequired="requestBody" for="requestBody"
+                   class="form-label">{{lang.map.request_body}}</label>
             <textarea rows="5" id="requestBody" formControlName="requestBody" validationClasses="requestBody"
-                      class="form-control" trimInput></textarea>
+                      class="form-control" trimInput
+                      [maxlength]="customValidators.defaultLengths.EXPLANATIONS"></textarea>
             <app-field-error-message controlName="requestBody"></app-field-error-message>
           </div>
         </div>
@@ -94,13 +98,9 @@
   </ng-template>
 
   <ng-template #attachmentsTabTemplate>
-    <div class="d-flex flex-row align-items-center justify-content-start">
-      <button [disabled]="isAttachmentReadonly()" (click)="attachmentsCtrl.openUploadDialog()"
-              class="d-inline-block btn p-0 icon-btn"><i
-        class="mdi mdi-plus-box text-primary"></i></button>
-    </div>
-    <app-documents #attachmentsCtrl [caseId]="model?.id" [service]="service.documentService"
-                   [readonly]="isAttachmentReadonly()"></app-documents>
+    <attachments [disabled]="isAttachmentReadonly()" [caseId]="model?.id" [caseType]="model?.caseType"
+                 [service]="service.documentService"
+                 [load]="loadAttachments"></attachments>
   </ng-template>
 
   <ng-template #recommendationsTemplate>
@@ -110,13 +110,4 @@
                          [caseId]="model?.id"
                          [service]="service.recommendationService"></app-recommendations>
   </ng-template>
-
-  <!--<div *ngIf="!fromDialog && !accordionView" class="mb-3 d-flex align-items-center justify-content-center">
-    <button (click)="save.next(saveTypes.FINAL)"
-            [disabled]="form.invalid || model?.alreadyStarted()"
-            class="btn btn-primary shadow-sm">{{lang.map.btn_save}}</button>
-    <button (click)="launch()" [disabled]="form.invalid || !model?.canStart()"
-            class="btn btn-primary shadow-sm mx-3">{{lang.map.launch}}</button>
-    <button (click)="navigateBack()" class="btn btn-secondary shadow-sm">{{lang.map.btn_cancel}}</button>
-  </div>-->
 </div>

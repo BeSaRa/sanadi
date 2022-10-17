@@ -1,4 +1,6 @@
+import {AllRequestTypesEnum} from '@app/enums/all-request-types-enum';
+
 export enum ProjectModelRequestType {
-  NEW = 1,
-  EDIT
+  NEW = AllRequestTypesEnum.NEW,
+  UPDATE = AllRequestTypesEnum.UPDATE
 }

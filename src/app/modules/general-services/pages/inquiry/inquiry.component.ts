@@ -1,127 +1,156 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {LangService} from '@app/services/lang.service';
-import {InternalDepartmentService} from '@app/services/internal-department.service';
-import {InternalDepartment} from '@app/models/internal-department';
-import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
-import {exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
-import {FormManager} from '@app/models/form-manager';
-import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
-import {Inquiry} from '@app/models/inquiry';
-import {LookupService} from '@app/services/lookup.service';
-import {Lookup} from '@app/models/lookup';
+import {Component} from '@angular/core';
 import {SaveTypes} from '@app/enums/save-types';
-import {DialogService} from '@app/services/dialog.service';
-import {ToastService} from '@app/services/toast.service';
-import {InquiryService} from '@app/services/inquiry.service';
-import {IESComponent} from '@app/interfaces/iescomponent';
+import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
+import {Inquiry} from '@app/models/inquiry';
+import {InquiryService} from '@services/inquiry.service';
 import {OperationTypes} from '@app/enums/operation-types.enum';
-import {CaseModel} from '@app/models/case-model';
+import {Observable} from 'rxjs';
+import {LangService} from '@services/lang.service';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+import {DialogService} from '@services/dialog.service';
+import {LookupService} from '@services/lookup.service';
+import {ToastService} from '@services/toast.service';
+import {EmployeeService} from '@services/employee.service';
+import {InternalDepartmentService} from '@services/internal-department.service';
+import {takeUntil} from 'rxjs/operators';
+import {InternalDepartment} from '@app/models/internal-department';
+import {TabMap} from '@app/types/types';
 import {OpenFrom} from '@app/enums/open-from.enum';
-import {EmployeeService} from '@app/services/employee.service';
-import {IKeyValue} from '@app/interfaces/i-key-value';
-import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {NavigationService} from '@app/services/navigation.service';
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {CommonUtils} from '@helpers/common-utils';
+import {Lookup} from '@app/models/lookup';
 
-// noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
-  selector: 'inquiry-component',
+  selector: 'inquiry',
   templateUrl: './inquiry.component.html',
   styleUrls: ['./inquiry.component.scss']
 })
-export class InquiryComponent implements OnInit, OnDestroy, IESComponent<Inquiry> {
-  afterSave$: EventEmitter<Inquiry> = new EventEmitter<Inquiry>();
-  fromWrapperComponent: boolean = false;
-  onModelChange$: EventEmitter<Inquiry | undefined> = new EventEmitter<Inquiry | undefined>();
-  accordionView: boolean = false;
-  departments: InternalDepartment[] = [];
-  destroy$: Subject<any> = new Subject<any>();
-  fm!: FormManager;
+export class InquiryComponent extends EServicesGenericComponent<Inquiry, InquiryService> {
+  constructor(public lang: LangService,
+              public service: InquiryService,
+              public fb: UntypedFormBuilder,
+              private dialog: DialogService,
+              private lookupService: LookupService,
+              private toast: ToastService,
+              private intDepService: InternalDepartmentService,
+              public employeeService: EmployeeService,) {
+    super();
+  }
+
   form!: UntypedFormGroup;
-  categories: Lookup[] = this.lookupService.listByCategory.InquiryCategory;
-  save: Subject<SaveTypes> = new Subject<SaveTypes>();
-  saveTypes: typeof SaveTypes = SaveTypes;
-  operation: OperationTypes = OperationTypes.CREATE;
-  openFrom: OpenFrom = OpenFrom.ADD_SCREEN;
-  model?: Inquiry;
-  resetForm$: Subject<boolean> = new Subject<boolean>();
-  private outModelChange$: BehaviorSubject<Inquiry> = new BehaviorSubject<Inquiry>(null as unknown as Inquiry);
-
-  @Input()
-  fromDialog: boolean = false;
-
-  @Input()
-  set outModel(model: Inquiry) {
-    this.outModelChange$.next(model);
-  }
-
-  get outModel(): Inquiry {
-    return this.outModelChange$.value;
-  }
-
-  private changeModel: BehaviorSubject<Inquiry | undefined> = new BehaviorSubject<Inquiry | undefined>(new Inquiry());
-  private modelChange$: Observable<Inquiry | undefined> = this.changeModel.asObservable().pipe(tap(model => this.onModelChange$.emit(model)));
-
-  readonly: boolean = false;
+  departments: InternalDepartment[] = [];
   allowEditRecommendations: boolean = true;
-
-  tabsData: IKeyValue = {
+  operation: OperationTypes = OperationTypes.CREATE;
+  categories: Lookup[] = this.lookupService.listByCategory.InquiryCategory;
+  loadAttachments: boolean = false;
+  tabsData: TabMap = {
     basicInfo: {
+      index: 0,
       name: 'basicInfoTab',
-      langKey: 'lbl_basic_info' as keyof ILanguageKeys,
-      validStatus: () => this.form.valid
+      langKey: 'lbl_basic_info',
+      validStatus: () => this.form && this.form.valid,
+      isTouchedOrDirty: () => true
     },
     comments: {
+      index: 1,
       name: 'commentsTab',
       langKey: 'comments',
-      validStatus: () => true
+      validStatus: () => true,
+      isTouchedOrDirty: () => true
     },
     attachments: {
+      index: 2,
       name: 'attachmentsTab',
       langKey: 'attachments',
-      validStatus: () => true
+      validStatus: () => true,
+      isTouchedOrDirty: () => true
     },
     recommendations: {
+      index: 3,
       name: 'recommendations',
       langKey: 'recommendations',
-      validStatus: () => true
+      validStatus: () => true,
+      isTouchedOrDirty: () => true
     }
   };
 
-  getTabInvalidStatus(tabName: string): boolean {
-    return !this.tabsData[tabName].validStatus();
-  }
-
-  constructor(private http: HttpClient,
-              public service: InquiryService,
-              private intDepService: InternalDepartmentService,
-              private fb: UntypedFormBuilder,
-              private dialog: DialogService,
-              private lookupService: LookupService,
-              public employeeService: EmployeeService,
-              private toast: ToastService,
-              private navigationService: NavigationService,
-              public lang: LangService) {
-
-  }
-
-  ngOnInit(): void {
-    this.service.ping();
+  _initComponent(): void {
     this.loadDepartments();
-    this.buildForm();
-    this._listenToResetForm();
-    this.listenToSave();
-    this.listenToModelChange();
-    this.listenToOutModelChange();
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-    this.destroy$.unsubscribe();
+  _buildForm(): void {
+    const inquiry = this._getNewInstance();
+    this.form = this.fb.group(inquiry.getFormFields(true));
+  }
+
+  _afterBuildForm(): void {
+  }
+
+  _prepareModel(): Observable<Inquiry> | Inquiry {
+    return this._getNewInstance().clone({
+      ...this.model,
+      ...this.form.value
+    });
+  }
+
+  _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
+    if (saveType === SaveTypes.DRAFT) {
+      return true;
+    }
+    if (this.form.invalid) {
+      this.displayInvalidFormMessage();
+      return false;
+    }
+    return true;
+  }
+
+  _afterSave(model: Inquiry, saveType: SaveTypes, operation: OperationTypes): void {
+    this._updateModelAfterSave(model);
+
+    if (
+      (operation === OperationTypes.CREATE && saveType === SaveTypes.FINAL) ||
+      (operation === OperationTypes.UPDATE && saveType === SaveTypes.COMMIT)
+    ) {
+      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({serial: model.fullSerial}));
+    } else {
+      this.toast.success(this.lang.map.request_has_been_saved_successfully);
+    }
+  }
+
+  _beforeLaunch(): boolean | Observable<boolean> {
+    return !!this.model && this.form.valid && this.model.canStart();
+  }
+
+  _afterLaunch(): void {
+    this.resetForm$.next();
+    this.toast.success(this.lang.map.request_has_been_sent_successfully);
+  }
+
+  _destroyComponent(): void {
+  }
+
+  _getNewInstance(): Inquiry {
+    return new Inquiry();
+  }
+
+  _launchFail(error: any): void {
+  }
+
+  _resetForm(): void {
+    this.form.reset();
+    this.model = this._getNewInstance();
+    this.operation = OperationTypes.CREATE;
+  }
+
+  _saveFail(error: any): void {
+  }
+
+  _updateForm(model: Inquiry | undefined): void {
+    this.model = model;
+    if (!model) {
+      return;
+    }
+    this.form.patchValue(model.getFormFields());
   }
 
   private loadDepartments(): void {
@@ -130,134 +159,21 @@ export class InquiryComponent implements OnInit, OnDestroy, IESComponent<Inquiry
       .subscribe(deps => this.departments = deps);
   }
 
-  private buildForm() {
-    const inquiry = new Inquiry();
-    this.form = this.fb.group(inquiry.getFormFields(true));
-    this.fm = new FormManager(this.form, this.lang);
-  }
-
-  private listenToSave(): void {
-    const validFormSubmit$ = this.save.pipe(
-      filter(val => val === SaveTypes.FINAL || val === SaveTypes.COMMIT),
-      tap(_ => (!this.form.valid ? this.displayInvalidFormMessage() : null)),
-      filter(_ => this.form.valid),
-    );
-
-    const finalSave$ = validFormSubmit$
-      .pipe(filter(val => val === SaveTypes.FINAL), map(_ => this.form.value));
-    const commitSave$ = validFormSubmit$
-      .pipe(filter(val => val === SaveTypes.COMMIT), map(_ => this.form.value));
-
-    const draftSave$ = this.save
-      .pipe(filter(val => val === SaveTypes.DRAFT), map(_ => this.form.value));
-
-    this.listenToDraftSave(draftSave$);
-    this.listenToFinalSave(finalSave$);
-    this.listenToCommitSave(commitSave$);
-  }
-
-  private listenToDraftSave(draftSave$: Observable<any>): void {
-    draftSave$.pipe(takeUntil(this.destroy$)).subscribe((fromValues) => {
-      const model = (new Inquiry()).clone({...this.model, ...fromValues});
-      model.draft()
-        .pipe(takeUntil(this.destroy$), tap(_ => this.saveDraftMessage()))
-        .subscribe((model) => {
-          this.changeModel.next(model);
-          this.afterSave$.emit(model);
-        });
-    });
-  }
-
-  private listenToFinalSave(finalSave$: Observable<any>): void {
-    finalSave$.pipe(
-      takeUntil(this.destroy$),
-      exhaustMap((fromValues) => {
-        const model = (new Inquiry()).clone({...this.model, ...fromValues});
-        return model.save().pipe(takeUntil(this.destroy$), tap(model => this.saveMessage(model)))
-      })
-    ).subscribe((model) => {
-      this.changeModel.next(model);
-      this.afterSave$.emit(model);
-    });
-  }
-
-
-  private listenToCommitSave(commitSave$: Observable<any>) {
-    commitSave$.pipe(
-      takeUntil(this.destroy$)
-    ).subscribe(fromValues => {
-      const model = (new Inquiry()).clone({...this.model, ...fromValues});
-      model.commit().pipe(takeUntil(this.destroy$), tap(model => this.saveMessage(model)))
-        .subscribe((model) => {
-          this.changeModel.next(model);
-          this.afterSave$.emit(model);
-        });
-    });
-  }
-
   onCompetentDepChange(depId: number): void {
     const dep = this.departments.find(item => item.id === depId);
     dep ? this.setAuthName(dep) : this.setAuthName(null);
   }
 
   setAuthName(dep: InternalDepartment | null): void {
-    this.fm.getFormField('competentDepartmentAuthName')?.setValue(dep ? dep.mainTeam.authName : null);
+    this.competentDepartmentAuthNameField?.setValue(dep ? dep.mainTeam.authName : null);
   }
 
-  private displayInvalidFormMessage(): void {
-    this.dialog.error(this.lang.map.msg_all_required_fields_are_filled).onAfterClose$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(() => this.fm.displayFormValidity());
+  getTabInvalidStatus(tabName: string): boolean {
+    return !this.tabsData[tabName].validStatus();
   }
 
-  private listenToModelChange(): void {
-    this.modelChange$
-      .pipe(
-        takeUntil(this.destroy$),
-        tap((item) => this.model = item),
-      )
-      .subscribe((model) => {
-        model?.id ? this.updateFromFields(model) : this.form.reset();
-      });
-  }
-
-  private updateFromFields(model: Inquiry): void {
-    this.form.patchValue(model.getFormFields());
-  }
-
-  private saveDraftMessage(): void {
-    this.toast.success(this.lang.map.draft_was_saved_successfully);
-  }
-
-  private saveMessage(model: CaseModel<any, any>): void {
-    if (this.operation === OperationTypes.CREATE) {
-      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({serial: model.fullSerial}));
-      this.operation = OperationTypes.UPDATE;
-    } else {
-      this.toast.success(this.lang.map.request_has_been_saved_successfully);
-    }
-  }
-
-  launch() {
-    this.model?.start().subscribe(_ => {
-      if (this.model) {
-        this.model.caseStatus = CommonCaseStatus.UNDER_PROCESSING;
-        this.resetForm$.next();
-      }
-      this.toast.success(this.lang.map.request_has_been_sent_successfully);
-      this.changeModel.next(this.model);
-    });
-  }
-
-  private listenToOutModelChange() {
-    this.outModelChange$
-      .pipe(
-        filter(model => !!model),
-        takeUntil(this.destroy$)
-      )
-      .subscribe((model) => {
-        this.changeModel.next(model);
-      });
+  get competentDepartmentAuthNameField(): UntypedFormControl {
+    return this.form.get('competentDepartmentAuthName') as UntypedFormControl;
   }
 
   isAddCommentAllowed(): boolean {
@@ -281,42 +197,26 @@ export class InquiryComponent implements OnInit, OnDestroy, IESComponent<Inquiry
     }
     if (isAllowed) {
       let caseStatus = this.model.getCaseStatus();
-        isAllowed = (caseStatus !== CommonCaseStatus.CANCELLED && caseStatus !== CommonCaseStatus.FINAL_APPROVE && caseStatus !== CommonCaseStatus.FINAL_REJECTION);
+      isAllowed = (caseStatus !== CommonCaseStatus.CANCELLED && caseStatus !== CommonCaseStatus.FINAL_APPROVE && caseStatus !== CommonCaseStatus.FINAL_REJECTION);
     }
     return !isAllowed;
   }
 
-  navigateBack(): void {
-    this.navigationService.goToBack();
+  private displayInvalidFormMessage(): void {
+    this.dialog.error(this.lang.map.msg_all_required_fields_are_filled).onAfterClose$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => CommonUtils.displayFormValidity(this.form, 'main-content'));
   }
 
-  resetForm(): void {
-    this.form.reset();
-    this.model = new Inquiry();
-    this.operation = OperationTypes.CREATE;
+  private _updateModelAfterSave(model: Inquiry): void {
+    if ((this.openFrom === OpenFrom.USER_INBOX || this.openFrom === OpenFrom.TEAM_INBOX) && this.model?.taskDetails && this.model.taskDetails.tkiid) {
+      this.service.getTask(this.model.taskDetails.tkiid)
+        .subscribe((model) => {
+          this.model = model;
+        });
+    } else {
+      this.model = model;
+    }
   }
 
-  confirmResetForm(): DialogRef {
-    return this.service.dialog.confirm(this.lang.map.msg_confirm_reset_form);
-  }
-
-  private _listenToResetForm(): void {
-    this.resetForm$
-      .pipe(
-        takeUntil(this.destroy$),
-        switchMap((needConfirmation) => {
-          if (needConfirmation){
-            return this.confirmResetForm().onAfterClose$;
-          } else {
-            return of(UserClickOn.YES);
-          }
-        })
-      )
-      .subscribe((userClick: UserClickOn) => {
-        if (userClick === UserClickOn.YES){
-          this.operation = OperationTypes.CREATE;
-          this.resetForm();
-        }
-      });
-  }
 }

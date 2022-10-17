@@ -1,23 +1,23 @@
-import { Injectable } from '@angular/core';
-import { InternationalCooperation } from '../models/international-cooperation';
-import { IModelInterceptor } from '@contracts/i-model-interceptor';
-import { DocumentService } from './document.service';
-import { CommentService } from './comment.service';
-import { ActionLogService } from './action-log.service';
-import { RecommendationService } from './recommendation.service';
-import { ILanguageKeys } from '@contracts/i-language-keys';
-import { InternationalCooperationInterceptor } from '../model-interceptors/international-cooperation-interceptor';
-import { UrlService } from './url.service';
-import { DialogService } from './dialog.service';
-import { DomSanitizer } from '@angular/platform-browser';
-import { HttpClient } from '@angular/common/http';
-import { FactoryService } from './factory.service';
-import { SearchService } from './search.service';
-import { InternationalCooperationSearchCriteria } from '../models/international-cooperation-search-criteria';
-import { DynamicOptionsService } from './dynamic-options.service';
-import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
-import { CastResponseContainer } from "@decorators/cast-response";
-import { BaseGenericEService } from "@app/generics/base-generic-e-service";
+import {Injectable} from '@angular/core';
+import {InternationalCooperation} from '../models/international-cooperation';
+import {IModelInterceptor} from '@contracts/i-model-interceptor';
+import {DocumentService} from './document.service';
+import {CommentService} from './comment.service';
+import {ActionLogService} from './action-log.service';
+import {RecommendationService} from './recommendation.service';
+import {ILanguageKeys} from '@contracts/i-language-keys';
+import {InternationalCooperationInterceptor} from '../model-interceptors/international-cooperation-interceptor';
+import {UrlService} from './url.service';
+import {DialogService} from './dialog.service';
+import {DomSanitizer} from '@angular/platform-browser';
+import {HttpClient} from '@angular/common/http';
+import {FactoryService} from './factory.service';
+import {SearchService} from './search.service';
+import {InternationalCooperationSearchCriteria} from '../models/international-cooperation-search-criteria';
+import {DynamicOptionsService} from './dynamic-options.service';
+import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import {CastResponseContainer} from '@decorators/cast-response';
+import {BaseGenericEService} from '@app/generics/base-generic-e-service';
 
 @CastResponseContainer({
   $default: {

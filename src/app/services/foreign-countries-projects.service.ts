@@ -1,20 +1,20 @@
-import { HttpClient } from '@angular/common/http';
-import { ComponentFactoryResolver, Injectable } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
-import { CastResponseContainer } from '@app/decorators/decorators/cast-response';
-import { WFResponseType } from '@app/enums/wfresponse-type.enum';
-import { BaseGenericEService } from '@app/generics/base-generic-e-service';
-import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { ForeignCountriesProjects } from '@app/models/foreign-countries-projects';
-import { ForeignCountriesProjectsResult } from '@app/models/foreign-countries-projects-results';
-import { ForeignCountriesProjectsSearchCriteria } from '@app/models/foreign-countries-projects-seach-criteria';
-import { Observable } from 'rxjs';
-import { DialogService } from './dialog.service';
-import { DynamicOptionsService } from './dynamic-options.service';
-import { FactoryService } from './factory.service';
-import { FollowupDateService } from './follow-up-date.service';
-import { LicenseService } from './license.service';
-import { UrlService } from './url.service';
+import {HttpClient} from '@angular/common/http';
+import {ComponentFactoryResolver, Injectable} from '@angular/core';
+import {DomSanitizer} from '@angular/platform-browser';
+import {CastResponse, CastResponseContainer} from '@app/decorators/decorators/cast-response';
+import {BaseGenericEService} from '@app/generics/base-generic-e-service';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {ForeignCountriesProjects} from '@app/models/foreign-countries-projects';
+import {ForeignCountriesProjectsResult} from '@app/models/foreign-countries-projects-results';
+import {ForeignCountriesProjectsSearchCriteria} from '@app/models/foreign-countries-projects-seach-criteria';
+import {Observable} from 'rxjs';
+import {DialogService} from './dialog.service';
+import {DynamicOptionsService} from './dynamic-options.service';
+import {FactoryService} from './factory.service';
+import {FollowupDateService} from './follow-up-date.service';
+import {LicenseService} from './license.service';
+import {UrlService} from './url.service';
+import {ForeignCountriesProjectsNeed} from '@app/models/foreign-countries-projects-need';
 
 @CastResponseContainer({
   $default: {
@@ -70,6 +70,11 @@ export class ForeignCountriesProjectsService extends BaseGenericEService<Foreign
     criteria: Partial<ForeignCountriesProjectsSearchCriteria> = {}
   ): Observable<ForeignCountriesProjectsResult[]> {
     return this.license.foreignCountriesProjectsSearch(criteria);
+  }
+
+  @CastResponse(() => ForeignCountriesProjectsNeed)
+  loadForeignCountriesProjectsNeeds(countryId: number): Observable<ForeignCountriesProjectsNeed[]> {
+    return this.http.get<ForeignCountriesProjectsNeed[]>(this._getURLSegment() + '/needs/country/' + countryId);
   }
 
   /* approveTask(model: ForeignCountriesProjects, action: WFResponseType) {

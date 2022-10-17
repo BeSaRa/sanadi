@@ -20,6 +20,7 @@ import {PermissionsEnum} from '@app/enums/permissions-enum';
 import {Profile} from '@app/models/profile';
 import {PermissionGroupsEnum} from '@app/enums/permission-groups-enum';
 import {StaticAppResourcesService} from '@services/static-app-resources.service';
+import {ProfileTypes} from '@app/enums/profile-types.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -135,6 +136,14 @@ export class EmployeeService {
 
   getProfile(): Profile | undefined {
     return this.profile;
+  }
+
+  isCharityProfile(): boolean {
+    return this.profile?.profileType === ProfileTypes.CHARITY;
+  }
+
+  isInstitutionProfile(): boolean {
+    return this.profile?.profileType === ProfileTypes.INSTITUTION;
   }
 
   private preparePermissionMap() {

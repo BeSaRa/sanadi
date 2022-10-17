@@ -13,8 +13,6 @@ import {Injectable} from '@angular/core';
 import {DynamicComponentService} from './dynamic-component.service';
 import {TeamService} from './team.service';
 import {CustomEmployeePermission} from '@app/helpers/custom-employee-permission';
-import {InquiryComponent} from '@app/modules/general-services/pages/inquiry/inquiry.component';
-import {ConsultationComponent} from '@app/modules/general-services/pages/consultation/consultation.component';
 import {
   InternationalCooperationComponent
 } from '@app/modules/general-services/pages/international-cooperation/international-cooperation.component';
@@ -65,6 +63,8 @@ import {
   CharityOrganizationUpdateComponent
 } from '@app/modules/general-services/pages/charity-organization-update/charity-organization-update.component';
 import {PermissionsEnum} from '@app/enums/permissions-enum';
+import {ConsultationComponent} from '@app/modules/general-services/pages/consultation/consultation.component';
+import {InquiryComponent} from '@app/modules/general-services/pages/inquiry/inquiry.component';
 
 @Injectable({
   providedIn: 'root'

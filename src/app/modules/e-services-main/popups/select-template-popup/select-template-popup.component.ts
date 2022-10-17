@@ -11,7 +11,7 @@ import {DialogRef} from "@app/shared/models/dialog-ref";
   styleUrls: ['./select-template-popup.component.scss']
 })
 export class SelectTemplatePopupComponent implements OnInit {
-  displayedColumns: string[] = ['domainInfo', 'projectTypeInfo', 'templateStatusInfo', 'createdBy', 'createdOn', 'templateTypeInfo', 'actions'];
+  displayedColumns: string[] = ['domainInfo', 'projectTypeInfo', 'templateStatusInfo', 'createdBy', 'createdOn', 'actions'];
 
   constructor(public lang: LangService,
               private dialogRef: DialogRef,

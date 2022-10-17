@@ -1,201 +1,161 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit} from '@angular/core';
-import {SaveTypes} from '@app/enums/save-types';
-import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
-import {FormManager} from '@app/models/form-manager';
-import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
-import {HttpClient} from '@angular/common/http';
-import {DialogService} from '@app/services/dialog.service';
-import {ToastService} from '@app/services/toast.service';
-import {LangService} from '@app/services/lang.service';
-import {exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
-import {IESComponent} from '@app/interfaces/iescomponent';
+import {Component, OnInit} from '@angular/core';
+import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
 import {InternationalCooperation} from '@app/models/international-cooperation';
-import {InternationalCooperationService} from '@app/services/international-cooperation.service';
-import {InternalDepartmentService} from '@app/services/internal-department.service';
-import {InternalDepartment} from '@app/models/internal-department';
-import {CountryService} from '@app/services/country.service';
-import {Country} from '@app/models/country';
+import {InternationalCooperationService} from '@services/international-cooperation.service';
+import {SaveTypes} from '@app/enums/save-types';
 import {OperationTypes} from '@app/enums/operation-types.enum';
-import {CaseModel} from '@app/models/case-model';
+import {Observable} from 'rxjs';
+import {LangService} from '@services/lang.service';
+import {InternalDepartmentService} from '@services/internal-department.service';
+import {CountryService} from '@services/country.service';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+import {DialogService} from '@services/dialog.service';
+import {ToastService} from '@services/toast.service';
+import {EmployeeService} from '@services/employee.service';
+import {TabMap} from '@app/types/types';
+import {Country} from '@app/models/country';
+import {InternalDepartment} from '@app/models/internal-department';
+import {takeUntil} from 'rxjs/operators';
 import {OpenFrom} from '@app/enums/open-from.enum';
-import {EmployeeService} from '@app/services/employee.service';
-import {IKeyValue} from '@app/interfaces/i-key-value';
-import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {NavigationService} from '@app/services/navigation.service';
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {CommonUtils} from '@helpers/common-utils';
 
-// noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
   selector: 'international-cooperation',
   templateUrl: './international-cooperation.component.html',
   styleUrls: ['./international-cooperation.component.scss']
 })
-export class InternationalCooperationComponent implements OnInit, OnDestroy, IESComponent<InternationalCooperation> {
-  afterSave$: EventEmitter<InternationalCooperation> = new EventEmitter<InternationalCooperation>();
-  fromWrapperComponent: boolean = false;
-  onModelChange$: EventEmitter<InternationalCooperation | undefined> = new EventEmitter<InternationalCooperation | undefined>();
-  accordionView: boolean = false;
+export class InternationalCooperationComponent extends EServicesGenericComponent<InternationalCooperation, InternationalCooperationService> {
+
+  constructor(public lang: LangService,
+              public service: InternationalCooperationService,
+              public fb: UntypedFormBuilder,
+              private dialog: DialogService,
+              public intDepService: InternalDepartmentService,
+              private countryService: CountryService,
+              private toast: ToastService,
+              public employeeService: EmployeeService) {
+    super();
+  }
+
+  form!: UntypedFormGroup;
   countries: Country[] = [];
   departments: InternalDepartment[] = [];
-  destroy$: Subject<any> = new Subject<any>();
-  fm!: FormManager;
-  form!: UntypedFormGroup;
-  save: Subject<SaveTypes> = new Subject<SaveTypes>();
-  saveTypes: typeof SaveTypes = SaveTypes;
-  operation: OperationTypes = OperationTypes.CREATE;
-  openFrom: OpenFrom = OpenFrom.ADD_SCREEN;
-  model?: InternationalCooperation;
-  resetForm$: Subject<boolean> = new Subject<boolean>();
-  private outModelChange$: BehaviorSubject<InternationalCooperation> = new BehaviorSubject<InternationalCooperation>(null as unknown as InternationalCooperation);
-
-  @Input()
-  fromDialog: boolean = false;
-
-  @Input()
-  set outModel(model: InternationalCooperation) {
-    this.outModelChange$.next(model);
-  }
-
-  get outModel(): InternationalCooperation {
-    return this.outModelChange$.value;
-  }
-
-  private changeModel: BehaviorSubject<InternationalCooperation | undefined> = new BehaviorSubject<InternationalCooperation | undefined>(new InternationalCooperation());
-  private modelChange$: Observable<InternationalCooperation | undefined> = this.changeModel.asObservable().pipe(tap(model => this.onModelChange$.emit(model)));
-  readonly: boolean = false;
   allowEditRecommendations: boolean = true;
-
-  tabsData: IKeyValue = {
+  loadAttachments: boolean = false;
+  tabsData: TabMap = {
     basicInfo: {
+      index: 0,
       name: 'basicInfoTab',
-      langKey: 'lbl_basic_info' as keyof ILanguageKeys,
-      validStatus: () => this.form.valid
+      langKey: 'lbl_basic_info',
+      validStatus: () => this.form.valid,
+      isTouchedOrDirty: () => true
     },
     comments: {
+      index: 1,
       name: 'commentsTab',
       langKey: 'comments',
-      validStatus: () => true
+      validStatus: () => true,
+      isTouchedOrDirty: () => true
     },
     attachments: {
+      index: 2,
       name: 'attachmentsTab',
       langKey: 'attachments',
-      validStatus: () => true
+      validStatus: () => true,
+      isTouchedOrDirty: () => true
     },
     recommendations: {
+      index: 3,
       name: 'recommendations',
       langKey: 'recommendations',
-      validStatus: () => true
+      validStatus: () => true,
+      isTouchedOrDirty: () => true
     }
   };
 
-  getTabInvalidStatus(tabName: string): boolean {
-    return !this.tabsData[tabName].validStatus();
-  }
-
-  constructor(private http: HttpClient,
-              public intDepService: InternalDepartmentService,
-              public service: InternationalCooperationService,
-              private fb: UntypedFormBuilder,
-              private dialog: DialogService,
-              private toast: ToastService,
-              private countryService: CountryService,
-              private navigationService: NavigationService,
-              public employeeService: EmployeeService,
-              public lang: LangService) {
-  }
-
-  handleReadonly?: any;
-  formValidity$?: Subject<any> | undefined;
-
-
-  ngOnInit(): void {
-    this.service.ping();
+  _initComponent(): void {
     this.loadDepartments();
-    this.buildForm();
-    this.listenToSave();
-    this._listenToResetForm();
-    this.listenToModelChange();
-    this.listenToOutModelChange();
     this.loadCountries();
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-    this.destroy$.unsubscribe();
-  }
-
-  private buildForm() {
-    const internationalCooperation = new InternationalCooperation();
+  _buildForm(): void {
+    const internationalCooperation = this._getNewInstance();
     this.form = this.fb.group(internationalCooperation.getFormFields(true));
-    this.fm = new FormManager(this.form, this.lang);
   }
 
-  private loadDepartments(): void {
-    this.intDepService.loadAsLookups()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(deps => this.departments = deps);
+  _afterBuildForm(): void {
   }
 
-  private listenToSave(): void {
-    const validFormSubmit$ = this.save.pipe(
-      filter(val => val === SaveTypes.FINAL || val === SaveTypes.COMMIT),
-      tap(_ => (!this.form.valid ? this.displayInvalidFormMessage() : null)),
-      filter(_ => this.form.valid),
-    );
-
-    const finalSave$ = validFormSubmit$
-      .pipe(filter(val => val === SaveTypes.FINAL), map(_ => this.form.value));
-    const commitSave$ = validFormSubmit$
-      .pipe(filter(val => val === SaveTypes.COMMIT), map(_ => this.form.value));
-
-    const draftSave$ = this.save
-      .pipe(filter(val => val === SaveTypes.DRAFT), map(_ => this.form.value));
-
-    this.listenToDraftSave(draftSave$);
-    this.listenToFinalSave(finalSave$);
-    this.listenToCommitSave(commitSave$);
-  }
-
-  private listenToDraftSave(draftSave$: Observable<any>): void {
-    draftSave$.pipe(takeUntil(this.destroy$)).subscribe((fromValues) => {
-      const model = (new InternationalCooperation()).clone({...this.model, ...fromValues});
-      model.draft()
-        .pipe(takeUntil(this.destroy$), tap(_ => this.saveDraftMessage()))
-        .subscribe((model) => {
-          this.changeModel.next(model);
-          this.afterSave$.emit(model);
-        });
+  _prepareModel(): Observable<InternationalCooperation> | InternationalCooperation {
+    return this._getNewInstance().clone({
+      ...this.model,
+      ...this.form.value
     });
   }
 
-  private listenToFinalSave(finalSave$: Observable<any>): void {
-    finalSave$.pipe(
-      takeUntil(this.destroy$),
-      exhaustMap((fromValues) => {
-        const model = (new InternationalCooperation()).clone({...this.model, ...fromValues});
-        return model.save().pipe(takeUntil(this.destroy$), tap(model => this.saveMessage(model)));
-      })
-    ).subscribe((model) => {
-      this.changeModel.next(model);
-      this.afterSave$.emit(model);
-    });
+  _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
+    if (saveType === SaveTypes.DRAFT) {
+      return true;
+    }
+    if (this.form.invalid) {
+      this.displayInvalidFormMessage();
+      return false;
+    }
+    return true;
   }
 
+  _afterSave(model: InternationalCooperation, saveType: SaveTypes, operation: OperationTypes): void {
+    this._updateModelAfterSave(model);
 
-  private listenToCommitSave(commitSave$: Observable<any>) {
-    commitSave$.pipe(
-      takeUntil(this.destroy$)
-    ).subscribe(fromValues => {
-      const model = (new InternationalCooperation()).clone({...this.model, ...fromValues});
-      model.commit().pipe(takeUntil(this.destroy$), tap(model => this.saveMessage(model)))
-        .subscribe((model) => {
-          this.changeModel.next(model);
-          this.afterSave$.emit(model);
-        });
-    });
+    if (
+      (operation === OperationTypes.CREATE && saveType === SaveTypes.FINAL) ||
+      (operation === OperationTypes.UPDATE && saveType === SaveTypes.COMMIT)
+    ) {
+      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({serial: model.fullSerial}));
+    } else {
+      this.toast.success(this.lang.map.request_has_been_saved_successfully);
+    }
+  }
+
+  _destroyComponent(): void {
+  }
+
+  _getNewInstance(): InternationalCooperation {
+    return new InternationalCooperation();
+  }
+
+  _beforeLaunch(): boolean | Observable<boolean> {
+    return !!this.model && this.form.valid && this.model.canStart();
+  }
+
+  _afterLaunch(): void {
+    this.resetForm$.next();
+    this.toast.success(this.lang.map.request_has_been_sent_successfully);
+  }
+
+  _launchFail(error: any): void {
+  }
+
+  _resetForm(): void {
+    this.form.reset();
+    this.model = this._getNewInstance();
+    this.operation = OperationTypes.CREATE;
+  }
+
+  _saveFail(error: any): void {
+  }
+
+  _updateForm(model: InternationalCooperation | undefined): void {
+    this.model = model;
+    if (!model) {
+      return;
+    }
+    this.form.patchValue(model.getFormFields());
+  }
+
+  getTabInvalidStatus(tabName: string): boolean {
+    return !this.tabsData[tabName].validStatus();
   }
 
   onCompetentDepChange(depId: number): void {
@@ -204,69 +164,11 @@ export class InternationalCooperationComponent implements OnInit, OnDestroy, IES
   }
 
   setAuthName(dep: InternalDepartment | null): void {
-    this.fm.getFormField('competentDepartmentAuthName')?.setValue(dep ? dep.mainTeam.authName : null);
+    this.competentDepartmentAuthNameField?.setValue(dep ? dep.mainTeam.authName : null);
   }
 
-  private displayInvalidFormMessage(): void {
-    this.dialog.error(this.lang.map.msg_all_required_fields_are_filled).onAfterClose$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(() => this.fm.displayFormValidity());
-  }
-
-  private listenToModelChange(): void {
-    this.modelChange$
-      .pipe(
-        takeUntil(this.destroy$),
-        tap((item) => this.model = item),
-      )
-      .subscribe((model) => {
-        model ? this.updateFromFields(model) : this.form.reset();
-      });
-  }
-
-  private updateFromFields(model: InternationalCooperation): void {
-    this.form.patchValue(model.getFormFields());
-  }
-
-  private saveDraftMessage(): void {
-    this.toast.success(this.lang.map.draft_was_saved_successfully);
-  }
-
-  private saveMessage(model: CaseModel<any, any>): void {
-    if (this.operation === OperationTypes.CREATE) {
-      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({serial: model.fullSerial}));
-      this.operation = OperationTypes.UPDATE;
-    } else {
-      this.toast.success(this.lang.map.request_has_been_saved_successfully);
-    }
-  }
-
-  launch() {
-    this.model?.start().subscribe(_ => {
-      if (this.model) {
-        this.model.caseStatus = CommonCaseStatus.UNDER_PROCESSING;
-        this.resetForm$.next();
-      }
-      this.toast.success(this.lang.map.request_has_been_sent_successfully);
-      this.changeModel.next(this.model);
-    });
-  }
-
-  private listenToOutModelChange() {
-    this.outModelChange$
-      .pipe(
-        filter(model => !!model),
-        takeUntil(this.destroy$)
-      )
-      .subscribe((model) => {
-        this.changeModel.next(model);
-      });
-  }
-
-  private loadCountries() {
-    this.countryService.loadAsLookups()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((countries) => this.countries = countries);
+  get competentDepartmentAuthNameField(): UntypedFormControl {
+    return this.form.get('competentDepartmentAuthName') as UntypedFormControl;
   }
 
   isAddCommentAllowed(): boolean {
@@ -295,37 +197,33 @@ export class InternationalCooperationComponent implements OnInit, OnDestroy, IES
     return !isAllowed;
   }
 
-  navigateBack(): void {
-    this.navigationService.goToBack();
+  private loadDepartments(): void {
+    this.intDepService.loadAsLookups()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(deps => this.departments = deps);
   }
 
-  resetForm(): void {
-    this.form.reset();
-    this.model = new InternationalCooperation();
-    this.operation = OperationTypes.CREATE;
+  private loadCountries() {
+    this.countryService.loadAsLookups()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((countries) => this.countries = countries);
   }
 
-  confirmResetForm(): DialogRef {
-    return this.service.dialog.confirm(this.lang.map.msg_confirm_reset_form);
+  private displayInvalidFormMessage(): void {
+    this.dialog.error(this.lang.map.msg_all_required_fields_are_filled).onAfterClose$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => CommonUtils.displayFormValidity(this.form, 'main-content'));
   }
 
-  private _listenToResetForm(): void {
-    this.resetForm$
-      .pipe(
-        takeUntil(this.destroy$),
-        switchMap((needConfirmation) => {
-          if (needConfirmation) {
-            return this.confirmResetForm().onAfterClose$;
-          } else {
-            return of(UserClickOn.YES);
-          }
-        })
-      )
-      .subscribe((userClick: UserClickOn) => {
-        if (userClick === UserClickOn.YES) {
-          this.operation = OperationTypes.CREATE;
-          this.resetForm();
-        }
-      });
+  private _updateModelAfterSave(model: InternationalCooperation): void {
+    if ((this.openFrom === OpenFrom.USER_INBOX || this.openFrom === OpenFrom.TEAM_INBOX) && this.model?.taskDetails && this.model.taskDetails.tkiid) {
+      this.service.getTask(this.model.taskDetails.tkiid)
+        .subscribe((model) => {
+          this.model = model;
+        });
+    } else {
+      this.model = model;
+    }
   }
+
 }

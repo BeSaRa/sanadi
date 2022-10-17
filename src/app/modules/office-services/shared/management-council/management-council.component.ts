@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { LangService } from "@app/services/lang.service";
-import { CountryService } from "@app/services/country.service";
-import { ToastService } from "@app/services/toast.service";
-import { DialogService } from "@app/services/dialog.service";
+import { LangService } from "@services/lang.service";
+import { CountryService } from "@services/country.service";
+import { ToastService } from "@services/toast.service";
+import { DialogService } from "@services/dialog.service";
 import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
 import { ManagementCouncil } from "@app/models/management-council";
 import { Country } from "@app/models/country";
