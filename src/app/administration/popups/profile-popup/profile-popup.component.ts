@@ -72,15 +72,12 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> {
   initPopup(): void {
     this.service.getByProfileType(ProfileTypes.REGISTERED_ENTITES).subscribe(e => {
       this.registrationAuthorities = e;
-      console.log({ e });
     });
     if (this.operation) {
       this.profileTypeField.disable();
     }
-    this.profileServiceSerice.getServicesByProfile(1).subscribe(console.log);
   }
   handleProfileType(profileType: number) {
-    console.log({ profileType });
     if (profileType === ProfileTypes.CHARITY || profileType === ProfileTypes.INSTITUTION) {
       this.showRaca = true;
       this.registrationAuthorityField?.patchValue(-1);
@@ -111,6 +108,10 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> {
     this.model = model;
     this.showServicesTab = true;
     this.operation = OperationTypes.UPDATE;
+
+    this.profileServiceSerice.getServicesByProfile(model.id).subscribe(e => {
+      this.profileServices = e;
+    });
 
   }
   beforeSave(
