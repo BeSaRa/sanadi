@@ -28,11 +28,11 @@ import {UserClickOn} from '@app/enums/user-click-on.enum';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
-  selector: 'inquiry-component',
-  templateUrl: './inquiry.component.html',
-  styleUrls: ['./inquiry.component.scss']
+  selector: 'inquiry-old',
+  templateUrl: './inquiry-old.component.html',
+  styleUrls: ['./inquiry-old.component.scss']
 })
-export class InquiryComponent implements OnInit, OnDestroy, IESComponent<Inquiry> {
+export class InquiryOldComponent implements OnInit, OnDestroy, IESComponent<Inquiry> {
   afterSave$: EventEmitter<Inquiry> = new EventEmitter<Inquiry>();
   fromWrapperComponent: boolean = false;
   onModelChange$: EventEmitter<Inquiry | undefined> = new EventEmitter<Inquiry | undefined>();

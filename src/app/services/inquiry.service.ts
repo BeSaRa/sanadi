@@ -60,7 +60,7 @@ export class InquiryService extends BaseGenericEService<Inquiry> {
   }
 
   getCaseComponentName(): string {
-    return 'InquiryComponent';
+    return 'InquiryOldComponent';
   }
 
   _getURLSegment(): string {

@@ -20,7 +20,7 @@ import { CommonModule } from '@angular/common';
 import { GeneralServicesRoutingModule } from './general-services-routing.module';
 import { GeneralServicesComponent } from './general-services.component';
 import { SharedModule } from '@app/shared/shared.module';
-import { InquiryComponent } from '@app/modules/general-services/pages/inquiry/inquiry.component';
+import { InquiryOldComponent } from '@app/modules/general-services/pages/inquiry-old/inquiry-old.component';
 import { ConsultationOldComponent } from '@app/modules/general-services/pages/consultation-old/consultation-old.component';
 import { ConsultationComponent } from './pages/consultation/consultation.component';
 import {
@@ -43,7 +43,7 @@ import { FollowupDateApprovePopupComponent } from './popups/follow-up-date-appro
 @NgModule({
   declarations: [
     GeneralServicesComponent,
-    InquiryComponent,
+    InquiryOldComponent,
     ConsultationComponent,
     ConsultationOldComponent,
     InternationalCooperationComponent,
