@@ -1,5 +1,5 @@
 <div class="row pb-3">
-  <app-page-header [pageTitle]="'menu_items'" [clickOnReload$]="reload$" [clickOnNew$]="add$">
+  <app-page-header [pageTitle]="'menu_items'" [clickOnReload$]="reload$" [clickOnNew$]="add$" [addPermission]="!readonly">
   </app-page-header>
   <ng-container *ngIf="table">
     <app-bulk-actions *ngIf="table.selection && table.selection.selected.length"
@@ -13,6 +13,7 @@
   <div class="col-12">
     <app-table #table
                [filter]="filterControl.value"
+               [paginator]="paginator"
                [useSearchToFilter]="true"
                [selectable]="true"
                [data]="models"
@@ -51,7 +52,7 @@
           <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">
             <grid-actions [record]="row" [actions]="actions" [itemIndex]="itemIndex">
               <span afterTemplate class="form-check form-switch switch-action"
-                    *ngIf="row.status !== commonStatusEnum.RETIRED"
+                    *ngIf="!readonly && row.status !== commonStatusEnum.RETIRED"
                     style="top: auto">
                 <input class="form-check-input" type="checkbox"
                        [checked]="row.status == commonStatusEnum.ACTIVATED"
@@ -68,7 +69,7 @@
         </tr>
       </table>
     </app-table>
-    <!-- <app-paginator #paginator [backend]="true" (pageChange)="pageChange($event)" [length]="count"></app-paginator> -->
+    <app-paginator #paginator [length]="models.length"></app-paginator>
     <context-menu-item #menu [actions]="actions"></context-menu-item>
   </div>
 </div>
