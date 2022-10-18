@@ -59,7 +59,7 @@ export class CharityDecision extends BaseModel<
         ]
         : subject,
       organization: controls
-        ? [organization, [CustomValidators.required]]
+        ? [organization, [CustomValidators.required, CustomValidators.maxLength(300)]]
         : organization,
       category: controls ? [category, [CustomValidators.required]] : category,
     };
