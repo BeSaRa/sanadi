@@ -11,20 +11,16 @@ export class WorkArea extends SearchableCloneable<WorkArea> {
   countryInfo!: AdminResult;
 
   buildForm(controls = true) {
-    const { arabicName, englishName, country } = this;
+    const { country } = this;
 
     return {
-      arabicName: controls ? [arabicName, [CustomValidators.required]] : arabicName,
-      englishName: controls ? [englishName, [CustomValidators.required]] : englishName,
       country: controls ? [country, [CustomValidators.required]] : country,
 
     }
   }
   toCharityOrgnizationUpdate() {
-    const { arabicName, englishName, id, country } = this;
+    const { id, country } = this;
     return new WorkArea().clone({
-      arabicName,
-      englishName,
       objectDBId: id,
       country
     })

@@ -132,6 +132,7 @@ export class CharityOrganizationUpdateComponent
   countries!: Country[];
   externalOffices$?: Observable<FinalExternalOfficeApprovalResult[]>;
   organizationMeetings$?: Observable<GeneralAssociationMeetingAttendance[]>;
+  buildingTabsDone = false;
   jobTitles!: JobTitle[];
   @ViewChildren('tabContent', { read: TemplateRef })
   tabsTemplates!: QueryList<TemplateRef<any>>;
@@ -216,7 +217,7 @@ export class CharityOrganizationUpdateComponent
     this.model!.englishName = charity!.enName;
   }
   private _loadCharities(): void {
-    this.charityOrganizationService.loadAsLookups().pipe(tap(e => console.log(e))).pipe(
+    this.charityOrganizationService.loadAsLookups().pipe(
       map((e) =>
         e.filter((x) =>
           this.employeeService.isExternalUser()
@@ -440,6 +441,7 @@ export class CharityOrganizationUpdateComponent
       });
       this.tabs.push(this._tabs[this._tabs.length - 1]);
     }
+    this.buildingTabsDone = true;
   }
   constructor(
     private meetingService: GeneralAssociationMeetingAttendanceService,
@@ -908,7 +910,7 @@ export class CharityOrganizationUpdateComponent
   _updateForm(model: CharityOrganizationUpdate | undefined): void {
     if (!model) return;
     this.model = model;
-
+    if (!this.buildingTabsDone) return;
     if (this.model.updateSection) {
       this.requestTypeForm.patchValue(this.model.updateSection);
       this.handleRequestTypeChange(this.model.updateSection);
@@ -931,13 +933,13 @@ export class CharityOrganizationUpdateComponent
         this.loadedLogo = logo;
       });
     }
-    if (this.requestTypeForm.value || (this.model.updateSection === this.RequestTypes.META_DATA)) {
+    if ((this.requestTypeForm.value === this.RequestTypes.META_DATA) || (this.model.updateSection === this.RequestTypes.META_DATA)) {
       this.metaDataForm?.patchValue(model!.buildMetaDataForm(false));
       this.contactInformationForm?.patchValue(
         model!.buildContactInformationForm(false)
       );
     }
-    else if (this.requestTypeForm.value || (this.model.updateSection === this.RequestTypes.GOVERNANCE_DOCUMENTS)) {
+    else if ((this.requestTypeForm.value === this.RequestTypes.GOVERNANCE_DOCUMENTS) || (this.model.updateSection === this.RequestTypes.GOVERNANCE_DOCUMENTS)) {
       this.primaryLawForm.patchValue(model!.buildPrimaryLawForm(false));
     }
     this.cd.detectChanges();

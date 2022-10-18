@@ -19,20 +19,21 @@ export class ForeignAidClassification extends SearchableCloneable<ForeignAidClas
   governanceDomainInfo!: AdminResult;
 
   mainDACCategory!: number;
-  mainDACInfo!: AdminResult;
+  mainDACCategoryInfo!: AdminResult;
 
   mainUNOCHACategory!: number;
-  mainUNOCHAInfo!: AdminResult;
+  mainUNOCHACategoryInfo!: AdminResult;
 
   subDACCategory!: number;
-  subDACInfo!: AdminResult;
+  subDACCategoryInfo!: AdminResult;
 
   subUNOCHACategory!: number;
-  subUNOCHAInfo!: AdminResult;
+  subUNOCHACategoryInfo!: AdminResult;
 
   id!: number;
   objectDBId?: number;
   domain?: number;
+  domainInfo!: AdminResult;
 
   toCharityOrgnizationUpdate() {
     const {
@@ -46,10 +47,11 @@ export class ForeignAidClassification extends SearchableCloneable<ForeignAidClas
       subUNOCHACategory,
       governanceDomainInfo,
       aidClassificationInfo,
-      mainDACInfo,
-      mainUNOCHAInfo,
-      subDACInfo,
-      subUNOCHAInfo
+      domainInfo,
+      mainDACCategoryInfo,
+      mainUNOCHACategoryInfo,
+      subDACCategoryInfo,
+      subUNOCHACategoryInfo
 
     } = this;
     return new ForeignAidClassification().clone({
@@ -63,10 +65,12 @@ export class ForeignAidClassification extends SearchableCloneable<ForeignAidClas
       subUNOCHACategory,
       governanceDomainInfo,
       aidClassificationInfo,
-      mainDACInfo,
-      mainUNOCHAInfo,
-      subDACInfo,
-      subUNOCHAInfo
+      domainInfo,
+      mainDACCategoryInfo,
+      mainUNOCHACategoryInfo,
+      subDACCategoryInfo,
+      subUNOCHACategoryInfo
+
 
     });
   }

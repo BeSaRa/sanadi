@@ -110,7 +110,7 @@
             {{ lang.map.domain }}
           </th>
           <td cdk-cell *cdkCellDef="let row">
-            {{ row?.governanceDomainInfo?.getName() || row.domain }}
+            {{ row?.domainInfo?.getName() || row.domain }}
           </td>
         </ng-container>
 
@@ -119,7 +119,12 @@
             {{ lang.map.main_unocha_category }}
           </th>
           <td cdk-cell *cdkCellDef="let row">
-            {{ row?.mainUNOCHAInfo?.getName() || row.mainUNOCHACategory }}
+            {{
+              row?.mainUNOCHACategoryInfo?.getName() || row.mainUNOCHACategory
+            }}
+            <!-- {{
+              row?.mainUNOCHACategoryInfo?.getName() || row.mainUNOCHACategory
+            }} -->
           </td>
         </ng-container>
 
@@ -128,7 +133,7 @@
             {{ lang.map.sub_unocha_category }}
           </th>
           <td cdk-cell *cdkCellDef="let row">
-            {{ row?.subUNOCHAInfo?.getName() || row.subUNOCHACategory }}
+            {{ row?.subUNOCHACategoryInfo?.getName() || row.subUNOCHACategory }}
           </td>
         </ng-container>
 
@@ -137,7 +142,7 @@
             {{ lang.map.main_dac_category }}
           </th>
           <td cdk-cell *cdkCellDef="let row">
-            {{ row?.mainDACInfo?.getName() || row.mainDACCategory }}
+            {{ row?.mainDACCategoryInfo?.getName() || row.mainDACCategory }}
           </td>
         </ng-container>
         <ng-container cdkColumnDef="subDACCategory">
@@ -145,7 +150,7 @@
             {{ lang.map.sub_dac_category }}
           </th>
           <td cdk-cell *cdkCellDef="let row">
-            {{ row?.subDACInfo?.getName() || row.subDACCategory }}
+            {{ row?.subDACCategoryInfo?.getName() || row.subDACCategory }}
           </td>
         </ng-container>
 

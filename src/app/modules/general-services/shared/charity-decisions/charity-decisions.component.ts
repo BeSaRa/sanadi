@@ -78,7 +78,7 @@ export class CharityDecisionsComponent extends ListModelComponent<CharityDecisio
         type: 'text'
       });
     }
-    this.form = this.fb.group(this.model.buildForm());
+    this.form = this.fb.group(this.model.buildForm(true, !this.inside));
   }
   _beforeAdd(model: CharityDecision): CharityDecision {
     model.generalDate = DateUtils.getDateStringFromDate(model.generalDate!)!;
