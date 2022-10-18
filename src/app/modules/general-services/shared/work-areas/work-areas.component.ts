@@ -24,23 +24,14 @@ export class WorkAreasComponent extends ListModelComponent<WorkArea> {
   @Input() readonly!: boolean;
   form!: UntypedFormGroup;
   controls: ControlWrapper[] = [];
-  columns = ['arabicName', 'englishName', 'country', 'actions'];
+  columns = ['country', 'actions'];
   constructor(private fb: UntypedFormBuilder, public lang: LangService) {
     super(WorkArea);
 
   }
   protected _initComponent(): void {
     this.controls = [
-      {
-        controlName: 'arabicName',
-        label: this.lang.map.arabic_name,
-        type: 'text'
-      },
-      {
-        controlName: 'englishName',
-        label: this.lang.map.english_name,
-        type: 'text'
-      },
+
       {
         controlName: 'country',
         load: this.countries,

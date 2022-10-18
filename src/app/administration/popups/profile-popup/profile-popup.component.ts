@@ -1,5 +1,11 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import {
+  AbstractControl,
+  FormControl,
+  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormGroup,
+} from '@angular/forms';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { ProfileTypes } from '@app/enums/profile-types.enum';
 import { AdminGenericDialog } from '@app/generics/admin-generic-dialog';
@@ -19,6 +25,10 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ServiceDataService } from '@app/services/service-data.service';
 import { ServiceData } from '@app/models/service-data';
+import { DialogService } from '@app/services/dialog.service';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 
 @Component({
   selector: 'profile-popup',
@@ -29,30 +39,42 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> {
   model!: Profile;
   form!: UntypedFormGroup;
   operation!: OperationTypes;
-
+  actions: IMenuItem<ProfileServiceModel>[] = [
+    {
+      type: 'action',
+      label: 'btn_delete',
+      icon: ActionIconsEnum.DELETE,
+      onClick: (item: ProfileServiceModel) => this.delete(item)
+    },
+  ];
   tabsData: IKeyValue = {
     basic: {
-      name: 'basic', validate:
-        () => (this.basicInfoForm?.invalid && (this.basicInfoForm?.touched || this.basicInfoForm?.dirty))
+      name: 'basic',
+      validate: () =>
+        this.basicInfoForm?.invalid &&
+        (this.basicInfoForm?.touched || this.basicInfoForm?.dirty),
     },
     services: {
-      name: 'linkServices',
-      validate: () => true
-    }
+      name: 'linkServices'
+    },
   };
   showServicesTab = false;
-  profileTypes = this.lookupService.listByCategory.ProfileType.sort((a, b) => a.lookupKey - b.lookupKey);
-  status = this.lookupService.listByCategory.CommonStatus.filter(e => !e.isRetiredCommonStatus());
-  profileServicesColumns = ['service'];
+  profileTypes = this.lookupService.listByCategory.ProfileType.sort(
+    (a, b) => a.lookupKey - b.lookupKey
+  );
+  status = this.lookupService.listByCategory.CommonStatus.filter(
+    (e) => !e.isRetiredCommonStatus()
+  );
+  profileServicesColumns = ['service', 'actions'];
   profileServices: ProfileServiceModel[] = [];
   showRaca = false;
   services: ServiceData[] = [];
   registrationAuthorities: Profile[] = [];
-  addedServices: string[] = [];
+  servicesControl = new FormControl<number[]>([]);
   _loadServices() {
-    return this.serviceData.loadAsLookups().subscribe(x => {
-      this.services = x;
-    })
+    return this.serviceData.loadAsLookups().subscribe((x) => {
+      this.services = x.filter(e => this.profileServices.findIndex(_e => _e.serviceId === e.id) === -1);
+    });
   }
   get OperationTypes() {
     return OperationTypes;
@@ -75,19 +97,21 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> {
     public lang: LangService,
     private profileServiceSerice: ProfileServiceService,
     private service: ProfileService,
-    private serviceData: ServiceDataService
+    private serviceData: ServiceDataService,
+    private dialogService: DialogService
   ) {
     super();
     this.model = data.model;
     this.operation = data.operation;
   }
 
-  onTabChange($event: TabComponent) {
-  }
+  onTabChange($event: TabComponent) { }
   initPopup(): void {
-    this.service.getByProfileType(ProfileTypes.REGISTERED_ENTITIES).subscribe(e => {
-      this.registrationAuthorities = e;
-    });
+    this.service
+      .getByProfileType(ProfileTypes.REGISTERED_ENTITIES)
+      .subscribe((e) => {
+        this.registrationAuthorities = e;
+      });
     if (this.operation) {
       this.profileTypeField.disable();
       this.getServices(this.model.id);
@@ -96,20 +120,20 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> {
     }
   }
   handleProfileType(profileType: number) {
-    if (profileType === ProfileTypes.CHARITY || profileType === ProfileTypes.INSTITUTION) {
+    if (
+      profileType === ProfileTypes.CHARITY ||
+      profileType === ProfileTypes.INSTITUTION
+    ) {
       this.showRaca = true;
       this.registrationAuthorityField?.patchValue(-1);
       this.registrationAuthorityField?.disable();
-    }
-    else {
+    } else {
       this.showRaca = false;
       this.registrationAuthorityField?.reset();
       this.registrationAuthorityField?.enable();
     }
   }
-  destroyPopup(): void {
-
-  }
+  destroyPopup(): void { }
   afterSave(model: Profile, dialogRef: DialogRef): void {
     const message =
       this.operation === OperationTypes.CREATE
@@ -119,7 +143,8 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> {
     this.operation === this.operationTypes.CREATE
       ? this.toast.success(
         message.change({
-          x: this.basicInfoForm?.get(this.lang.map.lang + 'Name')?.value || '',
+          x:
+            this.basicInfoForm?.get(this.lang.map.lang + 'Name')?.value || '',
         })
       )
       : this.toast.success(message.change({ x: model.getName() }));
@@ -127,12 +152,11 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> {
     this.showServicesTab = true;
     this.operation = OperationTypes.UPDATE;
     this.getServices(model.id);
-    this._loadServices();
   }
   getServices(id: number) {
-
-    this.profileServiceSerice.getServicesByProfile(id).subscribe(e => {
+    this.profileServiceSerice.getServicesByProfile(id).subscribe((e) => {
       this.profileServices = e;
+      this._loadServices();
     });
   }
   beforeSave(
@@ -148,36 +172,51 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> {
     const basicInfo = form.get('basicInfo')?.value;
     return new Profile().clone({
       ...model,
-      ...basicInfo
-    })
+      ...basicInfo,
+    });
   }
   saveFail(error: Error): void {
-    throw new Error('Method not implemented.');
   }
   buildForm(): void {
     this.form = this.fb.group({
-      basicInfo: this.fb.group(this.model.buildForm())
+      basicInfo: this.fb.group(this.model.buildForm()),
     });
     if (this.operation === OperationTypes.VIEW) {
       this.form.disable();
+      this.servicesControl.disable();
     }
     if (this.model?.profileType) {
       this.handleProfileType(this.model.profileType);
     }
-
-  }
-  handleChosenServicesChange(event: string[]) {
-    this.addedServices = event;
   }
   addServices() {
-    const _services = this.addedServices.map(e => new ProfileServiceModel().clone({
-      profileId: this.model.id,
-      serviceId: +e
-    }));
-    this.profileServiceSerice.createBulk(_services).subscribe(e => {
+    const _services = this.servicesControl.value!.map((e) =>
+      new ProfileServiceModel().clone({
+        profileId: this.model.id,
+        serviceId: +e,
+      })
+    );
+    this.profileServiceSerice.createBulk(_services).subscribe((e) => {
       this.getServices(this.model.id);
       this.toast.success(this.lang.map.services_add_successfully);
-      this.addedServices = [];
+      this.servicesControl.reset();
     });
+  }
+  delete(model: ProfileServiceModel): void {
+    const message = this.lang.map.remove_service_messages;
+    this.dialogService
+      .confirm(message)
+      .onAfterClose$.subscribe((click: UserClickOn) => {
+        if (click === UserClickOn.YES) {
+          const sub = model.delete().subscribe(() => {
+            this.getServices(this.model.id);
+            // @ts-ignore
+            this.toast.success(
+              this.lang.map.msg_delete_x_success.change({ x: model.serviceDataInfo.getName() })
+            );
+            sub.unsubscribe();
+          });
+        }
+      });
   }
 }

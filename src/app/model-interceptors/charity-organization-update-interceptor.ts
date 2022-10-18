@@ -10,6 +10,7 @@ import { ForeignAidClassification } from '@app/models/foreign-aid-classification
 import { OrgMember } from '@app/models/org-member';
 import { OrganizationOfficer } from '@app/models/organization-officer';
 import { RealBeneficiary } from '@app/models/real-beneficiary';
+import { WorkArea } from '@app/models/work-area';
 import { ByLawInterceptor } from './bylaw-interceptor';
 import { CharityBranchInterceptor } from './charity-branch-interceptor';
 import { CharityDecisionInterceptor } from './charity-Decision-interceptor';
@@ -18,6 +19,7 @@ import { ForeignAidClassificationInterceptor } from './foreign-aid-classificatio
 import { OrgMemberInterceptor } from './org-member-interceptor';
 import { OrganizationOfficerInterceptor } from './organization-officer-interceptor';
 import { RealBeneficiaryInterceptor } from './real-beneficiary-interceptors';
+import { WorkAreaInterceptor } from './workarea-interceptor';
 
 export class CharityOrganizationUpdateInterceptor implements IModelInterceptor<CharityOrganizationUpdate> {
   caseInterceptor?: IModelInterceptor<CharityOrganizationUpdate> | undefined;
@@ -33,6 +35,8 @@ export class CharityOrganizationUpdateInterceptor implements IModelInterceptor<C
     const bylawInterceptor = new ByLawInterceptor()
     const organizationOfficer = new OrganizationOfficerInterceptor();
     const charityBranchInterceptor = new CharityBranchInterceptor();
+    const workAreaInterceptor = new WorkAreaInterceptor();
+    model.workAreaObjectList = model.workAreaObjectList?.map(e => workAreaInterceptor.send(e) as WorkArea);
     model.charityBranchList = model.charityBranchList?.map(e => charityBranchInterceptor.send(e) as CharityBranch);
 
     model.realBeneficiaryList = model.realBeneficiaryList?.map(e => realBeneficiaryInterceptor.send(e) as RealBeneficiary);
@@ -65,6 +69,9 @@ export class CharityOrganizationUpdateInterceptor implements IModelInterceptor<C
     const organizationOfficer = new OrganizationOfficerInterceptor();
     const foreignAidClassificationInterceptor = new ForeignAidClassificationInterceptor();
     const charityBranchInterceptor = new CharityBranchInterceptor();
+
+    const workAreaInterceptor = new WorkAreaInterceptor();
+    model.workAreaObjectList = model.workAreaObjectList?.map(e => workAreaInterceptor.receive(e) as WorkArea);
     model.ouInfo = AdminResult.createInstance(model.ouInfo);
     (model.assignDate && (model.assignDate = DateUtils.getDateStringFromDate(model.assignDate)));
     (model.publishDate && (model.publishDate = DateUtils.getDateStringFromDate(model.publishDate)));
