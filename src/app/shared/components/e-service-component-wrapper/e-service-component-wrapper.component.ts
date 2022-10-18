@@ -540,6 +540,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
             || item.getResponses().includes(WFResponseType.INTERNAL_BANK_ACCOUNT_APPROVAL_SEND_TO_MULTI_DEPARTMENTS)
             || item.getResponses().includes(WFResponseType.AWARENESS_ACTIVITY_SUGGESTION_SEND_TO_MULTI_DEPARTMENTS)
             || item.getResponses().includes(WFResponseType.CHARITY_ORGANIZATION_UPDATE_SEND_TO_MULTI_DEPARTMENTS)
+            || item.getResponses().includes(WFResponseType.REVIEW_NPO_MANAGEMENT)
         },
         onClick: (item: CaseModel<any, any>) => {
           this.sendToMultiDepartmentsAction(item);
@@ -558,14 +559,11 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
             || item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_FOLLOWUP_SEND_TO_SINGLE_DEPARTMENT)
           );
           let isSendToLicenseDepartment = item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_CLOSURE_SEND_TO_SINGLE_DEPARTMENT);
-          let isSendToDpoManagement = item.getResponses().includes(WFResponseType.REVIEW_NPO_MANAGEMENT);
 
           if (isSendToRiskAndCompliance) {
             return this.lang.map.send_to_risk_and_compliance_department;
           } else if (isSendToLicenseDepartment) {
             return this.lang.map.send_to_license_department;
-          } else if (isSendToDpoManagement) {
-            return this.lang.map.send_to_npo_management;
           }
           return this.lang.map.send_to_supervision_and_control_department;
         },
@@ -582,7 +580,6 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
             || item.getResponses().includes(WFResponseType.CUSTOMS_EXEMPTION_SEND_TO_SINGLE_DEPARTMENT)
             || item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_CLOSURE_SEND_TO_SINGLE_DEPARTMENT)
             || item.getResponses().includes(WFResponseType.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD_SEND_TO_SINGLE_DEPARTMENT)
-            || item.getResponses().includes(WFResponseType.REVIEW_NPO_MANAGEMENT)
             ;
         },
         onClick: (item: CaseModel<any, any>) => {

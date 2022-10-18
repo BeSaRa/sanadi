@@ -515,7 +515,7 @@ NpoManagementService
       this.disbandmentDateField.setValidators([CustomValidators.required])
     }
     if (this.isNew) {
-      this.registrationAuthorityField.setValidators([CustomValidators.required])
+      // this.registrationAuthorityField.setValidators([CustomValidators.required])
       this.registrationDateField.setValidators([CustomValidators.required])
       this.registrationNumberField.setValidators([
         CustomValidators.required, Validators.maxLength(150),

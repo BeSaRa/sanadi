@@ -21,7 +21,7 @@
         <div class="col-md-4 mb-4 position-relative">
           <label asteriskIfRequired="requestType" for="requestType" class="form-label">{{ lang.map.request_type
             }}</label>
-          <ng-select [selectOnTab]="true" labelForId="requestType" [clearable]="true"
+          <ng-select [selectOnTab]="true" labelForId="requestType" [clearable]="true" [readonly]="readonly"
             placeholder="{{ lang.map.select }}" id="requestType" (change)="handleRequestTypeChange($event, true)"
             [notFoundText]="lang.map.msg_not_found" appendTo="body" validationClasses="requestType"
             formControlName="requestType">
@@ -67,7 +67,7 @@
             <label asteriskIfRequired="registrationAuthority" for="registrationAuthority" class="form-label">{{
               lang.map.registration_authority }}</label>
             <ng-select [selectOnTab]="true" placeholder="{{ lang.map.select }}" [notFoundText]="lang.map.msg_not_found"
-              [readonly]="!isNew" appendTo="body" id="registrationAuthority" validationClasses="registrationAuthority"
+              [readonly]="!isNew && readonly" appendTo="body" id="registrationAuthority" validationClasses="registrationAuthority"
               formControlName="registrationAuthority">
               <ng-option *ngFor="let option of registrationAuthoritiesList" [value]="option">{{ option }}
                 <!-- .getName() -->
@@ -92,7 +92,7 @@
           <div class="input-group">
             <i class="input-group-text mdi mdi-calendar"></i>
             <div class="form-control" formControlName="registrationDate" id="registrationDate"
-              [options]="datepickerOptionsMap.registrationDate" (click)="isNew && openDateMenu(dpregistrationDate)"
+              [options]="datepickerOptionsMap.registrationDate" (click)="isNew && !readonly && openDateMenu(dpregistrationDate)"
               #dpregistrationDate="angular-mydatepicker" angular-mydatepicker validationClasses="registrationDate">
             </div>
             <app-field-error-message controlName="registrationDate"></app-field-error-message>
@@ -103,7 +103,7 @@
           <label asteriskIfRequired="registrationNumber" for="registrationNumber" class="form-label">{{
             lang.map.lbl_registration_number
             }}</label>
-          <input id="registrationNumber" formControlName="registrationNumber" [readonly]="!isNew"
+          <input id="registrationNumber" formControlName="registrationNumber" [readonly]="!isNew && readonly"
             validationClasses="registrationNumber" class="form-control" />
           <app-field-error-message controlName="registrationNumber"></app-field-error-message>
         </div>
@@ -136,7 +136,7 @@
           <div class="input-group">
             <i class="input-group-text mdi mdi-calendar"></i>
             <div class="form-control" formControlName="establishmentDate" id="establishmentDate"
-              [options]="datepickerOptionsMap.establishmentDate" (click)="isNew && openDateMenu(dpestablishmentDate)"
+              [options]="datepickerOptionsMap.establishmentDate" (click)="isNew && !readonly && openDateMenu(dpestablishmentDate)"
               (inputFieldChanged)="onDateChange($event)" #dpestablishmentDate="angular-mydatepicker"
               angular-mydatepicker validationClasses="establishmentDate"></div>
             <app-field-error-message controlName="establishmentDate"></app-field-error-message>
@@ -147,7 +147,7 @@
         <div *ngIf="isDisbandment" class="col-sm-6 col-md-4 mb-4 position-relative">
           <label asteriskIfRequired="disbandmentType" for="disbandmentType" class="form-label">{{
             lang.map.lbl_disbandment_type }}</label>
-          <ng-select [selectOnTab]="true" placeholder="{{ lang.map.select }}" [notFoundText]="lang.map.msg_not_found"
+          <ng-select [readonly]="readonly" [selectOnTab]="true" placeholder="{{ lang.map.select }}" [notFoundText]="lang.map.msg_not_found"
             appendTo="body" id="disbandmentType" validationClasses="disbandmentType" formControlName="disbandmentType">
             <ng-option *ngFor="let option of NPODecisionsList" [value]="option.lookupKey">{{ option.getName() }}
             </ng-option>
@@ -161,7 +161,7 @@
           <div class="input-group">
             <i class="input-group-text mdi mdi-calendar"></i>
             <div class="form-control" formControlName="disbandmentDate" id="disbandmentDate"
-              [options]="datepickerOptionsMap.disbandmentDate" (click)="openDateMenu(dpdisbandmentDate)"
+              [options]="datepickerOptionsMap.disbandmentDate" (click)="!readonly && openDateMenu(dpdisbandmentDate)"
               #dpdisbandmentDate="angular-mydatepicker" angular-mydatepicker validationClasses="disbandmentDate"></div>
             <app-field-error-message controlName="disbandmentDate"></app-field-error-message>
           </div>
@@ -171,7 +171,7 @@
         <div *ngIf="isClearance" class="col-sm-6 col-md-4 mb-4 position-relative">
           <label asteriskIfRequired="clearanceType" for="clearanceType" class="form-label">{{
             lang.map.lbl_clearance_type }}</label>
-          <ng-select [selectOnTab]="true" placeholder="{{ lang.map.select }}" [notFoundText]="lang.map.msg_not_found"
+          <ng-select [readonly]="readonly" [selectOnTab]="true" placeholder="{{ lang.map.select }}" [notFoundText]="lang.map.msg_not_found"
             appendTo="body" id="clearanceType" validationClasses="clearanceType" formControlName="clearanceType">
             <ng-option *ngFor="let option of NPODecisionsList" [value]="option.lookupKey">{{ option.getName() }}
             </ng-option>
@@ -183,7 +183,7 @@
           <label asteriskIfRequired="clearanceName" for="clearanceName" class="form-label">{{
             lang.map.lbl_clearance_name
             }}</label>
-          <input id="clearanceName" formControlName="clearanceName" validationClasses="clearanceName"
+          <input id="clearanceName" [readonly]="readonly" formControlName="clearanceName" validationClasses="clearanceName"
             class="form-control" />
           <app-field-error-message controlName="clearanceName"></app-field-error-message>
         </div>
@@ -194,7 +194,7 @@
           <div class="input-group">
             <i class="input-group-text mdi mdi-calendar"></i>
             <div class="form-control" formControlName="clearanceDate" id="clearanceDate"
-              [options]="datepickerOptionsMap.clearanceDate" (click)="openDateMenu(dpclearanceDate)"
+              [options]="datepickerOptionsMap.clearanceDate" (click)="!readonly && openDateMenu(dpclearanceDate)"
               #dpclearanceDate="angular-mydatepicker" angular-mydatepicker validationClasses="clearanceDate"></div>
             <app-field-error-message controlName="clearanceDate"></app-field-error-message>
           </div>
@@ -339,7 +339,7 @@
         </div>
         <div class="col-12">
           <h6>{{lang.map.contact_officers}}</h6>
-          <npo-contact-officer #contactOfficersTab [list]="model?.contactOfficerList || []"
+          <npo-contact-officer #contactOfficersTab [readonly]="readonly" [list]="model?.contactOfficerList || []"
             (readyEvent)="contactOfficersTabStatus = $event">
           </npo-contact-officer>
         </div>
