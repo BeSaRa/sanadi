@@ -66,7 +66,7 @@ import { ToastService } from '@app/services/toast.service';
 import { DatepickerOptionsMap } from '@app/types/types';
 import { IMyDateModel } from 'angular-mydatepicker';
 import { Observable, of } from 'rxjs';
-import { share, map, take, switchMap, takeUntil } from 'rxjs/operators';
+import { share, map, tap, switchMap, takeUntil } from 'rxjs/operators';
 import { OrganizationOfficersComponent } from '../../shared/organization-officers/organization-officers.component';
 
 @Component({
@@ -216,14 +216,14 @@ export class CharityOrganizationUpdateComponent
     this.model!.englishName = charity!.enName;
   }
   private _loadCharities(): void {
-    this.charityOrganizationService.loadAsLookups().pipe(
-      /* map((e) =>
+    this.charityOrganizationService.loadAsLookups().pipe(tap(e => console.log(e))).pipe(
+      map((e) =>
         e.filter((x) =>
           this.employeeService.isExternalUser()
             ? x.id === this.employeeService.getProfile()?.profileDetails.entityId
             : true
         )
-      ) */
+      )
     ).subscribe(e => {
       this.charityOrganizations = e;
     });
@@ -943,8 +943,10 @@ export class CharityOrganizationUpdateComponent
     this.cd.detectChanges();
   }
 
+
   _resetForm(): void {
     this.handleRequestTypeChange(undefined!);
     this.form.reset();
   }
+
 }
