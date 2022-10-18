@@ -31,7 +31,7 @@ import {CommonUtils} from '@app/helpers/common-utils';
 import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
-import {DacOchaNewService} from '@services/dac-ocha-new.service';
+import {DacOchaService} from '@services/dac-ocha.service';
 import {AdminLookup} from '@app/models/admin-lookup';
 import {AidLookupService} from '@services/aid-lookup.service';
 import {AidLookup} from '@app/models/aid-lookup';
@@ -201,7 +201,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
               private toast: ToastService,
               private dialog: DialogService,
               public employeeService: EmployeeService,
-              private dacOchaService: DacOchaNewService,
+              private dacOchaService: DacOchaService,
               private lookupService: LookupService,
               private countryService: CountryService,
               private sdgService: SDGoalService,

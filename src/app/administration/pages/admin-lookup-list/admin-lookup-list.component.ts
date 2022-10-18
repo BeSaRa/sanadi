@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {AdminLookup} from '@app/models/admin-lookup';
-import {DacOchaNewService} from '@services/dac-ocha-new.service';
+import {DacOchaService} from '@services/dac-ocha.service';
 import {AdminLookupTypeEnum} from '@app/enums/admin-lookup-type-enum';
 import {LangService} from '@services/lang.service';
 import {AdminLookupService} from '@services/admin-lookup.service';
@@ -35,7 +35,7 @@ export class AdminLookupListComponent implements OnInit, AfterViewInit, OnDestro
   @Output() onReady: EventEmitter<AdminLookupTypeEnum> = new EventEmitter<AdminLookupTypeEnum>();
 
   constructor(public lang: LangService,
-              public dacOchaService: DacOchaNewService,
+              public dacOchaService: DacOchaService,
               public adminLookupService: AdminLookupService,
               private dialogService: DialogService,
               private toast: ToastService,

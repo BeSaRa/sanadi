@@ -1,19 +1,16 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { AdminLookupTypeEnum } from '@app/enums/admin-lookup-type-enum';
-import { CharityWorkArea } from '@app/enums/charity-work-area.enum';
-import { DomainTypes } from '@app/enums/domain-types';
-import { ListModelComponent } from '@app/generics/ListModel-component';
-import { ControlWrapper } from '@app/interfaces/i-control-wrapper';
-import { AdminResult } from '@app/models/admin-result';
-import { ForeignAidClassification } from '@app/models/foreign-aid-classification';
-import { AdminLookupService } from '@app/services/admin-lookup.service';
-import { AidLookupService } from '@app/services/aid-lookup.service';
-import { DacOchaNewService } from '@app/services/dac-ocha-new.service';
-import { LangService } from '@app/services/lang.service';
-import { LookupService } from '@app/services/lookup.service';
-import { CustomValidators } from '@app/validators/custom-validators';
-import { Observable } from 'rxjs';
+import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
+import {AdminLookupTypeEnum} from '@app/enums/admin-lookup-type-enum';
+import {CharityWorkArea} from '@app/enums/charity-work-area.enum';
+import {DomainTypes} from '@app/enums/domain-types';
+import {ListModelComponent} from '@app/generics/ListModel-component';
+import {ControlWrapper} from '@app/interfaces/i-control-wrapper';
+import {ForeignAidClassification} from '@app/models/foreign-aid-classification';
+import {AidLookupService} from '@app/services/aid-lookup.service';
+import {DacOchaService} from '@services/dac-ocha.service';
+import {LangService} from '@app/services/lang.service';
+import {LookupService} from '@app/services/lookup.service';
+import {CustomValidators} from '@app/validators/custom-validators';
 
 @Component({
   selector: 'foreign-aid-classifications',
@@ -61,7 +58,7 @@ export class ForeignAidClassificationsComponent
     private lookupService: LookupService,
     public lang: LangService,
     private aidService: AidLookupService,
-    private dacOchaNewService: DacOchaNewService
+    private dacOchaService: DacOchaService
   ) {
     super(ForeignAidClassification);
   }
@@ -85,7 +82,7 @@ export class ForeignAidClassificationsComponent
   controls = this.baseControls;
   private handleOCHAOrDAC = (id: string | number) => {
     const addOne = this.charityWorkArea === CharityWorkArea.BOTH ? 1 : 0;
-    this.controls[2 + addOne].load$ = this.dacOchaNewService.loadByParentId(
+    this.controls[2 + addOne].load$ = this.dacOchaService.loadByParentId(
       id as number
     );
   };
@@ -93,7 +90,7 @@ export class ForeignAidClassificationsComponent
     {
       controlName: 'mainDACCategory',
       type: 'dropdown',
-      load$: this.dacOchaNewService.loadByType(AdminLookupTypeEnum.DAC),
+      load$: this.dacOchaService.loadByType(AdminLookupTypeEnum.DAC),
       label: this.lang.map.classification_of_DAC,
       dropdownValue: 'id',
       onChange: this.handleOCHAOrDAC,
@@ -101,7 +98,7 @@ export class ForeignAidClassificationsComponent
     {
       controlName: 'subDACCategory',
       type: 'dropdown',
-      load$: this.dacOchaNewService.loadByParentId(-1),
+      load$: this.dacOchaService.loadByParentId(-1),
       label: this.lang.map.DAC_subclassification,
       dropdownValue: 'id',
     },
@@ -110,7 +107,7 @@ export class ForeignAidClassificationsComponent
     {
       controlName: 'mainUNOCHACategory',
       type: 'dropdown',
-      load$: this.dacOchaNewService.loadByType(AdminLookupTypeEnum.OCHA),
+      load$: this.dacOchaService.loadByType(AdminLookupTypeEnum.OCHA),
       label: this.lang.map.OCHA_main_classification,
       dropdownValue: 'id',
       onChange: this.handleOCHAOrDAC,
@@ -118,7 +115,7 @@ export class ForeignAidClassificationsComponent
     {
       controlName: 'subUNOCHACategory',
       type: 'dropdown',
-      load$: this.dacOchaNewService.loadByParentId(-1),
+      load$: this.dacOchaService.loadByParentId(-1),
       label: this.lang.map.OCHA_subclassification,
       dropdownValue: 'id',
     },

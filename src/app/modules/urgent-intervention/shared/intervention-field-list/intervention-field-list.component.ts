@@ -14,7 +14,7 @@ import {ToastService} from '@services/toast.service';
 import {DialogService} from '@services/dialog.service';
 import {LookupService} from '@services/lookup.service';
 import {AdminResult} from '@app/models/admin-result';
-import {DacOchaNewService} from '@services/dac-ocha-new.service';
+import {DacOchaService} from '@services/dac-ocha.service';
 import {AdminLookupTypeEnum} from '@app/enums/admin-lookup-type-enum';
 import {AdminLookup} from '@app/models/admin-lookup';
 
@@ -30,7 +30,7 @@ export class InterventionFieldListComponent implements OnInit, OnDestroy {
               private toastService: ToastService,
               private dialogService: DialogService,
               private lookupService: LookupService,
-              private dacOchaService: DacOchaNewService,
+              private dacOchaService: DacOchaService,
               private fb: UntypedFormBuilder) {
   }
 
