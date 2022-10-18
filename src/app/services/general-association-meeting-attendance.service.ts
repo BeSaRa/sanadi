@@ -88,6 +88,14 @@ export class GeneralAssociationMeetingAttendanceService extends BaseGenericEServ
   searchNpoEmployees(options?: any): Observable<NpoEmployee[]> {
     return this._searchNpoEmployees(options);
   }
+  @HasInterception
+  @CastResponse(() => NpoEmployee, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  getAllNpoEmployees(): Observable<NpoEmployee[]> {
+    return this.http.get<NpoEmployee[]>(this.getNpoEmployeeURLSegment() + '/search/criteria?');
+  }
 
   openSelectMemberDialog(members: GeneralAssociationExternalMember[] | GeneralAssociationInternalMember[], select = true, isInternalMembers: boolean): DialogRef {
     return this.dialog.show(SelectMemberPopupComponent, {

@@ -1,45 +1,64 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {GeneralAssociationExternalMember} from '@app/models/general-association-external-member';
-import {DialogService} from '@services/dialog.service';
-import {LangService} from '@services/lang.service';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
-import {JobTitle} from '@app/models/job-title';
-import {JobTitleService} from '@services/job-title.service';
-import {AdminResult} from '@app/models/admin-result';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {ILanguageKeys} from '@contracts/i-language-keys';
-import {exhaustMap, filter, map, tap} from 'rxjs/operators';
-import {Observable, of} from 'rxjs';
-import {GeneralAssociationMeetingAttendanceService} from '@services/general-association-meeting-attendance.service';
-import {NpoEmployee} from '@app/models/npo-employee';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
+import { GeneralAssociationExternalMember } from '@app/models/general-association-external-member';
+import { DialogService } from '@services/dialog.service';
+import { LangService } from '@services/lang.service';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { JobTitle } from '@app/models/job-title';
+import { JobTitleService } from '@services/job-title.service';
+import { AdminResult } from '@app/models/admin-result';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { ILanguageKeys } from '@contracts/i-language-keys';
+import { exhaustMap, filter, map, tap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { GeneralAssociationMeetingAttendanceService } from '@services/general-association-meeting-attendance.service';
+import { NpoEmployee } from '@app/models/npo-employee';
+import { NgSelectComponent } from '@ng-select/ng-select';
 
 @Component({
   selector: 'manage-members',
   templateUrl: './manage-members.component.html',
-  styleUrls: ['./manage-members.component.scss']
+  styleUrls: ['./manage-members.component.scss'],
 })
 export class ManageMembersComponent implements OnInit {
   @Input() membersForm!: FormGroup;
   @Input() isExternalUser!: boolean;
-  @Input() readonly !: boolean;
+  @Input() readonly!: boolean;
   @Input() selectedMembers: GeneralAssociationExternalMember[] = [];
   @Input() addLabel!: keyof ILanguageKeys;
-  @Output() memberListChanged: EventEmitter<GeneralAssociationExternalMember[]> = new EventEmitter<GeneralAssociationExternalMember[]>();
-
+  @Output() memberListChanged: EventEmitter<
+    GeneralAssociationExternalMember[]
+  > = new EventEmitter<GeneralAssociationExternalMember[]>();
+  @Input() membersList: GeneralAssociationExternalMember[] = [];
+  selectedRecord: GeneralAssociationExternalMember | undefined;
   addMemberFormActive!: boolean;
 
   selectedMember!: GeneralAssociationExternalMember | null;
   selectedMemberIndex!: number | null;
   jobTitles!: JobTitle[];
 
-  membersDisplayedColumns: string[] = ['index', 'arabicName', 'englishName', 'identificationNumber', 'jobTitle', 'actions'];
+  membersDisplayedColumns: string[] = [
+    'index',
+    'arabicName',
+    'englishName',
+    'identificationNumber',
+    'jobTitle',
+    'actions',
+  ];
 
-  constructor(private dialog: DialogService,
-              public lang: LangService,
-              private jobTitleService: JobTitleService,
-              private fb: FormBuilder,
-              private generalAssociationMeetingService: GeneralAssociationMeetingAttendanceService) {
-  }
+  constructor(
+    private dialog: DialogService,
+    public lang: LangService,
+    private jobTitleService: JobTitleService,
+    private fb: FormBuilder,
+    private generalAssociationMeetingService: GeneralAssociationMeetingAttendanceService
+  ) {}
 
   get arabicName(): FormControl {
     return this.membersForm.get('arabicName')! as FormControl;
@@ -54,20 +73,48 @@ export class ManageMembersComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.jobTitleService.loadAsLookups()
-      .subscribe(list => {
-        this.jobTitles = list;
-      });
+    this.jobTitleService.loadAsLookups().subscribe((list) => {
+      this.jobTitles = list;
+    });
 
     this.buildMemberForm();
   }
 
   buildMemberForm(): void {
     this.membersForm = this.fb.group({
-      arabicName: [null, [CustomValidators.required, CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX), CustomValidators.pattern('AR_NUM')]],
-      englishName: [null, [CustomValidators.required, CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.pattern('ENG_NUM')]],
-      identificationNumber: [null, [CustomValidators.required].concat(CustomValidators.commonValidations.qId)],
-      jobTitleId: [null, [CustomValidators.required]]
+      arabicName: [
+        null,
+        [
+          CustomValidators.required,
+          CustomValidators.minLength(
+            CustomValidators.defaultLengths.MIN_LENGTH
+          ),
+          CustomValidators.maxLength(
+            CustomValidators.defaultLengths.ARABIC_NAME_MAX
+          ),
+          CustomValidators.pattern('AR_NUM'),
+        ],
+      ],
+      englishName: [
+        null,
+        [
+          CustomValidators.required,
+          CustomValidators.minLength(
+            CustomValidators.defaultLengths.MIN_LENGTH
+          ),
+          CustomValidators.maxLength(
+            CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+          ),
+          CustomValidators.pattern('ENG_NUM'),
+        ],
+      ],
+      identificationNumber: [
+        null,
+        [CustomValidators.required].concat(
+          CustomValidators.commonValidations.qId
+        ),
+      ],
+      jobTitleId: [null, [CustomValidators.required]],
     });
   }
 
@@ -81,7 +128,8 @@ export class ManageMembersComponent implements OnInit {
     this.selectedMember = model;
     this.membersForm.patchValue(this.selectedMember!);
     this.selectedMemberIndex = this.selectedMembers
-      .map(x => x.identificationNumber).indexOf(model.identificationNumber);
+      .map((x) => x.identificationNumber)
+      .indexOf(model.identificationNumber);
   }
 
   _saveMember(boardMember: GeneralAssociationExternalMember) {
@@ -95,7 +143,13 @@ export class ManageMembersComponent implements OnInit {
         this.dialog.error(this.lang.map.selected_item_already_exists);
       }
     } else {
-      if (!this.isExistMemberInCaseOfEdit(this.selectedMembers, boardMember, this.selectedMemberIndex!)) {
+      if (
+        !this.isExistMemberInCaseOfEdit(
+          this.selectedMembers,
+          boardMember,
+          this.selectedMemberIndex!
+        )
+      ) {
         let newList = this.selectedMembers.slice();
         newList.splice(this.selectedMemberIndex!, 1);
         newList.splice(this.selectedMemberIndex!, 0, boardMember);
@@ -110,8 +164,14 @@ export class ManageMembersComponent implements OnInit {
   }
 
   saveMember() {
-    const boardMember = new GeneralAssociationExternalMember().clone(this.membersForm.getRawValue());
-    boardMember.jobTitleInfo = boardMember.jobTitleInfo ? boardMember.jobTitleInfo : AdminResult.createInstance(this.jobTitles.find(x => x.id === boardMember.jobTitleId)!);
+    const boardMember = new GeneralAssociationExternalMember().clone(
+      this.membersForm.getRawValue()
+    );
+    boardMember.jobTitleInfo = boardMember.jobTitleInfo
+      ? boardMember.jobTitleInfo
+      : AdminResult.createInstance(
+          this.jobTitles.find((x) => x.id === boardMember.jobTitleId)!
+        );
 
     this._saveMember(boardMember);
   }
@@ -129,22 +189,38 @@ export class ManageMembersComponent implements OnInit {
 
   removeMember(event: MouseEvent, model: GeneralAssociationExternalMember) {
     event.preventDefault();
-    this.selectedMembers = this.selectedMembers.filter(x => x.identificationNumber != model.identificationNumber);
+    this.selectedMembers = this.selectedMembers.filter(
+      (x) => x.identificationNumber != model.identificationNumber
+    );
     this.resetMemberForm();
     this.memberListChanged.emit(this.selectedMembers);
+    this.membersList.push(model);
+    this.membersList.sort((a, b) => (a.getName() < b.getName() ? -1 : 1));
   }
 
-  isExistMemberInCaseOfAdd(selectedMembers: GeneralAssociationExternalMember[], toBeAddedMember: GeneralAssociationExternalMember): boolean {
-    return selectedMembers.some(x => x.identificationNumber === toBeAddedMember.identificationNumber);
+  isExistMemberInCaseOfAdd(
+    selectedMembers: GeneralAssociationExternalMember[],
+    toBeAddedMember: GeneralAssociationExternalMember
+  ): boolean {
+    return selectedMembers.some(
+      (x) => x.identificationNumber === toBeAddedMember.identificationNumber
+    );
   }
 
-  isExistMemberInCaseOfEdit(selectedMembers: GeneralAssociationExternalMember[], toBeEditedMember: GeneralAssociationExternalMember, selectedIndex: number): boolean {
+  isExistMemberInCaseOfEdit(
+    selectedMembers: GeneralAssociationExternalMember[],
+    toBeEditedMember: GeneralAssociationExternalMember,
+    selectedIndex: number
+  ): boolean {
     for (let i = 0; i < selectedMembers.length; i++) {
       if (i === selectedIndex) {
         continue;
       }
 
-      if (selectedMembers[i].identificationNumber === toBeEditedMember.identificationNumber) {
+      if (
+        selectedMembers[i].identificationNumber ===
+        toBeEditedMember.identificationNumber
+      ) {
         return true;
       }
     }
@@ -152,24 +228,47 @@ export class ManageMembersComponent implements OnInit {
   }
 
   private openSelectMember(members: GeneralAssociationExternalMember[]) {
-    return this.generalAssociationMeetingService.openSelectMemberDialog(members, true, false).onAfterClose$ as Observable<GeneralAssociationExternalMember>;
+    return this.generalAssociationMeetingService.openSelectMemberDialog(
+      members,
+      true,
+      false
+    ).onAfterClose$ as Observable<GeneralAssociationExternalMember>;
   }
 
   searchMembers() {
     const criteria = {
       arabicName: this.arabicName.value === '' ? null : this.arabicName.value,
-      englishName: this.englishName.value === '' ? null : this.englishName.value,
-      qId: this.identificationNumber.value === '' ? null : this.identificationNumber.value
+      englishName:
+        this.englishName.value === '' ? null : this.englishName.value,
+      qId:
+        this.identificationNumber.value === ''
+          ? null
+          : this.identificationNumber.value,
     };
-    this.generalAssociationMeetingService.searchNpoEmployees(criteria)
-      .pipe(tap(members => !members.length && this.dialog.info(this.lang.map.no_result_for_your_search_criteria)))
-      .pipe(filter(members => !!members.length))
-      .pipe(map(items => {
-        return items.map(item => this.mapNpoEmployeeToGeneralAssociationExternalMember(item));
-      }))
-      .pipe(exhaustMap((members) => {
-        return members.length === 1 ? of(members[0]) : this.openSelectMember(members);
-      }))
+    this.generalAssociationMeetingService
+      .searchNpoEmployees(criteria)
+      .pipe(
+        tap(
+          (members) =>
+            !members.length &&
+            this.dialog.info(this.lang.map.no_result_for_your_search_criteria)
+        )
+      )
+      .pipe(filter((members) => !!members.length))
+      .pipe(
+        map((items) => {
+          return items.map((item) =>
+            this.mapNpoEmployeeToGeneralAssociationExternalMember(item)
+          );
+        })
+      )
+      .pipe(
+        exhaustMap((members) => {
+          return members.length === 1
+            ? of(members[0])
+            : this.openSelectMember(members);
+        })
+      )
       .subscribe((item) => {
         this._saveMember(item);
       });
@@ -178,12 +277,30 @@ export class ManageMembersComponent implements OnInit {
   mapNpoEmployeeToGeneralAssociationExternalMember(npoEmployee: NpoEmployee) {
     const member = new GeneralAssociationExternalMember();
     member.id = npoEmployee.id;
-    member.identificationNumber = npoEmployee.qId || npoEmployee.identificationNumber;
+    member.identificationNumber =
+      npoEmployee.qId || npoEmployee.identificationNumber;
     member.arabicName = npoEmployee.arabicName;
     member.englishName = npoEmployee.englishName;
     member.jobTitleId = npoEmployee.jobTitleId;
-    member.jobTitleInfo = npoEmployee.jobTitleInfo ? AdminResult.createInstance(npoEmployee.jobTitleInfo) : AdminResult.createInstance({});
+    member.jobTitleInfo = npoEmployee.jobTitleInfo
+      ? AdminResult.createInstance(npoEmployee.jobTitleInfo)
+      : AdminResult.createInstance({});
 
     return member;
+  }
+  @ViewChild('members')
+  ngSelectComponentRef!: NgSelectComponent;
+  onChangeRecord(record: GeneralAssociationExternalMember) {
+    this.selectedRecord = record;
+  }
+  onSave() {
+    if (this.selectedRecord) {
+      this._saveMember(this.selectedRecord);
+      this.membersList = this.membersList.filter(member=> member !== this.selectedRecord);
+      this.ngSelectComponentRef.handleClearClick();
+    }
+  }
+  allowAdd() {
+    return !this.selectedRecord;
   }
 }
