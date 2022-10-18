@@ -116,6 +116,7 @@ export interface IAppUrls {
   NPO_DATA: string;
   PROFILE: string;
   AWARENESS_ACTIVITY_SUGGESTION: string;
-  MENU_ITEM_LIST:string;
+  MENU_ITEM_LIST: string;
+  PROFILE_SERVICE: string;
   [index: string]: string;
 }

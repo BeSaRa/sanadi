@@ -66,7 +66,7 @@ import { ToastService } from '@app/services/toast.service';
 import { DatepickerOptionsMap } from '@app/types/types';
 import { IMyDateModel } from 'angular-mydatepicker';
 import { Observable, of } from 'rxjs';
-import { share, map, take, switchMap, takeUntil } from 'rxjs/operators';
+import { share, map, tap, switchMap, takeUntil } from 'rxjs/operators';
 import { OrganizationOfficersComponent } from '../../shared/organization-officers/organization-officers.component';
 
 @Component({
@@ -132,6 +132,7 @@ export class CharityOrganizationUpdateComponent
   countries!: Country[];
   externalOffices$?: Observable<FinalExternalOfficeApprovalResult[]>;
   organizationMeetings$?: Observable<GeneralAssociationMeetingAttendance[]>;
+  buildingTabsDone = false;
   jobTitles!: JobTitle[];
   @ViewChildren('tabContent', { read: TemplateRef })
   tabsTemplates!: QueryList<TemplateRef<any>>;
@@ -217,13 +218,13 @@ export class CharityOrganizationUpdateComponent
   }
   private _loadCharities(): void {
     this.charityOrganizationService.loadAsLookups().pipe(
-      /* map((e) =>
+      map((e) =>
         e.filter((x) =>
           this.employeeService.isExternalUser()
             ? x.id === this.employeeService.getProfile()?.profileDetails.entityId
             : true
         )
-      ) */
+      )
     ).subscribe(e => {
       this.charityOrganizations = e;
     });
@@ -348,7 +349,7 @@ export class CharityOrganizationUpdateComponent
         template: tabsTemplates[13],
         title: this.lang.map.primary_law,
         validStatus: () => this.primaryLawForm.valid,
-        category: CharityRequestType.GOVERANCE_DOCUMENTS,
+        category: CharityRequestType.GOVERNANCE_DOCUMENTS,
         order: 0,
       },
       {
@@ -356,7 +357,7 @@ export class CharityOrganizationUpdateComponent
         template: tabsTemplates[14],
         title: this.lang.map.classification_of_foreign_aid,
         validStatus: () => true,
-        category: CharityRequestType.GOVERANCE_DOCUMENTS,
+        category: CharityRequestType.GOVERNANCE_DOCUMENTS,
         order: 3,
       },
       {
@@ -364,7 +365,7 @@ export class CharityOrganizationUpdateComponent
         template: tabsTemplates[15],
         title: this.lang.map.work_areas,
         validStatus: () => true,
-        category: CharityRequestType.GOVERANCE_DOCUMENTS,
+        category: CharityRequestType.GOVERNANCE_DOCUMENTS,
         order: 4,
 
       },
@@ -373,7 +374,7 @@ export class CharityOrganizationUpdateComponent
         template: tabsTemplates[16],
         title: this.lang.map.bylaws,
         validStatus: () => true,
-        category: CharityRequestType.GOVERANCE_DOCUMENTS,
+        category: CharityRequestType.GOVERNANCE_DOCUMENTS,
         order: 2
       },
       {
@@ -417,7 +418,7 @@ export class CharityOrganizationUpdateComponent
         name: 'generalAssocationMeetingsTab',
         template: tabsTemplates[22],
         title: this.lang.map.meeting,
-        category: CharityRequestType.GOVERANCE_DOCUMENTS,
+        category: CharityRequestType.GOVERNANCE_DOCUMENTS,
         validStatus: () => true,
         order: 1,
       },
@@ -440,6 +441,7 @@ export class CharityOrganizationUpdateComponent
       });
       this.tabs.push(this._tabs[this._tabs.length - 1]);
     }
+    this.buildingTabsDone = true;
   }
   constructor(
     private meetingService: GeneralAssociationMeetingAttendanceService,
@@ -528,7 +530,7 @@ export class CharityOrganizationUpdateComponent
           );
           if (updateSection === this.RequestTypes.META_DATA) {
             this._buildMetaDataForm(updateSection);
-          } else if (updateSection === this.RequestTypes.GOVERANCE_DOCUMENTS) {
+          } else if (updateSection === this.RequestTypes.GOVERNANCE_DOCUMENTS) {
             this._buildPrimaryLawForm(updateSection);
             this.tabs = this.tabs.filter(e => ((!e?.order) || e.order <= 2));
             this.tabs.sort((a, b) => a.order - b.order);
@@ -682,7 +684,7 @@ export class CharityOrganizationUpdateComponent
           });
       });
 
-    } else if (updateSection === this.RequestTypes.GOVERANCE_DOCUMENTS) {
+    } else if (updateSection === this.RequestTypes.GOVERNANCE_DOCUMENTS) {
       this.charityWorkAreaField!.patchValue(CharityWorkArea.INSIDE);
       this.goveranceDocumentService.getByCharityId(id).subscribe(m => {
         this._updateForm(m[0].toCharityOrgnizationUpdate());
@@ -826,7 +828,7 @@ export class CharityOrganizationUpdateComponent
       authorizedSignatoryMemberList = arr[4].list || [];
       realBeneficiaryList = arr[5].list || [];
     }
-    else if (this.requestTypeForm.value === this.RequestTypes.GOVERANCE_DOCUMENTS) {
+    else if (this.requestTypeForm.value === this.RequestTypes.GOVERNANCE_DOCUMENTS) {
       const arr = this.goverRefs.toArray();
       primaryLawValue = { ...this.primaryLawForm.value };
       wFClassificationList = arr[0].list || [];
@@ -908,7 +910,7 @@ export class CharityOrganizationUpdateComponent
   _updateForm(model: CharityOrganizationUpdate | undefined): void {
     if (!model) return;
     this.model = model;
-
+    if (!this.buildingTabsDone) return;
     if (this.model.updateSection) {
       this.requestTypeForm.patchValue(this.model.updateSection);
       this.handleRequestTypeChange(this.model.updateSection);
@@ -931,20 +933,22 @@ export class CharityOrganizationUpdateComponent
         this.loadedLogo = logo;
       });
     }
-    if (this.requestTypeForm.value || (this.model.updateSection === this.RequestTypes.META_DATA)) {
+    if ((this.requestTypeForm.value === this.RequestTypes.META_DATA) || (this.model.updateSection === this.RequestTypes.META_DATA)) {
       this.metaDataForm?.patchValue(model!.buildMetaDataForm(false));
       this.contactInformationForm?.patchValue(
         model!.buildContactInformationForm(false)
       );
     }
-    else if (this.requestTypeForm.value || (this.model.updateSection === this.RequestTypes.GOVERANCE_DOCUMENTS)) {
+    else if ((this.requestTypeForm.value === this.RequestTypes.GOVERNANCE_DOCUMENTS) || (this.model.updateSection === this.RequestTypes.GOVERNANCE_DOCUMENTS)) {
       this.primaryLawForm.patchValue(model!.buildPrimaryLawForm(false));
     }
     this.cd.detectChanges();
   }
 
+
   _resetForm(): void {
     this.handleRequestTypeChange(undefined!);
     this.form.reset();
   }
+
 }

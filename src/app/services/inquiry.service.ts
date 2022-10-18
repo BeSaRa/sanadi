@@ -1,23 +1,23 @@
-import { ComponentFactoryResolver, Injectable } from '@angular/core';
-import { UrlService } from './url.service';
-import { Inquiry } from '../models/inquiry';
-import { HttpClient } from '@angular/common/http';
-import { CommentService } from './comment.service';
-import { FactoryService } from './factory.service';
-import { InquiryInterceptor } from '../model-interceptors/inquiry-interceptor';
-import { IModelInterceptor } from '@contracts/i-model-interceptor';
-import { DocumentService } from './document.service';
-import { DialogService } from './dialog.service';
-import { DomSanitizer } from '@angular/platform-browser';
-import { ActionLogService } from './action-log.service';
-import { RecommendationService } from './recommendation.service';
-import { ILanguageKeys } from '@contracts/i-language-keys';
-import { SearchService } from './search.service';
-import { InquirySearchCriteria } from '../models/inquiry-search-criteria';
-import { DynamicOptionsService } from './dynamic-options.service';
-import { BaseGenericEService } from "@app/generics/base-generic-e-service";
-import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
-import { CastResponseContainer } from "@decorators/cast-response";
+import {ComponentFactoryResolver, Injectable} from '@angular/core';
+import {UrlService} from './url.service';
+import {Inquiry} from '../models/inquiry';
+import {HttpClient} from '@angular/common/http';
+import {CommentService} from './comment.service';
+import {FactoryService} from './factory.service';
+import {InquiryInterceptor} from '../model-interceptors/inquiry-interceptor';
+import {IModelInterceptor} from '@contracts/i-model-interceptor';
+import {DocumentService} from './document.service';
+import {DialogService} from './dialog.service';
+import {DomSanitizer} from '@angular/platform-browser';
+import {ActionLogService} from './action-log.service';
+import {RecommendationService} from './recommendation.service';
+import {ILanguageKeys} from '@contracts/i-language-keys';
+import {SearchService} from './search.service';
+import {InquirySearchCriteria} from '../models/inquiry-search-criteria';
+import {DynamicOptionsService} from './dynamic-options.service';
+import {BaseGenericEService} from '@app/generics/base-generic-e-service';
+import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import {CastResponseContainer} from '@decorators/cast-response';
 
 @CastResponseContainer({
   $default: {

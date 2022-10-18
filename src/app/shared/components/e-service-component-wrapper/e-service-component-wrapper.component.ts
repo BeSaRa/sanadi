@@ -1270,7 +1270,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
 
   private listenToModelChange(): void {
     this.component.onModelChange$
-      .pipe(skip(1))
+      // .pipe(skip(1))
       .pipe(takeUntil(this.destroy$))
       .subscribe((model) => {
         this.updateActions(model!);

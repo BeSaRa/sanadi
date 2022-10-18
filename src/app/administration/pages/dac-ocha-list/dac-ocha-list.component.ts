@@ -8,7 +8,7 @@ import {of, Subject} from 'rxjs';
 import {SortEvent} from '@contracts/sort-event';
 import {CommonUtils} from '@helpers/common-utils';
 import {DateUtils} from '@helpers/date-utils';
-import {DacOchaNewService} from '@services/dac-ocha-new.service';
+import {DacOchaService} from '@services/dac-ocha.service';
 import {AdminLookupService} from '@services/admin-lookup.service';
 import {DialogService} from '@services/dialog.service';
 import {SharedService} from '@services/shared.service';
@@ -27,13 +27,13 @@ import {AdminGenericComponent} from '@app/generics/admin-generic-component';
   templateUrl: './dac-ocha-list.component.html',
   styleUrls: ['./dac-ocha-list.component.scss']
 })
-export class DacOchaListComponent extends AdminGenericComponent<AdminLookup, DacOchaNewService> implements AfterViewInit {
+export class DacOchaListComponent extends AdminGenericComponent<AdminLookup, DacOchaService> implements AfterViewInit {
 
   @Input() adminLookupType!: AdminLookupTypeEnum;
   @Output() onReady: EventEmitter<AdminLookupTypeEnum> = new EventEmitter<AdminLookupTypeEnum>();
 
   constructor(public lang: LangService,
-              public service: DacOchaNewService,
+              public service: DacOchaService,
               public adminLookupService: AdminLookupService,
               private dialogService: DialogService,
               private sharedService: SharedService,

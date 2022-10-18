@@ -13,7 +13,7 @@ import {CustomsExemptionRemittance} from '@app/models/customs-exemption-remittan
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 import {CustomsExemptionRemittanceService} from '@services/customs-exemption-remittance.service';
 import {InternalBankAccountApproval} from '@app/models/internal-bank-account-approval';
-import {BankAccountRequestTypes} from '@app/enums/bank-account-request-types';
+import {BankAccountRequestTypes} from '@app/enums/service-request-types';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({

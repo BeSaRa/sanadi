@@ -39,7 +39,7 @@ import { Observable, of } from 'rxjs';
 import { EmployeeService } from '@app/services/employee.service';
 import { AdminLookupService } from '@app/services/admin-lookup.service';
 import { AdminLookupTypeEnum } from '@app/enums/admin-lookup-type-enum';
-import { NPORequestType } from '@app/enums/npo-requestType.enum';
+import { NPORequestType } from '@app/enums/service-request-types';
 import { Bank } from '@app/models/bank';
 
 @Component({

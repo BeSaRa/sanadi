@@ -1,8 +1,7 @@
-import { CustomSubMenuPopupComponent } from './popups/custom-sub-menu-popup/custom-sub-menu-popup.component';
-import { CustomMenuPopupComponent } from './popups/custom-menu-popup/custom-menu-popup.component';
-import { CustomMenuComponent } from './pages/custom-menu/custom-menu.component';
-import { OrganizationUnitFieldPopupComponent } from './popups/organization-unit-field-popup/organization-unit-field-popup.component';
-import { NgModule } from '@angular/core';
+import {CustomMenuPopupComponent} from './popups/custom-menu-popup/custom-menu-popup.component';
+import {CustomMenuComponent} from './pages/custom-menu/custom-menu.component';
+import {OrganizationUnitFieldPopupComponent} from './popups/organization-unit-field-popup/organization-unit-field-popup.component';
+import {NgModule} from '@angular/core';
 import {AdminRoutingModule} from './admin-routing.module';
 import {AdminHomeComponent} from './pages/admin-home/admin-home.component';
 import {SharedModule} from '../shared/shared.module';
@@ -74,6 +73,8 @@ import {ActivityTypeComponent} from './pages/activity-types/activity-types.compo
 import {ActivityTypesPopupComponent} from './popups/activity-types-popup/activity-types-popup.component';
 import {AdminLookupListComponent} from './pages/admin-lookup-list/admin-lookup-list.component';
 import {AdminLookupComponent} from './pages/admin-lookup/admin-lookup.component';
+import {ProfilePopupComponent} from './popups/profile-popup/profile-popup.component';
+import {ProfilesComponent} from './pages/profiles/profiles.component';
 
 @NgModule({
   declarations: [
@@ -146,7 +147,8 @@ import {AdminLookupComponent} from './pages/admin-lookup/admin-lookup.component'
     AdminLookupComponent,
     CustomMenuComponent,
     CustomMenuPopupComponent,
-    CustomSubMenuPopupComponent
+    ProfilePopupComponent,
+    ProfilesComponent
   ],
   imports: [
     SharedModule,

@@ -14,7 +14,7 @@ import { LangService } from '@services/lang.service';
 import { Component, Inject, OnInit } from '@angular/core';
 import { Subject, of } from 'rxjs';
 import { InboxService } from '@app/services/inbox.service';
-import { AffiliationRequestType } from '@app/enums/AffiliationRequestType.enum';
+import { AffiliationRequestType } from '@app/enums/service-request-types';
 
 @Component({
   selector: 'app-external-org-affiliation-approve-popup',

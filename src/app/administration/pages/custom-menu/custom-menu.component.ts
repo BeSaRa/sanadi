@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, Input, ViewChild} from '@angular/core';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
@@ -15,28 +15,24 @@ import {SharedService} from '@app/services/shared.service';
 import {ToastService} from '@app/services/toast.service';
 import {TableComponent} from '@app/shared/components/table/table.component';
 import {DialogRef} from '@app/shared/models/dialog-ref';
-import {of, Subject} from 'rxjs';
+import {Observable, of, Subject} from 'rxjs';
 import {catchError, exhaustMap, filter, switchMap, takeUntil} from 'rxjs/operators';
+import {Donor} from '@app/models/donor';
 
 @Component({
   selector: 'app-custom-menu',
   templateUrl: './custom-menu.component.html',
   styleUrls: ['./custom-menu.component.css'],
 })
-export class CustomMenuComponent
-  extends AdminGenericComponent<CustomMenu, CustomMenuService> {
+export class CustomMenuComponent extends AdminGenericComponent<CustomMenu, CustomMenuService> {
   usePagination = false;
   useCompositeToLoad = false;
 
-  displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'status', 'actions'];
-
-  constructor(
-    public lang: LangService,
-    public service: CustomMenuService,
-    private dialogService: DialogService,
-    private sharedService: SharedService,
-    private toast: ToastService
-  ) {
+  constructor(public lang: LangService,
+              public service: CustomMenuService,
+              private dialogService: DialogService,
+              private sharedService: SharedService,
+              private toast: ToastService) {
     super();
   }
 
@@ -44,32 +40,108 @@ export class CustomMenuComponent
     this.listenToView();
   }
 
+  @Input() parentId?: number;
+  @Input() readonly: boolean = false;
+
   @ViewChild('table') table!: TableComponent;
   selectedPopupTabName: string = 'basic';
-
-  afterReload(): void {
-    this.table && this.table.clearSelection();
-  }
-
-  get selectedRecords(): CustomMenu[] {
-    return this.table.selection.selected;
-  }
-
+  displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'status', 'actions'];
   view$: Subject<CustomMenu> = new Subject<CustomMenu>();
 
-  commonStatusEnum = CommonStatusEnum;
-
-  listenToView(): void {
-    this.view$
-      .pipe(takeUntil(this.destroy$))
-      .pipe(exhaustMap((model) => {
-        return this.service.openViewDialog(model).pipe(catchError(_ => of(null)));
-      }))
-      .pipe(filter((dialog): dialog is DialogRef => !!dialog))
-      .pipe(switchMap(dialog => dialog.onAfterClose$))
-      .subscribe(() => this.reload$.next(null));
-  }
-
+  actions: IMenuItem<CustomMenu>[] = [
+    // edit
+    {
+      type: 'action',
+      label: 'btn_edit',
+      icon: ActionIconsEnum.EDIT,
+      onClick: (item: CustomMenu) => this.edit(item),
+      show: () => !this.readonly
+    },
+    // view
+    {
+      type: 'action',
+      label: 'view',
+      icon: ActionIconsEnum.VIEW,
+      onClick: (item: CustomMenu) => this.view(item),
+    },
+    // delete
+    {
+      type: 'action',
+      label: 'btn_delete',
+      icon: ActionIconsEnum.DELETE,
+      onClick: (item) => this.delete(item),
+      show: () => !this.readonly,
+    },
+    // children
+    {
+      type: 'action',
+      label: 'sub_lists',
+      icon: ActionIconsEnum.CHILD_ITEMS,
+      onClick: (item) => this.showChildren(item),
+      show: () => !this.parentId,
+    },
+    // activate
+    {
+      type: 'action',
+      icon: 'mdi-list-status',
+      label: 'btn_activate',
+      onClick: (item: CustomMenu) => this.toggleStatus(item),
+      displayInGrid: false,
+      show: (item) => {
+        if (this.readonly || item.status === CommonStatusEnum.RETIRED){
+          return false;
+        }
+        return item.status === CommonStatusEnum.DEACTIVATED;
+      }
+    },
+    // deactivate
+    {
+      type: 'action',
+      icon: 'mdi-list-status',
+      label: 'btn_deactivate',
+      onClick: (item: CustomMenu) => this.toggleStatus(item),
+      displayInGrid: false,
+      show: (item) => {
+        if (this.readonly || item.status === CommonStatusEnum.RETIRED){
+          return false;
+        }
+        return item.status === CommonStatusEnum.ACTIVATED;
+      }
+    }
+  ];
+  bulkActionsList: IGridAction[] = [
+    {
+      langKey: 'btn_delete',
+      icon: 'mdi-close-box',
+      callback: ($event: MouseEvent) => {
+        this.deleteBulk($event);
+      },
+    },
+    {
+      icon: 'mdi-list-status',
+      langKey: 'lbl_status',
+      children: [
+        {
+          langKey: 'btn_activate',
+          icon: '',
+          callback: ($event: MouseEvent, _data?: any) =>
+            this.changeStatusBulk($event, CommonStatusEnum.ACTIVATED),
+          show: (_items: CustomMenu[]) => {
+            return true;
+          },
+        },
+        {
+          langKey: 'btn_deactivate',
+          icon: '',
+          callback: ($event: MouseEvent, _data?: any) =>
+            this.changeStatusBulk($event, CommonStatusEnum.DEACTIVATED),
+          show: (_items: CustomMenu[]) => {
+            return true;
+          },
+        },
+      ],
+    },
+  ];
   sortingCallbacks = {
     statusInfo: (a: CustomMenu, b: CustomMenu, dir: SortEvent): number => {
       let value1 = !CommonUtils.isValidValue(a) ? '' : a.statusInfo?.getName().toLowerCase(),
@@ -78,14 +150,76 @@ export class CustomMenuComponent
     }
   };
 
-  edit(model: CustomMenu, event: MouseEvent) {
-    event.preventDefault();
+  listenToReload(): void {
+    this.reload$
+      .pipe(takeUntil((this.destroy$)))
+      .pipe(switchMap(() => {
+        let load: Observable<CustomMenu[]>;
+        if (this.parentId) {
+          load = this.service.loadByParentId(this.parentId);
+        } else {
+          load = this.service.load();
+        }
+        return load.pipe(catchError(_ => {
+          return of([]);
+        }));
+      }))
+      .subscribe((list: CustomMenu[]) => {
+        this.models = list;
+        this.afterReload();
+      });
+  }
+
+  afterReload(): void {
+    this.table && this.table.clearSelection();
+  }
+
+  listenToAdd(): void {
+    this.add$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(exhaustMap(() => this.service.openCreateDialog(this.parentId).onAfterClose$))
+      .subscribe(() => this.reload$.next(null));
+  }
+
+  listenToEdit(): void {
+    this.edit$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(exhaustMap((model) => {
+        return this.service.openEditDialog(model.id, this.selectedPopupTabName).pipe(catchError(_ => of(null)));
+      }))
+      .pipe(filter((dialog): dialog is DialogRef => !!dialog))
+      .pipe(switchMap(dialog => dialog.onAfterClose$))
+      .subscribe(() => this.reload$.next(null));
+  }
+
+  listenToView(): void {
+    this.view$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(exhaustMap((model) => {
+        return this.service.openViewDialog(model.id, this.selectedPopupTabName).pipe(catchError(_ => of(null)));
+      }))
+      .pipe(filter((dialog): dialog is DialogRef => !!dialog))
+      .pipe(switchMap(dialog => dialog.onAfterClose$))
+      .subscribe(() => this.reload$.next(null));
+  }
+
+  edit(model: CustomMenu): void {
+    this.selectedPopupTabName = 'basic';
     this.edit$.next(model);
   }
 
-  view(model: CustomMenu, event: MouseEvent) {
-    event.preventDefault();
+  view(model: CustomMenu): void {
+    this.selectedPopupTabName = 'basic';
     this.view$.next(model);
+  }
+
+  showChildren(item: CustomMenu): void {
+    this.selectedPopupTabName = 'sub';
+    if (this.readonly) {
+      this.view$.next(item);
+    } else {
+      this.edit$.next(item);
+    }
   }
 
   delete(model: CustomMenu): void {
@@ -148,78 +282,7 @@ export class CustomMenuComponent
       });
   }
 
-  actions: IMenuItem<CustomMenu>[] = [
-    // edit
-    {
-      type: 'action',
-      label: 'btn_edit',
-      icon: 'mdi-pen',
-      onClick: (item: CustomMenu) => this.edit$.next(item),
-    },
-    // sub childrin
-    {
-      type: 'action',
-      label: (_item) => {
-        return this.lang.map.sub_lists;
-      },
-      icon: ActionIconsEnum.CHILD_ITEMS,
-      onClick: (item) => this.showChildren(item)
-    },
-    // view
-    {
-      type: 'action',
-      label: 'view',
-      icon: 'mdi-eye',
-      onClick: (item: CustomMenu) => this.view$.next(item),
-    },
-    // delete
-    {
-      type: 'action',
-      label: 'btn_delete',
-      icon: ActionIconsEnum.DELETE,
-      show: () => true,
-      onClick: (item) => this.delete(item)
-    },
-  ];
-
-  showChildren(item: CustomMenu, $event?: Event): void {
-    $event?.preventDefault();
-    this.selectedPopupTabName = 'sub';
-    this.service.openEditDialog(item, this.selectedPopupTabName);
+  get selectedRecords(): CustomMenu[] {
+    return this.table.selection.selected;
   }
-
-  bulkActionsList: IGridAction[] = [
-    {
-      langKey: 'btn_delete',
-      icon: 'mdi-close-box',
-      callback: ($event: MouseEvent) => {
-        this.deleteBulk($event);
-      },
-    },
-    {
-      icon: 'mdi-list-status',
-      langKey: 'lbl_status',
-      children: [
-        {
-          langKey: 'btn_activate',
-          icon: '',
-          callback: ($event: MouseEvent, _data?: any) =>
-            this.changeStatusBulk($event, CommonStatusEnum.ACTIVATED),
-          show: (_items: CustomMenu[]) => {
-            return true;
-          },
-        },
-        {
-          langKey: 'btn_deactivate',
-          icon: '',
-          callback: ($event: MouseEvent, _data?: any) =>
-            this.changeStatusBulk($event, CommonStatusEnum.DEACTIVATED),
-          show: (_items: CustomMenu[]) => {
-            return true;
-          },
-        },
-      ],
-    },
-  ];
-
 }

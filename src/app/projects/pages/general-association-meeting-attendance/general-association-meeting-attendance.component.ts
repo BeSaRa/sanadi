@@ -236,7 +236,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
             details: validated
           } : null) as (null | SelectedLicenseInfo<GeneralAssociationMeetingAttendance, GeneralAssociationMeetingAttendance>);
         })).subscribe(ret => {
-          this.selectedLicenses = [ret?.details!];
+        this.selectedLicenses = [ret?.details!];
         this.hasSearchedForLicense = true;
       })
     }

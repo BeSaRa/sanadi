@@ -1,4 +1,4 @@
-import {IAppUrls} from '@contracts/i-app-urls';
+import { IAppUrls } from '@contracts/i-app-urls';
 
 export const urlsList = {
   // BASE_URL: '', // it will be overridden from CONFIGURATION
@@ -29,7 +29,7 @@ export const urlsList = {
   TEAM_SECURITY: '/admin/team-sec-config',
   USER_SECURITY: '/admin/user-sec-config',
   EXTERNAL_USER_SECURITY: '/admin/org-user-service-permission',
-  PROJECT_MODELING: '/external-project-modeling',
+  PROJECT_MODELING: '/project-modeling',
   TRAINING_PROGRAM: 'training/training-program',
   TRAINING_PROGRAM_BUNDLE: 'training/training-program/bundle',
   TRAINER: 'training/trainer',
@@ -120,6 +120,7 @@ export const urlsList = {
   NPO_MANAGEMENT: '/npo-management',
   NPO_DATA: '/admin/npo-data',
   PROFILE: '/admin/profile',
+  PROFILE_SERVICE: '/admin/profile-service',
   AWARENESS_ACTIVITY_SUGGESTION: '/awareness-activity-suggestion',
   MENU_ITEM_LIST: '/admin/menu-item'
 };

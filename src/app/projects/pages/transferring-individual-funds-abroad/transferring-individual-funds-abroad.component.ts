@@ -26,10 +26,10 @@ import {AdminLookupTypeEnum} from '@app/enums/admin-lookup-type-enum';
 import {AdminLookup} from '@app/models/admin-lookup';
 import {TransferFundsCharityPurpose} from '@app/models/transfer-funds-charity-purpose';
 import {AdminResult} from '@app/models/admin-result';
-import {DacOchaNewService} from '@services/dac-ocha-new.service';
+import {DacOchaService} from '@services/dac-ocha.service';
 import {DomainTypes} from '@app/enums/domain-types';
 import {SelectedLicenseInfo} from '@contracts/selected-license-info';
-import {TransferringIndividualFundsAbroadRequestTypeEnum} from '@app/enums/transferring-individual-funds-abroad-request-type-enum';
+import {TransferringIndividualFundsAbroadRequestTypeEnum} from '@app/enums/service-request-types';
 import {CountryService} from '@services/country.service';
 import {Country} from '@app/models/country';
 import {InternalProjectLicenseResult} from '@app/models/internal-project-license-result';
@@ -113,7 +113,7 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
               private toast: ToastService,
               private licenseService: LicenseService,
               private employeeService: EmployeeService,
-              private dacOchaNewService: DacOchaNewService,
+              private dacOchaService: DacOchaService,
               private countryService: CountryService,
               private sharedService: SharedService) {
     super();
@@ -767,13 +767,13 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
   }
 
   loadDacs() {
-    this.dacOchaNewService.loadByType(AdminLookupTypeEnum.DAC).subscribe(list => {
+    this.dacOchaService.loadByType(AdminLookupTypeEnum.DAC).subscribe(list => {
       this.mainDacs = list;
     });
   }
 
   loadOchas() {
-    this.dacOchaNewService.loadByType(AdminLookupTypeEnum.OCHA).subscribe(list => {
+    this.dacOchaService.loadByType(AdminLookupTypeEnum.OCHA).subscribe(list => {
       this.mainOchas = list;
     });
   }

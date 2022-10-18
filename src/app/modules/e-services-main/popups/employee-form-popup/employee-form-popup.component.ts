@@ -4,7 +4,7 @@ import { EmploymentService } from '@app/services/employment.service';
 import { IMyInputFieldChanged } from 'angular-mydatepicker';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { JobTitle } from '@app/models/job-title';
-import { EmploymentRequestType } from '@app/enums/employment-request-type';
+import { EmploymentRequestType } from '@app/enums/service-request-types';
 import { DialogService } from "@app/services/dialog.service";
 import { DatepickerOptionsMap } from "@app/types/types";
 import { DateUtils } from "@app/helpers/date-utils";

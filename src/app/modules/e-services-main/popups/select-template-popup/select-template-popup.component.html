@@ -35,10 +35,6 @@
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.creation_date}}</th>
         <td cdk-cell *cdkCellDef="let row"> {{row.createdOn|date}} </td>
       </ng-container>
-      <ng-container cdkColumnDef="templateTypeInfo">
-        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.model_type}}</th>
-        <td cdk-cell *cdkCellDef="let row"> {{row.templateTypeInfo.getName()}} </td>
-      </ng-container>
       <ng-container cdkColumnDef="actions">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
         <td cdk-cell *cdkCellDef="let row; index as itemIndex">

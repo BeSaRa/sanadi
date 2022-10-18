@@ -17,7 +17,7 @@ import { GeneralAssociationExternalMember } from '@app/models/general-associatio
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { GeneralAssociationExternalMemberInterceptor } from '@app/model-interceptors/general-association-external-member-interceptor';
 import { GeneralAssociationInternalMember } from '@app/models/general-association-internal-member';
-import { SelectMemberPopupComponent } from '@app/projects/pages/shared/select-member-popup-component/select-member-popup.component';
+import { SelectMemberPopupComponent } from '@app/projects/popups/select-member-popup-component/select-member-popup.component';
 import { WFResponseType } from '@app/enums/wfresponse-type.enum';
 import { UntypedFormGroup } from '@angular/forms';
 import {

@@ -19,7 +19,7 @@ import {exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators
 import {SelectedLicenseInfo} from '@app/interfaces/selected-license-info';
 import {LicenseService} from '@app/services/license.service';
 import {InternalBankAccountLicense} from '@app/license-models/internal-bank-account-license';
-import {BankAccountRequestTypes} from '@app/enums/bank-account-request-types';
+import {BankAccountRequestTypes} from '@app/enums/service-request-types';
 import {BankAccountOperationTypes} from '@app/enums/bank-account-operation-types';
 import {EmployeeService} from '@app/services/employee.service';
 import {NpoEmployee} from '@app/models/npo-employee';

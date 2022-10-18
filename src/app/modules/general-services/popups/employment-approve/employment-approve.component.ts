@@ -2,7 +2,7 @@ import { IMyInputFieldChanged } from 'angular-mydatepicker';
 import { DatepickerOptionsMap } from '@app/types/types';
 import { DateUtils } from '@app/helpers/date-utils';
 import { Subject } from 'rxjs';
-import { EmploymentRequestType } from '@app/enums/employment-request-type';
+import { EmploymentRequestType } from '@app/enums/service-request-types';
 import { exhaustMap, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { ToastService } from '@services/toast.service';
 import { DialogRef } from '@app/shared/models/dialog-ref';

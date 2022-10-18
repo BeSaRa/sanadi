@@ -106,7 +106,7 @@ export class CharityReport extends BaseModel<
     };
   }
   buildFormWithSubject() {
-    const { category, procedures, ...form } = this.buildSupportForm();
+    const { category, ...form } = this.buildSupportForm();
     return form;
   }
   toCharityOrganizationUpdate() {

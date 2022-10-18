@@ -9,7 +9,7 @@ import { LookupService } from '@services/lookup.service';
 import { ToastService } from '@services/toast.service';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { DialogService } from '@services/dialog.service';
-import { DacOchaNewService } from '@services/dac-ocha-new.service';
+import { DacOchaService } from '@services/dac-ocha.service';
 import { Lookup } from '@app/models/lookup';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 import { FormManager } from '@app/models/form-manager';
@@ -44,7 +44,7 @@ export class DacOchaNewPopupComponent extends AdminGenericDialog<AdminLookup> im
     public toast: ToastService,
     public dialogRef: DialogRef,
     public dialogService: DialogService,
-    public dacOchaService: DacOchaNewService) {
+    public dacOchaService: DacOchaService) {
     super();
     this.operation = data.operation;
     this.model = data.model;

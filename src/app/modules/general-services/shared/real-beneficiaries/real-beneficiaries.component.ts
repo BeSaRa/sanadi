@@ -77,7 +77,7 @@ export class RealBeneficiariesComponent extends ListModelComponent<RealBeneficia
     }),
     iDExpiryDate: DateUtils.getDatepickerOptions({ disablePeriod: 'past' }),
     passportDate: DateUtils.getDatepickerOptions({ disablePeriod: 'future' }),
-    startDate: DateUtils.getDatepickerOptions({ disablePeriod: 'past' }),
+    startDate: DateUtils.getDatepickerOptions({ disablePeriod: 'future' }),
     lastUpdateDate: DateUtils.getDatepickerOptions({ disablePeriod: 'none' }),
   };
   idColumns = ['identificationNumber', 'iDDate', 'iDExpiryDate'];
