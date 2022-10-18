@@ -21,7 +21,7 @@ import { CrudWithDialogGenericService } from "@app/generics/crud-with-dialog-gen
 @Injectable({
   providedIn: 'root'
 })
-export class DacOchaNewService extends CrudWithDialogGenericService<AdminLookup> {
+export class DacOchaService extends CrudWithDialogGenericService<AdminLookup> {
   list: AdminLookup[] = [];
 
   constructor(public http: HttpClient,
@@ -29,7 +29,7 @@ export class DacOchaNewService extends CrudWithDialogGenericService<AdminLookup>
     private adminLookupService: AdminLookupService,
     public dialog: DialogService) {
     super();
-    FactoryService.registerService('DacOchaNewService', this);
+    FactoryService.registerService('DacOchaService', this);
   }
 
   _getModel(): any {

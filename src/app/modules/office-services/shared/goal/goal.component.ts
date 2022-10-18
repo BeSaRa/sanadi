@@ -14,7 +14,7 @@ import {LookupService} from '@services/lookup.service';
 import {DomainTypes} from '@app/enums/domain-types';
 import {AdminResult} from '@app/models/admin-result';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
-import {DacOchaNewService} from '@services/dac-ocha-new.service';
+import {DacOchaService} from '@services/dac-ocha.service';
 
 @Component({
   selector: 'goal',
@@ -27,7 +27,7 @@ export class GoalComponent implements OnInit, OnDestroy {
               private toastService: ToastService,
               private dialogService: DialogService,
               public lookupService: LookupService,
-              private dacOchaService: DacOchaNewService,
+              private dacOchaService: DacOchaService,
               private fb: UntypedFormBuilder) {
   }
 
