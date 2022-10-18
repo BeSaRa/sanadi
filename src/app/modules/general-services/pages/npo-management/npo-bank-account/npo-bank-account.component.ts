@@ -94,10 +94,11 @@ export class NpoBankAccountComponent implements OnInit {
   private listenToAdd() {
     this.add$.pipe(takeUntil(this.destroy$))
       .subscribe(() => {
+        console.log('asaf')
         this.viewOnly = false;
         const modal = new NpoBankAccount();
         modal.currency = CurrencyEnum.UNITED_STATE_DOLLAR;
-        this.recordChanged$.next();
+        this.recordChanged$.next(modal);
       });
   }
 
