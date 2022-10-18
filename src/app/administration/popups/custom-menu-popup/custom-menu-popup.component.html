@@ -15,7 +15,7 @@
       <tab [name]="tabsData.linkSettings.name" [template]="linkSettingsTabTemplate" [title]="lang.map.link_settings">
       </tab>
       <tab [name]="tabsData.sub.name" [template]="subDataTabTemplate" [title]="lang.map.sub_lists"
-           *ngIf="model.id"></tab>
+           *ngIf="model.id && !model.parentMenuItemId"></tab>
     </tabs-list>
     <ng-template #basicTabTemplate>
       <div class="row">
@@ -33,7 +33,8 @@
       <div class="row">
         <div class="col-sm-6 mb-4 position-relative">
           <label asteriskIfRequired="menuOrder" for="menuOrder" class="form-label">{{lang.map.menu_order}}</label>
-          <input id="menuOrder" validationClasses="menuOrder" formControlName="menuOrder" class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY">
+          <input id="menuOrder" validationClasses="menuOrder" formControlName="menuOrder" class="form-control"
+                 [mask]="inputMaskPatterns.NUMBER_ONLY">
           <app-field-error-message controlName="menuOrder"></app-field-error-message>
         </div>
 
@@ -102,96 +103,18 @@
       </div>
     </ng-template>
     <ng-template #subDataTabTemplate>
-      <div class="row pb-3">
-        <app-page-header *ngIf="!readonly" [clickOnReload$]="reloadSubList$" [clickOnNew$]="addSubList$">
-        </app-page-header>
-        <div *ngIf="readonly" class="col-md-6"></div>
-        <ng-container *ngIf="table">
-          <app-bulk-actions *ngIf="table.selection && table.selection.selected.length"
-                            [selectedRecords]="table.selection.selected"
-                            [actionsList]="bulkActionsList"></app-bulk-actions>
-          <app-grid-search (searchTextEvent)="filterControl.setValue($event)"
-                           *ngIf="(table.selection && !table.selection.selected.length)"></app-grid-search>
-        </ng-container>
-
-      </div>
-      <div class="row">
-        <div class="col-12">
-          <div class="table-responsive">
-            <app-table #table
-                       [filter]="filterControl.value"
-                       [useSearchToFilter]="true"
-                       [selectable]="true"
-                       [data]="subList"
-                       [columns]="displayedColumns"
-                       sortableTable>
-              <table cdk-table [dataSource]="table.dataSource" class="table table-striped table-bordered caption-top">
-                <ng-container cdkColumnDef="rowSelection">
-                  <th class="select-all-td" cdk-header-cell *cdkHeaderCellDef>
-                    <input type="checkbox" [disabled]="readonly"
-                           [indeterminate]="table.selection.hasValue() && !table.allSelected()"
-                           (change)="$event ? table.toggleAll() : null"
-                           [checked]="table.selection.hasValue() && table.allSelected()"
-                           class="form-check-input"></th>
-                  <td cdk-cell *cdkCellDef="let row">
-                    <input type="checkbox"
-                           [disabled]="readonly"
-                           (click)="$event.stopPropagation()"
-                           [checked]="table.selection.isSelected(row)"
-                           (change)="$event ? table.selection.toggle(row) : null"
-                           class="form-check-input"></td>
-                </ng-container>
-                <ng-container cdkColumnDef="arName">
-                  <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.arabic_name}}</th>
-                  <td cdk-cell *cdkCellDef="let row"> {{row.arName}} </td>
-                </ng-container>
-                <ng-container cdkColumnDef="enName">
-                  <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.english_name}}</th>
-                  <td cdk-cell *cdkCellDef="let row"> {{row.enName}} </td>
-                </ng-container>
-                <ng-container cdkColumnDef="status">
-                  <th cdk-header-cell sortable-header *cdkHeaderCellDef [sortParamAsFullItem]="true"
-                  > {{lang.map.lbl_status}}</th>
-                  <td cdk-cell *cdkCellDef="let row"> {{row.statusInfo.getName()}} </td>
-                </ng-container>
-                <ng-container cdkColumnDef="actions">
-                  <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
-                  <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">
-                    <grid-actions [record]="row" [actions]="actions" [itemIndex]="itemIndex">
-           <span [hidden]="this.readonly" afterTemplate class="form-check form-switch switch-action"
-                 *ngIf="row.status !== commonStatusEnum.RETIRED"
-                 style="top: auto">
-             <input class="form-check-input" type="checkbox"
-                    [checked]="row.status == commonStatusEnum.ACTIVATED"
-                    tooltip="{{row.status == commonStatusEnum.ACTIVATED ? lang.map.btn_deactivate : lang.map.btn_activate}}"
-                    (change)="toggleStatus(row)">
-           </span>
-                    </grid-actions>
-                  </td>
-                </ng-container>
-                <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
-                <tr cdk-row (contextmenu)="menu.open($event , row)"
-                    *cdkRowDef="let row; columns: displayedColumns;"></tr>
-                <tr *cdkNoDataRow>
-                  <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
-                </tr>
-              </table>
-            </app-table>
-            <context-menu-item #menu [actions]="actions"></context-menu-item>
-          </div>
-        </div>
-      </div>
+      <app-custom-menu [parentId]="model.id" [readonly]="readonly"></app-custom-menu>
     </ng-template>
 
   </form>
 </div>
 <div class="dialog-actions">
-  <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="displayFormValidity(null, dialogContent)"
+  <button tabindex="-1" *ngIf="!readonly && validateFieldsVisible" (click)="displayFormValidity(null, dialogContent)"
           tooltip="{{lang.map.validate_fields}}" class="btn btn-link">
     <i class="mdi mdi-information-outline text-info"></i>
   </button>
   <span class="flex-grow-1"></span>
-  <button [disabled]="form.invalid" *ngIf="saveVisible" (click)="save$.next(null)"
+  <button [disabled]="form.invalid" *ngIf="!readonly && saveVisible" (click)="save$.next(null)"
           class="btn btn-primary">{{lang.map.btn_save}}</button>
   <button [dialogClose]="model" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
 </div>

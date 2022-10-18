@@ -30,7 +30,7 @@ export class CharityDecision extends BaseModel<
   id!: number;
   objectDBId?: number;
   category?: number;
-  buildForm(controls = true) {
+  buildForm(controls = true, withOrg = true) {
     const { referenceNumber, generalDate, category, subject, organization } =
       this;
 
@@ -45,7 +45,7 @@ export class CharityDecision extends BaseModel<
         ]
         : referenceNumber,
       generalDate: controls
-        ? [generalDate, [CustomValidators.required]]
+        ? [generalDate, withOrg ? [CustomValidators.required] : []]
         : generalDate,
       subject: controls
         ? [
@@ -59,7 +59,7 @@ export class CharityDecision extends BaseModel<
         ]
         : subject,
       organization: controls
-        ? [organization, [CustomValidators.required]]
+        ? [organization, [CustomValidators.required, CustomValidators.maxLength(300)]]
         : organization,
       category: controls ? [category, [CustomValidators.required]] : category,
     };

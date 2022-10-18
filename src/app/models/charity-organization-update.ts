@@ -144,7 +144,7 @@ export class CharityOrganizationUpdate extends CaseModel<
         ]
         : regulatingLaw,
       registrationAuthority: controls
-        ? [registrationAuthority, [CustomValidators.required]]
+        ? [registrationAuthority]
         : registrationAuthority,
       taxCardNo: controls
         ? [
