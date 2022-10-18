@@ -158,7 +158,7 @@ export class CustomMenuComponent extends AdminGenericComponent<CustomMenu, Custo
         if (this.parentId) {
           load = this.service.loadByParentId(this.parentId);
         } else {
-          load = this.service.load();
+          load = this.service.loadMain();
         }
         return load.pipe(catchError(_ => {
           return of([]);

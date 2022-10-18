@@ -10,7 +10,7 @@ import {ISearchFieldsMap} from '@app/types/types';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {CustomMenuService} from '@services/custom-menu.service';
 import {BaseModel} from './base-model';
-import {Lookup} from './lookup';
+import {AdminResult} from '@app/models/admin-result';
 
 const interceptor = new CustomMenuInterceptor();
 
@@ -19,7 +19,6 @@ const interceptor = new CustomMenuInterceptor();
   send: interceptor.send
 })
 export class CustomMenu extends BaseModel<CustomMenu, CustomMenuService> {
-
   status!: number;
   menuOrder!: number;
   menuType!: number;
@@ -27,7 +26,13 @@ export class CustomMenu extends BaseModel<CustomMenu, CustomMenuService> {
   userType!: number;
   menuURL!: string;
   parentMenuItemId?: number;
-  statusInfo!: Lookup;
+  statusDateModified!: string;
+  statusInfo!: AdminResult;
+  menuTypeInfo!: AdminResult;
+  menuViewInfo!: AdminResult;
+  parentMenuItemInfo!: AdminResult;
+  userTypeInfo!: AdminResult;
+  subMenuItems: CustomMenu[] = [];
 
   // extra properties
   service!: CustomMenuService;
