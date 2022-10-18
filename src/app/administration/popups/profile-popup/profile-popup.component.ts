@@ -27,6 +27,8 @@ import { ServiceDataService } from '@app/services/service-data.service';
 import { ServiceData } from '@app/models/service-data';
 import { DialogService } from '@app/services/dialog.service';
 import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 
 @Component({
   selector: 'profile-popup',
@@ -37,7 +39,14 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> {
   model!: Profile;
   form!: UntypedFormGroup;
   operation!: OperationTypes;
-
+  actions: IMenuItem<ProfileServiceModel>[] = [
+    {
+      type: 'action',
+      label: 'btn_delete',
+      icon: ActionIconsEnum.DELETE,
+      onClick: (item: ProfileServiceModel) => this.delete(item)
+    },
+  ];
   tabsData: IKeyValue = {
     basic: {
       name: 'basic',
@@ -193,8 +202,7 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> {
       this.servicesControl.reset();
     });
   }
-  delete(event: MouseEvent, model: ProfileServiceModel): void {
-    event?.preventDefault();
+  delete(model: ProfileServiceModel): void {
     const message = this.lang.map.remove_service_messages;
     this.dialogService
       .confirm(message)

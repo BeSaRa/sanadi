@@ -259,18 +259,17 @@
                 <th cdk-header-cell *cdkHeaderCellDef>
                   {{ lang.map.lbl_actions }}
                 </th>
-                <td cdk-cell *cdkCellDef="let row" class="table-actions">
-                  <div class="d-flex flex-row">
-                    <a
-                      *ngIf="operation !== OperationTypes.VIEW"
-                      href="#"
-                      (click)="delete($event, row)"
-                      tooltip="{{ lang.map.btn_delete }}"
-                      class="icon-btn"
-                    >
-                      <i class="mdi mdi-close-box"></i>
-                    </a>
-                  </div>
+                <td
+                  cdk-cell
+                  *cdkCellDef="let row; index as itemIndex"
+                  class="table-actions"
+                >
+                  <grid-actions
+                    [record]="row"
+                    [actions]="actions"
+                    [itemIndex]="itemIndex"
+                  >
+                  </grid-actions>
                 </td>
               </ng-container>
               <tr cdk-header-row *cdkHeaderRowDef="profileServicesColumns"></tr>
