@@ -138,6 +138,7 @@ NpoManagementService
     super();
   }
   handleReadonly(): void {
+    console.log(this.model)
     if (this.requestTypeField.value == NPORequestType.CANCEL || this.requestTypeField.value == NPORequestType.CLEARANCE || this.requestTypeField.value == NPORequestType.DISBANDMENT) {
       this.readonly = true;
     } else {
@@ -153,7 +154,6 @@ NpoManagementService
       this.readonly = true;
       return;
     }
-
     if (this.openFrom === OpenFrom.USER_INBOX) {
       if (this.employeeService.isCharityManager()) {
         this.readonly = false;
@@ -204,7 +204,7 @@ NpoManagementService
     });
   }
   _afterBuildForm(): void {
-    console.log('_afterBuildForm')
+    this.handleReadonly();
   }
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
     const invalidTabs = this._getInvalidTabs();
@@ -515,7 +515,7 @@ NpoManagementService
       this.disbandmentDateField.setValidators([CustomValidators.required])
     }
     if (this.isNew) {
-      // this.registrationAuthorityField.setValidators([CustomValidators.required])
+      this.registrationAuthorityField.setValidators([CustomValidators.required])
       this.registrationDateField.setValidators([CustomValidators.required])
       this.registrationNumberField.setValidators([
         CustomValidators.required, Validators.maxLength(150),

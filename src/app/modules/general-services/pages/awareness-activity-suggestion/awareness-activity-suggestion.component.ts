@@ -153,7 +153,7 @@ AwarenessActivitySuggestionService
     })
   }
   _afterBuildForm(): void {
-    console.log('_afterBuildForm')
+    this.handleReadonly();
   }
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
     const invalidTabs = this._getInvalidTabs();
