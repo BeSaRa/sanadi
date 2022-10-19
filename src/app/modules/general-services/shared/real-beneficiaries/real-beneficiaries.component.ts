@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
+import { Nationalities } from '@app/enums/nationalities.enum';
 import { ListModelComponent } from '@app/generics/ListModel-component';
 import { DateUtils } from '@app/helpers/date-utils';
 import { ControlWrapper } from '@app/interfaces/i-control-wrapper';
@@ -17,7 +18,7 @@ import { CustomValidators } from '@app/validators/custom-validators';
   styleUrls: ['./real-beneficiaries.component.scss'],
 })
 export class RealBeneficiariesComponent extends ListModelComponent<RealBeneficiary> {
-  QATARI_NATIONALITY = 1;
+  QATARI_NATIONALITY = Nationalities.QATARI;
   private _handleChangeNationality = (lookupKey: string | number) => {
     const natinoality = this.lookupService.listByCategory.Nationality.find(e => e.lookupKey === lookupKey);
     this.controls.map(e => {
@@ -221,8 +222,9 @@ export class RealBeneficiariesComponent extends ListModelComponent<RealBeneficia
     this.form.patchValue(row);
   }
   _beforeAdd(row: RealBeneficiary): RealBeneficiary | null {
-    const natinoality = this.lookupService.listByCategory.Nationality.find(e => e.id === row.nationality);
+    const natinoality = this.lookupService.listByCategory.Nationality.find(e => e.lookupKey === row.nationality);
     const field = (natinoality?.lookupKey === this.QATARI_NATIONALITY) ? 'identificationNumber' : 'passportNumber';
+    console.log({ field, row, natinoality });
     if (this._list.findIndex((e) => e[field] === row[field]) !== -1 && (this.editRecordIndex === -1)) {
       this.toast.alert(this.lang.map.msg_duplicated_item);
       return null;

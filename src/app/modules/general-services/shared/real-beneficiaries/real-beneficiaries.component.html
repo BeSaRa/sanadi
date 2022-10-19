@@ -74,7 +74,7 @@
           <div
             class="form-control"
             [formControlName]="control.controlName"
-            [ngClass]="{ 'input-disabled': readonly }"
+            [ngClass]="{ 'input-disabled': readonly || form.get(control.controlName)?.disabled }"
             [disabled]="readonly"
             [id]="control.controlName"
             [options]="datepickerOptionsMap[control.controlName]"
