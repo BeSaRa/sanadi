@@ -122,5 +122,7 @@ export const urlsList = {
   PROFILE: '/admin/profile',
   PROFILE_SERVICE: '/admin/profile-service',
   AWARENESS_ACTIVITY_SUGGESTION: '/awareness-activity-suggestion',
-  MENU_ITEM_LIST: '/admin/menu-item'
+  MENU_ITEM_LIST: '/admin/menu-item',
+  GENERAL_PROCESS: '/admin/general-process',
+  GENERAL_PROCESS_NOTIFICATION: '/general-process-notification',
 };

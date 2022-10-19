@@ -1520,5 +1520,8 @@ export interface ILanguageKeys {
   lbl_add_services_to_profile: string;
   services_add_successfully: string;
   remove_service_messages: string;
+
+  menu_general_process_template: string;
+  menu_general_process_notification: string;
 }
 

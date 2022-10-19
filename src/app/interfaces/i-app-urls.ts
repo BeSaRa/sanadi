@@ -118,5 +118,7 @@ export interface IAppUrls {
   AWARENESS_ACTIVITY_SUGGESTION: string;
   MENU_ITEM_LIST: string;
   PROFILE_SERVICE: string;
+  GENERAL_PROCESS: string;
+  GENERAL_PROCESS_NOTIFICATION: string;
   [index: string]: string;
 }

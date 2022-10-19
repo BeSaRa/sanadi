@@ -1,3 +1,4 @@
+import { GeneralProcessNotificationComponent } from './../modules/general-services/pages/general-process-notification/general-process-notification.component';
 import {
   AwarenessActivitySuggestionComponent
 } from './../modules/general-services/pages/awareness-activity-suggestion/awareness-activity-suggestion.component';
@@ -108,6 +109,7 @@ export class AutoRegisterService {
       DynamicComponentService.registerComponent('CharityOrganizationUpdateComponent', CharityOrganizationUpdateComponent);
       DynamicComponentService.registerComponent('NpoManagementComponent', NpoManagementComponent);
       DynamicComponentService.registerComponent('AwarenessActivitySuggestionComponent', AwarenessActivitySuggestionComponent);
+      DynamicComponentService.registerComponent('GeneralProcessNotificationComponent', GeneralProcessNotificationComponent);
     });// just to make sure that service constructed and register all dynamic components
 
 

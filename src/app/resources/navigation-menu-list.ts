@@ -1008,5 +1008,31 @@ export const navigationMenuList = [
     group: 'administration',
     itemOrder: 22,
     svg: null
+  },
+  {
+    id: 77,
+    langKey: 'menu_general_process_template',
+    path: '/home/administration/general-process-template',
+    icon: 'mdi-template',
+    isSvg: false,
+    permission: PermissionsEnum.GENERAL_PROCESS,
+    permissionGroup: null,
+    parent: 6,
+    group: 'administration',
+    itemOrder: 23,
+    svg: null
+  },
+  {
+    id: 78,
+    langKey: 'menu_general_process_notification',
+    path: '/home/general-services/general-process-notification',
+    icon: 'mdi-template',
+    isSvg: false,
+    permission: EServicePermissionsEnum.GENERAL_PROCESS_NOTIFICTION,
+    permissionGroup: null,
+    parent: 13,
+    group: 'general-services',
+    itemOrder: 11,
+    svg: null
   }
 ];

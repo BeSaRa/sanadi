@@ -1,3 +1,4 @@
+import { GeneralProcessNotificationComponent } from './pages/general-process-notification/general-process-notification.component';
 import {
   AwarenessActivitySuggestionApprovalComponent
 } from './popups/awareness-activity-suggestion-approval/awareness-activity-suggestion-approval.component';
@@ -66,6 +67,7 @@ import {InternationalCooperationComponent} from './pages/international-cooperati
     FollowupDateApprovePopupComponent,
     CoordinationWithOrganizationsRequestComponent,
     NpoManagementComponent,
+    GeneralProcessNotificationComponent,
     FounderMembersComponent,
     NpoBankAccountComponent,
     CharityOrganizationUpdateComponent,
