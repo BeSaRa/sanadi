@@ -93,20 +93,18 @@ export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAss
       meetingTime,
       meetingInitiator,
       meetingClassification,
-      periodical,
-      year
+      periodical
     } = this;
     return {
       oldFullSerial: controls ? [oldFullSerial] : oldFullSerial,
       requestType: controls ? [requestType, [CustomValidators.required]] : requestType,
       meetingType: controls ? [meetingType, [CustomValidators.required]] : meetingType,
-      location: controls ? [location, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : location,
+      location: controls ? [location, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : location,
       meetingDate: controls ? [meetingDate, [CustomValidators.required]] : meetingDate,
       meetingTime: controls ? [meetingTime, []] : meetingTime,
       meetingInitiator: controls ? [meetingInitiator, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : meetingInitiator,
       meetingClassification: controls ? [meetingClassification, [CustomValidators.required]] : meetingClassification,
-      periodical: controls ? [periodical, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(2)]] : periodical,
-      year: controls ? [year, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(4),CustomValidators.minLength(4)]] : year
+      periodical: controls ? [periodical, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(2)]] : periodical
     };
   }
 
