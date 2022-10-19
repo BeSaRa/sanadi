@@ -53,6 +53,9 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
     if (this.isSendToDepartments() && this.twoDepartmentsWFResponses.includes(this.data.sendToResponse)) {
       this.maxSelectionCount = 2; // as per business doc
     }
+    if (this.data.sendToResponse === WFResponseType.CHARITY_ORGANIZATION_UPDATE_SEND_TO_MULTI_DEPARTMENTS) {
+      this.maxSelectionCount = 1;
+    }
   }
 
   users: InternalUser[] = [];
@@ -63,15 +66,16 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
   title: keyof ILanguageKeys = {} as keyof ILanguageKeys;
   maxSelectionCount!: number;
   internalBankAccountApprovalDepartments = [InternalBankAccountApprovalReviewDepartments.LEGAL_AFFAIRS,
-    InternalBankAccountApprovalReviewDepartments.RISK_AND_COMPLIANCE,
-    InternalBankAccountApprovalReviewDepartments.SUPERVISION_AND_CONTROL];
+  InternalBankAccountApprovalReviewDepartments.RISK_AND_COMPLIANCE,
+  InternalBankAccountApprovalReviewDepartments.SUPERVISION_AND_CONTROL];
 
   multiSendToDepartmentWFResponseList = [
     WFResponseType.INTERNAL_PROJECT_SEND_TO_MULTI_DEPARTMENTS,
     WFResponseType.FUNDRAISING_LICENSE_SEND_TO_MULTI_DEPARTMENTS,
     WFResponseType.URGENT_INTERVENTION_LICENSE_SEND_TO_MULTI_DEPARTMENTS,
     WFResponseType.INTERNAL_BANK_ACCOUNT_APPROVAL_SEND_TO_MULTI_DEPARTMENTS,
-    WFResponseType.AWARENESS_ACTIVITY_SUGGESTION_SEND_TO_MULTI_DEPARTMENTS
+    WFResponseType.AWARENESS_ACTIVITY_SUGGESTION_SEND_TO_MULTI_DEPARTMENTS,
+    WFResponseType.CHARITY_ORGANIZATION_UPDATE_SEND_TO_MULTI_DEPARTMENTS
   ];
   multiSendToUserWFResponseList = [
     WFResponseType.INTERNAL_PROJECT_SEND_TO_EXPERT
@@ -80,7 +84,7 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
 
 
   isSendToDepartments(): boolean {
-    return this.multiSendToDepartmentWFResponseList.includes( this.data.sendToResponse);
+    return this.multiSendToDepartmentWFResponseList.includes(this.data.sendToResponse);
   }
 
   isSendToUsers(): boolean {
@@ -90,7 +94,7 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
   private _loadInitData(): void {
     if (this.isSendToDepartments()) {
       this.title = 'send_to_multi_departments';
-      if(this.data.sendToResponse === WFResponseType.INTERNAL_BANK_ACCOUNT_APPROVAL_SEND_TO_MULTI_DEPARTMENTS) {
+      if (this.data.sendToResponse === WFResponseType.INTERNAL_BANK_ACCOUNT_APPROVAL_SEND_TO_MULTI_DEPARTMENTS) {
         this.loadInternalBankAccountApprovalDepartments();
       } else {
         this.loadDepartments();
@@ -198,7 +202,6 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
         this.dialogRef.close(true);
       });
   }
-
   loadDepartments(): void {
     this.intDepService.loadAsLookups()
       .pipe(takeUntil(this.destroy$))
