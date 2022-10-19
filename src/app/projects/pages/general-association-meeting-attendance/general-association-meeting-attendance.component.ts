@@ -137,6 +137,10 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     return this.form?.get('basicInfo.location')! as FormControl;
   }
 
+  get year(): FormControl {
+    return this.form?.get('basicInfo.year')! as FormControl;
+  }
+
   get meetingTime(): FormControl {
     return this.form?.get('basicInfo.meetingTime')! as FormControl;
   }
@@ -953,5 +957,9 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     ).subscribe(blob => {
       window.open(blob.url);
     });
+  }
+
+  printConsole(event: any) {
+    this.year.patchValue((new Date(DateUtils.getDateStringFromDate(event))).getFullYear());
   }
 }
