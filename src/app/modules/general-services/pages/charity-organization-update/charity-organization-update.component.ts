@@ -686,7 +686,6 @@ export class CharityOrganizationUpdateComponent
       });
 
     } else if (updateSection === this.RequestTypes.GOVERNANCE_DOCUMENTS) {
-      this.charityWorkAreaField!.patchValue(CharityWorkArea.INSIDE);
       this.goveranceDocumentService.getByCharityId(id).subscribe(m => {
         if (m.length > 0) {
           this._updateForm(m[0].toCharityOrgnizationUpdate());

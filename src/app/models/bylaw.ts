@@ -24,7 +24,7 @@ export class Bylaw extends SearchableCloneable<Bylaw> {
   buildForm(controls = true) {
     const { fullName, firstReleaseDate, lastUpdateDate, category } = this;
     return {
-      fullName: controls ? [fullName, [CustomValidators.required]] : fullName,
+      fullName: controls ? [fullName, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : fullName,
       firstReleaseDate: controls ? [firstReleaseDate, [CustomValidators.required]] : firstReleaseDate,
       lastUpdateDate: controls ? [lastUpdateDate, [CustomValidators.required]] : lastUpdateDate,
       category: controls ? [category, [CustomValidators.required]] : category,
