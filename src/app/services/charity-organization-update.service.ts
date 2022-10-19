@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { ComponentFactoryResolver, Injectable } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { CastResponseContainer } from '@app/decorators/decorators/cast-response';
+import { AttachmentTypeEnum } from '@app/enums/attachment-type.enum';
 import { BaseGenericEService } from '@app/generics/base-generic-e-service';
 import { ILanguageKeys } from '@app/interfaces/i-language-keys';
 import { BlobModel } from '@app/models/blob-model';
@@ -41,7 +42,7 @@ export class CharityOrganizationUpdateService extends BaseGenericEService<Charit
     public dynamicService: DynamicOptionsService,
     public domSanitizer: DomSanitizer,
     public dialog: DialogService,
-    private urlService: UrlService
+    private urlService: UrlService,
   ) {
     super();
     FactoryService.registerService('CharityOrganizationUpdateService', this);
@@ -79,7 +80,7 @@ export class CharityOrganizationUpdateService extends BaseGenericEService<Charit
     const form = new FormData();
     form.append('content', file);
     form.append('itemId', caseId.toString());
-    form.append('attachmentTypeId', '154');
+    form.append('attachmentTypeId', AttachmentTypeEnum.SUPPLEMENTARY_DOCUMENTS.toString());
     return this.http.post(this._getURLSegment() + '/' + caseId + '/logo', form).pipe(map((e: any) => e.rs.id));
   }
 }
