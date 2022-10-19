@@ -96,7 +96,7 @@
                         class="btn btn-link outline-none" tooltip="{{lang.map.btn_remove}}">
                   <i class="mdi mdi-close-box"></i>
                 </button>
-                <button (click)="selectMember($event, row)" *ngIf="isGeneralAssociationMembers"
+                <button (click)="selectMember($event, row)" *ngIf="isGeneralAssociationMembers && !row.id"
                         [disabled]="(readonly || addMemberFormActive)"
                         class="btn btn-link outline-none" tooltip="{{lang.map.btn_edit}}">
                   <i class="mdi mdi-pen"></i>
