@@ -1,16 +1,16 @@
-import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
-import {AdminLookupTypeEnum} from '@app/enums/admin-lookup-type-enum';
-import {CharityWorkArea} from '@app/enums/charity-work-area.enum';
-import {DomainTypes} from '@app/enums/domain-types';
-import {ListModelComponent} from '@app/generics/ListModel-component';
-import {ControlWrapper} from '@app/interfaces/i-control-wrapper';
-import {ForeignAidClassification} from '@app/models/foreign-aid-classification';
-import {AidLookupService} from '@app/services/aid-lookup.service';
-import {DacOchaService} from '@services/dac-ocha.service';
-import {LangService} from '@app/services/lang.service';
-import {LookupService} from '@app/services/lookup.service';
-import {CustomValidators} from '@app/validators/custom-validators';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { AdminLookupTypeEnum } from '@app/enums/admin-lookup-type-enum';
+import { CharityWorkArea } from '@app/enums/charity-work-area.enum';
+import { DomainTypes } from '@app/enums/domain-types';
+import { ListModelComponent } from '@app/generics/ListModel-component';
+import { ControlWrapper } from '@app/interfaces/i-control-wrapper';
+import { ForeignAidClassification } from '@app/models/foreign-aid-classification';
+import { AidLookupService } from '@app/services/aid-lookup.service';
+import { DacOchaService } from '@services/dac-ocha.service';
+import { LangService } from '@app/services/lang.service';
+import { LookupService } from '@app/services/lookup.service';
+import { CustomValidators } from '@app/validators/custom-validators';
 
 @Component({
   selector: 'foreign-aid-classifications',
@@ -123,29 +123,29 @@ export class ForeignAidClassificationsComponent
   columns = ['aidClassification', 'domain', 'mainUNOCHACategory', 'subUNOCHACategory', 'mainDACCategory', 'subDACCategory', 'actions'];
 
   protected _initComponent(): void {
-    this.controls = [...this.baseControls];
     let fg: any = {
-      domain: [
-        this.model.domain,
+      aidClassification: [
+        this.model.aidClassification,
         [CustomValidators.required],
       ],
     };
+    this.controls = [
+      {
+        controlName: 'aidClassification',
+        type: 'dropdown',
+        label: this.lang.map.menu_aid_class,
+        load$: this.aidService.loadAsLookups(),
+        dropdownValue: 'id',
+      },
+    ];
     if (this.charityWorkArea === CharityWorkArea.OUTSIDE) {
       fg = {
-        aidClassification: [
-          this.model.aidClassification,
+        domain: [
+          this.model.domain,
           [CustomValidators.required],
         ],
       };
-      this.controls = [
-        {
-          controlName: 'aidClassification',
-          type: 'dropdown',
-          label: this.lang.map.menu_aid_class,
-          load$: this.aidService.loadAsLookups(),
-          dropdownValue: 'id',
-        },
-      ];
+      this.controls = [...this.baseControls];
     }
     if (this.charityWorkArea === CharityWorkArea.BOTH) {
       fg = {
