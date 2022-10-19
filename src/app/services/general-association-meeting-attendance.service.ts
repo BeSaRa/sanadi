@@ -37,6 +37,7 @@ import {
 } from '@app/projects/popups/meeting-point-members-comments-popup/meeting-point-members-comments-popup.component';
 import { BlobModel } from '@app/models/blob-model';
 import { map } from 'rxjs/operators';
+import {CommonUtils} from '@helpers/common-utils';
 
 @CastResponseContainer({
   $default: {
@@ -81,12 +82,38 @@ export class GeneralAssociationMeetingAttendanceService extends BaseGenericEServ
     unwrap: 'rs',
     fallback: '$default'
   })
-  private _searchNpoEmployees(options?: any): Observable<NpoEmployee[]> {
-    return this.http.get<NpoEmployee[]>(this.getNpoEmployeeURLSegment() + '/search/criteria?q-id=' + options.qId + '&arabic-name=' + options.arabicName + '&english-name=' + options.englishName);
+  private _searchNpoEmployees(criteria: {arabicName?: string, englishName?: string, qId?: string}): Observable<NpoEmployee[]> {
+    let criteriaSegment = this.getSearchNPOEmployeeCriteriaSegment(criteria);
+
+    return this.http.get<NpoEmployee[]>(this.getNpoEmployeeURLSegment() + '/search/criteria?' + criteriaSegment);
   }
 
-  searchNpoEmployees(options?: any): Observable<NpoEmployee[]> {
-    return this._searchNpoEmployees(options);
+  searchNpoEmployees(criteria: {arabicName?: string, englishName?: string, qId?: string}): Observable<NpoEmployee[]> {
+    return this._searchNpoEmployees(criteria);
+  }
+
+  getSearchNPOEmployeeCriteriaSegment(criteria: {arabicName?: string, englishName?: string, qId?: string}) {
+    let criteriaSegment = '';
+
+    if(CommonUtils.isValidValue(criteria.qId)) {
+      criteriaSegment += ('q-id=' + criteria.qId);
+    }
+
+    if(CommonUtils.isValidValue(criteria.arabicName)) {
+      if(criteriaSegment !== '') {
+        criteriaSegment += '&';
+      }
+      criteriaSegment += ('arabic-name=' + criteria.arabicName);
+    }
+
+    if(CommonUtils.isValidValue(criteria.englishName)) {
+      if(criteriaSegment !== '') {
+        criteriaSegment += '&';
+      }
+      criteriaSegment += ('english-name=' + criteria.englishName);
+    }
+
+    return criteriaSegment;
   }
 
   openSelectMemberDialog(members: GeneralAssociationExternalMember[] | GeneralAssociationInternalMember[], select = true, isInternalMembers: boolean): DialogRef {

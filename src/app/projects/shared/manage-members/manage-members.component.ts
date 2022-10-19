@@ -157,10 +157,11 @@ export class ManageMembersComponent implements OnInit {
 
   searchMembers() {
     const criteria = {
-      arabicName: this.arabicName.value === '' ? null : this.arabicName.value,
-      englishName: this.englishName.value === '' ? null : this.englishName.value,
-      qId: this.identificationNumber.value === '' ? null : this.identificationNumber.value
+      arabicName: this.arabicName.value,
+      englishName: this.englishName.value,
+      qId: this.identificationNumber.value
     };
+
     this.generalAssociationMeetingService.searchNpoEmployees(criteria)
       .pipe(tap(members => !members.length && this.dialog.info(this.lang.map.no_result_for_your_search_criteria)))
       .pipe(filter(members => !!members.length))
@@ -170,7 +171,15 @@ export class ManageMembersComponent implements OnInit {
       .pipe(exhaustMap((members) => {
         return members.length === 1 ? of(members[0]) : this.openSelectMember(members);
       }))
+      .pipe(filter(item => {
+        if(!item) {
+          this.resetMemberForm();
+          this.addMemberFormActive = false;
+        }
+        return !!item;
+      }))
       .subscribe((item) => {
+        console.log('item', item);
         this._saveMember(item);
       });
   }
