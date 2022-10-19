@@ -213,6 +213,7 @@
                         [addLabel]="addAdministrativeBoardMembersLabel"
                         [selectedMembers]="selectedAdministrativeBoardMembers"
                         [isExternalUser]="isExternalUser"
+                        [isGeneralAssociationMembers]="false"
                         [readonly]="readonly || isCancel"></manage-members>
       </ng-template>
     </ng-container>
@@ -222,6 +223,7 @@
                         [addLabel]="addGeneralAssociationMembersLabel"
                         [selectedMembers]="selectedGeneralAssociationMembers"
                         [isExternalUser]="isExternalUser"
+                        [isGeneralAssociationMembers]="true"
                         [readonly]="readonly || isCancel"></manage-members>
       </ng-template>
     </ng-container>

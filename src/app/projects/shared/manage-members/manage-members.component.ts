@@ -21,6 +21,7 @@ import {NpoEmployee} from '@app/models/npo-employee';
 export class ManageMembersComponent implements OnInit {
   @Input() membersForm!: FormGroup;
   @Input() isExternalUser!: boolean;
+  @Input() isGeneralAssociationMembers!: boolean;
   @Input() readonly !: boolean;
   @Input() selectedMembers: GeneralAssociationExternalMember[] = [];
   @Input() addLabel!: keyof ILanguageKeys;
@@ -63,12 +64,20 @@ export class ManageMembersComponent implements OnInit {
   }
 
   buildMemberForm(): void {
-    this.membersForm = this.fb.group({
-      arabicName: [null, [CustomValidators.required, CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX), CustomValidators.pattern('AR_NUM')]],
-      englishName: [null, [CustomValidators.required, CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.pattern('ENG_NUM')]],
-      identificationNumber: [null, [CustomValidators.required].concat(CustomValidators.commonValidations.qId)],
-      jobTitleId: [null, [CustomValidators.required]]
-    });
+    if(this.isGeneralAssociationMembers) {
+      this.membersForm = this.fb.group({
+        arabicName: [null, [CustomValidators.required, CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX), CustomValidators.pattern('AR_NUM')]],
+        englishName: [null, [CustomValidators.required, CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.pattern('ENG_NUM')]],
+        identificationNumber: [null, [CustomValidators.required].concat(CustomValidators.commonValidations.qId)],
+        jobTitleId: [null, [CustomValidators.required]]
+      });
+    } else {
+      this.membersForm = this.fb.group({
+        arabicName: [null, [CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX), CustomValidators.pattern('AR_NUM')]],
+        englishName: [null, [CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.pattern('ENG_NUM')]],
+        identificationNumber: [null, [...CustomValidators.commonValidations.qId]]
+      });
+    }
   }
 
   openAddAdministrativeBoardMemberForm() {
@@ -179,7 +188,6 @@ export class ManageMembersComponent implements OnInit {
         return !!item;
       }))
       .subscribe((item) => {
-        console.log('item', item);
         this._saveMember(item);
       });
   }
