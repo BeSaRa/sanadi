@@ -65,6 +65,6 @@ export class ProfileService extends CrudWithDialogGenericService<Profile>{
   }
   @CastResponse(undefined)
   getByRegistrationAuthorities() {
-    return this.http.get(this._getServiceURL() + '/registration-authorities');
+    return this.http.get<Profile[]>(this._getServiceURL() + '/registration-authorities');
   }
 }

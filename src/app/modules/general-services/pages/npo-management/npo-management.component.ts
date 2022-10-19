@@ -242,9 +242,7 @@ NpoManagementService
     const value = new NpoManagement().clone({
       ...this.model,
       ...this.basicInfo.value,
-      ...this.contectInfo.value,
-      // TODO!: fix this when finising the related admin page
-      registrationAuthority: 0
+      ...this.contectInfo.value
     })
     value.bankAccountList = this.bankAccountComponentRef.list;
     value.contactOfficerList = this.contactOfficerComponentRef.list;

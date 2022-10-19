@@ -69,7 +69,7 @@
             <ng-select [selectOnTab]="true" placeholder="{{ lang.map.select }}" [notFoundText]="lang.map.msg_not_found"
               [readonly]="!isNew && readonly" appendTo="body" id="registrationAuthority" validationClasses="registrationAuthority"
               formControlName="registrationAuthority">
-              <ng-option *ngFor="let option of registrationAuthoritiesList" [value]="option.id">{{ option }}
+              <ng-option *ngFor="let option of registrationAuthoritiesList" [value]="option.id">{{ option.getName() }}
               </ng-option>
             </ng-select>
             <app-field-error-message controlName="registrationAuthority"></app-field-error-message>
