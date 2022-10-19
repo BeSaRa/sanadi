@@ -666,7 +666,7 @@ export class CharityOrganizationUpdateComponent
             ),
           };
         }, {});
-        this._loadEmployees(id);
+        this._loadEmployees(charity.profileId);
         this.realBeneficiaryService
           .getRealBenficiaryOfCharity(id)
           .subscribe((e) => {
@@ -922,9 +922,11 @@ export class CharityOrganizationUpdateComponent
     }
     if (this.model.charityId) {
       this.form.get('charityId')?.patchValue(this.model.charityId);
-      this.externalOffices$ = this.finalOfficeApproval.licenseSearch({
-        organizationId: this.model.charityId,
-      });
+      if (!this.externalOffices$) {
+        this.externalOffices$ = this.finalOfficeApproval.licenseSearch({
+          organizationId: this.model.charityId,
+        });
+      }
       this.organizationMeetings$ = this.meetingService.getMeetingsByCharityId(this.model.charityId);
 
       this._loadEmployees(this.model.charityId);
@@ -943,10 +945,13 @@ export class CharityOrganizationUpdateComponent
       this.contactInformationForm?.patchValue(
         model!.buildContactInformationForm(false)
       );
+      ((model.registrationAuthorityInfo) && (this.metaDataForm.get('registrationAuthority')?.patchValue(model.registrationAuthorityInfo.getName())));
+
     }
     else if ((this.requestTypeForm.value === this.RequestTypes.GOVERNANCE_DOCUMENTS) || (this.model.updateSection === this.RequestTypes.GOVERNANCE_DOCUMENTS)) {
       this.primaryLawForm.patchValue(model!.buildPrimaryLawForm(false));
     }
+
     this.cd.detectChanges();
   }
 
