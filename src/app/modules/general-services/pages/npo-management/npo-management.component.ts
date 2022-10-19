@@ -1,3 +1,5 @@
+import { Profile } from './../../../../models/profile';
+import { ProfileService } from '@app/services/profile.service';
 import { UserClickOn } from './../../../../enums/user-click-on.enum';
 import { takeUntil, switchMap } from 'rxjs/operators';
 import { NpoBankAccount } from './../../../../models/npo-bank-account';
@@ -41,6 +43,7 @@ import { AdminLookupService } from '@app/services/admin-lookup.service';
 import { AdminLookupTypeEnum } from '@app/enums/admin-lookup-type-enum';
 import { NPORequestType } from '@app/enums/service-request-types';
 import { Bank } from '@app/models/bank';
+import { ProfileTypes } from '@app/enums/profile-types.enum';
 
 @Component({
   selector: 'app-npo-management',
@@ -57,8 +60,7 @@ NpoManagementService
   NpoList: NpoData[] = [];
   // Clearance Type & Disbandment Type
   NPODecisionsList: Lookup[] = this.lookupService.listByCategory.NPODecisions;
-  // TODO! fill this list after done from admin
-  registrationAuthoritiesList = []
+  registrationAuthoritiesList: Profile[] = []
   form!: UntypedFormGroup;
   npoIdField: UntypedFormControl = new UntypedFormControl();
   bankDetailsTabStatus: ReadinessStatus = 'READY';
@@ -134,11 +136,11 @@ NpoManagementService
     private bankService: BankService,
     private dialog: DialogService,
     private employeeService: EmployeeService,
+    private profileService: ProfileService,
     public lang: LangService) {
     super();
   }
   handleReadonly(): void {
-    console.log(this.model)
     if (this.requestTypeField.value == NPORequestType.CANCEL || this.requestTypeField.value == NPORequestType.CLEARANCE || this.requestTypeField.value == NPORequestType.DISBANDMENT) {
       this.readonly = true;
     } else {
@@ -181,6 +183,9 @@ NpoManagementService
   }
   _initComponent(): void {
     this._buildForm();
+    this.profileService.getByRegistrationAuthorities().subscribe((data: any) => {
+      this.registrationAuthoritiesList = data
+    })
     this.npoDataService.loadAsLookups().subscribe(data => {
       this.NpoList = data
     })
@@ -192,7 +197,7 @@ NpoManagementService
     })
     if (this.isRegistrationAuthority) {
       this.npoIdField.setValue(
-        8 // TODO!: set regestered user id
+        this.employeeService.getProfile()?.profileDetails.entityId
       )
     }
   }
@@ -525,7 +530,7 @@ NpoManagementService
     }
   }
   get isRegistrationAuthority() {
-    return true
+    return this.employeeService.getProfile()?.profileType == ProfileTypes.NON_PROFIT_ORGANIZATIONS
   }
   get isNew() {
     return this.requestTypeField.value == NPORequestType.NEW

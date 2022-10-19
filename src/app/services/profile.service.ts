@@ -63,4 +63,8 @@ export class ProfileService extends CrudWithDialogGenericService<Profile>{
     const query = new HttpParams().append('profile-type', profileType);
     return this.http.get<Profile[]>(this._getServiceURL() + '/criteria', { params: query });
   }
+  @CastResponse(undefined)
+  getByRegistrationAuthorities() {
+    return this.http.get(this._getServiceURL() + '/registration-authorities');
+  }
 }
