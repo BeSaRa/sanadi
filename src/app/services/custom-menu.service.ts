@@ -58,15 +58,11 @@ export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> 
     return this.http.get<CustomMenu[]>(this._getServiceURL() + '/main');
   }
 
-  load(prepare?: boolean): Observable<CustomMenu[]> {
-    return this._loadMain()
-      .pipe(
-        tap(result => this.list = result),
-        tap(result => this._loadDone$.next(result))
-      );
+  loadMain(): Observable<CustomMenu[]> {
+    return this._loadMain();
   }
 
-  @CastResponse(() => CustomMenu, {
+  @CastResponse(undefined, {
     fallback: '$default',
     unwrap: 'rs'
   })
@@ -139,5 +135,13 @@ export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> 
           return response.rs;
         })
       );
+  }
+
+  @CastResponse(() => CustomMenu, {
+    fallback: '$default',
+    unwrap: 'rs'
+  })
+  loadMenuTree(): Observable<CustomMenu[]> {
+    return this.http.get<CustomMenu[]>(this._getServiceURL() + '/tree');
   }
 }
