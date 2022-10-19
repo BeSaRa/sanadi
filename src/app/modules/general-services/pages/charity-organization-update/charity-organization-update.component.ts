@@ -639,7 +639,7 @@ export class CharityOrganizationUpdateComponent
     const charity = this.charityOrganizations.find(e => e.id === id)!;
     const updateSection = this.requestTypeForm.value;
     if (updateSection === this.RequestTypes.META_DATA) {
-      const model = this.charityOrganizationService.getById(id);
+      const model = this.charityOrganizationService.getByIdComposite(id);
       model.subscribe((m) => {
         this._updateForm(m.toCharityOrganizationUpdate());
         this.charityOrganizationService.getLogoBy({ charityId: id }).subscribe(logo => {
@@ -679,7 +679,8 @@ export class CharityOrganizationUpdateComponent
               generalAssemblyMemberList: this.listMembers(CharityRole.GENERAL_ASSEMBLY_MEMBERS),
               authorizedSignatoryMemberList: this.listMembers(CharityRole.AUTHORIZED_MEMBERS),
               currentExecutiveManagementList: this.listMembers(CharityRole.CURRENT_EXECUTIVE_MANAGEMENT),
-              realBeneficiaryList: this.realBenefeciaries
+              realBeneficiaryList: this.realBenefeciaries,
+              ...this.model
             });
           });
       });
@@ -687,7 +688,9 @@ export class CharityOrganizationUpdateComponent
     } else if (updateSection === this.RequestTypes.GOVERNANCE_DOCUMENTS) {
       this.charityWorkAreaField!.patchValue(CharityWorkArea.INSIDE);
       this.goveranceDocumentService.getByCharityId(id).subscribe(m => {
-        this._updateForm(m[0].toCharityOrgnizationUpdate());
+        if (m.length > 0) {
+          this._updateForm(m[0].toCharityOrgnizationUpdate());
+        }
       });
       this.organizationMeetings$ = this.meetingService.getMeetingsByCharityId(id);
     } else if (
@@ -698,7 +701,8 @@ export class CharityOrganizationUpdateComponent
         this.model = new CharityOrganizationUpdate().clone({
           riskReportList: this.riskCharityReport,
           incomingReportList: this.incomingCharityReport,
-          coordinationSupportReport: this.supportCharityReport
+          coordinationSupportReport: this.supportCharityReport,
+          ...this.model
         })
       });
     } else if (
@@ -708,7 +712,8 @@ export class CharityOrganizationUpdateComponent
         this.charityDecisions = m.map(e => new CharityDecision().clone({ ...e }).toCharityOrganizationUpdate());
         this.model = new CharityOrganizationUpdate().clone({
           incomingDecisionList: this.incomingCharityDecisions,
-          outgoingDecisionList: this.outgoingCharityDecisions
+          outgoingDecisionList: this.outgoingCharityDecisions,
+          ...this.model
         });
       });
     }
@@ -846,6 +851,7 @@ export class CharityOrganizationUpdateComponent
       outgoingDecisionList = arr[0].list || [];
       incomingDecisionList = arr[1].list || [];
     }
+    console.log({ sd: this.model, asd: metaDataValue })
     return new CharityOrganizationUpdate().clone({
       ...this.model,
       ...metaDataValue,
@@ -947,7 +953,7 @@ export class CharityOrganizationUpdateComponent
 
 
   _resetForm(): void {
-    this.handleRequestTypeChange(undefined!);
+    //this.handleRequestTypeChange(undefined!);
     this.form.reset();
   }
 
