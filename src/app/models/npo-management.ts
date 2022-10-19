@@ -44,7 +44,6 @@ export class NpoManagement
   unifiedEconomicRecord!: string;
   activityType!: number;
   establishmentDate!: string | IMyDateModel;
-  // TODO!: have to complete from the admin
   registrationAuthority!: number;
   registrationDate!: string | IMyDateModel;
   registrationNumber!: string;

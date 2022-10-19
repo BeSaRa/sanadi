@@ -80,7 +80,7 @@
               <label asteriskIfRequired="registrationAuthority" for="registrationAuthority" class="form-label">{{
                 lang.map.registration_authority
                 }}</label>
-              <input readonly class="form-control" />
+              <input [value]="userProfile?.getName()" readonly class="form-control" />
             </div>
           </ng-template>
         </ng-container>

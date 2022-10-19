@@ -527,6 +527,9 @@ NpoManagementService
       this.establishmentDateField.setValidators([CustomValidators.required])
     }
   }
+  get userProfile() {
+    return this.employeeService.getProfile()
+  }
   get isRegistrationAuthority() {
     return this.employeeService.getProfile()?.profileType == ProfileTypes.NON_PROFIT_ORGANIZATIONS
   }
