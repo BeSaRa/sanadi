@@ -38,6 +38,7 @@ import {
 import { BlobModel } from '@app/models/blob-model';
 import { map } from 'rxjs/operators';
 import {CommonUtils} from '@helpers/common-utils';
+import {IMyDateModel} from 'angular-mydatepicker';
 
 @CastResponseContainer({
   $default: {
@@ -160,12 +161,14 @@ export class GeneralAssociationMeetingAttendanceService extends BaseGenericEServ
     });
   }
 
-  approveTask(model: GeneralAssociationMeetingAttendance, action: WFResponseType, selectedInternalMembers: GeneralAssociationInternalMember[]): DialogRef {
+  approveTask(model: GeneralAssociationMeetingAttendance, action: WFResponseType, selectedInternalMembers: GeneralAssociationInternalMember[], meetingDate: IMyDateModel, year: number): DialogRef {
     return this.dialog.show(GeneralAssociationMeetingApproveTaskPopupComponent, {
       model,
       actionType: action,
       service: this,
-      selectedInternalMembers
+      selectedInternalMembers,
+      meetingDate,
+      year
     });
   }
 

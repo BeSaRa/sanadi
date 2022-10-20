@@ -1116,8 +1116,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       if (item.getCaseType() === CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE) {
         const model = item as unknown as IGeneralAssociationMeetingAttendanceApprove;
         const component = this.component as unknown as IGeneralAssociationMeetingAttendanceComponent;
+        const meetingDate = component.meetingDate.value;
+        const year = component.year.value;
 
-        model.approveWithSave(component.selectedInternalUsers).onAfterClose$.subscribe(actionTaken => {
+        model.approveWithSave(component.selectedInternalUsers, meetingDate, year).onAfterClose$.subscribe(actionTaken => {
           actionTaken && this.navigateToSamePageThatUserCameFrom();
         });
       }
@@ -1146,8 +1148,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       if (item.getCaseType() === CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE) {
         const model = item as unknown as IGeneralAssociationMeetingAttendanceApprove;
         const component = this.component as unknown as IGeneralAssociationMeetingAttendanceComponent;
+        const meetingDate = component.meetingDate.value;
+        const year = component.year.value;
 
-        model.initialApproveWithSave(component.selectedInternalUsers).onAfterClose$.subscribe(actionTaken => {
+        model.initialApproveWithSave(component.selectedInternalUsers, meetingDate, year).onAfterClose$.subscribe(actionTaken => {
           actionTaken && this.navigateToSamePageThatUserCameFrom();
         });
       }

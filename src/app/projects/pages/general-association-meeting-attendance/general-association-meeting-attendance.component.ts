@@ -232,7 +232,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     this.isDecisionMakerReview = this.model?.isDecisionMakerReviewStep()!;
     this.isManagerFinalReview = this.model?.isManagerFinalReviewStep()!;
 
-    if(this.requestType.value !== GeneralAssociationMeetingRequestTypeEnum.NEW && this.model?.oldFullSerial) {
+    if (this.requestType.value !== GeneralAssociationMeetingRequestTypeEnum.NEW && this.model?.oldFullSerial) {
       this.service.validateLicenseByRequestType(this.model!.requestType, this.model.oldFullSerial)
         .pipe(map(validated => {
           return (validated ? {
@@ -242,7 +242,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
         })).subscribe(ret => {
         this.selectedLicenses = [ret?.details!];
         this.hasSearchedForLicense = true;
-      })
+      });
     }
   }
 
@@ -309,8 +309,8 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
-    if(saveType === SaveTypes.DRAFT) {
-      if(this.requestType.value) {
+    if (saveType === SaveTypes.DRAFT) {
+      if (this.requestType.value) {
         return true;
       }
     } else {
@@ -385,7 +385,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
           this.resetForm$.next();
           this.requestType.setValue(requestTypeValue);
         }
-        if(!requestTypeValue) {
+        if (!requestTypeValue) {
           requestTypeValue = this.requestType && this.requestType.value;
         }
         if (requestTypeValue) {
@@ -732,6 +732,20 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
       if (this.model?.canCommit()) {
         this.readonly = false;
       }
+    }
+  }
+
+  canUpdateMeetingDate() {
+    return this.model?.taskDetails.isClaimed() && (this.isSupervisionAndControlReviewStep || this.isSupervisionManagerReviewStep);
+  }
+
+  getMeetingDateClass() {
+    if (this.readonly && this.canUpdateMeetingDate()) {
+      return {'input-disabled': false};
+    } else if (this.readonly || this.isCancel) {
+      return {'input-disabled': true};
+    } else {
+      return {'input-disabled': false};
     }
   }
 

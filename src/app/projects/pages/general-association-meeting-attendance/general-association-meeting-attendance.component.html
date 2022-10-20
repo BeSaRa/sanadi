@@ -155,8 +155,8 @@
                 <i class="input-group-text mdi mdi-calendar"></i>
                 <div #dpMeetingDate="angular-mydatepicker"
                      (dateChanged)="printConsole($event)"
-                     (click)="!readonly && dpMeetingDate.toggleCalendar()"
-                     [ngClass]="{'input-disabled': (readonly || isCancel)}"
+                     (click)="(!readonly || canUpdateMeetingDate()) && dpMeetingDate.toggleCalendar()"
+                     [ngClass]="getMeetingDateClass()"
                      [options]="datepickerOptionsMap.meetingDate"
                      angular-mydatepicker
                      class="form-control"

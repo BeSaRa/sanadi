@@ -121,12 +121,12 @@ export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAss
     return this.service!.completeTask(this, WFResponseType.COMPLETE, form, selectedAdministrativeBoardMembers, selectedGeneralAssociationMembers, agendaItems);
   }
 
-  approveWithSave(selectedInternalMembers: GeneralAssociationInternalMember[]): DialogRef {
-    return this.service!.approveTask(this, WFResponseType.APPROVE, selectedInternalMembers);
+  approveWithSave(selectedInternalMembers: GeneralAssociationInternalMember[], meetingDate: IMyDateModel, year: number): DialogRef {
+    return this.service!.approveTask(this, WFResponseType.APPROVE, selectedInternalMembers, meetingDate, year);
   }
 
-  initialApproveWithSave(selectedInternalMembers: GeneralAssociationInternalMember[]): DialogRef {
-    return this.service!.approveTask(this, WFResponseType.INITIAL_APPROVE, selectedInternalMembers);
+  initialApproveWithSave(selectedInternalMembers: GeneralAssociationInternalMember[], meetingDate: IMyDateModel, year: number): DialogRef {
+    return this.service!.approveTask(this, WFResponseType.INITIAL_APPROVE, selectedInternalMembers, meetingDate, year);
   }
 
   isSupervisionAndControlReviewStep(): boolean {
