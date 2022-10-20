@@ -1,3 +1,4 @@
+import { Profile } from '@app/models/profile';
 import { NpoDataInterceptor } from './../model-interceptors/npo-data-interceptor';
 import { BaseModel } from '@app/models/base-model';
 import { NpoDataService } from './../services/npo-data.service';
@@ -51,6 +52,7 @@ export class NpoData extends BaseModel<NpoData, NpoDataService> {
   founderList: FounderMembers[] = [];
   bankAccountList: NpoBankAccount[] = [];
   beneficiaryList: RealBeneficiary[] = [];
+  profileInfo!: Profile;
   activityTypeInfo!: AdminResult;
   nationalityInfo!: AdminResult;
   clearanceInfo!: AdminResult;

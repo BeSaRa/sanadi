@@ -1,3 +1,4 @@
+import { Profile } from '@app/models/profile';
 import { NpoData } from './../models/npo-data';
 import { AdminResult } from '../models/admin-result';
 import { DateUtils } from '../helpers/date-utils';
@@ -28,6 +29,7 @@ export class NpoDataInterceptor implements IModelInterceptor<NpoData> {
   private static _deleteBeforeSend(model: Partial<NpoData>): void {
     delete model.searchFields;
     delete model.activityTypeInfo;
+    delete model.profileInfo;
     delete model.clearanceInfo;
     delete model.disbandmentInfo;
     delete model.registrationAuthorityInfo;

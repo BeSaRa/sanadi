@@ -136,15 +136,18 @@
     <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
     <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
       <div class="d-flex flex-row">
-        <button (click)="delete($event, row, i)" class="icon-btn text-primary"
+        <button (click)="delete($event, row, i)" *ngIf="!readonly" class="icon-btn text-primary"
                 tooltip="{{lang.map.btn_delete}}"
                 [disabled]="readonly">
           <i class="mdi mdi-close-box"></i>
         </button>
-        <button (click)="edit($event, row, i)" class="icon-btn text-primary"
+        <button (click)="edit($event, row, i)" *ngIf="!readonly" class="icon-btn text-primary"
                 tooltip="{{lang.map.btn_edit}}"
                 [disabled]="readonly">
           <i class="mdi mdi-pen"></i>
+        </button>
+        <button (click)="view($event, row, i)" *ngIf="readonly" class="icon-btn text-primary" tooltip="{{lang.map.view}}">
+          <i class="mdi mdi-eye"></i>
         </button>
       </div>
     </td>
