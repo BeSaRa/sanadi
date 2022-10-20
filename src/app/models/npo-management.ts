@@ -44,7 +44,6 @@ export class NpoManagement
   unifiedEconomicRecord!: string;
   activityType!: number;
   establishmentDate!: string | IMyDateModel;
-  // TODO!: have to complete from the admin
   registrationAuthority!: number;
   registrationDate!: string | IMyDateModel;
   registrationNumber!: string;
@@ -144,7 +143,7 @@ export class NpoManagement
         englishName: controls ? [englishName, [
           CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
           Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')]] : englishName,
-        unifiedEconomicRecord: controls ? [unifiedEconomicRecord, [Validators.maxLength(150)]] : unifiedEconomicRecord,
+        unifiedEconomicRecord: controls ? [unifiedEconomicRecord, [Validators.required, Validators.maxLength(150)]] : unifiedEconomicRecord,
         activityType: controls ? [activityType, [Validators.required]] : activityType,
         registrationNumber: controls ? [registrationNumber, []] : registrationNumber,
         registrationAuthority: controls ? [registrationAuthority, []] : registrationAuthority,
@@ -184,5 +183,8 @@ export class NpoManagement
   }
   approve(): DialogRef {
     return this.service.approve(this, WFResponseType.APPROVE)
+  }
+  finalApprove(): DialogRef {
+    return this.service.approve(this, WFResponseType.FINAL_APPROVE)
   }
 }

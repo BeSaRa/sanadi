@@ -1,3 +1,5 @@
+import { Profile } from './../../../../models/profile';
+import { ProfileService } from '@app/services/profile.service';
 import { UserClickOn } from './../../../../enums/user-click-on.enum';
 import { takeUntil, switchMap } from 'rxjs/operators';
 import { NpoBankAccount } from './../../../../models/npo-bank-account';
@@ -41,6 +43,7 @@ import { AdminLookupService } from '@app/services/admin-lookup.service';
 import { AdminLookupTypeEnum } from '@app/enums/admin-lookup-type-enum';
 import { NPORequestType } from '@app/enums/service-request-types';
 import { Bank } from '@app/models/bank';
+import { ProfileTypes } from '@app/enums/profile-types.enum';
 
 @Component({
   selector: 'app-npo-management',
@@ -57,8 +60,7 @@ NpoManagementService
   NpoList: NpoData[] = [];
   // Clearance Type & Disbandment Type
   NPODecisionsList: Lookup[] = this.lookupService.listByCategory.NPODecisions;
-  // TODO! fill this list after done from admin
-  registrationAuthoritiesList = []
+  registrationAuthoritiesList: Profile[] = []
   form!: UntypedFormGroup;
   npoIdField: UntypedFormControl = new UntypedFormControl();
   bankDetailsTabStatus: ReadinessStatus = 'READY';
@@ -79,20 +81,13 @@ NpoManagementService
     contectInfo: {
       name: "contectInfoTab",
       langKey: "lbl_contact_info" as keyof ILanguageKeys,
-      validStatus: () => this.contectInfo.valid,
+      validStatus: () => this.contectInfo.valid && (!this.contactOfficerComponentRef || (this.contactOfficersTabStatus === 'READY' && this.contactOfficerComponentRef.list.length > 0)),
     },
     founderMember: {
       name: "founderMemberTab",
       langKey: "lbl_founder_members" as keyof ILanguageKeys,
       validStatus: () => {
         return !this.founderMemberComponentRef || (this.founderMemberTabStatus === 'READY' && this.founderMemberComponentRef.list.length > 0);
-      }
-    },
-    contactOfficer: {
-      name: "contactOfficerTab",
-      langKey: "contact_officers" as keyof ILanguageKeys,
-      validStatus: () => {
-        return !this.contactOfficerComponentRef || (this.contactOfficersTabStatus === 'READY' && this.contactOfficerComponentRef.list.length > 0);
       }
     },
     bankAccount: {
@@ -141,6 +136,7 @@ NpoManagementService
     private bankService: BankService,
     private dialog: DialogService,
     private employeeService: EmployeeService,
+    private profileService: ProfileService,
     public lang: LangService) {
     super();
   }
@@ -160,7 +156,6 @@ NpoManagementService
       this.readonly = true;
       return;
     }
-
     if (this.openFrom === OpenFrom.USER_INBOX) {
       if (this.employeeService.isCharityManager()) {
         this.readonly = false;
@@ -188,6 +183,9 @@ NpoManagementService
   }
   _initComponent(): void {
     this._buildForm();
+    this.profileService.getByRegistrationAuthorities().subscribe((data: any) => {
+      this.registrationAuthoritiesList = data
+    })
     this.npoDataService.loadAsLookups().subscribe(data => {
       this.NpoList = data
     })
@@ -199,7 +197,7 @@ NpoManagementService
     })
     if (this.isRegistrationAuthority) {
       this.npoIdField.setValue(
-        8 // TODO!: set regestered user id
+        this.employeeService.getProfile()?.profileDetails.entityId
       )
     }
   }
@@ -211,7 +209,7 @@ NpoManagementService
     });
   }
   _afterBuildForm(): void {
-    console.log('_afterBuildForm')
+    this.handleReadonly();
   }
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
     const invalidTabs = this._getInvalidTabs();
@@ -244,9 +242,7 @@ NpoManagementService
     const value = new NpoManagement().clone({
       ...this.model,
       ...this.basicInfo.value,
-      ...this.contectInfo.value,
-      // TODO!: fix this when finising the related admin page
-      registrationAuthority: 0
+      ...this.contectInfo.value
     })
     value.bankAccountList = this.bankAccountComponentRef.list;
     value.contactOfficerList = this.contactOfficerComponentRef.list;
@@ -414,7 +410,6 @@ NpoManagementService
           email: f.email,
           phone: f.phone,
           extraPhone: f.extraPhone,
-          joinDate: f.joinDate,
           nationality: f.nationality,
         });
         return ob;
@@ -523,7 +518,7 @@ NpoManagementService
       this.disbandmentDateField.setValidators([CustomValidators.required])
     }
     if (this.isNew) {
-      // this.registrationAuthorityField.setValidators([])
+      this.registrationAuthorityField.setValidators([CustomValidators.required])
       this.registrationDateField.setValidators([CustomValidators.required])
       this.registrationNumberField.setValidators([
         CustomValidators.required, Validators.maxLength(150),
@@ -532,8 +527,11 @@ NpoManagementService
       this.establishmentDateField.setValidators([CustomValidators.required])
     }
   }
+  get userProfile() {
+    return this.employeeService.getProfile()
+  }
   get isRegistrationAuthority() {
-    return true
+    return this.employeeService.getProfile()?.profileType == ProfileTypes.NON_PROFIT_ORGANIZATIONS
   }
   get isNew() {
     return this.requestTypeField.value == NPORequestType.NEW
