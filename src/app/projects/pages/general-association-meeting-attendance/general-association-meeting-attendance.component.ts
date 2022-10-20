@@ -309,24 +309,30 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
-    if (this.selectedAdministrativeBoardMembers && this.selectedAdministrativeBoardMembers.length < 1) {
-      this.dialog.error(this.lang.map.you_should_add_at_least_one_person_to_administrative_board_members);
-      return false;
-    }
+    if(saveType === SaveTypes.DRAFT) {
+      if(this.requestType.value) {
+        return true;
+      }
+    } else {
+      if (this.selectedAdministrativeBoardMembers && this.selectedAdministrativeBoardMembers.length < 1) {
+        this.dialog.error(this.lang.map.you_should_add_at_least_one_person_to_administrative_board_members);
+        return false;
+      }
 
-    if (this.selectedGeneralAssociationMembers && this.selectedGeneralAssociationMembers.length < 1) {
-      this.dialog.error(this.lang.map.you_should_add_at_least_one_person_to_general_association_members);
-      return false;
-    }
+      if (this.selectedGeneralAssociationMembers && this.selectedGeneralAssociationMembers.length < 1) {
+        this.dialog.error(this.lang.map.you_should_add_at_least_one_person_to_general_association_members);
+        return false;
+      }
 
-    if (this.agendaItems && this.agendaItems.length < 1) {
-      this.dialog.error(this.lang.map.you_should_add_at_least_one_item_to_meeting_agenda);
-      return false;
-    }
+      if (this.agendaItems && this.agendaItems.length < 1) {
+        this.dialog.error(this.lang.map.you_should_add_at_least_one_item_to_meeting_agenda);
+        return false;
+      }
 
-    if (this.isSupervisionAndControlReviewStep && this.selectedInternalUsers && this.selectedInternalUsers.length < 1) {
-      this.dialog.error(this.lang.map.you_should_add_at_least_one_member_to_internal_users);
-      return false;
+      if (this.isSupervisionAndControlReviewStep && this.selectedInternalUsers && this.selectedInternalUsers.length < 1) {
+        this.dialog.error(this.lang.map.you_should_add_at_least_one_member_to_internal_users);
+        return false;
+      }
     }
 
     return this.form.valid;
