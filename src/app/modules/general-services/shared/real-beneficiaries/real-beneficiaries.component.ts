@@ -84,12 +84,14 @@ export class RealBeneficiariesComponent extends ListModelComponent<RealBeneficia
   passportColumns = ['passportNumber', 'passportDate', 'passportExpiryDate'];
   controls: (ControlWrapper & { isDisplayed?: boolean })[] = [
     {
+      gridClass: 'col-sm-6',
       controlName: 'arabicName',
       label: this.lang.map.arabic_name,
       type: 'text',
       isDisplayed: true,
     },
     {
+      gridClass: 'col-sm-6',
       controlName: 'englishName',
       label: this.lang.map.english_name,
       type: 'text',
@@ -115,34 +117,6 @@ export class RealBeneficiariesComponent extends ListModelComponent<RealBeneficia
       load: this.lookupService.listByCategory.Nationality,
       onChange: this._handleChangeNationality
     },
-
-    {
-      isDisplayed: true,
-      controlName: 'zoneNumber',
-      label: this.lang.map.lbl_zone,
-      type: 'text',
-    },
-    {
-      isDisplayed: true,
-      controlName: 'streetNumber',
-      label: this.lang.map.lbl_street,
-      type: 'text',
-    },
-
-    {
-      isDisplayed: true,
-      controlName: 'buildingNumber',
-      label: this.lang.map.building_number,
-      type: 'text',
-    },
-    {
-      isDisplayed: true,
-      controlName: 'address',
-      label: this.lang.map.lbl_address,
-      type: 'text',
-    },
-
-
 
     {
       isDisplayed: true,
@@ -182,16 +156,51 @@ export class RealBeneficiariesComponent extends ListModelComponent<RealBeneficia
       type: 'date',
     },
     {
+      gridClass: 'col-sm-6',
       isDisplayed: true,
       controlName: 'startDate',
       label: this.lang.map.date_becoming_real_benefeciary,
       type: 'date',
     },
     {
+      gridClass: 'col-sm-6',
       isDisplayed: true,
       controlName: 'lastUpdateDate',
       label: this.lang.map.date_of_last_update_real_benefeciary,
       type: 'date',
+    },
+    {
+      isDisplayed: true,
+      controlName: '',
+      gridClass: 'col-12',
+      label: this.lang.map.lbl_national_address,
+      type: 'title',
+    },
+    {
+      isDisplayed: true,
+      controlName: 'zoneNumber',
+      label: this.lang.map.lbl_zone,
+      type: 'text',
+    },
+    {
+      isDisplayed: true,
+      controlName: 'streetNumber',
+      label: this.lang.map.lbl_street,
+      type: 'text',
+    },
+
+    {
+      isDisplayed: true,
+      controlName: 'buildingNumber',
+      label: this.lang.map.building_number,
+      type: 'text',
+    },
+    {
+      gridClass: 'col-12',
+      isDisplayed: true,
+      controlName: 'address',
+      label: this.lang.map.lbl_address,
+      type: 'textarea',
     },
   ];
   columns = [

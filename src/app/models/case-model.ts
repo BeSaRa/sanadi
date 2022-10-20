@@ -1,3 +1,4 @@
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
 import { AdminResult } from './admin-result';
 import { TaskDetails } from './task-details';
 import { FileNetModel } from './FileNetModel';
@@ -299,7 +300,14 @@ export abstract class CaseModel<S extends BaseGenericEService<T>, T extends File
     }
     return this.inboxService!.sendTaskToMultiple(this.getCaseId(), { taskName: taskName }, service);
   }
-
+  getRejectCommentLabel(caseType: number) : keyof ILanguageKeys {
+    switch (caseType) {
+      case CaseTypes.NPO_MANAGEMENT:
+        return 'reject_reason'
+      default:
+        return 'comment'
+    }
+  }
   sendToUser(): DialogRef {
     return this.inboxService!.sendToUser(this.taskDetails.tkiid, this.caseType, false, this);
   }
@@ -357,7 +365,7 @@ export abstract class CaseModel<S extends BaseGenericEService<T>, T extends File
   }
 
   reject(): DialogRef {
-    return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.REJECT, false, this);
+    return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.REJECT, false, this, this.getRejectCommentLabel(this.caseType));
   }
 
   organizationReject(): DialogRef {

@@ -90,7 +90,7 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
   itemDetails!: string;
 
   searchFields: ISearchFieldsMap<QueryResult> = {
-    ...normalSearchFields(['BD_FULL_SERIAL']),
+    ...normalSearchFields(['BD_FULL_SERIAL', 'BD_SUBJECT']),
     ...infoSearchFields(['teamInfo', 'fromUserInfo', 'displayNameInfo']),
     ACTIVATED: (text, model) => {
       let date = (new DatePipe('en')).transform(model.ACTIVATED);
