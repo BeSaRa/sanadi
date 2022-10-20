@@ -125,6 +125,10 @@ export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAss
     return this.service!.approveTask(this, WFResponseType.APPROVE, selectedInternalMembers);
   }
 
+  initialApproveWithSave(selectedInternalMembers: GeneralAssociationInternalMember[]): DialogRef {
+    return this.service!.approveTask(this, WFResponseType.INITIAL_APPROVE, selectedInternalMembers);
+  }
+
   isSupervisionAndControlReviewStep(): boolean {
     return this.taskDetails?.name === GeneralAssociationMeetingStepNameEnum.SUPERVISION_AND_CONTROL_REVIEW;
   }

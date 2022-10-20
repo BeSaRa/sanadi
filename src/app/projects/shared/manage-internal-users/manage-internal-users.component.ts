@@ -186,8 +186,8 @@ export class ManageInternalUsersComponent implements OnInit {
   }
 
   makeDecisionMaker(generalAssociationInternalMember: GeneralAssociationInternalMember): void {
-    this.selectedInternalUsers.filter(u => u.memberType === this.internalUserType.IS_DECISION_MAKER).forEach(u => u.memberType = this.internalUserType.IS_NOT_DECISION_MAKER);
-    this.selectedInternalUsers.find(u => u.id === generalAssociationInternalMember.id)!.memberType = this.internalUserType.IS_DECISION_MAKER;
+    this.selectedInternalUsers.filter(u => u.memberType === GeneralAssociationInternalMemberTypeEnum.IS_DECISION_MAKER).forEach(u => u.memberType = GeneralAssociationInternalMemberTypeEnum.IS_NOT_DECISION_MAKER);
+    this.selectedInternalUsers.find(u => u.domainName === generalAssociationInternalMember.domainName)!.memberType = GeneralAssociationInternalMemberTypeEnum.IS_DECISION_MAKER;
   }
 
   get isUnderProcessingLicense() {
@@ -200,5 +200,9 @@ export class ManageInternalUsersComponent implements OnInit {
 
   isSupervisionAndControlRework() {
     return this.caseStepName === GeneralAssociationMeetingStepNameEnum.SUPERVISION_AND_CONTROL_REWORK;
+  }
+
+  isSupervisionManagerReview() {
+    return this.caseStepName === GeneralAssociationMeetingStepNameEnum.SUPERVISION_MANAGER_REVIEW;
   }
 }

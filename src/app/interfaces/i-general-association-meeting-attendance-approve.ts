@@ -3,4 +3,5 @@ import {GeneralAssociationInternalMember} from '@app/models/general-association-
 
 export interface IGeneralAssociationMeetingAttendanceApprove {
   approveWithSave(selectedInternalMembers: GeneralAssociationInternalMember[]): DialogRef;
+  initialApproveWithSave(selectedInternalMembers: GeneralAssociationInternalMember[]): DialogRef;
 }
