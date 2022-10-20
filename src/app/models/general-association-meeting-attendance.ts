@@ -165,6 +165,10 @@ export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAss
     return !this.isSendToMember && this.isDecisionMakerReviewStep() || this.isMemberReviewStep();
   }
 
+  canAddOrRemoveMeetingPoints(): boolean {
+    return !this.isSendToMember && this.isDecisionMakerReviewStep();
+  }
+
   isSentToMember(): boolean {
     return this.isSendToMember;
   }

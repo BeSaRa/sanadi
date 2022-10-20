@@ -334,7 +334,7 @@
               <div class="col-md-12">
                 <h1 class="h6 text-primary m-0 d-inline-block">{{lang.map.main_meeting_points}}</h1>
                 <button class="btn btn-link outline-none"
-                        [disabled]="!this.model?.canEditMeetingPoints()"
+                        [disabled]="!this.model?.canAddOrRemoveMeetingPoints()"
                         tooltip="{{lang.map.add_main_meeting_point}}" (click)="addMainItem()">
                   <i class="mdi mdi-plus-box"></i></button>
               </div>
@@ -346,7 +346,7 @@
                   <div class="col-md-12">
                     <div class="main-point-container">
                       <button class="btn btn-link outline-none"
-                              [disabled]="!this.model?.canEditMeetingPoints()"
+                              [disabled]="!this.model?.canAddOrRemoveMeetingPoints()"
                               [ngClass]="getRemoveMainItemClass()"
                               tooltip="{{lang.map.delete_main_meeting_point}}" (click)="removeMainItem(i)">
                         <i class="mdi mdi-close-circle"></i></button>
@@ -367,7 +367,7 @@
                             <div class="col">
                               <h1 class="h6 text-primary m-0 d-inline-block">{{lang.map.sub_points}}</h1>
                               <button class="btn btn-link outline-none"
-                                      [disabled]="!this.model?.canEditMeetingPoints()"
+                                      [disabled]="!this.model?.canAddOrRemoveMeetingPoints()"
                                       tooltip="{{lang.map.add_sub_meeting_point}}" (click)="addSubItem(i)">
                                 <i class="mdi mdi-plus-box"></i></button>
                             </div>
@@ -420,7 +420,7 @@
                                 </div>
                               </div>
                               <button class="btn btn-link outline-none"
-                                      [disabled]="!this.model?.canEditMeetingPoints()"
+                                      [disabled]="!this.model?.canAddOrRemoveMeetingPoints()"
                                       [ngClass]="getRemoveSubItemClass()"
                                       tooltip="{{lang.map.delete_sub_meeting_point}}" (click)="removeSubItem(i, j)">
                                 <i class="mdi mdi-close-circle"></i></button>
