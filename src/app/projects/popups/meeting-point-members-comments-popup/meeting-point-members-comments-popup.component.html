@@ -28,6 +28,15 @@
                 sortable-header> {{lang.map.comment}}</th>
             <td *cdkCellDef="let row" cdk-cell> {{row.comment}} </td>
           </ng-container>
+          <ng-container cdkColumnDef="respectTerms">
+            <th *cdkHeaderCellDef cdk-header-cell
+                sortable-header> {{lang.map.respect_terms}}</th>
+            <td *cdkCellDef="let row" cdk-cell>
+              <div *ngIf="row.comment">
+                <input class="form-check-input" type="checkbox" [checked]="row.respectTerms" disabled>
+              </div>
+            </td>
+          </ng-container>
           <tr *cdkHeaderRowDef="displayedColumns" cdk-header-row></tr>
           <tr *cdkRowDef="let row; columns: displayedColumns;" cdk-row></tr>
           <!--suppress HtmlUnknownBooleanAttribute -->

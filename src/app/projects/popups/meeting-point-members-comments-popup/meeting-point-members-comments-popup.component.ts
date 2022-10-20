@@ -9,7 +9,7 @@ import {MeetingPointMemberComment} from '@app/models/meeting-point-member-commen
   styleUrls: ['./meeting-point-members-comments-popup.component.scss']
 })
 export class MeetingPointMembersCommentsPopupComponent implements OnInit {
-  displayedColumns: string[] = ['member', 'comment'];
+  displayedColumns: string[] = ['member', 'comment', 'respectTerms'];
   membersComments: MeetingPointMemberComment[] = [];
   constructor(
     @Inject(DIALOG_DATA_TOKEN) private data: {
