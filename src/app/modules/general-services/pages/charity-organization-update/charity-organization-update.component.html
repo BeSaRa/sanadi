@@ -196,22 +196,6 @@
             formControlName="establishmentDate"
           />
         </div>
-        <div class="col-sm-6 col-md-4 mb-4 position-relative">
-          <label
-            asteriskIfRequired="registrationAuthority"
-            for="registrationAuthority"
-            class="form-label"
-            >{{ lang.map.registration_authority }}</label
-          >
-          <input
-            type="text"
-            class="form-control"
-            id="registrationAuthority"
-            validationClasses="registrationAuthority"
-            formControlName="registrationAuthority"
-            [readonly]="true"
-          />
-        </div>
 
         <div class="col-sm-6 col-md-4 mb-4 position-relative">
           <file-uploader
@@ -229,16 +213,21 @@
           >
           </file-uploader>
         </div>
+
         <div class="col-sm-6 col-md-4 mb-4 position-relative">
-          <label for="registrationAuthority" class="form-label">{{
-            lang.map.registered_by
-          }}</label>
+          <label
+            asteriskIfRequired="registrationAuthority"
+            for="registrationAuthority"
+            class="form-label"
+            >{{ lang.map.registration_authority }}</label
+          >
           <input
             type="text"
             class="form-control"
             id="registrationAuthority"
-            [readonly]="true"
+            validationClasses="registrationAuthority"
             formControlName="registrationAuthority"
+            [readonly]="true"
           />
         </div>
         <div class="col-sm-6 col-md-4 mb-4 position-relative">

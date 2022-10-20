@@ -89,17 +89,19 @@
       ></app-field-error-message>
     </div>
   </div>
-  <div class="row">
-    <div class="col-12 text-center">
+    <div class="col-12 d-flex flex-row align-items-center justify-content-center">
       <button
         (click)="saveOfficer()"
         [disabled]="!officerForm.valid"
-        class="btn btn-primary mb-4"
+        class="btn btn-primary m-2"
       >
         {{ selectedOfficer ? lang.map.update_officer : lang.map.add_officer }}
       </button>
+
+    <button (click)="cancel()" class="btn btn-secondary m-2">
+      {{ lang.map.btn_cancel }}
+    </button>
     </div>
-  </div>
 </form>
 <div class="row">
   <div class="col-12">

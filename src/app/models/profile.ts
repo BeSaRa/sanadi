@@ -32,6 +32,8 @@ export class Profile extends BaseModel<Profile, ProfileService> {
   enDesc!: string;
   profileCode!: string;
   registrationAuthority!: number;
+  registrationAuthorityInfo!: AdminResult;
+  profileTypeInfo!: AdminResult;
   status!: number;
   statusInfo!: AdminResult;
   statusDateModified!: string | IMyDateModel;

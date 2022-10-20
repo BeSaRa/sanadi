@@ -41,11 +41,21 @@
           [validationClasses]="control.controlName">{{ control.label }}</label>
         <div class="input-group">
           <i class="input-group-text mdi mdi-calendar"></i>
-          <div class="form-control" [formControlName]="control.controlName" [ngClass]="{ 'input-disabled': readonly }"
-            [disabled]="readonly" [id]="control.controlName" [options]="datepickerOptionsMap[control.controlName]"
-            (click)="!readonly && dp.toggleCalendar()" #dp="angular-mydatepicker" angular-mydatepicker
-            [validationClasses]="control.controlName"></div>
-          <app-field-error-message [controlName]="control.controlName"></app-field-error-message>
+          <div
+            class="form-control"
+            [formControlName]="control.controlName"
+            [ngClass]="{ 'input-disabled': readonly || form.get(control.controlName)?.disabled }"
+            [disabled]="readonly"
+            [id]="control.controlName"
+            [options]="datepickerOptionsMap[control.controlName]"
+            (click)="!readonly && dp.toggleCalendar()"
+            #dp="angular-mydatepicker"
+            angular-mydatepicker
+            [validationClasses]="control.controlName"
+          ></div>
+          <app-field-error-message
+            [controlName]="control.controlName"
+          ></app-field-error-message>
         </div>
       </ng-container>
       <ng-container *ngSwitchCase="'title'">

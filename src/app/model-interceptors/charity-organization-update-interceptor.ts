@@ -24,9 +24,11 @@ import { WorkAreaInterceptor } from './workarea-interceptor';
 export class CharityOrganizationUpdateInterceptor implements IModelInterceptor<CharityOrganizationUpdate> {
   caseInterceptor?: IModelInterceptor<CharityOrganizationUpdate> | undefined;
   send(model: Partial<CharityOrganizationUpdate>): Partial<CharityOrganizationUpdate> {
-
+    model.registrationAuthority = model.registrationAuthorityInfo?.id;
     delete model.service;
     delete model.followUpService;
+    delete model.activityTypeInfo;
+    delete model.registrationAuthorityInfo;
     const foreignAidClassificationInterceptor = new ForeignAidClassificationInterceptor();
     const charityReportInterceptor = new CharityReportInterceptor();
     const charityDecisionInterceptor = new CharityDecisionInterceptor();
