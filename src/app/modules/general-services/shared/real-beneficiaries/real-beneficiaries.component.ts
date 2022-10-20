@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
+import { Nationalities } from '@app/enums/nationalities.enum';
 import { ListModelComponent } from '@app/generics/ListModel-component';
 import { DateUtils } from '@app/helpers/date-utils';
 import { ControlWrapper } from '@app/interfaces/i-control-wrapper';
@@ -17,7 +18,7 @@ import { CustomValidators } from '@app/validators/custom-validators';
   styleUrls: ['./real-beneficiaries.component.scss'],
 })
 export class RealBeneficiariesComponent extends ListModelComponent<RealBeneficiary> {
-  QATARI_NATIONALITY = 1;
+  QATARI_NATIONALITY = Nationalities.QATARI;
   private _handleChangeNationality = (lookupKey: string | number) => {
     const natinoality = this.lookupService.listByCategory.Nationality.find(e => e.lookupKey === lookupKey);
     this.controls.map(e => {
@@ -84,12 +85,14 @@ export class RealBeneficiariesComponent extends ListModelComponent<RealBeneficia
   passportColumns = ['passportNumber', 'passportDate', 'passportExpiryDate'];
   controls: (ControlWrapper & { isDisplayed?: boolean })[] = [
     {
+      gridClass: 'col-sm-6',
       controlName: 'arabicName',
       label: this.lang.map.arabic_name,
       type: 'text',
       isDisplayed: true,
     },
     {
+      gridClass: 'col-sm-6',
       controlName: 'englishName',
       label: this.lang.map.english_name,
       type: 'text',
@@ -115,34 +118,6 @@ export class RealBeneficiariesComponent extends ListModelComponent<RealBeneficia
       load: this.lookupService.listByCategory.Nationality,
       onChange: this._handleChangeNationality
     },
-
-    {
-      isDisplayed: true,
-      controlName: 'zoneNumber',
-      label: this.lang.map.lbl_zone,
-      type: 'text',
-    },
-    {
-      isDisplayed: true,
-      controlName: 'streetNumber',
-      label: this.lang.map.lbl_street,
-      type: 'text',
-    },
-
-    {
-      isDisplayed: true,
-      controlName: 'buildingNumber',
-      label: this.lang.map.building_number,
-      type: 'text',
-    },
-    {
-      isDisplayed: true,
-      controlName: 'address',
-      label: this.lang.map.lbl_address,
-      type: 'text',
-    },
-
-
 
     {
       isDisplayed: true,
@@ -182,16 +157,51 @@ export class RealBeneficiariesComponent extends ListModelComponent<RealBeneficia
       type: 'date',
     },
     {
+      gridClass: 'col-sm-6',
       isDisplayed: true,
       controlName: 'startDate',
       label: this.lang.map.date_becoming_real_benefeciary,
       type: 'date',
     },
     {
+      gridClass: 'col-sm-6',
       isDisplayed: true,
       controlName: 'lastUpdateDate',
       label: this.lang.map.date_of_last_update_real_benefeciary,
       type: 'date',
+    },
+    {
+      isDisplayed: true,
+      controlName: '',
+      gridClass: 'col-12',
+      label: this.lang.map.lbl_national_address,
+      type: 'title',
+    },
+    {
+      isDisplayed: true,
+      controlName: 'zoneNumber',
+      label: this.lang.map.lbl_zone,
+      type: 'text',
+    },
+    {
+      isDisplayed: true,
+      controlName: 'streetNumber',
+      label: this.lang.map.lbl_street,
+      type: 'text',
+    },
+
+    {
+      isDisplayed: true,
+      controlName: 'buildingNumber',
+      label: this.lang.map.building_number,
+      type: 'text',
+    },
+    {
+      gridClass: 'col-12',
+      isDisplayed: true,
+      controlName: 'address',
+      label: this.lang.map.lbl_address,
+      type: 'textarea',
     },
   ];
   columns = [
@@ -221,8 +231,9 @@ export class RealBeneficiariesComponent extends ListModelComponent<RealBeneficia
     this.form.patchValue(row);
   }
   _beforeAdd(row: RealBeneficiary): RealBeneficiary | null {
-    const natinoality = this.lookupService.listByCategory.Nationality.find(e => e.id === row.nationality);
+    const natinoality = this.lookupService.listByCategory.Nationality.find(e => e.lookupKey === row.nationality);
     const field = (natinoality?.lookupKey === this.QATARI_NATIONALITY) ? 'identificationNumber' : 'passportNumber';
+    console.log({ field, row, natinoality });
     if (this._list.findIndex((e) => e[field] === row[field]) !== -1 && (this.editRecordIndex === -1)) {
       this.toast.alert(this.lang.map.msg_duplicated_item);
       return null;

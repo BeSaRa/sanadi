@@ -7,6 +7,7 @@ import { BaseModel } from './base-model';
 import { CharityBranch } from './charity-branch';
 import { CharityOrganizationUpdate } from './charity-organization-update';
 import { OrganizationOfficer } from './organization-officer';
+import { Profile } from './profile';
 
 const interceptor = new CharityOrganizationInterceptor();
 
@@ -23,12 +24,13 @@ export class CharityOrganization extends BaseModel<
   );
   langService: LangService = FactoryService.getService('LangService');
   id!: number;
+  profileId!: number;
+  profileInfo!: Profile;
   updatedBy!: number;
   clientData!: string;
   arName!: string;
   enName!: string;
   activityType!: number;
-  registrationAuthority!: number;
   registrationDate!: string;
   shortName!: string;
   establishmentDate!: string;
@@ -65,7 +67,7 @@ export class CharityOrganization extends BaseModel<
       arName,
       enName,
       activityType,
-      registrationAuthority,
+      profileInfo,
       registrationDate,
       shortName,
       establishmentDate,
@@ -89,13 +91,15 @@ export class CharityOrganization extends BaseModel<
       branchList,
       contactOfficer,
       complianceOfficer,
+      profileId
     } = this;
     const model = new CharityOrganizationUpdate().clone({
       charityId: id,
       arabicName: arName,
       englishName: enName,
       activityType,
-      registrationAuthority,
+      registrationAuthority: profileId,
+      registrationAuthorityInfo: profileInfo.registrationAuthorityInfo,
       shortName,
       establishmentDate,
       publishDate,

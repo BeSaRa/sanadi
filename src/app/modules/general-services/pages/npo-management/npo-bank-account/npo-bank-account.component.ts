@@ -1,3 +1,4 @@
+import { CurrencyEnum } from '@app/enums/currency-enum';
 import { Bank } from './../../../../../models/bank';
 import { NpoBankAccount } from './../../../../../models/npo-bank-account';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
@@ -93,8 +94,11 @@ export class NpoBankAccountComponent implements OnInit {
   private listenToAdd() {
     this.add$.pipe(takeUntil(this.destroy$))
       .subscribe(() => {
+        console.log('asaf')
         this.viewOnly = false;
-        this.recordChanged$.next(new NpoBankAccount());
+        const modal = new NpoBankAccount();
+        modal.currency = CurrencyEnum.UNITED_STATE_DOLLAR;
+        this.recordChanged$.next(modal);
       });
   }
 
@@ -152,6 +156,17 @@ export class NpoBankAccountComponent implements OnInit {
 
     validForm$.pipe(
       takeUntil(this.destroy$),
+      filter((form) => {
+        const valid = this._list.findIndex(f => f.accountNumber == form.value.accountNumber) == -1;
+        !valid && this.dialogService
+          .error(this.lang.map.msg_user_identifier_is_already_exist)
+          .onAfterClose$
+          .pipe(take(1))
+          .subscribe(() => {
+            this.form.get('bankAccount')?.markAllAsTouched();
+          });
+        return valid
+      }),
       map(() => {
         return (this.form.get('bankAccount.0')) as UntypedFormArray;
       }),

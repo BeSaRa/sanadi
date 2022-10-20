@@ -1,10 +1,10 @@
+import { NpoDataInterceptor } from './../model-interceptors/npo-data-interceptor';
 import { BaseModel } from '@app/models/base-model';
 import { NpoDataService } from './../services/npo-data.service';
 import { FactoryService } from './../services/factory.service';
 import { INames } from './../interfaces/i-names';
 import { LangService } from '@app/services/lang.service';
 import { InterceptModel } from "@decorators/intercept-model";
-import { JobTitleInterceptor } from "@app/model-interceptors/job-title-interceptor";
 import { IMyDateModel } from 'angular-mydatepicker';
 import { AdminResult } from './admin-result';
 import { FounderMembers } from './founder-members';
@@ -12,7 +12,7 @@ import { NpoBankAccount } from './npo-bank-account';
 import { NpoContactOfficer } from './npo-contact-officer';
 import { RealBeneficiary } from './real-beneficiary';
 
-const interceptor: JobTitleInterceptor = new JobTitleInterceptor()
+const interceptor: NpoDataInterceptor = new NpoDataInterceptor()
 
 @InterceptModel({
   receive: interceptor.receive,
@@ -56,6 +56,7 @@ export class NpoData extends BaseModel<NpoData, NpoDataService> {
   clearanceInfo!: AdminResult;
   disbandmentInfo!: AdminResult;
   registrationAuthorityInfo!: AdminResult;
+
   constructor() {
     super();
     this.service = FactoryService.getService('NpoDataService');

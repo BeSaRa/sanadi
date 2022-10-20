@@ -1,9 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { OrganizationOfficer } from '@app/models/organization-officer';
-import { DialogService } from '@app/services/dialog.service';
 import { EmployeeService } from '@app/services/employee.service';
 import { LangService } from '@app/services/lang.service';
+import { ToastService } from '@app/services/toast.service';
 import { CustomValidators } from '@app/validators/custom-validators';
 
 @Component({
@@ -38,7 +38,7 @@ export class OrganizationOfficersComponent implements OnInit {
     private fb: UntypedFormBuilder,
     public lang: LangService,
     private employeeService: EmployeeService,
-    private dialog: DialogService
+    private toast: ToastService
   ) { }
 
   ngOnInit(): void {
@@ -104,20 +104,17 @@ export class OrganizationOfficersComponent implements OnInit {
         this.resetOfficerForm();
         return;
       }
+      this.toast.error(this.lang.map.selected_item_already_exists);
 
     }
-    const notExisted = !this.selectedOrganizationOfficers
-      .filter((x) => x.identificationNumber !== officer.identificationNumber)
-      .includes(officer);
-    if (notExisted) {
+    else {
       this.selectedOrganizationOfficers.splice(this.selectedOfficerIndex!, 1);
       this.selectedOrganizationOfficers =
         this.selectedOrganizationOfficers.concat(officer);
       this.selectedOfficer = null;
       this.selectedOfficerIndex = null;
-      return;
+      this.resetOfficerForm();
     }
-    this.dialog.error(this.lang.map.selected_item_already_exists);
   }
   removeOfficer(event: MouseEvent, model: OrganizationOfficer) {
     event.preventDefault();
@@ -149,5 +146,9 @@ export class OrganizationOfficersComponent implements OnInit {
       officerExtraPhone: officer.extraPhone,
     };
   }
-
+  cancel() {
+    this.resetOfficerForm();
+    this.selectedOfficer = null;
+    this.selectedOfficerIndex = null;
+  }
 }

@@ -183,13 +183,23 @@ EmploymentService
       ...this.model,
     });
   }
+  private _updateModelAfterSave(model: Employment): void {
+    if ((this.openFrom === OpenFrom.USER_INBOX || this.openFrom === OpenFrom.TEAM_INBOX) && this.model?.taskDetails && this.model.taskDetails.tkiid) {
+      this.service.getTask(this.model.taskDetails.tkiid)
+        .subscribe((model) => {
+          this.model = model;
+        });
+    } else {
+      this.model = model;
+    }
+    this.employees = [...model.employeeInfoDTOs];
+  }
   _afterSave(
     model: Employment,
     saveType: SaveTypes,
     operation: OperationTypes
   ): void {
-    this.model = model;
-    this.employees = [...model.employeeInfoDTOs];
+    this._updateModelAfterSave(model);
     if (
       (operation === OperationTypes.CREATE && saveType === SaveTypes.FINAL) ||
       (operation === OperationTypes.UPDATE && saveType === SaveTypes.COMMIT)

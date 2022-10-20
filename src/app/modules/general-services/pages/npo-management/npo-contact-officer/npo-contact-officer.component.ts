@@ -143,6 +143,17 @@ export class NpoContactOfficerComponent implements OnInit, OnDestroy {
 
     validForm$.pipe(
       takeUntil(this.destroy$),
+      filter((form) => {
+        const valid = this._list.findIndex(c => c.identificationNumber == form.value.identificationNumber) == -1;
+        !valid && this.dialogService
+          .error(this.lang.map.msg_user_identifier_is_already_exist)
+          .onAfterClose$
+          .pipe(take(1))
+          .subscribe(() => {
+            this.form.get('contactOfficers')?.markAllAsTouched();
+          });
+        return valid
+      }),
       map(() => {
         return (this.form.get('contactOfficers.0')) as UntypedFormArray;
       }),

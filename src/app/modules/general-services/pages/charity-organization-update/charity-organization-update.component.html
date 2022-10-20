@@ -15,53 +15,53 @@
       <div class="row">
         <div class="col-sm-6 col-md-4">
           <label
-            [asteriskIfRequired]="'updateSection'"
+            asteriskIfRequired="updateSection"
             for="updateSection"
             class="form-label"
-            >{{ lang.map.request_type }}</label
+            >{{ lang.map.section }}</label
           >
           <ng-select
             [selectOnTab]="true"
-            [labelForId]="'updateSection'"
+            labelForId="updateSection"
             [clearable]="true"
             placeholder="{{ lang.map.select }}"
-            [id]="'updateSection'"
+            id="updateSection"
             [readonly]="readonly"
             [notFoundText]="lang.map.msg_not_found"
             appendTo="body"
-            [validationClasses]="'updateSection'"
-            [formControlName]="'updateSection'"
+            validationClasses="updateSection"
+            formControlName="updateSection"
             (change)="handleRequestTypeChange($event, true)"
           >
             <ng-option
-              *ngFor="let type of requestTypes"
+              *ngFor="let type of updateSections"
               [disabled]="!type.isActive()"
               [value]="type.lookupKey"
               >{{ type.getName() }}</ng-option
             >
           </ng-select>
           <app-field-error-message
-            [controlName]="'updateSection'"
+            controlName="updateSection"
           ></app-field-error-message>
         </div>
-        <div class="col-sm-6 col-md-4" *ngIf="requestTypeForm.value !== null">
+        <div class="col-sm-6 col-md-4" *ngIf="updateSectionField.value !== null">
           <label
-            [asteriskIfRequired]="'charityId'"
+            asteriskIfRequired="charityId"
             for="charityId"
             class="form-label"
             >{{ lang.map.organization }}</label
           >
           <ng-select
             [selectOnTab]="true"
-            [labelForId]="'charityId'"
+            labelForId="charityId"
             [readonly]="readonly"
             [clearable]="true"
             placeholder="{{ lang.map.select }}"
-            [id]="'charityId'"
+            id="charityId"
             [notFoundText]="lang.map.msg_not_found"
             appendTo="body"
-            [validationClasses]="'charityId'"
-            [formControlName]="'charityId'"
+            validationClasses="charityId"
+            formControlName="charityId"
             (change)="handleSelectCharityOrganization($event)"
           >
             <ng-option
@@ -71,7 +71,7 @@
             >
           </ng-select>
           <app-field-error-message
-            [controlName]="'charityId'"
+            controlName="charityId"
           ></app-field-error-message>
         </div>
       </div>
@@ -141,7 +141,7 @@
         <div class="col-sm-6 col-md-4 mb-4 position-relative">
           <label
             asteriskIfRequired="activityType"
-            for="requestType"
+            for="activityType"
             class="form-label"
             >{{ lang.map.activity_type }}</label
           >
@@ -196,22 +196,6 @@
             formControlName="establishmentDate"
           />
         </div>
-        <div class="col-sm-6 col-md-4 mb-4 position-relative">
-          <label
-            asteriskIfRequired="registrationAuthority"
-            for="registrationAuthority"
-            class="form-label"
-            >{{ lang.map.registration_authority }}</label
-          >
-          <input
-            type="text"
-            class="form-control"
-            id="registrationAuthority"
-            validationClasses="registrationAuthority"
-            formControlName="registrationAuthority"
-            [readonly]="true"
-          />
-        </div>
 
         <div class="col-sm-6 col-md-4 mb-4 position-relative">
           <file-uploader
@@ -229,16 +213,21 @@
           >
           </file-uploader>
         </div>
+
         <div class="col-sm-6 col-md-4 mb-4 position-relative">
-          <label for="registrationAuthority" class="form-label">{{
-            lang.map.registered_by
-          }}</label>
+          <label
+            asteriskIfRequired="registrationAuthority"
+            for="registrationAuthority"
+            class="form-label"
+            >{{ lang.map.registration_authority }}</label
+          >
           <input
             type="text"
             class="form-control"
             id="registrationAuthority"
-            [readonly]="true"
+            validationClasses="registrationAuthority"
             formControlName="registrationAuthority"
+            [readonly]="true"
           />
         </div>
         <div class="col-sm-6 col-md-4 mb-4 position-relative">
@@ -596,7 +585,7 @@
           <div>
             <label
               asteriskIfRequired="charityWorkArea"
-              for="requestType"
+              for="charityWorkArea"
               class="form-label"
               >{{ lang.map.work_area }}</label
             >

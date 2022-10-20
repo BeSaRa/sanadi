@@ -74,7 +74,6 @@ export interface ILookupMap {
   InternalDepType: Lookup[];
   InternalProjectClassification: Lookup[];
   InternalProjectType: Lookup[];
-  InternalUserJobTitle: Lookup[];
   JobContractType: Lookup[];
   JointReliefStatus: Lookup[];
   LicenseDurationType: Lookup[];
@@ -99,7 +98,6 @@ export interface ILookupMap {
   OrgStatus: Lookup[];
   OrgUnitType: Lookup[];
   OrgUserActionType: Lookup[];
-  OrgUserJobTitle: Lookup[];
   OrgUserPermissionGroup: Lookup[];
   PermissionCategory: Lookup[];
   ProfileType: Lookup[];
@@ -113,6 +111,7 @@ export interface ILookupMap {
   ReportStatus: Lookup[];
   RequestClassification: Lookup[];
   RequestTypeNewOnly: Lookup[];
+  RequestTypeUpdateOnly: Lookup[];
   ResidenceStatus: Lookup[];
   RiskStatus: Lookup[];
   ServiceActionType: Lookup[];

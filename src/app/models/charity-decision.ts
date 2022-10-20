@@ -45,7 +45,7 @@ export class CharityDecision extends BaseModel<
         ]
         : referenceNumber,
       generalDate: controls
-        ? [generalDate, withOrg ? [CustomValidators.required] : []]
+        ? [generalDate, [CustomValidators.required]]
         : generalDate,
       subject: controls
         ? [
@@ -59,7 +59,7 @@ export class CharityDecision extends BaseModel<
         ]
         : subject,
       organization: controls
-        ? [organization, [CustomValidators.required, CustomValidators.maxLength(300)]]
+        ? [organization, withOrg ? [CustomValidators.required, CustomValidators.maxLength(300)] : [CustomValidators.maxLength(300)]]
         : organization,
       category: controls ? [category, [CustomValidators.required]] : category,
     };
