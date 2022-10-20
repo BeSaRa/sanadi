@@ -1,3 +1,5 @@
+import { GeneralProcessComponent } from './pages/general-process/general-process.component';
+import { SubTeamComponent } from './pages/sub-team/sub-team.component';
 import { CustomMenuComponent } from './pages/custom-menu/custom-menu.component';
 import { OrganizationUnitFieldComponent } from './pages/organization-unit-field/organization-unit-field.component';
 import { NgModule } from '@angular/core';
@@ -90,6 +92,16 @@ const routes: Routes = [
     path: 'job-titles', component: JobTitleComponent,
     canActivate: [PermissionGuard],
     data: { permissionKey: PermissionsEnum.MANAGE_JOB_TITLES, configPermissionGroup: null, checkAnyPermission: false }
+  },
+  {
+    path: 'general-process-template', component: GeneralProcessComponent,
+    canActivate: [PermissionGuard],
+    data: { permissionKey: PermissionsEnum.MANAGE_PROCESS_TEMPLATE, configPermissionGroup: null, checkAnyPermission: false }
+  },
+  {
+    path: 'sub-team', component: SubTeamComponent,
+    canActivate: [PermissionGuard],
+    data: { permissionKey: PermissionsEnum.MANAGE_SUB_TEAM, configPermissionGroup: null, checkAnyPermission: false }
   },
   {
     path: 'lookups', component: AdminLookupComponent,

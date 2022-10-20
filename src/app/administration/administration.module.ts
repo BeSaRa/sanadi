@@ -75,6 +75,8 @@ import {AdminLookupListComponent} from './pages/admin-lookup-list/admin-lookup-l
 import {AdminLookupComponent} from './pages/admin-lookup/admin-lookup.component';
 import {ProfilePopupComponent} from './popups/profile-popup/profile-popup.component';
 import {ProfilesComponent} from './pages/profiles/profiles.component';
+import { SubTeamPopupComponent } from './popups/sub-team-popup/sub-team-popup.component';
+import { SubTeamComponent } from './pages/sub-team/sub-team.component';
 
 @NgModule({
   declarations: [
@@ -109,6 +111,8 @@ import {ProfilesComponent} from './pages/profiles/profiles.component';
     InternalDepartmentPopupComponent,
     JobTitleComponent,
     JobTitlePopupComponent,
+    SubTeamComponent,
+    SubTeamPopupComponent,
     UserTeamComponent,
     UserSecurityComponent,
     SurveyQuestionComponent,

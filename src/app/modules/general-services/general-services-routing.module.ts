@@ -125,7 +125,7 @@ const routes: Routes = [
     canActivate: [ServicesGuard],
     resolve: { info: ServiceItemResolver },
     data: {
-      permissionKey: EServicePermissionsEnum.GENERAL_PROCESS_NOTIFICTION,
+      permissionKey: EServicePermissionsEnum.GENERAL_PROCESS_NOTIFICATION,
       configPermissionGroup: null,
       checkAnyPermission: false,
       render: 'GeneralProcessNotificationComponent'

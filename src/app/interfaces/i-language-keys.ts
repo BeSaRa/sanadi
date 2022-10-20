@@ -1522,6 +1522,8 @@ export interface ILanguageKeys {
   remove_service_messages: string;
 
   menu_general_process_template: string;
+  menu_sub_team: string;
   menu_general_process_notification: string;
+  lbl_main_team: string;
 }
 
