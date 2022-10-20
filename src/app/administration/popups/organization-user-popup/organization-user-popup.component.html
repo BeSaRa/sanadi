@@ -145,6 +145,24 @@
             <app-field-error-message [control]="fm.getFormField('basic.jobTitle')"></app-field-error-message>
           </div>
         </div>
+        <div class="row">
+          <div class="col-sm-6 mb-4 ng-select-wrapper">
+            <label for="profileId" asteriskIfRequired="profileId"
+                   class="form-label">{{langService.map.profile}}</label>
+            <ng-select [selectOnTab]="true" labelForId="profileId" [clearable]="false"
+                       placeholder="{{langService.map.select}}" id="profileId"
+                       [notFoundText]="langService.map.msg_not_found"
+                       formControlName="profileId" appendTo="body"
+                       validationClasses="profileId">
+              <ng-option value="">{{langService.map.lbl_none}}</ng-option>
+              <ng-option *ngFor="let option of profileList" [value]="option.id"
+                         [disabled]="!option.isActive()">
+                {{option.getName()}}
+              </ng-option>
+            </ng-select>
+            <app-field-error-message controlName="profileId"></app-field-error-message>
+          </div>
+        </div>
       </div>
     </ng-template>
     <ng-template #permissionsTabTemplate>

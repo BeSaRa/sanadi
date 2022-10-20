@@ -121,10 +121,15 @@ export class Profile extends BaseModel<Profile, ProfileService> {
         : email,
     };
   }
+
   updateStatus(profileId: number, status: CommonStatusEnum) {
     if (status === CommonStatusEnum.ACTIVATED) {
       return this.service.deActivate(profileId);
     }
     return this.service.activate(profileId);
+  }
+
+  isActive(): boolean {
+    return this.status === CommonStatusEnum.ACTIVATED;
   }
 }

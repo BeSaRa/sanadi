@@ -29,6 +29,8 @@ import {TabComponent} from '@app/shared/components/tab/tab.component';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
 import {JobTitle} from '@app/models/job-title';
 import {JobTitleService} from '@services/job-title.service';
+import {Profile} from '@app/models/profile';
+import {ProfileService} from '@services/profile.service';
 
 @Component({
   selector: 'app-organization-user-popup',
@@ -44,6 +46,7 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
   operation: OperationTypes;
   fm!: FormManager;
   jobTitleList: JobTitle[] = [];
+  profileList: Profile[] = [];
   customRoleList: CustomRole[];
   orgUnitList: OrgUnit[];
   orgUserPermissions: OrgUserPermission[];
@@ -85,6 +88,7 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
               public employeeService: EmployeeService,
               private authService: AuthService,
               private jobTitleService: JobTitleService,
+              private profileService: ProfileService,
               private fb: UntypedFormBuilder) {
     this.model = data.model;
     this.operation = data.operation;
@@ -115,6 +119,7 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
     this._saveModel();
     this.listenToCustomRoleChange();
     this._loadJobTitles();
+    this._loadProfiles();
   }
 
   buildForm(): void {
@@ -142,11 +147,12 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
           CustomValidators.required, Validators.email, Validators.maxLength(CustomValidators.defaultLengths.EMAIL_MAX)]],
         jobTitle: [this.model.jobTitle, [CustomValidators.required]],
         status: [this.model.status, CustomValidators.required],
+        profileId: [this.model.profileId, CustomValidators.required],
         customRoleId: [this.model.customRoleId] // not required as it is dummy to be tracked from permissions tab
       }, {
         validators: CustomValidators.validateFieldsStatus([
           'arName', 'enName', 'empNum', 'qid', 'phoneNumber', 'phoneExtension',
-          'officialPhoneNumber', 'email', 'jobTitle', 'orgId', 'orgBranchId', 'status'
+          'officialPhoneNumber', 'email', 'jobTitle', 'orgId', 'orgBranchId', 'status', 'profileId'
         ])
       }),
       permissions: this.fb.group({
@@ -364,5 +370,16 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe((result)=> this.jobTitleList = result);
+  }
+
+  private _loadProfiles(): void {
+    this.profileService.loadAsLookups()
+      .pipe(
+        takeUntil(this.destroy$),
+        catchError(() => {
+          return of([]);
+        })
+      )
+      .subscribe((result)=> this.profileList = result);
   }
 }

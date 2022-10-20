@@ -1521,5 +1521,6 @@ export interface ILanguageKeys {
   services_add_successfully: string;
   remove_service_messages: string;
   section: string;
+  profile: string;
 }
 
