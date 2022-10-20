@@ -257,7 +257,7 @@ export class CharityOrganizationUpdateComponent
       {
         name: 'requestTypeTab',
         template: tabsTemplates[0],
-        title: this.lang.map.request_type,
+        title: this.lang.map.section,
         validStatus: () => true,
       },
       {
