@@ -4,6 +4,7 @@ import { CharityBranch } from '@app/models/charity-branch';
 import { CharityOrganization } from '@app/models/charity-organization';
 import { CharityBranchInterceptor } from './charity-branch-interceptor';
 import { OrganizationOfficerInterceptor } from './organization-officer-interceptor';
+import { ProfileInterceptor } from './profile-interceptor';
 
 export class CharityOrganizationInterceptor implements IModelInterceptor<CharityOrganization>{
   caseInterceptor?: IModelInterceptor<CharityOrganization> | undefined;
@@ -11,11 +12,13 @@ export class CharityOrganizationInterceptor implements IModelInterceptor<Charity
     delete model.searchFields;
     delete model.service;
     delete model.langService;
+    delete model.profileInfo;
     return model;
   }
   receive(model: CharityOrganization): CharityOrganization {
     const organizationOfficersInterceptor = new OrganizationOfficerInterceptor();
     const charityBranchInterceptor = new CharityBranchInterceptor();
+    (model.profileInfo && (model.profileInfo = new ProfileInterceptor().receive(model.profileInfo)));
     model.statusDateModified = DateUtils.getDateStringFromDate(model.statusDateModified);
     model.publishDate = DateUtils.getDateStringFromDate(model.publishDate);
     model.registrationDate = DateUtils.getDateStringFromDate(model.registrationDate);

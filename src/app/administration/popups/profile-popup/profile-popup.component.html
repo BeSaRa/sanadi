@@ -1,286 +1,128 @@
 <div class="dialog-toolbar bg-primary d-flex justify-content-between">
   <h1 class="h6 text-white">{{ lang.map.menu_profile }}</h1>
   <div>
-    <button
-      type="button"
-      class="btn btn-fullscreen btn-close-white icon-btn"
-      tabindex="-1"
-      aria-label="Fullscreen"
-      fullscreenBtn
-    ></button>
-    <button
-      type="button"
-      class="btn-close btn-close-white"
-      tabindex="-1"
-      [dialogClose]="model"
-      aria-label="Close"
-    ></button>
+    <button type="button" class="btn btn-fullscreen btn-close-white icon-btn"
+            tabindex="-1" aria-label="Fullscreen" fullscreenBtn></button>
+    <button type="button" class="btn-close btn-close-white"
+            tabindex="-1" [dialogClose]="model" aria-label="Close"></button>
   </div>
 </div>
-<div class="dialog-content" #content>
+<div class="dialog-content w800px" #content>
   <tabs-list (onTabChange)="onTabChange($event)">
-    <tab
-      [name]="tabsData.basic.name"
-      [hasError]="tabsData.basic.validate()"
-      [template]="basicInfoTab"
-      [title]="lang.map.lbl_basic_info"
-    ></tab>
-    <tab
-      *ngIf="showServicesTab"
-      [name]="tabsData.services.name"
-      [hasError]="false"
-      [template]="linkServices"
-      [title]="lang.map.link_services"
-    >
+    <tab [name]="tabsData.basic.name" [hasError]="tabsData.basic.validate()"
+         [template]="basicInfoTab" [title]="lang.map.lbl_basic_info"></tab>
+    <tab *ngIf="showServicesTab" [name]="tabsData.services.name" [hasError]="false"
+         [template]="linkServices" [title]="lang.map.link_services">
     </tab>
   </tabs-list>
   <ng-template #basicInfoTab [formGroup]="form">
-    <form
-      style="width: 800px"
-      novalidate
-      formGroupName="basicInfo"
-      autocomplete="off"
-    >
+    <form novalidate formGroupName="basicInfo" autocomplete="off">
       <div class="row">
         <div class="col-sm-6 mb-4 position-relative">
-          <label for="arName" asteriskIfRequired="arName" class="form-label">{{
-            lang.map.lbl_arabic_name
-          }}</label>
-          <input
-            id="arName"
-            validationClasses="arName"
-            formControlName="arName"
-            class="form-control"
-            trimInput
-          />
-          <app-field-error-message
-            controlName="arName"
-          ></app-field-error-message>
+          <label for="arName" asteriskIfRequired="arName" class="form-label">{{lang.map.lbl_arabic_name}}</label>
+          <input id="arName" validationClasses="arName" formControlName="arName" class="form-control" trimInput/>
+          <app-field-error-message controlName="arName"></app-field-error-message>
         </div>
         <div class="col-sm-6 mb-4 position-relative">
-          <label
-            for="enName"
-            asteriskIfRequired="enName"
-            validationClasses="enName"
-            class="form-label"
-            >{{ lang.map.lbl_english_name }}</label
-          >
-          <input
-            id="enName"
-            trimInput
-            formControlName="enName"
-            class="form-control"
-          />
-          <app-field-error-message
-            controlName="enName"
-          ></app-field-error-message>
+          <label for="enName" asteriskIfRequired="enName" class="form-label">{{ lang.map.lbl_english_name }}</label>
+          <input id="enName" trimInput formControlName="enName" validationClasses="enName" class="form-control"/>
+          <app-field-error-message controlName="enName"></app-field-error-message>
         </div>
-        <div class="col-md-6 col-sm-12 mb-4 position-relative">
-          <label
-            class="form-label"
-            asteriskIfRequired="status"
-            for="profileType"
-            >{{ lang.map.lbl_profile_type }}</label
-          >
-          <ng-select
-            [selectOnTab]="true"
-            labelForId="profileType"
-            [clearable]="false"
-            placeholder="{{ lang.map.select }}"
-            id="profileType"
-            [notFoundText]="lang.map.msg_not_found"
-            formControlName="profileType"
-            validationClasses="profileType"
-            (change)="handleProfileType($event)"
-          >
-            <ng-option
-              *ngFor="let option of profileTypes"
-              [value]="option.lookupKey"
-              [disabled]="option.isRetiredCommonStatus()"
-            >
+        <div class="col-md-6 col-sm-12 mb-4 ng-select-wrapper">
+          <label class="form-label" asteriskIfRequired="profileType"
+                 for="profileType">{{ lang.map.lbl_profile_type }}</label>
+          <ng-select [selectOnTab]="true" labelForId="profileType"
+                     [clearable]="false" placeholder="{{ lang.map.select }}"
+                     id="profileType" [notFoundText]="lang.map.msg_not_found"
+                     formControlName="profileType" validationClasses="profileType"
+                     (change)="handleProfileType($event)" appendTo="body">
+            <ng-option *ngFor="let option of profileTypes"
+                       [value]="option.lookupKey" [disabled]="option.isRetiredCommonStatus()">
               {{ option.getName() }}
             </ng-option>
           </ng-select>
-          <app-field-error-message
-            controlName="profileType"
-          ></app-field-error-message>
+          <app-field-error-message controlName="profileType"></app-field-error-message>
         </div>
         <div class="col-sm-6 mb-4 position-relative">
-          <label for="arDesc" asteriskIfRequired="arDesc" class="form-label">{{
-            lang.map.lbl_description
-          }}</label>
-          <input
-            trimInput
-            id="arDesc"
-            validationClasses="arDesc"
-            formControlName="arDesc"
-            class="form-control"
-          />
-          <app-field-error-message
-            controlName="arDesc"
-          ></app-field-error-message>
+          <label for="arDesc" asteriskIfRequired="arDesc" class="form-label">{{lang.map.lbl_description}}</label>
+          <input trimInput id="arDesc" validationClasses="arDesc" formControlName="arDesc" class="form-control"/>
+          <app-field-error-message controlName="arDesc"></app-field-error-message>
         </div>
 
         <div class="col-sm-6 mb-4 position-relative">
-          <label
-            for="profileCode"
-            asteriskIfRequired="profileCode"
-            class="form-label"
-            >{{ lang.map.lbl_profile_code }}</label
-          >
-          <input
-            trimInput
-            id="profileCode"
-            formControlName="profileCode"
-            class="form-control"
-            validationClasses="profileCode"
-          />
-          <app-field-error-message
-            controlName="profileCode"
-          ></app-field-error-message>
+          <label for="profileCode" asteriskIfRequired="profileCode"
+                 class="form-label">{{ lang.map.lbl_profile_code }}</label>
+          <input trimInput id="profileCode" formControlName="profileCode" class="form-control"
+                 validationClasses="profileCode"/>
+          <app-field-error-message controlName="profileCode"></app-field-error-message>
         </div>
-        <div class="col-md-6 col-sm-12 mb-4 position-relative">
-          <label class="form-label" asteriskIfRequired="status" for="status">{{
-            lang.map.lbl_status
-          }}</label>
-          <ng-select
-            [selectOnTab]="true"
-            labelForId="status"
-            [clearable]="false"
-            placeholder="{{ lang.map.select }}"
-            id="status"
-            [notFoundText]="lang.map.msg_not_found"
-            formControlName="status"
-            validationClasses="status"
-          >
-            <ng-option
-              *ngFor="let option of status"
-              [value]="option.lookupKey"
-              [disabled]="option.isRetiredCommonStatus()"
-            >
+        <div class="col-md-6 col-sm-12 mb-4 ng-select-wrapper">
+          <label class="form-label" asteriskIfRequired="status" for="status">{{lang.map.lbl_status}}</label>
+          <ng-select [selectOnTab]="true" labelForId="status"
+                     [clearable]="false" placeholder="{{ lang.map.select }}"
+                     id="status" [notFoundText]="lang.map.msg_not_found"
+                     formControlName="status" validationClasses="status"
+                     appendTo="body">
+            <ng-option *ngFor="let option of status"
+                       [value]="option.lookupKey" [disabled]="option.isRetiredCommonStatus()">
               {{ option.getName() }}
             </ng-option>
           </ng-select>
-          <app-field-error-message
-            controlName="status"
-          ></app-field-error-message>
+          <app-field-error-message controlName="status"></app-field-error-message>
         </div>
-        <div class="col-md-6 col-sm-12 mb-4 position-relative">
-          <label
-            class="form-label"
-            asteriskIfRequired="registrationAuthority"
-            for="registrationAuthority"
-            >{{ lang.map.lbl_registration_authority }}</label
-          >
-          <ng-select
-            [selectOnTab]="true"
-            labelForId="registrationAuthority"
-            [clearable]="false"
-            placeholder="{{ lang.map.select }}"
-            id="registrationAuthority"
-            [notFoundText]="lang.map.msg_not_found"
-            formControlName="registrationAuthority"
-            validationClasses="registrationAuthority"
-          >
+        <div class="col-md-6 col-sm-12 mb-4 ng-select-wrapper">
+          <label class="form-label" asteriskIfRequired="registrationAuthority"
+                 for="registrationAuthority">{{ lang.map.lbl_registration_authority }}</label>
+          <ng-select [selectOnTab]="true" labelForId="registrationAuthority"
+                     [clearable]="false" placeholder="{{ lang.map.select }}"
+                     id="registrationAuthority" [notFoundText]="lang.map.msg_not_found"
+                     formControlName="registrationAuthority" validationClasses="registrationAuthority"
+                     appendTo="body">
             <ng-option value="">{{ lang.map.lbl_none }}</ng-option>
-            <ng-option *ngIf="showRaca" [value]="-1">{{
-              lang.map.lbl_raca
-            }}</ng-option>
-            <ng-option
-              *ngFor="let option of registrationAuthorities"
-              [value]="option.id"
-            >
+            <ng-option *ngIf="showRaca" [value]="-1">{{lang.map.lbl_raca}}</ng-option>
+            <ng-option *ngFor="let option of registrationAuthorities" [value]="option.id">
               {{ option.getName() }}
             </ng-option>
           </ng-select>
-          <app-field-error-message
-            controlName="registrationAuthority"
-          ></app-field-error-message>
+          <app-field-error-message controlName="registrationAuthority"></app-field-error-message>
         </div>
         <div class="col-sm-6 mb-4 position-relative">
-          <label for="email" asteriskIfRequired="email" class="form-label">{{
-            lang.map.lbl_email
-          }}</label>
-          <input
-            trimInput
-            id="email"
-            formControlName="email"
-            validationClasses="email"
-            class="form-control"
-          />
-          <app-field-error-message
-            controlName="email"
-          ></app-field-error-message>
+          <label for="email" asteriskIfRequired="email" class="form-label">{{lang.map.lbl_email}}</label>
+          <input trimInput id="email" formControlName="email" validationClasses="email" class="form-control"/>
+          <app-field-error-message controlName="email"></app-field-error-message>
         </div>
       </div>
     </form>
   </ng-template>
   <ng-template #linkServices>
-    <div style="width: 800px">
+    <div>
       <div class="row">
-        <div class="col-sm-12 mb-4 position-relative">
-          <label for="profileId" class="form-label">{{
-            lang.map.lbl_profile_id
-          }}</label>
-          <input
-            id="profileId"
-            class="form-control"
-            [value]="model.id"
-            [readonly]="true"
-          />
-        </div>
         <div class="col-sm-12">
           <h2 class="h6 text-primary">{{ lang.map.linked_services }}</h2>
-          <hr />
+          <hr/>
         </div>
         <div class="col-sm-12">
-          <app-table
-            #table
-            [useSearchToFilter]="true"
-            [selectable]="true"
-            [data]="profileServices"
-            [columns]="profileServicesColumns"
-            sortableTable
-          >
-            <table
-              cdk-table
-              [dataSource]="table.dataSource"
-              class="table table-striped table-bordered caption-top"
-            >
+          <app-table #table
+                     [useSearchToFilter]="true"
+                     [selectable]="true"
+                     [data]="profileServices"
+                     [columns]="profileServicesColumns"
+                     sortableTable>
+            <table cdk-table [dataSource]="table.dataSource" class="table table-striped table-bordered caption-top">
               <ng-container cdkColumnDef="service">
-                <th cdk-header-cell sortable-header *cdkHeaderCellDef>
-                  {{ lang.map.service_name }}
-                </th>
-                <td cdk-cell *cdkCellDef="let row">
-                  {{ row.serviceDataInfo.getName() }}
-                </td>
+                <th cdk-header-cell sortable-header *cdkHeaderCellDef>{{ lang.map.service_name }}</th>
+                <td cdk-cell *cdkCellDef="let row">{{ row.serviceDataInfo.getName() }}</td>
               </ng-container>
               <ng-container cdkColumnDef="actions">
-                <th cdk-header-cell *cdkHeaderCellDef>
-                  {{ lang.map.lbl_actions }}
-                </th>
-                <td
-                  cdk-cell
-                  *cdkCellDef="let row; index as itemIndex"
-                  class="table-actions"
-                >
-                  <grid-actions
-                    [record]="row"
-                    [actions]="actions"
-                    [itemIndex]="itemIndex"
-                  >
-                  </grid-actions>
+                <th cdk-header-cell *cdkHeaderCellDef>{{ lang.map.lbl_actions }}</th>
+                <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">
+                  <grid-actions [record]="row" [actions]="actions" [itemIndex]="itemIndex"></grid-actions>
                 </td>
               </ng-container>
               <tr cdk-header-row *cdkHeaderRowDef="profileServicesColumns"></tr>
-              <tr
-                cdk-row
-                *cdkRowDef="let row; columns: profileServicesColumns"
-              ></tr>
+              <tr cdk-row *cdkRowDef="let row; columns: profileServicesColumns"></tr>
               <tr *cdkNoDataRow>
-                <td colspan="100" class="text-center">
-                  {{ lang.map.no_records_to_display }}
-                </td>
+                <td colspan="100" class="text-center">{{ lang.map.no_records_to_display }}</td>
               </tr>
             </table>
           </app-table>
@@ -288,38 +130,26 @@
 
         <div class="col-sm-12 mt-5">
           <h2 class="h6 text-primary">{{ lang.map.lbl_add_service }}</h2>
-          <hr />
+          <hr/>
         </div>
         <div class="row align-items-center">
-          <div class="col-md-9 col-sm-12 mb-4 position-relative">
-            <label class="form-label" for="serviceId">{{
-              lang.map.service_name
-            }}</label>
-            <ng-select
-              [formControl]="servicesControl"
-              [selectOnTab]="true"
-              labelForId="serviceId"
-              [clearable]="false"
-              placeholder="{{ lang.map.select }}"
-              id="serviceId"
-              [notFoundText]="lang.map.msg_not_found"
-              [multiple]="true"
-            >
+          <div class="col-md-9 col-sm-12 mb-4 ng-select-wrapper">
+            <label class="form-label" for="serviceId">{{lang.map.service_name}}</label>
+            <ng-select [formControl]="servicesControl"
+                       [selectOnTab]="true" labelForId="serviceId"
+                       [clearable]="false" placeholder="{{lang.map.select}}"
+                       id="serviceId" appendTo="body"
+                       [notFoundText]="lang.map.msg_not_found"
+                       [multiple]="true">
               <ng-option *ngFor="let option of services" [value]="option.id">
                 {{ option.getName() }}
               </ng-option>
             </ng-select>
           </div>
           <div class="col-md-3">
-            <button
-              [disabled]="
-                operation === OperationTypes.VIEW ||
-                servicesControl.value?.length === 0
-              "
-              (click)="addServices()"
-              class="btn btn-primary"
-              tooltip="{{ lang.map.lbl_add_services_to_profile }}"
-            >
+            <button [disabled]="operation === OperationTypes.VIEW || servicesControl.value?.length === 0"
+                    (click)="addServices()" class="btn btn-primary"
+                    tooltip="{{ lang.map.lbl_add_services_to_profile }}">
               {{ lang.map.lbl_add_service }}
             </button>
           </div>
@@ -329,19 +159,9 @@
   </ng-template>
 </div>
 <div class="dialog-actions">
-  <button
-    tabindex="-1"
-    (click)="displayFormValidity(null, content)"
-    tooltip="{{ lang.map.validate_fields }}"
-    class="btn btn-link"
-  >
-    <i class="mdi mdi-information-outline text-info"></i>
-  </button>
+  <button tabindex="-1" (click)="displayFormValidity(null, content)" tooltip="{{ lang.map.validate_fields }}"
+          class="btn btn-link"><i class="mdi mdi-information-outline text-info"></i></button>
   <div class="flex-grow-1"></div>
-  <button (click)="save$.next(null)" class="btn btn-primary">
-    {{ lang.map.btn_save }}
-  </button>
-  <button [dialogClose]="model" class="btn btn-secondary">
-    {{ lang.map.btn_close }}
-  </button>
+  <button (click)="save$.next(null)" class="btn btn-primary">{{ lang.map.btn_save }}</button>
+  <button [dialogClose]="model" class="btn btn-secondary">{{ lang.map.btn_close }}</button>
 </div>

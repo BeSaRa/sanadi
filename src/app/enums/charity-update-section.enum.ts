@@ -1,4 +1,4 @@
-export enum CharityRequestType {
+export enum CharityUpdateSection {
   META_DATA = 1,
   ADMINISTRATIVE_DATA,
   GOVERNANCE_DOCUMENTS,
