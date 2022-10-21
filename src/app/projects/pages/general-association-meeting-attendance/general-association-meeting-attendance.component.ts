@@ -736,7 +736,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   }
 
   canUpdateMeetingDate() {
-    return this.model?.taskDetails.isClaimed() && (this.isSupervisionAndControlReviewStep || this.isSupervisionManagerReviewStep);
+    return this.model?.taskDetails?.isClaimed() && (this.isSupervisionAndControlReviewStep || this.isSupervisionManagerReviewStep);
   }
 
   getMeetingDateClass() {
