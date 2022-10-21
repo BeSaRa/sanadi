@@ -714,9 +714,9 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
 
     if (this.openFrom === OpenFrom.USER_INBOX) {
       if (this.employeeService.isCharityManager()) {
-        this.readonly = false;
+        this.readonly = this.model.isInitialApproved();
       } else if (this.employeeService.isCharityUser()) {
-        this.readonly = !this.model.isReturned();
+        this.readonly = this.model.isInitialApproved() ? true : !this.model.isReturned();
       }
     } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
       // after claim, consider it same as user inbox and use same condition
