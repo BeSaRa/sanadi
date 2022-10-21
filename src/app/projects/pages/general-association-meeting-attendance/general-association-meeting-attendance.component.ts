@@ -757,6 +757,10 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     return this.model?.isSupervisionManagerReviewStep()!;
   }
 
+  get isSupervisionAndControlRework(): boolean {
+    return this.model?.isSupervisionAndControlReworkStep()!;
+  }
+
   // meeting points functionality
   initMeetingPointsForm(): void {
     this.meetingPointsForm = this.fb.group({

@@ -323,7 +323,7 @@
                                [selectedInternalUsers]="selectedInternalUsers"
                                [caseStepName]="model?.taskDetails?.name!"
                                [isExternalUser]="isExternalUser"
-                               [readonly]="!model?.taskDetails?.isClaimed() || isCancel || !(isSupervisionAndControlReviewStep || isSupervisionManagerReviewStep) || (model?.getCaseStatus() !== commonCaseStatus.UNDER_PROCESSING && model?.getCaseStatus() !== commonCaseStatus.RETURNED)"></manage-internal-users>
+                               [readonly]="!model?.taskDetails?.isClaimed() || isCancel || !(isSupervisionAndControlReviewStep || isSupervisionManagerReviewStep || isSupervisionAndControlRework) || (model?.getCaseStatus() !== commonCaseStatus.UNDER_PROCESSING && model?.getCaseStatus() !== commonCaseStatus.RETURNED)"></manage-internal-users>
       </ng-template>
     </ng-container>
     <ng-container>
