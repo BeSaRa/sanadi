@@ -1,3 +1,125 @@
-<p>
-  general-process-notification works!
-</p>
+<div class="d-flex flex-column">
+  <tabs-list [accordionView]="accordionView" (onTabChange)="onTabChange($event)">
+    <tab
+      [name]="tabsData.basicInfo.name"
+      [hasError]="getTabInvalidStatus('basicInfo')"
+      [template]="basicInfoTabTemplate"
+      [title]="lang.map.lbl_basic_info"
+    ></tab>
+    <tab
+      [name]="tabsData.DSNNN.name"
+      [hasError]="getTabInvalidStatus('DSNNN')"
+      [template]="DSNNNTabTemplate"
+      [title]="lang.map.disclosure_statements_notices_notifications_notices"
+    ></tab>
+    <tab
+      [name]="tabsData.sampleDataForOperations.name"
+      [hasError]="getTabInvalidStatus('sampleDataForOperations')"
+      [template]="sampleDataForOperationsTabTemplate"
+      [title]="lang.map.sample_data_for_operations"
+    ></tab>
+    <tab
+      [name]="tabsData.specialExplanations.name"
+      [hasError]="getTabInvalidStatus('specialExplanations')"
+      [template]="specialExplanationsTabTemplate"
+      [title]="lang.map.special_explanations"
+    ></tab>
+    <tab
+      [name]="tabsData.attachments.name"
+      *ngIf="!accordionView"
+      [template]="attachmentsTab"
+      [title]="lang.map.attachments"
+      [hasError]="getTabInvalidStatus('attachments')"
+    ></tab>
+  </tabs-list>
+
+  <ng-template #basicInfoTabTemplate>
+    <form [formGroup]="form" autocomplete="off">
+      <h5 class="text-primary">{{ lang.map.request_info }}</h5>
+      <div class="row">
+        <!-- Request Type -->
+        <div class="col-md-6 mb-4 position-relative">
+          <label
+            asteriskIfRequired="requestType"
+            for="requestType"
+            class="form-label"
+            >{{ lang.map.request_type }}</label
+          >
+          <ng-select
+            [selectOnTab]="true"
+            labelForId="requestType"
+            [clearable]="true"
+            placeholder="{{ lang.map.select }}"
+            id="requestType"
+            [readonly]="readonly"
+            (change)="handleRequestTypeChange($event, true)"
+            [notFoundText]="lang.map.msg_not_found"
+            appendTo="body"
+            validationClasses="requestType"
+            formControlName="requestType"
+          >
+          <ng-option
+              *ngFor="let type of notificationRequestType"
+              [value]="type.lookupKey"
+              >{{ type.getName() }}</ng-option
+            >
+          </ng-select>
+          <app-field-error-message
+            controlName="requestType"
+          ></app-field-error-message>
+        </div>
+        <!-- License Number -->
+        <div class="col-md-6 mb-4 position-relative">
+          <label asteriskIfRequired="oldLicenseFullSerial" for="oldLicenseFullSerial"
+                  class="form-label">{{lang.map.license_number}}</label>
+          <div class="input-group">
+            <input (keydown.enter)="isEdit()"
+                    formControlName="oldLicenseFullSerial"
+                    [readonly]="!isEdit() || readonly"
+                    type="text" validationClasses="oldLicenseFullSerial" class="form-control"
+                    id="oldLicenseFullSerial" trimInput>
+            <button *ngIf="isEdit() && !readonly" type="button" (click)="licenseSearch($event)"
+                    class="input-group-text">
+              <i class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i></button>
+            <app-field-error-message controlName="oldLicenseFullSerial"></app-field-error-message>
+          </div>
+        </div>
+      </div>
+    </form>
+  </ng-template>
+
+  <ng-template #DSNNNTabTemplate>
+    <form [formGroup]="DSNNNFormGroup" autocomplete="off">
+
+    </form>
+  </ng-template>
+
+  <ng-template #sampleDataForOperationsTabTemplate>
+    <form [formGroup]="sampleDataForOperationsFormGroup" autocomplete="off">
+
+    </form>
+  </ng-template>
+
+  <ng-template #specialExplanationsTabTemplate>
+    <form [formGroup]="form" autocomplete="off">
+      <div class="row">
+        <div class="col-sm-12 col-md-12 mb-4 position-relative">
+          <label for="description" asteriskIfRequired="description"
+                class="form-label">{{lang.map.special_explanations}}</label>
+          <textarea rows="5" id="description" validationClasses="description"
+                    [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
+                    [readonly]="readonly"
+                    formControlName="description" trimInput class="form-control"></textarea>
+          <app-field-error-message controlName="description"></app-field-error-message>
+        </div>
+      </div>
+    </form>
+  </ng-template>
+
+  <ng-template #attachmentsTab>
+    <attachments [disabled]="isAttachmentReadonly()" [caseId]="model?.id" [caseType]="model?.caseType"
+                 [service]="service.documentService"
+                 [load]="loadAttachments"></attachments>
+  </ng-template>
+
+</div>

@@ -1,5 +1,8 @@
+import { LicenseService } from './../../../../services/license.service';
+import { Lookup } from '@app/models/lookup';
+import { TabComponent } from './../../../../shared/components/tab/tab.component';
 import { UserClickOn } from '@app/enums/user-click-on.enum';
-import { takeUntil, switchMap } from 'rxjs/operators';
+import { takeUntil, switchMap, map, catchError, filter, tap, exhaustMap } from 'rxjs/operators';
 import { NpoManagement } from './../../../../models/npo-management';
 import { EmployeeService } from '@app/services/employee.service';
 import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
@@ -17,7 +20,7 @@ import { UntypedFormGroup, UntypedFormBuilder, UntypedFormControl } from '@angul
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { SaveTypes } from '@app/enums/save-types';
 import { LangService } from '@app/services/lang.service';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-general-process-notification',
@@ -28,7 +31,10 @@ export class GeneralProcessNotificationComponent extends EServicesGenericCompone
 GeneralProcessNotification,
 GeneralProcessNotificationService
 > {
+  notificationRequestType: Lookup[] = [];
   form!: UntypedFormGroup;
+  licenseSearch$: Subject<string> = new Subject<string>();
+  selectedLicense?: GeneralProcessNotification;
 
   tabsData: IKeyValue = {
     basicInfo: {
@@ -36,17 +42,34 @@ GeneralProcessNotificationService
       langKey: "lbl_basic_info" as keyof ILanguageKeys,
       validStatus: () => this.form.valid,
     },
+    DSNNN: {
+      name: "DSNNNTab",
+      langKey: "disclosure_statements_notices_notifications_notices" as keyof ILanguageKeys,
+      validStatus: () => this.DSNNNFormGroup.valid,
+    },
+    sampleDataForOperations: {
+      name: "sampleDataForOperationsTab",
+      langKey: "sample_data_for_operations" as keyof ILanguageKeys,
+      validStatus: () => this.sampleDataForOperationsFormGroup.valid,
+    },
+    specialExplanations: {
+      name: 'specialExplanationsTab',
+      langKey: 'special_explanations',
+      validStatus: () => this.specialExplanationsField && this.specialExplanationsField.valid
+    },
     attachments: {
       name: 'attachmentsTab',
       langKey: 'attachments',
       validStatus: () => true
     },
   };
+  loadAttachments: boolean = false;
   constructor(
     public lang: LangService,
     private dialog: DialogService,
     private cd: ChangeDetectorRef,
     private toast: ToastService,
+    private licenseService: LicenseService,
     public fb: UntypedFormBuilder,
     public service: GeneralProcessNotificationService,
     private employeeService: EmployeeService,
@@ -96,7 +119,14 @@ GeneralProcessNotificationService
     this.handleReadonly();
   }
   _buildForm(): void {
-    this.form = this.fb.group({})
+    const model = new GeneralProcessNotification().buildForm(true)
+    this.form = this.fb.group({
+      requestType: model.requestType,
+      description: model.description,
+      oldLicenseFullSerial: model.oldLicenseFullSerial,
+      DSNNN: this.fb.group(model.DSNNN),
+      sampleDataForOperations: this.fb.group(model.sampleDataForOperations),
+    });
   }
   _afterBuildForm(): void {
   }
@@ -129,7 +159,11 @@ GeneralProcessNotificationService
   }
   _prepareModel(): GeneralProcessNotification | Observable<GeneralProcessNotification> {
     const value = new GeneralProcessNotification().clone({
-      ...this.model
+      ...this.model,
+      requestType: this.form.value.requestType,
+      description: this.form.value.description,
+      ...this.form.value.DSNNN,
+      ...this.form.value.sampleDataForOperations,
     })
     return value;
   }
@@ -168,12 +202,36 @@ GeneralProcessNotificationService
     this.model = model;
     const formModel = model.buildForm();
     this.form.patchValue({
-      basicInfo: formModel.basicInfo,
-      contectInfo: formModel.contectInfo
+      requestType: formModel.requestType,
+      description: formModel.description,
+      oldLicenseFullSerial: formModel.oldLicenseFullSerial,
+      DSNNN: formModel.DSNNN,
+      sampleDataForOperations: formModel.sampleDataForOperations
     });
 
     this.cd.detectChanges();
     this.handleRequestTypeChange(model.requestType, false);
+  }
+  onTabChange($event: TabComponent) {
+    this.loadAttachments = $event.name === this.tabsData.attachments.name;
+  }
+  getTabInvalidStatus(tabName: string): boolean {
+    return !this.tabsData[tabName].validStatus();
+  }
+  isAttachmentReadonly(): boolean {
+    if (!this.model?.id) {
+      return false;
+    }
+    let isAllowed = true;
+    if (this.openFrom === OpenFrom.TEAM_INBOX) {
+      isAllowed = this.model.taskDetails.isClaimed();
+    }
+    if (isAllowed) {
+      let caseStatus = this.model.getCaseStatus();
+      isAllowed = (caseStatus !== CommonCaseStatus.CANCELLED && caseStatus !== CommonCaseStatus.FINAL_APPROVE && caseStatus !== CommonCaseStatus.FINAL_REJECTION);
+    }
+
+    return !isAllowed;
   }
   handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false) {
     of(userInteraction).pipe(
@@ -182,7 +240,6 @@ GeneralProcessNotificationService
     ).subscribe((clickOn: UserClickOn) => {
       if (clickOn === UserClickOn.YES) {
         if (userInteraction) {
-
           this.resetForm$.next();
           this.requestTypeField.setValue(requestTypeValue);
           this.model!.requestType = requestTypeValue;
@@ -199,7 +256,93 @@ GeneralProcessNotificationService
     this.form.reset();
     this.operation = OperationTypes.CREATE;
   }
+  loadLicencesByCriteria(criteria: (Partial<GeneralProcessNotification>)): (Observable<GeneralProcessNotification[]>) {
+    return this.service.licenseSearch(criteria as Partial<GeneralProcessNotification>);
+  }
+  listenToLicenseSearch(): void {
+    this.licenseSearch$
+      .pipe(exhaustMap(oldLicenseFullSerial => {
+        return this.loadLicencesByCriteria({
+          fullSerial: oldLicenseFullSerial
+        }).pipe(catchError(() => of([])));
+      }))
+      .pipe(
+        // display message in case there is no returned license
+        tap(list => {
+          if (!list.length) {
+            this.dialog.info(this.lang.map.no_result_for_your_search_criteria);
+          }
+        }),
+        // allow only the collection if it has value
+        filter(result => !!result.length),
+        // switch to the dialog ref to use it later and catch the user response
+        switchMap(licenses => {
+          if (licenses.length === 1) {
+            return this.licenseService.validateLicenseByRequestType(this.model!.getCaseType(), this.requestTypeField.value, licenses[0].id)
+              .pipe(
+                map((data) => {
+                  if (!data) {
+                    return of(null);
+                  }
+                  return { selected: licenses[0], details: data };
+                }),
+                catchError(() => {
+                  return of(null);
+                })
+              );
+          } else {
+            const displayColumns = this.service.selectLicenseDisplayColumns;
+            return this.licenseService.openSelectLicenseDialog(licenses, this.model?.clone({ requestType: this.requestTypeField.value || null }), true, displayColumns).onAfterClose$;
+          }
+        }),
+        // allow only if the user select license
+        takeUntil(this.destroy$)
+      )
+      .subscribe((selection) => {
+        this.setSelectedLicense(selection.details);
+      });
+  }
+
+  private setSelectedLicense(licenseDetails: GeneralProcessNotification) {
+    this.selectedLicense = licenseDetails;
+    let requestType = this.requestTypeField?.value,
+      result: Partial<GeneralProcessNotification> = {
+        requestType
+      };
+
+    result.oldLicenseFullSerial = licenseDetails.fullSerial;
+    result.oldLicenseId = licenseDetails.id;
+    result.oldLicenseSerial = licenseDetails.serial;
+
+    result.description = licenseDetails.description;
+
+    this._updateForm((new GeneralProcessNotification()).clone(result));
+  }
+  licenseSearch($event?: Event): void {
+    $event?.preventDefault();
+    let value = '';
+    if (this.requestTypeField.valid) {
+      value = this.oldLicenseFullSerialField.value;
+    }
+    this.licenseSearch$.next(value);
+  }
+  isEdit() {
+    return this.requestTypeField.value == 2;
+  }
   get requestTypeField(): UntypedFormControl {
     return this.form.get("requestType") as UntypedFormControl;
   }
+  get DSNNNFormGroup(): UntypedFormGroup {
+    return this.form.get('DSNNN') as UntypedFormGroup;
+  }
+  get sampleDataForOperationsFormGroup(): UntypedFormGroup {
+    return this.form.get('sampleDataForOperations') as UntypedFormGroup;
+  }
+  get specialExplanationsField(): UntypedFormControl {
+    return this.form.get('description') as UntypedFormControl;
+  }
+  get oldLicenseFullSerialField(): UntypedFormControl {
+    return this.form.get('oldLicenseFullSerial') as UntypedFormControl;
+  }
+
 }

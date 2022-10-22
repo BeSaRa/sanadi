@@ -1,3 +1,4 @@
+import { GeneralProcessNotificationApprovalComponent } from './popups/general-process-notification-approval/general-process-notification-approval.component';
 import { GeneralProcessNotificationComponent } from './pages/general-process-notification/general-process-notification.component';
 import {
   AwarenessActivitySuggestionApprovalComponent
@@ -53,6 +54,7 @@ import {InternationalCooperationComponent} from './pages/international-cooperati
 @NgModule({
   declarations: [
     GeneralServicesComponent,
+    GeneralProcessNotificationApprovalComponent,
     InquiryOldComponent,
     ConsultationComponent,
     ConsultationOldComponent,

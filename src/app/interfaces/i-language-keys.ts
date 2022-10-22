@@ -1526,5 +1526,8 @@ export interface ILanguageKeys {
   lbl_main_team: string;
   section: string;
   profile: string;
+  disclosure_statements_notices_notifications_notices: string;
+  sample_data_for_operations: string;
+  approval_general_process_notification: string;
 }
 
