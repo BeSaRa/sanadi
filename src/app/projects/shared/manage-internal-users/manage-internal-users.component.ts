@@ -22,12 +22,22 @@ import {GeneralAssociationMeetingStepNameEnum} from '@app/enums/general-associat
 export class ManageInternalUsersComponent implements OnInit {
   @Input() internalMembersForm!: FormGroup;
   @Input() isExternalUser!: boolean;
-  @Input() readonly!: boolean;
+  @Input() isCancel!: boolean;
   @Input() caseStepName!: string;
   @Input() model!: GeneralAssociationMeetingAttendance;
   @Input() selectedInternalUsers: GeneralAssociationInternalMember[] = [];
   @Output() memberListChanged: EventEmitter<GeneralAssociationInternalMember[]> = new EventEmitter<GeneralAssociationInternalMember[]>();
+  _isClaimed!: boolean;
+  @Input() set isClaimed(value: boolean) {
+    this._isClaimed = value;
+    this.setReadonly();
+  };
 
+  get isClaimed(): boolean {
+    return this._isClaimed;
+  }
+
+  readonly!: boolean;
   addMemberFormActive!: boolean;
 
   selectedInternalUser!: GeneralAssociationInternalMember | null;
@@ -54,7 +64,18 @@ export class ManageInternalUsersComponent implements OnInit {
 
   ngOnInit(): void {
     this.buildMemberForm();
+    this.setReadonly();
   }
+
+  setReadonly() {
+    this.readonly = !this.isClaimed || this.isCancel ||
+      !(this.isSupervisionAndControlReview() || this.isSupervisionManagerReview() || this.isSupervisionAndControlRework()) ||
+      (this.model?.getCaseStatus() !== CommonCaseStatus.UNDER_PROCESSING && this.model?.getCaseStatus() !== CommonCaseStatus.RETURNED);
+  }
+
+/*!model?.taskDetails?.isClaimed() || isCancel ||
+!(isSupervisionAndControlReviewStep || isSupervisionManagerReviewStep || isSupervisionAndControlRework) ||
+(model?.getCaseStatus() !== commonCaseStatus.UNDER_PROCESSING && model?.getCaseStatus() !== commonCaseStatus.RETURNED)*/
 
   buildMemberForm(): void {
     this.internalMembersForm = this.fb.group({
@@ -190,7 +211,7 @@ export class ManageInternalUsersComponent implements OnInit {
     this.selectedInternalUsers.find(u => u.domainName === generalAssociationInternalMember.domainName)!.memberType = GeneralAssociationInternalMemberTypeEnum.IS_DECISION_MAKER;
   }
 
-  get isUnderProcessingLicense() {
+  isUnderProcessingLicense() {
     return this.model.getCaseStatus() === CommonCaseStatus.UNDER_PROCESSING;
   }
 

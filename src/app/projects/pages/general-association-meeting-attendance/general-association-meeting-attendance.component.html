@@ -323,7 +323,9 @@
                                [selectedInternalUsers]="selectedInternalUsers"
                                [caseStepName]="model?.taskDetails?.name!"
                                [isExternalUser]="isExternalUser"
-                               [readonly]="!model?.taskDetails?.isClaimed() || isCancel || !(isSupervisionAndControlReviewStep || isSupervisionManagerReviewStep || isSupervisionAndControlRework) || (model?.getCaseStatus() !== commonCaseStatus.UNDER_PROCESSING && model?.getCaseStatus() !== commonCaseStatus.RETURNED)"></manage-internal-users>
+                               [isCancel]="isCancel"
+                               [isClaimed]="model?.taskDetails?.isClaimed()!"
+                               [model]="model!"></manage-internal-users>
       </ng-template>
     </ng-container>
     <ng-container>

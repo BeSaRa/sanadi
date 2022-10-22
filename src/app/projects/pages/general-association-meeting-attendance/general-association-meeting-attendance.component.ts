@@ -53,7 +53,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   selectedLicenseDisplayedColumns: string[] = ['serial', 'requestType', 'licenseStatus'];
   hasSearchedForLicense = false;
   commonCaseStatus = CommonCaseStatus;
-  isCancel!: boolean;
+  isCancel: boolean = false;
 
   requestTypes: Lookup[] = this.lookupService.listByCategory.CollectionRequestType
     .sort((a, b) => a.lookupKey - b.lookupKey);
