@@ -152,9 +152,9 @@ NpoManagementService
       return;
     }
     if (this.openFrom === OpenFrom.USER_INBOX) {
-      if (this.employeeService.isCharityManager()) {
+      if (this.employeeService.isCharityManager() || this.employeeService.isLicensingUser()) {
         this.readonly = false;
-      } else if (this.employeeService.isCharityUser() || this.employeeService.isLicensingUser()) {
+      } else if (this.employeeService.isCharityUser()) {
         this.readonly = !this.model.isReturned();
       }
     } else if (this.openFrom === OpenFrom.TEAM_INBOX) {

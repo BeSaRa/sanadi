@@ -1,3 +1,6 @@
+import { CommonUtils } from './../../../../helpers/common-utils';
+import { LangType } from './../../../../types/types';
+import { ILanguageKeys } from './../../../../interfaces/i-language-keys';
 import { NpoManagement } from './../../../../models/npo-management';
 import { DatepickerOptionsMap } from '@app/types/types';
 import { DateUtils } from '@app/helpers/date-utils';
@@ -25,6 +28,7 @@ import { AffiliationRequestType } from '@app/enums/service-request-types';
 export class NpoManagementApprovePopupComponent implements OnInit {
   comment: UntypedFormControl = new UntypedFormControl('', [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]);
   response: WFResponseType = WFResponseType.APPROVE;
+  label: keyof ILanguageKeys;
   action$: Subject<any> = new Subject<any>();
   approvalForm!: UntypedFormGroup;
   datepickerOptionsMap: DatepickerOptionsMap = {
@@ -43,6 +47,7 @@ export class NpoManagementApprovePopupComponent implements OnInit {
     private inboxService: InboxService,
     private fb: UntypedFormBuilder
   ) {
+    this.label = ((CommonUtils.changeCamelToSnakeCase(this.data.action) + '_task') as unknown as keyof ILanguageKeys);
     this.response = this.data.action;
     this.approvalForm = this.fb.group(this.data.model.buildApprovalForm(true))
   }
@@ -73,7 +78,6 @@ export class NpoManagementApprovePopupComponent implements OnInit {
         this.dialogRef.close(true);
       })
   }
-
   private getResponse(): Partial<IWFResponse> {
     return this.comment.value ? {
       selectedResponse: this.response,

@@ -1522,5 +1522,7 @@ export interface ILanguageKeys {
   remove_service_messages: string;
   section: string;
   profile: string;
+  email_address_of_the_employer: string;
+  phone_of_the_employer: string;
 }
 
