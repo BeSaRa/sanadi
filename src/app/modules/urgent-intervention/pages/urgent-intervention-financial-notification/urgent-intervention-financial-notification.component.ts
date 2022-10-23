@@ -220,8 +220,19 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
     });
   }
 
+  private _updateModelAfterSave(model: UrgentInterventionFinancialNotification): void {
+    if ((this.openFrom === OpenFrom.USER_INBOX || this.openFrom === OpenFrom.TEAM_INBOX) && this.model?.taskDetails && this.model.taskDetails.tkiid) {
+      this.service.getTask(this.model.taskDetails.tkiid)
+        .subscribe((model) => {
+          this.model = model;
+        });
+    } else {
+      this.model = model;
+    }
+  }
+
   _afterSave(model: UrgentInterventionFinancialNotification, saveType: SaveTypes, operation: OperationTypes): void {
-    this.model = model;
+    this._updateModelAfterSave(model);
     if (
       (operation === OperationTypes.CREATE && saveType === SaveTypes.FINAL) ||
       (operation === OperationTypes.UPDATE && saveType === SaveTypes.COMMIT)

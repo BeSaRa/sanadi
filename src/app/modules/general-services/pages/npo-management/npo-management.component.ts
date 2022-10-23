@@ -141,11 +141,6 @@ NpoManagementService
     super();
   }
   handleReadonly(): void {
-    if (this.requestTypeField.value == NPORequestType.CANCEL || this.requestTypeField.value == NPORequestType.CLEARANCE || this.requestTypeField.value == NPORequestType.DISBANDMENT) {
-      this.readonly = true;
-    } else {
-      this.readonly = false;
-    }
     // if record is new, no readonly (don't change as default is readonly = false)
     if (!this.model?.id) {
       return;
@@ -183,6 +178,7 @@ NpoManagementService
   }
   _initComponent(): void {
     this._buildForm();
+    this.handleReadonly();
     this.profileService.getByRegistrationAuthorities().subscribe((data: any) => {
       this.registrationAuthoritiesList = data
     })
@@ -195,11 +191,10 @@ NpoManagementService
     this.adminLookupService.loadAsLookups(AdminLookupTypeEnum.ACTIVITY_TYPE).subscribe((data: never[] | AdminLookup[]) => {
       this.activityTypesList = data;
     })
-    if (this.isRegistrationAuthority) {
+    if (this.isRegistrationAuthority)
       this.npoIdField.setValue(
         this.employeeService.getProfile()?.profileDetails.entityId
-      )
-    }
+      );
   }
   _buildForm(): void {
     const model = new NpoManagement().buildForm(true);
@@ -242,7 +237,8 @@ NpoManagementService
     const value = new NpoManagement().clone({
       ...this.model,
       ...this.basicInfo.value,
-      ...this.contectInfo.value
+      ...this.contectInfo.value,
+      profileId: this.model?.profileId
     })
     value.bankAccountList = this.bankAccountComponentRef.list;
     value.contactOfficerList = this.contactOfficerComponentRef.list;
@@ -304,6 +300,9 @@ NpoManagementService
           this.handleReadonly();
           if (this.isNew) {
             this._resetForm();
+            if (this.isRegistrationAuthority) {
+              this.loadOrganizationData();
+            }
           } else if (this.requestTypeField.value && this.npoIdField.value) {
             this.loadOrganizationData()
           }
@@ -342,13 +341,16 @@ NpoManagementService
   loadOrganizationData() {
     this.npoDataService.loadCompositeById(this.npoIdField.value)
       .subscribe((data: any) => {
-        this.setSelectedLicense(data)
+        if (this.isRegistrationAuthority && this.isNew)
+          this.registrationAuthorityField.setValue(data.profileInfo?.registrationAuthority);
+        else
+          this.setSelectedLicense(data)
       })
   }
 
   private setSelectedLicense(details: NpoData) {
     if (details) {
-      let value: any = new NpoManagement();
+      let value: NpoManagement = new NpoManagement();
       value.requestType = this.requestTypeField.value;
       value.objectDBId = details.id;
       value.arabicName = details.arName;
@@ -356,7 +358,7 @@ NpoManagementService
       value.unifiedEconomicRecord = details.unifiedEconomicRecord;
       value.activityType = details.activityType;
       value.establishmentDate = details.establishmentDate;
-      value.registrationAuthority = details.registrationAuthority;
+      value.registrationAuthority = details.profileInfo?.registrationAuthority;
       value.registrationDate = details.registrationDate;
       value.registrationNumber = details.registrationNumber;
       value.disbandmentType = details.disbandmentType;
@@ -378,6 +380,7 @@ NpoManagementService
       value.instagram = details.instagram;
       value.snapChat = details.snapChat;
       value.youTube = details.youTube;
+      value.profileId = details.profileId;
 
       value.bankAccountList = details.bankAccountList.map((ba: any) => {
         const ob = new NpoBankAccount().clone({

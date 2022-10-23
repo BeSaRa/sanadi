@@ -23,7 +23,7 @@ export class NpoContactOfficer extends SearchableCloneable<NpoContactOfficer>{
       email: control ? [email, [CustomValidators.required, CustomValidators.pattern('EMAIL')]] : email,
       phone: control ? [phone, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : phone,
       extraPhone: control ? [extraPhone, CustomValidators.commonValidations.phone] : extraPhone,
-      jobTitleId: control ? [jobTitleId, [CustomValidators.required ]] : jobTitleId,
+      jobTitleId: control ? [jobTitleId, [CustomValidators.required]] : jobTitleId,
     };
   }
 }

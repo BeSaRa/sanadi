@@ -157,14 +157,14 @@ export class FounderMembersComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$),
       filter((form) => {
         const valid = this._list.findIndex(f => f.identificationNumber == form.value.identificationNumber) == -1;
-        !valid && this.dialogService
+        !valid && this.editIndex == -1 && this.dialogService
           .error(this.lang.map.msg_user_identifier_is_already_exist)
           .onAfterClose$
           .pipe(take(1))
           .subscribe(() => {
             this.form.get('founderMembers')?.markAllAsTouched();
           });
-        return valid
+        return valid || this.editIndex != -1
       }),
       map(() => {
         return (this.form.get('founderMembers.0')) as UntypedFormArray;
@@ -240,7 +240,11 @@ export class FounderMembersComponent implements OnInit, OnDestroy {
   private _setComponentReadiness(readyStatus: ReadinessStatus) {
     this.readyEvent.emit(readyStatus);
   }
-
+  view($event: MouseEvent, record: FounderMembers, index: number) {
+    $event.preventDefault();
+    this.editIndex = index;
+    this.changed$.next(record);
+  }
   forceClearComponent() {
     this.cancel();
     this.list = [];

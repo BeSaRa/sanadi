@@ -36,7 +36,7 @@
           <div class="col-sm-12 col-md-6 mb-4 position-relative">
             <label asteriskIfRequired="currency" for="currency" class="form-label">{{lang.map.currency}}</label>
             <ng-select [selectOnTab]="true" labelForId="currency" [clearable]="false" placeholder="{{lang.map.select}}"
-              id="currency" [notFoundText]="lang.map.msg_not_found" disabld appendTo="body" formControlName="currency"
+              id="currency" [notFoundText]="lang.map.msg_not_found" [readonly]="true" appendTo="body" formControlName="currency"
               validationClasses="currency">
               <ng-option *ngFor="let option of currenciesList" [value]="option.lookupKey">
                 {{option.getName()}}
@@ -72,15 +72,15 @@
     <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
     <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
       <div class="d-flex flex-row">
-        <button (click)="deleteBankAccount($event, row, i)" class="icon-btn text-primary" [disabled]="readonly"
+        <button (click)="deleteBankAccount($event, row, i)" *ngIf="!readonly" class="icon-btn text-primary" [disabled]="readonly"
           tooltip="{{lang.map.btn_delete}}">
           <i class="mdi mdi-close-box"></i>
         </button>
-        <button (click)="editBankAccount($event, row, i)" class="icon-btn text-primary" [disabled]="readonly"
+        <button (click)="editBankAccount($event, row, i)" *ngIf="!readonly" class="icon-btn text-primary" [disabled]="readonly"
           tooltip="{{lang.map.btn_edit}}">
           <i class="mdi mdi-pen"></i>
         </button>
-        <button (click)="view($event, row, i)" class="icon-btn text-primary" tooltip="{{lang.map.view}}">
+        <button (click)="view($event, row, i)" *ngIf="readonly" class="icon-btn text-primary" tooltip="{{lang.map.view}}">
           <i class="mdi mdi-eye"></i>
         </button>
       </div>

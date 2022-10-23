@@ -145,14 +145,14 @@ export class NpoContactOfficerComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$),
       filter((form) => {
         const valid = this._list.findIndex(c => c.identificationNumber == form.value.identificationNumber) == -1;
-        !valid && this.dialogService
+        !valid && this.editIndex == -1 && this.dialogService
           .error(this.lang.map.msg_user_identifier_is_already_exist)
           .onAfterClose$
           .pipe(take(1))
           .subscribe(() => {
             this.form.get('contactOfficers')?.markAllAsTouched();
           });
-        return valid
+        return valid || this.editIndex != -1
       }),
       map(() => {
         return (this.form.get('contactOfficers.0')) as UntypedFormArray;
@@ -229,6 +229,11 @@ export class NpoContactOfficerComponent implements OnInit, OnDestroy {
     this.readyEvent.emit(readyStatus);
   }
 
+  view($event: MouseEvent, record: NpoContactOfficer, index: number) {
+    $event.preventDefault();
+    this.editIndex = index;
+    this.changed$.next(record);
+  }
   forceClearComponent() {
     this.cancel();
     this.list = [];
