@@ -455,6 +455,10 @@
                         (click)="openFileBrowser($event)">
                   {{lang.map.upload_final_report}}
                 </button>
+              </div>
+            </div>
+            <div class="row" *ngIf="this.model?.isManagerFinalReviewStep()">
+              <div class="col-12 text-center action-container mb-3">
                 <button class="btn btn-primary" style="margin-right: 10px; margin-left: 10px"
                         *ngIf="model?.meetingReportID"
                         (click)="viewFinalReport$.next()">
