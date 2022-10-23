@@ -26,6 +26,9 @@ import { Subject, of } from 'rxjs';
 export class SubTeamComponent extends AdminGenericComponent<SubTeam, SubTeamService> {
   displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'status', 'actions'];
 
+  afterReload(): void {
+    this.table && this.table.clearSelection();
+  }
 
   @ViewChild('table') table!: TableComponent;
   view$: Subject<SubTeam> = new Subject<SubTeam>();

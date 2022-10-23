@@ -1,3 +1,4 @@
+import { GeneralProcessComponent } from './pages/general-process/general-process.component';
 import {CustomMenuPopupComponent} from './popups/custom-menu-popup/custom-menu-popup.component';
 import {CustomMenuComponent} from './pages/custom-menu/custom-menu.component';
 import {OrganizationUnitFieldPopupComponent} from './popups/organization-unit-field-popup/organization-unit-field-popup.component';
@@ -111,6 +112,7 @@ import { SubTeamComponent } from './pages/sub-team/sub-team.component';
     InternalDepartmentPopupComponent,
     JobTitleComponent,
     JobTitlePopupComponent,
+    GeneralProcessComponent,
     SubTeamComponent,
     SubTeamPopupComponent,
     UserTeamComponent,
