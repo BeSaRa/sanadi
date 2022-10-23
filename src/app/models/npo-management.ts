@@ -1,3 +1,4 @@
+import { Profile } from '@app/models/profile';
 import { normalSearchFields } from '@app/helpers/normal-search-fields';
 import { infoSearchFields } from '@app/helpers/info-search-fields';
 import { dateSearchFields } from '@app/helpers/date-search-fields';
@@ -69,6 +70,7 @@ export class NpoManagement
   instagram!: string;
   snapChat!: string;
   youTube!: string;
+  profileId!: number;
   // readonly info
   contactOfficerList: NpoContactOfficer[] = [];
   founderMemberList: FounderMembers[] = [];
@@ -78,7 +80,7 @@ export class NpoManagement
   subject!: string;
   fullSerial!: string;
   oldLicenseFullSerial!: string;
-
+  profileInfo!: Profile;
   activityTypeInfo!: AdminResult;
   nationalityInfo!: AdminResult;
   clearanceInfo!: AdminResult;

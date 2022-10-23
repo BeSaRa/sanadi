@@ -1,3 +1,4 @@
+import { Profile } from '@app/models/profile';
 import { NpoBankInterceptor } from './npo-bank-interceptor';
 import { NpoContactOfficerInterceptor } from './NpoContactOfficerInterceptor';
 import { RealBeneficiary } from '@app/models/real-beneficiary';
@@ -21,6 +22,7 @@ export class NpoManagementInterceptor implements IModelInterceptor<NpoManagement
   receive(model: NpoManagement): NpoManagement {
     model.requestTypeInfo && (model.requestTypeInfo = AdminResult.createInstance(model.requestTypeInfo));
     model.activityTypeInfo && (model.activityTypeInfo = AdminResult.createInstance(model.activityTypeInfo));
+    model.profileInfo && (model.profileInfo = Object.assign(new Profile, model.profileInfo));
     model.clearanceInfo && (model.clearanceInfo = AdminResult.createInstance(model.clearanceInfo));
     model.disbandmentInfo && (model.disbandmentInfo = AdminResult.createInstance(model.disbandmentInfo));
     model.registrationAuthorityInfo && (model.registrationAuthorityInfo = AdminResult.createInstance(model.registrationAuthorityInfo));
@@ -95,6 +97,7 @@ export class NpoManagementInterceptor implements IModelInterceptor<NpoManagement
   private static _deleteBeforeSend(model: Partial<NpoManagement>): void {
     delete model.searchFields;
     delete model.requestTypeInfo;
+    delete model.profileInfo;
     delete model.activityTypeInfo;
     delete model.clearanceInfo;
     delete model.disbandmentInfo;

@@ -158,14 +158,14 @@ export class NpoBankAccountComponent implements OnInit {
       takeUntil(this.destroy$),
       filter((form) => {
         const valid = this._list.findIndex(f => f.accountNumber == form.value.accountNumber) == -1;
-        !valid && this.dialogService
+        !valid && this.editRecordIndex == -1 && this.dialogService
           .error(this.lang.map.msg_user_identifier_is_already_exist)
           .onAfterClose$
           .pipe(take(1))
           .subscribe(() => {
             this.form.get('bankAccount')?.markAllAsTouched();
           });
-        return valid
+        return valid || this.editRecordIndex != -1
       }),
       map(() => {
         return (this.form.get('bankAccount.0')) as UntypedFormArray;

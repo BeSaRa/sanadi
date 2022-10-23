@@ -1,3 +1,4 @@
+import { Profile } from '@app/models/profile';
 import { NpoData } from './../models/npo-data';
 import { AdminResult } from '../models/admin-result';
 import { DateUtils } from '../helpers/date-utils';
@@ -10,6 +11,7 @@ export class NpoDataInterceptor implements IModelInterceptor<NpoData> {
     model.clearanceInfo && (model.clearanceInfo = AdminResult.createInstance(model.clearanceInfo));
     model.disbandmentInfo && (model.disbandmentInfo = AdminResult.createInstance(model.disbandmentInfo));
     model.registrationAuthorityInfo && (model.registrationAuthorityInfo = AdminResult.createInstance(model.registrationAuthorityInfo));
+    model.profileInfo && (model.profileInfo = Object.assign(new Profile, model.profileInfo));
 
     model.establishmentDate = DateUtils.changeDateToDatepicker(model.establishmentDate);
     model.disbandmentDate = DateUtils.changeDateToDatepicker(model.disbandmentDate);
@@ -28,6 +30,7 @@ export class NpoDataInterceptor implements IModelInterceptor<NpoData> {
   private static _deleteBeforeSend(model: Partial<NpoData>): void {
     delete model.searchFields;
     delete model.activityTypeInfo;
+    delete model.profileInfo;
     delete model.clearanceInfo;
     delete model.disbandmentInfo;
     delete model.registrationAuthorityInfo;
