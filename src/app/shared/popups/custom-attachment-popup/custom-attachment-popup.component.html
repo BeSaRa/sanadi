@@ -52,11 +52,6 @@
           <th cdk-header-cell class="bg-primary text-white" *cdkHeaderCellDef> {{lang.map.published}}</th>
           <td cdk-cell *cdkCellDef="let row">
             <span *ngIf="!canChangePublished(row)">{{row.getPublishedTranslate()}}</span>
-            <span *ngIf="canChangePublished(row)" class="form-check form-switch switch-action"
-                  style="top: auto">
-                  <input class="form-check-input" type="checkbox" [checked]="row.isPublished"
-                         (change)="row.isPublished = !row.isPublished">
-                </span>
             <span *ngIf="canChangePublished(row)" class="form-check form-switch switch-action" style="top: auto">
               <input class="form-check-input" type="checkbox" [checked]="row.isPublished"
                      [disabled]="isDisabledActionButtons(row, 'publish')"
