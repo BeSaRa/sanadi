@@ -3,7 +3,6 @@ import { Lookup } from '@app/models/lookup';
 import { TabComponent } from './../../../../shared/components/tab/tab.component';
 import { UserClickOn } from '@app/enums/user-click-on.enum';
 import { takeUntil, switchMap, map, catchError, filter, tap, exhaustMap } from 'rxjs/operators';
-import { NpoManagement } from './../../../../models/npo-management';
 import { EmployeeService } from '@app/services/employee.service';
 import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
 import { OpenFrom } from '@app/enums/open-from.enum';
@@ -32,6 +31,9 @@ GeneralProcessNotification,
 GeneralProcessNotificationService
 > {
   notificationRequestType: Lookup[] = [];
+  operationsList = [];
+  operationsTypeList = [];
+
   form!: UntypedFormGroup;
   licenseSearch$: Subject<string> = new Subject<string>();
   selectedLicense?: GeneralProcessNotification;

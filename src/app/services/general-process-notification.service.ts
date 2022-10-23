@@ -38,7 +38,7 @@ export class GeneralProcessNotificationService extends BaseGenericEService<Gener
     return this._getUrlService().URLS.GENERAL_PROCESS_NOTIFICATION;
   }
   _getModel() {
-    return new GeneralProcessNotification();
+    return GeneralProcessNotification;
   }
   getSearchCriteriaModel<S extends GeneralProcessNotification>(): GeneralProcessNotification {
     return new GeneralProcessNotification();
