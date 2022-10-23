@@ -154,7 +154,7 @@ NpoManagementService
     if (this.openFrom === OpenFrom.USER_INBOX) {
       if (this.employeeService.isCharityManager()) {
         this.readonly = false;
-      } else if (this.employeeService.isCharityUser()) {
+      } else if (this.employeeService.isCharityUser() || this.employeeService.isLicensingUser()) {
         this.readonly = !this.model.isReturned();
       }
     } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
@@ -295,11 +295,11 @@ NpoManagementService
     ).subscribe((clickOn: UserClickOn) => {
       if (clickOn === UserClickOn.YES) {
         if (userInteraction) {
+          this._resetForm();
           this.setFieldsValidation();
           this.requestTypeField.setValue(requestTypeValue);
           this.handleReadonly();
           if (this.isNew) {
-            this._resetForm();
             if (this.isRegistrationAuthority) {
               this.loadOrganizationData();
             }
@@ -443,8 +443,8 @@ NpoManagementService
         return ob;
       });
 
-      this._updateForm(value);
       this.setFieldsValidation();
+      this._updateForm(value);
       this.handleReadonly();
     }
   }
@@ -536,8 +536,15 @@ NpoManagementService
   get isRegistrationAuthority() {
     return this.employeeService.getProfile()?.profileType == ProfileTypes.NON_PROFIT_ORGANIZATIONS
   }
+  get isViewOnly() {
+    return this.isClearance || this.isDisbandment || this.isCancel
+  }
+
   get isNew() {
     return this.requestTypeField.value == NPORequestType.NEW
+  }
+  get isCancel() {
+    return this.requestTypeField.value == NPORequestType.CANCEL
   }
   get isClearance() {
     return this.requestTypeField.value == NPORequestType.CLEARANCE
