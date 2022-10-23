@@ -814,7 +814,9 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   getMembersComments(mainItemIndex: number, index: number): MeetingPointMemberComment[] {
     let mainItem = this.mainItems.at(mainItemIndex);
     let subItem = (mainItem.get('meetingSubItem') as UntypedFormArray).at(index) as FormGroup;
-    return subItem.get('userComments')?.value as MeetingPointMemberComment[];
+    return subItem.get('userComments')?.value.map((x: MeetingPointMemberComment) => {
+      return new MeetingPointMemberComment().clone(x);
+    });
   }
 
   newSubItem(subItem: MeetingAttendanceSubItem = new MeetingAttendanceSubItem()): FormGroup {
