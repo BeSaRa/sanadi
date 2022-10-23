@@ -11,6 +11,7 @@ export class NpoDataInterceptor implements IModelInterceptor<NpoData> {
     model.clearanceInfo && (model.clearanceInfo = AdminResult.createInstance(model.clearanceInfo));
     model.disbandmentInfo && (model.disbandmentInfo = AdminResult.createInstance(model.disbandmentInfo));
     model.registrationAuthorityInfo && (model.registrationAuthorityInfo = AdminResult.createInstance(model.registrationAuthorityInfo));
+    model.profileInfo && (model.profileInfo = Object.assign(new Profile, model.profileInfo));
 
     model.establishmentDate = DateUtils.changeDateToDatepicker(model.establishmentDate);
     model.disbandmentDate = DateUtils.changeDateToDatepicker(model.disbandmentDate);
