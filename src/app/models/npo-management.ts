@@ -70,6 +70,7 @@ export class NpoManagement
   instagram!: string;
   snapChat!: string;
   youTube!: string;
+  profileId!: number;
   // readonly info
   contactOfficerList: NpoContactOfficer[] = [];
   founderMemberList: FounderMembers[] = [];

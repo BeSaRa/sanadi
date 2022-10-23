@@ -237,7 +237,8 @@ NpoManagementService
     const value = new NpoManagement().clone({
       ...this.model,
       ...this.basicInfo.value,
-      ...this.contectInfo.value
+      ...this.contectInfo.value,
+      profileId: this.model?.profileId
     })
     value.bankAccountList = this.bankAccountComponentRef.list;
     value.contactOfficerList = this.contactOfficerComponentRef.list;
@@ -349,7 +350,7 @@ NpoManagementService
 
   private setSelectedLicense(details: NpoData) {
     if (details) {
-      let value: any = new NpoManagement();
+      let value: NpoManagement = new NpoManagement();
       value.requestType = this.requestTypeField.value;
       value.objectDBId = details.id;
       value.arabicName = details.arName;
@@ -379,6 +380,7 @@ NpoManagementService
       value.instagram = details.instagram;
       value.snapChat = details.snapChat;
       value.youTube = details.youTube;
+      value.profileId = details.profileId;
 
       value.bankAccountList = details.bankAccountList.map((ba: any) => {
         const ob = new NpoBankAccount().clone({

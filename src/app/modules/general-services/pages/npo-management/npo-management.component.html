@@ -66,7 +66,7 @@
             <label asteriskIfRequired="registrationAuthority" for="registrationAuthority" class="form-label">{{
               lang.map.registration_authority }}</label>
             <ng-select [selectOnTab]="true" placeholder="{{ lang.map.select }}" [notFoundText]="lang.map.msg_not_found"
-              [readonly]="isRegistrationAuthority || (!isNew && readonly)" appendTo="body" id="registrationAuthority"
+              [readonly]="isRegistrationAuthority || !isNew || readonly" appendTo="body" id="registrationAuthority"
               validationClasses="registrationAuthority" formControlName="registrationAuthority">
               <ng-option *ngFor="let option of registrationAuthoritiesList" [value]="option.id">{{ option.getName() }}
               </ng-option>
@@ -93,7 +93,7 @@
           <label asteriskIfRequired="registrationNumber" for="registrationNumber" class="form-label">{{
             lang.map.lbl_registration_number
             }}</label>
-          <input id="registrationNumber" formControlName="registrationNumber" [readonly]="!isNew && readonly"
+          <input id="registrationNumber" formControlName="registrationNumber" [readonly]="!isNew || readonly"
             validationClasses="registrationNumber" class="form-control" />
           <app-field-error-message controlName="registrationNumber"></app-field-error-message>
         </div>

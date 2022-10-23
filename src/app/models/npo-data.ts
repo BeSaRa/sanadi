@@ -48,6 +48,7 @@ export class NpoData extends BaseModel<NpoData, NpoDataService> {
   instagram!: string;
   snapChat!: string;
   youTube!: string;
+  profileId!: number;
   contactOfficerList: NpoContactOfficer[] = [];
   founderList: FounderMembers[] = [];
   bankAccountList: NpoBankAccount[] = [];
