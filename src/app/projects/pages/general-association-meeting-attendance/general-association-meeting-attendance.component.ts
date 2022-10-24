@@ -92,6 +92,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   isManagerFinalReview!: boolean;
   memberId!: number;
   hoursList = DateUtils.getHoursList();
+  generalAssociationMeetingRequestTypeEnum = GeneralAssociationMeetingRequestTypeEnum;
 
   // meeting points form
   meetingPointsForm!: UntypedFormGroup;
@@ -989,7 +990,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     });
   }
 
-  printConsole(event: any) {
+  meetingDateChanged(event: any) {
     this.year.patchValue((new Date(DateUtils.getDateStringFromDate(event))).getFullYear());
   }
 }

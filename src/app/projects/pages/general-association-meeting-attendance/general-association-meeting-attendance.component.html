@@ -67,7 +67,7 @@
                      id="oldFullSerial"
                      validationClasses="oldFullSerial">
               <app-field-error-message controlName="oldFullSerial"></app-field-error-message>
-              <button (click)="searchForLicense()" [disabled]="(readonly)" class="input-group-text">
+              <button (click)="searchForLicense()" [disabled]="(readonly || requestType?.value === generalAssociationMeetingRequestTypeEnum.NEW)" class="input-group-text">
                 <i class="mdi mdi-magnify text-primary"></i>
               </button>
             </div>
@@ -154,7 +154,7 @@
               <div class="input-group">
                 <i class="input-group-text mdi mdi-calendar"></i>
                 <div #dpMeetingDate="angular-mydatepicker"
-                     (dateChanged)="printConsole($event)"
+                     (dateChanged)="meetingDateChanged($event)"
                      (click)="(!readonly || canUpdateMeetingDate()) && dpMeetingDate.toggleCalendar()"
                      [ngClass]="getMeetingDateClass()"
                      [options]="datepickerOptionsMap.meetingDate"
