@@ -22,6 +22,7 @@ import {ISearchFieldsMap} from '@app/types/types';
 import {dateSearchFields} from '@helpers/date-search-fields';
 import {infoSearchFields} from '@helpers/info-search-fields';
 import {normalSearchFields} from '@helpers/normal-search-fields';
+import {CommonUtils} from '@helpers/common-utils';
 
 const _RequestType = mixinRequestType(CaseModel);
 const interceptor = new GeneralAssociationMeetingAttendanceInterceptor();
@@ -106,7 +107,10 @@ export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAss
       meetingInitiator: controls ? [meetingInitiator, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : meetingInitiator,
       meetingClassification: controls ? [meetingClassification, [CustomValidators.required]] : meetingClassification,
       periodical: controls ? [periodical, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(2)]] : periodical,
-      year: controls ? [{value: year, disabled: true}, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(2)]] : year
+      year: controls ? [{
+        value: year,
+        disabled: true
+      }, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(2)]] : year
     };
   }
 
@@ -169,8 +173,12 @@ export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAss
     return !this.isSendToMember && this.isDecisionMakerReviewStep() || this.isMemberReviewStep();
   }
 
-  canAddOrRemoveMeetingPoints(): boolean {
-    return !this.isSendToMember && this.isDecisionMakerReviewStep();
+  canAddMeetingPoints(): boolean {
+    return (!this.isSendToMember && this.isDecisionMakerReviewStep()) || (this.isSendToMember && this.isMemberReviewStep());
+  }
+
+  canRemoveMeetingPoints(pointId: boolean): boolean {
+    return (!this.isSendToMember && this.isDecisionMakerReviewStep()) || (this.isSendToMember && this.isMemberReviewStep() && !CommonUtils.isValidValue(pointId));
   }
 
   isSentToMember(): boolean {

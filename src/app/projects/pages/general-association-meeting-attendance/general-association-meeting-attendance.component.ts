@@ -999,4 +999,8 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   meetingDateChanged(event: any) {
     this.year.patchValue((new Date(DateUtils.getDateStringFromDate(event))).getFullYear());
   }
+
+  canRemoveMeetingPoint(point: any) {
+    return this.model?.canRemoveMeetingPoints(point.get('id').value);
+  }
 }
