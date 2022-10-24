@@ -225,7 +225,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
       this.generalNotes = notes;
     });
 
-    if (this.model?.isSentToMember() && this.model?.isDecisionMakerReviewStep()) {
+    if (this.model?.isSentToMember() && this.model?.isDecisionMakerReviewStep() || this.model?.isManagerFinalReviewStep()) {
       this.loadMembersTaskStatus();
     }
 
@@ -921,6 +921,12 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   loadMembersTaskStatus() {
     this.service.getMemberTaskStatus(this.model?.id).subscribe(membersStatus => {
       this.meetingUserTaskStatus = [...membersStatus.map(x => new MeetingMemberTaskStatus().clone(x)).slice()];
+      this.selectedInternalUsers = this.selectedInternalUsers.map(user => {
+        user.pId = this.meetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.pId;
+        user.name = this.meetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.name;
+        user.tkiid = this.meetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.tkiid;
+        return user;
+      });
     });
   }
 

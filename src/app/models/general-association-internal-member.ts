@@ -9,6 +9,9 @@ export class GeneralAssociationInternalMember extends SearchableCloneable<Genera
   englishName!: string;
   domainName!: string;
   memberType!: number;
+  name?: string;
+  pId?: string;
+  tkiid?: string;
   memberTypeInfo!: AdminResult;
   langService!: LangService;
 

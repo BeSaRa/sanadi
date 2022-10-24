@@ -73,6 +73,11 @@
                   </span>
             </td>
           </ng-container>
+          <ng-container cdkColumnDef="status">
+            <th *cdkHeaderCellDef cdk-header-cell
+                sortable-header> {{lang.map.status}}</th>
+            <td *cdkCellDef="let row" cdk-cell> {{row.name}} </td>
+          </ng-container>
           <ng-container cdkColumnDef="actions">
             <th *cdkHeaderCellDef cdk-header-cell> {{lang.map.lbl_actions}}</th>
             <td *cdkCellDef="let row" cdk-cell class="table-actions">
@@ -81,6 +86,12 @@
                         [disabled]="(readonly || addMemberFormActive)"
                         class="btn btn-link outline-none" tooltip="{{lang.map.btn_remove}}">
                   <i class="mdi mdi-close-box"></i>
+                </button>
+                <button *ngIf="!isExternalUser && model?.isSentToMember() && model?.isDecisionMakerReviewStep()"
+                  (click)="terminateUserTask($event, row)"
+                        [disabled]="!row.pId"
+                        class="btn btn-link outline-none" tooltip="{{lang.map.terminate_task}}">
+                  <i class="mdi mdi-stop-circle-outline"></i>
                 </button>
               </div>
             </td>
