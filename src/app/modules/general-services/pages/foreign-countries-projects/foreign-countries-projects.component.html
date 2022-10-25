@@ -105,35 +105,31 @@
             controlName="externalCooperationAuthority"
           ></app-field-error-message>
         </div>
-        <div class="col-sm-6 col-md-4 mb-4 position-relative">
-          <label
-            asteriskIfRequired="nPOList"
-            for="nPOList"
-            class="form-label"
-          >{{ lang.map.npo_list }}</label
-          >
-          <ng-select
-            [selectOnTab]="true"
-            labelForId="nPOList"
-            [multiple]="true"
-            [clearable]="true"
-            placeholder="{{ lang.map.select }}"
-            [readonly]="isCancelRequestType || !isEditAllowed"
-            id="nPOList"
-            [notFoundText]="lang.map.msg_not_found"
-            appendTo="body"
-            validationClasses="nPOList"
-            formControlName="nPOList"
-          >
-            <ng-option
-              [value]="option.id"
-              *ngFor="let option of npos$ | async"
-            >{{ option.getName() }}</ng-option
-            >
+        <div class="mb-4 ng-select-wrapper flex-grow-1">
+          <label for="nPOList">{{lang.map.npo_list}}</label>
+          <ng-select formControlName="nPOList" appendTo="body"
+                     [selectOnTab]="true" [items]="npos$| async" labelForId="nPOList"
+                     bindValue="id" [clearable]="true"
+                     placeholder="{{lang.map.select}}" id="nPOList"
+                     [notFoundText]="lang.map.msg_not_found"
+                     [multiple]="true" [closeOnSelect]="false">
+            <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+              <span class="custom-option" [ngOptionHighlight]="search">{{item.getName()}}</span>
+            </ng-template>
+            <ng-template ng-label-tmp let-item="item" let-clear="clear">
+              <span class="ng-value-label">{{item.getName()}}</span>
+              <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+            </ng-template>
+            <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+              <div class="ng-value" *ngFor="let item of (items ? items.slice(0,2): [])">
+                <span class="ng-value-label">{{item.getName()}}</span>
+                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+              </div>
+              <div class="ng-value" *ngIf="items.length > 2">
+                <span class="ng-value-label">{{items.length - 2}} more...</span>
+              </div>
+            </ng-template>
           </ng-select>
-          <app-field-error-message
-            controlName="nPOList"
-          ></app-field-error-message>
         </div>
         <div class="col-sm-6 col-md-4 mb-4 position-relative">
           <label
