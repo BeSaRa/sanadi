@@ -108,9 +108,6 @@ export class FounderMembersComponent implements OnInit, OnDestroy {
   private listenToChange() {
     this.changed$.pipe(takeUntil(this.destroy$))
       .subscribe(member => {
-        if (this.readonly) {
-          return;
-        }
         this.current = member || undefined;
         this.updateForm(this.current);
       })

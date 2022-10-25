@@ -7,8 +7,11 @@ export class ForeignCountriesProjectsInterceptor implements IModelInterceptor<Fo
   caseInterceptor?: IModelInterceptor<ForeignCountriesProjects> | undefined;
   send(model: Partial<ForeignCountriesProjects>): Partial<ForeignCountriesProjects> {
     delete model.entityClassification;
-    console.log(model);
-
+    delete model.requestTypeInfo;
+    delete model.service;
+    delete model.employeeService;
+    delete model.followUpService;
+    delete model.inboxService;
     model.projectNeeds?.forEach((e: Partial<ProjectNeed>) => {
       delete e.searchFields;
     });

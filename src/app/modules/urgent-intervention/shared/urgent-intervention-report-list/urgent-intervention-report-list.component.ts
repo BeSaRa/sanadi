@@ -26,17 +26,9 @@ export class UrgentInterventionReportListComponent extends AdminGenericComponent
     super();
   }
 
+  list: UrgentInterventionReport[] = [];
+
   @Input() readonly: boolean = false;
-
-  private _list: UrgentInterventionReport[] = [];
-  @Input()
-  set list(value: UrgentInterventionReport[]) {
-    this._list = value;
-  }
-
-  get list() {
-    return this._list;
-  }
 
   private _documentId: string = '';
   @Input()
