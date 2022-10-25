@@ -182,7 +182,7 @@ NpoManagementService
     this.profileService.getByRegistrationAuthorities().subscribe((data: any) => {
       this.registrationAuthoritiesList = data
     })
-    this.npoDataService.loadAsLookups().subscribe(data => {
+    this.npoDataService.loadActiveAsLookup().subscribe(data => {
       this.NpoList = data
     })
     this.bankService.loadAsLookups().subscribe((data) => {
