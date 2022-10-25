@@ -18,6 +18,7 @@ import { ParticipantOrganizationComponent } from './shared/participant-organizat
 import { OrganizaionOfficerComponent } from './shared/organizaion-officer/organizaion-officer.component';
 import { ResearchAndStudiesComponent } from './shared/research-and-studies/research-and-studies.component';
 import { ParticipantOrganizationsPopupComponent } from './popups/participant-organizations-popup/participant-organizations-popup.component';
+import { WorkAreasComponent } from '../general-services/shared/work-areas/work-areas.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,9 @@ import { ParticipantOrganizationsPopupComponent } from './popups/participant-org
     ParticipantOrganizationComponent,
     OrganizaionOfficerComponent,
     ResearchAndStudiesComponent,
-    ParticipantOrganizationsPopupComponent
+    ParticipantOrganizationsPopupComponent,
+    WorkAreasComponent,
+
   ],
   imports: [
     CommonModule,
@@ -56,7 +59,9 @@ import { ParticipantOrganizationsPopupComponent } from './popups/participant-org
     ParticipantOrganizationComponent,
     OrganizaionOfficerComponent,
     ResearchAndStudiesComponent,
-    ParticipantOrganizationsPopupComponent
+    ParticipantOrganizationsPopupComponent,
+    WorkAreasComponent,
+
   ]
 })
 export class EServicesMainModule {

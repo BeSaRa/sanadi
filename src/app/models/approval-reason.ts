@@ -1,20 +1,23 @@
 import {CustomValidators} from "@app/validators/custom-validators";
 import {SearchableCloneable} from "@app/models/searchable-cloneable";
+import { normalSearchFields } from "@app/helpers/normal-search-fields";
+import { ISearchFieldsMap } from "@app/types/types";
 
 export class ApprovalReason extends SearchableCloneable<ApprovalReason> {
   projects!: string;
   research!: string;
   fieldVisit!: string;
-  description!: string;
 
+  searchFields: ISearchFieldsMap<ApprovalReason> = {
+    ...normalSearchFields(['projects','research','fieldVisit'])
+  };
   getApprovalReasonFields(control: boolean): any {
-    const {description, fieldVisit, projects, research} = this;
+    const { fieldVisit, projects, research} = this;
 
     return {
-      projects: control ? [projects, CustomValidators.required] : projects,
-      research: control ? [research, CustomValidators.required] : research,
-      fieldVisit: control ? [fieldVisit, CustomValidators.required] : fieldVisit,
-      description: control ? [description, CustomValidators.required] : description
+      projects: control ? [projects,[ CustomValidators.required,CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : projects,
+      research: control ? [research,[ CustomValidators.required,CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : research,
+      fieldVisit: control ? [fieldVisit,[ CustomValidators.required,CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : fieldVisit,
     };
   }
 }

@@ -1,8 +1,12 @@
-import {CustomValidators} from '@app/validators/custom-validators';
-import {SearchableCloneable} from '@app/models/searchable-cloneable';
-import {CaseTypes} from '@app/enums/case-types.enum';
-import {Bank} from '@app/models/bank';
-import {Lookup} from '@app/models/lookup';
+import { AdminResult } from '@app/models/admin-result';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { SearchableCloneable } from '@app/models/searchable-cloneable';
+import { CaseTypes } from '@app/enums/case-types.enum';
+import { Bank } from '@app/models/bank';
+import { Lookup } from '@app/models/lookup';
+import { infoSearchFields } from '@app/helpers/info-search-fields';
+import { normalSearchFields } from '@app/helpers/normal-search-fields';
+import { ISearchFieldsMap } from '@app/types/types';
 
 export class BankAccount extends SearchableCloneable<BankAccount> {
   id!: number;
@@ -12,13 +16,20 @@ export class BankAccount extends SearchableCloneable<BankAccount> {
   iBan!: string;
   swiftCode!: string;
   country!: number;
+  partnerName!: string;
   category?: number;
   bankInfo!: Bank;
   isMergeAccount!: boolean;
   subAccounts: BankAccount[] = [];
   bankCategoryInfo!: Lookup;
   type!: number;
+  currencyInfo!: AdminResult;
+  countryInfo!: AdminResult;
 
+  searchFields: ISearchFieldsMap<BankAccount> = {
+    ...infoSearchFields(['countryInfo']),
+    ...normalSearchFields(['bankName', 'accountNumber', 'iBan']),
+  };
   constructor() {
     super();
   }
@@ -31,24 +42,86 @@ export class BankAccount extends SearchableCloneable<BankAccount> {
       iBan,
       swiftCode,
       country,
-      category
+      category,
+      partnerName,
     } = this;
     // if no case type or case type is not partner approval
-    let showCategory = (caseType !== CaseTypes.PARTNER_APPROVAL),
+    let showCategory = caseType !== CaseTypes.PARTNER_APPROVAL,
       controls: any = {
-        bankName: control ? [bankName, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : bankName,
-        accountNumber: control ? [accountNumber, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.SWIFT_CODE_MAX)]] : accountNumber,
-        iBan: control ? [iBan, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.SWIFT_CODE_MAX)]] : iBan,
-        swiftCode: control ? [swiftCode, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.SWIFT_CODE_MAX)]] : swiftCode,
+        bankName: control
+          ? [
+              bankName,
+              [
+                CustomValidators.required,
+                CustomValidators.minLength(
+                  CustomValidators.defaultLengths.MIN_LENGTH
+                ),
+                CustomValidators.maxLength(
+                  CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+                ),
+              ],
+            ]
+          : bankName,
+        accountNumber: control
+          ? [
+              accountNumber,
+              [
+                CustomValidators.required,
+                CustomValidators.number,
+                CustomValidators.maxLength(
+                  CustomValidators.defaultLengths.SWIFT_CODE_MAX
+                ),
+              ],
+            ]
+          : accountNumber,
+        iBan: control
+          ? [
+              iBan,
+              [
+                CustomValidators.required,
+                CustomValidators.number,
+                CustomValidators.maxLength(
+                  CustomValidators.defaultLengths.SWIFT_CODE_MAX
+                ),
+              ],
+            ]
+          : iBan,
+        swiftCode: control
+          ? [
+              swiftCode,
+              [
+                CustomValidators.required,
+                CustomValidators.maxLength(
+                  CustomValidators.defaultLengths.SWIFT_CODE_MAX
+                ),
+              ],
+            ]
+          : swiftCode,
         country: control ? [country, [CustomValidators.required]] : country,
-        currency: control ? [currency, [CustomValidators.required]] : currency
+        currency: control ? [currency, [CustomValidators.required]] : currency,
       };
 
     if (showCategory) {
-      controls.category = (control ? [category, [CustomValidators.required]] : category);
+      controls.category = control
+        ? [category, [CustomValidators.required]]
+        : category;
+    } else {
+      controls.partnerName = control
+        ? [
+            partnerName,
+            [
+              CustomValidators.required,
+              CustomValidators.minLength(
+                CustomValidators.defaultLengths.MIN_LENGTH
+              ),
+              CustomValidators.maxLength(
+                CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+              ),
+            ],
+          ]
+        : partnerName;
     }
 
     return controls;
   }
-
 }
