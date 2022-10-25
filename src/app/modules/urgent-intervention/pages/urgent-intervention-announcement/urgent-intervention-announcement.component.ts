@@ -386,7 +386,7 @@ export class UrgentInterventionAnnouncementComponent extends EServicesGenericCom
     // if no requestType
     // if new record or draft, reset license and its validations
     // also reset the values in model
-    if (!requestTypeValue || (requestTypeValue === ServiceRequestTypes.NEW)) {
+    if (!requestTypeValue || (requestTypeValue === UrgentInterventionAnnouncementRequestType.ANNOUNCEMENT)) {
       if (!this.model?.id || this.model.canCommit()) {
         this.oldLicenseFullSerialField.reset();
         this.oldLicenseFullSerialField.setValidators([]);

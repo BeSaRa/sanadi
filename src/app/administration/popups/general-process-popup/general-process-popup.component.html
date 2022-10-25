@@ -1,3 +1,63 @@
-<p>
-  general-process-popup works!
-</p>
+<div
+  class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between"
+>
+  <h1 class="h6 text-white">{{ lang.map[title] }}</h1>
+  <button
+    type="button"
+    class="btn-close btn-close-white"
+    tabindex="-1"
+    dialogClose
+    aria-label="Close"
+  ></button>
+</div>
+<div class="dialog-content no-fixed-height">
+  <form [formGroup]="form">
+    <div class="row">
+      <div class="col-sm-6 col-md-4 mb-4 position-relative">
+        <label
+          asteriskIfRequired="arabicName"
+          for="arabicName"
+          class="form-label"
+        >{{ lang.map.lbl_arabic_name }}</label
+        >
+        <input
+          id="arabicName"
+          validationClasses="arabicName"
+          formControlName="arabicName"
+          class="form-control"
+        />
+        <app-field-error-message
+          controlName="arabicName"
+        ></app-field-error-message>
+      </div>
+      <div class="col-sm-6 col-md-4 mb-4 position-relative">
+        <label
+          asteriskIfRequired="englishName"
+          for="englishName"
+          class="form-label"
+        >{{ lang.map.lbl_english_name }}</label
+        >
+        <input
+          id="englishName"
+          validationClasses="englishName"
+          formControlName="englishName"
+          class="form-control"
+        />
+        <app-field-error-message
+          controlName="englishName"
+        ></app-field-error-message>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="dialog-actions">
+  <button
+    class="btn btn-primary"
+    dialogClose
+  >
+    {{ lang.map.btn_save }}
+  </button>
+  <button dialogClose class="btn btn-secondary">
+    {{ lang.map.btn_close }}
+  </button>
+</div>

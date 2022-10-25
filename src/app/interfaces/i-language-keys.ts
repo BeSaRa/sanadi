@@ -1529,5 +1529,7 @@ export interface ILanguageKeys {
   disclosure_statements_notices_notifications_notices: string;
   sample_data_for_operations: string;
   approval_general_process_notification: string;
+  lbl_add_process_template: string;
+  lbl_edit_process_template: string;
 }
 

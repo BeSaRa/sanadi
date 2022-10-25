@@ -2,10 +2,8 @@ import { GeneralProcessPopupComponent } from './../administration/popups/general
 import { IDialogData } from './../interfaces/i-dialog-data';
 import { OperationTypes } from './../enums/operation-types.enum';
 import { DialogRef } from './../shared/models/dialog-ref';
-import { map, switchMap } from 'rxjs/operators';
+import { switchMap, exhaustMap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
-import { CommonStatusEnum } from './../enums/common-status.enum';
-import { GeneralProcessComponent } from './../administration/pages/general-process/general-process.component';
 import { ComponentType } from '@angular/cdk/overlay';
 import { FactoryService } from './factory.service';
 import { DialogService } from './dialog.service';
@@ -26,63 +24,68 @@ export class GeneralProcessService extends CrudWithDialogGenericService<GeneralP
   list: GeneralProcess[] = [];
 
   constructor(public http: HttpClient,
-              private urlService: UrlService,
-              public dialog: DialogService) {
+    private urlService: UrlService,
+    public dialog: DialogService) {
     super();
     FactoryService.registerService('GeneralProcessService', this);
   }
 
   _getDialogComponent(): ComponentType<any> {
-    return GeneralProcessComponent;
+    return GeneralProcessPopupComponent;
   }
-
 
   _getServiceURL(): string {
     return this.urlService.URLS.GENERAL_PROCESS;
   }
 
-  updateStatus(generalProcessId: number, newStatus: CommonStatusEnum) {
-    return newStatus === CommonStatusEnum.ACTIVATED ? this._activate(generalProcessId) : this._deactivate(generalProcessId);
+  addDialog(): DialogRef | Observable<DialogRef> {
+    return this.dialog.show<IDialogData<GeneralProcess>>(
+      this._getDialogComponent(),
+      {
+        model: new (this._getModel()),
+        operation: OperationTypes.CREATE
+      },
+      { fullscreen: true }
+    )
   }
 
-  updateStatusBulk(recordIds: number[], newStatus: CommonStatusEnum): Observable<any> {
-    return newStatus === CommonStatusEnum.ACTIVATED ? this._activateBulk(recordIds) : this._deactivateBulk(recordIds);
-  }
-
-  private _activate(generalProcessId: number): Observable<any> {
-    return this.http.put<any>(this._getServiceURL() + '/' + generalProcessId + '/activate', {});
-  }
-
-  private _deactivate(generalProcessId: number): Observable<any> {
-    return this.http.put<any>(this._getServiceURL() + '/' + generalProcessId + '/de-activate', {});
-  }
-
-  private _activateBulk(recordIds: number[]) {
-    return this.http.put(this._getServiceURL() + '/bulk/activate', recordIds)
+  editDialog(model: GeneralProcess, getById: boolean = true): Observable<DialogRef> {
+    return (getById ? this.getById(model.id) : of(model))
       .pipe(
-        map((response: any) => {
-          return response.rs;
-        })
-      );
+        exhaustMap((model) => of(
+          this.dialog.show<IDialogData<GeneralProcess>>(
+            this._getDialogComponent(),
+            {
+              model: model,
+              operation: OperationTypes.UPDATE
+            },
+            { fullscreen: true }
+          ))
+        )
+      )
   }
-
-  private _deactivateBulk(recordIds: number[]) {
-    return this.http.put(this._getServiceURL() + '/bulk/de-activate', recordIds)
-      .pipe(
-        map((response: any) => {
-          return response.rs;
-        })
-      );
+  editDialogComposite(model: GeneralProcess): Observable<DialogRef> {
+    return this.getByIdComposite(model.id)
+      .pipe(exhaustMap((model) => of(this.dialog.show<IDialogData<GeneralProcess>>(
+        this._getDialogComponent(),
+        {
+          model: model,
+          operation: OperationTypes.UPDATE
+        },
+        { fullscreen: true }
+      ))));
   }
-
-
   openViewDialog(modelId: number): Observable<DialogRef> {
     return this.getByIdComposite(modelId).pipe(
       switchMap((generalProcess: GeneralProcess) => {
-        return of(this.dialog.show<IDialogData<GeneralProcess>>(GeneralProcessPopupComponent, {
-          model: generalProcess,
-          operation: OperationTypes.VIEW
-        }));
+        return of(this.dialog.show<IDialogData<GeneralProcess>>(
+          this._getDialogComponent(),
+          {
+            model: generalProcess,
+            operation: OperationTypes.VIEW
+          },
+          { fullscreen: true }
+        ));
       })
     );
   }

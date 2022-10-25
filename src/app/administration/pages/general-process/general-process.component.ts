@@ -9,11 +9,9 @@ import { AdminGenericComponent } from '@app/generics/admin-generic-component';
 import { DialogRef } from './../../../shared/models/dialog-ref';
 import { takeUntil, exhaustMap, catchError, filter, switchMap } from 'rxjs/operators';
 import { TableComponent } from './../../../shared/components/table/table.component';
-import { SortEvent } from './../../../interfaces/sort-event';
 import { IMenuItem } from './../../../modules/context-menu/interfaces/i-menu-item';
 import { ActionIconsEnum } from './../../../enums/action-icons-enum';
 import { IGridAction } from './../../../interfaces/i-grid-action';
-import { CommonUtils } from './../../../helpers/common-utils';
 import { CommonStatusEnum } from './../../../enums/common-status.enum';
 import { Component, ViewChild } from '@angular/core';
 import { Subject, of } from 'rxjs';
@@ -52,30 +50,8 @@ export class GeneralProcessComponent extends AdminGenericComponent<GeneralProces
       icon: ActionIconsEnum.VIEW,
       onClick: (item: GeneralProcess) => this.view$.next(item)
     },
-    // activate
-    {
-      type: 'action',
-      icon: ActionIconsEnum.STATUS,
-      label: 'btn_activate',
-      onClick: (item: GeneralProcess) => this.toggleStatus(item),
-      displayInGrid: false,
-      show: (item) => {
-        return item.status !== CommonStatusEnum.RETIRED && item.status === CommonStatusEnum.DEACTIVATED;
-      }
-    },
-    // deactivate
-    {
-      type: 'action',
-      icon: ActionIconsEnum.STATUS,
-      label: 'btn_deactivate',
-      onClick: (item: GeneralProcess) => this.toggleStatus(item),
-      displayInGrid: false,
-      show: (item) => {
-        return item.status !== CommonStatusEnum.RETIRED && item.status === CommonStatusEnum.ACTIVATED;
-      }
-    }
   ];
-  displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'status', 'actions'];
+  displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'actions'];
 
   bulkActionsList: IGridAction[] = [
     {
@@ -84,38 +60,9 @@ export class GeneralProcessComponent extends AdminGenericComponent<GeneralProces
       callback: ($event: MouseEvent) => {
         this.deleteBulk($event);
       }
-    },
-    {
-      icon: 'mdi-list-status',
-      langKey: 'lbl_status',
-      children: [
-        {
-          langKey: 'btn_activate',
-          icon: '',
-          callback: ($event: MouseEvent, _data?: any) => this.changeStatusBulk($event, CommonStatusEnum.ACTIVATED),
-          show: (_items: GeneralProcess[]) => {
-            return true;
-          }
-        },
-        {
-          langKey: 'btn_deactivate',
-          icon: '',
-          callback: ($event: MouseEvent, _data?: any) => this.changeStatusBulk($event, CommonStatusEnum.DEACTIVATED),
-          show: (_items: GeneralProcess[]) => {
-            return true;
-          }
-        }
-      ],
     }
   ];
 
-  sortingCallbacks = {
-    statusInfo: (a: GeneralProcess, b: GeneralProcess, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a) ? '' : a.statusInfo?.getName().toLowerCase(),
-        value2 = !CommonUtils.isValidValue(b) ? '' : b.statusInfo?.getName().toLowerCase();
-      return CommonUtils.getSortValue(value1, value2, dir.direction);
-    }
-  }
 
   constructor(
     public lang: LangService,
@@ -183,28 +130,5 @@ export class GeneralProcessComponent extends AdminGenericComponent<GeneralProces
           }
         });
     }
-  }
-
-  changeStatusBulk($event: MouseEvent, newStatus: CommonStatusEnum): void {
-    const sub = this.service.updateStatusBulk(this.selectedRecords.map(item => item.id), newStatus)
-      .subscribe((response) => {
-        this.sharedService.mapBulkResponseMessages(this.selectedRecords, 'id', response, 'UPDATE')
-          .subscribe(() => {
-            this.reload$.next(null);
-            sub.unsubscribe();
-          });
-      });
-  }
-
-  toggleStatus(model: GeneralProcess) {
-    let updateObservable = model.status == CommonStatusEnum.ACTIVATED ? model.updateStatus(CommonStatusEnum.DEACTIVATED) : model.updateStatus(CommonStatusEnum.ACTIVATED);
-    updateObservable.pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        this.toast.success(this.lang.map.msg_status_x_updated_success.change({ x: model.getName() }));
-        this.reload$.next(null);
-      }, () => {
-        // this.toast.error(this.lang.map.msg_status_x_updated_fail.change({ x: model.getName() }));
-        this.reload$.next(null);
-      });
   }
 }

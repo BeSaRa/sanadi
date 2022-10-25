@@ -3,7 +3,6 @@ import { CommonStatusEnum } from './../enums/common-status.enum';
 import { searchFunctionType } from './../types/types';
 import { GeneralProcessService } from './../services/general-process.service';
 import { BaseModel } from '@app/models/base-model';
-import { Lookup } from './lookup';
 import { INames } from '@contracts/i-names';
 import { LangService } from '@app/services/lang.service';
 import { FactoryService } from '@app/services/factory.service';
@@ -11,8 +10,6 @@ import { FactoryService } from '@app/services/factory.service';
 export class GeneralProcess extends BaseModel<GeneralProcess, GeneralProcessService> {
   arName!: string;
   enName!: string;
-
-  clientData!: string;
 
   mainClass!: number;
   subClass!: number;
@@ -24,8 +21,6 @@ export class GeneralProcess extends BaseModel<GeneralProcess, GeneralProcessServ
   active!: true;
 
   template!: string;
-  status!: number;
-  statusInfo!: Lookup;
 
   // extra properties
   langService: LangService;
@@ -33,7 +28,6 @@ export class GeneralProcess extends BaseModel<GeneralProcess, GeneralProcessServ
   searchFields: { [key: string]: searchFunctionType | string } = {
     arName: 'arName',
     enName: 'enName',
-    status: text => !this.statusInfo ? false : this.statusInfo.getName().toLowerCase().indexOf(text) !== -1,
   };
 
   constructor() {
@@ -46,27 +40,10 @@ export class GeneralProcess extends BaseModel<GeneralProcess, GeneralProcessServ
     return this[(this.langService.map.lang + 'Name') as keyof INames];
   }
 
-  isRetired(): boolean {
-    return Number(this.status) === CommonStatusEnum.RETIRED;
-  }
-
-  isInactive(): boolean {
-    return Number(this.status) === CommonStatusEnum.DEACTIVATED;
-  }
-
-  isActive(): boolean {
-    return Number(this.status) === CommonStatusEnum.ACTIVATED;
-  }
-
-  updateStatus(newStatus: CommonStatusEnum): any {
-    return this.service.updateStatus(this.id, newStatus);
-  }
-
   buildForm(controls?: boolean): any {
     const {
       arName,
       enName,
-      status
     } = this;
     return {
       arName: controls ? [arName, [
@@ -81,7 +58,6 @@ export class GeneralProcess extends BaseModel<GeneralProcess, GeneralProcessServ
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
         CustomValidators.pattern('ENG_NUM_ONE_ENG')
       ]] : enName,
-      status: controls ? [status, [CustomValidators.required]] : status,
     }
   }
 }
