@@ -4,13 +4,13 @@
          [template]="basicInfoTabTemplate" [title]="lang.map.lbl_basic_info"></tab>
     <tab [name]="tabsData.entities.name" [hasError]="getTabInvalidStatus('entities')"
          [template]="entitiesTabTemplate" [title]="lang.map.entities"
-         [disabled]="!isStartOrEditRequestType()"></tab>
+         [disabled]="!isStartOrUpdateRequestType()"></tab>
     <tab [name]="tabsData.interventionAreas.name" [hasError]="getTabInvalidStatus('interventionAreas')"
          [template]="interventionAreasTabTemplate" [title]="lang.map.intervention_areas"
-         [disabled]="!isStartOrEditRequestType()"></tab>
+         [disabled]="!isStartOrUpdateRequestType()"></tab>
     <tab [name]="tabsData.interventionFields.name" [hasError]="getTabInvalidStatus('interventionFields')"
          [template]="interventionFieldsTabTemplate" [title]="lang.map.intervention_fields"
-         [disabled]="!isStartOrEditRequestType()"></tab>
+         [disabled]="!isStartOrUpdateRequestType()"></tab>
     <tab *ngIf="!accordionView" [name]="tabsData.attachments.name" [hasError]="getTabInvalidStatus('attachments')"
          [template]="attachmentsTab" [title]="lang.map.attachments"></tab>
   </tabs-list>

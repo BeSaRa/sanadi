@@ -91,7 +91,7 @@ export class UrgentInterventionAnnouncementComponent extends EServicesGenericCom
       show: () => true,
       validStatus: () => {
         // if request type = start/edit, then entities will show and will be mandatory
-        if (!this.isStartOrEditRequestType()) {
+        if (!this.isStartOrUpdateRequestType()) {
           return true;
         }
         return !this.implementingAgencyListComponentRef || (this.entitiesTabStatus === 'READY' && this.implementingAgencyListComponentRef.list.length > 0);
@@ -106,7 +106,7 @@ export class UrgentInterventionAnnouncementComponent extends EServicesGenericCom
       show: () => true,
       validStatus: () => {
         // if request type = start/edit, then intervention areas will show and will be mandatory
-        if (!this.isStartOrEditRequestType()) {
+        if (!this.isStartOrUpdateRequestType()) {
           return true;
         }
         return !this.interventionRegionListComponentRef || (this.interventionAreasTabStatus === 'READY' && this.interventionRegionListComponentRef.list.length > 0);
@@ -121,7 +121,7 @@ export class UrgentInterventionAnnouncementComponent extends EServicesGenericCom
       show: () => true,
       validStatus: () => {
         // if request type = start/edit, then intervention fields will show and will be mandatory
-        if (!this.isStartOrEditRequestType()) {
+        if (!this.isStartOrUpdateRequestType()) {
           return true;
         }
         return !this.interventionFieldListComponentRef || (this.interventionFieldsTabStatus === 'READY' && this.interventionFieldListComponentRef.list.length > 0);
@@ -181,7 +181,7 @@ export class UrgentInterventionAnnouncementComponent extends EServicesGenericCom
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
-    if (!this.requestTypeField.value || ((this.requestTypeField.value === UrgentInterventionAnnouncementRequestType.START || this.requestTypeField.value === UrgentInterventionAnnouncementRequestType.EDIT) && !this.selectedLicense)) {
+    if (!this.requestTypeField.value || (this.isStartOrUpdateRequestType() && !this.selectedLicense)) {
       this.dialogService.error(this.lang.map.please_select_notification_request_number_to_complete_save);
       return false;
     } else {
@@ -350,7 +350,7 @@ export class UrgentInterventionAnnouncementComponent extends EServicesGenericCom
     let isAllowed = !this.model?.id || (!!this.model?.id && this.model.canCommit());
     return isAllowed && CommonUtils.isValidValue(this.requestTypeField.value) &&
       (this.requestTypeField.value == UrgentInterventionAnnouncementRequestType.START
-        || this.requestTypeField.value == UrgentInterventionAnnouncementRequestType.EDIT);
+        || this.requestTypeField.value == UrgentInterventionAnnouncementRequestType.UPDATE);
   }
 
   handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
@@ -447,9 +447,9 @@ export class UrgentInterventionAnnouncementComponent extends EServicesGenericCom
     }
   }
 
-  isStartOrEditRequestType(): boolean {
+  isStartOrUpdateRequestType(): boolean {
     return this.requestTypeField.value === UrgentInterventionAnnouncementRequestType.START
-      || this.requestTypeField.value === UrgentInterventionAnnouncementRequestType.EDIT;
+      || this.requestTypeField.value === UrgentInterventionAnnouncementRequestType.UPDATE;
   }
 
   handleReadonly(): void {
