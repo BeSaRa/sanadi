@@ -1,8 +1,8 @@
-import { UserClickOn } from './../../../../enums/user-click-on.enum';
-import { TabComponent } from './../../../../shared/components/tab/tab.component';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { TabComponent } from '@app/shared/components/tab/tab.component';
 import { AttachmentsComponent } from '@app/shared/components/attachments/attachments.component';
-import { CommonCaseStatus } from './../../../../enums/common-case-status.enum';
-import { OpenFrom } from './../../../../enums/open-from.enum';
+import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
+import { OpenFrom } from '@app/enums/open-from.enum';
 import { EmploymentSearchCriteria } from '@app/models/employment-search-criteria';
 import { JobTitleService } from '@app/services/job-title.service';
 import { DateUtils } from '@app/helpers/date-utils';
@@ -286,7 +286,7 @@ EmploymentService
       .pipe(takeUntil(this.destroy$))
       .subscribe((val: EmploymentCategory) => {
         this.model!.category = val;
-        this.requestTypeField.setValue(null);
+        this.requestTypeField.setValue(EmploymentRequestType.NEW);
         this.handleRequestTypeChange(EmploymentRequestType.NEW, false);
         this.model!.employeeInfoDTOs = [];
         this.employees = [];
