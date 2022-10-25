@@ -669,13 +669,13 @@ export class CharityOrganizationUpdateComponent
               this.toCharityOrganizationRealBenficiary
             );
             this.model = new CharityOrganizationUpdate().clone({
+              ...this.model,
               boardMemberList: this.listMembers(CharityRole.BOARD_MEMBERS),
               founderMemberList: this.listMembers(CharityRole.FOUNDER_MEMBERS),
               generalAssemblyMemberList: this.listMembers(CharityRole.GENERAL_ASSEMBLY_MEMBERS),
               authorizedSignatoryMemberList: this.listMembers(CharityRole.AUTHORIZED_MEMBERS),
               currentExecutiveManagementList: this.listMembers(CharityRole.CURRENT_EXECUTIVE_MANAGEMENT),
               realBeneficiaryList: this.realBenefeciaries,
-              ...this.model
             });
           });
       });
@@ -693,10 +693,10 @@ export class CharityOrganizationUpdateComponent
       this.charityReportService.getByCharityId(id).subscribe((m) => {
         this.charityReports = m.map(e => new CharityReport().clone({ ...e }).toCharityOrganizationUpdate());
         this.model = new CharityOrganizationUpdate().clone({
+          ...this.model,
           riskReportList: this.riskCharityReport,
           incomingReportList: this.incomingCharityReport,
           coordinationSupportReport: this.supportCharityReport,
-          ...this.model
         })
       });
     } else if (
@@ -705,9 +705,9 @@ export class CharityOrganizationUpdateComponent
       this.charityDecisionService.getByCharityId(id).subscribe((m) => {
         this.charityDecisions = m.map(e => new CharityDecision().clone({ ...e }).toCharityOrganizationUpdate());
         this.model = new CharityOrganizationUpdate().clone({
+          ...this.model,
           incomingDecisionList: this.incomingCharityDecisions,
           outgoingDecisionList: this.outgoingCharityDecisions,
-          ...this.model
         });
       });
     }
