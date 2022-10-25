@@ -13,6 +13,7 @@ import {InternalUser} from '@app/models/internal-user';
 import {GeneralAssociationMeetingAttendance} from '@app/models/general-association-meeting-attendance';
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 import {GeneralAssociationMeetingStepNameEnum} from '@app/enums/general-association-meeting-step-name-enum';
+import {MeetingMemberTaskStatus} from '@app/models/meeting-member-task-status';
 
 @Component({
   selector: 'manage-internal-users',
@@ -22,18 +23,29 @@ import {GeneralAssociationMeetingStepNameEnum} from '@app/enums/general-associat
 export class ManageInternalUsersComponent implements OnInit {
   @Input() internalMembersForm!: FormGroup;
   @Input() isExternalUser!: boolean;
-  @Input() readonly!: boolean;
+  @Input() isCancel!: boolean;
   @Input() caseStepName!: string;
   @Input() model!: GeneralAssociationMeetingAttendance;
   @Input() selectedInternalUsers: GeneralAssociationInternalMember[] = [];
   @Output() memberListChanged: EventEmitter<GeneralAssociationInternalMember[]> = new EventEmitter<GeneralAssociationInternalMember[]>();
+  @Output() userTaskTerminated: EventEmitter<{ event: MouseEvent, item: MeetingMemberTaskStatus }> = new EventEmitter<{ event: MouseEvent, item: MeetingMemberTaskStatus }>();
+  _isClaimed!: boolean;
+  @Input() set isClaimed(value: boolean) {
+    this._isClaimed = value;
+    this.setReadonly();
+  };
 
+  get isClaimed(): boolean {
+    return this._isClaimed;
+  }
+
+  readonly!: boolean;
   addMemberFormActive!: boolean;
 
   selectedInternalUser!: GeneralAssociationInternalMember | null;
   selectedInternalUserIndex!: number | null;
 
-  membersDisplayedColumns: string[] = ['index', 'arabicName', 'englishName', 'isDecisionMaker', 'actions'];
+  membersDisplayedColumns: string[] = ['index', 'arabicName', 'englishName', 'isDecisionMaker', 'status', 'actions'];
   internalUserType = GeneralAssociationInternalMemberTypeEnum;
 
   constructor(private dialog: DialogService,
@@ -54,7 +66,27 @@ export class ManageInternalUsersComponent implements OnInit {
 
   ngOnInit(): void {
     this.buildMemberForm();
+    this.setReadonly();
+    this.setDisplayedColumns();
   }
+
+  setDisplayedColumns() {
+    if (!this.isExternalUser && this.model?.isSentToMember() && this.model?.isDecisionMakerReviewStep() || this.model?.isManagerFinalReviewStep()) {
+      this.membersDisplayedColumns = ['index', 'arabicName', 'englishName', 'isDecisionMaker', 'status', 'actions'];
+    } else {
+      this.membersDisplayedColumns = ['index', 'arabicName', 'englishName', 'isDecisionMaker', 'actions'];
+    }
+  }
+
+  setReadonly() {
+    this.readonly = !this.isClaimed || this.isCancel ||
+      !(this.isSupervisionAndControlReview() || this.isSupervisionManagerReview() || this.isSupervisionAndControlRework()) ||
+      (this.model?.getCaseStatus() !== CommonCaseStatus.UNDER_PROCESSING && this.model?.getCaseStatus() !== CommonCaseStatus.RETURNED);
+  }
+
+  /*!model?.taskDetails?.isClaimed() || isCancel ||
+  !(isSupervisionAndControlReviewStep || isSupervisionManagerReviewStep || isSupervisionAndControlRework) ||
+  (model?.getCaseStatus() !== commonCaseStatus.UNDER_PROCESSING && model?.getCaseStatus() !== commonCaseStatus.RETURNED)*/
 
   buildMemberForm(): void {
     this.internalMembersForm = this.fb.group({
@@ -186,11 +218,11 @@ export class ManageInternalUsersComponent implements OnInit {
   }
 
   makeDecisionMaker(generalAssociationInternalMember: GeneralAssociationInternalMember): void {
-    this.selectedInternalUsers.filter(u => u.memberType === this.internalUserType.IS_DECISION_MAKER).forEach(u => u.memberType = this.internalUserType.IS_NOT_DECISION_MAKER);
-    this.selectedInternalUsers.find(u => u.id === generalAssociationInternalMember.id)!.memberType = this.internalUserType.IS_DECISION_MAKER;
+    this.selectedInternalUsers.filter(u => u.memberType === GeneralAssociationInternalMemberTypeEnum.IS_DECISION_MAKER).forEach(u => u.memberType = GeneralAssociationInternalMemberTypeEnum.IS_NOT_DECISION_MAKER);
+    this.selectedInternalUsers.find(u => u.domainName === generalAssociationInternalMember.domainName)!.memberType = GeneralAssociationInternalMemberTypeEnum.IS_DECISION_MAKER;
   }
 
-  get isUnderProcessingLicense() {
+  isUnderProcessingLicense() {
     return this.model.getCaseStatus() === CommonCaseStatus.UNDER_PROCESSING;
   }
 
@@ -200,5 +232,13 @@ export class ManageInternalUsersComponent implements OnInit {
 
   isSupervisionAndControlRework() {
     return this.caseStepName === GeneralAssociationMeetingStepNameEnum.SUPERVISION_AND_CONTROL_REWORK;
+  }
+
+  isSupervisionManagerReview() {
+    return this.caseStepName === GeneralAssociationMeetingStepNameEnum.SUPERVISION_MANAGER_REVIEW;
+  }
+
+  terminateUserTask(event: MouseEvent, item: MeetingMemberTaskStatus) {
+    this.userTaskTerminated.emit({event: event, item: item});
   }
 }

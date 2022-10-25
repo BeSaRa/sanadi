@@ -132,6 +132,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE
   ];
 
+  initialApproveWithSaveServices: number[] = [
+    CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE
+  ];
+
   approveWithSaveStatuses: number[] = [
     CommonCaseStatus.UNDER_PROCESSING,
     CommonCaseStatus.RETURNED
@@ -1103,13 +1107,19 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     return this.approveWithSaveServices.includes(item.getCaseType()) && this.approveWithSaveStatuses.includes(item.caseStatus);
   }
 
+  isInitialApproveWithSave(item: CaseModel<any, any>): boolean {
+    return this.initialApproveWithSaveServices.includes(item.getCaseType());
+  }
+
   private approveAction(item: CaseModel<any, any>) {
     if (this.isApproveWithSave(item)) {
       if (item.getCaseType() === CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE) {
         const model = item as unknown as IGeneralAssociationMeetingAttendanceApprove;
         const component = this.component as unknown as IGeneralAssociationMeetingAttendanceComponent;
+        const meetingDate = component.meetingDate.value;
+        const year = component.year.value;
 
-        model.approveWithSave(component.selectedInternalUsers).onAfterClose$.subscribe(actionTaken => {
+        model.approveWithSave(component.selectedInternalUsers, meetingDate, year).onAfterClose$.subscribe(actionTaken => {
           actionTaken && this.navigateToSamePageThatUserCameFrom();
         });
       }
@@ -1134,9 +1144,22 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   }
 
   private initialApproveAction(item: CaseModel<any, any>) {
-    item.initialApprove().onAfterClose$.subscribe(actionTaken => {
-      actionTaken && this.navigateToSamePageThatUserCameFrom();
-    });
+    if (this.isInitialApproveWithSave(item)) {
+      if (item.getCaseType() === CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE) {
+        const model = item as unknown as IGeneralAssociationMeetingAttendanceApprove;
+        const component = this.component as unknown as IGeneralAssociationMeetingAttendanceComponent;
+        const meetingDate = component.meetingDate.value;
+        const year = component.year.value;
+
+        model.initialApproveWithSave(component.selectedInternalUsers, meetingDate, year).onAfterClose$.subscribe(actionTaken => {
+          actionTaken && this.navigateToSamePageThatUserCameFrom();
+        });
+      }
+    } else {
+      item.initialApprove().onAfterClose$.subscribe(actionTaken => {
+        actionTaken && this.navigateToSamePageThatUserCameFrom();
+      });
+    }
   }
 
   private organizationApproveAction(item: CaseModel<any, any>) {

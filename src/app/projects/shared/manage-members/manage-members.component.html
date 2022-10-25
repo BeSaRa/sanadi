@@ -33,7 +33,7 @@
           <app-field-error-message controlName="identificationNumber"></app-field-error-message>
         </div>
       </div>
-      <div class="row">
+      <div class="row" *ngIf="isGeneralAssociationMembers">
         <div class="col-md-4 col-sm-12 mb-4 position-relative">
           <label asteriskIfRequired="jobTitleId" class="form-label"
                  for="jobTitleId">{{lang.map.job_title}}</label>
@@ -46,9 +46,10 @@
       </div>
       <div class="row">
         <div class="col-12 text-center action-container mb-3">
+          <div class="flex-grow-1"></div>
           <button (click)="searchMembers()"
                   class="btn btn-primary">{{lang.map.lbl_search}}</button>
-          <button [disabled]="!membersForm.valid" (click)="saveMember()"
+          <button [disabled]="!membersForm.valid" (click)="saveMember()" *ngIf="isGeneralAssociationMembers"
                   class="btn btn-primary">{{lang.map.btn_save}}</button>
           <button class="btn btn-secondary"
                   (click)="cancelAddMember()">{{lang.map.btn_cancel}}</button>
@@ -96,7 +97,7 @@
                         class="btn btn-link outline-none" tooltip="{{lang.map.btn_remove}}">
                   <i class="mdi mdi-close-box"></i>
                 </button>
-                <button (click)="selectMember($event, row)"
+                <button (click)="selectMember($event, row)" *ngIf="isGeneralAssociationMembers && !row.id"
                         [disabled]="(readonly || addMemberFormActive)"
                         class="btn btn-link outline-none" tooltip="{{lang.map.btn_edit}}">
                   <i class="mdi mdi-pen"></i>

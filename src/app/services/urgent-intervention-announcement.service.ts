@@ -84,7 +84,7 @@ export class UrgentInterventionAnnouncementService extends BaseGenericEService<U
   licenseSearch(criteria: Partial<UrgentInterventionAnnouncementSearchCriteria>, requestType: UrgentInterventionAnnouncementRequestType): Observable<UrgentInterventionAnnouncementResult[]> {
     if (requestType === UrgentInterventionAnnouncementRequestType.START) {
       criteria.licenseStatus = 1;
-    } else if (requestType === UrgentInterventionAnnouncementRequestType.EDIT) {
+    } else if (requestType === UrgentInterventionAnnouncementRequestType.UPDATE) {
       criteria.licenseStatus = 2;
     }
     return this.licenseService.urgentInterventionAnnouncementSearch(criteria);

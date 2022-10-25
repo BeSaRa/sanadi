@@ -33,7 +33,7 @@ export class UrgentInterventionAnnouncementInterceptor implements IModelIntercep
       UrgentInterventionAnnouncementInterceptor._deleteBeforeSend(model);
       return model;
     }
-    if (model.requestType !== UrgentInterventionAnnouncementRequestType.START && model.requestType !== UrgentInterventionAnnouncementRequestType.EDIT) {
+    if (model.requestType !== UrgentInterventionAnnouncementRequestType.START && model.requestType !== UrgentInterventionAnnouncementRequestType.UPDATE) {
       model.implementingAgencyList = [];
       model.interventionRegionList = [];
       model.interventionFieldList = [];

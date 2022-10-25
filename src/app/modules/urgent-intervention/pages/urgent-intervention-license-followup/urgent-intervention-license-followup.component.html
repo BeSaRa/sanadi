@@ -121,7 +121,7 @@
 </ng-template>
 <ng-template #reportsTemplate>
   <urgent-intervention-report-list #urgentInterventionReportListComponent
-                                   [list]="reportsList" [readonly]="readonly"
+                                   [readonly]="readonly"
                                    [documentId]="(selectedLicense ? selectedLicense.id : '')"></urgent-intervention-report-list>
 </ng-template>
 <ng-template #attachmentsTab>

@@ -17,7 +17,7 @@ export enum CollectionRequestType {
 export enum UrgentInterventionAnnouncementRequestType {
   ANNOUNCEMENT = AllRequestTypesEnum.ANNOUNCEMENT,
   START = AllRequestTypesEnum.START,
-  EDIT = AllRequestTypesEnum.EDIT
+  UPDATE = AllRequestTypesEnum.UPDATE
 }
 
 export enum CustomsExemptionRequestTypes {

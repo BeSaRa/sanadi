@@ -22,6 +22,7 @@ import {ISearchFieldsMap} from '@app/types/types';
 import {dateSearchFields} from '@helpers/date-search-fields';
 import {infoSearchFields} from '@helpers/info-search-fields';
 import {normalSearchFields} from '@helpers/normal-search-fields';
+import {CommonUtils} from '@helpers/common-utils';
 
 const _RequestType = mixinRequestType(CaseModel);
 const interceptor = new GeneralAssociationMeetingAttendanceInterceptor();
@@ -93,18 +94,23 @@ export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAss
       meetingTime,
       meetingInitiator,
       meetingClassification,
-      periodical
+      periodical,
+      year
     } = this;
     return {
       oldFullSerial: controls ? [oldFullSerial] : oldFullSerial,
       requestType: controls ? [requestType, [CustomValidators.required]] : requestType,
       meetingType: controls ? [meetingType, [CustomValidators.required]] : meetingType,
-      location: controls ? [location, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : location,
+      location: controls ? [location, [CustomValidators.required, CustomValidators.maxLength(300), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : location,
       meetingDate: controls ? [meetingDate, [CustomValidators.required]] : meetingDate,
       meetingTime: controls ? [meetingTime, []] : meetingTime,
       meetingInitiator: controls ? [meetingInitiator, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : meetingInitiator,
       meetingClassification: controls ? [meetingClassification, [CustomValidators.required]] : meetingClassification,
-      periodical: controls ? [periodical, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(2)]] : periodical
+      periodical: controls ? [periodical, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(2)]] : periodical,
+      year: controls ? [{
+        value: year,
+        disabled: true
+      }, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(2)]] : year
     };
   }
 
@@ -119,8 +125,12 @@ export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAss
     return this.service!.completeTask(this, WFResponseType.COMPLETE, form, selectedAdministrativeBoardMembers, selectedGeneralAssociationMembers, agendaItems);
   }
 
-  approveWithSave(selectedInternalMembers: GeneralAssociationInternalMember[]): DialogRef {
-    return this.service!.approveTask(this, WFResponseType.APPROVE, selectedInternalMembers);
+  approveWithSave(selectedInternalMembers: GeneralAssociationInternalMember[], meetingDate: IMyDateModel, year: number): DialogRef {
+    return this.service!.approveTask(this, WFResponseType.APPROVE, selectedInternalMembers, meetingDate, year);
+  }
+
+  initialApproveWithSave(selectedInternalMembers: GeneralAssociationInternalMember[], meetingDate: IMyDateModel, year: number): DialogRef {
+    return this.service!.approveTask(this, WFResponseType.INITIAL_APPROVE, selectedInternalMembers, meetingDate, year);
   }
 
   isSupervisionAndControlReviewStep(): boolean {
@@ -129,6 +139,10 @@ export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAss
 
   isSupervisionManagerReviewStep(): boolean {
     return this.taskDetails?.name === GeneralAssociationMeetingStepNameEnum.SUPERVISION_MANAGER_REVIEW;
+  }
+
+  isSupervisionAndControlReworkStep(): boolean {
+    return this.taskDetails?.name === GeneralAssociationMeetingStepNameEnum.SUPERVISION_AND_CONTROL_REWORK;
   }
 
   isDecisionMakerReviewStep(): boolean {
@@ -157,6 +171,14 @@ export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAss
 
   canEditMeetingPoints(): boolean {
     return !this.isSendToMember && this.isDecisionMakerReviewStep() || this.isMemberReviewStep();
+  }
+
+  canAddMeetingPoints(): boolean {
+    return (!this.isSendToMember && this.isDecisionMakerReviewStep()) || (this.isSendToMember && this.isMemberReviewStep());
+  }
+
+  canRemoveMeetingPoints(pointId: boolean): boolean {
+    return (!this.isSendToMember && this.isDecisionMakerReviewStep()) || (this.isSendToMember && this.isMemberReviewStep() && !CommonUtils.isValidValue(pointId));
   }
 
   isSentToMember(): boolean {

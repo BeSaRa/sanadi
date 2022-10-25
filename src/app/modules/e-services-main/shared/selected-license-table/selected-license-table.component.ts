@@ -10,6 +10,7 @@ import {filter, take} from 'rxjs/operators';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {CustomsExemptionRemittanceService} from '@services/customs-exemption-remittance.service';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import {GeneralAssociationMeetingAttendanceService} from '@services/general-association-meeting-attendance.service';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -22,7 +23,8 @@ export class SelectedLicenseTableComponent {
               private dialog: DialogService,
               private licenseService: LicenseService,
               private sharedService: SharedService,
-              private customsExemptionRemittanceService: CustomsExemptionRemittanceService) {
+              private customsExemptionRemittanceService: CustomsExemptionRemittanceService,
+              private generalAssociationMeetingAttendanceService: GeneralAssociationMeetingAttendanceService) {
   }
 
   @Input() caseType!: number;
@@ -82,6 +84,11 @@ export class SelectedLicenseTableComponent {
       this.customsExemptionRemittanceService.showDocumentContent(doc, this.caseType)
         .subscribe((file) => {
           return this.sharedService.openViewContentDialog(file, doc);
+        });
+    } else if (this.caseType === CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE) {
+      this.generalAssociationMeetingAttendanceService.downloadFinalReport(license.meetingReportID)
+        .subscribe((file) => {
+          return this.sharedService.openViewContentDialog(file, license);
         });
     } else {
       this.licenseService.showLicenseContent(license, this.caseTypeViewLicense)

@@ -1531,5 +1531,8 @@ export interface ILanguageKeys {
   approval_general_process_notification: string;
   lbl_add_process_template: string;
   lbl_edit_process_template: string;
+  npo_list: string;
+  email_address_of_the_employer: string;
+  phone_of_the_employer: string;
 }
 

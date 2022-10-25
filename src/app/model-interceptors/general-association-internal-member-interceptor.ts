@@ -8,6 +8,9 @@ export class GeneralAssociationInternalMemberInterceptor implements IModelInterc
       delete model.memberTypeInfo;
       delete model.langService;
       delete model.searchFields;
+      delete model.name;
+      delete model.pId;
+      delete model.tkiid;
       return model;
     }
     receive(model: GeneralAssociationInternalMember): GeneralAssociationInternalMember {

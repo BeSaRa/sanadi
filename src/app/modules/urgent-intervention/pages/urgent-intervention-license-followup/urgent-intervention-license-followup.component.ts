@@ -53,7 +53,7 @@ export class UrgentInterventionLicenseFollowupComponent extends EServicesGeneric
   tabIndex$: Subject<number> = new Subject<number>();
   licenseSearch$: Subject<string> = new Subject<string>();
   selectedLicense?: UrgentInterventionAnnouncement;
-  reportsList: UrgentInterventionReport[] = [];
+
   @ViewChild('implementingAgencyListComponent') implementingAgencyListComponentRef!: ImplementingAgencyListComponent;
   @ViewChild('interventionRegionListComponent') interventionRegionListComponentRef!: InterventionRegionListComponent;
   @ViewChild('interventionFieldListComponent') interventionFieldListComponentRef!: InterventionFieldListComponent;
@@ -264,10 +264,6 @@ export class UrgentInterventionLicenseFollowupComponent extends EServicesGeneric
   licenseSearch($event?: Event): void {
     $event?.preventDefault();
     const value = this.fullSerialField.value && this.fullSerialField.value.trim();
-    /*if (!value) {
-      this.dialogService.info(this.lang.map.need_license_number_to_search)
-      return;
-    }*/
     this.licenseSearch$.next(value);
   }
 
@@ -307,32 +303,12 @@ export class UrgentInterventionLicenseFollowupComponent extends EServicesGeneric
     // update form fields if i have license
     if (licenseDetails && !ignoreUpdateForm) {
       this.fullSerialField.setValue(licenseDetails?.fullSerial);
-      // this.urgentInterventionReportListComponentRef.reload$.next(licenseDetails.id);
-
-      /*let value: any = (new UrgentInterventionLicenseFollowup()).clone({...licenseDetails});
-      // value.requestType = this.requestTypeField.value;
-      value.oldLicenseFullSerial = licenseDetails.fullSerial;
-      value.oldLicenseId = licenseDetails.id;
-      value.oldLicenseSerial = licenseDetails.serial;
-      value.documentTitle = '';
-      value.fullSerial = null;
-      value.description = '';
-      value.createdOn = '';
-      value.classDescription = '';
-
-      // delete id because license details contains old license id, and we are adding new, so no id is needed
-      delete value.id;
-      delete value.vsId;
-
-      this._updateForm(value);*/
-
     }
   }
 
   clearSelectedLicense(): void {
     this.setSelectedLicense(undefined, true);
     this.fullSerialField.setValue('');
-    this.selectedLicense = undefined;
   }
 
   get fullSerialField(): UntypedFormControl {

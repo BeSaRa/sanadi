@@ -31,6 +31,7 @@ export class ForeignCountriesProjects extends _RequestType<ForeignCountriesProje
       'ForeignCountriesProjectsService'
     );
   }
+  nPOList!: number[];
   followUpDate!: string | IMyDateModel;
   requestType!: number;
   caseType: number = CaseTypes.FOREIGN_COUNTRIES_PROJECTS;
@@ -76,7 +77,8 @@ export class ForeignCountriesProjects extends _RequestType<ForeignCountriesProje
       classDescription,
       recommendation,
       needSubject,
-      entityClassification
+      entityClassification,
+      nPOList
     } = this;
     return {
       oldLicenseFullSerial: withControls ? [oldLicenseFullSerial] : oldLicenseFullSerial,
@@ -87,6 +89,7 @@ export class ForeignCountriesProjects extends _RequestType<ForeignCountriesProje
       classDescription: withControls ? [classDescription, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : classDescription,
       justification: withControls ? [justification, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : justification,
       recommendation: withControls ? [recommendation, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : recommendation,
+      nPOList: withControls ? [nPOList] : nPOList,
       entityClassification
     };
   }

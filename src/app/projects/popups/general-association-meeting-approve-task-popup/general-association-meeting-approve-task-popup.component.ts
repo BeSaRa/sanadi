@@ -16,6 +16,7 @@ import {InboxService} from '@services/inbox.service';
 import {IWFResponse} from '@contracts/i-w-f-response';
 import {filter, map, switchMap, tap} from 'rxjs/operators';
 import {GeneralAssociationInternalMember} from '@app/models/general-association-internal-member';
+import {IMyDateModel} from 'angular-mydatepicker';
 
 @Component({
   selector: 'general-association-meeting-approve-task-popup',
@@ -36,7 +37,9 @@ export class GeneralAssociationMeetingApproveTaskPopupComponent implements OnIni
       model: GeneralAssociationMeetingAttendance,
       actionType: WFResponseType,
       service: BaseGenericEService<any>,
-      selectedInternalMembers: GeneralAssociationInternalMember[]
+      selectedInternalMembers: GeneralAssociationInternalMember[],
+      meetingDate: IMyDateModel,
+      year: number
     },
     private dialogRef: DialogRef,
     private toast: ToastService,
@@ -47,6 +50,9 @@ export class GeneralAssociationMeetingApproveTaskPopupComponent implements OnIni
     private dialog: DialogService,
     private inboxService: InboxService) {
     this.action = this.data.actionType;
+
+    this.data.model.meetingDate = this.data.meetingDate;
+    this.data.model.year = this.data.year;
   }
 
   ngOnInit(): void {
