@@ -1,9 +1,9 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
+import {AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {LangService} from '@app/services/lang.service';
 import {Country} from '@app/models/country';
 import {CountryService} from '@app/services/country.service';
-import {filter, map, take, takeUntil} from 'rxjs/operators';
+import {filter, map, take, takeUntil, tap} from 'rxjs/operators';
 import {Lookup} from '@app/models/lookup';
 import {BankAccount} from '@app/models/bank-account';
 import {BehaviorSubject, Subject} from 'rxjs';
@@ -13,6 +13,11 @@ import {ToastService} from '@app/services/toast.service';
 import {ReadinessStatus} from '@app/types/types';
 import {LookupService} from '@app/services/lookup.service';
 import {CaseTypes} from '@app/enums/case-types.enum';
+import { ActionIconsEnum } from '@app/enums/action-icons-enum';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { SortEvent } from '@app/interfaces/sort-event';
+import { AdminResult } from '@app/models/admin-result';
+import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
 
 @Component({
   selector: 'bank-account',
@@ -22,7 +27,6 @@ import {CaseTypes} from '@app/enums/case-types.enum';
 export class BankAccountComponent implements OnInit {
 
   constructor(public lang: LangService,
-              private countryService: CountryService,
               private toastService: ToastService,
               private dialogService: DialogService,
               private lookupService: LookupService,
@@ -34,7 +38,7 @@ export class BankAccountComponent implements OnInit {
 
   @Input() set list(list: BankAccount[]) {
     this._list = list;
-    this.listDataSource.next(this._list);
+    this.dataSource.next(this._list);
   }
 
   get list(): BankAccount[] {
@@ -49,24 +53,63 @@ export class BankAccountComponent implements OnInit {
   currenciesList: Lookup[] = this.lookupService.listByCategory.Currency;
   caseTypes = CaseTypes;
 
-  listDataSource: BehaviorSubject<BankAccount[]> = new BehaviorSubject<BankAccount[]>([]);
-  columns = ['bankName', 'accountNumber', 'iBan', 'swiftCode', 'actions'];
+  dataSource: BehaviorSubject<BankAccount[]> = new BehaviorSubject<BankAccount[]>([]);
+  columns = ['bankName', 'accountNumber', 'iBan', 'country', 'actions'];
 
-  editRecordIndex: number = -1;
+  editItem?: BankAccount;
+  showForm: boolean = false;
   viewOnly: boolean = false;
-  private save$: Subject<any> = new Subject<any>();
+  filterControl: UntypedFormControl = new UntypedFormControl('');
 
   add$: Subject<any> = new Subject<any>();
-  private recordChanged$: Subject<BankAccount | null> = new Subject<BankAccount | null>();
-  private currentRecord?: BankAccount;
+  private save$: Subject<any> = new Subject<any>();
+
+  private changed$: Subject<BankAccount | null> =
+    new Subject<BankAccount | null>();
+  private current?: BankAccount;
   private destroy$: Subject<any> = new Subject<any>();
 
   form!: UntypedFormGroup;
+  actions: IMenuItem<BankAccount>[] = [
+    // edit
+    {
+      type: 'action',
+      icon: ActionIconsEnum.EDIT,
+      label: 'btn_edit',
+      onClick: (item: BankAccount) => this.edit(item),
+      show: (_item: BankAccount) => !this.readonly
+    },
+    // delete
+    {
+      type: 'action',
+      icon: ActionIconsEnum.DELETE,
+      label: 'btn_delete',
+      onClick: (item: BankAccount) => this.delete(item),
+      show: (_item: BankAccount) => !this.readonly
+    },
+    // view
+    {
+      type: 'action',
+      icon: ActionIconsEnum.VIEW,
+      label: 'view',
+      onClick: (item: BankAccount) => this.view(item),
+      show: (_item: BankAccount) => this.readonly
+    }
+  ];
+  sortingCallbacks = {
+    country: (a: BankAccount, b: BankAccount, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.countryInfo.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.countryInfo.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
 
+
+  }
   ngOnInit(): void {
+    this.dataSource.next(this.list);
     this.buildForm();
     this.listenToAdd();
-    this.listenToRecordChange();
+    this.listenToChange();
     this.listenToSave();
     this._setComponentReadiness('READY');
   }
@@ -77,159 +120,137 @@ export class BankAccountComponent implements OnInit {
     this.destroy$.unsubscribe();
   }
 
-  private _setComponentReadiness(readyStatus: ReadinessStatus) {
-    this.readyEvent.emit(readyStatus);
-  }
-
-  buildForm(): void {
-    this.form = this.fb.group({
-      bankAccount: this.fb.array([])
-    });
-  }
-
-  addBankAccountAllowed(): boolean {
-    return !this.readonly;
-  }
-
-  get bankAccountsFormArray(): UntypedFormArray {
-    return (this.form.get('bankAccount')) as UntypedFormArray;
+  private buildForm() {
+    this.form = this.fb.group(
+      new BankAccount().getBankAccountFields(true,this.caseType)
+    );
   }
 
   private listenToAdd() {
-    this.add$.pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        this.viewOnly = false;
-        this.recordChanged$.next(new BankAccount());
-      });
-  }
-
-  private listenToRecordChange() {
-    this.recordChanged$.pipe(takeUntil(this.destroy$)).subscribe((bankAccount) => {
-      /*if (this.readonly) {
-        return;
-      }*/
-      this.currentRecord = bankAccount || undefined;
-      this.updateForm(this.currentRecord);
+    this.add$.pipe(takeUntil(this.destroy$)).subscribe(() => {
+      this.viewOnly = false;
+      this.changed$.next(new BankAccount());
     });
   }
 
-  private updateForm(bankAccount: BankAccount | undefined) {
-    const bankAccountFormArray = this.bankAccountsFormArray;
-    bankAccountFormArray.clear();
-    if (bankAccount) {
+  private listenToChange() {
+    this.changed$.pipe(takeUntil(this.destroy$)).subscribe((record) => {
+      this.current = record || undefined;
+      this.showForm = !!this.current;
+      this.updateForm(this.current);
+    });
+  }
+
+  private updateForm(record: BankAccount | undefined) {
+    if (record) {
       if (this.viewOnly) {
         this._setComponentReadiness('READY');
       } else {
         this._setComponentReadiness('NOT_READY');
       }
-      bankAccountFormArray.push(this.fb.group(bankAccount.getBankAccountFields(true, this.caseType)));
+      this.form.patchValue(record);
       if (this.readonly || this.viewOnly) {
-        this.bankAccountsFormArray.disable();
+        this.form.disable();
       }
     } else {
       this._setComponentReadiness('READY');
     }
   }
 
-  saveBankAccount() {
+  save() {
     if (this.readonly || this.viewOnly) {
       return;
     }
     this.save$.next();
   }
-
+  private displayRequiredFieldsMessage(): void {
+    this.dialogService
+      .error(this.lang.map.msg_all_required_fields_are_filled)
+      .onAfterClose$.pipe(take(1))
+      .subscribe(() => {
+        this.form.markAllAsTouched();
+      });
+  }
   private listenToSave() {
-    const bankAccountForm$ = this.save$.pipe(map(() => {
-      return (this.form.get('bankAccount.0')) as AbstractControl;
-    }));
+    this.save$
+      .pipe(
+        takeUntil(this.destroy$),
+        tap((_) =>
+          this.form.invalid ? this.displayRequiredFieldsMessage() : true
+        ),
+        filter(() => this.form.valid),
+        filter(() => {
+          const formValue = this.form.getRawValue();
+          const isDuplicate = this.list.some((x) => x === formValue);
+          if (isDuplicate) {
+            this.toastService.alert(this.lang.map.msg_duplicated_item);
+          }
+          return !isDuplicate;
+        }),
+        map(() => {
+          let formValue = this.form.getRawValue();
+          let countryInfo: AdminResult =
+            this.countriesList
+              .find((x) => x.id === formValue.country)
+              ?.createAdminResult() ?? new AdminResult();
 
-    const validForm$ = bankAccountForm$.pipe(filter((form) => form.valid));
-    const invalidForm$ = bankAccountForm$.pipe(filter((form) => form.invalid));
-    invalidForm$.pipe(takeUntil(this.destroy$)).subscribe(() => {
-      this.dialogService
-        .error(this.lang.map.msg_all_required_fields_are_filled)
-        .onAfterClose$
-        .pipe(take(1))
-        .subscribe(() => {
-          this.form.get('bankAccount')?.markAllAsTouched();
-        });
-    });
+          return new BankAccount().clone({
+            ...this.current,
+            ...formValue,
+            countryInfo: countryInfo,
+          });
+        })
+      )
+      .subscribe((record: BankAccount) => {
+        if (!record) {
+          return;
+        }
+        this._updateList(record, !!this.editItem ? 'UPDATE' : 'ADD');
+        this.toastService.success(this.lang.map.msg_save_success);
+        this.changed$.next(null);
+        this.cancel();
+      });
 
-    validForm$.pipe(
-      takeUntil(this.destroy$),
-      map(() => {
-        return (this.form.get('bankAccount.0')) as UntypedFormArray;
-      }),
-      map((form) => {
-        return (new BankAccount()).clone({
-          ...this.currentRecord, ...form.getRawValue()
-        });
-      })
-    ).subscribe((bankAccount: BankAccount) => {
-      if (!bankAccount) {
-        return;
-      }
-
-      this._updateList(bankAccount, (this.editRecordIndex > -1 ? 'UPDATE' : 'ADD'), this.editRecordIndex);
-      this.toastService.success(this.lang.map.msg_save_success);
-      this.editRecordIndex = -1;
-      this.viewOnly = false;
-      this.recordChanged$.next(null);
-    });
   }
 
-  private _updateList(record: (BankAccount | null), operation: 'ADD' | 'UPDATE' | 'DELETE' | 'NONE', gridIndex: number = -1) {
+  private _updateList(
+    record: BankAccount | null,
+    operation: 'ADD' | 'UPDATE' | 'DELETE' | 'NONE',
+  ) {
     if (record) {
       if (operation === 'ADD') {
         this.list.push(record);
-      } else if (operation === 'UPDATE') {
-        this.list.splice(gridIndex, 1, record);
-      } else if (operation === 'DELETE') {
-        this.list.splice(gridIndex, 1);
+      } else {
+        let index = !this.editItem ? -1 : this.list.findIndex(x => x === this.editItem);
+        if (operation === 'UPDATE') {
+          this.list.splice(index, 1, record);
+        } else if (operation === 'DELETE') {
+          this.list.splice(index, 1);
+        }
       }
     }
     this.list = this.list.slice();
-    this.listDataSource.next(this.list);
   }
 
-  cancelBankAccount() {
-    this.resetBankAccountForm();
-    this._setComponentReadiness('READY');
-    this.editRecordIndex = -1;
-  }
-
-  private resetBankAccountForm() {
-    this.bankAccountsFormArray.clear();
-    this.bankAccountsFormArray.markAsUntouched();
-    this.bankAccountsFormArray.markAsPristine();
-  }
-
-  forceClearComponent() {
-    this.cancelBankAccount();
-    this.list = [];
-    this._updateList(null, 'NONE');
-    this._setComponentReadiness('READY');
-  }
-
-  editBankAccount($event: MouseEvent, record: BankAccount, index: number) {
-    $event.preventDefault();
+  edit(record: BankAccount, $event?: MouseEvent) {
+    $event?.preventDefault();
     if (this.readonly) {
       return;
     }
-    this.editRecordIndex = index;
+    this.editItem = record;
     this.viewOnly = false;
-    this.recordChanged$.next(record);
+    this.changed$.next(record);
   }
 
-  view($event: MouseEvent, record: BankAccount, index: number) {
-    $event.preventDefault();
-    this.editRecordIndex = index;
+  view(record: BankAccount, $event?: MouseEvent) {
+    $event?.preventDefault();
+    this.editItem = record;
     this.viewOnly = true;
-    this.recordChanged$.next(record);
+    this.changed$.next(record);
   }
 
-  deleteBankAccount($event: MouseEvent, record: BankAccount, index: number): any {
-    $event.preventDefault();
+  delete(record: BankAccount, $event?: MouseEvent): any {
+    $event?.preventDefault();
     if (this.readonly) {
       return;
     }
@@ -238,9 +259,35 @@ export class BankAccountComponent implements OnInit {
       .pipe(take(1))
       .subscribe((click: UserClickOn) => {
         if (click === UserClickOn.YES) {
-          this._updateList(record, 'DELETE', index);
+          this.editItem = record;
+          this._updateList(record, 'DELETE');
           this.toastService.success(this.lang.map.msg_delete_success);
+          this.cancel();
         }
       });
+  }
+  cancel() {
+    this.resetForm();
+    this.showForm = false;
+    this.editItem = undefined;
+    this.viewOnly = false;
+    this._setComponentReadiness('READY');
+  }
+
+  private resetForm() {
+    this.form.reset();
+    this.form.markAsUntouched();
+    this.form.markAsPristine();
+  }
+
+  private _setComponentReadiness(readyStatus: ReadinessStatus) {
+    this.readyEvent.emit(readyStatus);
+  }
+
+  forceClearComponent() {
+    this.cancel();
+    this.list = [];
+    this._updateList(null, 'NONE');
+    this._setComponentReadiness('READY');
   }
 }

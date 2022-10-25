@@ -34,6 +34,10 @@ import { ApprovalReasonInterceptor } from "@app/model-interceptors/ApprovalReaso
 import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
 import { BaseGenericEService } from "@app/generics/base-generic-e-service";
 import { CastResponseContainer } from "@decorators/cast-response";
+import { CommercialActivity } from '@app/models/commercial-activity';
+import { CommercialActivityInterceptor } from '@app/model-interceptors/commercial-activity-interceptor';
+import { WorkArea } from '@app/models/work-area';
+import { WorkAreaInterceptor } from '@app/model-interceptors/workarea-interceptor';
 
 @CastResponseContainer({
   $default: {
@@ -61,6 +65,8 @@ export class PartnerApprovalService extends BaseGenericEService<PartnerApproval>
   targetGroupInterceptor: IModelInterceptor<TargetGroup> = new TargetGroupInterceptor();
   contactOfficerInterceptor: IModelInterceptor<ContactOfficer> = new ContactOfficerInterceptor();
   approvalReasonInterceptor: IModelInterceptor<ApprovalReason> = new ApprovalReasonInterceptor();
+  commercialActivityInterceptor: IModelInterceptor<CommercialActivity> = new CommercialActivityInterceptor();
+  workAreaInterceptor: IModelInterceptor<WorkArea> = new WorkAreaInterceptor();
   jsonSearchFile: string = 'partner_approval_search_form.json';
   searchColumns: string[] = ['fullSerial', 'requestTypeInfo', 'subject', 'createdOn', 'caseStatus', 'ouInfo', 'countryInfo', 'requestClassificationInfo', 'creatorInfo'];
   serviceKey: keyof ILanguageKeys = "menu_partner_approval";

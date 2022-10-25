@@ -1520,6 +1520,10 @@ export interface ILanguageKeys {
   lbl_add_services_to_profile: string;
   services_add_successfully: string;
   remove_service_messages: string;
+  org_name_in_bank: string;
+  trade_license:string;
+  commercial_License_No:string;
+  commercial_activity:string;
   section: string;
   profile: string;
   internal_aid_calssification: string;

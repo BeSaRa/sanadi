@@ -3,14 +3,19 @@ import {LangService} from '@app/services/lang.service';
 import {CountryService} from '@app/services/country.service';
 import {ToastService} from '@app/services/toast.service';
 import {DialogService} from '@app/services/dialog.service';
-import {AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
+import {AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {Country} from '@app/models/country';
 import {ReadinessStatus} from '@app/types/types';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {ExecutiveManagement} from '@app/models/executive-management';
-import {filter, map, take, takeUntil} from 'rxjs/operators';
+import {filter, map, take, takeUntil, tap} from 'rxjs/operators';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import { ActionIconsEnum } from '@app/enums/action-icons-enum';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { SortEvent } from '@app/interfaces/sort-event';
+import { AdminResult } from '@app/models/admin-result';
+import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
 
 @Component({
   selector: 'executive-management',
@@ -31,7 +36,7 @@ export class ExecutiveManagementComponent implements OnInit {
   private _list: ExecutiveManagement[] = [];
   @Input() set list(list: ExecutiveManagement[]) {
     this._list = list;
-    this.listDataSource.next(this._list);
+    this.dataSource.next(this._list);
   }
 
   get list(): ExecutiveManagement[] {
@@ -41,25 +46,62 @@ export class ExecutiveManagementComponent implements OnInit {
   @Input() readonly: boolean = false;
   @Input() pageTitleKey: keyof ILanguageKeys = 'managers';
 
-  listDataSource: BehaviorSubject<ExecutiveManagement[]> = new BehaviorSubject<ExecutiveManagement[]>([]);
-  columns = ['arabicName', 'englishName', 'email', 'phone', 'actions'];
-
-  editIndex: number = -1;
+  dataSource: BehaviorSubject<ExecutiveManagement[]> = new BehaviorSubject<
+  ExecutiveManagement[]
+>([]);  columns = ['arabicName', 'englishName', 'email', 'country','actions'];
+  editItem?: ExecutiveManagement;
+  showForm: boolean = false;
   viewOnly: boolean = false;
-  private save$: Subject<any> = new Subject<any>();
+  filterControl: UntypedFormControl = new UntypedFormControl('');
 
   add$: Subject<any> = new Subject<any>();
-  private recordChanged$: Subject<ExecutiveManagement | null> = new Subject<ExecutiveManagement | null>();
-  private currentRecord?: ExecutiveManagement;
+  private save$: Subject<any> = new Subject<any>();
 
+  private changed$: Subject<ExecutiveManagement | null> =
+    new Subject<ExecutiveManagement | null>();
+  private current?: ExecutiveManagement;
   private destroy$: Subject<any> = new Subject<any>();
 
   form!: UntypedFormGroup;
+  actions: IMenuItem<ExecutiveManagement>[] = [
+    // edit
+    {
+      type: 'action',
+      icon: ActionIconsEnum.EDIT,
+      label: 'btn_edit',
+      onClick: (item: ExecutiveManagement) => this.edit(item),
+      show: (_item: ExecutiveManagement) => !this.readonly
+    },
+    // delete
+    {
+      type: 'action',
+      icon: ActionIconsEnum.DELETE,
+      label: 'btn_delete',
+      onClick: (item: ExecutiveManagement) => this.delete(item),
+      show: (_item: ExecutiveManagement) => !this.readonly
+    },
+    // view
+    {
+      type: 'action',
+      icon: ActionIconsEnum.VIEW,
+      label: 'view',
+      onClick: (item: ExecutiveManagement) => this.view(item),
+      show: (_item: ExecutiveManagement) => this.readonly
+    }
+  ];
+  sortingCallbacks = {
+    country: (a: ExecutiveManagement, b: ExecutiveManagement, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.countryInfo.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.countryInfo.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
 
+  }
   ngOnInit(): void {
+    this.dataSource.next(this.list);
     this.buildForm();
     this.listenToAdd();
-    this.listenToRecordChange();
+    this.listenToChange();
     this.listenToSave();
     this._setComponentReadiness('READY');
   }
@@ -70,159 +112,137 @@ export class ExecutiveManagementComponent implements OnInit {
     this.destroy$.unsubscribe();
   }
 
-  private _setComponentReadiness(readyStatus: ReadinessStatus) {
-    this.readyEvent.emit(readyStatus);
-  }
-
-  buildForm(): void {
-    this.form = this.fb.group({
-      managers: this.fb.array([])
-    });
-  }
-
-  addManagerAllowed(): boolean {
-    return !this.readonly;
-  }
-
-  get managersFormArray(): UntypedFormArray {
-    return (this.form.get('managers')) as UntypedFormArray;
+  private buildForm() {
+    this.form = this.fb.group(
+      new ExecutiveManagement().getManagerFields(true)
+    );
   }
 
   private listenToAdd() {
-    this.add$.pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        this.viewOnly = false;
-        this.recordChanged$.next(new ExecutiveManagement());
-      });
-  }
-
-  private listenToRecordChange() {
-    this.recordChanged$.pipe(takeUntil(this.destroy$)).subscribe((manager) => {
-      /*if (this.readonly) {
-        return;
-      }*/
-      this.currentRecord = manager || undefined;
-      this.updateManagerForm(this.currentRecord);
+    this.add$.pipe(takeUntil(this.destroy$)).subscribe(() => {
+      this.viewOnly = false;
+      this.changed$.next(new ExecutiveManagement());
     });
   }
 
-  private updateManagerForm(manager: ExecutiveManagement | undefined) {
-    const managersFormArray = this.managersFormArray;
-    managersFormArray.clear();
-    if (manager) {
+  private listenToChange() {
+    this.changed$.pipe(takeUntil(this.destroy$)).subscribe((record) => {
+      this.current = record || undefined;
+      this.showForm = !!this.current;
+      this.updateForm(this.current);
+    });
+  }
+
+  private updateForm(record: ExecutiveManagement | undefined) {
+    if (record) {
       if (this.viewOnly) {
         this._setComponentReadiness('READY');
       } else {
         this._setComponentReadiness('NOT_READY');
       }
-      managersFormArray.push(this.fb.group(manager.getManagerFields(true)));
+      this.form.patchValue(record);
       if (this.readonly || this.viewOnly) {
-        this.managersFormArray.disable();
+        this.form.disable();
       }
     } else {
       this._setComponentReadiness('READY');
     }
   }
 
-  saveManager() {
+  save() {
     if (this.readonly || this.viewOnly) {
       return;
     }
     this.save$.next();
   }
-
+  private displayRequiredFieldsMessage(): void {
+    this.dialogService
+      .error(this.lang.map.msg_all_required_fields_are_filled)
+      .onAfterClose$.pipe(take(1))
+      .subscribe(() => {
+        this.form.markAllAsTouched();
+      });
+  }
   private listenToSave() {
-    const managerForm$ = this.save$.pipe(map(() => {
-      return this.form.get('managers.0') as AbstractControl;
-    }));
+    this.save$
+      .pipe(
+        takeUntil(this.destroy$),
+        tap((_) =>
+          this.form.invalid ? this.displayRequiredFieldsMessage() : true
+        ),
+        filter(() => this.form.valid),
+        filter(() => {
+          const formValue = this.form.getRawValue();
+          const isDuplicate = this.list.some((x) => x === formValue);
+          if (isDuplicate) {
+            this.toastService.alert(this.lang.map.msg_duplicated_item);
+          }
+          return !isDuplicate;
+        }),
+        map(() => {
+          let formValue = this.form.getRawValue();
+          let countryInfo: AdminResult =
+            this.countriesList
+              .find((x) => x.id === formValue.country)
+              ?.createAdminResult() ?? new AdminResult();
 
-    const validForm$ = managerForm$.pipe(filter((form) => form.valid));
-    const invalidForm$ = managerForm$.pipe(filter((form) => form.invalid));
-    invalidForm$.pipe(takeUntil(this.destroy$)).subscribe(() => {
-      this.dialogService
-        .error(this.lang.map.msg_all_required_fields_are_filled)
-        .onAfterClose$
-        .pipe(take(1))
-        .subscribe(() => {
-          this.form.get('managers')?.markAllAsTouched();
-        });
-    });
+          return new ExecutiveManagement().clone({
+            ...this.current,
+            ...formValue,
+            countryInfo: countryInfo,
+          });
+        })
+      )
+      .subscribe((record: ExecutiveManagement) => {
+        if (!record) {
+          return;
+        }
+        this._updateList(record, !!this.editItem ? 'UPDATE' : 'ADD');
+        this.toastService.success(this.lang.map.msg_save_success);
+        this.changed$.next(null);
+        this.cancel();
+      });
 
-    validForm$.pipe(
-      takeUntil(this.destroy$),
-      map(() => {
-        return (this.form.get('managers.0')) as UntypedFormArray;
-      }),
-      map((form) => {
-        return (new ExecutiveManagement()).clone({
-          ...this.currentRecord, ...form.getRawValue()
-        });
-      })
-    ).subscribe((manager: ExecutiveManagement) => {
-      if (!manager) {
-        return;
-      }
-
-      this._updateList(manager, (this.editIndex > -1 ? 'UPDATE' : 'ADD'), this.editIndex);
-      this.toastService.success(this.lang.map.msg_save_success);
-      this.editIndex = -1;
-      this.viewOnly = false;
-      this.recordChanged$.next(null);
-    });
   }
 
-  private _updateList(record: (ExecutiveManagement | null), operation: 'ADD' | 'UPDATE' | 'DELETE' | 'NONE', gridIndex: number = -1) {
+  private _updateList(
+    record: ExecutiveManagement | null,
+    operation: 'ADD' | 'UPDATE' | 'DELETE' | 'NONE',
+  ) {
     if (record) {
       if (operation === 'ADD') {
         this.list.push(record);
-      } else if (operation === 'UPDATE') {
-        this.list.splice(gridIndex, 1, record);
-      } else if (operation === 'DELETE') {
-        this.list.splice(gridIndex, 1);
+      } else {
+        let index = !this.editItem ? -1 : this.list.findIndex(x => x === this.editItem);
+        if (operation === 'UPDATE') {
+          this.list.splice(index, 1, record);
+        } else if (operation === 'DELETE') {
+          this.list.splice(index, 1);
+        }
       }
     }
     this.list = this.list.slice();
-    this.listDataSource.next(this.list);
   }
 
-  cancelManager() {
-    this.resetManagerForm();
-    this._setComponentReadiness('READY');
-    this.editIndex = -1;
-  }
-
-  private resetManagerForm() {
-    this.managersFormArray.clear();
-    this.managersFormArray.markAsUntouched();
-    this.managersFormArray.markAsPristine();
-  }
-
-  forceClearComponent() {
-    this.cancelManager();
-    this.list = [];
-    this._updateList(null, 'NONE');
-    this._setComponentReadiness('READY');
-  }
-
-  editManager($event: MouseEvent, record: ExecutiveManagement, index: number) {
-    $event.preventDefault();
+  edit(record: ExecutiveManagement, $event?: MouseEvent) {
+    $event?.preventDefault();
     if (this.readonly) {
       return;
     }
-    this.editIndex = index;
+    this.editItem = record;
     this.viewOnly = false;
-    this.recordChanged$.next(record);
+    this.changed$.next(record);
   }
 
-  view($event: MouseEvent, record: ExecutiveManagement, index: number) {
-    $event.preventDefault();
-    this.editIndex = index;
+  view(record: ExecutiveManagement, $event?: MouseEvent) {
+    $event?.preventDefault();
+    this.editItem = record;
     this.viewOnly = true;
-    this.recordChanged$.next(record);
+    this.changed$.next(record);
   }
 
-  deleteManager($event: MouseEvent, record: ExecutiveManagement, index: number): any {
-    $event.preventDefault();
+  delete(record: ExecutiveManagement, $event?: MouseEvent): any {
+    $event?.preventDefault();
     if (this.readonly) {
       return;
     }
@@ -231,10 +251,35 @@ export class ExecutiveManagementComponent implements OnInit {
       .pipe(take(1))
       .subscribe((click: UserClickOn) => {
         if (click === UserClickOn.YES) {
-          this._updateList(record, 'DELETE', index);
+          this.editItem = record;
+          this._updateList(record, 'DELETE');
           this.toastService.success(this.lang.map.msg_delete_success);
+          this.cancel();
         }
       });
   }
+  cancel() {
+    this.resetForm();
+    this.showForm = false;
+    this.editItem = undefined;
+    this.viewOnly = false;
+    this._setComponentReadiness('READY');
+  }
 
+  private resetForm() {
+    this.form.reset();
+    this.form.markAsUntouched();
+    this.form.markAsPristine();
+  }
+
+  private _setComponentReadiness(readyStatus: ReadinessStatus) {
+    this.readyEvent.emit(readyStatus);
+  }
+
+  forceClearComponent() {
+    this.cancel();
+    this.list = [];
+    this._updateList(null, 'NONE');
+    this._setComponentReadiness('READY');
+  }
 }
