@@ -42,6 +42,7 @@ export class NpoContactOfficerComponent implements OnInit, OnDestroy {
   dataSource: BehaviorSubject<NpoContactOfficer[]> = new BehaviorSubject<NpoContactOfficer[]>([]);
   columns = ['idNumber', 'fullName', 'email', 'phone', 'extraPhone', 'actions'];
 
+  viewOnly: boolean = false;
   editIndex: number = -1;
   add$: Subject<any> = new Subject<any>();
   private save$: Subject<any> = new Subject<any>();
@@ -90,6 +91,7 @@ export class NpoContactOfficerComponent implements OnInit, OnDestroy {
   private listenToAdd() {
     this.add$.pipe(takeUntil(this.destroy$))
       .subscribe(() => {
+        this.viewOnly = false;
         this.changed$.next(new NpoContactOfficer())
       })
   }
@@ -97,9 +99,7 @@ export class NpoContactOfficerComponent implements OnInit, OnDestroy {
   private listenToChange() {
     this.changed$.pipe(takeUntil(this.destroy$))
       .subscribe(contact => {
-        if (this.readonly) {
-          return;
-        }
+
         this.current = contact || undefined;
         this.updateForm(this.current);
       })

@@ -53,14 +53,25 @@
   {
     "fields": [
       {
-        "key": "organizationId",
-        "type": "selectField",
-        "label": "lbl_organization",
-        "selectOptions": {
-          "options": [],
-          "loader": "organization.loadAsLookups",
-          "bindValue": "id",
-          "bindLabel": "basedOnLanguage"
+        "key": "arabicName",
+        "type": "input",
+        "label": "arabic_name",
+        "validations": {
+          "required": false
+        },
+        "templateOptions": {
+          "maxLength": 50
+        }
+      },
+      {
+        "key": "englishName",
+        "type": "input",
+        "label": "english_name",
+        "validations": {
+          "required": false
+        },
+        "templateOptions": {
+          "maxLength": 50
         }
       }
     ]

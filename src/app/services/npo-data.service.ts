@@ -39,4 +39,12 @@ export class NpoDataService extends CrudGenericService<NpoData> {
   loadCompositeById(id: number): Observable<NpoData[]> {
     return this.http.get<NpoData[]>(this._getServiceURL() + '/' + id + '/composite');
   }
+
+  @CastResponse(undefined, {
+    fallback: '$default',
+    unwrap: 'rs'
+  })
+  loadActiveAsLookup(): Observable<NpoData[]> {
+    return this.http.get<NpoData[]>(this._getServiceURL() + '/active/lookup');
+  }
 }
