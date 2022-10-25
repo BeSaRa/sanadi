@@ -97,12 +97,42 @@
           >
             <ng-option
               [value]="option.id"
-              *ngFor="let option of externalCooperations"
+              *ngFor="let option of externalCooperations$ | async"
             >{{ option.getName() }}</ng-option
             >
           </ng-select>
           <app-field-error-message
             controlName="externalCooperationAuthority"
+          ></app-field-error-message>
+        </div>
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
+          <label
+            asteriskIfRequired="nPOList"
+            for="nPOList"
+            class="form-label"
+          >{{ lang.map.npo_list }}</label
+          >
+          <ng-select
+            [selectOnTab]="true"
+            labelForId="nPOList"
+            [multiple]="true"
+            [clearable]="true"
+            placeholder="{{ lang.map.select }}"
+            [readonly]="isCancelRequestType || !isEditAllowed"
+            id="nPOList"
+            [notFoundText]="lang.map.msg_not_found"
+            appendTo="body"
+            validationClasses="nPOList"
+            formControlName="nPOList"
+          >
+            <ng-option
+              [value]="option.id"
+              *ngFor="let option of npos$ | async"
+            >{{ option.getName() }}</ng-option
+            >
+          </ng-select>
+          <app-field-error-message
+            controlName="nPOList"
           ></app-field-error-message>
         </div>
         <div class="col-sm-6 col-md-4 mb-4 position-relative">

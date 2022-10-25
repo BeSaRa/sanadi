@@ -1522,5 +1522,6 @@ export interface ILanguageKeys {
   remove_service_messages: string;
   section: string;
   profile: string;
+  npo_list: string;
 }
 

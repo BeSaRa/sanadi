@@ -7,29 +7,29 @@ import {
   ViewChild,
   ViewChildren,
 } from '@angular/core';
-import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {SaveTypes} from '@app/enums/save-types';
-import {CollectionRequestType} from '@app/enums/service-request-types';
-import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
-import {CommonUtils} from '@app/helpers/common-utils';
-import {IKeyValue} from '@app/interfaces/i-key-value';
-import {Country} from '@app/models/country';
-import {ForeignCountriesProjects} from '@app/models/foreign-countries-projects';
-import {ForeignCountriesProjectsResult} from '@app/models/foreign-countries-projects-results';
-import {ForeignCountriesProjectsSearchCriteria} from '@app/models/foreign-countries-projects-seach-criteria';
-import {Lookup} from '@app/models/lookup';
-import {ProjectNeedsComponent} from '@app/modules/e-services-main/shared/project-needs/project-needs.component';
-import {CountryService} from '@app/services/country.service';
-import {DialogService} from '@app/services/dialog.service';
-import {FollowupDateService} from '@app/services/follow-up-date.service';
-import {ForeignCountriesProjectsService} from '@app/services/foreign-countries-projects.service';
-import {LangService} from '@app/services/lang.service';
-import {LicenseService} from '@app/services/license.service';
-import {LookupService} from '@app/services/lookup.service';
-import {ToastService} from '@app/services/toast.service';
-import {ReadinessStatus} from '@app/types/types';
-import {Observable, of, Subject} from 'rxjs';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { SaveTypes } from '@app/enums/save-types';
+import { CollectionRequestType } from '@app/enums/service-request-types';
+import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { IKeyValue } from '@app/interfaces/i-key-value';
+import { Country } from '@app/models/country';
+import { ForeignCountriesProjects } from '@app/models/foreign-countries-projects';
+import { ForeignCountriesProjectsResult } from '@app/models/foreign-countries-projects-results';
+import { ForeignCountriesProjectsSearchCriteria } from '@app/models/foreign-countries-projects-seach-criteria';
+import { Lookup } from '@app/models/lookup';
+import { ProjectNeedsComponent } from '@app/modules/e-services-main/shared/project-needs/project-needs.component';
+import { CountryService } from '@app/services/country.service';
+import { DialogService } from '@app/services/dialog.service';
+import { FollowupDateService } from '@app/services/follow-up-date.service';
+import { ForeignCountriesProjectsService } from '@app/services/foreign-countries-projects.service';
+import { LangService } from '@app/services/lang.service';
+import { LicenseService } from '@app/services/license.service';
+import { LookupService } from '@app/services/lookup.service';
+import { ToastService } from '@app/services/toast.service';
+import { ReadinessStatus } from '@app/types/types';
+import { Observable, of, Subject } from 'rxjs';
 import {
   catchError,
   exhaustMap,
@@ -40,7 +40,8 @@ import {
   takeUntil,
   tap,
 } from 'rxjs/operators';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { ProfileService } from '@app/services/profile.service';
 
 @Component({
   selector: 'app-foreign-countries-projects',
@@ -52,7 +53,8 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
   form!: UntypedFormGroup;
   tabs: IKeyValue[] = [];
   requestTypes: Lookup[] = this.lookupService.listByCategory.CollectionRequestType?.sort((a, b) => a.lookupKey - b.lookupKey);
-  externalCooperations: Lookup[] = this.lookupService.listByCategory.ContractLocationType;
+  externalCooperations$ = this.profileService.getInternationalCooperation();
+  npos$ = this.profileService.getCharitiesNpoInstitutions();
   licenseSearch$: Subject<string> = new Subject<string>();
   countries$: Observable<Country[]> = this.countryService.loadAsLookups()
     .pipe(takeUntil(this.destroy$), share());
@@ -61,7 +63,7 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
   projectNeedsTabStatus: ReadinessStatus = 'READY';
 
 
-  @ViewChildren('tabContent', {read: TemplateRef})
+  @ViewChildren('tabContent', { read: TemplateRef })
   tabsTemplates!: QueryList<TemplateRef<any>>;
 
   @ViewChild(ProjectNeedsComponent) projectNeedsComponentRef!: ProjectNeedsComponent;
@@ -76,6 +78,7 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
     private licenseService: LicenseService,
     private cd: ChangeDetectorRef,
     private toast: ToastService,
+    private profileService: ProfileService
   ) {
     super();
   }
@@ -198,7 +201,7 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
                   if (!data) {
                     return of(null);
                   }
-                  return {selected: licenses[0], details: data};
+                  return { selected: licenses[0], details: data };
                 }),
                 catchError(() => {
                   return of(null);
@@ -264,16 +267,16 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
         takeUntil(this.destroy$),
         switchMap(() => this.confirmChangeRequestType(userInteraction))
       ).subscribe((clickOn: UserClickOn) => {
-      if (clickOn === UserClickOn.YES) {
-        if (userInteraction) {
-          this.resetForm$.next();
-          this.requestTypeField.setValue(requestTypeValue);
+        if (clickOn === UserClickOn.YES) {
+          if (userInteraction) {
+            this.resetForm$.next();
+            this.requestTypeField.setValue(requestTypeValue);
+          }
+          this.requestType$.next(requestTypeValue);
+        } else {
+          this.requestTypeField.setValue(this.requestType$.value);
         }
-        this.requestType$.next(requestTypeValue);
-      } else {
-        this.requestTypeField.setValue(this.requestType$.value);
-      }
-    });
+      });
   }
 
   getTabInvalidStatus(i: number): boolean {
@@ -342,6 +345,7 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
       ...this.specialExplanation.getRawValue()
     });
     value.projectNeeds = this.projectNeedsComponentRef.list;
+    console.log({ value });
     return value;
   }
 
@@ -355,7 +359,7 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
       (operation === OperationTypes.CREATE && saveType === SaveTypes.FINAL) ||
       (operation === OperationTypes.UPDATE && saveType === SaveTypes.COMMIT)
     ) {
-      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({serial: model.fullSerial}));
+      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({ serial: model.fullSerial }));
     } else {
       this.toast.success(this.lang.map.request_has_been_saved_successfully);
     }
