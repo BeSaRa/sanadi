@@ -81,6 +81,7 @@ export class CharityReportsComponent extends ListModelComponent<CharityReport> {
       this.toastr.alert(this.lang.map.msg_duplicated_item);
       return null;
     }
+    model.reportStatusInfo = AdminResult.createInstance({ ...this.lookupService.listByCategory.CharityReportStatus.find(e => e.lookupKey === model.reportStatus) })
     model.generalDate = DateUtils.getDateStringFromDate(model.generalDate!)!;
     return model;
   }

@@ -93,9 +93,11 @@
       <button
         (click)="saveOfficer()"
         [disabled]="!officerForm.valid"
+        *ngIf="!readonly"
+
         class="btn btn-primary m-2"
       >
-        {{ selectedOfficer ? lang.map.update_officer : lang.map.add_officer }}
+        {{ selectedOfficer ? lang.map.btn_update : lang.map.add_officer }}
       </button>
 
     <button (click)="cancel()" class="btn btn-secondary m-2">

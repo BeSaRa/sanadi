@@ -68,7 +68,7 @@ export class ForeignAidClassificationsComponent
       dropdownValue: 'id',
     }] : [];
     if (id === DomainTypes.DEVELOPMENT) {
-      this.controls = [...this.baseControls, ...controls, ...this.developmentControls];
+      this.controls = [...this.baseControls, ...this.developmentControls, ...controls,];
       this.form = this.fb.group({
         domain: [id, [CustomValidators.required]],
         mainDACCategory: [
@@ -82,7 +82,7 @@ export class ForeignAidClassificationsComponent
         ...fg
       });
     } else {
-      this.controls = [...this.baseControls, ...controls, ...this.humanitirianControls];
+      this.controls = [...this.baseControls, ...this.humanitirianControls, ...controls];
       this.form = this.fb.group({
         domain: [id, [CustomValidators.required]],
         mainUNOCHACategory: [
@@ -124,7 +124,6 @@ export class ForeignAidClassificationsComponent
   ];
   controls = this.baseControls;
   private handleOCHAOrDAC = (id: string | number) => {
-    const addOne = this.charityWorkArea === CharityWorkArea.BOTH ? 1 : 0;
     this.latestWorkingSubForParent$ = this.dacOchaService.loadByParentId(
       id as number
     ).pipe(shareReplay()).pipe(
@@ -132,7 +131,7 @@ export class ForeignAidClassificationsComponent
         this.byParent = e;
       })
     );;
-    this.controls[2 + addOne].load$ = this.latestWorkingSubForParent$;
+    this.controls[2].load$ = this.latestWorkingSubForParent$;
   };
   developmentControls: ControlWrapper[] = [
     {
@@ -228,7 +227,7 @@ export class ForeignAidClassificationsComponent
   }
   _beforeAdd(model: ForeignAidClassification): ForeignAidClassification | null {
     (model.aidClassification && (model.aidClassificationInfo = AdminResult.createInstance({ ...this.aidClassifcations!.find(e => e.id === model.aidClassification) })));
-
+    (model.domain && (model.domainInfo = AdminResult.createInstance({ ...this.domains.find(e => e.lookupKey === model.domain) })));
     (model.mainDACCategory && (model.mainDACCategoryInfo = AdminResult.createInstance({
       ...this.mainDacCategories!.find(e => e.id === model.mainDACCategory)
     })));
@@ -244,6 +243,7 @@ export class ForeignAidClassificationsComponent
         model.subUNOCHACategoryInfo = AdminResult.createInstance({ ...this.byParent!.find(e => e.id === model.subUNOCHACategory) });
       }
     }
+    model.charityWorkArea = this.charityWorkArea;
     return model;
   }
 }
