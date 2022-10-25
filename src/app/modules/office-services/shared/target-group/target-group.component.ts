@@ -2,12 +2,16 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { LangService } from "@services/lang.service";
 import { ToastService } from "@services/toast.service";
 import { DialogService } from "@services/dialog.service";
-import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
+import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from "@angular/forms";
 import { ReadinessStatus } from "@app/types/types";
 import { BehaviorSubject, Subject } from "rxjs";
-import { filter, map, take, takeUntil } from "rxjs/operators";
+import { filter, map, take, takeUntil, tap } from "rxjs/operators";
 import { UserClickOn } from "@app/enums/user-click-on.enum";
 import { TargetGroup } from "@app/models/target-group";
+import { ActionIconsEnum } from '@app/enums/action-icons-enum';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { SortEvent } from '@app/interfaces/sort-event';
+import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
 
 @Component({
   selector: 'target-group',
@@ -38,15 +42,44 @@ export class TargetGroupComponent implements OnInit, OnDestroy {
   dataSource: BehaviorSubject<TargetGroup[]> = new BehaviorSubject<TargetGroup[]>([]);
   columns = ['services', 'targetedGroup', 'actions'];
 
-  editIndex: number = -1;
+  editItem?: TargetGroup;
+  viewOnly: boolean = false;
+
   add$: Subject<any> = new Subject<any>();
   private save$: Subject<any> = new Subject<any>();
-
+  showForm: boolean = false;
+  filterControl: UntypedFormControl = new UntypedFormControl('');
   private changed$: Subject<TargetGroup | null> = new Subject<TargetGroup | null>();
   private current?: TargetGroup;
   private destroy$: Subject<any> = new Subject<any>();
 
   form!: UntypedFormGroup;
+  actions: IMenuItem<TargetGroup>[] = [
+    // edit
+    {
+      type: 'action',
+      icon: ActionIconsEnum.EDIT,
+      label: 'btn_edit',
+      onClick: (item: TargetGroup) => this.edit(item),
+      show: (_item: TargetGroup) => !this.readonly
+    },
+    // delete
+    {
+      type: 'action',
+      icon: ActionIconsEnum.DELETE,
+      label: 'btn_delete',
+      onClick: (item: TargetGroup) => this.delete(item),
+      show: (_item: TargetGroup) => !this.readonly
+    },
+    // view
+    {
+      type: 'action',
+      icon: ActionIconsEnum.VIEW,
+      label: 'view',
+      onClick: (item: TargetGroup) => this.view(item),
+      show: (_item: TargetGroup) => this.readonly
+    }
+  ];
 
   ngOnInit(): void {
     this._handleInitData();
@@ -67,23 +100,17 @@ export class TargetGroupComponent implements OnInit, OnDestroy {
   }
 
   private buildForm() {
-    this.form = this.fb.group({
-      targetGroups: this.fb.array([])
-    })
+    this.form = this.fb.group(new TargetGroup().getTargetGroupFields(true))
   }
 
-  get targetGroupsFormArray(): UntypedFormArray {
-    return (this.form.get('targetGroups')) as UntypedFormArray;
-  }
 
-  addAllowed(): boolean {
-    return !this.readonly;
-  }
 
   private listenToAdd() {
     this.add$.pipe(takeUntil(this.destroy$))
       .subscribe(() => {
+        this.viewOnly = false;
         this.changed$.next(new TargetGroup())
+
       })
   }
 
@@ -94,93 +121,109 @@ export class TargetGroupComponent implements OnInit, OnDestroy {
           return;
         }
         this.current = targetGroup || undefined;
+        this.showForm = !!this.current;
         this.updateForm(this.current);
       })
   }
 
   private updateForm(record: TargetGroup | undefined) {
-    const targetGroupsFormArray = this.targetGroupsFormArray;
-    targetGroupsFormArray.clear();
-
     if (record) {
-      this._setComponentReadiness('NOT_READY');
-      targetGroupsFormArray.push(this.fb.group((record.getTargetGroupFields(true))));
+      if (this.viewOnly) {
+        this._setComponentReadiness('READY');
+      } else {
+        this._setComponentReadiness('NOT_READY');
+      }
+      this.form.patchValue(record);
+      if (this.readonly || this.viewOnly) {
+        this.form.disable();
+      }
     } else {
       this._setComponentReadiness('READY');
     }
   }
 
   save() {
-    if (this.readonly) {
+    if (this.readonly || this.viewOnly) {
       return;
     }
     this.save$.next();
   }
 
+
+  private displayRequiredFieldsMessage(): void {
+    this.dialogService.error(this.lang.map.msg_all_required_fields_are_filled).onAfterClose$
+      .pipe(take(1))
+      .subscribe(() => {
+        this.form.markAllAsTouched();
+      });
+  }
   private listenToSave() {
-    const form$ = this.save$.pipe(map(() => {
-      return this.form.get('targetGroups.0') as AbstractControl;
-    }));
-
-    const validForm$ = form$.pipe(filter((form) => form.valid));
-    const invalidForm$ = form$.pipe(filter((form) => form.invalid));
-    invalidForm$.pipe(takeUntil(this.destroy$)).subscribe(() => {
-      this.dialogService
-        .error(this.lang.map.msg_all_required_fields_are_filled)
-        .onAfterClose$
-        .pipe(take(1))
-        .subscribe(() => {
-          this.form.get('targetGroups')?.markAllAsTouched();
-        });
-    });
-
-    validForm$.pipe(
+    this.save$.pipe(
       takeUntil(this.destroy$),
-      map(() => {
-        return (this.form.get('targetGroups.0')) as UntypedFormArray;
+      tap(_ => this.form.invalid ? this.displayRequiredFieldsMessage() : true),
+      filter(() => this.form.valid),
+      filter(() => {
+        const formValue = this.form.getRawValue();
+        const isDuplicate = this.list.some(x => x.services === formValue.services &&
+           x.targetedGroup === formValue.targetedGroup);
+        if (isDuplicate) {
+          this.toastService.alert(this.lang.map.msg_duplicated_item);
+        }
+        return !isDuplicate;
       }),
-      map((form) => {
+      map(() => {
+        let formValue = this.form.getRawValue();
+
         return (new TargetGroup()).clone({
-          ...this.current, ...form.getRawValue()
+          ...this.current, ...formValue,
         });
       })
-    ).subscribe((targetGroup: TargetGroup) => {
-      if (!targetGroup) {
+    ).subscribe((agency: TargetGroup) => {
+      if (!agency) {
         return;
       }
-
-      this._updateList(targetGroup, (this.editIndex > -1 ? 'UPDATE' : 'ADD'), this.editIndex);
+      this._updateList(agency, (!!this.editItem ? 'UPDATE' : 'ADD'));
       this.toastService.success(this.lang.map.msg_save_success);
-      this.editIndex = -1;
       this.changed$.next(null);
+      this.cancel();
     });
   }
 
-  private _updateList(record: (TargetGroup | null), operation: 'ADD' | 'UPDATE' | 'DELETE' | 'NONE', gridIndex: number = -1) {
+  private _updateList(record: (TargetGroup | null), operation: 'ADD' | 'UPDATE' | 'DELETE' | 'NONE') {
     if (record) {
       if (operation === 'ADD') {
         this.list.push(record);
-      } else if (operation === 'UPDATE') {
-        this.list.splice(gridIndex, 1, record);
-      } else if (operation === 'DELETE') {
-        this.list.splice(gridIndex, 1);
+      } else {
+        let index = !this.editItem ? -1 : this.list.findIndex(x => x === this.editItem);
+        if (operation === 'UPDATE') {
+          this.list.splice(index, 1, record);
+        } else if (operation === 'DELETE') {
+          this.list.splice(index, 1);
+        }
       }
     }
     this.list = this.list.slice();
-    this.dataSource.next(this.list);
   }
 
-  edit($event: MouseEvent, record: TargetGroup, index: number) {
-    $event.preventDefault();
+  edit(record: TargetGroup, $event?: MouseEvent) {
+    $event?.preventDefault();
     if (this.readonly) {
       return;
     }
-    this.editIndex = index;
+    this.editItem = record;
+    this.viewOnly = false;
     this.changed$.next(record);
   }
 
-  delete($event: MouseEvent, record: TargetGroup, index: number): any {
-    $event.preventDefault();
+  view(record: TargetGroup, $event?: MouseEvent) {
+    $event?.preventDefault();
+    this.editItem = record;
+    this.viewOnly = true;
+    this.changed$.next(record);
+  }
+
+  delete(record: TargetGroup, $event?: MouseEvent): any {
+    $event?.preventDefault();
     if (this.readonly) {
       return;
     }
@@ -189,22 +232,27 @@ export class TargetGroupComponent implements OnInit, OnDestroy {
       .pipe(take(1))
       .subscribe((click: UserClickOn) => {
         if (click === UserClickOn.YES) {
-          this._updateList(record, 'DELETE', index);
+          this.editItem = record;
+          this._updateList(record, 'DELETE');
           this.toastService.success(this.lang.map.msg_delete_success);
+          this.cancel();
         }
       });
   }
 
+
   cancel() {
     this.resetForm();
+    this.showForm = false;
+    this.editItem = undefined;
+    this.viewOnly = false;
     this._setComponentReadiness('READY');
-    this.editIndex = -1;
   }
 
   private resetForm() {
-    this.targetGroupsFormArray.clear();
-    this.targetGroupsFormArray.markAsUntouched();
-    this.targetGroupsFormArray.markAsPristine();
+    this.form.reset();
+    this.form.markAsUntouched();
+    this.form.markAsPristine();
   }
 
   private _setComponentReadiness(readyStatus: ReadinessStatus) {

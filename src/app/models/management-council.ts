@@ -1,5 +1,9 @@
+import { normalSearchFields } from '@helpers/normal-search-fields';
+import { AdminResult } from './admin-result';
 import {CustomValidators} from "@app/validators/custom-validators";
 import {SearchableCloneable} from "@app/models/searchable-cloneable";
+import { infoSearchFields } from '@app/helpers/info-search-fields';
+import { ISearchFieldsMap } from '@app/types/types';
 
 export class ManagementCouncil extends SearchableCloneable<ManagementCouncil> {
   arabicName!: string;
@@ -7,12 +11,16 @@ export class ManagementCouncil extends SearchableCloneable<ManagementCouncil> {
   email!: string;
   jobTitle!: string;
   phone!: string;
-  mobileNo!: string;
+  // mobileNo!: string;
   country!: number;
+  countryInfo!:AdminResult
 
-
+  searchFields: ISearchFieldsMap<ManagementCouncil> = {
+    ...infoSearchFields(['countryInfo']),
+    ...normalSearchFields(['arabicName','englishName','jobTitle','email','phone'])
+  };
   getManagementCouncilFields(control: boolean): any {
-    const {arabicName, englishName, email, jobTitle, phone, mobileNo, country} = this;
+    const {arabicName, englishName, email, jobTitle, phone, country} = this;
 
     return {
       arabicName: control ? [arabicName, [CustomValidators.required, CustomValidators.pattern('AR_ONLY'),
@@ -24,7 +32,7 @@ export class ManagementCouncil extends SearchableCloneable<ManagementCouncil> {
       email: control ? [email, [CustomValidators.required, CustomValidators.pattern('EMAIL')]] : email,
       jobTitle: control ? [jobTitle, [CustomValidators.required, CustomValidators.maxLength(150)]] : jobTitle,
       phone: control ? [phone, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : phone,
-      mobileNo: control ? [mobileNo, [CustomValidators.required].concat(CustomValidators.commonValidations.mobileNo)] : mobileNo,
+      // mobileNo: control ? [mobileNo, [CustomValidators.required].concat(CustomValidators.commonValidations.mobileNo)] : mobileNo,
       country: control ? [country, CustomValidators.required] : country
     };
   }
