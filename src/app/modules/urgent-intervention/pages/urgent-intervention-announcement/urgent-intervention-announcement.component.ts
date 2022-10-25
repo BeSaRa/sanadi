@@ -30,7 +30,7 @@ import {
 import {
   InterventionFieldListComponent
 } from '@app/modules/urgent-intervention/shared/intervention-field-list/intervention-field-list.component';
-import {ServiceRequestTypes, UrgentInterventionAnnouncementRequestType} from '@app/enums/service-request-types';
+import {UrgentInterventionAnnouncementRequestType} from '@app/enums/service-request-types';
 import {CommonUtils} from '@helpers/common-utils';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {UrgentInterventionAnnouncementSearchCriteria} from '@app/models/urgent-intervention-announcement-search-criteria';
@@ -383,10 +383,10 @@ export class UrgentInterventionAnnouncementComponent extends EServicesGenericCom
     // set validators to empty
     this.oldLicenseFullSerialField?.setValidators([]);
 
-    // if no requestType
+    // if no requestType or announcement request type
     // if new record or draft, reset license and its validations
     // also reset the values in model
-    if (!requestTypeValue || (requestTypeValue === ServiceRequestTypes.NEW)) {
+    if (!requestTypeValue || (requestTypeValue === UrgentInterventionAnnouncementRequestType.ANNOUNCEMENT)) {
       if (!this.model?.id || this.model.canCommit()) {
         this.oldLicenseFullSerialField.reset();
         this.oldLicenseFullSerialField.setValidators([]);
