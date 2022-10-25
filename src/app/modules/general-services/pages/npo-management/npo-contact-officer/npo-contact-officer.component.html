@@ -19,7 +19,7 @@
           </div>
           <!-- Email -->
           <div class="col-sm-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="email" for="email" class="form-label">{{lang.map.lbl_email}}</label>
+            <label asteriskIfRequired="email" for="email" class="form-label">{{lang.map.email_address_of_the_employer}}</label>
             <input formControlName="email" type="text"
                    validationClasses="email" trimInput class="form-control" id="email">
             <app-field-error-message controlName="email"></app-field-error-message>
@@ -28,14 +28,14 @@
         <div class="row">
           <!-- Phone -->
           <div class="col-sm-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="phone" for="phone" class="form-label">{{lang.map.lbl_phone}}</label>
+            <label asteriskIfRequired="phone" for="phone" class="form-label">{{lang.map.phone_of_the_employer}}</label>
             <input formControlName="phone" type="text"
                    validationClasses="phone" trimInput class="form-control" id="phone">
             <app-field-error-message controlName="phone"></app-field-error-message>
           </div>
           <!-- extraPhone -->
           <div class="col-sm-12 col-md-4 mb-4 position-relative">
-            <label asteriskIfRequired="extraPhone" for="extraPhone" class="form-label">{{lang.map.lbl_extra_phone_number}}</label>
+            <label asteriskIfRequired="extraPhone" for="extraPhone" class="form-label">{{lang.map.mobile_number}}</label>
             <input formControlName="extraPhone" type="text"
                    validationClasses="extraPhone" trimInput class="form-control" id="extraPhone">
             <app-field-error-message controlName="extraPhone"></app-field-error-message>
@@ -63,7 +63,7 @@
           </div>
         </div>
         <div class="d-flex flex-row align-items-center justify-content-center">
-          <button (click)="save()" [disabled]="readonly"
+          <button (click)="save()" [disabled]="readonly" *ngIf="!readonly"
                   class="btn btn-primary m-2">{{(editIndex > -1) ? lang.map.btn_save : lang.map.btn_add}}</button>
           <button (click)="cancel()"
                   class="btn btn-secondary m-2">{{lang.map.btn_cancel}}</button>

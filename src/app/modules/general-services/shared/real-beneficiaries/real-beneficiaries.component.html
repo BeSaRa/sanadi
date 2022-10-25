@@ -110,13 +110,17 @@
           </th>
           <td cdk-cell *cdkCellDef="let row; let i = index" class="table-actions">
             <div class="d-flex flex-row">
-              <button (click)="removeOne($event, row, i)" tooltip="{{ lang.map.btn_remove }}"
+              <button (click)="removeOne($event, row, i)" *ngIf="!readonly" tooltip="{{ lang.map.btn_remove }}"
                 class="btn btn-link outline-none" [disabled]="readonly">
                 <i class="mdi mdi-close-box"></i>
               </button>
-              <button (click)="selectOne($event, row, i)" tooltip="{{ lang.map.btn_edit }}"
+              <button (click)="selectOne($event, row, i)" *ngIf="!readonly" tooltip="{{ lang.map.btn_edit }}"
                 class="btn btn-link outline-none" [disabled]="readonly">
                 <i class="mdi mdi-pen"></i>
+              </button>
+              <button (click)="selectOne($event, row, i)" *ngIf="readonly" tooltip="{{ lang.map.view }}"
+                class="btn btn-link outline-none">
+                <i class="mdi mdi-eye"></i>
               </button>
             </div>
           </td>

@@ -31,7 +31,7 @@
           <app-field-error-message controlName="requestType"></app-field-error-message>
         </div>
 
-        <div class="col-md-4 mb-4 position-relative" *ngIf="isLicensingUser && !isNew">
+        <div class="col-md-4 mb-4 position-relative" *ngIf="isLicensingUser && !isNew && !readonly">
           <label class="form-label">{{ lang.map.lbl_organization }}</label>
           <ng-select [selectOnTab]="true" labelForId="orgIdField" [clearable]="true" placeholder="{{ lang.map.select }}"
             id="orgIdField" [notFoundText]="lang.map.msg_not_found" (change)="loadOrganizationData()" appendTo="body"
@@ -46,7 +46,7 @@
           <label asteriskIfRequired="arabicName" for="arabicName" class="form-label">{{
             lang.map.lbl_arabic_name
             }}</label>
-          <input id="arabicName" formControlName="arabicName" [readonly]="readonly" validationClasses="arabicName"
+          <input id="arabicName" formControlName="arabicName" [readonly]="readonly || isViewOnly" validationClasses="arabicName"
             class="form-control" />
           <app-field-error-message controlName="arabicName"></app-field-error-message>
         </div>
@@ -55,7 +55,7 @@
           <label asteriskIfRequired="englishName" for="englishName" class="form-label">{{
             lang.map.lbl_english_name
             }}</label>
-          <input id="englishName" [readonly]="readonly" formControlName="englishName" validationClasses="englishName"
+          <input id="englishName" [readonly]="readonly || isViewOnly" formControlName="englishName" validationClasses="englishName"
             class="form-control" />
           <app-field-error-message controlName="englishName"></app-field-error-message>
         </div>
@@ -103,7 +103,7 @@
           <label asteriskIfRequired="unifiedEconomicRecord" for="unifiedEconomicRecord" class="form-label">{{
             lang.map.unified_economic_record
             }}</label>
-          <input id="unifiedEconomicRecord" formControlName="unifiedEconomicRecord" [readonly]="readonly"
+          <input id="unifiedEconomicRecord" formControlName="unifiedEconomicRecord" [readonly]="readonly || isViewOnly"
             validationClasses="unifiedEconomicRecord" class="form-control" />
           <app-field-error-message controlName="unifiedEconomicRecord"></app-field-error-message>
         </div>
@@ -111,7 +111,7 @@
         <div class="col-sm-6 col-md-4 mb-4 position-relative">
           <label asteriskIfRequired="activityType" for="activityType" class="form-label">{{
             lang.map.activity_type }}</label>
-          <ng-select [selectOnTab]="true" placeholder="{{ lang.map.select }}" [readonly]="readonly"
+          <ng-select [selectOnTab]="true" placeholder="{{ lang.map.select }}" [readonly]="readonly || isViewOnly"
             [notFoundText]="lang.map.msg_not_found" appendTo="body" id="activityType" validationClasses="activityType"
             formControlName="activityType">
             <ng-option *ngFor="let option of activityTypesList" [value]="option.id">{{ option.getName() }}
@@ -206,14 +206,14 @@
         <!-- Email -->
         <div class="col-sm-12 col-md-6 mb-4 position-relative">
           <label asteriskIfRequired="email" for="email" class="form-label">{{lang.map.lbl_email}}</label>
-          <input id="email" validationClasses="email" [readonly]="readonly" formControlName="email" trimInput
+          <input id="email" validationClasses="email" [readonly]="readonly || isViewOnly" formControlName="email" trimInput
             class="form-control">
           <app-field-error-message controlName="email"></app-field-error-message>
         </div>
         <!-- phone -->
         <div class="col-md-6 col-sm-12 mb-4 position-relative">
           <label class="form-label" asteriskIfRequired="phone" for="phone">{{lang.map.lbl_phone}}</label>
-          <input id="phone" validationClasses="phone" [readonly]="readonly" formControlName="phone"
+          <input id="phone" validationClasses="phone" [readonly]="readonly || isViewOnly" formControlName="phone"
             class="form-control">
           <app-field-error-message controlName="phone"></app-field-error-message>
         </div>
@@ -222,7 +222,7 @@
           <label asteriskIfRequired="fax" for="fax" class="form-label">{{
             lang.map.fax_number
             }}</label>
-          <input id="fax" [readonly]="readonly" formControlName="fax" validationClasses="fax" class="form-control" />
+          <input id="fax" [readonly]="readonly || isViewOnly" formControlName="fax" validationClasses="fax" class="form-control" />
           <app-field-error-message controlName="fax"></app-field-error-message>
         </div>
         <!-- hotline -->
@@ -230,7 +230,7 @@
           <label asteriskIfRequired="hotline" for="hotline" class="form-label">{{
             lang.map.hotline
             }}</label>
-          <input id="hotline" [readonly]="readonly" formControlName="hotline" validationClasses="hotline"
+          <input id="hotline" [readonly]="readonly || isViewOnly" formControlName="hotline" validationClasses="hotline"
             class="form-control" />
           <app-field-error-message controlName="hotline"></app-field-error-message>
         </div>
@@ -239,7 +239,7 @@
           <label asteriskIfRequired="website" for="website" class="form-label">{{
             lang.map.website
             }}</label>
-          <input id="website" [readonly]="readonly" formControlName="website" validationClasses="website"
+          <input id="website" [readonly]="readonly || isViewOnly" formControlName="website" validationClasses="website"
             class="form-control" />
           <app-field-error-message controlName="website"></app-field-error-message>
         </div>
@@ -251,7 +251,7 @@
           <label asteriskIfRequired="zoneNumber" for="zoneNumber" class="form-label">{{
             lang.map.lbl_zone
             }}</label>
-          <input id="zoneNumber" [readonly]="readonly" formControlName="zoneNumber" validationClasses="zoneNumber"
+          <input id="zoneNumber" [readonly]="readonly || isViewOnly" formControlName="zoneNumber" validationClasses="zoneNumber"
             class="form-control" />
           <app-field-error-message controlName="zoneNumber"></app-field-error-message>
         </div>
@@ -260,7 +260,7 @@
           <label asteriskIfRequired="streetNumber" for="streetNumber" class="form-label">{{
             lang.map.lbl_street
             }}</label>
-          <input id="streetNumber" [readonly]="readonly" formControlName="streetNumber" validationClasses="streetNumber"
+          <input id="streetNumber" [readonly]="readonly || isViewOnly" formControlName="streetNumber" validationClasses="streetNumber"
             class="form-control" />
           <app-field-error-message controlName="streetNumber"></app-field-error-message>
         </div>
@@ -269,7 +269,7 @@
           <label asteriskIfRequired="buildingNumber" for="buildingNumber" class="form-label">{{
             lang.map.building_number
             }}</label>
-          <input id="buildingNumber" [readonly]="readonly" formControlName="buildingNumber"
+          <input id="buildingNumber" [readonly]="readonly || isViewOnly" formControlName="buildingNumber"
             validationClasses="buildingNumber" class="form-control" />
           <app-field-error-message controlName="buildingNumber"></app-field-error-message>
         </div>
@@ -278,7 +278,7 @@
           <label asteriskIfRequired="address" for="address" class="form-label">{{
             lang.map.lbl_address
             }}</label>
-          <textarea id="address" [readonly]="readonly" validationClasses="address" trimInput formControlName="address"
+          <textarea id="address" [readonly]="readonly || isViewOnly" validationClasses="address" trimInput formControlName="address"
             class="form-control">
           </textarea>
           <app-field-error-message controlName="address"></app-field-error-message>
@@ -291,7 +291,7 @@
           <label asteriskIfRequired="facebook" for="facebook" class="form-label">{{
             lang.map.lbl_facebook
             }}</label>
-          <input id="facebook" [readonly]="readonly" formControlName="facebook" validationClasses="facebook"
+          <input id="facebook" [readonly]="readonly || isViewOnly" formControlName="facebook" validationClasses="facebook"
             class="form-control" />
           <app-field-error-message controlName="facebook"></app-field-error-message>
         </div>
@@ -300,7 +300,7 @@
           <label asteriskIfRequired="twitter" for="twitter" class="form-label">{{
             lang.map.lbl_twitter
             }}</label>
-          <input id="twitter" [readonly]="readonly" formControlName="twitter" validationClasses="twitter"
+          <input id="twitter" [readonly]="readonly || isViewOnly" formControlName="twitter" validationClasses="twitter"
             class="form-control" />
           <app-field-error-message controlName="twitter"></app-field-error-message>
         </div>
@@ -309,7 +309,7 @@
           <label asteriskIfRequired="instagram" for="instagram" class="form-label">{{
             lang.map.lbl_instagram
             }}</label>
-          <input id="instagram" [readonly]="readonly" formControlName="instagram" validationClasses="instagram"
+          <input id="instagram" [readonly]="readonly || isViewOnly" formControlName="instagram" validationClasses="instagram"
             class="form-control" />
           <app-field-error-message controlName="instagram"></app-field-error-message>
         </div>
@@ -318,7 +318,7 @@
           <label asteriskIfRequired="snapChat" for="snapChat" class="form-label">{{
             lang.map.lbl_snapchat
             }}</label>
-          <input id="snapChat" [readonly]="readonly" formControlName="snapChat" validationClasses="snapChat"
+          <input id="snapChat" [readonly]="readonly || isViewOnly" formControlName="snapChat" validationClasses="snapChat"
             class="form-control" />
           <app-field-error-message controlName="snapChat"></app-field-error-message>
         </div>
@@ -327,13 +327,13 @@
           <label asteriskIfRequired="youTube" for="youTube" class="form-label">{{
             lang.map.lbl_youtube
             }}</label>
-          <input id="youTube" [readonly]="readonly" formControlName="youTube" validationClasses="youTube"
+          <input id="youTube" [readonly]="readonly || isViewOnly" formControlName="youTube" validationClasses="youTube"
             class="form-control" />
           <app-field-error-message controlName="youTube"></app-field-error-message>
         </div>
         <div class="col-12">
           <h6>{{lang.map.contact_officers}}</h6>
-          <npo-contact-officer #contactOfficersTab [readonly]="readonly" [list]="model?.contactOfficerList || []"
+          <npo-contact-officer #contactOfficersTab [readonly]="readonly || isViewOnly" [list]="model?.contactOfficerList || []"
             (readyEvent)="contactOfficersTabStatus = $event">
           </npo-contact-officer>
         </div>
@@ -342,19 +342,19 @@
   </ng-template>
 
   <ng-template #founderMemberTabTemplate>
-    <founder-members [readonly]="readonly" #founderMemberTab [list]="model?.founderMemberList || []"
+    <founder-members [readonly]="readonly || isViewOnly" #founderMemberTab [list]="model?.founderMemberList || []"
       (readyEvent)="founderMemberTabStatus = $event">
     </founder-members>
   </ng-template>
 
   <ng-template #bankAccountTabTemplate>
-    <npo-bank-account #bankAccountsTab [caseType]="model?.caseType" [readonly]="readonly"
+    <npo-bank-account #bankAccountsTab [caseType]="model?.caseType" [readonly]="readonly || isViewOnly"
       [list]="model?.bankAccountList || []" [bankList]="bankList" (readyEvent)="bankDetailsTabStatus = $event">
     </npo-bank-account>
   </ng-template>
 
   <ng-template #realBeneficiaryTabTemplate>
-    <real-beneficiaries #realBeneficiaryTab [list]="model?.realBeneficiaryList || []" [readonly]="readonly">
+    <real-beneficiaries #realBeneficiaryTab [list]="model?.realBeneficiaryList || []" [readonly]="readonly || isViewOnly">
     </real-beneficiaries>
   </ng-template>
   <ng-template #attachmentsTab>

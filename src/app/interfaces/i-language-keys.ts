@@ -1522,6 +1522,11 @@ export interface ILanguageKeys {
   remove_service_messages: string;
   section: string;
   profile: string;
+<<<<<<< HEAD
   npo_list: string;
+=======
+  email_address_of_the_employer: string;
+  phone_of_the_employer: string;
+>>>>>>> c183207152fa3ee27e2b5ce905db656bea240bb8
 }
 

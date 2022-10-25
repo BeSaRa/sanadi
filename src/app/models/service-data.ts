@@ -96,4 +96,11 @@ export class ServiceData extends BaseModel<ServiceData, ServiceDataService> {
   updateStatus(newStatus: CommonStatusEnum): any {
     return this.service.updateStatus(this.id, newStatus);
   }
+
+  ngSelectSearch(searchText: string): boolean {
+    if (!searchText) {
+      return true;
+    }
+    return this.getName().toLowerCase().indexOf(searchText.toLowerCase()) > -1;
+  }
 }
