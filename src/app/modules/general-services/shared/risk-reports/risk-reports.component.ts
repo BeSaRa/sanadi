@@ -128,7 +128,7 @@ export class CharityReportsComponent extends ListModelComponent<CharityReport> {
         label: this.lang.map.classification,
         type: 'dropdown',
         load$: this.adminLookupService.loadAsLookups(
-          AdminLookupTypeEnum.RISK_CLASSIFICATION
+          AdminLookupTypeEnum.COORDINATION_SUPPORT_CLASSIFICATION
         ),
         dropdownValue: 'id',
       }, {
