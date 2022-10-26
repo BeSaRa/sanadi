@@ -13,6 +13,7 @@ import { CoordinationWithOrganizationsRequest } from '@app/models/coordination-w
 import { TaskDetails } from '@app/models/task-details';
 import { IMyDateModel } from 'angular-mydatepicker';
 import { EffectiveCoordinationInterceptor } from './effective-coordination-interceptor';
+import { mode } from 'crypto-js';
 
 const participatingOrgInterceptor = new ParticipatingOrgInterceptor();
 const buildinAbilityInterceptor = new BuildingAbilityInterceptor();
@@ -96,30 +97,31 @@ export class CoordinationWithOrganizationsRequestInterceptor
       isValidAdminResult(model.domainInfo) ? model.domainInfo : {}
     );
 
-    model.participatingOrganizaionList = model.participatingOrganizaionList.map(
+    model.organizaionOfficerList =model.organizaionOfficerList?? [];
+    model.participatingOrganizaionList = model.participatingOrganizaionList?.map(
       (item) => {
         return participatingOrgInterceptor.receive(
           new ParticipantOrg().clone(item)
         );
       }
-    );
-    model.buildingAbilitiesList = model.buildingAbilitiesList.map((item) => {
+    )??[];
+    model.buildingAbilitiesList = model.buildingAbilitiesList?.map((item) => {
       return buildinAbilityInterceptor.receive(
         new BuildingAbility().clone(item)
       );
-    });
+    }) ?? [];
     model.effectiveCoordinationCapabilities =
-      model.effectiveCoordinationCapabilities.map((item) => {
+      model.effectiveCoordinationCapabilities?.map((item) => {
         return effectiveCoordinationInterceptor.receive(
           new EffectiveCoordinationCapabilities().clone(item)
         );
-      });
+      })?? [];
     model.researchAndStudies =
-      model.researchAndStudies.map((item) => {
+      model.researchAndStudies?.map((item) => {
         return researchAndStudiesInterceptor.receive(
           new ResearchAndStudies().clone(item)
         );
-      });
+      })??[];
     return model;
   }
 }
