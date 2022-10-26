@@ -96,7 +96,7 @@ export class PartnerApprovalComponent
   loadAttachments: boolean = false;
 
   @ViewChild('bankAccountsTab') bankAccountComponentRef!: BankAccountComponent;
-  @ViewChild('goalsTab') goalComponentRef!: GoalComponent;
+  @ViewChild('goalsListTab') goalsListComponentRef!: GoalComponent;
   @ViewChild('executiveManagementsTab')
   executiveManagementComponentRef!: ExecutiveManagementComponent;
   @ViewChild('managementCouncilsTab')
@@ -156,9 +156,9 @@ export class PartnerApprovalComponent
       langKey: 'goals',
       validStatus: () => {
         return (
-          (!this.goalComponentRef ||
+          (!this.goalsListComponentRef ||
             (this.goalsTabStatus === 'READY' &&
-              this.goalComponentRef.list.length > 0)) &&
+              this.goalsListComponentRef.list.length > 0)) &&
           (!this.targetGroupComponentRef ||
             (this.targetGroupsTabStatus === 'READY' &&
               this.targetGroupComponentRef.list.length > 0)) &&
@@ -328,7 +328,7 @@ export class PartnerApprovalComponent
     });
 
     value.bankAccountList = this.bankAccountComponentRef.list;
-    value.goalsList = this.goalComponentRef?.list?? [] ;
+    value.goalsList = this.goalsListComponentRef?.list?? [] ;
     value.managementCouncilList = this.managementCouncilComponentRef.list;
     value.executiveManagementList = this.executiveManagementComponentRef.list;
     value.targetGroupList = this.targetGroupComponentRef?.list?? [];
@@ -389,7 +389,7 @@ export class PartnerApprovalComponent
     this.operation = this.operationTypes.CREATE;
     this.setSelectedLicense(undefined, true);
     this.bankAccountComponentRef.forceClearComponent();
-    this.goalComponentRef?.forceClearComponent();
+    this.goalsListComponentRef?.forceClearComponent();
     this.commercialActivityTabComponentRef?.forceClearComponent();
     this.managementCouncilComponentRef.forceClearComponent();
     this.executiveManagementComponentRef.forceClearComponent();

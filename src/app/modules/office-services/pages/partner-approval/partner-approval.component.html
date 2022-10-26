@@ -327,8 +327,8 @@
 
     <!-- Goals -->
     <ng-template #goalsTemplate>
-      <goal #goalsTab [list]="model?.goalsList || []" [readonly]="(isExtendOrCancelRequestType() || readonly)"
-        [goal]="model?.goals" (readyEvent)="goalsTabStatus = $event"></goal>
+      <goals-list #goalsListTab [list]="model?.goalsList || []" [readonly]="(isExtendOrCancelRequestType() || readonly)"
+        [goal]="model?.goals" (readyEvent)="goalsTabStatus = $event"></goals-list>
 
       <!-- Target Groups -->
       <target-group #targetGroupsTab [list]="model?.targetGroupList || []"

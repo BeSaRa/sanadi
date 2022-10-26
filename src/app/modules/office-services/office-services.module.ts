@@ -1,3 +1,4 @@
+import { GoalsListComponent } from './shared/goals-list/goals-list.component';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
@@ -36,6 +37,7 @@ import { CommercialActivityComponent } from './shared/commercial-activity/commer
     ManagementCouncilComponent,
     TargetGroupComponent,
     CommercialActivityComponent,
+    GoalsListComponent
 
   ],
   imports: [
