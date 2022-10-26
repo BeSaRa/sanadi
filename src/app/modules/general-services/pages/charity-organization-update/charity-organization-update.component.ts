@@ -480,13 +480,11 @@ export class CharityOrganizationUpdateComponent
     }
 
     let caseStatus = this.model.getCaseStatus();
-    console.log({ caseStatus });
     if (caseStatus == CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.FINAL_REJECTION) {
       this.readonly = true;
       return;
     }
     if (this.openFrom === OpenFrom.USER_INBOX) {
-      console.log({ ope: this.employeeService.isCharityManager(), sd: this.employeeService.isCharityUser(), x: this.model.isReturned() });
       if (this.employeeService.isCharityManager()) {
         this.readonly = false;
       } else if (this.employeeService.isCharityUser()) {
