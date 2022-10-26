@@ -102,7 +102,7 @@ export class ForeignAidClassificationsComponent
     private lookupService: LookupService,
     public lang: LangService,
     private aidService: AidLookupService,
-    private dacOchaService: DacOchaService
+    private dacOchaService: DacOchaService,
   ) {
     super(ForeignAidClassification);
   }
