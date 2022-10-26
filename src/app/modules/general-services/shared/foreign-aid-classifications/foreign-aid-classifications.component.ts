@@ -51,16 +51,17 @@ export class ForeignAidClassificationsComponent
   byParent: AdminLookup[] = [];
   latestWorkingSubForParent$!: Observable<never[] | AdminLookup[]>;
   handleGoveranceDomainChange = (id: number | string) => {
-    let fg: any = {
-      aidClassification: [
-        this.model.aidClassification,
-        [CustomValidators.required],
-      ],
+    console.log(this.model);
+    let fg: any = {};
+    if (this.model.charityWorkArea === CharityWorkArea.BOTH) {
+      fg = {
+        aidClassification: [
+          this.model.aidClassification,
+          [CustomValidators.required],
+        ],
+      };
     }
-    if (this.charityWorkArea !== CharityWorkArea.BOTH) {
-      fg = {};
-    }
-    const controls: ControlWrapper[] = this.charityWorkArea === CharityWorkArea.BOTH ? [{
+    const controls: ControlWrapper[] = this.model.charityWorkArea === CharityWorkArea.BOTH ? [{
       controlName: 'aidClassification',
       type: 'dropdown',
       label: this.lang.map.menu_aid_class,
@@ -171,7 +172,8 @@ export class ForeignAidClassificationsComponent
 
   protected _initComponent(): void {
     this.model = new ForeignAidClassification().clone({
-      charityWorkArea: this.charityWorkArea
+      ...this.model,
+      charityWorkArea: this.charityWorkArea,
     });
     let fg: any = {
       aidClassification: [
@@ -188,7 +190,7 @@ export class ForeignAidClassificationsComponent
         dropdownValue: 'id',
       },
     ];
-    if (this.charityWorkArea === CharityWorkArea.OUTSIDE) {
+    if (this.model.charityWorkArea === CharityWorkArea.OUTSIDE) {
       fg = {
         domain: [
           this.model.domain,
@@ -196,8 +198,9 @@ export class ForeignAidClassificationsComponent
         ],
       };
       this.controls = [...this.baseControls];
+
     }
-    if (this.charityWorkArea === CharityWorkArea.BOTH) {
+    if (this.model.charityWorkArea === CharityWorkArea.BOTH) {
       fg = {
         domain: [
           this.model.domain,
@@ -220,6 +223,9 @@ export class ForeignAidClassificationsComponent
       });
     }
     this.form = this.fb.group(fg);
+    if (this.model.domain) {
+      this.handleGoveranceDomainChange(this.model.domain);
+    }
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.charityWorkArea?.firstChange) return;
@@ -245,5 +251,18 @@ export class ForeignAidClassificationsComponent
     }
     model.charityWorkArea = this.charityWorkArea;
     return model;
+  }
+  _selectOne(row: ForeignAidClassification): void {
+    const tempModel = this.model;
+    this.charityWorkArea = row.charityWorkArea;
+    this.model.domain = row.domain;
+    this.model.aidClassification = row.aidClassification;
+    this.model.mainDACCategory = row.mainDACCategory;
+    this.model.subDACCategory = row.subDACCategory;
+    this.model.mainUNOCHACategory = row.mainUNOCHACategory;
+    this.model.subUNOCHACategory = row.subUNOCHACategory;
+    this._initComponent();
+    this.form.patchValue(row);
+    this.model = tempModel;
   }
 }
