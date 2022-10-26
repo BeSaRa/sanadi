@@ -95,7 +95,7 @@
       *ngIf="!readonly"
       class="btn btn-primary m-2"
     >
-      {{ editRecordIndex > -1 ? lang.map.btn_save : lang.map.btn_add }}
+      {{ editRecordIndex > -1 ? lang.map.btn_update : lang.map.btn_add }}
     </button>
     <button (click)="cancel()" class="btn btn-secondary m-2">
       {{ lang.map.btn_cancel }}
@@ -141,7 +141,7 @@
             {{ lang.map.status }}
           </th>
           <td cdk-cell *cdkCellDef="let row">
-            {{ row?.reportStatusInfo?.getName() || '' }}
+            {{ row?.reportStatusInfo?.getName() || row?.status }}
           </td>
         </ng-container>
         <ng-container cdkColumnDef="feedback">

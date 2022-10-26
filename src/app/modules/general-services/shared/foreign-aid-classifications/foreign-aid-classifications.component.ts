@@ -17,6 +17,7 @@ import { combineLatest, of } from 'rxjs';
 import { AdminLookup } from '@app/models/admin-lookup';
 import { Observable } from 'rxjs';
 import { AidLookup } from '@app/models/aid-lookup';
+import { AidLookupStatusEnum } from '@app/enums/status.enum';
 
 @Component({
   selector: 'foreign-aid-classifications',
@@ -39,7 +40,7 @@ export class ForeignAidClassificationsComponent
   aidClassifcations?: AidLookup[] = [];
   aidClassifcations$ = this.aidService.loadAsLookups().pipe(shareReplay()).pipe(
     tap(e => {
-      this.aidClassifcations = e;
+      this.aidClassifcations = e.filter(x => x.status !== AidLookupStatusEnum.RETIRED);
     })
   );
   mainOchaCategories: AdminLookup[] = [];
@@ -51,16 +52,17 @@ export class ForeignAidClassificationsComponent
   byParent: AdminLookup[] = [];
   latestWorkingSubForParent$!: Observable<never[] | AdminLookup[]>;
   handleGoveranceDomainChange = (id: number | string) => {
-    let fg: any = {
-      aidClassification: [
-        this.model.aidClassification,
-        [CustomValidators.required],
-      ],
+    console.log(this.model);
+    let fg: any = {};
+    if (this.model.charityWorkArea === CharityWorkArea.BOTH) {
+      fg = {
+        aidClassification: [
+          this.model.aidClassification,
+          [CustomValidators.required],
+        ],
+      };
     }
-    if (this.charityWorkArea !== CharityWorkArea.BOTH) {
-      fg = {};
-    }
-    const controls: ControlWrapper[] = this.charityWorkArea === CharityWorkArea.BOTH ? [{
+    const controls: ControlWrapper[] = this.model.charityWorkArea === CharityWorkArea.BOTH ? [{
       controlName: 'aidClassification',
       type: 'dropdown',
       label: this.lang.map.menu_aid_class,
@@ -68,7 +70,7 @@ export class ForeignAidClassificationsComponent
       dropdownValue: 'id',
     }] : [];
     if (id === DomainTypes.DEVELOPMENT) {
-      this.controls = [...this.baseControls, ...controls, ...this.developmentControls];
+      this.controls = [...this.baseControls, ...this.developmentControls, ...controls,];
       this.form = this.fb.group({
         domain: [id, [CustomValidators.required]],
         mainDACCategory: [
@@ -82,7 +84,7 @@ export class ForeignAidClassificationsComponent
         ...fg
       });
     } else {
-      this.controls = [...this.baseControls, ...controls, ...this.humanitirianControls];
+      this.controls = [...this.baseControls, ...this.humanitirianControls, ...controls];
       this.form = this.fb.group({
         domain: [id, [CustomValidators.required]],
         mainUNOCHACategory: [
@@ -101,7 +103,7 @@ export class ForeignAidClassificationsComponent
     private lookupService: LookupService,
     public lang: LangService,
     private aidService: AidLookupService,
-    private dacOchaService: DacOchaService
+    private dacOchaService: DacOchaService,
   ) {
     super(ForeignAidClassification);
   }
@@ -124,7 +126,6 @@ export class ForeignAidClassificationsComponent
   ];
   controls = this.baseControls;
   private handleOCHAOrDAC = (id: string | number) => {
-    const addOne = this.charityWorkArea === CharityWorkArea.BOTH ? 1 : 0;
     this.latestWorkingSubForParent$ = this.dacOchaService.loadByParentId(
       id as number
     ).pipe(shareReplay()).pipe(
@@ -132,7 +133,7 @@ export class ForeignAidClassificationsComponent
         this.byParent = e;
       })
     );;
-    this.controls[2 + addOne].load$ = this.latestWorkingSubForParent$;
+    this.controls[2].load$ = this.latestWorkingSubForParent$;
   };
   developmentControls: ControlWrapper[] = [
     {
@@ -172,7 +173,8 @@ export class ForeignAidClassificationsComponent
 
   protected _initComponent(): void {
     this.model = new ForeignAidClassification().clone({
-      charityWorkArea: this.charityWorkArea
+      ...this.model,
+      charityWorkArea: this.charityWorkArea,
     });
     let fg: any = {
       aidClassification: [
@@ -189,7 +191,7 @@ export class ForeignAidClassificationsComponent
         dropdownValue: 'id',
       },
     ];
-    if (this.charityWorkArea === CharityWorkArea.OUTSIDE) {
+    if (this.model.charityWorkArea === CharityWorkArea.OUTSIDE) {
       fg = {
         domain: [
           this.model.domain,
@@ -197,8 +199,9 @@ export class ForeignAidClassificationsComponent
         ],
       };
       this.controls = [...this.baseControls];
+
     }
-    if (this.charityWorkArea === CharityWorkArea.BOTH) {
+    if (this.model.charityWorkArea === CharityWorkArea.BOTH) {
       fg = {
         domain: [
           this.model.domain,
@@ -221,6 +224,9 @@ export class ForeignAidClassificationsComponent
       });
     }
     this.form = this.fb.group(fg);
+    if (this.model.domain) {
+      this.handleGoveranceDomainChange(this.model.domain);
+    }
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.charityWorkArea?.firstChange) return;
@@ -228,7 +234,7 @@ export class ForeignAidClassificationsComponent
   }
   _beforeAdd(model: ForeignAidClassification): ForeignAidClassification | null {
     (model.aidClassification && (model.aidClassificationInfo = AdminResult.createInstance({ ...this.aidClassifcations!.find(e => e.id === model.aidClassification) })));
-
+    (model.domain && (model.domainInfo = AdminResult.createInstance({ ...this.domains.find(e => e.lookupKey === model.domain) })));
     (model.mainDACCategory && (model.mainDACCategoryInfo = AdminResult.createInstance({
       ...this.mainDacCategories!.find(e => e.id === model.mainDACCategory)
     })));
@@ -244,6 +250,20 @@ export class ForeignAidClassificationsComponent
         model.subUNOCHACategoryInfo = AdminResult.createInstance({ ...this.byParent!.find(e => e.id === model.subUNOCHACategory) });
       }
     }
+    model.charityWorkArea = this.charityWorkArea;
     return model;
+  }
+  _selectOne(row: ForeignAidClassification): void {
+    const tempModel = this.model;
+    this.charityWorkArea = row.charityWorkArea;
+    this.model.domain = row.domain;
+    this.model.aidClassification = row.aidClassification;
+    this.model.mainDACCategory = row.mainDACCategory;
+    this.model.subDACCategory = row.subDACCategory;
+    this.model.mainUNOCHACategory = row.mainUNOCHACategory;
+    this.model.subUNOCHACategory = row.subUNOCHACategory;
+    this._initComponent();
+    this.form.patchValue(row);
+    this.model = tempModel;
   }
 }

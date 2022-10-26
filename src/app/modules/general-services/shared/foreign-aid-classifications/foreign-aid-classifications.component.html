@@ -67,14 +67,20 @@
       *ngIf="!readonly"
       class="btn btn-primary m-2"
     >
-      {{ editRecordIndex > -1 ? lang.map.btn_save : lang.map.btn_add }}
+      {{ editRecordIndex > -1 ? lang.map.btn_update : lang.map.btn_add }}
     </button>
     <button (click)="cancel()" class="btn btn-secondary m-2">
       {{ lang.map.btn_cancel }}
     </button>
   </div>
 </form>
+<hr>
 <div class="row">
+  <div class="col-12">
+    <h6 class="h6 text-primary">
+    {{ lang.map.classification_of_foreign_aid }}
+    </h6>
+  </div>
   <div class="col-12">
     <app-table
       #table
@@ -91,7 +97,7 @@
       >
         <ng-container cdkColumnDef="aidClassification">
           <th cdk-header-cell sortable-header *cdkHeaderCellDef>
-            {{ lang.map.classification_of_foreign_aid }}
+            {{ lang.map.internal_aid_calssification }}
           </th>
           <td cdk-cell *cdkCellDef="let row">
             {{ row?.aidClassificationInfo?.getName() || row.aidClassification }}
