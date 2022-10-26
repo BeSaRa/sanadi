@@ -101,7 +101,7 @@ export class GoalsListComponent implements OnInit {
 
   private buildForm() {
     const goalList = new GoalList();
-    this.form = this.fb.group(goalList.buildForm(true));
+    this.form = this.fb.group(    this.fb.group(goalList.buildForm(true)));
   }
   actions: IMenuItem<GoalList>[] = [
     // edit
@@ -335,7 +335,7 @@ export class GoalsListComponent implements OnInit {
   }
 
   private resetForm() {
-    this.form.reset();
+    this.form.get('goals')!.reset();
     this.form.markAsUntouched();
     this.form.markAsPristine();
   }
@@ -345,7 +345,7 @@ export class GoalsListComponent implements OnInit {
   }
 
   private listenToGoalListChange(): void {
-    this.form.get('domain')!.valueChanges
+    this.form.valueChanges
       .pipe(takeUntil(this.destroy$))
       .subscribe((value) => {
         if (value === DomainTypes.DEVELOPMENT) {
