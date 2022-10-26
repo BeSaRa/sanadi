@@ -81,6 +81,7 @@ export class CharityOrganizationUpdateService extends BaseGenericEService<Charit
     form.append('content', file);
     form.append('itemId', caseId.toString());
     form.append('attachmentTypeId', AttachmentTypeEnum.SUPPLEMENTARY_DOCUMENTS.toString());
+    form.append('isPublished', 'false');
     return this.http.post(this._getURLSegment() + '/' + caseId + '/logo', form).pipe(map((e: any) => e.rs.id));
   }
 }
