@@ -38,6 +38,8 @@ import { CommercialActivity } from '@app/models/commercial-activity';
 import { CommercialActivityInterceptor } from '@app/model-interceptors/commercial-activity-interceptor';
 import { WorkArea } from '@app/models/work-area';
 import { WorkAreaInterceptor } from '@app/model-interceptors/workarea-interceptor';
+import { GoalList } from '@app/models/goal-list';
+import { GoalListInterceptor } from '@app/model-interceptors/goal-list-interceptor';
 
 @CastResponseContainer({
   $default: {
@@ -59,7 +61,7 @@ export class PartnerApprovalService extends BaseGenericEService<PartnerApproval>
   searchService: SearchService = new SearchService(this);
   interceptor: IModelInterceptor<PartnerApproval> = new PartnerApprovalInterceptor();
   bankAccountInterceptor: IModelInterceptor<BankAccount> = new BankAccountInterceptor();
-  goalInterceptor: IModelInterceptor<Goal> = new GoalInterceptor();
+  goalListInterceptor: IModelInterceptor<GoalList> = new GoalListInterceptor();
   managementCouncilInterceptor: IModelInterceptor<ManagementCouncil> = new ManagementCouncilInterceptor();
   executiveManagementInterceptor: IModelInterceptor<ExecutiveManagement> = new ExecutiveManagementInterceptor();
   targetGroupInterceptor: IModelInterceptor<TargetGroup> = new TargetGroupInterceptor();

@@ -1,3 +1,4 @@
+import { GoalList } from './goal-list';
 import { CommercialActivity } from './commercial-activity';
 import { RequestClassifications } from './../enums/request-classifications.enum';
 import { AdminResult } from './admin-result';
@@ -75,7 +76,7 @@ export class PartnerApproval extends LicenseApprovalModel<
   executiveManagementList!: ExecutiveManagement[];
   managementCouncilList!: ManagementCouncil[];
   workAreaObjectList: WorkArea[] = [];
-  goalsList!: Goal[];
+  goalsList!: GoalList[];
   targetGroupList!: TargetGroup[];
   commercialActivitiesList!: CommercialActivity[];
   description!: string;
