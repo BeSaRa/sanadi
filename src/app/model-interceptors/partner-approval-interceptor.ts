@@ -16,6 +16,7 @@ import { TargetGroup } from '@app/models/target-group';
 import { ContactOfficer } from '@app/models/contact-officer';
 import { ApprovalReason } from '@app/models/approval-reason';
 import { CommonUtils } from '@app/helpers/common-utils';
+import { GoalList } from '@app/models/goal-list';
 
 export class PartnerApprovalInterceptor
   implements IModelInterceptor<PartnerApproval>
@@ -59,7 +60,7 @@ export class PartnerApprovalInterceptor
       service.bankAccountInterceptor.receive(new BankAccount().clone(x))
     );
     model.goalsList = model.goalsList.map((x) =>
-      service.goalInterceptor.receive(new Goal().clone(x))
+      service.goalListInterceptor.receive(new GoalList().clone(x))
     );
     model.managementCouncilList = model.managementCouncilList.map((x) =>
       service.managementCouncilInterceptor.receive(
@@ -116,8 +117,8 @@ export class PartnerApprovalInterceptor
       delete x.category;
       return service.bankAccountInterceptor.send(x) as BankAccount;
     });
-    model.goalsList = model.goalsList?.map((x: Goal) => {
-      return service.goalInterceptor.send(x) as Goal;
+    model.goalsList = model.goalsList?.map((x: GoalList) => {
+      return service.goalListInterceptor.send(x) as GoalList;
     });
     model.managementCouncilList = model.managementCouncilList?.map(
       (x: ManagementCouncil) => {
