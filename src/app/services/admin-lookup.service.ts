@@ -194,6 +194,19 @@ export class AdminLookupService implements CrudServiceAdminLookupContract<AdminL
     fallback: '$default',
     unwrap: 'rs'
   })
+  private _loadGeneralProcessClassificaion() {
+    return this.http.get<AdminLookup[]>(this.getServiceURLByType(AdminLookupTypeEnum.GENERAL_PROCESS_CLASSIFICATION) + '/main')
+      .pipe((catchError((_) => of([]))));
+  }
+
+  loadGeneralProcessClassificaion() {
+    return this._loadGeneralProcessClassificaion();
+  }
+
+  @CastResponse(() => AdminLookup, {
+    fallback: '$default',
+    unwrap: 'rs'
+  })
   private _loadByParent(typeId: AdminLookupTypeEnum, parentId: number): Observable<AdminLookup[]> {
     if (!parentId || !CommonUtils.isValidValue(typeId)) {
       return of([]);

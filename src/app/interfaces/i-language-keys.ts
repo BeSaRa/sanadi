@@ -1432,6 +1432,7 @@ export interface ILanguageKeys {
   registration_authority: string;
   work_areas: string;
   classification: string;
+  sub_classification: string;
   bylaws: string;
   risk_reports: string;
   risk_type: string;
@@ -1524,6 +1525,7 @@ export interface ILanguageKeys {
   menu_sub_team: string;
   menu_general_process_notification: string;
   lbl_main_team: string;
+  lbl_sub_team: string;
   section: string;
   profile: string;
   disclosure_statements_notices_notifications_notices: string;
@@ -1534,5 +1536,19 @@ export interface ILanguageKeys {
   npo_list: string;
   email_address_of_the_employer: string;
   phone_of_the_employer: string;
+  lbl_field_type: string;
+  lbl_input: string;
+  lbl_maskInput: string;
+  lbl_dateField: string;
+  lbl_selectField: string;
+  lbl_textarea: string;
+  lbl_checkbox: string;
+  lbl_number: string;
+  lbl_field_label: string;
+  lbl_add_template_field: string;
+  lbl_template: string;
+  lbl_identifying_name: string;
+  lbl_regex: string;
+  lbl_field_order: string;
 }
 

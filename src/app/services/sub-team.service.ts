@@ -36,8 +36,8 @@ export class SubTeamService extends CrudWithDialogGenericService<SubTeam> {
   list: SubTeam[] = [];
 
   constructor(public http: HttpClient,
-              private urlService: UrlService,
-              public dialog: DialogService) {
+    private urlService: UrlService,
+    public dialog: DialogService) {
     super();
     FactoryService.registerService('SubTeamService', this);
   }
@@ -66,6 +66,13 @@ export class SubTeamService extends CrudWithDialogGenericService<SubTeam> {
     return this.http.put<any>(this._getServiceURL() + '/' + SubTeamId + '/de-activate', {});
   }
 
+  private _getByParentId(parent: number): Observable<any> {
+    return this.http.post<any>(this._getServiceURL() + '/filter', { parent });
+  }
+
+  getByParentId(parent: number): Observable<any> {
+    return this._getByParentId(parent);
+  }
   private _activateBulk(recordIds: number[]) {
     return this.http.put(this._getServiceURL() + '/bulk/activate', recordIds)
       .pipe(

@@ -1,38 +1,24 @@
+import { Cloneable } from '@app/models/cloneable';
 import { CustomValidators } from './../validators/custom-validators';
-import { searchFunctionType } from './../types/types';
-import { GeneralProcessService } from './../services/general-process.service';
-import { BaseModel } from '@app/models/base-model';
 import { INames } from '@contracts/i-names';
 import { LangService } from '@app/services/lang.service';
 import { FactoryService } from '@app/services/factory.service';
 
-export class GeneralProcess extends BaseModel<GeneralProcess, GeneralProcessService> {
+export class GenerealProcessTemplate extends Cloneable<GenerealProcessTemplate>{
+  identifyingName!: string;
   arName!: string;
   enName!: string;
 
-  mainClass!: number;
-  subClass!: number;
+  fieldType!: number;
+  order!: number;
+  regex!: string;
+  note!: string;
+  isRquired: boolean = false;
 
-  departmentId!: number;
-  teamId!: string;
-  subTeamId!: number;
-
-  active!: true;
-
-  template!: string;
-
-  // extra properties
   langService: LangService;
-  service!: GeneralProcessService;
-  searchFields: { [key: string]: searchFunctionType | string } = {
-    arName: 'arName',
-    enName: 'enName',
-  };
-
   constructor() {
     super();
     this.langService = FactoryService.getService('LangService');
-    this.service = FactoryService.getService('GeneralProcessService')
   }
 
   getName(): string {
@@ -41,15 +27,21 @@ export class GeneralProcess extends BaseModel<GeneralProcess, GeneralProcessServ
 
   buildForm(controls?: boolean): any {
     const {
+      identifyingName,
       arName,
       enName,
-      mainClass,
-      subClass,
-      departmentId,
-      teamId,
-      subTeamId,
+      fieldType,
+      order,
+      regex,
+      note,
+      isRquired
     } = this;
     return {
+      identifyingName: controls ? [identifyingName, [
+        CustomValidators.required,
+        CustomValidators.maxLength(300),
+        CustomValidators.minLength(3),
+      ]] : identifyingName,
       arName: controls ? [arName, [
         CustomValidators.required,
         CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
@@ -62,11 +54,11 @@ export class GeneralProcess extends BaseModel<GeneralProcess, GeneralProcessServ
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
         CustomValidators.pattern('ENG_NUM_ONE_ENG')
       ]] : enName,
-      mainClass: controls ? [mainClass, [CustomValidators.required]] : mainClass,
-      subClass: controls ? [subClass, [CustomValidators.required]] : subClass,
-      departmentId: controls ? [departmentId, [CustomValidators.required]] : departmentId,
-      teamId: controls ? [teamId, [CustomValidators.required]] : teamId,
-      subTeamId: controls ? [subTeamId, [CustomValidators.required]] : subTeamId,
+      isRquired: controls ? [isRquired] : isRquired,
+      fieldType: controls ? [fieldType, [CustomValidators.required]] : fieldType,
+      order: controls ? [order, [CustomValidators.required]] : order,
+      regex: controls ? [regex, [CustomValidators.required]] : regex,
+      note: controls ? [note, [CustomValidators.required]] : note,
     }
   }
 

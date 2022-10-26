@@ -1,37 +1,58 @@
+import { CustomFormlyFieldConfig } from './../../../interfaces/custom-formly-field-config';
+import { CustomValidators } from './../../../validators/custom-validators';
+import { GenerealProcessTemplate } from './../../../models/general-process-template';
+import { InternalDepartment } from '@app/models/internal-department';
+import { InternalDepartmentService } from './../../../services/internal-department.service';
+import { Team } from './../../../models/team';
+import { TeamService } from './../../../services/team.service';
+import { AdminLookupTypeEnum } from './../../../enums/admin-lookup-type-enum';
+import { AdminLookup } from './../../../models/admin-lookup';
+import { AdminLookupService } from '@services/admin-lookup.service';
 import { ILanguageKeys } from '@app/interfaces/i-language-keys';
 import { DIALOG_DATA_TOKEN } from './../../../shared/tokens/tokens';
 import { DialogRef } from './../../../shared/models/dialog-ref';
 import { LangService } from './../../../services/lang.service';
 import { IDialogData } from './../../../interfaces/i-dialog-data';
-import { DialogService } from './../../../services/dialog.service';
 import { ToastService } from './../../../services/toast.service';
-import { LookupService } from './../../../services/lookup.service';
-import { UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
-import { Lookup } from './../../../models/lookup';
+import { UntypedFormGroup, UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
 import { OperationTypes } from './../../../enums/operation-types.enum';
 import { GeneralProcess } from './../../../models/genral-process';
 import { AdminGenericDialog } from '@app/generics/admin-generic-dialog';
 import { Component, Inject } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { SubTeamService } from '@app/services/sub-team.service';
+import { SubTeam } from '@app/models/sub-team';
+import { GeneralProcessTemplateFieldTypes } from '@app/enums/general-process-template-field-types.enum';
 
 @Component({
   selector: 'app-general-process-popup',
   templateUrl: './general-process-popup.component.html',
-  styleUrls: ['./general-process-popup.component.css']
+  styleUrls: ['./general-process-popup.component.scss']
 })
 export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProcess> {
   form!: UntypedFormGroup;
+  fieldForm!: UntypedFormGroup;
   model!: GeneralProcess;
   operation: OperationTypes;
+  inputMaskPatterns = CustomValidators.inputMaskPatterns;
+  _fields: any[] = [];
+
   saveVisible = true;
+  mainClassificationsList: AdminLookup[] = [];
+  subClassificationsList: AdminLookup[] = [];
+  departmentList: InternalDepartment[] = [];
+  teamsList: Team[] = [];
+  subTeamsList: SubTeam[] = [];
 
   constructor(public dialogRef: DialogRef,
     public fb: UntypedFormBuilder,
     public lang: LangService,
     @Inject(DIALOG_DATA_TOKEN) data: IDialogData<GeneralProcess>,
-    private dialogService: DialogService,
     private toast: ToastService,
-    private lookupService: LookupService) {
+    private teamService: TeamService,
+    private internalDepartmentService: InternalDepartmentService,
+    private subTeamService: SubTeamService,
+    private adminLookupService: AdminLookupService) {
     super();
     this.model = data.model;
     this.operation = data.operation;
@@ -43,9 +64,64 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
       this.saveVisible = false;
       this.validateFieldsVisible = false;
     }
+    const templateModel = new GenerealProcessTemplate();
+    this.fieldForm = this.fb.group(templateModel.buildForm(true));
   }
-  initPopup(): void {
 
+  initPopup(): void {
+    this.adminLookupService.loadGeneralProcessClassificaion().subscribe(data => {
+      this.mainClassificationsList = data;
+    })
+    this.internalDepartmentService.loadDepartments().subscribe(data => {
+      this.departmentList = data;
+    })
+    this.teamService.loadAsLookups().subscribe(data => {
+      this.teamsList = data;
+    })
+  }
+  get fields(): CustomFormlyFieldConfig[] {
+    return this._fields.map(f => {
+      const model: GenerealProcessTemplate = new GenerealProcessTemplate().clone(f)
+      return {
+        type: GeneralProcessTemplateFieldTypes[model.fieldType],
+        templateOptions: {
+          label: model.getName(),
+          required: model.isRquired,
+          options: of([{id: 1, name: 'as'}, {id: 2, name: 'asss'}]),
+        },
+        selectOptions: {
+          bindValue: 'id',
+          bindLabel: 'name'
+        }
+      }
+    })
+  }
+  addField() {
+    this._fields.unshift(this.fieldForm.value)
+    this.fieldForm.value
+  }
+  loadSubClasses(parentId: number) {
+    this.adminLookupService.loadByParentId(AdminLookupTypeEnum.GENERAL_PROCESS_CLASSIFICATION, parentId).subscribe(data => {
+      this.subClassificationsList = data;
+    })
+  }
+  private _loadSubTeam(teamId: number) {
+    this.subTeamService.getByParentId(teamId).subscribe(data => {
+      this.subTeamsList = data;
+    })
+  }
+  handleTeamChange(teamId: number) {
+    if (teamId) {
+      this._loadSubTeam(teamId);
+      this.departmentfield.setValue(teamId)
+    }
+  }
+  handleDepartmentChange(depId: number) {
+    let teamId = this.departmentList.find(dep => dep.id == depId)?.mainTeam.id
+    if (teamId) {
+      this._loadSubTeam(teamId);
+      this.teamfield.setValue(teamId)
+    }
   }
   afterSave(model: GeneralProcess, dialogRef: DialogRef): void {
     const message = this.operation === OperationTypes.CREATE ? this.lang.map.msg_create_x_success : this.lang.map.msg_update_x_success;
@@ -62,6 +138,11 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
   prepareModel(model: GeneralProcess, form: UntypedFormGroup): GeneralProcess | Observable<GeneralProcess> {
     return (new GeneralProcess()).clone({ ...model, ...form.value });
   }
+
+  get generalProcessTemplateFieldTypesList() {
+    var keys = Object.keys(GeneralProcessTemplateFieldTypes);
+    return keys.slice(keys.length / 2);
+  }
   get title(): keyof ILanguageKeys {
     if (this.operation === OperationTypes.CREATE) {
       return 'lbl_add_process_template';
@@ -71,6 +152,18 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
       return 'view';
     }
   };
+
+  get teamfield(): UntypedFormControl {
+    return this.form.get('teamId') as UntypedFormControl
+  }
+  get departmentfield(): UntypedFormControl {
+    return this.form.get('departmentId') as UntypedFormControl
+  }
+
+
+  getLabel(name: any) {
+    return this.lang.map[('lbl_' + name) as keyof ILanguageKeys];
+  }
 
   saveFail(error: Error): void {
   }
