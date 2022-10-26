@@ -17,6 +17,7 @@ import { combineLatest, of } from 'rxjs';
 import { AdminLookup } from '@app/models/admin-lookup';
 import { Observable } from 'rxjs';
 import { AidLookup } from '@app/models/aid-lookup';
+import { AidLookupStatusEnum } from '@app/enums/status.enum';
 
 @Component({
   selector: 'foreign-aid-classifications',
@@ -39,7 +40,7 @@ export class ForeignAidClassificationsComponent
   aidClassifcations?: AidLookup[] = [];
   aidClassifcations$ = this.aidService.loadAsLookups().pipe(shareReplay()).pipe(
     tap(e => {
-      this.aidClassifcations = e;
+      this.aidClassifcations = e.filter(x => x.status !== AidLookupStatusEnum.RETIRED);
     })
   );
   mainOchaCategories: AdminLookup[] = [];
