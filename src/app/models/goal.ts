@@ -6,23 +6,18 @@ import { normalSearchFields } from '@app/helpers/normal-search-fields';
 import { ISearchFieldsMap } from '@app/types/types';
 
 export class Goal extends SearchableCloneable<Goal> {
-  goals!: string;
-  domain!: number;
-  mainDACCategory!: number | null;
-  mainDACCategoryInfo!: AdminResult;
-  mainUNOCHACategory!: number | null;
-  mainUNOCHACategoryInfo!: AdminResult;
-  domainInfo!: AdminResult;
+  goal!: string;
+
 
   searchFields: ISearchFieldsMap<Goal> = {
-    ...infoSearchFields(['domainInfo', 'mainDACCategoryInfo', 'mainUNOCHACategoryInfo']),
+    ...normalSearchFields(['goal'])
   };
   getGoalsFields(control: boolean): any {
-    const { goals } = this;
+    const { goal } = this;
     return {
-      goals: control
+      goal: control
       ? [
-          goals,
+          goal,
           [
             CustomValidators.required,
             CustomValidators.maxLength(
@@ -30,23 +25,8 @@ export class Goal extends SearchableCloneable<Goal> {
             ),
           ],
         ]
-      : goals,
+      : goal,
     }
-  }
-  getDomainsFields(control: boolean): any {
-    const {
-      domain,
-      mainDACCategory,
-      mainUNOCHACategory,
-
-    } = this;
-
-    return {
-      domain: control ? [domain, CustomValidators.required] : domain,
-      mainDACCategory: control ? [mainDACCategory] : mainDACCategory,
-      mainUNOCHACategory: control ? [mainUNOCHACategory] : mainUNOCHACategory,
-
-    };
   }
 
 }
