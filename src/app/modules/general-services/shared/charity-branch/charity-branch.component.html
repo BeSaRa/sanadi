@@ -78,7 +78,7 @@
       *ngIf="!readonly"
       class="btn btn-primary m-2"
     >
-      {{ editRecordIndex > -1 ? lang.map.btn_save : lang.map.btn_add }}
+      {{ editRecordIndex > -1 ? lang.map.btn_update : lang.map.btn_add }}
     </button>
     <button (click)="cancel()" class="btn btn-secondary m-2">
       {{ lang.map.btn_cancel }}
@@ -164,6 +164,13 @@
                 [disabled]="readonly"
               >
                 <i class="mdi mdi-pen"></i>
+              </button>
+              <button
+                (click)="selectOne($event, row, i)"
+                tooltip="{{ lang.map.view }}"
+                class="btn btn-link outline-none"
+              >
+                <i class="mdi mdi-eye"></i>
               </button>
             </div>
           </td>

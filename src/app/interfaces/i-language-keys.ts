@@ -1550,5 +1550,7 @@ export interface ILanguageKeys {
   lbl_identifying_name: string;
   lbl_regex: string;
   lbl_field_order: string;
+  internal_aid_calssification: string;
+  btn_update: string;
 }
 

@@ -65,7 +65,7 @@
   </div>
   <div class="d-flex flex-row align-items-center justify-content-center">
     <button (click)="save()" [disabled]="!form.valid" *ngIf="!readonly" class="btn btn-primary m-2">
-      {{ editRecordIndex > -1 ? lang.map.btn_save : lang.map.btn_add }}
+      {{ editRecordIndex > -1 ? lang.map.btn_update : lang.map.btn_add }}
     </button>
     <button (click)="cancel()" class="btn btn-secondary m-2">
       {{ lang.map.btn_cancel }}

@@ -36,7 +36,7 @@ export class CharityOrganization extends BaseModel<
   establishmentDate!: string;
   publishDate!: string;
   unifiedEconomicRecord!: string;
-  establishmentID!: string;
+  establishmentId!: string;
   taxCardNo!: string;
   regulatingLaw!: string;
   phone!: string;
@@ -73,7 +73,7 @@ export class CharityOrganization extends BaseModel<
       establishmentDate,
       publishDate,
       unifiedEconomicRecord,
-      establishmentID,
+      establishmentId,
       taxCardNo,
       regulatingLaw,
       phone,
@@ -104,7 +104,7 @@ export class CharityOrganization extends BaseModel<
       establishmentDate,
       publishDate,
       unifiedEconomicRecord,
-      establishmentID,
+      establishmentID: establishmentId,
       taxCardNo,
       regulatingLaw,
       phone,

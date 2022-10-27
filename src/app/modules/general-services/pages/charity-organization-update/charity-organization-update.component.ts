@@ -480,15 +480,17 @@ export class CharityOrganizationUpdateComponent
     }
 
     let caseStatus = this.model.getCaseStatus();
-    if (caseStatus == CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.FINAL_REJECTION || this.employeeService.getInternalDepartment()?.code === 'LCN') {
+    if (caseStatus == CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.FINAL_REJECTION) {
       this.readonly = true;
       return;
     }
-
     if (this.openFrom === OpenFrom.USER_INBOX) {
       if (this.employeeService.isCharityManager()) {
         this.readonly = false;
       } else if (this.employeeService.isCharityUser()) {
+        this.readonly = !this.model.isReturned();
+      }
+      else if (this.employeeService.getInternalDepartment()?.code === 'LCN') {
         this.readonly = !this.model.isReturned();
       }
     } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
@@ -497,6 +499,10 @@ export class CharityOrganizationUpdateComponent
         if (this.employeeService.isCharityManager()) {
           this.readonly = false;
         } else if (this.employeeService.isCharityUser()) {
+          this.readonly = !this.model.isReturned();
+        }
+
+        else if (this.employeeService.getInternalDepartment()?.code === 'LCN') {
           this.readonly = !this.model.isReturned();
         }
       }
@@ -940,7 +946,7 @@ export class CharityOrganizationUpdateComponent
       this.contactInformationForm?.patchValue(
         model!.buildContactInformationForm(false)
       );
-      ((model.registrationAuthorityInfo) && (this.metaDataForm.get('registrationAuthority')?.patchValue(model.registrationAuthorityInfo.getName())));
+      ((model?.registrationAuthorityInfo) && (this.metaDataForm.get('registrationAuthority')?.patchValue(model?.registrationAuthorityInfo?.getName())));
 
     }
     else if ((this.updateSectionField.value === CharityUpdateSection.GOVERNANCE_DOCUMENTS) || (this.model.updateSection === CharityUpdateSection.GOVERNANCE_DOCUMENTS)) {

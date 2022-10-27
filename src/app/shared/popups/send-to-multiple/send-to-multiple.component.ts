@@ -53,9 +53,6 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
     if (this.isSendToDepartments() && this.twoDepartmentsWFResponses.includes(this.data.sendToResponse)) {
       this.maxSelectionCount = 2; // as per business doc
     }
-    if (this.data.sendToResponse === WFResponseType.CHARITY_ORGANIZATION_UPDATE_SEND_TO_MULTI_DEPARTMENTS) {
-      this.maxSelectionCount = 1;
-    }
   }
 
   users: InternalUser[] = [];

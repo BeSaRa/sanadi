@@ -63,7 +63,8 @@ export class CharityOrganizationUpdateInterceptor implements IModelInterceptor<C
     return model;
   }
   receive(model: CharityOrganizationUpdate): CharityOrganizationUpdate {
-    const bylawInterceptor = new ByLawInterceptor()
+    model.registrationAuthorityInfo = AdminResult.createInstance(model.registrationAuthorityInfo);
+    const bylawInterceptor = new ByLawInterceptor();
     const charityReportInterceptor = new CharityReportInterceptor();
     const charityDecisionInterceptor = new CharityDecisionInterceptor();
     const realBeneficiaryInterceptor = new RealBeneficiaryInterceptor();

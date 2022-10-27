@@ -68,9 +68,6 @@ export class OrganizaionOfficerComponent implements OnInit {
   columns = [
     "identificationNumber",
     "fullName",
-    "email",
-    "phone",
-    "extraPhone",
     "actions",
   ];
 
@@ -80,6 +77,7 @@ export class OrganizaionOfficerComponent implements OnInit {
   @Input() organizationUsers: OrganizationOfficer[] = [];
 
   ngOnInit(): void {
+
     this.listenToRecordChange();
     this.listenToSave();
     if(this.canUpdate === false){
@@ -95,6 +93,9 @@ export class OrganizaionOfficerComponent implements OnInit {
 
   listenToRecordChange() {
     this.recordChanged$.pipe(takeUntil(this.destroy$)).subscribe((record) => {
+      console.log(this.currentUserOrgId);
+
+
       this.currentRecord = record || undefined;
       this.readonly = record === undefined ? true : false;
     });
@@ -114,8 +115,10 @@ export class OrganizaionOfficerComponent implements OnInit {
 
         takeUntil(this.destroy$),
         map(() => {
+
           return new OrganizationOfficer().clone({
             ...this.currentRecord,
+            organizationId:this.currentUserOrgId
 
           });
         })
