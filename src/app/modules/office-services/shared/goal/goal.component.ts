@@ -65,16 +65,13 @@ export class GoalComponent implements OnInit, OnDestroy {
   showForm: boolean = false;
   filterControl: UntypedFormControl = new UntypedFormControl('');
 
-  domainsList: Lookup[] = this.lookupService.listByCategory.Domain;
-  mainDACCategoriesList: AdminResult[] = [];
-  mainUNOCHACategoriesList: AdminResult[] = [];
-  displayByDomain: 'DAC' | 'OCHA' | null = null;
+
   commonStatusEnum = CommonStatusEnum;
 
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();
 
   dataSource: BehaviorSubject<Goal[]> = new BehaviorSubject<Goal[]>([]);
-  columns = ['domain', 'mainDACCategory', 'mainUNOCHACategory', 'actions'];
+  columns = ['goal', 'actions'];
 
   editItem?: Goal;
   add$: Subject<any> = new Subject<any>();
@@ -86,18 +83,14 @@ export class GoalComponent implements OnInit, OnDestroy {
   private current?: Goal;
   private destroy$: Subject<any> = new Subject<any>();
 
-  mainDACCategoryInfo: AdminLookup[] = [];
-  mainUNOCHACategoryInfo: AdminLookup[] = [];
-  domainInfo: AdminLookup[] = [];
+
   form!: UntypedFormGroup;
 
   ngOnInit(): void {
-    this._handleInitData();
     this.buildForm();
     this.listenToAdd();
     this.listenToChange();
     this.listenToSave();
-    this.listenToGoalChange();
     this._setComponentReadiness('READY');
 
   }
@@ -108,16 +101,10 @@ export class GoalComponent implements OnInit, OnDestroy {
     this.destroy$.unsubscribe();
   }
 
-  private _handleInitData() {
-    this.loadOCHADACClassifications();
-  }
+
 
   private buildForm() {
-    const goal = new Goal();
-    this.form = this.fb.group({
-      basic: this.fb.group(goal.getGoalsFields(true)),
-      goals: this.fb.group(goal.getDomainsFields(true)),
-    });
+    this.form = this.fb.group(this.fb.group(new Goal().getGoalsFields(true)),);
   }
   actions: IMenuItem<Goal>[] = [
     // edit
@@ -145,35 +132,7 @@ export class GoalComponent implements OnInit, OnDestroy {
       show: (_item: Goal) => this.readonly,
     },
   ];
-  sortingCallbacks = {
-    domain: (a: Goal, b: Goal, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a)
-          ? ''
-          : a.domainInfo.getName().toLowerCase(),
-        value2 = !CommonUtils.isValidValue(b)
-          ? ''
-          : b.domainInfo.getName().toLowerCase();
-      return CommonUtils.getSortValue(value1, value2, dir.direction);
-    },
-    dac: (a: Goal, b: Goal, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a)
-          ? ''
-          : a.mainDACCategoryInfo.getName().toLowerCase(),
-        value2 = !CommonUtils.isValidValue(b)
-          ? ''
-          : b.mainDACCategoryInfo.getName().toLowerCase();
-      return CommonUtils.getSortValue(value1, value2, dir.direction);
-    },
-    unocha: (a: Goal, b: Goal, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a)
-          ? ''
-          : a.mainUNOCHACategoryInfo.getName().toLowerCase(),
-        value2 = !CommonUtils.isValidValue(b)
-          ? ''
-          : b.mainUNOCHACategoryInfo.getName().toLowerCase();
-      return CommonUtils.getSortValue(value1, value2, dir.direction);
-    },
-  };
+
   addAllowed(): boolean {
     return !this.readonly && !this.showForm;
   }
@@ -203,15 +162,13 @@ export class GoalComponent implements OnInit, OnDestroy {
       } else {
         this._setComponentReadiness('NOT_READY');
       }
-      this.listenToDomainChange();
-      this.form.controls.goals.patchValue(record);
+      this.form.patchValue(record);
       if (this.readonly || this.viewOnly) {
         this.form.disable();
       }
     } else {
       this._setComponentReadiness('READY');
     }
-    this.displayByDomain = null;
   }
 
   save() {
@@ -230,11 +187,10 @@ export class GoalComponent implements OnInit, OnDestroy {
         ),
         filter(() => this.form.valid),
         filter(() => {
-          const formValue = this.goals.getRawValue();
+          const formValue = this.form.getRawValue();
           const isDuplicate = this.list.some(
             (x) =>
-             (x.mainDACCategory === formValue.mainDACCategory )&&
-             (x.mainUNOCHACategory === formValue.mainUNOCHACategory)
+             (x.goal === formValue.goal )
           );
           if (isDuplicate) {
             this.toastService.alert(this.lang.map.msg_duplicated_item);
@@ -242,27 +198,10 @@ export class GoalComponent implements OnInit, OnDestroy {
           return !isDuplicate;
         }),
         map(() => {
-          let formValue = this.goals.getRawValue();
-          let domainInfo: AdminResult =
-            this.domainsList
-              .find((x) => x.lookupKey === formValue.domain)
-              ?.convertToAdminResult() ?? new AdminResult();
-          let mainDACCategoryInfo: AdminResult =
-            this.mainDACCategoriesList.find(
-              (x) => x.id === formValue.mainDACCategory
-            ) ?? new AdminResult();
-
-          let mainUNOCHACategoryInfo: AdminResult =
-            this.mainUNOCHACategoriesList.find(
-              (x) => x.id === formValue.mainUNOCHACategory
-            ) ?? new AdminResult();
-
+          let formValue = this.form.getRawValue();
           return new Goal().clone({
             ...this.current,
-            ...formValue,
-            domainInfo: domainInfo,
-            mainUNOCHACategoryInfo: mainUNOCHACategoryInfo,
-            mainDACCategoryInfo: mainDACCategoryInfo,
+            ...formValue
           });
         })
       )
@@ -275,42 +214,6 @@ export class GoalComponent implements OnInit, OnDestroy {
         this.recordChanged$.next(null);
         this.cancel();
       });
-    // const form$ = this.save$.pipe(map(() => {
-    //   return this.form.get('goals.0') as AbstractControl;
-    // }));
-
-    // const validForm$ = form$.pipe(filter((form) => form.valid));
-    // const invalidForm$ = form$.pipe(filter((form) => form.invalid));
-    // invalidForm$.pipe(takeUntil(this.destroy$)).subscribe(() => {
-    //   this.dialogService
-    //     .error(this.lang.map.msg_all_required_fields_are_filled)
-    //     .onAfterClose$
-    //     .pipe(take(1))
-    //     .subscribe(() => {
-    //       this.form.get('goals')?.markAllAsTouched();
-    //     });
-    // });
-
-    // validForm$.pipe(
-    //   takeUntil(this.destroy$),
-    //   map(() => {
-    //     return (this.form.get('goals.0')) as UntypedFormArray;
-    //   }),
-    //   map((form) => {
-    //     return (new Goal()).clone({
-    //       ...this.current, ...form.getRawValue()
-    //     });
-    //   })
-    // ).subscribe((goal: Goal) => {
-    //   if (!goal) {
-    //     return;
-    //   }
-
-    //   this._updateList(goal, (this.editIndex > -1 ? 'UPDATE' : 'ADD'), this.editIndex);
-    //   this.toastService.success(this.lang.map.msg_save_success);
-    //   this.editIndex = -1;
-    //   this.recordChanged$.next(null);
-    // });
   }
   private displayRequiredFieldsMessage(): void {
     this.dialogService
@@ -386,7 +289,7 @@ export class GoalComponent implements OnInit, OnDestroy {
   }
 
   private resetForm() {
-    this.form.get('goals')!.reset();
+    this.form.reset();
     this.form.markAsUntouched();
     this.form.markAsPristine();
   }
@@ -395,30 +298,6 @@ export class GoalComponent implements OnInit, OnDestroy {
     this.readyEvent.emit(readyStatus);
   }
 
-  private listenToDomainChange(): void {
-    this.domainField?.valueChanges
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((value) => {
-        if (value === DomainTypes.DEVELOPMENT) {
-          this.displayByDomain = 'DAC';
-          this.mainDACCategoryField.setValidators([
-            CustomValidators.required,
-          ]);
-          this.mainUNOCHACategoryField.setValidators([]);
-          this.mainUNOCHACategoryField.setValue(null);
-        } else if (value === DomainTypes.HUMANITARIAN) {
-          this.displayByDomain = 'OCHA';
-          this.mainUNOCHACategoryField.setValidators([
-            CustomValidators.required,
-          ]);
-          this.mainDACCategoryField.setValidators([]);
-          this.mainDACCategoryField.setValue(null);
-        }
-
-        this.mainDACCategoryField.updateValueAndValidity();
-        this.mainUNOCHACategoryField.updateValueAndValidity();
-      });
-  }
 
   forceClearComponent() {
     this.cancel();
@@ -427,54 +306,6 @@ export class GoalComponent implements OnInit, OnDestroy {
     this._setComponentReadiness('READY');
   }
 
-  private loadOCHADACClassifications() {
-    return this.dacOchaService
-      .loadAsLookups()
-      .pipe(
-        map((list) => {
-          return list.filter((model) => !model.parentId);
-        }),
-        map((result) => {
-          return result.filter((record) => {
-            if (record.type === DomainTypes.HUMANITARIAN) {
-              this.mainUNOCHACategoriesList.push(record.convertToAdminResult());
-            } else if (record.type === DomainTypes.DEVELOPMENT) {
-              this.mainDACCategoriesList.push(record.convertToAdminResult());
-            }
-            return record;
-          });
-        })
-      )
-      .subscribe(      );
-  }
-
-  listenToGoalChange(){
-    this.goalInput.valueChanges.pipe(takeUntil(this.destroy$),
-      tap(value=>this.goal = value)
-    ).subscribe();
-  }
-
-  get goals(): UntypedFormGroup {
-    return this.form.get('goals') as UntypedFormGroup;
-  }
-  get goalInput(): UntypedFormControl{
-   return this.form.get('basic.goals') as UntypedFormControl
-  }
-  get domainField(): UntypedFormControl {
-    return this.goals.get('domain') as UntypedFormControl;
-  }
-
-  get mainDACCategoryField(): UntypedFormControl {
-    return this.goals.get(
-      'mainDACCategory'
-    ) as UntypedFormControl;
-  }
-
-  get mainUNOCHACategoryField(): UntypedFormControl {
-    return this.goals.get(
-      'mainUNOCHACategory'
-    ) as UntypedFormControl;
-  }
 
   trackBy(item: AdminResult) {
     return item.id;
