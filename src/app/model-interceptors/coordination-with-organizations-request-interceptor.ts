@@ -13,7 +13,6 @@ import { CoordinationWithOrganizationsRequest } from '@app/models/coordination-w
 import { TaskDetails } from '@app/models/task-details';
 import { IMyDateModel } from 'angular-mydatepicker';
 import { EffectiveCoordinationInterceptor } from './effective-coordination-interceptor';
-import { mode } from 'crypto-js';
 
 const participatingOrgInterceptor = new ParticipatingOrgInterceptor();
 const buildinAbilityInterceptor = new BuildingAbilityInterceptor();
