@@ -59,6 +59,7 @@ import { ExecutiveManagementComponent } from '@app/modules/e-services-main/share
 import { BankAccountComponent } from '@app/modules/e-services-main/shared/bank-account/bank-account.component';
 import { UserClickOn } from '@app/enums/user-click-on.enum';
 import { ICoordinates } from '@app/interfaces/ICoordinates';
+import { GoalsListComponent } from '../../shared/goals-list/goals-list.component';
 
 @Component({
   selector: 'partner-approval',
@@ -96,7 +97,7 @@ export class PartnerApprovalComponent
   loadAttachments: boolean = false;
 
   @ViewChild('bankAccountsTab') bankAccountComponentRef!: BankAccountComponent;
-  @ViewChild('goalsListTab') goalsListComponentRef!: GoalComponent;
+  @ViewChild('goalsListTab') goalsListComponentRef!: GoalsListComponent;
   @ViewChild('executiveManagementsTab')
   executiveManagementComponentRef!: ExecutiveManagementComponent;
   @ViewChild('managementCouncilsTab')

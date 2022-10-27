@@ -69,7 +69,8 @@ export class PartnerApproval extends LicenseApprovalModel<
   state!: number;
   subject!: string;
   website!: string;
-  goals!: string | undefined;
+  goals!: string[] ;
+  displayGoals!:| Goal[];
   bankAccountList!: BankAccount[];
   approvalReasonList!: ApprovalReason[];
   contactOfficerList!: ContactOfficer[];
