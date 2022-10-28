@@ -1,0 +1,31 @@
+<div class="dialog-toolbar bg-primary d-flex justify-content-between">
+  <h1 class="h6 text-white">{{ lang.map.menu_profile }}</h1>
+  <div>
+    <button type="button" class="btn btn-fullscreen btn-close-white icon-btn"
+            tabindex="-1" aria-label="Fullscreen" fullscreenBtn></button>
+    <button type="button" class="btn-close btn-close-white"
+            tabindex="-1" [dialogClose]="model" aria-label="Close"></button>
+  </div>
+</div>
+<div class="dialog-content w800px" #content>
+  <tabs-list [accordionView]="accordionView">
+    <tab [template]="basic_info" [title]="lang.map.lbl_basic_info" name="basic_info">
+    </tab>
+    <tab [template]="another_tab" [title]="lang.map.administrative_board_members"
+         name="administrativeBoardMembers">
+    </tab>
+  </tabs-list>
+  <ng-template #basic_info [formGroup]="form">
+    first tab
+  </ng-template>
+  <ng-template #another_tab>
+    another tab
+  </ng-template>
+</div>
+<div class="dialog-actions">
+  <button tabindex="-1" (click)="displayFormValidity(null, content)" tooltip="{{ lang.map.validate_fields }}"
+          class="btn btn-link"><i class="mdi mdi-information-outline text-info"></i></button>
+  <div class="flex-grow-1"></div>
+  <button (click)="save$.next(null)" class="btn btn-primary">{{ lang.map.btn_save }}</button>
+  <button [dialogClose]="model" class="btn btn-secondary">{{ lang.map.btn_close }}</button>
+</div>

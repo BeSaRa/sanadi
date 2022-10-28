@@ -24,7 +24,9 @@ import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 import {TabMap} from '@app/types/types';
 import {EmployeeService} from '@services/employee.service';
 import {PermissionsEnum} from '@app/enums/permissions-enum';
+import {CharityOrganizationProfileExtraDataService} from '@services/charity-organization-profile-extra-data.service';
 
+// noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
   selector: 'profile-popup',
   templateUrl: './profile-popup.component.html',
@@ -119,7 +121,8 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
               private employeeService: EmployeeService,
               private service: ProfileService,
               private serviceDataService: ServiceDataService,
-              private dialogService: DialogService) {
+              private dialogService: DialogService,
+              private charityOrgProfileExtraDataService: CharityOrganizationProfileExtraDataService) {
     super();
     this.model = data.model;
     this.operation = data.operation;
@@ -241,5 +244,24 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
 
   searchNgSelect(searchText: string, item: any): boolean {
     return item.ngSelectSearch(searchText);
+  }
+
+  editProfileExtraData(event: MouseEvent) {
+    event.preventDefault();
+    switch(this.model.profileType) {
+      case 1: {
+        //statements;
+        break;
+      }
+      case 2: {
+        //statements;
+        break;
+      }
+      default: {
+        //statements;
+        break;
+      }
+    }
+    this.charityOrgProfileExtraDataService.openCharityOrgExtraDataDialog(this.model.id).subscribe();
   }
 }
