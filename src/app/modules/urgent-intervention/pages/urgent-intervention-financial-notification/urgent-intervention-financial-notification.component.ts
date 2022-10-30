@@ -386,14 +386,14 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
           this.accountType.setValidators([]);
           this.accountType.reset();
           this.resetAccountNumber();
-          if (this.isReceive) {
-            this.implementingAgencyTypeField.setValue(2);
-            this.handleImplementingAgencyTypeChanges();
-            this.accountType.setValidators([Validators.required]);
-          } else {
-            this.implementingAgencyTypeField.setValue(null);
-            this.handleImplementingAgencyTypeChanges();
-          }
+        }
+        if (this.isReceive) {
+          this.implementingAgencyTypeField.setValue(2);
+          this.handleImplementingAgencyTypeChanges();
+          this.accountType.setValidators([Validators.required]);
+        } else {
+          this.implementingAgencyTypeField.setValue(null);
+          this.handleImplementingAgencyTypeChanges();
         }
         this.requestType$.next(requestTypeValue);
       } else {
@@ -409,11 +409,12 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
     this.urgentAnnouncementFullSerialField.updateValueAndValidity();
   }
   _handleChangeAccountType() {
-    if (this.boxAccountType) {
-      this.getInterventionLicense();
-    } else {
-      this.resetAccountNumber();
-    }
+    if(this.implementingAgencyField.value)
+      if (this.boxAccountType) {
+        this.getInterventionLicense();
+      } else {
+        this.resetAccountNumber();
+      }
   }
 
   resetAccountNumber() {
@@ -436,22 +437,23 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
       this.implementingAgencies = (this.model?.implementingAgencyList || []).filter(ia => ia.implementingAgencyType == this.implementingAgencyTypeField.value)
     }
   }
-
   handleImplementingAgencyNameChanges() {
     this._loadImplementingAgenciesAccounts();
     this.accountNumberField.setValue(null);
+    this._handleChangeAccountType();
   }
 
   private _loadImplementingAgenciesAccounts() {
-    if (this.implementingAgencyTypeField.value == ImplementingAgencyTypes.Partner) {
-      this.licenseService.loadPartnerLicenseByLicenseId(this.implementingAgencyField.value).subscribe(data => {
-        this.bankAccountList = [...data.bankAccountList];
-      });
-    } else {
-      this.licenseService.loadFinalLicenseByLicenseId(this.implementingAgencyField.value).subscribe(data => {
-        this.bankAccountList = [...data.bankAccountList];
-      });
-    }
+    if(this.implementingAgencyField.value)
+      if (this.implementingAgencyTypeField.value == ImplementingAgencyTypes.Partner) {
+        this.licenseService.loadPartnerLicenseByLicenseId(this.implementingAgencyField.value).subscribe(data => {
+          this.bankAccountList = [...data.bankAccountList];
+        });
+      } else {
+        this.licenseService.loadFinalLicenseByLicenseId(this.implementingAgencyField.value).subscribe(data => {
+          this.bankAccountList = [...data.bankAccountList];
+        });
+      }
   }
 
   private _getInvalidTabs(): any {
