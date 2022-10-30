@@ -9,9 +9,9 @@
 </div>
 <div class="dialog-content w800px" #content>
   <tabs-list [accordionView]="accordionView">
-    <tab [name]="tabsData.basicInfo.name"
+    <tab [name]="tabsData.basicInfo.name" [hasError]="basicInfo.invalid"
          [template]="basicInfoTab" [title]="lang.map.lbl_basic_info"></tab>
-    <tab [name]="tabsData.contactInfo.name"
+    <tab [name]="tabsData.contactInfo.name" [hasError]="contactInfo.invalid"
          [template]="contactInfoTab" [title]="lang.map.contact_info"></tab>
     <tab [name]="tabsData.contactOfficers.name" [hasError]="!model.contactOfficer || model.contactOfficer.length < 1"
          [template]="contactOfficersTab" [title]="lang.map.contact_officers_details"></tab>

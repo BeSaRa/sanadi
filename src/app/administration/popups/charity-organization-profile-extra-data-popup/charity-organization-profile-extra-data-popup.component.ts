@@ -2,7 +2,7 @@ import {Component, Inject} from '@angular/core';
 import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
 import {CharityOrganizationProfileExtraData} from '@app/models/charity-organization-profile-extra-data';
 import {LookupService} from '@services/lookup.service';
-import {AbstractControl, FormControl, UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
+import {AbstractControl, UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {IDialogData} from '@contracts/i-dialog-data';
@@ -75,16 +75,16 @@ export class CharityOrganizationProfileExtraDataPopupComponent extends AdminGene
     this.operation = data.operation;
   }
 
-  get basicInfo(): AbstractControl | null {
-    return this.form.get('basicInfo');
+  get basicInfo(): UntypedFormGroup {
+    return this.form.get('basicInfo')! as UntypedFormGroup;
   }
 
-  get contactInfo(): AbstractControl | null {
-    return this.form.get('contactInfo');
+  get contactInfo(): AbstractControl {
+    return this.form.get('contactInfo')!;
   }
 
-  get establishmentDate() {
-    return this.basicInfo?.get('establishmentDate') as FormControl;
+  get establishmentDate(): AbstractControl {
+    return this.basicInfo?.get('establishmentDate')!;
   }
 
   afterSave(model: CharityOrganizationProfileExtraData, dialogRef: DialogRef): void {
