@@ -35,5 +35,6 @@ export enum ActionIconsEnum {
   ATTACHMENT = 'mdi-attachment',
   LAUNCH = 'mdi-rocket-launch-outline',
   APPROVE = 'mdi-check-decagram-outline',
-  MENU = 'mdi-menu'
+  MENU = 'mdi-menu',
+  EDIT_PROFILE_EXTRA_DATA = 'mdi-office-building-cog'
 }

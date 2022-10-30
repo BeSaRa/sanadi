@@ -9,7 +9,10 @@ import {ProfileService} from '@app/services/profile.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {of, Subject} from 'rxjs';
 import {catchError, exhaustMap, filter, switchMap, takeUntil} from 'rxjs/operators';
+import {ProfileTypes} from '@app/enums/profile-types.enum';
+import {CharityOrganizationProfileExtraDataService} from '@services/charity-organization-profile-extra-data.service';
 
+// noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
   selector: 'profiles',
   templateUrl: './profiles.component.html',
@@ -26,6 +29,12 @@ export class ProfilesComponent extends AdminGenericComponent<Profile, ProfileSer
       onClick: (item: Profile) => this.edit$.next(item)
     },
     // view
+    {
+      type: 'action',
+      label: 'edit_profile_extra_data',
+      icon: ActionIconsEnum.EDIT_PROFILE_EXTRA_DATA,
+      onClick: (item: Profile) => this.editProfileExtraData(item)
+    },
     {
       type: 'action',
       label: 'view',
@@ -65,7 +74,9 @@ export class ProfilesComponent extends AdminGenericComponent<Profile, ProfileSer
   displayedColumns: string[] = ['arName', 'enName', 'status', 'actions'];
   view$: Subject<Profile> = new Subject<Profile>();
 
-  constructor(public service: ProfileService, public lang: LangService) {
+  constructor(public service: ProfileService,
+              public lang: LangService,
+              private charityOrgProfileExtraDataService: CharityOrganizationProfileExtraDataService) {
     super();
   }
 
@@ -99,5 +110,22 @@ export class ProfilesComponent extends AdminGenericComponent<Profile, ProfileSer
       .subscribe((dialog: DialogRef) => {
         dialog.onAfterClose$.subscribe();
       });
+  }
+
+  editProfileExtraData(item: Profile) {
+    switch (item.profileType) {
+      case ProfileTypes.CHARITY: {
+        this.charityOrgProfileExtraDataService.openCharityOrgExtraDataDialog(item.id).subscribe();
+        break;
+      }
+      case 2: {
+        //statements;
+        break;
+      }
+      default: {
+        //statements;
+        break;
+      }
+    }
   }
 }

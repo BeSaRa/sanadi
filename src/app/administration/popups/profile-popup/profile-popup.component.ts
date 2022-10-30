@@ -121,8 +121,7 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
               private employeeService: EmployeeService,
               private service: ProfileService,
               private serviceDataService: ServiceDataService,
-              private dialogService: DialogService,
-              private charityOrgProfileExtraDataService: CharityOrganizationProfileExtraDataService) {
+              private dialogService: DialogService) {
     super();
     this.model = data.model;
     this.operation = data.operation;
@@ -246,25 +245,25 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
     return item.ngSelectSearch(searchText);
   }
 
-  editProfileExtraData(event: MouseEvent) {
-    event.preventDefault();
-    switch(this.model.profileType) {
-      case 1: {
-        this.charityOrgProfileExtraDataService.openCharityOrgExtraDataDialog(this.model.id).subscribe();
-        break;
-      }
-      case 2: {
-        //statements;
-        break;
-      }
-      default: {
-        //statements;
-        break;
-      }
-    }
-  }
-
-  showEditExtraDataLink() {
-    return this.operation === this.operationTypes.UPDATE && (this.profileTypeField.value === ProfileTypes.CHARITY)
-  }
+  // editProfileExtraData(event: MouseEvent) {
+  //   event.preventDefault();
+  //   switch(this.model.profileType) {
+  //     case 1: {
+  //       this.charityOrgProfileExtraDataService.openCharityOrgExtraDataDialog(this.model.id).subscribe();
+  //       break;
+  //     }
+  //     case 2: {
+  //       //statements;
+  //       break;
+  //     }
+  //     default: {
+  //       //statements;
+  //       break;
+  //     }
+  //   }
+  // }
+  //
+  // showEditExtraDataLink() {
+  //   return this.operation === this.operationTypes.UPDATE && (this.profileTypeField.value === ProfileTypes.CHARITY)
+  // }
 }
