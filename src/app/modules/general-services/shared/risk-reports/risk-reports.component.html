@@ -178,6 +178,15 @@
               >
                 <i class="mdi mdi-pen"></i>
               </button>
+
+              <button
+                *ngIf="readonly"
+                (click)="selectOne($event, row, i)"
+                tooltip="{{ lang.map.view }}"
+                class="btn btn-link outline-none"
+              >
+                <i class="mdi mdi-eye"></i>
+              </button>
             </div>
           </td>
         </ng-container>
