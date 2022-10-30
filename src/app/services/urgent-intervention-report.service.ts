@@ -56,7 +56,7 @@ export class UrgentInterventionReportService extends CrudWithDialogGenericServic
     if (!documentId) {
       return of([]);
     }
-    return this.http.get<any>(this._getServiceURL() + '/find/' + documentId)
+    return this.http.get<any>(this._getServiceURL() + '/documentId/' + documentId)
       .pipe(catchError(_ => of([])));
   }
 

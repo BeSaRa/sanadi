@@ -34,7 +34,7 @@ export class RealBeneficiaryService extends CrudWithDialogGenericService<RealBen
     return RealBeneficiary;
   }
   _getServiceURL(): string {
-    return this.urlService.URLS.REAL_BENEFECIARY;
+    return this.urlService.URLS.REAL_BENEFICIARY;
   }
   @CastResponse(undefined)
   getRealBenficiaryOfCharity(id: number) {

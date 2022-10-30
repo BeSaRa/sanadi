@@ -38,6 +38,7 @@ export class AttachmentTypeServiceDataPopupComponent implements OnInit {
   private save$: Subject<any> = new Subject<any>();
   private destroy$: Subject<any> = new Subject<any>();
   existingList: AttachmentTypeServiceData[] = [];
+  savedRequestTypesForService: number[] = [];
   customProperties$: Subject<CustomProperty[]> = new Subject<CustomProperty[]>();
   customProperties: CustomProperty[] = [];
   selectedService!: ServiceData;
@@ -92,8 +93,20 @@ export class AttachmentTypeServiceDataPopupComponent implements OnInit {
     return this.form.get('serviceId') as UntypedFormControl;
   }
 
+  get mandatoryField(): UntypedFormControl {
+    return this.form.get('isRequired') as UntypedFormControl;
+  }
+
   get identifierField(): UntypedFormControl {
     return this.form.get('identifier') as UntypedFormControl;
+  }
+
+  get customPropertiesArrayForm(): UntypedFormArray {
+    return this.form.get('customProperties') as UntypedFormArray;
+  }
+
+  get multiField(): AbstractControl {
+    return this.form.get('multi') as AbstractControl;
   }
 
   private loadServices(): void {
@@ -124,37 +137,30 @@ export class AttachmentTypeServiceDataPopupComponent implements OnInit {
     return this.existingList.map(x => x.serviceId).includes(serviceId);
   }
 
-  saveModel(): void {
-    this.selectedService = this.services.find(s => s.id === this.serviceIdField?.value)!;
-    this.save$.next();
+  private _getSavedRequestTypesForService(): void {
+    this.savedRequestTypesForService = [];
+    const existingSameServiceRecords: AttachmentTypeServiceData[] = this.existingList.filter(x => x.serviceId === this.selectedService.id);
+    existingSameServiceRecords.forEach((service) => {
+      let requestType = service.parsedCustomProperties?.requestType ?? undefined;
+      if (CommonUtils.isValidValue(requestType)) {
+        this.savedRequestTypesForService.push(Number(requestType));
+      }
+    });
   }
 
-  _saveModel(): void {
-    this.save$
-      .pipe(takeUntil(this.destroy$),
-        exhaustMap(() => {
-          let attachmentTypeServiceData = (new AttachmentTypeServiceData()).clone({
-            ...this.model, ...this.form.value,
-            caseType: this.selectedService.caseType
-          });
-          attachmentTypeServiceData = this.mapAttachmentTypeServiceDataToSend(attachmentTypeServiceData, this.customPropertiesKeyValue);
-          return attachmentTypeServiceData.save().pipe(
-            catchError((err) => {
-              // this.exceptionHandlerService.handle(err);
-              return of(null);
-            }));
-        }))
-      .subscribe((attachmentTypeServiceData: AttachmentTypeServiceData | null) => {
-        if (!attachmentTypeServiceData) {
-          return;
+  isRequestTypeUsed(customProperty: CustomProperty, requestType: number): boolean {
+    if (customProperty.type === CustomPropertyTypes.TABLE || customProperty.name !== 'requestType') {
+      return false;
+    } else {
+      // if operation is update/view, skip the currently selected request to check for disabled
+      if (this.operation !== OperationTypes.CREATE) {
+        const savedRequestType = this.model.parsedCustomProperties?.requestType;
+        if (CommonUtils.isValidValue(savedRequestType)) {
+          return this.savedRequestTypesForService.filter(x => x !== savedRequestType).includes(requestType);
         }
-        const message = this.operation === OperationTypes.CREATE ? this.lang.map.msg_create_x_success : this.lang.map.msg_update_x_success;
-        // @ts-ignore
-        this.toast.success(message.change({x: this.selectedService.getName()}));
-        this.model = attachmentTypeServiceData;
-        this.operation = OperationTypes.UPDATE;
-        this.dialogRef.close(this.model);
-      });
+      }
+      return this.savedRequestTypesForService.includes(requestType);
+    }
   }
 
   handleServiceChange(userInteraction: boolean = false) {
@@ -163,11 +169,12 @@ export class AttachmentTypeServiceDataPopupComponent implements OnInit {
       this.attachmentTypeServiceDataService.getCustomProperties(this.selectedService.caseType).pipe(
         takeUntil(this.destroy$)
       ).subscribe(customProperties => {
-        if (userInteraction){
+        if (userInteraction) {
           this.displayMulti = false;
           this.multiField.setValue(false);
           this.onMultiChange();
           this.customPropertiesKeyValue = {};
+          this.savedRequestTypesForService = [];
         }
         this.customProperties$.next(customProperties);
       });
@@ -187,15 +194,8 @@ export class AttachmentTypeServiceDataPopupComponent implements OnInit {
           this.customPropertiesArrayForm.push(new UntypedFormControl(controlValue));
         }
       });
+      this._getSavedRequestTypesForService();
     });
-  }
-
-  get customPropertiesArrayForm(): UntypedFormArray {
-    return this.form.get('customProperties') as UntypedFormArray;
-  }
-
-  get multiField(): AbstractControl {
-    return this.form.get('multi') as AbstractControl;
   }
 
   getOptionName(option: any): string {
@@ -259,6 +259,38 @@ export class AttachmentTypeServiceDataPopupComponent implements OnInit {
     CommonUtils.displayFormValidity((form || this.form), element);
   }
 
+  saveModel(): void {
+    this.selectedService = this.services.find(s => s.id === this.serviceIdField?.value)!;
+    this.save$.next();
+  }
+
+  _saveModel(): void {
+    this.save$
+      .pipe(takeUntil(this.destroy$),
+        exhaustMap(() => {
+          let attachmentTypeServiceData = (new AttachmentTypeServiceData()).clone({
+            ...this.model, ...this.form.value,
+            caseType: this.selectedService.caseType
+          });
+          attachmentTypeServiceData = this.mapAttachmentTypeServiceDataToSend(attachmentTypeServiceData, this.customPropertiesKeyValue);
+          return attachmentTypeServiceData.save().pipe(
+            catchError((err) => {
+              return of(null);
+            }));
+        }))
+      .subscribe((attachmentTypeServiceData: AttachmentTypeServiceData | null) => {
+        if (!attachmentTypeServiceData) {
+          return;
+        }
+        const message = this.operation === OperationTypes.CREATE ? this.lang.map.msg_create_x_success : this.lang.map.msg_update_x_success;
+        // @ts-ignore
+        this.toast.success(message.change({x: this.selectedService.getName()}));
+        this.model = attachmentTypeServiceData;
+        this.operation = OperationTypes.UPDATE;
+        this.dialogRef.close(this.model);
+      });
+  }
+
   private _setIdentifierValidations() {
     if (this.model.multi) {
       this.identifierField.addValidators(CustomValidators.required);
@@ -266,5 +298,13 @@ export class AttachmentTypeServiceDataPopupComponent implements OnInit {
       this.identifierField.removeValidators(CustomValidators.required);
     }
     this.identifierField.updateValueAndValidity();
+  }
+
+  getTranslatedMandatory(): string {
+    return this.mandatoryField.value ? this.lang.map.lbl_yes : this.lang.map.lbl_no;
+  }
+
+  getTranslatedMulti(): string {
+    return this.multiField.value ? this.lang.map.lbl_yes : this.lang.map.lbl_no;
   }
 }

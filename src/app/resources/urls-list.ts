@@ -1,6 +1,6 @@
 import { IAppUrls } from '@contracts/i-app-urls';
 
-export const urlsList = {
+export const urlsList: Partial<IAppUrls> = {
   // BASE_URL: '', // it will be overridden from CONFIGURATION
   FOLLOWUP_PERMISSION: '/admin/follow-up-permission',
   COMMON: '/common',
@@ -89,7 +89,7 @@ export const urlsList = {
   SERVICE_DATA: 'admin/services',
   SERVICE_DATA_2: 'admin/services/2',
   SERVICE_DATA_10: 'admin/services/10',
-  E_FINAL_EXTERNAL_OFFICE_APPROVAL: '/external-office-approval',
+  E_FINAL_EXTERNAL_OFFICE_APPROVAL: '/final-office-approval',
   INTERNAL_USER_PERMISSIONS: '/admin/internal-user-permission',
   INTERNAL_PROJECT_LICENSE: '/internal-project-licensing',
   URGENT_INTERVENTION_LICENSE: '/urgent-intervention-licensing',
@@ -116,7 +116,7 @@ export const urlsList = {
   CHARITY_DECISION: '/admin/charity-decision',
   MEMBER_ROLES: '/admin/member-role',
   GOVERNANCE_DOCUMENT: '/admin/governance-document',
-  REAL_BENEFECIARY: '/admin/real-beneficiary',
+  REAL_BENEFICIARY: '/admin/real-beneficiary',
   NPO_MANAGEMENT: '/npo-management',
   NPO_DATA: '/admin/npo-data',
   PROFILE: '/admin/profile',

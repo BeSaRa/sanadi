@@ -97,6 +97,10 @@
                   <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.lbl_required}}</th>
                   <td cdk-cell *cdkCellDef="let row">{{row.isRequired ? lang.map.lbl_yes : lang.map.lbl_no}}</td>
                 </ng-container>
+                <ng-container cdkColumnDef="requestType">
+                  <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.request_type}}</th>
+                  <td cdk-cell *cdkCellDef="let row">{{row.getRequestTypeName()}}</td>
+                </ng-container>
                 <ng-container cdkColumnDef="actions">
                   <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
                   <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">

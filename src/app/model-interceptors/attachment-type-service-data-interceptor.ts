@@ -13,8 +13,10 @@ export class AttachmentTypeServiceDataInterceptor implements IModelInterceptor<A
   }
 
   send(model: Partial<AttachmentTypeServiceData>): Partial<AttachmentTypeServiceData> {
+    delete model.searchFields;
     delete model.langService;
     delete model.service;
+    delete model.lookupService;
     delete model.serviceInfo;
     delete model.userTypeInfo;
     delete model.attachmentTypeInfo;
