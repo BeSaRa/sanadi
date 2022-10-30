@@ -1,5 +1,8 @@
 export interface ILanguageKeys {
   final_report_has_not_yet_been_uploaded: string;
+  add_compliance_officer: string;
+  compliance_officers_details: string;
+  add_contact_officer: string;
   contact_officers_details: string;
   social_media_accounts: string;
   main_branch_address: string;

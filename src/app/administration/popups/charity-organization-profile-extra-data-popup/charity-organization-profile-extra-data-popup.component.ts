@@ -15,6 +15,9 @@ import {OperationTypes} from '@app/enums/operation-types.enum';
 import {AdminLookup} from '@app/models/admin-lookup';
 import {AdminLookupService} from '@services/admin-lookup.service';
 import {AdminLookupTypeEnum} from '@app/enums/admin-lookup-type-enum';
+import {IKeyValue} from '@contracts/i-key-value';
+import {ILanguageKeys} from '@contracts/i-language-keys';
+import {Officer} from '@app/models/officer';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -28,6 +31,35 @@ export class CharityOrganizationProfileExtraDataPopupComponent extends AdminGene
   operation: OperationTypes;
   accordionView: boolean = false;
   activityTypes: AdminLookup[] = [];
+  addContactOfficersLabel: keyof ILanguageKeys = 'add_contact_officer';
+  addComplianceOfficersLabel: keyof ILanguageKeys = 'add_compliance_officer';
+
+  tabsData: IKeyValue = {
+    basicInfo: {
+      name: 'basicInfoTab',
+      langKey: 'lbl_basic_info' as keyof ILanguageKeys,
+      index: 0,
+      validStatus: () => this.basicInfo && this.basicInfo.valid
+    },
+    contactInfo: {
+      name: 'contactInfoTab',
+      langKey: 'contact_info' as keyof ILanguageKeys,
+      index: 1,
+      validStatus: () => this.contactInfo && this.contactInfo.valid
+    },
+    contactOfficers: {
+      name: 'contactOfficersTab',
+      langKey: 'contact_officers_details' as keyof ILanguageKeys,
+      index: 2,
+      validStatus: () => this.model.contactOfficer && this.model.contactOfficer.length > 0
+    },
+    complianceOfficers: {
+      name: 'complianceOfficersTab',
+      langKey: 'compliance_officers_details' as keyof ILanguageKeys,
+      index: 3,
+      validStatus: () => this.model.complianceOfficer && this.model.complianceOfficer.length > 0
+    }
+  };
 
   constructor(private lookupService: LookupService,
               public fb: UntypedFormBuilder,
@@ -45,6 +77,10 @@ export class CharityOrganizationProfileExtraDataPopupComponent extends AdminGene
 
   get basicInfo(): AbstractControl | null {
     return this.form.get('basicInfo');
+  }
+
+  get contactInfo(): AbstractControl | null {
+    return this.form.get('contactInfo');
   }
 
   get establishmentDate() {
@@ -100,5 +136,13 @@ export class CharityOrganizationProfileExtraDataPopupComponent extends AdminGene
     delete formObject.publishDate;
     delete formObject.registrationDate;
     return  formObject;
+  }
+
+  onProfileContactOfficersChanged(officers: Officer[]) {
+    this.model.contactOfficer = officers;
+  }
+
+  onProfileComplianceOfficersChanged(officers: Officer[]) {
+    this.model.complianceOfficer = officers;
   }
 }

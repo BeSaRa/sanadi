@@ -1,0 +1,129 @@
+<ng-container [formGroup]="officerForm">
+  <ng-container>
+    <div class="row">
+      <div class="col">
+        <h1 class="h6 text-primary m-0 d-inline-block">{{lang.map[addLabel]}}</h1>
+        <button class="btn btn-link outline-none"
+                tooltip="{{lang.map.btn_add}}" (click)="openAddOfficerForm()">
+          <i class="mdi mdi-plus-box"></i></button>
+      </div>
+    </div>
+    <ng-container *ngIf="addOfficerFormActive">
+      <div class="row">
+        <div class="col-md-6 col-sm-12 mb-4 position-relative">
+          <label asteriskIfRequired="qid" class="form-label"
+                 for="qid">{{lang.map.identification_number}}</label>
+          <input class="form-control" formControlName="qid"
+                 id="qid" validationClasses="qid">
+          <app-field-error-message controlName="qid"></app-field-error-message>
+        </div>
+        <div class="col-md-6 col-sm-12 mb-4 position-relative">
+          <label asteriskIfRequired="fullName" class="form-label"
+                 for="fullName">{{lang.map.full_name}}</label>
+          <input class="form-control"
+                 formControlName="fullName"
+                 id="fullName" validationClasses="fullName">
+          <app-field-error-message controlName="fullName"></app-field-error-message>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 col-sm-12 mb-4 position-relative">
+          <label asteriskIfRequired="email" class="form-label"
+                 for="email">{{lang.map.lbl_email}}</label>
+          <input class="form-control" formControlName="email"
+                 id="email" validationClasses="email">
+          <app-field-error-message controlName="email"></app-field-error-message>
+        </div>
+        <div class="col-md-6 col-sm-12 mb-4 position-relative">
+          <label asteriskIfRequired="phone" class="form-label"
+                 for="phone">{{lang.map.lbl_phone}}</label>
+          <input class="form-control"
+                 formControlName="phone"
+                 id="phone" validationClasses="phone">
+          <app-field-error-message controlName="phone"></app-field-error-message>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 col-sm-12 mb-4 position-relative">
+          <label asteriskIfRequired="extraPhone" class="form-label"
+                 for="extraPhone">{{lang.map.lbl_extra_phone_number}}</label>
+          <input class="form-control" formControlName="extraPhone"
+                 id="extraPhone" validationClasses="extraPhone">
+          <app-field-error-message controlName="extraPhone"></app-field-error-message>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 text-center action-container mb-3">
+          <div class="flex-grow-1"></div>
+          <button [disabled]="!officerForm.valid" (click)="saveOfficer()"
+                  class="btn btn-primary">{{lang.map.btn_save}}</button>
+          <button class="btn btn-secondary"
+                  (click)="cancelAddOfficer()">{{lang.map.btn_cancel}}</button>
+        </div>
+      </div>
+    </ng-container>
+  </ng-container>
+  <div class="row">
+    <div class="col-12">
+      <app-table #table [columns]="officersDisplayedColumns"
+                 [data]="selectedOfficers" [selectable]="true"
+                 [useSearchToFilter]="true"
+                 sortableTable>
+        <table [dataSource]="table.dataSource" cdk-table
+               class="table table-striped table-bordered caption-top">
+          <ng-container cdkColumnDef="index">
+            <th *cdkHeaderCellDef cdk-header-cell
+                sortable-header> #</th>
+            <td *cdkCellDef="let row; let i = index;" cdk-cell> {{i + 1}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="qId">
+            <th *cdkHeaderCellDef cdk-header-cell sortable-header> {{lang.map.identification_number}}</th>
+            <td *cdkCellDef="let row" cdk-cell> {{row.qid}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="fullName">
+            <th *cdkHeaderCellDef cdk-header-cell
+                sortable-header> {{lang.map.full_name}}</th>
+            <td *cdkCellDef="let row" cdk-cell> {{row.fullName}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="email">
+            <th *cdkHeaderCellDef cdk-header-cell
+                sortable-header> {{lang.map.lbl_email}}</th>
+            <td *cdkCellDef="let row" cdk-cell> {{row.email}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="phone">
+            <th *cdkHeaderCellDef cdk-header-cell sortable-header> {{lang.map.lbl_phone}}</th>
+            <td *cdkCellDef="let row" cdk-cell> {{row.phone}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="extraPhone">
+            <th *cdkHeaderCellDef cdk-header-cell
+                sortable-header> {{lang.map.lbl_extra_phone_number}}</th>
+            <td *cdkCellDef="let row" cdk-cell> {{row.extraPhone}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="actions">
+            <th *cdkHeaderCellDef cdk-header-cell> {{lang.map.lbl_actions}}</th>
+            <td *cdkCellDef="let row" cdk-cell class="table-actions">
+              <div class="d-flex flex-row">
+                <button (click)="removeOfficer($event, row)"
+                        [disabled]="(addOfficerFormActive)"
+                        class="btn btn-link outline-none" tooltip="{{lang.map.btn_remove}}">
+                  <i class="mdi mdi-close-box"></i>
+                </button>
+                <button (click)="selectOfficer($event, row)"
+                        [disabled]="(addOfficerFormActive)"
+                        class="btn btn-link outline-none" tooltip="{{lang.map.btn_edit}}">
+                  <i class="mdi mdi-pen"></i>
+                </button>
+              </div>
+            </td>
+          </ng-container>
+          <tr *cdkHeaderRowDef="officersDisplayedColumns" cdk-header-row></tr>
+          <tr *cdkRowDef="let row; columns: officersDisplayedColumns;" cdk-row></tr>
+          <!--suppress HtmlUnknownBooleanAttribute -->
+          <tr *cdkNoDataRow>
+            <td class="text-center" colspan="100">{{lang.map.no_records_to_display}}</td>
+          </tr>
+        </table>
+      </app-table>
+    </div>
+  </div>
+</ng-container>

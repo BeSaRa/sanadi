@@ -15,12 +15,14 @@ import {IDialogData} from '@contracts/i-dialog-data';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {FactoryService} from '@services/factory.service';
 import {CastResponse} from '@decorators/cast-response';
+import {OfficerInterceptor} from '@app/model-interceptors/officer-interceptor';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CharityOrganizationProfileExtraDataService extends CrudWithDialogGenericService<CharityOrganizationProfileExtraData> {
   list: CharityOrganizationProfileExtraData[] = [];
+  officerInterceptor = new OfficerInterceptor();
 
   constructor(public http: HttpClient, public dialog: DialogService, private urlService: UrlService) {
     super();

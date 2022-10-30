@@ -9,14 +9,17 @@
 </div>
 <div class="dialog-content w800px" #content>
   <tabs-list [accordionView]="accordionView">
-    <tab [template]="basic_info_tab" [title]="lang.map.lbl_basic_info" name="basic_info">
-    </tab>
-    <tab [template]="contact_info_tab" [title]="lang.map.contact_info"
-         name="administrativeBoardMembers">
-    </tab>
+    <tab [name]="tabsData.basicInfo.name"
+         [template]="basicInfoTab" [title]="lang.map.lbl_basic_info"></tab>
+    <tab [name]="tabsData.contactInfo.name"
+         [template]="contactInfoTab" [title]="lang.map.contact_info"></tab>
+    <tab [name]="tabsData.contactOfficers.name" [hasError]="!model.contactOfficer || model.contactOfficer.length < 1"
+         [template]="contactOfficersTab" [title]="lang.map.contact_officers_details"></tab>
+    <tab [name]="tabsData.complianceOfficers.name" [hasError]="!model.complianceOfficer || model.complianceOfficer.length < 1"
+         [template]="complianceOfficersTab" [title]="lang.map.compliance_officers_details"></tab>
   </tabs-list>
   <form [formGroup]="form" novalidate>
-    <ng-template #basic_info_tab>
+    <ng-template #basicInfoTab>
       <ng-container formGroupName="basicInfo">
         <div class="row">
           <div class="col-md-6 col-sm-12 mb-4 position-relative">
@@ -105,7 +108,7 @@
         </div>
       </ng-container>
     </ng-template>
-    <ng-template #contact_info_tab>
+    <ng-template #contactInfoTab>
       <ng-container formGroupName="contactInfo">
         <div class="row mb-3">
           <div class="col-sm-6 position-relative">
@@ -218,6 +221,12 @@
           </div>
         </div>
       </ng-container>
+    </ng-template>
+    <ng-template #contactOfficersTab>
+      <profile-officers [addLabel]="addContactOfficersLabel" [selectedOfficers]="model.contactOfficer" (officerListChanged)="onProfileContactOfficersChanged($event)"></profile-officers>
+    </ng-template>
+    <ng-template #complianceOfficersTab>
+      <profile-officers [addLabel]="addComplianceOfficersLabel" [selectedOfficers]="model.complianceOfficer" (officerListChanged)="onProfileComplianceOfficersChanged($event)"></profile-officers>
     </ng-template>
   </form>
 </div>
