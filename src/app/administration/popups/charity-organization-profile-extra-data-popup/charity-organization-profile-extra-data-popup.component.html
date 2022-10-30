@@ -170,6 +170,53 @@
             <app-field-error-message controlName="address"></app-field-error-message>
           </div>
         </div>
+        <div class="row">
+          <div class="col-sm-12">
+            <h2 class="h6 text-primary">{{lang.map.social_media_accounts}}</h2>
+            <hr>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-sm-6 position-relative">
+            <label asteriskIfRequired="facebook" for="facebook"
+                   class="form-label">{{lang.map.facebook}}</label>
+            <input id="facebook" validationClasses="facebook" trimInput
+                   formControlName="facebook" class="form-control">
+            <app-field-error-message controlName="facebook"></app-field-error-message>
+          </div>
+          <div class="col-sm-6 position-relative">
+            <label asteriskIfRequired="twitter" for="twitter"
+                   class="form-label">{{lang.map.twitter}}</label>
+            <input id="twitter" validationClasses="twitter" trimInput
+                   formControlName="twitter" class="form-control">
+            <app-field-error-message controlName="twitter"></app-field-error-message>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-sm-6 position-relative">
+            <label asteriskIfRequired="instagram" for="instagram"
+                   class="form-label">{{lang.map.instagram}}</label>
+            <input id="instagram" validationClasses="instagram" trimInput
+                   formControlName="instagram" class="form-control">
+            <app-field-error-message controlName="instagram"></app-field-error-message>
+          </div>
+          <div class="col-sm-6 position-relative">
+            <label asteriskIfRequired="snapChat" for="snapChat"
+                   class="form-label">{{lang.map.snapchat}}</label>
+            <input id="snapChat" validationClasses="snapChat" trimInput
+                   formControlName="snapChat" class="form-control">
+            <app-field-error-message controlName="snapChat"></app-field-error-message>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-sm-6 position-relative">
+            <label asteriskIfRequired="youTube" for="youTube"
+                   class="form-label">{{lang.map.youtube}}</label>
+            <input id="youTube" validationClasses="youTube" trimInput
+                   formControlName="youTube" class="form-control">
+            <app-field-error-message controlName="youTube"></app-field-error-message>
+          </div>
+        </div>
       </ng-container>
     </ng-template>
   </form>

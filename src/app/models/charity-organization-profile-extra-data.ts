@@ -110,7 +110,12 @@ export class CharityOrganizationProfileExtraData extends BaseModel<CharityOrgani
       zoneNumber,
       streetNumber,
       buildingNumber,
-      address
+      address,
+      facebook,
+      twitter,
+      instagram,
+      snapChat,
+      youTube
     } = this;
     return {
       phone: controls ? [phone, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : phone,
@@ -121,7 +126,12 @@ export class CharityOrganizationProfileExtraData extends BaseModel<CharityOrgani
       zoneNumber: controls ? [zoneNumber, [CustomValidators.required, CustomValidators.maxLength(5)]] : zoneNumber,
       streetNumber: controls ? [streetNumber, [CustomValidators.required, CustomValidators.maxLength(5)]] : streetNumber,
       buildingNumber: controls ? [buildingNumber, [CustomValidators.required, CustomValidators.maxLength(5)]] : buildingNumber,
-      address: controls ? [address, [CustomValidators.required, CustomValidators.maxLength(512)]] : address
+      address: controls ? [address, [CustomValidators.required, CustomValidators.maxLength(512)]] : address,
+      facebook: controls ? [facebook, [Validators.maxLength(350)]] : facebook,
+      twitter: controls ? [twitter, [Validators.maxLength(350)]] : twitter,
+      instagram: controls ? [instagram, [Validators.maxLength(350)]] : instagram,
+      snapChat: controls ? [snapChat, [Validators.maxLength(350)]] : snapChat,
+      youTube: controls ? [youTube, [Validators.maxLength(350)]] : youTube,
     };
   }
 }
