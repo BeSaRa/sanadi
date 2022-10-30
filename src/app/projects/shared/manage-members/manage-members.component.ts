@@ -19,7 +19,7 @@ import {NpoEmployee} from '@app/models/npo-employee';
   styleUrls: ['./manage-members.component.scss']
 })
 export class ManageMembersComponent implements OnInit {
-  @Input() membersForm!: FormGroup;
+  membersForm!: FormGroup;
   @Input() isExternalUser!: boolean;
   @Input() isGeneralAssociationMembers!: boolean;
   @Input() readonly !: boolean;
