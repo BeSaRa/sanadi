@@ -4,36 +4,26 @@ import {
   Input,
   OnDestroy,
   OnInit,
-  Output,
+  Output
 } from '@angular/core';
-import { LangService } from '@services/lang.service';
-import { ToastService } from '@services/toast.service';
-import { DialogService } from '@services/dialog.service';
 import {
-  AbstractControl,
-  UntypedFormArray,
   UntypedFormBuilder,
   UntypedFormControl,
-  UntypedFormGroup,
+  UntypedFormGroup
 } from '@angular/forms';
+import { ActionIconsEnum } from '@app/enums/action-icons-enum';
+import { CommonStatusEnum } from '@app/enums/common-status.enum';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { AdminResult } from '@app/models/admin-result';
+import { Goal } from '@app/models/goal';
+import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
 import { ReadinessStatus } from '@app/types/types';
+import { DialogService } from '@services/dialog.service';
+import { LangService } from '@services/lang.service';
+import { LookupService } from '@services/lookup.service';
+import { ToastService } from '@services/toast.service';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { filter, map, take, takeUntil, tap } from 'rxjs/operators';
-import { UserClickOn } from '@app/enums/user-click-on.enum';
-import { Goal } from '@app/models/goal';
-import { Lookup } from '@app/models/lookup';
-import { CustomValidators } from '@app/validators/custom-validators';
-import { LookupService } from '@services/lookup.service';
-import { DomainTypes } from '@app/enums/domain-types';
-import { AdminResult } from '@app/models/admin-result';
-import { CommonStatusEnum } from '@app/enums/common-status.enum';
-import { DacOchaService } from '@services/dac-ocha.service';
-import { ActionIconsEnum } from '@app/enums/action-icons-enum';
-import { CommonUtils } from '@app/helpers/common-utils';
-import { SortEvent } from '@app/interfaces/sort-event';
-import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
-import { AdminLookup } from '@app/models/admin-lookup';
-import { InterventionField } from '@app/models/intervention-field';
 
 @Component({
   selector: 'goal',
@@ -46,7 +36,6 @@ export class GoalComponent implements OnInit, OnDestroy {
     private toastService: ToastService,
     private dialogService: DialogService,
     public lookupService: LookupService,
-    private dacOchaService: DacOchaService,
     private fb: UntypedFormBuilder
   ) {}
 
@@ -104,7 +93,9 @@ export class GoalComponent implements OnInit, OnDestroy {
 
 
   private buildForm() {
-    this.form = this.fb.group(this.fb.group(new Goal().getGoalsFields(true)),);
+    this.form = this.fb.group(new Goal().getGoalsFields(true));
+    console.log(this.form);
+
   }
   actions: IMenuItem<Goal>[] = [
     // edit

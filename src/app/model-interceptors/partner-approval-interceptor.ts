@@ -89,6 +89,10 @@ export class PartnerApprovalInterceptor
         new CommercialActivity().clone(x)
       )
     );
+    model.displayGoals = model.goals.map(x=>new Goal().clone({
+      goal:x
+    }))
+
 
     return model;
   }
@@ -158,6 +162,11 @@ export class PartnerApprovalInterceptor
       return service.workAreaInterceptor.send(x) as WorkArea;
     });
 
+    console.log(model.displayGoals);
+
+    model.goals = model.displayGoals?.map(x=>x.goal) ?? [];
+
+
     PartnerApprovalInterceptor._deleteBeforeSend(model);
     return model;
   }
@@ -185,5 +194,6 @@ export class PartnerApprovalInterceptor
     delete model.categoryInfo;
     delete model.searchFields;
     delete model.deductionPercent;
+    delete model.displayGoals;
   }
 }
