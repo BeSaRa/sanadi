@@ -503,6 +503,7 @@ export class CharityOrganizationUpdateComponent
         }
 
         else if (this.employeeService.getInternalDepartment()?.code === 'LCN') {
+
           this.readonly = !this.model.isReturned();
         }
       }

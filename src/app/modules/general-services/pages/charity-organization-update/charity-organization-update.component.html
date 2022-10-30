@@ -26,7 +26,7 @@
             [clearable]="true"
             placeholder="{{ lang.map.select }}"
             id="updateSection"
-            [readonly]="readonly"
+            [readonly]="readonly || (model?.isReturned() || false)"
             [notFoundText]="lang.map.msg_not_found"
             appendTo="body"
             validationClasses="updateSection"
@@ -54,7 +54,7 @@
           <ng-select
             [selectOnTab]="true"
             labelForId="charityId"
-            [readonly]="readonly"
+            [readonly]="readonly || (model?.isReturned() || false)"
             [clearable]="true"
             placeholder="{{ lang.map.select }}"
             id="charityId"
