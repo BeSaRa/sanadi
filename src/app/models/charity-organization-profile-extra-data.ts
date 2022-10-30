@@ -10,6 +10,7 @@ import {INames} from '@contracts/i-names';
 import {LangService} from '@services/lang.service';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {IMyDateModel} from 'angular-mydatepicker';
+import {Validators} from '@angular/forms';
 
 const {receive, send} = new CharityOrganizationProfileExtraDataInterceptor();
 
@@ -98,6 +99,29 @@ export class CharityOrganizationProfileExtraData extends BaseModel<CharityOrgani
       ]] : regulatingLaw,
       unifiedEconomicRecord: controls ? [unifiedEconomicRecord] : unifiedEconomicRecord,
       taxCardNo: controls ? [taxCardNo] : taxCardNo
-    }
+    };
+  }
+
+  buildContactInfoTab(controls?: boolean): any {
+    const {
+      phone,
+      email,
+      website,
+      zoneNumber,
+      streetNumber,
+      buildingNumber,
+      address
+    } = this;
+    return {
+      phone: controls ? [phone, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : phone,
+      email: controls ? [email, [CustomValidators.required,
+        CustomValidators.maxLength(200),
+        Validators.email]] : email,
+      website: controls ? [website, [Validators.maxLength(350)]] : website,
+      zoneNumber: controls ? [zoneNumber, [CustomValidators.required, CustomValidators.maxLength(5)]] : zoneNumber,
+      streetNumber: controls ? [streetNumber, [CustomValidators.required, CustomValidators.maxLength(5)]] : streetNumber,
+      buildingNumber: controls ? [buildingNumber, [CustomValidators.required, CustomValidators.maxLength(5)]] : buildingNumber,
+      address: controls ? [address, [CustomValidators.required, CustomValidators.maxLength(512)]] : address
+    };
   }
 }

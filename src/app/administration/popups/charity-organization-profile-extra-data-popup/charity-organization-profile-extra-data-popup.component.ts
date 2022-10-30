@@ -60,7 +60,9 @@ export class CharityOrganizationProfileExtraDataPopupComponent extends AdminGene
 
   buildForm(): void {
     this.form = this.fb.group({
-      basicInfo: this.fb.group(this.model.buildBasicInfoTab(true))
+      basicInfo: this.fb.group(this.model.buildBasicInfoTab(true)),
+      contactInfo: this.fb.group(this.model.buildContactInfoTab(true)),
+
     });
   }
 

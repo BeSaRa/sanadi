@@ -9,14 +9,14 @@
 </div>
 <div class="dialog-content w800px" #content>
   <tabs-list [accordionView]="accordionView">
-    <tab [template]="basic_info" [title]="lang.map.lbl_basic_info" name="basic_info">
+    <tab [template]="basic_info_tab" [title]="lang.map.lbl_basic_info" name="basic_info">
     </tab>
-    <tab [template]="another_tab" [title]="lang.map.administrative_board_members"
+    <tab [template]="contact_info_tab" [title]="lang.map.contact_info"
          name="administrativeBoardMembers">
     </tab>
   </tabs-list>
   <form [formGroup]="form" novalidate>
-    <ng-template #basic_info>
+    <ng-template #basic_info_tab>
       <ng-container formGroupName="basicInfo">
         <div class="row">
           <div class="col-md-6 col-sm-12 mb-4 position-relative">
@@ -105,8 +105,72 @@
         </div>
       </ng-container>
     </ng-template>
-    <ng-template #another_tab>
-      another tab
+    <ng-template #contact_info_tab>
+      <ng-container formGroupName="contactInfo">
+        <div class="row mb-3">
+          <div class="col-sm-6 position-relative">
+            <label asteriskIfRequired="phone" for="phone"
+                   class="form-label">{{lang.map.lbl_phone}}</label>
+            <input id="phone" validationClasses="phone" trimInput
+                   formControlName="phone" class="form-control">
+            <app-field-error-message controlName="phone"></app-field-error-message>
+          </div>
+          <div class="col-sm-6 position-relative">
+            <label asteriskIfRequired="email" for="email"
+                   class="form-label">{{lang.map.lbl_email}}</label>
+            <input id="email" validationClasses="email" trimInput
+                   formControlName="email" class="form-control">
+            <app-field-error-message controlName="email"></app-field-error-message>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-sm-12 position-relative">
+            <label asteriskIfRequired="website" for="website"
+                   class="form-label">{{lang.map.website}}</label>
+            <input id="website" validationClasses="website" trimInput
+                   formControlName="website" class="form-control">
+            <app-field-error-message controlName="website"></app-field-error-message>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12">
+            <h2 class="h6 text-primary">{{lang.map.main_branch_address}}</h2>
+            <hr>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-sm-6 position-relative">
+            <label asteriskIfRequired="zoneNumber" for="zoneNumber"
+                   class="form-label">{{lang.map.lbl_zone}}</label>
+            <input id="zoneNumber" validationClasses="zoneNumber" trimInput
+                   formControlName="zoneNumber" class="form-control">
+            <app-field-error-message controlName="zoneNumber"></app-field-error-message>
+          </div>
+          <div class="col-sm-6 position-relative">
+            <label asteriskIfRequired="streetNumber" for="streetNumber"
+                   class="form-label">{{lang.map.lbl_street}}</label>
+            <input id="streetNumber" validationClasses="streetNumber" trimInput
+                   formControlName="streetNumber" class="form-control">
+            <app-field-error-message controlName="streetNumber"></app-field-error-message>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-sm-6 position-relative">
+            <label asteriskIfRequired="buildingNumber" for="buildingNumber"
+                   class="form-label">{{lang.map.building_number}}</label>
+            <input id="buildingNumber" validationClasses="buildingNumber" trimInput
+                   formControlName="buildingNumber" class="form-control">
+            <app-field-error-message controlName="buildingNumber"></app-field-error-message>
+          </div>
+          <div class="col-sm-6 position-relative">
+            <label asteriskIfRequired="address" for="address"
+                   class="form-label">{{lang.map.lbl_address}}</label>
+            <input id="address" validationClasses="address" trimInput
+                   formControlName="address" class="form-control">
+            <app-field-error-message controlName="address"></app-field-error-message>
+          </div>
+        </div>
+      </ng-container>
     </ng-template>
   </form>
 </div>
@@ -114,6 +178,7 @@
   <button tabindex="-1" (click)="displayFormValidity(null, content)" tooltip="{{ lang.map.validate_fields }}"
           class="btn btn-link"><i class="mdi mdi-information-outline text-info"></i></button>
   <div class="flex-grow-1"></div>
-  <button (click)="save$.next(null)" [disabled]="isNotValidForm()" class="btn btn-primary">{{ lang.map.btn_save }}</button>
+  <button (click)="save$.next(null)" [disabled]="isNotValidForm()"
+          class="btn btn-primary">{{ lang.map.btn_save }}</button>
   <button [dialogClose]="model" class="btn btn-secondary">{{ lang.map.btn_close }}</button>
 </div>
