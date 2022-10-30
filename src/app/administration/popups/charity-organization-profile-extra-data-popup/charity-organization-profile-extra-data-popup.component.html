@@ -1,5 +1,5 @@
 <div class="dialog-toolbar bg-primary d-flex justify-content-between">
-  <h1 class="h6 text-white">{{ lang.map.menu_profile }}</h1>
+  <h1 class="h6 text-white">{{ lang.map.profile_extra_data }}</h1>
   <div>
     <button type="button" class="btn btn-fullscreen btn-close-white icon-btn"
             tabindex="-1" aria-label="Fullscreen" fullscreenBtn></button>
@@ -15,17 +15,105 @@
          name="administrativeBoardMembers">
     </tab>
   </tabs-list>
-  <ng-template #basic_info [formGroup]="form">
-    first tab
-  </ng-template>
-  <ng-template #another_tab>
-    another tab
-  </ng-template>
+  <form [formGroup]="form" novalidate>
+    <ng-template #basic_info>
+      <ng-container formGroupName="basicInfo">
+        <div class="row">
+          <div class="col-md-6 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="arName" for="arName">{{lang.map.arabic_name}}</label>
+            <input validationClasses="arName" formControlName="arName" type="text" id="arName" class="form-control">
+            <app-field-error-message controlName="arName"></app-field-error-message>
+          </div>
+          <div class="col-md-6 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="enName" for="enName">{{lang.map.english_name}}</label>
+            <input validationClasses="enName" formControlName="enName" type="text" id="enName" class="form-control">
+            <app-field-error-message controlName="enName"></app-field-error-message>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="activityType"
+                   for="activityType">{{lang.map.activity_type}}</label>
+            <ng-select [selectOnTab]="true" labelForId="activityType" [clearable]="false"
+                       placeholder="{{lang.map.select}}" id="activityType"
+                       [notFoundText]="lang.map.msg_not_found"
+                       formControlName="activityType" validationClasses="activityType">
+              <ng-option value="">{{lang.map.lbl_none}}</ng-option>
+              <ng-option *ngFor="let option of activityTypes" [value]="option.id"
+                         [disabled]="option.isRetired()">
+                {{option.getName()}}
+              </ng-option>
+            </ng-select>
+            <app-field-error-message controlName="activityType"></app-field-error-message>
+          </div>
+          <div class="col-md-6 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="shortName" for="shortName">{{lang.map.short_name}}</label>
+            <input validationClasses="shortName" formControlName="shortName" type="text" id="shortName"
+                   class="form-control">
+            <app-field-error-message controlName="shortName"></app-field-error-message>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="establishmentDate"
+                   for="establishmentDate">{{lang.map.establishment_date}}</label>
+            <input validationClasses="establishmentDate" formControlName="establishmentDate" type="text"
+                   id="establishmentDate" class="form-control">
+            <app-field-error-message controlName="establishmentDate"></app-field-error-message>
+          </div>
+          <div class="col-md-6 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="publishDate"
+                   for="publishDate">{{lang.map.publish_date}}</label>
+            <input validationClasses="publishDate" formControlName="publishDate" type="text" id="publishDate"
+                   class="form-control">
+            <app-field-error-message controlName="publishDate"></app-field-error-message>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="registrationDate"
+                   for="registrationDate">{{lang.map.registration_date}}</label>
+            <input validationClasses="registrationDate" formControlName="registrationDate" type="text"
+                   id="registrationDate"
+                   class="form-control" trimInput>
+            <app-field-error-message controlName="registrationDate"></app-field-error-message>
+          </div>
+          <div class="col-md-6 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="regulatingLaw"
+                   for="regulatingLaw">{{lang.map.regulating_law}}</label>
+            <input validationClasses="regulatingLaw" formControlName="regulatingLaw" type="text" id="regulatingLaw"
+                   class="form-control" trimInput>
+            <app-field-error-message controlName="regulatingLaw"></app-field-error-message>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="unifiedEconomicRecord"
+                   for="unifiedEconomicRecord">{{lang.map.unified_economic_record}}</label>
+            <input validationClasses="unifiedEconomicRecord" formControlName="unifiedEconomicRecord" type="text"
+                   id="unifiedEconomicRecord"
+                   class="form-control" trimInput>
+            <app-field-error-message controlName="unifiedEconomicRecord"></app-field-error-message>
+          </div>
+          <div class="col-md-6 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="taxCardNo"
+                   for="taxCardNo">{{lang.map.tax_card_number}}</label>
+            <input validationClasses="taxCardNo" formControlName="taxCardNo" type="text" id="taxCardNo"
+                   class="form-control" trimInput>
+            <app-field-error-message controlName="taxCardNo"></app-field-error-message>
+          </div>
+        </div>
+      </ng-container>
+    </ng-template>
+    <ng-template #another_tab>
+      another tab
+    </ng-template>
+  </form>
 </div>
 <div class="dialog-actions">
   <button tabindex="-1" (click)="displayFormValidity(null, content)" tooltip="{{ lang.map.validate_fields }}"
           class="btn btn-link"><i class="mdi mdi-information-outline text-info"></i></button>
   <div class="flex-grow-1"></div>
-  <button (click)="save$.next(null)" class="btn btn-primary">{{ lang.map.btn_save }}</button>
+  <button (click)="save$.next(null)" [disabled]="isNotValidForm()" class="btn btn-primary">{{ lang.map.btn_save }}</button>
   <button [dialogClose]="model" class="btn btn-secondary">{{ lang.map.btn_close }}</button>
 </div>

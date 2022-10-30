@@ -1,5 +1,7 @@
 export interface ILanguageKeys {
   final_report_has_not_yet_been_uploaded: string;
+  profile_extra_data: string;
+  charity_profile_extra_data_activity_type: string;
   edit_profile_extra_data: string;
   address_details: string;
   project_addresses: string;

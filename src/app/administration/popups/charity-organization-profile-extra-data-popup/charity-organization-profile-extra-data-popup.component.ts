@@ -2,7 +2,7 @@ import {Component, Inject} from '@angular/core';
 import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
 import {CharityOrganizationProfileExtraData} from '@app/models/charity-organization-profile-extra-data';
 import {LookupService} from '@services/lookup.service';
-import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
+import {AbstractControl, FormControl, UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {IDialogData} from '@contracts/i-dialog-data';
@@ -12,6 +12,9 @@ import {DialogService} from '@services/dialog.service';
 import {CharityOrganizationProfileExtraDataService} from '@services/charity-organization-profile-extra-data.service';
 import {Observable} from 'rxjs';
 import {OperationTypes} from '@app/enums/operation-types.enum';
+import {AdminLookup} from '@app/models/admin-lookup';
+import {AdminLookupService} from '@services/admin-lookup.service';
+import {AdminLookupTypeEnum} from '@app/enums/admin-lookup-type-enum';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -24,6 +27,7 @@ export class CharityOrganizationProfileExtraDataPopupComponent extends AdminGene
   model: CharityOrganizationProfileExtraData;
   operation: OperationTypes;
   accordionView: boolean = false;
+  activityTypes: AdminLookup[] = [];
 
   constructor(private lookupService: LookupService,
               public fb: UntypedFormBuilder,
@@ -32,10 +36,19 @@ export class CharityOrganizationProfileExtraDataPopupComponent extends AdminGene
               private toast: ToastService,
               public lang: LangService,
               private service: CharityOrganizationProfileExtraDataService,
-              private dialogService: DialogService) {
+              private dialogService: DialogService,
+              private adminLookupService: AdminLookupService) {
     super();
-    this.model = data.model;
+    this.model = (data.model as unknown as CharityOrganizationProfileExtraData[])[0];
     this.operation = data.operation;
+  }
+
+  get basicInfo(): AbstractControl | null {
+    return this.form.get('basicInfo');
+  }
+
+  get establishmentDate() {
+    return this.basicInfo?.get('establishmentDate') as FormControl;
   }
 
   afterSave(model: CharityOrganizationProfileExtraData, dialogRef: DialogRef): void {
@@ -46,6 +59,9 @@ export class CharityOrganizationProfileExtraDataPopupComponent extends AdminGene
   }
 
   buildForm(): void {
+    this.form = this.fb.group({
+      basicInfo: this.fb.group(this.model.buildBasicInfoTab(true))
+    });
   }
 
   destroyPopup(): void {
@@ -53,13 +69,34 @@ export class CharityOrganizationProfileExtraDataPopupComponent extends AdminGene
 
 
   initPopup(): void {
+    this.loadActivityTypes();
   }
 
   prepareModel(model: CharityOrganizationProfileExtraData, form: UntypedFormGroup): Observable<CharityOrganizationProfileExtraData> | CharityOrganizationProfileExtraData {
-    return (new CharityOrganizationProfileExtraData()).clone({...model, ...form.value});
+    let formObjectWithoutViewOnlyProperties = this.removeViewOnlyProperties(form.value);
+
+    return (new CharityOrganizationProfileExtraData()).clone({...model, ...formObjectWithoutViewOnlyProperties});
   }
 
   saveFail(error: Error): void {
   }
 
+  loadActivityTypes() {
+    this.adminLookupService.load(AdminLookupTypeEnum.ACTIVITY_TYPE).subscribe(list => {
+      this.activityTypes = list;
+    });
+  }
+
+  isNotValidForm() {
+    return this.form.invalid;
+  }
+
+  removeViewOnlyProperties(formObject: any): Partial<CharityOrganizationProfileExtraData> {
+    delete formObject.arName;
+    delete formObject.enName;
+    delete formObject.establishmentDate;
+    delete formObject.publishDate;
+    delete formObject.registrationDate;
+    return  formObject;
+  }
 }

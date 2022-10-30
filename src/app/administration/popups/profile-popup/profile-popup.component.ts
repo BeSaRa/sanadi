@@ -250,7 +250,7 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
     event.preventDefault();
     switch(this.model.profileType) {
       case 1: {
-        //statements;
+        this.charityOrgProfileExtraDataService.openCharityOrgExtraDataDialog(this.model.id).subscribe();
         break;
       }
       case 2: {
@@ -262,6 +262,9 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
         break;
       }
     }
-    this.charityOrgProfileExtraDataService.openCharityOrgExtraDataDialog(this.model.id).subscribe();
+  }
+
+  showEditExtraDataLink() {
+    return this.operation === this.operationTypes.UPDATE && (this.profileTypeField.value === ProfileTypes.CHARITY)
   }
 }

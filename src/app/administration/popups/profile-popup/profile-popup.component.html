@@ -16,7 +16,7 @@
     </tab>
   </tabs-list>
   <ng-template #basicInfoTab [formGroup]="form">
-    <div class="mb-3" *ngIf="operation === operationTypes.UPDATE">
+    <div class="mb-3" *ngIf="showEditExtraDataLink()">
       <a href="#" (click)="editProfileExtraData($event)" tooltip="Edit Profile Extra Data" class="edit-extra-data">
         <h1 class="h6 text-primary d-inline-block">{{lang.map.edit_profile_extra_data}}</h1>
       </a>
