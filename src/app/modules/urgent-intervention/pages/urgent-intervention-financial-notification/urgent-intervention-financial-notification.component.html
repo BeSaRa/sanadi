@@ -62,6 +62,14 @@
                    readonly id="interventionName">
           </div>
         </div>
+        <div *ngIf="selectedLicense">
+          <selected-license-table [caseType]="caseTypes.URGENT_INTERVENTION_ANNOUNCEMENT"
+                                  [caseTypeViewLicense]="caseTypes.URGENT_INTERVENTION_ANNOUNCEMENT"
+                                  [ignoreDelete]="!isEditAllowed()"
+                                  [licenseList]="[selectedLicense]"
+                                  (clearLicense)="resetLicence()"
+                                  [columns]="service.selectLicenseDisplayColumns"></selected-license-table>
+        </div>
         <div class="row mb-4">
           <div class="col-sm-12">
             <h2 class="h6 text-primary">{{lang.map.beneficiary_country_info}}</h2>

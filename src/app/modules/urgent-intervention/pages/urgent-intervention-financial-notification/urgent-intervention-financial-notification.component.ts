@@ -64,7 +64,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
   @ViewChild('interventionFieldListComponent') interventionFieldListComponentRef!: InterventionFieldListComponent;
   @ViewChild('implementingAgencyListComponent') implementingAgencyListComponentRef!: ImplementingAgencyListComponent;
   licenseSearch$: Subject<string> = new Subject<string>();
-  selectedLicense?: UrgentInterventionAnnouncementResult;
+  selectedLicense?: UrgentInterventionAnnouncement;
   loadAttachments: boolean = false;
   OperationTypes = OperationTypes;
   form!: UntypedFormGroup;
@@ -180,8 +180,28 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
 
   _afterBuildForm(): void {
     this.cd.detectChanges();
+    if (this.fromDialog) {
+      this.loadSelectedLicenseById(this.model!.oldLicenseId, () => {
+        this.urgentAnnouncementFullSerialField.updateValueAndValidity();
+      });
+    }
   }
 
+  private loadSelectedLicenseById(id: string, callback?: any): void {
+    if (!id) {
+      return;
+    }
+    this.licenseService.loadUrgentInterventionAnnouncementByLicenseId(id)
+      .pipe(
+        filter(license => !!license),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((license) => {
+        this.setSelectedLicense(license, true);
+
+        callback && callback();
+      });
+  }
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
     if (!this.selectedLicense) {
       this.dialogService.error(this.lang.map.please_select_license_to_complete_save);
@@ -303,7 +323,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
         exhaustMap((licenses) => {
           return licenses.length === 1 ? this.singleLicenseDetails(licenses[0]) : this.openSelectLicense(licenses);
         }),
-        filter((info): info is UrgentInterventionAnnouncementResult => !!info),
+        filter((info): info is UrgentInterventionAnnouncement => !!info),
       )
       .subscribe((selection) => {
         this.setSelectedLicense(selection, false);
@@ -316,7 +336,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
     });
   }
 
-  private setSelectedLicense(licenseDetails: UrgentInterventionAnnouncementResult | undefined, ignoreUpdateForm: boolean) {
+  private setSelectedLicense(licenseDetails: UrgentInterventionAnnouncement | undefined, ignoreUpdateForm: boolean) {
     this.selectedLicense = licenseDetails;
     // update form fields if i have license
     if (licenseDetails && !ignoreUpdateForm) {
@@ -337,12 +357,20 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
       value.description = licenseDetails.description;
       value.beneficiaryCountryInfo = licenseDetails.beneficiaryCountryInfo;
       value.executionCountryInfo = licenseDetails.executionCountryInfo;
-      value.licenseVSID = licenseDetails.vsId;
+      value.licenseVSID = licenseDetails.licenseVSID;
       this.handleRequestTypeChange(value.requestType, false);
       this._updateForm(value);
     }
   }
-
+  resetLicence() {
+    this.setSelectedLicense(new UrgentInterventionAnnouncement().clone({
+      description: '',
+      projectDescription: '',
+      interventionName: '',
+      beneficiaryRegion: '',
+      executionRegion: ''
+    }), false)
+  }
   private singleLicenseDetails(license: UrgentInterventionAnnouncementResult): Observable<UrgentInterventionAnnouncement> {
     return this.licenseService.loadUrgentInterventionAnnouncementByLicenseId(license.id) as Observable<UrgentInterventionAnnouncement>;
   }
@@ -409,7 +437,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
     this.urgentAnnouncementFullSerialField.updateValueAndValidity();
   }
   _handleChangeAccountType() {
-    if(this.implementingAgencyField.value)
+    if (this.implementingAgencyField.value)
       if (this.boxAccountType) {
         this.getInterventionLicense();
       } else {
@@ -444,7 +472,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
   }
 
   private _loadImplementingAgenciesAccounts() {
-    if(this.implementingAgencyField.value)
+    if (this.implementingAgencyField.value)
       if (this.implementingAgencyTypeField.value == ImplementingAgencyTypes.Partner) {
         this.licenseService.loadPartnerLicenseByLicenseId(this.implementingAgencyField.value).subscribe(data => {
           this.bankAccountList = [...data.bankAccountList];
@@ -454,6 +482,9 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
           this.bankAccountList = [...data.bankAccountList];
         });
       }
+    else {
+      this.bankAccountList = [];
+    }
   }
 
   private _getInvalidTabs(): any {
