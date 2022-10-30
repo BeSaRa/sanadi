@@ -33,7 +33,8 @@ export class ProfilesComponent extends AdminGenericComponent<Profile, ProfileSer
       type: 'action',
       label: 'edit_profile_extra_data',
       icon: ActionIconsEnum.EDIT_PROFILE_EXTRA_DATA,
-      onClick: (item: Profile) => this.editProfileExtraData(item)
+      onClick: (item: Profile) => this.editProfileExtraData(item),
+      disabled: (item: Profile) => !this.enableEditExtraData(item)
     },
     {
       type: 'action',
@@ -127,5 +128,9 @@ export class ProfilesComponent extends AdminGenericComponent<Profile, ProfileSer
         break;
       }
     }
+  }
+
+  enableEditExtraData(item: Profile) {
+    return item.profileType === ProfileTypes.CHARITY;
   }
 }
