@@ -7,32 +7,23 @@
   <form class="w800px" novalidate autocomplete="off" [formGroup]="form">
     <div class="row">
       <div class="col-sm-6 mb-4 ng-select-wrapper">
-        <label asteriskIfRequired="serviceId" for="serviceId"
-               class="form-label">{{lang.map.lbl_services}}</label>
-        <ng-select
-          labelForId="serviceId"
-          validationClasses="serviceId"
-          formControlName="serviceId"
-          placeholder="{{lang.map.select}}"
-          id="serviceId"
-          appendTo="body"
-          (change)="handleServiceChange(true)">
-          <ng-option [value]="service.id" *ngFor="let service of services"
-                     [disabled]="this.isExistingService(service.id)">{{service.getName()}}</ng-option>
+        <label asteriskIfRequired="serviceId" for="serviceId" class="form-label">{{lang.map.lbl_services}}</label>
+        <ng-select labelForId="serviceId" validationClasses="serviceId"
+                   formControlName="serviceId" placeholder="{{lang.map.select}}"
+                   id="serviceId" appendTo="body" [notFoundText]="lang.map.msg_not_found"
+                   (change)="handleServiceChange(true)">
+          <ng-option [value]="service.id" *ngFor="let service of services">{{service.getName()}}</ng-option>
         </ng-select>
         <app-field-error-message controlName="serviceId"></app-field-error-message>
       </div>
       <div class="col-sm-6 mb-4 ng-select-wrapper">
         <label for="userType" asteriskIfRequired="userType"
                class="form-label">{{lang.map.lbl_user_type}}</label>
-        <ng-select
-          [selectOnTab]="true"
-          labelForId="userType"
-          validationClasses="userType"
-          [clearable]="false"
-          placeholder="{{lang.map.select}}" id="userType"
-          formControlName="userType"
-          appendTo="body">
+        <ng-select [selectOnTab]="true" labelForId="userType"
+                   validationClasses="userType" [clearable]="false"
+                   [notFoundText]="lang.map.msg_not_found"
+                   placeholder="{{lang.map.select}}" id="userType"
+                   formControlName="userType" appendTo="body">
           <ng-option *ngFor="let option of attachmentTypeUsersList" [value]="option.lookupKey">
             {{option.getName()}}
           </ng-option>
@@ -41,6 +32,20 @@
       </div>
     </div>
     <div class="row">
+      <!--<div class="col-sm-6 mb-4 position-relative">
+        <label for="isRequired" class="form-label" asteriskIfRequired="isRequired">{{lang.map.lbl_mandatory}}</label>
+        <div class="form-check form-switch form-switch-container">
+          <input class="form-check-input" type="checkbox" id="isRequired" formControlName="isRequired">
+          <label class="form-check-label" for="isRequired">{{getTranslatedMandatory()}}</label>
+        </div>
+      </div>
+      <div *ngIf="displayMulti" class="col-sm-6 mb-4 position-relative">
+        <label for="multi" class="form-label" asteriskIfRequired="multi">{{lang.map.multi}}</label>
+        <div class="form-check form-switch form-switch-container">
+          <input class="form-check-input" type="checkbox" id="multi" formControlName="multi" (change)="onMultiChange()">
+          <label class="form-check-label" for="multi">{{getTranslatedMulti()}}</label>
+        </div>
+      </div>-->
       <div class="col-sm-6 mb-4 form-check form-switch">
         <div class="ms-3">
           <input class="form-check-input" type="checkbox" id="isRequired" formControlName="isRequired">
@@ -55,37 +60,34 @@
                  for="multi">{{lang.map.multi}}</label>
         </div>
       </div>
-    </div>
-    <div class="row mb-3">
-      <div class="col-sm-6 d-flex flex-column" formArrayName="customProperties" *ngIf="customProperties.length > 0">
-        <div *ngFor="let control of customPropertiesArrayForm.controls; index as index ">
-          <div class="mb-3 position-relative ng-select-wrapper">
-            <label asteriskIfRequired [control]="control" [for]="customProperties[index].name"
-                   class="form-label">{{getCustomPropertyName(customProperties[index].name)}}</label>
-            <ng-select
-              appendTo="body"
-              [labelForId]="customProperties[index].name"
-              validationClasses
-              [control]="control" [readonly]="readonly"
-              [formControlName]="index"
-              placeholder="{{lang.map.select}}"
-              [id]="customProperties[index].name"
-              (change)="onCustomPropertyChange(index)">
-              <ng-option [value]="option[customProperties[index].bindKey]"
-                         *ngFor="let option of customProperties[index].values">{{getOptionName(option)}}</ng-option>
-            </ng-select>
-            <app-field-error-message [control]="control"></app-field-error-message>
-          </div>
-        </div>
-      </div>
-      <div *ngIf="model.multi" class="col-sm-6 mb-4 position-relative">
+      <div *ngIf="model.multi" class="col-sm-12 mb-4 position-relative">
         <label class="form-label" asteriskIfRequired="identifier"
                for="identifier">{{lang.map.lbl_identifier}}</label>
-        <ng-select validationClasses="identifier" appendTo="body" [clearable]="true" id="identifier"
-                   formControlName="identifier">
+        <ng-select [selectOnTab]="true" labelForId="identifier"
+                   validationClasses="identifier" appendTo="body" [clearable]="true" id="identifier"
+                   formControlName="identifier" placeholder="{{lang.map.select}}"
+                   [notFoundText]="lang.map.msg_not_found">
           <ng-option [value]="option.name" *ngFor="let option of tablesIdentifiers">{{option.name}}</ng-option>
         </ng-select>
         <app-field-error-message controlName="identifier"></app-field-error-message>
+      </div>
+    </div>
+    <div class="row" formArrayName="customProperties" *ngIf="customProperties.length > 0">
+      <div class="col-sm-6 mb-4 ng-select-wrapper"
+           *ngFor="let control of customPropertiesArrayForm.controls; index as index ">
+        <label asteriskIfRequired [control]="control" [for]="customProperties[index].name"
+               class="form-label">{{getCustomPropertyName(customProperties[index].name)}}</label>
+        <ng-select appendTo="body" [labelForId]="customProperties[index].name"
+                   validationClasses [notFoundText]="lang.map.msg_not_found"
+                   [control]="control" [readonly]="readonly"
+                   [formControlName]="index" placeholder="{{lang.map.select}}"
+                   [id]="customProperties[index].name"
+                   (change)="onCustomPropertyChange(index)">
+          <ng-option [value]="option[customProperties[index].bindKey]"
+                     [disabled]="isRequestTypeUsed(customProperties[index], option[customProperties[index].bindKey])"
+                     *ngFor="let option of customProperties[index].values">{{getOptionName(option)}}</ng-option>
+        </ng-select>
+        <app-field-error-message [control]="control"></app-field-error-message>
       </div>
     </div>
   </form>

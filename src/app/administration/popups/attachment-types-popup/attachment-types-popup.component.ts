@@ -49,7 +49,7 @@ export class AttachmentTypesPopupComponent implements OnInit, OnDestroy {
 
   serviceDataList: AttachmentTypeServiceData[] = [];
 
-  serviceDataColumns: string[] = ['arName', 'enName', 'userType', 'isActive', 'actions'];
+  serviceDataColumns: string[] = ['arName', 'enName', 'userType', 'isActive', 'requestType', 'actions'];
 
   validToAddServices = false;
 
