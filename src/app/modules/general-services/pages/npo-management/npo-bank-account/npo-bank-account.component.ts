@@ -1,3 +1,4 @@
+import { AdminResult } from './../../../../../models/admin-result';
 import { CurrencyEnum } from '@app/enums/currency-enum';
 import { Bank } from './../../../../../models/bank';
 import { NpoBankAccount } from './../../../../../models/npo-bank-account';
@@ -46,7 +47,7 @@ export class NpoBankAccountComponent implements OnInit {
   caseTypes = CaseTypes;
 
   listDataSource: BehaviorSubject<NpoBankAccount[]> = new BehaviorSubject<NpoBankAccount[]>([]);
-  columns = ['accountNumber', 'iban', 'actions'];
+  columns = ['bankName', 'accountNumber', 'iban', 'actions'];
 
   editRecordIndex: number = -1;
   viewOnly: boolean = false;
@@ -170,10 +171,13 @@ export class NpoBankAccountComponent implements OnInit {
         return (this.form.get('bankAccount.0')) as UntypedFormArray;
       }),
       map((form) => {
+        const bank = this.bankList.find(b => b.id == form.value.bankId);
         return (new NpoBankAccount()).clone({
-          ...this.currentRecord, ...form.getRawValue()
+          ...this.currentRecord, ...form.getRawValue(),
+          bankInfo: bank as unknown as AdminResult
         });
       })
+
     ).subscribe((bankAccount: NpoBankAccount) => {
       if (!bankAccount) {
         return;
