@@ -23,7 +23,7 @@ export class ProfileOfficersComponent implements OnInit {
   selectedOfficer!: Officer | null;
   selectedOfficerIndex!: number | null;
 
-  officersDisplayedColumns: string[] = ['index', 'qId', 'fullName', 'email', 'phone', 'extraPhone', 'actions'];
+  officersDisplayedColumns: string[] = ['index', 'qId', 'fullName', 'email', 'phone', 'actions'];
 
   constructor(private dialog: DialogService,
               public lang: LangService,

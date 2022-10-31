@@ -94,11 +94,6 @@
             <th *cdkHeaderCellDef cdk-header-cell sortable-header> {{lang.map.lbl_phone}}</th>
             <td *cdkCellDef="let row" cdk-cell> {{row.phone}} </td>
           </ng-container>
-          <ng-container cdkColumnDef="extraPhone">
-            <th *cdkHeaderCellDef cdk-header-cell
-                sortable-header> {{lang.map.lbl_extra_phone_number}}</th>
-            <td *cdkCellDef="let row" cdk-cell> {{row.extraPhone}} </td>
-          </ng-container>
           <ng-container cdkColumnDef="actions">
             <th *cdkHeaderCellDef cdk-header-cell> {{lang.map.lbl_actions}}</th>
             <td *cdkCellDef="let row" cdk-cell class="table-actions">
