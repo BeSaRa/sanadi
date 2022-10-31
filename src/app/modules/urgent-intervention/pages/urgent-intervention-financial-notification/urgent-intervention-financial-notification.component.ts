@@ -358,7 +358,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
       value.description = licenseDetails.description;
       value.beneficiaryCountryInfo = licenseDetails.beneficiaryCountryInfo;
       value.executionCountryInfo = licenseDetails.executionCountryInfo;
-      value.vsId = licenseDetails.vsId;
+      value.licenseVSID = licenseDetails.vsId;
       this.handleRequestTypeChange(value.requestType, false);
       this._updateForm(value);
     }
