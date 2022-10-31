@@ -236,7 +236,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
       ...this.transferDataTab.getRawValue(),
       interventionFieldList: this.interventionFieldListComponentRef.list,
       interventionRegionList: this.interventionRegionListComponentRef.list,
-      implementingAgencyList: this.implementingAgencyListComponentRef.list,
+      implementingAgencyList: this.implementingAgencyListComponentRef.list
     });
   }
 
@@ -275,6 +275,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
   }
 
   _updateForm(model: UrgentInterventionFinancialNotification | undefined): void {
+    console.log(model)
     this.model = model;
     if (!model) {
       this.cd.detectChanges();
@@ -357,7 +358,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
       value.description = licenseDetails.description;
       value.beneficiaryCountryInfo = licenseDetails.beneficiaryCountryInfo;
       value.executionCountryInfo = licenseDetails.executionCountryInfo;
-      value.licenseVSID = licenseDetails.licenseVSID;
+      value.vsId = licenseDetails.vsId;
       this.handleRequestTypeChange(value.requestType, false);
       this._updateForm(value);
     }
