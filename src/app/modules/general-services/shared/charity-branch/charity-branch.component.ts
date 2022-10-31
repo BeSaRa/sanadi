@@ -61,8 +61,7 @@ export class CharityBranchComponent extends ListModelComponent<CharityBranch> {
   constructor(
     public lang: LangService,
     private lookupService: LookupService,
-    private fb: UntypedFormBuilder
-  ) {
+    private fb: UntypedFormBuilder) {
     super(CharityBranch);
   }
   _initComponent(): void {

@@ -1527,5 +1527,6 @@ export interface ILanguageKeys {
   email_address_of_the_employer: string;
   phone_of_the_employer: string;
   btn_update: string;
+  logo_is_required: string;
 }
 

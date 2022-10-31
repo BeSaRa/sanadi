@@ -13,7 +13,7 @@
           >{{ control.label }}</label
         >
         <ng-select
-          [readonly]="readonly"
+          [readonly]="readonly || hideSave"
           [selectOnTab]="true"
           [labelForId]="control.controlName"
           [clearable]="true"
@@ -48,7 +48,7 @@
       >
       <input
         type="text"
-        [readonly]="readonly"
+        [readonly]="readonly || hideSave"
         class="form-control"
         [id]="control.controlName"
         [formControlName]="control.controlName"
@@ -64,7 +64,7 @@
     <button
       (click)="save()"
       [disabled]="!form.valid"
-      *ngIf="!readonly"
+      *ngIf="!hideSave"
       class="btn btn-primary m-2"
     >
       {{ editRecordIndex > -1 ? lang.map.btn_update : lang.map.btn_add }}

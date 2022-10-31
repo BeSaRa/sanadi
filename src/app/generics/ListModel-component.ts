@@ -1,14 +1,20 @@
 import { Directive, Input, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
 import { Cloneable } from '@app/models/cloneable';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { DialogService } from '@app/services/dialog.service';
+import { FactoryService } from '@app/services/factory.service';
+import { LangService } from '@app/services/lang.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Directive({})
 export abstract class ListModelComponent<T extends Cloneable<T>>
   implements OnInit, OnDestroy {
+  public lang: LangService = FactoryService.getService('LangService');
+  public dialogService: DialogService = FactoryService.getService('DialogService');
   _list: T[] = [];
   model!: T;
   form!: UntypedFormGroup;
@@ -38,12 +44,12 @@ export abstract class ListModelComponent<T extends Cloneable<T>>
     {
 
       type: 'action',
-      show: () => this.readonly,
       icon: ActionIconsEnum.VIEW,
       label: 'view',
-      onClick: (e) => this.selectOne(e)
+      onClick: (e) => this.selectOne(e, true)
     }
   ];
+  hideSave = false;
   constructor(private TCreator: new () => T) {
     this.model = new this.TCreator();
   }
@@ -95,8 +101,10 @@ export abstract class ListModelComponent<T extends Cloneable<T>>
   cancel(model: T | null = null): void {
     this.form.reset();
     this.showForm = false;
+    this.hideSave = false;
   }
-  selectOne(row: T) {
+  selectOne(row: T, viewOnly = false) {
+    this.hideSave = viewOnly;
     const index = this._list.findIndex(e => e === row);
     this.model = this._list[index];
     this.editRecordIndex = index;
@@ -108,6 +116,13 @@ export abstract class ListModelComponent<T extends Cloneable<T>>
   }
   removeOne(row: T) {
     const index = this._list.findIndex(e => e === row);
-    this._list = this._list.filter((_, idx) => idx !== index);
+    const message = this.lang.map.msg_confirm_delete_selected;
+    this.dialogService.confirm(message)
+      .onAfterClose$.subscribe((click: UserClickOn) => {
+        if (click === UserClickOn.YES) {
+          this._list = this._list.filter((_, idx) => idx !== index);
+
+        }
+      });
   }
 }

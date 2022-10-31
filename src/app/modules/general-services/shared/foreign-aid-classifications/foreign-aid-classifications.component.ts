@@ -52,7 +52,6 @@ export class ForeignAidClassificationsComponent
   byParent: AdminLookup[] = [];
   latestWorkingSubForParent$!: Observable<never[] | AdminLookup[]>;
   handleGoveranceDomainChange = (id: number | string) => {
-    console.log(this.model);
     let fg: any = {};
     if (this.model.charityWorkArea === CharityWorkArea.BOTH) {
       fg = {
@@ -83,6 +82,9 @@ export class ForeignAidClassificationsComponent
         ],
         ...fg
       });
+      if (this.model.mainDACCategory) {
+        this.handleOCHAOrDAC(this.model.mainDACCategory);
+      }
     } else {
       this.controls = [...this.baseControls, ...this.humanitirianControls, ...controls];
       this.form = this.fb.group({
@@ -96,6 +98,10 @@ export class ForeignAidClassificationsComponent
           [CustomValidators.required],
         ], ...fg
       });
+
+      if (this.model.mainUNOCHACategory) {
+        this.handleOCHAOrDAC(this.model.mainUNOCHACategory);
+      }
     }
   };
   constructor(
@@ -176,7 +182,6 @@ export class ForeignAidClassificationsComponent
       ...this.model,
       charityWorkArea: this.charityWorkArea,
     });
-    console.log(this.model.charityWorkArea, this.charityWorkArea);
     let fg: any = {
       aidClassification: [
         this.model.aidClassification,
