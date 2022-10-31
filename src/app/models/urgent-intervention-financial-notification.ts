@@ -44,7 +44,6 @@ export class UrgentInterventionFinancialNotification extends LicenseApprovalMode
   amount!: number;
   accountType!: number;
 
-  licenseVSID!: string;
   urgentAnnouncementFullSerial!: string;
   oldLicenseId!: string;
   fullSerial!: string;

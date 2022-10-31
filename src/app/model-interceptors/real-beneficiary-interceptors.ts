@@ -4,6 +4,7 @@ import { DateUtils } from '@app/helpers/date-utils';
 
 export class RealBeneficiaryInterceptor implements IModelInterceptor<RealBeneficiary> {
   receive(model: RealBeneficiary): RealBeneficiary {
+    model.birthDateString = model.birthDate ? DateUtils.getDateStringFromDate(model.birthDate, 'DEFAULT_DATE_FORMAT') : '';
     model.birthDate = DateUtils.getDateStringFromDate(model.birthDate);
     model.startDate = DateUtils.getDateStringFromDate(model.startDate);
     model.iddate = DateUtils.getDateStringFromDate(model.iddate);
@@ -17,7 +18,8 @@ export class RealBeneficiaryInterceptor implements IModelInterceptor<RealBenefic
   }
 
   send(model: Partial<RealBeneficiary>): Partial<RealBeneficiary> {
-    delete model.searchFields
+    delete model.searchFields;
+    delete model.birthDateString;
     return model;
   }
 }

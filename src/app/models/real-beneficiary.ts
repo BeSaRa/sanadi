@@ -42,6 +42,7 @@ export class RealBeneficiary extends SearchableCloneable<RealBeneficiary> {
   iddate!: string | IMyDateModel;
   idexpiryDate!: string | IMyDateModel;
   nationalityInfo!: AdminResult;
+  birthDateString!: string;
 
   buildForm(controls = true) {
     const {
