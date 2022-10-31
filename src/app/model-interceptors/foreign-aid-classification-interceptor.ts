@@ -11,6 +11,10 @@ export class ForeignAidClassificationInterceptor implements IModelInterceptor<Fo
     model.subDACCategoryInfo = AdminResult.createInstance(model.subDACCategoryInfo);
     model.subUNOCHACategoryInfo = AdminResult.createInstance(model.subUNOCHACategoryInfo);
     model.domainInfo = AdminResult.createInstance(model.domainInfo);
+    model.mainDACInfo = AdminResult.createInstance(model.mainDACInfo);
+    model.subDACInfo = AdminResult.createInstance(model.subDACInfo);
+    model.subUNOCHAInfo = AdminResult.createInstance(model.subUNOCHAInfo);
+    model.mainUNOCHAInfo = AdminResult.createInstance(model.mainUNOCHAInfo);
     model.mainUNOCHACategoryInfo = AdminResult.createInstance(model.mainUNOCHACategoryInfo);
     return model;
   }
@@ -23,6 +27,10 @@ export class ForeignAidClassificationInterceptor implements IModelInterceptor<Fo
     delete model.subDACCategoryInfo;
     delete model.subUNOCHACategoryInfo;
     delete model.domainInfo;
+    delete model.subDACInfo;
+    delete model.subUNOCHAInfo;
+    delete model.mainDACInfo;
+    delete model.mainUNOCHAInfo;
     return model;
   }
 }
