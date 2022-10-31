@@ -69,7 +69,7 @@ export class ProfileOfficersComponent implements OnInit {
     const officer = new Officer().clone(this.officerForm.getRawValue());
     if (!this.selectedOfficer) {
       if (!this.isExistOfficerInCaseOfAdd(this.selectedOfficers, officer)) {
-        this.selectedOfficers = this.selectedOfficers.concat(officer);
+        this.selectedOfficers = (this.selectedOfficers || []).concat(officer);
         this.resetOfficerForm();
         this.addOfficerFormActive = false;
         this.officerListChanged.emit(this.selectedOfficers);
@@ -109,7 +109,7 @@ export class ProfileOfficersComponent implements OnInit {
   }
 
   isExistOfficerInCaseOfAdd(selectedOfficers: Officer[], toBeAddedOfficer: Officer): boolean {
-    return selectedOfficers.some(x => x.qid === toBeAddedOfficer.qid);
+    return selectedOfficers && selectedOfficers.some(x => x.qid === toBeAddedOfficer.qid);
   }
 
   isExistOfficerInCaseOfEdit(selectedOfficers: Officer[], toBeEditedOfficer: Officer, selectedIndex: number): boolean {
