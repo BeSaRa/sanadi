@@ -12,7 +12,7 @@ export class BlobModel implements IBlobModel {
   }
 
   toFile(): File {
-    const fileName = `logo-${new Date()}`;
+    const fileName = `file-${new Date()}`;
     return new File([this.blob], fileName, {
       lastModified: new Date().getTime(),
       type: this.blob.type
