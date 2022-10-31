@@ -4,7 +4,6 @@ import { ForeignAidClassificationInterceptor } from './foreign-aid-classificatio
 
 export class GoveranceDocumentInterceptor implements IModelInterceptor<GoveranceDocument>{
   receive(model: GoveranceDocument): GoveranceDocument {
-    console.log({ model });
     const foreignAidClassificationInterceptor = new ForeignAidClassificationInterceptor();
     model.wfClassificationList = model.wfClassificationList.map(e => foreignAidClassificationInterceptor.receive(e));
     return model;

@@ -175,4 +175,50 @@ export class RealBeneficiary extends SearchableCloneable<RealBeneficiary> {
       [CustomValidators.required],
     ]
   }
+  toCharityOrganizationRealBenficiary(): RealBeneficiary {
+    const {
+      address,
+      arName,
+      enName,
+      birthDate,
+      birthLocation,
+      buildingNumber,
+      iDDate,
+      iDExpiryDate,
+      id,
+      iddate,
+      idexpiryDate,
+      lastUpdateDate,
+      nationality,
+      passportDate,
+      passportExpiryDate,
+      passportNumber,
+      qid,
+      startDate,
+      streetNumber,
+      zoneNumber,
+    } = this;
+    return new RealBeneficiary().clone({
+      address,
+      arabicName: arName,
+      englishName: enName,
+      birthDate,
+      birthLocation,
+      buildingNumber,
+      iddate,
+      iDDate,
+      idexpiryDate,
+      iDExpiryDate,
+      objectDBId: id,
+      lastUpdateDate,
+      identificationNumber: qid,
+      nationality,
+      passportDate,
+      passportExpiryDate,
+      startDate,
+      streetNumber,
+      zoneNumber,
+      passportNumber,
+    });
+  }
 }

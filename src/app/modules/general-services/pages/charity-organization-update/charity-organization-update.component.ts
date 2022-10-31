@@ -559,80 +559,6 @@ export class CharityOrganizationUpdateComponent
   toDate(date: IMyDateModel) {
     return DateUtils.getDateStringFromDate(date);
   }
-  toCharityOrganizationOrgMember(member: OrgMember): OrgMember {
-    const {
-      id,
-      qid,
-      email,
-      extraPhone,
-      phone,
-      jobTitleId,
-      joinDate,
-      nationality,
-      fullName,
-      jobTitleInfo
-    } = member;
-    return new OrgMember().clone({
-      objectDBId: id,
-      identificationNumber: qid,
-      fullName,
-      jobTitleId,
-      email,
-      phone,
-      joinDate: DateUtils.getDateStringFromDate(joinDate),
-      nationality,
-      extraPhone,
-      jobTitleInfo: AdminResult.createInstance(jobTitleInfo)
-    });
-  }
-  toCharityOrganizationRealBenficiary(
-    realBenefeciary: RealBeneficiary
-  ): RealBeneficiary {
-    const {
-      address,
-      arName,
-      enName,
-      birthDate,
-      birthLocation,
-      buildingNumber,
-      iDDate,
-      iDExpiryDate,
-      id,
-      iddate,
-      idexpiryDate,
-      lastUpdateDate,
-      nationality,
-      passportDate,
-      passportExpiryDate,
-      passportNumber,
-      qid,
-      startDate,
-      streetNumber,
-      zoneNumber,
-    } = realBenefeciary;
-    return new RealBeneficiary().clone({
-      address,
-      arabicName: arName,
-      englishName: enName,
-      birthDate,
-      birthLocation,
-      buildingNumber,
-      iddate,
-      iDDate,
-      idexpiryDate,
-      iDExpiryDate,
-      objectDBId: id,
-      lastUpdateDate,
-      identificationNumber: qid,
-      nationality,
-      passportDate,
-      passportExpiryDate,
-      startDate,
-      streetNumber,
-      zoneNumber,
-      passportNumber,
-    });
-  }
 
   handleSelectCharityOrganization(id: number): void {
     if (!id) {
@@ -650,6 +576,7 @@ export class CharityOrganizationUpdateComponent
             return;
           }
           this.loadedLogo = logo;
+          this.logoFile = this.loadedLogo.toFile();
         });
       });
       this.externalOffices$ = this.finalOfficeApproval.licenseSearch({
@@ -663,8 +590,7 @@ export class CharityOrganizationUpdateComponent
           }
           return {
             ...prev,
-            [key]: value.map((x) =>
-              this.toCharityOrganizationOrgMember(x)
+            [key]: value.map((x) => new OrgMember().clone({ ...x }).toCharityOrganizationOrgMember()
             ),
           };
         }, {});
@@ -672,9 +598,7 @@ export class CharityOrganizationUpdateComponent
         this.realBeneficiaryService
           .getRealBenficiaryOfCharity(id)
           .subscribe((e) => {
-            this.realBenefeciaries = e.map(
-              this.toCharityOrganizationRealBenficiary
-            );
+            this.realBenefeciaries = e.map(x => x.toCharityOrganizationRealBenficiary());
             this.model = new CharityOrganizationUpdate().clone({
               ...this.model,
               boardMemberList: this.listMembers(CharityRole.BOARD_MEMBERS),
@@ -690,7 +614,10 @@ export class CharityOrganizationUpdateComponent
     } else if (updateSection === CharityUpdateSection.GOVERNANCE_DOCUMENTS) {
       this.goveranceDocumentService.getByCharityId(id).subscribe(m => {
         if (m.length > 0) {
-          this._updateForm(m[0].toCharityOrgnizationUpdate());
+          const model = m[0].toCharityOrgnizationUpdate();
+          model.arabicName = charity.arName;
+          model.englishName = charity.enName;
+          this._updateForm(model);
         }
       });
       this.organizationMeetings$ = this.meetingService.getMeetingsByCharityId(id);
@@ -782,6 +709,10 @@ export class CharityOrganizationUpdateComponent
     this.handleReadonly();
   }
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
+    if (!this.logoFile && this.model?.updateSection === CharityUpdateSection.META_DATA) {
+      this.toast.error(this.lang.map.logo_is_required);
+      return false;
+    }
     return this.form.valid;
   }
   _beforeLaunch(): boolean | Observable<boolean> {
@@ -852,7 +783,7 @@ export class CharityOrganizationUpdateComponent
       outgoingDecisionList = arr[0].list || [];
       incomingDecisionList = arr[1].list || [];
     }
-    console.log({ sd: this.model, asd: metaDataValue })
+
     return new CharityOrganizationUpdate().clone({
       ...this.model,
       ...metaDataValue,

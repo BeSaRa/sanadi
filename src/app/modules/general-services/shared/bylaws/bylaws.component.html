@@ -16,6 +16,7 @@
           [selectOnTab]="true"
           [labelForId]="control.controlName"
           [clearable]="true"
+          [readonly]="readonly || hideSave"
           placeholder="{{ lang.map.select }}"
           [id]="control.controlName"
           [notFoundText]="lang.map.msg_not_found"
@@ -51,6 +52,8 @@
         class="form-control"
         [id]="control.controlName"
         [formControlName]="control.controlName"
+        [readonly]="readonly || hideSave"
+
       />
 
       <app-field-error-message
@@ -71,10 +74,10 @@
         <div
           class="form-control"
           [formControlName]="control.controlName"
-          [ngClass]="{ 'input-disabled': readonly }"
+          [ngClass]="{ 'input-disabled': (readonly || hideSave) }"
           [id]="control.controlName"
           [options]="datepickerOptionsMap[control.controlName]"
-          (click)="!readonly && dp.toggleCalendar()"
+          (click)="(!readonly && !hideSave) && dp.toggleCalendar()"
           #dp="angular-mydatepicker"
           angular-mydatepicker
           [validationClasses]="control.controlName"

@@ -72,11 +72,11 @@
         <div
           class="form-control"
           [formControlName]="control.controlName"
-          [ngClass]="{ 'input-disabled': readonly }"
+          [ngClass]="{ 'input-disabled': (readonly || hideSave) }"
           [disabled]="readonly"
           [id]="control.controlName"
           [options]="datepickerOptionsMap[control.controlName]"
-          (click)="!readonly && dp.toggleCalendar()"
+          (click)="(!readonly && !hideSave) && dp.toggleCalendar()"
           #dp="angular-mydatepicker"
           angular-mydatepicker
           [validationClasses]="control.controlName"

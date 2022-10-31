@@ -1,4 +1,5 @@
 import { InterceptModel } from '@app/decorators/decorators/intercept-model';
+import { DateUtils } from '@app/helpers/date-utils';
 import { OrgMemberInterceptor } from '@app/model-interceptors/org-member-interceptor';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { IMyDateModel } from 'angular-mydatepicker';
@@ -89,5 +90,31 @@ export class OrgMember extends SearchableCloneable<OrgMember> {
         ]
         : phone,
     };
+  }
+  toCharityOrganizationOrgMember(): OrgMember {
+    const {
+      id,
+      qid,
+      email,
+      extraPhone,
+      phone,
+      jobTitleId,
+      joinDate,
+      nationality,
+      fullName,
+      jobTitleInfo
+    } = this;
+    return new OrgMember().clone({
+      objectDBId: id,
+      identificationNumber: qid,
+      fullName,
+      jobTitleId,
+      email,
+      phone,
+      joinDate: DateUtils.getDateStringFromDate(joinDate),
+      nationality,
+      extraPhone,
+      jobTitleInfo: AdminResult.createInstance(jobTitleInfo)
+    });
   }
 }
