@@ -19,7 +19,7 @@
           placeholder="{{ lang.map.select }}"
           [id]="control.controlName"
           [notFoundText]="lang.map.msg_not_found"
-          [readonly]="readonly"
+          [readonly]="readonly || hideSave"
           appendTo="body"
           [validationClasses]="control.controlName"
           [formControlName]="control.controlName"
@@ -47,7 +47,7 @@
       <input
         type="text"
         class="form-control"
-        [readonly]="readonly"
+        [readonly]="readonly || hideSave"
         [id]="control.controlName"
         [formControlName]="control.controlName"
       />
@@ -64,7 +64,7 @@
     </div>
     <organization-officers
       #org_officers
-      [readonly]="readonly"
+      [readonly]="readonly || hideSave"
       [list]="model.branchContactOfficer || []"
     >
     </organization-officers>
@@ -75,7 +75,7 @@
     <button
       (click)="save()"
       [disabled]="!form.valid"
-      *ngIf="!readonly"
+      *ngIf="!hideSave"
       class="btn btn-primary m-2"
     >
       {{ editRecordIndex > -1 ? lang.map.btn_update : lang.map.btn_add }}
