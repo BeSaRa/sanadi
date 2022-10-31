@@ -176,6 +176,7 @@ export class ForeignAidClassificationsComponent
       ...this.model,
       charityWorkArea: this.charityWorkArea,
     });
+    console.log(this.model.charityWorkArea, this.charityWorkArea);
     let fg: any = {
       aidClassification: [
         this.model.aidClassification,
@@ -230,6 +231,7 @@ export class ForeignAidClassificationsComponent
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.charityWorkArea?.firstChange) return;
+    this.model = new ForeignAidClassification();
     this._initComponent();
   }
   _beforeAdd(model: ForeignAidClassification): ForeignAidClassification | null {
