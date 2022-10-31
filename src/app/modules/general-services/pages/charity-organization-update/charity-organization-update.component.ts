@@ -213,10 +213,10 @@ export class CharityOrganizationUpdateComponent
   }
   private _loadCharities(): void {
     this.charityOrganizationService.loadAsLookups().pipe(
-      map((e) =>
-        e.filter((x) =>
+      map((charities) =>
+        charities.filter((charity) =>
           this.employeeService.isExternalUser()
-            ? x.id === this.employeeService.getProfile()?.profileDetails.entityId
+            ? charity.id === this.employeeService.getProfile()?.profileDetails.entityId
             : true
         )
       )
@@ -590,15 +590,15 @@ export class CharityOrganizationUpdateComponent
           }
           return {
             ...prev,
-            [key]: value.map((x) => new OrgMember().clone({ ...x }).toCharityOrganizationOrgMember()
+            [key]: value.map((member) => new OrgMember().clone({ ...member }).toCharityOrganizationOrgMember()
             ),
           };
         }, {});
         this._loadEmployees(charity.profileId);
         this.realBeneficiaryService
           .getRealBenficiaryOfCharity(id)
-          .subscribe((e) => {
-            this.realBenefeciaries = e.map(x => x.toCharityOrganizationRealBenficiary());
+          .subscribe((realBenefeciaries) => {
+            this.realBenefeciaries = realBenefeciaries.map(realBenefeciary => realBenefeciary.toCharityOrganizationRealBenficiary());
             this.model = new CharityOrganizationUpdate().clone({
               ...this.model,
               boardMemberList: this.listMembers(CharityRole.BOARD_MEMBERS),
@@ -624,8 +624,8 @@ export class CharityOrganizationUpdateComponent
     } else if (
       updateSection === CharityUpdateSection.COORDINATION_AND_CONTROL_REPORTS
     ) {
-      this.charityReportService.getByCharityId(id).subscribe((m) => {
-        this.charityReports = m.map(e => new CharityReport().clone({ ...e }).toCharityOrganizationUpdate());
+      this.charityReportService.getByCharityId(id).subscribe((charityReports) => {
+        this.charityReports = charityReports.map(charityReport => new CharityReport().clone({ ...charityReport }).toCharityOrganizationUpdate());
         this.model = new CharityOrganizationUpdate().clone({
           ...this.model,
           riskReportList: this.riskCharityReport,
@@ -636,8 +636,8 @@ export class CharityOrganizationUpdateComponent
     } else if (
       updateSection === CharityUpdateSection.APPROVE_MEASURES_AND_PENALTIES
     ) {
-      this.charityDecisionService.getByCharityId(id).subscribe((m) => {
-        this.charityDecisions = m.map(e => new CharityDecision().clone({ ...e }).toCharityOrganizationUpdate());
+      this.charityDecisionService.getByCharityId(id).subscribe((charityDecisions) => {
+        this.charityDecisions = charityDecisions.map(charityDecision => new CharityDecision().clone({ ...charityDecision }).toCharityOrganizationUpdate());
         this.model = new CharityOrganizationUpdate().clone({
           ...this.model,
           incomingDecisionList: this.incomingCharityDecisions,
@@ -709,7 +709,7 @@ export class CharityOrganizationUpdateComponent
     this.handleReadonly();
   }
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
-    if (!this.logoFile && this.model?.updateSection === CharityUpdateSection.META_DATA) {
+    if ((!this.logoFile && !this.model?.logoFnId) && this.updateSectionField.value === CharityUpdateSection.META_DATA) {
       this.toast.error(this.lang.map.logo_is_required);
       return false;
     }
@@ -719,7 +719,6 @@ export class CharityOrganizationUpdateComponent
     return true
   }
   _afterLaunch(): void {
-
     this.resetForm$.next();
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
@@ -812,12 +811,9 @@ export class CharityOrganizationUpdateComponent
   selectExternalOffice(event: any, row: FinalExternalOfficeApprovalResult) {
     this.service.openExternalOfficePopup(row);
   }
-  _afterSave(
-    model: CharityOrganizationUpdate,
+  _afterSaveMessage(model: CharityOrganizationUpdate,
     saveType: SaveTypes,
-    operation: OperationTypes
-  ): void {
-    this.model = model;
+    operation: OperationTypes) {
     if (
       (operation === OperationTypes.CREATE && saveType === SaveTypes.FINAL) ||
       (operation === OperationTypes.UPDATE && saveType === SaveTypes.COMMIT)
@@ -826,12 +822,23 @@ export class CharityOrganizationUpdateComponent
     } else {
       this.toast.success(this.lang.map.request_has_been_saved_successfully);
     }
+  }
+  _afterSave(
+    model: CharityOrganizationUpdate,
+    saveType: SaveTypes,
+    operation: OperationTypes
+  ): void {
+    this.model = model;
+
     if (this.logoFile) {
       this.service.saveLogo(this.model.id, this.logoFile!).subscribe(id => {
-        this.model!.logoFnId = id;
-        this.model?.save().subscribe();
+        this._afterSaveMessage(model, saveType, operation);
       });
     }
+    else {
+      this._afterSaveMessage(model, saveType, operation);
+    }
+
   }
   _saveFail(error: any): void { }
   _launchFail(error: any): void {
@@ -890,6 +897,7 @@ export class CharityOrganizationUpdateComponent
 
 
   _resetForm(): void {
+    this.tabs = this._tabs.filter(tab => !tab.category);
     //this.handleRequestTypeChange(undefined!);
     this.form.reset();
   }
