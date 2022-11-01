@@ -1,21 +1,20 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {LangService} from '@app/services/lang.service';
-import {CountryService} from '@app/services/country.service';
-import {ToastService} from '@app/services/toast.service';
-import {DialogService} from '@app/services/dialog.service';
-import {AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import {Country} from '@app/models/country';
-import {ReadinessStatus} from '@app/types/types';
-import {BehaviorSubject, Subject} from 'rxjs';
-import {ExecutiveManagement} from '@app/models/executive-management';
-import {filter, map, take, takeUntil, tap} from 'rxjs/operators';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
 import { CommonUtils } from '@app/helpers/common-utils';
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
 import { SortEvent } from '@app/interfaces/sort-event';
 import { AdminResult } from '@app/models/admin-result';
+import { Country } from '@app/models/country';
+import { ExecutiveManagement } from '@app/models/executive-management';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { DialogService } from '@app/services/dialog.service';
+import { LangService } from '@app/services/lang.service';
+import { ToastService } from '@app/services/toast.service';
+import { ReadinessStatus } from '@app/types/types';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { filter, map, take, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'executive-management',
@@ -25,7 +24,6 @@ import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
 export class ExecutiveManagementComponent implements OnInit {
 
   constructor(public lang: LangService,
-              private countryService: CountryService,
               private toastService: ToastService,
               private dialogService: DialogService,
               private fb: UntypedFormBuilder) {
