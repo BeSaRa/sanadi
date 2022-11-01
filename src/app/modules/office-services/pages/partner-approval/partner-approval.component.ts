@@ -87,6 +87,7 @@ export class PartnerApprovalComponent
   selectedLicense?: PartnerApproval;
   bankDetailsTabStatus: ReadinessStatus = 'READY';
   goalsTabStatus: ReadinessStatus = 'READY';
+  goalsListTabStatus: ReadinessStatus = 'READY';
   managementCouncilsTabStatus: ReadinessStatus = 'READY';
   executiveManagementsTabStatus: ReadinessStatus = 'READY';
   targetGroupsTabStatus: ReadinessStatus = 'READY';
@@ -98,6 +99,7 @@ export class PartnerApprovalComponent
 
   @ViewChild('bankAccountsTab') bankAccountComponentRef!: BankAccountComponent;
   @ViewChild('goalsListTab') goalsListComponentRef!: GoalsListComponent;
+  @ViewChild('goalsTab') goalsComponentRef!: GoalComponent;
   @ViewChild('executiveManagementsTab')
   executiveManagementComponentRef!: ExecutiveManagementComponent;
   @ViewChild('managementCouncilsTab')
@@ -157,8 +159,11 @@ export class PartnerApprovalComponent
       langKey: 'goals',
       validStatus: () => {
         return (
-          (!this.goalsListComponentRef ||
+          (!this.goalsComponentRef ||
             (this.goalsTabStatus === 'READY' &&
+              this.goalsComponentRef.list.length > 0))&&
+          (!this.goalsListComponentRef ||
+            (this.goalsListTabStatus === 'READY' &&
               this.goalsListComponentRef.list.length > 0)) &&
           (!this.targetGroupComponentRef ||
             (this.targetGroupsTabStatus === 'READY' &&
@@ -337,6 +342,7 @@ export class PartnerApprovalComponent
     value.approvalReasonList = this.approvalReasonComponentRef.list;
     value.workAreaObjectList =this.workAreasTabComponentRef?.list?? [];
     value.commercialActivitiesList =this.commercialActivityTabComponentRef?.list?? [];
+    value.displayGoals =this.goalsComponentRef?.list?? [];
 
     return value;
   }
