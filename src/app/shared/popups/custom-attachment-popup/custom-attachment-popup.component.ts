@@ -16,6 +16,7 @@ import { UserClickOn } from '@app/enums/user-click-on.enum';
 import { EmployeeService } from '@services/employee.service';
 import { OrgUser } from '@app/models/org-user';
 import { InternalUser } from '@app/models/internal-user';
+import { DialogRef } from "@app/shared/models/dialog-ref";
 
 @Component({
   selector: 'custom-attachment-popup',
@@ -42,6 +43,7 @@ export class CustomAttachmentPopupComponent implements OnInit, OnDestroy {
 
   constructor(public lang: LangService,
               private toast: ToastService,
+              private dialogRef: DialogRef,
               private dialog: DialogService,
               private employeeService: EmployeeService,
               @Inject(DIALOG_DATA_TOKEN)
@@ -218,6 +220,13 @@ export class CustomAttachmentPopupComponent implements OnInit, OnDestroy {
   }
 
   private updateAttachments(attachments: FileNetDocument[]): void {
+    const grid = this.data.component.multiAttachments.get(this.identifier)!;
+    grid.set(this.itemId , attachments)
     this.data.attachmentsUpdated$.next(attachments)
+  }
+
+  closeAttachmentsPopup(): void {
+    this.updateAttachments(this.attachments)
+    this.dialogRef.close()
   }
 }
