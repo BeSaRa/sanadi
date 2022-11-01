@@ -19,6 +19,8 @@ export class GoalListInterceptor implements IModelInterceptor<GoalList> {
     model.mainUNOCHACategoryInfo = AdminResult.createInstance(model.mainUNOCHACategoryInfo);
     model.mainDACCategoryInfo = AdminResult.createInstance(model.mainDACCategoryInfo);
     model.domainInfo = AdminResult.createInstance(model.domainInfo);
+    console.log(model.domainInfo);
+
 
     return model;
   }
