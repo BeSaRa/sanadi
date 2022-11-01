@@ -11,6 +11,8 @@ import {LangService} from '@services/lang.service';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {IMyDateModel} from 'angular-mydatepicker';
 import {Validators} from '@angular/forms';
+import {Observable} from 'rxjs';
+import {BlobModel} from '@app/models/blob-model';
 
 const {receive, send} = new CharityOrganizationProfileExtraDataInterceptor();
 
@@ -133,5 +135,13 @@ export class CharityOrganizationProfileExtraData extends BaseModel<CharityOrgani
       snapChat: controls ? [snapChat, [Validators.maxLength(350)]] : snapChat,
       youTube: controls ? [youTube, [Validators.maxLength(350)]] : youTube,
     };
+  }
+
+  saveLogo(file: File): Observable<boolean> {
+    return this.service.updateLogo(this.id, file);
+  }
+
+  getLogo(): Observable<BlobModel> {
+    return this.service.getLogo(this.id);
   }
 }

@@ -11,11 +11,14 @@
   <tabs-list [accordionView]="accordionView">
     <tab [name]="tabsData.basicInfo.name" [hasError]="basicInfo.invalid"
          [template]="basicInfoTab" [title]="lang.map.lbl_basic_info"></tab>
+    <tab [name]="tabsData.logo.name" [template]="logoTab"
+         [title]="lang.map.logo"></tab>
     <tab [name]="tabsData.contactInfo.name" [hasError]="contactInfo.invalid"
          [template]="contactInfoTab" [title]="lang.map.contact_info"></tab>
     <tab [name]="tabsData.contactOfficers.name" [hasError]="!model.contactOfficer || model.contactOfficer.length < 1"
          [template]="contactOfficersTab" [title]="lang.map.contact_officers_details"></tab>
-    <tab [name]="tabsData.complianceOfficers.name" [hasError]="!model.complianceOfficer || model.complianceOfficer.length < 1"
+    <tab [name]="tabsData.complianceOfficers.name"
+         [hasError]="!model.complianceOfficer || model.complianceOfficer.length < 1"
          [template]="complianceOfficersTab" [title]="lang.map.compliance_officers_details"></tab>
   </tabs-list>
   <form [formGroup]="form" novalidate>
@@ -117,6 +120,30 @@
           </div>
         </div>
       </ng-container>
+    </ng-template>
+    <ng-template #logoTab>
+      <div class="row">
+        <input class="input-file" type="file" #logoUploader [hidden]="true" (change)="onLogoSelected($event)"
+               [accept]="logoExtensions.join(',')">
+        <div class="col-sm-12">
+          <div class="row mb-3" *ngIf="operation !== operationTypes.VIEW">
+            <div class="col-sm-12">
+              <button class="btn btn-primary"
+                      (click)="openFileBrowser($event)">
+                {{lang.map.upload_logo}}
+              </button>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-sm-12">
+              <div class="logo-container">
+                <img *ngIf="logoPath" [src]="logoPath" alt="{{lang.map.logo}}"
+                     class="img-fit-contain"/>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </ng-template>
     <ng-template #contactInfoTab>
       <ng-container formGroupName="contactInfo">
@@ -233,10 +260,12 @@
       </ng-container>
     </ng-template>
     <ng-template #contactOfficersTab>
-      <profile-officers [addLabel]="addContactOfficersLabel" [selectedOfficers]="model.contactOfficer" (officerListChanged)="onProfileContactOfficersChanged($event)"></profile-officers>
+      <profile-officers [addLabel]="addContactOfficersLabel" [selectedOfficers]="model.contactOfficer"
+                        (officerListChanged)="onProfileContactOfficersChanged($event)"></profile-officers>
     </ng-template>
     <ng-template #complianceOfficersTab>
-      <profile-officers [addLabel]="addComplianceOfficersLabel" [selectedOfficers]="model.complianceOfficer" (officerListChanged)="onProfileComplianceOfficersChanged($event)"></profile-officers>
+      <profile-officers [addLabel]="addComplianceOfficersLabel" [selectedOfficers]="model.complianceOfficer"
+                        (officerListChanged)="onProfileComplianceOfficersChanged($event)"></profile-officers>
     </ng-template>
   </form>
 </div>

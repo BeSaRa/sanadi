@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {Component, ElementRef, Inject, ViewChild} from '@angular/core';
 import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
 import {CharityOrganizationProfileExtraData} from '@app/models/charity-organization-profile-extra-data';
 import {LookupService} from '@services/lookup.service';
@@ -10,7 +10,7 @@ import {ToastService} from '@services/toast.service';
 import {LangService} from '@services/lang.service';
 import {DialogService} from '@services/dialog.service';
 import {CharityOrganizationProfileExtraDataService} from '@services/charity-organization-profile-extra-data.service';
-import {Observable} from 'rxjs';
+import {Observable, of, Subject} from 'rxjs';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {AdminLookup} from '@app/models/admin-lookup';
 import {AdminLookupService} from '@services/admin-lookup.service';
@@ -18,6 +18,10 @@ import {AdminLookupTypeEnum} from '@app/enums/admin-lookup-type-enum';
 import {IKeyValue} from '@contracts/i-key-value';
 import {ILanguageKeys} from '@contracts/i-language-keys';
 import {Officer} from '@app/models/officer';
+import {SafeResourceUrl} from '@angular/platform-browser';
+import {FileExtensionsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
+import {catchError, switchMap, takeUntil} from 'rxjs/operators';
+import {BlobModel} from '@app/models/blob-model';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -34,6 +38,13 @@ export class CharityOrganizationProfileExtraDataPopupComponent extends AdminGene
   addContactOfficersLabel: keyof ILanguageKeys = 'add_contact_officer';
   addComplianceOfficersLabel: keyof ILanguageKeys = 'add_compliance_officer';
 
+  @ViewChild('logoUploader') logoUploader!: ElementRef;
+  logoPath!: SafeResourceUrl;
+  logoFile: any;
+  logoExtensions: string[] = [FileExtensionsEnum.PNG, FileExtensionsEnum.JPG, FileExtensionsEnum.JPEG];
+  saveLogo$: Subject<void> = new Subject<void>();
+  blob!: BlobModel;
+
   tabsData: IKeyValue = {
     basicInfo: {
       name: 'basicInfoTab',
@@ -41,22 +52,27 @@ export class CharityOrganizationProfileExtraDataPopupComponent extends AdminGene
       index: 0,
       validStatus: () => this.basicInfo && this.basicInfo.valid
     },
+    logo: {
+      name: 'logoTab',
+      langKey: 'logo' as keyof ILanguageKeys,
+      index: 1
+    },
     contactInfo: {
       name: 'contactInfoTab',
       langKey: 'contact_info' as keyof ILanguageKeys,
-      index: 1,
+      index: 2,
       validStatus: () => this.contactInfo && this.contactInfo.valid
     },
     contactOfficers: {
       name: 'contactOfficersTab',
       langKey: 'contact_officers_details' as keyof ILanguageKeys,
-      index: 2,
+      index: 3,
       validStatus: () => this.model.contactOfficer && this.model.contactOfficer.length > 0
     },
     complianceOfficers: {
       name: 'complianceOfficersTab',
       langKey: 'compliance_officers_details' as keyof ILanguageKeys,
-      index: 3,
+      index: 4,
       validStatus: () => this.model.complianceOfficer && this.model.complianceOfficer.length > 0
     }
   };
@@ -108,6 +124,8 @@ export class CharityOrganizationProfileExtraDataPopupComponent extends AdminGene
 
   initPopup(): void {
     this.loadActivityTypes();
+    this.listenToSaveLogo();
+    this.setCurrentLogo();
   }
 
   prepareModel(model: CharityOrganizationProfileExtraData, form: UntypedFormGroup): Observable<CharityOrganizationProfileExtraData> | CharityOrganizationProfileExtraData {
@@ -144,5 +162,78 @@ export class CharityOrganizationProfileExtraDataPopupComponent extends AdminGene
 
   onProfileComplianceOfficersChanged(officers: Officer[]) {
     this.model.complianceOfficer = officers;
+  }
+
+  // logo functionality
+  openFileBrowser($event: MouseEvent): void {
+    $event?.stopPropagation();
+    $event?.preventDefault();
+    this.logoUploader?.nativeElement.click();
+  }
+
+  onLogoSelected($event: Event): void {
+    this.saveLogoAfterSelect($event);
+  }
+
+  private _clearLogoUploader(): void {
+    this.logoFile = null;
+    this.logoUploader.nativeElement.value = "";
+  }
+
+  removeLogo($event: MouseEvent): void {
+    $event.preventDefault();
+    this.logoPath = '';
+    this._clearLogoUploader();
+  }
+
+  listenToSaveLogo() {
+    this.saveLogo$.pipe(
+      takeUntil(this.destroy$),
+      switchMap(() => {
+        return this.model.saveLogo(this.logoFile).pipe(
+          catchError(_ => of(null))
+        );
+      })
+    ).subscribe((success) => {
+      if (success) {
+        this.toast.success(this.lang.map.msg_save_stamp_for_x_success.change({x: this.model.getName()}));
+      }
+    })
+  }
+
+  saveLogoAfterSelect($event: Event) {
+    let files = ($event.target as HTMLInputElement).files;
+    if (files && files[0]) {
+      const extension = files[0].name.getExtension().toLowerCase();
+      if (this.logoExtensions.indexOf(extension) === -1) {
+        this.dialogService.error(this.lang.map.msg_invalid_format_allowed_formats.change({formats: this.logoExtensions.join(', ')}));
+        this.logoPath = '';
+        this._clearLogoUploader();
+        return;
+      }
+
+      let reader = new FileReader();
+      reader.readAsDataURL(files[0]);
+
+      reader.onload = (event) => {
+        // @ts-ignore
+        this.logoPath = event.target.result as string;
+        // @ts-ignore
+        this.logoFile = files[0];
+
+        // save stamp file to department
+        this.saveLogo$.next();
+      };
+    }
+  }
+
+  setCurrentLogo() {
+    this.model.getLogo().subscribe((file) => {
+      if (file.blob.type === 'error' || file.blob.size === 0) {
+        return;
+      }
+      this.blob = file;
+      this.logoPath = file.safeUrl;
+    });
   }
 }

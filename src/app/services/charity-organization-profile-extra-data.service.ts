@@ -10,7 +10,7 @@ import {
 } from '@app/administration/popups/charity-organization-profile-extra-data-popup/charity-organization-profile-extra-data-popup.component';
 import {Observable, of} from 'rxjs';
 import {DialogRef} from '@app/shared/models/dialog-ref';
-import {switchMap} from 'rxjs/operators';
+import {catchError, map, switchMap} from 'rxjs/operators';
 import {IDialogData} from '@contracts/i-dialog-data';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {FactoryService} from '@services/factory.service';
@@ -19,6 +19,8 @@ import {OfficerInterceptor} from '@app/model-interceptors/officer-interceptor';
 import {BranchInterceptor} from '@app/model-interceptors/branch-interceptor';
 import {Officer} from '@app/models/officer';
 import {Branch} from '@app/models/branch';
+import {BlobModel} from '@app/models/blob-model';
+import {DomSanitizer} from '@angular/platform-browser';
 
 @CastResponseContainer({
   $default: {
@@ -39,7 +41,7 @@ export class CharityOrganizationProfileExtraDataService extends CrudWithDialogGe
   officerInterceptor = new OfficerInterceptor();
   branchInterceptor = new BranchInterceptor();
 
-  constructor(public http: HttpClient, public dialog: DialogService, private urlService: UrlService) {
+  constructor(public http: HttpClient, public dialog: DialogService, private urlService: UrlService, private domSanitizer: DomSanitizer) {
     super();
     FactoryService.registerService('CharityOrganizationProfileExtraDataService', this);
   }
@@ -77,5 +79,22 @@ export class CharityOrganizationProfileExtraDataService extends CrudWithDialogGe
         }));
       })
     )
+  }
+
+  updateLogo(charityId: number, file: File): Observable<boolean> {
+    let form = new FormData();
+    form.append('content', file);
+    return this.http.post<boolean>(this._getServiceURL() + '/logo?charityId=' + charityId, form);
+  }
+
+  getLogo(charityId: number): Observable<BlobModel> {
+    return this.http.post(this._getServiceURL() + '/logo/content', { charityId: charityId }, {
+      responseType: 'blob',
+      observe: 'body'
+    }).pipe(
+      map(blob => new BlobModel(blob, this.domSanitizer),
+        catchError(_ => {
+          return of(new BlobModel(new Blob([], { type: 'error' }), this.domSanitizer));
+        })));
   }
 }
