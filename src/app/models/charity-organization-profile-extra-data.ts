@@ -70,7 +70,8 @@ export class CharityOrganizationProfileExtraData extends BaseModel<CharityOrgani
       registrationDate, // view only
       regulatingLaw, // mandatory
       unifiedEconomicRecord, // not mandatory
-      taxCardNo // not mandatory
+      taxCardNo, // not mandatory
+      establishmentId
     } = this;
     return {
       arName: controls ? [{value: arName, disabled: true}, [
@@ -98,7 +99,8 @@ export class CharityOrganizationProfileExtraData extends BaseModel<CharityOrgani
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)
       ]] : regulatingLaw,
       unifiedEconomicRecord: controls ? [unifiedEconomicRecord] : unifiedEconomicRecord,
-      taxCardNo: controls ? [taxCardNo] : taxCardNo
+      taxCardNo: controls ? [taxCardNo] : taxCardNo,
+      establishmentId: controls ? [establishmentId] : establishmentId,
     };
   }
 

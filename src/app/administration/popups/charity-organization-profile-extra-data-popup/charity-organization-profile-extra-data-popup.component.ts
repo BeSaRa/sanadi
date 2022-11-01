@@ -71,7 +71,7 @@ export class CharityOrganizationProfileExtraDataPopupComponent extends AdminGene
               private dialogService: DialogService,
               private adminLookupService: AdminLookupService) {
     super();
-    this.model = (data.model as unknown as CharityOrganizationProfileExtraData[])[0];
+    this.model = data.model;
     this.operation = data.operation;
   }
 
