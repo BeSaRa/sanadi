@@ -67,4 +67,10 @@ export class WorkAreasComponent extends ListModelComponent<WorkArea> {
     this.cancel();
     this.list = [];
   }
+  // view(record: WorkArea, $event?: MouseEvent) {
+  //   $event?.preventDefault();
+  //   this.editItem = record;
+  //   this.viewOnly = true;
+  //   this.recordChanged$.next(record);
+  // }
 }

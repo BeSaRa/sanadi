@@ -4,31 +4,28 @@ import {
   Input,
   OnDestroy,
   OnInit,
-  Output,
+  Output
 } from '@angular/core';
-import { LangService } from '@services/lang.service';
-import { CountryService } from '@services/country.service';
-import { ToastService } from '@services/toast.service';
-import { DialogService } from '@services/dialog.service';
 import {
-  AbstractControl,
-  UntypedFormArray,
   UntypedFormBuilder,
   UntypedFormControl,
-  UntypedFormGroup,
+  UntypedFormGroup
 } from '@angular/forms';
-import { ManagementCouncil } from '@app/models/management-council';
-import { Country } from '@app/models/country';
-import { ReadinessStatus } from '@app/types/types';
-import { BehaviorSubject, Subject } from 'rxjs';
-import { filter, map, take, takeUntil, tap } from 'rxjs/operators';
-import { UserClickOn } from '@app/enums/user-click-on.enum';
-import { AdminResult } from '@app/models/admin-result';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
 import { CommonUtils } from '@app/helpers/common-utils';
 import { SortEvent } from '@app/interfaces/sort-event';
-import { InterventionField } from '@app/models/intervention-field';
+import { AdminResult } from '@app/models/admin-result';
+import { Country } from '@app/models/country';
+import { ManagementCouncil } from '@app/models/management-council';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { ReadinessStatus } from '@app/types/types';
+import { CountryService } from '@services/country.service';
+import { DialogService } from '@services/dialog.service';
+import { LangService } from '@services/lang.service';
+import { ToastService } from '@services/toast.service';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { filter, map, take, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'management-council',
@@ -38,7 +35,6 @@ import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
 export class ManagementCouncilComponent implements OnInit, OnDestroy {
   constructor(
     public lang: LangService,
-    private countryService: CountryService,
     private toastService: ToastService,
     private dialogService: DialogService,
     private fb: UntypedFormBuilder
