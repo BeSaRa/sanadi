@@ -80,7 +80,6 @@ export class GoalComponent implements OnInit, OnDestroy {
     this.listenToAdd();
     this.listenToChange();
     this.listenToSave();
-    this.listenToGoalChange();
     this._setComponentReadiness('READY');
 
   }
@@ -161,7 +160,6 @@ export class GoalComponent implements OnInit, OnDestroy {
     } else {
       this._setComponentReadiness('READY');
     }
-    this.displayByDomain = null;
   }
 
   save() {
