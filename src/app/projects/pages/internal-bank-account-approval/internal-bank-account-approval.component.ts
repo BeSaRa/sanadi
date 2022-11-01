@@ -13,7 +13,6 @@ import {ToastService} from '@app/services/toast.service';
 import {Lookup} from '@app/models/lookup';
 import {Bank} from '@app/models/bank';
 import {BankAccount} from '@app/models/bank-account';
-import {BankCategory} from '@app/enums/bank-category.enum';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {SelectedLicenseInfo} from '@app/interfaces/selected-license-info';
@@ -27,6 +26,7 @@ import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 import {OpenFrom} from '@app/enums/open-from.enum';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {BankService} from '@services/bank.service';
+import {InternalBankCategoryEnum} from '@app/enums/internal-bank-category-enum';
 
 @Component({
   selector: 'internal-bank-account-approval',
@@ -40,9 +40,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
 
   bankOperationTypes: Lookup[] = this.lookupService.listByCategory.BankOperationType;
   banks: Bank[] = [];
-  // bankCategories: Lookup[] = this.lookupService.listByCategory.InternalBankCategory;
-  bankCategories: Lookup[] = [new Lookup().clone({arName: 'رئيسي', enName: 'Main', lookupKey: 1}),
-    new Lookup().clone({arName: 'فرعي', enName: 'Sub', lookupKey: 2})];
+  bankCategories: Lookup[] = this.lookupService.listByCategory.InternalBankCategory;
   currencies: Lookup[] = this.lookupService.listByCategory.Currency;
   currentBankAccounts: BankAccount[] = [];
   bankAccountsBasedOnCurrencyAndBank: BankAccount[] = [];
@@ -323,7 +321,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   }
 
   loadBankAccountsBasedOnCurrencyAndBank(bankCategory: number, bankId: number, currencyId: number) {
-    if (bankCategory === BankCategory.SUB && bankId && currencyId) {
+    if (bankCategory === InternalBankCategoryEnum.SUB && bankId && currencyId) {
       this.service.loadBankAccountsBasedOnCurrencyAndBank(bankId, currencyId).subscribe(list => {
         this.bankAccountsBasedOnCurrencyAndBank = list;
       });
@@ -356,7 +354,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   }
 
   toggleAccountCategoryControl(accountCategory: number) {
-    if (accountCategory === BankCategory.SUB) {
+    if (accountCategory === InternalBankCategoryEnum.SUB) {
       this.enableMainAccount();
     } else {
       this.disableMainAccount();
@@ -813,7 +811,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
 
   addToSelectedBankAccounts(bankAccount: BankAccount) {
     if (!this.selectedBankAccounts.find(x => x.id === bankAccount.id)) {
-      if (this.isNewMerge && bankAccount.bankCategoryInfo.lookupKey === BankCategory.SUB) {
+      if (this.isNewMerge && bankAccount.bankCategoryInfo.lookupKey === InternalBankCategoryEnum.SUB) {
         this.dialog.error(this.lang.map.selected_bank_account_is_sub_account);
       } else {
         if (bankAccount.subAccounts && bankAccount.subAccounts.length && bankAccount.subAccounts.length > 0) {
