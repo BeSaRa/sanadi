@@ -181,6 +181,8 @@ EmploymentService
   _prepareModel(): Employment | Observable<Employment> {
     return new Employment().clone({
       ...this.model,
+      requestType: this.form.value.requestType,
+      category: this.form.value.category
     });
   }
   private _updateModelAfterSave(model: Employment): void {
@@ -285,7 +287,6 @@ EmploymentService
     this.category.valueChanges
       .pipe(takeUntil(this.destroy$))
       .subscribe((val: EmploymentCategory) => {
-        this.model!.category = val;
         this.requestTypeField.setValue(EmploymentRequestType.NEW);
         this.handleRequestTypeChange(EmploymentRequestType.NEW, false);
         this.model!.employeeInfoDTOs = [];
@@ -304,7 +305,6 @@ EmploymentService
           this.resetForm$.next();
           this.category.setValue(cat);
           this.requestTypeField.setValue(requestTypeValue);
-          this.model!.requestType = requestTypeValue;
           this.model!.employeeInfoDTOs = [];
           this.employees = [];
         }
