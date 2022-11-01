@@ -6,7 +6,6 @@ import { FactoryService } from '@app/services/factory.service';
 
 export class SubventionRequestAidInterceptor {
   receive(model: SubventionRequestAid): SubventionRequestAid {
-    model.orgBranchInfo = AdminResult.createInstance(model.orgBranchInfo);
     model.orgUserInfo = AdminResult.createInstance(model.orgUserInfo);
     model.orgInfo = AdminResult.createInstance(model.orgInfo);
     model.statusInfo = AdminResult.createInstance(model.statusInfo);

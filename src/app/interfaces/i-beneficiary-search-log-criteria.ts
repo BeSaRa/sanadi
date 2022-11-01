@@ -6,7 +6,6 @@ export interface IBeneficiarySearchLogCriteria {
   benIdNumber: string;
   fromActionTime: string;
   toActionTime: string;
-  orgBranchId: number;
   orgId: number;
   orgUserId: number;
 }

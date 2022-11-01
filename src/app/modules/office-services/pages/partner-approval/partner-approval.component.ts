@@ -1,65 +1,45 @@
-import { WorkAreasComponent } from './../../../general-services/shared/work-areas/work-areas.component';
-import { NgSelectComponent } from '@ng-select/ng-select';
-import { CommercialActivityComponent } from './../../shared/commercial-activity/commercial-activity.component';
-import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  ViewChild,
-} from '@angular/core';
-import { LangService } from '@app/services/lang.service';
-import { Observable, of, Subject } from 'rxjs';
-import {
-  AbstractControl,
-  UntypedFormBuilder,
-  UntypedFormControl,
-  UntypedFormGroup,
-} from '@angular/forms';
-import { PartnerApproval } from '@app/models/partner-approval';
-import { PartnerApprovalService } from '@app/services/partner-approval.service';
-import { IKeyValue } from '@app/interfaces/i-key-value';
-import { Lookup } from '@app/models/lookup';
-import { LookupService } from '@app/services/lookup.service';
-import {
-  catchError,
-  exhaustMap,
-  filter,
-  map,
-  switchMap,
-  takeUntil,
-  tap,
-} from 'rxjs/operators';
-import { CountryService } from '@app/services/country.service';
-import { Country } from '@app/models/country';
-import { DateUtils } from '@app/helpers/date-utils';
-import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
-import { ToastService } from '@app/services/toast.service';
-import { DialogService } from '@app/services/dialog.service';
-import { DatepickerOptionsMap, ReadinessStatus } from '@app/types/types';
-import { SaveTypes } from '@app/enums/save-types';
-import { OperationTypes } from '@app/enums/operation-types.enum';
-import { GoalComponent } from '@app/modules/office-services/shared/goal/goal.component';
-import { ManagementCouncilComponent } from '@app/modules/office-services/shared/management-council/management-council.component';
-import { TargetGroupComponent } from '@app/modules/office-services/shared/target-group/target-group.component';
-import { ContactOfficerComponent } from '@app/modules/office-services/shared/contact-officer/contact-officer.component';
-import { ApprovalReasonComponent } from '@app/modules/office-services/shared/approval-reason/approval-reason.component';
-import { ServiceRequestTypes } from '@app/enums/service-request-types';
-import { CustomValidators } from '@app/validators/custom-validators';
-import { LicenseService } from '@app/services/license.service';
-import { EmployeeService } from '@app/services/employee.service';
-import { OrganizationUnitService } from '@app/services/organization-unit.service';
-import { OrgUnit } from '@app/models/org-unit';
-import { CommonUtils } from '@app/helpers/common-utils';
-import { OpenFrom } from '@app/enums/open-from.enum';
-import { FileIconsEnum } from '@app/enums/file-extension-mime-types-icons.enum';
-import { PartnerApprovalSearchCriteria } from '@app/models/PartnerApprovalSearchCriteria';
-import { DialogRef } from '@app/shared/models/dialog-ref';
-import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
-import { ExecutiveManagementComponent } from '@app/modules/e-services-main/shared/executive-management/executive-management.component';
-import { BankAccountComponent } from '@app/modules/e-services-main/shared/bank-account/bank-account.component';
-import { UserClickOn } from '@app/enums/user-click-on.enum';
-import { ICoordinates } from '@app/interfaces/ICoordinates';
-import { GoalsListComponent } from '../../shared/goals-list/goals-list.component';
+import {WorkAreasComponent} from './../../../general-services/shared/work-areas/work-areas.component';
+import {NgSelectComponent} from '@ng-select/ng-select';
+import {CommercialActivityComponent} from './../../shared/commercial-activity/commercial-activity.component';
+import {AfterViewInit, ChangeDetectorRef, Component, ViewChild} from '@angular/core';
+import {LangService} from '@app/services/lang.service';
+import {Observable, of, Subject} from 'rxjs';
+import {AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+import {PartnerApproval} from '@app/models/partner-approval';
+import {PartnerApprovalService} from '@app/services/partner-approval.service';
+import {IKeyValue} from '@app/interfaces/i-key-value';
+import {Lookup} from '@app/models/lookup';
+import {LookupService} from '@app/services/lookup.service';
+import {catchError, exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
+import {CountryService} from '@app/services/country.service';
+import {Country} from '@app/models/country';
+import {DateUtils} from '@app/helpers/date-utils';
+import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
+import {ToastService} from '@app/services/toast.service';
+import {DialogService} from '@app/services/dialog.service';
+import {DatepickerOptionsMap, ReadinessStatus} from '@app/types/types';
+import {SaveTypes} from '@app/enums/save-types';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {GoalComponent} from '@app/modules/office-services/shared/goal/goal.component';
+import {ManagementCouncilComponent} from '@app/modules/office-services/shared/management-council/management-council.component';
+import {TargetGroupComponent} from '@app/modules/office-services/shared/target-group/target-group.component';
+import {ContactOfficerComponent} from '@app/modules/office-services/shared/contact-officer/contact-officer.component';
+import {ApprovalReasonComponent} from '@app/modules/office-services/shared/approval-reason/approval-reason.component';
+import {ServiceRequestTypes} from '@app/enums/service-request-types';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {LicenseService} from '@app/services/license.service';
+import {EmployeeService} from '@app/services/employee.service';
+import {CommonUtils} from '@app/helpers/common-utils';
+import {OpenFrom} from '@app/enums/open-from.enum';
+import {PartnerApprovalSearchCriteria} from '@app/models/PartnerApprovalSearchCriteria';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import {ExecutiveManagementComponent} from '@app/modules/e-services-main/shared/executive-management/executive-management.component';
+import {BankAccountComponent} from '@app/modules/e-services-main/shared/bank-account/bank-account.component';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {ICoordinates} from '@app/interfaces/ICoordinates';
+import {GoalsListComponent} from '../../shared/goals-list/goals-list.component';
+import {Profile} from '@app/models/profile';
 
 @Component({
   selector: 'partner-approval',
@@ -68,8 +48,7 @@ import { GoalsListComponent } from '../../shared/goals-list/goals-list.component
 })
 export class PartnerApprovalComponent
   extends EServicesGenericComponent<PartnerApproval, PartnerApprovalService>
-  implements AfterViewInit
-{
+  implements AfterViewInit {
   form!: UntypedFormGroup;
   serviceRequestTypes = ServiceRequestTypes;
   countries: Country[] = [];
@@ -81,7 +60,7 @@ export class PartnerApprovalComponent
     this.lookupService.listByCategory.HeadQuarterType;
   requestClassifications: Lookup[] =
     this.lookupService.listByCategory.RequestClassification;
-  organizations: OrgUnit[] = [];
+  organizations: Profile[] = [];
   readonly: boolean = false;
   licenseSearch$: Subject<string> = new Subject<string>();
   selectedLicense?: PartnerApproval;
@@ -124,6 +103,7 @@ export class PartnerApprovalComponent
   get latitude(): AbstractControl {
     return this.form.get('basic.latitude')!;
   }
+
   tabsData: IKeyValue = {
     basic: {
       name: 'basic',
@@ -161,7 +141,7 @@ export class PartnerApprovalComponent
         return (
           (!this.goalsComponentRef ||
             (this.goalsTabStatus === 'READY' &&
-              this.goalsComponentRef.list.length > 0))&&
+              this.goalsComponentRef.list.length > 0)) &&
           (!this.goalsListComponentRef ||
             (this.goalsListTabStatus === 'READY' &&
               this.goalsListComponentRef.list.length > 0)) &&
@@ -244,18 +224,16 @@ export class PartnerApprovalComponent
     }),
   };
 
-  constructor(
-    public lang: LangService,
-    public service: PartnerApprovalService,
-    public fb: UntypedFormBuilder,
-    public lookupService: LookupService,
-    private countryService: CountryService,
-    private dialog: DialogService,
-    private toast: ToastService,
-    private licenseService: LicenseService,
-    private cd: ChangeDetectorRef,
-    public employeeService: EmployeeService
-  ) {
+  constructor(public lang: LangService,
+              public service: PartnerApprovalService,
+              public fb: UntypedFormBuilder,
+              public lookupService: LookupService,
+              private countryService: CountryService,
+              private dialog: DialogService,
+              private toast: ToastService,
+              private licenseService: LicenseService,
+              private cd: ChangeDetectorRef,
+              public employeeService: EmployeeService) {
     super();
   }
 
@@ -290,6 +268,7 @@ export class PartnerApprovalComponent
 
     // this.listenToRequestTypeChange();
   }
+
   private _updateModelAfterSave(model: PartnerApproval): void {
     if (
       (this.openFrom === OpenFrom.USER_INBOX ||
@@ -330,19 +309,19 @@ export class PartnerApprovalComponent
     let value = new PartnerApproval().clone({
       ...this.model,
       ...this.form.value.basic,
-      ... this.form.value.trade
+      ...this.form.value.trade
     });
 
     value.bankAccountList = this.bankAccountComponentRef.list;
-    value.goalsList = this.goalsListComponentRef?.list?? [] ;
+    value.goalsList = this.goalsListComponentRef?.list ?? [];
     value.managementCouncilList = this.managementCouncilComponentRef.list;
     value.executiveManagementList = this.executiveManagementComponentRef.list;
-    value.targetGroupList = this.targetGroupComponentRef?.list?? [];
+    value.targetGroupList = this.targetGroupComponentRef?.list ?? [];
     value.contactOfficerList = this.contactOfficerComponentRef.list;
     value.approvalReasonList = this.approvalReasonComponentRef.list;
-    value.workAreaObjectList =this.workAreasTabComponentRef?.list?? [];
-    value.commercialActivitiesList =this.commercialActivityTabComponentRef?.list?? [];
-    value.displayGoals =this.goalsComponentRef?.list?? [];
+    value.workAreaObjectList = this.workAreasTabComponentRef?.list ?? [];
+    value.commercialActivitiesList = this.commercialActivityTabComponentRef?.list ?? [];
+    value.displayGoals = this.goalsComponentRef?.list ?? [];
 
     return value;
   }
@@ -376,14 +355,15 @@ export class PartnerApprovalComponent
     console.log('problem on save');
   }
 
-  _destroyComponent(): void {}
+  _destroyComponent(): void {
+  }
 
   _updateForm(model: PartnerApproval): void {
     this.model = model;
     this.basicTab.patchValue(model.getBasicFields());
     this.handleRequestTypeChange(model.requestType, false);
-    this.handleRequestClassificationChange(this.model!.requestClassification)
-    if(this.trade){
+    this.handleRequestClassificationChange(this.model!.requestClassification);
+    if (this.trade) {
 
       this.trade.patchValue(model.buildCommercialLicenseData());
     }
@@ -441,9 +421,10 @@ export class PartnerApprovalComponent
     }
     return failedList;
   }
+
   openMapMarker() {
     this.model!.openMap(this.readonly).onAfterClose$.subscribe(
-      ({ click, value }: { click: UserClickOn; value: ICoordinates }) => {
+      ({click, value}: { click: UserClickOn; value: ICoordinates }) => {
         if (click === UserClickOn.YES) {
           this.model!.latitude = value.latitude;
           this.model!.longitude = value.longitude;
@@ -453,22 +434,24 @@ export class PartnerApprovalComponent
       }
     );
   }
+
   getTabInvalidStatus(tabName: string): boolean {
     return !this.tabsData[tabName].validStatus();
   }
 
   showLicenseTrade?: boolean = undefined;
+
   handleRequestClassificationChange(requestClassification: number) {
     this.trade.reset();
     this.commercialLicenseNo.clearValidators();
     this.commercialLicenseNo.updateValueAndValidity();
     this.commercialLicenseEndDate.clearValidators();
-    this.commercialLicenseEndDate.updateValueAndValidity()
+    this.commercialLicenseEndDate.updateValueAndValidity();
 
-    if(this.model!.isWithCommercialTrade(requestClassification)){
+    if (this.model!.isWithCommercialTrade(requestClassification)) {
       this.commercialLicenseNo.setValidators([CustomValidators.required, CustomValidators.number,
         CustomValidators.maxLength(20)]);
-      this.commercialLicenseEndDate.setValidators([CustomValidators.required])
+      this.commercialLicenseEndDate.setValidators([CustomValidators.required]);
       this.showLicenseTrade = true;
       return;
 
@@ -476,8 +459,8 @@ export class PartnerApprovalComponent
     this.showLicenseTrade = false;
 
 
-
   }
+
   handleRequestTypeChange(
     requestTypeValue: number,
     userInteraction: boolean = false
@@ -518,9 +501,9 @@ export class PartnerApprovalComponent
               CustomValidators.required,
               (control) => {
                 return this.selectedLicense &&
-                  this.selectedLicense?.fullSerial === control.value
+                this.selectedLicense?.fullSerial === control.value
                   ? null
-                  : { select_license: true };
+                  : {select_license: true};
               },
             ]);
           }
@@ -579,45 +562,48 @@ export class PartnerApprovalComponent
   ): Observable<PartnerApproval[]> {
     return this.service.licenseSearch(criteria);
   }
+
   openDateMenu(ref: any) {
     if (!this.readonly) {
       ref.toggleCalendar();
     }
   }
+
   private validateSingleLicense(license: PartnerApproval): Observable<undefined | PartnerApproval> {
     return this.licenseService.validateLicenseByRequestType<PartnerApproval>(this.model!.caseType, this.requestType.value, license.id) as Observable<undefined | PartnerApproval>;
   }
 
   private openSelectLicense(licenses: PartnerApproval[]): Observable<undefined | PartnerApproval> {
     return this.licenseService.openSelectLicenseDialog(licenses, this.model?.clone({requestType: this.requestType.value || null}), true,
-     this.service.selectLicenseDisplayColumns)
+      this.service.selectLicenseDisplayColumns)
       .onAfterClose$
       .pipe(map((result: ({ selected: PartnerApproval, details: PartnerApproval } | undefined)) => result ? result.details : result));
   }
+
   private listenToLicenseSearch() {
     this.licenseSearch$
-    .pipe(
-      takeUntil(this.destroy$),
+      .pipe(
+        takeUntil(this.destroy$),
 
-      exhaustMap((oldLicenseFullSerial) => {
-        return this.loadLicencesByCriteria({
-          fullSerial: oldLicenseFullSerial,
-        }).pipe(catchError(() => of([])));
+        exhaustMap((oldLicenseFullSerial) => {
+          return this.loadLicencesByCriteria({
+            fullSerial: oldLicenseFullSerial,
+          }).pipe(catchError(() => of([])));
+        })
+      )
+      .pipe(
+        // display message in case there is no returned license
+        tap(list => !list.length ? this.dialog.info(this.lang.map.no_result_for_your_search_criteria) : null),
+        // allow only the result if it has value
+        filter(result => !!result.length)
+      ).pipe(
+      exhaustMap((licenses) => {
+        return licenses.length === 1 ? this.validateSingleLicense(licenses[0]) : this.openSelectLicense(licenses);
       })
-    )
-    .pipe(
-      // display message in case there is no returned license
-      tap(list => !list.length ? this.dialog.info(this.lang.map.no_result_for_your_search_criteria) : null),
-      // allow only the result if it has value
-      filter(result => !!result.length)
-    ).pipe(
-    exhaustMap((licenses) => {
-      return licenses.length === 1 ? this.validateSingleLicense(licenses[0]) : this.openSelectLicense(licenses);
-    })
-  ).pipe(filter((info): info is PartnerApproval => !!info))
-    .subscribe((selection) => {
-      this.setSelectedLicense(selection, false);
-    });
+    ).pipe(filter((info): info is PartnerApproval => !!info))
+      .subscribe((selection) => {
+        this.setSelectedLicense(selection, false);
+      });
     // this.licenseSearch$
     //   .pipe(
     //     exhaustMap((oldLicenseFullSerial) => {
@@ -738,12 +724,15 @@ export class PartnerApprovalComponent
   get region(): UntypedFormControl {
     return this.form.get('basic')?.get('region') as UntypedFormControl;
   }
+
   get trade(): UntypedFormGroup {
     return this.form.get('trade') as UntypedFormGroup;
   }
+
   get commercialLicenseNo(): UntypedFormControl {
     return this.form.get('trade')?.get('commercialLicenseNo') as UntypedFormControl;
   }
+
   get commercialLicenseEndDate(): UntypedFormControl {
     return this.form.get('trade')?.get('commercialLicenseEndDate') as UntypedFormControl;
   }

@@ -304,8 +304,8 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
     if (!this.employeeService.isExternalUser() || this.operation !== this.operationTypes.CREATE) {
       return;
     }
-    this.form.get('email')?.patchValue(this.employeeService.getUser()?.email);
-    this.form.get('phone')?.patchValue(this.employeeService.getUser()?.phoneNumber);
+    this.form.get('email')?.patchValue(this.employeeService.getExternalUser()?.email);
+    this.form.get('phone')?.patchValue(this.employeeService.getExternalUser()?.phoneNumber);
   }
 
   handleCountryChange(_$event?: MouseEvent): void {

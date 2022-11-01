@@ -20,10 +20,8 @@ export class SubventionRequestPartialLog extends SearchableCloneable<SubventionR
   requestFullSerial: string = '';
   creationDate!: string;
   orgId!: number;
-  orgBranchId!: number;
   orgUserId!: number;
   orgUserInfo!: AdminResult;
-  orgBranchInfo!: AdminResult;
   orgInfo!: AdminResult;
   actionType!: number;
   actionTypeInfo!: AdminResult;
@@ -44,17 +42,7 @@ export class SubventionRequestPartialLog extends SearchableCloneable<SubventionR
   }
 
   searchFields: ISearchFieldsMap<SubventionRequestPartialLog> = {
-    ...infoSearchFields(['aidLookupParentInfo', 'aidLookupInfo', 'actionTypeInfo', 'orgAndBranchInfo', 'orgUserInfo']), // 'benCategoryInfo', 'requestTypeInfo',
+    ...infoSearchFields(['aidLookupParentInfo', 'aidLookupInfo', 'actionTypeInfo', 'orgInfo', 'orgUserInfo']), // 'benCategoryInfo', 'requestTypeInfo',
     ...normalSearchFields(['requestFullSerial', 'creationDateString', 'requestSummary', 'actionDateString'])
-  }
-
-  get orgAndBranchInfo() {
-    if (!isValidValue(this.orgInfo.getName())) {
-      return new AdminResult();
-    }
-    return AdminResult.createInstance({
-      arName: this.orgInfo.arName + ' - ' + this.orgBranchInfo.arName,
-      enName: this.orgInfo.enName + ' - ' + this.orgBranchInfo.enName,
-    });
   }
 }

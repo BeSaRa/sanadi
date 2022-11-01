@@ -9,7 +9,6 @@ import {LookupService} from '@app/services/lookup.service';
 import {isEmptyObject, objectHasValue} from '@app/helpers/utils';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {DialogService} from '@app/services/dialog.service';
-import {OrgUnit} from '@app/models/org-unit';
 import {EmployeeService} from '@app/services/employee.service';
 import {AidLookup} from '@app/models/aid-lookup';
 import {AidTypes} from '@app/enums/aid-types.enum';
@@ -17,6 +16,7 @@ import {AidLookupStatusEnum} from '@app/enums/status.enum';
 import {catchError} from 'rxjs/operators';
 import {of} from 'rxjs';
 import {AidLookupService} from '@app/services/aid-lookup.service';
+import {Profile} from '@app/models/profile';
 
 @Component({
   selector: 'app-filter-request-popup',
@@ -29,7 +29,7 @@ export class FilterRequestPopupComponent implements OnInit, AfterViewInit {
   form: UntypedFormGroup = {} as UntypedFormGroup;
   fm: FormManager = {} as FormManager;
   years: number[] = this.configurationService.getSearchYears();
-  orgList: OrgUnit[] = [];
+  orgList: Profile[] = [];
   mainAidLookupsList: AidLookup[] = [];
   subAidLookupsList: AidLookup[] = [];
 

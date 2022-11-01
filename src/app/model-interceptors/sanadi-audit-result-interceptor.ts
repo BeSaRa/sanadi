@@ -7,7 +7,6 @@ import {DateUtils} from '@app/helpers/date-utils';
 export class SanadiAuditResultInterceptor implements IModelInterceptor<SanadiAuditResult>{
   receive(model: SanadiAuditResult): SanadiAuditResult {
     model.operationInfo = AdminResult.createInstance(isValidAdminResult(model.operationInfo) ? model.operationInfo : {});
-    model.orgBranchInfo = AdminResult.createInstance(isValidAdminResult(model.orgBranchInfo) ? model.orgBranchInfo : {});
     model.orgInfo = AdminResult.createInstance(isValidAdminResult(model.orgInfo) ? model.orgInfo : {});
     model.orgUserInfo = AdminResult.createInstance(isValidAdminResult(model.orgUserInfo) ? model.orgUserInfo : {});
     model.statusInfo = AdminResult.createInstance(isValidAdminResult(model.statusInfo) ? model.statusInfo : {});

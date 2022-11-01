@@ -17,15 +17,15 @@ import {IKeyValue} from '@app/interfaces/i-key-value';
 import {DateUtils} from '@app/helpers/date-utils';
 import {IMyDateModel, IMyInputFieldChanged} from 'angular-mydatepicker';
 import {CustomValidators} from '@app/validators/custom-validators';
-import {OrgUnit} from '@app/models/org-unit';
 import {exhaustMap, switchMap, take, takeUntil, tap} from 'rxjs/operators';
-import {OrganizationUnitService} from '@app/services/organization-unit.service';
 import {Trainer} from '@app/models/trainer';
 import {TrainerService} from '@app/services/trainer.service';
 import {TrainingStatus} from '@app/enums/training-status';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {EmployeeService} from '@app/services/employee.service';
 import {DatepickerControlsMap, DatepickerOptionsMap} from '@app/types/types';
+import {ProfileService} from '@services/profile.service';
+import {Profile} from '@app/models/profile';
 
 @Component({
   selector: 'training-program-popup',
@@ -82,15 +82,15 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   };
   hoursList = DateUtils.getHoursList();
   trainingTypes: Lookup[] = this.lookupService.listByCategory.TRAINING_TYPE;
-  organizationTypes: Lookup[] = this.lookupService.listByCategory.OrgUnitType;
+  organizationTypes: Lookup[] = this.lookupService.listByCategory.ProfileType;
   targetAudienceList: Lookup[] = this.lookupService.listByCategory.TRAINING_AUDIENCE;
   attendanceMethods: Lookup[] = this.lookupService.listByCategory.TRAINING_ATTENDENCE_METHOD;
   trainingLanguages: Lookup[] = this.lookupService.listByCategory.TRAINING_LANG;
 
   // organizations properties
   selectedOrganizationType!: number;
-  selectedOrganizations: OrgUnit[] = [];
-  organizations: OrgUnit[] = [];
+  selectedOrganizations: Profile[] = [];
+  organizations: Profile[] = [];
   selectedOrganization?: number;
   organizationColumns = ['arName', 'enName', 'actions'];
   showAddOrganizationForm = false;
@@ -118,7 +118,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
               public toast: ToastService,
               public dialogRef: DialogRef,
               public dialogService: DialogService,
-              private organizationUnitService: OrganizationUnitService,
+              private profileService: ProfileService,
               private trainerService: TrainerService,
               private employeeService: EmployeeService) {
     super();
@@ -558,7 +558,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
     if (this.selectedOrganization == -1) {
       this.organizations.forEach(org => {
         if (!this.hasDuplicatedId(org.id, this.selectedOrganizations)) {
-          let currentOrg: OrgUnit = this.organizations.find(e => e.id == org.id)!;
+          let currentOrg: Profile = this.organizations.find(e => e.id == org.id)!;
           this.selectedOrganizations = [...this.selectedOrganizations, currentOrg];
           this.model.targetOrganizationListIds = this.selectedOrganizations.map(selctedOrg => selctedOrg.id);
           this.selectedOrganization = undefined;
@@ -579,14 +579,14 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
     }
   }
 
-  removeOrganization(event: MouseEvent, org: OrgUnit) {
+  removeOrganization(event: MouseEvent, org: Profile) {
     event.preventDefault();
     this.selectedOrganizations = this.selectedOrganizations.filter(element => element.id != org.id);
     this.model.targetOrganizationListIds = this.selectedOrganizations.map(org => org.id);
   }
 
   private loadSelectedOrganizations(): void {
-    this.organizationUnitService.loadAsLookups()
+    this.profileService.loadAsLookups()
       .pipe(takeUntil(this.destroy$))
       .subscribe(organizations => {
         this.selectedOrganizations = organizations.filter(element => this.model.targetOrganizationListIds.includes(element.id));
@@ -599,7 +599,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
     if (!this.selectedOrganizationType) {
       return;
     }
-    this.organizationUnitService.getOrganizationUnitsByOrgType(this.selectedOrganizationType).subscribe(orgs => {
+    this.profileService.getProfilesByProfileType(this.selectedOrganizationType).subscribe(orgs => {
       this.organizations = orgs;
     });
   }
@@ -650,7 +650,6 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
   }
 
   saveDisabled() {
-    console.log(this.form.controls);
     return this.form.invalid || this.model.targetOrganizationListIds.length <= 0 || this.model.trainerListIds.length <= 0;
   }
 

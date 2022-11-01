@@ -12,7 +12,6 @@ export interface ISubventionRequestCriteria {
   requestSerial: string;
   requestFullSerial: string;
   status: number;
-  orgBranchId: number;
   orgUserId: number;
   orgId: number;
   aidLookupParentId: number;

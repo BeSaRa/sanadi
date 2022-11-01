@@ -106,9 +106,9 @@ export class RequestsUnderProcessComponent implements OnInit, OnDestroy {
         value2 = !CommonUtils.isValidValue(b) ? '' : b.creationDateString.toLowerCase();
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     },
-    organizationAndBranch: (a: SubventionRequest, b: SubventionRequest, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a) ? '' : a.orgAndBranchInfo?.getName().toLowerCase(),
-        value2 = !CommonUtils.isValidValue(b) ? '' : b.orgAndBranchInfo?.getName().toLowerCase();
+    organization: (a: SubventionRequest, b: SubventionRequest, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.orgInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.orgInfo?.getName().toLowerCase();
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     },
     requestStatus: (a: SubventionRequest, b: SubventionRequest, dir: SortEvent): number => {

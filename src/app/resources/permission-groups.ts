@@ -14,8 +14,6 @@ const sanadiPermissionsGroup: PermissionsEnum[] = [
 ];
 
 const adminPermissionsGroup: PermissionsEnum[] = [
-  PermissionsEnum.ADD_ORGANIZATION,
-  PermissionsEnum.EDIT_ORGANIZATION,
   PermissionsEnum.ADD_ORG_USER,
   PermissionsEnum.EDIT_ORG_USER,
   PermissionsEnum.MANAGE_CUSTOM_ROLE,
@@ -37,15 +35,11 @@ const adminPermissionsGroup: PermissionsEnum[] = [
   PermissionsEnum.MANAGE_FIELD_ASSESSMENT,
   PermissionsEnum.MANAGE_VACATIONS_DATE,
   PermissionsEnum.MANAGE_SDG,
-  PermissionsEnum.MANAGE_CUSTOM_MENU_ITEM
+  PermissionsEnum.MANAGE_CUSTOM_MENU_ITEM,
+  PermissionsEnum.MANAGE_PROFILE
 ];
 
-const organizationPermissionsGroup: PermissionsEnum[] = [
-  PermissionsEnum.ADD_ORGANIZATION,
-  PermissionsEnum.EDIT_ORGANIZATION
-];
-
-const userPermissionsGroup: PermissionsEnum[] = [
+const externalUserPermissionsGroup: PermissionsEnum[] = [
   PermissionsEnum.ADD_ORG_USER,
   PermissionsEnum.EDIT_ORG_USER
 ];
@@ -126,8 +120,7 @@ const giveUsersPermissions: PermissionsEnum[] = [
 const permissionGroups: PermissionGroupsMapType = {
   [PermissionGroupsEnum.SANADI_PERMISSIONS_GROUP]: sanadiPermissionsGroup,
   [PermissionGroupsEnum.ADMIN_PERMISSIONS_GROUP]: adminPermissionsGroup,
-  [PermissionGroupsEnum.MANAGE_ORGANIZATION_PERMISSIONS_GROUP]: organizationPermissionsGroup,
-  [PermissionGroupsEnum.MANAGE_USER_PERMISSIONS_GROUP]: userPermissionsGroup,
+  [PermissionGroupsEnum.MANAGE_EXTERNAL_USER_PERMISSIONS_GROUP]: externalUserPermissionsGroup,
   [PermissionGroupsEnum.GENERAL_SERVICES_PERMISSIONS_GROUP]: generalServicesPermissionsGroup,
   [PermissionGroupsEnum.OFFICE_SERVICES_PERMISSIONS_GROUP]: officeServicesPermissionsGroup,
   [PermissionGroupsEnum.PROJECTS_PERMISSION_GROUP]: projectServicesPermissionsGroup,

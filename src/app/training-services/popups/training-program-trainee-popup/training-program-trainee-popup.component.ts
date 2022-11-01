@@ -2,15 +2,13 @@ import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {LangService} from '@app/services/lang.service';
 import {of, Subject} from 'rxjs';
 import {InternalUser} from '@app/models/internal-user';
-import {OrgUser} from '@app/models/org-user';
+import {ExternalUser} from '@app/models/external-user';
 import {Trainer} from '@app/models/trainer';
 import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {FormManager} from '@app/models/form-manager';
 import {catchError, exhaustMap, filter, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {InternalUserService} from '@app/services/internal-user.service';
-import {OrganizationUnitService} from '@app/services/organization-unit.service';
-import {OrgUnit} from '@app/models/org-unit';
-import {OrganizationUserService} from '@app/services/organization-user.service';
+import {ExternalUserService} from '@services/external-user.service';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {Lookup} from '@app/models/lookup';
 import {LookupService} from '@app/services/lookup.service';
@@ -23,6 +21,8 @@ import {EmployeeService} from '@app/services/employee.service';
 import {ToastService} from '@app/services/toast.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {Profile} from '@app/models/profile';
+import {ProfileService} from '@services/profile.service';
 
 @Component({
   selector: 'training-program-add-candidate-popup',
@@ -42,8 +42,8 @@ export class TrainingProgramTraineePopupComponent implements OnInit, OnDestroy {
   employeeType: string = 'organization';
   authorityUsers: InternalUser[] = [];
   selectedAuthorityUserId?: number;
-  organizations: OrgUnit[] = [];
-  organizationUsers: OrgUser[] = [];
+  organizations: Profile[] = [];
+  organizationUsers: ExternalUser[] = [];
   selectedOrganizationUserId?: number;
   selectedOrganizationId?: number;
   trainer!: Trainer;
@@ -68,8 +68,8 @@ export class TrainingProgramTraineePopupComponent implements OnInit, OnDestroy {
     public dialogRef: DialogRef,
     public fb: UntypedFormBuilder,
     private internalUserService: InternalUserService,
-    private organizationUnitService: OrganizationUnitService,
-    private organizationUserService: OrganizationUserService,
+    private profileService: ProfileService,
+    private externalUserService: ExternalUserService,
     private lookupService: LookupService,
     private traineeService: TraineeService,
     public employeeService: EmployeeService) {
@@ -91,7 +91,7 @@ export class TrainingProgramTraineePopupComponent implements OnInit, OnDestroy {
     this.buildForm();
 
     if (!this.isInternalUser && this.operation == OperationTypes.CREATE) {
-      this.selectedOrganizationId = this.employeeService.getOrgUnit()?.id!;
+      this.selectedOrganizationId = this.employeeService.getProfile()?.id!;
       this.loadOrganizationUsers$.next();
     } else if (this.isInternalUser && this.operation == OperationTypes.CREATE) {
       this.loadOrganizations$.next();
@@ -168,7 +168,7 @@ export class TrainingProgramTraineePopupComponent implements OnInit, OnDestroy {
     this.loadOrganizations$
       .pipe(takeUntil(this.destroy$))
       .pipe(exhaustMap(() => {
-        return this.organizationUnitService.loadAsLookups();
+        return this.profileService.loadAsLookups();
       }))
       .subscribe((organizations) => {
         this.organizations = organizations;
@@ -189,7 +189,7 @@ export class TrainingProgramTraineePopupComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .pipe(exhaustMap(() => {
         if (this.selectedOrganizationId != null) {
-          return this.organizationUserService.getByCriteria({'org-id': this.selectedOrganizationId});
+          return this.externalUserService.getByCriteria({'profile-id': this.selectedOrganizationId});
         } else {
           return of([]);
         }
@@ -296,7 +296,7 @@ export class TrainingProgramTraineePopupComponent implements OnInit, OnDestroy {
       });
   }
 
-  mapUserToForm(user: OrgUser | InternalUser) {
+  mapUserToForm(user: ExternalUser | InternalUser) {
     this.form.patchValue({
       id: this.operation == OperationTypes.CREATE ? null : user?.id,
       generalUserId: user?.generalUserId,

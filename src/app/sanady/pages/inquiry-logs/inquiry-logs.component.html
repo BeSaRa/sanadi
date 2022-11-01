@@ -110,27 +110,11 @@
                    (change)="handleChangeOrgUnit($event,true)"
                    formControlName="orgId" appendTo="body">
           <ng-option *ngFor="let option of organizationsList"
-                     [disabled]="option.status !== orgStatusEnum.ACTIVE" [value]="option.id">
+                     [disabled]="!option.isActive()" [value]="option.id">
             {{option.getName()}}
           </ng-option>
         </ng-select>
         <app-field-error-message controlName="orgId"></app-field-error-message>
-      </div>
-      <div class="col-sm-12 col-md-4 mb-4 ng-select-wrapper">
-        <label for="orgBranchId" asteriskIfRequired="orgBranchId"
-               class="form-label">{{langService.map.lbl_branch}}</label>
-        <ng-select [selectOnTab]="true" labelForId="orgBranchId" [clearable]="true"
-                   placeholder="{{langService.map.select}}" id="orgBranchId"
-                   [notFoundText]="langService.map.msg_not_found"
-                   validationClasses="orgBranchId"
-                   (change)="handleChangeOrgBranch($event,true)"
-                   formControlName="orgBranchId" appendTo="body">
-          <ng-option *ngFor="let option of branchList"
-                     [disabled]="option.status !== orgStatusEnum.ACTIVE" [value]="option.id">
-            {{option.getName()}}
-          </ng-option>
-        </ng-select>
-        <app-field-error-message controlName="orgBranchId"></app-field-error-message>
       </div>
       <div class="col-sm-12 col-md-4 mb-4 ng-select-wrapper">
         <label for="orgUserId" asteriskIfRequired="orgUserId"
@@ -141,7 +125,7 @@
                    validationClasses="orgUserId"
                    formControlName="orgUserId" appendTo="body">
           <ng-option *ngFor="let option of userList"
-                     [disabled]="option.status !== commonStatusEnum.ACTIVATED" [value]="option.id">
+                     [disabled]="!option.isActive()" [value]="option.id">
             {{option.getName()}}
           </ng-option>
         </ng-select>
@@ -185,8 +169,8 @@
               </ng-container>
               <ng-container cdkColumnDef="organization">
                 <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
-                    [sortCallback]="sortingCallbacks.organizationAndBranch"> {{langService.map.lbl_organization}}</th>
-                <td cdk-cell *cdkCellDef="let row"><span>{{row.orgAndBranchInfo.getName()}}</span></td>
+                    [sortCallback]="sortingCallbacks.organization"> {{langService.map.lbl_organization}}</th>
+                <td cdk-cell *cdkCellDef="let row"><span>{{row.orgInfo.getName()}}</span></td>
               </ng-container>
               <ng-container cdkColumnDef="user">
                 <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"

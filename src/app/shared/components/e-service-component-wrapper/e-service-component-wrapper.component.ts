@@ -45,7 +45,7 @@ import { TabComponent } from '@app/shared/components/tab/tab.component';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { SaveTypes } from '@app/enums/save-types';
 import { IESComponent } from '@app/interfaces/iescomponent';
-import { OrgUser } from '@app/models/org-user';
+import { ExternalUser } from '@app/models/external-user';
 import { InternalUser } from '@app/models/internal-user';
 import { ChecklistItem } from '@app/models/checklist-item';
 import { StepCheckListComponent } from '@app/shared/components/step-check-list/step-check-list.component';
@@ -1063,7 +1063,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   private claimAction(item: CaseModel<any, any>) {
     item.claim().subscribe(() => {
       this.toast.success(this.lang.map.task_have_been_claimed_successfully);
-      item.addClaimAction((this.employeeService.getCurrentUser() as (OrgUser | InternalUser)).getUniqueName());
+      item.addClaimAction((this.employeeService.getCurrentUser() as (ExternalUser | InternalUser)).getUniqueName());
       this.displayRightActions(OpenFrom.USER_INBOX);
       this.actions = this.translateActions(this.actions);
       this.component.allowEditRecommendations = this.internal;

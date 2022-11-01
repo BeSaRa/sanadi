@@ -4,7 +4,6 @@ import { DateUtils } from '@helpers/date-utils';
 
 export class SubventionRequestPartialInterceptor {
   receive(model: SubventionRequestPartial): SubventionRequestPartial {
-    model.orgBranchInfo = AdminResult.createInstance(model.orgBranchInfo);
     model.orgInfo = AdminResult.createInstance(model.orgInfo);
     model.statusInfo = AdminResult.createInstance(model.statusInfo);
     model.genderInfo = AdminResult.createInstance(model.genderInfo);
@@ -15,7 +14,6 @@ export class SubventionRequestPartialInterceptor {
 
   send(model: any | SubventionRequestPartial): any {
     delete model.subventionRequestPartialService;
-    delete model.orgBranchInfo;
     delete model.orgInfo;
     delete model.statusInfo;
     delete model.genderInfo;

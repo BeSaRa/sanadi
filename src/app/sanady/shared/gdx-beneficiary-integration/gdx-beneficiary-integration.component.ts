@@ -157,9 +157,9 @@ export class GdxBeneficiaryIntegrationComponent implements OnInit, OnDestroy {
   };
   sortingCallbacksMap = {
     gdxServiceLog: {
-      organizationAndBranch: (a: GdxServiceLog, b: GdxServiceLog, dir: SortEvent): number => {
-        const value1 = !CommonUtils.isValidValue(a) ? '' : a.orgAndBranchInfo?.getName().toLowerCase(),
-          value2 = !CommonUtils.isValidValue(b) ? '' : b.orgAndBranchInfo?.getName().toLowerCase();
+      organization: (a: GdxServiceLog, b: GdxServiceLog, dir: SortEvent): number => {
+        const value1 = !CommonUtils.isValidValue(a) ? '' : a.orgInfo?.getName().toLowerCase(),
+          value2 = !CommonUtils.isValidValue(b) ? '' : b.orgInfo?.getName().toLowerCase();
         return CommonUtils.getSortValue(value1, value2, dir.direction);
       },
       user: (a: GdxServiceLog, b: GdxServiceLog, dir: SortEvent): number => {
@@ -240,7 +240,7 @@ export class GdxBeneficiaryIntegrationComponent implements OnInit, OnDestroy {
       return;
     }
     const criteria = this._getGDXCriteria(this.beneficiary, serviceId);
-    criteria.orgUserId = this.employeeService.getUser()?.id;
+    criteria.orgUserId = this.employeeService.getExternalUser()?.id;
     this.beneficiaryService.loadGDXIntegrationData(criteria)
       .pipe(
         takeUntil(this.destroy$),

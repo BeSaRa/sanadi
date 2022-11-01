@@ -1,30 +1,22 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import {
-  AbstractControl,
-  FormArray,
-  FormBuilder,
-  FormGroup,
-  UntypedFormArray,
-  UntypedFormControl,
-  UntypedFormGroup,
-} from '@angular/forms';
-import { TrainingWay } from '@app/enums/training-way.enum';
-import { UserClickOn } from '@app/enums/user-click-on.enum';
-import { DateUtils } from '@app/helpers/date-utils';
-import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { Lookup } from '@app/models/lookup';
-import { OrgUnit } from '@app/models/org-unit';
-import { DialogService } from '@app/services/dialog.service';
-import { LangService } from '@app/services/lang.service';
-import { LookupService } from '@app/services/lookup.service';
-import { ToastService } from '@app/services/toast.service';
-import { DatepickerOptionsMap } from '@app/types/types';
-import { IMyInputFieldChanged } from 'angular-mydatepicker';
-import { BehaviorSubject, Subject } from 'rxjs';
-import { filter, map, take, takeUntil } from 'rxjs/operators';
-import { RecommendedWay } from './../../../../enums/recommended-way.enum';
-import { TrainingLanguage } from './../../../../enums/training-language-enum';
-import { BuildingAbility } from './../../../../models/building-ability';
+import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
+import {AbstractControl, FormArray, FormBuilder, FormGroup, UntypedFormArray, UntypedFormControl, UntypedFormGroup,} from '@angular/forms';
+import {TrainingWay} from '@app/enums/training-way.enum';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {DateUtils} from '@app/helpers/date-utils';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {Lookup} from '@app/models/lookup';
+import {DialogService} from '@app/services/dialog.service';
+import {LangService} from '@app/services/lang.service';
+import {LookupService} from '@app/services/lookup.service';
+import {ToastService} from '@app/services/toast.service';
+import {DatepickerOptionsMap} from '@app/types/types';
+import {IMyInputFieldChanged} from 'angular-mydatepicker';
+import {BehaviorSubject, Subject} from 'rxjs';
+import {filter, map, take, takeUntil} from 'rxjs/operators';
+import {RecommendedWay} from '@app/enums/recommended-way.enum';
+import {TrainingLanguage} from '@app/enums/training-language-enum';
+import {BuildingAbility} from '@app/models/building-ability';
+import {Profile} from '@app/models/profile';
 
 @Component({
   selector: 'building-ability',
@@ -32,13 +24,13 @@ import { BuildingAbility } from './../../../../models/building-ability';
   styleUrls: ['./building-ability.component.scss'],
 })
 export class BuildingAbilityComponent implements OnInit {
-  constructor(
-    public lang: LangService,
-    private toastService: ToastService,
-    private dialogService: DialogService,
-    private fb: FormBuilder,
-    private lookup: LookupService
-  ) {}
+  constructor(public lang: LangService,
+              private toastService: ToastService,
+              private dialogService: DialogService,
+              private fb: FormBuilder,
+              private lookup: LookupService) {
+  }
+
   @Input() formArrayName: string = 'buildingAbilitiesList';
   @Input() orgId!: number | undefined;
   allowListUpdate: boolean = true;
@@ -50,16 +42,17 @@ export class BuildingAbilityComponent implements OnInit {
       this.listDataSource.next(this._list);
     }
   }
+
   model: BuildingAbility = new BuildingAbility();
+
   get list(): BuildingAbility[] {
     return this._list;
   }
+
   @Input() readonly: boolean = false;
   @Input() pageTitleKey: keyof ILanguageKeys = 'building_abilities';
 
-  listDataSource: BehaviorSubject<BuildingAbility[]> = new BehaviorSubject<
-    BuildingAbility[]
-  >([]);
+  listDataSource: BehaviorSubject<BuildingAbility[]> = new BehaviorSubject<BuildingAbility[]>([]);
   columns = this.model.DisplayedColumns;
 
   editIndex: number = -1;
@@ -74,7 +67,7 @@ export class BuildingAbilityComponent implements OnInit {
   private destroy$: Subject<any> = new Subject<any>();
   formOpend = false;
   form!: FormGroup;
-  @Input() organizationUnits: OrgUnit[] = [];
+  @Input() organizationUnits: Profile[] = [];
   @Input() trainingTypes: Lookup[] = [];
   @Input() trainingLanguages: Lookup[] = [];
   @Input() trainingWayes: Lookup[] = [];
@@ -116,6 +109,7 @@ export class BuildingAbilityComponent implements OnInit {
       [this.formArrayName]: this.fb.array([]),
     });
   }
+
   private listenToAdd() {
     this.add$.pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.viewOnly = false;
@@ -123,14 +117,18 @@ export class BuildingAbilityComponent implements OnInit {
       this.recordChanged$.next(new BuildingAbility());
     });
   }
+
   private listenToRecordChange() {
     this.recordChanged$.pipe(takeUntil(this.destroy$)).subscribe((record) => {
-      if (record && this.orgId) record.organizationId = this.orgId;
+      if (record && this.orgId) {
+        record.organizationId = this.orgId;
+      }
       this.currentRecord = record || undefined;
       this.showForm = !!this.currentRecord;
       this.updateForm(this.currentRecord);
     });
   }
+
   private updateForm(model: BuildingAbility | undefined) {
     const formArray = this.formArray;
     formArray.clear();
@@ -193,6 +191,7 @@ export class BuildingAbilityComponent implements OnInit {
         this.recordChanged$.next(null);
       });
   }
+
   private _updateLookups(model: BuildingAbility) {
     model.trainingActivityTypeInfo =
       this.lookup.listByCategory.TrainingActivityType.find(
@@ -206,6 +205,7 @@ export class BuildingAbilityComponent implements OnInit {
       (x) => x.lookupKey === model.trainingWay
     )!.convertToAdminResult();
   }
+
   private _updateList(
     record: BuildingAbility | null,
     operation: 'ADD' | 'UPDATE' | 'DELETE' | 'NONE',
@@ -224,26 +224,31 @@ export class BuildingAbilityComponent implements OnInit {
     this.list = this.list.slice();
     this.listDataSource.next(this.list);
   }
+
   addAllowed(): boolean {
     return !this.readonly && !this.formOpend;
   }
+
   onSave() {
     if (this.readonly || this.viewOnly) {
       return;
     }
     this.save$.next();
   }
+
   onCancel() {
     this.resetForm();
     this.showForm = false;
     this.editIndex = -1;
   }
+
   private resetForm() {
     this.formOpend = false;
     this.formArray.clear();
     this.formArray.markAsUntouched();
     this.formArray.markAsPristine();
   }
+
   view($event: MouseEvent, record: BuildingAbility, index: number) {
     $event.preventDefault();
     this.formOpend = true;
@@ -267,6 +272,7 @@ export class BuildingAbilityComponent implements OnInit {
         }
       });
   }
+
   edit($event: MouseEvent, record: BuildingAbility, index: number) {
     $event.preventDefault();
     this.formOpend = true;
@@ -277,13 +283,16 @@ export class BuildingAbilityComponent implements OnInit {
     this.viewOnly = false;
     this.recordChanged$.next(record);
   }
+
   @ViewChild('otherLanguage') otherLanguageRef!: ElementRef;
+
   onTranaingLangaugeChange(trainingLanguage: TrainingLanguage) {
     if (trainingLanguage !== TrainingLanguage.Other) {
       this.otherLanguageRef.nativeElement.value = '';
     }
     this.model!.trainingLanguage = trainingLanguage;
   }
+
   get isOtherLanguageAllowed() {
     return this.model.trainingLanguage === TrainingLanguage.Other
       ? false
@@ -307,15 +316,18 @@ export class BuildingAbilityComponent implements OnInit {
     }
     this.model!.trainingWay = trainingWay;
   }
+
   get isRemoteTraining() {
     return this.model.trainingWay === TrainingWay.REMOTE ? false : true;
   }
+
   get isLiveTraining() {
     return this.model.trainingWay === TrainingWay.LIVE ? false : true;
   }
 
   @ViewChild('email') emailRef!: ElementRef;
   @ViewChild('otherFiltrationMethod') otherFiltrationMethodRef!: ElementRef;
+
   onFilterationMethodChange(recommendedWay: RecommendedWay) {
     if (recommendedWay === RecommendedWay.EMAIL) {
       this.otherFiltrationMethodRef.nativeElement.value = '';
@@ -328,6 +340,7 @@ export class BuildingAbilityComponent implements OnInit {
   get isEmailFiltrationMethod() {
     return this.model.filtrationMethod === RecommendedWay.EMAIL ? false : true;
   }
+
   get isOtherFiltrationMethod() {
     return this.model.filtrationMethod === RecommendedWay.OTHER ? false : true;
   }
@@ -335,17 +348,21 @@ export class BuildingAbilityComponent implements OnInit {
   get buildingAbilityForm() {
     return this.form.controls.buildingAbilitiesList as UntypedFormArray;
   }
+
   get buildingAbilityFormArray() {
     return this.buildingAbilityForm.controls['0'] as UntypedFormGroup;
   }
+
   get suggestedActivityDateFrom() {
     return this.buildingAbilityFormArray.controls
       .suggestedActivityDateFrom as UntypedFormControl;
   }
+
   get suggestedActivityDateTo() {
     return this.buildingAbilityFormArray.controls
       .suggestedActivityDateTo as UntypedFormControl;
   }
+
   onDateChange(
     event: IMyInputFieldChanged,
     fromFieldName: string,

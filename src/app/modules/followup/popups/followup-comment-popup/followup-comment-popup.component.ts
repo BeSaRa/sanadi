@@ -1,17 +1,17 @@
-import { Component, ElementRef, Inject, ViewChild } from '@angular/core';
-import { AdminGenericDialog } from '@app/generics/admin-generic-dialog';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { DialogRef } from '@app/shared/models/dialog-ref';
-import { OperationTypes } from '@app/enums/operation-types.enum';
-import { FollowupComment } from '@app/models/followup-comment';
-import { Followup } from '@app/models/followup';
-import { LangService } from '@app/services/lang.service';
-import { FollowupCommentService } from '@app/services/followup-comment.service';
-import { EmployeeService } from '@app/services/employee.service';
-import { OrgUser } from '@app/models/org-user';
-import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
-import { InternalUser } from '@app/models/internal-user';
+import {Component, ElementRef, Inject, ViewChild} from '@angular/core';
+import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
+import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
+import {Observable} from 'rxjs';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {FollowupComment} from '@app/models/followup-comment';
+import {Followup} from '@app/models/followup';
+import {LangService} from '@app/services/lang.service';
+import {FollowupCommentService} from '@app/services/followup-comment.service';
+import {EmployeeService} from '@app/services/employee.service';
+import {ExternalUser} from '@app/models/external-user';
+import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
+import {InternalUser} from '@app/models/internal-user';
 
 @Component({
   selector: 'followup-comment-popup',
@@ -24,7 +24,7 @@ export class FollowupCommentPopupComponent extends AdminGenericDialog<any> {
   operation!: OperationTypes;
   comments: FollowupComment[] = [];
   form: UntypedFormGroup = new UntypedFormGroup({});
-  user!: OrgUser | InternalUser;
+  user!: ExternalUser | InternalUser;
   followUpId!: number;
   @ViewChild('dialogContent', { read: ElementRef })
   dialogContent!: ElementRef<HTMLDivElement>

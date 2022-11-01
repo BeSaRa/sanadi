@@ -1,30 +1,30 @@
-import { Component, OnInit } from '@angular/core';
-import { LangService } from '@app/services/lang.service';
-import { ToastService } from '@app/services/toast.service';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { LookupService } from '@app/services/lookup.service';
-import { BehaviorSubject, forkJoin, Observable, of, Subject, Subscription } from 'rxjs';
-import { catchError, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
-import { SubventionRequestPartialLog } from '@app/models/subvention-request-partial-log';
-import { SubventionRequestPartialLogService } from '@app/services/subvention-request-partial-log.service';
-import { IMyInputFieldChanged } from 'angular-mydatepicker';
-import { isEmptyObject, printBlobData } from '@app/helpers/utils';
-import { IKeyValue } from '@app/interfaces/i-key-value';
-import { DialogService } from '@app/services/dialog.service';
-import { ISubventionRequestPartialLogCriteria } from '@app/interfaces/i-subvention-request-partial-log-criteria';
+import {Component, OnInit} from '@angular/core';
+import {LangService} from '@app/services/lang.service';
+import {ToastService} from '@app/services/toast.service';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+import {LookupService} from '@app/services/lookup.service';
+import {BehaviorSubject, forkJoin, Observable, of, Subject, Subscription} from 'rxjs';
+import {catchError, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
+import {SubventionRequestPartialLog} from '@app/models/subvention-request-partial-log';
+import {SubventionRequestPartialLogService} from '@app/services/subvention-request-partial-log.service';
+import {IMyInputFieldChanged} from 'angular-mydatepicker';
+import {isEmptyObject, printBlobData} from '@app/helpers/utils';
+import {IKeyValue} from '@app/interfaces/i-key-value';
+import {DialogService} from '@app/services/dialog.service';
+import {ISubventionRequestPartialLogCriteria} from '@app/interfaces/i-subvention-request-partial-log-criteria';
 import * as dayjs from 'dayjs';
-import { ConfigurationService } from '@app/services/configuration.service';
-import { OrgUnit } from '@app/models/org-unit';
-import { OrgUser } from '@app/models/org-user';
-import { OrganizationUnitService } from '@app/services/organization-unit.service';
-import { ReadModeService } from '@app/services/read-mode.service';
-import { Router } from '@angular/router';
-import { OrganizationUserService } from '@app/services/organization-user.service';
-import { CustomValidators } from '@app/validators/custom-validators';
-import { DateUtils } from '@app/helpers/date-utils';
-import { DatepickerControlsMap, DatepickerOptionsMap } from '@app/types/types';
-import { SortEvent } from '@app/interfaces/sort-event';
-import { CommonUtils } from '@app/helpers/common-utils';
+import {ConfigurationService} from '@app/services/configuration.service';
+import {ExternalUser} from '@app/models/external-user';
+import {ReadModeService} from '@app/services/read-mode.service';
+import {Router} from '@angular/router';
+import {ExternalUserService} from '@services/external-user.service';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {DateUtils} from '@app/helpers/date-utils';
+import {DatepickerControlsMap, DatepickerOptionsMap} from '@app/types/types';
+import {SortEvent} from '@app/interfaces/sort-event';
+import {CommonUtils} from '@app/helpers/common-utils';
+import {Profile} from '@app/models/profile';
+import {ProfileService} from '@services/profile.service';
 
 @Component({
   selector: 'app-partial-request-reports',
@@ -42,8 +42,8 @@ export class PartialRequestReportsComponent implements OnInit {
               private readModeService: ReadModeService,
               private router: Router,
               private configService: ConfigurationService,
-              private organizationUnitService: OrganizationUnitService,
-              private orgUserService: OrganizationUserService,
+              private profileService: ProfileService,
+              private externalUserService: ExternalUserService,
               private subventionRequestPartialLogService: SubventionRequestPartialLogService) {
   }
 
@@ -61,8 +61,8 @@ export class PartialRequestReportsComponent implements OnInit {
     toDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'})
   };
 
-  orgUnitsList: OrgUnit[] = [];
-  orgUsersList: OrgUser[] = [];
+  profilesList: Profile[] = [];
+  orgUsersList: ExternalUser[] = [];
 
   filterControl: UntypedFormControl = new UntypedFormControl('');
   headerColumn: string[] = ['extra-header'];
@@ -95,8 +95,8 @@ export class PartialRequestReportsComponent implements OnInit {
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     },
     userOrganization: (a: SubventionRequestPartialLog, b: SubventionRequestPartialLog, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a) ? '' : a.orgAndBranchInfo?.getName().toLowerCase(),
-        value2 = !CommonUtils.isValidValue(b) ? '' : b.orgAndBranchInfo?.getName().toLowerCase();
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.orgInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.orgInfo?.getName().toLowerCase();
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     },
     orgUser: (a: SubventionRequestPartialLog, b: SubventionRequestPartialLog, dir: SortEvent): number => {
@@ -115,7 +115,7 @@ export class PartialRequestReportsComponent implements OnInit {
 
     this._loadInitData()
       .subscribe(result => {
-        this.orgUnitsList = result.orgUnits;
+        this.profilesList = result.profiles;
       });
   }
 
@@ -131,14 +131,13 @@ export class PartialRequestReportsComponent implements OnInit {
       takeUntil(this.destroy$),
       filter(val => val !== 'init')
     ).subscribe(() => {
-      debugger
       this.search$.next(false);
     });
   }
 
-  private _loadInitData(): Observable<{ orgUnits: OrgUnit[] }> {
+  private _loadInitData(): Observable<{ profiles: Profile[] }> {
     return forkJoin({
-      orgUnits: this.organizationUnitService.loadAsLookups()
+      profiles: this.profileService.loadAsLookups()
     });
   }
 
@@ -251,8 +250,8 @@ export class PartialRequestReportsComponent implements OnInit {
       this.orgUsersList = [];
       return;
     }
-    this.orgUserService.getByCriteria({'org-id': this.orgUnitField.value})
-      .subscribe((result: OrgUser[]) => {
+    this.externalUserService.getByCriteria({'profile-id': this.orgUnitField.value})
+      .subscribe((result: ExternalUser[]) => {
         return this.orgUsersList = result;
       })
   }

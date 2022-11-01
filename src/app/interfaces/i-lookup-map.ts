@@ -55,6 +55,7 @@ export interface ILookupMap {
   EvaluationResult: Lookup[];
   Experts: Lookup[];
   ExternalServiceRequestType: Lookup[];
+  ExternalUserPermissionGroup: Lookup[];
   FieldAssessment: Lookup[];
   FollowUpStatus: Lookup[];
   FollowUpType: Lookup[];
@@ -93,12 +94,10 @@ export interface ILookupMap {
   NPODecisions: Lookup[];
   NPORequestType: Lookup[];
   NPOStatus: Lookup[];
+  officeType: Lookup[];
   OrganizationWay: Lookup[];
   OrgMemberRole: Lookup[];
   OrgStatus: Lookup[];
-  OrgUnitType: Lookup[];
-  OrgUserActionType: Lookup[];
-  OrgUserPermissionGroup: Lookup[];
   PermissionCategory: Lookup[];
   ProfileType: Lookup[];
   ProjectLicenseType: Lookup[];

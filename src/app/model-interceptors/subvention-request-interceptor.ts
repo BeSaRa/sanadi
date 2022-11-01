@@ -4,7 +4,6 @@ import {DateUtils} from '@helpers/date-utils';
 
 export class SubventionRequestInterceptor {
   receive(model: SubventionRequest): SubventionRequest {
-    model.orgBranchInfo = AdminResult.createInstance(model.orgBranchInfo);
     model.orgInfo = AdminResult.createInstance(model.orgInfo);
     model.orgUserInfo = AdminResult.createInstance(model.orgUserInfo);
     model.requestChannelInfo = AdminResult.createInstance(model.requestChannelInfo);
@@ -34,7 +33,6 @@ export class SubventionRequestInterceptor {
   private static _deleteBeforeSend(model: Partial<SubventionRequest> | any): void {
     delete model.service;
     delete model.subventionRequestAidService;
-    delete model.orgBranchInfo;
     delete model.orgInfo;
     delete model.orgUserInfo;
     delete model.requestChannelInfo;

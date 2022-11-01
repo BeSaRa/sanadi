@@ -1,71 +1,71 @@
 import { BaseModel } from './base-model';
 import { Observable } from 'rxjs';
 import { FactoryService } from '@services/factory.service';
-import { OrganizationUserService } from '@services/organization-user.service';
+import { ExternalUserService } from '@services/external-user.service';
 import { LangService } from '@services/lang.service';
 import { INames } from '@contracts/i-names';
 import { AdminResult } from './admin-result';
 import { Lookup } from './lookup';
 import { LookupService } from '@services/lookup.service';
-import { searchFunctionType } from '../types/types';
+import {ISearchFieldsMap, searchFunctionType} from '../types/types';
 import { DialogRef } from '../shared/models/dialog-ref';
-import { OrgUserInterceptor } from "@app/model-interceptors/org-user-interceptor";
+import { ExternalUserInterceptor } from "@app/model-interceptors/external-user-interceptor";
 import { InterceptModel } from "@decorators/intercept-model";
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import {normalSearchFields} from '@helpers/normal-search-fields';
+import {infoSearchFields} from '@helpers/info-search-fields';
 
-const interceptor = new OrgUserInterceptor();
+const interceptor = new ExternalUserInterceptor();
 
 @InterceptModel({
   receive: interceptor.receive,
   send: interceptor.send
 })
-export class OrgUser extends BaseModel<OrgUser, OrganizationUserService> {
-  email: string | undefined;
-  statusDateModified: number | undefined;
-  orgId: number | undefined;
-  orgBranchId: number | undefined;
+export class ExternalUser extends BaseModel<ExternalUser, ExternalUserService> {
+  serviceToken!:	string;
   customRoleId: number | undefined;
+  qid: string | undefined;
+  profileId!: number;
+  domainPwd!:	string;
+  nationality!: number;
+  gender!: number;
+  status: number | undefined;
+  statusDateModified: number | undefined;
   userType: number | undefined;
-  qid: number | undefined;
-  empNum: number | undefined;
   phoneNumber: string | undefined;
   officialPhoneNumber: string | undefined;
-  phoneExtension: string | undefined;
+  email: string | undefined;
   jobTitle: number | undefined;
-  status: number | undefined;
-  orgUnitInfo: AdminResult | undefined;
-  orgBranchInfo: AdminResult | undefined;
-  statusInfo: AdminResult | undefined; // need to bind to model
-  userTypeInfo: AdminResult | undefined; // need to bind to model
-  jobTitleInfo: AdminResult | undefined; // need to bind to model
-  customRoleInfo: AdminResult | undefined;
+  empNum: number | undefined;
+  phoneExtension: string | undefined;
+  domainName!:string;
   generalUserId!: number;
-  profileId!: number;
+  profileInfo!: AdminResult;
+  customRoleInfo!: AdminResult;
+  nationalityInfo!: AdminResult;
+  statusInfo!: AdminResult;
+  userTypeInfo!: AdminResult;
+  jobTitleInfo!: AdminResult;
 
-  service: OrganizationUserService;
+  service: ExternalUserService;
   private langService: LangService;
-  lookupService: LookupService;
+  // lookupService: LookupService;
   statusDateModifiedString!: string;
 
-  searchFields: { [key: string]: searchFunctionType | string } = {
-    arName: 'arName',
-    enName: 'enName',
-    empNum: 'empNum',
-    domainName: 'domainName',
-    organization: text => !this.orgUnitInfo ? false : this.orgUnitInfo.getName().toLowerCase().indexOf(text) !== -1,
-    branch: text => !this.orgBranchInfo ? false : this.orgBranchInfo.getName().toLowerCase().indexOf(text) !== -1,
-    status: text => !this.getStatusLookup() ? false : this.getStatusLookup()?.getName().toLowerCase().indexOf(text) !== -1,
-    statusModifiedDate: 'statusDateModifiedString'
+  searchFields: ISearchFieldsMap<ExternalUser> = {
+    ...normalSearchFields(['arName', 'enName', 'empNum', 'domainName', 'statusDateModifiedString']),
+    ...infoSearchFields(['statusInfo'])
+    // status: text => !this.getStatusLookup() ? false : this.getStatusLookup()?.getName().toLowerCase().indexOf(text) !== -1
   };
 
   constructor() {
     super();
-    this.service = FactoryService.getService('OrganizationUserService');
+    this.service = FactoryService.getService('ExternalUserService');
     this.langService = FactoryService.getService('LangService');
-    this.lookupService = FactoryService.getService('LookupService');
+    // this.lookupService = FactoryService.getService('LookupService');
   }
 
-  create(): Observable<OrgUser> {
+  create(): Observable<ExternalUser> {
     return this.service.create(this);
   }
 
@@ -77,11 +77,11 @@ export class OrgUser extends BaseModel<OrgUser, OrganizationUserService> {
     return this.service.deactivate(this.id);
   }
 
-  save(): Observable<OrgUser> {
+  save(): Observable<ExternalUser> {
     return this.id ? this.update() : this.create();
   }
 
-  update(): Observable<OrgUser> {
+  update(): Observable<ExternalUser> {
     return this.service.update(this);
   }
 
@@ -89,9 +89,9 @@ export class OrgUser extends BaseModel<OrgUser, OrganizationUserService> {
     return this[(this.langService.map.lang + 'Name') as keyof INames];
   }
 
-  getStatusLookup(): Lookup | null {
+  /*getStatusLookup(): Lookup | null {
     return this.lookupService.findLookupByLookupKey(this.lookupService.listByCategory.CommonStatus, this.status);
-  }
+  }*/
 
   showAuditLogs(_$event?: MouseEvent): Observable<DialogRef> {
     return this.service.openAuditLogsById(this.id);
@@ -103,6 +103,10 @@ export class OrgUser extends BaseModel<OrgUser, OrganizationUserService> {
 
   isInternal(): boolean {
     return false;
+  }
+
+  isActive(): boolean {
+    return this.status === CommonStatusEnum.ACTIVATED;
   }
 
   updateStatus(newStatus: CommonStatusEnum): Observable<boolean> {

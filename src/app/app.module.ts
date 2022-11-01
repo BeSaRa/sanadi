@@ -16,11 +16,9 @@ import './helpers/protoypes/custom-prototypes';
 import {InfoService} from '@services/info.service';
 import {ILoginInfo} from '@contracts/i-login-info';
 import {LookupService} from '@services/lookup.service';
-import {CustomRoleService} from '@services/custom-role.service';
-import {OrganizationBranchService} from '@services/organization-branch.service';
-import {OrganizationUserService} from '@services/organization-user.service';
+import {ExternalUserCustomRoleService} from '@services/external-user-custom-role.service';
+import {ExternalUserService} from '@services/external-user.service';
 import {AidLookupService} from '@services/aid-lookup.service';
-import {OrganizationUnitService} from '@services/organization-unit.service';
 import {GeneralErrorHandler} from './ganaeral-error-handler/general-error-handler';
 import {CookieModule} from 'ngx-cookie';
 import {TokenService} from '@services/token.service';
@@ -72,12 +70,10 @@ import {ProfileService} from '@services/profile.service';
         MenuItemService,
         AutoRegisterService,
         ReportService,
-        CustomRoleService,
-        OrganizationBranchService,
-        OrganizationUserService,
+        ExternalUserCustomRoleService,
+        ExternalUserService,
         ProfileService,
-        AidLookupService,
-        OrganizationUnitService]
+        AidLookupService]
     },
     httpInterceptors
   ],

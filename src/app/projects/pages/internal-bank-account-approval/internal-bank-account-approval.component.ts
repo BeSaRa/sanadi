@@ -223,7 +223,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
       ...this.basicInfo.getRawValue(),
       ...this.specialExplanation.getRawValue()
     });
-    model.organizationId = this.employeeService.getOrgUnit()?.id!;
+    model.organizationId = this.employeeService.getProfile()?.id!;
 
     // set owner of merged accounts
     if (this.isNewMerge || this.isUpdateMerge) {

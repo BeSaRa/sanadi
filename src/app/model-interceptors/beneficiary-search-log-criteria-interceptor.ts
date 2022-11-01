@@ -10,7 +10,6 @@ export class BeneficiarySearchLogCriteriaInterceptor implements IModelIntercepto
   receive(model: BeneficiarySearchLog): BeneficiarySearchLog {
     model.actionTimeString = DateUtils.getDateStringFromDate(model.actionTime, 'DEFAULT_DATE_FORMAT');
     model.orgInfo && (model.orgInfo = AdminResult.createInstance(model.orgInfo));
-    model.orgBranchInfo && (model.orgBranchInfo = AdminResult.createInstance(model.orgBranchInfo));
     model.orgUserInfo && (model.orgUserInfo = AdminResult.createInstance(model.orgUserInfo));
     model.benIdTypeInfo && (model.benIdTypeInfo = AdminResult.createInstance(model.benIdTypeInfo));
     model.benNationalityInfo && (model.benNationalityInfo = AdminResult.createInstance(model.benNationalityInfo));
@@ -27,7 +26,6 @@ export class BeneficiarySearchLogCriteriaInterceptor implements IModelIntercepto
 
   private static _deleteBeforeSend(model: Partial<IBeneficiarySearchLogCriteria> | any): void {
     delete model.actionTimeString;
-    delete model.orgBranchInfo;
     delete model.orgInfo;
     delete model.orgUserInfo;
     delete model.benIdTypeInfo;

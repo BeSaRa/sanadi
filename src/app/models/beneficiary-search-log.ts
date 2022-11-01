@@ -20,10 +20,8 @@ export class BeneficiarySearchLog {
   benIsPrimaryId!: boolean;
   benIdNumber!: string;
   actionTime!: string;
-  orgBranchId!: number;
   orgId!: number;
   orgUserId!: number;
-  orgBranchInfo!: AdminResult;
   orgInfo!: AdminResult;
   orgUserInfo!: AdminResult;
   benIdTypeInfo!: AdminResult;
@@ -34,16 +32,6 @@ export class BeneficiarySearchLog {
 
   searchFields: ISearchFieldsMap<BeneficiarySearchLog> = {
     ...normalSearchFields(['actionTimeString']),
-    ...infoSearchFields(['orgAndBranchInfo', 'orgUserInfo']),
+    ...infoSearchFields(['orgInfo', 'orgUserInfo']),
   }; // add the same columns to displayColumns
-
-  get orgAndBranchInfo() {
-    if (!isValidValue(this.orgInfo.getName())) {
-      return new AdminResult();
-    }
-    return AdminResult.createInstance({
-      arName: this.orgInfo.arName + ' - ' + this.orgBranchInfo.arName,
-      enName: this.orgInfo.enName + ' - ' + this.orgBranchInfo.enName,
-    });
-  }
 }

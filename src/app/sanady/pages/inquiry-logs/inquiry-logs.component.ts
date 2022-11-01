@@ -17,15 +17,13 @@ import {CommonUtils} from '@helpers/common-utils';
 import {IMyInputFieldChanged} from 'angular-mydatepicker';
 import {SortEvent} from '@contracts/sort-event';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import {OrgUnit} from '@app/models/org-unit';
-import {OrgBranch} from '@app/models/org-branch';
-import {OrgUser} from '@app/models/org-user';
-import {OrganizationUnitService} from '@services/organization-unit.service';
-import {OrganizationBranchService} from '@services/organization-branch.service';
+import {ExternalUser} from '@app/models/external-user';
 import {OrgStatusEnum} from '@app/enums/status.enum';
-import {OrganizationUserService} from '@services/organization-user.service';
+import {ExternalUserService} from '@services/external-user.service';
 import * as dayjs from 'dayjs';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import {ProfileService} from '@services/profile.service';
+import {Profile} from '@app/models/profile';
 
 @Component({
   selector: 'inquiry-logs',
@@ -39,9 +37,8 @@ export class InquiryLogsComponent implements OnInit, OnDestroy {
               private fb: UntypedFormBuilder,
               private lookupService: LookupService,
               private dialogService: DialogService,
-              private orgUnitService: OrganizationUnitService,
-              private orgBranchService: OrganizationBranchService,
-              private orgUserService: OrganizationUserService,
+              private profileService: ProfileService,
+              private externalUserService: ExternalUserService,
               private beneficiaryService: BeneficiaryService) {
   }
 
@@ -49,7 +46,7 @@ export class InquiryLogsComponent implements OnInit, OnDestroy {
     this.buildForm();
     this.listenToSearch();
     this.listenToReload();
-    this.loadOrganizations();
+    this.loadProfiles();
   }
 
   ngOnDestroy(): void {
@@ -76,9 +73,8 @@ export class InquiryLogsComponent implements OnInit, OnDestroy {
   idTypes: Lookup[] = this.lookupService.listByCategory.BenIdType;
   nationalitiesList: Lookup[] = this.lookupService.listByCategory.Nationality;
   gulfNationalitiesList: Lookup[] = this.lookupService.listByCategory.GulfCountries;
-  organizationsList: OrgUnit[] = [];
-  branchList: OrgBranch[] = [];
-  userList: OrgUser[] = [];
+  organizationsList: Profile[] = [];
+  userList: ExternalUser[] = [];
   form: UntypedFormGroup = {} as UntypedFormGroup;
   logsList: BeneficiarySearchLog[] = [];
   private search$: Subject<any> = new Subject<any>();
@@ -110,9 +106,9 @@ export class InquiryLogsComponent implements OnInit, OnDestroy {
         value2 = !CommonUtils.isValidValue(b) ? '' : DateUtils.getTimeStampFromDate(b.actionTime);
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     },
-    organizationAndBranch: (a: BeneficiarySearchLog, b: BeneficiarySearchLog, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a) ? '' : a.orgAndBranchInfo?.getName().toLowerCase(),
-        value2 = !CommonUtils.isValidValue(b) ? '' : b.orgAndBranchInfo?.getName().toLowerCase();
+    organization: (a: BeneficiarySearchLog, b: BeneficiarySearchLog, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.orgInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.orgInfo?.getName().toLowerCase();
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     },
     orgUser: (a: BeneficiarySearchLog, b: BeneficiarySearchLog, dir: SortEvent): number => {
@@ -142,7 +138,6 @@ export class InquiryLogsComponent implements OnInit, OnDestroy {
       benIdNumber: [{value: null, disabled: true}],
       benIdNationality: [{value: null, disabled: true}],
       orgId: [],
-      orgBranchId: [{value: null, disabled: true}],
       orgUserId: [{value: null, disabled: true}]
     });
     this._buildDatepickerControlsMap();
@@ -237,10 +232,6 @@ export class InquiryLogsComponent implements OnInit, OnDestroy {
     return this.form.get('orgId') as UntypedFormControl;
   }
 
-  get orgBranchField(): UntypedFormControl {
-    return this.form.get('orgBranchId') as UntypedFormControl;
-  }
-
   get orgUserField(): UntypedFormControl {
     return this.form.get('orgUserId') as UntypedFormControl;
   }
@@ -332,8 +323,8 @@ export class InquiryLogsComponent implements OnInit, OnDestroy {
     });
   }
 
-  private loadOrganizations() {
-    this.orgUnitService.loadAsLookups()
+  private loadProfiles() {
+    this.profileService.loadAsLookups()
       .pipe(
         takeUntil(this.destroy$),
         catchError(() => {
@@ -346,44 +337,18 @@ export class InquiryLogsComponent implements OnInit, OnDestroy {
 
   handleChangeOrgUnit(orgId: number, userInteraction: boolean) {
     if (userInteraction) {
-      this.orgBranchField.reset();
       this.orgUserField.reset();
-      this.handleChangeOrgBranch(undefined, true);
     }
-    !orgId ? this.orgBranchField.disable() : this.orgBranchField.enable();
-    this._loadBranchByOrgId(this.orgUnitField.value);
+    !orgId ? this.orgUserField.disable() : this.orgUserField.enable();
+    this._loadUsersByOrgId(this.orgUnitField.value);
   }
 
-  private _loadBranchByOrgId(orgUnitId: number) {
-    this.branchList = [];
+  private _loadUsersByOrgId(orgUnitId: number) {
+    this.userList = [];
     if (!orgUnitId) {
       return;
     }
-    this.orgBranchService.loadByCriteria({'org-id': orgUnitId})
-      .pipe(
-        takeUntil(this.destroy$),
-        catchError(() => {
-          return of([]);
-        })
-      ).subscribe((result) => {
-      this.branchList = result;
-    })
-  }
-
-  handleChangeOrgBranch(orgBranchId: number | undefined, userInteraction: boolean) {
-    if (userInteraction) {
-      this.orgUserField.reset();
-    }
-    !orgBranchId ? this.orgUserField.disable() : this.orgUserField.enable();
-    this._loadUsersByOrgAndBranchId(this.orgUnitField.value, this.orgBranchField.value);
-  }
-
-  private _loadUsersByOrgAndBranchId(orgUnitId: number, orgBranchId: number) {
-    this.userList = [];
-    if (!orgUnitId || !orgBranchId) {
-      return;
-    }
-    this.orgUserService.getByCriteria({'org-id': orgUnitId, 'org-branch-id': orgBranchId})
+    this.externalUserService.getByCriteria({'profile-id': orgUnitId})
       .pipe(
         takeUntil(this.destroy$),
         catchError(() => {

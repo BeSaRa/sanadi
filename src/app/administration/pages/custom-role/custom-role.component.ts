@@ -1,6 +1,6 @@
 import {Component, ViewChild} from '@angular/core';
 import {LangService} from '@app/services/lang.service';
-import {CustomRoleService} from '@app/services/custom-role.service';
+import {ExternalUserCustomRoleService} from '@services/external-user-custom-role.service';
 import {CustomRole} from '@app/models/custom-role';
 import {takeUntil} from 'rxjs/operators';
 import {ToastService} from '@app/services/toast.service';
@@ -20,11 +20,12 @@ import {CommonUtils} from '@app/helpers/common-utils';
   templateUrl: './custom-role.component.html',
   styleUrls: ['./custom-role.component.scss']
 })
-export class CustomRoleComponent extends AdminGenericComponent<CustomRole, CustomRoleService> {
+export class CustomRoleComponent extends AdminGenericComponent<CustomRole, ExternalUserCustomRoleService> {
   usePagination = true;
+
   constructor(public langService: LangService,
               private dialogService: DialogService,
-              public service: CustomRoleService,
+              public service: ExternalUserCustomRoleService,
               private toast: ToastService,
               private sharedService: SharedService) {
     super();
@@ -85,7 +86,7 @@ export class CustomRoleComponent extends AdminGenericComponent<CustomRole, Custo
         value2 = !CommonUtils.isValidValue(b) ? '' : b.statusInfo?.getName().toLowerCase();
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     }
-  }
+  };
 
   _init(): void {
     this.listenToLoadDone();

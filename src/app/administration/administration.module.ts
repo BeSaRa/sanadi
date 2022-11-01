@@ -11,13 +11,8 @@ import {CustomRolePopupComponent} from './popups/custom-role-popup/custom-role-p
 import {AidLookupComponent} from './pages/aid-lookup/aid-lookup.component';
 import {AidLookupPopupComponent} from './popups/aid-lookup-popup/aid-lookup-popup.component';
 import {AidLookupContainerComponent} from './pages/aid-lookup-container/aid-lookup-container.component';
-import {OrganizationUnitComponent} from './pages/organization-unit/organization-unit.component';
-import {OrganizationUnitPopupComponent} from './popups/organization-unit-popup/organization-unit-popup.component';
-import {OrganizationBranchPopupComponent,} from './popups/organization-branch-popup/organization-branch-popup.component';
-import {OrganizationBranchComponent} from './pages/organization-branch/organization-branch.component';
-import {OrganizationUserComponent} from './pages/organization-user/organization-user.component';
-import {OrganizationUserPopupComponent} from './popups/organization-user-popup/organization-user-popup.component';
-import {OrganizationBranchUserComponent} from './pages/organization-branch-user/organization-branch-user.component';
+import {ExternalUserComponent} from './pages/external-user/external-user.component';
+import {ExternalUserPopupComponent} from './popups/external-user-popup/external-user-popup.component';
 import {AuditLogPopupComponent} from './popups/audit-log-popup/audit-log-popup.component';
 import {AttachmentTypesComponent} from './pages/attachment-types/attachment-types.component';
 import {AttachmentTypesPopupComponent} from './popups/attachment-types-popup/attachment-types-popup.component';
@@ -52,7 +47,6 @@ import {ServiceDataStepPopupComponent} from './popups/service-data-step-popup/se
 import {ChecklistPopupComponent} from './popups/checklist-popup/checklist-popup.component';
 import {ChecklistItemPopupComponent} from './popups/checklist-item-popup/checklist-item-popup.component';
 import {OrgUnitFieldPopupComponent} from './popups/org-unit-field-popup/org-unit-field-popup.component';
-import {OrganizationUnitServicesComponent} from './shared/organization-unit-services/organization-unit-services.component';
 import {BankComponent} from './pages/bank/bank.component';
 import {BankPopupComponent} from './popups/bank-popup/bank-popup.component';
 import {DonorComponent} from './pages/donor/donor.component';
@@ -85,13 +79,8 @@ import {ProfilesComponent} from './pages/profiles/profiles.component';
     AidLookupComponent,
     AidLookupPopupComponent,
     AidLookupContainerComponent,
-    OrganizationUnitComponent,
-    OrganizationUnitPopupComponent,
-    OrganizationBranchPopupComponent,
-    OrganizationBranchComponent,
-    OrganizationUserComponent,
-    OrganizationUserPopupComponent,
-    OrganizationBranchUserComponent,
+    ExternalUserComponent,
+    ExternalUserPopupComponent,
     AuditLogPopupComponent,
     AttachmentTypesComponent,
     AttachmentTypesPopupComponent,
@@ -123,7 +112,6 @@ import {ProfilesComponent} from './pages/profiles/profiles.component';
     ChecklistPopupComponent,
     ChecklistItemPopupComponent,
     OrgUnitFieldPopupComponent,
-    OrganizationUnitServicesComponent,
     BankComponent,
     BankPopupComponent,
     DonorComponent,

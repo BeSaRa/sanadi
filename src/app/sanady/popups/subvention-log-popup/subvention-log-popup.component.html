@@ -37,11 +37,6 @@
                     [sortCallback]="generalSortingCallbacks.organization"> {{langService.map.lbl_organization}}</th>
                 <td cdk-cell *cdkCellDef="let row"> {{row.orgInfo.getName()}} </td>
               </ng-container>
-              <ng-container cdkColumnDef="branch">
-                <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
-                    [sortCallback]="generalSortingCallbacks.branch"> {{langService.map.lbl_branch}}</th>
-                <td cdk-cell *cdkCellDef="let row"> {{row.orgBranchInfo.getName()}} </td>
-              </ng-container>
               <ng-container cdkColumnDef="user">
                 <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
                     [sortCallback]="generalSortingCallbacks.user"> {{langService.map.user}}</th>
@@ -134,11 +129,6 @@
             <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
             [sortCallback]="auditSortingCallbacks.organization"> {{langService.map.lbl_organization}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.orgInfo.getName()}} </td>
-          </ng-container>
-          <ng-container cdkColumnDef="branch">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
-                [sortCallback]="auditSortingCallbacks.branch"> {{langService.map.lbl_branch}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.orgBranchInfo.getName()}} </td>
           </ng-container>
           <ng-container cdkColumnDef="user">
             <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"

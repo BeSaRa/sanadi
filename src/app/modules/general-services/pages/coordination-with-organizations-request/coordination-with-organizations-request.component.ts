@@ -9,7 +9,6 @@ import {IKeyValue} from '@app/interfaces/i-key-value';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {CoordinationWithOrganizationsRequest} from '@app/models/coordination-with-organizations-request';
 import {Lookup} from '@app/models/lookup';
-import {OrgUnit} from '@app/models/org-unit';
 import {OrganizationOfficer} from '@app/models/organization-officer';
 import {BuildingAbilityComponent} from '@app/modules/e-services-main/shared/building-ability/building-ability.component';
 import {ResearchAndStudiesComponent} from '@app/modules/e-services-main/shared/research-and-studies/research-and-studies.component';
@@ -18,9 +17,8 @@ import {DialogService} from '@app/services/dialog.service';
 import {EmployeeService} from '@app/services/employee.service';
 import {LangService} from '@app/services/lang.service';
 import {LookupService} from '@app/services/lookup.service';
-import {OrganizationUnitService} from '@app/services/organization-unit.service';
 import {ToastService} from '@app/services/toast.service';
-import {OrganizationUserService} from '@services/organization-user.service';
+import {ExternalUserService} from '@services/external-user.service';
 import {IMyInputFieldChanged} from 'angular-mydatepicker';
 import {Observable, of} from 'rxjs';
 import {map, take} from 'rxjs/operators';
@@ -39,6 +37,8 @@ import {AttachmentsComponent} from '@app/shared/components/attachments/attachmen
 import { BuildingAbility } from '@app/models/building-ability';
 import { EffectiveCoordinationCapabilities } from '@app/models/effective-coordination-capabilities';
 import { ResearchAndStudies } from '@app/models/research-and-studies';
+import {ProfileService} from '@services/profile.service';
+import {Profile} from '@app/models/profile';
 
 @Component({
   selector: 'app-coordination-with-organizations-request',
@@ -49,7 +49,7 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
   CoordinationWithOrganizationsRequestService> {
   form!: FormGroup;
 
-  // Particpating  Orginzations
+  // Participating  Organizations
   domains: Lookup[] = this.lookupService.listByCategory.CoordinationType?.sort(
     (a, b) => a?.lookupKey - b?.lookupKey
   );
@@ -142,7 +142,7 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
     },
 
   };
-  organizationUnits: OrgUnit[] = [];
+  organizationUnits: Profile[] = [];
   // Organization Officers
   organizationOfficersTabStatus: ReadinessStatus = 'READY';
   organizationUsers: OrganizationOfficer[] = [];
@@ -159,15 +159,16 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
   loadAttachments: boolean = false;
 
   @ViewChild('attachment')
-  attachmentsComponentRef!:AttachmentsComponent
+  attachmentsComponentRef!: AttachmentsComponent;
+
   constructor(
     public lang: LangService,
     private lookupService: LookupService,
     private dialog: DialogService,
     private toast: ToastService,
     private employeeService: EmployeeService,
-    private orgUnitService: OrganizationUnitService,
-    private orgUserService: OrganizationUserService,
+    private profileService: ProfileService,
+    private externalUserService: ExternalUserService,
     public service: CoordinationWithOrganizationsRequestService,
 
     public fb: FormBuilder
@@ -265,7 +266,7 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
     this.isCharityUser = this.employeeService.isCharityUser() || this.employeeService.isCharityManager();
     this.isInternalUser = this.employeeService.isInternalUser();
     this.isLicensingUser = this.employeeService.isLicensingUser();
-    this.currentUserOrgId = this.employeeService.getOrgUnit()?.id;
+    this.currentUserOrgId = this.employeeService.getProfile()?.id;
     this.loadOrgUnits();
     this.loadOrgUsers();
     this.datepickerOptionsMap = {
@@ -424,20 +425,14 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
   }
 
   loadOrgUnits(reset = false) {
-    this.orgUnitService
-      .getActiveOrgUnits()
+    this.profileService.loadActive()
       .pipe(
         map((list) => {
           if (reset) {
             return list;
           }
           if (this.model!.participatingOrganizaionList.length > 0) {
-            return list.filter(
-              (orgUnit) =>
-                !this.model?.participatingOrganizaionList.find(
-                  (pt) => pt.organizationId === orgUnit.id
-                )
-            );
+            return list.filter((org) => !this.model?.participatingOrganizaionList.find((ptOrg) => ptOrg.organizationId === org.id));
           }
           return list;
         })
@@ -460,8 +455,8 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
   }
 
   loadOrgUsers() {
-    this.orgUserService
-      .getByCriteria({'org-id': this.employeeService.getOrgUnit()?.id!})
+    this.externalUserService
+      .getByCriteria({'profile-id': this.employeeService.getProfile()?.id!})
       .pipe(
         map((records) => {
           const list: OrganizationOfficer[] = [];

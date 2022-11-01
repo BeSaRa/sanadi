@@ -29,7 +29,7 @@ import {Pagination} from '@app/models/pagination';
 @Injectable({
   providedIn: 'root'
 })
-export class CustomRoleService extends CrudWithDialogGenericService<CustomRole> {
+export class ExternalUserCustomRoleService extends CrudWithDialogGenericService<CustomRole> {
   list!: CustomRole[];
   interceptor: CustomRoleInterceptor = new CustomRoleInterceptor();
 
@@ -38,7 +38,7 @@ export class CustomRoleService extends CrudWithDialogGenericService<CustomRole> 
               private _customRolePermissionService: CustomRolePermissionService,
               public dialog: DialogService) {
     super();
-    FactoryService.registerService('CustomRoleService', this);
+    FactoryService.registerService('ExternalUserCustomRoleService', this);
 
   }
 
@@ -51,7 +51,7 @@ export class CustomRoleService extends CrudWithDialogGenericService<CustomRole> 
   }
 
   _getServiceURL(): string {
-    return this.urlService.URLS.CUSTOM_ROLE;
+    return this.urlService.URLS.EXTERNAL_USER_CUSTOM_ROLE;
   }
 
   addDialog(): DialogRef {

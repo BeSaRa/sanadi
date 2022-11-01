@@ -2,7 +2,7 @@ import {CoordinationWithOrganizationsRequestService} from '@app/services/coordin
 import {Component, Inject, OnInit} from '@angular/core';
 import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {CustomValidators} from '@app/validators/custom-validators';
-import {of, Subject} from 'rxjs';
+import {Subject} from 'rxjs';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {LangService} from '@services/lang.service';
 import {DialogService} from '@services/dialog.service';
@@ -48,7 +48,7 @@ export class CoordinationWithOrgPopupComponent implements OnInit {
     private fb: UntypedFormBuilder
   ) {
     this.currentOrganization = this.data.model.participatingOrganizaionList
-      .find(x => x.organizationId === employeeService.getOrgUnit()?.id)!;
+      .find(x => x.organizationId === employeeService.getProfile()?.id)!;
     this.approvalForm = this.fb.group(this.currentOrganization.buildApprovalForm(true));
     this.response = this.data.actionType;
 

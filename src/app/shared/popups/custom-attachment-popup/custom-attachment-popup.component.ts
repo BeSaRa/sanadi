@@ -14,7 +14,7 @@ import {ToastService} from '@services/toast.service';
 import {DialogService} from '@services/dialog.service';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {EmployeeService} from '@services/employee.service';
-import {OrgUser} from '@app/models/org-user';
+import {ExternalUser} from '@app/models/external-user';
 import {InternalUser} from '@app/models/internal-user';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {ItemId} from '@app/types/types';
@@ -217,7 +217,7 @@ export class CustomAttachmentPopupComponent implements OnInit, OnDestroy {
   private _isCreatedByCurrentUser(attachment: FileNetDocument) {
     let user = this.employeeService.getCurrentUser();
     if (this.employeeService.isExternalUser()) {
-      return ('' + ((user as OrgUser).qid ?? '')).trim() === attachment.createdBy;
+      return ('' + ((user as ExternalUser).qid ?? '')).trim() === attachment.createdBy;
     } else {
       return (user as InternalUser).domainName === attachment.createdBy;
     }

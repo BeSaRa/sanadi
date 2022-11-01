@@ -12,16 +12,16 @@ import {LookupService} from '@services/lookup.service';
 import {ToastService} from '@services/toast.service';
 import {EmployeeService} from '@services/employee.service';
 import {InternalDepartmentService} from '@services/internal-department.service';
-import {OrganizationUnitService} from '@services/organization-unit.service';
 import {takeUntil} from 'rxjs/operators';
 import {InternalDepartment} from '@app/models/internal-department';
-import {OrgUnit} from '@app/models/org-unit';
 import {SaveTypes} from '@app/enums/save-types';
 import {Observable} from 'rxjs';
 import {Lookup} from '@app/models/lookup';
 import {CommonUtils} from '@helpers/common-utils';
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 import {ConsultationService} from '@services/consultation.service';
+import {ProfileService} from '@services/profile.service';
+import {Profile} from '@app/models/profile';
 
 @Component({
   selector: 'consultation',
@@ -38,7 +38,7 @@ export class ConsultationComponent extends EServicesGenericComponent<Consultatio
               private toast: ToastService,
               public employeeService: EmployeeService,
               private intDepService: InternalDepartmentService,
-              private orgUnitService: OrganizationUnitService) {
+              private profileService: ProfileService) {
     super();
   }
 
@@ -46,7 +46,7 @@ export class ConsultationComponent extends EServicesGenericComponent<Consultatio
   operation: OperationTypes = OperationTypes.CREATE;
   readonly: boolean = false;
   departments: InternalDepartment[] = [];
-  organizations: OrgUnit[] = [];
+  organizations: Profile[] = [];
   categories: Lookup[] = this.lookupService.listByCategory.ConsultationCategory;
   allowEditRecommendations: boolean = true;
   loadAttachments: boolean = false;
@@ -201,7 +201,7 @@ export class ConsultationComponent extends EServicesGenericComponent<Consultatio
 
     const orgExists = this.organizations.find(i => i.id === this.model?.organizationId);
     if (!orgExists) {
-      this.organizations = this.organizations.concat(new OrgUnit().clone({
+      this.organizations = this.organizations.concat(new Profile().clone({
         id: this.model.organizationInfo.id,
         arName: this.model.organizationInfo.arName,
         enName: this.model.organizationInfo.enName,
@@ -213,15 +213,15 @@ export class ConsultationComponent extends EServicesGenericComponent<Consultatio
     if (!this.employeeService.isExternalUser() || (this.model && this.model.id)) {
       return;
     }
-    const user = this.employeeService.getUser();
-    this.organizationField?.patchValue(this.employeeService.getOrgUnit()?.id);
+    const user = this.employeeService.getExternalUser();
+    this.organizationField?.patchValue(this.employeeService.getProfile()?.id);
     this.fullNameField?.patchValue(user?.getName());
     this.emailField?.patchValue(user?.email);
     this.mobileNumberField?.patchValue(user?.phoneNumber);
   }
 
   private loadOrganizations(): void {
-    this.orgUnitService.loadActive().pipe(takeUntil(this.destroy$))
+    this.profileService.loadActive().pipe(takeUntil(this.destroy$))
       .subscribe(organizations => {
         this.organizations = organizations;
       });

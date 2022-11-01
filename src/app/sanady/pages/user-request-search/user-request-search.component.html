@@ -425,8 +425,8 @@
             </ng-container>
             <ng-container cdkColumnDef="organization">
               <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
-                  [sortCallback]="sortingCallbacks.organizationAndBranch"> {{langService.map.lbl_organization}}</th>
-              <td cdk-cell *cdkCellDef="let row"><span>{{row.orgAndBranchInfo.getName()}}</span></td>
+                  [sortCallback]="sortingCallbacks.organization"> {{langService.map.lbl_organization}}</th>
+              <td cdk-cell *cdkCellDef="let row"><span>{{row.orgInfo.getName()}}</span></td>
             </ng-container>
             <ng-container cdkColumnDef="createdBy">
               <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"

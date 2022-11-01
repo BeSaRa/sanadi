@@ -51,16 +51,15 @@ export interface IAppUrls {
   BASE_URL: string;
   LOGIN_INFO: string;
   LANGUAGE: string;
-  CUSTOM_ROLE: string;
+  EXTERNAL_USER_CUSTOM_ROLE: string;
   CUSTOM_ROLE_PERMISSIONS: string;
   LOOKUPS: string;
   ORGANIZATION_UNIT: string;
-  ORGANIZATION_UNIT_SERVICES: string;
   ORGANIZATION_BRANCH: string;
   AID_LOOKUPS: string;
   AID_LOOKUPS_CRITERIA: string;
   ORGANIZATION: string;
-  ORG_USER: string;
+  EXTERNAL_USER: string;
   CACHE_SERVICE: string;
   BENEFICIARY: string;
   SUBVENTION_REQUEST: string;
@@ -69,7 +68,7 @@ export interface IAppUrls {
   SUBVENTION_REQUEST_AID: string;
   SUBVENTION_AID: string;
   SANADI_ATTACHMENT: string;
-  ORG_USER_PERMISSION: string;
+  EXTERNAL_USER_PERMISSION: string;
   AUTHENTICATE: string;
   VALIDATE_TOKEN: string;
   SUBVENTION_LOG: string;

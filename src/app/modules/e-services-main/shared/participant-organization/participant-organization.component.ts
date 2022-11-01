@@ -1,29 +1,16 @@
-import { map, takeUntil, take } from 'rxjs/operators';
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-  ViewChild,
-} from '@angular/core';
-import {
-  AbstractControl,
-  FormArray,
-  FormBuilder,
-  FormGroup,
-  UntypedFormControl,
-} from '@angular/forms';
-import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { OrgUnit } from '@app/models/org-unit';
-import { DialogService } from '@app/services/dialog.service';
-import { LangService } from '@app/services/lang.service';
-import { ToastService } from '@app/services/toast.service';
-import { ReadinessStatus } from '@app/types/types';
-import { BehaviorSubject, Subject } from 'rxjs';
-import { UserClickOn } from '@app/enums/user-click-on.enum';
-import { NgSelectComponent } from '@ng-select/ng-select';
-import { ParticipantOrg } from '@app/models/participant-org';
+import {map, take, takeUntil} from 'rxjs/operators';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild,} from '@angular/core';
+import {AbstractControl, FormArray, FormBuilder, FormGroup,UntypedFormControl,} from '@angular/forms';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {DialogService} from '@app/services/dialog.service';
+import {LangService} from '@app/services/lang.service';
+import {ToastService} from '@app/services/toast.service';
+import {ReadinessStatus} from '@app/types/types';
+import {BehaviorSubject, Subject} from 'rxjs';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {NgSelectComponent} from '@ng-select/ng-select';
+import {ParticipantOrg} from '@app/models/participant-org';
+import {Profile} from '@app/models/profile';
 
 @Component({
   selector: 'participant-organization',
@@ -41,44 +28,45 @@ export class ParticipantOrganizationComponent implements OnInit {
   }
 
   @Input() formArrayName: string = 'participatingOrganizaionList';
+
   get formArray(): FormArray {
     return this.form.get(this.formArrayName) as FormArray;
   }
+
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();
-  @Output() listUpdated= new EventEmitter();
+  @Output() listUpdated = new EventEmitter();
   private _list: ParticipantOrg[] = [];
   @Input() set list(list: ParticipantOrg[]) {
     this._list = list;
     this.listDataSource.next(this._list);
   }
+
   get list(): ParticipantOrg[] {
     return this._list;
   }
+
   @Input() isSuperVisor: boolean = false;
   model: ParticipantOrg = new ParticipantOrg();
   @Input() pageTitleKey: keyof ILanguageKeys = 'participant_organizations';
 
-  listDataSource: BehaviorSubject<ParticipantOrg[]> = new BehaviorSubject<
-    ParticipantOrg[]
-  >([]);
+  listDataSource: BehaviorSubject<ParticipantOrg[]> = new BehaviorSubject<ParticipantOrg[]>([]);
   columns = this.model.DisplayedColumns;
 
-  @Input()canAdd:boolean=true;
-  @Input()canView:boolean=true;
-  @Input()canDelete:boolean=true;
+  @Input() canAdd: boolean = true;
+  @Input() canView: boolean = true;
+  @Input() canDelete: boolean = true;
 
 
   private readonly: boolean = true;
   private save$: Subject<any> = new Subject<any>();
 
-  private recordChanged$: Subject<OrgUnit | null> =
-    new Subject<OrgUnit | null>();
+  private recordChanged$: Subject<Profile | null> = new Subject<Profile | null>();
   private currentRecord?: ParticipantOrg;
 
   private destroy$: Subject<any> = new Subject<any>();
 
   form!: FormGroup;
-  @Input() organizationUnits: OrgUnit[] = [];
+  @Input() organizationUnits: Profile[] = [];
   filterControl: UntypedFormControl = new UntypedFormControl('');
   showForm: boolean = false;
   ngOnInit(): void {
@@ -93,6 +81,7 @@ export class ParticipantOrganizationComponent implements OnInit {
     this.destroy$.complete();
     this.destroy$.unsubscribe();
   }
+
   buildForm(): void {
     this.form = this.fb.group({
       [this.formArrayName]: this.fb.array([]),
@@ -103,20 +92,19 @@ export class ParticipantOrganizationComponent implements OnInit {
     this.recordChanged$
       .pipe(
         takeUntil(this.destroy$),
-        map((orgUnit) =>
-          orgUnit
-            ? new ParticipantOrg().clone({
-                organizationId: orgUnit?.id,
-                arabicName: orgUnit?.arName,
-                englishName: orgUnit?.enName,
-              })
-            : orgUnit
+        map((org) => {
+            return org ? new ParticipantOrg().clone({
+              organizationId: org?.id,
+              arabicName: org?.arName,
+              englishName: org?.enName,
+            }) : org;
+          }
         )
       )
       .subscribe((record) => {
         this.currentRecord = record || undefined;
         this.updateForm(this.currentRecord);
-        this.readonly = record === undefined ? true : false;
+        this.readonly = record === undefined;
       });
   }
 
@@ -129,6 +117,7 @@ export class ParticipantOrganizationComponent implements OnInit {
       this._setComponentReadiness('READY');
     }
   }
+
   private _setComponentReadiness(readyStatus: ReadinessStatus) {
     this.readyEvent.emit(readyStatus);
   }
@@ -137,15 +126,18 @@ export class ParticipantOrganizationComponent implements OnInit {
   ngSelectComponentRef!: NgSelectComponent;
 
   onChangeRecord(id: number) {
-    const record = this.organizationUnits.find((orgUnit) => orgUnit.id === id)!;
+    const record = this.organizationUnits.find((org: Profile) => org.id === id)!;
     this.recordChanged$.next(record);
   }
+
   onSave() {
     this.save$.next();
   }
+
   allowAdd() {
     return this.readonly;
   }
+
   private listenToSave() {
     this.save$
       .pipe(
@@ -171,6 +163,7 @@ export class ParticipantOrganizationComponent implements OnInit {
         this.toastService.success(this.lang.map.msg_save_success);
       });
   }
+
   private _updateList(
     record: ParticipantOrg | null,
     operation: 'ADD' | 'DELETE' | 'NONE',
@@ -179,17 +172,15 @@ export class ParticipantOrganizationComponent implements OnInit {
     if (record) {
       if (operation === 'ADD') {
         this.list.push(record);
-        this.organizationUnits = this.organizationUnits.filter(
-          (orgUnit) => orgUnit.id !== record.organizationId
-        );
+        this.organizationUnits = this.organizationUnits.filter((org: Profile) => org.id !== record.organizationId);
       } else if (operation === 'DELETE') {
-        this.list.splice(gridIndex,1);
-        const orgUnit=new OrgUnit().clone({
+        this.list.splice(gridIndex, 1);
+        const org = new Profile().clone({
           id: record.organizationId,
           enName: record.englishName,
           arName: record.arabicName,
-        })
-        this.organizationUnits.push(orgUnit)
+        });
+        this.organizationUnits.push(org);
       }
     }
 
@@ -200,6 +191,7 @@ export class ParticipantOrganizationComponent implements OnInit {
     this.listUpdated.emit();
 
   }
+
   delete($event: MouseEvent, record: ParticipantOrg, index: number): any {
     $event.preventDefault();
 
@@ -214,17 +206,21 @@ export class ParticipantOrganizationComponent implements OnInit {
         }
       });
   }
-  @Output()requestView:EventEmitter<number>=new EventEmitter<number>();
+
+  @Output() requestView: EventEmitter<number> = new EventEmitter<number>();
+
   view($event: MouseEvent, record: ParticipantOrg): any {
     $event.preventDefault();
     this.requestView.emit(record.organizationId);
   }
+
   sortOrganizations() {
     const propName =
       this.lang.getCurrentLanguage().name === 'English' ? 'enName' : 'arName';
     this.organizationUnits.sort((a, b) => (a[propName] < b[propName] ? -1 : 1));
   }
-  calculateTotalParticipatingValue(){
-    return this.list.map(x=>Number(x.value??0)).reduce((a,b)=>a+b,0)
+
+  calculateTotalParticipatingValue() {
+    return this.list.map(x => Number(x.value ?? 0)).reduce((a, b) => a + b, 0);
   }
 }

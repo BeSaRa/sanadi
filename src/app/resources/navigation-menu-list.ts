@@ -97,25 +97,25 @@ export const navigationMenuList = [
   },
   {
     id: 8,
-    langKey: 'menu_organizations',
-    path: '/home/administration/organizations',
-    icon: 'organizations',
-    isSvg: true,
-    permission: null,
-    permissionGroup: PermissionGroupsEnum.MANAGE_ORGANIZATION_PERMISSIONS_GROUP,
+    langKey: 'menu_profile',
+    path: '/home/administration/profiles',
+    icon: 'mdi-account',
+    isSvg: false,
+    permission: PermissionsEnum.MANAGE_PROFILE,
+    permissionGroup: null,
     parent: 6,
     group: 'administration',
     itemOrder: 2,
-    svg: '<svg fill="currentColor" stroke="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25">\n<g>\n\t<g>\n\t\t<path class="st0" d="M16.3,18.6c-0.2,0-0.4-0.2-0.4-0.4V5.1h-7v13.2c0,0.2-0.2,0.4-0.4,0.4c-0.2,0-0.4-0.2-0.4-0.4V4.8\n\t\t\tc0-0.2,0.2-0.4,0.4-0.4h7.6c0.2,0,0.4,0.2,0.4,0.4v13.4C16.6,18.4,16.5,18.6,16.3,18.6z"/>\n\t</g>\n\t<g>\n\t\t<path class="st0" d="M13.6,9.3c-0.2,0-0.4-0.2-0.4-0.4V7.6c0-0.2,0.2-0.4,0.4-0.4s0.4,0.2,0.4,0.4v1.3C14.1,9.2,13.9,9.3,13.6,9.3\n\t\t\tz"/>\n\t</g>\n\t<g>\n\t\t<path class="st0" d="M13.6,13.3c-0.2,0-0.4-0.2-0.4-0.4v-1.3c0-0.2,0.2-0.4,0.4-0.4s0.4,0.2,0.4,0.4v1.3\n\t\t\tC14.1,13.2,13.9,13.3,13.6,13.3z"/>\n\t</g>\n\t<g>\n\t\t<path class="st0" d="M20.1,13.3c-0.2,0-0.4-0.2-0.4-0.4v-1.3c0-0.2,0.2-0.4,0.4-0.4c0.2,0,0.4,0.2,0.4,0.4v1.3\n\t\t\tC20.6,13.2,20.4,13.3,20.1,13.3z"/>\n\t</g>\n\t<g>\n\t\t<path class="st0" d="M20.1,17.3c-0.2,0-0.4-0.2-0.4-0.4v-1.3c0-0.2,0.2-0.4,0.4-0.4c0.2,0,0.4,0.2,0.4,0.4v1.3\n\t\t\tC20.6,17.1,20.4,17.3,20.1,17.3z"/>\n\t</g>\n\t<g>\n\t\t<path class="st0" d="M13.6,17.3c-0.2,0-0.4-0.2-0.4-0.4v-1.3c0-0.2,0.2-0.4,0.4-0.4s0.4,0.2,0.4,0.4v1.3\n\t\t\tC14.1,17.1,13.9,17.3,13.6,17.3z"/>\n\t</g>\n\t<g>\n\t\t<path class="st0" d="M11.2,9.3c-0.2,0-0.4-0.2-0.4-0.4V7.6c0-0.2,0.2-0.4,0.4-0.4s0.4,0.2,0.4,0.4v1.3C11.6,9.2,11.4,9.3,11.2,9.3\n\t\t\tz"/>\n\t</g>\n\t<g>\n\t\t<path class="st0" d="M11.2,13.3c-0.2,0-0.4-0.2-0.4-0.4v-1.3c0-0.2,0.2-0.4,0.4-0.4s0.4,0.2,0.4,0.4v1.3\n\t\t\tC11.6,13.2,11.4,13.3,11.2,13.3z"/>\n\t</g>\n\t<g>\n\t\t<path class="st0" d="M11.2,17.3c-0.2,0-0.4-0.2-0.4-0.4v-1.3c0-0.2,0.2-0.4,0.4-0.4s0.4,0.2,0.4,0.4v1.3\n\t\t\tC11.6,17.1,11.4,17.3,11.2,17.3z"/>\n\t</g>\n\t<g>\n\t\t<path class="st0" d="M22.7,18.7c-0.2,0-0.4-0.2-0.4-0.4V9.5h-4.1c-0.2,0-0.4-0.2-0.4-0.4c0-0.2,0.2-0.4,0.4-0.4h4.2\n\t\t\tc0.4,0,0.7,0.3,0.7,0.7v8.9C23.1,18.5,22.9,18.7,22.7,18.7z M22.4,9.5L22.4,9.5L22.4,9.5z"/>\n\t</g>\n\t<g>\n\t\t<path class="st0" d="M4.8,13.3c-0.2,0-0.4-0.2-0.4-0.4v-1.3c0-0.2,0.2-0.4,0.4-0.4c0.2,0,0.4,0.2,0.4,0.4v1.3\n\t\t\tC5.2,13.2,5,13.3,4.8,13.3z"/>\n\t</g>\n\t<g>\n\t\t<path class="st0" d="M4.8,17.3c-0.2,0-0.4-0.2-0.4-0.4v-1.3c0-0.2,0.2-0.4,0.4-0.4c0.2,0,0.4,0.2,0.4,0.4v1.3\n\t\t\tC5.2,17.1,5,17.3,4.8,17.3z"/>\n\t</g>\n\t<g>\n\t\t<path class="st0" d="M2.3,18.7c-0.2,0-0.4-0.2-0.4-0.4V9.3c0-0.4,0.3-0.7,0.7-0.7h4.2c0.2,0,0.4,0.2,0.4,0.4\n\t\t\tc0,0.2-0.2,0.4-0.4,0.4H2.7v8.7C2.7,18.5,2.5,18.7,2.3,18.7z"/>\n\t</g>\n\t<g>\n\t\t<path class="st0" d="M24.6,20.7H0.4c-0.2,0-0.4-0.2-0.4-0.4c0-0.2,0.2-0.4,0.4-0.4h24.1c0.2,0,0.4,0.2,0.4,0.4\n\t\t\tC25,20.5,24.8,20.7,24.6,20.7z"/>\n\t</g>\n</g>\n</svg>\n'
+    svg: null
   },
   {
     id: 9,
     langKey: 'menu_organization_user',
-    path: '/home/administration/users',
+    path: '/home/administration/external-users',
     icon: 'users',
     isSvg: true,
     permission: null,
-    permissionGroup: PermissionGroupsEnum.MANAGE_USER_PERMISSIONS_GROUP,
+    permissionGroup: PermissionGroupsEnum.MANAGE_EXTERNAL_USER_PERMISSIONS_GROUP,
     parent: 6,
     group: 'administration',
     itemOrder: 4,
@@ -994,19 +994,6 @@ export const navigationMenuList = [
     parent: 6,
     group: 'administration',
     itemOrder: 21,
-    svg: null
-  },
-  {
-    id: 76,
-    langKey: 'menu_profile',
-    path: '/home/administration/profiles',
-    icon: 'mdi-account',
-    isSvg: false,
-    permission: PermissionsEnum.MANAGE_PROFILE,
-    permissionGroup: null,
-    parent: 6,
-    group: 'administration',
-    itemOrder: 22,
     svg: null
   }
 ];

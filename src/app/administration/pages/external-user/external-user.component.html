@@ -38,12 +38,7 @@
           <ng-container cdkColumnDef="organization">
             <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
                 [sortCallback]="sortingCallbacks.organization"> {{langService.map.lbl_organization}}</th>
-            <td cdk-cell *cdkCellDef="let row"><span>{{row.orgUnitInfo.getName()}}</span></td>
-          </ng-container>
-          <ng-container cdkColumnDef="branch">
-            <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
-                [sortCallback]="sortingCallbacks.branch"> {{langService.map.lbl_branch}}</th>
-            <td cdk-cell *cdkCellDef="let row"><span>{{row.orgBranchInfo.getName()}}</span></td>
+            <td cdk-cell *cdkCellDef="let row"><span>{{row.profileInfo?.getName() || ''}}</span></td>
           </ng-container>
           <ng-container cdkColumnDef="status">
             <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"

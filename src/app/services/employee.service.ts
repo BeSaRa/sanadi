@@ -1,8 +1,6 @@
 import {Injectable} from '@angular/core';
 import {FactoryService} from './factory.service';
-import {OrgUser} from '../models/org-user';
-import {OrgBranch} from '../models/org-branch';
-import {OrgUnit} from '../models/org-unit';
+import {ExternalUser} from '../models/external-user';
 import {Permission} from '../models/permission';
 import {isValidValue} from '@helpers/utils';
 import {ILoginData} from '@contracts/i-login-data';
@@ -21,14 +19,15 @@ import {Profile} from '@app/models/profile';
 import {PermissionGroupsEnum} from '@app/enums/permission-groups-enum';
 import {StaticAppResourcesService} from '@services/static-app-resources.service';
 import {ProfileTypes} from '@app/enums/profile-types.enum';
+import {CustomMenu} from '@app/models/custom-menu';
+import {CustomMenuInterceptor} from '@app/model-interceptors/custom-menu-interceptor';
+import {ProfileInterceptor} from '@app/model-interceptors/profile-interceptor';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EmployeeService {
-  private orgBranch?: OrgBranch;
-  private orgUnit?: OrgUnit;
-  private orgUser?: OrgUser;
+  private externalUser?: ExternalUser;
   private internalUser?: InternalUser;
   private internalDepartment?: InternalDepartment;
   private permissions?: Permission[];
@@ -38,6 +37,7 @@ export class EmployeeService {
 
   public internalDepartments?: InternalDepartment[];
   public teams: Team[] = [];
+  public menuItems: CustomMenu[] = [];
   private userSecConfig?: Record<number, UserSecurityConfiguration[]>
   public userSecurityMap: Map<number, IUserSecurity> = new Map<number, IUserSecurity>();
 
@@ -91,6 +91,8 @@ export class EmployeeService {
       ldapGroupName: 'Supervision_and_Control_Manager'
     }
   };
+  private customMenuInterceptor = new CustomMenuInterceptor();
+  private profileInterceptor = new ProfileInterceptor();
 
   constructor(private configService: ConfigurationService,
               private staticResourcesService: StaticAppResourcesService) {
@@ -99,16 +101,12 @@ export class EmployeeService {
 
 
   setExternalUserData(loginData: ILoginData): void {
-    this.orgUser = (new OrgUser()).clone(loginData.orgUser);
-    this.orgBranch = (new OrgBranch()).clone(loginData.orgBranch);
-    this.orgUnit = (new OrgUnit()).clone(loginData.orgUnit);
-    this.profile = (new Profile()).clone(loginData.profile);
+    this.externalUser = (new ExternalUser()).clone(loginData.externalUser);
+    this.profile = this.profileInterceptor.receive((new Profile()).clone(loginData.profile));
   }
 
   clear(): void {
-    this.orgBranch = undefined;
-    this.orgUnit = undefined;
-    this.orgUser = undefined;
+    this.externalUser = undefined;
     this.profile = undefined;
     this.permissions = undefined;
     this.internalUser = undefined;
@@ -116,18 +114,11 @@ export class EmployeeService {
     this.internalDepartments = undefined;
     this.permissionMap.clear();
     this.teams = [];
+    this.menuItems = [];
   }
 
-  getUser(): OrgUser | undefined {
-    return this.orgUser;
-  }
-
-  getBranch(): OrgBranch | undefined {
-    return this.orgBranch;
-  }
-
-  getOrgUnit(): OrgUnit | undefined {
-    return this.orgUnit;
+  getExternalUser(): ExternalUser | undefined {
+    return this.externalUser;
   }
 
   getPermissions(): Permission[] {
@@ -198,12 +189,13 @@ export class EmployeeService {
     }
   }
 
-  isCurrentEmployee(user: OrgUser): boolean {
-    return this.orgUser?.id === user.id;
+  isCurrentEmployee(user: ExternalUser): boolean {
+    return this.externalUser?.id === user.id;
   }
 
   fillCurrentEmployeeData(loginData: ILoginData) {
     this.type = loginData.type;
+    this.menuItems = loginData.menuItems.map(customMenu => this.customMenuInterceptor.receive((new CustomMenu()).clone(customMenu)));
     this.permissions = loginData.permissionSet.map(permission => (new Permission()).clone(permission));
     this.teams = loginData.teams.map(item => (new Team()).clone(item));
     this.userSecConfig = loginData.userSecConfig;
@@ -264,7 +256,7 @@ export class EmployeeService {
   }
 
   getCurrentUserName(): string | undefined {
-    return this.isInternalUser() ? this.getInternalUser()?.getName() : this.getUser()?.getName();
+    return this.isInternalUser() ? this.getInternalUser()?.getName() : this.getExternalUser()?.getName();
   }
 
   getCurrentUserDepartment(): string {
@@ -272,7 +264,7 @@ export class EmployeeService {
   }
 
   getExternalUserDepartment(): string {
-    return this.getOrgUnit()?.getName() + ' - ' + this.getBranch()?.getName();
+    return this.profile?.getName() ?? '';// this.getOrgUnit()?.getName() + ' - ' + this.getBranch()?.getName();
   }
 
   getInternalUserDepartment(): string {
@@ -280,11 +272,11 @@ export class EmployeeService {
   }
 
   loggedIn(): boolean {
-    return !!this.orgUser || !!this.internalUser;
+    return !!this.externalUser || !!this.internalUser;
   }
 
-  getCurrentUser(): InternalUser | OrgUser {
-    return this.isInternalUser() ? this.getInternalUser()! : this.getUser()!;
+  getCurrentUser(): InternalUser | ExternalUser {
+    return this.isInternalUser() ? this.getInternalUser()! : this.getExternalUser()!;
   }
 
   private _isInTeam(team: { authName: string, ldapGroupName: string }, compareBy: 'authName' | 'ldapGroupName' = 'authName') {

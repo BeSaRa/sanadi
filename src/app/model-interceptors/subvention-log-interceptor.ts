@@ -6,7 +6,6 @@ import {DateUtils} from '../helpers/date-utils';
 export class SubventionLogInterceptor implements IModelInterceptor<SubventionLog> {
   receive(model: SubventionLog): SubventionLog {
     model.orgInfo = AdminResult.createInstance(model.orgInfo);
-    model.orgBranchInfo = AdminResult.createInstance(model.orgBranchInfo);
     model.orgUserInfo = AdminResult.createInstance(model.orgUserInfo);
     model.actionTypeInfo = AdminResult.createInstance(model.actionTypeInfo);
     model.actionTimeString = model.actionTime ? DateUtils.getDateStringFromDate(model.actionTime, 'DEFAULT_DATE_FORMAT') : '';

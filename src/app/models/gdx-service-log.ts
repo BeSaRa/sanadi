@@ -17,11 +17,9 @@ export class GdxServiceLog {
   benId!: number;
   gdxServiceId!: string;
   actionTime!: string;
-  orgBranchId!: number;
   orgId!: number;
   gdxServiceResponse!: string;
   orgUserId!: string;
-  orgBranchInfo!: AdminResult;
   orgInfo!: AdminResult;
   orgUserInfo!: AdminResult;
 
@@ -30,19 +28,9 @@ export class GdxServiceLog {
   gdxServiceResponseParsed: any;
   actionTimeString: string = '';
 
-  get orgAndBranchInfo() {
-    if (!isValidValue(this.orgInfo.getName())) {
-      return new AdminResult();
-    }
-    return AdminResult.createInstance({
-      arName: this.orgInfo.arName + ' - ' + this.orgBranchInfo.arName,
-      enName: this.orgInfo.enName + ' - ' + this.orgBranchInfo.enName,
-    });
-  }
-
   searchFields: ISearchFieldsMap<GdxServiceLog> = {
     ...normalSearchFields([]),
-    ...infoSearchFields(['orgAndBranchInfo', 'orgUserInfo']),
+    ...infoSearchFields(['orgInfo', 'orgUserInfo']),
     ...dateSearchFields(['actionTime'])
   }
 }

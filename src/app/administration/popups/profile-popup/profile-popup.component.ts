@@ -7,9 +7,9 @@ import {IDialogData} from '@app/interfaces/i-dialog-data';
 import {Profile} from '@app/models/profile';
 import {LangService} from '@app/services/lang.service';
 import {LookupService} from '@app/services/lookup.service';
-import {ProfileServiceService} from '@app/services/profile-service.service';
+import {ProfileServiceRelationService} from '@services/profile-service-relation.service';
 import {ProfileService} from '@app/services/profile.service';
-import {ProfileService as ProfileServiceModel} from '@app/models/profile-service';
+import {ProfileServiceRelation as ProfileServiceModel} from '@app/models/profile-service-relation';
 import {ToastService} from '@app/services/toast.service';
 import {TabComponent} from '@app/shared/components/tab/tab.component';
 import {DialogRef} from '@app/shared/models/dialog-ref';
@@ -115,7 +115,7 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
               private toast: ToastService,
               public lang: LangService,
               private cd: ChangeDetectorRef,
-              private profileServiceService: ProfileServiceService,
+              private profileServiceRelationService: ProfileServiceRelationService,
               private employeeService: EmployeeService,
               private service: ProfileService,
               private serviceDataService: ServiceDataService,
@@ -177,7 +177,7 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
     if (!this.employeeService.checkPermissions(PermissionsEnum.MANAGE_PROFILE_SERVICE_DATA)) {
       return;
     }
-    this.profileServiceService.getServicesByProfile(id)
+    this.profileServiceRelationService.getServicesByProfile(id)
       .subscribe((result) => {
         this.profileServices = result;
         this._filterExistingServices();
@@ -216,7 +216,7 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
         serviceId: +e,
       })
     );
-    this.profileServiceService.createBulk(_services).subscribe((e) => {
+    this.profileServiceRelationService.createBulk(_services).subscribe((e) => {
       this.loadLinkedServices(this.model.id);
       this.toast.success(this.lang.map.services_add_successfully);
       this.servicesControl.reset();

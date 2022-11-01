@@ -22,9 +22,7 @@ export class SubventionRequestPartial extends BaseModel<SubventionRequestPartial
   creationYear!: number;
   status!: number;
   orgId!: number;
-  orgBranchId!: number;
   statusInfo!: AdminResult;
-  orgBranchInfo!: AdminResult;
   orgInfo!: AdminResult;
   gender!: number;
   isHandicapped: boolean = false;
@@ -39,7 +37,7 @@ export class SubventionRequestPartial extends BaseModel<SubventionRequestPartial
   subventionRequestService: SubventionRequestService;
 
   searchFields: ISearchFieldsMap<SubventionRequestPartial> = {
-    ...infoSearchFields(['orgAndBranchInfo', 'genderInfo']),
+    ...infoSearchFields(['orgInfo', 'genderInfo']),
     ...normalSearchFields(['creationDateString', 'creationYear', 'aidTotalSuggestedAmount', 'aidTotalPayedAmount', 'aidRemainingAmount'])
   }
 
@@ -47,16 +45,6 @@ export class SubventionRequestPartial extends BaseModel<SubventionRequestPartial
     super();
     this.service = FactoryService.getService('SubventionRequestPartialService');
     this.subventionRequestService = FactoryService.getService('SubventionRequestService');
-  }
-
-  get orgAndBranchInfo() {
-    if (!isValidValue(this.orgInfo.getName())) {
-      return new AdminResult();
-    }
-    return AdminResult.createInstance({
-      arName: this.orgInfo.arName + ' - ' + this.orgBranchInfo.arName,
-      enName: this.orgInfo.enName + ' - ' + this.orgBranchInfo.enName,
-    });
   }
 
   create(): Observable<SubventionRequestPartial> {

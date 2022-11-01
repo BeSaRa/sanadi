@@ -1,30 +1,30 @@
-import { LicenseService } from '@app/services/license.service';
-import { SearchAwarenessActivitySuggestionCriteria } from './../../../../models/search-awareness-activity-suggestion-criteria';
-import { Lookup } from '@app/models/lookup';
-import { DatepickerOptionsMap } from './../../../../types/types';
-import { DateUtils } from './../../../../helpers/date-utils';
-import { EmployeeService } from './../../../../services/employee.service';
-import { TabComponent } from './../../../../shared/components/tab/tab.component';
-import { CommonCaseStatus } from './../../../../enums/common-case-status.enum';
-import { CollectionRequestType, ServiceRequestTypes } from './../../../../enums/service-request-types';
-import { UserClickOn } from './../../../../enums/user-click-on.enum';
-import { takeUntil, switchMap, exhaustMap, catchError, tap, filter, map } from 'rxjs/operators';
-import { OpenFrom } from './../../../../enums/open-from.enum';
-import { IKeyValue } from './../../../../interfaces/i-key-value';
-import { ILanguageKeys } from '@contracts/i-language-keys';
-import { CommonUtils } from './../../../../helpers/common-utils';
-import { ToastService } from './../../../../services/toast.service';
-import { DialogService } from './../../../../services/dialog.service';
-import { LookupService } from './../../../../services/lookup.service';
-import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
-import { AwarenessActivitySuggestion } from './../../../../models/awareness-activity-suggestion';
-import { AwarenessActivitySuggestionService } from './../../../../services/awareness-activity-suggestion.service';
-import { Component, ChangeDetectorRef } from '@angular/core';
-import { UntypedFormGroup, UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
-import { OperationTypes } from '@app/enums/operation-types.enum';
-import { SaveTypes } from '@app/enums/save-types';
-import { LangService } from '@app/services/lang.service';
-import { Observable, of, Subject } from 'rxjs';
+import {LicenseService} from '@app/services/license.service';
+import {SearchAwarenessActivitySuggestionCriteria} from './../../../../models/search-awareness-activity-suggestion-criteria';
+import {Lookup} from '@app/models/lookup';
+import {DatepickerOptionsMap} from './../../../../types/types';
+import {DateUtils} from './../../../../helpers/date-utils';
+import {EmployeeService} from './../../../../services/employee.service';
+import {TabComponent} from './../../../../shared/components/tab/tab.component';
+import {CommonCaseStatus} from './../../../../enums/common-case-status.enum';
+import {CollectionRequestType, ServiceRequestTypes} from './../../../../enums/service-request-types';
+import {UserClickOn} from './../../../../enums/user-click-on.enum';
+import {catchError, exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
+import {OpenFrom} from './../../../../enums/open-from.enum';
+import {IKeyValue} from './../../../../interfaces/i-key-value';
+import {ILanguageKeys} from '@contracts/i-language-keys';
+import {CommonUtils} from './../../../../helpers/common-utils';
+import {ToastService} from './../../../../services/toast.service';
+import {DialogService} from './../../../../services/dialog.service';
+import {LookupService} from './../../../../services/lookup.service';
+import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
+import {AwarenessActivitySuggestion} from './../../../../models/awareness-activity-suggestion';
+import {AwarenessActivitySuggestionService} from './../../../../services/awareness-activity-suggestion.service';
+import {ChangeDetectorRef, Component} from '@angular/core';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {SaveTypes} from '@app/enums/save-types';
+import {LangService} from '@app/services/lang.service';
+import {Observable, of, Subject} from 'rxjs';
 
 @Component({
   selector: 'app-awareness-activity-suggestion',
@@ -243,7 +243,7 @@ AwarenessActivitySuggestionService
     if (this.model!.ouInfo)
       return this.model!.ouInfo.getName()
     else
-      return this.employeeService.getOrgUnit()?.getName()
+      return this.employeeService.getProfile()?.getName()
   }
   handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
     of(userInteraction).pipe(

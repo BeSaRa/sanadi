@@ -137,8 +137,8 @@ export class UrgentJointReliefCampaignOrganizationApproveTaskPopupComponent impl
   }
 
   updateCase(): Observable<any> {
-    this.model!.participatingOrganizaionList.find(x => x.organizationId == this.employeeService.getOrgUnit()!.id)!.workStartDate = this.model?.workStartDate;
-    this.model!.participatingOrganizaionList.find(x => x.organizationId == this.employeeService.getOrgUnit()!.id)!.donation = this.model?.donation;
+    this.model!.participatingOrganizaionList.find(x => x.organizationId == this.employeeService.getProfile()!.id)!.workStartDate = this.model?.workStartDate;
+    this.model!.participatingOrganizaionList.find(x => x.organizationId == this.employeeService.getProfile()!.id)!.donation = this.model?.donation;
     this.model = (new UrgentJointReliefCampaign()).clone(this.model);
     return this.model ? this.model.update() : of(null);
   }
