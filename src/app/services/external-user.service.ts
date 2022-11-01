@@ -81,6 +81,7 @@ export class ExternalUserService extends CrudWithDialogGenericService<ExternalUs
           let model = new ExternalUser().clone();
           if (this.employeeService.isExternalUser()){
             model.profileId = this.employeeService.getProfile()!.id;
+            model.status = CommonStatusEnum.ACTIVATED;
           }
           return of(this.dialog.show<IDialogData<ExternalUser>>(ExternalUserPopupComponent, {
             model: model,

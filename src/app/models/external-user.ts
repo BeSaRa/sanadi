@@ -1,19 +1,19 @@
-import { BaseModel } from './base-model';
-import { Observable } from 'rxjs';
-import { FactoryService } from '@services/factory.service';
-import { ExternalUserService } from '@services/external-user.service';
-import { LangService } from '@services/lang.service';
-import { INames } from '@contracts/i-names';
-import { AdminResult } from './admin-result';
-import { Lookup } from './lookup';
-import { LookupService } from '@services/lookup.service';
-import {ISearchFieldsMap, searchFunctionType} from '../types/types';
-import { DialogRef } from '../shared/models/dialog-ref';
-import { ExternalUserInterceptor } from "@app/model-interceptors/external-user-interceptor";
-import { InterceptModel } from "@decorators/intercept-model";
+import {BaseModel} from './base-model';
+import {Observable} from 'rxjs';
+import {FactoryService} from '@services/factory.service';
+import {ExternalUserService} from '@services/external-user.service';
+import {LangService} from '@services/lang.service';
+import {INames} from '@contracts/i-names';
+import {AdminResult} from './admin-result';
+import {ISearchFieldsMap} from '../types/types';
+import {DialogRef} from '../shared/models/dialog-ref';
+import {ExternalUserInterceptor} from '@app/model-interceptors/external-user-interceptor';
+import {InterceptModel} from '@decorators/intercept-model';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
 import {normalSearchFields} from '@helpers/normal-search-fields';
 import {infoSearchFields} from '@helpers/info-search-fields';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {Validators} from '@angular/forms';
 
 const interceptor = new ExternalUserInterceptor();
 
@@ -22,11 +22,11 @@ const interceptor = new ExternalUserInterceptor();
   send: interceptor.send
 })
 export class ExternalUser extends BaseModel<ExternalUser, ExternalUserService> {
-  serviceToken!:	string;
+  serviceToken!: string;
   customRoleId: number | undefined;
   qid: string | undefined;
   profileId!: number;
-  domainPwd!:	string;
+  domainPwd!: string;
   nationality!: number;
   gender!: number;
   status: number | undefined;
@@ -38,7 +38,7 @@ export class ExternalUser extends BaseModel<ExternalUser, ExternalUserService> {
   jobTitle: number | undefined;
   empNum: number | undefined;
   phoneExtension: string | undefined;
-  domainName!:string;
+  domainName!: string;
   generalUserId!: number;
   profileInfo!: AdminResult;
   customRoleInfo!: AdminResult;
@@ -116,5 +116,50 @@ export class ExternalUser extends BaseModel<ExternalUser, ExternalUserService> {
   // noinspection JSUnusedGlobalSymbols
   getUniqueName(): string {
     return this.qid?.toString()?? '';
+  }
+
+  buildForm(controls?: boolean): any {
+    const {
+      arName,
+      enName,
+      qid,
+      empNum,
+      phoneNumber,
+      phoneExtension,
+      officialPhoneNumber,
+      email,
+      jobTitle,
+      status,
+      profileId,
+      customRoleId
+    } = this;
+    return {
+      arName: controls ? [arName, [
+        CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
+        Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('AR_NUM')
+      ]] : arName,
+      enName: controls ? [enName, [
+        CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
+        Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')
+      ]] : enName,
+      qid: controls ? [{value: qid, disabled: !!this.id}, [CustomValidators.required].concat(CustomValidators.commonValidations.qId)] : qid,
+      empNum: controls ? [empNum, [CustomValidators.required, CustomValidators.number, Validators.maxLength(10)]] : empNum,
+      phoneNumber: controls ? [phoneNumber, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : phoneNumber,
+      phoneExtension: controls ? [phoneExtension, [CustomValidators.number, Validators.maxLength(10)]] : phoneExtension,
+      officialPhoneNumber: controls ? [officialPhoneNumber, CustomValidators.commonValidations.phone] : officialPhoneNumber,
+      email: controls ? [email, [
+        CustomValidators.required, Validators.email, Validators.maxLength(CustomValidators.defaultLengths.EMAIL_MAX)]] : email,
+      jobTitle: controls ? [jobTitle, [CustomValidators.required]] : jobTitle,
+      status: controls ? [status, CustomValidators.required] : status,
+      profileId: controls ? [profileId, CustomValidators.required] : profileId,
+      customRoleId: controls ? [customRoleId] : customRoleId // not required as it is dummy to be tracked from permissions tab
+    };
+  }
+
+  setBasicFormCrossValidations(): any {
+    return CustomValidators.validateFieldsStatus([
+      'arName', 'enName', 'empNum', 'qid', 'phoneNumber', 'phoneExtension',
+      'officialPhoneNumber', 'email', 'jobTitle', 'status', 'profileId', 'customRoleId']
+    );
   }
 }

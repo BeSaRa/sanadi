@@ -1,4 +1,4 @@
-import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, Inject, ViewChild} from '@angular/core';
 import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {LangService} from '@app/services/lang.service';
@@ -9,9 +9,8 @@ import {ToastService} from '@app/services/toast.service';
 import {Lookup} from '@app/models/lookup';
 import {LookupService} from '@app/services/lookup.service';
 import {CustomRole} from '@app/models/custom-role';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {combineLatest, of, Subject} from 'rxjs';
-import {catchError, exhaustMap, filter, map, switchMap, take, takeUntil} from 'rxjs/operators';
+import {combineLatest, Observable, of} from 'rxjs';
+import {catchError, filter, map, switchMap, take, takeUntil} from 'rxjs/operators';
 import {Permission} from '@app/models/permission';
 import {ExternalUserPermission} from '@app/models/external-user-permission';
 import {CheckGroup} from '@app/models/check-group';
@@ -21,7 +20,6 @@ import {ExternalUserPermissionService} from '@services/external-user-permission.
 import {EmployeeService} from '@app/services/employee.service';
 import {AuthService} from '@app/services/auth.service';
 import {TabComponent} from '@app/shared/components/tab/tab.component';
-import {CommonStatusEnum} from '@app/enums/common-status.enum';
 import {JobTitle} from '@app/models/job-title';
 import {JobTitleService} from '@services/job-title.service';
 import {Profile} from '@app/models/profile';
@@ -29,15 +27,15 @@ import {ProfileService} from '@services/profile.service';
 import {CommonUtils} from '@helpers/common-utils';
 import {TabMap} from '@app/types/types';
 import {DialogService} from '@services/dialog.service';
+import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
+import {DialogRef} from '@app/shared/models/dialog-ref';
 
 @Component({
   selector: 'app-external-user-popup',
   templateUrl: './external-user-popup.component.html',
   styleUrls: ['./external-user-popup.component.scss']
 })
-export class ExternalUserPopupComponent implements OnInit, AfterViewInit, OnDestroy {
-  private save$: Subject<any> = new Subject<any>();
-  private destroy$: Subject<any> = new Subject<any>();
+export class ExternalUserPopupComponent extends AdminGenericDialog<ExternalUser> implements AfterViewInit {
   list: ExternalUser[] = [];
   form!: UntypedFormGroup;
   model: ExternalUser;
@@ -47,7 +45,7 @@ export class ExternalUserPopupComponent implements OnInit, AfterViewInit, OnDest
   customRoleList: CustomRole[];
   orgUserPermissions: ExternalUserPermission[];
   permissionList: Permission[] = [];
-  statusList!: Lookup[];
+  statusList: Lookup[] = this.lookupService.listByCategory.CommonStatus;
 
   permissions!: Record<number, Permission[][]>;
   selectedPermissions: number[] = [];
@@ -83,10 +81,7 @@ export class ExternalUserPopupComponent implements OnInit, AfterViewInit, OnDest
   };
   validateFieldsVisible = true;
 
-  inputMaskPatterns = CustomValidators.inputMaskPatterns;
-  commonStatusEnum = CommonStatusEnum;
-
-  displaySaveBtn: boolean = true;
+  saveVisible: boolean = true;
 
   static buildPermissionsByGroupId(permissions: Permission[]): any {
     return permissions.reduce((acc, current) => {
@@ -100,8 +95,10 @@ export class ExternalUserPopupComponent implements OnInit, AfterViewInit, OnDest
 
   @ViewChild('dialogContent') dialogContent!: ElementRef;
 
-  constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<ExternalUser>,
-              private toast: ToastService, public langService: LangService,
+  constructor(public dialogRef: DialogRef,
+              @Inject(DIALOG_DATA_TOKEN) data: IDialogData<ExternalUser>,
+              private toast: ToastService,
+              public langService: LangService,
               private permissionService: PermissionService,
               private userPermissionService: ExternalUserPermissionService,
               private lookupService: LookupService,
@@ -111,12 +108,12 @@ export class ExternalUserPopupComponent implements OnInit, AfterViewInit, OnDest
               private profileService: ProfileService,
               private dialogService: DialogService,
               private cd: ChangeDetectorRef,
-              private fb: UntypedFormBuilder) {
+              public fb: UntypedFormBuilder) {
+    super();
     this.model = data.model;
     this.operation = data.operation;
     this.customRoleList = data.customRoleList;
     this.orgUserPermissions = data.orgUserPermissions;
-    this.statusList = lookupService.listByCategory.CommonStatus;
     this._setDefaultPermissions();
   }
 
@@ -124,16 +121,12 @@ export class ExternalUserPopupComponent implements OnInit, AfterViewInit, OnDest
     return this.operation === OperationTypes.VIEW;
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-    this.destroy$.unsubscribe();
+  destroyPopup(): void {
   }
 
-  ngOnInit(): void {
+  initPopup(): void {
     this.buildPermissionGroups();
     this.buildForm();
-    this._saveModel();
     this.listenToCustomRoleChange();
     this._loadJobTitles();
     this._loadProfiles();
@@ -146,7 +139,7 @@ export class ExternalUserPopupComponent implements OnInit, AfterViewInit, OnDest
     }
     if (this.readonly) {
       this.form.disable();
-      this.displaySaveBtn = false;
+      this.saveVisible = false;
       this.validateFieldsVisible = false;
     }
   }
@@ -159,35 +152,7 @@ export class ExternalUserPopupComponent implements OnInit, AfterViewInit, OnDest
 
   buildForm(): void {
     this.form = this.fb.group({
-      basic: this.fb.group({
-        arName: [this.model.arName, [
-          CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
-          Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('AR_NUM')
-        ]],
-        enName: [this.model.enName, [
-          CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
-          Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')
-        ]],
-        qid: [{
-          value: this.model.qid,
-          disabled: !!this.model.id
-        }, [CustomValidators.required].concat(CustomValidators.commonValidations.qId)],
-        empNum: [this.model.empNum, [CustomValidators.required, CustomValidators.number, Validators.maxLength(10)]],
-        phoneNumber: [this.model.phoneNumber, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)],
-        phoneExtension: [this.model.phoneExtension, [CustomValidators.number, Validators.maxLength(10)]],
-        officialPhoneNumber: [this.model.officialPhoneNumber, CustomValidators.commonValidations.phone],
-        email: [this.model.email, [
-          CustomValidators.required, Validators.email, Validators.maxLength(CustomValidators.defaultLengths.EMAIL_MAX)]],
-        jobTitle: [this.model.jobTitle, [CustomValidators.required]],
-        status: [this.model.status, CustomValidators.required],
-        profileId: [this.model.profileId, CustomValidators.required],
-        customRoleId: [this.model.customRoleId] // not required as it is dummy to be tracked from permissions tab
-      }, {
-        validators: CustomValidators.validateFieldsStatus([
-          'arName', 'enName', 'empNum', 'qid', 'phoneNumber', 'phoneExtension',
-          'officialPhoneNumber', 'email', 'jobTitle', 'status', 'profileId'
-        ])
-      }),
+      basic: this.fb.group(this.model.buildForm(true), {validators: this.model.setBasicFormCrossValidations()}),
       permissions: this.fb.group({
         customRoleId: [this.model.customRoleId],
         permissions: [!!this.selectedPermissions.length]
@@ -215,27 +180,13 @@ export class ExternalUserPopupComponent implements OnInit, AfterViewInit, OnDest
     return this.permissionsFormGroup.get('permissions') as UntypedFormControl;
   }
 
-  saveModel(): void {
+  /*saveModel(): void {
     this.save$.next();
-  }
-
-  displayFormValidity(form?: UntypedFormGroup | null, element?: HTMLElement | string): void {
-    CommonUtils.displayFormValidity(form || this.form, this.dialogContent.nativeElement);
   }
 
   _saveModel(): void {
     this.save$.pipe(
       takeUntil(this.destroy$),
-      filter(()=> {
-        const invalidTabs = this._getInvalidTabs();
-        if (invalidTabs.length > 0) {
-          const listHtml = CommonUtils.generateHtmlList(this.langService.map.msg_following_tabs_valid, invalidTabs);
-          this.dialogService.error(listHtml.outerHTML);
-          return false;
-        } else {
-          return true;
-        }
-      }),
       exhaustMap(() => {
         const orgUser = new ExternalUser().clone({...this.model, ...this.basicFormGroup?.value});
         return orgUser.save()
@@ -277,7 +228,7 @@ export class ExternalUserPopupComponent implements OnInit, AfterViewInit, OnDest
       this.model = user;
       this.operation = OperationTypes.UPDATE;
     });
-  }
+  }*/
 
   get popupTitle(): string {
     if (this.operation === OperationTypes.CREATE) {
@@ -289,7 +240,6 @@ export class ExternalUserPopupComponent implements OnInit, AfterViewInit, OnDest
     }
     return '';
   }
-
 
   private buildPermissionGroups(): void {
     combineLatest([this.permissionService.loadAsLookups(), of(this.lookupService.listByCategory.ExternalUserPermissionGroup)])
@@ -329,8 +279,7 @@ export class ExternalUserPopupComponent implements OnInit, AfterViewInit, OnDest
     }
   }
 
-  // noinspection JSUnusedLocalSymbols
-  updatePermissionsByRole($event: Event): void {
+  updatePermissionsByRole($event?: Event): void {
     const value = this.customRoleControl?.value;
     if (!value) {
       this.selectedPermissions = [];
@@ -389,7 +338,7 @@ export class ExternalUserPopupComponent implements OnInit, AfterViewInit, OnDest
   }
 
   onTabChange($event: TabComponent) {
-    this.displaySaveBtn = (!['services', 'teams'].includes($event.name));
+    this.saveVisible = (!['services', 'teams'].includes($event.name));
     this.validateFieldsVisible = (!['services', 'teams'].includes($event.name));
   }
 
@@ -428,5 +377,47 @@ export class ExternalUserPopupComponent implements OnInit, AfterViewInit, OnDest
       }
     }
     return failedList;
+  }
+
+  beforeSave(model: ExternalUser, form: UntypedFormGroup): Observable<boolean> | boolean {
+    const invalidTabs = this._getInvalidTabs();
+    if (invalidTabs.length > 0) {
+      const listHtml = CommonUtils.generateHtmlList(this.langService.map.msg_following_tabs_valid, invalidTabs);
+      this.dialogService.error(listHtml.outerHTML);
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  prepareModel(model: ExternalUser, form: UntypedFormGroup): Observable<ExternalUser> | ExternalUser {
+    return new ExternalUser().clone({...this.model, ...this.basicFormGroup?.value});
+  }
+
+  afterSave(model: ExternalUser, dialogRef: DialogRef): void {
+    this.userPermissionService.saveBulkUserPermissions(model.id, this.selectedPermissions)
+      .pipe(
+        catchError(() => {
+          return of(null);
+        }),
+        filter((response) => response !== null),
+        switchMap(() => {
+          return this.employeeService.isCurrentEmployee(model) ? this.authService.validateToken()
+            .pipe(catchError(() => of(model)), map(_ => model)) : of(model);
+        })
+      ).subscribe((result) => {
+      if (!result) {
+        return;
+      }
+      const message = (this.operation === OperationTypes.CREATE)
+        ? this.langService.map.msg_create_x_success
+        : this.langService.map.msg_update_x_success;
+      this.model = model;
+      this.operation = OperationTypes.UPDATE;
+      this.toast.success(message.change({x: model.getName()}));
+    });
+  }
+
+  saveFail(error: Error): void {
   }
 }

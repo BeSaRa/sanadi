@@ -76,11 +76,10 @@
           <div class="col-sm-6 mb-4 ng-select-wrapper">
             <label for="status" asteriskIfRequired="status"
                    class="form-label">{{langService.map.lbl_status}}</label>
-            <ng-select [selectOnTab]="true" labelForId="status" [clearable]="false"
+            <ng-select [selectOnTab]="true" labelForId="status" [clearable]="true"
                        placeholder="{{langService.map.select}}" id="status"
                        [notFoundText]="langService.map.msg_not_found" appendTo="body"
                        formControlName="status" validationClasses="status">
-              <ng-option value="">{{langService.map.lbl_none}}</ng-option>
               <ng-option *ngFor="let option of statusList" [value]="option.lookupKey"
                          [disabled]="(option.lookupKey === commonStatusEnum.RETIRED)">
                 {{option.getName()}}
@@ -184,7 +183,7 @@
     <i class="mdi mdi-information-outline text-info"></i>
   </button>
   <span class="flex-grow-1"></span>
-  <button [disabled]="form.invalid" *ngIf="displaySaveBtn && !readonly" (click)="saveModel()"
+  <button [disabled]="form.invalid" *ngIf="saveVisible && !readonly" (click)="save$.next(null)"
           class="btn btn-primary">{{langService.map.btn_save}}</button>
   <button [dialogClose]="model" class="btn btn-secondary">{{langService.map.btn_cancel}}</button>
 </div>
