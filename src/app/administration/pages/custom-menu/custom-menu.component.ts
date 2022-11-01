@@ -16,8 +16,7 @@ import {ToastService} from '@app/services/toast.service';
 import {TableComponent} from '@app/shared/components/table/table.component';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {Observable, of, Subject} from 'rxjs';
-import {catchError, exhaustMap, filter, switchMap, takeUntil} from 'rxjs/operators';
-import {Donor} from '@app/models/donor';
+import {catchError, exhaustMap, filter, map, switchMap, takeUntil} from 'rxjs/operators';
 
 @Component({
   selector: 'app-custom-menu',
@@ -25,7 +24,7 @@ import {Donor} from '@app/models/donor';
   styleUrls: ['./custom-menu.component.css'],
 })
 export class CustomMenuComponent extends AdminGenericComponent<CustomMenu, CustomMenuService> {
-  usePagination = false;
+  usePagination = true;
   useCompositeToLoad = false;
 
   constructor(public lang: LangService,
@@ -156,11 +155,22 @@ export class CustomMenuComponent extends AdminGenericComponent<CustomMenu, Custo
       .pipe(switchMap(() => {
         let load: Observable<CustomMenu[]>;
         if (this.parentId) {
-          load = this.service.loadByParentId(this.parentId);
+          load = this.service.loadByParentId(this.parentId).pipe(map((res) => {
+            this.count = res.length;
+            return res;
+          }));
         } else {
-          load = this.service.loadMain();
+          const paginationOptions = {
+            limit: this.pageEvent.pageSize,
+            offset: (this.pageEvent.pageIndex * this.pageEvent.pageSize)
+          }
+          load = this.service.loadMain(paginationOptions).pipe(map((res) => {
+            this.count = res.count;
+            return res.rs;
+          }));
         }
         return load.pipe(catchError(_ => {
+          this.count = 0;
           return of([]);
         }));
       }))
