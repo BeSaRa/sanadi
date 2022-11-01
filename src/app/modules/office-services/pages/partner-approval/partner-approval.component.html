@@ -332,7 +332,7 @@
 
       </goal>
       <goals-list #goalsListTab [list]="model?.goalsList || []" [readonly]="(isExtendOrCancelRequestType() || readonly)"
-       (readyEvent)="goalsTabStatus = $event"></goals-list>
+       (readyEvent)="goalsListTabStatus = $event"></goals-list>
 
       <!-- Target Groups -->
       <target-group #targetGroupsTab [list]="model?.targetGroupList || []"
@@ -341,7 +341,7 @@
 
       <!-- Work Area -->
       <work-areas [countries]="countries" #workAreasTab
-      [readonly]="readonly" [list]="model?.workAreaObjectList || []"
+      [readonly]="(isExtendOrCancelRequestType() || readonly)" [list]="model?.workAreaObjectList || []"
      >
       </work-areas>
     </ng-template>
