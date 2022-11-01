@@ -17,6 +17,7 @@ import { EmployeeService } from '@services/employee.service';
 import { OrgUser } from '@app/models/org-user';
 import { InternalUser } from '@app/models/internal-user';
 import { DialogRef } from "@app/shared/models/dialog-ref";
+import { ItemId } from "@app/types/types";
 
 @Component({
   selector: 'custom-attachment-popup',
@@ -220,8 +221,12 @@ export class CustomAttachmentPopupComponent implements OnInit, OnDestroy {
   }
 
   private updateAttachments(attachments: FileNetDocument[]): void {
-    const grid = this.data.component.multiAttachments.get(this.identifier)!;
-    grid.set(this.itemId , attachments)
+    let grid = this.data.component.multiAttachments.get(this.identifier)!;
+    if (!grid) {
+      this.data.component.multiAttachments.set(this.identifier, new Map<ItemId, FileNetDocument[]>())
+      grid = this.data.component.multiAttachments.get(this.identifier)!;
+    }
+    grid.set(this.itemId, attachments)
     this.data.attachmentsUpdated$.next(attachments)
   }
 
