@@ -162,8 +162,6 @@ export class PartnerApprovalInterceptor
       return service.workAreaInterceptor.send(x) as WorkArea;
     });
 
-    console.log(model.displayGoals);
-
     model.goals = model.displayGoals?.map(x=>x.goal) ?? [];
 
 
