@@ -68,15 +68,14 @@ export class NpoManagementApprovePopupComponent implements OnInit {
       .pipe(exhaustMap(_ => {
         if (!this.isCancelRequestType()) {
           Object.assign(this.data.model, this.approvalForm.value)
-          console.log({...this.data.model})
           return this.data.model.save()
         }
         return of(true)
       }))
-      // .pipe(switchMap(_ => this.inboxService.takeActionOnTask(this.data.model.taskDetails.tkiid, this.getResponse(), this.data.model.service)))
+      .pipe(switchMap(_ => this.inboxService.takeActionOnTask(this.data.model.taskDetails.tkiid, this.getResponse(), this.data.model.service)))
       .subscribe(() => {
         this.toast.success(this.lang.map.process_has_been_done_successfully);
-        // this.dialogRef.close(true);
+        this.dialogRef.close(true);
       })
   }
   private getResponse(): Partial<IWFResponse> {
