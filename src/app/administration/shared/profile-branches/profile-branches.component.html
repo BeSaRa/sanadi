@@ -1,0 +1,169 @@
+<ng-container [formGroup]="branchForm">
+  <ng-container>
+    <div class="row">
+      <div class="col">
+        <h1 class="h6 text-primary m-0 d-inline-block">{{lang.map.add_branch}}</h1>
+        <button class="btn btn-link outline-none"
+                tooltip="{{lang.map.btn_add}}" (click)="openAddBranchForm()">
+          <i class="mdi mdi-plus-box"></i></button>
+      </div>
+    </div>
+    <ng-container *ngIf="addBranchFormActive">
+      <div class="row">
+        <div class="col-md-6 col-sm-12 mb-4 position-relative">
+          <label asteriskIfRequired="fullName" class="form-label"
+                 for="fullName">{{lang.map.full_name}}</label>
+          <input class="form-control"
+                 formControlName="fullName"
+                 id="fullName" validationClasses="fullName">
+          <app-field-error-message controlName="fullName"></app-field-error-message>
+        </div>
+        <div class="col-md-6 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="category"
+                 for="category">{{lang.map.headquarter_type}}</label>
+          <ng-select [selectOnTab]="true" labelForId="category" [clearable]="false"
+                     placeholder="{{lang.map.select}}" id="category"
+                     [notFoundText]="lang.map.msg_not_found"
+                     formControlName="category" validationClasses="category">
+            <ng-option *ngFor="let option of categories" [value]="option.lookupKey">
+              {{option.getName()}}
+            </ng-option>
+          </ng-select>
+          <app-field-error-message controlName="category"></app-field-error-message>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="branchAdjective"
+                 for="branchAdjective">{{lang.map.branch_adjective}}</label>
+          <ng-select [selectOnTab]="true" labelForId="branchAdjective" [clearable]="false"
+                     placeholder="{{lang.map.select}}" id="branchAdjective"
+                     [notFoundText]="lang.map.msg_not_found"
+                     formControlName="branchAdjective" validationClasses="branchAdjective">
+            <ng-option *ngFor="let option of branchAdjectives" [value]="option.lookupKey">
+              {{option.getName()}}
+            </ng-option>
+          </ng-select>
+          <app-field-error-message controlName="branchAdjective"></app-field-error-message>
+        </div>
+        <div class="col-md-6 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="usageAdjective"
+                 for="usageAdjective">{{lang.map.usage_adjective}}</label>
+          <ng-select [selectOnTab]="true" labelForId="usageAdjective" [clearable]="false"
+                     placeholder="{{lang.map.select}}" id="usageAdjective"
+                     [notFoundText]="lang.map.msg_not_found"
+                     formControlName="usageAdjective" validationClasses="usageAdjective">
+            <ng-option *ngFor="let option of usageAdjectives" [value]="option.lookupKey">
+              {{option.getName()}}
+            </ng-option>
+          </ng-select>
+          <app-field-error-message controlName="usageAdjective"></app-field-error-message>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 col-sm-12 mb-4 position-relative">
+          <label asteriskIfRequired="zoneNumber" class="form-label"
+                 for="zoneNumber">{{lang.map.lbl_zone}}</label>
+          <input class="form-control" formControlName="zoneNumber"
+                 id="zoneNumber" validationClasses="zoneNumber">
+          <app-field-error-message controlName="zoneNumber"></app-field-error-message>
+        </div>
+        <div class="col-md-6 col-sm-12 mb-4 position-relative">
+          <label asteriskIfRequired="streetNumber" class="form-label"
+                 for="streetNumber">{{lang.map.lbl_street}}</label>
+          <input class="form-control" formControlName="streetNumber"
+                 id="streetNumber" validationClasses="streetNumber">
+          <app-field-error-message controlName="streetNumber"></app-field-error-message>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 col-sm-12 mb-4 position-relative">
+          <label asteriskIfRequired="buildingNumber" class="form-label"
+                 for="buildingNumber">{{lang.map.building_number}}</label>
+          <input class="form-control" formControlName="buildingNumber"
+                 id="buildingNumber" validationClasses="buildingNumber">
+          <app-field-error-message controlName="buildingNumber"></app-field-error-message>
+        </div>
+        <div class="col-md-6 col-sm-12 mb-4 position-relative">
+          <label asteriskIfRequired="address" class="form-label"
+                 for="address">{{lang.map.address_details}}</label>
+          <input class="form-control" formControlName="address"
+                 id="address" validationClasses="address">
+          <app-field-error-message controlName="address"></app-field-error-message>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 text-center action-container mb-3">
+          <div class="flex-grow-1"></div>
+          <button [disabled]="!branchForm.valid" (click)="saveBranch()"
+                  class="btn btn-primary">{{lang.map.btn_save}}</button>
+          <button class="btn btn-secondary"
+                  (click)="cancelAddBranch()">{{lang.map.btn_cancel}}</button>
+        </div>
+      </div>
+    </ng-container>
+  </ng-container>
+  <div class="row">
+    <div class="col-12">
+      <app-table #table [columns]="branchesDisplayedColumns"
+                 [data]="selectedBranches" [selectable]="true"
+                 [useSearchToFilter]="true"
+                 sortableTable>
+        <table [dataSource]="table.dataSource" cdk-table
+               class="table table-striped table-bordered caption-top">
+          <ng-container cdkColumnDef="index">
+            <th *cdkHeaderCellDef cdk-header-cell
+                sortable-header> #</th>
+            <td *cdkCellDef="let row; let i = index;" cdk-cell> {{i + 1}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="fullName">
+            <th *cdkHeaderCellDef cdk-header-cell
+                sortable-header> {{lang.map.full_name}}</th>
+            <td *cdkCellDef="let row" cdk-cell> {{row.fullName}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="zoneNumber">
+            <th *cdkHeaderCellDef cdk-header-cell
+                sortable-header> {{lang.map.lbl_zone}}</th>
+            <td *cdkCellDef="let row" cdk-cell> {{row.zoneNumber}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="streetNumber">
+            <th *cdkHeaderCellDef cdk-header-cell sortable-header> {{lang.map.lbl_street}}</th>
+            <td *cdkCellDef="let row" cdk-cell> {{row.streetNumber}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="buildingNumber">
+            <th *cdkHeaderCellDef cdk-header-cell sortable-header> {{lang.map.building_number}}</th>
+            <td *cdkCellDef="let row" cdk-cell> {{row.buildingNumber}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="actions">
+            <th *cdkHeaderCellDef cdk-header-cell> {{lang.map.lbl_actions}}</th>
+            <td *cdkCellDef="let row" cdk-cell class="table-actions">
+              <div class="d-flex flex-row">
+                <button (click)="manageContactOfficers($event, row)"
+                        [disabled]="(addBranchFormActive)"
+                        class="btn btn-link outline-none" tooltip="{{lang.map.contact_officers}}">
+                  <i class="mdi mdi-card-account-phone"></i>
+                </button>
+                <button (click)="selectBranch($event, row)"
+                        [disabled]="(addBranchFormActive)"
+                        class="btn btn-link outline-none" tooltip="{{lang.map.btn_edit}}">
+                  <i class="mdi mdi-pen"></i>
+                </button>
+                <button (click)="removeBranch($event, row)"
+                        [disabled]="(addBranchFormActive)"
+                        class="btn btn-link outline-none" tooltip="{{lang.map.btn_remove}}">
+                  <i class="mdi mdi-close-box"></i>
+                </button>
+              </div>
+            </td>
+          </ng-container>
+          <tr *cdkHeaderRowDef="branchesDisplayedColumns" cdk-header-row></tr>
+          <tr *cdkRowDef="let row; columns: branchesDisplayedColumns;" cdk-row></tr>
+          <!--suppress HtmlUnknownBooleanAttribute -->
+          <tr *cdkNoDataRow>
+            <td class="text-center" colspan="100">{{lang.map.no_records_to_display}}</td>
+          </tr>
+        </table>
+      </app-table>
+    </div>
+  </div>
+</ng-container>

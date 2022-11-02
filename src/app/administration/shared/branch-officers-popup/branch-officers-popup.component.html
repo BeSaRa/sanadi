@@ -1,0 +1,15 @@
+<div class="dialog-toolbar bg-primary d-flex justify-content-between">
+  <h1 class="h6 text-white">{{langService.map.contact_officers}}</h1>
+  <button type="button" class="btn-close btn-close-white"
+          tabindex="-1" [dialogClose]="null" aria-label="Close"></button>
+</div>
+
+<div class="dialog-content w600px">
+  <profile-officers [selectedOfficers]="model.branchContactOfficer" (officerListChanged)="onBranchOfficersChanged($event)" [addLabel]="'add_contact_officer'"></profile-officers>
+</div>
+<div class="dialog-actions">
+  <span class="flex-grow-1"></span>
+  <button (click)="saveOfficers()" [disabled]="!(tempModel.branchContactOfficer && tempModel.branchContactOfficer.length > 0)"
+          class="btn btn-primary">{{langService.map.btn_save}}</button>
+  <button [dialogClose]="null" class="btn btn-secondary">{{langService.map.btn_cancel}}</button>
+</div>

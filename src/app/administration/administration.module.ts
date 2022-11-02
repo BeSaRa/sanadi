@@ -85,6 +85,8 @@ import {CustomMenuUrlHandlerComponent} from './shared/custom-menu-url-handler/cu
 import {CustomMenuPermissionComponent} from './shared/custom-menu-permission/custom-menu-permission.component';
 import {CharityOrganizationProfileExtraDataPopupComponent} from './popups/charity-organization-profile-extra-data-popup/charity-organization-profile-extra-data-popup.component';
 import { ProfileOfficersComponent } from './shared/profile-officers/profile-officers.component';
+import { ProfileBranchesComponent } from './shared/profile-branches/profile-branches.component';
+import { BranchOfficersPopupComponent } from './shared/branch-officers-popup/branch-officers-popup.component';
 
 @NgModule({
   declarations: [
@@ -161,7 +163,9 @@ import { ProfileOfficersComponent } from './shared/profile-officers/profile-offi
     CustomMenuUrlHandlerComponent,
     CustomMenuPermissionComponent,
     CharityOrganizationProfileExtraDataPopupComponent,
-    ProfileOfficersComponent
+    ProfileOfficersComponent,
+    ProfileBranchesComponent,
+    BranchOfficersPopupComponent
   ],
   imports: [
     SharedModule,

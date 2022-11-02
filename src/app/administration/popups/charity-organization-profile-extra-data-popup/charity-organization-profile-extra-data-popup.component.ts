@@ -22,6 +22,7 @@ import {SafeResourceUrl} from '@angular/platform-browser';
 import {FileExtensionsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 import {catchError, switchMap, takeUntil} from 'rxjs/operators';
 import {BlobModel} from '@app/models/blob-model';
+import {Branch} from '@app/models/branch';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -74,6 +75,12 @@ export class CharityOrganizationProfileExtraDataPopupComponent extends AdminGene
       langKey: 'compliance_officers_details' as keyof ILanguageKeys,
       index: 4,
       validStatus: () => this.model.complianceOfficer && this.model.complianceOfficer.length > 0
+    },
+    internalBranches: {
+      name: 'internalBranchesTab',
+      langKey: 'internal_branches' as keyof ILanguageKeys,
+      index: 5,
+      validStatus: () => this.model.branchList && this.model.branchList.length > 0
     }
   };
 
@@ -162,6 +169,11 @@ export class CharityOrganizationProfileExtraDataPopupComponent extends AdminGene
 
   onProfileComplianceOfficersChanged(officers: Officer[]) {
     this.model.complianceOfficer = officers;
+  }
+
+  onProfileBranchesChanged(branches: Branch[]) {
+    console.log('branches from main component', branches);
+    this.model.branchList = branches;
   }
 
   // logo functionality

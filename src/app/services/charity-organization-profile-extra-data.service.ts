@@ -21,6 +21,7 @@ import {Officer} from '@app/models/officer';
 import {Branch} from '@app/models/branch';
 import {BlobModel} from '@app/models/blob-model';
 import {DomSanitizer} from '@angular/platform-browser';
+import {BranchOfficersPopupComponent} from '@app/administration/shared/branch-officers-popup/branch-officers-popup.component';
 
 @CastResponseContainer({
   $default: {
@@ -79,6 +80,13 @@ export class CharityOrganizationProfileExtraDataService extends CrudWithDialogGe
         }));
       })
     )
+  }
+
+  openBranchContactOfficersDialog(model: Branch): Observable<DialogRef> {
+    return of(this.dialog.show<IDialogData<Branch>>(BranchOfficersPopupComponent, {
+      model: model,
+      operation: OperationTypes.UPDATE
+    }));
   }
 
   updateLogo(charityId: number, file: File): Observable<boolean> {

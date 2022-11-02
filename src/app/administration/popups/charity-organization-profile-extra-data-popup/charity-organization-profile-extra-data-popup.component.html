@@ -20,6 +20,9 @@
     <tab [name]="tabsData.complianceOfficers.name"
          [hasError]="!model.complianceOfficer || model.complianceOfficer.length < 1"
          [template]="complianceOfficersTab" [title]="lang.map.compliance_officers_details"></tab>
+    <tab [name]="tabsData.internalBranches.name"
+         [hasError]="!model.branchList || model.branchList.length < 1"
+         [template]="internalBranchesTab" [title]="lang.map.internal_branches"></tab>
   </tabs-list>
   <form [formGroup]="form" novalidate>
     <ng-template #basicInfoTab>
@@ -266,6 +269,10 @@
     <ng-template #complianceOfficersTab>
       <profile-officers [addLabel]="addComplianceOfficersLabel" [selectedOfficers]="model.complianceOfficer"
                         (officerListChanged)="onProfileComplianceOfficersChanged($event)"></profile-officers>
+    </ng-template>
+    <ng-template #internalBranchesTab>
+      <profile-branches [selectedBranches]="model.branchList"
+                        (branchListChanged)="onProfileBranchesChanged($event)"></profile-branches>
     </ng-template>
   </form>
 </div>
