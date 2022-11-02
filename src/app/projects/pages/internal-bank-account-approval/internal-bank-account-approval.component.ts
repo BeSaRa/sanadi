@@ -41,6 +41,12 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   bankOperationTypes: Lookup[] = this.lookupService.listByCategory.BankOperationType
     .sort((a, b) => a.lookupKey - b.lookupKey);
 
+  bankOperationTypesWithoutCancel: Lookup[] = this.lookupService.listByCategory.BankOperationType
+    .filter(x => x.lookupKey !== BankAccountOperationTypes.INACTIVE)
+    .sort((a, b) => a.lookupKey - b.lookupKey);
+
+  flexBankOperationTypes: Lookup[] = [];
+
   banks: Bank[] = [];
   bankCategories: Lookup[] = this.lookupService.listByCategory.InternalBankCategory;
   currencies: Lookup[] = this.lookupService.listByCategory.Currency;
@@ -413,6 +419,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   }
 
   onSelectNewRequestType() {
+    this.flexBankOperationTypes = this.bankOperationTypesWithoutCancel;
     this.enableCancelAccountFields();
     this.enableNewNewAccountFields();
     this.disableNewNewAccountFields();
@@ -437,6 +444,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   }
 
   onSelectUpdateRequestType() {
+    this.flexBankOperationTypes = this.bankOperationTypesWithoutCancel;
     this.enableSearchField();
     this.enableCancelAccountFields();
     this.isCancel = false;
@@ -462,6 +470,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   }
 
   onSelectCancelRequestType() {
+    this.flexBankOperationTypes = this.bankOperationTypes;
     this.dontRequirePurposeField();
     // this.enableCancelAccountFields();
     this.disableCancelAccountFields();
