@@ -1,3 +1,4 @@
+import { switchMap, tap, catchError, filter } from 'rxjs/operators';
 import { CustomFormlyFieldConfig } from './../../../interfaces/custom-formly-field-config';
 import { CustomValidators } from './../../../validators/custom-validators';
 import { GenerealProcessTemplate } from './../../../models/general-process-template';
@@ -41,7 +42,7 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
   mainClassificationsList: AdminLookup[] = [];
   subClassificationsList: AdminLookup[] = [];
   departmentList: InternalDepartment[] = [];
-  teamsList: Team[] = [];
+  private _teamsList: Team[] = [];
   subTeamsList: SubTeam[] = [];
 
   constructor(public dialogRef: DialogRef,
@@ -72,12 +73,21 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
     this.adminLookupService.loadGeneralProcessClassificaion().subscribe(data => {
       this.mainClassificationsList = data;
     })
-    this.internalDepartmentService.loadDepartments().subscribe(data => {
-      this.departmentList = data;
+    this.teamService.loadAsLookups().pipe(
+      switchMap((teams) => {
+        return this.internalDepartmentService.loadGeneralProcessDepartments()
+          .pipe(
+            tap((deparments) => {
+              this._teamsList = teams.filter(team => deparments.findIndex(deparment => team.parentDeptId == deparment.id) != -1);
+            }))
+      })
+    ).subscribe(deparments => {
+      this.departmentList = deparments;
     })
-    this.teamService.loadAsLookups().subscribe(data => {
-      this.teamsList = data;
-    })
+    if(this.model?.id) {
+      this._loadSubTeam(this.model?.teamId);
+      this.loadSubClasses(this.model?.mainClass)
+    }
   }
   get fields(): CustomFormlyFieldConfig[] {
     return this._fields.map(f => {
@@ -87,7 +97,7 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
         templateOptions: {
           label: model.getName(),
           required: model.isRquired,
-          options: of([{id: 1, name: 'as'}, {id: 2, name: 'asss'}]),
+          options: of([{ id: 1, name: 'as' }, { id: 2, name: 'asss' }]),
         },
         selectOptions: {
           bindValue: 'id',
@@ -105,23 +115,33 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
       this.subClassificationsList = data;
     })
   }
-  private _loadSubTeam(teamId: number) {
-    this.subTeamService.getByParentId(teamId).subscribe(data => {
-      this.subTeamsList = data;
-    })
+  private _loadSubTeam(teamId?: number) {
+    if (teamId)
+      this.subTeamService.getByParentId(teamId).pipe(catchError(err => of([]))).subscribe(data => {
+        this.subTeamsList = data;
+      })
+    else this.subTeamsList = [];
   }
-  handleTeamChange(teamId: number) {
-    if (teamId) {
-      this._loadSubTeam(teamId);
-      this.departmentfield.setValue(teamId)
-    }
+  handleDepartmentChange() {
+    this.teamField.reset();
+    this.handleTeamChange();
   }
-  handleDepartmentChange(depId: number) {
-    let teamId = this.departmentList.find(dep => dep.id == depId)?.mainTeam.id
-    if (teamId) {
-      this._loadSubTeam(teamId);
-      this.teamfield.setValue(teamId)
-    }
+  handleTeamChange(teamId?: number) {
+    this.subTeamField.reset();
+    this._loadSubTeam(teamId);
+  }
+  get teamsList() {
+    return this._teamsList.filter(team => !this.departmentField.value || team.parentDeptId == this.departmentField.value)
+  }
+
+  beforeSave(model: GeneralProcess, form: UntypedFormGroup): boolean | Observable<boolean> {
+    return form.valid;
+  }
+  prepareModel(model: GeneralProcess, form: UntypedFormGroup): GeneralProcess | Observable<GeneralProcess> {
+    return (new GeneralProcess()).clone({
+      ...model, ...form.value,
+      template: ''
+    });
   }
   afterSave(model: GeneralProcess, dialogRef: DialogRef): void {
     const message = this.operation === OperationTypes.CREATE ? this.lang.map.msg_create_x_success : this.lang.map.msg_update_x_success;
@@ -131,12 +151,6 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
     this.model = model;
     this.operation = OperationTypes.UPDATE;
     dialogRef.close(model);
-  }
-  beforeSave(model: GeneralProcess, form: UntypedFormGroup): boolean | Observable<boolean> {
-    return form.valid;
-  }
-  prepareModel(model: GeneralProcess, form: UntypedFormGroup): GeneralProcess | Observable<GeneralProcess> {
-    return (new GeneralProcess()).clone({ ...model, ...form.value });
   }
 
   get generalProcessTemplateFieldTypesList() {
@@ -153,14 +167,15 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
     }
   };
 
-  get teamfield(): UntypedFormControl {
-    return this.form.get('teamId') as UntypedFormControl
-  }
-  get departmentfield(): UntypedFormControl {
+  get departmentField(): UntypedFormControl {
     return this.form.get('departmentId') as UntypedFormControl
   }
-
-
+  get teamField(): UntypedFormControl {
+    return this.form.get('teamId') as UntypedFormControl
+  }
+  get subTeamField(): UntypedFormControl {
+    return this.form.get('subTeamId') as UntypedFormControl
+  }
   getLabel(name: any) {
     return this.lang.map[('lbl_' + name) as keyof ILanguageKeys];
   }

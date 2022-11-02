@@ -63,7 +63,6 @@ export class GeneralProcessComponent extends AdminGenericComponent<GeneralProces
     }
   ];
 
-
   constructor(
     public lang: LangService,
     public service: GeneralProcessService,

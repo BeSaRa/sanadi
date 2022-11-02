@@ -1,3 +1,9 @@
+import { FormlyFieldHulfGridWrapperComponent } from './../../services-search/components/formly-field-hulf-grid-wrapper/formly-field-hulf-grid-wrapper.component';
+import { FormlyMaskInputFieldComponent } from './../../services-search/components/formly-mask-input-field/formly-mask-input-field.component';
+import { FormlySelectFieldComponent } from './../../services-search/components/formly-select-field/formly-select-field.component';
+import { FormlyDateFieldComponent } from './../../services-search/components/formly-date-field/formly-date-field.component';
+import { FormlyModule } from '@ngx-formly/core';
+import { FormlyBootstrapModule } from '@ngx-formly/bootstrap';
 import { GeneralProcessNotificationApprovalComponent } from './popups/general-process-notification-approval/general-process-notification-approval.component';
 import { GeneralProcessNotificationComponent } from './pages/general-process-notification/general-process-notification.component';
 import {
@@ -93,7 +99,18 @@ import {InternationalCooperationComponent} from './pages/international-cooperati
     CommonModule,
     EServicesMainModule,
     GeneralServicesRoutingModule,
-    OfficeServicesModule
+    OfficeServicesModule,
+    FormlyModule.forChild({
+      types: [
+        { name: 'dateField', component: FormlyDateFieldComponent, wrappers: ['col-md-6'] },
+        { name: 'selectField', component: FormlySelectFieldComponent, wrappers: ['col-md-6'] },
+        { name: 'maskInput', extends: 'input', component: FormlyMaskInputFieldComponent, wrappers: ['col-md-6'] },
+      ],
+      wrappers: [
+        { name: 'col-md-6', component: FormlyFieldHulfGridWrapperComponent }
+      ]
+    }),
+    FormlyBootstrapModule
   ]
 })
 export class GeneralServicesModule { }

@@ -13,7 +13,7 @@ import { DialogRef } from '@app/shared/models/dialog-ref';
 import { IDialogData } from '@app/interfaces/i-dialog-data';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { CrudWithDialogGenericService } from "@app/generics/crud-with-dialog-generic-service";
-import { CastResponseContainer } from "@decorators/cast-response";
+import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
 import { Pagination } from "@app/models/pagination";
 
 @CastResponseContainer({
@@ -70,6 +70,7 @@ export class SubTeamService extends CrudWithDialogGenericService<SubTeam> {
     return this.http.post<any>(this._getServiceURL() + '/filter', { parent });
   }
 
+  @CastResponse(undefined, { unwrap: 'rs', fallback: '$default' })
   getByParentId(parent: number): Observable<any> {
     return this._getByParentId(parent);
   }

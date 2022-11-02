@@ -1552,5 +1552,10 @@ export interface ILanguageKeys {
   lbl_field_order: string;
   internal_aid_calssification: string;
   btn_update: string;
+  lbl_process: string;
+  lbl_process_name: string;
+  lbl_process_subject: string;
+  lbl_process_explanations: string;
+  lbl_parent_classification: string;
 }
 

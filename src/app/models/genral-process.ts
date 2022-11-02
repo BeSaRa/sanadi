@@ -14,7 +14,7 @@ export class GeneralProcess extends BaseModel<GeneralProcess, GeneralProcessServ
   subClass!: number;
 
   departmentId!: number;
-  teamId!: string;
+  teamId!: number;
   subTeamId!: number;
 
   active!: true;

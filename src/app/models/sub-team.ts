@@ -1,5 +1,6 @@
-import { CommonStatusEnum } from '@app/enums/common-status.enum';
 import { SubTeamInterceptor } from './../model-interceptors/sub-team-interceptor';
+import { AdminResult } from '@app/models/admin-result';
+import { CommonStatusEnum } from '@app/enums/common-status.enum';
 import { SubTeamService } from './../services/sub-team.service';
 import { BaseModel } from '@app/models/base-model';
 import { FactoryService } from '@app/services/factory.service';
@@ -22,7 +23,7 @@ export class SubTeam extends BaseModel<SubTeam, SubTeamService> {
   parent!: number;
   status!: number;
   statusInfo!: Lookup;
-
+  parentInfo!: AdminResult;
   // extra properties
   service!: SubTeamService;
   langService: LangService;

@@ -1,3 +1,12 @@
+import { GeneralProcess } from '@app/models/genral-process';
+import { GeneralProcessService } from './../../../../services/general-process.service';
+import { AdminLookupTypeEnum } from './../../../../enums/admin-lookup-type-enum';
+import { TeamService } from './../../../../services/team.service';
+import { InternalDepartmentService } from './../../../../services/internal-department.service';
+import { AdminLookupService } from '@services/admin-lookup.service';
+import { AdminLookup } from './../../../../models/admin-lookup';
+import { InternalDepartment } from './../../../../models/internal-department';
+import { Team } from './../../../../models/team';
 import { LicenseService } from './../../../../services/license.service';
 import { Lookup } from '@app/models/lookup';
 import { TabComponent } from './../../../../shared/components/tab/tab.component';
@@ -31,8 +40,17 @@ GeneralProcessNotification,
 GeneralProcessNotificationService
 > {
   notificationRequestType: Lookup[] = [];
-  operationsList = [];
-  operationsTypeList = [];
+  processTypeList: Lookup[] = [];
+  processList: GeneralProcess[] = [];
+  otherProcess: GeneralProcess = new GeneralProcess().clone({
+    id: -1,
+    arName: 'عمليات أخرى',
+    enName: 'Other Procss'
+  })
+  mainClassificationsList: AdminLookup[] = [];
+  subClassificationsList: AdminLookup[] = [];
+  departmentList: InternalDepartment[] = [];
+  teamsList: Team[] = [];
 
   form!: UntypedFormGroup;
   licenseSearch$: Subject<string> = new Subject<string>();
@@ -53,6 +71,7 @@ GeneralProcessNotificationService
       name: "sampleDataForOperationsTab",
       langKey: "sample_data_for_operations" as keyof ILanguageKeys,
       validStatus: () => this.sampleDataForOperationsFormGroup.valid,
+      disabled: this.isOtherProcess
     },
     specialExplanations: {
       name: 'specialExplanationsTab',
@@ -75,6 +94,10 @@ GeneralProcessNotificationService
     public fb: UntypedFormBuilder,
     public service: GeneralProcessNotificationService,
     private employeeService: EmployeeService,
+    private adminLookupService: AdminLookupService,
+    private internalDepartmentService: InternalDepartmentService,
+    private teamService: TeamService,
+    private generalProcessService: GeneralProcessService
   ) {
     super();
   }
@@ -119,6 +142,44 @@ GeneralProcessNotificationService
   _initComponent(): void {
     this._buildForm();
     this.handleReadonly();
+    this.adminLookupService.loadGeneralProcessClassificaion().subscribe((data: AdminLookup[]) => {
+      this.mainClassificationsList = data;
+    })
+    this.teamService.loadAsLookups().pipe(
+      switchMap((teams: Team[]) => {
+        return this.internalDepartmentService.loadGeneralProcessDepartments()
+          .pipe(
+            tap((deparments: InternalDepartment[]) => {
+              this.teamsList = teams.filter((team: Team) => deparments.findIndex((deparment: InternalDepartment) => team.parentDeptId == deparment.id) != -1);
+            }))
+      }),
+    ).subscribe((deparments: InternalDepartment[]) => {
+      this.departmentList = deparments;
+    })
+    this.generalProcessService.filterProcess({}).pipe(
+      catchError((err) => {
+        console.log(err)
+        return of([this.otherProcess])
+      })
+    ).subscribe((data: GeneralProcess[]) => {
+      this.processList = [...data, this.otherProcess];
+    })
+  }
+  loadSubClasses(parentId: number) {
+    this.adminLookupService.loadByParentId(AdminLookupTypeEnum.GENERAL_PROCESS_CLASSIFICATION, parentId).subscribe(data => {
+      this.subClassificationsList = data;
+    })
+  }
+  handleTeamChange(teamId: number) {
+    if (teamId) {
+      this.departmentfield.setValue(teamId)
+    }
+  }
+  handleDepartmentChange(depId: number) {
+    let teamId = this.departmentList.find(dep => dep.id == depId)?.mainTeam.id
+    if (teamId) {
+      this.teamfield.setValue(teamId)
+    }
   }
   _buildForm(): void {
     const model = new GeneralProcessNotification().buildForm(true)
@@ -252,6 +313,10 @@ GeneralProcessNotificationService
       }
     });
   }
+  get fields() {
+    if(!this.model || !this.model.template) return [];
+    return JSON.parse(this.model.template);
+  }
   _destroyComponent(): void {
   }
   _resetForm(): void {
@@ -331,11 +396,14 @@ GeneralProcessNotificationService
   isEdit() {
     return this.requestTypeField.value == 2;
   }
+  get isOtherProcess() {
+    return this.processIdField && (!this.processIdField.value || this.processIdField.value == -1);
+  }
   get requestTypeField(): UntypedFormControl {
     return this.form.get("requestType") as UntypedFormControl;
   }
   get DSNNNFormGroup(): UntypedFormGroup {
-    return this.form.get('DSNNN') as UntypedFormGroup;
+    return this.form && this.form.get('DSNNN') as UntypedFormGroup;
   }
   get sampleDataForOperationsFormGroup(): UntypedFormGroup {
     return this.form.get('sampleDataForOperations') as UntypedFormGroup;
@@ -346,5 +414,13 @@ GeneralProcessNotificationService
   get oldLicenseFullSerialField(): UntypedFormControl {
     return this.form.get('oldLicenseFullSerial') as UntypedFormControl;
   }
-
+  get teamfield(): UntypedFormControl {
+    return this.form.get('teamId') as UntypedFormControl
+  }
+  get departmentfield(): UntypedFormControl {
+    return this.form.get('departmentId') as UntypedFormControl
+  }
+  get processIdField(): UntypedFormControl {
+    return this.DSNNNFormGroup && this.DSNNNFormGroup.get('processid') as UntypedFormControl
+  }
 }

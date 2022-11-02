@@ -12,7 +12,13 @@ import { HttpClient } from '@angular/common/http';
 import { GeneralProcess } from '@app/models/genral-process';
 import { CrudWithDialogGenericService } from '@app/generics/crud-with-dialog-generic-service';
 import { Injectable } from '@angular/core';
+import { CastResponse, CastResponseContainer } from '@app/decorators/decorators/cast-response';
 
+@CastResponseContainer({
+  $default: {
+    model: () => GeneralProcess
+  }
+})
 @Injectable({
   providedIn: 'root'
 })
@@ -88,5 +94,14 @@ export class GeneralProcessService extends CrudWithDialogGenericService<GeneralP
         ));
       })
     );
+  }
+
+
+  @CastResponse(undefined, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  filterProcess(params: Partial<GeneralProcess>): Observable<GeneralProcess[]> {
+    return this.http.post<GeneralProcess[]>(this._getServiceURL() + '/filter', params)
   }
 }
