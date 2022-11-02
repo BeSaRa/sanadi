@@ -38,7 +38,9 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   requestTypes: Lookup[] = this.lookupService.listByCategory.BankRequestType
     .sort((a, b) => a.lookupKey - b.lookupKey);
 
-  bankOperationTypes: Lookup[] = this.lookupService.listByCategory.BankOperationType;
+  bankOperationTypes: Lookup[] = this.lookupService.listByCategory.BankOperationType
+    .sort((a, b) => a.lookupKey - b.lookupKey);
+
   banks: Bank[] = [];
   bankCategories: Lookup[] = this.lookupService.listByCategory.InternalBankCategory;
   currencies: Lookup[] = this.lookupService.listByCategory.Currency;
@@ -461,7 +463,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
 
   onSelectCancelRequestType() {
     this.dontRequirePurposeField();
-    this.enableCancelAccountFields();
+    // this.enableCancelAccountFields();
     this.disableCancelAccountFields();
     this.hideUpdateBankAccountFields();
     this.hideUpdateMergeFields();
@@ -589,13 +591,19 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   }
 
   disableCancelAccountFields() {
-    this.disableOperationType();
+    this.makeOperationTypeCancel();
     this.disableBankAccountCategory();
     this.disablePurpose();
     this.disableBankId();
     this.disableCurrency();
     this.disableMainAccount();
     this.disableSearchField();
+  }
+
+  makeOperationTypeCancel() {
+    this.operationType.disable({emitEvent: false});
+    this.operationType.setValidators([CustomValidators.required]);
+    this.operationType.patchValue(BankAccountOperationTypes.INACTIVE, {emitEvent: false});
   }
 
   enableOperationType() {
