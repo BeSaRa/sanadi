@@ -20,6 +20,7 @@ const realBeneInter = new RealBeneficiaryInterceptor();
 
 export class NpoManagementInterceptor implements IModelInterceptor<NpoManagement> {
   receive(model: NpoManagement): NpoManagement {
+
     model.requestTypeInfo && (model.requestTypeInfo = AdminResult.createInstance(model.requestTypeInfo));
     model.activityTypeInfo && (model.activityTypeInfo = AdminResult.createInstance(model.activityTypeInfo));
     model.profileInfo && (model.profileInfo = Object.assign(new Profile, model.profileInfo));

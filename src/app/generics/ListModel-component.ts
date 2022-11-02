@@ -28,7 +28,7 @@ export abstract class ListModelComponent<T extends Cloneable<T>>
   actions: IMenuItem<T>[] = [
     {
       type: 'action',
-      disabled: () => this.readonly,
+      show: () => !this.readonly,
       icon: ActionIconsEnum.DELETE,
       label: 'btn_delete',
       onClick: (e) => this.removeOne(e)
@@ -36,7 +36,7 @@ export abstract class ListModelComponent<T extends Cloneable<T>>
     {
 
       type: 'action',
-      disabled: () => this.readonly,
+      show: () => !this.readonly,
       icon: ActionIconsEnum.EDIT,
       label: 'btn_edit',
       onClick: (e) => this.selectOne(e)
@@ -45,6 +45,7 @@ export abstract class ListModelComponent<T extends Cloneable<T>>
 
       type: 'action',
       icon: ActionIconsEnum.VIEW,
+      show: () => this.readonly,
       label: 'view',
       onClick: (e) => this.selectOne(e, true)
     }

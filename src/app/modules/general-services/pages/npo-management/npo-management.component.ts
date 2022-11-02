@@ -1,3 +1,4 @@
+import { AdminResult } from './../../../../models/admin-result';
 import { Profile } from './../../../../models/profile';
 import { ProfileService } from '@app/services/profile.service';
 import { UserClickOn } from './../../../../enums/user-click-on.enum';
@@ -279,6 +280,7 @@ NpoManagementService
       return;
     }
     this.model = model;
+
     const formModel = model.buildForm();
     this.form.patchValue({
       basicInfo: formModel.basicInfo,
@@ -295,8 +297,8 @@ NpoManagementService
     ).subscribe((clickOn: UserClickOn) => {
       if (clickOn === UserClickOn.YES) {
         if (userInteraction) {
-          this._resetForm();
           this.setFieldsValidation();
+          this._resetForm();
           this.requestTypeField.setValue(requestTypeValue);
           this.handleReadonly();
           if (this.isNew) {
@@ -388,7 +390,8 @@ NpoManagementService
           iban: ba.iBAN,
           currency: ba.currency,
           accountNumber: ba.accountNumber,
-          bankId: ba.bankId
+          bankId: ba.bankId,
+          bankInfo: (ba.bankInfo && (ba.bankInfo = AdminResult.createInstance(ba.bankInfo)))
         });
         return ob;
       });
@@ -439,6 +442,7 @@ NpoManagementService
           lastUpdateDate: rb.lastUpdateDate,
           iddate: rb.iddate,
           idexpiryDate: rb.idexpiryDate,
+          birthDateString: rb.birthDate ? DateUtils.getDateStringFromDate(rb.birthDate, 'DEFAULT_DATE_FORMAT') : ''
         });
         return ob;
       });
@@ -481,35 +485,23 @@ NpoManagementService
   }
   setFieldsValidation() {
     this.disbandmentTypeField?.setValidators([]);
-    this.disbandmentTypeField.reset()
     this.disbandmentDateField?.setValidators([]);
-    this.disbandmentDateField.reset()
     this.clearanceTypeField?.setValidators([]);
-    this.clearanceTypeField.reset()
     this.clearanceNameField?.setValidators([]);
-    this.clearanceNameField.reset()
     this.clearanceDateField?.setValidators([]);
-    this.clearanceDateField.reset()
 
     this.registrationAuthorityField?.setValidators([]);
     const registrationAuthority = this.registrationAuthorityField.value;
-    this.registrationAuthorityField.reset()
-    this.registrationAuthorityField.setValue(registrationAuthority)
 
     this.registrationDateField?.setValidators([]);
-    const registrationDate = this.registrationDateField.value;
-    this.registrationDateField.reset()
-    this.registrationDateField.setValue(registrationDate)
+      const registrationDate = this.registrationDateField.value;
 
     this.registrationNumberField?.setValidators([]);
     const registrationNumber = this.registrationNumberField.value;
-    this.registrationNumberField.reset()
-    this.registrationNumberField.setValue(registrationNumber)
 
     this.establishmentDateField?.setValidators([]);
     const establishmentDate = this.establishmentDateField.value;
-    this.establishmentDateField.reset()
-    this.establishmentDateField.setValue(establishmentDate);
+
     if (this.isClearance) {
       this.clearanceTypeField.setValidators([Validators.required])
       this.clearanceNameField.setValidators([CustomValidators.required, Validators.maxLength(150),
@@ -529,6 +521,19 @@ NpoManagementService
       ])
       this.establishmentDateField.setValidators([CustomValidators.required])
     }
+    this.disbandmentTypeField.reset()
+    this.disbandmentDateField.reset()
+    this.clearanceTypeField.reset()
+    this.clearanceNameField.reset()
+    this.clearanceDateField.reset()
+    this.registrationAuthorityField.reset()
+    this.registrationAuthorityField.setValue(registrationAuthority)
+    this.registrationDateField.reset()
+    this.registrationDateField.setValue(registrationDate)
+    this.registrationNumberField.reset()
+    this.registrationNumberField.setValue(registrationNumber)
+    this.establishmentDateField.reset()
+    this.establishmentDateField.setValue(establishmentDate);
   }
   get userProfile() {
     return this.employeeService.getProfile()

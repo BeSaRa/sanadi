@@ -189,4 +189,7 @@ export class NpoManagement
   finalApprove(): DialogRef {
     return this.service.approve(this, WFResponseType.FINAL_APPROVE)
   }
+  validateApprove(): DialogRef {
+    return this.service.approve(this, WFResponseType. VALIDATE_APPROVE)
+  }
 }
