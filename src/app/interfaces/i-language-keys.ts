@@ -1528,5 +1528,6 @@ export interface ILanguageKeys {
   phone_of_the_employer: string;
   btn_update: string;
   logo_is_required: string;
+  msg_account_number_is_already_exist: string;
 }
 

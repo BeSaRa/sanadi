@@ -159,7 +159,7 @@ export class NpoBankAccountComponent implements OnInit {
       filter((form) => {
         const valid = this._list.findIndex(f => f.accountNumber == form.value.accountNumber) == -1;
         !valid && this.editRecordIndex == -1 && this.dialogService
-          .error(this.lang.map.msg_user_identifier_is_already_exist)
+          .error(this.lang.map.msg_account_number_is_already_exist)
           .onAfterClose$
           .pipe(take(1))
           .subscribe(() => {
