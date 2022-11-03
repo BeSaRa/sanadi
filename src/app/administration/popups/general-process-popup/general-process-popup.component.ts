@@ -36,7 +36,7 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
   model!: GeneralProcess;
   operation: OperationTypes;
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
-  _fields: any[] = [];
+  _fields: GenerealProcessTemplate[] = [];
 
   saveVisible = true;
   mainClassificationsList: AdminLookup[] = [];
@@ -84,31 +84,10 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
     ).subscribe(deparments => {
       this.departmentList = deparments;
     })
-    if(this.model?.id) {
+    if (this.model?.id) {
       this._loadSubTeam(this.model?.teamId);
       this.loadSubClasses(this.model?.mainClass)
     }
-  }
-  get fields(): CustomFormlyFieldConfig[] {
-    return this._fields.map(f => {
-      const model: GenerealProcessTemplate = new GenerealProcessTemplate().clone(f)
-      return {
-        type: GeneralProcessTemplateFieldTypes[model.fieldType],
-        templateOptions: {
-          label: model.getName(),
-          required: model.isRquired,
-          options: of([{ id: 1, name: 'as' }, { id: 2, name: 'asss' }]),
-        },
-        selectOptions: {
-          bindValue: 'id',
-          bindLabel: 'name'
-        }
-      }
-    })
-  }
-  addField() {
-    this._fields.unshift(this.fieldForm.value)
-    this.fieldForm.value
   }
   loadSubClasses(parentId: number) {
     this.adminLookupService.loadByParentId(AdminLookupTypeEnum.GENERAL_PROCESS_CLASSIFICATION, parentId).subscribe(data => {
@@ -134,13 +113,37 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
     return this._teamsList.filter(team => !this.departmentField.value || team.parentDeptId == this.departmentField.value)
   }
 
+  get fields(): CustomFormlyFieldConfig[] {
+    return this._fields.map(f => {
+      const model: GenerealProcessTemplate = new GenerealProcessTemplate().clone(f)
+      return {
+        type: GeneralProcessTemplateFieldTypes[model.fieldType],
+        templateOptions: {
+          label: model.getName(),
+          required: model.isRquired,
+          options: of([{ id: 1, name: 'as' }, { id: 2, name: 'asss' }]),
+        },
+        selectOptions: {
+          bindValue: 'id',
+          bindLabel: 'name'
+        }
+      }
+    })
+  }
+  addField() {
+    this._fields.unshift(this.fieldForm.value)
+    this.resetFieldForm();
+  }
+  resetFieldForm() {
+    this.fieldForm.reset();
+  }
   beforeSave(model: GeneralProcess, form: UntypedFormGroup): boolean | Observable<boolean> {
     return form.valid;
   }
   prepareModel(model: GeneralProcess, form: UntypedFormGroup): GeneralProcess | Observable<GeneralProcess> {
     return (new GeneralProcess()).clone({
       ...model, ...form.value,
-      template: ''
+      template: JSON.stringify(this._fields)
     });
   }
   afterSave(model: GeneralProcess, dialogRef: DialogRef): void {

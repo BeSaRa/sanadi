@@ -153,10 +153,10 @@
                 <app-field-error-message controlName="note"></app-field-error-message>
               </div>
               <div class="col-12">
-                <button class="btn btn-primary me-2" (click)="addField()">
+                <button class="btn btn-primary me-2" [disabled]="!this.fieldForm.valid" (click)="addField()">
                   {{ lang.map.btn_save }}
                 </button>
-                <button class="btn btn-secondary">
+                <button class="btn btn-secondary" (click)="resetFieldForm()">
                   {{ lang.map.btn_clear }}
                 </button>
               </div>

@@ -8,11 +8,14 @@ export class GenerealProcessTemplate extends Cloneable<GenerealProcessTemplate>{
   identifyingName!: string;
   arName!: string;
   enName!: string;
-
-  fieldType!: number;
-  order!: number;
-  regex!: string;
   note!: string;
+  order!: number;
+
+  // TODO: from validation field // IFormFieldOptions.type
+  fieldType!: number;
+  // TODO: from validation field // IFormFieldOptions.validations.pattern
+  regex!: string;
+  // TODO: from validation field // IFormFieldOptions.validations.required
   isRquired: boolean = false;
 
   langService: LangService;
