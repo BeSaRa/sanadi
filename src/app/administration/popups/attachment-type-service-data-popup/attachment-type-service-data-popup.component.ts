@@ -58,7 +58,7 @@ export class AttachmentTypeServiceDataPopupComponent implements OnInit {
     this.operation = data.operation;
     this.model = data.model;
     this.existingList = data.existingList;
-    this.attachmentTypeUsersList = lookupService.listByCategory.UserType.filter(x => x.lookupKey !== UserTypes.INTEGRATION_USER);
+    this.attachmentTypeUsersList = lookupService.listByCategory.UserType.filter(x => x.lookupKey !== UserTypes.INTEGRATION_USER && x.lookupKey !== UserTypes.ALL);
   }
 
   ngOnInit(): void {
