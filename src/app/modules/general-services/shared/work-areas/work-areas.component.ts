@@ -1,11 +1,12 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { Component, Input } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { ListModelComponent } from '@app/generics/ListModel-component';
+import { CommonUtils } from '@app/helpers/common-utils';
 import { ControlWrapper } from '@app/interfaces/i-control-wrapper';
+import { SortEvent } from '@app/interfaces/sort-event';
 import { AdminResult } from '@app/models/admin-result';
 import { Country } from '@app/models/country';
 import { WorkArea } from '@app/models/work-area';
-import { CountryService } from '@app/services/country.service';
 import { LangService } from '@app/services/lang.service';
 
 @Component({
@@ -23,8 +24,17 @@ export class WorkAreasComponent extends ListModelComponent<WorkArea> {
   @Input() countries: Country[] = [];
   @Input() readonly!: boolean;
   form!: UntypedFormGroup;
+  filterControl: UntypedFormControl = new UntypedFormControl('');
+
   controls: ControlWrapper[] = [];
-  columns = ['country', 'actions'];
+  columns = ['country', 'region','actions'];
+  sortingCallbacks = {
+    country: (a: WorkArea, b: WorkArea, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.countryInfo.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.countryInfo.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+  }
   constructor(private fb: UntypedFormBuilder, public lang: LangService) {
     super(WorkArea);
 
@@ -38,7 +48,12 @@ export class WorkAreasComponent extends ListModelComponent<WorkArea> {
         dropdownValue: 'id',
         label: this.lang.map.country,
         type: 'dropdown',
-      }
+      },
+      {
+        controlName: 'region',
+        label: this.lang.map.region,
+        type: 'text'
+      },
     ];
     this.form = this.fb.group(this.model.buildForm());
   }
@@ -48,5 +63,14 @@ export class WorkAreasComponent extends ListModelComponent<WorkArea> {
     })
     return model;
   }
-
+  forceClearComponent() {
+    this.cancel();
+    this.list = [];
+  }
+  // view(record: WorkArea, $event?: MouseEvent) {
+  //   $event?.preventDefault();
+  //   this.editItem = record;
+  //   this.viewOnly = true;
+  //   this.recordChanged$.next(record);
+  // }
 }
