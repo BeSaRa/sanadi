@@ -173,9 +173,6 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
       transferData: this.fb.group(urgentInterventionFinancialNotification.buildTransferDataForm(true))
     });
     this.setLicenseValidations()
-    /*this.form.valueChanges.subscribe((data) => {
-      console.log(this.form, data)
-    })*/
   }
 
   _afterBuildForm(): void {
@@ -275,7 +272,6 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
   }
 
   _updateForm(model: UrgentInterventionFinancialNotification | undefined): void {
-    console.log(model)
     this.model = model;
     if (!model) {
       this.cd.detectChanges();
@@ -359,8 +355,8 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
       value.beneficiaryCountryInfo = licenseDetails.beneficiaryCountryInfo;
       value.executionCountryInfo = licenseDetails.executionCountryInfo;
       value.licenseVSID = licenseDetails.vsId;
-      this.handleRequestTypeChange(value.requestType, false);
       this._updateForm(value);
+      this.handleFinanecDataFillList();
     }
   }
   resetLicence() {
@@ -415,14 +411,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
           this.accountType.setValidators([]);
           this.accountType.reset();
           this.resetAccountNumber();
-        }
-        if (this.isReceive) {
-          this.implementingAgencyTypeField.setValue(2);
-          this.handleImplementingAgencyTypeChanges();
-          this.accountType.setValidators([Validators.required]);
-        } else {
-          this.implementingAgencyTypeField.setValue(null);
-          this.handleImplementingAgencyTypeChanges();
+          this.handleFinanecDataFillList()
         }
         this.requestType$.next(requestTypeValue);
       } else {
@@ -430,7 +419,16 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
       }
     });
   }
-
+  handleFinanecDataFillList() {
+    if (this.isReceive) {
+      this.implementingAgencyTypeField.setValue(2);
+      this.handleImplementingAgencyTypeChanges();
+      this.accountType.setValidators([Validators.required]);
+    } else {
+      this.implementingAgencyTypeField.setValue(null);
+      this.handleImplementingAgencyTypeChanges();
+    }
+  }
   private setLicenseValidations(): void {
     this.urgentAnnouncementFullSerialField.setValidators([CustomValidators.required, (control) => {
       return this.selectedLicense && this.selectedLicense?.fullSerial === control.value ? null : { select_license: true };
