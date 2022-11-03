@@ -421,7 +421,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
   }
   handleFinanecDataFillList() {
     if (this.isReceive) {
-      this.implementingAgencyTypeField.setValue(2);
+      this.implementingAgencyTypeField.setValue(ImplementingAgencyTypes.ExternalOffice);
       this.handleImplementingAgencyTypeChanges();
       this.accountType.setValidators([Validators.required]);
     } else {
