@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  final_report_has_not_yet_been_uploaded: string;
   address_details: string;
   project_addresses: string;
   you_should_add_at_least_one_foreign_project_need: string;
