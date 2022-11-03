@@ -94,7 +94,6 @@ export class GoalComponent implements OnInit, OnDestroy {
 
   private buildForm() {
     this.form = this.fb.group(new Goal().getGoalsFields(true));
-    console.log(this.form);
 
   }
   actions: IMenuItem<Goal>[] = [
