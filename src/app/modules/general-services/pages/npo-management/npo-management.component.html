@@ -82,6 +82,7 @@
             <i class="input-group-text mdi mdi-calendar"></i>
             <div class="form-control" formControlName="registrationDate" id="registrationDate"
               [options]="datepickerOptionsMap.registrationDate"
+              [ngClass]="{'input-disabled': (!isNew || readonly)}"
               (click)="isNew && !readonly && openDateMenu(dpregistrationDate)"
               #dpregistrationDate="angular-mydatepicker" angular-mydatepicker validationClasses="registrationDate">
             </div>
@@ -127,6 +128,7 @@
             <i class="input-group-text mdi mdi-calendar"></i>
             <div class="form-control" formControlName="establishmentDate" id="establishmentDate"
               [options]="datepickerOptionsMap.establishmentDate"
+              [ngClass]="{'input-disabled': (!isNew || readonly)}"
               (click)="isNew && !readonly && openDateMenu(dpestablishmentDate)"
               (inputFieldChanged)="onDateChange($event)" #dpestablishmentDate="angular-mydatepicker"
               angular-mydatepicker validationClasses="establishmentDate"></div>
@@ -153,6 +155,7 @@
           <div class="input-group">
             <i class="input-group-text mdi mdi-calendar"></i>
             <div class="form-control" formControlName="disbandmentDate" id="disbandmentDate"
+              [ngClass]="{'input-disabled': readonly}"
               [options]="datepickerOptionsMap.disbandmentDate" (click)="!readonly && openDateMenu(dpdisbandmentDate)"
               #dpdisbandmentDate="angular-mydatepicker" angular-mydatepicker validationClasses="disbandmentDate">
             </div>
@@ -188,6 +191,7 @@
           <div class="input-group">
             <i class="input-group-text mdi mdi-calendar"></i>
             <div class="form-control" formControlName="clearanceDate" id="clearanceDate"
+              [ngClass]="{'input-disabled': readonly}"
               [options]="datepickerOptionsMap.clearanceDate" (click)="!readonly && openDateMenu(dpclearanceDate)"
               #dpclearanceDate="angular-mydatepicker" angular-mydatepicker validationClasses="clearanceDate"></div>
             <app-field-error-message controlName="clearanceDate"></app-field-error-message>

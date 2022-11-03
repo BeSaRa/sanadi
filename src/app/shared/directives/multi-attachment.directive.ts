@@ -1,17 +1,19 @@
-import {Directive, HostListener, Input, OnDestroy, OnInit} from '@angular/core';
-import {AttachmentTypeService} from '@services/attachment-type.service';
-import {AttachmentsComponent} from '@app/shared/components/attachments/attachments.component';
-import {AttachmentTypeServiceData} from '@app/models/attachment-type-service-data';
-import {combineLatest, Observable, Subject} from 'rxjs';
-import {filter, map, takeUntil} from 'rxjs/operators';
-import {DialogService} from '@app/services/dialog.service';
-import {CustomAttachmentPopupComponent} from '@app/shared/popups/custom-attachment-popup/custom-attachment-popup.component';
-import {CustomAttachmentDataContract} from '@contracts/custom-attachment-data-contract';
-import {FileNetDocument} from '@app/models/file-net-document';
-import {LangService} from '@services/lang.service';
-import {isEmptyObject} from '@helpers/utils';
-import {AttachmentHandlerDirective} from '@app/shared/directives/attachment-handler.directive';
-import {HasMissingRequiredAttachmentsContract} from '@contracts/has-missing-required-attachments-contract';
+import { Directive, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
+import { AttachmentTypeService } from '@services/attachment-type.service';
+import { AttachmentsComponent } from '@app/shared/components/attachments/attachments.component';
+import { AttachmentTypeServiceData } from '@app/models/attachment-type-service-data';
+import { combineLatest, Observable, Subject } from 'rxjs';
+import { filter, map, takeUntil } from 'rxjs/operators';
+import { DialogService } from '@app/services/dialog.service';
+import {
+  CustomAttachmentPopupComponent
+} from '@app/shared/popups/custom-attachment-popup/custom-attachment-popup.component';
+import { CustomAttachmentDataContract } from '@contracts/custom-attachment-data-contract';
+import { FileNetDocument } from '@app/models/file-net-document';
+import { LangService } from '@services/lang.service';
+import { isEmptyObject } from '@helpers/utils';
+import { AttachmentHandlerDirective } from '@app/shared/directives/attachment-handler.directive';
+import { HasMissingRequiredAttachmentsContract } from '@contracts/has-missing-required-attachments-contract';
 
 @Directive({
   selector: '[multiAttachment]'
@@ -39,6 +41,8 @@ export class MultiAttachmentDirective implements OnInit, OnDestroy, HasMissingRe
   formObservables: Record<string, () => Observable<any>> = {};
 
   private loadStatus$: Subject<Omit<CustomAttachmentDataContract, 'loadStatus$'>> = new Subject<Omit<CustomAttachmentDataContract, 'loadStatus$'>>();
+  // used to get the updated attachments from the popup
+  private attachmentsUpdated$: Subject<FileNetDocument[]> = new Subject<FileNetDocument[]>()
 
   private conditionalAttachments: FileNetDocument[] = [];
 
@@ -62,6 +66,7 @@ export class MultiAttachmentDirective implements OnInit, OnDestroy, HasMissingRe
 
   ngOnInit(): void {
     this.listenToLoadedAttachments();
+    this.listenToUpdatedAttachmentsFromPopup();
   }
 
 
@@ -83,6 +88,7 @@ export class MultiAttachmentDirective implements OnInit, OnDestroy, HasMissingRe
 
   private emitAttachmentsData(): void {
     this.loadStatus$.next({
+      attachmentsUpdated$: this.attachmentsUpdated$,
       component: this.attachmentComponent,
       attachmentsTypes: this.attachmentsTypes,
       attachments: this.attachments,
@@ -99,6 +105,7 @@ export class MultiAttachmentDirective implements OnInit, OnDestroy, HasMissingRe
       return;
     }
     this.dialog.show<CustomAttachmentDataContract>(CustomAttachmentPopupComponent, {
+      attachmentsUpdated$: this.attachmentsUpdated$,
       loadStatus$: this.loadStatus$,
       component: this.attachmentComponent,
       attachmentsTypes: this.attachmentsTypes,
@@ -117,7 +124,7 @@ export class MultiAttachmentDirective implements OnInit, OnDestroy, HasMissingRe
     const attachments = map && map.get(this.item[this.itemDef] as string) || [];
     this.conditionalAttachments = [];
     this.attachmentsMap = attachments.reduce((acc, file) => {
-      return {...acc, [file.attachmentTypeInfo.id!]: file};
+      return { ...acc, [file.attachmentTypeInfo.id!]: file };
     }, {});
     this.attachments = this.attachmentsTypes.map(type => {
       return (this.attachmentsMap[type.attachmentTypeId] || type.convertToAttachment()).setAttachmentTypeServiceData(type);
@@ -136,10 +143,10 @@ export class MultiAttachmentDirective implements OnInit, OnDestroy, HasMissingRe
 
   private listenToFormPropertiesChange(attachment: FileNetDocument): void {
     const keys = Object.keys(this.formObservables);
-    combineLatest(keys.map(key => this.formObservables[key]().pipe(map(value => ({[key]: value})))))
+    combineLatest(keys.map(key => this.formObservables[key]().pipe(map(value => ({ [key]: value })))))
       .pipe(map(values => {
         return values.reduce((acc, currentValue) => {
-          return {...acc, ...currentValue};
+          return { ...acc, ...currentValue };
         }, {} as Record<string, number>);
       }))
       .pipe(takeUntil(this.customPropertiesDestroy$))
@@ -162,5 +169,13 @@ export class MultiAttachmentDirective implements OnInit, OnDestroy, HasMissingRe
 
   hasMissingRequiredAttachments(): boolean {
     return this.attachments.some(attachment => attachment.required && !attachment.id);
+  }
+
+  private listenToUpdatedAttachmentsFromPopup(): void {
+    this.attachmentsUpdated$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((attachments) => {
+        this.attachments = attachments
+      })
   }
 }

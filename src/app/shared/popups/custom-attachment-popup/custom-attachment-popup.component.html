@@ -1,7 +1,7 @@
 <div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
   <h1 class="h6 text-white">{{lang.map.attachments}}</h1>
   <button type="button" class="btn-close btn-close-white"
-          tabindex="-1" dialogClose aria-label="Close"></button>
+          tabindex="-1" (click)="closeAttachmentsPopup()"  aria-label="Close"></button>
 </div>
 <div class="dialog-content">
   <div>
@@ -106,5 +106,5 @@
 </div>
 <div class="dialog-actions">
   <div class="flex-grow-1"></div>
-  <button dialogClose class="btn btn-secondary">{{lang.map.btn_close}}</button>
+  <button (click)="closeAttachmentsPopup()" class="btn btn-secondary">{{lang.map.btn_close}}</button>
 </div>

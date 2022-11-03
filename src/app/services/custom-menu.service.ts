@@ -15,6 +15,7 @@ import {CustomMenu} from '../models/custom-menu';
 import {DialogService} from './dialog.service';
 import {FactoryService} from './factory.service';
 import {UrlService} from './url.service';
+import {PaginationContract} from '@contracts/pagination-contract';
 
 @CastResponseContainer({
   $default: {
@@ -51,15 +52,16 @@ export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> 
   }
 
   @CastResponse(undefined, {
-    fallback: '$default',
-    unwrap: 'rs'
+    fallback: '$pagination'
   })
-  private _loadMain(): Observable<CustomMenu[]> {
-    return this.http.get<CustomMenu[]>(this._getServiceURL() + '/main');
+  private _loadMain(options: Partial<PaginationContract>): Observable<Pagination<CustomMenu[]>> {
+    return this.http.get<Pagination<CustomMenu[]>>(this._getServiceURL() + '/main', {
+      params: { ...options }
+    });
   }
 
-  loadMain(): Observable<CustomMenu[]> {
-    return this._loadMain();
+  loadMain(options: Partial<PaginationContract>): Observable<Pagination<CustomMenu[]>> {
+    return this._loadMain(options);
   }
 
   @CastResponse(undefined, {

@@ -1557,5 +1557,7 @@ export interface ILanguageKeys {
   lbl_process_subject: string;
   lbl_process_explanations: string;
   lbl_parent_classification: string;
+  logo_is_required: string;
+  msg_account_number_is_already_exist: string;
 }
 

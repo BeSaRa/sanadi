@@ -13,7 +13,7 @@
           >{{ control.label }}</label
         >
         <ng-select
-          [readonly]="readonly"
+          [readonly]="readonly || hideSave"
           [selectOnTab]="true"
           [labelForId]="control.controlName"
           [clearable]="true"
@@ -48,7 +48,7 @@
       >
       <input
         type="text"
-        [readonly]="readonly"
+        [readonly]="readonly || hideSave"
         class="form-control"
         [id]="control.controlName"
         [formControlName]="control.controlName"
@@ -64,7 +64,7 @@
     <button
       (click)="save()"
       [disabled]="!form.valid"
-      *ngIf="!readonly"
+      *ngIf="!hideSave"
       class="btn btn-primary m-2"
     >
       {{ editRecordIndex > -1 ? lang.map.btn_update : lang.map.btn_add }}
@@ -151,32 +151,10 @@
         </ng-container>
 
         <ng-container cdkColumnDef="actions">
-          <th cdk-header-cell *cdkHeaderCellDef>
-            {{ lang.map.lbl_actions }}
-          </th>
-          <td
-            cdk-cell
-            *cdkCellDef="let row; let i = index"
-            class="table-actions"
-          >
-            <div class="d-flex flex-row">
-              <button
-                (click)="removeOne($event, row, i)"
-                tooltip="{{ lang.map.btn_remove }}"
-                class="btn btn-link outline-none"
-                [disabled]="readonly"
-              >
-                <i class="mdi mdi-close-box"></i>
-              </button>
-              <button
-                (click)="selectOne($event, row, i)"
-                tooltip="{{ lang.map.btn_edit }}"
-                class="btn btn-link outline-none"
-                [disabled]="readonly"
-              >
-                <i class="mdi mdi-pen"></i>
-              </button>
-            </div>
+          <th cdk-header-cell *cdkHeaderCellDef>{{ lang.map.lbl_actions }}</th>
+          <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">
+            <grid-actions [record]="row" [actions]="actions" [itemIndex]="itemIndex">
+            </grid-actions>
           </td>
         </ng-container>
         <tr cdk-header-row *cdkHeaderRowDef="columns"></tr>

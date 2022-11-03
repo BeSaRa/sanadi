@@ -60,6 +60,10 @@
 
 <table *ngIf="list.length" class="table mt-3 table-striped table-bordered caption-top" cdk-table
   [dataSource]="listDataSource">
+  <ng-container cdkColumnDef="bankName">
+    <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.bank_name}}</th>
+    <td cdk-cell *cdkCellDef="let row"> {{row.bankInfo.getName()}} </td>
+  </ng-container>
   <ng-container cdkColumnDef="accountNumber">
     <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.account_number}}</th>
     <td cdk-cell *cdkCellDef="let row"> {{row.accountNumber}} </td>

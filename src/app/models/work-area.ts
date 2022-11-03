@@ -22,7 +22,8 @@ export class WorkArea extends SearchableCloneable<WorkArea> {
     const { id, country } = this;
     return new WorkArea().clone({
       objectDBId: id,
-      country
+      country,
+      countryInfo: AdminResult.createInstance({ arName: this.arabicName, enName: this.englishName })
     })
   }
 }

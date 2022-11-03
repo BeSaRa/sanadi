@@ -6,6 +6,7 @@ import { Subject } from "rxjs";
 
 export interface CustomAttachmentDataContract {
   loadStatus$: Subject<Omit<CustomAttachmentDataContract, 'loadStatus$'>>
+  attachmentsUpdated$: Subject<FileNetDocument[]>
   component: AttachmentsComponent
   itemId: string;
   identifier: string

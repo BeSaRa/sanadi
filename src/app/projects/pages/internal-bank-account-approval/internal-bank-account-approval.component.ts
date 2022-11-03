@@ -13,7 +13,6 @@ import {ToastService} from '@app/services/toast.service';
 import {Lookup} from '@app/models/lookup';
 import {Bank} from '@app/models/bank';
 import {BankAccount} from '@app/models/bank-account';
-import {BankCategory} from '@app/enums/bank-category.enum';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {SelectedLicenseInfo} from '@app/interfaces/selected-license-info';
@@ -27,6 +26,7 @@ import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 import {OpenFrom} from '@app/enums/open-from.enum';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {BankService} from '@services/bank.service';
+import {InternalBankCategoryEnum} from '@app/enums/internal-bank-category-enum';
 
 @Component({
   selector: 'internal-bank-account-approval',
@@ -38,11 +38,17 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   requestTypes: Lookup[] = this.lookupService.listByCategory.BankRequestType
     .sort((a, b) => a.lookupKey - b.lookupKey);
 
-  bankOperationTypes: Lookup[] = this.lookupService.listByCategory.BankOperationType;
+  bankOperationTypes: Lookup[] = this.lookupService.listByCategory.BankOperationType
+    .sort((a, b) => a.lookupKey - b.lookupKey);
+
+  bankOperationTypesWithoutCancel: Lookup[] = this.lookupService.listByCategory.BankOperationType
+    .filter(x => x.lookupKey !== BankAccountOperationTypes.INACTIVE)
+    .sort((a, b) => a.lookupKey - b.lookupKey);
+
+  flexBankOperationTypes: Lookup[] = [];
+
   banks: Bank[] = [];
-  // bankCategories: Lookup[] = this.lookupService.listByCategory.InternalBankCategory;
-  bankCategories: Lookup[] = [new Lookup().clone({arName: 'رئيسي', enName: 'Main', lookupKey: 1}),
-    new Lookup().clone({arName: 'فرعي', enName: 'Sub', lookupKey: 2})];
+  bankCategories: Lookup[] = this.lookupService.listByCategory.InternalBankCategory;
   currencies: Lookup[] = this.lookupService.listByCategory.Currency;
   currentBankAccounts: BankAccount[] = [];
   bankAccountsBasedOnCurrencyAndBank: BankAccount[] = [];
@@ -323,7 +329,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   }
 
   loadBankAccountsBasedOnCurrencyAndBank(bankCategory: number, bankId: number, currencyId: number) {
-    if (bankCategory === BankCategory.SUB && bankId && currencyId) {
+    if (bankCategory === InternalBankCategoryEnum.SUB && bankId && currencyId) {
       this.service.loadBankAccountsBasedOnCurrencyAndBank(bankId, currencyId).subscribe(list => {
         this.bankAccountsBasedOnCurrencyAndBank = list;
       });
@@ -356,7 +362,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   }
 
   toggleAccountCategoryControl(accountCategory: number) {
-    if (accountCategory === BankCategory.SUB) {
+    if (accountCategory === InternalBankCategoryEnum.SUB) {
       this.enableMainAccount();
     } else {
       this.disableMainAccount();
@@ -413,6 +419,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   }
 
   onSelectNewRequestType() {
+    this.flexBankOperationTypes = this.bankOperationTypesWithoutCancel;
     this.enableCancelAccountFields();
     this.enableNewNewAccountFields();
     this.disableNewNewAccountFields();
@@ -437,6 +444,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   }
 
   onSelectUpdateRequestType() {
+    this.flexBankOperationTypes = this.bankOperationTypesWithoutCancel;
     this.enableSearchField();
     this.enableCancelAccountFields();
     this.isCancel = false;
@@ -462,8 +470,9 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   }
 
   onSelectCancelRequestType() {
+    this.flexBankOperationTypes = this.bankOperationTypes;
     this.dontRequirePurposeField();
-    this.enableCancelAccountFields();
+    // this.enableCancelAccountFields();
     this.disableCancelAccountFields();
     this.hideUpdateBankAccountFields();
     this.hideUpdateMergeFields();
@@ -591,13 +600,19 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   }
 
   disableCancelAccountFields() {
-    this.disableOperationType();
+    this.makeOperationTypeCancel();
     this.disableBankAccountCategory();
     this.disablePurpose();
     this.disableBankId();
     this.disableCurrency();
     this.disableMainAccount();
     this.disableSearchField();
+  }
+
+  makeOperationTypeCancel() {
+    this.operationType.disable({emitEvent: false});
+    this.operationType.setValidators([CustomValidators.required]);
+    this.operationType.patchValue(BankAccountOperationTypes.INACTIVE, {emitEvent: false});
   }
 
   enableOperationType() {
@@ -813,7 +828,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
 
   addToSelectedBankAccounts(bankAccount: BankAccount) {
     if (!this.selectedBankAccounts.find(x => x.id === bankAccount.id)) {
-      if (this.isNewMerge && bankAccount.bankCategoryInfo.lookupKey === BankCategory.SUB) {
+      if (this.isNewMerge && bankAccount.bankCategoryInfo.lookupKey === InternalBankCategoryEnum.SUB) {
         this.dialog.error(this.lang.map.selected_bank_account_is_sub_account);
       } else {
         if (bankAccount.subAccounts && bankAccount.subAccounts.length && bankAccount.subAccounts.length > 0) {

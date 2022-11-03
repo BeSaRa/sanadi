@@ -37,6 +37,7 @@ export class UrgentInterventionAnnouncement extends _RequestType<UrgentIntervent
   executionRegion!: string;
   description!: string;
   licenseVSID!: string;
+  vsId!: string;
   oldLicenseFullSerial!: string;
   oldLicenseId!: string;
   oldLicenseSerial!: number;

@@ -219,6 +219,7 @@ export class RealBeneficiariesComponent extends ListModelComponent<RealBeneficia
   _selectOne(_row: RealBeneficiary): void {
     const row = { ..._row };
     row.birthDate = DateUtils.changeDateToDatepicker(row.birthDate);
+    row.birthDateString = row.birthDate ? DateUtils.getDateStringFromDate(row.birthDate, 'DEFAULT_DATE_FORMAT') : '';
     row.startDate = DateUtils.changeDateToDatepicker(row.startDate);
     row.iDDate = DateUtils.changeDateToDatepicker(row.iDDate);
     row.iDExpiryDate = DateUtils.changeDateToDatepicker(row.iDExpiryDate);
@@ -239,6 +240,7 @@ export class RealBeneficiariesComponent extends ListModelComponent<RealBeneficia
       return null;
     }
     row.birthDate = DateUtils.getDateStringFromDate(row.birthDate);
+    row.birthDateString = row.birthDate ? DateUtils.getDateStringFromDate(row.birthDate, 'DEFAULT_DATE_FORMAT') : '';
     row.startDate = DateUtils.getDateStringFromDate(row.startDate);
     row.iDDate = DateUtils.getDateStringFromDate(row.iDDate);
     row.iDExpiryDate = DateUtils.getDateStringFromDate(row.iDExpiryDate);

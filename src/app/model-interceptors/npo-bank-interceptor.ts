@@ -6,7 +6,7 @@ export class NpoBankInterceptor implements IModelInterceptor<NpoBankAccount> {
   send(model: Partial<NpoBankAccount>): Partial<NpoBankAccount> {
     delete model.bankInfo;
     delete model.currencyInfo;
-    delete model.searchFields
+    delete model.searchFields;
     return model;
   }
 

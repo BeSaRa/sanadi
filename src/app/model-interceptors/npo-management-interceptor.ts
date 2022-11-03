@@ -20,6 +20,7 @@ const realBeneInter = new RealBeneficiaryInterceptor();
 
 export class NpoManagementInterceptor implements IModelInterceptor<NpoManagement> {
   receive(model: NpoManagement): NpoManagement {
+
     model.requestTypeInfo && (model.requestTypeInfo = AdminResult.createInstance(model.requestTypeInfo));
     model.activityTypeInfo && (model.activityTypeInfo = AdminResult.createInstance(model.activityTypeInfo));
     model.profileInfo && (model.profileInfo = Object.assign(new Profile, model.profileInfo));
@@ -76,19 +77,18 @@ export class NpoManagementInterceptor implements IModelInterceptor<NpoManagement
         model.followUpDate as unknown as IMyDateModel
       )?.toISOString();
 
-
-    model.contactOfficerList = model.contactOfficerList.map((ei: any) => {
-      return contactOffercireInter.send(ei) as unknown as NpoContactOfficer;
-    });
-    model.founderMemberList = model.founderMemberList.map((ei: any) => {
-      return founderInter.send(ei) as unknown as FounderMembers;
-    });
-    model.bankAccountList = model.bankAccountList.map((ei: any) => {
-      return bankInter.send(ei) as unknown as NpoBankAccount;
-    });
-    model.realBeneficiaryList = model.realBeneficiaryList.map((ei: any) => {
-      return realBeneInter.send(ei) as unknown as RealBeneficiary;
-    });
+    model.contactOfficerList = [].concat(model.contactOfficerList.map((ei: NpoContactOfficer) => {
+      return contactOffercireInter.send(ei.clone()) as unknown as NpoContactOfficer;
+    }));
+    model.founderMemberList = [].concat(model.founderMemberList.map((ei: FounderMembers) => {
+      return founderInter.send(ei.clone()) as unknown as FounderMembers;
+    }));
+    model.bankAccountList = [].concat(model.bankAccountList.map((ei: NpoBankAccount) => {
+      return bankInter.send(ei.clone()) as unknown as NpoBankAccount;
+    }));
+    model.realBeneficiaryList = [].concat(model.realBeneficiaryList.map((ei: RealBeneficiary) => {
+      return realBeneInter.send(ei.clone()) as unknown as RealBeneficiary;
+    }));
 
     NpoManagementInterceptor._deleteBeforeSend(model);
     return model;

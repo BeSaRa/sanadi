@@ -15,7 +15,7 @@
         <ng-select
           [selectOnTab]="true"
           [labelForId]="control.controlName"
-          [readonly]="readonly"
+          [readonly]="readonly || hideSave"
           [clearable]="true"
           placeholder="{{ lang.map.select }}"
           [id]="control.controlName"
@@ -47,7 +47,7 @@
         >{{ control.label }}</label
       >
       <input
-        [readonly]="readonly"
+        [readonly]="readonly || hideSave"
         type="text"
         class="form-control"
         [id]="control.controlName"
@@ -72,11 +72,11 @@
         <div
           class="form-control"
           [formControlName]="control.controlName"
-          [ngClass]="{ 'input-disabled': readonly }"
+          [ngClass]="{ 'input-disabled': (readonly || hideSave) }"
           [disabled]="readonly"
           [id]="control.controlName"
           [options]="datepickerOptionsMap[control.controlName]"
-          (click)="!readonly && dp.toggleCalendar()"
+          (click)="(!readonly && !hideSave) && dp.toggleCalendar()"
           #dp="angular-mydatepicker"
           angular-mydatepicker
           [validationClasses]="control.controlName"
@@ -92,7 +92,7 @@
     <button
       (click)="save()"
       [disabled]="!form.valid"
-      *ngIf="!readonly"
+      *ngIf="!hideSave"
       class="btn btn-primary m-2"
     >
       {{ editRecordIndex > -1 ? lang.map.btn_update : lang.map.btn_add }}
@@ -152,33 +152,12 @@
             {{ row.feedback }}
           </td>
         </ng-container>
+
         <ng-container cdkColumnDef="actions">
-          <th cdk-header-cell *cdkHeaderCellDef>
-            {{ lang.map.lbl_actions }}
-          </th>
-          <td
-            cdk-cell
-            *cdkCellDef="let row; let i = index"
-            class="table-actions"
-          >
-            <div class="d-flex flex-row">
-              <button
-                (click)="removeOne($event, row, i)"
-                tooltip="{{ lang.map.btn_remove }}"
-                class="btn btn-link outline-none"
-                [disabled]="readonly"
-              >
-                <i class="mdi mdi-close-box"></i>
-              </button>
-              <button
-                (click)="selectOne($event, row, i)"
-                tooltip="{{ lang.map.btn_edit }}"
-                class="btn btn-link outline-none"
-                [disabled]="readonly"
-              >
-                <i class="mdi mdi-pen"></i>
-              </button>
-            </div>
+          <th cdk-header-cell *cdkHeaderCellDef>{{ lang.map.lbl_actions }}</th>
+          <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">
+            <grid-actions [record]="row" [actions]="actions" [itemIndex]="itemIndex">
+            </grid-actions>
           </td>
         </ng-container>
         <tr cdk-header-row *cdkHeaderRowDef="columns"></tr>
