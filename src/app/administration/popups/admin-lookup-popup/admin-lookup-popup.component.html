@@ -54,7 +54,8 @@
       </div>
     </ng-template>
     <ng-template #childrenTemplate>
-      <admin-lookup-list [adminLookupTypeId]="adminLookupTypeId!"
+      <admin-lookup-list #childListComponent
+                         [adminLookupTypeId]="adminLookupTypeId!"
                          [isRootLevel]="false" [parentId]="model.id"
                          [readonly]="readonly"
       ></admin-lookup-list>
