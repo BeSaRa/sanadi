@@ -1,41 +1,26 @@
 <form class="row" [formGroup]="form">
-  <div
-    *ngFor="let control of controls"
-    class="col-sm-6 col-md-4 mb-4 position-relative"
-    [ngSwitch]="control.type"
-  >
+  <div *ngFor="let control of controls" class="col-sm-6 col-md-4 mb-4 position-relative"
+       [ngSwitch]="control.type">
     <ng-container *ngSwitchCase="'dropdown'">
       <div>
-        <label
-          [asteriskIfRequired]="control.controlName"
-          [for]="control.controlName"
-          class="form-label"
-          >{{ control.label }}</label
-        >
-        <ng-select
-          [readonly]="readonly || hideSave"
-          [selectOnTab]="true"
-          [labelForId]="control.controlName"
-          [clearable]="true"
-          placeholder="{{ lang.map.select }}"
-          [id]="control.controlName"
-          [notFoundText]="lang.map.msg_not_found"
-          appendTo="body"
-          [validationClasses]="control.controlName"
-          [formControlName]="control.controlName"
-          (change)="control.onChange?.($event)"
-        >
-          <ng-option
-            *ngFor="
-              let type of control.load ? control.load : (control.load$ | async)
-            "
-            [value]="type[control.dropdownValue!]"
-            >{{ type.getName() }}</ng-option
-          >
+        <label [asteriskIfRequired]="control.controlName" [for]="control.controlName"
+               class="form-label">{{ control.label }}</label>
+        <ng-select [readonly]="readonly || hideSave"
+                   [selectOnTab]="true"
+                   [labelForId]="control.controlName"
+                   [clearable]="true"
+                   placeholder="{{ lang.map.select }}"
+                   [id]="control.controlName"
+                   [notFoundText]="lang.map.msg_not_found"
+                   appendTo="body"
+                   [validationClasses]="control.controlName"
+                   [formControlName]="control.controlName"
+                   (change)="control.onChange?.($event)">
+          <ng-option *ngFor="let type of control.load ? control.load : (control.load$ | async)"
+                     [disabled]="(control.dropdownOptionDisabled && control.dropdownOptionDisabled(type)) ?? false"
+                     [value]="type[control.dropdownValue!]">{{ type.getName() }}</ng-option>
         </ng-select>
-        <app-field-error-message
-          [controlName]="control.controlName"
-        ></app-field-error-message>
+        <app-field-error-message [controlName]="control.controlName"></app-field-error-message>
       </div>
     </ng-container>
     <ng-container *ngSwitchCase="'text'">
@@ -44,7 +29,7 @@
         [for]="control.controlName"
         class="form-label"
         [validationClasses]="control.controlName"
-        >{{ control.label }}</label
+      >{{ control.label }}</label
       >
       <input
         type="text"
@@ -78,7 +63,7 @@
 <div class="row">
   <div class="col-12">
     <h6 class="h6 text-primary">
-    {{ lang.map.classification_of_foreign_aid }}
+      {{ lang.map.classification_of_foreign_aid }}
     </h6>
   </div>
   <div class="col-12">
@@ -119,7 +104,7 @@
           </th>
           <td cdk-cell *cdkCellDef="let row">
             {{
-              row?.mainUNOCHACategoryInfo?.getName() || row.mainUNOCHACategory
+            row?.mainUNOCHACategoryInfo?.getName() || row.mainUNOCHACategory
             }}
           </td>
         </ng-container>
