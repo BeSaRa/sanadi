@@ -1,7 +1,12 @@
-import { FormlyFieldHulfGridWrapperComponent } from './../services-search/components/formly-field-hulf-grid-wrapper/formly-field-hulf-grid-wrapper.component';
+import { ProcessTextareaFieldComponent } from './popups/general-process-popup/process-formly-components/process-textarea-field/process-textarea-field.component';
+import { ProcessDateFieldComponent } from './popups/general-process-popup/process-formly-components/process-date-field/process-date-field.component';
+import { ProcessMaskInputFieldComponent } from './popups/general-process-popup/process-formly-components/process-mask-input-field/process-mask-input-field.component';
+import { ProcessSelectFieldComponent } from './popups/general-process-popup/process-formly-components/process-select-field/process-select-field.component';
+import { ProcessFieldWrapperComponent } from './popups/general-process-popup/process-formly-components/process-field-wrapper/process-field-wrapper.component';
 import { FormlyMaskInputFieldComponent } from './../services-search/components/formly-mask-input-field/formly-mask-input-field.component';
 import { FormlySelectFieldComponent } from './../services-search/components/formly-select-field/formly-select-field.component';
 import { FormlyDateFieldComponent } from './../services-search/components/formly-date-field/formly-date-field.component';
+import { FormlyFieldWrapperComponent } from './../services-search/components/formly-field-wrapper/formly-field-wrapper.component';
 import { GeneralProcessPopupComponent } from './popups/general-process-popup/general-process-popup.component';
 import { GeneralProcessComponent } from './pages/general-process/general-process.component';
 import { CustomMenuPopupComponent } from './popups/custom-menu-popup/custom-menu-popup.component';
@@ -162,23 +167,31 @@ import { FormlyBootstrapModule } from '@ngx-formly/bootstrap';
     CustomMenuComponent,
     CustomMenuPopupComponent,
     ProfilePopupComponent,
-    ProfilesComponent
+    ProfilesComponent,
+    ProcessFieldWrapperComponent,
+    ProcessSelectFieldComponent,
+    ProcessMaskInputFieldComponent,
+    ProcessDateFieldComponent,
+    ProcessTextareaFieldComponent
   ],
   imports: [
     SharedModule,
     AdminRoutingModule,
     DragDropModule,
+    FormlyBootstrapModule,
     FormlyModule.forChild({
       types: [
-        { name: 'dateField', component: FormlyDateFieldComponent, wrappers: ['col-md-6'] },
-        { name: 'selectField', component: FormlySelectFieldComponent, wrappers: ['col-md-6'] },
-        { name: 'maskInput', extends: 'input', component: FormlyMaskInputFieldComponent, wrappers: ['col-md-6'] },
+        { name: 'dateField', component: ProcessDateFieldComponent, wrappers: ['custom-wrapper'] },
+        { name: 'selectField', component: ProcessSelectFieldComponent, wrappers: ['custom-wrapper'] },
+        { name: 'yesOrNo', component: ProcessSelectFieldComponent, wrappers: ['custom-wrapper'] },
+        { name: 'textarea', component: ProcessTextareaFieldComponent, wrappers: ['custom-wrapper'] },
+        { name: 'maskInput', extends: 'input', component: ProcessMaskInputFieldComponent, wrappers: ['custom-wrapper'] },
+        { name: 'number', extends: 'input', component: ProcessMaskInputFieldComponent, wrappers: ['custom-wrapper'] },
       ],
       wrappers: [
-        { name: 'col-md-6', component: FormlyFieldHulfGridWrapperComponent }
+        { name: 'custom-wrapper', component: ProcessFieldWrapperComponent }
       ]
     }),
-    FormlyBootstrapModule
   ],
 })
 export class AdministrationModule {

@@ -1,5 +1,7 @@
-import { switchMap, tap, catchError, filter } from 'rxjs/operators';
-import { CustomFormlyFieldConfig } from './../../../interfaces/custom-formly-field-config';
+import { ProcessFieldBuilder } from './process-formly-components/process-fields-builder';
+import { FormlyFieldConfig } from '@ngx-formly/core/lib/components/formly.field.config';
+import { CustomGeneralProcessFieldConfig, ISelectOption } from './../../../interfaces/custom-general-process-field';
+import { switchMap, tap, catchError } from 'rxjs/operators';
 import { CustomValidators } from './../../../validators/custom-validators';
 import { GenerealProcessTemplate } from './../../../models/general-process-template';
 import { InternalDepartment } from '@app/models/internal-department';
@@ -36,7 +38,7 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
   model!: GeneralProcess;
   operation: OperationTypes;
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
-  _fields: GenerealProcessTemplate[] = [];
+  processForm: ProcessFieldBuilder;
 
   saveVisible = true;
   mainClassificationsList: AdminLookup[] = [];
@@ -57,6 +59,7 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
     super();
     this.model = data.model;
     this.operation = data.operation;
+    this.processForm = new ProcessFieldBuilder();
   }
   buildForm(): void {
     this.form = this.fb.group(this.model.buildForm(true));
@@ -113,27 +116,6 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
     return this._teamsList.filter(team => !this.departmentField.value || team.parentDeptId == this.departmentField.value)
   }
 
-  get fields(): CustomFormlyFieldConfig[] {
-    return this._fields.map(f => {
-      const model: GenerealProcessTemplate = new GenerealProcessTemplate().clone(f)
-      return {
-        type: GeneralProcessTemplateFieldTypes[model.fieldType],
-        templateOptions: {
-          label: model.getName(),
-          required: model.isRquired,
-          options: of([{ id: 1, name: 'as' }, { id: 2, name: 'asss' }]),
-        },
-        selectOptions: {
-          bindValue: 'id',
-          bindLabel: 'name'
-        }
-      }
-    })
-  }
-  addField() {
-    this._fields.unshift(this.fieldForm.value)
-    this.resetFieldForm();
-  }
   resetFieldForm() {
     this.fieldForm.reset();
   }
@@ -143,7 +125,7 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
   prepareModel(model: GeneralProcess, form: UntypedFormGroup): GeneralProcess | Observable<GeneralProcess> {
     return (new GeneralProcess()).clone({
       ...model, ...form.value,
-      template: JSON.stringify(this._fields)
+      template: JSON.stringify(this.processForm.fieldsGroups)
     });
   }
   afterSave(model: GeneralProcess, dialogRef: DialogRef): void {
@@ -155,7 +137,9 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
     this.operation = OperationTypes.UPDATE;
     dialogRef.close(model);
   }
-
+  get isSelectField() {
+    return this.fieldForm.value.type == GeneralProcessTemplateFieldTypes.selectField
+  }
   get generalProcessTemplateFieldTypesList() {
     var keys = Object.keys(GeneralProcessTemplateFieldTypes);
     return keys.slice(keys.length / 2);

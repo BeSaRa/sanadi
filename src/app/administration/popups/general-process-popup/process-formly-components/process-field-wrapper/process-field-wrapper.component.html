@@ -1,5 +1,5 @@
-<div class="col-sm-12 col-md-6 mb-3 position-relative">
-  <label asteriskIfRequired [control]="formControl" [for]="id">{{lang.getLocalByKey(labelKey).getName()}}</label>
+<div class="position-relative">
+  <label asteriskIfRequired [control]="formControl" [for]="id">{{field.label.getName()}}</label>
   <ng-container #fieldComponent></ng-container>
   <div [class.is-invalid]="showError"></div>
   <app-field-error-message [control]="formControl"></app-field-error-message>

@@ -24,7 +24,6 @@ export class FormlySelectFieldComponent extends FieldType<CustomFormlyFieldConfi
 
   constructor(public lang: LangService) {
     super();
-    console.log(this.field)
   }
 
   ngOnInit(): void {

@@ -1559,5 +1559,6 @@ export interface ILanguageKeys {
   lbl_parent_classification: string;
   logo_is_required: string;
   msg_account_number_is_already_exist: string;
+  lbl_select_options: string;
 }
 

@@ -1,4 +1,3 @@
-import { FormlyFieldHulfGridWrapperComponent } from './components/formly-field-hulf-grid-wrapper/formly-field-hulf-grid-wrapper.component';
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 
@@ -17,7 +16,6 @@ import { FormlyMaskInputFieldComponent } from './components/formly-mask-input-fi
   declarations: [
     ServicesSearchComponent,
     FormlyFieldWrapperComponent,
-    FormlyFieldHulfGridWrapperComponent,
     FormlyFieldFullWrapperComponent,
     FormlyDateFieldComponent,
     FormlySelectFieldComponent,
@@ -35,7 +33,6 @@ import { FormlyMaskInputFieldComponent } from './components/formly-mask-input-fi
       ],
       wrappers: [
         {name: 'col-md-4-8', component: FormlyFieldWrapperComponent},
-        {name: 'col-md-6', component: FormlyFieldHulfGridWrapperComponent},
         {name: 'col-md-2-10', component: FormlyFieldFullWrapperComponent}
       ]
     })

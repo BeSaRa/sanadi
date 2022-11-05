@@ -1,24 +1,27 @@
+import { IMyDateModel } from 'angular-mydatepicker';
+import { IKeyValue } from './../interfaces/i-key-value';
+import { CustomGeneralProcessFieldConfig } from './../interfaces/custom-general-process-field';
+import { GeneralProcessTemplateFieldTypes } from './../enums/general-process-template-field-types.enum';
 import { Cloneable } from '@app/models/cloneable';
 import { CustomValidators } from './../validators/custom-validators';
 import { INames } from '@contracts/i-names';
 import { LangService } from '@app/services/lang.service';
 import { FactoryService } from '@app/services/factory.service';
-
+import { ISelectOption } from '@app/interfaces/custom-general-process-field';
 export class GenerealProcessTemplate extends Cloneable<GenerealProcessTemplate>{
   identifyingName!: string;
   arName!: string;
   enName!: string;
   note!: string;
   order!: number;
-
-  // TODO: from validation field // IFormFieldOptions.type
-  fieldType!: number;
-  // TODO: from validation field // IFormFieldOptions.validations.pattern
-  regex!: string;
-  // TODO: from validation field // IFormFieldOptions.validations.required
-  isRquired: boolean = false;
-
+  wrappers: string = 'custom-wrapper';
+  type!: number;
+  pattern!: string;
+  mask!: string;
+  required!: boolean;
+  options: IKeyValue[] = [];
   langService: LangService;
+  value!: number | string | IMyDateModel;
   constructor() {
     super();
     this.langService = FactoryService.getService('LangService');
@@ -33,11 +36,11 @@ export class GenerealProcessTemplate extends Cloneable<GenerealProcessTemplate>{
       identifyingName,
       arName,
       enName,
-      fieldType,
       order,
-      regex,
       note,
-      isRquired
+      required,
+      pattern,
+      type
     } = this;
     return {
       identifyingName: controls ? [identifyingName, [
@@ -57,12 +60,56 @@ export class GenerealProcessTemplate extends Cloneable<GenerealProcessTemplate>{
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
         CustomValidators.pattern('ENG_NUM_ONE_ENG')
       ]] : enName,
-      isRquired: controls ? [isRquired] : isRquired,
-      fieldType: controls ? [fieldType, [CustomValidators.required]] : fieldType,
+      required: controls ? [required] : required,
+      type: controls ? [type, [CustomValidators.required]] : type,
       order: controls ? [order, [CustomValidators.required]] : order,
-      regex: controls ? [regex, [CustomValidators.required]] : regex,
+      pattern: controls ? [pattern, []] : pattern,
       note: controls ? [note, [CustomValidators.required]] : note,
     }
   }
 
+  buildField(): CustomGeneralProcessFieldConfig {
+    const {
+      type,
+      options,
+      required,
+      pattern,
+      wrappers,
+      arName,
+      enName,
+      mask,
+      order
+    } = this;
+    let selectOptions: ISelectOption = {
+      bindValue: 'id',
+      bindLabel: 'name',
+      options: options
+    };
+    const classes = type == GeneralProcessTemplateFieldTypes.textarea ? 'col-12' : 'col-12 col-md-4'
+    const field = {
+      type: GeneralProcessTemplateFieldTypes[type],
+      label: new ILabel(arName, enName),
+      className: classes,
+      templateOptions: {
+        required: required,
+        pattern: pattern,
+        rows: 3
+      },
+      selectOptions,
+      mask,
+      wrappers: [wrappers],
+    }
+    return field;
+  }
+}
+
+export class ILabel {
+  langService: LangService;
+  constructor(private arName: string, private enName: string) {
+    this.langService = FactoryService.getService('LangService');
+  }
+
+  getName(): string {
+    return this[(this.langService.map.lang + 'Name') as keyof INames];
+  }
 }
