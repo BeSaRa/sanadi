@@ -1,6 +1,8 @@
 import { AdminResult } from './admin-result';
 import {CustomValidators} from "@app/validators/custom-validators";
 import {SearchableCloneable} from "@app/models/searchable-cloneable";
+import { normalSearchFields } from '@app/helpers/normal-search-fields';
+import { ISearchFieldsMap } from '@app/types/types';
 
 export class ContactOfficer extends SearchableCloneable<ContactOfficer>{
   arabicName!: string;
@@ -8,6 +10,10 @@ export class ContactOfficer extends SearchableCloneable<ContactOfficer>{
   email!: string;
   phone!: string;
   mobileNo!: string;
+
+  searchFields: ISearchFieldsMap<ContactOfficer> = {
+    ...normalSearchFields(['arabicName','englishName','email','phone'])
+  };
 
   getContactOfficerFields(control: boolean): any {
     const {arabicName, englishName, email, phone, mobileNo} = this;

@@ -141,11 +141,11 @@ export class AttachmentTypeServiceDataService extends CrudGenericService<Attachm
     }));
   }
 
-  private passedReloadDuration(caseType: number): boolean {
-    return ((Date.now() - this.attachmentTypes[caseType].time) > (5 * 60 * 1000))
-  }
+  // private passedReloadDuration(caseType: number): boolean {
+  //   return ((Date.now() - this.attachmentTypes[caseType].time) > (5 * 60 * 1000))
+  // }
 
   getByCaseType(caseType: number): Observable<AttachmentTypeServiceData[]> {
-    return this.attachmentTypes[caseType] && !this.passedReloadDuration(caseType) ? of(this.attachmentTypes[caseType].list) : this.loadByCaseType(caseType)
+    return this.loadByCaseType(caseType)
   }
 }

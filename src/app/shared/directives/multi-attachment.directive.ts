@@ -126,15 +126,23 @@ export class MultiAttachmentDirective implements OnInit, OnDestroy, HasMissingRe
     this.attachmentsMap = attachments.reduce((acc, file) => {
       return { ...acc, [file.attachmentTypeInfo.id!]: file };
     }, {});
-    this.attachments = this.attachmentsTypes.map(type => {
-      return (this.attachmentsMap[type.attachmentTypeId] || type.convertToAttachment()).setAttachmentTypeServiceData(type);
-    }).filter((attachment) => {
-      if (attachment.attachmentTypeServiceData && isEmptyObject(attachment.attachmentTypeServiceData.parsedCustomProperties)) {
-        return true;
-      }
-      this.conditionalAttachments = this.conditionalAttachments.concat(attachment);
-      return false;
-    });
+
+    const attachmentsTypeIds = Object.keys(this.attachmentsMap).map(Number)
+
+    this.attachments = this.attachmentsTypes.filter((item) => {
+      return !attachmentsTypeIds.includes(item.attachmentTypeId);
+    })
+      .map(type => {
+        return (type.convertToAttachment()).setAttachmentTypeServiceData(type);
+      })
+      .concat(attachments)
+      .filter((attachment) => {
+        if (attachment.attachmentTypeServiceData && isEmptyObject(attachment.attachmentTypeServiceData.parsedCustomProperties)) {
+          return true;
+        }
+        this.conditionalAttachments = this.conditionalAttachments.concat(attachment);
+        return false;
+      });
     // start checking the custom properties
     this.conditionalAttachments.forEach(attachment => {
       this.listenToFormPropertiesChange(attachment);

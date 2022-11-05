@@ -79,7 +79,6 @@ import {InternationalCooperationComponent} from './pages/international-cooperati
     RealBeneficiariesComponent,
     ExternalOfficesPopupComponent,
     ForeignAidClassificationsComponent,
-    WorkAreasComponent,
     BylawsComponent,
     CharityReportsComponent,
     CharityDecisionsComponent,

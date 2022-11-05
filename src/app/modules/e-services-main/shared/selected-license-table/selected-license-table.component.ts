@@ -11,6 +11,7 @@ import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {CustomsExemptionRemittanceService} from '@services/customs-exemption-remittance.service';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 import {GeneralAssociationMeetingAttendanceService} from '@services/general-association-meeting-attendance.service';
+import {CommonUtils} from '@helpers/common-utils';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -86,10 +87,15 @@ export class SelectedLicenseTableComponent {
           return this.sharedService.openViewContentDialog(file, doc);
         });
     } else if (this.caseType === CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE) {
-      this.generalAssociationMeetingAttendanceService.downloadFinalReport(license.meetingReportID)
-        .subscribe((file) => {
-          return this.sharedService.openViewContentDialog(file, license);
-        });
+      let doc = {...license, documentTitle: license.fullSerial};
+      if(CommonUtils.isValidValue(doc.meetingReportID)) {
+        this.generalAssociationMeetingAttendanceService.downloadFinalReport(doc.meetingReportID)
+          .subscribe((file) => {
+            return this.sharedService.openViewContentDialog(file, license);
+          });
+      } else {
+        this.dialog.error(this.lang.map.final_report_has_not_yet_been_uploaded);
+      }
     } else {
       this.licenseService.showLicenseContent(license, this.caseTypeViewLicense)
         .subscribe((file) => {

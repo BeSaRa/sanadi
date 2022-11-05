@@ -111,6 +111,6 @@ export class OrgUser extends BaseModel<OrgUser, OrganizationUserService> {
 
   // noinspection JSUnusedGlobalSymbols
   getUniqueName(): string {
-    return this.qid!.toString();
+    return this.qid?.toString()?? '';
   }
 }

@@ -1,5 +1,9 @@
+import { infoSearchFields } from '@app/helpers/info-search-fields';
+import { normalSearchFields } from '@app/helpers/normal-search-fields';
 import {SearchableCloneable} from '@app/models/searchable-cloneable';
+import { ISearchFieldsMap } from '@app/types/types';
 import {CustomValidators} from '@app/validators/custom-validators';
+import { AdminResult } from './admin-result';
 
 export class ExecutiveManagement extends SearchableCloneable<ExecutiveManagement> {
   arabicName!: string;
@@ -8,6 +12,12 @@ export class ExecutiveManagement extends SearchableCloneable<ExecutiveManagement
   jobTitle!: number;
   phone!: string;
   country!: number;
+  countryInfo!:AdminResult
+
+  searchFields: ISearchFieldsMap<ExecutiveManagement> = {
+    ...infoSearchFields(['countryInfo']),
+    ...normalSearchFields(['arabicName','englishName','jobTitle','email','phone'])
+  };
 
   getManagerFields(control: boolean = false): any {
     const {

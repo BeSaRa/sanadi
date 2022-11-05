@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  final_report_has_not_yet_been_uploaded: string;
   address_details: string;
   project_addresses: string;
   you_should_add_at_least_one_foreign_project_need: string;
@@ -1526,6 +1527,10 @@ export interface ILanguageKeys {
   menu_general_process_notification: string;
   lbl_main_team: string;
   lbl_sub_team: string;
+  org_name_in_bank: string;
+  trade_license:string;
+  commercial_License_No:string;
+  commercial_activity:string;
   section: string;
   profile: string;
   disclosure_statements_notices_notifications_notices: string;
