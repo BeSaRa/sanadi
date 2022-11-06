@@ -172,7 +172,7 @@
                   <label class="form-label" asteriskIfRequired="oldLicenseFullSerial"
                          for="oldLicenseFullSerial">{{lang.map.account_number}}
                   </label>
-                  <div class="input-group">
+                  <div class="input-group" [formGroup]="bankAccountSearchCriteriaForm">
                     <input (keydown.enter)="bankAccountSearchCriteriaField.valid && searchForBankAccount()" id="bankAccountSearchCriteria"
                            validationClasses="bankAccountSearchCriteria"
                            formControlName="bankAccountSearchCriteria"
