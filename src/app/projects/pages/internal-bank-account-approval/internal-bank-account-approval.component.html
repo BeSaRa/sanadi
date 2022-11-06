@@ -173,12 +173,12 @@
                          for="oldLicenseFullSerial">{{lang.map.account_number}}
                   </label>
                   <div class="input-group">
-                    <input (keydown.enter)="searchForBankAccount()" id="bankAccountSearchCriteria"
+                    <input (keydown.enter)="bankAccountSearchCriteriaField.valid && searchForBankAccount()" id="bankAccountSearchCriteria"
                            validationClasses="bankAccountSearchCriteria"
                            formControlName="bankAccountSearchCriteria"
                            class="form-control"
                            [readonly]="(readonly)">
-                    <button (click)="searchForBankAccount()" class="input-group-text" [disabled]="(readonly)">
+                    <button (click)="searchForBankAccount()" class="input-group-text" [disabled]="(readonly || bankAccountSearchCriteriaField.invalid)">
                       <i class="mdi mdi-magnify text-primary"></i>
                     </button>
                   </div>
