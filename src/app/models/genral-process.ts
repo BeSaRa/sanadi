@@ -16,6 +16,7 @@ export class GeneralProcess extends BaseModel<GeneralProcess, GeneralProcessServ
   departmentId!: number;
   teamId!: number;
   subTeamId!: number;
+  processType!: number;
 
   active!: true;
 
@@ -47,6 +48,7 @@ export class GeneralProcess extends BaseModel<GeneralProcess, GeneralProcessServ
       subClass,
       departmentId,
       teamId,
+      processType,
       subTeamId,
     } = this;
     return {
@@ -62,6 +64,7 @@ export class GeneralProcess extends BaseModel<GeneralProcess, GeneralProcessServ
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
         CustomValidators.pattern('ENG_NUM_ONE_ENG')
       ]] : enName,
+      processType: controls ? [processType, [CustomValidators.required]] : processType,
       mainClass: controls ? [mainClass, [CustomValidators.required]] : mainClass,
       subClass: controls ? [subClass, [CustomValidators.required]] : subClass,
       departmentId: controls ? [departmentId, [CustomValidators.required]] : departmentId,

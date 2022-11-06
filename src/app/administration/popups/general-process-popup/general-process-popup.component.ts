@@ -1,3 +1,9 @@
+import { LookupService } from './../../../services/lookup.service';
+import { Lookup } from './../../../models/lookup';
+import { group } from '@angular/animations';
+import { UserClickOn } from './../../../enums/user-click-on.enum';
+import { DialogService } from './../../../services/dialog.service';
+import { GeneralProcessService } from './../../../services/general-process.service';
 import { ProcessFieldBuilder } from './process-formly-components/process-fields-builder';
 import { FormlyFieldConfig } from '@ngx-formly/core/lib/components/formly.field.config';
 import { CustomGeneralProcessFieldConfig, ISelectOption } from './../../../interfaces/custom-general-process-field';
@@ -22,7 +28,7 @@ import { OperationTypes } from './../../../enums/operation-types.enum';
 import { GeneralProcess } from './../../../models/genral-process';
 import { AdminGenericDialog } from '@app/generics/admin-generic-dialog';
 import { Component, Inject } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subscription } from 'rxjs';
 import { SubTeamService } from '@app/services/sub-team.service';
 import { SubTeam } from '@app/models/sub-team';
 import { GeneralProcessTemplateFieldTypes } from '@app/enums/general-process-template-field-types.enum';
@@ -37,9 +43,11 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
   fieldForm!: UntypedFormGroup;
   model!: GeneralProcess;
   operation: OperationTypes;
+  GeneralProcessTypeList: Lookup[] = this.lookupService.listByCategory.GeneralProcessType;
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
   processForm: ProcessFieldBuilder;
-
+  listenToFieldDetailsSubsecribtion$!: Subscription;
+  isEditForm: boolean = false;
   saveVisible = true;
   mainClassificationsList: AdminLookup[] = [];
   subClassificationsList: AdminLookup[] = [];
@@ -50,11 +58,14 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
   constructor(public dialogRef: DialogRef,
     public fb: UntypedFormBuilder,
     public lang: LangService,
+    private generalProcessService: GeneralProcessService,
     @Inject(DIALOG_DATA_TOKEN) data: IDialogData<GeneralProcess>,
+    private lookupService: LookupService,
     private toast: ToastService,
     private teamService: TeamService,
     private internalDepartmentService: InternalDepartmentService,
     private subTeamService: SubTeamService,
+    private dialogService: DialogService,
     private adminLookupService: AdminLookupService) {
     super();
     this.model = data.model;
@@ -91,6 +102,32 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
       this._loadSubTeam(this.model?.teamId);
       this.loadSubClasses(this.model?.mainClass)
     }
+    this.listenToFieldDetailsSubsecribtion$ = this.generalProcessService.listenToSelectField().subscribe((fieldId: string) => {
+      if (fieldId) {
+        const field = this.processForm.getFieldById(fieldId);
+        this.fieldForm.reset();
+        if (field)
+          this.fieldForm = this.fb.group(field.buildForm(true));
+        this.isEditForm = true;
+      }
+    })
+  }
+  submitField(form: UntypedFormGroup) {
+    if (!this.processForm.fields.filter(f => f.identifyingName == form.value.identifyingName).length || this.isEditForm) {
+      this.processForm.setField(form);
+      this.isEditForm = false;
+    } else
+      this.toast.error(this.lang.map.msg_user_identifier_is_already_exist);
+  }
+  deleteField(form: UntypedFormGroup) {
+    this.dialogService
+      .confirm(this.lang.map.msg_confirm_delete_x.change({ x: form.value.identifyingName }))
+      .onAfterClose$.subscribe((click: UserClickOn) => {
+        if (click === UserClickOn.YES) {
+          this.processForm.deleteField(form);
+          this.isEditForm = false;
+        }
+      });
   }
   loadSubClasses(parentId: number) {
     this.adminLookupService.loadByParentId(AdminLookupTypeEnum.GENERAL_PROCESS_CLASSIFICATION, parentId).subscribe(data => {
@@ -118,14 +155,31 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
 
   resetFieldForm() {
     this.fieldForm.reset();
+    this.isEditForm = false;
   }
   beforeSave(model: GeneralProcess, form: UntypedFormGroup): boolean | Observable<boolean> {
     return form.valid;
   }
   prepareModel(model: GeneralProcess, form: UntypedFormGroup): GeneralProcess | Observable<GeneralProcess> {
+    const fields = this.processForm.fields.map((field: GenerealProcessTemplate) => {
+      return {
+        id: field.id,
+        identifyingName: field.identifyingName,
+        arName: field.arName,
+        enName: field.enName,
+        note: field.note,
+        order: field.order,
+        wrappers: field.wrappers,
+        type: field.type,
+        pattern: field.pattern,
+        mask: field.mask,
+        required: field.required,
+        options: field.options
+      }
+    })
     return (new GeneralProcess()).clone({
       ...model, ...form.value,
-      template: JSON.stringify(this.processForm.fieldsGroups)
+      template: JSON.stringify(fields)
     });
   }
   afterSave(model: GeneralProcess, dialogRef: DialogRef): void {
@@ -170,5 +224,6 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
   saveFail(error: Error): void {
   }
   destroyPopup(): void {
+    this.listenToFieldDetailsSubsecribtion$.unsubscribe();
   }
 }

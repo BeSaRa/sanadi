@@ -24,7 +24,7 @@
             placeholder="{{ lang.map.select }}" id="requestType" [readonly]="readonly"
             (change)="handleRequestTypeChange($event, true)" [notFoundText]="lang.map.msg_not_found" appendTo="body"
             validationClasses="requestType" formControlName="requestType">
-            <ng-option *ngFor="let type of notificationRequestType" [value]="type.lookupKey">{{ type.getName() }}
+            <ng-option *ngFor="let type of notificationRequestTypeList" [value]="type.lookupKey">{{ type.getName() }}
             </ng-option>
           </ng-select>
           <app-field-error-message controlName="requestType"></app-field-error-message>
@@ -80,7 +80,7 @@
           <app-field-error-message controlName="competentDepartmentID"></app-field-error-message>
         </div>
         <!-- domain -->
-        <div class="col-md-6 mb-4 position-relative">
+        <div class="col-md-6 col-md-4 mb-4 position-relative">
           <label asteriskIfRequired="domain" for="domain" class="form-label">{{ lang.map.classification
             }}</label>
           <ng-select [selectOnTab]="true" labelForId="domain" [clearable]="true" placeholder="{{ lang.map.select }}"
@@ -93,7 +93,7 @@
           <app-field-error-message controlName="domain"></app-field-error-message>
         </div>
         <!-- first Sub Domain -->
-        <div class="col-md-6 mb-4 position-relative">
+        <div class="col-md-6 col-md-4 mb-4 position-relative">
           <label asteriskIfRequired="firstSubDomain" for="firstSubDomain" class="form-label">{{
             lang.map.sub_classification
             }}</label>
@@ -104,6 +104,21 @@
           </ng-select>
           <app-field-error-message controlName="firstSubDomain"></app-field-error-message>
         </div>
+        <!-- General Process Type -->
+        <div class="col-md-6 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="processType" for="processType" class="form-label">{{ lang.map.lbl_process_type
+            }}</label>
+          <ng-select [selectOnTab]="true" labelForId="processType" [clearable]="true"
+            placeholder="{{ lang.map.select }}" id="processType" [readonly]="readonly"
+            [notFoundText]="lang.map.msg_not_found" appendTo="body" (change)="handleDepartmentChange($event)"
+            validationClasses="processType" formControlName="processType">
+            <ng-option *ngFor="let option of GeneralProcessTypeList" [value]="option.lookupKey">
+              {{option.getName()}}
+            </ng-option>
+          </ng-select>
+          <app-field-error-message controlName=" processType">
+          </app-field-error-message>
+        </div>
         <!-- process id -->
         <div class="col-sm-6 col-md-4 mb-4 position-relative">
           <label asteriskIfRequired="processid" for="processid" class="form-label">{{
@@ -111,7 +126,7 @@
             }}</label>
           <ng-select [selectOnTab]="true" labelForId="processid" [clearable]="true" placeholder="{{ lang.map.select }}"
             id="processid" [readonly]="readonly" [notFoundText]="lang.map.msg_not_found" appendTo="body"
-            validationClasses="processid" formControlName="processid">
+            (change)="handleProcessChange($event)" validationClasses="processid" formControlName="processid">
             <ng-option *ngFor="let process of processList" [value]="process.id">{{ process.getName() }}
             </ng-option>
           </ng-select>

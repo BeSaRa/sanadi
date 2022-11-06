@@ -1,3 +1,5 @@
+import { AllRequestTypesEnum } from './../../../../enums/all-request-types-enum';
+import { LookupService } from './../../../../services/lookup.service';
 import { GeneralProcess } from '@app/models/genral-process';
 import { GeneralProcessService } from './../../../../services/general-process.service';
 import { AdminLookupTypeEnum } from './../../../../enums/admin-lookup-type-enum';
@@ -39,8 +41,9 @@ export class GeneralProcessNotificationComponent extends EServicesGenericCompone
 GeneralProcessNotification,
 GeneralProcessNotificationService
 > {
-  notificationRequestType: Lookup[] = [];
-  processTypeList: Lookup[] = [];
+  notificationRequestTypeList: Lookup[] = this.lookupService.listByCategory
+    .AllRequestTypes.filter(rt => rt.lookupKey == AllRequestTypesEnum.NEW || rt.lookupKey == AllRequestTypesEnum.EDIT);
+  GeneralProcessTypeList: Lookup[] = this.lookupService.listByCategory.GeneralProcessType;
   processList: GeneralProcess[] = [];
   otherProcess: GeneralProcess = new GeneralProcess().clone({
     id: -1,
@@ -91,6 +94,7 @@ GeneralProcessNotificationService
     private cd: ChangeDetectorRef,
     private toast: ToastService,
     private licenseService: LicenseService,
+    private lookupService: LookupService,
     public fb: UntypedFormBuilder,
     public service: GeneralProcessNotificationService,
     private employeeService: EmployeeService,
@@ -156,7 +160,10 @@ GeneralProcessNotificationService
     ).subscribe((deparments: InternalDepartment[]) => {
       this.departmentList = deparments;
     })
-    this.generalProcessService.filterProcess({}).pipe(
+    this.filterProcess({});
+  }
+  filterProcess(params: Partial<GeneralProcess>) {
+    this.generalProcessService.filterProcess(params).pipe(
       catchError((err) => {
         console.log(err)
         return of([this.otherProcess])
@@ -180,6 +187,9 @@ GeneralProcessNotificationService
     if (teamId) {
       this.teamfield.setValue(teamId)
     }
+  }
+  handleProcessChange(id: number) {
+    console.log(id);
   }
   _buildForm(): void {
     const model = new GeneralProcessNotification().buildForm(true)
@@ -314,7 +324,7 @@ GeneralProcessNotificationService
     });
   }
   get fields() {
-    if(!this.model || !this.model.template) return [];
+    if (!this.model || !this.model.template) return [];
     return JSON.parse(this.model.template);
   }
   _destroyComponent(): void {

@@ -42,8 +42,21 @@
         </ng-select>
         <app-field-error-message controlName="subClass"></app-field-error-message>
       </div>
+      <!-- General Process Type -->
+      <div class="col-sm-6 col-md-3 mb-4 position-relative">
+        <label for="processType" asteriskIfRequired="processType"
+          class="form-label">{{lang.map.lbl_process_type}}</label>
+        <ng-select validationClasses="type" labelForId="processType" placeholder="{{lang.map.select}}"
+          [notFoundText]="lang.map.msg_not_found" formControlName="processType" id="processType" appendTo="body">
+          <ng-option *ngFor="let option of GeneralProcessTypeList" [value]="option.lookupKey">
+            {{option.getName()}}
+          </ng-option>
+        </ng-select>
+        <app-field-error-message controlName=" processType">
+        </app-field-error-message>
+      </div>
       <!-- department -->
-      <div class="col-sm-6 col-md-4 mb-4 position-relative">
+      <div class="col-sm-6 col-md-3 mb-4 position-relative">
         <label for="departmentId" asteriskIfRequired="departmentId" class="form-label">{{lang.map.department}}</label>
         <ng-select validationClasses="type" labelForId="departmentId" placeholder="{{lang.map.select}}"
           [notFoundText]="lang.map.msg_not_found" formControlName="departmentId" (change)="handleDepartmentChange()"
@@ -55,7 +68,7 @@
         <app-field-error-message controlName="departmentId"></app-field-error-message>
       </div>
       <!-- team -->
-      <div class="col-sm-6 col-md-4 mb-4 position-relative">
+      <div class="col-sm-6 col-md-3 mb-4 position-relative">
         <label for="teamId" asteriskIfRequired="teamId" class="form-label">{{lang.map.lbl_main_team}}</label>
         <ng-select validationClasses="type" labelForId="teamId" placeholder="{{lang.map.select}}"
           [notFoundText]="lang.map.msg_not_found" (change)="handleTeamChange($event)" formControlName="teamId"
@@ -67,7 +80,7 @@
         <app-field-error-message controlName="teamId"></app-field-error-message>
       </div>
       <!-- sub team -->
-      <div class="col-sm-6 col-md-4 mb-4 position-relative">
+      <div class="col-sm-6 col-md-3 mb-4 position-relative">
         <label for="subTeamId" asteriskIfRequired="subTeamId" class="form-label">{{lang.map.lbl_sub_team}}</label>
         <ng-select validationClasses="type" labelForId="subTeamId" placeholder="{{lang.map.select}}"
           [notFoundText]="lang.map.msg_not_found" formControlName="subTeamId" id="subTeamId" appendTo="body">
@@ -91,8 +104,8 @@
               <div class="col-12 col-md-6 col-lg-12 mb-4 position-relative">
                 <label asteriskIfRequired="identifyingName" for="identifyingName" class="form-label">{{
                   lang.map.lbl_identifying_name}}</label>
-                <input id="identifyingName" formControlName="identifyingName" validationClasses="identifyingName"
-                  class="form-control" />
+                <input id="identifyingName" [readonly]="isEditForm" formControlName="identifyingName"
+                  validationClasses="identifyingName" class="form-control" />
                 <app-field-error-message controlName="identifyingName"></app-field-error-message>
               </div>
               <!-- ar name -->
@@ -158,9 +171,11 @@
                 <app-field-error-message controlName="note"></app-field-error-message>
               </div>
               <div class="col-12">
-                <button class="btn btn-primary me-2" [disabled]="!fieldForm.valid"
-                  (click)="processForm.addField(fieldForm)">
+                <button class="btn btn-primary me-2" [disabled]="!fieldForm.valid" (click)="submitField(fieldForm)">
                   {{ lang.map.btn_save }}
+                </button>
+                <button class="btn btn-outline-danger me-2" *ngIf="isEditForm" (click)="deleteField(fieldForm)">
+                  {{ lang.map.btn_delete }}
                 </button>
                 <button class="btn btn-secondary" (click)="resetFieldForm()">
                   {{ lang.map.btn_clear }}

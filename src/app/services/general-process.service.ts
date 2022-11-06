@@ -3,7 +3,7 @@ import { IDialogData } from './../interfaces/i-dialog-data';
 import { OperationTypes } from './../enums/operation-types.enum';
 import { DialogRef } from './../shared/models/dialog-ref';
 import { switchMap, exhaustMap } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 import { ComponentType } from '@angular/cdk/overlay';
 import { FactoryService } from './factory.service';
 import { DialogService } from './dialog.service';
@@ -13,6 +13,7 @@ import { GeneralProcess } from '@app/models/genral-process';
 import { CrudWithDialogGenericService } from '@app/generics/crud-with-dialog-generic-service';
 import { Injectable } from '@angular/core';
 import { CastResponse, CastResponseContainer } from '@app/decorators/decorators/cast-response';
+
 
 @CastResponseContainer({
   $default: {
@@ -28,7 +29,7 @@ export class GeneralProcessService extends CrudWithDialogGenericService<GeneralP
   }
 
   list: GeneralProcess[] = [];
-
+  private _selectField: Subject<string> = new Subject<string>();
   constructor(public http: HttpClient,
     private urlService: UrlService,
     public dialog: DialogService) {
@@ -43,7 +44,12 @@ export class GeneralProcessService extends CrudWithDialogGenericService<GeneralP
   _getServiceURL(): string {
     return this.urlService.URLS.GENERAL_PROCESS;
   }
-
+  listenToSelectField() {
+    return this._selectField
+  }
+  setlectField(fieldId: string) {
+    this._selectField.next(fieldId);
+  }
   addDialog(): DialogRef | Observable<DialogRef> {
     return this.dialog.show<IDialogData<GeneralProcess>>(
       this._getDialogComponent(),

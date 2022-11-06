@@ -42,6 +42,7 @@ export class GeneralProcessNotification
   processid!: number;
   projectName!: string;
   needSubject!: string;
+  processType!: number;
   template!: string;
 
   followUpDate!: string | IMyDateModel;
@@ -81,6 +82,7 @@ export class GeneralProcessNotification
       firstSubDomain,
       processid,
       projectName,
+      processType,
       needSubject,
     } = this;
     return {
@@ -92,6 +94,7 @@ export class GeneralProcessNotification
         competentDepartmentID: controls ? [competentDepartmentID] : competentDepartmentID,
         domain: controls ? [domain] : domain,
         firstSubDomain: controls ? [firstSubDomain] : firstSubDomain,
+        processType: controls ? [processType] : processType,
         processid: controls ? [processid, CustomValidators.required] : processid,
         projectName: controls ? [projectName, CustomValidators.required] : projectName,
         needSubject: controls ? [needSubject, CustomValidators.required] : needSubject,

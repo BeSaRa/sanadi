@@ -9,6 +9,7 @@ import { LangService } from '@app/services/lang.service';
 import { FactoryService } from '@app/services/factory.service';
 import { ISelectOption } from '@app/interfaces/custom-general-process-field';
 export class GenerealProcessTemplate extends Cloneable<GenerealProcessTemplate>{
+  id!: string;
   identifyingName!: string;
   arName!: string;
   enName!: string;
@@ -70,6 +71,7 @@ export class GenerealProcessTemplate extends Cloneable<GenerealProcessTemplate>{
 
   buildField(): CustomGeneralProcessFieldConfig {
     const {
+      id,
       type,
       options,
       required,
@@ -77,8 +79,7 @@ export class GenerealProcessTemplate extends Cloneable<GenerealProcessTemplate>{
       wrappers,
       arName,
       enName,
-      mask,
-      order
+      mask
     } = this;
     let selectOptions: ISelectOption = {
       bindValue: 'id',
@@ -87,6 +88,7 @@ export class GenerealProcessTemplate extends Cloneable<GenerealProcessTemplate>{
     };
     const classes = type == GeneralProcessTemplateFieldTypes.textarea ? 'col-12' : 'col-12 col-md-4'
     const field = {
+      id: id,
       type: GeneralProcessTemplateFieldTypes[type],
       label: new ILabel(arName, enName),
       className: classes,
