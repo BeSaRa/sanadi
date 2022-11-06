@@ -66,7 +66,6 @@ export class OrganizaionOfficerComponent implements OnInit {
   >([])
   ;
   columns = [
-    "identificationNumber",
     "fullName",
     "actions",
   ];
@@ -83,6 +82,7 @@ export class OrganizaionOfficerComponent implements OnInit {
     if(this.canUpdate === false){
       this.columns= this.columns.slice(0,this.columns.length-1);
     }
+
   }
 
   ngOnDestroy(): void {
@@ -93,11 +93,8 @@ export class OrganizaionOfficerComponent implements OnInit {
 
   listenToRecordChange() {
     this.recordChanged$.pipe(takeUntil(this.destroy$)).subscribe((record) => {
-      console.log(this.currentUserOrgId);
-
-
       this.currentRecord = record || undefined;
-      this.readonly = record === undefined ? true : false;
+      this.readonly = record === undefined ? false : true;
     });
   }
 
@@ -174,7 +171,7 @@ export class OrganizaionOfficerComponent implements OnInit {
     this.save$.next();
   }
   allowAdd() {
-    return this.readonly;
+    return !this.readonly;
   }
   sortOrganizations() {
     this.organizationUsers.sort((a, b) => (a.fullName < b.fullName ? -1 : 1));
