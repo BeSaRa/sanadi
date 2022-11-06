@@ -98,7 +98,7 @@ export class InternalBankAccountApproval extends _RequestType<InternalBankAccoun
       selectedBankAccountToMerge: controls ? [selectedBankAccountToMerge] : selectedBankAccountToMerge,
       ownerOfMergedBankAccounts: controls ? [ownerOfMergedBankAccounts] : ownerOfMergedBankAccounts,
       selectedResponsiblePerson: controls ? [selectedResponsiblePerson] : selectedResponsiblePerson,
-      bankAccountSearchCriteria: controls ? [bankAccountSearchCriteria] : bankAccountSearchCriteria
+      bankAccountSearchCriteria: controls ? [bankAccountSearchCriteria, [CustomValidators.required]] : bankAccountSearchCriteria
     }
   }
 
