@@ -72,5 +72,4 @@ export class GeneralProcess extends BaseModel<GeneralProcess, GeneralProcessServ
       subTeamId: controls ? [subTeamId, [CustomValidators.required]] : subTeamId,
     }
   }
-
 }

@@ -1,3 +1,4 @@
+import { CustomValidators } from './../../../../validators/custom-validators';
 import { ProcessFieldBuilder } from './../../../../administration/popups/general-process-popup/process-formly-components/process-fields-builder';
 import { AllRequestTypesEnum } from './../../../../enums/all-request-types-enum';
 import { LookupService } from './../../../../services/lookup.service';
@@ -56,9 +57,10 @@ GeneralProcessNotificationService
   mainClassificationsList: AdminLookup[] = [];
   subClassificationsList: AdminLookup[] = [];
   departmentList: InternalDepartment[] = [];
-  teamsList: Team[] = [];
+  _teamsList: Team[] = [];
 
   form!: UntypedFormGroup;
+  processTemplateForm!: UntypedFormGroup;
   licenseSearch$: Subject<string> = new Subject<string>();
   selectedLicense?: GeneralProcessNotification;
 
@@ -155,17 +157,23 @@ GeneralProcessNotificationService
       this.mainClassificationsList = data;
     })
     this.teamService.loadAsLookups().pipe(
-      switchMap((teams: Team[]) => {
+      switchMap((teams) => {
         return this.internalDepartmentService.loadGeneralProcessDepartments()
           .pipe(
-            tap((deparments: InternalDepartment[]) => {
-              this.teamsList = teams.filter((team: Team) => deparments.findIndex((deparment: InternalDepartment) => team.parentDeptId == deparment.id) != -1);
+            tap((deparments) => {
+              this._teamsList = teams.filter(team => deparments.findIndex(deparment => team.parentDeptId == deparment.id) != -1);
             }))
-      }),
-    ).subscribe((deparments: InternalDepartment[]) => {
+      })
+    ).subscribe(deparments => {
       this.departmentList = deparments;
     })
     this.filterProcess({});
+  }
+  handleDepartmentChange() {
+    this.teamField.reset();
+  }
+  get teamsList() {
+    return this._teamsList.filter(team => !this.departmentField.value || team.parentDeptId == this.departmentField.value)
   }
   filterProcess(params: Partial<GeneralProcess>) {
     this.generalProcessService.filterProcess(params).pipe(
@@ -182,20 +190,16 @@ GeneralProcessNotificationService
       this.subClassificationsList = data;
     })
   }
-  handleTeamChange(teamId: number) {
-    if (teamId) {
-      this.departmentfield.setValue(teamId)
-    }
-  }
-  handleDepartmentChange(depId: number) {
-    let teamId = this.departmentList.find(dep => dep.id == depId)?.mainTeam.id
-    if (teamId) {
-      this.teamfield.setValue(teamId)
-    }
-  }
   handleProcessChange(id: number) {
     const process = this.processList.find(p => p.id == id);
+    this.projectNameField.setValidators([])
+    this.projectNameField.reset();
+    if (this.isOtherProcess)
+      this.projectNameField.setValidators([CustomValidators.required])
     this.processFieldBuilder.generateFromString(process?.template)
+    this.sampleDataForOperationsFormGroup.reset();
+    this.form.removeControl('sampleDataForOperations');
+    this.form.setControl('sampleDataForOperations', this.fb.group({}))
   }
   _buildForm(): void {
     const model = new GeneralProcessNotification().buildForm(true)
@@ -206,6 +210,9 @@ GeneralProcessNotificationService
       DSNNN: this.fb.group(model.DSNNN),
       sampleDataForOperations: this.fb.group(model.sampleDataForOperations),
     });
+    this.form.valueChanges.subscribe((data) => {
+      console.log(data);
+    })
   }
   _afterBuildForm(): void {
   }
@@ -237,12 +244,15 @@ GeneralProcessNotificationService
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
   _prepareModel(): GeneralProcessNotification | Observable<GeneralProcessNotification> {
+    this.processFieldBuilder.fields.map(f => {
+      f.value = this.sampleDataForOperationsFormGroup.value[f.identifyingName];
+    })
     const value = new GeneralProcessNotification().clone({
       ...this.model,
       requestType: this.form.value.requestType,
       description: this.form.value.description,
       ...this.form.value.DSNNN,
-      ...this.form.value.sampleDataForOperations,
+      template: this.processFieldBuilder.generateAsString()
     })
     return value;
   }
@@ -280,6 +290,7 @@ GeneralProcessNotificationService
     }
     this.model = model;
     const formModel = model.buildForm();
+    // TODO: Generate form from string and set form value for sampleDataForOperations
     this.form.patchValue({
       requestType: formModel.requestType,
       description: formModel.description,
@@ -426,13 +437,17 @@ GeneralProcessNotificationService
   get oldLicenseFullSerialField(): UntypedFormControl {
     return this.form.get('oldLicenseFullSerial') as UntypedFormControl;
   }
-  get teamfield(): UntypedFormControl {
-    return this.form.get('teamId') as UntypedFormControl
+  get teamField(): UntypedFormControl {
+    return this.DSNNNFormGroup.get('competentDepartmentID') as UntypedFormControl
   }
-  get departmentfield(): UntypedFormControl {
-    return this.form.get('departmentId') as UntypedFormControl
+  get departmentField(): UntypedFormControl {
+    return this.DSNNNFormGroup.get('departmentId') as UntypedFormControl
+  }
+  get projectNameField(): UntypedFormControl {
+    return this.DSNNNFormGroup.get('projectName') as UntypedFormControl
   }
   get processIdField(): UntypedFormControl {
     return this.DSNNNFormGroup && this.DSNNNFormGroup.get('processid') as UntypedFormControl
   }
+
 }

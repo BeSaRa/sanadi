@@ -1,7 +1,7 @@
 <div
   class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between"
 >
-  <h1 class="h6 text-white">{{ lang.map.approval_general_process_notification }}</h1>
+  <h1 class="h6 text-white">{{ lang.map[label] }}</h1>
   <button
     type="button"
     class="btn-close btn-close-white"
@@ -10,9 +10,9 @@
     aria-label="Close"
   ></button>
 </div>
-<div class="dialog-content" [ngClass]="isCancelRequestType() ? 'no-fixed-height' : 'w800px'">
+<div class="dialog-content" [ngClass]="'w800px'">
   <div class="row">
-    <form [formGroup]="approvalForm" *ngIf="!isCancelRequestType()">
+    <form [formGroup]="approvalForm">
       <div class="mb-4 position-relative">
         <label
           for="followUpDate"

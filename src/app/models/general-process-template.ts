@@ -89,8 +89,8 @@ export class GenerealProcessTemplate extends Cloneable<GenerealProcessTemplate>{
     };
     const classes = type == GeneralProcessTemplateFieldTypes.textarea ? 'col-12' : 'col-12 col-md-4'
     const field = {
-      key: identifyingName,
       id: id,
+      key: identifyingName,
       type: GeneralProcessTemplateFieldTypes[type],
       label: new ILabel(arName, enName),
       className: classes,

@@ -1,3 +1,4 @@
+import { CustomValidators } from './../../../../validators/custom-validators';
 import { map } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { FieldMode } from './../../../../interfaces/custom-general-process-field';
@@ -49,6 +50,25 @@ export class ProcessFieldBuilder {
   formChange() {
     this._FormChange()
   }
+  generateAsString(): string {
+    const fields = this.fields.map((field: GenerealProcessTemplate) => {
+      return {
+        id: field.id,
+        identifyingName: field.identifyingName,
+        arName: field.arName,
+        enName: field.enName,
+        note: field.note,
+        order: field.order,
+        wrappers: field.wrappers,
+        type: field.type,
+        pattern: field.pattern,
+        mask: field.mask,
+        required: field.required,
+        options: field.options
+      }
+    })
+    return JSON.stringify(fields);
+  }
   generateFromString(template?: string) {
     of<GenerealProcessTemplate[]>(JSON.parse(template || '[]')).pipe(
       map((fields: GenerealProcessTemplate[]) => {
@@ -68,6 +88,7 @@ export class ProcessFieldBuilder {
       note: form.value.note,
       order: form.value.order,
       type: form.value.type,
+      mask: form.value.type == GeneralProcessTemplateFieldTypes.number ? CustomValidators.inputMaskPatterns.NUMBER_ONLY : '',
       required: form.value.required,
       pattern: form.value.pattern,
     });

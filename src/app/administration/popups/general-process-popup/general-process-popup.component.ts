@@ -167,25 +167,9 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
     return form.valid;
   }
   prepareModel(model: GeneralProcess, form: UntypedFormGroup): GeneralProcess | Observable<GeneralProcess> {
-    const fields = this.processForm.fields.map((field: GenerealProcessTemplate) => {
-      return {
-        id: field.id,
-        identifyingName: field.identifyingName,
-        arName: field.arName,
-        enName: field.enName,
-        note: field.note,
-        order: field.order,
-        wrappers: field.wrappers,
-        type: field.type,
-        pattern: field.pattern,
-        mask: field.mask,
-        required: field.required,
-        options: field.options
-      }
-    })
     return (new GeneralProcess()).clone({
       ...model, ...form.value,
-      template: JSON.stringify(fields)
+      template: this.processForm.generateAsString()
     });
   }
   afterSave(model: GeneralProcess, dialogRef: DialogRef): void {

@@ -5,7 +5,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FieldType } from '@ngx-formly/core';
 import { LangService } from '@services/lang.service';
 import { UntypedFormControl } from '@angular/forms';
-import { Subject } from 'rxjs';
+import { Subject, of, Observable } from 'rxjs';
 
 @Component({
   selector: 'process-select-field',
@@ -38,13 +38,13 @@ export class ProcessSelectFieldComponent extends FieldType<CustomGeneralProcessF
     this.destroy$.complete();
   }
 
-  get selectOptions(): IKeyValue[] {
+  get selectOptions(): Observable<any[]> {
     if (this.isYesOrNo) {
-      return [
+      return of([
         { id: 0, name: 'No' },
         { id: 1, name: 'Yes' }
-      ]
+      ])
     }
-    return this.field.selectOptions?.options as unknown as IKeyValue[];
+    return of(this.field.selectOptions?.options!);
   }
 }

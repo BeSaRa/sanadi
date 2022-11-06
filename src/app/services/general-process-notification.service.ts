@@ -18,10 +18,10 @@ import { DynamicOptionsService } from './dynamic-options.service';
   providedIn: 'root'
 })
 export class GeneralProcessNotificationService extends BaseGenericEService<GeneralProcessNotification> {
-  jsonSearchFile: string = '';
+  jsonSearchFile: string = 'general_process_notification_search.json';
   serviceKey: keyof ILanguageKeys = 'menu_general_process_notification';
   caseStatusIconMap: Map<number, string> = new Map();
-  searchColumns: string[] = ['fullSerial', 'createdOn', 'creatorInfo', 'caseStatus', 'subject', 'ouInfo'];
+  searchColumns: string[] = ['fullSerial', 'createdOn', 'caseStatus', 'subject', 'creatorInfo'];
   selectLicenseDisplayColumns: string[] = ['enName', 'licenseNumber', 'status', 'actions'];
 
   constructor(
