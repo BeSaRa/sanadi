@@ -74,13 +74,18 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
   }
   buildForm(): void {
     this.form = this.fb.group(this.model.buildForm(true));
+    const templateModel = new GenerealProcessTemplate();
+    this.fieldForm = this.fb.group(templateModel.buildForm(true));
     if (this.operation === OperationTypes.VIEW) {
       this.form.disable();
       this.saveVisible = false;
       this.validateFieldsVisible = false;
+      this.fieldForm.disable();
+      this.processForm.buildMode = 'use';
     }
-    const templateModel = new GenerealProcessTemplate();
-    this.fieldForm = this.fb.group(templateModel.buildForm(true));
+  }
+  get isViewForm() {
+    return this.operation === OperationTypes.VIEW
   }
 
   initPopup(): void {
@@ -101,6 +106,7 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
     if (this.model?.id) {
       this._loadSubTeam(this.model?.teamId);
       this.loadSubClasses(this.model?.mainClass)
+      this.processForm.generateFromString(this.model?.template)
     }
     this.listenToFieldDetailsSubsecribtion$ = this.generalProcessService.listenToSelectField().subscribe((fieldId: string) => {
       if (fieldId) {

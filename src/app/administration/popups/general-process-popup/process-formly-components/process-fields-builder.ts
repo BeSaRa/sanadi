@@ -1,3 +1,6 @@
+import { map } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { FieldMode } from './../../../../interfaces/custom-general-process-field';
 import { GeneralProcessTemplateFieldTypes } from './../../../../enums/general-process-template-field-types.enum';
 import { UntypedFormGroup } from '@angular/forms';
 import { GenerealProcessTemplate } from './../../../../models/general-process-template';
@@ -5,11 +8,12 @@ import { FormlyFieldConfig } from '@ngx-formly/core/lib/components/formly.field.
 import { uniqueId } from 'lodash';
 
 export class ProcessFieldBuilder {
+  buildMode: FieldMode = 'init'
+  fieldsGroups: FormlyFieldConfig[] = [];
   private _fields: GenerealProcessTemplate[] = [];
   get fields(): GenerealProcessTemplate[] {
     return this._fields;
   }
-  fieldsGroups: FormlyFieldConfig[] = [];
   private _FormChange() {
     this.fieldsGroups = [];
     this._fields = this.fields.sort((ff, fl) => +ff.order - +fl.order);
@@ -38,9 +42,22 @@ export class ProcessFieldBuilder {
   private _buildRow(fields: GenerealProcessTemplate[]) {
     const row = {
       fieldGroupClassName: 'row mb-4',
-      fieldGroup: fields.map(f => f.buildField())
+      fieldGroup: fields.map(f => f.buildField(this.buildMode))
     }
     return row
+  }
+  formChange() {
+    this._FormChange()
+  }
+  generateFromString(template?: string) {
+    of<GenerealProcessTemplate[]>(JSON.parse(template || '[]')).pipe(
+      map((fields: GenerealProcessTemplate[]) => {
+        return fields.map(f => new GenerealProcessTemplate().clone(f))
+      })
+    ).subscribe((templateFields: GenerealProcessTemplate[]) => {
+      this._fields = templateFields;
+      this.formChange();
+    })
   }
   setField(form: UntypedFormGroup) {
     const field = new GenerealProcessTemplate().clone({
@@ -60,7 +77,7 @@ export class ProcessFieldBuilder {
     else
       Object.assign(prevField, field);
     form.reset();
-    this._FormChange();
+    this.formChange();
   }
   getFieldById(id: string): GenerealProcessTemplate | undefined {
     return this.fields.find(f => f.id == id);
@@ -72,18 +89,6 @@ export class ProcessFieldBuilder {
     const index = this.fields.findIndex(f => f.identifyingName == form.value.identifyingName);
     this.fields.splice(index, 1);
     form.reset();
-    this._FormChange();
+    this.formChange();
   }
-  getCircularReplacer() {
-    const seen = new WeakSet();
-    return (key: any, value: any) => {
-      if (typeof value === 'object' && value !== null) {
-        if (seen.has(value)) {
-          return;
-        }
-        seen.add(value);
-      }
-      return value;
-    };
-  };
 }

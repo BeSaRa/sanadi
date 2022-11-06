@@ -1,3 +1,4 @@
+import { ProcessFieldBuilder } from './../../../../administration/popups/general-process-popup/process-formly-components/process-fields-builder';
 import { AllRequestTypesEnum } from './../../../../enums/all-request-types-enum';
 import { LookupService } from './../../../../services/lookup.service';
 import { GeneralProcess } from '@app/models/genral-process';
@@ -31,6 +32,7 @@ import { OperationTypes } from '@app/enums/operation-types.enum';
 import { SaveTypes } from '@app/enums/save-types';
 import { LangService } from '@app/services/lang.service';
 import { Observable, of, Subject } from 'rxjs';
+import { GenerealProcessTemplate } from '@app/models/general-process-template';
 
 @Component({
   selector: 'app-general-process-notification',
@@ -45,6 +47,7 @@ GeneralProcessNotificationService
     .AllRequestTypes.filter(rt => rt.lookupKey == AllRequestTypesEnum.NEW || rt.lookupKey == AllRequestTypesEnum.EDIT);
   GeneralProcessTypeList: Lookup[] = this.lookupService.listByCategory.GeneralProcessType;
   processList: GeneralProcess[] = [];
+  processFieldBuilder: ProcessFieldBuilder;
   otherProcess: GeneralProcess = new GeneralProcess().clone({
     id: -1,
     arName: 'عمليات أخرى',
@@ -104,6 +107,8 @@ GeneralProcessNotificationService
     private generalProcessService: GeneralProcessService
   ) {
     super();
+    this.processFieldBuilder = new ProcessFieldBuilder();
+    this.processFieldBuilder.buildMode = 'use';
   }
   handleReadonly(): void {
     // if record is new, no readonly (don't change as default is readonly = false)
@@ -189,7 +194,8 @@ GeneralProcessNotificationService
     }
   }
   handleProcessChange(id: number) {
-    console.log(id);
+    const process = this.processList.find(p => p.id == id);
+    this.processFieldBuilder.generateFromString(process?.template)
   }
   _buildForm(): void {
     const model = new GeneralProcessNotification().buildForm(true)
@@ -322,10 +328,6 @@ GeneralProcessNotificationService
         this.requestTypeField.setValue(this.requestType$.value);
       }
     });
-  }
-  get fields() {
-    if (!this.model || !this.model.template) return [];
-    return JSON.parse(this.model.template);
   }
   _destroyComponent(): void {
   }

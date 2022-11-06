@@ -1,6 +1,6 @@
 import { IMyDateModel } from 'angular-mydatepicker';
 import { IKeyValue } from './../interfaces/i-key-value';
-import { CustomGeneralProcessFieldConfig } from './../interfaces/custom-general-process-field';
+import { CustomGeneralProcessFieldConfig, FieldMode } from './../interfaces/custom-general-process-field';
 import { GeneralProcessTemplateFieldTypes } from './../enums/general-process-template-field-types.enum';
 import { Cloneable } from '@app/models/cloneable';
 import { CustomValidators } from './../validators/custom-validators';
@@ -69,7 +69,7 @@ export class GenerealProcessTemplate extends Cloneable<GenerealProcessTemplate>{
     }
   }
 
-  buildField(): CustomGeneralProcessFieldConfig {
+  buildField(mode: FieldMode = 'init'): CustomGeneralProcessFieldConfig {
     const {
       id,
       type,
@@ -98,6 +98,7 @@ export class GenerealProcessTemplate extends Cloneable<GenerealProcessTemplate>{
         rows: 3
       },
       selectOptions,
+      mode,
       mask,
       wrappers: [wrappers],
     }

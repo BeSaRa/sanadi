@@ -1,3 +1,10 @@
+import { ProcessFieldWrapperComponent } from './../../administration/popups/general-process-popup/process-formly-components/process-field-wrapper/process-field-wrapper.component';
+import { ProcessMaskInputFieldComponent } from './../../administration/popups/general-process-popup/process-formly-components/process-mask-input-field/process-mask-input-field.component';
+import { ProcessTextareaFieldComponent } from './../../administration/popups/general-process-popup/process-formly-components/process-textarea-field/process-textarea-field.component';
+import { ProcessSelectFieldComponent } from './../../administration/popups/general-process-popup/process-formly-components/process-select-field/process-select-field.component';
+import { ProcessDateFieldComponent } from './../../administration/popups/general-process-popup/process-formly-components/process-date-field/process-date-field.component';
+import { FormlyModule } from '@ngx-formly/core';
+import { FormlyBootstrapModule } from '@ngx-formly/bootstrap';
 import { GeneralProcessNotificationApprovalComponent } from './popups/general-process-notification-approval/general-process-notification-approval.component';
 import { GeneralProcessNotificationComponent } from './pages/general-process-notification/general-process-notification.component';
 import {
@@ -92,7 +99,21 @@ import {InternationalCooperationComponent} from './pages/international-cooperati
     CommonModule,
     EServicesMainModule,
     GeneralServicesRoutingModule,
-    OfficeServicesModule
+    OfficeServicesModule,
+    FormlyBootstrapModule,
+    FormlyModule.forChild({
+      types: [
+        { name: 'dateField', component: ProcessDateFieldComponent, wrappers: ['custom-wrapper'] },
+        { name: 'selectField', component: ProcessSelectFieldComponent, wrappers: ['custom-wrapper'] },
+        { name: 'yesOrNo', component: ProcessSelectFieldComponent, wrappers: ['custom-wrapper'] },
+        { name: 'textarea', component: ProcessTextareaFieldComponent, wrappers: ['custom-wrapper'] },
+        { name: 'maskInput', extends: 'input', component: ProcessMaskInputFieldComponent, wrappers: ['custom-wrapper'] },
+        { name: 'number', extends: 'input', component: ProcessMaskInputFieldComponent, wrappers: ['custom-wrapper'] },
+      ],
+      wrappers: [
+        { name: 'custom-wrapper', component: ProcessFieldWrapperComponent }
+      ]
+    }),
   ]
 })
 export class GeneralServicesModule { }

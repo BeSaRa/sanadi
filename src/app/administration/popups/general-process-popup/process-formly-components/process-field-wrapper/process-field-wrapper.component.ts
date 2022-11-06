@@ -23,7 +23,9 @@ export class ProcessFieldWrapperComponent extends FieldWrapper<CustomGeneralProc
     ) {
     super();
   }
-
+  get isInitMode() {
+    return this.field.mode == 'init'
+  }
   ngOnInit(): void {
     this.lang.onLanguageChange$.pipe(takeUntil(this.destroy$)).subscribe(() => this.cd.markForCheck());
   }

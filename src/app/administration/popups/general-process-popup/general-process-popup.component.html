@@ -97,7 +97,7 @@
     <div class="row">
       <div class="col-12">
         <div class="row">
-          <div class="col-12 col-lg-3 border-end" style="min-width: 300px;">
+          <div class="col-12 col-lg-3 border-end" *ngIf="!isViewForm" style="min-width: 300px;">
             <h6 class="title mb-3">{{ lang.map.lbl_add_template_field }}</h6>
             <div class="row">
               <!-- identifying name -->

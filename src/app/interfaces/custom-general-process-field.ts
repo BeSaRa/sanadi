@@ -10,8 +10,10 @@ export interface CustomGeneralProcessFieldConfig extends FormlyFieldConfig {
     value?: string
   }
   selectOptions?: ISelectOption,
-  mask?: string
+  mask?: string,
+  mode?: FieldMode
 }
+export type FieldMode = 'init' | 'use'
 export interface ISelectOption {
   defaultValue?: any,
   options?: IKeyValue[],

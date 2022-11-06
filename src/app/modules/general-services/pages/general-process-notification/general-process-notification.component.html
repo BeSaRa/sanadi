@@ -80,7 +80,7 @@
           <app-field-error-message controlName="competentDepartmentID"></app-field-error-message>
         </div>
         <!-- domain -->
-        <div class="col-md-6 col-md-4 mb-4 position-relative">
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
           <label asteriskIfRequired="domain" for="domain" class="form-label">{{ lang.map.classification
             }}</label>
           <ng-select [selectOnTab]="true" labelForId="domain" [clearable]="true" placeholder="{{ lang.map.select }}"
@@ -93,7 +93,7 @@
           <app-field-error-message controlName="domain"></app-field-error-message>
         </div>
         <!-- first Sub Domain -->
-        <div class="col-md-6 col-md-4 mb-4 position-relative">
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
           <label asteriskIfRequired="firstSubDomain" for="firstSubDomain" class="form-label">{{
             lang.map.sub_classification
             }}</label>
@@ -105,7 +105,7 @@
           <app-field-error-message controlName="firstSubDomain"></app-field-error-message>
         </div>
         <!-- General Process Type -->
-        <div class="col-md-6 col-md-4 mb-4 position-relative">
+        <div class="col-sm-6 col-md-4 mb-4 position-relative">
           <label asteriskIfRequired="processType" for="processType" class="form-label">{{ lang.map.lbl_process_type
             }}</label>
           <ng-select [selectOnTab]="true" labelForId="processType" [clearable]="true"
@@ -165,7 +165,7 @@
 
   <ng-template #sampleDataForOperationsTabTemplate>
     <form [formGroup]="sampleDataForOperationsFormGroup" autocomplete="off">
-      <!-- <formly-form [fields]="fields"></formly-form> -->
+      <formly-form [fields]="processFieldBuilder.fieldsGroups"></formly-form>
     </form>
   </ng-template>
 
