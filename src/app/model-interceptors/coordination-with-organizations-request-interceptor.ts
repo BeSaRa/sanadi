@@ -45,6 +45,7 @@ export class CoordinationWithOrganizationsRequestInterceptor
       delete x.langService;
       delete (x as any).searchFields;
     });
+    model.temporaryOrganizaionOfficerList=[...model.organizaionOfficerList??[]];
 
     model.buildingAbilitiesList &&
       (model.buildingAbilitiesList = model.buildingAbilitiesList.map((item) => {
@@ -52,6 +53,8 @@ export class CoordinationWithOrganizationsRequestInterceptor
           item
         ) as unknown as BuildingAbility;
       }));
+    model.temporaryBuildingAbilitiesList=[...model.buildingAbilitiesList??[]];
+
     model.effectiveCoordinationCapabilities &&
       (model.effectiveCoordinationCapabilities =
         model.effectiveCoordinationCapabilities.map((item) => {
@@ -59,13 +62,15 @@ export class CoordinationWithOrganizationsRequestInterceptor
             item
           ) as unknown as EffectiveCoordinationCapabilities;
         }));
+
+        model.temporaryEffectiveCoordinationCapabilities=[... model.effectiveCoordinationCapabilities?? []]
     model.researchAndStudies &&
       (model.researchAndStudies = model.researchAndStudies.map((item) => {
         return researchAndStudiesInterceptor.send(
           item
         ) as unknown as ResearchAndStudies;
       }));
-
+      model.temporaryResearchAndStudies=[... model.researchAndStudies?? []]
     delete model.service;
     delete model.taskDetails;
     delete model.caseStatusInfo;
@@ -96,7 +101,7 @@ export class CoordinationWithOrganizationsRequestInterceptor
       isValidAdminResult(model.domainInfo) ? model.domainInfo : {}
     );
 
-    model.organizaionOfficerList =model.organizaionOfficerList?? [];
+    model.organizaionOfficerList =model.temporaryOrganizaionOfficerList?? [];
     model.participatingOrganizaionList = model.participatingOrganizaionList?.map(
       (item) => {
         return participatingOrgInterceptor.receive(
@@ -104,19 +109,19 @@ export class CoordinationWithOrganizationsRequestInterceptor
         );
       }
     )??[];
-    model.buildingAbilitiesList = model.buildingAbilitiesList?.map((item) => {
+    model.buildingAbilitiesList = model.temporaryBuildingAbilitiesList?.map((item) => {
       return buildinAbilityInterceptor.receive(
         new BuildingAbility().clone(item)
       );
     }) ?? [];
     model.effectiveCoordinationCapabilities =
-      model.effectiveCoordinationCapabilities?.map((item) => {
+      model.temporaryEffectiveCoordinationCapabilities?.map((item) => {
         return effectiveCoordinationInterceptor.receive(
           new EffectiveCoordinationCapabilities().clone(item)
         );
       })?? [];
     model.researchAndStudies =
-      model.researchAndStudies?.map((item) => {
+      model.temporaryResearchAndStudies?.map((item) => {
         return researchAndStudiesInterceptor.receive(
           new ResearchAndStudies().clone(item)
         );

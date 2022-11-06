@@ -165,6 +165,7 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
     private orgUnitService: OrganizationUnitService,
     private orgUserService: OrganizationUserService,
     public service: CoordinationWithOrganizationsRequestService,
+
     public fb: FormBuilder
   ) {
     super();
@@ -248,10 +249,10 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
 
   isApproved(): boolean {
     return (
-      this.model!.organizaionOfficerList.length > 0 &&
-      (this.model!.buildingAbilitiesList.length > 0 ||
-        this.model!.effectiveCoordinationCapabilities.length > 0 ||
-        this.model!.researchAndStudies.length > 0)
+      this.model!.organizaionOfficerList?.length > 0 &&
+      (this.model!.buildingAbilitiesList?.length > 0 ||
+        this.model!.effectiveCoordinationCapabilities?.length > 0 ||
+        this.model!.researchAndStudies?.length > 0)
     );
   }
 
@@ -463,12 +464,9 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
           records.forEach((record) => {
             list.push(
               new OrganizationOfficer().clone({
-                identificationNumber: record.qid?.toString(),
+                identificationNumber: record.generalUserId?.toString(),
                 fullName: record.getName(),
-                email: record.email,
-                phone: record.officialPhoneNumber,
-                extraPhone: record.phoneNumber,
-                organizationId: record.orgId,
+
               })
             );
           });
