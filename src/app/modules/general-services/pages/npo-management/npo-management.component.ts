@@ -248,7 +248,6 @@ NpoManagementService
     return value;
   }
   private _updateModelAfterSave(model: NpoManagement): void {
-    console.log({...model})
     if ((this.openFrom === OpenFrom.USER_INBOX || this.openFrom === OpenFrom.TEAM_INBOX) && this.model?.taskDetails && this.model.taskDetails.tkiid) {
       this.service.getTask(this.model.taskDetails.tkiid)
         .subscribe((model) => {
@@ -350,7 +349,9 @@ NpoManagementService
           this.setSelectedLicense(data)
       })
   }
-
+  get criticalOnTask() {
+    return !!this.model?.id;
+  }
   private setSelectedLicense(details: NpoData) {
     if (details) {
       let value: NpoManagement = new NpoManagement();
@@ -495,7 +496,7 @@ NpoManagementService
     const registrationAuthority = this.registrationAuthorityField.value;
 
     this.registrationDateField?.setValidators([]);
-      const registrationDate = this.registrationDateField.value;
+    const registrationDate = this.registrationDateField.value;
 
     this.registrationNumberField?.setValidators([]);
     const registrationNumber = this.registrationNumberField.value;
