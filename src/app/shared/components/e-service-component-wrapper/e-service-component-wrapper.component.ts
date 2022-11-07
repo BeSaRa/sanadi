@@ -495,7 +495,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
             return !item.isInitialApproved() || !this.internal;
           }
           // show if external user or service which are only for internal user
-          return !this.internal || this.internalUserServices.includes(item.getCaseType());
+          return !this.internal || (this.internalUserServices.includes(item.getCaseType()) && this.canSave());
         },
         onClick: () => {
           this.component.save.next(this.saveTypes.FINAL);
