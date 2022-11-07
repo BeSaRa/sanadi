@@ -73,7 +73,7 @@
             placeholder="{{ lang.map.select }}" id="competentDepartmentID" [readonly]="readonly"
             [notFoundText]="lang.map.msg_not_found" appendTo="body" validationClasses="competentDepartmentID"
             formControlName="competentDepartmentID">
-            <ng-option *ngFor="let option of teamsList" [value]="option.id">
+            <ng-option *ngFor="let option of subTeamsList" [value]="option.id">
               {{option.getName()}}
             </ng-option>
           </ng-select>

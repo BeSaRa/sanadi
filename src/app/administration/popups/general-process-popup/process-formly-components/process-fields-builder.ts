@@ -1,3 +1,4 @@
+import { IKeyValue } from '@contracts/i-key-value';
 import { CustomValidators } from './../../../../validators/custom-validators';
 import { map } from 'rxjs/operators';
 import { of } from 'rxjs';
@@ -90,6 +91,7 @@ export class ProcessFieldBuilder {
       mask: form.value.type == GeneralProcessTemplateFieldTypes.number ? CustomValidators.inputMaskPatterns.NUMBER_ONLY : '',
       required: form.value.required,
       pattern: form.value.pattern,
+      value: form.value.value
     });
     let prevField = this.getFieldByIdentifyingName(form.value.identifyingName)
     if (!prevField)
@@ -98,6 +100,13 @@ export class ProcessFieldBuilder {
       Object.assign(prevField, field);
     form.reset();
     this.formChange();
+  }
+  get formValues(): IKeyValue {
+    return this.fields.map(f => {
+      return { [f.id]: f.value }
+    }).reduce((prev, next) => {
+      return Object.assign(prev, next)
+    }, {})
   }
   getFieldById(id: string): GeneralProcessTemplate | undefined {
     return this.fields.find(f => f.id == id);

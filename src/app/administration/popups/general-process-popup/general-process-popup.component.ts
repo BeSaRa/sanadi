@@ -4,13 +4,12 @@ import { UserClickOn } from './../../../enums/user-click-on.enum';
 import { DialogService } from './../../../services/dialog.service';
 import { GeneralProcessService } from './../../../services/general-process.service';
 import { ProcessFieldBuilder } from './process-formly-components/process-fields-builder';
-import { switchMap, tap, catchError } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import { CustomValidators } from './../../../validators/custom-validators';
 import { GeneralProcessTemplate } from './../../../models/general-process-template';
 import { InternalDepartment } from '@app/models/internal-department';
 import { InternalDepartmentService } from './../../../services/internal-department.service';
 import { Team } from './../../../models/team';
-import { TeamService } from './../../../services/team.service';
 import { AdminLookupTypeEnum } from './../../../enums/admin-lookup-type-enum';
 import { AdminLookup } from './../../../models/admin-lookup';
 import { AdminLookupService } from '@services/admin-lookup.service';
@@ -59,7 +58,6 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
     @Inject(DIALOG_DATA_TOKEN) data: IDialogData<GeneralProcess>,
     private lookupService: LookupService,
     private toast: ToastService,
-    private teamService: TeamService,
     private internalDepartmentService: InternalDepartmentService,
     private subTeamService: SubTeamService,
     private dialogService: DialogService,
@@ -89,15 +87,7 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
     this.adminLookupService.loadGeneralProcessClassificaion().subscribe(data => {
       this.mainClassificationsList = data;
     })
-    this.teamService.loadAsLookups().pipe(
-      switchMap((teams) => {
-        return this.internalDepartmentService.loadGeneralProcessDepartments()
-          .pipe(
-            tap((deparments) => {
-              this._teamsList = teams.filter(team => deparments.findIndex(deparment => team.parentDeptId == deparment.id) != -1);
-            }))
-      })
-    ).subscribe(deparments => {
+    this.internalDepartmentService.loadGeneralProcessDepartments().subscribe(deparments => {
       this.departmentList = deparments;
     })
     if (this.model?.id) {
@@ -145,8 +135,8 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
     else this.subTeamsList = [];
   }
   handleDepartmentChange() {
-    this.teamField.reset();
-    this.handleTeamChange();
+    this.teamField.setValue(this.departmentList.find(d => d.id == this.departmentField.value)?.mainTeam.id);
+    this.handleTeamChange(this.teamField.value);
   }
   handleTeamChange(teamId?: number) {
     this.subTeamField.reset();

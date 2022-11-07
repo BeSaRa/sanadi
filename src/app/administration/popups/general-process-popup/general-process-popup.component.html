@@ -6,18 +6,31 @@
   <form [formGroup]="form">
     <div class="row">
       <!-- ar name -->
-      <div class="col-sm-6 col-md-3 mb-4 position-relative">
+      <div class="col-sm-6 col-md-4 mb-4 position-relative">
         <label asteriskIfRequired="arName" for="arName" class="form-label">{{ lang.map.lbl_arabic_name
           }}</label>
         <input id="arName" validationClasses="arName" formControlName="arName" class="form-control" />
         <app-field-error-message controlName="arName"></app-field-error-message>
       </div>
       <!-- en nam -->
-      <div class="col-sm-6 col-md-3 mb-4 position-relative">
+      <div class="col-sm-6 col-md-4 mb-4 position-relative">
         <label asteriskIfRequired="enName" for="enName" class="form-label">{{ lang.map.lbl_english_name
           }}</label>
         <input id="enName" validationClasses="enName" formControlName="enName" class="form-control" />
         <app-field-error-message controlName="enName"></app-field-error-message>
+      </div>
+      <!-- General Process Type -->
+      <div class="col-sm-6 col-md-4 mb-4 position-relative">
+        <label for="processType" asteriskIfRequired="processType"
+          class="form-label">{{lang.map.lbl_process_type}}</label>
+        <ng-select validationClasses="type" labelForId="processType" placeholder="{{lang.map.select}}"
+          [notFoundText]="lang.map.msg_not_found" formControlName="processType" id="processType" appendTo="body">
+          <ng-option *ngFor="let option of GeneralProcessTypeList" [value]="option.lookupKey">
+            {{option.getName()}}
+          </ng-option>
+        </ng-select>
+        <app-field-error-message controlName=" processType">
+        </app-field-error-message>
       </div>
       <!-- main cat -->
       <div class="col-sm-6 col-md-3 mb-4 position-relative">
@@ -42,19 +55,6 @@
         </ng-select>
         <app-field-error-message controlName="subClass"></app-field-error-message>
       </div>
-      <!-- General Process Type -->
-      <div class="col-sm-6 col-md-3 mb-4 position-relative">
-        <label for="processType" asteriskIfRequired="processType"
-          class="form-label">{{lang.map.lbl_process_type}}</label>
-        <ng-select validationClasses="type" labelForId="processType" placeholder="{{lang.map.select}}"
-          [notFoundText]="lang.map.msg_not_found" formControlName="processType" id="processType" appendTo="body">
-          <ng-option *ngFor="let option of GeneralProcessTypeList" [value]="option.lookupKey">
-            {{option.getName()}}
-          </ng-option>
-        </ng-select>
-        <app-field-error-message controlName=" processType">
-        </app-field-error-message>
-      </div>
       <!-- department -->
       <div class="col-sm-6 col-md-3 mb-4 position-relative">
         <label for="departmentId" asteriskIfRequired="departmentId" class="form-label">{{lang.map.department}}</label>
@@ -66,18 +66,6 @@
           </ng-option>
         </ng-select>
         <app-field-error-message controlName="departmentId"></app-field-error-message>
-      </div>
-      <!-- team -->
-      <div class="col-sm-6 col-md-3 mb-4 position-relative">
-        <label for="teamId" asteriskIfRequired="teamId" class="form-label">{{lang.map.lbl_main_team}}</label>
-        <ng-select validationClasses="type" labelForId="teamId" placeholder="{{lang.map.select}}"
-          [notFoundText]="lang.map.msg_not_found" (change)="handleTeamChange($event)" formControlName="teamId"
-          id="teamId" appendTo="body">
-          <ng-option *ngFor="let option of teamsList" [value]="option.id">
-            {{option.getName()}}
-          </ng-option>
-        </ng-select>
-        <app-field-error-message controlName="teamId"></app-field-error-message>
       </div>
       <!-- sub team -->
       <div class="col-sm-6 col-md-3 mb-4 position-relative">
@@ -97,7 +85,7 @@
     <div class="row">
       <div class="col-12">
         <div class="row">
-          <div class="col-12 col-lg-3 border-end" *ngIf="!isViewForm" style="min-width: 300px;">
+          <div class="col-12 col-lg-3 border-end" style="min-width: 300px;">
             <h6 class="title mb-3">{{ lang.map.lbl_add_template_field }}</h6>
             <div class="row">
               <!-- identifying name -->

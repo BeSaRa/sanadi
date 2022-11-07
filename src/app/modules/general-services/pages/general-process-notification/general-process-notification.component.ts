@@ -1,3 +1,4 @@
+import { SubTeamService } from '@app/services/sub-team.service';
 import { CustomValidators } from './../../../../validators/custom-validators';
 import { ProcessFieldBuilder } from './../../../../administration/popups/general-process-popup/process-formly-components/process-fields-builder';
 import { AllRequestTypesEnum } from './../../../../enums/all-request-types-enum';
@@ -5,7 +6,6 @@ import { LookupService } from './../../../../services/lookup.service';
 import { GeneralProcess } from '@app/models/genral-process';
 import { GeneralProcessService } from './../../../../services/general-process.service';
 import { AdminLookupTypeEnum } from './../../../../enums/admin-lookup-type-enum';
-import { TeamService } from './../../../../services/team.service';
 import { InternalDepartmentService } from './../../../../services/internal-department.service';
 import { AdminLookupService } from '@services/admin-lookup.service';
 import { AdminLookup } from './../../../../models/admin-lookup';
@@ -33,7 +33,6 @@ import { OperationTypes } from '@app/enums/operation-types.enum';
 import { SaveTypes } from '@app/enums/save-types';
 import { LangService } from '@app/services/lang.service';
 import { Observable, of, Subject } from 'rxjs';
-import { GeneralProcessTemplate } from '@app/models/general-process-template';
 
 @Component({
   selector: 'app-general-process-notification',
@@ -57,7 +56,7 @@ GeneralProcessNotificationService
   mainClassificationsList: AdminLookup[] = [];
   subClassificationsList: AdminLookup[] = [];
   departmentList: InternalDepartment[] = [];
-  _teamsList: Team[] = [];
+  subTeamsList: Team[] = [];
 
   form!: UntypedFormGroup;
   processTemplateForm!: UntypedFormGroup;
@@ -105,7 +104,7 @@ GeneralProcessNotificationService
     private employeeService: EmployeeService,
     private adminLookupService: AdminLookupService,
     private internalDepartmentService: InternalDepartmentService,
-    private teamService: TeamService,
+    private subTeamService: SubTeamService,
     private generalProcessService: GeneralProcessService
   ) {
     super();
@@ -156,24 +155,24 @@ GeneralProcessNotificationService
     this.adminLookupService.loadGeneralProcessClassificaion().subscribe((data: AdminLookup[]) => {
       this.mainClassificationsList = data;
     })
-    this.teamService.loadAsLookups().pipe(
-      switchMap((teams) => {
-        return this.internalDepartmentService.loadGeneralProcessDepartments()
-          .pipe(
-            tap((deparments) => {
-              this._teamsList = teams.filter(team => deparments.findIndex(deparment => team.parentDeptId == deparment.id) != -1);
-            }))
-      })
-    ).subscribe(deparments => {
+    this.internalDepartmentService.loadGeneralProcessDepartments().subscribe(deparments => {
       this.departmentList = deparments;
     })
     this.filterProcess({});
   }
-  handleDepartmentChange() {
-    this.teamField.reset();
+  private _loadSubTeam(teamId?: number) {
+    if (teamId)
+      this.subTeamService.getByParentId(teamId).pipe(catchError(err => of([]))).subscribe(data => {
+        this.subTeamsList = data;
+      })
+    else this.subTeamsList = [];
   }
-  get teamsList() {
-    return this._teamsList.filter(team => !this.departmentField.value || team.parentDeptId == this.departmentField.value)
+  handleDepartmentChange() {
+    this.handleTeamChange(this.departmentList.find(d => d.id == this.departmentField.value)?.mainTeam.id);
+  }
+  handleTeamChange(teamId?: number) {
+    this.subTeamField.reset();
+    this._loadSubTeam(teamId);
   }
   filterProcess(params: Partial<GeneralProcess>) {
     this.generalProcessService.filterProcess(params).pipe(
@@ -210,9 +209,6 @@ GeneralProcessNotificationService
       DSNNN: this.fb.group(model.DSNNN),
       sampleDataForOperations: this.fb.group(model.sampleDataForOperations),
     });
-    this.form.valueChanges.subscribe((data) => {
-      console.log(data);
-    })
   }
   _afterBuildForm(): void {
   }
@@ -290,15 +286,26 @@ GeneralProcessNotificationService
     }
     this.model = model;
     const formModel = model.buildForm();
-    // TODO: Generate form from string and set form value for sampleDataForOperations
+
+    this._loadSubTeam(this.model?.departmentId);
+    this.loadSubClasses(this.model?.firstSubDomain)
+    this.processFieldBuilder.generateFromString(this.model?.template)
+
     this.form.patchValue({
       requestType: formModel.requestType,
       description: formModel.description,
       oldLicenseFullSerial: formModel.oldLicenseFullSerial,
       DSNNN: formModel.DSNNN,
-      sampleDataForOperations: formModel.sampleDataForOperations
+      sampleDataForOperations: this.processFieldBuilder.formValues
     });
 
+    this.filterProcess({
+      departmentId: this.model.departmentId,
+      subTeamId: this.model.competentDepartmentID,
+      mainClass: this.model.domain,
+      subClass: this.model.firstSubDomain,
+      processType: this.model.processType
+    });
     this.cd.detectChanges();
     this.handleRequestTypeChange(model.requestType, false);
   }
@@ -437,7 +444,7 @@ GeneralProcessNotificationService
   get oldLicenseFullSerialField(): UntypedFormControl {
     return this.form.get('oldLicenseFullSerial') as UntypedFormControl;
   }
-  get teamField(): UntypedFormControl {
+  get subTeamField(): UntypedFormControl {
     return this.DSNNNFormGroup.get('competentDepartmentID') as UntypedFormControl
   }
   get departmentField(): UntypedFormControl {
