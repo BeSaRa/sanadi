@@ -1,14 +1,15 @@
+import { CustomFormlyFieldConfig, ISelectOption } from '@contracts/custom-formly-field-config';
+import { FieldMode } from './../interfaces/custom-formly-field-config';
+import { of } from 'rxjs';
 import { IMyDateModel } from 'angular-mydatepicker';
 import { IKeyValue } from './../interfaces/i-key-value';
-import { CustomGeneralProcessFieldConfig, FieldMode } from './../interfaces/custom-general-process-field';
 import { GeneralProcessTemplateFieldTypes } from './../enums/general-process-template-field-types.enum';
 import { Cloneable } from '@app/models/cloneable';
 import { CustomValidators } from './../validators/custom-validators';
 import { INames } from '@contracts/i-names';
 import { LangService } from '@app/services/lang.service';
 import { FactoryService } from '@app/services/factory.service';
-import { ISelectOption } from '@app/interfaces/custom-general-process-field';
-export class GenerealProcessTemplate extends Cloneable<GenerealProcessTemplate>{
+export class GeneralProcessTemplate extends Cloneable<GeneralProcessTemplate>{
   id!: string;
   identifyingName!: string;
   arName!: string;
@@ -20,7 +21,7 @@ export class GenerealProcessTemplate extends Cloneable<GenerealProcessTemplate>{
   pattern!: string;
   mask!: string;
   required!: boolean;
-  options: IKeyValue[] = [];
+  options: IKeyValue[] = [{ id: 1, name: 'No' }, { id: 2, name: 'Yes' }];
   langService: LangService;
   value!: number | string | IMyDateModel;
   constructor() {
@@ -48,6 +49,7 @@ export class GenerealProcessTemplate extends Cloneable<GenerealProcessTemplate>{
         CustomValidators.required,
         CustomValidators.maxLength(300),
         CustomValidators.minLength(3),
+        CustomValidators.pattern('ENG_NO_SPACES_ONLY'),
       ]] : identifyingName,
       arName: controls ? [arName, [
         CustomValidators.required,
@@ -69,7 +71,7 @@ export class GenerealProcessTemplate extends Cloneable<GenerealProcessTemplate>{
     }
   }
 
-  buildField(mode: FieldMode = 'init'): CustomGeneralProcessFieldConfig {
+  buildField(mode: FieldMode = 'init'): CustomFormlyFieldConfig {
     const {
       id,
       type,
@@ -79,8 +81,7 @@ export class GenerealProcessTemplate extends Cloneable<GenerealProcessTemplate>{
       wrappers,
       arName,
       enName,
-      mask,
-      identifyingName
+      mask
     } = this;
     let selectOptions: ISelectOption = {
       bindValue: 'id',
@@ -90,14 +91,15 @@ export class GenerealProcessTemplate extends Cloneable<GenerealProcessTemplate>{
     const classes = type == GeneralProcessTemplateFieldTypes.textarea ? 'col-12' : 'col-12 col-md-4'
     const field = {
       id: id,
-      key: identifyingName,
+      key: id,
       type: GeneralProcessTemplateFieldTypes[type],
       label: new ILabel(arName, enName),
       className: classes,
       templateOptions: {
         required: required,
         pattern: pattern,
-        rows: 3
+        rows: 3,
+        options: of(options)
       },
       selectOptions,
       mode,

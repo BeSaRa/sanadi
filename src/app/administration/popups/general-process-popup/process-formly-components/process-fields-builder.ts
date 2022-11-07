@@ -1,24 +1,23 @@
 import { CustomValidators } from './../../../../validators/custom-validators';
 import { map } from 'rxjs/operators';
 import { of } from 'rxjs';
-import { FieldMode } from './../../../../interfaces/custom-general-process-field';
 import { GeneralProcessTemplateFieldTypes } from './../../../../enums/general-process-template-field-types.enum';
 import { UntypedFormGroup } from '@angular/forms';
-import { GenerealProcessTemplate } from './../../../../models/general-process-template';
+import { GeneralProcessTemplate } from './../../../../models/general-process-template';
 import { FormlyFieldConfig } from '@ngx-formly/core/lib/components/formly.field.config';
-import { uniqueId } from 'lodash';
+import { FieldMode } from '@app/interfaces/custom-formly-field-config';
 
 export class ProcessFieldBuilder {
   buildMode: FieldMode = 'init'
   fieldsGroups: FormlyFieldConfig[] = [];
-  private _fields: GenerealProcessTemplate[] = [];
-  get fields(): GenerealProcessTemplate[] {
+  private _fields: GeneralProcessTemplate[] = [];
+  get fields(): GeneralProcessTemplate[] {
     return this._fields;
   }
   private _FormChange() {
     this.fieldsGroups = [];
     this._fields = this.fields.sort((ff, fl) => +ff.order - +fl.order);
-    let fields: GenerealProcessTemplate[] = [];
+    let fields: GeneralProcessTemplate[] = [];
     for (let i = 0; i < this.fields.length; i++) {
       const field = this.fields[i];
       if (field.type == GeneralProcessTemplateFieldTypes.textarea) {
@@ -40,7 +39,7 @@ export class ProcessFieldBuilder {
       }
     }
   }
-  private _buildRow(fields: GenerealProcessTemplate[]) {
+  private _buildRow(fields: GeneralProcessTemplate[]) {
     const row = {
       fieldGroupClassName: 'row mb-4',
       fieldGroup: fields.map(f => f.buildField(this.buildMode))
@@ -51,7 +50,7 @@ export class ProcessFieldBuilder {
     this._FormChange()
   }
   generateAsString(): string {
-    const fields = this.fields.map((field: GenerealProcessTemplate) => {
+    const fields = this.fields.map((field: GeneralProcessTemplate) => {
       return {
         id: field.id,
         identifyingName: field.identifyingName,
@@ -70,18 +69,18 @@ export class ProcessFieldBuilder {
     return JSON.stringify(fields);
   }
   generateFromString(template?: string) {
-    of<GenerealProcessTemplate[]>(JSON.parse(template || '[]')).pipe(
-      map((fields: GenerealProcessTemplate[]) => {
-        return fields.map(f => new GenerealProcessTemplate().clone(f))
+    of<GeneralProcessTemplate[]>(JSON.parse(template || '[]')).pipe(
+      map((fields: GeneralProcessTemplate[]) => {
+        return fields.map(f => new GeneralProcessTemplate().clone(f))
       })
-    ).subscribe((templateFields: GenerealProcessTemplate[]) => {
+    ).subscribe((templateFields: GeneralProcessTemplate[]) => {
       this._fields = templateFields;
       this.formChange();
     })
   }
   setField(form: UntypedFormGroup) {
-    const field = new GenerealProcessTemplate().clone({
-      id: uniqueId('field_'),
+    const field = new GeneralProcessTemplate().clone({
+      id: form.value.identifyingName,
       identifyingName: form.value.identifyingName,
       arName: form.value.arName,
       enName: form.value.enName,
@@ -100,10 +99,10 @@ export class ProcessFieldBuilder {
     form.reset();
     this.formChange();
   }
-  getFieldById(id: string): GenerealProcessTemplate | undefined {
+  getFieldById(id: string): GeneralProcessTemplate | undefined {
     return this.fields.find(f => f.id == id);
   }
-  getFieldByIdentifyingName(id: string): GenerealProcessTemplate | undefined {
+  getFieldByIdentifyingName(id: string): GeneralProcessTemplate | undefined {
     return this.fields.find(f => f.identifyingName == id);
   }
   deleteField(form: UntypedFormGroup) {

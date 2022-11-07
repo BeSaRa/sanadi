@@ -1,15 +1,12 @@
 import { LookupService } from './../../../services/lookup.service';
 import { Lookup } from './../../../models/lookup';
-import { group } from '@angular/animations';
 import { UserClickOn } from './../../../enums/user-click-on.enum';
 import { DialogService } from './../../../services/dialog.service';
 import { GeneralProcessService } from './../../../services/general-process.service';
 import { ProcessFieldBuilder } from './process-formly-components/process-fields-builder';
-import { FormlyFieldConfig } from '@ngx-formly/core/lib/components/formly.field.config';
-import { CustomGeneralProcessFieldConfig, ISelectOption } from './../../../interfaces/custom-general-process-field';
 import { switchMap, tap, catchError } from 'rxjs/operators';
 import { CustomValidators } from './../../../validators/custom-validators';
-import { GenerealProcessTemplate } from './../../../models/general-process-template';
+import { GeneralProcessTemplate } from './../../../models/general-process-template';
 import { InternalDepartment } from '@app/models/internal-department';
 import { InternalDepartmentService } from './../../../services/internal-department.service';
 import { Team } from './../../../models/team';
@@ -74,7 +71,7 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
   }
   buildForm(): void {
     this.form = this.fb.group(this.model.buildForm(true));
-    const templateModel = new GenerealProcessTemplate();
+    const templateModel = new GeneralProcessTemplate();
     this.fieldForm = this.fb.group(templateModel.buildForm(true));
     if (this.operation === OperationTypes.VIEW) {
       this.form.disable();

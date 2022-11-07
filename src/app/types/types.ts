@@ -28,6 +28,7 @@ export type customValidationTypes =
   | 'AR_NUM_ONE_AR'
   | 'ENG_AR_ONLY'
   | 'ENG_AR_NUM_ONLY'
+  | 'ENG_NO_SPACES_ONLY'
   | 'PASSPORT'
   | 'EMAIL'
   | 'NUM_HYPHEN_COMMA'

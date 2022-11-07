@@ -1,10 +1,10 @@
 import { GeneralProcessService } from './../../../../../services/general-process.service';
-import { CustomGeneralProcessFieldConfig } from './../../../../../interfaces/custom-general-process-field';
 import { LangService } from './../../../../../services/lang.service';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { FieldWrapper } from '@ngx-formly/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { CustomFormlyFieldConfig } from '@app/interfaces/custom-formly-field-config';
 
 @Component({
   selector: 'process-field-wrapper',
@@ -13,7 +13,7 @@ import { takeUntil } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None
 })
-export class ProcessFieldWrapperComponent extends FieldWrapper<CustomGeneralProcessFieldConfig> implements OnInit, OnDestroy {
+export class ProcessFieldWrapperComponent extends FieldWrapper<CustomFormlyFieldConfig> implements OnInit, OnDestroy {
   private destroy$: Subject<any> = new Subject<any>();
 
   constructor(
@@ -29,7 +29,7 @@ export class ProcessFieldWrapperComponent extends FieldWrapper<CustomGeneralProc
   ngOnInit(): void {
     this.lang.onLanguageChange$.pipe(takeUntil(this.destroy$)).subscribe(() => this.cd.markForCheck());
   }
-  details(field: CustomGeneralProcessFieldConfig) {
+  details(field: CustomFormlyFieldConfig) {
     this.generalProcessService.setlectField(field.id!);
   }
   ngOnDestroy(): void {

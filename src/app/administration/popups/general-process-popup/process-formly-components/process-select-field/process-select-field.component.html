@@ -1,5 +1,0 @@
-<ng-select [selectOnTab]="true" appendTo="body" [labelForId]="id" [clearable]="true" placeholder="{{lang.map.select}}"
-  [notFoundText]="lang.map.msg_not_found" [formlyAttributes]="field" [formControl]="control" [openOnEnter]="false"
-  validationClasses [onlyInvalid]="true" [control]="formControl">
-  <ng-option [value]="option[bindValue]" *ngFor="let option of selectOptions|async">{{option[bindLabel]}}</ng-option>
-</ng-select>

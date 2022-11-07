@@ -33,7 +33,7 @@ import { OperationTypes } from '@app/enums/operation-types.enum';
 import { SaveTypes } from '@app/enums/save-types';
 import { LangService } from '@app/services/lang.service';
 import { Observable, of, Subject } from 'rxjs';
-import { GenerealProcessTemplate } from '@app/models/general-process-template';
+import { GeneralProcessTemplate } from '@app/models/general-process-template';
 
 @Component({
   selector: 'app-general-process-notification',
