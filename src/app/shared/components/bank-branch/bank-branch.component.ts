@@ -1,14 +1,14 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {LangService} from '@app/services/lang.service';
-import {ToastService} from '@app/services/toast.service';
-import {DialogService} from '@app/services/dialog.service';
+import {LangService} from '@services/lang.service';
+import {ToastService} from '@services/toast.service';
+import {DialogService} from '@services/dialog.service';
 import {AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
 import {DatepickerOptionsMap, ReadinessStatus} from '@app/types/types';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {BankBranch} from '@app/models/bank-branch';
 import {filter, map, take, takeUntil} from 'rxjs/operators';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {DateUtils} from '@app/helpers/date-utils';
+import {DateUtils} from '@helpers/date-utils';
 
 @Component({
   selector: 'bank-branch',
@@ -24,6 +24,7 @@ export class BankBranchComponent implements OnInit {
   }
 
   private _list: BankBranch[] = [];
+  @Input() showHeader: boolean = true;
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();
   @Input() readonly: boolean = false;
 

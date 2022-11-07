@@ -2,16 +2,16 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 import { UserClickOn } from '@app/enums/user-click-on.enum';
-import { CommonUtils } from '@app/helpers/common-utils';
-import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { SortEvent } from '@app/interfaces/sort-event';
+import { CommonUtils } from '@helpers/common-utils';
+import { ILanguageKeys } from '@contracts/i-language-keys';
+import { SortEvent } from '@contracts/sort-event';
 import { AdminResult } from '@app/models/admin-result';
 import { Country } from '@app/models/country';
 import { ExecutiveManagement } from '@app/models/executive-management';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
-import { DialogService } from '@app/services/dialog.service';
-import { LangService } from '@app/services/lang.service';
-import { ToastService } from '@app/services/toast.service';
+import { DialogService } from '@services/dialog.service';
+import { LangService } from '@services/lang.service';
+import { ToastService } from '@services/toast.service';
 import { ReadinessStatus } from '@app/types/types';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { filter, map, take, takeUntil, tap } from 'rxjs/operators';
@@ -22,7 +22,7 @@ import { filter, map, take, takeUntil, tap } from 'rxjs/operators';
   styleUrls: ['./executive-management.component.scss']
 })
 export class ExecutiveManagementComponent implements OnInit {
-
+  @Input() showHeader: boolean = true;
   constructor(public lang: LangService,
               private toastService: ToastService,
               private dialogService: DialogService,

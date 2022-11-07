@@ -16,11 +16,10 @@ import {
 import {AwarenessActivitySuggestionComponent} from './pages/awareness-activity-suggestion/awareness-activity-suggestion.component';
 import {MembersComponent} from './shared/members/members.component';
 import {CharityBranchComponent} from './shared/charity-branch/charity-branch.component';
-import {OrganizationOfficersComponent} from './shared/organization-officers/organization-officers.component';
+import {OrganizationOfficersComponent} from '@app/shared/components/organization-officers/organization-officers.component';
 import {
   CharityOrganizationUpdateComponent
 } from '@app/modules/general-services/pages/charity-organization-update/charity-organization-update.component';
-import {ExternalOfficesPopupComponent} from '@app/modules/general-services/popups/external-offices-popup/external-offices-popup.component';
 import {ForeignAidClassificationsComponent} from './shared/foreign-aid-classifications/foreign-aid-classifications.component';
 import {BylawsComponent} from './shared/bylaws/bylaws.component';
 import {CharityDecisionsComponent} from './shared/charity-decisions/charity-decisions.component';
@@ -48,11 +47,11 @@ import {NpoContactOfficerComponent} from './pages/npo-management/npo-contact-off
 import {FounderMembersComponent} from './pages/npo-management/founder-members/founder-members.component';
 import {RealBeneficiariesComponent} from './shared/real-beneficiaries/real-beneficiaries.component';
 import {OfficeServicesModule} from '../office-services/office-services.module';
-import {CharityReportsComponent} from './shared/risk-reports/risk-reports.component';
-import {CoordinationWithOrgPopupComponent} from './popups/coordination-with-org-popup/coordination-with-org-popup.component';
-import {FollowupDateApprovePopupComponent} from './popups/follow-up-date-approve-popup/follow-up-date-approve-popup.component';
-import {InquiryComponent} from './pages/inquiry/inquiry.component';
-import {InternationalCooperationComponent} from './pages/international-cooperation/international-cooperation.component';
+import {  CharityReportsComponent } from './shared/risk-reports/risk-reports.component';
+import { CoordinationWithOrgPopupComponent } from './popups/coordination-with-org-popup/coordination-with-org-popup.component';
+import { FollowupDateApprovePopupComponent } from './popups/follow-up-date-approve-popup/follow-up-date-approve-popup.component';
+import { InquiryComponent } from './pages/inquiry/inquiry.component';
+import { InternationalCooperationComponent } from './pages/international-cooperation/international-cooperation.component';
 
 
 @NgModule({
@@ -78,7 +77,6 @@ import {InternationalCooperationComponent} from './pages/international-cooperati
     CharityBranchComponent,
     MembersComponent,
     RealBeneficiariesComponent,
-    ExternalOfficesPopupComponent,
     ForeignAidClassificationsComponent,
     BylawsComponent,
     CharityReportsComponent,

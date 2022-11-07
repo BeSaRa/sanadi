@@ -1,9 +1,9 @@
 import {Component, OnInit, Inject} from '@angular/core';
 import {FormBuilder, UntypedFormGroup} from '@angular/forms';
-import {ControlWrapper} from '@app/interfaces/i-control-wrapper';
+import {ControlWrapper} from '@contracts/i-control-wrapper';
 import {FinalExternalOfficeApprovalResult} from '@app/models/final-external-office-approval-result';
-import {CountryService} from '@app/services/country.service';
-import {LangService} from '@app/services/lang.service';
+import {CountryService} from '@services/country.service';
+import {LangService} from '@services/lang.service';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {Country} from '@app/models/country';
 

@@ -25,7 +25,7 @@ import {LicenseService} from '@app/services/license.service';
 import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
 import {SaveTypes} from '@app/enums/save-types';
 import {DatepickerOptionsMap, ReadinessStatus} from '@app/types/types';
-import {BankBranchComponent} from '@app/modules/office-services/shared/bank-branch/bank-branch.component';
+import {BankBranchComponent} from '@app/shared/components/bank-branch/bank-branch.component';
 import {OpenFrom} from '@app/enums/open-from.enum';
 import {FinalExternalOfficeApprovalResult} from '@app/models/final-external-office-approval-result';
 import {InitialExternalOfficeApproval} from '@app/models/initial-external-office-approval';
@@ -36,7 +36,7 @@ import {FinalExternalOfficeApprovalSearchCriteria} from '@app/models/final-exter
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 import {BankAccountComponent} from '@app/modules/e-services-main/shared/bank-account/bank-account.component';
-import {ExecutiveManagementComponent} from '@app/modules/e-services-main/shared/executive-management/executive-management.component';
+import {ExecutiveManagementComponent} from '@app/shared/components/executive-management/executive-management.component';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule

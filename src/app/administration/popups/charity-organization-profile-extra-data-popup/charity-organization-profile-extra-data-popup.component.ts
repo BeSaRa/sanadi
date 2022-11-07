@@ -23,6 +23,8 @@ import {FileExtensionsEnum} from '@app/enums/file-extension-mime-types-icons.enu
 import {catchError, switchMap, takeUntil} from 'rxjs/operators';
 import {BlobModel} from '@app/models/blob-model';
 import {Branch} from '@app/models/branch';
+import {FinalExternalOfficeApprovalResult} from '@app/models/final-external-office-approval-result';
+import {FinalExternalOfficeApprovalService} from '@services/final-external-office-approval.service';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -45,6 +47,14 @@ export class CharityOrganizationProfileExtraDataPopupComponent extends AdminGene
   logoExtensions: string[] = [FileExtensionsEnum.PNG, FileExtensionsEnum.JPG, FileExtensionsEnum.JPEG];
   saveLogo$: Subject<void> = new Subject<void>();
   blob!: BlobModel;
+  externalOffices$?: Observable<FinalExternalOfficeApprovalResult[]>;
+  externalOfficesColumns = [
+    'externalOfficeName',
+    'country',
+    'region',
+    'establishmentDate',
+    'actions',
+  ];
 
   tabsData: IKeyValue = {
     basicInfo: {
@@ -81,6 +91,11 @@ export class CharityOrganizationProfileExtraDataPopupComponent extends AdminGene
       langKey: 'internal_branches' as keyof ILanguageKeys,
       index: 5,
       validStatus: () => this.model.branchList && this.model.branchList.length > 0
+    },
+    externalOffices: {
+      name: 'externalOfficesTab',
+      langKey: 'external_offices' as keyof ILanguageKeys,
+      index: 6
     }
   };
 
@@ -92,7 +107,8 @@ export class CharityOrganizationProfileExtraDataPopupComponent extends AdminGene
               public lang: LangService,
               private service: CharityOrganizationProfileExtraDataService,
               private dialogService: DialogService,
-              private adminLookupService: AdminLookupService) {
+              private adminLookupService: AdminLookupService,
+              private finalExternalOfficeApprovalService: FinalExternalOfficeApprovalService) {
     super();
     this.model = data.model;
     this.operation = data.operation;
@@ -133,6 +149,9 @@ export class CharityOrganizationProfileExtraDataPopupComponent extends AdminGene
     this.loadActivityTypes();
     this.listenToSaveLogo();
     this.setCurrentLogo();
+    this.externalOffices$ = this.finalExternalOfficeApprovalService.licenseSearch({
+      organizationId: this.model.profileId,
+    });
   }
 
   prepareModel(model: CharityOrganizationProfileExtraData, form: UntypedFormGroup): Observable<CharityOrganizationProfileExtraData> | CharityOrganizationProfileExtraData {

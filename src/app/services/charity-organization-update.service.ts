@@ -1,22 +1,21 @@
-import { HttpClient } from '@angular/common/http';
-import { ComponentFactoryResolver, Injectable } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
-import { CastResponseContainer } from '@app/decorators/decorators/cast-response';
-import { AttachmentTypeEnum } from '@app/enums/attachment-type.enum';
-import { BaseGenericEService } from '@app/generics/base-generic-e-service';
-import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { BlobModel } from '@app/models/blob-model';
-import { CharityOrganizationUpdate } from '@app/models/charity-organization-update';
-import { CharityOrganizationUpdateSearchCriteria } from '@app/models/charity-organization-update-search-criteria';
-import { FinalExternalOfficeApprovalResult } from '@app/models/final-external-office-approval-result';
-import { ExternalOfficesPopupComponent } from '@app/modules/general-services/popups/external-offices-popup/external-offices-popup.component';
-import { of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
-import { DialogService } from './dialog.service';
-import { DynamicOptionsService } from './dynamic-options.service';
-import { FactoryService } from './factory.service';
-import { FollowupDateService } from './follow-up-date.service';
-import { UrlService } from './url.service';
+import {HttpClient} from '@angular/common/http';
+import {ComponentFactoryResolver, Injectable} from '@angular/core';
+import {DomSanitizer} from '@angular/platform-browser';
+import {CastResponseContainer} from '@app/decorators/decorators/cast-response';
+import {BaseGenericEService} from '@app/generics/base-generic-e-service';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {BlobModel} from '@app/models/blob-model';
+import {CharityOrganizationUpdate} from '@app/models/charity-organization-update';
+import {CharityOrganizationUpdateSearchCriteria} from '@app/models/charity-organization-update-search-criteria';
+import {FinalExternalOfficeApprovalResult} from '@app/models/final-external-office-approval-result';
+import {ExternalOfficesPopupComponent} from '@app/shared/components/external-offices-popup/external-offices-popup.component';
+import {of} from 'rxjs';
+import {catchError, map} from 'rxjs/operators';
+import {DialogService} from './dialog.service';
+import {DynamicOptionsService} from './dynamic-options.service';
+import {FactoryService} from './factory.service';
+import {FollowupDateService} from './follow-up-date.service';
+import {UrlService} from './url.service';
 
 @CastResponseContainer({
   $default: {

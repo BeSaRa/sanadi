@@ -11,7 +11,6 @@ import {
 } from '@app/modules/office-services/pages/initial-external-office-approval/initial-external-office-approval.component';
 import { PartnerApprovalComponent } from '@app/modules/office-services/pages/partner-approval/partner-approval.component';
 import { ApprovalReasonComponent } from '@app/modules/office-services/shared/approval-reason/approval-reason.component';
-import { BankBranchComponent } from '@app/modules/office-services/shared/bank-branch/bank-branch.component';
 import { ContactOfficerComponent } from '@app/modules/office-services/shared/contact-officer/contact-officer.component';
 import { GoalComponent } from '@app/modules/office-services/shared/goal/goal.component';
 import {
@@ -30,7 +29,6 @@ import { CommercialActivityComponent } from './shared/commercial-activity/commer
     InitialExternalOfficeApprovalComponent,
     PartnerApprovalComponent,
     FinalExternalOfficeApprovalComponent,
-    BankBranchComponent,
     ApprovalReasonComponent,
     ContactOfficerComponent,
     GoalComponent,
@@ -45,7 +43,6 @@ import { CommercialActivityComponent } from './shared/commercial-activity/commer
     EServicesMainModule,
     OfficeServicesRoutingModule,
     MapsModule
-  ],
-  exports: [BankBranchComponent]
+  ]
 })
 export class OfficeServicesModule { }

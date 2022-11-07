@@ -83,7 +83,7 @@
   </div>
 </div>
 
-<app-page-header [hidden]="branchesFormArray.controls.length" pageTitle="branches"
+<app-page-header [hidden]="branchesFormArray.controls.length || !showHeader" pageTitle="branches"
                  [clickOnNew$]="add$"
                  [addPermission]="addBranchAllowed()"></app-page-header>
 
@@ -114,12 +114,12 @@
     <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
       <div class="d-flex flex-row">
         <button (click)="deleteBranch($event, row, i)" class="icon-btn text-primary"
-                [disabled]="readonly"
+                *ngIf="!readonly"
                 tooltip="{{lang.map.btn_delete}}">
           <i class="mdi mdi-close-box"></i>
         </button>
         <button (click)="editBranch($event, row, i)" class="icon-btn text-primary"
-                [disabled]="readonly"
+                *ngIf="!readonly"
                 tooltip="{{lang.map.btn_edit}}">
           <i class="mdi mdi-pen"></i>
         </button>

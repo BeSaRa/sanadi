@@ -1,4 +1,4 @@
-import { UserClickOn } from './../../../../enums/user-click-on.enum';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 import {OpenFrom} from '@app/enums/open-from.enum';
 import {EmployeeService} from '@app/services/employee.service';
@@ -29,7 +29,7 @@ import {AffiliationRequestType} from '@app/enums/service-request-types';
 import {BankAccountComponent} from '@app/modules/e-services-main/shared/bank-account/bank-account.component';
 import {
   ExecutiveManagementComponent
-} from '@app/modules/e-services-main/shared/executive-management/executive-management.component';
+} from '@app/shared/components/executive-management/executive-management.component';
 
 @Component({
   selector: 'app-external-org-affiliation',
