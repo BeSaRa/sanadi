@@ -494,8 +494,11 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           if (item.caseType === CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST) {
             return !item.isInitialApproved() || !this.internal;
           }
+          if(item.caseType === CaseTypes.NPO_MANAGEMENT) {
+            return !this.internal || !!this.model?.isReturned();
+          }
           // show if external user or service which are only for internal user
-          return !this.internal || (this.internalUserServices.includes(item.getCaseType()) && this.canSave());
+          return !this.internal || this.internalUserServices.includes(item.getCaseType());
         },
         onClick: () => {
           this.component.save.next(this.saveTypes.FINAL);
