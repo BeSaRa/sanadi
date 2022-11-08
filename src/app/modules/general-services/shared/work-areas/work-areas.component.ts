@@ -48,6 +48,9 @@ export class WorkAreasComponent extends ListModelComponent<WorkArea> {
         dropdownValue: 'id',
         label: this.lang.map.country,
         type: 'dropdown',
+        dropdownOptionDisabled: (optionItem: Country) => {
+          return !optionItem.isActive();
+        }
       },
       {
         controlName: 'region',

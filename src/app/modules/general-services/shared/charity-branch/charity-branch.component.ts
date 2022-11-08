@@ -1,13 +1,12 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { ListModelComponent } from '@app/generics/ListModel-component';
-import { ControlWrapper } from '@app/interfaces/i-control-wrapper';
-import { CharityBranch } from '@app/models/charity-branch';
-import { OrganizaionOfficerComponent } from '@app/modules/e-services-main/shared/organizaion-officer/organizaion-officer.component';
-import { LangService } from '@app/services/lang.service';
-import { LookupService } from '@app/services/lookup.service';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import {Component, Input, ViewChild} from '@angular/core';
+import {UntypedFormBuilder} from '@angular/forms';
+import {ListModelComponent} from '@app/generics/ListModel-component';
+import {ControlWrapper} from '@app/interfaces/i-control-wrapper';
+import {CharityBranch} from '@app/models/charity-branch';
+import {OrganizaionOfficerComponent} from '@app/modules/e-services-main/shared/organizaion-officer/organizaion-officer.component';
+import {LangService} from '@app/services/lang.service';
+import {LookupService} from '@app/services/lookup.service';
+import {Lookup} from '@app/models/lookup';
 
 @Component({
   selector: 'charity-branch',
@@ -21,8 +20,7 @@ export class CharityBranchComponent extends ListModelComponent<CharityBranch> {
   }
   @ViewChild('org_officers') org!: OrganizaionOfficerComponent;
   get list(): CharityBranch[] {
-    const branches = [...this._list];
-    return branches;
+    return [...this._list];
   }
   columns = [
     'fullName',
@@ -38,19 +36,31 @@ export class CharityBranchComponent extends ListModelComponent<CharityBranch> {
       controlName: 'category',
       label: this.lang.map.type,
       load: this.lookupService.listByCategory.BranchCategory,
-      type: 'dropdown'
+      type: 'dropdown',
+      dropdownValue: 'lookupKey',
+      dropdownOptionDisabled: (optionItem: Lookup) => {
+        return !optionItem.isActive();
+      }
     },
     {
       controlName: 'branchAdjective',
       label: this.lang.map.branch_adjective,
       load: this.lookupService.listByCategory.BranchAdjective,
-      type: 'dropdown'
+      type: 'dropdown',
+      dropdownValue: 'lookupKey',
+      dropdownOptionDisabled: (optionItem: Lookup) => {
+        return !optionItem.isActive();
+      }
     },
     {
       controlName: 'usageAdjective',
       label: this.lang.map.usage_adjective,
       load: this.lookupService.listByCategory.UsageAdjective,
-      type: 'dropdown'
+      type: 'dropdown',
+      dropdownValue: 'lookupKey',
+      dropdownOptionDisabled: (optionItem: Lookup) => {
+        return !optionItem.isActive();
+      }
     },
     { controlName: 'address', label: this.lang.map.lbl_address, type: 'text' },
     { controlName: 'streetNumber', label: this.lang.map.lbl_street, type: 'text' },

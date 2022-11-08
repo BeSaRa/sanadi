@@ -9,4 +9,5 @@ export interface ControlWrapper {
   type: 'text' | 'textarea' | 'dropdown' | 'date' | 'title';
   dropdownValue?: string;
   onChange?: (id: string | number) => void;
+  dropdownOptionDisabled?: (optionItem: any) => boolean
 }

@@ -1,17 +1,19 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { AdminLookupTypeEnum } from '@app/enums/admin-lookup-type-enum';
-import { ListModelComponent } from '@app/generics/ListModel-component';
-import { DateUtils } from '@app/helpers/date-utils';
-import { ControlWrapper } from '@app/interfaces/i-control-wrapper';
-import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { AdminResult } from '@app/models/admin-result';
-import { CharityReport } from '@app/models/charity-report';
-import { AdminLookupService } from '@app/services/admin-lookup.service';
-import { LangService } from '@app/services/lang.service';
-import { LookupService } from '@app/services/lookup.service';
-import { ToastService } from '@app/services/toast.service';
-import { DatepickerOptionsMap } from '@app/types/types';
+import {Component, Input} from '@angular/core';
+import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
+import {AdminLookupTypeEnum} from '@app/enums/admin-lookup-type-enum';
+import {ListModelComponent} from '@app/generics/ListModel-component';
+import {DateUtils} from '@app/helpers/date-utils';
+import {ControlWrapper} from '@app/interfaces/i-control-wrapper';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {AdminResult} from '@app/models/admin-result';
+import {CharityReport} from '@app/models/charity-report';
+import {AdminLookupService} from '@app/services/admin-lookup.service';
+import {LangService} from '@app/services/lang.service';
+import {LookupService} from '@app/services/lookup.service';
+import {ToastService} from '@app/services/toast.service';
+import {DatepickerOptionsMap} from '@app/types/types';
+import {Lookup} from '@app/models/lookup';
+import {AdminLookup} from '@app/models/admin-lookup';
 
 @Component({
   selector: 'charity-reports',
@@ -22,9 +24,11 @@ export class CharityReportsComponent extends ListModelComponent<CharityReport> {
   get list() {
     return this._list;
   }
+
   @Input() set list(_list: CharityReport[]) {
     this._list = _list;
   }
+
   @Input() readonly!: boolean;
   @Input() pageTitle!: keyof ILanguageKeys;
   datepickerOptionsMap: DatepickerOptionsMap = {
@@ -62,8 +66,12 @@ export class CharityReportsComponent extends ListModelComponent<CharityReport> {
       label: this.lang.map.status,
       load: this.lookupService.listByCategory.CharityReportStatus,
       dropdownValue: 'lookupKey',
+      dropdownOptionDisabled: (optionItem: Lookup) => {
+        return !optionItem.isActive();
+      }
     },
   ];
+
   constructor(
     private fb: UntypedFormBuilder,
     public lang: LangService,
@@ -73,6 +81,7 @@ export class CharityReportsComponent extends ListModelComponent<CharityReport> {
   ) {
     super(CharityReport);
   }
+
   _beforeAdd(model: CharityReport): CharityReport | null {
     if (
       this._list.findIndex((e) => e.fullName === model.fullName) !== -1 &&
@@ -81,16 +90,18 @@ export class CharityReportsComponent extends ListModelComponent<CharityReport> {
       this.toastr.alert(this.lang.map.msg_duplicated_item);
       return null;
     }
-    model.reportStatusInfo = AdminResult.createInstance({ ...this.lookupService.listByCategory.CharityReportStatus.find(e => e.lookupKey === model.reportStatus) })
+    model.reportStatusInfo = AdminResult.createInstance({...this.lookupService.listByCategory.CharityReportStatus.find(e => e.lookupKey === model.reportStatus)});
     model.generalDate = DateUtils.getDateStringFromDate(model.generalDate!)!;
     return model;
   }
+
   _selectOne(row: CharityReport): void {
     this.form.patchValue({
       ...row,
       generalDate: DateUtils.changeDateToDatepicker(row.generalDate),
     });
   }
+
   protected _initComponent(): void {
     if (this.pageTitle === 'risk_reports') {
 
@@ -100,10 +111,11 @@ export class CharityReportsComponent extends ListModelComponent<CharityReport> {
           controlName: 'riskType',
           label: this.lang.map.risk_type,
           type: 'dropdown',
-          load$: this.adminLookupService.loadAsLookups(
-            AdminLookupTypeEnum.RISK_TYPE
-          ),
+          load$: this.adminLookupService.loadAsLookups(AdminLookupTypeEnum.RISK_TYPE),
           dropdownValue: 'id',
+          dropdownOptionDisabled: (optionItem: AdminLookup) => {
+            return !optionItem.isActive();
+          }
         },
         {
           controlName: 'riskMitigationMeasures',
@@ -114,36 +126,38 @@ export class CharityReportsComponent extends ListModelComponent<CharityReport> {
           controlName: 'category',
           label: this.lang.map.classification,
           type: 'dropdown',
-          load$: this.adminLookupService.loadAsLookups(
-            AdminLookupTypeEnum.RISK_CLASSIFICATION
-          ),
+          load$: this.adminLookupService.loadAsLookups(AdminLookupTypeEnum.RISK_CLASSIFICATION),
           dropdownValue: 'id',
+          dropdownOptionDisabled: (optionItem: AdminLookup) => {
+            return !optionItem.isActive();
+          }
         }
       );
-    }
-    else if (this.pageTitle === 'coordination_and_support_reports') {
+    } else if (this.pageTitle === 'coordination_and_support_reports') {
 
       this.form = this.fb.group(this.model.buildSupportForm());
       this.controls.push({
-        controlName: 'category',
-        label: this.lang.map.classification,
-        type: 'dropdown',
-        load$: this.adminLookupService.loadAsLookups(
-          AdminLookupTypeEnum.COORDINATION_SUPPORT_CLASSIFICATION
-        ),
-        dropdownValue: 'id',
-      }, {
-        controlName: 'subject',
-        type: 'text',
-        label: this.lang.map.report_subject,
-      }, {
-        controlName: 'procedures',
-        type: 'text',
-        label: this.lang.map.procedures
-      }
+          controlName: 'category',
+          label: this.lang.map.classification,
+          type: 'dropdown',
+          load$: this.adminLookupService.loadAsLookups(AdminLookupTypeEnum.COORDINATION_SUPPORT_CLASSIFICATION),
+          dropdownValue: 'id',
+          dropdownOptionDisabled: (optionItem: AdminLookup) => {
+            return !optionItem.isActive();
+          }
+        },
+        {
+          controlName: 'subject',
+          type: 'text',
+          label: this.lang.map.report_subject,
+        },
+        {
+          controlName: 'procedures',
+          type: 'text',
+          label: this.lang.map.procedures
+        }
       );
-    }
-    else {
+    } else {
 
       this.form = this.fb.group(this.model.buildFormWithSubject());
       this.controls.push({
@@ -154,7 +168,7 @@ export class CharityReportsComponent extends ListModelComponent<CharityReport> {
         controlName: 'procedures',
         type: 'text',
         label: this.lang.map.procedures
-      })
+      });
     }
   }
 }
