@@ -87,6 +87,7 @@ export interface ILookupMap {
   MeetingReplyStatus: Lookup[];
   MeetingType: Lookup[];
   MembersType: Lookup[];
+  MenuItemParameters: Lookup[];
   MenuType: Lookup[];
   MenuView: Lookup[];
   Nationality: Lookup[];

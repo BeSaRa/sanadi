@@ -1,5 +1,3 @@
-import {HttpClient} from '@angular/common/http';
-import {DialogService} from '@services/dialog.service';
 import {CustomMenu} from '@app/models/custom-menu';
 import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, Inject, ViewChild} from '@angular/core';
 import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
@@ -12,13 +10,11 @@ import {ToastService} from '@app/services/toast.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
-import {Observable, of, Subject} from 'rxjs';
-import {catchError, filter, switchMap, takeUntil, tap} from 'rxjs/operators';
-import {CustomMenuService} from '@services/custom-menu.service';
-import {SharedService} from '@app/services/shared.service';
+import {Observable, Subject} from 'rxjs';
 import {TabMap} from '@app/types/types';
-import {ExceptionHandlerService} from '@services/exception-handler.service';
+import {CustomMenuUrlHandlerComponent} from '@app/administration/shared/custom-menu-url-handler/custom-menu-url-handler.component';
 import {CommonUtils} from '@helpers/common-utils';
+import {DialogService} from '@services/dialog.service';
 
 @Component({
   selector: 'app-custom-menu-popup',
@@ -34,7 +30,6 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
   menuTypes: Lookup[] = this.lookupService.listByCategory.MenuType;
   menuView: Lookup[] = this.lookupService.listByCategory.MenuView;
   userTypes: Lookup[] = this.lookupService.listByCategory.PermissionCategory;
-  isValidURL: boolean = false;
 
   selectedTabIndex$: Subject<number> = new Subject<number>();
   defaultSelectedTab: string = 'basic';
@@ -52,11 +47,28 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
       },
       isTouchedOrDirty: () => true
     },
-    linkSettings: {name: 'linkSettings', langKey: 'link_settings', index: 1, validStatus: () => true, isTouchedOrDirty: () => true},
+    linkSettings: {
+      name: 'linkSettings',
+      langKey: 'link_settings',
+      index: 1,
+      validStatus: () => {
+        if (this.readonly || !this.urlHandlerComponentRef) {
+          return true;
+        }
+        return this.urlHandlerComponentRef.isValidUrl();
+      },
+      isTouchedOrDirty: () => {
+        if (!this.urlHandlerComponentRef) {
+          return false;
+        }
+        return this.urlHandlerComponentRef.isTouchedOrDirty();
+      }
+    },
     sub: {name: 'sub', langKey: 'sub_lists', index: 2, validStatus: () => true, isTouchedOrDirty: () => true}
   };
 
   @ViewChild('dialogContent') dialogContent!: ElementRef;
+  @ViewChild('urlHandlerComponent') urlHandlerComponentRef!: CustomMenuUrlHandlerComponent;
 
   constructor(public dialogRef: DialogRef,
               public fb: UntypedFormBuilder,
@@ -64,12 +76,8 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
               private cd: ChangeDetectorRef,
               @Inject(DIALOG_DATA_TOKEN) data: IDialogData<CustomMenu>,
               private toast: ToastService,
-              private lookupService: LookupService,
-              private customMenuService: CustomMenuService,
               private dialogService: DialogService,
-              private sharedService: SharedService,
-              private exceptionHandlerService: ExceptionHandlerService,
-              private http: HttpClient) {
+              private lookupService: LookupService) {
     super();
     this.model = data.model;
     this.operation = data.operation;
@@ -115,11 +123,21 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
   }
 
   beforeSave(model: CustomMenu, form: UntypedFormGroup): Observable<boolean> | boolean {
-    return form.valid;
+    const invalidTabs = this._getInvalidTabs();
+    if (invalidTabs.length > 0) {
+      const listHtml = CommonUtils.generateHtmlList(this.lang.map.msg_following_tabs_valid, invalidTabs);
+      this.dialogService.error(listHtml.outerHTML);
+      return false;
+    }
+    return true;
   }
 
   prepareModel(model: CustomMenu, form: UntypedFormGroup): Observable<CustomMenu> | CustomMenu {
-    return (new CustomMenu()).clone({...model, ...form.value});
+    let value = (new CustomMenu()).clone({...model, ...form.value});
+    value.menuURL = this.urlHandlerComponentRef ? this.urlHandlerComponentRef.menuUrlControl.value : '';
+    value.urlParamsParsed = this.urlHandlerComponentRef ? this.urlHandlerComponentRef.variableList : [];
+
+    return value;
   }
 
   afterSave(model: CustomMenu, dialogRef: DialogRef): void {
@@ -158,10 +176,6 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
     });
   }
 
-  get menuURLControl(): UntypedFormControl {
-    return this.form.controls.menuURL as UntypedFormControl;
-  }
-
   get statusControl(): UntypedFormControl {
     return this.form.get('status') as UntypedFormControl;
   }
@@ -170,37 +184,22 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
     return this.form.get('menuView') as UntypedFormControl;
   }
 
-  checkURL() {
-    of(this.menuURLControl.value)
-      .pipe(
-        takeUntil(this.destroy$),
-        filter(value => CommonUtils.isValidValue(value)),
-        // set the url to exclude list to skip exception handling
-        tap(() => {
-          this.exceptionHandlerService.excludeHandlingForURL(this.menuURLControl.value);
-        }),
-        switchMap(() => this.http.get<any>(this.menuURLControl.value)),
-        catchError(() => {
-          // remove the url from exclude list
-          this.exceptionHandlerService.removeExcludeHandlingForURL(this.menuURLControl.value);
-          this.isValidURL = false;
-          this.dialogService.error(this.lang.map.err_invalid_URL);
-          return of('INVALID_URL');
-        })
-      ).subscribe((result) => {
-      // remove the url from exclude list
-      this.exceptionHandlerService.removeExcludeHandlingForURL(this.menuURLControl.value);
-      if (result !== 'INVALID_URL') {
-        this.isValidURL = true;
-      }
-    });
-  }
-
   getTranslatedStatus() {
     return !!this.statusControl.value ? this.lang.map.lbl_active : this.lang.map.lbl_inactive;
   }
 
   getTranslatedMenuView() {
     return !!this.menuViewControl.value ? this.lang.map.private_menu : this.lang.map.public_menu;
+  }
+
+  private _getInvalidTabs(): any {
+    let failedList: string[] = [];
+    for (const key in this.tabsData) {
+      if (!(this.tabsData[key].validStatus())) {
+        // @ts-ignore
+        failedList.push(this.lang.map[this.tabsData[key].langKey]);
+      }
+    }
+    return failedList;
   }
 }

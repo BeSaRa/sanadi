@@ -9,13 +9,19 @@ import {IDialogData} from '@app/interfaces/i-dialog-data';
 import {Pagination} from '@app/models/pagination';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {Observable, of} from 'rxjs';
-import {map, switchMap, tap} from 'rxjs/operators';
+import {map, switchMap} from 'rxjs/operators';
 import {CustomMenuPopupComponent} from '../administration/popups/custom-menu-popup/custom-menu-popup.component';
 import {CustomMenu} from '../models/custom-menu';
 import {DialogService} from './dialog.service';
 import {FactoryService} from './factory.service';
 import {UrlService} from './url.service';
 import {PaginationContract} from '@contracts/pagination-contract';
+import {CommonUtils} from '@helpers/common-utils';
+import {MenuItemParametersEnum} from '@app/enums/menu-item-parameters.enum';
+import {EmployeeService} from '@services/employee.service';
+import {LangService} from '@services/lang.service';
+import {TokenService} from '@services/token.service';
+import {ICustomMenuSearchCriteria} from '@contracts/i-custom-menu-search-criteria';
 
 @CastResponseContainer({
   $default: {
@@ -34,7 +40,10 @@ export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> 
 
   constructor(public dialog: DialogService,
               public http: HttpClient,
-              private urlService: UrlService) {
+              private urlService: UrlService,
+              private langService: LangService,
+              private tokenService: TokenService,
+              private employeeService: EmployeeService) {
     super();
     FactoryService.registerService('CustomMenuService', this);
   }
@@ -56,7 +65,7 @@ export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> 
   })
   private _loadMain(options: Partial<PaginationContract>): Observable<Pagination<CustomMenu[]>> {
     return this.http.get<Pagination<CustomMenu[]>>(this._getServiceURL() + '/main', {
-      params: { ...options }
+      params: {...options}
     });
   }
 
@@ -64,14 +73,24 @@ export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> 
     return this._loadMain(options);
   }
 
+  @CastResponse(() => CustomMenu, {
+    fallback: '$default',
+    unwrap: 'rs'
+  })
+  loadMenuTree(): Observable<CustomMenu[]> {
+    return this.http.get<CustomMenu[]>(this._getServiceURL() + '/tree');
+  }
+
+  loadByParentId(parentId: number): Observable<CustomMenu[]> {
+    return this.loadByCriteria({parentMenuItemId: parentId});
+  }
+
   @CastResponse(undefined, {
     fallback: '$default',
     unwrap: 'rs'
   })
-  loadByParentId(parentId: number): Observable<CustomMenu[]> {
-    return this.http.post<CustomMenu[]>(this._getServiceURL() + '/filter', {
-      parentMenuItemId: parentId
-    });
+  loadByCriteria(criteria: Partial<ICustomMenuSearchCriteria>): Observable<CustomMenu[]> {
+    return this.http.post<CustomMenu[]>(this._getServiceURL() + '/filter', criteria);
   }
 
   openCreateDialog(parentId?: number): DialogRef {
@@ -139,11 +158,33 @@ export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> 
       );
   }
 
-  @CastResponse(() => CustomMenu, {
-    fallback: '$default',
-    unwrap: 'rs'
-  })
-  loadMenuTree(): Observable<CustomMenu[]> {
-    return this.http.get<CustomMenu[]>(this._getServiceURL() + '/tree');
+  findVariablesInUrl(url: string): string[] {
+    if (!CommonUtils.isValidValue(url)) {
+      return [];
+    }
+    return (url.match(/{(\w+)}/g) ?? []);
+  }
+
+  getUrlReplacementValue(variableValue: MenuItemParametersEnum): string {
+    let value: string | number | undefined = '';
+    switch (variableValue) {
+      case MenuItemParametersEnum.GENERAL_USER_ID:
+        value = this.employeeService.getCurrentUser().generalUserId;
+        break;
+      case MenuItemParametersEnum.LANG_CODE:
+        value = this.langService.map.lang;
+        break;
+      case MenuItemParametersEnum.USER_TOKEN:
+        value = this.tokenService.getToken();
+        break;
+      case MenuItemParametersEnum.PROFILE_ID:
+        value = this.employeeService.getProfile()?.id;
+        break;
+      case MenuItemParametersEnum.DOMAIN_NAME:
+        // @ts-ignore
+        value = this.employeeService.getCurrentUser().domainName;
+        break;
+    }
+    return (value ?? '') + '';
   }
 }

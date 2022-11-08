@@ -11,6 +11,7 @@ import {CustomValidators} from '@app/validators/custom-validators';
 import {CustomMenuService} from '@services/custom-menu.service';
 import {BaseModel} from './base-model';
 import {AdminResult} from '@app/models/admin-result';
+import {MenuUrlValueContract} from '@contracts/menu-url-value-contract';
 
 const interceptor = new CustomMenuInterceptor();
 
@@ -25,6 +26,7 @@ export class CustomMenu extends BaseModel<CustomMenu, CustomMenuService> {
   menuView!: number;
   userType!: number;
   menuURL!: string;
+  urlParams: string = '';
   parentMenuItemId?: number;
   statusDateModified!: string;
   statusInfo!: AdminResult;
@@ -37,6 +39,7 @@ export class CustomMenu extends BaseModel<CustomMenu, CustomMenuService> {
   // extra properties
   service!: CustomMenuService;
   langService: LangService;
+  urlParamsParsed: MenuUrlValueContract[] = [];
 
   searchFields: ISearchFieldsMap<CustomMenu> = {
     ...normalSearchFields(['arName', 'enName']),
@@ -66,58 +69,30 @@ export class CustomMenu extends BaseModel<CustomMenu, CustomMenuService> {
       menuType,
       menuView,
       userType,
-      menuURL,
       parentMenuItemId,
     } = this;
     return {
-      arName: controls
-        ? [
-          arName,
-          [
-            CustomValidators.required,
-            CustomValidators.maxLength(
-              CustomValidators.defaultLengths.ARABIC_NAME_MAX
-            ),
-            CustomValidators.minLength(
-              CustomValidators.defaultLengths.MIN_LENGTH
-            ),
-            CustomValidators.pattern('AR_NUM_ONE_AR'),
-          ],
-        ]
-        : arName,
-      enName: controls
-        ? [
-          enName,
-          [
-            CustomValidators.required,
-            CustomValidators.maxLength(
-              CustomValidators.defaultLengths.ENGLISH_NAME_MAX
-            ),
-            CustomValidators.minLength(
-              CustomValidators.defaultLengths.MIN_LENGTH
-            ),
-            CustomValidators.pattern('ENG_NUM_ONE_ENG'),
-          ],
-        ]
-        : enName,
+      arName: controls ? [arName, [CustomValidators.required,
+        CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
+        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
+        CustomValidators.pattern('AR_NUM_ONE_AR')]] : arName,
+      enName: controls ? [enName, [CustomValidators.required,
+        CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
+        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
+        CustomValidators.pattern('ENG_NUM_ONE_ENG')]] : enName,
       status: controls ? [status, []] : status,
-      menuOrder: controls
-        ? [menuOrder, [CustomValidators.required, CustomValidators.number]]
-        : menuOrder,
+      menuOrder: controls ? [menuOrder, [CustomValidators.required, CustomValidators.number]] : menuOrder,
       menuType: controls ? [menuType, [CustomValidators.required]] : menuType,
       menuView: controls ? [menuView, []] : menuView,
       userType: controls ? [userType, [CustomValidators.required]] : userType,
-      menuURL: controls
-        ? [
-          menuURL,
-          [
-            CustomValidators.maxLength(350),
-          ],
-        ]
-        : menuURL,
-      parentMenuItemId: controls
-        ? [parentMenuItemId, []]
-        : parentMenuItemId,
+      parentMenuItemId: controls ? [parentMenuItemId, []] : parentMenuItemId,
+    };
+  }
+
+  buildMenuUrlForm(controls?: boolean): any {
+    const {menuURL} = this;
+    return {
+      menuURL: controls ? [menuURL, [CustomValidators.maxLength(350)]] : menuURL
     };
   }
 }

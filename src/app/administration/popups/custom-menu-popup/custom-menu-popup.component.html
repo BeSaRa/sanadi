@@ -12,7 +12,8 @@
     <tabs-list [tabByIndex$]="selectedTabIndex$" (onTabChange)="setDialogButtonsVisibility($event)">
       <tab [name]="tabsData.basic.name" [template]="basicTabTemplate" [title]="lang.map.lbl_basic_info"
            [hasError]="getTabInvalidStatus('basic')"></tab>
-      <tab [name]="tabsData.linkSettings.name" [template]="linkSettingsTabTemplate" [title]="lang.map.link_settings">
+      <tab [name]="tabsData.linkSettings.name" [template]="linkSettingsTabTemplate" [title]="lang.map.link_settings"
+           [hasError]="getTabInvalidStatus('linkSettings')">
       </tab>
       <tab [name]="tabsData.sub.name" [template]="subDataTabTemplate" [title]="lang.map.sub_lists"
            *ngIf="model.id && !model.parentMenuItemId"></tab>
@@ -84,23 +85,7 @@
 
     </ng-template>
     <ng-template #linkSettingsTabTemplate>
-      <div class="row mb-3">
-
-        <div class="col-sm-6 position-relative">
-          <label asteriskIfRequired="menuURL" for="menuURL" class="form-label">{{lang.map.menu_URL}}</label>
-          <input id="menuURL" validationClasses="menuURL"
-                 [ngClass]="{'is-valid' : isValidURL}"
-                 formControlName="menuURL" class="form-control">
-          <app-field-error-message controlName="menuURL"></app-field-error-message>
-        </div>
-        <div class="col-sm-6 position-relative">
-          <button (click)="checkURL()"
-                  [disabled]="menuURLControl.invalid || !menuURLControl.value"
-                  class="btn btn-primary "
-                  style="margin-top: 2rem;"
-          >{{lang.map.validate_URL}}</button>
-        </div>
-      </div>
+      <custom-menu-url-handler #urlHandlerComponent [record]="model"></custom-menu-url-handler>
     </ng-template>
     <ng-template #subDataTabTemplate>
       <app-custom-menu [parentId]="model.id" [readonly]="readonly"></app-custom-menu>
