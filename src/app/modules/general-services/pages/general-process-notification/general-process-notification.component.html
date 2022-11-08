@@ -70,7 +70,7 @@
             lang.map.lbl_main_team
             }}</label>
           <ng-select [selectOnTab]="true" labelForId="competentDepartmentID" [clearable]="true"
-            placeholder="{{ lang.map.select }}" id="competentDepartmentID" [readonly]="readonly"
+            placeholder="{{ lang.map.select }}" (change)="filterProcess()" id="competentDepartmentID" [readonly]="readonly"
             [notFoundText]="lang.map.msg_not_found" appendTo="body" validationClasses="competentDepartmentID"
             formControlName="competentDepartmentID">
             <ng-option *ngFor="let option of subTeamsList" [value]="option.id">
@@ -98,7 +98,7 @@
             lang.map.sub_classification
             }}</label>
           <ng-select [selectOnTab]="true" labelForId="firstSubDomain" [clearable]="true"
-            placeholder="{{ lang.map.select }}" id="firstSubDomain" [readonly]="readonly"
+            placeholder="{{ lang.map.select }}" (change)="filterProcess()" id="firstSubDomain" [readonly]="readonly"
             [notFoundText]="lang.map.msg_not_found" appendTo="body" validationClasses="firstSubDomain"
             formControlName="firstSubDomain">
             <ng-option *ngFor="let option of subClassificationsList" [value]="option.id">
@@ -113,7 +113,7 @@
             }}</label>
           <ng-select [selectOnTab]="true" labelForId="processType" [clearable]="true"
             placeholder="{{ lang.map.select }}" id="processType" [readonly]="readonly"
-            [notFoundText]="lang.map.msg_not_found" appendTo="body" (change)="handleDepartmentChange()"
+            [notFoundText]="lang.map.msg_not_found" appendTo="body" (change)="filterProcess()"
             validationClasses="processType" formControlName="processType">
             <ng-option *ngFor="let option of GeneralProcessTypeList" [value]="option.lookupKey">
               {{option.getName()}}

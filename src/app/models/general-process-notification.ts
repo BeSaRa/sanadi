@@ -90,7 +90,7 @@ export class GeneralProcessNotification
       oldLicenseFullSerial: controls ? [oldLicenseFullSerial] : oldLicenseFullSerial,
       description: controls ? [description, CustomValidators.required] : description,
       DSNNN: {
-        departmentId: controls ? [departmentId] : departmentId,
+        departmentId: controls ? [departmentId, CustomValidators.required] : departmentId,
         competentDepartmentID: controls ? [competentDepartmentID] : competentDepartmentID,
         domain: controls ? [domain] : domain,
         firstSubDomain: controls ? [firstSubDomain] : firstSubDomain,

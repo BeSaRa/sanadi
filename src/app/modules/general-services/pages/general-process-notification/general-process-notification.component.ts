@@ -158,7 +158,7 @@ GeneralProcessNotificationService
     this.internalDepartmentService.loadGeneralProcessDepartments().subscribe(deparments => {
       this.departmentList = deparments;
     })
-    this.filterProcess({});
+    this.filterProcess();
   }
   private _loadSubTeam(teamId?: number) {
     if (teamId)
@@ -169,12 +169,20 @@ GeneralProcessNotificationService
   }
   handleDepartmentChange() {
     this.handleTeamChange(this.departmentList.find(d => d.id == this.departmentField.value)?.mainTeam.id);
+    this.filterProcess();
   }
   handleTeamChange(teamId?: number) {
     this.subTeamField.reset();
     this._loadSubTeam(teamId);
   }
-  filterProcess(params: Partial<GeneralProcess>) {
+  filterProcess() {
+    const params = {
+      departmentId: this.model?.departmentId,
+      subTeamId: this.model?.competentDepartmentID,
+      mainClass: this.model?.domain,
+      subClass: this.model?.firstSubDomain,
+      processType: this.model?.processType
+    }
     this.generalProcessService.filterProcess(params).pipe(
       catchError((err) => {
         console.log(err)
@@ -188,6 +196,7 @@ GeneralProcessNotificationService
     this.adminLookupService.loadByParentId(AdminLookupTypeEnum.GENERAL_PROCESS_CLASSIFICATION, parentId).subscribe(data => {
       this.subClassificationsList = data;
     })
+    this.filterProcess()
   }
   handleProcessChange(id: number) {
     const process = this.processList.find(p => p.id == id);
@@ -298,14 +307,8 @@ GeneralProcessNotificationService
       DSNNN: formModel.DSNNN,
       sampleDataForOperations: this.processFieldBuilder.formValues
     });
-
-    this.filterProcess({
-      departmentId: this.model.departmentId,
-      subTeamId: this.model.competentDepartmentID,
-      mainClass: this.model.domain,
-      subClass: this.model.firstSubDomain,
-      processType: this.model.processType
-    });
+    // TODO: call this on selects change
+    this.filterProcess();
     this.cd.detectChanges();
     this.handleRequestTypeChange(model.requestType, false);
   }

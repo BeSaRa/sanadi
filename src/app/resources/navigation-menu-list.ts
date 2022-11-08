@@ -1041,7 +1041,7 @@ export const navigationMenuList = [
     path: '/home/general-services/general-process-notification',
     icon: 'mdi-template',
     isSvg: false,
-    // permission: EServicePermissionsEnum.GENERAL_PROCESS_NOTIFICATION,
+    permission: EServicePermissionsEnum.GENERAL_PROCESS_NOTIFICATION,
     permissionGroup: null,
     parent: 13,
     group: 'general-services',
