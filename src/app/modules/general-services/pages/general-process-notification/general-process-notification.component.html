@@ -34,7 +34,7 @@
           <label asteriskIfRequired="oldLicenseFullSerial" for="oldLicenseFullSerial"
             class="form-label">{{lang.map.license_number}}</label>
           <div class="input-group">
-            <input (keydown.enter)="isEdit()" formControlName="oldLicenseFullSerial" [readonly]="!isEdit() || readonly"
+            <input (keydown.enter)="isEdit() || readonly" formControlName="oldLicenseFullSerial" [readonly]="!isEdit() || readonly"
               type="text" validationClasses="oldLicenseFullSerial" class="form-control" id="oldLicenseFullSerial"
               trimInput>
             <button *ngIf="isEdit() && !readonly" type="button" (click)="licenseSearch($event)"

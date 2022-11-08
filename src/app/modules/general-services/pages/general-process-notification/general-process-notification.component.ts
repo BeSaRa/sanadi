@@ -150,6 +150,7 @@ GeneralProcessNotificationService
     return new GeneralProcessNotification()
   }
   _initComponent(): void {
+    this.listenToLicenseSearch();
     this._buildForm();
     this.handleReadonly();
     this.adminLookupService.loadGeneralProcessClassificaion().subscribe((data: AdminLookup[]) => {
@@ -415,6 +416,18 @@ GeneralProcessNotificationService
     result.oldLicenseSerial = licenseDetails.serial;
 
     result.description = licenseDetails.description;
+    result.projectDescription = licenseDetails.projectDescription;
+
+    result.departmentId = licenseDetails.departmentId;
+    result.competentDepartmentID = licenseDetails.competentDepartmentID;
+    result.domain = licenseDetails.domain;
+    result.firstSubDomain = licenseDetails.firstSubDomain;
+    result.processid = licenseDetails.processid;
+    result.projectName = licenseDetails.projectName;
+    result.needSubject = licenseDetails.needSubject;
+    result.processType = licenseDetails.processType;
+    result.template = licenseDetails.template;
+    result.subject = licenseDetails.subject;
 
     this._updateForm((new GeneralProcessNotification()).clone(result));
   }
@@ -427,7 +440,7 @@ GeneralProcessNotificationService
     this.licenseSearch$.next(value);
   }
   isEdit() {
-    return this.requestTypeField.value == 2;
+    return this.requestTypeField.value == AllRequestTypesEnum.EDIT;
   }
   get isOtherProcess() {
     return this.processIdField && (!this.processIdField.value || this.processIdField.value == -1);
