@@ -35,6 +35,7 @@ import {InternalBankCategoryEnum} from '@app/enums/internal-bank-category-enum';
 })
 export class InternalBankAccountApprovalComponent extends EServicesGenericComponent<InternalBankAccountApproval, InternalBankAccountApprovalService> {
   form!: UntypedFormGroup;
+  bankAccountSearchCriteriaForm!: UntypedFormGroup;
   requestTypes: Lookup[] = this.lookupService.listByCategory.BankRequestType
     .sort((a, b) => a.lookupKey - b.lookupKey);
 
@@ -124,7 +125,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   }
 
   get bankAccountSearchCriteriaField(): AbstractControl {
-    return this.form.get('basicInfo.bankAccountSearchCriteria')!;
+    return this.bankAccountSearchCriteriaForm.get('bankAccountSearchCriteria')!;
   }
 
   get accountNumber(): UntypedFormControl {
@@ -164,6 +165,10 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
     this.form = this.fb.group({
       basicInfo: this.fb.group(model.buildBasicInfo(true)),
       explanation: this.fb.group(model.buildExplanation(true))
+    });
+
+    this.bankAccountSearchCriteriaForm = this.fb.group({
+      bankAccountSearchCriteria: [null, [CustomValidators.required]]
     });
   }
 

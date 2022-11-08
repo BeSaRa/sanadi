@@ -97,7 +97,7 @@ export class Trainer extends BaseModel<Trainer, TrainerService> {
         CustomValidators.required
       ]] : nationality,
       langListArr: controls ? [langListArr, [
-        CustomValidators.required
+        CustomValidators.requiredArray
       ]] : langListArr,
       organizationUnit: controls ? [organizationUnit, [
         CustomValidators.required,

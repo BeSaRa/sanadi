@@ -122,6 +122,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
+    this.handleRequesterRelationTypeChange();
     this.listenToRouteParams();
     this.cd.detectChanges();
   }

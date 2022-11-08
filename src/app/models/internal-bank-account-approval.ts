@@ -56,7 +56,6 @@ export class InternalBankAccountApproval extends _RequestType<InternalBankAccoun
   followUpDate!: string;
   isUpdatedNewAccount!: boolean;
   ownerOfMergedBankAccounts!: number;
-  bankAccountSearchCriteria!: string;
 
   service!: InternalBankAccountApprovalService;
 
@@ -82,7 +81,7 @@ export class InternalBankAccountApproval extends _RequestType<InternalBankAccoun
   buildBasicInfo(controls: boolean = false): any {
     const { oldLicenseFullSerial, requestType, operationType, purpose, bankId, category,
       currency, mainAccount, accountNumber, iBan, swiftCode, selectedBankAccountToMerge,
-      ownerOfMergedBankAccounts, selectedResponsiblePerson, bankAccountSearchCriteria } = this;
+      ownerOfMergedBankAccounts, selectedResponsiblePerson } = this;
     return {
       oldLicenseFullSerial: controls ? [oldLicenseFullSerial] : oldLicenseFullSerial,
       requestType: controls ? [requestType, [CustomValidators.required]] : requestType,
@@ -97,8 +96,7 @@ export class InternalBankAccountApproval extends _RequestType<InternalBankAccoun
       swiftCode: controls ? [swiftCode] : swiftCode,
       selectedBankAccountToMerge: controls ? [selectedBankAccountToMerge] : selectedBankAccountToMerge,
       ownerOfMergedBankAccounts: controls ? [ownerOfMergedBankAccounts] : ownerOfMergedBankAccounts,
-      selectedResponsiblePerson: controls ? [selectedResponsiblePerson] : selectedResponsiblePerson,
-      bankAccountSearchCriteria: controls ? [bankAccountSearchCriteria, [CustomValidators.required]] : bankAccountSearchCriteria
+      selectedResponsiblePerson: controls ? [selectedResponsiblePerson] : selectedResponsiblePerson
     }
   }
 

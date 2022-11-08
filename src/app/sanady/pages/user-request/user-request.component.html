@@ -52,27 +52,27 @@
               </div>
               <app-field-error-message controlName="benRequestorRelationType"></app-field-error-message>
             </div>
+            <ng-container *ngIf="!isRequesterSameAsBeneficiary()">
+              <div class="col-md-4 col-sm-12 mb-4 position-relative">
+                <label for="requestorName" class="form-label"
+                       asteriskIfRequired="requestorName">{{langService.map.requester_name}}</label>
+                <input id="requestorName" validationClasses="requestorName" formControlName="requestorName"
+                       maxlength="100" trimInput class="form-control" type="text"
+                       [readOnly]="readOnly || isPartialRequest">
+                <app-field-error-message controlName="requestorName"></app-field-error-message>
+              </div>
+              <div class="col-md-4 col-sm-12 mb-4 position-relative">
+                <label for="requestorPhoneNumber" class="form-label"
+                       asteriskIfRequired="requestorPhoneNumber">{{langService.map.lbl_phone}}</label>
+                <input id="requestorPhoneNumber" validationClasses="requestorPhoneNumber"
+                       formControlName="requestorPhoneNumber"
+                       trimInput class="form-control" type="text" [readOnly]="readOnly || isPartialRequest">
+                <app-field-error-message controlName="requestorPhoneNumber"></app-field-error-message>
+              </div>
+            </ng-container>
           </div>
           <div class="row" *ngIf="!isRequesterSameAsBeneficiary()">
-            <div class="col-md-4 col-sm-12 mb-4 position-relative">
-              <label for="requestorName" class="form-label"
-                     asteriskIfRequired="requestorName">{{langService.map.requester_name}}</label>
-              <input id="requestorName" validationClasses="requestorName" formControlName="requestorName"
-                     maxlength="100" trimInput class="form-control" type="text"
-                     [readOnly]="readOnly || isPartialRequest">
-              <app-field-error-message controlName="requestorName"></app-field-error-message>
-            </div>
-            <div class="col-md-4 col-sm-12 mb-4 position-relative">
-              <label for="requestorPhoneNumber" class="form-label"
-                     asteriskIfRequired="requestorPhoneNumber">{{langService.map.lbl_phone}}</label>
-              <input id="requestorPhoneNumber" validationClasses="requestorPhoneNumber"
-                     formControlName="requestorPhoneNumber"
-                     trimInput class="form-control" type="text" [readOnly]="readOnly || isPartialRequest">
-              <app-field-error-message controlName="requestorPhoneNumber"></app-field-error-message>
-            </div>
-          </div>
-          <div class="row" *ngIf="!isRequesterSameAsBeneficiary()">
-            <div class="col-md-4 col-sm-12 mb-4">
+            <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
               <label for="requestorIdType" class="form-label"
                      asteriskIfRequired="requestorIdType">{{langService.map.id_type}}</label>
               <ng-select [selectOnTab]="true" labelForId="requestorIdType" [clearable]="false"
@@ -87,7 +87,7 @@
               </ng-select>
               <app-field-error-message controlName="requestorIdType"></app-field-error-message>
             </div>
-            <div class="col-md-4 col-sm-12 mb-4">
+            <div class="col-md-4 col-sm-12 mb-4 position-relative">
               <label for="requestorIdNumber" class="form-label"
                      asteriskIfRequired="requestorIdNumber">{{langService.map.id_number}}</label>
               <input formControlName="requestorIdNumber" id="requestorIdNumber" class="form-control"
@@ -96,7 +96,7 @@
                      [readOnly]="requesterIdDisabled()">
               <app-field-error-message controlName="requestorIdNumber"></app-field-error-message>
             </div>
-            <div class="col-md-4 col-sm-12 mb-4" *ngIf="displayRequesterNationality">
+            <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper" *ngIf="displayRequesterNationality">
               <label for="requestorIdNationality" class="form-label"
                      asteriskIfRequired="requestorIdNationality">{{isGCCId('requester') ? langService.map.country : langService.map.lbl_nationality}}</label>
               <ng-select [selectOnTab]="true" labelForId="requestorIdNationality" [clearable]="false"
@@ -804,7 +804,8 @@
     ></app-attachment-list>
   </ng-template>
   <hr/>
-  <div *ngIf="!aidFormArray.controls.length && !isAttachmentFormVisible" class="d-flex flex-row justify-content-center mb-2">
+  <div *ngIf="!aidFormArray.controls.length && !isAttachmentFormVisible"
+       class="d-flex flex-row justify-content-center mb-2">
     <button *ngIf="saveVisible" [disabled]="!saveButtonEnabled()" type="button" (click)="saveModel()"
             class="btn btn-primary m-2">{{editMode ? langService.map.btn_save : langService.map.btn_add}}</button>
     <button *ngIf="cancelVisible" type="button" (click)="cancelRequest()"

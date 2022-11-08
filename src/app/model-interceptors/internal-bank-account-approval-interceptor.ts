@@ -36,7 +36,6 @@ export class InternalBankAccountApprovalInterceptor implements IModelInterceptor
     delete model.selectedBankAccountToMerge;
     delete model.ownerOfMergedBankAccounts;
     delete model.selectedResponsiblePerson;
-    delete model.bankAccountSearchCriteria;
 
     return model;
   }

@@ -50,7 +50,10 @@ export class CoordinationWithOrganizationsRequest
   buildingAbilitiesList: BuildingAbility[] = [];
   effectiveCoordinationCapabilities: EffectiveCoordinationCapabilities[] = [];
   researchAndStudies: ResearchAndStudies[] = [];
-
+  temporaryBuildingAbilitiesList:BuildingAbility[]=[]
+  temporaryEffectiveCoordinationCapabilities:EffectiveCoordinationCapabilities[]=[]
+  temporaryOrganizaionOfficerList:OrganizationOfficer[]=[]
+  temporaryResearchAndStudies:ResearchAndStudies[]=[]
   approved = false;
   domainInfo!: AdminResult;
   searchFields: ISearchFieldsMap<CoordinationWithOrganizationsRequest> = {

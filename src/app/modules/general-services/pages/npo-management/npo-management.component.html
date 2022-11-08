@@ -21,7 +21,7 @@
         <div class="col-md-4 mb-4 position-relative">
           <label asteriskIfRequired="requestType" for="requestType" class="form-label">{{ lang.map.request_type
             }}</label>
-          <ng-select [selectOnTab]="true" labelForId="requestType" [clearable]="true" [readonly]="readonly"
+          <ng-select [selectOnTab]="true" labelForId="requestType" [clearable]="true" [readonly]="criticalOnTask || readonly"
             placeholder="{{ lang.map.select }}" id="requestType" (change)="handleRequestTypeChange($event, true)"
             [notFoundText]="lang.map.msg_not_found" appendTo="body" validationClasses="requestType"
             formControlName="requestType">
@@ -31,7 +31,7 @@
           <app-field-error-message controlName="requestType"></app-field-error-message>
         </div>
 
-        <div class="col-md-4 mb-4 position-relative" *ngIf="isLicensingUser && !isNew && !readonly">
+        <div class="col-md-4 mb-4 position-relative" *ngIf="isLicensingUser && !isNew && !readonly && !criticalOnTask">
           <label class="form-label">{{ lang.map.lbl_organization }}</label>
           <ng-select [selectOnTab]="true" labelForId="orgIdField" [clearable]="true" placeholder="{{ lang.map.select }}"
             id="orgIdField" [notFoundText]="lang.map.msg_not_found" (change)="loadOrganizationData()" appendTo="body"
