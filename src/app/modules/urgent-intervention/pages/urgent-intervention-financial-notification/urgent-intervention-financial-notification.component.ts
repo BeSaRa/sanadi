@@ -283,12 +283,8 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
       this._loadImplementingAgenciesByAgencyType();
       this._loadImplementingAgenciesAccounts();
     }
-    if (this.accountType.value) {
-      if (this.boxAccountType) {
-        this.getInterventionLicense();
-      } else {
-        this._loadImplementingAgenciesAccounts();
-      }
+    if (this.accountType.value && !this.boxAccountType) {
+      this._loadImplementingAgenciesAccounts();
     }
 
     this.cd.detectChanges();
