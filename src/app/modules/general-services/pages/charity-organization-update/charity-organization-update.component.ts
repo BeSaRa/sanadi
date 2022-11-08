@@ -1,81 +1,63 @@
-import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  QueryList,
-  TemplateRef,
-  ViewChildren,
-} from '@angular/core';
-import {
-  UntypedFormGroup,
-  UntypedFormBuilder,
-  UntypedFormControl,
-} from '@angular/forms';
-import { AdminLookupTypeEnum } from '@app/enums/admin-lookup-type-enum';
-import { CharityDecisionType } from '@app/enums/charity-decision-type.enum';
-import { CharityReportType } from '@app/enums/charity-report-type.enum';
-import { CharityUpdateSection } from '@app/enums/charity-update-section.enum';
-import { CharityRole } from '@app/enums/charity-role.enum';
-import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
-import { FileExtensionsEnum } from '@app/enums/file-extension-mime-types-icons.enum';
-import { OpenFrom } from '@app/enums/open-from.enum';
-import { OperationTypes } from '@app/enums/operation-types.enum';
-import { SaveTypes } from '@app/enums/save-types';
-import { UserClickOn } from '@app/enums/user-click-on.enum';
-import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
-import { CommonUtils } from '@app/helpers/common-utils';
-import { DateUtils } from '@app/helpers/date-utils';
-import { ControlWrapper } from '@app/interfaces/i-control-wrapper';
-import { IKeyValue } from '@app/interfaces/i-key-value';
-import { AdminLookup } from '@app/models/admin-lookup';
-import { AdminResult } from '@app/models/admin-result';
-import { BlobModel } from '@app/models/blob-model';
-import { CharityDecision } from '@app/models/charity-decision';
-import { CharityOrganization } from '@app/models/charity-organization';
-import { CharityOrganizationUpdate } from '@app/models/charity-organization-update';
-import { CharityReport } from '@app/models/charity-report';
-import { Country } from '@app/models/country';
-import { FinalExternalOfficeApprovalResult } from '@app/models/final-external-office-approval-result';
-import { GeneralAssociationMeetingAttendance } from '@app/models/general-association-meeting-attendance';
-import { JobTitle } from '@app/models/job-title';
-import { Lookup } from '@app/models/lookup';
-import { NpoEmployee } from '@app/models/npo-employee';
-import { OrgMember } from '@app/models/org-member';
-import { RealBeneficiary } from '@app/models/real-beneficiary';
-import { AdminLookupService } from '@app/services/admin-lookup.service';
-import { CharityDecisionService } from '@app/services/charity-decision.service';
-import { CharityOrganizationUpdateService } from '@app/services/charity-organization-update.service';
-import { CharityOrganizationService } from '@app/services/charity-organization.service';
-import { CharityReportService } from '@app/services/charity-report.service';
-import { CountryService } from '@app/services/country.service';
-import { DialogService } from '@app/services/dialog.service';
-import { EmployeeService } from '@app/services/employee.service';
-import { FinalExternalOfficeApprovalService } from '@app/services/final-external-office-approval.service';
-import { GeneralAssociationMeetingAttendanceService } from '@app/services/general-association-meeting-attendance.service';
-import { GoveranceDocumentService } from '@app/services/governance-document.service';
-import { JobTitleService } from '@app/services/job-title.service';
-import { LangService } from '@app/services/lang.service';
-import { LookupService } from '@app/services/lookup.service';
-import { MemberRoleService } from '@app/services/member-role.service';
-import { NpoEmployeeService } from '@app/services/npo-employee.service';
-import { RealBeneficiaryService } from '@app/services/real-beneficiary.service';
-import { ToastService } from '@app/services/toast.service';
-import { DatepickerOptionsMap } from '@app/types/types';
-import { IMyDateModel } from 'angular-mydatepicker';
-import { Observable, of } from 'rxjs';
-import { share, map, tap, switchMap, takeUntil } from 'rxjs/operators';
+import {AfterViewInit, ChangeDetectorRef, Component, QueryList, TemplateRef, ViewChildren,} from '@angular/core';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup,} from '@angular/forms';
+import {AdminLookupTypeEnum} from '@app/enums/admin-lookup-type-enum';
+import {CharityDecisionType} from '@app/enums/charity-decision-type.enum';
+import {CharityReportType} from '@app/enums/charity-report-type.enum';
+import {CharityUpdateSection} from '@app/enums/charity-update-section.enum';
+import {CharityRole} from '@app/enums/charity-role.enum';
+import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import {FileExtensionsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
+import {OpenFrom} from '@app/enums/open-from.enum';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {SaveTypes} from '@app/enums/save-types';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
+import {CommonUtils} from '@app/helpers/common-utils';
+import {DateUtils} from '@app/helpers/date-utils';
+import {ControlWrapper} from '@app/interfaces/i-control-wrapper';
+import {IKeyValue} from '@app/interfaces/i-key-value';
+import {AdminLookup} from '@app/models/admin-lookup';
+import {BlobModel} from '@app/models/blob-model';
+import {CharityDecision} from '@app/models/charity-decision';
+import {CharityOrganization} from '@app/models/charity-organization';
+import {CharityOrganizationUpdate} from '@app/models/charity-organization-update';
+import {CharityReport} from '@app/models/charity-report';
+import {Country} from '@app/models/country';
+import {FinalExternalOfficeApprovalResult} from '@app/models/final-external-office-approval-result';
+import {GeneralAssociationMeetingAttendance} from '@app/models/general-association-meeting-attendance';
+import {JobTitle} from '@app/models/job-title';
+import {NpoEmployee} from '@app/models/npo-employee';
+import {OrgMember} from '@app/models/org-member';
+import {RealBeneficiary} from '@app/models/real-beneficiary';
+import {AdminLookupService} from '@app/services/admin-lookup.service';
+import {CharityDecisionService} from '@app/services/charity-decision.service';
+import {CharityOrganizationUpdateService} from '@app/services/charity-organization-update.service';
+import {CharityOrganizationService} from '@app/services/charity-organization.service';
+import {CharityReportService} from '@app/services/charity-report.service';
+import {CountryService} from '@app/services/country.service';
+import {DialogService} from '@app/services/dialog.service';
+import {EmployeeService} from '@app/services/employee.service';
+import {FinalExternalOfficeApprovalService} from '@app/services/final-external-office-approval.service';
+import {GeneralAssociationMeetingAttendanceService} from '@app/services/general-association-meeting-attendance.service';
+import {GoveranceDocumentService} from '@app/services/governance-document.service';
+import {JobTitleService} from '@app/services/job-title.service';
+import {LangService} from '@app/services/lang.service';
+import {LookupService} from '@app/services/lookup.service';
+import {MemberRoleService} from '@app/services/member-role.service';
+import {NpoEmployeeService} from '@app/services/npo-employee.service';
+import {RealBeneficiaryService} from '@app/services/real-beneficiary.service';
+import {ToastService} from '@app/services/toast.service';
+import {DatepickerOptionsMap} from '@app/types/types';
+import {IMyDateModel} from 'angular-mydatepicker';
+import {Observable, of} from 'rxjs';
+import {map, share, switchMap, takeUntil} from 'rxjs/operators';
 
 @Component({
   selector: 'charity-organization-update',
   templateUrl: './charity-organization-update.component.html',
   styleUrls: ['./charity-organization-update.component.scss'],
 })
-export class CharityOrganizationUpdateComponent
-  extends EServicesGenericComponent<
-    CharityOrganizationUpdate,
-    CharityOrganizationUpdateService
-  >
-  implements AfterViewInit {
+export class CharityOrganizationUpdateComponent extends EServicesGenericComponent<CharityOrganizationUpdate, CharityOrganizationUpdateService> implements AfterViewInit {
   form!: UntypedFormGroup;
   tabs: IKeyValue[] = [];
   _tabs: IKeyValue[] = [];

@@ -1,15 +1,15 @@
-import { Component, Input } from '@angular/core';
-import { UntypedFormBuilder } from '@angular/forms';
-import { ListModelComponent } from '@app/generics/ListModel-component';
-import { DateUtils } from '@app/helpers/date-utils';
-import { ControlWrapper } from '@app/interfaces/i-control-wrapper';
-import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { AdminResult } from '@app/models/admin-result';
-import { JobTitle } from '@app/models/job-title';
-import { OrgMember } from '@app/models/org-member';
-import { LangService } from '@app/services/lang.service';
-import { ToastService } from '@app/services/toast.service';
-import { DatepickerOptionsMap } from '@app/types/types';
+import {Component, Input} from '@angular/core';
+import {UntypedFormBuilder} from '@angular/forms';
+import {ListModelComponent} from '@app/generics/ListModel-component';
+import {DateUtils} from '@app/helpers/date-utils';
+import {ControlWrapper} from '@app/interfaces/i-control-wrapper';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {AdminResult} from '@app/models/admin-result';
+import {JobTitle} from '@app/models/job-title';
+import {OrgMember} from '@app/models/org-member';
+import {LangService} from '@app/services/lang.service';
+import {ToastService} from '@app/services/toast.service';
+import {DatepickerOptionsMap} from '@app/types/types';
 
 @Component({
   selector: 'members',
@@ -18,20 +18,24 @@ import { DatepickerOptionsMap } from '@app/types/types';
 })
 export class MembersComponent extends ListModelComponent<OrgMember> {
   @Input() readonly!: boolean;
+
   @Input() set list(_list: OrgMember[]) {
     this._list = _list;
   }
+
   @Input() extended = false;
   @Input() pageTitle!: keyof ILanguageKeys;
   @Input() jobTitles: JobTitle[] = [];
   controls!: ControlWrapper[];
   columns = ['fullName', 'identificationNumber', 'jobTitleId'];
   datepickerOptionsMap: DatepickerOptionsMap = {
-    joinDate: DateUtils.getDatepickerOptions({ disablePeriod: 'future' }),
+    joinDate: DateUtils.getDatepickerOptions({disablePeriod: 'future'}),
   };
+
   get list() {
     return this._list;
   }
+
   constructor(
     private fb: UntypedFormBuilder,
     public lang: LangService,
@@ -39,6 +43,7 @@ export class MembersComponent extends ListModelComponent<OrgMember> {
   ) {
     super(OrgMember);
   }
+
   getFormControls(): ControlWrapper[] {
     return [
       {
@@ -57,17 +62,20 @@ export class MembersComponent extends ListModelComponent<OrgMember> {
         load: this.jobTitles,
         dropdownValue: 'id',
         type: 'dropdown',
+        dropdownOptionDisabled: (optionItem: JobTitle) => {
+          return !optionItem.isActive();
+        }
       },
     ];
   }
+
   protected _initComponent(): void {
     this.controls = this.getFormControls();
     if (this.extended) {
       this.form = this.fb.group(this.model.bulildExtendedForm());
     } else if (this.pageTitle === 'board_members') {
       this.form = this.fb.group(this.model.buildExtendedBoardMembersForm());
-    }
-    else {
+    } else {
       this.form = this.fb.group(this.model.buildForm());
     }
     if (this.extended) {
@@ -89,8 +97,7 @@ export class MembersComponent extends ListModelComponent<OrgMember> {
         }
       );
       this.columns.push('joinDate', 'email', 'phone');
-    }
-    else if (this.pageTitle === 'board_members') {
+    } else if (this.pageTitle === 'board_members') {
 
       this.controls.push(
         {
@@ -103,11 +110,13 @@ export class MembersComponent extends ListModelComponent<OrgMember> {
     }
     this.columns.push('actions');
   }
+
   _selectOne(row: OrgMember): void {
-    const _row = { ...row };
+    const _row = {...row};
     (_row.joinDate && (_row.joinDate = DateUtils.changeDateToDatepicker(_row.joinDate)));
     this.form.patchValue(_row);
   }
+
   _beforeAdd(row: OrgMember): OrgMember | null {
     if (this._list.findIndex(e => e.identificationNumber === row.identificationNumber) !== -1 && (this.editRecordIndex === -1)) {
       this.toastr.error(this.lang.map.msg_duplicated_item);
@@ -115,7 +124,7 @@ export class MembersComponent extends ListModelComponent<OrgMember> {
     }
 
     const jobTitle = this.jobTitles.find(e => e.id === row.jobTitleId);
-    row.jobTitleInfo = AdminResult.createInstance({ ...jobTitle });
+    row.jobTitleInfo = AdminResult.createInstance({...jobTitle});
     (row.joinDate && (row.joinDate = DateUtils.getDateStringFromDate(row.joinDate)));
     return row;
   }

@@ -1,4 +1,4 @@
-import {AfterViewInit, ChangeDetectorRef, Component, Inject} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, Inject, ViewChild} from '@angular/core';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {IDialogData} from '@contracts/i-dialog-data';
 import {AdminLookup} from '@app/models/admin-lookup';
@@ -17,6 +17,7 @@ import {TabMap} from '@app/types/types';
 import {Observable, Subject} from 'rxjs';
 import {TabComponent} from '@app/shared/components/tab/tab.component';
 import {AdminLookupService} from '@services/admin-lookup.service';
+import {AdminLookupListComponent} from '@app/administration/pages/admin-lookup-list/admin-lookup-list.component';
 
 @Component({
   selector: 'admin-lookup-popup',
@@ -91,6 +92,8 @@ export class AdminLookupPopupComponent extends AdminGenericDialog<AdminLookup> i
   defaultSelectedTab: string = 'basic';
   typeWithSubRecord: boolean = false;
   selectedTab: string = 'basic';
+  childrenLoaded: boolean = false;
+  @ViewChild('childListComponent') childListComponentRef!: AdminLookupListComponent;
 
   get readonly(): boolean {
     return this.operation === OperationTypes.VIEW;
@@ -107,6 +110,10 @@ export class AdminLookupPopupComponent extends AdminGenericDialog<AdminLookup> i
   tabChanged(tab: TabComponent) {
     this.selectedTab = tab.name;
     this.setDialogButtonsVisibility(tab);
+    if (this.typeWithSubRecord && (this.selectedTab === this.tabsData.children.name) && !this.childrenLoaded) {
+      this.childListComponentRef.reload$.next(null);
+      this.childrenLoaded = true;
+    }
   }
 
   setDialogButtonsVisibility(tab: any): void {

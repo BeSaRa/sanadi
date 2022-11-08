@@ -1,16 +1,17 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { UntypedFormBuilder, Validators } from '@angular/forms';
-import { Nationalities } from '@app/enums/nationalities.enum';
-import { ListModelComponent } from '@app/generics/ListModel-component';
-import { DateUtils } from '@app/helpers/date-utils';
-import { ControlWrapper } from '@app/interfaces/i-control-wrapper';
-import { AdminResult } from '@app/models/admin-result';
-import { RealBeneficiary } from '@app/models/real-beneficiary';
-import { LangService } from '@app/services/lang.service';
-import { LookupService } from '@app/services/lookup.service';
-import { ToastService } from '@app/services/toast.service';
-import { DatepickerOptionsMap } from '@app/types/types';
-import { CustomValidators } from '@app/validators/custom-validators';
+import {Component, Input, OnInit} from '@angular/core';
+import {UntypedFormBuilder, Validators} from '@angular/forms';
+import {Nationalities} from '@app/enums/nationalities.enum';
+import {ListModelComponent} from '@app/generics/ListModel-component';
+import {DateUtils} from '@app/helpers/date-utils';
+import {ControlWrapper} from '@app/interfaces/i-control-wrapper';
+import {AdminResult} from '@app/models/admin-result';
+import {RealBeneficiary} from '@app/models/real-beneficiary';
+import {LangService} from '@app/services/lang.service';
+import {LookupService} from '@app/services/lookup.service';
+import {ToastService} from '@app/services/toast.service';
+import {DatepickerOptionsMap} from '@app/types/types';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {Lookup} from '@app/models/lookup';
 
 @Component({
   selector: 'real-beneficiaries',
@@ -20,17 +21,17 @@ import { CustomValidators } from '@app/validators/custom-validators';
 export class RealBeneficiariesComponent extends ListModelComponent<RealBeneficiary> {
   QATARI_NATIONALITY = Nationalities.QATARI;
   private _handleChangeNationality = (lookupKey: string | number) => {
-    const natinoality = this.lookupService.listByCategory.Nationality.find(e => e.lookupKey === lookupKey);
+    const nationality = this.lookupService.listByCategory.Nationality.find(e => e.lookupKey === lookupKey);
     this.controls.map(e => {
       if (this.idColumns.includes(e.controlName)) {
-        e.isDisplayed = natinoality?.lookupKey === this.QATARI_NATIONALITY;
+        e.isDisplayed = nationality?.lookupKey === this.QATARI_NATIONALITY;
       }
       if (this.passportColumns.includes(e.controlName)) {
-        e.isDisplayed = natinoality?.lookupKey !== this.QATARI_NATIONALITY
+        e.isDisplayed = nationality?.lookupKey !== this.QATARI_NATIONALITY;
       }
       return e;
     });
-    if (this.QATARI_NATIONALITY === natinoality?.lookupKey) {
+    if (this.QATARI_NATIONALITY === nationality?.lookupKey) {
       this.idColumns.forEach((controlName, idx) => {
         this.form.get(controlName)?.addValidators(this.model.getPassportValidation()[idx]);
         this.form.get(controlName)?.updateValueAndValidity();
@@ -41,8 +42,7 @@ export class RealBeneficiariesComponent extends ListModelComponent<RealBeneficia
         this.form.get(controlName)?.updateValueAndValidity();
         this.form.get(controlName)?.reset();
       });
-    }
-    else {
+    } else {
       this.idColumns.forEach((controlName, idx) => {
         this.form.get(controlName)?.removeValidators(this.model.getIdValidation()[idx]);
         this.form.get(controlName)?.updateValueAndValidity();
@@ -56,12 +56,15 @@ export class RealBeneficiariesComponent extends ListModelComponent<RealBeneficia
     }
   };
   @Input() readonly!: boolean;
+
   @Input() set list(_list: RealBeneficiary[]) {
     this._list = _list;
   }
+
   get list() {
     return this._list;
   }
+
   constructor(
     public lang: LangService,
     private fb: UntypedFormBuilder,
@@ -70,16 +73,17 @@ export class RealBeneficiariesComponent extends ListModelComponent<RealBeneficia
   ) {
     super(RealBeneficiary);
   }
+
   datepickerOptionsMap: DatepickerOptionsMap = {
-    birthDate: DateUtils.getDatepickerOptions({ disablePeriod: 'future' }),
-    iDDate: DateUtils.getDatepickerOptions({ disablePeriod: 'future' }),
+    birthDate: DateUtils.getDatepickerOptions({disablePeriod: 'future'}),
+    iDDate: DateUtils.getDatepickerOptions({disablePeriod: 'future'}),
     passportExpiryDate: DateUtils.getDatepickerOptions({
       disablePeriod: 'past',
     }),
-    iDExpiryDate: DateUtils.getDatepickerOptions({ disablePeriod: 'past' }),
-    passportDate: DateUtils.getDatepickerOptions({ disablePeriod: 'future' }),
-    startDate: DateUtils.getDatepickerOptions({ disablePeriod: 'future' }),
-    lastUpdateDate: DateUtils.getDatepickerOptions({ disablePeriod: 'none' }),
+    iDExpiryDate: DateUtils.getDatepickerOptions({disablePeriod: 'past'}),
+    passportDate: DateUtils.getDatepickerOptions({disablePeriod: 'future'}),
+    startDate: DateUtils.getDatepickerOptions({disablePeriod: 'future'}),
+    lastUpdateDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
   };
   idColumns = ['identificationNumber', 'iDDate', 'iDExpiryDate'];
   passportColumns = ['passportNumber', 'passportDate', 'passportExpiryDate'];
@@ -116,7 +120,11 @@ export class RealBeneficiariesComponent extends ListModelComponent<RealBeneficia
       label: this.lang.map.lbl_nationality,
       type: 'dropdown',
       load: this.lookupService.listByCategory.Nationality,
-      onChange: this._handleChangeNationality
+      onChange: this._handleChangeNationality,
+      dropdownValue: 'lookupKey',
+      dropdownOptionDisabled: (optionItem: Lookup) => {
+        return !optionItem.isActive();
+      }
     },
 
     {
@@ -216,8 +224,9 @@ export class RealBeneficiariesComponent extends ListModelComponent<RealBeneficia
     this.form = this.fb.group(this.model.buildForm());
     this.form.get('lastUpdateDate')?.disable();
   }
+
   _selectOne(_row: RealBeneficiary): void {
-    const row = { ..._row };
+    const row = {..._row};
     row.birthDate = DateUtils.changeDateToDatepicker(row.birthDate);
     row.birthDateString = row.birthDate ? DateUtils.getDateStringFromDate(row.birthDate, 'DEFAULT_DATE_FORMAT') : '';
     row.startDate = DateUtils.changeDateToDatepicker(row.startDate);
@@ -231,10 +240,11 @@ export class RealBeneficiariesComponent extends ListModelComponent<RealBeneficia
     this._handleChangeNationality(row.nationality);
     this.form.patchValue(row);
   }
+
   _beforeAdd(row: RealBeneficiary): RealBeneficiary | null {
     const natinoality = this.lookupService.listByCategory.Nationality.find(e => e.lookupKey === row.nationality);
     const field = (natinoality?.lookupKey === this.QATARI_NATIONALITY) ? 'identificationNumber' : 'passportNumber';
-    console.log({ field, row, natinoality });
+    console.log({field, row, natinoality});
     if (this._list.findIndex((e) => e[field] === row[field]) !== -1 && (this.editRecordIndex === -1)) {
       this.toast.alert(this.lang.map.msg_duplicated_item);
       return null;

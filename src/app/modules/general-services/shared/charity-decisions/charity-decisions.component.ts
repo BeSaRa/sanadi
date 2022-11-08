@@ -1,14 +1,15 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { AdminLookupTypeEnum } from '@app/enums/admin-lookup-type-enum';
-import { ListModelComponent } from '@app/generics/ListModel-component';
-import { DateUtils } from '@app/helpers/date-utils';
-import { ControlWrapper } from '@app/interfaces/i-control-wrapper';
-import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { CharityDecision } from '@app/models/charity-decision';
-import { AdminLookupService } from '@app/services/admin-lookup.service';
-import { LangService } from '@app/services/lang.service';
-import { DatepickerOptionsMap } from '@app/types/types';
+import {Component, Input} from '@angular/core';
+import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
+import {AdminLookupTypeEnum} from '@app/enums/admin-lookup-type-enum';
+import {ListModelComponent} from '@app/generics/ListModel-component';
+import {DateUtils} from '@app/helpers/date-utils';
+import {ControlWrapper} from '@app/interfaces/i-control-wrapper';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {CharityDecision} from '@app/models/charity-decision';
+import {AdminLookupService} from '@app/services/admin-lookup.service';
+import {LangService} from '@app/services/lang.service';
+import {DatepickerOptionsMap} from '@app/types/types';
+import {AdminLookup} from '@app/models/admin-lookup';
 
 @Component({
   selector: 'charity-decisions',
@@ -63,12 +64,11 @@ export class CharityDecisionsComponent extends ListModelComponent<CharityDecisio
         type: 'dropdown',
         dropdownValue: 'id',
         load$: this.inside
-          ? this.adminLookupService.loadAsLookups(
-            AdminLookupTypeEnum.PENALTIES_DECISION
-          )
-          : this.adminLookupService.loadAsLookups(
-            AdminLookupTypeEnum.RESOLUTIONS_ISSUED
-          ),
+          ? this.adminLookupService.loadAsLookups(AdminLookupTypeEnum.PENALTIES_DECISION)
+          : this.adminLookupService.loadAsLookups(AdminLookupTypeEnum.RESOLUTIONS_ISSUED),
+        dropdownOptionDisabled: (optionItem: AdminLookup) => {
+          return !optionItem.isActive();
+        }
       },
     ];
     if (!this.inside) {
