@@ -1,3 +1,4 @@
+import { AdminstrationDepartmentCodes } from './../enums/department-code.enum';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { InternalDepartment } from '../models/internal-department';
@@ -37,7 +38,7 @@ import { Pagination } from "@app/models/pagination";
 export class InternalDepartmentService extends CrudWithDialogGenericService<InternalDepartment> {
   list!: InternalDepartment[];
   interceptor: InternalDepartmentInterceptor = new InternalDepartmentInterceptor();
-  private _generalProcessDepartmentTypes = ['RC', 'LCN', 'SVC'];
+  private _generalProcessDepartmentTypes = [AdminstrationDepartmentCodes.RC, AdminstrationDepartmentCodes.LCN, AdminstrationDepartmentCodes.SVC];
 
   constructor(public http: HttpClient, private domSanitizer: DomSanitizer, private urlService: UrlService, public dialog: DialogService) {
     super();
@@ -72,7 +73,7 @@ export class InternalDepartmentService extends CrudWithDialogGenericService<Inte
   loadGeneralProcessDepartments() {
     return this.loadDepartments().pipe(
       map((epartments: InternalDepartment[]) => {
-        return epartments.filter((d: InternalDepartment) => this._generalProcessDepartmentTypes.indexOf(d.code) != -1)
+        return epartments.filter((d: InternalDepartment) => this._generalProcessDepartmentTypes.indexOf(d.code as AdminstrationDepartmentCodes) != -1)
       })
     )
   }

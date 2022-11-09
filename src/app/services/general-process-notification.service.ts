@@ -13,7 +13,14 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { ILanguageKeys } from '@app/interfaces/i-language-keys';
 import { DialogService } from './dialog.service';
 import { DynamicOptionsService } from './dynamic-options.service';
+import { CastResponseContainer } from '@app/decorators/decorators/cast-response';
 
+
+@CastResponseContainer({
+  $default: {
+    model: () => GeneralProcessNotification
+  }
+})
 @Injectable({
   providedIn: 'root'
 })
@@ -22,7 +29,7 @@ export class GeneralProcessNotificationService extends BaseGenericEService<Gener
   serviceKey: keyof ILanguageKeys = 'menu_general_process_notification';
   caseStatusIconMap: Map<number, string> = new Map();
   searchColumns: string[] = ['fullSerial', 'createdOn', 'caseStatus', 'subject', 'creatorInfo'];
-  selectLicenseDisplayColumns: string[] = ['enName', 'licenseNumber', 'status', 'actions'];
+  selectLicenseDisplayColumns: string[] = ['projectName', 'licenseNumber', 'needSubject', 'actions'];
 
   constructor(
     public http: HttpClient,

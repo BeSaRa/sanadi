@@ -85,6 +85,7 @@ export class GeneralProcessNotification
       processType,
       needSubject,
     } = this;
+
     return {
       requestType: controls ? [requestType, CustomValidators.required] : requestType,
       oldLicenseFullSerial: controls ? [oldLicenseFullSerial] : oldLicenseFullSerial,
@@ -100,8 +101,7 @@ export class GeneralProcessNotification
         needSubject: controls ? [needSubject, CustomValidators.required] : needSubject,
         projectDescription: controls ? [projectDescription, CustomValidators.required] : projectDescription,
       },
-      sampleDataForOperations: {
-      },
+      sampleDataForOperations: {},
     }
   }
   buildApprovalForm(control: boolean = false): any {

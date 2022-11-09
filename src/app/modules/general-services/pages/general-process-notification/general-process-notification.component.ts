@@ -33,6 +33,7 @@ import { OperationTypes } from '@app/enums/operation-types.enum';
 import { SaveTypes } from '@app/enums/save-types';
 import { LangService } from '@app/services/lang.service';
 import { Observable, of, Subject } from 'rxjs';
+import { CaseTypes } from '@app/enums/case-types.enum';
 
 @Component({
   selector: 'app-general-process-notification',
@@ -201,14 +202,12 @@ GeneralProcessNotificationService
   }
   handleProcessChange(id: number) {
     const process = this.processList.find(p => p.id == id);
-    this.projectNameField.setValidators([])
-    this.projectNameField.reset();
-    if (this.isOtherProcess)
-      this.projectNameField.setValidators([CustomValidators.required])
-    this.processFieldBuilder.generateFromString(process?.template)
+    if (!this.isOtherProcess)
+      this.projectNameField.setValue(process?.arName);
+    this.processFieldBuilder.generateFromString(process?.template);
     this.sampleDataForOperationsFormGroup.reset();
     this.form.removeControl('sampleDataForOperations');
-    this.form.setControl('sampleDataForOperations', this.fb.group({}))
+    this.form.setControl('sampleDataForOperations', this.fb.group({}));
   }
   _buildForm(): void {
     const model = new GeneralProcessNotification().buildForm(true)
@@ -251,7 +250,7 @@ GeneralProcessNotificationService
   }
   _prepareModel(): GeneralProcessNotification | Observable<GeneralProcessNotification> {
     this.processFieldBuilder.fields.map(f => {
-      f.value = this.sampleDataForOperationsFormGroup.value[f.identifyingName];
+      f.value = this.sampleDataForOperationsFormGroup.value[f.id];
     })
     const value = new GeneralProcessNotification().clone({
       ...this.model,
@@ -304,11 +303,8 @@ GeneralProcessNotificationService
     this.form.patchValue({
       requestType: formModel.requestType,
       description: formModel.description,
-      oldLicenseFullSerial: formModel.oldLicenseFullSerial,
       DSNNN: formModel.DSNNN,
-      sampleDataForOperations: this.processFieldBuilder.formValues
     });
-    // TODO: call this on selects change
     this.filterProcess();
     this.cd.detectChanges();
     this.handleRequestTypeChange(model.requestType, false);
@@ -364,10 +360,12 @@ GeneralProcessNotificationService
     this.licenseSearch$
       .pipe(exhaustMap(oldLicenseFullSerial => {
         return this.loadLicencesByCriteria({
+          caseType: CaseTypes.GENERAL_PROCESS_NOTIFICATION,
           fullSerial: oldLicenseFullSerial
         }).pipe(catchError(() => of([])));
       }))
       .pipe(
+        map(result => result.filter(l => l.caseState == CommonCaseStatus.FINAL_APPROVE || l.caseState == CommonCaseStatus.CANCELLED || l.caseState == CommonCaseStatus.FINAL_REJECTION)),
         // display message in case there is no returned license
         tap(list => {
           if (!list.length) {

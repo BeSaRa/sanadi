@@ -64,7 +64,8 @@ export class ProcessFieldBuilder {
         pattern: field.pattern,
         mask: field.mask,
         required: field.required,
-        options: field.options
+        options: field.options,
+        value: field.value
       }
     })
     return JSON.stringify(fields);
@@ -91,7 +92,10 @@ export class ProcessFieldBuilder {
       mask: form.value.type == GeneralProcessTemplateFieldTypes.number ? CustomValidators.inputMaskPatterns.NUMBER_ONLY : '',
       required: form.value.required,
       pattern: form.value.pattern,
-      value: form.value.value
+      value: form.value.value,
+      options:
+        form.value.type == GeneralProcessTemplateFieldTypes.yesOrNo
+          ? [{ id: 1, name: 'No' }, { id: 2, name: 'Yes' }] : form.value.options
     });
     let prevField = this.getFieldByIdentifyingName(form.value.identifyingName)
     if (!prevField)
@@ -100,13 +104,6 @@ export class ProcessFieldBuilder {
       Object.assign(prevField, field);
     form.reset();
     this.formChange();
-  }
-  get formValues(): IKeyValue {
-    return this.fields.map(f => {
-      return { [f.id]: f.value }
-    }).reduce((prev, next) => {
-      return Object.assign(prev, next)
-    }, {})
   }
   getFieldById(id: string): GeneralProcessTemplate | undefined {
     return this.fields.find(f => f.id == id);

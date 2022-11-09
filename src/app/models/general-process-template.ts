@@ -21,7 +21,7 @@ export class GeneralProcessTemplate extends Cloneable<GeneralProcessTemplate>{
   pattern!: string;
   mask!: string;
   required!: boolean;
-  options: IKeyValue[] = [{ id: 1, name: 'No' }, { id: 2, name: 'Yes' }];
+  options: IKeyValue[] = [];
   langService: LangService;
   value!: number | string | IMyDateModel;
   constructor() {
@@ -33,7 +33,7 @@ export class GeneralProcessTemplate extends Cloneable<GeneralProcessTemplate>{
     return this[(this.langService.map.lang + 'Name') as keyof INames];
   }
 
-  buildForm(controls?: boolean): any {
+  buildForm(): any {
     const {
       identifyingName,
       arName,
@@ -42,32 +42,32 @@ export class GeneralProcessTemplate extends Cloneable<GeneralProcessTemplate>{
       note,
       required,
       pattern,
-      type
+      type,
     } = this;
     return {
-      identifyingName: controls ? [identifyingName, [
+      identifyingName: [identifyingName, [
         CustomValidators.required,
         CustomValidators.maxLength(300),
         CustomValidators.minLength(3),
         CustomValidators.pattern('ENG_NO_SPACES_ONLY'),
-      ]] : identifyingName,
-      arName: controls ? [arName, [
+      ]],
+      arName: [arName, [
         CustomValidators.required,
         CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
         CustomValidators.pattern('AR_NUM_ONE_AR')
-      ]] : arName,
-      enName: controls ? [enName, [
+      ]],
+      enName: [enName, [
         CustomValidators.required,
         CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
         CustomValidators.pattern('ENG_NUM_ONE_ENG')
-      ]] : enName,
-      required: controls ? [required] : required,
-      type: controls ? [type, [CustomValidators.required]] : type,
-      order: controls ? [order, [CustomValidators.required]] : order,
-      pattern: controls ? [pattern, []] : pattern,
-      note: controls ? [note, [CustomValidators.required]] : note,
+      ]],
+      required: [required],
+      type: [type, [CustomValidators.required]],
+      order: [order, [CustomValidators.required]],
+      pattern: [pattern, []],
+      note: [note, [CustomValidators.required]],
     }
   }
 
@@ -81,7 +81,8 @@ export class GeneralProcessTemplate extends Cloneable<GeneralProcessTemplate>{
       wrappers,
       arName,
       enName,
-      mask
+      mask,
+      value
     } = this;
     let selectOptions: ISelectOption = {
       bindValue: 'id',
@@ -103,6 +104,7 @@ export class GeneralProcessTemplate extends Cloneable<GeneralProcessTemplate>{
       },
       selectOptions,
       mode,
+      defaultValue: value,
       mask,
       wrappers: [wrappers],
     }

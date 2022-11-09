@@ -50,43 +50,6 @@ export class GeneralProcessService extends CrudWithDialogGenericService<GeneralP
   setlectField(fieldId: string) {
     this._selectField.next(fieldId);
   }
-  addDialog(): DialogRef | Observable<DialogRef> {
-    return this.dialog.show<IDialogData<GeneralProcess>>(
-      this._getDialogComponent(),
-      {
-        model: new (this._getModel()),
-        operation: OperationTypes.CREATE
-      },
-      { fullscreen: true }
-    )
-  }
-
-  editDialog(model: GeneralProcess, getById: boolean = true): Observable<DialogRef> {
-    return (getById ? this.getById(model.id) : of(model))
-      .pipe(
-        exhaustMap((model) => of(
-          this.dialog.show<IDialogData<GeneralProcess>>(
-            this._getDialogComponent(),
-            {
-              model: model,
-              operation: OperationTypes.UPDATE
-            },
-            { fullscreen: true }
-          ))
-        )
-      )
-  }
-  editDialogComposite(model: GeneralProcess): Observable<DialogRef> {
-    return this.getByIdComposite(model.id)
-      .pipe(exhaustMap((model) => of(this.dialog.show<IDialogData<GeneralProcess>>(
-        this._getDialogComponent(),
-        {
-          model: model,
-          operation: OperationTypes.UPDATE
-        },
-        { fullscreen: true }
-      ))));
-  }
   openViewDialog(modelId: number): Observable<DialogRef> {
     return this.getByIdComposite(modelId).pipe(
       switchMap((generalProcess: GeneralProcess) => {

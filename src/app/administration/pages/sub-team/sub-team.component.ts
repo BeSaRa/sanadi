@@ -24,6 +24,7 @@ import { Subject, of } from 'rxjs';
   styleUrls: ['./sub-team.component.scss']
 })
 export class SubTeamComponent extends AdminGenericComponent<SubTeam, SubTeamService> {
+  usePagination = true;
   displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'status', 'actions']; //, 'parent'
 
   afterReload(): void {

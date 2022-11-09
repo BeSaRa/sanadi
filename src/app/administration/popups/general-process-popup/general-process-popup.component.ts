@@ -1,3 +1,4 @@
+import { Validators } from '@angular/forms';
 import { LookupService } from './../../../services/lookup.service';
 import { Lookup } from './../../../models/lookup';
 import { UserClickOn } from './../../../enums/user-click-on.enum';
@@ -70,7 +71,10 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
   buildForm(): void {
     this.form = this.fb.group(this.model.buildForm(true));
     const templateModel = new GeneralProcessTemplate();
-    this.fieldForm = this.fb.group(templateModel.buildForm(true));
+    this.fieldForm = this.fb.group({
+      ...templateModel.buildForm(),
+      options: this.fb.array([], Validators.required)
+    });
     if (this.operation === OperationTypes.VIEW) {
       this.form.disable();
       this.saveVisible = false;
@@ -100,7 +104,10 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
         const field = this.processForm.getFieldById(fieldId);
         this.fieldForm.reset();
         if (field)
-          this.fieldForm = this.fb.group(field.buildForm(true));
+          this.fieldForm = this.fb.group({
+            ...field.buildForm(),
+            options: this.fb.array([], Validators.required)
+          });
         this.isEditForm = true;
       }
     })

@@ -141,7 +141,6 @@ export class FBuilder {
     } else {
       options = isObservable(field.selectOptions?.options!) ? field.selectOptions?.options! : of(field.selectOptions?.options!);
     }
-    console.log(options)
     field.selectOptions!.options = options;
     return {
       key: field.key,

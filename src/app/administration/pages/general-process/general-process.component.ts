@@ -22,7 +22,7 @@ import { Subject, of } from 'rxjs';
   styleUrls: ['./general-process.component.scss']
 })
 export class GeneralProcessComponent extends AdminGenericComponent<GeneralProcess, GeneralProcessService> {
-
+  usePagination = true;
   list: GeneralProcess[] = [];
   commonStatusEnum = CommonStatusEnum;
   @ViewChild('table') table!: TableComponent;
