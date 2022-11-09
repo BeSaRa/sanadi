@@ -1,10 +1,10 @@
 <div class="dialog-toolbar bg-primary d-flex justify-content-between">
   <h1 class="h6 text-white">{{ lang.map[title] }}</h1>
   <div>
-    <button type="button" class="btn btn-fullscreen btn-close-white icon-btn"
-            tabindex="-1" aria-label="Fullscreen" fullscreenBtn></button>
-    <button type="button" class="btn-close btn-close-white"
-            tabindex="-1" [dialogClose]="model" aria-label="Close"></button>
+    <button type="button" class="btn btn-fullscreen btn-close-white icon-btn" tabindex="-1" aria-label="Fullscreen"
+      fullscreenBtn></button>
+    <button type="button" class="btn-close btn-close-white" tabindex="-1" [dialogClose]="model"
+      aria-label="Close"></button>
   </div>
 </div>
 <div class="dialog-content no-fixed-height">
@@ -119,7 +119,7 @@
               <div class="col-12 col-md-6 col-lg-12 mb-4 position-relative">
                 <label for="type" asteriskIfRequired="type" class="form-label">{{lang.map.lbl_field_type}}</label>
                 <ng-select validationClasses="type" labelForId="type" placeholder="{{lang.map.select}}"
-                  [notFoundText]="lang.map.msg_not_found" formControlName="type" id="type" appendTo="body">
+                  [notFoundText]="lang.map.msg_not_found" (change)="handleFieldTypeChange($event)" formControlName="type" id="type" appendTo="body">
                   <ng-option *ngFor="let option of generalProcessTemplateFieldTypesList; let i = index;"
                     [value]="i + 1">
                     {{ getLabel(option) }}
@@ -127,11 +127,30 @@
                 </ng-select>
                 <app-field-error-message controlName="type"></app-field-error-message>
               </div>
-              <!-- isSelectField -->
-              <div class="col-12 mb-4 position-relative" *ngIf="isSelectField">
-                <label asteriskIfRequired="name" for="name" class="form-label">{{ lang.map.lbl_select_options}}</label>
-                <input id="fieldname" formControlName="name" validationClasses="name" class="form-control" />
-                <app-field-error-message controlName="name"></app-field-error-message>
+              <!-- options -->
+              <div class="col-12 mb-3 position-relative" *ngIf="isSelectField">
+                <div class="col-12 mb-3 position-relative">
+                  <div class="d-flex mb-1">
+                    <label class="form-label mb-0">{{
+                      lang.map.lbl_select_options}}</label>
+                    <button class="btn icon-btn text-primary ms-auto" (click)="addOption()">
+                      <i class="mdi mdi-plus"></i>
+                    </button>
+                  </div>
+                </div>
+                <div formArrayName="options">
+                  <ng-container *ngFor="let option of options.controls; let i = index">
+                    <div class="mb-2 d-flex" [formGroupName]="i">
+                      <div class="flex-grow-1">
+                        <input id="fieldname" formControlName="name" validationClasses="name" class="form-control" />
+                        <app-field-error-message controlName="name"></app-field-error-message>
+                      </div>
+                      <button class="btn icon-btn text-primary mx-2" [disabled]="options.controls.length == 1" (click)="removeOption(i)">
+                        <i class="mdi mdi-delete"></i>
+                      </button>
+                    </div>
+                  </ng-container>
+                </div>
               </div>
               <div class="col-12 col-md-6 col-lg-12">
                 <div class="row">

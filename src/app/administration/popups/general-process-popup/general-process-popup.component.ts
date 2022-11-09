@@ -1,4 +1,4 @@
-import { Validators } from '@angular/forms';
+import { UntypedFormArray, Validators } from '@angular/forms';
 import { LookupService } from './../../../services/lookup.service';
 import { Lookup } from './../../../models/lookup';
 import { UserClickOn } from './../../../enums/user-click-on.enum';
@@ -29,6 +29,7 @@ import { Observable, of, Subscription } from 'rxjs';
 import { SubTeamService } from '@app/services/sub-team.service';
 import { SubTeam } from '@app/models/sub-team';
 import { GeneralProcessTemplateFieldTypes } from '@app/enums/general-process-template-field-types.enum';
+import { v4 } from 'uuid';
 
 @Component({
   selector: 'app-general-process-popup',
@@ -73,7 +74,7 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
     const templateModel = new GeneralProcessTemplate();
     this.fieldForm = this.fb.group({
       ...templateModel.buildForm(),
-      options: this.fb.array([], Validators.required)
+      options: this.fb.array([])
     });
     if (this.operation === OperationTypes.VIEW) {
       this.form.disable();
@@ -87,6 +88,22 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
     return this.operation === OperationTypes.VIEW
   }
 
+  addOption() {
+    this.options.push(
+      this.fb.group({
+        id: [v4()],
+        name: ['', Validators.required]
+      })
+    );
+  }
+  removeOption(index: number) {
+    this.options.removeAt(index);
+  }
+  handleFieldTypeChange(type: number) {
+    if (type == GeneralProcessTemplateFieldTypes.selectField) {
+      this.addOption();
+    }
+  }
   initPopup(): void {
     this.adminLookupService.loadGeneralProcessClassificaion().subscribe(data => {
       this.mainClassificationsList = data;
@@ -103,11 +120,20 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
       if (fieldId) {
         const field = this.processForm.getFieldById(fieldId);
         this.fieldForm.reset();
-        if (field)
+        if (field) {
           this.fieldForm = this.fb.group({
             ...field.buildForm(),
-            options: this.fb.array([], Validators.required)
+            options: this.fb.array([])
           });
+          field.options.forEach((o) => {
+            this.options.push(
+              this.fb.group({
+                id: [o.id],
+                name: [o.name, Validators.required]
+              })
+            )
+          })
+        }
         this.isEditForm = true;
       }
     })
@@ -116,6 +142,9 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
     if (!this.processForm.fields.filter(f => f.identifyingName == form.value.identifyingName).length || this.isEditForm) {
       this.processForm.setField(form);
       this.isEditForm = false;
+      while (this.options.length !== 0) {
+        this.options.removeAt(0)
+      }
     } else
       this.toast.error(this.lang.map.msg_user_identifier_is_already_exist);
   }
@@ -192,6 +221,9 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
     }
   };
 
+  get options() {
+    return this.fieldForm.controls["options"] as UntypedFormArray;
+  }
   get departmentField(): UntypedFormControl {
     return this.form.get('departmentId') as UntypedFormControl
   }

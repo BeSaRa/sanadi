@@ -95,7 +95,9 @@ export class ProcessFieldBuilder {
       value: form.value.value,
       options:
         form.value.type == GeneralProcessTemplateFieldTypes.yesOrNo
-          ? [{ id: 1, name: 'No' }, { id: 2, name: 'Yes' }] : form.value.options
+          ? [{ id: 1, name: 'No' }, { id: 2, name: 'Yes' }]
+          : form.value.type == GeneralProcessTemplateFieldTypes.selectField
+            ? form.value.options : []
     });
     let prevField = this.getFieldByIdentifyingName(form.value.identifyingName)
     if (!prevField)
