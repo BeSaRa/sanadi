@@ -152,7 +152,6 @@ NpoManagementService
       this.readonly = true;
       return;
     }
-      console.log(!this.model.isReturned(), this.employeeService.getCurrentUser().generalUserId, this.model.creatorInfo.id)
     if (this.openFrom === OpenFrom.USER_INBOX) {
       if (this.employeeService.isCharityManager()) {
         this.readonly = false;
