@@ -500,7 +500,7 @@ export class TrainingProgramPopupComponent extends AdminGenericDialog<TrainingPr
       this.durationInDaysControl,
       this.durationInHoursControl,
       this.averageDurationInHoursControl,
-      this.trainingLangControl,
+      // this.trainingLangControl,
       this.numberOfSeatsControl,
       this.totalTrainingCostControl,
       this.commentsControl
