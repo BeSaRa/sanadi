@@ -32,6 +32,6 @@ export class LessonsLearned extends SearchableCloneable<LessonsLearned> {
   }
 
   get lessonsLearntListString(): string {
-    return this.lessonsLearnedInfo.map(x => x.getName()).join(', ') ?? '';
+    return this.lessonsLearnedInfo?.map(x => x.getName()).join(', ') ?? '';
   }
 }
