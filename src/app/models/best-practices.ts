@@ -32,6 +32,6 @@ export class BestPractices extends SearchableCloneable<BestPractices> {
   }
 
   get bestPracticesListString(): string {
-    return this.bestPracticesInfo.map(x => x.getName()).join(', ') ?? '';
+    return this.bestPracticesInfo?.map(x => x.getName()).join(', ') ?? '';
   }
 }
