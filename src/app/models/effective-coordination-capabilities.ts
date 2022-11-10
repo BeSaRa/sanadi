@@ -1,17 +1,16 @@
-import { EffectiveCoordinationInterceptor } from './../model-interceptors/effective-coordination-interceptor';
-import { AdminResult } from './admin-result';
-import { FactoryService } from '@app/services/factory.service';
-import { LangService } from '@app/services/lang.service';
-import { SearchableCloneable } from './searchable-cloneable';
 import { Validators } from '@angular/forms';
-import { CustomValidators } from '@app/validators/custom-validators';
-import { EmployeeService } from '@app/services/employee.service';
-import { ISearchFieldsMap } from '@app/types/types';
-import { dateSearchFields } from '@app/helpers/date-search-fields';
+import { InterceptModel } from '@app/decorators/decorators/intercept-model';
 import { infoSearchFields } from '@app/helpers/info-search-fields';
 import { normalSearchFields } from '@app/helpers/normal-search-fields';
-import { InterceptModel } from '@app/decorators/decorators/intercept-model';
+import { EmployeeService } from '@app/services/employee.service';
+import { FactoryService } from '@app/services/factory.service';
+import { LangService } from '@app/services/lang.service';
+import { ISearchFieldsMap } from '@app/types/types';
+import { CustomValidators } from '@app/validators/custom-validators';
 import { IMyDateModel } from 'angular-mydatepicker';
+import { EffectiveCoordinationInterceptor } from './../model-interceptors/effective-coordination-interceptor';
+import { AdminResult } from './admin-result';
+import { SearchableCloneable } from './searchable-cloneable';
 
 const { send, receive } = new EffectiveCoordinationInterceptor();
 
@@ -42,7 +41,6 @@ export class EffectiveCoordinationCapabilities extends SearchableCloneable<Effec
 
   employeeService: EmployeeService;
   searchFields: ISearchFieldsMap<EffectiveCoordinationCapabilities> = {
-    ...dateSearchFields(['eventStartDate']),
     ...infoSearchFields(['organizationWayInfo']),
     ...normalSearchFields([
       'eventTopic',
@@ -71,7 +69,6 @@ export class EffectiveCoordinationCapabilities extends SearchableCloneable<Effec
       'eventObjectives',
       'expectedOutcomes',
       'axes',
-      'eventStartDate',
       'daysNumber',
       'hoursNumber',
       'organizationWay',

@@ -1,34 +1,34 @@
-import {HttpClient} from '@angular/common/http';
-import {ComponentFactoryResolver, Injectable} from '@angular/core';
-import {DomSanitizer} from '@angular/platform-browser';
-import {CastResponseContainer} from '@app/decorators/decorators/cast-response';
-import {BaseGenericEService} from '@app/generics/base-generic-e-service';
-import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {IReturnToOrganizationService} from '@app/interfaces/i-return-to-organization-service-interface';
-import {IDefaultResponse} from '@app/interfaces/idefault-response';
-import {CoordinationWithOrganizationsRequest} from '@app/models/coordination-with-organizations-request';
-import {OrgUnit} from '@app/models/org-unit';
-import {ValidOrgUnit} from '@app/models/valid-org-unit';
+import { HttpClient } from '@angular/common/http';
+import { ComponentFactoryResolver, Injectable } from '@angular/core';
+import { UntypedFormGroup } from '@angular/forms';
+import { DomSanitizer } from '@angular/platform-browser';
+import { CastResponseContainer } from '@app/decorators/decorators/cast-response';
+import { WFResponseType } from '@app/enums/wfresponse-type.enum';
+import { BaseGenericEService } from '@app/generics/base-generic-e-service';
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
+import { IReturnToOrganizationService } from '@app/interfaces/i-return-to-organization-service-interface';
+import { IDefaultResponse } from '@app/interfaces/idefault-response';
+import { CoordinationWithOrganizationsRequest } from '@app/models/coordination-with-organizations-request';
+import { OrgUnit } from '@app/models/org-unit';
+import { OrganizationOfficer } from '@app/models/organization-officer';
+import { ValidOrgUnit } from '@app/models/valid-org-unit';
 import {
   ParticipantOrganizationsPopupComponent
 } from '@app/modules/e-services-main/popups/participant-organizations-popup/participant-organizations-popup.component';
-import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
-import {CoordinationWithOrganizationsRequestSearchCriteria} from './../models/coordination-with-organizations-request-search-criteria';
-import {DialogService} from './dialog.service';
-import {DynamicOptionsService} from './dynamic-options.service';
-import {FactoryService} from './factory.service';
-import {LangService} from './lang.service';
-import {SearchService} from './search.service';
-import {UrlService} from './url.service';
-import {WFResponseType} from '@app/enums/wfresponse-type.enum';
-import {DialogRef} from '@app/shared/models/dialog-ref';
 import {
   CoordinationWithOrgPopupComponent
 } from '@app/modules/general-services/popups/coordination-with-org-popup/coordination-with-org-popup.component';
-import {InboxService} from './inbox.service';
-import {UntypedFormGroup} from '@angular/forms';
-import {OrganizationOfficer} from '@app/models/organization-officer';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { CoordinationWithOrganizationsRequestSearchCriteria } from './../models/coordination-with-organizations-request-search-criteria';
+import { DialogService } from './dialog.service';
+import { DynamicOptionsService } from './dynamic-options.service';
+import { FactoryService } from './factory.service';
+import { InboxService } from './inbox.service';
+import { LangService } from './lang.service';
+import { SearchService } from './search.service';
+import { UrlService } from './url.service';
 
 @CastResponseContainer({
   $default: {
@@ -113,20 +113,20 @@ export class CoordinationWithOrganizationsRequestService
 
   prepareModelBeforeSave(model: CoordinationWithOrganizationsRequest) {
     if (this.mainModel) {
-      model.organizaionOfficerList =
-        model.organizaionOfficerList.concat(
-          this.mainModel.organizaionOfficerList
+      model.temporaryOrganizaionOfficerList =
+        model.temporaryOrganizaionOfficerList.concat(
+          this.mainModel.temporaryOrganizaionOfficerList
         );
-      model.buildingAbilitiesList =
-        model.buildingAbilitiesList.concat(
-          this.mainModel.buildingAbilitiesList
+      model.temporaryBuildingAbilitiesList =
+        model.temporaryBuildingAbilitiesList.concat(
+          this.mainModel.temporaryBuildingAbilitiesList
         );
-      model.effectiveCoordinationCapabilities =
-        model.effectiveCoordinationCapabilities.concat(
-          this.mainModel.effectiveCoordinationCapabilities
+      model.temporaryEffectiveCoordinationCapabilities =
+        model.temporaryEffectiveCoordinationCapabilities.concat(
+          this.mainModel.temporaryEffectiveCoordinationCapabilities
         );
-      model.researchAndStudies = model.researchAndStudies.concat(
-        this.mainModel.researchAndStudies
+      model.temporaryResearchAndStudies = model.temporaryResearchAndStudies.concat(
+        this.mainModel.temporaryResearchAndStudies
       );
     }
     return model;

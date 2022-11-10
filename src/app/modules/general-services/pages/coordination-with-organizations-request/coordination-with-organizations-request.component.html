@@ -119,7 +119,7 @@
       </participant-organization>
     </ng-template>
     <ng-template #organization_officers>
-      <organizaion-officer #organizationOfficersTap [list]="model?.organizaionOfficerList || []"
+      <organizaion-officer #organizationOfficersTap [list]="organizationOfficersList"
 
         [organizationUsers]="service.orgUsers" (readyEvent)="organizationOfficersTabStatus = $event"
         [canUpdate]="isCharityUser" [isClaimed]="model?.isClaimed()?? true" [currentUserOrgId]="currentUserOrgId">
@@ -130,7 +130,7 @@
 
 
     <ng-template #building_abilities>
-      <building-ability #buildingAbilityTap [list]="model?.buildingAbilitiesList || []"
+      <building-ability #buildingAbilityTap [list]="buildingAbiltiesList "
         [organizationUnits]="organizationUnits" [trainingTypes]="trainingTypes"
         [orgId]="currentUserOrgId"
         [trainingLanguages]="trainingLanguages"
@@ -140,7 +140,7 @@
     </ng-template>
     <ng-template #effective_coordination_capabilities>
       <effective-coordination-capabilities #effectiveCoordinationCapabilitiesTap
-        [list]="model?.effectiveCoordinationCapabilities || []" [organizationWayes]="organizationWayes"
+        [list]="effectiveCoordinationCapabilitiesList" [organizationWayes]="organizationWayes"
         [organizationUnits]="organizationUnits" [readonly]=" isEditAllowed()" [canUpdate]="isCharityUser"
         [orgId]="currentUserOrgId"
         [isClaimed]="model?.isClaimed()?? true" >
@@ -148,7 +148,7 @@
     </ng-template>
 
     <ng-template #research_and_studies>
-      <app-research-and-studies #researchAndStudiesTap [list]="model?.researchAndStudies || []"
+      <app-research-and-studies #researchAndStudiesTap [list]="researchAndStudiesList"
         [readonly]=" isEditAllowed()"
         [orgId]="currentUserOrgId"
         [canUpdate]="isCharityUser"

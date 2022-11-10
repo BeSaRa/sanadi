@@ -405,6 +405,12 @@ export abstract class CaseModel<S extends BaseGenericEService<T>, T extends File
   finalNotification(): DialogRef {
     return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.FINAL_NOTIFICATION, false, this);
   }
+  organizationFinalApprove(externalUserData: { form: UntypedFormGroup, organizationOfficers: OrganizationOfficer[] }): DialogRef {
+    return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.ORGANIZATION_APPROVE, false, this);
+  }
+  organizationFinalReject(): DialogRef {
+    return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.ORGANIZATION_FINAL_REJECT, false, this);
+  }
   isClaimed(): boolean {
     return this.taskDetails && this.taskDetails.isClaimed();
   }

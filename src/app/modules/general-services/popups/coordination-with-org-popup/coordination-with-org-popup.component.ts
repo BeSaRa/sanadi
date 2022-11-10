@@ -36,7 +36,7 @@ export class CoordinationWithOrgPopupComponent implements OnInit {
     @Inject(DIALOG_DATA_TOKEN) public data: {
       service: CoordinationWithOrganizationsRequestService,
       model: CoordinationWithOrganizationsRequest,
-      action: WFResponseType,
+      actionType: WFResponseType,
 
     },
     public lang: LangService,
@@ -50,6 +50,7 @@ export class CoordinationWithOrgPopupComponent implements OnInit {
     this.currentOrganization = this.data.model.participatingOrganizaionList
       .find(x => x.organizationId === employeeService.getOrgUnit()?.id)!;
     this.approvalForm = this.fb.group(this.currentOrganization.buildApprovalForm(true));
+    this.response = this.data.actionType;
 
 
   }
