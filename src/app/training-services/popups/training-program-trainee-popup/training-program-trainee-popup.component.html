@@ -181,8 +181,7 @@
               <ng-select validationClasses="gender"
                          formControlName="gender"
                          id="gender">
-                <ng-option [value]="gender.lookupKey" *ngFor="let gender of genders"
-                           [disabled]="gender.isRetiredCommonStatus()">{{gender.getName()}}</ng-option>
+                <ng-option [value]="gender.lookupKey" *ngFor="let gender of genders">{{gender.getName()}}</ng-option>
               </ng-select>
               <app-field-error-message controlName="gender"></app-field-error-message>
             </div>
@@ -213,8 +212,7 @@
               <ng-select validationClasses="jobType"
                          formControlName="jobType"
                          id="jobType">
-                <ng-option [value]="jobType.lookupKey" *ngFor="let jobType of jobTypes"
-                           [disabled]="jobType.isRetiredCommonStatus()">{{jobType.getName()}}</ng-option>
+                <ng-option [value]="jobType.lookupKey" *ngFor="let jobType of jobTypes">{{jobType.getName()}}</ng-option>
               </ng-select>
               <app-field-error-message controlName="nationality"></app-field-error-message>
             </div>
