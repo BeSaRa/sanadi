@@ -1,6 +1,7 @@
 import { UntypedFormGroup, Validators } from '@angular/forms';
 import { InterceptModel } from '@app/decorators/decorators/intercept-model';
 import { CaseTypes } from '@app/enums/case-types.enum';
+import { WFResponseType } from '@app/enums/wfresponse-type.enum';
 import { dateSearchFields } from '@app/helpers/date-search-fields';
 import { infoSearchFields } from '@app/helpers/info-search-fields';
 import { normalSearchFields } from '@app/helpers/normal-search-fields';
@@ -11,6 +12,7 @@ import { mixinRequestType } from '@app/mixins/mixin-request-type';
 import { OrganizationOfficer } from '@app/models/organization-officer';
 import { CoordinationWithOrganizationsRequestService } from '@app/services/coordination-with-organizations-request.service';
 import { FactoryService } from '@app/services/factory.service';
+import { DialogRef } from '@app/shared/models/dialog-ref';
 import { ISearchFieldsMap } from '@app/types/types';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { IMyDateModel } from 'angular-mydatepicker';
@@ -22,8 +24,6 @@ import { CaseModel } from './case-model';
 import { EffectiveCoordinationCapabilities } from './effective-coordination-capabilities';
 import { ParticipantOrg } from './participant-org';
 import { ResearchAndStudies } from './research-and-studies';
-import { DialogRef } from '@app/shared/models/dialog-ref';
-import { WFResponseType } from '@app/enums/wfresponse-type.enum';
 
 const _RequestType = mixinLicenseDurationType(mixinRequestType(CaseModel));
 const interceptor = new CoordinationWithOrganizationsRequestInterceptor();
@@ -121,6 +121,19 @@ export class CoordinationWithOrganizationsRequest
       this.taskDetails.tkiid,
       this.caseType,
       WFResponseType.ORGANIZATION_APPROVE,
+      false,
+      this,
+      externalUserData
+    );
+  }
+  organizationFinalApprove(externalUserData: {
+    form: UntypedFormGroup;
+    organizationOfficers: OrganizationOfficer[];
+  }): DialogRef {
+    return this.service.organizationApprove(
+      this.taskDetails.tkiid,
+      this.caseType,
+      WFResponseType.ORGANIZATION_FINAL_APPROVE,
       false,
       this,
       externalUserData

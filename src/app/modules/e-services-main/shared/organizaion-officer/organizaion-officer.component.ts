@@ -7,18 +7,20 @@ import {
   ViewChild
 } from "@angular/core";
 import {
-  FormControl,
-  FormGroup
+  FormGroup,
+  UntypedFormControl
 } from "@angular/forms";
+import { ActionIconsEnum } from "@app/enums/action-icons-enum";
 import { UserClickOn } from "@app/enums/user-click-on.enum";
 import { ILanguageKeys } from "@app/interfaces/i-language-keys";
+import { IMenuItem } from "@app/modules/context-menu/interfaces/i-menu-item";
 import { DialogService } from "@app/services/dialog.service";
 import { LangService } from "@app/services/lang.service";
 import { ToastService } from "@app/services/toast.service";
 import { ReadinessStatus } from "@app/types/types";
 import { NgSelectComponent } from "@ng-select/ng-select";
 import { BehaviorSubject, Subject } from "rxjs";
-import { map, take, takeUntil, takeWhile,tap } from "rxjs/operators";
+import { filter, map, take, takeUntil } from "rxjs/operators";
 import { OrganizationOfficer } from "./../../../../models/organization-officer";
 
 @Component({
@@ -34,9 +36,9 @@ export class OrganizaionOfficerComponent implements OnInit {
   ) {}
 
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();
-  filterControl: FormControl = new FormControl("");
+  filterControl: UntypedFormControl = new UntypedFormControl("");
 
-  private readonly: boolean = true;
+  private readonly: boolean = false;
   private save$: Subject<any> = new Subject<any>();
 
   private recordChanged$: Subject<OrganizationOfficer | null> =
@@ -47,7 +49,7 @@ export class OrganizaionOfficerComponent implements OnInit {
   @Input() set list(list: OrganizationOfficer[]) {
     if( this.allowListUpdate === true){
       this._list = list;
-      this.listDataSource.next(this._list);
+      this.dataSource.next(this._list);
     }
   }
   model: OrganizationOfficer = new OrganizationOfficer();
@@ -61,7 +63,7 @@ export class OrganizaionOfficerComponent implements OnInit {
   @Input()isClaimed:boolean=false;
   @Input()currentUserOrgId!:number|undefined;
 
-  listDataSource: BehaviorSubject<OrganizationOfficer[]> = new BehaviorSubject<
+    dataSource: BehaviorSubject<OrganizationOfficer[]> = new BehaviorSubject<
     OrganizationOfficer[]
   >([])
   ;
@@ -74,7 +76,18 @@ export class OrganizaionOfficerComponent implements OnInit {
 
   form!: FormGroup;
   @Input() organizationUsers: OrganizationOfficer[] = [];
+  actions: IMenuItem<OrganizationOfficer>[] = [
 
+    // delete
+    {
+      type: 'action',
+      icon: ActionIconsEnum.DELETE,
+      label: 'btn_delete',
+      onClick: (item: OrganizationOfficer) => this.delete(item),
+      show: (_item: OrganizationOfficer) => !this.readonly
+    },
+
+  ];
   ngOnInit(): void {
 
     this.listenToRecordChange();
@@ -94,7 +107,7 @@ export class OrganizaionOfficerComponent implements OnInit {
   listenToRecordChange() {
     this.recordChanged$.pipe(takeUntil(this.destroy$)).subscribe((record) => {
       this.currentRecord = record || undefined;
-      this.readonly = record === undefined ? false : true;
+      this.readonly = !!record ;
     });
   }
 
@@ -111,6 +124,13 @@ export class OrganizaionOfficerComponent implements OnInit {
       .pipe(
 
         takeUntil(this.destroy$),
+        filter(() => {
+          const isDuplicate = this.list.some((x) => x.identificationNumber === this.currentRecord?.identificationNumber);
+          if (isDuplicate) {
+            this.toastService.alert(this.lang.map.msg_duplicated_item);
+          }
+          return !isDuplicate;
+        }),
         map(() => {
 
           return new OrganizationOfficer().clone({
@@ -133,36 +153,32 @@ export class OrganizaionOfficerComponent implements OnInit {
   private _updateList(
     record: OrganizationOfficer | null,
     operation: "ADD" | "DELETE" | "NONE",
-    gridIndex: number = -1
   ) {
     if (record) {
       if (operation === "ADD") {
          this.list.push(record);
-        this.organizationUsers = this.organizationUsers.filter(
-          (user) => user.identificationNumber !== record.identificationNumber
-        );
+
       } else if (operation === "DELETE") {
-        this.list.splice(gridIndex, 1);
-        this.organizationUsers.push(new OrganizationOfficer().clone(record));
-        this.organizationUsers = this.organizationUsers.slice();
+        let index = !this.currentRecord ? -1 : this.list
+        .findIndex(x => x.identificationNumber === this.currentRecord?.identificationNumber);
+        this.list.splice(index, 1);
+
       }
     }
-
-
-    this.sortOrganizations();
     this.ngSelectComponentRef.handleClearClick();
 
-    this.listDataSource.next(this.list);
+    this.dataSource.next(this.list);
   }
-  delete($event: MouseEvent, record: OrganizationOfficer, index: number): any {
-    $event.preventDefault();
+  delete(record: OrganizationOfficer,$event?: MouseEvent): any {
+    $event?.preventDefault();
 
     this.dialogService
       .confirm(this.lang.map.msg_confirm_delete_selected)
       .onAfterClose$.pipe(take(1))
       .subscribe((click: UserClickOn) => {
         if (click === UserClickOn.YES) {
-          this._updateList(record, "DELETE", index);
+          this.currentRecord = record;
+          this._updateList(record, "DELETE");
           this.toastService.success(this.lang.map.msg_delete_success);
         }
       });

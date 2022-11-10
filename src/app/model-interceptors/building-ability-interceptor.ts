@@ -1,9 +1,9 @@
-import { isValidAdminResult } from '@helpers/utils';
-import { BuildingAbility } from './../models/building-ability';
-import { IModelInterceptor } from "@app/interfaces/i-model-interceptor";
 import { DateUtils } from '@app/helpers/date-utils';
-import { IMyDateModel } from 'angular-mydatepicker';
+import { IModelInterceptor } from "@app/interfaces/i-model-interceptor";
 import { AdminResult } from '@app/models/admin-result';
+import { isValidAdminResult } from '@helpers/utils';
+import { IMyDateModel } from 'angular-mydatepicker';
+import { BuildingAbility } from './../models/building-ability';
 
 export class BuildingAbilityInterceptor implements IModelInterceptor<BuildingAbility> {
   caseInterceptor?: IModelInterceptor<BuildingAbility> | undefined;
@@ -24,6 +24,8 @@ export class BuildingAbilityInterceptor implements IModelInterceptor<BuildingAbi
           model.suggestedActivityDateTo as unknown as IMyDateModel
         )?.toISOString();
 
+        model.timeFrom= model.getISOFromString!(model.timeFrom) ;
+        model.timeTo= model.getISOFromString!(model.timeTo);
         return model;
   }
   receive(model: BuildingAbility): BuildingAbility {
@@ -36,6 +38,10 @@ export class BuildingAbilityInterceptor implements IModelInterceptor<BuildingAbi
     model.suggestedActivityDateTo = DateUtils.changeDateToDatepicker(
       model.suggestedActivityDateTo
     );
+    model.timeFrom= new Date(model.timeFrom).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit',timeZone:'UTC'})
+    model.timeTo= new Date(model.timeTo).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit',timeZone:'UTC'})
     return model;
   }
+
+
 }

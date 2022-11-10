@@ -83,6 +83,8 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
 
     if (this.data.actionType.indexOf(WFResponseType.ASK_FOR_CONSULTATION) === 0) {
       this.label = 'ask_for_consultation_task';
+    } else if(this.data.actionType === WFResponseType.ORGANIZATION_FINAL_REJECT){
+      this.label = 'organization_final_reject'
     } else {
       this.label = ((CommonUtils.changeCamelToSnakeCase(this.data.actionType) + '_task') as unknown as keyof ILanguageKeys);
     }

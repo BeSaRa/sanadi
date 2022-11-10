@@ -36,6 +36,9 @@ import {OpenFrom} from '@app/enums/open-from.enum';
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 import {TabComponent} from '@app/shared/components/tab/tab.component';
 import {AttachmentsComponent} from '@app/shared/components/attachments/attachments.component';
+import { BuildingAbility } from '@app/models/building-ability';
+import { EffectiveCoordinationCapabilities } from '@app/models/effective-coordination-capabilities';
+import { ResearchAndStudies } from '@app/models/research-and-studies';
 
 @Component({
   selector: 'app-coordination-with-organizations-request',
@@ -100,7 +103,8 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
       name: 'organizationOfficersTap',
       langKey: 'organization_officers',
       validStatus: () => {
-        return this.model!.organizaionOfficerList.length > 0;
+        return this.model!.temporaryOrganizaionOfficerList.length > 0;
+
 
       },
     },
@@ -108,21 +112,21 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
       name: 'buildingAbilitiesTap',
       langKey: 'building_abilities',
       validStatus: () => {
-        return this.model!.buildingAbilitiesList.length > 0;
+        return this.model!.temporaryBuildingAbilitiesList.length > 0;
       },
     },
     effectiveCoordinationCapabilities: {
       name: 'effectiveCoordinationCapabilitiesTap',
       langKey: 'effective_coordination_capabilities',
       validStatus: () => {
-        return this.model!.effectiveCoordinationCapabilities.length > 0;
+        return this.model!.temporaryEffectiveCoordinationCapabilities.length > 0;
       },
     },
     researchAndStudies: {
       name: 'researchAndStudiesTap',
       langKey: 'research_and_studies',
       validStatus: () => {
-        return this.model!.researchAndStudies.length > 0;
+        return this.model!.temporaryResearchAndStudies.length > 0;
       },
     },
 
@@ -187,10 +191,10 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
   get paticipatingOrgsCanView(): boolean {
     return (
       this.isInternalUser &&
-      (this.model?.organizaionOfficerList?.length! > 0 ||
-        this.model?.buildingAbilitiesList?.length! > 0 ||
-        this.model?.effectiveCoordinationCapabilities?.length! > 0 ||
-        this.model?.researchAndStudies?.length! > 0)
+      (this.model?.temporaryOrganizaionOfficerList?.length! > 0 ||
+        this.model?.temporaryBuildingAbilitiesList?.length! > 0 ||
+        this.model?.temporaryEffectiveCoordinationCapabilities?.length! > 0 ||
+        this.model?.temporaryResearchAndStudies?.length! > 0)
     );
   }
 
@@ -224,6 +228,7 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
       classDescription: '',
       clone(override: Partial<any> | undefined): any {
       },
+      id: undefined,
       createdBy: '',
       createdByGeneralId: 0,
       createdByOUId: 0,
@@ -249,10 +254,10 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
 
   isApproved(): boolean {
     return (
-      this.model!.organizaionOfficerList?.length > 0 &&
-      (this.model!.buildingAbilitiesList?.length > 0 ||
-        this.model!.effectiveCoordinationCapabilities?.length > 0 ||
-        this.model!.researchAndStudies?.length > 0)
+      this.model!.temporaryOrganizaionOfficerList?.length > 0 &&
+      (this.model!.temporaryBuildingAbilitiesList?.length > 0 ||
+        this.model!.temporaryEffectiveCoordinationCapabilities?.length > 0 ||
+        this.model!.temporaryResearchAndStudies?.length > 0)
     );
   }
 
@@ -374,7 +379,6 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
     if (!model) {
       return;
     }
-
     if (this.currentUserOrgId) {
       this.service.mainModel = this.prepareMainModel(this.currentUserOrgId, model);
       this.model = this.filterModelByOrgId(this.currentUserOrgId, model)!;
@@ -385,12 +389,12 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
 
     this.isInitialApproved = this.model?.isInitialApproved();
     this.model.approved = this.isApproved();
+    this.model.taskDetails.piid = model.taskDetails.piid
   }
 
   _resetForm(): void {
     this.model = this._getNewInstance();
     this.form.reset();
-    this.attachmentsComponentRef.caseId=undefined;
     this.participantOrganizationsComponentRef.list! = [];
     if (this.organizationOfficerssComponentRef) {
       this.organizationOfficerssComponentRef.list = [];
@@ -520,20 +524,19 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
       ? updatedModel
       : new CoordinationWithOrganizationsRequest().clone(this.model);
 
-    model!.organizaionOfficerList! = model!.organizaionOfficerList.filter(
-      (x) => x.organizationId === orgId
-    );
-    model!.buildingAbilitiesList! = model!.buildingAbilitiesList.filter(
-      (x) => x.organizationId === orgId
-    );
-    model!.effectiveCoordinationCapabilities! =
-      model!.effectiveCoordinationCapabilities.filter(
+      model!.temporaryOrganizaionOfficerList! = model!.temporaryOrganizaionOfficerList.filter(
         (x) => x.organizationId === orgId
       );
-    model!.researchAndStudies! = model!.researchAndStudies.filter(
-      (x) => x.organizationId === orgId
-    );
-
+      model!.temporaryBuildingAbilitiesList! = model!.temporaryBuildingAbilitiesList.filter(
+        (x) => x.organizationId === orgId
+      );
+      model!.temporaryEffectiveCoordinationCapabilities! =
+        model!.temporaryEffectiveCoordinationCapabilities.filter(
+          (x) => x.organizationId === orgId
+        );
+      model!.temporaryResearchAndStudies! = model!.temporaryResearchAndStudies.filter(
+        (x) => x.organizationId === orgId
+      );
     return model;
   }
 
@@ -548,19 +551,20 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
       updatedModel
     );
 
-    model!.organizaionOfficerList! = model!.organizaionOfficerList.filter(
+    model!.temporaryOrganizaionOfficerList! = model!.temporaryOrganizaionOfficerList.filter(
       (x) => x.organizationId !== orgId
     );
-    model!.buildingAbilitiesList! = model!.buildingAbilitiesList.filter(
+    model!.temporaryBuildingAbilitiesList! = model!.temporaryBuildingAbilitiesList.filter(
       (x) => x.organizationId !== orgId
     );
-    model!.effectiveCoordinationCapabilities! =
-      model!.effectiveCoordinationCapabilities.filter(
+    model!.temporaryEffectiveCoordinationCapabilities! =
+      model!.temporaryEffectiveCoordinationCapabilities.filter(
         (x) => x.organizationId !== orgId
       );
-    model!.researchAndStudies! = model!.researchAndStudies.filter(
+    model!.temporaryResearchAndStudies! = model!.temporaryResearchAndStudies.filter(
       (x) => x.organizationId !== orgId
     );
+
 
     return model;
   }
@@ -621,5 +625,25 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
       licenseStartDate: this.licenseStartDate,
       licenseEndDate: this.licenseEndDate,
     };
+  }
+  get organizationOfficersList(): OrganizationOfficer[] | [] {
+    if (this.isInternalUser) return this.model?.organizaionOfficerList ?? [];
+    return this.model?.temporaryOrganizaionOfficerList ?? [];
+  }
+
+  get buildingAbiltiesList(): BuildingAbility[] | [] {
+    if (this.isInternalUser) return this.model?.buildingAbilitiesList ?? [];
+    return this.model?.temporaryBuildingAbilitiesList ?? [];
+  }
+  get effectiveCoordinationCapabilitiesList():
+    | EffectiveCoordinationCapabilities[]
+    | [] {
+    if (this.isInternalUser)
+      return this.model?.effectiveCoordinationCapabilities?? [];
+    return this.model?.temporaryEffectiveCoordinationCapabilities?? [];
+  }
+  get researchAndStudiesList(): ResearchAndStudies[] | [] {
+    if (this.isInternalUser) return this.model?.researchAndStudies?? [];
+    return this.model?.temporaryResearchAndStudies?? [];
   }
 }
