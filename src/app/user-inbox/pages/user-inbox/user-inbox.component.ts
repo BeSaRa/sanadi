@@ -151,98 +151,98 @@ export class UserInboxComponent implements OnInit, OnDestroy {
 
   actionSendToUser(item: QueryResult, viewDialogRef?: DialogRef): void {
     item.sendToUser().onAfterClose$.subscribe(actionTaken => {
-      actionTaken ? viewDialogRef?.close() : null;
+      actionTaken ? viewDialogRef && viewDialogRef.close && viewDialogRef?.close()  : null;
       this.reloadInbox$.next(null);
     });
   }
 
   actionSendToStructureExpert(item: QueryResult, viewDialogRef?: DialogRef): void {
     item.sendToStructureExpert().onAfterClose$.subscribe(actionTaken => {
-      actionTaken ? viewDialogRef?.close() : null;
+      actionTaken ? viewDialogRef && viewDialogRef.close && viewDialogRef?.close()  : null;
       this.reloadInbox$.next(null);
     });
   }
 
   actionSendToDevelopmentExpert(item: QueryResult, viewDialogRef?: DialogRef): void {
     item.sendToDevelopmentExpert().onAfterClose$.subscribe(actionTaken => {
-      actionTaken ? viewDialogRef?.close() : null;
+      actionTaken ? viewDialogRef && viewDialogRef.close && viewDialogRef?.close()  : null;
       this.reloadInbox$.next(null);
     });
   }
 
   actionSendToDepartment(item: QueryResult, viewDialogRef?: DialogRef): void {
     item.sendToDepartment().onAfterClose$.subscribe(actionTaken => {
-      actionTaken ? viewDialogRef?.close() : null;
+      actionTaken ? viewDialogRef && viewDialogRef.close && viewDialogRef?.close()  : null;
       this.reloadInbox$.next(null);
     });
   }
 
   actionSendToMultiDepartments(item: QueryResult, viewDialogRef?: DialogRef): void {
     item.sendToMultiDepartments().onAfterClose$.subscribe(actionTaken => {
-      actionTaken ? viewDialogRef?.close() : null;
+      actionTaken ? viewDialogRef && viewDialogRef.close && viewDialogRef?.close()  : null;
       this.reloadInbox$.next(null);
     });
   }
 
   actionSendToSingleDepartment(item: QueryResult, viewDialogRef?: DialogRef): void {
     item.sendToSingleDepartment().subscribe((_) => {
-      viewDialogRef?.close();
+      viewDialogRef && viewDialogRef.close && viewDialogRef?.close() ;
       this.reloadInbox$.next(null);
     });
   }
 
   actionComplete(item: QueryResult, viewDialogRef?: DialogRef): void {
     item.complete().onAfterClose$.subscribe(actionTaken => {
-      actionTaken ? viewDialogRef?.close() : null;
+      actionTaken ? viewDialogRef && viewDialogRef.close && viewDialogRef?.close()  : null;
       this.reloadInbox$.next(null);
     });
   }
 
   actionApprove(item: QueryResult, viewDialogRef?: DialogRef): void {
     item.approve().onAfterClose$.subscribe(actionTaken => {
-      actionTaken ? viewDialogRef?.close() : null;
+      actionTaken ? viewDialogRef && viewDialogRef.close && viewDialogRef?.close()  : null;
       this.reloadInbox$.next(null);
     });
   }
 
   actionFinalApprove(item: QueryResult, viewDialogRef?: DialogRef): void {
     item.finalApprove().onAfterClose$.subscribe(actionTaken => {
-      actionTaken ? viewDialogRef?.close() : null;
+      actionTaken ? viewDialogRef && viewDialogRef.close && viewDialogRef?.close()  : null;
       this.reloadInbox$.next(null);
     });
   }
 
   actionAskForConsultation(item: QueryResult, viewDialogRef?: DialogRef): void {
     item.askForConsultation().onAfterClose$.subscribe(actionTaken => {
-      actionTaken ? viewDialogRef?.close() : null;
+      actionTaken ? viewDialogRef && viewDialogRef.close && viewDialogRef?.close()  : null;
       this.reloadInbox$.next(null);
     });
   }
 
   actionPostpone(item: QueryResult, viewDialogRef?: DialogRef): void {
     item.postpone().onAfterClose$.subscribe(actionTaken => {
-      actionTaken ? viewDialogRef?.close() : null;
+      actionTaken ? viewDialogRef && viewDialogRef.close && viewDialogRef?.close()  : null;
       this.reloadInbox$.next(null);
     });
   }
 
   actionClose(item: QueryResult, viewDialogRef?: DialogRef): void {
     item.close().onAfterClose$.subscribe(actionTaken => {
-      actionTaken ? viewDialogRef?.close() : null;
+      actionTaken ? viewDialogRef && viewDialogRef.close && viewDialogRef?.close()  : null;
       this.reloadInbox$.next(null);
     });
   }
 
   actionReject(item: QueryResult, viewDialogRef?: DialogRef): void {
     item.reject().onAfterClose$.subscribe(actionTaken => {
-      actionTaken ? viewDialogRef?.close() : null;
+      actionTaken ? viewDialogRef && viewDialogRef.close && viewDialogRef?.close()  : null;
       this.reloadInbox$.next(null);
     });
   }
 
   actionReturn(item: QueryResult, viewDialogRef?: DialogRef): void {
     item.return().onAfterClose$.subscribe(actionTaken => {
-      actionTaken ? viewDialogRef?.close() : null;
+      actionTaken ? viewDialogRef && viewDialogRef.close && viewDialogRef?.close()  : null;
       this.reloadInbox$.next(null);
     });
   }
@@ -264,7 +264,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
           return;
         }
         this.toast.success(this.lang.map.task_have_been_released_successfully);
-        viewDialogRef?.close();
+        viewDialogRef && viewDialogRef.close && viewDialogRef?.close() ;
       });
   }
 
@@ -277,7 +277,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
           return;
         }
         this.toast.success(this.lang.map.msg_mark_as_read_success);
-        viewDialogRef?.close();
+        viewDialogRef && viewDialogRef.close && viewDialogRef?.close() ;
       });
   }
 
@@ -290,20 +290,20 @@ export class UserInboxComponent implements OnInit, OnDestroy {
           return;
         }
         this.toast.success(this.lang.map.msg_mark_as_unread_success);
-        viewDialogRef?.close();
+        viewDialogRef && viewDialogRef.close && viewDialogRef?.close() ;
       });
   }
 
   actionSendToManager(item: QueryResult, viewDialogRef?: DialogRef) {
     item.sendToManager().onAfterClose$.subscribe((actionTaken) => {
-      actionTaken ? viewDialogRef?.close() : null;
+      actionTaken ? viewDialogRef && viewDialogRef.close && viewDialogRef?.close()  : null;
       this.reloadInbox$.next(null);
     });
   }
 
   actionSendToGeneralManager(item: QueryResult, viewDialogRef?: DialogRef) {
     item.sendToGeneralManager().onAfterClose$.subscribe((actionTaken) => {
-      actionTaken ? viewDialogRef?.close() : null;
+      actionTaken ? viewDialogRef && viewDialogRef.close && viewDialogRef?.close()  : null;
       this.reloadInbox$.next(null);
     });
   }

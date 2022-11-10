@@ -1,4 +1,5 @@
-import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
+import { Observable } from "rxjs";
 
 export interface IMenuItem<T> {
   askChecklist?: boolean;
@@ -17,5 +18,7 @@ export interface IMenuItem<T> {
   children?: IMenuItem<T>[];
   displayInGrid?: ((model: T) => boolean) | boolean,
   translatedLabel?: string;
-  disabled?: ((model: T) => boolean) | boolean
+  disabled?: ((model: T) => boolean) | boolean,
+  runBefore?: (model: T) => void,
+  runBeforeShouldSuccess?: (model: T) => boolean | Observable<boolean>
 }
