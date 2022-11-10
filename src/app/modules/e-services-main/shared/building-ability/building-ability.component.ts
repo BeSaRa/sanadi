@@ -94,6 +94,8 @@ export class BuildingAbilityComponent implements OnInit {
   get formArray(): FormArray {
     return this.form.get(this.formArrayName) as FormArray;
   }
+  filterControl: UntypedFormControl = new UntypedFormControl('');
+  showForm: boolean = false;
 
   ngOnInit(): void {
     this.buildForm();
@@ -125,6 +127,7 @@ export class BuildingAbilityComponent implements OnInit {
     this.recordChanged$.pipe(takeUntil(this.destroy$)).subscribe((record) => {
       if (record && this.orgId) record.organizationId = this.orgId;
       this.currentRecord = record || undefined;
+      this.showForm = !!this.currentRecord;
       this.updateForm(this.currentRecord);
     });
   }
@@ -232,6 +235,7 @@ export class BuildingAbilityComponent implements OnInit {
   }
   onCancel() {
     this.resetForm();
+    this.showForm = false;
     this.editIndex = -1;
   }
   private resetForm() {
@@ -358,200 +362,213 @@ export class BuildingAbilityComponent implements OnInit {
     });
   }
 
-  date = new Date();
+  getISOFromString(str:string |undefined){
+    const arr=str?.split(/:| /).filter(x=>x !== '').map(x=>x[0] === '0'? x.substring(1): x);
+    const addition=arr? arr[2] === 'AM' ? 0 :12  : 0;
+    const h=arr? Number(arr[0]) + addition :0;
+    const m =arr? Number(arr[1]):0;
+
+    console.log(arr);
+
+    console.log(addition);
+    console.log(h);
+    console.log(m);
+
+    return new Date(new Date().setUTCHours(h,m)).toISOString();
+  }
 
   times = [
     {
-      text: '00 : 00 AM',
-      value: new Date(this.date.setHours(0, 0)).toISOString(),
+      text: '12 : 00 AM',
+      value: '00 : 00 AM',
     },
     {
-      text: '00 : 30 AM',
-      value: new Date(this.date.setHours(0, 30)).toISOString(),
+      text: '12 : 30 AM',
+      value: '00 : 30 AM',
     },
     {
       text: '01 : 00 AM',
-      value: new Date(this.date.setHours(1, 0)).toISOString(),
+      value: '01 : 00 AM',
     },
     {
       text: '01 : 30 AM',
-      value: new Date(this.date.setHours(1, 30)).toISOString(),
+      value: '01 : 30 AM',
     },
     {
       text: '02 : 00 AM',
-      value: new Date(this.date.setHours(2, 0)).toISOString(),
+      value: '02 : 00 AM',
     },
     {
       text: '02 : 30 AM',
-      value: new Date(this.date.setHours(2, 30)).toISOString(),
+      value: '02 : 30 AM',
     },
     {
       text: '03 : 00 AM',
-      value: new Date(this.date.setHours(3, 0)).toISOString(),
+      value: '03 : 00 AM',
     },
     {
       text: '03 : 30 AM',
-      value: new Date(this.date.setHours(3, 30)).toISOString(),
+      value: '03 : 30 AM',
     },
     {
       text: '04 : 00 AM',
-      value: new Date(this.date.setHours(4, 0)).toISOString(),
+      value: '04 : 00 AM',
     },
     {
       text: '04 : 30 AM',
-      value: new Date(this.date.setHours(4, 30)).toISOString(),
+      value: '04 : 30 AM',
     },
     {
       text: '05 : 00 AM',
-      value: new Date(this.date.setHours(5, 0)).toISOString(),
+      value: '05 : 00 AM',
     },
     {
       text: '05 : 30 AM',
-      value: new Date(this.date.setHours(5, 30)).toISOString(),
+      value: '05 : 30 AM',
     },
     {
       text: '06 : 00 AM',
-      value: new Date(this.date.setHours(6, 0)).toISOString(),
+      value: '06 : 00 AM',
     },
     {
       text: '06 : 30 AM',
-      value: new Date(this.date.setHours(6, 30)).toISOString(),
+      value: '06 : 30 AM',
     },
     {
       text: '07 : 00 AM',
-      value: new Date(this.date.setHours(7, 0)).toISOString(),
+      value: '07 : 00 AM',
     },
     {
       text: '07 : 30 AM',
-      value: new Date(this.date.setHours(7, 30)).toISOString(),
+      value: '07 : 30 AM',
     },
     {
       text: '08 : 00 AM',
-      value: new Date(this.date.setHours(8, 0)).toISOString(),
+      value: '08 : 00 AM',
     },
     {
       text: '08 : 30 AM',
-      value: new Date(this.date.setHours(8, 30)).toISOString(),
+      value: '08 : 30 AM',
     },
     {
       text: '09 : 00 AM',
-      value: new Date(this.date.setHours(9, 0)).toISOString(),
+      value: '09 : 00 AM',
     },
     {
       text: '09 : 30 AM',
-      value: new Date(this.date.setHours(9, 30)).toISOString(),
+      value: '09 : 30 AM',
     },
     {
       text: '10 : 00 AM',
-      value: new Date(this.date.setHours(10, 0)).toISOString(),
+      value: '10 : 00 AM',
     },
     {
       text: '10 : 30 AM',
-      value: new Date(this.date.setHours(10, 30)).toISOString(),
+      value: '10 : 30 AM',
     },
     {
       text: '11 : 00 AM',
-      value: new Date(this.date.setHours(11, 0)).toISOString(),
+      value: '11 : 00 AM',
     },
     {
       text: '11 : 30 AM',
-      value: new Date(this.date.setHours(11, 30)).toISOString(),
+      value: '11 : 30 AM',
     },
     {
       text: '12 : 00 PM',
-      value: new Date(this.date.setHours(12, 0)).toISOString(),
+      value: '12 : 00 PM',
     },
     {
       text: '12 : 30 PM',
-      value: new Date(this.date.setHours(12, 30)).toISOString(),
+      value: '12 : 30 PM',
     },
     {
       text: '01 : 00 PM',
-      value: new Date(this.date.setHours(1, 0)).toISOString(),
+      value: '01 : 00 PM',
     },
     {
       text: '01 : 30 PM',
-      value: new Date(this.date.setHours(1, 30)).toISOString(),
+      value: '01 : 30 PM',
     },
     {
       text: '02 : 00 PM',
-      value: new Date(this.date.setHours(2, 0)).toISOString(),
+      value: '02 : 00 PM',
     },
     {
       text: '02 : 30 PM',
-      value: new Date(this.date.setHours(2, 30)).toISOString(),
+      value: '02 : 30 PM',
     },
     {
       text: '03 : 00 PM',
-      value: new Date(this.date.setHours(3, 0)).toISOString(),
+      value: '03 : 00 PM',
     },
     {
       text: '03 : 30 PM',
-      value: new Date(this.date.setHours(3, 30)).toISOString(),
+      value: '03 : 30 PM',
     },
     {
       text: '04 : 00 PM',
-      value: new Date(this.date.setHours(4, 0)).toISOString(),
+      value: '04 : 00 PM',
     },
     {
       text: '04 : 30 PM',
-      value: new Date(this.date.setHours(4, 30)).toISOString(),
+      value: '04 : 30 PM',
     },
     {
       text: '05 : 00 PM',
-      value: new Date(this.date.setHours(5, 0)).toISOString(),
+      value: '05 : 00 PM',
     },
     {
       text: '05 : 30 PM',
-      value: new Date(this.date.setHours(5, 30)).toISOString(),
+      value: '05 : 30 PM',
     },
     {
       text: '06 : 00 PM',
-      value: new Date(this.date.setHours(6, 0)).toISOString(),
+      value: '06 : 00 PM',
     },
     {
       text: '06 : 30 PM',
-      value: new Date(this.date.setHours(6, 30)).toISOString(),
+      value: '06 : 30 PM',
     },
     {
       text: '07 : 00 PM',
-      value: new Date(this.date.setHours(7, 0)).toISOString(),
+      value: '07 : 00 PM',
     },
     {
       text: '07 : 30 PM',
-      value: new Date(this.date.setHours(7, 30)).toISOString(),
+      value: '07 : 30 PM',
     },
     {
       text: '08 : 00 PM',
-      value: new Date(this.date.setHours(8, 0)).toISOString(),
+      value: '08 : 00 PM',
     },
     {
       text: '08 : 30 PM',
-      value: new Date(this.date.setHours(8, 30)).toISOString(),
+      value: '08 : 30 PM',
     },
     {
       text: '09 : 00 PM',
-      value: new Date(this.date.setHours(9, 0)).toISOString(),
+      value: '09 : 00 PM',
     },
     {
       text: '09 : 30 PM',
-      value: new Date(this.date.setHours(9, 30)).toISOString(),
+      value: '09 : 30 PM',
     },
     {
       text: '10 : 00 PM',
-      value: new Date(this.date.setHours(10, 0)).toISOString(),
+      value: '10 : 00 PM',
     },
     {
       text: '10 : 30 PM',
-      value: new Date(this.date.setHours(10, 30)).toISOString(),
+      value: '10 : 30 PM',
     },
     {
       text: '11 : 00 PM',
-      value: new Date(this.date.setHours(11, 0)).toISOString(),
+      value: '11 : 00 PM',
     },
     {
       text: '11 : 30 PM',
-      value: new Date(this.date.setHours(11, 30)).toISOString(),
+      value: '11 : 30 PM',
     },
   ];
 }

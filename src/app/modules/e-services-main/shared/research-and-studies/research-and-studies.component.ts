@@ -80,6 +80,8 @@ export class ResearchAndStudiesComponent implements OnInit {
   get formArray(): FormArray {
     return this.form.get(this.formArrayName) as FormArray;
   }
+  filterControl: UntypedFormControl = new UntypedFormControl('');
+  showForm: boolean = false;
   ngOnInit(): void {
     this.buildForm();
     this.listenToAdd();
@@ -108,6 +110,7 @@ export class ResearchAndStudiesComponent implements OnInit {
     this.recordChanged$.pipe(takeUntil(this.destroy$)).subscribe((record) => {
       if(record && this.orgId)record.organizationId=this.orgId;
       this.currentRecord = record || undefined;
+      this.showForm = !!this.currentRecord;
       this.updateForm(this.currentRecord);
     });
   }
@@ -190,7 +193,7 @@ export class ResearchAndStudiesComponent implements OnInit {
     this.listDataSource.next(this.list);
   }
   addAllowed(): boolean {
-    return !this.readonly && !this.formOpend;
+    return !this.readonly && !this.showForm;
   }
   onSave() {
     if (this.readonly || this.viewOnly) {
@@ -200,6 +203,7 @@ export class ResearchAndStudiesComponent implements OnInit {
   }
   onCancel() {
     this.resetForm();
+    this.showForm=false;
     this.editIndex = -1;
   }
   private resetForm() {

@@ -1,6 +1,5 @@
-import { BuildingAbilityInterceptor } from './../model-interceptors/building-ability-interceptor';
 import { Validators } from '@angular/forms';
-import { dateSearchFields } from '@app/helpers/date-search-fields';
+import { InterceptModel } from '@app/decorators/decorators/intercept-model';
 import { infoSearchFields } from '@app/helpers/info-search-fields';
 import { normalSearchFields } from '@app/helpers/normal-search-fields';
 import { AdminResult } from '@app/models/admin-result';
@@ -8,9 +7,9 @@ import { EmployeeService } from '@app/services/employee.service';
 import { FactoryService } from '@app/services/factory.service';
 import { ISearchFieldsMap } from '@app/types/types';
 import { CustomValidators } from '@app/validators/custom-validators';
-import { SearchableCloneable } from './searchable-cloneable';
-import { InterceptModel } from '@app/decorators/decorators/intercept-model';
 import { IMyDateModel } from 'angular-mydatepicker';
+import { BuildingAbilityInterceptor } from './../model-interceptors/building-ability-interceptor';
+import { SearchableCloneable } from './searchable-cloneable';
 
 const { send, receive } = new BuildingAbilityInterceptor();
 
@@ -49,10 +48,6 @@ export class BuildingAbility extends SearchableCloneable<BuildingAbility> {
 
   employeeService: EmployeeService;
   searchFields: ISearchFieldsMap<BuildingAbility> = {
-    ...dateSearchFields([
-      'suggestedActivityDateFrom',
-      'suggestedActivityDateTo',
-    ]),
     ...infoSearchFields([
       'trainingActivityTypeInfo',
       'trainingLanguageInfo',
@@ -63,14 +58,7 @@ export class BuildingAbility extends SearchableCloneable<BuildingAbility> {
       'activityGoal',
       'trainingActivityMainAxes',
       'targetGroupNature',
-      'timeFrom',
-      'timeTo',
-      'platform',
-      'buildingsName',
-      'floorNo',
-      'hallName',
-      'streetName',
-      'email',
+      'participantsMaximumNumber',
     ]),
   };
   finalizeSearchFields(): void {
@@ -269,12 +257,15 @@ export class BuildingAbility extends SearchableCloneable<BuildingAbility> {
       'trainingLanguage',
       'targetGroupNature',
       'participantsMaximumNumber',
-      'suggestedActivityDateFrom',
-      'suggestedActivityDateTo',
-      'timeFrom',
-      'timeTo',
       'trainingWay',
       'actions',
     ];
+  }
+  getISOFromString(str:string |undefined){
+    const arr=str?.split(/:| /).filter(x=>x !== '').map(x=>x[0] === '0'? x.substring(1): x);
+    const addition=arr? arr[2] === 'AM' ? 0 :12  : 0;
+    const h=arr? Number(arr[0]) + addition :0;
+    const m =arr? Number(arr[1]):0;
+    return new Date(new Date().setUTCHours(h,m)).toISOString();
   }
 }

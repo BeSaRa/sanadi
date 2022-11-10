@@ -730,6 +730,32 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.organizationApproveAction(item);
         }
       },
+       // organiztion final approve
+       {
+        type: 'action',
+        icon: 'mdi-check-bold',
+        label: 'organization_final_approve',
+        askChecklist: true,
+        show: (item: CaseModel<any, any>) => {
+          return item.getResponses().includes(WFResponseType.ORGANIZATION_FINAL_APPROVE);
+        },
+        onClick: (item: CaseModel<any, any>) => {
+          this.organizationFinalApproveAction(item);
+        }
+      },
+       // organiztion final reject
+       {
+        type: 'action',
+        icon: 'mdi-undo-variant',
+        label: 'organization_final_reject',
+        askChecklist: true,
+        show: (item: CaseModel<any, any>) => {
+          return item.getResponses().includes(WFResponseType.ORGANIZATION_FINAL_REJECT);
+        },
+        onClick: (item: CaseModel<any, any>) => {
+          this.organizationFinalRejectAction(item);
+        }
+      },
       // validate approve
       {
         type: 'action',
@@ -1259,7 +1285,19 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       actionTaken && this.navigateToSamePageThatUserCameFrom();
     });
   }
-
+  private organizationFinalApproveAction(item: CaseModel<any, any>) {
+    item.organizationFinalApprove({
+      form: this.component.form,
+      organizationOfficers: (this.component as any).selectedOrganizationOfficers
+    }).onAfterClose$.subscribe(actionTaken => {
+      actionTaken && this.navigateToSamePageThatUserCameFrom();
+    });
+  }
+  private organizationFinalRejectAction(item: CaseModel<any, any>) {
+    item.organizationFinalReject().onAfterClose$.subscribe(actionTaken => {
+      actionTaken && this.navigateToSamePageThatUserCameFrom();
+    });
+  }
   private markAsUnreadAction(item: CaseModel<any, any>) {
     item.markAsUnread().subscribe(() => {
       this.toast.success(this.lang.map.msg_mark_as_unread_success);
