@@ -1,25 +1,38 @@
-import {Directive, EventEmitter, Input, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
-import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {SaveTypes} from '@app/enums/save-types';
-import {IESComponent} from '@app/interfaces/iescomponent';
-import {BehaviorSubject, isObservable, Observable, of, Subject} from 'rxjs';
-import {catchError, delay, exhaustMap, filter, map, skip, startWith, switchMap, takeUntil, tap, withLatestFrom} from 'rxjs/operators';
-import {ICaseModel} from '@app/interfaces/icase-model';
-import {LangService} from '@app/services/lang.service';
-import {CaseModel} from '@app/models/case-model';
-import {OpenFrom} from '@app/enums/open-from.enum';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {CaseTypes} from '@app/enums/case-types.enum';
-import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
-import {BaseGenericEService} from '@app/generics/base-generic-e-service';
-import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {FactoryService} from '@services/factory.service';
-import {AttachmentTypeService} from '@services/attachment-type.service';
-import {HasAttachmentHandlerDirective} from '@app/shared/directives/has-attachment-handler.directive';
-import {AttachmentHandlerDirective} from '@app/shared/directives/attachment-handler.directive';
+import { Directive, EventEmitter, Input, OnDestroy, OnInit } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { SaveTypes } from '@app/enums/save-types';
+import { IESComponent } from '@app/interfaces/iescomponent';
+import { BehaviorSubject, isObservable, Observable, of, Subject } from 'rxjs';
+import {
+  catchError,
+  delay,
+  exhaustMap,
+  filter,
+  map,
+  skip,
+  startWith,
+  switchMap,
+  take,
+  takeUntil,
+  tap,
+  withLatestFrom
+} from 'rxjs/operators';
+import { ICaseModel } from '@app/interfaces/icase-model';
+import { LangService } from '@app/services/lang.service';
+import { CaseModel } from '@app/models/case-model';
+import { OpenFrom } from '@app/enums/open-from.enum';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { CaseTypes } from '@app/enums/case-types.enum';
+import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
+import { BaseGenericEService } from '@app/generics/base-generic-e-service';
+import { FileIconsEnum } from '@app/enums/file-extension-mime-types-icons.enum';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { FactoryService } from '@services/factory.service';
+import { AttachmentTypeService } from '@services/attachment-type.service';
+import { HasAttachmentHandlerDirective } from '@app/shared/directives/has-attachment-handler.directive';
+import { AttachmentHandlerDirective } from '@app/shared/directives/attachment-handler.directive';
 
 @Directive()
 export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S extends BaseGenericEService<M>> implements OnInit, OnDestroy, IESComponent<M> {
@@ -30,6 +43,7 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
   _saveTypes: typeof SaveTypes = SaveTypes;
   save: Subject<SaveTypes> = new Subject<SaveTypes>();
   launch$: Subject<null> = new Subject<null>();
+  private afterLaunch$: Subject<boolean> = new Subject<boolean>()
   resetForm$: Subject<boolean> = new Subject<boolean>();
   fromDialog: boolean = false;
   openFrom: OpenFrom = OpenFrom.ADD_SCREEN;
@@ -97,7 +111,7 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
   _saveModel(model: M, saveType: SaveTypes): Observable<{ saveType: SaveTypes, model: M }> {
     const modelInstance = model as unknown as CaseModel<any, any>;
     const type = (!modelInstance.canSave() && saveType === SaveTypes.FINAL) ? SaveTypes.COMMIT : saveType;
-    return model[this.saveMethods[type]]().pipe(map(m => ({saveType: type, model: m})));
+    return model[this.saveMethods[type]]().pipe(map(m => ({ saveType: type, model: m })));
   }
 
   _listenToSave(): void {
@@ -122,7 +136,7 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
           return this._saveModel(model, saveType).pipe(catchError(error => {
             // handle the errors came from backend
             this._saveFail(error);
-            return of({saveType: saveType, model: null});
+            return of({ saveType: saveType, model: null });
           }));
         }),
         // allow only success save
@@ -189,6 +203,7 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
       )
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
+        this.afterLaunch$.next(true);
         (this.model as unknown as CaseModel<any, any>).caseStatus = CommonCaseStatus.UNDER_PROCESSING;
         this._afterLaunch();
         this.onModelChange$.emit(this._getNewInstance());
@@ -213,7 +228,7 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
         } else if (element instanceof HTMLElement) {
           ele = element;
         }
-        ele?.scrollTo({top: 0, behavior: 'smooth'});
+        ele?.scrollTo({ top: 0, behavior: 'smooth' });
       });
   }
 
@@ -252,8 +267,15 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
     return [this.form];
   }
 
-  launch(): void {
-    this.launch$.next(null);
+  launch(): Observable<boolean> {
+    return (() => {
+      return this.afterLaunch$
+        .pipe(takeUntil(this.destroy$))
+        .pipe(take(1))
+        .pipe(startWith(false))
+        .pipe(tap(value => !value && this.launch$.next(null)))
+        .pipe(filter((value) => value))
+    })();
   }
 
   displayMissingRequiredAttachmentsDialog() {
@@ -278,39 +300,23 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
     );
   }
 
-  launchNew(): Observable<any> {
+  checkIfHasMissingRequiredAttachments(): Observable<boolean> {
     let service = FactoryService.getService<AttachmentTypeService>('AttachmentTypeService');
     return of(service.attachmentsComponent)
       .pipe(
         takeUntil(this.destroy$),
-        switchMap(_ => {
-          const result = this._beforeLaunch();
-          return isObservable(result) ? result : of(result);
-        }),
-        // check missing required attachments in attachments component
         switchMap(_ => {
           if (!service.attachmentsComponent) {
             return of(true);
           }
           return this.hasMissingRequiredAttachments();
         }),
-        filter((isMissingRequiredAttachments) => {
+        map((isMissingRequiredAttachments) => {
           if (isMissingRequiredAttachments) {
             this.displayMissingRequiredAttachmentsDialog();
-            return false;
           }
-          return true;
-        }),
-        exhaustMap(_ => {
-          const model = this.model as unknown as CaseModel<any, any>;
-          return model.start().pipe(catchError(error => {
-            this._launchFail(error);
-            return of(false);
-          }));
-        }),
-        filter<boolean | null, boolean>((value): value is boolean => {
-          return !!value;
-        }),
+          return !isMissingRequiredAttachments
+        })
       );
   }
 

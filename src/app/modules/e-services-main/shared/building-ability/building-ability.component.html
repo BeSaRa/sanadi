@@ -256,90 +256,93 @@
     </ng-container>
   </div>
 </div>
-<app-page-header [hidden]="!canUpdate || !isClaimed" pageTitle="building_abilities" [clickOnNew$]="add$"
-  [addPermission]="addAllowed() "
 
-  ></app-page-header>
 
-<table  class="table mt-3 table-striped table-bordered caption-top" cdk-table
-  [dataSource]="listDataSource">
-  <ng-container cdkColumnDef="activityName">
-    <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.activity_name}}</th>
-    <td cdk-cell *cdkCellDef="let row"> {{row.activityName}} </td>
-  </ng-container>
-  <ng-container cdkColumnDef="trainingActivityType">
-    <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.training_activity_type}}</th>
-    <td cdk-cell *cdkCellDef="let row"> {{row.trainingActivityTypeInfo?.getName()}} </td>
-  </ng-container>
-  <ng-container cdkColumnDef="activityGoal">
-    <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.activity_goal}}</th>
-    <td cdk-cell *cdkCellDef="let row"> {{row.activityGoal}} </td>
-  </ng-container>
-  <ng-container cdkColumnDef="trainingActivityMainAxes">
-    <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_training_activit_main_axes}}</th>
-    <td cdk-cell *cdkCellDef="let row"> {{row.trainingActivityMainAxes}} </td>
-  </ng-container>
-  <ng-container cdkColumnDef="trainingLanguage">
-    <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.training_language}}</th>
-    <td cdk-cell *cdkCellDef="let row"> {{row.trainingLanguageInfo?.getName()}} </td>
-  </ng-container>
-  <ng-container cdkColumnDef="targetGroupNature">
-    <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_target_group_nature}}</th>
-    <td cdk-cell *cdkCellDef="let row"> {{row.targetGroupNature}} </td>
-  </ng-container>
-  <ng-container cdkColumnDef="participantsMaximumNumber">
-    <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_participants_maximum_number}}</th>
-    <td cdk-cell *cdkCellDef="let row"> {{row.participantsMaximumNumber}} </td>
-  </ng-container>
-  <ng-container cdkColumnDef="suggestedActivityDateFrom">
-    <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_suggested_activity_date_from}}</th>
-    <td cdk-cell *cdkCellDef="let row"> {{row.suggestedActivityDateFrom|date}} </td>
-  </ng-container>
-  <ng-container cdkColumnDef="suggestedActivityDateTo">
-    <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_suggested_activity_date_to}}</th>
-    <td cdk-cell *cdkCellDef="let row"> {{row.suggestedActivityDateTo|date}} </td>
-  </ng-container>
-  <ng-container cdkColumnDef="timeFrom">
-    <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_time_from}}</th>
-    <td cdk-cell *cdkCellDef="let row"> {{row.timeFrom | date:'hh:mm' }} </td>
-  </ng-container>
-  <ng-container cdkColumnDef="timeTo">
-    <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_time_to}}</th>
-    <td cdk-cell *cdkCellDef="let row"> {{row.timeTo | date:'hh:mm' }} </td>
-  </ng-container>
-  <ng-container cdkColumnDef="trainingWay">
-    <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_training_way}}</th>
-    <td cdk-cell *cdkCellDef="let row"> {{row.trainingWayInfo?.getName()}} </td>
-  </ng-container>
+<ng-container>
+  <div class="row" [hidden]="showForm" >
+    <div class="col-md-6" >
+      <app-page-header [hidden]="!canUpdate || !isClaimed" pageTitle="building_abilities" [clickOnNew$]="add$"
+      [addPermission]="addAllowed() "
+      ></app-page-header>
+    </div>
+
+    <app-grid-search class="search-grid" (searchTextEvent)="filterControl.setValue($event)"></app-grid-search>
+  </div>
+  <div class="row pt-3" *ngIf="!showForm">
+    <div class="col-12">
+      <div class="table-responsive">
+        <app-table #table sortableTable [paginator]="paginator" [data]="listDataSource" [columns]="columns"
+          [filter]="filterControl.value" [useSearchToFilter]="true">
+          <table  class="table mt-3 table-striped table-bordered caption-top" cdk-table
+          [dataSource]="table.dataSource">
+          <ng-container cdkColumnDef="activityName">
+            <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.activity_name}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.activityName}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="trainingActivityType">
+            <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.training_activity_type}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.trainingActivityTypeInfo?.getName()}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="activityGoal">
+            <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.activity_goal}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.activityGoal}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="trainingActivityMainAxes">
+            <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_training_activit_main_axes}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.trainingActivityMainAxes}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="trainingLanguage">
+            <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.training_language}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.trainingLanguageInfo?.getName()}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="targetGroupNature">
+            <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_target_group_nature}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.targetGroupNature}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="participantsMaximumNumber">
+            <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_participants_maximum_number}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.participantsMaximumNumber}} </td>
+          </ng-container>
+
+          <ng-container cdkColumnDef="trainingWay">
+            <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_training_way}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.trainingWayInfo?.getName()}} </td>
+          </ng-container>
 
 
 
-  <ng-container cdkColumnDef="actions">
-    <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
-    <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
-      <div class="d-flex flex-row">
-        <button (click)="delete($event, row, i)" class="icon-btn text-primary" [disabled]="readonly"
-        [hidden]="!canUpdate"
-          [disabled]="!isClaimed || formOpend" tooltip="{{lang.map.btn_delete}}">
-          <i class="mdi mdi-close-box"></i>
-        </button>
-        <button (click)="edit($event, row, i)" class="icon-btn text-primary" [disabled]="readonly"
-        [hidden]="!canUpdate"
-          [disabled]="!isClaimed || formOpend" tooltip="{{lang.map.btn_edit}}">
-          <i class="mdi mdi-pen"></i>
-        </button>
-        <button (click)="view($event, row, i)"
-        [disabled]="formOpend"
-         class="icon-btn text-primary"
-          tooltip="{{lang.map.view}}">
-          <i class="mdi mdi-eye"></i>
-        </button>
+          <ng-container cdkColumnDef="actions">
+            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
+            <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
+              <div class="d-flex flex-row">
+                <button (click)="delete($event, row, i)" class="icon-btn text-primary" [disabled]="readonly"
+                [hidden]="!canUpdate"
+                  [disabled]="!isClaimed || formOpend" tooltip="{{lang.map.btn_delete}}">
+                  <i class="mdi mdi-close-box"></i>
+                </button>
+                <button (click)="edit($event, row, i)" class="icon-btn text-primary" [disabled]="readonly"
+                [hidden]="!canUpdate"
+                  [disabled]="!isClaimed || formOpend" tooltip="{{lang.map.btn_edit}}">
+                  <i class="mdi mdi-pen"></i>
+                </button>
+                <button (click)="view($event, row, i)"
+                [disabled]="formOpend"
+                 class="icon-btn text-primary"
+                  tooltip="{{lang.map.view}}">
+                  <i class="mdi mdi-eye"></i>
+                </button>
+              </div>
+            </td>
+          </ng-container>
+          <tr cdk-header-row *cdkHeaderRowDef="columns"></tr>
+          <tr cdk-row *cdkRowDef="let row; columns: columns;"></tr>
+          <tr *cdkNoDataRow>
+            <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
+          </tr>
+        </table>
+          <app-paginator #paginator></app-paginator>
+        </app-table>
       </div>
-    </td>
-  </ng-container>
-  <tr cdk-header-row *cdkHeaderRowDef="columns"></tr>
-  <tr cdk-row *cdkRowDef="let row; columns: columns;"></tr>
-  <tr *cdkNoDataRow>
-    <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
-  </tr>
-</table>
+    </div>
+  </div>
+</ng-container>

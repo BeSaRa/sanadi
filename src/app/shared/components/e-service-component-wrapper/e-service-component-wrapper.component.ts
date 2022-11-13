@@ -1,8 +1,16 @@
 import { CoordinationWithOrganizationsRequest } from '@app/models/coordination-with-organizations-request';
-import { IGeneralAssociationMeetingAttendanceSpecialActions } from '@contracts/i-general-association-meeting-attendance-special-actions';
-import { IGeneralAssociationMeetingAttendanceApprove } from '@contracts/i-general-association-meeting-attendance-approve';
-import { IGeneralAssociationMeetingAttendanceComponent } from '@contracts/i-general-association-meeting-attendance-component';
-import { IGeneralAssociationMeetingAttendanceComplete } from '@contracts/i-general-association-meeting-attendance-complete';
+import {
+  IGeneralAssociationMeetingAttendanceSpecialActions
+} from '@contracts/i-general-association-meeting-attendance-special-actions';
+import {
+  IGeneralAssociationMeetingAttendanceApprove
+} from '@contracts/i-general-association-meeting-attendance-approve';
+import {
+  IGeneralAssociationMeetingAttendanceComponent
+} from '@contracts/i-general-association-meeting-attendance-component';
+import {
+  IGeneralAssociationMeetingAttendanceComplete
+} from '@contracts/i-general-association-meeting-attendance-complete';
 import { ITransferFundsAbroadComponent } from '@contracts/i-transfer-funds-abroad-component';
 import { ITransferIndividualFundsAbroadComplete } from '@contracts/i-transfer-individual-funds-abroad-complete';
 import {
@@ -31,8 +39,8 @@ import { CaseTypes } from '@app/enums/case-types.enum';
 import { ILanguageKeys } from '@app/interfaces/i-language-keys';
 import { ToastService } from '@app/services/toast.service';
 import { InboxService } from '@app/services/inbox.service';
-import { merge, Subject } from 'rxjs';
-import { startWith, takeUntil } from 'rxjs/operators';
+import { isObservable, merge, Observable, of, Subject } from 'rxjs';
+import { filter, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { TabComponent } from '@app/shared/components/tab/tab.component';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { SaveTypes } from '@app/enums/save-types';
@@ -284,7 +292,8 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           }
           return item.canStart();
         },
-        onClick: (item: CaseModel<any, any>) => {
+        runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
+        onClick: (_item: CaseModel<any, any>) => {
           this.launchAction(true);
         }
       },
@@ -360,6 +369,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         type: 'action',
         // icon: 'mdi-rocket-launch-outline',
         label: 'launch',
+        runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
         show: (item) => {
           return !this.servicesWithNoSaveDraftLaunch.includes(item.getCaseType());
         },
@@ -417,16 +427,11 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   }
 
   private launchAction(redirectOnSuccess: boolean = false) {
-    this.component.launchNew().pipe(
+    this.component.launch().pipe(
       takeUntil(this.destroy$),
     ).subscribe(() => {
       if (redirectOnSuccess) {
-        this.toast.success(this.lang.map.request_has_been_sent_successfully);
         this.navigateToSamePageThatUserCameFrom();
-      } else {
-        (this.component.model as unknown as CaseModel<any, any>).caseStatus = CommonCaseStatus.UNDER_PROCESSING;
-        this.component._afterLaunch();
-        this.component.onModelChange$.emit(this.component._getNewInstance());
       }
     });
   }
@@ -519,6 +524,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         icon: 'mdi-send-circle',
         label: 'send_to_competent_dep',
         askChecklist: true,
+        runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
         show: (item: CaseModel<any, any>) => {
           return item.getResponses().includes(WFResponseType.TO_COMPETENT_DEPARTMENT);
         },
@@ -532,6 +538,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         icon: 'mdi-send-circle',
         label: 'return_to_org_task',
         askChecklist: true,
+        runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
         show: (item: CaseModel<any, any>) => {
           return item.getResponses().includes(WFResponseType.RETURN_TO_SPECIFIC_ORGANIZATION);
         },
@@ -546,6 +553,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         icon: 'mdi-send-circle',
         label: 'send_to_multi_departments',
         askChecklist: true,
+        runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
         show: (item: CaseModel<any, any>) => {
           return item.getResponses().includes(WFResponseType.INTERNAL_PROJECT_SEND_TO_MULTI_DEPARTMENTS)
             || item.getResponses().includes(WFResponseType.FUNDRAISING_LICENSE_SEND_TO_MULTI_DEPARTMENTS)
@@ -581,6 +589,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           return this.lang.map.send_to_supervision_and_control_department;
         },
         askChecklist: true,
+        runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
         show: (item: CaseModel<any, any>) => {
           return item.getResponses().includes(WFResponseType.INITIAL_EXTERNAL_OFFICE_SEND_TO_SINGLE_DEPARTMENT)
             || item.getResponses().includes(WFResponseType.PARTNER_APPROVAL_SEND_TO_SINGLE_DEPARTMENT)
@@ -605,6 +614,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         icon: 'mdi-account-arrow-right',
         label: 'send_to_user',
         askChecklist: true,
+        runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
         show: (item: CaseModel<any, any>) => {
           return item.getResponses().includes(WFResponseType.TO_USER);
         },
@@ -618,6 +628,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         icon: 'mdi-account-arrow-right',
         label: 'send_to_structure_expert',
         askChecklist: true,
+        runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
         show: (item: CaseModel<any, any>) => {
           return item.getResponses().includes(WFResponseType.TO_CONSTRUCTION_EXPERT);
         },
@@ -631,6 +642,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         icon: 'mdi-account-arrow-right',
         label: 'send_to_development_expert',
         askChecklist: true,
+        runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
         show: (item: CaseModel<any, any>) => {
           return item.getResponses().includes(WFResponseType.TO_DEVELOPMENT_EXPERT);
         },
@@ -644,6 +656,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         icon: 'mdi-card-account-details-star',
         label: 'send_to_manager',
         askChecklist: true,
+        runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
         show: (item: CaseModel<any, any>) => {
           return item.getResponses().includes(WFResponseType.TO_MANAGER);
         },
@@ -657,6 +670,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         icon: 'mdi-card-account-details-star',
         label: 'send_to_general_manager',
         askChecklist: true,
+        runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
         show: (item: CaseModel<any, any>) => {
           return item.getResponses().includes(WFResponseType.TO_GM);
         },
@@ -670,6 +684,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         icon: 'mdi-book-check',
         label: 'task_complete',
         askChecklist: true,
+        runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
         show: (item: CaseModel<any, any>) => {
           return !item.getResponses().length || item.getResponses().includes(WFResponseType.COMPLETE);
         },
@@ -683,6 +698,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         icon: 'mdi-check-bold',
         label: 'approve_task',
         askChecklist: true,
+        runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
         show: (item: CaseModel<any, any>) => {
           return item.getResponses().includes(WFResponseType.APPROVE);
         },
@@ -696,6 +712,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         icon: 'mdi-account-arrow-right',
         label: 'send_to_members',
         askChecklist: true,
+        runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
         show: (item: CaseModel<any, any>) => {
           return item.getResponses().includes(WFResponseType.TO_GENERAL_MEETING_MEMBERS);
         },
@@ -709,6 +726,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         icon: 'mdi-check-bold',
         label: 'initial_approve_task',
         askChecklist: true,
+        runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
         show: (item: CaseModel<any, any>) => {
           return item.getResponses().includes(WFResponseType.INITIAL_APPROVE);
         },
@@ -722,6 +740,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         icon: 'mdi-check-bold',
         label: 'org_approve_task',
         askChecklist: true,
+        runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
         disabled: () => !this.canOrganizationApprove(),
         show: (item: CaseModel<any, any>) => {
           return item.getResponses().includes(WFResponseType.ORGANIZATION_APPROVE);
@@ -730,12 +749,39 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.organizationApproveAction(item);
         }
       },
+       // organiztion final approve
+       {
+        type: 'action',
+        icon: 'mdi-check-bold',
+        label: 'organization_final_approve',
+        askChecklist: true,
+        show: (item: CaseModel<any, any>) => {
+          return item.getResponses().includes(WFResponseType.ORGANIZATION_FINAL_APPROVE);
+        },
+        onClick: (item: CaseModel<any, any>) => {
+          this.organizationFinalApproveAction(item);
+        }
+      },
+       // organiztion final reject
+       {
+        type: 'action',
+        icon: 'mdi-undo-variant',
+        label: 'organization_final_reject',
+        askChecklist: true,
+        show: (item: CaseModel<any, any>) => {
+          return item.getResponses().includes(WFResponseType.ORGANIZATION_FINAL_REJECT);
+        },
+        onClick: (item: CaseModel<any, any>) => {
+          this.organizationFinalRejectAction(item);
+        }
+      },
       // validate approve
       {
         type: 'action',
         icon: 'mdi-check-bold',
         label: 'validate_approve_task',
         askChecklist: true,
+        runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
         show: (item: CaseModel<any, any>) => {
           return item.getResponses().includes(WFResponseType.VALIDATE_APPROVE);
         },
@@ -748,6 +794,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         type: 'action',
         icon: 'mdi-check-underline',
         askChecklist: true,
+        runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
         label: (item) => this.finalApproveByMatrixServices.includes(item.getCaseType()) ? this.lang.map.final_approve_task_based_on_matrix : this.lang.map.final_approve_task,
         show: (item: CaseModel<any, any>) => {
           return item.getResponses().includes(WFResponseType.FINAL_APPROVE);
@@ -762,6 +809,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         icon: 'mdi-book-check',
         label: 'final_Notification',
         askChecklist: true,
+        runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
         show: (item: CaseModel<any, any>) => {
           return item.getResponses().includes(WFResponseType.FINAL_NOTIFICATION);
         },
@@ -775,6 +823,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         icon: 'mdi-help-rhombus-outline',
         label: 'ask_for_consultation_task',
         askChecklist: true,
+        runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
         show: (item: CaseModel<any, any>) => {
           return item.getResponses().some(x => x.indexOf(WFResponseType.ASK_FOR_CONSULTATION) > -1);
         },
@@ -788,6 +837,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         icon: 'mdi-calendar-clock',
         label: 'postpone_task',
         askChecklist: true,
+        runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
         show: (item: CaseModel<any, any>) => {
           return item.getResponses().includes(WFResponseType.POSTPONE);
         },
@@ -801,6 +851,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         icon: 'mdi-undo-variant',
         label: 'return_task',
         askChecklist: true,
+        runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
         show: (item: CaseModel<any, any>) => {
           return item.getResponses().includes(WFResponseType.RETURN);
         },
@@ -814,6 +865,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         icon: 'mdi-undo-variant',
         label: 'final_reject_task',
         askChecklist: true,
+        runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
         show: (item: CaseModel<any, any>) => {
           return item.getResponses().includes(WFResponseType.FINAL_REJECT);
         },
@@ -827,6 +879,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         icon: 'mdi-undo-variant',
         label: 'organization_reject_task',
         askChecklist: true,
+        runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
         show: (item: CaseModel<any, any>) => {
           return item.getResponses().includes(WFResponseType.ORGANIZATION_REJECT);
         },
@@ -840,6 +893,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         icon: 'mdi-undo-variant',
         label: 'validate_reject_task',
         askChecklist: true,
+        runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
         show: (item: CaseModel<any, any>) => {
           return item.getResponses().includes(WFResponseType.VALIDATE_REJECT);
         },
@@ -853,6 +907,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         icon: 'mdi-undo-variant',
         label: 'return_to_org_task',
         askChecklist: true,
+        runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
         show: (item: CaseModel<any, any>) => {
           return item.getResponses().includes(WFResponseType.RETURN_TO_ORG);
         },
@@ -866,6 +921,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         icon: 'mdi-book-remove-outline',
         label: 'reject_task',
         askChecklist: true,
+        runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
         show: (item: CaseModel<any, any>) => {
           return item.getResponses().includes(WFResponseType.REJECT);
         },
@@ -879,6 +935,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         icon: 'mdi-close-circle-outline',
         label: 'cancel_task',
         askChecklist: true,
+        runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
         show: (item: CaseModel<any, any>) => {
           return item.getResponses().includes(WFResponseType.CLOSE);
         },
@@ -1259,7 +1316,19 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       actionTaken && this.navigateToSamePageThatUserCameFrom();
     });
   }
-
+  private organizationFinalApproveAction(item: CaseModel<any, any>) {
+    item.organizationFinalApprove({
+      form: this.component.form,
+      organizationOfficers: (this.component as any).selectedOrganizationOfficers
+    }).onAfterClose$.subscribe(actionTaken => {
+      actionTaken && this.navigateToSamePageThatUserCameFrom();
+    });
+  }
+  private organizationFinalRejectAction(item: CaseModel<any, any>) {
+    item.organizationFinalReject().onAfterClose$.subscribe(actionTaken => {
+      actionTaken && this.navigateToSamePageThatUserCameFrom();
+    });
+  }
   private markAsUnreadAction(item: CaseModel<any, any>) {
     item.markAsUnread().subscribe(() => {
       this.toast.success(this.lang.map.msg_mark_as_unread_success);
@@ -1369,8 +1438,19 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
 
   actionCallback(action: IMenuItem<CaseModel<any, any>>) {
     action.onClick && this.model && (!action.disabled || (typeof action.disabled === 'function' && !action.disabled(this.model))) && this.checkIfChecklistMarked(action, () => {
-      return this.model && action.onClick && action.onClick(this.model);
+      return this.runBeforeActionCallbacks(action)
+        .pipe(filter(value => value))
+        .subscribe(() => this.model && action.onClick && action.onClick(this.model));
     });
+  }
+
+  runBeforeActionCallbacks(action: IMenuItem<CaseModel<any, any>>): Observable<boolean> {
+    return of(true)
+      .pipe(tap(() => action.runBefore && this.model ? action.runBefore(this.model) : null))
+      .pipe(switchMap(() => {
+        const result = action.runBeforeShouldSuccess && this.model ? action.runBeforeShouldSuccess(this.model) : of(true);
+        return isObservable(result) ? result : of(result);
+      }))
   }
 
   checkIfChecklistMarked(action: IMenuItem<CaseModel<any, any>>, callback: () => void): void {

@@ -12,6 +12,7 @@ import {
   FormArray,
   FormBuilder,
   FormGroup,
+  UntypedFormControl,
 } from '@angular/forms';
 import { ILanguageKeys } from '@app/interfaces/i-language-keys';
 import { OrgUnit } from '@app/models/org-unit';
@@ -78,7 +79,8 @@ export class ParticipantOrganizationComponent implements OnInit {
 
   form!: FormGroup;
   @Input() organizationUnits: OrgUnit[] = [];
-
+  filterControl: UntypedFormControl = new UntypedFormControl('');
+  showForm: boolean = false;
   ngOnInit(): void {
     this.buildForm();
     this.listenToRecordChange();
