@@ -44,7 +44,7 @@ export class CustomMenuComponent extends AdminGenericComponent<CustomMenu, Custo
 
   @ViewChild('table') table!: TableComponent;
   selectedPopupTabName: string = 'basic';
-  displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'status', 'actions'];
+  displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'menuType', 'status', 'actions'];
   view$: Subject<CustomMenu> = new Subject<CustomMenu>();
 
   actions: IMenuItem<CustomMenu>[] = [
@@ -142,6 +142,11 @@ export class CustomMenuComponent extends AdminGenericComponent<CustomMenu, Custo
     },
   ];
   sortingCallbacks = {
+    menuType: (a: CustomMenu, b: CustomMenu, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.menuTypeInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.menuTypeInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
     statusInfo: (a: CustomMenu, b: CustomMenu, dir: SortEvent): number => {
       let value1 = !CommonUtils.isValidValue(a) ? '' : a.statusInfo?.getName().toLowerCase(),
         value2 = !CommonUtils.isValidValue(b) ? '' : b.statusInfo?.getName().toLowerCase();

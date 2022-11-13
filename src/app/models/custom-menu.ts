@@ -12,6 +12,7 @@ import {CustomMenuService} from '@services/custom-menu.service';
 import {BaseModel} from './base-model';
 import {AdminResult} from '@app/models/admin-result';
 import {MenuUrlValueContract} from '@contracts/menu-url-value-contract';
+import {MenuPermissionCategoryEnum} from '@app/enums/menu-permission-category.enum';
 
 const interceptor = new CustomMenuInterceptor();
 
@@ -43,7 +44,7 @@ export class CustomMenu extends BaseModel<CustomMenu, CustomMenuService> {
 
   searchFields: ISearchFieldsMap<CustomMenu> = {
     ...normalSearchFields(['arName', 'enName']),
-    ...infoSearchFields(['statusInfo']),
+    ...infoSearchFields(['menuTypeInfo', 'statusInfo']),
   };
 
   constructor() {

@@ -1,5 +1,6 @@
 <div class="row pb-3">
-  <app-page-header [pageTitle]="'menu_items'" [clickOnReload$]="reload$" [clickOnNew$]="add$" [addPermission]="!readonly">
+  <app-page-header [pageTitle]="'menu_items'" [clickOnReload$]="reload$" [clickOnNew$]="add$"
+                   [addPermission]="!readonly">
   </app-page-header>
   <ng-container *ngIf="table">
     <app-bulk-actions *ngIf="table.selection && table.selection.selected.length"
@@ -41,6 +42,11 @@
         <ng-container cdkColumnDef="enName">
           <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.english_name}}</th>
           <td cdk-cell *cdkCellDef="let row"> {{row.enName}} </td>
+        </ng-container>
+        <ng-container cdkColumnDef="menuType">
+          <th cdk-header-cell sortable-header *cdkHeaderCellDef [sortParamAsFullItem]="true"
+          [sortCallback]="sortingCallbacks.menuType"> {{lang.map.menu_type}}</th>
+          <td cdk-cell *cdkCellDef="let row"> {{row.menuTypeInfo ? row.menuTypeInfo.getName() : '' }} </td>
         </ng-container>
         <ng-container cdkColumnDef="status">
           <th cdk-header-cell sortable-header *cdkHeaderCellDef [sortParamAsFullItem]="true"
