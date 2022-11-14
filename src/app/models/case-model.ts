@@ -131,7 +131,7 @@ export abstract class CaseModel<S extends BaseGenericEService<T>, T extends File
   }
 
   manageAttachments(): DialogRef {
-    return this.service.openDocumentDialog(this.id, this.caseType);
+    return this.service.openDocumentDialog(this.id, this.caseType, this);
   }
 
   manageRecommendations(onlyLogs: boolean = false): DialogRef {

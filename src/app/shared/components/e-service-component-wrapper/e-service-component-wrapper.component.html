@@ -33,7 +33,7 @@
     </tabs-list>
     <ng-template #attachment>
       <attachments [disabled]="isAttachmentReadonly()"
-                   [caseId]="model?.id"
+                   [caseId]="model?.id" [model]="model"
                    [caseType]="model?.caseType"
                    [service]="service.documentService"
                    [load]="loadAttachments"></attachments>

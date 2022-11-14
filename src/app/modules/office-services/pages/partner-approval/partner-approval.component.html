@@ -380,7 +380,7 @@
     </ng-template>
     <ng-template #attachmentsTemplate>
       <attachments [disabled]="isAttachmentReadonly()" [caseId]="model?.id" [caseType]="model?.caseType"
-        [service]="service.documentService" [load]="loadAttachments"></attachments>
+        [service]="service.documentService" [load]="loadAttachments" [model]="model"></attachments>
     </ng-template>
     <ng-template #logsTemplate>
       <!--<request-recommendations [record]="model"></request-recommendations>-->

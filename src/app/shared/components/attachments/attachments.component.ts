@@ -55,6 +55,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
     return this._caseId.value;
   }
 
+  @Input() model!: any;
   @Input()
   disabled: boolean = false;
   @Input()
@@ -367,6 +368,9 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
     if (buttonType === 'view') {
       return !attachment.id;
     } else if (buttonType === 'delete') {
+      if (this.model && this.model.isFinalApproved()) {
+        return true;
+      }
       return this.disabled || !attachment.attachmentTypeStatus || !attachment.id || !this._isCreatedByCurrentUser(attachment);
     } else if (buttonType === 'upload') {
       return this.disabled || !attachment.attachmentTypeStatus;
