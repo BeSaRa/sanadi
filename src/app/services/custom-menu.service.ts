@@ -93,9 +93,16 @@ export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> 
     return this.http.post<CustomMenu[]>(this._getServiceURL() + '/filter', criteria);
   }
 
-  openCreateDialog(parentId?: number): DialogRef {
+  openCreateDialog(parentMenu?: CustomMenu): DialogRef {
+    let data = new CustomMenu().clone({status: CommonStatusEnum.ACTIVATED});
+    if (parentMenu) {
+      data.parentMenuItemId = parentMenu.id;
+      data.menuView = parentMenu.menuView;
+      data.menuType = parentMenu.menuType;
+      data.userType = parentMenu.userType;
+    }
     return this.dialog.show<IDialogData<CustomMenu>>(this._getDialogComponent(), {
-      model: new CustomMenu().clone({parentMenuItemId: parentId}),
+      model: data,
       operation: OperationTypes.CREATE
     });
   }

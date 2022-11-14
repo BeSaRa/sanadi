@@ -1,4 +1,4 @@
-import {Component, Input, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
@@ -39,8 +39,9 @@ export class CustomMenuComponent extends AdminGenericComponent<CustomMenu, Custo
     this.listenToView();
   }
 
-  @Input() parentId?: number;
+  @Input() parent?: CustomMenu;
   @Input() readonly: boolean = false;
+  @Output() listUpdated: EventEmitter<any> = new EventEmitter<any>();
 
   @ViewChild('table') table!: TableComponent;
   selectedPopupTabName: string = 'basic';
@@ -77,7 +78,7 @@ export class CustomMenuComponent extends AdminGenericComponent<CustomMenu, Custo
       label: 'sub_lists',
       icon: ActionIconsEnum.CHILD_ITEMS,
       onClick: (item) => this.showChildren(item),
-      show: () => !this.parentId,
+      show: () => !this.parent,
     },
     // activate
     {
@@ -159,8 +160,8 @@ export class CustomMenuComponent extends AdminGenericComponent<CustomMenu, Custo
       .pipe(takeUntil((this.destroy$)))
       .pipe(switchMap(() => {
         let load: Observable<CustomMenu[]>;
-        if (this.parentId) {
-          load = this.service.loadByParentId(this.parentId).pipe(map((res) => {
+        if (!!this.parent) {
+          load = this.service.loadByParentId(this.parent.id).pipe(map((res) => {
             this.count = res.length;
             return res;
           }));
@@ -187,12 +188,13 @@ export class CustomMenuComponent extends AdminGenericComponent<CustomMenu, Custo
 
   afterReload(): void {
     this.table && this.table.clearSelection();
+    this.listUpdated.emit(true);
   }
 
   listenToAdd(): void {
     this.add$
       .pipe(takeUntil(this.destroy$))
-      .pipe(exhaustMap(() => this.service.openCreateDialog(this.parentId).onAfterClose$))
+      .pipe(exhaustMap(() => this.service.openCreateDialog(this.parent).onAfterClose$))
       .subscribe(() => this.reload$.next(null));
   }
 

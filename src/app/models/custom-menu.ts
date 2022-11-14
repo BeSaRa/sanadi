@@ -96,4 +96,8 @@ export class CustomMenu extends BaseModel<CustomMenu, CustomMenuService> {
       menuURL: controls ? [menuURL, [CustomValidators.maxLength(350)]] : menuURL
     };
   }
+
+  isParentMenu(): boolean {
+    return !this.parentMenuItemId;
+  }
 }

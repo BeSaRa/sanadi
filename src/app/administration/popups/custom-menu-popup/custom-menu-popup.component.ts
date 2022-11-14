@@ -15,6 +15,7 @@ import {TabMap} from '@app/types/types';
 import {CustomMenuUrlHandlerComponent} from '@app/administration/shared/custom-menu-url-handler/custom-menu-url-handler.component';
 import {CommonUtils} from '@helpers/common-utils';
 import {DialogService} from '@services/dialog.service';
+import {CustomMenuComponent} from '@app/administration/pages/custom-menu/custom-menu.component';
 
 @Component({
   selector: 'app-custom-menu-popup',
@@ -64,11 +65,18 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
         return this.urlHandlerComponentRef.isTouchedOrDirty();
       }
     },
-    sub: {name: 'sub', langKey: 'sub_lists', index: 2, validStatus: () => true, isTouchedOrDirty: () => true}
+    sub: {
+      name: 'sub',
+      langKey: 'sub_lists',
+      index: 2,
+      validStatus: () => true,
+      isTouchedOrDirty: () => true
+    }
   };
 
   @ViewChild('dialogContent') dialogContent!: ElementRef;
   @ViewChild('urlHandlerComponent') urlHandlerComponentRef!: CustomMenuUrlHandlerComponent;
+  @ViewChild('customMenuChildren') customMenuChildrenRef!: CustomMenuComponent;
 
   constructor(public dialogRef: DialogRef,
               public fb: UntypedFormBuilder,
@@ -92,11 +100,42 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
       this.displayFormValidity(null, this.dialogContent.nativeElement);
     }
 
+    this.handleDisableFields();
+
     if (this.readonly) {
       this.form.disable();
       this.saveVisible = false;
       this.validateFieldsVisible = false;
     }
+  }
+
+  handleDisableFields() {
+    if (this.readonly){
+      this.form.disable();
+      return;
+    }
+
+    if (!this.model.isParentMenu()) {
+      this._disableDependentFields();
+    } else {
+      if (!!this.model.id && this.hasChildren) {
+        this._disableDependentFields();
+      } else {
+        this._enableDependentFields();
+      }
+    }
+  }
+
+  private _disableDependentFields(){
+    this.childrenDependentFields.forEach((field)=> field.disable());
+  }
+
+  private _enableDependentFields(){
+    this.childrenDependentFields.forEach((field)=> field.enable());
+  }
+
+  get childrenDependentFields(): UntypedFormControl[] {
+    return [this.menuTypeControl, this.menuViewControl, this.userTypeControl];
   }
 
   ngAfterViewInit(): void {
@@ -107,6 +146,13 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
 
   get readonly(): boolean {
     return this.operation === OperationTypes.VIEW;
+  }
+
+  get hasChildren(): boolean {
+    if (!this.customMenuChildrenRef) {
+      return false;
+    }
+    return this.customMenuChildrenRef.models.length > 0;
   }
 
   buildForm(): void {
@@ -133,7 +179,7 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
   }
 
   prepareModel(model: CustomMenu, form: UntypedFormGroup): Observable<CustomMenu> | CustomMenu {
-    let value = (new CustomMenu()).clone({...model, ...form.value});
+    let value = (new CustomMenu()).clone({...model, ...form.getRawValue()});
     value.menuURL = this.urlHandlerComponentRef ? this.urlHandlerComponentRef.menuUrlControl.value : '';
     value.urlParamsParsed = this.urlHandlerComponentRef ? this.urlHandlerComponentRef.variableList : [];
 
@@ -182,6 +228,14 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
 
   get menuViewControl(): UntypedFormControl {
     return this.form.get('menuView') as UntypedFormControl;
+  }
+
+  get menuTypeControl(): UntypedFormControl {
+    return this.form.get('menuType') as UntypedFormControl;
+  }
+
+  get userTypeControl(): UntypedFormControl {
+    return this.form.get('userType') as UntypedFormControl;
   }
 
   getTranslatedStatus() {
