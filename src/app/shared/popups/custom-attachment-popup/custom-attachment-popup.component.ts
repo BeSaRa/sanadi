@@ -205,7 +205,7 @@ export class CustomAttachmentPopupComponent implements OnInit, OnDestroy {
       if (this.model.isFinalApproved()) {
         return true;
       }
-      // return this.disabled || !attachment.attachmentTypeStatus || !attachment.id || !this._isCreatedByCurrentUser(attachment);
+      return this.disabled || !attachment.attachmentTypeStatus || !attachment.id || !this._isCreatedByCurrentUser(attachment);
     } else if (buttonType === 'upload') {
       return this.disabled || !attachment.attachmentTypeStatus;
     } else if (buttonType === 'publish') {
