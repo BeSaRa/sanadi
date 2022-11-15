@@ -1020,13 +1020,13 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   }
 
   loadExitMechanisms(): void {
-    this.adminLookupService.load(AdminLookupTypeEnum.EXIT_MECHANISM).subscribe(list => {
+    this.adminLookupService.loadAsLookups(AdminLookupTypeEnum.EXIT_MECHANISM).subscribe(list => {
       this.exitMechanisms = list;
     });
   }
 
   loadIndicators(): void {
-    this.adminLookupService.load(AdminLookupTypeEnum.TEMPLATE_INDICATOR).subscribe(list => {
+    this.adminLookupService.loadAsLookups(AdminLookupTypeEnum.TEMPLATE_INDICATOR).subscribe(list => {
       this.indicators = list;
     });
   }
