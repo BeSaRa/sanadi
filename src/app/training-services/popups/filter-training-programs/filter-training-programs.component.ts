@@ -11,13 +11,13 @@ import {isEmptyObject, objectHasValue} from '@app/helpers/utils';
 import {Lookup} from '@app/models/lookup';
 import {LookupService} from '@app/services/lookup.service';
 import {Trainer} from '@app/models/trainer';
-import {OrgUnit} from '@app/models/org-unit';
 import {takeUntil} from 'rxjs/operators';
-import {OrganizationUnitService} from '@app/services/organization-unit.service';
 import {TrainerService} from '@app/services/trainer.service';
 import {Subject} from 'rxjs';
 import {ITrainingProgramCriteria} from '@app/interfaces/i-training-program-criteria';
 import {DatepickerControlsMap, DatepickerOptionsMap} from '@app/types/types';
+import {ProfileService} from '@services/profile.service';
+import {Profile} from '@app/models/profile';
 
 @Component({
   selector: 'filter-training-programs',
@@ -44,7 +44,7 @@ export class FilterTrainingProgramsComponent implements OnInit, OnDestroy {
   trainingTypes: Lookup[] = this.lookupService.listByCategory.TRAINING_TYPE;
   statuses: Lookup[] = this.lookupService.listByCategory.TRAINING_STATUS;
   trainers: Trainer[] = [];
-  organizations: OrgUnit[] = [];
+  organizations: Profile[] = [];
 
   constructor(@Inject(DIALOG_DATA_TOKEN) public data: any,
               private fb: UntypedFormBuilder,
@@ -52,7 +52,7 @@ export class FilterTrainingProgramsComponent implements OnInit, OnDestroy {
               public lang: LangService,
               private dialogService: DialogService,
               public lookupService: LookupService,
-              private organizationUnitService: OrganizationUnitService,
+              private profileService: ProfileService,
               private trainerService: TrainerService) {
     this.criteria = data.criteria;
   }
@@ -106,7 +106,7 @@ export class FilterTrainingProgramsComponent implements OnInit, OnDestroy {
   }
 
   private loadOrganizations(): void {
-    this.organizationUnitService.load()
+    this.profileService.loadAsLookups()
       .pipe(takeUntil(this.destroy$))
       .subscribe(organizations => {
         this.organizations = organizations;

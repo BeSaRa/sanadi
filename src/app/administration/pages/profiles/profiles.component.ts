@@ -18,20 +18,29 @@ import {catchError, exhaustMap, filter, switchMap, takeUntil} from 'rxjs/operato
 export class ProfilesComponent extends AdminGenericComponent<Profile, ProfileService> {
   usePagination = true;
   actions: IMenuItem<Profile>[] = [
+    // edit
     {
       type: 'action',
       label: 'btn_edit',
       icon: ActionIconsEnum.EDIT,
       onClick: (item: Profile) => this.edit$.next(item)
     },
+    // view
     {
       type: 'action',
       label: 'view',
       icon: ActionIconsEnum.VIEW,
       onClick: (item: Profile) => this.view$.next(item)
     },
+    // logs
     {
-
+      type: 'action',
+      icon: ActionIconsEnum.HISTORY,
+      label: 'show_logs',
+      onClick: (item: Profile) => this.showAuditLogs(item)
+    },
+    // activate
+    {
       type: 'action',
       icon: ActionIconsEnum.STATUS,
       label: 'btn_activate',
@@ -39,6 +48,17 @@ export class ProfilesComponent extends AdminGenericComponent<Profile, ProfileSer
       displayInGrid: false,
       show: (item) => {
         return item.status !== CommonStatusEnum.RETIRED && item.status === CommonStatusEnum.DEACTIVATED;
+      }
+    },
+    // deactivate
+    {
+      type: 'action',
+      icon: ActionIconsEnum.STATUS,
+      label: 'btn_deactivate',
+      onClick: (item: Profile) => this.toggleStatus(item),
+      displayInGrid: false,
+      show: (item) => {
+        return item.status !== CommonStatusEnum.RETIRED && item.status === CommonStatusEnum.ACTIVATED;
       }
     }
   ];
@@ -67,9 +87,17 @@ export class ProfilesComponent extends AdminGenericComponent<Profile, ProfileSer
       .subscribe(() => this.reload$.next(null));
   }
 
-  public toggleStatus(model: Profile): void {
+  toggleStatus(model: Profile): void {
     model.updateStatus(model.id, model.status).subscribe(() => {
       this.reload$.next(null);
     });
+  }
+
+  showAuditLogs(model: Profile, $event?: MouseEvent): void {
+    $event?.preventDefault();
+    model.showAuditLogs()
+      .subscribe((dialog: DialogRef) => {
+        dialog.onAfterClose$.subscribe();
+      });
   }
 }

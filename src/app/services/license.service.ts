@@ -165,7 +165,7 @@ export class LicenseService {
 
   @CastResponse(() => InitialExternalOfficeApprovalResult)
   private _initialLicenseSearch(criteria: Partial<InitialExternalOfficeApprovalSearchCriteria>): Observable<InitialExternalOfficeApprovalResult[]> {
-    const orgId = { organizationId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id : undefined }
+    const orgId = { organizationId: this.employeeService.isExternalUser() ? this.employeeService.getProfile()?.id : undefined }
     return this.http.post<InitialExternalOfficeApprovalResult[]>(this.getServiceUrlByCaseType(CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL) + '/license/search', { ...criteria, ...orgId })
   }
 
@@ -175,19 +175,19 @@ export class LicenseService {
 
   @CastResponse(() => PartnerApproval)
   partnerApprovalLicenseSearch(criteria: Partial<PartnerApprovalSearchCriteria>): Observable<PartnerApproval[]> {
-    const orgId = { organizationId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id : undefined }
+    const orgId = { organizationId: this.employeeService.isExternalUser() ? this.employeeService.getProfile()?.id : undefined }
     return this.http.post<PartnerApproval[]>(this.getServiceUrlByCaseType(CaseTypes.PARTNER_APPROVAL) + '/license/search', { ...criteria, ...orgId })
   }
 
   @CastResponse(() => Fundraising)
   fundRaisingLicenseSearch(criteria: Partial<FundraisingSearchCriteria>): Observable<Fundraising[]> {
-    const orgId = { organizationId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id : undefined };
+    const orgId = { organizationId: this.employeeService.isExternalUser() ? this.employeeService.getProfile()?.id : undefined };
     return this.http.post<Fundraising[]>(this.getServiceUrlByCaseType(CaseTypes.FUNDRAISING_LICENSING) + "/license/search", { ...criteria, ...orgId });
   }
 
   @CastResponse(() => FinalExternalOfficeApprovalResult)
   private _finalApprovalLicenseSearch(criteria: Partial<FinalExternalOfficeApprovalSearchCriteria>): Observable<FinalExternalOfficeApprovalResult[]> {
-    const orgId = { organizationId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id : undefined }
+    const orgId = { organizationId: this.employeeService.isExternalUser() ? this.employeeService.getProfile()?.id : undefined }
     return this.http.post<FinalExternalOfficeApprovalResult[]>(this.getServiceUrlByCaseType(CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL) + '/license/search', { ...criteria, ...orgId })
   }
 
@@ -197,7 +197,7 @@ export class LicenseService {
 
   @CastResponse(() => ExternalOrgAffiliationResult)
   private _externalOrgAffiliationSearchCriteria(criteria: Partial<ExternalOrgAffiliationSearchCriteria>): Observable<ExternalOrgAffiliationResult[]> {
-    const orgId = { organizationId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id : undefined }
+    const orgId = { organizationId: this.employeeService.isExternalUser() ? this.employeeService.getProfile()?.id : undefined }
     return this.http.post<ExternalOrgAffiliationResult[]>(this.getServiceUrlByCaseType(CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST) + '/license/search', { ...criteria, ...orgId })
   }
 
@@ -207,7 +207,7 @@ export class LicenseService {
 
   @CastResponse(() => AwarenessActivitySuggestion)
   private _awarenessActivitySuggestionSearchCriteria(criteria: Partial<SearchAwarenessActivitySuggestionCriteria>): Observable<AwarenessActivitySuggestion[]> {
-    const orgId = { organizationId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id : undefined }
+    const orgId = { organizationId: this.employeeService.isExternalUser() ? this.employeeService.getProfile()?.id : undefined }
     return this.http.post<AwarenessActivitySuggestion[]>(this.getServiceUrlByCaseType(CaseTypes.AWARENESS_ACTIVITY_SUGGESTION) + '/license/search', { ...criteria, ...orgId })
   }
   awarenessActivitySuggestionSearch(criteria: Partial<SearchAwarenessActivitySuggestionCriteria>): Observable<AwarenessActivitySuggestion[]> {
@@ -225,7 +225,7 @@ export class LicenseService {
 
   @CastResponse(() => ForeignCountriesProjectsResult)
   private _foreignCountriesProjectsSearchCriteria(criteria: Partial<ForeignCountriesProjectsSearchCriteria>): Observable<ForeignCountriesProjectsResult[]> {
-    const orgId = { organizationId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id : undefined }
+    const orgId = { organizationId: this.employeeService.isExternalUser() ? this.employeeService.getProfile()?.id : undefined }
     return this.http.post<ForeignCountriesProjectsResult[]>(this.getServiceUrlByCaseType(CaseTypes.FOREIGN_COUNTRIES_PROJECTS) + '/license/search', { ...criteria, ...orgId })
   }
 
@@ -235,7 +235,7 @@ export class LicenseService {
 
   @CastResponse(() => InternalProjectLicenseResult)
   private _internalProjectLicenseSearch(criteria: Partial<InternalProjectLicenseSearchCriteria>): Observable<InternalProjectLicenseResult[]> {
-    const orgId = { organizationId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id : undefined }
+    const orgId = { organizationId: this.employeeService.isExternalUser() ? this.employeeService.getProfile()?.id : undefined }
     return this.http.post<InternalProjectLicenseResult[]>(this.getServiceUrlByCaseType(CaseTypes.INTERNAL_PROJECT_LICENSE) + '/license/search', { ...criteria, ...orgId })
   }
 
@@ -245,7 +245,7 @@ export class LicenseService {
 
   @CastResponse(() => UrgentInterventionLicenseResult)
   private _urgentInterventionLicenseSearch(criteria: Partial<UrgentInterventionLicenseSearchCriteria>): Observable<UrgentInterventionLicenseResult[]> {
-    const orgId = { organizationId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id : undefined }
+    const orgId = { organizationId: this.employeeService.isExternalUser() ? this.employeeService.getProfile()?.id : undefined }
     return this.http.post<UrgentInterventionLicenseResult[]>(this.getServiceUrlByCaseType(CaseTypes.URGENT_INTERVENTION_LICENSING) + '/license/search', { ...criteria, ...orgId })
   }
 
@@ -255,7 +255,7 @@ export class LicenseService {
 
   @CastResponse(() => UrgentInterventionAnnouncementResult)
   private _urgentInterventionAnnouncementSearch(criteria: Partial<UrgentInterventionAnnouncementSearchCriteria>, validOnly: boolean = false): Observable<UrgentInterventionAnnouncementResult[]> {
-    const orgId = { organizationId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id : undefined },
+    const orgId = { organizationId: this.employeeService.isExternalUser() ? this.employeeService.getProfile()?.id : undefined },
       url = this.getServiceUrlByCaseType(CaseTypes.URGENT_INTERVENTION_ANNOUNCEMENT) + '/license/search' + (validOnly ? '-valid' : '');
     return this.http.post<UrgentInterventionAnnouncementResult[]>(url, { ...criteria, ...orgId })
   }
@@ -270,7 +270,7 @@ export class LicenseService {
 
   @CastResponse(() => UrgentInterventionClosure)
   private _urgentInterventionClosureSearch(criteria: Partial<UrgentInterventionClosure>): Observable<UrgentInterventionClosure[]> {
-    const orgId = { organizationId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id : undefined }
+    const orgId = { organizationId: this.employeeService.isExternalUser() ? this.employeeService.getProfile()?.id : undefined }
     return this.http.post<UrgentInterventionClosure[]>(this.getServiceUrlByCaseType(CaseTypes.URGENT_INTERVENTION_CLOSURE) + '/license/search', { ...criteria, ...orgId })
   }
 

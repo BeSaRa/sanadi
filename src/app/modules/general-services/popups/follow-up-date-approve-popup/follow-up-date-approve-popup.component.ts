@@ -1,23 +1,20 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
-import { WFResponseType } from '@app/enums/wfresponse-type.enum';
-import { CommonUtils } from '@app/helpers/common-utils';
-import { DateUtils } from '@app/helpers/date-utils';
-import { IKeyValue } from '@app/interfaces/i-key-value';
-import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { IWFResponse } from '@app/interfaces/i-w-f-response';
-import { ForeignCountriesProjects } from '@app/models/foreign-countries-projects';
-import { DialogService } from '@app/services/dialog.service';
-import { FollowupDateService } from '@app/services/follow-up-date.service';
-import { InboxService } from '@app/services/inbox.service';
-import { LangService } from '@app/services/lang.service';
-import { OrganizationUnitService } from '@app/services/organization-unit.service';
-import { ToastService } from '@app/services/toast.service';
-import { DialogRef } from '@app/shared/models/dialog-ref';
-import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
-import { FollowUpDateModels } from '@app/types/types';
-import { Subject } from 'rxjs';
-import { exhaustMap, switchMap, takeUntil, filter, tap, map } from 'rxjs/operators';
+import {Component, Inject, OnInit} from '@angular/core';
+import {UntypedFormControl} from '@angular/forms';
+import {WFResponseType} from '@app/enums/wfresponse-type.enum';
+import {CommonUtils} from '@app/helpers/common-utils';
+import {DateUtils} from '@app/helpers/date-utils';
+import {IKeyValue} from '@app/interfaces/i-key-value';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {IWFResponse} from '@app/interfaces/i-w-f-response';
+import {DialogService} from '@app/services/dialog.service';
+import {InboxService} from '@app/services/inbox.service';
+import {LangService} from '@app/services/lang.service';
+import {ToastService} from '@app/services/toast.service';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
+import {FollowUpDateModels} from '@app/types/types';
+import {Subject} from 'rxjs';
+import {exhaustMap, filter, switchMap, takeUntil, tap} from 'rxjs/operators';
 
 
 @Component({

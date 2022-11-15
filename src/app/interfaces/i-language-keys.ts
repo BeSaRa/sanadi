@@ -1566,5 +1566,7 @@ export interface ILanguageKeys {
   msg_account_number_is_already_exist: string;
   lbl_select_options: string;
   lbl_process_type: string;
+  organization_final_reject: string;
+  organization_final_approve: string;
 }
 

@@ -15,7 +15,7 @@ import {FileExtensionsEnum, FileIconsEnum} from '@app/enums/file-extension-mime-
 import {AdminResult} from '@app/models/admin-result';
 import {GridName, ItemId} from '@app/types/types';
 import {EmployeeService} from '@services/employee.service';
-import {OrgUser} from '@app/models/org-user';
+import {ExternalUser} from '@app/models/external-user';
 import {InternalUser} from '@app/models/internal-user';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
@@ -55,6 +55,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
     return this._caseId.value;
   }
 
+  @Input() model!: any;
   @Input()
   disabled: boolean = false;
   @Input()
@@ -367,6 +368,9 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
     if (buttonType === 'view') {
       return !attachment.id;
     } else if (buttonType === 'delete') {
+      if (this.model && (this.model.isFinalApproved() || this.model.isFinalNotification())) {
+        return true;
+      }
       return this.disabled || !attachment.attachmentTypeStatus || !attachment.id || !this._isCreatedByCurrentUser(attachment);
     } else if (buttonType === 'upload') {
       return this.disabled || !attachment.attachmentTypeStatus;
@@ -379,7 +383,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
   private _isCreatedByCurrentUser(attachment: FileNetDocument) {
     let user = this.employeeService.getCurrentUser();
     if (this.employeeService.isExternalUser()) {
-      return ('' + ((user as OrgUser).qid ?? '')).trim() === attachment.createdBy;
+      return ('' + ((user as ExternalUser).qid ?? '')).trim() === attachment.createdBy;
     } else {
       return (user as InternalUser).domainName === attachment.createdBy;
     }

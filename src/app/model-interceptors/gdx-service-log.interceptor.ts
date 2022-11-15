@@ -21,7 +21,6 @@ export class GdxServiceLogInterceptor implements IModelInterceptor<GdxServiceLog
     model.actionTimeString = DateUtils.getDateStringFromDate(model.actionTime, 'TIMESTAMP');
     model.orgUserInfo && (model.orgUserInfo = AdminResult.createInstance(model.orgUserInfo));
     model.orgInfo && (model.orgInfo = AdminResult.createInstance(model.orgInfo));
-    model.orgBranchInfo && (model.orgBranchInfo = AdminResult.createInstance(model.orgBranchInfo));
     try {
       if (CommonUtils.isValidValue(model.gdxServiceResponse)) {
         let parsed = JSON.parse(model.gdxServiceResponse);
@@ -47,7 +46,6 @@ export class GdxServiceLogInterceptor implements IModelInterceptor<GdxServiceLog
   private static _deleteBeforeSend(model: Partial<GdxServiceLog> | any): void {
     delete model.orgUserInfo;
     delete model.orgInfo;
-    delete model.orgBranchInfo;
     delete model.gdxServiceResponseList;
     delete model.gdxServiceResponseParsed;
     delete model.actionTimeString;

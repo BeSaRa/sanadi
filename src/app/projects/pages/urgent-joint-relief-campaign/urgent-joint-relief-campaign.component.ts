@@ -15,7 +15,6 @@ import {EmployeeService} from '@services/employee.service';
 import {DatepickerControlsMap, DatepickerOptionsMap} from '@app/types/types';
 import {DateUtils} from '@helpers/date-utils';
 import {FormManager} from '@app/models/form-manager';
-import {OrganizationUnitService} from '@services/organization-unit.service';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
 import {Lookup} from '@app/models/lookup';
 import {Country} from '@app/models/country';
@@ -27,7 +26,8 @@ import {IMyInputFieldChanged} from 'angular-mydatepicker';
 import {ParticipantOrganization} from '@app/models/participant-organization';
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 import {OpenFrom} from '@app/enums/open-from.enum';
-import {OrgUnit} from '@app/models/org-unit';
+import {ProfileService} from '@services/profile.service';
+import {Profile} from '@app/models/profile';
 
 @Component({
   selector: 'urgent-joint-relief-campaign',
@@ -38,9 +38,9 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
   form!: UntypedFormGroup;
   officerForm!: UntypedFormGroup;
   fm!: FormManager;
-  organizationUnits: OrgUnit[] = [];
+  organizationUnits: Profile[] = [];
   selectedOrganizationUnits: ParticipantOrganization[] = [];
-  selectedOrg!: OrgUnit;
+  selectedOrg!: Profile;
   selectedOrganizationOfficers: OrganizationOfficer[] = [];
   selectedOfficer!: OrganizationOfficer | null;
   selectedOfficerIndex!: number | null;
@@ -69,7 +69,7 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
               private toast: ToastService,
               private licenseService: LicenseService,
               private employeeService: EmployeeService,
-              private orgUnitService: OrganizationUnitService,
+              private profileService: ProfileService,
               private countryService: CountryService) {
     super();
   }
@@ -117,19 +117,19 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
   }
 
   loadOrgUnits() {
-    this.orgUnitService.loadAsLookups().subscribe((list) => {
+    this.profileService.loadAsLookups().subscribe((list) => {
       this.organizationUnits = list;
     });
   }
 
-  mapOrgUnitsToParticipantOrgUnits(orgUnit: any): ParticipantOrganization {
+  mapOrgUnitsToParticipantOrgUnits(org: any): ParticipantOrganization {
       return new ParticipantOrganization()
         .clone({
-          organizationId: orgUnit.id,
-          arabicName: orgUnit.arName,
-          englishName: orgUnit.enName,
-          donation: this.model?.participatingOrganizaionList.find(xx => xx.organizationId == orgUnit.id)?.donation,
-          workStartDate: this.model?.participatingOrganizaionList.find(xx => xx.organizationId == orgUnit.id)?.workStartDate
+          organizationId: org.id,
+          arabicName: org.arName,
+          englishName: org.enName,
+          donation: this.model?.participatingOrganizaionList.find(xx => xx.organizationId == org.id)?.donation,
+          workStartDate: this.model?.participatingOrganizaionList.find(xx => xx.organizationId == org.id)?.workStartDate
         });
   }
 
@@ -225,8 +225,8 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
         ...model,
         ...this.externalUserData.getRawValue()
       });
-      model.participatingOrganizaionList.find(x => x.organizationId == this.employeeService.getOrgUnit()!.id)!.donation = this.externalUserData?.get('donation')?.value!;
-      model.participatingOrganizaionList.find(x => x.organizationId == this.employeeService.getOrgUnit()!.id)!.workStartDate = this.externalUserData?.get('workStartDate')?.value!;
+      model.participatingOrganizaionList.find(x => x.organizationId == this.employeeService.getProfile()!.id)!.donation = this.externalUserData?.get('donation')?.value!;
+      model.participatingOrganizaionList.find(x => x.organizationId == this.employeeService.getProfile()!.id)!.workStartDate = this.externalUserData?.get('workStartDate')?.value!;
     } else {
       model.participatingOrganizaionList = this.selectedOrganizationUnits;
     }
@@ -317,7 +317,7 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
 
   saveOfficer() {
     const officer = this.mapFormToOrganizationOfficer(this.organizationOfficer.getRawValue());
-    officer.organizationId = this.employeeService.getOrgUnit()?.id!;
+    officer.organizationId = this.employeeService.getProfile()?.id!;
     if (!this.selectedOfficer) {
       if (!this.selectedOrganizationOfficers.includes(officer)) {
         this.selectedOrganizationOfficers = this.selectedOrganizationOfficers.concat(officer);

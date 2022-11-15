@@ -149,9 +149,9 @@ export class UserInquiryComponent implements OnInit, OnDestroy {
         value2 = !isValidValue(b) ? '' : new Date(b.creationDate).valueOf();
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     },
-    organizationAndBranch: (a: SubventionRequestAid, b: SubventionRequestAid, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a) ? '' : a.orgAndBranchInfo?.getName().toLowerCase(),
-        value2 = !CommonUtils.isValidValue(b) ? '' : b.orgAndBranchInfo?.getName().toLowerCase();
+    organization: (a: SubventionRequestAid, b: SubventionRequestAid, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.orgInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.orgInfo?.getName().toLowerCase();
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     },
     requestStatus: (a: SubventionRequestAid, b: SubventionRequestAid, dir: SortEvent): number => {

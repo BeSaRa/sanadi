@@ -1,39 +1,38 @@
-import { Observable, of } from "rxjs";
-import { CastResponse } from "@decorators/cast-response";
-import { FactoryService } from "@services/factory.service";
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { DialogService } from "@services/dialog.service";
-import { DomSanitizer } from "@angular/platform-browser";
-import { ILanguageKeys } from "@contracts/i-language-keys";
-import { DynamicOptionsService } from "@services/dynamic-options.service";
-import { MenuItemService } from "@services/menu-item.service";
-import { EmployeeService } from "@services/employee.service";
-import { CommentService } from "@services/comment.service";
-import { RecommendationService } from "@services/recommendation.service";
-import { DocumentService } from "@services/document.service";
-import { ActionLogService } from "@services/action-log.service";
-import { SearchService } from "@services/search.service";
-import { CaseComment } from "../models/case-comment";
-import { FormlyFieldConfig } from "@ngx-formly/core/lib/components/formly.field.config";
-import { IFormRowGroup } from "@contracts/iform-row-group";
-import { map } from "rxjs/operators";
-import { FBuilder } from "@helpers/FBuilder";
-import { FileNetDocument } from "../models/file-net-document";
-import { BlobModel } from "../models/blob-model";
-import { DialogRef } from "../shared/models/dialog-ref";
-import { ActionRegistryPopupComponent } from "../shared/popups/action-registry-popup/action-registry-popup.component";
-import { ManageCommentPopupComponent } from "../shared/popups/manage-comment-popup/manage-comment-popup.component";
-import {
-  ManageRecommendationPopupComponent
-} from "../shared/popups/manage-recommendation-popup/manage-recommendation-popup.component";
-import { DocumentsPopupComponent } from "../shared/popups/documents-popup/documents-popup.component";
-import { IBulkResult } from "@contracts/ibulk-result";
-import { IDefaultResponse } from "@contracts/idefault-response";
-import { MenuItem } from "../models/menu-item";
-import { UrlService } from "@services/url.service";
-import { HasInterception, InterceptParam } from "@decorators/intercept-model";
-import { CaseModel } from '@app/models/case-model';
-import { FollowupComponent } from '@app/shared/popups/followup/followup.component';
+import {Observable, of} from 'rxjs';
+import {CastResponse} from '@decorators/cast-response';
+import {FactoryService} from '@services/factory.service';
+import {HttpClient, HttpParams} from '@angular/common/http';
+import {DialogService} from '@services/dialog.service';
+import {DomSanitizer} from '@angular/platform-browser';
+import {ILanguageKeys} from '@contracts/i-language-keys';
+import {DynamicOptionsService} from '@services/dynamic-options.service';
+import {MenuItemService} from '@services/menu-item.service';
+import {EmployeeService} from '@services/employee.service';
+import {CommentService} from '@services/comment.service';
+import {RecommendationService} from '@services/recommendation.service';
+import {DocumentService} from '@services/document.service';
+import {ActionLogService} from '@services/action-log.service';
+import {SearchService} from '@services/search.service';
+import {CaseComment} from '../models/case-comment';
+import {FormlyFieldConfig} from '@ngx-formly/core/lib/components/formly.field.config';
+import {IFormRowGroup} from '@contracts/iform-row-group';
+import {map} from 'rxjs/operators';
+import {FBuilder} from '@helpers/FBuilder';
+import {FileNetDocument} from '../models/file-net-document';
+import {BlobModel} from '../models/blob-model';
+import {DialogRef} from '../shared/models/dialog-ref';
+import {ActionRegistryPopupComponent} from '../shared/popups/action-registry-popup/action-registry-popup.component';
+import {ManageCommentPopupComponent} from '../shared/popups/manage-comment-popup/manage-comment-popup.component';
+import {ManageRecommendationPopupComponent} from '../shared/popups/manage-recommendation-popup/manage-recommendation-popup.component';
+import {DocumentsPopupComponent} from '../shared/popups/documents-popup/documents-popup.component';
+import {IBulkResult} from '@contracts/ibulk-result';
+import {IDefaultResponse} from '@contracts/idefault-response';
+import {MenuItem} from '../models/menu-item';
+import {UrlService} from '@services/url.service';
+import {HasInterception, InterceptParam} from '@decorators/intercept-model';
+import {CaseModel} from '@app/models/case-model';
+import {FollowupComponent} from '@app/shared/popups/followup/followup.component';
+import {QueryResult} from '@app/models/query-result';
 
 export abstract class BaseGenericEService<T extends { id: string }> {
   protected constructor() {
@@ -211,8 +210,8 @@ export abstract class BaseGenericEService<T extends { id: string }> {
     return this.dialog.show(ManageRecommendationPopupComponent, { service: this, caseId, onlyLogs });
   }
 
-  openDocumentDialog(caseId: string, caseType?: number): DialogRef {
-    return this.dialog.show(DocumentsPopupComponent, { service: this, caseId, caseType });
+  openDocumentDialog(caseId: string, caseType: number, model: QueryResult | CaseModel<any, any>): DialogRef {
+    return this.dialog.show(DocumentsPopupComponent, { service: this, caseId, caseType, model });
   }
 
   exportModel(caseId: string): Observable<BlobModel> {

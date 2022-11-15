@@ -1,21 +1,21 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {LangService} from "@app/services/lang.service";
-import {BehaviorSubject, iif, of, Subject} from "rxjs";
-import {UntypedFormControl} from "@angular/forms";
-import {UserTeam} from "@app/models/user-team";
-import {UserSecurityConfiguration} from "@app/models/user-security-configuration";
-import {TeamSecurityConfiguration} from "@app/models/team-security-configuration";
-import {catchError, distinctUntilChanged, filter, map, share, switchMap, takeUntil, tap} from "rxjs/operators";
-import {UserSecurityConfigurationService} from "@app/services/user-security-configuration.service";
-import {InternalUser} from "@app/models/internal-user";
-import {OrgUser} from "@app/models/org-user";
-import {TeamSecurityConfigurationService} from "@app/services/team-security-configuration.service";
-import {ToastService} from "@app/services/toast.service";
-import {TeamService} from "@app/services/team.service";
-import {Team} from "@app/models/team";
-import {ConfigurationService} from "@app/services/configuration.service";
-import {OperationTypes} from "@app/enums/operation-types.enum";
-import {UserTeamService} from "@app/services/user-team.service";
+import {LangService} from '@app/services/lang.service';
+import {BehaviorSubject, iif, of, Subject} from 'rxjs';
+import {UntypedFormControl} from '@angular/forms';
+import {UserTeam} from '@app/models/user-team';
+import {UserSecurityConfiguration} from '@app/models/user-security-configuration';
+import {TeamSecurityConfiguration} from '@app/models/team-security-configuration';
+import {catchError, distinctUntilChanged, filter, map, share, switchMap, takeUntil, tap} from 'rxjs/operators';
+import {UserSecurityConfigurationService} from '@app/services/user-security-configuration.service';
+import {InternalUser} from '@app/models/internal-user';
+import {ExternalUser} from '@app/models/external-user';
+import {TeamSecurityConfigurationService} from '@app/services/team-security-configuration.service';
+import {ToastService} from '@app/services/toast.service';
+import {TeamService} from '@app/services/team.service';
+import {Team} from '@app/models/team';
+import {ConfigurationService} from '@app/services/configuration.service';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {UserTeamService} from '@app/services/user-team.service';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
 
 @Component({
@@ -63,7 +63,7 @@ export class UserSecurityComponent implements OnInit, OnDestroy {
   }
 
   @Input()
-  model!: InternalUser | OrgUser
+  model!: InternalUser | ExternalUser
   teamSecurityMap!: Record<number, TeamSecurityConfiguration>;
   teamSecurity: TeamSecurityConfiguration[] = [];
   userSecurity: UserSecurityConfiguration[] = [];

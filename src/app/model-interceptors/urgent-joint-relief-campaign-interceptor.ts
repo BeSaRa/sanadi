@@ -44,7 +44,7 @@ export class UrgentJointReliefCampaignInterceptor implements IModelInterceptor<U
 
     // to set donation and workStartDate for login user's organization
     if(employeeService.isExternalUser()) {
-      const orgId = employeeService.getOrgUnit()!.id;
+      const orgId = employeeService.getProfile()!.id;
       if(model.participatingOrganizaionList.map(x => x.organizationId).includes(orgId)) {
         model.donation = model.participatingOrganizaionList.find(x => x.organizationId == orgId)!.donation!;
         model.workStartDate = DateUtils.changeDateToDatepicker(model.participatingOrganizaionList.find(x => x.organizationId == orgId)!.workStartDate!);

@@ -131,7 +131,7 @@ export abstract class CaseModel<S extends BaseGenericEService<T>, T extends File
   }
 
   manageAttachments(): DialogRef {
-    return this.service.openDocumentDialog(this.id, this.caseType);
+    return this.service.openDocumentDialog(this.id, this.caseType, this);
   }
 
   manageRecommendations(onlyLogs: boolean = false): DialogRef {
@@ -227,6 +227,10 @@ export abstract class CaseModel<S extends BaseGenericEService<T>, T extends File
 
   isFinalApproved(): boolean {
     return this.caseStatus === CommonCaseStatus.FINAL_APPROVE;
+  }
+
+  isFinalNotification(): boolean {
+    return this.caseStatus === CommonCaseStatus.FINAL_NOTIFICATION;
   }
 
   isInitialApproved(): boolean {
@@ -404,6 +408,12 @@ export abstract class CaseModel<S extends BaseGenericEService<T>, T extends File
   }
   finalNotification(): DialogRef {
     return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.FINAL_NOTIFICATION, false, this);
+  }
+  organizationFinalApprove(externalUserData: { form: UntypedFormGroup, organizationOfficers: OrganizationOfficer[] }): DialogRef {
+    return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.ORGANIZATION_APPROVE, false, this);
+  }
+  organizationFinalReject(): DialogRef {
+    return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.ORGANIZATION_FINAL_REJECT, false, this);
   }
   isClaimed(): boolean {
     return this.taskDetails && this.taskDetails.isClaimed();

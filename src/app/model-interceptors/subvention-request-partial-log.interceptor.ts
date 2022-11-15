@@ -5,7 +5,6 @@ import {DateUtils} from '@helpers/date-utils';
 export class SubventionRequestPartialLogInterceptor {
   receive(model: SubventionRequestPartialLog): SubventionRequestPartialLog {
     model.orgUserInfo = AdminResult.createInstance(model.orgUserInfo);
-    model.orgBranchInfo = AdminResult.createInstance(model.orgBranchInfo);
     model.orgInfo = AdminResult.createInstance(model.orgInfo);
     model.actionTypeInfo = AdminResult.createInstance(model.actionTypeInfo);
     model.aidLookupParentInfo = AdminResult.createInstance(model.aidLookupParentInfo);
@@ -18,7 +17,6 @@ export class SubventionRequestPartialLogInterceptor {
 
   send(model: any | SubventionRequestPartialLog): any {
     delete model.subventionRequestPartialLogService;
-    delete model.orgBranchInfo;
     delete model.orgInfo;
     delete model.orgUserInfo;
     delete model.aidLookupParentInfo;

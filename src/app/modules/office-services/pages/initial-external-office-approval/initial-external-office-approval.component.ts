@@ -1,36 +1,33 @@
 import {Component} from '@angular/core';
 import {AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import {EServicesGenericComponent} from "@app/generics/e-services-generic-component";
-import {InitialExternalOfficeApproval} from "@app/models/initial-external-office-approval";
+import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
+import {InitialExternalOfficeApproval} from '@app/models/initial-external-office-approval';
 import {Observable, of, Subject} from 'rxjs';
-import {InitialExternalOfficeApprovalService} from "@app/services/initial-external-office-approval.service";
-import {LangService} from "@app/services/lang.service";
-import {LookupService} from "@app/services/lookup.service";
-import {Lookup} from "@app/models/lookup";
-import {CountryService} from "@app/services/country.service";
-import {Country} from "@app/models/country";
-import {catchError, exhaustMap, filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
-import {InitialExternalOfficeApprovalResult} from "@app/models/initial-external-office-approval-result";
-import {LicenseService} from "@app/services/license.service";
-import {DialogService} from "@app/services/dialog.service";
-import {CustomValidators} from "@app/validators/custom-validators";
-import {OrgUnit} from "@app/models/org-unit";
-import {OrganizationUnitService} from "@app/services/organization-unit.service";
-import {EmployeeService} from "@app/services/employee.service";
-import {SaveTypes} from "@app/enums/save-types";
-import {OperationTypes} from "@app/enums/operation-types.enum";
-import {ToastService} from "@app/services/toast.service";
-import {ServiceRequestTypes} from "@app/enums/service-request-types";
+import {InitialExternalOfficeApprovalService} from '@app/services/initial-external-office-approval.service';
+import {LangService} from '@app/services/lang.service';
+import {LookupService} from '@app/services/lookup.service';
+import {Lookup} from '@app/models/lookup';
+import {CountryService} from '@app/services/country.service';
+import {Country} from '@app/models/country';
+import {catchError, exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
+import {InitialExternalOfficeApprovalResult} from '@app/models/initial-external-office-approval-result';
+import {LicenseService} from '@app/services/license.service';
+import {DialogService} from '@app/services/dialog.service';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {EmployeeService} from '@app/services/employee.service';
+import {SaveTypes} from '@app/enums/save-types';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {ToastService} from '@app/services/toast.service';
+import {ServiceRequestTypes} from '@app/enums/service-request-types';
 import {OpenFrom} from '@app/enums/open-from.enum';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {IKeyValue} from '@app/interfaces/i-key-value';
-import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
-import {
-  InitialExternalOfficeApprovalSearchCriteria
-} from '@app/models/initial-external-office-approval-search-criteria';
+import {InitialExternalOfficeApprovalSearchCriteria} from '@app/models/initial-external-office-approval-search-criteria';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {Profile} from '@app/models/profile';
+import {ProfileService} from '@services/profile.service';
 
 @Component({
   selector: 'initial-external-office-approval',
@@ -41,10 +38,10 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
 
   form!: UntypedFormGroup;
   requestTypes: Lookup[] = this.lookupService.listByCategory.ServiceRequestType.slice().sort((a, b) => a.lookupKey - b.lookupKey);
-  countries: Country[] = []
+  countries: Country[] = [];
   licenseSearch$: Subject<string> = new Subject<string>();
   selectedLicense?: InitialExternalOfficeApproval;
-  organizations: OrgUnit[] = [];
+  organizations: Profile[] = [];
   loadAttachments: boolean = false;
 
   tabsData: IKeyValue = {
@@ -74,7 +71,7 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
               public lang: LangService,
               private lookupService: LookupService,
               private countryService: CountryService,
-              private orgService: OrganizationUnitService,
+              private profileService: ProfileService,
               private licenseService: LicenseService,
               private dialog: DialogService,
               public employeeService: EmployeeService,
@@ -126,7 +123,7 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
   }
 
   _prepareModel(): InitialExternalOfficeApproval | Observable<InitialExternalOfficeApproval> {
-    return (new InitialExternalOfficeApproval()).clone({...this.model, ...this.form.value})
+    return (new InitialExternalOfficeApproval()).clone({...this.model, ...this.form.value});
   }
 
   private _updateModelAfterSave(model: InitialExternalOfficeApproval): void {
@@ -134,7 +131,7 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
       this.service.getTask(this.model.taskDetails.tkiid)
         .subscribe((model) => {
           this.model = model;
-        })
+        });
     } else {
       this.model = model;
     }
@@ -203,11 +200,11 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
   }
 
   get requestType(): AbstractControl {
-    return this.form.get('requestType')!
+    return this.form.get('requestType')!;
   }
 
   get licenseNumber(): AbstractControl {
-    return this.form.get('licenseNumber')!
+    return this.form.get('licenseNumber')!;
   }
 
   get oldLicenseFullSerialField(): UntypedFormControl {
@@ -217,21 +214,21 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
   private loadCountries(): void {
     this.countryService.loadAsLookups()
       .pipe(takeUntil(this.destroy$))
-      .subscribe((countries) => this.countries = countries)
+      .subscribe((countries) => this.countries = countries);
   }
 
   private loadOrganizations() {
-    this.orgService.loadAsLookups()
+    this.profileService.loadAsLookups()
       .pipe(takeUntil(this.destroy$))
       .subscribe((organizations) => {
         this.organizations = organizations;
         this.setDefaultOrganization();
-      })
+      });
   }
 
   private setDefaultOrganization(): void {
     if (this.operation === this.operationTypes.CREATE && this.employeeService.isExternalUser()) {
-      const orgId = this.employeeService.getOrgUnit()?.id;
+      const orgId = this.employeeService.getProfile()?.id;
       this.organizationId.patchValue(orgId);
       this.organizationId.disable();
     }
@@ -275,7 +272,7 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
           }
         } else {
           this.oldLicenseFullSerialField.setValidators([CustomValidators.required, (control) => {
-            return this.selectedLicense && this.selectedLicense?.fullSerial === control.value ? null : {select_license: true}
+            return this.selectedLicense && this.selectedLicense?.fullSerial === control.value ? null : {select_license: true};
           }]);
         }
         this.oldLicenseFullSerialField.updateValueAndValidity();
@@ -294,7 +291,7 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
     this.licenseSearch$
       .pipe(exhaustMap(oldLicenseFullSerial => {
         return this.loadLicencesByCriteria({fullSerial: oldLicenseFullSerial})
-          .pipe(catchError(() => of([])))
+          .pipe(catchError(() => of([])));
       }))
       .pipe(
         // display message in case there is no returned license
@@ -315,7 +312,7 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
                 catchError(() => {
                   return of(null);
                 })
-              )
+              );
           } else {
             return this.licenseService.openSelectLicenseDialog(licenses, this.model?.clone({requestType: this.requestType.value || null})).onAfterClose$;
           }
@@ -329,7 +326,7 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
       )
       .subscribe((selection) => {
         this.setSelectedLicense(selection.details, false);
-      })
+      });
   }
 
   private setSelectedLicense(licenseDetails: InitialExternalOfficeApproval | undefined, ignoreUpdateForm: boolean) {
@@ -384,7 +381,7 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
         this.setSelectedLicense(license, true);
 
         callback && callback();
-      })
+      });
   }
 
   handleReadonly(): void {
@@ -455,7 +452,7 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
     }
     if (isAllowed) {
       let caseStatus = this.model.getCaseStatus();
-        isAllowed = (caseStatus !== CommonCaseStatus.CANCELLED && caseStatus !== CommonCaseStatus.FINAL_APPROVE && caseStatus !== CommonCaseStatus.FINAL_REJECTION);
+      isAllowed = (caseStatus !== CommonCaseStatus.CANCELLED && caseStatus !== CommonCaseStatus.FINAL_APPROVE && caseStatus !== CommonCaseStatus.FINAL_REJECTION);
     }
 
     return !isAllowed;
@@ -473,7 +470,7 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
   }
 
   isNewRequestType(): boolean {
-    return this.requestType.value && (this.requestType.value === ServiceRequestTypes.NEW)
+    return this.requestType.value && (this.requestType.value === ServiceRequestTypes.NEW);
   }
 
   isRenewOrUpdateRequestType(): boolean {

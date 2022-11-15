@@ -14,12 +14,10 @@ import {OperationTypes} from '@app/enums/operation-types.enum';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {IDialogData} from '@app/interfaces/i-dialog-data';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
-import {catchError, switchMap} from 'rxjs/operators';
+import {switchMap} from 'rxjs/operators';
 import {CrudWithDialogGenericService} from '@app/generics/crud-with-dialog-generic-service';
 import {CastResponse, CastResponseContainer} from '@decorators/cast-response';
 import {Pagination} from '@app/models/pagination';
-import {OrgUser} from '@app/models/org-user';
-import {OrganizationUserPopupComponent} from '@app/administration/popups/organization-user-popup/organization-user-popup.component';
 
 @CastResponseContainer({
   $default: {

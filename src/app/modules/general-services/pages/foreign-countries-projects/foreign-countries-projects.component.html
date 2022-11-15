@@ -277,7 +277,7 @@
       </div>
     </ng-template>
     <ng-template #tabContent>
-      <attachments
+      <attachments [model]="model"
         [caseId]="model?.id"
         [caseType]="model?.caseType"
         [service]="service.documentService"

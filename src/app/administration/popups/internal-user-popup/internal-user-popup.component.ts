@@ -18,7 +18,7 @@ import {Permission} from '@app/models/permission';
 import {PermissionService} from '@app/services/permission.service';
 import {CheckGroupHandler} from '@app/models/check-group-handler';
 import {CustomRole} from '@app/models/custom-role';
-import {CustomRoleService} from '@app/services/custom-role.service';
+import {ExternalUserCustomRoleService} from '@services/external-user-custom-role.service';
 import {UserPermissionService} from '@app/services/user-permission.service';
 import {ToastService} from '@app/services/toast.service';
 import {SharedService} from '@app/services/shared.service';
@@ -81,7 +81,7 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
               public fb: UntypedFormBuilder,
               private sharedService: SharedService,
               private lookupService: LookupService,
-              private customRoleService: CustomRoleService,
+              private customRoleService: ExternalUserCustomRoleService,
               private userPermissionService: UserPermissionService,
               private internalUserDepartmentService: InternalUserDepartmentService,
               private permissionService: PermissionService,
@@ -139,7 +139,7 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
     this.permissionService
       .loadAsLookups()
       .pipe(takeUntil(this.destroy$))
-      .pipe(withLatestFrom(of(this.lookupService.listByCategory.OrgUserPermissionGroup)))
+      .pipe(withLatestFrom(of(this.lookupService.listByCategory.ExternalUserPermissionGroup)))
       .pipe(switchMap(([permissions, groups]) => {
         this.buildPermissionGroups(groups, permissions);
         this.groupHandler = new CheckGroupHandler<Permission>(

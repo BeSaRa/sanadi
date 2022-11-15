@@ -144,7 +144,7 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
   }
 
   manageAttachments(): DialogRef {
-    return this.service.openDocumentDialog(this.PI_PARENT_CASE_ID, this.BD_CASE_TYPE);
+    return this.service.openDocumentDialog(this.PI_PARENT_CASE_ID, this.BD_CASE_TYPE, this);
   }
 
   manageRecommendations(): DialogRef {
@@ -335,6 +335,22 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
 
   getCaseStatus(): any {
     return this.BD_CASE_STATUS;
+  }
+
+  isFinalApproved(): any {
+    return this.getCaseStatus() === CommonCaseStatus.FINAL_APPROVE;
+  }
+
+  isFinalNotification(): any {
+    return this.getCaseStatus() === CommonCaseStatus.FINAL_NOTIFICATION;
+  }
+
+  isInitialApproved(): boolean {
+    return this.getCaseStatus() === CommonCaseStatus.INITIAL_APPROVE;
+  }
+
+  isFinalRejection(): boolean {
+    return this.getCaseStatus() === CommonCaseStatus.FINAL_REJECTION;
   }
 
   isTask(): boolean {

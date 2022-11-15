@@ -12,6 +12,10 @@ import {IMyDateModel} from 'angular-mydatepicker';
 import {AdminResult} from './admin-result';
 import {BaseModel} from './base-model';
 import {ProfileDetails} from './profile-details';
+import {Observable, of} from 'rxjs';
+import {ProfileServiceRelation} from '@app/models/profile-service-relation';
+import {ProfileServiceRelationService} from '@services/profile-service-relation.service';
+import {DialogRef} from '@app/shared/models/dialog-ref';
 
 const {receive, send} = new ProfileInterceptor();
 
@@ -90,5 +94,17 @@ export class Profile extends BaseModel<Profile, ProfileService> {
 
   isActive(): boolean {
     return this.status === CommonStatusEnum.ACTIVATED;
+  }
+
+  loadLinkedServices(): Observable<ProfileServiceRelation[]> {
+    if (!this.id) {
+      return of([]);
+    }
+    let profileServiceRelationService: ProfileServiceRelationService = FactoryService.getService('ProfileServiceRelationService');
+    return profileServiceRelationService.getServicesByProfile(this.id);
+  }
+
+  showAuditLogs(): Observable<DialogRef> {
+    return this.service.openAuditLogsById(this.id);
   }
 }

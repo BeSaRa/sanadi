@@ -1,10 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { OrganizationOfficer } from '@app/models/organization-officer';
-import { EmployeeService } from '@app/services/employee.service';
-import { LangService } from '@app/services/lang.service';
-import { ToastService } from '@app/services/toast.service';
-import { CustomValidators } from '@app/validators/custom-validators';
+import {Component, Input, OnInit} from '@angular/core';
+import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
+import {OrganizationOfficer} from '@app/models/organization-officer';
+import {EmployeeService} from '@app/services/employee.service';
+import {LangService} from '@app/services/lang.service';
+import {ToastService} from '@app/services/toast.service';
+import {CustomValidators} from '@app/validators/custom-validators';
 
 @Component({
   selector: 'organization-officers',
@@ -92,7 +92,7 @@ export class OrganizationOfficersComponent implements OnInit {
     const officer = this.mapFormToOrganizationOfficer(
       this.officerForm.getRawValue()
     );
-    officer.organizationId = this.employeeService.getOrgUnit()?.id!;
+    officer.organizationId = this.employeeService.getProfile()?.id!;
     if (!this.selectedOfficer) {
       if (
         this.selectedOrganizationOfficers.findIndex(

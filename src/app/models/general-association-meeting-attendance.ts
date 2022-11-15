@@ -153,6 +153,10 @@ export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAss
     return this.taskDetails?.name === GeneralAssociationMeetingStepNameEnum.MANAGER_FINAL_REVIEW;
   }
 
+  isCharityManagerReviewStep(): boolean {
+    return this.taskDetails?.name === GeneralAssociationMeetingStepNameEnum.CharityManagerReview;
+  }
+
   isMemberReviewStep(): boolean {
     return this.taskDetails?.name === GeneralAssociationMeetingStepNameEnum.MEMBER_REVIEW;
   }

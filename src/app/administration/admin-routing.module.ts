@@ -1,35 +1,34 @@
+import { CustomMenuComponent } from './pages/custom-menu/custom-menu.component';
 import { GeneralProcessComponent } from './pages/general-process/general-process.component';
 import { SubTeamComponent } from './pages/sub-team/sub-team.component';
-import { CustomMenuComponent } from './pages/custom-menu/custom-menu.component';
-import { OrganizationUnitFieldComponent } from './pages/organization-unit-field/organization-unit-field.component';
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { AdminHomeComponent } from './pages/admin-home/admin-home.component';
-import { LocalizationComponent } from './pages/localization/localization.component';
-import { CustomRoleComponent } from './pages/custom-role/custom-role.component';
-import { OrganizationUnitComponent } from './pages/organization-unit/organization-unit.component';
-import { AidLookupContainerComponent } from './pages/aid-lookup-container/aid-lookup-container.component';
-import { OrganizationUserComponent } from './pages/organization-user/organization-user.component';
-import { PermissionGuard } from '../guards/permission-guard';
-import { AttachmentTypesComponent } from './pages/attachment-types/attachment-types.component';
-import { ServiceDataComponent } from './pages/service-data/service-data.component';
-import { TeamComponent } from './pages/team/team.component';
-import { CountryComponent } from './pages/country/country.component';
-import { InternalUserComponent } from './pages/internal-user/internal-user.component';
-import { InternalDepartmentComponent, } from '@app/administration/pages/internal-department/internal-department.component';
-import { JobTitleComponent } from '@app/administration/pages/job-title/job-title.component';
-import { SurveyQuestionComponent } from '@app/administration/pages/survey-question/survey-question.component';
-import { SurveyTemplateComponent } from '@app/administration/pages/survey-template/survey-template.component';
-import { PermissionsEnum } from '@app/enums/permissions-enum';
-import { SdGoalComponent } from '@app/administration/pages/sd-goal/sd-goal.component';
-import { BankComponent } from '@app/administration/pages/bank/bank.component';
-import { DonorComponent } from '@app/administration/pages/donor/donor.component';
-import { FieldAssessmentComponent } from '@app/administration/pages/field-assessment/field-assessment.component';
-import { VactionDatesComponent } from './pages/vaction-dates/vaction-dates.component';
-import { PermissionGroupsEnum } from '@app/enums/permission-groups-enum';
-import { AdminLookupComponent } from '@app/administration/pages/admin-lookup/admin-lookup.component';
-import { AdminLookupOldComponent } from './pages/admin-lookup-old/admin-lookup-old.component';
-import { ProfilesComponent } from './pages/profiles/profiles.component';
+import {OrganizationUnitFieldComponent} from './pages/organization-unit-field/organization-unit-field.component';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
+import {AdminHomeComponent} from './pages/admin-home/admin-home.component';
+import {LocalizationComponent} from './pages/localization/localization.component';
+import {CustomRoleComponent} from './pages/custom-role/custom-role.component';
+import {AidLookupContainerComponent} from './pages/aid-lookup-container/aid-lookup-container.component';
+import {ExternalUserComponent} from './pages/external-user/external-user.component';
+import {PermissionGuard} from '../guards/permission-guard';
+import {AttachmentTypesComponent} from './pages/attachment-types/attachment-types.component';
+import {ServiceDataComponent} from './pages/service-data/service-data.component';
+import {TeamComponent} from './pages/team/team.component';
+import {CountryComponent} from './pages/country/country.component';
+import {InternalUserComponent} from './pages/internal-user/internal-user.component';
+import {InternalDepartmentComponent,} from '@app/administration/pages/internal-department/internal-department.component';
+import {JobTitleComponent} from '@app/administration/pages/job-title/job-title.component';
+import {SurveyQuestionComponent} from '@app/administration/pages/survey-question/survey-question.component';
+import {SurveyTemplateComponent} from '@app/administration/pages/survey-template/survey-template.component';
+import {PermissionsEnum} from '@app/enums/permissions-enum';
+import {SdGoalComponent} from '@app/administration/pages/sd-goal/sd-goal.component';
+import {BankComponent} from '@app/administration/pages/bank/bank.component';
+import {DonorComponent} from '@app/administration/pages/donor/donor.component';
+import {FieldAssessmentComponent} from '@app/administration/pages/field-assessment/field-assessment.component';
+import {VactionDatesComponent} from './pages/vaction-dates/vaction-dates.component';
+import {PermissionGroupsEnum} from '@app/enums/permission-groups-enum';
+import {AdminLookupComponent} from '@app/administration/pages/admin-lookup/admin-lookup.component';
+import {AdminLookupOldComponent} from './pages/admin-lookup-old/admin-lookup-old.component';
+import {ProfilesComponent} from './pages/profiles/profiles.component';
 
 const routes: Routes = [
   { path: '', component: AdminHomeComponent },
@@ -43,20 +42,20 @@ const routes: Routes = [
     canActivate: [PermissionGuard],
     data: { permissionKey: PermissionsEnum.MANAGE_CUSTOM_ROLE, configPermissionGroup: null, checkAnyPermission: false },
   },
-  {
+  /*{
     path: 'organizations', component: OrganizationUnitComponent,
     canActivate: [PermissionGuard],
     data: { permissionKey: null, configPermissionGroup: PermissionGroupsEnum.MANAGE_ORGANIZATION_PERMISSIONS_GROUP, checkAnyPermission: true },
-  },
+  },*/
   {
     path: 'aid', component: AidLookupContainerComponent,
     canActivate: [PermissionGuard],
     data: { permissionKey: PermissionsEnum.MANAGE_AID_LOOKUP, configPermissionGroup: null, checkAnyPermission: false },
   },
   {
-    path: 'users', component: OrganizationUserComponent,
+    path: 'external-users', component: ExternalUserComponent,
     canActivate: [PermissionGuard],
-    data: { permissionKey: null, configPermissionGroup: PermissionGroupsEnum.MANAGE_USER_PERMISSIONS_GROUP, checkAnyPermission: true },
+    data: { permissionKey: null, configPermissionGroup: PermissionGroupsEnum.MANAGE_EXTERNAL_USER_PERMISSIONS_GROUP, checkAnyPermission: true },
   },
   {
     path: 'services', component: ServiceDataComponent,

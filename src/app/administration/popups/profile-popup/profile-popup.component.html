@@ -7,11 +7,11 @@
             tabindex="-1" [dialogClose]="model" aria-label="Close"></button>
   </div>
 </div>
-<div class="dialog-content w800px" #content>
+<div class="dialog-content w800px" #dialogContent>
   <tabs-list (onTabChange)="onTabChange($event)">
     <tab [name]="tabsData.basic.name" [hasError]="!tabsData.basic.validStatus()"
          [template]="basicInfoTab" [title]="lang.map.lbl_basic_info"></tab>
-    <tab *ngIf="showServicesTab" [name]="tabsData.services.name" [hasError]="false"
+    <tab *ngIf="tabsData.services.show!()" [name]="tabsData.services.name" [hasError]="false"
          [template]="linkServices" [title]="lang.map.link_services">
     </tab>
   </tabs-list>
@@ -163,7 +163,7 @@
   </ng-template>
 </div>
 <div class="dialog-actions">
-  <button tabindex="-1" (click)="displayFormValidity(null, content)" tooltip="{{ lang.map.validate_fields }}"
+  <button tabindex="-1" (click)="displayFormValidity(null, dialogContent)" tooltip="{{ lang.map.validate_fields }}"
           class="btn btn-link"><i class="mdi mdi-information-outline text-info"></i></button>
   <div class="flex-grow-1"></div>
   <button (click)="save$.next(null)" class="btn btn-primary">{{ lang.map.btn_save }}</button>

@@ -36,8 +36,6 @@ export class SubventionRequestAid extends SearchableCloneable<SubventionRequestA
   aidLookupId?: number;
   aidLookupInfo!: AdminResult;
   aidId?: number;
-  orgBranchId!: number;
-  orgBranchInfo!: AdminResult;
   orgUserId!: number;
   orgUserInfo!: AdminResult;
   orgId!: number;
@@ -60,24 +58,14 @@ export class SubventionRequestAid extends SearchableCloneable<SubventionRequestA
   aidCount: any = 0;
 
   searchFieldsInquiry: ISearchFieldsMap<SubventionRequestAid> = {
-    ...infoSearchFields(['orgAndBranchInfo', 'statusInfo']),
+    ...infoSearchFields(['orgInfo', 'statusInfo']),
     ...normalSearchFields(['requestFullSerial', 'creationDateString', 'requestedAidAmount', 'aidTotalPayedAmount'])
   };
 
   searchFieldsSearch: ISearchFieldsMap<SubventionRequestAid> = {
-    ...infoSearchFields(['orgAndBranchInfo', 'orgUserInfo', 'statusInfo']),
+    ...infoSearchFields(['orgInfo', 'orgUserInfo', 'statusInfo']),
     ...normalSearchFields(['requestFullSerial', 'creationDateString', 'aidSuggestedAmount', 'requestedAidAmount', 'aidTotalPayedAmount', 'statusDateModifiedString'])
   };
-
-  get orgAndBranchInfo() {
-    if (!isValidValue(this.orgInfo.getName())) {
-      return new AdminResult();
-    }
-    return AdminResult.createInstance({
-      arName: this.orgInfo.arName + ' - ' + this.orgBranchInfo.arName,
-      enName: this.orgInfo.enName + ' - ' + this.orgBranchInfo.enName,
-    });
-  }
 
   printRequest(fileName: string): void {
     this.subventionRequestService.loadByRequestIdAsBlob(this.requestId)

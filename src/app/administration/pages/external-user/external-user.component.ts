@@ -1,7 +1,7 @@
 import {catchError, exhaustMap, filter, switchMap, takeUntil} from 'rxjs/operators';
 import {Component, ViewChild} from '@angular/core';
-import {OrgUser} from '@app/models/org-user';
-import {OrganizationUserService} from '@app/services/organization-user.service';
+import {ExternalUser} from '@app/models/external-user';
+import {ExternalUserService} from '@services/external-user.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {LangService} from '@app/services/lang.service';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
@@ -21,15 +21,15 @@ import {of, Subject} from 'rxjs';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 
 @Component({
-  selector: 'app-organization-user',
-  templateUrl: './organization-user.component.html',
-  styleUrls: ['./organization-user.component.scss']
+  selector: 'app-external-user',
+  templateUrl: './external-user.component.html',
+  styleUrls: ['./external-user.component.scss']
 })
-export class OrganizationUserComponent extends AdminGenericComponent<OrgUser, OrganizationUserService> {
-  view$: Subject<OrgUser> = new Subject<OrgUser>();
+export class ExternalUserComponent extends AdminGenericComponent<ExternalUser, ExternalUserService> {
+  view$: Subject<ExternalUser> = new Subject<ExternalUser>();
   usePagination = true;
 
-  constructor(public service: OrganizationUserService,
+  constructor(public service: ExternalUserService,
               public langService: LangService,
               private toast: ToastService,
               public configService: ConfigurationService,
@@ -46,20 +46,15 @@ export class OrganizationUserComponent extends AdminGenericComponent<OrgUser, Or
 
   @ViewChild('table') table!: TableComponent;
 
-  displayedColumns: string[] = ['domainName', 'arName', 'enName', 'empNum', 'organization', 'branch', 'status', 'statusDateModified', 'actions'];
+  displayedColumns: string[] = ['domainName', 'arName', 'enName', 'empNum', 'organization', 'status', 'statusDateModified', 'actions'];
 
   sortingCallbacks = {
-    organization: (a: OrgUser, b: OrgUser, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a) ? '' : a.orgUnitInfo?.getName().toLowerCase(),
-        value2 = !CommonUtils.isValidValue(b) ? '' : b.orgUnitInfo?.getName().toLowerCase();
+    organization: (a: ExternalUser, b: ExternalUser, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.profileInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.profileInfo?.getName().toLowerCase();
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     },
-    branch: (a: OrgUser, b: OrgUser, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a) ? '' : a.orgBranchInfo?.getName().toLowerCase(),
-        value2 = !CommonUtils.isValidValue(b) ? '' : b.orgBranchInfo?.getName().toLowerCase();
-      return CommonUtils.getSortValue(value1, value2, dir.direction);
-    },
-    status: (a: OrgUser, b: OrgUser, dir: SortEvent): number => {
+    status: (a: ExternalUser, b: ExternalUser, dir: SortEvent): number => {
       let value1 = !CommonUtils.isValidValue(a) ? '' : a.statusInfo?.getName().toLowerCase(),
         value2 = !CommonUtils.isValidValue(b) ? '' : b.statusInfo?.getName().toLowerCase();
       return CommonUtils.getSortValue(value1, value2, dir.direction);
@@ -77,7 +72,7 @@ export class OrganizationUserComponent extends AdminGenericComponent<OrgUser, Or
     // }
   ];
 
-  actions: IMenuItem<OrgUser>[] = [
+  actions: IMenuItem<ExternalUser>[] = [
     // edit
     {
       type: 'action',
@@ -126,11 +121,11 @@ export class OrganizationUserComponent extends AdminGenericComponent<OrgUser, Or
     }
   ];
 
-  get selectedRecords(): OrgUser[] {
+  get selectedRecords(): ExternalUser[] {
     return this.table.selection.selected;
   }
 
-  deactivate(model: OrgUser, event?: MouseEvent): void {
+  deactivate(model: ExternalUser, event?: MouseEvent): void {
     event?.preventDefault();
     // @ts-ignore
     const message = this.langService.map.msg_delete_will_change_x_status_to_retired.change({x: this.langService.map.user.toLowerCase()}) + '<br/>' +
@@ -171,7 +166,7 @@ export class OrganizationUserComponent extends AdminGenericComponent<OrgUser, Or
     }
   }
 
-  edit(orgUser: OrgUser, $event?: MouseEvent): void {
+  edit(orgUser: ExternalUser, $event?: MouseEvent): void {
     $event?.preventDefault();
     this.edit$.next(orgUser);
   }
@@ -195,7 +190,7 @@ export class OrganizationUserComponent extends AdminGenericComponent<OrgUser, Or
       .subscribe(() => this.reload$.next(null));
   }
 
-  showAuditLogs(user: OrgUser, $event?: MouseEvent): void {
+  showAuditLogs(user: ExternalUser, $event?: MouseEvent): void {
     $event?.preventDefault();
     user.showAuditLogs($event)
       .subscribe((dialog: DialogRef) => {
@@ -203,7 +198,7 @@ export class OrganizationUserComponent extends AdminGenericComponent<OrgUser, Or
       });
   }
 
-  toggleStatus(model: OrgUser) {
+  toggleStatus(model: ExternalUser) {
     let updateObservable = model.status == CommonStatusEnum.ACTIVATED ? model.updateStatus(CommonStatusEnum.DEACTIVATED) : model.updateStatus(CommonStatusEnum.ACTIVATED);
     updateObservable.pipe(takeUntil(this.destroy$))
       .subscribe((_value) => {

@@ -1,22 +1,22 @@
-import { Injectable } from '@angular/core';
-import { FactoryService } from './factory.service';
-import { SubventionRequestPartial } from '../models/subvention-request-partial';
-import { UrlService } from './url.service';
-import { HttpClient } from '@angular/common/http';
-import { LangService } from './lang.service';
-import { Observable, of } from 'rxjs';
-import { IPartialRequestCriteria } from '@contracts/i-partial-request-criteria';
-import { DialogRef } from '../shared/models/dialog-ref';
-import { switchMap } from 'rxjs/operators';
-import { RequestDetailsPopupComponent } from '../sanady/popups/request-details-popup/request-details-popup.component';
-import { DialogService } from './dialog.service';
-import { OrgUnit } from '../models/org-unit';
-import { FilterRequestPopupComponent } from '../sanady/popups/filter-request-popup/filter-request-popup.component';
-import { OrganizationUnitService } from './organization-unit.service';
-import { SubventionResponseService } from './subvention-response.service';
-import { SubventionResponse } from '../models/subvention-response';
-import { CrudGenericService } from "@app/generics/crud-generic-service";
-import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
+import {Injectable} from '@angular/core';
+import {FactoryService} from './factory.service';
+import {SubventionRequestPartial} from '../models/subvention-request-partial';
+import {UrlService} from './url.service';
+import {HttpClient} from '@angular/common/http';
+import {LangService} from './lang.service';
+import {Observable, of} from 'rxjs';
+import {IPartialRequestCriteria} from '@contracts/i-partial-request-criteria';
+import {DialogRef} from '../shared/models/dialog-ref';
+import {switchMap} from 'rxjs/operators';
+import {RequestDetailsPopupComponent} from '../sanady/popups/request-details-popup/request-details-popup.component';
+import {DialogService} from './dialog.service';
+import {FilterRequestPopupComponent} from '../sanady/popups/filter-request-popup/filter-request-popup.component';
+import {SubventionResponseService} from './subvention-response.service';
+import {SubventionResponse} from '../models/subvention-response';
+import {CrudGenericService} from '@app/generics/crud-generic-service';
+import {CastResponse, CastResponseContainer} from '@decorators/cast-response';
+import {ProfileService} from '@services/profile.service';
+import {Profile} from '@app/models/profile';
 
 @CastResponseContainer({
   $default: {
@@ -34,7 +34,7 @@ export class SubventionRequestPartialService extends CrudGenericService<Subventi
               public http: HttpClient,
               private langService: LangService,
               private dialogService: DialogService,
-              private orgUnitService: OrganizationUnitService) {
+              private profileService: ProfileService) {
     super();
     FactoryService.registerService('SubventionRequestPartialService', this);
   }
@@ -79,8 +79,8 @@ export class SubventionRequestPartialService extends CrudGenericService<Subventi
    * @param filterCriteria
    */
   openFilterPartialRequestDialog(filterCriteria: Partial<IPartialRequestCriteria>): Observable<DialogRef> {
-    return this.orgUnitService.load().pipe(
-      switchMap((orgUnits: OrgUnit[]) => {
+    return this.profileService.loadAsLookups().pipe(
+      switchMap((orgUnits: Profile[]) => {
         return of(this.dialogService.show(FilterRequestPopupComponent, {
           criteria: filterCriteria,
           orgUnits: orgUnits

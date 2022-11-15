@@ -4,5 +4,6 @@ export enum GeneralAssociationMeetingStepNameEnum {
   DECISION_MAKER_REVIEW = 'Decision Maker Review',
   MEMBER_REVIEW = 'Member Review',
   MANAGER_FINAL_REVIEW = 'Man Final Review',
-  SUPERVISION_AND_CONTROL_REWORK = 'Supervision and Control ReWork'
+  SUPERVISION_AND_CONTROL_REWORK = 'Supervision and Control ReWork',
+  CharityManagerReview = 'Charity Man Review'
 }

@@ -66,7 +66,6 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
   benWivesCount!: number;
   benDependentsCount!: number;
   benDependentsUnder18Count!: number;
-  orgBranchId!: number;
   orgId!: number;
   orgUserId!: number;
   streetName!: string;
@@ -104,7 +103,6 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
   govEmploymentTypeInfo!: AdminResult;
   maritalStatusInfo!: AdminResult;
   occuptionStatusInfo!: AdminResult;
-  orgBranchInfo!: AdminResult;
   orgInfo!: AdminResult;
   orgUserInfo!: AdminResult;
   residenceCityInfo!: AdminResult;
@@ -129,16 +127,6 @@ export class Beneficiary extends BaseModel<Beneficiary, BeneficiaryService> {
       delete this.searchFields.benSecIdTypeInfo;
       delete this.searchFields.benSecIdNumber;
     }
-  }
-
-  get orgAndBranchInfo() {
-    if (!isValidValue(this.orgInfo.getName())) {
-      return new AdminResult();
-    }
-    return AdminResult.createInstance({
-      arName: this.orgInfo.arName + ' - ' + this.orgBranchInfo.arName,
-      enName: this.orgInfo.enName + ' - ' + this.orgBranchInfo.enName,
-    });
   }
 
   isBeneficiaryWorking(): boolean {

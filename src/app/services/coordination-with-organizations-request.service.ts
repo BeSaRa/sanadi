@@ -7,7 +7,6 @@ import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {IReturnToOrganizationService} from '@app/interfaces/i-return-to-organization-service-interface';
 import {IDefaultResponse} from '@app/interfaces/idefault-response';
 import {CoordinationWithOrganizationsRequest} from '@app/models/coordination-with-organizations-request';
-import {OrgUnit} from '@app/models/org-unit';
 import {ValidOrgUnit} from '@app/models/valid-org-unit';
 import {
   ParticipantOrganizationsPopupComponent
@@ -29,6 +28,7 @@ import {
 import {InboxService} from './inbox.service';
 import {UntypedFormGroup} from '@angular/forms';
 import {OrganizationOfficer} from '@app/models/organization-officer';
+import {Profile} from '@app/models/profile';
 
 @CastResponseContainer({
   $default: {
@@ -55,20 +55,15 @@ export class CoordinationWithOrganizationsRequestService
     'createdOn',
   ];
 
-  constructor(
-    public domSanitizer: DomSanitizer,
-    public lang: LangService,
-    public http: HttpClient,
-    public dynamicService: DynamicOptionsService,
-    public cfr: ComponentFactoryResolver,
-    private urlService: UrlService,
-    public dialog: DialogService
-  ) {
+  constructor(public domSanitizer: DomSanitizer,
+              public lang: LangService,
+              public http: HttpClient,
+              public dynamicService: DynamicOptionsService,
+              public cfr: ComponentFactoryResolver,
+              private urlService: UrlService,
+              public dialog: DialogService) {
     super();
-    FactoryService.registerService(
-      'CoordinationWithOrganizationsRequestService',
-      this
-    );
+    FactoryService.registerService('CoordinationWithOrganizationsRequestService', this);
   }
 
   set setOrgUsers(value: OrganizationOfficer[]) {
@@ -113,20 +108,20 @@ export class CoordinationWithOrganizationsRequestService
 
   prepareModelBeforeSave(model: CoordinationWithOrganizationsRequest) {
     if (this.mainModel) {
-      model.organizaionOfficerList =
-        model.organizaionOfficerList.concat(
-          this.mainModel.organizaionOfficerList
+      model.temporaryOrganizaionOfficerList =
+        model.temporaryOrganizaionOfficerList.concat(
+          this.mainModel.temporaryOrganizaionOfficerList
         );
-      model.buildingAbilitiesList =
-        model.buildingAbilitiesList.concat(
-          this.mainModel.buildingAbilitiesList
+      model.temporaryBuildingAbilitiesList =
+        model.temporaryBuildingAbilitiesList.concat(
+          this.mainModel.temporaryBuildingAbilitiesList
         );
-      model.effectiveCoordinationCapabilities =
-        model.effectiveCoordinationCapabilities.concat(
-          this.mainModel.effectiveCoordinationCapabilities
+      model.temporaryEffectiveCoordinationCapabilities =
+        model.temporaryEffectiveCoordinationCapabilities.concat(
+          this.mainModel.temporaryEffectiveCoordinationCapabilities
         );
-      model.researchAndStudies = model.researchAndStudies.concat(
-        this.mainModel.researchAndStudies
+      model.temporaryResearchAndStudies = model.temporaryResearchAndStudies.concat(
+        this.mainModel.temporaryResearchAndStudies
       );
     }
     return model;
@@ -147,25 +142,20 @@ export class CoordinationWithOrganizationsRequestService
     );
   }
 
-  returnToOrganization(caseId: number, orgId: number): Observable<OrgUnit[]> {
-    return this.http
-      .get<IDefaultResponse<OrgUnit[]>>(
-        this._getURLSegment() + '/task/' + caseId + '/' + orgId
-      )
+  returnToOrganization(caseId: number, orgId: number): Observable<Profile[]> {
+    return this.http.get<IDefaultResponse<Profile[]>>(this._getURLSegment() + '/task/' + caseId + '/' + orgId)
       .pipe(map((response) => response.rs));
   }
 
   getToReturnValidOrganizations(caseId: number): Observable<ValidOrgUnit[]> {
-    return this.http
-      .get<IDefaultResponse<ValidOrgUnit[]>>(
-        this._getURLSegment() + '/valid/org/' + caseId
-      )
+    return this.http.get<IDefaultResponse<ValidOrgUnit[]>>(this._getURLSegment() + '/valid/org/' + caseId)
       .pipe(
         map((response) => {
           return response.rs.map((x) => new ValidOrgUnit().clone(x));
         })
       );
   }
+
   organizationApprove(
     taskId: string,
     caseType: number,

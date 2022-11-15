@@ -57,8 +57,8 @@ export class SubventionLogPopupComponent implements OnInit, OnDestroy {
   }
 
   userClick: typeof UserClickOn = UserClickOn;
-  generalDisplayedColumns: string[] = ['organization', 'branch', 'user', 'actionType', 'actionTime', 'userComments'];
-  auditDisplayedColumns: string[] = ['organization', 'branch', 'user', 'actionType', 'actionTime', 'actions'];
+  generalDisplayedColumns: string[] = ['organization', 'user', 'actionType', 'actionTime', 'userComments'];
+  auditDisplayedColumns: string[] = ['organization', 'user', 'actionType', 'actionTime', 'actions'];
   search$: Subject<string> = new Subject<string>();
   internalSearch$: Subject<string> = new Subject<string>();
   searchSubscription!: Subscription;
@@ -79,11 +79,6 @@ export class SubventionLogPopupComponent implements OnInit, OnDestroy {
     organization: (a: SubventionLog, b: SubventionLog, dir: SortEvent): number => {
       let value1 = !CommonUtils.isValidValue(a) ? '' : a.orgInfo?.getName().toLowerCase(),
         value2 = !CommonUtils.isValidValue(b) ? '' : b.orgInfo?.getName().toLowerCase();
-      return CommonUtils.getSortValue(value1, value2, dir.direction);
-    },
-    branch: (a: SubventionLog, b: SubventionLog, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a) ? '' : a.orgBranchInfo?.getName().toLowerCase(),
-        value2 = !CommonUtils.isValidValue(b) ? '' : b.orgBranchInfo?.getName().toLowerCase();
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     },
     user: (a: SubventionLog, b: SubventionLog, dir: SortEvent): number => {
@@ -107,11 +102,6 @@ export class SubventionLogPopupComponent implements OnInit, OnDestroy {
     organization: (a: SanadiAuditResult, b: SanadiAuditResult, dir: SortEvent): number => {
       let value1 = !CommonUtils.isValidValue(a) ? '' : a.orgInfo?.getName().toLowerCase(),
         value2 = !CommonUtils.isValidValue(b) ? '' : b.orgInfo?.getName().toLowerCase();
-      return CommonUtils.getSortValue(value1, value2, dir.direction);
-    },
-    branch: (a: SanadiAuditResult, b: SanadiAuditResult, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a) ? '' : a.orgBranchInfo?.getName().toLowerCase(),
-        value2 = !CommonUtils.isValidValue(b) ? '' : b.orgBranchInfo?.getName().toLowerCase();
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     },
     user: (a: SanadiAuditResult, b: SanadiAuditResult, dir: SortEvent): number => {

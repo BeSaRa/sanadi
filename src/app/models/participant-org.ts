@@ -1,15 +1,14 @@
-import {ParticipatingOrgInterceptor} from './../model-interceptors/participating-org-interceptor';
-import {Validators} from '@angular/forms';
-import {dateSearchFields} from '@app/helpers/date-search-fields';
-import {infoSearchFields} from '@app/helpers/info-search-fields';
-import {normalSearchFields} from '@app/helpers/normal-search-fields';
-import {AdminResult} from '@app/models/admin-result';
-import {SearchableCloneable} from '@app/models/searchable-cloneable';
-import {EmployeeService} from '@app/services/employee.service';
-import {FactoryService} from '@app/services/factory.service';
-import {ISearchFieldsMap} from '@app/types/types';
-import {CustomValidators} from '../validators/custom-validators';
-import {InterceptModel} from '@app/decorators/decorators/intercept-model';
+import { Validators } from '@angular/forms';
+import { InterceptModel } from '@app/decorators/decorators/intercept-model';
+import { infoSearchFields } from '@app/helpers/info-search-fields';
+import { normalSearchFields } from '@app/helpers/normal-search-fields';
+import { AdminResult } from '@app/models/admin-result';
+import { SearchableCloneable } from '@app/models/searchable-cloneable';
+import { EmployeeService } from '@app/services/employee.service';
+import { FactoryService } from '@app/services/factory.service';
+import { ISearchFieldsMap } from '@app/types/types';
+import { CustomValidators } from '../validators/custom-validators';
+import { ParticipatingOrgInterceptor } from './../model-interceptors/participating-org-interceptor';
 
 const {send, receive} = new ParticipatingOrgInterceptor();
 
@@ -26,7 +25,6 @@ export class ParticipantOrg extends SearchableCloneable<ParticipantOrg> {
   DisplayedColumns = ['arName', 'enName', 'managerDecisionInfo','value', 'actions'];
   employeeService: EmployeeService;
   searchFields: ISearchFieldsMap<ParticipantOrg> = {
-    ...dateSearchFields([]),
     ...infoSearchFields(['managerDecisionInfo']),
     ...normalSearchFields(['arabicName', 'englishName','value']),
   };

@@ -15,9 +15,7 @@ const { send, receive } = new SubventionLogInterceptor();
 export class SubventionLog extends SearchableCloneable<SubventionLog>{
   id!: number;
   orgId!: number;
-  orgBranchId!: number;
   orgUserId!: number;
-  orgBranchInfo!: AdminResult;
   orgInfo!: AdminResult;
   orgUserInfo!: AdminResult;
   actionType!: number;
@@ -30,7 +28,7 @@ export class SubventionLog extends SearchableCloneable<SubventionLog>{
   actionTimeString!: string;
 
   searchFields: ISearchFieldsMap<SubventionLog> = {
-    ...infoSearchFields(['orgInfo', 'orgBranchInfo', 'orgUserInfo', 'actionTypeInfo']),
+    ...infoSearchFields(['orgInfo', 'orgInfo', 'orgUserInfo', 'actionTypeInfo']),
     ...normalSearchFields(['actionTimeString', 'userComments'])
   };
 
@@ -39,13 +37,4 @@ export class SubventionLog extends SearchableCloneable<SubventionLog>{
     this.service = FactoryService.getService('SubventionLogService');
   }
 
-  get orgAndBranchInfo() {
-    if (!isValidValue(this.orgInfo.getName())) {
-      return new AdminResult();
-    }
-    return AdminResult.createInstance({
-      arName: this.orgInfo.arName + ' - ' + this.orgBranchInfo.arName,
-      enName: this.orgInfo.enName + ' - ' + this.orgBranchInfo.enName,
-    });
-  }
 }

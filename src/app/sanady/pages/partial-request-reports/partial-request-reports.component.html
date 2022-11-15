@@ -23,7 +23,7 @@
                        (change)="loadUsersByOrgUnit()" appendTo="body"
                        validationClasses="ordId" formControlName="orgId">
               <ng-option value="">{{langService.map.lbl_none}}</ng-option>
-              <ng-option *ngFor="let option of orgUnitsList" [value]="option.id">
+              <ng-option *ngFor="let option of profilesList" [value]="option.id">
                 {{option.getName()}}
               </ng-option>
             </ng-select>
@@ -161,7 +161,7 @@
             <ng-container cdkColumnDef="userOrganization">
               <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
                   [sortCallback]="sortingCallbacks.userOrganization"> {{langService.map.user_organization}}</th>
-              <td cdk-cell *cdkCellDef="let row"><span>{{row.orgAndBranchInfo.getName()}}</span></td>
+              <td cdk-cell *cdkCellDef="let row"><span>{{row.orgInfo.getName()}}</span></td>
             </ng-container>
             <ng-container cdkColumnDef="orgUser">
               <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"

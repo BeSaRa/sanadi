@@ -200,9 +200,9 @@ export class InboxService {
     return service.markAsReadUnreadBulk(taskIds, markAsRead);
   }
 
-  openDocumentDialog(caseId: string, caseType: number): DialogRef {
+  openDocumentDialog(caseId: string, caseType: number, model: QueryResult | CaseModel<any, any>): DialogRef {
     const service = this.getService(caseType);
-    return service.openDocumentDialog(caseId, caseType);
+    return service.openDocumentDialog(caseId, caseType, model);
   }
 
   openRecommendationDialog(caseId: string, caseType: number): DialogRef {

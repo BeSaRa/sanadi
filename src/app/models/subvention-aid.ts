@@ -30,13 +30,11 @@ export class SubventionAid extends BaseModel<SubventionAid, SubventionAidService
   aidLookupId!: number;
   subventionRequestId!: number;
   subventionAidParentId?: number;
-  orgBranchId!: number;
   orgId!: number;
   orgUserId!: number;
   aidLookupParentId!: number;
   donorId!: number;
   // not belong to the model
-  orgBranchInfo!: AdminResult;
   orgInfo!: AdminResult;
   orgUserInfo!: AdminResult;
   aidLookupInfo!: AdminResult;
@@ -68,16 +66,6 @@ export class SubventionAid extends BaseModel<SubventionAid, SubventionAidService
   constructor() {
     super();
     this.service = FactoryService.getService('SubventionAidService');
-  }
-
-  get orgAndBranchInfo() {
-    if (!isValidValue(this.orgInfo.getName())) {
-      return new AdminResult();
-    }
-    return AdminResult.createInstance({
-      arName: this.orgInfo.arName + ' - ' + this.orgBranchInfo.arName,
-      enName: this.orgInfo.enName + ' - ' + this.orgBranchInfo.enName,
-    });
   }
 
   create(): Observable<SubventionAid> {

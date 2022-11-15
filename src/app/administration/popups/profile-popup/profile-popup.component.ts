@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, Inject, ViewChild} from '@angular/core';
 import {AbstractControl, FormControl, UntypedFormBuilder, UntypedFormGroup,} from '@angular/forms';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {ProfileTypes} from '@app/enums/profile-types.enum';
@@ -7,9 +7,9 @@ import {IDialogData} from '@app/interfaces/i-dialog-data';
 import {Profile} from '@app/models/profile';
 import {LangService} from '@app/services/lang.service';
 import {LookupService} from '@app/services/lookup.service';
-import {ProfileServiceService} from '@app/services/profile-service.service';
+import {ProfileServiceRelationService} from '@services/profile-service-relation.service';
 import {ProfileService} from '@app/services/profile.service';
-import {ProfileService as ProfileServiceModel} from '@app/models/profile-service';
+import {ProfileServiceRelation as ProfileServiceModel} from '@app/models/profile-service-relation';
 import {ToastService} from '@app/services/toast.service';
 import {TabComponent} from '@app/shared/components/tab/tab.component';
 import {DialogRef} from '@app/shared/models/dialog-ref';
@@ -22,13 +22,15 @@ import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 import {TabMap} from '@app/types/types';
+import {EmployeeService} from '@services/employee.service';
+import {PermissionsEnum} from '@app/enums/permissions-enum';
 
 @Component({
   selector: 'profile-popup',
   templateUrl: './profile-popup.component.html',
   styleUrls: ['./profile-popup.component.scss'],
 })
-export class ProfilePopupComponent extends AdminGenericDialog<Profile> {
+export class ProfilePopupComponent extends AdminGenericDialog<Profile> implements AfterViewInit {
   model!: Profile;
   form!: UntypedFormGroup;
   operation!: OperationTypes;
@@ -58,10 +60,12 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> {
       langKey: 'link_services',
       index: 1,
       validStatus: () => true,
-      isTouchedOrDirty: () => true
+      isTouchedOrDirty: () => true,
+      show: () => {
+        return (this.operation !== OperationTypes.CREATE && this.employeeService.checkPermissions(PermissionsEnum.MANAGE_PROFILE_SERVICE_DATA));
+      }
     },
   };
-  showServicesTab = false;
   profileTypes = this.lookupService.listByCategory.ProfileType.sort((a, b) => a.lookupKey - b.lookupKey);
   status = this.lookupService.listByCategory.CommonStatus.filter((e) => !e.isRetiredCommonStatus());
   profileServicesColumns = ['service', 'actions'];
@@ -70,9 +74,10 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> {
   services: ServiceData[] = [];
   registrationAuthorities: Profile[] = [];
   servicesControl = new FormControl<number[]>([]);
+  @ViewChild('dialogContent') dialogContent!: ElementRef;
 
   private _loadServices() {
-    return this.serviceData.loadAsLookups()
+    return this.serviceDataService.loadAsLookups()
       .subscribe((result) => {
         this.services = result;
         this._filterExistingServices();
@@ -109,13 +114,22 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> {
               @Inject(DIALOG_DATA_TOKEN) data: IDialogData<Profile>,
               private toast: ToastService,
               public lang: LangService,
-              private profileServiceService: ProfileServiceService,
+              private cd: ChangeDetectorRef,
+              private profileServiceRelationService: ProfileServiceRelationService,
+              private employeeService: EmployeeService,
               private service: ProfileService,
-              private serviceData: ServiceDataService,
+              private serviceDataService: ServiceDataService,
               private dialogService: DialogService) {
     super();
     this.model = data.model;
     this.operation = data.operation;
+  }
+
+  ngAfterViewInit() {
+    if (this.operation === OperationTypes.UPDATE) {
+      this.displayFormValidity(null, this.dialogContent.nativeElement);
+    }
+    this.cd.detectChanges();
   }
 
   onTabChange($event: TabComponent) {
@@ -126,11 +140,11 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> {
       .subscribe((e) => {
         this.registrationAuthorities = e;
       });
-    if (this.operation) {
+
+    if (this.operation !== OperationTypes.CREATE) {
       this.profileTypeField.disable();
       this.loadLinkedServices(this.model.id);
       this._loadServices();
-      this.showServicesTab = true;
     }
   }
 
@@ -151,18 +165,19 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> {
 
   afterSave(model: Profile, dialogRef: DialogRef): void {
     const message = this.operation === OperationTypes.CREATE ? this.lang.map.msg_create_x_success : this.lang.map.msg_update_x_success;
-    debugger
     this.operation === this.operationTypes.CREATE
       ? this.toast.success(message.change({x: this.basicInfoForm?.get(this.lang.map.lang + 'Name')?.value || ''}))
       : this.toast.success(message.change({x: model.getName()}));
     this.model = model;
-    this.showServicesTab = true;
     this.operation = OperationTypes.UPDATE;
     this.loadLinkedServices(model.id);
   }
 
   loadLinkedServices(id: number) {
-    this.profileServiceService.getServicesByProfile(id)
+    if (!this.employeeService.checkPermissions(PermissionsEnum.MANAGE_PROFILE_SERVICE_DATA)) {
+      return;
+    }
+    this.profileServiceRelationService.getServicesByProfile(id)
       .subscribe((result) => {
         this.profileServices = result;
         this._filterExistingServices();
@@ -201,7 +216,7 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> {
         serviceId: +e,
       })
     );
-    this.profileServiceService.createBulk(_services).subscribe((e) => {
+    this.profileServiceRelationService.createBulk(_services).subscribe((e) => {
       this.loadLinkedServices(this.model.id);
       this.toast.success(this.lang.map.services_add_successfully);
       this.servicesControl.reset();

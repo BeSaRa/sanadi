@@ -1,73 +1,87 @@
-import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, Inject, ViewChild} from '@angular/core';
 import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {OperationTypes} from '@app/enums/operation-types.enum';
-import {FormManager} from '@app/models/form-manager';
 import {LangService} from '@app/services/lang.service';
-import {OrgUser} from '@app/models/org-user';
+import {ExternalUser} from '@app/models/external-user';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {IDialogData} from '@app/interfaces/i-dialog-data';
 import {ToastService} from '@app/services/toast.service';
 import {Lookup} from '@app/models/lookup';
 import {LookupService} from '@app/services/lookup.service';
-import {OrgUnit} from '@app/models/org-unit';
 import {CustomRole} from '@app/models/custom-role';
-import {OrgBranch} from '@app/models/org-branch';
-import {OrganizationBranchService} from '@app/services/organization-branch.service';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {combineLatest, of, Subject} from 'rxjs';
-import {catchError, exhaustMap, map, switchMap, take, takeUntil} from 'rxjs/operators';
+import {combineLatest, Observable, of} from 'rxjs';
+import {catchError, filter, map, switchMap, take, takeUntil} from 'rxjs/operators';
 import {Permission} from '@app/models/permission';
-import {OrgUserPermission} from '@app/models/org-user-permission';
+import {ExternalUserPermission} from '@app/models/external-user-permission';
 import {CheckGroup} from '@app/models/check-group';
 import {PermissionService} from '@app/services/permission.service';
 import {CustomRolePermission} from '@app/models/custom-role-permission';
-import {OrganizationUserPermissionService} from '@app/services/organization-user-permission.service';
-import {IKeyValue} from '@app/interfaces/i-key-value';
+import {ExternalUserPermissionService} from '@services/external-user-permission.service';
 import {EmployeeService} from '@app/services/employee.service';
 import {AuthService} from '@app/services/auth.service';
 import {TabComponent} from '@app/shared/components/tab/tab.component';
-import {CommonStatusEnum} from '@app/enums/common-status.enum';
 import {JobTitle} from '@app/models/job-title';
 import {JobTitleService} from '@services/job-title.service';
 import {Profile} from '@app/models/profile';
 import {ProfileService} from '@services/profile.service';
+import {CommonUtils} from '@helpers/common-utils';
+import {TabMap} from '@app/types/types';
+import {DialogService} from '@services/dialog.service';
+import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
+import {DialogRef} from '@app/shared/models/dialog-ref';
 
 @Component({
-  selector: 'app-organization-user-popup',
-  templateUrl: './organization-user-popup.component.html',
-  styleUrls: ['./organization-user-popup.component.scss']
+  selector: 'app-external-user-popup',
+  templateUrl: './external-user-popup.component.html',
+  styleUrls: ['./external-user-popup.component.scss']
 })
-export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
-  private save$: Subject<any> = new Subject<any>();
-  private destroy$: Subject<any> = new Subject<any>();
-  list: OrgUser[] = [];
+export class ExternalUserPopupComponent extends AdminGenericDialog<ExternalUser> implements AfterViewInit {
+  list: ExternalUser[] = [];
   form!: UntypedFormGroup;
-  model: OrgUser;
+  model: ExternalUser;
   operation: OperationTypes;
-  fm!: FormManager;
   jobTitleList: JobTitle[] = [];
   profileList: Profile[] = [];
   customRoleList: CustomRole[];
-  orgUnitList: OrgUnit[];
-  orgUserPermissions: OrgUserPermission[];
+  orgUserPermissions: ExternalUserPermission[];
   permissionList: Permission[] = [];
-  orgBranchList!: OrgBranch[];
-  statusList!: Lookup[];
+  statusList: Lookup[] = this.lookupService.listByCategory.CommonStatus;
 
   permissions!: Record<number, Permission[][]>;
   selectedPermissions: number[] = [];
   groups: CheckGroup<Permission>[] = [];
 
-  tabsData: IKeyValue = {
-    basic: {name: 'basic'},
-    permissions: {name: 'permissions'}
+  tabsData: TabMap = {
+    basic: {
+      name: 'basic',
+      index: 0,
+      langKey: 'lbl_basic_info',
+      validStatus: () => {
+        if (this.form.disabled || !this.basicFormGroup) {
+          return true;
+        }
+        return this.basicFormGroup.valid;
+      },
+      isTouchedOrDirty: () => true
+    },
+    permissions: {
+      name: 'permissions',
+      index: 1,
+      langKey: 'lbl_permissions',
+      validStatus: () => {
+        if (this.form.disabled || !this.permissionsFormGroup) {
+          return true;
+        }
+        return this.permissionsFormGroup.valid;
+      },
+      isTouchedOrDirty: () => true
+    },
+    services: {name: 'services', index: 2, langKey: 'link_services', validStatus: () => true, isTouchedOrDirty: () => true},
+
   };
   validateFieldsVisible = true;
 
-  inputMaskPatterns = CustomValidators.inputMaskPatterns;
-  commonStatusEnum = CommonStatusEnum;
-
-  displaySaveBtn: boolean = true;
+  saveVisible: boolean = true;
 
   static buildPermissionsByGroupId(permissions: Permission[]): any {
     return permissions.reduce((acc, current) => {
@@ -79,102 +93,94 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
     }, {} as any);
   }
 
-  constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<OrgUser>,
-              private toast: ToastService, public langService: LangService,
-              private organizationBranchService: OrganizationBranchService,
+  @ViewChild('dialogContent') dialogContent!: ElementRef;
+
+  constructor(public dialogRef: DialogRef,
+              @Inject(DIALOG_DATA_TOKEN) data: IDialogData<ExternalUser>,
+              private toast: ToastService,
+              public langService: LangService,
               private permissionService: PermissionService,
-              private userPermissionService: OrganizationUserPermissionService,
+              private userPermissionService: ExternalUserPermissionService,
               private lookupService: LookupService,
               public employeeService: EmployeeService,
               private authService: AuthService,
               private jobTitleService: JobTitleService,
               private profileService: ProfileService,
-              private fb: UntypedFormBuilder) {
+              private dialogService: DialogService,
+              private cd: ChangeDetectorRef,
+              public fb: UntypedFormBuilder) {
+    super();
     this.model = data.model;
     this.operation = data.operation;
     this.customRoleList = data.customRoleList;
-    this.orgUnitList = data.orgUnitList;
     this.orgUserPermissions = data.orgUserPermissions;
-    this.statusList = lookupService.listByCategory.CommonStatus;
     this._setDefaultPermissions();
-
   }
 
   get readonly(): boolean {
     return this.operation === OperationTypes.VIEW;
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-    this.destroy$.unsubscribe();
+  destroyPopup(): void {
   }
 
-  ngOnInit(): void {
-    if (!this.model.id && this.employeeService.isExternalUser()) {
-      this.model.orgId = this.employeeService.getOrgUnit()?.id;
-    }
+  initPopup(): void {
     this.buildPermissionGroups();
     this.buildForm();
-    this._saveModel();
     this.listenToCustomRoleChange();
     this._loadJobTitles();
     this._loadProfiles();
   }
 
+  private _afterViewInit(): void {
+    if (this.operation === OperationTypes.UPDATE) {
+      this._updatePermissionValidations(true);
+      this.displayFormValidity(this.form, this.dialogContent.nativeElement);
+    }
+    if (this.readonly) {
+      this.form.disable();
+      this.saveVisible = false;
+      this.validateFieldsVisible = false;
+    }
+  }
+
+  ngAfterViewInit(): void {
+    // used the private function to reuse functionality of afterViewInit if needed
+    this._afterViewInit();
+    this.cd.detectChanges();
+  }
+
   buildForm(): void {
     this.form = this.fb.group({
-      basic: this.fb.group({
-        orgId: [this.model.orgId, CustomValidators.required],
-        orgBranchId: [this.model.orgBranchId, [CustomValidators.required]],
-        arName: [this.model.arName, [
-          CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
-          Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('AR_NUM')
-        ]],
-        enName: [this.model.enName, [
-          CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
-          Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')
-        ]],
-        qid: [{
-          value: this.model.qid,
-          disabled: !!this.model.id
-        }, [CustomValidators.required].concat(CustomValidators.commonValidations.qId)],
-        empNum: [this.model.empNum, [CustomValidators.required, CustomValidators.number, Validators.maxLength(10)]],
-        phoneNumber: [this.model.phoneNumber, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)],
-        phoneExtension: [this.model.phoneExtension, [CustomValidators.number, Validators.maxLength(10)]],
-        officialPhoneNumber: [this.model.officialPhoneNumber, CustomValidators.commonValidations.phone],
-        email: [this.model.email, [
-          CustomValidators.required, Validators.email, Validators.maxLength(CustomValidators.defaultLengths.EMAIL_MAX)]],
-        jobTitle: [this.model.jobTitle, [CustomValidators.required]],
-        status: [this.model.status, CustomValidators.required],
-        profileId: [this.model.profileId, CustomValidators.required],
-        customRoleId: [this.model.customRoleId] // not required as it is dummy to be tracked from permissions tab
-      }, {
-        validators: CustomValidators.validateFieldsStatus([
-          'arName', 'enName', 'empNum', 'qid', 'phoneNumber', 'phoneExtension',
-          'officialPhoneNumber', 'email', 'jobTitle', 'orgId', 'orgBranchId', 'status', 'profileId'
-        ])
-      }),
+      basic: this.fb.group(this.model.buildForm(true), {validators: this.model.setBasicFormCrossValidations()}),
       permissions: this.fb.group({
         customRoleId: [this.model.customRoleId],
         permissions: [!!this.selectedPermissions.length]
       })
     });
-    this.fm = new FormManager(this.form, this.langService);
-    this.bindOrgBranchList();
-    // will check it later
-    if (this.operation === OperationTypes.UPDATE) {
-      this._updatePermissionValidations(true);
-      this.fm.displayFormValidity();
-    }
-    if (this.readonly) {
-      this.form.disable();
-      this.displaySaveBtn = false;
-      this.validateFieldsVisible = false;
-    }
   }
 
-  saveModel(): void {
+  get basicFormGroup(): UntypedFormGroup {
+    return this.form.get('basic') as UntypedFormGroup;
+  }
+
+  get permissionsFormGroup(): UntypedFormGroup {
+    return this.form.get('permissions') as UntypedFormGroup;
+  }
+
+  get customRoleBasicControl(): UntypedFormControl {
+    return this.basicFormGroup.get('customRoleId') as UntypedFormControl;
+  }
+
+  get customRoleControl(): UntypedFormControl {
+    return this.permissionsFormGroup.get('customRoleId') as UntypedFormControl;
+  }
+
+  get permissionsControl(): UntypedFormControl {
+    return this.permissionsFormGroup.get('permissions') as UntypedFormControl;
+  }
+
+  /*saveModel(): void {
     this.save$.next();
   }
 
@@ -182,14 +188,13 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
     this.save$.pipe(
       takeUntil(this.destroy$),
       exhaustMap(() => {
-        // const orgUser = extender<OrgUser>(OrgUser, {...this.model, ...this.fm.getFormField('basic')?.value});
-        const orgUser = new OrgUser().clone({...this.model, ...this.fm.getFormField('basic')?.value});
+        const orgUser = new ExternalUser().clone({...this.model, ...this.basicFormGroup?.value});
         return orgUser.save()
           .pipe(
             catchError(() => {
               return of(null);
             }),
-            switchMap((savedUser: OrgUser | null) => {
+            switchMap((savedUser: ExternalUser | null) => {
               if (!savedUser) {
                 return of(savedUser);
               }
@@ -223,23 +228,7 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
       this.model = user;
       this.operation = OperationTypes.UPDATE;
     });
-  }
-
-  onOrgUnitChange(): void {
-    this.fm.getFormField('basic.orgBranchId')?.setValue(null);
-    this.bindOrgBranchList();
-  }
-
-  bindOrgBranchList(): void {
-    this.orgBranchList = [];
-    if (!this.fm.getFormField('basic.orgId')?.value) {
-      return;
-    }
-    this.organizationBranchService.loadByCriteria({'org-id': this.fm.getFormField('basic.orgId')?.value})
-      .subscribe((orgBranch: OrgBranch[]) => {
-        this.orgBranchList = orgBranch;
-      });
-  }
+  }*/
 
   get popupTitle(): string {
     if (this.operation === OperationTypes.CREATE) {
@@ -251,20 +240,12 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
     }
     return '';
   }
-  get customRoleControl(): UntypedFormControl {
-    return this.fm.getFormField('permissions.customRoleId') as UntypedFormControl;
-  }
-
-  get permissionsControl(): UntypedFormControl {
-    return this.fm.getFormField('permissions.permissions') as UntypedFormControl;
-  }
-
 
   private buildPermissionGroups(): void {
-    combineLatest([this.permissionService.loadAsLookups(), of(this.lookupService.listByCategory.OrgUserPermissionGroup)])
+    combineLatest([this.permissionService.loadAsLookups(), of(this.lookupService.listByCategory.ExternalUserPermissionGroup)])
       .pipe(take(1))
       .subscribe((result) => {
-        const permissionByGroupId = OrganizationUserPopupComponent.buildPermissionsByGroupId(result[0]);
+        const permissionByGroupId = ExternalUserPopupComponent.buildPermissionsByGroupId(result[0]);
         result[1].forEach((group: Lookup) => {
           this.groups.push(new CheckGroup<Permission>(group, permissionByGroupId[group.lookupKey], this.selectedPermissions, 3));
         });
@@ -276,7 +257,7 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
       this.selectedPermissions = [];
     } else {
       if (this.operation === OperationTypes.UPDATE && this.orgUserPermissions && this.orgUserPermissions.length > 0) {
-        this.orgUserPermissions.map((item: OrgUserPermission) => {
+        this.orgUserPermissions.map((item: ExternalUserPermission) => {
           if (!!item.permissionId) {
             this.selectedPermissions.push(item.permissionId);
           }
@@ -298,8 +279,7 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
     }
   }
 
-  // noinspection JSUnusedLocalSymbols
-  updatePermissionsByRole($event: Event): void {
+  updatePermissionsByRole($event?: Event): void {
     const value = this.customRoleControl?.value;
     if (!value) {
       this.selectedPermissions = [];
@@ -353,12 +333,13 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
     this.customRoleControl?.valueChanges
       .pipe(takeUntil(this.destroy$))
       .subscribe((value) => {
-        this.fm.getFormField('basic.customRoleId')?.setValue(value);
+        this.customRoleBasicControl?.setValue(value);
       });
   }
 
   onTabChange($event: TabComponent) {
-    this.displaySaveBtn = (!['services', 'teams'].includes($event.name));
+    this.saveVisible = (!['services', 'teams'].includes($event.name));
+    this.validateFieldsVisible = (!['services', 'teams'].includes($event.name));
   }
 
   private _loadJobTitles(): void {
@@ -369,7 +350,7 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
           return of([]);
         })
       )
-      .subscribe((result)=> this.jobTitleList = result);
+      .subscribe((result) => this.jobTitleList = result);
   }
 
   private _loadProfiles(): void {
@@ -380,6 +361,63 @@ export class OrganizationUserPopupComponent implements OnInit, OnDestroy {
           return of([]);
         })
       )
-      .subscribe((result)=> this.profileList = result);
+      .subscribe((result) => this.profileList = result);
+  }
+
+  getTabInvalidStatus(tabName: string): boolean {
+    return !this.tabsData[tabName].validStatus();
+  }
+
+  private _getInvalidTabs(): any {
+    let failedList: string[] = [];
+    for (const key in this.tabsData) {
+      if (!(this.tabsData[key].validStatus())) {
+        // @ts-ignore
+        failedList.push(this.langService.map[this.tabsData[key].langKey]);
+      }
+    }
+    return failedList;
+  }
+
+  beforeSave(model: ExternalUser, form: UntypedFormGroup): Observable<boolean> | boolean {
+    const invalidTabs = this._getInvalidTabs();
+    if (invalidTabs.length > 0) {
+      const listHtml = CommonUtils.generateHtmlList(this.langService.map.msg_following_tabs_valid, invalidTabs);
+      this.dialogService.error(listHtml.outerHTML);
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  prepareModel(model: ExternalUser, form: UntypedFormGroup): Observable<ExternalUser> | ExternalUser {
+    return new ExternalUser().clone({...this.model, ...this.basicFormGroup?.value});
+  }
+
+  afterSave(model: ExternalUser, dialogRef: DialogRef): void {
+    this.userPermissionService.saveBulkUserPermissions(model.id, this.selectedPermissions)
+      .pipe(
+        catchError(() => {
+          return of(null);
+        }),
+        filter((response) => response !== null),
+        switchMap(() => {
+          return this.employeeService.isCurrentEmployee(model) ? this.authService.validateToken()
+            .pipe(catchError(() => of(model)), map(_ => model)) : of(model);
+        })
+      ).subscribe((result) => {
+      if (!result) {
+        return;
+      }
+      const message = (this.operation === OperationTypes.CREATE)
+        ? this.langService.map.msg_create_x_success
+        : this.langService.map.msg_update_x_success;
+      this.model = model;
+      this.operation = OperationTypes.UPDATE;
+      this.toast.success(message.change({x: model.getName()}));
+    });
+  }
+
+  saveFail(error: Error): void {
   }
 }

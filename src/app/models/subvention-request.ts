@@ -37,7 +37,6 @@ export class SubventionRequest extends BaseModel<SubventionRequest, SubventionRe
   status: number = 2;
   statusDateModified: IMyDateModel = DateUtils.changeDateToDatepicker((new Date()).setHours(0, 0, 0, 0));
   requestNotes!: string;
-  orgBranchId!: number;
   orgId!: number;
   orgUserId!: number;
   benId!: number;
@@ -54,7 +53,6 @@ export class SubventionRequest extends BaseModel<SubventionRequest, SubventionRe
   subventionRequestAidService: SubventionRequestAidService;
   configService: ConfigurationService;
 
-  orgBranchInfo!: AdminResult;
   orgInfo!: AdminResult;
   orgUserInfo!: AdminResult;
   requestChannelInfo!: AdminResult;
@@ -71,9 +69,7 @@ export class SubventionRequest extends BaseModel<SubventionRequest, SubventionRe
     requestSerial: 'requestSerial',
     requestDate: 'creationDateString',
     requestedAidAmount: 'requestedAidAmount',
-    organization: (text) => {
-      return (this.orgAndBranchInfo.getName()).toLowerCase().indexOf(text) !== -1;
-    },
+    organization: text => !this.orgInfo ? false : this.orgInfo.getName().toLowerCase().indexOf(text) !== -1,
     requestStatusInfo: text => !this.requestStatusInfo ? false : this.requestStatusInfo.getName().toLowerCase().indexOf(text) !== -1
   };
 
@@ -83,16 +79,6 @@ export class SubventionRequest extends BaseModel<SubventionRequest, SubventionRe
     this.service = FactoryService.getService('SubventionRequestService');
     this.subventionRequestAidService = FactoryService.getService('SubventionRequestAidService');
     this.configService = FactoryService.getService('ConfigurationService');
-  }
-
-  get orgAndBranchInfo() {
-    if (!isValidValue(this.orgInfo.getName())) {
-      return new AdminResult();
-    }
-    return AdminResult.createInstance({
-      arName: this.orgInfo.arName + ' - ' + this.orgBranchInfo.arName,
-      enName: this.orgInfo.enName + ' - ' + this.orgBranchInfo.enName,
-    });
   }
 
   create(): Observable<SubventionRequest> {

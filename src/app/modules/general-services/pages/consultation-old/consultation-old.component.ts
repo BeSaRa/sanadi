@@ -13,8 +13,6 @@ import {ToastService} from '@app/services/toast.service';
 import {LangService} from '@app/services/lang.service';
 import {ConsultationService} from '@app/services/consultation.service';
 import {exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
-import {OrgUnit} from '@app/models/org-unit';
-import {OrganizationUnitService} from '@app/services/organization-unit.service';
 import {InternalDepartment} from '@app/models/internal-department';
 import {InternalDepartmentService} from '@app/services/internal-department.service';
 import {EmployeeService} from '@app/services/employee.service';
@@ -24,10 +22,12 @@ import {CaseModel} from '@app/models/case-model';
 import {OpenFrom} from '@app/enums/open-from.enum';
 import {IKeyValue} from '@app/interfaces/i-key-value';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {NavigationService} from "@app/services/navigation.service";
+import {NavigationService} from '@app/services/navigation.service';
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {DialogRef} from '@app/shared/models/dialog-ref';
+import {Profile} from '@app/models/profile';
+import {ProfileService} from '@services/profile.service';
 
 @Component({
   selector: 'consultation-old',
@@ -39,7 +39,7 @@ export class ConsultationOldComponent implements OnInit, OnDestroy, IESComponent
   onModelChange$: EventEmitter<Consultation | undefined> = new EventEmitter<Consultation | undefined>();
   accordionView: boolean = false;
   departments: InternalDepartment[] = [];
-  organizations: OrgUnit[] = [];
+  organizations: Profile[] = [];
   destroy$: Subject<any> = new Subject<any>();
   saveTypes: typeof SaveTypes = SaveTypes;
   form!: UntypedFormGroup;
@@ -104,7 +104,7 @@ export class ConsultationOldComponent implements OnInit, OnDestroy, IESComponent
               private intDepService: InternalDepartmentService,
               public lang: LangService,
               private navigationService: NavigationService,
-              private orgUnitService: OrganizationUnitService) {
+              private profileService: ProfileService) {
   }
 
   afterSave$: EventEmitter<Consultation> = new EventEmitter<Consultation>();
@@ -142,16 +142,16 @@ export class ConsultationOldComponent implements OnInit, OnDestroy, IESComponent
 
     const orgExists = this.organizations.find(i => i.id === this.model?.organizationId);
     if (!orgExists) {
-      this.organizations = this.organizations.concat(new OrgUnit().clone({
+      this.organizations = this.organizations.concat(new Profile().clone({
         id: this.model.organizationInfo.id,
         arName: this.model.organizationInfo.arName,
         enName: this.model.organizationInfo.enName,
-      }))
+      }));
     }
   }
 
   private loadOrganizations(): void {
-    this.orgUnitService.loadActive().pipe(takeUntil(this.destroy$))
+    this.profileService.loadActive().pipe(takeUntil(this.destroy$))
       .subscribe(organizations => {
         this.organizations = organizations;
       });
@@ -224,7 +224,7 @@ export class ConsultationOldComponent implements OnInit, OnDestroy, IESComponent
       takeUntil(this.destroy$),
       exhaustMap((fromValues) => {
         const model = (new Consultation()).clone({...this.model, ...fromValues});
-        return model.save().pipe(takeUntil(this.destroy$), tap(model => this.saveMessage(model)))
+        return model.save().pipe(takeUntil(this.destroy$), tap(model => this.saveMessage(model)));
       })
     ).subscribe((model) => {
       this.changeModel.next(model);
@@ -308,10 +308,10 @@ export class ConsultationOldComponent implements OnInit, OnDestroy, IESComponent
     if (!this.employeeService.isExternalUser() || (this.model && this.model.id)) {
       return;
     }
-    this.form.get('organizationId')?.patchValue(this.employeeService.getOrgUnit()?.id);
-    this.form.get('fullName')?.patchValue(this.employeeService.getUser()?.getName());
-    this.form.get('email')?.patchValue(this.employeeService.getUser()?.email);
-    this.form.get('mobileNo')?.patchValue(this.employeeService.getUser()?.phoneNumber);
+    this.form.get('organizationId')?.patchValue(this.employeeService.getProfile()?.id);
+    this.form.get('fullName')?.patchValue(this.employeeService.getExternalUser()?.getName());
+    this.form.get('email')?.patchValue(this.employeeService.getExternalUser()?.email);
+    this.form.get('mobileNo')?.patchValue(this.employeeService.getExternalUser()?.phoneNumber);
   }
 
   getTabInvalidStatus(tabName: string): boolean {
@@ -358,7 +358,7 @@ export class ConsultationOldComponent implements OnInit, OnDestroy, IESComponent
       .pipe(
         takeUntil(this.destroy$),
         switchMap((needConfirmation) => {
-          if (needConfirmation){
+          if (needConfirmation) {
             return this.confirmResetForm().onAfterClose$;
           } else {
             return of(UserClickOn.YES);
@@ -366,7 +366,7 @@ export class ConsultationOldComponent implements OnInit, OnDestroy, IESComponent
         })
       )
       .subscribe((userClick: UserClickOn) => {
-        if (userClick === UserClickOn.YES){
+        if (userClick === UserClickOn.YES) {
           this.operation = OperationTypes.CREATE;
           this.resetForm();
         }

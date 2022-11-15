@@ -13,7 +13,7 @@ export class DocumentsPopupComponent {
 
   constructor(public lang: LangService,
               @Inject(DIALOG_DATA_TOKEN)
-              public data: { service: BaseGenericEService<any>, caseId: string, caseType: number }) {
+              public data: { service: BaseGenericEService<any>, caseId: string, caseType: number, model: any }) {
 
   }
 

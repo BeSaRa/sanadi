@@ -6,9 +6,6 @@ import { BankAccount } from '@app/models/bank-account';
 import { CaseTypes } from '@app/enums/case-types.enum';
 import { InterceptModel } from '@decorators/intercept-model';
 import { FinalExternalOfficeApprovalResultInterceptor } from '@app/model-interceptors/final-external-office-approval-result-interceptor';
-import { OrgBranch } from './org-branch';
-import { CharityBranch } from './charity-branch';
-import { OrgMember } from './org-member';
 
 const { send, receive } = new FinalExternalOfficeApprovalResultInterceptor();
 @InterceptModel({ send, receive })

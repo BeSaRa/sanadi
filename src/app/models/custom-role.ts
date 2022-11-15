@@ -1,5 +1,5 @@
 import { BaseModel } from './base-model';
-import { CustomRoleService } from '@services/custom-role.service';
+import { ExternalUserCustomRoleService } from '@services/external-user-custom-role.service';
 import { Observable } from 'rxjs';
 import { FactoryService } from '@services/factory.service';
 import { LangService } from '@services/lang.service';
@@ -19,11 +19,11 @@ const interceptor = new CustomRoleInterceptor()
   send: interceptor.send,
   receive: interceptor.receive
 })
-export class CustomRole extends BaseModel<CustomRole, CustomRoleService> {
+export class CustomRole extends BaseModel<CustomRole, ExternalUserCustomRoleService> {
   status: boolean = true;
   permissionSet: CustomRolePermission[] = [];
   description: string = '';
-  service: CustomRoleService;
+  service: ExternalUserCustomRoleService;
   langService: LangService;
 
   statusInfo!: Lookup;
@@ -36,7 +36,7 @@ export class CustomRole extends BaseModel<CustomRole, CustomRoleService> {
 
   constructor() {
     super();
-    this.service = FactoryService.getService('CustomRoleService');
+    this.service = FactoryService.getService('ExternalUserCustomRoleService');
     this.langService = FactoryService.getService('LangService');
   }
 

@@ -1,24 +1,24 @@
 import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {LangService} from "@app/services/lang.service";
-import {UntypedFormControl} from "@angular/forms";
-import {Team} from "@app/models/team";
-import {UserTeam} from "@app/models/user-team";
-import {AdminResult} from "@app/models/admin-result";
-import {TeamService} from "@app/services/team.service";
-import {ToastService} from "@app/services/toast.service";
-import {InternalUser} from "@app/models/internal-user";
-import {OrgUser} from "@app/models/org-user";
-import {iif, of, Subject} from "rxjs";
-import {IGridAction} from "@app/interfaces/i-grid-action";
-import {filter, map, share, switchMap, takeUntil} from "rxjs/operators";
-import {UserClickOn} from "@app/enums/user-click-on.enum";
-import {TableComponent} from "@app/shared/components/table/table.component";
-import {DialogService} from "@app/services/dialog.service";
-import {SharedService} from "@app/services/shared.service";
-import {OperationTypes} from "@app/enums/operation-types.enum";
-import {TeamSecurityConfigurationService} from "@app/services/team-security-configuration.service";
-import {UserSecurityConfigurationService} from "@app/services/user-security-configuration.service";
-import {TeamSecurityConfiguration} from "@app/models/team-security-configuration";
+import {LangService} from '@app/services/lang.service';
+import {UntypedFormControl} from '@angular/forms';
+import {Team} from '@app/models/team';
+import {UserTeam} from '@app/models/user-team';
+import {AdminResult} from '@app/models/admin-result';
+import {TeamService} from '@app/services/team.service';
+import {ToastService} from '@app/services/toast.service';
+import {InternalUser} from '@app/models/internal-user';
+import {ExternalUser} from '@app/models/external-user';
+import {iif, of, Subject} from 'rxjs';
+import {IGridAction} from '@app/interfaces/i-grid-action';
+import {filter, map, share, switchMap, takeUntil} from 'rxjs/operators';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {TableComponent} from '@app/shared/components/table/table.component';
+import {DialogService} from '@app/services/dialog.service';
+import {SharedService} from '@app/services/shared.service';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {TeamSecurityConfigurationService} from '@app/services/team-security-configuration.service';
+import {UserSecurityConfigurationService} from '@app/services/user-security-configuration.service';
+import {TeamSecurityConfiguration} from '@app/models/team-security-configuration';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
 
 @Component({
@@ -42,7 +42,7 @@ export class UserTeamComponent implements OnInit, OnDestroy {
   @Input()
   operation!: OperationTypes;
   @Input()
-  model!: InternalUser | OrgUser;
+  model!: InternalUser | ExternalUser;
   @ViewChild(TableComponent)
   teamsTable!: TableComponent;
   destroy$: Subject<any> = new Subject<any>();

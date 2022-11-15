@@ -251,7 +251,9 @@ export class UrgentInterventionClosureComponent extends EServicesGenericComponen
 
   _afterBuildForm(): void {
     this.handleReadonly();
-    this._setDefaultValues();
+    if(!this.model?.id) {
+      this._setDefaultValues();
+    }
     if (this.fromDialog) {
       this.loadSelectedLicenseById(this.model!.oldLicenseId, () => {
         this.oldLicenseFullSerialField.updateValueAndValidity();
@@ -418,7 +420,6 @@ export class UrgentInterventionClosureComponent extends EServicesGenericComponen
       beneficiary: model.getBeneficiaryFields(),
       beneficiaryByAge: model.getBeneficiaryByAgeFields()
     });
-
     this.handleRequestTypeChange(model.requestType, false);
     this.cd.detectChanges();
   }

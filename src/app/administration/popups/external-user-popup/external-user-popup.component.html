@@ -7,14 +7,10 @@
   <form class="w800px" novalidate autocomplete="off" [formGroup]="form">
     <tabs-list (onTabChange)="onTabChange($event)">
       <tab [name]="tabsData.basic.name" [template]="basicTabTemplate" [title]="langService.map.lbl_basic_info"
-           [hasError]="fm.getFieldInvalidStatus('basic')"></tab>
-      <tab [name]="tabsData.permissions.name" [template]="permissionsTabTemplate"
-           [title]="langService.map.lbl_permissions"
-           [hasError]="fm.getFieldInvalidStatus('permissions')"></tab>
-      <tab name="services"
-           [disabled]="!model.id"
-           [title]="langService.map.link_services"
-           [template]="serviceTab"></tab>
+           [hasError]="getTabInvalidStatus('basic')"></tab>
+      <tab [name]="tabsData.permissions.name" [template]="permissionsTabTemplate" [title]="langService.map.lbl_permissions"
+           [hasError]="getTabInvalidStatus('permissions')"></tab>
+      <tab name="services" [disabled]="!model.id" [title]="langService.map.link_services" [template]="serviceTab"></tab>
     </tabs-list>
     <ng-template #basicTabTemplate>
       <div formGroupName="basic">
@@ -22,127 +18,88 @@
           <div class="col-sm-6 mb-4 position-relative">
             <label asteriskIfRequired="arName" for="arName"
                    class="form-label">{{langService.map.lbl_arabic_name}}</label>
-            <input id="arName" [ngClass]="fm.getStatusClass('basic.arName')" formControlName="arName"
-                   class="form-control">
-            <app-field-error-message [control]="fm.getFormField('basic.arName')"></app-field-error-message>
+            <input id="arName" validationClasses="arName" formControlName="arName" class="form-control" trimInput>
+            <app-field-error-message controlName="arName"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
             <label asteriskIfRequired="enName" for="enName"
                    class="form-label">{{langService.map.lbl_english_name}}</label>
-            <input id="enName" [ngClass]="fm.getStatusClass('basic.enName')" formControlName="enName"
-                   class="form-control">
-            <app-field-error-message [control]="fm.getFormField('basic.enName')"></app-field-error-message>
+            <input id="enName" validationClasses="enName" formControlName="enName" class="form-control" trimInput>
+            <app-field-error-message controlName="enName"></app-field-error-message>
           </div>
         </div>
         <div class="row">
           <div class="col-sm-6 mb-4 position-relative">
             <label for="empNum" asteriskIfRequired="empNum"
                    class="form-label">{{langService.map.lbl_employee_number}}</label>
-            <input id="empNum" [ngClass]="fm.getStatusClass('basic.empNum')" formControlName="empNum"
+            <input id="empNum" validationClasses="empNum" formControlName="empNum"
                    class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY">
-            <app-field-error-message [control]="fm.getFormField('basic.empNum')"></app-field-error-message>
+            <app-field-error-message controlName="empNum"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
             <label for="qid" asteriskIfRequired="qid"
                    class="form-label">{{langService.map.lbl_qid}}</label>
-            <input id="qid" [ngClass]="fm.getStatusClass('basic.qid')" formControlName="qid"
+            <input id="qid" validationClasses="qid" formControlName="qid"
                    class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY">
-            <app-field-error-message [control]="fm.getFormField('basic.qid')"></app-field-error-message>
+            <app-field-error-message controlName="qid"></app-field-error-message>
           </div>
         </div>
         <div class="row">
           <div class="col-sm-6 mb-4 position-relative">
             <label for="phoneNumber" asteriskIfRequired="phoneNumber"
                    class="form-label">{{langService.map.lbl_phone}}</label>
-            <input id="phoneNumber" [ngClass]="fm.getStatusClass('basic.phoneNumber')" formControlName="phoneNumber"
+            <input id="phoneNumber" validationClasses="phoneNumber" formControlName="phoneNumber"
                    class="form-control" trimInput>
-            <app-field-error-message [control]="fm.getFormField('basic.phoneNumber')"></app-field-error-message>
+            <app-field-error-message controlName="phoneNumber"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
             <label for="phoneExtension" class="form-label">{{langService.map.lbl_phone_extension}}</label>
-            <input id="phoneExtension" [ngClass]="fm.getStatusClass('basic.phoneExtension')"
+            <input id="phoneExtension" validationClasses="phoneExtension"
                    formControlName="phoneExtension" class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY">
-            <app-field-error-message [control]="fm.getFormField('basic.phoneExtension')"></app-field-error-message>
+            <app-field-error-message controlName="phoneExtension"></app-field-error-message>
           </div>
         </div>
         <div class="row">
           <div class="col-sm-6 mb-4 position-relative">
             <label for="officialPhoneNumber" class="form-label">{{langService.map.lbl_official_phone_number}}</label>
-            <input id="officialPhoneNumber" [ngClass]="fm.getStatusClass('basic.officialPhoneNumber')"
+            <input id="officialPhoneNumber" validationClasses="officialPhoneNumber"
                    formControlName="officialPhoneNumber" class="form-control" trimInput>
-            <app-field-error-message [control]="fm.getFormField('basic.officialPhoneNumber')"></app-field-error-message>
+            <app-field-error-message controlName="officialPhoneNumber"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 position-relative">
             <label asteriskIfRequired="email" for="email" class="form-label">{{langService.map.lbl_email}}</label>
-            <input id="email" [ngClass]="fm.getStatusClass('basic.email')" formControlName="email"
-                   class="form-control">
-            <app-field-error-message [control]="fm.getFormField('basic.email')"></app-field-error-message>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-6 mb-4 ng-select-wrapper">
-            <label for="orgId" asteriskIfRequired="orgId" class="form-label">{{langService.map.lbl_org_unit}}</label>
-            <ng-select [selectOnTab]="true" labelForId="orgId" [clearable]="false"
-                       placeholder="{{langService.map.select}}" id="orgId"
-                       [notFoundText]="langService.map.msg_not_found"
-                       (change)="onOrgUnitChange()"
-                       formControlName="orgId"
-                       [readonly]="employeeService.isExternalUser()"
-                       [ngClass]="fm.getStatusClass('basic.orgId')">
-              <ng-option value="">{{langService.map.lbl_none}}</ng-option>
-              <ng-option *ngFor="let option of orgUnitList" [value]="option.id">
-                {{option.getName()}}
-              </ng-option>
-            </ng-select>
-            <app-field-error-message [control]="fm.getFormField('basic.orgId')"></app-field-error-message>
-          </div>
-          <div class="col-sm-6 mb-4 ng-select-wrapper">
-            <label for="orgBranchId" asteriskIfRequired="orgBranchId"
-                   class="form-label">{{langService.map.lbl_branch}}</label>
-            <ng-select [selectOnTab]="true" labelForId="orgBranchId" [clearable]="false"
-                       placeholder="{{langService.map.select}}" id="orgBranchId"
-                       [notFoundText]="langService.map.msg_not_found"
-                       formControlName="orgBranchId"
-                       [ngClass]="fm.getStatusClass('basic.orgBranchId')">
-              <ng-option value="">{{langService.map.lbl_none}}</ng-option>
-              <ng-option *ngFor="let option of orgBranchList" [value]="option.id">
-                {{option.getName()}}
-              </ng-option>
-            </ng-select>
-            <app-field-error-message [control]="fm.getFormField('basic.orgBranchId')"></app-field-error-message>
+            <input id="email" validationClasses="email" formControlName="email" class="form-control" trimInput>
+            <app-field-error-message controlName="email"></app-field-error-message>
           </div>
         </div>
         <div class="row">
           <div class="col-sm-6 mb-4 ng-select-wrapper">
             <label for="status" asteriskIfRequired="status"
                    class="form-label">{{langService.map.lbl_status}}</label>
-            <ng-select [selectOnTab]="true" labelForId="status" [clearable]="false"
+            <ng-select [selectOnTab]="true" labelForId="status" [clearable]="true"
                        placeholder="{{langService.map.select}}" id="status"
-                       [notFoundText]="langService.map.msg_not_found"
-                       formControlName="status"
-                       [ngClass]="fm.getStatusClass('basic.status')">
-              <ng-option value="">{{langService.map.lbl_none}}</ng-option>
+                       [notFoundText]="langService.map.msg_not_found" appendTo="body"
+                       formControlName="status" validationClasses="status">
               <ng-option *ngFor="let option of statusList" [value]="option.lookupKey"
                          [disabled]="(option.lookupKey === commonStatusEnum.RETIRED)">
                 {{option.getName()}}
               </ng-option>
             </ng-select>
-            <app-field-error-message [control]="fm.getFormField('basic.status')"></app-field-error-message>
+            <app-field-error-message controlName="status"></app-field-error-message>
           </div>
           <div class="col-sm-6 mb-4 ng-select-wrapper">
             <label for="jobTitle" asteriskIfRequired="jobTitle"
                    class="form-label">{{langService.map.lbl_job_title}}</label>
             <ng-select [selectOnTab]="true" labelForId="jobTitle" [clearable]="true"
                        placeholder="{{langService.map.select}}" id="jobTitle"
-                       [notFoundText]="langService.map.msg_not_found"
-                       formControlName="jobTitle"
-                       [ngClass]="fm.getStatusClass('basic.jobTitle')">
+                       [notFoundText]="langService.map.msg_not_found" appendTo="body"
+                       formControlName="jobTitle" validationClasses="jobTitle">
               <ng-option *ngFor="let option of jobTitleList" [value]="option.id"
                          [disabled]="!option.isActive()">
                 {{option.getName()}}
               </ng-option>
             </ng-select>
-            <app-field-error-message [control]="fm.getFormField('basic.jobTitle')"></app-field-error-message>
+            <app-field-error-message controlName="jobTitle"></app-field-error-message>
           </div>
         </div>
         <div class="row">
@@ -173,16 +130,15 @@
             <ng-select [selectOnTab]="true" labelForId="customRoleId" [clearable]="false"
                        placeholder="{{langService.map.select}}" id="customRoleId"
                        [notFoundText]="langService.map.msg_not_found"
-                       (change)="updatePermissionsByRole($event)"
-                       formControlName="customRoleId"
-                       [ngClass]="fm.getStatusClass('permissions.customRoleId')">
+                       (change)="updatePermissionsByRole($event)" appendTo="body"
+                       formControlName="customRoleId" validationClasses="customRoleId">
               <ng-option value="">{{langService.map.lbl_none}}</ng-option>
               <ng-option *ngFor="let option of customRoleList" [value]="option.id"
                          [disabled]="!option.status">
                 {{option.getName()}}
               </ng-option>
             </ng-select>
-            <app-field-error-message [control]="customRoleControl"></app-field-error-message>
+            <app-field-error-message controlName="customRoleId"></app-field-error-message>
           </div>
         </div>
         <div class="row" *ngIf="customRoleControl?.value">
@@ -222,12 +178,12 @@
   </ng-template>
 </div>
 <div class="dialog-actions">
-  <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="fm.displayFormValidity(dialogContent)"
+  <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="displayFormValidity(null, dialogContent)"
           tooltip="{{langService.map.validate_fields}}" class="btn btn-link">
     <i class="mdi mdi-information-outline text-info"></i>
   </button>
   <span class="flex-grow-1"></span>
-  <button [disabled]="form.invalid" *ngIf="displaySaveBtn && !readonly" (click)="saveModel()"
+  <button [disabled]="form.invalid" *ngIf="saveVisible && !readonly" (click)="save$.next(null)"
           class="btn btn-primary">{{langService.map.btn_save}}</button>
   <button [dialogClose]="model" class="btn btn-secondary">{{langService.map.btn_cancel}}</button>
 </div>

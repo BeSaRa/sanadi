@@ -221,9 +221,12 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     // update meeting form
     this.setMeetingPointsForm();
 
-    this.service.getMeetingGeneralNotes(this.memberId, this.model?.id).subscribe(notes => {
-      this.generalNotes = notes;
-    });
+    if (this.model?.taskDetails && !this.model?.isCharityManagerReviewStep() && !this.model?.isSupervisionAndControlReviewStep()) {
+      this.service.getMeetingGeneralNotes(this.memberId, this.model?.id)
+        .subscribe(notes => {
+          this.generalNotes = notes;
+        });
+    }
 
     if (this.model?.isSentToMember() && this.model?.isDecisionMakerReviewStep() || this.model?.isManagerFinalReviewStep()) {
       this.loadMembersTaskStatus();

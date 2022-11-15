@@ -1,3 +1,4 @@
+import { CaseTypes } from "@app/enums/case-types.enum";
 import {AdminResult} from "@app/models/admin-result";
 import {TaskDetails} from "@app/models/task-details";
 
@@ -24,9 +25,12 @@ export class GeneralInterceptor {
     delete model.inboxService;
     delete model.caseStatusInfo;
     delete model.creatorInfo;
-    delete model.taskDetails;
+    if(model.caseType === CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST){
+      if(model.taskDetails?.piid) model.taskDetails={piid:model.taskDetails.piid}
+    }else{
+      delete model.taskDetails;
+    }
     delete model.ouInfo;
-    delete model.taskDetails;
     return model;
   }
 }

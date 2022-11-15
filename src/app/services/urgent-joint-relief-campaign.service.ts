@@ -29,11 +29,11 @@ import {OrganizationOfficer} from '@app/models/organization-officer';
 import {Observable} from 'rxjs';
 import {IDefaultResponse} from '@contracts/idefault-response';
 import {map} from 'rxjs/operators';
-import {OrgUnit} from '@app/models/org-unit';
 import {ValidOrgUnit} from '@app/models/valid-org-unit';
 import {ParticipantOrganization} from '@app/models/participant-organization';
 import {Lookup} from '@app/models/lookup';
-import { IReturnToOrganizationService } from '@app/interfaces/i-return-to-organization-service-interface';
+import {IReturnToOrganizationService} from '@app/interfaces/i-return-to-organization-service-interface';
+import {Profile} from '@app/models/profile';
 
 @CastResponseContainer({
   $default: {
@@ -123,8 +123,8 @@ implements IReturnToOrganizationService {
     });
   }
 
-  returnToOrganization(caseId: number, orgId: number): Observable<OrgUnit[]> {
-    return this.http.get<IDefaultResponse<OrgUnit[]>>(this._getURLSegment() + '/task/' + caseId + '/' + orgId)
+  returnToOrganization(caseId: number, orgId: number): Observable<Profile[]> {
+    return this.http.get<IDefaultResponse<Profile[]>>(this._getURLSegment() + '/task/' + caseId + '/' + orgId)
       .pipe(map(response => response.rs));
   }
 
