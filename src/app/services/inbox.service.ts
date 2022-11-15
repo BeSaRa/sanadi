@@ -1,3 +1,4 @@
+import { GeneralProcessNotificationService } from './general-process-notification.service';
 import { AwarenessActivitySuggestionService } from './awareness-activity-suggestion.service';
 import { GeneralAssociationMeetingAttendanceService } from '@services/general-association-meeting-attendance.service';
 import { CoordinationWithOrganizationsRequestService } from '@app/services/coordination-with-organizations-request.service';
@@ -97,6 +98,7 @@ export class InboxService {
     private coordinationWithOrganizationsRequestService: CoordinationWithOrganizationsRequestService,
     private charityUpdateService: CharityOrganizationUpdateService,
     private awarenessActivitySuggestionService: AwarenessActivitySuggestionService,
+    private generalProcessNotificationService: GeneralProcessNotificationService,
     private generalAssociationMeetingAttendanceService: GeneralAssociationMeetingAttendanceService) {
     FactoryService.registerService('InboxService', this);
     // register all e-services that we need.
@@ -126,6 +128,7 @@ export class InboxService {
     this.services.set(CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST, this.coordinationWithOrganizationsRequestService);
     this.services.set(CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP, this.urgentInterventionLicenseFollowupService);
     this.services.set(CaseTypes.NPO_MANAGEMENT, this.npoManagementService);
+    this.services.set(CaseTypes.GENERAL_PROCESS_NOTIFICATION, this.generalProcessNotificationService);
     this.services.set(CaseTypes.CHARITY_ORGANIZATION_UPDATE, this.charityUpdateService);
     this.services.set(CaseTypes.AWARENESS_ACTIVITY_SUGGESTION, this.awarenessActivitySuggestionService);
   }

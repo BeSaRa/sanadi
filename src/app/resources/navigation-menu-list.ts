@@ -995,5 +995,57 @@ export const navigationMenuList = [
     group: 'administration',
     itemOrder: 21,
     svg: null
+  },
+  {
+    id: 76,
+    langKey: 'menu_profile',
+    path: '/home/administration/profiles',
+    icon: 'mdi-account',
+    isSvg: false,
+    permission: PermissionsEnum.MANAGE_PROFILE,
+    permissionGroup: null,
+    parent: 6,
+    group: 'administration',
+    itemOrder: 22,
+    svg: null
+  },
+  {
+    id: 77,
+    langKey: 'menu_sub_team',
+    path: '/home/administration/sub-team',
+    icon: 'mdi-account',
+    isSvg: false,
+    permission: PermissionsEnum.MANAGE_SUB_TEAM,
+    permissionGroup: null,
+    parent: 6,
+    group: 'administration',
+    itemOrder: 23,
+    svg: null
+  },
+  {
+    id: 78,
+    langKey: 'menu_general_process_template',
+    path: '/home/administration/general-process-template',
+    icon: 'mdi-template',
+    isSvg: false,
+    permission: PermissionsEnum.MANAGE_PROCESS_TEMPLATE,
+    permissionGroup: null,
+    parent: 6,
+    group: 'administration',
+    itemOrder: 24,
+    svg: null
+  },
+  {
+    id: 79,
+    langKey: 'menu_general_process_notification',
+    path: '/home/general-services/general-process-notification',
+    icon: 'mdi-template',
+    isSvg: false,
+    permission: EServicePermissionsEnum.GENERAL_PROCESS_NOTIFICATION,
+    permissionGroup: null,
+    parent: 13,
+    group: 'general-services',
+    itemOrder: 11,
+    svg: null
   }
 ];

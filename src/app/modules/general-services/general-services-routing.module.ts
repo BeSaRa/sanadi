@@ -90,7 +90,7 @@ const routes: Routes = [
   {
     path: 'npo-management', component: EServiceComponentWrapperComponent,
     canActivate: [ServicesGuard],
-    resolve: {info: ServiceItemResolver},
+    resolve: { info: ServiceItemResolver },
     data: {
       permissionKey: EServicePermissionsEnum.NPO_MANAGEMENT,
       configPermissionGroup: null,
@@ -112,12 +112,23 @@ const routes: Routes = [
   {
     path: 'awareness-activity-suggestion', component: EServiceComponentWrapperComponent,
     canActivate: [ServicesGuard],
-    resolve: {info: ServiceItemResolver},
+    resolve: { info: ServiceItemResolver },
     data: {
       permissionKey: EServicePermissionsEnum.AWARENESS_ACTIVITY_SUGGESTION,
       configPermissionGroup: null,
       checkAnyPermission: false,
       render: 'AwarenessActivitySuggestionComponent'
+    }
+  },
+  {
+    path: 'general-process-notification', component: EServiceComponentWrapperComponent,
+    canActivate: [ServicesGuard],
+    resolve: { info: ServiceItemResolver },
+    data: {
+      permissionKey: EServicePermissionsEnum.GENERAL_PROCESS_NOTIFICATION,
+      configPermissionGroup: null,
+      checkAnyPermission: false,
+      render: 'GeneralProcessNotificationComponent'
     }
   },
 

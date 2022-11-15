@@ -1,16 +1,8 @@
 import { CoordinationWithOrganizationsRequest } from '@app/models/coordination-with-organizations-request';
-import {
-  IGeneralAssociationMeetingAttendanceSpecialActions
-} from '@contracts/i-general-association-meeting-attendance-special-actions';
-import {
-  IGeneralAssociationMeetingAttendanceApprove
-} from '@contracts/i-general-association-meeting-attendance-approve';
-import {
-  IGeneralAssociationMeetingAttendanceComponent
-} from '@contracts/i-general-association-meeting-attendance-component';
-import {
-  IGeneralAssociationMeetingAttendanceComplete
-} from '@contracts/i-general-association-meeting-attendance-complete';
+import { IGeneralAssociationMeetingAttendanceSpecialActions } from '@contracts/i-general-association-meeting-attendance-special-actions';
+import { IGeneralAssociationMeetingAttendanceApprove } from '@contracts/i-general-association-meeting-attendance-approve';
+import { IGeneralAssociationMeetingAttendanceComponent } from '@contracts/i-general-association-meeting-attendance-component';
+import { IGeneralAssociationMeetingAttendanceComplete } from '@contracts/i-general-association-meeting-attendance-complete';
 import { ITransferFundsAbroadComponent } from '@contracts/i-transfer-funds-abroad-component';
 import { ITransferIndividualFundsAbroadComplete } from '@contracts/i-transfer-individual-funds-abroad-complete';
 import {

@@ -1,3 +1,4 @@
+import { AdminstrationDepartmentCodes } from './../enums/department-code.enum';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { InternalDepartment } from '../models/internal-department';
@@ -11,7 +12,7 @@ import {
   InternalDepartmentPopupComponent
 } from '@app/administration/popups/internal-department-popup/internal-department-popup.component';
 import { DialogRef } from '@app/shared/models/dialog-ref';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap, filter } from 'rxjs/operators';
 import { IDialogData } from '@app/interfaces/i-dialog-data';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { FactoryService } from '@app/services/factory.service';
@@ -37,6 +38,7 @@ import { Pagination } from "@app/models/pagination";
 export class InternalDepartmentService extends CrudWithDialogGenericService<InternalDepartment> {
   list!: InternalDepartment[];
   interceptor: InternalDepartmentInterceptor = new InternalDepartmentInterceptor();
+  private _generalProcessDepartmentTypes = [AdminstrationDepartmentCodes.RC, AdminstrationDepartmentCodes.LCN, AdminstrationDepartmentCodes.SVC];
 
   constructor(public http: HttpClient, private domSanitizer: DomSanitizer, private urlService: UrlService, public dialog: DialogService) {
     super();
@@ -68,6 +70,13 @@ export class InternalDepartmentService extends CrudWithDialogGenericService<Inte
     return this.loadDepsByType(InternalDepartmentTypes.COMMITTEE);
   }
 
+  loadGeneralProcessDepartments() {
+    return this.loadDepartments().pipe(
+      map((epartments: InternalDepartment[]) => {
+        return epartments.filter((d: InternalDepartment) => this._generalProcessDepartmentTypes.indexOf(d.code as AdminstrationDepartmentCodes) != -1)
+      })
+    )
+  }
   _getModel() {
     return InternalDepartment;
   }

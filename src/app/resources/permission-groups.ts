@@ -36,6 +36,8 @@ const adminPermissionsGroup: PermissionsEnum[] = [
   PermissionsEnum.MANAGE_VACATIONS_DATE,
   PermissionsEnum.MANAGE_SDG,
   PermissionsEnum.MANAGE_CUSTOM_MENU_ITEM,
+  PermissionsEnum.MANAGE_PROCESS_TEMPLATE,
+  PermissionsEnum.MANAGE_SUB_TEAM,
   PermissionsEnum.MANAGE_PROFILE
 ];
 
@@ -77,7 +79,8 @@ const generalServicesPermissionsGroup: EServicePermissionsEnum[] = [
   EServicePermissionsEnum.NPO_MANAGEMENT,
   EServicePermissionsEnum.CHARITY_ORGANIZATION_UPDATE,
   EServicePermissionsEnum.AWARENESS_ACTIVITY_SUGGESTION,
-  EServicePermissionsEnum.EXTERNAL_ORG_AFFILIATION_REQUEST
+  EServicePermissionsEnum.EXTERNAL_ORG_AFFILIATION_REQUEST,
+  EServicePermissionsEnum.GENERAL_PROCESS_NOTIFICATION
 ];
 
 const officeServicesPermissionsGroup: EServicePermissionsEnum[] = [

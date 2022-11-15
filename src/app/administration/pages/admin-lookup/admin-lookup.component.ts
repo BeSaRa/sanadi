@@ -126,8 +126,7 @@ export class AdminLookupComponent {
       langKey: 'lookup_general_process_classification',
       lookupType: AdminLookupTypeEnum.GENERAL_PROCESS_CLASSIFICATION,
       validStatus: () => true,
-      isTouchedOrDirty: () => true,
-      show: () => false
+      isTouchedOrDirty: () => true
     }
   };
   selectedWorkFieldTabIndex$: Subject<number> = new Subject<number>();

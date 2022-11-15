@@ -121,5 +121,8 @@ export const urlsList: Partial<IAppUrls> = {
   PROFILE: '/admin/profile',
   PROFILE_SERVICE: '/admin/profile-service',
   AWARENESS_ACTIVITY_SUGGESTION: '/awareness-activity-suggestion',
-  MENU_ITEM_LIST: '/admin/menu-item'
+  MENU_ITEM_LIST: '/admin/menu-item',
+  SUB_TEAM: '/admin/sub-team',
+  GENERAL_PROCESS: '/admin/general-process',
+  GENERAL_PROCESS_NOTIFICATION: '/general-process-notification',
 };
