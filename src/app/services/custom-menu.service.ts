@@ -22,6 +22,7 @@ import {EmployeeService} from '@services/employee.service';
 import {LangService} from '@services/lang.service';
 import {TokenService} from '@services/token.service';
 import {ICustomMenuSearchCriteria} from '@contracts/i-custom-menu-search-criteria';
+import {MenuView} from '@app/enums/menu-view.enum';
 
 @CastResponseContainer({
   $default: {
@@ -91,6 +92,10 @@ export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> 
   })
   loadByCriteria(criteria: Partial<ICustomMenuSearchCriteria>): Observable<CustomMenu[]> {
     return this.http.post<CustomMenu[]>(this._getServiceURL() + '/filter', criteria);
+  }
+
+  loadPrivateMenus(): Observable<CustomMenu[]> {
+    return this.loadByCriteria({menuView: MenuView.PRIVATE});
   }
 
   openCreateDialog(parentMenu?: CustomMenu): DialogRef {

@@ -100,4 +100,12 @@ export class CustomMenu extends BaseModel<CustomMenu, CustomMenuService> {
   isParentMenu(): boolean {
     return !this.parentMenuItemId;
   }
+
+  isExternalUserMenu(): boolean {
+    return this.menuView === MenuPermissionCategoryEnum.EXTERNAL;
+  }
+
+  isInternalUserMenu(): boolean {
+    return this.userType === MenuPermissionCategoryEnum.INTERNAL;
+  }
 }

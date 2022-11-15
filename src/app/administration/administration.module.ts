@@ -82,6 +82,7 @@ import {AdminLookupComponent} from './pages/admin-lookup/admin-lookup.component'
 import {ProfilePopupComponent} from './popups/profile-popup/profile-popup.component';
 import {ProfilesComponent} from './pages/profiles/profiles.component';
 import {CustomMenuUrlHandlerComponent} from './shared/custom-menu-url-handler/custom-menu-url-handler.component';
+import {CustomMenuPermissionComponent} from './shared/custom-menu-permission/custom-menu-permission.component';
 
 @NgModule({
   declarations: [
@@ -155,7 +156,8 @@ import {CustomMenuUrlHandlerComponent} from './shared/custom-menu-url-handler/cu
     ProfilePopupComponent,
     ProfilesComponent,
     ProcessFieldWrapperComponent,
-    CustomMenuUrlHandlerComponent
+    CustomMenuUrlHandlerComponent,
+    CustomMenuPermissionComponent
   ],
   imports: [
     SharedModule,

@@ -10,7 +10,7 @@ import {DialogRef} from '@app/shared/models/dialog-ref';
 import {Observable, of, Subject} from 'rxjs';
 import {InternalDepartmentService} from '@app/services/internal-department.service';
 import {InternalDepartment} from '@app/models/internal-department';
-import {switchMap, takeUntil, withLatestFrom} from 'rxjs/operators';
+import {catchError, filter, switchMap, takeUntil, withLatestFrom} from 'rxjs/operators';
 import {Lookup} from '@app/models/lookup';
 import {LookupService} from '@app/services/lookup.service';
 import {CheckGroup} from '@app/models/check-group';
@@ -27,12 +27,13 @@ import {UserTeamComponent} from '@app/administration/shared/user-team/user-team.
 import {InternalUserDepartmentService} from '@app/services/internal-user-department.service';
 import {InternalUserDepartment} from '@app/models/internal-user-department';
 import {AdminResult} from '@app/models/admin-result';
-import {IKeyValue} from '@app/interfaces/i-key-value';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
 import {FileExtensionsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 import {InternalUserService} from '@app/services/internal-user.service';
 import {BlobModel} from '@app/models/blob-model';
 import {CommonUtils} from '@app/helpers/common-utils';
+import {TabMap} from '@app/types/types';
+import {CustomMenuPermissionComponent} from '@app/administration/shared/custom-menu-permission/custom-menu-permission.component';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -49,14 +50,15 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
   permissionGroups: CheckGroup<Permission>[] = [];
   groupHandler!: CheckGroupHandler<Permission>;
   customRoles: CustomRole[] = [];
-  @ViewChild(UserTeamComponent)
-  userTeamComponent!: UserTeamComponent;
+  @ViewChild(UserTeamComponent) userTeamComponent!: UserTeamComponent;
+  @ViewChild('customMenuPermissionComponent') customMenuPermissionComponentRef!: CustomMenuPermissionComponent;
   displaySaveBtn: boolean = true;
   userDepartments: InternalUserDepartment[] = [];
-  get displayedColumns(): string [] {
 
-    return this.readonly ? ['arabicName', 'englishName','default'] : ['arabicName', 'englishName', 'default', 'actions']
+  get displayedColumns(): string [] {
+    return this.readonly ? ['arabicName', 'englishName', 'default'] : ['arabicName', 'englishName', 'default', 'actions'];
   }
+
   selectedDepartment: UntypedFormControl = new UntypedFormControl();
   private userDepartmentsChanged$: Subject<InternalUserDepartment[]> = new Subject<InternalUserDepartment[]>();
   private userDepartmentsIds: number[] = [];
@@ -66,13 +68,48 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
   loadedSignature?: BlobModel;
   list: InternalUser[] = [];
 
-  tabsData: IKeyValue = {
-    basic: {name: 'basic'},
-    permissions: {name: 'permissions'},
-    departments: {name: 'departments'},
-    teams: {name: 'teams'},
-    services: {name: 'services'},
-    followup: {name: 'followup'}
+  tabsData: TabMap = {
+    basic: {
+      name: 'basic',
+      langKey: 'lbl_basic_info',
+      index: 0,
+      checkTouchedDirty: true,
+      validStatus: () => {
+        if (!this.basicFormTab || this.readonly) {
+          return true;
+        }
+        return this.basicFormTab.valid;
+      },
+      isTouchedOrDirty: () => {
+        if (!this.basicFormTab) {
+          return true;
+        }
+        return this.basicFormTab!.touched || this.basicFormTab!.dirty;
+      }
+    },
+    permissions: {
+      name: 'permissions',
+      langKey: 'lbl_permissions',
+      index: 1,
+      checkTouchedDirty: true,
+      validStatus: () => {
+        if (!this.permissionsFormTab || this.readonly) {
+          return true;
+        }
+        return this.permissionsFormTab.valid;
+      },
+      isTouchedOrDirty: () => {
+        if (!this.permissionsFormTab) {
+          return true;
+        }
+        return this.permissionsFormTab.touched || this.permissionsFormTab.dirty;
+      }
+    },
+    menus: {name: 'menus', langKey: 'menus', index: 2, validStatus: () => true, isTouchedOrDirty: () => true},
+    departments: {name: 'departments', langKey: 'departments', index: 3, validStatus: () => true, isTouchedOrDirty: () => true},
+    teams: {name: 'teams', langKey: 'link_teams', index: 4, validStatus: () => true, isTouchedOrDirty: () => true},
+    followup: {name: 'followup', langKey: 'followup', index: 5, validStatus: () => true, isTouchedOrDirty: () => true},
+    services: {name: 'services', langKey: 'link_services', index: 6, validStatus: () => true, isTouchedOrDirty: () => true},
   };
 
   constructor(public dialogRef: DialogRef,
@@ -163,7 +200,7 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
     permissions.reduce((record, permission) => {
       return permissionsByGroup.set(permission.groupId, (permissionsByGroup.get(permission.groupId) || []).concat(permission));
     }, {} as any);
-    groups.forEach(group => this.permissionGroups.push(new CheckGroup(group, permissionsByGroup.get(group.lookupKey) || [], [])));
+    groups.forEach(group => this.permissionGroups.push(new CheckGroup<Permission>(group, permissionsByGroup.get(group.lookupKey) || [], [])));
   }
 
   private loadCustomRoles() {
@@ -231,6 +268,7 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
     }
     return '';
   }
+
   private _updatePermissionValidations(forceUpdateValueAndValidation: boolean = false) {
     const value = this.customRoleId?.value;
     if (!value) {
@@ -264,8 +302,16 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
     }
 
     signSub.subscribe(() => {
-      this.userPermissionService
-        .saveUserPermissions(model.id, this.groupHandler.getSelection())
+      this.userPermissionService.saveUserPermissions(model.id, this.groupHandler.getSelection())
+        .pipe(
+          catchError(() => of(null)),
+          filter((response) => response !== null)
+        )
+        .pipe(
+          switchMap(() => this.customMenuPermissionComponentRef.saveUserCustomMenuPermissions()),
+          catchError(() => of(null)),
+          filter((response) => response !== null)
+        )
         .subscribe(() => {
           const message = (this.operation === OperationTypes.CREATE)
             ? this.lang.map.msg_create_x_success : this.lang.map.msg_update_x_success;
@@ -317,8 +363,9 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
   }
 
   onTabChange($event: TabComponent) {
-    this.displaySaveBtn = (![this.tabsData.services.name, this.tabsData.teams.name, this.tabsData.departments.name].includes($event.name));
-    this.validateFieldsVisible = (![this.tabsData.services.name, this.tabsData.teams.name, this.tabsData.departments.name].includes($event.name));
+    const tabsWithSaveAndValidate = [this.tabsData.basic.name, this.tabsData.permissions.name, this.tabsData.menus.name];
+    this.displaySaveBtn = tabsWithSaveAndValidate.includes($event.name);
+    this.validateFieldsVisible = tabsWithSaveAndValidate.includes($event.name);
   }
 
   addDepartment() {
@@ -411,5 +458,17 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
       .subscribe((data) => {
         CommonUtils.printBlobData(data, 'InternalUserPermission_' + this.model.getName());
       });
+  }
+
+  getTabInvalidStatus(tabName: string): boolean {
+    let tab = this.tabsData[tabName];
+    if (!tab) {
+      console.info('tab not found: %s', tabName);
+      return true; // if tab not found, consider it invalid
+    }
+    if (!tab.checkTouchedDirty) {
+      return !tab.validStatus();
+    }
+    return !tab.validStatus() && tab.isTouchedOrDirty();
   }
 }

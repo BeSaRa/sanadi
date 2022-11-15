@@ -1573,5 +1573,7 @@ export interface ILanguageKeys {
   variable_name: string;
   variable_value: string;
   available_values: string;
+  menus: string;
+  msg_no_menus_available: string;
 }
 

@@ -120,7 +120,7 @@ export class CustomRolePopupComponent extends AdminGenericDialog<CustomRole> imp
       .subscribe((result) => {
         const permissionByGroupId = CustomRolePopupComponent.buildPermissionsByGroupId(result[0]);
         result[1].forEach((group: Lookup) => {
-          this.groups.push(new CheckGroup<Permission>(group, permissionByGroupId[group.lookupKey], this.selectedPermissions, 3));
+          this.groups.push(new CheckGroup<Permission>(group, permissionByGroupId[group.lookupKey], this.selectedPermissions));
         });
       });
   }

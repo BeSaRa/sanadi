@@ -29,6 +29,7 @@ import {TabMap} from '@app/types/types';
 import {DialogService} from '@services/dialog.service';
 import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
 import {DialogRef} from '@app/shared/models/dialog-ref';
+import {CustomMenuPermissionComponent} from '@app/administration/shared/custom-menu-permission/custom-menu-permission.component';
 
 @Component({
   selector: 'app-external-user-popup',
@@ -76,7 +77,8 @@ export class ExternalUserPopupComponent extends AdminGenericDialog<ExternalUser>
       },
       isTouchedOrDirty: () => true
     },
-    services: {name: 'services', index: 2, langKey: 'link_services', validStatus: () => true, isTouchedOrDirty: () => true},
+    menus: {name: 'menus', langKey: 'menus', index: 2, validStatus: () => true, isTouchedOrDirty: () => true},
+    services: {name: 'services', index: 3, langKey: 'link_services', validStatus: () => true, isTouchedOrDirty: () => true},
 
   };
   validateFieldsVisible = true;
@@ -94,6 +96,7 @@ export class ExternalUserPopupComponent extends AdminGenericDialog<ExternalUser>
   }
 
   @ViewChild('dialogContent') dialogContent!: ElementRef;
+  @ViewChild('customMenuPermissionComponent') customMenuPermissionComponentRef!: CustomMenuPermissionComponent;
 
   constructor(public dialogRef: DialogRef,
               @Inject(DIALOG_DATA_TOKEN) data: IDialogData<ExternalUser>,
@@ -247,7 +250,7 @@ export class ExternalUserPopupComponent extends AdminGenericDialog<ExternalUser>
       .subscribe((result) => {
         const permissionByGroupId = ExternalUserPopupComponent.buildPermissionsByGroupId(result[0]);
         result[1].forEach((group: Lookup) => {
-          this.groups.push(new CheckGroup<Permission>(group, permissionByGroupId[group.lookupKey], this.selectedPermissions, 3));
+          this.groups.push(new CheckGroup<Permission>(group, permissionByGroupId[group.lookupKey], this.selectedPermissions));
         });
       });
   }
@@ -397,15 +400,19 @@ export class ExternalUserPopupComponent extends AdminGenericDialog<ExternalUser>
   afterSave(model: ExternalUser, dialogRef: DialogRef): void {
     this.userPermissionService.saveBulkUserPermissions(model.id, this.selectedPermissions)
       .pipe(
-        catchError(() => {
-          return of(null);
-        }),
+        catchError(() => of(null)),
         filter((response) => response !== null),
-        switchMap(() => {
-          return this.employeeService.isCurrentEmployee(model) ? this.authService.validateToken()
-            .pipe(catchError(() => of(model)), map(_ => model)) : of(model);
-        })
-      ).subscribe((result) => {
+      )
+      .pipe(
+        switchMap(() => this.customMenuPermissionComponentRef.saveUserCustomMenuPermissions()),
+        catchError(() => of(null)),
+        filter((response) => response !== null),
+      ).pipe(
+      switchMap(() => {
+        return this.employeeService.isCurrentEmployee(model) ? this.authService.validateToken()
+          .pipe(catchError(() => of(model)), map(_ => model)) : of(model);
+      })
+    ).subscribe((result) => {
       if (!result) {
         return;
       }

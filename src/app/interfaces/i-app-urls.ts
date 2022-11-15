@@ -116,6 +116,7 @@ export interface IAppUrls {
   PROFILE: string;
   AWARENESS_ACTIVITY_SUGGESTION: string;
   MENU_ITEM_LIST: string;
+  USER_MENU_ITEM: string;
   PROFILE_SERVICE: string;
   SUB_TEAM: string;
   GENERAL_PROCESS: string;
