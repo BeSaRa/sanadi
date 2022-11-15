@@ -368,7 +368,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
     if (buttonType === 'view') {
       return !attachment.id;
     } else if (buttonType === 'delete') {
-      if (this.model && this.model.isFinalApproved()) {
+      if (this.model && (this.model.isFinalApproved() || this.model.isFinalNotification())) {
         return true;
       }
       return this.disabled || !attachment.attachmentTypeStatus || !attachment.id || !this._isCreatedByCurrentUser(attachment);

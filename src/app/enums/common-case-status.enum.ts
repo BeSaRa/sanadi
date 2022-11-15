@@ -6,5 +6,6 @@ export enum CommonCaseStatus {
   INITIAL_APPROVE = 4,
   FINAL_APPROVE = 5,
   RETURNED = 6,
-  FINAL_REJECTION = 7
+  FINAL_REJECTION = 7,
+  FINAL_NOTIFICATION = 8
 }

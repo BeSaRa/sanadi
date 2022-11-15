@@ -229,6 +229,10 @@ export abstract class CaseModel<S extends BaseGenericEService<T>, T extends File
     return this.caseStatus === CommonCaseStatus.FINAL_APPROVE;
   }
 
+  isFinalNotification(): boolean {
+    return this.caseStatus === CommonCaseStatus.FINAL_NOTIFICATION;
+  }
+
   isInitialApproved(): boolean {
     return this.caseStatus === CommonCaseStatus.INITIAL_APPROVE;
   }

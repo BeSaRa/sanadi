@@ -341,6 +341,18 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
     return this.getCaseStatus() === CommonCaseStatus.FINAL_APPROVE;
   }
 
+  isFinalNotification(): any {
+    return this.getCaseStatus() === CommonCaseStatus.FINAL_NOTIFICATION;
+  }
+
+  isInitialApproved(): boolean {
+    return this.getCaseStatus() === CommonCaseStatus.INITIAL_APPROVE;
+  }
+
+  isFinalRejection(): boolean {
+    return this.getCaseStatus() === CommonCaseStatus.FINAL_REJECTION;
+  }
+
   isTask(): boolean {
     return true;
   }
