@@ -1,4 +1,4 @@
-import {Component, Inject, ViewChild} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, Inject, ViewChild} from '@angular/core';
 import {LangService} from '@app/services/lang.service';
 import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
 import {InternalUser} from '@app/models/internal-user';
@@ -41,7 +41,7 @@ import {CustomMenuPermissionComponent} from '@app/administration/shared/custom-m
   templateUrl: './internal-user-popup.component.html',
   styleUrls: ['./internal-user-popup.component.scss']
 })
-export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser> {
+export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser> implements AfterViewInit{
   operation: OperationTypes;
   model: InternalUser;
   form!: UntypedFormGroup;
@@ -111,11 +111,13 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
     followup: {name: 'followup', langKey: 'followup', index: 5, validStatus: () => true, isTouchedOrDirty: () => true},
     services: {name: 'services', langKey: 'link_services', index: 6, validStatus: () => true, isTouchedOrDirty: () => true},
   };
+  @ViewChild('dialogContent') dialogContent!: ElementRef;
 
   constructor(public dialogRef: DialogRef,
               public lang: LangService,
               private internalDep: InternalDepartmentService,
               public fb: UntypedFormBuilder,
+              private cd: ChangeDetectorRef,
               private sharedService: SharedService,
               private lookupService: LookupService,
               private customRoleService: ExternalUserCustomRoleService,
@@ -129,6 +131,46 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
     this.model = this.data.model;
     this.operation = this.data.operation;
     this.statusList = lookupService.listByCategory.CommonStatus;
+  }
+
+  initPopup(): void {
+    this.loadDepartments();
+    this.loadPermissions();
+    this.loadCustomRoles();
+    if (this.operation === OperationTypes.UPDATE) {
+      this.loadUserDepartments();
+      this.loadSignature();
+    }
+    this.listenToUserDepartmentsChange();
+  }
+
+  private _afterViewInit(): void {
+    if (this.operation === OperationTypes.UPDATE) {
+      this._updatePermissionValidations(true);
+      this.displayFormValidity(this.form, this.dialogContent.nativeElement);
+    }
+    if (this.readonly) {
+      this.form.disable();
+      this.displaySaveBtn = false;
+      this.validateFieldsVisible = false;
+    }
+  }
+
+  ngAfterViewInit(): void {
+    // used the private function to reuse functionality of afterViewInit if needed
+    this._afterViewInit();
+    this.cd.detectChanges();
+  }
+
+  buildForm(): void {
+    this.form = this.fb.group({
+      user: this.fb.group(this.model.buildForm(true)),
+      userPermissions: this.fb.group({
+        permissions: [false],
+        customRoleId: [this.model?.customRoleId]
+      })
+    });
+    this.preventUserDomain();
   }
 
   private loadDepartments(): void {
@@ -220,40 +262,6 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
       });
   }
 
-  initPopup(): void {
-    this.loadDepartments();
-    this.loadPermissions();
-    this.loadCustomRoles();
-    if (this.operation === OperationTypes.UPDATE) {
-      this.loadUserDepartments();
-      this.loadSignature();
-    }
-    this.listenToUserDepartmentsChange();
-  }
-
-  destroyPopup(): void {
-
-  }
-
-  buildForm(): void {
-    this.form = this.fb.group({
-      user: this.fb.group(this.model.buildForm(true)),
-      userPermissions: this.fb.group({
-        permissions: [false],
-        customRoleId: [this.model?.customRoleId]
-      })
-    });
-    this.preventUserDomain();
-    if (this.operation === OperationTypes.UPDATE) {
-      this._updatePermissionValidations(true);
-    }
-    if (this.readonly) {
-      this.form.disable();
-      this.displaySaveBtn = false;
-      this.validateFieldsVisible = false;
-    }
-  }
-
   get readonly(): boolean {
     return this.operation === OperationTypes.VIEW;
   }
@@ -339,14 +347,6 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
 
   saveFail(error: Error): void {
     console.log(error);
-  }
-
-  basicInfoHasError() {
-    return (this.basicFormTab!.invalid && (this.basicFormTab!.touched || this.basicFormTab!.dirty));
-  }
-
-  permissionTabHasError() {
-    return (this.permissionsFormTab!.invalid && (this.permissionsFormTab!.touched || this.permissionsFormTab!.dirty));
   }
 
   updateUserPermissions(bool: boolean): void {
@@ -470,5 +470,9 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
       return !tab.validStatus();
     }
     return !tab.validStatus() && tab.isTouchedOrDirty();
+  }
+
+  destroyPopup(): void {
+
   }
 }
