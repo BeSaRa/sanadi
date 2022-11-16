@@ -45,12 +45,12 @@ export class ConfigurationService {
         // @ts-ignore
         finalConfig[overrideKey] = overridingConfig[overrideKey];
       }
-      this.staticResourcesService.setConfigurationMergingProperties(Object.keys(finalConfig)); // always set after finalConfig is set
+      this.staticResourcesService.setConfigurationMergingProperties(Object.keys(finalConfig) as Array<keyof IAppConfig>); // always set after finalConfig is set
     } else {
-      const configurableProperties: string[] = this.staticResourcesService.getConfigurableProperties();
+      const configurableProperties: Array<keyof IAppConfig> = this.staticResourcesService.getConfigurableProperties();
 
       for (const overrideKey in overridingConfig) {
-        if (configurableProperties.includes(overrideKey)) {
+        if (configurableProperties.includes(overrideKey as keyof IAppConfig)) {
           // @ts-ignore
           finalConfig[overrideKey] = overridingConfig[overrideKey];
         }

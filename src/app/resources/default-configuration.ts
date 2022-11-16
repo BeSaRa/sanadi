@@ -27,10 +27,10 @@ export const defaultConfiguration: Partial<IAppConfig> = {
   LOGIN_BACKGROUND_EXTERNAL: 'raca-login-background-2.jpg'
 };
 
-export const limitedConfigurableProperties = [
+export const limitedConfigurableProperties: Array<keyof IAppConfig> = [
   'ENVIRONMENTS_URLS', 'BASE_ENVIRONMENT', 'REPORTS_URL', 'RESET_PASSWORD',
 ];
 
-export const extendedConfigurableProperties = [
+export const extendedConfigurableProperties: Array<keyof IAppConfig> = [
   'MAP_API_KEY', 'LOGIN_BACKGROUND_INTERNAL', 'LOGIN_BACKGROUND_EXTERNAL', 'GIVE_USERS_PERMISSIONS', 'SEARCH_YEARS_START', 'SEARCH_YEARS_RANGE'
 ];
