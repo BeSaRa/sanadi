@@ -97,6 +97,10 @@ export class CustomMenu extends BaseModel<CustomMenu, CustomMenuService> {
     };
   }
 
+  isActive(): boolean {
+    return this.status === CommonStatusEnum.ACTIVATED;
+  }
+
   isParentMenu(): boolean {
     return !this.parentMenuItemId;
   }

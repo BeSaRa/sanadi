@@ -17,6 +17,8 @@ import {TableComponent} from '@app/shared/components/table/table.component';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {Observable, of, Subject} from 'rxjs';
 import {catchError, exhaustMap, filter, map, switchMap, takeUntil} from 'rxjs/operators';
+import {ICustomMenuSearchCriteria} from '@contracts/i-custom-menu-search-criteria';
+import {Pagination} from '@app/models/pagination';
 
 @Component({
   selector: 'app-custom-menu',
@@ -88,7 +90,7 @@ export class CustomMenuComponent extends AdminGenericComponent<CustomMenu, Custo
       onClick: (item: CustomMenu) => this.toggleStatus(item),
       displayInGrid: false,
       show: (item) => {
-        if (this.readonly || item.status === CommonStatusEnum.RETIRED){
+        if (this.readonly || item.status === CommonStatusEnum.RETIRED) {
           return false;
         }
         return item.status === CommonStatusEnum.DEACTIVATED;
@@ -102,7 +104,7 @@ export class CustomMenuComponent extends AdminGenericComponent<CustomMenu, Custo
       onClick: (item: CustomMenu) => this.toggleStatus(item),
       displayInGrid: false,
       show: (item) => {
-        if (this.readonly || item.status === CommonStatusEnum.RETIRED){
+        if (this.readonly || item.status === CommonStatusEnum.RETIRED) {
           return false;
         }
         return item.status === CommonStatusEnum.ACTIVATED;
@@ -159,26 +161,27 @@ export class CustomMenuComponent extends AdminGenericComponent<CustomMenu, Custo
     this.reload$
       .pipe(takeUntil((this.destroy$)))
       .pipe(switchMap(() => {
-        let load: Observable<CustomMenu[]>;
+        let load: Observable<Pagination<CustomMenu[]>>;
+        const paginationOptions = {
+          limit: this.pageEvent.pageSize,
+          offset: (this.pageEvent.pageIndex * this.pageEvent.pageSize)
+        };
         if (!!this.parent) {
-          load = this.service.loadByParentId(this.parent.id).pipe(map((res) => {
-            this.count = res.length;
-            return res;
-          }));
+          let criteria: Partial<ICustomMenuSearchCriteria> = {
+            'parent-menu-item-id': this.parent.id
+          };
+          load = this.service.loadByCriteriaPaging(criteria, paginationOptions);
         } else {
-          const paginationOptions = {
-            limit: this.pageEvent.pageSize,
-            offset: (this.pageEvent.pageIndex * this.pageEvent.pageSize)
-          }
-          load = this.service.loadMain(paginationOptions).pipe(map((res) => {
+          load = this.service.loadMain(paginationOptions);
+        }
+        return load.pipe(map((res) => {
             this.count = res.count;
             return res.rs;
+          }),
+          catchError(_ => {
+            this.count = 0;
+            return of([]);
           }));
-        }
-        return load.pipe(catchError(_ => {
-          this.count = 0;
-          return of([]);
-        }));
       }))
       .subscribe((list: CustomMenu[]) => {
         this.models = list;

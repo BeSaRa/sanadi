@@ -1,5 +1,5 @@
 import {ComponentType} from '@angular/cdk/portal';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {CastResponse, CastResponseContainer} from '@app/decorators/decorators/cast-response';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
@@ -9,7 +9,7 @@ import {IDialogData} from '@app/interfaces/i-dialog-data';
 import {Pagination} from '@app/models/pagination';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {Observable, of} from 'rxjs';
-import {map, switchMap} from 'rxjs/operators';
+import {catchError, map, switchMap} from 'rxjs/operators';
 import {CustomMenuPopupComponent} from '../administration/popups/custom-menu-popup/custom-menu-popup.component';
 import {CustomMenu} from '../models/custom-menu';
 import {DialogService} from './dialog.service';
@@ -38,6 +38,12 @@ import {MenuView} from '@app/enums/menu-view.enum';
 })
 export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> {
   list: CustomMenu[] = [];
+
+  private _emptyPaginationListResponse = of({
+    rs: [],
+    count: 0,
+    sc: 200
+  } as Pagination<CustomMenu[]>);
 
   constructor(public dialog: DialogService,
               public http: HttpClient,
@@ -83,7 +89,10 @@ export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> 
   }
 
   loadByParentId(parentId: number): Observable<CustomMenu[]> {
-    return this.loadByCriteria({parentMenuItemId: parentId});
+    let criteria: Partial<ICustomMenuSearchCriteria> = {
+      'parent-menu-item-id': parentId
+    };
+    return this.loadByCriteria(criteria);
   }
 
   @CastResponse(undefined, {
@@ -91,11 +100,30 @@ export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> 
     unwrap: 'rs'
   })
   loadByCriteria(criteria: Partial<ICustomMenuSearchCriteria>): Observable<CustomMenu[]> {
-    return this.http.post<CustomMenu[]>(this._getServiceURL() + '/filter', criteria);
+    delete criteria.offset;
+    delete criteria.limit;
+
+    return this.http.get<CustomMenu[]>(this._getServiceURL() + '/criteria', {
+      params: new HttpParams({fromObject: criteria})
+    })
+      .pipe(catchError(() => of([])));
+  }
+
+  @CastResponse(undefined, {
+    fallback: '$pagination'
+  })
+  loadByCriteriaPaging(criteria: Partial<ICustomMenuSearchCriteria>, options: Partial<PaginationContract>): Observable<Pagination<CustomMenu[]>> {
+    criteria.offset = options.offset;
+    criteria.limit = options.limit;
+
+    return this.http.get<Pagination<CustomMenu[]>>(this._getServiceURL() + '/criteria', {
+      params: new HttpParams({fromObject: criteria})
+    })
+      .pipe(catchError(() => this._emptyPaginationListResponse));
   }
 
   loadPrivateMenus(): Observable<CustomMenu[]> {
-    return this.loadByCriteria({menuView: MenuView.PRIVATE});
+    return this.loadByCriteria({'menu-view': MenuView.PRIVATE});
   }
 
   openCreateDialog(parentMenu?: CustomMenu): DialogRef {
@@ -193,7 +221,6 @@ export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> 
         value = this.employeeService.getProfile()?.id;
         break;
       case MenuItemParametersEnum.DOMAIN_NAME:
-        // @ts-ignore
         value = this.employeeService.getCurrentUser().domainName;
         break;
     }

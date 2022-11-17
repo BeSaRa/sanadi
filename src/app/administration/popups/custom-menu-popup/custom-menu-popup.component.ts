@@ -110,7 +110,7 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
   }
 
   handleDisableFields() {
-    if (this.readonly){
+    if (this.readonly) {
       this.form.disable();
       return;
     }
@@ -126,12 +126,12 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
     }
   }
 
-  private _disableDependentFields(){
-    this.childrenDependentFields.forEach((field)=> field.disable());
+  private _disableDependentFields() {
+    this.childrenDependentFields.forEach((field) => field.disable());
   }
 
-  private _enableDependentFields(){
-    this.childrenDependentFields.forEach((field)=> field.enable());
+  private _enableDependentFields() {
+    this.childrenDependentFields.forEach((field) => field.enable());
   }
 
   get childrenDependentFields(): UntypedFormControl[] {
