@@ -10,7 +10,7 @@ import {DialogRef} from '@app/shared/models/dialog-ref';
 import {Observable, of, Subject} from 'rxjs';
 import {InternalDepartmentService} from '@app/services/internal-department.service';
 import {InternalDepartment} from '@app/models/internal-department';
-import {catchError, filter, switchMap, takeUntil, withLatestFrom} from 'rxjs/operators';
+import {catchError, filter, map, switchMap, takeUntil, withLatestFrom} from 'rxjs/operators';
 import {Lookup} from '@app/models/lookup';
 import {LookupService} from '@app/services/lookup.service';
 import {CheckGroup} from '@app/models/check-group';
@@ -34,6 +34,9 @@ import {BlobModel} from '@app/models/blob-model';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {TabMap} from '@app/types/types';
 import {CustomMenuPermissionComponent} from '@app/administration/shared/custom-menu-permission/custom-menu-permission.component';
+import {EmployeeService} from '@services/employee.service';
+import {AuthService} from '@services/auth.service';
+import {MenuItemService} from '@services/menu-item.service';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -41,7 +44,7 @@ import {CustomMenuPermissionComponent} from '@app/administration/shared/custom-m
   templateUrl: './internal-user-popup.component.html',
   styleUrls: ['./internal-user-popup.component.scss']
 })
-export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser> implements AfterViewInit{
+export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser> implements AfterViewInit {
   operation: OperationTypes;
   model: InternalUser;
   form!: UntypedFormGroup;
@@ -116,6 +119,8 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
   constructor(public dialogRef: DialogRef,
               public lang: LangService,
               private internalDep: InternalDepartmentService,
+              private employeeService: EmployeeService,
+              private authService: AuthService,
               public fb: UntypedFormBuilder,
               private cd: ChangeDetectorRef,
               private sharedService: SharedService,
@@ -125,6 +130,7 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
               private internalUserDepartmentService: InternalUserDepartmentService,
               private permissionService: PermissionService,
               private toast: ToastService,
+              private menuItemService: MenuItemService,
               private internalUserService: InternalUserService,
               @Inject(DIALOG_DATA_TOKEN) public data: IDialogData<InternalUser>) {
     super();
@@ -319,6 +325,13 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
           switchMap(() => this.customMenuPermissionComponentRef.saveUserCustomMenuPermissions()),
           catchError(() => of(null)),
           filter((response) => response !== null)
+        )
+        .pipe(
+          switchMap(() => {
+            return this.employeeService.isCurrentUser(model) ? this.authService.validateToken()
+              .pipe(switchMap(()=> this.menuItemService.loadAllMenus()))
+              .pipe(catchError(() => of(model)), map(_ => model)) : of(model);
+          })
         )
         .subscribe(() => {
           const message = (this.operation === OperationTypes.CREATE)

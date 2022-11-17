@@ -2,12 +2,14 @@ import {Injectable} from '@angular/core';
 import {MenuItem} from '../models/menu-item';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {tap} from 'rxjs/operators';
+import {switchMap, tap} from 'rxjs/operators';
 import {DomSanitizer} from '@angular/platform-browser';
 import {FactoryService} from './factory.service';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {CastResponse} from '@decorators/cast-response';
 import {StaticAppResourcesService} from '@services/static-app-resources.service';
+import {CustomMenuService} from '@services/custom-menu.service';
+import {ReportService} from '@services/report.service';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +25,20 @@ export class MenuItemService {
     FactoryService.registerService('DomSanitizer', domSanitizer);
   }
 
-  @CastResponse(() => MenuItem, { unwrap: '', fallback: '$default' })
+  /**
+   * @description Loads all type of menus in system and typecast them to MenuItem[]
+   */
+  loadAllMenus() {
+    let customMenuService: CustomMenuService = FactoryService.getService('CustomMenuService');
+    let reportService: ReportService = FactoryService.getService('ReportService');
+    return this.load(false)
+      .pipe(switchMap(() => customMenuService.prepareCustomMenuList()))
+      .pipe(switchMap(() => reportService.loadReportsMenu()))
+      .pipe(tap((reportsMenuList) => reportService.prepareReportsMenu(reportsMenuList)))
+      .pipe(tap(() => this.prepareMenuItems()));
+  }
+
+  @CastResponse(() => MenuItem, {unwrap: '', fallback: '$default'})
   private _load(): Observable<MenuItem[]> {
     return this.staticResourcesService.getMenuList();
   }

@@ -30,6 +30,7 @@ import {DialogService} from '@services/dialog.service';
 import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {CustomMenuPermissionComponent} from '@app/administration/shared/custom-menu-permission/custom-menu-permission.component';
+import {MenuItemService} from '@services/menu-item.service';
 
 @Component({
   selector: 'app-external-user-popup',
@@ -108,6 +109,7 @@ export class ExternalUserPopupComponent extends AdminGenericDialog<ExternalUser>
               public employeeService: EmployeeService,
               private authService: AuthService,
               private jobTitleService: JobTitleService,
+              private menuItemService: MenuItemService,
               private profileService: ProfileService,
               private dialogService: DialogService,
               private cd: ChangeDetectorRef,
@@ -182,56 +184,6 @@ export class ExternalUserPopupComponent extends AdminGenericDialog<ExternalUser>
   get permissionsControl(): UntypedFormControl {
     return this.permissionsFormGroup.get('permissions') as UntypedFormControl;
   }
-
-  /*saveModel(): void {
-    this.save$.next();
-  }
-
-  _saveModel(): void {
-    this.save$.pipe(
-      takeUntil(this.destroy$),
-      exhaustMap(() => {
-        const orgUser = new ExternalUser().clone({...this.model, ...this.basicFormGroup?.value});
-        return orgUser.save()
-          .pipe(
-            catchError(() => {
-              return of(null);
-            }),
-            switchMap((savedUser: ExternalUser | null) => {
-              if (!savedUser) {
-                return of(savedUser);
-              }
-              return this.userPermissionService.saveBulkUserPermissions(savedUser.id, this.selectedPermissions)
-                .pipe(
-                  catchError(() => {
-                    return of(null);
-                  }),
-                  map(() => {
-                    return savedUser;
-                  })
-                );
-            }));
-      }),
-      switchMap((user) => {
-        if (!user) {
-          return of(user);
-        }
-        // noinspection JSUnusedLocalSymbols
-        return this.employeeService.isCurrentEmployee(user) ? this.authService.validateToken()
-          .pipe(catchError(error => of(user)), map(_ => user)) : of(user);
-      }),
-    ).subscribe((user) => {
-      if (!user) {
-        return;
-      }
-      const message = (this.operation === OperationTypes.CREATE)
-        ? this.langService.map.msg_create_x_success : this.langService.map.msg_update_x_success;
-      // @ts-ignore
-      this.toast.success(message.change({x: user.arName}));
-      this.model = user;
-      this.operation = OperationTypes.UPDATE;
-    });
-  }*/
 
   get popupTitle(): string {
     if (this.operation === OperationTypes.CREATE) {
@@ -409,7 +361,8 @@ export class ExternalUserPopupComponent extends AdminGenericDialog<ExternalUser>
         filter((response) => response !== null),
       ).pipe(
       switchMap(() => {
-        return this.employeeService.isCurrentEmployee(model) ? this.authService.validateToken()
+        return this.employeeService.isCurrentUser(model) ? this.authService.validateToken()
+          .pipe(switchMap(() => this.menuItemService.loadAllMenus()))
           .pipe(catchError(() => of(model)), map(_ => model)) : of(model);
       })
     ).subscribe((result) => {

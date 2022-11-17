@@ -91,9 +91,7 @@ export class AppModule {
                  tokenService: TokenService,
                  authService: AuthService,
                  menuItemService: MenuItemService,
-                 autoRegister: AutoRegisterService,
-                 customMenuService: CustomMenuService,
-                 reportService: ReportService): () => Promise<unknown> {
+                 autoRegister: AutoRegisterService): () => Promise<unknown> {
     autoRegister.ping();
     return () => {
       return forkJoin({
@@ -111,12 +109,7 @@ export class AppModule {
             lookupService.setLookupsMap(infoResult.lookupMap);
             return tokenService.setAuthService(authService)
               .validateToken().toPromise().then(() => {
-                return menuItemService.load(false)
-                  .pipe(switchMap(() => customMenuService.prepareCustomMenuList()))
-                  .pipe(switchMap(() => reportService.loadReportsMenu()))
-                  .pipe(tap((reportsMenuList) => reportService.prepareReportsMenu(reportsMenuList)))
-                  .pipe(tap(() => menuItemService.prepareMenuItems()))
-                  .toPromise();
+                return menuItemService.loadAllMenus().toPromise();
               });
           });
         });
