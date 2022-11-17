@@ -24,7 +24,7 @@ export class ServiceListComponent implements OnInit, OnDestroy {
   iconBackground: string = 'url(assets/images/top-pattern.png)';
   starsImage: string = 'url(assets/images/icons/stars.svg)';
 
-  constructor(private langService: LangService,
+  constructor(public langService: LangService,
               private cd: ChangeDetectorRef,
               private router: Router,
               public empService: EmployeeService) {
