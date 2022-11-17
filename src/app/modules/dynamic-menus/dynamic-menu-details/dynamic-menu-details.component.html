@@ -1,0 +1,9 @@
+<div class="row pb-3">
+  <app-page-header [customTemplate]="headerTemplate"></app-page-header>
+  <ng-template #headerTemplate>
+    <div class="align-items-center">
+      <h1 class="h6 text-primary m-0 d-inline-block">{{dynamicMenu|translateName:lang.map.lang}}</h1>
+    </div>
+  </ng-template>
+</div>
+<iframe [src]="safeUrl"></iframe>

@@ -83,4 +83,12 @@ export class MenuItemService {
   getMenuItemByLangKey(langKey: keyof ILanguageKeys): MenuItem | undefined {
     return this.menuItems.find(item => item.langKey === langKey);
   }
+
+  getMaxMenuItemId() {
+    return Math.max.apply(this, this.menuItems.map(item => item.id));
+  }
+
+  getMaxParentMenuSortOrder() {
+    return Math.max.apply(this, this.menuItems.filter(x => !x.parent).map(item => item.itemOrder));
+  }
 }

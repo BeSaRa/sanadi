@@ -23,6 +23,10 @@ import {LangService} from '@services/lang.service';
 import {TokenService} from '@services/token.service';
 import {ICustomMenuSearchCriteria} from '@contracts/i-custom-menu-search-criteria';
 import {MenuView} from '@app/enums/menu-view.enum';
+import {MenuItemService} from '@services/menu-item.service';
+import {MenuItem} from '@app/models/menu-item';
+import {MenuItemInterceptor} from '@app/model-interceptors/menu-item-interceptor';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 
 @CastResponseContainer({
   $default: {
@@ -38,6 +42,9 @@ import {MenuView} from '@app/enums/menu-view.enum';
 })
 export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> {
   list: CustomMenu[] = [];
+  dynamicMainMenuUrl: string = 'home/dynamic-menus/:parentId';
+  dynamicMainMenuDetailsUrl: string = 'home/dynamic-menus/:parentId/details';
+  dynamicChildMenuUrl: string = 'home/dynamic-menus/:parentId/details/:id';
 
   private _emptyPaginationListResponse = of({
     rs: [],
@@ -50,6 +57,7 @@ export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> 
               private urlService: UrlService,
               private langService: LangService,
               private tokenService: TokenService,
+              private menuItemService: MenuItemService,
               private employeeService: EmployeeService) {
     super();
     FactoryService.registerService('CustomMenuService', this);
@@ -225,5 +233,98 @@ export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> 
         break;
     }
     return (value ?? '') + '';
+  }
+
+  private _getMaxParentItemOrder(finalList: MenuItem[]) {
+    if (finalList.length === 0) {
+      return this.menuItemService.getMaxParentMenuSortOrder();
+    } else {
+      return Math.max(...(finalList.filter(x => !x.parent).map(item => item.itemOrder)));
+    }
+  }
+
+  private _getMaxChildItemOrder(finalList: MenuItem[], customMenuParentId: number) {
+    let childMenuList = finalList.filter(item => item.customMenu && item.customMenu.id === customMenuParentId);
+    if (!childMenuList || childMenuList.length === 0) {
+      return 0;
+    }
+    return Math.max(...(childMenuList.map(item => item.itemOrder)));
+  }
+
+  private _transformParentMenu(customMenu: CustomMenu, newId: number, newItemOrder: number, hasChildren: boolean): MenuItem {
+    return (new MenuItemInterceptor).receive(new MenuItem().clone({
+      id: newId,
+      itemOrder: newItemOrder,
+      parent: undefined,
+      // langKey: '',
+      arName: customMenu.arName,
+      enName: customMenu.enName,
+      group: 'main',
+      isSvg: false,
+      icon: ActionIconsEnum.MENU,
+      path: (hasChildren ? this.dynamicMainMenuUrl : this.dynamicMainMenuDetailsUrl).change({parentId: customMenu.id}),
+      customMenu: customMenu
+    }));
+  }
+
+  private _transformChildMenu(customMenu: CustomMenu, newId: number, newItemOrder: number, newParentId: number): MenuItem {
+    return (new MenuItemInterceptor).receive(new MenuItem().clone({
+      id: newId,
+      itemOrder: newItemOrder,
+      parent: newParentId,
+      // langKey: '',
+      arName: customMenu.arName,
+      enName: customMenu.enName,
+      group: 'dynamic-menus-' + customMenu.parentMenuItemId,
+      isSvg: false,
+      icon: ActionIconsEnum.MENU,
+      path: this.dynamicChildMenuUrl.change({parentId: customMenu.parentMenuItemId, id: customMenu.id}),
+      customMenu: customMenu
+    }));
+  }
+
+  private _transformToMenuItems(customMenuList: CustomMenu[]): MenuItem[] {
+    let maxId = this.menuItemService.getMaxMenuItemId();
+    let finalList: MenuItem[] = [];
+    let parentList = customMenuList.filter(item => !item.parentMenuItemId);
+    let childrenList = customMenuList.filter(item => !!item.parentMenuItemId && !!item.menuURL); // children must have menuUrl
+
+    parentList.forEach((parentMenu: CustomMenu) => {
+      const hasChildren: boolean = !!childrenList.find(x => x.parentMenuItemId === parentMenu.id);
+      // parent must have children or menu url. (if it has children, no need to have menuUrl as it will be ignored)
+      // if parent does not have children, it must have menu url to open page
+      if (hasChildren || parentMenu.menuURL) {
+        ++maxId;
+        let itemOrder = this._getMaxParentItemOrder(finalList) + 1;
+        finalList.push(this._transformParentMenu(parentMenu, maxId, itemOrder, hasChildren));
+      }
+    });
+
+    childrenList.forEach((childMenu: CustomMenu) => {
+      ++maxId;
+      let newParent = finalList.find(x => x.customMenu && x.customMenu.id === childMenu.parentMenuItemId);
+      // if no newParent is found, add the current menu as parent menu instead of child menu
+      if (!newParent) {
+        let itemOrder = this._getMaxParentItemOrder(finalList) + 1;
+        finalList.push(this._transformParentMenu(childMenu, maxId, itemOrder, false));
+      } else {
+        let itemOrder = this._getMaxChildItemOrder(finalList, childMenu.parentMenuItemId!) + 1;
+        finalList.push(this._transformChildMenu(childMenu, maxId, itemOrder, newParent!.id));
+      }
+    });
+    return finalList;
+  }
+
+  prepareCustomMenuList(): Observable<MenuItem[]> {
+    return this.loadByCriteria({'menu-view': MenuView.PUBLIC})
+      .pipe(
+        map(result => result.filter(x => x.isActive())),
+        switchMap((publicMenus) => {
+          const allMenus = publicMenus.concat(this.employeeService.menuItems);
+          let list = this._transformToMenuItems(allMenus);
+          this.menuItemService.menuItems = this.menuItemService.menuItems.concat(list);
+          return of(this.menuItemService.menuItems);
+        })
+      );
   }
 }

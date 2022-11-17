@@ -33,6 +33,7 @@ import {ExternalLoginComponent} from './pages/external-login/external-login.comp
 import {ReportService} from '@services/report.service';
 import {switchMap, tap} from 'rxjs/operators';
 import {ProfileService} from '@services/profile.service';
+import {CustomMenuService} from '@services/custom-menu.service';
 
 @NgModule({
   declarations: [
@@ -69,6 +70,7 @@ import {ProfileService} from '@services/profile.service';
         AuthService,
         MenuItemService,
         AutoRegisterService,
+        CustomMenuService,
         ReportService,
         ExternalUserCustomRoleService,
         ExternalUserService,
@@ -90,6 +92,7 @@ export class AppModule {
                  authService: AuthService,
                  menuItemService: MenuItemService,
                  autoRegister: AutoRegisterService,
+                 customMenuService: CustomMenuService,
                  reportService: ReportService): () => Promise<unknown> {
     autoRegister.ping();
     return () => {
@@ -109,6 +112,7 @@ export class AppModule {
             return tokenService.setAuthService(authService)
               .validateToken().toPromise().then(() => {
                 return menuItemService.load(false)
+                  .pipe(switchMap(() => customMenuService.prepareCustomMenuList()))
                   .pipe(switchMap(() => reportService.loadReportsMenu()))
                   .pipe(tap((reportsMenuList) => reportService.prepareReportsMenu(reportsMenuList)))
                   .pipe(tap(() => menuItemService.prepareMenuItems()))
