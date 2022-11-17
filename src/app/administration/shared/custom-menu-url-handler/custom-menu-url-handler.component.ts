@@ -21,7 +21,7 @@ export class CustomMenuUrlHandlerComponent implements OnInit, AfterViewInit {
   @Input() record!: CustomMenu;
   @Input() readonly: boolean = false;
   actionIconsEnum = ActionIconsEnum;
-  dropListIdInitials = 'dropList_';
+  dropListIdInitials: string = 'dropList_' + new Date().valueOf() + '_';
 
   constructor(public lang: LangService,
               private fb: FormBuilder,
@@ -55,7 +55,21 @@ export class CustomMenuUrlHandlerComponent implements OnInit, AfterViewInit {
   }
 
   isValidUrl(): boolean {
-    return this.menuUrlControl.valid && this.isValidVariableList;
+    const url = this.menuUrlControl.value;
+    if (this.record.isParentMenu()) {
+      // if no url, its valid
+      if (!CommonUtils.isValidValue(url)) {
+        return true;
+      }
+    } else {
+      // children must have url
+      if (!CommonUtils.isValidValue(url)) {
+        return false;
+      }
+    }
+    // menu should have valid url and valid variables too
+    const variables = this.customMenuService.findVariablesInUrl(url);
+    return this.menuUrlControl.valid && (!variables.length || this.isValidVariableList);
   }
 
   isTouchedOrDirty(): boolean {

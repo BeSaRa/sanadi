@@ -2,7 +2,7 @@
   <div class="row mb-4">
     <div class="col-12 position-relative">
       <label asteriskIfRequired="menuURL" for="menuURL" class="form-label">{{lang.map.menu_URL}}</label>
-      <textarea id="menuURL" validationClasses="menuURL" trimInput
+      <textarea id="menuURL" validationClasses="menuURL" trimInput (blur)="checkUrlVariables()"
                 formControlName="menuURL" class="form-control"></textarea>
       <app-field-error-message controlName="menuURL"></app-field-error-message>
     </div>
