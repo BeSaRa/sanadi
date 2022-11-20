@@ -90,6 +90,9 @@ export class CustomMenuComponent extends AdminGenericComponent<CustomMenu, Custo
       onClick: (item: CustomMenu) => this.toggleStatus(item),
       displayInGrid: false,
       show: (item) => {
+        if (this.parent && !this.parent.isActive()) {
+          return false;
+        }
         if (this.readonly || item.status === CommonStatusEnum.RETIRED) {
           return false;
         }
@@ -104,6 +107,9 @@ export class CustomMenuComponent extends AdminGenericComponent<CustomMenu, Custo
       onClick: (item: CustomMenu) => this.toggleStatus(item),
       displayInGrid: false,
       show: (item) => {
+        if (this.parent && !this.parent.isActive()) {
+          return false;
+        }
         if (this.readonly || item.status === CommonStatusEnum.RETIRED) {
           return false;
         }
@@ -129,7 +135,8 @@ export class CustomMenuComponent extends AdminGenericComponent<CustomMenu, Custo
           callback: ($event: MouseEvent, _data?: any) =>
             this.changeStatusBulk($event, CommonStatusEnum.ACTIVATED),
           show: (_items: CustomMenu[]) => {
-            return true;
+            return !(this.parent && !this.parent.isActive());
+
           },
         },
         {
@@ -138,7 +145,8 @@ export class CustomMenuComponent extends AdminGenericComponent<CustomMenu, Custo
           callback: ($event: MouseEvent, _data?: any) =>
             this.changeStatusBulk($event, CommonStatusEnum.DEACTIVATED),
           show: (_items: CustomMenu[]) => {
-            return true;
+            return !(this.parent && !this.parent.isActive());
+
           },
         },
       ],
@@ -205,7 +213,7 @@ export class CustomMenuComponent extends AdminGenericComponent<CustomMenu, Custo
     this.edit$
       .pipe(takeUntil(this.destroy$))
       .pipe(exhaustMap((model) => {
-        return this.service.openEditDialog(model.id, this.selectedPopupTabName).pipe(catchError(_ => of(null)));
+        return this.service.openEditDialog(model.id, this.parent, this.selectedPopupTabName).pipe(catchError(_ => of(null)));
       }))
       .pipe(filter((dialog): dialog is DialogRef => !!dialog))
       .pipe(switchMap(dialog => dialog.onAfterClose$))
@@ -216,7 +224,7 @@ export class CustomMenuComponent extends AdminGenericComponent<CustomMenu, Custo
     this.view$
       .pipe(takeUntil(this.destroy$))
       .pipe(exhaustMap((model) => {
-        return this.service.openViewDialog(model.id, this.selectedPopupTabName).pipe(catchError(_ => of(null)));
+        return this.service.openViewDialog(model.id, this.parent, this.selectedPopupTabName).pipe(catchError(_ => of(null)));
       }))
       .pipe(filter((dialog): dialog is DialogRef => !!dialog))
       .pipe(switchMap(dialog => dialog.onAfterClose$))

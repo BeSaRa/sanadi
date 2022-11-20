@@ -141,32 +141,36 @@ export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> 
       data.menuView = parentMenu.menuView;
       data.menuType = parentMenu.menuType;
       data.userType = parentMenu.userType;
+      data.status = parentMenu.status;
     }
     return this.dialog.show<IDialogData<CustomMenu>>(this._getDialogComponent(), {
       model: data,
-      operation: OperationTypes.CREATE
+      operation: OperationTypes.CREATE,
+      parentMenu: parentMenu
     });
   }
 
-  openEditDialog(modelId: number, selectedPopupTab: string = 'basic'): Observable<DialogRef> {
+  openEditDialog(modelId: number, parentMenu?: CustomMenu, selectedPopupTab: string = 'basic'): Observable<DialogRef> {
     return this.getById(modelId).pipe(
       switchMap((item: CustomMenu) => {
         return of(this.dialog.show<IDialogData<CustomMenu>>(this._getDialogComponent(), {
           model: item,
           operation: OperationTypes.UPDATE,
-          selectedTab: selectedPopupTab || 'basic'
+          selectedTab: selectedPopupTab || 'basic',
+          parentMenu: parentMenu
         }));
       })
     );
   }
 
-  openViewDialog(modelId: number, selectedPopupTab: string = 'basic'): Observable<DialogRef> {
+  openViewDialog(modelId: number, parentMenu?: CustomMenu, selectedPopupTab: string = 'basic'): Observable<DialogRef> {
     return this.getById(modelId).pipe(
       switchMap((item: CustomMenu) => {
         return of(this.dialog.show<IDialogData<CustomMenu>>(this._getDialogComponent(), {
           model: item,
           operation: OperationTypes.VIEW,
-          selectedTab: selectedPopupTab || 'basic'
+          selectedTab: selectedPopupTab || 'basic',
+          parentMenu: parentMenu
         }));
       })
     );

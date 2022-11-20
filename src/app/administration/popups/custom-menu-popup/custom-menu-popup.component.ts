@@ -31,6 +31,7 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
   menuTypes: Lookup[] = this.lookupService.listByCategory.MenuType;
   menuView: Lookup[] = this.lookupService.listByCategory.MenuView;
   userTypes: Lookup[] = this.lookupService.listByCategory.PermissionCategory;
+  parentMenu?: CustomMenu;
 
   selectedTabIndex$: Subject<number> = new Subject<number>();
   defaultSelectedTab: string = 'basic';
@@ -89,6 +90,7 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
     super();
     this.model = data.model;
     this.operation = data.operation;
+    this.parentMenu = data.parentMenu;
     this.defaultSelectedTab = data.selectedTab ?? 'basic';
   }
 
@@ -135,7 +137,11 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
   }
 
   get childrenDependentFields(): UntypedFormControl[] {
-    return [this.menuTypeControl, this.menuViewControl, this.userTypeControl];
+    let fields: UntypedFormControl[] = [];
+    if(this.parentMenu && !this.parentMenu.isActive()){
+      fields = [this.statusControl];
+    }
+    return fields.concat([this.menuTypeControl, this.menuViewControl, this.userTypeControl]);
   }
 
   ngAfterViewInit(): void {
@@ -193,6 +199,7 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
       : this.toast.success(message.change({x: model.getName()}));
     this.model = model;
     this.operation = OperationTypes.UPDATE;
+    this.customMenuChildrenRef && this.customMenuChildrenRef.reload$.next(null);
   }
 
   saveFail(error: Error): void {

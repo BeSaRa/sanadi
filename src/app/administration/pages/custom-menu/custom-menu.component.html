@@ -58,7 +58,7 @@
           <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">
             <grid-actions [record]="row" [actions]="actions" [itemIndex]="itemIndex">
               <span afterTemplate class="form-check form-switch switch-action"
-                    *ngIf="!readonly && row.status !== commonStatusEnum.RETIRED"
+                    *ngIf="!readonly && row.status !== commonStatusEnum.RETIRED && (!parent || parent.isActive())"
                     style="top: auto">
                 <input class="form-check-input" type="checkbox"
                        [checked]="row.status == commonStatusEnum.ACTIVATED"
