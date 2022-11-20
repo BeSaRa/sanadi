@@ -36,7 +36,6 @@ import {TabMap} from '@app/types/types';
 import {CustomMenuPermissionComponent} from '@app/administration/shared/custom-menu-permission/custom-menu-permission.component';
 import {EmployeeService} from '@services/employee.service';
 import {AuthService} from '@services/auth.service';
-import {MenuItemService} from '@services/menu-item.service';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -130,7 +129,6 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
               private internalUserDepartmentService: InternalUserDepartmentService,
               private permissionService: PermissionService,
               private toast: ToastService,
-              private menuItemService: MenuItemService,
               private internalUserService: InternalUserService,
               @Inject(DIALOG_DATA_TOKEN) public data: IDialogData<InternalUser>) {
     super();
@@ -329,7 +327,6 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
         .pipe(
           switchMap(() => {
             return this.employeeService.isCurrentUser(model) ? this.authService.validateToken()
-              .pipe(switchMap(()=> this.menuItemService.loadAllMenus()))
               .pipe(catchError(() => of(model)), map(_ => model)) : of(model);
           })
         )

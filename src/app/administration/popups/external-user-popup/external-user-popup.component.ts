@@ -30,7 +30,6 @@ import {DialogService} from '@services/dialog.service';
 import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {CustomMenuPermissionComponent} from '@app/administration/shared/custom-menu-permission/custom-menu-permission.component';
-import {MenuItemService} from '@services/menu-item.service';
 
 @Component({
   selector: 'app-external-user-popup',
@@ -109,7 +108,6 @@ export class ExternalUserPopupComponent extends AdminGenericDialog<ExternalUser>
               public employeeService: EmployeeService,
               private authService: AuthService,
               private jobTitleService: JobTitleService,
-              private menuItemService: MenuItemService,
               private profileService: ProfileService,
               private dialogService: DialogService,
               private cd: ChangeDetectorRef,
@@ -362,7 +360,6 @@ export class ExternalUserPopupComponent extends AdminGenericDialog<ExternalUser>
       ).pipe(
       switchMap(() => {
         return this.employeeService.isCurrentUser(model) ? this.authService.validateToken()
-          .pipe(switchMap(() => this.menuItemService.loadAllMenus()))
           .pipe(catchError(() => of(model)), map(_ => model)) : of(model);
       })
     ).subscribe((result) => {

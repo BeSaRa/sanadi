@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {MenuItem} from '../models/menu-item';
 import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 import {switchMap, tap} from 'rxjs/operators';
 import {DomSanitizer} from '@angular/platform-browser';
 import {FactoryService} from './factory.service';
@@ -15,8 +15,9 @@ import {ReportService} from '@services/report.service';
   providedIn: 'root'
 })
 export class MenuItemService {
-  menuItems!: MenuItem[];
+  menuItems: MenuItem[] = [];
   parents!: MenuItem[];
+  resetMenuItems$: Subject<boolean> = new Subject<boolean>();
   private children: Map<number, MenuItem[]> = new Map<number, MenuItem[]>();
 
   constructor(public http: HttpClient, private domSanitizer: DomSanitizer,
@@ -32,10 +33,11 @@ export class MenuItemService {
     let customMenuService: CustomMenuService = FactoryService.getService('CustomMenuService');
     let reportService: ReportService = FactoryService.getService('ReportService');
     return this.load(false)
-      .pipe(switchMap(() => customMenuService.prepareCustomMenuList()))
       .pipe(switchMap(() => reportService.loadReportsMenu()))
       .pipe(tap((reportsMenuList) => reportService.prepareReportsMenu(reportsMenuList)))
-      .pipe(tap(() => this.prepareMenuItems()));
+      .pipe(switchMap(() => customMenuService.prepareCustomMenuList()))
+      .pipe(tap(() => this.prepareMenuItems()))
+      .pipe(tap(() => this.resetMenuItems$.next(true)));
   }
 
   @CastResponse(() => MenuItem, {unwrap: '', fallback: '$default'})
