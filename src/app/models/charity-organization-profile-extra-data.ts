@@ -13,6 +13,7 @@ import {IMyDateModel} from 'angular-mydatepicker';
 import {Validators} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {BlobModel} from '@app/models/blob-model';
+import {AdminResult} from '@app/models/admin-result';
 
 const {receive, send} = new CharityOrganizationProfileExtraDataInterceptor();
 
@@ -41,6 +42,8 @@ export class CharityOrganizationProfileExtraData extends BaseModel<CharityOrgani
   buildingNumber!: string;
   address!: string;
   status!: number;
+  statusInfo!: AdminResult;
+  activityTypeInfo!: AdminResult;
   website!: string;
   snapChat!: string;
   twitter!: string;

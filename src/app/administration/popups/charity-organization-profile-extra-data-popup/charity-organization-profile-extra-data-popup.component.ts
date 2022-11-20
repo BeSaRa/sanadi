@@ -155,8 +155,7 @@ export class CharityOrganizationProfileExtraDataPopupComponent extends AdminGene
   }
 
   prepareModel(model: CharityOrganizationProfileExtraData, form: UntypedFormGroup): Observable<CharityOrganizationProfileExtraData> | CharityOrganizationProfileExtraData {
-    let formObjectWithoutViewOnlyProperties = this.removeViewOnlyProperties(form.value);
-
+    let formObjectWithoutViewOnlyProperties = this.removeViewOnlyProperties({...this.basicInfo.getRawValue(), ...this.contactInfo.getRawValue()});
     return (new CharityOrganizationProfileExtraData()).clone({...model, ...formObjectWithoutViewOnlyProperties});
   }
 
@@ -179,7 +178,7 @@ export class CharityOrganizationProfileExtraDataPopupComponent extends AdminGene
     delete formObject.establishmentDate;
     delete formObject.publishDate;
     delete formObject.registrationDate;
-    return  formObject;
+    return formObject;
   }
 
   onProfileContactOfficersChanged(officers: Officer[]) {
@@ -208,7 +207,7 @@ export class CharityOrganizationProfileExtraDataPopupComponent extends AdminGene
 
   private _clearLogoUploader(): void {
     this.logoFile = null;
-    this.logoUploader.nativeElement.value = "";
+    this.logoUploader.nativeElement.value = '';
   }
 
   removeLogo($event: MouseEvent): void {
@@ -229,7 +228,7 @@ export class CharityOrganizationProfileExtraDataPopupComponent extends AdminGene
       if (success) {
         this.toast.success(this.lang.map.msg_save_stamp_for_x_success.change({x: this.model.getName()}));
       }
-    })
+    });
   }
 
   saveLogoAfterSelect($event: Event) {

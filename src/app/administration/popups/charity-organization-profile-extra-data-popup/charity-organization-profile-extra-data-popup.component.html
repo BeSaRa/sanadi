@@ -90,11 +90,10 @@
             <app-field-error-message controlName="registrationDate"></app-field-error-message>
           </div>
           <div class="col-md-6 col-sm-12 mb-4 position-relative">
-            <label class="form-label" asteriskIfRequired="regulatingLaw"
-                   for="regulatingLaw">{{lang.map.regulating_law}}</label>
-            <input validationClasses="regulatingLaw" formControlName="regulatingLaw" type="text" id="regulatingLaw"
-                   class="form-control" trimInput>
-            <app-field-error-message controlName="regulatingLaw"></app-field-error-message>
+            <label class="form-label" for="registrationAuthority">{{lang.map.registration_authority}}</label>
+            <input type="text" [value]="model.profileInfo.registrationAuthorityInfo.getName()"
+                   id="registrationAuthority" disabled
+                   class="form-control">
           </div>
         </div>
         <div class="row">
@@ -122,6 +121,13 @@
                    id="establishmentId"
                    class="form-control" trimInput>
             <app-field-error-message controlName="establishmentId"></app-field-error-message>
+          </div>
+          <div class="col-md-6 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="regulatingLaw"
+                   for="regulatingLaw">{{lang.map.regulating_law}}</label>
+            <input validationClasses="regulatingLaw" formControlName="regulatingLaw" type="text" id="regulatingLaw"
+                   class="form-control" trimInput>
+            <app-field-error-message controlName="regulatingLaw"></app-field-error-message>
           </div>
         </div>
       </ng-container>

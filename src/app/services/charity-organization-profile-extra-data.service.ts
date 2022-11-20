@@ -22,6 +22,8 @@ import {Branch} from '@app/models/branch';
 import {BlobModel} from '@app/models/blob-model';
 import {DomSanitizer} from '@angular/platform-browser';
 import {BranchOfficersPopupComponent} from '@app/administration/shared/branch-officers-popup/branch-officers-popup.component';
+import {Profile} from '@app/models/profile';
+import {AdminResult} from '@app/models/admin-result';
 
 @CastResponseContainer({
   $default: {
@@ -31,6 +33,8 @@ import {BranchOfficersPopupComponent} from '@app/administration/shared/branch-of
       'complianceOfficer.*': () => Officer,
       'branchList.*': () => Branch,
       'branchList.*.branchContactOfficer.*': () => Officer,
+      'profileInfo': () => Profile,
+      'profileInfo.registrationAuthorityInfo': () => AdminResult
     }
   }
 })

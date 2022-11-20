@@ -5,6 +5,7 @@ export class OfficerInterceptor implements IModelInterceptor<Officer> {
   caseInterceptor?: IModelInterceptor<Officer> | undefined;
 
   send(model: Partial<Officer>): Partial<Officer> {
+    delete model.searchFields;
     return model;
   }
 

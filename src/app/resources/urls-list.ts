@@ -88,7 +88,7 @@ export const urlsList: Partial<IAppUrls> = {
   SERVICE_DATA: 'admin/services',
   SERVICE_DATA_2: 'admin/services/2',
   SERVICE_DATA_10: 'admin/services/10',
-  E_FINAL_EXTERNAL_OFFICE_APPROVAL: '/final-office-approval',
+  E_FINAL_EXTERNAL_OFFICE_APPROVAL: '/external-office-approval',
   INTERNAL_USER_PERMISSIONS: '/admin/internal-user-permission',
   INTERNAL_PROJECT_LICENSE: '/internal-project-licensing',
   URGENT_INTERVENTION_LICENSE: '/urgent-intervention-licensing',
