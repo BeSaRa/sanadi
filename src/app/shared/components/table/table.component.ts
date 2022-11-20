@@ -72,7 +72,7 @@ export class TableComponent implements OnInit, OnDestroy {
   }
 
   constructor(private service: TableService,
-    @Optional() private sortable: SortableTableDirective) {
+              @Optional() private sortable: SortableTableDirective) {
   }
 
   ngOnInit(): void {
@@ -129,7 +129,7 @@ export class TableComponent implements OnInit, OnDestroy {
   private listenToDataChanged() {
     let oldSub: Subscription;
     this.dataChange.pipe(takeUntil(this.destroy$))
-      .subscribe((value: Observable<any> | any[]) => {
+      .subscribe((value: Observable<any[]> | any[]) => {
         if (isObservable(value)) {
           oldSub?.unsubscribe();
           oldSub = value.pipe(takeUntil(this.destroy$)).subscribe((data: any[]) => this.dataSource.data = data);
