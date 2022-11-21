@@ -10,6 +10,8 @@ import {EServicePermissionsEnum} from '@app/enums/e-service-permissions-enum';
 import {ExternalLoginComponent} from '@app/pages/external-login/external-login.component';
 import {InternalLoginComponent} from '@app/pages/internal-login/internal-login.component';
 import {ServicesGuard} from '@app/guards/services.guard';
+import {DynamicMenuGuard} from '@app/guards/dynamic-menu.guard';
+import {DynamicMenuRouteTypeEnum} from '@app/enums/dynamic-menu-route-type.enum';
 
 const routes: Routes = [
   {path: '', redirectTo: 'login', pathMatch: 'full'},
@@ -83,6 +85,11 @@ const routes: Routes = [
       },
       {path: 'reports', loadChildren: () => import('./modules/reports/reports.module').then(m => m.ReportsModule)},
       {
+        path: 'dynamic-menus', loadChildren: () => import('./modules/dynamic-menus/dynamic-menus.module').then(m => m.DynamicMenusModule),
+        canActivate: [DynamicMenuGuard],
+        data: {checkType: DynamicMenuRouteTypeEnum.MODULE}
+      },
+      {
         path: 'urgent-intervention',
         loadChildren: () => import('./modules/urgent-intervention/urgent-intervention.module').then(m => m.UrgentInterventionModule),
         data: {configPermissionGroup: PermissionGroupsEnum.URGENT_INTERVENTION_PERMISSIONS_GROUP, checkAnyPermission: true}
@@ -91,7 +98,7 @@ const routes: Routes = [
     ]
   },
   {path: 'survey', loadChildren: () => import('./survey/survey.module').then(m => m.SurveyModule)},
-  {path: 'error', component: ErrorPageComponent},
+  {path: 'error', component: ErrorPageComponent}
 
 ];
 

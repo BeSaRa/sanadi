@@ -6,18 +6,15 @@
   <button type="button" class="btn-close btn-close-white"
           tabindex="-1" dialogClose aria-label="Close"></button>
 </div>
-<div class="dialog-content" #content style="width: 800px">
+<div class="dialog-content w800px" #dialogContent>
   <tabs-list (onTabChange)="onTabChange($event)">
-    <tab [name]="tabsData.basic.name" [hasError]="basicInfoHasError()" [template]="basicInfoTab"
-         [title]="lang.map.lbl_basic_info"></tab>
-    <tab [name]="tabsData.permissions.name" [hasError]="permissionTabHasError()" [template]="permissionsTab"
-         [title]="lang.map.lbl_permissions"></tab>
-    <tab [name]="tabsData.departments.name" [disabled]="!model.id" [title]="lang.map.departments"
-         [template]="departmentsTab"></tab>
+    <tab [name]="tabsData.basic.name" [hasError]="getTabInvalidStatus('basic')" [template]="basicInfoTab" [title]="lang.map.lbl_basic_info"></tab>
+    <tab [name]="tabsData.permissions.name" [hasError]="getTabInvalidStatus('permissions')" [template]="permissionsTab" [title]="lang.map.lbl_permissions"></tab>
+    <tab [name]="tabsData.menus.name" [template]="menusTab" [title]="lang.map.menus"></tab>
+    <tab [name]="tabsData.departments.name" [disabled]="!model.id" [title]="lang.map.departments" [template]="departmentsTab"></tab>
     <tab [name]="tabsData.teams.name" [disabled]="!model.id" [title]="lang.map.link_teams" [template]="teamsTab"></tab>
     <tab [name]="tabsData.followup.name" [title]="lang.map.followup" [template]="followupTab"></tab>
-    <tab [name]="tabsData.services.name" [disabled]="!(userTeamComponent && userTeamComponent.userTeams.length)"
-         [title]="lang.map.link_services" [template]="serviceTab"></tab>
+    <tab [name]="tabsData.services.name" [disabled]="!(userTeamComponent && userTeamComponent.userTeams.length)" [title]="lang.map.link_services" [template]="serviceTab"></tab>
   </tabs-list>
   <ng-template #basicInfoTab>
     <form [formGroup]="form" novalidate>
@@ -141,6 +138,10 @@
       </div>
     </div>
   </ng-template>
+  <ng-template #menusTab>
+    <custom-menu-permission #customMenuPermissionComponent
+                            [user]="model" [readonly]="readonly"></custom-menu-permission>
+  </ng-template>
   <ng-template #teamsTab>
     <user-team [model]="model" [readonly]="readonly" [operation]="operation"></user-team>
   </ng-template>
@@ -220,7 +221,7 @@
   </ng-template>
 </div>
 <div class="dialog-actions">
-  <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="displayFormValidity(null , content)"
+  <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="displayFormValidity(null , dialogContent)"
           tooltip="{{lang.map.validate_fields}}" class="btn btn-link">
     <i class="mdi mdi-information-outline text-info"></i>
   </button>

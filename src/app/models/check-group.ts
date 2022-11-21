@@ -5,18 +5,26 @@ export class CheckGroup<T extends { id: number }> {
   rows!: T[][];
   idList!: number[];
 
-  constructor(public group: Lookup, private items: T[], private selected: number[] = [], chunkCount: number = 3) {
+  constructor(public group: Lookup, private items: T[], private selected: number[] = [], chunkCount: number = 3, private containsEmptyChunkItems: boolean = false) {
     this.getItemsId();
     this.filterSelection();
     this.updateChunkCount(chunkCount);
   }
 
   protected get length() {
-    return this.items.length;
+    return this.list.length;
+  }
+
+  get list(): T[] {
+    let list: T[] = this.items;
+    if (this.containsEmptyChunkItems) {
+      list = this.items.filter(x => !!x.id);
+    }
+    return list;
   }
 
   isFull(): boolean {
-    return this.items.length === this.selected.length;
+    return this.list.length === this.selected.length;
   }
 
   isEmpty(): boolean {
@@ -36,7 +44,7 @@ export class CheckGroup<T extends { id: number }> {
   }
 
   selectAll(): void {
-    this.selected = this.items.map(item => {
+    this.selected = this.list.map(item => {
       return item.id;
     });
   }
@@ -62,8 +70,8 @@ export class CheckGroup<T extends { id: number }> {
   }
 
   private getItemsId(): void {
-    // get items by id
-    this.idList = this.items.map(item => {
+    // get items id
+    this.idList = this.list.map(item => {
       return item.id;
     });
   }

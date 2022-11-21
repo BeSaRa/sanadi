@@ -1,13 +1,15 @@
-import { ProcessFieldWrapperComponent } from './popups/general-process-popup/process-formly-components/process-field-wrapper/process-field-wrapper.component';
-import { FormlyMaskInputFieldComponent } from './../services-search/components/formly-mask-input-field/formly-mask-input-field.component';
-import { FormlySelectFieldComponent } from './../services-search/components/formly-select-field/formly-select-field.component';
-import { FormlyDateFieldComponent } from './../services-search/components/formly-date-field/formly-date-field.component';
-import { GeneralProcessPopupComponent } from './popups/general-process-popup/general-process-popup.component';
-import { GeneralProcessComponent } from './pages/general-process/general-process.component';
-import { SubTeamPopupComponent } from './popups/sub-team-popup/sub-team-popup.component';
-import { SubTeamComponent } from './pages/sub-team/sub-team.component';
-import { FormlyModule } from '@ngx-formly/core';
-import { FormlyBootstrapModule } from '@ngx-formly/bootstrap';
+import {
+  ProcessFieldWrapperComponent
+} from './popups/general-process-popup/process-formly-components/process-field-wrapper/process-field-wrapper.component';
+import {FormlyMaskInputFieldComponent} from './../services-search/components/formly-mask-input-field/formly-mask-input-field.component';
+import {FormlySelectFieldComponent} from './../services-search/components/formly-select-field/formly-select-field.component';
+import {FormlyDateFieldComponent} from './../services-search/components/formly-date-field/formly-date-field.component';
+import {GeneralProcessPopupComponent} from './popups/general-process-popup/general-process-popup.component';
+import {GeneralProcessComponent} from './pages/general-process/general-process.component';
+import {SubTeamPopupComponent} from './popups/sub-team-popup/sub-team-popup.component';
+import {SubTeamComponent} from './pages/sub-team/sub-team.component';
+import {FormlyModule} from '@ngx-formly/core';
+import {FormlyBootstrapModule} from '@ngx-formly/bootstrap';
 import {CustomMenuPopupComponent} from './popups/custom-menu-popup/custom-menu-popup.component';
 import {CustomMenuComponent} from './pages/custom-menu/custom-menu.component';
 import {OrganizationUnitFieldPopupComponent} from './popups/organization-unit-field-popup/organization-unit-field-popup.component';
@@ -79,6 +81,8 @@ import {AdminLookupListComponent} from './pages/admin-lookup-list/admin-lookup-l
 import {AdminLookupComponent} from './pages/admin-lookup/admin-lookup.component';
 import {ProfilePopupComponent} from './popups/profile-popup/profile-popup.component';
 import {ProfilesComponent} from './pages/profiles/profiles.component';
+import {CustomMenuUrlHandlerComponent} from './shared/custom-menu-url-handler/custom-menu-url-handler.component';
+import {CustomMenuPermissionComponent} from './shared/custom-menu-permission/custom-menu-permission.component';
 
 @NgModule({
   declarations: [
@@ -152,6 +156,8 @@ import {ProfilesComponent} from './pages/profiles/profiles.component';
     ProfilePopupComponent,
     ProfilesComponent,
     ProcessFieldWrapperComponent,
+    CustomMenuUrlHandlerComponent,
+    CustomMenuPermissionComponent
   ],
   imports: [
     SharedModule,
@@ -160,14 +166,14 @@ import {ProfilesComponent} from './pages/profiles/profiles.component';
     FormlyBootstrapModule,
     FormlyModule.forChild({
       types: [
-        { name: 'dateField', component: FormlyDateFieldComponent, wrappers: ['custom-wrapper'] },
-        { name: 'selectField', component: FormlySelectFieldComponent, wrappers: ['custom-wrapper'] },
-        { name: 'yesOrNo', component: FormlySelectFieldComponent, wrappers: ['custom-wrapper'] },
-        { name: 'maskInput', extends: 'input', component: FormlyMaskInputFieldComponent, wrappers: ['custom-wrapper'] },
-        { name: 'number', extends: 'input', component: FormlyMaskInputFieldComponent, wrappers: ['custom-wrapper'] },
+        {name: 'dateField', component: FormlyDateFieldComponent, wrappers: ['custom-wrapper']},
+        {name: 'selectField', component: FormlySelectFieldComponent, wrappers: ['custom-wrapper']},
+        {name: 'yesOrNo', component: FormlySelectFieldComponent, wrappers: ['custom-wrapper']},
+        {name: 'maskInput', extends: 'input', component: FormlyMaskInputFieldComponent, wrappers: ['custom-wrapper']},
+        {name: 'number', extends: 'input', component: FormlyMaskInputFieldComponent, wrappers: ['custom-wrapper']},
       ],
       wrappers: [
-        { name: 'custom-wrapper', component: ProcessFieldWrapperComponent }
+        {name: 'custom-wrapper', component: ProcessFieldWrapperComponent}
       ]
     }),
   ],

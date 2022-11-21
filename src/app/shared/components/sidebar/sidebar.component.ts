@@ -13,7 +13,7 @@ import {DialogService} from '@app/services/dialog.service';
 import {Router} from '@angular/router';
 import {ToastService} from '@app/services/toast.service';
 import {NavigationService} from '@app/services/navigation.service';
-import {EmployeeService} from "@app/services/employee.service";
+import {EmployeeService} from '@app/services/employee.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -94,6 +94,15 @@ export class SidebarComponent implements OnInit {
         this.scrollDirection = language.direction;
       });
     this.isOpened ? this.startOpen() : this.startClose();
+    this._listenToResetMenus();
+  }
+
+  private _listenToResetMenus(): void {
+    this.menuItemService.resetMenuItems$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.items = this.menuItemService.parents;
+      });
   }
 
 

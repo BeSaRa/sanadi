@@ -14,7 +14,7 @@
           </div>
         </div>
       </div>
-      <a class="service-title my-2" [routerLink]="item.path">{{item.getName()}}</a>
+      <a class="service-title my-2" [routerLink]="item.path">{{item|translateName:langService.map.lang}}</a>
     </li>
   </ng-container>
 </ul>

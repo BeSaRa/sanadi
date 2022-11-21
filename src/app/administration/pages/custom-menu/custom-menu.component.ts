@@ -1,4 +1,4 @@
-import {Component, Input, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
@@ -17,6 +17,8 @@ import {TableComponent} from '@app/shared/components/table/table.component';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {Observable, of, Subject} from 'rxjs';
 import {catchError, exhaustMap, filter, map, switchMap, takeUntil} from 'rxjs/operators';
+import {ICustomMenuSearchCriteria} from '@contracts/i-custom-menu-search-criteria';
+import {Pagination} from '@app/models/pagination';
 
 @Component({
   selector: 'app-custom-menu',
@@ -39,12 +41,13 @@ export class CustomMenuComponent extends AdminGenericComponent<CustomMenu, Custo
     this.listenToView();
   }
 
-  @Input() parentId?: number;
+  @Input() parent?: CustomMenu;
   @Input() readonly: boolean = false;
+  @Output() listUpdated: EventEmitter<any> = new EventEmitter<any>();
 
   @ViewChild('table') table!: TableComponent;
   selectedPopupTabName: string = 'basic';
-  displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'status', 'actions'];
+  displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'menuType', 'status', 'actions'];
   view$: Subject<CustomMenu> = new Subject<CustomMenu>();
 
   actions: IMenuItem<CustomMenu>[] = [
@@ -77,7 +80,7 @@ export class CustomMenuComponent extends AdminGenericComponent<CustomMenu, Custo
       label: 'sub_lists',
       icon: ActionIconsEnum.CHILD_ITEMS,
       onClick: (item) => this.showChildren(item),
-      show: () => !this.parentId,
+      show: () => !this.parent,
     },
     // activate
     {
@@ -87,7 +90,10 @@ export class CustomMenuComponent extends AdminGenericComponent<CustomMenu, Custo
       onClick: (item: CustomMenu) => this.toggleStatus(item),
       displayInGrid: false,
       show: (item) => {
-        if (this.readonly || item.status === CommonStatusEnum.RETIRED){
+        if (this.parent && !this.parent.isActive()) {
+          return false;
+        }
+        if (this.readonly || item.status === CommonStatusEnum.RETIRED) {
           return false;
         }
         return item.status === CommonStatusEnum.DEACTIVATED;
@@ -101,7 +107,10 @@ export class CustomMenuComponent extends AdminGenericComponent<CustomMenu, Custo
       onClick: (item: CustomMenu) => this.toggleStatus(item),
       displayInGrid: false,
       show: (item) => {
-        if (this.readonly || item.status === CommonStatusEnum.RETIRED){
+        if (this.parent && !this.parent.isActive()) {
+          return false;
+        }
+        if (this.readonly || item.status === CommonStatusEnum.RETIRED) {
           return false;
         }
         return item.status === CommonStatusEnum.ACTIVATED;
@@ -126,7 +135,8 @@ export class CustomMenuComponent extends AdminGenericComponent<CustomMenu, Custo
           callback: ($event: MouseEvent, _data?: any) =>
             this.changeStatusBulk($event, CommonStatusEnum.ACTIVATED),
           show: (_items: CustomMenu[]) => {
-            return true;
+            return !(this.parent && !this.parent.isActive());
+
           },
         },
         {
@@ -135,13 +145,19 @@ export class CustomMenuComponent extends AdminGenericComponent<CustomMenu, Custo
           callback: ($event: MouseEvent, _data?: any) =>
             this.changeStatusBulk($event, CommonStatusEnum.DEACTIVATED),
           show: (_items: CustomMenu[]) => {
-            return true;
+            return !(this.parent && !this.parent.isActive());
+
           },
         },
       ],
     },
   ];
   sortingCallbacks = {
+    menuType: (a: CustomMenu, b: CustomMenu, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.menuTypeInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.menuTypeInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
     statusInfo: (a: CustomMenu, b: CustomMenu, dir: SortEvent): number => {
       let value1 = !CommonUtils.isValidValue(a) ? '' : a.statusInfo?.getName().toLowerCase(),
         value2 = !CommonUtils.isValidValue(b) ? '' : b.statusInfo?.getName().toLowerCase();
@@ -153,26 +169,27 @@ export class CustomMenuComponent extends AdminGenericComponent<CustomMenu, Custo
     this.reload$
       .pipe(takeUntil((this.destroy$)))
       .pipe(switchMap(() => {
-        let load: Observable<CustomMenu[]>;
-        if (this.parentId) {
-          load = this.service.loadByParentId(this.parentId).pipe(map((res) => {
-            this.count = res.length;
-            return res;
-          }));
+        let load: Observable<Pagination<CustomMenu[]>>;
+        const paginationOptions = {
+          limit: this.pageEvent.pageSize,
+          offset: (this.pageEvent.pageIndex * this.pageEvent.pageSize)
+        };
+        if (!!this.parent) {
+          let criteria: Partial<ICustomMenuSearchCriteria> = {
+            'parent-menu-item-id': this.parent.id
+          };
+          load = this.service.loadByCriteriaPaging(criteria, paginationOptions);
         } else {
-          const paginationOptions = {
-            limit: this.pageEvent.pageSize,
-            offset: (this.pageEvent.pageIndex * this.pageEvent.pageSize)
-          }
-          load = this.service.loadMain(paginationOptions).pipe(map((res) => {
+          load = this.service.loadMain(paginationOptions);
+        }
+        return load.pipe(map((res) => {
             this.count = res.count;
             return res.rs;
+          }),
+          catchError(_ => {
+            this.count = 0;
+            return of([]);
           }));
-        }
-        return load.pipe(catchError(_ => {
-          this.count = 0;
-          return of([]);
-        }));
       }))
       .subscribe((list: CustomMenu[]) => {
         this.models = list;
@@ -182,12 +199,13 @@ export class CustomMenuComponent extends AdminGenericComponent<CustomMenu, Custo
 
   afterReload(): void {
     this.table && this.table.clearSelection();
+    this.listUpdated.emit(true);
   }
 
   listenToAdd(): void {
     this.add$
       .pipe(takeUntil(this.destroy$))
-      .pipe(exhaustMap(() => this.service.openCreateDialog(this.parentId).onAfterClose$))
+      .pipe(exhaustMap(() => this.service.openCreateDialog(this.parent).onAfterClose$))
       .subscribe(() => this.reload$.next(null));
   }
 
@@ -195,7 +213,7 @@ export class CustomMenuComponent extends AdminGenericComponent<CustomMenu, Custo
     this.edit$
       .pipe(takeUntil(this.destroy$))
       .pipe(exhaustMap((model) => {
-        return this.service.openEditDialog(model.id, this.selectedPopupTabName).pipe(catchError(_ => of(null)));
+        return this.service.openEditDialog(model.id, this.parent, this.selectedPopupTabName).pipe(catchError(_ => of(null)));
       }))
       .pipe(filter((dialog): dialog is DialogRef => !!dialog))
       .pipe(switchMap(dialog => dialog.onAfterClose$))
@@ -206,7 +224,7 @@ export class CustomMenuComponent extends AdminGenericComponent<CustomMenu, Custo
     this.view$
       .pipe(takeUntil(this.destroy$))
       .pipe(exhaustMap((model) => {
-        return this.service.openViewDialog(model.id, this.selectedPopupTabName).pipe(catchError(_ => of(null)));
+        return this.service.openViewDialog(model.id, this.parent, this.selectedPopupTabName).pipe(catchError(_ => of(null)));
       }))
       .pipe(filter((dialog): dialog is DialogRef => !!dialog))
       .pipe(switchMap(dialog => dialog.onAfterClose$))

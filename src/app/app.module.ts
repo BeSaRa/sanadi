@@ -31,8 +31,8 @@ import {AutoRegisterService} from '@services/auto-register.service';
 import {InternalLoginComponent} from './pages/internal-login/internal-login.component';
 import {ExternalLoginComponent} from './pages/external-login/external-login.component';
 import {ReportService} from '@services/report.service';
-import {switchMap, tap} from 'rxjs/operators';
 import {ProfileService} from '@services/profile.service';
+import {CustomMenuService} from '@services/custom-menu.service';
 
 @NgModule({
   declarations: [
@@ -67,9 +67,10 @@ import {ProfileService} from '@services/profile.service';
         LookupService,
         TokenService,
         AuthService,
-        MenuItemService,
         AutoRegisterService,
-        ReportService,
+        MenuItemService, // used in authService to load menus
+        ReportService, // used in menuItemService to set reports menus
+        CustomMenuService, // used in employeeService after load data and menuItemService to typecast to menuItems
         ExternalUserCustomRoleService,
         ExternalUserService,
         ProfileService,
@@ -88,9 +89,7 @@ export class AppModule {
                  lookupService: LookupService,
                  tokenService: TokenService,
                  authService: AuthService,
-                 menuItemService: MenuItemService,
-                 autoRegister: AutoRegisterService,
-                 reportService: ReportService): () => Promise<unknown> {
+                 autoRegister: AutoRegisterService): () => Promise<unknown> {
     autoRegister.ping();
     return () => {
       return forkJoin({
@@ -107,13 +106,7 @@ export class AppModule {
             langService._loadDone$.next(langService.list);
             lookupService.setLookupsMap(infoResult.lookupMap);
             return tokenService.setAuthService(authService)
-              .validateToken().toPromise().then(() => {
-                return menuItemService.load(false)
-                  .pipe(switchMap(() => reportService.loadReportsMenu()))
-                  .pipe(tap((reportsMenuList) => reportService.prepareReportsMenu(reportsMenuList)))
-                  .pipe(tap(() => menuItemService.prepareMenuItems()))
-                  .toPromise();
-              });
+              .validateToken().toPromise()
           });
         });
     };

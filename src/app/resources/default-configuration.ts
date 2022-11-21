@@ -4,7 +4,7 @@ import {ConfigurationMergingScope} from '@app/types/types';
 export const configurationMergingLevel: ConfigurationMergingScope = 'limited';
 
 export const defaultConfiguration: Partial<IAppConfig> = {
-  VERSION: 'v1.4.20',
+  VERSION: 'v1.5.0-rc#1',
   API_VERSION: 'v1',
   BASE_ENVIRONMENT: 'BAW_UI',
   TOKEN_HEADER_KEY: 'Authorization',
@@ -27,10 +27,10 @@ export const defaultConfiguration: Partial<IAppConfig> = {
   LOGIN_BACKGROUND_EXTERNAL: 'raca-login-background-2.jpg'
 };
 
-export const limitedConfigurableProperties = [
+export const limitedConfigurableProperties: Array<keyof IAppConfig> = [
   'ENVIRONMENTS_URLS', 'BASE_ENVIRONMENT', 'REPORTS_URL', 'RESET_PASSWORD',
 ];
 
-export const extendedConfigurableProperties = [
+export const extendedConfigurableProperties: Array<keyof IAppConfig> = [
   'MAP_API_KEY', 'LOGIN_BACKGROUND_INTERNAL', 'LOGIN_BACKGROUND_EXTERNAL', 'GIVE_USERS_PERMISSIONS', 'SEARCH_YEARS_START', 'SEARCH_YEARS_RANGE'
 ];

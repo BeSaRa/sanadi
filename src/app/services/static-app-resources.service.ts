@@ -23,7 +23,7 @@ import {
 export class StaticAppResourcesService {
   private _permissionGroupsMap = PermissionsGroupMap;
   private _mergingScope: ConfigurationMergingScope = configurationMergingLevel;
-  private _mergingProperties: string[] = [];
+  private _mergingProperties: Array<keyof IAppConfig> = [];
 
   constructor() {
     FactoryService.registerService('StaticAppResourcesService', this);
@@ -33,7 +33,7 @@ export class StaticAppResourcesService {
     return this._mergingScope;
   }
 
-  setConfigurationMergingProperties(propertyList: string[]) {
+  setConfigurationMergingProperties(propertyList: Array<keyof IAppConfig>) {
     this._mergingProperties = propertyList;
   }
 
@@ -45,7 +45,7 @@ export class StaticAppResourcesService {
    * @description Get the list of properties to be merged
    * if mergingLevel = 'open', return []
    */
-  getConfigurableProperties(): string[] {
+  getConfigurableProperties(): Array<keyof IAppConfig> {
     if (this._mergingScope === 'limited') {
       return limitedConfigurableProperties;
     } else if (this._mergingScope === 'extended') {
@@ -56,7 +56,7 @@ export class StaticAppResourcesService {
     return [];
   }
 
-  getConfigurablePropertiesForConsole(): { scope: string, properties: string[] } {
+  getConfigurablePropertiesForConsole(): { scope: string, properties: Array<keyof IAppConfig> } {
     return {scope: this._mergingScope, properties: this._mergingProperties.sort()};
   }
 

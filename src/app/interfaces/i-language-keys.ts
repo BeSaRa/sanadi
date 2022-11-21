@@ -1504,6 +1504,8 @@ export interface ILanguageKeys {
   menu_view: string;
   menu_order: string;
   menu_URL: string;
+  check_url_variables: string;
+  msg_duplicate_url_variables: string;
   main_list: string;
   link_settings: string;
   sub_lists: string;
@@ -1568,5 +1570,10 @@ export interface ILanguageKeys {
   lbl_process_type: string;
   organization_final_reject: string;
   organization_final_approve: string;
+  variable_name: string;
+  variable_value: string;
+  available_values: string;
+  menus: string;
+  msg_no_menus_available: string;
 }
 

@@ -9,6 +9,7 @@ import { MenuItemInterceptor } from '@app/model-interceptors/menu-item-intercept
 import { InterceptModel } from "@decorators/intercept-model";
 import {PermissionGroupsEnum} from '@app/enums/permission-groups-enum';
 import {StaticAppResourcesService} from '@services/static-app-resources.service';
+import {CustomMenu} from '@app/models/custom-menu';
 
 const { send, receive } = new MenuItemInterceptor();
 
@@ -39,6 +40,8 @@ export class MenuItem extends Cloneable<MenuItem> {
   counter?: keyof Common['counters']
   private domSanitizer: DomSanitizer;
   private resourcesService: StaticAppResourcesService;
+  // extra properties
+  customMenu?: CustomMenu;
 
   constructor() {
     super()
@@ -73,8 +76,8 @@ export class MenuItem extends Cloneable<MenuItem> {
   }
 
   getLangKeyValues(): void {
-    this.enName = this.langService.getEnglishLocalByKey(this.langKey);
-    this.arName = this.langService.getArabicLocalByKey(this.langKey);
+    this.enName = this.enName ? this.enName : this.langService.getEnglishLocalByKey(this.langKey);
+    this.arName = this.arName ? this.arName :this.langService.getArabicLocalByKey(this.langKey);
   }
 
   getChildrenText(parentArName?: string, parentEnName?: string): void {

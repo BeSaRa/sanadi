@@ -1,6 +1,7 @@
-import { MenuItem } from '../models/menu-item';
+import {MenuItem} from '../models/menu-item';
+import {IModelInterceptor} from '@contracts/i-model-interceptor';
 
-export class MenuItemInterceptor {
+export class MenuItemInterceptor implements IModelInterceptor<MenuItem> {
   receive(model: MenuItem): MenuItem {
     model.preparePermissionList();
     model.getLangKeyValues();
@@ -8,8 +9,8 @@ export class MenuItemInterceptor {
     return model;
   }
 
-  send(model: any): any {
+  send(model: Partial<MenuItem>): Partial<MenuItem> {
+    delete model.customMenu;
     return model;
   }
-
 }

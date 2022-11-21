@@ -1,5 +1,6 @@
 import {FactoryService} from '@services/factory.service';
 import {StaticAppResourcesService} from '@services/static-app-resources.service';
+import {IAppConfig} from '@contracts/i-app-config';
 
 String.prototype.change = function(): string {
   if (!arguments.length) {
@@ -27,7 +28,7 @@ String.prototype.getExtension = function (): string {
   return name.substring(name.lastIndexOf('.'));
 }
 
-Window.prototype.getConfigMergeProperties = function (): {scope: string, properties: string[]} {
+Window.prototype.getConfigMergeProperties = function (): {scope: string, properties: Array<keyof IAppConfig>} {
   const service = FactoryService.getService<StaticAppResourcesService>('StaticAppResourcesService');
   return !service ? {} as any : service.getConfigurablePropertiesForConsole();
 }

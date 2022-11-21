@@ -1,19 +1,20 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, throwError } from 'rxjs';
-import { catchError, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
-import { ICredentials } from '@contracts/i-credentials';
-import { HttpClient } from '@angular/common/http';
-import { UrlService } from './url.service';
-import { FactoryService } from './factory.service';
-import { EmployeeService } from './employee.service';
-import { ILoginData } from '@contracts/i-login-data';
-import { TokenService } from './token.service';
-import { InternalUserService } from "@app/services/internal-user.service";
-import { CommonService } from "@services/common.service";
-import { FollowupPermissionService } from "@services/followup-permission.service";
-import { UserTypes } from "@app/enums/user-types.enum";
-import { CastResponse } from "@decorators/cast-response";
+import {Injectable} from '@angular/core';
+import {BehaviorSubject, Observable, of, throwError} from 'rxjs';
+import {catchError, map, switchMap, tap, withLatestFrom} from 'rxjs/operators';
+import {ICredentials} from '@contracts/i-credentials';
+import {HttpClient} from '@angular/common/http';
+import {UrlService} from './url.service';
+import {FactoryService} from './factory.service';
+import {EmployeeService} from './employee.service';
+import {ILoginData} from '@contracts/i-login-data';
+import {TokenService} from './token.service';
+import {InternalUserService} from '@app/services/internal-user.service';
+import {CommonService} from '@services/common.service';
+import {FollowupPermissionService} from '@services/followup-permission.service';
+import {UserTypes} from '@app/enums/user-types.enum';
+import {CastResponse} from '@decorators/cast-response';
 import {PermissionsEnum} from '@app/enums/permissions-enum';
+import {MenuItemService} from '@services/menu-item.service';
 
 @Injectable({
   providedIn: 'root'
@@ -80,10 +81,10 @@ export class AuthService {
   login(credential: Partial<ICredentials>, external: boolean): Observable<ILoginData> {
     return this._login(credential, external).pipe(switchMap((loggedIn) => this.commonService.loadCounters().pipe(tap(counters => {
       if (loggedIn.type === UserTypes.INTERNAL) {
-        counters.flags && counters.flags.externalFollowUpPermission && this.employeeService.addFollowupPermission(PermissionsEnum.EXTERNAL_FOLLOWUP)
-        counters.flags && counters.flags.internalFollowUpPermission && this.employeeService.addFollowupPermission(PermissionsEnum.INTERNAL_FOLLOWUP)
+        counters.flags && counters.flags.externalFollowUpPermission && this.employeeService.addFollowupPermission(PermissionsEnum.EXTERNAL_FOLLOWUP);
+        counters.flags && counters.flags.internalFollowUpPermission && this.employeeService.addFollowupPermission(PermissionsEnum.INTERNAL_FOLLOWUP);
       }
-    })).pipe(map(_ => loggedIn))))
+    })).pipe(map(_ => loggedIn))));
   }
 
   logout(): Observable<boolean> {
@@ -102,14 +103,22 @@ export class AuthService {
           if (isAuthenticated && loginData) {
             this.employeeService.fillCurrentEmployeeData(loginData);
             this.tokenService.setToken(loginData.token);
-            return loginData
+            return loginData;
           } else {
             this.employeeService.clear();
             this.tokenService.clearToken();
-            return false
+            return false;
           }
         })
       )
+      .pipe(switchMap((loginData) => {
+        if (!!loginData) {
+          let menuItemService: MenuItemService = FactoryService.getService('MenuItemService');
+          return menuItemService.loadAllMenus();
+        } else {
+          return of([]);
+        }
+      }))
       .subscribe();
   }
 

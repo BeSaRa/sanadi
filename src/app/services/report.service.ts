@@ -5,6 +5,7 @@ import {MenuItem} from '@app/models/menu-item';
 import {MenuItemInterceptor} from '@app/model-interceptors/menu-item-interceptor';
 import {Observable} from 'rxjs';
 import {StaticAppResourcesService} from '@services/static-app-resources.service';
+import {FactoryService} from '@services/factory.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,9 @@ import {StaticAppResourcesService} from '@services/static-app-resources.service'
 export class ReportService {
 
   constructor(private menuService: MenuItemService,
-              private staticResourcesService: StaticAppResourcesService ) { }
+              private staticResourcesService: StaticAppResourcesService ) {
+    FactoryService.registerService('ReportService', this);
+  }
 
   loadReportsMenu(): Observable<ReportContract[]> {
     return this.staticResourcesService.getReportsMenuList();

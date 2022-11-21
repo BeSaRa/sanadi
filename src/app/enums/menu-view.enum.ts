@@ -1,4 +1,4 @@
 export enum MenuView {
-  PUBLIC= 0,
-  PRIVATE= 1,
+  PUBLIC = 0,
+  PRIVATE = 1,
 }

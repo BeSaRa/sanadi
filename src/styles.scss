@@ -1,7 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 @import "./scss/custom_variables";
 @import "./scss/style-rtl";
-@import "~@ng-select/ng-select/themes/default.theme.css";
+@import "@ng-select/ng-select/scss/default.theme";
 @import "scss/custom_mixin";
 
 * {

@@ -1,5 +1,5 @@
 import {ComponentType} from '@angular/cdk/portal';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {CastResponse, CastResponseContainer} from '@app/decorators/decorators/cast-response';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
@@ -9,13 +9,24 @@ import {IDialogData} from '@app/interfaces/i-dialog-data';
 import {Pagination} from '@app/models/pagination';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {Observable, of} from 'rxjs';
-import {map, switchMap, tap} from 'rxjs/operators';
+import {catchError, map, switchMap} from 'rxjs/operators';
 import {CustomMenuPopupComponent} from '../administration/popups/custom-menu-popup/custom-menu-popup.component';
 import {CustomMenu} from '../models/custom-menu';
 import {DialogService} from './dialog.service';
 import {FactoryService} from './factory.service';
 import {UrlService} from './url.service';
 import {PaginationContract} from '@contracts/pagination-contract';
+import {CommonUtils} from '@helpers/common-utils';
+import {MenuItemParametersEnum} from '@app/enums/menu-item-parameters.enum';
+import {EmployeeService} from '@services/employee.service';
+import {LangService} from '@services/lang.service';
+import {TokenService} from '@services/token.service';
+import {ICustomMenuSearchCriteria} from '@contracts/i-custom-menu-search-criteria';
+import {MenuView} from '@app/enums/menu-view.enum';
+import {MenuItemService} from '@services/menu-item.service';
+import {MenuItem} from '@app/models/menu-item';
+import {MenuItemInterceptor} from '@app/model-interceptors/menu-item-interceptor';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 
 @CastResponseContainer({
   $default: {
@@ -31,10 +42,23 @@ import {PaginationContract} from '@contracts/pagination-contract';
 })
 export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> {
   list: CustomMenu[] = [];
+  dynamicMainMenuUrl: string = 'home/dynamic-menus/:parentId';
+  dynamicMainMenuDetailsUrl: string = 'home/dynamic-menus/:parentId/details';
+  dynamicChildMenuUrl: string = 'home/dynamic-menus/:parentId/details/:id';
+
+  private _emptyPaginationListResponse = of({
+    rs: [],
+    count: 0,
+    sc: 200
+  } as Pagination<CustomMenu[]>);
 
   constructor(public dialog: DialogService,
               public http: HttpClient,
-              private urlService: UrlService) {
+              private urlService: UrlService,
+              private langService: LangService,
+              private tokenService: TokenService,
+              private menuItemService: MenuItemService,
+              private employeeService: EmployeeService) {
     super();
     FactoryService.registerService('CustomMenuService', this);
   }
@@ -56,7 +80,7 @@ export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> 
   })
   private _loadMain(options: Partial<PaginationContract>): Observable<Pagination<CustomMenu[]>> {
     return this.http.get<Pagination<CustomMenu[]>>(this._getServiceURL() + '/main', {
-      params: { ...options }
+      params: {...options}
     });
   }
 
@@ -64,42 +88,89 @@ export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> 
     return this._loadMain(options);
   }
 
+  @CastResponse(() => CustomMenu, {
+    fallback: '$default',
+    unwrap: 'rs'
+  })
+  loadMenuTree(): Observable<CustomMenu[]> {
+    return this.http.get<CustomMenu[]>(this._getServiceURL() + '/tree');
+  }
+
+  loadByParentId(parentId: number): Observable<CustomMenu[]> {
+    let criteria: Partial<ICustomMenuSearchCriteria> = {
+      'parent-menu-item-id': parentId
+    };
+    return this.loadByCriteria(criteria);
+  }
+
   @CastResponse(undefined, {
     fallback: '$default',
     unwrap: 'rs'
   })
-  loadByParentId(parentId: number): Observable<CustomMenu[]> {
-    return this.http.post<CustomMenu[]>(this._getServiceURL() + '/filter', {
-      parentMenuItemId: parentId
-    });
+  loadByCriteria(criteria: Partial<ICustomMenuSearchCriteria>): Observable<CustomMenu[]> {
+    delete criteria.offset;
+    delete criteria.limit;
+
+    return this.http.get<CustomMenu[]>(this._getServiceURL() + '/criteria', {
+      params: new HttpParams({fromObject: criteria})
+    })
+      .pipe(catchError(() => of([])));
   }
 
-  openCreateDialog(parentId?: number): DialogRef {
+  @CastResponse(undefined, {
+    fallback: '$pagination'
+  })
+  loadByCriteriaPaging(criteria: Partial<ICustomMenuSearchCriteria>, options: Partial<PaginationContract>): Observable<Pagination<CustomMenu[]>> {
+    criteria.offset = options.offset;
+    criteria.limit = options.limit;
+
+    return this.http.get<Pagination<CustomMenu[]>>(this._getServiceURL() + '/criteria', {
+      params: new HttpParams({fromObject: criteria})
+    })
+      .pipe(catchError(() => this._emptyPaginationListResponse));
+  }
+
+  loadPrivateMenus(): Observable<CustomMenu[]> {
+    return this.loadByCriteria({'menu-view': MenuView.PRIVATE});
+  }
+
+  openCreateDialog(parentMenu?: CustomMenu): DialogRef {
+    let data = new CustomMenu().clone({status: CommonStatusEnum.ACTIVATED});
+    if (parentMenu) {
+      data.parentMenuItemId = parentMenu.id;
+      data.menuView = parentMenu.menuView;
+      data.menuType = parentMenu.menuType;
+      data.userType = parentMenu.userType;
+      data.status = parentMenu.status;
+    }
     return this.dialog.show<IDialogData<CustomMenu>>(this._getDialogComponent(), {
-      model: new CustomMenu().clone({parentMenuItemId: parentId}),
-      operation: OperationTypes.CREATE
+      model: data,
+      operation: OperationTypes.CREATE,
+      parentMenu: parentMenu
     });
   }
 
-  openEditDialog(modelId: number, selectedPopupTab: string = 'basic'): Observable<DialogRef> {
+  openEditDialog(modelId: number, parentMenu?: CustomMenu, selectedPopupTab: string = 'basic'): Observable<DialogRef> {
     return this.getById(modelId).pipe(
       switchMap((item: CustomMenu) => {
         return of(this.dialog.show<IDialogData<CustomMenu>>(this._getDialogComponent(), {
           model: item,
           operation: OperationTypes.UPDATE,
-          selectedTab: selectedPopupTab || 'basic'
+          selectedTab: selectedPopupTab || 'basic',
+          parentMenu: parentMenu
         }));
       })
     );
   }
 
-  openViewDialog(modelId: number, selectedPopupTab: string = 'basic'): Observable<DialogRef> {
+  openViewDialog(modelId: number, parentMenu?: CustomMenu, selectedPopupTab: string = 'basic'): Observable<DialogRef> {
     return this.getById(modelId).pipe(
       switchMap((item: CustomMenu) => {
         return of(this.dialog.show<IDialogData<CustomMenu>>(this._getDialogComponent(), {
           model: item,
           operation: OperationTypes.VIEW,
-          selectedTab: selectedPopupTab || 'basic'
+          selectedTab: selectedPopupTab || 'basic',
+          parentMenu: parentMenu
         }));
       })
     );
@@ -139,11 +210,124 @@ export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> 
       );
   }
 
-  @CastResponse(() => CustomMenu, {
-    fallback: '$default',
-    unwrap: 'rs'
-  })
-  loadMenuTree(): Observable<CustomMenu[]> {
-    return this.http.get<CustomMenu[]>(this._getServiceURL() + '/tree');
+  findVariablesInUrl(url: string): string[] {
+    if (!CommonUtils.isValidValue(url)) {
+      return [];
+    }
+    return (url.match(/{(\w+)}/g) ?? []);
+  }
+
+  getUrlReplacementValue(variableValue: MenuItemParametersEnum): string {
+    let value: string | number | undefined = '';
+    switch (variableValue) {
+      case MenuItemParametersEnum.GENERAL_USER_ID:
+        value = this.employeeService.getCurrentUser().generalUserId;
+        break;
+      case MenuItemParametersEnum.LANG_CODE:
+        value = this.langService.map.lang;
+        break;
+      case MenuItemParametersEnum.USER_TOKEN:
+        value = this.tokenService.getToken();
+        break;
+      case MenuItemParametersEnum.PROFILE_ID:
+        value = this.employeeService.getProfile()?.id;
+        break;
+      case MenuItemParametersEnum.DOMAIN_NAME:
+        value = this.employeeService.getCurrentUser().domainName;
+        break;
+    }
+    return (value ?? '') + '';
+  }
+
+  private _getMaxParentItemOrder(finalList: MenuItem[]) {
+    if (finalList.length === 0) {
+      return this.menuItemService.getMaxParentMenuSortOrder();
+    } else {
+      return Math.max(...(finalList.filter(x => !x.parent).map(item => item.itemOrder)));
+    }
+  }
+
+  private _getMaxChildItemOrder(finalList: MenuItem[], customMenuParentId: number) {
+    let childMenuList = finalList.filter(item => item.customMenu && item.customMenu.id === customMenuParentId);
+    if (!childMenuList || childMenuList.length === 0) {
+      return 0;
+    }
+    return Math.max(...(childMenuList.map(item => item.itemOrder)));
+  }
+
+  private _transformParentMenu(customMenu: CustomMenu, newId: number, newItemOrder: number, hasChildren: boolean): MenuItem {
+    return (new MenuItemInterceptor).receive(new MenuItem().clone({
+      id: newId,
+      itemOrder: newItemOrder,
+      parent: undefined,
+      // langKey: '',
+      arName: customMenu.arName,
+      enName: customMenu.enName,
+      group: 'main',
+      isSvg: false,
+      icon: ActionIconsEnum.MENU,
+      path: (hasChildren ? this.dynamicMainMenuUrl : this.dynamicMainMenuDetailsUrl).change({parentId: customMenu.id}),
+      customMenu: customMenu
+    }));
+  }
+
+  private _transformChildMenu(customMenu: CustomMenu, newId: number, newItemOrder: number, newParentId: number): MenuItem {
+    return (new MenuItemInterceptor).receive(new MenuItem().clone({
+      id: newId,
+      itemOrder: newItemOrder,
+      parent: newParentId,
+      // langKey: '',
+      arName: customMenu.arName,
+      enName: customMenu.enName,
+      group: 'dynamic-menus-' + customMenu.parentMenuItemId,
+      isSvg: false,
+      icon: ActionIconsEnum.MENU,
+      path: this.dynamicChildMenuUrl.change({parentId: customMenu.parentMenuItemId, id: customMenu.id}),
+      customMenu: customMenu
+    }));
+  }
+
+  private _transformToMenuItems(customMenuList: CustomMenu[]): MenuItem[] {
+    let maxId = this.menuItemService.getMaxMenuItemId();
+    let finalList: MenuItem[] = [];
+    let parentList = customMenuList.filter(item => !item.parentMenuItemId);
+    let childrenList = customMenuList.filter(item => !!item.parentMenuItemId && !!item.menuURL); // children must have menuUrl
+
+    parentList.forEach((parentMenu: CustomMenu) => {
+      const hasChildren: boolean = !!childrenList.find(x => x.parentMenuItemId === parentMenu.id);
+      // parent must have children or menu url. (if it has children, no need to have menuUrl as it will be ignored)
+      // if parent does not have children, it must have menu url to open page
+      if (hasChildren || parentMenu.menuURL) {
+        ++maxId;
+        let itemOrder = this._getMaxParentItemOrder(finalList) + 1;
+        finalList.push(this._transformParentMenu(parentMenu, maxId, itemOrder, hasChildren));
+      }
+    });
+
+    childrenList.forEach((childMenu: CustomMenu) => {
+      ++maxId;
+      let newParent = finalList.find(x => x.customMenu && x.customMenu.id === childMenu.parentMenuItemId);
+      // if no newParent is found, add the current menu as parent menu instead of child menu
+      if (!newParent) {
+        let itemOrder = this._getMaxParentItemOrder(finalList) + 1;
+        finalList.push(this._transformParentMenu(childMenu, maxId, itemOrder, false));
+      } else {
+        let itemOrder = this._getMaxChildItemOrder(finalList, childMenu.parentMenuItemId!) + 1;
+        finalList.push(this._transformChildMenu(childMenu, maxId, itemOrder, newParent!.id));
+      }
+    });
+    return finalList;
+  }
+
+  prepareCustomMenuList(): Observable<MenuItem[]> {
+    return this.loadByCriteria({'menu-view': MenuView.PUBLIC, 'status': CommonStatusEnum.ACTIVATED})
+      .pipe(
+        switchMap((publicMenus) => {
+          const allMenus = publicMenus.concat(this.employeeService.menuItems);
+          let list = this._transformToMenuItems(allMenus);
+          this.menuItemService.menuItems = this.menuItemService.menuItems.concat(list);
+          return of(this.menuItemService.menuItems);
+        })
+      );
   }
 }

@@ -193,6 +193,10 @@ export class EmployeeService {
     return this.externalUser?.id === user.id;
   }
 
+  isCurrentUser(user: ExternalUser | InternalUser): boolean {
+    return this.getCurrentUser()?.generalUserId === user.generalUserId;
+  }
+
   fillCurrentEmployeeData(loginData: ILoginData) {
     this.type = loginData.type;
     this.menuItems = loginData.menuItems.map(customMenu => this.customMenuInterceptor.receive((new CustomMenu()).clone(customMenu)));

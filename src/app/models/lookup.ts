@@ -1,7 +1,7 @@
 import {BaseModel} from './base-model';
-import {FactoryService} from '../services/factory.service';
-import {LangService} from '../services/lang.service';
-import {INames} from '../interfaces/i-names';
+import {FactoryService} from '@services/factory.service';
+import {LangService} from '@services/lang.service';
+import {INames} from '@contracts/i-names';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
 import {AdminResult} from '@app/models/admin-result';
 
@@ -14,6 +14,9 @@ export class Lookup extends BaseModel<Lookup, any> {
   itemOrder: number | undefined;
   parent: number | undefined;
   langService: LangService;
+
+  // extra properties
+  temp: boolean = false; // used in menu item (drag/drop) to mark the temporary item
 
   constructor() {
     super();

@@ -34,5 +34,6 @@ export enum ActionIconsEnum {
   TERMINATE = 'mdi-stop',
   ATTACHMENT = 'mdi-attachment',
   LAUNCH = 'mdi-rocket-launch-outline',
-  APPROVE = 'mdi-check-decagram-outline'
+  APPROVE = 'mdi-check-decagram-outline',
+  MENU = 'mdi-menu'
 }

@@ -1,5 +1,3 @@
-import {HttpClient} from '@angular/common/http';
-import {DialogService} from '@services/dialog.service';
 import {CustomMenu} from '@app/models/custom-menu';
 import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, Inject, ViewChild} from '@angular/core';
 import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
@@ -12,13 +10,12 @@ import {ToastService} from '@app/services/toast.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
-import {Observable, of, Subject} from 'rxjs';
-import {catchError, filter, switchMap, takeUntil, tap} from 'rxjs/operators';
-import {CustomMenuService} from '@services/custom-menu.service';
-import {SharedService} from '@app/services/shared.service';
+import {Observable, Subject} from 'rxjs';
 import {TabMap} from '@app/types/types';
-import {ExceptionHandlerService} from '@services/exception-handler.service';
+import {CustomMenuUrlHandlerComponent} from '@app/administration/shared/custom-menu-url-handler/custom-menu-url-handler.component';
 import {CommonUtils} from '@helpers/common-utils';
+import {DialogService} from '@services/dialog.service';
+import {CustomMenuComponent} from '@app/administration/pages/custom-menu/custom-menu.component';
 
 @Component({
   selector: 'app-custom-menu-popup',
@@ -34,7 +31,7 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
   menuTypes: Lookup[] = this.lookupService.listByCategory.MenuType;
   menuView: Lookup[] = this.lookupService.listByCategory.MenuView;
   userTypes: Lookup[] = this.lookupService.listByCategory.PermissionCategory;
-  isValidURL: boolean = false;
+  parentMenu?: CustomMenu;
 
   selectedTabIndex$: Subject<number> = new Subject<number>();
   defaultSelectedTab: string = 'basic';
@@ -52,11 +49,35 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
       },
       isTouchedOrDirty: () => true
     },
-    linkSettings: {name: 'linkSettings', langKey: 'link_settings', index: 1, validStatus: () => true, isTouchedOrDirty: () => true},
-    sub: {name: 'sub', langKey: 'sub_lists', index: 2, validStatus: () => true, isTouchedOrDirty: () => true}
+    linkSettings: {
+      name: 'linkSettings',
+      langKey: 'link_settings',
+      index: 1,
+      validStatus: () => {
+        if (this.readonly || !this.urlHandlerComponentRef) {
+          return true;
+        }
+        return this.urlHandlerComponentRef.isValidUrl();
+      },
+      isTouchedOrDirty: () => {
+        if (!this.urlHandlerComponentRef) {
+          return false;
+        }
+        return this.urlHandlerComponentRef.isTouchedOrDirty();
+      }
+    },
+    sub: {
+      name: 'sub',
+      langKey: 'sub_lists',
+      index: 2,
+      validStatus: () => true,
+      isTouchedOrDirty: () => true
+    }
   };
 
   @ViewChild('dialogContent') dialogContent!: ElementRef;
+  @ViewChild('urlHandlerComponent') urlHandlerComponentRef!: CustomMenuUrlHandlerComponent;
+  @ViewChild('customMenuChildren') customMenuChildrenRef!: CustomMenuComponent;
 
   constructor(public dialogRef: DialogRef,
               public fb: UntypedFormBuilder,
@@ -64,15 +85,12 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
               private cd: ChangeDetectorRef,
               @Inject(DIALOG_DATA_TOKEN) data: IDialogData<CustomMenu>,
               private toast: ToastService,
-              private lookupService: LookupService,
-              private customMenuService: CustomMenuService,
               private dialogService: DialogService,
-              private sharedService: SharedService,
-              private exceptionHandlerService: ExceptionHandlerService,
-              private http: HttpClient) {
+              private lookupService: LookupService) {
     super();
     this.model = data.model;
     this.operation = data.operation;
+    this.parentMenu = data.parentMenu;
     this.defaultSelectedTab = data.selectedTab ?? 'basic';
   }
 
@@ -84,11 +102,46 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
       this.displayFormValidity(null, this.dialogContent.nativeElement);
     }
 
+    this.handleDisableFields();
+
     if (this.readonly) {
       this.form.disable();
       this.saveVisible = false;
       this.validateFieldsVisible = false;
     }
+  }
+
+  handleDisableFields() {
+    if (this.readonly) {
+      this.form.disable();
+      return;
+    }
+
+    if (!this.model.isParentMenu()) {
+      this._disableDependentFields();
+    } else {
+      if (!!this.model.id && this.hasChildren) {
+        this._disableDependentFields();
+      } else {
+        this._enableDependentFields();
+      }
+    }
+  }
+
+  private _disableDependentFields() {
+    this.childrenDependentFields.forEach((field) => field.disable());
+  }
+
+  private _enableDependentFields() {
+    this.childrenDependentFields.forEach((field) => field.enable());
+  }
+
+  get childrenDependentFields(): UntypedFormControl[] {
+    let fields: UntypedFormControl[] = [];
+    if(this.parentMenu && !this.parentMenu.isActive()){
+      fields = [this.statusControl];
+    }
+    return fields.concat([this.menuTypeControl, this.menuViewControl, this.userTypeControl]);
   }
 
   ngAfterViewInit(): void {
@@ -99,6 +152,13 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
 
   get readonly(): boolean {
     return this.operation === OperationTypes.VIEW;
+  }
+
+  get hasChildren(): boolean {
+    if (!this.customMenuChildrenRef) {
+      return false;
+    }
+    return this.customMenuChildrenRef.models.length > 0;
   }
 
   buildForm(): void {
@@ -115,11 +175,21 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
   }
 
   beforeSave(model: CustomMenu, form: UntypedFormGroup): Observable<boolean> | boolean {
-    return form.valid;
+    const invalidTabs = this._getInvalidTabs();
+    if (invalidTabs.length > 0) {
+      const listHtml = CommonUtils.generateHtmlList(this.lang.map.msg_following_tabs_valid, invalidTabs);
+      this.dialogService.error(listHtml.outerHTML);
+      return false;
+    }
+    return true;
   }
 
   prepareModel(model: CustomMenu, form: UntypedFormGroup): Observable<CustomMenu> | CustomMenu {
-    return (new CustomMenu()).clone({...model, ...form.value});
+    let value = (new CustomMenu()).clone({...model, ...form.getRawValue()});
+    value.menuURL = this.urlHandlerComponentRef ? this.urlHandlerComponentRef.menuUrlControl.value : '';
+    value.urlParamsParsed = this.urlHandlerComponentRef ? this.urlHandlerComponentRef.variableList : [];
+
+    return value;
   }
 
   afterSave(model: CustomMenu, dialogRef: DialogRef): void {
@@ -129,6 +199,7 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
       : this.toast.success(message.change({x: model.getName()}));
     this.model = model;
     this.operation = OperationTypes.UPDATE;
+    this.customMenuChildrenRef && this.customMenuChildrenRef.reload$.next(null);
   }
 
   saveFail(error: Error): void {
@@ -158,10 +229,6 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
     });
   }
 
-  get menuURLControl(): UntypedFormControl {
-    return this.form.controls.menuURL as UntypedFormControl;
-  }
-
   get statusControl(): UntypedFormControl {
     return this.form.get('status') as UntypedFormControl;
   }
@@ -170,30 +237,12 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
     return this.form.get('menuView') as UntypedFormControl;
   }
 
-  checkURL() {
-    of(this.menuURLControl.value)
-      .pipe(
-        takeUntil(this.destroy$),
-        filter(value => CommonUtils.isValidValue(value)),
-        // set the url to exclude list to skip exception handling
-        tap(() => {
-          this.exceptionHandlerService.excludeHandlingForURL(this.menuURLControl.value);
-        }),
-        switchMap(() => this.http.get<any>(this.menuURLControl.value)),
-        catchError(() => {
-          // remove the url from exclude list
-          this.exceptionHandlerService.removeExcludeHandlingForURL(this.menuURLControl.value);
-          this.isValidURL = false;
-          this.dialogService.error(this.lang.map.err_invalid_URL);
-          return of('INVALID_URL');
-        })
-      ).subscribe((result) => {
-      // remove the url from exclude list
-      this.exceptionHandlerService.removeExcludeHandlingForURL(this.menuURLControl.value);
-      if (result !== 'INVALID_URL') {
-        this.isValidURL = true;
-      }
-    });
+  get menuTypeControl(): UntypedFormControl {
+    return this.form.get('menuType') as UntypedFormControl;
+  }
+
+  get userTypeControl(): UntypedFormControl {
+    return this.form.get('userType') as UntypedFormControl;
   }
 
   getTranslatedStatus() {
@@ -202,5 +251,16 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
 
   getTranslatedMenuView() {
     return !!this.menuViewControl.value ? this.lang.map.private_menu : this.lang.map.public_menu;
+  }
+
+  private _getInvalidTabs(): any {
+    let failedList: string[] = [];
+    for (const key in this.tabsData) {
+      if (!(this.tabsData[key].validStatus())) {
+        // @ts-ignore
+        failedList.push(this.lang.map[this.tabsData[key].langKey]);
+      }
+    }
+    return failedList;
   }
 }

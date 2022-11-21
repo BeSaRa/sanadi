@@ -10,6 +10,7 @@
            [hasError]="getTabInvalidStatus('basic')"></tab>
       <tab [name]="tabsData.permissions.name" [template]="permissionsTabTemplate" [title]="langService.map.lbl_permissions"
            [hasError]="getTabInvalidStatus('permissions')"></tab>
+      <tab [name]="tabsData.menus.name" [template]="menusTab" [title]="langService.map.menus"></tab>
       <tab name="services" [disabled]="!model.id" [title]="langService.map.link_services" [template]="serviceTab"></tab>
     </tabs-list>
     <ng-template #basicTabTemplate>
@@ -171,6 +172,10 @@
           </ng-container>
         </div>
       </div>
+    </ng-template>
+    <ng-template #menusTab>
+      <custom-menu-permission #customMenuPermissionComponent
+                              [user]="model" [readonly]="readonly"></custom-menu-permission>
     </ng-template>
   </form>
   <ng-template #serviceTab>

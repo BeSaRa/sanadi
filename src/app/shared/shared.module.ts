@@ -108,6 +108,7 @@ import { ReturnToOrganizationPopupComponent } from './popups/return-to-organizat
 import { MultiAttachmentDirective } from './directives/multi-attachment.directive';
 import { CustomAttachmentPopupComponent } from './popups/custom-attachment-popup/custom-attachment-popup.component';
 import { AttachmentHandlerDirective } from './directives/attachment-handler.directive';
+import { TranslateNamePipe } from './pipes/translate-name.pipe';
 
 @NgModule({
   declarations: [
@@ -198,7 +199,8 @@ import { AttachmentHandlerDirective } from './directives/attachment-handler.dire
     ReturnToOrganizationPopupComponent,
     MultiAttachmentDirective,
     CustomAttachmentPopupComponent,
-    AttachmentHandlerDirective
+    AttachmentHandlerDirective,
+    TranslateNamePipe
   ],
   imports: [
     CommonModule,
@@ -288,6 +290,7 @@ import { AttachmentHandlerDirective } from './directives/attachment-handler.dire
     FollowupPopupComponent,
     MultiAttachmentDirective,
     AttachmentHandlerDirective,
+    TranslateNamePipe
   ]
 })
 export class SharedModule {
