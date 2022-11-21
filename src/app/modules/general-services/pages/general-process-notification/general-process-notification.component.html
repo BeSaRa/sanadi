@@ -21,7 +21,7 @@
           <label asteriskIfRequired="requestType" for="requestType" class="form-label">{{ lang.map.request_type
             }}</label>
           <ng-select [selectOnTab]="true" labelForId="requestType" [clearable]="true"
-            placeholder="{{ lang.map.select }}" id="requestType" [readonly]="readonly"
+            placeholder="{{ lang.map.select }}" id="requestType" [readonly]="canChangeReuestType"
             (change)="handleRequestTypeChange($event, true)" [notFoundText]="lang.map.msg_not_found" appendTo="body"
             validationClasses="requestType" formControlName="requestType">
             <ng-option *ngFor="let type of notificationRequestTypeList" [value]="type.lookupKey">{{ type.getName() }}
@@ -67,7 +67,7 @@
         <!-- competent Department Id -->
         <div class="col-md-6 mb-4 position-relative">
           <label asteriskIfRequired="competentDepartmentID" for="competentDepartmentID" class="form-label">{{
-            lang.map.lbl_main_team
+            lang.map.lbl_team
             }}</label>
           <ng-select [selectOnTab]="true" labelForId="competentDepartmentID" [clearable]="true"
             placeholder="{{ lang.map.select }}" (change)="filterProcess()" id="competentDepartmentID" [readonly]="readonly"

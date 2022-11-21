@@ -442,6 +442,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
             || item.getResponses().includes(WFResponseType.COLLECTOR_LICENSING_SEND_TO_SINGLE_DEPARTMENT)
             || item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_LICENSE_SEND_TO_SINGLE_DEPARTMENT)
             || item.getResponses().includes(WFResponseType.FUNDRAISING_LICENSE_SEND_TO_SINGLE_DEPARTMENT)
+            || item.getResponses().includes(WFResponseType.GENERAL_NOTIFICATION_SEND_TO_SINGLE_DEPARTMENTS)
             || item.getResponses().includes(WFResponseType.CUSTOMS_EXEMPTION_SEND_TO_SINGLE_DEPARTMENT);
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {

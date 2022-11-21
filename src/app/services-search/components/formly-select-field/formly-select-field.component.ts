@@ -21,7 +21,9 @@ export class FormlySelectFieldComponent extends FieldType<CustomFormlyFieldConfi
   get control(): UntypedFormControl {
     return this.formControl as UntypedFormControl;
   };
-
+  get readonly() {
+    return !!this.field.templateOptions?.readonly;
+  }
   constructor(public lang: LangService) {
     super();
   }

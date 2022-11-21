@@ -118,7 +118,7 @@
               <!-- field type -->
               <div class="col-12 col-md-6 col-lg-12 mb-4 position-relative">
                 <label for="type" asteriskIfRequired="type" class="form-label">{{lang.map.lbl_field_type}}</label>
-                <ng-select validationClasses="type" labelForId="type" placeholder="{{lang.map.select}}"
+                <ng-select validationClasses="type" [readonly]="isEditForm" labelForId="type" placeholder="{{lang.map.select}}"
                   [notFoundText]="lang.map.msg_not_found" (change)="handleFieldTypeChange($event)" formControlName="type" id="type" appendTo="body">
                   <ng-option *ngFor="let option of generalProcessTemplateFieldTypesList; let i = index;"
                     [value]="i + 1">

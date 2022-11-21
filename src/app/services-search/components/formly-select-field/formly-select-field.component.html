@@ -2,6 +2,7 @@
            placeholder="{{lang.map.select}}"
            [notFoundText]="lang.map.msg_not_found"
            [formlyAttributes]="field"
+           [readonly]="readonly"
            [formControl]="control"
            [openOnEnter]="false"
            validationClasses [onlyInvalid]="true" [control]="formControl">

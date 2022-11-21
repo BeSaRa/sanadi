@@ -1,3 +1,4 @@
+import { SubTeam } from '@app/models/sub-team';
 import { SubTeamService } from '@app/services/sub-team.service';
 import { CustomValidators } from './../../../../validators/custom-validators';
 import { ProcessFieldBuilder } from './../../../../administration/popups/general-process-popup/process-formly-components/process-fields-builder';
@@ -45,7 +46,7 @@ GeneralProcessNotification,
 GeneralProcessNotificationService
 > {
   notificationRequestTypeList: Lookup[] = this.lookupService.listByCategory
-    .AllRequestTypes.filter(rt => rt.lookupKey == AllRequestTypesEnum.NEW || rt.lookupKey == AllRequestTypesEnum.EDIT);
+    .AllRequestTypes.filter(rt => rt.lookupKey == AllRequestTypesEnum.NEW || rt.lookupKey == AllRequestTypesEnum.UPDATE).sort((a, b) => a.lookupKey - b.lookupKey);
   GeneralProcessTypeList: Lookup[] = this.lookupService.listByCategory.GeneralProcessType;
   processList: GeneralProcess[] = [];
   processFieldBuilder: ProcessFieldBuilder;
@@ -57,7 +58,7 @@ GeneralProcessNotificationService
   mainClassificationsList: AdminLookup[] = [];
   subClassificationsList: AdminLookup[] = [];
   departmentList: InternalDepartment[] = [];
-  subTeamsList: Team[] = [];
+  subTeamsList: SubTeam[] = [];
 
   form!: UntypedFormGroup;
   processTemplateForm!: UntypedFormGroup;
@@ -113,6 +114,7 @@ GeneralProcessNotificationService
     this.processFieldBuilder.buildMode = 'use';
   }
   handleReadonly(): void {
+
     // if record is new, no readonly (don't change as default is readonly = false)
     if (!this.model?.id) {
       return;
@@ -123,7 +125,6 @@ GeneralProcessNotificationService
       this.readonly = true;
       return;
     }
-
     if (this.openFrom === OpenFrom.USER_INBOX) {
       if (this.employeeService.isCharityManager()) {
         this.readonly = false;
@@ -145,6 +146,8 @@ GeneralProcessNotificationService
         this.readonly = false;
       }
     }
+    this.processFieldBuilder.buildMode = this.readonly ? 'view' : 'use';
+    this.processFieldBuilder.generateFromString(this.model?.template)
   }
 
   _getNewInstance(): GeneralProcessNotification {
@@ -153,8 +156,7 @@ GeneralProcessNotificationService
   _initComponent(): void {
     this.listenToLicenseSearch();
     this._buildForm();
-    this.handleReadonly();
-    this.adminLookupService.loadGeneralProcessClassificaion().subscribe((data: AdminLookup[]) => {
+    this.adminLookupService.loadAsLookups(AdminLookupTypeEnum.GENERAL_PROCESS_CLASSIFICATION, true).subscribe((data: AdminLookup[]) => {
       this.mainClassificationsList = data;
     })
     this.internalDepartmentService.loadGeneralProcessDepartments().subscribe(deparments => {
@@ -162,11 +164,13 @@ GeneralProcessNotificationService
     })
     this.filterProcess();
   }
-  private _loadSubTeam(teamId?: number) {
-    if (teamId)
-      this.subTeamService.getByParentId(teamId).pipe(catchError(err => of([]))).subscribe(data => {
-        this.subTeamsList = data;
-      })
+  private _loadSubTeam(parentTeamId?: number) {
+    if (parentTeamId)
+      this.subTeamService.loadAsLookups().pipe(
+        map((teams) => teams.filter((team: SubTeam) => parentTeamId == team.parent)),
+        catchError(err => of([]))).subscribe(data => {
+          this.subTeamsList = data;
+        })
     else this.subTeamsList = [];
   }
   handleDepartmentChange() {
@@ -179,20 +183,29 @@ GeneralProcessNotificationService
   }
   filterProcess() {
     const params = {
-      departmentId: this.model?.departmentId,
-      subTeamId: this.model?.competentDepartmentID,
-      mainClass: this.model?.domain,
-      subClass: this.model?.firstSubDomain,
-      processType: this.model?.processType
+      departmentId: this.DSNNNFormGroup.value.departmentId,
+      subTeamId: this.DSNNNFormGroup.value.competentDepartmentID,
+      mainClass: this.DSNNNFormGroup.value.domain,
+      subClass: this.DSNNNFormGroup.value.firstSubDomain,
+      processType: this.DSNNNFormGroup.value.processType
     }
-    this.generalProcessService.filterProcess(params).pipe(
-      catchError((err) => {
-        console.log(err)
-        return of([this.otherProcess])
+    this.generalProcessService.loadAsLookups()
+      .pipe(
+        map((processes) => processes.filter(p =>
+          (!params.departmentId || p.departmentId == params.departmentId)
+          && (!params.mainClass || p.mainClass == params.mainClass)
+          && (!params.processType || p.processType == params.processType)
+          && (!params.subClass || p.subClass == params.subClass)
+          && (!params.subTeamId || p.subTeamId == params.subTeamId)
+        )
+        ),
+        catchError((err) => {
+          console.log(err)
+          return of([this.otherProcess])
+        })
+      ).subscribe((data: GeneralProcess[]) => {
+        this.processList = [...data, this.otherProcess];
       })
-    ).subscribe((data: GeneralProcess[]) => {
-      this.processList = [...data, this.otherProcess];
-    })
   }
   loadSubClasses(parentId: number) {
     this.adminLookupService.loadByParentId(AdminLookupTypeEnum.GENERAL_PROCESS_CLASSIFICATION, parentId).subscribe(data => {
@@ -220,6 +233,7 @@ GeneralProcessNotificationService
     });
   }
   _afterBuildForm(): void {
+    this.handleReadonly();
   }
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
     const invalidTabs = this._getInvalidTabs();
@@ -288,6 +302,9 @@ GeneralProcessNotificationService
   _launchFail(error: any): void {
     console.log('problem in launch');
   }
+  get canChangeReuestType() {
+    return !!(this.readonly || this.model?.id);
+  }
   _updateForm(model: GeneralProcessNotification | undefined): void {
     if (!model) {
       this.cd.detectChanges();
@@ -303,6 +320,7 @@ GeneralProcessNotificationService
     this.form.patchValue({
       requestType: formModel.requestType,
       description: formModel.description,
+      oldLicenseFullSerial: model.oldLicenseFullSerial,
       DSNNN: formModel.DSNNN,
     });
     this.filterProcess();
@@ -438,7 +456,7 @@ GeneralProcessNotificationService
     this.licenseSearch$.next(value);
   }
   isEdit() {
-    return this.requestTypeField.value == AllRequestTypesEnum.EDIT;
+    return this.requestTypeField.value == AllRequestTypesEnum.UPDATE;
   }
   get isOtherProcess() {
     return this.processIdField && (!this.processIdField.value || this.processIdField.value == -1);

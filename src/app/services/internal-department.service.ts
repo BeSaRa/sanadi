@@ -71,7 +71,7 @@ export class InternalDepartmentService extends CrudWithDialogGenericService<Inte
   }
 
   loadGeneralProcessDepartments() {
-    return this.loadDepartments().pipe(
+    return this.loadAsLookups().pipe(
       map((epartments: InternalDepartment[]) => {
         return epartments.filter((d: InternalDepartment) => this._generalProcessDepartmentTypes.indexOf(d.code as AdminstrationDepartmentCodes) != -1)
       })

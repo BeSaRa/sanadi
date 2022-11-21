@@ -30,7 +30,9 @@ export enum WFResponseType {
   URGENT_INTERVENTION_CLOSURE_SEND_TO_SINGLE_DEPARTMENT = 'askSingle:ReviewUrgentInterventionClosureApproval',
   URGENT_INTERVENTION_FOLLOWUP_SEND_TO_SINGLE_DEPARTMENT = 'askSingle:ReviewInterventionFollowUp',
   FUNDRAISING_LICENSE_SEND_TO_SINGLE_DEPARTMENT = 'askSingle:ReviewFundraisingChannelLicensing',
+  GENERAL_NOTIFICATION_SEND_TO_SINGLE_DEPARTMENTS = 'askSingle:ReviewGeneralNotification',
   FUNDRAISING_LICENSE_SEND_TO_MULTI_DEPARTMENTS = 'ask:ReviewFundraisingChannelLicensing',
+
   INTERNAL_PROJECT_SEND_TO_EXPERT = 'ask:InternalProjectSpecialistReview', // not used anymore but still reference in multi-send popup
   TO_DEVELOPMENT_EXPERT = 'toDevExpert',
   TO_CONSTRUCTION_EXPERT = 'toConExpert',

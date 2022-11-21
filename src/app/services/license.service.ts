@@ -216,7 +216,7 @@ export class LicenseService {
 
   @CastResponse(() => GeneralProcessNotification)
   private _GeneralProcessNotificationSearchCriteria(criteria: Partial<GeneralProcessNotification>): Observable<GeneralProcessNotification[]> {
-    const orgId = { organizationId: this.employeeService.isExternalUser() ? this.employeeService.getOrgUnit()?.id : undefined }
+    const orgId = { organizationId: this.employeeService.isExternalUser() ? this.employeeService.getProfile()?.id : undefined }
     return this.http.post<GeneralProcessNotification[]>(this.getServiceUrlByCaseType(CaseTypes.GENERAL_PROCESS_NOTIFICATION) + '/search', { ...criteria, ...orgId })
   }
   GeneralProcessNotificationSearch(criteria: Partial<GeneralProcessNotification>): Observable<GeneralProcessNotification[]> {

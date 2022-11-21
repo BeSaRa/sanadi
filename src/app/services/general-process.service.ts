@@ -64,13 +64,4 @@ export class GeneralProcessService extends CrudWithDialogGenericService<GeneralP
       })
     );
   }
-
-
-  @CastResponse(undefined, {
-    unwrap: 'rs',
-    fallback: '$default'
-  })
-  filterProcess(params: Partial<GeneralProcess>): Observable<GeneralProcess[]> {
-    return this.http.post<GeneralProcess[]>(this._getServiceURL() + '/filter', params)
-  }
 }

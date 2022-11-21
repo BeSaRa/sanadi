@@ -100,7 +100,8 @@ export class GeneralProcessTemplate extends Cloneable<GeneralProcessTemplate>{
         required: required,
         pattern: pattern,
         rows: 3,
-        options: of(options)
+        options: of(options),
+        readonly: mode == 'view',
       },
       selectOptions,
       mode,

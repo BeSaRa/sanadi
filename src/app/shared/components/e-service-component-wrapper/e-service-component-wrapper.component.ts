@@ -591,6 +591,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
             || item.getResponses().includes(WFResponseType.COLLECTOR_LICENSING_SEND_TO_SINGLE_DEPARTMENT)
             || item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_LICENSE_SEND_TO_SINGLE_DEPARTMENT)
             || item.getResponses().includes(WFResponseType.FUNDRAISING_LICENSE_SEND_TO_SINGLE_DEPARTMENT)
+            || item.getResponses().includes(WFResponseType.GENERAL_NOTIFICATION_SEND_TO_SINGLE_DEPARTMENTS)
             || item.getResponses().includes(WFResponseType.CUSTOMS_EXEMPTION_SEND_TO_SINGLE_DEPARTMENT)
             || item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_CLOSURE_SEND_TO_SINGLE_DEPARTMENT)
             || item.getResponses().includes(WFResponseType.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD_SEND_TO_SINGLE_DEPARTMENT)
@@ -1047,8 +1048,12 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       item.addReleaseAction();
       this.displayRightActions(OpenFrom.TEAM_INBOX); // update actions to be same as team inbox
       this.actions = this.translateActions(this.actions);
-      this.component.readonly = true;
       this.component.allowEditRecommendations = false;
+      this.component.readonly = true;
+      const component = (this.component as IESComponent<any>);
+      if (component.handleReadonly && typeof component.handleReadonly === 'function') {
+        component.handleReadonly();
+      }
     });
   }
 

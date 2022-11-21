@@ -66,8 +66,8 @@ export class SubTeamService extends CrudWithDialogGenericService<SubTeam> {
     return this.http.put<any>(this._getServiceURL() + '/' + SubTeamId + '/de-activate', {});
   }
 
-  private _getByParentId(parent: number): Observable<any> {
-    return this.http.post<any>(this._getServiceURL() + '/filter', { parent });
+  private _getByParentId(parent: number): Observable<SubTeam> {
+    return this.http.post<SubTeam>(this._getServiceURL() + '/filter', { parent });
   }
 
   @CastResponse(undefined, { unwrap: 'rs', fallback: '$default' })

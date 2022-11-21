@@ -5,7 +5,7 @@ import { UserClickOn } from './../../../enums/user-click-on.enum';
 import { DialogService } from './../../../services/dialog.service';
 import { GeneralProcessService } from './../../../services/general-process.service';
 import { ProcessFieldBuilder } from './process-formly-components/process-fields-builder';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { CustomValidators } from './../../../validators/custom-validators';
 import { GeneralProcessTemplate } from './../../../models/general-process-template';
 import { InternalDepartment } from '@app/models/internal-department';
@@ -163,11 +163,12 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
       this.subClassificationsList = data;
     })
   }
-  private _loadSubTeam(teamId?: number) {
-    if (teamId)
-      this.subTeamService.getByParentId(teamId).pipe(catchError(err => of([]))).subscribe(data => {
-        this.subTeamsList = data;
-      })
+  private _loadSubTeam(parentTeamId?: number) {
+    if (parentTeamId)
+      this.subTeamService.loadAsLookups().pipe(
+        map((teams) => teams.filter((team: SubTeam) => parentTeamId == team.parent)), catchError(err => of([]))).subscribe(data => {
+          this.subTeamsList = data;
+        })
     else this.subTeamsList = [];
   }
   handleDepartmentChange() {

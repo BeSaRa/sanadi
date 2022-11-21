@@ -19,6 +19,9 @@ export class FormlyDateFieldComponent extends FieldType<CustomFormlyFieldConfig>
     return this.formControl as UntypedFormControl;
   }
 
+  get readonly() {
+    return !!this.field.templateOptions?.readonly;
+  }
   constructor() {
     super();
   }
