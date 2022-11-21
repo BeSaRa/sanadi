@@ -1,3 +1,4 @@
+import { AdminResult } from './admin-result';
 import { WFResponseType } from './../enums/wfresponse-type.enum';
 import { DialogRef } from './../shared/models/dialog-ref';
 import { IMyDateModel } from 'angular-mydatepicker';
@@ -48,9 +49,11 @@ export class GeneralProcessNotification
   followUpDate!: string | IMyDateModel;
   subject!: string;
   fullSerial!: string;
-  oldLicenseFullSerial!: string;
+  oldFullSerial!: string;
   oldLicenseId!: string;
   oldLicenseSerial!: number;
+
+  subTeam!: AdminResult;
 
   searchFields: ISearchFieldsMap<GeneralProcessNotification> = {
     ...dateSearchFields(['createdOn']),
@@ -74,7 +77,7 @@ export class GeneralProcessNotification
     const {
       requestType,
       description,
-      oldLicenseFullSerial,
+      oldFullSerial,
       projectDescription,
       departmentId,
       competentDepartmentID,
@@ -88,7 +91,7 @@ export class GeneralProcessNotification
 
     return {
       requestType: controls ? [requestType, CustomValidators.required] : requestType,
-      oldLicenseFullSerial: controls ? [oldLicenseFullSerial] : oldLicenseFullSerial,
+      oldFullSerial: controls ? [oldFullSerial] : oldFullSerial,
       description: controls ? [description, CustomValidators.required] : description,
       DSNNN: {
         departmentId: controls ? [departmentId, CustomValidators.required] : departmentId,
@@ -114,5 +117,8 @@ export class GeneralProcessNotification
   }
   approve(): DialogRef {
     return this.service.approve(this, WFResponseType.APPROVE)
+  }
+  finalApprove(): DialogRef {
+    return this.service.approve(this, WFResponseType.FINAL_APPROVE)
   }
 }

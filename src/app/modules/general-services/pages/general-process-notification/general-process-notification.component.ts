@@ -1,6 +1,5 @@
-import { SubTeam } from '@app/models/sub-team';
+import { SubTeam } from './../../../../models/sub-team';
 import { SubTeamService } from '@app/services/sub-team.service';
-import { CustomValidators } from './../../../../validators/custom-validators';
 import { ProcessFieldBuilder } from './../../../../administration/popups/general-process-popup/process-formly-components/process-fields-builder';
 import { AllRequestTypesEnum } from './../../../../enums/all-request-types-enum';
 import { LookupService } from './../../../../services/lookup.service';
@@ -11,7 +10,6 @@ import { InternalDepartmentService } from './../../../../services/internal-depar
 import { AdminLookupService } from '@services/admin-lookup.service';
 import { AdminLookup } from './../../../../models/admin-lookup';
 import { InternalDepartment } from './../../../../models/internal-department';
-import { Team } from './../../../../models/team';
 import { LicenseService } from './../../../../services/license.service';
 import { Lookup } from '@app/models/lookup';
 import { TabComponent } from './../../../../shared/components/tab/tab.component';
@@ -227,7 +225,7 @@ GeneralProcessNotificationService
     this.form = this.fb.group({
       requestType: model.requestType,
       description: model.description,
-      oldLicenseFullSerial: model.oldLicenseFullSerial,
+      oldFullSerial: model.oldFullSerial,
       DSNNN: this.fb.group(model.DSNNN),
       sampleDataForOperations: this.fb.group(model.sampleDataForOperations),
     });
@@ -312,15 +310,14 @@ GeneralProcessNotificationService
     }
     this.model = model;
     const formModel = model.buildForm();
-
-    this._loadSubTeam(this.model?.departmentId);
+    this._loadSubTeam(this.model?.subTeam?.parent);
     this.loadSubClasses(this.model?.firstSubDomain)
     this.processFieldBuilder.generateFromString(this.model?.template)
 
     this.form.patchValue({
       requestType: formModel.requestType,
       description: formModel.description,
-      oldLicenseFullSerial: model.oldLicenseFullSerial,
+      oldFullSerial: model.oldFullSerial,
       DSNNN: formModel.DSNNN,
     });
     this.filterProcess();
@@ -376,14 +373,14 @@ GeneralProcessNotificationService
   }
   listenToLicenseSearch(): void {
     this.licenseSearch$
-      .pipe(exhaustMap(oldLicenseFullSerial => {
+      .pipe(exhaustMap(oldFullSerial => {
         return this.loadLicencesByCriteria({
           caseType: CaseTypes.GENERAL_PROCESS_NOTIFICATION,
-          fullSerial: oldLicenseFullSerial
+          fullSerial: oldFullSerial
         }).pipe(catchError(() => of([])));
       }))
       .pipe(
-        map(result => result.filter(l => l.caseState == CommonCaseStatus.FINAL_APPROVE || l.caseState == CommonCaseStatus.CANCELLED || l.caseState == CommonCaseStatus.FINAL_REJECTION)),
+        map(result => result.filter(l => l.caseStatus == CommonCaseStatus.FINAL_APPROVE || l.caseStatus == CommonCaseStatus.CANCELLED || l.caseStatus == CommonCaseStatus.FINAL_REJECTION)),
         // display message in case there is no returned license
         tap(list => {
           if (!list.length) {
@@ -395,7 +392,7 @@ GeneralProcessNotificationService
         // switch to the dialog ref to use it later and catch the user response
         switchMap(licenses => {
           if (licenses.length === 1) {
-            return this.licenseService.validateLicenseByRequestType(this.model!.getCaseType(), this.requestTypeField.value, licenses[0].id)
+            return this.licenseService.validateLicenseByRequestType(this.model!.getCaseType(), this.requestTypeField.value, licenses[0].fullSerial)
               .pipe(
                 map((data) => {
                   if (!data) {
@@ -416,6 +413,7 @@ GeneralProcessNotificationService
         takeUntil(this.destroy$)
       )
       .subscribe((selection) => {
+        console.log(selection)
         this.setSelectedLicense(selection.details);
       });
   }
@@ -427,7 +425,7 @@ GeneralProcessNotificationService
         requestType
       };
 
-    result.oldLicenseFullSerial = licenseDetails.fullSerial;
+    result.oldFullSerial = licenseDetails.fullSerial;
     result.oldLicenseId = licenseDetails.id;
     result.oldLicenseSerial = licenseDetails.serial;
 
@@ -451,7 +449,7 @@ GeneralProcessNotificationService
     $event?.preventDefault();
     let value = '';
     if (this.requestTypeField.valid) {
-      value = this.oldLicenseFullSerialField.value;
+      value = this.oldFullSerialField.value;
     }
     this.licenseSearch$.next(value);
   }
@@ -473,8 +471,8 @@ GeneralProcessNotificationService
   get specialExplanationsField(): UntypedFormControl {
     return this.form.get('description') as UntypedFormControl;
   }
-  get oldLicenseFullSerialField(): UntypedFormControl {
-    return this.form.get('oldLicenseFullSerial') as UntypedFormControl;
+  get oldFullSerialField(): UntypedFormControl {
+    return this.form.get('oldFullSerial') as UntypedFormControl;
   }
   get subTeamField(): UntypedFormControl {
     return this.DSNNNFormGroup.get('competentDepartmentID') as UntypedFormControl
