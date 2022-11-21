@@ -121,5 +121,6 @@ export interface IAppUrls {
   SUB_TEAM: string;
   GENERAL_PROCESS: string;
   GENERAL_PROCESS_NOTIFICATION: string;
+  JOB_TITLE_CLONE: string;
   [index: string]: string;
 }

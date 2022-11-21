@@ -1047,5 +1047,18 @@ export const navigationMenuList = [
     group: 'general-services',
     itemOrder: 11,
     svg: null
-  }
+  },
+  {
+    id: 80,
+    langKey: 'menu_job_title_clone',
+    path: '/home/administration/job-titles-clone',
+    icon: 'mdi-badge-account-horizontal-outline',
+    isSvg: false,
+    permission: PermissionsEnum.MANAGE_JOB_TITLES_CLONE,
+    permissionGroup: null,
+    parent: 6,
+    group: 'administration',
+    itemOrder: 25,
+    svg: null
+  },
 ];

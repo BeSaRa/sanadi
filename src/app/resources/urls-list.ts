@@ -126,4 +126,5 @@ export const urlsList: Partial<IAppUrls> = {
   SUB_TEAM: '/admin/sub-team',
   GENERAL_PROCESS: '/admin/general-process',
   GENERAL_PROCESS_NOTIFICATION: '/general-process-notification',
+  JOB_TITLE_CLONE: 'admin/job-title',
 };

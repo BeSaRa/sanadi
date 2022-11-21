@@ -1575,5 +1575,6 @@ export interface ILanguageKeys {
   available_values: string;
   menus: string;
   msg_no_menus_available: string;
+  menu_job_title_clone:string
 }
 

@@ -29,6 +29,7 @@ import {PermissionGroupsEnum} from '@app/enums/permission-groups-enum';
 import {AdminLookupComponent} from '@app/administration/pages/admin-lookup/admin-lookup.component';
 import {AdminLookupOldComponent} from './pages/admin-lookup-old/admin-lookup-old.component';
 import {ProfilesComponent} from './pages/profiles/profiles.component';
+import { JobTitleCloneComponent } from './pages/job-title-clone/job-title-clone.component';
 
 const routes: Routes = [
   { path: '', component: AdminHomeComponent },
@@ -171,7 +172,12 @@ const routes: Routes = [
     data: {
       permissionKey: PermissionsEnum.MANAGE_PROFILE, configPermissionGroup: null, checkAnyPermission: false
     }
-  }
+  },
+  {
+    path: 'job-titles-clone', component: JobTitleCloneComponent,
+    canActivate: [PermissionGuard],
+    data: { permissionKey: PermissionsEnum.MANAGE_JOB_TITLES_CLONE, configPermissionGroup: null, checkAnyPermission: false }
+  },
 ];
 
 
