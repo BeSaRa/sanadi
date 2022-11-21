@@ -129,7 +129,6 @@ export class ExternalUserPopupComponent extends AdminGenericDialog<ExternalUser>
 
   initPopup(): void {
     this.buildPermissionGroups();
-    this.buildForm();
     this.listenToCustomRoleChange();
     this._loadJobTitles();
     this._loadProfiles();
