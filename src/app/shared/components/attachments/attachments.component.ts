@@ -17,6 +17,8 @@ import {GridName, ItemId} from '@app/types/types';
 import {EmployeeService} from '@services/employee.service';
 import {ExternalUser} from '@app/models/external-user';
 import {InternalUser} from '@app/models/internal-user';
+import {OtherAttachmentDetailsPopupComponent} from '@app/shared/popups/other-attachment-details-popup/other-attachment-details-popup.component';
+import {OperationTypes} from '@app/enums/operation-types.enum';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -320,7 +322,11 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
 
   private listenToAddOtherAttachment() {
     this.addOtherAttachments
-      .pipe(map(_ => this.createOtherAttachment()))
+      .pipe(
+        switchMap(() => this.dialog.show(OtherAttachmentDetailsPopupComponent, {
+          model: new FileNetDocument(),
+          operation: OperationTypes.CREATE
+        }).onAfterClose$.pipe(filter((attachment) => !!attachment))))
       .subscribe((attachment) => {
         this.attachments = ([] as FileNetDocument[]).concat([attachment, ...this.attachments]);
       });
@@ -330,15 +336,6 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
     return AdminResult.createInstance({
       arName: this.lang.getArabicLocalByKey('attachment_other'),
       enName: this.lang.getEnglishLocalByKey('attachment_other'),
-    });
-  }
-
-  private createOtherAttachment(): FileNetDocument {
-    return new FileNetDocument().clone({
-      attachmentTypeInfo: this.createOtherLookup(),
-      attachmentTypeId: -1,
-      description: this.lang.map.attachment_other_desc,
-      attachmentTypeStatus: true
     });
   }
 

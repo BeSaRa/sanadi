@@ -320,14 +320,8 @@ export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> 
   }
 
   prepareCustomMenuList(): Observable<MenuItem[]> {
-    return this.loadByCriteria({'menu-view': MenuView.PUBLIC, 'status': CommonStatusEnum.ACTIVATED})
-      .pipe(
-        switchMap((publicMenus) => {
-          const allMenus = publicMenus.concat(this.employeeService.menuItems);
-          let list = this._transformToMenuItems(allMenus);
-          this.menuItemService.menuItems = this.menuItemService.menuItems.concat(list);
-          return of(this.menuItemService.menuItems);
-        })
-      );
+    const list = this._transformToMenuItems(this.employeeService.menuItems);
+    this.menuItemService.menuItems = this.menuItemService.menuItems.concat(list);
+    return of(this.menuItemService.menuItems);
   }
 }

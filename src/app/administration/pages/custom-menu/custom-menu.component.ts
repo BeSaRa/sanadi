@@ -305,7 +305,7 @@ export class CustomMenuComponent extends AdminGenericComponent<CustomMenu, Custo
         this.toast.success(this.lang.map.msg_status_x_updated_success.change({x: model.getName()}));
         this.reload$.next(null);
       }, () => {
-        this.toast.error(this.lang.map.msg_status_x_updated_fail.change({x: model.getName()}));
+        // this.toast.error(this.lang.map.msg_status_x_updated_fail.change({x: model.getName()}));
         this.reload$.next(null);
       });
   }

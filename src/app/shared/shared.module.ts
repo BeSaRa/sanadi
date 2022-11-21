@@ -109,6 +109,7 @@ import { MultiAttachmentDirective } from './directives/multi-attachment.directiv
 import { CustomAttachmentPopupComponent } from './popups/custom-attachment-popup/custom-attachment-popup.component';
 import { AttachmentHandlerDirective } from './directives/attachment-handler.directive';
 import { TranslateNamePipe } from './pipes/translate-name.pipe';
+import { OtherAttachmentDetailsPopupComponent } from './popups/other-attachment-details-popup/other-attachment-details-popup.component';
 
 @NgModule({
   declarations: [
@@ -200,7 +201,8 @@ import { TranslateNamePipe } from './pipes/translate-name.pipe';
     MultiAttachmentDirective,
     CustomAttachmentPopupComponent,
     AttachmentHandlerDirective,
-    TranslateNamePipe
+    TranslateNamePipe,
+    OtherAttachmentDetailsPopupComponent
   ],
   imports: [
     CommonModule,
