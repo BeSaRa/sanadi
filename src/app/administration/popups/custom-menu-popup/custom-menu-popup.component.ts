@@ -16,6 +16,7 @@ import {CustomMenuUrlHandlerComponent} from '@app/administration/shared/custom-m
 import {CommonUtils} from '@helpers/common-utils';
 import {DialogService} from '@services/dialog.service';
 import {CustomMenuComponent} from '@app/administration/pages/custom-menu/custom-menu.component';
+import {UserTypes} from '@app/enums/user-types.enum';
 
 @Component({
   selector: 'app-custom-menu-popup',
@@ -30,7 +31,7 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
   statuses: Lookup[] = this.lookupService.listByCategory.CommonStatus;
   menuTypes: Lookup[] = this.lookupService.listByCategory.MenuType;
   menuView: Lookup[] = this.lookupService.listByCategory.MenuView;
-  userTypes: Lookup[] = this.lookupService.listByCategory.PermissionCategory;
+  userTypes: Lookup[] = this.lookupService.listByCategory.UserType.filter(x => x.lookupKey !== UserTypes.INTEGRATION_USER);
   parentMenu?: CustomMenu;
 
   selectedTabIndex$: Subject<number> = new Subject<number>();
@@ -138,7 +139,7 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
 
   get childrenDependentFields(): UntypedFormControl[] {
     let fields: UntypedFormControl[] = [];
-    if(this.parentMenu && !this.parentMenu.isActive()){
+    if (this.parentMenu && !this.parentMenu.isActive()) {
       fields = [this.statusControl];
     }
     return fields.concat([this.menuTypeControl, this.menuViewControl, this.userTypeControl]);

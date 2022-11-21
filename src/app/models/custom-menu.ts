@@ -12,7 +12,7 @@ import {CustomMenuService} from '@services/custom-menu.service';
 import {BaseModel} from './base-model';
 import {AdminResult} from '@app/models/admin-result';
 import {MenuUrlValueContract} from '@contracts/menu-url-value-contract';
-import {MenuPermissionCategoryEnum} from '@app/enums/menu-permission-category.enum';
+import {UserTypes} from '@app/enums/user-types.enum';
 
 const interceptor = new CustomMenuInterceptor();
 
@@ -106,10 +106,10 @@ export class CustomMenu extends BaseModel<CustomMenu, CustomMenuService> {
   }
 
   isExternalUserMenu(): boolean {
-    return this.userType === MenuPermissionCategoryEnum.EXTERNAL;
+    return this.userType === UserTypes.EXTERNAL;
   }
 
   isInternalUserMenu(): boolean {
-    return this.userType === MenuPermissionCategoryEnum.INTERNAL;
+    return this.userType === UserTypes.INTERNAL;
   }
 }
