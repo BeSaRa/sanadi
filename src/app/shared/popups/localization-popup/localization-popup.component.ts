@@ -52,6 +52,7 @@ export class LocalizationPopupComponent implements OnInit, OnDestroy {
       localizationKey: [{
         value: this.model.localizationKey,
         disabled: (this.operation === OperationTypes.UPDATE)
+        // disabled: false
       }, [CustomValidators.required, Validators.minLength(2), Validators.maxLength(150)]],
       arName: [this.model.arName, [CustomValidators.required, Validators.maxLength(1000)]],
       enName: [this.model.enName, [CustomValidators.required, Validators.maxLength(1000)]]

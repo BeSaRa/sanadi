@@ -1,7 +1,6 @@
 import { PermissionsEnum } from '@app/enums/permissions-enum';
 import { PermissionGroupsEnum } from '@app/enums/permission-groups-enum';
 import { EServicePermissionsEnum } from '@app/enums/e-service-permissions-enum';
-import { MenuItem } from '@app/models/menu-item';
 
 export const navigationMenuList = [
   {
@@ -1061,4 +1060,17 @@ export const navigationMenuList = [
     itemOrder: 25,
     svg: null
   },
+  {
+    id: 81,
+    langKey: 'menu_projects_fundraising',
+    path: '/home/projects/projects-fundraising',
+    icon: 'mdi-template',
+    isSvg: false,
+    permission: null,
+    permissionGroup: null,
+    parent: 32,
+    group: 'projects',
+    itemOrder: 11,
+    svg: null
+  }
 ];
