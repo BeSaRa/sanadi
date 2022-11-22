@@ -11,6 +11,15 @@
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.english_name}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.enName}} </td>
           </ng-container>
+
+          <ng-container cdkColumnDef="projectName">
+            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.project_name}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.projectName}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="needSubject">
+            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_process_subject}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.needSubject}} </td>
+          </ng-container>
           <ng-container cdkColumnDef="licenseNumber">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.license_number}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.fullSerial}} </td>

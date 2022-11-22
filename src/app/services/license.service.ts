@@ -478,11 +478,18 @@ export class LicenseService {
     });
   }
 
-  @CastResponse(() => GeneralAssociationMeetingAttendance)
+  @CastResponse(() => AwarenessActivitySuggestion)
   _validateAwarenessActivitySuggestionByRequestType<T>(requestType: number, oldLicenseId: string): Observable<T> {
     return this.http.post<T>(this.getServiceUrlByCaseType(CaseTypes.AWARENESS_ACTIVITY_SUGGESTION) + '/draft/validate', {
       requestType,
       oldLicenseId
+    });
+  }
+  @CastResponse(() => GeneralProcessNotification)
+  _validateGeneralProcessNotificationByRequestType<T>(requestType: number, oldFullSerial: string): Observable<T> {
+    return this.http.post<T>(this.getServiceUrlByCaseType(CaseTypes.GENERAL_PROCESS_NOTIFICATION) + '/draft/validate', {
+      requestType,
+      oldFullSerial
     });
   }
 
@@ -539,6 +546,8 @@ export class LicenseService {
       return this._validateGeneralAssociationMeetingAttendanceByRequestType<T>(requestType, licenseId);
     } else if (caseType === CaseTypes.AWARENESS_ACTIVITY_SUGGESTION) {
       return this._validateAwarenessActivitySuggestionByRequestType<T>(requestType, licenseId);
+    } else if (caseType === CaseTypes.GENERAL_PROCESS_NOTIFICATION) {
+      return this._validateGeneralProcessNotificationByRequestType<T>(requestType, licenseId);
     }
     return of(undefined);
   }

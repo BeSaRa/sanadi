@@ -1,16 +1,16 @@
-import {Component, Inject} from '@angular/core';
-import {LangService} from '@app/services/lang.service';
-import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {LicenseService} from '@app/services/license.service';
-import {SharedService} from '@app/services/shared.service';
-import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
-import {InboxService} from '@app/services/inbox.service';
-import {CaseTypes} from '@app/enums/case-types.enum';
-import {ServiceRequestTypes} from '@app/enums/service-request-types';
-import {BaseGenericEService} from '@app/generics/base-generic-e-service';
-import {GeneralAssociationMeetingAttendanceService} from '@services/general-association-meeting-attendance.service';
+import { Component, Inject } from '@angular/core';
+import { LangService } from '@app/services/lang.service';
+import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
+import { LicenseService } from '@app/services/license.service';
+import { SharedService } from '@app/services/shared.service';
+import { FileIconsEnum } from '@app/enums/file-extension-mime-types-icons.enum';
+import { InboxService } from '@app/services/inbox.service';
+import { CaseTypes } from '@app/enums/case-types.enum';
+import { ServiceRequestTypes } from '@app/enums/service-request-types';
+import { BaseGenericEService } from '@app/generics/base-generic-e-service';
+import { GeneralAssociationMeetingAttendanceService } from '@services/general-association-meeting-attendance.service';
 
 @Component({
   selector: 'select-license-popup',
@@ -30,16 +30,16 @@ export class SelectLicensePopupComponent {
   // generalAssociationService: GeneralAssociationMeetingAttendanceService;
 
   constructor(public lang: LangService, private dialogRef: DialogRef,
-              private licenseService: LicenseService,
-              private inboxService: InboxService,
-              private _sharedService: SharedService,
-              @Inject(DIALOG_DATA_TOKEN) public data: {
-                licenses: any[],
-                caseRecord: any | undefined,
-                select: boolean,
-                displayedColumns: string[],
-                isNotLicense: boolean
-              }) {
+    private licenseService: LicenseService,
+    private inboxService: InboxService,
+    private _sharedService: SharedService,
+    @Inject(DIALOG_DATA_TOKEN) public data: {
+      licenses: any[],
+      caseRecord: any | undefined,
+      select: boolean,
+      displayedColumns: string[],
+      isNotLicense: boolean
+    }) {
     this.caseType = this.data.caseRecord?.getCaseType();
     this.caseStatus = this.data.caseRecord?.getCaseStatus();
     this.requestType = this.data.caseRecord?.getRequestType() || -1;
@@ -90,14 +90,21 @@ export class SelectLicensePopupComponent {
         if (!licenseDetails) {
           return;
         }
-        this.dialogRef.close({selected: license, details: licenseDetails});
+        this.dialogRef.close({ selected: license, details: licenseDetails });
       });
     } else if (this.caseType === CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION || this.caseType === CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP) {
       this.licenseService.loadUrgentInterventionAnnouncementByLicenseId(license.id).subscribe((licenseDetails) => {
         if (!licenseDetails) {
           return;
         }
-        this.dialogRef.close({selected: license, details: licenseDetails});
+        this.dialogRef.close({ selected: license, details: licenseDetails });
+      });
+    } else if (this.caseType === CaseTypes.GENERAL_PROCESS_NOTIFICATION) {
+      this.licenseService.validateLicenseByRequestType(this.caseType, this.requestType, license.fullSerial).subscribe((requestDetails) => {
+        if (!requestDetails) {
+          return;
+        }
+        this.dialogRef.close({ selected: license, details: requestDetails });
       });
     } else {
       this.licenseService.validateLicenseByRequestType(this.caseType, this.requestType, license.id)
@@ -105,7 +112,7 @@ export class SelectLicensePopupComponent {
           if (!licenseDetails) {
             return;
           }
-          this.dialogRef.close({selected: license, details: licenseDetails});
+          this.dialogRef.close({ selected: license, details: licenseDetails });
         });
     }
   }

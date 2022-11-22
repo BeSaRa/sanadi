@@ -80,7 +80,7 @@ export class ProcessFieldBuilder {
       this.formChange();
     })
   }
-  setField(form: UntypedFormGroup) {
+  setField(form: UntypedFormGroup, ) {
     const field = new GeneralProcessTemplate().clone({
       id: form.value.identifyingName,
       identifyingName: form.value.identifyingName,

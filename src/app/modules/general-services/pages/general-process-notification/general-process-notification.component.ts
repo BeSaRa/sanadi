@@ -1,5 +1,5 @@
+import { SubTeam } from './../../../../models/sub-team';
 import { SubTeamService } from '@app/services/sub-team.service';
-import { CustomValidators } from './../../../../validators/custom-validators';
 import { ProcessFieldBuilder } from './../../../../administration/popups/general-process-popup/process-formly-components/process-fields-builder';
 import { AllRequestTypesEnum } from './../../../../enums/all-request-types-enum';
 import { LookupService } from './../../../../services/lookup.service';
@@ -10,7 +10,6 @@ import { InternalDepartmentService } from './../../../../services/internal-depar
 import { AdminLookupService } from '@services/admin-lookup.service';
 import { AdminLookup } from './../../../../models/admin-lookup';
 import { InternalDepartment } from './../../../../models/internal-department';
-import { Team } from './../../../../models/team';
 import { LicenseService } from './../../../../services/license.service';
 import { Lookup } from '@app/models/lookup';
 import { TabComponent } from './../../../../shared/components/tab/tab.component';
@@ -45,7 +44,7 @@ GeneralProcessNotification,
 GeneralProcessNotificationService
 > {
   notificationRequestTypeList: Lookup[] = this.lookupService.listByCategory
-    .AllRequestTypes.filter(rt => rt.lookupKey == AllRequestTypesEnum.NEW || rt.lookupKey == AllRequestTypesEnum.EDIT);
+    .AllRequestTypes.filter(rt => rt.lookupKey == AllRequestTypesEnum.NEW || rt.lookupKey == AllRequestTypesEnum.UPDATE).sort((a, b) => a.lookupKey - b.lookupKey);
   GeneralProcessTypeList: Lookup[] = this.lookupService.listByCategory.GeneralProcessType;
   processList: GeneralProcess[] = [];
   processFieldBuilder: ProcessFieldBuilder;
@@ -57,7 +56,7 @@ GeneralProcessNotificationService
   mainClassificationsList: AdminLookup[] = [];
   subClassificationsList: AdminLookup[] = [];
   departmentList: InternalDepartment[] = [];
-  subTeamsList: Team[] = [];
+  subTeamsList: SubTeam[] = [];
 
   form!: UntypedFormGroup;
   processTemplateForm!: UntypedFormGroup;
@@ -113,6 +112,7 @@ GeneralProcessNotificationService
     this.processFieldBuilder.buildMode = 'use';
   }
   handleReadonly(): void {
+
     // if record is new, no readonly (don't change as default is readonly = false)
     if (!this.model?.id) {
       return;
@@ -123,7 +123,6 @@ GeneralProcessNotificationService
       this.readonly = true;
       return;
     }
-
     if (this.openFrom === OpenFrom.USER_INBOX) {
       if (this.employeeService.isCharityManager()) {
         this.readonly = false;
@@ -145,6 +144,8 @@ GeneralProcessNotificationService
         this.readonly = false;
       }
     }
+    this.processFieldBuilder.buildMode = this.readonly ? 'view' : 'use';
+    this.processFieldBuilder.generateFromString(this.model?.template)
   }
 
   _getNewInstance(): GeneralProcessNotification {
@@ -153,8 +154,7 @@ GeneralProcessNotificationService
   _initComponent(): void {
     this.listenToLicenseSearch();
     this._buildForm();
-    this.handleReadonly();
-    this.adminLookupService.loadGeneralProcessClassificaion().subscribe((data: AdminLookup[]) => {
+    this.adminLookupService.loadAsLookups(AdminLookupTypeEnum.GENERAL_PROCESS_CLASSIFICATION, true).subscribe((data: AdminLookup[]) => {
       this.mainClassificationsList = data;
     })
     this.internalDepartmentService.loadGeneralProcessDepartments().subscribe(deparments => {
@@ -162,11 +162,13 @@ GeneralProcessNotificationService
     })
     this.filterProcess();
   }
-  private _loadSubTeam(teamId?: number) {
-    if (teamId)
-      this.subTeamService.getByParentId(teamId).pipe(catchError(err => of([]))).subscribe(data => {
-        this.subTeamsList = data;
-      })
+  private _loadSubTeam(parentTeamId?: number) {
+    if (parentTeamId)
+      this.subTeamService.loadAsLookups().pipe(
+        map((teams) => teams.filter((team: SubTeam) => parentTeamId == team.parent)),
+        catchError(err => of([]))).subscribe(data => {
+          this.subTeamsList = data;
+        })
     else this.subTeamsList = [];
   }
   handleDepartmentChange() {
@@ -179,20 +181,29 @@ GeneralProcessNotificationService
   }
   filterProcess() {
     const params = {
-      departmentId: this.model?.departmentId,
-      subTeamId: this.model?.competentDepartmentID,
-      mainClass: this.model?.domain,
-      subClass: this.model?.firstSubDomain,
-      processType: this.model?.processType
+      departmentId: this.DSNNNFormGroup.value.departmentId,
+      subTeamId: this.DSNNNFormGroup.value.competentDepartmentID,
+      mainClass: this.DSNNNFormGroup.value.domain,
+      subClass: this.DSNNNFormGroup.value.firstSubDomain,
+      processType: this.DSNNNFormGroup.value.processType
     }
-    this.generalProcessService.filterProcess(params).pipe(
-      catchError((err) => {
-        console.log(err)
-        return of([this.otherProcess])
+    this.generalProcessService.loadAsLookups()
+      .pipe(
+        map((processes) => processes.filter(p =>
+          (!params.departmentId || p.departmentId == params.departmentId)
+          && (!params.mainClass || p.mainClass == params.mainClass)
+          && (!params.processType || p.processType == params.processType)
+          && (!params.subClass || p.subClass == params.subClass)
+          && (!params.subTeamId || p.subTeamId == params.subTeamId)
+        )
+        ),
+        catchError((err) => {
+          console.log(err)
+          return of([this.otherProcess])
+        })
+      ).subscribe((data: GeneralProcess[]) => {
+        this.processList = [...data, this.otherProcess];
       })
-    ).subscribe((data: GeneralProcess[]) => {
-      this.processList = [...data, this.otherProcess];
-    })
   }
   loadSubClasses(parentId: number) {
     this.adminLookupService.loadByParentId(AdminLookupTypeEnum.GENERAL_PROCESS_CLASSIFICATION, parentId).subscribe(data => {
@@ -214,12 +225,13 @@ GeneralProcessNotificationService
     this.form = this.fb.group({
       requestType: model.requestType,
       description: model.description,
-      oldLicenseFullSerial: model.oldLicenseFullSerial,
+      oldFullSerial: model.oldFullSerial,
       DSNNN: this.fb.group(model.DSNNN),
       sampleDataForOperations: this.fb.group(model.sampleDataForOperations),
     });
   }
   _afterBuildForm(): void {
+    this.handleReadonly();
   }
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
     const invalidTabs = this._getInvalidTabs();
@@ -288,6 +300,9 @@ GeneralProcessNotificationService
   _launchFail(error: any): void {
     console.log('problem in launch');
   }
+  get canChangeReuestType() {
+    return !!(this.readonly || this.model?.id);
+  }
   _updateForm(model: GeneralProcessNotification | undefined): void {
     if (!model) {
       this.cd.detectChanges();
@@ -295,14 +310,14 @@ GeneralProcessNotificationService
     }
     this.model = model;
     const formModel = model.buildForm();
-
-    this._loadSubTeam(this.model?.departmentId);
+    this._loadSubTeam(this.model?.subTeam?.parent);
     this.loadSubClasses(this.model?.firstSubDomain)
     this.processFieldBuilder.generateFromString(this.model?.template)
 
     this.form.patchValue({
       requestType: formModel.requestType,
       description: formModel.description,
+      oldFullSerial: model.oldFullSerial,
       DSNNN: formModel.DSNNN,
     });
     this.filterProcess();
@@ -358,14 +373,14 @@ GeneralProcessNotificationService
   }
   listenToLicenseSearch(): void {
     this.licenseSearch$
-      .pipe(exhaustMap(oldLicenseFullSerial => {
+      .pipe(exhaustMap(oldFullSerial => {
         return this.loadLicencesByCriteria({
           caseType: CaseTypes.GENERAL_PROCESS_NOTIFICATION,
-          fullSerial: oldLicenseFullSerial
+          fullSerial: oldFullSerial
         }).pipe(catchError(() => of([])));
       }))
       .pipe(
-        map(result => result.filter(l => l.caseState == CommonCaseStatus.FINAL_APPROVE || l.caseState == CommonCaseStatus.CANCELLED || l.caseState == CommonCaseStatus.FINAL_REJECTION)),
+        map(result => result.filter(l => l.caseStatus == CommonCaseStatus.FINAL_APPROVE || l.caseStatus == CommonCaseStatus.CANCELLED || l.caseStatus == CommonCaseStatus.FINAL_REJECTION)),
         // display message in case there is no returned license
         tap(list => {
           if (!list.length) {
@@ -377,7 +392,7 @@ GeneralProcessNotificationService
         // switch to the dialog ref to use it later and catch the user response
         switchMap(licenses => {
           if (licenses.length === 1) {
-            return this.licenseService.validateLicenseByRequestType(this.model!.getCaseType(), this.requestTypeField.value, licenses[0].id)
+            return this.licenseService.validateLicenseByRequestType(this.model!.getCaseType(), this.requestTypeField.value, licenses[0].fullSerial)
               .pipe(
                 map((data) => {
                   if (!data) {
@@ -398,6 +413,7 @@ GeneralProcessNotificationService
         takeUntil(this.destroy$)
       )
       .subscribe((selection) => {
+        console.log(selection)
         this.setSelectedLicense(selection.details);
       });
   }
@@ -409,7 +425,7 @@ GeneralProcessNotificationService
         requestType
       };
 
-    result.oldLicenseFullSerial = licenseDetails.fullSerial;
+    result.oldFullSerial = licenseDetails.fullSerial;
     result.oldLicenseId = licenseDetails.id;
     result.oldLicenseSerial = licenseDetails.serial;
 
@@ -433,12 +449,12 @@ GeneralProcessNotificationService
     $event?.preventDefault();
     let value = '';
     if (this.requestTypeField.valid) {
-      value = this.oldLicenseFullSerialField.value;
+      value = this.oldFullSerialField.value;
     }
     this.licenseSearch$.next(value);
   }
   isEdit() {
-    return this.requestTypeField.value == AllRequestTypesEnum.EDIT;
+    return this.requestTypeField.value == AllRequestTypesEnum.UPDATE;
   }
   get isOtherProcess() {
     return this.processIdField && (!this.processIdField.value || this.processIdField.value == -1);
@@ -455,8 +471,8 @@ GeneralProcessNotificationService
   get specialExplanationsField(): UntypedFormControl {
     return this.form.get('description') as UntypedFormControl;
   }
-  get oldLicenseFullSerialField(): UntypedFormControl {
-    return this.form.get('oldLicenseFullSerial') as UntypedFormControl;
+  get oldFullSerialField(): UntypedFormControl {
+    return this.form.get('oldFullSerial') as UntypedFormControl;
   }
   get subTeamField(): UntypedFormControl {
     return this.DSNNNFormGroup.get('competentDepartmentID') as UntypedFormControl
