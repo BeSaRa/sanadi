@@ -15,10 +15,10 @@
          [title]="lang.map.logo"></tab>
     <tab [name]="tabsData.contactInfo.name" [hasError]="contactInfo.invalid"
          [template]="contactInfoTab" [title]="lang.map.contact_info"></tab>
-    <tab [name]="tabsData.contactOfficers.name" [hasError]="!model.contactOfficer || model.contactOfficer.length < 1"
+    <tab [name]="tabsData.contactOfficers.name" [hasError]="!model.contactOfficerList || model.contactOfficerList.length < 1"
          [template]="contactOfficersTab" [title]="lang.map.contact_officers_details"></tab>
     <tab [name]="tabsData.complianceOfficers.name"
-         [hasError]="!model.complianceOfficer || model.complianceOfficer.length < 1"
+         [hasError]="!model.complianceOfficerList || model.complianceOfficerList.length < 1"
          [template]="complianceOfficersTab" [title]="lang.map.compliance_officers_details"></tab>
     <tab [name]="tabsData.internalBranches.name"
          [hasError]="!model.branchList || model.branchList.length < 1"
@@ -271,11 +271,11 @@
       </ng-container>
     </ng-template>
     <ng-template #contactOfficersTab>
-      <profile-officers [addLabel]="addContactOfficersLabel" [selectedOfficers]="model.contactOfficer"
+      <profile-officers [addLabel]="addContactOfficersLabel" [selectedOfficers]="model.contactOfficerList"
                         (officerListChanged)="onProfileContactOfficersChanged($event)"></profile-officers>
     </ng-template>
     <ng-template #complianceOfficersTab>
-      <profile-officers [addLabel]="addComplianceOfficersLabel" [selectedOfficers]="model.complianceOfficer"
+      <profile-officers [addLabel]="addComplianceOfficersLabel" [selectedOfficers]="model.complianceOfficerList"
                         (officerListChanged)="onProfileComplianceOfficersChanged($event)"></profile-officers>
     </ng-template>
     <ng-template #internalBranchesTab>

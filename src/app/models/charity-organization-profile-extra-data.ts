@@ -51,8 +51,8 @@ export class CharityOrganizationProfileExtraData extends BaseModel<CharityOrgani
   instagram!: string;
   youTube!: string;
   branchList: Branch[] = [];
-  contactOfficer: Officer[] = [];
-  complianceOfficer: Officer[] = [];
+  contactOfficerList: Officer[] = [];
+  complianceOfficerList: Officer[] = [];
   langService: LangService;
 
   constructor() {

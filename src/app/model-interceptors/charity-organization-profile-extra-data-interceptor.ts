@@ -15,10 +15,10 @@ export class CharityOrganizationProfileExtraDataInterceptor implements IModelInt
     model.branchList?.map(x => {
       return branchInterceptor.send(x);
     });
-    model.contactOfficer?.map(x => {
+    model.contactOfficerList?.map(x => {
       return officerInterceptor.send(x);
     });
-    model.complianceOfficer?.map(x => {
+    model.complianceOfficerList?.map(x => {
       return officerInterceptor.send(x);
     });
     delete model.profileInfo;

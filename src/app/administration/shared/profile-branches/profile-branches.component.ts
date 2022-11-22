@@ -140,7 +140,7 @@ export class ProfileBranchesComponent implements OnInit {
     this.charityOrgProfileExtraDataService.openBranchContactOfficersDialog(model).subscribe((dialog: DialogRef) => {
       dialog.onAfterClose$.subscribe(item => {
         if (item) {
-          this.selectedBranches.find(x => x.fullName === item.fullName)!.branchContactOfficer = item.branchContactOfficer;
+          this.selectedBranches.find(x => x.fullName === item.fullName)!.branchContactOfficerList = item.branchContactOfficerList;
           this.branchListChanged.emit(this.selectedBranches);
           console.log('returned item', item);
         }

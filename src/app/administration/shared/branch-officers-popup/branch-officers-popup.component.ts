@@ -31,6 +31,6 @@ export class BranchOfficersPopupComponent implements OnInit {
   }
 
   onBranchOfficersChanged(officers: Officer[]) {
-    this.tempModel.branchContactOfficer = officers;
+    this.tempModel.branchContactOfficerList = officers;
   }
 }

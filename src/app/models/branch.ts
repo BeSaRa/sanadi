@@ -17,6 +17,6 @@ export class Branch extends SearchableCloneable<Branch> {
   address!: string;
   tempId!: number;
   status!: number;
-  branchContactOfficer: Officer[] = [];
+  branchContactOfficerList: Officer[] = [];
   id!: number;
 }

@@ -7,7 +7,7 @@ export class BranchInterceptor implements IModelInterceptor<Branch> {
 
   send(model: Partial<Branch>): Partial<Branch> {
     let officerInterceptor = new OfficerInterceptor();
-    model.branchContactOfficer?.map(x => {
+    model.branchContactOfficerList?.map(x => {
       return officerInterceptor.send(x);
     });
     delete model.searchFields;

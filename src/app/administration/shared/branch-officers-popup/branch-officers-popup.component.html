@@ -5,11 +5,11 @@
 </div>
 
 <div class="dialog-content w600px">
-  <profile-officers [selectedOfficers]="model.branchContactOfficer" (officerListChanged)="onBranchOfficersChanged($event)" [addLabel]="'add_contact_officer'"></profile-officers>
+  <profile-officers [selectedOfficers]="model.branchContactOfficerList" (officerListChanged)="onBranchOfficersChanged($event)" [addLabel]="'add_contact_officer'"></profile-officers>
 </div>
 <div class="dialog-actions">
   <span class="flex-grow-1"></span>
-  <button (click)="saveOfficers()" [disabled]="!(tempModel.branchContactOfficer && tempModel.branchContactOfficer.length > 0)"
+  <button (click)="saveOfficers()" [disabled]="!(tempModel.branchContactOfficerList && tempModel.branchContactOfficerList.length > 0)"
           class="btn btn-primary">{{langService.map.btn_save}}</button>
   <button [dialogClose]="null" class="btn btn-secondary">{{langService.map.btn_cancel}}</button>
 </div>

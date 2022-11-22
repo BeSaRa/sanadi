@@ -29,10 +29,10 @@ import {AdminResult} from '@app/models/admin-result';
   $default: {
     model: () => CharityOrganizationProfileExtraData,
     shape: {
-      'contactOfficer.*': () => Officer,
-      'complianceOfficer.*': () => Officer,
+      'contactOfficerList.*': () => Officer,
+      'complianceOfficerList.*': () => Officer,
       'branchList.*': () => Branch,
-      'branchList.*.branchContactOfficer.*': () => Officer,
+      'branchList.*.branchContactOfficerList.*': () => Officer,
       'profileInfo': () => Profile,
       'profileInfo.registrationAuthorityInfo': () => AdminResult
     }

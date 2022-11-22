@@ -78,13 +78,13 @@ export class CharityOrganizationProfileExtraDataPopupComponent extends AdminGene
       name: 'contactOfficersTab',
       langKey: 'contact_officers_details' as keyof ILanguageKeys,
       index: 3,
-      validStatus: () => this.model.contactOfficer && this.model.contactOfficer.length > 0
+      validStatus: () => this.model.contactOfficerList && this.model.contactOfficerList.length > 0
     },
     complianceOfficers: {
       name: 'complianceOfficersTab',
       langKey: 'compliance_officers_details' as keyof ILanguageKeys,
       index: 4,
-      validStatus: () => this.model.complianceOfficer && this.model.complianceOfficer.length > 0
+      validStatus: () => this.model.complianceOfficerList && this.model.complianceOfficerList.length > 0
     },
     internalBranches: {
       name: 'internalBranchesTab',
@@ -182,11 +182,11 @@ export class CharityOrganizationProfileExtraDataPopupComponent extends AdminGene
   }
 
   onProfileContactOfficersChanged(officers: Officer[]) {
-    this.model.contactOfficer = officers;
+    this.model.contactOfficerList = officers;
   }
 
   onProfileComplianceOfficersChanged(officers: Officer[]) {
-    this.model.complianceOfficer = officers;
+    this.model.complianceOfficerList = officers;
   }
 
   onProfileBranchesChanged(branches: Branch[]) {
