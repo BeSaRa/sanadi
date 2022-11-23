@@ -1098,6 +1098,8 @@ export interface ILanguageKeys {
   license_min_time: string;
   license_max_time: string;
   fees: string;
+  fine: string;
+  has_sheep: string;
   service_terms: string;
   service_description: string;
   service_requirements: string;
@@ -1230,6 +1232,8 @@ export interface ILanguageKeys {
   integration_moph: string;
   integration_mawared: string;
   integration_garsia: string;
+  integration_izzab: string;
+  integration_kahramaa: string;
   integration_qatar_charity: string;
   date_of_death: string;
   company_info: string;

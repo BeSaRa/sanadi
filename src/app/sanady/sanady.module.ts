@@ -22,6 +22,7 @@ import {BeneficiaryIncomeComponent} from './shared/beneficiary-income/beneficiar
 import {InquiryLogsComponent} from './pages/inquiry-logs/inquiry-logs.component';
 import {AidListComponent} from './shared/aid-list/aid-list.component';
 import {GdxBeneficiaryIntegrationComponent} from './shared/gdx-beneficiary-integration/gdx-beneficiary-integration.component';
+import { GdxIntegrationInquiryLogListComponent } from './shared/gdx-integration-inquiry-log-list/gdx-integration-inquiry-log-list.component';
 
 
 @NgModule({
@@ -44,7 +45,8 @@ import {GdxBeneficiaryIntegrationComponent} from './shared/gdx-beneficiary-integ
     BeneficiaryIncomeComponent,
     InquiryLogsComponent,
     AidListComponent,
-    GdxBeneficiaryIntegrationComponent
+    GdxBeneficiaryIntegrationComponent,
+    GdxIntegrationInquiryLogListComponent
   ],
   imports: [
     CommonModule,

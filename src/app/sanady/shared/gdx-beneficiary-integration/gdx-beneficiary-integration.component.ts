@@ -24,8 +24,8 @@ import {GdxMawaredResponse} from '@app/models/gdx-mawared-response';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 import {GdxPensionMonthPayment} from '@app/models/gdx-pension-month-payment';
 import {CustomValidators} from '@app/validators/custom-validators';
-import {TableComponent} from '@app/shared/components/table/table.component';
 import {PaginatorComponent} from '@app/shared/components/paginator/paginator.component';
+import {GdxKahramaaResponse} from '@app/models/gdx-kahramaa-response';
 
 @Component({
   selector: 'gdx-beneficiary-integration',
@@ -92,9 +92,27 @@ export class GdxBeneficiaryIntegrationComponent implements OnInit, OnDestroy {
       serviceId: GdxServicesEnum.GARSIA + '',
       isLoaded: false
     },
+    izzab: {
+      name: 'izzab',
+      index: 4,
+      langKey: 'integration_izzab',
+      validStatus: () => true,
+      isTouchedOrDirty: () => true,
+      serviceId: GdxServicesEnum.IZZAB + '',
+      isLoaded: false
+    },
+    kahramaa: {
+      name: 'kahramaa',
+      index: 5,
+      langKey: 'integration_kahramaa',
+      validStatus: () => true,
+      isTouchedOrDirty: () => true,
+      serviceId: GdxServicesEnum.KAHRAMAA + '',
+      isLoaded: false
+    },
     qatarCharity: {
       name: 'qatarCharity',
-      index: 4,
+      index: 6,
       langKey: 'integration_qatar_charity',
       validStatus: () => true,
       isTouchedOrDirty: () => true,
@@ -121,6 +139,12 @@ export class GdxBeneficiaryIntegrationComponent implements OnInit, OnDestroy {
   selectedGarsiaPensionList: GdxPensionMonthPayment[] = [];
   @ViewChild('garsiaPensionPaymentPaginator') pensionPaymentsPaginator!: PaginatorComponent;
 
+  izzabLogs: GdxServiceLog[] = [];
+  hasSheep: boolean = false;
+
+  kahramaaLogs: GdxServiceLog[] = [];
+  kahramaaRelatedDataList: GdxKahramaaResponse[] = [];
+
   addMOJ$: Subject<any> = new Subject<any>();
   reloadMOJ$: BehaviorSubject<any> = new BehaviorSubject<any>('init');
 
@@ -133,15 +157,23 @@ export class GdxBeneficiaryIntegrationComponent implements OnInit, OnDestroy {
   addGarsia$: Subject<any> = new Subject<any>();
   reloadGarsia$: BehaviorSubject<any> = new BehaviorSubject<any>('init');
 
+  addIzzab$: Subject<any> = new Subject<any>();
+  reloadIzzab$: BehaviorSubject<any> = new BehaviorSubject<any>('init');
+
+  addKahramaa$: Subject<any> = new Subject<any>();
+  reloadKahramaa$: BehaviorSubject<any> = new BehaviorSubject<any>('init');
+
   displayColumnsMap: any = {
     gdxServiceLog: ['organization', 'user', 'actionTime', 'actions'],
+    gdxServiceLogIzzab: ['organization', 'user', 'actionTime'],
     mojRelatedFlats: ['transactionNo', 'transactionType', 'ownerName', 'contractDate', 'ownerShares'],
     mojRelatedParcels: ['parcelNo', 'parcelType', 'ownerName', 'city', 'zone', 'sharesCount'],
     mociRelatedCompanies: ['companyName', 'licenceNumber', 'companyStatus', 'relation', 'relationStatus'],
     mawaredRelatedData: ['empNameAr', 'empNameEn', 'empQID', 'entityName', 'entityId', 'firstMonth', 'firstPayment', 'secondMonth', 'secondPayment', 'thirdMonth', 'thirdPayment'],
     garsiaRelatedPensions: ['pensionArName', 'pensionEmployer', 'pensionStatus', 'firstJoinDate',
       'endOfServiceDate', 'finalServicePeriodYears', 'finalServicePeriodMonths', 'finalServicePeriodDays', 'pensionDeserveDate', 'totalPensionDeserved', 'actions'],
-    garsiaRelatedPensionPayments: ['payAccountNum', 'payMonth', 'payYear', 'payValue']
+    garsiaRelatedPensionPayments: ['payAccountNum', 'payMonth', 'payYear', 'payValue'],
+    kahramaaRelatedData: ['amount', 'fees', 'fine']
   };
   filterControlsMap: { [key: string]: UntypedFormControl } = {
     moj: new UntypedFormControl(''),
@@ -154,6 +186,9 @@ export class GdxBeneficiaryIntegrationComponent implements OnInit, OnDestroy {
     garsia: new UntypedFormControl(''),
     garsiaRelatedPensions: new UntypedFormControl(''),
     garsiaRelatedPensionPayments: new UntypedFormControl(''),
+    izzab: new UntypedFormControl(''),
+    kahramaa: new UntypedFormControl(''),
+    kahramaaRelatedData: new UntypedFormControl(''),
   };
   sortingCallbacksMap = {
     gdxServiceLog: {
@@ -209,7 +244,9 @@ export class GdxBeneficiaryIntegrationComponent implements OnInit, OnDestroy {
     moj: null,
     moci: null,
     mawared: null,
-    garsia: null
+    garsia: null,
+    izzab: null,
+    kahramaa: null
   };
 
   getBeneficiaryQID(beneficiary: Beneficiary): string {
@@ -277,6 +314,13 @@ export class GdxBeneficiaryIntegrationComponent implements OnInit, OnDestroy {
         this.selectedGarsiaPension = undefined;
         this.selectedGarsiaPensionList = [];
         break;
+      case GdxServicesEnum.IZZAB:
+        this.selectedRecordMap.izzab = log;
+        break;
+      case GdxServicesEnum.KAHRAMAA:
+        this.kahramaaRelatedDataList = log.gdxServiceResponseList;
+        this.selectedRecordMap.kahramaa = log;
+        break;
       default:
         break;
     }
@@ -307,6 +351,12 @@ export class GdxBeneficiaryIntegrationComponent implements OnInit, OnDestroy {
       case GdxServicesEnum.GARSIA:
         this.garsiaLogs = response;
         break;
+      case GdxServicesEnum.IZZAB:
+        this.izzabLogs = response;
+        break;
+      case GdxServicesEnum.KAHRAMAA:
+        this.kahramaaLogs = response;
+        break;
       default:
         break;
     }
@@ -325,6 +375,8 @@ export class GdxBeneficiaryIntegrationComponent implements OnInit, OnDestroy {
     this._listenToAddInquiriesMOCI();
     this._listenToAddInquiriesMAWARED();
     this._listenToAddInquiriesGARSIA();
+    // this._listenToAddInquiriesIZZAB();
+    this._listenToAddInquiriesKAHRAMAA();
   }
 
   private listenToReloadIntegrationInquiries() {
@@ -379,6 +431,30 @@ export class GdxBeneficiaryIntegrationComponent implements OnInit, OnDestroy {
       });
   }
 
+  /*private _listenToAddInquiriesIZZAB(): void {
+    this.addIzzab$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(exhaustMap(() => {
+        return this.beneficiaryService.addIZZABInquiry(this._getGDXCriteria(this.beneficiary!, GdxServicesEnum.IZZAB));
+      }))
+      .subscribe(() => {
+        this.toast.success(this.langService.map.msg_added_successfully);
+        this.loadGDXIntegrationData(GdxServicesEnum.IZZAB);
+      });
+  }*/
+
+  private _listenToAddInquiriesKAHRAMAA(): void {
+    this.addKahramaa$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(exhaustMap(() => {
+        return this.beneficiaryService.addKahramaaInquiry(this._getGDXCriteria(this.beneficiary!, GdxServicesEnum.KAHRAMAA));
+      }))
+      .subscribe(() => {
+        this.toast.success(this.langService.map.msg_added_successfully);
+        this.loadGDXIntegrationData(GdxServicesEnum.KAHRAMAA);
+      });
+  }
+
   private _listenToReloadGDXServiceData(): void {
     this.reloadMOJ$.pipe(
       takeUntil(this.destroy$),
@@ -399,6 +475,16 @@ export class GdxBeneficiaryIntegrationComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$),
       filter(val => val !== 'init')
     ).subscribe(() => this.loadGDXIntegrationData(GdxServicesEnum.GARSIA));
+
+    this.reloadIzzab$.pipe(
+      takeUntil(this.destroy$),
+      filter(val => val !== 'init')
+    ).subscribe(() => this.loadGDXIntegrationData(GdxServicesEnum.IZZAB));
+
+    this.reloadKahramaa$.pipe(
+      takeUntil(this.destroy$),
+      filter(val => val !== 'init')
+    ).subscribe(() => this.loadGDXIntegrationData(GdxServicesEnum.KAHRAMAA));
   }
 
   private _buildIntegrationActions() {
@@ -418,6 +504,7 @@ export class GdxBeneficiaryIntegrationComponent implements OnInit, OnDestroy {
       }
     }];
     this.actionsMap.garsiaPensionPayments = [];
+    this.actionsMap.kahramaaRelatedData = [];
   }
 
   private _resetRelatedData(serviceId: string) {
@@ -435,6 +522,9 @@ export class GdxBeneficiaryIntegrationComponent implements OnInit, OnDestroy {
         this.garsiaRelatedDataList = [];
         this.selectedGarsiaPension = undefined;
         this.selectedGarsiaPensionList = [];
+        break;
+      case GdxServicesEnum.KAHRAMAA:
+        this.kahramaaRelatedDataList = [];
         break;
       default:
         break;

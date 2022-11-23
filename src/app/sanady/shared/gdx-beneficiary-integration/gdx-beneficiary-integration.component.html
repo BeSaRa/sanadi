@@ -7,6 +7,10 @@
        [title]="langService.map[tabData.mawared.langKey]"></tab>
   <tab [name]="tabData.garsia.name" [template]="GarsiaTemplate"
        [title]="langService.map[tabData.garsia.langKey]"></tab>
+  <tab [name]="tabData.izzab.name" [template]="IzzabTemplate"
+       [title]="langService.map[tabData.izzab.langKey]"></tab>
+  <tab [name]="tabData.kahramaa.name" [template]="KahramaaTemplate"
+       [title]="langService.map[tabData.kahramaa.langKey]"></tab>
   <tab [name]="tabData.qatarCharity.name" [template]="QatarCharityTemplate"
        [title]="langService.map[tabData.qatarCharity.langKey]"></tab>
 </tabs-list>
@@ -248,7 +252,9 @@
               </ng-container>
               <ng-container cdkColumnDef="firstPayment">
                 <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.first_payment}}</th>
-                <td cdk-cell *cdkCellDef="let row" class="text-end"><span>{{(row.firstPayment ? row.firstPayment + '' : '') | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span></td>
+                <td cdk-cell *cdkCellDef="let row" class="text-end">
+                  <span>{{(row.firstPayment ? row.firstPayment + '' : '') | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span>
+                </td>
               </ng-container>
               <ng-container cdkColumnDef="secondMonth">
                 <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.second_month}}</th>
@@ -256,7 +262,9 @@
               </ng-container>
               <ng-container cdkColumnDef="secondPayment">
                 <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.second_payment}}</th>
-                <td cdk-cell *cdkCellDef="let row" class="text-end"><span>{{(row.secondPayment ? row.secondPayment + '' : '') | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span></td>
+                <td cdk-cell *cdkCellDef="let row" class="text-end">
+                  <span>{{(row.secondPayment ? row.secondPayment + '' : '') | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span>
+                </td>
               </ng-container>
               <ng-container cdkColumnDef="thirdMonth">
                 <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.third_month}}</th>
@@ -264,7 +272,9 @@
               </ng-container>
               <ng-container cdkColumnDef="thirdPayment">
                 <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.third_payment}}</th>
-                <td cdk-cell *cdkCellDef="let row" class="text-end"><span>{{(row.thirdPayment ? row.thirdPayment + '' : '') | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span></td>
+                <td cdk-cell *cdkCellDef="let row" class="text-end">
+                  <span>{{(row.thirdPayment ? row.thirdPayment + '' : '') | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span>
+                </td>
               </ng-container>
 
               <tr cdk-header-row *cdkHeaderRowDef="headerColumn"></tr>
@@ -331,7 +341,8 @@
               <td cdk-cell *cdkCellDef="let row"><span>{{row.finalServicePeriodYears}}</span></td>
             </ng-container>
             <ng-container cdkColumnDef="finalServicePeriodMonths">
-              <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.final_service_period_months}}</th>
+              <th cdk-header-cell *cdkHeaderCellDef
+                  sortable-header> {{langService.map.final_service_period_months}}</th>
               <td cdk-cell *cdkCellDef="let row"><span>{{row.finalServicePeriodMonths}}</span></td>
             </ng-container>
             <ng-container cdkColumnDef="finalServicePeriodDays">
@@ -344,7 +355,9 @@
             </ng-container>
             <ng-container cdkColumnDef="totalPensionDeserved">
               <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.deserved_amount}}</th>
-              <td cdk-cell *cdkCellDef="let row" class="text-end"><span>{{(row.totalPensionDeserved ? row.totalPensionDeserved + '' : '') | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span></td>
+              <td cdk-cell *cdkCellDef="let row" class="text-end">
+                <span>{{(row.totalPensionDeserved ? row.totalPensionDeserved + '' : '') | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span>
+              </td>
             </ng-container>
             <ng-container cdkColumnDef="actions">
               <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_actions}}</th>
@@ -403,7 +416,9 @@
             </ng-container>
             <ng-container cdkColumnDef="payValue">
               <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.amount}}</th>
-              <td cdk-cell *cdkCellDef="let row"><span>{{(row.payValue ? row.payValue + '' : '') | mask: inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span></td>
+              <td cdk-cell *cdkCellDef="let row">
+                <span>{{(row.payValue ? row.payValue + '' : '') | mask: inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span>
+              </td>
             </ng-container>
 
             <tr cdk-header-row *cdkHeaderRowDef="headerColumn"></tr>
@@ -417,6 +432,79 @@
           <app-paginator #garsiaPensionPaymentPaginator></app-paginator>
         </app-table>
         <context-menu-item #garsiaPensionPaymentMenu [actions]="actionsMap.garsiaPensionPayments"></context-menu-item>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template #IzzabTemplate>
+  <div class="row">
+    <div class="col-4 mb-4 position-relative">
+      <label>{{langService.map.has_sheep}}</label>
+      <span class="form-control">{{hasSheep ? langService.map.lbl_yes : langService.map.lbl_no}}</span>
+    </div>
+  </div>
+  <ng-container [ngTemplateOutlet]="gdxServicesLogTableTemplate"
+                [ngTemplateOutletContext]="{add$: addIzzab$, reload$: reloadIzzab$, data: izzabLogs, displayColumns: displayColumnsMap.gdxServiceLogIzzab,
+                                            filterControl: filterControlsMap.izzab, actionsList: actionsMap.gdxServiceLog, selectedRecord: selectedRecordMap.izzab}">
+  </ng-container>
+</ng-template>
+<ng-template #KahramaaTemplate>
+  <ng-container [ngTemplateOutlet]="gdxServicesLogTableTemplate"
+                [ngTemplateOutletContext]="{add$: addKahramaa$, reload$: reloadKahramaa$, data: kahramaaLogs, displayColumns: displayColumnsMap.gdxServiceLog,
+                                            filterControl: filterControlsMap.kahramaa, actionsList: actionsMap.gdxServiceLog, selectedRecord: selectedRecordMap.kahramaa}">
+  </ng-container>
+  <div id="kahramaaRelatedDataContainer">
+    <h6 class="text-primary">{{langService.map.employees}}</h6>
+    <hr class="mt-0">
+    <div class="row">
+      <div class="col-12">
+        <div class="table-responsive">
+          <app-table #kahramaaRelatedDataTable sortableTable [paginator]="kahramaaRelatedDataPaginator"
+                     [data]="kahramaaRelatedDataList"
+                     [columns]="displayColumnsMap.kahramaaRelatedData"
+                     [filter]="filterControlsMap.kahramaaRelatedData.value" [useSearchToFilter]="true">
+            <table class="table table-striped table-bordered caption-top" cdk-table
+                   [dataSource]="kahramaaRelatedDataTable.dataSource">
+              <ng-container cdkColumnDef="extra-header">
+                <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+                  <table-header tableTitle="employees"
+                                [sort]="kahramaaRelatedDataTable.dataSource.sort"
+                                (textChange)="filterControlsMap.kahramaaRelatedData.setValue($event)">
+                  </table-header>
+                </th>
+              </ng-container>
+              <ng-container cdkColumnDef="amount">
+                <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.amount}}</th>
+                <td cdk-cell *cdkCellDef="let row" class="text-end">
+                  <span>{{(row.amount ? row.amount + '' : '') | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span>
+                </td>
+              </ng-container>
+              <ng-container cdkColumnDef="fees">
+                <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.fees}}</th>
+                <td cdk-cell *cdkCellDef="let row" class="text-end">
+                  <span>{{(row.fees ? row.fees + '' : '') | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span>
+                </td>
+              </ng-container>
+              <ng-container cdkColumnDef="fine">
+                <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.fine}}</th>
+                <td cdk-cell *cdkCellDef="let row" class="text-end">
+                  <span>{{(row.fine ? row.fine + '' : '') | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span>
+                </td>
+              </ng-container>
+
+              <tr cdk-header-row *cdkHeaderRowDef="headerColumn"></tr>
+              <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="kahramaaRelatedDataTable.columns"></tr>
+              <tr cdk-row *cdkRowDef="let row; columns: kahramaaRelatedDataTable.columns;"
+                  (contextmenu)="kahramaaRelatedDataMenu.open($event , row)"></tr>
+              <tr *cdkNoDataRow>
+                <td colspan="100" class="text-center">{{langService.map.no_records_to_display}}</td>
+              </tr>
+            </table>
+            <app-paginator #kahramaaRelatedDataPaginator
+                           [length]="(kahramaaRelatedDataList.length || 0)"></app-paginator>
+          </app-table>
+          <context-menu-item #kahramaaRelatedDataMenu [actions]="actionsMap.kahramaaRelatedData"></context-menu-item>
+        </div>
       </div>
     </div>
   </div>
