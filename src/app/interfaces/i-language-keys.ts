@@ -1588,5 +1588,6 @@ export interface ILanguageKeys {
   available_values: string;
   menus: string;
   msg_no_menus_available: string;
+  link_sub_teams: string;
 }
 

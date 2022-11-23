@@ -120,6 +120,7 @@ export interface IAppUrls {
   USER_MENU_ITEM: string;
   PROFILE_SERVICE: string;
   SUB_TEAM: string;
+  USER_SUB_TEAM: string;
   GENERAL_PROCESS: string;
   GENERAL_PROCESS_NOTIFICATION: string;
   [index: string]: string;

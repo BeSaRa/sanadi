@@ -13,6 +13,7 @@
     <tab [name]="tabsData.menus.name" [template]="menusTab" [title]="lang.map.menus"></tab>
     <tab [name]="tabsData.departments.name" [disabled]="!model.id" [title]="lang.map.departments" [template]="departmentsTab"></tab>
     <tab [name]="tabsData.teams.name" [disabled]="!model.id" [title]="lang.map.link_teams" [template]="teamsTab"></tab>
+    <tab [name]="tabsData.subTeams.name" [disabled]="!model.id" [title]="lang.map.link_sub_teams" [template]="subTeamsTab"></tab>
     <tab [name]="tabsData.followup.name" [title]="lang.map.followup" [template]="followupTab"></tab>
     <tab [name]="tabsData.services.name" [disabled]="!(userTeamComponent && userTeamComponent.userTeams.length)" [title]="lang.map.link_services" [template]="serviceTab"></tab>
   </tabs-list>
@@ -144,6 +145,9 @@
   </ng-template>
   <ng-template #teamsTab>
     <user-team [model]="model" [readonly]="readonly" [operation]="operation"></user-team>
+  </ng-template>
+  <ng-template #subTeamsTab>
+    <user-sub-team [model]="model" [readonly]="readonly" [operation]="operation"></user-sub-team>
   </ng-template>
   <ng-template #serviceTab>
     <user-security [operation]="operation" [model]="model" [readonly]="readonly"
