@@ -26,7 +26,7 @@ import {CoordinationTypes} from '@app/enums/coordination-types-enum';
 import {
   EffectiveCoordinationCapabilitiesComponent
 } from './../../../e-services-main/shared/effective-coordination-capabilities/effective-coordination-capabilities.component';
-import {OrganizaionOfficerComponent} from './../../../e-services-main/shared/organizaion-officer/organizaion-officer.component';
+import {OrganizationOfficerComponent} from '../../../e-services-main/shared/organization-officer/organization-officer.component';
 import {
   ParticipantOrganizationComponent
 } from './../../../e-services-main/shared/participant-organization/participant-organization.component';
@@ -61,14 +61,14 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
     this.lookupService.listByCategory.TrainingLanguage?.sort(
       (a, b) => a?.lookupKey - b?.lookupKey
     );
-  trainingWayes: Lookup[] = this.lookupService.listByCategory.TrainingWay?.sort(
+  trainingWays: Lookup[] = this.lookupService.listByCategory.TrainingWay?.sort(
     (a, b) => a?.lookupKey - b?.lookupKey
   );
-  recommendedWayes: Lookup[] =
+  recommendedWays: Lookup[] =
     this.lookupService.listByCategory.RecommendedWay?.sort(
       (a, b) => a?.lookupKey - b?.lookupKey
     );
-  organizationWayes: Lookup[] =
+  organizationWays: Lookup[] =
     this.lookupService.listByCategory.OrganizationWay?.sort(
       (a, b) => a?.lookupKey - b?.lookupKey
     );
@@ -147,7 +147,7 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
   organizationOfficersTabStatus: ReadinessStatus = 'READY';
   organizationUsers: OrganizationOfficer[] = [];
   @ViewChild('organizationOfficersTap')
-  organizationOfficerssComponentRef!: OrganizaionOfficerComponent;
+  organizationOfficersComponentRef!: OrganizationOfficerComponent;
   @ViewChild('buildingAbilityTap') buildingAbilityComponentRef!: BuildingAbilityComponent;
   effectiveCoordinationCapabilitiesTabStatus: ReadinessStatus = 'READY';
   @ViewChild('effectiveCoordinationCapabilitiesTap')
@@ -180,7 +180,7 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
 
   // building Abilities
 
-  get paticipatingOrgsCanAdd(): boolean {
+  get participatingOrgsCanAdd(): boolean {
     return (
       (this.isLicensingUser && !this.isInitialApproved) ||
       !!(!this.isInitialApproved && this.model?.isClaimed())
@@ -189,7 +189,7 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
 
   // Effective Coordination Capabilities
 
-  get paticipatingOrgsCanView(): boolean {
+  get participatingOrgsCanView(): boolean {
     return (
       this.isInternalUser &&
       (this.model?.temporaryOrganizaionOfficerList?.length! > 0 ||
@@ -199,7 +199,7 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
     );
   }
 
-  get paticipatingOrgsCanDelete(): boolean {
+  get participatingOrgsCanDelete(): boolean {
     return (
       (!this.isInitialApproved &&
         this.isInternalUser &&
@@ -300,7 +300,7 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
-    this.disableListsUpate();
+    this.disableListsUpdate();
     this.model = this.service.prepareModelBeforeSave(this.model!);
 
     if (this.form.invalid) {
@@ -343,7 +343,7 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
     saveType: SaveTypes,
     operation: OperationTypes
   ): void {
-    this.enableListsUpate();
+    this.enableListsUpdate();
     const taskDetails = this.model!.taskDetails;
     this.service.mainModel = this.prepareMainModel(this.currentUserOrgId!, model);
     this.model = this.filterModelByOrgId(this.currentUserOrgId!, model);
@@ -397,8 +397,8 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
     this.model = this._getNewInstance();
     this.form.reset();
     this.participantOrganizationsComponentRef.list! = [];
-    if (this.organizationOfficerssComponentRef) {
-      this.organizationOfficerssComponentRef.list = [];
+    if (this.organizationOfficersComponentRef) {
+      this.organizationOfficersComponentRef.list = [];
     }
     if (this.buildingAbilityComponentRef) {
       this.buildingAbilityComponentRef.list = [];
@@ -564,9 +564,9 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
     return model;
   }
 
-  enableListsUpate() {
-    if (this.organizationOfficerssComponentRef) {
-      this.organizationOfficerssComponentRef.allowListUpdate = true;
+  enableListsUpdate() {
+    if (this.organizationOfficersComponentRef) {
+      this.organizationOfficersComponentRef.allowListUpdate = true;
     }
     if (this.buildingAbilityComponentRef) {
       this.buildingAbilityComponentRef.allowListUpdate = true;
@@ -579,9 +579,9 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
     }
   }
 
-  disableListsUpate() {
-    if (this.organizationOfficerssComponentRef) {
-      this.organizationOfficerssComponentRef.allowListUpdate = false;
+  disableListsUpdate() {
+    if (this.organizationOfficersComponentRef) {
+      this.organizationOfficersComponentRef.allowListUpdate = false;
     }
     if (this.buildingAbilityComponentRef) {
       this.buildingAbilityComponentRef.allowListUpdate = false;
@@ -626,7 +626,7 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
     return this.model?.temporaryOrganizaionOfficerList ?? [];
   }
 
-  get buildingAbiltiesList(): BuildingAbility[] | [] {
+  get buildingAbilitiesList(): BuildingAbility[] | [] {
     if (this.isInternalUser) return this.model?.buildingAbilitiesList ?? [];
     return this.model?.temporaryBuildingAbilitiesList ?? [];
   }

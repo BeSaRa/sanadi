@@ -7,9 +7,9 @@
 
   <section *ngIf="isOrganizaionOfficers">
     <h1 class="h6 ">{{ lang.map.organization_officers }}</h1>
-    <organizaion-officer [list]="data.model?.organizaionOfficerList || []" [canUpdate]="false" [isClaimed]="false"
+    <organization-officer [list]="data.model?.organizaionOfficerList || []" [canUpdate]="false" [isClaimed]="false"
       [currentUserOrgId]="data.orgId">
-    </organizaion-officer>
+    </organization-officer>
   </section>
   <section *ngIf="isBuildingAbilities">
     <h1 class="h6 ">{{ lang.map.building_abilities }}</h1>

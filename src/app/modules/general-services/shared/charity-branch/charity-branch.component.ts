@@ -3,7 +3,7 @@ import {UntypedFormBuilder} from '@angular/forms';
 import {ListModelComponent} from '@app/generics/ListModel-component';
 import {ControlWrapper} from '@app/interfaces/i-control-wrapper';
 import {CharityBranch} from '@app/models/charity-branch';
-import {OrganizaionOfficerComponent} from '@app/modules/e-services-main/shared/organizaion-officer/organizaion-officer.component';
+import {OrganizationOfficerComponent} from '@app/modules/e-services-main/shared/organization-officer/organization-officer.component';
 import {LangService} from '@app/services/lang.service';
 import {LookupService} from '@app/services/lookup.service';
 import {Lookup} from '@app/models/lookup';
@@ -18,7 +18,7 @@ export class CharityBranchComponent extends ListModelComponent<CharityBranch> {
   @Input() set list(_list: CharityBranch[]) {
     this._list = _list;
   }
-  @ViewChild('org_officers') org!: OrganizaionOfficerComponent;
+  @ViewChild('org_officers') org!: OrganizationOfficerComponent;
   get list(): CharityBranch[] {
     return [...this._list];
   }

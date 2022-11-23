@@ -14,7 +14,7 @@ import { ProjectNeedsComponent } from './shared/project-needs/project-needs.comp
 import { BuildingAbilityComponent } from './shared/building-ability/building-ability.component';
 import { EffectiveCoordinationCapabilitiesComponent } from './shared/effective-coordination-capabilities/effective-coordination-capabilities.component';
 import { ParticipantOrganizationComponent } from './shared/participant-organization/participant-organization.component';
-import { OrganizaionOfficerComponent } from './shared/organizaion-officer/organizaion-officer.component';
+import { OrganizationOfficerComponent } from './shared/organization-officer/organization-officer.component';
 import { ResearchAndStudiesComponent } from './shared/research-and-studies/research-and-studies.component';
 import { ParticipantOrganizationsPopupComponent } from './popups/participant-organizations-popup/participant-organizations-popup.component';
 import { WorkAreasComponent } from '../general-services/shared/work-areas/work-areas.component';
@@ -34,7 +34,7 @@ import { WorkAreasComponent } from '../general-services/shared/work-areas/work-a
     BuildingAbilityComponent,
     EffectiveCoordinationCapabilitiesComponent,
     ParticipantOrganizationComponent,
-    OrganizaionOfficerComponent,
+    OrganizationOfficerComponent,
     ResearchAndStudiesComponent,
     ParticipantOrganizationsPopupComponent,
     WorkAreasComponent,
@@ -54,7 +54,7 @@ import { WorkAreasComponent } from '../general-services/shared/work-areas/work-a
     BuildingAbilityComponent,
     EffectiveCoordinationCapabilitiesComponent,
     ParticipantOrganizationComponent,
-    OrganizaionOfficerComponent,
+    OrganizationOfficerComponent,
     ResearchAndStudiesComponent,
     ParticipantOrganizationsPopupComponent,
     WorkAreasComponent,

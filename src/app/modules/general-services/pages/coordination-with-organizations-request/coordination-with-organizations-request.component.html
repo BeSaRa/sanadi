@@ -109,9 +109,9 @@
     <ng-template #participating_organizaions>
       <participant-organization #participantOrganizations [list]="model?.participatingOrganizaionList || []"
         [organizationUnits]="organizationUnits" (readyEvent)="participantOrganizationsTapStatus = $event"
-        [canAdd]="paticipatingOrgsCanAdd"
-        [canView]="paticipatingOrgsCanView"
-        [canDelete]="paticipatingOrgsCanDelete"
+        [canAdd]="participatingOrgsCanAdd"
+        [canView]="participatingOrgsCanView"
+        [canDelete]="participatingOrgsCanDelete"
         (listUpdated)="updateParticipantOrgs()"
         (requestView)="openParticipantOrgPopup($event)"
         >
@@ -119,28 +119,28 @@
       </participant-organization>
     </ng-template>
     <ng-template #organization_officers>
-      <organizaion-officer #organizationOfficersTap [list]="organizationOfficersList"
+      <organization-officer #organizationOfficersTap [list]="organizationOfficersList"
 
         [organizationUsers]="service.orgUsers" (readyEvent)="organizationOfficersTabStatus = $event"
         [canUpdate]="isCharityUser" [isClaimed]="model?.isClaimed()?? true" [currentUserOrgId]="currentUserOrgId">
-      </organizaion-officer>
+      </organization-officer>
 
     </ng-template>
 
 
 
     <ng-template #building_abilities>
-      <building-ability #buildingAbilityTap [list]="buildingAbiltiesList "
-        [organizationUnits]="organizationUnits" [trainingTypes]="trainingTypes"
-        [orgId]="currentUserOrgId"
-        [trainingLanguages]="trainingLanguages"
-        [trainingWayes]="trainingWayes" [recommendedWayes]="recommendedWayes" [readonly]=" isEditAllowed()"
-        [canUpdate]="isCharityUser" [isClaimed]="model?.isClaimed()?? true">
+      <building-ability #buildingAbilityTap [list]="buildingAbilitiesList "
+                        [organizationUnits]="organizationUnits" [trainingTypes]="trainingTypes"
+                        [orgId]="currentUserOrgId"
+                        [trainingLanguages]="trainingLanguages"
+                        [trainingWays]="trainingWays" [recommendedWays]="recommendedWays" [readonly]=" isEditAllowed()"
+                        [canUpdate]="isCharityUser" [isClaimed]="model?.isClaimed()?? true">
       </building-ability>
     </ng-template>
     <ng-template #effective_coordination_capabilities>
       <effective-coordination-capabilities #effectiveCoordinationCapabilitiesTap
-        [list]="effectiveCoordinationCapabilitiesList" [organizationWayes]="organizationWayes"
+        [list]="effectiveCoordinationCapabilitiesList" [organizationWays]="organizationWays"
         [organizationUnits]="organizationUnits" [readonly]=" isEditAllowed()" [canUpdate]="isCharityUser"
         [orgId]="currentUserOrgId"
         [isClaimed]="model?.isClaimed()?? true" >

@@ -59,7 +59,7 @@ export class EffectiveCoordinationCapabilitiesComponent implements OnInit {
   editIndex: number = -1;
   viewOnly: boolean = false;
   private save$: Subject<any> = new Subject<any>();
-  formOpend = false;
+  formOpened = false;
   add$: Subject<any> = new Subject<any>();
   private recordChanged$: Subject<EffectiveCoordinationCapabilities | null> =
     new Subject<EffectiveCoordinationCapabilities | null>();
@@ -68,7 +68,7 @@ export class EffectiveCoordinationCapabilitiesComponent implements OnInit {
   private destroy$: Subject<any> = new Subject<any>();
 
   form!: FormGroup;
-  @Input() organizationWayes: Lookup[] = [];
+  @Input() organizationWays: Lookup[] = [];
   @Input() organizationUnits: Profile[] = [];
   datepickerOptionsMap: DatepickerOptionsMap = {
     eventStartDate: DateUtils.getDatepickerOptions({disablePeriod: 'past'}),
@@ -106,7 +106,7 @@ export class EffectiveCoordinationCapabilitiesComponent implements OnInit {
   private listenToAdd() {
     this.add$.pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.viewOnly = false;
-      this.formOpend = true;
+      this.formOpened = true;
       this.recordChanged$.next(new EffectiveCoordinationCapabilities());
     });
   }
@@ -167,7 +167,7 @@ export class EffectiveCoordinationCapabilitiesComponent implements OnInit {
           });
           model.organizationWayInfo =
             this.lookup.listByCategory.OrganizationWay.find(x => x.lookupKey === model.organizationWay)!.convertToAdminResult();
-          this.formOpend = false;
+          this.formOpened = false;
           return model;
         })
       )
@@ -205,7 +205,7 @@ export class EffectiveCoordinationCapabilitiesComponent implements OnInit {
   }
 
   addAllowed(): boolean {
-    return !this.readonly && !this.formOpend;
+    return !this.readonly && !this.formOpened;
   }
 
   onSave() {
@@ -222,7 +222,7 @@ export class EffectiveCoordinationCapabilitiesComponent implements OnInit {
   }
 
   private resetForm() {
-    this.formOpend = false;
+    this.formOpened = false;
     this.formArray.clear();
     this.formArray.markAsUntouched();
     this.formArray.markAsPristine();
@@ -230,7 +230,7 @@ export class EffectiveCoordinationCapabilitiesComponent implements OnInit {
 
   view($event: MouseEvent, record: EffectiveCoordinationCapabilities, index: number) {
     $event.preventDefault();
-    this.formOpend = true;
+    this.formOpened = true;
     this.editIndex = index;
     this.viewOnly = true;
     this.recordChanged$.next(record);
@@ -257,7 +257,7 @@ export class EffectiveCoordinationCapabilitiesComponent implements OnInit {
     if (this.readonly) {
       return;
     }
-    this.formOpend = true;
+    this.formOpened = true;
     this.editIndex = index;
     this.viewOnly = false;
     this.recordChanged$.next(record);

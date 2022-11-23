@@ -149,7 +149,7 @@
               labelForId="trainingWay"
               validationClasses="trainingWay"
               formControlName="trainingWay" (change)="onTranaingWayChange($event)">
-              <ng-option *ngFor="let option of trainingWayes" [value]="option.lookupKey">{{ option.getName() }}
+              <ng-option *ngFor="let option of trainingWays" [value]="option.lookupKey">{{ option.getName() }}
               </ng-option>
             </ng-select>
             <app-field-error-message controlName="trainingWay"></app-field-error-message>
@@ -207,7 +207,7 @@
               validationClasses="filtrationMethod" formControlName="filtrationMethod"
               (change)="onFilterationMethodChange($event)"
               labelForId="filtrationMethod">
-              <ng-option *ngFor="let option of recommendedWayes" [value]="option.lookupKey">{{ option.getName() }}
+              <ng-option *ngFor="let option of recommendedWays" [value]="option.lookupKey">{{ option.getName() }}
               </ng-option>
             </ng-select>
             <app-field-error-message controlName="filtrationMethod"></app-field-error-message>
@@ -316,17 +316,17 @@
             <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
               <div class="d-flex flex-row">
                 <button (click)="delete($event, row, i)" class="icon-btn text-primary" [disabled]="readonly"
-                [hidden]="!canUpdate"
-                  [disabled]="!isClaimed || formOpend" tooltip="{{lang.map.btn_delete}}">
+                        [hidden]="!canUpdate"
+                        [disabled]="!isClaimed || formOpened" tooltip="{{lang.map.btn_delete}}">
                   <i class="mdi mdi-close-box"></i>
                 </button>
                 <button (click)="edit($event, row, i)" class="icon-btn text-primary" [disabled]="readonly"
-                [hidden]="!canUpdate"
-                  [disabled]="!isClaimed || formOpend" tooltip="{{lang.map.btn_edit}}">
+                        [hidden]="!canUpdate"
+                        [disabled]="!isClaimed || formOpened" tooltip="{{lang.map.btn_edit}}">
                   <i class="mdi mdi-pen"></i>
                 </button>
                 <button (click)="view($event, row, i)"
-                [disabled]="formOpend"
+                [disabled]="formOpened"
                  class="icon-btn text-primary"
                   tooltip="{{lang.map.view}}">
                   <i class="mdi mdi-eye"></i>
