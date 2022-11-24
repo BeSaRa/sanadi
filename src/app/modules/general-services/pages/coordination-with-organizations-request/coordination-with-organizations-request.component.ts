@@ -192,10 +192,10 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
   get participatingOrgsCanView(): boolean {
     return (
       this.isInternalUser &&
-      (this.model?.temporaryOrganizaionOfficerList?.length! > 0 ||
-        this.model?.temporaryBuildingAbilitiesList?.length! > 0 ||
-        this.model?.temporaryEffectiveCoordinationCapabilities?.length! > 0 ||
-        this.model?.temporaryResearchAndStudies?.length! > 0)
+      (this.model?.organizaionOfficerList?.length! > 0 ||
+        this.model?.buildingAbilitiesList?.length! > 0 ||
+        this.model?.effectiveCoordinationCapabilities?.length! > 0 ||
+        this.model?.researchAndStudies?.length! > 0)
     );
   }
 
@@ -530,6 +530,19 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
           (x) => x.organizationId === orgId
         );
       model!.temporaryResearchAndStudies! = model!.temporaryResearchAndStudies.filter(
+        (x) => x.organizationId === orgId
+      );
+      model!.organizaionOfficerList! = model!.organizaionOfficerList.filter(
+        (x) => x.organizationId === orgId
+      );
+      model!.buildingAbilitiesList! = model!.buildingAbilitiesList.filter(
+        (x) => x.organizationId === orgId
+      );
+      model!.effectiveCoordinationCapabilities! =
+        model!.effectiveCoordinationCapabilities.filter(
+          (x) => x.organizationId === orgId
+        );
+      model!.researchAndStudies! = model!.researchAndStudies.filter(
         (x) => x.organizationId === orgId
       );
     return model;
