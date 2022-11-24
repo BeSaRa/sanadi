@@ -167,8 +167,7 @@ import { DynamicModelPopupComponent } from './popups/dynamic-model-popup/dynamic
     CharityOrganizationProfileExtraDataPopupComponent,
     ProfileOfficersComponent,
     ProfileBranchesComponent,
-    BranchOfficersPopupComponent
-    CustomMenuPermissionComponent,
+    BranchOfficersPopupComponent,
     DynamicModelsComponent,
     DynamicModelPopupComponent
   ],
