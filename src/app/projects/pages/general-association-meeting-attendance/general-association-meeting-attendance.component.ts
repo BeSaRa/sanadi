@@ -774,7 +774,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
 
   buildMeetingPointsForm(): void {
     this.meetingPointsForm = this.fb.group({
-      meetingMainItem: this.fb.array([this.newMainItem()])
+      meetingMainItem: this.fb.array([])
     });
   }
 
