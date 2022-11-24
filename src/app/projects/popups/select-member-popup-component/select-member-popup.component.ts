@@ -12,7 +12,7 @@ import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 })
 export class SelectMemberPopupComponent{
   displayedColumns: string[] = [];
-  label: keyof ILanguageKeys = 'license';
+  label: keyof ILanguageKeys = 'members';
   fileIconsEnum = FileIconsEnum;
 
   constructor(public lang: LangService, private dialogRef: DialogRef,
@@ -28,7 +28,7 @@ export class SelectMemberPopupComponent{
     }
   }
 
-  selectLicense(member: any): void {
+  selectMember(member: any): void {
     this.dialogRef.close(member);
   }
 }

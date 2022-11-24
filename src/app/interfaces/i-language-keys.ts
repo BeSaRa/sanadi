@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  members: string;
   final_report_has_not_yet_been_uploaded: string;
   add_branch: string;
   add_compliance_officer: string;
