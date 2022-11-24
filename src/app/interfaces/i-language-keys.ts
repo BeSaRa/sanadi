@@ -1100,6 +1100,7 @@ export interface ILanguageKeys {
   fees: string;
   fine: string;
   has_sheep: string;
+  outstanding_payment_report: string;
   service_terms: string;
   service_description: string;
   service_requirements: string;

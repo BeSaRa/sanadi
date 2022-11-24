@@ -201,7 +201,7 @@ export class BeneficiaryService extends CrudGenericService<Beneficiary> {
     return this.http.post<GdxGarsiaPensionResponse[]>(this._getServiceURL() + '/gdx/garsia/pension', criteria);
   }
 
-  loadIzzabStatus(criteria: IGdxCriteria): Observable<any> {
+  addIzzabInquiry(criteria: IGdxCriteria): Observable<any> {
     return this.http.post<any>(this._getServiceURL() + '/gdx/izzab-status', criteria)
       .pipe(map(response => response.rs));
   }
