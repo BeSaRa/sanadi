@@ -39,7 +39,7 @@ const adminPermissionsGroup: PermissionsEnum[] = [
   PermissionsEnum.MANAGE_PROCESS_TEMPLATE,
   PermissionsEnum.MANAGE_SUB_TEAM,
   PermissionsEnum.MANAGE_PROFILE,
-  PermissionsEnum.MANAGE_DYNAMIC_MODELS
+  PermissionsEnum.MANAGE_DYNAMIC_MODEL
 
 ];
 

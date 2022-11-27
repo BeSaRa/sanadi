@@ -3,7 +3,6 @@ import { LookupService } from './../../../services/lookup.service';
 import { Lookup } from './../../../models/lookup';
 import { UserClickOn } from './../../../enums/user-click-on.enum';
 import { DialogService } from './../../../services/dialog.service';
-import { GeneralProcessService } from './../../../services/general-process.service';
 import { ProcessFieldBuilder } from './process-formly-components/process-fields-builder';
 import { catchError, map } from 'rxjs/operators';
 import { CustomValidators } from './../../../validators/custom-validators';
@@ -56,7 +55,6 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
   constructor(public dialogRef: DialogRef,
     public fb: UntypedFormBuilder,
     public lang: LangService,
-    private generalProcessService: GeneralProcessService,
     @Inject(DIALOG_DATA_TOKEN) data: IDialogData<GeneralProcess>,
     private lookupService: LookupService,
     private toast: ToastService,
@@ -116,7 +114,7 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
       this.loadSubClasses(this.model?.mainClass)
       this.processForm.generateFromString(this.model?.template)
     }
-    this.listenToFieldDetailsSubsecribtion$ = this.generalProcessService.listenToSelectField().subscribe((fieldId: string) => {
+    this.listenToFieldDetailsSubsecribtion$ = ProcessFieldBuilder.listenToSelectField().subscribe((fieldId: string) => {
       if (fieldId) {
         const field = this.processForm.getFieldById(fieldId);
         this.fieldForm.reset();

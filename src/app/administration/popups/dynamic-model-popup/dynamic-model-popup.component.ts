@@ -1,31 +1,22 @@
+import { LookupService } from './../../../services/lookup.service';
+import { Lookup } from './../../../models/lookup';
 import { GeneralProcessTemplate } from './../../../models/general-process-template';
 import { DynamicModelService } from './../../../services/dynamic-models.service';
-import { Component, Inject, OnInit } from '@angular/core';
-import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormArray, UntypedFormControl } from '@angular/forms';
-import { AdminLookupTypeEnum } from '@app/enums/admin-lookup-type-enum';
+import { Component, Inject } from '@angular/core';
+import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormArray } from '@angular/forms';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { UserClickOn } from '@app/enums/user-click-on.enum';
 import { AdminGenericDialog } from '@app/generics/admin-generic-dialog';
 import { IDialogData } from '@app/interfaces/i-dialog-data';
 import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { AdminLookup } from '@app/models/admin-lookup';
 import { DynamicModel } from '@app/models/dynamic-model';
-import { InternalDepartment } from '@app/models/internal-department';
-import { Lookup } from '@app/models/lookup';
-import { SubTeam } from '@app/models/sub-team';
-import { Team } from '@app/models/team';
-import { AdminLookupService } from '@app/services/admin-lookup.service';
 import { DialogService } from '@app/services/dialog.service';
-import { InternalDepartmentService } from '@app/services/internal-department.service';
 import { LangService } from '@app/services/lang.service';
-import { LookupService } from '@app/services/lookup.service';
-import { SubTeamService } from '@app/services/sub-team.service';
 import { ToastService } from '@app/services/toast.service';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
 import { CustomValidators } from '@app/validators/custom-validators';
-import { Subscription, of, Observable } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { Subscription, Observable } from 'rxjs';
 import { v4 } from 'uuid';
 import { ProcessFieldBuilder } from '../general-process-popup/process-formly-components/process-fields-builder';
 import { GeneralProcessTemplateFieldTypes } from '@app/enums/general-process-template-field-types.enum';
@@ -36,33 +27,26 @@ import { GeneralProcessTemplateFieldTypes } from '@app/enums/general-process-tem
   styleUrls: ['./dynamic-model-popup.component.scss']
 })
 export class DynamicModelPopupComponent extends AdminGenericDialog<DynamicModel> {
+  statuses: Lookup[] = this.lookupService.listByCategory.CommonStatus;
   form!: UntypedFormGroup;
   fieldForm!: UntypedFormGroup;
   model!: DynamicModel;
   operation: OperationTypes;
-  GeneralProcessTypeList: Lookup[] = this.lookupService.listByCategory.GeneralProcessType;
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
   processForm: ProcessFieldBuilder;
   listenToFieldDetailsSubsecribtion$!: Subscription;
   isEditForm: boolean = false;
   saveVisible = true;
-  mainClassificationsList: AdminLookup[] = [];
-  subClassificationsList: AdminLookup[] = [];
-  departmentList: InternalDepartment[] = [];
-  private _teamsList: Team[] = [];
-  subTeamsList: SubTeam[] = [];
 
   constructor(public dialogRef: DialogRef,
     public fb: UntypedFormBuilder,
     public lang: LangService,
+    private lookupService: LookupService,
     private dynamicModelService: DynamicModelService,
     @Inject(DIALOG_DATA_TOKEN) data: IDialogData<DynamicModel>,
-    private lookupService: LookupService,
     private toast: ToastService,
-    private internalDepartmentService: InternalDepartmentService,
-    private subTeamService: SubTeamService,
     private dialogService: DialogService,
-    private adminLookupService: AdminLookupService) {
+  ) {
     super();
     this.model = data.model;
     this.operation = data.operation;
@@ -86,7 +70,9 @@ export class DynamicModelPopupComponent extends AdminGenericDialog<DynamicModel>
   get isViewForm() {
     return this.operation === OperationTypes.VIEW
   }
-
+  get isCreateForm() {
+    return this.operation === OperationTypes.CREATE
+  }
   addOption() {
     this.options.push(
       this.fb.group({
@@ -104,18 +90,10 @@ export class DynamicModelPopupComponent extends AdminGenericDialog<DynamicModel>
     }
   }
   initPopup(): void {
-    this.adminLookupService.loadGeneralProcessClassificaion().subscribe(data => {
-      this.mainClassificationsList = data;
-    })
-    this.internalDepartmentService.loadGeneralProcessDepartments().subscribe(deparments => {
-      this.departmentList = deparments;
-    })
     if (this.model?.id) {
-      this._loadSubTeam(this.model?.teamId);
-      this.loadSubClasses(this.model?.mainClass)
       this.processForm.generateFromString(this.model?.template)
     }
-    this.listenToFieldDetailsSubsecribtion$ = this.dynamicModelService.listenToSelectField().subscribe((fieldId: string) => {
+    this.listenToFieldDetailsSubsecribtion$ = ProcessFieldBuilder.listenToSelectField().subscribe((fieldId: string) => {
       if (fieldId) {
         const field = this.processForm.getFieldById(fieldId);
         this.fieldForm.reset();
@@ -157,30 +135,6 @@ export class DynamicModelPopupComponent extends AdminGenericDialog<DynamicModel>
         }
       });
   }
-  loadSubClasses(parentId: number) {
-    this.adminLookupService.loadByParentId(AdminLookupTypeEnum.GENERAL_PROCESS_CLASSIFICATION, parentId).subscribe(data => {
-      this.subClassificationsList = data;
-    })
-  }
-  private _loadSubTeam(teamId?: number) {
-    if (teamId)
-      this.subTeamService.getByParentId(teamId).pipe(catchError(err => of([]))).subscribe(data => {
-        this.subTeamsList = data;
-      })
-    else this.subTeamsList = [];
-  }
-  handleDepartmentChange() {
-    this.teamField.setValue(this.departmentList.find(d => d.id == this.departmentField.value)?.mainTeam.id);
-    this.handleTeamChange(this.teamField.value);
-  }
-  handleTeamChange(teamId?: number) {
-    this.subTeamField.reset();
-    this._loadSubTeam(teamId);
-  }
-  get teamsList() {
-    return this._teamsList.filter(team => !this.departmentField.value || team.parentDeptId == this.departmentField.value)
-  }
-
   resetFieldForm() {
     this.fieldForm.reset();
     this.isEditForm = false;
@@ -212,9 +166,9 @@ export class DynamicModelPopupComponent extends AdminGenericDialog<DynamicModel>
   }
   get title(): keyof ILanguageKeys {
     if (this.operation === OperationTypes.CREATE) {
-      return 'lbl_add_process_template';
+      return 'lbl_add_coordination_with_organizations_template';
     } else if (this.operation === OperationTypes.UPDATE) {
-      return 'lbl_edit_process_template';
+      return 'lbl_edit_coordination_with_organizations_template';
     } else {
       return 'view';
     }
@@ -222,15 +176,6 @@ export class DynamicModelPopupComponent extends AdminGenericDialog<DynamicModel>
 
   get options() {
     return this.fieldForm.controls["options"] as UntypedFormArray;
-  }
-  get departmentField(): UntypedFormControl {
-    return this.form.get('departmentId') as UntypedFormControl
-  }
-  get teamField(): UntypedFormControl {
-    return this.form.get('teamId') as UntypedFormControl
-  }
-  get subTeamField(): UntypedFormControl {
-    return this.form.get('subTeamId') as UntypedFormControl
   }
   getLabel(name: any) {
     return this.lang.map[('lbl_' + name) as keyof ILanguageKeys];

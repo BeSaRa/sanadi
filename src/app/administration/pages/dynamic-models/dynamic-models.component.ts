@@ -50,6 +50,28 @@ export class DynamicModelsComponent extends AdminGenericComponent<DynamicModel, 
       icon: ActionIconsEnum.VIEW,
       onClick: (item: DynamicModel) => this.view$.next(item)
     },
+    // activate
+    {
+      type: 'action',
+      icon: ActionIconsEnum.STATUS,
+      label: 'btn_activate',
+      onClick: (item: DynamicModel) => this.toggleStatus(item),
+      displayInGrid: false,
+      show: (item) => {
+        return item.status !== CommonStatusEnum.RETIRED && item.status === CommonStatusEnum.DEACTIVATED;
+      }
+    },
+    // deactivate
+    {
+      type: 'action',
+      icon: ActionIconsEnum.STATUS,
+      label: 'btn_deactivate',
+      onClick: (item: DynamicModel) => this.toggleStatus(item),
+      displayInGrid: false,
+      show: (item) => {
+        return item.status !== CommonStatusEnum.RETIRED && item.status === CommonStatusEnum.ACTIVATED;
+      }
+    }
   ];
   displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'actions'];
 
@@ -60,6 +82,28 @@ export class DynamicModelsComponent extends AdminGenericComponent<DynamicModel, 
       callback: ($event: MouseEvent) => {
         this.deleteBulk($event);
       }
+    },
+    {
+      icon: 'mdi-list-status',
+      langKey: 'lbl_status',
+      children: [
+        {
+          langKey: 'btn_activate',
+          icon: '',
+          callback: ($event: MouseEvent, _data?: any) => this.changeStatusBulk($event, CommonStatusEnum.ACTIVATED),
+          show: (_items: DynamicModel[]) => {
+            return true;
+          }
+        },
+        {
+          langKey: 'btn_deactivate',
+          icon: '',
+          callback: ($event: MouseEvent, _data?: any) => this.changeStatusBulk($event, CommonStatusEnum.DEACTIVATED),
+          show: (_items: DynamicModel[]) => {
+            return true;
+          }
+        }
+      ],
     }
   ];
 
@@ -72,6 +116,17 @@ export class DynamicModelsComponent extends AdminGenericComponent<DynamicModel, 
   ) {
     super();
   }
+  changeStatusBulk($event: MouseEvent, newStatus: CommonStatusEnum): void {
+    const sub = this.service.updateStatusBulk(this.selectedRecords.map(item => item.id), newStatus)
+      .subscribe((response) => {
+        this.sharedService.mapBulkResponseMessages(this.selectedRecords, 'id', response, 'UPDATE')
+          .subscribe(() => {
+            this.reload$.next(null);
+            sub.unsubscribe();
+          });
+      });
+  }
+
   protected _init(): void {
     this.listenToView();
   }
@@ -129,5 +184,17 @@ export class DynamicModelsComponent extends AdminGenericComponent<DynamicModel, 
           }
         });
     }
+  }
+
+  toggleStatus(model: DynamicModel) {
+    let updateObservable = model.status == CommonStatusEnum.ACTIVATED ? model.updateStatus(CommonStatusEnum.DEACTIVATED) : model.updateStatus(CommonStatusEnum.ACTIVATED);
+    updateObservable.pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.toast.success(this.lang.map.msg_status_x_updated_success.change({ x: model.getName() }));
+        this.reload$.next(null);
+      }, () => {
+        // this.toast.error(this.lang.map.msg_status_x_updated_fail.change({ x: model.getName() }));
+        this.reload$.next(null);
+      });
   }
 }

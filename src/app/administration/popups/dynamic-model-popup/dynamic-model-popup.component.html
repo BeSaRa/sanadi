@@ -24,64 +24,22 @@
         <input id="enName" validationClasses="enName" formControlName="enName" class="form-control" />
         <app-field-error-message controlName="enName"></app-field-error-message>
       </div>
-      <!-- General Process Type -->
-      <div class="col-sm-6 col-md-4 mb-4 position-relative">
-        <label for="processType" asteriskIfRequired="processType"
-          class="form-label">{{lang.map.lbl_process_type}}</label>
-        <ng-select validationClasses="type" labelForId="processType" placeholder="{{lang.map.select}}"
-          [notFoundText]="lang.map.msg_not_found" formControlName="processType" id="processType" appendTo="body">
-          <ng-option *ngFor="let option of GeneralProcessTypeList" [value]="option.lookupKey">
-            {{option.getName()}}
-          </ng-option>
-        </ng-select>
-        <app-field-error-message controlName=" processType">
-        </app-field-error-message>
-      </div>
-      <!-- main cat -->
-      <div class="col-sm-6 col-md-3 mb-4 position-relative">
-        <label for="mainClass" asteriskIfRequired="mainClass" class="form-label">{{lang.map.classification}}</label>
-        <ng-select validationClasses="type" (change)="loadSubClasses($event)" labelForId="mainClass"
-          placeholder="{{lang.map.select}}" [notFoundText]="lang.map.msg_not_found" formControlName="mainClass"
-          id="mainClass" appendTo="body">
-          <ng-option *ngFor="let option of mainClassificationsList" [value]="option.id">
-            {{option.getName()}}
-          </ng-option>
-        </ng-select>
-        <app-field-error-message controlName="mainClass"></app-field-error-message>
-      </div>
-      <!-- sub cat -->
-      <div class="col-sm-6 col-md-3 mb-4 position-relative">
-        <label for="subClass" asteriskIfRequired="subClass" class="form-label">{{lang.map.sub_classification}}</label>
-        <ng-select validationClasses="type" labelForId="subClass" placeholder="{{lang.map.select}}"
-          [notFoundText]="lang.map.msg_not_found" formControlName="subClass" id="subClass" appendTo="body">
-          <ng-option *ngFor="let option of subClassificationsList" [value]="option.id">
-            {{option.getName()}}
-          </ng-option>
-        </ng-select>
-        <app-field-error-message controlName="subClass"></app-field-error-message>
-      </div>
-      <!-- department -->
-      <div class="col-sm-6 col-md-3 mb-4 position-relative">
-        <label for="departmentId" asteriskIfRequired="departmentId" class="form-label">{{lang.map.department}}</label>
-        <ng-select validationClasses="type" labelForId="departmentId" placeholder="{{lang.map.select}}"
-          [notFoundText]="lang.map.msg_not_found" formControlName="departmentId" (change)="handleDepartmentChange()"
-          id="departmentId" appendTo="body">
-          <ng-option *ngFor="let option of departmentList" [value]="option.id">
-            {{option.getName()}}
-          </ng-option>
-        </ng-select>
-        <app-field-error-message controlName="departmentId"></app-field-error-message>
-      </div>
-      <!-- sub team -->
-      <div class="col-sm-6 col-md-3 mb-4 position-relative">
-        <label for="subTeamId" asteriskIfRequired="subTeamId" class="form-label">{{lang.map.lbl_sub_team}}</label>
-        <ng-select validationClasses="type" labelForId="subTeamId" placeholder="{{lang.map.select}}"
-          [notFoundText]="lang.map.msg_not_found" formControlName="subTeamId" id="subTeamId" appendTo="body">
-          <ng-option *ngFor="let option of subTeamsList" [value]="option.id">
-            {{option.getName()}}
-          </ng-option>
-        </ng-select>
-        <app-field-error-message controlName="subTeamId"></app-field-error-message>
+      <div class="col-sm-6 col-md-4">
+        <div class="row">
+          <label asteriskIfRequired="status" for="status"
+                 class="form-label">{{lang.map.lbl_status}}</label>
+          <div class="mb-3 position-relative ng-select-wrapper">
+            <ng-select validationClasses="status" labelForId="status"
+                       placeholder="{{lang.map.select}}"
+                       [notFoundText]="lang.map.msg_not_found"
+                       formControlName="status"
+                       id="status" appendTo="body">
+              <ng-option [value]="status.lookupKey"
+                         *ngFor="let status of statuses | filterRetiredStatus">{{status.getName()}}</ng-option>
+            </ng-select>
+            <app-field-error-message controlName="status"></app-field-error-message>
+          </div>
+        </div>
       </div>
     </div>
   </form>
@@ -119,9 +77,9 @@
               <div class="col-12 col-md-6 col-lg-12 mb-4 position-relative">
                 <label for="type" asteriskIfRequired="type" class="form-label">{{lang.map.lbl_field_type}}</label>
                 <ng-select validationClasses="type" labelForId="type" placeholder="{{lang.map.select}}"
-                  [notFoundText]="lang.map.msg_not_found" (change)="handleFieldTypeChange($event)" formControlName="type" id="type" appendTo="body">
-                  <ng-option *ngFor="let option of dynamicModelTemplateFieldTypesList; let i = index;"
-                    [value]="i + 1">
+                  [notFoundText]="lang.map.msg_not_found" (change)="handleFieldTypeChange($event)"
+                  formControlName="type" [readonly]="!isCreateForm" id="type" appendTo="body">
+                  <ng-option *ngFor="let option of dynamicModelTemplateFieldTypesList; let i = index;" [value]="i + 1">
                     {{ getLabel(option) }}
                   </ng-option>
                 </ng-select>
@@ -129,7 +87,7 @@
               </div>
               <!-- options -->
               <div class="col-12 mb-3 position-relative" *ngIf="isSelectField">
-                <div class="col-12 mb-3 position-relative">
+                <div class="col-12 mb-3 position-relative" *ngIf="isCreateForm">
                   <div class="d-flex mb-1">
                     <label class="form-label mb-0">{{
                       lang.map.lbl_select_options}}</label>
@@ -142,10 +100,11 @@
                   <ng-container *ngFor="let option of options.controls; let i = index">
                     <div class="mb-2 d-flex" [formGroupName]="i">
                       <div class="flex-grow-1">
-                        <input id="fieldname" formControlName="name" validationClasses="name" class="form-control" />
+                        <input id="fieldname" [readonly]="!isCreateForm" formControlName="name" validationClasses="name" class="form-control" />
                         <app-field-error-message controlName="name"></app-field-error-message>
                       </div>
-                      <button class="btn icon-btn text-primary mx-2" [disabled]="options.controls.length == 1" (click)="removeOption(i)">
+                      <button class="btn icon-btn text-primary mx-2" *ngIf="isCreateForm" [disabled]="options.controls.length == 1"
+                        (click)="removeOption(i)">
                         <i class="mdi mdi-delete"></i>
                       </button>
                     </div>
@@ -156,29 +115,28 @@
                 <div class="row">
                   <!-- order -->
                   <div class="col mb-4 position-relative">
-                    <label asteriskIfRequired="order" for="order" class="form-label">{{ lang.map.lbl_field_order
-                      }}</label>
-                    <input id="order" validationClasses="order" [mask]="inputMaskPatterns.NUMBER_ONLY"
+                    <label asteriskIfRequired="order" for="order" class="form-label">{{ lang.map.lbl_field_order }}</label>
+                    <input id="order" [readonly]="!isCreateForm" validationClasses="order" [mask]="inputMaskPatterns.NUMBER_ONLY"
                       formControlName="order" class="form-control" />
                     <app-field-error-message controlName="order"></app-field-error-message>
                   </div>
                   <!-- is required -->
                   <div class="mb-4 position-relative" style="max-width: 100px;">
                     <label for="required" class="form-label d-block">{{lang.map.lbl_required}}</label>
-                    <input class="form-check-input" formControlName="required" type="checkbox">
+                    <input class="form-check-input" [readonly]="!isCreateForm" formControlName="required" type="checkbox">
                   </div>
                 </div>
               </div>
               <!-- pattern -->
               <div class="col-12 col-md-6 col-lg-12 mb-4 position-relative">
                 <label asteriskIfRequired="pattern" for="pattern" class="form-label">{{ lang.map.lbl_regex}}</label>
-                <input id="pattern" validationClasses="pattern" formControlName="pattern" class="form-control" />
+                <input id="pattern" [readonly]="!isCreateForm" validationClasses="pattern" formControlName="pattern" class="form-control" />
                 <app-field-error-message controlName="pattern"></app-field-error-message>
               </div>
               <!-- note -->
               <div class="col-sm-12 mb-4 position-relative">
                 <label class="form-label" asteriskIfRequired="note" for="note">{{lang.map.notes}}</label>
-                <textarea name="note" validationClasses="note" id="note" formControlName="note" rows="4"
+                <textarea name="note" [readonly]="!isCreateForm" validationClasses="note" id="note" formControlName="note" rows="4"
                   class="form-control"></textarea>
                 <app-field-error-message controlName="note"></app-field-error-message>
               </div>

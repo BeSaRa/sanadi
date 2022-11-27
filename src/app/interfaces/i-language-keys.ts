@@ -1549,9 +1549,9 @@ export interface ILanguageKeys {
   lbl_main_team: string;
   lbl_sub_team: string;
   org_name_in_bank: string;
-  trade_license:string;
-  commercial_License_No:string;
-  commercial_activity:string;
+  trade_license: string;
+  commercial_License_No: string;
+  commercial_activity: string;
   section: string;
   profile: string;
   disclosure_statements_notices_notifications_notices: string;
@@ -1594,5 +1594,8 @@ export interface ILanguageKeys {
   available_values: string;
   menus: string;
   msg_no_menus_available: string;
+  menu_coordination_with_organizations_template: string;
+  lbl_add_coordination_with_organizations_template: string;
+  lbl_edit_coordination_with_organizations_template: string;
 }
 

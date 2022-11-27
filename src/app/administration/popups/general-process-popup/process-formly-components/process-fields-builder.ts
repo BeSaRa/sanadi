@@ -1,3 +1,4 @@
+import { Subject } from 'rxjs';
 import { IKeyValue } from '@contracts/i-key-value';
 import { CustomValidators } from './../../../../validators/custom-validators';
 import { map } from 'rxjs/operators';
@@ -11,6 +12,7 @@ import { FieldMode } from '@app/interfaces/custom-formly-field-config';
 export class ProcessFieldBuilder {
   buildMode: FieldMode = 'init'
   fieldsGroups: FormlyFieldConfig[] = [];
+  private static _selectField: Subject<string> = new Subject<string>();
   private _fields: GeneralProcessTemplate[] = [];
   get fields(): GeneralProcessTemplate[] {
     return this._fields;
@@ -49,6 +51,12 @@ export class ProcessFieldBuilder {
   }
   formChange() {
     this._FormChange()
+  }
+  static listenToSelectField() {
+    return this._selectField
+  }
+  static setlectField(fieldId: string) {
+    this._selectField.next(fieldId);
   }
   generateAsString(): string {
     const fields = this.fields.map((field: GeneralProcessTemplate) => {

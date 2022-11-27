@@ -1,5 +1,8 @@
+import { CommonStatusEnum } from './../enums/common-status.enum';
+import { Pagination } from './../models/pagination';
+import { DynamicModelPopupComponent } from './../administration/popups/dynamic-model-popup/dynamic-model-popup.component';
 import { DynamicModel } from './../models/dynamic-model';
-import { CastResponse, CastResponseContainer } from "@app/decorators/decorators/cast-response";
+import { CastResponseContainer } from "@app/decorators/decorators/cast-response";
 import { Injectable } from '@angular/core';
 import { ComponentType } from '@angular/cdk/portal';
 import { HttpClient } from '@angular/common/http';
@@ -7,16 +10,19 @@ import { OperationTypes } from '@app/enums/operation-types.enum';
 import { IDialogData } from '@app/interfaces/i-dialog-data';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { Subject, Observable, of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, map } from 'rxjs/operators';
 import { DialogService } from './dialog.service';
 import { FactoryService } from './factory.service';
 import { UrlService } from './url.service';
 import { CrudWithDialogGenericService } from '@app/generics/crud-with-dialog-generic-service';
-import { GeneralProcessPopupComponent } from '@app/administration/popups/general-process-popup/general-process-popup.component';
 
 @CastResponseContainer({
   $default: {
     model: () => DynamicModel
+  },
+  $pagination: {
+    model: () => Pagination,
+    shape: { 'rs.*': () => DynamicModel }
   }
 })
 @Injectable({
@@ -37,11 +43,44 @@ export class DynamicModelService extends CrudWithDialogGenericService<DynamicMod
   }
 
   _getDialogComponent(): ComponentType<any> {
-    return GeneralProcessPopupComponent;
+    return DynamicModelPopupComponent;
   }
 
+
+  updateStatus(jobTitleId: number, newStatus: CommonStatusEnum) {
+    return newStatus === CommonStatusEnum.ACTIVATED ? this._activate(jobTitleId) : this._deactivate(jobTitleId);
+  }
+
+  updateStatusBulk(recordIds: number[], newStatus: CommonStatusEnum): Observable<any> {
+    return newStatus === CommonStatusEnum.ACTIVATED ? this._activateBulk(recordIds) : this._deactivateBulk(recordIds);
+  }
+
+  private _activate(jobTitleId: number): Observable<any> {
+    return this.http.put<any>(this._getServiceURL() + '/' + jobTitleId + '/activate', {});
+  }
+
+  private _deactivate(jobTitleId: number): Observable<any> {
+    return this.http.put<any>(this._getServiceURL() + '/' + jobTitleId + '/de-activate', {});
+  }
+
+  private _activateBulk(recordIds: number[]) {
+    return this.http.put(this._getServiceURL() + '/bulk/activate', recordIds)
+      .pipe(
+        map((response: any) => {
+          return response.rs;
+        })
+      );
+  }
+  private _deactivateBulk(recordIds: number[]) {
+    return this.http.put(this._getServiceURL() + '/bulk/de-activate', recordIds)
+      .pipe(
+        map((response: any) => {
+          return response.rs;
+        })
+      );
+  }
   _getServiceURL(): string {
-    return this.urlService.URLS.GENERAL_PROCESS;
+    return this.urlService.URLS.DYNAMIC_MODEL;
   }
   listenToSelectField() {
     return this._selectField
@@ -64,12 +103,4 @@ export class DynamicModelService extends CrudWithDialogGenericService<DynamicMod
     );
   }
 
-
-  @CastResponse(undefined, {
-    unwrap: 'rs',
-    fallback: '$default'
-  })
-  filterProcess(params: Partial<DynamicModel>): Observable<DynamicModel[]> {
-    return this.http.post<DynamicModel[]>(this._getServiceURL() + '/filter', params)
-  }
 }

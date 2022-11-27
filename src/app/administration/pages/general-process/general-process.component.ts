@@ -1,3 +1,4 @@
+import { DynamicModel } from '@app/models/dynamic-model';
 import { GeneralProcess } from '@app/models/genral-process';
 import { UserClickOn } from './../../../enums/user-click-on.enum';
 import { ToastService } from './../../../services/toast.service';
@@ -50,6 +51,28 @@ export class GeneralProcessComponent extends AdminGenericComponent<GeneralProces
       icon: ActionIconsEnum.VIEW,
       onClick: (item: GeneralProcess) => this.view$.next(item)
     },
+    // activate
+    {
+      type: 'action',
+      icon: ActionIconsEnum.STATUS,
+      label: 'btn_activate',
+      onClick: (item: GeneralProcess) => this.toggleStatus(item),
+      displayInGrid: false,
+      show: (item) => {
+        return item.status !== CommonStatusEnum.RETIRED && item.status === CommonStatusEnum.DEACTIVATED;
+      }
+    },
+    // deactivate
+    {
+      type: 'action',
+      icon: ActionIconsEnum.STATUS,
+      label: 'btn_deactivate',
+      onClick: (item: GeneralProcess) => this.toggleStatus(item),
+      displayInGrid: false,
+      show: (item) => {
+        return item.status !== CommonStatusEnum.RETIRED && item.status === CommonStatusEnum.ACTIVATED;
+      }
+    }
   ];
   displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'actions'];
 
@@ -60,9 +83,30 @@ export class GeneralProcessComponent extends AdminGenericComponent<GeneralProces
       callback: ($event: MouseEvent) => {
         this.deleteBulk($event);
       }
+    },
+    {
+      icon: 'mdi-list-status',
+      langKey: 'lbl_status',
+      children: [
+        {
+          langKey: 'btn_activate',
+          icon: '',
+          callback: ($event: MouseEvent, _data?: any) => this.changeStatusBulk($event, CommonStatusEnum.ACTIVATED),
+          show: (_items: GeneralProcess[]) => {
+            return true;
+          }
+        },
+        {
+          langKey: 'btn_deactivate',
+          icon: '',
+          callback: ($event: MouseEvent, _data?: any) => this.changeStatusBulk($event, CommonStatusEnum.DEACTIVATED),
+          show: (_items: GeneralProcess[]) => {
+            return true;
+          }
+        }
+      ],
     }
   ];
-
   constructor(
     public lang: LangService,
     public service: GeneralProcessService,
@@ -80,6 +124,17 @@ export class GeneralProcessComponent extends AdminGenericComponent<GeneralProces
   }
   get selectedRecords(): GeneralProcess[] {
     return this.table.selection.selected;
+  }
+
+  changeStatusBulk($event: MouseEvent, newStatus: CommonStatusEnum): void {
+    const sub = this.service.updateStatusBulk(this.selectedRecords.map(item => item.id), newStatus)
+      .subscribe((response) => {
+        this.sharedService.mapBulkResponseMessages(this.selectedRecords, 'id', response, 'UPDATE')
+          .subscribe(() => {
+            this.reload$.next(null);
+            sub.unsubscribe();
+          });
+      });
   }
 
   listenToView(): void {
@@ -129,5 +184,16 @@ export class GeneralProcessComponent extends AdminGenericComponent<GeneralProces
           }
         });
     }
+  }
+  toggleStatus(model: GeneralProcess) {
+    let updateObservable = model.status == CommonStatusEnum.ACTIVATED ? model.updateStatus(CommonStatusEnum.DEACTIVATED) : model.updateStatus(CommonStatusEnum.ACTIVATED);
+    updateObservable.pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.toast.success(this.lang.map.msg_status_x_updated_success.change({ x: model.getName() }));
+        this.reload$.next(null);
+      }, () => {
+        // this.toast.error(this.lang.map.msg_status_x_updated_fail.change({ x: model.getName() }));
+        this.reload$.next(null);
+      });
   }
 }

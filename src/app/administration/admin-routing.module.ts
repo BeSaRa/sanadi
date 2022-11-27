@@ -177,7 +177,7 @@ const routes: Routes = [
   {
     path: 'dynamic-models', component: DynamicModelsComponent,
     canActivate: [PermissionGuard],
-    data: { permissionKey: PermissionsEnum.MANAGE_PROFILE, configPermissionGroup: null, checkAnyPermission: false }
+    data: { permissionKey: PermissionsEnum.MANAGE_DYNAMIC_MODEL, configPermissionGroup: null, checkAnyPermission: false }
   },
 ];
 

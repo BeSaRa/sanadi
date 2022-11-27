@@ -1,9 +1,11 @@
+import { CommonStatusEnum } from './../enums/common-status.enum';
+import { Pagination } from './../models/pagination';
 import { GeneralProcessPopupComponent } from './../administration/popups/general-process-popup/general-process-popup.component';
 import { IDialogData } from './../interfaces/i-dialog-data';
 import { OperationTypes } from './../enums/operation-types.enum';
 import { DialogRef } from './../shared/models/dialog-ref';
-import { switchMap, exhaustMap } from 'rxjs/operators';
-import { Observable, of, Subject } from 'rxjs';
+import { switchMap, map } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
 import { ComponentType } from '@angular/cdk/overlay';
 import { FactoryService } from './factory.service';
 import { DialogService } from './dialog.service';
@@ -12,12 +14,16 @@ import { HttpClient } from '@angular/common/http';
 import { GeneralProcess } from '@app/models/genral-process';
 import { CrudWithDialogGenericService } from '@app/generics/crud-with-dialog-generic-service';
 import { Injectable } from '@angular/core';
-import { CastResponse, CastResponseContainer } from '@app/decorators/decorators/cast-response';
+import { CastResponseContainer } from '@app/decorators/decorators/cast-response';
 
 
 @CastResponseContainer({
   $default: {
     model: () => GeneralProcess
+  },
+  $pagination: {
+    model: () => Pagination,
+    shape: { 'rs.*': () => GeneralProcess }
   }
 })
 @Injectable({
@@ -29,7 +35,6 @@ export class GeneralProcessService extends CrudWithDialogGenericService<GeneralP
   }
 
   list: GeneralProcess[] = [];
-  private _selectField: Subject<string> = new Subject<string>();
   constructor(public http: HttpClient,
     private urlService: UrlService,
     public dialog: DialogService) {
@@ -41,14 +46,41 @@ export class GeneralProcessService extends CrudWithDialogGenericService<GeneralP
     return GeneralProcessPopupComponent;
   }
 
+  updateStatus(jobTitleId: number, newStatus: CommonStatusEnum) {
+    return newStatus === CommonStatusEnum.ACTIVATED ? this._activate(jobTitleId) : this._deactivate(jobTitleId);
+  }
+
+  updateStatusBulk(recordIds: number[], newStatus: CommonStatusEnum): Observable<any> {
+    return newStatus === CommonStatusEnum.ACTIVATED ? this._activateBulk(recordIds) : this._deactivateBulk(recordIds);
+  }
+
+  private _activate(jobTitleId: number): Observable<any> {
+    return this.http.put<any>(this._getServiceURL() + '/' + jobTitleId + '/activate', {});
+  }
+
+  private _deactivate(jobTitleId: number): Observable<any> {
+    return this.http.put<any>(this._getServiceURL() + '/' + jobTitleId + '/de-activate', {});
+  }
+
+  private _activateBulk(recordIds: number[]) {
+    return this.http.put(this._getServiceURL() + '/bulk/activate', recordIds)
+      .pipe(
+        map((response: any) => {
+          return response.rs;
+        })
+      );
+  }
+  private _deactivateBulk(recordIds: number[]) {
+    return this.http.put(this._getServiceURL() + '/bulk/de-activate', recordIds)
+      .pipe(
+        map((response: any) => {
+          return response.rs;
+        })
+      );
+  }
+
   _getServiceURL(): string {
     return this.urlService.URLS.GENERAL_PROCESS;
-  }
-  listenToSelectField() {
-    return this._selectField
-  }
-  setlectField(fieldId: string) {
-    this._selectField.next(fieldId);
   }
   openViewDialog(modelId: number): Observable<DialogRef> {
     return this.getByIdComposite(modelId).pipe(

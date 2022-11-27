@@ -1050,15 +1050,15 @@ export const navigationMenuList = [
   },
   {
     id: 80,
-    langKey: 'menu_general_process_template',
+    langKey: 'menu_coordination_with_organizations_template',
     path: '/home/administration/dynamic-models',
     icon: 'mdi-template',
     isSvg: false,
-    permission: PermissionsEnum.MANAGE_PROFILE,
+    permission: PermissionsEnum.MANAGE_DYNAMIC_MODEL,
     permissionGroup: null,
     parent: 6,
     group: 'administration',
-    itemOrder: 24,
+    itemOrder: 25,
     svg: null
   },
 ];
