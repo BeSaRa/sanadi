@@ -85,6 +85,9 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
   get isViewForm() {
     return this.operation === OperationTypes.VIEW
   }
+  get isCreateForm() {
+    return this.operation === OperationTypes.CREATE
+  }
 
   addOption() {
     this.options.push(

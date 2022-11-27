@@ -118,7 +118,7 @@
               <!-- field type -->
               <div class="col-12 col-md-6 col-lg-12 mb-4 position-relative">
                 <label for="type" asteriskIfRequired="type" class="form-label">{{lang.map.lbl_field_type}}</label>
-                <ng-select validationClasses="type" [readonly]="isEditForm" labelForId="type" placeholder="{{lang.map.select}}"
+                <ng-select validationClasses="type" [readonly]="!isCreateForm" labelForId="type" placeholder="{{lang.map.select}}"
                   [notFoundText]="lang.map.msg_not_found" (change)="handleFieldTypeChange($event)" formControlName="type" id="type" appendTo="body">
                   <ng-option *ngFor="let option of generalProcessTemplateFieldTypesList; let i = index;"
                     [value]="i + 1">
@@ -129,7 +129,7 @@
               </div>
               <!-- options -->
               <div class="col-12 mb-3 position-relative" *ngIf="isSelectField">
-                <div class="col-12 mb-3 position-relative">
+                <div class="col-12 mb-3 position-relative" *ngIf="isCreateForm">
                   <div class="d-flex mb-1">
                     <label class="form-label mb-0">{{
                       lang.map.lbl_select_options}}</label>
@@ -142,10 +142,10 @@
                   <ng-container *ngFor="let option of options.controls; let i = index">
                     <div class="mb-2 d-flex" [formGroupName]="i">
                       <div class="flex-grow-1">
-                        <input id="fieldname" formControlName="name" validationClasses="name" class="form-control" />
+                        <input id="fieldname" [readonly]="!isCreateForm" formControlName="name" validationClasses="name" class="form-control" />
                         <app-field-error-message controlName="name"></app-field-error-message>
                       </div>
-                      <button class="btn icon-btn text-primary mx-2" [disabled]="options.controls.length == 1" (click)="removeOption(i)">
+                      <button class="btn icon-btn text-primary mx-2" *ngIf="isCreateForm" [disabled]="options.controls.length == 1" (click)="removeOption(i)">
                         <i class="mdi mdi-delete"></i>
                       </button>
                     </div>
@@ -158,27 +158,27 @@
                   <div class="col mb-4 position-relative">
                     <label asteriskIfRequired="order" for="order" class="form-label">{{ lang.map.lbl_field_order
                       }}</label>
-                    <input id="order" validationClasses="order" [mask]="inputMaskPatterns.NUMBER_ONLY"
+                    <input id="order" validationClasses="order" [readonly]="!isCreateForm" [mask]="inputMaskPatterns.NUMBER_ONLY"
                       formControlName="order" class="form-control" />
                     <app-field-error-message controlName="order"></app-field-error-message>
                   </div>
                   <!-- is required -->
                   <div class="mb-4 position-relative" style="max-width: 100px;">
                     <label for="required" class="form-label d-block">{{lang.map.lbl_required}}</label>
-                    <input class="form-check-input" formControlName="required" type="checkbox">
+                    <input class="form-check-input" [readonly]="!isCreateForm" formControlName="required" type="checkbox">
                   </div>
                 </div>
               </div>
               <!-- pattern -->
               <div class="col-12 col-md-6 col-lg-12 mb-4 position-relative">
                 <label asteriskIfRequired="pattern" for="pattern" class="form-label">{{ lang.map.lbl_regex}}</label>
-                <input id="pattern" validationClasses="pattern" formControlName="pattern" class="form-control" />
+                <input id="pattern" validationClasses="pattern" [readonly]="!isCreateForm" formControlName="pattern" class="form-control" />
                 <app-field-error-message controlName="pattern"></app-field-error-message>
               </div>
               <!-- note -->
               <div class="col-sm-12 mb-4 position-relative">
                 <label class="form-label" asteriskIfRequired="note" for="note">{{lang.map.notes}}</label>
-                <textarea name="note" validationClasses="note" id="note" formControlName="note" rows="4"
+                <textarea name="note" validationClasses="note" [readonly]="!isCreateForm" id="note" formControlName="note" rows="4"
                   class="form-control"></textarea>
                 <app-field-error-message controlName="note"></app-field-error-message>
               </div>
