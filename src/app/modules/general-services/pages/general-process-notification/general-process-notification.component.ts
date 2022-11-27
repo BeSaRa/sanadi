@@ -187,7 +187,7 @@ GeneralProcessNotificationService
       subClass: this.DSNNNFormGroup.value.firstSubDomain,
       processType: this.DSNNNFormGroup.value.processType
     }
-    this.generalProcessService.loadAsLookups()
+    this.generalProcessService.loadActive()
       .pipe(
         map((processes) => processes.filter(p =>
           (!params.departmentId || p.departmentId == params.departmentId)
