@@ -1,30 +1,28 @@
-import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {BehaviorSubject, of, Subject} from 'rxjs';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 import {GdxServicesEnum} from '@app/enums/gdx-services.enum';
+import {LangService} from '@services/lang.service';
+import {BeneficiaryService} from '@services/beneficiary.service';
+import {EmployeeService} from '@services/employee.service';
+import {ToastService} from '@services/toast.service';
 import {Beneficiary} from '@app/models/beneficiary';
 import {GdxServiceLog} from '@app/models/gdx-service-log';
 import {UntypedFormControl} from '@angular/forms';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import {LangService} from '@services/lang.service';
 import {SortEvent} from '@contracts/sort-event';
 import {CommonUtils} from '@helpers/common-utils';
 import {DateUtils} from '@helpers/date-utils';
-import {BehaviorSubject, of, Subject} from 'rxjs';
 import {exhaustMap, filter, takeUntil} from 'rxjs/operators';
-import {BeneficiaryService} from '@services/beneficiary.service';
-import {EmployeeService} from '@services/employee.service';
-import {ToastService} from '@services/toast.service';
-import {BeneficiaryIdTypes} from '@app/enums/beneficiary-id-types.enum';
 import {IGdxCriteria} from '@contracts/i-gdx-criteria';
-import {ActionIconsEnum} from '@app/enums/action-icons-enum';
-import {GdxGarsiaPensionResponse} from '@app/models/gdx-garsia-pension-response';
-import {GdxServiceRelatedTypesEnum} from '@app/enums/gdx-service-related-types.enum';
+import {BeneficiaryIdTypes} from '@app/enums/beneficiary-id-types.enum';
 
 @Component({
-  selector: 'gdx-integration-inquiry-log-list',
-  templateUrl: './gdx-integration-inquiry-log-list.component.html',
-  styleUrls: ['./gdx-integration-inquiry-log-list.component.scss']
+  selector: 'integration-inquiry-log-list',
+  templateUrl: './integration-inquiry-log-list.component.html',
+  styleUrls: ['./integration-inquiry-log-list.component.scss']
 })
-export class GdxIntegrationInquiryLogListComponent implements OnInit, AfterViewInit, OnDestroy {
+export class IntegrationInquiryLogListComponent {
   private destroy$: Subject<any> = new Subject<any>();
   actionIconsEnum = ActionIconsEnum;
   gdxServicesEnum = GdxServicesEnum;
