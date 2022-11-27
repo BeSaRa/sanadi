@@ -2,7 +2,7 @@ import { DynamicModel } from '@app/models/dynamic-model';
 import { DynamicModelService } from '@app/services/dynamic-models.service';
 import { DatepickerControlsMap, DatepickerOptionsMap, ReadinessStatus } from '@app/types/types';
 import { Component, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, UntypedFormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { SaveTypes } from '@app/enums/save-types';
 import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
@@ -55,6 +55,7 @@ CoordinationWithOrganizationsRequestService> {
   domains: Lookup[] = this.lookupService.listByCategory.CoordinationType?.sort(
     (a, b) => a?.lookupKey - b?.lookupKey
   );
+  coordinationTypes = CoordinationTypes;
   trainingTypes: Lookup[] =
     this.lookupService.listByCategory.TrainingActivityType?.sort(
       (a, b) => a?.lookupKey - b?.lookupKey
@@ -130,7 +131,13 @@ CoordinationWithOrganizationsRequestService> {
         return this.model!.temporaryResearchAndStudies.length > 0;
       },
     },
-
+    dynamicTempaltes: {
+      name: 'dynamicTempaltesTap',
+      langKey: 'lbl_template',
+      validStatus: () => {
+        return this.model!.temporaryResearchAndStudies.length > 0; // TODO: fix list name
+      },
+    },
     specialExplanation: {
       name: 'specialExplanationTab',
       langKey: 'special_explanations',
@@ -425,7 +432,13 @@ CoordinationWithOrganizationsRequestService> {
     this.destroy$.complete();
     this.destroy$.unsubscribe();
   }
-
+  handleDomainChange() {
+    this.templateField.setValidators([]);
+    if (this.isOtherDomain) {
+      this.templateField.setValidators([Validators.required]);
+    }
+    this.templateField.reset();
+  }
   getTabInvalidStatus(tabName: string): boolean {
     return !this.tabsData[tabName].validStatus();
   }
@@ -640,6 +653,17 @@ CoordinationWithOrganizationsRequestService> {
       licenseEndDate: this.licenseEndDate,
     };
   }
+
+  get isOtherDomain() {
+    return this.domainField.value == CoordinationTypes.Other;
+  }
+  get domainField() {
+    return this.form.get('domain') as UntypedFormControl;
+  }
+  get templateField() {
+    return this.form.get('templateId') as UntypedFormControl;
+  }
+
   get organizationOfficersList(): OrganizationOfficer[] | [] {
     if (this.isInternalUser) return this.model?.organizaionOfficerList ?? [];
     return this.model?.temporaryOrganizaionOfficerList ?? [];

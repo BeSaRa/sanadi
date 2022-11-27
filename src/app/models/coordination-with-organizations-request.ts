@@ -42,6 +42,8 @@ export class CoordinationWithOrganizationsRequest
   caseType: number = CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST;
   fullName!: string;
   domain!: number;
+
+  templateId!: number;
   licenseStartDate!: string | IMyDateModel;
   licenseEndDate!: string | IMyDateModel;
   description!: string;
@@ -86,7 +88,7 @@ export class CoordinationWithOrganizationsRequest
     return false;
   }
   formBuilder(controls?: boolean) {
-    const { fullName, domain, licenseStartDate, licenseEndDate, description } =
+    const { fullName, domain, templateId, licenseStartDate, licenseEndDate, description } =
       this;
     return {
       fullName: controls
@@ -103,6 +105,7 @@ export class CoordinationWithOrganizationsRequest
           ]
         : fullName,
       domain: controls ? [domain, [Validators.required]] : domain,
+      templateId: controls ? [templateId, []] : templateId,
       licenseStartDate: controls
         ? [licenseStartDate, [Validators.required]]
         : licenseStartDate,
