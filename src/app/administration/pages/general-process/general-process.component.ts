@@ -37,13 +37,6 @@ export class GeneralProcessComponent extends AdminGenericComponent<GeneralProces
       icon: ActionIconsEnum.EDIT,
       onClick: (item: GeneralProcess) => this.edit$.next(item)
     },
-    // delete
-    {
-      type: 'action',
-      label: 'btn_delete',
-      icon: ActionIconsEnum.DELETE,
-      onClick: (item: GeneralProcess) => this.delete(item)
-    },
     // view
     {
       type: 'action',
@@ -77,13 +70,6 @@ export class GeneralProcessComponent extends AdminGenericComponent<GeneralProces
   displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'actions'];
 
   bulkActionsList: IGridAction[] = [
-    {
-      langKey: 'btn_delete',
-      icon: 'mdi-close-box',
-      callback: ($event: MouseEvent) => {
-        this.deleteBulk($event);
-      }
-    },
     {
       icon: 'mdi-list-status',
       langKey: 'lbl_status',
@@ -148,43 +134,6 @@ export class GeneralProcessComponent extends AdminGenericComponent<GeneralProces
       .subscribe(() => this.reload$.next(null))
   }
 
-  delete(model: GeneralProcess, event?: MouseEvent): void {
-    event?.preventDefault();
-    const message = this.lang.map.msg_confirm_delete_x.change({ x: model.getName() });
-    this.dialogService.confirm(message)
-      .onAfterClose$.subscribe((click: UserClickOn) => {
-        if (click === UserClickOn.YES) {
-          const sub = model.delete().subscribe(() => {
-            // @ts-ignore
-            this.toast.success(this.lang.map.msg_delete_x_success.change({ x: model.getName() }));
-            this.reload$.next(null);
-            sub.unsubscribe();
-          });
-        }
-      });
-  }
-
-  deleteBulk($event: MouseEvent): void {
-    $event.preventDefault();
-    if (this.selectedRecords.length > 0) {
-      const message = this.lang.map.msg_confirm_delete_selected;
-      this.dialogService.confirm(message)
-        .onAfterClose$.subscribe((click: UserClickOn) => {
-          if (click === UserClickOn.YES) {
-            const ids = this.selectedRecords.map((item) => {
-              return item.id;
-            });
-            const sub = this.service.deleteBulk(ids).subscribe((response) => {
-              this.sharedService.mapBulkResponseMessages(this.selectedRecords, 'id', response)
-                .subscribe(() => {
-                  this.reload$.next(null);
-                  sub.unsubscribe();
-                });
-            });
-          }
-        });
-    }
-  }
   toggleStatus(model: GeneralProcess) {
     let updateObservable = model.status == CommonStatusEnum.ACTIVATED ? model.updateStatus(CommonStatusEnum.DEACTIVATED) : model.updateStatus(CommonStatusEnum.ACTIVATED);
     updateObservable.pipe(takeUntil(this.destroy$))
