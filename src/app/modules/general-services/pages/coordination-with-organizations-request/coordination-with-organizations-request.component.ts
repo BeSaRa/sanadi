@@ -1,44 +1,46 @@
-import {DatepickerControlsMap, DatepickerOptionsMap, ReadinessStatus} from '@app/types/types';
-import {Component, ViewChild} from '@angular/core';
-import {FormBuilder, FormGroup, UntypedFormControl} from '@angular/forms';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {SaveTypes} from '@app/enums/save-types';
-import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
-import {DateUtils} from '@app/helpers/date-utils';
-import {IKeyValue} from '@app/interfaces/i-key-value';
-import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {CoordinationWithOrganizationsRequest} from '@app/models/coordination-with-organizations-request';
-import {Lookup} from '@app/models/lookup';
-import {OrganizationOfficer} from '@app/models/organization-officer';
-import {BuildingAbilityComponent} from '@app/modules/e-services-main/shared/building-ability/building-ability.component';
-import {ResearchAndStudiesComponent} from '@app/modules/e-services-main/shared/research-and-studies/research-and-studies.component';
-import {CoordinationWithOrganizationsRequestService} from '@app/services/coordination-with-organizations-request.service';
-import {DialogService} from '@app/services/dialog.service';
-import {EmployeeService} from '@app/services/employee.service';
-import {LangService} from '@app/services/lang.service';
-import {LookupService} from '@app/services/lookup.service';
-import {ToastService} from '@app/services/toast.service';
-import {ExternalUserService} from '@services/external-user.service';
-import {IMyInputFieldChanged} from 'angular-mydatepicker';
-import {Observable, of} from 'rxjs';
-import {map, take} from 'rxjs/operators';
-import {CoordinationTypes} from '@app/enums/coordination-types-enum';
+import { DynamicModel } from '@app/models/dynamic-model';
+import { DynamicModelService } from '@app/services/dynamic-models.service';
+import { DatepickerControlsMap, DatepickerOptionsMap, ReadinessStatus } from '@app/types/types';
+import { Component, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, UntypedFormControl } from '@angular/forms';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { SaveTypes } from '@app/enums/save-types';
+import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
+import { DateUtils } from '@app/helpers/date-utils';
+import { IKeyValue } from '@app/interfaces/i-key-value';
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
+import { CoordinationWithOrganizationsRequest } from '@app/models/coordination-with-organizations-request';
+import { Lookup } from '@app/models/lookup';
+import { OrganizationOfficer } from '@app/models/organization-officer';
+import { BuildingAbilityComponent } from '@app/modules/e-services-main/shared/building-ability/building-ability.component';
+import { ResearchAndStudiesComponent } from '@app/modules/e-services-main/shared/research-and-studies/research-and-studies.component';
+import { CoordinationWithOrganizationsRequestService } from '@app/services/coordination-with-organizations-request.service';
+import { DialogService } from '@app/services/dialog.service';
+import { EmployeeService } from '@app/services/employee.service';
+import { LangService } from '@app/services/lang.service';
+import { LookupService } from '@app/services/lookup.service';
+import { ToastService } from '@app/services/toast.service';
+import { ExternalUserService } from '@services/external-user.service';
+import { IMyInputFieldChanged } from 'angular-mydatepicker';
+import { Observable, of } from 'rxjs';
+import { map, take } from 'rxjs/operators';
+import { CoordinationTypes } from '@app/enums/coordination-types-enum';
 import {
   EffectiveCoordinationCapabilitiesComponent
 } from './../../../e-services-main/shared/effective-coordination-capabilities/effective-coordination-capabilities.component';
-import {OrganizationOfficerComponent} from '../../../e-services-main/shared/organization-officer/organization-officer.component';
+import { OrganizationOfficerComponent } from '../../../e-services-main/shared/organization-officer/organization-officer.component';
 import {
   ParticipantOrganizationComponent
 } from './../../../e-services-main/shared/participant-organization/participant-organization.component';
-import {OpenFrom} from '@app/enums/open-from.enum';
-import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
-import {TabComponent} from '@app/shared/components/tab/tab.component';
-import {AttachmentsComponent} from '@app/shared/components/attachments/attachments.component';
+import { OpenFrom } from '@app/enums/open-from.enum';
+import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
+import { TabComponent } from '@app/shared/components/tab/tab.component';
+import { AttachmentsComponent } from '@app/shared/components/attachments/attachments.component';
 import { BuildingAbility } from '@app/models/building-ability';
 import { EffectiveCoordinationCapabilities } from '@app/models/effective-coordination-capabilities';
 import { ResearchAndStudies } from '@app/models/research-and-studies';
-import {ProfileService} from '@services/profile.service';
-import {Profile} from '@app/models/profile';
+import { ProfileService } from '@services/profile.service';
+import { Profile } from '@app/models/profile';
 
 @Component({
   selector: 'app-coordination-with-organizations-request',
@@ -46,7 +48,7 @@ import {Profile} from '@app/models/profile';
   styleUrls: ['./coordination-with-organizations-request.component.scss'],
 })
 export class CoordinationWithOrganizationsRequestComponent extends EServicesGenericComponent<CoordinationWithOrganizationsRequest,
-  CoordinationWithOrganizationsRequestService> {
+CoordinationWithOrganizationsRequestService> {
   form!: FormGroup;
 
   // Participating  Organizations
@@ -72,6 +74,7 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
     this.lookupService.listByCategory.OrganizationWay?.sort(
       (a, b) => a?.lookupKey - b?.lookupKey
     );
+  formsList: DynamicModel[] = [];
   isCharityUser!: boolean;
   isInternalUser!: boolean;
   isLicensingUser!: boolean;
@@ -104,8 +107,6 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
       langKey: 'organization_officers',
       validStatus: () => {
         return this.model!.temporaryOrganizaionOfficerList.length > 0;
-
-
       },
     },
     buildingAbilities: {
@@ -170,7 +171,7 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
     private profileService: ProfileService,
     private externalUserService: ExternalUserService,
     public service: CoordinationWithOrganizationsRequestService,
-
+    private dynamicModelService: DynamicModelService,
     public fb: FormBuilder
   ) {
     super();
@@ -269,6 +270,7 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
     this.currentUserOrgId = this.employeeService.getProfile()?.id;
     this.loadOrgUnits();
     this.loadOrgUsers();
+    this.loadCoordForms();
     this.datepickerOptionsMap = {
       licenseStartDate: DateUtils.getDatepickerOptions({
         disablePeriod: !this.isLicensingUser ? 'none' : 'past',
@@ -278,7 +280,11 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
       }),
     };
   }
-
+  loadCoordForms() {
+    this.dynamicModelService.loadActive().subscribe((forms) => {
+      this.formsList = forms;
+    })
+  }
   _buildForm(): void {
     this.form = this.fb.group(
       new CoordinationWithOrganizationsRequest().formBuilder(true)
@@ -456,7 +462,7 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
 
   loadOrgUsers() {
     this.externalUserService
-      .getByCriteria({'profile-id': this.employeeService.getProfile()?.id!})
+      .getByCriteria({ 'profile-id': this.employeeService.getProfile()?.id! })
       .pipe(
         map((records) => {
           const list: OrganizationOfficer[] = [];
@@ -519,32 +525,32 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
       ? updatedModel
       : new CoordinationWithOrganizationsRequest().clone(this.model);
 
-      model!.temporaryOrganizaionOfficerList! = model!.temporaryOrganizaionOfficerList.filter(
+    model!.temporaryOrganizaionOfficerList! = model!.temporaryOrganizaionOfficerList.filter(
+      (x) => x.organizationId === orgId
+    );
+    model!.temporaryBuildingAbilitiesList! = model!.temporaryBuildingAbilitiesList.filter(
+      (x) => x.organizationId === orgId
+    );
+    model!.temporaryEffectiveCoordinationCapabilities! =
+      model!.temporaryEffectiveCoordinationCapabilities.filter(
         (x) => x.organizationId === orgId
       );
-      model!.temporaryBuildingAbilitiesList! = model!.temporaryBuildingAbilitiesList.filter(
+    model!.temporaryResearchAndStudies! = model!.temporaryResearchAndStudies.filter(
+      (x) => x.organizationId === orgId
+    );
+    model!.organizaionOfficerList! = model!.organizaionOfficerList.filter(
+      (x) => x.organizationId === orgId
+    );
+    model!.buildingAbilitiesList! = model!.buildingAbilitiesList.filter(
+      (x) => x.organizationId === orgId
+    );
+    model!.effectiveCoordinationCapabilities! =
+      model!.effectiveCoordinationCapabilities.filter(
         (x) => x.organizationId === orgId
       );
-      model!.temporaryEffectiveCoordinationCapabilities! =
-        model!.temporaryEffectiveCoordinationCapabilities.filter(
-          (x) => x.organizationId === orgId
-        );
-      model!.temporaryResearchAndStudies! = model!.temporaryResearchAndStudies.filter(
-        (x) => x.organizationId === orgId
-      );
-      model!.organizaionOfficerList! = model!.organizaionOfficerList.filter(
-        (x) => x.organizationId === orgId
-      );
-      model!.buildingAbilitiesList! = model!.buildingAbilitiesList.filter(
-        (x) => x.organizationId === orgId
-      );
-      model!.effectiveCoordinationCapabilities! =
-        model!.effectiveCoordinationCapabilities.filter(
-          (x) => x.organizationId === orgId
-        );
-      model!.researchAndStudies! = model!.researchAndStudies.filter(
-        (x) => x.organizationId === orgId
-      );
+    model!.researchAndStudies! = model!.researchAndStudies.filter(
+      (x) => x.organizationId === orgId
+    );
     return model;
   }
 
@@ -647,11 +653,11 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
     | EffectiveCoordinationCapabilities[]
     | [] {
     if (this.isInternalUser)
-      return this.model?.effectiveCoordinationCapabilities?? [];
-    return this.model?.temporaryEffectiveCoordinationCapabilities?? [];
+      return this.model?.effectiveCoordinationCapabilities ?? [];
+    return this.model?.temporaryEffectiveCoordinationCapabilities ?? [];
   }
   get researchAndStudiesList(): ResearchAndStudies[] | [] {
-    if (this.isInternalUser) return this.model?.researchAndStudies?? [];
-    return this.model?.temporaryResearchAndStudies?? [];
+    if (this.isInternalUser) return this.model?.researchAndStudies ?? [];
+    return this.model?.temporaryResearchAndStudies ?? [];
   }
 }
