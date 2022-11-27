@@ -91,13 +91,19 @@
       <div class="col-12">
         <div class="row">
           <div class="col-12 col-lg-3 border-end" style="min-width: 300px;">
-            <h6 class="title mb-3">{{ lang.map.lbl_add_template_field }}</h6>
+            <div class="d-flex">
+              <h6 class="title mb-3">{{ lang.map.lbl_add_template_field }}</h6>
+              <span class="form-check form-switch switch-action ms-auto">
+                <input formControlName="status" class="form-check-input" type="checkbox"
+                  tooltip="{{statusField.value == commonStatusEnum.ACTIVATED ? lang.map.btn_deactivate : lang.map.btn_activate}}">
+              </span>
+            </div>
             <div class="row">
               <!-- identifying name -->
               <div class="col-12 col-md-6 col-lg-12 mb-4 position-relative">
                 <label asteriskIfRequired="identifyingName" for="identifyingName" class="form-label">{{
                   lang.map.lbl_identifying_name}}</label>
-                <input id="identifyingName" [readonly]="isEditForm" formControlName="identifyingName"
+                <input id="identifyingName" [readonly]="isEditField" formControlName="identifyingName"
                   validationClasses="identifyingName" class="form-control" />
                 <app-field-error-message controlName="identifyingName"></app-field-error-message>
               </div>
@@ -186,7 +192,7 @@
                 <button class="btn btn-primary me-2" [disabled]="!fieldForm.valid" (click)="submitField(fieldForm)">
                   {{ lang.map.btn_save }}
                 </button>
-                <button class="btn btn-outline-danger me-2" *ngIf="isEditForm" (click)="deleteField(fieldForm)">
+                <button class="btn btn-outline-danger me-2" *ngIf="isEditField && isCreateForm" (click)="deleteField(fieldForm)">
                   {{ lang.map.btn_delete }}
                 </button>
                 <button class="btn btn-secondary" (click)="resetFieldForm()">

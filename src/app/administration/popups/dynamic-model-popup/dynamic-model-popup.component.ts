@@ -1,7 +1,7 @@
+import { CommonStatusEnum } from './../../../enums/common-status.enum';
 import { LookupService } from './../../../services/lookup.service';
 import { Lookup } from './../../../models/lookup';
-import { GeneralProcessTemplate } from './../../../models/general-process-template';
-import { DynamicModelService } from './../../../services/dynamic-models.service';
+import { TemplateField } from './../../../models/general-process-template';
 import { Component, Inject } from '@angular/core';
 import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormArray } from '@angular/forms';
 import { OperationTypes } from '@app/enums/operation-types.enum';
@@ -19,7 +19,7 @@ import { CustomValidators } from '@app/validators/custom-validators';
 import { Subscription, Observable } from 'rxjs';
 import { v4 } from 'uuid';
 import { ProcessFieldBuilder } from '../general-process-popup/process-formly-components/process-fields-builder';
-import { GeneralProcessTemplateFieldTypes } from '@app/enums/general-process-template-field-types.enum';
+import { TemplateFieldTypes } from '@app/enums/general-process-template-field-types.enum';
 
 @Component({
   selector: 'app-dynamic-model-popup',
@@ -28,6 +28,7 @@ import { GeneralProcessTemplateFieldTypes } from '@app/enums/general-process-tem
 })
 export class DynamicModelPopupComponent extends AdminGenericDialog<DynamicModel> {
   statuses: Lookup[] = this.lookupService.listByCategory.CommonStatus;
+  commonStatusEnum = CommonStatusEnum;
   form!: UntypedFormGroup;
   fieldForm!: UntypedFormGroup;
   model!: DynamicModel;
@@ -35,14 +36,13 @@ export class DynamicModelPopupComponent extends AdminGenericDialog<DynamicModel>
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
   processForm: ProcessFieldBuilder;
   listenToFieldDetailsSubsecribtion$!: Subscription;
-  isEditForm: boolean = false;
+  isEditField: boolean = false;
   saveVisible = true;
 
   constructor(public dialogRef: DialogRef,
     public fb: UntypedFormBuilder,
     public lang: LangService,
     private lookupService: LookupService,
-    private dynamicModelService: DynamicModelService,
     @Inject(DIALOG_DATA_TOKEN) data: IDialogData<DynamicModel>,
     private toast: ToastService,
     private dialogService: DialogService,
@@ -54,7 +54,7 @@ export class DynamicModelPopupComponent extends AdminGenericDialog<DynamicModel>
   }
   buildForm(): void {
     this.form = this.fb.group(this.model.buildForm(true));
-    const templateModel = new GeneralProcessTemplate();
+    const templateModel = new TemplateField();
     this.fieldForm = this.fb.group({
       ...templateModel.buildForm(),
       options: this.fb.array([])
@@ -85,7 +85,7 @@ export class DynamicModelPopupComponent extends AdminGenericDialog<DynamicModel>
     this.options.removeAt(index);
   }
   handleFieldTypeChange(type: number) {
-    if (type == GeneralProcessTemplateFieldTypes.selectField) {
+    if (type == TemplateFieldTypes.selectField) {
       this.addOption();
     }
   }
@@ -110,15 +110,15 @@ export class DynamicModelPopupComponent extends AdminGenericDialog<DynamicModel>
               })
             )
           })
+          this.isEditField = true;
         }
-        this.isEditForm = true;
       }
     })
   }
   submitField(form: UntypedFormGroup) {
-    if (!this.processForm.fields.filter(f => f.identifyingName == form.value.identifyingName).length || this.isEditForm) {
+    if (!this.processForm.fields.filter(f => f.identifyingName == form.value.identifyingName).length || this.isEditField) {
       this.processForm.setField(form);
-      this.isEditForm = false;
+      this.isEditField = false;
       while (this.options.length !== 0) {
         this.options.removeAt(0)
       }
@@ -131,13 +131,13 @@ export class DynamicModelPopupComponent extends AdminGenericDialog<DynamicModel>
       .onAfterClose$.subscribe((click: UserClickOn) => {
         if (click === UserClickOn.YES) {
           this.processForm.deleteField(form);
-          this.isEditForm = false;
+          this.isEditField = false;
         }
       });
   }
   resetFieldForm() {
     this.fieldForm.reset();
-    this.isEditForm = false;
+    this.isEditField = false;
   }
   beforeSave(model: DynamicModel, form: UntypedFormGroup): boolean | Observable<boolean> {
     return form.valid;
@@ -158,10 +158,10 @@ export class DynamicModelPopupComponent extends AdminGenericDialog<DynamicModel>
     dialogRef.close(model);
   }
   get isSelectField() {
-    return this.fieldForm.value.type == GeneralProcessTemplateFieldTypes.selectField
+    return this.fieldForm.value.type == TemplateFieldTypes.selectField
   }
   get dynamicModelTemplateFieldTypesList() {
-    var keys = Object.keys(GeneralProcessTemplateFieldTypes);
+    var keys = Object.keys(TemplateFieldTypes);
     return keys.slice(keys.length / 2);
   }
   get title(): keyof ILanguageKeys {
@@ -173,7 +173,9 @@ export class DynamicModelPopupComponent extends AdminGenericDialog<DynamicModel>
       return 'view';
     }
   };
-
+  get statusField() {
+    return this.fieldForm.controls['status'] as UntypedFormArray;
+  }
   get options() {
     return this.fieldForm.controls["options"] as UntypedFormArray;
   }

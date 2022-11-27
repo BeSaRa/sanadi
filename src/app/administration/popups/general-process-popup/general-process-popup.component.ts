@@ -6,7 +6,7 @@ import { DialogService } from './../../../services/dialog.service';
 import { ProcessFieldBuilder } from './process-formly-components/process-fields-builder';
 import { catchError, map } from 'rxjs/operators';
 import { CustomValidators } from './../../../validators/custom-validators';
-import { GeneralProcessTemplate } from './../../../models/general-process-template';
+import { TemplateField } from './../../../models/general-process-template';
 import { InternalDepartment } from '@app/models/internal-department';
 import { InternalDepartmentService } from './../../../services/internal-department.service';
 import { Team } from './../../../models/team';
@@ -27,7 +27,7 @@ import { Component, Inject } from '@angular/core';
 import { Observable, of, Subscription } from 'rxjs';
 import { SubTeamService } from '@app/services/sub-team.service';
 import { SubTeam } from '@app/models/sub-team';
-import { GeneralProcessTemplateFieldTypes } from '@app/enums/general-process-template-field-types.enum';
+import { TemplateFieldTypes } from '@app/enums/general-process-template-field-types.enum';
 import { v4 } from 'uuid';
 
 @Component({
@@ -44,7 +44,7 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
   processForm: ProcessFieldBuilder;
   listenToFieldDetailsSubsecribtion$!: Subscription;
-  isEditForm: boolean = false;
+  isEditField: boolean = false;
   saveVisible = true;
   mainClassificationsList: AdminLookup[] = [];
   subClassificationsList: AdminLookup[] = [];
@@ -69,7 +69,7 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
   }
   buildForm(): void {
     this.form = this.fb.group(this.model.buildForm(true));
-    const templateModel = new GeneralProcessTemplate();
+    const templateModel = new TemplateField();
     this.fieldForm = this.fb.group({
       ...templateModel.buildForm(),
       options: this.fb.array([])
@@ -101,7 +101,7 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
     this.options.removeAt(index);
   }
   handleFieldTypeChange(type: number) {
-    if (type == GeneralProcessTemplateFieldTypes.selectField) {
+    if (type == TemplateFieldTypes.selectField) {
       this.addOption();
     }
   }
@@ -135,14 +135,14 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
             )
           })
         }
-        this.isEditForm = true;
+        this.isEditField = true;
       }
     })
   }
   submitField(form: UntypedFormGroup) {
-    if (!this.processForm.fields.filter(f => f.identifyingName == form.value.identifyingName).length || this.isEditForm) {
+    if (!this.processForm.fields.filter(f => f.identifyingName == form.value.identifyingName).length || this.isEditField) {
       this.processForm.setField(form);
-      this.isEditForm = false;
+      this.isEditField = false;
       while (this.options.length !== 0) {
         this.options.removeAt(0)
       }
@@ -155,7 +155,7 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
       .onAfterClose$.subscribe((click: UserClickOn) => {
         if (click === UserClickOn.YES) {
           this.processForm.deleteField(form);
-          this.isEditForm = false;
+          this.isEditField = false;
         }
       });
   }
@@ -186,7 +186,7 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
 
   resetFieldForm() {
     this.fieldForm.reset();
-    this.isEditForm = false;
+    this.isEditField = false;
   }
   beforeSave(model: GeneralProcess, form: UntypedFormGroup): boolean | Observable<boolean> {
     return form.valid;
@@ -207,10 +207,10 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
     dialogRef.close(model);
   }
   get isSelectField() {
-    return this.fieldForm.value.type == GeneralProcessTemplateFieldTypes.selectField
+    return this.fieldForm.value.type == TemplateFieldTypes.selectField
   }
   get generalProcessTemplateFieldTypesList() {
-    var keys = Object.keys(GeneralProcessTemplateFieldTypes);
+    var keys = Object.keys(TemplateFieldTypes);
     return keys.slice(keys.length / 2);
   }
   get title(): keyof ILanguageKeys {
@@ -222,7 +222,9 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
       return 'view';
     }
   };
-
+  get statusField() {
+    return this.fieldForm.controls['status'] as UntypedFormArray;
+  }
   get options() {
     return this.fieldForm.controls["options"] as UntypedFormArray;
   }

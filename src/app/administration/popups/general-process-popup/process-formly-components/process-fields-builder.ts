@@ -1,11 +1,10 @@
 import { Subject } from 'rxjs';
-import { IKeyValue } from '@contracts/i-key-value';
 import { CustomValidators } from './../../../../validators/custom-validators';
 import { map } from 'rxjs/operators';
 import { of } from 'rxjs';
-import { GeneralProcessTemplateFieldTypes } from './../../../../enums/general-process-template-field-types.enum';
+import { TemplateFieldTypes } from './../../../../enums/general-process-template-field-types.enum';
 import { UntypedFormGroup } from '@angular/forms';
-import { GeneralProcessTemplate } from './../../../../models/general-process-template';
+import { TemplateField } from './../../../../models/general-process-template';
 import { FormlyFieldConfig } from '@ngx-formly/core/lib/components/formly.field.config';
 import { FieldMode } from '@app/interfaces/custom-formly-field-config';
 
@@ -13,17 +12,17 @@ export class ProcessFieldBuilder {
   buildMode: FieldMode = 'init'
   fieldsGroups: FormlyFieldConfig[] = [];
   private static _selectField: Subject<string> = new Subject<string>();
-  private _fields: GeneralProcessTemplate[] = [];
-  get fields(): GeneralProcessTemplate[] {
+  private _fields: TemplateField[] = [];
+  get fields(): TemplateField[] {
     return this._fields;
   }
   private _FormChange() {
     this.fieldsGroups = [];
     this._fields = this.fields.sort((ff, fl) => +ff.order - +fl.order);
-    let fields: GeneralProcessTemplate[] = [];
+    let fields: TemplateField[] = [];
     for (let i = 0; i < this.fields.length; i++) {
       const field = this.fields[i];
-      if (field.type == GeneralProcessTemplateFieldTypes.textarea) {
+      if (field.type == TemplateFieldTypes.textarea) {
         if (fields.length) {
           this.fieldsGroups = [...this.fieldsGroups, this._buildRow(fields)]
           fields = [];
@@ -42,7 +41,7 @@ export class ProcessFieldBuilder {
       }
     }
   }
-  private _buildRow(fields: GeneralProcessTemplate[]) {
+  private _buildRow(fields: TemplateField[]) {
     const row = {
       fieldGroupClassName: 'row mb-4',
       fieldGroup: fields.map(f => f.buildField(this.buildMode))
@@ -59,7 +58,7 @@ export class ProcessFieldBuilder {
     this._selectField.next(fieldId);
   }
   generateAsString(): string {
-    const fields = this.fields.map((field: GeneralProcessTemplate) => {
+    const fields = this.fields.map((field: TemplateField) => {
       return {
         id: field.id,
         identifyingName: field.identifyingName,
@@ -79,17 +78,17 @@ export class ProcessFieldBuilder {
     return JSON.stringify(fields);
   }
   generateFromString(template?: string) {
-    of<GeneralProcessTemplate[]>(JSON.parse(template || '[]')).pipe(
-      map((fields: GeneralProcessTemplate[]) => {
-        return fields.map(f => new GeneralProcessTemplate().clone(f))
+    of<TemplateField[]>(JSON.parse(template || '[]')).pipe(
+      map((fields: TemplateField[]) => {
+        return fields.map(f => new TemplateField().clone(f))
       })
-    ).subscribe((templateFields: GeneralProcessTemplate[]) => {
+    ).subscribe((templateFields: TemplateField[]) => {
       this._fields = templateFields;
       this.formChange();
     })
   }
-  setField(form: UntypedFormGroup, ) {
-    const field = new GeneralProcessTemplate().clone({
+  setField(form: UntypedFormGroup) {
+    const field = new TemplateField().clone({
       id: form.value.identifyingName,
       identifyingName: form.value.identifyingName,
       arName: form.value.arName,
@@ -97,14 +96,15 @@ export class ProcessFieldBuilder {
       note: form.value.note,
       order: form.value.order,
       type: form.value.type,
-      mask: form.value.type == GeneralProcessTemplateFieldTypes.number ? CustomValidators.inputMaskPatterns.NUMBER_ONLY : '',
+      status: form.value.status,
+      mask: form.value.type == TemplateFieldTypes.number ? CustomValidators.inputMaskPatterns.NUMBER_ONLY : '',
       required: form.value.required,
       pattern: form.value.pattern,
       value: form.value.value,
       options:
-        form.value.type == GeneralProcessTemplateFieldTypes.yesOrNo
+        form.value.type == TemplateFieldTypes.yesOrNo
           ? [{ id: 1, name: 'No' }, { id: 2, name: 'Yes' }]
-          : form.value.type == GeneralProcessTemplateFieldTypes.selectField
+          : form.value.type == TemplateFieldTypes.selectField
             ? form.value.options : []
     });
     let prevField = this.getFieldByIdentifyingName(form.value.identifyingName)
@@ -115,10 +115,10 @@ export class ProcessFieldBuilder {
     form.reset();
     this.formChange();
   }
-  getFieldById(id: string): GeneralProcessTemplate | undefined {
+  getFieldById(id: string): TemplateField | undefined {
     return this.fields.find(f => f.id == id);
   }
-  getFieldByIdentifyingName(id: string): GeneralProcessTemplate | undefined {
+  getFieldByIdentifyingName(id: string): TemplateField | undefined {
     return this.fields.find(f => f.identifyingName == id);
   }
   deleteField(form: UntypedFormGroup) {
