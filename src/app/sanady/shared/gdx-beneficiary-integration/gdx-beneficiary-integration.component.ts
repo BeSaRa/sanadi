@@ -1,52 +1,43 @@
-import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {exhaustMap, filter, takeUntil, tap} from 'rxjs/operators';
+import {Component, Input, OnDestroy, ViewChild} from '@angular/core';
 import {GdxServicesEnum} from '@app/enums/gdx-services.enum';
 import {GdxServiceLog} from '@app/models/gdx-service-log';
 import {TabMap} from '@app/types/types';
-import {BehaviorSubject, Subject} from 'rxjs';
-import {GdxMojResponse} from '@app/models/gdx-moj-response';
+import {Subject} from 'rxjs';
 import {GdxMociResponse} from '@app/models/gdx-moci-response';
 import {UntypedFormControl} from '@angular/forms';
 import {SortEvent} from '@contracts/sort-event';
 import {CommonUtils} from '@helpers/common-utils';
-import {DateUtils} from '@helpers/date-utils';
 import {LangService} from '@services/lang.service';
 import {ITabData} from '@contracts/i-tab-data';
 import {TabComponent} from '@app/shared/components/tab/tab.component';
-import {BeneficiaryService} from '@services/beneficiary.service';
-import {ToastService} from '@services/toast.service';
 import {Beneficiary} from '@app/models/beneficiary';
-import {BeneficiaryIdTypes} from '@app/enums/beneficiary-id-types.enum';
-import {IGdxCriteria} from '@contracts/i-gdx-criteria';
-import {EmployeeService} from '@services/employee.service';
 import {GdxGarsiaPensionResponse} from '@app/models/gdx-garsia-pension-response';
-import {GdxMawaredResponse} from '@app/models/gdx-mawared-response';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import {GdxPensionMonthPayment} from '@app/models/gdx-pension-month-payment';
 import {CustomValidators} from '@app/validators/custom-validators';
-import {TableComponent} from '@app/shared/components/table/table.component';
 import {PaginatorComponent} from '@app/shared/components/paginator/paginator.component';
+import {
+  GdxIntegrationInquiryLogListComponent
+} from '@app/sanady/shared/gdx-integration-inquiry-log-list/gdx-integration-inquiry-log-list.component';
+import {GdxServiceRelatedTypesEnum} from '@app/enums/gdx-service-related-types.enum';
+import {IGdxServiceRelatedData} from '@contracts/i-gdx-service-related-data';
 
 @Component({
   selector: 'gdx-beneficiary-integration',
   templateUrl: './gdx-beneficiary-integration.component.html',
   styleUrls: ['./gdx-beneficiary-integration.component.scss']
 })
-export class GdxBeneficiaryIntegrationComponent implements OnInit, OnDestroy {
+export class GdxBeneficiaryIntegrationComponent implements OnDestroy {
   private destroy$: Subject<any> = new Subject<any>();
   @Input('beneficiary') beneficiary!: Beneficiary;
+
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
+  gdxServicesEnum = GdxServicesEnum;
+  gdxServiceRelatedTypesEnum = GdxServiceRelatedTypesEnum;
+  logListComponentsMap: Map<GdxServicesEnum, any> = new Map<GdxServicesEnum, any>();
+  selectedLog: { [key in GdxServicesEnum]?: GdxServiceLog | undefined } = {};
+  selectedService: GdxServicesEnum = GdxServicesEnum.MOJ;
 
-  constructor(public langService: LangService,
-              private beneficiaryService: BeneficiaryService,
-              private employeeService: EmployeeService,
-              private toast: ToastService) {
-  }
-
-  ngOnInit(): void {
-    this.listenToAddIntegrationInquiries();
-    this.listenToReloadIntegrationInquiries();
-    this._buildIntegrationActions();
+  constructor(public lang: LangService) {
   }
 
   ngOnDestroy(): void {
@@ -92,9 +83,27 @@ export class GdxBeneficiaryIntegrationComponent implements OnInit, OnDestroy {
       serviceId: GdxServicesEnum.GARSIA + '',
       isLoaded: false
     },
+    izzab: {
+      name: 'izzab',
+      index: 4,
+      langKey: 'integration_izzab',
+      validStatus: () => true,
+      isTouchedOrDirty: () => true,
+      serviceId: GdxServicesEnum.IZZAB + '',
+      isLoaded: false
+    },
+    kahramaa: {
+      name: 'kahramaa',
+      index: 5,
+      langKey: 'integration_kahramaa',
+      validStatus: () => true,
+      isTouchedOrDirty: () => true,
+      serviceId: GdxServicesEnum.KAHRAMAA + '',
+      isLoaded: false
+    },
     qatarCharity: {
       name: 'qatarCharity',
-      index: 4,
+      index: 6,
       langKey: 'integration_qatar_charity',
       validStatus: () => true,
       isTouchedOrDirty: () => true,
@@ -106,76 +115,44 @@ export class GdxBeneficiaryIntegrationComponent implements OnInit, OnDestroy {
 
   headerColumn: string[] = ['extra-header'];
 
-  mojLogs: GdxServiceLog[] = [];
-  mojRelatedData: GdxMojResponse = {flatInfoList: [], parcelInfoList: []};
-
-  mociLogs: GdxServiceLog[] = [];
-  mociRelatedDataList: GdxMociResponse[] = [];
-
-  mawaredLogs: GdxServiceLog[] = [];
-  mawaredRelatedDataList: GdxMawaredResponse[] = [];
-
-  garsiaLogs: GdxServiceLog[] = [];
-  garsiaRelatedDataList: GdxGarsiaPensionResponse[] = [];
   selectedGarsiaPension?: GdxGarsiaPensionResponse;
-  selectedGarsiaPensionList: GdxPensionMonthPayment[] = [];
   @ViewChild('garsiaPensionPaymentPaginator') pensionPaymentsPaginator!: PaginatorComponent;
 
-  addMOJ$: Subject<any> = new Subject<any>();
-  reloadMOJ$: BehaviorSubject<any> = new BehaviorSubject<any>('init');
+  relatedData: IGdxServiceRelatedData = {
+    [GdxServiceRelatedTypesEnum.MOJ_FLATS]: [],
+    [GdxServiceRelatedTypesEnum.MOJ_PARCELS]: [],
+    [GdxServiceRelatedTypesEnum.MOCI_COMPANIES]: [],
+    [GdxServiceRelatedTypesEnum.MAWARED_RELATED]: [],
+    [GdxServiceRelatedTypesEnum.GARSIA_PENSION]: [],
+    [GdxServiceRelatedTypesEnum.GARSIA_PENSION_PAYMENT]: [],
+    [GdxServiceRelatedTypesEnum.KAHRAMAA_RELATED]: []
+  }
 
-  addMOCI$: Subject<any> = new Subject<any>();
-  reloadMOCI$: BehaviorSubject<any> = new BehaviorSubject<any>('init');
-
-  addMawared$: Subject<any> = new Subject<any>();
-  reloadMawared$: BehaviorSubject<any> = new BehaviorSubject<any>('init');
-
-  addGarsia$: Subject<any> = new Subject<any>();
-  reloadGarsia$: BehaviorSubject<any> = new BehaviorSubject<any>('init');
-
-  displayColumnsMap: any = {
-    gdxServiceLog: ['organization', 'user', 'actionTime', 'actions'],
-    mojRelatedFlats: ['transactionNo', 'transactionType', 'ownerName', 'contractDate', 'ownerShares'],
-    mojRelatedParcels: ['parcelNo', 'parcelType', 'ownerName', 'city', 'zone', 'sharesCount'],
-    mociRelatedCompanies: ['companyName', 'licenceNumber', 'companyStatus', 'relation', 'relationStatus'],
-    mawaredRelatedData: ['empNameAr', 'empNameEn', 'empQID', 'entityName', 'entityId', 'firstMonth', 'firstPayment', 'secondMonth', 'secondPayment', 'thirdMonth', 'thirdPayment'],
-    garsiaRelatedPensions: ['pensionArName', 'pensionEmployer', 'pensionStatus', 'firstJoinDate',
+  displayColumnsMap: { [key in GdxServiceRelatedTypesEnum]: string[] } = {
+    [GdxServiceRelatedTypesEnum.MOJ_FLATS]: ['transactionNo', 'transactionType', 'ownerName', 'contractDate', 'ownerShares'],
+    [GdxServiceRelatedTypesEnum.MOJ_PARCELS]: ['parcelNo', 'parcelType', 'ownerName', 'city', 'zone', 'sharesCount'],
+    [GdxServiceRelatedTypesEnum.MOCI_COMPANIES]: ['companyName', 'licenceNumber', 'companyStatus', 'relation', 'relationStatus'],
+    [GdxServiceRelatedTypesEnum.MAWARED_RELATED]: ['empNameAr', 'empNameEn', 'empQID', 'entityName', 'entityId', 'firstMonth', 'firstPayment', 'secondMonth', 'secondPayment', 'thirdMonth', 'thirdPayment'],
+    [GdxServiceRelatedTypesEnum.GARSIA_PENSION]: ['pensionArName', 'pensionEmployer', 'pensionStatus', 'firstJoinDate',
       'endOfServiceDate', 'finalServicePeriodYears', 'finalServicePeriodMonths', 'finalServicePeriodDays', 'pensionDeserveDate', 'totalPensionDeserved', 'actions'],
-    garsiaRelatedPensionPayments: ['payAccountNum', 'payMonth', 'payYear', 'payValue']
+    [GdxServiceRelatedTypesEnum.GARSIA_PENSION_PAYMENT]: ['payAccountNum', 'payMonth', 'payYear', 'payValue'],
+    [GdxServiceRelatedTypesEnum.IZZAB_RELATED]: [],
+    [GdxServiceRelatedTypesEnum.KAHRAMAA_RELATED]: ['amount', 'fees', 'fine']
   };
-  filterControlsMap: { [key: string]: UntypedFormControl } = {
-    moj: new UntypedFormControl(''),
-    mojRelatedFlats: new UntypedFormControl(''),
-    mojRelatedParcels: new UntypedFormControl(''),
-    moci: new UntypedFormControl(''),
-    mociRelatedCompanies: new UntypedFormControl(''),
-    mawared: new UntypedFormControl(''),
-    mawaredRelatedData: new UntypedFormControl(''),
-    garsia: new UntypedFormControl(''),
-    garsiaRelatedPensions: new UntypedFormControl(''),
-    garsiaRelatedPensionPayments: new UntypedFormControl(''),
+
+  filterControlsMap: { [key in GdxServiceRelatedTypesEnum]: UntypedFormControl } = {
+    [GdxServiceRelatedTypesEnum.MOJ_FLATS]: new UntypedFormControl(''),
+    [GdxServiceRelatedTypesEnum.MOJ_PARCELS]: new UntypedFormControl(''),
+    [GdxServiceRelatedTypesEnum.MOCI_COMPANIES]: new UntypedFormControl(''),
+    [GdxServiceRelatedTypesEnum.MAWARED_RELATED]: new UntypedFormControl(''),
+    [GdxServiceRelatedTypesEnum.GARSIA_PENSION]: new UntypedFormControl(''),
+    [GdxServiceRelatedTypesEnum.GARSIA_PENSION_PAYMENT]: new UntypedFormControl(''),
+    [GdxServiceRelatedTypesEnum.IZZAB_RELATED]: new UntypedFormControl(''),
+    [GdxServiceRelatedTypesEnum.KAHRAMAA_RELATED]: new UntypedFormControl(''),
   };
-  sortingCallbacksMap = {
-    gdxServiceLog: {
-      organization: (a: GdxServiceLog, b: GdxServiceLog, dir: SortEvent): number => {
-        const value1 = !CommonUtils.isValidValue(a) ? '' : a.orgInfo?.getName().toLowerCase(),
-          value2 = !CommonUtils.isValidValue(b) ? '' : b.orgInfo?.getName().toLowerCase();
-        return CommonUtils.getSortValue(value1, value2, dir.direction);
-      },
-      user: (a: GdxServiceLog, b: GdxServiceLog, dir: SortEvent): number => {
-        const value1 = !CommonUtils.isValidValue(a) ? '' : a.orgUserInfo?.getName().toLowerCase(),
-          value2 = !CommonUtils.isValidValue(b) ? '' : b.orgUserInfo?.getName().toLowerCase();
-        return CommonUtils.getSortValue(value1, value2, dir.direction);
-      },
-      actionTime: (a: GdxServiceLog, b: GdxServiceLog, dir: SortEvent): number => {
-        const value1 = !CommonUtils.isValidValue(a) ? '' : DateUtils.getTimeStampFromDate(a.actionTime),
-          value2 = !CommonUtils.isValidValue(b) ? '' : DateUtils.getTimeStampFromDate(b.actionTime);
-        return CommonUtils.getSortValue(value1, value2, dir.direction);
-      }
-    },
-    mojRelatedFlats: {},
-    mojRelatedParcels: {},
-    mociRelatedCompanies: {
+
+  sortingCallbacksMap: { [key in GdxServiceRelatedTypesEnum]?: any } = {
+    [GdxServiceRelatedTypesEnum.MOCI_COMPANIES]: {
       companyName: (a: GdxMociResponse, b: GdxMociResponse, dir: SortEvent): number => {
         const value1 = !CommonUtils.isValidValue(a) ? '' : a.primaryEstablishmentName.toLowerCase(),
           value2 = !CommonUtils.isValidValue(b) ? '' : b.primaryEstablishmentName.toLowerCase();
@@ -201,81 +178,77 @@ export class GdxBeneficiaryIntegrationComponent implements OnInit, OnDestroy {
           value2 = !CommonUtils.isValidValue(b) ? '' : b.ownerStatus.toLowerCase();
         return CommonUtils.getSortValue(value1, value2, dir.direction);
       },
-    },
-    garsiaRelatedPensions: {}
-  };
-  actionsMap: { [key: string]: IMenuItem<any>[] } = {};
-  selectedRecordMap: any = {
-    moj: null,
-    moci: null,
-    mawared: null,
-    garsia: null
+    }
   };
 
-  getBeneficiaryQID(beneficiary: Beneficiary): string {
-    if (!beneficiary) {
-      return '';
-    }
-    if (beneficiary.benPrimaryIdType === BeneficiaryIdTypes.QID) {
-      return beneficiary.benPrimaryIdNumber;
-    } else if (beneficiary.benSecIdNumber && Number(beneficiary.benSecIdType) === BeneficiaryIdTypes.QID) {
-      return beneficiary.benSecIdNumber;
-    } else {
-      return '';
+  actionsMap: { [key in GdxServiceRelatedTypesEnum]: IMenuItem<any>[] } = {
+    [GdxServiceRelatedTypesEnum.MOJ_FLATS]: [],
+    [GdxServiceRelatedTypesEnum.MOJ_PARCELS]: [],
+    [GdxServiceRelatedTypesEnum.MOCI_COMPANIES]: [],
+    [GdxServiceRelatedTypesEnum.MAWARED_RELATED]: [],
+    [GdxServiceRelatedTypesEnum.GARSIA_PENSION]: [
+      // payments
+      {
+        type: 'action',
+        label: 'payments',
+        show: () => true,
+        onClick: (item: GdxGarsiaPensionResponse) => {
+          this.selectedGarsiaPension = item;
+          this.relatedData[GdxServiceRelatedTypesEnum.GARSIA_PENSION_PAYMENT] = item.pensionMonthlyPayments;
+          this.pensionPaymentsPaginator.goToControl.setValue(1);
+        }
+      }
+    ],
+    [GdxServiceRelatedTypesEnum.GARSIA_PENSION_PAYMENT]: [],
+    [GdxServiceRelatedTypesEnum.IZZAB_RELATED]: [],
+    [GdxServiceRelatedTypesEnum.KAHRAMAA_RELATED]: []
+  };
+
+  private _getServiceComponent(serviceId: GdxServicesEnum): GdxIntegrationInquiryLogListComponent {
+    return this.logListComponentsMap.get(serviceId);
+  }
+
+  private _resetSelectedLog(serviceId: GdxServicesEnum) {
+    this.selectedLog = {};
+    const currentListComponent = this._getServiceComponent(serviceId);
+    if (currentListComponent) {
+      currentListComponent.selectedRecord = undefined;
     }
   }
 
   onTabChange($event: TabComponent) {
     const selectedTab = this._findTab('tabName', $event.name);
-    if (!selectedTab) {
+    if (!selectedTab || selectedTab.isLoaded) {
       return;
     }
-    if (!selectedTab.isLoaded) {
-      this.loadGDXIntegrationData(selectedTab.serviceId, true);
-    }
-  }
-
-  loadGDXIntegrationData(serviceId: string, userInteraction: boolean = false) {
-    if (!this.getBeneficiaryQID(this.beneficiary!)) {
+    let listComponent = this._getServiceComponent(selectedTab.serviceId);
+    if (!listComponent) {
       return;
     }
-    const criteria = this._getGDXCriteria(this.beneficiary, serviceId);
-    criteria.orgUserId = this.employeeService.getExternalUser()?.id;
-    this.beneficiaryService.loadGDXIntegrationData(criteria)
-      .pipe(
-        takeUntil(this.destroy$),
-        tap(() => {
-          if (userInteraction) {
-            const selectedTab = this._findTab('serviceId', serviceId);
-            selectedTab ? selectedTab.isLoaded = true : null;
-          }
-        })
-      )
-      .subscribe((result) => {
-        this._setResult(result, serviceId);
-        this._resetRelatedData(serviceId);
-      });
+    this.selectedService = selectedTab.serviceId;
+    listComponent?.reload$.next(null);
   }
 
   selectLog(log: GdxServiceLog): void {
+    this.selectedLog[log.gdxServiceId as GdxServicesEnum] = log;
     switch (log.gdxServiceId) {
       case GdxServicesEnum.MOJ:
-        this.mojRelatedData = log.gdxServiceResponseParsed;
-        this.selectedRecordMap.moj = log;
+        this.relatedData[GdxServiceRelatedTypesEnum.MOJ_FLATS] = log.gdxServiceResponseParsed.flatInfoList;
+        this.relatedData[GdxServiceRelatedTypesEnum.MOJ_PARCELS] = log.gdxServiceResponseParsed.parcelInfoList;
         break;
       case GdxServicesEnum.MOCI:
-        this.mociRelatedDataList = log.gdxServiceResponseList;
-        this.selectedRecordMap.moci = log;
+        this.relatedData[GdxServiceRelatedTypesEnum.MOCI_COMPANIES] = log.gdxServiceResponseList;
         break;
       case GdxServicesEnum.MAWARED:
-        this.mawaredRelatedDataList = [log.gdxServiceResponseParsed];
-        this.selectedRecordMap.mawared = log;
+        this.relatedData[GdxServiceRelatedTypesEnum.MAWARED_RELATED] = [log.gdxServiceResponseParsed];
         break;
       case GdxServicesEnum.GARSIA:
-        this.garsiaRelatedDataList = [log.gdxServiceResponseParsed];
-        this.selectedRecordMap.garsia = log;
+        this.relatedData[GdxServiceRelatedTypesEnum.GARSIA_PENSION] = [log.gdxServiceResponseParsed];
+        this.relatedData[GdxServiceRelatedTypesEnum.GARSIA_PENSION_PAYMENT] = [];
         this.selectedGarsiaPension = undefined;
-        this.selectedGarsiaPensionList = [];
+        break;
+      case GdxServicesEnum.KAHRAMAA:
+        this.relatedData[GdxServiceRelatedTypesEnum.KAHRAMAA_RELATED] = log.gdxServiceResponseList;
         break;
       default:
         break;
@@ -293,148 +266,42 @@ export class GdxBeneficiaryIntegrationComponent implements OnInit, OnDestroy {
     });
   }
 
-  private _setResult(response: GdxServiceLog[], serviceId: string) {
-    switch (serviceId) {
-      case GdxServicesEnum.MOJ:
-        this.mojLogs = response;
-        break;
-      case GdxServicesEnum.MOCI:
-        this.mociLogs = response;
-        break;
-      case GdxServicesEnum.MAWARED:
-        this.mawaredLogs = response;
-        break;
-      case GdxServicesEnum.GARSIA:
-        this.garsiaLogs = response;
-        break;
-      default:
-        break;
+  setLookupComponentMap(serviceId: GdxServicesEnum, componentRef: GdxIntegrationInquiryLogListComponent) {
+    if (!CommonUtils.isValidValue(serviceId)) {
+      return;
+    }
+    this.logListComponentsMap.set(serviceId, componentRef);
+    if (serviceId === GdxServicesEnum.MOJ) {
+      componentRef.reload$.next(null); // load the first tab manually
     }
   }
 
-  private _getGDXCriteria(beneficiary: Beneficiary, gdxServiceId: string): IGdxCriteria {
-    return {
-      qId: this.getBeneficiaryQID(beneficiary),
-      gdxServiceId: gdxServiceId,
-      benId: beneficiary.id
-    };
+  loadRecordsDone(serviceId: GdxServicesEnum) {
+    this._resetRelatedData(serviceId);
+    const selectedTab = this._findTab('serviceId', serviceId);
+    selectedTab ? selectedTab.isLoaded = true : null;
   }
 
-  private listenToAddIntegrationInquiries() {
-    this._listenToAddInquiriesMOJ();
-    this._listenToAddInquiriesMOCI();
-    this._listenToAddInquiriesMAWARED();
-    this._listenToAddInquiriesGARSIA();
-  }
-
-  private listenToReloadIntegrationInquiries() {
-    this._listenToReloadGDXServiceData();
-  }
-
-  private _listenToAddInquiriesMOJ(): void {
-    this.addMOJ$
-      .pipe(takeUntil(this.destroy$))
-      .pipe(exhaustMap(() => {
-        return this.beneficiaryService.addMOJInquiry(this._getGDXCriteria(this.beneficiary!, GdxServicesEnum.MOJ));
-      }))
-      .subscribe(() => {
-        this.toast.success(this.langService.map.msg_added_successfully);
-        this.loadGDXIntegrationData(GdxServicesEnum.MOJ);
-      });
-  }
-
-  private _listenToAddInquiriesMOCI(): void {
-    this.addMOCI$
-      .pipe(takeUntil(this.destroy$))
-      .pipe(exhaustMap(() => {
-        return this.beneficiaryService.addMOCIInquiry(this._getGDXCriteria(this.beneficiary!, GdxServicesEnum.MOCI));
-      }))
-      .subscribe(() => {
-        this.toast.success(this.langService.map.msg_added_successfully);
-        this.loadGDXIntegrationData(GdxServicesEnum.MOCI);
-      });
-  }
-
-  private _listenToAddInquiriesMAWARED(): void {
-    this.addMawared$
-      .pipe(takeUntil(this.destroy$))
-      .pipe(exhaustMap(() => {
-        return this.beneficiaryService.addMAWAREDInquiry(this._getGDXCriteria(this.beneficiary!, GdxServicesEnum.MAWARED));
-      }))
-      .subscribe(() => {
-        this.toast.success(this.langService.map.msg_added_successfully);
-        this.loadGDXIntegrationData(GdxServicesEnum.MAWARED);
-      });
-  }
-
-  private _listenToAddInquiriesGARSIA(): void {
-    this.addGarsia$
-      .pipe(takeUntil(this.destroy$))
-      .pipe(exhaustMap(() => {
-        return this.beneficiaryService.addGarsiaInquiry(this._getGDXCriteria(this.beneficiary!, GdxServicesEnum.GARSIA));
-      }))
-      .subscribe(() => {
-        this.toast.success(this.langService.map.msg_added_successfully);
-        this.loadGDXIntegrationData(GdxServicesEnum.GARSIA);
-      });
-  }
-
-  private _listenToReloadGDXServiceData(): void {
-    this.reloadMOJ$.pipe(
-      takeUntil(this.destroy$),
-      filter(val => val !== 'init')
-    ).subscribe(() => this.loadGDXIntegrationData(GdxServicesEnum.MOJ));
-
-    this.reloadMOCI$.pipe(
-      takeUntil(this.destroy$),
-      filter(val => val !== 'init')
-    ).subscribe(() => this.loadGDXIntegrationData(GdxServicesEnum.MOCI));
-
-    this.reloadMawared$.pipe(
-      takeUntil(this.destroy$),
-      filter(val => val !== 'init')
-    ).subscribe(() => this.loadGDXIntegrationData(GdxServicesEnum.MAWARED));
-
-    this.reloadGarsia$.pipe(
-      takeUntil(this.destroy$),
-      filter(val => val !== 'init')
-    ).subscribe(() => this.loadGDXIntegrationData(GdxServicesEnum.GARSIA));
-  }
-
-  private _buildIntegrationActions() {
-    this.actionsMap.gdxServiceLog = [];
-    this.actionsMap.mojRelatedFlats = [];
-    this.actionsMap.mojRelatedParcels = [];
-    this.actionsMap.mociRelatedCompanies = [];
-    this.actionsMap.mawaredRelatedData = [];
-    this.actionsMap.garsiaRelatedPensions = [{
-      type: 'action',
-      label: 'payments',
-      show: () => true,
-      onClick: (item: GdxGarsiaPensionResponse) => {
-        this.selectedGarsiaPension = item;
-        this.selectedGarsiaPensionList = item.pensionMonthlyPayments;
-        this.pensionPaymentsPaginator.goToControl.setValue(1);
-      }
-    }];
-    this.actionsMap.garsiaPensionPayments = [];
-  }
-
-  private _resetRelatedData(serviceId: string) {
-    switch (serviceId + '') {
-      case GdxServicesEnum.MOPH:
-        this.mojRelatedData = {flatInfoList: [], parcelInfoList: []};
+  private _resetRelatedData(serviceId: GdxServicesEnum) {
+    this._resetSelectedLog(serviceId);
+    switch (serviceId) {
+      case GdxServicesEnum.MOJ:
+        this.relatedData[GdxServiceRelatedTypesEnum.MOJ_FLATS] = [];
+        this.relatedData[GdxServiceRelatedTypesEnum.MOJ_PARCELS] = [];
         break;
       case GdxServicesEnum.MOCI:
-        this.mociRelatedDataList = [];
+        this.relatedData[GdxServiceRelatedTypesEnum.MOCI_COMPANIES] = [];
         break;
       case GdxServicesEnum.MAWARED:
-        this.mawaredRelatedDataList = [];
+        this.relatedData[GdxServiceRelatedTypesEnum.MAWARED_RELATED] = [];
         break;
       case GdxServicesEnum.GARSIA:
-        this.garsiaRelatedDataList = [];
+        this.relatedData[GdxServiceRelatedTypesEnum.GARSIA_PENSION] = [];
+        this.relatedData[GdxServiceRelatedTypesEnum.GARSIA_PENSION_PAYMENT] = [];
         this.selectedGarsiaPension = undefined;
-        this.selectedGarsiaPensionList = [];
+        break;
+      case GdxServicesEnum.KAHRAMAA:
+        this.relatedData[GdxServiceRelatedTypesEnum.KAHRAMAA_RELATED] = [];
         break;
       default:
         break;

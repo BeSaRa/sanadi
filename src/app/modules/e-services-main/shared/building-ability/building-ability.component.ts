@@ -37,7 +37,7 @@ export class BuildingAbilityComponent implements OnInit {
 
   private _list: BuildingAbility[] = [];
   @Input() set list(list: BuildingAbility[]) {
-    if (this.allowListUpdate === true) {
+    if (this.allowListUpdate) {
       this._list = list;
       this.listDataSource.next(this._list);
     }
@@ -65,13 +65,13 @@ export class BuildingAbilityComponent implements OnInit {
   private currentRecord?: BuildingAbility;
 
   private destroy$: Subject<any> = new Subject<any>();
-  formOpend = false;
+  formOpened = false;
   form!: FormGroup;
   @Input() organizationUnits: Profile[] = [];
   @Input() trainingTypes: Lookup[] = [];
   @Input() trainingLanguages: Lookup[] = [];
-  @Input() trainingWayes: Lookup[] = [];
-  @Input() recommendedWayes: Lookup[] = [];
+  @Input() trainingWays: Lookup[] = [];
+  @Input() recommendedWays: Lookup[] = [];
   @Input() canUpdate: boolean = true;
   @Input() isClaimed: boolean = true;
 
@@ -113,7 +113,7 @@ export class BuildingAbilityComponent implements OnInit {
   private listenToAdd() {
     this.add$.pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.viewOnly = false;
-      this.formOpend = true;
+      this.formOpened = true;
       this.recordChanged$.next(new BuildingAbility());
     });
   }
@@ -172,7 +172,7 @@ export class BuildingAbilityComponent implements OnInit {
             ...form.getRawValue(),
           });
           this._updateLookups(model);
-          this.formOpend = false;
+          this.formOpened = false;
           return model;
         })
       )
@@ -226,7 +226,7 @@ export class BuildingAbilityComponent implements OnInit {
   }
 
   addAllowed(): boolean {
-    return !this.readonly && !this.formOpend;
+    return !this.readonly && !this.formOpened;
   }
 
   onSave() {
@@ -243,7 +243,7 @@ export class BuildingAbilityComponent implements OnInit {
   }
 
   private resetForm() {
-    this.formOpend = false;
+    this.formOpened = false;
     this.formArray.clear();
     this.formArray.markAsUntouched();
     this.formArray.markAsPristine();
@@ -251,7 +251,7 @@ export class BuildingAbilityComponent implements OnInit {
 
   view($event: MouseEvent, record: BuildingAbility, index: number) {
     $event.preventDefault();
-    this.formOpend = true;
+    this.formOpened = true;
     this.editIndex = index;
     this.viewOnly = true;
     this.recordChanged$.next(record);
@@ -275,7 +275,7 @@ export class BuildingAbilityComponent implements OnInit {
 
   edit($event: MouseEvent, record: BuildingAbility, index: number) {
     $event.preventDefault();
-    this.formOpend = true;
+    this.formOpened = true;
     if (this.readonly) {
       return;
     }

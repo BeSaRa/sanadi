@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  members: string;
   final_report_has_not_yet_been_uploaded: string;
   add_branch: string;
   add_compliance_officer: string;
@@ -1098,6 +1099,9 @@ export interface ILanguageKeys {
   license_min_time: string;
   license_max_time: string;
   fees: string;
+  fine: string;
+  has_sheep: string;
+  outstanding_payment_report: string;
   service_terms: string;
   service_description: string;
   service_requirements: string;
@@ -1230,6 +1234,8 @@ export interface ILanguageKeys {
   integration_moph: string;
   integration_mawared: string;
   integration_garsia: string;
+  integration_izzab: string;
+  integration_kahramaa: string;
   integration_qatar_charity: string;
   date_of_death: string;
   company_info: string;
