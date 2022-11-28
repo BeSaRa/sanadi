@@ -12,6 +12,7 @@ export class GeneralAssociationInternalMember extends SearchableCloneable<Genera
   name?: string;
   pId?: string;
   tkiid?: string;
+  userId!: number;
   memberTypeInfo!: AdminResult;
   langService!: LangService;
 

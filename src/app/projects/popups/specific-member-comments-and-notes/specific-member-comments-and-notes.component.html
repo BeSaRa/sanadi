@@ -1,0 +1,58 @@
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
+  <h1 class="h6 text-white">{{data.internalMember.getName()}}</h1>
+  <button type="button" class="btn-close btn-close-white"
+          tabindex="-1" dialogClose aria-label="Close"></button>
+</div>
+<div class="dialog-content no-fixed-height" [ngStyle]="{width: '800px'}">
+  <div class="row" *ngFor="let mainPoint of data.meetingReport.meetingMainItem">
+    <div class="col-md-12">
+      <h1 class="h6 text-primary m-0 d-inline-block">Main Point: {{mainPoint.enName}}</h1>
+      <app-table #table [columns]="subPointsDisplayedColumns"
+                 [data]="mainPoint.meetingSubItem" [selectable]="true"
+                 [useSearchToFilter]="true"
+                 sortableTable>
+        <table [dataSource]="table.dataSource" cdk-table
+               class="table table-striped table-bordered caption-top">
+          <ng-container cdkColumnDef="index">
+            <th *cdkHeaderCellDef cdk-header-cell
+                sortable-header> #
+            </th>
+            <td *cdkCellDef="let row; let i = index;" cdk-cell> {{i + 1}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="subPoint">
+            <th *cdkHeaderCellDef cdk-header-cell
+                sortable-header> {{lang.map.sub_points}}</th>
+            <td *cdkCellDef="let row" cdk-cell> {{row.enName}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="comment">
+            <th *cdkHeaderCellDef cdk-header-cell
+                sortable-header> {{lang.map.comments}}</th>
+            <td *cdkCellDef="let row" cdk-cell> {{row.userComments[0].comment}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="respectTerms">
+            <th *cdkHeaderCellDef cdk-header-cell
+                sortable-header> {{lang.map.respect_terms}}</th>
+            <td cdk-cell *cdkCellDef="let row;" class="table-actions">
+                <span afterTemplate class="form-check form-switch switch-action"
+                      style="top: auto; margin-left: 8px">
+                    <input class="form-check-input" type="checkbox"
+                           [disabled]="true"
+                           [checked]="row.userComments[0].respectTerms == 1">
+                  </span>
+            </td>
+          </ng-container>
+          <tr *cdkHeaderRowDef="subPointsDisplayedColumns" cdk-header-row></tr>
+          <tr *cdkRowDef="let row; columns: subPointsDisplayedColumns;" cdk-row></tr>
+          <!--suppress HtmlUnknownBooleanAttribute -->
+          <tr *cdkNoDataRow>
+            <td class="text-center" colspan="100">{{lang.map.no_records_to_display}}</td>
+          </tr>
+        </table>
+      </app-table>
+    </div>
+  </div>
+</div>
+<div class="dialog-actions">
+  <div class="flex-grow-1"></div>
+  <button dialogClose class="btn btn-secondary">{{lang.map.btn_close}}</button>
+</div>

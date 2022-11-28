@@ -21,7 +21,7 @@ export class MeetingPointMembersCommentsPopupComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('comments', this.data.membersComments);
+
   }
 
 }

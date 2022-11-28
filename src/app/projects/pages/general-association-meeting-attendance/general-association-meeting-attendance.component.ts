@@ -101,6 +101,8 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   viewFinalReport$: Subject<void> = new Subject<void>();
   @ViewChild('finalReportUploader') finalReportUploader!: ElementRef;
 
+  meetingReport!: MeetingAttendanceReport;
+
   constructor(public lang: LangService,
               public fb: FormBuilder,
               private cd: ChangeDetectorRef,
@@ -254,9 +256,9 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     if (this.model?.isDecisionMakerReviewStep() || this.model?.isManagerFinalReviewStep()) {
       this.service.getMeetingPointsForDecisionMaker(this.model?.id).subscribe(meetingReport => {
         if (this.isMemberReview || ((this.isDecisionMakerReview || this.isManagerFinalReview) && meetingReport && meetingReport.meetingMainItem.length > 0)) {
-          // get meeting attendance report
-          this.updateMeetingPointsForm(meetingReport);
           // update meeting points form
+          this.meetingReport = meetingReport;
+          this.updateMeetingPointsForm(meetingReport);
         } else {
           this.buildMeetingPointsForm();
         }
@@ -928,6 +930,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
         user.pId = this.meetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.pId;
         user.name = this.meetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.name;
         user.tkiid = this.meetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.tkiid;
+        user.userId = this.meetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.userId;
         return user;
       });
     });

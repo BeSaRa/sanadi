@@ -39,6 +39,9 @@ import {BlobModel} from '@app/models/blob-model';
 import {map} from 'rxjs/operators';
 import {CommonUtils} from '@helpers/common-utils';
 import {IMyDateModel} from 'angular-mydatepicker';
+import {
+  SpecificMemberCommentsAndNotesComponent
+} from '@app/projects/popups/specific-member-comments-and-notes/specific-member-comments-and-notes.component';
 
 @CastResponseContainer({
   $default: {
@@ -257,6 +260,14 @@ export class GeneralAssociationMeetingAttendanceService extends BaseGenericEServ
   openViewPointMembersCommentsDialog(membersComments: MeetingPointMemberComment[]): DialogRef {
     return this.dialog.show(MeetingPointMembersCommentsPopupComponent, {
       membersComments
+    });
+  }
+
+  openViewMemberCommentsAndNotesDialog(internalMember: GeneralAssociationInternalMember, meetingReport: MeetingAttendanceReport, generalNotes: GeneralMeetingAttendanceNote[]): DialogRef {
+    return this.dialog.show(SpecificMemberCommentsAndNotesComponent, {
+      internalMember,
+      meetingReport,
+      generalNotes
     });
   }
 
