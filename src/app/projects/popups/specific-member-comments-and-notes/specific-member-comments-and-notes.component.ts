@@ -12,6 +12,7 @@ import {GeneralAssociationInternalMember} from '@app/models/general-association-
 })
 export class SpecificMemberCommentsAndNotesComponent {
   subPointsDisplayedColumns: string[] = ['index', 'subPoint', 'comment', 'respectTerms'];
+  generalNotesDisplayedColumns: string[] = ['index', 'comment'];
 
   constructor(
     @Inject(DIALOG_DATA_TOKEN) public data: {

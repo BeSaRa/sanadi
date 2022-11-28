@@ -171,7 +171,6 @@ export class ManageInternalUsersComponent implements OnInit {
 
   viewMemberCommentsAndNotes(event: MouseEvent, model: GeneralAssociationInternalMember) {
     event.preventDefault();
-    console.log('yyyyyyyyyyyyyyyy', this.generalNotes);
     // filter depend on userId
     let userMeetingReport = JSON.parse(JSON.stringify({...this.meetingReport})) as MeetingAttendanceReport;
 
