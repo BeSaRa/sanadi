@@ -11,6 +11,7 @@ import {
 import {LangService} from "@app/services/lang.service";
 import {UrlService} from "@app/services/url.service";
 import {MapService} from "@app/services/map.service";
+import {TokenService} from "@services/token.service";
 
 
 @Component({
@@ -82,7 +83,12 @@ export class RacaMapsComponent implements OnDestroy, OnInit {
               private lang: LangService,
               private urlService: UrlService,
               private mapService: MapService,
+              private tokenService: TokenService,
               private configuration: ConfigurationService) {
+
+    const url = `${this.urlService.URLS.MAP_API_URL}${this.configuration.CONFIG.MAP_API_KEY}`;
+
+    this.tokenService.addExcludedUrl(url + '&callback=JSONP_CALLBACK');
 
     this.loader = of(this.mapService.loaded)
       .pipe(switchMap(loaded => iif(() => loaded, of(true), this.http.jsonp(`${this.urlService.URLS.MAP_API_URL}${this.configuration.CONFIG.MAP_API_KEY}`, 'callback'))))
@@ -93,6 +99,7 @@ export class RacaMapsComponent implements OnDestroy, OnInit {
           return true
         }),
         catchError((_e) => {
+          console.log(_e);
           return of(false)
         })
       )
