@@ -19,7 +19,7 @@ export const defaultConfiguration: Partial<IAppConfig> = {
   DATEPICKER_FORMAT: 'YYYY-MM-DD',
   CHARITY_ORG_TEAM: 'Charity Organization',
   GIVE_USERS_PERMISSIONS: [],
-  MAP_API_KEY: 'AIzaSyC--IAJ4X9fxT2y8b6e-ooxxsMjzrwIOJ4',
+  MAP_API_KEY: 'AIzaSyAhWYKMzIKxukRQ6D0p6M3hyVZu6NqRlqo',
   BENEFICIARY_AUDIT_LIMIT: 50,
   E_SERVICE_ITEM_KEY: 'item',
   LOGIN_BACKGROUND_FALLBACK: 'login-background.png',
