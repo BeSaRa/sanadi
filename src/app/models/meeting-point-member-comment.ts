@@ -5,4 +5,5 @@ export class MeetingPointMemberComment extends SearchableCloneable<MeetingPointM
   comment!: string;
   enName!: string;
   userId!: number;
+  respectTerms!: number;
 }

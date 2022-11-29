@@ -34,6 +34,7 @@ import {GeneralMeetingAttendanceNote} from '@app/models/general-meeting-attendan
 import {MeetingMemberTaskStatus} from '@app/models/meeting-member-task-status';
 import {MeetingPointMemberComment} from '@app/models/meeting-point-member-comment';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {CommonUtils} from '@helpers/common-utils';
 
 @Component({
   selector: 'general-association-meeting-attendance',
@@ -259,6 +260,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
           // update meeting points form
           this.meetingReport = meetingReport;
           this.updateMeetingPointsForm(meetingReport);
+          // auto check respect terms
         } else {
           this.buildMeetingPointsForm();
         }
@@ -829,14 +831,34 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     return this.fb.group({
       id: [subItem.id],
       enName: [subItem.enName, [CustomValidators.required, CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]],
-      comment: [subItem.comment, this.isMemberReview ? [CustomValidators.required, CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)] : []],
-      respectTerms: [subItem.respectTerms, []],
+      comment: [subItem.comment, this.isMemberReview || (this.isDecisionMakerReview && this.model?.isSendToMember) ? [CustomValidators.required, CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)] : []],
+      respectTerms: [(this.isDecisionMakerReview && this.model?.isSendToMember && !CommonUtils.isValidValue(subItem?.comment)) ? this.autoCheckRespectTerms(subItem.userComments!) : subItem.respectTerms, []],
       mainItemID: [subItem.mainItemID],
       memberID: [subItem.memberID],
       status: [subItem.status],
       userComments: [subItem.userComments],
       selected: []
     });
+  }
+
+  autoCheckRespectTerms(userComments: MeetingPointMemberComment[]) {
+    let respectTerms;
+    if (userComments.length === 0) {
+      respectTerms = 0;
+      return respectTerms;
+    }
+
+    let respectTermsSum = userComments.reduce((accumulator, comment) => {
+      return accumulator + comment.respectTerms;
+    }, 0);
+
+    if (respectTermsSum >= (userComments.length / 2)) {
+      respectTerms = 1;
+    } else {
+      respectTerms = 0;
+    }
+
+    return respectTerms;
   }
 
   addSubItem(index: number) {
@@ -872,12 +894,30 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     }
   }
 
+  getViewSubItemClass() {
+    if (this.lang.map.lang === 'en') {
+      return {'view-sub-item-right': true, 'view-sub-item-left': false};
+    } else {
+      return {'view-sub-item-right': false, 'view-sub-item-left': true};
+    }
+  }
+
   saveMeetingPoints() {
     const model = new MeetingAttendanceReport().clone(this.meetingPointsForm.value);
     this.service.addMeetingPoints(model, this.model?.id).subscribe(ret => {
       if (ret) {
         this.updateMeetingPointsForm(ret);
         this.dialog.success(this.lang.map.meeting_points_saved_successfully);
+      }
+    });
+  }
+
+  saveFinalMeetingPoints() {
+    const model = new MeetingAttendanceReport().clone(this.meetingPointsForm.value);
+    this.service.addFinalMeetingPoints(model, this.model?.id).subscribe(ret => {
+      if (ret) {
+        this.updateMeetingPointsForm(ret);
+        this.dialog.success(this.lang.map.final_comments_saved_successfully);
       }
     });
   }

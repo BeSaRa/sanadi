@@ -24,4 +24,7 @@ export class MeetingPointMembersCommentsPopupComponent implements OnInit {
 
   }
 
+  getMemberName(member: MeetingPointMemberComment): string {
+    return this.lang?.map.lang === 'ar' ? member.arName : member.enName;
+  }
 }

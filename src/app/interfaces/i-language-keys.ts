@@ -1,4 +1,6 @@
 export interface ILanguageKeys {
+  final_comments_saved_successfully: string;
+  save_final_comments: string;
   members: string;
   final_report_has_not_yet_been_uploaded: string;
   add_branch: string;

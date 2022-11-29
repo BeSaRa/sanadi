@@ -50,7 +50,7 @@ export class ManageInternalUsersComponent implements OnInit {
   membersDisplayedColumns: string[] = ['index', 'arabicName', 'englishName', 'isDecisionMaker', 'status', 'actions'];
   internalUserType = GeneralAssociationInternalMemberTypeEnum;
   @Input() meetingReport!: MeetingAttendanceReport;
-  @Input() generalNotes: GeneralMeetingAttendanceNote[] = [];
+  generalNotes: GeneralMeetingAttendanceNote[] = [];
 
   constructor(private dialog: DialogService,
               public lang: LangService,
@@ -171,20 +171,11 @@ export class ManageInternalUsersComponent implements OnInit {
 
   viewMemberCommentsAndNotes(event: MouseEvent, model: GeneralAssociationInternalMember) {
     event.preventDefault();
-    // filter depend on userId
-    let userMeetingReport = JSON.parse(JSON.stringify({...this.meetingReport})) as MeetingAttendanceReport;
+    this.generalAssociationMeetingService.openViewMemberCommentsAndNotesDialog(model, this.meetingReport, model.userId, this.model?.id);
+  }
 
-    userMeetingReport.meetingMainItem = userMeetingReport.meetingMainItem.slice();
-    userMeetingReport.meetingMainItem.forEach(mainItem => {
-      mainItem.meetingSubItem = mainItem.meetingSubItem.slice();
-      mainItem.meetingSubItem.forEach(subItem => {
-        subItem.userComments = subItem.userComments?.slice();
-        subItem.userComments = subItem.userComments?.filter(comment => comment.userId === model.userId);
-      });
-    });
-
-    let userGeneralNotes = this.generalNotes.filter(x => x.memberID === model.userId);
-    this.generalAssociationMeetingService.openViewMemberCommentsAndNotesDialog(model, userMeetingReport, userGeneralNotes);
+  setGeneralNotesByMemberId(memberId: number) {
+    return this.generalAssociationMeetingService.getMeetingGeneralNotes(memberId, this.model?.id);
   }
 
   isExistMemberInCaseOfAdd(selectedMembers: GeneralAssociationInternalMember[], toBeAddedMember: GeneralAssociationInternalMember): boolean {

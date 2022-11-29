@@ -21,7 +21,7 @@
           <ng-container cdkColumnDef="member">
             <th *cdkHeaderCellDef cdk-header-cell
                 sortable-header> {{lang.map.meeting_member_name}}</th>
-            <td *cdkCellDef="let row" cdk-cell> {{row.getName()}} </td>
+            <td *cdkCellDef="let row" cdk-cell> {{getMemberName(row)}} </td>
           </ng-container>
           <ng-container cdkColumnDef="comment">
             <th *cdkHeaderCellDef cdk-header-cell

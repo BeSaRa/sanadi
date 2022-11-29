@@ -1,5 +1,5 @@
 <div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
-  <h1 class="h6 text-white">{{data.internalMember.getName()}}</h1>
+  <h1 class="h6 text-white">{{getMemberName()}}</h1>
   <button type="button" class="btn-close btn-close-white"
           tabindex="-1" dialogClose aria-label="Close"></button>
 </div>
@@ -56,7 +56,7 @@
     <div class="col-12">
       <h1 class="h6 text-primary m-0 d-inline-block">{{lang.map.general_notes}}</h1>
       <app-table #table [columns]="generalNotesDisplayedColumns"
-                 [data]="data.generalNotes" [selectable]="true"
+                 [data]="this.generalNotes" [selectable]="true"
                  [useSearchToFilter]="true"
                  sortableTable>
         <table [dataSource]="table.dataSource" cdk-table

@@ -4,6 +4,7 @@ import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {MeetingAttendanceReport} from '@app/models/meeting-attendance-report';
 import {GeneralMeetingAttendanceNote} from '@app/models/general-meeting-attendance-note';
 import {GeneralAssociationInternalMember} from '@app/models/general-association-internal-member';
+import {GeneralAssociationMeetingAttendanceService} from '@services/general-association-meeting-attendance.service';
 
 @Component({
   selector: 'specific-member-comments-and-notes',
@@ -13,13 +14,37 @@ import {GeneralAssociationInternalMember} from '@app/models/general-association-
 export class SpecificMemberCommentsAndNotesComponent {
   subPointsDisplayedColumns: string[] = ['index', 'subPoint', 'comment', 'respectTerms'];
   generalNotesDisplayedColumns: string[] = ['index', 'comment'];
-
+  generalNotes: GeneralMeetingAttendanceNote[] = [];
   constructor(
     @Inject(DIALOG_DATA_TOKEN) public data: {
       internalMember: GeneralAssociationInternalMember,
       meetingReport: MeetingAttendanceReport,
-      generalNotes: GeneralMeetingAttendanceNote[]
+      userId: number,
+      meetingId: string
     },
+    private generalAssociationMeetingService: GeneralAssociationMeetingAttendanceService,
     public lang: LangService) {
+    this.data.meetingReport = JSON.parse(JSON.stringify({...this.data.meetingReport})) as MeetingAttendanceReport;
+
+    data.meetingReport.meetingMainItem = data.meetingReport.meetingMainItem.slice();
+    data.meetingReport.meetingMainItem.forEach(mainItem => {
+      mainItem.meetingSubItem = mainItem.meetingSubItem.slice();
+      mainItem.meetingSubItem.forEach(subItem => {
+        subItem.userComments = subItem.userComments?.slice();
+        subItem.userComments = subItem.userComments?.filter(comment => comment.userId === this.data.userId);
+      });
+    });
+
+    this.setGeneralNotesByMemberId();
+  }
+
+  setGeneralNotesByMemberId() {
+    return this.generalAssociationMeetingService.getMeetingGeneralNotes(this.data.userId, this.data.meetingId).subscribe(notes => {
+      this.generalNotes = notes;
+    })
+  }
+
+  getMemberName(): string {
+    return this.lang?.map.lang === 'ar' ? this.data.internalMember.arabicName : this.data.internalMember.englishName;
   }
 }

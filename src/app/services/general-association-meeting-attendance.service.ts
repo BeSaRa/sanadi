@@ -188,6 +188,19 @@ export class GeneralAssociationMeetingAttendanceService extends BaseGenericEServ
     return this._addMeetingPoints(meetingItems, caseId);
   }
 
+  @HasInterception
+  @CastResponse(() => MeetingAttendanceReport, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  private _addFinalMeetingPoints(@InterceptParam() meetingItems: MeetingAttendanceReport, caseId?: string): Observable<MeetingAttendanceReport> {
+    return this.http.post<MeetingAttendanceReport>(this._getURLSegment() + '/items/add-update/final/' + caseId, meetingItems);
+  }
+
+  addFinalMeetingPoints(meetingItems: MeetingAttendanceReport, caseId?: string): Observable<MeetingAttendanceReport> {
+    return this._addFinalMeetingPoints(meetingItems, caseId);
+  }
+
   @CastResponse(() => MeetingAttendanceReport, {
     unwrap: 'rs',
     fallback: '$default'
@@ -229,6 +242,19 @@ export class GeneralAssociationMeetingAttendanceService extends BaseGenericEServ
     return this._addMeetingGeneralNotes(meetingNotes, caseId);
   }
 
+  @HasInterception
+  @CastResponse(() => GeneralMeetingAttendanceNote, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  private _addFinalMeetingGeneralNotes(@InterceptParam() meetingItems: GeneralMeetingAttendanceNote[], caseId?: string): Observable<GeneralMeetingAttendanceNote[]> {
+    return this.http.post<GeneralMeetingAttendanceNote[]>(this._getURLSegment() + '/' + caseId + '/meeting-comments/final', meetingItems);
+  }
+
+  addFinalMeetingGeneralNotes(meetingNotes: GeneralMeetingAttendanceNote[], caseId?: string): Observable<GeneralMeetingAttendanceNote[]> {
+    return this._addMeetingGeneralNotes(meetingNotes, caseId);
+  }
+
   @CastResponse(() => GeneralMeetingAttendanceNote, {
     unwrap: 'rs',
     fallback: '$default'
@@ -263,11 +289,12 @@ export class GeneralAssociationMeetingAttendanceService extends BaseGenericEServ
     });
   }
 
-  openViewMemberCommentsAndNotesDialog(internalMember: GeneralAssociationInternalMember, meetingReport: MeetingAttendanceReport, generalNotes: GeneralMeetingAttendanceNote[]): DialogRef {
+  openViewMemberCommentsAndNotesDialog(internalMember: GeneralAssociationInternalMember, meetingReport: MeetingAttendanceReport, userId: number, meetingId: string): DialogRef {
     return this.dialog.show(SpecificMemberCommentsAndNotesComponent, {
       internalMember,
       meetingReport,
-      generalNotes
+      userId,
+      meetingId
     });
   }
 
