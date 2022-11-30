@@ -50,7 +50,7 @@ export class ManageInternalUsersComponent implements OnInit {
   membersDisplayedColumns: string[] = ['index', 'arabicName', 'englishName', 'isDecisionMaker', 'status', 'actions'];
   internalUserType = GeneralAssociationInternalMemberTypeEnum;
   @Input() meetingReport!: MeetingAttendanceReport;
-  generalNotes: GeneralMeetingAttendanceNote[] = [];
+  @Input() generalNotes: GeneralMeetingAttendanceNote[] = [];
 
   constructor(private dialog: DialogService,
               public lang: LangService,
@@ -171,11 +171,7 @@ export class ManageInternalUsersComponent implements OnInit {
 
   viewMemberCommentsAndNotes(event: MouseEvent, model: GeneralAssociationInternalMember) {
     event.preventDefault();
-    this.generalAssociationMeetingService.openViewMemberCommentsAndNotesDialog(model, this.meetingReport, model.userId, this.model?.id);
-  }
-
-  setGeneralNotesByMemberId(memberId: number) {
-    return this.generalAssociationMeetingService.getMeetingGeneralNotes(memberId, this.model?.id);
+    this.generalAssociationMeetingService.openViewMemberCommentsAndNotesDialog(model, this.meetingReport, this.generalNotes, model.userId, this.model?.id);
   }
 
   isExistMemberInCaseOfAdd(selectedMembers: GeneralAssociationInternalMember[], toBeAddedMember: GeneralAssociationInternalMember): boolean {

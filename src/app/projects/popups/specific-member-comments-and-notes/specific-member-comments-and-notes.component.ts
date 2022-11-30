@@ -4,7 +4,6 @@ import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {MeetingAttendanceReport} from '@app/models/meeting-attendance-report';
 import {GeneralMeetingAttendanceNote} from '@app/models/general-meeting-attendance-note';
 import {GeneralAssociationInternalMember} from '@app/models/general-association-internal-member';
-import {GeneralAssociationMeetingAttendanceService} from '@services/general-association-meeting-attendance.service';
 
 @Component({
   selector: 'specific-member-comments-and-notes',
@@ -19,10 +18,10 @@ export class SpecificMemberCommentsAndNotesComponent {
     @Inject(DIALOG_DATA_TOKEN) public data: {
       internalMember: GeneralAssociationInternalMember,
       meetingReport: MeetingAttendanceReport,
+      generalNotes: GeneralMeetingAttendanceNote[],
       userId: number,
       meetingId: string
     },
-    private generalAssociationMeetingService: GeneralAssociationMeetingAttendanceService,
     public lang: LangService) {
     this.data.meetingReport = JSON.parse(JSON.stringify({...this.data.meetingReport})) as MeetingAttendanceReport;
 
@@ -35,13 +34,7 @@ export class SpecificMemberCommentsAndNotesComponent {
       });
     });
 
-    this.setGeneralNotesByMemberId();
-  }
-
-  setGeneralNotesByMemberId() {
-    return this.generalAssociationMeetingService.getMeetingGeneralNotes(this.data.userId, this.data.meetingId).subscribe(notes => {
-      this.generalNotes = notes;
-    })
+    this.generalNotes = this.data.generalNotes.filter(note => note.memberID === this.data.userId);
   }
 
   getMemberName(): string {

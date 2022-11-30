@@ -329,7 +329,8 @@
                                [isCancel]="isCancel"
                                [isClaimed]="model?.taskDetails?.isClaimed()!"
                                [model]="model!"
-                               [meetingReport]="meetingReport"></manage-internal-users>
+                               [meetingReport]="meetingReport"
+                               [generalNotes]="generalNotes"></manage-internal-users>
       </ng-template>
     </ng-container>
     <!--    <ng-container>-->
@@ -453,7 +454,8 @@
                                          [id]="'enName' + i + j" validationClasses="enName">
                                   <app-field-error-message controlName="enName"></app-field-error-message>
                                 </div>
-                                <ng-container *ngIf="isMemberReview || (isDecisionMakerReview && model?.isSendToMember)">
+                                <ng-container
+                                  *ngIf="isMemberReview || (isDecisionMakerReview && model?.isSendToMember)">
                                   <div class="col-md-3 col-sm-12 position-relative">
                                     <label asteriskIfRequired="comment" class="form-label"
                                            [for]="'comment' + i + j">{{lang.map.notes}}</label>
@@ -507,7 +509,8 @@
             <div class="col-md-12">
               <div class="action-container text-center">
                 <div class="flex-grow-1"></div>
-                <button *ngIf="this.model?.canEditMeetingPoints()" [disabled]="!meetingPointsForm?.valid || (mainItems && mainItems.length === 0)"
+                <button *ngIf="this.model?.canEditMeetingPoints()"
+                        [disabled]="!meetingPointsForm?.valid || (mainItems && mainItems.length === 0)"
                         (click)="saveMeetingPoints()"
                         class="btn btn-primary">{{lang.map.save_meeting_points}}</button>
                 <button *ngIf="isDecisionMakerReview && model?.isSendToMember" [disabled]="!meetingPointsForm?.valid"

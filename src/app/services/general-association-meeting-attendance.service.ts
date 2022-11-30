@@ -289,10 +289,11 @@ export class GeneralAssociationMeetingAttendanceService extends BaseGenericEServ
     });
   }
 
-  openViewMemberCommentsAndNotesDialog(internalMember: GeneralAssociationInternalMember, meetingReport: MeetingAttendanceReport, userId: number, meetingId: string): DialogRef {
+  openViewMemberCommentsAndNotesDialog(internalMember: GeneralAssociationInternalMember, meetingReport: MeetingAttendanceReport, generalNotes: GeneralMeetingAttendanceNote[], userId: number, meetingId: string): DialogRef {
     return this.dialog.show(SpecificMemberCommentsAndNotesComponent, {
       internalMember,
       meetingReport,
+      generalNotes,
       userId,
       meetingId
     });
