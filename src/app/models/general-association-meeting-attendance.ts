@@ -23,6 +23,7 @@ import {dateSearchFields} from '@helpers/date-search-fields';
 import {infoSearchFields} from '@helpers/info-search-fields';
 import {normalSearchFields} from '@helpers/normal-search-fields';
 import {CommonUtils} from '@helpers/common-utils';
+import {IGeneralAssociationMeetingAttendanceFinalApprove} from '@contracts/i-general-association-meeting-attendance-final-approve';
 
 const _RequestType = mixinRequestType(CaseModel);
 const interceptor = new GeneralAssociationMeetingAttendanceInterceptor();
@@ -32,7 +33,7 @@ const interceptor = new GeneralAssociationMeetingAttendanceInterceptor();
   send: interceptor.send
 })
 
-export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAssociationMeetingAttendanceService, GeneralAssociationMeetingAttendance> implements HasRequestType, IGeneralAssociationMeetingAttendanceSpecialActions, IGeneralAssociationMeetingAttendanceComplete {
+export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAssociationMeetingAttendanceService, GeneralAssociationMeetingAttendance> implements HasRequestType, IGeneralAssociationMeetingAttendanceSpecialActions, IGeneralAssociationMeetingAttendanceComplete, IGeneralAssociationMeetingAttendanceFinalApprove {
   service!: GeneralAssociationMeetingAttendanceService;
   caseType = CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE;
   licenseApprovedDate!: string | IMyDateModel;
@@ -191,5 +192,11 @@ export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAss
 
   proceedSendToMembers(caseId: string): Observable<boolean> {
     return this.service.proceedSendToMembers(caseId);
+  }
+
+  downloadFinalReport(): void {
+    this.service.downloadFinalReport(this.meetingReportID).subscribe(blob => {
+      window.open(blob.url);
+    });
   }
 }

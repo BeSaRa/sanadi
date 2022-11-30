@@ -182,7 +182,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     this.buildAgendaForm();
     this.buildGeneralNotesForm();
     this.listenToImportFinalReport();
-    this.listenToDownloadFinalReport();
+    // this.listenToDownloadFinalReport();
     // this.initMeetingPointsForm();
   }
 
@@ -1049,16 +1049,16 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     this.finalReportUploader.nativeElement.value = '';
   }
 
-  listenToDownloadFinalReport() {
-    this.viewFinalReport$.pipe(
-      takeUntil(this.destroy$),
-      switchMap(() => {
-        return this.service?.downloadFinalReport(this.model?.meetingReportID!)!;
-      })
-    ).subscribe(blob => {
-      window.open(blob.url);
-    });
-  }
+  // listenToDownloadFinalReport() {
+  //   this.viewFinalReport$.pipe(
+  //     takeUntil(this.destroy$),
+  //     switchMap(() => {
+  //       return this.model?.downloadFinalReport()!;
+  //     })
+  //   ).subscribe(blob => {
+  //     window.open(blob.url);
+  //   });
+  // }
 
   meetingDateChanged(event: any) {
     this.year.patchValue((new Date(DateUtils.getDateStringFromDate(event))).getFullYear());
