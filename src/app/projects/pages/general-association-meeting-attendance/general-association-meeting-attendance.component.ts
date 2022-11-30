@@ -225,8 +225,13 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     // update meeting form
     this.setMeetingPointsForm();
 
-    if (this.model?.taskDetails && !this.model?.isCharityManagerReviewStep() && !this.model?.isSupervisionAndControlReviewStep()) {
-      this.service.getMeetingGeneralNotes(this.memberId, this.model?.id)
+    this.isMemberReview = this.model?.isMemberReviewStep()!;
+    this.isDecisionMakerReview = this.model?.isDecisionMakerReviewStep()!;
+    this.isManagerFinalReview = this.model?.isManagerFinalReviewStep()!;
+
+    if (this.isMemberReview || this.isDecisionMakerReview) {
+      let generalNotesObservable = (this.isDecisionMakerReview && this.model?.isSendToMember) ? this.service.getDecisionMakerMeetingGeneralNotes(this.memberId, this.model?.id) : this.service.getMeetingGeneralNotes(this.memberId, this.model?.id)
+      generalNotesObservable
         .subscribe(notes => {
 
           if(this.isDecisionMakerReview && this.model?.isSendToMember) {
@@ -240,10 +245,6 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     if (this.model?.isSentToMember() && this.model?.isDecisionMakerReviewStep() || this.model?.isManagerFinalReviewStep()) {
       this.loadMembersTaskStatus();
     }
-
-    this.isMemberReview = this.model?.isMemberReviewStep()!;
-    this.isDecisionMakerReview = this.model?.isDecisionMakerReviewStep()!;
-    this.isManagerFinalReview = this.model?.isManagerFinalReviewStep()!;
 
     if (this.requestType.value !== GeneralAssociationMeetingRequestTypeEnum.NEW && this.model?.oldFullSerial) {
       this.service.validateLicenseByRequestType(this.model!.requestType, this.model.oldFullSerial)

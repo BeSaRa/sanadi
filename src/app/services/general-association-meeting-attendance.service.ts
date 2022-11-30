@@ -267,6 +267,18 @@ export class GeneralAssociationMeetingAttendanceService extends BaseGenericEServ
     return this._getMeetingGeneralNotes(memberId, caseId);
   }
 
+  @CastResponse(() => GeneralMeetingAttendanceNote, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  private _getDecisionMakerMeetingGeneralNotes(memberId: number, caseId?: string): Observable<GeneralMeetingAttendanceNote[]> {
+    return this.http.get<GeneralMeetingAttendanceNote[]>(this._getURLSegment() + '/' + memberId + '/meeting-comments-decision/' + caseId);
+  }
+
+  getDecisionMakerMeetingGeneralNotes(memberId: number, caseId?: string): Observable<GeneralMeetingAttendanceNote[]> {
+    return this._getDecisionMakerMeetingGeneralNotes(memberId, caseId);
+  }
+
   @CastResponse(() => MeetingMemberTaskStatus, {
     unwrap: 'rs',
     fallback: '$default'
