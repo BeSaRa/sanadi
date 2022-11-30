@@ -63,6 +63,9 @@ export class InternalUser extends BaseModel<InternalUser, InternalUserService> {
     return this[(this.langService.map.lang + 'Name') as keyof INames];
   }
 
+  getProfileId(): number | undefined {
+    return undefined;
+  }
 
   buildForm(controls?: boolean): any {
     const {

@@ -1,14 +1,14 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { TeamSecurityConfiguration } from "@app/models/team-security-configuration";
-import { UrlService } from "@app/services/url.service";
-import { FactoryService } from "@app/services/factory.service";
-import { Observable } from "rxjs";
-import { IModelInterceptor } from "@app/interfaces/i-model-interceptor";
-import { TeamSecurityConfigurationInterceptor } from "@app/model-interceptors/team-security-configuration-interceptor";
-import { CrudGenericService } from "@app/generics/crud-generic-service";
-import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
-import { Pagination } from "@app/models/pagination";
+import {HttpClient, HttpParams} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {TeamSecurityConfiguration} from '@app/models/team-security-configuration';
+import {UrlService} from '@app/services/url.service';
+import {FactoryService} from '@app/services/factory.service';
+import {Observable} from 'rxjs';
+import {IModelInterceptor} from '@app/interfaces/i-model-interceptor';
+import {TeamSecurityConfigurationInterceptor} from '@app/model-interceptors/team-security-configuration-interceptor';
+import {CrudGenericService} from '@app/generics/crud-generic-service';
+import {CastResponse, CastResponseContainer} from '@decorators/cast-response';
+import {Pagination} from '@app/models/pagination';
 
 @CastResponseContainer({
   $default: {
@@ -16,7 +16,7 @@ import { Pagination } from "@app/models/pagination";
   },
   $pagination: {
     model: () => Pagination,
-    shape: { 'rs.*': () => TeamSecurityConfiguration }
+    shape: {'rs.*': () => TeamSecurityConfiguration}
   }
 })
 @Injectable({
@@ -55,5 +55,12 @@ export class TeamSecurityConfigurationService extends CrudGenericService<TeamSec
 
   loadSecurityByTeamId(teamId: number): Observable<TeamSecurityConfiguration[]> {
     return this._loadSecurityByTeamId(teamId);
+  }
+
+  @CastResponse(undefined)
+  loadSecurityByTeamIdAndProfileId(teamId: number, profileId: number): Observable<TeamSecurityConfiguration[]> {
+    return this.http.get<TeamSecurityConfiguration[]>(this._getServiceURL() + '/team/' + teamId, {
+      params: new HttpParams().set('profileId', profileId)
+    });
   }
 }
