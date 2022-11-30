@@ -24,11 +24,11 @@
     <!--         name="manage_members_tasks">-->
     <!--    </tab>-->
     <tab [template]="meeting_points" [title]="lang.map.meeting_points"
-         *ngIf="!isExternalUser && (isDecisionMakerReview || isMemberReview || isManagerFinalReview)"
+         *ngIf="!isExternalUser && (isDecisionMakerReview || isMemberReview)"
          name="meeting_points">
     </tab>
     <tab [template]="general_notes" [title]="lang.map.general_notes"
-         *ngIf="isDecisionMakerReview || isMemberReview || isManagerFinalReview"
+         *ngIf="isDecisionMakerReview || isMemberReview"
          name="general_notes">
     </tab>
     <tab [hasError]="specialExplanation.invalid" [template]="special_explanations"
