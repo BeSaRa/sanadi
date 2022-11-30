@@ -81,6 +81,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   addGeneralNotesFormActive!: boolean;
   generalNotesForm!: FormGroup;
   generalNotes: GeneralMeetingAttendanceNote[] = [];
+  membersGeneralNotes: GeneralMeetingAttendanceNote[] = [];
   selectedGeneralNote!: GeneralMeetingAttendanceNote | null;
   selectedGeneralNoteIndex!: number | null;
   generalNotesDisplayedColumns: string[] = ['index', 'comment', 'actions'];
@@ -227,7 +228,12 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     if (this.model?.taskDetails && !this.model?.isCharityManagerReviewStep() && !this.model?.isSupervisionAndControlReviewStep()) {
       this.service.getMeetingGeneralNotes(this.memberId, this.model?.id)
         .subscribe(notes => {
-          this.generalNotes = notes;
+
+          if(this.isDecisionMakerReview && this.model?.isSendToMember) {
+            this.membersGeneralNotes = notes;
+          } else {
+            this.generalNotes = notes;
+          }
         });
     }
 
@@ -949,6 +955,18 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
       return new GeneralMeetingAttendanceNote().clone(x);
     });
     this.service.addMeetingGeneralNotes(meetingGeneralNotes, this.model?.id).subscribe(ret => {
+      this.dialog.success(this.lang.map.general_notes_saved_successfully);
+      this.generalNotes = ret.map(x => {
+        return new GeneralMeetingAttendanceNote().clone(x);
+      });
+    });
+  }
+
+  saveFinalGeneralNotes() {
+    const meetingGeneralNotes = this.generalNotes.map(x => {
+      return new GeneralMeetingAttendanceNote().clone(x);
+    });
+    this.service.addFinalMeetingGeneralNotes(meetingGeneralNotes, this.model?.id).subscribe(ret => {
       this.dialog.success(this.lang.map.general_notes_saved_successfully);
       this.generalNotes = ret.map(x => {
         return new GeneralMeetingAttendanceNote().clone(x);

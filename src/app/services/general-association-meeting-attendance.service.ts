@@ -252,7 +252,7 @@ export class GeneralAssociationMeetingAttendanceService extends BaseGenericEServ
   }
 
   addFinalMeetingGeneralNotes(meetingNotes: GeneralMeetingAttendanceNote[], caseId?: string): Observable<GeneralMeetingAttendanceNote[]> {
-    return this._addMeetingGeneralNotes(meetingNotes, caseId);
+    return this._addFinalMeetingGeneralNotes(meetingNotes, caseId);
   }
 
   @CastResponse(() => GeneralMeetingAttendanceNote, {

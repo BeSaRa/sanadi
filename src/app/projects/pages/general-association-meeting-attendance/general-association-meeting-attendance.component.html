@@ -330,7 +330,7 @@
                                [isClaimed]="model?.taskDetails?.isClaimed()!"
                                [model]="model!"
                                [meetingReport]="meetingReport"
-                               [generalNotes]="generalNotes"></manage-internal-users>
+                               [generalNotes]="membersGeneralNotes"></manage-internal-users>
       </ng-template>
     </ng-container>
     <!--    <ng-container>-->
@@ -544,7 +544,7 @@
     </ng-container>
     <ng-container>
       <ng-template #general_notes [formGroup]="generalNotesForm">
-        <ng-container *ngIf="isMemberReview">
+        <ng-container *ngIf="isMemberReview || (isDecisionMakerReview && model?.isSendToMember)">
           <div class="row">
             <div class="col">
               <h1 class="h6 text-primary m-0 d-inline-block">{{lang.map.add_to_general_notes}}</h1>
@@ -558,7 +558,7 @@
               <div class="col-md-4 col-sm-12 mb-4 position-relative">
                 <label asteriskIfRequired="comment" class="form-label"
                        for="generalNoteDescription">{{lang.map.lbl_description}}</label>
-                <input [readonly]="(readonly && !isMemberReview)" class="form-control"
+                <input class="form-control"
                        formControlName="comment"
                        id="generalNoteDescription" validationClasses="comment">
                 <app-field-error-message controlName="comment"></app-field-error-message>
@@ -598,12 +598,12 @@
                   <td *cdkCellDef="let row" cdk-cell class="table-actions">
                     <div class="d-flex flex-row">
                       <button (click)="removeGeneralNote($event, row)"
-                              [disabled]="((readonly && !isMemberReview) || addGeneralNotesFormActive)"
+                              [disabled]="((readonly && !(isMemberReview || (isDecisionMakerReview && model?.isSendToMember))) || addGeneralNotesFormActive)"
                               class="btn btn-link outline-none" tooltip="{{lang.map.btn_remove}}">
                         <i class="mdi mdi-close-box"></i>
                       </button>
                       <button (click)="selectGeneralNote($event, row)"
-                              [disabled]="((readonly && !isMemberReview) || addGeneralNotesFormActive)"
+                              [disabled]="((readonly && !(isMemberReview || (isDecisionMakerReview && model?.isSendToMember))) || addGeneralNotesFormActive)"
                               class="btn btn-link outline-none" tooltip="{{lang.map.btn_edit}}">
                         <i class="mdi mdi-pen"></i>
                       </button>
@@ -624,6 +624,12 @@
           <div class="col-12 text-center action-container mb-3">
             <button [disabled]="generalNotes.length === 0" (click)="saveGeneralNotes()"
                     class="btn btn-primary">{{lang.map.save_general_notes}}</button>
+          </div>
+        </div>
+        <div class="row" *ngIf="isDecisionMakerReview && model?.isSendToMember">
+          <div class="col-12 text-center action-container mb-3">
+            <button [disabled]="generalNotes.length === 0" (click)="saveFinalGeneralNotes()"
+                    class="btn btn-primary">{{lang.map.save_final_general_notes}}</button>
           </div>
         </div>
       </ng-template>
