@@ -1,12 +1,4 @@
-import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  QueryList,
-  TemplateRef,
-  ViewChild,
-  ViewChildren,
-} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, QueryList, TemplateRef, ViewChild, ViewChildren,} from '@angular/core';
 import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {SaveTypes} from '@app/enums/save-types';
@@ -22,7 +14,6 @@ import {Lookup} from '@app/models/lookup';
 import {ProjectNeedsComponent} from '@app/modules/e-services-main/shared/project-needs/project-needs.component';
 import {CountryService} from '@app/services/country.service';
 import {DialogService} from '@app/services/dialog.service';
-import {FollowupDateService} from '@app/services/follow-up-date.service';
 import {ForeignCountriesProjectsService} from '@app/services/foreign-countries-projects.service';
 import {LangService} from '@app/services/lang.service';
 import {LicenseService} from '@app/services/license.service';
@@ -30,16 +21,7 @@ import {LookupService} from '@app/services/lookup.service';
 import {ToastService} from '@app/services/toast.service';
 import {ReadinessStatus} from '@app/types/types';
 import {Observable, of, Subject} from 'rxjs';
-import {
-  catchError,
-  exhaustMap,
-  filter,
-  map,
-  share,
-  switchMap,
-  takeUntil,
-  tap,
-} from 'rxjs/operators';
+import {catchError, exhaustMap, filter, map, share, switchMap, takeUntil, tap,} from 'rxjs/operators';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {ProfileService} from '@app/services/profile.service';
 import {Profile} from '@app/models/profile';
@@ -114,6 +96,8 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
           validStatus: () => true,
         });
       }
+
+      this.cd.detectChanges();
     }, 0);
   }
 
