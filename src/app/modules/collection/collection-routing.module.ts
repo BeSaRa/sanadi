@@ -42,7 +42,18 @@ const routes: Routes = [
       configPermissionGroup: null, checkAnyPermission: false,
       render: 'CollectorApprovalComponent'
     }
-  }
+  },
+  {
+    path: 'collection-services-approval-clone',
+    component: EServiceComponentWrapperComponent,
+    canActivate: [ServicesGuard],
+    resolve: {info: ServiceItemResolver},
+    data: {
+      permissionKey: EServicePermissionsEnum.COLLECTION_APPROVAL_CLONE,
+      configPermissionGroup: null, checkAnyPermission: false,
+      render: 'CollectionApprovalCloneComponent'
+    }
+  },
 ];
 
 @NgModule({

@@ -16,6 +16,7 @@ export const urlsList: Partial<IAppUrls> = {
   MAP_API_URL: 'https://maps.googleapis.com/maps/api/js?libraries=places&key=',
   FOLLOWUP_CONFIGURATION: 'admin/follow-up-configuration',
   COLLECTION_APPROVAL: '/collection-licensing',
+  COLLECTION_APPROVAL_CLONE: '/collection-licensing',
   ORG_UNIT_FIELD: 'admin/org-unit-field',
   CHECKLIST: 'admin/checklist',
   SERVICE_DATA_STEP: 'admin/service-steps',

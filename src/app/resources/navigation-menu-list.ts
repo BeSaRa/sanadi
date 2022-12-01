@@ -1048,4 +1048,17 @@ export const navigationMenuList = [
     itemOrder: 11,
     svg: null
   }
+  ,{
+    id: 44,
+    langKey: 'menu_collection_services_approval_clone',
+    path: '/home/collection/collection-services-approval-clone',
+    icon: 'mdi-currency-usd',
+    isSvg: false,
+    permission: EServicePermissionsEnum.COLLECTION_APPROVAL,
+    permissionGroup: null,
+    parent: 43,
+    group: 'collection',
+    itemOrder: 4,
+    svg: null
+  },
 ];

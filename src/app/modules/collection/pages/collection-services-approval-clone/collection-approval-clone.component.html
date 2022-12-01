@@ -1,0 +1,95 @@
+<div class="row" >
+  <tabs-list [accordionView]="accordionView">
+    <tab name="basic_info"  [template]="basic_info" [title]="lang.map.lbl_basic_info"></tab>
+    <tab name="special_explanations"  [template]="special_explanations" [title]="lang.map.special_explanations"></tab>
+    <tab name="attachments" *ngIf="!accordionView" [template]="attachmentsTab" [title]="lang.map.attachments"></tab>
+  </tabs-list>
+  <ng-container [formGroup]="form">
+    <ng-container formGroupName="basicInfo">
+      <ng-template #basic_info>
+        <div class="row">
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+              <label asteriskIfRequired="requestType" for="requestType">{{lang.map.request_type}}</label>
+              <ng-select
+                  [selectOnTab]="true"
+                  labelForId="requestType"
+                  [clearable]="false"
+                  placeholder="{{lang.map.select}}"
+                  [notFoundText]="lang.map.msg_not_found"
+                  validationClasses="requestType"
+                  id="requestType"
+                  appendTo="body"
+                  formControlName="requestType"
+                  (change)="handleRequestTypeChange($event, true)"
+                  [readonly]="!isEditRequestTypeAllowed()"
+              >
+              <ng-option value="option.lookupKey" *ngFor="let option of requestTypes">{{option.getName()}}</ng-option>
+              </ng-select>
+              <app-field-error-message controlName="requestType"></app-field-error-message>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+              <label asteriskIfRequired="requestClassification" for="requestClassification">{{lang.map.req_classification}}</label>
+              <ng-select
+                  [selectOnTab]="true"
+                  labelForId="requestClassification"
+                  [clearable]="true"
+                  placeholder="{{lang.map.select}}"
+                  [notFoundText]="lang.map.msg_not_found"
+                  id="requestClassification"
+                  appendTo="body"
+                  formControlName="requestClassification"
+                  [readonly]="(readonly)"
+              >
+                  <ng-option [value]="option.lookupKey" *ngFor="let option of requestClassifications">{{option.getName()}}</ng-option>
+              </ng-select>
+              <app-field-error-message controlName="requestClassification"></app-field-error-message>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+              <label asteriskIfRequired="licenseDurationType" for="licenseDurationType">{{lang.map.license_type}}</label>
+              <ng-select
+                  validationClasses="licenseDurationType"
+                  appendTo="body"
+                  [clearable]="true"
+                  id="licenseDurationType"
+                  placeholder="{{lang.map.select}}"
+                  [selectOnTab]="true"
+                  [notFoundText]="lang.map.msg_not_found"
+                  [readonly]="(readonly)"
+                  formControlName="licenseDurationType"
+              >
+                  <ng-option [value]="option.lookupKey" *ngFor="let option of licenseDurationTypes">{{option.getName()}}</ng-option>
+              </ng-select>
+              <app-field-error-message controlName="licenseDurationType"></app-field-error-message>
+          </div>
+        </div>
+        <div class="row">
+          <collection-item-clone  
+              [formProperties]="formProperties" 
+              [licenseDurationType]="model!.licenseDurationType"
+              (formOpenedStatus)="collectionItemFormStatusChanged($event)"
+              [disableAdd]="basicInfo.invalid || readonly"
+              [readOnly]="(readonly)"
+              (eventHappened)="checkDisableFields()"
+              (attachmentHandlerEmitter)="registerAttachmentHandler($event)"
+              [model]="model!"
+          ></collection-item-clone>
+        </div>
+      </ng-template>
+    </ng-container>
+    <ng-container formGroupName="explanation">
+      <ng-template #special_explanations>
+          <div class="row">
+            <div class="col-sm-12 mb-4 postion-relative">
+              <label for="description" asteriskIfRequired="description">
+                {{lang.map.special_explanations}}
+              </label>
+              <textarea name="description" formControlName="description" validationClasses="description" id="description" rows="4" class="form-control" [readOnly]="(readonly)" [maxlength]="customValidators.defaultLengths.EXPLANATIONS"></textarea>
+            </div>
+          </div>
+      </ng-template>
+    </ng-container>
+  </ng-container>
+  <ng-template #attachmentsTab>
+    <attachments [model]="model" [caseId]="model?.id" [caseType]="model?.caseType" [service]="service.documentService"></attachments>
+  </ng-template>
+</div>

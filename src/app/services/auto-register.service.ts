@@ -66,6 +66,7 @@ import {
 import {PermissionsEnum} from '@app/enums/permissions-enum';
 import {ConsultationComponent} from '@app/modules/general-services/pages/consultation/consultation.component';
 import {InquiryComponent} from '@app/modules/general-services/pages/inquiry/inquiry.component';
+import { CollectionApprovalCloneComponent } from '@app/modules/collection/pages/collection-services-approval-clone/collection-approval-clone.component';
 
 @Injectable({
   providedIn: 'root'
@@ -110,6 +111,7 @@ export class AutoRegisterService {
       DynamicComponentService.registerComponent('NpoManagementComponent', NpoManagementComponent);
       DynamicComponentService.registerComponent('AwarenessActivitySuggestionComponent', AwarenessActivitySuggestionComponent);
       DynamicComponentService.registerComponent('GeneralProcessNotificationComponent', GeneralProcessNotificationComponent);
+      DynamicComponentService.registerComponent('CollectionApprovalCloneComponent', CollectionApprovalCloneComponent);
     });// just to make sure that service constructed and register all dynamic components
 
 

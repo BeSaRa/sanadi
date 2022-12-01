@@ -13,6 +13,7 @@ export interface IAppUrls {
   MAP_API_URL: string;
   FOLLOWUP_CONFIGURATION: string;
   COLLECTION_APPROVAL: string;
+  COLLECTION_APPROVAL_CLONE: string;
   FUNDRAISING: string;
   ORG_UNIT_FIELD: string;
   CHECKLIST: string;

@@ -18,6 +18,8 @@ import {
   CollectorApprovalApproveTaskPopupComponent
 } from './popups/collector-approval-approve-task-popup/collector-approval-approve-task-popup.component';
 import {EServicesMainModule} from '@app/modules/e-services-main/e-services-main.module';
+import { CollectionApprovalCloneComponent } from './pages/collection-services-approval-clone/collection-approval-clone.component';
+import { CollectionItemCloneComponent } from './shared/collection-item-clone/collection-item-clone.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +32,9 @@ import {EServicesMainModule} from '@app/modules/e-services-main/e-services-main.
     FundraisingApproveTaskPopupComponent,
     CollectorApprovalComponent,
     CollectorItemComponent,
-    CollectorApprovalApproveTaskPopupComponent
+    CollectorApprovalApproveTaskPopupComponent,
+    CollectionApprovalCloneComponent,
+    CollectionItemCloneComponent
   ],
   imports: [
     CommonModule,
