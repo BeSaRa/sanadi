@@ -1,9 +1,11 @@
+import { InterceptModel } from "@app/decorators/decorators/intercept-model";
 import { WFResponseType } from "@app/enums/wfresponse-type.enum";
 import { dateSearchFields } from "@app/helpers/date-search-fields";
 import { infoSearchFields } from "@app/helpers/info-search-fields";
 import { normalSearchFields } from "@app/helpers/normal-search-fields";
 import { mixinLicenseDurationType } from "@app/mixins/mixin-license-duration";
 import { mixinRequestType } from "@app/mixins/mixin-request-type";
+import { CollectionApprovalInterceptorClone } from "@app/model-interceptors/collection-approval-interceptor-clone";
 import { CollectionApprovalCloneService } from "@app/services/collection-approval-clone.service";
 import { FactoryService } from "@app/services/factory.service";
 import { DialogRef } from "@app/shared/models/dialog-ref";
@@ -15,7 +17,12 @@ import { CollectionItem } from "./collection-item";
 import { TaskDetails } from "./task-details";
 
 const _CaseModelWithLicenseDurationTypeAndRequestType = mixinLicenseDurationType(mixinRequestType(CaseModel))
+const interceptor = new CollectionApprovalInterceptorClone()
 
+@InterceptModel({
+    send: interceptor.send,
+    receive: interceptor.receive
+})
 export class CollectionApprovalClone extends _CaseModelWithLicenseDurationTypeAndRequestType<CollectionApprovalCloneService, CollectionApprovalClone> {
     service!: CollectionApprovalCloneService;
     classDescription!:	string
