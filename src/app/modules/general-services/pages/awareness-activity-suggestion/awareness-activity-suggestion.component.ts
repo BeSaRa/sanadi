@@ -151,9 +151,6 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
         })
       }
     })
-    this.form.valueChanges.subscribe((data) => {
-      console.log(data);
-    })
   }
   _afterBuildForm(): void {
     this.handleReadonly();
