@@ -1,3 +1,4 @@
+import { DynamicModel } from '@app/models/dynamic-model';
 import { ProcessFieldBuilder } from './../../../../administration/popups/general-process-popup/process-formly-components/process-fields-builder';
 import { DynamicModelService } from './../../../../services/dynamic-models.service';
 import { CoordinationWithOrganizationTemplate } from './../../../../models/corrdination-with-organization-template';
@@ -6,19 +7,13 @@ import {
   OnInit
 } from '@angular/core';
 import {
-  AbstractControl,
-  FormArray,
-  FormBuilder,
-  FormGroup, UntypedFormArray, UntypedFormControl, UntypedFormGroup
+  FormBuilder, UntypedFormControl, UntypedFormGroup
 } from '@angular/forms';
 import { UserClickOn } from '@app/enums/user-click-on.enum';
-import { DateUtils } from '@app/helpers/date-utils';
 import { ILanguageKeys } from '@app/interfaces/i-language-keys';
 import { DialogService } from '@app/services/dialog.service';
 import { LangService } from '@app/services/lang.service';
 import { ToastService } from '@app/services/toast.service';
-import { DatepickerOptionsMap } from '@app/types/types';
-import { IMyInputFieldChanged } from 'angular-mydatepicker';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { filter, map, take, takeUntil } from 'rxjs/operators';
 
@@ -29,7 +24,6 @@ import { filter, map, take, takeUntil } from 'rxjs/operators';
 })
 export class DynamicTemplatesComponent implements OnInit {
 
-  @Input() formArrayName: string = 'dynamicTemplates';
   @Input() orgId!: number | undefined;
   @Input() templateId!: number;
 
@@ -67,21 +61,11 @@ export class DynamicTemplatesComponent implements OnInit {
 
   private destroy$: Subject<any> = new Subject<any>();
   formOpend = false;
-  form!: FormGroup;
+  form!: UntypedFormGroup;
 
-  datepickerOptionsMap: DatepickerOptionsMap = {
-    searchStartDate: DateUtils.getDatepickerOptions({ disablePeriod: 'past' }),
-    searchSubmissionDeadline: DateUtils.getDatepickerOptions({
-      disablePeriod: 'past',
-    }),
-  };
-
-  get formArray(): FormArray {
-    return this.form.get(this.formArrayName) as FormArray;
-  }
   filterControl: UntypedFormControl = new UntypedFormControl('');
   showForm: boolean = false;
-
+  usedModel!: DynamicModel;
   constructor(
     public lang: LangService,
     private toastService: ToastService,
@@ -91,15 +75,14 @@ export class DynamicTemplatesComponent implements OnInit {
   ) {
 
     this.fieldBuilder = new ProcessFieldBuilder();
-    this.fieldBuilder.buildMode = this.readonly ? 'view' : 'use';
   }
   ngOnInit(): void {
     this.buildForm();
     this.listenToAdd();
     this.listenToRecordChange();
     this.listenToSave();
-    this.dynamicModelService.getById(this.templateId).subscribe((model) => {
-      this.fieldBuilder.generateFromString(model?.template);
+    this.dynamicModelService.getById(this.templateId).subscribe((model: DynamicModel) => {
+      this.usedModel = model;
     })
   }
 
@@ -109,9 +92,7 @@ export class DynamicTemplatesComponent implements OnInit {
     this.destroy$.unsubscribe();
   }
   buildForm(): void {
-    this.form = this.fb.group({
-      [this.formArrayName]: this.fb.array([]),
-    });
+    this.form = this.fb.group({});
   }
   private listenToAdd() {
     this.add$.pipe(takeUntil(this.destroy$)).subscribe(() => {
@@ -129,14 +110,15 @@ export class DynamicTemplatesComponent implements OnInit {
     });
   }
   private updateForm(model: CoordinationWithOrganizationTemplate | undefined) {
-    const formArray = this.formArray;
-    formArray.clear();
     if (model) {
-      console.log('update')
-      console.log(formArray)
-      // formArray.push(this.fb.group(new CoordinationWithOrganizationTemplate().clone(model).BuildForm(true)));
-      if (this.readonly || this.viewOnly) {
-        this.formArray.disable();
+      this.fieldBuilder.buildMode = 'use';
+      if (model?.template) {
+        this.fieldBuilder.generateFromString(model?.template);
+        if (this.readonly || this.viewOnly) {
+          this.fieldBuilder.buildMode = 'view'
+        }
+      } else {
+        this.fieldBuilder.generateFromString(this.usedModel?.template);
       }
     }
   }
@@ -144,7 +126,7 @@ export class DynamicTemplatesComponent implements OnInit {
   private listenToSave() {
     const form$ = this.save$.pipe(
       map(() => {
-        return this.form.get(`${this.formArrayName}.0`) as AbstractControl;
+        return this.form as UntypedFormGroup;
       })
     );
 
@@ -155,7 +137,7 @@ export class DynamicTemplatesComponent implements OnInit {
         .error(this.lang.map.msg_all_required_fields_are_filled)
         .onAfterClose$.pipe(take(1))
         .subscribe(() => {
-          this.form.get(this.formArrayName)?.markAllAsTouched();
+          this.form?.markAllAsTouched();
         });
     });
 
@@ -163,7 +145,7 @@ export class DynamicTemplatesComponent implements OnInit {
       .pipe(
         takeUntil(this.destroy$),
         map(() => {
-          return this.form.get(`${this.formArrayName}.0`) as FormArray;
+          return this.form as UntypedFormGroup;
         }),
         map((form) => {
           this.fieldBuilder.fields.map(f => {
@@ -227,9 +209,9 @@ export class DynamicTemplatesComponent implements OnInit {
   }
   private resetForm() {
     this.formOpend = false;
-    this.formArray.clear();
-    this.formArray.markAsUntouched();
-    this.formArray.markAsPristine();
+    this.form.reset();
+    this.form.markAsUntouched();
+    this.form.markAsPristine();
   }
   view($event: MouseEvent, record: CoordinationWithOrganizationTemplate, index: number) {
     $event.preventDefault();
@@ -238,7 +220,6 @@ export class DynamicTemplatesComponent implements OnInit {
     this.viewOnly = true;
     this.recordChanged$.next(record);
   }
-
   delete($event: MouseEvent, record: CoordinationWithOrganizationTemplate, index: number): any {
     $event.preventDefault();
     if (this.readonly) {
@@ -263,34 +244,5 @@ export class DynamicTemplatesComponent implements OnInit {
     this.editIndex = index;
     this.viewOnly = false;
     this.recordChanged$.next(record);
-  }
-  get dynamicTemplatesForm() {
-    return this.form.controls.dynamicTemplates as UntypedFormArray;
-  }
-  get dynamicTemplatesFormArray() {
-    return this.dynamicTemplatesForm.controls['0'] as UntypedFormGroup;
-  }
-  get searchStartDate() {
-    return this.dynamicTemplatesFormArray.controls
-      .searchStartDate as UntypedFormControl;
-  }
-  get searchSubmissionDeadline() {
-    return this.dynamicTemplatesFormArray.controls
-      .searchSubmissionDeadline as UntypedFormControl;
-  }
-  onDateChange(
-    event: IMyInputFieldChanged,
-    fromFieldName: string,
-    toFieldName: string
-  ): void {
-    DateUtils.setRelatedMinMaxDate({
-      fromFieldName,
-      toFieldName,
-      controlOptionsMap: this.datepickerOptionsMap,
-      controlsMap: {
-        searchStartDate: this.searchStartDate,
-        searchSubmissionDeadline: this.searchSubmissionDeadline,
-      },
-    });
   }
 }

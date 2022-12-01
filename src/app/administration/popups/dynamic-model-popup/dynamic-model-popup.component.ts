@@ -19,7 +19,7 @@ import { CustomValidators } from '@app/validators/custom-validators';
 import { Subscription, Observable } from 'rxjs';
 import { v4 } from 'uuid';
 import { ProcessFieldBuilder } from '../general-process-popup/process-formly-components/process-fields-builder';
-import { TemplateFieldTypes } from '@app/enums/general-process-template-field-types.enum';
+import { TemplateFieldTypes } from '@app/enums/template-field-types.enum';
 
 @Component({
   selector: 'app-dynamic-model-popup',

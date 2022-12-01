@@ -1,11 +1,9 @@
-<div [formGroup]="form">
-  <div formGroupName="{{formArrayName}}">
-    <formly-form [form]="formArray" [fields]="fieldBuilder.fieldsGroups"></formly-form>
-    <div class="d-flex flex-row align-items-center justify-content-center">
-      <button (click)="onSave()" [disabled]="readonly" *ngIf="!readonly && !viewOnly"
-        class="btn btn-primary m-2">{{(editIndex > -1) ? lang.map.btn_save : lang.map.btn_add}}</button>
-      <button (click)="onCancel()" class="btn btn-secondary m-2">{{lang.map.btn_cancel}}</button>
-    </div>
+<div [formGroup]="form" *ngIf="formOpend">
+  <formly-form [form]="form" [fields]="fieldBuilder.fieldsGroups"></formly-form>
+  <div class="d-flex flex-row align-items-center justify-content-center">
+    <button (click)="onSave()" [disabled]="readonly" *ngIf="!readonly && !viewOnly"
+      class="btn btn-primary m-2">{{(editIndex > -1) ? lang.map.btn_save : lang.map.btn_add}}</button>
+    <button (click)="onCancel()" class="btn btn-secondary m-2">{{lang.map.btn_cancel}}</button>
   </div>
 </div>
 
@@ -24,30 +22,11 @@
         <app-table #table sortableTable [paginator]="paginator" [data]="listDataSource" [columns]="columns"
           [filter]="filterControl.value" [useSearchToFilter]="true">
           <table class="table mt-3 table-striped table-bordered caption-top" cdk-table [dataSource]="table.dataSource">
-            <ng-container cdkColumnDef="researchTopic">
-              <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_research_topic}}</th>
-              <td cdk-cell *cdkCellDef="let row"> {{row.researchTopic}} </td>
-            </ng-container>
-            <ng-container cdkColumnDef="researchAndStudyObjectives">
-              <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.lbl_research_and_study_objectives}}</th>
-              <td cdk-cell *cdkCellDef="let row">{{row.researchAndStudyObjectives}}</td>
-            </ng-container>
-            <ng-container cdkColumnDef="expectedResearchResults">
-              <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.lbl_expected_research_results}}</th>
-              <td cdk-cell *cdkCellDef="let row">{{row.expectedResearchResults}}</td>
-            </ng-container>
-            <ng-container cdkColumnDef="generalLandmarks">
-              <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.lbl_general_landmarks}}</th>
-              <td cdk-cell *cdkCellDef="let row">{{row.generalLandmarks}}</td>
-            </ng-container>
-            <ng-container cdkColumnDef="requiredRole">
-              <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.lbl_required_role}}</th>
-              <td cdk-cell *cdkCellDef="let row">{{row.requiredRole}}</td>
-            </ng-container>
-            <ng-container cdkColumnDef="financialCost">
+
+            <!-- <ng-container cdkColumnDef="financialCost">
               <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.lbl_financial_cost}}</th>
               <td cdk-cell *cdkCellDef="let row">{{row.financialCost}}</td>
-            </ng-container>
+            </ng-container> -->
 
 
             <ng-container cdkColumnDef="actions">

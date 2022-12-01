@@ -43,7 +43,6 @@ import { ResearchAndStudies } from '@app/models/research-and-studies';
 import { ProfileService } from '@services/profile.service';
 import { Profile } from '@app/models/profile';
 import { DynamicTemplatesComponent } from '@app/modules/e-services-main/shared/dynamic-templates/dynamic-templates.component';
-import { numberValidator } from '@app/validators/validate-fields-status';
 
 @Component({
   selector: 'app-coordination-with-organizations-request',

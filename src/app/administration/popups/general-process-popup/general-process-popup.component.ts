@@ -27,7 +27,7 @@ import { Component, Inject } from '@angular/core';
 import { Observable, of, Subscription } from 'rxjs';
 import { SubTeamService } from '@app/services/sub-team.service';
 import { SubTeam } from '@app/models/sub-team';
-import { TemplateFieldTypes } from '@app/enums/general-process-template-field-types.enum';
+import { TemplateFieldTypes } from '@app/enums/template-field-types.enum';
 import { v4 } from 'uuid';
 
 @Component({

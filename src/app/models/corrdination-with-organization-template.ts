@@ -38,12 +38,6 @@ export class CoordinationWithOrganizationTemplate extends SearchableCloneable<Co
 
   get DisplayedColumns(): string[] {
     return [
-      'researchTopic',
-      'researchAndStudyObjectives',
-      'expectedResearchResults',
-      'generalLandmarks',
-      'requiredRole',
-      'financialCost',
       'actions',
     ];
   }

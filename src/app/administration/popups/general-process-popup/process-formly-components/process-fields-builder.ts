@@ -2,7 +2,7 @@ import { Subject } from 'rxjs';
 import { CustomValidators } from './../../../../validators/custom-validators';
 import { map } from 'rxjs/operators';
 import { of } from 'rxjs';
-import { TemplateFieldTypes } from './../../../../enums/general-process-template-field-types.enum';
+import { TemplateFieldTypes } from './../../../../enums/template-field-types.enum';
 import { UntypedFormGroup } from '@angular/forms';
 import { TemplateField } from './../../../../models/general-process-template';
 import { FormlyFieldConfig } from '@ngx-formly/core/lib/components/formly.field.config';
