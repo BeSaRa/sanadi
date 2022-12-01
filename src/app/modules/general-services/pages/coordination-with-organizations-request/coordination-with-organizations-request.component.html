@@ -22,8 +22,9 @@
         [name]="tabsData.researchAndStudies.name" [template]="research_and_studies"
         [title]="lang.map.research_and_studies" [hasError]="getTabInvalidStatus('researchAndStudies')">
       </tab>
-      <tab *ngIf="!isInternalUser && isOtherDomain" [name]="tabsData.researchAndStudies.name"
-        [template]="dynamic_tempaltes" [title]="lang.map.lbl_template" [hasError]="getTabInvalidStatus('dynamicTempaltes')">
+      <tab *ngIf="!isInternalUser && isOtherDomain" [name]="tabsData.dynamicTempaltes.name"
+        [template]="dynamic_tempaltes" [title]="lang.map.lbl_template"
+        [hasError]="getTabInvalidStatus('dynamicTempaltes')">
       </tab>
       <tab [name]="tabsData.specialExplanation.name" [hasError]="getTabInvalidStatus('specialExplanation')"
         [template]="specialExplanationTab" [title]="lang.map.special_explanations">
@@ -55,15 +56,15 @@
           </div>
           <!-- template -->
           <div class="col-12 col-md-4 mb-6 position-relative" *ngIf="isOtherDomain">
-            <label asteriskIfRequired="templateId" for="templateId" class="form-label">{{ lang.map.lbl_template
+            <label asteriskIfRequired="processid" for="processid" class="form-label">{{ lang.map.lbl_template
               }}</label>
             <ng-select [selectOnTab]="true" placeholder="{{ lang.map.select }}" [readonly]="!isEditAllowed()"
-              [notFoundText]="lang.map.msg_not_found" appendTo="body" id="templateId" validationClasses="templateId"
-              labelForId="templateId" formControlName="templateId">
+              [notFoundText]="lang.map.msg_not_found" appendTo="body" id="processid" validationClasses="processid"
+              labelForId="processid" formControlName="processid">
               <ng-option [disabled]="!isEditAllowed()" *ngFor="let option of formsList" [value]="option.id">{{
                 option.getName() }}</ng-option>
             </ng-select>
-            <app-field-error-message controlName="templateId"></app-field-error-message>
+            <app-field-error-message controlName="processid"></app-field-error-message>
           </div>
         </div>
 
@@ -148,6 +149,10 @@
       </app-research-and-studies>
     </ng-template>
     <ng-template #dynamic_tempaltes>
+      <app-dynamic-templates #dynamicTemplatesTap [templateId]="templateField.value" [list]="dynamicTemplatesList"
+        [readonly]=" isEditAllowed()" [orgId]="currentUserOrgId" [canUpdate]="isCharityUser"
+        [isClaimed]="model?.isClaimed()?? true">
+      </app-dynamic-templates>
     </ng-template>
 
   </form>

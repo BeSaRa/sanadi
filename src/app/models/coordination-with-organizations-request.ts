@@ -1,3 +1,4 @@
+import { CoordinationWithOrganizationTemplate } from './corrdination-with-organization-template';
 import { UntypedFormGroup, Validators } from '@angular/forms';
 import { InterceptModel } from '@app/decorators/decorators/intercept-model';
 import { CaseTypes } from '@app/enums/case-types.enum';
@@ -34,16 +35,15 @@ const interceptor = new CoordinationWithOrganizationsRequestInterceptor();
 })
 export class CoordinationWithOrganizationsRequest
   extends _RequestType<
-    CoordinationWithOrganizationsRequestService,
-    CoordinationWithOrganizationsRequest
+  CoordinationWithOrganizationsRequestService,
+  CoordinationWithOrganizationsRequest
   >
-  implements HasRequestType, HasLicenseDurationType
-{
+  implements HasRequestType, HasLicenseDurationType {
   caseType: number = CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST;
   fullName!: string;
   domain!: number;
 
-  templateId!: number;
+  processid!: number;
   licenseStartDate!: string | IMyDateModel;
   licenseEndDate!: string | IMyDateModel;
   description!: string;
@@ -52,10 +52,12 @@ export class CoordinationWithOrganizationsRequest
   buildingAbilitiesList: BuildingAbility[] = [];
   effectiveCoordinationCapabilities: EffectiveCoordinationCapabilities[] = [];
   researchAndStudies: ResearchAndStudies[] = [];
-  temporaryBuildingAbilitiesList:BuildingAbility[]=[]
-  temporaryEffectiveCoordinationCapabilities:EffectiveCoordinationCapabilities[]=[]
-  temporaryOrganizaionOfficerList:OrganizationOfficer[]=[]
-  temporaryResearchAndStudies:ResearchAndStudies[]=[]
+  templateList: CoordinationWithOrganizationTemplate[] = [];
+  temporaryBuildingAbilitiesList: BuildingAbility[] = [];
+  temporaryEffectiveCoordinationCapabilities: EffectiveCoordinationCapabilities[] = [];
+  temporaryOrganizaionOfficerList: OrganizationOfficer[] = [];
+  temporaryResearchAndStudies: ResearchAndStudies[] = [];
+  temporaryTemplateList: CoordinationWithOrganizationTemplate[] = [];
   approved = false;
   domainInfo!: AdminResult;
   searchFields: ISearchFieldsMap<CoordinationWithOrganizationsRequest> = {
@@ -88,24 +90,24 @@ export class CoordinationWithOrganizationsRequest
     return false;
   }
   formBuilder(controls?: boolean) {
-    const { fullName, domain, templateId, licenseStartDate, licenseEndDate, description } =
+    const { fullName, domain, processid, licenseStartDate, licenseEndDate, description } =
       this;
     return {
       fullName: controls
         ? [
-            fullName,
-            [Validators.required].concat(
-              CustomValidators.maxLength(
-                CustomValidators.defaultLengths.ENGLISH_NAME_MAX
-              ),
-              CustomValidators.minLength(
-                CustomValidators.defaultLengths.MIN_LENGTH
-              )
+          fullName,
+          [Validators.required].concat(
+            CustomValidators.maxLength(
+              CustomValidators.defaultLengths.ENGLISH_NAME_MAX
             ),
-          ]
+            CustomValidators.minLength(
+              CustomValidators.defaultLengths.MIN_LENGTH
+            )
+          ),
+        ]
         : fullName,
       domain: controls ? [domain, [Validators.required]] : domain,
-      templateId: controls ? [templateId, []] : templateId,
+      processid: controls ? [processid, []] : processid,
       licenseStartDate: controls
         ? [licenseStartDate, [Validators.required]]
         : licenseStartDate,

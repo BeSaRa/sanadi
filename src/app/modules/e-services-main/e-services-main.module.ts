@@ -1,3 +1,10 @@
+import { ProcessFieldWrapperComponent } from './../../administration/popups/general-process-popup/process-formly-components/process-field-wrapper/process-field-wrapper.component';
+import { FormlyMaskInputFieldComponent } from './../../services-search/components/formly-mask-input-field/formly-mask-input-field.component';
+import { FormlySelectFieldComponent } from './../../services-search/components/formly-select-field/formly-select-field.component';
+import { FormlyDateFieldComponent } from './../../services-search/components/formly-date-field/formly-date-field.component';
+import { FormlyModule } from '@ngx-formly/core';
+import { FormlyBootstrapModule } from '@ngx-formly/bootstrap';
+import { DynamicTemplatesComponent } from './shared/dynamic-templates/dynamic-templates.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from '@app/shared/shared.module';
@@ -38,11 +45,24 @@ import { WorkAreasComponent } from '../general-services/shared/work-areas/work-a
     ResearchAndStudiesComponent,
     ParticipantOrganizationsPopupComponent,
     WorkAreasComponent,
-
+    DynamicTemplatesComponent,
   ],
   imports: [
     CommonModule,
-    SharedModule
+    SharedModule,
+    FormlyBootstrapModule,
+    FormlyModule.forChild({
+      types: [
+        { name: 'dateField', component: FormlyDateFieldComponent, wrappers: ['custom-wrapper'] },
+        { name: 'selectField', component: FormlySelectFieldComponent, wrappers: ['custom-wrapper'] },
+        { name: 'yesOrNo', component: FormlySelectFieldComponent, wrappers: ['custom-wrapper'] },
+        { name: 'maskInput', extends: 'input', component: FormlyMaskInputFieldComponent, wrappers: ['custom-wrapper'] },
+        { name: 'number', extends: 'input', component: FormlyMaskInputFieldComponent, wrappers: ['custom-wrapper'] },
+      ],
+      wrappers: [
+        { name: 'custom-wrapper', component: ProcessFieldWrapperComponent }
+      ]
+    }),
   ],
   exports: [
     SharedModule,
@@ -58,7 +78,7 @@ import { WorkAreasComponent } from '../general-services/shared/work-areas/work-a
     ResearchAndStudiesComponent,
     ParticipantOrganizationsPopupComponent,
     WorkAreasComponent,
-
+    DynamicTemplatesComponent
   ]
 })
 export class EServicesMainModule {

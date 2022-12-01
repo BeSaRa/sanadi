@@ -1,3 +1,6 @@
+import { ProcessFieldBuilder } from './../../../../administration/popups/general-process-popup/process-formly-components/process-fields-builder';
+import { DynamicModelService } from './../../../../services/dynamic-models.service';
+import { CoordinationWithOrganizationTemplate } from './../../../../models/corrdination-with-organization-template';
 import {
   Component, Input,
   OnInit
@@ -11,7 +14,6 @@ import {
 import { UserClickOn } from '@app/enums/user-click-on.enum';
 import { DateUtils } from '@app/helpers/date-utils';
 import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { ResearchAndStudies } from '@app/models/research-and-studies';
 import { DialogService } from '@app/services/dialog.service';
 import { LangService } from '@app/services/lang.service';
 import { ToastService } from '@app/services/toast.service';
@@ -21,39 +23,36 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import { filter, map, take, takeUntil } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-research-and-studies',
-  templateUrl: './research-and-studies.component.html',
-  styleUrls: ['./research-and-studies.component.scss'],
+  selector: 'app-dynamic-templates',
+  templateUrl: './dynamic-templates.component.html',
+  styleUrls: ['./dynamic-templates.component.scss'],
 })
-export class ResearchAndStudiesComponent implements OnInit {
-  constructor(
-    public lang: LangService,
-    private toastService: ToastService,
-    private dialogService: DialogService,
-    private fb: FormBuilder
-  ) {}
-  @Input() formArrayName: string = 'researchAndStudies';
-  @Input() orgId!:number|undefined;
+export class DynamicTemplatesComponent implements OnInit {
 
-  allowListUpdate:boolean=true;
-  private _list: ResearchAndStudies[] = [];
-  @Input() set list(list: ResearchAndStudies[]) {
-    if( this.allowListUpdate === true){
+  @Input() formArrayName: string = 'dynamicTemplates';
+  @Input() orgId!: number | undefined;
+  @Input() templateId!: number;
+
+  allowListUpdate: boolean = true;
+  private _list: CoordinationWithOrganizationTemplate[] = [];
+  @Input() set list(list: CoordinationWithOrganizationTemplate[]) {
+    if (this.allowListUpdate === true) {
       this._list = list;
       this.listDataSource.next(this._list);
     }
   }
-  model: ResearchAndStudies = new ResearchAndStudies();
-  get list(): ResearchAndStudies[] {
+  model: CoordinationWithOrganizationTemplate = new CoordinationWithOrganizationTemplate();
+  get list(): CoordinationWithOrganizationTemplate[] {
     return this._list;
   }
   @Input() readonly: boolean = false;
-  @Input() pageTitleKey: keyof ILanguageKeys = 'research_and_studies';
-  @Input() canUpdate:boolean=true;
-  @Input() isClaimed:boolean=false;
+  @Input() pageTitleKey: keyof ILanguageKeys = 'lbl_template';
+  @Input() canUpdate: boolean = true;
+  @Input() isClaimed: boolean = false;
+  fieldBuilder: ProcessFieldBuilder;
 
-  listDataSource: BehaviorSubject<ResearchAndStudies[]> = new BehaviorSubject<
-    ResearchAndStudies[]
+  listDataSource: BehaviorSubject<CoordinationWithOrganizationTemplate[]> = new BehaviorSubject<
+    CoordinationWithOrganizationTemplate[]
   >([]);
   columns = this.model.DisplayedColumns;
 
@@ -62,12 +61,12 @@ export class ResearchAndStudiesComponent implements OnInit {
   private save$: Subject<any> = new Subject<any>();
 
   add$: Subject<any> = new Subject<any>();
-  private recordChanged$: Subject<ResearchAndStudies | null> =
-    new Subject<ResearchAndStudies | null>();
-  private currentRecord?: ResearchAndStudies;
+  private recordChanged$: Subject<CoordinationWithOrganizationTemplate | null> =
+    new Subject<CoordinationWithOrganizationTemplate | null>();
+  private currentRecord?: CoordinationWithOrganizationTemplate;
 
   private destroy$: Subject<any> = new Subject<any>();
-  formOpend=false;
+  formOpend = false;
   form!: FormGroup;
 
   datepickerOptionsMap: DatepickerOptionsMap = {
@@ -82,11 +81,26 @@ export class ResearchAndStudiesComponent implements OnInit {
   }
   filterControl: UntypedFormControl = new UntypedFormControl('');
   showForm: boolean = false;
+
+  constructor(
+    public lang: LangService,
+    private toastService: ToastService,
+    private dialogService: DialogService,
+    private dynamicModelService: DynamicModelService,
+    private fb: FormBuilder
+  ) {
+
+    this.fieldBuilder = new ProcessFieldBuilder();
+    this.fieldBuilder.buildMode = this.readonly ? 'view' : 'use';
+  }
   ngOnInit(): void {
     this.buildForm();
     this.listenToAdd();
     this.listenToRecordChange();
     this.listenToSave();
+    this.dynamicModelService.getById(this.templateId).subscribe((model) => {
+      this.fieldBuilder.generateFromString(model?.template);
+    })
   }
 
   ngOnDestroy(): void {
@@ -102,24 +116,25 @@ export class ResearchAndStudiesComponent implements OnInit {
   private listenToAdd() {
     this.add$.pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.viewOnly = false;
-      this.formOpend=true;
-      this.recordChanged$.next(new ResearchAndStudies());
+      this.formOpend = true;
+      this.recordChanged$.next(new CoordinationWithOrganizationTemplate());
     });
   }
   private listenToRecordChange() {
     this.recordChanged$.pipe(takeUntil(this.destroy$)).subscribe((record) => {
-      if(record && this.orgId)record.organizationId=this.orgId;
+      if (record && this.orgId) record.organizationId = this.orgId;
       this.currentRecord = record || undefined;
       this.showForm = !!this.currentRecord;
       this.updateForm(this.currentRecord);
     });
   }
-  private updateForm(model: ResearchAndStudies | undefined) {
+  private updateForm(model: CoordinationWithOrganizationTemplate | undefined) {
     const formArray = this.formArray;
     formArray.clear();
     if (model) {
-
-      formArray.push(this.fb.group(new ResearchAndStudies().clone(model).BuildForm(true)));
+      console.log('update')
+      console.log(formArray)
+      // formArray.push(this.fb.group(new CoordinationWithOrganizationTemplate().clone(model).BuildForm(true)));
       if (this.readonly || this.viewOnly) {
         this.formArray.disable();
       }
@@ -151,15 +166,19 @@ export class ResearchAndStudiesComponent implements OnInit {
           return this.form.get(`${this.formArrayName}.0`) as FormArray;
         }),
         map((form) => {
-          const model= new ResearchAndStudies().clone({
+          this.fieldBuilder.fields.map(f => {
+            f.value = form.value[f.id];
+          })
+          const model = new CoordinationWithOrganizationTemplate().clone({
             ...this.currentRecord,
-            ...form.getRawValue(),
+            templateId: this.templateId,
+            template: this.fieldBuilder.generateAsString()
           });
-          this.formOpend=false;
+          this.formOpend = false;
           return model;
         })
       )
-      .subscribe((model: ResearchAndStudies) => {
+      .subscribe((model: CoordinationWithOrganizationTemplate) => {
         if (!model) {
           return;
         }
@@ -175,7 +194,7 @@ export class ResearchAndStudiesComponent implements OnInit {
       });
   }
   private _updateList(
-    record: ResearchAndStudies | null,
+    record: CoordinationWithOrganizationTemplate | null,
     operation: 'ADD' | 'UPDATE' | 'DELETE' | 'NONE',
     gridIndex: number = -1
   ) {
@@ -203,24 +222,24 @@ export class ResearchAndStudiesComponent implements OnInit {
   }
   onCancel() {
     this.resetForm();
-    this.showForm=false;
+    this.showForm = false;
     this.editIndex = -1;
   }
   private resetForm() {
-    this.formOpend=false;
+    this.formOpend = false;
     this.formArray.clear();
     this.formArray.markAsUntouched();
     this.formArray.markAsPristine();
   }
-  view($event: MouseEvent, record: ResearchAndStudies, index: number) {
+  view($event: MouseEvent, record: CoordinationWithOrganizationTemplate, index: number) {
     $event.preventDefault();
-    this.formOpend=true;
+    this.formOpend = true;
     this.editIndex = index;
     this.viewOnly = true;
     this.recordChanged$.next(record);
   }
 
-  delete($event: MouseEvent, record: ResearchAndStudies, index: number): any {
+  delete($event: MouseEvent, record: CoordinationWithOrganizationTemplate, index: number): any {
     $event.preventDefault();
     if (this.readonly) {
       return;
@@ -235,28 +254,28 @@ export class ResearchAndStudiesComponent implements OnInit {
         }
       });
   }
-  edit($event: MouseEvent, record: ResearchAndStudies, index: number) {
+  edit($event: MouseEvent, record: CoordinationWithOrganizationTemplate, index: number) {
     $event.preventDefault();
     if (this.readonly) {
       return;
     }
-    this.formOpend=true;
+    this.formOpend = true;
     this.editIndex = index;
     this.viewOnly = false;
     this.recordChanged$.next(record);
   }
-  get researchAndStudiesForm() {
-    return this.form.controls.researchAndStudies as UntypedFormArray;
+  get dynamicTemplatesForm() {
+    return this.form.controls.dynamicTemplates as UntypedFormArray;
   }
-  get researchAndStudiesFormArray() {
-    return this.researchAndStudiesForm.controls['0'] as UntypedFormGroup;
+  get dynamicTemplatesFormArray() {
+    return this.dynamicTemplatesForm.controls['0'] as UntypedFormGroup;
   }
   get searchStartDate() {
-    return this.researchAndStudiesFormArray.controls
+    return this.dynamicTemplatesFormArray.controls
       .searchStartDate as UntypedFormControl;
   }
   get searchSubmissionDeadline() {
-    return this.researchAndStudiesFormArray.controls
+    return this.dynamicTemplatesFormArray.controls
       .searchSubmissionDeadline as UntypedFormControl;
   }
   onDateChange(

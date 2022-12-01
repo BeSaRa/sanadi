@@ -1,3 +1,4 @@
+import { CoordinationWithOrganizationTemplate } from './../../../../models/corrdination-with-organization-template';
 import { DynamicModel } from '@app/models/dynamic-model';
 import { DynamicModelService } from '@app/services/dynamic-models.service';
 import { DatepickerControlsMap, DatepickerOptionsMap, ReadinessStatus } from '@app/types/types';
@@ -41,6 +42,8 @@ import { EffectiveCoordinationCapabilities } from '@app/models/effective-coordin
 import { ResearchAndStudies } from '@app/models/research-and-studies';
 import { ProfileService } from '@services/profile.service';
 import { Profile } from '@app/models/profile';
+import { DynamicTemplatesComponent } from '@app/modules/e-services-main/shared/dynamic-templates/dynamic-templates.component';
+import { numberValidator } from '@app/validators/validate-fields-status';
 
 @Component({
   selector: 'app-coordination-with-organizations-request',
@@ -132,10 +135,10 @@ CoordinationWithOrganizationsRequestService> {
       },
     },
     dynamicTempaltes: {
-      name: 'dynamicTempaltesTap',
+      name: 'dynamicTemplatesTap',
       langKey: 'lbl_template',
       validStatus: () => {
-        return this.model!.temporaryResearchAndStudies.length > 0; // TODO: fix list name
+        return this.model!.temporaryTemplateList.length > 0;
       },
     },
     specialExplanation: {
@@ -164,6 +167,9 @@ CoordinationWithOrganizationsRequestService> {
   ResearchAndStudiesTabStatus: ReadinessStatus = 'READY';
   @ViewChild('researchAndStudiesTap')
   ResearchAndStudiesComponentRef!: ResearchAndStudiesComponent;
+  @ViewChild('dynamicTemplatesTap')
+  DynamicTemplatesComponentRef!: DynamicTemplatesComponent;
+
   loadAttachments: boolean = false;
 
   @ViewChild('attachment')
@@ -203,7 +209,8 @@ CoordinationWithOrganizationsRequestService> {
       (this.model?.organizaionOfficerList?.length! > 0 ||
         this.model?.buildingAbilitiesList?.length! > 0 ||
         this.model?.effectiveCoordinationCapabilities?.length! > 0 ||
-        this.model?.researchAndStudies?.length! > 0)
+        this.model?.researchAndStudies?.length! > 0 ||
+        this.model?.templateList?.length! > 0)
     );
   }
 
@@ -246,6 +253,7 @@ CoordinationWithOrganizationsRequestService> {
       creatorInfo: undefined,
       lastModified: '',
       lastModifier: '',
+      processid: 0,
       ouInfo: undefined,
       search(searchText: string, searchFieldsName: string | undefined): boolean {
         return false;
@@ -257,7 +265,8 @@ CoordinationWithOrganizationsRequestService> {
       participatingOrganizaionList: [],
       organizaionOfficerList: [],
       effectiveCoordinationCapabilities: [],
-      researchAndStudies: []
+      researchAndStudies: [],
+      templateList: []
     });
   }
 
@@ -266,7 +275,8 @@ CoordinationWithOrganizationsRequestService> {
       this.model!.temporaryOrganizaionOfficerList?.length > 0 &&
       (this.model!.temporaryBuildingAbilitiesList?.length > 0 ||
         this.model!.temporaryEffectiveCoordinationCapabilities?.length > 0 ||
-        this.model!.temporaryResearchAndStudies?.length > 0)
+        this.model!.temporaryResearchAndStudies?.length > 0 ||
+        this.model!.temporaryTemplateList?.length > 0)
     );
   }
 
@@ -309,6 +319,9 @@ CoordinationWithOrganizationsRequestService> {
     }
     if (this.ResearchAndStudiesComponentRef) {
       this.model!.researchAndStudies = this.ResearchAndStudiesComponentRef.list;
+    }
+    if (this.DynamicTemplatesComponentRef) {
+      this.model!.templateList = this.DynamicTemplatesComponentRef.list;
     }
   }
 
@@ -421,6 +434,9 @@ CoordinationWithOrganizationsRequestService> {
     }
     if (this.ResearchAndStudiesComponentRef) {
       this.ResearchAndStudiesComponentRef.list = [];
+    }
+    if (this.DynamicTemplatesComponentRef) {
+      this.DynamicTemplatesComponentRef.list = [];
     }
 
 
@@ -564,6 +580,9 @@ CoordinationWithOrganizationsRequestService> {
     model!.researchAndStudies! = model!.researchAndStudies.filter(
       (x) => x.organizationId === orgId
     );
+    model!.templateList! = model!.templateList.filter(
+      (x) => x.organizationId === orgId
+    );
     return model;
   }
 
@@ -591,6 +610,9 @@ CoordinationWithOrganizationsRequestService> {
     model!.temporaryResearchAndStudies! = model!.temporaryResearchAndStudies.filter(
       (x) => x.organizationId !== orgId
     );
+    model!.temporaryTemplateList! = model!.temporaryTemplateList.filter(
+      (x) => x.organizationId !== orgId
+    );
 
 
     return model;
@@ -609,6 +631,9 @@ CoordinationWithOrganizationsRequestService> {
     if (this.ResearchAndStudiesComponentRef) {
       this.ResearchAndStudiesComponentRef.allowListUpdate = true;
     }
+    if (this.DynamicTemplatesComponentRef) {
+      this.DynamicTemplatesComponentRef.allowListUpdate = true;
+    }
   }
 
   disableListsUpdate() {
@@ -624,6 +649,9 @@ CoordinationWithOrganizationsRequestService> {
     }
     if (this.ResearchAndStudiesComponentRef) {
       this.ResearchAndStudiesComponentRef.allowListUpdate = false;
+    }
+    if (this.DynamicTemplatesComponentRef) {
+      this.DynamicTemplatesComponentRef.allowListUpdate = false;
     }
   }
 
@@ -661,7 +689,7 @@ CoordinationWithOrganizationsRequestService> {
     return this.form.get('domain') as UntypedFormControl;
   }
   get templateField() {
-    return this.form.get('templateId') as UntypedFormControl;
+    return this.form.get('processid') as UntypedFormControl;
   }
 
   get organizationOfficersList(): OrganizationOfficer[] | [] {
@@ -683,5 +711,9 @@ CoordinationWithOrganizationsRequestService> {
   get researchAndStudiesList(): ResearchAndStudies[] | [] {
     if (this.isInternalUser) return this.model?.researchAndStudies ?? [];
     return this.model?.temporaryResearchAndStudies ?? [];
+  }
+  get dynamicTemplatesList(): CoordinationWithOrganizationTemplate[] | [] {
+    if (this.isInternalUser) return this.model?.templateList ?? [];
+    return this.model?.temporaryTemplateList ?? [];
   }
 }
