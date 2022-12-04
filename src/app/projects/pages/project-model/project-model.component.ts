@@ -1,5 +1,13 @@
 import {Component, ViewChild} from '@angular/core';
-import {AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, ValidatorFn} from '@angular/forms';
+import {
+  AbstractControl,
+  UntypedFormArray,
+  UntypedFormBuilder,
+  UntypedFormControl,
+  UntypedFormGroup,
+  ValidatorFn,
+  Validators
+} from '@angular/forms';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {SaveTypes} from '@app/enums/save-types';
 import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
@@ -1078,7 +1086,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   buildEvaluationIndicatorForm(): void {
     this.evaluationIndicatorForm = this.fb.group({
       indicator: [null, [CustomValidators.required]],
-      percentage: [null, [CustomValidators.required, CustomValidators.decimal(2)]],
+      percentage: [null, [CustomValidators.required, Validators.max(100), CustomValidators.decimal(2)]],
       notes: [null]
     });
   }
