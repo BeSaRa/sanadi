@@ -35,7 +35,7 @@
         <div class="col-sm-6 mb-4 position-relative">
           <label asteriskIfRequired="menuOrder" for="menuOrder" class="form-label">{{lang.map.menu_order}}</label>
           <input id="menuOrder" validationClasses="menuOrder" formControlName="menuOrder" class="form-control"
-                 [mask]="inputMaskPatterns.NUMBER_ONLY">
+                 [mask]="inputMaskPatterns.NUMBER_ONLY" max="99" maxlength="2">
           <app-field-error-message controlName="menuOrder"></app-field-error-message>
         </div>
 
