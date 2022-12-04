@@ -280,7 +280,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
         projectTotalCost: [model.projectTotalCost, [CustomValidators.required, CustomValidators.decimal(2)]],
         componentList: this.fb.array([])
       }),
-      description: this.fb.control(model.description, CustomValidators.required)
+      description: this.fb.control(model.description, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)])
     });
 
     this.listenToExecutionFieldChange();
