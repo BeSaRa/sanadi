@@ -178,7 +178,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       name: 'foreignCountriesProjectsTab',
       langKey: 'project_model_foreign_countries_projects',
       index: 6,
-      validStatus: () => (this.model && this.pMForeignCountriesProjects && this.pMForeignCountriesProjects.length > 0)
+      validStatus: () => true
     },
     specialExplanations: {
       name: 'specialExplanationsTab',
