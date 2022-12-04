@@ -1,4 +1,8 @@
 export interface ILanguageKeys {
+  transfer_type: string;
+  you_should_add_at_least_one_payment_in_payments: string;
+  payment_name: string;
+  add_payment: string;
   save_final_general_notes: string;
   final_general_notes: string;
   final_comments_saved_successfully: string;
