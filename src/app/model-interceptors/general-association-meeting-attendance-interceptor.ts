@@ -41,13 +41,13 @@ export class GeneralAssociationMeetingAttendanceInterceptor implements IModelInt
     model.managerDecisionInfo == model.managerDecisionInfo ? AdminResult.createInstance(model.managerDecisionInfo) : AdminResult.createInstance({});
 
     if (model.administrativeBoardMembers && model.administrativeBoardMembers.length > 0) {
-      model.administrativeBoardMembers = model.administrativeBoardMembers.map(x => service.externalMembersInterceptor.receive(x) as GeneralAssociationExternalMember);
+      model.administrativeBoardMembers = model.administrativeBoardMembers.map(x => new GeneralAssociationExternalMember().clone(service.externalMembersInterceptor.receive(x) as GeneralAssociationExternalMember));
     }
     if (model.generalAssociationMembers && model.generalAssociationMembers.length > 0) {
-      model.generalAssociationMembers = model.generalAssociationMembers.map(x => service.externalMembersInterceptor.receive(x) as GeneralAssociationExternalMember);
+      model.generalAssociationMembers = model.generalAssociationMembers.map(x => new GeneralAssociationExternalMember().clone(service.externalMembersInterceptor.receive(x) as GeneralAssociationExternalMember));
     }
     if (model.internalMembersDTO && model.internalMembersDTO.length > 0) {
-      model.internalMembersDTO = model.internalMembersDTO.map(x => service.internalMembersInterceptor.receive(x) as GeneralAssociationInternalMember);
+      model.internalMembersDTO = model.internalMembersDTO.map(x => new GeneralAssociationInternalMember().clone(service.internalMembersInterceptor.receive(x) as GeneralAssociationInternalMember));
     }
     model.meetingDate = DateUtils.changeDateToDatepicker(model.meetingDate);
     model.requestTypeInfo = model.requestTypeInfo ? AdminResult.createInstance(model.requestTypeInfo) : AdminResult.createInstance({});

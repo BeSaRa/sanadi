@@ -14,6 +14,8 @@ import {GeneralAssociationMeetingAttendance} from '@app/models/general-associati
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 import {GeneralAssociationMeetingStepNameEnum} from '@app/enums/general-association-meeting-step-name-enum';
 import {MeetingMemberTaskStatus} from '@app/models/meeting-member-task-status';
+import {MeetingAttendanceReport} from '@app/models/meeting-attendance-report';
+import {GeneralMeetingAttendanceNote} from '@app/models/general-meeting-attendance-note';
 
 @Component({
   selector: 'manage-internal-users',
@@ -47,13 +49,14 @@ export class ManageInternalUsersComponent implements OnInit {
 
   membersDisplayedColumns: string[] = ['index', 'arabicName', 'englishName', 'isDecisionMaker', 'status', 'actions'];
   internalUserType = GeneralAssociationInternalMemberTypeEnum;
+  @Input() meetingReport!: MeetingAttendanceReport;
+  @Input() generalNotes: GeneralMeetingAttendanceNote[] = [];
 
   constructor(private dialog: DialogService,
               public lang: LangService,
               private fb: FormBuilder,
               private generalAssociationMeetingService: GeneralAssociationMeetingAttendanceService,
               private internalUserService: InternalUserService) {
-
   }
 
   get arabicName(): FormControl {
@@ -164,6 +167,11 @@ export class ManageInternalUsersComponent implements OnInit {
     this.selectedInternalUsers = this.selectedInternalUsers.filter(x => x.domainName != model.domainName);
     this.resetMemberForm();
     this.memberListChanged.emit(this.selectedInternalUsers);
+  }
+
+  viewMemberCommentsAndNotes(event: MouseEvent, model: GeneralAssociationInternalMember) {
+    event.preventDefault();
+    this.generalAssociationMeetingService.openViewMemberCommentsAndNotesDialog(model, this.meetingReport, this.generalNotes, model.userId, this.model?.id);
   }
 
   isExistMemberInCaseOfAdd(selectedMembers: GeneralAssociationInternalMember[], toBeAddedMember: GeneralAssociationInternalMember): boolean {

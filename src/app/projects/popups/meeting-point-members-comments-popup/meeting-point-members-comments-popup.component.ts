@@ -21,7 +21,10 @@ export class MeetingPointMembersCommentsPopupComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('comments', this.data.membersComments);
+
   }
 
+  getMemberName(member: MeetingPointMemberComment): string {
+    return this.lang?.map.lang === 'ar' ? member.arName : member.enName;
+  }
 }

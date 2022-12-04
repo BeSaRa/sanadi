@@ -113,6 +113,10 @@ export class ExternalUser extends BaseModel<ExternalUser, ExternalUserService> {
     return this.service.updateStatus(this.id, newStatus);
   }
 
+  getProfileId(): number {
+    return this.profileId;
+  }
+
   // noinspection JSUnusedGlobalSymbols
   getUniqueName(): string {
     return this.qid?.toString()?? '';

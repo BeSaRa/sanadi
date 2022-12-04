@@ -130,8 +130,7 @@ export class AwarenessActivitySuggestion
         agreementWithRACA: controls ? [agreementWithRACA, Validators.required] : agreementWithRACA,
         subject: controls ? [subject, [Validators.required]] : subject,
         expectedDate: controls ? [expectedDate, [Validators.required]] : expectedDate,
-        goal: controls ? [goal, [Validators.required]] : goal,
-        linkedProject: controls ? [goal, [Validators.required]] : goal
+        goal: controls ? [goal, [Validators.required]] : goal
       },
     };
   }
