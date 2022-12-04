@@ -164,7 +164,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       name: 'projectAddressesTab',
       langKey: 'project_addresses',
       index: 5,
-      validStatus: () => (this.model && this.projectAddresses && this.projectAddresses.length > 0)
+      validStatus: () => this.isValidProjectAddresses()
     },
     foreignCountriesProjects: {
       name: 'foreignCountriesProjectsTab',
@@ -192,9 +192,15 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     }
   };
 
+  isValidProjectAddresses() {
+    return (this.model && this.projectAddresses && this.projectAddresses.length > 0) || !this.showProjectAddressesTab
+  }
+
   getTabInvalidStatus(tabName: string): boolean {
     return !this.tabsData[tabName].validStatus();
   }
+
+  showProjectAddressesTab: boolean = false;
 
   constructor(public lang: LangService,
               public fb: UntypedFormBuilder,
@@ -284,6 +290,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     });
 
     this.listenToExecutionFieldChange();
+    this.listenToIsConstructionalChange();
   }
 
   handleReadonly(): void {
@@ -357,15 +364,15 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       return true;
     }
 
-    if (this.evaluationIndicators && this.evaluationIndicators.length < 1) {
-      this.dialog.error(this.lang.map.you_should_add_at_least_one_evaluation_indicator);
-      return false;
-    }
-
-    if (this.pMForeignCountriesProjects && this.pMForeignCountriesProjects.length < 1) {
-      this.dialog.error(this.lang.map.you_should_add_at_least_one_foreign_project_need);
-      return false;
-    }
+    // if (this.evaluationIndicators && this.evaluationIndicators.length < 1) {
+    //   this.dialog.error(this.lang.map.you_should_add_at_least_one_evaluation_indicator);
+    //   return false;
+    // }
+    //
+    // if (this.pMForeignCountriesProjects && this.pMForeignCountriesProjects.length < 1) {
+    //   this.dialog.error(this.lang.map.you_should_add_at_least_one_foreign_project_need);
+    //   return false;
+    // }
 
     const invalidTabs = this._getInvalidTabs();
     if (invalidTabs.length > 0) {
@@ -503,6 +510,10 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
 
   get projectWorkArea(): AbstractControl {
     return this.form.get('basicInfo')?.get('projectWorkArea') as AbstractControl;
+  }
+
+  get isConstructional(): AbstractControl {
+    return this.form.get('basicInfo')?.get('isConstructional') as AbstractControl;
   }
 
   get projectTotalCostField(): AbstractControl {
@@ -772,17 +783,39 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   listenToExecutionFieldChange() {
     this.projectWorkArea.valueChanges.subscribe(val => {
       if (val === ExecutionFields.OutsideQatar) {
+        this.showProjectAddressesTab = this.isConstructional.value;
         this.removeQatarFromCountries();
         this.isOutsideQatarWorkArea = true;
         this.emptyFieldsAndValidation(['internalProjectClassification', 'sanadiDomain', 'sanadiMainClassification']);
       } else if (this.projectWorkArea.value === ExecutionFields.InsideQatar) {
+        this.hideProjectAddressesTabAndClearProjectAddressesList();
         this.applyNotOutsideQatarChanges();
         this.setQatarAsTheOnlyChoiceInCountries();
       } else {
+        this.hideProjectAddressesTabAndClearProjectAddressesList();
         this.countriesAvailableForSelection = this.countries;
         this.applyNotOutsideQatarChanges();
       }
-    })
+    });
+  }
+
+  listenToIsConstructionalChange() {
+    this.isConstructional.valueChanges.subscribe(val => {
+      if (val) {
+        if (this.projectWorkArea.value === ExecutionFields.OutsideQatar) {
+          this.showProjectAddressesTab = true;
+        } else {
+          this.hideProjectAddressesTabAndClearProjectAddressesList();
+        }
+      } else {
+        this.hideProjectAddressesTabAndClearProjectAddressesList();
+      }
+    });
+  }
+
+  hideProjectAddressesTabAndClearProjectAddressesList() {
+    this.showProjectAddressesTab = false;
+    this.projectAddresses = [];
   }
 
   applyNotOutsideQatarChanges() {
