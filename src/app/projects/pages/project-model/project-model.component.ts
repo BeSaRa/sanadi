@@ -124,7 +124,6 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   displayTemplateSerialField: boolean = false;
   displayDevGoals: boolean = false;
   isOutsideQatarWorkArea: boolean = false;
-  isDevelopmentField: boolean = false;
   isCharityProfile: boolean = false;
   isInstitutionProfile: boolean = false;
 
@@ -485,6 +484,10 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     this.pMForeignCountriesProjects = this.model?.foreignCountriesProjectList;
     this.projectAddresses = this.model?.projectAddressList;
     this.handleRequestTypeChange(model.requestType, false);
+
+    if(model.domain === DomainTypes.DEVELOPMENT) {
+      this.displayDevGoals = true;
+    }
   }
 
   _resetForm(): void {
