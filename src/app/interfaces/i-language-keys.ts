@@ -1598,5 +1598,14 @@ export interface ILanguageKeys {
   available_values: string;
   menus: string;
   msg_no_menus_available: string;
+  parent_number: string;
+  tenant_number: string;
+  last_invoice_date: string;
+  balance_aging_category: string;
+  current_month: string;
+  month_1_to_3: string;
+  month_3_to_6: string;
+  month_6_to_12: string;
+  over_12_months: string;
 }
 

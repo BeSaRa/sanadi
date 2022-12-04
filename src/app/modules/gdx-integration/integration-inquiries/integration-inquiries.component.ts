@@ -148,7 +148,6 @@ export class IntegrationInquiriesComponent {
         break;
       case GdxServicesEnum.KAHRAMAA:
         this.relatedData[GdxServiceRelatedTypesEnum.KAHRAMAA_OUTSTANDING_PAYMENTS] = log.gdxServiceResponseList;
-        console.log(log.gdxServiceResponseList);
         break;
       default:
         break;
