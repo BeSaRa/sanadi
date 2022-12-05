@@ -1601,5 +1601,7 @@ export interface ILanguageKeys {
   menu_coordination_with_organizations_template: string;
   lbl_add_coordination_with_organizations_template: string;
   lbl_edit_coordination_with_organizations_template: string;
+  btn_hide_from_table: string;
+  btn_show_on_table: string;
 }
 

@@ -97,6 +97,7 @@ export class DynamicModelPopupComponent extends AdminGenericDialog<DynamicModel>
       if (fieldId) {
         const field = this.processForm.getFieldById(fieldId);
         this.fieldForm.reset();
+        console.log(field)
         if (field) {
           this.fieldForm = this.fb.group({
             ...field.buildForm(),
@@ -175,6 +176,9 @@ export class DynamicModelPopupComponent extends AdminGenericDialog<DynamicModel>
   };
   get statusField() {
     return this.fieldForm.controls['status'] as UntypedFormArray;
+  }
+  get showOnTableField() {
+    return this.fieldForm.controls['showOnTable'] as UntypedFormArray;
   }
   get options() {
     return this.fieldForm.controls["options"] as UntypedFormArray;

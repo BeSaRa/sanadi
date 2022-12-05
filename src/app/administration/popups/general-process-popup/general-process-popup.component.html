@@ -209,7 +209,7 @@
                 <button class="btn btn-outline-danger me-2" *ngIf="isEditField && isCreateForm" (click)="deleteField(fieldForm)">
                   {{ lang.map.btn_delete }}
                 </button>
-                <button class="btn btn-secondary" (click)="resetFieldForm()">
+                <button class="btn btn-secondary" *ngIf="isEditField && isCreateForm" (click)="resetFieldForm()">
                   {{ lang.map.btn_clear }}
                 </button>
               </div>

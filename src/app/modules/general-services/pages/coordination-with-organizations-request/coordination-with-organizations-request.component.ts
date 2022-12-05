@@ -43,7 +43,6 @@ import { ResearchAndStudies } from '@app/models/research-and-studies';
 import { ProfileService } from '@services/profile.service';
 import { Profile } from '@app/models/profile';
 import { DynamicTemplatesComponent } from '@app/modules/e-services-main/shared/dynamic-templates/dynamic-templates.component';
-اضافة اتريبيوت في الادمن لتحديدي ظهور قيمة الحقل في الجدول او لا
 @Component({
   selector: 'app-coordination-with-organizations-request',
   templateUrl: './coordination-with-organizations-request.component.html',

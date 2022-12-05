@@ -26,6 +26,7 @@ export class TemplateField extends Cloneable<TemplateField>{
   langService: LangService;
   value!: number | string | IMyDateModel;
   status!: number;
+  showOnTable!: number;
   constructor() {
     super();
     this.langService = FactoryService.getService('LangService');
@@ -45,7 +46,8 @@ export class TemplateField extends Cloneable<TemplateField>{
       required,
       pattern,
       type,
-      status
+      status,
+      showOnTable
     } = this;
     return {
       identifyingName: [identifyingName, [
@@ -72,6 +74,7 @@ export class TemplateField extends Cloneable<TemplateField>{
       pattern: [pattern, []],
       note: [note, [CustomValidators.required]],
       status: [status],
+      showOnTable: [showOnTable]
     }
   }
 

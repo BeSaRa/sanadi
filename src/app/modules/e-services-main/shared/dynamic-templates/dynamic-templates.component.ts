@@ -1,3 +1,4 @@
+import { DateUtils } from '@app/helpers/date-utils';
 import { DynamicModel } from '@app/models/dynamic-model';
 import { ProcessFieldBuilder } from './../../../../administration/popups/general-process-popup/process-formly-components/process-fields-builder';
 import { DynamicModelService } from './../../../../services/dynamic-models.service';
@@ -16,6 +17,8 @@ import { LangService } from '@app/services/lang.service';
 import { ToastService } from '@app/services/toast.service';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { filter, map, take, takeUntil } from 'rxjs/operators';
+import { D } from 'angular-mydatepicker';
+import { TemplateFieldTypes } from '@app/enums/template-field-types.enum';
 
 @Component({
   selector: 'app-dynamic-templates',
@@ -48,7 +51,7 @@ export class DynamicTemplatesComponent implements OnInit {
   listDataSource: BehaviorSubject<CoordinationWithOrganizationTemplate[]> = new BehaviorSubject<
     CoordinationWithOrganizationTemplate[]
   >([]);
-  columns = this.model.DisplayedColumns;
+  columns = ['actions'];
 
   editIndex: number = -1;
   viewOnly: boolean = false;
@@ -83,9 +86,30 @@ export class DynamicTemplatesComponent implements OnInit {
     this.listenToSave();
     this.dynamicModelService.getById(this.templateId).subscribe((model: DynamicModel) => {
       this.usedModel = model;
+      this.fieldBuilder.generateFromString(model.template);
+      this.columns = this.fieldBuilder.fields.reduce((p, c) => {
+        if (c.showOnTable)
+          return [c.identifyingName, ...p];
+        else return p;
+      }, this.columns)
     })
   }
+  getCellValue(row: CoordinationWithOrganizationTemplate, col: string) {
+    const field = row.generatedTemplate.find(f => f.identifyingName == col);
+    if (field?.value) {
+      if (field?.type == TemplateFieldTypes.dateField) {
+        return DateUtils.getDateStringFromDate(field?.value);
+      } else if (field?.type == TemplateFieldTypes.selectField || field?.type == TemplateFieldTypes.yesOrNo) {
 
+      }
+      return field?.value;
+    } else {
+      return '---';
+    }
+  }
+  getHeaderName(col: string) {
+    return this.fieldBuilder.fields.find(f => f.identifyingName == col)?.getName() || col
+  }
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
@@ -181,6 +205,7 @@ export class DynamicTemplatesComponent implements OnInit {
     gridIndex: number = -1
   ) {
     if (record) {
+      record.generatedTemplate = this.fieldBuilder.fields;
       if (operation === 'ADD') {
         this.list.push(record);
       } else if (operation === 'UPDATE') {

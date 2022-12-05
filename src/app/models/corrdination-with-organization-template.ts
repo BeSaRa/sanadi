@@ -1,3 +1,4 @@
+import { TemplateField } from './general-process-template';
 import { CoordinationWithOrganizationTemplateInterceptor } from './../model-interceptors/coordination-with-organization-template-interceptor';
 import { InterceptModel } from '@app/decorators/decorators/intercept-model';
 import { infoSearchFields } from '@app/helpers/info-search-fields';
@@ -17,6 +18,7 @@ export class CoordinationWithOrganizationTemplate extends SearchableCloneable<Co
   templateId!: number;
   langService?: LangService;
 
+  generatedTemplate: TemplateField[] = [];
   constructor() {
     super();
     this.employeeService = FactoryService.getService('EmployeeService');
@@ -34,11 +36,5 @@ export class CoordinationWithOrganizationTemplate extends SearchableCloneable<Co
       delete this.searchFields.organizationId;
       delete this.searchFields.organization;
     }
-  }
-
-  get DisplayedColumns(): string[] {
-    return [
-      'actions',
-    ];
   }
 }

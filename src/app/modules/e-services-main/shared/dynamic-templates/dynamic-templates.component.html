@@ -22,12 +22,10 @@
         <app-table #table sortableTable [paginator]="paginator" [data]="listDataSource" [columns]="columns"
           [filter]="filterControl.value" [useSearchToFilter]="true">
           <table class="table mt-3 table-striped table-bordered caption-top" cdk-table [dataSource]="table.dataSource">
-
-            <!-- <ng-container cdkColumnDef="financialCost">
-              <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.lbl_financial_cost}}</th>
-              <td cdk-cell *cdkCellDef="let row">{{row.financialCost}}</td>
-            </ng-container> -->
-
+            <ng-container *ngFor="let column of columns.slice(0, -1)" [cdkColumnDef]="column">
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{ getHeaderName(column) }}</th>
+              <td cdk-cell *cdkCellDef="let row">{{ getCellValue(row, column) }}</td>
+            </ng-container>
 
             <ng-container cdkColumnDef="actions">
               <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>

@@ -72,7 +72,9 @@ export class ProcessFieldBuilder {
         mask: field.mask,
         required: field.required,
         options: field.options,
-        value: field.value
+        value: field.value,
+        status: field.status,
+        showOnTable: field.showOnTable
       }
     })
     return JSON.stringify(fields);
@@ -97,6 +99,7 @@ export class ProcessFieldBuilder {
       order: form.value.order,
       type: form.value.type,
       status: form.value.status,
+      showOnTable: form.value.showOnTable,
       mask: form.value.type == TemplateFieldTypes.number ? CustomValidators.inputMaskPatterns.NUMBER_ONLY : '',
       required: form.value.required,
       pattern: form.value.pattern,

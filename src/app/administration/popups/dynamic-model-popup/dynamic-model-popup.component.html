@@ -51,6 +51,10 @@
                 <input formControlName="status" class="form-check-input" type="checkbox"
                   tooltip="{{statusField.value == commonStatusEnum.ACTIVATED ? lang.map.btn_deactivate : lang.map.btn_activate}}">
               </span>
+              <span class="form-check form-switch switch-action ms-2">
+                <input formControlName="showOnTable" class="form-check-input" type="checkbox"
+                  tooltip="{{showOnTableField.value == commonStatusEnum.ACTIVATED ? lang.map.btn_hide_from_table : lang.map.btn_show_on_table}}">
+              </span>
             </div>
             <div class="row">
               <!-- identifying name -->
@@ -80,7 +84,7 @@
                 <label for="type" asteriskIfRequired="type" class="form-label">{{lang.map.lbl_field_type}}</label>
                 <ng-select validationClasses="type" labelForId="type" placeholder="{{lang.map.select}}"
                   [notFoundText]="lang.map.msg_not_found" (change)="handleFieldTypeChange($event)"
-                  formControlName="type" [readonly]="!isCreateForm" id="type" appendTo="body">
+                  formControlName="type" [readonly]="!isCreateForm && isEditField" id="type" appendTo="body">
                   <ng-option *ngFor="let option of dynamicModelTemplateFieldTypesList; let i = index;" [value]="i + 1">
                     {{ getLabel(option) }}
                   </ng-option>
@@ -89,7 +93,7 @@
               </div>
               <!-- options -->
               <div class="col-12 mb-3 position-relative" *ngIf="isSelectField">
-                <div class="col-12 mb-3 position-relative" *ngIf="isCreateForm">
+                <div class="col-12 mb-3 position-relative" *ngIf="!isEditField && !isViewForm">
                   <div class="d-flex mb-1">
                     <label class="form-label mb-0">{{
                       lang.map.lbl_select_options}}</label>
@@ -102,11 +106,11 @@
                   <ng-container *ngFor="let option of options.controls; let i = index">
                     <div class="mb-2 d-flex" [formGroupName]="i">
                       <div class="flex-grow-1">
-                        <input id="fieldname" [readonly]="!isCreateForm" formControlName="name" validationClasses="name"
-                          class="form-control" />
+                        <input id="fieldname" [readonly]="!isCreateForm && isEditField" formControlName="name"
+                          validationClasses="name" class="form-control" />
                         <app-field-error-message controlName="name"></app-field-error-message>
                       </div>
-                      <button class="btn icon-btn text-primary mx-2" *ngIf="isCreateForm"
+                      <button class="btn icon-btn text-primary mx-2" *ngIf="!isEditField || isCreateForm"
                         [disabled]="options.controls.length == 1" (click)="removeOption(i)">
                         <i class="mdi mdi-delete"></i>
                       </button>
@@ -120,14 +124,14 @@
                   <div class="col mb-4 position-relative">
                     <label asteriskIfRequired="order" for="order" class="form-label">{{ lang.map.lbl_field_order
                       }}</label>
-                    <input id="order" [readonly]="!isCreateForm" validationClasses="order"
+                    <input id="order" [readonly]="!isCreateForm && isEditField" validationClasses="order"
                       [mask]="inputMaskPatterns.NUMBER_ONLY" formControlName="order" class="form-control" />
                     <app-field-error-message controlName="order"></app-field-error-message>
                   </div>
                   <!-- is required -->
                   <div class="mb-4 position-relative" style="max-width: 100px;">
                     <label for="required" class="form-label d-block">{{lang.map.lbl_required}}</label>
-                    <input class="form-check-input" [readonly]="!isCreateForm" formControlName="required"
+                    <input class="form-check-input" [readonly]="!isCreateForm && isEditField" formControlName="required"
                       type="checkbox">
                   </div>
                 </div>
@@ -135,14 +139,14 @@
               <!-- pattern -->
               <div class="col-12 col-md-6 col-lg-12 mb-4 position-relative">
                 <label asteriskIfRequired="pattern" for="pattern" class="form-label">{{ lang.map.lbl_regex}}</label>
-                <input id="pattern" [readonly]="!isCreateForm" validationClasses="pattern" formControlName="pattern"
-                  class="form-control" />
+                <input id="pattern" [readonly]="!isCreateForm && isEditField" validationClasses="pattern"
+                  formControlName="pattern" class="form-control" />
                 <app-field-error-message controlName="pattern"></app-field-error-message>
               </div>
               <!-- note -->
               <div class="col-sm-12 mb-4 position-relative">
                 <label class="form-label" asteriskIfRequired="note" for="note">{{lang.map.notes}}</label>
-                <textarea name="note" [readonly]="!isCreateForm" validationClasses="note" id="note"
+                <textarea name="note" [readonly]="!isCreateForm && isEditField" validationClasses="note" id="note"
                   formControlName="note" rows="4" class="form-control"></textarea>
                 <app-field-error-message controlName="note"></app-field-error-message>
               </div>
@@ -150,10 +154,11 @@
                 <button class="btn btn-primary me-2" [disabled]="!fieldForm.valid" (click)="submitField(fieldForm)">
                   {{ lang.map.btn_save }}
                 </button>
-                <button class="btn btn-outline-danger me-2" *ngIf="isEditField && isCreateForm" (click)="deleteField(fieldForm)">
+                <button class="btn btn-outline-danger me-2" *ngIf="isEditField && isCreateForm"
+                  (click)="deleteField(fieldForm)">
                   {{ lang.map.btn_delete }}
                 </button>
-                <button class="btn btn-secondary" (click)="resetFieldForm()">
+                <button class="btn btn-secondary" *ngIf="isCreateForm && !isEditField" (click)="resetFieldForm()">
                   {{ lang.map.btn_clear }}
                 </button>
               </div>
