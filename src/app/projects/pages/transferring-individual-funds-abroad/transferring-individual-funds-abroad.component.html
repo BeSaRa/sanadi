@@ -897,7 +897,9 @@
                        for="amount">{{lang.map.amount}}</label>
                 <input [readonly]="(readonly)" class="form-control"
                        formControlName="totalCost"
-                       id="amount" validationClasses="totalCost">
+                       id="amount" validationClasses="totalCost"
+                       [mask]="inputMaskPatterns.DECIMAL_WITH_SEPARATOR(2)"
+                       [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR">
                 <app-field-error-message controlName="totalCost"></app-field-error-message>
               </div>
               <div class="col-md-4 col-sm-12 mb-4 position-relative">
@@ -930,6 +932,7 @@
             </div>
             <div class="row">
               <div class="col-12 text-center action-container mb-3">
+                <span class="flex-grow-1"></span>
                 <button [disabled]="!paymentForm.valid" (click)="savePayment()"
                         class="btn btn-primary">{{lang.map.btn_save}}</button>
                 <button class="btn btn-secondary"
@@ -985,6 +988,32 @@
             </app-table>
           </div>
         </div>
+        <ng-container>
+          <div class="row">
+            <div class="col-md-4 col-sm-12 mb-4 position-relative">
+              <label class="form-label">{{lang.map.qatari_riyal_transaction_amount}}</label>
+              <input [readonly]="true" class="form-control" [value]="qatariTransactionAmount.value">
+            </div>
+            <div class="col-md-4 col-sm-12 mb-4 position-relative">
+              <label class="form-label">{{lang.map.total_amounts_of_payments}}</label>
+              <input [readonly]="true" class="form-control" [value]="totalPaymentsAmount">
+            </div>
+            <div class="col-md-4 col-sm-12 mb-4 position-relative">
+              <label class="form-label">{{lang.map.remaining_amount}}</label>
+              <input [readonly]="true" class="form-control" [value]="(+qatariTransactionAmount.value) - totalPaymentsAmount">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12 position-relative" style="text-align: center"
+            *ngIf="qatariTransactionAmount.value && ((+qatariTransactionAmount.value) === totalPaymentsAmount)">
+              <label class="form-label" style="font-weight: bold">* {{lang.map.the_transfer_amount_has_been_depleted}} *</label>
+            </div>
+            <div class="col-sm-12 position-relative" style="text-align: center"
+            *ngIf="totalPaymentsAmount > (+qatariTransactionAmount.value)">
+              <label class="form-label" style="font-weight: bold; color: #dc3545">* {{lang.map.total_payments_is_greater_than_transfer_amount}} *</label>
+            </div>
+          </div>
+        </ng-container>
       </ng-template>
     </ng-container>
     <ng-container formGroupName="explanation">
