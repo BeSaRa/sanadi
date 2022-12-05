@@ -1553,9 +1553,9 @@ export interface ILanguageKeys {
   lbl_main_team: string;
   lbl_sub_team: string;
   org_name_in_bank: string;
-  trade_license:string;
-  commercial_License_No:string;
-  commercial_activity:string;
+  trade_license: string;
+  commercial_License_No: string;
+  commercial_activity: string;
   section: string;
   profile: string;
   disclosure_statements_notices_notifications_notices: string;
@@ -1607,5 +1607,8 @@ export interface ILanguageKeys {
   month_3_to_6: string;
   month_6_to_12: string;
   over_12_months: string;
+  states: string;
+  license_duration_type: string;
+  office_type: string;
 }
 
