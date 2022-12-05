@@ -18,7 +18,19 @@
                angular-mydatepicker></div>
           <app-field-error-message [control]="followUpDateField"></app-field-error-message>
         </div>
-
+      </div>
+      <div class="col-md-4 col-sm-12 mb-4 position-relative">
+        <label for="licenseEndDate"
+               class="form-label">{{lang.map.license_end_date}}</label> <span class="text-danger"> * </span>
+        <div class="input-group">
+          <i class="input-group-text mdi mdi-calendar"></i>
+          <div class="form-control" [formControl]="licenseEndDateField"
+               id="licenseEndDate" [options]="datepickerOptionsMap.licenseEndDate"
+               (click)="dpLicenseEndDate.toggleCalendar()"
+               #dpLicenseEndDate="angular-mydatepicker"
+               angular-mydatepicker></div>
+          <app-field-error-message [control]="licenseEndDateField"></app-field-error-message>
+        </div>
       </div>
     </div>
   </div>

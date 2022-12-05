@@ -249,11 +249,13 @@ export class TransferringIndividualFundsAbroad extends _RequestType<Transferring
   buildApprovalForm(controls: boolean = false): any {
     const {
       followUpDate,
+      licenseEndDate,
       publicTerms,
       customTerms
     } = this;
     return {
       followUpDate: controls ? [followUpDate, [CustomValidators.required]] : followUpDate,
+      licenseEndDate: controls ? [licenseEndDate, [CustomValidators.required]] : licenseEndDate,
       publicTerms: controls ? [{value: publicTerms, disabled: true}] : publicTerms,
       customTerms: controls ? [customTerms] : customTerms
     }
