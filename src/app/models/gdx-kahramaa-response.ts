@@ -24,7 +24,10 @@ export class GdxKahramaaResponse extends SearchableCloneable<GdxKahramaaResponse
   qId!: string;
 
   // extra properties
+  lastInvoiceDateString!: string;
+
   searchFields: ISearchFieldsMap<GdxKahramaaResponse> = {
-    ...normalSearchFields(['amount', 'fees', 'fine'])
-  }
+    ...normalSearchFields(['qId', 'parentNum', 'tenantNum', 'amount', 'lastInvoiceDateString', 'balanceAgingCategory', 'currentMonth',
+      'month1To3', 'month1To6', 'month6To12', 'over12Months', 'fees', 'fine'])
+  };
 }

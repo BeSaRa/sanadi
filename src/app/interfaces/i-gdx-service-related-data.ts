@@ -11,8 +11,8 @@ export interface IGdxServiceRelatedData {
   [GdxServiceRelatedTypesEnum.MOJ_FLATS]: GdxFlatInfo[],
   [GdxServiceRelatedTypesEnum.MOJ_PARCELS]: GdxParcelInfo[],
   [GdxServiceRelatedTypesEnum.MOCI_COMPANIES]: GdxMociResponse[],
-  [GdxServiceRelatedTypesEnum.MAWARED_RELATED]: GdxMawaredResponse[],
+  [GdxServiceRelatedTypesEnum.MAWARED_EMPLOYEES]: GdxMawaredResponse[],
   [GdxServiceRelatedTypesEnum.GARSIA_PENSION]: GdxGarsiaPensionResponse[],
   [GdxServiceRelatedTypesEnum.GARSIA_PENSION_PAYMENT]: GdxPensionMonthPayment[],
-  [GdxServiceRelatedTypesEnum.KAHRAMAA_RELATED]: GdxKahramaaResponse[]
+  [GdxServiceRelatedTypesEnum.KAHRAMAA_OUTSTANDING_PAYMENTS]: GdxKahramaaResponse[]
 }

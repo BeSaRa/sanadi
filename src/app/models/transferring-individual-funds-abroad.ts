@@ -19,6 +19,7 @@ import {ISearchFieldsMap} from '@app/types/types';
 import {dateSearchFields} from '@helpers/date-search-fields';
 import {infoSearchFields} from '@helpers/info-search-fields';
 import {normalSearchFields} from '@helpers/normal-search-fields';
+import {Payment} from '@app/models/payment';
 
 const _RequestType = mixinRequestType(CaseModel);
 const interceptor = new TransferringIndividualFundsAbroadInterceptor();
@@ -67,6 +68,7 @@ export class TransferringIndividualFundsAbroad extends _RequestType<Transferring
   executionCountry!: number;
   executiveManagementList: TransferFundsExecutiveManagement[] = [];
   charityPurposeTransferList: TransferFundsCharityPurpose[] = [];
+  payment: Payment[] = [];
   establishmentDate!: string | IMyDateModel;
   followUpDate!: string;
   identificationNumber!: string;
@@ -247,11 +249,13 @@ export class TransferringIndividualFundsAbroad extends _RequestType<Transferring
   buildApprovalForm(controls: boolean = false): any {
     const {
       followUpDate,
+      licenseEndDate,
       publicTerms,
       customTerms
     } = this;
     return {
       followUpDate: controls ? [followUpDate, [CustomValidators.required]] : followUpDate,
+      licenseEndDate: controls ? [licenseEndDate, [CustomValidators.required]] : licenseEndDate,
       publicTerms: controls ? [{value: publicTerms, disabled: true}] : publicTerms,
       customTerms: controls ? [customTerms] : customTerms
     }

@@ -43,7 +43,8 @@ export class TransferFundsAbroadApproveTaskPopupComponent implements OnInit, OnD
   servicePublicTerms: string = '';
 
   datepickerOptionsMap: IKeyValue = {
-    followUpDate: DateUtils.getDatepickerOptions({disablePeriod: 'past', appendToBody: true})
+    followUpDate: DateUtils.getDatepickerOptions({disablePeriod: 'past', appendToBody: true}),
+    licenseEndDate: DateUtils.getDatepickerOptions({disablePeriod: 'past', appendToBody: true}),
   };
 
   constructor(
@@ -72,11 +73,16 @@ export class TransferFundsAbroadApproveTaskPopupComponent implements OnInit, OnD
     return this.form.get('followUpDate') as UntypedFormControl;
   }
 
+  get licenseEndDateField(): UntypedFormControl {
+    return this.form.get('licenseEndDate') as UntypedFormControl;
+  }
+
   ngOnInit(): void {
     this.buildForm();
     this.selectedLicense = this.model;
     this.customTermsField.patchValue(this.model.customTerms);
     this.followUpDateField.patchValue(DateUtils.changeDateToDatepicker(this.model.followUpDate));
+    this.licenseEndDateField.patchValue(DateUtils.changeDateToDatepicker(this.model.licenseEndDate));
     this.listenToAction();
     this.loadTerms();
   }
@@ -93,6 +99,7 @@ export class TransferFundsAbroadApproveTaskPopupComponent implements OnInit, OnD
       .pipe(exhaustMap(_ => {
         this.model.customTerms = this.customTermsField.value;
         this.model.followUpDate = DateUtils.getDateStringFromDate(this.followUpDateField.value);
+        this.model.licenseEndDate = DateUtils.getDateStringFromDate(this.licenseEndDateField.value);
         return this.data.model.save();
       }))
       .pipe(switchMap(_ => this.inboxService.takeActionOnTask(this.data.model.taskDetails.tkiid, this.getResponse(), this.model.service)))
@@ -107,7 +114,7 @@ export class TransferFundsAbroadApproveTaskPopupComponent implements OnInit, OnD
   }
 
   private getResponse(): Partial<IWFResponse> {
-    return this.followUpDateField.value ? {selectedResponse: this.response} : {selectedResponse: this.response};
+    return {selectedResponse: this.response};
   }
 
   private loadUserCustomTerms(): Observable<CustomTerm[]> {

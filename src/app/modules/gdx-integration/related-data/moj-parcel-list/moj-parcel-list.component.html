@@ -1,0 +1,53 @@
+<div class="row">
+  <div class="col-12">
+      <app-table #table sortableTable [paginator]="paginator"
+                 [data]="list"
+                 [columns]="displayedColumns"
+                 [filter]="filterControl.value" [useSearchToFilter]="true">
+        <table class="table table-striped table-bordered caption-top" cdk-table
+               [dataSource]="table.dataSource">
+          <ng-container cdkColumnDef="extra-header">
+            <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+              <table-header tableTitle="parcels_info"
+                            [sort]="table.dataSource.sort"
+                            (textChange)="filterControl.setValue($event)">
+              </table-header>
+            </th>
+          </ng-container>
+          <ng-container cdkColumnDef="parcelNo">
+            <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.parcel_number}}</th>
+            <td cdk-cell *cdkCellDef="let row"><span>{{row.parcelNo}}</span></td>
+          </ng-container>
+          <ng-container cdkColumnDef="parcelType">
+            <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.parcel_type}}</th>
+            <td cdk-cell *cdkCellDef="let row"><span>{{row.parcelType}}</span></td>
+          </ng-container>
+          <ng-container cdkColumnDef="ownerName">
+            <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.owner_name}}</th>
+            <td cdk-cell *cdkCellDef="let row"><span>{{row.ownerName}}</span></td>
+          </ng-container>
+          <ng-container cdkColumnDef="city">
+            <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.city}}</th>
+            <td cdk-cell *cdkCellDef="let row"><span>{{row.city}}</span></td>
+          </ng-container>
+          <ng-container cdkColumnDef="zone">
+            <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_zone}}</th>
+            <td cdk-cell *cdkCellDef="let row"><span>{{row.zone}}</span></td>
+          </ng-container>
+          <ng-container cdkColumnDef="sharesCount">
+            <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.shares_count}}</th>
+            <td cdk-cell *cdkCellDef="let row"><span>{{row.sharesCount}}</span></td>
+          </ng-container>
+          <tr cdk-header-row *cdkHeaderRowDef="headerColumn"></tr>
+          <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="table.columns"></tr>
+          <tr cdk-row *cdkRowDef="let row; columns: table.columns;"
+              (contextmenu)="menu.open($event , row)"></tr>
+          <tr *cdkNoDataRow>
+            <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
+          </tr>
+        </table>
+        <app-paginator #paginator></app-paginator>
+      </app-table>
+      <context-menu-item #menu [actions]="actions"></context-menu-item>
+  </div>
+</div>

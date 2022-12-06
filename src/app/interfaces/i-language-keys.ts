@@ -1,4 +1,12 @@
 export interface ILanguageKeys {
+  total_payments_should_be_less_than_or_equal_to_transfer_amount: string;
+  total_payments_is_greater_than_transfer_amount: string;
+  the_transfer_amount_has_been_depleted: string;
+  total_amounts_of_payments: string;
+  transfer_type: string;
+  you_should_add_at_least_one_payment_in_payments: string;
+  payment_name: string;
+  add_payment: string;
   save_final_general_notes: string;
   final_general_notes: string;
   final_comments_saved_successfully: string;
@@ -1603,5 +1611,14 @@ export interface ILanguageKeys {
   lbl_edit_coordination_with_organizations_template: string;
   btn_hide_from_table: string;
   btn_show_on_table: string;
+  parent_number: string;
+  tenant_number: string;
+  last_invoice_date: string;
+  balance_aging_category: string;
+  current_month: string;
+  month_1_to_3: string;
+  month_3_to_6: string;
+  month_6_to_12: string;
+  over_12_months: string;
 }
 
