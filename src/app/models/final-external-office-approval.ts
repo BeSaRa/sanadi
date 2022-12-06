@@ -46,6 +46,10 @@ export class FinalExternalOfficeApproval extends LicenseApprovalModel<FinalExter
   phone: string = '';
   postalCode: string = '';
   recordNo: string = '';
+  headQuarterType!: number;
+  licenseDuration!: number;
+  licenseDurationType!: number;
+  countries: number[] = [];
 
   executiveManagementList: ExecutiveManagement[] = [];
   branchList: BankBranch[] = [];
@@ -56,9 +60,6 @@ export class FinalExternalOfficeApproval extends LicenseApprovalModel<FinalExter
   managerDecisionInfo!: AdminResult;
   generalManagerDecisionInfo!: AdminResult;
   reviewerDepartmentDecisionInfo!: AdminResult;
-  initialLicenseFullSerial!: string;
-  initialLicenseId!: string;
-  initialLicenseSerial!: number;
   licenseStatusInfo!: AdminResult;
 
   service: FinalExternalOfficeApprovalService;
@@ -86,9 +87,6 @@ export class FinalExternalOfficeApproval extends LicenseApprovalModel<FinalExter
   getFormFields(control: boolean = false): any {
     const {
       requestType,
-      initialLicenseId,
-      initialLicenseFullSerial,
-      initialLicenseSerial,
       oldLicenseFullSerial,
       oldLicenseId,
       oldLicenseSerial,
@@ -102,14 +100,15 @@ export class FinalExternalOfficeApproval extends LicenseApprovalModel<FinalExter
       fax,
       postalCode,
       email,
-      description
+      description,
+      headQuarterType,
+      licenseDuration,
+      licenseDurationType,
+      countries
     } = this;
 
     return {
       requestType: control ? [requestType, [CustomValidators.required]] : requestType,
-      initialLicenseFullSerial: control ? [initialLicenseFullSerial, [CustomValidators.maxLength(250)]] : initialLicenseFullSerial,
-      initialLicenseId: control ? [initialLicenseId] : initialLicenseId,
-      initialLicenseSerial: control ? [initialLicenseSerial] : initialLicenseSerial,
       oldLicenseFullSerial: control ? [oldLicenseFullSerial, [CustomValidators.maxLength(250)]] : oldLicenseFullSerial,
       oldLicenseId: control ? [oldLicenseId] : oldLicenseId,
       oldLicenseSerial: control ? [oldLicenseSerial] : oldLicenseSerial,
@@ -123,7 +122,11 @@ export class FinalExternalOfficeApproval extends LicenseApprovalModel<FinalExter
       fax: control ? [fax, [CustomValidators.required].concat(CustomValidators.commonValidations.fax)] : fax,
       postalCode: control ? [postalCode, [CustomValidators.required, CustomValidators.number, Validators.maxLength(10)]] : postalCode,
       email: control ? [email, [CustomValidators.required, CustomValidators.pattern('EMAIL'), CustomValidators.maxLength(100)]] : email,
-      description: control ? [description, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : description
+      description: control ? [description, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : description,
+      headQuarterType: control ? [headQuarterType, [CustomValidators.required]] : headQuarterType,
+      licenseDuration: control ? [licenseDuration] : licenseDuration,
+      licenseDurationType: control ? [licenseDurationType, [CustomValidators.required]] : licenseDurationType,
+      countries: control ? [countries] : countries
     }
   }
 }
