@@ -95,12 +95,14 @@ export class DynamicTemplatesComponent implements OnInit {
     })
   }
   getCellValue(row: CoordinationWithOrganizationTemplate, col: string) {
+    if (!row.generatedTemplate)
+      return '---';
     const field = row.generatedTemplate.find(f => f.identifyingName == col);
     if (field?.value) {
       if (field?.type == TemplateFieldTypes.dateField) {
         return DateUtils.getDateStringFromDate(field?.value);
       } else if (field?.type == TemplateFieldTypes.selectField || field?.type == TemplateFieldTypes.yesOrNo) {
-
+        return field.options.find(o => o.id == field.value)?.name;
       }
       return field?.value;
     } else {

@@ -17,7 +17,7 @@ export class CoordinationWithOrganizationTemplateInterceptor
   receive(model: CoordinationWithOrganizationTemplate): CoordinationWithOrganizationTemplate {
     const fieldBuilder = new ProcessFieldBuilder();
     fieldBuilder.generateFromString(model.template)
-    model.generatedTemplate = fieldBuilder.fields;
+    model.generatedTemplate = fieldBuilder.fields || [];
     return model;
   }
 }
