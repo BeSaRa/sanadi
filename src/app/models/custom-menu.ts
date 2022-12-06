@@ -13,6 +13,7 @@ import {BaseModel} from './base-model';
 import {AdminResult} from '@app/models/admin-result';
 import {MenuUrlValueContract} from '@contracts/menu-url-value-contract';
 import {UserTypes} from '@app/enums/user-types.enum';
+import {Validators} from '@angular/forms';
 
 const interceptor = new CustomMenuInterceptor();
 
@@ -82,7 +83,7 @@ export class CustomMenu extends BaseModel<CustomMenu, CustomMenuService> {
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
         CustomValidators.pattern('ENG_NUM_ONE_ENG')]] : enName,
       status: controls ? [status, []] : status,
-      menuOrder: controls ? [menuOrder, [CustomValidators.required, CustomValidators.number]] : menuOrder,
+      menuOrder: controls ? [menuOrder, [CustomValidators.required, CustomValidators.number, Validators.max(99)]] : menuOrder,
       menuType: controls ? [menuType, [CustomValidators.required]] : menuType,
       menuView: controls ? [menuView, []] : menuView,
       userType: controls ? [userType, [CustomValidators.required]] : userType,
