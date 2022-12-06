@@ -94,6 +94,7 @@ export class ExternalUserPopupComponent extends AdminGenericDialog<ExternalUser>
   saveVisible: boolean = true;
 
   static buildPermissionsByGroupId(permissions: Permission[]): any {
+    permissions = permissions.filter((permission) => !permission.isInternalPermissionCategory());
     return permissions.reduce((acc, current) => {
       if (!acc.hasOwnProperty(current.groupId)) {
         acc[current.groupId] = [];
