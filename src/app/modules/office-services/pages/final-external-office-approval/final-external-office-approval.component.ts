@@ -226,26 +226,6 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
     value.branchList = this.bankBranchComponentRef.list;
     return value;
   }
-  handleLicenseDurationTypeChange() {
-    this.licenseDurationField.setValidators([]);
-    if (this.isPermanentLicenseDurationTypes()) {
-      this.licenseDurationField.setValidators([Validators.required]);
-    }
-    this.licenseDurationField.reset();
-  }
-  handleOfficeTypeChenge() {
-    this.countriesField.setValidators([]);
-    if (this.isInternationalOfficeType()) {
-      this.countriesField.setValidators([Validators.required]);
-    }
-    this.countriesField.reset();
-  }
-  isPermanentLicenseDurationTypes() {
-    return this.licenseDurationTypeField.value == LicenseDurationType.TEMPORARY
-  }
-  isInternationalOfficeType() {
-    return this.officeTypeField.value == OfficeTypes.INTERNATIONAL
-  }
   private _updateModelAfterSave(model: FinalExternalOfficeApproval): void {
     if ((this.openFrom === OpenFrom.USER_INBOX || this.openFrom === OpenFrom.TEAM_INBOX) && this.model?.taskDetails && this.model.taskDetails.tkiid) {
       this.service.getTask(this.model.taskDetails.tkiid)
@@ -358,6 +338,30 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
 
   }
 
+  handleLicenseDurationTypeChange() {
+    const prevV = this.licenseDurationField.value;
+    this.licenseDurationField.setValidators([]);
+    if (this.isPermanentLicenseDurationTypes()) {
+      this.licenseDurationField.setValidators([Validators.required]);
+    }
+    this.licenseDurationField.reset();
+    this.licenseDurationField.setValue(prevV);
+  }
+  handleOfficeTypeChenge() {
+    const prevV = this.countriesField.value;
+    this.countriesField.setValidators([]);
+    if (this.isInternationalOfficeType()) {
+      this.countriesField.setValidators([Validators.required]);
+    }
+    this.countriesField.reset();
+    this.countriesField.setValue(prevV);
+  }
+  isPermanentLicenseDurationTypes() {
+    return this.licenseDurationTypeField.value == LicenseDurationType.TEMPORARY
+  }
+  isInternationalOfficeType() {
+    return this.officeTypeField.value == OfficeTypes.INTERNATIONAL
+  }
   handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
     of(userInteraction).pipe(
       takeUntil(this.destroy$),
@@ -467,6 +471,10 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
         result.postalCode = licenseDetails.postalCode;
         result.phone = licenseDetails.phone;
         result.email = licenseDetails.email;
+        result.licenseDuration = licenseDetails.licenseDuration;
+        result.licenseDurationType = licenseDetails.licenseDurationType
+        result.headQuarterType = licenseDetails.headQuarterType;
+        result.countries = licenseDetails.countries;
         result.fax = licenseDetails.fax;
         result.description = licenseDetails.description;
         result.bankAccountList = (licenseDetails as FinalExternalOfficeApproval).bankAccountList;
@@ -475,6 +483,8 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
       }
 
       this._updateForm((new FinalExternalOfficeApproval()).clone(result));
+      this.handleLicenseDurationTypeChange();
+      this.handleOfficeTypeChenge();
     } else {
       this.countryField.updateValueAndValidity();
     }
