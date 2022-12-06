@@ -251,7 +251,7 @@ CoordinationWithOrganizationsRequestService> {
       creatorInfo: undefined,
       lastModified: '',
       lastModifier: '',
-      processid: 0,
+      processId: 0,
       ouInfo: undefined,
       search(searchText: string, searchFieldsName: string | undefined): boolean {
         return false;
@@ -687,7 +687,7 @@ CoordinationWithOrganizationsRequestService> {
     return this.form.get('domain') as UntypedFormControl;
   }
   get templateField() {
-    return this.form.get('processid') as UntypedFormControl;
+    return this.form.get('processId') as UntypedFormControl;
   }
 
   get organizationOfficersList(): OrganizationOfficer[] | [] {

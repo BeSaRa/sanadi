@@ -43,7 +43,7 @@ export class CoordinationWithOrganizationsRequest
   fullName!: string;
   domain!: number;
 
-  processid!: number;
+  processId!: number;
   licenseStartDate!: string | IMyDateModel;
   licenseEndDate!: string | IMyDateModel;
   description!: string;
@@ -90,7 +90,7 @@ export class CoordinationWithOrganizationsRequest
     return false;
   }
   formBuilder(controls?: boolean) {
-    const { fullName, domain, processid, licenseStartDate, licenseEndDate, description } =
+    const { fullName, domain, processId, licenseStartDate, licenseEndDate, description } =
       this;
     return {
       fullName: controls
@@ -107,7 +107,7 @@ export class CoordinationWithOrganizationsRequest
         ]
         : fullName,
       domain: controls ? [domain, [Validators.required]] : domain,
-      processid: controls ? [processid, []] : processid,
+      processId: controls ? [processId, []] : processId,
       licenseStartDate: controls
         ? [licenseStartDate, [Validators.required]]
         : licenseStartDate,
