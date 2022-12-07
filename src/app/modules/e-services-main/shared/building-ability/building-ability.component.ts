@@ -221,7 +221,6 @@ export class BuildingAbilityComponent implements OnInit {
       }
     }
 
-    this.list = this.list.slice();
     this.listDataSource.next(this.list);
   }
 

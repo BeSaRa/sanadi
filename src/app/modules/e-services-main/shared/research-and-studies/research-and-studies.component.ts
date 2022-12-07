@@ -189,7 +189,6 @@ export class ResearchAndStudiesComponent implements OnInit {
       }
     }
 
-    this.list = this.list.slice();
     this.listDataSource.next(this.list);
   }
   addAllowed(): boolean {
