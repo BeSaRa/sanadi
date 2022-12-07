@@ -150,7 +150,7 @@
     </ng-template>
     <ng-template #dynamic_tempaltes>
       <app-dynamic-templates #dynamicTemplatesTap [templateId]="templateField.value" [list]="dynamicTemplatesList"
-        [readonly]=" isEditAllowed()" [orgId]="currentUserOrgId" [canUpdate]="isCharityUser"
+        [readonly]=" isEditAllowed()" [profileId]="currentUserOrgId" [canUpdate]="isCharityUser"
         [isClaimed]="model?.isClaimed()?? true">
       </app-dynamic-templates>
     </ng-template>

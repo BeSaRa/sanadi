@@ -13,7 +13,7 @@ const { send, receive } = new CoordinationWithOrganizationTemplateInterceptor();
 
 @InterceptModel({ send, receive })
 export class CoordinationWithOrganizationTemplate extends SearchableCloneable<CoordinationWithOrganizationTemplate> {
-  organizationId!: number | undefined;
+  profileId!: number | undefined;
   template!: string;
   templateId!: number;
   langService?: LangService;
@@ -33,7 +33,7 @@ export class CoordinationWithOrganizationTemplate extends SearchableCloneable<Co
   finalizeSearchFields(): void {
     if (this.employeeService.isExternalUser()) {
       delete this.searchFields.ouInfo;
-      delete this.searchFields.organizationId;
+      delete this.searchFields.profileId;
       delete this.searchFields.organization;
     }
   }

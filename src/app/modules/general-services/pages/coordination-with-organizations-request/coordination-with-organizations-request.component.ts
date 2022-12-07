@@ -565,6 +565,9 @@ CoordinationWithOrganizationsRequestService> {
     model!.temporaryResearchAndStudies! = model!.temporaryResearchAndStudies.filter(
       (x) => x.organizationId === orgId
     );
+    model!.temporaryTemplateList! = model!.temporaryTemplateList.filter(
+      (x) => x.profileId === orgId
+    );
     model!.organizaionOfficerList! = model!.organizaionOfficerList.filter(
       (x) => x.organizationId === orgId
     );
@@ -579,7 +582,7 @@ CoordinationWithOrganizationsRequestService> {
       (x) => x.organizationId === orgId
     );
     model!.templateList! = model!.templateList.filter(
-      (x) => x.organizationId === orgId
+      (x) => x.profileId === orgId
     );
     return model;
   }
@@ -609,7 +612,7 @@ CoordinationWithOrganizationsRequestService> {
       (x) => x.organizationId !== orgId
     );
     model!.temporaryTemplateList! = model!.temporaryTemplateList.filter(
-      (x) => x.organizationId !== orgId
+      (x) => x.profileId !== orgId
     );
 
 

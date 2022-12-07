@@ -17,7 +17,6 @@ import { LangService } from '@app/services/lang.service';
 import { ToastService } from '@app/services/toast.service';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { filter, map, take, takeUntil } from 'rxjs/operators';
-import { D } from 'angular-mydatepicker';
 import { TemplateFieldTypes } from '@app/enums/template-field-types.enum';
 
 @Component({
@@ -27,7 +26,7 @@ import { TemplateFieldTypes } from '@app/enums/template-field-types.enum';
 })
 export class DynamicTemplatesComponent implements OnInit {
 
-  @Input() orgId!: number | undefined;
+  @Input() profileId!: number | undefined;
   @Input() templateId!: number;
 
   allowListUpdate: boolean = true;
@@ -80,6 +79,7 @@ export class DynamicTemplatesComponent implements OnInit {
     this.fieldBuilder = new ProcessFieldBuilder();
   }
   ngOnInit(): void {
+    console.log(this.list)
     this.buildForm();
     this.listenToAdd();
     this.listenToRecordChange();
@@ -129,7 +129,7 @@ export class DynamicTemplatesComponent implements OnInit {
   }
   private listenToRecordChange() {
     this.recordChanged$.pipe(takeUntil(this.destroy$)).subscribe((record) => {
-      if (record && this.orgId) record.organizationId = this.orgId;
+      if (record && this.profileId) record.profileId = this.profileId;
       this.currentRecord = record || undefined;
       this.showForm = !!this.currentRecord;
       this.updateForm(this.currentRecord);
@@ -216,7 +216,6 @@ export class DynamicTemplatesComponent implements OnInit {
         this.list.splice(gridIndex, 1);
       }
     }
-
     this.list = this.list.slice();
     this.listDataSource.next(this.list);
   }
