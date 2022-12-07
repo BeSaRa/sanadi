@@ -288,7 +288,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   }
 
   private setDatePeriodValidation() {
-    if (this.operation === OperationTypes.CREATE) {
+    if (this.operation === OperationTypes.CREATE || this.model?.isCharityManagerReviewStep() || this.model?.isSupervisionAndControlReviewStep() || this.model?.isSupervisionManagerReviewStep() || this.model?.isSupervisionAndControlReworkStep()) {
       this.datepickerOptionsMap = {
         meetingDate: DateUtils.getDatepickerOptions({disablePeriod: 'past'})
       };
@@ -751,7 +751,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   }
 
   canUpdateMeetingDate() {
-    return this.model?.taskDetails?.isClaimed() && (this.isSupervisionAndControlReviewStep || this.isSupervisionManagerReviewStep);
+    return this.model?.taskDetails?.isClaimed() && (this.isSupervisionAndControlReviewStep || this.isSupervisionManagerReviewStep || this.isSupervisionAndControlRework);
   }
 
   getMeetingDateClass() {
