@@ -125,7 +125,7 @@
     <ng-template #organization_officers>
       <organization-officer #organizationOfficersTap [list]="organizationOfficersList"
         [organizationUsers]="service.orgUsers" (readyEvent)="organizationOfficersTabStatus = $event"
-        [canUpdate]="isCharityUser" [isClaimed]="model?.isClaimed()?? true" [currentUserOrgId]="currentUserOrgId">
+        [canUpdate]="isCharityUser" [isClaimed]="true" [currentUserOrgId]="currentUserOrgId">
       </organization-officer>
 
     </ng-template>
@@ -133,25 +133,24 @@
       <building-ability #buildingAbilityTap [list]="buildingAbilitiesList " [organizationUnits]="organizationUnits"
         [trainingTypes]="trainingTypes" [orgId]="currentUserOrgId" [trainingLanguages]="trainingLanguages"
         [trainingWays]="trainingWays" [recommendedWays]="recommendedWays" [readonly]=" isEditAllowed()"
-        [canUpdate]="isCharityUser" [isClaimed]="model?.isClaimed()?? true">
+        [canUpdate]="isCharityUser" [isClaimed]="true">
       </building-ability>
     </ng-template>
     <ng-template #effective_coordination_capabilities>
       <effective-coordination-capabilities #effectiveCoordinationCapabilitiesTap
         [list]="effectiveCoordinationCapabilitiesList" [organizationWays]="organizationWays"
         [organizationUnits]="organizationUnits" [readonly]=" isEditAllowed()" [canUpdate]="isCharityUser"
-        [orgId]="currentUserOrgId" [isClaimed]="model?.isClaimed()?? true">
+        [orgId]="currentUserOrgId" [isClaimed]="true">
       </effective-coordination-capabilities>
     </ng-template>
     <ng-template #research_and_studies>
       <app-research-and-studies #researchAndStudiesTap [list]="researchAndStudiesList" [readonly]=" isEditAllowed()"
-        [orgId]="currentUserOrgId" [canUpdate]="isCharityUser" [isClaimed]="model?.isClaimed()?? true">
+        [orgId]="currentUserOrgId" [canUpdate]="isCharityUser" [isClaimed]="true">
       </app-research-and-studies>
     </ng-template>
     <ng-template #dynamic_tempaltes>
       <app-dynamic-templates #dynamicTemplatesTap [templateId]="templateField.value" [list]="dynamicTemplatesList"
-        [readonly]=" isEditAllowed()" [profileId]="currentUserOrgId" [canUpdate]="isCharityUser"
-        [isClaimed]="model?.isClaimed()?? true">
+        [readonly]=" isEditAllowed()" [profileId]="currentUserOrgId" [canUpdate]="isCharityUser" [isClaimed]="true">
       </app-dynamic-templates>
     </ng-template>
 

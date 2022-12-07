@@ -1620,5 +1620,8 @@ export interface ILanguageKeys {
   month_3_to_6: string;
   month_6_to_12: string;
   over_12_months: string;
+  states: string;
+  license_duration_type: string;
+  office_type: string;
 }
 
