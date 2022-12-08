@@ -431,14 +431,16 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
       return false;
     }
 
-    if(this.selectedPayments && this.selectedPayments.length === 0 && !this.isCancel) {
-      this.dialog.error(this.lang.map.you_should_add_at_least_one_payment_in_payments);
-      return false;
-    }
+    if(this.transferType.value === TransferTypeEnum.PERIODICAL) {
+      if(this.selectedPayments && this.selectedPayments.length === 0 && !this.isCancel) {
+        this.dialog.error(this.lang.map.you_should_add_at_least_one_payment_in_payments);
+        return false;
+      }
 
-    if((this.selectedPayments && this.selectedPayments.length > 0) && this.totalPaymentsAmount > +this.qatariTransactionAmount.value) {
-      this.dialog.error(this.lang.map.you_should_add_at_least_one_payment_in_payments);
-      return false;
+      if((this.selectedPayments && this.selectedPayments.length > 0) && this.totalPaymentsAmount > +this.qatariTransactionAmount.value) {
+        this.dialog.error(this.lang.map.total_payments_should_be_less_than_or_equal_to_transfer_amount);
+        return false;
+      }
     }
 
     return this.form.valid;
