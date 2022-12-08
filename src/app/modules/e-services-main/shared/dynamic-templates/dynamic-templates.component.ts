@@ -216,7 +216,6 @@ export class DynamicTemplatesComponent implements OnInit {
         this.list.splice(gridIndex, 1);
       }
     }
-    this.list = this.list.slice();
     this.listDataSource.next(this.list);
   }
   addAllowed(): boolean {
