@@ -112,7 +112,7 @@ export class FinalExternalOfficeApproval extends LicenseApprovalModel<FinalExter
       oldLicenseFullSerial: control ? [oldLicenseFullSerial, [CustomValidators.maxLength(250)]] : oldLicenseFullSerial,
       oldLicenseId: control ? [oldLicenseId] : oldLicenseId,
       oldLicenseSerial: control ? [oldLicenseSerial] : oldLicenseSerial,
-      country: control ? [country] : country,
+      country: control ? [country, [CustomValidators.required]] : country,
       region: control ? [region, [CustomValidators.maxLength(50)]] : region,//state
       externalOfficeName: control ? [externalOfficeName, [CustomValidators.required, CustomValidators.maxLength(100)]] : externalOfficeName,
       establishmentDate: control ? [DateUtils.changeDateToDatepicker(establishmentDate), [CustomValidators.maxDate(new Date())]] : DateUtils.changeDateToDatepicker(establishmentDate),
