@@ -25,12 +25,14 @@ export class GeneralInterceptor {
     delete model.inboxService;
     delete model.caseStatusInfo;
     delete model.creatorInfo;
-    if(model.caseType === CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST){
-      if(model.taskDetails?.piid) model.taskDetails={piid:model.taskDetails.piid}
-    }else{
-      delete model.taskDetails;
-    }
     delete model.ouInfo;
+    if(model.caseType === CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST){
+      if(!!model.taskDetails?.piid && !model.taskDetails.isMain){
+        model.taskDetails={  piid:model.taskDetails.piid };
+        return model;
+      }
+    }
+    delete model.taskDetails;
     return model;
   }
 }
