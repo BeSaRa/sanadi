@@ -996,19 +996,6 @@ export const navigationMenuList = [
     svg: null
   },
   {
-    id: 76,
-    langKey: 'menu_profile',
-    path: '/home/administration/profiles',
-    icon: 'mdi-account',
-    isSvg: false,
-    permission: PermissionsEnum.MANAGE_PROFILE,
-    permissionGroup: null,
-    parent: 6,
-    group: 'administration',
-    itemOrder: 22,
-    svg: null
-  },
-  {
     id: 77,
     langKey: 'menu_sub_team',
     path: '/home/administration/sub-team',

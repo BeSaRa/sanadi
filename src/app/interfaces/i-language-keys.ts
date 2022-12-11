@@ -11,6 +11,14 @@ export interface ILanguageKeys {
   final_general_notes: string;
   final_comments_saved_successfully: string;
   save_final_comments: string;
+  template_deduction_ratio_info: string;
+  project_total_cost: string;
+  sanady_main_classification: string;
+  sanady_domain: string;
+  internal_projects_classification: string;
+  country_countries: string;
+  project_work_area: string;
+  permit_type: string;
   members: string;
   menu_projects_fundraising: string;
   final_report_has_not_yet_been_uploaded: string;
@@ -1628,4 +1636,3 @@ export interface ILanguageKeys {
   office_type: string;
   lbl_beneficiaries_nature: string;
 }
-

@@ -2,6 +2,9 @@
 @import "custom_mixin";
 
 @include rtl_direction {
+  .mdi {
+    font-size: 23px;
+  }
   body {
     font-family: 'Tajawal', sans-serif;
   }

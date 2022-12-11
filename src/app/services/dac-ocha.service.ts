@@ -52,7 +52,7 @@ export class DacOchaService extends CrudWithDialogGenericService<AdminLookup> {
     return this.adminLookupService.loadComposite(AdminLookupTypeEnum.WORK_FIELD);
   }
 
-  loadAsLookups() {
+  loadAsLookups(): Observable<AdminLookup[]> {
     return this.adminLookupService.loadAsLookups(AdminLookupTypeEnum.WORK_FIELD);
   }
 
