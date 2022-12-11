@@ -613,13 +613,8 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
       return false;
     }
     let isAllowed = true;
-    if (this.openFrom === OpenFrom.TEAM_INBOX) {
-      isAllowed = this.model.taskDetails.isClaimed();
-    }
-    if (isAllowed) {
-      let caseStatus = this.model.getCaseStatus();
-      isAllowed = (caseStatus !== CommonCaseStatus.CANCELLED && caseStatus !== CommonCaseStatus.FINAL_APPROVE && caseStatus !== CommonCaseStatus.FINAL_REJECTION);
-    }
+    let caseStatus = this.model.getCaseStatus();
+    isAllowed = (caseStatus !== CommonCaseStatus.CANCELLED && caseStatus !== CommonCaseStatus.FINAL_APPROVE && caseStatus !== CommonCaseStatus.FINAL_REJECTION);
 
     return !isAllowed;
   }
