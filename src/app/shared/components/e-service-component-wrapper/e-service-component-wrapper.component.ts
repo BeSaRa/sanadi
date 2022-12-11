@@ -490,6 +490,8 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
             return false;
           }
           if (item.caseType === CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST) {
+            //@ts-ignore
+            if(item.isApproved && this.internal) return false;
             return !item.isInitialApproved() || !this.internal;
           }
           if (item.caseType === CaseTypes.NPO_MANAGEMENT) {
