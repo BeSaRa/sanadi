@@ -79,7 +79,7 @@ export class UserSubTeamComponent implements OnInit, OnDestroy {
     this.userSubTeamsChanged$
       .pipe(map(userSubTeams => this.userSubTeams = userSubTeams))
       .subscribe((userSubTeams) => {
-        this.selectedTeamsIds = userSubTeams.map(userSubTeam => userSubTeam.subTeamId);
+        this.selectedTeamsIds = userSubTeams.map(userSubTeam => userSubTeam.id);
       });
   }
 
@@ -89,7 +89,7 @@ export class UserSubTeamComponent implements OnInit, OnDestroy {
       // .pipe(map(result => {
       // return this.model.isInternal() ? result.filter(item => item.parentDeptId > -1) : result;
       // }))
-      .subscribe((teams) => this.subTeams = teams);
+      .subscribe((subTeams) => this.subTeams = subTeams);
   }
 
   loadUserSubTeams(): void {
