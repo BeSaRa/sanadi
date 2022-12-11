@@ -44,12 +44,12 @@ export class SubTeamComponent extends AdminGenericComponent<SubTeam, SubTeamServ
       onClick: (item: SubTeam) => this.edit$.next(item)
     },
     // delete
-    {
-      type: 'action',
-      label: 'btn_delete',
-      icon: ActionIconsEnum.DELETE,
-      onClick: (item: SubTeam) => this.delete(item)
-    },
+    // {
+    //   type: 'action',
+    //   label: 'btn_delete',
+    //   icon: ActionIconsEnum.DELETE,
+    //   onClick: (item: SubTeam) => this.delete(item)
+    // },
     // view
     {
       type: 'action',
@@ -82,13 +82,13 @@ export class SubTeamComponent extends AdminGenericComponent<SubTeam, SubTeamServ
   ];
 
   bulkActionsList: IGridAction[] = [
-    {
-      langKey: 'btn_delete',
-      icon: 'mdi-close-box',
-      callback: ($event: MouseEvent) => {
-        this.deleteBulk($event);
-      }
-    },
+    // {
+    //   langKey: 'btn_delete',
+    //   icon: 'mdi-close-box',
+    //   callback: ($event: MouseEvent) => {
+    //     this.deleteBulk($event);
+    //   }
+    // },
     {
       icon: 'mdi-list-status',
       langKey: 'lbl_status',
