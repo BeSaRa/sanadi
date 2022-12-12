@@ -220,7 +220,6 @@ export class BuildingAbilityComponent implements OnInit {
         this.list.splice(gridIndex, 1);
       }
     }
-
     this.listDataSource.next(this.list);
   }
 

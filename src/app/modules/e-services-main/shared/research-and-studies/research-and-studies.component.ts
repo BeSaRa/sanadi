@@ -188,7 +188,6 @@ export class ResearchAndStudiesComponent implements OnInit {
         this.list.splice(gridIndex, 1);
       }
     }
-
     this.listDataSource.next(this.list);
   }
   addAllowed(): boolean {

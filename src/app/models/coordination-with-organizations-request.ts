@@ -47,6 +47,7 @@ export class CoordinationWithOrganizationsRequest
   licenseStartDate!: string | IMyDateModel;
   licenseEndDate!: string | IMyDateModel;
   description!: string;
+  isApproved!:boolean;
   participatingOrganizaionList: ParticipantOrg[] = [];
   organizaionOfficerList: OrganizationOfficer[] = [];
   buildingAbilitiesList: BuildingAbility[] = [];
