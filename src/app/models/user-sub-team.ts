@@ -1,8 +1,8 @@
+import { UserSubTeamService } from './../services/user-sub-team.service';
 import { AdminResult } from "./admin-result";
 import { Cloneable } from "@app/models/cloneable";
 import { Observable } from "rxjs";
 import { FactoryService } from "@app/services/factory.service";
-import { UserTeamService } from "@app/services/user-team.service";
 import { map } from "rxjs/operators";
 import { CommonStatusEnum } from '@app/enums/common-status.enum';
 import { InterceptModel } from "@decorators/intercept-model";
@@ -23,11 +23,11 @@ export class UserSubTeam extends Cloneable<UserSubTeam> {
   // not related to the model
   arName?: string;
   enName?: string;
-  service!: UserTeamService
+  service!: UserSubTeamService
 
   constructor() {
     super();
-    this.service = FactoryService.getService('UserTeamService');
+    this.service = FactoryService.getService('UserSubTeamService');
   }
 
   denormalize(): UserSubTeam {
