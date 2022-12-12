@@ -1,5 +1,5 @@
 <div class="row">
-  <tabs-list>
+  <tabs-list [activeTabIndex]="1">
     <tab name="basic_info" [hasError]="basicInfo.invalid" [template]="basic_info" [title]="lang.map.lbl_basic_info">
     </tab>
     <tab name="templates" [hasError]="templateDeductionRatioInfo.invalid" [template]="template_deduction_ratio_info"
@@ -234,7 +234,10 @@
   <ng-template #template_deduction_ratio_info>
     <ng-container [formGroup]="form">
       <ng-container formGroupName="templateDeductionInfo">
-
+        <button (click)="searchForTemplate()" class="btn btn-primary d-flex align-items-center gap-2">
+          <i class="mdi mdi-plus-box"></i>
+          <span>{{lang.map.search_for_template}}</span>
+        </button>
       </ng-container>
     </ng-container>
   </ng-template>

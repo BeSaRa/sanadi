@@ -1,14 +1,17 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
-import { BaseGenericEService } from "@app/generics/base-generic-e-service";
-import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { ProjectFundraising } from "@app/models/project-fundraising";
-import { DialogService } from './dialog.service';
-import { DynamicOptionsService } from './dynamic-options.service';
-import { UrlService } from './url.service';
-import { FactoryService } from "@services/factory.service";
-import { CastResponseContainer } from "@decorators/cast-response";
+import {HttpClient, HttpParams} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {DomSanitizer} from '@angular/platform-browser';
+import {BaseGenericEService} from "@app/generics/base-generic-e-service";
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {ProjectFundraising} from "@app/models/project-fundraising";
+import {DialogService} from './dialog.service';
+import {DynamicOptionsService} from './dynamic-options.service';
+import {UrlService} from './url.service';
+import {FactoryService} from "@services/factory.service";
+import {CastResponse, CastResponseContainer} from "@decorators/cast-response";
+import {Observable} from "rxjs";
+import {ProjectWorkArea} from "@app/enums/project-work-area";
+import {ProjectModel} from "@app/models/project-model";
 
 @CastResponseContainer({
   $default: {
@@ -51,5 +54,16 @@ export class ProjectFundraisingService extends BaseGenericEService<ProjectFundra
 
   _getUrlService(): UrlService {
     return this.urlService
+  }
+
+  openDialogSearchTemplate(criteria: any, workAreType: ProjectWorkArea): Observable<ProjectModel[]> {
+    return this.searchForTemplate(criteria, workAreType)
+  }
+
+  @CastResponse(() => ProjectModel)
+  private searchForTemplate(criteria: any, workAreType: ProjectWorkArea): Observable<ProjectModel[]> {
+    return this.http.get<ProjectModel[]>(this.urlService.URLS.PROJECT_MODELING + '/' + (workAreType === ProjectWorkArea.OUTSIDE_QATAR ? 'external' : 'internal') + '/template/criteria', {
+      params: new HttpParams({fromObject: criteria})
+    })
   }
 }

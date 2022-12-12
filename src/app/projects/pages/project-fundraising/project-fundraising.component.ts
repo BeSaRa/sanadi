@@ -437,4 +437,37 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
         this.loadSubDacOchaByParentId(value)
       })
   }
+
+  searchForTemplate(): void {
+    this.service
+      .openDialogSearchTemplate(this.getSearchTemplateCriteria(), this.projectWorkArea.value)
+      .subscribe((list) => {
+        list.forEach(item => console.log(item.normalizeTemplate()))
+      })
+  }
+
+  private getSearchTemplateCriteria(): Record<any, any> {
+    const workArea = this.projectWorkArea.value
+    const domain = this.domain.value;
+
+    const external: Record<string, string> = {
+      domain: 'domain',
+      countries: 'countriesField'
+    };
+
+    if (workArea === ProjectWorkArea.OUTSIDE_QATAR) {
+      domain === DomainTypes.DEVELOPMENT ? external['mainDAC'] = 'mainDACCategory' : external['mainUNOCHA'] = 'mainUNOCHACategory';
+    }
+    const internal: Record<string, string> = {
+      projectType: 'projectType',
+      internalProjectClassification: 'internalProjectClassification',
+      countries: 'countriesField'
+    };
+
+    return Object.entries(this.projectWorkArea.value === ProjectWorkArea.INSIDE_QATAR ? internal : external)
+      .reduce((acc, [key, controlName]: [string, string]) => {
+        const control = this[(controlName as keyof this)] as AbstractControl
+        return {...acc, [key]: control.getRawValue()}
+      }, {})
+  }
 }

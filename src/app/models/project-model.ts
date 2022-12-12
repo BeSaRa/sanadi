@@ -17,6 +17,7 @@ import {EvaluationIndicator} from '@app/models/evaluation-indicator';
 import {ProjectModelForeignCountriesProject} from '@app/models/project-model-foreign-countries-project';
 import {ProjectAddress} from '@app/models/project-address';
 import {EmployeeService} from '@services/employee.service';
+import {Template} from "@app/models/template";
 
 // noinspection JSUnusedGlobalSymbols
 const {send, receive} = new ProjectModelInterceptor();
@@ -194,7 +195,10 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
 
   buildSummaryTab(controls: boolean = false): any {
     const employeeService: EmployeeService = FactoryService.getService('EmployeeService');
-    const profile = {isCharityProfile: employeeService.isCharityProfile(), isInstitutionProfile: employeeService.isInstitutionProfile()}
+    const profile = {
+      isCharityProfile: employeeService.isCharityProfile(),
+      isInstitutionProfile: employeeService.isInstitutionProfile()
+    }
 
     const {
       needsAssessment,
@@ -210,7 +214,7 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
       exitMechanism
     } = this;
 
-    if(profile.isCharityProfile || profile.isInstitutionProfile) {
+    if (profile.isCharityProfile || profile.isInstitutionProfile) {
       return {
         needsAssessment: controls ? [needsAssessment, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : needsAssessment,
         goals: controls ? [goals, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : goals,
@@ -272,5 +276,16 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
       .map(t => t.totalCost)
       .reduce((a, b) => Number(Number(a).toFixed(numberOfDecimalPlaces)) + Number(Number(b).toFixed(numberOfDecimalPlaces)), 0) || 0;
     return Number(total.toFixed(numberOfDecimalPlaces));
+  }
+
+  normalizeTemplate(): Template {
+    return (new Template()).clone({
+      templateId: (this as unknown as { vsId: string }).vsId,
+      projectName: this.projectName,
+      templateFullSerial: this.templateFullSerial,
+      templateCost: this.projectTotalCost,
+      templateStatus: this.templateStatus,
+      templateStatusInfo: this.templateStatusInfo
+    })
   }
 }

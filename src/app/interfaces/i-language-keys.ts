@@ -11,6 +11,7 @@ export interface ILanguageKeys {
   final_general_notes: string;
   final_comments_saved_successfully: string;
   save_final_comments: string;
+  search_for_template: string;
   template_deduction_ratio_info: string;
   project_total_cost: string;
   sanady_main_classification: string;
