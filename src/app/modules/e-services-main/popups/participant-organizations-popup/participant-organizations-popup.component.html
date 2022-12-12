@@ -4,7 +4,6 @@
 </div>
 
 <div class="dialog-content no-fixed-height">
-
   <section *ngIf="isOrganizaionOfficers">
     <h1 class="h6 ">{{ lang.map.organization_officers }}</h1>
     <organization-officer [list]="data.model?.organizaionOfficerList || []" [canUpdate]="false" [isClaimed]="false"
@@ -13,39 +12,30 @@
   </section>
   <section *ngIf="isBuildingAbilities">
     <h1 class="h6 ">{{ lang.map.building_abilities }}</h1>
-    <building-ability [list]="data.model?.buildingAbilitiesList || []"
-    [readonly]=" true"
-    [canUpdate]="false"
-    [isClaimed]="false"
-    >
-  </building-ability>
-
+    <building-ability [list]="data.model?.buildingAbilitiesList || []" [readonly]=" true" [canUpdate]="false"
+      [isClaimed]="false">
+    </building-ability>
   </section>
-
   <section *ngIf="isEffectiveCoordinationCapabilities">
     <h1 class="h6 ">{{ lang.map.effective_coordination_capabilities }}</h1>
 
-    <effective-coordination-capabilities [list]="data.model?.effectiveCoordinationCapabilities || []"
-      [readonly]=" true"
-      [canUpdate]="false"
-      [isClaimed]="false">
+    <effective-coordination-capabilities [list]="data.model?.effectiveCoordinationCapabilities || []" [readonly]=" true"
+      [canUpdate]="false" [isClaimed]="false">
 
     </effective-coordination-capabilities>
   </section>
-
-
   <section *ngIf="isResearchAndStudies">
     <h1 class="h6 ">{{ lang.map.research_and_studies }}</h1>
-
-    <app-research-and-studies #researchAndStudiesTap [list]="data.model?.researchAndStudies || []"
-    [readonly]=" true"
-      [canUpdate]="false"
-      [isClaimed]="false"
-    >
-  </app-research-and-studies>
+    <app-research-and-studies #researchAndStudiesTap [list]="data.model?.researchAndStudies || []" [readonly]=" true"
+      [canUpdate]="false" [isClaimed]="false">
+    </app-research-and-studies>
   </section>
-
-
+  <section *ngIf="isTemplateList">
+    <h1 class="h6 ">{{ lang.map.lbl_template }}</h1>
+    <app-dynamic-templates #templateListTap [list]="data.model?.templateList || []" [readonly]=" true"
+      [canUpdate]="false" [isClaimed]="false">
+    </app-dynamic-templates>
+  </section>
 
 </div>
 <div class="dialog-actions">

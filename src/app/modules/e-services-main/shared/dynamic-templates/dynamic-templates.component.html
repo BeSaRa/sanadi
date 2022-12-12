@@ -13,7 +13,6 @@
       <app-page-header [hidden]="!canUpdate || !isClaimed" [pageTitle]="pageTitleKey" [clickOnNew$]="add$">
       </app-page-header>
     </div>
-
     <app-grid-search class="search-grid" (searchTextEvent)="filterControl.setValue($event)"></app-grid-search>
   </div>
   <div class="row pt-3" *ngIf="!showForm">
@@ -26,7 +25,6 @@
               <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{ getHeaderName(column) }}</th>
               <td cdk-cell *cdkCellDef="let row">{{ getCellValue(row, column) }}</td>
             </ng-container>
-
             <ng-container cdkColumnDef="actions">
               <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
               <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">

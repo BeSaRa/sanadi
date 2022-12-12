@@ -127,7 +127,6 @@
         [organizationUsers]="service.orgUsers" (readyEvent)="organizationOfficersTabStatus = $event"
         [canUpdate]="isCharityUser" [isClaimed]="true" [currentUserOrgId]="currentUserOrgId">
       </organization-officer>
-
     </ng-template>
     <ng-template #building_abilities>
       <building-ability #buildingAbilityTap [list]="buildingAbilitiesList " [organizationUnits]="organizationUnits"
