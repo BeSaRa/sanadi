@@ -79,7 +79,6 @@ export class DynamicTemplatesComponent implements OnInit {
     this.fieldBuilder = new ProcessFieldBuilder();
   }
   ngOnInit(): void {
-    console.log(this.list)
     this.buildForm();
     this.listenToAdd();
     this.listenToRecordChange();
