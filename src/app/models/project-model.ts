@@ -280,7 +280,7 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
 
   normalizeTemplate(): Template {
     return (new Template()).clone({
-      templateId: (this as unknown as { vsId: string }).vsId,
+      templateId: this.id,
       projectName: this.projectName,
       templateFullSerial: this.templateFullSerial,
       templateCost: this.projectTotalCost,

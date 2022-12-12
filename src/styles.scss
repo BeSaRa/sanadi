@@ -172,7 +172,7 @@ app-dialog-container {
 }
 
 .dialog-actions {
-  border-top: 1px solid tint-color($primary, 80);
+  border-top: 1px solid tint-color($primary, 80%);
   display: flex;
   justify-content: flex-end;
 
