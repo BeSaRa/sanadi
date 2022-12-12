@@ -32,7 +32,7 @@
   </section>
   <section *ngIf="isTemplateList">
     <h1 class="h6 ">{{ lang.map.lbl_template }}</h1>
-    <app-dynamic-templates #templateListTap [list]="data.model?.templateList || []" [readonly]=" true"
+    <app-dynamic-templates #templateListTap [list]="data.model?.templateList || []" [templateId]="data.model?.processId" [readonly]=" true"
       [canUpdate]="false" [isClaimed]="false">
     </app-dynamic-templates>
   </section>

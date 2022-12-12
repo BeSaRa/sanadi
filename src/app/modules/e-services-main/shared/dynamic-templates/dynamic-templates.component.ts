@@ -27,7 +27,7 @@ import { TemplateFieldTypes } from '@app/enums/template-field-types.enum';
 export class DynamicTemplatesComponent implements OnInit {
 
   @Input() profileId!: number | undefined;
-  @Input() templateId!: number;
+  @Input() templateId!: number | undefined;
 
   allowListUpdate: boolean = true;
   private _list: CoordinationWithOrganizationTemplate[] = [];
@@ -83,15 +83,16 @@ export class DynamicTemplatesComponent implements OnInit {
     this.listenToAdd();
     this.listenToRecordChange();
     this.listenToSave();
-    this.dynamicModelService.getById(this.templateId).subscribe((model: DynamicModel) => {
-      this.usedModel = model;
-      this.fieldBuilder.generateFromString(model.template);
-      this.columns = this.fieldBuilder.fields.reduce((p, c) => {
-        if (c.showOnTable)
-          return [c.identifyingName, ...p];
-        else return p;
-      }, this.columns)
-    })
+    if (this.templateId)
+      this.dynamicModelService.getById(this.templateId).subscribe((model: DynamicModel) => {
+        this.usedModel = model;
+        this.fieldBuilder.generateFromString(model.template);
+        this.columns = this.fieldBuilder.fields.reduce((p, c) => {
+          if (c.showOnTable)
+            return [c.identifyingName, ...p];
+          else return p;
+        }, this.columns)
+      })
   }
   getCellValue(row: CoordinationWithOrganizationTemplate, col: string) {
     if (!row.generatedTemplate)
