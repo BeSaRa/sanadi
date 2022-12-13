@@ -24,7 +24,6 @@ import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 import {TabMap} from '@app/types/types';
 import {EmployeeService} from '@services/employee.service';
 import {PermissionsEnum} from '@app/enums/permissions-enum';
-import {CharityOrganizationProfileExtraDataService} from '@services/charity-organization-profile-extra-data.service';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -150,14 +149,16 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
     }
   }
 
-  handleProfileType(profileType: number) {
+  handleProfileType(profileType: number, skipReset = false) {
     if (profileType === ProfileTypes.CHARITY || profileType === ProfileTypes.INSTITUTION) {
       this.showRaca = true;
       this.registrationAuthorityField?.patchValue(-1);
       this.registrationAuthorityField?.disable();
     } else {
       this.showRaca = false;
-      this.registrationAuthorityField?.reset();
+      if(!skipReset) {
+        this.registrationAuthorityField?.reset();
+      }
       this.registrationAuthorityField?.enable();
     }
   }
@@ -207,7 +208,7 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
       this.servicesControl.disable();
     }
     if (this.model?.profileType) {
-      this.handleProfileType(this.model.profileType);
+      this.handleProfileType(this.model.profileType, true);
     }
   }
 
