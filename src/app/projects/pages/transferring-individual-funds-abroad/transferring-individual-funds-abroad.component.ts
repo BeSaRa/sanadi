@@ -549,6 +549,8 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
         // delete id property
         let tempObj = _info.details as any;
         delete tempObj.id;
+        delete tempObj.followUpDate;
+        delete tempObj.licenseEndDate;
         _info.details = new TransferringIndividualFundsAbroad().clone(tempObj);
 
         this.hasSearchedForLicense = true;
