@@ -426,7 +426,7 @@
                               <label asteriskIfRequired="enName" class="form-label"
                                      [for]="'enName' + i">{{lang.map.main_point_name}}</label>
                               <input class="form-control"
-                                     [readonly]="!this.model?.canEditMeetingPoints()"
+                                     [readonly]="!this.canEditMeetingPoints(mainItem)"
                                      formControlName="enName"
                                      [id]="'enName' + i" validationClasses="enName">
                               <app-field-error-message controlName="enName"></app-field-error-message>
@@ -449,7 +449,7 @@
                                   <label asteriskIfRequired="enName" class="form-label"
                                          [for]="'enName' + i + j">{{lang.map.lbl_description}}</label>
                                   <input class="form-control"
-                                         [readonly]="!this.model?.canEditMeetingPoints()"
+                                         [readonly]="!this.canEditMeetingPoints(subItem)"
                                          formControlName="enName"
                                          [id]="'enName' + i + j" validationClasses="enName">
                                   <app-field-error-message controlName="enName"></app-field-error-message>

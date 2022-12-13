@@ -806,6 +806,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
       meetingSubItem: this.fb.array(mainItem.meetingSubItem ? [...mainItem.meetingSubItem.map(x => this.newSubItem(x))] : [this.newSubItem()]),
       caseID: [mainItem.caseID],
       memberID: [mainItem.memberID],
+      addedByDecisionMaker: [mainItem.addedByDecisionMaker],
       status: [mainItem.status],
     });
   }
@@ -842,6 +843,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
       respectTerms: [(this.isDecisionMakerReview && this.model?.isSendToMember && !CommonUtils.isValidValue(subItem?.comment)) ? this.autoCheckRespectTerms(subItem.userComments!) : subItem.respectTerms, []],
       mainItemID: [subItem.mainItemID],
       memberID: [subItem.memberID],
+      addedByDecisionMaker: [subItem.addedByDecisionMaker],
       status: [subItem.status],
       userComments: [subItem.userComments],
       selected: []
@@ -1066,6 +1068,12 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   }
 
   canRemoveMeetingPoint(point: any) {
-    return this.model?.canRemoveMeetingPoints(point.get('id').value);
+    let isSelfMadePoint = +point.get('addedByDecisionMaker').value !== 1;
+    return this.model?.canRemoveMeetingPoints(isSelfMadePoint);
+  }
+
+  canEditMeetingPoints(point: any) {
+    let isSelfMadePoint = +point.get('addedByDecisionMaker').value !== 1;
+    return this.model?.canEditSelfMadeMeetingPoints(isSelfMadePoint);
   }
 }

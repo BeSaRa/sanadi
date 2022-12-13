@@ -9,5 +9,6 @@ export class MeetingAttendanceMainItem extends SearchableCloneable<MeetingAttend
 
   decisionMakerID!: number;
   memberID!: number;
+  addedByDecisionMaker!: boolean;
   status!: number;
 }

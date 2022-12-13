@@ -9,6 +9,7 @@ export class MeetingAttendanceSubItem extends SearchableCloneable<MeetingAttenda
   userComments?: MeetingPointMemberComment[];
   mainItemID!: number;
   memberID!: number;
+  addedByDecisionMaker!: boolean;
   status!: number;
   selected?: boolean;
 }
