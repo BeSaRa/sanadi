@@ -335,7 +335,6 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
       ...this.specialExplanation.getRawValue()
     });
     value.projectNeeds = this.projectNeedsComponentRef.list;
-    console.log({value});
     return value;
   }
 
@@ -376,6 +375,7 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
 
   _resetForm(): void {
     this.form.reset();
+    this.model = this._getNewInstance();
     this.operation = OperationTypes.CREATE;
   }
 }
