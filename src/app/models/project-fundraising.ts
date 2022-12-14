@@ -4,7 +4,7 @@ import {ProjectFundraisingService} from "@services/project-fundraising.service";
 import {CaseTypes} from "@app/enums/case-types.enum";
 import {FactoryService} from "@services/factory.service";
 import {CustomValidators} from "@app/validators/custom-validators";
-import {Template} from "@app/models/template";
+import {ProjectTemplate} from "@app/models/projectTemplate";
 import {DeductedPercentage} from "@app/models/deducted-percentage";
 import {AmountOverYear} from "@app/models/amount-over-year";
 import {AmountOverCountry} from "@app/models/amount-over-country";
@@ -43,10 +43,10 @@ export class ProjectFundraising extends CaseModel<ProjectFundraisingService, Pro
   sanadiDomain!: number
   sanadiMainClassification!: number
   administrativeDeductionAmount!: number
-  targetAmount!: number
-  projectTotalCost!: number
+  targetAmount: number = 0
+  projectTotalCost: number = 0
   description!: string
-  templateList!: Template[]
+  templateList: ProjectTemplate[] = []
   deductedPercentagesItemList: DeductedPercentage[] = []
   amountOverYearsList!: AmountOverYear[]
   amountOverCountriesList!: AmountOverCountry[]
@@ -112,6 +112,7 @@ export class ProjectFundraising extends CaseModel<ProjectFundraisingService, Pro
       sanadiMainClassification: controls ? [sanadiMainClassification] : sanadiMainClassification,
       licenseDuration: controls ? [licenseDuration, [CustomValidators.required]] : licenseDuration,
       projectTotalCost: controls ? [projectTotalCost, [CustomValidators.required]] : projectTotalCost,
+
     }
   }
 
@@ -120,5 +121,42 @@ export class ProjectFundraising extends CaseModel<ProjectFundraisingService, Pro
     return {
       description: controls ? [description, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : description,
     }
+  }
+
+  setTemplate(template: ProjectTemplate): boolean {
+    this.templateList = [template]
+    return true
+  }
+
+  getTemplateId(): string | undefined {
+    return this.templateList && this.templateList.length ? this.templateList[0].templateId : undefined;
+  }
+
+  hasTemplate(): boolean {
+    return !!(this.templateList && this.templateList.length)
+  }
+
+  clearTemplate(): ProjectFundraising {
+    this.templateList = []
+    return this;
+  }
+
+  addDeductionRatioItem(item: DeductedPercentage): ProjectFundraising {
+    this.deductedPercentagesItemList = this.deductedPercentagesItemList.concat([item])
+    return this
+  }
+
+  removeDeductionRatioItem(deductionItem: DeductedPercentage): ProjectFundraising {
+    this.deductedPercentagesItemList = this.deductedPercentagesItemList.filter(item => item.deductionType !== deductionItem.deductionType)
+    return this;
+  }
+
+  clearDeductionItems(): void {
+    this.deductedPercentagesItemList = []
+  }
+
+  setProjectTotalCoast(coast: number): ProjectFundraising {
+    this.projectTotalCost = coast
+    return this
   }
 }

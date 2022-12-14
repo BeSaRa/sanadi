@@ -125,5 +125,6 @@ export interface IAppUrls {
   GENERAL_PROCESS_NOTIFICATION: string;
   DYNAMIC_MODEL: string;
   PROJECT_FUNDRAISING: string;
+  DEDUCTION_RATIO_ITEM: string;
   [index: string]: string;
 }

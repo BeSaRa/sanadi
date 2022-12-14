@@ -54,9 +54,9 @@ import {
 import {
   MeetingPointMembersCommentsPopupComponent
 } from './popups/meeting-point-members-comments-popup/meeting-point-members-comments-popup.component';
-import {
-  SpecificMemberCommentsAndNotesComponent
-} from './popups/specific-member-comments-and-notes/specific-member-comments-and-notes.component';
+import {SpecificMemberCommentsAndNotesComponent} from './popups/specific-member-comments-and-notes/specific-member-comments-and-notes.component';
+import {ChooseTemplatePopupComponent} from './popups/choose-template-popup/choose-template-popup.component';
+import { DeductionRatioManagerComponent } from './pages/project-fundraising/components/deduction-ratio-manager/deduction-ratio-manager.component';
 
 
 @NgModule({
@@ -84,7 +84,9 @@ import {
     GeneralAssociationMeetingApproveTaskPopupComponent,
     MeetingPointMembersCommentsPopupComponent,
     SpecificMemberCommentsAndNotesComponent,
-    ProjectFundraisingComponent
+    ProjectFundraisingComponent,
+    ChooseTemplatePopupComponent,
+    DeductionRatioManagerComponent
   ],
   imports: [
     CommonModule,

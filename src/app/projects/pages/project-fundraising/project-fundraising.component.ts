@@ -5,12 +5,12 @@ import {SaveTypes} from '@app/enums/save-types';
 import {EServicesGenericComponent} from "@app/generics/e-services-generic-component";
 import {ProjectFundraising} from "@app/models/project-fundraising";
 import {ProjectFundraisingService} from "@services/project-fundraising.service";
-import {combineLatest, merge, Observable} from 'rxjs';
+import {combineLatest, merge, Observable, Subject} from 'rxjs';
 import {Lookup} from "@app/models/lookup";
 import {LookupService} from "@services/lookup.service";
 import {LangService} from "@services/lang.service";
 import {Country} from "@app/models/country";
-import {filter, takeUntil} from "rxjs/operators";
+import {filter, switchMap, takeUntil} from "rxjs/operators";
 import {ProjectWorkArea} from "@app/enums/project-work-area";
 import {ProjectPermitTypes} from "@app/enums/project-permit-types";
 import {ServiceRequestTypes} from "@app/enums/service-request-types";
@@ -26,6 +26,8 @@ import {AidLookup} from "@app/models/aid-lookup";
 import {CustomValidators} from "@app/validators/custom-validators";
 import {DacOchaService} from "@services/dac-ocha.service";
 import {AdminLookup} from "@app/models/admin-lookup";
+import {ProjectTemplate} from "@app/models/projectTemplate";
+import {UserClickOn} from "@app/enums/user-click-on.enum";
 
 @Component({
   selector: 'project-fundraising',
@@ -53,9 +55,13 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   displayOuchSection: boolean = false;
   disableQatarFromSelection: boolean = false;
   displayLLicenseAndTargetCostFields = false;
+  displayedColumns = ['name', 'serial', 'status', 'totalCost', 'actions']
+  templateRequired: boolean = false;
+  addTemplate$: Subject<any> = new Subject<any>();
   private profile?: Profile = this.employeeService.getProfile()
   private qatarCountry: Country = this.getQatarCountry()
   private loadedDacOchaBefore: Boolean = false;
+  clearDeductionItems: boolean = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -83,7 +89,6 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     const model = new ProjectFundraising()
     this.form = this.fb.group({
       basicInfo: this.fb.group(model.buildBasicInfo(true)),
-      templateDeductionInfo: this.fb.group({}),
       specialExplanation: this.fb.group(model.buildExplanation(true))
     })
   }
@@ -96,6 +101,9 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     this.listenToMainDacOchaChanges();
     this.setDefaultValues()
     this.overrideValuesInCreate()
+    this.listenToAddTemplate()
+    this.listenToProjectTotalCoastChanges()
+    this.test()
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
@@ -112,8 +120,8 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
 
   _prepareModel(): ProjectFundraising | Observable<ProjectFundraising> {
     return new ProjectFundraising().clone({
+      ...this.model,
       ...this.basicInfo.getRawValue(),
-      ...this.templateDeductionRatioInfo.getRawValue(),
       ...this.specialExplanation.getRawValue()
     })
   }
@@ -149,13 +157,8 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     throw new Error('Method not implemented.');
   }
 
-
   get basicInfo(): AbstractControl {
     return this.form.get('basicInfo')!
-  }
-
-  get templateDeductionRatioInfo(): AbstractControl {
-    return this.form.get('templateDeductionInfo')!
   }
 
   get specialExplanation(): AbstractControl {
@@ -214,6 +217,14 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     return this.basicInfo.get('sanadiMainClassification')!
   }
 
+  get licenseDuration(): AbstractControl {
+    return this.basicInfo.get('licenseDuration')!
+  }
+
+  get projectTotalCost(): AbstractControl {
+    return this.basicInfo.get('projectTotalCost')!
+  }
+
   private getQatarCountry(): Country {
     return this.countries.find(item => item.enName.toLowerCase() === 'qatar')!
   }
@@ -245,7 +256,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   private handelPermitTypeAndWorkAreaChanges(workArea: ProjectWorkArea, permitType: ProjectPermitTypes): void {
     this.displayDomainSection = workArea === ProjectWorkArea.OUTSIDE_QATAR && [ProjectPermitTypes.SINGLE_TYPE_PROJECT, ProjectPermitTypes.SECTIONAL_BASKET].includes(permitType);
     this.displayAidSection = workArea === ProjectWorkArea.INSIDE_QATAR && [ProjectPermitTypes.SINGLE_TYPE_PROJECT, ProjectPermitTypes.SECTIONAL_BASKET].includes(permitType);
-
+    this.templateRequired = permitType === ProjectPermitTypes.SINGLE_TYPE_PROJECT
     const domainFields = [
       this.domain,
       this.mainDACCategory,
@@ -278,6 +289,8 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       this.markUnRequiredFields(allFields)
       this.displayLLicenseAndTargetCostFields = true
     }
+    // we will ge the total coast from the template
+    this.templateRequired ? this.projectTotalCost.disable() : this.projectTotalCost.enable()
   }
 
   private markRequiredFields(fields: AbstractControl[]): void {
@@ -305,11 +318,14 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     if (this.displayOuchSection) {
       this.markRequiredFields(ochaFields)
       this.markUnRequiredFields(dacFields)
+      this.displayLLicenseAndTargetCostFields = true;
     } else if (this.displayDacSection) {
       this.markRequiredFields(dacFields)
       this.markUnRequiredFields(ochaFields)
+      this.displayLLicenseAndTargetCostFields = true;
     } else {
       this.markUnRequiredFields(allFields)
+      this.displayLLicenseAndTargetCostFields = false;
     }
     this.loadDacOuchMain(domain)
   }
@@ -438,11 +454,12 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       })
   }
 
-  searchForTemplate(): void {
+  private openAddTemplatePopup(): void {
     this.service
-      .openDialogSearchTemplate(this.getSearchTemplateCriteria(), this.projectWorkArea.value)
-      .subscribe((list) => {
-        list.forEach(item => console.log(item.normalizeTemplate()))
+      .openDialogSearchTemplate(this.getSearchTemplateCriteria(), this.projectWorkArea.value, this.model?.getTemplateId())
+      .pipe(switchMap(dialog => dialog.onAfterClose$))
+      .subscribe((template: ProjectTemplate | undefined) => {
+        this.model && template && this.model.setTemplate(template) && this.model.setProjectTotalCoast(template.templateCost) && this.projectTotalCost.setValue(template.templateCost, {emitEvent: false})
       })
   }
 
@@ -469,5 +486,43 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
         const control = this[(controlName as keyof this)] as AbstractControl
         return {...acc, [key]: control.getRawValue()}
       }, {})
+  }
+
+  private test(): void {
+    this.projectWorkArea.setValue(ProjectWorkArea.OUTSIDE_QATAR)
+    this.domain.setValue(DomainTypes.HUMANITARIAN)
+    this.countriesField.setValue([231])
+    this.mainUNOCHACategory.setValue(1)
+  }
+
+  deleteTemplate(): void {
+    this.dialog.confirm(this.lang.map.remove_template_will_empty_deduction_ration_list)
+      .onAfterClose$
+      .pipe(filter((val: UserClickOn) => val === UserClickOn.YES))
+      .subscribe(() => {
+        this.model && this.model.clearTemplate() && this.model.setProjectTotalCoast(0) && this.projectTotalCost.setValue(0, {emitEvent: false})
+        this.clearDeductionItems = true;
+      })
+  }
+
+  private listenToAddTemplate(): void {
+    this.addTemplate$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.openAddTemplatePopup()
+      })
+  }
+
+  onClearDeductionItems(): void {
+    this.clearDeductionItems = false;
+  }
+
+  private listenToProjectTotalCoastChanges(): void {
+    this.projectTotalCost
+      .valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((value: number) => {
+        this.model && this.model.setProjectTotalCoast(value)
+      })
   }
 }

@@ -17,7 +17,7 @@ import {EvaluationIndicator} from '@app/models/evaluation-indicator';
 import {ProjectModelForeignCountriesProject} from '@app/models/project-model-foreign-countries-project';
 import {ProjectAddress} from '@app/models/project-address';
 import {EmployeeService} from '@services/employee.service';
-import {Template} from "@app/models/template";
+import {ProjectTemplate} from "@app/models/projectTemplate";
 
 // noinspection JSUnusedGlobalSymbols
 const {send, receive} = new ProjectModelInterceptor();
@@ -278,8 +278,8 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
     return Number(total.toFixed(numberOfDecimalPlaces));
   }
 
-  normalizeTemplate(): Template {
-    return (new Template()).clone({
+  normalizeTemplate(): ProjectTemplate {
+    return (new ProjectTemplate()).clone({
       templateId: this.id,
       projectName: this.projectName,
       templateFullSerial: this.templateFullSerial,

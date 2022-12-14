@@ -13,6 +13,13 @@ export interface ILanguageKeys {
   save_final_comments: string;
   search_for_template: string;
   add_template: string;
+  qr: string;
+  please_add_template_to_proceed: string;
+  total_deduction_ratio: string;
+  select_item: string;
+  deduction_ratio_items: string;
+  remove_template_will_empty_deduction_ration_list: string;
+  templates: string;
   template_deduction_ratio_info: string;
   project_total_cost: string;
   sanady_main_classification: string;

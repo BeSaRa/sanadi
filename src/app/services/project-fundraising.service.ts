@@ -9,9 +9,14 @@ import {DynamicOptionsService} from './dynamic-options.service';
 import {UrlService} from './url.service';
 import {FactoryService} from "@services/factory.service";
 import {CastResponse, CastResponseContainer} from "@decorators/cast-response";
-import {Observable} from "rxjs";
+import {Observable, of} from "rxjs";
 import {ProjectWorkArea} from "@app/enums/project-work-area";
 import {ProjectModel} from "@app/models/project-model";
+import {switchMap} from "rxjs/operators";
+import {DialogRef} from "@app/shared/models/dialog-ref";
+import {ChooseTemplatePopupComponent} from "@app/projects/popups/choose-template-popup/choose-template-popup.component";
+import {DeductionRatioItem} from "@app/models/deduction-ratio-item";
+import {DeductionRatioItemService} from "@services/deduction-ratio-item.service";
 
 @CastResponseContainer({
   $default: {
@@ -29,6 +34,7 @@ export class ProjectFundraisingService extends BaseGenericEService<ProjectFundra
 
   constructor(public http: HttpClient,
               public domSanitizer: DomSanitizer,
+              private _deductionService: DeductionRatioItemService,
               public dialog: DialogService,
               private urlService: UrlService,
               public dynamicService: DynamicOptionsService) {
@@ -56,13 +62,25 @@ export class ProjectFundraisingService extends BaseGenericEService<ProjectFundra
     return this.urlService
   }
 
-  openDialogSearchTemplate(criteria: any, workAreType: ProjectWorkArea): Observable<ProjectModel[]> {
+  openDialogSearchTemplate(criteria: any, workAreType: ProjectWorkArea, templateId?: string): Observable<DialogRef> {
     return this.searchForTemplate(criteria, workAreType)
+      // .pipe(map(items => items.map(item => item.normalizeTemplate())))
+      .pipe(switchMap(templates => templates.length ? of(this.dialog.show(ChooseTemplatePopupComponent, {
+        templates,
+        templateId,
+      })) : of(this.dialog.info('there is no templates'))))
   }
 
   @CastResponse(() => ProjectModel)
   private searchForTemplate(criteria: any, workAreType: ProjectWorkArea): Observable<ProjectModel[]> {
     return this.http.get<ProjectModel[]>(this.urlService.URLS.PROJECT_MODELING + '/' + (workAreType === ProjectWorkArea.OUTSIDE_QATAR ? 'external' : 'internal') + '/template/criteria', {
+      params: new HttpParams({fromObject: criteria})
+    })
+  }
+
+  @CastResponse(() => DeductionRatioItem)
+  public loadDeductionRatio(criteria: { permitType: number, workArea: number }): Observable<DeductionRatioItem[]> {
+    return this.http.get<DeductionRatioItem[]>(this.urlService.URLS.DEDUCTION_RATIO_ITEM, {
       params: new HttpParams({fromObject: criteria})
     })
   }
