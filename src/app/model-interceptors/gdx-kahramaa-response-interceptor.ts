@@ -1,8 +1,10 @@
 import {IModelInterceptor} from '@contracts/i-model-interceptor';
 import {GdxKahramaaResponse} from '@app/models/gdx-kahramaa-response';
+import {DateUtils} from '@helpers/date-utils';
 
 export class GdxKahramaaResponseInterceptor implements IModelInterceptor<GdxKahramaaResponse>{
   receive(model: GdxKahramaaResponse): GdxKahramaaResponse {
+    model.lastInvoiceDateString = DateUtils.getDateStringFromDate(model.lastInvoiceDate, 'DEFAULT_DATE_FORMAT');
     return model;
   }
 
@@ -13,5 +15,6 @@ export class GdxKahramaaResponseInterceptor implements IModelInterceptor<GdxKahr
 
   private static _deleteBeforeSend(model: Partial<GdxKahramaaResponse>): void {
     delete model.searchFields;
+    delete model.lastInvoiceDateString;
   }
 }

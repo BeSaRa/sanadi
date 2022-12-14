@@ -41,14 +41,28 @@
 .remove-sub-item-right {
   position: absolute;
   right: 0;
-  top: 36px;
+  top: 10px;
   padding: 0;
 }
 
 .remove-sub-item-left {
   position: absolute;
   left: 0;
-  top: 36px;
+  top: 10px;
+  padding: 0;
+}
+
+.view-sub-item-right {
+  position: absolute;
+  right: 28px;
+  top: 10px;
+  padding: 0;
+}
+
+.view-sub-item-left {
+  position: absolute;
+  left: 28px;
+  top: 10px;
   padding: 0;
 }
 

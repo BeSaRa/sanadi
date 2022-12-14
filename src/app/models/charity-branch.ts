@@ -22,6 +22,7 @@ export class CharityBranch extends SearchableCloneable<CharityBranch> {
   address!: string;
   tempId!: number;
   branchContactOfficer: OrganizationOfficer[] = [];
+  branchContactOfficerList: OrganizationOfficer[] = [];
 
 
   buildForm(controls = true) {

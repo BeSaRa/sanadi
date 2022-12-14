@@ -291,7 +291,8 @@ export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> 
     let maxId = this.menuItemService.getMaxMenuItemId();
     let finalList: MenuItem[] = [];
     let parentList = customMenuList.filter(item => !item.parentMenuItemId);
-    let childrenList = customMenuList.filter(item => !!item.parentMenuItemId && !!item.menuURL); // children must have menuUrl
+    let childrenList = customMenuList.filter(item => !!item.parentMenuItemId && !!item.menuURL)
+      .sort((a: CustomMenu, b: CustomMenu) => a.menuOrder - b.menuOrder); // children must have menuUrl
 
     parentList.forEach((parentMenu: CustomMenu) => {
       const hasChildren: boolean = !!childrenList.find(x => x.parentMenuItemId === parentMenu.id);

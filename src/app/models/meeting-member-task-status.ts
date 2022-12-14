@@ -20,6 +20,7 @@ export class MeetingMemberTaskStatus extends SearchableCloneable<MeetingMemberTa
   arName!: string;
   enName!: string;
   organizationId!: string;
+  userId!: number;
 
   langService: LangService;
 

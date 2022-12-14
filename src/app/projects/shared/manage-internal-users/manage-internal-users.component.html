@@ -1,6 +1,7 @@
 <ng-container [formGroup]="internalMembersForm">
   <ng-container *ngIf="!isExternalUser">
-    <div class="row" *ngIf="isSupervisionAndControlReview() || isSupervisionAndControlRework() || isSupervisionManagerReview()">
+    <div class="row"
+         *ngIf="isSupervisionAndControlReview() || isSupervisionAndControlRework() || isSupervisionManagerReview()">
       <div class="col">
         <h1 class="h6 text-primary m-0 d-inline-block">{{lang.map.add_internal_member}}</h1>
         <button class="btn btn-link outline-none"
@@ -88,7 +89,13 @@
                   <i class="mdi mdi-close-box"></i>
                 </button>
                 <button *ngIf="!isExternalUser && model?.isSentToMember() && model?.isDecisionMakerReviewStep()"
-                  (click)="terminateUserTask($event, row)"
+                        (click)="viewMemberCommentsAndNotes($event, row)"
+                        [disabled]="row.pId"
+                        class="btn btn-link outline-none" tooltip="{{lang.map.view}}">
+                  <i class="mdi mdi-eye"></i>
+                </button>
+                <button *ngIf="!isExternalUser && model?.isSentToMember() && model?.isDecisionMakerReviewStep()"
+                        (click)="terminateUserTask($event, row)"
                         [disabled]="!row.pId"
                         class="btn btn-link outline-none" tooltip="{{lang.map.terminate_task}}">
                   <i class="mdi mdi-stop-circle-outline"></i>

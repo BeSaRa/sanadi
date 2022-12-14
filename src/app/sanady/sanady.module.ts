@@ -21,8 +21,7 @@ import {BeneficiaryObligationComponent} from './shared/beneficiary-obligation/be
 import {BeneficiaryIncomeComponent} from './shared/beneficiary-income/beneficiary-income.component';
 import {InquiryLogsComponent} from './pages/inquiry-logs/inquiry-logs.component';
 import {AidListComponent} from './shared/aid-list/aid-list.component';
-import {GdxBeneficiaryIntegrationComponent} from './shared/gdx-beneficiary-integration/gdx-beneficiary-integration.component';
-import { GdxIntegrationInquiryLogListComponent } from './shared/gdx-integration-inquiry-log-list/gdx-integration-inquiry-log-list.component';
+import {GdxIntegrationModule} from '@app/modules/gdx-integration/gdx-integration.module';
 
 
 @NgModule({
@@ -44,14 +43,13 @@ import { GdxIntegrationInquiryLogListComponent } from './shared/gdx-integration-
     BeneficiaryObligationComponent,
     BeneficiaryIncomeComponent,
     InquiryLogsComponent,
-    AidListComponent,
-    GdxBeneficiaryIntegrationComponent,
-    GdxIntegrationInquiryLogListComponent
+    AidListComponent
   ],
   imports: [
     CommonModule,
     SanadyRoutingModule,
-    SharedModule
+    SharedModule,
+    GdxIntegrationModule
   ]
 })
 export class SanadyModule {

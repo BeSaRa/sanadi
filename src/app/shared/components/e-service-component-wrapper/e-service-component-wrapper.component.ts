@@ -45,6 +45,7 @@ import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 import { UserClickOn } from '@app/enums/user-click-on.enum';
 import { BaseGenericEService } from '@app/generics/base-generic-e-service';
+import {IGeneralAssociationMeetingAttendanceFinalApprove} from '@contracts/i-general-association-meeting-attendance-final-approve';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -489,6 +490,8 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
             return false;
           }
           if (item.caseType === CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST) {
+            //@ts-ignore
+            if(item.isApproved && this.internal) return false;
             return !item.isInitialApproved() || !this.internal;
           }
           if (item.caseType === CaseTypes.NPO_MANAGEMENT) {
@@ -711,6 +714,20 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         },
         onClick: (item: CaseModel<any, any>) => {
           this.sendToGeneralMeetingMembersAction(item);
+        }
+      },
+      // download final report
+      {
+        type: 'action',
+        label: 'generate_final_report',
+        askChecklist: true,
+        show: (item: CaseModel<any, any>) => {
+          const model = item as unknown as IGeneralAssociationMeetingAttendanceFinalApprove;
+          return item.getCaseType() === CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE && (model.isManagerFinalReviewStep());
+        },
+        onClick: (item: CaseModel<any, any>) => {
+          const model = item as unknown as IGeneralAssociationMeetingAttendanceFinalApprove;
+          model.downloadFinalReport();
         }
       },
       // initial approve

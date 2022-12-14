@@ -31,6 +31,7 @@ export class UserSecurityComponent implements OnInit, OnDestroy {
   private _operation: BehaviorSubject<OperationTypes> = new BehaviorSubject<OperationTypes>(OperationTypes.CREATE);
   @Input()
   readonly: boolean = false;
+
   @Input()
   set operation(value: OperationTypes) {
     this._operation.next(value);
@@ -63,7 +64,7 @@ export class UserSecurityComponent implements OnInit, OnDestroy {
   }
 
   @Input()
-  model!: InternalUser | ExternalUser
+  model!: InternalUser | ExternalUser;
   teamSecurityMap!: Record<number, TeamSecurityConfiguration>;
   teamSecurity: TeamSecurityConfiguration[] = [];
   userSecurity: UserSecurityConfiguration[] = [];
@@ -89,7 +90,7 @@ export class UserSecurityComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.listenToTeamSecurityChange();
     if (this.model.isExternal()) {
-      this.userSecurityColumns = this.userSecurityColumns.concat(['approval','followUp'])
+      this.userSecurityColumns = this.userSecurityColumns.concat(['approval', 'followUp']);
     }
     this.listenToOperationChange();
   }
@@ -101,7 +102,7 @@ export class UserSecurityComponent implements OnInit, OnDestroy {
       .pipe(map(teams => teams.filter(team => this.configService.CONFIG.CHARITY_ORG_TEAM === team.authName)[0]))
       .subscribe((team) => {
         this.selectedUserTeam.setValue(team.id);
-      })
+      });
   }
 
   private listenToTeamSecurityChange() {
@@ -116,7 +117,7 @@ export class UserSecurityComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
         this.userSecurity = [];
-      })
+      });
 
     const insertDefaultTeamSecurity$ = (userSecurity: UserSecurityConfiguration[]) => {
       let securityConfigurations: UserSecurityConfiguration[];
@@ -131,19 +132,24 @@ export class UserSecurityComponent implements OnInit, OnDestroy {
           item.serviceInfo = this.teamSecurity[index].serviceInfo;
           return item;
         })))
-        .pipe(map(list => caseTypeIds ? userSecurity.concat(list) : list))
-    }
+        .pipe(map(list => caseTypeIds ? userSecurity.concat(list) : list));
+    };
 
     selected$
       .pipe(
         // get the team security configuration
-        switchMap(teamId => this.teamSecurityService.loadSecurityByTeamId(teamId)),
+        switchMap(teamId => {
+          if (this.model.isExternal()) {
+            return this.teamSecurityService.loadSecurityByTeamIdAndProfileId(teamId, (this.model as ExternalUser).getProfileId());
+          }
+          return this.teamSecurityService.loadSecurityByTeamId(teamId);
+        }),
         tap((teamSecurity) => this.teamSecurity = teamSecurity),
         // create team security map based on caseType to use it later in grid
         tap(_ => {
           this.teamSecurityMap = this.teamSecurity.reduce((acc, item) => {
-            return {...acc, [item.caseType]: item}
-          }, {}) || {}
+            return {...acc, [item.caseType]: item};
+          }, {}) || {};
         }),
         // get the user security configuration
         switchMap(() => this.userSecurityService.loadSecurityByTeamId(this.selectedUserTeam.value, this.model.generalUserId)),
@@ -151,7 +157,7 @@ export class UserSecurityComponent implements OnInit, OnDestroy {
         switchMap((userSecurity => iif(() => !userSecurity.length || (userSecurity.length !== this.teamSecurity.length), insertDefaultTeamSecurity$(userSecurity), of(userSecurity)))),
         tap((userSecurity) => this.userSecurity = userSecurity)
       )
-      .subscribe()
+      .subscribe();
   }
 
   canManage(userSecurity: UserSecurityConfiguration): boolean {
@@ -166,7 +172,7 @@ export class UserSecurityComponent implements OnInit, OnDestroy {
     return this.teamSecurityMap[userSecurity.caseType]?.canView;
   }
 
-  updateBulkUserSecurity(userSecurity: UserSecurityConfiguration, property: 'canView' | 'canManage' | 'canAdd' | 'approval'| 'followUp'): void {
+  updateBulkUserSecurity(userSecurity: UserSecurityConfiguration, property: 'canView' | 'canManage' | 'canAdd' | 'approval' | 'followUp'): void {
     userSecurity[property] = !userSecurity[property];
     const list = this.userSecurity.map<Partial<UserSecurityConfiguration>>(item => ({
       id: item.id,
@@ -178,7 +184,7 @@ export class UserSecurityComponent implements OnInit, OnDestroy {
       caseType: item.caseType,
       serviceId: item.serviceId,
       approval: item.approval,
-      followUp:item.followUp,
+      followUp: item.followUp,
     }));
     // // for testing purpose
     // // this.userSecurityService.deleteBulkExternal(list).subscribe();
@@ -189,8 +195,8 @@ export class UserSecurityComponent implements OnInit, OnDestroy {
         this.userSecurity = this.userSecurity.map(((item, index) => {
           item.id = updated[index].id;
           return item;
-        }))
-      })
+        }));
+      });
   }
 
   toggleUserSecurity(userSecurity: UserSecurityConfiguration, property: 'canView' | 'canManage' | 'canAdd' | 'approval' | 'followUp'): void {
@@ -205,13 +211,13 @@ export class UserSecurityComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((updated) => {
         this.userSecurity = this.userSecurity.map((item => {
-          item.id === userSecurity.id && (item[property] = updated[property])
+          item.id === userSecurity.id && (item[property] = updated[property]);
           return item;
-        }))
+        }));
         this.toast.success(this.lang.map.msg_update_success);
       }, () => {
-        userSecurity[property] = !userSecurity[property]
-      })
+        userSecurity[property] = !userSecurity[property];
+      });
   }
 
   private listenToOperationChange() {
@@ -221,6 +227,6 @@ export class UserSecurityComponent implements OnInit, OnDestroy {
       .pipe(filter(val => val !== OperationTypes.CREATE && this.model.isExternal()))
       .subscribe(() => {
         this.loadTeamsAndSecurity();
-      })
+      });
   }
 }

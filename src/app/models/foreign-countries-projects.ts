@@ -70,6 +70,7 @@ export class ForeignCountriesProjects extends _RequestType<ForeignCountriesProje
   buildForm(withControls: boolean): IKeyValue {
     const {
       requestType,
+      organizationId,
       oldLicenseFullSerial,
       externalCooperationAuthority,
       country,
@@ -82,6 +83,7 @@ export class ForeignCountriesProjects extends _RequestType<ForeignCountriesProje
     } = this;
     return {
       oldLicenseFullSerial: withControls ? [oldLicenseFullSerial] : oldLicenseFullSerial,
+      organizationId: withControls ? [organizationId, [CustomValidators.required]] : organizationId,
       externalCooperationAuthority: withControls ? [externalCooperationAuthority, [CustomValidators.required]] : externalCooperationAuthority,
       requestType: withControls ? [requestType, [CustomValidators.required]] : requestType,
       country: withControls ? [country, [CustomValidators.required]] : country,

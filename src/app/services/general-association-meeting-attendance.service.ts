@@ -39,6 +39,9 @@ import {BlobModel} from '@app/models/blob-model';
 import {map} from 'rxjs/operators';
 import {CommonUtils} from '@helpers/common-utils';
 import {IMyDateModel} from 'angular-mydatepicker';
+import {
+  SpecificMemberCommentsAndNotesComponent
+} from '@app/projects/popups/specific-member-comments-and-notes/specific-member-comments-and-notes.component';
 
 @CastResponseContainer({
   $default: {
@@ -185,6 +188,19 @@ export class GeneralAssociationMeetingAttendanceService extends BaseGenericEServ
     return this._addMeetingPoints(meetingItems, caseId);
   }
 
+  @HasInterception
+  @CastResponse(() => MeetingAttendanceReport, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  private _addFinalMeetingPoints(@InterceptParam() meetingItems: MeetingAttendanceReport, caseId?: string): Observable<MeetingAttendanceReport> {
+    return this.http.post<MeetingAttendanceReport>(this._getURLSegment() + '/items/add-update/final/' + caseId, meetingItems);
+  }
+
+  addFinalMeetingPoints(meetingItems: MeetingAttendanceReport, caseId?: string): Observable<MeetingAttendanceReport> {
+    return this._addFinalMeetingPoints(meetingItems, caseId);
+  }
+
   @CastResponse(() => MeetingAttendanceReport, {
     unwrap: 'rs',
     fallback: '$default'
@@ -226,6 +242,19 @@ export class GeneralAssociationMeetingAttendanceService extends BaseGenericEServ
     return this._addMeetingGeneralNotes(meetingNotes, caseId);
   }
 
+  @HasInterception
+  @CastResponse(() => GeneralMeetingAttendanceNote, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  private _addFinalMeetingGeneralNotes(@InterceptParam() meetingItems: GeneralMeetingAttendanceNote[], caseId?: string): Observable<GeneralMeetingAttendanceNote[]> {
+    return this.http.post<GeneralMeetingAttendanceNote[]>(this._getURLSegment() + '/' + caseId + '/meeting-comments/final', meetingItems);
+  }
+
+  addFinalMeetingGeneralNotes(meetingNotes: GeneralMeetingAttendanceNote[], caseId?: string): Observable<GeneralMeetingAttendanceNote[]> {
+    return this._addFinalMeetingGeneralNotes(meetingNotes, caseId);
+  }
+
   @CastResponse(() => GeneralMeetingAttendanceNote, {
     unwrap: 'rs',
     fallback: '$default'
@@ -236,6 +265,18 @@ export class GeneralAssociationMeetingAttendanceService extends BaseGenericEServ
 
   getMeetingGeneralNotes(memberId: number, caseId?: string): Observable<GeneralMeetingAttendanceNote[]> {
     return this._getMeetingGeneralNotes(memberId, caseId);
+  }
+
+  @CastResponse(() => GeneralMeetingAttendanceNote, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  private _getDecisionMakerMeetingGeneralNotes(memberId: number, caseId?: string): Observable<GeneralMeetingAttendanceNote[]> {
+    return this.http.get<GeneralMeetingAttendanceNote[]>(this._getURLSegment() + '/' + memberId + '/meeting-comments-decision/' + caseId);
+  }
+
+  getDecisionMakerMeetingGeneralNotes(memberId: number, caseId?: string): Observable<GeneralMeetingAttendanceNote[]> {
+    return this._getDecisionMakerMeetingGeneralNotes(memberId, caseId);
   }
 
   @CastResponse(() => MeetingMemberTaskStatus, {
@@ -257,6 +298,16 @@ export class GeneralAssociationMeetingAttendanceService extends BaseGenericEServ
   openViewPointMembersCommentsDialog(membersComments: MeetingPointMemberComment[]): DialogRef {
     return this.dialog.show(MeetingPointMembersCommentsPopupComponent, {
       membersComments
+    });
+  }
+
+  openViewMemberCommentsAndNotesDialog(internalMember: GeneralAssociationInternalMember, meetingReport: MeetingAttendanceReport, generalNotes: GeneralMeetingAttendanceNote[], userId: number, meetingId: string): DialogRef {
+    return this.dialog.show(SpecificMemberCommentsAndNotesComponent, {
+      internalMember,
+      meetingReport,
+      generalNotes,
+      userId,
+      meetingId
     });
   }
 

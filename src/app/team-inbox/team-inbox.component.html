@@ -50,7 +50,7 @@
             <td cdk-cell *cdkCellDef="let row">
               <!--<a class="dir-ltr" [routerLink]="row.itemRoute"
                  [queryParams]="{item:row.itemDetails}">{{row.BD_FULL_SERIAL}}</a>-->
-              <span (click)="actionOpen(row)"
+              <span (click)="openTask(row)"
                     class="dir-ltr text-primary cursor-pointer text-decoration-underline">{{row.BD_FULL_SERIAL}}</span>
             </td>
           </ng-container>

@@ -1,5 +1,13 @@
 import {Component, ViewChild} from '@angular/core';
-import {AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, ValidatorFn} from '@angular/forms';
+import {
+  AbstractControl,
+  UntypedFormArray,
+  UntypedFormBuilder,
+  UntypedFormControl,
+  UntypedFormGroup,
+  ValidatorFn,
+  Validators
+} from '@angular/forms';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {SaveTypes} from '@app/enums/save-types';
 import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
@@ -116,7 +124,6 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   displayTemplateSerialField: boolean = false;
   displayDevGoals: boolean = false;
   isOutsideQatarWorkArea: boolean = false;
-  isDevelopmentField: boolean = false;
   isCharityProfile: boolean = false;
   isInstitutionProfile: boolean = false;
 
@@ -164,13 +171,13 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       name: 'projectAddressesTab',
       langKey: 'project_addresses',
       index: 5,
-      validStatus: () => (this.model && this.projectAddresses && this.projectAddresses.length > 0)
+      validStatus: () => this.isValidProjectAddresses()
     },
     foreignCountriesProjects: {
       name: 'foreignCountriesProjectsTab',
       langKey: 'project_model_foreign_countries_projects',
       index: 6,
-      validStatus: () => (this.model && this.pMForeignCountriesProjects && this.pMForeignCountriesProjects.length > 0)
+      validStatus: () => true
     },
     specialExplanations: {
       name: 'specialExplanationsTab',
@@ -192,9 +199,15 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     }
   };
 
+  isValidProjectAddresses() {
+    return (this.model && this.projectAddresses && this.projectAddresses.length > 0) || !this.showProjectAddressesTab
+  }
+
   getTabInvalidStatus(tabName: string): boolean {
     return !this.tabsData[tabName].validStatus();
   }
+
+  showProjectAddressesTab: boolean = false;
 
   constructor(public lang: LangService,
               public fb: UntypedFormBuilder,
@@ -280,10 +293,11 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
         projectTotalCost: [model.projectTotalCost, [CustomValidators.required, CustomValidators.decimal(2)]],
         componentList: this.fb.array([])
       }),
-      description: this.fb.control(model.description, CustomValidators.required)
+      description: this.fb.control(model.description, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)])
     });
 
     this.listenToExecutionFieldChange();
+    this.listenToIsConstructionalChange();
   }
 
   handleReadonly(): void {
@@ -357,15 +371,15 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
       return true;
     }
 
-    if (this.evaluationIndicators && this.evaluationIndicators.length < 1) {
-      this.dialog.error(this.lang.map.you_should_add_at_least_one_evaluation_indicator);
-      return false;
-    }
-
-    if (this.pMForeignCountriesProjects && this.pMForeignCountriesProjects.length < 1) {
-      this.dialog.error(this.lang.map.you_should_add_at_least_one_foreign_project_need);
-      return false;
-    }
+    // if (this.evaluationIndicators && this.evaluationIndicators.length < 1) {
+    //   this.dialog.error(this.lang.map.you_should_add_at_least_one_evaluation_indicator);
+    //   return false;
+    // }
+    //
+    // if (this.pMForeignCountriesProjects && this.pMForeignCountriesProjects.length < 1) {
+    //   this.dialog.error(this.lang.map.you_should_add_at_least_one_foreign_project_need);
+    //   return false;
+    // }
 
     const invalidTabs = this._getInvalidTabs();
     if (invalidTabs.length > 0) {
@@ -470,6 +484,10 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     this.pMForeignCountriesProjects = this.model?.foreignCountriesProjectList;
     this.projectAddresses = this.model?.projectAddressList;
     this.handleRequestTypeChange(model.requestType, false);
+
+    if(model.domain === DomainTypes.DEVELOPMENT) {
+      this.displayDevGoals = true;
+    }
   }
 
   _resetForm(): void {
@@ -503,6 +521,10 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
 
   get projectWorkArea(): AbstractControl {
     return this.form.get('basicInfo')?.get('projectWorkArea') as AbstractControl;
+  }
+
+  get isConstructional(): AbstractControl {
+    return this.form.get('basicInfo')?.get('isConstructional') as AbstractControl;
   }
 
   get projectTotalCostField(): AbstractControl {
@@ -772,17 +794,39 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   listenToExecutionFieldChange() {
     this.projectWorkArea.valueChanges.subscribe(val => {
       if (val === ExecutionFields.OutsideQatar) {
+        this.showProjectAddressesTab = this.isConstructional.value;
         this.removeQatarFromCountries();
         this.isOutsideQatarWorkArea = true;
         this.emptyFieldsAndValidation(['internalProjectClassification', 'sanadiDomain', 'sanadiMainClassification']);
       } else if (this.projectWorkArea.value === ExecutionFields.InsideQatar) {
+        this.hideProjectAddressesTabAndClearProjectAddressesList();
         this.applyNotOutsideQatarChanges();
         this.setQatarAsTheOnlyChoiceInCountries();
       } else {
+        this.hideProjectAddressesTabAndClearProjectAddressesList();
         this.countriesAvailableForSelection = this.countries;
         this.applyNotOutsideQatarChanges();
       }
-    })
+    });
+  }
+
+  listenToIsConstructionalChange() {
+    this.isConstructional.valueChanges.subscribe(val => {
+      if (val) {
+        if (this.projectWorkArea.value === ExecutionFields.OutsideQatar) {
+          this.showProjectAddressesTab = true;
+        } else {
+          this.hideProjectAddressesTabAndClearProjectAddressesList();
+        }
+      } else {
+        this.hideProjectAddressesTabAndClearProjectAddressesList();
+      }
+    });
+  }
+
+  hideProjectAddressesTabAndClearProjectAddressesList() {
+    this.showProjectAddressesTab = false;
+    this.projectAddresses = [];
   }
 
   applyNotOutsideQatarChanges() {
@@ -1045,7 +1089,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   buildEvaluationIndicatorForm(): void {
     this.evaluationIndicatorForm = this.fb.group({
       indicator: [null, [CustomValidators.required]],
-      percentage: [null, [CustomValidators.required, CustomValidators.decimal(2)]],
+      percentage: [null, [CustomValidators.required, Validators.max(100), CustomValidators.decimal(2)]],
       notes: [null]
     });
   }
