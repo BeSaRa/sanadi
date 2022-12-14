@@ -1,25 +1,27 @@
-import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {LangService} from '@app/services/lang.service';
-import {UntypedFormControl} from '@angular/forms';
-import {Team} from '@app/models/team';
-import {UserTeam} from '@app/models/user-team';
-import {AdminResult} from '@app/models/admin-result';
-import {TeamService} from '@app/services/team.service';
-import {ToastService} from '@app/services/toast.service';
-import {InternalUser} from '@app/models/internal-user';
-import {ExternalUser} from '@app/models/external-user';
-import {iif, of, Subject} from 'rxjs';
-import {IGridAction} from '@app/interfaces/i-grid-action';
-import {filter, map, share, switchMap, takeUntil} from 'rxjs/operators';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {TableComponent} from '@app/shared/components/table/table.component';
-import {DialogService} from '@app/services/dialog.service';
-import {SharedService} from '@app/services/shared.service';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {TeamSecurityConfigurationService} from '@app/services/team-security-configuration.service';
-import {UserSecurityConfigurationService} from '@app/services/user-security-configuration.service';
-import {TeamSecurityConfiguration} from '@app/models/team-security-configuration';
-import {CommonStatusEnum} from '@app/enums/common-status.enum';
+import { SubTeam } from './../../../models/sub-team';
+import { SubTeamService } from '@app/services/sub-team.service';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { LangService } from '@app/services/lang.service';
+import { UntypedFormControl } from '@angular/forms';
+import { Team } from '@app/models/team';
+import { UserTeam } from '@app/models/user-team';
+import { AdminResult } from '@app/models/admin-result';
+import { TeamService } from '@app/services/team.service';
+import { ToastService } from '@app/services/toast.service';
+import { InternalUser } from '@app/models/internal-user';
+import { ExternalUser } from '@app/models/external-user';
+import { iif, of, Subject } from 'rxjs';
+import { IGridAction } from '@app/interfaces/i-grid-action';
+import { filter, map, share, switchMap, takeUntil } from 'rxjs/operators';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { TableComponent } from '@app/shared/components/table/table.component';
+import { DialogService } from '@app/services/dialog.service';
+import { SharedService } from '@app/services/shared.service';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { TeamSecurityConfigurationService } from '@app/services/team-security-configuration.service';
+import { UserSecurityConfigurationService } from '@app/services/user-security-configuration.service';
+import { TeamSecurityConfiguration } from '@app/models/team-security-configuration';
+import { CommonStatusEnum } from '@app/enums/common-status.enum';
 
 @Component({
   selector: 'user-team',
@@ -28,13 +30,14 @@ import {CommonStatusEnum} from '@app/enums/common-status.enum';
 })
 export class UserTeamComponent implements OnInit, OnDestroy {
   selectedTeamsIds: number[] = [];
-  get displayedColumns() : string[] {
-    return this.readonly ? ['arName', 'enName', 'status'] :  ['checkbox', 'arName', 'enName', 'status', 'actions'];
+  get displayedColumns(): string[] {
+    return this.readonly ? ['arName', 'enName', 'status'] : ['checkbox', 'arName', 'enName', 'status', 'actions'];
   }
   filterControl: UntypedFormControl = new UntypedFormControl();
   selectedTeamControl: UntypedFormControl = new UntypedFormControl();
   teams: Team[] = [];
   userTeams: UserTeam[] = [];
+  subTeamsListBasedOnUserTeams: SubTeam[] = [];
   commonStatusEnum = CommonStatusEnum;
   userTeamsChanged$: Subject<UserTeam[]> = new Subject<UserTeam[]>();
   @Input()
@@ -58,12 +61,13 @@ export class UserTeamComponent implements OnInit, OnDestroy {
   ]
 
   constructor(public lang: LangService,
-              private toast: ToastService,
-              private dialog: DialogService,
-              private sharedService: SharedService,
-              private teamSecurityService: TeamSecurityConfigurationService,
-              private userSecurityService: UserSecurityConfigurationService,
-              public teamService: TeamService) {
+    private toast: ToastService,
+    private dialog: DialogService,
+    private sharedService: SharedService,
+    private teamSecurityService: TeamSecurityConfigurationService,
+    private userSecurityService: UserSecurityConfigurationService,
+    private subTeamService: SubTeamService,
+    public teamService: TeamService) {
   }
 
   ngOnDestroy(): void {
@@ -83,8 +87,15 @@ export class UserTeamComponent implements OnInit, OnDestroy {
   private listenToUserTeamsChange() {
     this.userTeamsChanged$
       .pipe(map(userTeams => this.userTeams = userTeams))
-      .subscribe((userTeams) => {
-        this.selectedTeamsIds = userTeams.map(userTeam => userTeam.teamId);
+      .pipe(
+        switchMap((userTeams) => {
+          this.selectedTeamsIds = userTeams.map(userTeam => userTeam.teamId);
+          return this.subTeamService.loadFilterByMainTeamAsLookups(this.selectedTeamsIds)
+        })
+      )
+      .subscribe((subTeams) => {
+        console.log(subTeams);
+        this.subTeamsListBasedOnUserTeams = subTeams;
       });
   }
 
@@ -125,7 +136,7 @@ export class UserTeamComponent implements OnInit, OnDestroy {
     addTeam$
       .pipe(takeUntil(this.destroy$))
       .subscribe((userTeam) => {
-        this.toast.success(this.lang.map.msg_create_x_success.change({x: userTeam.teamInfo.getName()}))
+        this.toast.success(this.lang.map.msg_create_x_success.change({ x: userTeam.teamInfo.getName() }))
         this.userTeamsChanged$.next(this.userTeams.concat([userTeam]));
         this.selectedTeamControl.setValue(null);
       });
@@ -166,20 +177,20 @@ export class UserTeamComponent implements OnInit, OnDestroy {
   toggleTeamUser(userTeam: UserTeam): void {
     userTeam.toggleStatus()
       .subscribe(() => {
-          let updatedTeams = this.userTeams.map(x=> {
-            if (x.id === userTeam.id){
-              x.status = 1 - userTeam.status; // toggling 1 and 0
-            }
-            return x;
-          })
-          this.userTeamsChanged$.next(updatedTeams);
-          this.toast.success(this.lang.map.msg_status_x_updated_success.change({x: userTeam.teamInfo.getName()}));
-        }
+        let updatedTeams = this.userTeams.map(x => {
+          if (x.id === userTeam.id) {
+            x.status = 1 - userTeam.status; // toggling 1 and 0
+          }
+          return x;
+        })
+        this.userTeamsChanged$.next(updatedTeams);
+        this.toast.success(this.lang.map.msg_status_x_updated_success.change({ x: userTeam.teamInfo.getName() }));
+      }
       )
   }
 
   deleteUserTeam(userTeam: UserTeam): void {
-    of(this.dialog.confirm(this.lang.map.msg_confirm_delete_x.change({x: userTeam.teamInfo.getName()})))
+    of(this.dialog.confirm(this.lang.map.msg_confirm_delete_x.change({ x: userTeam.teamInfo.getName() })))
       .pipe(takeUntil(this.destroy$))
       .pipe(switchMap(ref => ref.onAfterClose$))
       .pipe(filter((answer: UserClickOn) => answer === UserClickOn.YES))
@@ -187,10 +198,10 @@ export class UserTeamComponent implements OnInit, OnDestroy {
       .subscribe((result) => {
         // TODO : delete anything related to the teamId with the current user in the nex tab
         if (result) {
-          this.toast.success(this.lang.map.msg_delete_x_success.change({x: userTeam.teamInfo.getName()}))
+          this.toast.success(this.lang.map.msg_delete_x_success.change({ x: userTeam.teamInfo.getName() }))
           this.userTeamsChanged$.next(this.userTeams.filter(uTeam => uTeam.id !== userTeam.id))
         } else {
-          this.toast.error(this.lang.map.msg_delete_fail.change({x: userTeam.teamInfo.getName()}))
+          this.toast.error(this.lang.map.msg_delete_fail.change({ x: userTeam.teamInfo.getName() }))
         }
       })
   }

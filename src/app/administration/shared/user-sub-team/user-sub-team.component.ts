@@ -1,10 +1,10 @@
+import { UserTeam } from './../../../models/user-team';
 import { UserClickOn } from '@app/enums/user-click-on.enum';
 import { SubTeamService } from '@app/services/sub-team.service';
 import { SubTeam } from '@app/models/sub-team';
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { LangService } from '@app/services/lang.service';
 import { UntypedFormControl } from '@angular/forms';
-import { AdminResult } from '@app/models/admin-result';
 import { ToastService } from '@app/services/toast.service';
 import { InternalUser } from '@app/models/internal-user';
 import { ExternalUser } from '@app/models/external-user';
@@ -30,10 +30,11 @@ export class UserSubTeamComponent implements OnInit, OnDestroy {
   }
   filterControl: UntypedFormControl = new UntypedFormControl();
   selectedTeamControl: UntypedFormControl = new UntypedFormControl();
-  subTeams: SubTeam[] = [];
   userSubTeams: UserSubTeam[] = [];
   commonStatusEnum = CommonStatusEnum;
   userSubTeamsChanged$: Subject<UserSubTeam[]> = new Subject<UserSubTeam[]>();
+  @Input()
+  subTeams: SubTeam[] = [];
   @Input()
   readonly: boolean = false;
   @Input()
@@ -68,7 +69,6 @@ export class UserSubTeamComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.loadSubTeams();
     this.listenToUserSubTeamsChange();
     if (this.operation !== OperationTypes.CREATE) {
       this.loadUserSubTeams();
@@ -81,15 +81,6 @@ export class UserSubTeamComponent implements OnInit, OnDestroy {
       .subscribe((userSubTeams) => {
         this.selectedTeamsIds = userSubTeams.map(userSubTeam => userSubTeam.id);
       });
-  }
-
-  loadSubTeams(): void {
-    this.subTeamService.loadAsLookups()
-      .pipe(takeUntil(this.destroy$))
-      // .pipe(map(result => {
-      // return this.model.isInternal() ? result.filter(item => item.parentDeptId > -1) : result;
-      // }))
-      .subscribe((subTeams) => this.subTeams = subTeams);
   }
 
   loadUserSubTeams(): void {
@@ -111,14 +102,16 @@ export class UserSubTeamComponent implements OnInit, OnDestroy {
     // add sub team to the user
     const subTeam = new UserSubTeam().clone({
       generalUserId: this.model.generalUserId,
-      subTeamId: this.selectedTeamControl.value.id,
-      subTeamfo: AdminResult.createInstance(this.selectedTeamControl.value)
-    }).denormalize();
+      subTeamId: this.selectedTeamControl.value.id
+    })
     this.subTeamService
       .createSubTeamUserLink(subTeam)
-      .subscribe((userSubTeam) => {
-        this.toast.success(this.lang.map.msg_create_x_success.change({ x: userSubTeam.subTeamfo.getName() }))
-        this.userSubTeamsChanged$.next(this.userSubTeams.concat([userSubTeam]));
+      .subscribe(() => {
+        const st = this.subTeams.find(st => st.id == this.selectedTeamControl.value.id);
+        const uSubTeam = subTeam.clone(
+          { id: st?.id, status: st?.status, arName: st?.arName, enName: st?.enName })
+        this.userSubTeamsChanged$.next(this.userSubTeams.concat([uSubTeam]));
+        this.toast.success(this.lang.map.msg_create_x_success.change({ x: uSubTeam.getName() }))
         this.selectedTeamControl.setValue(null);
       });
   }
@@ -154,13 +147,13 @@ export class UserSubTeamComponent implements OnInit, OnDestroy {
           return x;
         })
         this.userSubTeamsChanged$.next(updatedTeams);
-        this.toast.success(this.lang.map.msg_status_x_updated_success.change({ x: userSubTeam.subTeamfo.getName() }));
+        this.toast.success(this.lang.map.msg_status_x_updated_success.change({ x: userSubTeam.getName() }));
       }
       )
   }
 
   deleteUserSubTeam(userSubTeam: UserSubTeam): void {
-    of(this.dialog.confirm(this.lang.map.msg_confirm_delete_x.change({ x: userSubTeam.subTeamfo.getName() })))
+    of(this.dialog.confirm(this.lang.map.msg_confirm_delete_x.change({ x: userSubTeam.getName() })))
       .pipe(takeUntil(this.destroy$))
       .pipe(switchMap(ref => ref.onAfterClose$))
       .pipe(filter((answer: UserClickOn) => answer === UserClickOn.YES))
@@ -168,10 +161,10 @@ export class UserSubTeamComponent implements OnInit, OnDestroy {
       .subscribe((result) => {
         // TODO : delete anything related to the subTeamId with the current user in the nex tab
         if (result) {
-          this.toast.success(this.lang.map.msg_delete_x_success.change({ x: userSubTeam.subTeamfo.getName() }))
+          this.toast.success(this.lang.map.msg_delete_x_success.change({ x: userSubTeam.getName() }))
           this.userSubTeamsChanged$.next(this.userSubTeams.filter(uSubTeam => uSubTeam.id !== userSubTeam.id))
         } else {
-          this.toast.error(this.lang.map.msg_delete_fail.change({ x: userSubTeam.subTeamfo.getName() }))
+          this.toast.error(this.lang.map.msg_delete_fail.change({ x: userSubTeam.getName() }))
         }
       })
   }

@@ -209,6 +209,13 @@ export abstract class CrudGenericService<T> implements CrudServiceInterface<T>, 
     return this.http.get<T[]>(this._getServiceURL() + '/lookup');
   }
 
+  @CastResponse(undefined, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  loadFilterByMainTeamAsLookups(teamsList: number[]): Observable<T[]> {
+    return this.http.post<T[]>(this._getServiceURL() + '/parent', teamsList);
+  }
   _parseObjectToQueryString(data: IKeyValue, myKey?: string): string {
     let queryString = [];
     for (const key in data) {

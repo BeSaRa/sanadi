@@ -1,5 +1,6 @@
+import { LangService } from './../services/lang.service';
+import { INames } from './../interfaces/i-names';
 import { UserSubTeamService } from './../services/user-sub-team.service';
-import { AdminResult } from "./admin-result";
 import { Cloneable } from "@app/models/cloneable";
 import { Observable } from "rxjs";
 import { FactoryService } from "@app/services/factory.service";
@@ -18,22 +19,21 @@ export class UserSubTeam extends Cloneable<UserSubTeam> {
   id!: number;
   generalUserId!: number;
   subTeamId!: number;
-  subTeamfo!: AdminResult;
   status!: number;
   // not related to the model
   arName?: string;
   enName?: string;
   service!: UserSubTeamService
+  langService!: LangService;
 
   constructor() {
     super();
     this.service = FactoryService.getService('UserSubTeamService');
+    this.langService = FactoryService.getService('LangService');
   }
 
-  denormalize(): UserSubTeam {
-    this.arName = this.subTeamfo.arName;
-    this.enName = this.subTeamfo.enName;
-    return this;
+  getName(): string | undefined {
+    return this[(this.langService.map.lang + 'Name') as keyof INames];
   }
 
   isActive(): boolean {
