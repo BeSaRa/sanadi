@@ -11,6 +11,7 @@ import {CdkDrag, CdkDragDrop, CdkDragEnter, CdkDragExit, CdkDropList, copyArrayI
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {MenuUrlValueContract} from '@contracts/menu-url-value-contract';
+import {ToastService} from '@services/toast.service';
 
 @Component({
   selector: 'custom-menu-url-handler',
@@ -27,6 +28,7 @@ export class CustomMenuUrlHandlerComponent implements OnInit, AfterViewInit {
               private fb: FormBuilder,
               private lookupService: LookupService,
               private dialogService: DialogService,
+              private toast: ToastService,
               private customMenuService: CustomMenuService) {
   }
 
@@ -90,8 +92,12 @@ export class CustomMenuUrlHandlerComponent implements OnInit, AfterViewInit {
     });
   }
 
-  checkUrlVariables(): void {
-    let newVariableList = this.customMenuService.findVariablesInUrl(this.menuUrlControl.value);
+  checkUrlVariables(userInteraction: boolean = false): void {
+    let newVariableList: string[] = this.customMenuService.findVariablesInUrl(this.menuUrlControl.value);
+    if (userInteraction && !newVariableList.length) {
+      this.toast.info(this.lang.map.msg_no_variables_found);
+      return;
+    }
     let duplicateVariablesList = this._getDuplicateVariables(newVariableList);
     if (duplicateVariablesList.length) {
       const listHtml = CommonUtils.generateHtmlList(this.lang.map.msg_duplicate_url_variables, duplicateVariablesList);

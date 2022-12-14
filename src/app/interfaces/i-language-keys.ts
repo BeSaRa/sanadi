@@ -1535,6 +1535,7 @@ export interface ILanguageKeys {
   menu_URL: string;
   check_url_variables: string;
   msg_duplicate_url_variables: string;
+  msg_no_variables_found: string;
   main_list: string;
   link_settings: string;
   sub_lists: string;
