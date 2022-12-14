@@ -1,3 +1,5 @@
+import { UserSubTeamService } from './user-sub-team.service';
+import { UserSubTeam } from './../models/user-sub-team';
 import { CommonStatusEnum } from '@app/enums/common-status.enum';
 import { SubTeamPopupComponent } from './../administration/popups/sub-team-popup/sub-team-popup.component';
 import { SubTeam } from './../models/sub-team';
@@ -37,6 +39,7 @@ export class SubTeamService extends CrudWithDialogGenericService<SubTeam> {
 
   constructor(public http: HttpClient,
     private urlService: UrlService,
+    private userSubTeamService: UserSubTeamService,
     public dialog: DialogService) {
     super();
     FactoryService.registerService('SubTeamService', this);
@@ -101,5 +104,22 @@ export class SubTeamService extends CrudWithDialogGenericService<SubTeam> {
         }));
       })
     );
+  }
+
+
+  createSubTeamUserLink(userSubTeam: Partial<UserSubTeam>): Observable<UserSubTeam> {
+    return this.userSubTeamService.createUserSubTeam(userSubTeam).pipe(map(id => new UserSubTeam().clone({
+      ...userSubTeam,
+      status: 1,
+      id
+    })));
+  }
+
+  loadUserSubTeamsByUserId(generalUserId: number) {
+    return this.userSubTeamService.loadUserSubTeamByUserId(generalUserId);
+  }
+
+  deleteUserSubTeamBulk(ids: number[]): Observable<Record<number, boolean>> {
+    return this.userSubTeamService.deleteBulk(ids);
   }
 }

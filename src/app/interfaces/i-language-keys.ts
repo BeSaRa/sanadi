@@ -1606,6 +1606,7 @@ export interface ILanguageKeys {
   available_values: string;
   menus: string;
   msg_no_menus_available: string;
+  link_sub_teams: string;
   menu_coordination_with_organizations_template: string;
   lbl_add_coordination_with_organizations_template: string;
   lbl_edit_coordination_with_organizations_template: string;

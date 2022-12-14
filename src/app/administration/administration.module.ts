@@ -1,3 +1,4 @@
+import { UserSubTeamComponent } from './shared/user-sub-team/user-sub-team.component';
 import {
   ProcessFieldWrapperComponent
 } from './popups/general-process-popup/process-formly-components/process-field-wrapper/process-field-wrapper.component';
@@ -123,6 +124,7 @@ import { DynamicModelPopupComponent } from './popups/dynamic-model-popup/dynamic
     SubTeamComponent,
     SubTeamPopupComponent,
     UserTeamComponent,
+    UserSubTeamComponent,
     UserSecurityComponent,
     SurveyQuestionComponent,
     SurveyQuestionPopupComponent,
