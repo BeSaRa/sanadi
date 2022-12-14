@@ -1,3 +1,4 @@
+import { Employment } from '@app/models/employment';
 import { IModelInterceptor } from '@app/interfaces/i-model-interceptor';
 import { InquirySearchCriteria } from '../models/inquiry-search-criteria';
 import { DateUtils } from '@app/helpers/date-utils';
@@ -30,6 +31,7 @@ import {
 } from '@app/search-criteria-interceptors/search-urgent-intervention-announcement-criteria-interceptor';
 import { ProjectModelInterceptor } from '@app/model-interceptors/project-model-interceptor';
 import { ForeignCountriesProjectsSearchCriteriaInterceptor } from '@app/search-criteria-interceptors/foreign-countries-projects-seach-criteria-interceptor';
+import { EmploymentSearchCriteriaInterceptor } from '@app/search-criteria-interceptors/employment-seach-criteria-interceptor';
 
 const interceptors: Map<number, IModelInterceptor<any>> = new Map<number, IModelInterceptor<any>>();
 
@@ -46,6 +48,7 @@ interceptors.set(CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE, new CustomsExemptionRem
 interceptors.set(CaseTypes.FUNDRAISING_LICENSING, new FundraisingInterceptor());
 interceptors.set(CaseTypes.URGENT_INTERVENTION_ANNOUNCEMENT, new SearchUrgentInterventionAnnouncementCriteriaInterceptor());
 interceptors.set(CaseTypes.FOREIGN_COUNTRIES_PROJECTS, new ForeignCountriesProjectsSearchCriteriaInterceptor());
+interceptors.set(CaseTypes.EMPLOYMENT, new EmploymentSearchCriteriaInterceptor());
 
 export class GeneralSearchCriteriaInterceptor implements IModelInterceptor<ICaseSearchCriteria> {
   // not important we will never use it

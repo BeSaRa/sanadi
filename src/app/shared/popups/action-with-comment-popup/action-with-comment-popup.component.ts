@@ -1,3 +1,5 @@
+import { FinalExternalOfficeApproval } from '@app/models/final-external-office-approval';
+import { LicenseDurationType } from '@app/enums/license-duration-type';
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { LangService } from '@app/services/lang.service';
 import { DIALOG_DATA_TOKEN } from '../../tokens/tokens';
@@ -292,7 +294,6 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .pipe(tap(customTerms => this.customTerms = customTerms));
   }
-
   openAddCustomTermDialog() {
     const customTerm = new CustomTerm().clone({ caseType: this.data.task.getCaseType() });
     this.dialog.show(CustomTermPopupComponent, {
@@ -305,6 +306,9 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
   onCustomTermsChange(customTerm: CustomTerm) {
     let appendTerm = this.customTermsField.value ? this.customTermsField.value + ' ' + customTerm.terms : customTerm.terms;
     this.customTermsField.setValue(appendTerm)
+  }
+  get hasLicenseDuration() {
+    return (this.data.task as FinalExternalOfficeApproval).licenseDurationType == LicenseDurationType.TEMPORARY
   }
 
   get canShowDeductionRatio(): boolean {

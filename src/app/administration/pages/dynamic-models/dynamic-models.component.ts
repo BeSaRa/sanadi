@@ -1,55 +1,54 @@
-import { DynamicModel } from '@app/models/dynamic-model';
-import { GeneralProcess } from '@app/models/genral-process';
-import { UserClickOn } from './../../../enums/user-click-on.enum';
-import { ToastService } from './../../../services/toast.service';
-import { SharedService } from './../../../services/shared.service';
-import { DialogService } from './../../../services/dialog.service';
-import { LangService } from './../../../services/lang.service';
-import { GeneralProcessService } from './../../../services/general-process.service';
+import { DynamicModel } from './../../../models/dynamic-model';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { DynamicModelService } from '@app/services/dynamic-models.service';
+import { CommonStatusEnum } from '@app/enums/common-status.enum';
+import { ActionIconsEnum } from '@app/enums/action-icons-enum';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
 import { AdminGenericComponent } from '@app/generics/admin-generic-component';
-import { DialogRef } from './../../../shared/models/dialog-ref';
-import { takeUntil, exhaustMap, catchError, filter, switchMap } from 'rxjs/operators';
-import { TableComponent } from './../../../shared/components/table/table.component';
-import { IMenuItem } from './../../../modules/context-menu/interfaces/i-menu-item';
-import { ActionIconsEnum } from './../../../enums/action-icons-enum';
-import { IGridAction } from './../../../interfaces/i-grid-action';
-import { CommonStatusEnum } from './../../../enums/common-status.enum';
-import { Component, ViewChild } from '@angular/core';
+import { IGridAction } from '@app/interfaces/i-grid-action';
+import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { DialogService } from '@app/services/dialog.service';
+import { LangService } from '@app/services/lang.service';
+import { SharedService } from '@app/services/shared.service';
+import { ToastService } from '@app/services/toast.service';
+import { TableComponent } from '@app/shared/components/table/table.component';
+import { DialogRef } from '@app/shared/models/dialog-ref';
 import { Subject, of } from 'rxjs';
+import { takeUntil, exhaustMap, catchError, switchMap, filter } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-general-process',
-  templateUrl: './general-process.component.html',
-  styleUrls: ['./general-process.component.scss']
+  selector: 'app-dynamic-models',
+  templateUrl: './dynamic-models.component.html',
+  styleUrls: ['./dynamic-models.component.scss']
 })
-export class GeneralProcessComponent extends AdminGenericComponent<GeneralProcess, GeneralProcessService> {
+export class DynamicModelsComponent extends AdminGenericComponent<DynamicModel, DynamicModelService> {
   usePagination = true;
-  list: GeneralProcess[] = [];
+  list: DynamicModel[] = [];
   commonStatusEnum = CommonStatusEnum;
   @ViewChild('table') table!: TableComponent;
-  view$: Subject<GeneralProcess> = new Subject<GeneralProcess>();
+  view$: Subject<DynamicModel> = new Subject<DynamicModel>();
 
-  actions: IMenuItem<GeneralProcess>[] = [
+  actions: IMenuItem<DynamicModel>[] = [
     // edit
     {
       type: 'action',
       label: 'btn_edit',
       icon: ActionIconsEnum.EDIT,
-      onClick: (item: GeneralProcess) => this.edit$.next(item)
+      onClick: (item: DynamicModel) => this.edit$.next(item)
     },
     // view
     {
       type: 'action',
       label: 'view',
       icon: ActionIconsEnum.VIEW,
-      onClick: (item: GeneralProcess) => this.view$.next(item)
+      onClick: (item: DynamicModel) => this.view$.next(item)
     },
     // activate
     {
       type: 'action',
       icon: ActionIconsEnum.STATUS,
       label: 'btn_activate',
-      onClick: (item: GeneralProcess) => this.toggleStatus(item),
+      onClick: (item: DynamicModel) => this.toggleStatus(item),
       displayInGrid: false,
       show: (item) => {
         return item.status !== CommonStatusEnum.RETIRED && item.status === CommonStatusEnum.DEACTIVATED;
@@ -60,7 +59,7 @@ export class GeneralProcessComponent extends AdminGenericComponent<GeneralProces
       type: 'action',
       icon: ActionIconsEnum.STATUS,
       label: 'btn_deactivate',
-      onClick: (item: GeneralProcess) => this.toggleStatus(item),
+      onClick: (item: DynamicModel) => this.toggleStatus(item),
       displayInGrid: false,
       show: (item) => {
         return item.status !== CommonStatusEnum.RETIRED && item.status === CommonStatusEnum.ACTIVATED;
@@ -78,7 +77,7 @@ export class GeneralProcessComponent extends AdminGenericComponent<GeneralProces
           langKey: 'btn_activate',
           icon: '',
           callback: ($event: MouseEvent, _data?: any) => this.changeStatusBulk($event, CommonStatusEnum.ACTIVATED),
-          show: (_items: GeneralProcess[]) => {
+          show: (_items: DynamicModel[]) => {
             return true;
           }
         },
@@ -86,32 +85,23 @@ export class GeneralProcessComponent extends AdminGenericComponent<GeneralProces
           langKey: 'btn_deactivate',
           icon: '',
           callback: ($event: MouseEvent, _data?: any) => this.changeStatusBulk($event, CommonStatusEnum.DEACTIVATED),
-          show: (_items: GeneralProcess[]) => {
+          show: (_items: DynamicModel[]) => {
             return true;
           }
         }
       ],
     }
   ];
+
   constructor(
     public lang: LangService,
-    public service: GeneralProcessService,
+    public service: DynamicModelService,
     private dialogService: DialogService,
     private sharedService: SharedService,
     private toast: ToastService
   ) {
     super();
   }
-  protected _init(): void {
-    this.listenToView();
-  }
-  afterReload(): void {
-    this.table && this.table.clearSelection();
-  }
-  get selectedRecords(): GeneralProcess[] {
-    return this.table.selection.selected;
-  }
-
   changeStatusBulk($event: MouseEvent, newStatus: CommonStatusEnum): void {
     const sub = this.service.updateStatusBulk(this.selectedRecords.map(item => item.id), newStatus)
       .subscribe((response) => {
@@ -121,6 +111,16 @@ export class GeneralProcessComponent extends AdminGenericComponent<GeneralProces
             sub.unsubscribe();
           });
       });
+  }
+
+  protected _init(): void {
+    this.listenToView();
+  }
+  afterReload(): void {
+    this.table && this.table.clearSelection();
+  }
+  get selectedRecords(): DynamicModel[] {
+    return this.table.selection.selected;
   }
 
   listenToView(): void {
@@ -134,7 +134,7 @@ export class GeneralProcessComponent extends AdminGenericComponent<GeneralProces
       .subscribe(() => this.reload$.next(null))
   }
 
-  toggleStatus(model: GeneralProcess) {
+  toggleStatus(model: DynamicModel) {
     let updateObservable = model.status == CommonStatusEnum.ACTIVATED ? model.updateStatus(CommonStatusEnum.DEACTIVATED) : model.updateStatus(CommonStatusEnum.ACTIVATED);
     updateObservable.pipe(takeUntil(this.destroy$))
       .subscribe(() => {

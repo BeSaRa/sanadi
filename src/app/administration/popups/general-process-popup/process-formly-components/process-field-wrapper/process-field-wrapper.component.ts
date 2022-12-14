@@ -5,6 +5,7 @@ import { FieldWrapper } from '@ngx-formly/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CustomFormlyFieldConfig } from '@app/interfaces/custom-formly-field-config';
+import { ProcessFieldBuilder } from '../process-fields-builder';
 
 @Component({
   selector: 'process-field-wrapper',
@@ -30,7 +31,7 @@ export class ProcessFieldWrapperComponent extends FieldWrapper<CustomFormlyField
     this.lang.onLanguageChange$.pipe(takeUntil(this.destroy$)).subscribe(() => this.cd.markForCheck());
   }
   details(field: CustomFormlyFieldConfig) {
-    this.generalProcessService.setlectField(field.id!);
+    ProcessFieldBuilder.setlectField(field.id!);
   }
   ngOnDestroy(): void {
     this.destroy$.next();

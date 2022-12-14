@@ -1,15 +1,16 @@
+import { TemplateFieldTypes } from '@app/enums/template-field-types.enum';
 import { CustomFormlyFieldConfig, ISelectOption } from '@contracts/custom-formly-field-config';
 import { FieldMode } from './../interfaces/custom-formly-field-config';
 import { of } from 'rxjs';
 import { IMyDateModel } from 'angular-mydatepicker';
 import { IKeyValue } from './../interfaces/i-key-value';
-import { GeneralProcessTemplateFieldTypes } from './../enums/general-process-template-field-types.enum';
 import { Cloneable } from '@app/models/cloneable';
 import { CustomValidators } from './../validators/custom-validators';
 import { INames } from '@contracts/i-names';
 import { LangService } from '@app/services/lang.service';
 import { FactoryService } from '@app/services/factory.service';
-export class GeneralProcessTemplate extends Cloneable<GeneralProcessTemplate>{
+import { CommonStatusEnum } from '@app/enums/common-status.enum';
+export class TemplateField extends Cloneable<TemplateField>{
   id!: string;
   identifyingName!: string;
   arName!: string;
@@ -24,6 +25,8 @@ export class GeneralProcessTemplate extends Cloneable<GeneralProcessTemplate>{
   options: IKeyValue[] = [];
   langService: LangService;
   value!: number | string | IMyDateModel;
+  status!: number;
+  showOnTable!: number;
   constructor() {
     super();
     this.langService = FactoryService.getService('LangService');
@@ -43,6 +46,8 @@ export class GeneralProcessTemplate extends Cloneable<GeneralProcessTemplate>{
       required,
       pattern,
       type,
+      status,
+      showOnTable
     } = this;
     return {
       identifyingName: [identifyingName, [
@@ -68,6 +73,8 @@ export class GeneralProcessTemplate extends Cloneable<GeneralProcessTemplate>{
       order: [order, [CustomValidators.required]],
       pattern: [pattern, []],
       note: [note, [CustomValidators.required]],
+      status: [status],
+      showOnTable: [showOnTable]
     }
   }
 
@@ -82,18 +89,19 @@ export class GeneralProcessTemplate extends Cloneable<GeneralProcessTemplate>{
       arName,
       enName,
       mask,
-      value
+      value,
+      status
     } = this;
     let selectOptions: ISelectOption = {
       bindValue: 'id',
       bindLabel: 'name',
       options: options
     };
-    const classes = type == GeneralProcessTemplateFieldTypes.textarea ? 'col-12' : 'col-12 col-md-4'
+    const classes = type == TemplateFieldTypes.textarea ? 'col-12' : 'col-12 col-md-4'
     const field = {
       id: id,
       key: id,
-      type: GeneralProcessTemplateFieldTypes[type],
+      type: TemplateFieldTypes[type],
       label: new ILabel(arName, enName),
       className: classes,
       templateOptions: {
@@ -101,7 +109,7 @@ export class GeneralProcessTemplate extends Cloneable<GeneralProcessTemplate>{
         pattern: pattern,
         rows: 3,
         options: of(options),
-        readonly: mode == 'view',
+        readonly: mode == 'view' || status == CommonStatusEnum.DEACTIVATED,
       },
       selectOptions,
       mode,

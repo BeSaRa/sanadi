@@ -40,7 +40,7 @@ export class ForeignCountriesProjects extends _RequestType<ForeignCountriesProje
   organizationId!: number;
   country!: number;
   countryInfo!: AdminResult;
-  projectNeeds!: ProjectNeeds;
+  projectNeeds: ProjectNeeds = [];
   oldLicenseId!: string;
   oldLicenseSerial!: number;
   oldLicenseFullSerial!: string;

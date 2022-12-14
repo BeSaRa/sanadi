@@ -30,7 +30,7 @@
               asteriskIfRequired="totalCost"
               for="totalCost"
               class="form-label"
-            >{{ lang.map.total_cost }}</label
+            >{{ lang.map.total_cost }} ({{lang.map.currency_usd}})</label
             >
             <input id="totalCost"
                    validationClasses="totalCost"
@@ -89,7 +89,7 @@
               class="form-label"
               asteriskIfRequired="beneficiaries"
               for="beneficiaries"
-            >{{ lang.map.lbl_beneficiaries }}</label
+            >{{ lang.map.lbl_beneficiaries_nature }}</label
             >
             <textarea name="beneficiaries"
                       formControlName="beneficiaries"
@@ -148,12 +148,12 @@
   </ng-container>
 
   <ng-container cdkColumnDef="beneficiaries">
-    <th cdk-header-cell *cdkHeaderCellDef>{{ lang.map.lbl_beneficiaries }}</th>
+    <th cdk-header-cell *cdkHeaderCellDef>{{ lang.map.lbl_beneficiaries_nature }}</th>
     <td cdk-cell *cdkCellDef="let row">{{ row.beneficiaries }}</td>
     <td cdk-footer-cell *cdkFooterCellDef></td>
   </ng-container>
   <ng-container cdkColumnDef="goals">
-    <th cdk-header-cell *cdkHeaderCellDef>{{ lang.map.goals }}</th>
+    <th cdk-header-cell *cdkHeaderCellDef>{{ lang.map.project_goals }}</th>
     <td cdk-cell *cdkCellDef="let row">{{ row.goals }}</td>
     <td cdk-footer-cell *cdkFooterCellDef></td>
   </ng-container>

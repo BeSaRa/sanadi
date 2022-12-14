@@ -50,7 +50,7 @@ export class ResearchAndStudiesComponent implements OnInit {
   @Input() readonly: boolean = false;
   @Input() pageTitleKey: keyof ILanguageKeys = 'research_and_studies';
   @Input() canUpdate:boolean=true;
-  @Input()isClaimed:boolean=false;
+  @Input() isClaimed:boolean=false;
 
   listDataSource: BehaviorSubject<ResearchAndStudies[]> = new BehaviorSubject<
     ResearchAndStudies[]

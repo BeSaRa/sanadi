@@ -55,6 +55,7 @@ export class NpoManagementComponent extends EServicesGenericComponent<
 NpoManagement,
 NpoManagementService
 > {
+  NPORequestTypes = NPORequestType;
   NPORequestTypesList: Lookup[] = this.lookupService.listByCategory.NPORequestType.slice().sort((a, b) => a.lookupKey - b.lookupKey);
   activityTypesList: AdminLookup[] = [];
   bankList: Bank[] = [];
@@ -186,7 +187,7 @@ NpoManagementService
       this.registrationAuthoritiesList = data
     })
     this.npoDataService.loadActiveAsLookup().subscribe(data => {
-      this.NpoList = data
+      this.NpoList = data.filter(npo => !this.isRegistrationAuthority || npo.profileInfo.registrationAuthority == this.employeeService.getProfile()?.id)
     })
     this.bankService.loadAsLookups().subscribe((data) => {
       this.bankList = data;
@@ -194,7 +195,7 @@ NpoManagementService
     this.adminLookupService.loadAsLookups(AdminLookupTypeEnum.ACTIVITY_TYPE).subscribe((data: never[] | AdminLookup[]) => {
       this.activityTypesList = data;
     })
-    if (this.isRegistrationAuthority)
+    if (this.nonProfitOrg)
       this.npoIdField.setValue(
         this.employeeService.getProfile()?.profileDetails.entityId
       );
@@ -304,7 +305,7 @@ NpoManagementService
           this.requestTypeField.setValue(requestTypeValue);
           this.handleReadonly();
           if (this.isNew) {
-            if (this.isRegistrationAuthority) {
+            if (this.nonProfitOrg) {
               this.loadOrganizationData();
             }
           } else if (this.requestTypeField.value && this.npoIdField.value) {
@@ -345,7 +346,7 @@ NpoManagementService
   loadOrganizationData() {
     this.npoDataService.loadCompositeById(this.npoIdField.value)
       .subscribe((data: any) => {
-        if (this.isRegistrationAuthority && this.isNew)
+        if (this.nonProfitOrg && this.isNew)
           this.registrationAuthorityField.setValue(data.profileInfo?.registrationAuthority);
         else
           this.setSelectedLicense(data)
@@ -542,8 +543,12 @@ NpoManagementService
   get userProfile() {
     return this.employeeService.getProfile()
   }
-  get isRegistrationAuthority() {
+
+  get nonProfitOrg() {
     return this.employeeService.getProfile()?.profileType == ProfileTypes.NON_PROFIT_ORGANIZATIONS
+  }
+  get isRegistrationAuthority() {
+    return this.employeeService.getProfile()?.profileType == ProfileTypes.REGISTERED_ENTITIES
   }
   get isViewOnly() {
     return this.isClearance || this.isDisbandment || this.isCancel

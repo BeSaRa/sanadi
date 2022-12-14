@@ -1607,6 +1607,11 @@ export interface ILanguageKeys {
   menus: string;
   msg_no_menus_available: string;
   link_sub_teams: string;
+  menu_coordination_with_organizations_template: string;
+  lbl_add_coordination_with_organizations_template: string;
+  lbl_edit_coordination_with_organizations_template: string;
+  btn_hide_from_table: string;
+  btn_show_on_table: string;
   parent_number: string;
   tenant_number: string;
   last_invoice_date: string;
@@ -1619,5 +1624,6 @@ export interface ILanguageKeys {
   states: string;
   license_duration_type: string;
   office_type: string;
+  lbl_beneficiaries_nature: string;
 }
 

@@ -1,3 +1,5 @@
+import { CoordinationWithOrganizationTemplate } from './../models/corrdination-with-organization-template';
+import { CoordinationWithOrganizationTemplateInterceptor } from './coordination-with-organization-template-interceptor';
 import { DateUtils } from '@app/helpers/date-utils';
 import { isValidAdminResult } from '@app/helpers/utils';
 import { IModelInterceptor } from '@app/interfaces/i-model-interceptor';
@@ -18,6 +20,7 @@ const participatingOrgInterceptor = new ParticipatingOrgInterceptor();
 const buildinAbilityInterceptor = new BuildingAbilityInterceptor();
 const effectiveCoordinationInterceptor = new EffectiveCoordinationInterceptor();
 const researchAndStudiesInterceptor = new ResearchAndStudiesInterceptor();
+const coordinationWithOrganizationTemplateInterceptor = new CoordinationWithOrganizationTemplateInterceptor();
 export class CoordinationWithOrganizationsRequestInterceptor
   implements IModelInterceptor<CoordinationWithOrganizationsRequest>
 {
@@ -67,6 +70,14 @@ export class CoordinationWithOrganizationsRequestInterceptor
           item
         ) as unknown as ResearchAndStudies;
       }));
+    model.temporaryTemplateList &&
+      (model.temporaryTemplateList = model.temporaryTemplateList.map((item) => {
+        return coordinationWithOrganizationTemplateInterceptor.send(
+          item
+        ) as unknown as CoordinationWithOrganizationTemplate;
+      }));
+
+
     delete model.service;
     delete model.caseStatusInfo;
     delete model.creatorInfo;
@@ -79,6 +90,7 @@ export class CoordinationWithOrganizationsRequestInterceptor
     delete model.buildingAbilitiesList;
     delete model.effectiveCoordinationCapabilities;
     delete model.researchAndStudies;
+    delete model.templateList;
     return model;
   }
   receive(
@@ -106,8 +118,8 @@ export class CoordinationWithOrganizationsRequestInterceptor
           new ParticipantOrg().clone(item)
         );
       }
-      )??[];
-    model.organizaionOfficerList =model.organizaionOfficerList?? [];
+    ) ?? [];
+    model.organizaionOfficerList = model.organizaionOfficerList ?? [];
     model.buildingAbilitiesList = model.buildingAbilitiesList?.map((item) => {
       return buildinAbilityInterceptor.receive(
         new BuildingAbility().clone(item)
@@ -118,15 +130,20 @@ export class CoordinationWithOrganizationsRequestInterceptor
         return effectiveCoordinationInterceptor.receive(
           new EffectiveCoordinationCapabilities().clone(item)
         );
-      })?? [];
+      }) ?? [];
     model.researchAndStudies =
       model.researchAndStudies?.map((item) => {
         return researchAndStudiesInterceptor.receive(
           new ResearchAndStudies().clone(item)
         );
-      })??[];
-
-     model.temporaryOrganizaionOfficerList =model.temporaryOrganizaionOfficerList?? [];
+      }) ?? [];
+    model.templateList =
+      model.templateList?.map((item) => {
+        return coordinationWithOrganizationTemplateInterceptor.receive(
+          new CoordinationWithOrganizationTemplate().clone(item)
+        );
+      }) ?? [];
+    model.temporaryOrganizaionOfficerList = model.temporaryOrganizaionOfficerList ?? [];
     model.temporaryBuildingAbilitiesList = model.temporaryBuildingAbilitiesList?.map((item) => {
       return buildinAbilityInterceptor.receive(
         new BuildingAbility().clone(item)
@@ -137,13 +154,18 @@ export class CoordinationWithOrganizationsRequestInterceptor
         return effectiveCoordinationInterceptor.receive(
           new EffectiveCoordinationCapabilities().clone(item)
         );
-      })?? [];
+      }) ?? [];
     model.temporaryResearchAndStudies =
       model.temporaryResearchAndStudies?.map((item) => {
         return researchAndStudiesInterceptor.receive(
           new ResearchAndStudies().clone(item)
         );
-      })??[];
+      }) ?? [];
+    model.temporaryTemplateList = model.temporaryTemplateList?.map((item) => {
+      return coordinationWithOrganizationTemplateInterceptor.receive(
+        new CoordinationWithOrganizationTemplate().clone(item)
+      );
+    }) ?? [];
     return model;
   }
 
