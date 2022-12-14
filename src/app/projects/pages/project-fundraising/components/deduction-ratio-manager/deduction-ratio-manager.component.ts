@@ -34,6 +34,8 @@ export class DeductionRatioManagerComponent implements OnInit, OnDestroy {
   maskPattern = CustomValidators.inputMaskPatterns;
   totalDeductionRatio: number = 0;
   @Input()
+  readonly: boolean = false;
+  @Input()
   checkForTemplate: boolean = false;
   clearItems$: Subject<boolean> = new Subject()
 
@@ -79,7 +81,7 @@ export class DeductionRatioManagerComponent implements OnInit, OnDestroy {
   }
 
   private generateFormArray(): void {
-    this.model.deductedPercentagesItemList.forEach(item => this.list.push(item.deductionPercent))
+    this.model.deductedPercentagesItemList.forEach(item => this.list.push(this.addController(item.deductionType, item.deductionPercent)))
   }
 
   ngOnDestroy(): void {
@@ -196,7 +198,9 @@ export class DeductionRatioManagerComponent implements OnInit, OnDestroy {
   }
 
   private calculateTotalAdminDeduction(): number {
-    return this.totalAdminRatio = (this.totalDeductionRatio * this.model.projectTotalCost) / 100
+    this.totalAdminRatio = (this.totalDeductionRatio * this.model.projectTotalCost) / 100;
+    this.model.setTargetAmount(this.totalAdminRatio + this.model.projectTotalCost);
+    return this.totalAdminRatio;
   }
 
   removeItem(item: DeductedPercentage, index: number) {

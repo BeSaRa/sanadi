@@ -27,10 +27,10 @@ import {DeductionRatioItemService} from "@services/deduction-ratio-item.service"
   providedIn: 'root'
 })
 export class ProjectFundraisingService extends BaseGenericEService<ProjectFundraising> {
-  jsonSearchFile: string = '';
+  jsonSearchFile: string = 'project_fundraising_search.json';
   serviceKey: keyof ILanguageKeys = 'menu_projects_fundraising';
   caseStatusIconMap: Map<number, string> = new Map<number, string>();
-  searchColumns: string[] = [];
+  searchColumns: string[] = ['fullSerial', 'requestTypeInfo', 'createdOn', 'caseStatus', 'ouInfo'];
 
   constructor(public http: HttpClient,
               public domSanitizer: DomSanitizer,
@@ -51,7 +51,7 @@ export class ProjectFundraisingService extends BaseGenericEService<ProjectFundra
   }
 
   getSearchCriteriaModel<S extends ProjectFundraising>(): ProjectFundraising {
-    throw new Error('Method not implemented.');
+    return new ProjectFundraising();
   }
 
   getCaseComponentName(): string {

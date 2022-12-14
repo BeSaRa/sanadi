@@ -5,12 +5,15 @@
   <div class="col-md-4 col-sm-12 mb-4 position-relative">
     <div class="d-flex align-items-end gap-2">
       <div class="flex-grow-1">
-        <ng-select [formControl]="item" appendTo="body" [clearable]="true" id="selectedDeductionItem">
+        <ng-select [formControl]="item" appendTo="body" [clearable]="true" id="selectedDeductionItem"
+                   placeholder="{{lang.map.select}}"
+                   [notFoundText]="lang.map.msg_not_found"
+                   [readonly]="readonly">
           <ng-option [disabled]="itemExists(option.id)" [value]="option"
                      *ngFor="let option of deductionRatioItems">{{option.getName(lang.map.lang)}}</ng-option>
         </ng-select>
       </div>
-      <button (click)="addItem()" [disabled]="!item.value" class="btn btn-primary">{{lang.map.btn_add}}</button>
+      <button (click)="!readonly && addItem()" [disabled]="readonly || !item.value" class="btn btn-primary">{{lang.map.btn_add}}</button>
     </div>
   </div>
 </div>
@@ -35,7 +38,7 @@
           <!--          <span>{{row.deductionPercent}}</span>-->
           <ng-container [formGroupName]="i">
             <input [mask]="maskPattern.PERCENT" suffix="%" [dropSpecialCharacters]="false" style="width:100px"
-                   id="field_name_{{i}}"
+                   id="field_name_{{i}}" [readonly]="readonly"
                    formControlName="value"
                    class="form-control form-control-sm">
           </ng-container>
@@ -44,7 +47,7 @@
       <ng-container cdkColumnDef="actions">
         <th cdk-header-cell style="width:100px" *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
         <td cdk-cell *cdkCellDef="let row; let i = index">
-          <button (click)="removeItem(row , i)" [tooltip]="lang.map.btn_remove" class="btn icon-btn">
+          <button [disabled]="readonly" (click)="!readonly && removeItem(row , i)" [tooltip]="lang.map.btn_remove" class="btn icon-btn">
             <i class="mdi text-primary mdi-trash-can"></i>
           </button>
         </td>
@@ -92,6 +95,22 @@
           </div>
         </th>
       </ng-container>
+      <ng-container cdkColumnDef="targetAmountCell">
+        <th cdk-footer-cell colspan="2" *cdkFooterCellDef>
+          <div class="d-flex align-items-center justify-content-end">
+            <span
+              class="h6 mb-0">{{lang.map.target_amount  }}</span>
+          </div>
+        </th>
+      </ng-container>
+      <ng-container cdkColumnDef="targetAmountCellValue">
+        <th cdk-footer-cell colspan="2" *cdkFooterCellDef>
+          <div class="d-flex align-items-center">
+            <span
+              class="h6 mb-0">{{model.targetAmount | mask : maskPattern.SEPARATOR: maskPattern.THOUSAND_SEPARATOR}}</span>
+          </div>
+        </th>
+      </ng-container>
       <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="displayedColumns"></tr>
       <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
       <tr cdk-footer-row class="table-row-header"
@@ -100,6 +119,8 @@
           *cdkFooterRowDef="['projectTotalCost','projectTotalCostValue'];"></tr>
       <tr cdk-footer-row class="table-row-header"
           *cdkFooterRowDef="['adminDeductionTotalCell','adminDeductionTotalCellValue'];"></tr>
+      <tr cdk-footer-row class="table-row-header"
+          *cdkFooterRowDef="['targetAmountCell','targetAmountCellValue'];"></tr>
       <tr *cdkNoDataRow>
         <td colspan="20">{{lang.map.no_records_to_display}}</td>
       </tr>

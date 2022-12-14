@@ -59,6 +59,7 @@ import { CastResponse } from '@decorators/cast-response';
 import { UrgentInterventionLicenseFollowupService } from '@services/urgent-intervention-license-followup.service';
 import { CharityOrganizationUpdateService } from './charity-organization-update.service';
 import { ILanguageKeys } from '@app/interfaces/i-language-keys';
+import {ProjectFundraisingService} from "@services/project-fundraising.service";
 
 @Injectable({
   providedIn: 'root'
@@ -99,6 +100,7 @@ export class InboxService {
     private charityUpdateService: CharityOrganizationUpdateService,
     private awarenessActivitySuggestionService: AwarenessActivitySuggestionService,
     private generalProcessNotificationService: GeneralProcessNotificationService,
+    private projectFundraisingService: ProjectFundraisingService,
     private generalAssociationMeetingAttendanceService: GeneralAssociationMeetingAttendanceService) {
     FactoryService.registerService('InboxService', this);
     // register all e-services that we need.
@@ -131,6 +133,7 @@ export class InboxService {
     this.services.set(CaseTypes.GENERAL_PROCESS_NOTIFICATION, this.generalProcessNotificationService);
     this.services.set(CaseTypes.CHARITY_ORGANIZATION_UPDATE, this.charityUpdateService);
     this.services.set(CaseTypes.AWARENESS_ACTIVITY_SUGGESTION, this.awarenessActivitySuggestionService);
+    this.services.set(CaseTypes.PROJECT_FUNDRAISING, this.projectFundraisingService);
   }
 
   @CastResponse(() => QueryResultSet)

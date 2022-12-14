@@ -10,6 +10,7 @@ import {AmountOverYear} from "@app/models/amount-over-year";
 import {AmountOverCountry} from "@app/models/amount-over-country";
 import {ProjectFundraisingInterceptor} from "@app/model-interceptors/project-fundraising-interceptor";
 import {InterceptModel} from "@decorators/intercept-model";
+import {EmployeeService} from "@services/employee.service";
 
 const {send, receive} = new ProjectFundraisingInterceptor()
 
@@ -70,11 +71,24 @@ export class ProjectFundraising extends CaseModel<ProjectFundraisingService, Pro
   requestTypeInfo!: AdminResult
   inRenewalPeriod!: boolean
   usedInProjectCompletion!: boolean
-  licenseClassName!: string
+  licenseClassName!: string;
+
+  // extra properties
+  employeeService: EmployeeService;
 
   constructor() {
     super();
-    this.service = FactoryService.getService('ProjectFundraisingService')
+    this.service = FactoryService.getService('ProjectFundraisingService');
+    this.employeeService = FactoryService.getService('EmployeeService');
+    this.finalizeSearchFields();
+  }
+
+  finalizeSearchFields(): void {
+    if (this.employeeService.isExternalUser()) {
+      delete this.searchFields.ouInfo;
+      delete this.searchFields.organizationId;
+      delete this.searchFields.organization;
+    }
   }
 
   buildBasicInfo(controls: boolean = false): any {
@@ -156,12 +170,27 @@ export class ProjectFundraising extends CaseModel<ProjectFundraisingService, Pro
     return this;
   }
 
+  removeYear(year: AmountOverYear): ProjectFundraising {
+    this.amountOverYearsList = this.amountOverYearsList.filter(item => !(year.targetAmount === item.targetAmount && year.year === item.year))
+    return this;
+  }
+
   clearDeductionItems(): void {
     this.deductedPercentagesItemList = []
   }
 
-  setProjectTotalCoast(coast: number): ProjectFundraising {
-    this.projectTotalCost = coast
+  setProjectTotalCost(cost: number): ProjectFundraising {
+    this.projectTotalCost = cost
+    return this
+  }
+
+  setTargetAmount(cost: number): ProjectFundraising {
+    this.targetAmount = cost
+    return this
+  }
+
+  addYear(value: AmountOverYear): ProjectFundraising {
+    this.amountOverYearsList = this.amountOverYearsList.concat([value])
     return this
   }
 }

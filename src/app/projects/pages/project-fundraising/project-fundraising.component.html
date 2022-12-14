@@ -5,19 +5,23 @@
     <tab name="templates" [template]="template_deduction_ratio_info"
          [title]="lang.map.template_deduction_ratio_info">
     </tab>
-    <tab [hasError]="specialExplanation.invalid" name="special_explanations" [template]="special_explanations"
+    <tab [hasError]="specialExplanation.invalid" name="special_explanations" [template]="specialExplanations"
          [title]="lang.map.special_explanations"></tab>
     <tab name="attachments" *ngIf="!accordionView" [template]="attachmentsTab" [title]="lang.map.attachments"></tab>
   </tabs-list>
-  <ng-template #basic_info>
-    <ng-container [formGroup]="form">
+  <ng-container [formGroup]="form">
+    <ng-template #basic_info>
       <ng-container formGroupName="basicInfo">
         <div class="row">
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="requestType"
                    for="requestType">{{lang.map.request_type}}</label>
-            <ng-select validationClasses="requestType" appendTo="body" [clearable]="true" id="requestType"
-                       formControlName="requestType">
+            <ng-select [selectOnTab]="true" labelForId="requestType" [clearable]="true"
+                       placeholder="{{lang.map.select}}" id="requestType"
+                       (change)="handleRequestTypeChange($event, true)"
+                       [notFoundText]="lang.map.msg_not_found"
+                       [readonly]="!isEditRequestTypeAllowed()"
+                       formControlName="requestType" validationClasses="requestType">
               <ng-option [value]="option.lookupKey" *ngFor="let option of requestTypes">{{option.getName()}}</ng-option>
             </ng-select>
             <app-field-error-message controlName="requestType"></app-field-error-message>
@@ -25,8 +29,13 @@
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="permitType"
                    for="permitType">{{lang.map.permit_type}}</label>
-            <ng-select validationClasses="permitType" appendTo="body" [clearable]="true" id="permitType"
-                       formControlName="permitType">
+            <ng-select [selectOnTab]="true" validationClasses="permitType"
+                       labelForId="permitType"
+                       placeholder="{{lang.map.select}}"
+                       [notFoundText]="lang.map.msg_not_found"
+                       appendTo="body" [clearable]="true" id="permitType"
+                       formControlName="permitType"
+                       [readonly]="(isExtendOrCancelRequestType() || readonly)">
               <ng-option [value]="option.lookupKey" *ngFor="let option of permitTypes">{{option.getName()}}</ng-option>
             </ng-select>
             <app-field-error-message controlName="permitType"></app-field-error-message>
@@ -39,23 +48,33 @@
               <!--              *ngIf="isEditLicenseAllowed()"-->
               <!--              (click)="licenseSearch($event)"-->
               <!--              [readOnly]="!isEditLicenseAllowed()"-->
-              <input
-                formControlName="oldLicenseFullSerial"
-                type="text" validationClasses="oldLicenseFullSerial" class="form-control"
-                id="oldLicenseFullSerial" trimInput>
-              <button type="button"
+              <input [readonly]="!isEditLicenseAllowed()"
+                     formControlName="oldLicenseFullSerial"
+                     type="text" validationClasses="oldLicenseFullSerial" class="form-control"
+                     id="oldLicenseFullSerial" trimInput>
+              <button type="button" *ngIf="isEditLicenseAllowed()"
                       class="input-group-text">
                 <i class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i></button>
               <app-field-error-message controlName="oldLicenseFullSerial"></app-field-error-message>
             </div>
           </div>
         </div>
+        <div *ngIf="selectedLicense">
+          <selected-license-table [caseType]="caseTypes.PROJECT_FUNDRAISING"
+                                  [caseTypeViewLicense]="caseTypes.PROJECT_FUNDRAISING"
+                                  [licenseList]="[selectedLicense]"
+                                  [columns]="service.selectLicenseDisplayColumns"></selected-license-table>
+        </div>
         <div class="row">
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="projectWorkArea"
                    for="projectWorkArea">{{lang.map.project_work_area}}</label>
             <ng-select validationClasses="projectWorkArea" appendTo="body" [clearable]="true" id="projectWorkArea"
-                       formControlName="projectWorkArea">
+                       formControlName="projectWorkArea"
+                       labelForId="projectWorkArea"
+                       placeholder="{{lang.map.select}}"
+                       [notFoundText]="lang.map.msg_not_found"
+                       [readonly]="(isExtendOrCancelRequestType() || readonly)">
               <ng-option [value]="option.lookupKey"
                          *ngFor="let option of projectWorkAreas">{{option.getName()}}</ng-option>
             </ng-select>
@@ -65,7 +84,11 @@
             <label class="form-label" asteriskIfRequired="countries"
                    for="countries">{{lang.map.country_countries}}</label>
             <ng-select [multiple]="true" validationClasses="countries" appendTo="body" [clearable]="true" id="countries"
-                       formControlName="countries">
+                       formControlName="countries"
+                       labelForId="countries"
+                       placeholder="{{lang.map.select}}"
+                       [notFoundText]="lang.map.msg_not_found"
+                       [readonly]="(isExtendOrCancelRequestType() || readonly)">
               <ng-option [disabled]="checkCountryDisabled(option)" [value]="option.id"
                          *ngFor="let option of countries">{{option.getName()}}</ng-option>
             </ng-select>
@@ -77,7 +100,11 @@
             <label class="form-label" asteriskIfRequired="domain"
                    for="domain">{{lang.map.domain}}</label>
             <ng-select validationClasses="domain" appendTo="body" [clearable]="true" id="domain"
-                       formControlName="domain">
+                       formControlName="domain"
+                       labelForId="domain"
+                       placeholder="{{lang.map.select}}"
+                       [notFoundText]="lang.map.msg_not_found"
+                       [readonly]="(isExtendOrCancelRequestType() || readonly)">
               <ng-option [value]="option.lookupKey" *ngFor="let option of domains">{{option.getName()}}</ng-option>
             </ng-select>
             <app-field-error-message [ignoreTop]="true" controlName="domain"></app-field-error-message>
@@ -89,7 +116,11 @@
                   <label class="form-label" asteriskIfRequired="mainDACCategory"
                          for="mainDACCategory">{{lang.map.main_dac_category}}</label>
                   <ng-select validationClasses="mainDACCategory" appendTo="body" [clearable]="true" id="mainDACCategory"
-                             formControlName="mainDACCategory">
+                             formControlName="mainDACCategory"
+                             labelForId="mainDACCategory"
+                             placeholder="{{lang.map.select}}"
+                             [notFoundText]="lang.map.msg_not_found"
+                             [readonly]="(isExtendOrCancelRequestType() || readonly)">
                     <ng-option [value]="option.id"
                                *ngFor="let option of mainDacCategories">{{option.getName()}}</ng-option>
                   </ng-select>
@@ -99,7 +130,11 @@
                   <label class="form-label" asteriskIfRequired="subDACCategory"
                          for="subDACCategory">{{lang.map.sub_dac_category}}</label>
                   <ng-select validationClasses="subDACCategory" appendTo="body" [clearable]="true" id="subDACCategory"
-                             formControlName="subDACCategory">
+                             formControlName="subDACCategory"
+                             labelForId="subDACCategory"
+                             placeholder="{{lang.map.select}}"
+                             [notFoundText]="lang.map.msg_not_found"
+                             [readonly]="(isExtendOrCancelRequestType() || readonly)">
                     <ng-option [value]="option.id"
                                *ngFor="let option of subDacCategories">{{option.getName()}}</ng-option>
                   </ng-select>
@@ -112,7 +147,11 @@
                          for="mainUNOCHACategory">{{lang.map.main_unocha_category}}</label>
                   <ng-select validationClasses="mainUNOCHACategory" appendTo="body" [clearable]="true"
                              id="mainUNOCHACategory"
-                             formControlName="mainUNOCHACategory">
+                             formControlName="mainUNOCHACategory"
+                             labelForId="mainUNOCHACategory"
+                             placeholder="{{lang.map.select}}"
+                             [notFoundText]="lang.map.msg_not_found"
+                             [readonly]="(isExtendOrCancelRequestType() || readonly)">
                     <ng-option [value]="option.id"
                                *ngFor="let option of mainUNOCHACategories">{{option.getName()}}</ng-option>
                   </ng-select>
@@ -123,7 +162,11 @@
                          for="subUNOCHACategory">{{lang.map.sub_unocha_category}}</label>
                   <ng-select validationClasses="subUNOCHACategory" appendTo="body" [clearable]="true"
                              id="subUNOCHACategory"
-                             formControlName="subUNOCHACategory">
+                             formControlName="subUNOCHACategory"
+                             labelForId="subUNOCHACategory"
+                             placeholder="{{lang.map.select}}"
+                             [notFoundText]="lang.map.msg_not_found"
+                             [readonly]="(isExtendOrCancelRequestType() || readonly)">
                     <ng-option [value]="option.id"
                                *ngFor="let option of subUNOCHACategories">{{option.getName()}}</ng-option>
                   </ng-select>
@@ -137,15 +180,17 @@
                   <!--suppress XmlDuplicatedId -->
                   <input id="licenseDuration" validationClasses="licenseDuration"
                          [mask]="inputMaskPatterns.NUMBER_ONLY_WITH_LIMIT(4)" formControlName="licenseDuration"
-                         class="form-control">
+                         class="form-control" [readonly]="(isExtendOrCancelRequestType() || readonly)">
                   <app-field-error-message controlName="licenseDuration"></app-field-error-message>
                 </div>
                 <div class="col-md-6 col-sm-12 mb-4 position-relative">
                   <label class="form-label" asteriskIfRequired="projectTotalCost"
                          for="projectTotalCost">{{lang.map.project_total_cost}}</label>
                   <!--suppress XmlDuplicatedId -->
-                  <input id="projectTotalCost" [mask]="inputMaskPatterns.SEPARATOR" [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR" validationClasses="projectTotalCost" formControlName="projectTotalCost"
-                         class="form-control">
+                  <input id="projectTotalCost" [mask]="inputMaskPatterns.SEPARATOR"
+                         [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR" validationClasses="projectTotalCost"
+                         formControlName="projectTotalCost"
+                         class="form-control" [readonly]="(isExtendOrCancelRequestType() || readonly)">
                   <app-field-error-message controlName="projectTotalCost"></app-field-error-message>
                 </div>
               </div>
@@ -157,7 +202,11 @@
             <label class="form-label" asteriskIfRequired="projectType"
                    for="projectType">{{lang.map.project_type}}</label>
             <ng-select validationClasses="projectType" appendTo="body" [clearable]="true" id="projectType"
-                       formControlName="projectType">
+                       formControlName="projectType"
+                       labelForId="projectType"
+                       placeholder="{{lang.map.select}}"
+                       [notFoundText]="lang.map.msg_not_found"
+                       [readonly]="(isExtendOrCancelRequestType() || readonly)">
               <ng-option [value]="option.lookupKey" *ngFor="let option of projectTypes">{{option.getName()}}</ng-option>
             </ng-select>
             <app-field-error-message controlName="projectType"></app-field-error-message>
@@ -167,7 +216,11 @@
                    for="internalProjectClassification">{{lang.map.internal_projects_classification}}</label>
             <ng-select validationClasses="internalProjectClassification" appendTo="body" [clearable]="true"
                        id="internalProjectClassification"
-                       formControlName="internalProjectClassification">
+                       formControlName="internalProjectClassification"
+                       labelForId="internalProjectClassification"
+                       placeholder="{{lang.map.select}}"
+                       [notFoundText]="lang.map.msg_not_found"
+                       [readonly]="(isExtendOrCancelRequestType() || readonly)">
               <ng-option [value]="option.lookupKey"
                          *ngFor="let option of internalProjectsClassifications">{{option.getName()}}</ng-option>
             </ng-select>
@@ -177,7 +230,11 @@
             <label class="form-label" asteriskIfRequired="sanadiDomain"
                    for="sanadiDomain">{{lang.map.sanady_domain}}</label>
             <ng-select validationClasses="sanadiDomain" appendTo="body" [clearable]="true" id="sanadiDomain"
-                       formControlName="sanadiDomain">
+                       formControlName="sanadiDomain"
+                       labelForId="sanadiDomain"
+                       placeholder="{{lang.map.select}}"
+                       [notFoundText]="lang.map.msg_not_found"
+                       [readonly]="(isExtendOrCancelRequestType() || readonly)">
               <ng-option [value]="option.id" *ngFor="let option of sanadyDomains">{{option.getName()}}</ng-option>
             </ng-select>
             <app-field-error-message controlName="sanadiDomain"></app-field-error-message>
@@ -187,7 +244,11 @@
                    for="sanadiMainClassification">{{lang.map.sanady_main_classification}}</label>
             <ng-select validationClasses="sanadiMainClassification" appendTo="body" [clearable]="true"
                        id="sanadiMainClassification"
-                       formControlName="sanadiMainClassification">
+                       formControlName="sanadiMainClassification"
+                       labelForId="sanadiMainClassification"
+                       placeholder="{{lang.map.select}}"
+                       [notFoundText]="lang.map.msg_not_found"
+                       [readonly]="(isExtendOrCancelRequestType() || readonly)">
               <ng-option [value]="option.id"
                          *ngFor="let option of sanadyMainClassifications">{{option.getName()}}</ng-option>
             </ng-select>
@@ -199,7 +260,7 @@
             <!--suppress XmlDuplicatedId -->
             <input id="licenseDuration" validationClasses="licenseDuration"
                    [mask]="inputMaskPatterns.NUMBER_ONLY_WITH_LIMIT(4)" formControlName="licenseDuration"
-                   class="form-control">
+                   class="form-control" [readonly]="(isExtendOrCancelRequestType() || readonly)">
             <app-field-error-message controlName="licenseDuration"></app-field-error-message>
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
@@ -207,7 +268,9 @@
                    for="projectTotalCost">{{lang.map.project_total_cost}}</label>
             <!--suppress XmlDuplicatedId -->
             <input id="projectTotalCost" validationClasses="projectTotalCost" formControlName="projectTotalCost"
-                   class="form-control">
+                   class="form-control" [readonly]="(isExtendOrCancelRequestType() || readonly)"
+                   [mask]="inputMaskPatterns.SEPARATOR"
+                   [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR">
             <app-field-error-message controlName="projectTotalCost"></app-field-error-message>
           </div>
         </div>
@@ -218,7 +281,7 @@
             <!--suppress XmlDuplicatedId -->
             <input id="licenseDuration" validationClasses="licenseDuration"
                    [mask]="inputMaskPatterns.NUMBER_ONLY_WITH_LIMIT(4)" formControlName="licenseDuration"
-                   class="form-control">
+                   class="form-control" [readonly]="(isExtendOrCancelRequestType() || readonly)">
             <app-field-error-message controlName="licenseDuration"></app-field-error-message>
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
@@ -226,68 +289,89 @@
                    for="projectTotalCost">{{lang.map.project_total_cost}}</label>
             <!--suppress XmlDuplicatedId -->
             <input id="projectTotalCost" validationClasses="projectTotalCost" formControlName="projectTotalCost"
-                   class="form-control">
+                   class="form-control" [readonly]="(isExtendOrCancelRequestType() || readonly)">
             <app-field-error-message controlName="projectTotalCost"></app-field-error-message>
           </div>
         </div>
       </ng-container>
+    </ng-template>
+
+    <ng-template #template_deduction_ratio_info>
+      <app-page-header class="mb-2" *ngIf="templateRequired"
+                       [clickOnNew$]="addTemplate$"
+                       [pageTitle]="'templates'"></app-page-header>
+      <div *ngIf="templateRequired" class="row">
+        <app-table #table sortableTable
+                   [data]="(model!.templateList)"
+                   [columns]="displayedColumns">
+          <table cdk-table [dataSource]="table.dataSource" class="table table-striped table-bordered caption-top">
+            <ng-container cdkColumnDef="status">
+              <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.status}}</th>
+              <td cdk-cell *cdkCellDef="let row"> {{row.templateStatusInfo.getName()}} </td>
+            </ng-container>
+            <ng-container cdkColumnDef="name">
+              <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.project_name}}</th>
+              <td cdk-cell *cdkCellDef="let row"> {{row.projectName}} </td>
+            </ng-container>
+            <ng-container cdkColumnDef="serial">
+              <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.serial_number}}</th>
+              <td cdk-cell *cdkCellDef="let row"> {{row.templateFullSerial}}</td>
+            </ng-container>
+            <ng-container cdkColumnDef="totalCost">
+              <th cdk-header-cell style="width:300px" *cdkHeaderCellDef> {{lang.map.total_cost}}</th>
+              <td cdk-cell *cdkCellDef="let row"> {{row.templateCost}} </td>
+            </ng-container>
+            <ng-container cdkColumnDef="actions">
+              <th cdk-header-cell style="width:100px" *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
+              <td cdk-cell *cdkCellDef="let row">
+                <button [tooltip]="lang.map.btn_remove" (click)="deleteTemplate()" class="btn icon-btn">
+                  <i class="mdi mdi-trash-can text-primary"></i>
+                </button>
+              </td>
+            </ng-container>
+            <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="displayedColumns"></tr>
+            <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
+            <tr *cdkNoDataRow>
+              <td colspan="20">{{lang.map.no_records_to_display}}</td>
+            </tr>
+          </table>
+        </app-table>
+      </div>
+      <deduction-ratio-manager [clearItems]="clearDeductionItems"
+                               (afterClearItems)="onClearDeductionItems()"
+                               [checkForTemplate]="templateRequired"
+                               [model]="model!"
+                               [readonly]="(isExtendOrCancelRequestType() || readonly)"
+                               [workArea]="projectWorkArea.value" [permitType]="permitType.value"
+                               [operation]="operation"></deduction-ratio-manager>
+
+      <targeted-countries-distribution [model]="model!"
+                                       [readonly]="(isExtendOrCancelRequestType() || readonly)"
+                                       [countries]="countries"
+                                       [operation]="operation"></targeted-countries-distribution>
+      <targeted-years-distribution [model]="model!"
+                                   [readonly]="(isExtendOrCancelRequestType() || readonly)"
+                                   [numberOfMonths]="13"
+                                   [operation]="operation"></targeted-years-distribution>
+    </ng-template>
+    <ng-container formGroupName="explanation">
+      <ng-template #specialExplanations>
+        <div class="row">
+          <div class="col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="description"
+                   for="description">{{lang.map.special_explanations}}</label>
+            <textarea name="description" formControlName="description" validationClasses="description" id="description"
+                      rows="4" class="form-control" [readOnly]="(readonly)" trimInput
+                      [maxlength]="customValidators.defaultLengths.EXPLANATIONS"></textarea>
+            <app-field-error-message controlName="description"></app-field-error-message>
+          </div>
+        </div>
+      </ng-template>
     </ng-container>
-  </ng-template>
-
-  <ng-template #template_deduction_ratio_info>
-    <app-page-header class="mb-2" *ngIf="templateRequired"
-                     [clickOnNew$]="addTemplate$"
-                     [pageTitle]="'templates'"></app-page-header>
-    <div *ngIf="templateRequired" class="row">
-      <app-table #table sortableTable
-                 [data]="(model!.templateList)"
-                 [columns]="displayedColumns">
-        <table cdk-table [dataSource]="table.dataSource" class="table table-striped table-bordered caption-top">
-          <ng-container cdkColumnDef="status">
-            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.status}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.templateStatusInfo.getName()}} </td>
-          </ng-container>
-          <ng-container cdkColumnDef="name">
-            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.project_name}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.projectName}} </td>
-          </ng-container>
-          <ng-container cdkColumnDef="serial">
-            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.serial_number}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.templateFullSerial}}</td>
-          </ng-container>
-          <ng-container cdkColumnDef="totalCost">
-            <th cdk-header-cell style="width:300px" *cdkHeaderCellDef> {{lang.map.total_cost}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.templateCost}} </td>
-          </ng-container>
-          <ng-container cdkColumnDef="actions">
-            <th cdk-header-cell style="width:100px" *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
-            <td cdk-cell *cdkCellDef="let row">
-              <button [tooltip]="lang.map.btn_remove" (click)="deleteTemplate()" class="btn icon-btn">
-                <i class="mdi mdi-trash-can text-primary"></i>
-              </button>
-            </td>
-          </ng-container>
-          <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="displayedColumns"></tr>
-          <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
-          <tr *cdkNoDataRow>
-            <td colspan="20">{{lang.map.no_records_to_display}}</td>
-          </tr>
-        </table>
-      </app-table>
-    </div>
-    <deduction-ratio-manager [clearItems]="clearDeductionItems"
-                             (afterClearItems)="onClearDeductionItems()"
-                             [checkForTemplate]="templateRequired"
-                             [model]="model!"
-                             [workArea]="projectWorkArea.value" [permitType]="permitType.value"
-                             [operation]="operation"></deduction-ratio-manager>
-  </ng-template>
-  <ng-template #special_explanations>
-
-  </ng-template>
-  <ng-template #attachmentsTab>
-    <attachments [caseId]="model?.id" [caseType]="model?.caseType"
-                 [model]="model"
-                 [service]="service.documentService"></attachments>
-  </ng-template>
+    <ng-template #attachmentsTab>
+      <attachments [caseId]="model?.id" [caseType]="model?.caseType"
+                   [model]="model"
+                   [service]="service.documentService"></attachments>
+    </ng-template>
+  </ng-container>
 </div>

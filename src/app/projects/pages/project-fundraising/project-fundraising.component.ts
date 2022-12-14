@@ -5,12 +5,12 @@ import {SaveTypes} from '@app/enums/save-types';
 import {EServicesGenericComponent} from "@app/generics/e-services-generic-component";
 import {ProjectFundraising} from "@app/models/project-fundraising";
 import {ProjectFundraisingService} from "@services/project-fundraising.service";
-import {combineLatest, merge, Observable, Subject} from 'rxjs';
+import {combineLatest, merge, Observable, of, Subject} from 'rxjs';
 import {Lookup} from "@app/models/lookup";
 import {LookupService} from "@services/lookup.service";
 import {LangService} from "@services/lang.service";
 import {Country} from "@app/models/country";
-import {filter, switchMap, takeUntil} from "rxjs/operators";
+import {filter, switchMap, takeUntil, tap} from "rxjs/operators";
 import {ProjectWorkArea} from "@app/enums/project-work-area";
 import {ProjectPermitTypes} from "@app/enums/project-permit-types";
 import {ServiceRequestTypes} from "@app/enums/service-request-types";
@@ -28,6 +28,9 @@ import {DacOchaService} from "@services/dac-ocha.service";
 import {AdminLookup} from "@app/models/admin-lookup";
 import {ProjectTemplate} from "@app/models/projectTemplate";
 import {UserClickOn} from "@app/enums/user-click-on.enum";
+import {CommonCaseStatus} from "@app/enums/common-case-status.enum";
+import {OpenFrom} from "@app/enums/open-from.enum";
+import {CommonUtils} from "@helpers/common-utils";
 
 @Component({
   selector: 'project-fundraising',
@@ -62,6 +65,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   private qatarCountry: Country = this.getQatarCountry()
   private loadedDacOchaBefore: Boolean = false;
   clearDeductionItems: boolean = false;
+  selectedLicense?: ProjectFundraising;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -89,7 +93,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     const model = new ProjectFundraising()
     this.form = this.fb.group({
       basicInfo: this.fb.group(model.buildBasicInfo(true)),
-      specialExplanation: this.fb.group(model.buildExplanation(true))
+      explanation: this.fb.group(model.buildExplanation(true))
     })
   }
 
@@ -103,19 +107,29 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     this.overrideValuesInCreate()
     this.listenToAddTemplate()
     this.listenToProjectTotalCoastChanges()
-    this.test()
+    // this._test()
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
-    return true
+    return of(this.form.valid)
+      .pipe(tap(valid => !valid && this.invalidFormMessage()))
+      .pipe(filter(valid => valid));
   }
 
   _beforeLaunch(): boolean | Observable<boolean> {
-    throw new Error('Method not implemented.');
+    if (this.model && !this.model.deductedPercentagesItemList.length) {
+      this.invalidItemMessage();
+    }
+    return true;
+  }
+
+  private invalidItemMessage() {
+    this.dialog.error(this.lang.map.please_add_deduction_items_to_proceed);
   }
 
   _afterLaunch(): void {
-    throw new Error('Method not implemented.');
+    this.resetForm$.next();
+    this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
 
   _prepareModel(): ProjectFundraising | Observable<ProjectFundraising> {
@@ -142,19 +156,49 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   _launchFail(error: any): void {
-    throw new Error('Method not implemented.');
+    console.error('Launch failed', error)
   }
 
   _destroyComponent(): void {
     // throw new Error('Method not implemented.');
   }
 
+  handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
+    of(userInteraction).pipe(
+      takeUntil(this.destroy$),
+      switchMap(() => this.confirmChangeRequestType(userInteraction))
+    ).subscribe((clickOn: UserClickOn) => {
+      if (clickOn === UserClickOn.YES) {
+        if (userInteraction) {
+          this.resetForm$.next();
+          this.requestType.setValue(requestTypeValue);
+        }
+        this.requestType$.next(requestTypeValue);
+
+      } else {
+        this.requestType.setValue(this.requestType$.value);
+      }
+    });
+  }
+
   _updateForm(model: ProjectFundraising | undefined): void {
-    throw new Error('Method not implemented.');
+    if (!model) {
+      return;
+    }
+    this.model = model;
+    this.form.patchValue({
+      basicInfo: model?.buildBasicInfo(),
+      explanation: model?.buildExplanation()
+    });
+    this.handleRequestTypeChange(model.requestType, false);
   }
 
   _resetForm(): void {
-    throw new Error('Method not implemented.');
+    this.form.reset();
+    this.model = this._getNewInstance();
+    this.operation = this.operationTypes.CREATE;
+    this.setDefaultValues()
+    this.overrideValuesInCreate()
   }
 
   get basicInfo(): AbstractControl {
@@ -162,7 +206,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   get specialExplanation(): AbstractControl {
-    return this.form.get('specialExplanation')!
+    return this.form.get('explanation')!
   }
 
   get permitType(): AbstractControl {
@@ -459,7 +503,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       .openDialogSearchTemplate(this.getSearchTemplateCriteria(), this.projectWorkArea.value, this.model?.getTemplateId())
       .pipe(switchMap(dialog => dialog.onAfterClose$))
       .subscribe((template: ProjectTemplate | undefined) => {
-        this.model && template && this.model.setTemplate(template) && this.model.setProjectTotalCoast(template.templateCost) && this.projectTotalCost.setValue(template.templateCost, {emitEvent: false})
+        this.model && template && this.model.setTemplate(template) && this.model.setProjectTotalCost(template.templateCost) && this.projectTotalCost.setValue(template.templateCost, {emitEvent: false})
       })
   }
 
@@ -488,7 +532,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       }, {})
   }
 
-  private test(): void {
+  private _test(): void {
     this.projectWorkArea.setValue(ProjectWorkArea.OUTSIDE_QATAR)
     this.domain.setValue(DomainTypes.HUMANITARIAN)
     this.countriesField.setValue([231])
@@ -500,7 +544,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       .onAfterClose$
       .pipe(filter((val: UserClickOn) => val === UserClickOn.YES))
       .subscribe(() => {
-        this.model && this.model.clearTemplate() && this.model.setProjectTotalCoast(0) && this.projectTotalCost.setValue(0, {emitEvent: false})
+        this.model && this.model.clearTemplate() && this.model.setProjectTotalCost(0) && this.projectTotalCost.setValue(0, {emitEvent: false})
         this.clearDeductionItems = true;
       })
   }
@@ -522,7 +566,63 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       .valueChanges
       .pipe(takeUntil(this.destroy$))
       .subscribe((value: number) => {
-        this.model && this.model.setProjectTotalCoast(value)
+        this.model && this.model.setProjectTotalCost(value)
       })
+  }
+
+  private invalidFormMessage() {
+    this.dialog.error(this.lang.map.msg_all_required_fields_are_filled);
+  }
+
+
+  isExtendOrCancelRequestType(): boolean {
+    return this.requestType.value && (this.requestType.value === ServiceRequestTypes.EXTEND || this.requestType.value === ServiceRequestTypes.CANCEL);
+  }
+
+  isEditLicenseAllowed(): boolean {
+    // if new or draft record and request type !== new, edit is allowed
+    let isAllowed = !this.model?.id || (!!this.model?.id && this.model.canCommit());
+    return isAllowed && CommonUtils.isValidValue(this.requestType.value) && this.requestType.value !== ServiceRequestTypes.NEW;
+  }
+
+  isEditRequestTypeAllowed(): boolean {
+    // allow edit if new record or saved as draft
+    return !this.model?.id || (!!this.model?.id && this.model.canCommit());
+  }
+
+  handleReadonly(): void {
+    // if record is new, no readonly (don't change as default is readonly = false)
+    if (!this.model?.id) {
+      return;
+    }
+
+    let caseStatus = this.model.getCaseStatus();
+    if (caseStatus == CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.FINAL_REJECTION) {
+      this.readonly = true;
+      return;
+    }
+
+    if (this.openFrom === OpenFrom.USER_INBOX) {
+      if (this.employeeService.isCharityManager()) {
+        this.readonly = false;
+      } else if (this.employeeService.isCharityUser()) {
+        this.readonly = !this.model.isReturned();
+      }
+    } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
+      // after claim, consider it same as user inbox and use same condition
+      if (this.model.taskDetails.isClaimed()) {
+        if (this.employeeService.isCharityManager()) {
+          this.readonly = false;
+        } else if (this.employeeService.isCharityUser()) {
+          this.readonly = !this.model.isReturned();
+        }
+      }
+    } else if (this.openFrom === OpenFrom.SEARCH) {
+      // if saved as draft, then no readonly
+      if (this.model?.canCommit()) {
+        this.readonly = false;
+      }
+    }
+
   }
 }
