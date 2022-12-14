@@ -94,7 +94,6 @@ export class UserTeamComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe((subTeams) => {
-        console.log(subTeams);
         this.subTeamsListBasedOnUserTeams = subTeams;
       });
   }
