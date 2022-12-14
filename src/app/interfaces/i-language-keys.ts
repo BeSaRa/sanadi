@@ -1618,5 +1618,6 @@ export interface ILanguageKeys {
   states: string;
   license_duration_type: string;
   office_type: string;
+  lbl_beneficiaries_nature: string;
 }
 

@@ -21,17 +21,19 @@
         <div class="col-md-4 mb-4 position-relative">
           <label asteriskIfRequired="requestType" for="requestType" class="form-label">{{ lang.map.request_type
             }}</label>
-          <ng-select [selectOnTab]="true" labelForId="requestType" [clearable]="true" [readonly]="criticalOnTask || readonly"
-            placeholder="{{ lang.map.select }}" id="requestType" (change)="handleRequestTypeChange($event, true)"
-            [notFoundText]="lang.map.msg_not_found" appendTo="body" validationClasses="requestType"
-            formControlName="requestType">
-            <ng-option *ngFor="let type of NPORequestTypesList" [value]="type.lookupKey">{{ type.getName() }}
+          <ng-select [selectOnTab]="true" labelForId="requestType" [clearable]="true"
+            [readonly]="criticalOnTask || readonly" placeholder="{{ lang.map.select }}" id="requestType"
+            (change)="handleRequestTypeChange($event, true)" [notFoundText]="lang.map.msg_not_found" appendTo="body"
+            validationClasses="requestType" formControlName="requestType">
+            <ng-option *ngFor="let type of NPORequestTypesList" [value]="type.lookupKey"
+              [disabled]="type.lookupKey == NPORequestTypes.NEW && nonProfitOrg">{{ type.getName() }}
             </ng-option>
           </ng-select>
           <app-field-error-message controlName="requestType"></app-field-error-message>
         </div>
 
-        <div class="col-md-4 mb-4 position-relative" *ngIf="isLicensingUser && !isNew && !readonly && !criticalOnTask">
+        <div class="col-md-4 mb-4 position-relative"
+          *ngIf="(isLicensingUser || isRegistrationAuthority) && !isNew && !readonly && !criticalOnTask">
           <label class="form-label">{{ lang.map.lbl_organization }}</label>
           <ng-select [selectOnTab]="true" labelForId="orgIdField" [clearable]="true" placeholder="{{ lang.map.select }}"
             id="orgIdField" [notFoundText]="lang.map.msg_not_found" (change)="loadOrganizationData()" appendTo="body"
@@ -46,8 +48,8 @@
           <label asteriskIfRequired="arabicName" for="arabicName" class="form-label">{{
             lang.map.lbl_arabic_name
             }}</label>
-          <input id="arabicName" formControlName="arabicName" [readonly]="readonly || isViewOnly" validationClasses="arabicName"
-            class="form-control" />
+          <input id="arabicName" formControlName="arabicName" [readonly]="readonly || isViewOnly"
+            validationClasses="arabicName" class="form-control" />
           <app-field-error-message controlName="arabicName"></app-field-error-message>
         </div>
         <!-- en name -->
@@ -55,8 +57,8 @@
           <label asteriskIfRequired="englishName" for="englishName" class="form-label">{{
             lang.map.lbl_english_name
             }}</label>
-          <input id="englishName" [readonly]="readonly || isViewOnly" formControlName="englishName" validationClasses="englishName"
-            class="form-control" />
+          <input id="englishName" [readonly]="readonly || isViewOnly" formControlName="englishName"
+            validationClasses="englishName" class="form-control" />
           <app-field-error-message controlName="englishName"></app-field-error-message>
         </div>
 
@@ -81,8 +83,7 @@
           <div class="input-group">
             <i class="input-group-text mdi mdi-calendar"></i>
             <div class="form-control" formControlName="registrationDate" id="registrationDate"
-              [options]="datepickerOptionsMap.registrationDate"
-              [ngClass]="{'input-disabled': (!isNew || readonly)}"
+              [options]="datepickerOptionsMap.registrationDate" [ngClass]="{'input-disabled': (!isNew || readonly)}"
               (click)="isNew && !readonly && openDateMenu(dpregistrationDate)"
               #dpregistrationDate="angular-mydatepicker" angular-mydatepicker validationClasses="registrationDate">
             </div>
@@ -127,8 +128,7 @@
           <div class="input-group">
             <i class="input-group-text mdi mdi-calendar"></i>
             <div class="form-control" formControlName="establishmentDate" id="establishmentDate"
-              [options]="datepickerOptionsMap.establishmentDate"
-              [ngClass]="{'input-disabled': (!isNew || readonly)}"
+              [options]="datepickerOptionsMap.establishmentDate" [ngClass]="{'input-disabled': (!isNew || readonly)}"
               (click)="isNew && !readonly && openDateMenu(dpestablishmentDate)"
               (inputFieldChanged)="onDateChange($event)" #dpestablishmentDate="angular-mydatepicker"
               angular-mydatepicker validationClasses="establishmentDate"></div>
@@ -155,9 +155,9 @@
           <div class="input-group">
             <i class="input-group-text mdi mdi-calendar"></i>
             <div class="form-control" formControlName="disbandmentDate" id="disbandmentDate"
-              [ngClass]="{'input-disabled': readonly}"
-              [options]="datepickerOptionsMap.disbandmentDate" (click)="!readonly && openDateMenu(dpdisbandmentDate)"
-              #dpdisbandmentDate="angular-mydatepicker" angular-mydatepicker validationClasses="disbandmentDate">
+              [ngClass]="{'input-disabled': readonly}" [options]="datepickerOptionsMap.disbandmentDate"
+              (click)="!readonly && openDateMenu(dpdisbandmentDate)" #dpdisbandmentDate="angular-mydatepicker"
+              angular-mydatepicker validationClasses="disbandmentDate">
             </div>
             <app-field-error-message controlName="disbandmentDate"></app-field-error-message>
           </div>
@@ -191,9 +191,9 @@
           <div class="input-group">
             <i class="input-group-text mdi mdi-calendar"></i>
             <div class="form-control" formControlName="clearanceDate" id="clearanceDate"
-              [ngClass]="{'input-disabled': readonly}"
-              [options]="datepickerOptionsMap.clearanceDate" (click)="!readonly && openDateMenu(dpclearanceDate)"
-              #dpclearanceDate="angular-mydatepicker" angular-mydatepicker validationClasses="clearanceDate"></div>
+              [ngClass]="{'input-disabled': readonly}" [options]="datepickerOptionsMap.clearanceDate"
+              (click)="!readonly && openDateMenu(dpclearanceDate)" #dpclearanceDate="angular-mydatepicker"
+              angular-mydatepicker validationClasses="clearanceDate"></div>
             <app-field-error-message controlName="clearanceDate"></app-field-error-message>
           </div>
         </div>
@@ -210,8 +210,8 @@
         <!-- Email -->
         <div class="col-sm-12 col-md-6 mb-4 position-relative">
           <label asteriskIfRequired="email" for="email" class="form-label">{{lang.map.lbl_email}}</label>
-          <input id="email" validationClasses="email" [readonly]="readonly || isViewOnly" formControlName="email" trimInput
-            class="form-control">
+          <input id="email" validationClasses="email" [readonly]="readonly || isViewOnly" formControlName="email"
+            trimInput class="form-control">
           <app-field-error-message controlName="email"></app-field-error-message>
         </div>
         <!-- phone -->
@@ -226,7 +226,8 @@
           <label asteriskIfRequired="fax" for="fax" class="form-label">{{
             lang.map.fax_number
             }}</label>
-          <input id="fax" [readonly]="readonly || isViewOnly" formControlName="fax" validationClasses="fax" class="form-control" />
+          <input id="fax" [readonly]="readonly || isViewOnly" formControlName="fax" validationClasses="fax"
+            class="form-control" />
           <app-field-error-message controlName="fax"></app-field-error-message>
         </div>
         <!-- hotline -->
@@ -255,8 +256,8 @@
           <label asteriskIfRequired="zoneNumber" for="zoneNumber" class="form-label">{{
             lang.map.lbl_zone
             }}</label>
-          <input id="zoneNumber" [readonly]="readonly || isViewOnly" formControlName="zoneNumber" validationClasses="zoneNumber"
-            class="form-control" />
+          <input id="zoneNumber" [readonly]="readonly || isViewOnly" formControlName="zoneNumber"
+            validationClasses="zoneNumber" class="form-control" />
           <app-field-error-message controlName="zoneNumber"></app-field-error-message>
         </div>
         <!-- street number -->
@@ -264,8 +265,8 @@
           <label asteriskIfRequired="streetNumber" for="streetNumber" class="form-label">{{
             lang.map.lbl_street
             }}</label>
-          <input id="streetNumber" [readonly]="readonly || isViewOnly" formControlName="streetNumber" validationClasses="streetNumber"
-            class="form-control" />
+          <input id="streetNumber" [readonly]="readonly || isViewOnly" formControlName="streetNumber"
+            validationClasses="streetNumber" class="form-control" />
           <app-field-error-message controlName="streetNumber"></app-field-error-message>
         </div>
         <!-- building number -->
@@ -282,8 +283,8 @@
           <label asteriskIfRequired="address" for="address" class="form-label">{{
             lang.map.lbl_address
             }}</label>
-          <textarea id="address" [readonly]="readonly || isViewOnly" validationClasses="address" trimInput formControlName="address"
-            class="form-control">
+          <textarea id="address" [readonly]="readonly || isViewOnly" validationClasses="address" trimInput
+            formControlName="address" class="form-control">
           </textarea>
           <app-field-error-message controlName="address"></app-field-error-message>
         </div>
@@ -295,8 +296,8 @@
           <label asteriskIfRequired="facebook" for="facebook" class="form-label">{{
             lang.map.lbl_facebook
             }}</label>
-          <input id="facebook" [readonly]="readonly || isViewOnly" formControlName="facebook" validationClasses="facebook"
-            class="form-control" />
+          <input id="facebook" [readonly]="readonly || isViewOnly" formControlName="facebook"
+            validationClasses="facebook" class="form-control" />
           <app-field-error-message controlName="facebook"></app-field-error-message>
         </div>
         <!-- twitter -->
@@ -313,8 +314,8 @@
           <label asteriskIfRequired="instagram" for="instagram" class="form-label">{{
             lang.map.lbl_instagram
             }}</label>
-          <input id="instagram" [readonly]="readonly || isViewOnly" formControlName="instagram" validationClasses="instagram"
-            class="form-control" />
+          <input id="instagram" [readonly]="readonly || isViewOnly" formControlName="instagram"
+            validationClasses="instagram" class="form-control" />
           <app-field-error-message controlName="instagram"></app-field-error-message>
         </div>
         <!-- snapChat -->
@@ -322,8 +323,8 @@
           <label asteriskIfRequired="snapChat" for="snapChat" class="form-label">{{
             lang.map.lbl_snapchat
             }}</label>
-          <input id="snapChat" [readonly]="readonly || isViewOnly" formControlName="snapChat" validationClasses="snapChat"
-            class="form-control" />
+          <input id="snapChat" [readonly]="readonly || isViewOnly" formControlName="snapChat"
+            validationClasses="snapChat" class="form-control" />
           <app-field-error-message controlName="snapChat"></app-field-error-message>
         </div>
         <!-- youTube -->
@@ -337,8 +338,8 @@
         </div>
         <div class="col-12">
           <h6>{{lang.map.contact_officers}}</h6>
-          <npo-contact-officer #contactOfficersTab [readonly]="readonly || isViewOnly" [list]="model?.contactOfficerList || []"
-            (readyEvent)="contactOfficersTabStatus = $event">
+          <npo-contact-officer #contactOfficersTab [readonly]="readonly || isViewOnly"
+            [list]="model?.contactOfficerList || []" (readyEvent)="contactOfficersTabStatus = $event">
           </npo-contact-officer>
         </div>
       </div>
@@ -358,7 +359,8 @@
   </ng-template>
 
   <ng-template #realBeneficiaryTabTemplate>
-    <real-beneficiaries #realBeneficiaryTab [list]="model?.realBeneficiaryList || []" [readonly]="readonly || isViewOnly">
+    <real-beneficiaries #realBeneficiaryTab [list]="model?.realBeneficiaryList || []"
+      [readonly]="readonly || isViewOnly">
     </real-beneficiaries>
   </ng-template>
   <ng-template #attachmentsTab>
