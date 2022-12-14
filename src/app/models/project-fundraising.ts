@@ -8,7 +8,12 @@ import {ProjectTemplate} from "@app/models/projectTemplate";
 import {DeductedPercentage} from "@app/models/deducted-percentage";
 import {AmountOverYear} from "@app/models/amount-over-year";
 import {AmountOverCountry} from "@app/models/amount-over-country";
+import {ProjectFundraisingInterceptor} from "@app/model-interceptors/project-fundraising-interceptor";
+import {InterceptModel} from "@decorators/intercept-model";
 
+const {send, receive} = new ProjectFundraisingInterceptor()
+
+@InterceptModel({send, receive})
 export class ProjectFundraising extends CaseModel<ProjectFundraisingService, ProjectFundraising> {
   service: ProjectFundraisingService;
   caseType: number = CaseTypes.PROJECT_FUNDRAISING
@@ -42,15 +47,15 @@ export class ProjectFundraising extends CaseModel<ProjectFundraisingService, Pro
   internalProjectClassification!: number
   sanadiDomain!: number
   sanadiMainClassification!: number
-  administrativeDeductionAmount!: number
+  administrativeDeductionAmount: number = 0
   targetAmount: number = 0
   projectTotalCost: number = 0
   description!: string
   templateList: ProjectTemplate[] = []
   deductedPercentagesItemList: DeductedPercentage[] = []
-  amountOverYearsList!: AmountOverYear[]
-  amountOverCountriesList!: AmountOverCountry[]
-  countriesInfo!: AdminResult
+  amountOverYearsList: AmountOverYear[] = []
+  amountOverCountriesList: AmountOverCountry[] = []
+  countriesInfo: AdminResult[] = []
   domainInfo!: AdminResult
   workAreaInfo!: AdminResult
   permitTypeInfo!: AdminResult
