@@ -1,50 +1,51 @@
 import { CommonStatusEnum } from './../enums/common-status.enum';
 import { Pagination } from './../models/pagination';
-import { GeneralProcessPopupComponent } from './../administration/popups/general-process-popup/general-process-popup.component';
-import { IDialogData } from './../interfaces/i-dialog-data';
-import { OperationTypes } from './../enums/operation-types.enum';
-import { DialogRef } from './../shared/models/dialog-ref';
-import { switchMap, map } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
-import { ComponentType } from '@angular/cdk/overlay';
-import { FactoryService } from './factory.service';
-import { DialogService } from './dialog.service';
-import { UrlService } from './url.service';
-import { HttpClient } from '@angular/common/http';
-import { GeneralProcess } from '@app/models/genral-process';
-import { CrudWithDialogGenericService } from '@app/generics/crud-with-dialog-generic-service';
+import { DynamicModelPopupComponent } from './../administration/popups/dynamic-model-popup/dynamic-model-popup.component';
+import { DynamicModel } from './../models/dynamic-model';
+import { CastResponseContainer } from "@app/decorators/decorators/cast-response";
 import { Injectable } from '@angular/core';
-import { CastResponseContainer } from '@app/decorators/decorators/cast-response';
-
+import { ComponentType } from '@angular/cdk/portal';
+import { HttpClient } from '@angular/common/http';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { IDialogData } from '@app/interfaces/i-dialog-data';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { Subject, Observable, of } from 'rxjs';
+import { switchMap, map } from 'rxjs/operators';
+import { DialogService } from './dialog.service';
+import { FactoryService } from './factory.service';
+import { UrlService } from './url.service';
+import { CrudWithDialogGenericService } from '@app/generics/crud-with-dialog-generic-service';
 
 @CastResponseContainer({
   $default: {
-    model: () => GeneralProcess
+    model: () => DynamicModel
   },
   $pagination: {
     model: () => Pagination,
-    shape: { 'rs.*': () => GeneralProcess }
+    shape: { 'rs.*': () => DynamicModel }
   }
 })
 @Injectable({
   providedIn: 'root'
 })
-export class GeneralProcessService extends CrudWithDialogGenericService<GeneralProcess> {
-  _getModel(): new () => GeneralProcess {
-    return GeneralProcess
+export class DynamicModelService extends CrudWithDialogGenericService<DynamicModel>{
+  _getModel(): new () => DynamicModel {
+    return DynamicModel
   }
 
-  list: GeneralProcess[] = [];
+  list: DynamicModel[] = [];
+  private _selectField: Subject<string> = new Subject<string>();
   constructor(public http: HttpClient,
     private urlService: UrlService,
     public dialog: DialogService) {
     super();
-    FactoryService.registerService('GeneralProcessService', this);
+    FactoryService.registerService('DynamicModelService', this);
   }
 
   _getDialogComponent(): ComponentType<any> {
-    return GeneralProcessPopupComponent;
+    return DynamicModelPopupComponent;
   }
+
 
   updateStatus(jobTitleId: number, newStatus: CommonStatusEnum) {
     return newStatus === CommonStatusEnum.ACTIVATED ? this._activate(jobTitleId) : this._deactivate(jobTitleId);
@@ -78,17 +79,22 @@ export class GeneralProcessService extends CrudWithDialogGenericService<GeneralP
         })
       );
   }
-
   _getServiceURL(): string {
-    return this.urlService.URLS.GENERAL_PROCESS;
+    return this.urlService.URLS.DYNAMIC_MODEL;
+  }
+  listenToSelectField() {
+    return this._selectField
+  }
+  setlectField(fieldId: string) {
+    this._selectField.next(fieldId);
   }
   openViewDialog(modelId: number): Observable<DialogRef> {
     return this.getByIdComposite(modelId).pipe(
-      switchMap((generalProcess: GeneralProcess) => {
-        return of(this.dialog.show<IDialogData<GeneralProcess>>(
+      switchMap((DynamicModel: DynamicModel) => {
+        return of(this.dialog.show<IDialogData<DynamicModel>>(
           this._getDialogComponent(),
           {
-            model: generalProcess,
+            model: DynamicModel,
             operation: OperationTypes.VIEW
           },
           { fullscreen: true }
@@ -96,4 +102,5 @@ export class GeneralProcessService extends CrudWithDialogGenericService<GeneralP
       })
     );
   }
+
 }

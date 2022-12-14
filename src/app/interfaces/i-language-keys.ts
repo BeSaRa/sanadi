@@ -1606,6 +1606,11 @@ export interface ILanguageKeys {
   available_values: string;
   menus: string;
   msg_no_menus_available: string;
+  menu_coordination_with_organizations_template: string;
+  lbl_add_coordination_with_organizations_template: string;
+  lbl_edit_coordination_with_organizations_template: string;
+  btn_hide_from_table: string;
+  btn_show_on_table: string;
   parent_number: string;
   tenant_number: string;
   last_invoice_date: string;

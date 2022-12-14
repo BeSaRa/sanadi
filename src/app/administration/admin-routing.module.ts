@@ -29,6 +29,7 @@ import {PermissionGroupsEnum} from '@app/enums/permission-groups-enum';
 import {AdminLookupComponent} from '@app/administration/pages/admin-lookup/admin-lookup.component';
 import {AdminLookupOldComponent} from './pages/admin-lookup-old/admin-lookup-old.component';
 import {ProfilesComponent} from './pages/profiles/profiles.component';
+import { DynamicModelsComponent } from './pages/dynamic-models/dynamic-models.component';
 
 const routes: Routes = [
   { path: '', component: AdminHomeComponent },
@@ -170,8 +171,14 @@ const routes: Routes = [
     canActivate: [PermissionGuard],
     data: {
       permissionKey: PermissionsEnum.MANAGE_PROFILE, configPermissionGroup: null, checkAnyPermission: false
-    }
-  }
+    },
+
+  },
+  {
+    path: 'dynamic-models', component: DynamicModelsComponent,
+    canActivate: [PermissionGuard],
+    data: { permissionKey: PermissionsEnum.MANAGE_DYNAMIC_MODEL, configPermissionGroup: null, checkAnyPermission: false }
+  },
 ];
 
 

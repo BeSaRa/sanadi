@@ -21,7 +21,7 @@ export class ParticipantOrganizationsPopupComponent implements OnInit {
       orgId: number;
       model: CoordinationWithOrganizationsRequest | undefined;
     }
-  ) {}
+  ) { }
 
   get isOrganizaionOfficers(): boolean {
     return !!(this.data.model?.organizaionOfficerList?.length! > 0);
@@ -35,7 +35,10 @@ export class ParticipantOrganizationsPopupComponent implements OnInit {
   get isResearchAndStudies(): boolean {
     return !!(this.data.model?.researchAndStudies?.length! > 0);
   }
-  ngOnInit() {}
+  get isTemplateList(): boolean {
+    return !!(this.data.model?.templateList?.length! > 0);
+  }
+  ngOnInit() { }
 
-  submit() {}
+  submit() { }
 }

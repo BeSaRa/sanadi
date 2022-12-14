@@ -87,6 +87,8 @@ import {CharityOrganizationProfileExtraDataPopupComponent} from './popups/charit
 import { ProfileOfficersComponent } from './shared/profile-officers/profile-officers.component';
 import { ProfileBranchesComponent } from './shared/profile-branches/profile-branches.component';
 import { BranchOfficersPopupComponent } from './shared/branch-officers-popup/branch-officers-popup.component';
+import { DynamicModelsComponent } from './pages/dynamic-models/dynamic-models.component';
+import { DynamicModelPopupComponent } from './popups/dynamic-model-popup/dynamic-model-popup.component';
 
 @NgModule({
   declarations: [
@@ -165,7 +167,9 @@ import { BranchOfficersPopupComponent } from './shared/branch-officers-popup/bra
     CharityOrganizationProfileExtraDataPopupComponent,
     ProfileOfficersComponent,
     ProfileBranchesComponent,
-    BranchOfficersPopupComponent
+    BranchOfficersPopupComponent,
+    DynamicModelsComponent,
+    DynamicModelPopupComponent
   ],
   imports: [
     SharedModule,

@@ -1,4 +1,4 @@
-export enum GeneralProcessTemplateFieldTypes {
+export enum TemplateFieldTypes {
   input = 1,
   dateField,
   selectField,

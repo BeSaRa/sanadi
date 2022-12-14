@@ -122,5 +122,6 @@ export interface IAppUrls {
   SUB_TEAM: string;
   GENERAL_PROCESS: string;
   GENERAL_PROCESS_NOTIFICATION: string;
+  DYNAMIC_MODEL: string;
   [index: string]: string;
 }

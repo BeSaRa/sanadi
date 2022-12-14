@@ -1,58 +1,62 @@
-import {DatepickerControlsMap, DatepickerOptionsMap, ReadinessStatus} from '@app/types/types';
-import {Component, ViewChild} from '@angular/core';
-import {FormBuilder, FormGroup, UntypedFormControl} from '@angular/forms';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {SaveTypes} from '@app/enums/save-types';
-import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
-import {DateUtils} from '@app/helpers/date-utils';
-import {IKeyValue} from '@app/interfaces/i-key-value';
-import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {CoordinationWithOrganizationsRequest} from '@app/models/coordination-with-organizations-request';
-import {Lookup} from '@app/models/lookup';
-import {OrganizationOfficer} from '@app/models/organization-officer';
-import {BuildingAbilityComponent} from '@app/modules/e-services-main/shared/building-ability/building-ability.component';
-import {ResearchAndStudiesComponent} from '@app/modules/e-services-main/shared/research-and-studies/research-and-studies.component';
-import {CoordinationWithOrganizationsRequestService} from '@app/services/coordination-with-organizations-request.service';
-import {DialogService} from '@app/services/dialog.service';
-import {EmployeeService} from '@app/services/employee.service';
-import {LangService} from '@app/services/lang.service';
-import {LookupService} from '@app/services/lookup.service';
-import {ToastService} from '@app/services/toast.service';
-import {ExternalUserService} from '@services/external-user.service';
-import {IMyInputFieldChanged} from 'angular-mydatepicker';
-import {Observable, of} from 'rxjs';
-import {map, take} from 'rxjs/operators';
-import {CoordinationTypes} from '@app/enums/coordination-types-enum';
+import { CoordinationWithOrganizationTemplate } from './../../../../models/corrdination-with-organization-template';
+import { DynamicModel } from '@app/models/dynamic-model';
+import { DynamicModelService } from '@app/services/dynamic-models.service';
+import { DatepickerControlsMap, DatepickerOptionsMap, ReadinessStatus } from '@app/types/types';
+import { Component, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, UntypedFormControl, Validators } from '@angular/forms';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { SaveTypes } from '@app/enums/save-types';
+import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
+import { DateUtils } from '@app/helpers/date-utils';
+import { IKeyValue } from '@app/interfaces/i-key-value';
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
+import { CoordinationWithOrganizationsRequest } from '@app/models/coordination-with-organizations-request';
+import { Lookup } from '@app/models/lookup';
+import { OrganizationOfficer } from '@app/models/organization-officer';
+import { BuildingAbilityComponent } from '@app/modules/e-services-main/shared/building-ability/building-ability.component';
+import { ResearchAndStudiesComponent } from '@app/modules/e-services-main/shared/research-and-studies/research-and-studies.component';
+import { CoordinationWithOrganizationsRequestService } from '@app/services/coordination-with-organizations-request.service';
+import { DialogService } from '@app/services/dialog.service';
+import { EmployeeService } from '@app/services/employee.service';
+import { LangService } from '@app/services/lang.service';
+import { LookupService } from '@app/services/lookup.service';
+import { ToastService } from '@app/services/toast.service';
+import { ExternalUserService } from '@services/external-user.service';
+import { IMyInputFieldChanged } from 'angular-mydatepicker';
+import { Observable, of } from 'rxjs';
+import { map, take } from 'rxjs/operators';
+import { CoordinationTypes } from '@app/enums/coordination-types-enum';
 import {
   EffectiveCoordinationCapabilitiesComponent
 } from './../../../e-services-main/shared/effective-coordination-capabilities/effective-coordination-capabilities.component';
-import {OrganizationOfficerComponent} from '../../../e-services-main/shared/organization-officer/organization-officer.component';
+import { OrganizationOfficerComponent } from '../../../e-services-main/shared/organization-officer/organization-officer.component';
 import {
   ParticipantOrganizationComponent
 } from './../../../e-services-main/shared/participant-organization/participant-organization.component';
-import {OpenFrom} from '@app/enums/open-from.enum';
-import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
-import {TabComponent} from '@app/shared/components/tab/tab.component';
-import {AttachmentsComponent} from '@app/shared/components/attachments/attachments.component';
+import { OpenFrom } from '@app/enums/open-from.enum';
+import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
+import { TabComponent } from '@app/shared/components/tab/tab.component';
+import { AttachmentsComponent } from '@app/shared/components/attachments/attachments.component';
 import { BuildingAbility } from '@app/models/building-ability';
 import { EffectiveCoordinationCapabilities } from '@app/models/effective-coordination-capabilities';
 import { ResearchAndStudies } from '@app/models/research-and-studies';
-import {ProfileService} from '@services/profile.service';
-import {Profile} from '@app/models/profile';
-
+import { ProfileService } from '@services/profile.service';
+import { Profile } from '@app/models/profile';
+import { DynamicTemplatesComponent } from '@app/modules/e-services-main/shared/dynamic-templates/dynamic-templates.component';
 @Component({
   selector: 'app-coordination-with-organizations-request',
   templateUrl: './coordination-with-organizations-request.component.html',
   styleUrls: ['./coordination-with-organizations-request.component.scss'],
 })
 export class CoordinationWithOrganizationsRequestComponent extends EServicesGenericComponent<CoordinationWithOrganizationsRequest,
-  CoordinationWithOrganizationsRequestService> {
+CoordinationWithOrganizationsRequestService> {
   form!: FormGroup;
 
   // Participating  Organizations
   domains: Lookup[] = this.lookupService.listByCategory.CoordinationType?.sort(
     (a, b) => a?.lookupKey - b?.lookupKey
   );
+  coordinationTypes = CoordinationTypes;
   trainingTypes: Lookup[] =
     this.lookupService.listByCategory.TrainingActivityType?.sort(
       (a, b) => a?.lookupKey - b?.lookupKey
@@ -72,6 +76,7 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
     this.lookupService.listByCategory.OrganizationWay?.sort(
       (a, b) => a?.lookupKey - b?.lookupKey
     );
+  formsList: DynamicModel[] = [];
   isCharityUser!: boolean;
   isInternalUser!: boolean;
   isLicensingUser!: boolean;
@@ -104,8 +109,6 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
       langKey: 'organization_officers',
       validStatus: () => {
         return this.model!.temporaryOrganizaionOfficerList.length > 0;
-
-
       },
     },
     buildingAbilities: {
@@ -129,7 +132,13 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
         return this.model!.temporaryResearchAndStudies.length > 0;
       },
     },
-
+    dynamicTempaltes: {
+      name: 'dynamicTemplatesTap',
+      langKey: 'lbl_template',
+      validStatus: () => {
+        return this.model!.temporaryTemplateList.length > 0;
+      },
+    },
     specialExplanation: {
       name: 'specialExplanationTab',
       langKey: 'special_explanations',
@@ -156,6 +165,9 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
   ResearchAndStudiesTabStatus: ReadinessStatus = 'READY';
   @ViewChild('researchAndStudiesTap')
   ResearchAndStudiesComponentRef!: ResearchAndStudiesComponent;
+  @ViewChild('dynamicTemplatesTap')
+  DynamicTemplatesComponentRef!: DynamicTemplatesComponent;
+
   loadAttachments: boolean = false;
 
   @ViewChild('attachment')
@@ -170,7 +182,7 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
     private profileService: ProfileService,
     private externalUserService: ExternalUserService,
     public service: CoordinationWithOrganizationsRequestService,
-
+    private dynamicModelService: DynamicModelService,
     public fb: FormBuilder
   ) {
     super();
@@ -195,7 +207,8 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
       (this.model?.organizaionOfficerList?.length! > 0 ||
         this.model?.buildingAbilitiesList?.length! > 0 ||
         this.model?.effectiveCoordinationCapabilities?.length! > 0 ||
-        this.model?.researchAndStudies?.length! > 0)
+        this.model?.researchAndStudies?.length! > 0 ||
+        this.model?.templateList?.length! > 0)
     );
   }
 
@@ -238,6 +251,7 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
       creatorInfo: undefined,
       lastModified: '',
       lastModifier: '',
+      processId: 0,
       ouInfo: undefined,
       search(searchText: string, searchFieldsName: string | undefined): boolean {
         return false;
@@ -249,7 +263,8 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
       participatingOrganizaionList: [],
       organizaionOfficerList: [],
       effectiveCoordinationCapabilities: [],
-      researchAndStudies: []
+      researchAndStudies: [],
+      templateList: []
     });
   }
 
@@ -258,7 +273,8 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
       this.model!.temporaryOrganizaionOfficerList?.length > 0 &&
       (this.model!.temporaryBuildingAbilitiesList?.length > 0 ||
         this.model!.temporaryEffectiveCoordinationCapabilities?.length > 0 ||
-        this.model!.temporaryResearchAndStudies?.length > 0)
+        this.model!.temporaryResearchAndStudies?.length > 0 ||
+        this.model!.temporaryTemplateList?.length > 0)
     );
   }
 
@@ -269,6 +285,7 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
     this.currentUserOrgId = this.employeeService.getProfile()?.id;
     this.loadOrgUnits();
     this.loadOrgUsers();
+    this.loadCoordForms();
     this.datepickerOptionsMap = {
       licenseStartDate: DateUtils.getDatepickerOptions({
         disablePeriod: !this.isLicensingUser ? 'none' : 'past',
@@ -278,7 +295,11 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
       }),
     };
   }
-
+  loadCoordForms() {
+    this.dynamicModelService.loadActive().subscribe((forms) => {
+      this.formsList = forms;
+    })
+  }
   _buildForm(): void {
     this.form = this.fb.group(
       new CoordinationWithOrganizationsRequest().formBuilder(true)
@@ -296,6 +317,9 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
     }
     if (this.ResearchAndStudiesComponentRef) {
       this.model!.researchAndStudies = this.ResearchAndStudiesComponentRef.list;
+    }
+    if (this.DynamicTemplatesComponentRef) {
+      this.model!.templateList = this.DynamicTemplatesComponentRef.list;
     }
   }
 
@@ -409,6 +433,9 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
     if (this.ResearchAndStudiesComponentRef) {
       this.ResearchAndStudiesComponentRef.list = [];
     }
+    if (this.DynamicTemplatesComponentRef) {
+      this.DynamicTemplatesComponentRef.list = [];
+    }
 
 
     this.loadOrgUnits(true);
@@ -419,7 +446,13 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
     this.destroy$.complete();
     this.destroy$.unsubscribe();
   }
-
+  handleDomainChange() {
+    this.templateField.setValidators([]);
+    if (this.isOtherDomain) {
+      this.templateField.setValidators([Validators.required]);
+    }
+    this.templateField.reset();
+  }
   getTabInvalidStatus(tabName: string): boolean {
     return !this.tabsData[tabName].validStatus();
   }
@@ -456,7 +489,7 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
 
   loadOrgUsers() {
     this.externalUserService
-      .getByCriteria({'profile-id': this.employeeService.getProfile()?.id!})
+      .getByCriteria({ 'profile-id': this.employeeService.getProfile()?.id! })
       .pipe(
         map((records) => {
           const list: OrganizationOfficer[] = [];
@@ -519,32 +552,38 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
       ? updatedModel
       : new CoordinationWithOrganizationsRequest().clone(this.model);
 
-      model!.temporaryOrganizaionOfficerList! = model!.temporaryOrganizaionOfficerList.filter(
+    model!.temporaryOrganizaionOfficerList! = model!.temporaryOrganizaionOfficerList.filter(
+      (x) => x.organizationId === orgId
+    );
+    model!.temporaryBuildingAbilitiesList! = model!.temporaryBuildingAbilitiesList.filter(
+      (x) => x.organizationId === orgId
+    );
+    model!.temporaryEffectiveCoordinationCapabilities! =
+      model!.temporaryEffectiveCoordinationCapabilities.filter(
         (x) => x.organizationId === orgId
       );
-      model!.temporaryBuildingAbilitiesList! = model!.temporaryBuildingAbilitiesList.filter(
+    model!.temporaryResearchAndStudies! = model!.temporaryResearchAndStudies.filter(
+      (x) => x.organizationId === orgId
+    );
+    model!.temporaryTemplateList! = model!.temporaryTemplateList.filter(
+      (x) => x.profileId === orgId
+    );
+    model!.organizaionOfficerList! = model!.organizaionOfficerList.filter(
+      (x) => x.organizationId === orgId
+    );
+    model!.buildingAbilitiesList! = model!.buildingAbilitiesList.filter(
+      (x) => x.organizationId === orgId
+    );
+    model!.effectiveCoordinationCapabilities! =
+      model!.effectiveCoordinationCapabilities.filter(
         (x) => x.organizationId === orgId
       );
-      model!.temporaryEffectiveCoordinationCapabilities! =
-        model!.temporaryEffectiveCoordinationCapabilities.filter(
-          (x) => x.organizationId === orgId
-        );
-      model!.temporaryResearchAndStudies! = model!.temporaryResearchAndStudies.filter(
-        (x) => x.organizationId === orgId
-      );
-      model!.organizaionOfficerList! = model!.organizaionOfficerList.filter(
-        (x) => x.organizationId === orgId
-      );
-      model!.buildingAbilitiesList! = model!.buildingAbilitiesList.filter(
-        (x) => x.organizationId === orgId
-      );
-      model!.effectiveCoordinationCapabilities! =
-        model!.effectiveCoordinationCapabilities.filter(
-          (x) => x.organizationId === orgId
-        );
-      model!.researchAndStudies! = model!.researchAndStudies.filter(
-        (x) => x.organizationId === orgId
-      );
+    model!.researchAndStudies! = model!.researchAndStudies.filter(
+      (x) => x.organizationId === orgId
+    );
+    model!.templateList! = model!.templateList.filter(
+      (x) => x.profileId === orgId
+    );
     return model;
   }
 
@@ -572,6 +611,9 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
     model!.temporaryResearchAndStudies! = model!.temporaryResearchAndStudies.filter(
       (x) => x.organizationId !== orgId
     );
+    model!.temporaryTemplateList! = model!.temporaryTemplateList.filter(
+      (x) => x.profileId !== orgId
+    );
 
 
     return model;
@@ -590,6 +632,9 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
     if (this.ResearchAndStudiesComponentRef) {
       this.ResearchAndStudiesComponentRef.allowListUpdate = true;
     }
+    if (this.DynamicTemplatesComponentRef) {
+      this.DynamicTemplatesComponentRef.allowListUpdate = true;
+    }
   }
 
   disableListsUpdate() {
@@ -605,6 +650,9 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
     }
     if (this.ResearchAndStudiesComponentRef) {
       this.ResearchAndStudiesComponentRef.allowListUpdate = false;
+    }
+    if (this.DynamicTemplatesComponentRef) {
+      this.DynamicTemplatesComponentRef.allowListUpdate = false;
     }
   }
 
@@ -629,6 +677,17 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
       licenseEndDate: this.licenseEndDate,
     };
   }
+
+  get isOtherDomain() {
+    return this.domainField.value == CoordinationTypes.Other;
+  }
+  get domainField() {
+    return this.form.get('domain') as UntypedFormControl;
+  }
+  get templateField() {
+    return this.form.get('processId') as UntypedFormControl;
+  }
+
   get organizationOfficersList(): OrganizationOfficer[] | [] {
     if (this.isInternalUser) return this.model?.organizaionOfficerList ?? [];
     return this.model?.temporaryOrganizaionOfficerList ?? [];
@@ -642,11 +701,15 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
     | EffectiveCoordinationCapabilities[]
     | [] {
     if (this.isInternalUser)
-      return this.model?.effectiveCoordinationCapabilities?? [];
-    return this.model?.temporaryEffectiveCoordinationCapabilities?? [];
+      return this.model?.effectiveCoordinationCapabilities ?? [];
+    return this.model?.temporaryEffectiveCoordinationCapabilities ?? [];
   }
   get researchAndStudiesList(): ResearchAndStudies[] | [] {
-    if (this.isInternalUser) return this.model?.researchAndStudies?? [];
-    return this.model?.temporaryResearchAndStudies?? [];
+    if (this.isInternalUser) return this.model?.researchAndStudies ?? [];
+    return this.model?.temporaryResearchAndStudies ?? [];
+  }
+  get dynamicTemplatesList(): CoordinationWithOrganizationTemplate[] | [] {
+    if (this.isInternalUser) return this.model?.templateList ?? [];
+    return this.model?.temporaryTemplateList ?? [];
   }
 }
