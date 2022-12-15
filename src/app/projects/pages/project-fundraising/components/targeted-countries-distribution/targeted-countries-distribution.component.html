@@ -1,3 +1,50 @@
+<div class="row mb-2">
+  <app-page-header [pageTitle]="'deduction_ratio_items'"></app-page-header>
+</div>
 <div class="row">
+  <div class="col-md-4 col-sm-12 mb-4 position-relative">
+    <div class="d-flex align-items-end gap-2">
+      <div class="flex-grow-1">
+        <ng-select [formControl]="item" appendTo="body" [clearable]="true" id="selectedCountry"
+                   placeholder="{{lang.map.select}}"
+                   [notFoundText]="lang.map.msg_not_found"
+                   [readonly]="readonly">
+          <ng-option [disabled]="itemExists(option.id)" [value]="option"
+                     *ngFor="let option of countries">{{option.getName()}}</ng-option>
+        </ng-select>
+      </div>
+      <button (click)="!readonly && addItem()" [disabled]="readonly || !item.value"
+              class="btn btn-primary">{{lang.map.btn_add}}</button>
+    </div>
+  </div>
+</div>
 
+<div class="row mb-2">
+  <app-table #table [data]="model.amountOverCountriesList"
+             [columns]="displayedColumns" sortableTable="">
+    <table cdk-table [dataSource]="table.dataSource" class="table table-striped table-bordered caption-top">
+      <ng-container cdkColumnDef="country">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.country}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.countryInfo.getName()}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="amount">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.target_amount}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.targetAmount}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="actions">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
+        <td cdk-cell *cdkCellDef="let row">
+          <button class="btn icon-btn" (click)="deleteCountry(row)">
+            <i class="mdi mdi-trash-can"></i>
+          </button>
+        </td>
+      </ng-container>
+      <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="displayedColumns"></tr>
+      <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
+      <tr *cdkNoDataRow>
+        <td colspan="20">{{lang.map.no_records_to_display}}</td>
+      </tr>
+    </table>
+  </app-table>
+  <app-paginator #paginator></app-paginator>
 </div>

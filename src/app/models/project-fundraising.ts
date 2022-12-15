@@ -165,6 +165,13 @@ export class ProjectFundraising extends CaseModel<ProjectFundraisingService, Pro
     return this
   }
 
+  updateDeductionRatioItem(deductionType: number, amount: number): void {
+    this.deductedPercentagesItemList = this.deductedPercentagesItemList.map(item => {
+      item.deductionType === deductionType ? (item.deductionPercent = amount) : null
+      return item
+    })
+  }
+
   removeDeductionRatioItem(deductionItem: DeductedPercentage): ProjectFundraising {
     this.deductedPercentagesItemList = this.deductedPercentagesItemList.filter(item => item.deductionType !== deductionItem.deductionType)
     return this;
@@ -223,10 +230,18 @@ export class ProjectFundraising extends CaseModel<ProjectFundraisingService, Pro
         publicStatusInfo: undefined
       })
     })
+
     this.deductedPercentagesItemList = this.deductedPercentagesItemList!.map((item: DeductedPercentage) => {
       return item.clone({
         ...item,
         deductionTypeInfo: undefined
+      })
+    })
+
+    this.amountOverCountriesList = this.amountOverCountriesList!.map((item) => {
+      return item.clone({
+        ...item,
+        countryInfo: undefined
       })
     })
   }

@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  distribute_evenly: string;
   total_payments_should_be_less_than_or_equal_to_transfer_amount: string;
   total_payments_is_greater_than_transfer_amount: string;
   the_transfer_amount_has_been_depleted: string;

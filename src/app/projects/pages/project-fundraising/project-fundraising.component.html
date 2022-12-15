@@ -346,9 +346,11 @@
                                [operation]="operation"></deduction-ratio-manager>
 
       <targeted-countries-distribution [model]="model!"
+                                       [countriesChange]="countriesField.value"
                                        [readonly]="(isExtendOrCancelRequestType() || readonly)"
                                        [countries]="countries"
                                        [operation]="operation"></targeted-countries-distribution>
+
       <targeted-years-distribution [model]="model!"
                                    [readonly]="(isExtendOrCancelRequestType() || readonly)"
                                    [numberOfMonths]="licenseDuration.value"

@@ -167,14 +167,17 @@ export class DeductionRatioManagerComponent implements OnInit, OnDestroy {
         newValue = Number(newValue);
         const item = this.deductionRatioItemsMap[id];
         if (item) {
-          newValue > item.maxLimit ? input.setValue(item.maxLimit, {
-            emitEvent: false
-          }) : null
-
-          newValue < item.minLimit ? input.setValue(item.minLimit, {
-            emitEvent: false
-          }) : null
+          if (newValue > item.maxLimit) {
+            input.setValue(item.maxLimit, {
+              emitEvent: false
+            })
+          } else if (newValue < item.minLimit) {
+            input.setValue(item.minLimit, {
+              emitEvent: false
+            })
+          }
         }
+        this.model.updateDeductionRatioItem(Number(id), Number(input.getRawValue()))
         this.calculateDeductionRatio()
       })
   }
@@ -200,6 +203,7 @@ export class DeductionRatioManagerComponent implements OnInit, OnDestroy {
   private calculateTotalAdminDeduction(): number {
     this.totalAdminRatio = (this.totalDeductionRatio * this.model.projectTotalCost) / 100;
     this.model.setTargetAmount(this.totalAdminRatio + this.model.projectTotalCost);
+    this.model.administrativeDeductionAmount = this.totalAdminRatio;
     return this.totalAdminRatio;
   }
 

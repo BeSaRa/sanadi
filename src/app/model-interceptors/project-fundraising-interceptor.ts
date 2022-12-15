@@ -9,16 +9,26 @@ import {AmountOverCountry} from "@app/models/amount-over-country";
 export class ProjectFundraisingInterceptor implements IModelInterceptor<ProjectFundraising> {
 
   send(model: Partial<ProjectFundraising>): Partial<ProjectFundraising> {
+
     model.beforeSend!()
     ProjectFundraisingInterceptor._deleteBeforeSend(model);
     return model;
   }
 
   receive(model: ProjectFundraising): ProjectFundraising {
-    model.templateList = model.templateList ? model.templateList.map(item => new ProjectTemplate().clone({...item})) : []
-    model.deductedPercentagesItemList = model.deductedPercentagesItemList ? model.deductedPercentagesItemList.map(item => new DeductedPercentage().clone({...item})) : []
+    model.templateList = model.templateList ? model.templateList.map(item => new ProjectTemplate().clone({
+      ...item,
+      templateStatusInfo: AdminResult.createInstance(item.templateStatusInfo)
+    })) : []
+    model.deductedPercentagesItemList = model.deductedPercentagesItemList ? model.deductedPercentagesItemList.map(item => new DeductedPercentage().clone({
+      ...item,
+      deductionTypeInfo: AdminResult.createInstance(item.deductionTypeInfo)
+    })) : []
     model.amountOverYearsList = model.amountOverYearsList ? model.amountOverYearsList.map(item => new AmountOverYear().clone({...item})) : []
-    model.amountOverCountriesList = model.amountOverCountriesList ? model.amountOverCountriesList.map(item => new AmountOverCountry().clone({...item})) : []
+    model.amountOverCountriesList = model.amountOverCountriesList ? model.amountOverCountriesList.map(item => new AmountOverCountry().clone({
+      ...item,
+      countryInfo: AdminResult.createInstance(item.countryInfo)
+    })) : []
     model.countriesInfo = model.countriesInfo ? model.countriesInfo.map(item => AdminResult.createInstance(item)) : []
 
     model.domainInfo = AdminResult.createInstance(model.domainInfo)
