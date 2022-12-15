@@ -274,7 +274,7 @@
             <app-field-error-message controlName="projectTotalCost"></app-field-error-message>
           </div>
         </div>
-        <div class="row">
+        <div *ngIf="displayLicenseAndTargetCostFields" class="row">
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="licenseDuration"
                    for="licenseDuration">{{lang.map.license_duration}} ({{lang.map.months}})</label>

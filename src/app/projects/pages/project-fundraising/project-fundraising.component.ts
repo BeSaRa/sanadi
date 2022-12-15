@@ -319,20 +319,17 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     const allFields = aidFields.concat(domainFields)
 
     if (this.displayAidSection) {
-      console.log('AID BLOCK');
       this.displayLicenseAndTargetCostFields = false
       this.markAsFieldsUnTouchedAndPristine(domainFields)
       this.markUnRequiredFields(domainFields)
       this.markRequiredFields(aidFields)
     } else if (this.displayDomainSection) {
-      console.log('AID DOMAIN');
       this.displayLicenseAndTargetCostFields = false
       this.markAsFieldsUnTouchedAndPristine(aidFields)
       this.markUnRequiredFields(aidFields)
       this.markRequiredFields([this.domain])
       this.domain.setValue(DomainTypes.HUMANITARIAN)
     } else {
-      console.log('ELSE');
       this.markUnRequiredFields(allFields)
       this.displayLicenseAndTargetCostFields = true
     }
@@ -365,14 +362,11 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     if (this.displayOuchSection) {
       this.markRequiredFields(ochaFields)
       this.markUnRequiredFields(dacFields)
-      this.displayLicenseAndTargetCostFields = true;
     } else if (this.displayDacSection) {
       this.markRequiredFields(dacFields)
       this.markUnRequiredFields(ochaFields)
-      this.displayLicenseAndTargetCostFields = true;
     } else {
       this.markUnRequiredFields(allFields)
-      this.displayLicenseAndTargetCostFields = false;
     }
     this.loadDacOuchMain(domain)
   }
