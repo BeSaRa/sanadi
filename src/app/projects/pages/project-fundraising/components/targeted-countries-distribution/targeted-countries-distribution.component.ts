@@ -4,10 +4,14 @@ import {ProjectFundraisingService} from "@services/project-fundraising.service";
 import {Country} from "@app/models/country";
 import {OperationTypes} from "@app/enums/operation-types.enum";
 import {BehaviorSubject, Subject} from "rxjs";
-import {takeUntil} from "rxjs/operators";
+import {filter, takeUntil} from "rxjs/operators";
 import {LangService} from "@services/lang.service";
 import {UntypedFormControl} from "@angular/forms";
 import {AmountOverCountry} from "@app/models/amount-over-country";
+import {AdminResult} from "@app/models/admin-result";
+import {DialogService} from "@services/dialog.service";
+import {UserClickOn} from "@app/enums/user-click-on.enum";
+import {CustomValidators} from "@app/validators/custom-validators";
 
 @Component({
   selector: 'targeted-countries-distribution',
@@ -24,14 +28,19 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
   @Input()
   readonly: boolean = false;
 
+  countriesList: Country[] = []
+
   item: UntypedFormControl = new UntypedFormControl()
 
   private destroy$: Subject<any> = new Subject<any>()
 
   private countriesChange$: BehaviorSubject<number[] | undefined> = new BehaviorSubject<number[] | undefined>(undefined)
 
-  displayedColumns: string[] = ['country', 'amount'];
+  displayedColumns: string[] = ['arName', 'enName', 'amount'];
 
+  selectedIds: number[] = [];
+
+  maskPattern = CustomValidators.inputMaskPatterns;
 
   @Input()
   set countriesChange(value: number[]) {
@@ -39,7 +48,10 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
   }
 
 
-  constructor(private service: ProjectFundraisingService, public lang: LangService) {
+  constructor(private service: ProjectFundraisingService,
+              private dialog: DialogService,
+              public lang: LangService) {
+
   }
 
   ngOnDestroy(): void {
@@ -52,26 +64,63 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
     if (this.operation === OperationTypes.CREATE) {
       this.displayedColumns.push('actions')
     }
+    this.updateSelectedIds()
     this.listenToCountriesChanges()
   }
 
   private listenToCountriesChanges() {
     this.countriesChange$
       .pipe(takeUntil(this.destroy$))
-      .subscribe((val) => {
-        console.log(val);
+      .pipe(filter((val): val is number[] => !!val))
+      .subscribe(() => {
+        this.generateCountryList()
       })
   }
 
+  private generateCountryList(): void {
+    this.countriesList = this.countries.filter(country => this.countriesChange$.value?.includes(country.id))
+  }
+
   itemExists(id: number): boolean {
-    return (this.countriesChange$.value ?? []).includes(id)
+    return this.selectedIds.includes(id)
   }
 
   addItem(): void {
-    console.log('ADD');
+    if (!this.item.value)
+      return
+
+
+    const country = this.item.value as Country
+    const amount = (new AmountOverCountry()).clone({
+      country: country.id,
+      targetAmount: this.countriesChange$.value?.length === 1 ? this.model.targetAmount : 0,
+      countryInfo: AdminResult.createInstance({
+        ...country
+      })
+    })
+    this.model.addCountry(amount)
+    this.updateSelectedIds()
+    this.item.setValue(null)
   }
 
   deleteCountry(row: AmountOverCountry) {
+    this.dialog
+      .confirm(this.lang.map.msg_confirm_delete_x.change({x: row.countryInfo.getName()}))
+      .onAfterClose$
+      .pipe(filter(val => val === UserClickOn.YES))
+      .subscribe(() => {
+        this.model.removeCountry(row.country)
+        this.updateSelectedIds()
+      })
 
+  }
+
+  private updateSelectedIds(): void {
+    this.selectedIds = this.model.amountOverCountriesList.map(item => item.country)
+  }
+
+  amountChanged($event: KeyboardEvent, row: AmountOverCountry) {
+    const input = $event.target as HTMLInputElement
+    row.targetAmount = Number(input.value)
   }
 }

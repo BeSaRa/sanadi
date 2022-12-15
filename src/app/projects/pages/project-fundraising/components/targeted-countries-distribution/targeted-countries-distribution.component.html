@@ -1,5 +1,5 @@
 <div class="row mb-2">
-  <app-page-header [pageTitle]="'deduction_ratio_items'"></app-page-header>
+  <app-page-header [pageTitle]="'distribute_target_amount_over_countries'"></app-page-header>
 </div>
 <div class="row">
   <div class="col-md-4 col-sm-12 mb-4 position-relative">
@@ -10,7 +10,7 @@
                    [notFoundText]="lang.map.msg_not_found"
                    [readonly]="readonly">
           <ng-option [disabled]="itemExists(option.id)" [value]="option"
-                     *ngFor="let option of countries">{{option.getName()}}</ng-option>
+                     *ngFor="let option of countriesList">{{option.getName()}}</ng-option>
         </ng-select>
       </div>
       <button (click)="!readonly && addItem()" [disabled]="readonly || !item.value"
@@ -23,19 +23,29 @@
   <app-table #table [data]="model.amountOverCountriesList"
              [columns]="displayedColumns" sortableTable="">
     <table cdk-table [dataSource]="table.dataSource" class="table table-striped table-bordered caption-top">
-      <ng-container cdkColumnDef="country">
-        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.country}}</th>
-        <td cdk-cell *cdkCellDef="let row"> {{row.countryInfo.getName()}} </td>
+      <ng-container cdkColumnDef="arName">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.arabic_name}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.countryInfo.arName}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="enName">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.english_name}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.countryInfo.enName}} </td>
       </ng-container>
       <ng-container cdkColumnDef="amount">
-        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.target_amount}}</th>
-        <td cdk-cell *cdkCellDef="let row"> {{row.targetAmount}} </td>
+        <th cdk-header-cell style="width:300px" *cdkHeaderCellDef> {{lang.map.target_amount}}</th>
+        <td cdk-cell *cdkCellDef="let row; let i = index">
+          <input (keyup)="amountChanged($event , row)" value="{{row.targetAmount}}" id="country_field_{{i}}"
+                 [mask]="maskPattern.NUMBER_ONLY"
+                 style="width:100px"
+
+                 class="form-control form-control-sm">
+        </td>
       </ng-container>
       <ng-container cdkColumnDef="actions">
-        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
+        <th cdk-header-cell style="width: 100px" *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
         <td cdk-cell *cdkCellDef="let row">
           <button class="btn icon-btn" (click)="deleteCountry(row)">
-            <i class="mdi mdi-trash-can"></i>
+            <i class="mdi text-primary mdi-trash-can"></i>
           </button>
         </td>
       </ng-container>

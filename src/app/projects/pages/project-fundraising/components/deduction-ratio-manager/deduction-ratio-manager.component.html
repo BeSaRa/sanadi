@@ -35,7 +35,6 @@
       <ng-container cdkColumnDef="percentage">
         <th cdk-header-cell style="width:300px" *cdkHeaderCellDef> {{lang.map.percentage}}</th>
         <td cdk-cell *cdkCellDef="let row ; let i = index">
-          <!--          <span>{{row.deductionPercent}}</span>-->
           <ng-container [formGroupName]="i">
             <input [mask]="maskPattern.PERCENT" suffix="%" [dropSpecialCharacters]="false" style="width:100px"
                    id="field_name_{{i}}" [readonly]="readonly"

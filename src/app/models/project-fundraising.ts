@@ -131,14 +131,13 @@ export class ProjectFundraising extends CaseModel<ProjectFundraisingService, Pro
       sanadiMainClassification: controls ? [sanadiMainClassification] : sanadiMainClassification,
       licenseDuration: controls ? [licenseDuration, [CustomValidators.required]] : licenseDuration,
       projectTotalCost: controls ? [projectTotalCost, [CustomValidators.required]] : projectTotalCost,
-
     }
   }
 
   buildExplanation(controls: boolean = false): any {
     const {description} = this;
     return {
-      description: controls ? [description, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : description,
+      description: controls ? [description, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : description,
     }
   }
 
@@ -218,6 +217,14 @@ export class ProjectFundraising extends CaseModel<ProjectFundraisingService, Pro
       return item
     })
     return this;
+  }
+
+  addCountry(country: AmountOverCountry): void {
+    this.amountOverCountriesList = this.amountOverCountriesList.concat([country])
+  }
+
+  removeCountry(id: number): void {
+    this.amountOverCountriesList = this.amountOverCountriesList.filter(item => item.country !== id)
   }
 
 

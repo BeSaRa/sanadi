@@ -16,6 +16,7 @@ export interface ILanguageKeys {
   add_template: string;
   qr: string;
   please_add_deduction_items_to_proceed: string;
+  distribute_target_amount_over_countries: string;
   distribute_target_amount_over_years: string;
   please_add_template_to_proceed: string;
   total_deduction_ratio: string;
