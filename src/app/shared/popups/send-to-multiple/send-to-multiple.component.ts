@@ -71,6 +71,12 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
     AdminstrationDepartmentCodes.LCN,
     AdminstrationDepartmentCodes.SVC
   ]
+  NPOManagmentApprovalDepartments = [
+    AdminstrationDepartmentCodes.RC,
+    AdminstrationDepartmentCodes.LCN,
+    AdminstrationDepartmentCodes.LA,
+    AdminstrationDepartmentCodes.SVC
+  ]
 
 
   multiSendToDepartmentWFResponseList = [
@@ -104,6 +110,8 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
         this.loadInternalBankAccountApprovalDepartments();
       } else if (this.data.sendToResponse === WFResponseType.FOREIGN_COUNTRIES_PROJECTS_LICENSING_SEND_TO_MULTI_DEPARTMENTS) {
         this.loadForeignCountiesProjectsApprovalDepartments();
+      } else if (this.data.sendToResponse === WFResponseType.REVIEW_NPO_MANAGEMENT) {
+        this.loadNPOManagmentApprovalDepartments()
       } else {
         this.loadDepartments();
       }
@@ -227,6 +235,13 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(deps => this.departments = deps.filter(dep => this.ForeignCountiesProjectsApprovalDepartments.includes(dep.code as AdminstrationDepartmentCodes)));
   }
+
+  loadNPOManagmentApprovalDepartments(): void {
+    this.intDepService.loadAsLookups()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(deps => this.departments = deps.filter(dep => this.NPOManagmentApprovalDepartments.includes(dep.code as AdminstrationDepartmentCodes)));
+  }
+
 
   loadUsersByTeamLookup(teamLookupKey: number): void {
     this.teamService
