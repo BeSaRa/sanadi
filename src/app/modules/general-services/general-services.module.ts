@@ -1,3 +1,4 @@
+import { ForeignCountriesProjectsApprovalPopupComponent } from './popups/foreign-countries-projects-approval-popup/foreign-countries-projects-approval-popup.component';
 import {FormlyMaskInputFieldComponent} from '@app/services-search/components/formly-mask-input-field/formly-mask-input-field.component';
 import {FormlySelectFieldComponent} from '@app/services-search/components/formly-select-field/formly-select-field.component';
 import {FormlyDateFieldComponent} from '@app/services-search/components/formly-date-field/formly-date-field.component';
@@ -58,6 +59,7 @@ import { InternationalCooperationComponent } from './pages/international-coopera
   declarations: [
     GeneralServicesComponent,
     GeneralProcessNotificationApprovalComponent,
+    ForeignCountriesProjectsApprovalPopupComponent,
     ConsultationComponent,
     EmploymentApproveComponent,
     NpoContactOfficerComponent,
