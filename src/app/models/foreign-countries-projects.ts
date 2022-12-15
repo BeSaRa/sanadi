@@ -45,7 +45,7 @@ export class ForeignCountriesProjects extends _RequestType<ForeignCountriesProje
   description!: string;
   recommendation!: string;
   subject!: string;
-  entityClassification!: string;
+
   // for approval popup
   nPOList!: number[];
   followUpDate!: string | IMyDateModel;
@@ -78,8 +78,7 @@ export class ForeignCountriesProjects extends _RequestType<ForeignCountriesProje
       justification,
       classDescription,
       recommendation,
-      needSubject,
-      entityClassification,
+      needSubject
     } = this;
     return {
       oldLicenseFullSerial: withControls ? [oldLicenseFullSerial] : oldLicenseFullSerial,
@@ -90,8 +89,7 @@ export class ForeignCountriesProjects extends _RequestType<ForeignCountriesProje
       needSubject: withControls ? [needSubject, [CustomValidators.required, CustomValidators.maxLength(300)]] : needSubject,
       classDescription: withControls ? [classDescription, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : classDescription,
       justification: withControls ? [justification, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : justification,
-      recommendation: withControls ? [recommendation, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : recommendation,
-      entityClassification
+      recommendation: withControls ? [recommendation, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : recommendation
     };
   }
 

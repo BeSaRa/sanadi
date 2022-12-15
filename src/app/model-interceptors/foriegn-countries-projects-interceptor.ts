@@ -14,7 +14,6 @@ export class ForeignCountriesProjectsInterceptor implements IModelInterceptor<Fo
         model.followUpDate as unknown as IMyDateModel
       )?.toISOString();
 
-    delete model.entityClassification;
     delete model.requestTypeInfo;
     delete model.service;
     delete model.employeeService;

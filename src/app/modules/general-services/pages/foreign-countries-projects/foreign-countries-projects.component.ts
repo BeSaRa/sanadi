@@ -1,3 +1,4 @@
+import { EmployeeService } from './../../../../services/employee.service';
 import { AfterViewInit, ChangeDetectorRef, Component, QueryList, TemplateRef, ViewChild, ViewChildren, } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { OperationTypes } from '@app/enums/operation-types.enum';
@@ -59,6 +60,7 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
     private dialog: DialogService,
     private licenseService: LicenseService,
     private cd: ChangeDetectorRef,
+    private employeeService: EmployeeService,
     private toast: ToastService,
     private profileService: ProfileService) {
     super();
@@ -133,11 +135,18 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
   get oldLicenseFullSerialField(): UntypedFormControl {
     return this.basicInfo?.get('oldLicenseFullSerial') as UntypedFormControl;
   }
+  get organizationIdFeild(): UntypedFormControl {
+    return this.basicInfo?.get('organizationId')! as UntypedFormControl;
+  }
 
   get specialExplanation(): UntypedFormGroup {
     return this.form.get('explanation')! as UntypedFormGroup;
   }
 
+
+  get isExternalUser() {
+    return this.employeeService.isExternalUser();
+  }
   licenseSearch($event?: Event): void {
     $event?.preventDefault();
     let value = '';
@@ -292,6 +301,7 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
   }
 
   _afterBuildForm(): void {
+    this.organizationIdFeild.setValue(this.employeeService.getProfile()?.id);
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
