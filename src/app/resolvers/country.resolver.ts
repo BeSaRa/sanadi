@@ -12,6 +12,6 @@ export class CountryResolver implements Resolve<Country[]> {
   }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Country[]> {
-    return this.countryService.load()
+    return this.countryService.loadAsLookups()
   }
 }
