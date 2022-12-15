@@ -194,6 +194,16 @@ export class ProjectFundraising extends CaseModel<ProjectFundraisingService, Pro
     return this
   }
 
+  removeYearByName(yearName: string): ProjectFundraising {
+    this.amountOverYearsList = this.amountOverYearsList.filter(year => year.year !== yearName)
+    return this;
+  }
+
+  removeYearsExcept(yearsName: string[]): ProjectFundraising {
+    this.amountOverYearsList = this.amountOverYearsList.filter(item => yearsName.includes(item.year))
+    return this
+  }
+
   updateYear(value: number, index: number): ProjectFundraising {
     this.amountOverYearsList = this.amountOverYearsList.map((item, i) => {
       if (index == i)

@@ -90,6 +90,10 @@ export class TargetedYearsDistributionComponent implements OnInit, OnDestroy {
 
   private generateYearList(numberOfYears: number) {
     this.yearsList = Array.from({length: numberOfYears}, (_, i) => (i + 1).toString());
+    if (this.yearsList.length !== this.model.amountOverYearsList.length) {
+      this.makeYearsMatchInModel()
+    }
+    this.updateSelectedList()
   }
 
   addItem(): void {
@@ -169,5 +173,48 @@ export class TargetedYearsDistributionComponent implements OnInit, OnDestroy {
           this.model.updateYear(value, index)
         }
       })
+  }
+
+  private makeYearsMatchInModel() {
+    const years = this.yearsList.length;
+    const amount = this.model.amountOverYearsList.length;
+    years > amount ? this.addItemsToModel() : this.removeItemsFromModel();
+  }
+
+  private addItemsToModel() {
+    const onlyOneYear = this.yearsList.length === 1;
+    if (onlyOneYear) {
+      this.addYearToModel(this.yearsList[0], this.model.targetAmount)
+    } else {
+      const existsList = this.model.amountOverYearsList.map(item => item.year);
+      this.yearsList.forEach(item => {
+        (!existsList.includes(item) ? this.addYearToModel(item, 0) : null)
+      })
+    }
+  }
+
+  private removeItemsFromModel() {
+    this.model.removeYearsExcept(this.yearsList)
+    const controlsNeedToBeRemoved = (this.list.controls as UntypedFormGroup[]).filter((item) => {
+      return !this.yearsList.includes(item.controls.year.value)
+    });
+    controlsNeedToBeRemoved.forEach(ctrl => {
+      this.removeControlFromList(ctrl)
+    })
+
+  }
+
+  private removeControlFromList(item: AbstractControl): void {
+    this.list.controls.forEach((ctrl, index) => {
+      ctrl === item ? this.list.removeAt(index) : null
+    })
+  }
+
+  private addYearToModel(year: string, amount: number): void {
+    const amountOverYear = new AmountOverYear().clone({year: year, targetAmount: amount});
+    const ctrl = this.createControl(amountOverYear.year, amount)
+    this.listenToControl(ctrl, this.list.length)
+    this.list.push(ctrl)
+    this.model.addYear(amountOverYear)
   }
 }
