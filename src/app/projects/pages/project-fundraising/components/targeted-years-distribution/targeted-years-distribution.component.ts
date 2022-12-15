@@ -157,13 +157,16 @@ export class TargetedYearsDistributionComponent implements OnInit, OnDestroy {
       .pipe(debounceTime(300))
       .pipe(map(val => Number(val)))
       .subscribe((value: number) => {
-        const currentValue = this.list.controls.reduce((acc, con, currentIndex) => {
-          console.log(currentIndex, con, acc);
+        let currentValue = this.list.controls.reduce((acc, con, currentIndex) => {
           return acc + (currentIndex !== index ? Number(con.value) : 0)
         }, 0) + value
         if (currentValue > this.model.targetAmount) {
           const toBeRemoved = currentValue - this.model.targetAmount;
-          input.setValue((currentValue - toBeRemoved), {emitEvent: false})
+          const correctedValue = (currentValue - toBeRemoved)
+          input.setValue(correctedValue, {emitEvent: false})
+          this.model.updateYear(correctedValue, index)
+        } else {
+          this.model.updateYear(value, index)
         }
       })
   }

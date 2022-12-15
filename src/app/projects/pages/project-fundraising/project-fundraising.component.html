@@ -1,5 +1,5 @@
 <div class="row">
-  <tabs-list [activeTabIndex]="1">
+  <tabs-list>
     <tab name="basic_info" [hasError]="basicInfo.invalid" [template]="basic_info" [title]="lang.map.lbl_basic_info">
     </tab>
     <tab name="templates" [template]="template_deduction_ratio_info"
@@ -297,8 +297,8 @@
     </ng-template>
 
     <ng-template #template_deduction_ratio_info>
-      <app-page-header class="mb-2" *ngIf="templateRequired"
-                       [clickOnNew$]="addTemplate$"
+      <app-page-header class="mb-2" [hidden]="!templateRequired" [clickOnNew$]="addTemplate$"
+                       [addPermission]="!(isExtendOrCancelRequestType() || readonly) && templateRequired"
                        [pageTitle]="'templates'"></app-page-header>
       <div *ngIf="templateRequired" class="row">
         <app-table #table sortableTable
@@ -351,7 +351,7 @@
                                        [operation]="operation"></targeted-countries-distribution>
       <targeted-years-distribution [model]="model!"
                                    [readonly]="(isExtendOrCancelRequestType() || readonly)"
-                                   [numberOfMonths]="13"
+                                   [numberOfMonths]="licenseDuration.value"
                                    [operation]="operation"></targeted-years-distribution>
     </ng-template>
     <ng-container formGroupName="explanation">

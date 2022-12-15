@@ -193,4 +193,31 @@ export class ProjectFundraising extends CaseModel<ProjectFundraisingService, Pro
     this.amountOverYearsList = this.amountOverYearsList.concat([value])
     return this
   }
+
+  updateYear(value: number, index: number): ProjectFundraising {
+    this.amountOverYearsList = this.amountOverYearsList.map((item, i) => {
+      if (index == i)
+        item.targetAmount = value
+      return item
+    })
+    return this;
+  }
+
+
+  beforeSend(): void {
+    this.templateList = this.templateList!.map((item: ProjectTemplate) => {
+      return item.clone({
+        ...item,
+        searchFields: undefined,
+        templateStatusInfo: undefined,
+        publicStatusInfo: undefined
+      })
+    })
+    this.deductedPercentagesItemList = this.deductedPercentagesItemList!.map((item: DeductedPercentage) => {
+      return item.clone({
+        ...item,
+        deductionTypeInfo: undefined
+      })
+    })
+  }
 }

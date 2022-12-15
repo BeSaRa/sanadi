@@ -9,18 +9,8 @@ import {AmountOverCountry} from "@app/models/amount-over-country";
 export class ProjectFundraisingInterceptor implements IModelInterceptor<ProjectFundraising> {
 
   send(model: Partial<ProjectFundraising>): Partial<ProjectFundraising> {
-    delete model.domainInfo
-    delete model.workAreaInfo
-    delete model.permitTypeInfo
-    delete model.projectTypeInfo
-    delete model.mainDACCategoryInfo
-    delete model.mainUNOCHACategoryInfo
-    delete model.subUNOCHACategoryInfo
-    delete model.subDACCategoryInfo
-    delete model.internalProjectClassificationInfo
-    delete model.sanadiDomainInfo
-    delete model.sanadiMainClassificationInfo
-    delete model.requestTypeInfo
+    model.beforeSend!()
+    ProjectFundraisingInterceptor._deleteBeforeSend(model);
     return model;
   }
 
@@ -45,5 +35,23 @@ export class ProjectFundraisingInterceptor implements IModelInterceptor<ProjectF
     model.requestTypeInfo = AdminResult.createInstance(model.requestTypeInfo)
 
     return model
+  }
+
+  static _deleteBeforeSend(model: Partial<ProjectFundraising>): void {
+    delete model.employeeService;
+    delete model.domainInfo
+    delete model.workAreaInfo
+    delete model.permitTypeInfo
+    delete model.projectTypeInfo
+    delete model.mainDACCategoryInfo
+    delete model.mainUNOCHACategoryInfo
+    delete model.subUNOCHACategoryInfo
+    delete model.subDACCategoryInfo
+    delete model.internalProjectClassificationInfo
+    delete model.sanadiDomainInfo
+    delete model.sanadiMainClassificationInfo
+    delete model.requestTypeInfo
+    delete model.licenseStatusInfo
+    delete model.countriesInfo
   }
 }
