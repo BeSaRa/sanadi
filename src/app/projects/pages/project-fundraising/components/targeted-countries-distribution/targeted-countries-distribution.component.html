@@ -35,7 +35,7 @@
         <th cdk-header-cell style="width:300px" *cdkHeaderCellDef> {{lang.map.target_amount}}</th>
         <td cdk-cell *cdkCellDef="let row; let i = index">
           <input (keyup)="amountChanged($event , row)" value="{{row.targetAmount}}" id="country_field_{{i}}"
-                 [mask]="maskPattern.NUMBER_ONLY"
+                 [mask]="maskPattern.DECIMAL()"
                  style="width:100px"
 
                  class="form-control form-control-sm">

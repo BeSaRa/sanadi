@@ -202,7 +202,7 @@ export class DeductionRatioManagerComponent implements OnInit, OnDestroy {
 
   private calculateTotalAdminDeduction(): number {
     this.totalAdminRatio = (this.totalDeductionRatio * this.model.projectTotalCost) / 100;
-    this.model.setTargetAmount(this.totalAdminRatio + this.model.projectTotalCost);
+    this.model.setTargetAmount(Number(this.totalAdminRatio + this.model.projectTotalCost));
     this.model.administrativeDeductionAmount = this.totalAdminRatio;
     return this.totalAdminRatio;
   }

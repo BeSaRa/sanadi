@@ -274,7 +274,7 @@
             <app-field-error-message controlName="projectTotalCost"></app-field-error-message>
           </div>
         </div>
-        <div class="row" *ngIf="displayLLicenseAndTargetCostFields">
+        <div class="row">
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="licenseDuration"
                    for="licenseDuration">{{lang.map.license_duration}} ({{lang.map.months}})</label>
@@ -288,7 +288,10 @@
             <label class="form-label" asteriskIfRequired="projectTotalCost"
                    for="projectTotalCost">{{lang.map.project_total_cost}}</label>
             <!--suppress XmlDuplicatedId -->
-            <input id="projectTotalCost" validationClasses="projectTotalCost" formControlName="projectTotalCost"
+            <input id="projectTotalCost"
+                   [mask]="inputMaskPatterns.SEPARATOR"
+                   [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR"
+                   validationClasses="projectTotalCost" formControlName="projectTotalCost"
                    class="form-control" [readonly]="(isExtendOrCancelRequestType() || readonly)">
             <app-field-error-message controlName="projectTotalCost"></app-field-error-message>
           </div>
@@ -344,13 +347,11 @@
                                [readonly]="(isExtendOrCancelRequestType() || readonly)"
                                [workArea]="projectWorkArea.value" [permitType]="permitType.value"
                                [operation]="operation"></deduction-ratio-manager>
-
       <targeted-countries-distribution [model]="model!"
                                        [countriesChange]="countriesField.value"
                                        [readonly]="(isExtendOrCancelRequestType() || readonly)"
                                        [countries]="countries"
                                        [operation]="operation"></targeted-countries-distribution>
-
       <targeted-years-distribution [model]="model!"
                                    [readonly]="(isExtendOrCancelRequestType() || readonly)"
                                    [numberOfMonths]="licenseDuration.value"

@@ -57,7 +57,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   displayDacSection: boolean = false;
   displayOuchSection: boolean = false;
   disableQatarFromSelection: boolean = false;
-  displayLLicenseAndTargetCostFields = false;
+  displayLicenseAndTargetCostFields = false;
   displayedColumns = ['name', 'serial', 'status', 'totalCost', 'actions']
   templateRequired: boolean = false;
   addTemplate$: Subject<any> = new Subject<any>();
@@ -319,19 +319,22 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     const allFields = aidFields.concat(domainFields)
 
     if (this.displayAidSection) {
-      this.displayLLicenseAndTargetCostFields = false
+      console.log('AID BLOCK');
+      this.displayLicenseAndTargetCostFields = false
       this.markAsFieldsUnTouchedAndPristine(domainFields)
       this.markUnRequiredFields(domainFields)
       this.markRequiredFields(aidFields)
     } else if (this.displayDomainSection) {
-      this.displayLLicenseAndTargetCostFields = false
+      console.log('AID DOMAIN');
+      this.displayLicenseAndTargetCostFields = false
       this.markAsFieldsUnTouchedAndPristine(aidFields)
       this.markUnRequiredFields(aidFields)
       this.markRequiredFields([this.domain])
       this.domain.setValue(DomainTypes.HUMANITARIAN)
     } else {
+      console.log('ELSE');
       this.markUnRequiredFields(allFields)
-      this.displayLLicenseAndTargetCostFields = true
+      this.displayLicenseAndTargetCostFields = true
     }
     // we will ge the total coast from the template
     this.templateRequired ? this.projectTotalCost.disable() : this.projectTotalCost.enable()
@@ -362,14 +365,14 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     if (this.displayOuchSection) {
       this.markRequiredFields(ochaFields)
       this.markUnRequiredFields(dacFields)
-      this.displayLLicenseAndTargetCostFields = true;
+      this.displayLicenseAndTargetCostFields = true;
     } else if (this.displayDacSection) {
       this.markRequiredFields(dacFields)
       this.markUnRequiredFields(ochaFields)
-      this.displayLLicenseAndTargetCostFields = true;
+      this.displayLicenseAndTargetCostFields = true;
     } else {
       this.markUnRequiredFields(allFields)
-      this.displayLLicenseAndTargetCostFields = false;
+      this.displayLicenseAndTargetCostFields = false;
     }
     this.loadDacOuchMain(domain)
   }
