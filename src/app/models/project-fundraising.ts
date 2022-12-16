@@ -227,6 +227,16 @@ export class ProjectFundraising extends CaseModel<ProjectFundraisingService, Pro
     this.amountOverCountriesList = this.amountOverCountriesList.filter(item => item.country !== id)
   }
 
+  calculateAllCountriesAmount(): number {
+    return this.amountOverCountriesList.reduce((acc, country) => acc + country.targetAmount, 0)
+  }
+
+  calculateAllCountriesExcept(countryId: number): number {
+    return this.amountOverCountriesList.reduce((acc, country) => {
+      return acc + (country.country == countryId ? 0 : country.targetAmount)
+    }, 0)
+  }
+
 
   beforeSend(): void {
     this.templateList = this.templateList!.map((item: ProjectTemplate) => {
@@ -250,6 +260,13 @@ export class ProjectFundraising extends CaseModel<ProjectFundraisingService, Pro
         ...item,
         countryInfo: undefined
       })
+    })
+  }
+
+  updateCountryAmount(countryId: number, correctedAmount: number) {
+    this.amountOverCountriesList = this.amountOverCountriesList.map(country => {
+      country.country === countryId ? (country.targetAmount = correctedAmount) : null
+      return country
     })
   }
 }

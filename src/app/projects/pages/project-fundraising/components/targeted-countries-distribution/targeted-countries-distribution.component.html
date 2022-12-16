@@ -19,8 +19,8 @@
   </div>
 </div>
 
-<div class="row mb-2">
-  <app-table #table [data]="model.amountOverCountriesList"
+<div [formGroup]="items" class="row mb-2">
+  <app-table formArrayName="items" #table [data]="model.amountOverCountriesList"
              [columns]="displayedColumns" sortableTable="">
     <table cdk-table [dataSource]="table.dataSource" class="table table-striped table-bordered caption-top">
       <ng-container cdkColumnDef="arName">
@@ -34,17 +34,20 @@
       <ng-container cdkColumnDef="amount">
         <th cdk-header-cell style="width:300px" *cdkHeaderCellDef> {{lang.map.target_amount}}</th>
         <td cdk-cell *cdkCellDef="let row; let i = index">
-          <input (keyup)="amountChanged($event , row)" value="{{row.targetAmount}}" id="country_field_{{i}}"
-                 [mask]="maskPattern.DECIMAL()"
-                 style="width:100px"
-
-                 class="form-control form-control-sm">
+          <ng-container [formGroupName]="i">
+            <input id="country_field_{{i}}"
+                   [mask]="maskPattern.DECIMAL()"
+                   [dropSpecialCharacters]="false"
+                   style="width:100px"
+                   formControlName="targetAmount"
+                   class="form-control form-control-sm">
+          </ng-container>
         </td>
       </ng-container>
       <ng-container cdkColumnDef="actions">
         <th cdk-header-cell style="width: 100px" *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
-        <td cdk-cell *cdkCellDef="let row">
-          <button class="btn icon-btn" (click)="deleteCountry(row)">
+        <td cdk-cell *cdkCellDef="let row; let i = index">
+          <button class="btn icon-btn" (click)="deleteCountry(row , i)">
             <i class="mdi text-primary mdi-trash-can"></i>
           </button>
         </td>

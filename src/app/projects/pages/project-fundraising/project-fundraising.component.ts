@@ -529,10 +529,12 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       }, {})
   }
 
+  // noinspection JSUnusedLocalSymbols
   private _test(): void {
+    this.permitType.setValue(ProjectPermitTypes.SECTIONAL_BASKET)
     this.projectWorkArea.setValue(ProjectWorkArea.OUTSIDE_QATAR)
     this.domain.setValue(DomainTypes.HUMANITARIAN)
-    this.countriesField.setValue([231])
+    this.countriesField.setValue([231, 232, 233])
     this.mainUNOCHACategory.setValue(1)
   }
 

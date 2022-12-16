@@ -11,6 +11,7 @@ import {CustomValidators} from "@app/validators/custom-validators";
 import {DeductedPercentage} from "@app/models/deducted-percentage";
 import {DialogService} from "@services/dialog.service";
 import {UserClickOn} from "@app/enums/user-click-on.enum";
+import currency from "currency.js";
 
 @Component({
   selector: 'deduction-ratio-manager',
@@ -201,8 +202,8 @@ export class DeductionRatioManagerComponent implements OnInit, OnDestroy {
   }
 
   private calculateTotalAdminDeduction(): number {
-    this.totalAdminRatio = (this.totalDeductionRatio * this.model.projectTotalCost) / 100;
-    this.model.setTargetAmount(Number(this.totalAdminRatio + this.model.projectTotalCost));
+    this.totalAdminRatio = currency((this.totalDeductionRatio * this.model.projectTotalCost) / 100).value;
+    this.model.setTargetAmount(currency(this.totalAdminRatio).value + currency(this.model.projectTotalCost).value);
     this.model.administrativeDeductionAmount = this.totalAdminRatio;
     return this.totalAdminRatio;
   }

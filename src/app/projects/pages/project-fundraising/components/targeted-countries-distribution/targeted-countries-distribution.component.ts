@@ -4,14 +4,15 @@ import {ProjectFundraisingService} from "@services/project-fundraising.service";
 import {Country} from "@app/models/country";
 import {OperationTypes} from "@app/enums/operation-types.enum";
 import {BehaviorSubject, Subject} from "rxjs";
-import {filter, takeUntil} from "rxjs/operators";
+import {debounceTime, filter, map, takeUntil} from "rxjs/operators";
 import {LangService} from "@services/lang.service";
-import {UntypedFormControl} from "@angular/forms";
+import {UntypedFormArray, UntypedFormControl, UntypedFormGroup} from "@angular/forms";
 import {AmountOverCountry} from "@app/models/amount-over-country";
 import {AdminResult} from "@app/models/admin-result";
 import {DialogService} from "@services/dialog.service";
 import {UserClickOn} from "@app/enums/user-click-on.enum";
 import {CustomValidators} from "@app/validators/custom-validators";
+import currency from "currency.js";
 
 @Component({
   selector: 'targeted-countries-distribution',
@@ -42,6 +43,10 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
 
   maskPattern = CustomValidators.inputMaskPatterns;
 
+  items = new UntypedFormGroup({
+    items: new UntypedFormArray([])
+  })
+
   @Input()
   set countriesChange(value: number[]) {
     this.countriesChange$.next(value)
@@ -68,6 +73,10 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
     this.listenToCountriesChanges()
   }
 
+  get list(): UntypedFormArray {
+    return this.items.get('items')! as UntypedFormArray
+  }
+
   private listenToCountriesChanges() {
     this.countriesChange$
       .pipe(takeUntil(this.destroy$))
@@ -88,29 +97,26 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
   addItem(): void {
     if (!this.item.value)
       return
-
-
-    const country = this.item.value as Country
-    const amount = (new AmountOverCountry()).clone({
-      country: country.id,
-      targetAmount: this.countriesChange$.value?.length === 1 ? this.model.targetAmount : 0,
-      countryInfo: AdminResult.createInstance({
-        ...country
-      })
+    const country = new AmountOverCountry().clone({
+      country: this.item.value.id,
+      targetAmount: 0,
+      countryInfo: AdminResult.createInstance(this.item.value)
     })
-    this.model.addCountry(amount)
+    const control = this.createControl(country.country, country.targetAmount)
+    this.listenToControl(control)
+    this.list.push(control)
+    this.model.addCountry(country)
     this.updateSelectedIds()
     this.item.setValue(null)
   }
 
-  deleteCountry(row: AmountOverCountry) {
+  deleteCountry(row: AmountOverCountry, index: number) {
     this.dialog
       .confirm(this.lang.map.msg_confirm_delete_x.change({x: row.countryInfo.getName()}))
       .onAfterClose$
       .pipe(filter(val => val === UserClickOn.YES))
       .subscribe(() => {
-        this.model.removeCountry(row.country)
-        this.updateSelectedIds()
+        this.removeItem(row, index)
       })
 
   }
@@ -119,8 +125,36 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
     this.selectedIds = this.model.amountOverCountriesList.map(item => item.country)
   }
 
-  amountChanged($event: KeyboardEvent, row: AmountOverCountry) {
-    const input = $event.target as HTMLInputElement
-    row.targetAmount = Number(input.value)
+  createControl(country: number, targetAmount: number): UntypedFormGroup {
+    return new UntypedFormGroup({
+      country: new UntypedFormControl(country),
+      targetAmount: new UntypedFormControl(targetAmount)
+    })
+  }
+
+  listenToControl(group: UntypedFormGroup): void {
+    const control = group.controls.targetAmount;
+    const countryId = group.controls.country.value as number;
+    control.valueChanges
+      .pipe(filter((value): value is number => value !== null))
+      .pipe(debounceTime(300))
+      .pipe(map((value) => Number(value)))
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((amount: number) => {
+        const targetAmount = this.model.targetAmount;
+        const amountChanged = amount + this.model.calculateAllCountriesExcept(countryId)
+        const correctedAmount = currency(amountChanged).value > currency(targetAmount).value ? (currency(amount).subtract(currency(amountChanged).subtract(targetAmount).value)).value : amount
+        if (currency(amountChanged).value > currency(targetAmount).value) {
+          control.setValue(correctedAmount, {emitEvent: false})
+        }
+        this.model.updateCountryAmount(countryId, correctedAmount)
+      })
+  }
+
+  private removeItem(country: AmountOverCountry, index: number): void {
+    const id = country.country
+    this.model.removeCountry(id);
+    this.list.removeAt(index)
+    this.updateSelectedIds()
   }
 }
