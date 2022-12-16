@@ -191,4 +191,44 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
     this.totalValue = this.model.calculateAllCountriesAmount()
     this.remain = currency(this.model.targetAmount).subtract(this.totalValue).value
   }
+
+  addAllCountries(): void {
+    this.countriesList.forEach(item => {
+      if (!this.selectedIds.includes(item.id)) {
+        this.item.setValue(item)
+        this.addItem()
+      }
+    })
+  }
+
+  distributeRemaining() {
+    const length = this.model.amountOverCountriesList.length
+    if (length === 0)
+      return;
+    if (length === 1) {
+      const input = (this.list.controls as UntypedFormGroup[])[0].controls.targetAmount;
+      const value = input.getRawValue();
+      input.setValue(currency(value).add(this.remain).value)
+      return;
+    }
+    const mod = this.remain % length
+    const dontDistribute = mod == this.remain
+    if (dontDistribute) {
+      return
+    }
+    const amountToDistribute = (this.remain - mod) / length;
+    (this.list.controls as UntypedFormGroup[])
+      .forEach((group) => {
+        const currentValue = currency(group.controls.targetAmount.getRawValue()).value
+        group.controls.targetAmount.setValue(currency(currentValue).add(amountToDistribute).value)
+      })
+
+  }
+
+  takeTheRemaining(i: number) {
+    if (this.remain != 0) {
+      const input = (this.list.at(i) as UntypedFormGroup).controls.targetAmount
+      input.setValue(currency(input.getRawValue()).add(this.remain).value)
+    }
+  }
 }

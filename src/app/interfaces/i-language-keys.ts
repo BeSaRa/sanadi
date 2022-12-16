@@ -1,4 +1,6 @@
 export interface ILanguageKeys {
+  take_the_remaining: string;
+  btn_add_all: string;
   remain: string;
   total: string;
   distribute_evenly: string;
