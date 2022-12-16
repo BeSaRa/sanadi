@@ -6,7 +6,7 @@ import {LangService} from "@services/lang.service";
 import {DeductionRatioItem} from "@app/models/deduction-ratio-item";
 import {AbstractControl, FormGroup, UntypedFormArray, UntypedFormControl, UntypedFormGroup} from "@angular/forms";
 import {BehaviorSubject, combineLatest, Subject} from "rxjs";
-import {debounceTime, filter, startWith, switchMap, takeUntil} from "rxjs/operators";
+import {debounceTime, distinctUntilChanged, filter, startWith, switchMap, takeUntil} from "rxjs/operators";
 import {CustomValidators} from "@app/validators/custom-validators";
 import {DeductedPercentage} from "@app/models/deducted-percentage";
 import {DialogService} from "@services/dialog.service";
@@ -35,24 +35,24 @@ export class DeductionRatioManagerComponent implements OnInit, OnDestroy {
   maskPattern = CustomValidators.inputMaskPatterns;
   totalDeductionRatio: number = 0;
   @Input()
-  readonly: boolean = false;
-  @Input()
   checkForTemplate: boolean = false;
   clearItems$: Subject<boolean> = new Subject()
+  form: UntypedFormGroup = new FormGroup<any>({
+    list: new UntypedFormArray([])
+  })
+  @Output()
+  afterClearItems: EventEmitter<void> = new EventEmitter<void>()
+  @Output()
+  deductionChange: EventEmitter<number> = new EventEmitter<number>()
+  @Input()
+  readonly: boolean = false;
+  totalAdminRatio: number = 0;
+  deductionAmountHasChanges$: Subject<any> = new Subject<any>()
 
   @Input()
   set clearItems(value: boolean) {
     this.clearItems$.next(value)
   }
-
-
-  public form: UntypedFormGroup = new FormGroup<any>({
-    list: new UntypedFormArray([])
-  })
-
-  @Output()
-  afterClearItems: EventEmitter<void> = new EventEmitter<void>()
-  totalAdminRatio: number = 0;
 
   constructor(private service: ProjectFundraisingService,
               private dialog: DialogService,
@@ -64,17 +64,9 @@ export class DeductionRatioManagerComponent implements OnInit, OnDestroy {
     this._permitType.next(value)
   }
 
-  get permitType(): number {
-    return 200
-  }
-
   @Input()
   set workArea(value: number) {
     this._workArea.next(value)
-  }
-
-  get workArea(): number {
-    return 102
   }
 
   get list(): UntypedFormArray {
@@ -104,6 +96,7 @@ export class DeductionRatioManagerComponent implements OnInit, OnDestroy {
     this.listenToUpdates();
     this.updateItemIds();
     this.listenToClearItems();
+    this.listenToDeductionChanges()
   }
 
 
@@ -163,7 +156,7 @@ export class DeductionRatioManagerComponent implements OnInit, OnDestroy {
       .valueChanges
       .pipe(takeUntil(this.destroyInputsListeners))
       .pipe(startWith(Number(input.value)))
-      .pipe(debounceTime(300))
+      .pipe(debounceTime(400))
       .subscribe((newValue) => {
         newValue = Number(newValue);
         const item = this.deductionRatioItemsMap[id];
@@ -180,14 +173,13 @@ export class DeductionRatioManagerComponent implements OnInit, OnDestroy {
         }
         this.model.updateDeductionRatioItem(Number(id), Number(input.getRawValue()))
         this.calculateDeductionRatio()
+        this.deductionAmountHasChanges$.next(input.getRawValue())
       })
   }
 
   private createInputListeners(): void {
-    this.list.controls.forEach((item) => {
-      ((control) => {
-        this.listenToControl(control)
-      })(item)
+    this.list.controls.forEach((control) => {
+      this.listenToControl(control)
     })
   }
 
@@ -231,6 +223,16 @@ export class DeductionRatioManagerComponent implements OnInit, OnDestroy {
         this.list.clear()
         this.calculateDeductionRatio()
         this.afterClearItems.emit()
+      })
+  }
+
+  private listenToDeductionChanges() {
+    this.deductionAmountHasChanges$
+      .pipe(debounceTime(300))
+      .pipe(distinctUntilChanged())
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((value: number) => {
+        this.deductionChange.emit(value)
       })
   }
 }

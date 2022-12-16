@@ -67,6 +67,8 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   clearDeductionItems: boolean = false;
   selectedLicense?: ProjectFundraising;
 
+  deductionRatioChanged: boolean = false
+
   constructor(
     private activatedRoute: ActivatedRoute,
     public fb: UntypedFormBuilder,
@@ -534,7 +536,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     this.permitType.setValue(ProjectPermitTypes.SECTIONAL_BASKET)
     this.projectWorkArea.setValue(ProjectWorkArea.OUTSIDE_QATAR)
     this.domain.setValue(DomainTypes.HUMANITARIAN)
-    this.countriesField.setValue([231, 232, 233])
+    this.countriesField.setValue([231])
     this.mainUNOCHACategory.setValue(1)
   }
 
@@ -587,6 +589,13 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   isEditRequestTypeAllowed(): boolean {
     // allow edit if new record or saved as draft
     return !this.model?.id || (!!this.model?.id && this.model.canCommit());
+  }
+
+  onDeductionRatioChanges() {
+    console.log('WELCOME');
+    this.deductionRatioChanged = false
+    setTimeout(() => this.deductionRatioChanged = true)
+
   }
 
   handleReadonly(): void {
