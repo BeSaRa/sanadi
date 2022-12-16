@@ -107,7 +107,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     this.overrideValuesInCreate()
     this.listenToAddTemplate()
     this.listenToProjectTotalCoastChanges()
-    // this._test()
+    this._test()
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {

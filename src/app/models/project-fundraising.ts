@@ -11,6 +11,7 @@ import {AmountOverCountry} from "@app/models/amount-over-country";
 import {ProjectFundraisingInterceptor} from "@app/model-interceptors/project-fundraising-interceptor";
 import {InterceptModel} from "@decorators/intercept-model";
 import {EmployeeService} from "@services/employee.service";
+import currency from "currency.js";
 
 const {send, receive} = new ProjectFundraisingInterceptor()
 
@@ -228,7 +229,7 @@ export class ProjectFundraising extends CaseModel<ProjectFundraisingService, Pro
   }
 
   calculateAllCountriesAmount(): number {
-    return this.amountOverCountriesList.reduce((acc, country) => acc + country.targetAmount, 0)
+    return this.amountOverCountriesList.reduce((acc, country) => currency(acc).add(country.targetAmount).value, 0)
   }
 
   calculateAllCountriesExcept(countryId: number): number {

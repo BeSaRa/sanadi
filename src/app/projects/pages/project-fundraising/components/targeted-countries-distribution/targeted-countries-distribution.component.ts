@@ -13,11 +13,13 @@ import {DialogService} from "@services/dialog.service";
 import {UserClickOn} from "@app/enums/user-click-on.enum";
 import {CustomValidators} from "@app/validators/custom-validators";
 import currency from "currency.js";
+import {MaskPipe} from "ngx-mask";
 
 @Component({
   selector: 'targeted-countries-distribution',
   templateUrl: './targeted-countries-distribution.component.html',
-  styleUrls: ['./targeted-countries-distribution.component.scss']
+  styleUrls: ['./targeted-countries-distribution.component.scss'],
+  providers: [MaskPipe]
 })
 export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy {
   @Input()
@@ -47,6 +49,10 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
     items: new UntypedFormArray([])
   })
 
+  private destroyInputListeners$: Subject<any> = new Subject<any>();
+  totalValue: number = 0;
+  remain: number = 0;
+
   @Input()
   set countriesChange(value: number[]) {
     this.countriesChange$.next(value)
@@ -55,6 +61,7 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
 
   constructor(private service: ProjectFundraisingService,
               private dialog: DialogService,
+              private maskPipe: MaskPipe,
               public lang: LangService) {
 
   }
@@ -63,18 +70,31 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
     this.destroy$.next()
     this.destroy$.complete()
     this.destroy$.unsubscribe()
+
+    this.destroyInputListeners$.next()
+    this.destroyInputListeners$.complete()
+    this.destroyInputListeners$.unsubscribe()
   }
+
 
   ngOnInit(): void {
     if (this.operation === OperationTypes.CREATE) {
       this.displayedColumns.push('actions')
     }
     this.updateSelectedIds()
+    this.generateInputsControllers()
+    this.listenToControllers()
     this.listenToCountriesChanges()
   }
 
   get list(): UntypedFormArray {
     return this.items.get('items')! as UntypedFormArray
+  }
+
+  private listenToControllers(): void {
+    this.list.controls.forEach((group) => {
+      this.listenToControl(group as UntypedFormGroup)
+    })
   }
 
   private listenToCountriesChanges() {
@@ -118,11 +138,11 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
       .subscribe(() => {
         this.removeItem(row, index)
       })
-
   }
 
   private updateSelectedIds(): void {
     this.selectedIds = this.model.amountOverCountriesList.map(item => item.country)
+    this.updateTotalValue()
   }
 
   createControl(country: number, targetAmount: number): UntypedFormGroup {
@@ -137,17 +157,20 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
     const countryId = group.controls.country.value as number;
     control.valueChanges
       .pipe(filter((value): value is number => value !== null))
-      .pipe(debounceTime(300))
-      .pipe(map((value) => Number(value)))
+      .pipe(debounceTime(500))
+      .pipe(map((value) => currency(value).value))
       .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntil(this.destroyInputListeners$))
       .subscribe((amount: number) => {
+        console.log(amount);
         const targetAmount = this.model.targetAmount;
         const amountChanged = amount + this.model.calculateAllCountriesExcept(countryId)
         const correctedAmount = currency(amountChanged).value > currency(targetAmount).value ? (currency(amount).subtract(currency(amountChanged).subtract(targetAmount).value)).value : amount
         if (currency(amountChanged).value > currency(targetAmount).value) {
-          control.setValue(correctedAmount, {emitEvent: false})
+          control.setValue(this.maskPipe.transform(correctedAmount, this.maskPattern.SEPARATOR, this.maskPattern.THOUSAND_SEPARATOR), {emitEvent: false})
         }
         this.model.updateCountryAmount(countryId, correctedAmount)
+        this.updateTotalValue()
       })
   }
 
@@ -156,5 +179,16 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
     this.model.removeCountry(id);
     this.list.removeAt(index)
     this.updateSelectedIds()
+  }
+
+  private generateInputsControllers() {
+    this.model.amountOverCountriesList.forEach(amount => {
+      this.list.push(this.createControl(amount.country, amount.targetAmount))
+    })
+  }
+
+  private updateTotalValue(): void {
+    this.totalValue = this.model.calculateAllCountriesAmount()
+    this.remain = currency(this.model.targetAmount).subtract(this.totalValue).value
   }
 }
