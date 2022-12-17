@@ -109,7 +109,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     this.overrideValuesInCreate()
     this.listenToAddTemplate()
     this.listenToProjectTotalCoastChanges()
-    this._test()
+    // this._test()
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
@@ -303,6 +303,9 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     this.displayDomainSection = workArea === ProjectWorkArea.OUTSIDE_QATAR && [ProjectPermitTypes.SINGLE_TYPE_PROJECT, ProjectPermitTypes.SECTIONAL_BASKET].includes(permitType);
     this.displayAidSection = workArea === ProjectWorkArea.INSIDE_QATAR && [ProjectPermitTypes.SINGLE_TYPE_PROJECT, ProjectPermitTypes.SECTIONAL_BASKET].includes(permitType);
     this.templateRequired = permitType === ProjectPermitTypes.SINGLE_TYPE_PROJECT
+    this.displayLicenseAndTargetCostFields = (workArea === ProjectWorkArea.OUTSIDE_QATAR && permitType === ProjectPermitTypes.SINGLE_TYPE_PROJECT)
+      || [ProjectPermitTypes.UNCONDITIONAL_RECEIVE, ProjectPermitTypes.CHARITY].includes(permitType)
+    
     const domainFields = [
       this.domain,
       this.mainDACCategory,
@@ -321,19 +324,16 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     const allFields = aidFields.concat(domainFields)
 
     if (this.displayAidSection) {
-      this.displayLicenseAndTargetCostFields = false
       this.markAsFieldsUnTouchedAndPristine(domainFields)
       this.markUnRequiredFields(domainFields)
       this.markRequiredFields(aidFields)
     } else if (this.displayDomainSection) {
-      this.displayLicenseAndTargetCostFields = false
       this.markAsFieldsUnTouchedAndPristine(aidFields)
       this.markUnRequiredFields(aidFields)
       this.markRequiredFields([this.domain])
       this.domain.setValue(DomainTypes.HUMANITARIAN)
     } else {
       this.markUnRequiredFields(allFields)
-      this.displayLicenseAndTargetCostFields = true
     }
     // we will ge the total coast from the template
     this.templateRequired ? this.projectTotalCost.disable() : this.projectTotalCost.enable()

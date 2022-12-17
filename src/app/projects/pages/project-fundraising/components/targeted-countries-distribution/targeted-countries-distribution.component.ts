@@ -176,6 +176,9 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
         if (currency(amountChanged).value > currency(targetAmount).value) {
           control.setValue(this.maskPipe.transform(correctedAmount, this.maskPattern.SEPARATOR, this.maskPattern.THOUSAND_SEPARATOR), {emitEvent: false})
         }
+        if (this.readonly)
+          return;
+
         this.model.updateCountryAmount(countryId, correctedAmount)
         this.updateTotalValue()
       })

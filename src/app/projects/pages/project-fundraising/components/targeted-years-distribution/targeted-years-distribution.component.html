@@ -37,7 +37,7 @@
         <td cdk-cell *cdkCellDef="let row; let i = index">
           <ng-container [formGroupName]="i">
             <div class="d-flex">
-              <input id="year_name_{{i}}" [mask]="maskPattern.SEPARATOR"
+              <input [readonly]="readonly" id="year_name_{{i}}" [mask]="maskPattern.SEPARATOR"
                      [thousandSeparator]="maskPattern.THOUSAND_SEPARATOR"
                      [dropSpecialCharacters]="[',']"
                      style="width:100px" formControlName="targetAmount" class="form-control form-control-sm">

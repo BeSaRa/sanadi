@@ -182,9 +182,9 @@ export class TargetedYearsDistributionComponent implements OnInit, OnDestroy {
           const toBeRemoved = currency(currentValue).subtract(this.model.targetAmount).value;
           const correctedValue = currency(value).subtract(toBeRemoved).value
           input.setValue(this.maskPipe.transform(correctedValue, this.maskPattern.SEPARATOR, this.maskPattern.THOUSAND_SEPARATOR), {emitEvent: false})
-          this.model.updateYear(correctedValue, index)
+          !this.readonly && this.model.updateYear(correctedValue, index)
         } else {
-          this.model.updateYear(value, index)
+          !this.readonly && this.model.updateYear(value, index)
         }
         this.updateTotalValue()
       })
