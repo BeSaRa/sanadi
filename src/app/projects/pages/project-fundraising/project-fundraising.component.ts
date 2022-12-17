@@ -105,10 +105,10 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     this.listenToProjectWorkArea()
     this.listenToSanadiDomainChanges()
     this.listenToMainDacOchaChanges();
-    this.setDefaultValues()
     this.overrideValuesInCreate()
     this.listenToAddTemplate()
     this.listenToProjectTotalCoastChanges()
+    this.setDefaultValues()
     // this._test()
   }
 
@@ -189,10 +189,11 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     }
     this.model = model;
     this.form.patchValue({
-      basicInfo: model?.buildBasicInfo(),
-      explanation: model?.buildExplanation()
+      basicInfo: this.model.buildBasicInfo(),
+      explanation: this.model.buildExplanation()
     });
     this.handleRequestTypeChange(model.requestType, false);
+    this.validateHiddenDisplayFields()
   }
 
   _resetForm(): void {
@@ -298,7 +299,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
         this.handelDomainChanges(domain, permitType)
       })
   }
-  
+
 
   private handelPermitTypeAndWorkAreaChanges(workArea: ProjectWorkArea, permitType: ProjectPermitTypes): void {
     this.displayDomainSection = workArea === ProjectWorkArea.OUTSIDE_QATAR && [ProjectPermitTypes.SINGLE_TYPE_PROJECT, ProjectPermitTypes.SECTIONAL_BASKET].includes(permitType);
@@ -378,7 +379,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     this.projectWorkArea.valueChanges
       .pipe(takeUntil(this.destroy$))
       .subscribe((value: ProjectWorkArea | null) => {
-        this.countriesField.setValue([])
+        !this.readonly && this.countriesField.setValue([])
         value === ProjectWorkArea.INSIDE_QATAR ? this.handleInsideQatar() : this.handleOutsideQatar();
       })
   }
@@ -595,7 +596,16 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   onDeductionRatioChanges() {
     this.deductionRatioChanged = false
     setTimeout(() => this.deductionRatioChanged = true)
+  }
 
+  validateHiddenDisplayFields(): void {
+    const workArea = this.projectWorkArea.value;
+    const permitType = this.permitType.value;
+    const domain = this.domain.value;
+
+    workArea === ProjectWorkArea.INSIDE_QATAR ? this.handleInsideQatar() : workArea === ProjectWorkArea.OUTSIDE_QATAR ? this.handleOutsideQatar() : null;
+    this.handelPermitTypeAndWorkAreaChanges(workArea, permitType)
+    this.handelDomainChanges(domain, workArea)
   }
 
   handleReadonly(): void {
