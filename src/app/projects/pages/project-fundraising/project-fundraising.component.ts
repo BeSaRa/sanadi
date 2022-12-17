@@ -304,7 +304,6 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       })
   }
 
-
   private handelPermitTypeAndWorkAreaChanges(workArea: ProjectWorkArea, permitType: ProjectPermitTypes): void {
     if ([ProjectPermitTypes.UNCONDITIONAL_RECEIVE, ProjectPermitTypes.CHARITY].includes(permitType)) {
       workArea = ProjectWorkArea.INSIDE_QATAR
