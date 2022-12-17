@@ -10,7 +10,7 @@ import {Lookup} from "@app/models/lookup";
 import {LookupService} from "@services/lookup.service";
 import {LangService} from "@services/lang.service";
 import {Country} from "@app/models/country";
-import {filter, switchMap, takeUntil, tap} from "rxjs/operators";
+import {filter, switchMap, takeUntil, tap, withLatestFrom} from "rxjs/operators";
 import {ProjectWorkArea} from "@app/enums/project-work-area";
 import {ProjectPermitTypes} from "@app/enums/project-permit-types";
 import {ServiceRequestTypes} from "@app/enums/service-request-types";
@@ -100,7 +100,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   _afterBuildForm(): void {
-    this.listenToPermitTypeAndWorkAreaChanges()
+    this.listenToPermitTypeChanges()
     this.listenToDomainChanges()
     this.listenToProjectWorkArea()
     this.listenToSanadiDomainChanges()
@@ -282,15 +282,16 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   private setDefaultValues(): void {
     if (this.operation === OperationTypes.CREATE) {
       this.requestType.setValue(ServiceRequestTypes.NEW)
-      this.permitType.setValue(ProjectPermitTypes.SINGLE_TYPE_PROJECT)
       this.projectWorkArea.setValue(ProjectWorkArea.INSIDE_QATAR)
+      this.permitType.setValue(ProjectPermitTypes.SINGLE_TYPE_PROJECT)
     }
   }
 
-  private listenToPermitTypeAndWorkAreaChanges(): void {
-    combineLatest([this.projectWorkArea.valueChanges, this.permitType.valueChanges])
+  private listenToPermitTypeChanges(): void {
+    this.permitType.valueChanges
+      .pipe(withLatestFrom(this.projectWorkArea.valueChanges))
       .pipe(takeUntil(this.destroy$))
-      .subscribe(([workArea, permitType]: [ProjectWorkArea, ProjectPermitTypes]) => {
+      .subscribe(([permitType, workArea]: [ProjectPermitTypes, ProjectWorkArea]) => {
         this.handelPermitTypeAndWorkAreaChanges(workArea, permitType);
       })
   }
@@ -305,6 +306,14 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
 
 
   private handelPermitTypeAndWorkAreaChanges(workArea: ProjectWorkArea, permitType: ProjectPermitTypes): void {
+    if ([ProjectPermitTypes.UNCONDITIONAL_RECEIVE, ProjectPermitTypes.CHARITY].includes(permitType)) {
+      workArea = ProjectWorkArea.INSIDE_QATAR
+      this.projectWorkArea.setValue(ProjectWorkArea.INSIDE_QATAR)
+      this.projectWorkArea.disable()
+    } else {
+      this.projectWorkArea.enable()
+    }
+
     this.displayDomainSection = workArea === ProjectWorkArea.OUTSIDE_QATAR && [ProjectPermitTypes.SINGLE_TYPE_PROJECT, ProjectPermitTypes.SECTIONAL_BASKET].includes(permitType);
     this.displayAidSection = workArea === ProjectWorkArea.INSIDE_QATAR && [ProjectPermitTypes.SINGLE_TYPE_PROJECT, ProjectPermitTypes.SECTIONAL_BASKET].includes(permitType);
     this.templateRequired = permitType === ProjectPermitTypes.SINGLE_TYPE_PROJECT

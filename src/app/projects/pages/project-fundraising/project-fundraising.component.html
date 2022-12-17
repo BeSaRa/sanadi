@@ -16,8 +16,9 @@
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="requestType"
                    for="requestType">{{lang.map.request_type}}</label>
-            <ng-select [selectOnTab]="true" labelForId="requestType" [clearable]="true"
+            <ng-select [selectOnTab]="true" labelForId="requestType"
                        placeholder="{{lang.map.select}}" id="requestType"
+                       [clearable]="false"
                        (change)="handleRequestTypeChange($event, true)"
                        [notFoundText]="lang.map.msg_not_found"
                        [readonly]="!isEditRequestTypeAllowed()"
@@ -33,7 +34,8 @@
                        labelForId="permitType"
                        placeholder="{{lang.map.select}}"
                        [notFoundText]="lang.map.msg_not_found"
-                       appendTo="body" [clearable]="true" id="permitType"
+                       appendTo="body" id="permitType"
+                       [clearable]="false"
                        formControlName="permitType"
                        [readonly]="(isExtendOrCancelRequestType() || readonly)">
               <ng-option [value]="option.lookupKey" *ngFor="let option of permitTypes">{{option.getName()}}</ng-option>
