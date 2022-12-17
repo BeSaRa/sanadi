@@ -592,7 +592,6 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   onDeductionRatioChanges() {
-    console.log('WELCOME');
     this.deductionRatioChanged = false
     setTimeout(() => this.deductionRatioChanged = true)
 

@@ -10,11 +10,14 @@ import {UserClickOn} from "@app/enums/user-click-on.enum";
 import {DialogService} from "@services/dialog.service";
 import {CustomValidators} from "@app/validators/custom-validators";
 import {AmountOverYear} from "@app/models/amount-over-year";
+import currency from "currency.js";
+import {MaskPipe} from "ngx-mask";
 
 @Component({
   selector: 'targeted-years-distribution',
   templateUrl: './targeted-years-distribution.component.html',
-  styleUrls: ['./targeted-years-distribution.component.scss']
+  styleUrls: ['./targeted-years-distribution.component.scss'],
+  providers: [MaskPipe]
 })
 export class TargetedYearsDistributionComponent implements OnInit, OnDestroy {
   @Input()
@@ -34,6 +37,8 @@ export class TargetedYearsDistributionComponent implements OnInit, OnDestroy {
   yearsList: string[] = [];
   maskPattern = CustomValidators.inputMaskPatterns;
   selectedItems: string[] = [];
+  totalValue: number = 0;
+  remain: number = 0;
 
   @Input()
   set numberOfMonths(value: number) {
@@ -46,12 +51,20 @@ export class TargetedYearsDistributionComponent implements OnInit, OnDestroy {
 
   displayedColumns = ['year', 'amount'];
 
+  deductionRatioChanges$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false)
+
+  @Input()
+  set deductionRatioChanged(value: boolean) {
+    this.deductionRatioChanges$.next(value)
+  }
+
   get list(): UntypedFormArray {
     return this.form.get('list')! as UntypedFormArray
   }
 
   constructor(private service: ProjectFundraisingService,
               public lang: LangService,
+              private maskPipe: MaskPipe,
               private dialog: DialogService) {
   }
 
@@ -63,6 +76,7 @@ export class TargetedYearsDistributionComponent implements OnInit, OnDestroy {
     if (this.operation === OperationTypes.CREATE) {
       this.displayedColumns = this.displayedColumns.concat(['actions'])
     }
+    this.listenToDeductionRatioChanges()
   }
 
   ngOnDestroy() {
@@ -90,17 +104,17 @@ export class TargetedYearsDistributionComponent implements OnInit, OnDestroy {
 
   private generateYearList(numberOfYears: number) {
     this.yearsList = Array.from({length: numberOfYears}, (_, i) => (i + 1).toString());
-    if (this.yearsList.length !== this.model.amountOverYearsList.length) {
-      this.makeYearsMatchInModel()
-    }
+    // if (this.yearsList.length !== this.model.amountOverYearsList.length) {
+    //   this.makeYearsMatchInModel()
+    // }
     this.updateSelectedList()
   }
 
-  addItem(): void {
+  addItem(overrideAmount?: number): void {
     if (!this.item.value)
       return;
 
-    const year = new AmountOverYear().clone({year: this.item.value, targetAmount: 0});
+    const year = new AmountOverYear().clone({year: this.item.value, targetAmount: overrideAmount ? overrideAmount : 0});
     const control = this.createControl(year.year, year.targetAmount)
 
     this.listenToControl(control, this.list.length)
@@ -150,31 +164,33 @@ export class TargetedYearsDistributionComponent implements OnInit, OnDestroy {
 
   private updateSelectedList(): void {
     this.selectedItems = this.model.amountOverYearsList.map(item => item.year);
+    this.updateTotalValue()
   }
 
   private listenToControl(control: AbstractControl, index: number): void {
     const input = (control as UntypedFormGroup).controls.targetAmount;
+    const year = (control as UntypedFormGroup).controls.year;
     const value = input.value;
     input.valueChanges
       .pipe(takeUntil(this.destroyListener$))
       .pipe(startWith(Number(value)))
-      .pipe(debounceTime(300))
-      .pipe(map(val => Number(val)))
+      .pipe(debounceTime(400))
+      .pipe(map(val => currency(val).value))
       .subscribe((value: number) => {
-        let currentValue = this.list.controls.reduce((acc, con, currentIndex) => {
-          return acc + (currentIndex !== index ? Number(con.value) : 0)
-        }, 0) + value
+        const currentValue = currency(this.model.calculateAllYearsExcept(year.getRawValue())).add(value).value
         if (currentValue > this.model.targetAmount) {
-          const toBeRemoved = currentValue - this.model.targetAmount;
-          const correctedValue = (currentValue - toBeRemoved)
-          input.setValue(correctedValue, {emitEvent: false})
+          const toBeRemoved = currency(currentValue).subtract(this.model.targetAmount).value;
+          const correctedValue = currency(value).subtract(toBeRemoved).value
+          input.setValue(this.maskPipe.transform(correctedValue, this.maskPattern.SEPARATOR, this.maskPattern.THOUSAND_SEPARATOR), {emitEvent: false})
           this.model.updateYear(correctedValue, index)
         } else {
           this.model.updateYear(value, index)
         }
+        this.updateTotalValue()
       })
   }
 
+  // noinspection JSUnusedLocalSymbols
   private makeYearsMatchInModel() {
     const years = this.yearsList.length;
     const amount = this.model.amountOverYearsList.length;
@@ -216,5 +232,79 @@ export class TargetedYearsDistributionComponent implements OnInit, OnDestroy {
     this.listenToControl(ctrl, this.list.length)
     this.list.push(ctrl)
     this.model.addYear(amountOverYear)
+  }
+
+  private updateTotalValue(): void {
+    this.totalValue = this.model.calculateAllYearsAmount()
+    this.remain = currency(this.model.targetAmount).subtract(this.totalValue).value
+  }
+
+  distributeRemaining() {
+    const length = this.model.amountOverYearsList.length
+    if (length === 0)
+      return;
+    if (length === 1) {
+      const input = (this.list.controls as UntypedFormGroup[])[0].controls.targetAmount;
+      const value = input.getRawValue();
+      input.setValue(currency(value).add(this.remain).value)
+      return;
+    }
+    const mod = this.remain % length
+    const dontDistribute = mod == this.remain
+    if (dontDistribute) {
+      return
+    }
+    const amountToDistribute = (this.remain - mod) / length;
+    (this.list.controls as UntypedFormGroup[])
+      .forEach((group) => {
+        const currentValue = currency(group.controls.targetAmount.getRawValue()).value
+        group.controls.targetAmount.setValue(currency(currentValue).add(amountToDistribute).value)
+      })
+
+  }
+
+  takeTheRemaining(i: number) {
+    if (this.remain != 0) {
+      const input = (this.list.at(i) as UntypedFormGroup).controls.targetAmount
+      input.setValue(currency(input.getRawValue()).add(this.remain).value)
+    }
+  }
+
+  private addOrphanItem(): void {
+    if (this.model.amountOverYearsList.length === 0 && this.yearsList.length === 1) {
+      this.item.setValue(this.yearsList[0])
+      this.addItem(this.model.targetAmount)
+    }
+  }
+
+  private updateOrphanItem(): void {
+    if (this.yearsList.length === 1 && this.model.amountOverYearsList.length === 1) {
+      const input = (this.list.controls[0] as UntypedFormGroup).controls.targetAmount
+      input.setValue(this.model.targetAmount)
+    }
+  }
+
+  private listenToDeductionRatioChanges() {
+    this.deductionRatioChanges$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(filter(value => value))
+      .subscribe(() => {
+        this.addOrphanItem()
+        this.updateOrphanItem()
+      })
+  }
+
+
+  addAllItems(): void {
+    if (this.yearsList.length === 1 && this.model.amountOverYearsList.length === 0) {
+      this.addOrphanItem()
+      return
+    }
+    this.yearsList.forEach(item => {
+      if (!this.selectedItems.includes(item)) {
+        this.item.setValue(item)
+        this.addItem()
+      }
+    })
   }
 }

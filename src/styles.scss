@@ -438,3 +438,10 @@ tr.risk {
   padding-bottom: 0.375rem;
 }
 
+th.remain {
+  background-color: red;
+  color: white;
+  i {
+    color: white !important;
+  }
+}

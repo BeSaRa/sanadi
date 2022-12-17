@@ -177,11 +177,6 @@ export class ProjectFundraising extends CaseModel<ProjectFundraisingService, Pro
     return this;
   }
 
-  removeYear(year: AmountOverYear): ProjectFundraising {
-    this.amountOverYearsList = this.amountOverYearsList.filter(item => !(year.targetAmount === item.targetAmount && year.year === item.year))
-    return this;
-  }
-
   clearDeductionItems(): void {
     this.deductedPercentagesItemList = []
   }
@@ -199,11 +194,6 @@ export class ProjectFundraising extends CaseModel<ProjectFundraisingService, Pro
   addYear(value: AmountOverYear): ProjectFundraising {
     this.amountOverYearsList = this.amountOverYearsList.concat([value])
     return this
-  }
-
-  removeYearByName(yearName: string): ProjectFundraising {
-    this.amountOverYearsList = this.amountOverYearsList.filter(year => year.year !== yearName)
-    return this;
   }
 
   removeYearsExcept(yearsName: string[]): ProjectFundraising {
@@ -228,13 +218,28 @@ export class ProjectFundraising extends CaseModel<ProjectFundraisingService, Pro
     this.amountOverCountriesList = this.amountOverCountriesList.filter(item => item.country !== id)
   }
 
+  removeYear(year: AmountOverYear): ProjectFundraising {
+    this.amountOverYearsList = this.amountOverYearsList.filter(item => !(year.targetAmount === item.targetAmount && year.year === item.year))
+    return this;
+  }
+
   calculateAllCountriesAmount(): number {
     return this.amountOverCountriesList.reduce((acc, country) => currency(acc).add(country.targetAmount).value, 0)
+  }
+
+  calculateAllYearsAmount(): number {
+    return this.amountOverYearsList.reduce((acc, year) => currency(acc).add(year.targetAmount).value, 0)
   }
 
   calculateAllCountriesExcept(countryId: number): number {
     return this.amountOverCountriesList.reduce((acc, country) => {
       return acc + (country.country == countryId ? 0 : country.targetAmount)
+    }, 0)
+  }
+
+  calculateAllYearsExcept(yearName: string): number {
+    return this.amountOverYearsList.reduce((acc, year) => {
+      return currency(acc).add(year.year == yearName ? 0 : year.targetAmount).value
     }, 0)
   }
 

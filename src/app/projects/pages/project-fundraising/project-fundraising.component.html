@@ -357,10 +357,13 @@
         [countries]="countries"
         [operation]="operation"></targeted-countries-distribution>
 
-      <targeted-years-distribution [model]="model!"
-                                   [readonly]="(isExtendOrCancelRequestType() || readonly)"
-                                   [numberOfMonths]="licenseDuration.value"
-                                   [operation]="operation"></targeted-years-distribution>
+      <targeted-years-distribution
+        [deductionRatioChanged]="deductionRatioChanged"
+        [model]="model!"
+        [readonly]="(isExtendOrCancelRequestType() || readonly)"
+        [numberOfMonths]="licenseDuration.value"
+        [operation]="operation"></targeted-years-distribution>
+
     </ng-template>
     <ng-container formGroupName="explanation">
       <ng-template #specialExplanations>

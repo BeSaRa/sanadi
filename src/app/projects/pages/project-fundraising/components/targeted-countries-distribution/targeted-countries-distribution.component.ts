@@ -199,7 +199,7 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
     this.remain = currency(this.model.targetAmount).subtract(this.totalValue).value
   }
 
-  addAllCountries(): void {
+  addAllItems(): void {
     if (this.countriesList.length === 1 && this.model.amountOverCountriesList.length === 0) {
       this.addOrphanItem()
       return
