@@ -298,6 +298,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
         this.handelDomainChanges(domain, permitType)
       })
   }
+  
 
   private handelPermitTypeAndWorkAreaChanges(workArea: ProjectWorkArea, permitType: ProjectPermitTypes): void {
     this.displayDomainSection = workArea === ProjectWorkArea.OUTSIDE_QATAR && [ProjectPermitTypes.SINGLE_TYPE_PROJECT, ProjectPermitTypes.SECTIONAL_BASKET].includes(permitType);
@@ -305,7 +306,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     this.templateRequired = permitType === ProjectPermitTypes.SINGLE_TYPE_PROJECT
     this.displayLicenseAndTargetCostFields = (workArea === ProjectWorkArea.OUTSIDE_QATAR && permitType === ProjectPermitTypes.SINGLE_TYPE_PROJECT)
       || [ProjectPermitTypes.UNCONDITIONAL_RECEIVE, ProjectPermitTypes.CHARITY].includes(permitType)
-    
+
     const domainFields = [
       this.domain,
       this.mainDACCategory,
