@@ -113,6 +113,9 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
+    if (saveType === SaveTypes.DRAFT)
+      return true
+
     return of(this.form.valid)
       .pipe(tap(valid => !valid && this.invalidFormMessage()))
       .pipe(filter(valid => valid));
