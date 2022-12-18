@@ -13,6 +13,7 @@ import { SharedService } from '@app/services/shared.service';
 import { ToastService } from '@app/services/toast.service';
 import { TableComponent } from '@app/shared/components/table/table.component';
 import { DialogRef } from '@app/shared/models/dialog-ref';
+import { CustomValidators } from '@app/validators/custom-validators';
 import { of, Subject } from 'rxjs';
 import { exhaustMap, filter, switchMap, takeUntil } from 'rxjs/operators';
 
@@ -29,7 +30,7 @@ export class DeductionRatioComponent extends AdminGenericComponent<DeductionRati
   commonStatusEnum = CommonStatusEnum;
   maximumDeductionRatio = 50
   displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'status', 'actions'];
-
+  inputMaskPatterns = CustomValidators.inputMaskPatterns;
   constructor(public lang: LangService,
               public service: DeductionRatioItemService,
               private dialogService: DialogService,
