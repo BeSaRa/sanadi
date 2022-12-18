@@ -7,6 +7,9 @@ import {DeductionRatioItemInterceptor} from "@app/model-interceptors/deduction-r
 import {INames} from "@contracts/i-names";
 import {DeductedPercentage} from "@app/models/deducted-percentage";
 import {AdminResult} from "@app/models/admin-result";
+import { searchFunctionType } from "@app/types/types";
+import { CommonStatusEnum } from "@app/enums/common-status.enum";
+import { CustomValidators } from "@app/validators/custom-validators";
 
 const {receive, send} = new DeductionRatioItemInterceptor()
 
@@ -20,10 +23,12 @@ export class DeductionRatioItem extends BaseModel<DeductionRatioItem, DeductionR
   workArea!: number;
   service: DeductionRatioItemService;
   langService!: LangService
-
+  statusInfo!:AdminResult;
+  
   constructor() {
     super();
     this.service = FactoryService.getService('DeductionRatioItemService')
+    this.langService = FactoryService.getService('LangService');
   }
 
   getName(currentLang: string): string {
@@ -39,5 +44,48 @@ export class DeductionRatioItem extends BaseModel<DeductionRatioItem, DeductionR
         enName: this.enName
       })
     })
+  }
+
+  searchFields: { [key: string]: searchFunctionType | string } = {
+    arName: 'arName',
+    enName: 'enName',
+    status: text => !this.statusInfo ? false : this.statusInfo.getName().toLowerCase().indexOf(text) !== -1,
+  };
+
+  updateStatus(newStatus: CommonStatusEnum): any {
+    return this.service.updateStatus(this.id, newStatus);
+  }
+
+  buildForm(controls?: boolean): any {
+    const {
+      arName,
+      enName,
+      status,
+      profile,
+      workArea,
+      permitType,
+      maxLimit,
+      minLimit
+    } = this;
+    return {
+      arName: controls ? [arName, [
+        CustomValidators.required,
+        CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
+        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
+        CustomValidators.pattern('AR_NUM_ONE_AR')
+      ]] : arName,
+      enName: controls ? [enName, [
+        CustomValidators.required,
+        CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
+        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
+        CustomValidators.pattern('ENG_NUM_ONE_ENG')
+      ]] : enName,
+      status: controls ? [status, [CustomValidators.required]] : status,
+      profile: controls ? [profile, [CustomValidators.required]] : profile,
+      workArea: controls ? [workArea, [CustomValidators.required]] : workArea,
+      permitType: controls ? [permitType, [CustomValidators.required]] : permitType,
+      maxLimit: controls ? [maxLimit, [CustomValidators.required]] : maxLimit,
+      minLimit: controls ? [minLimit, [CustomValidators.required]] : minLimit,
+    }
   }
 }

@@ -30,6 +30,7 @@ import {AdminLookupComponent} from '@app/administration/pages/admin-lookup/admin
 import {AdminLookupOldComponent} from './pages/admin-lookup-old/admin-lookup-old.component';
 import {ProfilesComponent} from './pages/profiles/profiles.component';
 import { DynamicModelsComponent } from './pages/dynamic-models/dynamic-models.component';
+import { DeductionRatioComponent } from './pages/deduction-ratio/deduction-ratio.component';
 
 const routes: Routes = [
   { path: '', component: AdminHomeComponent },
@@ -178,6 +179,11 @@ const routes: Routes = [
     path: 'dynamic-models', component: DynamicModelsComponent,
     canActivate: [PermissionGuard],
     data: { permissionKey: PermissionsEnum.MANAGE_DYNAMIC_MODEL, configPermissionGroup: null, checkAnyPermission: false }
+  },
+  {
+    path: 'deduction-ratio', component: DeductionRatioComponent,
+    canActivate: [PermissionGuard],
+    data: { permissionKey: PermissionsEnum.MANAGE_DEDUCTION_RATIO_ITEM, configPermissionGroup: null, checkAnyPermission: false }
   },
 ];
 

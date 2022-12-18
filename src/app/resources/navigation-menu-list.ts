@@ -1059,5 +1059,18 @@ export const navigationMenuList = [
     group: 'projects',
     itemOrder: 11,
     svg: null
-  }
+  },
+  {
+    id: 30,
+    langKey: 'menu_deduction_ratio',
+    path: '/home/administration/deduction-ratio',
+    icon: 'mdi-badge-account-horizontal-outline',
+    isSvg: false,
+    permission: PermissionsEnum.MANAGE_DEDUCTION_RATIO_ITEM,
+    permissionGroup: null,
+    parent: 6,
+    group: 'administration',
+    itemOrder: 25,
+    svg: null
+  },
 ];

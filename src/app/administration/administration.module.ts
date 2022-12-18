@@ -90,6 +90,8 @@ import { ProfileBranchesComponent } from './shared/profile-branches/profile-bran
 import { BranchOfficersPopupComponent } from './shared/branch-officers-popup/branch-officers-popup.component';
 import { DynamicModelsComponent } from './pages/dynamic-models/dynamic-models.component';
 import { DynamicModelPopupComponent } from './popups/dynamic-model-popup/dynamic-model-popup.component';
+import { DeductionRatioComponent } from './pages/deduction-ratio/deduction-ratio.component';
+import { DeductionRatioPopupComponent } from './popups/deduction-ratio-popup/deduction-ratio-popup.component';
 
 @NgModule({
   declarations: [
@@ -171,7 +173,9 @@ import { DynamicModelPopupComponent } from './popups/dynamic-model-popup/dynamic
     ProfileBranchesComponent,
     BranchOfficersPopupComponent,
     DynamicModelsComponent,
-    DynamicModelPopupComponent
+    DynamicModelPopupComponent,
+    DeductionRatioComponent,
+    DeductionRatioPopupComponent
   ],
   imports: [
     SharedModule,
