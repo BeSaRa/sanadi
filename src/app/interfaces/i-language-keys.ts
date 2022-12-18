@@ -1661,4 +1661,8 @@ export interface ILanguageKeys {
   lbl_min_limit:string;
   lbl_max_limit:string;
   lbl_maximum_deduction_ratio:string
+  menu_organizations_entities_support: string;
+  beneficiaries_type: string;
+  beneficiaries_description: string;
+  organization_officer: string;
 }

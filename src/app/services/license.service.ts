@@ -1,3 +1,4 @@
+import { OrganizationsEntitiesSupport } from '@app/models/organizations-entities-support';
 import {GeneralProcessNotification} from '@app/models/general-process-notification';
 import {SearchAwarenessActivitySuggestionCriteria} from './../models/search-awareness-activity-suggestion-criteria';
 import {AwarenessActivitySuggestion} from './../models/awareness-activity-suggestion';
@@ -165,6 +166,9 @@ export class LicenseService {
       case CaseTypes.PROJECT_FUNDRAISING:
         url = this.urlService.URLS.PROJECT_FUNDRAISING;
         break;
+        case CaseTypes.ORGANIZATION_ENTITIES_SUPPORT:
+        url = this.urlService.URLS.ORGANIZATION_ENTITIES_SUPPORT;
+        break;
     }
     return url;
   }
@@ -286,6 +290,15 @@ export class LicenseService {
     return this._urgentInterventionClosureSearch(criteria);
   }
 
+  @CastResponse(() => OrganizationsEntitiesSupport)
+  private _organizationsEntitiesSupportSearch(criteria: Partial<OrganizationsEntitiesSupport>): Observable<OrganizationsEntitiesSupport[]> {
+    const orgId = { organizationId: this.employeeService.isExternalUser() ? this.employeeService.getProfile()?.id : undefined }
+    return this.http.post<OrganizationsEntitiesSupport[]>(this.getServiceUrlByCaseType(CaseTypes.ORGANIZATION_ENTITIES_SUPPORT) + '/license/search', { ...criteria, ...orgId })
+  }
+
+  organizationsEntitiesSupportSearch(criteria: Partial<OrganizationsEntitiesSupport>): Observable<OrganizationsEntitiesSupport[]> {
+    return this._organizationsEntitiesSupportSearch(criteria);
+  }
   @CastResponse(() => InitialExternalOfficeApproval)
   private _loadInitialLicenseByLicenseId(licenseId: string): Observable<InitialExternalOfficeApproval> {
     return this.http.get<InitialExternalOfficeApproval>(this.getServiceUrlByCaseType(CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL) + '/license/' + licenseId + '/details');
@@ -386,6 +399,16 @@ export class LicenseService {
   loadUrgentInterventionInterventionLicense() {
     return this.http.get<any>(this.getServiceUrlByCaseType(CaseTypes.URGENT_INTERVENTION_ANNOUNCEMENT) + '/intervention-license')
   }
+
+  @CastResponse(() => OrganizationsEntitiesSupport)
+  private _loadOrganizationsEntitiesSupportByLicenseId(licenseId: string): Observable<OrganizationsEntitiesSupport> {
+    return this.http.get<OrganizationsEntitiesSupport>(this.getServiceUrlByCaseType(CaseTypes.ORGANIZATION_ENTITIES_SUPPORT) + '/license/' + licenseId + '/details');
+  }
+
+  loadOrganizationsEntitiesSupportByLicenseId(licenseId: string): Observable<OrganizationsEntitiesSupport> {
+    return this._loadOrganizationsEntitiesSupportByLicenseId(licenseId);
+  }
+
 
   @CastResponse(() => InitialExternalOfficeApproval)
   _validateInitialApprovalLicenseByRequestType(requestType: number, oldLicenseId: string): Observable<InitialExternalOfficeApproval> {
@@ -495,7 +518,13 @@ export class LicenseService {
       oldLicenseId
     });
   }
-
+  @CastResponse(() => OrganizationsEntitiesSupport)
+  _validateOrganizationsEntitiesSupportByRequestType<T>(requestType: number, oldFullSerial: string): Observable<T> {
+    return this.http.post<T>(this.getServiceUrlByCaseType(CaseTypes.ORGANIZATION_ENTITIES_SUPPORT) + '/draft/validate', {
+      requestType,
+      oldFullSerial
+    });
+  }
   @CastResponse(() => GeneralProcessNotification)
   _validateGeneralProcessNotificationByRequestType<T>(requestType: number, oldFullSerial: string): Observable<T> {
     return this.http.post<T>(this.getServiceUrlByCaseType(CaseTypes.GENERAL_PROCESS_NOTIFICATION) + '/draft/validate', {
@@ -561,6 +590,8 @@ export class LicenseService {
       return this._validateGeneralProcessNotificationByRequestType<T>(requestType, licenseId);
     } else if (caseType === CaseTypes.PROJECT_FUNDRAISING) {
       return this._validateProjectFundraisingRequestType<T>(requestType, licenseId);
+    } else if (caseType === CaseTypes.ORGANIZATION_ENTITIES_SUPPORT) {
+      return this._validateOrganizationsEntitiesSupportByRequestType<T>(requestType, licenseId);
     }
     return of(undefined);
   }
