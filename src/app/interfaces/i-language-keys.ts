@@ -1654,4 +1654,8 @@ export interface ILanguageKeys {
   license_duration_type: string;
   office_type: string;
   lbl_beneficiaries_nature: string;
+  menu_organizations_entities_support: string;
+  beneficiaries_type: string;
+  beneficiaries_description: string;
+  organization_officer: string;
 }
