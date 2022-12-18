@@ -1,0 +1,6 @@
+export enum ProjectPermitTypes {
+  SINGLE_TYPE_PROJECT = 1,
+  SECTIONAL_BASKET = 2,
+  UNCONDITIONAL_RECEIVE = 3,
+  CHARITY = 4
+}

@@ -1,4 +1,9 @@
 export interface ILanguageKeys {
+  take_the_remaining: string;
+  btn_add_all: string;
+  remain: string;
+  total: string;
+  distribute_evenly: string;
   total_payments_should_be_less_than_or_equal_to_transfer_amount: string;
   total_payments_is_greater_than_transfer_amount: string;
   the_transfer_amount_has_been_depleted: string;
@@ -11,7 +16,28 @@ export interface ILanguageKeys {
   final_general_notes: string;
   final_comments_saved_successfully: string;
   save_final_comments: string;
+  search_for_template: string;
+  add_template: string;
+  qr: string;
+  please_add_deduction_items_to_proceed: string;
+  distribute_target_amount_over_countries: string;
+  distribute_target_amount_over_years: string;
+  please_add_template_to_proceed: string;
+  total_deduction_ratio: string;
+  select_item: string;
+  deduction_ratio_items: string;
+  remove_template_will_empty_deduction_ration_list: string;
+  templates: string;
+  template_deduction_ratio_info: string;
+  project_total_cost: string;
+  sanady_main_classification: string;
+  sanady_domain: string;
+  internal_projects_classification: string;
+  country_countries: string;
+  project_work_area: string;
+  permit_type: string;
   members: string;
+  menu_projects_fundraising: string;
   final_report_has_not_yet_been_uploaded: string;
   add_branch: string;
   add_compliance_officer: string;
@@ -726,6 +752,7 @@ export interface ILanguageKeys {
   search_method: string;
   serial_number: string;
   year: string;
+  year_s: string;
   days: string;
   months: string;
   msg_are_you_sure_you_want_logout: string;
@@ -1627,4 +1654,3 @@ export interface ILanguageKeys {
   office_type: string;
   lbl_beneficiaries_nature: string;
 }
-

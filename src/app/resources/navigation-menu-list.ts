@@ -1,7 +1,6 @@
-import { PermissionsEnum } from '@app/enums/permissions-enum';
-import { PermissionGroupsEnum } from '@app/enums/permission-groups-enum';
-import { EServicePermissionsEnum } from '@app/enums/e-service-permissions-enum';
-import { MenuItem } from '@app/models/menu-item';
+import {PermissionsEnum} from '@app/enums/permissions-enum';
+import {PermissionGroupsEnum} from '@app/enums/permission-groups-enum';
+import {EServicePermissionsEnum} from '@app/enums/e-service-permissions-enum';
 
 export const navigationMenuList = [
   {
@@ -997,19 +996,6 @@ export const navigationMenuList = [
     svg: null
   },
   {
-    id: 76,
-    langKey: 'menu_profile',
-    path: '/home/administration/profiles',
-    icon: 'mdi-account',
-    isSvg: false,
-    permission: PermissionsEnum.MANAGE_PROFILE,
-    permissionGroup: null,
-    parent: 6,
-    group: 'administration',
-    itemOrder: 22,
-    svg: null
-  },
-  {
     id: 77,
     langKey: 'menu_sub_team',
     path: '/home/administration/sub-team',
@@ -1061,4 +1047,17 @@ export const navigationMenuList = [
     itemOrder: 25,
     svg: null
   },
+  {
+    id: 81,
+    langKey: 'menu_projects_fundraising',
+    path: '/home/projects/projects-fundraising',
+    icon: 'mdi-template',
+    isSvg: false,
+    permission: EServicePermissionsEnum.PROJECT_FUNDRAISING,
+    permissionGroup: null,
+    parent: 32,
+    group: 'projects',
+    itemOrder: 11,
+    svg: null
+  }
 ];

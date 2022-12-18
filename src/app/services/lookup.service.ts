@@ -22,6 +22,7 @@ export class LookupService extends CrudGenericService<Lookup> {
   }
 
   setLookupsMap(lookupMap: ILookupMap): ILookupMap {
+    // LookupService._changeLookupArrayToEnum(lookupMap.ProjectWorkArea , true , true)
     return this.listByCategory = lookupMap;
   }
 

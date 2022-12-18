@@ -154,4 +154,5 @@ export interface ILookupMap {
   UserType: Lookup[];
   WORK_FIELD: Lookup[];
   GeneralProcessType: Lookup[];
+  ProjectPermitType: Lookup[];
 }

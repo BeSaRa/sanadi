@@ -126,7 +126,9 @@ export const urlsList: Partial<IAppUrls> = {
   SUB_TEAM: '/admin/sub-team',
   GENERAL_PROCESS: '/admin/general-process',
   GENERAL_PROCESS_NOTIFICATION: '/general-process-notification',
+  PROJECT_FUNDRAISING: '/project-fundraising',
   CHARITY_ORGANIZATION_PROFILE_EXTRA_DATA: '/admin/charity-organization',
   USER_SUB_TEAM: '/admin/user-sub-team',
   DYNAMIC_MODEL: '/admin/dynamic-model',
+  DEDUCTION_RATIO_ITEM: '/admin/deduction-ratio-item',
 };

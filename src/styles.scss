@@ -172,7 +172,7 @@ app-dialog-container {
 }
 
 .dialog-actions {
-  border-top: 1px solid tint-color($primary, 80);
+  border-top: 1px solid tint-color($primary, 80%);
   display: flex;
   justify-content: flex-end;
 
@@ -438,3 +438,10 @@ tr.risk {
   padding-bottom: 0.375rem;
 }
 
+th.remain {
+  background-color: red;
+  color: white;
+  i {
+    color: white !important;
+  }
+}
