@@ -1064,7 +1064,7 @@ export const navigationMenuList = [
     id: 82,
     langKey: 'menu_organizations_entities_support',
     path: '/home/general-services/organizations-entities-support',
-    icon: 'mdi-template',
+    icon: 'mdi-file-swap',
     isSvg: false,
     permission: EServicePermissionsEnum.ORGANIZATION_ENTITIES_SUPPORT,
     permissionGroup: null,
