@@ -67,11 +67,11 @@
                                   [licenseList]="[selectedLicense]"
                                   [columns]="service.selectLicenseDisplayColumns"></selected-license-table>
         </div>
-        <div class="row">
+        <div *ngIf="displayWorkAreaAndCountry" class="row">
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="projectWorkArea"
                    for="projectWorkArea">{{lang.map.project_work_area}}</label>
-            <ng-select validationClasses="projectWorkArea" appendTo="body" [clearable]="true" id="projectWorkArea"
+            <ng-select validationClasses="projectWorkArea" appendTo="body" [clearable]="false" id="projectWorkArea"
                        formControlName="projectWorkArea"
                        labelForId="projectWorkArea"
                        placeholder="{{lang.map.select}}"
@@ -101,7 +101,7 @@
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="domain"
                    for="domain">{{lang.map.domain}}</label>
-            <ng-select validationClasses="domain" appendTo="body" [clearable]="true" id="domain"
+            <ng-select validationClasses="domain" appendTo="body" [clearable]="false" id="domain"
                        formControlName="domain"
                        labelForId="domain"
                        placeholder="{{lang.map.select}}"
@@ -203,7 +203,7 @@
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="projectType"
                    for="projectType">{{lang.map.project_type}}</label>
-            <ng-select validationClasses="projectType" appendTo="body" [clearable]="true" id="projectType"
+            <ng-select validationClasses="projectType" appendTo="body" [clearable]="false" id="projectType"
                        formControlName="projectType"
                        labelForId="projectType"
                        placeholder="{{lang.map.select}}"

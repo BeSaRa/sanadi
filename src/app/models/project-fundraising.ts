@@ -36,7 +36,7 @@ export class ProjectFundraising extends CaseModel<ProjectFundraisingService, Pro
   requestType!: number
   subject!: string
   conditionalLicenseIndicator!: boolean
-  countries!: string[]
+  countries: string[] = []
   domain!: number
   followUpDate!: string
   permitType!: number
@@ -76,6 +76,8 @@ export class ProjectFundraising extends CaseModel<ProjectFundraisingService, Pro
 
   // extra properties
   employeeService: EmployeeService;
+
+
 
   constructor() {
     super();

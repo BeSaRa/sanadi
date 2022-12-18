@@ -10,7 +10,7 @@ import {Lookup} from "@app/models/lookup";
 import {LookupService} from "@services/lookup.service";
 import {LangService} from "@services/lang.service";
 import {Country} from "@app/models/country";
-import {filter, switchMap, takeUntil, tap, withLatestFrom} from "rxjs/operators";
+import {filter, switchMap, takeUntil, tap} from "rxjs/operators";
 import {ProjectWorkArea} from "@app/enums/project-work-area";
 import {ProjectPermitTypes} from "@app/enums/project-permit-types";
 import {ServiceRequestTypes} from "@app/enums/service-request-types";
@@ -31,6 +31,7 @@ import {UserClickOn} from "@app/enums/user-click-on.enum";
 import {CommonCaseStatus} from "@app/enums/common-case-status.enum";
 import {OpenFrom} from "@app/enums/open-from.enum";
 import {CommonUtils} from "@helpers/common-utils";
+import {ProjectTypes} from "@app/enums/project-types";
 
 @Component({
   selector: 'project-fundraising',
@@ -56,8 +57,8 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   displayAidSection: boolean = false;
   displayDacSection: boolean = false;
   displayOuchSection: boolean = false;
-  disableQatarFromSelection: boolean = false;
   displayLicenseAndTargetCostFields = false;
+  displayWorkAreaAndCountry: boolean = true;
   displayedColumns = ['name', 'serial', 'status', 'totalCost', 'actions']
   templateRequired: boolean = false;
   addTemplate$: Subject<any> = new Subject<any>();
@@ -100,9 +101,9 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   _afterBuildForm(): void {
-    this.listenToPermitTypeChanges()
+    this.handleReadonly()
+    this.listenToPermitTypeWorkAreaChanges()
     this.listenToDomainChanges()
-    this.listenToProjectWorkArea()
     this.listenToSanadiDomainChanges()
     this.listenToMainDacOchaChanges();
     this.overrideValuesInCreate()
@@ -287,38 +288,18 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     }
   }
 
-  private listenToPermitTypeChanges(): void {
-    this.permitType.valueChanges
-      .pipe(withLatestFrom(this.projectWorkArea.valueChanges))
+  private listenToPermitTypeWorkAreaChanges(): void {
+    combineLatest([this.permitType.valueChanges, this.projectWorkArea.valueChanges])
       .pipe(takeUntil(this.destroy$))
-      .subscribe(([permitType, workArea]: [ProjectPermitTypes, ProjectWorkArea]) => {
-        this.handelPermitTypeAndWorkAreaChanges(workArea, permitType);
+      .subscribe(([type, area]: [ProjectPermitTypes, ProjectWorkArea]) => {
+        console.log('listenToPermitTypeWorkAreaChanges');
+        this.handlePermitTypeChanges(type, area)
       })
   }
 
-  private listenToDomainChanges(): void {
-    combineLatest([this.domain.valueChanges, this.permitType.valueChanges])
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(([domain, permitType]: [DomainTypes, ProjectPermitTypes]) => {
-        this.handelDomainChanges(domain, permitType)
-      })
-  }
-
-  private handelPermitTypeAndWorkAreaChanges(workArea: ProjectWorkArea, permitType: ProjectPermitTypes): void {
-    if ([ProjectPermitTypes.UNCONDITIONAL_RECEIVE, ProjectPermitTypes.CHARITY].includes(permitType)) {
-      workArea = ProjectWorkArea.INSIDE_QATAR
-      this.projectWorkArea.setValue(ProjectWorkArea.INSIDE_QATAR)
-      this.projectWorkArea.disable()
-    } else {
-      this.projectWorkArea.enable()
-    }
-
-    this.displayDomainSection = workArea === ProjectWorkArea.OUTSIDE_QATAR && [ProjectPermitTypes.SINGLE_TYPE_PROJECT, ProjectPermitTypes.SECTIONAL_BASKET].includes(permitType);
-    this.displayAidSection = workArea === ProjectWorkArea.INSIDE_QATAR && [ProjectPermitTypes.SINGLE_TYPE_PROJECT, ProjectPermitTypes.SECTIONAL_BASKET].includes(permitType);
-    this.templateRequired = permitType === ProjectPermitTypes.SINGLE_TYPE_PROJECT
-    this.displayLicenseAndTargetCostFields = (workArea === ProjectWorkArea.OUTSIDE_QATAR && permitType === ProjectPermitTypes.SINGLE_TYPE_PROJECT)
-      || [ProjectPermitTypes.UNCONDITIONAL_RECEIVE, ProjectPermitTypes.CHARITY].includes(permitType)
-
+  private handlePermitTypeChanges(type: ProjectPermitTypes, area: ProjectWorkArea) {
+    console.log('PERMIT CHANGE');
+    const workAreaAndCountriesFields = [this.projectWorkArea, this.countriesField];
     const domainFields = [
       this.domain,
       this.mainDACCategory,
@@ -326,47 +307,68 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       this.mainUNOCHACategory,
       this.subUNOCHACategory
     ]
-
     const aidFields = [
       this.projectType,
       this.internalProjectClassification,
       this.sanadiDomain,
       this.sanadiMainClassification,
     ]
+    const allFields = aidFields.concat(domainFields);
 
-    const allFields = aidFields.concat(domainFields)
-
-    if (this.displayAidSection) {
-      this.markAsFieldsUnTouchedAndPristine(domainFields)
-      this.markUnRequiredFields(domainFields)
-      this.markRequiredFields(aidFields)
-    } else if (this.displayDomainSection) {
-      this.markAsFieldsUnTouchedAndPristine(aidFields)
-      this.markUnRequiredFields(aidFields)
-      this.markRequiredFields([this.domain])
-      this.domain.setValue(DomainTypes.HUMANITARIAN)
-    } else {
+    if ([ProjectPermitTypes.UNCONDITIONAL_RECEIVE, ProjectPermitTypes.CHARITY].includes(type)) {
+      this.displayWorkAreaAndCountry = false;
+      this.displayDomainSection = false;
+      this.displayAidSection = false;
+      this.displayLicenseAndTargetCostFields = true;
+      // mark the workArea and countries not required and empty the values this hide theme
+      this.markUnRequiredFields(workAreaAndCountriesFields)
+      this.countriesField.setValue([])
+      this.projectWorkArea.setValue(null, {emitEvent: false})
+      this.projectWorkArea.updateValueAndValidity({emitEvent: false})
       this.markUnRequiredFields(allFields)
+      this.setFieldsToNull(allFields)
+      console.log('NO AREA');
+    } else {
+      console.log('IN AREA');
+      this.displayLicenseAndTargetCostFields = false;
+      this.displayWorkAreaAndCountry = true;
+      !this.projectWorkArea.value ? this.projectWorkArea.setValue(area, {emitEvent: false}) : null;
+      area === ProjectWorkArea.INSIDE_QATAR ? this.handleInsideQatar(domainFields, aidFields) : this.handleOutsideQatar(domainFields, aidFields)
+      if (type === ProjectPermitTypes.SINGLE_TYPE_PROJECT) {
+        this.templateRequired = true;
+        this.projectTotalCost.disable()
+      } else {
+        this.templateRequired = false;
+        this.projectTotalCost.enable()
+      }
     }
-    // we will ge the total coast from the template
-    this.templateRequired ? this.projectTotalCost.disable() : this.projectTotalCost.enable()
+
   }
 
-  private markRequiredFields(fields: AbstractControl[]): void {
+  private listenToDomainChanges(): void {
+    combineLatest([this.domain.valueChanges, this.permitType.valueChanges])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(([domain, permitType]: [DomainTypes, ProjectPermitTypes]) => {
+        this.handleDomainChanges(domain, permitType)
+      })
+  }
+
+  private markRequiredFields(fields: AbstractControl[], emitEvent: boolean = false): void {
     fields.forEach(field => {
       field.setValidators(CustomValidators.required)
-      field.updateValueAndValidity()
+      field.updateValueAndValidity({emitEvent})
     })
   }
 
-  private markUnRequiredFields(fields: AbstractControl[]): void {
+  private markUnRequiredFields(fields: AbstractControl[], emitEvent: boolean = false): void {
     fields.forEach(field => {
       field.removeValidators(CustomValidators.required)
-      field.updateValueAndValidity()
+      field.updateValueAndValidity({emitEvent})
     })
   }
 
-  private handelDomainChanges(domain: DomainTypes, permitType: ProjectPermitTypes): void {
+  private handleDomainChanges(domain: DomainTypes, permitType: ProjectPermitTypes): void {
+    console.log('DOMAIN CHANGE');
     this.displayDacSection = domain === DomainTypes.DEVELOPMENT;
     this.displayOuchSection = domain === DomainTypes.HUMANITARIAN && permitType === ProjectPermitTypes.SINGLE_TYPE_PROJECT
     const dacFields = [this.mainDACCategory, this.subDACCategory]
@@ -375,24 +377,18 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     this.setFieldsToNull(allFields)
     this.markAsFieldsUnTouchedAndPristine(allFields)
     if (this.displayOuchSection) {
+      this.displayLicenseAndTargetCostFields = true;
       this.markRequiredFields(ochaFields)
       this.markUnRequiredFields(dacFields)
     } else if (this.displayDacSection) {
+      this.displayLicenseAndTargetCostFields = true;
       this.markRequiredFields(dacFields)
       this.markUnRequiredFields(ochaFields)
     } else {
+      this.displayLicenseAndTargetCostFields = !this.domain.value;
       this.markUnRequiredFields(allFields)
     }
     this.loadDacOuchMain(domain)
-  }
-
-  private listenToProjectWorkArea(): void {
-    this.projectWorkArea.valueChanges
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((value: ProjectWorkArea | null) => {
-        !this.readonly && this.countriesField.setValue([])
-        value === ProjectWorkArea.INSIDE_QATAR ? this.handleInsideQatar() : this.handleOutsideQatar();
-      })
   }
 
   private markAsFieldsUnTouchedAndPristine(fields: AbstractControl[]): void {
@@ -402,28 +398,33 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     })
   }
 
-  private setFieldsToNull(fields: AbstractControl[]): void {
-    fields.forEach(field => field.setValue(null))
+  private setFieldsToNull(fields: AbstractControl[], emitEvent: boolean = false): void {
+    fields.forEach(field => field.setValue(null, {emitEvent}))
   }
 
-  private handleInsideQatar(): void {
-    this.basicInfo.patchValue({
-      domain: null,
-      mainDACCategory: null,
-      subDACCategory: null,
-      mainUNOCHACategory: null,
-      subUNOCHACategory: null,
-    })
-    this.markAsFieldsUnTouchedAndPristine([this.domain, this.mainDACCategory, this.subDACCategory, this.mainUNOCHACategory, this.subUNOCHACategory])
-    this.countriesField.setValue([this.qatarCountry.id])
-    this.countriesField.disable()
-    this.disableQatarFromSelection = false;
+  private handleInsideQatar(domainFields: AbstractControl[], aidFields: AbstractControl[]): void {
+    console.log('INSIDE');
+    this.displayDomainSection = false;
+    this.displayAidSection = true;
+    !this.projectType.value ? this.projectType.setValue(ProjectTypes.SOFTWARE) : null
+    this.markUnRequiredFields(domainFields);
+    this.setFieldsToNull(domainFields);
+    this.markRequiredFields(aidFields);
+    this.countriesField.setValue([this.qatarCountry.id]);
+    this.countriesField.disable();
+    this.displayLicenseAndTargetCostFields = false;
   }
 
-  private handleOutsideQatar(): void {
-    this.countriesField.setValue(this.countriesField.value.filter((id: number) => id !== this.qatarCountry.id))
-    this.countriesField.enable()
-    this.disableQatarFromSelection = true;
+  private handleOutsideQatar(domainFields: AbstractControl[], aidFields: AbstractControl[]): void {
+    console.log('OUTSIDE');
+    !this.domain.value ? this.domain.setValue(DomainTypes.HUMANITARIAN) : null;
+    this.displayAidSection = false;
+    this.displayDomainSection = true;
+    this.markUnRequiredFields(aidFields);
+    this.setFieldsToNull(aidFields);
+    this.markRequiredFields(domainFields);
+    this.countriesField.setValue(this.countriesField.value.filter((id: number) => id !== this.qatarCountry.id));
+    this.countriesField.enable();
   }
 
   private overrideValuesInCreate() {
@@ -441,7 +442,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
 
   private singleCountrySelect(country: Country): boolean {
     return this.permitType.value === ProjectPermitTypes.SINGLE_TYPE_PROJECT &&
-      (this.countriesField.value as number[]).length == 1 &&
+      (this.countriesField.value as number[] ?? []).length == 1 &&
       country.id !== this.countriesField.value[0];
   }
 
@@ -610,16 +611,29 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   validateHiddenDisplayFields(): void {
-    const workArea = this.projectWorkArea.value;
-    const permitType = this.permitType.value;
-    const domain = this.domain.value;
+    const model = this.model!
+    if ([ProjectPermitTypes.UNCONDITIONAL_RECEIVE, ProjectPermitTypes.CHARITY].includes(model.permitType)) {
+      this.displayAidSection = false;
+      this.displayDomainSection = false;
+      this.displayLicenseAndTargetCostFields = true;
+    } else {
+      this.displayDomainSection = model.projectWorkArea === ProjectWorkArea.OUTSIDE_QATAR;
+      this.displayAidSection = model.projectWorkArea === ProjectWorkArea.INSIDE_QATAR;
 
-    workArea === ProjectWorkArea.INSIDE_QATAR ? this.handleInsideQatar() : workArea === ProjectWorkArea.OUTSIDE_QATAR ? this.handleOutsideQatar() : null;
-    this.handelPermitTypeAndWorkAreaChanges(workArea, permitType)
-    this.handelDomainChanges(domain, workArea)
+      this.displayDacSection = this.displayDomainSection && model.domain === DomainTypes.DEVELOPMENT;
+      this.displayOuchSection = model.permitType === ProjectPermitTypes.SINGLE_TYPE_PROJECT && model.domain === DomainTypes.HUMANITARIAN
+
+      this.displayLicenseAndTargetCostFields = this.displayDacSection || this.displayOuchSection
+
+      this.templateRequired = model.permitType === ProjectPermitTypes.SINGLE_TYPE_PROJECT;
+
+      this.templateRequired ? this.projectTotalCost.disable() : this.projectTotalCost.enable()
+    }
+
   }
 
   handleReadonly(): void {
+    console.log('CHECK READ ONLY');
     // if record is new, no readonly (don't change as default is readonly = false)
     if (!this.model?.id) {
       return;
@@ -649,6 +663,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     } else if (this.openFrom === OpenFrom.SEARCH) {
       // if saved as draft, then no readonly
       if (this.model?.canCommit()) {
+        console.log('INSIDE IF');
         this.readonly = false;
       }
     }
