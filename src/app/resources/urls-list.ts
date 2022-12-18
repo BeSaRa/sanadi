@@ -130,6 +130,6 @@ export const urlsList: Partial<IAppUrls> = {
   CHARITY_ORGANIZATION_PROFILE_EXTRA_DATA: '/admin/charity-organization',
   USER_SUB_TEAM: '/admin/user-sub-team',
   DYNAMIC_MODEL: '/admin/dynamic-model',
-  DEDUCTION_RATIO_ITEM: '/admin/deduction-ratio-item',,
+  DEDUCTION_RATIO_ITEM: '/admin/deduction-ratio-item',
   ORGANIZATION_ENTITIES_SUPPORT:'/organizations-entities-support'
 };

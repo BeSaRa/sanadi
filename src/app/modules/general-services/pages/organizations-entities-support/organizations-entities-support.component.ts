@@ -452,7 +452,7 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
   }
   private _loadActivityTypes() {
     this.adminLookupService
-      .loadAsLookups(AdminLookupTypeEnum.ACTIVITY_TYPE)
+      .loadAsLookups(AdminLookupTypeEnum.SERVICE_TYPE)
       .subscribe((list) => {
         this.serviceTypes = list;
       });
@@ -623,8 +623,8 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
       .getById(externalUserId)
       .subscribe((externalUser) => {
         this.organizationOfficerGroup.patchValue({...externalUser,
-          mobileNo:externalUser.phoneNumber,
-          phone:externalUser.phoneExtension,
+          phone:externalUser.phoneNumber,
+          mobileNo:externalUser.phoneExtension,
           jobTitle:this.jobTitleList.find(x=>x.id === externalUser.jobTitle)?.getName()
         });
         subscriber.unsubscribe();
