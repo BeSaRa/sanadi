@@ -32,6 +32,7 @@ import {CommonCaseStatus} from "@app/enums/common-case-status.enum";
 import {OpenFrom} from "@app/enums/open-from.enum";
 import {CommonUtils} from "@helpers/common-utils";
 import {ProjectTypes} from "@app/enums/project-types";
+import {FundraisingProjectTypes} from "@app/enums/fundraising-project-types";
 
 @Component({
   selector: 'project-fundraising',
@@ -59,6 +60,8 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   displayOuchSection: boolean = false;
   displayLicenseAndTargetCostFields = false;
   displayWorkAreaAndCountry: boolean = true;
+  displaySanady: boolean = false;
+  displayIPC: boolean = false;
   displayedColumns = ['name', 'serial', 'status', 'totalCost', 'actions']
   templateRequired: boolean = false;
   addTemplate$: Subject<any> = new Subject<any>();
@@ -106,10 +109,12 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     this.listenToDomainChanges()
     this.listenToSanadiDomainChanges()
     this.listenToMainDacOchaChanges();
-    this.overrideValuesInCreate()
-    this.listenToAddTemplate()
-    this.listenToProjectTotalCoastChanges()
-    this.setDefaultValues()
+    this.listenToAddTemplate();
+    this.listenToProjectTotalCoastChanges();
+    this.listenToProjectTypeChanges()
+    this.setDefaultValues();
+    this.overrideValuesInCreate();
+
     // this._test()
   }
 
@@ -158,7 +163,6 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   _saveFail(error: any): void {
-    console.log(error);
   }
 
   _launchFail(error: any): void {
@@ -292,13 +296,11 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     combineLatest([this.permitType.valueChanges, this.projectWorkArea.valueChanges])
       .pipe(takeUntil(this.destroy$))
       .subscribe(([type, area]: [ProjectPermitTypes, ProjectWorkArea]) => {
-        console.log('listenToPermitTypeWorkAreaChanges');
         this.handlePermitTypeChanges(type, area)
       })
   }
 
   private handlePermitTypeChanges(type: ProjectPermitTypes, area: ProjectWorkArea) {
-    console.log('PERMIT CHANGE');
     const workAreaAndCountriesFields = [this.projectWorkArea, this.countriesField];
     const domainFields = [
       this.domain,
@@ -327,9 +329,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       this.projectWorkArea.updateValueAndValidity({emitEvent: false})
       this.markUnRequiredFields(allFields)
       this.setFieldsToNull(allFields)
-      console.log('NO AREA');
     } else {
-      console.log('IN AREA');
       this.displayLicenseAndTargetCostFields = false;
       this.displayWorkAreaAndCountry = true;
       !this.projectWorkArea.value ? this.projectWorkArea.setValue(area, {emitEvent: false}) : null;
@@ -368,7 +368,6 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   private handleDomainChanges(domain: DomainTypes, permitType: ProjectPermitTypes): void {
-    console.log('DOMAIN CHANGE');
     this.displayDacSection = domain === DomainTypes.DEVELOPMENT;
     this.displayOuchSection = domain === DomainTypes.HUMANITARIAN && permitType === ProjectPermitTypes.SINGLE_TYPE_PROJECT
     const dacFields = [this.mainDACCategory, this.subDACCategory]
@@ -403,7 +402,6 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   private handleInsideQatar(domainFields: AbstractControl[], aidFields: AbstractControl[]): void {
-    console.log('INSIDE');
     this.displayDomainSection = false;
     this.displayAidSection = true;
     !this.projectType.value ? this.projectType.setValue(ProjectTypes.SOFTWARE) : null
@@ -416,7 +414,6 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   private handleOutsideQatar(domainFields: AbstractControl[], aidFields: AbstractControl[]): void {
-    console.log('OUTSIDE');
     !this.domain.value ? this.domain.setValue(DomainTypes.HUMANITARIAN) : null;
     this.displayAidSection = false;
     this.displayDomainSection = true;
@@ -523,20 +520,24 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   private getSearchTemplateCriteria(): Record<any, any> {
     const workArea = this.projectWorkArea.value
     const domain = this.domain.value;
-
-    const external: Record<string, string> = {
+    const projectType = this.projectType.value;
+    const common: Record<string, string> = {
       domain: 'domain',
       countries: 'countriesField'
-    };
+    }
+    const external: Record<string, string> = common;
+    const internal: Record<string, string> = common;
 
     if (workArea === ProjectWorkArea.OUTSIDE_QATAR) {
       domain === DomainTypes.DEVELOPMENT ? external['mainDAC'] = 'mainDACCategory' : external['mainUNOCHA'] = 'mainUNOCHACategory';
     }
-    const internal: Record<string, string> = {
-      projectType: 'projectType',
-      internalProjectClassification: 'internalProjectClassification',
-      countries: 'countriesField'
-    };
+
+    if (workArea === ProjectWorkArea.INSIDE_QATAR) {
+      projectType === FundraisingProjectTypes.SOFTWARE ? internal['internalProjectClassification'] = 'internalProjectClassification' : (() => {
+        internal['sanadiDomain'] = 'sanadiDomain';
+        internal['sanadiMainClassification'] = 'sanadiMainClassification';
+      })()
+    }
 
     return Object.entries(this.projectWorkArea.value === ProjectWorkArea.INSIDE_QATAR ? internal : external)
       .reduce((acc, [key, controlName]: [string, string]) => {
@@ -633,7 +634,6 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   handleReadonly(): void {
-    console.log('CHECK READ ONLY');
     // if record is new, no readonly (don't change as default is readonly = false)
     if (!this.model?.id) {
       return;
@@ -663,10 +663,32 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     } else if (this.openFrom === OpenFrom.SEARCH) {
       // if saved as draft, then no readonly
       if (this.model?.canCommit()) {
-        console.log('INSIDE IF');
         this.readonly = false;
       }
     }
 
+  }
+
+  private listenToProjectTypeChanges() {
+    this.projectType.valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((value: FundraisingProjectTypes) => {
+        this.handleProjectTypeChanges(value);
+      })
+  }
+
+  private handleProjectTypeChanges(projectType: FundraisingProjectTypes, ignoreSetValues = false) {
+    this.displayIPC = projectType === FundraisingProjectTypes.SOFTWARE;
+    this.displaySanady = projectType === FundraisingProjectTypes.AIDS;
+
+    this.displayIPC ? ((() => {
+      this.markUnRequiredFields([this.sanadiDomain, this.sanadiMainClassification])
+      !ignoreSetValues && this.setFieldsToNull([this.sanadiDomain, this.sanadiMainClassification])
+      this.markRequiredFields([this.internalProjectClassification])
+    })()) : (this.displaySanady ? ((() => {
+      this.markUnRequiredFields([this.sanadiDomain, this.sanadiMainClassification])
+      !ignoreSetValues && this.setFieldsToNull([this.sanadiDomain, this.sanadiMainClassification])
+      this.markRequiredFields([this.internalProjectClassification])
+    })()) : null)
   }
 }
