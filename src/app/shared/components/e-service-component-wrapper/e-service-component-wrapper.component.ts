@@ -45,7 +45,7 @@ import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 import { UserClickOn } from '@app/enums/user-click-on.enum';
 import { BaseGenericEService } from '@app/generics/base-generic-e-service';
-import {IGeneralAssociationMeetingAttendanceFinalApprove} from '@contracts/i-general-association-meeting-attendance-final-approve';
+import { IGeneralAssociationMeetingAttendanceFinalApprove } from '@contracts/i-general-association-meeting-attendance-final-approve';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -491,10 +491,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           }
           if (item.caseType === CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST) {
             //@ts-ignore
-            if(item.isApproved && this.internal) return false;
+            if (item.isApproved && this.internal) return false;
             return !item.isInitialApproved() || !this.internal;
           }
-          if (item.caseType === CaseTypes.NPO_MANAGEMENT) {
+          if (item.caseType === CaseTypes.NPO_MANAGEMENT || item.caseType === CaseTypes.FOREIGN_COUNTRIES_PROJECTS) {
             return !this.internal || this.employeeService.getCurrentUser().generalUserId == this.model?.creatorInfo.id;
           }
           // show if external user or service which are only for internal user
@@ -760,8 +760,8 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.organizationApproveAction(item);
         }
       },
-       // organiztion final approve
-       {
+      // organiztion final approve
+      {
         type: 'action',
         icon: 'mdi-check-bold',
         label: 'organization_final_approve',
@@ -773,8 +773,8 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.organizationFinalApproveAction(item);
         }
       },
-       // organiztion final reject
-       {
+      // organiztion final reject
+      {
         type: 'action',
         icon: 'mdi-undo-variant',
         label: 'organization_final_reject',

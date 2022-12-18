@@ -1,3 +1,5 @@
+import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
+import { OpenFrom } from '@app/enums/open-from.enum';
 import { EmployeeService } from './../../../../services/employee.service';
 import { AfterViewInit, ChangeDetectorRef, Component, QueryList, TemplateRef, ViewChild, ViewChildren, } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
@@ -66,6 +68,41 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
     super();
   }
 
+  handleReadonly(): void {
+    // if record is new, no readonly (don't change as default is readonly = false)
+    if (!this.model?.id) {
+      return;
+    }
+
+    let caseStatus = this.model.getCaseStatus();
+    if (caseStatus == CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.FINAL_REJECTION) {
+      this.readonly = true;
+      return;
+    }
+    if (this.openFrom === OpenFrom.USER_INBOX) {
+      if (this.employeeService.isCharityManager()) {
+        this.readonly = false;
+      } else if (this.employeeService.isCharityUser()) {
+        this.readonly = !this.model.isReturned();
+      } else if (this.employeeService.isLicensingUser() && this.employeeService.getCurrentUser().generalUserId == this.model.creatorInfo.id) {
+        this.readonly = !this.model.isReturned();
+      }
+    } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
+      // after claim, consider it same as user inbox and use same condition
+      if (this.model.taskDetails.isClaimed()) {
+        if (this.employeeService.isCharityManager()) {
+          this.readonly = false;
+        } else if (this.employeeService.isCharityUser()) {
+          this.readonly = !this.model.isReturned();
+        }
+      }
+    } else if (this.openFrom === OpenFrom.SEARCH) {
+      // if saved as draft, then no readonly
+      if (this.model?.canCommit()) {
+        this.readonly = false;
+      }
+    }
+  }
   ngAfterViewInit(): void {
     const tabsTemplates = this.tabsTemplates.toArray();
     setTimeout(() => {
@@ -102,51 +139,6 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
     }, 0);
   }
 
-  get isEditOrCancel(): boolean {
-    return this.isEditRequestType || this.isCancelRequestType;
-  }
-
-  get isEditRequestType(): boolean {
-    return (
-      this.requestTypeField.value &&
-      this.requestTypeField.value === CollectionRequestType.UPDATE
-    );
-  }
-
-  get isCancelRequestType(): boolean {
-    return (
-      this.requestTypeField.value &&
-      this.requestTypeField.value === CollectionRequestType.CANCEL
-    );
-  }
-
-  get isEditAllowed(): boolean {
-    return !this.model?.id || (!!this.model?.id && this.model.canCommit());
-  }
-
-  get basicInfo(): UntypedFormGroup {
-    return this.form.get('basicInfo') as UntypedFormGroup;
-  }
-
-  get requestTypeField(): UntypedFormControl {
-    return this.basicInfo?.get('requestType') as UntypedFormControl;
-  }
-
-  get oldLicenseFullSerialField(): UntypedFormControl {
-    return this.basicInfo?.get('oldLicenseFullSerial') as UntypedFormControl;
-  }
-  get organizationIdFeild(): UntypedFormControl {
-    return this.basicInfo?.get('organizationId')! as UntypedFormControl;
-  }
-
-  get specialExplanation(): UntypedFormGroup {
-    return this.form.get('explanation')! as UntypedFormGroup;
-  }
-
-
-  get isExternalUser() {
-    return this.employeeService.isExternalUser();
-  }
   licenseSearch($event?: Event): void {
     $event?.preventDefault();
     let value = '';
@@ -251,6 +243,7 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
     result.description = licenseDetails.description;
 
     this._updateForm(new ForeignCountriesProjects().clone(result));
+    this.handleReadonly();
   }
 
   handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
@@ -263,6 +256,7 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
           if (userInteraction) {
             this.resetForm$.next();
             this.requestTypeField.setValue(requestTypeValue);
+            this.handleReadonly();
           }
           this.requestType$.next(requestTypeValue);
         } else {
@@ -284,6 +278,7 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
 
   _initComponent(): void {
     this._loadProfiles();
+    this.handleReadonly();
     this.listenToLicenseSearch();
   }
 
@@ -301,6 +296,7 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
   }
 
   _afterBuildForm(): void {
+    this.handleReadonly();
     this.organizationIdFeild.setValue(this.employeeService.getProfile()?.id);
   }
 
@@ -386,5 +382,48 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
     this.form.reset();
     this.model = this._getNewInstance();
     this.operation = OperationTypes.CREATE;
+  }
+
+  get criticalOnTask() {
+    return !!this.model?.id;
+  }
+
+  get isEditOrCancel(): boolean {
+    return this.isEditRequestType || this.isCancelRequestType;
+  }
+
+  get isEditRequestType(): boolean {
+    return (
+      this.requestTypeField.value &&
+      this.requestTypeField.value === CollectionRequestType.UPDATE
+    );
+  }
+
+  get isCancelRequestType(): boolean {
+    return (
+      this.requestTypeField.value &&
+      this.requestTypeField.value === CollectionRequestType.CANCEL
+    );
+  }
+
+  get basicInfo(): UntypedFormGroup {
+    return this.form.get('basicInfo') as UntypedFormGroup;
+  }
+
+  get requestTypeField(): UntypedFormControl {
+    return this.basicInfo?.get('requestType') as UntypedFormControl;
+  }
+
+  get oldLicenseFullSerialField(): UntypedFormControl {
+    return this.basicInfo?.get('oldLicenseFullSerial') as UntypedFormControl;
+  }
+  get organizationIdFeild(): UntypedFormControl {
+    return this.basicInfo?.get('organizationId')! as UntypedFormControl;
+  }
+  get specialExplanation(): UntypedFormGroup {
+    return this.form.get('explanation')! as UntypedFormGroup;
+  }
+  get isExternalUser() {
+    return this.employeeService.isExternalUser();
   }
 }

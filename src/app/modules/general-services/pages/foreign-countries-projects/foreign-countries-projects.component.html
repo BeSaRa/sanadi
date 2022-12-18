@@ -12,7 +12,7 @@
           <label asteriskIfRequired="requestType" for="requestType" class="form-label">{{ lang.map.request_type
             }}</label>
           <ng-select [selectOnTab]="true" labelForId="requestType" [clearable]="true"
-            placeholder="{{ lang.map.select }}" id="requestType" [readonly]="!isEditAllowed"
+            placeholder="{{ lang.map.select }}" id="requestType" [readonly]="criticalOnTask || readonly"
             (change)="handleRequestTypeChange($event, true)" [notFoundText]="lang.map.msg_not_found" appendTo="body"
             validationClasses="requestType" formControlName="requestType">
             <ng-option *ngFor="let type of requestTypes" [value]="type.lookupKey">{{ type.getName() }}</ng-option>
@@ -25,10 +25,9 @@
             lang.map.license_number }}</label>
           <div class="input-group">
             <input (keydown.enter)="(isEditOrCancel)" formControlName="oldLicenseFullSerial"
-              [readonly]="!isEditOrCancel || !isEditAllowed" type="text" validationClasses="oldLicenseFullSerial"
-              class="form-control" id="oldLicenseFullSerial" trimInput />
-            <button *ngIf="isEditOrCancel && isEditAllowed" type="button" (click)="licenseSearch($event)"
-              class="input-group-text">
+              [readonly]="!isEditOrCancel" type="text" validationClasses="oldLicenseFullSerial" class="form-control"
+              id="oldLicenseFullSerial" trimInput />
+            <button *ngIf="isEditOrCancel" type="button" (click)="licenseSearch($event)" class="input-group-text">
               <i class="mdi {{ fileIconsEnum.SEARCH }} text-primary"></i>
             </button>
             <app-field-error-message controlName="oldLicenseFullSerial"></app-field-error-message>
@@ -39,7 +38,7 @@
           <label asteriskIfRequired="externalCooperationAuthority" for="externalCooperationAuthority"
             class="form-label">{{ lang.map.external_cooperation_authority }}</label>
           <ng-select [selectOnTab]="true" labelForId="externalCooperationAuthority" [clearable]="true"
-            placeholder="{{ lang.map.select }}" [readonly]="isCancelRequestType || !isEditAllowed"
+            placeholder="{{ lang.map.select }}" [readonly]="readonly || isCancelRequestType"
             id="externalCooperationAuthority" [notFoundText]="lang.map.msg_not_found" appendTo="body"
             validationClasses="externalCooperationAuthority" formControlName="externalCooperationAuthority">
             <ng-option [value]="option.id" *ngFor="let option of externalCooperations$ | async">{{ option.getName() }}
@@ -52,7 +51,7 @@
           <label asteriskIfRequired="organizationId" for="organizationId" class="form-label">{{
             lang.map.lbl_organization }}</label>
           <ng-select [selectOnTab]="true" labelForId="organizationId" [clearable]="true"
-            placeholder="{{ lang.map.select }}" id="organizationId" [readonly]="isCancelRequestType || !isEditAllowed"
+            placeholder="{{ lang.map.select }}" id="organizationId" [readonly]="readonly || criticalOnTask"
             [notFoundText]="lang.map.msg_not_found" appendTo="body" validationClasses="organizationId"
             formControlName="organizationId">
             <ng-option *ngFor="let option of organizationsList" [value]="option.id">{{ option.getName() }}</ng-option>
@@ -62,7 +61,7 @@
         <div class="col-sm-6 col-md-4 mb-4 position-relative">
           <label asteriskIfRequired="country" for="country" class="form-label">{{ lang.map.country }}</label>
           <ng-select [selectOnTab]="true" labelForId="country" [clearable]="true" placeholder="{{ lang.map.select }}"
-            [readonly]="isCancelRequestType || !isEditAllowed" id="country" [notFoundText]="lang.map.msg_not_found"
+            [readonly]="readonly || isCancelRequestType" id="country" [notFoundText]="lang.map.msg_not_found"
             appendTo="body" validationClasses="country" formControlName="country">
             <ng-option [value]="option.id" *ngFor="let option of countries$ | async">{{ option.getName() }}</ng-option>
           </ng-select>
@@ -72,7 +71,7 @@
           <label asteriskIfRequired="needSubject" for="needSubject" class="form-label">{{ lang.map.subject_of_need
             }}</label>
           <input type="text" maxlength="300" validationClasses="needSubject"
-            [readonly]="isCancelRequestType || !isEditAllowed" trimInput class="form-control" id="needSubject"
+            [readonly]="readonly || isCancelRequestType" trimInput class="form-control" id="needSubject"
             formControlName="needSubject" />
           <app-field-error-message controlName="needSubject"></app-field-error-message>
         </div>
@@ -81,7 +80,7 @@
             lang.map.lbl_description
             }}</label>
           <textarea id="classDescription" trimInput [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
-            [readonly]="isCancelRequestType || !isEditAllowed" validationClasses="classDescription"
+            [readonly]="readonly || isCancelRequestType" validationClasses="classDescription"
             formControlName="classDescription" class="form-control"></textarea>
           <app-field-error-message controlName="classDescription"></app-field-error-message>
         </div>
@@ -90,9 +89,8 @@
             lang.map.lbl_justification
             }}</label>
           <textarea id="justification" validationClasses="justification" trimInput
-            [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
-            [readonly]="isCancelRequestType || !isEditAllowed" formControlName="justification"
-            class="form-control"></textarea>
+            [maxlength]="customValidators.defaultLengths.EXPLANATIONS" [readonly]="readonly || isCancelRequestType"
+            formControlName="justification" class="form-control"></textarea>
           <app-field-error-message controlName="justification"></app-field-error-message>
         </div>
         <div class="mb-4 position-relative">
@@ -100,16 +98,15 @@
             lang.map.lbl_recommendation
             }}</label>
           <textarea id="recommendation" validationClasses="recommendation" trimInput
-            [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
-            [readonly]="isCancelRequestType || !isEditAllowed" formControlName="recommendation"
-            class="form-control"></textarea>
+            [maxlength]="customValidators.defaultLengths.EXPLANATIONS" [readonly]="readonly || isCancelRequestType"
+            formControlName="recommendation" class="form-control"></textarea>
           <app-field-error-message controlName="recommendation"></app-field-error-message>
         </div>
       </div>
     </ng-template>
     <ng-template #tabContent>
       <project-needs [caseType]="model?.caseType" [list]="model?.projectNeeds || []"
-        [readonly]="isCancelRequestType || !isEditAllowed" (readyEvent)="projectNeedsTabStatus = $event">
+        [readonly]="readonly || isCancelRequestType" (readyEvent)="projectNeedsTabStatus = $event">
       </project-needs>
     </ng-template>
     <ng-template #tabContent>
@@ -118,7 +115,7 @@
           <label class="form-label" asteriskIfRequired="description" for="description">{{ lang.map.special_explanations
             }}</label>
           <textarea name="description" formControlName="description" validationClasses="description" id="description"
-            rows="4" class="form-control" [readonly]="isCancelRequestType || !isEditAllowed"
+            rows="4" class="form-control" [readonly]="readonly || isCancelRequestType"
             [maxlength]="customValidators.defaultLengths.EXPLANATIONS"></textarea>
           <app-field-error-message controlName="description"></app-field-error-message>
         </div>
