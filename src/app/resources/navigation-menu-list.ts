@@ -1059,5 +1059,18 @@ export const navigationMenuList = [
     group: 'projects',
     itemOrder: 11,
     svg: null
+  },
+  {
+    id: 82,
+    langKey: 'menu_organizations_entities_support',
+    path: '/home/general-services/organizations-entities-support',
+    icon: 'mdi-template',
+    isSvg: false,
+    permission: EServicePermissionsEnum.ORGANIZATION_ENTITIES_SUPPORT,
+    permissionGroup: null,
+    parent: 13,
+    group: 'general-services',
+    itemOrder: 12,
+    svg: null
   }
 ];
