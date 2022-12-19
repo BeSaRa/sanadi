@@ -626,6 +626,8 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
 
       this.displayLicenseAndTargetCostFields = this.displayDacSection || this.displayOuchSection
 
+      this.handleProjectTypeChanges(model.projectType, true)
+
       this.templateRequired = model.permitType === ProjectPermitTypes.SINGLE_TYPE_PROJECT;
 
       this.templateRequired ? this.projectTotalCost.disable() : this.projectTotalCost.enable()
@@ -678,17 +680,25 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   private handleProjectTypeChanges(projectType: FundraisingProjectTypes, ignoreSetValues = false) {
+    const sanadyFields = [this.sanadiDomain, this.sanadiMainClassification];
+    const aidFields = [this.internalProjectClassification]
+    const allFields = sanadyFields.concat(aidFields)
     this.displayIPC = projectType === FundraisingProjectTypes.SOFTWARE;
     this.displaySanady = projectType === FundraisingProjectTypes.AIDS;
 
     this.displayIPC ? ((() => {
-      this.markUnRequiredFields([this.sanadiDomain, this.sanadiMainClassification])
-      !ignoreSetValues && this.setFieldsToNull([this.sanadiDomain, this.sanadiMainClassification])
-      this.markRequiredFields([this.internalProjectClassification])
+      this.markUnRequiredFields(sanadyFields)
+      !ignoreSetValues && this.setFieldsToNull(sanadyFields)
+      this.markRequiredFields(aidFields)
     })()) : (this.displaySanady ? ((() => {
-      this.markUnRequiredFields([this.sanadiDomain, this.sanadiMainClassification])
-      !ignoreSetValues && this.setFieldsToNull([this.sanadiDomain, this.sanadiMainClassification])
-      this.markRequiredFields([this.internalProjectClassification])
+      this.markUnRequiredFields(aidFields)
+      !ignoreSetValues && this.setFieldsToNull(aidFields)
+      this.markRequiredFields(sanadyFields)
     })()) : null)
+
+    !this.displaySanady && !this.displayIPC ? (() => {
+      this.markUnRequiredFields(allFields)
+      !ignoreSetValues && this.setFieldsToNull(allFields)
+    })() : null
   }
 }
