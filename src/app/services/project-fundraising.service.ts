@@ -62,12 +62,13 @@ export class ProjectFundraisingService extends BaseGenericEService<ProjectFundra
     return this.urlService
   }
 
-  openDialogSearchTemplate(criteria: any, workAreType: ProjectWorkArea, templateId?: string): Observable<DialogRef> {
-    return this.searchForTemplate(criteria, workAreType)
+  openDialogSearchTemplate(criteria: any, workArea: ProjectWorkArea, templateId?: string): Observable<DialogRef> {
+    return this.searchForTemplate(criteria, workArea)
       // .pipe(map(items => items.map(item => item.normalizeTemplate())))
       .pipe(switchMap(templates => templates.length ? of(this.dialog.show(ChooseTemplatePopupComponent, {
         templates,
         templateId,
+        workArea
       })) : of(this.dialog.info('there is no templates'))))
   }
 
