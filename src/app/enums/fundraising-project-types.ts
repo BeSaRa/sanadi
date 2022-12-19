@@ -1,4 +1,4 @@
 export enum FundraisingProjectTypes {
-  SOFTWARE = 1,
-  AIDS = 2
+  AIDS = 1,
+  SOFTWARE = 2
 }

@@ -10,7 +10,7 @@ import {Lookup} from "@app/models/lookup";
 import {LookupService} from "@services/lookup.service";
 import {LangService} from "@services/lang.service";
 import {Country} from "@app/models/country";
-import {filter, switchMap, takeUntil, tap} from "rxjs/operators";
+import {delay, filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
 import {ProjectWorkArea} from "@app/enums/project-work-area";
 import {ProjectPermitTypes} from "@app/enums/project-permit-types";
 import {ServiceRequestTypes} from "@app/enums/service-request-types";
@@ -124,7 +124,8 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
 
     return of(this.form.valid)
       .pipe(tap(valid => !valid && this.invalidFormMessage()))
-      .pipe(filter(valid => valid));
+      .pipe(filter(valid => valid))
+      .pipe(switchMap(() => this.isAllHasSameTargetAmount()))
   }
 
   _beforeLaunch(): boolean | Observable<boolean> {
@@ -346,9 +347,9 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   private listenToDomainChanges(): void {
-    combineLatest([this.domain.valueChanges, this.permitType.valueChanges])
+    combineLatest([this.domain.valueChanges, this.permitType.valueChanges, this.projectWorkArea.valueChanges.pipe(delay(200))])
       .pipe(takeUntil(this.destroy$))
-      .subscribe(([domain, permitType]: [DomainTypes, ProjectPermitTypes]) => {
+      .subscribe(([domain, permitType, _workArea]: [DomainTypes, ProjectPermitTypes, ProjectWorkArea]) => {
         this.handleDomainChanges(domain, permitType)
       })
   }
@@ -368,21 +369,29 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   private handleDomainChanges(domain: DomainTypes, permitType: ProjectPermitTypes): void {
-    this.displayDacSection = domain === DomainTypes.DEVELOPMENT;
-    this.displayOuchSection = domain === DomainTypes.HUMANITARIAN && permitType === ProjectPermitTypes.SINGLE_TYPE_PROJECT
     const dacFields = [this.mainDACCategory, this.subDACCategory]
     const ochaFields = [this.mainUNOCHACategory, this.subUNOCHACategory]
     const allFields = dacFields.concat(ochaFields);
+    const inputValue = this.domain.value;
+    if (!inputValue) {
+      this.setFieldsToNull(allFields)
+      this.markUnRequiredFields(allFields)
+      return
+    }
+    this.displayDacSection = domain === DomainTypes.DEVELOPMENT;
+    this.displayOuchSection = domain === DomainTypes.HUMANITARIAN && permitType === ProjectPermitTypes.SINGLE_TYPE_PROJECT
+
     this.setFieldsToNull(allFields)
+    this.markUnRequiredFields(allFields)
     this.markAsFieldsUnTouchedAndPristine(allFields)
     if (this.displayOuchSection) {
       this.displayLicenseAndTargetCostFields = true;
       this.markRequiredFields(ochaFields)
-      this.markUnRequiredFields(dacFields)
+      // this.markUnRequiredFields(dacFields)
     } else if (this.displayDacSection) {
       this.displayLicenseAndTargetCostFields = true;
       this.markRequiredFields(dacFields)
-      this.markUnRequiredFields(ochaFields)
+      // this.markUnRequiredFields(ochaFields)
     } else {
       this.displayLicenseAndTargetCostFields = !this.domain.value;
       this.markUnRequiredFields(allFields)
@@ -521,19 +530,23 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     const workArea = this.projectWorkArea.value
     const domain = this.domain.value;
     const projectType = this.projectType.value;
-    const common: Record<string, string> = {
+    const external: Record<string, string> = {
       domain: 'domain',
       countries: 'countriesField'
-    }
-    const external: Record<string, string> = common;
-    const internal: Record<string, string> = common;
+    };
+    const internal: Record<string, string> = {
+      countries: 'countriesField'
+    };
 
     if (workArea === ProjectWorkArea.OUTSIDE_QATAR) {
       domain === DomainTypes.DEVELOPMENT ? external['mainDAC'] = 'mainDACCategory' : external['mainUNOCHA'] = 'mainUNOCHACategory';
     }
 
     if (workArea === ProjectWorkArea.INSIDE_QATAR) {
-      projectType === FundraisingProjectTypes.SOFTWARE ? internal['internalProjectClassification'] = 'internalProjectClassification' : (() => {
+      projectType === FundraisingProjectTypes.SOFTWARE ? (() => {
+        internal['projectType'] = 'projectType';
+        internal['internalProjectClassification'] = 'internalProjectClassification';
+      })() : (() => {
         internal['sanadiDomain'] = 'sanadiDomain';
         internal['sanadiMainClassification'] = 'sanadiMainClassification';
       })()
@@ -635,13 +648,14 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
 
   }
 
-  handleReadonly(): void {
+  handleReadonly() {
     // if record is new, no readonly (don't change as default is readonly = false)
-    if (!this.model?.id) {
+    const model = this.model!
+    if (!model.id) {
       return;
     }
 
-    let caseStatus = this.model.getCaseStatus();
+    let caseStatus = model.getCaseStatus();
     if (caseStatus == CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.FINAL_REJECTION) {
       this.readonly = true;
       return;
@@ -651,20 +665,20 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       if (this.employeeService.isCharityManager()) {
         this.readonly = false;
       } else if (this.employeeService.isCharityUser()) {
-        this.readonly = !this.model.isReturned();
+        this.readonly = !model.isReturned();
       }
     } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
       // after claim, consider it same as user inbox and use same condition
-      if (this.model.taskDetails.isClaimed()) {
+      if (model.taskDetails.isClaimed()) {
         if (this.employeeService.isCharityManager()) {
           this.readonly = false;
         } else if (this.employeeService.isCharityUser()) {
-          this.readonly = !this.model.isReturned();
+          this.readonly = !model.isReturned();
         }
       }
     } else if (this.openFrom === OpenFrom.SEARCH) {
       // if saved as draft, then no readonly
-      if (this.model?.canCommit()) {
+      if (model?.canCommit()) {
         this.readonly = false;
       }
     }
@@ -672,9 +686,9 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   private listenToProjectTypeChanges() {
-    this.projectType.valueChanges
+    combineLatest([this.projectType.valueChanges, this.projectWorkArea.valueChanges.pipe(delay(200))])
       .pipe(takeUntil(this.destroy$))
-      .subscribe((value: FundraisingProjectTypes) => {
+      .subscribe(([value, _workArea]: [FundraisingProjectTypes, ProjectWorkArea]) => {
         this.handleProjectTypeChanges(value);
       })
   }
@@ -683,6 +697,13 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     const sanadyFields = [this.sanadiDomain, this.sanadiMainClassification];
     const aidFields = [this.internalProjectClassification]
     const allFields = sanadyFields.concat(aidFields)
+    const inputValue = this.projectType.value;
+
+    if (!inputValue) {
+      this.markUnRequiredFields(allFields)
+      return;
+    }
+
     this.displayIPC = projectType === FundraisingProjectTypes.SOFTWARE;
     this.displaySanady = projectType === FundraisingProjectTypes.AIDS;
 
@@ -700,5 +721,17 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       this.markUnRequiredFields(allFields)
       !ignoreSetValues && this.setFieldsToNull(allFields)
     })() : null
+  }
+
+  isAllHasSameTargetAmount(): Observable<boolean> {
+    const countriesMessage = this.lang.map.make_sure_that_x_sum_equal_to_target_amount.change({x: this.lang.map.country_countries})
+    const yearsMessage = this.lang.map.make_sure_that_x_sum_equal_to_target_amount.change({x: this.lang.map.year_s})
+    const model = this.model!
+    return of(model)
+      .pipe(map(_ => model.targetAmount === model.calculateAllCountriesAmount()))
+      .pipe(tap(value => !value && this.dialog.error(countriesMessage)))
+      .pipe(filter(val => val))
+      .pipe(map(_ => model.targetAmount === model.calculateAllYearsAmount()))
+      .pipe(tap(value => !value && this.dialog.error(yearsMessage)))
   }
 }
