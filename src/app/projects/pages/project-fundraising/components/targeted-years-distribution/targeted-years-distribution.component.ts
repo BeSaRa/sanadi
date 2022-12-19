@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {ProjectFundraising} from "@app/models/project-fundraising";
 import {OperationTypes} from "@app/enums/operation-types.enum";
 import {ProjectFundraisingService} from "@services/project-fundraising.service";
@@ -39,6 +39,12 @@ export class TargetedYearsDistributionComponent implements OnInit, OnDestroy {
   selectedItems: string[] = [];
   totalValue: number = 0;
   remain: number = 0;
+  @Output()
+  onAddItem: EventEmitter<void> = new EventEmitter<void>()
+  @Output()
+  onItemChange: EventEmitter<void> = new EventEmitter<void>()
+  @Output()
+  onItemRemoved: EventEmitter<void> = new EventEmitter<void>()
 
   @Input()
   set numberOfMonths(value: number) {
@@ -104,9 +110,6 @@ export class TargetedYearsDistributionComponent implements OnInit, OnDestroy {
 
   private generateYearList(numberOfYears: number) {
     this.yearsList = Array.from({length: numberOfYears}, (_, i) => (i + 1).toString());
-    // if (this.yearsList.length !== this.model.amountOverYearsList.length) {
-    //   this.makeYearsMatchInModel()
-    // }
     this.updateSelectedList()
   }
 
@@ -114,6 +117,10 @@ export class TargetedYearsDistributionComponent implements OnInit, OnDestroy {
     if (!this.item.value)
       return;
 
+    if (!this.model.deductedPercentagesItemList.length) {
+      this.dialog.error(this.lang.map.please_add_deduction_items_to_proceed)
+      return;
+    }
     const year = new AmountOverYear().clone({year: this.item.value, targetAmount: overrideAmount ? overrideAmount : 0});
     const control = this.createControl(year.year, year.targetAmount)
 
@@ -122,6 +129,7 @@ export class TargetedYearsDistributionComponent implements OnInit, OnDestroy {
     this.model.addYear(year)
     this.updateSelectedList()
     this.item.setValue(null)
+    this.onAddItem.emit()
   }
 
   itemExists(id: string): boolean {
@@ -137,6 +145,7 @@ export class TargetedYearsDistributionComponent implements OnInit, OnDestroy {
         this.list.removeAt(index)
         this.updateSelectedList()
         this.calculateYears()
+        this.onItemRemoved.emit()
       })
   }
 
@@ -187,6 +196,7 @@ export class TargetedYearsDistributionComponent implements OnInit, OnDestroy {
           !this.readonly && this.model.updateYear(value, index)
         }
         this.updateTotalValue()
+        this.onItemChange.emit()
       })
   }
 
@@ -296,10 +306,16 @@ export class TargetedYearsDistributionComponent implements OnInit, OnDestroy {
 
 
   addAllItems(): void {
+    if (!this.model.deductedPercentagesItemList.length) {
+      this.dialog.error(this.lang.map.please_add_deduction_items_to_proceed)
+      return;
+    }
+
     if (this.yearsList.length === 1 && this.model.amountOverYearsList.length === 0) {
       this.addOrphanItem()
       return
     }
+
     this.yearsList.forEach(item => {
       if (!this.selectedItems.includes(item)) {
         this.item.setValue(item)

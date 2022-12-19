@@ -2,7 +2,8 @@
   <tabs-list [accordionView]="accordionView">
     <tab name="basic_info" [hasError]="basicInfo.invalid" [template]="basic_info" [title]="lang.map.lbl_basic_info">
     </tab>
-    <tab name="templates" [template]="template_deduction_ratio_info"
+    <tab name="templates" [hasError]="templateTabHasError"
+         [template]="template_deduction_ratio_info"
          [title]="lang.map.template_deduction_ratio_info">
     </tab>
     <tab [hasError]="specialExplanation.invalid" name="special_explanations" [template]="specialExplanations"
@@ -343,6 +344,9 @@
         </app-table>
       </div>
       <deduction-ratio-manager
+        (onAddItem)="checkTemplateTabValidity()"
+        (onItemChange)="checkTemplateTabValidity()"
+        (onItemRemoved)="checkTemplateTabValidity()"
         (deductionChange)="onDeductionRatioChanges()"
         [clearItems]="clearDeductionItems"
         (afterClearItems)="onClearDeductionItems()"
@@ -352,6 +356,9 @@
         [workArea]="projectWorkArea.value" [permitType]="permitType.value"
         [operation]="operation"></deduction-ratio-manager>
       <targeted-countries-distribution
+        (onAddItem)="checkTemplateTabValidity()"
+        (onItemChange)="checkTemplateTabValidity()"
+        (onItemRemoved)="checkTemplateTabValidity()"
         [deductionRatioChanged]="deductionRatioChanged"
         [model]="model!"
         [countriesChange]="countriesField.value"
@@ -360,6 +367,9 @@
         [operation]="operation"></targeted-countries-distribution>
 
       <targeted-years-distribution
+        (onAddItem)="checkTemplateTabValidity()"
+        (onItemChange)="checkTemplateTabValidity()"
+        (onItemRemoved)="checkTemplateTabValidity()"
         [deductionRatioChanged]="deductionRatioChanged"
         [model]="model!"
         [readonly]="(isExtendOrCancelRequestType() || readonly)"

@@ -70,8 +70,8 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   private loadedDacOchaBefore: Boolean = false;
   clearDeductionItems: boolean = false;
   selectedLicense?: ProjectFundraising;
-
   deductionRatioChanged: boolean = false
+  templateTabHasError = true;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -518,6 +518,11 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   private openAddTemplatePopup(): void {
+    if (!(this.countriesField.value as []).length) {
+      this.dialog.error(this.lang.map.msg_please_select_x_to_continue.change({x: this.lang.map.country_countries}))
+      return;
+    }
+
     this.service
       .openDialogSearchTemplate(this.getSearchTemplateCriteria(), this.projectWorkArea.value, this.model?.getTemplateId())
       .pipe(switchMap(dialog => dialog.onAfterClose$))
@@ -733,5 +738,15 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       .pipe(filter(val => val))
       .pipe(map(_ => model.targetAmount === model.calculateAllYearsAmount()))
       .pipe(tap(value => !value && this.dialog.error(yearsMessage)))
+  }
+
+  checkTemplateTabValidity(): void {
+    const model = this.model!
+    if (this.templateRequired && !model.templateList.length) {
+      this.templateTabHasError = true;
+      return
+    }
+
+    this.templateTabHasError = model.hasInvalidTargetAmount()
   }
 }
