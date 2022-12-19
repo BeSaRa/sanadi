@@ -111,7 +111,8 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     this.listenToMainDacOchaChanges();
     this.listenToAddTemplate();
     this.listenToProjectTotalCoastChanges();
-    this.listenToProjectTypeChanges()
+    this.listenToProjectTypeChanges();
+    this.listenToPermitTypeChange()
     this.setDefaultValues();
     this.overrideValuesInCreate();
 
@@ -748,5 +749,14 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     }
 
     this.templateTabHasError = model.hasInvalidTargetAmount()
+  }
+
+  private listenToPermitTypeChange() {
+    this.permitType
+      .valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((value: ProjectPermitTypes) => {
+        value === ProjectPermitTypes.SINGLE_TYPE_PROJECT ? this.countriesField.setValue([]) : null
+      })
   }
 }
