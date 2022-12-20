@@ -159,6 +159,9 @@ export class LicenseService {
       case CaseTypes.GENERAL_PROCESS_NOTIFICATION:
         url = this.urlService.URLS.GENERAL_PROCESS_NOTIFICATION;
         break;
+      case CaseTypes.PROJECT_FUNDRAISING:
+        url = this.urlService.URLS.PROJECT_FUNDRAISING;
+        break;
     }
     return url;
   }
