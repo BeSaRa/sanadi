@@ -14,6 +14,8 @@ import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 import {CustomsExemptionRemittanceService} from '@services/customs-exemption-remittance.service';
 import {InternalBankAccountApproval} from '@app/models/internal-bank-account-approval';
 import {BankAccountRequestTypes} from '@app/enums/service-request-types';
+import {GeneralAssociationMeetingAttendance} from '@app/models/general-association-meeting-attendance';
+import {GeneralAssociationMeetingAttendanceService} from '@services/general-association-meeting-attendance.service';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -25,6 +27,7 @@ export class CaseInfoComponent {
   constructor(public lang: LangService,
               private licenseService: LicenseService,
               private customsExemptionRemittanceService: CustomsExemptionRemittanceService,
+              private generalAssociationMeetingAttendanceService: GeneralAssociationMeetingAttendanceService,
               private sharedService: SharedService) {
   }
 
@@ -45,12 +48,14 @@ export class CaseInfoComponent {
     CaseTypes.EMPLOYMENT,
     CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST,
     CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD,
-    CaseTypes.AWARENESS_ACTIVITY_SUGGESTION
+    CaseTypes.AWARENESS_ACTIVITY_SUGGESTION,
+    CaseTypes.PROJECT_FUNDRAISING
   ];
 
   // this should be updated when ever you will add a new document service
   private documentCasList: number[] = [
-    CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE
+    CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE,
+    CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE
   ];
 
   get fullSerial(): string {
@@ -86,11 +91,24 @@ export class CaseInfoComponent {
   }
 
   get generatedDocumentNumber(): string {
-    return (this.model as CustomsExemptionRemittance).exportedBookFullSerial || '';
+    if (this.model.getCaseType() === CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE) {
+      return (this.model as CustomsExemptionRemittance).exportedBookFullSerial || '';
+    } else if(this.model.getCaseType() === CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE) {
+      return (this.model as GeneralAssociationMeetingAttendance).fullSerial || '';
+    } else {
+      return '';
+    }
   }
 
   get generatedDocumentId(): string {
-    return (this.model as CustomsExemptionRemittance).bookId || '';
+    if (this.model.getCaseType() === CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE) {
+      return (this.model as GeneralAssociationMeetingAttendance).meetingReportID;
+    } else if (this.model.getCaseType() === CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE) {
+      return (this.model as CustomsExemptionRemittance).bookId;
+    } else {
+      return '';
+    }
+
   }
 
   get templateSerial(): string {
@@ -102,7 +120,7 @@ export class CaseInfoComponent {
   }
 
   isLicenseCase(): boolean {
-    if(this.model.caseType === CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL) {
+    if (this.model.caseType === CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL) {
       return this.licenseCasList.includes(this.model.getCaseType()) && this.model.getCaseStatus() === CommonCaseStatus.FINAL_APPROVE && (this.model as InternalBankAccountApproval).requestType !== BankAccountRequestTypes.CANCEL;
     } else {
       return this.licenseCasList.includes(this.model.getCaseType()) && this.model.getCaseStatus() === CommonCaseStatus.FINAL_APPROVE;
@@ -114,6 +132,7 @@ export class CaseInfoComponent {
   }
 
   viewGeneratedLicense(): void {
+    console.log(this.generatedLicenseId);
     if (!this.generatedLicenseId) {
       return;
     }
@@ -128,7 +147,7 @@ export class CaseInfoComponent {
   }
 
   viewGeneratedDocument(): void {
-    console.log(this.generatedDocumentId)
+    console.log(this.generatedDocumentId);
     if (!this.generatedDocumentId) {
       return;
     }
@@ -136,13 +155,23 @@ export class CaseInfoComponent {
       documentTitle: this.generatedDocumentNumber,
       bookId: this.generatedDocumentId
     };
-    console.log(document)
+    console.log(document);
 
-    this.customsExemptionRemittanceService
-      .showDocumentContent(document, this.model.getCaseType())
-      .subscribe((file) => {
-        return this.sharedService.openViewContentDialog(file, document);
-      });
+    if (this.model.getCaseType() === CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE) {
+      this.customsExemptionRemittanceService
+        .showDocumentContent(document, this.model.getCaseType())
+        .subscribe((file) => {
+          return this.sharedService.openViewContentDialog(file, document);
+        });
+    }
+
+    if (this.model.getCaseType() === CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE) {
+      (this.generalAssociationMeetingAttendanceService)
+        .downloadFinalReport(this.generatedDocumentId)
+        .subscribe((file) => {
+          return this.sharedService.openViewContentDialog(file, document);
+        });
+    }
   }
 
   isTemplateModelServiceAndApproved() {

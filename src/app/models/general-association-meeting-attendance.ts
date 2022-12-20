@@ -178,12 +178,16 @@ export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAss
     return !this.isSendToMember && this.isDecisionMakerReviewStep() || this.isMemberReviewStep();
   }
 
+  canEditSelfMadeMeetingPoints(isSelfMadePoint: boolean): boolean {
+    return !this.isSendToMember && this.isDecisionMakerReviewStep() || (this.isSendToMember && this.isMemberReviewStep() && isSelfMadePoint);
+  }
+
   canAddMeetingPoints(): boolean {
     return (!this.isSendToMember && this.isDecisionMakerReviewStep()) || (this.isSendToMember && this.isMemberReviewStep());
   }
 
-  canRemoveMeetingPoints(pointId: boolean): boolean {
-    return (!this.isSendToMember && this.isDecisionMakerReviewStep()) || (this.isSendToMember && this.isMemberReviewStep() && !CommonUtils.isValidValue(pointId));
+  canRemoveMeetingPoints(isSelfMadePoint: boolean): boolean {
+    return (!this.isSendToMember && this.isDecisionMakerReviewStep()) || (this.isSendToMember && this.isMemberReviewStep() && isSelfMadePoint);
   }
 
   isSentToMember(): boolean {

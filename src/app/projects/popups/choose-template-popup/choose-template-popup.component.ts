@@ -4,6 +4,7 @@ import {LangService} from "@services/lang.service";
 import {ProjectModel} from "@app/models/project-model";
 import {DIALOG_DATA_TOKEN} from "@app/shared/tokens/tokens";
 import {TableComponent} from "@app/shared/components/table/table.component";
+import {ProjectWorkArea} from "@app/enums/project-work-area";
 
 @Component({
   selector: 'choose-template',
@@ -11,12 +12,13 @@ import {TableComponent} from "@app/shared/components/table/table.component";
   styleUrls: ['./choose-template-popup.component.scss']
 })
 export class ChooseTemplatePopupComponent implements AfterViewInit {
-  public displayedColumns: string[] = ['checkbox', 'projectName', 'serial', 'domain', 'country', 'status', 'totalCost']
+  public displayedColumns: string[] = ['checkbox', 'projectName', 'serial', 'country', 'status', 'totalCost']
   @ViewChild(TableComponent) private table!: TableComponent;
 
-  constructor(@Inject(DIALOG_DATA_TOKEN) public data: { templates: ProjectModel[], templateId: string },
+  constructor(@Inject(DIALOG_DATA_TOKEN) public data: { templates: ProjectModel[], templateId: string, workArea: ProjectWorkArea },
               private dialogRef: DialogRef,
               public lang: LangService) {
+    this.data.workArea === ProjectWorkArea.OUTSIDE_QATAR ? this.displayedColumns.splice(3, 0, 'domain') : null;
   }
 
   ngAfterViewInit(): void {

@@ -2,7 +2,8 @@
   <tabs-list [accordionView]="accordionView">
     <tab name="basic_info" [hasError]="basicInfo.invalid" [template]="basic_info" [title]="lang.map.lbl_basic_info">
     </tab>
-    <tab name="templates" [template]="template_deduction_ratio_info"
+    <tab name="templates" [hasError]="templateTabHasError"
+         [template]="template_deduction_ratio_info"
          [title]="lang.map.template_deduction_ratio_info">
     </tab>
     <tab [hasError]="specialExplanation.invalid" name="special_explanations" [template]="specialExplanations"
@@ -98,7 +99,7 @@
           </div>
         </div>
         <div class="row" *ngIf="displayDomainSection">
-          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <div class="col-md-4 col-sm-12 position-relative">
             <label class="form-label" asteriskIfRequired="domain"
                    for="domain">{{lang.map.domain}}</label>
             <ng-select validationClasses="domain" appendTo="body" [clearable]="false" id="domain"
@@ -111,7 +112,7 @@
             </ng-select>
             <app-field-error-message [ignoreTop]="true" controlName="domain"></app-field-error-message>
           </div>
-          <div class="col-md-8 col-sm-12 mb-4">
+          <div class="col-md-8 col-sm-12">
             <div class="flex flex-column">
               <div *ngIf="displayDacSection" class="row">
                 <div class="col-md-6 col-sm-12 mb-4 position-relative">
@@ -213,7 +214,7 @@
             </ng-select>
             <app-field-error-message controlName="projectType"></app-field-error-message>
           </div>
-          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <div *ngIf="displayIPC" class="col-md-4 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="internalProjectClassification"
                    for="internalProjectClassification">{{lang.map.internal_projects_classification}}</label>
             <ng-select validationClasses="internalProjectClassification" appendTo="body" [clearable]="true"
@@ -228,7 +229,7 @@
             </ng-select>
             <app-field-error-message controlName="internalProjectClassification"></app-field-error-message>
           </div>
-          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <div *ngIf="displaySanady" class="col-md-4 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="sanadiDomain"
                    for="sanadiDomain">{{lang.map.sanady_domain}}</label>
             <ng-select validationClasses="sanadiDomain" appendTo="body" [clearable]="true" id="sanadiDomain"
@@ -241,7 +242,7 @@
             </ng-select>
             <app-field-error-message controlName="sanadiDomain"></app-field-error-message>
           </div>
-          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <div *ngIf="displaySanady" class="col-md-4 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="sanadiMainClassification"
                    for="sanadiMainClassification">{{lang.map.sanady_main_classification}}</label>
             <ng-select validationClasses="sanadiMainClassification" appendTo="body" [clearable]="true"
@@ -329,8 +330,11 @@
             <ng-container cdkColumnDef="actions">
               <th cdk-header-cell style="width:100px" *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
               <td cdk-cell *cdkCellDef="let row">
-                <button [tooltip]="lang.map.btn_remove" (click)="deleteTemplate()" class="btn icon-btn">
+                <button *ngIf="!readonly" [tooltip]="lang.map.btn_remove" (click)="deleteTemplate()" class="btn icon-btn">
                   <i class="mdi mdi-trash-can text-primary"></i>
+                </button>
+                <button [tooltip]="lang.map.view" (click)="viewTemplate(row)" class="btn icon-btn">
+                  <i class="mdi mdi-eye text-primary"></i>
                 </button>
               </td>
             </ng-container>
@@ -343,6 +347,9 @@
         </app-table>
       </div>
       <deduction-ratio-manager
+        (onAddItem)="checkTemplateTabValidity()"
+        (onItemChange)="checkTemplateTabValidity()"
+        (onItemRemoved)="checkTemplateTabValidity()"
         (deductionChange)="onDeductionRatioChanges()"
         [clearItems]="clearDeductionItems"
         (afterClearItems)="onClearDeductionItems()"
@@ -352,6 +359,9 @@
         [workArea]="projectWorkArea.value" [permitType]="permitType.value"
         [operation]="operation"></deduction-ratio-manager>
       <targeted-countries-distribution
+        (onAddItem)="checkTemplateTabValidity()"
+        (onItemChange)="checkTemplateTabValidity()"
+        (onItemRemoved)="checkTemplateTabValidity()"
         [deductionRatioChanged]="deductionRatioChanged"
         [model]="model!"
         [countriesChange]="countriesField.value"
@@ -360,6 +370,9 @@
         [operation]="operation"></targeted-countries-distribution>
 
       <targeted-years-distribution
+        (onAddItem)="checkTemplateTabValidity()"
+        (onItemChange)="checkTemplateTabValidity()"
+        (onItemRemoved)="checkTemplateTabValidity()"
         [deductionRatioChanged]="deductionRatioChanged"
         [model]="model!"
         [readonly]="(isExtendOrCancelRequestType() || readonly)"

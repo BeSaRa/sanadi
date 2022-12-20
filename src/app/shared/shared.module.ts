@@ -75,7 +75,6 @@ import {
 } from '@app/shared/components/request-recommendations/request-recommendations.component';
 import {ValidationGroupClassesDirective} from './directives/validation-group-classes.directive';
 import {GroupErrorMessageComponent} from './components/group-error-message/group-error-message.component';
-import {NgOptionHighlightModule} from '@ng-select/ng-option-highlight';
 import {SendToMultipleComponent} from './popups/send-to-multiple/send-to-multiple.component';
 import {AttachmentsComponent} from './components/attachments/attachments.component';
 import {OnlyNumbersDirective} from './directives/only-numbers.directive';
@@ -225,7 +224,6 @@ import {BankBranchComponent} from '@app/shared/components/bank-branch/bank-branc
     ReactiveFormsModule,
     NgxMaskModule.forRoot(),
     NgSelectModule,
-    NgOptionHighlightModule,
     AngularMyDatePickerModule,
   ],
   exports: [
@@ -258,7 +256,6 @@ import {BankBranchComponent} from '@app/shared/components/bank-branch/bank-branc
     VersionComponent,
     SidebarComponent,
     NgSelectModule,
-    NgOptionHighlightModule,
     AngularMyDatePickerModule,
     DateFixDirective,
     AttachmentListComponent,

@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {ProjectFundraising} from "@app/models/project-fundraising";
 import {ProjectFundraisingService} from "@services/project-fundraising.service";
 import {Country} from "@app/models/country";
@@ -30,6 +30,12 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
   operation!: OperationTypes
   @Input()
   readonly: boolean = false;
+  @Output()
+  onAddItem: EventEmitter<void> = new EventEmitter<void>()
+  @Output()
+  onItemChange: EventEmitter<void> = new EventEmitter<void>()
+  @Output()
+  onItemRemoved: EventEmitter<void> = new EventEmitter<void>()
 
   countriesList: Country[] = []
 
@@ -125,6 +131,12 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
   addItem(overrideAmount?: number): void {
     if (!this.item.value)
       return
+
+    if (!this.model.deductedPercentagesItemList.length) {
+      this.dialog.error(this.lang.map.please_add_deduction_items_to_proceed)
+      return;
+    }
+
     const country = new AmountOverCountry().clone({
       country: this.item.value.id,
       targetAmount: overrideAmount ? overrideAmount : 0,
@@ -136,6 +148,7 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
     this.model.addCountry(country)
     this.updateSelectedIds()
     this.item.setValue(null)
+    this.onAddItem.emit()
   }
 
   deleteCountry(row: AmountOverCountry, index: number) {
@@ -145,6 +158,7 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
       .pipe(filter(val => val === UserClickOn.YES))
       .subscribe(() => {
         this.removeItem(row, index)
+        this.onItemRemoved.emit()
       })
   }
 
@@ -181,6 +195,7 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
 
         this.model.updateCountryAmount(countryId, correctedAmount)
         this.updateTotalValue()
+        this.onItemChange.emit()
       })
   }
 
@@ -203,10 +218,16 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
   }
 
   addAllItems(): void {
+    if (!this.model.deductedPercentagesItemList.length) {
+      this.dialog.error(this.lang.map.please_add_deduction_items_to_proceed)
+      return;
+    }
+
     if (this.countriesList.length === 1 && this.model.amountOverCountriesList.length === 0) {
       this.addOrphanItem()
       return
     }
+
     this.countriesList.forEach(item => {
       if (!this.selectedIds.includes(item.id)) {
         this.item.setValue(item)

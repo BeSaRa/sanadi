@@ -112,8 +112,8 @@
                        placeholder="{{lang.map.select}}" id="serviceId"
                        [notFoundText]="lang.map.msg_not_found"
                        [multiple]="true" [closeOnSelect]="false">
-              <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
-                <span class="custom-option" [ngOptionHighlight]="search">{{item.getName()}}</span>
+              <ng-template ng-option-tmp let-item="item">
+                <span class="custom-option">{{item.getName()}}</span>
               </ng-template>
               <ng-template ng-label-tmp let-item="item" let-clear="clear">
                 <span class="ng-value-label">{{item && item.getName ? item.getName() : ''}}</span>

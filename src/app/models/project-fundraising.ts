@@ -78,7 +78,6 @@ export class ProjectFundraising extends CaseModel<ProjectFundraisingService, Pro
   employeeService: EmployeeService;
 
 
-
   constructor() {
     super();
     this.service = FactoryService.getService('ProjectFundraisingService');
@@ -277,4 +276,16 @@ export class ProjectFundraising extends CaseModel<ProjectFundraisingService, Pro
       return country
     })
   }
+
+
+  hasInvalidTargetAmount(): boolean {
+    return !this.deductedPercentagesItemList.length
+      || this.deductedPercentagesItemList.some(item => item.deductionPercent <= 0)
+      || this.calculateAllYearsAmount() !== this.targetAmount
+      || this.calculateAllCountriesAmount() !== this.targetAmount
+      || this.amountOverCountriesList.some(item => item.targetAmount <= 0)
+      || this.amountOverYearsList.some(item => item.targetAmount <= 0)
+      || this.administrativeDeductionAmount <= 0
+  }
+
 }

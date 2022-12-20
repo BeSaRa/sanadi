@@ -1051,7 +1051,7 @@ export const navigationMenuList = [
     id: 81,
     langKey: 'menu_projects_fundraising',
     path: '/home/projects/projects-fundraising',
-    icon: 'mdi-template',
+    icon: 'mdi-charity',
     isSvg: false,
     permission: EServicePermissionsEnum.PROJECT_FUNDRAISING,
     permissionGroup: null,

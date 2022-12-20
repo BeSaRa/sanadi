@@ -70,17 +70,6 @@ export class GeneralAssociationMeetingAttendanceService extends BaseGenericEServ
     FactoryService.registerService('GeneralAssociationMeetingAttendanceService', this);
   }
 
-  // @HasInterception
-  // @CastResponse(() => NpoEmployee, {
-  //   unwrap: 'rs',
-  //   fallback: '$default'
-  // })
-  // private _searchNpoEmployees(options?: any): Observable<NpoEmployee[]> {
-  //   return this.http.get<NpoEmployee[]>(this.getNpoEmployeeURLSegment() + '/composite', {
-  //     params: (new HttpParams({ fromObject: options }))
-  //   });
-  // }
-
   @HasInterception
   @CastResponse(() => NpoEmployee, {
     unwrap: 'rs',

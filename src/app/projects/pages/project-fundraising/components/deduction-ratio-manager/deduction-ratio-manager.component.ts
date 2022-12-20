@@ -49,6 +49,13 @@ export class DeductionRatioManagerComponent implements OnInit, OnDestroy {
   totalAdminRatio: number = 0;
   deductionAmountHasChanges$: Subject<any> = new Subject<any>()
 
+  @Output()
+  onAddItem: EventEmitter<void> = new EventEmitter<void>()
+  @Output()
+  onItemChange: EventEmitter<void> = new EventEmitter<void>()
+  @Output()
+  onItemRemoved: EventEmitter<void> = new EventEmitter<void>()
+
   @Input()
   set clearItems(value: boolean) {
     this.clearItems$.next(value)
@@ -124,6 +131,7 @@ export class DeductionRatioManagerComponent implements OnInit, OnDestroy {
     this.model.addDeductionRatioItem(item)
     this.item.setValue(null)
     this.updateItemIds()
+    this.onAddItem.emit()
   }
 
   itemExists(id: number) {
@@ -174,6 +182,7 @@ export class DeductionRatioManagerComponent implements OnInit, OnDestroy {
         this.model.updateDeductionRatioItem(Number(id), Number(input.getRawValue()))
         this.calculateDeductionRatio()
         this.deductionAmountHasChanges$.next(input.getRawValue())
+        this.onItemChange.emit()
       })
   }
 
@@ -209,6 +218,7 @@ export class DeductionRatioManagerComponent implements OnInit, OnDestroy {
         this.list.removeAt(index)
         this.updateItemIds()
         this.calculateDeductionRatio()
+        this.onItemRemoved.emit()
       })
   }
 
