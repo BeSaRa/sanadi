@@ -127,6 +127,7 @@ export class CharityOrganizationProfileExtraDataPopupComponent extends AdminGene
   }
 
   afterSave(model: CharityOrganizationProfileExtraData, dialogRef: DialogRef): void {
+    this.toast.success(this.lang.map.msg_save_success);
   }
 
   beforeSave(model: CharityOrganizationProfileExtraData, form: UntypedFormGroup): Observable<boolean> | boolean {
