@@ -36,9 +36,15 @@
           <th cdk-header-cell sortable-header *cdkHeaderCellDef>{{ lang.map.english_name }}</th>
           <td cdk-cell *cdkCellDef="let row">{{ row.enName }}</td>
         </ng-container>
+        <ng-container cdkColumnDef="profileType">
+          <th cdk-header-cell sortable-header *cdkHeaderCellDef [sortParamAsFullItem]="true"
+              [sortCallback]="sortingCallbacks.profileType">{{ lang.map.lbl_profile_type }}</th>
+          <td cdk-cell *cdkCellDef="let row">{{ row.profileTypeInfo ? row.profileTypeInfo.getName() : '' }}</td>
+        </ng-container>
         <ng-container cdkColumnDef="status">
-          <th cdk-header-cell sortable-header *cdkHeaderCellDef>{{ lang.map.status }}</th>
-          <td cdk-cell *cdkCellDef="let row">{{ row?.statusInfo?.getName() || '' }}</td>
+          <th cdk-header-cell sortable-header *cdkHeaderCellDef [sortParamAsFullItem]="true"
+              [sortCallback]="sortingCallbacks.status">{{ lang.map.status }}</th>
+          <td cdk-cell *cdkCellDef="let row">{{ row.statusInfo ? row.statusInfo.getName() : '' }}</td>
         </ng-container>
 
         <ng-container cdkColumnDef="actions">
@@ -49,7 +55,7 @@
                     *ngIf="row.status != commonStatusEnum.RETIRED"
                     style="top: auto">
                 <input class="form-check-input" type="checkbox" [checked]="row.status == commonStatusEnum.ACTIVATED"
-                       tooltip="{{row.status == commonStatusEnum.ACTIVATED ? lang.map.btn_deactivate: lang.map.btn_activate                  }}"
+                       tooltip="{{row.status == commonStatusEnum.ACTIVATED ? lang.map.btn_deactivate: lang.map.btn_activate}}"
                        (change)="toggleStatus(row)">
               </span>
             </grid-actions>
