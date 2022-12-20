@@ -21,6 +21,7 @@ export class PageHeaderComponent implements OnInit, OnDestroy {
 
   @Input() disableAdd: boolean = false;
   @Input() disableReload: boolean = false;
+  @Input() customTemplateParentClass: string = 'flex-fill';
 
   isReloadAvailable = false;
 

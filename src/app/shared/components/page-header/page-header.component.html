@@ -8,7 +8,7 @@
             tooltip="{{langService.map.btn_reload}}" (click)="reloadCallback()">
       <i class="mdi mdi-reload"></i></button>
   </div>
-  <div *ngIf="customTemplate">
+  <div *ngIf="customTemplate" [class]="customTemplateParentClass">
     <ng-container *ngTemplateOutlet="customTemplate">
     </ng-container>
   </div>
