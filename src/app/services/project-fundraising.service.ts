@@ -24,6 +24,7 @@ import {WFResponseType} from "@app/enums/wfresponse-type.enum";
 import {
   ProjectFundraisingApproveTaskPopupComponent
 } from "@app/projects/popups/project-fundraising-approve-task-popup/project-fundraising-approve-task-popup.component";
+import {LicenseService} from "@services/license.service";
 
 @CastResponseContainer({
   $default: {
@@ -46,6 +47,7 @@ export class ProjectFundraisingService extends BaseGenericEService<ProjectFundra
               private sharedService: SharedService,
               private projectModelService: ProjectModelService,
               private urlService: UrlService,
+              private licenseService: LicenseService,
               public dynamicService: DynamicOptionsService) {
     super()
     FactoryService.registerService('ProjectFundraisingService', this)
@@ -107,5 +109,9 @@ export class ProjectFundraisingService extends BaseGenericEService<ProjectFundra
       model,
       action: action
     });
+  }
+
+  licenseSearch(criteria: Partial<ProjectFundraising>): Observable<ProjectFundraising[]> {
+    return this.licenseService.projectFundraisingLicenseSearch(criteria);
   }
 }

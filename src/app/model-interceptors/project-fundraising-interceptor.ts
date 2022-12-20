@@ -12,8 +12,6 @@ export class ProjectFundraisingInterceptor implements IModelInterceptor<ProjectF
 
     model.beforeSend!()
     ProjectFundraisingInterceptor._deleteBeforeSend(model);
-
-    console.log(model);
     return model;
   }
 
@@ -45,7 +43,7 @@ export class ProjectFundraisingInterceptor implements IModelInterceptor<ProjectF
     model.sanadiDomainInfo = AdminResult.createInstance(model.sanadiDomainInfo)
     model.sanadiMainClassificationInfo = AdminResult.createInstance(model.sanadiMainClassificationInfo)
     model.requestTypeInfo = AdminResult.createInstance(model.requestTypeInfo)
-
+    model.licenseStatusInfo = AdminResult.createInstance(model.licenseStatusInfo)
     return model
   }
 
@@ -66,6 +64,7 @@ export class ProjectFundraisingInterceptor implements IModelInterceptor<ProjectF
     delete model.licenseStatusInfo
     delete model.countriesInfo
     delete model.licenseDurationType
+    delete model.taskDetails;
     delete model.itemId
   }
 }

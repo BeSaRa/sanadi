@@ -10,7 +10,7 @@ import {Lookup} from "@app/models/lookup";
 import {LookupService} from "@services/lookup.service";
 import {LangService} from "@services/lang.service";
 import {Country} from "@app/models/country";
-import {delay, filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
+import {delay, exhaustMap, filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
 import {ProjectWorkArea} from "@app/enums/project-work-area";
 import {ProjectPermitTypes} from "@app/enums/project-permit-types";
 import {ServiceRequestTypes} from "@app/enums/service-request-types";
@@ -33,6 +33,7 @@ import {OpenFrom} from "@app/enums/open-from.enum";
 import {CommonUtils} from "@helpers/common-utils";
 import {ProjectTypes} from "@app/enums/project-types";
 import {FundraisingProjectTypes} from "@app/enums/fundraising-project-types";
+import {LicenseService} from "@services/license.service";
 
 @Component({
   selector: 'project-fundraising',
@@ -72,6 +73,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   selectedLicense?: ProjectFundraising;
   deductionRatioChanged: boolean = false
   templateTabHasError = true;
+  licenseSearch$: Subject<string> = new Subject()
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -83,6 +85,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     private aidLookupService: AidLookupService,
     private employeeService: EmployeeService,
     private dacOchaService: DacOchaService,
+    private licenseService: LicenseService,
     public lang: LangService) {
     super()
   }
@@ -115,7 +118,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     this.listenToPermitTypeChange()
     this.setDefaultValues();
     this.overrideValuesInCreate();
-
+    this.listenToLicenseSearch()
     // this._test()
   }
 
@@ -766,10 +769,70 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       })
   }
 
+  get oldLicenseFullSerial(): AbstractControl {
+    return this.basicInfo.get('oldLicenseFullSerial')!
+  }
+
   viewTemplate(template: ProjectTemplate) {
     template
       .viewTemplate()
       .pipe(takeUntil(this.destroy$))
       .subscribe()
+  }
+
+  licenseSearch($event?: Event) {
+    $event?.preventDefault();
+    this.licenseSearch$.next((this.oldLicenseFullSerial.value as string || '').trim())
+  }
+
+  private listenToLicenseSearch() {
+    this.licenseSearch$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(exhaustMap((serialNumber) => this.service.licenseSearch({
+        fullSerial: serialNumber
+      })))
+      .pipe(
+        // display message in case there is no returned license
+        tap((list) => !list.length ? this.dialog.info(this.lang.map.no_result_for_your_search_criteria) : null),
+        // allow only the collection if it has value
+        filter((result) => !!result.length)
+      )
+      .pipe(exhaustMap(licenses => licenses.length === 1 ? this.validateSingleLicense(licenses[0]) : this.openSelectLicense(licenses)))
+      .pipe(filter((info): info is ProjectFundraising => !!info))
+      .subscribe((license) => {
+        this.setSelectedLicense(license, false);
+      });
+  }
+
+  private validateSingleLicense(license: ProjectFundraising): Observable<undefined | ProjectFundraising> {
+    return this.licenseService.validateLicenseByRequestType<ProjectFundraising>(this.model!.caseType, this.requestType.value, license.id) as Observable<undefined | ProjectFundraising>;
+  }
+
+  private openSelectLicense(licenses: ProjectFundraising[]): Observable<undefined | ProjectFundraising> {
+    return this.licenseService.openSelectLicenseDialog(licenses, this.model?.clone({requestType: this.requestType.value || null}), true, this.service.selectLicenseDisplayColumns)
+      .onAfterClose$
+      .pipe(map((result: ({ selected: ProjectFundraising, details: ProjectFundraising } | undefined)) => result ? result.details : result));
+  }
+
+  setSelectedLicense(licenseDetails: ProjectFundraising | undefined, ignoreUpdateForm: boolean) {
+    console.log(licenseDetails);
+    this.selectedLicense = licenseDetails;
+    // update form fields if i have license
+    if (licenseDetails && !ignoreUpdateForm) {
+      let model: any = new ProjectFundraising().clone(licenseDetails);
+      model.requestType = this.requestType.value;
+      model.oldLicenseFullSerial = licenseDetails.fullSerial;
+      model.oldLicenseId = licenseDetails.id;
+      model.oldLicenseSerial = licenseDetails.serial;
+      model.documentTitle = '';
+      model.fullSerial = null;
+      model.description = '';
+      model.licenseStartDate = licenseDetails.licenseStartDate || licenseDetails.licenseApprovedDate;
+      // delete id because license details contains old license id, and we are adding new, so no id is needed
+      delete model.id;
+      delete model.vsId;
+
+      this._updateForm(model);
+    }
   }
 }
