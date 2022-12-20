@@ -320,6 +320,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     const allFields = aidFields.concat(domainFields);
 
     if ([ProjectPermitTypes.UNCONDITIONAL_RECEIVE, ProjectPermitTypes.CHARITY].includes(type)) {
+      this.templateRequired = false;
       this.displayWorkAreaAndCountry = false;
       this.displayDomainSection = false;
       this.displayAidSection = false;
@@ -331,6 +332,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       this.projectWorkArea.updateValueAndValidity({emitEvent: false})
       this.markUnRequiredFields(allFields)
       this.setFieldsToNull(allFields)
+      this.projectTotalCost.enable()
     } else {
       this.displayLicenseAndTargetCostFields = false;
       this.displayWorkAreaAndCountry = true;
