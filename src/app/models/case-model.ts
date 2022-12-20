@@ -1,32 +1,32 @@
-import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { AdminResult } from './admin-result';
-import { TaskDetails } from './task-details';
-import { FileNetModel } from './FileNetModel';
-import { Observable } from 'rxjs';
-import { BlobModel } from './blob-model';
-import { DialogRef } from '../shared/models/dialog-ref';
-import { IMenuItem } from '../modules/context-menu/interfaces/i-menu-item';
-import { ComponentType } from '@angular/cdk/overlay';
-import { DynamicComponentService } from '@services/dynamic-component.service';
-import { delay, map, take, tap } from 'rxjs/operators';
-import { CaseViewerPopupComponent } from '../shared/popups/case-viewer-popup/case-viewer-popup.component';
-import { IESComponent } from '@contracts/iescomponent';
-import { OpenFrom } from '../enums/open-from.enum';
-import { EmployeeService } from '@services/employee.service';
-import { FactoryService } from '@services/factory.service';
-import { OperationTypes } from '../enums/operation-types.enum';
-import { ICaseModel } from "@app/interfaces/icase-model";
-import { IBulkResult } from "@app/interfaces/ibulk-result";
-import { InboxService } from "@app/services/inbox.service";
-import { WFResponseType } from "@app/enums/wfresponse-type.enum";
-import { LicenseApprovalModel } from "@app/models/license-approval-model";
-import { INavigatedItem } from "@app/interfaces/inavigated-item";
-import { EncryptionService } from "@app/services/encryption.service";
-import { CaseTypes } from '@app/enums/case-types.enum';
-import { BaseGenericEService } from "@app/generics/base-generic-e-service";
-import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
-import { UntypedFormGroup } from '@angular/forms';
-import { OrganizationOfficer } from '@app/models/organization-officer';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {AdminResult} from './admin-result';
+import {TaskDetails} from './task-details';
+import {FileNetModel} from './FileNetModel';
+import {Observable} from 'rxjs';
+import {BlobModel} from './blob-model';
+import {DialogRef} from '../shared/models/dialog-ref';
+import {IMenuItem} from '../modules/context-menu/interfaces/i-menu-item';
+import {ComponentType} from '@angular/cdk/overlay';
+import {DynamicComponentService} from '@services/dynamic-component.service';
+import {delay, map, take, tap} from 'rxjs/operators';
+import {CaseViewerPopupComponent} from '../shared/popups/case-viewer-popup/case-viewer-popup.component';
+import {IESComponent} from '@contracts/iescomponent';
+import {OpenFrom} from '../enums/open-from.enum';
+import {EmployeeService} from '@services/employee.service';
+import {FactoryService} from '@services/factory.service';
+import {OperationTypes} from '../enums/operation-types.enum';
+import {ICaseModel} from "@app/interfaces/icase-model";
+import {IBulkResult} from "@app/interfaces/ibulk-result";
+import {InboxService} from "@app/services/inbox.service";
+import {WFResponseType} from "@app/enums/wfresponse-type.enum";
+import {LicenseApprovalModel} from "@app/models/license-approval-model";
+import {INavigatedItem} from "@app/interfaces/inavigated-item";
+import {EncryptionService} from "@app/services/encryption.service";
+import {CaseTypes} from '@app/enums/case-types.enum';
+import {BaseGenericEService} from "@app/generics/base-generic-e-service";
+import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import {UntypedFormGroup} from '@angular/forms';
+import {OrganizationOfficer} from '@app/models/organization-officer';
 
 export abstract class CaseModel<S extends BaseGenericEService<T>, T extends FileNetModel<T>> extends FileNetModel<T> implements ICaseModel<T> {
   serial!: number;
@@ -52,6 +52,7 @@ export abstract class CaseModel<S extends BaseGenericEService<T>, T extends File
   itemDetails: string = '';
   encrypt!: EncryptionService;
   organizationId!: number;
+
   constructor() {
     super();
     this.employeeService = FactoryService.getService('EmployeeService');
@@ -122,7 +123,7 @@ export abstract class CaseModel<S extends BaseGenericEService<T>, T extends File
     return Object.keys(this).filter((key) => (self[key] !== '' && self[key] !== null))
       .filter(field => fields ? fields.indexOf(field) !== -1 : field)
       .reduce((acc, current) => {
-        return (current === 'service') ? acc : { ...acc, [current]: self[current] };
+        return (current === 'service') ? acc : {...acc, [current]: self[current]};
       }, {});
   }
 
@@ -160,7 +161,7 @@ export abstract class CaseModel<S extends BaseGenericEService<T>, T extends File
           loadedModel: model,
           actions,
           componentService: this.service
-        }, { fullscreen: false })),
+        }, {fullscreen: false})),
         tap(ref => {
           const instance = ref.instance as unknown as CaseViewerPopupComponent;
           instance.viewInit
@@ -211,12 +212,15 @@ export abstract class CaseModel<S extends BaseGenericEService<T>, T extends File
   isReturned(): boolean {
     return this.caseStatus === CommonCaseStatus.RETURNED;
   }
+
   isCancelled(): boolean {
     return this.caseStatus === CommonCaseStatus.CANCELLED;
   }
+
   isFinalRejection(): boolean {
     return this.caseStatus === CommonCaseStatus.FINAL_REJECTION;
   }
+
   getCaseType(): number {
     return this.caseType;
   }
@@ -264,6 +268,7 @@ export abstract class CaseModel<S extends BaseGenericEService<T>, T extends File
   sendToDepartment(): DialogRef {
     return this.inboxService!.sendToDepartment(this.taskDetails.tkiid, this.caseType, false, this);
   }
+
   sendToMultiDepartments(): DialogRef {
     return this.inboxService!.sendToMultiDepartments(this.taskDetails.tkiid, this.caseType, false, this);
   }
@@ -284,6 +289,7 @@ export abstract class CaseModel<S extends BaseGenericEService<T>, T extends File
       [CaseTypes.GENERAL_PROCESS_NOTIFICATION]: WFResponseType.GENERAL_NOTIFICATION_SEND_TO_SINGLE_DEPARTMENTS,
       [CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD]: WFResponseType.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD_SEND_TO_SINGLE_DEPARTMENT,
       [CaseTypes.NPO_MANAGEMENT]: WFResponseType.REVIEW_NPO_MANAGEMENT,
+      [CaseTypes.PROJECT_FUNDRAISING]: WFResponseType.PROJECT_FUNDRAISING_SEND_TO_SINGLE_DEPARTMENT
     }
 
     if (!caseType) {
@@ -303,9 +309,10 @@ export abstract class CaseModel<S extends BaseGenericEService<T>, T extends File
     } else if (taskName.startsWith('askSingle:')) {
       taskName = taskName.split('askSingle:')[1];
     }
-    return this.inboxService!.sendTaskToMultiple(this.getCaseId(), { taskName: taskName }, service);
+    return this.inboxService!.sendTaskToMultiple(this.getCaseId(), {taskName: taskName}, service);
   }
-  getRejectCommentLabel(caseType: number) : keyof ILanguageKeys {
+
+  getRejectCommentLabel(caseType: number): keyof ILanguageKeys {
     switch (caseType) {
       case CaseTypes.NPO_MANAGEMENT:
         return 'reject_reason'
@@ -313,6 +320,7 @@ export abstract class CaseModel<S extends BaseGenericEService<T>, T extends File
         return 'comment'
     }
   }
+
   sendToUser(): DialogRef {
     return this.inboxService!.sendToUser(this.taskDetails.tkiid, this.caseType, false, this);
   }
@@ -336,6 +344,7 @@ export abstract class CaseModel<S extends BaseGenericEService<T>, T extends File
   complete(): DialogRef {
     return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.COMPLETE, false, this);
   }
+
   approve(): DialogRef {
     return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.APPROVE, false, this);
   }
@@ -404,18 +413,23 @@ export abstract class CaseModel<S extends BaseGenericEService<T>, T extends File
   returnToOrganization(): DialogRef {
     return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.RETURN_TO_ORG, false, this);
   }
+
   returnToSpecificOrganization(): DialogRef {
     return this.inboxService!.openReturnToSpecificOrganization(this.id, this);
   }
+
   finalNotification(): DialogRef {
     return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.FINAL_NOTIFICATION, false, this);
   }
-  organizationFinalApprove(externalUserData: { form: UntypedFormGroup, organizationOfficers: OrganizationOfficer[] }): DialogRef {
+
+  organizationFinalApprove(_externalUserData: { form: UntypedFormGroup, organizationOfficers: OrganizationOfficer[] }): DialogRef {
     return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.ORGANIZATION_APPROVE, false, this);
   }
+
   organizationFinalReject(): DialogRef {
     return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.ORGANIZATION_FINAL_REJECT, false, this);
   }
+
   isClaimed(): boolean {
     return this.taskDetails && this.taskDetails.isClaimed();
   }
