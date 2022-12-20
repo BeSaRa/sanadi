@@ -22,7 +22,7 @@ import {
   OnInit,
   ViewChild,
   ViewContainerRef
-} from '@angular/core';d
+} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {DynamicComponentService} from '@app/services/dynamic-component.service';
 import {EmployeeService} from '@app/services/employee.service';
