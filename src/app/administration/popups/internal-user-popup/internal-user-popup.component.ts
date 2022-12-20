@@ -307,6 +307,7 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
   }
 
   afterSave(model: InternalUser, dialogRef: DialogRef): void {
+    this.model = model;
     let signSub;
     if (!!this.signatureFile) {
       signSub = model.saveSignature(this.signatureFile);
