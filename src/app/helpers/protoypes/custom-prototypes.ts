@@ -32,3 +32,8 @@ Window.prototype.getConfigMergeProperties = function (): {scope: string, propert
   const service = FactoryService.getService<StaticAppResourcesService>('StaticAppResourcesService');
   return !service ? {} as any : service.getConfigurablePropertiesForConsole();
 }
+
+Window.prototype.getPrivateBuild = function (): string {
+  const service = FactoryService.getService<StaticAppResourcesService>('StaticAppResourcesService');
+  return !service ? '' : service.getPrivateBuildForConsole();
+}

@@ -1,6 +1,7 @@
 export interface IAppConfig {
   MAP_API_KEY: string;
   VERSION: string;
+  PRIVATE_VERSION: string;
   TIMESTAMP: string;
   ENVIRONMENTS_URLS: Record<string, string>;
   BASE_ENVIRONMENT: string;
