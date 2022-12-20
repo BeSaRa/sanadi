@@ -577,6 +577,9 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   deleteTemplate(): void {
+    if (this.readonly)
+      return;
+
     this.dialog.confirm(this.lang.map.remove_template_will_empty_deduction_ration_list)
       .onAfterClose$
       .pipe(filter((val: UserClickOn) => val === UserClickOn.YES))
@@ -760,5 +763,12 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       .subscribe((value: ProjectPermitTypes) => {
         value === ProjectPermitTypes.SINGLE_TYPE_PROJECT ? this.countriesField.setValue([]) : null
       })
+  }
+
+  viewTemplate(template: ProjectTemplate) {
+    template
+      .viewTemplate()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe()
   }
 }

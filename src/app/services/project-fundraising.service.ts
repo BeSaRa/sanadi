@@ -12,11 +12,14 @@ import {CastResponse, CastResponseContainer} from "@decorators/cast-response";
 import {Observable, of} from "rxjs";
 import {ProjectWorkArea} from "@app/enums/project-work-area";
 import {ProjectModel} from "@app/models/project-model";
-import {switchMap} from "rxjs/operators";
+import {map, switchMap} from "rxjs/operators";
 import {DialogRef} from "@app/shared/models/dialog-ref";
 import {ChooseTemplatePopupComponent} from "@app/projects/popups/choose-template-popup/choose-template-popup.component";
 import {DeductionRatioItem} from "@app/models/deduction-ratio-item";
 import {DeductionRatioItemService} from "@services/deduction-ratio-item.service";
+import {SharedService} from "@services/shared.service";
+import {ProjectTemplate} from "@app/models/projectTemplate";
+import {ProjectModelService} from "@services/project-model.service";
 
 @CastResponseContainer({
   $default: {
@@ -36,6 +39,8 @@ export class ProjectFundraisingService extends BaseGenericEService<ProjectFundra
               public domSanitizer: DomSanitizer,
               private _deductionService: DeductionRatioItemService,
               public dialog: DialogService,
+              private sharedService: SharedService,
+              private projectModelService: ProjectModelService,
               private urlService: UrlService,
               public dynamicService: DynamicOptionsService) {
     super()
@@ -84,5 +89,12 @@ export class ProjectFundraisingService extends BaseGenericEService<ProjectFundra
     return this.http.get<DeductionRatioItem[]>(this.urlService.URLS.DEDUCTION_RATIO_ITEM, {
       params: new HttpParams({fromObject: criteria})
     })
+  }
+
+  viewTemplate(template: ProjectTemplate): Observable<DialogRef> {
+    return this.projectModelService.exportTemplate(template.templateId)
+      .pipe(map((blob) => {
+        return this.sharedService.openViewContentDialog(blob, {documentTitle: template.templateFullSerial}) as DialogRef
+      }))
   }
 }
