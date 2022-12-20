@@ -163,9 +163,10 @@
   </ng-template>
 </div>
 <div class="dialog-actions">
-  <button tabindex="-1" (click)="displayFormValidity(null, dialogContent)" tooltip="{{ lang.map.validate_fields }}"
+  <button tabindex="-1" *ngIf="validateFieldsVisible"
+          (click)="displayFormValidity(null, dialogContent)" tooltip="{{ lang.map.validate_fields }}"
           class="btn btn-link"><i class="mdi mdi-information-outline text-info"></i></button>
   <div class="flex-grow-1"></div>
-  <button (click)="save$.next(null)" class="btn btn-primary">{{ lang.map.btn_save }}</button>
+  <button *ngIf="saveVisible" (click)="save$.next(null)" class="btn btn-primary">{{ lang.map.btn_save }}</button>
   <button [dialogClose]="model" class="btn btn-secondary">{{ lang.map.btn_close }}</button>
 </div>

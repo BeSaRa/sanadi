@@ -35,6 +35,7 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
   model!: Profile;
   form!: UntypedFormGroup;
   operation!: OperationTypes;
+  saveVisible: boolean = true;
   actions: IMenuItem<ProfileServiceModel>[] = [
     {
       type: 'action',
@@ -130,6 +131,10 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
     if (this.operation === OperationTypes.UPDATE) {
       this.displayFormValidity(null, this.dialogContent.nativeElement);
     }
+    if (this.readonly) {
+      this.validateFieldsVisible = false;
+      this.saveVisible = false;
+    }
     this.cd.detectChanges();
   }
 
@@ -156,7 +161,7 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
       this.registrationAuthorityField?.disable();
     } else {
       this.showRaca = false;
-      if(!skipReset) {
+      if (!skipReset) {
         this.registrationAuthorityField?.reset();
       }
       this.registrationAuthorityField?.enable();
