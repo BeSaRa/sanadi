@@ -59,6 +59,7 @@ import {ChooseTemplatePopupComponent} from './popups/choose-template-popup/choos
 import { DeductionRatioManagerComponent } from './pages/project-fundraising/components/deduction-ratio-manager/deduction-ratio-manager.component';
 import { TargetedCountriesDistributionComponent } from './pages/project-fundraising/components/targeted-countries-distribution/targeted-countries-distribution.component';
 import { TargetedYearsDistributionComponent } from './pages/project-fundraising/components/targeted-years-distribution/targeted-years-distribution.component';
+import { ProjectFundraisingApproveTaskPopupComponent } from './popups/project-fundraising-approve-task-popup/project-fundraising-approve-task-popup.component';
 
 
 @NgModule({
@@ -90,7 +91,8 @@ import { TargetedYearsDistributionComponent } from './pages/project-fundraising/
     ChooseTemplatePopupComponent,
     DeductionRatioManagerComponent,
     TargetedCountriesDistributionComponent,
-    TargetedYearsDistributionComponent
+    TargetedYearsDistributionComponent,
+    ProjectFundraisingApproveTaskPopupComponent
   ],
   imports: [
     CommonModule,

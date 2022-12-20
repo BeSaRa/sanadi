@@ -12,6 +12,8 @@ export class ProjectFundraisingInterceptor implements IModelInterceptor<ProjectF
 
     model.beforeSend!()
     ProjectFundraisingInterceptor._deleteBeforeSend(model);
+
+    console.log(model);
     return model;
   }
 
@@ -63,5 +65,7 @@ export class ProjectFundraisingInterceptor implements IModelInterceptor<ProjectF
     delete model.requestTypeInfo
     delete model.licenseStatusInfo
     delete model.countriesInfo
+    delete model.licenseDurationType
+    delete model.itemId
   }
 }

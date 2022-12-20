@@ -11,7 +11,9 @@ import {
 import {ApprovalFormComponent} from './shared/approval-form/approval-form.component';
 import {MapsModule} from '@app/modules/maps/maps.module';
 import {FundraisingComponent} from './pages/fundraising/fundraising.component';
-import {FundraisingApproveTaskPopupComponent} from './popups/fundraising-approve-task-popup/fundraising-approve-task-popup.component';
+import {
+  FundraisingApproveTaskPopupComponent
+} from './popups/fundraising-approve-task-popup/fundraising-approve-task-popup.component';
 import {CollectorApprovalComponent} from './pages/collector-approval/collector-approval.component';
 import {CollectorItemComponent} from './shared/collector-item/collector-item.component';
 import {

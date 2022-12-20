@@ -154,7 +154,8 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   _afterSave(model: ProjectFundraising, saveType: SaveTypes, operation: OperationTypes): void {
-    this.model = model.clone({taskDetails: this.model?.taskDetails});
+    this.model = model.clone<ProjectFundraising>({taskDetails: this.model?.taskDetails});
+
     if (
       [OperationTypes.CREATE, OperationTypes.UPDATE].includes(operation) && [SaveTypes.FINAL, SaveTypes.COMMIT].includes(saveType)
     ) {

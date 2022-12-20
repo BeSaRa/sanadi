@@ -41,7 +41,8 @@
 
       </div>
     </div>
-    <div class="row">
+    <div class="row align-items-center">
+      <ng-container *ngIf="template" [ngTemplateOutlet]="template"></ng-container>
       <div class="col-sm-12 col-md-4 mb-3 position-relative">
         <div class="form-check form-switch pt-4">
           <input type="checkbox" id="conditionalLicenseIndicator" formControlName="conditionalLicenseIndicator"

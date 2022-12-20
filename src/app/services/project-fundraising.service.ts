@@ -20,6 +20,10 @@ import {DeductionRatioItemService} from "@services/deduction-ratio-item.service"
 import {SharedService} from "@services/shared.service";
 import {ProjectTemplate} from "@app/models/projectTemplate";
 import {ProjectModelService} from "@services/project-model.service";
+import {WFResponseType} from "@app/enums/wfresponse-type.enum";
+import {
+  ProjectFundraisingApproveTaskPopupComponent
+} from "@app/projects/popups/project-fundraising-approve-task-popup/project-fundraising-approve-task-popup.component";
 
 @CastResponseContainer({
   $default: {
@@ -96,5 +100,12 @@ export class ProjectFundraisingService extends BaseGenericEService<ProjectFundra
       .pipe(map((blob) => {
         return this.sharedService.openViewContentDialog(blob, {documentTitle: template.templateFullSerial}) as DialogRef
       }))
+  }
+
+  approveTask(model: ProjectFundraising, action: WFResponseType) {
+    return this.dialog.show(ProjectFundraisingApproveTaskPopupComponent, {
+      model,
+      action: action
+    });
   }
 }
