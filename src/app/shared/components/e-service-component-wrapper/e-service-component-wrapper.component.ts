@@ -153,7 +153,8 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
 
   finalApproveByMatrixServices: number[] = [
     CaseTypes.INTERNAL_PROJECT_LICENSE,
-    CaseTypes.URGENT_INTERVENTION_LICENSING
+    CaseTypes.URGENT_INTERVENTION_LICENSING,
+    CaseTypes.PROJECT_FUNDRAISING
   ];
 
   canShowMatrixNotification: boolean = false;
