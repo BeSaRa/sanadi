@@ -49,8 +49,8 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
       langKey: 'lbl_basic_info',
       index: 0,
       validStatus: () => {
-        if (!this.basicInfoForm) {
-          return false;
+        if (!this.basicInfoForm || this.basicInfoForm.disabled) {
+          return true;
         }
         return this.basicInfoForm.valid;
       },
@@ -203,7 +203,7 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
     this.form = this.fb.group({
       basicInfo: this.fb.group(this.model.buildForm()),
     });
-    if (this.operation === OperationTypes.VIEW) {
+    if (this.readonly) {
       this.form.disable();
       this.servicesControl.disable();
     }
@@ -245,26 +245,4 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
   searchNgSelect(searchText: string, item: any): boolean {
     return item.ngSelectSearch(searchText);
   }
-
-  // editProfileExtraData(event: MouseEvent) {
-  //   event.preventDefault();
-  //   switch(this.model.profileType) {
-  //     case 1: {
-  //       this.charityOrgProfileExtraDataService.openCharityOrgExtraDataDialog(this.model.id).subscribe();
-  //       break;
-  //     }
-  //     case 2: {
-  //       //statements;
-  //       break;
-  //     }
-  //     default: {
-  //       //statements;
-  //       break;
-  //     }
-  //   }
-  // }
-  //
-  // showEditExtraDataLink() {
-  //   return this.operation === this.operationTypes.UPDATE && (this.profileTypeField.value === ProfileTypes.CHARITY)
-  // }
 }
