@@ -1666,8 +1666,5 @@ export interface ILanguageKeys {
   beneficiaries_type: string;
   beneficiaries_description: string;
   organization_officer: string;
-  menu_organizations_entities_support: string;
-  beneficiaries_type: string;
-  beneficiaries_description: string;
-  organization_officer: string;
+
 }

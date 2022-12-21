@@ -1,4 +1,5 @@
 import { OrganizationsEntitiesSupportService } from './organizations-entities-support.service';
+import { OrganizationsEntitiesSupportService } from './organizations-entities-support.service';
 import {GeneralProcessNotificationService} from './general-process-notification.service';
 import {AwarenessActivitySuggestionService} from './awareness-activity-suggestion.service';
 import {GeneralAssociationMeetingAttendanceService} from '@services/general-association-meeting-attendance.service';
