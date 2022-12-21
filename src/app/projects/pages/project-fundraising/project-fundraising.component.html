@@ -330,7 +330,8 @@
               <th cdk-header-cell style="width:100px" *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
               <td cdk-cell *cdkCellDef="let row">
                 <div class="d-flex">
-                  <button *ngIf="!readonly" [tooltip]="lang.map.btn_remove" (click)="deleteTemplate()"
+                  <button *ngIf="!readonly && !isExtendOrCancelRequestType()" [tooltip]="lang.map.btn_remove"
+                          (click)="deleteTemplate()"
                           class="btn icon-btn">
                     <i class="mdi mdi-trash-can text-primary"></i>
                   </button>

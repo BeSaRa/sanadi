@@ -206,7 +206,6 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     if (!model) {
       return;
     }
-    console.log(model);
     this.model = model;
     this.form.patchValue({
       basicInfo: this.model.buildBasicInfo(),
