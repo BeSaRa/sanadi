@@ -58,7 +58,7 @@
       <ng-container cdkColumnDef="actions">
         <th cdk-header-cell style="width: 100px" *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
         <td cdk-cell *cdkCellDef="let row; let i = index">
-          <button class="btn icon-btn" (click)="deleteCountry(row , i)">
+          <button [disabled]="readonly" class="btn icon-btn" (click)="!readonly && deleteCountry(row , i)">
             <i class="mdi text-primary mdi-trash-can"></i>
           </button>
         </td>

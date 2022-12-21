@@ -1,6 +1,5 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {ProjectFundraising} from "@app/models/project-fundraising";
-import {OperationTypes} from "@app/enums/operation-types.enum";
 import {ProjectFundraisingService} from "@services/project-fundraising.service";
 import {BehaviorSubject, ReplaySubject, Subject} from "rxjs";
 import {debounceTime, filter, map, startWith, takeUntil} from "rxjs/operators";
@@ -29,8 +28,6 @@ export class TargetedYearsDistributionComponent implements OnInit, OnDestroy {
 
   @Input()
   _model!: ProjectFundraising
-  @Input()
-  operation!: OperationTypes
   @Input()
   readonly: boolean = false;
 
@@ -62,7 +59,7 @@ export class TargetedYearsDistributionComponent implements OnInit, OnDestroy {
     list: new UntypedFormArray([])
   })
 
-  displayedColumns = ['year', 'amount'];
+  displayedColumns = ['year', 'amount', 'actions'];
 
   deductionRatioChanges$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false)
 
@@ -91,9 +88,6 @@ export class TargetedYearsDistributionComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.listenToModelChange()
     this.listenToNumberOfMonthsChanges();
-    if (this.operation === OperationTypes.CREATE) {
-      this.displayedColumns = this.displayedColumns.concat(['actions'])
-    }
     this.listenToDeductionRatioChanges()
     this.listenToClearItems()
   }

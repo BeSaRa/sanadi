@@ -1,5 +1,4 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {OperationTypes} from "@app/enums/operation-types.enum";
 import {ProjectFundraising} from "@app/models/project-fundraising";
 import {ProjectFundraisingService} from "@services/project-fundraising.service";
 import {LangService} from "@services/lang.service";
@@ -19,10 +18,7 @@ import currency from "currency.js";
   styleUrls: ['./deduction-ratio-manager.component.scss']
 })
 export class DeductionRatioManagerComponent implements OnInit, OnDestroy {
-  @Input()
-  operation!: OperationTypes
   private modelChange$: ReplaySubject<ProjectFundraising> = new ReplaySubject<ProjectFundraising>(1)
-
   @Input()
   set model(value: ProjectFundraising) {
     this.modelChange$.next(value)
@@ -48,10 +44,12 @@ export class DeductionRatioManagerComponent implements OnInit, OnDestroy {
   @Input()
   checkForTemplate: boolean = false;
   clearItems$: Subject<boolean> = new Subject()
+
   @Input()
   set clearItems(value: boolean) {
     this.clearItems$.next(value)
   }
+
   @Output()
   afterClearItems: EventEmitter<void> = new EventEmitter<void>()
   @Output()
@@ -102,9 +100,6 @@ export class DeductionRatioManagerComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.listenToModelChange()
-    if (this.operation === OperationTypes.CREATE) {
-      this.displayedColumns = this.displayedColumns.concat(['actions'])
-    }
     this.listenToUpdates();
     this.listenToClearItems();
     this.listenToDeductionChanges()

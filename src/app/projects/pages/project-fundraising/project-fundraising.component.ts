@@ -107,6 +107,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   _afterBuildForm(): void {
+    this.loadLicenseById()
     this.handleReadonly()
     this.listenToPermitTypeWorkAreaChanges()
     this.listenToDomainChanges()
@@ -703,9 +704,9 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   private listenToProjectTypeChanges() {
-    combineLatest([this.projectType.valueChanges, this.projectWorkArea.valueChanges.pipe(delay(200))])
+    combineLatest([this.projectType.valueChanges, this.permitType.valueChanges, this.projectWorkArea.valueChanges.pipe(delay(200))])
       .pipe(takeUntil(this.destroy$))
-      .subscribe(([value, _workArea]: [FundraisingProjectTypes, ProjectWorkArea]) => {
+      .subscribe(([value, ,]: [FundraisingProjectTypes, ProjectPermitTypes, ProjectWorkArea]) => {
         this.handleProjectTypeChanges(value);
       })
   }
@@ -818,8 +819,6 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
 
   setSelectedLicense(licenseDetails: ProjectFundraising | undefined, ignoreUpdateForm: boolean) {
     this.selectedLicense = licenseDetails;
-
-    console.log(this.selectedLicense);
     // update form fields if i have license
     if (licenseDetails && !ignoreUpdateForm) {
       let model: any = new ProjectFundraising().clone(licenseDetails);
@@ -837,6 +836,18 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
 
       this._updateForm(model);
     }
+  }
+
+  loadLicenseById(): void {
+    if (!this.model || !this.model.oldLicenseId)
+      return;
+
+    this.licenseService
+      .loadProjectFundraisingLicenseById(this.model.oldLicenseId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((license) => {
+        this.setSelectedLicense(license, true)
+      })
   }
 
   clearLicense() {

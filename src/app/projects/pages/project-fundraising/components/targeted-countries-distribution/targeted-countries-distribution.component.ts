@@ -2,7 +2,6 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angula
 import {ProjectFundraising} from "@app/models/project-fundraising";
 import {ProjectFundraisingService} from "@services/project-fundraising.service";
 import {Country} from "@app/models/country";
-import {OperationTypes} from "@app/enums/operation-types.enum";
 import {BehaviorSubject, ReplaySubject, Subject} from "rxjs";
 import {debounceTime, filter, map, takeUntil} from "rxjs/operators";
 import {LangService} from "@services/lang.service";
@@ -34,8 +33,6 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
   @Input()
   countries: Country[] = []
   @Input()
-  operation!: OperationTypes
-  @Input()
   readonly: boolean = false;
   @Output()
   onAddItem: EventEmitter<void> = new EventEmitter<void>()
@@ -52,7 +49,7 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
 
   private countriesChange$: BehaviorSubject<number[] | undefined> = new BehaviorSubject<number[] | undefined>(undefined)
 
-  displayedColumns: string[] = ['arName', 'enName', 'amount'];
+  displayedColumns: string[] = ['arName', 'enName', 'amount', 'actions'];
 
   selectedIds: number[] = [];
 
@@ -104,9 +101,6 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
 
 
   ngOnInit(): void {
-    if (this.operation === OperationTypes.CREATE) {
-      this.displayedColumns.push('actions')
-    }
     this.listenToModelChange()
     this.listenToClearItems()
     this.listenToCountriesChanges()
