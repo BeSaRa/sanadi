@@ -112,9 +112,7 @@ export class InboxService {
     private generalAssociationMeetingAttendanceService: GeneralAssociationMeetingAttendanceService,
     private organizationsEntitiesSupportService:OrganizationsEntitiesSupportService
     ) {
-    private generalAssociationMeetingAttendanceService: GeneralAssociationMeetingAttendanceService,
-    private organizationsEntitiesSupportService:OrganizationsEntitiesSupportService
-    ) {
+   {
     FactoryService.registerService('InboxService', this);
     // register all e-services that we need.
     this.services.set(CaseTypes.INQUIRY, this.inquiryService);
@@ -148,9 +146,8 @@ export class InboxService {
     this.services.set(CaseTypes.AWARENESS_ACTIVITY_SUGGESTION, this.awarenessActivitySuggestionService);
     this.services.set(CaseTypes.PROJECT_FUNDRAISING, this.projectFundraisingService);
     this.services.set(CaseTypes.ORGANIZATION_ENTITIES_SUPPORT, this.organizationsEntitiesSupportService);
-    this.services.set(CaseTypes.ORGANIZATION_ENTITIES_SUPPORT, this.organizationsEntitiesSupportService);
   }
-
+}
   @CastResponse(() => QueryResultSet)
   private _loadUserInbox(options?: any): Observable<QueryResultSet> {
     let objOptions;
