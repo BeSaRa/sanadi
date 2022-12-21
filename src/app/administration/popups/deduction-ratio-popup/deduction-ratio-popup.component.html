@@ -1,0 +1,125 @@
+<div class="dialog-toolbar bg-primary d-flex justify-content-between">
+  <h1 class="h6 text-white">{{popupTitle}}</h1>
+  <div>
+    <button type="button" class="btn btn-fullscreen btn-close-white icon-btn"
+    tabindex="-1" aria-label="Fullscreen" fullscreenBtn></button>
+    <button type="button" class="btn-close btn-close-white"
+    tabindex="-1" [dialogClose]="model" aria-label="Close"></button>
+  </div>
+</div>
+<div class="dialog-content" #dialogContent>
+    <form class="w800px" novalidate autocomplete="off" [formGroup]="form">
+      <div class="row mb-3">
+        <div class="col-sm-6 position-relative">
+          <label asteriskIfRequired="arName" for="arName"
+                 class="form-label">{{lang.map.lbl_arabic_name}}</label>
+          <input id="arName"
+                 validationClasses="arName"
+                 formControlName="arName" class="form-control">
+          <app-field-error-message controlName="arName"></app-field-error-message>
+        </div>
+        <div class="col-sm-6 position-relative">
+          <label asteriskIfRequired="enName" for="enName"
+                 class="form-label">{{lang.map.lbl_english_name}}</label>
+          <input id="enName"
+                 validationClasses="enName"
+                 formControlName="enName" class="form-control">
+          <app-field-error-message controlName="enName"></app-field-error-message>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-sm-6">
+          <div class="row">
+            <label asteriskIfRequired="status" for="status"
+                   class="form-label">{{lang.map.lbl_status}}</label>
+            <div class="mb-3 position-relative ng-select-wrapper">
+              <ng-select validationClasses="status" labelForId="status"
+                         placeholder="{{lang.map.select}}"
+                         [notFoundText]="lang.map.msg_not_found"
+                         formControlName="status"
+                         id="status" appendTo="body">
+                <ng-option [value]="status.lookupKey"
+                           *ngFor="let status of statuses | filterRetiredStatus">{{status.getName()}}</ng-option>
+              </ng-select>
+              <app-field-error-message controlName="status"></app-field-error-message>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 mb-4 ng-select-wrapper">
+          <label for="profile" asteriskIfRequired="profile"
+                 class="form-label">{{lang.map.lbl_profile}}</label>
+          <ng-select [selectOnTab]="true" labelForId="profile" [clearable]="false"
+                     placeholder="{{lang.map.select}}" id="profile"
+                     [notFoundText]="lang.map.msg_not_found"
+                     formControlName="profile" appendTo="body"
+                     validationClasses="profile">
+            <ng-option *ngFor="let option of profileList" [value]="option.id">
+              {{option.getName()}}
+            </ng-option>
+          </ng-select>
+          <app-field-error-message controlName="profile"></app-field-error-message>
+        </div>
+        <div class="col-sm-6">
+          <div class="row">
+            <label asteriskIfRequired="workArea" for="workArea"
+                   class="form-label">{{lang.map.project_work_area}}</label>
+            <div class="mb-3 position-relative ng-select-wrapper">
+              <ng-select validationClasses="workArea" labelForId="workArea"
+                         placeholder="{{lang.map.select}}"
+                         [notFoundText]="lang.map.msg_not_found"
+                         formControlName="workArea"
+                         id="workArea" appendTo="body">
+                <ng-option [value]="workArea.lookupKey"
+                           *ngFor="let workArea of workAreas ">{{workArea.getName()}}</ng-option>
+              </ng-select>
+              <app-field-error-message controlName="workArea"></app-field-error-message>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="row">
+            <label asteriskIfRequired="permitType" for="permitType"
+                   class="form-label">{{lang.map.permit_type}}</label>
+            <div class="mb-3 position-relative ng-select-wrapper">
+              <ng-select validationClasses="permitType" labelForId="permitType"
+                         placeholder="{{lang.map.select}}"
+                         [notFoundText]="lang.map.msg_not_found"
+                         formControlName="permitType"
+                         id="permitType" appendTo="body">
+                <ng-option [value]="permitType.lookupKey"
+                           *ngFor="let permitType of permitTypes ">{{permitType.getName()}}</ng-option>
+              </ng-select>
+              <app-field-error-message controlName="permitType"></app-field-error-message>
+            </div>
+          </div>
+        </div>
+          <div class="col-sm-6 position-relative">
+            <label asteriskIfRequired="minLimit" for="minLimit"
+                   class="form-label">{{lang.map.lbl_min_limit}}</label>
+            <input id="minLimit"
+                   validationClasses="minLimit"
+                   formControlName="minLimit" class="form-control" [mask]="inputMaskPatterns.DECIMAL(2)">
+            <app-field-error-message controlName="minLimit"></app-field-error-message>
+          </div>
+          <div class="col-sm-6 position-relative">
+            <label asteriskIfRequired="maxLimit" for="maxLimit"
+                   class="form-label">{{lang.map.lbl_max_limit}}</label>
+            <input id="maxLimit"
+                   validationClasses="maxLimit"
+                   formControlName="maxLimit" class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY">
+            <app-field-error-message controlName="maxLimit"></app-field-error-message>
+          </div>
+        </div>
+    </form>
+  </div>
+  <div class="dialog-actions">
+    <button tabindex="-1" *ngIf="validateFieldsVisible" (click)="displayFormValidity(null, dialogContent)"
+            tooltip="{{lang.map.validate_fields}}" class="btn btn-link">
+      <i class="mdi mdi-information-outline text-info"></i>
+    </button>
+    <span class="flex-grow-1"></span>
+    <button [disabled]="form.invalid" *ngIf="saveVisible" (click)="save$.next(null)"
+            class="btn btn-primary">{{lang.map.btn_save}}</button>
+    <button [dialogClose]="model" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
+  </div>
+  

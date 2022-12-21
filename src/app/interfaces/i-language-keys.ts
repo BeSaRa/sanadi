@@ -1654,4 +1654,11 @@ export interface ILanguageKeys {
   license_duration_type: string;
   office_type: string;
   lbl_beneficiaries_nature: string;
+  menu_deduction_ratio:string;
+  lbl_add_deduction_ratio_item:string;
+  lbl_edit_deduction_ratio_item:string;
+  lbl_profile:string;
+  lbl_min_limit:string;
+  lbl_max_limit:string;
+  lbl_maximum_deduction_ratio:string
 }
