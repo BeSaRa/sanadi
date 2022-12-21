@@ -102,9 +102,9 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
 
   ngOnInit(): void {
     this.listenToModelChange()
-    this.listenToClearItems()
     this.listenToCountriesChanges()
     this.listenToDeductionRatioChanges()
+    this.listenToClearItems()
   }
 
   get list(): UntypedFormArray {
@@ -122,6 +122,7 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
       .pipe(takeUntil(this.destroy$))
       .pipe(filter((val): val is number[] => !!val))
       .subscribe(() => {
+        console.log('COUNTRY CHANGES');
         this.generateCountryList()
       })
   }
@@ -286,8 +287,10 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
       .pipe(takeUntil(this.destroy$))
       .pipe(filter(value => value))
       .subscribe(() => {
+        console.log('deductionChanged !!');
         this.addOrphanItem()
         this.updateOrphanItem()
+        this.updateTotalValue()
       })
   }
 

@@ -120,6 +120,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     this.setDefaultValues();
     this.overrideValuesInCreate();
     this.listenToLicenseSearch()
+    this.checkTemplateTabValidity()
     // this._test()
   }
 
@@ -134,8 +135,10 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   _beforeLaunch(): boolean | Observable<boolean> {
+    console.log('BEFORE LAUNCH');
     if (this.model && !this.model.deductedPercentagesItemList.length) {
       this.invalidItemMessage();
+      return false
     }
     return true;
   }
@@ -145,6 +148,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   _afterLaunch(): void {
+    console.log('AFTER LAUNCH');
     this.resetForm$.next();
     this.selectedLicense = undefined;
     this.checkTemplateTabValidity()
@@ -638,6 +642,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   onDeductionRatioChanges() {
+    console.log('FROM PARENT');
     this.deductionRatioChanged = false
     setTimeout(() => this.deductionRatioChanged = true)
   }
@@ -746,7 +751,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     const yearsMessage = this.lang.map.make_sure_that_x_sum_equal_to_target_amount.change({x: this.lang.map.year_s})
     const model = this.model!
     return of(model)
-      .pipe(map(_ => model.targetAmount === model.calculateAllCountriesAmount()))
+      .pipe(map(_ => this.displayWorkAreaAndCountry ? model.targetAmount === model.calculateAllCountriesAmount() : true))
       .pipe(tap(value => !value && this.dialog.error(countriesMessage)))
       .pipe(filter(val => val))
       .pipe(map(_ => model.targetAmount === model.calculateAllYearsAmount()))
@@ -760,7 +765,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       return
     }
 
-    this.templateTabHasError = model.hasInvalidTargetAmount()
+    this.templateTabHasError = model.hasInvalidTargetAmount(!this.displayWorkAreaAndCountry)
   }
 
   private listenToPermitTypeChange() {

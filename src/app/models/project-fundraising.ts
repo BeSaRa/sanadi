@@ -283,12 +283,12 @@ export class ProjectFundraising extends _ApprovalLicenseWithMonthly<ProjectFundr
   }
 
 
-  hasInvalidTargetAmount(): boolean {
+  hasInvalidTargetAmount(ignoreCountries: boolean = false): boolean {
     return !this.deductedPercentagesItemList.length
       || this.deductedPercentagesItemList.some(item => item.deductionPercent <= 0)
       || this.calculateAllYearsAmount() !== this.targetAmount
-      || this.calculateAllCountriesAmount() !== this.targetAmount
-      || this.amountOverCountriesList.some(item => item.targetAmount <= 0)
+      || (ignoreCountries ? false : this.calculateAllCountriesAmount() !== this.targetAmount)
+      || (ignoreCountries ? false : this.amountOverCountriesList.some(item => item.targetAmount <= 0))
       || this.amountOverYearsList.some(item => item.targetAmount <= 0)
       || this.administrativeDeductionAmount <= 0
   }

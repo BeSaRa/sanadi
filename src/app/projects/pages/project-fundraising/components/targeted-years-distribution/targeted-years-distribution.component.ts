@@ -257,6 +257,7 @@ export class TargetedYearsDistributionComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         this.addOrphanItem()
         this.updateOrphanItem()
+        this.updateTotalValue()
       })
   }
 
