@@ -47,7 +47,8 @@
             "allowedCommonJsDependencies": [
               "lodash",
               "crypto-js",
-              "dayjs"
+              "dayjs",
+              "currency.js"
             ],
             "outputPath": "dist/sanadi",
             "index": "src/index.html",

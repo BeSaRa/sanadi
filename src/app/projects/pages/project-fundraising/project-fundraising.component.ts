@@ -602,7 +602,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   onClearDeductionItems(): void {
-    this.clearDeductionItems = false;
+    Promise.resolve(() => this.clearDeductionItems = false).then()
   }
 
   private listenToProjectTotalCoastChanges(): void {

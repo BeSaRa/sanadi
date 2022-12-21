@@ -322,13 +322,15 @@
             </ng-container>
             <ng-container cdkColumnDef="totalCost">
               <th cdk-header-cell style="width:300px" *cdkHeaderCellDef> {{lang.map.total_cost}}</th>
-              <td cdk-cell *cdkCellDef="let row"> {{row.templateCost}} </td>
+              <td cdk-cell
+                  *cdkCellDef="let row"> {{row.templateCost | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
             </ng-container>
             <ng-container cdkColumnDef="actions">
               <th cdk-header-cell style="width:100px" *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
               <td cdk-cell *cdkCellDef="let row">
                 <div class="d-flex">
-                  <button *ngIf="!readonly" [tooltip]="lang.map.btn_remove" (click)="deleteTemplate()" class="btn icon-btn">
+                  <button *ngIf="!readonly" [tooltip]="lang.map.btn_remove" (click)="deleteTemplate()"
+                          class="btn icon-btn">
                     <i class="mdi mdi-trash-can text-primary"></i>
                   </button>
                   <button [tooltip]="lang.map.view" (click)="viewTemplate(row)" class="btn icon-btn">
@@ -364,6 +366,7 @@
         (onItemRemoved)="checkTemplateTabValidity()"
         [deductionRatioChanged]="deductionRatioChanged"
         [model]="model!"
+        [clearItems]="clearDeductionItems"
         [countriesChange]="countriesField.value"
         [readonly]="(isExtendOrCancelRequestType() || readonly)"
         [countries]="countries"
@@ -373,6 +376,7 @@
         (onAddItem)="checkTemplateTabValidity()"
         (onItemChange)="checkTemplateTabValidity()"
         (onItemRemoved)="checkTemplateTabValidity()"
+        [clearItems]="clearDeductionItems"
         [deductionRatioChanged]="deductionRatioChanged"
         [model]="model!"
         [readonly]="(isExtendOrCancelRequestType() || readonly)"

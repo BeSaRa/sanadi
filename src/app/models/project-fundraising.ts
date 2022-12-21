@@ -206,11 +206,6 @@ export class ProjectFundraising extends _ApprovalLicenseWithMonthly<ProjectFundr
     return this
   }
 
-  removeYearsExcept(yearsName: string[]): ProjectFundraising {
-    this.amountOverYearsList = this.amountOverYearsList.filter(item => yearsName.includes(item.year))
-    return this
-  }
-
   updateYear(value: number, index: number): ProjectFundraising {
     this.amountOverYearsList = this.amountOverYearsList.map((item, i) => {
       if (index == i)
@@ -304,6 +299,14 @@ export class ProjectFundraising extends _ApprovalLicenseWithMonthly<ProjectFundr
 
   finalApprove(): DialogRef {
     return this.service.approveTask(this, WFResponseType.FINAL_APPROVE);
+  }
+
+  clearYears(): void {
+    this.amountOverYearsList = []
+  }
+
+  clearCountries(): void {
+    this.amountOverCountriesList = []
   }
 
 }
