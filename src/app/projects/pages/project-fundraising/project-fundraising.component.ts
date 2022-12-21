@@ -145,6 +145,8 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
 
   _afterLaunch(): void {
     this.resetForm$.next();
+    this.selectedLicense = undefined;
+    this.validateHiddenDisplayFields()
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
 
@@ -815,8 +817,9 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   setSelectedLicense(licenseDetails: ProjectFundraising | undefined, ignoreUpdateForm: boolean) {
-    console.log(licenseDetails);
     this.selectedLicense = licenseDetails;
+
+    console.log(this.selectedLicense);
     // update form fields if i have license
     if (licenseDetails && !ignoreUpdateForm) {
       let model: any = new ProjectFundraising().clone(licenseDetails);
@@ -834,5 +837,9 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
 
       this._updateForm(model);
     }
+  }
+
+  clearLicense() {
+    this.selectedLicense = undefined
   }
 }

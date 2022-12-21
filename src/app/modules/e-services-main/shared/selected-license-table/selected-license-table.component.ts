@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {LangService} from '@services/lang.service';
 import {LicenseService} from '@services/license.service';
 import {SharedService} from '@services/shared.service';
@@ -19,7 +19,7 @@ import {CommonUtils} from '@helpers/common-utils';
   templateUrl: './selected-license-table.component.html',
   styleUrls: ['./selected-license-table.component.scss']
 })
-export class SelectedLicenseTableComponent {
+export class SelectedLicenseTableComponent implements OnInit {
   constructor(public lang: LangService,
               private dialog: DialogService,
               private licenseService: LicenseService,
@@ -28,10 +28,17 @@ export class SelectedLicenseTableComponent {
               private generalAssociationMeetingAttendanceService: GeneralAssociationMeetingAttendanceService) {
   }
 
+  ngOnInit(): void {
+    if (!this.columns.length) {
+      this.columns = this.defaultColumns
+    }
+  }
+
   @Input() caseType!: number;
   @Input() caseTypeViewLicense!: number;
   @Input() licenseList!: any[];
   @Input() columns: string[] = ['arName', 'enName', 'licenseNumber', 'status', 'endDate', 'actions'];
+  defaultColumns: string[] = ['arName', 'enName', 'licenseNumber', 'status', 'endDate', 'actions'];
   @Input() ignoreDelete: boolean = false;
   @Input() allowSelect: boolean = false;
   @Input() isNotLicense: boolean = false;
@@ -51,12 +58,12 @@ export class SelectedLicenseTableComponent {
     // view license/document
     {
       type: 'action',
-      label: (item: any) => {
+      label: (_item: any) => {
         return (this.caseType === CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE) ? this.lang.map.view_document : this.lang.map.view_license;
       },
       icon: FileIconsEnum.PDF,
       onClick: (item: any) => this.viewLicenseAsPDF(item),
-      show: (item: any) => {
+      show: (_item: any) => {
         // urgent intervention announcement does not have content to view
         return (this.caseTypeViewLicense !== CaseTypes.URGENT_INTERVENTION_ANNOUNCEMENT);
       }
@@ -88,7 +95,7 @@ export class SelectedLicenseTableComponent {
         });
     } else if (this.caseType === CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE) {
       let doc = {...license, documentTitle: license.fullSerial};
-      if(CommonUtils.isValidValue(doc.meetingReportID)) {
+      if (CommonUtils.isValidValue(doc.meetingReportID)) {
         this.generalAssociationMeetingAttendanceService.downloadFinalReport(doc.meetingReportID)
           .subscribe((file) => {
             return this.sharedService.openViewContentDialog(file, license);
