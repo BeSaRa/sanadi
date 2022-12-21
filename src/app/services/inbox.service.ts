@@ -1,3 +1,4 @@
+import { OrganizationsEntitiesSupportService } from './organizations-entities-support.service';
 import {GeneralProcessNotificationService} from './general-process-notification.service';
 import {AwarenessActivitySuggestionService} from './awareness-activity-suggestion.service';
 import {GeneralAssociationMeetingAttendanceService} from '@services/general-association-meeting-attendance.service';
@@ -108,7 +109,9 @@ export class InboxService {
     private awarenessActivitySuggestionService: AwarenessActivitySuggestionService,
     private generalProcessNotificationService: GeneralProcessNotificationService,
     private projectFundraisingService: ProjectFundraisingService,
-    private generalAssociationMeetingAttendanceService: GeneralAssociationMeetingAttendanceService) {
+    private generalAssociationMeetingAttendanceService: GeneralAssociationMeetingAttendanceService,
+    private organizationsEntitiesSupportService:OrganizationsEntitiesSupportService
+    ) {
     FactoryService.registerService('InboxService', this);
     // register all e-services that we need.
     this.services.set(CaseTypes.INQUIRY, this.inquiryService);
@@ -141,6 +144,7 @@ export class InboxService {
     this.services.set(CaseTypes.CHARITY_ORGANIZATION_UPDATE, this.charityUpdateService);
     this.services.set(CaseTypes.AWARENESS_ACTIVITY_SUGGESTION, this.awarenessActivitySuggestionService);
     this.services.set(CaseTypes.PROJECT_FUNDRAISING, this.projectFundraisingService);
+    this.services.set(CaseTypes.ORGANIZATION_ENTITIES_SUPPORT, this.organizationsEntitiesSupportService);
   }
 
   @CastResponse(() => QueryResultSet)

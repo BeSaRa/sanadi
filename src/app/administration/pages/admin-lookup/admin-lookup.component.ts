@@ -127,6 +127,14 @@ export class AdminLookupComponent {
       lookupType: AdminLookupTypeEnum.GENERAL_PROCESS_CLASSIFICATION,
       validStatus: () => true,
       isTouchedOrDirty: () => true
+    },
+    serviceType: {
+      name: 'serviceType',
+      index: 12,
+      langKey: 'lookup_service_type',
+      lookupType: AdminLookupTypeEnum.SERVICE_TYPE,
+      validStatus: () => true,
+      isTouchedOrDirty: () => true
     }
   };
   selectedWorkFieldTabIndex$: Subject<number> = new Subject<number>();

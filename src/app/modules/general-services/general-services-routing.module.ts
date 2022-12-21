@@ -131,6 +131,17 @@ const routes: Routes = [
       render: 'GeneralProcessNotificationComponent'
     }
   },
+  {
+    path: 'organizations-entities-support', component: EServiceComponentWrapperComponent,
+    canActivate: [ServicesGuard],
+    resolve: { info: ServiceItemResolver },
+    data: {
+      permissionKey: EServicePermissionsEnum.ORGANIZATION_ENTITIES_SUPPORT,
+      configPermissionGroup: null,
+      checkAnyPermission: false,
+      render: 'OrganizationsEntitiesSupportComponent'
+    }
+  },
 
 ];
 

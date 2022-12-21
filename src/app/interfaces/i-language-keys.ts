@@ -1556,6 +1556,7 @@ export interface ILanguageKeys {
   lookup_resolutions_issued: string; // don't delete or change because it's map for lookup
   lookup_penalties_decisions: string; // don't delete or change because it's map for lookup
   lookup_general_process_classification: string; // don't delete or change because it's map for lookup
+  lookup_service_type: string; // don't delete or change because it's map for lookup
   menu_items: string;
   menu_type: string;
   menu_view: string;
@@ -1661,4 +1662,9 @@ export interface ILanguageKeys {
   lbl_min_limit:string;
   lbl_max_limit:string;
   lbl_maximum_deduction_ratio:string
+  menu_organizations_entities_support: string;
+  beneficiaries_type: string;
+  beneficiaries_description: string;
+  organization_officer: string;
+
 }

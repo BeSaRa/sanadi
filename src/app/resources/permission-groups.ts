@@ -82,7 +82,8 @@ const generalServicesPermissionsGroup: EServicePermissionsEnum[] = [
   EServicePermissionsEnum.CHARITY_ORGANIZATION_UPDATE,
   EServicePermissionsEnum.AWARENESS_ACTIVITY_SUGGESTION,
   EServicePermissionsEnum.EXTERNAL_ORG_AFFILIATION_REQUEST,
-  EServicePermissionsEnum.GENERAL_PROCESS_NOTIFICATION
+  EServicePermissionsEnum.GENERAL_PROCESS_NOTIFICATION,
+  EServicePermissionsEnum.ORGANIZATION_ENTITIES_SUPPORT
 ];
 
 const officeServicesPermissionsGroup: EServicePermissionsEnum[] = [

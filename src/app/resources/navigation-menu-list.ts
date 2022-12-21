@@ -1061,6 +1061,19 @@ export const navigationMenuList = [
     svg: null
   },
   {
+    id: 82,
+    langKey: 'menu_organizations_entities_support',
+    path: '/home/general-services/organizations-entities-support',
+    icon: 'mdi-file-swap',
+    isSvg: false,
+    permission: EServicePermissionsEnum.ORGANIZATION_ENTITIES_SUPPORT,
+    permissionGroup: null,
+    parent: 13,
+    group: 'general-services',
+    itemOrder: 12,
+    svg: null
+  },
+  {
     id: 30,
     langKey: 'menu_deduction_ratio',
     path: '/home/administration/deduction-ratio',
