@@ -146,7 +146,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   _afterLaunch(): void {
     this.resetForm$.next();
     this.selectedLicense = undefined;
-    this.validateHiddenDisplayFields()
+    this.checkTemplateTabValidity()
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
 
