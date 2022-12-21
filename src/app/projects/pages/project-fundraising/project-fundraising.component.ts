@@ -135,7 +135,6 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   _beforeLaunch(): boolean | Observable<boolean> {
-    console.log('BEFORE LAUNCH');
     if (this.model && !this.model.deductedPercentagesItemList.length) {
       this.invalidItemMessage();
       return false
@@ -148,7 +147,6 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   _afterLaunch(): void {
-    console.log('AFTER LAUNCH');
     this.resetForm$.next();
     this.selectedLicense = undefined;
     this.checkTemplateTabValidity()
@@ -208,6 +206,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     if (!model) {
       return;
     }
+    console.log(model);
     this.model = model;
     this.form.patchValue({
       basicInfo: this.model.buildBasicInfo(),
@@ -430,6 +429,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     !this.projectType.value ? this.projectType.setValue(ProjectTypes.SOFTWARE) : null
     this.markUnRequiredFields(domainFields);
     this.setFieldsToNull(domainFields);
+    this.countriesField.addValidators(CustomValidators.requiredArray)
     this.markRequiredFields(aidFields);
     this.countriesField.setValue([this.qatarCountry.id]);
     this.countriesField.disable();
@@ -442,6 +442,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     this.displayDomainSection = true;
     this.markUnRequiredFields(aidFields);
     this.setFieldsToNull(aidFields);
+    this.countriesField.addValidators(CustomValidators.requiredArray)
     this.markRequiredFields(domainFields);
     this.countriesField.setValue(this.countriesField.value.filter((id: number) => id !== this.qatarCountry.id));
     this.countriesField.enable();
@@ -642,7 +643,6 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   onDeductionRatioChanges() {
-    console.log('FROM PARENT');
     this.deductionRatioChanged = false
     setTimeout(() => this.deductionRatioChanged = true)
   }
@@ -653,6 +653,9 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       this.displayAidSection = false;
       this.displayDomainSection = false;
       this.displayLicenseAndTargetCostFields = true;
+      this.displayWorkAreaAndCountry = false;
+      this.markUnRequiredFields([this.countriesField, this.projectWorkArea])
+      this.countriesField.setValue([])
     } else {
       this.displayDomainSection = model.projectWorkArea === ProjectWorkArea.OUTSIDE_QATAR;
       this.displayAidSection = model.projectWorkArea === ProjectWorkArea.INSIDE_QATAR;

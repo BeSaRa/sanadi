@@ -122,7 +122,6 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
       .pipe(takeUntil(this.destroy$))
       .pipe(filter((val): val is number[] => !!val))
       .subscribe(() => {
-        console.log('COUNTRY CHANGES');
         this.generateCountryList()
       })
   }
@@ -286,8 +285,8 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
     this.deductionRatioChanges$
       .pipe(takeUntil(this.destroy$))
       .pipe(filter(value => value))
+      .pipe(filter(_ => !!this._model.deductedPercentagesItemList.length))
       .subscribe(() => {
-        console.log('deductionChanged !!');
         this.addOrphanItem()
         this.updateOrphanItem()
         this.updateTotalValue()

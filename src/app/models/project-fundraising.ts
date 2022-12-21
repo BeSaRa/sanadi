@@ -127,7 +127,7 @@ export class ProjectFundraising extends _ApprovalLicenseWithMonthly<ProjectFundr
       requestType: controls ? [requestType, [CustomValidators.required]] : requestType,
       permitType: controls ? [permitType, [CustomValidators.required]] : permitType,
       projectWorkArea: controls ? [projectWorkArea, [CustomValidators.required]] : projectWorkArea,
-      countries: controls ? [countries, [CustomValidators.requiredArray]] : countries,
+      countries: controls ? [countries] : countries,
       domain: controls ? [domain] : domain,
       oldLicenseFullSerial: controls ? [oldLicenseFullSerial, [CustomValidators.maxLength(250)]] : oldLicenseFullSerial,
       oldLicenseId: controls ? [oldLicenseId] : oldLicenseId,

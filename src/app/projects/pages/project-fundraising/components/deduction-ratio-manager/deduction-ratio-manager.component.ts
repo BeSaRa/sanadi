@@ -181,7 +181,6 @@ export class DeductionRatioManagerComponent implements OnInit, OnDestroy {
         }
         this._model.updateDeductionRatioItem(Number(id), Number(input.getRawValue()))
         this.calculateDeductionRatio()
-        console.log('input.getRawValue()', input.getRawValue());
         this.deductionAmountHasChanges$.next(input.getRawValue())
         this.onItemChange.emit()
       })
