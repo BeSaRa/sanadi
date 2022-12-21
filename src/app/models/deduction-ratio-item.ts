@@ -85,7 +85,7 @@ export class DeductionRatioItem extends BaseModel<DeductionRatioItem, DeductionR
       workArea: controls ? [workArea, [CustomValidators.required]] : workArea,
       permitType: controls ? [permitType, [CustomValidators.required]] : permitType,
       maxLimit: controls ? [maxLimit, [CustomValidators.required]] : maxLimit,
-      minLimit: controls ? [minLimit, [CustomValidators.required]] : minLimit,
+      minLimit: controls ? [minLimit, [CustomValidators.required].concat(CustomValidators.commonValidations.decimalWithMinValue(2,0.1))] : minLimit,
     }
   }
 }

@@ -28,7 +28,6 @@ export class DeductionRatioComponent extends AdminGenericComponent<DeductionRati
   @ViewChild('table') table!: TableComponent;
   view$: Subject<DeductionRatioItem> = new Subject<DeductionRatioItem>();
   commonStatusEnum = CommonStatusEnum;
-  maximumDeductionRatio = 50
   displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'status', 'actions'];
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
   constructor(public lang: LangService,

@@ -98,7 +98,7 @@
                    class="form-label">{{lang.map.lbl_min_limit}}</label>
             <input id="minLimit"
                    validationClasses="minLimit"
-                   formControlName="minLimit" class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY">
+                   formControlName="minLimit" class="form-control" [mask]="inputMaskPatterns.DECIMAL(2)">
             <app-field-error-message controlName="minLimit"></app-field-error-message>
           </div>
           <div class="col-sm-6 position-relative">
