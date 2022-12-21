@@ -38,7 +38,7 @@ export class ProjectFundraisingService extends BaseGenericEService<ProjectFundra
   jsonSearchFile: string = 'project_fundraising_search.json';
   serviceKey: keyof ILanguageKeys = 'menu_projects_fundraising';
   caseStatusIconMap: Map<number, string> = new Map<number, string>();
-  searchColumns: string[] = ['fullSerial', 'requestTypeInfo', 'createdOn', 'caseStatus', 'ouInfo'];
+  searchColumns: string[] = ['fullSerial', 'subject',  'requestTypeInfo', 'createdOn', 'caseStatus', 'ouInfo'];
 
   constructor(public http: HttpClient,
               public domSanitizer: DomSanitizer,
