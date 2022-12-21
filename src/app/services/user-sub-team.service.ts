@@ -52,7 +52,7 @@ export class UserSubTeamService extends CrudGenericService<UserSubTeam> {
 
   @CastResponse(undefined)
   loadUserSubTeamByUserId(generalUserId: number): Observable<UserSubTeam[]> {
-    return this.http.get<UserSubTeam[]>(this.urlService.URLS.USER_SUB_TEAM + '/user-sub-team/' + generalUserId)
+    return this.http.get<UserSubTeam[]>(this.urlService.URLS.USER_SUB_TEAM + '/user/' + generalUserId)
   }
 
 

@@ -33,7 +33,9 @@ import {InternalUserService} from '@app/services/internal-user.service';
 import {BlobModel} from '@app/models/blob-model';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {TabMap} from '@app/types/types';
-import {CustomMenuPermissionComponent} from '@app/administration/shared/custom-menu-permission/custom-menu-permission.component';
+import {
+  CustomMenuPermissionComponent
+} from '@app/administration/shared/custom-menu-permission/custom-menu-permission.component';
 import {EmployeeService} from '@services/employee.service';
 import {AuthService} from '@services/auth.service';
 
@@ -108,11 +110,29 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
       }
     },
     menus: {name: 'menus', langKey: 'menus', index: 2, validStatus: () => true, isTouchedOrDirty: () => true},
-    departments: {name: 'departments', langKey: 'departments', index: 3, validStatus: () => true, isTouchedOrDirty: () => true},
+    departments: {
+      name: 'departments',
+      langKey: 'departments',
+      index: 3,
+      validStatus: () => true,
+      isTouchedOrDirty: () => true
+    },
     teams: {name: 'teams', langKey: 'link_teams', index: 4, validStatus: () => true, isTouchedOrDirty: () => true},
-    subTeams: {name: 'sub-teams', langKey: 'link_sub_teams', index: 5, validStatus: () => true, isTouchedOrDirty: () => true},
+    subTeams: {
+      name: 'sub-teams',
+      langKey: 'link_sub_teams',
+      index: 5,
+      validStatus: () => true,
+      isTouchedOrDirty: () => true
+    },
     followup: {name: 'followup', langKey: 'followup', index: 6, validStatus: () => true, isTouchedOrDirty: () => true},
-    services: {name: 'services', langKey: 'link_services', index: 7, validStatus: () => true, isTouchedOrDirty: () => true},
+    services: {
+      name: 'services',
+      langKey: 'link_services',
+      index: 7,
+      validStatus: () => true,
+      isTouchedOrDirty: () => true
+    },
   };
   @ViewChild('dialogContent') dialogContent!: ElementRef;
 
@@ -275,9 +295,9 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
     if (this.operation === OperationTypes.CREATE) {
       return this.lang.map.add_new_internal_user;
     } else if (this.operation === OperationTypes.UPDATE) {
-      return this.lang.map.edit_internal_user;
+      return this.lang.map.edit_internal_user + ' : ' + this.model.getName();
     } else if (this.operation === OperationTypes.VIEW) {
-      return this.lang.map.view;
+      return this.lang.map.view + ' : ' + this.model.getName();
     }
     return '';
   }
