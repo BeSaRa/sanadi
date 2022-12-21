@@ -684,7 +684,8 @@ export class LicenseService {
 
   @CastResponse(() => ProjectFundraising)
   projectFundraisingLicenseSearch(criteria: Partial<ProjectFundraising>): Observable<ProjectFundraising[]> {
-    return this.http.post<ProjectFundraising[]>(this.urlService.URLS.PROJECT_FUNDRAISING + '/license/search', criteria);
+    const orgId = {organizationId: this.employeeService.isExternalUser() ? this.employeeService.getProfile()?.id : undefined}
+    return this.http.post<ProjectFundraising[]>(this.urlService.URLS.PROJECT_FUNDRAISING + '/license/search', {...criteria, ...orgId});
   }
 
   @CastResponse(() => ProjectFundraising)
