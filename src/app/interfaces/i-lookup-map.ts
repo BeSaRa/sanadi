@@ -156,4 +156,5 @@ export interface ILookupMap {
   GeneralProcessType: Lookup[];
   ProjectPermitType: Lookup[];
   SubmissionMechanism: Lookup[];
+  ExternalUserUpdateRequestStatus: Lookup[];
 }

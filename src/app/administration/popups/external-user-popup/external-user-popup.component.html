@@ -8,13 +8,14 @@
 </div>
 <div class="dialog-content w800px" #dialogContent>
   <form novalidate autocomplete="off" [formGroup]="form">
-    <tabs-list (onTabChange)="onTabChange($event)">
+    <tabs-list>
       <tab [name]="tabsData.basic.name" [template]="basicTabTemplate" [title]="langService.map.lbl_basic_info"
            [hasError]="getTabInvalidStatus('basic')"></tab>
-      <tab [name]="tabsData.permissions.name" [template]="permissionsTabTemplate" [title]="langService.map.lbl_permissions"
+      <tab [name]="tabsData.permissions.name" [template]="permissionsTabTemplate"
+           [title]="langService.map.lbl_permissions"
            [hasError]="getTabInvalidStatus('permissions')"></tab>
-      <tab [name]="tabsData.menus.name" [template]="menusTab" [title]="langService.map.menus"></tab>
-      <tab name="services" [disabled]="!model.id" [title]="langService.map.link_services" [template]="serviceTab"></tab>
+      <tab [name]="tabsData.menus.name" *ngIf="false" [template]="menusTab" [title]="langService.map.menus"></tab>
+      <tab [name]="tabsData.services.name" [disabled]="!isProfileValid" [title]="langService.map.link_services" [template]="serviceTab"></tab>
     </tabs-list>
     <ng-template #basicTabTemplate>
       <div formGroupName="basic">
@@ -115,7 +116,6 @@
                        [notFoundText]="langService.map.msg_not_found"
                        formControlName="profileId" appendTo="body"
                        validationClasses="profileId">
-              <ng-option value="">{{langService.map.lbl_none}}</ng-option>
               <ng-option *ngFor="let option of profileList" [value]="option.id"
                          [disabled]="!option.isActive()">
                 {{option.getName()}}
@@ -160,7 +160,8 @@
                 </div>
                 <div *ngFor="let row of checkBoxGroup.rows" class="row mx-2">
                   <div *ngFor="let permission of row" class="form-check col-sm-12 col-md-4">
-                    <input type="checkbox" [checked]="checkBoxGroup.isSelected(permission.id)" [disabled]="readonly"
+                    <input type="checkbox" [checked]="checkBoxGroup.isSelected(permission.id)"
+                           [disabled]="readonly || !isChangePermissionAllowed(permission)"
                            [value]="permission.id"
                            id="group-permission-id-{{permission.id}}"
                            (change)="onPermissionClicked($event , permission , checkBoxGroup)"
@@ -177,12 +178,14 @@
       </div>
     </ng-template>
     <ng-template #menusTab>
-      <custom-menu-permission #customMenuPermissionComponent
+      <custom-menu-permission #customMenuPermissionComponent [userUpdateRequest]="userUpdateRequest"
                               [user]="model" [readonly]="readonly"></custom-menu-permission>
     </ng-template>
   </form>
   <ng-template #serviceTab>
-    <user-security [operation]="operation" [readonly]="readonly" [model]="model"></user-security>
+    <user-security #userSecurityComponent [operation]="operation" [readonly]="readonly" [model]="model"
+                   [userUpdateRequest]="userUpdateRequest"
+                   [profileId]="profileControl?.value"></user-security>
   </ng-template>
 </div>
 <div class="dialog-actions">
@@ -192,6 +195,6 @@
   </button>
   <span class="flex-grow-1"></span>
   <button [disabled]="form.invalid" *ngIf="saveVisible && !readonly" (click)="save$.next(null)"
-          class="btn btn-primary">{{langService.map.btn_save}}</button>
+          class="btn btn-primary">{{canSaveDirectly ? langService.map.btn_save : langService.map.btn_save_request}}</button>
   <button [dialogClose]="model" class="btn btn-secondary">{{langService.map.btn_cancel}}</button>
 </div>

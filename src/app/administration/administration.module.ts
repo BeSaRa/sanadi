@@ -92,6 +92,15 @@ import {DynamicModelsComponent} from './pages/dynamic-models/dynamic-models.comp
 import {DynamicModelPopupComponent} from './popups/dynamic-model-popup/dynamic-model-popup.component';
 import {DeductionRatioComponent} from './pages/deduction-ratio/deduction-ratio.component';
 import {DeductionRatioPopupComponent} from './popups/deduction-ratio-popup/deduction-ratio-popup.component';
+import {
+  ExternalUserUpdateRequestApprovalComponent
+} from './pages/external-user-update-approval/external-user-update-request-approval.component';
+import {
+  ExternalUserUpdateApprovalPopupComponent
+} from '@app/administration/popups/external-user-update-approval-popup/external-user-update-approval-popup.component';
+import {
+  ExternalUserUpdateChangesPopupComponent
+} from './popups/external-user-update-changes-popup/external-user-update-changes-popup.component';
 
 @NgModule({
   declarations: [
@@ -173,7 +182,10 @@ import {DeductionRatioPopupComponent} from './popups/deduction-ratio-popup/deduc
     DynamicModelsComponent,
     DynamicModelPopupComponent,
     DeductionRatioComponent,
-    DeductionRatioPopupComponent
+    DeductionRatioPopupComponent,
+    ExternalUserUpdateRequestApprovalComponent,
+    ExternalUserUpdateApprovalPopupComponent,
+    ExternalUserUpdateChangesPopupComponent
   ],
   imports: [
     SharedModule,

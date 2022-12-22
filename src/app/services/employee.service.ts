@@ -24,6 +24,7 @@ import {CustomMenuInterceptor} from '@app/model-interceptors/custom-menu-interce
 import {ProfileInterceptor} from '@app/model-interceptors/profile-interceptor';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {UserRoleManageUserContract} from '@contracts/user-role-manage-user-contract';
+import {PermissionsGroupMap} from '@app/resources/permission-groups';
 
 @Injectable({
   providedIn: 'root'
@@ -259,7 +260,16 @@ export class EmployeeService {
   }
 
   private _setPostPermissionMapCustomPermissions(): void {
-    // this._addToPermissionMap('TEST');
+    // (super admin or (sub admin, acting super admin with permission )) can access external user screen
+    const hasExternalUserAccess = (this.userRolesManageUser.isSuperAdmin(OperationTypes.CREATE) || this.userRolesManageUser.isSuperAdmin(OperationTypes.UPDATE))
+    || ((this.userRolesManageUser.isActingSuperAdmin() || this.userRolesManageUser.isSubAdmin())
+        && this.checkPermissions(PermissionsGroupMap.MANAGE_EXTERNAL_USER_PERMISSIONS_GROUP, true));
+    hasExternalUserAccess && this._addToPermissionMap(PermissionsEnum.MANAGE_EXTERNAL_USER_DYNAMIC);
+
+    // (sub admin, approval admin, acting super admin, super admin) can access external user request approval screen
+    const hasExternalUserRequestApprovalAccess = this.userRolesManageUser.isSubAdmin() || this.userRolesManageUser.isApprovalAdmin()
+      || this.userRolesManageUser.isSuperAdmin(OperationTypes.UPDATE);
+    hasExternalUserRequestApprovalAccess && this._addToPermissionMap(PermissionsEnum.MANAGE_EXTERNAL_USER_REQUEST_APPROVALS_DYNAMIC);
   }
 
   private setUserData(loginData: ILoginData) {

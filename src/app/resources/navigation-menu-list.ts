@@ -983,6 +983,19 @@ export const navigationMenuList = [
     svg: null
   },
   {
+    id: 76,
+    langKey: 'menu_external_user_request_approval',
+    path: '/home/administration/external-user-request-approval',
+    icon: 'mdi-text-account',
+    isSvg: false,
+    permission: PermissionsEnum.MANAGE_EXTERNAL_USER_REQUEST_APPROVALS_DYNAMIC, // added from employeeService (not available in permissions list from db)
+    permissionGroup: null,
+    parent: 6,
+    group: 'administration',
+    itemOrder: 4,
+    svg: null
+  },
+  {
     id: 77,
     langKey: 'menu_sub_team',
     path: '/home/administration/sub-team',

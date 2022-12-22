@@ -54,4 +54,8 @@ export class Permission extends BaseModel<Permission, any> {
   isAllPermissionCategory(): boolean {
     return this.category === PermissionCategoryEnum.ALL;
   }
+
+  convertToAdminResult(): AdminResult {
+    return AdminResult.createInstance({enName: this.enName, arName: this.arName, id: this.id})
+  }
 }

@@ -37,5 +37,14 @@ export enum ActionIconsEnum {
   APPROVE = 'mdi-check-decagram-outline',
   MENU = 'mdi-menu',
   EDIT_PROFILE_EXTRA_DATA = 'mdi-office-building-cog',
-  SHEEP = 'mdi-sheep'
+  SHEEP = 'mdi-sheep',
+  ACCEPT = 'mdi-check',
+  ALPHABET_N = 'mdi-alpha-n-box-outline',
+  ALPHABET_U = 'mdi-alpha-u-box-outline',
+  USER_CHANGES = 'mdi-account-details',
+  REMOVED_VALUE = 'mdi-close-octagon-outline',
+  ADDED_VALUE = 'mdi-check-decagram-outline',
+  HAS_VALUE = 'mdi-check',
+  HAS_NO_VALUE = 'mdi-close',
+
 }

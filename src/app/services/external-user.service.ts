@@ -7,11 +7,11 @@ import {DialogRef} from '../shared/models/dialog-ref';
 import {IDialogData} from '@contracts/i-dialog-data';
 import {OperationTypes} from '../enums/operation-types.enum';
 import {forkJoin, Observable, of} from 'rxjs';
-import {switchMap} from 'rxjs/operators';
+import {catchError, switchMap} from 'rxjs/operators';
 import {DialogService} from './dialog.service';
 import {ExternalUserPopupComponent} from '../administration/popups/external-user-popup/external-user-popup.component';
 import {ExternalUserCustomRoleService} from './external-user-custom-role.service';
-import {IOrgUserCriteria} from '@contracts/i-org-user-criteria';
+import {IExternalUserCriteria} from '@contracts/i-external-user-criteria';
 import {CustomRole} from '../models/custom-role';
 import {PermissionService} from './permission.service';
 import {ExternalUserPermissionService} from './external-user-permission.service';
@@ -26,6 +26,7 @@ import {CommonUtils} from '@helpers/common-utils';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
 import {EmployeeService} from '@services/employee.service';
 import {ProfileService} from '@services/profile.service';
+import {ExternalUserUpdateRequest} from '@app/models/external-user-update-request';
 
 @CastResponseContainer({
   $default: {
@@ -48,7 +49,7 @@ export class ExternalUserService extends CrudWithDialogGenericService<ExternalUs
               private customRoleService: ExternalUserCustomRoleService,
               private profileService: ProfileService,
               private permissionService: PermissionService,
-              private orgUserPermissionService: ExternalUserPermissionService,
+              private externalUserPermissionService: ExternalUserPermissionService,
               private employeeService: EmployeeService,
               private auditLogService: AuditLogService) {
     super();
@@ -67,33 +68,42 @@ export class ExternalUserService extends CrudWithDialogGenericService<ExternalUs
     return ExternalUserPopupComponent;
   }
 
-  private _loadInitData(userId?: number): Observable<{ customRoles: CustomRole[], orgUserPermissions: ExternalUserPermission[] }> {
+  private _loadInitData(userId?: number): Observable<{ customRoles: CustomRole[], externalUserPermissions: ExternalUserPermission[] }> {
     return forkJoin({
       customRoles: this.customRoleService.loadAsLookups(),
-      orgUserPermissions: !userId ? of([]) : this.orgUserPermissionService.loadByUserId(userId)
+      externalUserPermissions: !userId ? of([]) : this.externalUserPermissionService.loadByUserId(userId)
     });
   }
 
-  addDialog(): Observable<DialogRef> {
+  addDialog(selectedProfile?: number): Observable<DialogRef> {
     return this._loadInitData()
       .pipe(
         switchMap((result) => {
-          let model = new ExternalUser().clone();
-          if (this.employeeService.isExternalUser()){
-            model.profileId = this.employeeService.getProfile()!.id;
-            model.status = CommonStatusEnum.ACTIVATED;
-          }
+          let model = new ExternalUser().clone({
+            status: CommonStatusEnum.ACTIVATED,
+            profileId: selectedProfile
+          });
+
           return of(this.dialog.show<IDialogData<ExternalUser>>(ExternalUserPopupComponent, {
             model: model,
             operation: OperationTypes.CREATE,
             customRoleList: result.customRoles,
-            orgUserPermissions: result.orgUserPermissions
+            externalUserPermissions: result.externalUserPermissions,
+            userRequest: undefined
           }));
         })
       );
   }
 
-  openViewDialog(orgUserId: number): Observable<DialogRef> {
+  viewDialog(model: ExternalUser): Observable<DialogRef> {
+    return this._openViewDialog(model.id, false);
+  }
+
+  viewDialogComposite(model: ExternalUser): Observable<DialogRef> {
+    return this._openViewDialog(model.id, false);
+  }
+
+  private _openViewDialog(orgUserId: number, isCompositeLoad: boolean): Observable<DialogRef> {
     return this._loadInitData(orgUserId).pipe(
       switchMap((result) => {
         let request = this.getById(orgUserId);
@@ -103,7 +113,8 @@ export class ExternalUserService extends CrudWithDialogGenericService<ExternalUs
               model: orgUser,
               operation: OperationTypes.VIEW,
               customRoleList: result.customRoles,
-              orgUserPermissions: result.orgUserPermissions
+              externalUserPermissions: result.externalUserPermissions,
+              userRequest: undefined
             }));
           })
         );
@@ -121,7 +132,8 @@ export class ExternalUserService extends CrudWithDialogGenericService<ExternalUs
               model: orgUser,
               operation: OperationTypes.UPDATE,
               customRoleList: result.customRoles,
-              orgUserPermissions: result.orgUserPermissions
+              externalUserPermissions: result.externalUserPermissions,
+              userRequest: undefined
             }));
           })
         );
@@ -157,24 +169,15 @@ export class ExternalUserService extends CrudWithDialogGenericService<ExternalUs
   }
 
 
-  private _buildCriteriaQueryParams(criteria: IOrgUserCriteria, pagingOptions?: Partial<PaginationContract>): HttpParams {
+  private _buildCriteriaQueryParams(criteria: Partial<IExternalUserCriteria>, pagingOptions?: Partial<PaginationContract>): HttpParams {
     let queryParams = new HttpParams();
 
     if (CommonUtils.isValidValue(criteria.status)) {
       queryParams = queryParams.append('status', Number(criteria.status).toString());
     }
     if (CommonUtils.isValidValue(criteria['profile-id'])) {
-      // @ts-ignore
-      queryParams = queryParams.append('profile-id', criteria['profile-id'].toString());
+      queryParams = queryParams.append('profile-id', (criteria['profile-id']!).toString());
     }
-    /*if (CommonUtils.isValidValue(criteria['org-id'])) {
-      // @ts-ignore
-      queryParams = queryParams.append('org-id', criteria['org-id'].toString());
-    }
-    if (CommonUtils.isValidValue(criteria['org-branch-id'])) {
-      // @ts-ignore
-      queryParams = queryParams.append('org-branch-id', criteria['org-branch-id'].toString());
-    }*/
     if (pagingOptions) {
       queryParams = queryParams.appendAll(pagingOptions);
     }
@@ -182,11 +185,11 @@ export class ExternalUserService extends CrudWithDialogGenericService<ExternalUs
   }
 
   /**
-   * @description Loads the organization users list by criteria
-   * @param criteria: IOrgUserCriteria
+   * @description Loads the external users list by criteria
+   * @param criteria: Partial<IExternalUserCriteria>
    */
   @CastResponse(undefined, {fallback: '$default', unwrap: 'rs'})
-  getByCriteria(criteria: IOrgUserCriteria): Observable<ExternalUser[]> {
+  getByCriteria(criteria: Partial<IExternalUserCriteria>): Observable<ExternalUser[]> {
     const queryParams = this._buildCriteriaQueryParams(criteria);
 
     return this.http.get<ExternalUser[]>(this._getServiceURL() + '/criteria', {
@@ -197,24 +200,54 @@ export class ExternalUserService extends CrudWithDialogGenericService<ExternalUs
   @CastResponse(undefined, {
     fallback: '$pagination'
   })
-  private _getByCriteriaPaging(options: Partial<PaginationContract>, criteria: IOrgUserCriteria): Observable<Pagination<ExternalUser[]>> {
+  private _getByCriteriaPaging(options: Partial<PaginationContract>, criteria: Partial<IExternalUserCriteria>): Observable<Pagination<ExternalUser[]>> {
     const queryParams = this._buildCriteriaQueryParams(criteria, options);
 
     return this.http.get<Pagination<ExternalUser[]>>(this._getServiceURL() + '/criteria', {
-      params: queryParams
+      params: queryParams,
     });
   }
 
   /**
-   * @description Loads the organization users list by criteria and paging
+   * @description Loads the external users list by criteria and paging
    * @param options: Partial<PaginationContract>
-   * @param criteria: IOrgUserCriteria
+   * @param criteria: Partial<IExternalUserCriteria>
    */
-  getByCriteriaPaging(options: Partial<PaginationContract>, criteria: IOrgUserCriteria): Observable<Pagination<ExternalUser[]>> {
+  getByCriteriaPaging(options: Partial<PaginationContract>, criteria: Partial<IExternalUserCriteria>): Observable<Pagination<ExternalUser[]>> {
     return this._getByCriteriaPaging(options, criteria);
+  }
+
+  /**
+   * @description Load the external users by profile and paging
+   * NOTE: this response contains full response. So, use it only to load external users inside admin screen, otherwise use load by criteria
+   * @param options
+   * @param profileId
+   */
+  @CastResponse(undefined, {
+    fallback: '$pagination'
+  })
+  loadByProfilePaging(options: Partial<PaginationContract>, profileId: number): Observable<Pagination<ExternalUser[]>> {
+    const queryParams = this._buildCriteriaQueryParams({'profile-id': profileId} as Partial<IExternalUserCriteria>, options);
+    return this.http.get<Pagination<ExternalUser[]>>(this._getServiceURL() + '/profile-id', {
+      params: queryParams,
+    }).pipe(catchError(() => of(this._emptyPaginationListResponse)));
   }
 
   openAuditLogsById(id: number): Observable<DialogRef> {
     return this.auditLogService.openAuditLogsDialog(id, this._getServiceURL());
+  }
+
+  openUpdateUserRequest(userUpdateRequest: ExternalUserUpdateRequest): Observable<DialogRef> {
+    return this._loadInitData(userUpdateRequest.externalUserID).pipe(
+      switchMap((result) => {
+        return of(this.dialog.show<IDialogData<ExternalUser>>(ExternalUserPopupComponent, {
+          model: userUpdateRequest.convertToExternalUser(),
+          operation: OperationTypes.UPDATE,
+          customRoleList: result.customRoles,
+          externalUserPermissions: result.externalUserPermissions,
+          userRequest: userUpdateRequest
+        }));
+      })
+    );
   }
 }

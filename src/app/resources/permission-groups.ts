@@ -14,8 +14,8 @@ const sanadiPermissionsGroup: PermissionsEnum[] = [
 ];
 
 const adminPermissionsGroup: PermissionsEnum[] = [
-  PermissionsEnum.ADD_ORG_USER,
-  PermissionsEnum.EDIT_ORG_USER,
+  // PermissionsEnum.ADD_ORG_USER,
+  // PermissionsEnum.EDIT_ORG_USER,
   PermissionsEnum.MANAGE_CUSTOM_ROLE,
   PermissionsEnum.MANAGE_AID_LOOKUP,
   PermissionsEnum.MANAGE_LOCALIZATION,
@@ -38,8 +38,10 @@ const adminPermissionsGroup: PermissionsEnum[] = [
   PermissionsEnum.MANAGE_PROCESS_TEMPLATE,
   PermissionsEnum.MANAGE_SUB_TEAM,
   PermissionsEnum.MANAGE_PROFILE,
-  PermissionsEnum.MANAGE_DYNAMIC_MODEL
-
+  PermissionsEnum.MANAGE_DYNAMIC_MODEL,
+  PermissionsEnum.MANAGE_PROFILE,
+  PermissionsEnum.MANAGE_EXTERNAL_USER_REQUEST_APPROVALS_DYNAMIC,
+  PermissionsEnum.MANAGE_EXTERNAL_USER_DYNAMIC
 ];
 
 const externalUserPermissionsGroup: PermissionsEnum[] = [
