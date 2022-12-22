@@ -52,7 +52,8 @@
         <div class="col-sm-6 mb-4 position-relative">
           <label for="profileCode" asteriskIfRequired="profileCode"
                  class="form-label">{{ lang.map.lbl_profile_code }}</label>
-          <input trimInput id="profileCode" formControlName="profileCode" class="form-control"
+          <input profileCodeExists [operation]="operation" [profileId]="this.model?.id!"
+                 trimInput id="profileCode" formControlName="profileCode" class="form-control"
                  validationClasses="profileCode"/>
           <app-field-error-message controlName="profileCode"></app-field-error-message>
         </div>

@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  profile_code_already_exists: string;
   make_sure_that_x_sum_equal_to_target_amount: string;
   take_the_remaining: string;
   btn_add_all: string;
