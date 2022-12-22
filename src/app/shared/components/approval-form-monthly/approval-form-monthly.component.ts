@@ -16,6 +16,7 @@ import {HasLicenseApprovalMonthly} from "@app/interfaces/has-license-approval-mo
 import {mixinApprovalLicenseWithMonthly} from "@app/mixins/minin-approval-license-with-monthly";
 import {Constructor} from "@app/helpers/constructor";
 import {BaseGenericEService} from "@app/generics/base-generic-e-service";
+import {CustomValidators} from "@app/validators/custom-validators";
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -53,6 +54,9 @@ export class ApprovalFormMonthlyComponent implements OnInit, OnDestroy {
   get license(): HasLicenseApprovalMonthly | null {
     return this._license$.value;
   }
+
+  @Input()
+  licenseStartDateMandatory: boolean = true;
 
   datepickerOptionsMap: IKeyValue = {
     licenseStartDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
@@ -142,7 +146,9 @@ export class ApprovalFormMonthlyComponent implements OnInit, OnDestroy {
   }
 
   private afterBuildForm() {
-
+    const startDate = this.form.get('licenseStartDate')!
+    !this.licenseStartDateMandatory ? startDate.removeValidators(CustomValidators.required) : null
+    startDate.updateValueAndValidity()
   }
 
   saveApprovalInfo() {
