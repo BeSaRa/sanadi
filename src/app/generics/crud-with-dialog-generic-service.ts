@@ -61,4 +61,25 @@ export abstract class CrudWithDialogGenericService<T extends { id: number }> ext
       .pipe(exhaustMap((model) => of(this.getDialog(model, OperationTypes.UPDATE))));
   }
 
+ /* /!**
+   * @description open view dialog for the given model
+   * @param model
+   * @param getById
+   * @returns Observable<DialogRef> Observable of reference for opened dialog
+   *!/
+  viewDialog(model: T, getById: boolean = true): Observable<DialogRef> {
+    return (getById ? this.getById(model.id) : of(model))
+      .pipe(exhaustMap((model) => of(this.getDialog(model, OperationTypes.VIEW))));
+  }
+
+  /!**
+   * @description open view dialog for the given model composite
+   * @param model
+   * @returns Observable<DialogRef> Observable of reference for opened dialog
+   *!/
+  viewDialogComposite(model: T): Observable<DialogRef> {
+    return this.getByIdComposite(model.id)
+      .pipe(exhaustMap((model) => of(this.getDialog(model, OperationTypes.VIEW))));
+  }*/
+
 }
