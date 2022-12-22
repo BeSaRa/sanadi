@@ -840,19 +840,6 @@ export const navigationMenuList = [
     svg: null
   },
   {
-    id: 64,
-    langKey: 'org_unit_field',
-    path: '/home/administration/organization-unit-field',
-    icon: 'mdi-focus-field',
-    isSvg: false,
-    permission: PermissionsEnum.MANAGE_ORG_UNIT_FIELDS,
-    permissionGroup: null,
-    parent: 6,
-    group: 'administration',
-    itemOrder: 12,
-    svg: null
-  },
-  {
     id: 65,
     langKey: 'menu_urgent_intervention_financial_notification',
     path: '/home/urgent-intervention/urgent-intervention-financial-notification',

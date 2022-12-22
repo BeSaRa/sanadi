@@ -31,7 +31,6 @@ const adminPermissionsGroup: PermissionsEnum[] = [
   PermissionsEnum.MANAGE_ADMIN_LOOKUP,
   PermissionsEnum.MANAGE_BANK,
   PermissionsEnum.MANAGE_DONORS,
-  PermissionsEnum.MANAGE_ORG_UNIT_FIELDS,
   PermissionsEnum.MANAGE_FIELD_ASSESSMENT,
   PermissionsEnum.MANAGE_VACATIONS_DATE,
   PermissionsEnum.MANAGE_SDG,
