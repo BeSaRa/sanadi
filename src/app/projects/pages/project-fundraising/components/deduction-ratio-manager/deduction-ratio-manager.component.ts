@@ -110,8 +110,10 @@ export class DeductionRatioManagerComponent implements OnInit, OnDestroy {
   private listenToUpdates(): void {
     combineLatest([this._permitType, this._workArea])
       .pipe(takeUntil(this.destroy$))
-      .pipe(filter((value): value is [number, number] => !!(value[0] && value[1])))
-      .pipe(switchMap(([permitType, workArea]) => this.service.loadDeductionRatio({permitType, workArea})))
+      .pipe(filter((value): value is [number, number] => !!(value[0] || value[1])))
+      .pipe(switchMap(([permitType, workArea]) => {
+        return this.service.loadDeductionRatio({...permitType ? {permitType} : undefined, ...workArea ? {workArea} : undefined})
+      }))
       .subscribe((items) => {
         this.deductionRatioItems = items;
         this.updateDeductionMap()
