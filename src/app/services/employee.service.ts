@@ -22,6 +22,8 @@ import {ProfileTypes} from '@app/enums/profile-types.enum';
 import {CustomMenu} from '@app/models/custom-menu';
 import {CustomMenuInterceptor} from '@app/model-interceptors/custom-menu-interceptor';
 import {ProfileInterceptor} from '@app/model-interceptors/profile-interceptor';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {UserRoleManageUserContract} from '@contracts/user-role-manage-user-contract';
 
 @Injectable({
   providedIn: 'root'
@@ -38,7 +40,7 @@ export class EmployeeService {
   public internalDepartments?: InternalDepartment[];
   public teams: Team[] = [];
   public menuItems: CustomMenu[] = [];
-  private userSecConfig?: Record<number, UserSecurityConfiguration[]>
+  private userSecConfig?: Record<number, UserSecurityConfiguration[]>;
   public userSecurityMap: Map<number, IUserSecurity> = new Map<number, IUserSecurity>();
 
   private userTeamsMap = {
@@ -93,6 +95,13 @@ export class EmployeeService {
   };
   private customMenuInterceptor = new CustomMenuInterceptor();
   private profileInterceptor = new ProfileInterceptor();
+
+  public userRolesManageUser: UserRoleManageUserContract = {
+    isSuperAdmin: (operation: OperationTypes) => this._manageUserSuperAdmin(operation),
+    isActingSuperAdmin: () => this._manageUserActingSuperAdmin(),
+    isSubAdmin: () => this._manageUserSubAdmin(),
+    isApprovalAdmin: () => this._manageUserApprovalAdmin(),
+  };
 
   constructor(private configService: ConfigurationService,
               private staticResourcesService: StaticAppResourcesService) {
@@ -217,19 +226,40 @@ export class EmployeeService {
     }
 
     let userForcedPermissions = this.staticResourcesService.getPermissionsListByGroup(PermissionGroupsEnum.GIVE_USERS_PERMISSIONS) as string[];
-    if (this.configService.CONFIG.GIVE_USERS_PERMISSIONS && this.configService.CONFIG.GIVE_USERS_PERMISSIONS.length > 0){
-      userForcedPermissions = this.configService.CONFIG.GIVE_USERS_PERMISSIONS
+    if (this.configService.CONFIG.GIVE_USERS_PERMISSIONS && this.configService.CONFIG.GIVE_USERS_PERMISSIONS.length > 0) {
+      userForcedPermissions = this.configService.CONFIG.GIVE_USERS_PERMISSIONS;
     }
 
     (userForcedPermissions ?? []).forEach((permission) => {
       this.permissions?.push(new Permission().clone({
         permissionKey: permission
       }));
-    })
-
+    });
     this.setUserData(loginData);
+    this._setPrePermissionMapCustomPermissions();
     this.preparePermissionMap();
+    this._setPostPermissionMapCustomPermissions();
     this.prepareUserSecurityMap();
+  }
+
+  private _addToPermissions(permissionKey: string) {
+    this.permissions?.push(new Permission().clone({
+      permissionKey: permissionKey
+    }));
+  }
+
+  private _addToPermissionMap(permissionKey: string) {
+    this.permissionMap.set(permissionKey.toLowerCase(), new Permission().clone({
+      permissionKey: permissionKey
+    }));
+  }
+
+  private _setPrePermissionMapCustomPermissions(): void {
+    // this._addToPermissions('TEST');
+  }
+
+  private _setPostPermissionMapCustomPermissions(): void {
+    // this._addToPermissionMap('TEST');
   }
 
   private setUserData(loginData: ILoginData) {
@@ -375,7 +405,7 @@ export class EmployeeService {
     }
 
     const securityArray = keys.reduce((acc, key: string) => {
-      const list = this.userSecConfig ? this.userSecConfig[key as unknown as number] : []
+      const list = this.userSecConfig ? this.userSecConfig[key as unknown as number] : [];
       return [...acc, ...list];
     }, [] as UserSecurityConfiguration[]);
 
@@ -383,16 +413,16 @@ export class EmployeeService {
       if (this.type == UserTypes.EXTERNAL && item.followUp && !hasFollowupPermission) {
         this.permissionMap?.set('external_followup', new Permission().clone({
           permissionKey: PermissionsEnum.EXTERNAL_FOLLOWUP
-        }))
+        }));
         hasFollowupPermission = true;
       }
-      this.addUserSecurityToMap(item)
+      this.addUserSecurityToMap(item);
     });
     this.generateEServicesPermissions();
   }
 
   private userCan(caseType: number, key: keyof (Pick<UserSecurityConfiguration, 'canAdd' | 'canView' | 'canManage' | 'followUp'>)): boolean {
-    return !!(this.userSecurityMap.has(caseType) && this.userSecurityMap.get(caseType)!.override[key])
+    return !!(this.userSecurityMap.has(caseType) && this.userSecurityMap.get(caseType)!.override[key]);
   }
 
   userCanAdd(caseType: number): boolean {
@@ -408,7 +438,7 @@ export class EmployeeService {
   }
 
   userCanFollowUp(caseType: number): boolean {
-    return this.userCan(caseType, 'followUp')
+    return this.userCan(caseType, 'followUp');
   }
 
 
@@ -429,12 +459,35 @@ export class EmployeeService {
     });
     canSearch && this.permissionMap.set(EServicePermissionsEnum.E_SERVICES_SEARCH.toLowerCase(), new Permission().clone({
       permissionKey: EServicePermissionsEnum.E_SERVICES_SEARCH
-    }))
+    }));
   }
 
   addFollowupPermission(permission: string): void {
     this.permissionMap.set(permission.toLowerCase(), new Permission().clone({
       permissionKey: permission
     }));
+  }
+
+  private _manageUserSuperAdmin(operation: OperationTypes): boolean {
+    if (this.isExternalUser()) {
+      return false;
+    }
+    if (operation === OperationTypes.CREATE) {
+      return this.checkPermissions(PermissionsEnum.ADD_ORG_USER);
+    } else {
+      return this.checkPermissions(PermissionsEnum.EDIT_ORG_USER);
+    }
+  }
+
+  private _manageUserActingSuperAdmin(): boolean {
+    return this._manageUserSubAdmin() && this._manageUserApprovalAdmin();
+  }
+
+  private _manageUserSubAdmin(): boolean {
+    return this.isExternalUser() && this.checkPermissions(PermissionsEnum.SUB_ADMIN);
+  }
+
+  private _manageUserApprovalAdmin(): boolean {
+    return this.isExternalUser() && this.checkPermissions(PermissionsEnum.APPROVAL_ADMIN);
   }
 }
