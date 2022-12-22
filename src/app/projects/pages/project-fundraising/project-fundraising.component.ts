@@ -121,7 +121,11 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     this.overrideValuesInCreate();
     this.listenToLicenseSearch()
     this.checkTemplateTabValidity()
+    // only it work on edit mode
+    this.prepareNecessaryData()
     // this._test()
+
+    // this.debugPurpose(this.basicInfo as UntypedFormGroup);
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
@@ -399,11 +403,9 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     if (this.displayOuchSection) {
       this.displayLicenseAndTargetCostFields = true;
       this.markRequiredFields(ochaFields)
-      // this.markUnRequiredFields(dacFields)
     } else if (this.displayDacSection) {
       this.displayLicenseAndTargetCostFields = true;
       this.markRequiredFields(dacFields)
-      // this.markUnRequiredFields(ochaFields)
     } else {
       this.displayLicenseAndTargetCostFields = !this.domain.value;
       this.markUnRequiredFields(allFields)
@@ -859,5 +861,35 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
 
   clearLicense() {
     this.selectedLicense = undefined
+  }
+
+  private prepareNecessaryData() {
+    if (this.operation !== OperationTypes.UPDATE)
+      return;
+    const model = this.model!
+    const permitType = model.permitType;
+    const workArea = model.projectWorkArea;
+    const domain = model.domain;
+    const dacOchaMainId = domain === DomainTypes.HUMANITARIAN ? model.mainUNOCHACategory : model.mainDACCategory;
+    const projectType = model.projectType;
+    const sanadyDomain = model.sanadiDomain
+    if ([ProjectPermitTypes.UNCONDITIONAL_RECEIVE, ProjectPermitTypes.CHARITY].includes(permitType)) {
+      return;
+    }
+
+    if (workArea === ProjectWorkArea.OUTSIDE_QATAR) {
+      this.loadDacOuchMain(domain)
+      this.loadSubDacOchaByParentId(dacOchaMainId)
+    } else {
+      projectType === FundraisingProjectTypes.AIDS ? (() => {
+        this.loadSanadyMainClassification(sanadyDomain)
+      })() : null;
+    }
+  }
+
+  debugPurpose(formGroup: UntypedFormGroup) {
+    console.log(Object.keys(formGroup.controls).reduce((acc, key) => {
+      return {...acc, [key]: formGroup.controls[key].errors}
+    }, {}));
   }
 }
