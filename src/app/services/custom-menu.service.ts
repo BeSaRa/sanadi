@@ -46,12 +46,6 @@ export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> 
   dynamicMainMenuDetailsUrl: string = 'home/dynamic-menus/:parentId/details';
   dynamicChildMenuUrl: string = 'home/dynamic-menus/:parentId/details/:id';
 
-  private _emptyPaginationListResponse = of({
-    rs: [],
-    count: 0,
-    sc: 200
-  } as Pagination<CustomMenu[]>);
-
   constructor(public dialog: DialogService,
               public http: HttpClient,
               private urlService: UrlService,
@@ -127,7 +121,7 @@ export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> 
     return this.http.get<Pagination<CustomMenu[]>>(this._getServiceURL() + '/criteria', {
       params: new HttpParams({fromObject: criteria})
     })
-      .pipe(catchError(() => this._emptyPaginationListResponse));
+      .pipe(catchError(() => of(this._emptyPaginationListResponse)));
   }
 
   loadPrivateMenus(): Observable<CustomMenu[]> {
