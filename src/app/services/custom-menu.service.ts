@@ -27,6 +27,7 @@ import {MenuItemService} from '@services/menu-item.service';
 import {MenuItem} from '@app/models/menu-item';
 import {MenuItemInterceptor} from '@app/model-interceptors/menu-item-interceptor';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import {UserTypes} from '@app/enums/user-types.enum';
 
 @CastResponseContainer({
   $default: {
@@ -126,6 +127,16 @@ export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> 
 
   loadPrivateMenus(): Observable<CustomMenu[]> {
     return this.loadByCriteria({'menu-view': MenuView.PRIVATE});
+  }
+
+  loadPrivateMenusByUserType(userType: UserTypes): Observable<CustomMenu[]> {
+    return this.loadPrivateMenus()
+      .pipe(
+        catchError(() => of([])),
+        map((result) => result.filter(menu => {
+          return userType === UserTypes.INTERNAL ? !menu.isExternalUserMenu() : !menu.isInternalUserMenu();
+        }))
+      );
   }
 
   openCreateDialog(parentMenu?: CustomMenu): DialogRef {
