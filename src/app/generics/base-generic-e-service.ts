@@ -65,7 +65,7 @@ export abstract class BaseGenericEService<T extends { id: string }> {
   documentService: DocumentService = new DocumentService(this);
   actionLogService: ActionLogService = new ActionLogService(this);
   searchService: SearchService = new SearchService(this);
-  selectLicenseDisplayColumns: string[] = [];
+  selectLicenseDisplayColumns = ['licenseNumber', 'ouInfo', 'status', 'endDate', 'actions'];
 
   ping(): void {
     // just a dummy method to invoke it later to prevent webstorm from Blaming us that we inject service not used.
