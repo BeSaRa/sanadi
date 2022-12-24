@@ -241,6 +241,7 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
     result.description = licenseDetails.description;
     result.country = licenseDetails.country;
     result.description = licenseDetails.description;
+    result.organizationId = licenseDetails.organizationId;
 
     this._updateForm(new ForeignCountriesProjects().clone(result));
     this.handleReadonly();

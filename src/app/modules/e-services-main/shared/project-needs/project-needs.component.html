@@ -169,7 +169,7 @@
         <button
           (click)="deleteRow($event, row, i)"
           class="icon-btn text-primary"
-          [disabled]="readonly"
+          [disabled]="readonly" [hidden]="readonly"
           tooltip="{{ lang.map.btn_delete }}"
         >
           <i class="mdi mdi-close-box"></i>
@@ -177,7 +177,7 @@
         <button
           (click)="editRow($event, row, i)"
           class="icon-btn text-primary"
-          [disabled]="readonly"
+          [disabled]="readonly" [hidden]="readonly"
           tooltip="{{ lang.map.btn_edit }}"
         >
           <i class="mdi mdi-pen"></i>

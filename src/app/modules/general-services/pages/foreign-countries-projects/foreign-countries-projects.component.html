@@ -51,7 +51,7 @@
           <label asteriskIfRequired="organizationId" for="organizationId" class="form-label">{{
             lang.map.lbl_organization }}</label>
           <ng-select [selectOnTab]="true" labelForId="organizationId" [clearable]="true"
-            placeholder="{{ lang.map.select }}" id="organizationId" [readonly]="readonly || criticalOnTask"
+            placeholder="{{ lang.map.select }}" id="organizationId" [readonly]="readonly || criticalOnTask || isCancelRequestType"
             [notFoundText]="lang.map.msg_not_found" appendTo="body" validationClasses="organizationId"
             formControlName="organizationId">
             <ng-option *ngFor="let option of organizationsList" [value]="option.id">{{ option.getName() }}</ng-option>
