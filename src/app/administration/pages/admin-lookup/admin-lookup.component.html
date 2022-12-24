@@ -18,39 +18,36 @@
 </ng-template>
 
 <tabs-list (onTabChange)="tabChanged($event)">
-  <tab [name]="tabsData.workField.name" [template]="workFieldTemplate"
-       *ngIf="canShowTab(tabsData.workField)"
-       [title]="getTabLabel(adminLookupTypeEnum.WORK_FIELD)"></tab>
-  <tab [name]="tabsData.activityType.name" [template]="activityTypeTemplate"
-       *ngIf="canShowTab(tabsData.activityType)"
-       [title]="getTabLabel(adminLookupTypeEnum.ACTIVITY_TYPE)"></tab>
+  <tab [name]="tabsData.workField.name" [template]="workFieldTemplate" *ngIf="canShowTab(tabsData.workField)"
+    [title]="getTabLabel(adminLookupTypeEnum.WORK_FIELD)"></tab>
+  <tab [name]="tabsData.activityType.name" [template]="activityTypeTemplate" *ngIf="canShowTab(tabsData.activityType)"
+    [title]="getTabLabel(adminLookupTypeEnum.ACTIVITY_TYPE)"></tab>
   <tab [name]="tabsData.templateIndicator.name" [template]="templateIndicatorTemplate"
-       *ngIf="canShowTab(tabsData.templateIndicator)"
-       [title]="getTabLabel(adminLookupTypeEnum.TEMPLATE_INDICATOR)"></tab>
+    *ngIf="canShowTab(tabsData.templateIndicator)" [title]="getTabLabel(adminLookupTypeEnum.TEMPLATE_INDICATOR)"></tab>
   <tab [name]="tabsData.exitMechanism.name" [template]="exitMechanismTemplate"
-       *ngIf="canShowTab(tabsData.exitMechanism)"
-       [title]="getTabLabel(adminLookupTypeEnum.EXIT_MECHANISM)"></tab>
+    *ngIf="canShowTab(tabsData.exitMechanism)" [title]="getTabLabel(adminLookupTypeEnum.EXIT_MECHANISM)"></tab>
   <tab [name]="tabsData.byLawsClassification.name" [template]="byLawsClassificationTemplate"
-       *ngIf="canShowTab(tabsData.byLawsClassification)"
-       [title]="getTabLabel(adminLookupTypeEnum.BYLAWS_CLASSIFICATION)"></tab>
-  <tab [name]="tabsData.riskType.name" [template]="riskTypeTemplate"
-       *ngIf="canShowTab(tabsData.riskType)"
-       [title]="getTabLabel(adminLookupTypeEnum.RISK_TYPE)"></tab>
+    *ngIf="canShowTab(tabsData.byLawsClassification)" [title]="getTabLabel(adminLookupTypeEnum.BYLAWS_CLASSIFICATION)">
+  </tab>
+  <tab [name]="tabsData.riskType.name" [template]="riskTypeTemplate" *ngIf="canShowTab(tabsData.riskType)"
+    [title]="getTabLabel(adminLookupTypeEnum.RISK_TYPE)"></tab>
   <tab [name]="tabsData.riskClassification.name" [template]="riskClassificationTemplate"
-       *ngIf="canShowTab(tabsData.riskClassification)"
-       [title]="getTabLabel(adminLookupTypeEnum.RISK_CLASSIFICATION)"></tab>
-  <tab [name]="tabsData.coordinationAndSupportClassification.name" [template]="coordinationAndSupportClassificationTemplate"
-       *ngIf="canShowTab(tabsData.coordinationAndSupportClassification)"
-       [title]="getTabLabel(adminLookupTypeEnum.COORDINATION_SUPPORT_CLASSIFICATION)"></tab>
+    *ngIf="canShowTab(tabsData.riskClassification)" [title]="getTabLabel(adminLookupTypeEnum.RISK_CLASSIFICATION)">
+  </tab>
+  <tab [name]="tabsData.coordinationAndSupportClassification.name"
+    [template]="coordinationAndSupportClassificationTemplate"
+    *ngIf="canShowTab(tabsData.coordinationAndSupportClassification)"
+    [title]="getTabLabel(adminLookupTypeEnum.COORDINATION_SUPPORT_CLASSIFICATION)"></tab>
   <tab [name]="tabsData.resolutionsIssued.name" [template]="resolutionsIssuedTemplate"
-       *ngIf="canShowTab(tabsData.resolutionsIssued)"
-       [title]="getTabLabel(adminLookupTypeEnum.RESOLUTIONS_ISSUED)"></tab>
+    *ngIf="canShowTab(tabsData.resolutionsIssued)" [title]="getTabLabel(adminLookupTypeEnum.RESOLUTIONS_ISSUED)"></tab>
   <tab [name]="tabsData.penaltiesDecisions.name" [template]="penaltiesDecisionsTemplate"
-       *ngIf="canShowTab(tabsData.penaltiesDecisions)"
-       [title]="getTabLabel(adminLookupTypeEnum.PENALTIES_DECISION)"></tab>
+    *ngIf="canShowTab(tabsData.penaltiesDecisions)" [title]="getTabLabel(adminLookupTypeEnum.PENALTIES_DECISION)"></tab>
   <tab [name]="tabsData.generalProcessClassification.name" [template]="generalProcessClassificationTemplate"
-       *ngIf="canShowTab(tabsData.generalProcessClassification)"
-       [title]="getTabLabel(adminLookupTypeEnum.GENERAL_PROCESS_CLASSIFICATION)"></tab>
+    *ngIf="canShowTab(tabsData.generalProcessClassification)"
+    [title]="getTabLabel(adminLookupTypeEnum.GENERAL_PROCESS_CLASSIFICATION)"></tab>
+  <tab [name]="tabsData.serviceType.name" [template]="serviceTypeTemplate"
+    *ngIf="canShowTab(tabsData.serviceType)"
+    [title]="getTabLabel(adminLookupTypeEnum.SERVICE_TYPE)"></tab>
 </tabs-list>
 
 <ng-template #workFieldTemplate>
@@ -62,61 +59,68 @@
 
 <ng-template #ochaTemplate>
   <admin-lookup-list #ochaListComponent [adminLookupTypeId]="adminLookupTypeEnum.OCHA"
-                     (onReady)="setLookupComponentMap($event, ochaListComponent)">
+    (onReady)="setLookupComponentMap($event, ochaListComponent)">
   </admin-lookup-list>
 </ng-template>
 <ng-template #dacTemplate>
   <admin-lookup-list #dacListComponent [adminLookupTypeId]="adminLookupTypeEnum.DAC"
-                     (onReady)="setLookupComponentMap($event, dacListComponent)">
+    (onReady)="setLookupComponentMap($event, dacListComponent)">
   </admin-lookup-list>
 </ng-template>
 <ng-template #activityTypeTemplate>
   <admin-lookup-list #activityTypeListComponent [adminLookupTypeId]="adminLookupTypeEnum.ACTIVITY_TYPE"
-                     (onReady)="setLookupComponentMap($event, activityTypeListComponent)">
+    (onReady)="setLookupComponentMap($event, activityTypeListComponent)">
   </admin-lookup-list>
 </ng-template>
 <ng-template #templateIndicatorTemplate>
   <admin-lookup-list #templateIndicatorListComponent [adminLookupTypeId]="adminLookupTypeEnum.TEMPLATE_INDICATOR"
-                     (onReady)="setLookupComponentMap($event, templateIndicatorListComponent)">
+    (onReady)="setLookupComponentMap($event, templateIndicatorListComponent)">
   </admin-lookup-list>
 </ng-template>
 <ng-template #exitMechanismTemplate>
   <admin-lookup-list #exitMechanismListComponent [adminLookupTypeId]="adminLookupTypeEnum.EXIT_MECHANISM"
-                     (onReady)="setLookupComponentMap($event, exitMechanismListComponent)">
+    (onReady)="setLookupComponentMap($event, exitMechanismListComponent)">
   </admin-lookup-list>
 </ng-template>
 <ng-template #byLawsClassificationTemplate>
   <admin-lookup-list #byLawsClassificationListComponent [adminLookupTypeId]="adminLookupTypeEnum.BYLAWS_CLASSIFICATION"
-                     (onReady)="setLookupComponentMap($event, byLawsClassificationListComponent)">
+    (onReady)="setLookupComponentMap($event, byLawsClassificationListComponent)">
   </admin-lookup-list>
 </ng-template>
 <ng-template #riskTypeTemplate>
   <admin-lookup-list #riskTypeListComponent [adminLookupTypeId]="adminLookupTypeEnum.RISK_TYPE"
-                     (onReady)="setLookupComponentMap($event, riskTypeListComponent)">
+    (onReady)="setLookupComponentMap($event, riskTypeListComponent)">
   </admin-lookup-list>
 </ng-template>
 <ng-template #riskClassificationTemplate>
   <admin-lookup-list #riskClassificationComponent [adminLookupTypeId]="adminLookupTypeEnum.RISK_CLASSIFICATION"
-                     (onReady)="setLookupComponentMap($event, riskClassificationComponent)">
+    (onReady)="setLookupComponentMap($event, riskClassificationComponent)">
   </admin-lookup-list>
 </ng-template>
 <ng-template #coordinationAndSupportClassificationTemplate>
-  <admin-lookup-list #coordinationAndSupportClassificationComponent [adminLookupTypeId]="adminLookupTypeEnum.COORDINATION_SUPPORT_CLASSIFICATION"
-                     (onReady)="setLookupComponentMap($event, coordinationAndSupportClassificationComponent)">
+  <admin-lookup-list #coordinationAndSupportClassificationComponent
+    [adminLookupTypeId]="adminLookupTypeEnum.COORDINATION_SUPPORT_CLASSIFICATION"
+    (onReady)="setLookupComponentMap($event, coordinationAndSupportClassificationComponent)">
   </admin-lookup-list>
 </ng-template>
 <ng-template #resolutionsIssuedTemplate>
   <admin-lookup-list #resolutionsIssuedComponent [adminLookupTypeId]="adminLookupTypeEnum.RESOLUTIONS_ISSUED"
-                     (onReady)="setLookupComponentMap($event, resolutionsIssuedComponent)">
+    (onReady)="setLookupComponentMap($event, resolutionsIssuedComponent)">
   </admin-lookup-list>
 </ng-template>
 <ng-template #penaltiesDecisionsTemplate>
   <admin-lookup-list #penaltiesDecisionsComponent [adminLookupTypeId]="adminLookupTypeEnum.PENALTIES_DECISION"
-                     (onReady)="setLookupComponentMap($event, penaltiesDecisionsComponent)">
+    (onReady)="setLookupComponentMap($event, penaltiesDecisionsComponent)">
   </admin-lookup-list>
 </ng-template>
 <ng-template #generalProcessClassificationTemplate>
-  <admin-lookup-list #generalProcessClassificationListComponent [adminLookupTypeId]="adminLookupTypeEnum.GENERAL_PROCESS_CLASSIFICATION"
-                     (onReady)="setLookupComponentMap($event, generalProcessClassificationListComponent)">
+  <admin-lookup-list #generalProcessClassificationListComponent
+    [adminLookupTypeId]="adminLookupTypeEnum.GENERAL_PROCESS_CLASSIFICATION"
+    (onReady)="setLookupComponentMap($event, generalProcessClassificationListComponent)">
+  </admin-lookup-list>
+</ng-template>
+<ng-template #serviceTypeTemplate>
+  <admin-lookup-list #serviceTypeListComponent [adminLookupTypeId]="adminLookupTypeEnum.SERVICE_TYPE"
+    (onReady)="setLookupComponentMap($event, serviceTypeListComponent)">
   </admin-lookup-list>
 </ng-template>

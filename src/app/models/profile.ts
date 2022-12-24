@@ -29,7 +29,7 @@ export class Profile extends BaseModel<Profile, ProfileService> {
   searchFields: ISearchFieldsMap<Profile> = {
     enName: 'enName',
     arName: 'arName',
-    ...infoSearchFields(['statusInfo']),
+    ...infoSearchFields(['profileTypeInfo', 'statusInfo']),
   };
   profileType!: number;
   arDesc!: string;

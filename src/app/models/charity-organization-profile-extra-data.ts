@@ -105,7 +105,7 @@ export class CharityOrganizationProfileExtraData extends BaseModel<CharityOrgani
       ]] : regulatingLaw,
       unifiedEconomicRecord: controls ? [unifiedEconomicRecord] : unifiedEconomicRecord,
       taxCardNo: controls ? [taxCardNo] : taxCardNo,
-      establishmentId: controls ? [establishmentId] : establishmentId,
+      establishmentId: controls ? [establishmentId, [CustomValidators.required]] : establishmentId,
     };
   }
 

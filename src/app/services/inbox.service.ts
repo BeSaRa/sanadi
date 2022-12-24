@@ -1,3 +1,4 @@
+import { OrganizationsEntitiesSupportService } from './organizations-entities-support.service';
 import {GeneralProcessNotificationService} from './general-process-notification.service';
 import {AwarenessActivitySuggestionService} from './awareness-activity-suggestion.service';
 import {GeneralAssociationMeetingAttendanceService} from '@services/general-association-meeting-attendance.service';
@@ -108,7 +109,9 @@ export class InboxService {
     private awarenessActivitySuggestionService: AwarenessActivitySuggestionService,
     private generalProcessNotificationService: GeneralProcessNotificationService,
     private projectFundraisingService: ProjectFundraisingService,
-    private generalAssociationMeetingAttendanceService: GeneralAssociationMeetingAttendanceService) {
+    private generalAssociationMeetingAttendanceService: GeneralAssociationMeetingAttendanceService,
+    private organizationsEntitiesSupportService:OrganizationsEntitiesSupportService
+    ) {
     FactoryService.registerService('InboxService', this);
     // register all e-services that we need.
     this.services.set(CaseTypes.INQUIRY, this.inquiryService);
@@ -141,6 +144,7 @@ export class InboxService {
     this.services.set(CaseTypes.CHARITY_ORGANIZATION_UPDATE, this.charityUpdateService);
     this.services.set(CaseTypes.AWARENESS_ACTIVITY_SUGGESTION, this.awarenessActivitySuggestionService);
     this.services.set(CaseTypes.PROJECT_FUNDRAISING, this.projectFundraisingService);
+    this.services.set(CaseTypes.ORGANIZATION_ENTITIES_SUPPORT, this.organizationsEntitiesSupportService);
   }
 
   @CastResponse(() => QueryResultSet)
@@ -330,6 +334,7 @@ export class InboxService {
       [CaseTypes.AWARENESS_ACTIVITY_SUGGESTION]: WFResponseType.AWARENESS_ACTIVITY_SUGGESTION_SEND_TO_MULTI_DEPARTMENTS,
       [CaseTypes.CHARITY_ORGANIZATION_UPDATE]: WFResponseType.CHARITY_ORGANIZATION_UPDATE_SEND_TO_MULTI_DEPARTMENTS,
       [CaseTypes.FOREIGN_COUNTRIES_PROJECTS]: WFResponseType.FOREIGN_COUNTRIES_PROJECTS_LICENSING_SEND_TO_MULTI_DEPARTMENTS,
+      [CaseTypes.PROJECT_FUNDRAISING]: WFResponseType.PROJECT_FUNDRAISING_SEND_TO_DEPARTMENTS
     };
 
     // @ts-ignore

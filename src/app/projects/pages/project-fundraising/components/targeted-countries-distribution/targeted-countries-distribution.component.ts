@@ -2,8 +2,7 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angula
 import {ProjectFundraising} from "@app/models/project-fundraising";
 import {ProjectFundraisingService} from "@services/project-fundraising.service";
 import {Country} from "@app/models/country";
-import {OperationTypes} from "@app/enums/operation-types.enum";
-import {BehaviorSubject, Subject} from "rxjs";
+import {BehaviorSubject, ReplaySubject, Subject} from "rxjs";
 import {debounceTime, filter, map, takeUntil} from "rxjs/operators";
 import {LangService} from "@services/lang.service";
 import {UntypedFormArray, UntypedFormControl, UntypedFormGroup} from "@angular/forms";
@@ -22,12 +21,17 @@ import {MaskPipe} from "ngx-mask";
   providers: [MaskPipe]
 })
 export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy {
+  private modelChange$: ReplaySubject<ProjectFundraising> = new ReplaySubject<ProjectFundraising>(1)
+
   @Input()
-  model!: ProjectFundraising
+  set model(value: ProjectFundraising) {
+    this.modelChange$.next(value)
+  }
+
+  _model!: ProjectFundraising
+
   @Input()
   countries: Country[] = []
-  @Input()
-  operation!: OperationTypes
   @Input()
   readonly: boolean = false;
   @Output()
@@ -45,7 +49,7 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
 
   private countriesChange$: BehaviorSubject<number[] | undefined> = new BehaviorSubject<number[] | undefined>(undefined)
 
-  displayedColumns: string[] = ['arName', 'enName', 'amount'];
+  displayedColumns: string[] = ['arName', 'enName', 'amount', 'actions'];
 
   selectedIds: number[] = [];
 
@@ -60,6 +64,12 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
   remain: number = 0;
 
   deductionRatioChanges$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false)
+  clearItems$: Subject<boolean> = new Subject()
+
+  @Input()
+  set clearItems(value: boolean) {
+    this.clearItems$.next(value)
+  }
 
   @Input()
   set countriesChange(value: number[]) {
@@ -91,14 +101,10 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
 
 
   ngOnInit(): void {
-    if (this.operation === OperationTypes.CREATE) {
-      this.displayedColumns.push('actions')
-    }
-    this.updateSelectedIds()
-    this.generateInputsControllers()
-    this.listenToControllers()
+    this.listenToModelChange()
     this.listenToCountriesChanges()
     this.listenToDeductionRatioChanges()
+    this.listenToClearItems()
   }
 
   get list(): UntypedFormArray {
@@ -132,7 +138,7 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
     if (!this.item.value)
       return
 
-    if (!this.model.deductedPercentagesItemList.length) {
+    if (!this._model.deductedPercentagesItemList.length) {
       this.dialog.error(this.lang.map.please_add_deduction_items_to_proceed)
       return;
     }
@@ -145,7 +151,7 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
     const control = this.createControl(country.country, country.targetAmount)
     this.listenToControl(control)
     this.list.push(control)
-    this.model.addCountry(country)
+    this._model.addCountry(country)
     this.updateSelectedIds()
     this.item.setValue(null)
     this.onAddItem.emit()
@@ -163,7 +169,7 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
   }
 
   private updateSelectedIds(): void {
-    this.selectedIds = this.model.amountOverCountriesList.map(item => item.country)
+    this.selectedIds = this._model.amountOverCountriesList.map(item => item.country)
     this.updateTotalValue()
   }
 
@@ -184,8 +190,8 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
       .pipe(takeUntil(this.destroy$))
       .pipe(takeUntil(this.destroyInputListeners$))
       .subscribe((amount: number) => {
-        const targetAmount = this.model.targetAmount;
-        const amountChanged = amount + this.model.calculateAllCountriesExcept(countryId)
+        const targetAmount = this._model.targetAmount;
+        const amountChanged = amount + this._model.calculateAllCountriesExcept(countryId)
         const correctedAmount = currency(amountChanged).value > currency(targetAmount).value ? (currency(amount).subtract(currency(amountChanged).subtract(targetAmount).value)).value : amount
         if (currency(amountChanged).value > currency(targetAmount).value) {
           control.setValue(this.maskPipe.transform(correctedAmount, this.maskPattern.SEPARATOR, this.maskPattern.THOUSAND_SEPARATOR), {emitEvent: false})
@@ -193,7 +199,7 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
         if (this.readonly)
           return;
 
-        this.model.updateCountryAmount(countryId, correctedAmount)
+        this._model.updateCountryAmount(countryId, correctedAmount)
         this.updateTotalValue()
         this.onItemChange.emit()
       })
@@ -201,29 +207,23 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
 
   private removeItem(country: AmountOverCountry, index: number): void {
     const id = country.country
-    this.model.removeCountry(id);
+    this._model.removeCountry(id);
     this.list.removeAt(index)
     this.updateSelectedIds()
   }
 
-  private generateInputsControllers() {
-    this.model.amountOverCountriesList.forEach(amount => {
-      this.list.push(this.createControl(amount.country, amount.targetAmount))
-    })
-  }
-
   private updateTotalValue(): void {
-    this.totalValue = this.model.calculateAllCountriesAmount()
-    this.remain = currency(this.model.targetAmount).subtract(this.totalValue).value
+    this.totalValue = this._model.calculateAllCountriesAmount()
+    this.remain = currency(this._model.targetAmount).subtract(this.totalValue).value
   }
 
   addAllItems(): void {
-    if (!this.model.deductedPercentagesItemList.length) {
+    if (!this._model.deductedPercentagesItemList.length) {
       this.dialog.error(this.lang.map.please_add_deduction_items_to_proceed)
       return;
     }
 
-    if (this.countriesList.length === 1 && this.model.amountOverCountriesList.length === 0) {
+    if (this.countriesList.length === 1 && this._model.amountOverCountriesList.length === 0) {
       this.addOrphanItem()
       return
     }
@@ -237,7 +237,7 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
   }
 
   distributeRemaining() {
-    const length = this.model.amountOverCountriesList.length
+    const length = this._model.amountOverCountriesList.length
     if (length === 0)
       return;
     if (length === 1) {
@@ -268,16 +268,16 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
   }
 
   private addOrphanItem(): void {
-    if (this.model.amountOverCountriesList.length === 0 && this.countriesList.length === 1) {
+    if (this._model.amountOverCountriesList.length === 0 && this.countriesList.length === 1) {
       this.item.setValue(this.countriesList[0])
-      this.addItem(this.model.targetAmount)
+      this.addItem(this._model.targetAmount)
     }
   }
 
   private updateOrphanItem(): void {
-    if (this.countriesList.length === 1 && this.model.amountOverCountriesList.length === 1) {
+    if (this.countriesList.length === 1 && this._model.amountOverCountriesList.length === 1) {
       const input = (this.list.controls[0] as UntypedFormGroup).controls.targetAmount
-      input.setValue(this.model.targetAmount)
+      input.setValue(this._model.targetAmount)
     }
   }
 
@@ -285,9 +285,45 @@ export class TargetedCountriesDistributionComponent implements OnInit, OnDestroy
     this.deductionRatioChanges$
       .pipe(takeUntil(this.destroy$))
       .pipe(filter(value => value))
+      .pipe(filter(_ => !!this._model.deductedPercentagesItemList.length))
       .subscribe(() => {
         this.addOrphanItem()
         this.updateOrphanItem()
+        this.updateTotalValue()
+      })
+  }
+
+  private generateFromModel(model: ProjectFundraising): void {
+    model.amountOverCountriesList.forEach(amount => {
+      this.list.push(this.createControl(amount.country, amount.targetAmount))
+    })
+  }
+
+  private listenToModelChange() {
+    this.modelChange$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((model) => {
+        this.destroyInputListeners$.next();
+        this._model = new ProjectFundraising()
+        this.list.clear()
+        this.generateFromModel(model)
+        this._model = model;
+        this.listenToControllers()
+        this.updateSelectedIds()
+        this.updateTotalValue()
+      })
+  }
+
+  private listenToClearItems() {
+    this.clearItems$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(filter(value => value))
+      .subscribe(() => {
+        this._model && this._model.clearCountries()
+        this.destroyInputListeners$.next();
+        this.list.clear()
+        this.updateSelectedIds()
+        this.updateTotalValue()
       })
   }
 }

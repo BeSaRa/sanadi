@@ -31,7 +31,6 @@ const adminPermissionsGroup: PermissionsEnum[] = [
   PermissionsEnum.MANAGE_ADMIN_LOOKUP,
   PermissionsEnum.MANAGE_BANK,
   PermissionsEnum.MANAGE_DONORS,
-  PermissionsEnum.MANAGE_ORG_UNIT_FIELDS,
   PermissionsEnum.MANAGE_FIELD_ASSESSMENT,
   PermissionsEnum.MANAGE_VACATIONS_DATE,
   PermissionsEnum.MANAGE_SDG,
@@ -82,7 +81,8 @@ const generalServicesPermissionsGroup: EServicePermissionsEnum[] = [
   EServicePermissionsEnum.CHARITY_ORGANIZATION_UPDATE,
   EServicePermissionsEnum.AWARENESS_ACTIVITY_SUGGESTION,
   EServicePermissionsEnum.EXTERNAL_ORG_AFFILIATION_REQUEST,
-  EServicePermissionsEnum.GENERAL_PROCESS_NOTIFICATION
+  EServicePermissionsEnum.GENERAL_PROCESS_NOTIFICATION,
+  EServicePermissionsEnum.ORGANIZATION_ENTITIES_SUPPORT
 ];
 
 const officeServicesPermissionsGroup: EServicePermissionsEnum[] = [

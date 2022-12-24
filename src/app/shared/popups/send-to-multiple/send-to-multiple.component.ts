@@ -1,29 +1,29 @@
 import { AdminstrationDepartmentCodes } from './../../../enums/department-code.enum';
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
-import { InboxService } from '@app/services/inbox.service';
-import { WFResponseType } from '@app/enums/wfresponse-type.enum';
-import { QueryResult } from '@app/models/query-result';
-import { DialogRef } from '@app/shared/models/dialog-ref';
-import { ToastService } from '@app/services/toast.service';
-import { EmployeeService } from '@app/services/employee.service';
-import { TeamService } from '@app/services/team.service';
-import { InternalDepartmentService } from '@app/services/internal-department.service';
-import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, ValidatorFn } from '@angular/forms';
-import { DialogService } from '@app/services/dialog.service';
-import { LangService } from '@app/services/lang.service';
-import { InternalUser } from '@app/models/internal-user';
-import { InternalDepartment } from '@app/models/internal-department';
-import { of, Subject } from 'rxjs';
-import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { CustomValidators } from '@app/validators/custom-validators';
-import { filter, switchMap, take, takeUntil } from 'rxjs/operators';
-import { ExpertsEnum } from '@app/enums/experts-enum';
-import { CaseModel } from '@app/models/case-model';
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
+import {InboxService} from '@app/services/inbox.service';
+import {WFResponseType} from '@app/enums/wfresponse-type.enum';
+import {QueryResult} from '@app/models/query-result';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {ToastService} from '@app/services/toast.service';
+import {EmployeeService} from '@app/services/employee.service';
+import {TeamService} from '@app/services/team.service';
+import {InternalDepartmentService} from '@app/services/internal-department.service';
+import {AbstractControl, UntypedFormBuilder, UntypedFormGroup, ValidatorFn} from '@angular/forms';
+import {DialogService} from '@app/services/dialog.service';
+import {LangService} from '@app/services/lang.service';
+import {InternalUser} from '@app/models/internal-user';
+import {InternalDepartment} from '@app/models/internal-department';
+import {of, Subject} from 'rxjs';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {filter, switchMap, take, takeUntil} from 'rxjs/operators';
+import {ExpertsEnum} from '@app/enums/experts-enum';
+import {CaseModel} from '@app/models/case-model';
 import {
   InternalBankAccountApprovalReviewDepartments
 } from '@app/enums/internal-bank-account-approval-review-departments';
-import { BaseGenericEService } from "@app/generics/base-generic-e-service";
+import {BaseGenericEService} from "@app/generics/base-generic-e-service";
 
 @Component({
   selector: 'send-to-multiple',
@@ -78,7 +78,6 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
     AdminstrationDepartmentCodes.SVC
   ]
 
-
   multiSendToDepartmentWFResponseList = [
     WFResponseType.INTERNAL_PROJECT_SEND_TO_MULTI_DEPARTMENTS,
     WFResponseType.FUNDRAISING_LICENSE_SEND_TO_MULTI_DEPARTMENTS,
@@ -88,11 +87,15 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
     WFResponseType.CHARITY_ORGANIZATION_UPDATE_SEND_TO_MULTI_DEPARTMENTS,
     WFResponseType.REVIEW_NPO_MANAGEMENT,
     WFResponseType.FOREIGN_COUNTRIES_PROJECTS_LICENSING_SEND_TO_MULTI_DEPARTMENTS,
+    WFResponseType.PROJECT_FUNDRAISING_SEND_TO_DEPARTMENTS
   ];
   multiSendToUserWFResponseList = [
     WFResponseType.INTERNAL_PROJECT_SEND_TO_EXPERT
   ];
-  twoDepartmentsWFResponses = [WFResponseType.FUNDRAISING_LICENSE_SEND_TO_MULTI_DEPARTMENTS, WFResponseType.URGENT_INTERVENTION_LICENSE_SEND_TO_MULTI_DEPARTMENTS];
+  twoDepartmentsWFResponses = [
+    WFResponseType.FUNDRAISING_LICENSE_SEND_TO_MULTI_DEPARTMENTS,
+    WFResponseType.URGENT_INTERVENTION_LICENSE_SEND_TO_MULTI_DEPARTMENTS
+  ];
 
 
   isSendToDepartments(): boolean {
@@ -218,6 +221,7 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
         this.dialogRef.close(true);
       });
   }
+
   loadDepartments(): void {
     this.intDepService.loadAsLookups()
       .pipe(takeUntil(this.destroy$))

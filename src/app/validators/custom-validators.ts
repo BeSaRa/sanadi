@@ -137,6 +137,7 @@ const errorKeys: IKeyValue = {
   WEBSITE: {key: 'err_invalid_website', replaceValues: null},
   URL: {key: 'err_invalid_URL', replaceValues: null},
   keyExists: {key: 'localization_key_already_exists', replaceValues: null},
+  profileCodeExists: {key: 'profile_code_already_exists', replaceValues: null},
   atLeastOneRequired: {
     key: 'at_least_one_field_should_be_filled',
     replaceValues: (message: string, errorValue: any, _fieldLabelKey: string): string => {

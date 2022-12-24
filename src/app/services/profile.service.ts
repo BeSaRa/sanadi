@@ -15,6 +15,7 @@ import {DialogService} from './dialog.service';
 import {FactoryService} from './factory.service';
 import {UrlService} from './url.service';
 import {AuditLogService} from '@services/audit-log.service';
+import {CommonUtils} from '@helpers/common-utils';
 
 @CastResponseContainer({
   $default: {
@@ -73,6 +74,15 @@ export class ProfileService extends CrudWithDialogGenericService<Profile> {
   @CastResponse(undefined)
   getByProfileType(profileType: number) {
     const query = new HttpParams().append('profile-type', profileType);
+    return this.http.get<Profile[]>(this._getServiceURL() + '/criteria', {params: query});
+  }
+
+  @CastResponse(undefined)
+  getByIdAndProfileCode(id: number, profileCode: string) {
+    let query = new HttpParams().append('profile-code', profileCode);
+    if(CommonUtils.isValidValue(id)) {
+      query = query.append('id', id);
+    }
     return this.http.get<Profile[]>(this._getServiceURL() + '/criteria', {params: query});
   }
 

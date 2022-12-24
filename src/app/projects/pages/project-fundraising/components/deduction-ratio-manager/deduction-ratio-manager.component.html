@@ -18,7 +18,7 @@
   </div>
 </div>
 <div class="row mb-2">
-  <app-table [formGroup]="form" #table [data]="model.deductedPercentagesItemList"
+  <app-table [formGroup]="form" #table [data]="_model.deductedPercentagesItemList"
              [columns]="displayedColumns">
     <table formArrayName="list" cdk-table [dataSource]="table.dataSource"
            class="table table-striped table-bordered caption-top">
@@ -90,7 +90,7 @@
         <th cdk-footer-cell colspan="2" *cdkFooterCellDef>
           <div class="d-flex align-items-center">
             <span
-              class="h6 mb-0">{{model.projectTotalCost | mask : maskPattern.SEPARATOR: maskPattern.THOUSAND_SEPARATOR}}</span>
+              class="h6 mb-0">{{_model.projectTotalCost | mask : maskPattern.SEPARATOR: maskPattern.THOUSAND_SEPARATOR}}</span>
           </div>
         </th>
       </ng-container>
@@ -106,7 +106,7 @@
         <th cdk-footer-cell colspan="2" *cdkFooterCellDef>
           <div class="d-flex align-items-center">
             <span
-              class="h6 mb-0">{{model.targetAmount | mask : maskPattern.SEPARATOR: maskPattern.THOUSAND_SEPARATOR}}</span>
+              class="h6 mb-0">{{_model.targetAmount | mask : maskPattern.SEPARATOR: maskPattern.THOUSAND_SEPARATOR}}</span>
           </div>
         </th>
       </ng-container>

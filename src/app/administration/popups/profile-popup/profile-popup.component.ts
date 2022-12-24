@@ -35,6 +35,7 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
   model!: Profile;
   form!: UntypedFormGroup;
   operation!: OperationTypes;
+  saveVisible: boolean = true;
   actions: IMenuItem<ProfileServiceModel>[] = [
     {
       type: 'action',
@@ -49,8 +50,8 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
       langKey: 'lbl_basic_info',
       index: 0,
       validStatus: () => {
-        if (!this.basicInfoForm) {
-          return false;
+        if (!this.basicInfoForm || this.basicInfoForm.disabled) {
+          return true;
         }
         return this.basicInfoForm.valid;
       },
@@ -130,6 +131,10 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
     if (this.operation === OperationTypes.UPDATE) {
       this.displayFormValidity(null, this.dialogContent.nativeElement);
     }
+    if (this.readonly) {
+      this.validateFieldsVisible = false;
+      this.saveVisible = false;
+    }
     this.cd.detectChanges();
   }
 
@@ -156,7 +161,7 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
       this.registrationAuthorityField?.disable();
     } else {
       this.showRaca = false;
-      if(!skipReset) {
+      if (!skipReset) {
         this.registrationAuthorityField?.reset();
       }
       this.registrationAuthorityField?.enable();
@@ -203,7 +208,7 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
     this.form = this.fb.group({
       basicInfo: this.fb.group(this.model.buildForm()),
     });
-    if (this.operation === OperationTypes.VIEW) {
+    if (this.readonly) {
       this.form.disable();
       this.servicesControl.disable();
     }
@@ -245,26 +250,4 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
   searchNgSelect(searchText: string, item: any): boolean {
     return item.ngSelectSearch(searchText);
   }
-
-  // editProfileExtraData(event: MouseEvent) {
-  //   event.preventDefault();
-  //   switch(this.model.profileType) {
-  //     case 1: {
-  //       this.charityOrgProfileExtraDataService.openCharityOrgExtraDataDialog(this.model.id).subscribe();
-  //       break;
-  //     }
-  //     case 2: {
-  //       //statements;
-  //       break;
-  //     }
-  //     default: {
-  //       //statements;
-  //       break;
-  //     }
-  //   }
-  // }
-  //
-  // showEditExtraDataLink() {
-  //   return this.operation === this.operationTypes.UPDATE && (this.profileTypeField.value === ProfileTypes.CHARITY)
-  // }
 }

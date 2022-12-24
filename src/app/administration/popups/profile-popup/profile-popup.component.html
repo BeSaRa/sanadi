@@ -16,11 +16,6 @@
     </tab>
   </tabs-list>
   <ng-template #basicInfoTab [formGroup]="form">
-<!--    <div class="mb-3" *ngIf="showEditExtraDataLink()">-->
-<!--      <a href="#" (click)="editProfileExtraData($event)" tooltip="Edit Profile Extra Data" class="edit-extra-data">-->
-<!--        <h1 class="h6 text-primary d-inline-block">{{lang.map.edit_profile_extra_data}}</h1>-->
-<!--      </a>-->
-<!--    </div>-->
     <form novalidate formGroupName="basicInfo" autocomplete="off">
       <div class="row">
         <div class="col-sm-6 mb-4 position-relative">
@@ -42,7 +37,7 @@
                      formControlName="profileType" validationClasses="profileType"
                      (change)="handleProfileType($event)" appendTo="body">
             <ng-option *ngFor="let option of profileTypes"
-                       [value]="option.lookupKey" [disabled]="option.isRetiredCommonStatus()">
+                       [value]="option.lookupKey" [disabled]="!option.isActive()">
               {{ option.getName() }}
             </ng-option>
           </ng-select>
@@ -57,7 +52,8 @@
         <div class="col-sm-6 mb-4 position-relative">
           <label for="profileCode" asteriskIfRequired="profileCode"
                  class="form-label">{{ lang.map.lbl_profile_code }}</label>
-          <input trimInput id="profileCode" formControlName="profileCode" class="form-control"
+          <input profileCodeExists [operation]="operation" [profileId]="this.model?.id!"
+                 trimInput id="profileCode" formControlName="profileCode" class="form-control"
                  validationClasses="profileCode"/>
           <app-field-error-message controlName="profileCode"></app-field-error-message>
         </div>
@@ -168,9 +164,10 @@
   </ng-template>
 </div>
 <div class="dialog-actions">
-  <button tabindex="-1" (click)="displayFormValidity(null, dialogContent)" tooltip="{{ lang.map.validate_fields }}"
+  <button tabindex="-1" *ngIf="validateFieldsVisible"
+          (click)="displayFormValidity(null, dialogContent)" tooltip="{{ lang.map.validate_fields }}"
           class="btn btn-link"><i class="mdi mdi-information-outline text-info"></i></button>
   <div class="flex-grow-1"></div>
-  <button (click)="save$.next(null)" class="btn btn-primary">{{ lang.map.btn_save }}</button>
+  <button *ngIf="saveVisible" (click)="save$.next(null)" class="btn btn-primary">{{ lang.map.btn_save }}</button>
   <button [dialogClose]="model" class="btn btn-secondary">{{ lang.map.btn_close }}</button>
 </div>

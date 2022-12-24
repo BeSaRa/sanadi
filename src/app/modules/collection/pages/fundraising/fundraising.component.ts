@@ -28,8 +28,7 @@ import {UserClickOn} from '@app/enums/user-click-on.enum';
   templateUrl: './fundraising.component.html',
   styleUrls: ['./fundraising.component.scss'],
 })
-export class FundraisingComponent extends EServicesGenericComponent<Fundraising,
-  FundraisingService> {
+export class FundraisingComponent extends EServicesGenericComponent<Fundraising, FundraisingService> {
   form!: UntypedFormGroup;
   fileIconsEnum = FileIconsEnum;
   licenseSearch$: Subject<string> = new Subject<string>();

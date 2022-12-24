@@ -53,6 +53,8 @@ import { CoordinationWithOrgPopupComponent } from './popups/coordination-with-or
 import { FollowupDateApprovePopupComponent } from './popups/follow-up-date-approve-popup/follow-up-date-approve-popup.component';
 import { InquiryComponent } from './pages/inquiry/inquiry.component';
 import { InternationalCooperationComponent } from './pages/international-cooperation/international-cooperation.component';
+import { OrganizationsEntitiesSupportComponent } from './pages/organizations-entities-support/organizations-entities-support.component';
+import { OrganizationsEntitiesSupportPopupComponent } from './popups/organizations-entities-support-popup/organizations-entities-support-popup.component';
 
 
 @NgModule({
@@ -87,7 +89,9 @@ import { InternationalCooperationComponent } from './pages/international-coopera
     AwarenessActivitySuggestionComponent,
     AwarenessActivitySuggestionApprovalComponent,
     InquiryComponent,
-    InternationalCooperationComponent
+    InternationalCooperationComponent,
+    OrganizationsEntitiesSupportComponent,
+    OrganizationsEntitiesSupportPopupComponent
   ],
   imports: [
     CommonModule,

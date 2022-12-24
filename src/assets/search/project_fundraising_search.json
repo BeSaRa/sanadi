@@ -88,6 +88,17 @@
           "bindValue": "id",
           "bindLabel": "basedOnLanguage"
         }
+      },
+      {
+        "key": "subject",
+        "type": "input",
+        "label": "subject",
+        "validations": {
+          "required": false
+        },
+        "templateOptions": {
+          "maxLength": 100
+        }
       }
     ]
   }

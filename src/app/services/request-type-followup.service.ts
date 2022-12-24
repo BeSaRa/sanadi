@@ -39,6 +39,8 @@ export class RequestTypeFollowupService {
     [CaseTypes.CHARITY_ORGANIZATION_UPDATE]: this.lookupService.listByCategory.RequestTypeUpdateOnly,
     [CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE]: this.lookupService.listByCategory.CollectionRequestType,
     [CaseTypes.AWARENESS_ACTIVITY_SUGGESTION]: this.lookupService.listByCategory.CollectionRequestType,
+    [CaseTypes.ORGANIZATION_ENTITIES_SUPPORT]: this.lookupService.listByCategory.CollectionRequestType,
+
   }
 
   constructor(private lookupService: LookupService) {

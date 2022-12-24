@@ -126,5 +126,6 @@ export interface IAppUrls {
   DYNAMIC_MODEL: string;
   PROJECT_FUNDRAISING: string;
   DEDUCTION_RATIO_ITEM: string;
+  ORGANIZATION_ENTITIES_SUPPORT: string;
   [index: string]: string;
 }

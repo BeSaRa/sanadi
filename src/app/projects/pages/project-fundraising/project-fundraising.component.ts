@@ -10,7 +10,7 @@ import {Lookup} from "@app/models/lookup";
 import {LookupService} from "@services/lookup.service";
 import {LangService} from "@services/lang.service";
 import {Country} from "@app/models/country";
-import {delay, filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
+import {delay, exhaustMap, filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
 import {ProjectWorkArea} from "@app/enums/project-work-area";
 import {ProjectPermitTypes} from "@app/enums/project-permit-types";
 import {ServiceRequestTypes} from "@app/enums/service-request-types";
@@ -33,6 +33,7 @@ import {OpenFrom} from "@app/enums/open-from.enum";
 import {CommonUtils} from "@helpers/common-utils";
 import {ProjectTypes} from "@app/enums/project-types";
 import {FundraisingProjectTypes} from "@app/enums/fundraising-project-types";
+import {LicenseService} from "@services/license.service";
 
 @Component({
   selector: 'project-fundraising',
@@ -72,6 +73,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   selectedLicense?: ProjectFundraising;
   deductionRatioChanged: boolean = false
   templateTabHasError = true;
+  licenseSearch$: Subject<string> = new Subject()
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -83,6 +85,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     private aidLookupService: AidLookupService,
     private employeeService: EmployeeService,
     private dacOchaService: DacOchaService,
+    private licenseService: LicenseService,
     public lang: LangService) {
     super()
   }
@@ -104,6 +107,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   _afterBuildForm(): void {
+    this.loadLicenseById()
     this.handleReadonly()
     this.listenToPermitTypeWorkAreaChanges()
     this.listenToDomainChanges()
@@ -115,8 +119,13 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     this.listenToPermitTypeChange()
     this.setDefaultValues();
     this.overrideValuesInCreate();
-
+    this.listenToLicenseSearch()
+    this.checkTemplateTabValidity()
+    // only it work on edit mode
+    this.prepareNecessaryData()
     // this._test()
+
+    // this.debugPurpose(this.basicInfo as UntypedFormGroup);
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
@@ -132,6 +141,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   _beforeLaunch(): boolean | Observable<boolean> {
     if (this.model && !this.model.deductedPercentagesItemList.length) {
       this.invalidItemMessage();
+      return false
     }
     return true;
   }
@@ -142,6 +152,8 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
 
   _afterLaunch(): void {
     this.resetForm$.next();
+    this.selectedLicense = undefined;
+    this.checkTemplateTabValidity()
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
 
@@ -154,7 +166,8 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   _afterSave(model: ProjectFundraising, saveType: SaveTypes, operation: OperationTypes): void {
-    this.model = model.clone({taskDetails: this.model?.taskDetails});
+    this.model = model.clone<ProjectFundraising>({taskDetails: this.model?.taskDetails});
+
     if (
       [OperationTypes.CREATE, OperationTypes.UPDATE].includes(operation) && [SaveTypes.FINAL, SaveTypes.COMMIT].includes(saveType)
     ) {
@@ -390,11 +403,9 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     if (this.displayOuchSection) {
       this.displayLicenseAndTargetCostFields = true;
       this.markRequiredFields(ochaFields)
-      // this.markUnRequiredFields(dacFields)
     } else if (this.displayDacSection) {
       this.displayLicenseAndTargetCostFields = true;
       this.markRequiredFields(dacFields)
-      // this.markUnRequiredFields(ochaFields)
     } else {
       this.displayLicenseAndTargetCostFields = !this.domain.value;
       this.markUnRequiredFields(allFields)
@@ -419,6 +430,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     !this.projectType.value ? this.projectType.setValue(ProjectTypes.SOFTWARE) : null
     this.markUnRequiredFields(domainFields);
     this.setFieldsToNull(domainFields);
+    this.countriesField.addValidators(CustomValidators.requiredArray)
     this.markRequiredFields(aidFields);
     this.countriesField.setValue([this.qatarCountry.id]);
     this.countriesField.disable();
@@ -431,6 +443,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     this.displayDomainSection = true;
     this.markUnRequiredFields(aidFields);
     this.setFieldsToNull(aidFields);
+    this.countriesField.addValidators(CustomValidators.requiredArray)
     this.markRequiredFields(domainFields);
     this.countriesField.setValue(this.countriesField.value.filter((id: number) => id !== this.qatarCountry.id));
     this.countriesField.enable();
@@ -598,7 +611,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   onClearDeductionItems(): void {
-    this.clearDeductionItems = false;
+    Promise.resolve(() => this.clearDeductionItems = false).then()
   }
 
   private listenToProjectTotalCoastChanges(): void {
@@ -641,6 +654,9 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       this.displayAidSection = false;
       this.displayDomainSection = false;
       this.displayLicenseAndTargetCostFields = true;
+      this.displayWorkAreaAndCountry = false;
+      this.markUnRequiredFields([this.countriesField, this.projectWorkArea])
+      this.countriesField.setValue([])
     } else {
       this.displayDomainSection = model.projectWorkArea === ProjectWorkArea.OUTSIDE_QATAR;
       this.displayAidSection = model.projectWorkArea === ProjectWorkArea.INSIDE_QATAR;
@@ -697,9 +713,9 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   private listenToProjectTypeChanges() {
-    combineLatest([this.projectType.valueChanges, this.projectWorkArea.valueChanges.pipe(delay(200))])
+    combineLatest([this.projectType.valueChanges, this.permitType.valueChanges, this.projectWorkArea.valueChanges.pipe(delay(200))])
       .pipe(takeUntil(this.destroy$))
-      .subscribe(([value, _workArea]: [FundraisingProjectTypes, ProjectWorkArea]) => {
+      .subscribe(([value, ,]: [FundraisingProjectTypes, ProjectPermitTypes, ProjectWorkArea]) => {
         this.handleProjectTypeChanges(value);
       })
   }
@@ -739,7 +755,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     const yearsMessage = this.lang.map.make_sure_that_x_sum_equal_to_target_amount.change({x: this.lang.map.year_s})
     const model = this.model!
     return of(model)
-      .pipe(map(_ => model.targetAmount === model.calculateAllCountriesAmount()))
+      .pipe(map(_ => this.displayWorkAreaAndCountry ? model.targetAmount === model.calculateAllCountriesAmount() : true))
       .pipe(tap(value => !value && this.dialog.error(countriesMessage)))
       .pipe(filter(val => val))
       .pipe(map(_ => model.targetAmount === model.calculateAllYearsAmount()))
@@ -753,7 +769,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       return
     }
 
-    this.templateTabHasError = model.hasInvalidTargetAmount()
+    this.templateTabHasError = model.hasInvalidTargetAmount(!this.displayWorkAreaAndCountry)
   }
 
   private listenToPermitTypeChange() {
@@ -765,10 +781,115 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       })
   }
 
+  get oldLicenseFullSerial(): AbstractControl {
+    return this.basicInfo.get('oldLicenseFullSerial')!
+  }
+
   viewTemplate(template: ProjectTemplate) {
     template
       .viewTemplate()
       .pipe(takeUntil(this.destroy$))
       .subscribe()
+  }
+
+  licenseSearch($event?: Event) {
+    $event?.preventDefault();
+    this.licenseSearch$.next((this.oldLicenseFullSerial.value as string || '').trim())
+  }
+
+  private listenToLicenseSearch() {
+    this.licenseSearch$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(exhaustMap((serialNumber) => this.service.licenseSearch({
+        fullSerial: serialNumber
+      })))
+      .pipe(
+        // display message in case there is no returned license
+        tap((list) => !list.length ? this.dialog.info(this.lang.map.no_result_for_your_search_criteria) : null),
+        // allow only the collection if it has value
+        filter((result) => !!result.length)
+      )
+      .pipe(exhaustMap(licenses => licenses.length === 1 ? this.validateSingleLicense(licenses[0]) : this.openSelectLicense(licenses)))
+      .pipe(filter((info): info is ProjectFundraising => !!info))
+      .subscribe((license) => {
+        this.setSelectedLicense(license, false);
+      });
+  }
+
+  private validateSingleLicense(license: ProjectFundraising): Observable<undefined | ProjectFundraising> {
+    return this.licenseService.validateLicenseByRequestType<ProjectFundraising>(this.model!.caseType, this.requestType.value, license.id) as Observable<undefined | ProjectFundraising>;
+  }
+
+  private openSelectLicense(licenses: ProjectFundraising[]): Observable<undefined | ProjectFundraising> {
+    return this.licenseService.openSelectLicenseDialog(licenses, this.model?.clone({requestType: this.requestType.value || null}), true, this.service.selectLicenseDisplayColumns)
+      .onAfterClose$
+      .pipe(map((result: ({ selected: ProjectFundraising, details: ProjectFundraising } | undefined)) => result ? result.details : result));
+  }
+
+  setSelectedLicense(licenseDetails: ProjectFundraising | undefined, ignoreUpdateForm: boolean) {
+    this.selectedLicense = licenseDetails;
+    // update form fields if i have license
+    if (licenseDetails && !ignoreUpdateForm) {
+      let model: any = new ProjectFundraising().clone(licenseDetails);
+      model.requestType = this.requestType.value;
+      model.oldLicenseFullSerial = licenseDetails.fullSerial;
+      model.oldLicenseId = licenseDetails.id;
+      model.oldLicenseSerial = licenseDetails.serial;
+      model.documentTitle = '';
+      model.fullSerial = null;
+      model.description = '';
+      model.licenseStartDate = licenseDetails.licenseStartDate || licenseDetails.licenseApprovedDate;
+      // delete id because license details contains old license id, and we are adding new, so no id is needed
+      delete model.id;
+      delete model.vsId;
+
+      this._updateForm(model);
+    }
+  }
+
+  loadLicenseById(): void {
+    if (!this.model || !this.model.oldLicenseId)
+      return;
+
+    this.licenseService
+      .loadProjectFundraisingLicenseById(this.model.oldLicenseId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((license) => {
+        this.setSelectedLicense(license, true)
+      })
+  }
+
+  clearLicense() {
+    this.selectedLicense = undefined
+  }
+
+  private prepareNecessaryData() {
+    if (this.operation !== OperationTypes.UPDATE)
+      return;
+    const model = this.model!
+    const permitType = model.permitType;
+    const workArea = model.projectWorkArea;
+    const domain = model.domain;
+    const dacOchaMainId = domain === DomainTypes.HUMANITARIAN ? model.mainUNOCHACategory : model.mainDACCategory;
+    const projectType = model.projectType;
+    const sanadyDomain = model.sanadiDomain
+    if ([ProjectPermitTypes.UNCONDITIONAL_RECEIVE, ProjectPermitTypes.CHARITY].includes(permitType)) {
+      return;
+    }
+
+    if (workArea === ProjectWorkArea.OUTSIDE_QATAR) {
+      this.loadDacOuchMain(domain)
+      this.loadSubDacOchaByParentId(dacOchaMainId)
+    } else {
+      projectType === FundraisingProjectTypes.AIDS ? (() => {
+        this.loadSanadyMainClassification(sanadyDomain)
+      })() : null;
+    }
+  }
+
+  debugPurpose(formGroup: UntypedFormGroup) {
+    console.log(Object.keys(formGroup.controls).reduce((acc, key) => {
+      return {...acc, [key]: formGroup.controls[key].errors}
+    }, {}));
   }
 }
