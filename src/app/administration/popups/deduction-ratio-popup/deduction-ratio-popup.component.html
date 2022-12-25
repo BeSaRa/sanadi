@@ -9,7 +9,7 @@
 </div>
 <div class="dialog-content" #dialogContent>
     <form class="w800px" novalidate autocomplete="off" [formGroup]="form">
-      <div class="row mb-3">
+      <div class="row mb-3" [ngClass]="{'mb-5':NameNotValid()}">
         <div class="col-sm-6 position-relative">
           <label asteriskIfRequired="arName" for="arName"
                  class="form-label">{{lang.map.lbl_arabic_name}}</label>
