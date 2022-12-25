@@ -194,7 +194,8 @@
         <div class="input-group">
           <i class="input-group-text mdi mdi-calendar"></i>
           <div class="form-control" formControlName="workEndDate" id="workEndDate"
-            [options]="datepickerOptionsMap.workEndDate" (click)="openDateMenu(dpworkEndDate)"
+            [options]="datepickerOptionsMap.workEndDate"
+            [ngClass]="{ 'input-disabled': isFinishedContract() }" (click)="!isFinishedContract() && openDateMenu(dpworkEndDate)"
             #dpworkEndDate="angular-mydatepicker" angular-mydatepicker validationClasses="workEndDate"
             (inputFieldChanged)="
               onDateChange($event, 'workStartDate', 'workEndDate')

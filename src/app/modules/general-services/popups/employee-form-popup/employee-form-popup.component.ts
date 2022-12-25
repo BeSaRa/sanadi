@@ -130,7 +130,7 @@ export class EmployeeFormPopupComponent implements OnInit {
 
   ngOnInit() {
     this._buildForm();
-    this.loadImplementingAgenciesByAgencyType();
+    // this.loadImplementingAgenciesByAgencyType();
     this.JobTitleList = this.data.jobTitleList;
   }
 
@@ -296,6 +296,27 @@ export class EmployeeFormPopupComponent implements OnInit {
         workEndDate: this.workEndDate
       }
     });
+
+    const contractExpiryDate: string = 'contractExpiryDate';
+    DateUtils.setRelatedMinMaxDate({
+      fromFieldName: contractExpiryDate,
+      toFieldName,
+      controlOptionsMap: this.datepickerOptionsMap,
+      controlsMap: {
+        contractExpiryDate: this.contractExpiryDate,
+        workEndDate: this.workEndDate
+      }
+    });
+    DateUtils.setRelatedMinMaxDate({
+      fromFieldName,
+      toFieldName: contractExpiryDate,
+      controlOptionsMap: this.datepickerOptionsMap,
+      controlsMap: {
+        contractExpiryDate: this.contractExpiryDate,
+        workStartDate: this.workStartDate
+      }
+    });
+    this.contractExpiryDate.reset()
   }
 
   private loadImplementingAgenciesByAgencyType() {
