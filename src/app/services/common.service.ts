@@ -45,13 +45,14 @@ export class CommonService {
     return (this.counters && this.counters[key]) || '';
   }
 
-  loadAgenciesByAgencyTypeAndCountry(agencyType: number, executionCountry: number): Observable<AdminResult[]> {
-    if (!agencyType || !executionCountry) {
-      return of([]);
-    }
+  loadAgenciesByAgencyTypeAndCountry(agencyType: number, executionCountry?: number): Observable<AdminResult[]> {
+    // if (!agencyType || !executionCountry) {
+    //   return of([]);
+    // }
     let queryParams = new HttpParams();
     queryParams = queryParams.append('type', agencyType);
-    queryParams = queryParams.append('country', executionCountry);
+    executionCountry && (
+      queryParams = queryParams.append('country', executionCountry))
     return this.http.get(this._getURLSegment() + '/agency', { params: queryParams })
       .pipe(
         catchError((_err: any) => of([])),

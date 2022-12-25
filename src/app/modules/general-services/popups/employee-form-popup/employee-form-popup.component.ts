@@ -1,3 +1,5 @@
+import { AdminResult } from './../../../../models/admin-result';
+import { CommonService } from './../../../../services/common.service';
 import { EmployeeService } from '@app/services/employee.service';
 import { Employment } from '@app/models/employment';
 import { EmploymentService } from '@app/services/employment.service';
@@ -23,6 +25,8 @@ import { IdentificationType } from '@app/enums/identification-type.enum';
 import { ContractLocationTypes } from '@app/enums/contract-location-types.enum';
 import { EmploymentCategory } from '@app/enums/employment-category.enum';
 import { EmployeesDataComponent } from '../../shared/employees-data/employees-data.component';
+import { ImplementingAgency } from '@app/models/implementing-agency';
+import { ImplementingAgencyTypes } from '@app/enums/implementing-agency-types.enum';
 
 @Component({
   selector: "app-employee-form-popup",
@@ -35,6 +39,7 @@ export class EmployeeFormPopupComponent implements OnInit {
   starterId: number = 0;
   employeesList: Partial<Employee>[] = [];
   JobTitleList: JobTitle[] = [];
+  implementingAgencyList: AdminResult[] = [];
   datepickerOptionsMap: DatepickerOptionsMap = {
     contractExpiryDate: DateUtils.getDatepickerOptions({
       disablePeriod: "none",
@@ -111,6 +116,7 @@ export class EmployeeFormPopupComponent implements OnInit {
     private dialog: DialogService,
     private lookupService: LookupService,
     private employeeService: EmployeeService,
+    private commonService: CommonService,
     @Inject(DIALOG_DATA_TOKEN)
     public data: {
       service: EmploymentService;
@@ -124,11 +130,8 @@ export class EmployeeFormPopupComponent implements OnInit {
 
   ngOnInit() {
     this._buildForm();
+    this.loadImplementingAgenciesByAgencyType();
     this.JobTitleList = this.data.jobTitleList;
-    if (!this.isApproval()) {
-      this.identificationType.setValue(1);
-      this.handleIdentityNumberValidationsByIdentificationType()
-    }
   }
 
   _buildForm() {
@@ -242,9 +245,6 @@ export class EmployeeFormPopupComponent implements OnInit {
   }
   reset() {
     this.form.reset();
-    this.form.patchValue({
-      identificationType: 1
-    });
     this.handleIdentityNumberValidationsByIdentificationType();
   }
 
@@ -286,12 +286,6 @@ export class EmployeeFormPopupComponent implements OnInit {
     this.identificationNumber.updateValueAndValidity();
     this.passportNumber.updateValueAndValidity();
   }
-  handleJobTitleChange() {
-    if (this.isExternalManagerJobTitle) {
-      this.identificationType.setValue(2);
-      this.handleIdentityNumberValidationsByIdentificationType()
-    }
-  }
   onDateChange(event: IMyInputFieldChanged, fromFieldName: string, toFieldName: string): void {
     DateUtils.setRelatedMinMaxDate({
       fromFieldName,
@@ -303,8 +297,16 @@ export class EmployeeFormPopupComponent implements OnInit {
       }
     });
   }
+
+  private loadImplementingAgenciesByAgencyType() {
+    this.commonService.loadAgenciesByAgencyTypeAndCountry(ImplementingAgencyTypes.ExternalOffice)
+      .subscribe((result) => {
+        this.implementingAgencyList = result;
+      });
+  }
+
   isIdentificationNumberType() {
-    return this.identificationType.value == null || this.identificationType.value == IdentificationType.Identification
+    return this.identificationType.value == IdentificationType.Identification
   }
   isPassportNumberNumberType() {
     return this.identificationType.value == IdentificationType.Passport
