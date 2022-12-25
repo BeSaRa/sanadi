@@ -25,7 +25,6 @@ import { IdentificationType } from '@app/enums/identification-type.enum';
 import { ContractLocationTypes } from '@app/enums/contract-location-types.enum';
 import { EmploymentCategory } from '@app/enums/employment-category.enum';
 import { EmployeesDataComponent } from '../../shared/employees-data/employees-data.component';
-import { ImplementingAgency } from '@app/models/implementing-agency';
 import { ImplementingAgencyTypes } from '@app/enums/implementing-agency-types.enum';
 
 @Component({
@@ -40,12 +39,15 @@ export class EmployeeFormPopupComponent implements OnInit {
   employeesList: Partial<Employee>[] = [];
   JobTitleList: JobTitle[] = [];
   implementingAgencyList: AdminResult[] = [];
+  functionalGroupsList: any[] = []; // fill it from controller
+  skipConfirmUnsavedChanges: boolean = false;
   datepickerOptionsMap: DatepickerOptionsMap = {
     contractExpiryDate: DateUtils.getDatepickerOptions({
       disablePeriod: "none",
     }),
     workStartDate: DateUtils.getDatepickerOptions({ disablePeriod: "none" }),
     workEndDate: DateUtils.getDatepickerOptions({ disablePeriod: "none" }),
+    ExpIdPass: DateUtils.getDatepickerOptions({ disablePeriod: "none" }),
   };
   GenderList: Lookup[] = this.lookupService.listByCategory.Gender.slice().sort(
     (a, b) => a.lookupKey - b.lookupKey
@@ -165,6 +167,9 @@ export class EmployeeFormPopupComponent implements OnInit {
       contractExpiryDate: [null],
       workStartDate: [null, CustomValidators.required],
       workEndDate: [null],
+      JobNumber: [null, [CustomValidators.maxLength(50)]],
+      ExpIdPass: [null, CustomValidators.required],
+      functionalGroup: [null, CustomValidators.required],
     });
     this.data.employees.forEach((ei, i) => {
       if (!this.data.employees[i].id) {
@@ -207,9 +212,17 @@ export class EmployeeFormPopupComponent implements OnInit {
   }
   setEmployee() {
     if (this.form.valid) {
-      const index = this.employeesList.findIndex(e => (this.form.value.passportNumber && e.passportNumber == this.form.value.passportNumber) || (this.form.value.identificationNumber && e.identificationNumber == this.form.value.identificationNumber))
+      let index = this.employeesList.findIndex(e =>
+        (this.form.value.passportNumber && e.passportNumber == this.form.value.passportNumber) ||
+        (this.form.value.identificationNumber && e.identificationNumber == this.form.value.identificationNumber)
+      )
       if (index != -1 && this.employeesList[index].id != this.form.value.id) {
         this.dialog.error(this.lang.map.msg_user_identifier_is_already_exist);
+        return
+      }
+      index = this.employeesList.findIndex(e => (this.form.value.JobNumber && e.JobNumber == this.form.value.JobNumber))
+      if (index != -1 && this.employeesList[index].id != this.form.value.id) {
+        this.dialog.error(this.lang.map.msg_user_job_number_is_already_exist);
         return
       }
       if (!this.form.value.id) {
@@ -329,7 +342,7 @@ export class EmployeeFormPopupComponent implements OnInit {
   isIdentificationNumberType() {
     return this.identificationType.value == IdentificationType.Identification
   }
-  isPassportNumberNumberType() {
+  isPassportNumberType() {
     return this.identificationType.value == IdentificationType.Passport
   }
   isInterim() {

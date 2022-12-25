@@ -1656,16 +1656,20 @@ export interface ILanguageKeys {
   license_duration_type: string;
   office_type: string;
   lbl_beneficiaries_nature: string;
-  menu_deduction_ratio:string;
-  lbl_add_deduction_ratio_item:string;
-  lbl_edit_deduction_ratio_item:string;
-  lbl_profile:string;
-  lbl_min_limit:string;
-  lbl_max_limit:string;
-  lbl_maximum_deduction_ratio:string
+  menu_deduction_ratio: string;
+  lbl_add_deduction_ratio_item: string;
+  lbl_edit_deduction_ratio_item: string;
+  lbl_profile: string;
+  lbl_min_limit: string;
+  lbl_max_limit: string;
+  lbl_maximum_deduction_ratio: string
   menu_organizations_entities_support: string;
   beneficiaries_type: string;
   beneficiaries_description: string;
   organization_officer: string;
-
+  job_number: string;
+  functional_group: string;
+  passport_number_exp_date: string;
+  identification_number_exp_date: string;
+  msg_user_job_number_is_already_exist: string;
 }

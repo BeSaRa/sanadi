@@ -20,7 +20,7 @@
         <app-field-error-message controlName="identificationType"></app-field-error-message>
       </div>
       <!-- passportNumber -->
-      <div class="col-sm-6 col-md-4 mb-4 position-relative" *ngIf="isPassportNumberNumberType()">
+      <div class="col-sm-6 col-md-4 mb-4 position-relative" *ngIf="isPassportNumberType()">
         <label asteriskIfRequired="passportNumber" for="passportNumber" class="form-label">{{ lang.map.passport_number
           }}</label>
         <input id="passportNumber" validationClasses="passportNumber" formControlName="passportNumber"
@@ -36,6 +36,20 @@
             !isEditRequestTypeAllowed || !isNewRequestType() || !canDraftModel()
           " />
         <app-field-error-message controlName="identificationNumber"></app-field-error-message>
+      </div>
+      <!-- ExpIdPass -->
+      <div class="col-sm-6 col-md-4 mb-4 position-relative"
+        *ngIf="isIdentificationNumberType() || isPassportNumberType()">
+        <label for="ExpIdPass" asteriskIfRequired="ExpIdPass" class="form-label">{{
+          isIdentificationNumberType() ? lang.map.identification_number_exp_date : lang.map.passport_number_exp_date
+          }}</label>
+        <div class="input-group">
+          <i class="input-group-text mdi mdi-calendar"></i>
+          <div class="form-control" formControlName="ExpIdPass" id="ExpIdPass"
+            [options]="datepickerOptionsMap.ExpIdPass" (click)="openDateMenu(dpExpIdPass)"
+            #dpExpIdPass="angular-mydatepicker" angular-mydatepicker validationClasses="ExpIdPass"></div>
+          <app-field-error-message controlName="ExpIdPass"></app-field-error-message>
+        </div>
       </div>
       <!-- arabicName -->
       <div class="col-sm-6 col-md-4 mb-4 position-relative">
@@ -85,13 +99,34 @@
           [readonly]="!isEditRequestTypeAllowed" />
         <app-field-error-message controlName="phone"></app-field-error-message>
       </div>
-      <!-- الرقم الوظيفي -->
+      <!-- JobNumber make is uniqe in table -->
+      <div class="col-sm-6 col-md-4 mb-4 position-relative">
+        <label asteriskIfRequired="JobNumber" for="JobNumber" class="form-label">{{
+          lang.map.job_number }}</label>
+        <input id="JobNumber" validationClasses="JobNumber" formControlName="JobNumber" class="form-control" [readonly]="
+            !isEditRequestTypeAllowed || !isNewRequestType() || !canDraftModel()
+          " />
+        <app-field-error-message controlName="JobNumber"></app-field-error-message>
+      </div>
       <!-- officeName TODO: change to dropdown-->
       <div class="col-sm-6 col-md-4 mb-4 position-relative">
         <label asteriskIfRequired="officeName" for="officeName" class="form-label">{{ lang.map.office_name }}</label>
         <input id="officeName" validationClasses="officeName" formControlName="officeName" class="form-control"
           [readonly]="!isEditRequestTypeAllowed" />
         <app-field-error-message controlName="officeName"></app-field-error-message>
+      </div>
+      <!-- functionalGroup fill list -->
+      <div class="col-sm-6 col-md-4 mb-4 position-relative ng-select-wrapper">
+        <label asteriskIfRequired="functionalGroup" for="functionalGroup" labelForId="functionalGroup"
+          class="form-label">{{
+          lang.map.functional_group }}</label>
+        <ng-select [selectOnTab]="true" [clearable]="true" placeholder="{{ lang.map.select }}"
+          [notFoundText]="lang.map.msg_not_found" appendTo="body" id="functionalGroup"
+          [readonly]="!isEditRequestTypeAllowed" validationClasses="functionalGroup" formControlName="functionalGroup">
+          <ng-option *ngFor="let option of functionalGroupsList" [value]="option.id" [disabled]="!option.isActive()">
+            {{option.getName()}}</ng-option>
+        </ng-select>
+        <app-field-error-message controlName="functionalGroup"></app-field-error-message>
       </div>
       <!-- department -->
       <div class="col-sm-6 col-md-4 mb-4 position-relative">
@@ -194,10 +229,9 @@
         <div class="input-group">
           <i class="input-group-text mdi mdi-calendar"></i>
           <div class="form-control" formControlName="workEndDate" id="workEndDate"
-            [options]="datepickerOptionsMap.workEndDate"
-            [ngClass]="{ 'input-disabled': isFinishedContract() }" (click)="!isFinishedContract() && openDateMenu(dpworkEndDate)"
-            #dpworkEndDate="angular-mydatepicker" angular-mydatepicker validationClasses="workEndDate"
-            (inputFieldChanged)="
+            [options]="datepickerOptionsMap.workEndDate" [ngClass]="{ 'input-disabled': isFinishedContract() }"
+            (click)="!isFinishedContract() && openDateMenu(dpworkEndDate)" #dpworkEndDate="angular-mydatepicker"
+            angular-mydatepicker validationClasses="workEndDate" (inputFieldChanged)="
               onDateChange($event, 'workStartDate', 'workEndDate')
             "></div>
           <app-field-error-message controlName="workEndDate"></app-field-error-message>

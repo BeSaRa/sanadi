@@ -22,6 +22,12 @@ export class EmployeeInterceptor implements IModelInterceptor<Employee> {
       : DateUtils.changeDateFromDatepicker(
         model.workEndDate as unknown as IMyDateModel
       )?.toISOString();
+    model.ExpIdPass = !model.ExpIdPass
+      ? undefined
+      : DateUtils.changeDateFromDatepicker(
+        model.ExpIdPass as unknown as IMyDateModel
+      )?.toISOString();
+
     if (model.identificationType == IdentificationType.Identification) {
       delete model.passportNumber
     } else {
@@ -47,6 +53,8 @@ export class EmployeeInterceptor implements IModelInterceptor<Employee> {
     model.workStartDate = DateUtils.changeDateToDatepicker(model.workStartDate);
     model.workEndDate = DateUtils.changeDateToDatepicker(model.workEndDate);
     model.updatedOn = DateUtils.changeDateToDatepicker(model.updatedOn);
+    model.ExpIdPass = DateUtils.changeDateToDatepicker(model.ExpIdPass);
+
     model.jobTitleInfo && (model.jobTitleInfo = AdminResult.createInstance({
       id: model.jobTitleInfo.id,
       arName: model.jobTitleInfo.arName,

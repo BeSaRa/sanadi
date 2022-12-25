@@ -23,6 +23,9 @@ export interface IEmployeeDto {
   workStartDate: string | IMyDateModel;
   workEndDate: string | IMyDateModel;
   updatedOn: string | IMyDateModel;
+  ExpIdPass: string | IMyDateModel;
+  JobNumber: string;
+  functionalGroup: number;
   qId: string;
   updatedBy: number;
   jobTitleInfo: AdminResult | JobTitle | undefined;
