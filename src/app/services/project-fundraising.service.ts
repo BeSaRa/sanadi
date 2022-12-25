@@ -20,6 +20,11 @@ import {DeductionRatioItemService} from "@services/deduction-ratio-item.service"
 import {SharedService} from "@services/shared.service";
 import {ProjectTemplate} from "@app/models/projectTemplate";
 import {ProjectModelService} from "@services/project-model.service";
+import {WFResponseType} from "@app/enums/wfresponse-type.enum";
+import {
+  ProjectFundraisingApproveTaskPopupComponent
+} from "@app/projects/popups/project-fundraising-approve-task-popup/project-fundraising-approve-task-popup.component";
+import {LicenseService} from "@services/license.service";
 
 @CastResponseContainer({
   $default: {
@@ -33,7 +38,7 @@ export class ProjectFundraisingService extends BaseGenericEService<ProjectFundra
   jsonSearchFile: string = 'project_fundraising_search.json';
   serviceKey: keyof ILanguageKeys = 'menu_projects_fundraising';
   caseStatusIconMap: Map<number, string> = new Map<number, string>();
-  searchColumns: string[] = ['fullSerial', 'requestTypeInfo', 'createdOn', 'caseStatus', 'ouInfo'];
+  searchColumns: string[] = ['fullSerial', 'subject',  'requestTypeInfo', 'createdOn', 'caseStatus', 'ouInfo'];
 
   constructor(public http: HttpClient,
               public domSanitizer: DomSanitizer,
@@ -42,6 +47,7 @@ export class ProjectFundraisingService extends BaseGenericEService<ProjectFundra
               private sharedService: SharedService,
               private projectModelService: ProjectModelService,
               private urlService: UrlService,
+              private licenseService: LicenseService,
               public dynamicService: DynamicOptionsService) {
     super()
     FactoryService.registerService('ProjectFundraisingService', this)
@@ -85,7 +91,7 @@ export class ProjectFundraisingService extends BaseGenericEService<ProjectFundra
   }
 
   @CastResponse(() => DeductionRatioItem)
-  public loadDeductionRatio(criteria: { permitType: number, workArea: number }): Observable<DeductionRatioItem[]> {
+  public loadDeductionRatio(criteria: { permitType?: number, workArea?: number }): Observable<DeductionRatioItem[]> {
     return this.http.get<DeductionRatioItem[]>(this.urlService.URLS.DEDUCTION_RATIO_ITEM, {
       params: new HttpParams({fromObject: criteria})
     })
@@ -96,5 +102,16 @@ export class ProjectFundraisingService extends BaseGenericEService<ProjectFundra
       .pipe(map((blob) => {
         return this.sharedService.openViewContentDialog(blob, {documentTitle: template.templateFullSerial}) as DialogRef
       }))
+  }
+
+  approveTask(model: ProjectFundraising, action: WFResponseType) {
+    return this.dialog.show(ProjectFundraisingApproveTaskPopupComponent, {
+      model,
+      action: action
+    });
+  }
+
+  licenseSearch(criteria: Partial<ProjectFundraising>): Observable<ProjectFundraising[]> {
+    return this.licenseService.projectFundraisingLicenseSearch(criteria);
   }
 }

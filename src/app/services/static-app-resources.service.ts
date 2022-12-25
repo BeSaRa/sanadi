@@ -16,6 +16,7 @@ import {
   extendedConfigurableProperties,
   configurationMergingLevel
 } from '@app/resources/default-configuration';
+import {CommonUtils} from '@helpers/common-utils';
 
 @Injectable({
   providedIn: 'root'
@@ -58,6 +59,16 @@ export class StaticAppResourcesService {
 
   getConfigurablePropertiesForConsole(): { scope: string, properties: Array<keyof IAppConfig> } {
     return {scope: this._mergingScope, properties: this._mergingProperties.sort()};
+  }
+
+  getPrivateBuildForConsole(): string {
+    if (!defaultConfiguration || !CommonUtils.isValidValue(defaultConfiguration.VERSION)) {
+      return '';
+    }
+    if (CommonUtils.isValidValue(defaultConfiguration.PRIVATE_VERSION)) {
+      return defaultConfiguration.VERSION + ' | ' + defaultConfiguration.PRIVATE_VERSION!.trim();
+    }
+    return defaultConfiguration.VERSION!;
   }
 
   getUrls(): Observable<IAppUrls> {

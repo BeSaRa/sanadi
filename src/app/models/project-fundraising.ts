@@ -12,11 +12,18 @@ import {ProjectFundraisingInterceptor} from "@app/model-interceptors/project-fun
 import {InterceptModel} from "@decorators/intercept-model";
 import {EmployeeService} from "@services/employee.service";
 import currency from "currency.js";
+import {DialogRef} from "@app/shared/models/dialog-ref";
+import {WFResponseType} from "@app/enums/wfresponse-type.enum";
+import {mixinApprovalLicenseWithMonthly} from "@app/mixins/minin-approval-license-with-monthly";
+import {mixinRequestType} from "@app/mixins/mixin-request-type";
+import {ICaseModel} from "@contracts/icase-model";
+import {HasLicenseApprovalMonthly} from "@contracts/has-license-approval-monthly";
 
 const {send, receive} = new ProjectFundraisingInterceptor()
+const _ApprovalLicenseWithMonthly = mixinRequestType(mixinApprovalLicenseWithMonthly(CaseModel))
 
 @InterceptModel({send, receive})
-export class ProjectFundraising extends CaseModel<ProjectFundraisingService, ProjectFundraising> {
+export class ProjectFundraising extends _ApprovalLicenseWithMonthly<ProjectFundraisingService, ProjectFundraising> implements HasLicenseApprovalMonthly, ICaseModel<ProjectFundraising> {
   service: ProjectFundraisingService;
   caseType: number = CaseTypes.PROJECT_FUNDRAISING
   licenseDuration!: number
@@ -77,13 +84,15 @@ export class ProjectFundraising extends CaseModel<ProjectFundraisingService, Pro
   // extra properties
   employeeService: EmployeeService;
 
-
   constructor() {
     super();
     this.service = FactoryService.getService('ProjectFundraisingService');
     this.employeeService = FactoryService.getService('EmployeeService');
     this.finalizeSearchFields();
   }
+
+  licenseDurationType!: number;
+  itemId!: string;
 
   finalizeSearchFields(): void {
     if (this.employeeService.isExternalUser()) {
@@ -118,7 +127,7 @@ export class ProjectFundraising extends CaseModel<ProjectFundraisingService, Pro
       requestType: controls ? [requestType, [CustomValidators.required]] : requestType,
       permitType: controls ? [permitType, [CustomValidators.required]] : permitType,
       projectWorkArea: controls ? [projectWorkArea, [CustomValidators.required]] : projectWorkArea,
-      countries: controls ? [countries, [CustomValidators.requiredArray]] : countries,
+      countries: controls ? [countries] : countries,
       domain: controls ? [domain] : domain,
       oldLicenseFullSerial: controls ? [oldLicenseFullSerial, [CustomValidators.maxLength(250)]] : oldLicenseFullSerial,
       oldLicenseId: controls ? [oldLicenseId] : oldLicenseId,
@@ -197,11 +206,6 @@ export class ProjectFundraising extends CaseModel<ProjectFundraisingService, Pro
     return this
   }
 
-  removeYearsExcept(yearsName: string[]): ProjectFundraising {
-    this.amountOverYearsList = this.amountOverYearsList.filter(item => yearsName.includes(item.year))
-    return this
-  }
-
   updateYear(value: number, index: number): ProjectFundraising {
     this.amountOverYearsList = this.amountOverYearsList.map((item, i) => {
       if (index == i)
@@ -251,7 +255,8 @@ export class ProjectFundraising extends CaseModel<ProjectFundraisingService, Pro
         ...item,
         searchFields: undefined,
         templateStatusInfo: undefined,
-        publicStatusInfo: undefined
+        publicStatusInfo: undefined,
+        service: undefined
       })
     })
 
@@ -278,14 +283,30 @@ export class ProjectFundraising extends CaseModel<ProjectFundraisingService, Pro
   }
 
 
-  hasInvalidTargetAmount(): boolean {
+  hasInvalidTargetAmount(ignoreCountries: boolean = false): boolean {
     return !this.deductedPercentagesItemList.length
       || this.deductedPercentagesItemList.some(item => item.deductionPercent <= 0)
       || this.calculateAllYearsAmount() !== this.targetAmount
-      || this.calculateAllCountriesAmount() !== this.targetAmount
-      || this.amountOverCountriesList.some(item => item.targetAmount <= 0)
+      || (ignoreCountries ? false : this.calculateAllCountriesAmount() !== this.targetAmount)
+      || (ignoreCountries ? false : this.amountOverCountriesList.some(item => item.targetAmount <= 0))
       || this.amountOverYearsList.some(item => item.targetAmount <= 0)
       || this.administrativeDeductionAmount <= 0
+  }
+
+  approve(): DialogRef {
+    return this.service.approveTask(this, WFResponseType.APPROVE);
+  }
+
+  finalApprove(): DialogRef {
+    return this.service.approveTask(this, WFResponseType.FINAL_APPROVE);
+  }
+
+  clearYears(): void {
+    this.amountOverYearsList = []
+  }
+
+  clearCountries(): void {
+    this.amountOverCountriesList = []
   }
 
 }

@@ -3,7 +3,7 @@
   <button type="button" class="btn-close btn-close-white"
           tabindex="-1" [dialogClose]="model" aria-label="Close"></button>
 </div>
-<div class="dialog-content" #dialogContent>
+<div class="dialog-content no-fixed-height" #dialogContent>
   <form class="min-w400px" novalidate autocomplete="off" [formGroup]="form">
     <div class="col-sm-12 mb-3 position-relative">
       <label asteriskIfRequired="terms" for="terms"

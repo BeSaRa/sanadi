@@ -29,7 +29,9 @@ import {TabMap} from '@app/types/types';
 import {DialogService} from '@services/dialog.service';
 import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
 import {DialogRef} from '@app/shared/models/dialog-ref';
-import {CustomMenuPermissionComponent} from '@app/administration/shared/custom-menu-permission/custom-menu-permission.component';
+import {
+  CustomMenuPermissionComponent
+} from '@app/administration/shared/custom-menu-permission/custom-menu-permission.component';
 
 @Component({
   selector: 'app-external-user-popup',
@@ -78,7 +80,13 @@ export class ExternalUserPopupComponent extends AdminGenericDialog<ExternalUser>
       isTouchedOrDirty: () => true
     },
     menus: {name: 'menus', langKey: 'menus', index: 2, validStatus: () => true, isTouchedOrDirty: () => true},
-    services: {name: 'services', index: 3, langKey: 'link_services', validStatus: () => true, isTouchedOrDirty: () => true},
+    services: {
+      name: 'services',
+      index: 3,
+      langKey: 'link_services',
+      validStatus: () => true,
+      isTouchedOrDirty: () => true
+    },
 
   };
   validateFieldsVisible = true;
@@ -186,9 +194,9 @@ export class ExternalUserPopupComponent extends AdminGenericDialog<ExternalUser>
     if (this.operation === OperationTypes.CREATE) {
       return this.langService.map.lbl_add_org_user;
     } else if (this.operation === OperationTypes.UPDATE) {
-      return this.langService.map.lbl_edit_org_user;
+      return this.langService.map.lbl_edit_org_user + ' : ' + this.model.getName();
     } else if (this.operation === OperationTypes.VIEW) {
-      return this.langService.map.view;
+      return this.langService.map.view + ' : ' + this.model.getName();
     }
     return '';
   }
@@ -231,7 +239,7 @@ export class ExternalUserPopupComponent extends AdminGenericDialog<ExternalUser>
     }
   }
 
-  updatePermissionsByRole($event?: Event): void {
+  updatePermissionsByRole(_$event?: Event): void {
     const value = this.customRoleControl?.value;
     if (!value) {
       this.selectedPermissions = [];

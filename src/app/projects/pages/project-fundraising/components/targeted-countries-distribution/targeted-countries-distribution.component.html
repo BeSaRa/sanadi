@@ -22,7 +22,7 @@
 </div>
 
 <div [formGroup]="items" class="row mb-2">
-  <app-table formArrayName="items" #table [data]="model.amountOverCountriesList"
+  <app-table formArrayName="items" #table [data]="_model.amountOverCountriesList"
              [columns]="displayedColumns">
     <table cdk-table [dataSource]="table.dataSource" class="table table-striped table-bordered caption-top">
       <ng-container cdkColumnDef="arName">
@@ -58,7 +58,7 @@
       <ng-container cdkColumnDef="actions">
         <th cdk-header-cell style="width: 100px" *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
         <td cdk-cell *cdkCellDef="let row; let i = index">
-          <button class="btn icon-btn" (click)="deleteCountry(row , i)">
+          <button [disabled]="readonly" class="btn icon-btn" (click)="!readonly && deleteCountry(row , i)">
             <i class="mdi text-primary mdi-trash-can"></i>
           </button>
         </td>
@@ -82,7 +82,7 @@
       <ng-container cdkColumnDef="targetValue">
         <th cdk-header-cell colspan="2" *cdkFooterCellDef>
           <div
-            class="d-flex align-items-center h6 mb-0">{{model.targetAmount| mask:maskPattern.SEPARATOR:maskPattern.THOUSAND_SEPARATOR}}</div>
+            class="d-flex align-items-center h6 mb-0">{{_model.targetAmount| mask:maskPattern.SEPARATOR:maskPattern.THOUSAND_SEPARATOR}}</div>
         </th>
       </ng-container>
       <ng-container cdkColumnDef="remain">

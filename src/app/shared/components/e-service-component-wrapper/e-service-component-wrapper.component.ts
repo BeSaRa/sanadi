@@ -122,7 +122,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     CaseTypes.FOREIGN_COUNTRIES_PROJECTS,
     CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST,
     CaseTypes.NPO_MANAGEMENT,
-    CaseTypes.CHARITY_ORGANIZATION_UPDATE
+    CaseTypes.CHARITY_ORGANIZATION_UPDATE,
   ];
   servicesWithNoSaveDraftLaunch: number[] = [
     CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP
@@ -153,7 +153,8 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
 
   finalApproveByMatrixServices: number[] = [
     CaseTypes.INTERNAL_PROJECT_LICENSE,
-    CaseTypes.URGENT_INTERVENTION_LICENSING
+    CaseTypes.URGENT_INTERVENTION_LICENSING,
+    CaseTypes.PROJECT_FUNDRAISING
   ];
 
   canShowMatrixNotification: boolean = false;
@@ -567,7 +568,8 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
             || item.getResponses().includes(WFResponseType.INTERNAL_BANK_ACCOUNT_APPROVAL_SEND_TO_MULTI_DEPARTMENTS)
             || item.getResponses().includes(WFResponseType.AWARENESS_ACTIVITY_SUGGESTION_SEND_TO_MULTI_DEPARTMENTS)
             || item.getResponses().includes(WFResponseType.CHARITY_ORGANIZATION_UPDATE_SEND_TO_MULTI_DEPARTMENTS)
-            || item.getResponses().includes(WFResponseType.REVIEW_NPO_MANAGEMENT);
+            || item.getResponses().includes(WFResponseType.REVIEW_NPO_MANAGEMENT)
+            || item.getResponses().includes(WFResponseType.PROJECT_FUNDRAISING_SEND_TO_DEPARTMENTS)
         },
         onClick: (item: CaseModel<any, any>) => {
           this.sendToMultiDepartmentsAction(item);

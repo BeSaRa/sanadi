@@ -106,6 +106,10 @@
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.subject}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.subject || ''}} </td>
           </ng-container>
+          <ng-container cdkColumnDef="goal">
+            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.goal}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.goal || ''}} </td>
+          </ng-container>
           <ng-container cdkColumnDef="actions">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
             <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">

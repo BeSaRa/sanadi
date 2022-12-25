@@ -11,6 +11,8 @@ import {of, Subject} from 'rxjs';
 import {catchError, exhaustMap, filter, switchMap, takeUntil} from 'rxjs/operators';
 import {ProfileTypes} from '@app/enums/profile-types.enum';
 import {CharityOrganizationProfileExtraDataService} from '@services/charity-organization-profile-extra-data.service';
+import {SortEvent} from '@contracts/sort-event';
+import {CommonUtils} from '@helpers/common-utils';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -72,7 +74,7 @@ export class ProfilesComponent extends AdminGenericComponent<Profile, ProfileSer
       }
     }
   ];
-  displayedColumns: string[] = ['arName', 'enName', 'status', 'actions'];
+  displayedColumns: string[] = ['arName', 'enName', 'profileType', 'status', 'actions'];
   view$: Subject<Profile> = new Subject<Profile>();
 
   constructor(public service: ProfileService,
@@ -83,6 +85,19 @@ export class ProfilesComponent extends AdminGenericComponent<Profile, ProfileSer
 
   protected _init(): void {
     this.listenToView();
+  }
+
+  sortingCallbacks = {
+    profileType: (a: Profile, b: Profile, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.profileTypeInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.profileTypeInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    status: (a: Profile, b: Profile, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.statusInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.statusInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    }
   }
 
   listenToView(): void {

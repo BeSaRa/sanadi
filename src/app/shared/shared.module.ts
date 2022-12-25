@@ -113,6 +113,7 @@ import {ExternalOfficeListComponent} from '@app/shared/components/external-offic
 import {ExternalOfficesPopupComponent} from '@app/shared/components/external-offices-popup/external-offices-popup.component';
 import {ExecutiveManagementComponent} from '@app/shared/components/executive-management/executive-management.component';
 import {BankBranchComponent} from '@app/shared/components/bank-branch/bank-branch.component';
+import {ProfileCodeExistsDirective} from '@app/validators/profile-code-exists.directive';
 
 @NgModule({
   declarations: [
@@ -211,7 +212,8 @@ import {BankBranchComponent} from '@app/shared/components/bank-branch/bank-branc
     ExternalOfficeListComponent,
     ExternalOfficesPopupComponent,
     ExecutiveManagementComponent,
-    BankBranchComponent
+    BankBranchComponent,
+    ProfileCodeExistsDirective
   ],
   imports: [
     CommonModule,
@@ -303,7 +305,8 @@ import {BankBranchComponent} from '@app/shared/components/bank-branch/bank-branc
     ExternalOfficeListComponent,
     ExternalOfficesPopupComponent,
     ExecutiveManagementComponent,
-    BankBranchComponent
+    BankBranchComponent,
+    ProfileCodeExistsDirective
   ]
 })
 export class SharedModule {

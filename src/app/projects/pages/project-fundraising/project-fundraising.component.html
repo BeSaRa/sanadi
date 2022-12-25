@@ -47,15 +47,12 @@
             <label class="form-label" asteriskIfRequired="oldLicenseFullSerial"
                    for="oldLicenseFullSerial">{{lang.map.license_number}}</label>
             <div class="input-group">
-              <!--              (keydown.enter)="isEditLicenseAllowed() && licenseSearch($event)"-->
-              <!--              *ngIf="isEditLicenseAllowed()"-->
-              <!--              (click)="licenseSearch($event)"-->
-              <!--              [readOnly]="!isEditLicenseAllowed()"-->
               <input [readonly]="!isEditLicenseAllowed()"
+                     (keydown.enter)="isEditLicenseAllowed() && licenseSearch($event)"
                      formControlName="oldLicenseFullSerial"
                      type="text" validationClasses="oldLicenseFullSerial" class="form-control"
                      id="oldLicenseFullSerial" trimInput>
-              <button type="button" *ngIf="isEditLicenseAllowed()"
+              <button type="button" (click)="licenseSearch($event)" *ngIf="isEditLicenseAllowed()"
                       class="input-group-text">
                 <i class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i></button>
               <app-field-error-message controlName="oldLicenseFullSerial"></app-field-error-message>
@@ -63,7 +60,8 @@
           </div>
         </div>
         <div *ngIf="selectedLicense">
-          <selected-license-table [caseType]="caseTypes.PROJECT_FUNDRAISING"
+          <selected-license-table (clearLicense)="clearLicense()" [ignoreDelete]="!isEditLicenseAllowed()"
+                                  [caseType]="caseTypes.PROJECT_FUNDRAISING"
                                   [caseTypeViewLicense]="caseTypes.PROJECT_FUNDRAISING"
                                   [licenseList]="[selectedLicense]"
                                   [columns]="service.selectLicenseDisplayColumns"></selected-license-table>
@@ -325,17 +323,22 @@
             </ng-container>
             <ng-container cdkColumnDef="totalCost">
               <th cdk-header-cell style="width:300px" *cdkHeaderCellDef> {{lang.map.total_cost}}</th>
-              <td cdk-cell *cdkCellDef="let row"> {{row.templateCost}} </td>
+              <td cdk-cell
+                  *cdkCellDef="let row"> {{row.templateCost | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
             </ng-container>
             <ng-container cdkColumnDef="actions">
               <th cdk-header-cell style="width:100px" *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
               <td cdk-cell *cdkCellDef="let row">
-                <button *ngIf="!readonly" [tooltip]="lang.map.btn_remove" (click)="deleteTemplate()" class="btn icon-btn">
-                  <i class="mdi mdi-trash-can text-primary"></i>
-                </button>
-                <button [tooltip]="lang.map.view" (click)="viewTemplate(row)" class="btn icon-btn">
-                  <i class="mdi mdi-eye text-primary"></i>
-                </button>
+                <div class="d-flex">
+                  <button *ngIf="!readonly && !isExtendOrCancelRequestType()" [tooltip]="lang.map.btn_remove"
+                          (click)="deleteTemplate()"
+                          class="btn icon-btn">
+                    <i class="mdi mdi-trash-can text-primary"></i>
+                  </button>
+                  <button [tooltip]="lang.map.view" (click)="viewTemplate(row)" class="btn icon-btn">
+                    <i class="mdi mdi-eye text-primary"></i>
+                  </button>
+                </div>
               </td>
             </ng-container>
             <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="displayedColumns"></tr>
@@ -356,28 +359,29 @@
         [checkForTemplate]="templateRequired"
         [model]="model!"
         [readonly]="(isExtendOrCancelRequestType() || readonly)"
-        [workArea]="projectWorkArea.value" [permitType]="permitType.value"
-        [operation]="operation"></deduction-ratio-manager>
+        [workArea]="projectWorkArea.value" [permitType]="permitType.value"></deduction-ratio-manager>
+
       <targeted-countries-distribution
+        *ngIf="displayWorkAreaAndCountry"
         (onAddItem)="checkTemplateTabValidity()"
         (onItemChange)="checkTemplateTabValidity()"
         (onItemRemoved)="checkTemplateTabValidity()"
         [deductionRatioChanged]="deductionRatioChanged"
         [model]="model!"
+        [clearItems]="clearDeductionItems"
         [countriesChange]="countriesField.value"
         [readonly]="(isExtendOrCancelRequestType() || readonly)"
-        [countries]="countries"
-        [operation]="operation"></targeted-countries-distribution>
+        [countries]="countries"></targeted-countries-distribution>
 
       <targeted-years-distribution
         (onAddItem)="checkTemplateTabValidity()"
         (onItemChange)="checkTemplateTabValidity()"
         (onItemRemoved)="checkTemplateTabValidity()"
+        [clearItems]="clearDeductionItems"
         [deductionRatioChanged]="deductionRatioChanged"
         [model]="model!"
         [readonly]="(isExtendOrCancelRequestType() || readonly)"
-        [numberOfMonths]="licenseDuration.value"
-        [operation]="operation"></targeted-years-distribution>
+        [numberOfMonths]="licenseDuration.value"></targeted-years-distribution>
 
     </ng-template>
     <ng-container formGroupName="explanation">

@@ -1,4 +1,4 @@
-import { UserSubTeamComponent } from './shared/user-sub-team/user-sub-team.component';
+import {UserSubTeamComponent} from './shared/user-sub-team/user-sub-team.component';
 import {
   ProcessFieldWrapperComponent
 } from './popups/general-process-popup/process-formly-components/process-field-wrapper/process-field-wrapper.component';
@@ -13,7 +13,6 @@ import {FormlyModule} from '@ngx-formly/core';
 import {FormlyBootstrapModule} from '@ngx-formly/bootstrap';
 import {CustomMenuPopupComponent} from './popups/custom-menu-popup/custom-menu-popup.component';
 import {CustomMenuComponent} from './pages/custom-menu/custom-menu.component';
-import {OrganizationUnitFieldPopupComponent} from './popups/organization-unit-field-popup/organization-unit-field-popup.component';
 import {NgModule} from '@angular/core';
 import {AdminRoutingModule} from './admin-routing.module';
 import {AdminHomeComponent} from './pages/admin-home/admin-home.component';
@@ -69,7 +68,6 @@ import {FollowupConfigurationPopupComponent} from './popups/followup-configurati
 import {UserFollowupPermissionComponent} from './shared/user-followup-permission/user-followup-permission.component';
 import {FieldAssessmentPopupComponent} from './popups/field-assessment-popup/field-assessment-popup.component';
 import {FieldAssessmentComponent} from './pages/field-assessment/field-assessment.component';
-import {OrganizationUnitFieldComponent} from './pages/organization-unit-field/organization-unit-field.component';
 import {AdminLookupPopupComponent} from './popups/admin-lookup-popup/admin-lookup-popup.component';
 import {DacOchaNewPopupComponent} from './popups/dac-ocha-new-popup/dac-ocha-new-popup.component';
 import {VactionDatesComponent} from './pages/vaction-dates/vaction-dates.component';
@@ -84,12 +82,16 @@ import {ProfilePopupComponent} from './popups/profile-popup/profile-popup.compon
 import {ProfilesComponent} from './pages/profiles/profiles.component';
 import {CustomMenuUrlHandlerComponent} from './shared/custom-menu-url-handler/custom-menu-url-handler.component';
 import {CustomMenuPermissionComponent} from './shared/custom-menu-permission/custom-menu-permission.component';
-import {CharityOrganizationProfileExtraDataPopupComponent} from './popups/charity-organization-profile-extra-data-popup/charity-organization-profile-extra-data-popup.component';
-import { ProfileOfficersComponent } from './shared/profile-officers/profile-officers.component';
-import { ProfileBranchesComponent } from './shared/profile-branches/profile-branches.component';
-import { BranchOfficersPopupComponent } from './shared/branch-officers-popup/branch-officers-popup.component';
-import { DynamicModelsComponent } from './pages/dynamic-models/dynamic-models.component';
-import { DynamicModelPopupComponent } from './popups/dynamic-model-popup/dynamic-model-popup.component';
+import {
+  CharityOrganizationProfileExtraDataPopupComponent
+} from './popups/charity-organization-profile-extra-data-popup/charity-organization-profile-extra-data-popup.component';
+import {ProfileOfficersComponent} from './shared/profile-officers/profile-officers.component';
+import {ProfileBranchesComponent} from './shared/profile-branches/profile-branches.component';
+import {BranchOfficersPopupComponent} from './shared/branch-officers-popup/branch-officers-popup.component';
+import {DynamicModelsComponent} from './pages/dynamic-models/dynamic-models.component';
+import {DynamicModelPopupComponent} from './popups/dynamic-model-popup/dynamic-model-popup.component';
+import {DeductionRatioComponent} from './pages/deduction-ratio/deduction-ratio.component';
+import {DeductionRatioPopupComponent} from './popups/deduction-ratio-popup/deduction-ratio-popup.component';
 
 @NgModule({
   declarations: [
@@ -147,8 +149,6 @@ import { DynamicModelPopupComponent } from './popups/dynamic-model-popup/dynamic
     UserFollowupPermissionComponent,
     FieldAssessmentPopupComponent,
     FieldAssessmentComponent,
-    OrganizationUnitFieldPopupComponent,
-    OrganizationUnitFieldComponent,
     AdminLookupPopupComponent,
     DacOchaNewPopupComponent,
     VactionDatesComponent,
@@ -171,7 +171,9 @@ import { DynamicModelPopupComponent } from './popups/dynamic-model-popup/dynamic
     ProfileBranchesComponent,
     BranchOfficersPopupComponent,
     DynamicModelsComponent,
-    DynamicModelPopupComponent
+    DynamicModelPopupComponent,
+    DeductionRatioComponent,
+    DeductionRatioPopupComponent
   ],
   imports: [
     SharedModule,

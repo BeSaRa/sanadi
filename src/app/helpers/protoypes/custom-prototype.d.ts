@@ -10,4 +10,5 @@ interface String {
 
 interface Window {
   getConfigMergeProperties(): { scope: string, properties: string[] };
+  getPrivateBuild(): string;
 }

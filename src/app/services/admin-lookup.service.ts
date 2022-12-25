@@ -116,6 +116,9 @@ export class AdminLookupService implements CrudServiceAdminLookupContract<AdminL
       case AdminLookupTypeEnum.GENERAL_PROCESS_CLASSIFICATION:
         url += '/general-process-classification';
         break;
+      case AdminLookupTypeEnum.SERVICE_TYPE:
+        url += '/service-type';
+        break;
     }
     return url;
   }
