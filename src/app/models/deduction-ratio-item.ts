@@ -10,6 +10,7 @@ import {AdminResult} from "@app/models/admin-result";
 import { searchFunctionType } from "@app/types/types";
 import { CommonStatusEnum } from "@app/enums/common-status.enum";
 import { CustomValidators } from "@app/validators/custom-validators";
+import { Validators } from "@angular/forms";
 
 const {receive, send} = new DeductionRatioItemInterceptor()
 
@@ -84,7 +85,7 @@ export class DeductionRatioItem extends BaseModel<DeductionRatioItem, DeductionR
       profile: controls ? [profile, [CustomValidators.required]] : profile,
       workArea: controls ? [workArea, [CustomValidators.required]] : workArea,
       permitType: controls ? [permitType, [CustomValidators.required]] : permitType,
-      maxLimit: controls ? [maxLimit, [CustomValidators.required]] : maxLimit,
+      maxLimit: controls ? [maxLimit, [CustomValidators.required, Validators.max(50)]] : maxLimit,
       minLimit: controls ? [minLimit, [CustomValidators.required].concat(CustomValidators.commonValidations.decimalWithMinValue(2,0.1))] : minLimit,
     }
   }
