@@ -2,7 +2,7 @@ import {Directive, forwardRef, Input} from '@angular/core';
 import {AbstractControl, AsyncValidator, NG_ASYNC_VALIDATORS, ValidationErrors} from '@angular/forms';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {Observable} from 'rxjs';
-import {debounceTime, map, switchMap, take} from 'rxjs/operators';
+import {debounceTime, map, startWith, switchMap, take, tap} from 'rxjs/operators';
 import {ProfileService} from '@services/profile.service';
 
 @Directive({
@@ -18,16 +18,17 @@ import {ProfileService} from '@services/profile.service';
 export class ProfileCodeExistsDirective implements AsyncValidator {
   @Input('operation') operation!: OperationTypes;
   @Input('profileId') profileId!: number;
+  private firstTime = true;
 
-  constructor(private profileService: ProfileService) { }
+  constructor(private profileService: ProfileService) {
+  }
 
   validate(control: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> {
     return control.valueChanges.pipe(
       debounceTime(500),
+      (this.firstTime ? startWith<string, string>(control.value) : tap(_ => undefined)),
       switchMap((val: string) => {
-        // if (this.operation === OperationTypes.UPDATE){
-        //   return of(null);
-        // }
+        this.firstTime = false;
         return this.profileService.getByIdAndProfileCode(this.profileId, val)
           .pipe(map(value => value.length > 0 ? {profileCodeExists: true} : null));
       }),

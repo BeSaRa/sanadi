@@ -70,6 +70,8 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
   };
   profileTypes = this.lookupService.listByCategory.ProfileType.sort((a, b) => a.lookupKey - b.lookupKey);
   status = this.lookupService.listByCategory.CommonStatus.filter((e) => !e.isRetiredCommonStatus());
+  permitTypes = this.lookupService.listByCategory.ProjectPermitType.sort( (a , b) => a.lookupKey - b.lookupKey)
+  submissionMechanisms = this.lookupService.listByCategory.SubmissionMechanism.sort( (a , b) => a.lookupKey - b.lookupKey)
   profileServicesColumns = ['service', 'actions'];
   profileServices: ProfileServiceModel[] = [];
   showRaca = false;
@@ -138,7 +140,7 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
     this.cd.detectChanges();
   }
 
-  onTabChange($event: TabComponent) {
+  onTabChange(_$event: TabComponent) {
   }
 
   initPopup(): void {
@@ -198,7 +200,7 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
 
   prepareModel(model: Profile, form: UntypedFormGroup): Profile | Observable<Profile> {
     const basicInfo = form.get('basicInfo')?.value;
-    return new Profile().clone({...model, ...basicInfo,});
+    return new Profile().clone({...model, ...basicInfo});
   }
 
   saveFail(error: Error): void {
@@ -224,7 +226,7 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
         serviceId: +e,
       })
     );
-    this.profileServiceRelationService.createBulk(_services).subscribe((e) => {
+    this.profileServiceRelationService.createBulk(_services).subscribe((_e) => {
       this.loadLinkedServices(this.model.id);
       this.toast.success(this.lang.map.services_add_successfully);
       this.servicesControl.reset();

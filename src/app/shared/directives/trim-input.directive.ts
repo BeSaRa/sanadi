@@ -76,7 +76,10 @@ export class TrimInputDirective implements OnInit, OnDestroy {
       return;
     }
     let trimmedValue = this.getTrimValue(this.control.value);
-    this.control.patchValue(trimmedValue, {emitEvent: false});
+    if (trimmedValue !== this.control.value) {
+      this.control.setValue(trimmedValue);
+      this.control.updateValueAndValidity()
+    }
   }
 
   @HostListener('blur')
