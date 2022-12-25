@@ -1,9 +1,9 @@
 export enum AdminstrationDepartmentCodes {
   IN = 'IN',
   REM = 'REM',
-  SVC = 'SVC',
-  LCN = 'LCN',
-  RC = 'RC',
-  LA = 'LA',
+  SVC = 'SVC', // الاشراف والقابة
+  LCN = 'LCN', // االتراخيص والدعم
+  RC = 'RC', // الامتثال والمخاطر
+  LA = 'LA', // شؤون القانونية
   PR1 = 'PR1'
 }

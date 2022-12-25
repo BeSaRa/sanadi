@@ -9,7 +9,6 @@ import { mixinLicenseDurationType } from '@app/mixins/mixin-license-duration';
 import { mixinRequestType } from '@app/mixins/mixin-request-type';
 import { ForeignCountriesProjectsInterceptor } from '@app/model-interceptors/foriegn-countries-projects-interceptor';
 import { FactoryService } from '@app/services/factory.service';
-import { FollowupDateService } from '@app/services/follow-up-date.service';
 import { ForeignCountriesProjectsService } from '@app/services/foreign-countries-projects.service';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { CustomValidators } from '@app/validators/custom-validators';
@@ -24,15 +23,12 @@ const { send, receive } = new ForeignCountriesProjectsInterceptor();
 @InterceptModel({ send, receive })
 export class ForeignCountriesProjects extends _RequestType<ForeignCountriesProjectsService, ForeignCountriesProjects> implements HasRequestType, HasExternalCooperationAuthority, HasFollowUpDate {
   public service!: ForeignCountriesProjectsService;
-  public followUpService: FollowupDateService = FactoryService.getService('FollowupDateService');
   constructor() {
     super();
     this.service = FactoryService.getService(
       'ForeignCountriesProjectsService'
     );
   }
-  nPOList!: number[];
-  followUpDate!: string | IMyDateModel;
   requestType!: number;
   caseType: number = CaseTypes.FOREIGN_COUNTRIES_PROJECTS;
   externalCooperationAuthority!: number;
@@ -49,7 +45,12 @@ export class ForeignCountriesProjects extends _RequestType<ForeignCountriesProje
   description!: string;
   recommendation!: string;
   subject!: string;
-  entityClassification!: string;
+
+  // for approval popup
+  nPOList!: number[];
+  followUpDate!: string | IMyDateModel;
+  customTerms!: string;
+  publicTerms!: string;
 
 
   getExternalCooperationAuthority(): number {
@@ -70,16 +71,14 @@ export class ForeignCountriesProjects extends _RequestType<ForeignCountriesProje
   buildForm(withControls: boolean): IKeyValue {
     const {
       requestType,
-      organizationId,
       oldLicenseFullSerial,
       externalCooperationAuthority,
+      organizationId,
       country,
       justification,
       classDescription,
       recommendation,
-      needSubject,
-      entityClassification,
-      nPOList
+      needSubject
     } = this;
     return {
       oldLicenseFullSerial: withControls ? [oldLicenseFullSerial] : oldLicenseFullSerial,
@@ -90,13 +89,28 @@ export class ForeignCountriesProjects extends _RequestType<ForeignCountriesProje
       needSubject: withControls ? [needSubject, [CustomValidators.required, CustomValidators.maxLength(300)]] : needSubject,
       classDescription: withControls ? [classDescription, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : classDescription,
       justification: withControls ? [justification, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : justification,
-      recommendation: withControls ? [recommendation, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : recommendation,
-      nPOList: withControls ? [nPOList] : nPOList,
-      entityClassification
+      recommendation: withControls ? [recommendation, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : recommendation
     };
   }
 
+  buildApprovalForm(withControls: boolean = false): any {
+    const {
+      followUpDate,
+      nPOList,
+      publicTerms,
+      customTerms,
+    } = this;
+    return {
+      followUpDate: withControls ? [followUpDate, [CustomValidators.required]] : followUpDate,
+      nPOList: withControls ? [nPOList] : nPOList,
+      publicTerms: withControls ? [publicTerms] : publicTerms,
+      customTerms: withControls ? [customTerms] : customTerms
+    }
+  }
+  approve(): DialogRef {
+    return this.service.finalApproveTask(this, WFResponseType.APPROVE);
+  }
   finalApprove(): DialogRef {
-    return this.followUpService.finalApproveTask(this, WFResponseType.FINAL_APPROVE);
+    return this.service.finalApproveTask(this, WFResponseType.FINAL_APPROVE);
   }
 }

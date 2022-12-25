@@ -55,7 +55,6 @@ export class UserSubTeamService extends CrudGenericService<UserSubTeam> {
     return this.http.get<UserSubTeam[]>(this.urlService.URLS.USER_SUB_TEAM + '/user/' + generalUserId)
   }
 
-
   @HasInterception
   createUserSubTeam(@InterceptParam() userTeam: Partial<UserSubTeam>): Observable<number> {
     return this.http.post<IDefaultResponse<number>>(this.urlService.URLS.USER_SUB_TEAM, userTeam)

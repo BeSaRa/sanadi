@@ -47,5 +47,6 @@ export enum WFResponseType {
   AWARENESS_ACTIVITY_SUGGESTION_SEND_TO_MULTI_DEPARTMENTS = 'ask:ReviewAwarenessActivitySuggestion',
   CHARITY_ORGANIZATION_UPDATE_SEND_TO_MULTI_DEPARTMENTS = 'ask:ReviewCharityOrganizationRequest',
   ORGANIZATION_FINAL_APPROVE = 'orgFinalApprove',
-  ORGANIZATION_FINAL_REJECT = 'orgFinalReject'
+  ORGANIZATION_FINAL_REJECT = 'orgFinalReject',
+  FOREIGN_COUNTRIES_PROJECTS_LICENSING_SEND_TO_MULTI_DEPARTMENTS = 'ask:ReviewForeignCountriesProjectsLicensing'
 }

@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { WFResponseType } from '@app/enums/wfresponse-type.enum';
-import { ForeignCountriesProjects } from '@app/models/foreign-countries-projects';
 import { FollowupDateApprovePopupComponent } from '@app/modules/general-services/popups/follow-up-date-approve-popup/follow-up-date-approve-popup.component';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { FollowUpDateModels } from '@app/types/types';

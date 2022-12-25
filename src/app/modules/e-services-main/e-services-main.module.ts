@@ -4,7 +4,6 @@ import { FormlySelectFieldComponent } from './../../services-search/components/f
 import { FormlyDateFieldComponent } from './../../services-search/components/formly-date-field/formly-date-field.component';
 import { FormlyModule } from '@ngx-formly/core';
 import { FormlyBootstrapModule } from '@ngx-formly/bootstrap';
-import { DynamicTemplatesComponent } from './shared/dynamic-templates/dynamic-templates.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from '@app/shared/shared.module';
@@ -15,8 +14,6 @@ import {
 import { SelectTemplatePopupComponent } from '@app/modules/e-services-main/popups/select-template-popup/select-template-popup.component';
 import { SelectedLicenseTableComponent } from '@app/modules/e-services-main/shared/selected-license-table/selected-license-table.component';
 import { BankAccountComponent } from './shared/bank-account/bank-account.component';
-import { EmployeeFormPopupComponent } from '@app/modules/e-services-main/popups/employee-form-popup/employee-form-popup.component';
-import { EmployeesDataComponent } from './shared/employees-data/employees-data.component';
 import { ProjectNeedsComponent } from './shared/project-needs/project-needs.component';
 import { BuildingAbilityComponent } from './shared/building-ability/building-ability.component';
 import { EffectiveCoordinationCapabilitiesComponent } from './shared/effective-coordination-capabilities/effective-coordination-capabilities.component';
@@ -25,6 +22,7 @@ import { OrganizationOfficerComponent } from './shared/organization-officer/orga
 import { ResearchAndStudiesComponent } from './shared/research-and-studies/research-and-studies.component';
 import { ParticipantOrganizationsPopupComponent } from './popups/participant-organizations-popup/participant-organizations-popup.component';
 import { WorkAreasComponent } from '../general-services/shared/work-areas/work-areas.component';
+import { DynamicTemplatesComponent } from './shared/dynamic-templates/dynamic-templates.component';
 
 @NgModule({
   declarations: [
@@ -35,17 +33,15 @@ import { WorkAreasComponent } from '../general-services/shared/work-areas/work-a
     SelectTemplatePopupComponent,
     SelectedLicenseTableComponent,
     BankAccountComponent,
-    EmployeesDataComponent,
-    EmployeeFormPopupComponent,
     ProjectNeedsComponent,
     BuildingAbilityComponent,
     EffectiveCoordinationCapabilitiesComponent,
+    DynamicTemplatesComponent,
     ParticipantOrganizationComponent,
     OrganizationOfficerComponent,
     ResearchAndStudiesComponent,
     ParticipantOrganizationsPopupComponent,
     WorkAreasComponent,
-    DynamicTemplatesComponent,
   ],
   imports: [
     CommonModule,
@@ -68,17 +64,15 @@ import { WorkAreasComponent } from '../general-services/shared/work-areas/work-a
     SharedModule,
     SelectedLicenseTableComponent,
     BankAccountComponent,
-    EmployeeFormPopupComponent,
-    EmployeesDataComponent,
     ProjectNeedsComponent,
     BuildingAbilityComponent,
     EffectiveCoordinationCapabilitiesComponent,
     ParticipantOrganizationComponent,
+    DynamicTemplatesComponent,
     OrganizationOfficerComponent,
     ResearchAndStudiesComponent,
     ParticipantOrganizationsPopupComponent,
     WorkAreasComponent,
-    DynamicTemplatesComponent
   ]
 })
 export class EServicesMainModule {

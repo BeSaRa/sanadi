@@ -1,30 +1,33 @@
-import {AfterViewInit, ChangeDetectorRef, Component, QueryList, TemplateRef, ViewChild, ViewChildren,} from '@angular/core';
-import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {SaveTypes} from '@app/enums/save-types';
-import {CollectionRequestType} from '@app/enums/service-request-types';
-import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
-import {CommonUtils} from '@app/helpers/common-utils';
-import {IKeyValue} from '@app/interfaces/i-key-value';
-import {Country} from '@app/models/country';
-import {ForeignCountriesProjects} from '@app/models/foreign-countries-projects';
-import {ForeignCountriesProjectsResult} from '@app/models/foreign-countries-projects-results';
-import {ForeignCountriesProjectsSearchCriteria} from '@app/models/foreign-countries-projects-seach-criteria';
-import {Lookup} from '@app/models/lookup';
-import {ProjectNeedsComponent} from '@app/modules/e-services-main/shared/project-needs/project-needs.component';
-import {CountryService} from '@app/services/country.service';
-import {DialogService} from '@app/services/dialog.service';
-import {ForeignCountriesProjectsService} from '@app/services/foreign-countries-projects.service';
-import {LangService} from '@app/services/lang.service';
-import {LicenseService} from '@app/services/license.service';
-import {LookupService} from '@app/services/lookup.service';
-import {ToastService} from '@app/services/toast.service';
-import {ReadinessStatus} from '@app/types/types';
-import {Observable, of, Subject} from 'rxjs';
-import {catchError, exhaustMap, filter, map, share, switchMap, takeUntil, tap,} from 'rxjs/operators';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {ProfileService} from '@app/services/profile.service';
-import {Profile} from '@app/models/profile';
+import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
+import { OpenFrom } from '@app/enums/open-from.enum';
+import { EmployeeService } from './../../../../services/employee.service';
+import { AfterViewInit, ChangeDetectorRef, Component, QueryList, TemplateRef, ViewChild, ViewChildren, } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { SaveTypes } from '@app/enums/save-types';
+import { CollectionRequestType } from '@app/enums/service-request-types';
+import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { IKeyValue } from '@app/interfaces/i-key-value';
+import { Country } from '@app/models/country';
+import { ForeignCountriesProjects } from '@app/models/foreign-countries-projects';
+import { ForeignCountriesProjectsResult } from '@app/models/foreign-countries-projects-results';
+import { ForeignCountriesProjectsSearchCriteria } from '@app/models/foreign-countries-projects-seach-criteria';
+import { Lookup } from '@app/models/lookup';
+import { ProjectNeedsComponent } from '@app/modules/e-services-main/shared/project-needs/project-needs.component';
+import { CountryService } from '@app/services/country.service';
+import { DialogService } from '@app/services/dialog.service';
+import { ForeignCountriesProjectsService } from '@app/services/foreign-countries-projects.service';
+import { LangService } from '@app/services/lang.service';
+import { LicenseService } from '@app/services/license.service';
+import { LookupService } from '@app/services/lookup.service';
+import { ToastService } from '@app/services/toast.service';
+import { ReadinessStatus } from '@app/types/types';
+import { Observable, of, Subject } from 'rxjs';
+import { catchError, exhaustMap, filter, map, share, switchMap, takeUntil, tap, } from 'rxjs/operators';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { ProfileService } from '@app/services/profile.service';
+import { Profile } from '@app/models/profile';
 
 @Component({
   selector: 'app-foreign-countries-projects',
@@ -38,7 +41,6 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
   requestTypes: Lookup[] = this.lookupService.listByCategory.CollectionRequestType?.sort((a, b) => a.lookupKey - b.lookupKey);
   externalCooperations$ = this.profileService.getInternationalCooperation();
   organizationsList: Profile[] = [];
-  npos$ = this.profileService.getCharitiesNpoInstitutions();
   licenseSearch$: Subject<string> = new Subject<string>();
   countries$: Observable<Country[]> = this.countryService.loadAsLookups()
     .pipe(takeUntil(this.destroy$), share());
@@ -47,24 +49,60 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
   projectNeedsTabStatus: ReadinessStatus = 'READY';
 
 
-  @ViewChildren('tabContent', {read: TemplateRef})
+  @ViewChildren('tabContent', { read: TemplateRef })
   tabsTemplates!: QueryList<TemplateRef<any>>;
 
   @ViewChild(ProjectNeedsComponent) projectNeedsComponentRef!: ProjectNeedsComponent;
 
   constructor(public lang: LangService,
-              public fb: UntypedFormBuilder,
-              public service: ForeignCountriesProjectsService,
-              private lookupService: LookupService,
-              private countryService: CountryService,
-              private dialog: DialogService,
-              private licenseService: LicenseService,
-              private cd: ChangeDetectorRef,
-              private toast: ToastService,
-              private profileService: ProfileService) {
+    public fb: UntypedFormBuilder,
+    public service: ForeignCountriesProjectsService,
+    private lookupService: LookupService,
+    private countryService: CountryService,
+    private dialog: DialogService,
+    private licenseService: LicenseService,
+    private cd: ChangeDetectorRef,
+    private employeeService: EmployeeService,
+    private toast: ToastService,
+    private profileService: ProfileService) {
     super();
   }
 
+  handleReadonly(): void {
+    // if record is new, no readonly (don't change as default is readonly = false)
+    if (!this.model?.id) {
+      return;
+    }
+
+    let caseStatus = this.model.getCaseStatus();
+    if (caseStatus == CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.FINAL_REJECTION) {
+      this.readonly = true;
+      return;
+    }
+    if (this.openFrom === OpenFrom.USER_INBOX) {
+      if (this.employeeService.isCharityManager()) {
+        this.readonly = false;
+      } else if (this.employeeService.isCharityUser()) {
+        this.readonly = !this.model.isReturned();
+      } else if (this.employeeService.isLicensingUser() && this.employeeService.getCurrentUser().generalUserId == this.model.creatorInfo.id) {
+        this.readonly = !this.model.isReturned();
+      }
+    } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
+      // after claim, consider it same as user inbox and use same condition
+      if (this.model.taskDetails.isClaimed()) {
+        if (this.employeeService.isCharityManager()) {
+          this.readonly = false;
+        } else if (this.employeeService.isCharityUser()) {
+          this.readonly = !this.model.isReturned();
+        }
+      }
+    } else if (this.openFrom === OpenFrom.SEARCH) {
+      // if saved as draft, then no readonly
+      if (this.model?.canCommit()) {
+        this.readonly = false;
+      }
+    }
+  }
   ngAfterViewInit(): void {
     const tabsTemplates = this.tabsTemplates.toArray();
     setTimeout(() => {
@@ -99,44 +137,6 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
 
       this.cd.detectChanges();
     }, 0);
-  }
-
-  get isEditOrCancel(): boolean {
-    return this.isEditRequestType || this.isCancelRequestType;
-  }
-
-  get isEditRequestType(): boolean {
-    return (
-      this.requestTypeField.value &&
-      this.requestTypeField.value === CollectionRequestType.UPDATE
-    );
-  }
-
-  get isCancelRequestType(): boolean {
-    return (
-      this.requestTypeField.value &&
-      this.requestTypeField.value === CollectionRequestType.CANCEL
-    );
-  }
-
-  get isEditAllowed(): boolean {
-    return !this.model?.id || (!!this.model?.id && this.model.canCommit());
-  }
-
-  get basicInfo(): UntypedFormGroup {
-    return this.form.get('basicInfo') as UntypedFormGroup;
-  }
-
-  get requestTypeField(): UntypedFormControl {
-    return this.basicInfo?.get('requestType') as UntypedFormControl;
-  }
-
-  get oldLicenseFullSerialField(): UntypedFormControl {
-    return this.basicInfo?.get('oldLicenseFullSerial') as UntypedFormControl;
-  }
-
-  get specialExplanation(): UntypedFormGroup {
-    return this.form.get('explanation')! as UntypedFormGroup;
   }
 
   licenseSearch($event?: Event): void {
@@ -185,7 +185,7 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
                   if (!data) {
                     return of(null);
                   }
-                  return {selected: licenses[0], details: data};
+                  return { selected: licenses[0], details: data };
                 }),
                 catchError(() => {
                   return of(null);
@@ -241,8 +241,10 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
     result.description = licenseDetails.description;
     result.country = licenseDetails.country;
     result.description = licenseDetails.description;
+    result.organizationId = licenseDetails.organizationId;
 
     this._updateForm(new ForeignCountriesProjects().clone(result));
+    this.handleReadonly();
   }
 
   handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
@@ -251,16 +253,17 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
         takeUntil(this.destroy$),
         switchMap(() => this.confirmChangeRequestType(userInteraction))
       ).subscribe((clickOn: UserClickOn) => {
-      if (clickOn === UserClickOn.YES) {
-        if (userInteraction) {
-          this.resetForm$.next();
-          this.requestTypeField.setValue(requestTypeValue);
+        if (clickOn === UserClickOn.YES) {
+          if (userInteraction) {
+            this.resetForm$.next();
+            this.requestTypeField.setValue(requestTypeValue);
+            this.handleReadonly();
+          }
+          this.requestType$.next(requestTypeValue);
+        } else {
+          this.requestTypeField.setValue(this.requestType$.value);
         }
-        this.requestType$.next(requestTypeValue);
-      } else {
-        this.requestTypeField.setValue(this.requestType$.value);
-      }
-    });
+      });
   }
 
   getTabInvalidStatus(i: number): boolean {
@@ -276,6 +279,7 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
 
   _initComponent(): void {
     this._loadProfiles();
+    this.handleReadonly();
     this.listenToLicenseSearch();
   }
 
@@ -293,6 +297,8 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
   }
 
   _afterBuildForm(): void {
+    this.handleReadonly();
+    this.organizationIdFeild.setValue(this.employeeService.getProfile()?.id);
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
@@ -348,7 +354,7 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
       (operation === OperationTypes.CREATE && saveType === SaveTypes.FINAL) ||
       (operation === OperationTypes.UPDATE && saveType === SaveTypes.COMMIT)
     ) {
-      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({serial: model.fullSerial}));
+      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({ serial: model.fullSerial }));
     } else {
       this.toast.success(this.lang.map.request_has_been_saved_successfully);
     }
@@ -377,5 +383,48 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
     this.form.reset();
     this.model = this._getNewInstance();
     this.operation = OperationTypes.CREATE;
+  }
+
+  get criticalOnTask() {
+    return !!this.model?.id;
+  }
+
+  get isEditOrCancel(): boolean {
+    return this.isEditRequestType || this.isCancelRequestType;
+  }
+
+  get isEditRequestType(): boolean {
+    return (
+      this.requestTypeField.value &&
+      this.requestTypeField.value === CollectionRequestType.UPDATE
+    );
+  }
+
+  get isCancelRequestType(): boolean {
+    return (
+      this.requestTypeField.value &&
+      this.requestTypeField.value === CollectionRequestType.CANCEL
+    );
+  }
+
+  get basicInfo(): UntypedFormGroup {
+    return this.form.get('basicInfo') as UntypedFormGroup;
+  }
+
+  get requestTypeField(): UntypedFormControl {
+    return this.basicInfo?.get('requestType') as UntypedFormControl;
+  }
+
+  get oldLicenseFullSerialField(): UntypedFormControl {
+    return this.basicInfo?.get('oldLicenseFullSerial') as UntypedFormControl;
+  }
+  get organizationIdFeild(): UntypedFormControl {
+    return this.basicInfo?.get('organizationId')! as UntypedFormControl;
+  }
+  get specialExplanation(): UntypedFormGroup {
+    return this.form.get('explanation')! as UntypedFormGroup;
+  }
+  get isExternalUser() {
+    return this.employeeService.isExternalUser();
   }
 }

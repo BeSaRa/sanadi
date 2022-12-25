@@ -54,7 +54,7 @@ export class NpoContactOfficerComponent implements OnInit, OnDestroy {
   form!: UntypedFormGroup;
 
   ngOnInit(): void {
-    this._jb.loadAsLookups().subscribe((data) => {
+    this._jb.loadActive().subscribe((data) => {
       this.jobTitleAdminLookup = data;
     })
     this._handleInitData();

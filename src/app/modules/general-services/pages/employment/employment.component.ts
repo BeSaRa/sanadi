@@ -27,10 +27,10 @@ import { LookupService } from '@app/services/lookup.service';
 import { LangService } from '@app/services/lang.service';
 import { EmploymentCategory } from '@app/enums/employment-category.enum';
 import { AdminResult } from '@app/models/admin-result';
-import { EmployeesDataComponent } from '@app/modules/e-services-main/shared/employees-data/employees-data.component';
 import { catchError, exhaustMap, filter, map, switchMap, takeUntil, tap } from "rxjs/operators";
 import { Employment } from '@app/models/employment';
 import { EmploymentService } from '@app/services/employment.service';
+import { EmployeesDataComponent } from '../../shared/employees-data/employees-data.component';
 
 @Component({
   templateUrl: "./employment.component.html",

@@ -1,16 +1,16 @@
-import {CoordinationWithOrganizationsRequest} from '@app/models/coordination-with-organizations-request';
+import { CoordinationWithOrganizationsRequest } from '@app/models/coordination-with-organizations-request';
 import {
   IGeneralAssociationMeetingAttendanceSpecialActions
 } from '@contracts/i-general-association-meeting-attendance-special-actions';
-import {IGeneralAssociationMeetingAttendanceApprove} from '@contracts/i-general-association-meeting-attendance-approve';
+import { IGeneralAssociationMeetingAttendanceApprove } from '@contracts/i-general-association-meeting-attendance-approve';
 import {
   IGeneralAssociationMeetingAttendanceComponent
 } from '@contracts/i-general-association-meeting-attendance-component';
 import {
   IGeneralAssociationMeetingAttendanceComplete
 } from '@contracts/i-general-association-meeting-attendance-complete';
-import {ITransferFundsAbroadComponent} from '@contracts/i-transfer-funds-abroad-component';
-import {ITransferIndividualFundsAbroadComplete} from '@contracts/i-transfer-individual-funds-abroad-complete';
+import { ITransferFundsAbroadComponent } from '@contracts/i-transfer-funds-abroad-component';
+import { ITransferIndividualFundsAbroadComplete } from '@contracts/i-transfer-individual-funds-abroad-complete';
 import {
   AfterViewInit,
   ApplicationRef,
@@ -23,35 +23,35 @@ import {
   ViewChild,
   ViewContainerRef
 } from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {DynamicComponentService} from '@app/services/dynamic-component.service';
-import {EmployeeService} from '@app/services/employee.service';
-import {LangService} from '@app/services/lang.service';
-import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
-import {CaseModel} from '@app/models/case-model';
-import {OpenFrom} from '@app/enums/open-from.enum';
-import {IOpenedInfo} from '@app/interfaces/i-opened-info';
-import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import {WFResponseType} from '@app/enums/wfresponse-type.enum';
-import {WFActions} from '@app/enums/wfactions.enum';
-import {CaseTypes} from '@app/enums/case-types.enum';
-import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {ToastService} from '@app/services/toast.service';
-import {InboxService} from '@app/services/inbox.service';
-import {isObservable, merge, Observable, of, Subject} from 'rxjs';
-import {filter, startWith, switchMap, takeUntil, tap} from 'rxjs/operators';
-import {TabComponent} from '@app/shared/components/tab/tab.component';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {SaveTypes} from '@app/enums/save-types';
-import {IESComponent} from '@app/interfaces/iescomponent';
-import {ExternalUser} from '@app/models/external-user';
-import {InternalUser} from '@app/models/internal-user';
-import {ChecklistItem} from '@app/models/checklist-item';
-import {StepCheckListComponent} from '@app/shared/components/step-check-list/step-check-list.component';
-import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
-import {ActionIconsEnum} from '@app/enums/action-icons-enum';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {BaseGenericEService} from '@app/generics/base-generic-e-service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { DynamicComponentService } from '@app/services/dynamic-component.service';
+import { EmployeeService } from '@app/services/employee.service';
+import { LangService } from '@app/services/lang.service';
+import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
+import { CaseModel } from '@app/models/case-model';
+import { OpenFrom } from '@app/enums/open-from.enum';
+import { IOpenedInfo } from '@app/interfaces/i-opened-info';
+import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { WFResponseType } from '@app/enums/wfresponse-type.enum';
+import { WFActions } from '@app/enums/wfactions.enum';
+import { CaseTypes } from '@app/enums/case-types.enum';
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
+import { ToastService } from '@app/services/toast.service';
+import { InboxService } from '@app/services/inbox.service';
+import { isObservable, merge, Observable, of, Subject } from 'rxjs';
+import { filter, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { TabComponent } from '@app/shared/components/tab/tab.component';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { SaveTypes } from '@app/enums/save-types';
+import { IESComponent } from '@app/interfaces/iescomponent';
+import { ExternalUser } from '@app/models/external-user';
+import { InternalUser } from '@app/models/internal-user';
+import { ChecklistItem } from '@app/models/checklist-item';
+import { StepCheckListComponent } from '@app/shared/components/step-check-list/step-check-list.component';
+import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
+import { ActionIconsEnum } from '@app/enums/action-icons-enum';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { BaseGenericEService } from '@app/generics/base-generic-e-service';
 import {
   IGeneralAssociationMeetingAttendanceFinalApprove
 } from '@contracts/i-general-association-meeting-attendance-final-approve';
@@ -66,13 +66,13 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
 
 
   constructor(private route: ActivatedRoute,
-              private injector: Injector,
-              private employeeService: EmployeeService,
-              public lang: LangService,
-              private router: Router,
-              private toast: ToastService,
-              private appRef: ApplicationRef,
-              private inboxService: InboxService) {
+    private injector: Injector,
+    private employeeService: EmployeeService,
+    public lang: LangService,
+    private router: Router,
+    private toast: ToastService,
+    private appRef: ApplicationRef,
+    private inboxService: InboxService) {
     this.render = this.route.snapshot.data.render as string;
     if (!this.render) {
       throw Error(`Please Provide render property in this route ${route.snapshot.url}`);
@@ -86,10 +86,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
 
   private readonly render: string;
   private componentRef!: ComponentRef<EServicesGenericComponent<CaseModel<any, any>, BaseGenericEService<any>>>;
-  @ViewChild('internalContainer', {read: ViewContainerRef})
+  @ViewChild('internalContainer', { read: ViewContainerRef })
   internalContainer!: ViewContainerRef;
 
-  @ViewChild('externalContainer', {read: ViewContainerRef})
+  @ViewChild('externalContainer', { read: ViewContainerRef })
   externalContainer!: ViewContainerRef;
 
   @ViewChild(StepCheckListComponent)
@@ -506,7 +506,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
             if (item.isApproved && this.internal) return false;
             return !item.isInitialApproved() || !this.internal;
           }
-          if (item.caseType === CaseTypes.NPO_MANAGEMENT) {
+          if (item.caseType === CaseTypes.NPO_MANAGEMENT || item.caseType === CaseTypes.FOREIGN_COUNTRIES_PROJECTS) {
             return !this.internal || this.employeeService.getCurrentUser().generalUserId == this.model?.creatorInfo.id;
           }
           // show if external user or service which are only for internal user
@@ -569,6 +569,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
             || item.getResponses().includes(WFResponseType.AWARENESS_ACTIVITY_SUGGESTION_SEND_TO_MULTI_DEPARTMENTS)
             || item.getResponses().includes(WFResponseType.CHARITY_ORGANIZATION_UPDATE_SEND_TO_MULTI_DEPARTMENTS)
             || item.getResponses().includes(WFResponseType.REVIEW_NPO_MANAGEMENT)
+            || item.getResponses().includes(WFResponseType.FOREIGN_COUNTRIES_PROJECTS_LICENSING_SEND_TO_MULTI_DEPARTMENTS)
             || item.getResponses().includes(WFResponseType.PROJECT_FUNDRAISING_SEND_TO_DEPARTMENTS)
         },
         onClick: (item: CaseModel<any, any>) => {

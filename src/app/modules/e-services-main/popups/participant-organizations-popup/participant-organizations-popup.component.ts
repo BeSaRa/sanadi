@@ -1,5 +1,4 @@
 import { CoordinationWithOrganizationsRequest } from './../../../../models/coordination-with-organizations-request';
-import { CoordinationTypes } from './../../../../enums/coordination-types-enum';
 import { DialogService } from '@app/services/dialog.service';
 import { CoordinationWithOrganizationsRequestService } from '@app/services/coordination-with-organizations-request.service';
 import { Component, Inject, OnInit } from '@angular/core';

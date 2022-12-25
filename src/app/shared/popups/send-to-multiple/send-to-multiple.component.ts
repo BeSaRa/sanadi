@@ -1,3 +1,4 @@
+import { AdminstrationDepartmentCodes } from './../../../enums/department-code.enum';
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {InboxService} from '@app/services/inbox.service';
@@ -63,8 +64,19 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
   title: keyof ILanguageKeys = {} as keyof ILanguageKeys;
   maxSelectionCount!: number;
   internalBankAccountApprovalDepartments = [InternalBankAccountApprovalReviewDepartments.LEGAL_AFFAIRS,
-    InternalBankAccountApprovalReviewDepartments.RISK_AND_COMPLIANCE,
-    InternalBankAccountApprovalReviewDepartments.SUPERVISION_AND_CONTROL];
+  InternalBankAccountApprovalReviewDepartments.RISK_AND_COMPLIANCE,
+  InternalBankAccountApprovalReviewDepartments.SUPERVISION_AND_CONTROL];
+  ForeignCountiesProjectsApprovalDepartments = [
+    AdminstrationDepartmentCodes.RC,
+    AdminstrationDepartmentCodes.LCN,
+    AdminstrationDepartmentCodes.SVC
+  ]
+  NPOManagmentApprovalDepartments = [
+    AdminstrationDepartmentCodes.RC,
+    AdminstrationDepartmentCodes.LCN,
+    AdminstrationDepartmentCodes.LA,
+    AdminstrationDepartmentCodes.SVC
+  ]
 
   multiSendToDepartmentWFResponseList = [
     WFResponseType.INTERNAL_PROJECT_SEND_TO_MULTI_DEPARTMENTS,
@@ -74,6 +86,7 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
     WFResponseType.AWARENESS_ACTIVITY_SUGGESTION_SEND_TO_MULTI_DEPARTMENTS,
     WFResponseType.CHARITY_ORGANIZATION_UPDATE_SEND_TO_MULTI_DEPARTMENTS,
     WFResponseType.REVIEW_NPO_MANAGEMENT,
+    WFResponseType.FOREIGN_COUNTRIES_PROJECTS_LICENSING_SEND_TO_MULTI_DEPARTMENTS,
     WFResponseType.PROJECT_FUNDRAISING_SEND_TO_DEPARTMENTS
   ];
   multiSendToUserWFResponseList = [
@@ -98,6 +111,10 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
       this.title = 'send_to_multi_departments';
       if (this.data.sendToResponse === WFResponseType.INTERNAL_BANK_ACCOUNT_APPROVAL_SEND_TO_MULTI_DEPARTMENTS) {
         this.loadInternalBankAccountApprovalDepartments();
+      } else if (this.data.sendToResponse === WFResponseType.FOREIGN_COUNTRIES_PROJECTS_LICENSING_SEND_TO_MULTI_DEPARTMENTS) {
+        this.loadForeignCountiesProjectsApprovalDepartments();
+      } else if (this.data.sendToResponse === WFResponseType.REVIEW_NPO_MANAGEMENT) {
+        this.loadNPOManagmentApprovalDepartments()
       } else {
         this.loadDepartments();
       }
@@ -216,6 +233,19 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(deps => this.departments = deps.filter(dep => this.internalBankAccountApprovalDepartments.includes(dep.mainTeam.authName as InternalBankAccountApprovalReviewDepartments)));
   }
+
+  loadForeignCountiesProjectsApprovalDepartments(): void {
+    this.intDepService.loadAsLookups()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(deps => this.departments = deps.filter(dep => this.ForeignCountiesProjectsApprovalDepartments.includes(dep.code as AdminstrationDepartmentCodes)));
+  }
+
+  loadNPOManagmentApprovalDepartments(): void {
+    this.intDepService.loadAsLookups()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(deps => this.departments = deps.filter(dep => this.NPOManagmentApprovalDepartments.includes(dep.code as AdminstrationDepartmentCodes)));
+  }
+
 
   loadUsersByTeamLookup(teamLookupKey: number): void {
     this.teamService
