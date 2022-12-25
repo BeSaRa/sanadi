@@ -1,8 +1,8 @@
+import { DynamicModelService } from './../../../../services/dynamic-models.service';
+import { ProcessFieldBuilder } from './../../../../administration/popups/general-process-popup/process-formly-components/process-fields-builder';
+import { CoordinationWithOrganizationTemplate } from './../../../../models/corrdination-with-organization-template';
 import { DateUtils } from '@app/helpers/date-utils';
 import { DynamicModel } from '@app/models/dynamic-model';
-import { ProcessFieldBuilder } from './../../../../administration/popups/general-process-popup/process-formly-components/process-fields-builder';
-import { DynamicModelService } from './../../../../services/dynamic-models.service';
-import { CoordinationWithOrganizationTemplate } from './../../../../models/corrdination-with-organization-template';
 import {
   Component, Input,
   OnInit

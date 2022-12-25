@@ -19,11 +19,9 @@ import {DialogService} from './dialog.service';
 import {DynamicOptionsService} from './dynamic-options.service';
 import {UrlService} from './url.service';
 import {
-  EmployeeFormPopupComponent
-} from '@app/modules/e-services-main/popups/employee-form-popup/employee-form-popup.component';
-import {
   EmploymentApproveComponent
 } from '@app/modules/general-services/popups/employment-approve/employment-approve.component';
+import { EmployeeFormPopupComponent } from '@app/modules/general-services/popups/employee-form-popup/employee-form-popup.component';
 
 const Empinterceptor = new EmployeeInterceptor();
 
