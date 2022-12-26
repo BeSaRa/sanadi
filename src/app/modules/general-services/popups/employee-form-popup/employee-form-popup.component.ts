@@ -1,3 +1,5 @@
+import { AdminLookupService } from '@services/admin-lookup.service';
+import { AdminLookup } from './../../../../models/admin-lookup';
 import { AdminResult } from './../../../../models/admin-result';
 import { CommonService } from './../../../../services/common.service';
 import { EmployeeService } from '@app/services/employee.service';
@@ -26,6 +28,7 @@ import { ContractLocationTypes } from '@app/enums/contract-location-types.enum';
 import { EmploymentCategory } from '@app/enums/employment-category.enum';
 import { EmployeesDataComponent } from '../../shared/employees-data/employees-data.component';
 import { ImplementingAgencyTypes } from '@app/enums/implementing-agency-types.enum';
+import { AdminLookupTypeEnum } from '@app/enums/admin-lookup-type-enum';
 
 @Component({
   selector: "app-employee-form-popup",
@@ -39,7 +42,7 @@ export class EmployeeFormPopupComponent implements OnInit {
   employeesList: Partial<Employee>[] = [];
   JobTitleList: JobTitle[] = [];
   implementingAgencyList: AdminResult[] = [];
-  functionalGroupsList: any[] = []; // fill it from controller
+  functionalGroupsList: AdminLookup[] = [];
   skipConfirmUnsavedChanges: boolean = false;
   datepickerOptionsMap: DatepickerOptionsMap = {
     contractExpiryDate: DateUtils.getDatepickerOptions({
@@ -118,6 +121,7 @@ export class EmployeeFormPopupComponent implements OnInit {
     private dialog: DialogService,
     private lookupService: LookupService,
     private employeeService: EmployeeService,
+    private adminLookupService: AdminLookupService,
     private commonService: CommonService,
     @Inject(DIALOG_DATA_TOKEN)
     public data: {
@@ -133,6 +137,9 @@ export class EmployeeFormPopupComponent implements OnInit {
   ngOnInit() {
     this._buildForm();
     // this.loadImplementingAgenciesByAgencyType();
+    this.adminLookupService.loadAsLookups(AdminLookupTypeEnum.FUNCTIONAL_GROUP).subscribe((data) => {
+      this.functionalGroupsList = data;
+    })
     this.JobTitleList = this.data.jobTitleList;
   }
 
