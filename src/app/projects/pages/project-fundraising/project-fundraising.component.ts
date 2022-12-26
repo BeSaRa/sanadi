@@ -516,7 +516,9 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     this.mainUNOCHACategories = list.filter(item => item.type === DomainTypes.HUMANITARIAN)
   }
 
-  private loadSubDacOchaByParentId(parentId: number): void {
+  private loadSubDacOchaByParentId(parentId: number | null): void {
+    if (!parentId)
+      return;
     this.dacOchaService.loadByParentId(parentId)
       .pipe(takeUntil(this.destroy$))
       .subscribe((list) => {
@@ -527,7 +529,6 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   private listenToMainDacOchaChanges() {
     merge(this.mainDACCategory.valueChanges, this.mainUNOCHACategory.valueChanges)
       .pipe(takeUntil(this.destroy$))
-      .pipe(filter(value => !!value))
       .subscribe((value: number) => {
         this.subDACCategory.setValue(null)
         this.subUNOCHACategory.setValue(null)
