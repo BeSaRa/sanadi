@@ -12,6 +12,8 @@ const userSecurityConfigurationInterceptor = new UserSecurityConfigurationInterc
 export class ExternalUserUpdateRequestInterceptor implements IModelInterceptor<ExternalUserUpdateRequest> {
   receive(model: ExternalUserUpdateRequest): ExternalUserUpdateRequest {
     model.updatedOnString = DateUtils.getDateStringFromDate(model.updatedOn, 'DEFAULT_DATE_FORMAT');
+    model.statusInfo && (model.statusInfo = AdminResult.createInstance(model.statusInfo));
+    model.userTypeInfo && (model.userTypeInfo = AdminResult.createInstance(model.userTypeInfo));
     model.requestStatusInfo && (model.requestStatusInfo = AdminResult.createInstance(model.requestStatusInfo));
     model.customRoleInfo && (model.customRoleInfo = AdminResult.createInstance(model.customRoleInfo));
     model.jobTitleInfo && (model.jobTitleInfo = AdminResult.createInstance(model.jobTitleInfo));

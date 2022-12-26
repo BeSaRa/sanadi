@@ -183,9 +183,12 @@
     </ng-template>
   </form>
   <ng-template #serviceTab>
-    <user-security #userSecurityComponent [operation]="operation" [readonly]="readonly" [model]="model"
+    <!--<user-security #userSecurityComponent [operation]="operation" [readonly]="readonly" [model]="model"
                    [userUpdateRequest]="userUpdateRequest"
-                   [profileId]="profileControl?.value"></user-security>
+                   [profileId]="profileControl?.value"></user-security>-->
+    <user-security-external #userSecurityComponent [operation]="operation" [readonly]="readonly" [model]="model"
+                   [userUpdateRequest]="userUpdateRequest"
+                   [profileId]="profileControl?.value"></user-security-external>
   </ng-template>
 </div>
 <div class="dialog-actions">

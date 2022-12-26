@@ -32,7 +32,7 @@ export class ExternalUserUpdateRequestApprovalComponent extends AdminGenericComp
               private toast: ToastService,
               private profileService: ProfileService,
               private lookupService: LookupService,
-              private empService: EmployeeService) {
+              private employeeService: EmployeeService) {
     super();
   }
 
@@ -139,11 +139,11 @@ export class ExternalUserUpdateRequestApprovalComponent extends AdminGenericComp
 
   editRequest(item: ExternalUserUpdateRequest): void {
     this.service.openUpdateRequestDialog(item)
+      .pipe(switchMap(dialog => dialog.onAfterClose$))
       .subscribe((result) => {
         if (!result) {
           return;
         }
-        this.toast.success(this.lang.map.msg_save_success);
         this.reload$.next(null);
       });
   }
@@ -180,9 +180,9 @@ export class ExternalUserUpdateRequestApprovalComponent extends AdminGenericComp
   }
 
   private _setDefaultProfileId() {
-    const isSubAdmin = this.empService.userRolesManageUser.isSubAdmin();
+    const isSubAdmin = this.employeeService.userRolesManageUser.isSubAdmin();
     if (isSubAdmin) {
-      this.profileIdControl.setValue(this.empService.getProfile()!.id);
+      this.profileIdControl.setValue(this.employeeService.getProfile()!.id);
       this.profileIdControl.disable();
     }
   }

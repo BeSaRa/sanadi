@@ -33,6 +33,7 @@ import {PermissionService} from '@services/permission.service';
 import {UserSecurityConfigurationService} from '@services/user-security-configuration.service';
 import {ServiceDataService} from '@services/service-data.service';
 import {ExternalUserCustomRoleService} from '@services/external-user-custom-role.service';
+import {ExternalUser} from '@app/models/external-user';
 
 @CastResponseContainer({
   $default: {
@@ -172,7 +173,7 @@ export class ExternalUserUpdateRequestService extends CrudWithDialogGenericServi
 
   openUpdateRequestDialog(request: ExternalUserUpdateRequest): Observable<DialogRef> {
     return this.getByIdComposite(request.id)
-      .pipe(exhaustMap((model) => {
+      .pipe(switchMap((model) => {
         return this.externalUserService.openUpdateUserRequest(model);
       }));
   }
@@ -180,7 +181,7 @@ export class ExternalUserUpdateRequestService extends CrudWithDialogGenericServi
   viewChangesDialog(request: ExternalUserUpdateRequest): Observable<DialogRef> {
     return forkJoin({
       userRequest: this.getByIdComposite(request.id),
-      user: this.externalUserService.getByIdComposite(request.externalUserID),
+      user: request.externalUserID ? this.externalUserService.getByIdComposite(request.externalUserID) : of(new ExternalUser()),
       allPermissions: this.permissionService.loadAsLookups(),
       allCustomMenus: this.customMenuService.loadPrivateMenusByUserType(UserTypes.EXTERNAL),
       allServices: this.serviceDataService.loadAsLookups()

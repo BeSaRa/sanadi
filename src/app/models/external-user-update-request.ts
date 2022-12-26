@@ -53,6 +53,8 @@ export class ExternalUserUpdateRequest extends BaseModel<ExternalUserUpdateReque
   customRoleInfo!: AdminResult;
   jobTitleInfo!: AdminResult;
   nationalityInfo!: AdminResult;
+  statusInfo!: AdminResult;
+  userTypeInfo!: AdminResult;
   service!: ExternalUserUpdateRequestService;
   langService!: LangService;
   updatedByInfo!: AdminResult;
@@ -122,23 +124,5 @@ export class ExternalUserUpdateRequest extends BaseModel<ExternalUserUpdateReque
     externalUser.generalUserId = this.generalUserId;
 
     return externalUser;
-
-    /*return externalUser.clone({
-      id: this.externalUserID,
-      generalUserId: this.generalUserId,
-      customRoleId: this.customRoleId,
-      qid: this.qid,
-      profileId: this.profileId,
-      status: this.status,
-      nationality: this.nationality,
-      gender: this.gender,
-      domainName: this.domainName,
-      empNum: this.empNum ? Number(this.empNum) : undefined,
-      phoneNumber: this.phoneNumber,
-      officialPhoneNumber: this.officialPhoneNumber,
-      phoneExtension: this.phoneExtension,
-      email: this.email,
-      jobTitle: this.jobTitle
-    });*/
   }
 }

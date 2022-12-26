@@ -73,29 +73,28 @@ export class ExternalUserUpdateChangesPopupComponent implements OnInit {
     this._getRemovedUserCustomMenus();
   }
 
-  private getAdminResultValue(model: Partial<ExternalUser>, key: keyof ExternalUser) {
+  private getAdminResultValue(key: keyof ExternalUser, isUpdatedValue: boolean) {
     let adminResultValue;
+    const value = isUpdatedValue ? this.model : this.externalUser;
     switch (key) {
       case 'customRoleId':
-        adminResultValue = model.customRoleInfo;
+        adminResultValue = value.customRoleInfo;
         break;
       case 'profileId':
-        adminResultValue = model.profileInfo;
+        adminResultValue = value.profileInfo;
         break;
       case 'status':
-        adminResultValue = model.statusInfo;
+        adminResultValue = value.statusInfo;
         break;
       case 'userType':
-        adminResultValue = model.userTypeInfo;
+        adminResultValue = value.userTypeInfo;
         break;
       case 'jobTitle':
-        adminResultValue = model.jobTitleInfo;
+        adminResultValue = value.jobTitleInfo;
         break;
       default:
-        adminResultValue = AdminResult.createInstance({
-          arName: model[key] as string,
-          enName: model[key] as string
-        });
+        // @ts-ignore
+        adminResultValue = AdminResult.createInstance({arName: value[key] as string, enName: value[key] as string});
     }
     return adminResultValue ?? new AdminResult();
   }
@@ -106,8 +105,8 @@ export class ExternalUserUpdateChangesPopupComponent implements OnInit {
       const newValue = this.newBasicInfo[key as keyof ExternalUser];
       if (oldValue !== newValue) {
         this.basicInfoDifferences.push({
-          oldValueInfo: this.getAdminResultValue(this.oldBasicInfo, key as keyof ExternalUser),
-          newValueInfo: this.getAdminResultValue(this.newBasicInfo, key as keyof ExternalUser),
+          oldValueInfo: this.getAdminResultValue(key as keyof ExternalUser, false),
+          newValueInfo: this.getAdminResultValue(key as keyof ExternalUser, true),
           labelInfo: AdminResult.createInstance({
             arName: this.lang.getArabicLocalByKey(labelLangKeys[key]),
             enName: this.lang.getEnglishLocalByKey(labelLangKeys[key])
