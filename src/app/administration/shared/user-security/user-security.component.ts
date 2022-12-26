@@ -5,7 +5,7 @@ import {UntypedFormControl} from '@angular/forms';
 import {UserTeam} from '@app/models/user-team';
 import {UserSecurityConfiguration} from '@app/models/user-security-configuration';
 import {TeamSecurityConfiguration} from '@app/models/team-security-configuration';
-import {catchError, filter, map, share, switchMap, takeUntil, tap} from 'rxjs/operators';
+import {catchError, distinctUntilChanged, filter, map, share, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {UserSecurityConfigurationService} from '@app/services/user-security-configuration.service';
 import {InternalUser} from '@app/models/internal-user';
 import {ExternalUser} from '@app/models/external-user';
@@ -17,7 +17,6 @@ import {ConfigurationService} from '@app/services/configuration.service';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {UserTeamService} from '@app/services/user-team.service';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
-import {ExternalUserUpdateRequest} from '@app/models/external-user-update-request';
 
 @Component({
   selector: 'user-security',
@@ -27,7 +26,6 @@ import {ExternalUserUpdateRequest} from '@app/models/external-user-update-reques
 export class UserSecurityComponent implements OnInit, OnDestroy {
   destroy$: Subject<any> = new Subject<any>();
   selectedUserTeam: UntypedFormControl = new UntypedFormControl();
-  externalUserTeamId?: number;
   commonStatusEnum = CommonStatusEnum;
   private _userTeams: UserTeam[] = [];
   private _operation: BehaviorSubject<OperationTypes> = new BehaviorSubject<OperationTypes>(OperationTypes.CREATE);
@@ -67,24 +65,9 @@ export class UserSecurityComponent implements OnInit, OnDestroy {
 
   @Input()
   model!: InternalUser | ExternalUser;
-
-  private _profileId?: number;
-  @Input()
-  set profileId(value: number | undefined) {
-    this._profileId = value;
-    this._setSelectedUserTeam();
-  }
-
-  get profileId(): number | undefined {
-    return this._profileId;
-  }
-
-  @Input() userUpdateRequest?: ExternalUserUpdateRequest;
-
   teamSecurityMap!: Record<number, TeamSecurityConfiguration>;
   teamSecurity: TeamSecurityConfiguration[] = [];
   userSecurity: UserSecurityConfiguration[] = [];
-  private oldExternalUserSecurity$: BehaviorSubject<UserSecurityConfiguration[]> = new BehaviorSubject<UserSecurityConfiguration[]>([]);
   userSecurityColumns: string[] = ['serviceName', 'add', 'search', 'teamInbox'];
   private teams: Team[] = [];
 
@@ -108,8 +91,8 @@ export class UserSecurityComponent implements OnInit, OnDestroy {
     this.listenToTeamSecurityChange();
     if (this.model.isExternal()) {
       this.userSecurityColumns = this.userSecurityColumns.concat(['approval', 'followUp']);
-      this.loadTeamsAndSecurity();
     }
+    this.listenToOperationChange();
   }
 
   private loadTeamsAndSecurity(): void {
@@ -117,14 +100,9 @@ export class UserSecurityComponent implements OnInit, OnDestroy {
       .loadAsLookups()
       .pipe(tap(teams => this.teams = teams))
       .pipe(map(teams => teams.filter(team => this.configService.CONFIG.CHARITY_ORG_TEAM === team.authName)[0]))
-      .pipe(tap(team => this.externalUserTeamId = team.id))
       .subscribe((team) => {
-        this._setSelectedUserTeam();
+        this.selectedUserTeam.setValue(team.id);
       });
-  }
-
-  private _setSelectedUserTeam(): void {
-    this.selectedUserTeam.setValue(this.profileId ? this.externalUserTeamId : undefined);
   }
 
   private listenToTeamSecurityChange() {
@@ -146,15 +124,7 @@ export class UserSecurityComponent implements OnInit, OnDestroy {
       let caseTypeIds = userSecurity.map(item => item.caseType);
       securityConfigurations = this.teamSecurity
         .filter(team => !caseTypeIds.includes(team.caseType))
-        .map(ts => new UserSecurityConfiguration().clone(ts.convertToUserSecurity(this.model.generalUserId)));
-
-      if (this.model.isExternal()) {
-        const security = caseTypeIds ? userSecurity.concat(securityConfigurations) : securityConfigurations;
-        /*if (this.operation !== OperationTypes.CREATE) {
-          this.oldExternalUserSecurity$.next(security.map(data => new UserSecurityConfiguration().clone(data)));
-        }*/
-        return of(security);
-      }
+        .map(t => t.convertToUserSecurity(this.model.generalUserId)) as UserSecurityConfiguration[];
 
       return this.userSecurityService.createBulk(securityConfigurations).pipe(catchError(_ => of([] as UserSecurityConfiguration[])))
         .pipe(map(result => result.map((item, index) => {
@@ -170,7 +140,7 @@ export class UserSecurityComponent implements OnInit, OnDestroy {
         // get the team security configuration
         switchMap(teamId => {
           if (this.model.isExternal()) {
-            return this.teamSecurityService.loadSecurityByTeamIdAndProfileId(teamId, this.profileId!);
+            return this.teamSecurityService.loadSecurityByTeamIdAndProfileId(teamId, (this.model as ExternalUser).getProfileId());
           }
           return this.teamSecurityService.loadSecurityByTeamId(teamId);
         }),
@@ -182,23 +152,10 @@ export class UserSecurityComponent implements OnInit, OnDestroy {
           }, {}) || {};
         }),
         // get the user security configuration
-        switchMap(() => {
-          // there will be no user security when creating external user
-          if (this.model.isExternal() && this.operation === OperationTypes.CREATE) {
-            return of([]);
-          }
-          return this.userSecurityService.loadSecurityByTeamId(this.selectedUserTeam.value, this.model.generalUserId);
-        }),
+        switchMap(() => this.userSecurityService.loadSecurityByTeamId(this.selectedUserTeam.value, this.model.generalUserId)),
         // if there is length for the user security configurations we have to display the right mapping on the view
         switchMap((userSecurity => iif(() => !userSecurity.length || (userSecurity.length !== this.teamSecurity.length), insertDefaultTeamSecurity$(userSecurity), of(userSecurity)))),
-        tap((userSecurity) => {
-          this.oldExternalUserSecurity$.next(userSecurity.map(data => new UserSecurityConfiguration().clone(data)));
-          if (this.model.isExternal() && !!this.userUpdateRequest) {
-            this.userSecurity = this.userUpdateRequest.newServicePermissions.map(x => new UserSecurityConfiguration().clone(x));
-            return;
-          }
-          this.userSecurity = userSecurity;
-        })
+        tap((userSecurity) => this.userSecurity = userSecurity)
       )
       .subscribe();
   }
@@ -213,14 +170,6 @@ export class UserSecurityComponent implements OnInit, OnDestroy {
 
   canView(userSecurity: UserSecurityConfiguration): boolean {
     return this.teamSecurityMap[userSecurity.caseType]?.canView;
-  }
-
-  getOldUserSecurity(): UserSecurityConfiguration[] {
-    return this.oldExternalUserSecurity$.value;
-  }
-
-  getFinalUserSecurity(): UserSecurityConfiguration[] {
-    return this.userSecurity;
   }
 
   updateBulkUserSecurity(userSecurity: UserSecurityConfiguration, property: 'canView' | 'canManage' | 'canAdd' | 'approval' | 'followUp'): void {
@@ -255,10 +204,7 @@ export class UserSecurityComponent implements OnInit, OnDestroy {
       return;
     }
     if (this.model.isExternal()) {
-      userSecurity[property] = !userSecurity[property];
-      console.log('old', this.getOldUserSecurity());
-      console.log('new', this.getFinalUserSecurity());
-      return;
+      return this.updateBulkUserSecurity(userSecurity, property);
     }
     userSecurity.clone({[property]: !userSecurity[property]})
       .save()
@@ -271,6 +217,16 @@ export class UserSecurityComponent implements OnInit, OnDestroy {
         this.toast.success(this.lang.map.msg_update_success);
       }, () => {
         userSecurity[property] = !userSecurity[property];
+      });
+  }
+
+  private listenToOperationChange() {
+    this._operation
+      .pipe(takeUntil(this.destroy$))
+      .pipe(distinctUntilChanged())
+      .pipe(filter(val => val !== OperationTypes.CREATE && this.model.isExternal()))
+      .subscribe(() => {
+        this.loadTeamsAndSecurity();
       });
   }
 }
