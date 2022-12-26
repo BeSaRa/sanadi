@@ -14,14 +14,14 @@
       <div class="col-sm-6 col-md-3 mb-4 position-relative">
         <label asteriskIfRequired="arName" for="arName" class="form-label">{{ lang.map.lbl_arabic_name
           }}</label>
-        <input id="arName" validationClasses="arName" formControlName="arName" class="form-control" />
+        <input id="arName" validationClasses="arName" [readonly]="isViewForm" formControlName="arName" class="form-control" />
         <app-field-error-message controlName="arName"></app-field-error-message>
       </div>
       <!-- en nam -->
       <div class="col-sm-6 col-md-3 mb-4 position-relative">
         <label asteriskIfRequired="enName" for="enName" class="form-label">{{ lang.map.lbl_english_name
           }}</label>
-        <input id="enName" validationClasses="enName" formControlName="enName" class="form-control" />
+        <input id="enName" validationClasses="enName" [readonly]="isViewForm" formControlName="enName" class="form-control" />
         <app-field-error-message controlName="enName"></app-field-error-message>
       </div>
       <!-- status -->
@@ -29,7 +29,7 @@
         <div class="row">
           <label asteriskIfRequired="status" for="status" class="form-label">{{lang.map.lbl_status}}</label>
           <div class="mb-3 position-relative ng-select-wrapper">
-            <ng-select validationClasses="status" labelForId="status" placeholder="{{lang.map.select}}"
+            <ng-select validationClasses="status" [readonly]="isViewForm" labelForId="status" placeholder="{{lang.map.select}}"
               [notFoundText]="lang.map.msg_not_found" formControlName="status" id="status" appendTo="body">
               <ng-option [value]="status.lookupKey" *ngFor="let status of statuses | filterRetiredStatus">
                 {{status.getName()}}</ng-option>
@@ -42,7 +42,7 @@
       <div class="col-sm-6 col-md-3 mb-4 position-relative">
         <label for="processType" asteriskIfRequired="processType"
           class="form-label">{{lang.map.lbl_process_type}}</label>
-        <ng-select validationClasses="type" labelForId="processType" placeholder="{{lang.map.select}}"
+        <ng-select validationClasses="type" [readonly]="isViewForm" labelForId="processType" placeholder="{{lang.map.select}}"
           [notFoundText]="lang.map.msg_not_found" formControlName="processType" id="processType" appendTo="body">
           <ng-option *ngFor="let option of GeneralProcessTypeList" [value]="option.lookupKey">
             {{option.getName()}}
@@ -54,7 +54,7 @@
       <!-- main cat -->
       <div class="col-sm-6 col-md-3 mb-4 position-relative">
         <label for="mainClass" asteriskIfRequired="mainClass" class="form-label">{{lang.map.classification}}</label>
-        <ng-select validationClasses="type" (change)="loadSubClasses($event)" labelForId="mainClass"
+        <ng-select validationClasses="type" [readonly]="isViewForm" (change)="loadSubClasses($event)" labelForId="mainClass"
           placeholder="{{lang.map.select}}" [notFoundText]="lang.map.msg_not_found" formControlName="mainClass"
           id="mainClass" appendTo="body">
           <ng-option *ngFor="let option of mainClassificationsList" [value]="option.id">
@@ -66,7 +66,7 @@
       <!-- sub cat -->
       <div class="col-sm-6 col-md-3 mb-4 position-relative">
         <label for="subClass" asteriskIfRequired="subClass" class="form-label">{{lang.map.sub_classification}}</label>
-        <ng-select validationClasses="type" labelForId="subClass" placeholder="{{lang.map.select}}"
+        <ng-select validationClasses="type" [readonly]="isViewForm" labelForId="subClass" placeholder="{{lang.map.select}}"
           [notFoundText]="lang.map.msg_not_found" formControlName="subClass" id="subClass" appendTo="body">
           <ng-option *ngFor="let option of subClassificationsList" [value]="option.id">
             {{option.getName()}}
@@ -77,7 +77,7 @@
       <!-- department -->
       <div class="col-sm-6 col-md-3 mb-4 position-relative">
         <label for="departmentId" asteriskIfRequired="departmentId" class="form-label">{{lang.map.department}}</label>
-        <ng-select validationClasses="type" labelForId="departmentId" placeholder="{{lang.map.select}}"
+        <ng-select validationClasses="type" [readonly]="isViewForm" labelForId="departmentId" placeholder="{{lang.map.select}}"
           [notFoundText]="lang.map.msg_not_found" formControlName="departmentId" (change)="handleDepartmentChange()"
           id="departmentId" appendTo="body">
           <ng-option *ngFor="let option of departmentList" [value]="option.id">
@@ -89,7 +89,7 @@
       <!-- sub team -->
       <div class="col-sm-6 col-md-3 mb-4 position-relative">
         <label for="subTeamId" asteriskIfRequired="subTeamId" class="form-label">{{lang.map.lbl_sub_team}}</label>
-        <ng-select validationClasses="type" labelForId="subTeamId" placeholder="{{lang.map.select}}"
+        <ng-select validationClasses="type" [readonly]="isViewForm" labelForId="subTeamId" placeholder="{{lang.map.select}}"
           [notFoundText]="lang.map.msg_not_found" formControlName="subTeamId" id="subTeamId" appendTo="body">
           <ng-option *ngFor="let option of subTeamsList" [value]="option.id">
             {{option.getName()}}
@@ -117,7 +117,7 @@
               <div class="col-12 col-md-6 col-lg-12 mb-4 position-relative">
                 <label asteriskIfRequired="identifyingName" for="identifyingName" class="form-label">{{
                   lang.map.lbl_identifying_name}}</label>
-                <input id="identifyingName" [readonly]="isEditField" formControlName="identifyingName"
+                <input id="identifyingName" [readonly]="isEditField || isViewForm" formControlName="identifyingName"
                   validationClasses="identifyingName" class="form-control" />
                 <app-field-error-message controlName="identifyingName"></app-field-error-message>
               </div>
@@ -125,20 +125,20 @@
               <div class="col-12 col-md-6 col-lg-12 mb-4 position-relative">
                 <label asteriskIfRequired="arName" for="fieldArName" class="form-label">{{ lang.map.lbl_arabic_name
                   }}</label>
-                <input id="fieldArName" formControlName="arName" validationClasses="arName" class="form-control" />
+                <input id="fieldArName" formControlName="arName" [readonly]="isViewForm" validationClasses="arName" class="form-control" />
                 <app-field-error-message controlName="arName"></app-field-error-message>
               </div>
               <!-- en nam -->
               <div class="col-12 col-md-6 col-lg-12 mb-4 position-relative">
                 <label asteriskIfRequired="enName" for="fieldEnName" class="form-label">{{ lang.map.lbl_english_name
                   }}</label>
-                <input id="fieldEnName" formControlName="enName" validationClasses="enName" class="form-control" />
+                <input id="fieldEnName" formControlName="enName" [readonly]="isViewForm" validationClasses="enName" class="form-control" />
                 <app-field-error-message controlName="enName"></app-field-error-message>
               </div>
               <!-- field type -->
               <div class="col-12 col-md-6 col-lg-12 mb-4 position-relative">
                 <label for="type" asteriskIfRequired="type" class="form-label">{{lang.map.lbl_field_type}}</label>
-                <ng-select validationClasses="type" [readonly]="!isCreateForm" labelForId="type" placeholder="{{lang.map.select}}"
+                <ng-select validationClasses="type" [readonly]="isViewForm || !isNewCreatedField" labelForId="type" placeholder="{{lang.map.select}}"
                   [notFoundText]="lang.map.msg_not_found" (change)="handleFieldTypeChange($event)" formControlName="type" id="type" appendTo="body">
                   <ng-option *ngFor="let option of generalProcessTemplateFieldTypesList; let i = index;"
                     [value]="i + 1">
@@ -149,7 +149,7 @@
               </div>
               <!-- options -->
               <div class="col-12 mb-3 position-relative" *ngIf="isSelectField">
-                <div class="col-12 mb-3 position-relative" *ngIf="isCreateForm">
+                <div class="col-12 mb-3 position-relative" *ngIf="isNewCreatedField">
                   <div class="d-flex mb-1">
                     <label class="form-label mb-0">{{
                       lang.map.lbl_select_options}}</label>
@@ -162,7 +162,7 @@
                   <ng-container *ngFor="let option of options.controls; let i = index">
                     <div class="mb-2 d-flex" [formGroupName]="i">
                       <div class="flex-grow-1">
-                        <input id="fieldname" [readonly]="!isCreateForm" formControlName="name" validationClasses="name" class="form-control" />
+                        <input id="fieldname" [readonly]="isViewForm || !isNewCreatedField" formControlName="name" validationClasses="name" class="form-control" />
                         <app-field-error-message controlName="name"></app-field-error-message>
                       </div>
                       <button class="btn icon-btn text-primary mx-2" *ngIf="isCreateForm" [disabled]="options.controls.length == 1" (click)="removeOption(i)">
@@ -178,27 +178,27 @@
                   <div class="col mb-4 position-relative">
                     <label asteriskIfRequired="order" for="order" class="form-label">{{ lang.map.lbl_field_order
                       }}</label>
-                    <input id="order" validationClasses="order" [readonly]="!isCreateForm" [mask]="inputMaskPatterns.NUMBER_ONLY"
+                    <input id="order" validationClasses="order" [readonly]="isViewForm" [mask]="inputMaskPatterns.NUMBER_ONLY"
                       formControlName="order" class="form-control" />
                     <app-field-error-message controlName="order"></app-field-error-message>
                   </div>
                   <!-- is required -->
                   <div class="mb-4 position-relative" style="max-width: 100px;">
                     <label for="required" class="form-label d-block">{{lang.map.lbl_required}}</label>
-                    <input class="form-check-input" [readonly]="!isCreateForm" formControlName="required" type="checkbox">
+                    <input class="form-check-input" [readonly]="isViewForm" formControlName="required" type="checkbox">
                   </div>
                 </div>
               </div>
               <!-- pattern -->
               <div class="col-12 col-md-6 col-lg-12 mb-4 position-relative">
                 <label asteriskIfRequired="pattern" for="pattern" class="form-label">{{ lang.map.lbl_regex}}</label>
-                <input id="pattern" validationClasses="pattern" [readonly]="!isCreateForm" formControlName="pattern" class="form-control" />
+                <input id="pattern" validationClasses="pattern" [readonly]="isViewForm || !isNewCreatedField" formControlName="pattern" class="form-control" />
                 <app-field-error-message controlName="pattern"></app-field-error-message>
               </div>
               <!-- note -->
               <div class="col-sm-12 mb-4 position-relative">
                 <label class="form-label" asteriskIfRequired="note" for="note">{{lang.map.notes}}</label>
-                <textarea name="note" validationClasses="note" [readonly]="!isCreateForm" id="note" formControlName="note" rows="4"
+                <textarea name="note" validationClasses="note" [readonly]="isViewForm || !isNewCreatedField" id="note" formControlName="note" rows="4"
                   class="form-control"></textarea>
                 <app-field-error-message controlName="note"></app-field-error-message>
               </div>
@@ -209,7 +209,7 @@
                 <button class="btn btn-outline-danger me-2" *ngIf="isEditField && isCreateForm" (click)="deleteField(fieldForm)">
                   {{ lang.map.btn_delete }}
                 </button>
-                <button class="btn btn-secondary" *ngIf="isEditField && isCreateForm" (click)="resetFieldForm()">
+                <button class="btn btn-secondary" *ngIf="isEditField" (click)="resetFieldForm()">
                   {{ lang.map.btn_clear }}
                 </button>
               </div>

@@ -52,6 +52,7 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
   departmentList: InternalDepartment[] = [];
   private _teamsList: Team[] = [];
   subTeamsList: SubTeam[] = [];
+  newCreatedFieldsIds: number[] = [];
 
   constructor(public dialogRef: DialogRef,
     public fb: UntypedFormBuilder,
@@ -140,8 +141,14 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
       }
     })
   }
+  get isNewCreatedField() {
+    return (this.isEditField && this.newCreatedFieldsIds.indexOf(this.fieldForm.value.identifyingName) != -1) || !this.isEditField;
+  }
   submitField(form: UntypedFormGroup) {
     if (!this.processForm.fields.filter(f => f.identifyingName == form.value.identifyingName).length || this.isEditField) {
+      if (!this.isEditField) {
+        this.newCreatedFieldsIds.push(form.value.identifyingName)
+      }
       this.processForm.setField(form);
       this.isEditField = false;
       while (this.options.length !== 0) {
