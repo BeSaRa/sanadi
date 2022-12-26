@@ -84,7 +84,7 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
         this.readonly = false;
       } else if (this.employeeService.isCharityUser()) {
         this.readonly = !this.model.isReturned();
-      } else if (this.employeeService.isLicensingUser() && this.employeeService.getCurrentUser().generalUserId == this.model.creatorInfo.id) {
+      } else if (this.employeeService.isInternationalCooperationUser() && this.employeeService.getCurrentUser().generalUserId == this.model.creatorInfo.id) {
         this.readonly = !this.model.isReturned();
       }
     } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
@@ -298,7 +298,8 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
 
   _afterBuildForm(): void {
     this.handleReadonly();
-    this.organizationIdFeild.setValue(this.employeeService.getProfile()?.id);
+    if (this.operation == OperationTypes.CREATE)
+      this.organizationIdFeild.setValue(this.employeeService.getProfile()?.id);
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {

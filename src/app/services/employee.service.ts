@@ -1,30 +1,30 @@
-import {Injectable} from '@angular/core';
-import {FactoryService} from './factory.service';
-import {ExternalUser} from '../models/external-user';
-import {Permission} from '../models/permission';
-import {isValidValue} from '@helpers/utils';
-import {ILoginData} from '@contracts/i-login-data';
-import {UserTypes} from '../enums/user-types.enum';
-import {InternalUser} from '../models/internal-user';
-import {InternalDepartment} from '../models/internal-department';
-import {Team} from '../models/team';
-import {CommonUtils} from '@app/helpers/common-utils';
-import {IUserSecurity} from '@app/interfaces/iuser-security';
-import {UserSecurityConfiguration} from '@app/models/user-security-configuration';
-import {CaseTypes} from '@app/enums/case-types.enum';
-import {EServicePermissionsEnum} from '@app/enums/e-service-permissions-enum';
-import {ConfigurationService} from '@app/services/configuration.service';
-import {PermissionsEnum} from '@app/enums/permissions-enum';
-import {Profile} from '@app/models/profile';
-import {PermissionGroupsEnum} from '@app/enums/permission-groups-enum';
-import {StaticAppResourcesService} from '@services/static-app-resources.service';
-import {ProfileTypes} from '@app/enums/profile-types.enum';
-import {CustomMenu} from '@app/models/custom-menu';
-import {CustomMenuInterceptor} from '@app/model-interceptors/custom-menu-interceptor';
-import {ProfileInterceptor} from '@app/model-interceptors/profile-interceptor';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {UserRoleManageUserContract} from '@contracts/user-role-manage-user-contract';
-import {PermissionsGroupMap} from '@app/resources/permission-groups';
+import { Injectable } from '@angular/core';
+import { FactoryService } from './factory.service';
+import { ExternalUser } from '../models/external-user';
+import { Permission } from '../models/permission';
+import { isValidValue } from '@helpers/utils';
+import { ILoginData } from '@contracts/i-login-data';
+import { UserTypes } from '../enums/user-types.enum';
+import { InternalUser } from '../models/internal-user';
+import { InternalDepartment } from '../models/internal-department';
+import { Team } from '../models/team';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { IUserSecurity } from '@app/interfaces/iuser-security';
+import { UserSecurityConfiguration } from '@app/models/user-security-configuration';
+import { CaseTypes } from '@app/enums/case-types.enum';
+import { EServicePermissionsEnum } from '@app/enums/e-service-permissions-enum';
+import { ConfigurationService } from '@app/services/configuration.service';
+import { PermissionsEnum } from '@app/enums/permissions-enum';
+import { Profile } from '@app/models/profile';
+import { PermissionGroupsEnum } from '@app/enums/permission-groups-enum';
+import { StaticAppResourcesService } from '@services/static-app-resources.service';
+import { ProfileTypes } from '@app/enums/profile-types.enum';
+import { CustomMenu } from '@app/models/custom-menu';
+import { CustomMenuInterceptor } from '@app/model-interceptors/custom-menu-interceptor';
+import { ProfileInterceptor } from '@app/model-interceptors/profile-interceptor';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { UserRoleManageUserContract } from '@contracts/user-role-manage-user-contract';
+import { PermissionsGroupMap } from '@app/resources/permission-groups';
 
 @Injectable({
   providedIn: 'root'
@@ -92,6 +92,10 @@ export class EmployeeService {
     supervisionAndControlSecretary: {
       authName: 'Supervision and Control Manager',
       ldapGroupName: 'Supervision_and_Control_Manager'
+    },
+    internationalCooperation: {
+      authName: 'International Cooperation',
+      ldapGroupName: '"International_Cooperation_STG"'
     }
   };
   private customMenuInterceptor = new CustomMenuInterceptor();
@@ -105,7 +109,7 @@ export class EmployeeService {
   };
 
   constructor(private configService: ConfigurationService,
-              private staticResourcesService: StaticAppResourcesService) {
+    private staticResourcesService: StaticAppResourcesService) {
     FactoryService.registerService('EmployeeService', this);
   }
 
@@ -262,7 +266,7 @@ export class EmployeeService {
   private _setPostPermissionMapCustomPermissions(): void {
     // (super admin or (sub admin, acting super admin with permission )) can access external user screen
     const hasExternalUserAccess = (this.userRolesManageUser.isSuperAdmin(OperationTypes.CREATE) || this.userRolesManageUser.isSuperAdmin(OperationTypes.UPDATE))
-    || ((this.userRolesManageUser.isActingSuperAdmin() || this.userRolesManageUser.isSubAdmin())
+      || ((this.userRolesManageUser.isActingSuperAdmin() || this.userRolesManageUser.isSubAdmin())
         && this.checkPermissions(PermissionsGroupMap.MANAGE_EXTERNAL_USER_PERMISSIONS_GROUP, true));
     hasExternalUserAccess && this._addToPermissionMap(PermissionsEnum.MANAGE_EXTERNAL_USER_DYNAMIC);
 
@@ -359,6 +363,9 @@ export class EmployeeService {
 
   isLicensingChiefManager(compareBy: 'authName' | 'ldapGroupName' = 'authName'): boolean {
     return this._isInTeam(this.userTeamsMap.licenseChiefManager, compareBy);
+  }
+  isInternationalCooperationUser(compareBy: 'authName' | 'ldapGroupName' = 'authName'): boolean {
+    return this._isInTeam(this.userTeamsMap.internationalCooperation, compareBy);
   }
 
   isRiskAndComplianceUser(compareBy: 'authName' | 'ldapGroupName' = 'authName'): boolean {
