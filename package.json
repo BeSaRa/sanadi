@@ -1,6 +1,6 @@
 {
   "name": "sanadi",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --hmr",
@@ -13,7 +13,8 @@
     "eservices": "ng build --base-href /eservices-ui/",
     "eservices-ebla": "ng build --base-href /eservices-ui/ebla/",
     "prod:env": "npm run prod && node environments.js CONFIGURATION.json",
-    "prod:eservices": "npm run eservices && node environments.js CONFIGURATION.json"
+    "prod:eservices": "npm run eservices && node environments.js CONFIGURATION.json",
+    "version": "node ./bin/index.js"
   },
   "private": true,
   "dependencies": {
