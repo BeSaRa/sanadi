@@ -647,8 +647,13 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   onDeductionRatioChanges() {
-    this.deductionRatioChanged = false
-    setTimeout(() => this.deductionRatioChanged = true)
+    Promise
+      .resolve(() => {
+        this.deductionRatioChanged = false
+      })
+      .then(() => {
+        this.deductionRatioChanged = true
+      })
   }
 
   validateHiddenDisplayFields(): void {
