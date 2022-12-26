@@ -10,7 +10,7 @@ import {Lookup} from "@app/models/lookup";
 import {LookupService} from "@services/lookup.service";
 import {LangService} from "@services/lang.service";
 import {Country} from "@app/models/country";
-import {delay, exhaustMap, filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
+import {catchError, delay, exhaustMap, filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
 import {ProjectWorkArea} from "@app/enums/project-work-area";
 import {ProjectPermitTypes} from "@app/enums/project-permit-types";
 import {ServiceRequestTypes} from "@app/enums/service-request-types";
@@ -205,7 +205,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     });
   }
 
-  _updateForm(model: ProjectFundraising | undefined): void {
+  _updateForm(model: ProjectFundraising | undefined, fromSelectedLicense: boolean = false): void {
     if (!model) {
       return;
     }
@@ -213,9 +213,22 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     this.form.patchValue({
       basicInfo: this.model.buildBasicInfo(),
       explanation: this.model.buildExplanation()
+    }, {
+      emitEvent: !fromSelectedLicense
     });
     this.handleRequestTypeChange(model.requestType, false);
     this.validateHiddenDisplayFields()
+
+    if (!fromSelectedLicense)
+      return;
+
+    if (model.projectWorkArea === ProjectWorkArea.OUTSIDE_QATAR) {
+      this.loadDacOuchMain(model.domain, () => {
+        this.loadSubDacOchaByParentId(model.domain === DomainTypes.DEVELOPMENT ? model.mainDACCategory : model.mainUNOCHACategory)
+      })
+    } else if (model.projectWorkArea === ProjectWorkArea.INSIDE_QATAR && model.projectType === FundraisingProjectTypes.AIDS) {
+      this.loadSanadyMainClassification(model.sanadiDomain)
+    }
   }
 
   _resetForm(): void {
@@ -498,8 +511,9 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       })
   }
 
-  private loadDacOuchMain(domain: DomainTypes | null): void {
+  private loadDacOuchMain(domain: DomainTypes | null, callback?: () => void): void {
     if (!domain || this.loadedDacOchaBefore) {
+      callback && callback()
       return
     }
 
@@ -508,6 +522,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       .subscribe((list) => {
         this.loadedDacOchaBefore = true;
         this.separateDacFromOcha(list);
+        callback && callback()
       })
   }
 
@@ -516,13 +531,19 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     this.mainUNOCHACategories = list.filter(item => item.type === DomainTypes.HUMANITARIAN)
   }
 
-  private loadSubDacOchaByParentId(parentId: number | null): void {
-    if (!parentId)
+  private loadSubDacOchaByParentId(parentId: number | null, callback?: () => void): void {
+    if (!parentId) {
+      callback && callback()
       return;
-    this.dacOchaService.loadByParentId(parentId)
+    }
+
+    of(this.domain.value as number)
+      .pipe(filter((value) => value === DomainTypes.DEVELOPMENT || (value === DomainTypes.HUMANITARIAN && this.permitType.value === ProjectPermitTypes.SINGLE_TYPE_PROJECT)))
+      .pipe(switchMap(() => this.dacOchaService.loadByParentId(parentId)))
       .pipe(takeUntil(this.destroy$))
       .subscribe((list) => {
         this.domain.value === DomainTypes.DEVELOPMENT ? this.subDacCategories = list : this.subUNOCHACategories = list
+        callback && callback()
       })
   }
 
@@ -530,8 +551,8 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     merge(this.mainDACCategory.valueChanges, this.mainUNOCHACategory.valueChanges)
       .pipe(takeUntil(this.destroy$))
       .subscribe((value: number) => {
-        this.subDACCategory.setValue(null)
-        this.subUNOCHACategory.setValue(null)
+        this.subDACCategory.setValue(null, {emitEvent: false})
+        this.subUNOCHACategory.setValue(null, {emitEvent: false})
         this.loadSubDacOchaByParentId(value)
       })
   }
@@ -817,7 +838,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
         // allow only the collection if it has value
         filter((result) => !!result.length)
       )
-      .pipe(exhaustMap(licenses => licenses.length === 1 ? this.validateSingleLicense(licenses[0]) : this.openSelectLicense(licenses)))
+      .pipe(exhaustMap(licenses => licenses.length === 1 ? this.validateSingleLicense(licenses[0]).pipe(catchError(_ => of(false))) : this.openSelectLicense(licenses)))
       .pipe(filter((info): info is ProjectFundraising => !!info))
       .subscribe((license) => {
         this.setSelectedLicense(license, false);
@@ -851,7 +872,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       delete model.id;
       delete model.vsId;
 
-      this._updateForm(model);
+      this._updateForm(model, true);
     }
   }
 
@@ -893,11 +914,5 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
         this.loadSanadyMainClassification(sanadyDomain)
       })() : null;
     }
-  }
-
-  debugPurpose(formGroup: UntypedFormGroup) {
-    console.log(Object.keys(formGroup.controls).reduce((acc, key) => {
-      return {...acc, [key]: formGroup.controls[key].errors}
-    }, {}));
   }
 }
