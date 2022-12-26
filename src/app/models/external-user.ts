@@ -14,6 +14,10 @@ import {normalSearchFields} from '@helpers/normal-search-fields';
 import {infoSearchFields} from '@helpers/info-search-fields';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {Validators} from '@angular/forms';
+import {ILanguageKeys} from '@contracts/i-language-keys';
+import {IKeyValue} from '@contracts/i-key-value';
+import {keys} from 'lodash';
+import {UserTypes} from '@app/enums/user-types.enum';
 
 const interceptor = new ExternalUserInterceptor();
 
@@ -31,7 +35,7 @@ export class ExternalUser extends BaseModel<ExternalUser, ExternalUserService> {
   gender!: number;
   status: number | undefined;
   statusDateModified: number | undefined;
-  userType: number | undefined;
+  userType: UserTypes = UserTypes.EXTERNAL;
   phoneNumber: string | undefined;
   officialPhoneNumber: string | undefined;
   email: string | undefined;
@@ -119,44 +123,79 @@ export class ExternalUser extends BaseModel<ExternalUser, ExternalUserService> {
 
   // noinspection JSUnusedGlobalSymbols
   getUniqueName(): string {
-    return this.qid?.toString()?? '';
+    return this.qid?.toString() ?? '';
+  }
+
+  getBasicInfoValuesWithLabels(): {[key: string]: {langKey: keyof ILanguageKeys, value: any}} {
+    return {
+      arName: {langKey: 'lbl_arabic_name', value: this.arName},
+      enName: {langKey: 'lbl_english_name', value: this.enName},
+      qid: {langKey: 'lbl_qid', value: this.qid},
+      empNum: {langKey: 'lbl_employee_number', value: this.empNum},
+      phoneNumber: {langKey: 'lbl_phone', value: this.phoneNumber},
+      phoneExtension: {langKey: 'lbl_phone_extension', value: this.phoneExtension},
+      officialPhoneNumber: {langKey: 'lbl_official_phone_number', value: this.officialPhoneNumber},
+      email: {langKey: 'lbl_email', value: this.email},
+      jobTitle: {langKey: 'lbl_job_title', value: this.jobTitle},
+      status: {langKey: 'lbl_status', value: this.status},
+      profileId: {langKey: 'profile', value: this.profileId},
+      customRoleId: {langKey: 'lbl_custom_role', value: this.customRoleId},
+    };
+  }
+
+  getBasicControlKeys(): string[] {
+    let keys: string[] = [];
+    const valuesWithLabels = this.getBasicInfoValuesWithLabels();
+    for (const [controlKey, valueObj] of Object.entries(valuesWithLabels)) {
+      keys.push(controlKey);
+    }
+    return keys;
+  }
+
+  getBasicControlValues(): Partial<ExternalUser> {
+    let values: Partial<ExternalUser> = {};
+    const valuesWithLabels = this.getBasicInfoValuesWithLabels();
+    for (const [controlKey, valueObj] of Object.entries(valuesWithLabels)) {
+      // @ts-ignore
+      values[controlKey] = valueObj.value;
+    }
+    return values;
+  }
+
+  getBasicControlLabels(): {[key: string]: keyof ILanguageKeys} {
+    let values: {[key: string]: keyof ILanguageKeys} = {};
+    const valuesWithLabels = this.getBasicInfoValuesWithLabels();
+    for (const [controlKey, valueObj] of Object.entries(valuesWithLabels)) {
+      values[controlKey] = valueObj.langKey;
+    }
+    return values;
   }
 
   buildForm(controls?: boolean): any {
-    const {
-      arName,
-      enName,
-      qid,
-      empNum,
-      phoneNumber,
-      phoneExtension,
-      officialPhoneNumber,
-      email,
-      jobTitle,
-      status,
-      profileId,
-      customRoleId
-    } = this;
+    let values = this.getBasicControlValues();
     return {
-      arName: controls ? [arName, [
+      arName: controls ? [values.arName, [
         CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
         Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('AR_NUM')
-      ]] : arName,
-      enName: controls ? [enName, [
+      ]] : values.arName,
+      enName: controls ? [values.enName, [
         CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
         Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')
-      ]] : enName,
-      qid: controls ? [{value: qid, disabled: !!this.id}, [CustomValidators.required].concat(CustomValidators.commonValidations.qId)] : qid,
-      empNum: controls ? [empNum, [CustomValidators.required, CustomValidators.number, Validators.maxLength(10)]] : empNum,
-      phoneNumber: controls ? [phoneNumber, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : phoneNumber,
-      phoneExtension: controls ? [phoneExtension, [CustomValidators.number, Validators.maxLength(10)]] : phoneExtension,
-      officialPhoneNumber: controls ? [officialPhoneNumber, CustomValidators.commonValidations.phone] : officialPhoneNumber,
-      email: controls ? [email, [
-        CustomValidators.required, Validators.email, Validators.maxLength(CustomValidators.defaultLengths.EMAIL_MAX)]] : email,
-      jobTitle: controls ? [jobTitle, [CustomValidators.required]] : jobTitle,
-      status: controls ? [status, CustomValidators.required] : status,
-      profileId: controls ? [profileId, CustomValidators.required] : profileId,
-      customRoleId: controls ? [customRoleId] : customRoleId // not required as it is dummy to be tracked from permissions tab
+      ]] : values.enName,
+      qid: controls ? [{
+        value: values.qid,
+        disabled: !!this.id
+      }, [CustomValidators.required].concat(CustomValidators.commonValidations.qId)] : values.qid,
+      empNum: controls ? [values.empNum, [CustomValidators.required, CustomValidators.number, Validators.maxLength(10)]] : values.empNum,
+      phoneNumber: controls ? [values.phoneNumber, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : values.phoneNumber,
+      phoneExtension: controls ? [values.phoneExtension, [CustomValidators.number, Validators.maxLength(10)]] : values.phoneExtension,
+      officialPhoneNumber: controls ? [values.officialPhoneNumber, CustomValidators.commonValidations.phone] : values.officialPhoneNumber,
+      email: controls ? [values.email, [
+        CustomValidators.required, Validators.email, Validators.maxLength(CustomValidators.defaultLengths.EMAIL_MAX)]] : values.email,
+      jobTitle: controls ? [values.jobTitle, [CustomValidators.required]] : values.jobTitle,
+      status: controls ? [values.status, CustomValidators.required] : values.status,
+      profileId: controls ? [values.profileId, CustomValidators.required] : values.profileId,
+      customRoleId: controls ? [values.customRoleId] : values.customRoleId // not required as it is dummy to be tracked from permissions tab
     };
   }
 

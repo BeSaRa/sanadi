@@ -1,11 +1,22 @@
 <div class="row">
   <app-page-header pageTitle="menu_organization_user" [clickOnReload$]="reload$"
-                   [clickOnNew$]="add$" [addPermission]="empService.checkPermissions(permissionsEnum.ADD_ORG_USER)">
-  </app-page-header>
+                   [customTemplate]="customHeaderTemplate"
+                   [clickOnNew$]="add$"
+                   [addPermission]="externalUserUpdateRequestService.canAddUser()"></app-page-header>
+  <ng-template #customHeaderTemplate>
+    <ng-select [selectOnTab]="true" [clearable]="false"
+               placeholder="{{langService.map.select}}" id="profileId"
+               [notFoundText]="langService.map.msg_not_found" appendTo="body"
+               [formControl]="profileIdControl"
+               (change)="filterUsersByProfile(true)">
+      <ng-option value="">{{langService.map.lbl_all}}</ng-option>
+      <ng-option *ngFor="let option of profiles$|async" [value]="option.id">
+        {{option.getName()}}
+      </ng-option>
+    </ng-select>
+
+  </ng-template>
   <ng-container *ngIf="table">
-    <!-- <app-bulk-actions *ngIf="table.selection && table.selection.selected.length"
-                      [selectedRecords]="table.selection.selected"
-                      [actionsList]="bulkActionsList"></app-bulk-actions> -->
     <app-grid-search (searchTextEvent)="filterControl.setValue($event)"></app-grid-search>
   </ng-container>
 </div>
@@ -54,13 +65,6 @@
             <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.lbl_actions}}</th>
             <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">
               <grid-actions [record]="row" [actions]="actions" [itemIndex]="itemIndex">
-                <span afterTemplate class="form-check form-switch switch-action"
-                      *ngIf="empService.checkPermissions(permissionsEnum.EDIT_ORG_USER) && row.status !== commonStatusEnum.RETIRED"
-                      style="top: auto">
-                  <input class="form-check-input" type="checkbox" [checked]="row.status == commonStatusEnum.ACTIVATED"
-                         tooltip="{{row.status == commonStatusEnum.ACTIVATED ? langService.map.btn_deactivate : langService.map.btn_activate}}"
-                         (change)="toggleStatus(row)">
-                </span>
               </grid-actions>
             </td>
           </ng-container>
@@ -74,6 +78,5 @@
       <app-paginator #paginator [backend]="true" (pageChange)="pageChange($event)" [length]="count"></app-paginator>
       <context-menu-item #menu [actions]="actions"></context-menu-item>
     </div>
-    <context-menu-item #menu [actions]="actions"></context-menu-item>
   </div>
 </div>

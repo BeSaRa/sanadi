@@ -18,6 +18,8 @@ export abstract class AdminGenericComponent<M extends { id: number }, S extends 
   add$: Subject<any> = new Subject<any>();
   // subject for emit clicking on edit button
   edit$: Subject<M> = new Subject<M>();
+  // subject for emit clicking on view button
+  // view$: Subject<M> = new Subject<M>();
   // using this subject later to unsubscribe from any subscription
   destroy$: Subject<any> = new Subject<any>();
   // list fo models related to the entity
@@ -59,6 +61,7 @@ export abstract class AdminGenericComponent<M extends { id: number }, S extends 
     this.listenToReload();
     this.listenToAdd();
     this.listenToEdit();
+    // this.listenToView();
   }
 
   /**
@@ -141,6 +144,28 @@ export abstract class AdminGenericComponent<M extends { id: number }, S extends 
       .pipe(switchMap(dialog => dialog.onAfterClose$))
       .subscribe(() => this.reload$.next(null))
   }
+
+  /**
+   * @description listen to view - default implementation you can override it in Child class if you need
+   */
+  /*listenToView(): void {
+    this.view$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(exhaustMap((model) => {
+        return (this.useCompositeToEdit ?
+          this.service.viewDialogComposite(model).pipe(catchError(_ => {
+            console.log(_);
+            return of(null)
+          })) :
+          this.service.viewDialog(model).pipe(catchError(_ => {
+            console.log(_);
+            return of(null)
+          })))
+      }))
+      .pipe(filter((dialog): dialog is DialogRef => !!dialog))
+      .pipe(switchMap(dialog => dialog.onAfterClose$))
+      .subscribe()
+  }*/
 
   protected _init(): void {
 

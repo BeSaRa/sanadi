@@ -103,4 +103,12 @@ export class ServiceData extends BaseModel<ServiceData, ServiceDataService> {
     }
     return this.getName().toLowerCase().indexOf(searchText.toLowerCase()) > -1;
   }
+
+  isActive(): boolean {
+    return this.status === CommonStatusEnum.ACTIVATED;
+  }
+
+  convertToAdminResult(): AdminResult {
+    return AdminResult.createInstance({ arName: this.arName, enName: this.enName, id: this.id, status: this.status, disabled: !this.isActive() });
+  }
 }

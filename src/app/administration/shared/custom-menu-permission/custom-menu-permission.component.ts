@@ -2,8 +2,8 @@ import {Component, Input, OnInit} from '@angular/core';
 import {LangService} from '@app/services/lang.service';
 import {CustomMenuService} from '@services/custom-menu.service';
 import {CustomMenu} from '@app/models/custom-menu';
-import {catchError, map, switchMap, takeUntil, tap, withLatestFrom} from 'rxjs/operators';
-import {Observable, of, Subject} from 'rxjs';
+import {map, switchMap, tap, withLatestFrom} from 'rxjs/operators';
+import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
 import {InternalUser} from '@app/models/internal-user';
 import {LookupService} from '@services/lookup.service';
 import {CheckGroupHandler} from '@app/models/check-group-handler';
@@ -13,6 +13,7 @@ import {UserCustomMenuService} from '@services/user-custom-menu.service';
 import {UserCustomMenu} from '@app/models/user-custom-menu';
 import {SharedService} from '@services/shared.service';
 import {ExternalUser} from '@app/models/external-user';
+import {ExternalUserUpdateRequest} from '@app/models/external-user-update-request';
 
 @Component({
   selector: 'custom-menu-permission',
@@ -23,8 +24,11 @@ export class CustomMenuPermissionComponent implements OnInit {
   destroy$: Subject<any> = new Subject<any>();
   chunkSize: number = 3;
 
+  private oldSelection$: BehaviorSubject<number[]> = new BehaviorSubject<number[]>([]);
+
   @Input() user!: InternalUser | ExternalUser;
   @Input() readonly: boolean = false;
+  @Input() userUpdateRequest?: ExternalUserUpdateRequest;
 
   constructor(public lang: LangService,
               private lookupService: LookupService,
@@ -38,7 +42,6 @@ export class CustomMenuPermissionComponent implements OnInit {
   groupHandler!: CheckGroupHandler<CustomMenu>;
 
   ngOnInit(): void {
-    this._loadPrivateCustomMenus();
     this._loadCustomMenuPermissions();
   }
 
@@ -48,17 +51,8 @@ export class CustomMenuPermissionComponent implements OnInit {
   }
 
   private _loadPrivateCustomMenus(): Observable<CustomMenu[]> {
-    return this.customMenuService.loadPrivateMenus()
-      .pipe(
-        takeUntil(this.destroy$),
-        map((result: CustomMenu[]) => {
-          return result.filter((menu) => {
-            return this.user.isInternal() ? !menu.isExternalUserMenu() : !menu.isInternalUserMenu();
-          });
-        }),
-        tap((result) => this.allCustomMenusList = result)
-      )
-      .pipe(catchError(()=> of([])));
+    return this.customMenuService.loadPrivateMenusByUserType(this.user.userType)
+      .pipe(tap((result) => this.allCustomMenusList = result));
   }
 
   private _loadCustomMenuPermissions(): void {
@@ -73,9 +67,23 @@ export class CustomMenuPermissionComponent implements OnInit {
         );
         return of(true);
       }))
-      .pipe(switchMap(_ => this.user.generalUserId ? this.userCustomMenuService.loadByCriteria({generalUserId: this.user.generalUserId}) : of([])))
-      .subscribe((userCustomMenus: UserCustomMenu[]) => {
-        this.groupHandler.setSelection(userCustomMenus.map(p => p.menuItemId));
+      .pipe(switchMap(_ => {
+        if (!!this.userUpdateRequest) {
+          this.oldSelection$.next([...(this.userUpdateRequest.newMenuList ?? [])]);
+          return of((this.userUpdateRequest.newMenuList ?? []));
+        }
+        if (!this.user.generalUserId) {
+          this.oldSelection$.next([]);
+          return of([]);
+        }
+        return this.userCustomMenuService.loadByCriteria({generalUserId: this.user.generalUserId})
+          .pipe(
+            map((userCustomMenus: UserCustomMenu[]) => userCustomMenus.map(p => p.menuItemId)),
+            tap((selectedMenus: number[]) => this.oldSelection$.next([...selectedMenus]))
+          );
+      }))
+      .subscribe((selectedMenus: number[]) => {
+        this.groupHandler.setSelection(selectedMenus);
       });
   }
 
@@ -174,8 +182,16 @@ export class CustomMenuPermissionComponent implements OnInit {
     return !row[0].parentMenuItemId;
   }
 
+  getOldUserMenuPermissions(): number[] {
+    return this.oldSelection$.value;
+  }
+
+  getFinalUserMenuPermissions(): number[] {
+    return this.groupHandler.getSelection().filter((item, index, list) => list.indexOf(item) === index);
+  }
+
   saveUserCustomMenuPermissions(): Observable<UserCustomMenu[]> {
-    const selection: number[] = this.groupHandler.getSelection().filter((item, index, list) => list.indexOf(item) === index);
+    const selection: number[] = this.getFinalUserMenuPermissions();
     return this.userCustomMenuService.saveUserCustomMenu(this.user.generalUserId, selection);
   }
 

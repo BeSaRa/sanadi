@@ -92,7 +92,7 @@ export class ProjectFundraisingService extends BaseGenericEService<ProjectFundra
 
   @CastResponse(() => DeductionRatioItem)
   public loadDeductionRatio(criteria: { permitType?: number, workArea?: number }): Observable<DeductionRatioItem[]> {
-    return this.http.get<DeductionRatioItem[]>(this.urlService.URLS.DEDUCTION_RATIO_ITEM, {
+    return this.http.get<DeductionRatioItem[]>(this.urlService.URLS.DEDUCTION_RATIO_ITEM + '/criteria', {
       params: new HttpParams({fromObject: criteria})
     })
   }

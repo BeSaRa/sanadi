@@ -48,7 +48,7 @@
         <div class="col-sm-6 mb-4 ng-select-wrapper">
           <label for="profile" asteriskIfRequired="profile"
                  class="form-label">{{lang.map.lbl_profile}}</label>
-          <ng-select [selectOnTab]="true" labelForId="profile" [clearable]="false"
+          <ng-select [multiple]="true" [selectOnTab]="true" labelForId="profile" [clearable]="false"
                      placeholder="{{lang.map.select}}" id="profile"
                      [notFoundText]="lang.map.msg_not_found"
                      formControlName="profile" appendTo="body"
@@ -122,4 +122,3 @@
             class="btn btn-primary">{{lang.map.btn_save}}</button>
     <button [dialogClose]="model" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
   </div>
-  

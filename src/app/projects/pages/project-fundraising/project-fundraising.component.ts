@@ -151,8 +151,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   _afterLaunch(): void {
-    this.resetForm$.next();
-    this.selectedLicense = undefined;
+    this._resetForm()
     this.checkTemplateTabValidity()
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
@@ -223,6 +222,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     this.form.reset();
     this.model = this._getNewInstance();
     this.operation = this.operationTypes.CREATE;
+    this.selectedLicense = undefined;
     this.setDefaultValues()
     this.overrideValuesInCreate()
   }
@@ -516,7 +516,9 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     this.mainUNOCHACategories = list.filter(item => item.type === DomainTypes.HUMANITARIAN)
   }
 
-  private loadSubDacOchaByParentId(parentId: number): void {
+  private loadSubDacOchaByParentId(parentId: number | null): void {
+    if (!parentId)
+      return;
     this.dacOchaService.loadByParentId(parentId)
       .pipe(takeUntil(this.destroy$))
       .subscribe((list) => {
@@ -527,8 +529,9 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   private listenToMainDacOchaChanges() {
     merge(this.mainDACCategory.valueChanges, this.mainUNOCHACategory.valueChanges)
       .pipe(takeUntil(this.destroy$))
-      .pipe(filter(value => !!value))
       .subscribe((value: number) => {
+        this.subDACCategory.setValue(null)
+        this.subUNOCHACategory.setValue(null)
         this.loadSubDacOchaByParentId(value)
       })
   }
@@ -644,8 +647,13 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   onDeductionRatioChanges() {
-    this.deductionRatioChanged = false
-    setTimeout(() => this.deductionRatioChanged = true)
+    Promise
+      .resolve(() => {
+        this.deductionRatioChanged = false
+      })
+      .then(() => {
+        this.deductionRatioChanged = true
+      })
   }
 
   validateHiddenDisplayFields(): void {

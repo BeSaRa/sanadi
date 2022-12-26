@@ -27,6 +27,7 @@ import {MenuItemService} from '@services/menu-item.service';
 import {MenuItem} from '@app/models/menu-item';
 import {MenuItemInterceptor} from '@app/model-interceptors/menu-item-interceptor';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import {UserTypes} from '@app/enums/user-types.enum';
 
 @CastResponseContainer({
   $default: {
@@ -45,12 +46,6 @@ export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> 
   dynamicMainMenuUrl: string = 'home/dynamic-menus/:parentId';
   dynamicMainMenuDetailsUrl: string = 'home/dynamic-menus/:parentId/details';
   dynamicChildMenuUrl: string = 'home/dynamic-menus/:parentId/details/:id';
-
-  private _emptyPaginationListResponse = of({
-    rs: [],
-    count: 0,
-    sc: 200
-  } as Pagination<CustomMenu[]>);
 
   constructor(public dialog: DialogService,
               public http: HttpClient,
@@ -127,11 +122,21 @@ export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> 
     return this.http.get<Pagination<CustomMenu[]>>(this._getServiceURL() + '/criteria', {
       params: new HttpParams({fromObject: criteria})
     })
-      .pipe(catchError(() => this._emptyPaginationListResponse));
+      .pipe(catchError(() => of(this._emptyPaginationListResponse)));
   }
 
   loadPrivateMenus(): Observable<CustomMenu[]> {
     return this.loadByCriteria({'menu-view': MenuView.PRIVATE});
+  }
+
+  loadPrivateMenusByUserType(userType: UserTypes): Observable<CustomMenu[]> {
+    return this.loadPrivateMenus()
+      .pipe(
+        catchError(() => of([])),
+        map((result) => result.filter(menu => {
+          return userType === UserTypes.INTERNAL ? !menu.isExternalUserMenu() : !menu.isInternalUserMenu();
+        }))
+      );
   }
 
   openCreateDialog(parentMenu?: CustomMenu): DialogRef {

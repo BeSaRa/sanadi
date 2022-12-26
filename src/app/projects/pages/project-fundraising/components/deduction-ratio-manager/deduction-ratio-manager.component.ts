@@ -11,6 +11,7 @@ import {DeductedPercentage} from "@app/models/deducted-percentage";
 import {DialogService} from "@services/dialog.service";
 import {UserClickOn} from "@app/enums/user-click-on.enum";
 import currency from "currency.js";
+import {EmployeeService} from "@services/employee.service";
 
 @Component({
   selector: 'deduction-ratio-manager',
@@ -27,7 +28,7 @@ export class DeductionRatioManagerComponent implements OnInit, OnDestroy {
 
   _model!: ProjectFundraising
 
-  displayedColumns = ['arabic_name', 'english_name', 'percentage'];
+  displayedColumns = ['arabic_name', 'english_name', 'percentage', 'actions'];
   private _permitType: BehaviorSubject<number | undefined> = new BehaviorSubject<number | undefined>(undefined);
   private _workArea: BehaviorSubject<number | undefined> = new BehaviorSubject<number | undefined>(undefined);
   private destroy$: Subject<void> = new Subject<void>()
@@ -35,6 +36,7 @@ export class DeductionRatioManagerComponent implements OnInit, OnDestroy {
   private deductionRatioItemsMap: Record<number, DeductionRatioItem> = {}
   private destroyInputsListeners: Subject<any> = new Subject<any>()
   deductionRatioItems: DeductionRatioItem[] = [];
+  allDeductionRationItems: DeductionRatioItem[] = []
   item: UntypedFormControl = new UntypedFormControl();
   maskPattern = CustomValidators.inputMaskPatterns;
   totalDeductionRatio: number = 0;
@@ -69,6 +71,7 @@ export class DeductionRatioManagerComponent implements OnInit, OnDestroy {
 
   constructor(private service: ProjectFundraisingService,
               private dialog: DialogService,
+              private employeeService: EmployeeService,
               public lang: LangService) {
   }
 
@@ -110,12 +113,13 @@ export class DeductionRatioManagerComponent implements OnInit, OnDestroy {
   private listenToUpdates(): void {
     combineLatest([this._permitType, this._workArea])
       .pipe(takeUntil(this.destroy$))
-      .pipe(filter((value): value is [number, number] => !!(value[0] || value[1])))
+      .pipe(filter((value): value is [number, number] => !!(value[0] || value[1]) && this.employeeService.isExternalUser()))
       .pipe(switchMap(([permitType, workArea]) => {
         return this.service.loadDeductionRatio({...permitType ? {permitType} : undefined, ...workArea ? {workArea} : undefined})
       }))
       .subscribe((items) => {
-        this.deductionRatioItems = items;
+        this.allDeductionRationItems = items;
+        this.deductionRatioItems = this.allDeductionRationItems.filter(item => item.status);
         this.updateDeductionMap()
       })
   }
@@ -141,7 +145,7 @@ export class DeductionRatioManagerComponent implements OnInit, OnDestroy {
   }
 
   updateDeductionMap(): void {
-    this.deductionRatioItemsMap = this.deductionRatioItems.reduce((acc, current) => {
+    this.deductionRatioItemsMap = this.allDeductionRationItems.reduce((acc, current) => {
       return {...acc, [current.id]: current}
     }, {})
   }

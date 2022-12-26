@@ -2,8 +2,12 @@ import {UserSubTeamComponent} from './shared/user-sub-team/user-sub-team.compone
 import {
   ProcessFieldWrapperComponent
 } from './popups/general-process-popup/process-formly-components/process-field-wrapper/process-field-wrapper.component';
-import {FormlyMaskInputFieldComponent} from './../services-search/components/formly-mask-input-field/formly-mask-input-field.component';
-import {FormlySelectFieldComponent} from './../services-search/components/formly-select-field/formly-select-field.component';
+import {
+  FormlyMaskInputFieldComponent
+} from './../services-search/components/formly-mask-input-field/formly-mask-input-field.component';
+import {
+  FormlySelectFieldComponent
+} from './../services-search/components/formly-select-field/formly-select-field.component';
 import {FormlyDateFieldComponent} from './../services-search/components/formly-date-field/formly-date-field.component';
 import {GeneralProcessPopupComponent} from './popups/general-process-popup/general-process-popup.component';
 import {GeneralProcessComponent} from './pages/general-process/general-process.component';
@@ -34,14 +38,18 @@ import {TeamComponent} from './pages/team/team.component';
 import {TeamPopupComponent} from './popups/team-popup/team-popup.component';
 import {CountryComponent} from './pages/country/country.component';
 import {CountryPopupComponent} from './popups/country-popup/country-popup.component';
-import {ChangeCountryParentPopupComponent,} from './popups/change-country-parent-popup/change-country-parent-popup.component';
+import {
+  ChangeCountryParentPopupComponent,
+} from './popups/change-country-parent-popup/change-country-parent-popup.component';
 import {
   AttachmentTypeServiceDataPopupComponent,
 } from './popups/attachment-type-service-data-popup/attachment-type-service-data-popup.component';
 import {InternalUserComponent} from './pages/internal-user/internal-user.component';
 import {InternalUserPopupComponent} from './popups/internal-user-popup/internal-user-popup.component';
 import {InternalDepartmentComponent} from './pages/internal-department/internal-department.component';
-import {InternalDepartmentPopupComponent,} from './popups/internal-department-popup/internal-department-popup.component';
+import {
+  InternalDepartmentPopupComponent,
+} from './popups/internal-department-popup/internal-department-popup.component';
 import {JobTitleComponent} from './pages/job-title/job-title.component';
 import {JobTitlePopupComponent} from './popups/job-title-popup/job-title-popup.component';
 import {UserTeamComponent} from './shared/user-team/user-team.component';
@@ -64,7 +72,9 @@ import {BankPopupComponent} from './popups/bank-popup/bank-popup.component';
 import {DonorComponent} from './pages/donor/donor.component';
 import {DonorPopupComponent} from './popups/donor-popup/donor-popup.component';
 import {FollowupConfigurationComponent} from './pages/followup-configuration/followup-configuration.component';
-import {FollowupConfigurationPopupComponent} from './popups/followup-configuration-popup/followup-configuration-popup.component';
+import {
+  FollowupConfigurationPopupComponent
+} from './popups/followup-configuration-popup/followup-configuration-popup.component';
 import {UserFollowupPermissionComponent} from './shared/user-followup-permission/user-followup-permission.component';
 import {FieldAssessmentPopupComponent} from './popups/field-assessment-popup/field-assessment-popup.component';
 import {FieldAssessmentComponent} from './pages/field-assessment/field-assessment.component';
@@ -92,6 +102,16 @@ import {DynamicModelsComponent} from './pages/dynamic-models/dynamic-models.comp
 import {DynamicModelPopupComponent} from './popups/dynamic-model-popup/dynamic-model-popup.component';
 import {DeductionRatioComponent} from './pages/deduction-ratio/deduction-ratio.component';
 import {DeductionRatioPopupComponent} from './popups/deduction-ratio-popup/deduction-ratio-popup.component';
+import {
+  ExternalUserUpdateRequestApprovalComponent
+} from './pages/external-user-update-approval/external-user-update-request-approval.component';
+import {
+  ExternalUserUpdateApprovalPopupComponent
+} from '@app/administration/popups/external-user-update-approval-popup/external-user-update-approval-popup.component';
+import {
+  ExternalUserUpdateChangesPopupComponent
+} from './popups/external-user-update-changes-popup/external-user-update-changes-popup.component';
+import {UserSecurityExternalComponent} from './shared/user-security-external/user-security-external.component';
 
 @NgModule({
   declarations: [
@@ -173,7 +193,11 @@ import {DeductionRatioPopupComponent} from './popups/deduction-ratio-popup/deduc
     DynamicModelsComponent,
     DynamicModelPopupComponent,
     DeductionRatioComponent,
-    DeductionRatioPopupComponent
+    DeductionRatioPopupComponent,
+    ExternalUserUpdateRequestApprovalComponent,
+    ExternalUserUpdateApprovalPopupComponent,
+    ExternalUserUpdateChangesPopupComponent,
+    UserSecurityExternalComponent
   ],
   imports: [
     SharedModule,

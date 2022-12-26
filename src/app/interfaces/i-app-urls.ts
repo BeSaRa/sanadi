@@ -60,6 +60,7 @@ export interface IAppUrls {
   AID_LOOKUPS_CRITERIA: string;
   ORGANIZATION: string;
   EXTERNAL_USER: string;
+  EXTERNAL_USER_UPDATE_REQUEST: string;
   CACHE_SERVICE: string;
   BENEFICIARY: string;
   SUBVENTION_REQUEST: string;

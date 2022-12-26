@@ -3,6 +3,8 @@ import {Observable} from 'rxjs';
 import {FactoryService} from '@services/factory.service';
 import {LangService} from '@services/lang.service';
 import {INames} from '@contracts/i-names';
+import {AdminResult} from '@app/models/admin-result';
+import {PermissionCategoryEnum} from '@app/enums/permission-category.enum';
 
 export class Permission extends BaseModel<Permission, any> {
   service: any;
@@ -10,6 +12,10 @@ export class Permission extends BaseModel<Permission, any> {
   description: string | undefined;
   groupId!: number;
   status: boolean | undefined;
+  category!: number;
+
+  categoryInfo!: AdminResult;
+
   private langService: LangService;
 
   constructor() {
@@ -35,5 +41,21 @@ export class Permission extends BaseModel<Permission, any> {
 
   getName(): string {
     return this[(this.langService.map.lang + 'Name') as keyof INames];
+  }
+
+  isExternalPermissionCategory(): boolean {
+    return this.category === PermissionCategoryEnum.INTERNAL;
+  }
+
+  isInternalPermissionCategory(): boolean {
+    return this.category === PermissionCategoryEnum.EXTERNAL;
+  }
+
+  isAllPermissionCategory(): boolean {
+    return this.category === PermissionCategoryEnum.ALL;
+  }
+
+  convertToAdminResult(): AdminResult {
+    return AdminResult.createInstance({enName: this.enName, arName: this.arName, id: this.id})
   }
 }

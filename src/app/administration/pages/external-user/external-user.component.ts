@@ -1,10 +1,9 @@
-import {catchError, exhaustMap, filter, switchMap, takeUntil} from 'rxjs/operators';
+import {catchError, exhaustMap, filter, map, switchMap, takeUntil} from 'rxjs/operators';
 import {Component, ViewChild} from '@angular/core';
 import {ExternalUser} from '@app/models/external-user';
 import {ExternalUserService} from '@services/external-user.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {LangService} from '@app/services/lang.service';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {DialogService} from '@app/services/dialog.service';
 import {ToastService} from '@app/services/toast.service';
 import {ConfigurationService} from '@app/services/configuration.service';
@@ -19,6 +18,10 @@ import {CommonUtils} from '@app/helpers/common-utils';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
 import {of, Subject} from 'rxjs';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import {ExternalUserUpdateRequestService} from '@services/external-user-update-request.service';
+import {ProfileService} from '@services/profile.service';
+import {UntypedFormControl} from '@angular/forms';
+import {PaginatorComponent} from '@app/shared/components/paginator/paginator.component';
 
 @Component({
   selector: 'app-external-user',
@@ -28,6 +31,9 @@ import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 export class ExternalUserComponent extends AdminGenericComponent<ExternalUser, ExternalUserService> {
   view$: Subject<ExternalUser> = new Subject<ExternalUser>();
   usePagination = true;
+  profileIdControl: UntypedFormControl = new UntypedFormControl('');
+  profiles$ = this.profileService.loadAsLookups();
+  @ViewChild('paginator') paginator!: PaginatorComponent;
 
   constructor(public service: ExternalUserService,
               public langService: LangService,
@@ -35,19 +41,19 @@ export class ExternalUserComponent extends AdminGenericComponent<ExternalUser, E
               public configService: ConfigurationService,
               public empService: EmployeeService,
               private dialogService: DialogService,
-              private sharedService: SharedService) {
+              private sharedService: SharedService,
+              private profileService: ProfileService,
+              public externalUserUpdateRequestService: ExternalUserUpdateRequestService) {
     super();
   }
 
   _init() {
-    this.listenToLoadDone();
+    this._setDefaultProfileId();
     this.listenToView();
   }
 
   @ViewChild('table') table!: TableComponent;
-
   displayedColumns: string[] = ['domainName', 'arName', 'enName', 'empNum', 'organization', 'status', 'statusDateModified', 'actions'];
-
   sortingCallbacks = {
     organization: (a: ExternalUser, b: ExternalUser, dir: SortEvent): number => {
       let value1 = !CommonUtils.isValidValue(a) ? '' : a.profileInfo?.getName().toLowerCase(),
@@ -62,15 +68,7 @@ export class ExternalUserComponent extends AdminGenericComponent<ExternalUser, E
   };
 
   commonStatusEnum = CommonStatusEnum;
-  bulkActionsList: IGridAction[] = [
-    // {
-    //   langKey: 'btn_delete',
-    //   icon: 'mdi-close-box',
-    //   callback: ($event: MouseEvent) => {
-    //     this.deactivateBulk($event);
-    //   }
-    // }
-  ];
+  bulkActionsList: IGridAction[] = [];
 
   actions: IMenuItem<ExternalUser>[] = [
     // edit
@@ -79,7 +77,7 @@ export class ExternalUserComponent extends AdminGenericComponent<ExternalUser, E
       label: 'btn_edit',
       icon: ActionIconsEnum.EDIT,
       onClick: item => this.edit$.next(item),
-      show: () => this.empService.checkPermissions(this.permissionsEnum.EDIT_ORG_USER)
+      show: () => this.externalUserUpdateRequestService.canEditUser()
     },
     // view
     {
@@ -94,30 +92,6 @@ export class ExternalUserComponent extends AdminGenericComponent<ExternalUser, E
       icon: ActionIconsEnum.HISTORY,
       label: 'show_logs',
       onClick: (item) => this.showAuditLogs(item)
-    },
-    // activate
-    {
-      type: 'action',
-      icon: ActionIconsEnum.STATUS,
-      label: 'btn_activate',
-      onClick: (item) => this.toggleStatus(item),
-      displayInGrid: false,
-      show: (item) => {
-        return this.empService.checkPermissions(this.permissionsEnum.EDIT_ORG_USER)
-          && (item.status !== CommonStatusEnum.RETIRED && item.status === CommonStatusEnum.DEACTIVATED);
-      }
-    },
-    // deactivate
-    {
-      type: 'action',
-      icon: ActionIconsEnum.STATUS,
-      label: 'btn_deactivate',
-      onClick: (item) => this.toggleStatus(item),
-      displayInGrid: false,
-      show: (item) => {
-        return this.empService.checkPermissions(this.permissionsEnum.EDIT_ORG_USER)
-          && (item.status !== CommonStatusEnum.RETIRED && item.status === CommonStatusEnum.ACTIVATED);
-      }
     }
   ];
 
@@ -125,69 +99,34 @@ export class ExternalUserComponent extends AdminGenericComponent<ExternalUser, E
     return this.table.selection.selected;
   }
 
-  deactivate(model: ExternalUser, event?: MouseEvent): void {
-    event?.preventDefault();
-    // @ts-ignore
-    const message = this.langService.map.msg_delete_will_change_x_status_to_retired.change({x: this.langService.map.user.toLowerCase()}) + '<br/>' +
-      this.langService.map.msg_confirm_delete_x.change({x: model.getName()});
-    this.dialogService.confirm(message)
-      .onAfterClose$.subscribe((click: UserClickOn) => {
-      if (click === UserClickOn.YES) {
-        const sub = model.deactivate().subscribe(() => {
-          // @ts-ignore
-          this.toast.success(this.langService.map.msg_delete_x_success.change({x: model.getName()}));
-          this.reload$.next(null);
-          sub.unsubscribe();
-        });
-      }
-    });
-  }
-
-  deactivateBulk($event: MouseEvent): void {
-    $event.preventDefault();
-    if (this.selectedRecords.length > 0) {
-      const message = this.langService.map.msg_delete_will_change_x_status_to_retired.change({x: this.langService.map.lbl_org_users.toLowerCase()}) + '<br/>' +
-        this.langService.map.msg_confirm_delete_selected;
-      this.dialogService.confirm(message)
-        .onAfterClose$.subscribe((click: UserClickOn) => {
-        if (click === UserClickOn.YES) {
-          const ids = this.selectedRecords.map((item) => {
-            return item.id;
-          });
-          const sub = this.service.deactivateBulk(ids).subscribe((response) => {
-            this.sharedService.mapBulkResponseMessages(this.selectedRecords, 'id', response)
-              .subscribe(() => {
-                this.reload$.next(null);
-                sub.unsubscribe();
-              });
-          });
-        }
-      });
+  private _setDefaultProfileId() {
+    const isSubAdmin = this.empService.userRolesManageUser.isSubAdmin();
+    if (isSubAdmin) {
+      this.profileIdControl.setValue(this.empService.getProfile()!.id);
+      this.profileIdControl.disable();
     }
+    this.filterUsersByProfile();
   }
 
-  edit(orgUser: ExternalUser, $event?: MouseEvent): void {
-    $event?.preventDefault();
-    this.edit$.next(orgUser);
-  }
-
-  listenToLoadDone(): void {
-    this.service._loadDone$
-      .pipe(takeUntil((this.destroy$)))
-      .subscribe(() => {
-        this.table && this.table.clearSelection();
-      });
+  listenToAdd(): void {
+    this.add$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(exhaustMap(() => {
+        return this.service.addDialog(this.profileIdControl.getRawValue())
+          .pipe(switchMap(ref => ref.onAfterClose$));
+      }))
+      .subscribe(() => this.reload$.next(null));
   }
 
   listenToView(): void {
     this.view$
       .pipe(takeUntil(this.destroy$))
       .pipe(exhaustMap((model) => {
-        return this.service.openViewDialog(model.id).pipe(catchError(_ => of(null)));
+        return this.service.viewDialog(model).pipe(catchError(_ => of(null)));
       }))
       .pipe(filter((dialog): dialog is DialogRef => !!dialog))
       .pipe(switchMap(dialog => dialog.onAfterClose$))
-      .subscribe(() => this.reload$.next(null));
+      .subscribe();
   }
 
   showAuditLogs(user: ExternalUser, $event?: MouseEvent): void {
@@ -198,15 +137,36 @@ export class ExternalUserComponent extends AdminGenericComponent<ExternalUser, E
       });
   }
 
-  toggleStatus(model: ExternalUser) {
-    let updateObservable = model.status == CommonStatusEnum.ACTIVATED ? model.updateStatus(CommonStatusEnum.DEACTIVATED) : model.updateStatus(CommonStatusEnum.ACTIVATED);
-    updateObservable.pipe(takeUntil(this.destroy$))
-      .subscribe((_value) => {
-        this.toast.success(this.langService.map.msg_status_x_updated_success.change({x: model.getName()}));
-        this.reload$.next(null);
-      }, () => {
-        this.toast.error(this.langService.map.msg_status_x_updated_fail.change({x: model.getName()}));
-        this.reload$.next(null);
+  filterUsersByProfile(userInteraction: boolean = false) {
+    this.reload$.next(null);
+  }
+
+  listenToReload() {
+    this.reload$
+      .pipe(
+        takeUntil(this.destroy$),
+        filter(val => val !== 'init')
+      )
+      .pipe(switchMap(() => {
+        const paginationOptions = {
+          limit: this.pageEvent.pageSize,
+          offset: (this.pageEvent.pageIndex * this.pageEvent.pageSize)
+        };
+
+        return this.service.loadByProfilePaging(paginationOptions, this.profileIdControl.getRawValue())
+          .pipe(
+            map((res) => {
+              this.count = res.count;
+              return res.rs;
+            }));
+      }))
+      .subscribe((list: ExternalUser[]) => {
+        this.models = list;
+        this.afterReload();
       });
+  }
+
+  afterReload(): void {
+    this.table && this.table.clearSelection();
   }
 }

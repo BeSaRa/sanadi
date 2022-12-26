@@ -58,6 +58,7 @@ export const urlsList: Partial<IAppUrls> = {
   ORGANIZATION: 'admin/ou',
   EXTERNAL_USER: 'admin/external-user',
   EXTERNAL_USER_PERMISSION: 'admin/external-user-permission',
+  EXTERNAL_USER_UPDATE_REQUEST: 'admin/external-user-update-request',
   CACHE_SERVICE: 'admin/config/refresh-cache',
   BENEFICIARY: 'aids/beneficiary',
   SUBVENTION_REQUEST: 'aids/subvention-request',

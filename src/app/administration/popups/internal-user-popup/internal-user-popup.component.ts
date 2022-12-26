@@ -262,6 +262,7 @@ export class InternalUserPopupComponent extends AdminGenericDialog<InternalUser>
   }
 
   private buildPermissionGroups(groups: Lookup[], permissions: Permission[]): void {
+    permissions = permissions.filter((permission) => !permission.isExternalPermissionCategory());
     const permissionsByGroup = new Map<number, Permission[]>();
     this.permissionGroups = [];
     permissions.reduce((record, permission) => {

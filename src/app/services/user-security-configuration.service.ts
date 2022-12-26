@@ -1,14 +1,15 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { UserSecurityConfiguration } from "@app/models/user-security-configuration";
-import { UrlService } from "@app/services/url.service";
-import { FactoryService } from "@app/services/factory.service";
-import { IModelInterceptor } from "@app/interfaces/i-model-interceptor";
-import { UserSecurityConfigurationInterceptor } from "@app/model-interceptors/user-security-configuration-interceptor";
-import { Observable } from "rxjs";
-import { CrudGenericService } from "@app/generics/crud-generic-service";
-import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
-import { Pagination } from "@app/models/pagination";
+import {HttpClient, HttpParams} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {UserSecurityConfiguration} from '@app/models/user-security-configuration';
+import {UrlService} from '@app/services/url.service';
+import {FactoryService} from '@app/services/factory.service';
+import {IModelInterceptor} from '@app/interfaces/i-model-interceptor';
+import {UserSecurityConfigurationInterceptor} from '@app/model-interceptors/user-security-configuration-interceptor';
+import {Observable} from 'rxjs';
+import {CrudGenericService} from '@app/generics/crud-generic-service';
+import {CastResponse, CastResponseContainer} from '@decorators/cast-response';
+import {Pagination} from '@app/models/pagination';
+import {HasInterception, InterceptParam} from '@decorators/intercept-model';
 
 @CastResponseContainer({
   $default: {
@@ -63,8 +64,9 @@ export class UserSecurityConfigurationService extends CrudGenericService<UserSec
     return this._loadSecurityByTeamId(teamId, generalUserId);
   }
 
+  @HasInterception
   @CastResponse(undefined)
-  createBulk(securityConfiguration: Partial<UserSecurityConfiguration>[]): Observable<UserSecurityConfiguration[]> {
+  createBulk(@InterceptParam(new UserSecurityConfigurationInterceptor().send) securityConfiguration: Partial<UserSecurityConfiguration>[]): Observable<UserSecurityConfiguration[]> {
     return this.http.post<UserSecurityConfiguration[]>(this._getServiceURL() + '/bulk/full', securityConfiguration)
   }
 

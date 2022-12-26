@@ -65,6 +65,8 @@ export class ApprovalFormMonthlyComponent implements OnInit, OnDestroy {
 
   @Input()
   template?: TemplateRef<any>;
+  @Input()
+  displayDuration: boolean = true;
 
   constructor(private fb: UntypedFormBuilder,
               private customTermService: CustomTermService,

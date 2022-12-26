@@ -19,6 +19,11 @@ export abstract class CrudGenericService<T> implements CrudServiceInterface<T>, 
   // 15 min in milliseconds
   protected _timeRange: number = 15 * 60 * 1000;
   protected _lastLoadTime!: number;
+  protected _emptyPaginationListResponse = {
+    rs: [],
+    count: 0,
+    sc: 200
+  } as Pagination<T[]>;
 
   @CastResponse(undefined, {
     fallback: '$default',

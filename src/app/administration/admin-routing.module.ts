@@ -24,12 +24,14 @@ import {BankComponent} from '@app/administration/pages/bank/bank.component';
 import {DonorComponent} from '@app/administration/pages/donor/donor.component';
 import {FieldAssessmentComponent} from '@app/administration/pages/field-assessment/field-assessment.component';
 import {VactionDatesComponent} from './pages/vaction-dates/vaction-dates.component';
-import {PermissionGroupsEnum} from '@app/enums/permission-groups-enum';
 import {AdminLookupComponent} from '@app/administration/pages/admin-lookup/admin-lookup.component';
 import {AdminLookupOldComponent} from './pages/admin-lookup-old/admin-lookup-old.component';
 import {ProfilesComponent} from './pages/profiles/profiles.component';
 import {DynamicModelsComponent} from './pages/dynamic-models/dynamic-models.component';
 import {DeductionRatioComponent} from './pages/deduction-ratio/deduction-ratio.component';
+import {
+  ExternalUserUpdateRequestApprovalComponent
+} from '@app/administration/pages/external-user-update-approval/external-user-update-request-approval.component';
 
 const routes: Routes = [
   {path: '', component: AdminHomeComponent},
@@ -43,11 +45,6 @@ const routes: Routes = [
     canActivate: [PermissionGuard],
     data: {permissionKey: PermissionsEnum.MANAGE_CUSTOM_ROLE, configPermissionGroup: null, checkAnyPermission: false},
   },
-  /*{
-    path: 'organizations', component: OrganizationUnitComponent,
-    canActivate: [PermissionGuard],
-    data: { permissionKey: null, configPermissionGroup: PermissionGroupsEnum.MANAGE_ORGANIZATION_PERMISSIONS_GROUP, checkAnyPermission: true },
-  },*/
   {
     path: 'aid', component: AidLookupContainerComponent,
     canActivate: [PermissionGuard],
@@ -57,10 +54,15 @@ const routes: Routes = [
     path: 'external-users', component: ExternalUserComponent,
     canActivate: [PermissionGuard],
     data: {
-      permissionKey: null,
-      configPermissionGroup: PermissionGroupsEnum.MANAGE_EXTERNAL_USER_PERMISSIONS_GROUP,
-      checkAnyPermission: true
+      permissionKey: PermissionsEnum.MANAGE_EXTERNAL_USER_DYNAMIC,
+      configPermissionGroup: null,
+      checkAnyPermission: false
     },
+  },
+  {
+    path: 'external-user-request-approval', component: ExternalUserUpdateRequestApprovalComponent,
+    canActivate: [PermissionGuard],
+    data: {permissionKey: PermissionsEnum.MANAGE_EXTERNAL_USER_REQUEST_APPROVALS_DYNAMIC, configPermissionGroup: null, checkAnyPermission: false},
   },
   {
     path: 'services', component: ServiceDataComponent,

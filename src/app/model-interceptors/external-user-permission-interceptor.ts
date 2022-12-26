@@ -15,6 +15,7 @@ export class ExternalUserPermissionInterceptor implements IModelInterceptor<Exte
   }
 
   private static _deleteBeforeSend(model: Partial<ExternalUserPermission>): void {
+    delete model.searchFields;
     delete model.externalUserInfo;
     delete model.permisionInfo;
   }

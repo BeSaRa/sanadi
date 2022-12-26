@@ -1,0 +1,17 @@
+<div class="dialog-toolbar bg-primary d-flex justify-content-between">
+  <h1 class="h6 text-white">{{popupTitle}}</h1>
+  <span class="flex-grow-1"></span>
+  <button type="button" class="btn btn-fullscreen btn-close-white icon-btn"
+          tabindex="-1" aria-label="Fullscreen" fullscreenBtn></button>
+  <button type="button" class="btn-close btn-close-white"
+          tabindex="-1" [dialogClose]="model" aria-label="Close"></button>
+</div>
+<div class="dialog-content" #dialogContent>
+  <p>external-user-update-approval-popup works!</p>
+</div>
+<div class="dialog-actions">
+  <span class="flex-grow-1"></span>
+  <button (click)="saveRequest($event)" *ngIf="service.canEditUserRequest()"
+          class="btn btn-primary">{{lang.map.btn_save_request}}</button>
+  <button [dialogClose]="model" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
+</div>

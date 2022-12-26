@@ -722,6 +722,7 @@ export interface ILanguageKeys {
   no_documents_to_show: string;
   items_selected: string;
   select_all: string;
+  lbl_all: string;
   attachments: string;
   document_title: string;
   launch: string;
@@ -875,7 +876,9 @@ export interface ILanguageKeys {
   btn_no: string;
   btn_yes: string;
   msg_create_x_success: string;
+  msg_create_request_x_success: string;
   msg_update_x_success: string;
+  msg_update_request_x_success: string;
   err_specific_min_length: string;
   err_too_short: string;
   err_required_field: string;
@@ -1674,4 +1677,19 @@ export interface ILanguageKeys {
   identification_number_exp_date: string;
   msg_user_job_number_is_already_exist: string;
   lookup_function_group: string;
+  menu_external_user_request_approval: string;
+  msg_accept_x_success: string;
+  msg_reject_x_success: string;
+  new_user_request: string;
+  update_user_request: string;
+  btn_save_request: string;
+  view_changes: string;
+  old_value: string;
+  new_value: string;
+  added_permissions: string;
+  removed_permissions: string;
+  added_menus: string;
+  removed_menus: string;
+  added: string;
+  removed: string;
 }
