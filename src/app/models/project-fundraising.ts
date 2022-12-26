@@ -18,12 +18,17 @@ import {mixinApprovalLicenseWithMonthly} from "@app/mixins/minin-approval-licens
 import {mixinRequestType} from "@app/mixins/mixin-request-type";
 import {ICaseModel} from "@contracts/icase-model";
 import {HasLicenseApprovalMonthly} from "@contracts/has-license-approval-monthly";
+import {CaseModelContract} from "@contracts/case-model-contract";
 
 const {send, receive} = new ProjectFundraisingInterceptor()
 const _ApprovalLicenseWithMonthly = mixinRequestType(mixinApprovalLicenseWithMonthly(CaseModel))
 
 @InterceptModel({send, receive})
-export class ProjectFundraising extends _ApprovalLicenseWithMonthly<ProjectFundraisingService, ProjectFundraising> implements HasLicenseApprovalMonthly, ICaseModel<ProjectFundraising> {
+export class ProjectFundraising extends _ApprovalLicenseWithMonthly<ProjectFundraisingService, ProjectFundraising>
+  implements HasLicenseApprovalMonthly,
+    ICaseModel<ProjectFundraising>,
+    CaseModelContract<ProjectFundraisingService, ProjectFundraising> {
+
   service: ProjectFundraisingService;
   caseType: number = CaseTypes.PROJECT_FUNDRAISING
   licenseDuration!: number

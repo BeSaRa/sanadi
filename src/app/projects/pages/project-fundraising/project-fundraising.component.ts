@@ -889,7 +889,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   clearLicense() {
-    this.selectedLicense = undefined
+    this._resetForm()
   }
 
   private prepareNecessaryData() {
