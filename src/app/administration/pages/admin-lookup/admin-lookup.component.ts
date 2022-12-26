@@ -135,6 +135,14 @@ export class AdminLookupComponent {
       lookupType: AdminLookupTypeEnum.SERVICE_TYPE,
       validStatus: () => true,
       isTouchedOrDirty: () => true
+    },
+    functionGroup: {
+      name: 'functionGroup',
+      index: 12,
+      langKey: 'lookup_function_group',
+      lookupType: AdminLookupTypeEnum.FUNCTIONAL_GROUP,
+      validStatus: () => true,
+      isTouchedOrDirty: () => true
     }
   };
   selectedWorkFieldTabIndex$: Subject<number> = new Subject<number>();

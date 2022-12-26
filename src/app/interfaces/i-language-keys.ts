@@ -1672,4 +1672,5 @@ export interface ILanguageKeys {
   passport_number_exp_date: string;
   identification_number_exp_date: string;
   msg_user_job_number_is_already_exist: string;
+  lookup_function_group: string;
 }

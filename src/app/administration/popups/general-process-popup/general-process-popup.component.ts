@@ -167,7 +167,7 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
   }
   private _loadSubTeam(parentTeamId?: number) {
     if (parentTeamId)
-      this.subTeamService.loadAsLookups().pipe(
+      this.subTeamService.loadActive().pipe(
         map((teams) => teams.filter((team: SubTeam) => parentTeamId == team.parent)), catchError(err => of([]))).subscribe(data => {
           this.subTeamsList = data;
         })

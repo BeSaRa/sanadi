@@ -165,7 +165,6 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
       followUpDate: DateUtils.changeDateToDatepicker(caseDetails.followUpDate),
       deductionPercent: caseDetails.deductionPercent
     };
-
     if (!this.canShowDeductionRatio) {
       delete data.deductionPercent
     }
