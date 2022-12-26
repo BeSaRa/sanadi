@@ -120,7 +120,7 @@ export class FinalExternalOfficeApproval extends LicenseApprovalModel<FinalExter
       address: control ? [address, [CustomValidators.maxLength(100)]] : address,
       phone: control ? [phone, CustomValidators.commonValidations.phone] : phone,
       fax: control ? [fax, CustomValidators.commonValidations.fax] : fax,
-      postalCode: control ? [postalCode, [CustomValidators.required, CustomValidators.number, Validators.maxLength(10)]] : postalCode,
+      postalCode: control ? [postalCode, [CustomValidators.number, Validators.maxLength(10)]] : postalCode,
       email: control ? [email, [CustomValidators.pattern('EMAIL'), CustomValidators.maxLength(100)]] : email,
       description: control ? [description, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : description,
       headQuarterType: control ? [headQuarterType, [CustomValidators.required]] : headQuarterType,

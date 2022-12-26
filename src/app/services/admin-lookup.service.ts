@@ -119,6 +119,9 @@ export class AdminLookupService implements CrudServiceAdminLookupContract<AdminL
       case AdminLookupTypeEnum.SERVICE_TYPE:
         url += '/service-type';
         break;
+      case AdminLookupTypeEnum.FUNCTIONAL_GROUP:
+        url += '/functional-group';
+        break;
     }
     return url;
   }
