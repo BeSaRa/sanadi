@@ -27,7 +27,7 @@ export class DeductionRatioManagerComponent implements OnInit, OnDestroy {
 
   _model!: ProjectFundraising
 
-  displayedColumns = ['arabic_name', 'english_name', 'percentage'];
+  displayedColumns = ['arabic_name', 'english_name', 'percentage','actions'];
   private _permitType: BehaviorSubject<number | undefined> = new BehaviorSubject<number | undefined>(undefined);
   private _workArea: BehaviorSubject<number | undefined> = new BehaviorSubject<number | undefined>(undefined);
   private destroy$: Subject<void> = new Subject<void>()
