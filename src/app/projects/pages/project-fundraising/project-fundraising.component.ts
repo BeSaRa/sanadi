@@ -151,10 +151,9 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   _afterLaunch(): void {
-    this.resetForm$.next();
-    this.selectedLicense = undefined;
     this.checkTemplateTabValidity()
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
+    this._resetForm()
   }
 
   _prepareModel(): ProjectFundraising | Observable<ProjectFundraising> {
@@ -223,6 +222,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     this.form.reset();
     this.model = this._getNewInstance();
     this.operation = this.operationTypes.CREATE;
+    this.selectedLicense = undefined;
     this.setDefaultValues()
     this.overrideValuesInCreate()
   }
