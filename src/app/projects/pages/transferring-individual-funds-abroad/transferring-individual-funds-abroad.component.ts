@@ -373,14 +373,8 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     this.handleRequestTypeChange(this.requestType.value, false);
 
     if(this.requestType.value !== TransferringIndividualFundsAbroadRequestTypeEnum.NEW && this.model?.oldLicenseId) {
-      this.licenseService.validateLicenseByRequestType(this.model?.caseType, this.model!.requestType, this.model.oldLicenseId)
-        .pipe(map(validated => {
-          return (validated ? {
-            selected: validated,
-            details: validated
-          } : null) as (null | SelectedLicenseInfo<TransferringIndividualFundsAbroad, TransferringIndividualFundsAbroad>);
-        })).subscribe(ret => {
-        this.selectedLicenses = [ret?.details!];
+      this.service.getByLicenseId(this.model.oldLicenseId).subscribe(ret => {
+        this.selectedLicenses = [ret];
         this.hasSearchedForLicense = true;
       })
     }
