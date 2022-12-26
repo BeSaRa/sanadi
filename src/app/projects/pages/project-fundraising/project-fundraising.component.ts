@@ -194,11 +194,10 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     ).subscribe((clickOn: UserClickOn) => {
       if (clickOn === UserClickOn.YES) {
         if (userInteraction) {
-          this.resetForm$.next();
+          this._resetForm()
           this.requestType.setValue(requestTypeValue);
         }
         this.requestType$.next(requestTypeValue);
-
       } else {
         this.requestType.setValue(this.requestType$.value);
       }
