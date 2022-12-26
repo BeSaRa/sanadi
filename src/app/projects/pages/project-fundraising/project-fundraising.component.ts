@@ -151,9 +151,9 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   _afterLaunch(): void {
+    this._resetForm()
     this.checkTemplateTabValidity()
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
-    this._resetForm()
   }
 
   _prepareModel(): ProjectFundraising | Observable<ProjectFundraising> {
