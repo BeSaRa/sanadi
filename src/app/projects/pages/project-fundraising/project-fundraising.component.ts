@@ -529,6 +529,8 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       .pipe(takeUntil(this.destroy$))
       .pipe(filter(value => !!value))
       .subscribe((value: number) => {
+        this.subDACCategory.setValue(null)
+        this.subUNOCHACategory.setValue(null)
         this.loadSubDacOchaByParentId(value)
       })
   }
