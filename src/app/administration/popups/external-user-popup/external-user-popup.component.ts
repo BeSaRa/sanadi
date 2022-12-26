@@ -36,6 +36,9 @@ import {ExternalUserUpdateRequestService} from '@services/external-user-update-r
 import {ExternalUserUpdateRequestStatusEnum} from '@app/enums/external-user-update-request-status.enum';
 import {ExternalUserUpdateRequestTypeEnum} from '@app/enums/external-user-update-request-type.enum';
 import {PermissionsEnum} from '@app/enums/permissions-enum';
+import {
+  UserSecurityExternalComponent
+} from '@app/administration/shared/user-security-external/user-security-external.component';
 
 @Component({
   selector: 'app-external-user-popup',
@@ -177,7 +180,7 @@ export class ExternalUserPopupComponent extends AdminGenericDialog<ExternalUser>
 
   @ViewChild('dialogContent') dialogContent!: ElementRef;
   @ViewChild('customMenuPermissionComponent') customMenuPermissionComponentRef!: CustomMenuPermissionComponent;
-  @ViewChild('userSecurityComponent') userSecurityComponentRef!: UserSecurityComponent;
+  @ViewChild('userSecurityExternalComponent') userSecurityComponentRef!: UserSecurityExternalComponent;
 
   buildForm(): void {
     this.form = this.fb.group({
