@@ -25,7 +25,7 @@ export class DeductionRatioItem extends BaseModel<DeductionRatioItem, DeductionR
   service: DeductionRatioItemService;
   langService!: LangService
   statusInfo!:AdminResult;
-  
+
   constructor() {
     super();
     this.service = FactoryService.getService('DeductionRatioItemService')
