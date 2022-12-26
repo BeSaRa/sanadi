@@ -33,7 +33,6 @@ export class ProjectFundraisingApproveTaskPopupComponent implements OnInit, OnDe
 
   model: ProjectFundraising;
   comment: UntypedFormControl = new UntypedFormControl('', [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]);
-  deductionRatio: number;
   @ViewChild(ApprovalFormMonthlyComponent) approvalForm!: ApprovalFormMonthlyComponent;
 
   constructor(
@@ -50,7 +49,6 @@ export class ProjectFundraisingApproveTaskPopupComponent implements OnInit, OnDe
     this.label = ((CommonUtils.changeCamelToSnakeCase(this.data.action) + '_task') as unknown as keyof ILanguageKeys);
     this.response = this.data.action;
     this.model = this.data.model;
-    this.deductionRatio = (this.model.administrativeDeductionAmount * 100 / this.model.projectTotalCost)
   }
 
   ngOnDestroy(): void {
@@ -72,7 +70,6 @@ export class ProjectFundraisingApproveTaskPopupComponent implements OnInit, OnDe
 
   private listenToAction() {
     this.action$
-      .pipe(tap((_) => this.isCancelRequestType() ? null : this.approvalForm.saveApprovalInfo()))
       .pipe(map(_ => this.isCancelRequestType() ? true : this.model.hasValidApprovalInfo()))
       .pipe(tap(valid => !valid && this.displayInvalidFormMessage()))
       .pipe(filter(valid => valid))

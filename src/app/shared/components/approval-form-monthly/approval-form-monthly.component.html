@@ -20,7 +20,7 @@
         </div>
 
       </div>
-      <div class="col-md-4 col-sm-12 mb-4 position-relative">
+      <div *ngIf="displayDuration" class="col-md-4 col-sm-12 mb-4 position-relative">
           <label class="form-label" asteriskIfRequired="licenseDuration"
                  for="licenseDuration">{{lang.map.license_duration}}</label>
           <input id="licenseDuration" validationClasses="licenseDuration" formControlName="licenseDuration" class="form-control">

@@ -11,6 +11,7 @@ import {DeductedPercentage} from "@app/models/deducted-percentage";
 import {DialogService} from "@services/dialog.service";
 import {UserClickOn} from "@app/enums/user-click-on.enum";
 import currency from "currency.js";
+import {EmployeeService} from "@services/employee.service";
 
 @Component({
   selector: 'deduction-ratio-manager',
@@ -70,6 +71,7 @@ export class DeductionRatioManagerComponent implements OnInit, OnDestroy {
 
   constructor(private service: ProjectFundraisingService,
               private dialog: DialogService,
+              private employeeService: EmployeeService,
               public lang: LangService) {
   }
 
@@ -111,7 +113,7 @@ export class DeductionRatioManagerComponent implements OnInit, OnDestroy {
   private listenToUpdates(): void {
     combineLatest([this._permitType, this._workArea])
       .pipe(takeUntil(this.destroy$))
-      .pipe(filter((value): value is [number, number] => !!(value[0] || value[1])))
+      .pipe(filter((value): value is [number, number] => !!(value[0] || value[1]) && this.employeeService.isExternalUser()))
       .pipe(switchMap(([permitType, workArea]) => {
         return this.service.loadDeductionRatio({...permitType ? {permitType} : undefined, ...workArea ? {workArea} : undefined})
       }))

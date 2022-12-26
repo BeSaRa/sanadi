@@ -5,16 +5,10 @@
 </div>
 <div class="dialog-content" [ngClass]="isCancelRequestType() ? 'no-fixed-height min-w400px' : 'w800px'">
   <ng-container *ngIf="!isCancelRequestType()">
-    <approval-form-monthly [licenseStartDateMandatory]="false" [template]="template" [multi]="false"
+    <approval-form-monthly [displayDuration]="false" [licenseStartDateMandatory]="false" [multi]="false"
                            [license]="data.model"
                            [model]="data.model"></approval-form-monthly>
   </ng-container>
-  <ng-template #template>
-    <div class="col-md-4 col-sm-12 mb-4 position-relative">
-      <label class="form-label" for="deductionRatio">{{lang.map.total_deduction_ratio}}</label>
-      <input id="deductionRatio" [value]="deductionRatio" [readonly]="true" class="form-control">
-    </div>
-  </ng-template>
   <div class="row">
     <div class="col-sm-12 mb-4 position-relative">
       <label class="form-label" asteriskIfRequired="" [control]="comment" for="comment">{{lang.map.comment}}</label>

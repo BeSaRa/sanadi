@@ -309,4 +309,8 @@ export class ProjectFundraising extends _ApprovalLicenseWithMonthly<ProjectFundr
     this.amountOverCountriesList = []
   }
 
+  hasValidApprovalInfo(): boolean {
+    return !!this.licenseDuration
+  }
+
 }
