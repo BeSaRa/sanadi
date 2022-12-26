@@ -144,4 +144,13 @@ export class TransferringIndividualFundsAbroadService extends BaseGenericEServic
       displayedColumns
     });
   }
+
+  @CastResponse(() => TransferringIndividualFundsAbroad)
+  private _getByLicenseId(licenseId: string): Observable<TransferringIndividualFundsAbroad> {
+    return this.http.get<TransferringIndividualFundsAbroad>(this._getURLSegment() + '/license/' + licenseId + '/details');
+  }
+
+  getByLicenseId(licenseId: string): Observable<TransferringIndividualFundsAbroad> {
+    return this._getByLicenseId(licenseId);
+  }
 }

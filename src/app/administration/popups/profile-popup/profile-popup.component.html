@@ -7,7 +7,7 @@
             tabindex="-1" [dialogClose]="model" aria-label="Close"></button>
   </div>
 </div>
-<div class="dialog-content w800px" #dialogContent>
+<div class="dialog-content" style="width:900px" #dialogContent>
   <tabs-list (onTabChange)="onTabChange($event)">
     <tab [name]="tabsData.basic.name" [hasError]="!tabsData.basic.validStatus()"
          [template]="basicInfoTab" [title]="lang.map.lbl_basic_info"></tab>
@@ -48,13 +48,12 @@
           <input trimInput id="arDesc" validationClasses="arDesc" formControlName="arDesc" class="form-control"/>
           <app-field-error-message controlName="arDesc"></app-field-error-message>
         </div>
-
         <div class="col-sm-6 mb-4 position-relative">
           <label for="profileCode" asteriskIfRequired="profileCode"
                  class="form-label">{{ lang.map.lbl_profile_code }}</label>
           <input profileCodeExists [operation]="operation" [profileId]="this.model?.id!"
-                 trimInput id="profileCode" formControlName="profileCode" class="form-control"
-                 validationClasses="profileCode"/>
+                 id="profileCode" formControlName="profileCode" class="form-control"
+                 validationClasses="profileCode" trimInput="ALL"/>
           <app-field-error-message controlName="profileCode"></app-field-error-message>
         </div>
         <div class="col-md-6 col-sm-12 mb-4 ng-select-wrapper">
@@ -91,6 +90,43 @@
           <label for="email" asteriskIfRequired="email" class="form-label">{{lang.map.lbl_email}}</label>
           <input trimInput id="email" formControlName="email" validationClasses="email" class="form-control"/>
           <app-field-error-message controlName="email"></app-field-error-message>
+        </div>
+        <div class="col-md-6 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="permitTypeList"
+                 for="permitTypeList">{{lang.map.permit_type}}</label>
+          <ng-select [multiple]="true" validationClasses="permitTypeList" appendTo="body" [clearable]="true"
+                     id="permitTypeList"
+                     [items]="permitTypes"
+                     bindValue="lookupKey"
+                     formControlName="permitTypeList">
+            <ng-template ng-option-tmp let-item="item">
+              <span class="custom-option">{{item.getName()}}</span>
+            </ng-template>
+            <ng-template ng-label-tmp let-item="item" let-clear="clear">
+              <span class="ng-value-label">{{item && item.getName ? item.getName() : ''}}</span>
+              <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+            </ng-template>
+            <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+              <div class="ng-value" *ngFor="let item of (items ? items.slice(0,2): [])">
+                <span class="ng-value-label">{{item && item.getName ? item.getName() : ''}}</span>
+                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+              </div>
+              <div class="ng-value" *ngIf="items.length > 2">
+                <span class="ng-value-label">{{items.length - 2}} more...</span>
+              </div>
+            </ng-template>
+          </ng-select>
+          <app-field-error-message controlName="permitTypeList"></app-field-error-message>
+        </div>
+        <div class="col-md-6 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="submissionMechanism"
+                 for="submissionMechanism">{{lang.map.submission_mechanism}}</label>
+          <ng-select validationClasses="submissionMechanism" appendTo="body" [clearable]="true" id="submissionMechanism"
+                     formControlName="submissionMechanism">
+            <ng-option [value]="option.lookupKey"
+                       *ngFor="let option of submissionMechanisms">{{option.getName()}}</ng-option>
+          </ng-select>
+          <app-field-error-message controlName="submissionMechanism"></app-field-error-message>
         </div>
       </div>
     </form>
@@ -168,6 +204,7 @@
           (click)="displayFormValidity(null, dialogContent)" tooltip="{{ lang.map.validate_fields }}"
           class="btn btn-link"><i class="mdi mdi-information-outline text-info"></i></button>
   <div class="flex-grow-1"></div>
-  <button *ngIf="saveVisible" (click)="save$.next(null)" class="btn btn-primary">{{ lang.map.btn_save }}</button>
+  <button *ngIf="saveVisible" [disabled]="form.invalid || form.pending" (click)="save$.next(null)"
+          class="btn btn-primary">{{ lang.map.btn_save }}</button>
   <button [dialogClose]="model" class="btn btn-secondary">{{ lang.map.btn_close }}</button>
 </div>

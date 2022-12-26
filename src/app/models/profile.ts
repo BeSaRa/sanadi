@@ -43,6 +43,11 @@ export class Profile extends BaseModel<Profile, ProfileService> {
   statusDateModified!: string | IMyDateModel;
   email!: string;
   profileDetails!: ProfileDetails;
+  permitTypeList: number[] = [];
+  submissionMechanism?: number
+
+  // not related to the model
+  permitTypesInfo: AdminResult[] = []
 
   getName(): string {
     return this[(this.langService.map.lang + 'Name') as keyof INames];
@@ -59,6 +64,8 @@ export class Profile extends BaseModel<Profile, ProfileService> {
       registrationAuthority,
       status,
       email,
+      permitTypeList,
+      submissionMechanism
     } = this;
     return {
       arName: controls ? [arName, [CustomValidators.required,
@@ -75,13 +82,15 @@ export class Profile extends BaseModel<Profile, ProfileService> {
       arDesc: controls ? [arDesc, [CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
         CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS),
       ]] : arDesc,
-      profileCode: controls ? [profileCode, [CustomValidators.required]] : profileCode,
+      profileCode: controls ? [profileCode, [CustomValidators.required], []] : profileCode,
       registrationAuthority: controls ? [registrationAuthority] : registrationAuthority,
       status: controls ? [status] : status,
       email: controls ? [email, [CustomValidators.required,
         CustomValidators.pattern('EMAIL'),
         CustomValidators.maxLength(CustomValidators.defaultLengths.EMAIL_MAX),
       ]] : email,
+      permitTypeList: controls ? [permitTypeList] : permitTypeList,
+      submissionMechanism: controls ? [submissionMechanism] : submissionMechanism
     };
   }
 

@@ -103,4 +103,9 @@ export class DeductionRatioPopupComponent extends AdminGenericDialog<DeductionRa
       )
       .subscribe((result) => this.profileList = result);
   }
+  NameNotValid(){
+    const arName = this.form.get('arName')
+    const enName = this.form.get('enName')
+    return (arName?.invalid && (arName?.dirty || arName?.touched))|| (enName?.invalid && (enName?.dirty || enName?.touched))
+  }
 }

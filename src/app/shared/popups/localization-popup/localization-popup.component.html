@@ -10,10 +10,11 @@
       <div class="col-sm-12 mb-4 position-relative">
         <label asteriskIfRequired="localizationKey" for="localizationKey"
                class="form-label">{{langService.map.lbl_localization_key}}</label>
-        <input localizationKeyExists [operation]="operation" id="localizationKey"
-               [ngClass]="fm.getStatusClass('localizationKey')"
+        <input localizationKeyExists [operation]="operation"
+               id="localizationKey"
+               validationClasses="localizationKey"
                formControlName="localizationKey" class="form-control">
-        <app-field-error-message [control]="fm.getFormField('localizationKey')"></app-field-error-message>
+        <app-field-error-message controlName="localizationKey"></app-field-error-message>
       </div>
     </div>
     <div class="row">

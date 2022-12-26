@@ -80,10 +80,10 @@ export class ProfileService extends CrudWithDialogGenericService<Profile> {
   @CastResponse(undefined)
   getByIdAndProfileCode(id: number, profileCode: string) {
     let query = new HttpParams().append('profile-code', profileCode);
-    if(CommonUtils.isValidValue(id)) {
+    if (CommonUtils.isValidValue(id)) {
       query = query.append('id', id);
     }
-    return this.http.get<Profile[]>(this._getServiceURL() + '/criteria', {params: query});
+    return this.http.get<Profile[]>(this._getServiceURL() + '/criteria', {params: query})
   }
 
   @CastResponse(undefined)

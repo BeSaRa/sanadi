@@ -155,4 +155,5 @@ export interface ILookupMap {
   WORK_FIELD: Lookup[];
   GeneralProcessType: Lookup[];
   ProjectPermitType: Lookup[];
+  SubmissionMechanism: Lookup[];
 }
