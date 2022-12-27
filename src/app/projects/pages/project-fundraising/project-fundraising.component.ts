@@ -10,7 +10,7 @@ import {Lookup} from "@app/models/lookup";
 import {LookupService} from "@services/lookup.service";
 import {LangService} from "@services/lang.service";
 import {Country} from "@app/models/country";
-import {catchError, exhaustMap, filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
+import {catchError, delay, exhaustMap, filter, map, startWith, switchMap, takeUntil, tap} from "rxjs/operators";
 import {ProjectWorkArea} from "@app/enums/project-work-area";
 import {ProjectPermitTypes} from "@app/enums/project-permit-types";
 import {ServiceRequestTypes} from "@app/enums/service-request-types";
@@ -54,7 +54,6 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   internalProjectsClassifications: Lookup[] = this.lookupService.listByCategory.InternalProjectClassification;
   sanadyDomains: AidLookup[] = [];
   sanadyMainClassifications: AidLookup[] = [];
-  displayWorkAreaAndCountry: boolean = true;
   displayedColumns = ['name', 'serial', 'status', 'totalCost', 'actions']
   templateRequired: boolean = false;
   addTemplate$: Subject<any> = new Subject<any>();
@@ -476,13 +475,13 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   onDeductionRatioChanges() {
-    Promise
-      .resolve(() => {
-        this.deductionRatioChanged = false
-      })
-      .then(() => {
-        this.deductionRatioChanged = true
-      })
+    of(this.deductionRatioChanged)
+      .pipe(delay(0))
+      .pipe(tap(() => this.deductionRatioChanged = false))
+      .pipe(delay(0))
+      .pipe(tap(() => this.deductionRatioChanged = true))
+      .pipe(takeUntil(this.destroy$))
+      .subscribe()
   }
 
   handleReadonly() {
@@ -527,7 +526,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     const yearsMessage = this.lang.map.make_sure_that_x_sum_equal_to_target_amount.change({x: this.lang.map.year_s})
     const model = this.model!
     return of(model)
-      .pipe(map(_ => this.displayWorkAreaAndCountry ? model.targetAmount === model.calculateAllCountriesAmount() : true))
+      .pipe(map(_ => this.displayAllFields ? model.targetAmount === model.calculateAllCountriesAmount() : true))
       .pipe(tap(value => !value && this.dialog.error(countriesMessage)))
       .pipe(filter(val => val))
       .pipe(map(_ => model.targetAmount === model.calculateAllYearsAmount()))
@@ -540,8 +539,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       this.templateTabHasError = true;
       return
     }
-
-    this.templateTabHasError = model.hasInvalidTargetAmount(!this.displayWorkAreaAndCountry)
+    Promise.resolve().then(() => this.templateTabHasError = model.hasInvalidTargetAmount(!this.displayAllFields))
   }
 
   viewTemplate(template: ProjectTemplate) {
@@ -678,7 +676,12 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   private listenToPermitTypeChanges() {
-    combineLatest([this.permitType.valueChanges, this.projectWorkArea.valueChanges, this.projectType.valueChanges, this.domain.valueChanges])
+    combineLatest([
+      this.permitType.valueChanges.pipe(startWith<number, number>(this.permitType.value)),
+      this.projectWorkArea.valueChanges.pipe(startWith<number, number>(this.projectWorkArea.value)),
+      this.projectType.valueChanges.pipe(startWith<number, number>(this.projectType.value)),
+      this.domain.valueChanges.pipe(startWith<number, number>(this.domain.value))
+    ])
       .pipe(takeUntil(this.destroy$))
       .subscribe(([permitType, projectWorkArea, projectType, domain]: [ProjectPermitTypes, ProjectWorkArea, FundraisingProjectTypes, DomainTypes]) => {
         console.log(
@@ -767,13 +770,19 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       .subscribe((value: ProjectWorkArea) => {
         value === ProjectWorkArea.OUTSIDE_QATAR && (() => {
           !this.domain.value && this.domain.setValue(DomainTypes.HUMANITARIAN)
+          this.domain.updateValueAndValidity()
           this.loadDacOuchMain(this.domain.value)
           this.emptyFields(aidFields)
+          this.countriesField.setValue(((this.countriesField.value ?? []) as number[]).filter(id => id !== this.qatarCountry.id))
+          this.countriesField.enable()
         })()
 
         value === ProjectWorkArea.INSIDE_QATAR && (() => {
           !this.projectType.value && this.projectType.setValue(FundraisingProjectTypes.SOFTWARE)
+          this.projectType.updateValueAndValidity()
           this.emptyFields(domainFields)
+          this.countriesField.setValue([this.qatarCountry.id])
+          this.countriesField.disable()
         })()
 
         !value && this.emptyFields(aidFields.concat(domainFields))
@@ -784,7 +793,6 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     merge(this.mainDACCategory.valueChanges, this.mainUNOCHACategory.valueChanges)
       .pipe(takeUntil(this.destroy$))
       .subscribe((value: number) => {
-        console.log('SUB');
         this.loadSubDacOchaByParentId(value)
       })
   }

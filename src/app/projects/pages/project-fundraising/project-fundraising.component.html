@@ -321,7 +321,7 @@
         [workArea]="projectWorkArea.value" [permitType]="permitType.value"></deduction-ratio-manager>
 
       <targeted-countries-distribution
-        *ngIf="displayWorkAreaAndCountry"
+        *ngIf="displayAllFields"
         (onAddItem)="checkTemplateTabValidity()"
         (onItemChange)="checkTemplateTabValidity()"
         (onItemRemoved)="checkTemplateTabValidity()"
