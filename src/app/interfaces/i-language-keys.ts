@@ -1,4 +1,9 @@
 export interface ILanguageKeys {
+  template_action_x_confirmation_msg: string;
+  review_status: string;
+  public_status: string;
+  no_need_review: string;
+  need_review: string;
   submission_mechanism: string;
   profile_code_already_exists: string;
   make_sure_that_x_sum_equal_to_target_amount: string;

@@ -27,8 +27,9 @@ import {BaseGenericEService} from "@app/generics/base-generic-e-service";
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 import {UntypedFormGroup} from '@angular/forms';
 import {OrganizationOfficer} from '@app/models/organization-officer';
+import {CaseModelContract} from "@contracts/case-model-contract";
 
-export abstract class CaseModel<S extends BaseGenericEService<T>, T extends FileNetModel<T>> extends FileNetModel<T> implements ICaseModel<T> {
+export abstract class CaseModel<S extends BaseGenericEService<T>, T extends FileNetModel<T>> extends FileNetModel<T> implements ICaseModel<T>, CaseModelContract<S, T> {
   serial!: number;
   fullSerial!: string;
   caseState!: number;

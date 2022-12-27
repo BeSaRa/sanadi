@@ -64,7 +64,7 @@ export class DacOchaService extends CrudWithDialogGenericService<AdminLookup> {
     return this.adminLookupService.loadWorkFieldsByTypePaging(options, dacOchaTypeId);
   }
 
-  loadByParentId(parentId: number) {
+  loadByParentId(parentId: number): Observable<AdminLookup[]> {
     if (!parentId) {
       return of([]);
     }

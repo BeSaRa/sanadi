@@ -18,12 +18,21 @@ import {mixinApprovalLicenseWithMonthly} from "@app/mixins/minin-approval-licens
 import {mixinRequestType} from "@app/mixins/mixin-request-type";
 import {ICaseModel} from "@contracts/icase-model";
 import {HasLicenseApprovalMonthly} from "@contracts/has-license-approval-monthly";
+import {CaseModelContract} from "@contracts/case-model-contract";
+import {DomainTypes} from "@app/enums/domain-types";
+import {ProjectPermitTypes} from "@app/enums/project-permit-types";
+import {TemplateStatus} from "@app/enums/template-status";
+import {ServiceRequestTypes} from "@app/enums/service-request-types";
 
 const {send, receive} = new ProjectFundraisingInterceptor()
 const _ApprovalLicenseWithMonthly = mixinRequestType(mixinApprovalLicenseWithMonthly(CaseModel))
 
 @InterceptModel({send, receive})
-export class ProjectFundraising extends _ApprovalLicenseWithMonthly<ProjectFundraisingService, ProjectFundraising> implements HasLicenseApprovalMonthly, ICaseModel<ProjectFundraising> {
+export class ProjectFundraising extends _ApprovalLicenseWithMonthly<ProjectFundraisingService, ProjectFundraising>
+  implements HasLicenseApprovalMonthly,
+    ICaseModel<ProjectFundraising>,
+    CaseModelContract<ProjectFundraisingService, ProjectFundraising> {
+
   service: ProjectFundraisingService;
   caseType: number = CaseTypes.PROJECT_FUNDRAISING
   licenseDuration!: number
@@ -161,6 +170,10 @@ export class ProjectFundraising extends _ApprovalLicenseWithMonthly<ProjectFundr
     return this.templateList && this.templateList.length ? this.templateList[0].templateId : undefined;
   }
 
+  getTemplate(): ProjectTemplate | undefined {
+    return this.templateList && this.templateList.length ? this.templateList[0] : undefined
+  }
+
   hasTemplate(): boolean {
     return !!(this.templateList && this.templateList.length)
   }
@@ -294,11 +307,11 @@ export class ProjectFundraising extends _ApprovalLicenseWithMonthly<ProjectFundr
   }
 
   approve(): DialogRef {
-    return this.service.approveTask(this, WFResponseType.APPROVE);
+    return [ServiceRequestTypes.CANCEL, ServiceRequestTypes.UPDATE].includes(this.requestType) ? super.approve() : this.service.approveTask(this, WFResponseType.APPROVE);
   }
 
   finalApprove(): DialogRef {
-    return this.service.approveTask(this, WFResponseType.FINAL_APPROVE);
+    return [ServiceRequestTypes.CANCEL, ServiceRequestTypes.UPDATE].includes(this.requestType) ? super.approve() : this.service.approveTask(this, WFResponseType.FINAL_APPROVE);
   }
 
   clearYears(): void {
@@ -313,4 +326,19 @@ export class ProjectFundraising extends _ApprovalLicenseWithMonthly<ProjectFundr
     return !!this.licenseDuration
   }
 
+  getDacOchaId(): number | null {
+    return this.domain === DomainTypes.DEVELOPMENT ? this.mainDACCategory :
+      this.domain === DomainTypes.HUMANITARIAN &&
+      this.permitType !== ProjectPermitTypes.SECTIONAL_BASKET ?
+        this.mainUNOCHACategory : null;
+  }
+
+  changeTemplateStatus(index: number, status: TemplateStatus): boolean {
+    this.templateList[index].templateStatus = status
+    return true
+  }
+
+  canApproveTemplate(index: number = 0) {
+    return this.templateList[index].templateStatus !== TemplateStatus.APPROVED;
+  }
 }

@@ -5,6 +5,10 @@ import {ProjectTemplate} from "@app/models/projectTemplate";
 import {DeductedPercentage} from "@app/models/deducted-percentage";
 import {AmountOverYear} from "@app/models/amount-over-year";
 import {AmountOverCountry} from "@app/models/amount-over-country";
+import {Lookup} from "@app/models/lookup";
+import {FactoryService} from "@services/factory.service";
+import {LangService} from "@services/lang.service";
+import {PublicTemplateStatus} from "@app/enums/public-template-status";
 
 export class ProjectFundraisingInterceptor implements IModelInterceptor<ProjectFundraising> {
 
@@ -16,19 +20,35 @@ export class ProjectFundraisingInterceptor implements IModelInterceptor<ProjectF
   }
 
   receive(model: ProjectFundraising): ProjectFundraising {
-    model.templateList = model.templateList ? model.templateList.map(item => new ProjectTemplate().clone({
-      ...item,
-      templateStatusInfo: AdminResult.createInstance(item.templateStatusInfo)
-    })) : []
+    const lang = FactoryService.getService<LangService>('LangService');
+    const needReview = (new Lookup().clone({
+      arName: lang.getArabicLocalByKey('need_review'),
+      enName: lang.getEnglishLocalByKey('need_review')
+    }))
+    const noNeedReview = (new Lookup().clone({
+      arName: lang.getArabicLocalByKey('no_need_review'),
+      enName: lang.getEnglishLocalByKey('no_need_review')
+    }))
+    model.templateList = model.templateList ? model.templateList.map(item => {
+      return new ProjectTemplate().clone({
+        ...item,
+        templateStatusInfo: item.templateStatus ? AdminResult.createInstance(item.templateStatusInfo) : (item.publicStatus === PublicTemplateStatus.APPROVED_BY_RACA ? noNeedReview : needReview).convertToAdminResult(),
+        publicStatusInfo: AdminResult.createInstance(item.publicStatusInfo)
+      })
+    }) : []
+
+
     model.deductedPercentagesItemList = model.deductedPercentagesItemList ? model.deductedPercentagesItemList.map(item => new DeductedPercentage().clone({
       ...item,
       deductionTypeInfo: AdminResult.createInstance(item.deductionTypeInfo)
     })) : []
+
     model.amountOverYearsList = model.amountOverYearsList ? model.amountOverYearsList.map(item => new AmountOverYear().clone({...item})) : []
     model.amountOverCountriesList = model.amountOverCountriesList ? model.amountOverCountriesList.map(item => new AmountOverCountry().clone({
       ...item,
       countryInfo: AdminResult.createInstance(item.countryInfo)
     })) : []
+
     model.countriesInfo = model.countriesInfo ? model.countriesInfo.map(item => AdminResult.createInstance(item)) : []
 
     model.domainInfo = AdminResult.createInstance(model.domainInfo)

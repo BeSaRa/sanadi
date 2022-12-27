@@ -38,7 +38,7 @@ export class ProjectFundraisingService extends BaseGenericEService<ProjectFundra
   jsonSearchFile: string = 'project_fundraising_search.json';
   serviceKey: keyof ILanguageKeys = 'menu_projects_fundraising';
   caseStatusIconMap: Map<number, string> = new Map<number, string>();
-  searchColumns: string[] = ['fullSerial', 'subject',  'requestTypeInfo', 'createdOn', 'caseStatus', 'ouInfo'];
+  searchColumns: string[] = ['fullSerial', 'subject', 'requestTypeInfo', 'createdOn', 'caseStatus', 'ouInfo'];
 
   constructor(public http: HttpClient,
               public domSanitizer: DomSanitizer,
@@ -73,12 +73,11 @@ export class ProjectFundraisingService extends BaseGenericEService<ProjectFundra
     return this.urlService
   }
 
-  openDialogSearchTemplate(criteria: any, workArea: ProjectWorkArea, templateId?: string): Observable<DialogRef> {
+  openDialogSearchTemplate(criteria: any, workArea: ProjectWorkArea, template?: ProjectTemplate): Observable<DialogRef> {
     return this.searchForTemplate(criteria, workArea)
-      // .pipe(map(items => items.map(item => item.normalizeTemplate())))
       .pipe(switchMap(templates => templates.length ? of(this.dialog.show(ChooseTemplatePopupComponent, {
         templates,
-        templateId,
+        template,
         workArea
       })) : of(this.dialog.info('there is no templates'))))
   }
