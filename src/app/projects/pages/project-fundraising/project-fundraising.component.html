@@ -66,54 +66,53 @@
                                   [licenseList]="[selectedLicense]"
                                   [columns]="service.selectLicenseDisplayColumns"></selected-license-table>
         </div>
-        <div *ngIf="displayWorkAreaAndCountry" class="row">
-          <div class="col-md-4 col-sm-12 mb-4 position-relative">
-            <label class="form-label" asteriskIfRequired="projectWorkArea"
-                   for="projectWorkArea">{{lang.map.project_work_area}}</label>
-            <ng-select validationClasses="projectWorkArea" appendTo="body" [clearable]="false" id="projectWorkArea"
-                       formControlName="projectWorkArea"
-                       labelForId="projectWorkArea"
-                       placeholder="{{lang.map.select}}"
-                       [notFoundText]="lang.map.msg_not_found"
-                       [readonly]="(isExtendOrCancelRequestType() || readonly)">
-              <ng-option [value]="option.lookupKey"
-                         *ngFor="let option of projectWorkAreas">{{option.getName()}}</ng-option>
-            </ng-select>
-            <app-field-error-message controlName="projectWorkArea"></app-field-error-message>
-          </div>
-          <div class="col-md-8 col-sm-12 mb-4 position-relative">
-            <label class="form-label" asteriskIfRequired="countries"
-                   for="countries">{{lang.map.country_countries}}</label>
-            <ng-select [multiple]="true" validationClasses="countries" appendTo="body" [clearable]="true" id="countries"
-                       formControlName="countries"
-                       labelForId="countries"
-                       placeholder="{{lang.map.select}}"
-                       [notFoundText]="lang.map.msg_not_found"
-                       [readonly]="(isExtendOrCancelRequestType() || readonly)">
-              <ng-option [disabled]="checkCountryDisabled(option)" [value]="option.id"
-                         *ngFor="let option of countries">{{option.getName()}}</ng-option>
-            </ng-select>
-            <app-field-error-message controlName="countries"></app-field-error-message>
-          </div>
-        </div>
-        <div class="row" *ngIf="displayDomainSection">
-          <div class="col-md-4 col-sm-12 position-relative">
-            <label class="form-label" asteriskIfRequired="domain"
-                   for="domain">{{lang.map.domain}}</label>
-            <ng-select validationClasses="domain" appendTo="body" [clearable]="false" id="domain"
-                       formControlName="domain"
-                       labelForId="domain"
-                       placeholder="{{lang.map.select}}"
-                       [notFoundText]="lang.map.msg_not_found"
-                       [readonly]="(isExtendOrCancelRequestType() || readonly)">
-              <ng-option [value]="option.lookupKey" *ngFor="let option of domains">{{option.getName()}}</ng-option>
-            </ng-select>
-            <app-field-error-message [ignoreTop]="true" controlName="domain"></app-field-error-message>
-          </div>
-          <div class="col-md-8 col-sm-12">
-            <div class="flex flex-column">
-              <div *ngIf="displayDacSection" class="row">
-                <div class="col-md-6 col-sm-12 mb-4 position-relative">
+        <div class="row">
+          <ng-container *ngIf="displayAllFields">
+            <div class="col-md-4 col-sm-12 mb-4 position-relative">
+              <label class="form-label" asteriskIfRequired="projectWorkArea"
+                     for="projectWorkArea">{{lang.map.project_work_area}}</label>
+              <ng-select validationClasses="projectWorkArea" appendTo="body" [clearable]="false" id="projectWorkArea"
+                         formControlName="projectWorkArea"
+                         labelForId="projectWorkArea"
+                         placeholder="{{lang.map.select}}"
+                         [notFoundText]="lang.map.msg_not_found"
+                         [readonly]="(isExtendOrCancelRequestType() || readonly)">
+                <ng-option [value]="option.lookupKey"
+                           *ngFor="let option of projectWorkAreas">{{option.getName()}}</ng-option>
+              </ng-select>
+              <app-field-error-message controlName="projectWorkArea"></app-field-error-message>
+            </div>
+            <div class="col-md-8 col-sm-12 mb-4 position-relative">
+              <label class="form-label" asteriskIfRequired="countries"
+                     for="countries">{{lang.map.country_countries}}</label>
+              <ng-select [multiple]="true" validationClasses="countries" appendTo="body" [clearable]="true"
+                         id="countries"
+                         formControlName="countries"
+                         labelForId="countries"
+                         placeholder="{{lang.map.select}}"
+                         [notFoundText]="lang.map.msg_not_found"
+                         [readonly]="(this.displayInsideQatar || isExtendOrCancelRequestType() || readonly)">
+                <ng-option [disabled]="checkCountryDisabled(option)" [value]="option.id"
+                           *ngFor="let option of countries">{{option.getName()}}</ng-option>
+              </ng-select>
+              <app-field-error-message controlName="countries"></app-field-error-message>
+            </div>
+            <ng-container *ngIf="displayOutsideQatar">
+              <div class="col-md-4 col-sm-12 mb-4 position-relative">
+                <label class="form-label" asteriskIfRequired="domain"
+                       for="domain">{{lang.map.domain}}</label>
+                <ng-select validationClasses="domain" appendTo="body" [clearable]="false" id="domain"
+                           formControlName="domain"
+                           labelForId="domain"
+                           placeholder="{{lang.map.select}}"
+                           [notFoundText]="lang.map.msg_not_found"
+                           [readonly]="(isExtendOrCancelRequestType() || readonly)">
+                  <ng-option [value]="option.lookupKey" *ngFor="let option of domains">{{option.getName()}}</ng-option>
+                </ng-select>
+                <app-field-error-message [ignoreTop]="true" controlName="domain"></app-field-error-message>
+              </div>
+              <ng-container *ngIf="displayDacSection">
+                <div class="col-md-4 col-sm-12 mb-4 position-relative">
                   <label class="form-label" asteriskIfRequired="mainDACCategory"
                          for="mainDACCategory">{{lang.map.main_dac_category}}</label>
                   <ng-select validationClasses="mainDACCategory" appendTo="body" [clearable]="true" id="mainDACCategory"
@@ -127,7 +126,7 @@
                   </ng-select>
                   <app-field-error-message controlName="mainDACCategory"></app-field-error-message>
                 </div>
-                <div class="col-md-6 col-sm-12 mb-4 position-relative">
+                <div class="col-md-4 col-sm-12 mb-4 position-relative">
                   <label class="form-label" asteriskIfRequired="subDACCategory"
                          for="subDACCategory">{{lang.map.sub_dac_category}}</label>
                   <ng-select validationClasses="subDACCategory" appendTo="body" [clearable]="true" id="subDACCategory"
@@ -141,9 +140,9 @@
                   </ng-select>
                   <app-field-error-message controlName="subDACCategory"></app-field-error-message>
                 </div>
-              </div>
-              <div *ngIf="displayOuchSection" class="row">
-                <div class="col-md-6 col-sm-12 mb-4 position-relative">
+              </ng-container>
+              <ng-container *ngIf="displayOchaSection">
+                <div class="col-md-4 col-sm-12 mb-4 position-relative">
                   <label class="form-label" asteriskIfRequired="mainUNOCHACategory"
                          for="mainUNOCHACategory">{{lang.map.main_unocha_category}}</label>
                   <ng-select validationClasses="mainUNOCHACategory" appendTo="body" [clearable]="true"
@@ -158,7 +157,7 @@
                   </ng-select>
                   <app-field-error-message controlName="mainUNOCHACategory"></app-field-error-message>
                 </div>
-                <div class="col-md-6 col-sm-12 mb-4 position-relative">
+                <div class="col-md-4 col-sm-12 mb-4 position-relative">
                   <label class="form-label" asteriskIfRequired="subUNOCHACategory"
                          for="subUNOCHACategory">{{lang.map.sub_unocha_category}}</label>
                   <ng-select validationClasses="subUNOCHACategory" appendTo="body" [clearable]="true"
@@ -173,109 +172,80 @@
                   </ng-select>
                   <app-field-error-message controlName="subUNOCHACategory"></app-field-error-message>
                 </div>
+              </ng-container>
+            </ng-container>
+            <ng-container *ngIf="displayInsideQatar">
+              <div class="col-md-4 col-sm-12 mb-4 position-relative">
+                <label class="form-label" asteriskIfRequired="projectType"
+                       for="projectType">{{lang.map.project_type}}</label>
+                <ng-select validationClasses="projectType" appendTo="body" [clearable]="false" id="projectType"
+                           formControlName="projectType"
+                           labelForId="projectType"
+                           placeholder="{{lang.map.select}}"
+                           [notFoundText]="lang.map.msg_not_found"
+                           [readonly]="(isExtendOrCancelRequestType() || readonly)">
+                  <ng-option [value]="option.lookupKey"
+                             *ngFor="let option of projectTypes">{{option.getName()}}</ng-option>
+                </ng-select>
+                <app-field-error-message controlName="projectType"></app-field-error-message>
               </div>
-              <div *ngIf="!displayDacSection && !displayOuchSection" class="row">
-                <div class="col-md-6 col-sm-12 mb-4 position-relative">
-                  <label class="form-label" asteriskIfRequired="licenseDuration"
-                         for="licenseDuration">{{lang.map.license_duration}} ({{lang.map.months}})</label>
-                  <!--suppress XmlDuplicatedId -->
-                  <input id="licenseDuration" validationClasses="licenseDuration"
-                         [mask]="inputMaskPatterns.NUMBER_ONLY_WITH_LIMIT(4)" formControlName="licenseDuration"
-                         class="form-control" [readonly]="(isExtendOrCancelRequestType() || readonly)">
-                  <app-field-error-message controlName="licenseDuration"></app-field-error-message>
-                </div>
-                <div class="col-md-6 col-sm-12 mb-4 position-relative">
-                  <label class="form-label" asteriskIfRequired="projectTotalCost"
-                         for="projectTotalCost">{{lang.map.project_total_cost}}</label>
-                  <!--suppress XmlDuplicatedId -->
-                  <input id="projectTotalCost" [mask]="inputMaskPatterns.SEPARATOR"
-                         [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR" validationClasses="projectTotalCost"
-                         formControlName="projectTotalCost"
-                         class="form-control" [readonly]="(isExtendOrCancelRequestType() || readonly)">
-                  <app-field-error-message controlName="projectTotalCost"></app-field-error-message>
-                </div>
+              <div *ngIf="displayInternalSection" class="col-md-4 col-sm-12 mb-4 position-relative">
+                <label class="form-label" asteriskIfRequired="internalProjectClassification"
+                       for="internalProjectClassification">{{lang.map.internal_projects_classification}}</label>
+                <ng-select validationClasses="internalProjectClassification" appendTo="body" [clearable]="true"
+                           id="internalProjectClassification"
+                           formControlName="internalProjectClassification"
+                           labelForId="internalProjectClassification"
+                           placeholder="{{lang.map.select}}"
+                           [notFoundText]="lang.map.msg_not_found"
+                           [readonly]="(isExtendOrCancelRequestType() || readonly)">
+                  <ng-option [value]="option.lookupKey"
+                             *ngFor="let option of internalProjectsClassifications">{{option.getName()}}</ng-option>
+                </ng-select>
+                <app-field-error-message controlName="internalProjectClassification"></app-field-error-message>
               </div>
-            </div>
-          </div>
-        </div>
-        <div class="row" *ngIf="displayAidSection">
-          <div class="col-md-4 col-sm-12 mb-4 position-relative">
-            <label class="form-label" asteriskIfRequired="projectType"
-                   for="projectType">{{lang.map.project_type}}</label>
-            <ng-select validationClasses="projectType" appendTo="body" [clearable]="false" id="projectType"
-                       formControlName="projectType"
-                       labelForId="projectType"
-                       placeholder="{{lang.map.select}}"
-                       [notFoundText]="lang.map.msg_not_found"
-                       [readonly]="(isExtendOrCancelRequestType() || readonly)">
-              <ng-option [value]="option.lookupKey" *ngFor="let option of projectTypes">{{option.getName()}}</ng-option>
-            </ng-select>
-            <app-field-error-message controlName="projectType"></app-field-error-message>
-          </div>
-          <div *ngIf="displayIPC" class="col-md-4 col-sm-12 mb-4 position-relative">
-            <label class="form-label" asteriskIfRequired="internalProjectClassification"
-                   for="internalProjectClassification">{{lang.map.internal_projects_classification}}</label>
-            <ng-select validationClasses="internalProjectClassification" appendTo="body" [clearable]="true"
-                       id="internalProjectClassification"
-                       formControlName="internalProjectClassification"
-                       labelForId="internalProjectClassification"
-                       placeholder="{{lang.map.select}}"
-                       [notFoundText]="lang.map.msg_not_found"
-                       [readonly]="(isExtendOrCancelRequestType() || readonly)">
-              <ng-option [value]="option.lookupKey"
-                         *ngFor="let option of internalProjectsClassifications">{{option.getName()}}</ng-option>
-            </ng-select>
-            <app-field-error-message controlName="internalProjectClassification"></app-field-error-message>
-          </div>
-          <div *ngIf="displaySanady" class="col-md-4 col-sm-12 mb-4 position-relative">
-            <label class="form-label" asteriskIfRequired="sanadiDomain"
-                   for="sanadiDomain">{{lang.map.sanady_domain}}</label>
-            <ng-select validationClasses="sanadiDomain" appendTo="body" [clearable]="true" id="sanadiDomain"
-                       formControlName="sanadiDomain"
-                       labelForId="sanadiDomain"
-                       placeholder="{{lang.map.select}}"
-                       [notFoundText]="lang.map.msg_not_found"
-                       [readonly]="(isExtendOrCancelRequestType() || readonly)">
-              <ng-option [value]="option.id" *ngFor="let option of sanadyDomains">{{option.getName()}}</ng-option>
-            </ng-select>
-            <app-field-error-message controlName="sanadiDomain"></app-field-error-message>
-          </div>
-          <div *ngIf="displaySanady" class="col-md-4 col-sm-12 mb-4 position-relative">
-            <label class="form-label" asteriskIfRequired="sanadiMainClassification"
-                   for="sanadiMainClassification">{{lang.map.sanady_main_classification}}</label>
-            <ng-select validationClasses="sanadiMainClassification" appendTo="body" [clearable]="true"
-                       id="sanadiMainClassification"
-                       formControlName="sanadiMainClassification"
-                       labelForId="sanadiMainClassification"
-                       placeholder="{{lang.map.select}}"
-                       [notFoundText]="lang.map.msg_not_found"
-                       [readonly]="(isExtendOrCancelRequestType() || readonly)">
-              <ng-option [value]="option.id"
-                         *ngFor="let option of sanadyMainClassifications">{{option.getName()}}</ng-option>
-            </ng-select>
-            <app-field-error-message controlName="sanadiMainClassification"></app-field-error-message>
-          </div>
-          <div class="col-md-4 col-sm-12 mb-4 position-relative">
-            <label class="form-label" asteriskIfRequired="licenseDuration"
-                   for="licenseDuration">{{lang.map.license_duration}} ({{lang.map.months}})</label>
-            <!--suppress XmlDuplicatedId -->
-            <input id="licenseDuration" validationClasses="licenseDuration"
-                   [mask]="inputMaskPatterns.NUMBER_ONLY_WITH_LIMIT(4)" formControlName="licenseDuration"
-                   class="form-control" [readonly]="(isExtendOrCancelRequestType() || readonly)">
-            <app-field-error-message controlName="licenseDuration"></app-field-error-message>
-          </div>
+              <ng-container *ngIf="displaySanadySection">
+                <div class="col-md-4 col-sm-12 mb-4 position-relative">
+                  <label class="form-label" asteriskIfRequired="sanadiDomain"
+                         for="sanadiDomain">{{lang.map.sanady_domain}}</label>
+                  <ng-select validationClasses="sanadiDomain" appendTo="body" [clearable]="true" id="sanadiDomain"
+                             formControlName="sanadiDomain"
+                             labelForId="sanadiDomain"
+                             placeholder="{{lang.map.select}}"
+                             [notFoundText]="lang.map.msg_not_found"
+                             [readonly]="(isExtendOrCancelRequestType() || readonly)">
+                    <ng-option [value]="option.id" *ngFor="let option of sanadyDomains">{{option.getName()}}</ng-option>
+                  </ng-select>
+                  <app-field-error-message controlName="sanadiDomain"></app-field-error-message>
+                </div>
+                <div class="col-md-4 col-sm-12 mb-4 position-relative">
+                  <label class="form-label" asteriskIfRequired="sanadiMainClassification"
+                         for="sanadiMainClassification">{{lang.map.sanady_main_classification}}</label>
+                  <ng-select validationClasses="sanadiMainClassification" appendTo="body" [clearable]="true"
+                             id="sanadiMainClassification"
+                             formControlName="sanadiMainClassification"
+                             labelForId="sanadiMainClassification"
+                             placeholder="{{lang.map.select}}"
+                             [notFoundText]="lang.map.msg_not_found"
+                             [readonly]="(isExtendOrCancelRequestType() || readonly)">
+                    <ng-option [value]="option.id"
+                               *ngFor="let option of sanadyMainClassifications">{{option.getName()}}</ng-option>
+                  </ng-select>
+                  <app-field-error-message controlName="sanadiMainClassification"></app-field-error-message>
+                </div>
+              </ng-container>
+            </ng-container>
+          </ng-container>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="projectTotalCost"
                    for="projectTotalCost">{{lang.map.project_total_cost}}</label>
             <!--suppress XmlDuplicatedId -->
             <input id="projectTotalCost" validationClasses="projectTotalCost" formControlName="projectTotalCost"
-                   class="form-control" [readonly]="(isExtendOrCancelRequestType() || readonly)"
+                   class="form-control" [readonly]="(templateRequired || isExtendOrCancelRequestType() || readonly)"
                    [mask]="inputMaskPatterns.SEPARATOR"
                    [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR">
             <app-field-error-message controlName="projectTotalCost"></app-field-error-message>
           </div>
-        </div>
-        <div *ngIf="displayLicenseAndTargetCostFields" class="row">
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="licenseDuration"
                    for="licenseDuration">{{lang.map.license_duration}} ({{lang.map.months}})</label>
@@ -284,17 +254,6 @@
                    [mask]="inputMaskPatterns.NUMBER_ONLY_WITH_LIMIT(4)" formControlName="licenseDuration"
                    class="form-control" [readonly]="(isExtendOrCancelRequestType() || readonly)">
             <app-field-error-message controlName="licenseDuration"></app-field-error-message>
-          </div>
-          <div class="col-md-4 col-sm-12 mb-4 position-relative">
-            <label class="form-label" asteriskIfRequired="projectTotalCost"
-                   for="projectTotalCost">{{lang.map.project_total_cost}}</label>
-            <!--suppress XmlDuplicatedId -->
-            <input id="projectTotalCost"
-                   [mask]="inputMaskPatterns.SEPARATOR"
-                   [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR"
-                   validationClasses="projectTotalCost" formControlName="projectTotalCost"
-                   class="form-control" [readonly]="(isExtendOrCancelRequestType() || readonly)">
-            <app-field-error-message controlName="projectTotalCost"></app-field-error-message>
           </div>
         </div>
       </ng-container>

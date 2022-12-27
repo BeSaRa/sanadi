@@ -10,7 +10,7 @@ import {Lookup} from "@app/models/lookup";
 import {LookupService} from "@services/lookup.service";
 import {LangService} from "@services/lang.service";
 import {Country} from "@app/models/country";
-import {catchError, delay, exhaustMap, filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
+import {catchError, exhaustMap, filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
 import {ProjectWorkArea} from "@app/enums/project-work-area";
 import {ProjectPermitTypes} from "@app/enums/project-permit-types";
 import {ServiceRequestTypes} from "@app/enums/service-request-types";
@@ -31,7 +31,6 @@ import {UserClickOn} from "@app/enums/user-click-on.enum";
 import {CommonCaseStatus} from "@app/enums/common-case-status.enum";
 import {OpenFrom} from "@app/enums/open-from.enum";
 import {CommonUtils} from "@helpers/common-utils";
-import {ProjectTypes} from "@app/enums/project-types";
 import {FundraisingProjectTypes} from "@app/enums/fundraising-project-types";
 import {LicenseService} from "@services/license.service";
 
@@ -55,14 +54,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   internalProjectsClassifications: Lookup[] = this.lookupService.listByCategory.InternalProjectClassification;
   sanadyDomains: AidLookup[] = [];
   sanadyMainClassifications: AidLookup[] = [];
-  displayDomainSection: boolean = false;
-  displayAidSection: boolean = false;
-  displayDacSection: boolean = false;
-  displayOuchSection: boolean = false;
-  displayLicenseAndTargetCostFields = false;
   displayWorkAreaAndCountry: boolean = true;
-  displaySanady: boolean = false;
-  displayIPC: boolean = false;
   displayedColumns = ['name', 'serial', 'status', 'totalCost', 'actions']
   templateRequired: boolean = false;
   addTemplate$: Subject<any> = new Subject<any>();
@@ -74,6 +66,14 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   deductionRatioChanged: boolean = false
   templateTabHasError = true;
   licenseSearch$: Subject<string> = new Subject()
+
+  displayAllFields: boolean = false;
+  displayInsideQatar: boolean = true;
+  displayOutsideQatar: boolean = true;
+  displaySanadySection: boolean = true;
+  displayInternalSection: boolean = true;
+  displayDacSection: boolean = true;
+  displayOchaSection: boolean = true;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -109,23 +109,20 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   _afterBuildForm(): void {
     this.loadLicenseById()
     this.handleReadonly()
-    this.listenToPermitTypeWorkAreaChanges()
-    this.listenToDomainChanges()
-    this.listenToSanadiDomainChanges()
-    this.listenToMainDacOchaChanges();
     this.listenToAddTemplate();
     this.listenToProjectTotalCoastChanges();
-    this.listenToProjectTypeChanges();
-    this.listenToPermitTypeChange()
-    this.setDefaultValues();
-    this.overrideValuesInCreate();
     this.listenToLicenseSearch()
-    this.checkTemplateTabValidity()
-    // only it work on edit mode
-    this.prepareNecessaryData()
+    this.listenToPermitTypeChanges()
+    this.listenToWorkAreaChanges()
+    // order here matter
+    this.setDefaultValues();
+    this.listenToSanadyDomainChanges()
+    this.listenToProjectTypeChanges()
+    this.listenToMainDacOchaChanges()
+    this.listenToDomainChanges()
+    this.overrideValuesInCreate();
+    this.checkTemplateTabValidity();
     // this._test()
-
-    // this.debugPurpose(this.basicInfo as UntypedFormGroup);
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
@@ -216,18 +213,8 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       emitEvent: !fromSelectedLicense
     });
     this.handleRequestTypeChange(model.requestType, false);
-    this.validateHiddenDisplayFields()
-
-    if (!fromSelectedLicense)
-      return;
-
-    if (model.projectWorkArea === ProjectWorkArea.OUTSIDE_QATAR) {
-      this.loadDacOuchMain(model.domain, () => {
-        this.loadSubDacOchaByParentId(model.domain === DomainTypes.DEVELOPMENT ? model.mainDACCategory : model.mainUNOCHACategory)
-      })
-    } else if (model.projectWorkArea === ProjectWorkArea.INSIDE_QATAR && model.projectType === FundraisingProjectTypes.AIDS) {
-      this.loadSanadyMainClassification(model.sanadiDomain)
-    }
+    this.handleFieldsDisplay(model)
+    this.handleMandatoryFields()
   }
 
   _resetForm(): void {
@@ -237,6 +224,36 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     this.selectedLicense = undefined;
     this.setDefaultValues()
     this.overrideValuesInCreate()
+  }
+
+  // noinspection JSUnusedLocalSymbols
+  private markUnTouched(fields: AbstractControl[]): void {
+    fields.forEach(field => {
+      field.markAsPristine()
+      field.markAsUntouched()
+    })
+  }
+
+  private markRequired(fields: AbstractControl[], emitEvent: boolean = false): boolean {
+    fields.forEach(field => {
+      field.setValidators(CustomValidators.required)
+      field.updateValueAndValidity({emitEvent})
+    })
+    return true
+  }
+
+  private markNotRequired(fields: AbstractControl[], emitEvent: boolean = false): boolean {
+    fields.forEach(field => {
+      field.removeValidators(CustomValidators.required)
+      field.updateValueAndValidity({emitEvent})
+    })
+    return true
+  }
+
+  // noinspection JSUnusedLocalSymbols
+  private emptyFields(fields: AbstractControl[], emitEvent: boolean = false): boolean {
+    fields.forEach(field => field.setValue(null, {emitEvent}))
+    return true
   }
 
   get basicInfo(): AbstractControl {
@@ -307,6 +324,10 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     return this.basicInfo.get('projectTotalCost')!
   }
 
+  get oldLicenseFullSerial(): AbstractControl {
+    return this.basicInfo.get('oldLicenseFullSerial')!
+  }
+
   private getQatarCountry(): Country {
     return this.countries.find(item => item.enName.toLowerCase() === 'qatar')!
   }
@@ -316,149 +337,10 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       this.requestType.setValue(ServiceRequestTypes.NEW)
       this.projectWorkArea.setValue(ProjectWorkArea.INSIDE_QATAR)
       this.permitType.setValue(ProjectPermitTypes.SINGLE_TYPE_PROJECT)
+      this.domain.setValue(DomainTypes.HUMANITARIAN)
+      this.projectType.setValue(FundraisingProjectTypes.SOFTWARE)
+      this.countriesField.setValue([this.qatarCountry.id])
     }
-  }
-
-  private listenToPermitTypeWorkAreaChanges(): void {
-    combineLatest([this.permitType.valueChanges, this.projectWorkArea.valueChanges])
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(([type, area]: [ProjectPermitTypes, ProjectWorkArea]) => {
-        this.handlePermitTypeChanges(type, area)
-      })
-  }
-
-  private handlePermitTypeChanges(type: ProjectPermitTypes, area: ProjectWorkArea) {
-    const workAreaAndCountriesFields = [this.projectWorkArea, this.countriesField];
-    const domainFields = [
-      this.domain,
-      this.mainDACCategory,
-      this.subDACCategory,
-      this.mainUNOCHACategory,
-      this.subUNOCHACategory
-    ]
-    const aidFields = [
-      this.projectType,
-      this.internalProjectClassification,
-      this.sanadiDomain,
-      this.sanadiMainClassification,
-    ]
-    const allFields = aidFields.concat(domainFields);
-
-    if ([ProjectPermitTypes.UNCONDITIONAL_RECEIVE, ProjectPermitTypes.CHARITY].includes(type)) {
-      this.templateRequired = false;
-      this.displayWorkAreaAndCountry = false;
-      this.displayDomainSection = false;
-      this.displayAidSection = false;
-      this.displayLicenseAndTargetCostFields = true;
-      // mark the workArea and countries not required and empty the values this hide theme
-      this.markUnRequiredFields(workAreaAndCountriesFields)
-      this.countriesField.setValue([])
-      this.projectWorkArea.setValue(null, {emitEvent: false})
-      this.projectWorkArea.updateValueAndValidity({emitEvent: false})
-      this.markUnRequiredFields(allFields)
-      this.setFieldsToNull(allFields)
-      this.projectTotalCost.enable()
-    } else {
-      this.displayLicenseAndTargetCostFields = false;
-      this.displayWorkAreaAndCountry = true;
-      !this.projectWorkArea.value ? this.projectWorkArea.setValue(area, {emitEvent: false}) : null;
-      area === ProjectWorkArea.INSIDE_QATAR ? this.handleInsideQatar(domainFields, aidFields) : this.handleOutsideQatar(domainFields, aidFields)
-      if (type === ProjectPermitTypes.SINGLE_TYPE_PROJECT) {
-        this.templateRequired = true;
-        this.projectTotalCost.disable()
-      } else {
-        this.templateRequired = false;
-        this.projectTotalCost.enable()
-      }
-    }
-
-  }
-
-  private listenToDomainChanges(): void {
-    combineLatest([this.domain.valueChanges, this.permitType.valueChanges, this.projectWorkArea.valueChanges.pipe(delay(200))])
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(([domain, permitType, _workArea]: [DomainTypes, ProjectPermitTypes, ProjectWorkArea]) => {
-        this.handleDomainChanges(domain, permitType)
-      })
-  }
-
-  private markRequiredFields(fields: AbstractControl[], emitEvent: boolean = false): void {
-    fields.forEach(field => {
-      field.setValidators(CustomValidators.required)
-      field.updateValueAndValidity({emitEvent})
-    })
-  }
-
-  private markUnRequiredFields(fields: AbstractControl[], emitEvent: boolean = false): void {
-    fields.forEach(field => {
-      field.removeValidators(CustomValidators.required)
-      field.updateValueAndValidity({emitEvent})
-    })
-  }
-
-  private handleDomainChanges(domain: DomainTypes, permitType: ProjectPermitTypes): void {
-    const dacFields = [this.mainDACCategory, this.subDACCategory]
-    const ochaFields = [this.mainUNOCHACategory, this.subUNOCHACategory]
-    const allFields = dacFields.concat(ochaFields);
-    const inputValue = this.domain.value;
-    if (!inputValue) {
-      this.setFieldsToNull(allFields)
-      this.markUnRequiredFields(allFields)
-      return
-    }
-    this.displayDacSection = domain === DomainTypes.DEVELOPMENT;
-    this.displayOuchSection = domain === DomainTypes.HUMANITARIAN && permitType === ProjectPermitTypes.SINGLE_TYPE_PROJECT
-
-    this.setFieldsToNull(allFields)
-    this.markUnRequiredFields(allFields)
-    this.markAsFieldsUnTouchedAndPristine(allFields)
-    if (this.displayOuchSection) {
-      this.displayLicenseAndTargetCostFields = true;
-      this.markRequiredFields(ochaFields)
-    } else if (this.displayDacSection) {
-      this.displayLicenseAndTargetCostFields = true;
-      this.markRequiredFields(dacFields)
-    } else {
-      this.displayLicenseAndTargetCostFields = !this.domain.value;
-      this.markUnRequiredFields(allFields)
-    }
-    this.loadDacOuchMain(domain)
-  }
-
-  private markAsFieldsUnTouchedAndPristine(fields: AbstractControl[]): void {
-    fields.forEach(field => {
-      field.markAsPristine()
-      field.markAsUntouched()
-    })
-  }
-
-  private setFieldsToNull(fields: AbstractControl[], emitEvent: boolean = false): void {
-    fields.forEach(field => field.setValue(null, {emitEvent}))
-  }
-
-  private handleInsideQatar(domainFields: AbstractControl[], aidFields: AbstractControl[]): void {
-    this.displayDomainSection = false;
-    this.displayAidSection = true;
-    !this.projectType.value ? this.projectType.setValue(ProjectTypes.SOFTWARE) : null
-    this.markUnRequiredFields(domainFields);
-    this.setFieldsToNull(domainFields);
-    this.countriesField.addValidators(CustomValidators.requiredArray)
-    this.markRequiredFields(aidFields);
-    this.countriesField.setValue([this.qatarCountry.id]);
-    this.countriesField.disable();
-    this.displayLicenseAndTargetCostFields = false;
-  }
-
-  private handleOutsideQatar(domainFields: AbstractControl[], aidFields: AbstractControl[]): void {
-    !this.domain.value ? this.domain.setValue(DomainTypes.HUMANITARIAN) : null;
-    this.displayAidSection = false;
-    this.displayDomainSection = true;
-    this.markUnRequiredFields(aidFields);
-    this.setFieldsToNull(aidFields);
-    this.countriesField.addValidators(CustomValidators.requiredArray)
-    this.markRequiredFields(domainFields);
-    this.countriesField.setValue(this.countriesField.value.filter((id: number) => id !== this.qatarCountry.id));
-    this.countriesField.enable();
   }
 
   private overrideValuesInCreate() {
@@ -487,74 +369,10 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       })
   }
 
-  private loadSanadyMainClassification(parentId: number | null): void {
-    if (!parentId) {
-      this.sanadyMainClassifications = []
-      return
-    }
-    this.aidLookupService.loadByCriteria({parent: parentId}).subscribe((list) => {
-      this.sanadyMainClassifications = list
-    })
-  }
-
   checkCountryDisabled(option: Country): boolean {
     return this.excludeQatar(option) || this.singleCountrySelect(option)
   }
 
-  private listenToSanadiDomainChanges(): void {
-    this.sanadiDomain.valueChanges
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((value: number) => {
-        this.sanadiMainClassification.setValue(null)
-        this.loadSanadyMainClassification(value)
-      })
-  }
-
-  private loadDacOuchMain(domain: DomainTypes | null, callback?: () => void): void {
-    if (!domain || this.loadedDacOchaBefore) {
-      callback && callback()
-      return
-    }
-
-    this.dacOchaService.loadAsLookups()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((list) => {
-        this.loadedDacOchaBefore = true;
-        this.separateDacFromOcha(list);
-        callback && callback()
-      })
-  }
-
-  private separateDacFromOcha(list: AdminLookup[]) {
-    this.mainDacCategories = list.filter(item => item.type === DomainTypes.DEVELOPMENT)
-    this.mainUNOCHACategories = list.filter(item => item.type === DomainTypes.HUMANITARIAN)
-  }
-
-  private loadSubDacOchaByParentId(parentId: number | null, callback?: () => void): void {
-    if (!parentId) {
-      callback && callback()
-      return;
-    }
-
-    of(this.domain.value as number)
-      .pipe(filter((value) => value === DomainTypes.DEVELOPMENT || (value === DomainTypes.HUMANITARIAN && this.permitType.value === ProjectPermitTypes.SINGLE_TYPE_PROJECT)))
-      .pipe(switchMap(() => this.dacOchaService.loadByParentId(parentId)))
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((list) => {
-        this.domain.value === DomainTypes.DEVELOPMENT ? this.subDacCategories = list : this.subUNOCHACategories = list
-        callback && callback()
-      })
-  }
-
-  private listenToMainDacOchaChanges() {
-    merge(this.mainDACCategory.valueChanges, this.mainUNOCHACategory.valueChanges)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((value: number) => {
-        this.subDACCategory.setValue(null, {emitEvent: false})
-        this.subUNOCHACategory.setValue(null, {emitEvent: false})
-        this.loadSubDacOchaByParentId(value)
-      })
-  }
 
   private openAddTemplatePopup(): void {
     if (!(this.countriesField.value as []).length) {
@@ -601,15 +419,6 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
         const control = this[(controlName as keyof this)] as AbstractControl
         return {...acc, [key]: control.getRawValue()}
       }, {})
-  }
-
-  // noinspection JSUnusedLocalSymbols
-  private _test(): void {
-    this.permitType.setValue(ProjectPermitTypes.SECTIONAL_BASKET)
-    this.projectWorkArea.setValue(ProjectWorkArea.OUTSIDE_QATAR)
-    this.domain.setValue(DomainTypes.HUMANITARIAN)
-    this.countriesField.setValue([231])
-    this.mainUNOCHACategory.setValue(1)
   }
 
   deleteTemplate(): void {
@@ -676,33 +485,6 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       })
   }
 
-  validateHiddenDisplayFields(): void {
-    const model = this.model!
-    if ([ProjectPermitTypes.UNCONDITIONAL_RECEIVE, ProjectPermitTypes.CHARITY].includes(model.permitType)) {
-      this.displayAidSection = false;
-      this.displayDomainSection = false;
-      this.displayLicenseAndTargetCostFields = true;
-      this.displayWorkAreaAndCountry = false;
-      this.markUnRequiredFields([this.countriesField, this.projectWorkArea])
-      this.countriesField.setValue([])
-    } else {
-      this.displayDomainSection = model.projectWorkArea === ProjectWorkArea.OUTSIDE_QATAR;
-      this.displayAidSection = model.projectWorkArea === ProjectWorkArea.INSIDE_QATAR;
-
-      this.displayDacSection = this.displayDomainSection && model.domain === DomainTypes.DEVELOPMENT;
-      this.displayOuchSection = model.permitType === ProjectPermitTypes.SINGLE_TYPE_PROJECT && model.domain === DomainTypes.HUMANITARIAN
-
-      this.displayLicenseAndTargetCostFields = this.displayDacSection || this.displayOuchSection
-
-      this.handleProjectTypeChanges(model.projectType, true)
-
-      this.templateRequired = model.permitType === ProjectPermitTypes.SINGLE_TYPE_PROJECT;
-
-      this.templateRequired ? this.projectTotalCost.disable() : this.projectTotalCost.enable()
-    }
-
-  }
-
   handleReadonly() {
     // if record is new, no readonly (don't change as default is readonly = false)
     const model = this.model!
@@ -740,44 +522,6 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
 
   }
 
-  private listenToProjectTypeChanges() {
-    combineLatest([this.projectType.valueChanges, this.permitType.valueChanges, this.projectWorkArea.valueChanges.pipe(delay(200))])
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(([value, ,]: [FundraisingProjectTypes, ProjectPermitTypes, ProjectWorkArea]) => {
-        this.handleProjectTypeChanges(value);
-      })
-  }
-
-  private handleProjectTypeChanges(projectType: FundraisingProjectTypes, ignoreSetValues = false) {
-    const sanadyFields = [this.sanadiDomain, this.sanadiMainClassification];
-    const aidFields = [this.internalProjectClassification]
-    const allFields = sanadyFields.concat(aidFields)
-    const inputValue = this.projectType.value;
-
-    if (!inputValue) {
-      this.markUnRequiredFields(allFields)
-      return;
-    }
-
-    this.displayIPC = projectType === FundraisingProjectTypes.SOFTWARE;
-    this.displaySanady = projectType === FundraisingProjectTypes.AIDS;
-
-    this.displayIPC ? ((() => {
-      this.markUnRequiredFields(sanadyFields)
-      !ignoreSetValues && this.setFieldsToNull(sanadyFields)
-      this.markRequiredFields(aidFields)
-    })()) : (this.displaySanady ? ((() => {
-      this.markUnRequiredFields(aidFields)
-      !ignoreSetValues && this.setFieldsToNull(aidFields)
-      this.markRequiredFields(sanadyFields)
-    })()) : null)
-
-    !this.displaySanady && !this.displayIPC ? (() => {
-      this.markUnRequiredFields(allFields)
-      !ignoreSetValues && this.setFieldsToNull(allFields)
-    })() : null
-  }
-
   isAllHasSameTargetAmount(): Observable<boolean> {
     const countriesMessage = this.lang.map.make_sure_that_x_sum_equal_to_target_amount.change({x: this.lang.map.country_countries})
     const yearsMessage = this.lang.map.make_sure_that_x_sum_equal_to_target_amount.change({x: this.lang.map.year_s})
@@ -798,19 +542,6 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     }
 
     this.templateTabHasError = model.hasInvalidTargetAmount(!this.displayWorkAreaAndCountry)
-  }
-
-  private listenToPermitTypeChange() {
-    this.permitType
-      .valueChanges
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((value: ProjectPermitTypes) => {
-        value === ProjectPermitTypes.SINGLE_TYPE_PROJECT ? this.countriesField.setValue([]) : null
-      })
-  }
-
-  get oldLicenseFullSerial(): AbstractControl {
-    return this.basicInfo.get('oldLicenseFullSerial')!
   }
 
   viewTemplate(template: ProjectTemplate) {
@@ -891,27 +622,195 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     this._resetForm()
   }
 
-  private prepareNecessaryData() {
-    if (this.operation !== OperationTypes.UPDATE)
-      return;
-    const model = this.model!
-    const permitType = model.permitType;
-    const workArea = model.projectWorkArea;
-    const domain = model.domain;
-    const dacOchaMainId = domain === DomainTypes.HUMANITARIAN ? model.mainUNOCHACategory : model.mainDACCategory;
-    const projectType = model.projectType;
-    const sanadyDomain = model.sanadiDomain
-    if ([ProjectPermitTypes.UNCONDITIONAL_RECEIVE, ProjectPermitTypes.CHARITY].includes(permitType)) {
+  private loadSanadyMainClassification(parentId: number | null): void {
+    if (!parentId) {
+      this.sanadyMainClassifications = []
+      return
+    }
+    this.aidLookupService.loadByCriteria({parent: parentId}).subscribe((list) => {
+      this.sanadyMainClassifications = list
+    })
+  }
+
+  private loadDacOuchMain(domain: DomainTypes | null, callback?: () => void): void {
+    if (!domain || this.loadedDacOchaBefore) {
+      callback && callback()
+      return
+    }
+
+    this.dacOchaService.loadAsLookups()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((list) => {
+        this.loadedDacOchaBefore = true;
+        this.separateDacFromOcha(list);
+        callback && callback()
+      })
+  }
+
+  private loadSubDacOchaByParentId(parentId: number | null, callback?: () => void): void {
+    if (!parentId) {
+      callback && callback()
       return;
     }
 
-    if (workArea === ProjectWorkArea.OUTSIDE_QATAR) {
-      this.loadDacOuchMain(domain)
-      this.loadSubDacOchaByParentId(dacOchaMainId)
-    } else {
-      projectType === FundraisingProjectTypes.AIDS ? (() => {
-        this.loadSanadyMainClassification(sanadyDomain)
-      })() : null;
+    of(this.domain.value as number)
+      .pipe(filter((value) => value === DomainTypes.DEVELOPMENT || (value === DomainTypes.HUMANITARIAN && this.permitType.value === ProjectPermitTypes.SINGLE_TYPE_PROJECT)))
+      .pipe(switchMap(() => this.dacOchaService.loadByParentId(parentId)))
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((list) => {
+        this.domain.value === DomainTypes.DEVELOPMENT ? this.subDacCategories = list : this.subUNOCHACategories = list
+        callback && callback()
+      })
+  }
+
+  private separateDacFromOcha(list: AdminLookup[]) {
+    this.mainDacCategories = list.filter(item => item.type === DomainTypes.DEVELOPMENT)
+    this.mainUNOCHACategories = list.filter(item => item.type === DomainTypes.HUMANITARIAN)
+  }
+
+  // noinspection JSUnusedLocalSymbols
+  private _test(): void {
+    this.permitType.setValue(ProjectPermitTypes.SECTIONAL_BASKET)
+    this.projectWorkArea.setValue(ProjectWorkArea.OUTSIDE_QATAR)
+    this.domain.setValue(DomainTypes.HUMANITARIAN)
+    this.countriesField.setValue([231])
+    this.mainUNOCHACategory.setValue(1)
+  }
+
+  private listenToPermitTypeChanges() {
+    combineLatest([this.permitType.valueChanges, this.projectWorkArea.valueChanges, this.projectType.valueChanges, this.domain.valueChanges])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(([permitType, projectWorkArea, projectType, domain]: [ProjectPermitTypes, ProjectWorkArea, FundraisingProjectTypes, DomainTypes]) => {
+        console.log(
+          ProjectPermitTypes[permitType],
+          ProjectWorkArea[projectWorkArea],
+          DomainTypes[domain],
+          FundraisingProjectTypes[projectType]
+        );
+        this.handleFieldsDisplay({
+          permitType,
+          projectWorkArea,
+          domain,
+          projectType
+        })
+        this.handleMandatoryFields();
+      })
+  }
+
+  private handleFieldsDisplay(model: Partial<ProjectFundraising>) {
+    this.displayAllFields = !!(model.permitType && ![ProjectPermitTypes.CHARITY, ProjectPermitTypes.UNCONDITIONAL_RECEIVE].includes(model.permitType))
+    this.displayInsideQatar = !!(model.projectWorkArea && model.projectWorkArea === ProjectWorkArea.INSIDE_QATAR)
+    this.displayOutsideQatar = !!(model.projectWorkArea && model.projectWorkArea === ProjectWorkArea.OUTSIDE_QATAR)
+    this.templateRequired = this.displayAllFields && model.permitType === ProjectPermitTypes.SINGLE_TYPE_PROJECT
+    this.displaySanadySection = !!(this.displayInsideQatar && model.projectType && model.projectType === FundraisingProjectTypes.AIDS)
+    this.displayInternalSection = !!(this.displayInsideQatar && model.projectType && model.projectType === FundraisingProjectTypes.SOFTWARE)
+    this.displayDacSection = this.displayOutsideQatar && model.domain === DomainTypes.DEVELOPMENT
+    this.displayOchaSection = this.displayOutsideQatar && model.domain === DomainTypes.HUMANITARIAN && model.permitType === ProjectPermitTypes.SINGLE_TYPE_PROJECT
+  }
+
+  private handleMandatoryFields(emitEvent: boolean = false) {
+    const dacFields = [this.mainDACCategory, this.subDACCategory]
+    const ochaFields = [this.mainUNOCHACategory, this.subUNOCHACategory]
+    const outsideFields = [this.domain].concat(dacFields).concat(ochaFields)
+
+    const sanadyFields = [this.sanadiDomain, this.sanadiMainClassification]
+    const insideFields = sanadyFields.concat([this.projectType, this.internalProjectClassification])
+
+    const allFields = outsideFields.concat(insideFields).concat(this.projectWorkArea)
+
+    if (!this.displayAllFields) {
+      this.markNotRequired(allFields, emitEvent)
+      this.countriesField.removeValidators(CustomValidators.requiredArray)
+      return;
     }
+
+    this.countriesField.addValidators(CustomValidators.requiredArray)
+
+    this.displayInsideQatar && this.markNotRequired(outsideFields) && (() => {
+      this.markRequired([this.projectType])
+      this.displaySanadySection ? this.markRequired(sanadyFields) : this.markNotRequired(sanadyFields)
+      this.displayInternalSection ? this.markRequired([this.internalProjectClassification]) : this.markNotRequired([this.internalProjectClassification])
+    })()
+
+    this.displayOutsideQatar && this.markNotRequired(insideFields) && (() => {
+      this.markRequired([this.domain])
+      this.displayDacSection ? this.markRequired(dacFields) : this.markNotRequired(dacFields)
+      this.displayOchaSection ? this.markRequired(ochaFields) : this.markNotRequired(ochaFields)
+    })()
+
+  }
+
+  private listenToSanadyDomainChanges() {
+    this.sanadiDomain.valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((value: number) => {
+        this.sanadiMainClassification.setValue(null)
+        this.loadSanadyMainClassification(value)
+      })
+  }
+
+  private listenToProjectTypeChanges() {
+    this.projectType.valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .pipe(filter(val => !!val))
+      .subscribe((value: FundraisingProjectTypes) => {
+        value === FundraisingProjectTypes.AIDS ? this.emptyFields([this.internalProjectClassification]) : this.emptyFields([this.sanadiDomain, this.sanadiMainClassification])
+      })
+  }
+
+  private listenToWorkAreaChanges() {
+    const aidFields = [this.projectType, this.sanadiDomain, this.sanadiMainClassification, this.internalProjectClassification]
+    const domainFields = [this.domain, this.mainDACCategory, this.mainUNOCHACategory, this.subUNOCHACategory, this.subDACCategory]
+    this.projectWorkArea
+      .valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((value: ProjectWorkArea) => {
+        value === ProjectWorkArea.OUTSIDE_QATAR && (() => {
+          !this.domain.value && this.domain.setValue(DomainTypes.HUMANITARIAN)
+          this.loadDacOuchMain(this.domain.value)
+          this.emptyFields(aidFields)
+        })()
+
+        value === ProjectWorkArea.INSIDE_QATAR && (() => {
+          !this.projectType.value && this.projectType.setValue(FundraisingProjectTypes.SOFTWARE)
+          this.emptyFields(domainFields)
+        })()
+
+        !value && this.emptyFields(aidFields.concat(domainFields))
+      })
+  }
+
+  private listenToMainDacOchaChanges() {
+    merge(this.mainDACCategory.valueChanges, this.mainUNOCHACategory.valueChanges)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((value: number) => {
+        console.log('SUB');
+        this.loadSubDacOchaByParentId(value)
+      })
+  }
+
+  private listenToDomainChanges() {
+    const dacFields = [this.mainDACCategory, this.subDACCategory]
+    const ochaFields = [this.mainUNOCHACategory, this.subUNOCHACategory]
+    this.domain
+      .valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((value: DomainTypes) => {
+        value === DomainTypes.HUMANITARIAN && (() => {
+          this.emptyFields(dacFields)
+          this.permitType.value === ProjectPermitTypes.SECTIONAL_BASKET && this.emptyFields(ochaFields)
+        })()
+
+        value === DomainTypes.DEVELOPMENT && (() => {
+          this.emptyFields(ochaFields)
+        })()
+
+        !value && this.emptyFields(ochaFields.concat(ochaFields))
+      })
+  }
+
+  _afterOpenCase(model: ProjectFundraising) {
+    model.projectWorkArea === ProjectWorkArea.OUTSIDE_QATAR && this.loadSubDacOchaByParentId(model.getDacOchaId())
+    model.projectWorkArea === ProjectWorkArea.INSIDE_QATAR && model.projectType === FundraisingProjectTypes.AIDS && this.loadSanadyMainClassification(model.sanadiDomain)
   }
 }

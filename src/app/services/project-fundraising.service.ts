@@ -38,7 +38,7 @@ export class ProjectFundraisingService extends BaseGenericEService<ProjectFundra
   jsonSearchFile: string = 'project_fundraising_search.json';
   serviceKey: keyof ILanguageKeys = 'menu_projects_fundraising';
   caseStatusIconMap: Map<number, string> = new Map<number, string>();
-  searchColumns: string[] = ['fullSerial', 'subject',  'requestTypeInfo', 'createdOn', 'caseStatus', 'ouInfo'];
+  searchColumns: string[] = ['fullSerial', 'subject', 'requestTypeInfo', 'createdOn', 'caseStatus', 'ouInfo'];
 
   constructor(public http: HttpClient,
               public domSanitizer: DomSanitizer,
@@ -92,7 +92,9 @@ export class ProjectFundraisingService extends BaseGenericEService<ProjectFundra
 
   @CastResponse(() => DeductionRatioItem)
   public loadDeductionRatio(criteria: { permitType?: number, workArea?: number }): Observable<DeductionRatioItem[]> {
-    return this.http.get<DeductionRatioItem[]>(this.urlService.URLS.DEDUCTION_RATIO_ITEM + '/criteria', {
+    //TODO: should be removed when backend team make the work Area not mandatory
+    // return this.http.get<DeductionRatioItem[]>(this.urlService.URLS.DEDUCTION_RATIO_ITEM + '/criteria', {
+    return this.http.get<DeductionRatioItem[]>(this.urlService.URLS.DEDUCTION_RATIO_ITEM, {
       params: new HttpParams({fromObject: criteria})
     })
   }

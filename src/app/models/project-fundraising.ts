@@ -19,6 +19,8 @@ import {mixinRequestType} from "@app/mixins/mixin-request-type";
 import {ICaseModel} from "@contracts/icase-model";
 import {HasLicenseApprovalMonthly} from "@contracts/has-license-approval-monthly";
 import {CaseModelContract} from "@contracts/case-model-contract";
+import {DomainTypes} from "@app/enums/domain-types";
+import {ProjectPermitTypes} from "@app/enums/project-permit-types";
 
 const {send, receive} = new ProjectFundraisingInterceptor()
 const _ApprovalLicenseWithMonthly = mixinRequestType(mixinApprovalLicenseWithMonthly(CaseModel))
@@ -318,4 +320,10 @@ export class ProjectFundraising extends _ApprovalLicenseWithMonthly<ProjectFundr
     return !!this.licenseDuration
   }
 
+  getDacOchaId(): number | null {
+    return this.domain === DomainTypes.DEVELOPMENT ? this.mainDACCategory :
+      this.domain === DomainTypes.HUMANITARIAN &&
+      this.permitType !== ProjectPermitTypes.SECTIONAL_BASKET ?
+        this.mainUNOCHACategory : null;
+  }
 }

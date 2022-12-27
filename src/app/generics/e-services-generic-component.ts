@@ -1,9 +1,9 @@
-import { Directive, EventEmitter, Input, OnDestroy, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { OperationTypes } from '@app/enums/operation-types.enum';
-import { SaveTypes } from '@app/enums/save-types';
-import { IESComponent } from '@app/interfaces/iescomponent';
-import { BehaviorSubject, isObservable, Observable, of, Subject } from 'rxjs';
+import {Directive, EventEmitter, Input, OnDestroy, OnInit} from '@angular/core';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {SaveTypes} from '@app/enums/save-types';
+import {IESComponent} from '@app/interfaces/iescomponent';
+import {BehaviorSubject, isObservable, Observable, of, Subject} from 'rxjs';
 import {
   catchError,
   delay,
@@ -18,21 +18,21 @@ import {
   tap,
   withLatestFrom
 } from 'rxjs/operators';
-import { ICaseModel } from '@app/interfaces/icase-model';
-import { LangService } from '@app/services/lang.service';
-import { CaseModel } from '@app/models/case-model';
-import { OpenFrom } from '@app/enums/open-from.enum';
-import { CustomValidators } from '@app/validators/custom-validators';
-import { CaseTypes } from '@app/enums/case-types.enum';
-import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
-import { BaseGenericEService } from '@app/generics/base-generic-e-service';
-import { FileIconsEnum } from '@app/enums/file-extension-mime-types-icons.enum';
-import { UserClickOn } from '@app/enums/user-click-on.enum';
-import { DialogRef } from '@app/shared/models/dialog-ref';
-import { FactoryService } from '@services/factory.service';
-import { AttachmentTypeService } from '@services/attachment-type.service';
-import { HasAttachmentHandlerDirective } from '@app/shared/directives/has-attachment-handler.directive';
-import { AttachmentHandlerDirective } from '@app/shared/directives/attachment-handler.directive';
+import {ICaseModel} from '@app/interfaces/icase-model';
+import {LangService} from '@app/services/lang.service';
+import {CaseModel} from '@app/models/case-model';
+import {OpenFrom} from '@app/enums/open-from.enum';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {CaseTypes} from '@app/enums/case-types.enum';
+import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import {BaseGenericEService} from '@app/generics/base-generic-e-service';
+import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {FactoryService} from '@services/factory.service';
+import {AttachmentTypeService} from '@services/attachment-type.service';
+import {HasAttachmentHandlerDirective} from '@app/shared/directives/has-attachment-handler.directive';
+import {AttachmentHandlerDirective} from '@app/shared/directives/attachment-handler.directive';
 
 @Directive()
 export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S extends BaseGenericEService<M>> implements OnInit, OnDestroy, IESComponent<M> {
@@ -93,6 +93,7 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
       .pipe(tap(_ => this._listenToResetForm()))
       .pipe(tap(_ => this._listenToLaunch()))
       .pipe(tap(_ => this._listenToValidateForms()))
+      .pipe(tap(_ => this.operation === OperationTypes.UPDATE && this._afterOpenCase(this.model!)))
       .pipe(delay(0))// delay
       .pipe(tap(_ => this._afterBuildForm()))
       .subscribe();
@@ -111,7 +112,7 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
   _saveModel(model: M, saveType: SaveTypes): Observable<{ saveType: SaveTypes, model: M }> {
     const modelInstance = model as unknown as CaseModel<any, any>;
     const type = (!modelInstance.canSave() && saveType === SaveTypes.FINAL) ? SaveTypes.COMMIT : saveType;
-    return model[this.saveMethods[type]]().pipe(map(m => ({ saveType: type, model: m })));
+    return model[this.saveMethods[type]]().pipe(map(m => ({saveType: type, model: m})));
   }
 
   _listenToSave(): void {
@@ -136,7 +137,7 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
           return this._saveModel(model, saveType).pipe(catchError(error => {
             // handle the errors came from backend
             this._saveFail(error);
-            return of({ saveType: saveType, model: null });
+            return of({saveType: saveType, model: null});
           }));
         }),
         // allow only success save
@@ -228,7 +229,7 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
         } else if (element instanceof HTMLElement) {
           ele = element;
         }
-        ele?.scrollTo({ top: 0, behavior: 'smooth' });
+        ele?.scrollTo({top: 0, behavior: 'smooth'});
       });
   }
 
@@ -341,5 +342,11 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
         return this.confirmResetForm().onAfterClose$;
       }
     }
+  }
+
+  // if you need to load some lookups based on your model when you open it for the first time from search or inboxes
+  // note this method will work only if you open it from inboxes or search, and it will work one time only
+  _afterOpenCase(model: M): void {
+
   }
 }
