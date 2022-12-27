@@ -147,6 +147,10 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
   submitField(form: UntypedFormGroup) {
     if (!this.processForm.fields.filter(f => f.identifyingName == form.value.identifyingName).length || this.isEditField) {
       if (!this.isEditField) {
+        if (this.processForm.fields.findIndex(f => f.order == form.value.order) != -1) {
+          this.toast.error(this.lang.map.msg_field_order_is_already_exist);
+          return
+        }
         this.newCreatedFieldsIds.push(form.value.identifyingName)
       }
       this.processForm.setField(form);
@@ -155,7 +159,7 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
         this.options.removeAt(0)
       }
     } else
-      this.toast.error(this.lang.map.msg_user_identifier_is_already_exist);
+      this.toast.error(this.lang.map.msg_field_identifier_is_already_exist);
   }
   deleteField(form: UntypedFormGroup) {
     this.dialogService

@@ -116,6 +116,10 @@ export class ProcessFieldBuilder {
     else
       Object.assign(prevField, field);
     form.reset();
+    form.patchValue({
+      status: 1,
+      showOnTable: 1
+    })
     this.formChange();
   }
   getFieldById(id: string): TemplateField | undefined {

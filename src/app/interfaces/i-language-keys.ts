@@ -1692,4 +1692,6 @@ export interface ILanguageKeys {
   removed_menus: string;
   added: string;
   removed: string;
+  msg_field_order_is_already_exist: string;
+  msg_field_identifier_is_already_exist: string;
 }
