@@ -22,6 +22,7 @@ import {CaseModelContract} from "@contracts/case-model-contract";
 import {DomainTypes} from "@app/enums/domain-types";
 import {ProjectPermitTypes} from "@app/enums/project-permit-types";
 import {TemplateStatus} from "@app/enums/template-status";
+import {ServiceRequestTypes} from "@app/enums/service-request-types";
 
 const {send, receive} = new ProjectFundraisingInterceptor()
 const _ApprovalLicenseWithMonthly = mixinRequestType(mixinApprovalLicenseWithMonthly(CaseModel))
@@ -306,11 +307,11 @@ export class ProjectFundraising extends _ApprovalLicenseWithMonthly<ProjectFundr
   }
 
   approve(): DialogRef {
-    return this.service.approveTask(this, WFResponseType.APPROVE);
+    return [ServiceRequestTypes.CANCEL, ServiceRequestTypes.UPDATE].includes(this.requestType) ? super.approve() : this.service.approveTask(this, WFResponseType.APPROVE);
   }
 
   finalApprove(): DialogRef {
-    return this.service.approveTask(this, WFResponseType.FINAL_APPROVE);
+    return [ServiceRequestTypes.CANCEL, ServiceRequestTypes.UPDATE].includes(this.requestType) ? super.approve() : this.service.approveTask(this, WFResponseType.FINAL_APPROVE);
   }
 
   clearYears(): void {
