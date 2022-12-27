@@ -164,6 +164,8 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
         if (click === UserClickOn.YES) {
           this.processForm.deleteField(form);
           this.isEditField = false;
+          const index = this.newCreatedFieldsIds.indexOf(form.value.identifyingName);
+          this.newCreatedFieldsIds.splice(index, 1);
         }
       });
   }

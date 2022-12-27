@@ -38,6 +38,7 @@ export class DynamicModelPopupComponent extends AdminGenericDialog<DynamicModel>
   listenToFieldDetailsSubsecribtion$!: Subscription;
   isEditField: boolean = false;
   saveVisible = true;
+  newCreatedFieldsIds: number[] = [];
 
   constructor(public dialogRef: DialogRef,
     public fb: UntypedFormBuilder,
@@ -97,7 +98,6 @@ export class DynamicModelPopupComponent extends AdminGenericDialog<DynamicModel>
       if (fieldId) {
         const field = this.processForm.getFieldById(fieldId);
         this.fieldForm.reset();
-        console.log(field)
         if (field) {
           this.fieldForm = this.fb.group({
             ...field.buildForm(),
@@ -116,9 +116,15 @@ export class DynamicModelPopupComponent extends AdminGenericDialog<DynamicModel>
       }
     })
   }
+  get isNewCreatedField() {
+    return (this.isEditField && this.newCreatedFieldsIds.indexOf(this.fieldForm.value.identifyingName) != -1) || !this.isEditField;
+  }
   submitField(form: UntypedFormGroup) {
     if (!this.processForm.fields.filter(f => f.identifyingName == form.value.identifyingName).length || this.isEditField) {
       this.processForm.setField(form);
+      if (!this.isEditField) {
+        this.newCreatedFieldsIds.push(form.value.identifyingName)
+      }
       this.isEditField = false;
       while (this.options.length !== 0) {
         this.options.removeAt(0)
@@ -133,6 +139,8 @@ export class DynamicModelPopupComponent extends AdminGenericDialog<DynamicModel>
         if (click === UserClickOn.YES) {
           this.processForm.deleteField(form);
           this.isEditField = false;
+          const index = this.newCreatedFieldsIds.indexOf(form.value.identifyingName);
+          this.newCreatedFieldsIds.splice(index, 1);
         }
       });
   }
