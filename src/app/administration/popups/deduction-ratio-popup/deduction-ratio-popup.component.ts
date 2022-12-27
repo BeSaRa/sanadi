@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, ValidationErrors } from '@angular/forms';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { UserTypes } from '@app/enums/user-types.enum';
 import { AdminGenericDialog } from '@app/generics/admin-generic-dialog';
@@ -51,12 +51,18 @@ export class DeductionRatioPopupComponent extends AdminGenericDialog<DeductionRa
   }
 
   buildForm(): void {
-    this.form = this.fb.group(this.model.buildForm(true));
+    this.form = this.fb.group(this.model.buildForm(true), { validator: this.validateMinMax });
     if (this.operation === OperationTypes.VIEW) {
       this.form.disable();
       this.saveVisible = false;
       this.validateFieldsVisible = false;
     }
+  }
+  validateMinMax(control: AbstractControl): ValidationErrors | null {
+    const minValue = control.get("minLimit")?.value;
+    const maxValue = control.get("maxLimit")?.value;
+    if (minValue&&maxValue&& +minValue > +maxValue) { return { 'minBiggerThanMax': true } }
+    return null
   }
 
   beforeSave(model: DeductionRatioItem, form: UntypedFormGroup): Observable<boolean> | boolean {

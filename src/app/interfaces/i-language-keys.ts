@@ -1699,4 +1699,5 @@ export interface ILanguageKeys {
   removed: string;
   msg_field_order_is_already_exist: string;
   msg_field_identifier_is_already_exist: string;
+  min_bigger_than_max_error:string;
 }
