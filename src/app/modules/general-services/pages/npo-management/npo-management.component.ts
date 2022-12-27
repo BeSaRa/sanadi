@@ -307,6 +307,8 @@ NpoManagementService
           if (this.isNew) {
             if (this.nonProfitOrg) {
               this.loadOrganizationData();
+            } else if (this.isRegistrationAuthority) {
+              this.registrationAuthorityField.setValue(this.employeeService.getProfile()?.id);
             }
           } else if (this.requestTypeField.value && this.npoIdField.value) {
             this.loadOrganizationData()
@@ -321,6 +323,7 @@ NpoManagementService
   _setDefaultValues(): void {
     this.requestTypeField.setValue(ServiceRequestTypes.NEW);
     this.handleRequestTypeChange(ServiceRequestTypes.NEW, false);
+    this.npoIdField.reset();
   }
   _resetForm(): void {
     this.form.reset();

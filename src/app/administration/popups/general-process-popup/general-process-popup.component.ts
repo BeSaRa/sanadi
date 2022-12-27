@@ -52,6 +52,7 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
   departmentList: InternalDepartment[] = [];
   private _teamsList: Team[] = [];
   subTeamsList: SubTeam[] = [];
+  newCreatedFieldsIds: number[] = [];
 
   constructor(public dialogRef: DialogRef,
     public fb: UntypedFormBuilder,
@@ -140,15 +141,25 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
       }
     })
   }
+  get isNewCreatedField() {
+    return (this.isEditField && this.newCreatedFieldsIds.indexOf(this.fieldForm.value.identifyingName) != -1) || !this.isEditField;
+  }
   submitField(form: UntypedFormGroup) {
     if (!this.processForm.fields.filter(f => f.identifyingName == form.value.identifyingName).length || this.isEditField) {
+      if (!this.isEditField) {
+        if (this.processForm.fields.findIndex(f => f.order == form.value.order) != -1) {
+          this.toast.error(this.lang.map.msg_field_order_is_already_exist);
+          return
+        }
+        this.newCreatedFieldsIds.push(form.value.identifyingName)
+      }
       this.processForm.setField(form);
       this.isEditField = false;
       while (this.options.length !== 0) {
         this.options.removeAt(0)
       }
     } else
-      this.toast.error(this.lang.map.msg_user_identifier_is_already_exist);
+      this.toast.error(this.lang.map.msg_field_identifier_is_already_exist);
   }
   deleteField(form: UntypedFormGroup) {
     this.dialogService
@@ -157,6 +168,8 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
         if (click === UserClickOn.YES) {
           this.processForm.deleteField(form);
           this.isEditField = false;
+          const index = this.newCreatedFieldsIds.indexOf(form.value.identifyingName);
+          this.newCreatedFieldsIds.splice(index, 1);
         }
       });
   }

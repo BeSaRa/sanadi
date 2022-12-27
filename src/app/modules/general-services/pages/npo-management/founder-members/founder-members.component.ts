@@ -64,7 +64,7 @@ export class FounderMembersComponent implements OnInit, OnDestroy {
     }),
   }
   ngOnInit(): void {
-    this._jb.loadAsLookups().subscribe((data) => {
+    this._jb.loadActive().subscribe((data) => {
       this.jobTitleAdminLookup = data;
     })
     this._handleInitData();
