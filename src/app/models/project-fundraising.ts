@@ -21,6 +21,7 @@ import {HasLicenseApprovalMonthly} from "@contracts/has-license-approval-monthly
 import {CaseModelContract} from "@contracts/case-model-contract";
 import {DomainTypes} from "@app/enums/domain-types";
 import {ProjectPermitTypes} from "@app/enums/project-permit-types";
+import {TemplateStatus} from "@app/enums/template-status";
 
 const {send, receive} = new ProjectFundraisingInterceptor()
 const _ApprovalLicenseWithMonthly = mixinRequestType(mixinApprovalLicenseWithMonthly(CaseModel))
@@ -166,6 +167,10 @@ export class ProjectFundraising extends _ApprovalLicenseWithMonthly<ProjectFundr
 
   getTemplateId(): string | undefined {
     return this.templateList && this.templateList.length ? this.templateList[0].templateId : undefined;
+  }
+
+  getTemplate(): ProjectTemplate | undefined {
+    return this.templateList && this.templateList.length ? this.templateList[0] : undefined
   }
 
   hasTemplate(): boolean {
@@ -325,5 +330,14 @@ export class ProjectFundraising extends _ApprovalLicenseWithMonthly<ProjectFundr
       this.domain === DomainTypes.HUMANITARIAN &&
       this.permitType !== ProjectPermitTypes.SECTIONAL_BASKET ?
         this.mainUNOCHACategory : null;
+  }
+
+  changeTemplateStatus(index: number, status: TemplateStatus): boolean {
+    this.templateList[index].templateStatus = status
+    return true
+  }
+
+  canApproveTemplate(index: number = 0) {
+    return this.templateList[index].templateStatus !== TemplateStatus.APPROVED;
   }
 }

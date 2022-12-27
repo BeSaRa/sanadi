@@ -33,6 +33,7 @@ import {OpenFrom} from "@app/enums/open-from.enum";
 import {CommonUtils} from "@helpers/common-utils";
 import {FundraisingProjectTypes} from "@app/enums/fundraising-project-types";
 import {LicenseService} from "@services/license.service";
+import {TemplateStatus} from "@app/enums/template-status";
 
 @Component({
   selector: 'project-fundraising',
@@ -54,7 +55,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   internalProjectsClassifications: Lookup[] = this.lookupService.listByCategory.InternalProjectClassification;
   sanadyDomains: AidLookup[] = [];
   sanadyMainClassifications: AidLookup[] = [];
-  displayedColumns = ['name', 'serial', 'status', 'totalCost', 'actions']
+  displayedColumns = ['name', 'serial', 'public_status', 'review_status', 'totalCost', 'actions']
   templateRequired: boolean = false;
   addTemplate$: Subject<any> = new Subject<any>();
   private profile?: Profile = this.employeeService.getProfile()
@@ -380,7 +381,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     }
 
     this.service
-      .openDialogSearchTemplate(this.getSearchTemplateCriteria(), this.projectWorkArea.value, this.model?.getTemplateId())
+      .openDialogSearchTemplate(this.getSearchTemplateCriteria(), this.projectWorkArea.value, this.model?.getTemplate())
       .pipe(switchMap(dialog => dialog.onAfterClose$))
       .subscribe((template: ProjectTemplate | undefined) => {
         this.model && template && this.model.setTemplate(template) && this.model.setProjectTotalCost(template.templateCost) && this.projectTotalCost.setValue(template.templateCost, {emitEvent: false})
@@ -684,12 +685,6 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     ])
       .pipe(takeUntil(this.destroy$))
       .subscribe(([permitType, projectWorkArea, projectType, domain]: [ProjectPermitTypes, ProjectWorkArea, FundraisingProjectTypes, DomainTypes]) => {
-        console.log(
-          ProjectPermitTypes[permitType],
-          ProjectWorkArea[projectWorkArea],
-          DomainTypes[domain],
-          FundraisingProjectTypes[projectType]
-        );
         this.handleFieldsDisplay({
           permitType,
           projectWorkArea,
@@ -820,5 +815,29 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   _afterOpenCase(model: ProjectFundraising) {
     model.projectWorkArea === ProjectWorkArea.OUTSIDE_QATAR && this.loadSubDacOchaByParentId(model.getDacOchaId())
     model.projectWorkArea === ProjectWorkArea.INSIDE_QATAR && model.projectType === FundraisingProjectTypes.AIDS && this.loadSanadyMainClassification(model.sanadiDomain)
+  }
+
+  rejectTemplate(index: number) {
+    this.dialog.confirm(this.lang.map.template_action_x_confirmation_msg.change({x: this.lang.map.lbl_reject}))
+      .onAfterClose$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(filter(value => value === UserClickOn.YES))
+      .subscribe(() => {
+        this.model && this.model.changeTemplateStatus(index, TemplateStatus.REJECTED) && this.save.next(SaveTypes.FINAL)
+      })
+  }
+
+  acceptTemplate(index: number) {
+    this.dialog.confirm(this.lang.map.template_action_x_confirmation_msg.change({x: this.lang.map.lbl_accept}))
+      .onAfterClose$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(filter(value => value === UserClickOn.YES))
+      .subscribe(() => {
+        this.model && this.model.changeTemplateStatus(index, TemplateStatus.APPROVED) && this.save.next(SaveTypes.FINAL)
+      })
+  }
+
+  needTemplateApproval(index: number): boolean {
+    return !!(this.model && this.employeeService.isInternalUser() && this.model.canApproveTemplate(index))
   }
 }
