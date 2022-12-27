@@ -131,6 +131,7 @@ const errorKeys: IKeyValue = {
   AR_NUM_ONE_AR: {key: 'err_arabic_num_one_ar', replaceValues: null},
   ENG_AR_ONLY: {key: 'err_english_arabic_only', replaceValues: null},
   ENG_AR_NUM_ONLY: {key: 'err_english_arabic_num_only', replaceValues: null},
+  ENG_NO_SPACES_ONLY: {key: 'err_english_no_space_only', replaceValues: null},
   PASSPORT: {key: 'err_invalid_passport_format', replaceValues: null},
   EMAIL: {key: 'err_invalid_email', replaceValues: null},
   PHONE_NUMBER: {key: 'err_invalid_phone_number', replaceValues: null},
