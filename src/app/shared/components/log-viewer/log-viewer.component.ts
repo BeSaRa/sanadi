@@ -1,3 +1,8 @@
+import { CaseModel } from '@app/models/case-model';
+import { UserClickOn } from './../../../enums/user-click-on.enum';
+import { DialogService } from './../../../services/dialog.service';
+import { ToastService } from './../../../services/toast.service';
+import { TaskDetails } from './../../../models/task-details';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ActionLogService } from '@app/services/action-log.service';
 import { BehaviorSubject, iif, merge, of, Subject } from 'rxjs';
@@ -7,6 +12,7 @@ import { LangService } from '@app/services/lang.service';
 import { AdminResult } from '@app/models/admin-result';
 import { TabComponent } from '../tab/tab.component';
 import { ServiceActionType } from '@app/enums/service-action-type.enum';
+import { CaseTypes } from '@app/enums/case-types.enum';
 
 @Component({
   selector: 'log-viewer',
@@ -24,7 +30,6 @@ export class LogViewerComponent implements OnInit, OnDestroy {
   get caseId(): string {
     return this._caseId.value;
   }
-
   @Input() service!: ActionLogService;
 
   @Input() hideViewedAction: boolean = false;
@@ -32,6 +37,7 @@ export class LogViewerComponent implements OnInit, OnDestroy {
   @Input() categorizeLogs: boolean = false;
   @Input() displayCategorizedAs: 'tabs' | 'one-page' = 'tabs';
   @Input() accordionView: boolean = false;
+  @Input() case!: CaseModel<any, any> | undefined;
 
   logsAll: ActionRegistry[] = [];
   logsViewed: ActionRegistry[] = [];
@@ -50,7 +56,9 @@ export class LogViewerComponent implements OnInit, OnDestroy {
   displayReturnBtn: boolean = false;
   destroy$: Subject<any> = new Subject<any>();
 
-  constructor(public lang: LangService) {
+  constructor(public lang: LangService,
+    public toast: ToastService,
+    public dialog: DialogService) {
   }
 
   ngOnInit(): void {
@@ -86,7 +94,14 @@ export class LogViewerComponent implements OnInit, OnDestroy {
 
   tabChanged($event: TabComponent) {
     this.displayPrintBtn = $event.name !== 'location';
-    this.displayReturnBtn = $event.name === 'location';
+    this.displayReturnBtn = $event.name === 'location' && (
+      this.case?.caseType == CaseTypes.NPO_MANAGEMENT ||
+      this.case?.caseType == CaseTypes.CHARITY_ORGANIZATION_UPDATE
+    );
+  }
+
+  isMainTask(tkiid: string) {
+    return this.case?.taskDetails.isMain && this.case?.taskDetails.tkiid == tkiid;
   }
 
   private _categorizeLogsByActionType(logs: any[]) {
@@ -102,5 +117,16 @@ export class LogViewerComponent implements OnInit, OnDestroy {
         this.logsOthers = this.logsOthers.concat(x);
       }
     });
+  }
+  terminate(tkiid: string) {
+    this.dialog.confirm(this.lang.map.msg_confirm_terminate_task).onAfterClose$
+      .subscribe((click: UserClickOn) => {
+        if (click === UserClickOn.YES) {
+          this.service.terminateTask(tkiid).subscribe(() => {
+            this.toast.success(this.lang.map.msg_success_terminate_task);
+            this.load();
+          });
+        }
+      });
   }
 }
