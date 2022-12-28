@@ -1,10 +1,10 @@
 <div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
-  <h1 class="h6 text-white">{{ lang.map.approval_external_org_affiliation }}</h1>
+  <h1 class="h6 text-white">{{ lang.map.approval_foreign_countries_projects }}</h1>
   <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose aria-label="Close"></button>
 </div>
-<div class="dialog-content" [ngClass]="isCancelRequestType() ? 'no-fixed-height' : 'w800px'">
+<div class="dialog-content" [ngClass]="isCancelRequestType() || !isNotCreator ? 'no-fixed-height' : 'w800px'">
   <div class="row">
-    <form [formGroup]="approvalForm" *ngIf="!isCancelRequestType()">
+    <form [formGroup]="approvalForm" *ngIf="!isCancelRequestType() && isNotCreator">
       <div class="row">
         <!-- nPOList -->
         <div class="col-sm-6 col-md-6 mb-4 ng-select-wrapper">
