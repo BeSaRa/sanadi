@@ -683,7 +683,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         askChecklist: true,
         runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
         show: (item: CaseModel<any, any>) => {
-          return item.getResponses().includes(WFResponseType.TO_GM);
+          return item.getResponses().includes(WFResponseType.TO_GM) || item.getResponses().includes(WFResponseType.SEND_TO_GM);
         },
         onClick: (item: CaseModel<any, any>) => {
           this.sendToGeneralManagerAction(item);

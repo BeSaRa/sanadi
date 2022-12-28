@@ -1,14 +1,13 @@
 <ng-container *ngIf="hideItemLocation">
   <ng-container [ngTemplateOutlet]="logTableTemplate"
-                [ngTemplateOutletContext]="{data: logsAll, displayColumns: displayedColumns}">
+    [ngTemplateOutletContext]="{data: logsAll, displayColumns: displayedColumns}">
   </ng-container>
 </ng-container>
 
 <ng-container *ngIf="!hideItemLocation">
   <tabs-list class="position-relative" (onTabChange)="tabChanged($event)">
     <button [tooltip]="lang.map.btn_reload" (click)="reload$.next()" class="btn icon-btn position-absolute top-0 end-0">
-      <i
-        class="mdi mdi-reload text-primary"></i></button>
+      <i class="mdi mdi-reload text-primary"></i></button>
     <tab [template]="logTemplate" name="logs_view" [title]="lang.map.logs"></tab>
     <tab name="location" [template]="locationTemplate" [title]="lang.map.item_location"></tab>
   </tabs-list>
@@ -18,7 +17,7 @@
   <!-- Not Categorized -->
   <div *ngIf="!categorizeLogs">
     <ng-container [ngTemplateOutlet]="logTableTemplate"
-                  [ngTemplateOutletContext]="{data: logsAll, displayColumns: displayedColumns}">
+      [ngTemplateOutletContext]="{data: logsAll, displayColumns: displayedColumns}">
     </ng-container>
   </div>
 
@@ -33,7 +32,7 @@
           </div>
         </div>
         <ng-container [ngTemplateOutlet]="logTableTemplate"
-                      [ngTemplateOutletContext]="{data: logsViewed, displayColumns: displayedColumnsViewed}">
+          [ngTemplateOutletContext]="{data: logsViewed, displayColumns: displayedColumnsViewed}">
         </ng-container>
       </div>
 
@@ -44,7 +43,7 @@
         </div>
       </div>
       <ng-container [ngTemplateOutlet]="logTableTemplate"
-                    [ngTemplateOutletContext]="{data: logsUpdated, displayColumns: displayedColumnsUpdated}">
+        [ngTemplateOutletContext]="{data: logsUpdated, displayColumns: displayedColumnsUpdated}">
       </ng-container>
 
       <div class="row">
@@ -54,30 +53,30 @@
         </div>
       </div>
       <ng-container [ngTemplateOutlet]="logTableTemplate"
-                    [ngTemplateOutletContext]="{data: logsOthers, displayColumns: displayedColumnsOthers}">
+        [ngTemplateOutletContext]="{data: logsOthers, displayColumns: displayedColumnsOthers}">
       </ng-container>
     </div>
 
     <div *ngIf="displayCategorizedAs === 'tabs'">
       <tabs-list [accordionView]="accordionView">
         <tab name="view_actions" [template]="logTemplateViewed" [title]="lang.map.action_viewed"
-             *ngIf="!hideViewedAction"></tab>
+          *ngIf="!hideViewedAction"></tab>
         <tab name="update_actions" [template]="logTemplateUpdated" [title]="lang.map.action_updated"></tab>
         <tab name="other_actions" [template]="logTemplateOthers" [title]="lang.map.action_others"></tab>
       </tabs-list>
       <ng-template #logTemplateViewed>
         <ng-container [ngTemplateOutlet]="logTableTemplate"
-                      [ngTemplateOutletContext]="{data: logsViewed, displayColumns: displayedColumnsViewed}">
+          [ngTemplateOutletContext]="{data: logsViewed, displayColumns: displayedColumnsViewed}">
         </ng-container>
       </ng-template>
       <ng-template #logTemplateUpdated>
         <ng-container [ngTemplateOutlet]="logTableTemplate"
-                      [ngTemplateOutletContext]="{data: logsUpdated, displayColumns: displayedColumnsUpdated}">
+          [ngTemplateOutletContext]="{data: logsUpdated, displayColumns: displayedColumnsUpdated}">
         </ng-container>
       </ng-template>
       <ng-template #logTemplateOthers>
         <ng-container [ngTemplateOutlet]="logTableTemplate"
-                      [ngTemplateOutletContext]="{data: logsOthers, displayColumns: displayedColumnsOthers}">
+          [ngTemplateOutletContext]="{data: logsOthers, displayColumns: displayedColumnsOthers}">
         </ng-container>
       </ng-template>
     </div>
@@ -130,7 +129,12 @@
       <table class="table table-striped table-bordered caption-top" cdk-table [dataSource]="table2.dataSource">
         <ng-container cdkColumnDef="location">
           <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.item_location}}</th>
-          <td cdk-cell *cdkCellDef="let row"> {{row.getName()}} </td>
+          <td cdk-cell *cdkCellDef="let row">
+            {{row.getName()}}
+            <!-- <button [tooltip]="lang.map.return_from_department" *ngIf="displayReturnBtn" (click)="reload$.next()"
+              class="btn icon-btn position-absolute top-0 end-0">
+              <i class="mdi mdi-return text-primary"></i></button> -->
+          </td>
         </ng-container>
         <tr cdk-header-row *cdkHeaderRowDef="displayLocationColumns"></tr>
         <tr cdk-row *cdkRowDef="let row; columns: displayLocationColumns;"></tr>

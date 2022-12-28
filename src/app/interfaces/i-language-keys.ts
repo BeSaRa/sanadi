@@ -1700,4 +1700,5 @@ export interface ILanguageKeys {
   msg_field_order_is_already_exist: string;
   msg_field_identifier_is_already_exist: string;
   approval_foreign_countries_projects: string;
+  return_from_department: string;
 }

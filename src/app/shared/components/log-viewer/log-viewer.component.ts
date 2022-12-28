@@ -1,12 +1,12 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {ActionLogService} from '@app/services/action-log.service';
-import {BehaviorSubject, iif, merge, of, Subject} from 'rxjs';
-import {ActionRegistry} from '@app/models/action-registry';
-import {concatMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
-import {LangService} from '@app/services/lang.service';
-import {AdminResult} from '@app/models/admin-result';
-import {TabComponent} from '../tab/tab.component';
-import {ServiceActionType} from '@app/enums/service-action-type.enum';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ActionLogService } from '@app/services/action-log.service';
+import { BehaviorSubject, iif, merge, of, Subject } from 'rxjs';
+import { ActionRegistry } from '@app/models/action-registry';
+import { concatMap, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { LangService } from '@app/services/lang.service';
+import { AdminResult } from '@app/models/admin-result';
+import { TabComponent } from '../tab/tab.component';
+import { ServiceActionType } from '@app/enums/service-action-type.enum';
 
 @Component({
   selector: 'log-viewer',
@@ -47,6 +47,7 @@ export class LogViewerComponent implements OnInit, OnDestroy {
   displayLocationColumns: string[] = ['location'];
 
   displayPrintBtn: boolean = true;
+  displayReturnBtn: boolean = false;
   destroy$: Subject<any> = new Subject<any>();
 
   constructor(public lang: LangService) {
@@ -85,6 +86,7 @@ export class LogViewerComponent implements OnInit, OnDestroy {
 
   tabChanged($event: TabComponent) {
     this.displayPrintBtn = $event.name !== 'location';
+    this.displayReturnBtn = $event.name === 'location';
   }
 
   private _categorizeLogsByActionType(logs: any[]) {

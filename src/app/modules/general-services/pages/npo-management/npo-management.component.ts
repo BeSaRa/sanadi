@@ -323,7 +323,8 @@ NpoManagementService
   _setDefaultValues(): void {
     this.requestTypeField.setValue(ServiceRequestTypes.NEW);
     this.handleRequestTypeChange(ServiceRequestTypes.NEW, false);
-    this.npoIdField.reset();
+    if (!this.nonProfitOrg)
+      this.npoIdField.reset();
   }
   _resetForm(): void {
     this.form.reset();
