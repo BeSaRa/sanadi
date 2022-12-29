@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, ValidationErrors } from '@angular/forms';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { UserTypes } from '@app/enums/user-types.enum';
 import { AdminGenericDialog } from '@app/generics/admin-generic-dialog';
@@ -28,10 +28,10 @@ export class DeductionRatioPopupComponent extends AdminGenericDialog<DeductionRa
   operation: OperationTypes;
   saveVisible = true;
   userTypes: Lookup[] = this.lookupService.listByCategory.UserType.filter((x:any) => x.lookupKey !== UserTypes.INTEGRATION_USER);
-  // profiles$ = this.profileService.loadAsLookups();
   workAreas: Lookup[] = this.lookupService.listByCategory.ProjectWorkArea
   permitTypes: Lookup[] = this.lookupService.listByCategory.ProjectPermitType
-  profileList: Profile[] = [];
+  profileTypes: Lookup[] = this.lookupService.listByCategory.ProfileType
+  // profileList: Profile[] = [];
 
   constructor(public dialogRef: DialogRef,
               public fb: UntypedFormBuilder,
@@ -39,7 +39,7 @@ export class DeductionRatioPopupComponent extends AdminGenericDialog<DeductionRa
               @Inject(DIALOG_DATA_TOKEN) data: IDialogData<DeductionRatioItem>,
               private toast: ToastService,
               private lookupService: LookupService,
-              private profileService:ProfileService,
+              // private profileService:ProfileService,
               ) {
     super();
     this.model = data.model;
@@ -47,18 +47,29 @@ export class DeductionRatioPopupComponent extends AdminGenericDialog<DeductionRa
   }
 
   initPopup(): void {
-    this._loadProfiles()
+    // this._loadProfiles()
   }
 
   buildForm(): void {
-    this.form = this.fb.group(this.model.buildForm(true));
+    this.form = this.fb.group(this.model.buildForm(true), { validator: this.validateMinMax });
     if (this.operation === OperationTypes.VIEW) {
       this.form.disable();
       this.saveVisible = false;
       this.validateFieldsVisible = false;
     }
   }
+  validateMinMax(control: AbstractControl): ValidationErrors | null {
+    const minValue = control.get("minLimit")?.value;
+    const maxValue = control.get("maxLimit")?.value;
+    if (minValue&&maxValue&& +minValue > +maxValue) { return { 'minBiggerThanMax': true } }
+    return null
+  }
 
+  workAreaReadOnly(){
+    const permitTypeValue = this.form.get('permitType')?.value
+    return permitTypeValue == 3 || permitTypeValue == 4 
+  }
+  
   beforeSave(model: DeductionRatioItem, form: UntypedFormGroup): Observable<boolean> | boolean {
     return form.valid;
   }
@@ -93,16 +104,16 @@ export class DeductionRatioPopupComponent extends AdminGenericDialog<DeductionRa
 
   destroyPopup(): void {
   }
-  private _loadProfiles(): void {
-    this.profileService.loadAsLookups()
-      .pipe(
-        takeUntil(this.destroy$),
-        catchError(() => {
-          return of([]);
-        })
-      )
-      .subscribe((result) => this.profileList = result);
-  }
+  // private _loadProfiles(): void {
+  //   this.profileService.loadAsLookups()
+  //     .pipe(
+  //       takeUntil(this.destroy$),
+  //       catchError(() => {
+  //         return of([]);
+  //       })
+  //     )
+  //     .subscribe((result) => this.profileList = result);
+  // }
   NameNotValid(){
     const arName = this.form.get('arName')
     const enName = this.form.get('enName')
