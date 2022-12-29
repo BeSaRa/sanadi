@@ -215,6 +215,10 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     this.handleRequestTypeChange(model.requestType, false);
     this.handleFieldsDisplay(model)
     this.handleMandatoryFields()
+
+    if (fromSelectedLicense) {
+      this.loadNecessaryData(model)
+    }
   }
 
   _resetForm(): void {
@@ -839,5 +843,29 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
 
   needTemplateApproval(index: number): boolean {
     return !!(this.model && this.employeeService.isInternalUser() && this.model.canApproveTemplate(index))
+  }
+
+  private loadNecessaryData(model: ProjectFundraising) {
+    if (!this.displayAllFields)
+      return;
+
+    this.displayOutsideQatar ?
+      // outside and domain development
+      model.domain === DomainTypes.DEVELOPMENT ?
+        (() => {
+          this.loadDacOuchMain(model.domain)
+          this.loadSubDacOchaByParentId(model.mainDACCategory)
+        })() :
+        // outside and domain humanitarian
+        (() => {
+          model.permitType === ProjectPermitTypes.SINGLE_TYPE_PROJECT ? (() => {
+            this.loadDacOuchMain(model.domain)
+            this.loadSubDacOchaByParentId(model.mainUNOCHACategory)
+          })() : null
+        })()
+      :
+      // inside and project type aids
+      model.projectType === FundraisingProjectTypes.AIDS ? this.loadSanadyMainClassification(model.sanadiDomain) : null
+
   }
 }
