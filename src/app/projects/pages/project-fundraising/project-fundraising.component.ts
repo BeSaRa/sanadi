@@ -217,7 +217,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     this.handleMandatoryFields()
 
     if (fromSelectedLicense) {
-      this.loadNecessaryData(model)
+      this.afterSelectLicense(model)
     }
   }
 
@@ -653,8 +653,6 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   private loadSubDacOchaByParentId(parentId: number | null, callback?: () => void): void {
     if (!parentId) {
       callback && callback()
-      this.subDACCategory.setValue(null, {emitEvent: false})
-      this.subUNOCHACategory.setValue(null, {emitEvent: false})
       return;
     }
 
@@ -663,8 +661,6 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       .pipe(switchMap(() => this.dacOchaService.loadByParentId(parentId)))
       .pipe(takeUntil(this.destroy$))
       .subscribe((list) => {
-        this.subDACCategory.setValue(null, {emitEvent: false})
-        this.subUNOCHACategory.setValue(null, {emitEvent: false})
         this.domain.value === DomainTypes.DEVELOPMENT ? this.subDacCategories = list : this.subUNOCHACategories = list
         callback && callback()
       })
@@ -796,6 +792,8 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     merge(this.mainDACCategory.valueChanges, this.mainUNOCHACategory.valueChanges)
       .pipe(takeUntil(this.destroy$))
       .subscribe((value: number) => {
+        this.subDACCategory.setValue(null, {emitEvent: false})
+        this.subUNOCHACategory.setValue(null, {emitEvent: false})
         this.loadSubDacOchaByParentId(value)
       })
   }
@@ -849,7 +847,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     return !!(this.model && this.employeeService.isInternalUser() && this.model.canApproveTemplate(index))
   }
 
-  private loadNecessaryData(model: ProjectFundraising) {
+  private afterSelectLicense(model: ProjectFundraising) {
     if (!this.displayAllFields)
       return;
 
