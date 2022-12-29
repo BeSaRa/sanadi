@@ -38,6 +38,7 @@ import {Pagination} from '@app/models/pagination';
 import {GdxMawaredResponse} from '@app/models/gdx-mawared-response';
 import {GdxGarsiaPensionResponse} from '@app/models/gdx-garsia-pension-response';
 import {GdxKahramaaResponse} from '@app/models/gdx-kahramaa-response';
+import {GdxMolPayrollResponse} from '@app/models/gdx-mol-payroll-response';
 
 const beneficiarySearchLogCriteriaInterceptor = new BeneficiarySearchLogCriteriaInterceptor();
 
@@ -216,5 +217,13 @@ export class BeneficiaryService extends CrudGenericService<Beneficiary> {
   })
   addKahramaaInquiry(criteria: IGdxCriteria) {
     return this.http.post<GdxKahramaaResponse[]>(this._getGDXServiceURL() + '/kaharmaa-outstanding', criteria);
+  }
+
+  @CastResponse(() => GdxMolPayrollResponse, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  addMOLInquiry(criteria: IGdxCriteria) {
+    return this.http.post<GdxMolPayrollResponse[]>(this._getGDXServiceURL() + '/mol-payroll', criteria);
   }
 }

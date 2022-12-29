@@ -25,7 +25,6 @@ import {BeneficiaryIdTypes} from '@app/enums/beneficiary-id-types.enum';
 export class IntegrationInquiryLogListComponent {
   private destroy$: Subject<any> = new Subject<any>();
   actionIconsEnum = ActionIconsEnum;
-  gdxServicesEnum = GdxServicesEnum;
 
   constructor(public lang: LangService,
               private beneficiaryService: BeneficiaryService,
@@ -125,6 +124,9 @@ export class IntegrationInquiryLogListComponent {
         break;
       case GdxServicesEnum.KAHRAMAA:
         request = this.beneficiaryService.addKahramaaInquiry(this._getGDXCriteria());
+        break;
+      case GdxServicesEnum.MOL:
+        request = this.beneficiaryService.addMOLInquiry(this._getGDXCriteria());
         break;
       default:
         request = null;

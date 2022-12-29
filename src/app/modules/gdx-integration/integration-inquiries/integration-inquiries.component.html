@@ -11,6 +11,8 @@
        [title]="lang.map[tabsData.izzab.langKey]"></tab>
   <tab [name]="tabsData.kahramaa.name" [template]="KahramaaTemplate"
        [title]="lang.map[tabsData.kahramaa.langKey]"></tab>
+  <tab [name]="tabsData.mol.name" [template]="MOLTemplate"
+       [title]="lang.map[tabsData.mol.langKey]"></tab>
   <tab [name]="tabsData.qatarCharity.name" [template]="QatarCharityTemplate"
        [title]="lang.map[tabsData.qatarCharity.langKey]"></tab>
 </tabs-list>
@@ -91,6 +93,19 @@
     <hr class="mt-0">
     <kahramaa-outstanding-payment-list
       [list]="relatedData[gdxServiceRelatedTypesEnum.KAHRAMAA_OUTSTANDING_PAYMENTS]"></kahramaa-outstanding-payment-list>
+  </div>
+</ng-template>
+<ng-template #MOLTemplate>
+  <integration-inquiry-log-list #molLogsComponent [gdxServiceId]="gdxServicesEnum.MOL"
+                                [beneficiary]="beneficiary"
+                                (onSelect)="selectLog($event)" (onLoadDone)="loadRecordsDone($event)"
+                                (onReady)="setLookupComponentMap($event, molLogsComponent)"
+  ></integration-inquiry-log-list>
+  <div id="molRelatedDataContainer">
+    <h6 class="text-primary">{{lang.map.payroll_report}}</h6>
+    <hr class="mt-0">
+    <mol-related-data-list
+      [list]="relatedData[gdxServiceRelatedTypesEnum.MOL_RELATED_DATA]"></mol-related-data-list>
   </div>
 </ng-template>
 <ng-template #QatarCharityTemplate>

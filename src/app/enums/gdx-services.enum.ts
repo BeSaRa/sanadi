@@ -5,5 +5,6 @@ export enum GdxServicesEnum {
   MAWARED = '4',
   GARSIA = '5',
   IZZAB = '6',
-  KAHRAMAA = '7'
+  KAHRAMAA = '7',
+  MOL = '8',
 }

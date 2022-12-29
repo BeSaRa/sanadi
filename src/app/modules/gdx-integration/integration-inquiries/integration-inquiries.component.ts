@@ -17,7 +17,11 @@ import {
 import {
   GarsiaPensionPaymentListComponent
 } from '@app/modules/gdx-integration/related-data/garsia-pension-payment-list/garsia-pension-payment-list.component';
-import {GarsiaPensionListComponent} from '@app/modules/gdx-integration/related-data/garsia-pension-list/garsia-pension-list.component';
+import {
+  GarsiaPensionListComponent
+} from '@app/modules/gdx-integration/related-data/garsia-pension-list/garsia-pension-list.component';
+import {GdxMolPayrollResponse} from '@app/models/gdx-mol-payroll-response';
+import {GdxMojResponse} from '@app/models/gdx-moj-response';
 
 @Component({
   selector: 'integration-inquiries',
@@ -94,9 +98,18 @@ export class IntegrationInquiriesComponent {
       serviceId: GdxServicesEnum.KAHRAMAA,
       isLoaded: false
     },
+    mol: {
+      name: 'mol',
+      index: 6,
+      langKey: 'integration_mol',
+      validStatus: () => true,
+      isTouchedOrDirty: () => true,
+      serviceId: GdxServicesEnum.MOL,
+      isLoaded: false
+    },
     qatarCharity: {
       name: 'qatarCharity',
-      index: 6,
+      index: 7,
       langKey: 'integration_qatar_charity',
       validStatus: () => true,
       isTouchedOrDirty: () => true,
@@ -113,7 +126,8 @@ export class IntegrationInquiriesComponent {
     [GdxServiceRelatedTypesEnum.MAWARED_EMPLOYEES]: [],
     [GdxServiceRelatedTypesEnum.GARSIA_PENSION]: [],
     [GdxServiceRelatedTypesEnum.GARSIA_PENSION_PAYMENT]: [],
-    [GdxServiceRelatedTypesEnum.KAHRAMAA_OUTSTANDING_PAYMENTS]: []
+    [GdxServiceRelatedTypesEnum.KAHRAMAA_OUTSTANDING_PAYMENTS]: [],
+    [GdxServiceRelatedTypesEnum.MOL_RELATED_DATA]: [],
   };
 
   onTabChange($event: TabComponent) {
@@ -133,8 +147,8 @@ export class IntegrationInquiriesComponent {
     this.selectedLog[log.gdxServiceId as GdxServicesEnum] = log;
     switch (log.gdxServiceId) {
       case GdxServicesEnum.MOJ:
-        this.relatedData[GdxServiceRelatedTypesEnum.MOJ_FLATS] = log.gdxServiceResponseParsed.flatInfoList;
-        this.relatedData[GdxServiceRelatedTypesEnum.MOJ_PARCELS] = log.gdxServiceResponseParsed.parcelInfoList;
+        this.relatedData[GdxServiceRelatedTypesEnum.MOJ_FLATS] = (log.gdxServiceResponseParsed as GdxMojResponse).flatInfoList;
+        this.relatedData[GdxServiceRelatedTypesEnum.MOJ_PARCELS] = (log.gdxServiceResponseParsed as GdxMojResponse).parcelInfoList;
         break;
       case GdxServicesEnum.MOCI:
         this.relatedData[GdxServiceRelatedTypesEnum.MOCI_COMPANIES] = log.gdxServiceResponseList;
@@ -148,6 +162,9 @@ export class IntegrationInquiriesComponent {
         break;
       case GdxServicesEnum.KAHRAMAA:
         this.relatedData[GdxServiceRelatedTypesEnum.KAHRAMAA_OUTSTANDING_PAYMENTS] = log.gdxServiceResponseList;
+        break;
+      case GdxServicesEnum.MOL:
+        this.relatedData[GdxServiceRelatedTypesEnum.MOL_RELATED_DATA] = (log.gdxServiceResponseParsed as GdxMolPayrollResponse).payRollList;
         break;
       default:
         break;
@@ -207,6 +224,9 @@ export class IntegrationInquiriesComponent {
         break;
       case GdxServicesEnum.KAHRAMAA:
         this.relatedData[GdxServiceRelatedTypesEnum.KAHRAMAA_OUTSTANDING_PAYMENTS] = [];
+        break;
+      case GdxServicesEnum.MOL:
+        this.relatedData[GdxServiceRelatedTypesEnum.MOL_RELATED_DATA] = [];
         break;
       default:
         break;
