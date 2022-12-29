@@ -1773,4 +1773,5 @@ export interface ILanguageKeys {
   due_amount: string;
   total_qatari_riyal_transaction_amount:string;
   msg_select_project_required:string;
+  menu_financial_transfers_licensing: string;
 }

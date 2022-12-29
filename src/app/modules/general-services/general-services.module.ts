@@ -1,3 +1,4 @@
+import { FinancialTransfersLicensingComponent } from './pages/financial-transfers-licensing/financial-transfers-licensing.component';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import {
@@ -96,7 +97,7 @@ import { CharityReportsComponent } from './shared/risk-reports/risk-reports.comp
     InternationalCooperationComponent,
     OrganizationsEntitiesSupportComponent,
     OrganizationsEntitiesSupportPopupComponent,
-
+    FinancialTransfersLicensingComponent
   ],
   imports: [
     CommonModule,
