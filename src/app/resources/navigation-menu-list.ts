@@ -1098,7 +1098,6 @@ export const navigationMenuList = [
     group: 'projects',
     itemOrder: 25,
     svg: null
-  }
   },
   {
     id: 85,

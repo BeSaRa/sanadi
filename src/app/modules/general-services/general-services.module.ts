@@ -1,3 +1,8 @@
+import { FinancialTransfersLicensingComponent } from './pages/financial-transfers-licensing/financial-transfers-licensing.component';
+import { ForeignCountriesProjectsApprovalPopupComponent } from './popups/foreign-countries-projects-approval-popup/foreign-countries-projects-approval-popup.component';
+import { FormlyMaskInputFieldComponent } from '@app/services-search/components/formly-mask-input-field/formly-mask-input-field.component';
+import { FormlySelectFieldComponent } from '@app/services-search/components/formly-select-field/formly-select-field.component';
+import { FormlyDateFieldComponent } from '@app/services-search/components/formly-date-field/formly-date-field.component';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import {
@@ -19,49 +24,20 @@ import { OrganizationOfficersComponent } from '@app/shared/components/organizati
 import { FormlyBootstrapModule } from '@ngx-formly/bootstrap';
 import { FormlyModule } from '@ngx-formly/core';
 import { AwarenessActivitySuggestionComponent } from './pages/awareness-activity-suggestion/awareness-activity-suggestion.component';
-import { FormlyDateFieldComponent } from '@app/services-search/components/formly-date-field/formly-date-field.component';
-import { FormlyMaskInputFieldComponent } from '@app/services-search/components/formly-mask-input-field/formly-mask-input-field.component';
-import { FormlySelectFieldComponent } from '@app/services-search/components/formly-select-field/formly-select-field.component';
-import { OrganizationOfficersComponent } from '@app/shared/components/organization-officers/organization-officers.component';
-import { FormlyBootstrapModule } from '@ngx-formly/bootstrap';
-import { FormlyModule } from '@ngx-formly/core';
-import { AwarenessActivitySuggestionComponent } from './pages/awareness-activity-suggestion/awareness-activity-suggestion.component';
 import { EmploymentComponent } from './pages/employment/employment.component';
 import { GeneralProcessNotificationComponent } from './pages/general-process-notification/general-process-notification.component';
 import { NpoBankAccountComponent } from './pages/npo-management/npo-bank-account/npo-bank-account.component';
 import { NpoManagementComponent } from './pages/npo-management/npo-management.component';
 import {
-  AwarenessActivitySuggestionApprovalComponent
-} from './popups/awareness-activity-suggestion-approval/awareness-activity-suggestion-approval.component';
-import { ForeignCountriesProjectsApprovalPopupComponent } from './popups/foreign-countries-projects-approval-popup/foreign-countries-projects-approval-popup.component';
-import {
   GeneralProcessNotificationApprovalComponent
 } from './popups/general-process-notification-approval/general-process-notification-approval.component';
 import { NpoManagementApprovePopupComponent } from './popups/npo-management-approve-popup/npo-management-approve-popup.component';
 import { BylawsComponent } from './shared/bylaws/bylaws.component';
 import { CharityBranchComponent } from './shared/charity-branch/charity-branch.component';
-import { CharityDecisionsComponent } from './shared/charity-decisions/charity-decisions.component';
 import { ForeignAidClassificationsComponent } from './shared/foreign-aid-classifications/foreign-aid-classifications.component';
 import { MembersComponent } from './shared/members/members.component';
-import { GeneralProcessNotificationComponent } from './pages/general-process-notification/general-process-notification.component';
-import { NpoBankAccountComponent } from './pages/npo-management/npo-bank-account/npo-bank-account.component';
-import { NpoManagementComponent } from './pages/npo-management/npo-management.component';
-import {
-  AwarenessActivitySuggestionApprovalComponent
-} from './popups/awareness-activity-suggestion-approval/awareness-activity-suggestion-approval.component';
-import { ForeignCountriesProjectsApprovalPopupComponent } from './popups/foreign-countries-projects-approval-popup/foreign-countries-projects-approval-popup.component';
-import {
-  GeneralProcessNotificationApprovalComponent
-} from './popups/general-process-notification-approval/general-process-notification-approval.component';
-import { NpoManagementApprovePopupComponent } from './popups/npo-management-approve-popup/npo-management-approve-popup.component';
-import { BylawsComponent } from './shared/bylaws/bylaws.component';
-import { CharityBranchComponent } from './shared/charity-branch/charity-branch.component';
 import { CharityDecisionsComponent } from './shared/charity-decisions/charity-decisions.component';
-import { ForeignAidClassificationsComponent } from './shared/foreign-aid-classifications/foreign-aid-classifications.component';
-import { MembersComponent } from './shared/members/members.component';
 
-import { EServicesMainModule } from '@app/modules/e-services-main/e-services-main.module';
-import { OfficeServicesModule } from '../office-services/office-services.module';
 import { EServicesMainModule } from '@app/modules/e-services-main/e-services-main.module';
 import { OfficeServicesModule } from '../office-services/office-services.module';
 import { GeneralServicesRoutingModule } from './general-services-routing.module';
@@ -72,15 +48,9 @@ import { ForeignCountriesProjectsComponent } from './pages/foreign-countries-pro
 import { InquiryComponent } from './pages/inquiry/inquiry.component';
 import { InternationalCooperationComponent } from './pages/international-cooperation/international-cooperation.component';
 import { FounderMembersComponent } from './pages/npo-management/founder-members/founder-members.component';
-import { InquiryComponent } from './pages/inquiry/inquiry.component';
-import { InternationalCooperationComponent } from './pages/international-cooperation/international-cooperation.component';
-import { FounderMembersComponent } from './pages/npo-management/founder-members/founder-members.component';
 import { NpoContactOfficerComponent } from './pages/npo-management/npo-contact-officer/npo-contact-officer.component';
 import { OrganizationsEntitiesSupportComponent } from './pages/organizations-entities-support/organizations-entities-support.component';
-import { OrganizationsEntitiesSupportComponent } from './pages/organizations-entities-support/organizations-entities-support.component';
 import { CoordinationWithOrgPopupComponent } from './popups/coordination-with-org-popup/coordination-with-org-popup.component';
-import { EmployeeFormPopupComponent } from './popups/employee-form-popup/employee-form-popup.component';
-import { EmploymentApproveComponent } from './popups/employment-approve/employment-approve.component';
 import { EmployeeFormPopupComponent } from './popups/employee-form-popup/employee-form-popup.component';
 import { EmploymentApproveComponent } from './popups/employment-approve/employment-approve.component';
 import { FollowupDateApprovePopupComponent } from './popups/follow-up-date-approve-popup/follow-up-date-approve-popup.component';
@@ -89,7 +59,6 @@ import { EmployeesDataComponent } from './shared/employees-data/employees-data.c
 import { RealBeneficiariesComponent } from './shared/real-beneficiaries/real-beneficiaries.component';
 import { CharityReportsComponent } from './shared/risk-reports/risk-reports.component';
 import { RealBeneficiariesComponent } from './shared/real-beneficiaries/real-beneficiaries.component';
-import { CharityReportsComponent } from './shared/risk-reports/risk-reports.component';
 
 
 @NgModule({
@@ -128,8 +97,7 @@ import { CharityReportsComponent } from './shared/risk-reports/risk-reports.comp
     InquiryComponent,
     InternationalCooperationComponent,
     OrganizationsEntitiesSupportComponent,
-    OrganizationsEntitiesSupportPopupComponent,
-
+    OrganizationsEntitiesSupportPopupComponent
   ],
   imports: [
     CommonModule,
