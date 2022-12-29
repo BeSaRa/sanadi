@@ -136,7 +136,7 @@ export class EmployeeFormPopupComponent implements OnInit {
 
   ngOnInit() {
     this._buildForm();
-    // this.loadImplementingAgenciesByAgencyType();
+    this.loadImplementingAgenciesByAgencyType();
     this.adminLookupService.loadAsLookups(AdminLookupTypeEnum.FUNCTIONAL_GROUP).subscribe((data) => {
       this.functionalGroupsList = data;
     })

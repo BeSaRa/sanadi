@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { DialogService } from './dialog.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { BackendServiceModelInterface } from '@contracts/backend-service-model-interface';
@@ -14,7 +14,6 @@ import { CastResponse } from "@decorators/cast-response";
 
 export class ActionLogService implements Pick<BackendServiceModelInterface<ActionRegistry>, '_getModel' | '_getInterceptor'> {
   interceptor: ActionRegistryInterceptor = new ActionRegistryInterceptor();
-
   constructor(private service: {
     http: HttpClient,
     _getURLSegment(): string,
@@ -53,5 +52,12 @@ export class ActionLogService implements Pick<BackendServiceModelInterface<Actio
     return this.service.http
       .get<IDefaultResponse<AdminResult[]>>(this.service._getURLSegment() + '/' + caseId + '/assigned-to')
       .pipe(map((response) => response.rs.map(item => AdminResult.createInstance(item))));
+  }
+
+
+  terminateTask(taskId: string): Observable<boolean> {
+    return this.service.http.post<IDefaultResponse<boolean>>(this.service._getURLSegment() + '/task/terminate', {}, {
+      params: new HttpParams().set('tkiid', taskId)
+    }).pipe(map(response => response.rs))
   }
 }

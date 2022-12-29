@@ -48,5 +48,6 @@ export enum WFResponseType {
   CHARITY_ORGANIZATION_UPDATE_SEND_TO_MULTI_DEPARTMENTS = 'ask:ReviewCharityOrganizationRequest',
   ORGANIZATION_FINAL_APPROVE = 'orgFinalApprove',
   ORGANIZATION_FINAL_REJECT = 'orgFinalReject',
-  FOREIGN_COUNTRIES_PROJECTS_LICENSING_SEND_TO_MULTI_DEPARTMENTS = 'ask:ReviewForeignCountriesProjectsLicensing'
+  FOREIGN_COUNTRIES_PROJECTS_LICENSING_SEND_TO_MULTI_DEPARTMENTS = 'ask:ReviewForeignCountriesProjectsLicensing',
+  SEND_TO_GM = 'sendToGM'
 }

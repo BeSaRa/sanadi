@@ -114,7 +114,7 @@
                 <div class="mb-4 ng-select-wrapper flex-grow-1 ">
                   <label asteriskIfRequired="headQuarterType" for="headQuarterType"
                     class="form-label">{{lang.map.office_type}}</label>
-                  <ng-select [selectOnTab]="true" labelForId="headQuarterType" [clearable]="true" [readonly]="readonly"
+                  <ng-select [selectOnTab]="true" labelForId="headQuarterType" [clearable]="true" [readonly]="(isExtendOrCancelRequestType() || readonly)"
                     (change)="handleOfficeTypeChenge()" placeholder="{{lang.map.select}}" id="headQuarterType"
                     [notFoundText]="lang.map.msg_not_found" appendTo="body" formControlName="headQuarterType"
                     validationClasses="headQuarterType">
@@ -133,7 +133,7 @@
                   <label asteriskIfRequired="countries" for="countries" class="form-label">{{lang.map.states}}</label>
                   <ng-select [selectOnTab]="true" [multiple]="true" labelForId="countries" [clearable]="true"
                     placeholder="{{lang.map.select}}" id="countries" [notFoundText]="lang.map.msg_not_found"
-                    [readonly]="readonly" appendTo="body" formControlName="countries" validationClasses="countries">
+                    [readonly]="(isExtendOrCancelRequestType() || readonly)" appendTo="body" formControlName="countries" validationClasses="countries">
                     <ng-option *ngFor="let option of countriesList" [value]="option.id" [disabled]="!option.isActive()">
                       {{option.getName()}}
                     </ng-option>
@@ -150,7 +150,7 @@
                     class="form-label">{{lang.map.license_duration_type}}</label>
                   <ng-select [selectOnTab]="true" labelForId="licenseDurationType" [clearable]="true"
                     placeholder="{{lang.map.select}}" id="licenseDurationType" [notFoundText]="lang.map.msg_not_found"
-                    (change)="handleLicenseDurationTypeChange()" [readonly]="readonly" appendTo="body"
+                    (change)="handleLicenseDurationTypeChange()" [readonly]="(isExtendOrCancelRequestType() || readonly)" appendTo="body"
                     formControlName="licenseDurationType" validationClasses="licenseDurationType">
                     <ng-option *ngFor="let option of LicenseDurationType" [value]="option.lookupKey">
                       {{ option.getName() }}
@@ -166,7 +166,7 @@
                 <div class="mb-4 ng-select-wrapper flex-grow-1 ">
                   <label asteriskIfRequired="licenseDuration" for="licenseDuration"
                     class="form-label">{{lang.map.license_duration}} / {{lang.map.month}}</label>
-                  <input formControlName="licenseDuration" [readonly]="readonly" cdkTrapFocus tabindex="1"
+                  <input formControlName="licenseDuration" [readonly]="(isExtendOrCancelRequestType() || readonly)" cdkTrapFocus tabindex="1"
                     id="licenseDuration" class="form-control" [mask]="inputMaskPatterns.NUMBER_ONLY" type="text">
                   <app-field-error-message controlName="licenseDuration"></app-field-error-message>
                 </div>
