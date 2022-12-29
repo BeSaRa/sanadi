@@ -653,6 +653,8 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   private loadSubDacOchaByParentId(parentId: number | null, callback?: () => void): void {
     if (!parentId) {
       callback && callback()
+      this.subDACCategory.setValue(null, {emitEvent: false})
+      this.subUNOCHACategory.setValue(null, {emitEvent: false})
       return;
     }
 
@@ -661,6 +663,8 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       .pipe(switchMap(() => this.dacOchaService.loadByParentId(parentId)))
       .pipe(takeUntil(this.destroy$))
       .subscribe((list) => {
+        this.subDACCategory.setValue(null, {emitEvent: false})
+        this.subUNOCHACategory.setValue(null, {emitEvent: false})
         this.domain.value === DomainTypes.DEVELOPMENT ? this.subDacCategories = list : this.subUNOCHACategories = list
         callback && callback()
       })
