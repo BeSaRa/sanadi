@@ -258,6 +258,8 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
             this.resetForm$.next();
             this.requestTypeField.setValue(requestTypeValue);
             this.handleReadonly();
+            if (this.operation == OperationTypes.CREATE)
+              this.organizationIdFeild.setValue(this.employeeService.getProfile()?.id);
           }
           this.requestType$.next(requestTypeValue);
         } else {
@@ -298,8 +300,6 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
 
   _afterBuildForm(): void {
     this.handleReadonly();
-    if (this.operation == OperationTypes.CREATE)
-      this.organizationIdFeild.setValue(this.employeeService.getProfile()?.id);
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {

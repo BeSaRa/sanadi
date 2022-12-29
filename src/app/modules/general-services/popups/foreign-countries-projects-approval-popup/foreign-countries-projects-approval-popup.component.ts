@@ -1,3 +1,4 @@
+import { EmployeeService } from '@app/services/employee.service';
 import { ProfileService } from './../../../../services/profile.service';
 import { Profile } from './../../../../models/profile';
 import { of } from 'rxjs';
@@ -43,6 +44,7 @@ export class ForeignCountriesProjectsApprovalPopupComponent implements OnInit {
     private dialog: DialogService,
     private dialogRef: DialogRef,
     private toast: ToastService,
+    private employeeService: EmployeeService,
     private profileService: ProfileService,
     private inboxService: InboxService,
     private fb: UntypedFormBuilder
@@ -77,7 +79,9 @@ export class ForeignCountriesProjectsApprovalPopupComponent implements OnInit {
         this.dialogRef.close(true);
       })
   }
-
+  get isNotCreator() {
+    return this.employeeService.getCurrentUser()?.generalUserId != this.data.model.creatorInfo.id
+  }
   private getResponse(): Partial<IWFResponse> {
     return this.comment.value ? {
       selectedResponse: this.response,

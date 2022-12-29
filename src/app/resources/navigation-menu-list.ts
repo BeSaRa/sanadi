@@ -113,8 +113,8 @@ export const navigationMenuList = [
     path: '/home/administration/external-users',
     icon: 'users',
     isSvg: true,
-    permission: null,
-    permissionGroup: PermissionGroupsEnum.MANAGE_EXTERNAL_USER_PERMISSIONS_GROUP,
+    permission: PermissionsEnum.MANAGE_EXTERNAL_USER_DYNAMIC, // added from employeeService (not available in permissions list from db)
+    permissionGroup: null,
     parent: 6,
     group: 'administration',
     itemOrder: 4,

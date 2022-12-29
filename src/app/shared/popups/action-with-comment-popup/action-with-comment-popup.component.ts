@@ -152,6 +152,8 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
     if (!this.canShowDeductionRatio) {
       delete controls.deductionPercent;
     }
+    if (!this.hasLicenseDuration)
+      delete controls.licenseDuration;
     this.form = this.fb.group(controls);
   }
 

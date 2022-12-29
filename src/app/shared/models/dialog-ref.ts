@@ -102,6 +102,7 @@ export class DialogRef {
         }
       });
     }
+    // TODO: add confirm to close popup
   }
 
   private createInjector<D>(data: D, dialogRef: DialogRef): Injector {
