@@ -16,15 +16,22 @@ const {receive, send} = new DeductionRatioItemInterceptor()
 
 @InterceptModel({receive, send})
 export class DeductionRatioItem extends BaseModel<DeductionRatioItem, DeductionRatioItemService> {
-  maxLimit!: number;
-  minLimit!: number;
-  permitType!: 1;
-  profile!: string;
+  
   status!: number;
-  workArea!: number;
+  profileTypes!: string;
+  workArea!: number|null;
+  permitType!:number;
+  minLimit!:number;
+  maxLimit!:number;
+  statusDateModified!: string;
+  statusInfo!:AdminResult;
+  workAreaInfo!:AdminResult;
+  permitTypeInfo!:AdminResult;
+  profileTypesList!:	number[]|null;
+  
+
   service: DeductionRatioItemService;
   langService!: LangService
-  statusInfo!:AdminResult;
   
   constructor() {
     super();
@@ -62,7 +69,7 @@ export class DeductionRatioItem extends BaseModel<DeductionRatioItem, DeductionR
       arName,
       enName,
       status,
-      profile,
+      profileTypesList,
       workArea,
       permitType,
       maxLimit,
@@ -82,8 +89,8 @@ export class DeductionRatioItem extends BaseModel<DeductionRatioItem, DeductionR
         CustomValidators.pattern('ENG_NUM_ONE_ENG')
       ]] : enName,
       status: controls ? [status, [CustomValidators.required]] : status,
-      profile: controls ? [profile, [CustomValidators.required]] : profile,
-      workArea: controls ? [workArea, [CustomValidators.required]] : workArea,
+      profileTypesList: controls ? [profileTypesList, [CustomValidators.required]] : profileTypesList,
+      workArea: controls ? [workArea] : workArea,
       permitType: controls ? [permitType, [CustomValidators.required]] : permitType,
       maxLimit: controls ? [maxLimit, [CustomValidators.required, Validators.max(50)]] : maxLimit,
       minLimit: controls ? [minLimit, [CustomValidators.required].concat(CustomValidators.commonValidations.decimalWithMinValue(2,0.1))] : minLimit,

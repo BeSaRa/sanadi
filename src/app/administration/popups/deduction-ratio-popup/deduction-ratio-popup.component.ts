@@ -28,10 +28,10 @@ export class DeductionRatioPopupComponent extends AdminGenericDialog<DeductionRa
   operation: OperationTypes;
   saveVisible = true;
   userTypes: Lookup[] = this.lookupService.listByCategory.UserType.filter((x:any) => x.lookupKey !== UserTypes.INTEGRATION_USER);
-  // profiles$ = this.profileService.loadAsLookups();
   workAreas: Lookup[] = this.lookupService.listByCategory.ProjectWorkArea
   permitTypes: Lookup[] = this.lookupService.listByCategory.ProjectPermitType
-  profileList: Profile[] = [];
+  profileTypes: Lookup[] = this.lookupService.listByCategory.ProfileType
+  // profileList: Profile[] = [];
 
   constructor(public dialogRef: DialogRef,
               public fb: UntypedFormBuilder,
@@ -39,7 +39,7 @@ export class DeductionRatioPopupComponent extends AdminGenericDialog<DeductionRa
               @Inject(DIALOG_DATA_TOKEN) data: IDialogData<DeductionRatioItem>,
               private toast: ToastService,
               private lookupService: LookupService,
-              private profileService:ProfileService,
+              // private profileService:ProfileService,
               ) {
     super();
     this.model = data.model;
@@ -47,7 +47,7 @@ export class DeductionRatioPopupComponent extends AdminGenericDialog<DeductionRa
   }
 
   initPopup(): void {
-    this._loadProfiles()
+    // this._loadProfiles()
   }
 
   buildForm(): void {
@@ -65,6 +65,11 @@ export class DeductionRatioPopupComponent extends AdminGenericDialog<DeductionRa
     return null
   }
 
+  workAreaReadOnly(){
+    const permitTypeValue = this.form.get('permitType')?.value
+    return permitTypeValue == 3 || permitTypeValue == 4 
+  }
+  
   beforeSave(model: DeductionRatioItem, form: UntypedFormGroup): Observable<boolean> | boolean {
     return form.valid;
   }
@@ -99,16 +104,16 @@ export class DeductionRatioPopupComponent extends AdminGenericDialog<DeductionRa
 
   destroyPopup(): void {
   }
-  private _loadProfiles(): void {
-    this.profileService.loadAsLookups()
-      .pipe(
-        takeUntil(this.destroy$),
-        catchError(() => {
-          return of([]);
-        })
-      )
-      .subscribe((result) => this.profileList = result);
-  }
+  // private _loadProfiles(): void {
+  //   this.profileService.loadAsLookups()
+  //     .pipe(
+  //       takeUntil(this.destroy$),
+  //       catchError(() => {
+  //         return of([]);
+  //       })
+  //     )
+  //     .subscribe((result) => this.profileList = result);
+  // }
   NameNotValid(){
     const arName = this.form.get('arName')
     const enName = this.form.get('enName')

@@ -46,15 +46,15 @@
           </div>
         </div>
         <div class="col-sm-6 mb-4 ng-select-wrapper">
-          <label for="profile" asteriskIfRequired="profile"
+          <label for="profileTypesList" asteriskIfRequired="profileTypesList"
                  class="form-label">{{lang.map.lbl_profile}}</label>
-          <ng-select [multiple]="true" [selectOnTab]="true" labelForId="profile" [clearable]="false"
-                     placeholder="{{lang.map.select}}" id="profile"
+          <ng-select [multiple]="true" [selectOnTab]="true" labelForId="profileTypesList" [clearable]="false"
+                     placeholder="{{lang.map.select}}" id="profileTypesList"
                      [notFoundText]="lang.map.msg_not_found"
-                     formControlName="profile" appendTo="body"
-                     validationClasses="profile">
-            <ng-option *ngFor="let option of profileList" [value]="option.id">
-              {{option.getName()}}
+                     formControlName="profileTypesList" appendTo="body"
+                     validationClasses="profileTypesList">
+            <ng-option *ngFor="let profileType of profileTypes" [value]="profileType.lookupKey">
+              {{profileType.getName()}}
             </ng-option>
           </ng-select>
           <app-field-error-message controlName="profile"></app-field-error-message>
@@ -68,7 +68,9 @@
                          placeholder="{{lang.map.select}}"
                          [notFoundText]="lang.map.msg_not_found"
                          formControlName="workArea"
-                         id="workArea" appendTo="body">
+                         id="workArea" appendTo="body"
+                         [readonly]="workAreaReadOnly()"
+                         >
                 <ng-option [value]="workArea.lookupKey"
                            *ngFor="let workArea of workAreas ">{{workArea.getName()}}</ng-option>
               </ng-select>
