@@ -1,4 +1,3 @@
-import { AdminResult } from './admin-result';
 import {CustomValidators} from "@app/validators/custom-validators";
 import {SearchableCloneable} from "@app/models/searchable-cloneable";
 import { normalSearchFields } from '@app/helpers/normal-search-fields';
@@ -9,14 +8,13 @@ export class ContactOfficer extends SearchableCloneable<ContactOfficer>{
   englishName!: string;
   email!: string;
   phone!: string;
-  mobileNo!: string;
 
   searchFields: ISearchFieldsMap<ContactOfficer> = {
     ...normalSearchFields(['arabicName','englishName','email','phone'])
   };
 
   getContactOfficerFields(control: boolean): any {
-    const {arabicName, englishName, email, phone, mobileNo} = this;
+    const {arabicName, englishName, email, phone} = this;
 
     return {
       arabicName: control ? [arabicName, [CustomValidators.required, CustomValidators.pattern('AR_ONLY'),
@@ -27,7 +25,6 @@ export class ContactOfficer extends SearchableCloneable<ContactOfficer>{
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : englishName,
       email: control ? [email, [CustomValidators.required, CustomValidators.pattern('EMAIL')]] : email,
       phone: control ? [phone, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : phone,
-      mobileNo: control ? [mobileNo, [CustomValidators.required].concat(CustomValidators.commonValidations.mobileNo)] : mobileNo,
     };
   }
 }

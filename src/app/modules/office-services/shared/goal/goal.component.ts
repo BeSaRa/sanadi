@@ -136,9 +136,6 @@ export class GoalComponent implements OnInit, OnDestroy {
 
   private listenToChange() {
     this.recordChanged$.pipe(takeUntil(this.destroy$)).subscribe((goal) => {
-      if (this.readonly) {
-        return;
-      }
       this.current = goal || undefined;
       this.showForm = !!this.current;
       this.updateForm(this.current);

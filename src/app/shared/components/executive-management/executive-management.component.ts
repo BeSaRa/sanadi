@@ -1,3 +1,4 @@
+import { Lookup } from './../../../models/lookup';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
@@ -40,13 +41,14 @@ export class ExecutiveManagementComponent implements OnInit {
   get list(): ExecutiveManagement[] {
     return this._list;
   }
+  @Input() nationalities: Lookup[] = [];
   @Input() countriesList: Country[] = [];
   @Input() readonly: boolean = false;
   @Input() pageTitleKey: keyof ILanguageKeys = 'managers';
 
   dataSource: BehaviorSubject<ExecutiveManagement[]> = new BehaviorSubject<
   ExecutiveManagement[]
->([]);  columns = ['arabicName', 'englishName', 'email', 'country','actions'];
+>([]);  columns = ['arabicName', 'englishName', 'email','actions'];
   editItem?: ExecutiveManagement;
   showForm: boolean = false;
   viewOnly: boolean = false;

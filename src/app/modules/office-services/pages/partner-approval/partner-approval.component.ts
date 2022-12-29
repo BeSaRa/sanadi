@@ -51,6 +51,7 @@ export class PartnerApprovalComponent
   implements AfterViewInit {
   form!: UntypedFormGroup;
   serviceRequestTypes = ServiceRequestTypes;
+  nationalities: Lookup[] = this.lookupService.listByCategory.Nationality;
   countries: Country[] = [];
   requestTypes: Lookup[] =
     this.lookupService.listByCategory.ServiceRequestType.slice().sort(

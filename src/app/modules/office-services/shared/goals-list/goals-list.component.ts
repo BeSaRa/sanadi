@@ -171,9 +171,6 @@ export class GoalsListComponent implements OnInit {
 
   private listenToChange() {
     this.recordChanged$.pipe(takeUntil(this.destroy$)).subscribe((goalList) => {
-      if (this.readonly) {
-        return;
-      }
       this.current = goalList || undefined;
       this.showForm = !!this.current;
       this.updateForm(this.current);

@@ -1,13 +1,13 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {LangService} from "@services/lang.service";
-import {ToastService} from "@services/toast.service";
-import {DialogService} from "@services/dialog.service";
-import {AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from "@angular/forms";
-import {ReadinessStatus} from "@app/types/types";
-import {BehaviorSubject, Subject} from "rxjs";
-import {filter, map, take, takeUntil, tap} from "rxjs/operators";
-import {UserClickOn} from "@app/enums/user-click-on.enum";
-import {ContactOfficer} from "@app/models/contact-officer";
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { LangService } from "@services/lang.service";
+import { ToastService } from "@services/toast.service";
+import { DialogService } from "@services/dialog.service";
+import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from "@angular/forms";
+import { ReadinessStatus } from "@app/types/types";
+import { BehaviorSubject, Subject } from "rxjs";
+import { filter, map, take, takeUntil, tap } from "rxjs/operators";
+import { UserClickOn } from "@app/enums/user-click-on.enum";
+import { ContactOfficer } from "@app/models/contact-officer";
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 import { CommonUtils } from '@app/helpers/common-utils';
 import { SortEvent } from '@app/interfaces/sort-event';
@@ -22,9 +22,9 @@ import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
 export class ContactOfficerComponent implements OnInit, OnDestroy {
 
   constructor(public lang: LangService,
-              private toastService: ToastService,
-              private dialogService: DialogService,
-              private fb: UntypedFormBuilder) {
+    private toastService: ToastService,
+    private dialogService: DialogService,
+    private fb: UntypedFormBuilder) {
   }
 
   private _list: ContactOfficer[] = [];
@@ -37,7 +37,7 @@ export class ContactOfficerComponent implements OnInit, OnDestroy {
     return this._list;
   }
 
-  @Input() readonly : boolean = false;
+  @Input() readonly: boolean = false;
 
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();
 
@@ -115,6 +115,7 @@ export class ContactOfficerComponent implements OnInit, OnDestroy {
 
   private listenToChange() {
     this.changed$.pipe(takeUntil(this.destroy$)).subscribe((record) => {
+      console.log(record)
       this.current = record || undefined;
       this.showForm = !!this.current;
       this.updateForm(this.current);
