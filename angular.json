@@ -157,21 +157,6 @@
             ],
             "scripts": []
           }
-        },
-        "e2e": {
-          "builder": "@angular-devkit/build-angular:protractor",
-          "options": {
-            "protractorConfig": "e2e/protractor.conf.js"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "sanadi:serve:production"
-            },
-            "development": {
-              "devServerTarget": "sanadi:serve:development"
-            }
-          },
-          "defaultConfiguration": "development"
         }
       }
     }
