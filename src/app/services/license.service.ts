@@ -169,6 +169,9 @@ export class LicenseService {
       case CaseTypes.ORGANIZATION_ENTITIES_SUPPORT:
         url = this.urlService.URLS.ORGANIZATION_ENTITIES_SUPPORT;
         break;
+      case CaseTypes.FINANCIAL_TRANSFERS_LICENSING:
+        url = this.urlService.URLS.FINANCIAL_TRANSFERS_LICENSING;
+        break;
     }
     return url;
   }
