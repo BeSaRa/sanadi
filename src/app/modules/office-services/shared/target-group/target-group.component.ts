@@ -115,9 +115,6 @@ export class TargetGroupComponent implements OnInit, OnDestroy {
   private listenToChange() {
     this.changed$.pipe(takeUntil(this.destroy$))
       .subscribe(targetGroup => {
-        if (this.readonly) {
-          return;
-        }
         this.current = targetGroup || undefined;
         this.showForm = !!this.current;
         this.updateForm(this.current);

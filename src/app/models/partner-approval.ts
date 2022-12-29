@@ -33,7 +33,6 @@ export class PartnerApproval extends LicenseApprovalModel<
 > {
   caseType: number = CaseTypes.PARTNER_APPROVAL;
   organizationId!: number;
-  address!: string;
   arName!: string;
   chiefDecision!: number;
   chiefJustification!: string;
@@ -132,7 +131,6 @@ export class PartnerApproval extends LicenseApprovalModel<
       headQuarterType,
       latitude,
       longitude,
-      address,
       establishmentDate,
       phone,
       fax,
@@ -146,8 +144,6 @@ export class PartnerApproval extends LicenseApprovalModel<
       oldLicenseFullSerial,
       oldLicenseId,
       oldLicenseSerial,
-      commercialLicenseNo,
-      commercialLicenseEndDate
     } = this;
 
     return {
@@ -220,7 +216,6 @@ export class PartnerApproval extends LicenseApprovalModel<
             ],
           ]
         : longitude,
-      address: control ? [address, CustomValidators.required] : address,
       establishmentDate: control
         ? [
             establishmentDate,

@@ -1,3 +1,4 @@
+import { IAngularMyDpOptions } from 'angular-mydatepicker';
 import { FinalExternalOfficeApproval } from '@app/models/final-external-office-approval';
 import { LicenseDurationType } from '@app/enums/license-duration-type';
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
@@ -85,7 +86,7 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
 
     if (this.data.actionType.indexOf(WFResponseType.ASK_FOR_CONSULTATION) === 0) {
       this.label = 'ask_for_consultation_task';
-    } else if(this.data.actionType === WFResponseType.ORGANIZATION_FINAL_REJECT){
+    } else if (this.data.actionType === WFResponseType.ORGANIZATION_FINAL_REJECT) {
       this.label = 'organization_final_reject'
     } else {
       this.label = ((CommonUtils.changeCamelToSnakeCase(this.data.actionType) + '_task') as unknown as keyof ILanguageKeys);
@@ -126,7 +127,6 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
     this.destroy$.unsubscribe();
   }
-
   displayCustomForm(caseDetails: LicenseApprovalModel<any, any>): void {
     this.displayLicenseForm = this.data.task &&
       this.specialApproveServices.includes(this.data.task.getCaseType()) &&
@@ -157,6 +157,21 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
     this.form = this.fb.group(controls);
   }
 
+  handleDurationChange(event: any) {
+    this._handleDurationChange(event.target?.value);
+  }
+  _handleDurationChange(value: number) {
+    let toFieldDateOptions: IAngularMyDpOptions = JSON.parse(JSON.stringify(this.datepickerOptionsMap.licenseStartDate));
+    const disableDate = new Date();
+    disableDate.setMonth(disableDate.getMonth() - value);
+    toFieldDateOptions.disableUntil = {
+      year: disableDate.getFullYear(),
+      month: disableDate.getMonth() + 1,
+      day: disableDate.getDate()
+    };
+    this.datepickerOptionsMap.licenseStartDate = toFieldDateOptions;
+    this.licenseStartDateField.reset()
+  }
   updateForm(caseDetails: LicenseApprovalModel<any, any>, serviceData: ServiceData) {
     let data: any = {
       licenseStartDate: DateUtils.changeDateToDatepicker(caseDetails.licenseStartDate),
@@ -170,8 +185,8 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
     if (!this.canShowDeductionRatio) {
       delete data.deductionPercent
     }
-
     this.form.patchValue(data);
+    this._handleDurationChange(data.licenseDuration)
 
     let licenseDurationValidations = [CustomValidators.required, CustomValidators.number];
     if (CommonUtils.isValidValue(serviceData.licenseMinTime)) {
@@ -309,7 +324,7 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
     this.customTermsField.setValue(appendTerm)
   }
   get hasLicenseDuration() {
-    return (this.data.task as FinalExternalOfficeApproval).licenseDurationType == LicenseDurationType.TEMPORARY
+    return (this.data.task as FinalExternalOfficeApproval).licenseDurationType == LicenseDurationType.TEMPORARY || this.data.task.getCaseType() != CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL
   }
 
   get canShowDeductionRatio(): boolean {

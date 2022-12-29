@@ -69,9 +69,8 @@
       <div *ngIf="selectedLicense">
         <selected-license-table [caseType]="caseTypes.PARTNER_APPROVAL"
           [caseTypeViewLicense]="caseTypes.PARTNER_APPROVAL" [licenseList]="[selectedLicense]"
-          [columns]="service.selectLicenseDisplayColumns"
-          [ignoreDelete]="!isEditLicenseAllowed()"
-          ></selected-license-table>
+          [columns]="service.selectLicenseDisplayColumns" [ignoreDelete]="!isEditLicenseAllowed()">
+        </selected-license-table>
       </div>
       <div class="row">
         <!-- Request Classification -->
@@ -126,13 +125,13 @@
         <!-- City -->
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label asteriskIfRequired="city" for="city" class="form-label">{{lang.map.city}}</label>
-          <input formControlName="city" type="text" [readOnly]="(isExtendOrCancelRequestType() || readonly)" validationClasses="city"
-            class="form-control" trimInput id="city">
+          <input formControlName="city" type="text" [readOnly]="(isExtendOrCancelRequestType() || readonly)"
+            validationClasses="city" class="form-control" trimInput id="city">
           <app-field-error-message controlName="city"></app-field-error-message>
         </div>
 
-         <!-- Headquarter  Type -->
-         <div class="col-sm-12 col-md-4 mb-4 position-relative">
+        <!-- Headquarter  Type -->
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label asteriskIfRequired="headQuarterType" for="headQuarterType"
             class="form-label">{{lang.map.headquarter_type}}</label>
           <ng-select [selectOnTab]="true" labelForId="headQuarterType" [clearable]="true"
@@ -149,8 +148,8 @@
       </div>
       <div class="row">
 
-         <!-- Region -->
-         <div class="col-sm-12 col-md-4 mb-4 position-relative">
+        <!-- Region -->
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label asteriskIfRequired="region" for="region" class="form-label">{{lang.map.region}}</label>
           <input formControlName="region" type="text" [readOnly]="!isEditCountryAllowed()" validationClasses="region"
             class="form-control" trimInput id="region">
@@ -190,13 +189,6 @@
       </div>
       <div class="row">
 
-        <!-- Address -->
-        <div class="col-sm-12 col-md-4 mb-4 position-relative">
-          <label asteriskIfRequired="address" for="address" class="form-label">{{lang.map.lbl_address}}</label>
-          <input formControlName="address" type="text" [readOnly]="(isExtendOrCancelRequestType() || readonly)"
-            validationClasses="address" class="form-control" trimInput id="address">
-          <app-field-error-message controlName="address"></app-field-error-message>
-        </div>
         <!-- Phone -->
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label asteriskIfRequired="phone" for="phone" class="form-label">{{lang.map.lbl_phone}}</label>
@@ -327,12 +319,10 @@
 
     <!-- Goals -->
     <ng-template #goalsTemplate>
-      <goal  #goalsTab [list]="model?.displayGoals  || []" [readonly]="(isExtendOrCancelRequestType() || readonly)"
-      (readyEvent)="goalsTabStatus = $event">
-
-      </goal>
+      <goal #goalsTab [list]="model?.displayGoals  || []" [readonly]="(isExtendOrCancelRequestType() || readonly)"
+        (readyEvent)="goalsTabStatus = $event"></goal>
       <goals-list #goalsListTab [list]="model?.goalsList || []" [readonly]="(isExtendOrCancelRequestType() || readonly)"
-       (readyEvent)="goalsListTabStatus = $event"></goals-list>
+        (readyEvent)="goalsListTabStatus = $event"></goals-list>
 
       <!-- Target Groups -->
       <target-group #targetGroupsTab [list]="model?.targetGroupList || []"
@@ -340,9 +330,8 @@
       </target-group>
 
       <!-- Work Area -->
-      <work-areas [countries]="countries" #workAreasTab
-      [readonly]="(isExtendOrCancelRequestType() || readonly)" [list]="model?.workAreaObjectList || []"
-     >
+      <work-areas [countries]="countries" #workAreasTab [readonly]="(isExtendOrCancelRequestType() || readonly)"
+        [list]="model?.workAreaObjectList || []">
       </work-areas>
     </ng-template>
     <!-- Management Councils -->
@@ -353,9 +342,10 @@
     </ng-template>
     <!-- Executive Managements -->
     <ng-template #executiveManagementsTemplate>
-      <executive-management #executiveManagementsTab [countriesList]="countries" [pageTitleKey]="'executive_management'"
-        [list]="model?.executiveManagementList || []" [readonly]="(isExtendOrCancelRequestType() || readonly)"
-        (readyEvent)="executiveManagementsTabStatus = $event"></executive-management>
+      <executive-management #executiveManagementsTab [nationalities]="nationalities"
+        [pageTitleKey]="'executive_management'" [list]="model?.executiveManagementList || []"
+        [readonly]="(isExtendOrCancelRequestType() || readonly)" (readyEvent)="executiveManagementsTabStatus = $event">
+      </executive-management>
     </ng-template>
 
     <!-- Contact Officers -->

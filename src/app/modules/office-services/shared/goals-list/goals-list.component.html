@@ -48,7 +48,7 @@
 
 
     <div class="d-flex flex-row align-items-center justify-content-center">
-      <button (click)="save()" [disabled]="readonly" class="btn btn-primary m-2">{{!!editItem ? lang.map.btn_save :
+      <button (click)="save()" *ngIf="!readonly" class="btn btn-primary m-2">{{!!editItem ? lang.map.btn_save :
         lang.map.btn_add}}</button>
       <button (click)="cancel()" class="btn btn-secondary m-2">{{lang.map.btn_cancel}}</button>
     </div>
