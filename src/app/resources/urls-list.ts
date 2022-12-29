@@ -134,7 +134,8 @@ export const urlsList: Partial<IAppUrls> = {
   DEDUCTION_RATIO_ITEM: '/admin/deduction-ratio-item',
   ORGANIZATION_ENTITIES_SUPPORT: '/organizations-entities-support',
   PROFILE_COUNTRY: '/admin/profile-country',
+  PROJECT_IMPLEMENTATION: '/project-implementation',
+  FINANCIAL_TRANSFERS_LICENSING:'/financial-transfers-licensing',
   GLOBAL_SETTINGS:'/admin/global-setting',
   USER_PREFERENCES: '/admin/user-preferences',
-  PROJECT_IMPLEMENTATION: '/project-implementation'
 };

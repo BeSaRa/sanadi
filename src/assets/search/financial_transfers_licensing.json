@@ -1,0 +1,79 @@
+[
+  {
+    "fields": [
+      {
+        "key": "createdOnFrom",
+        "type": "dateField",
+        "label": "creation_date_from",
+        "validations": {
+          "required": false
+        },
+        "dateOptions": {
+          "operator": "-",
+          "defaultValue": "now",
+          "value": "1 year"
+        }
+      },
+      {
+        "key": "createdOnTo",
+        "type": "dateField",
+        "label": "creation_date_to",
+        "validations": {
+          "required": false
+        }
+      }
+    ]
+  },
+  {
+    "fields": [
+      {
+        "key": "organizationId",
+        "type": "selectField",
+        "label": "lbl_organization",
+        "selectOptions": {
+          "options": [],
+          "loader": "organization.loadAsLookups",
+          "bindValue": "id",
+          "bindLabel": "basedOnLanguage"
+        }
+      },
+      {
+        "key": "subject",
+        "type": "input",
+        "label": "subject",
+        "validations": {
+          "required": false
+        },
+        "templateOptions": {
+          "maxLength": 300
+        }
+      }
+    ]
+  },
+  {
+    "fields": [
+      {
+        "key": "goal",
+        "type": "input",
+        "label": "goal",
+        "validations": {
+          "required": false
+        },
+        "templateOptions": {
+          "maxLength": 300
+        }
+      },
+      {
+        "key": "beneficiaries",
+        "type": "input",
+        "label": "beneficiaries_description",
+        "validations": {
+          "required": false
+        },
+        "templateOptions": {
+          "maxLength": 300
+        }
+      }
+    ]
+  }
+]

@@ -1,3 +1,4 @@
+import { FinancialTransfersLicensingComponent } from './pages/financial-transfers-licensing/financial-transfers-licensing.component';
 import { ForeignCountriesProjectsApprovalPopupComponent } from './popups/foreign-countries-projects-approval-popup/foreign-countries-projects-approval-popup.component';
 import { FormlyMaskInputFieldComponent } from '@app/services-search/components/formly-mask-input-field/formly-mask-input-field.component';
 import { FormlySelectFieldComponent } from '@app/services-search/components/formly-select-field/formly-select-field.component';
@@ -95,7 +96,8 @@ import { EmployeesDataComponent } from './shared/employees-data/employees-data.c
     InquiryComponent,
     InternationalCooperationComponent,
     OrganizationsEntitiesSupportComponent,
-    OrganizationsEntitiesSupportPopupComponent
+    OrganizationsEntitiesSupportPopupComponent,
+    FinancialTransfersLicensingComponent
   ],
   imports: [
     CommonModule,

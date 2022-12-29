@@ -1754,6 +1754,7 @@ export interface ILanguageKeys {
   government_agencies: string;
   countries_add_successfully: string;
   remove_countries_messages: string;
+  menu_financial_transfers_licensing: string;
   employee_with_jobNumber: string;
   lbl_mobile_number: string;
 }
