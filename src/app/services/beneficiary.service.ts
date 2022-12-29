@@ -101,6 +101,10 @@ export class BeneficiaryService extends CrudGenericService<Beneficiary> {
     return this.urlService.URLS.BENEFICIARY;
   }
 
+  _getGDXServiceURL(): string {
+    return this.urlService.URLS.BENEFICIARY + '/gdx';
+  }
+
 
   _getReceiveInterceptor() {
     return (new BeneficiaryInterceptor).receive;
@@ -158,7 +162,7 @@ export class BeneficiaryService extends CrudGenericService<Beneficiary> {
     fallback: '$default'
   })
   loadGDXMOPHMortality(criteria: IGdxCriteria) {
-    return this.http.post<GdxMophResponse[]>(this._getServiceURL() + '/gdx/moph/mortality', criteria);
+    return this.http.post<GdxMophResponse[]>(this._getGDXServiceURL() + '/moph/mortality', criteria);
   }
 
   @CastResponse(() => GdxServiceLog, {
@@ -166,7 +170,7 @@ export class BeneficiaryService extends CrudGenericService<Beneficiary> {
     fallback: '$default'
   })
   loadGDXIntegrationData(criteria: IGdxCriteria) {
-    return this.http.post<GdxServiceLog[]>(this._getServiceURL() + '/gdx/audit', criteria);
+    return this.http.post<GdxServiceLog[]>(this._getGDXServiceURL() + '/audit', criteria);
   }
 
   @CastResponse(() => GdxMojResponse, {
@@ -174,7 +178,7 @@ export class BeneficiaryService extends CrudGenericService<Beneficiary> {
     fallback: '$default'
   })
   addMOJInquiry(criteria: IGdxCriteria) {
-    return this.http.post<GdxMojResponse[]>(this._getServiceURL() + '/gdx/moj/real-estate', criteria);
+    return this.http.post<GdxMojResponse[]>(this._getGDXServiceURL() + '/moj/real-estate', criteria);
   }
 
   @CastResponse(() => GdxMociResponse, {
@@ -182,7 +186,7 @@ export class BeneficiaryService extends CrudGenericService<Beneficiary> {
     fallback: '$default'
   })
   addMOCIInquiry(criteria: IGdxCriteria) {
-    return this.http.post<GdxMociResponse[]>(this._getServiceURL() + '/gdx/moci/commercial-record', criteria);
+    return this.http.post<GdxMociResponse[]>(this._getGDXServiceURL() + '/moci/commercial-record', criteria);
   }
 
   @CastResponse(() => GdxMawaredResponse, {
@@ -190,7 +194,7 @@ export class BeneficiaryService extends CrudGenericService<Beneficiary> {
     fallback: '$default'
   })
   addMAWAREDInquiry(criteria: IGdxCriteria) {
-    return this.http.post<GdxMawaredResponse[]>(this._getServiceURL() + '/gdx/mawared/last-salary', criteria);
+    return this.http.post<GdxMawaredResponse[]>(this._getGDXServiceURL() + '/mawared/last-salary', criteria);
   }
 
   @CastResponse(() => GdxGarsiaPensionResponse, {
@@ -198,11 +202,11 @@ export class BeneficiaryService extends CrudGenericService<Beneficiary> {
     fallback: '$default'
   })
   addGarsiaInquiry(criteria: IGdxCriteria) {
-    return this.http.post<GdxGarsiaPensionResponse[]>(this._getServiceURL() + '/gdx/garsia/pension', criteria);
+    return this.http.post<GdxGarsiaPensionResponse[]>(this._getGDXServiceURL() + '/garsia/pension', criteria);
   }
 
   addIzzabInquiry(criteria: IGdxCriteria): Observable<any> {
-    return this.http.post<any>(this._getServiceURL() + '/gdx/izzab-status', criteria)
+    return this.http.post<any>(this._getGDXServiceURL() + '/izzab-status', criteria)
       .pipe(map(response => response.rs));
   }
 
@@ -211,6 +215,6 @@ export class BeneficiaryService extends CrudGenericService<Beneficiary> {
     fallback: '$default'
   })
   addKahramaaInquiry(criteria: IGdxCriteria) {
-    return this.http.post<GdxKahramaaResponse[]>(this._getServiceURL() + '/gdx/kaharmaa-outstanding', criteria);
+    return this.http.post<GdxKahramaaResponse[]>(this._getGDXServiceURL() + '/kaharmaa-outstanding', criteria);
   }
 }
