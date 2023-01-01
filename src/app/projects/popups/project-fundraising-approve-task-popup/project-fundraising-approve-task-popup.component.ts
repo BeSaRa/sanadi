@@ -69,7 +69,10 @@ export class ProjectFundraisingApproveTaskPopupComponent implements OnInit, OnDe
   }
 
   private listenToAction() {
+    // noinspection DuplicatedCode
     this.action$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(tap((_) => this.isCancelRequestType() ? null : this.approvalForm.saveApprovalInfo()))
       .pipe(map(_ => this.isCancelRequestType() ? true : this.model.hasValidApprovalInfo()))
       .pipe(tap(valid => !valid && this.displayInvalidFormMessage()))
       .pipe(filter(valid => valid))
