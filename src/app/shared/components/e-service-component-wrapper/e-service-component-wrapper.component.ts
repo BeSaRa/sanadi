@@ -1237,7 +1237,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
    } else {
       if(item.getCaseType() === CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST){
         const model = item as unknown as CoordinationWithOrganizationsRequest;
-        if( model.employeeService.isDevelopmentalExpert() || model.employeeService.isConstructionExpert()){
+        if( model.isApproved && (model.employeeService.isDevelopmentalExpert() || model.employeeService.isConstructionExpert())){
           model.approveWithDocument(model).onAfterClose$.subscribe(actionTaken => {
             actionTaken && this.navigateToSamePageThatUserCameFrom();
           })
