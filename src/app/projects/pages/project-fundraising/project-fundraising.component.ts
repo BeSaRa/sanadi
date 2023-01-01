@@ -13,6 +13,7 @@ import {Country} from "@app/models/country";
 import {
   catchError,
   delay,
+  distinctUntilChanged,
   exhaustMap,
   filter,
   map,
@@ -89,6 +90,83 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   userAnswer: ReplaySubject<UserClickOn> = new ReplaySubject<UserClickOn>(1)
 
   storedOldValues: Record<string, number> = {}
+
+
+  get basicInfo(): AbstractControl {
+    return this.form.get('basicInfo')!
+  }
+
+  get specialExplanation(): AbstractControl {
+    return this.form.get('explanation')!
+  }
+
+  get permitType(): AbstractControl {
+    return this.basicInfo.get('permitType')!
+  }
+
+  get projectWorkArea(): AbstractControl {
+    return this.basicInfo.get('projectWorkArea')!
+  }
+
+  get requestType(): AbstractControl {
+    return this.basicInfo.get('requestType')!
+  }
+
+  get domain(): AbstractControl {
+    return this.basicInfo.get('domain')!
+  }
+
+  get mainDACCategory(): AbstractControl {
+    return this.basicInfo.get('mainDACCategory')!
+  }
+
+  get subDACCategory(): AbstractControl {
+    return this.basicInfo.get('subDACCategory')!
+  }
+
+  get mainUNOCHACategory(): AbstractControl {
+    return this.basicInfo.get('mainUNOCHACategory')!
+  }
+
+  get subUNOCHACategory(): AbstractControl {
+    return this.basicInfo.get('subUNOCHACategory')!
+  }
+
+  get countriesField(): AbstractControl {
+    return this.basicInfo.get('countries')!
+  }
+
+  get sanadiDomain(): AbstractControl {
+    return this.basicInfo.get('sanadiDomain')!
+  }
+
+  get projectType(): AbstractControl {
+    return this.basicInfo.get('projectType')!
+  }
+
+  get internalProjectClassification(): AbstractControl {
+    return this.basicInfo.get('internalProjectClassification')!
+  }
+
+  get sanadiMainClassification(): AbstractControl {
+    return this.basicInfo.get('sanadiMainClassification')!
+  }
+
+  get licenseDuration(): AbstractControl {
+    return this.basicInfo.get('licenseDuration')!
+  }
+
+  get projectTotalCost(): AbstractControl {
+    return this.basicInfo.get('projectTotalCost')!
+  }
+
+  get oldLicenseFullSerial(): AbstractControl {
+    return this.basicInfo.get('oldLicenseFullSerial')!
+  }
+
+  private getQatarCountry(): Country {
+    return this.countries.find(item => item.enName.toLowerCase() === 'qatar')!
+  }
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -238,20 +316,13 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   _resetForm(): void {
+    this.model!.templateList = [];
     this.form.reset();
     this.model = this._getNewInstance();
     this.operation = this.operationTypes.CREATE;
     this.selectedLicense = undefined;
     this.setDefaultValues()
     this.overrideValuesInCreate()
-  }
-
-  // noinspection JSUnusedLocalSymbols
-  private markUnTouched(fields: AbstractControl[]): void {
-    fields.forEach(field => {
-      field.markAsPristine()
-      field.markAsUntouched()
-    })
   }
 
   private markRequired(fields: AbstractControl[], emitEvent: boolean = false): boolean {
@@ -274,82 +345,6 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   private emptyFields(fields: AbstractControl[], emitEvent: boolean = false): boolean {
     fields.forEach(field => field.setValue(null, {emitEvent}))
     return true
-  }
-
-  get basicInfo(): AbstractControl {
-    return this.form.get('basicInfo')!
-  }
-
-  get specialExplanation(): AbstractControl {
-    return this.form.get('explanation')!
-  }
-
-  get permitType(): AbstractControl {
-    return this.basicInfo.get('permitType')!
-  }
-
-  get projectWorkArea(): AbstractControl {
-    return this.basicInfo.get('projectWorkArea')!
-  }
-
-  get requestType(): AbstractControl {
-    return this.basicInfo.get('requestType')!
-  }
-
-  get domain(): AbstractControl {
-    return this.basicInfo.get('domain')!
-  }
-
-  get mainDACCategory(): AbstractControl {
-    return this.basicInfo.get('mainDACCategory')!
-  }
-
-  get subDACCategory(): AbstractControl {
-    return this.basicInfo.get('subDACCategory')!
-  }
-
-  get mainUNOCHACategory(): AbstractControl {
-    return this.basicInfo.get('mainUNOCHACategory')!
-  }
-
-  get subUNOCHACategory(): AbstractControl {
-    return this.basicInfo.get('subUNOCHACategory')!
-  }
-
-  get countriesField(): AbstractControl {
-    return this.basicInfo.get('countries')!
-  }
-
-  get sanadiDomain(): AbstractControl {
-    return this.basicInfo.get('sanadiDomain')!
-  }
-
-  get projectType(): AbstractControl {
-    return this.basicInfo.get('projectType')!
-  }
-
-  get internalProjectClassification(): AbstractControl {
-    return this.basicInfo.get('internalProjectClassification')!
-  }
-
-  get sanadiMainClassification(): AbstractControl {
-    return this.basicInfo.get('sanadiMainClassification')!
-  }
-
-  get licenseDuration(): AbstractControl {
-    return this.basicInfo.get('licenseDuration')!
-  }
-
-  get projectTotalCost(): AbstractControl {
-    return this.basicInfo.get('projectTotalCost')!
-  }
-
-  get oldLicenseFullSerial(): AbstractControl {
-    return this.basicInfo.get('oldLicenseFullSerial')!
-  }
-
-  private getQatarCountry(): Country {
-    return this.countries.find(item => item.enName.toLowerCase() === 'qatar')!
   }
 
   private setDefaultValues(): void {
@@ -691,15 +686,6 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     this.mainUNOCHACategories = list.filter(item => item.type === DomainTypes.HUMANITARIAN)
   }
 
-  // noinspection JSUnusedLocalSymbols
-  private _test(): void {
-    this.permitType.setValue(ProjectPermitTypes.SECTIONAL_BASKET)
-    this.projectWorkArea.setValue(ProjectWorkArea.OUTSIDE_QATAR)
-    this.domain.setValue(DomainTypes.HUMANITARIAN)
-    this.countriesField.setValue([231])
-    this.mainUNOCHACategory.setValue(1)
-  }
-
   private listenToPermitTypeChanges() {
     combineLatest([
       this.permitType.valueChanges.pipe(this.holdTillGetUserResponse()).pipe(startWith<number, number>(this.permitType.value)),
@@ -794,6 +780,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     this.projectWorkArea
       .valueChanges
       .pipe(takeUntil(this.destroy$))
+      .pipe(distinctUntilChanged())
       .pipe(this.holdTillGetUserResponse())
       .subscribe((value: ProjectWorkArea) => {
         value === ProjectWorkArea.OUTSIDE_QATAR && (() => {
@@ -850,7 +837,10 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   _afterOpenCase(model: ProjectFundraising) {
-    model.projectWorkArea === ProjectWorkArea.OUTSIDE_QATAR && this.loadSubDacOchaByParentId(model.getDacOchaId())
+    model.projectWorkArea === ProjectWorkArea.OUTSIDE_QATAR && (() => {
+      this.loadDacOuchMain(model.domain)
+      this.loadSubDacOchaByParentId(model.getDacOchaId())
+    })()
     model.projectWorkArea === ProjectWorkArea.INSIDE_QATAR && model.projectType === FundraisingProjectTypes.AIDS && this.loadSanadyMainClassification(model.sanadiDomain)
   }
 
@@ -899,7 +889,6 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       :
       // inside and project type aids
       model.projectType === FundraisingProjectTypes.AIDS ? this.loadSanadyMainClassification(model.sanadiDomain) : null
-
   }
 
   private createFieldObservable({ctrl, key}: { ctrl: AbstractControl, key: string }): Observable<{
@@ -908,6 +897,8 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     field: AbstractControl,
     key: string
   }> {
+    // dirty way to handle first emit from workArea
+    let count = 0;
     return ctrl.valueChanges.pipe(
       startWith<number, number>(ctrl.value),
       pairwise(),
@@ -918,6 +909,10 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
           field: ctrl,
           key
         }
+      }),
+      filter(_ => {
+        count += 1
+        return key !== 'projectWorkArea' || (key === 'projectWorkArea' && count > 1)
       })
     )
   }

@@ -23,6 +23,7 @@ import {DomainTypes} from "@app/enums/domain-types";
 import {ProjectPermitTypes} from "@app/enums/project-permit-types";
 import {TemplateStatus} from "@app/enums/template-status";
 import {ServiceRequestTypes} from "@app/enums/service-request-types";
+import {PublicTemplateStatus} from "@app/enums/public-template-status";
 
 const {send, receive} = new ProjectFundraisingInterceptor()
 const _ApprovalLicenseWithMonthly = mixinRequestType(mixinApprovalLicenseWithMonthly(CaseModel))
@@ -339,6 +340,6 @@ export class ProjectFundraising extends _ApprovalLicenseWithMonthly<ProjectFundr
   }
 
   canApproveTemplate(index: number = 0) {
-    return this.templateList[index].templateStatus !== TemplateStatus.APPROVED;
+    return this.templateList[index].publicStatus !== PublicTemplateStatus.APPROVED_BY_RACA;
   }
 }
