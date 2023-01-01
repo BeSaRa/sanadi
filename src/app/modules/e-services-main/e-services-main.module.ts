@@ -1,3 +1,4 @@
+import { ApproveWithDocumentPopupComponent } from './popups/approve-with-document-popup/approve-with-document-popup.component';
 import { ProcessFieldWrapperComponent } from './../../administration/popups/general-process-popup/process-formly-components/process-field-wrapper/process-field-wrapper.component';
 import { FormlyMaskInputFieldComponent } from './../../services-search/components/formly-mask-input-field/formly-mask-input-field.component';
 import { FormlySelectFieldComponent } from './../../services-search/components/formly-select-field/formly-select-field.component';
@@ -42,6 +43,7 @@ import { DynamicTemplatesComponent } from './shared/dynamic-templates/dynamic-te
     ResearchAndStudiesComponent,
     ParticipantOrganizationsPopupComponent,
     WorkAreasComponent,
+    ApproveWithDocumentPopupComponent
   ],
   imports: [
     CommonModule,

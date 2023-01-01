@@ -418,6 +418,9 @@ export abstract class CaseModel<S extends BaseGenericEService<T>, T extends File
   returnToSpecificOrganization(): DialogRef {
     return this.inboxService!.openReturnToSpecificOrganization(this.id, this);
   }
+  returnToSpecificOrganizationWithComment(commentRequired=false): DialogRef {
+    return this.inboxService!.openReturnToSpecificOrganizationWithComment(this.id, this,commentRequired);
+  }
 
   finalNotification(): DialogRef {
     return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.FINAL_NOTIFICATION, false, this);

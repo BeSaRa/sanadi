@@ -49,5 +49,6 @@ export enum WFResponseType {
   ORGANIZATION_FINAL_APPROVE = 'orgFinalApprove',
   ORGANIZATION_FINAL_REJECT = 'orgFinalReject',
   FOREIGN_COUNTRIES_PROJECTS_LICENSING_SEND_TO_MULTI_DEPARTMENTS = 'ask:ReviewForeignCountriesProjectsLicensing',
-  SEND_TO_GM = 'sendToGM'
+  SEND_TO_GM = 'sendToGM',
+  TO_CHIEF = 'toChief',
 }

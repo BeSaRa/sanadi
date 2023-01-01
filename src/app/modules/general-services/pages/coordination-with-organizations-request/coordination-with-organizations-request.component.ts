@@ -1,48 +1,50 @@
-import { CoordinationWithOrganizationTemplate } from './../../../../models/corrdination-with-organization-template';
-import { DynamicModel } from '@app/models/dynamic-model';
-import { DynamicModelService } from '@app/services/dynamic-models.service';
-import { DatepickerControlsMap, DatepickerOptionsMap, ReadinessStatus } from '@app/types/types';
+import { ActionLogService } from '@app/services/action-log.service';
 import { Component, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, UntypedFormControl, Validators } from '@angular/forms';
+import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
+import { CoordinationTypes } from '@app/enums/coordination-types-enum';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { SaveTypes } from '@app/enums/save-types';
 import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
 import { DateUtils } from '@app/helpers/date-utils';
 import { IKeyValue } from '@app/interfaces/i-key-value';
 import { ILanguageKeys } from '@app/interfaces/i-language-keys';
+import { AdminResult } from '@app/models/admin-result';
+import { BuildingAbility } from '@app/models/building-ability';
 import { CoordinationWithOrganizationsRequest } from '@app/models/coordination-with-organizations-request';
+import { DynamicModel } from '@app/models/dynamic-model';
+import { EffectiveCoordinationCapabilities } from '@app/models/effective-coordination-capabilities';
 import { Lookup } from '@app/models/lookup';
 import { OrganizationOfficer } from '@app/models/organization-officer';
+import { Profile } from '@app/models/profile';
+import { ResearchAndStudies } from '@app/models/research-and-studies';
 import { BuildingAbilityComponent } from '@app/modules/e-services-main/shared/building-ability/building-ability.component';
+import { DynamicTemplatesComponent } from '@app/modules/e-services-main/shared/dynamic-templates/dynamic-templates.component';
 import { ResearchAndStudiesComponent } from '@app/modules/e-services-main/shared/research-and-studies/research-and-studies.component';
 import { CoordinationWithOrganizationsRequestService } from '@app/services/coordination-with-organizations-request.service';
 import { DialogService } from '@app/services/dialog.service';
+import { DynamicModelService } from '@app/services/dynamic-models.service';
 import { EmployeeService } from '@app/services/employee.service';
 import { LangService } from '@app/services/lang.service';
 import { LookupService } from '@app/services/lookup.service';
 import { ToastService } from '@app/services/toast.service';
+import { AttachmentsComponent } from '@app/shared/components/attachments/attachments.component';
+import { TabComponent } from '@app/shared/components/tab/tab.component';
+import { DatepickerControlsMap, DatepickerOptionsMap, ReadinessStatus } from '@app/types/types';
 import { ExternalUserService } from '@services/external-user.service';
+import { ProfileService } from '@services/profile.service';
 import { IMyInputFieldChanged } from 'angular-mydatepicker';
 import { Observable, of } from 'rxjs';
-import { map, take } from 'rxjs/operators';
-import { CoordinationTypes } from '@app/enums/coordination-types-enum';
+import { map, take, takeUntil } from 'rxjs/operators';
+import { OrganizationOfficerComponent } from '../../../e-services-main/shared/organization-officer/organization-officer.component';
+import { CoordinationWithOrganizationTemplate } from './../../../../models/corrdination-with-organization-template';
 import {
   EffectiveCoordinationCapabilitiesComponent
 } from './../../../e-services-main/shared/effective-coordination-capabilities/effective-coordination-capabilities.component';
-import { OrganizationOfficerComponent } from '../../../e-services-main/shared/organization-officer/organization-officer.component';
 import {
   ParticipantOrganizationComponent
 } from './../../../e-services-main/shared/participant-organization/participant-organization.component';
-import { OpenFrom } from '@app/enums/open-from.enum';
-import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
-import { TabComponent } from '@app/shared/components/tab/tab.component';
-import { AttachmentsComponent } from '@app/shared/components/attachments/attachments.component';
-import { BuildingAbility } from '@app/models/building-ability';
-import { EffectiveCoordinationCapabilities } from '@app/models/effective-coordination-capabilities';
-import { ResearchAndStudies } from '@app/models/research-and-studies';
-import { ProfileService } from '@services/profile.service';
-import { Profile } from '@app/models/profile';
-import { DynamicTemplatesComponent } from '@app/modules/e-services-main/shared/dynamic-templates/dynamic-templates.component';
+import { TaskAdminResult } from '@app/models/task-admin-result';
 @Component({
   selector: 'app-coordination-with-organizations-request',
   templateUrl: './coordination-with-organizations-request.component.html',
@@ -77,6 +79,7 @@ CoordinationWithOrganizationsRequestService> {
       (a, b) => a?.lookupKey - b?.lookupKey
     );
   formsList: DynamicModel[] = [];
+  locations: TaskAdminResult[] = [];
   isCharityUser!: boolean;
   isInternalUser!: boolean;
   isLicensingUser!: boolean;
@@ -183,7 +186,7 @@ CoordinationWithOrganizationsRequestService> {
     private externalUserService: ExternalUserService,
     public service: CoordinationWithOrganizationsRequestService,
     private dynamicModelService: DynamicModelService,
-    public fb: FormBuilder
+    public fb: FormBuilder,
   ) {
     super();
     this._buildForm();
@@ -211,8 +214,13 @@ CoordinationWithOrganizationsRequestService> {
         this.model?.templateList?.length! > 0)
     );
   }
+  get participatingOrgsCanTerminate(): boolean {
+    return this.isInternalUser && this.model!.isApproved;
+
+  }
 
   get participatingOrgsCanDelete(): boolean {
+    if(this.model?.isApproved) return false;
     return (
       (!this.isInitialApproved &&
         this.isInternalUser &&
@@ -324,7 +332,7 @@ CoordinationWithOrganizationsRequestService> {
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
-    this.disableListsUpdate();
+
     this.model = this.service.prepareModelBeforeSave(this.model!);
 
     if (this.form.invalid) {
@@ -340,9 +348,40 @@ CoordinationWithOrganizationsRequestService> {
       this.dialog.error(this.lang.map.participant_organizations_required);
       return false;
     }
+    if(!this.isInternalUser){
+      if(this.organizationOfficersList.length < 1){
+        this.dialog.error(this.lang.map.organization_officers_required);
+        return false;
+      }
 
+      if(this.model.domain === this.coordinationTypes.BuildingAbilities &&
+        this.buildingAbilitiesList.length < 1){
+          this.dialog.error(this.lang.map.building_abilities_required);
+          return false;
+        }
+
+     if(this.model.domain === this.coordinationTypes.EffectiveCoordinationCapabilities &&
+        this.effectiveCoordinationCapabilitiesList.length < 1){
+            this.dialog.error(this.lang.map.effective_coordination_required);
+            return false;
+        }
+
+      if(this.model.domain === this.coordinationTypes.ResearchAndStudies &&
+        this.researchAndStudiesList.length < 1){
+          this.dialog.error(this.lang.map.research_and_studies_required);
+          return false;
+        }
+      if(this.model.domain === this.coordinationTypes.Other &&
+          this.dynamicTemplatesList.length < 1){
+              this.dialog.error(this.lang.map.dynamic_template_required);
+              return false;
+        }
+
+    }
+    this.disableListsUpdate();
     return of(this.form.valid);
   }
+
 
   _beforeLaunch(): boolean | Observable<boolean> {
     return true;
@@ -415,6 +454,7 @@ CoordinationWithOrganizationsRequestService> {
     this.isInitialApproved = this.model?.isInitialApproved();
     this.model.approved = this.isApproved();
     this.model.taskDetails.piid = model.taskDetails.piid
+    this.loadLogs();
   }
 
   _resetForm(): void {
@@ -487,9 +527,21 @@ CoordinationWithOrganizationsRequestService> {
       this.participantOrganizationsComponentRef.list;
   }
 
+  loadLogs(){
+    this.service.actionLogService
+    .loadCaseLocation(this.model?.getCaseId())
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(locations=>{
+      this.locations =locations;
+      console.log(this.locations);
+
+    })
+
+  }
   loadOrgUsers() {
-    this.externalUserService
-      .getByCriteria({ 'profile-id': this.employeeService.getProfile()?.id! })
+    this.externalUserService.loadAsLookups()
+      // .getByCriteria({ 'profile-id': this.employeeService.getProfile()?.id! })
+      .pipe(map(users=>users.filter(user=>user.profileId === this.employeeService.getProfile()?.id!)))
       .pipe(
         map((records) => {
           const list: OrganizationOfficer[] = [];
@@ -498,6 +550,9 @@ CoordinationWithOrganizationsRequestService> {
               new OrganizationOfficer().clone({
                 identificationNumber: record.generalUserId?.toString(),
                 fullName: record.getName(),
+                email:record.email,
+                phone : record.phoneNumber,
+                extraPhone: record.phoneExtension
 
               })
             );
@@ -544,6 +599,16 @@ CoordinationWithOrganizationsRequestService> {
     this.service.openParticipantOrganizationspopup(orgId, model!);
   }
 
+  terminateOrganizationTask(tkiid:string){
+    this.service.terminateTask(tkiid)
+    .pipe(take(1))
+    .subscribe(success=>{
+      if(success){
+        this.locations = this.locations.filter(location=>location.tkiid !== tkiid);
+        this.dialog.success(this.lang.map.terminate_task_success)
+      }
+    });
+  }
   filterModelByOrgId(
     orgId: number,
     updatedModel: CoordinationWithOrganizationsRequest | null = null
