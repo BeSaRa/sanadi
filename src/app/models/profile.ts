@@ -46,6 +46,8 @@ export class Profile extends BaseModel<Profile, ProfileService> {
   permitTypeList: number[] = [];
   submissionMechanism?: number
 
+  permitTypes!: string
+
   // not related to the model
   permitTypesInfo: AdminResult[] = []
 
@@ -115,5 +117,15 @@ export class Profile extends BaseModel<Profile, ProfileService> {
 
   showAuditLogs(): Observable<DialogRef> {
     return this.service.openAuditLogsById(this.id);
+  }
+
+  getParsedPermitTypes(): number[] {
+    let parsed: { ids: number[] };
+    try {
+      parsed = JSON.parse(this.permitTypes)
+    } catch (e) {
+      parsed = {ids: []}
+    }
+    return parsed.hasOwnProperty('ids') ? parsed.ids : []
   }
 }

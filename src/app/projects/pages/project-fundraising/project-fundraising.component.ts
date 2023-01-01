@@ -189,6 +189,11 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
 
   _initComponent(): void {
     this.loadSanadyDomains()
+    const profile = this.employeeService.getProfile()
+    if (profile && (this.operation === OperationTypes.CREATE || this.operation === OperationTypes.UPDATE && this.employeeService.isExternalUser())) {
+      const allowed = profile.getParsedPermitTypes()
+      this.permitTypes = this.permitTypes.filter(item => allowed.includes(item.lookupKey))
+    }
   }
 
   _buildForm(): void {
@@ -351,7 +356,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     if (this.operation === OperationTypes.CREATE) {
       this.requestType.setValue(ServiceRequestTypes.NEW)
       this.projectWorkArea.setValue(ProjectWorkArea.INSIDE_QATAR)
-      this.permitType.setValue(ProjectPermitTypes.SINGLE_TYPE_PROJECT)
+      this.permitType.setValue((this.permitTypes[0] && this.permitTypes[0].lookupKey) || null)
       this.domain.setValue(DomainTypes.HUMANITARIAN)
       this.projectType.setValue(FundraisingProjectTypes.SOFTWARE)
       this.countriesField.setValue([this.qatarCountry.id])
