@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {AbstractControl, UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
+import {AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {SaveTypes} from '@app/enums/save-types';
 import {EServicesGenericComponent} from "@app/generics/e-services-generic-component";
@@ -46,6 +46,7 @@ import {CommonUtils} from "@helpers/common-utils";
 import {FundraisingProjectTypes} from "@app/enums/fundraising-project-types";
 import {LicenseService} from "@services/license.service";
 import {TemplateStatus} from "@app/enums/template-status";
+import {ServiceDataService} from "@services/service-data.service";
 
 @Component({
   selector: 'project-fundraising',
@@ -91,82 +92,8 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
 
   storedOldValues: Record<string, number> = {}
 
-
-  get basicInfo(): AbstractControl {
-    return this.form.get('basicInfo')!
-  }
-
-  get specialExplanation(): AbstractControl {
-    return this.form.get('explanation')!
-  }
-
-  get permitType(): AbstractControl {
-    return this.basicInfo.get('permitType')!
-  }
-
-  get projectWorkArea(): AbstractControl {
-    return this.basicInfo.get('projectWorkArea')!
-  }
-
-  get requestType(): AbstractControl {
-    return this.basicInfo.get('requestType')!
-  }
-
-  get domain(): AbstractControl {
-    return this.basicInfo.get('domain')!
-  }
-
-  get mainDACCategory(): AbstractControl {
-    return this.basicInfo.get('mainDACCategory')!
-  }
-
-  get subDACCategory(): AbstractControl {
-    return this.basicInfo.get('subDACCategory')!
-  }
-
-  get mainUNOCHACategory(): AbstractControl {
-    return this.basicInfo.get('mainUNOCHACategory')!
-  }
-
-  get subUNOCHACategory(): AbstractControl {
-    return this.basicInfo.get('subUNOCHACategory')!
-  }
-
-  get countriesField(): AbstractControl {
-    return this.basicInfo.get('countries')!
-  }
-
-  get sanadiDomain(): AbstractControl {
-    return this.basicInfo.get('sanadiDomain')!
-  }
-
-  get projectType(): AbstractControl {
-    return this.basicInfo.get('projectType')!
-  }
-
-  get internalProjectClassification(): AbstractControl {
-    return this.basicInfo.get('internalProjectClassification')!
-  }
-
-  get sanadiMainClassification(): AbstractControl {
-    return this.basicInfo.get('sanadiMainClassification')!
-  }
-
-  get licenseDuration(): AbstractControl {
-    return this.basicInfo.get('licenseDuration')!
-  }
-
-  get projectTotalCost(): AbstractControl {
-    return this.basicInfo.get('projectTotalCost')!
-  }
-
-  get oldLicenseFullSerial(): AbstractControl {
-    return this.basicInfo.get('oldLicenseFullSerial')!
-  }
-
-  private getQatarCountry(): Country {
-    return this.countries.find(item => item.enName.toLowerCase() === 'qatar')!
-  }
+  maxDuration: number = 0;
+  minDuration: number = 0;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -179,6 +106,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     private employeeService: EmployeeService,
     private dacOchaService: DacOchaService,
     private licenseService: LicenseService,
+    private serviceDataService: ServiceDataService,
     public lang: LangService) {
     super()
   }
@@ -205,6 +133,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   _afterBuildForm(): void {
+    this.loadLicenseConfigurations()
     this.loadLicenseById()
     this.handleReadonly()
     this.listenToAddTemplate();
@@ -350,6 +279,82 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   private emptyFields(fields: AbstractControl[], emitEvent: boolean = false): boolean {
     fields.forEach(field => field.setValue(null, {emitEvent}))
     return true
+  }
+
+  get basicInfo(): AbstractControl {
+    return this.form.get('basicInfo')!
+  }
+
+  get specialExplanation(): AbstractControl {
+    return this.form.get('explanation')!
+  }
+
+  get permitType(): AbstractControl {
+    return this.basicInfo.get('permitType')!
+  }
+
+  get projectWorkArea(): AbstractControl {
+    return this.basicInfo.get('projectWorkArea')!
+  }
+
+  get requestType(): AbstractControl {
+    return this.basicInfo.get('requestType')!
+  }
+
+  get domain(): AbstractControl {
+    return this.basicInfo.get('domain')!
+  }
+
+  get mainDACCategory(): AbstractControl {
+    return this.basicInfo.get('mainDACCategory')!
+  }
+
+  get subDACCategory(): AbstractControl {
+    return this.basicInfo.get('subDACCategory')!
+  }
+
+  get mainUNOCHACategory(): AbstractControl {
+    return this.basicInfo.get('mainUNOCHACategory')!
+  }
+
+  get subUNOCHACategory(): AbstractControl {
+    return this.basicInfo.get('subUNOCHACategory')!
+  }
+
+  get countriesField(): AbstractControl {
+    return this.basicInfo.get('countries')!
+  }
+
+  get sanadiDomain(): AbstractControl {
+    return this.basicInfo.get('sanadiDomain')!
+  }
+
+  get projectType(): AbstractControl {
+    return this.basicInfo.get('projectType')!
+  }
+
+  get internalProjectClassification(): AbstractControl {
+    return this.basicInfo.get('internalProjectClassification')!
+  }
+
+  get sanadiMainClassification(): AbstractControl {
+    return this.basicInfo.get('sanadiMainClassification')!
+  }
+
+  get licenseDuration(): AbstractControl {
+    return this.basicInfo.get('licenseDuration')!
+  }
+
+  get projectTotalCost(): AbstractControl {
+    return this.basicInfo.get('projectTotalCost')!
+  }
+
+  get oldLicenseFullSerial(): AbstractControl {
+    return this.basicInfo.get('oldLicenseFullSerial')!
+  }
+
+  private getQatarCountry(): Country {
+    return this.countries.find(item => item.enName.toLowerCase() === 'qatar')!
   }
 
   private setDefaultValues(): void {
@@ -961,4 +966,23 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       })
   }
 
+  private loadLicenseConfigurations() {
+    this.serviceDataService
+      .loadByCaseType(this.model!.caseType)
+      .pipe(tap(configs => {
+        this.maxDuration = configs.licenseMaxTime;
+        this.minDuration = configs.licenseMinTime;
+      }))
+      .subscribe(() => {
+        this.updateDurationValidator()
+      })
+  }
+
+  private updateDurationValidator() {
+    const defaultMin = Validators.min(this.minDuration);
+    const defaultMax = Validators.max(this.maxDuration);
+    this.licenseDuration.removeValidators([defaultMin, defaultMax])
+    this.licenseDuration.addValidators([defaultMin, defaultMax])
+    this.licenseDuration.updateValueAndValidity({emitEvent: false})
+  }
 }

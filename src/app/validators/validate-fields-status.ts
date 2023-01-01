@@ -1,9 +1,9 @@
 import { AbstractControl, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { hasValidLength, isValidValue } from '../helpers/utils';
+import { hasValidLength, isValidValue } from '@helpers/utils';
 import { customValidationTypes } from '../types/types';
 import * as dayjs from 'dayjs';
-import { FactoryService } from '../services/factory.service';
-import { ConfigurationService } from '../services/configuration.service';
+import { FactoryService } from '@services/factory.service';
+import { ConfigurationService } from '@services/configuration.service';
 import { some as _some } from 'lodash';
 import { CommonUtils } from '@app/helpers/common-utils';
 
@@ -35,7 +35,7 @@ export function validateFieldsStatus(fields: string[]): ValidatorFn {
     const isInvalid = fields.some((fieldName: string) => {
       return formGroup.get(fieldName)?.invalid;
     });
-    return isInvalid ? { required: true } : null;
+    return isInvalid ? {required: true} : null;
   };
 }
 
@@ -52,7 +52,7 @@ export function validateSum(expectedSum: number, numberOfPlaces: number, fields:
     });
     sum = (numberOfPlaces === 0) ? sum : Number(sum.toFixed(numberOfPlaces));
     expectedSum = (numberOfPlaces === 0) ? expectedSum : Number(expectedSum.toFixed(numberOfPlaces));
-    return (expectedSum === sum) ? null : { invalid_sum_total: { fields, fieldLocalizationMap, expectedSum } };
+    return (expectedSum === sum) ? null : {invalid_sum_total: {fields, fieldLocalizationMap, expectedSum}};
   };
 }
 
@@ -61,7 +61,7 @@ export function numberValidator(control: AbstractControl): ValidationErrors | nu
     return null;
   }
   const isValid = (/^[0-9\u0660-\u0669]+$/g).test(control.value);
-  return !isValid ? { number: true } : null;
+  return !isValid ? {number: true} : null;
 }
 
 export function decimalValidator(numberOfPlaces: number = 2): ValidatorFn {// , allowNegative: boolean = false
@@ -75,7 +75,7 @@ export function decimalValidator(numberOfPlaces: number = 2): ValidatorFn {// , 
 
     let decimalPattern = `^([0-9\u0660-\u0669]*)(\.[0-9\u0660-\u0669]{1,${numberOfPlaces}})?$`;
     const isValid = new RegExp(decimalPattern).test(control.value);
-    return isValid ? null : { decimal: { numberOfPlaces: numberOfPlaces } };
+    return isValid ? null : {decimal: {numberOfPlaces: numberOfPlaces}};
 
     /*let decimalPattern = `^([0-9\u0660-\u0669]*)(\.[0-9\u0660-\u0669]{1,${numberOfPlaces}})?$`,
       negativeDecimalPattern = `^-?([0-9\u0660-\u0669]*)(\.[0-9\u0660-\u0669]{1,${numberOfPlaces}})?$`,
@@ -104,7 +104,7 @@ export function maxlengthValidator(maxLength: number): ValidatorFn {
       valueLength = control.value.length;
     }
     isInvalid = (valueLength > maxLength);
-    return isInvalid ? { maxlength: { requiredLength: maxLength, actualLength: valueLength } } : null;
+    return isInvalid ? {maxlength: {requiredLength: maxLength, actualLength: valueLength}} : null;
   };
 }
 
@@ -127,16 +127,16 @@ export function minlengthValidator(minLength: number): ValidatorFn {
       valueLength = control.value.length;
     }
     isInvalid = (valueLength < minLength);
-    return isInvalid ? { minlength: { requiredLength: minLength, actualLength: valueLength } } : null;
+    return isInvalid ? {minlength: {requiredLength: minLength, actualLength: valueLength}} : null;
   };
 }
 
 export function requiredValidator(control: AbstractControl): ValidationErrors | null {
-  return !isValidValue(control.value) ? { required: true } : null;
+  return !isValidValue(control.value) ? {required: true} : null;
 }
 
 export function requiredArrayValidator(control: AbstractControl): ValidationErrors | null {
-  return (!isValidValue(control.value) || control.value.length === 0) ? { requiredArray: true } : null;
+  return (!isValidValue(control.value) || control.value.length === 0) ? {requiredArray: true} : null;
 }
 
 export function patternValidator(patternName: customValidationTypes): ValidatorFn {
@@ -233,6 +233,6 @@ export function uniqueValidator<T>(data: T[], property: keyof T, editObj: T): Va
       }
       return (row[property] + '').toLowerCase() === control.value.toLowerCase();
     });
-    return unique ? { unique: { value: control.value } } : null;
+    return unique ? {unique: {value: control.value}} : null;
   });
 }
