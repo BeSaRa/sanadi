@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  this_change_will_effect_the_selected_template: string;
   template_action_x_confirmation_msg: string;
   review_status: string;
   public_status: string;

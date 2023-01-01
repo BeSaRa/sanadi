@@ -5,12 +5,23 @@ import {SaveTypes} from '@app/enums/save-types';
 import {EServicesGenericComponent} from "@app/generics/e-services-generic-component";
 import {ProjectFundraising} from "@app/models/project-fundraising";
 import {ProjectFundraisingService} from "@services/project-fundraising.service";
-import {combineLatest, merge, Observable, of, Subject} from 'rxjs';
+import {combineLatest, iif, merge, Observable, of, ReplaySubject, Subject} from 'rxjs';
 import {Lookup} from "@app/models/lookup";
 import {LookupService} from "@services/lookup.service";
 import {LangService} from "@services/lang.service";
 import {Country} from "@app/models/country";
-import {catchError, delay, exhaustMap, filter, map, startWith, switchMap, takeUntil, tap} from "rxjs/operators";
+import {
+  catchError,
+  delay,
+  exhaustMap,
+  filter,
+  map,
+  pairwise,
+  startWith,
+  switchMap,
+  takeUntil,
+  tap
+} from "rxjs/operators";
 import {ProjectWorkArea} from "@app/enums/project-work-area";
 import {ProjectPermitTypes} from "@app/enums/project-permit-types";
 import {ServiceRequestTypes} from "@app/enums/service-request-types";
@@ -74,6 +85,10 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   displayInternalSection: boolean = true;
   displayDacSection: boolean = true;
   displayOchaSection: boolean = true;
+  // will create it later
+  userAnswer: ReplaySubject<UserClickOn> = new ReplaySubject<UserClickOn>(1)
+
+  storedOldValues: Record<string, number> = {}
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -110,6 +125,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     this.loadLicenseById()
     this.handleReadonly()
     this.listenToAddTemplate();
+    this.listenToDataWillEffectSelectedTemplate();
     this.listenToProjectTotalCoastChanges();
     this.listenToLicenseSearch()
     this.listenToPermitTypeChanges()
@@ -425,13 +441,17 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       }, {})
   }
 
-  deleteTemplate(): void {
+  deleteTemplate(silent: boolean = false): void {
     if (this.readonly)
       return;
 
-    this.dialog.confirm(this.lang.map.remove_template_will_empty_deduction_ration_list)
-      .onAfterClose$
-      .pipe(filter((val: UserClickOn) => val === UserClickOn.YES))
+    of(silent)
+      .pipe(switchMap(val => !val ?
+        this.dialog.confirm(this.lang.map.remove_template_will_empty_deduction_ration_list)
+          .onAfterClose$
+          .pipe(filter((val: UserClickOn) => val === UserClickOn.YES)) : of(val))
+      )
+      .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
         this.model && this.model.clearTemplate() && this.model.setProjectTotalCost(0) && this.projectTotalCost.setValue(0, {emitEvent: false})
         this.clearDeductionItems = true;
@@ -682,10 +702,10 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
 
   private listenToPermitTypeChanges() {
     combineLatest([
-      this.permitType.valueChanges.pipe(startWith<number, number>(this.permitType.value)),
-      this.projectWorkArea.valueChanges.pipe(startWith<number, number>(this.projectWorkArea.value)),
-      this.projectType.valueChanges.pipe(startWith<number, number>(this.projectType.value)),
-      this.domain.valueChanges.pipe(startWith<number, number>(this.domain.value))
+      this.permitType.valueChanges.pipe(this.holdTillGetUserResponse()).pipe(startWith<number, number>(this.permitType.value)),
+      this.projectWorkArea.valueChanges.pipe(this.holdTillGetUserResponse()).pipe(startWith<number, number>(this.projectWorkArea.value)),
+      this.projectType.valueChanges.pipe(this.holdTillGetUserResponse()).pipe(startWith<number, number>(this.projectType.value)),
+      this.domain.valueChanges.pipe(this.holdTillGetUserResponse()).pipe(startWith<number, number>(this.domain.value))
     ])
       .pipe(takeUntil(this.destroy$))
       .subscribe(([permitType, projectWorkArea, projectType, domain]: [ProjectPermitTypes, ProjectWorkArea, FundraisingProjectTypes, DomainTypes]) => {
@@ -744,6 +764,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
 
   private listenToSanadyDomainChanges() {
     this.sanadiDomain.valueChanges
+      .pipe(this.holdTillGetUserResponse())
       .pipe(takeUntil(this.destroy$))
       .subscribe((value: number) => {
         this.sanadiMainClassification.setValue(null)
@@ -753,11 +774,18 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
 
   private listenToProjectTypeChanges() {
     this.projectType.valueChanges
+      .pipe(this.holdTillGetUserResponse())
       .pipe(takeUntil(this.destroy$))
       .pipe(filter(val => !!val))
       .subscribe((value: FundraisingProjectTypes) => {
         value === FundraisingProjectTypes.AIDS ? this.emptyFields([this.internalProjectClassification]) : this.emptyFields([this.sanadiDomain, this.sanadiMainClassification])
       })
+  }
+
+  private holdTillGetUserResponse() {
+    return switchMap((value: number) => {
+      return iif(() => this.model!.hasTemplate(), this.userAnswer.pipe(filter(v => v === UserClickOn.YES), map(_ => value)), of(value))
+    })
   }
 
   private listenToWorkAreaChanges() {
@@ -766,22 +794,23 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     this.projectWorkArea
       .valueChanges
       .pipe(takeUntil(this.destroy$))
+      .pipe(this.holdTillGetUserResponse())
       .subscribe((value: ProjectWorkArea) => {
         value === ProjectWorkArea.OUTSIDE_QATAR && (() => {
-          !this.domain.value && this.domain.setValue(DomainTypes.HUMANITARIAN)
-          this.domain.updateValueAndValidity()
+          !this.domain.value && this.domain.setValue(DomainTypes.HUMANITARIAN, {emitEvent: false})
+          this.domain.updateValueAndValidity({emitEvent: false})
           this.loadDacOuchMain(this.domain.value)
           this.emptyFields(aidFields)
-          this.countriesField.setValue(((this.countriesField.value ?? []) as number[]).filter(id => id !== this.qatarCountry.id))
-          this.countriesField.enable()
+          this.countriesField.setValue(((this.countriesField.value ?? []) as number[]).filter(id => id !== this.qatarCountry.id), {emitEvent: false})
+          this.countriesField.enable({emitEvent: false})
         })()
 
         value === ProjectWorkArea.INSIDE_QATAR && (() => {
-          !this.projectType.value && this.projectType.setValue(FundraisingProjectTypes.SOFTWARE)
-          this.projectType.updateValueAndValidity()
+          !this.projectType.value && this.projectType.setValue(FundraisingProjectTypes.SOFTWARE, {emitEvent: false})
+          this.projectType.updateValueAndValidity({emitEvent: false})
           this.emptyFields(domainFields)
-          this.countriesField.setValue([this.qatarCountry.id])
-          this.countriesField.disable()
+          this.countriesField.setValue([this.qatarCountry.id], {emitEvent: false})
+          this.countriesField.disable({emitEvent: false})
         })()
 
         !value && this.emptyFields(aidFields.concat(domainFields))
@@ -790,6 +819,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
 
   private listenToMainDacOchaChanges() {
     merge(this.mainDACCategory.valueChanges, this.mainUNOCHACategory.valueChanges)
+      .pipe(this.holdTillGetUserResponse())
       .pipe(takeUntil(this.destroy$))
       .subscribe((value: number) => {
         this.subDACCategory.setValue(null, {emitEvent: false})
@@ -803,6 +833,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     const ochaFields = [this.mainUNOCHACategory, this.subUNOCHACategory]
     this.domain
       .valueChanges
+      .pipe(this.holdTillGetUserResponse())
       .pipe(takeUntil(this.destroy$))
       .subscribe((value: DomainTypes) => {
         value === DomainTypes.HUMANITARIAN && (() => {
@@ -870,4 +901,64 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       model.projectType === FundraisingProjectTypes.AIDS ? this.loadSanadyMainClassification(model.sanadiDomain) : null
 
   }
+
+  private createFieldObservable({ctrl, key}: { ctrl: AbstractControl, key: string }): Observable<{
+    oldValue: number,
+    newValue: number,
+    field: AbstractControl,
+    key: string
+  }> {
+    return ctrl.valueChanges.pipe(
+      startWith<number, number>(ctrl.value),
+      pairwise(),
+      map(([oldValue, newValue]: [number, number]) => {
+        return {
+          oldValue,
+          newValue,
+          field: ctrl,
+          key
+        }
+      })
+    )
+  }
+
+  private listenToDataWillEffectSelectedTemplate(): void {
+    const fields = [
+      {ctrl: this.permitType, key: 'permitType'},
+      {ctrl: this.projectWorkArea, key: 'projectWorkArea'},
+      {ctrl: this.domain, key: 'domain'},
+      {ctrl: this.mainDACCategory, key: 'mainDACCategory'},
+      {ctrl: this.mainUNOCHACategory, key: 'mainUNOCHACategory'},
+      {ctrl: this.countriesField, key: 'countriesField'},
+      {ctrl: this.projectType, key: 'projectType'},
+      {ctrl: this.internalProjectClassification, key: 'internalProjectClassification'},
+      {ctrl: this.sanadiDomain, key: 'sanadiDomain'},
+      {ctrl: this.sanadiMainClassification, key: 'sanadiMainClassification'},
+    ]
+    const fieldsObservables = fields.map((item) => this.createFieldObservable(item))
+    merge(...fieldsObservables)
+      .pipe(tap(() => {
+        this.model!.hasTemplate() ? this.userAnswer.next(UserClickOn.NO) : this.userAnswer.next(UserClickOn.YES)
+      }))
+      .pipe(filter(_ => this.model!.hasTemplate()))
+      .pipe(takeUntil(this.destroy$))
+      .pipe(switchMap((value) => {
+          return this.dialog.confirm(this.lang.map.this_change_will_effect_the_selected_template)
+            .onAfterClose$
+            .pipe(map((answer: UserClickOn) => ({
+              ...value, answer
+            })))
+        })
+      )
+      .subscribe(({answer, oldValue, field, key}) => {
+        answer === UserClickOn.YES ? this.deleteTemplate(true) : (() => {
+          let value = this.storedOldValues[key] || oldValue;
+          field.setValue(value, {emitEvent: false})
+          field.updateValueAndValidity({emitEvent: false})
+          this.storedOldValues[key] = value;
+        })()
+        this.userAnswer.next(answer === UserClickOn.YES ? UserClickOn.YES : UserClickOn.NO)
+      })
+  }
+
 }
