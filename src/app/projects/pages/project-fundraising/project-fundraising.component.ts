@@ -49,6 +49,7 @@ import {TemplateStatus} from "@app/enums/template-status";
 import {ServiceDataService} from "@services/service-data.service";
 import {ServiceData} from "@app/models/service-data";
 
+// noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
   selector: 'project-fundraising',
   templateUrl: './project-fundraising.component.html',
@@ -98,6 +99,19 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
 
   private configs!: ServiceData;
 
+  private controlsToWatchOldValues = [
+    'permitType',
+    'projectWorkArea',
+    'domain',
+    'mainDACCategory',
+    'mainUNOCHACategory',
+    'countriesField',
+    'projectType',
+    'internalProjectClassification',
+    'sanadiDomain',
+    'sanadiMainClassification'
+  ]
+
   constructor(
     private activatedRoute: ActivatedRoute,
     public fb: UntypedFormBuilder,
@@ -125,6 +139,11 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       const allowed = profile.getParsedPermitTypes()
       this.permitTypes = this.permitTypes.filter(item => allowed.includes(item.lookupKey))
     }
+
+    setInterval(() => {
+      console.log('this.displayInsideQatar', this.displayInsideQatar, 'this.readonly', this.readonly);
+      console.log('this.isExtendOrCancelRequestType()', this.isExtendOrCancelRequestType());
+    }, 7000)
   }
 
   _buildForm(): void {
@@ -258,6 +277,8 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     this.model = this._getNewInstance();
     this.operation = this.operationTypes.CREATE;
     this.selectedLicense = undefined;
+    this.minDuration = this.configs.licenseMinTime
+    this.maxDuration = this.configs.licenseMaxTime
     this.setDefaultValues()
     this.overrideValuesInCreate()
   }
@@ -494,6 +515,12 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
 
   isExtendOrCancelRequestType(): boolean {
     return this.requestType.value && (this.requestType.value === ServiceRequestTypes.EXTEND || this.requestType.value === ServiceRequestTypes.CANCEL);
+  }
+
+
+  isExtendOrCancelOrUpdateRequestType(): boolean {
+    const type = this.requestType.value
+    return type && (type === ServiceRequestTypes.EXTEND || type === ServiceRequestTypes.CANCEL || type === ServiceRequestTypes.UPDATE);
   }
 
   isLicenseDurationDisabled(): boolean {
@@ -759,17 +786,21 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     }
 
     this.countriesField.addValidators(CustomValidators.requiredArray)
+    this.projectWorkArea.addValidators(CustomValidators.required)
+
 
     this.displayInsideQatar && this.markNotRequired(outsideFields) && (() => {
       this.markRequired([this.projectType])
       this.displaySanadySection ? this.markRequired(sanadyFields) : this.markNotRequired(sanadyFields)
       this.displayInternalSection ? this.markRequired([this.internalProjectClassification]) : this.markNotRequired([this.internalProjectClassification])
+      this.countriesField.disable({emitEvent: false})
     })()
 
     this.displayOutsideQatar && this.markNotRequired(insideFields) && (() => {
       this.markRequired([this.domain])
       this.displayDacSection ? this.markRequired(dacFields) : this.markNotRequired(dacFields)
       this.displayOchaSection ? this.markRequired(ochaFields) : this.markNotRequired(ochaFields)
+      this.countriesField.enable({emitEvent: false})
     })()
 
   }
@@ -868,6 +899,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       this.loadSubDacOchaByParentId(model.getDacOchaId())
     })()
     model.projectWorkArea === ProjectWorkArea.INSIDE_QATAR && model.projectType === FundraisingProjectTypes.AIDS && this.loadSanadyMainClassification(model.sanadiDomain)
+    this.getOldValues()
   }
 
   rejectTemplate(index: number) {
@@ -915,6 +947,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       :
       // inside and project type aids
       model.projectType === FundraisingProjectTypes.AIDS ? this.loadSanadyMainClassification(model.sanadiDomain) : null
+    this.getOldValues()
   }
 
   private createFieldObservable({ctrl, key}: { ctrl: AbstractControl, key: string }): Observable<{
@@ -1001,5 +1034,12 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     this.licenseDuration.clearValidators()
     this.licenseDuration.addValidators([CustomValidators.required, defaultMin, defaultMax])
     this.licenseDuration.updateValueAndValidity({emitEvent: false})
+  }
+
+  private getOldValues() {
+    this.controlsToWatchOldValues.forEach((key) => {
+      const ctrl = (this[key as keyof this] as unknown as AbstractControl)
+      this.storedOldValues[key] = ctrl.getRawValue()
+    })
   }
 }
