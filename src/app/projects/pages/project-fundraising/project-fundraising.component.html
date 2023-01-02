@@ -252,7 +252,7 @@
             <!--suppress XmlDuplicatedId -->
             <input id="licenseDuration" validationClasses="licenseDuration"
                    [mask]="inputMaskPatterns.NUMBER_ONLY_WITH_LIMIT(4)" formControlName="licenseDuration"
-                   class="form-control" [readonly]="(isExtendOrCancelRequestType() || readonly)">
+                   class="form-control" [readonly]="(readonly || isLicenseDurationDisabled())">
             <app-field-error-message controlName="licenseDuration"></app-field-error-message>
           </div>
         </div>
@@ -355,7 +355,9 @@
         [clearItems]="clearDeductionItems"
         [deductionRatioChanged]="deductionRatioChanged"
         [model]="model!"
-        [readonly]="(isExtendOrCancelRequestType() || readonly)"
+        [oldDuration]="selectedLicense?.licenseDuration"
+        [requestType]="requestType.value"
+        [readonly]="(readonly || isLicenseDurationDisabled())"
         [numberOfMonths]="licenseDuration.value"></targeted-years-distribution>
 
     </ng-template>

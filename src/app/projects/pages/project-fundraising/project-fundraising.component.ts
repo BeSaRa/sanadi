@@ -47,6 +47,7 @@ import {FundraisingProjectTypes} from "@app/enums/fundraising-project-types";
 import {LicenseService} from "@services/license.service";
 import {TemplateStatus} from "@app/enums/template-status";
 import {ServiceDataService} from "@services/service-data.service";
+import {ServiceData} from "@app/models/service-data";
 
 @Component({
   selector: 'project-fundraising',
@@ -94,6 +95,8 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
 
   maxDuration: number = 0;
   minDuration: number = 0;
+
+  private configs!: ServiceData;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -493,6 +496,10 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     return this.requestType.value && (this.requestType.value === ServiceRequestTypes.EXTEND || this.requestType.value === ServiceRequestTypes.CANCEL);
   }
 
+  isLicenseDurationDisabled(): boolean {
+    return this.requestType.value && (this.requestType.value !== ServiceRequestTypes.EXTEND && this.requestType.value !== ServiceRequestTypes.NEW)
+  }
+
   isEditLicenseAllowed(): boolean {
     // if new or draft record and request type !== new, edit is allowed
     let isAllowed = !this.model?.id || (!!this.model?.id && this.model.canCommit());
@@ -615,6 +622,14 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
 
   setSelectedLicense(licenseDetails: ProjectFundraising | undefined, ignoreUpdateForm: boolean) {
     this.selectedLicense = licenseDetails;
+
+    if (this.requestType.value === ServiceRequestTypes.EXTEND && this.selectedLicense) {
+      this.maxDuration = this.configs.licenseMaxTime - this.selectedLicense.licenseDuration
+    } else {
+      this.maxDuration = this.configs.licenseMaxTime
+    }
+
+    this.updateDurationValidator()
     // update form fields if i have license
     if (licenseDetails && !ignoreUpdateForm) {
       let model: any = new ProjectFundraising().clone(licenseDetails);
@@ -629,6 +644,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       // delete id because license details contains old license id, and we are adding new, so no id is needed
       delete model.id;
       delete model.vsId;
+
 
       this._updateForm(model, true);
     }
@@ -970,6 +986,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     this.serviceDataService
       .loadByCaseType(this.model!.caseType)
       .pipe(tap(configs => {
+        this.configs = configs;
         this.maxDuration = configs.licenseMaxTime;
         this.minDuration = configs.licenseMinTime;
       }))
@@ -981,8 +998,8 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   private updateDurationValidator() {
     const defaultMin = Validators.min(this.minDuration);
     const defaultMax = Validators.max(this.maxDuration);
-    this.licenseDuration.removeValidators([defaultMin, defaultMax])
-    this.licenseDuration.addValidators([defaultMin, defaultMax])
+    this.licenseDuration.clearValidators()
+    this.licenseDuration.addValidators([CustomValidators.required, defaultMin, defaultMax])
     this.licenseDuration.updateValueAndValidity({emitEvent: false})
   }
 }
