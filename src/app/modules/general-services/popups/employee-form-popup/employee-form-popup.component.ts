@@ -167,7 +167,7 @@ export class EmployeeFormPopupComponent implements OnInit {
       department: ["", [CustomValidators.required, CustomValidators.maxLength(300)]],
       contractLocation: ["", CustomValidators.required],
       contractLocationType: [null, CustomValidators.required],
-      officeName: ["", CustomValidators.maxLength(300)],
+      officeName: [null, CustomValidators.maxLength(300)],
       contractStatus: [null, CustomValidators.required],
       contractType: [null, CustomValidators.required],
       jobContractType: [null, CustomValidators.required],
