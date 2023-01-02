@@ -675,6 +675,20 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.sendToManagerAction(item);
         }
       },
+      // send to Chief
+      {
+        type: 'action',
+        icon: 'mdi-card-account-details-star',
+        label: 'send_to_chief',
+        askChecklist: true,
+        runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
+        show: (item: CaseModel<any, any>) => {
+          return item.getResponses().includes(WFResponseType.TO_CHIEF);
+        },
+        onClick: (item: CaseModel<any, any>) => {
+          this.sendToManagerAction(item);
+        }
+      },
       // send to general Manager
       {
         type: 'action',
@@ -780,6 +794,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         icon: 'mdi-check-bold',
         label: 'organization_final_approve',
         askChecklist: true,
+        disabled: () => !this.canOrganizationApprove(),
         show: (item: CaseModel<any, any>) => {
           return item.getResponses().includes(WFResponseType.ORGANIZATION_FINAL_APPROVE);
         },
@@ -1219,7 +1234,17 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           actionTaken && this.navigateToSamePageThatUserCameFrom();
         });
       }
-    } else {
+   } else {
+      if(item.getCaseType() === CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST){
+        const model = item as unknown as CoordinationWithOrganizationsRequest;
+        if( model.isApproved && (model.employeeService.isDevelopmentalExpert() || model.employeeService.isConstructionExpert())){
+          model.approveWithDocument(model).onAfterClose$.subscribe(actionTaken => {
+            actionTaken && this.navigateToSamePageThatUserCameFrom();
+          })
+          return;
+        }
+
+      }
       item.approve().onAfterClose$.subscribe(actionTaken => {
         actionTaken && this.navigateToSamePageThatUserCameFrom();
       });

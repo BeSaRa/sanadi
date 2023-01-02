@@ -1463,6 +1463,7 @@ export interface ILanguageKeys {
   building_abilities_required: string;
   effective_coordination_required: string;
   research_and_studies_required: string;
+  dynamic_template_required: string;
   menu_npo_management: string;
   lbl_contact_info: string;
   lbl_national_address: string;
@@ -1709,4 +1710,6 @@ export interface ILanguageKeys {
   establishment_name_english: string;
   basic_salary: string;
   net_salary: string;
+  send_to_chief:string;
+  terminate_task_success:string;
 }

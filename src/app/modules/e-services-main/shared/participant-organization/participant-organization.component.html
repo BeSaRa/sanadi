@@ -59,6 +59,12 @@
                   class="btn btn-link outline-none">
                   <i class="mdi mdi-close-box"></i>
                 </button>
+                <button (click)="terminate($event, row)"
+                [hidden]="!canTerminate"
+                [disabled]="isTerminated(row)" tooltip="{{lang.map.btn_terminate}}"
+                  class="btn btn-link outline-none">
+                  <i class="mdi mdi-delete-off"></i>
+                </button>
 
               </div>
             </td>

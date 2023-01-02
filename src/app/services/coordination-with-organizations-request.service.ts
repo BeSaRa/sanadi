@@ -1,3 +1,4 @@
+import { ApproveWithDocumentPopupComponent } from './../modules/e-services-main/popups/approve-with-document-popup/approve-with-document-popup.component';
 import { HttpClient } from '@angular/common/http';
 import { ComponentFactoryResolver, Injectable } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -180,5 +181,21 @@ export class CoordinationWithOrganizationsRequestService
     });
   }
 
+  approveWithDocument(
+    actionType: WFResponseType,
+    model?: CoordinationWithOrganizationsRequest,
+    claimBefore: boolean = false,
+
+  ): DialogRef {
+    const inboxService = FactoryService.getService(
+      'InboxService'
+    ) as InboxService;
+    return this.dialog.show(ApproveWithDocumentPopupComponent, {
+      service: this.documentService,
+      model:model,
+      actionType,
+    });
+
+  }
 
 }

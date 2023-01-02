@@ -145,4 +145,8 @@ export class CoordinationWithOrganizationsRequest
       externalUserData
     );
   }
+  approveWithDocument(model:CoordinationWithOrganizationsRequest): DialogRef {
+    return this.service.approveWithDocument(WFResponseType.APPROVE,model );
+
+  }
 }

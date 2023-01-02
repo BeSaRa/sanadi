@@ -1,3 +1,4 @@
+import { ReturnToOrganizationWithCommentPopupComponent } from './popups/return-to-organization-with-comment-popup/return-to-organization-with-comment-popup.component';
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {MouseEnterLeaveDirective} from './directives/mouse-enter-leave.directive';
@@ -213,7 +214,8 @@ import {ProfileCodeExistsDirective} from '@app/validators/profile-code-exists.di
     ExternalOfficesPopupComponent,
     ExecutiveManagementComponent,
     BankBranchComponent,
-    ProfileCodeExistsDirective
+    ProfileCodeExistsDirective,
+    ReturnToOrganizationWithCommentPopupComponent
   ],
   imports: [
     CommonModule,

@@ -1,3 +1,4 @@
+import { ReturnToOrganizationWithCommentPopupComponent } from './../shared/popups/return-to-organization-with-comment-popup/return-to-organization-with-comment-popup.component';
 import { OrganizationsEntitiesSupportService } from './organizations-entities-support.service';
 import {GeneralProcessNotificationService} from './general-process-notification.service';
 import {AwarenessActivitySuggestionService} from './awareness-activity-suggestion.service';
@@ -386,6 +387,16 @@ export class InboxService {
       {
         caseId,
         task
+      });
+  }
+  openReturnToSpecificOrganizationWithComment(caseId: string, model:CaseModel<any, any>,commentRequired=false): DialogRef {
+    return this.dialog.show(ReturnToOrganizationWithCommentPopupComponent,
+      {
+        caseId,
+        model,
+        inboxService: this,
+        commentRequired
+
       });
   }
 

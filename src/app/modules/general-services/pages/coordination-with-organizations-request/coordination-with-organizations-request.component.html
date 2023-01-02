@@ -36,13 +36,6 @@
     <ng-template #basicInfoTabTemplate>
       <fieldset [disabled]="!isEditAllowed()">
         <div class="row mb-4">
-          <!-- Campaign Name -->
-          <div class="col-sm-12 col-md-4 mb-6 position-relative">
-            <label asteriskIfRequired="fullName" for="fullName" class="form-label">{{lang.map.campaign_name}}</label>
-            <input id="fullName" validationClasses="fullName" [value]="model?.fullName" formControlName="fullName"
-              trimInput class="form-control">
-            <app-field-error-message controlName="fullName"></app-field-error-message>
-          </div>
           <!-- Domain -->
           <div class="col-12 col-md-4 mb-6 position-relative">
             <label asteriskIfRequired="domain" for="domain" class="form-label">{{ lang.map.domain }}</label>
@@ -68,9 +61,17 @@
           </div>
         </div>
 
-        <!-- License Start Date -->
         <div class="row">
-          <div class="col-12 col-md-6 mb-6 position-relative">
+          <!-- Campaign Name -->
+          <div class="col-sm-12 col-md-4 mb-6 position-relative">
+            <label asteriskIfRequired="fullName" for="fullName" class="form-label">{{lang.map.campaign_name}}</label>
+            <input id="fullName" validationClasses="fullName" [value]="model?.fullName" formControlName="fullName"
+              trimInput class="form-control">
+            <app-field-error-message controlName="fullName"></app-field-error-message>
+          </div>
+
+          <!-- License Start Date -->
+          <div class="col-12 col-md-4 mb-6 position-relative">
             <label for="licenseStartDate" asteriskIfRequired="licenseStartDate"
               class="form-label">{{lang.map.license_start_date}}</label>
             <div class="input-group">
@@ -85,7 +86,7 @@
             </div>
           </div>
           <!-- License End Date -->
-          <div class="col-12 col-md-6 mb-6 position-relative">
+          <div class="col-12 col-md-4 mb-6 position-relative">
             <label for="licenseEndDate" asteriskIfRequired="licenseEndDate"
               class="form-label">{{lang.map.license_end_date}}</label>
             <div class="input-group">
@@ -116,9 +117,11 @@
     </ng-template>
     <ng-template #participating_organizaions>
       <participant-organization #participantOrganizations [list]="model?.participatingOrganizaionList || []"
+        [locations]="locations || []" [canTerminate]="participatingOrgsCanTerminate"
         [organizationUnits]="organizationUnits" (readyEvent)="participantOrganizationsTapStatus = $event"
         [canAdd]="participatingOrgsCanAdd" [canView]="participatingOrgsCanView" [canDelete]="participatingOrgsCanDelete"
-        (listUpdated)="updateParticipantOrgs()" (requestView)="openParticipantOrgPopup($event)">
+        (listUpdated)="updateParticipantOrgs()" (requestView)="openParticipantOrgPopup($event)"
+        (requestTerminate)="terminateOrganizationTask($event)">
 
       </participant-organization>
     </ng-template>
