@@ -521,6 +521,12 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   isExtendOrCancelOrUpdateRequestType(): boolean {
     const type = this.requestType.value
     return type && (type === ServiceRequestTypes.EXTEND || type === ServiceRequestTypes.CANCEL || type === ServiceRequestTypes.UPDATE);
+
+  }
+
+  isYearsEditAllowed(): boolean {
+    const type = this.requestType.value
+    return type && (type === ServiceRequestTypes.UPDATE && type !== ServiceRequestTypes.NEW);
   }
 
   isLicenseDurationDisabled(): boolean {
@@ -1041,5 +1047,9 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       const ctrl = (this[key as keyof this] as unknown as AbstractControl)
       this.storedOldValues[key] = ctrl.getRawValue()
     })
+  }
+
+  isTargetedYearsDisabled(): boolean {
+    return this.readonly || this.employeeService.isInternalUser() || (this.requestType.value === ServiceRequestTypes.CANCEL)
   }
 }

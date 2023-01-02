@@ -357,7 +357,7 @@
         [model]="model!"
         [oldDuration]="selectedLicense?.licenseDuration"
         [requestType]="requestType.value"
-        [readonly]="(readonly || isLicenseDurationDisabled())"
+        [readonly]="isTargetedYearsDisabled()"
         [numberOfMonths]="licenseDuration.value"></targeted-years-distribution>
 
     </ng-template>
