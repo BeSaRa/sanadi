@@ -133,7 +133,6 @@ export class CaseInfoComponent {
   }
 
   viewGeneratedLicense(): void {
-    console.log(this.generatedLicenseId);
     if (!this.generatedLicenseId) {
       return;
     }

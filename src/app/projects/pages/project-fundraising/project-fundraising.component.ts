@@ -139,11 +139,6 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       const allowed = profile.getParsedPermitTypes()
       this.permitTypes = this.permitTypes.filter(item => allowed.includes(item.lookupKey))
     }
-
-    setInterval(() => {
-      console.log('this.displayInsideQatar', this.displayInsideQatar, 'this.readonly', this.readonly);
-      console.log('this.isExtendOrCancelRequestType()', this.isExtendOrCancelRequestType());
-    }, 7000)
   }
 
   _buildForm(): void {
