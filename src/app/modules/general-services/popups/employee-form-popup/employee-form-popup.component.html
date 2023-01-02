@@ -115,7 +115,7 @@
         <ng-select [selectOnTab]="true" [clearable]="true" placeholder="{{ lang.map.select }}"
           [notFoundText]="lang.map.msg_not_found" appendTo="body" id="officeName" [readonly]="!isEditRequestTypeAllowed"
           validationClasses="officeName" formControlName="officeName">
-          <ng-option *ngFor="let option of implementingAgencyList" [value]="option.id" [disabled]="!option.isActive()">
+          <ng-option *ngFor="let option of implementingAgencyList" [value]="option.id">
             {{option.getName()}}</ng-option>
         </ng-select>
         <app-field-error-message controlName="officeName"></app-field-error-message>
