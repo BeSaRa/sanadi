@@ -1,41 +1,41 @@
-import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, Inject, ViewChild} from '@angular/core';
-import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {LangService} from '@app/services/lang.service';
-import {ExternalUser} from '@app/models/external-user';
-import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
-import {IDialogData} from '@app/interfaces/i-dialog-data';
-import {ToastService} from '@app/services/toast.service';
-import {Lookup} from '@app/models/lookup';
-import {LookupService} from '@app/services/lookup.service';
-import {CustomRole} from '@app/models/custom-role';
-import {combineLatest, isObservable, Observable, of} from 'rxjs';
-import {catchError, exhaustMap, filter, map, switchMap, take, takeUntil} from 'rxjs/operators';
-import {Permission} from '@app/models/permission';
-import {ExternalUserPermission} from '@app/models/external-user-permission';
-import {CheckGroup} from '@app/models/check-group';
-import {PermissionService} from '@app/services/permission.service';
-import {CustomRolePermission} from '@app/models/custom-role-permission';
-import {ExternalUserPermissionService} from '@services/external-user-permission.service';
-import {EmployeeService} from '@app/services/employee.service';
-import {AuthService} from '@app/services/auth.service';
-import {JobTitle} from '@app/models/job-title';
-import {JobTitleService} from '@services/job-title.service';
-import {Profile} from '@app/models/profile';
-import {ProfileService} from '@services/profile.service';
-import {CommonUtils} from '@helpers/common-utils';
-import {TabMap} from '@app/types/types';
-import {DialogService} from '@services/dialog.service';
-import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {CustomMenuPermissionComponent} from '@app/administration/shared/custom-menu-permission/custom-menu-permission.component';
-import {BaseModel} from '@app/models/base-model';
-import {ExternalUserUpdateRequest} from '@app/models/external-user-update-request';
-import {UserSecurityComponent} from '@app/administration/shared/user-security/user-security.component';
-import {ExternalUserUpdateRequestService} from '@services/external-user-update-request.service';
-import {ExternalUserUpdateRequestStatusEnum} from '@app/enums/external-user-update-request-status.enum';
-import {ExternalUserUpdateRequestTypeEnum} from '@app/enums/external-user-update-request-type.enum';
-import {PermissionsEnum} from '@app/enums/permissions-enum';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Inject, ViewChild } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { LangService } from '@app/services/lang.service';
+import { ExternalUser } from '@app/models/external-user';
+import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
+import { IDialogData } from '@app/interfaces/i-dialog-data';
+import { ToastService } from '@app/services/toast.service';
+import { Lookup } from '@app/models/lookup';
+import { LookupService } from '@app/services/lookup.service';
+import { CustomRole } from '@app/models/custom-role';
+import { combineLatest, isObservable, Observable, of } from 'rxjs';
+import { catchError, exhaustMap, filter, map, switchMap, take, takeUntil } from 'rxjs/operators';
+import { Permission } from '@app/models/permission';
+import { ExternalUserPermission } from '@app/models/external-user-permission';
+import { CheckGroup } from '@app/models/check-group';
+import { PermissionService } from '@app/services/permission.service';
+import { CustomRolePermission } from '@app/models/custom-role-permission';
+import { ExternalUserPermissionService } from '@services/external-user-permission.service';
+import { EmployeeService } from '@app/services/employee.service';
+import { AuthService } from '@app/services/auth.service';
+import { JobTitle } from '@app/models/job-title';
+import { JobTitleService } from '@services/job-title.service';
+import { Profile } from '@app/models/profile';
+import { ProfileService } from '@services/profile.service';
+import { CommonUtils } from '@helpers/common-utils';
+import { TabMap } from '@app/types/types';
+import { DialogService } from '@services/dialog.service';
+import { AdminGenericDialog } from '@app/generics/admin-generic-dialog';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { CustomMenuPermissionComponent } from '@app/administration/shared/custom-menu-permission/custom-menu-permission.component';
+import { BaseModel } from '@app/models/base-model';
+import { ExternalUserUpdateRequest } from '@app/models/external-user-update-request';
+import { UserSecurityComponent } from '@app/administration/shared/user-security/user-security.component';
+import { ExternalUserUpdateRequestService } from '@services/external-user-update-request.service';
+import { ExternalUserUpdateRequestStatusEnum } from '@app/enums/external-user-update-request-status.enum';
+import { ExternalUserUpdateRequestTypeEnum } from '@app/enums/external-user-update-request-type.enum';
+import { PermissionsEnum } from '@app/enums/permissions-enum';
 import {
   UserSecurityExternalComponent
 } from '@app/administration/shared/user-security-external/user-security-external.component';
@@ -88,7 +88,7 @@ export class ExternalUserPopupComponent extends AdminGenericDialog<ExternalUser>
       },
       isTouchedOrDirty: () => true
     },
-    menus: {name: 'menus', langKey: 'menus', index: 2, validStatus: () => true, isTouchedOrDirty: () => true},
+    menus: { name: 'menus', langKey: 'menus', index: 2, validStatus: () => true, isTouchedOrDirty: () => true },
     services: {
       name: 'services',
       index: 3,
@@ -104,20 +104,20 @@ export class ExternalUserPopupComponent extends AdminGenericDialog<ExternalUser>
   superAdminPermissions: string[] = [PermissionsEnum.SUB_ADMIN, PermissionsEnum.APPROVAL_ADMIN];
 
   constructor(public dialogRef: DialogRef,
-              @Inject(DIALOG_DATA_TOKEN) data: IDialogData<ExternalUser>,
-              private toast: ToastService,
-              public langService: LangService,
-              private permissionService: PermissionService,
-              private userPermissionService: ExternalUserPermissionService,
-              private lookupService: LookupService,
-              public employeeService: EmployeeService,
-              private externalUserUpdateRequestService: ExternalUserUpdateRequestService,
-              private authService: AuthService,
-              private jobTitleService: JobTitleService,
-              private profileService: ProfileService,
-              private dialogService: DialogService,
-              private cd: ChangeDetectorRef,
-              public fb: UntypedFormBuilder) {
+    @Inject(DIALOG_DATA_TOKEN) data: IDialogData<ExternalUser>,
+    private toast: ToastService,
+    public langService: LangService,
+    private permissionService: PermissionService,
+    private userPermissionService: ExternalUserPermissionService,
+    private lookupService: LookupService,
+    public employeeService: EmployeeService,
+    private externalUserUpdateRequestService: ExternalUserUpdateRequestService,
+    private authService: AuthService,
+    private jobTitleService: JobTitleService,
+    private profileService: ProfileService,
+    private dialogService: DialogService,
+    private cd: ChangeDetectorRef,
+    public fb: UntypedFormBuilder) {
     super();
     this.model = data.model;
     this.operation = data.operation;
@@ -184,7 +184,7 @@ export class ExternalUserPopupComponent extends AdminGenericDialog<ExternalUser>
 
   buildForm(): void {
     this.form = this.fb.group({
-      basic: this.fb.group(this.model.buildForm(true), {validators: this.model.setBasicFormCrossValidations()}),
+      basic: this.fb.group(this.model.buildForm(true), { validators: this.model.setBasicFormCrossValidations() }),
       permissions: this.fb.group({
         customRoleId: [this.model.customRoleId],
         permissions: [!!this.selectedPermissions.length]
@@ -380,7 +380,7 @@ export class ExternalUserPopupComponent extends AdminGenericDialog<ExternalUser>
   }
 
   prepareModel(model: ExternalUser, form: UntypedFormGroup): Observable<ExternalUser> | ExternalUser {
-    return new ExternalUser().clone({...this.model, ...this.basicFormGroup?.value});
+    return new ExternalUser().clone({ ...this.model, ...this.basicFormGroup?.value });
   }
 
   prepareUserRequestModel(model: ExternalUser, form: UntypedFormGroup): Observable<ExternalUserUpdateRequest> | ExternalUserUpdateRequest {
@@ -402,12 +402,13 @@ export class ExternalUserPopupComponent extends AdminGenericDialog<ExternalUser>
 
     // when data is prepared by cloning model, id is replaced by userId. It has to be requestId
     // so, delete it if there is no userRequest available, otherwise set userRequestId to be id
-    if (!this.userUpdateRequest) {
-      // @ts-ignore
-      delete data.id;
-    } else {
-      data.id = this.userUpdateRequest.id;
-    }
+    if (!this.canSaveDirectly)
+      if (!this.userUpdateRequest) {
+        // @ts-ignore
+        delete data.id;
+      } else {
+        data.id = this.userUpdateRequest.id;
+      }
     return data;
   }
 
@@ -422,20 +423,20 @@ export class ExternalUserPopupComponent extends AdminGenericDialog<ExternalUser>
         catchError(() => of(null)),
         filter((response) => response !== null),
       ).pipe(
-      switchMap(() => {
-        return this.employeeService.isCurrentUser(model) ? this.authService.validateToken()
-          .pipe(catchError(() => of(model)), map(_ => model)) : of(model);
-      })
-    ).subscribe((result) => {
-      if (!result) {
-        return;
-      }
-      const message = (this.operation === OperationTypes.CREATE)
-        ? this.langService.map.msg_create_x_success
-        : this.langService.map.msg_update_x_success;
-      this.toast.success(message.change({x: model.getName()}));
-      dialogRef.close(model);
-    });
+        switchMap(() => {
+          return this.employeeService.isCurrentUser(model) ? this.authService.validateToken()
+            .pipe(catchError(() => of(model)), map(_ => model)) : of(model);
+        })
+      ).subscribe((result) => {
+        if (!result) {
+          return;
+        }
+        const message = (this.operation === OperationTypes.CREATE)
+          ? this.langService.map.msg_create_x_success
+          : this.langService.map.msg_update_x_success;
+        this.toast.success(message.change({ x: model.getName() }));
+        dialogRef.close(model);
+      });
   }
 
   saveFail(error: Error): void {
@@ -479,7 +480,7 @@ export class ExternalUserPopupComponent extends AdminGenericDialog<ExternalUser>
 
   afterSaveUserRequest(model: ExternalUserUpdateRequest, dialogRef: DialogRef): void {
     let _done: Observable<any>;
-    const isCurrentLoggedInUserUpdated = this.employeeService.isCurrentUser({generalUserId: model.generalUserId} as ExternalUser);
+    const isCurrentLoggedInUserUpdated = this.employeeService.isCurrentUser({ generalUserId: model.generalUserId } as ExternalUser);
     if (isCurrentLoggedInUserUpdated && this.canSaveDirectly) {
       _done = this.authService.validateToken()
         .pipe(
@@ -503,7 +504,7 @@ export class ExternalUserPopupComponent extends AdminGenericDialog<ExternalUser>
           ? this.langService.map.msg_create_request_x_success
           : this.langService.map.msg_update_request_x_success;
       }
-      this.toast.success(message.change({x: model.getName()}));
+      this.toast.success(message.change({ x: model.getName() }));
       dialogRef.close(model);
     });
   }

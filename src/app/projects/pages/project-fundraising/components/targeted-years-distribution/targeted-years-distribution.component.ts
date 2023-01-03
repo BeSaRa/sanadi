@@ -11,6 +11,7 @@ import {CustomValidators} from "@app/validators/custom-validators";
 import {AmountOverYear} from "@app/models/amount-over-year";
 import currency from "currency.js";
 import {MaskPipe} from "ngx-mask";
+import {ServiceRequestTypes} from "@app/enums/service-request-types";
 
 @Component({
   selector: 'targeted-years-distribution',
@@ -30,6 +31,12 @@ export class TargetedYearsDistributionComponent implements OnInit, OnDestroy {
   _model!: ProjectFundraising
   @Input()
   readonly: boolean = false;
+
+  @Input()
+  oldDuration?: number | undefined;
+
+  @Input()
+  requestType!: number
 
   private destroy$: Subject<any> = new Subject<any>();
   private destroyListener$: Subject<any> = new Subject<any>();
@@ -112,7 +119,10 @@ export class TargetedYearsDistributionComponent implements OnInit, OnDestroy {
     if (!this.numberOfMonths$.value) {
       return 0;
     }
-    return Math.ceil(this.numberOfMonths$.value / 12);
+
+    const months = this.requestType === ServiceRequestTypes.EXTEND ? (this.oldDuration || 0) + Number(this.numberOfMonths$.value) : this.numberOfMonths$.value
+
+    return Math.ceil(months / 12);
   }
 
   private generateYearList(numberOfYears: number) {

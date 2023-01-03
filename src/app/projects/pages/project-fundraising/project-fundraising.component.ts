@@ -47,7 +47,9 @@ import {FundraisingProjectTypes} from "@app/enums/fundraising-project-types";
 import {LicenseService} from "@services/license.service";
 import {TemplateStatus} from "@app/enums/template-status";
 import {ServiceDataService} from "@services/service-data.service";
+import {ServiceData} from "@app/models/service-data";
 
+// noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
   selector: 'project-fundraising',
   templateUrl: './project-fundraising.component.html',
@@ -95,6 +97,21 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   maxDuration: number = 0;
   minDuration: number = 0;
 
+  private configs!: ServiceData;
+
+  private controlsToWatchOldValues = [
+    'permitType',
+    'projectWorkArea',
+    'domain',
+    'mainDACCategory',
+    'mainUNOCHACategory',
+    'countriesField',
+    'projectType',
+    'internalProjectClassification',
+    'sanadiDomain',
+    'sanadiMainClassification'
+  ]
+
   constructor(
     private activatedRoute: ActivatedRoute,
     public fb: UntypedFormBuilder,
@@ -140,6 +157,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     this.listenToDataWillEffectSelectedTemplate();
     this.listenToProjectTotalCoastChanges();
     this.listenToLicenseSearch()
+    this.listenToMainFieldsChanges()
     this.listenToPermitTypeChanges()
     this.listenToWorkAreaChanges()
     // order here matter
@@ -250,11 +268,12 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   _resetForm(): void {
-    this.model!.templateList = [];
-    this.form.reset();
     this.model = this._getNewInstance();
+    this.form.reset();
     this.operation = this.operationTypes.CREATE;
     this.selectedLicense = undefined;
+    this.minDuration = this.configs.licenseMinTime
+    this.maxDuration = this.configs.licenseMaxTime
     this.setDefaultValues()
     this.overrideValuesInCreate()
   }
@@ -493,6 +512,22 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     return this.requestType.value && (this.requestType.value === ServiceRequestTypes.EXTEND || this.requestType.value === ServiceRequestTypes.CANCEL);
   }
 
+
+  isExtendOrCancelOrUpdateRequestType(): boolean {
+    const type = this.requestType.value
+    return type && (type === ServiceRequestTypes.EXTEND || type === ServiceRequestTypes.CANCEL || type === ServiceRequestTypes.UPDATE);
+
+  }
+
+  isYearsEditAllowed(): boolean {
+    const type = this.requestType.value
+    return type && (type === ServiceRequestTypes.UPDATE && type !== ServiceRequestTypes.NEW);
+  }
+
+  isLicenseDurationDisabled(): boolean {
+    return this.requestType.value && (this.requestType.value !== ServiceRequestTypes.EXTEND && this.requestType.value !== ServiceRequestTypes.NEW)
+  }
+
   isEditLicenseAllowed(): boolean {
     // if new or draft record and request type !== new, edit is allowed
     let isAllowed = !this.model?.id || (!!this.model?.id && this.model.canCommit());
@@ -615,6 +650,14 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
 
   setSelectedLicense(licenseDetails: ProjectFundraising | undefined, ignoreUpdateForm: boolean) {
     this.selectedLicense = licenseDetails;
+
+    if (this.requestType.value === ServiceRequestTypes.EXTEND && this.selectedLicense) {
+      this.maxDuration = this.configs.licenseMaxTime - this.selectedLicense.licenseDuration
+    } else {
+      this.maxDuration = this.configs.licenseMaxTime
+    }
+
+    this.updateDurationValidator()
     // update form fields if i have license
     if (licenseDetails && !ignoreUpdateForm) {
       let model: any = new ProjectFundraising().clone(licenseDetails);
@@ -629,6 +672,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       // delete id because license details contains old license id, and we are adding new, so no id is needed
       delete model.id;
       delete model.vsId;
+
 
       this._updateForm(model, true);
     }
@@ -696,7 +740,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     this.mainUNOCHACategories = list.filter(item => item.type === DomainTypes.HUMANITARIAN)
   }
 
-  private listenToPermitTypeChanges() {
+  private listenToMainFieldsChanges() {
     combineLatest([
       this.permitType.valueChanges.pipe(this.holdTillGetUserResponse()).pipe(startWith<number, number>(this.permitType.value)),
       this.projectWorkArea.valueChanges.pipe(this.holdTillGetUserResponse()).pipe(startWith<number, number>(this.projectWorkArea.value)),
@@ -743,17 +787,21 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     }
 
     this.countriesField.addValidators(CustomValidators.requiredArray)
+    this.projectWorkArea.addValidators(CustomValidators.required)
+
 
     this.displayInsideQatar && this.markNotRequired(outsideFields) && (() => {
       this.markRequired([this.projectType])
       this.displaySanadySection ? this.markRequired(sanadyFields) : this.markNotRequired(sanadyFields)
       this.displayInternalSection ? this.markRequired([this.internalProjectClassification]) : this.markNotRequired([this.internalProjectClassification])
+      this.countriesField.disable({emitEvent: false})
     })()
 
     this.displayOutsideQatar && this.markNotRequired(insideFields) && (() => {
       this.markRequired([this.domain])
       this.displayDacSection ? this.markRequired(dacFields) : this.markNotRequired(dacFields)
       this.displayOchaSection ? this.markRequired(ochaFields) : this.markNotRequired(ochaFields)
+      this.countriesField.enable({emitEvent: false})
     })()
 
   }
@@ -780,7 +828,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
 
   private holdTillGetUserResponse() {
     return switchMap((value: number) => {
-      return iif(() => this.model!.hasTemplate(), this.userAnswer.pipe(filter(v => v === UserClickOn.YES), map(_ => value)), of(value))
+      return iif(() => !!(this.model && (this.model.hasTemplate() || this.model.hasCountries() || this.model.hasYears())), this.userAnswer.pipe(filter(v => v === UserClickOn.YES), map(_ => value)), of(value))
     })
   }
 
@@ -852,6 +900,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       this.loadSubDacOchaByParentId(model.getDacOchaId())
     })()
     model.projectWorkArea === ProjectWorkArea.INSIDE_QATAR && model.projectType === FundraisingProjectTypes.AIDS && this.loadSanadyMainClassification(model.sanadiDomain)
+    this.getOldValues()
   }
 
   rejectTemplate(index: number) {
@@ -899,6 +948,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       :
       // inside and project type aids
       model.projectType === FundraisingProjectTypes.AIDS ? this.loadSanadyMainClassification(model.sanadiDomain) : null
+    this.getOldValues()
   }
 
   private createFieldObservable({ctrl, key}: { ctrl: AbstractControl, key: string }): Observable<{
@@ -943,9 +993,9 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     const fieldsObservables = fields.map((item) => this.createFieldObservable(item))
     merge(...fieldsObservables)
       .pipe(tap(() => {
-        this.model!.hasTemplate() ? this.userAnswer.next(UserClickOn.NO) : this.userAnswer.next(UserClickOn.YES)
+        (this.model!.hasTemplate() || this.model!.hasYears() || this.model!.hasCountries()) ? this.userAnswer.next(UserClickOn.NO) : this.userAnswer.next(UserClickOn.YES)
       }))
-      .pipe(filter(_ => this.model!.hasTemplate()))
+      .pipe(filter(_ => this.model!.hasTemplate() || this.model!.hasYears() || this.model!.hasCountries()))
       .pipe(takeUntil(this.destroy$))
       .pipe(switchMap((value) => {
           return this.dialog.confirm(this.lang.map.this_change_will_effect_the_selected_template)
@@ -956,7 +1006,9 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
         })
       )
       .subscribe(({answer, oldValue, field, key}) => {
-        answer === UserClickOn.YES ? this.deleteTemplate(true) : (() => {
+        answer === UserClickOn.YES ? (() => {
+          this.model && this.model.hasTemplate() ? this.deleteTemplate(true) : this.clearDeductionItems = true
+        })() : (() => {
           let value = this.storedOldValues[key] || oldValue;
           field.setValue(value, {emitEvent: false})
           field.updateValueAndValidity({emitEvent: false})
@@ -970,6 +1022,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     this.serviceDataService
       .loadByCaseType(this.model!.caseType)
       .pipe(tap(configs => {
+        this.configs = configs;
         this.maxDuration = configs.licenseMaxTime;
         this.minDuration = configs.licenseMinTime;
       }))
@@ -981,8 +1034,30 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   private updateDurationValidator() {
     const defaultMin = Validators.min(this.minDuration);
     const defaultMax = Validators.max(this.maxDuration);
-    this.licenseDuration.removeValidators([defaultMin, defaultMax])
-    this.licenseDuration.addValidators([defaultMin, defaultMax])
+    this.licenseDuration.clearValidators()
+    this.licenseDuration.addValidators([CustomValidators.required, defaultMin, defaultMax])
     this.licenseDuration.updateValueAndValidity({emitEvent: false})
+  }
+
+  private getOldValues() {
+    this.controlsToWatchOldValues.forEach((key) => {
+      const ctrl = (this[key as keyof this] as unknown as AbstractControl)
+      this.storedOldValues[key] = ctrl.getRawValue()
+    })
+  }
+
+  isTargetedYearsDisabled(): boolean {
+    return this.readonly || this.employeeService.isInternalUser() || (this.requestType.value === ServiceRequestTypes.CANCEL)
+  }
+
+  private listenToPermitTypeChanges() {
+    this.permitType.valueChanges
+      .pipe(this.holdTillGetUserResponse())
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((type: ProjectPermitTypes) => {
+        [ProjectPermitTypes.CHARITY, ProjectPermitTypes.UNCONDITIONAL_RECEIVE].includes(type) ? (() => {
+          this.projectWorkArea.setValue(null, {emitEvent: false})
+        })() : this.projectWorkArea.setValue(this.projectWorkArea.value || ProjectWorkArea.INSIDE_QATAR, {emitEvent: false})
+      })
   }
 }

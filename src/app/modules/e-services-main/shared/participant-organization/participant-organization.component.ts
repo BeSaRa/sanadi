@@ -1,16 +1,31 @@
-import {map, take, takeUntil} from 'rxjs/operators';
-import {Component, EventEmitter, Input, OnInit, Output, ViewChild,} from '@angular/core';
-import {AbstractControl, FormArray, FormBuilder, FormGroup,UntypedFormControl,} from '@angular/forms';
-import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {DialogService} from '@app/services/dialog.service';
-import {LangService} from '@app/services/lang.service';
-import {ToastService} from '@app/services/toast.service';
-import {ReadinessStatus} from '@app/types/types';
-import {BehaviorSubject, Subject} from 'rxjs';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {NgSelectComponent} from '@ng-select/ng-select';
-import {ParticipantOrg} from '@app/models/participant-org';
-import {Profile} from '@app/models/profile';
+import { AdminResult } from '@app/models/admin-result';
+import { map, take, takeUntil } from 'rxjs/operators';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
+import {
+  AbstractControl,
+  FormArray,
+  FormBuilder,
+  FormGroup,
+  UntypedFormControl,
+} from '@angular/forms';
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
+import { DialogService } from '@app/services/dialog.service';
+import { LangService } from '@app/services/lang.service';
+import { ToastService } from '@app/services/toast.service';
+import { ReadinessStatus } from '@app/types/types';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { NgSelectComponent } from '@ng-select/ng-select';
+import { ParticipantOrg } from '@app/models/participant-org';
+import { Profile } from '@app/models/profile';
+import { TaskAdminResult } from '@app/models/task-admin-result';
 
 @Component({
   selector: 'participant-organization',
@@ -23,9 +38,7 @@ export class ParticipantOrganizationComponent implements OnInit {
     private toastService: ToastService,
     private dialogService: DialogService,
     private fb: FormBuilder
-  ) {
-
-  }
+  ) {}
 
   @Input() formArrayName: string = 'participatingOrganizaionList';
 
@@ -49,18 +62,22 @@ export class ParticipantOrganizationComponent implements OnInit {
   model: ParticipantOrg = new ParticipantOrg();
   @Input() pageTitleKey: keyof ILanguageKeys = 'participant_organizations';
 
-  listDataSource: BehaviorSubject<ParticipantOrg[]> = new BehaviorSubject<ParticipantOrg[]>([]);
+  listDataSource: BehaviorSubject<ParticipantOrg[]> = new BehaviorSubject<
+    ParticipantOrg[]
+  >([]);
   columns = this.model.DisplayedColumns;
 
   @Input() canAdd: boolean = true;
   @Input() canView: boolean = true;
   @Input() canDelete: boolean = true;
-
+  @Input() canTerminate: boolean = true;
+  @Input() locations:TaskAdminResult[] = [];
 
   private readonly: boolean = true;
   private save$: Subject<any> = new Subject<any>();
 
-  private recordChanged$: Subject<Profile | null> = new Subject<Profile | null>();
+  private recordChanged$: Subject<Profile | null> =
+    new Subject<Profile | null>();
   private currentRecord?: ParticipantOrg;
 
   private destroy$: Subject<any> = new Subject<any>();
@@ -93,13 +110,14 @@ export class ParticipantOrganizationComponent implements OnInit {
       .pipe(
         takeUntil(this.destroy$),
         map((org) => {
-            return org ? new ParticipantOrg().clone({
-              organizationId: org?.id,
-              arabicName: org?.arName,
-              englishName: org?.enName,
-            }) : org;
-          }
-        )
+          return org
+            ? new ParticipantOrg().clone({
+                organizationId: org?.id,
+                arabicName: org?.arName,
+                englishName: org?.enName,
+              })
+            : org;
+        })
       )
       .subscribe((record) => {
         this.currentRecord = record || undefined;
@@ -126,7 +144,9 @@ export class ParticipantOrganizationComponent implements OnInit {
   ngSelectComponentRef!: NgSelectComponent;
 
   onChangeRecord(id: number) {
-    const record = this.organizationUnits.find((org: Profile) => org.id === id)!;
+    const record = this.organizationUnits.find(
+      (org: Profile) => org.id === id
+    )!;
     this.recordChanged$.next(record);
   }
 
@@ -172,7 +192,9 @@ export class ParticipantOrganizationComponent implements OnInit {
     if (record) {
       if (operation === 'ADD') {
         this.list.push(record);
-        this.organizationUnits = this.organizationUnits.filter((org: Profile) => org.id !== record.organizationId);
+        this.organizationUnits = this.organizationUnits.filter(
+          (org: Profile) => org.id !== record.organizationId
+        );
       } else if (operation === 'DELETE') {
         this.list.splice(gridIndex, 1);
         const org = new Profile().clone({
@@ -189,7 +211,6 @@ export class ParticipantOrganizationComponent implements OnInit {
     this.ngSelectComponentRef.handleClearClick();
     this.sortOrganizations();
     this.listUpdated.emit();
-
   }
 
   delete($event: MouseEvent, record: ParticipantOrg, index: number): any {
@@ -214,6 +235,16 @@ export class ParticipantOrganizationComponent implements OnInit {
     this.requestView.emit(record.organizationId);
   }
 
+  @Output() requestTerminate: EventEmitter<string> = new EventEmitter<string>();
+  terminate($event: MouseEvent, record: ParticipantOrg) {
+    $event.preventDefault();
+    const {tkiid}= this.locations.find(location=>location.organizationId === record.organizationId )!;
+    this.requestTerminate.emit(tkiid);
+  }
+
+  isTerminated(record: ParticipantOrg){
+    return !this.locations.find(location=>location.organizationId === record.organizationId);
+  }
   sortOrganizations() {
     const propName =
       this.lang.getCurrentLanguage().name === 'English' ? 'enName' : 'arName';
@@ -221,6 +252,8 @@ export class ParticipantOrganizationComponent implements OnInit {
   }
 
   calculateTotalParticipatingValue() {
-    return this.list.map(x => Number(x.value ?? 0)).reduce((a, b) => a + b, 0);
+    return this.list
+      .map((x) => Number(x.value ?? 0))
+      .reduce((a, b) => a + b, 0);
   }
 }

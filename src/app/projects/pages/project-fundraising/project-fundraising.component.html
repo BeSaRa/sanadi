@@ -38,7 +38,7 @@
                        appendTo="body" id="permitType"
                        [clearable]="false"
                        formControlName="permitType"
-                       [readonly]="(isExtendOrCancelRequestType() || readonly)">
+                       [readonly]="(isExtendOrCancelOrUpdateRequestType() || readonly)">
               <ng-option [value]="option.lookupKey" *ngFor="let option of permitTypes">{{option.getName()}}</ng-option>
             </ng-select>
             <app-field-error-message controlName="permitType"></app-field-error-message>
@@ -76,7 +76,7 @@
                          labelForId="projectWorkArea"
                          placeholder="{{lang.map.select}}"
                          [notFoundText]="lang.map.msg_not_found"
-                         [readonly]="(isExtendOrCancelRequestType() || readonly)">
+                         [readonly]="(isExtendOrCancelOrUpdateRequestType() || readonly)">
                 <ng-option [value]="option.lookupKey"
                            *ngFor="let option of projectWorkAreas">{{option.getName()}}</ng-option>
               </ng-select>
@@ -252,7 +252,7 @@
             <!--suppress XmlDuplicatedId -->
             <input id="licenseDuration" validationClasses="licenseDuration"
                    [mask]="inputMaskPatterns.NUMBER_ONLY_WITH_LIMIT(4)" formControlName="licenseDuration"
-                   class="form-control" [readonly]="(isExtendOrCancelRequestType() || readonly)">
+                   class="form-control" [readonly]="(readonly || isLicenseDurationDisabled())">
             <app-field-error-message controlName="licenseDuration"></app-field-error-message>
           </div>
         </div>
@@ -355,7 +355,9 @@
         [clearItems]="clearDeductionItems"
         [deductionRatioChanged]="deductionRatioChanged"
         [model]="model!"
-        [readonly]="(isExtendOrCancelRequestType() || readonly)"
+        [oldDuration]="selectedLicense?.licenseDuration"
+        [requestType]="requestType.value"
+        [readonly]="isTargetedYearsDisabled()"
         [numberOfMonths]="licenseDuration.value"></targeted-years-distribution>
 
     </ng-template>

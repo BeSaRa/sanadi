@@ -302,7 +302,7 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
   }
 
   private isCommentRequired(): boolean {
-    return this.action === WFResponseType.REJECT || this.action === WFResponseType.POSTPONE || this.action === WFResponseType.COMPLETE || this.action === WFResponseType.RETURN || this.action === WFResponseType.CLOSE || this.action === WFResponseType.FINAL_REJECT || this.action === WFResponseType.ORGANIZATION_REJECT || this.action === WFResponseType.VALIDATE_REJECT;
+    return this.action === WFResponseType.REJECT || this.action === WFResponseType.POSTPONE || this.action === WFResponseType.COMPLETE || this.action === WFResponseType.RETURN || this.action === WFResponseType.CLOSE || this.action === WFResponseType.FINAL_REJECT || this.action === WFResponseType.ORGANIZATION_REJECT || this.action === WFResponseType.VALIDATE_REJECT || this.action === WFResponseType.ORGANIZATION_FINAL_REJECT;
   }
 
   private loadUserCustomTerms(): Observable<CustomTerm[]> {

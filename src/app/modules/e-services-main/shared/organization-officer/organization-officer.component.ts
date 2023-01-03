@@ -67,6 +67,9 @@ export class OrganizationOfficerComponent implements OnInit {
   ;
   columns = [
     'fullName',
+    'email',
+    'phone',
+    'extraPhone',
     'actions',
   ];
 
