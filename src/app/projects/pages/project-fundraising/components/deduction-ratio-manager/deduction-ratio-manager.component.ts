@@ -46,6 +46,12 @@ export class DeductionRatioManagerComponent implements OnInit, OnDestroy {
   })
   @Input()
   checkForTemplate: boolean = false;
+
+  @Input()
+  set projectCost(value: number | null) {
+    this.deductionAmountHasChanges$.next(value)
+  }
+
   clearItems$: Subject<boolean> = new Subject()
 
   @Input()
@@ -68,6 +74,7 @@ export class DeductionRatioManagerComponent implements OnInit, OnDestroy {
   onItemChange: EventEmitter<void> = new EventEmitter<void>()
   @Output()
   onItemRemoved: EventEmitter<void> = new EventEmitter<void>()
+
 
   constructor(private service: ProjectFundraisingService,
               private dialog: DialogService,
@@ -186,7 +193,6 @@ export class DeductionRatioManagerComponent implements OnInit, OnDestroy {
           }
         }
         this._model.updateDeductionRatioItem(Number(id), Number(input.getRawValue()))
-        this.calculateDeductionRatio()
         this.deductionAmountHasChanges$.next(input.getRawValue())
         this.onItemChange.emit()
       })
@@ -248,6 +254,7 @@ export class DeductionRatioManagerComponent implements OnInit, OnDestroy {
       .pipe(distinctUntilChanged())
       .pipe(takeUntil(this.destroy$))
       .subscribe((value: number) => {
+        this.calculateDeductionRatio()
         this.deductionChange.emit(value)
       })
   }

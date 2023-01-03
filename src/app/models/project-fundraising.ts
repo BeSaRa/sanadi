@@ -91,7 +91,6 @@ export class ProjectFundraising extends _ApprovalLicenseWithMonthly<ProjectFundr
   inRenewalPeriod!: boolean
   usedInProjectCompletion!: boolean
   licenseClassName!: string;
-
   // extra properties
   employeeService: EmployeeService;
   constructor() {
