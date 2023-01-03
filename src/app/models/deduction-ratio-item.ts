@@ -7,32 +7,32 @@ import {DeductionRatioItemInterceptor} from "@app/model-interceptors/deduction-r
 import {INames} from "@contracts/i-names";
 import {DeductedPercentage} from "@app/models/deducted-percentage";
 import {AdminResult} from "@app/models/admin-result";
-import { searchFunctionType } from "@app/types/types";
-import { CommonStatusEnum } from "@app/enums/common-status.enum";
-import { CustomValidators } from "@app/validators/custom-validators";
-import { Validators } from "@angular/forms";
+import {searchFunctionType} from "@app/types/types";
+import {CommonStatusEnum} from "@app/enums/common-status.enum";
+import {CustomValidators} from "@app/validators/custom-validators";
+import {Validators} from "@angular/forms";
 
 const {receive, send} = new DeductionRatioItemInterceptor()
 
 @InterceptModel({receive, send})
 export class DeductionRatioItem extends BaseModel<DeductionRatioItem, DeductionRatioItemService> {
-  
+
   status!: number;
   profileTypes!: string;
-  workArea!: number|null;
-  permitType!:number;
-  minLimit!:number;
-  maxLimit!:number;
+  workArea!: number | null;
+  permitType!: number;
+  minLimit!: number;
+  maxLimit!: number;
   statusDateModified!: string;
-  statusInfo!:AdminResult;
-  workAreaInfo!:AdminResult;
-  permitTypeInfo!:AdminResult;
-  profileTypesList!:	number[]|null;
-  
+  statusInfo!: AdminResult;
+  workAreaInfo!: AdminResult;
+  permitTypeInfo!: AdminResult;
+  profileTypesList!: number[] | null;
+
 
   service: DeductionRatioItemService;
   langService!: LangService
-  
+
   constructor() {
     super();
     this.service = FactoryService.getService('DeductionRatioItemService')
@@ -93,7 +93,7 @@ export class DeductionRatioItem extends BaseModel<DeductionRatioItem, DeductionR
       workArea: controls ? [workArea] : workArea,
       permitType: controls ? [permitType, [CustomValidators.required]] : permitType,
       maxLimit: controls ? [maxLimit, [CustomValidators.required, Validators.max(50)]] : maxLimit,
-      minLimit: controls ? [minLimit, [CustomValidators.required].concat(CustomValidators.commonValidations.decimalWithMinValue(2,0.1))] : minLimit,
+      minLimit: controls ? [minLimit, [CustomValidators.required, Validators.min(0.1)]] : minLimit,
     }
   }
 }

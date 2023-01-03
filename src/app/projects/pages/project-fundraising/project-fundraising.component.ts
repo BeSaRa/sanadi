@@ -139,11 +139,6 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       const allowed = profile.getParsedPermitTypes()
       this.permitTypes = this.permitTypes.filter(item => allowed.includes(item.lookupKey))
     }
-
-    setInterval(() => {
-      console.log('this.displayInsideQatar', this.displayInsideQatar, 'this.readonly', this.readonly);
-      console.log('this.isExtendOrCancelRequestType()', this.isExtendOrCancelRequestType());
-    }, 7000)
   }
 
   _buildForm(): void {
@@ -272,9 +267,8 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   _resetForm(): void {
-    this.model!.templateList = [];
-    this.form.reset();
     this.model = this._getNewInstance();
+    this.form.reset();
     this.operation = this.operationTypes.CREATE;
     this.selectedLicense = undefined;
     this.minDuration = this.configs.licenseMinTime
@@ -833,7 +827,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
 
   private holdTillGetUserResponse() {
     return switchMap((value: number) => {
-      return iif(() => this.model!.hasTemplate(), this.userAnswer.pipe(filter(v => v === UserClickOn.YES), map(_ => value)), of(value))
+      return iif(() => !!(this.model && (this.model.hasTemplate() || this.model.hasCountries() || this.model.hasYears())), this.userAnswer.pipe(filter(v => v === UserClickOn.YES), map(_ => value)), of(value))
     })
   }
 
@@ -998,9 +992,9 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     const fieldsObservables = fields.map((item) => this.createFieldObservable(item))
     merge(...fieldsObservables)
       .pipe(tap(() => {
-        this.model!.hasTemplate() ? this.userAnswer.next(UserClickOn.NO) : this.userAnswer.next(UserClickOn.YES)
+        (this.model!.hasTemplate() || this.model!.hasYears() || this.model!.hasCountries()) ? this.userAnswer.next(UserClickOn.NO) : this.userAnswer.next(UserClickOn.YES)
       }))
-      .pipe(filter(_ => this.model!.hasTemplate()))
+      .pipe(filter(_ => this.model!.hasTemplate() || this.model!.hasYears() || this.model!.hasCountries()))
       .pipe(takeUntil(this.destroy$))
       .pipe(switchMap((value) => {
           return this.dialog.confirm(this.lang.map.this_change_will_effect_the_selected_template)
@@ -1011,7 +1005,9 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
         })
       )
       .subscribe(({answer, oldValue, field, key}) => {
-        answer === UserClickOn.YES ? this.deleteTemplate(true) : (() => {
+        answer === UserClickOn.YES ? (() => {
+          this.model && this.model.hasTemplate() ? this.deleteTemplate(true) : this.clearDeductionItems = true
+        })() : (() => {
           let value = this.storedOldValues[key] || oldValue;
           field.setValue(value, {emitEvent: false})
           field.updateValueAndValidity({emitEvent: false})

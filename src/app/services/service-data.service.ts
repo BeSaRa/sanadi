@@ -82,7 +82,6 @@ export class ServiceDataService extends CrudWithDialogGenericService<ServiceData
   }
 
   loadByCaseType(caseType: number): Observable<ServiceData> {
-    console.log(caseType);
     return this._loadByCaseType(caseType);
   }
 

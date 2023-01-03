@@ -179,6 +179,14 @@ export class ProjectFundraising extends _ApprovalLicenseWithMonthly<ProjectFundr
     return !!(this.templateList && this.templateList.length)
   }
 
+  hasCountries(): boolean {
+    return !!(this.amountOverCountriesList && this.amountOverCountriesList.length)
+  }
+
+  hasYears(): boolean {
+    return !!(this.amountOverYearsList && this.amountOverYearsList.length)
+  }
+
   clearTemplate(): ProjectFundraising {
     this.templateList = []
     return this;
@@ -312,7 +320,7 @@ export class ProjectFundraising extends _ApprovalLicenseWithMonthly<ProjectFundr
   }
 
   finalApprove(): DialogRef {
-    return [ServiceRequestTypes.CANCEL, ServiceRequestTypes.UPDATE].includes(this.requestType) ? super.approve() : this.service.approveTask(this, WFResponseType.FINAL_APPROVE);
+    return [ServiceRequestTypes.CANCEL, ServiceRequestTypes.UPDATE].includes(this.requestType) ? super.approve(WFResponseType.FINAL_APPROVE) : this.service.approveTask(this, WFResponseType.FINAL_APPROVE);
   }
 
   clearYears(): void {
