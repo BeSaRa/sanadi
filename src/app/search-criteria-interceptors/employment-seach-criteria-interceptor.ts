@@ -14,6 +14,7 @@ export class EmploymentSearchCriteriaInterceptor implements IModelInterceptor<Em
   send(model: Partial<EmploymentSearchCriteria>): Partial<EmploymentSearchCriteria> {
     this.employeeService = FactoryService.getService('EmployeeService');
     model.organizationId = this.employeeService.getProfile()?.id || 0;
+    if (!this.employeeService.isExternalUser()) delete model.organizationId;
     return model;
   }
 }
