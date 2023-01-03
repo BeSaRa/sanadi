@@ -267,9 +267,8 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   _resetForm(): void {
-    this.model!.templateList = [];
-    this.form.reset();
     this.model = this._getNewInstance();
+    this.form.reset();
     this.operation = this.operationTypes.CREATE;
     this.selectedLicense = undefined;
     this.minDuration = this.configs.licenseMinTime
@@ -963,6 +962,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       startWith<number, number>(ctrl.value),
       pairwise(),
       map(([oldValue, newValue]: [number, number]) => {
+        console.log('OLD NEW VALUE', oldValue, newValue);
         return {
           oldValue,
           newValue,
@@ -993,9 +993,9 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     const fieldsObservables = fields.map((item) => this.createFieldObservable(item))
     merge(...fieldsObservables)
       .pipe(tap(() => {
-        this.model!.hasTemplate() ? this.userAnswer.next(UserClickOn.NO) : this.userAnswer.next(UserClickOn.YES)
+        (this.model!.hasTemplate() || this.model!.hasYears() || this.model!.hasCountries()) ? this.userAnswer.next(UserClickOn.NO) : this.userAnswer.next(UserClickOn.YES)
       }))
-      .pipe(filter(_ => this.model!.hasTemplate()))
+      .pipe(filter(_ => this.model!.hasTemplate() || this.model!.hasYears() || this.model!.hasCountries()))
       .pipe(takeUntil(this.destroy$))
       .pipe(switchMap((value) => {
           return this.dialog.confirm(this.lang.map.this_change_will_effect_the_selected_template)
