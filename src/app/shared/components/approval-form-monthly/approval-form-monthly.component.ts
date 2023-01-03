@@ -47,6 +47,9 @@ export class ApprovalFormMonthlyComponent implements OnInit, OnDestroy {
   multi: boolean = true;
 
   @Input()
+  disableStartDate: boolean = false;
+
+  @Input()
   set license(val: HasLicenseApprovalMonthly | null) {
     this._license$.next(val);
   }
@@ -150,6 +153,7 @@ export class ApprovalFormMonthlyComponent implements OnInit, OnDestroy {
   private afterBuildForm() {
     const startDate = this.form.get('licenseStartDate')!
     !this.licenseStartDateMandatory ? startDate.removeValidators(CustomValidators.required) : null
+    this.disableStartDate ? startDate.disable() : startDate.enable()
     startDate.updateValueAndValidity()
   }
 

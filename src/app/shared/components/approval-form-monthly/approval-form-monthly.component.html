@@ -4,7 +4,7 @@
   </div>
   <ng-container *ngIf="!multi" [ngTemplateOutlet]="licenseInfo"></ng-container>
   <ng-template #licenseInfo>
-    <div class="row">
+    <div class="row align-items-center">
       <div class="col-md-4 col-sm-12 mb-4 position-relative">
         <label asteriskIfRequired="licenseStartDate" for="licenseStartDate"
                class="form-label">{{lang.map.license_start_date}}</label>
@@ -40,9 +40,6 @@
         </div>
 
       </div>
-    </div>
-    <div class="row align-items-center">
-      <ng-container *ngIf="template" [ngTemplateOutlet]="template"></ng-container>
       <div class="col-sm-12 col-md-4 mb-3 position-relative">
         <div class="form-check form-switch pt-4">
           <input type="checkbox" id="conditionalLicenseIndicator" formControlName="conditionalLicenseIndicator"
@@ -51,6 +48,9 @@
             : {{conditionalLicenseField?.value ? lang.map.lbl_yes : lang.map.lbl_no}}</label>
         </div>
       </div>
+    </div>
+    <div class="row align-items-center">
+      <ng-container *ngIf="template" [ngTemplateOutlet]="template"></ng-container>
     </div>
     <div class="row">
       <div class="col-sm-12 mb-3 position-relative">

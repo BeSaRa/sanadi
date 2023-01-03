@@ -30,7 +30,7 @@ export class ProjectFundraisingApproveTaskPopupComponent implements OnInit, OnDe
   action$: Subject<any> = new Subject<any>();
 
   response: WFResponseType = WFResponseType.APPROVE;
-
+  disableLicenseStartDate: boolean = false;
   model: ProjectFundraising;
   comment: UntypedFormControl = new UntypedFormControl('', [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]);
   @ViewChild(ApprovalFormMonthlyComponent) approvalForm!: ApprovalFormMonthlyComponent;
@@ -62,6 +62,8 @@ export class ProjectFundraisingApproveTaskPopupComponent implements OnInit, OnDe
     if (this.isCommentRequired()) {
       this.comment.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]);
     }
+
+    this.disableLicenseStartDate = this.model.requestType === ServiceRequestTypes.EXTEND
   }
 
   ngAfterViewInit() {
