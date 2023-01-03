@@ -962,7 +962,6 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       startWith<number, number>(ctrl.value),
       pairwise(),
       map(([oldValue, newValue]: [number, number]) => {
-        console.log('OLD NEW VALUE', oldValue, newValue);
         return {
           oldValue,
           newValue,
