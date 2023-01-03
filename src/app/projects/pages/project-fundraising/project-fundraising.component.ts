@@ -828,7 +828,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
 
   private holdTillGetUserResponse() {
     return switchMap((value: number) => {
-      return iif(() => this.model!.hasTemplate(), this.userAnswer.pipe(filter(v => v === UserClickOn.YES), map(_ => value)), of(value))
+      return iif(() => !!(this.model && (this.model.hasTemplate() || this.model.hasCountries() || this.model.hasYears())), this.userAnswer.pipe(filter(v => v === UserClickOn.YES), map(_ => value)), of(value))
     })
   }
 
@@ -1006,7 +1006,9 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
         })
       )
       .subscribe(({answer, oldValue, field, key}) => {
-        answer === UserClickOn.YES ? this.deleteTemplate(true) : (() => {
+        answer === UserClickOn.YES ? (() => {
+          this.model && this.model.hasTemplate() ? this.deleteTemplate(true) : this.clearDeductionItems = true
+        })() : (() => {
           let value = this.storedOldValues[key] || oldValue;
           field.setValue(value, {emitEvent: false})
           field.updateValueAndValidity({emitEvent: false})

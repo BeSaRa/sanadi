@@ -179,6 +179,14 @@ export class ProjectFundraising extends _ApprovalLicenseWithMonthly<ProjectFundr
     return !!(this.templateList && this.templateList.length)
   }
 
+  hasCountries(): boolean {
+    return !!(this.amountOverCountriesList && this.amountOverCountriesList.length)
+  }
+
+  hasYears(): boolean {
+    return !!(this.amountOverYearsList && this.amountOverYearsList.length)
+  }
+
   clearTemplate(): ProjectFundraising {
     this.templateList = []
     return this;
