@@ -157,6 +157,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     this.listenToDataWillEffectSelectedTemplate();
     this.listenToProjectTotalCoastChanges();
     this.listenToLicenseSearch()
+    this.listenToMainFieldsChanges()
     this.listenToPermitTypeChanges()
     this.listenToWorkAreaChanges()
     // order here matter
@@ -739,7 +740,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     this.mainUNOCHACategories = list.filter(item => item.type === DomainTypes.HUMANITARIAN)
   }
 
-  private listenToPermitTypeChanges() {
+  private listenToMainFieldsChanges() {
     combineLatest([
       this.permitType.valueChanges.pipe(this.holdTillGetUserResponse()).pipe(startWith<number, number>(this.permitType.value)),
       this.projectWorkArea.valueChanges.pipe(this.holdTillGetUserResponse()).pipe(startWith<number, number>(this.projectWorkArea.value)),
@@ -1047,5 +1048,16 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
 
   isTargetedYearsDisabled(): boolean {
     return this.readonly || this.employeeService.isInternalUser() || (this.requestType.value === ServiceRequestTypes.CANCEL)
+  }
+
+  private listenToPermitTypeChanges() {
+    this.permitType.valueChanges
+      .pipe(this.holdTillGetUserResponse())
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((type: ProjectPermitTypes) => {
+        [ProjectPermitTypes.CHARITY, ProjectPermitTypes.UNCONDITIONAL_RECEIVE].includes(type) ? (() => {
+          this.projectWorkArea.setValue(null, {emitEvent: false})
+        })() : this.projectWorkArea.setValue(this.projectWorkArea.value || ProjectWorkArea.INSIDE_QATAR, {emitEvent: false})
+      })
   }
 }
