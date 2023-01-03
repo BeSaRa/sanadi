@@ -652,7 +652,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     this.selectedLicense = licenseDetails;
 
     if (this.requestType.value === ServiceRequestTypes.EXTEND && this.selectedLicense) {
-      this.maxDuration = this.configs.licenseMaxTime - this.selectedLicense.licenseDuration
+      this.maxDuration = this.configs.licenseMaxTime - this.selectedLicense.totalLicenseDuration
     } else {
       this.maxDuration = this.configs.licenseMaxTime
     }

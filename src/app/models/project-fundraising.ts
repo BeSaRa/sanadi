@@ -37,6 +37,7 @@ export class ProjectFundraising extends _ApprovalLicenseWithMonthly<ProjectFundr
   service: ProjectFundraisingService;
   caseType: number = CaseTypes.PROJECT_FUNDRAISING
   licenseDuration!: number
+  totalLicenseDuration!: number
   licenseStatus!: number
   licenseStartDate!: string
   licenseEndDate!: string
@@ -93,7 +94,6 @@ export class ProjectFundraising extends _ApprovalLicenseWithMonthly<ProjectFundr
 
   // extra properties
   employeeService: EmployeeService;
-
   constructor() {
     super();
     this.service = FactoryService.getService('ProjectFundraisingService');
