@@ -36,6 +36,7 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
   form!: UntypedFormGroup;
   operation!: OperationTypes;
   saveVisible: boolean = true;
+  loadAttachments: boolean = false
   actions: IMenuItem<ProfileServiceModel>[] = [
     {
       type: 'action',
@@ -57,10 +58,18 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
       },
       isTouchedOrDirty: () => true
     },
+    attachments:{
+      name:'attachments',
+      langKey:'attachments',
+      index:1,
+      validStatus: () => true,
+      isTouchedOrDirty: () => true,
+      show:()=> true,
+    },
     services: {
       name: 'linkServices',
       langKey: 'link_services',
-      index: 1,
+      index: 2,
       validStatus: () => true,
       isTouchedOrDirty: () => true,
       show: () => {
@@ -111,6 +120,10 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
   get profileTypeField() {
     return this.basicInfoForm?.get('profileType') as FormControl;
   }
+  
+  get documentService() {
+    return this.service.documentService;
+  }
 
   constructor(private lookupService: LookupService,
               public fb: UntypedFormBuilder,
@@ -121,7 +134,7 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
               private cd: ChangeDetectorRef,
               private profileServiceRelationService: ProfileServiceRelationService,
               private employeeService: EmployeeService,
-              private service: ProfileService,
+              public service: ProfileService,
               private serviceDataService: ServiceDataService,
               private dialogService: DialogService) {
     super();
@@ -140,7 +153,8 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
     this.cd.detectChanges();
   }
 
-  onTabChange(_$event: TabComponent) {
+  onTabChange($event: TabComponent) {
+    this.loadAttachments = $event.name === this.tabsData.attachments.name;
   }
 
   initPopup(): void {

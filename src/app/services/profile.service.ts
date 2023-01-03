@@ -16,6 +16,8 @@ import {FactoryService} from './factory.service';
 import {UrlService} from './url.service';
 import {AuditLogService} from '@services/audit-log.service';
 import {CommonUtils} from '@helpers/common-utils';
+import { DocumentService } from './document.service';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @CastResponseContainer({
   $default: {
@@ -31,15 +33,24 @@ import {CommonUtils} from '@helpers/common-utils';
 })
 export class ProfileService extends CrudWithDialogGenericService<Profile> {
   list: Profile[] = [];
-
-  constructor(public dialog: DialogService,
-              public http: HttpClient,
-              private urlService: UrlService,
-              private auditLogService: AuditLogService) {
+  public documentService!: DocumentService;
+  constructor(
+    public dialog: DialogService,
+    public http: HttpClient,
+    private urlService: UrlService,
+    private auditLogService: AuditLogService,
+    private domSanitizer: DomSanitizer
+  ) {
     super();
+    this.documentService = new DocumentService({
+      http:this.http,
+      _getURLSegment: () => this.urlService.URLS.PROFILE,
+      dialog:this.dialog,
+      domSanitizer:this.domSanitizer
+    })
     FactoryService.registerService('ProfileService', this);
   }
-
+  
   _getDialogComponent(): ComponentType<any> {
     return ProfilePopupComponent;
   }

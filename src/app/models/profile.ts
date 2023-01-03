@@ -55,6 +55,8 @@ export class Profile extends BaseModel<Profile, ProfileService> {
     return this[(this.langService.map.lang + 'Name') as keyof INames];
   }
 
+  isFinalApproved(): boolean { return true } 
+  
   buildForm(controls = true) {
     const {
       arName,
