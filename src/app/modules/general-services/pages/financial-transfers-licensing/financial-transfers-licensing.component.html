@@ -199,6 +199,9 @@
   </ng-template>
   <ng-template #financialTransfersProjectsTabTemplate>
     <ng-container formGroupName="financialTransfersProjects">
+      <financial-transfers-projects #financialTransfersProjectsTab
+      [list]="model?.financialTransfersProjects  || []" [readonly]="readonly"
+      (readyEvent)="financialTransfersProjectsTabStatus = $event">      </financial-transfers-projects>
 
     </ng-container>
   </ng-template>
