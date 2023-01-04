@@ -1,7 +1,7 @@
 import { UntypedFormArray, UntypedFormControl } from '@angular/forms';
 import { Country } from './../../../../models/country';
 import { CountryService } from '@services/country.service';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
 import { FinancialTransferLicensing } from '@app/models/financial-transfer-licensing';
@@ -13,7 +13,7 @@ import { LangService } from '@app/services/lang.service';
 import { LicenseService } from '@app/services/license.service';
 import { LookupService } from '@app/services/lookup.service';
 import { ToastService } from '@app/services/toast.service';
-import { DatepickerOptionsMap, TabMap } from '@app/types/types';
+import { DatepickerOptionsMap, ReadinessStatus, TabMap } from '@app/types/types';
 import { Observable, of, Subject } from 'rxjs';
 import {
   catchError,
@@ -35,6 +35,7 @@ import { UserClickOn } from '@app/enums/user-click-on.enum';
 import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
 import { FinancialTransferLicensingSearchCriteria } from '@app/models/financial-transfer-licesing-search-criteria';
 import { DateUtils } from '@app/helpers/date-utils';
+import { FinancialTransfersProjectsComponent } from '../../shared/financial-transfers-projects/financial-transfers-projects.component';
 
 @Component({
   selector: 'app-financial-transfers-licensing',
@@ -93,6 +94,9 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
   licenseSearch$: Subject<string> = new Subject<string>();
   selectedLicense?: FinancialTransferLicensing;
 
+  financialTransfersProjectsTabStatus: ReadinessStatus = 'READY';
+  @ViewChild('financialTransfersProjectsTab') financialTransfersProjectsComponentRef!: FinancialTransfersProjectsComponent;
+
   tabsData: TabMap = {
     basicInfo: {
       name: 'basicInfoTab',
@@ -149,10 +153,10 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
       isTouchedOrDirty: () => true,
       show: () => true,
       validStatus: () => {
-        return (
-          this.financialTransfersProjects &&
-          this.financialTransfersProjects.valid
-        );
+        return  (!this.financialTransfersProjectsComponentRef ||
+          (this.financialTransfersProjectsTabStatus === 'READY' &&
+            this.financialTransfersProjectsComponentRef.list.length > 0))
+          ;
       },
     },
     affidavitOfCompletionGroup: {
@@ -191,6 +195,8 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
   tabIndex$: Subject<number> = new Subject<number>();
   ngAfterViewInit(): void {
     this.cd.detectChanges();
+    this._listenToTargetCountryChange();
+
   }
 
   _initComponent(): void {
@@ -513,6 +519,15 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
       .subscribe((result) => (this.countries = result));
   }
 
+  private _listenToTargetCountryChange(){
+    this.targetCountry.valueChanges
+    .pipe(
+      takeUntil(this.destroy$),
+      tap(value => this.country.setValue(value))
+    )
+    .subscribe();
+  }
+
   onTabChange($event: TabComponent) {
     this.loadAttachments = $event.name === this.tabsData.attachments.name;
   }
@@ -673,6 +688,13 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
     return this.form.get('transferOperation') as UntypedFormGroup;
   }
 
+  get targetCountry():UntypedFormControl{
+
+    return this.transferOperationGroup.get('transferCountry') as UntypedFormControl;
+  }
+  get country():UntypedFormControl{
+    return this.transferOperationGroup.get('country') as UntypedFormControl;
+  }
   get transfereeBankAccountGroup(): UntypedFormGroup {
     return this.form.get('transfereeBankAccount') as UntypedFormGroup;
   }
