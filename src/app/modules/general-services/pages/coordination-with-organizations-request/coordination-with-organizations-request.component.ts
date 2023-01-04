@@ -334,7 +334,9 @@ CoordinationWithOrganizationsRequestService> {
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
 
     this.model = this.service.prepareModelBeforeSave(this.model!);
-
+    if (saveType === SaveTypes.DRAFT) {
+      return true;
+    }
     if (this.form.invalid) {
       this.dialog
         .error(this.lang.map.msg_all_required_fields_are_filled)
