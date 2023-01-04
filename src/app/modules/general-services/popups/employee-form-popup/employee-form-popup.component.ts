@@ -167,7 +167,7 @@ export class EmployeeFormPopupComponent implements OnInit {
       department: ["", [CustomValidators.required, CustomValidators.maxLength(300)]],
       contractLocation: ["", CustomValidators.required],
       contractLocationType: [null, CustomValidators.required],
-      officeName: [null, CustomValidators.maxLength(300)],
+      officeId: [null, CustomValidators.maxLength(300)],
       contractStatus: [null, CustomValidators.required],
       contractType: [null, CustomValidators.required],
       jobContractType: [null, CustomValidators.required],
@@ -270,11 +270,11 @@ export class EmployeeFormPopupComponent implements OnInit {
 
   handleOfficeNameValidationsByContractLocationType(): void {
     // set validators as empty
-    this.officeName?.setValidators([]);
+    this.officeId?.setValidators([]);
     if (this.isExternal()) {
-      this.officeName.setValidators([Validators.required]);
+      this.officeId.setValidators([Validators.required]);
     }
-    this.officeName.updateValueAndValidity();
+    this.officeId.updateValueAndValidity();
   }
   handleContractExpireDateValidationsByContractType(): void {
     // set validators as empty
@@ -395,8 +395,8 @@ export class EmployeeFormPopupComponent implements OnInit {
   get contractExpiryDate() {
     return this.form.controls.contractExpiryDate as UntypedFormControl;
   }
-  get officeName() {
-    return this.form.controls.officeName as UntypedFormControl;
+  get officeId() {
+    return this.form.controls.officeId as UntypedFormControl;
   }
   get contractStatus() {
     return this.form.controls.contractStatus as UntypedFormControl;
