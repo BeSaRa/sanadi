@@ -1774,4 +1774,10 @@ export interface ILanguageKeys {
   total_qatari_riyal_transaction_amount:string;
   msg_select_project_required:string;
   menu_financial_transfers_licensing: string;
+  transfer_operation: string;
+  transferee_bank_account: string;
+  transfer_bank_account: string;
+  financial_transfers_projects: string;
+  affidavit_of_completion: string;
+  transferee_bank_name: string;
 }
