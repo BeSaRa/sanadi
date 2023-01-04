@@ -1723,4 +1723,10 @@ export interface ILanguageKeys {
   msg_confirm_reject_selected: string;
   msg_confirm_accept_selected: string;
   menu_financial_transfers_licensing: string;
+  transfer_operation: string;
+  transferee_bank_account: string;
+  transfer_bank_account: string;
+  financial_transfers_projects: string;
+  affidavit_of_completion: string;
+  transferee_bank_name: string;
 }
