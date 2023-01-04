@@ -44,11 +44,11 @@ export class Permission extends BaseModel<Permission, any> {
   }
 
   isExternalPermissionCategory(): boolean {
-    return this.category === PermissionCategoryEnum.INTERNAL;
+    return this.category === PermissionCategoryEnum.EXTERNAL;
   }
 
   isInternalPermissionCategory(): boolean {
-    return this.category === PermissionCategoryEnum.EXTERNAL;
+    return this.category === PermissionCategoryEnum.INTERNAL;
   }
 
   isAllPermissionCategory(): boolean {
