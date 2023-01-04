@@ -158,4 +158,7 @@ export interface ILookupMap {
   SubmissionMechanism: Lookup[];
   ExternalUserUpdateRequestStatus: Lookup[];
   RequestTemplateStatus: Lookup[];
+  FinancialTransferType: Lookup[];
+  FinancialTransfereeType: Lookup[];
+  FinancialTransferRequestType: Lookup[];
 }
