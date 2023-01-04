@@ -117,7 +117,7 @@
     </ng-template>
     <ng-template #participating_organizaions>
       <participant-organization #participantOrganizations [list]="model?.participatingOrganizaionList || []"
-        [locations]="locations || []" [canTerminate]="participatingOrgsCanTerminate"
+        [locations]="model?.locations|| []" [canTerminate]="participatingOrgsCanTerminate"
         [organizationUnits]="organizationUnits" (readyEvent)="participantOrganizationsTapStatus = $event"
         [canAdd]="participatingOrgsCanAdd" [canView]="participatingOrgsCanView" [canDelete]="participatingOrgsCanDelete"
         (listUpdated)="updateParticipantOrgs()" (requestView)="openParticipantOrgPopup($event)"

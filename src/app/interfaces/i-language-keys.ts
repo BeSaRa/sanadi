@@ -1713,4 +1713,5 @@ export interface ILanguageKeys {
   net_salary: string;
   send_to_chief:string;
   terminate_task_success:string;
+  msg_terminate_all_tasks:string;
 }

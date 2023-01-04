@@ -681,7 +681,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         icon: 'mdi-card-account-details-star',
         label: 'send_to_chief',
         askChecklist: true,
-        runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
+        runBeforeShouldSuccess: () => this.checkIfHasMissingConditions(),
         show: (item: CaseModel<any, any>) => {
           return item.getResponses().includes(WFResponseType.TO_CHIEF);
         },
@@ -1457,6 +1457,16 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     });
   }
 
+  private checkIfHasMissingConditions(){
+    if (this.model?.caseType === CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST) {
+      const model = this.model as CoordinationWithOrganizationsRequest;
+      if(model.participatingOrganizaionList.some(org=>model.locations.some(location=>location.organizationId === org.organizationId))){
+        this.service.dialog.info(this.lang.map.msg_terminate_all_tasks);
+        return of(false);
+      }
+    }
+    return this.component.checkIfHasMissingRequiredAttachments();
+  }
 
   isAllowedToEditRecommendations(model: CaseModel<any, any>, from: OpenFrom): boolean {
     return this.employeeService.isInternalUser() && (from === OpenFrom.USER_INBOX || (from === OpenFrom.SEARCH && model.canStart()) || (model.taskDetails && model.taskDetails.actions && model.taskDetails.actions.indexOf(WFActions.ACTION_CANCEL_CLAIM) !== -1));

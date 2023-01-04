@@ -79,7 +79,6 @@ CoordinationWithOrganizationsRequestService> {
       (a, b) => a?.lookupKey - b?.lookupKey
     );
   formsList: DynamicModel[] = [];
-  locations: TaskAdminResult[] = [];
   isCharityUser!: boolean;
   isInternalUser!: boolean;
   isLicensingUser!: boolean;
@@ -534,9 +533,7 @@ CoordinationWithOrganizationsRequestService> {
     .loadCaseLocation(this.model?.getCaseId())
     .pipe(takeUntil(this.destroy$))
     .subscribe(locations=>{
-      this.locations =locations;
-      console.log(this.locations);
-
+      this.model!.locations =locations;
     })
 
   }
@@ -606,7 +603,7 @@ CoordinationWithOrganizationsRequestService> {
     .pipe(take(1))
     .subscribe(success=>{
       if(success){
-        this.locations = this.locations.filter(location=>location.tkiid !== tkiid);
+        this.model!.locations = this.model!.locations.filter(location=>location.tkiid !== tkiid);
         this.dialog.success(this.lang.map.terminate_task_success)
       }
     });

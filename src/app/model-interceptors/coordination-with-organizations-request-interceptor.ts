@@ -91,6 +91,7 @@ export class CoordinationWithOrganizationsRequestInterceptor
     delete model.effectiveCoordinationCapabilities;
     delete model.researchAndStudies;
     delete model.templateList;
+    delete model.locations;
     return model;
   }
   receive(

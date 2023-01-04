@@ -44,7 +44,7 @@
 
           <ng-container cdkColumnDef="managerDecisionInfo">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.request_state}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.managerDecisionInfo?.getName() }} </td>
+            <td cdk-cell *cdkCellDef="let row"> {{row.managerDecisionInfo?.getName() === '' || undefined ? lang.map.menu_under_process: row.managerDecisionInfo?.getName()}} </td>
           </ng-container>
 
           <ng-container cdkColumnDef="actions">
