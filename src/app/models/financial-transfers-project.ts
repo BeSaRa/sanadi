@@ -1,7 +1,8 @@
 import { normalSearchFields } from '@app/helpers/normal-search-fields';
 import { ISearchFieldsMap } from '@app/types/types';
 import { CustomValidators } from '../validators/custom-validators';
-export class FinancialTransfersProject {
+import { SearchableCloneable } from './searchable-cloneable';
+export class FinancialTransfersProject extends SearchableCloneable<FinancialTransfersProject> {
   fullSerial!: string;
   qatariTransactionAmount!: number;
   notes!: string;
