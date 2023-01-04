@@ -124,6 +124,22 @@
         (requestTerminate)="terminateOrganizationTask($event)">
 
       </participant-organization>
+      <button *ngIf="isLicensingUser && model?.isApproved"
+      [tooltip]="lang.map.upload_file" style="margin-inline-end: 1rem;"
+      class="btn btn-primary" (click)="uploadAttachment(uploader)">
+        {{lang.map.upload_final_report}}
+        <i [class.mdi-progress-upload]="model!.coordinationReportId" [class.mdi-upload]="!model!.coordinationReportId"
+          class="mdi mdi-upload"></i>
+      </button>
+      <button *ngIf="model?.coordinationReportId" [tooltip]="lang.map.view" (click)="viewFile()"
+        class="btn btn-primary" >
+        {{lang.map.view_final_report}}
+        <i class="mdi text-white mdi-eye"></i>
+      </button>
+
+      <input type="file" (change)="uploaderFileChange($event)" #uploader id="attachmentUploader" class="visually-hidden"
+        [accept]="allowedExtensions.join(',')">
+
     </ng-template>
     <ng-template #organization_officers>
       <organization-officer #organizationOfficersTap [list]="organizationOfficersList"

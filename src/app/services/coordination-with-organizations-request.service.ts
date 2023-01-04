@@ -1,35 +1,34 @@
-import { ApproveWithDocumentPopupComponent } from './../modules/e-services-main/popups/approve-with-document-popup/approve-with-document-popup.component';
 import { HttpClient } from '@angular/common/http';
 import { ComponentFactoryResolver, Injectable } from '@angular/core';
+import { UntypedFormGroup } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { CastResponseContainer } from '@app/decorators/decorators/cast-response';
+import { WFResponseType } from '@app/enums/wfresponse-type.enum';
 import { BaseGenericEService } from '@app/generics/base-generic-e-service';
 import { ILanguageKeys } from '@app/interfaces/i-language-keys';
 import { IReturnToOrganizationService } from '@app/interfaces/i-return-to-organization-service-interface';
 import { IDefaultResponse } from '@app/interfaces/idefault-response';
 import { CoordinationWithOrganizationsRequest } from '@app/models/coordination-with-organizations-request';
+import { OrganizationOfficer } from '@app/models/organization-officer';
+import { Profile } from '@app/models/profile';
 import { ValidOrgUnit } from '@app/models/valid-org-unit';
 import {
   ParticipantOrganizationsPopupComponent
 } from '@app/modules/e-services-main/popups/participant-organizations-popup/participant-organizations-popup.component';
+import {
+  CoordinationWithOrgPopupComponent
+} from '@app/modules/general-services/popups/coordination-with-org-popup/coordination-with-org-popup.component';
+import { DialogRef } from '@app/shared/models/dialog-ref';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { CoordinationWithOrganizationsRequestSearchCriteria } from './../models/coordination-with-organizations-request-search-criteria';
 import { DialogService } from './dialog.service';
 import { DynamicOptionsService } from './dynamic-options.service';
 import { FactoryService } from './factory.service';
+import { InboxService } from './inbox.service';
 import { LangService } from './lang.service';
 import { SearchService } from './search.service';
 import { UrlService } from './url.service';
-import { WFResponseType } from '@app/enums/wfresponse-type.enum';
-import { DialogRef } from '@app/shared/models/dialog-ref';
-import {
-  CoordinationWithOrgPopupComponent
-} from '@app/modules/general-services/popups/coordination-with-org-popup/coordination-with-org-popup.component';
-import { InboxService } from './inbox.service';
-import { UntypedFormGroup } from '@angular/forms';
-import { OrganizationOfficer } from '@app/models/organization-officer';
-import { Profile } from '@app/models/profile';
 
 @CastResponseContainer({
   $default: {
@@ -180,22 +179,4 @@ export class CoordinationWithOrganizationsRequestService
       model,
     });
   }
-
-  approveWithDocument(
-    actionType: WFResponseType,
-    model?: CoordinationWithOrganizationsRequest,
-    claimBefore: boolean = false,
-
-  ): DialogRef {
-    const inboxService = FactoryService.getService(
-      'InboxService'
-    ) as InboxService;
-    return this.dialog.show(ApproveWithDocumentPopupComponent, {
-      service: this.documentService,
-      model:model,
-      actionType,
-    });
-
-  }
-
 }

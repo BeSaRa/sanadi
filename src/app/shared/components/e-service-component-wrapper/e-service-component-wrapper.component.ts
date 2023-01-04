@@ -1235,16 +1235,6 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         });
       }
    } else {
-      if(item.getCaseType() === CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST){
-        const model = item as unknown as CoordinationWithOrganizationsRequest;
-        if( model.isApproved && (model.employeeService.isDevelopmentalExpert() || model.employeeService.isConstructionExpert())){
-          model.approveWithDocument(model).onAfterClose$.subscribe(actionTaken => {
-            actionTaken && this.navigateToSamePageThatUserCameFrom();
-          })
-          return;
-        }
-
-      }
       item.approve().onAfterClose$.subscribe(actionTaken => {
         actionTaken && this.navigateToSamePageThatUserCameFrom();
       });
@@ -1460,10 +1450,15 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   private checkIfHasMissingConditions(){
     if (this.model?.caseType === CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST) {
       const model = this.model as CoordinationWithOrganizationsRequest;
+      if(!model.coordinationReportId){
+        this.service.dialog.info(this.lang.map.msg_final_report_required);
+        return of(false);
+      }
       if(model.participatingOrganizaionList.some(org=>model.locations.some(location=>location.organizationId === org.organizationId))){
         this.service.dialog.info(this.lang.map.msg_terminate_all_tasks);
         return of(false);
       }
+
     }
     return this.component.checkIfHasMissingRequiredAttachments();
   }

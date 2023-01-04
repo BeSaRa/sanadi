@@ -62,6 +62,7 @@ export class CoordinationWithOrganizationsRequest
   temporaryTemplateList: CoordinationWithOrganizationTemplate[] = [];
   locations: TaskAdminResult[] = [];
 
+  coordinationReportId?:string;
   approved = false;
   domainInfo!: AdminResult;
   searchFields: ISearchFieldsMap<CoordinationWithOrganizationsRequest> = {
@@ -148,8 +149,5 @@ export class CoordinationWithOrganizationsRequest
       externalUserData
     );
   }
-  approveWithDocument(model:CoordinationWithOrganizationsRequest): DialogRef {
-    return this.service.approveWithDocument(WFResponseType.APPROVE,model );
 
-  }
 }

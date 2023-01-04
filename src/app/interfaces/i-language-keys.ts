@@ -1714,4 +1714,7 @@ export interface ILanguageKeys {
   send_to_chief:string;
   terminate_task_success:string;
   msg_terminate_all_tasks:string;
+  view_final_report:string;
+  msg_final_report_required:string;
+  lbl_final_report:string;
 }
