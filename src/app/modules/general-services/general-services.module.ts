@@ -1,5 +1,9 @@
-import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
+import { FinancialTransfersProjectsComponent } from './shared/financial-transfers-projects/financial-transfers-projects.component';
+import { FinancialTransfersLicensingComponent } from './pages/financial-transfers-licensing/financial-transfers-licensing.component';
+import { ForeignCountriesProjectsApprovalPopupComponent } from './popups/foreign-countries-projects-approval-popup/foreign-countries-projects-approval-popup.component';
+import { FormlyMaskInputFieldComponent } from '@app/services-search/components/formly-mask-input-field/formly-mask-input-field.component';
+import { FormlySelectFieldComponent } from '@app/services-search/components/formly-select-field/formly-select-field.component';
+import { FormlyDateFieldComponent } from '@app/services-search/components/formly-date-field/formly-date-field.component';
 import {
   ProcessFieldWrapperComponent
 } from '@app/administration/popups/general-process-popup/process-formly-components/process-field-wrapper/process-field-wrapper.component';
@@ -95,7 +99,8 @@ import { CharityReportsComponent } from './shared/risk-reports/risk-reports.comp
     InternationalCooperationComponent,
     OrganizationsEntitiesSupportComponent,
     OrganizationsEntitiesSupportPopupComponent,
-
+    FinancialTransfersLicensingComponent,
+    FinancialTransfersProjectsComponent
   ],
   imports: [
     CommonModule,
