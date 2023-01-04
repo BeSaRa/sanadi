@@ -1,6 +1,8 @@
 <div class="row">
   <app-page-header pageTitle="menu_external_user_request_approval" [clickOnReload$]="reload$"
-                   [customTemplate]="customHeaderTemplate">
+                   [customTemplate]="customHeaderTemplate"
+                   [clickOnNew$]="add$"
+                   [addPermission]="service.canAddUser()">
   </app-page-header>
   <ng-template #customHeaderTemplate>
     <ng-select [selectOnTab]="true" [clearable]="false"

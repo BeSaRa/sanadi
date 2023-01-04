@@ -1,23 +1,24 @@
-import {Component, ViewChild} from '@angular/core';
-import {AdminGenericComponent} from '@app/generics/admin-generic-component';
-import {ExternalUserUpdateRequest} from '@app/models/external-user-update-request';
-import {ExternalUserUpdateRequestService} from '@services/external-user-update-request.service';
-import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import {ActionIconsEnum} from '@app/enums/action-icons-enum';
-import {LangService} from '@services/lang.service';
-import {ToastService} from '@services/toast.service';
-import {EmployeeService} from '@services/employee.service';
-import {CommonUtils} from '@app/helpers/common-utils';
-import {SortEvent} from '@contracts/sort-event';
-import {DateUtils} from '@helpers/date-utils';
-import {BehaviorSubject} from 'rxjs';
-import {switchMap} from 'rxjs/operators';
-import {UntypedFormControl} from '@angular/forms';
-import {ProfileService} from '@services/profile.service';
-import {TableComponent} from '@app/shared/components/table/table.component';
-import {ExternalUserUpdateRequestStatusEnum} from '@app/enums/external-user-update-request-status.enum';
-import {LookupService} from '@services/lookup.service';
-import {Lookup} from '@app/models/lookup';
+import { ExternalUserService } from '@services/external-user.service';
+import { Component, ViewChild } from '@angular/core';
+import { AdminGenericComponent } from '@app/generics/admin-generic-component';
+import { ExternalUserUpdateRequest } from '@app/models/external-user-update-request';
+import { ExternalUserUpdateRequestService } from '@services/external-user-update-request.service';
+import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { ActionIconsEnum } from '@app/enums/action-icons-enum';
+import { LangService } from '@services/lang.service';
+import { ToastService } from '@services/toast.service';
+import { EmployeeService } from '@services/employee.service';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { SortEvent } from '@contracts/sort-event';
+import { DateUtils } from '@helpers/date-utils';
+import { BehaviorSubject } from 'rxjs';
+import { switchMap, takeUntil, exhaustMap } from 'rxjs/operators';
+import { UntypedFormControl } from '@angular/forms';
+import { ProfileService } from '@services/profile.service';
+import { TableComponent } from '@app/shared/components/table/table.component';
+import { ExternalUserUpdateRequestStatusEnum } from '@app/enums/external-user-update-request-status.enum';
+import { LookupService } from '@services/lookup.service';
+import { Lookup } from '@app/models/lookup';
 
 @Component({
   selector: 'external-user-update-request-request',
@@ -28,11 +29,12 @@ export class ExternalUserUpdateRequestApprovalComponent extends AdminGenericComp
   allRequests$: BehaviorSubject<ExternalUserUpdateRequest[]> = new BehaviorSubject<ExternalUserUpdateRequest[]>([]);
 
   constructor(public lang: LangService,
-              public service: ExternalUserUpdateRequestService,
-              private toast: ToastService,
-              private profileService: ProfileService,
-              private lookupService: LookupService,
-              private employeeService: EmployeeService) {
+    public service: ExternalUserUpdateRequestService,
+    public externalUserService: ExternalUserService,
+    private toast: ToastService,
+    private profileService: ProfileService,
+    private lookupService: LookupService,
+    private employeeService: EmployeeService) {
     super();
   }
 
@@ -121,7 +123,7 @@ export class ExternalUserUpdateRequestApprovalComponent extends AdminGenericComp
         if (!result) {
           return;
         }
-        this.toast.success(this.lang.map.msg_accept_x_success.change({x: item.getName()}));
+        this.toast.success(this.lang.map.msg_accept_x_success.change({ x: item.getName() }));
         this.reload$.next(null);
       });
   }
@@ -132,7 +134,7 @@ export class ExternalUserUpdateRequestApprovalComponent extends AdminGenericComp
         if (!result) {
           return;
         }
-        this.toast.success(this.lang.map.msg_reject_x_success.change({x: item.getName()}));
+        this.toast.success(this.lang.map.msg_reject_x_success.change({ x: item.getName() }));
         this.reload$.next(null);
       });
   }
@@ -174,6 +176,15 @@ export class ExternalUserUpdateRequestApprovalComponent extends AdminGenericComp
     this._setCounters();
   }
 
+  listenToAdd(): void {
+    this.add$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(exhaustMap(() => {
+        return this.externalUserService.addDialog(this.profileIdControl.getRawValue())
+          .pipe(switchMap(ref => ref.onAfterClose$));
+      }))
+      .subscribe(() => this.reload$.next(null));
+  }
   selectFilter(selectedStatus: Lookup | undefined) {
     this.selectedFilter = selectedStatus;
     this.models = this._filterRequestsByProfileAndStatus(this.selectedFilter?.lookupKey);
