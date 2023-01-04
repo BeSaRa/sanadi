@@ -87,7 +87,7 @@ export class ProfileService extends CrudWithDialogGenericService<Profile> {
   }
 
   @CastResponse(undefined)
-  getProfilesByProfileType(profileType: number) {
+  getProfilesByProfileType(profileType: number| number[]) {
     if (!profileType) {
       return of([]);
     }

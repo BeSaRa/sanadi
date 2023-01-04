@@ -1,3 +1,4 @@
+import { ProfileTypes } from '@app/enums/profile-types.enum';
 import { ActionLogService } from '@app/services/action-log.service';
 import { Component, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, UntypedFormControl, Validators } from '@angular/forms';
@@ -499,7 +500,11 @@ CoordinationWithOrganizationsRequestService> {
   }
 
   loadOrgUnits(reset = false) {
-    this.profileService.loadActive()
+    this.profileService.getProfilesByProfileType([
+      ProfileTypes.CHARITY,
+      ProfileTypes.NON_PROFIT_ORGANIZATIONS,
+      ProfileTypes.INSTITUTION
+    ])
       .pipe(
         map((list) => {
           if (reset) {
