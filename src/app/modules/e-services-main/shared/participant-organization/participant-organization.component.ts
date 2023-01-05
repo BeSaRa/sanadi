@@ -1,3 +1,4 @@
+import { ITerminateOrganizationTask } from './../../../../interfaces/iterminate-organization-task';
 import { AdminResult } from '@app/models/admin-result';
 import { map, take, takeUntil } from 'rxjs/operators';
 import {
@@ -235,11 +236,14 @@ export class ParticipantOrganizationComponent implements OnInit {
     this.requestView.emit(record.organizationId);
   }
 
-  @Output() requestTerminate: EventEmitter<string> = new EventEmitter<string>();
+  @Output() requestTerminate: EventEmitter<ITerminateOrganizationTask> = new EventEmitter<ITerminateOrganizationTask>();
   terminate($event: MouseEvent, record: ParticipantOrg) {
     $event.preventDefault();
-    const {tkiid}= this.locations.find(location=>location.organizationId === record.organizationId )!;
-    this.requestTerminate.emit(tkiid);
+    const {tkiid}= this.locations.find(location=>location.organizationId === record.organizationId)!;
+    this.requestTerminate.emit({
+      organizationId:record.organizationId,
+      taskId: tkiid!
+    });
   }
 
   isTerminated(record: ParticipantOrg){

@@ -1,8 +1,8 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { ComponentFactoryResolver, Injectable } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
-import { CastResponseContainer } from '@app/decorators/decorators/cast-response';
+import { CastResponse, CastResponseContainer } from '@app/decorators/decorators/cast-response';
 import { WFResponseType } from '@app/enums/wfresponse-type.enum';
 import { BaseGenericEService } from '@app/generics/base-generic-e-service';
 import { ILanguageKeys } from '@app/interfaces/i-language-keys';
@@ -177,6 +177,15 @@ export class CoordinationWithOrganizationsRequestService
       service: this,
       actionType,
       model,
+    });
+  }
+  @CastResponse(undefined, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  terminateOrganizationTask(caseId:string,orgId:number,taskId:string){
+    return this.http.post<IDefaultResponse<boolean>>(this._getURLSegment() + `/task/terminate/${caseId}/${orgId}`, {}, {
+      params: new HttpParams().set('tkiid', taskId)
     });
   }
 }

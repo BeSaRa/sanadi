@@ -1,3 +1,6 @@
+import { ApprovalDecisions } from './../../../../enums/approval-decisions.enum';
+import { tap } from 'rxjs/operators';
+import { ITerminateOrganizationTask } from './../../../../interfaces/iterminate-organization-task';
 import { Component, ViewChild } from '@angular/core';
 import {
   FormBuilder,
@@ -55,6 +58,7 @@ import { OrganizationOfficerComponent } from '../../../e-services-main/shared/or
 import { CoordinationWithOrganizationTemplate } from './../../../../models/corrdination-with-organization-template';
 import { EffectiveCoordinationCapabilitiesComponent } from './../../../e-services-main/shared/effective-coordination-capabilities/effective-coordination-capabilities.component';
 import { ParticipantOrganizationComponent } from './../../../e-services-main/shared/participant-organization/participant-organization.component';
+import { AdminResult } from '@app/models/admin-result';
 @Component({
   selector: 'app-coordination-with-organizations-request',
   templateUrl: './coordination-with-organizations-request.component.html',
@@ -90,6 +94,7 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
     this.lookupService.listByCategory.OrganizationWay?.sort(
       (a, b) => a?.lookupKey - b?.lookupKey
     );
+
   formsList: DynamicModel[] = [];
   isCharityUser!: boolean;
   isInternalUser!: boolean;
@@ -640,16 +645,21 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
     this.service.openParticipantOrganizationspopup(orgId, model!);
   }
 
-  terminateOrganizationTask(tkiid: string) {
+  terminateOrganizationTask(orgTask: ITerminateOrganizationTask) {
     this.service
-      .terminateTask(tkiid)
+      .terminateOrganizationTask(this.model!.id,orgTask.organizationId,orgTask.taskId)
       .pipe(take(1))
       .subscribe((success) => {
         if (success) {
           this.model!.locations = this.model!.locations.filter(
-            (location) => location.tkiid !== tkiid
+            (location) => location.tkiid !== orgTask.taskId
           );
           this.dialog.success(this.lang.map.terminate_task_success);
+          const org= this.model?.participatingOrganizaionList.find(org=>org.organizationId === orgTask.organizationId);
+            if(org){
+              org.managerDecisionInfo = this.lookupService.listByCategory.ApprovalDecision
+              .find(x => x.lookupKey === ApprovalDecisions.TERMINATE)!.convertToAdminResult();
+            }
         }
       });
   }
@@ -811,6 +821,7 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
     this.service.documentService
       .downloadDocument(this.model!.coordinationReportId)
       .pipe(
+        take(1),
         map((model) => this.service.documentService.viewDocument(model, file)),
         catchError(_=>{
           this.model!.coordinationReportId = undefined;
@@ -837,12 +848,14 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
       ? this.service.documentService.deleteDocument(
           this.model.coordinationReportId
         ).pipe(
+          take(1),
           catchError(_=>of(null))
         )
       : of(null);
     of(null)
       .pipe(switchMap((_) => deleteFirst$))
       .pipe(
+        take(1),
         switchMap((_) => {
           return this.service.documentService.addSingleDocument(
             this.model!.id,
@@ -858,13 +871,18 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
         }),
         concatMap((attachment) => {
           this.model!.coordinationReportId = attachment.id;
-          return this.model!.save();
+          return this.model!.save()
+          .pipe(tap((model)=>{
+            this.model!.participatingOrganizaionList = model.participatingOrganizaionList;
+          }))
+
         }),
-        takeUntil(this.destroy$)
+
       )
       .subscribe(_ => {
         input.value = '';
         this.toast.success(this.lang.map.files_have_been_uploaded_successfully);
+
       });
   }
 

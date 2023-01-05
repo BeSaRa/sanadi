@@ -686,7 +686,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           return item.getResponses().includes(WFResponseType.TO_CHIEF);
         },
         onClick: (item: CaseModel<any, any>) => {
-          this.sendToManagerAction(item);
+          this.sendToChiefAction(item);
         }
       },
       // send to general Manager
@@ -1159,6 +1159,11 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
 
   private sendToManagerAction(item: CaseModel<any, any>) {
     item.sendToManager().onAfterClose$.subscribe(actionTaken => {
+      actionTaken && this.navigateToSamePageThatUserCameFrom();
+    });
+  }
+  private sendToChiefAction(item: CaseModel<any, any>) {
+    item.sendToChief().onAfterClose$.subscribe(actionTaken => {
       actionTaken && this.navigateToSamePageThatUserCameFrom();
     });
   }
