@@ -56,9 +56,6 @@ export class CommonService {
     return this.http.get(this._getURLSegment() + '/agency', { params: queryParams })
       .pipe(
         catchError((_err: any) => of([])),
-        tap((d) =>
-          console.log(d)
-        ),
         map((result: any) => result.rs.map((x: AdminResult) => AdminResult.createInstance(x)))
       );
   }

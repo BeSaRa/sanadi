@@ -5,7 +5,6 @@ import { EServiceComponentWrapperComponent } from '@app/shared/components/e-serv
 import { ServicesGuard } from '@app/guards/services.guard';
 import { ServiceItemResolver } from '@app/resolvers/service-item.resolver';
 import { EServicePermissionsEnum } from '@app/enums/e-service-permissions-enum';
-import { ForeignCountriesProjectsComponent } from './pages/foreign-countries-projects/foreign-countries-projects.component';
 
 const routes: Routes = [
   { path: '', component: GeneralServicesComponent },

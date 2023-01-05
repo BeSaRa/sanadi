@@ -75,7 +75,6 @@ export class EmploymentService extends BaseGenericEService<Employment> {
     );
   }
 
-  // TODO: ask to to apply sup interceptor
   @HasInterception
   @CastResponse(undefined, {
     unwrap: 'rs',

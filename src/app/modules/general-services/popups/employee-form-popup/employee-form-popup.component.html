@@ -1,6 +1,7 @@
 <div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
   <h1 class="h6 text-white">{{ lang.map.add_new_Employee_data }}</h1>
-  <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose aria-label="Close"></button>
+  <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose [isConfirmClose]="true"
+    aria-label="Close"></button>
 </div>
 <div class="dialog-content no-fixed-height">
   <form [formGroup]="form">

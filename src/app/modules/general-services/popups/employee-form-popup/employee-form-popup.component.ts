@@ -227,7 +227,7 @@ export class EmployeeFormPopupComponent implements OnInit {
         this.dialog.error(this.lang.map.msg_user_identifier_is_already_exist);
         return
       }
-      index = this.employeesList.findIndex(e => (this.form.value.JobNumber && e.JobNumber == this.form.value.JobNumber))
+      index = this.employeesList.findIndex(e => (this.form.value.JobNumber && e.JobNumber == this.form.value.JobNumber));
       if (index != -1 && this.employeesList[index].id != this.form.value.id) {
         this.dialog.error(this.lang.map.msg_user_job_number_is_already_exist);
         return
@@ -336,7 +336,6 @@ export class EmployeeFormPopupComponent implements OnInit {
         workStartDate: this.workStartDate
       }
     });
-    this.contractExpiryDate.reset()
   }
 
   private loadImplementingAgenciesByAgencyType() {
