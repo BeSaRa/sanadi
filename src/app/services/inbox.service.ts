@@ -353,6 +353,10 @@ export class InboxService {
     const service = this.getService(caseType);
     return this.openSendToDialog(taskId, WFResponseType.TO_MANAGER, service, claimBefore, task);
   }
+  sendToChief(taskId: string, caseType: number, claimBefore: boolean = false, task?: QueryResult | CaseModel<any, any>): DialogRef {
+    const service = this.getService(caseType);
+    return this.openSendToDialog(taskId, WFResponseType.TO_CHIEF, service, claimBefore, task);
+  }
 
   sendToGeneralManager(taskId: string, caseType: number, claimBefore: boolean = false, task?: QueryResult | CaseModel<any, any>): DialogRef {
     const service = this.getService(caseType);

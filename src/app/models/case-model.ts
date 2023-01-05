@@ -337,6 +337,9 @@ export abstract class CaseModel<S extends BaseGenericEService<T>, T extends File
   sendToManager(): DialogRef {
     return this.inboxService!.sendToManager(this.taskDetails.tkiid, this.caseType, false, this);
   }
+  sendToChief(): DialogRef {
+    return this.inboxService!.sendToChief(this.taskDetails.tkiid, this.caseType, false, this);
+  }
 
   sendToGeneralManager(): DialogRef {
     return this.inboxService!.sendToGeneralManager(this.taskDetails.tkiid, this.caseType, false, this);

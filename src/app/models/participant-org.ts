@@ -20,6 +20,7 @@ export class ParticipantOrg extends SearchableCloneable<ParticipantOrg> {
   organizationOfficerName!: string;
   value!: number;
 
+  managerDecision!:number;
   managerDecisionInfo!: AdminResult;
 
   DisplayedColumns = ['arName', 'enName', 'managerDecisionInfo','value', 'actions'];

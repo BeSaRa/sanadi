@@ -1,19 +1,28 @@
-import { ActionLogService } from '@app/services/action-log.service';
+import { ApprovalDecisions } from './../../../../enums/approval-decisions.enum';
+import { tap } from 'rxjs/operators';
+import { ITerminateOrganizationTask } from './../../../../interfaces/iterminate-organization-task';
 import { Component, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, UntypedFormControl, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  UntypedFormControl,
+  Validators
+} from '@angular/forms';
 import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
 import { CoordinationTypes } from '@app/enums/coordination-types-enum';
+import { FileExtensionsEnum } from '@app/enums/file-extension-mime-types-icons.enum';
 import { OperationTypes } from '@app/enums/operation-types.enum';
+import { ProfileTypes } from '@app/enums/profile-types.enum';
 import { SaveTypes } from '@app/enums/save-types';
 import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
 import { DateUtils } from '@app/helpers/date-utils';
 import { IKeyValue } from '@app/interfaces/i-key-value';
 import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { AdminResult } from '@app/models/admin-result';
 import { BuildingAbility } from '@app/models/building-ability';
 import { CoordinationWithOrganizationsRequest } from '@app/models/coordination-with-organizations-request';
 import { DynamicModel } from '@app/models/dynamic-model';
 import { EffectiveCoordinationCapabilities } from '@app/models/effective-coordination-capabilities';
+import { FileNetDocument } from '@app/models/file-net-document';
 import { Lookup } from '@app/models/lookup';
 import { OrganizationOfficer } from '@app/models/organization-officer';
 import { Profile } from '@app/models/profile';
@@ -30,28 +39,35 @@ import { LookupService } from '@app/services/lookup.service';
 import { ToastService } from '@app/services/toast.service';
 import { AttachmentsComponent } from '@app/shared/components/attachments/attachments.component';
 import { TabComponent } from '@app/shared/components/tab/tab.component';
-import { DatepickerControlsMap, DatepickerOptionsMap, ReadinessStatus } from '@app/types/types';
+import {
+  DatepickerControlsMap,
+  DatepickerOptionsMap,
+  ReadinessStatus
+} from '@app/types/types';
 import { ExternalUserService } from '@services/external-user.service';
 import { ProfileService } from '@services/profile.service';
 import { IMyInputFieldChanged } from 'angular-mydatepicker';
 import { Observable, of } from 'rxjs';
-import { map, take, takeUntil } from 'rxjs/operators';
+import {
+  catchError, concatMap, map,
+  switchMap,
+  take,
+  takeUntil
+} from 'rxjs/operators';
 import { OrganizationOfficerComponent } from '../../../e-services-main/shared/organization-officer/organization-officer.component';
 import { CoordinationWithOrganizationTemplate } from './../../../../models/corrdination-with-organization-template';
-import {
-  EffectiveCoordinationCapabilitiesComponent
-} from './../../../e-services-main/shared/effective-coordination-capabilities/effective-coordination-capabilities.component';
-import {
-  ParticipantOrganizationComponent
-} from './../../../e-services-main/shared/participant-organization/participant-organization.component';
-import { TaskAdminResult } from '@app/models/task-admin-result';
+import { EffectiveCoordinationCapabilitiesComponent } from './../../../e-services-main/shared/effective-coordination-capabilities/effective-coordination-capabilities.component';
+import { ParticipantOrganizationComponent } from './../../../e-services-main/shared/participant-organization/participant-organization.component';
+import { AdminResult } from '@app/models/admin-result';
 @Component({
   selector: 'app-coordination-with-organizations-request',
   templateUrl: './coordination-with-organizations-request.component.html',
   styleUrls: ['./coordination-with-organizations-request.component.scss'],
 })
-export class CoordinationWithOrganizationsRequestComponent extends EServicesGenericComponent<CoordinationWithOrganizationsRequest,
-CoordinationWithOrganizationsRequestService> {
+export class CoordinationWithOrganizationsRequestComponent extends EServicesGenericComponent<
+  CoordinationWithOrganizationsRequest,
+  CoordinationWithOrganizationsRequestService
+> {
   form!: FormGroup;
 
   // Participating  Organizations
@@ -78,8 +94,8 @@ CoordinationWithOrganizationsRequestService> {
     this.lookupService.listByCategory.OrganizationWay?.sort(
       (a, b) => a?.lookupKey - b?.lookupKey
     );
+
   formsList: DynamicModel[] = [];
-  locations: TaskAdminResult[] = [];
   isCharityUser!: boolean;
   isInternalUser!: boolean;
   isLicensingUser!: boolean;
@@ -125,7 +141,9 @@ CoordinationWithOrganizationsRequestService> {
       name: 'effectiveCoordinationCapabilitiesTap',
       langKey: 'effective_coordination_capabilities',
       validStatus: () => {
-        return this.model!.temporaryEffectiveCoordinationCapabilities.length > 0;
+        return (
+          this.model!.temporaryEffectiveCoordinationCapabilities.length > 0
+        );
       },
     },
     researchAndStudies: {
@@ -152,7 +170,6 @@ CoordinationWithOrganizationsRequestService> {
       langKey: 'attachments',
       validStatus: () => true,
     },
-
   };
   organizationUnits: Profile[] = [];
   // Organization Officers
@@ -160,7 +177,8 @@ CoordinationWithOrganizationsRequestService> {
   organizationUsers: OrganizationOfficer[] = [];
   @ViewChild('organizationOfficersTap')
   organizationOfficersComponentRef!: OrganizationOfficerComponent;
-  @ViewChild('buildingAbilityTap') buildingAbilityComponentRef!: BuildingAbilityComponent;
+  @ViewChild('buildingAbilityTap')
+  buildingAbilityComponentRef!: BuildingAbilityComponent;
   effectiveCoordinationCapabilitiesTabStatus: ReadinessStatus = 'READY';
   @ViewChild('effectiveCoordinationCapabilitiesTap')
   effectiveCoordinationCapabilitiesComponentRef!: EffectiveCoordinationCapabilitiesComponent;
@@ -186,7 +204,7 @@ CoordinationWithOrganizationsRequestService> {
     private externalUserService: ExternalUserService,
     public service: CoordinationWithOrganizationsRequestService,
     private dynamicModelService: DynamicModelService,
-    public fb: FormBuilder,
+    public fb: FormBuilder
   ) {
     super();
     this._buildForm();
@@ -216,11 +234,10 @@ CoordinationWithOrganizationsRequestService> {
   }
   get participatingOrgsCanTerminate(): boolean {
     return this.isInternalUser && this.model!.isApproved;
-
   }
 
   get participatingOrgsCanDelete(): boolean {
-    if(this.model?.isApproved) return false;
+    if (this.model?.isApproved) return false;
     return (
       (!this.isInitialApproved &&
         this.isInternalUser &&
@@ -248,8 +265,7 @@ CoordinationWithOrganizationsRequestService> {
   _getNewInstance(): CoordinationWithOrganizationsRequest {
     return new CoordinationWithOrganizationsRequest().clone({
       classDescription: '',
-      clone(override: Partial<any> | undefined): any {
-      },
+      clone(override: Partial<any> | undefined): any {},
       id: undefined,
       createdBy: '',
       createdByGeneralId: 0,
@@ -261,7 +277,10 @@ CoordinationWithOrganizationsRequestService> {
       lastModifier: '',
       processId: 0,
       ouInfo: undefined,
-      search(searchText: string, searchFieldsName: string | undefined): boolean {
+      search(
+        searchText: string,
+        searchFieldsName: string | undefined
+      ): boolean {
         return false;
       },
       searchFields: undefined,
@@ -272,7 +291,7 @@ CoordinationWithOrganizationsRequestService> {
       organizaionOfficerList: [],
       effectiveCoordinationCapabilities: [],
       researchAndStudies: [],
-      templateList: []
+      templateList: [],
     });
   }
 
@@ -287,7 +306,9 @@ CoordinationWithOrganizationsRequestService> {
   }
 
   _initComponent(): void {
-    this.isCharityUser = this.employeeService.isCharityUser() || this.employeeService.isCharityManager();
+    this.isCharityUser =
+      this.employeeService.isCharityUser() ||
+      this.employeeService.isCharityManager();
     this.isInternalUser = this.employeeService.isInternalUser();
     this.isLicensingUser = this.employeeService.isLicensingUser();
     this.currentUserOrgId = this.employeeService.getProfile()?.id;
@@ -306,7 +327,7 @@ CoordinationWithOrganizationsRequestService> {
   loadCoordForms() {
     this.dynamicModelService.loadActive().subscribe((forms) => {
       this.formsList = forms;
-    })
+    });
   }
   _buildForm(): void {
     this.form = this.fb.group(
@@ -332,9 +353,10 @@ CoordinationWithOrganizationsRequestService> {
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
-
     this.model = this.service.prepareModelBeforeSave(this.model!);
-
+    if (saveType === SaveTypes.DRAFT) {
+      return true;
+    }
     if (this.form.invalid) {
       this.dialog
         .error(this.lang.map.msg_all_required_fields_are_filled)
@@ -348,40 +370,47 @@ CoordinationWithOrganizationsRequestService> {
       this.dialog.error(this.lang.map.participant_organizations_required);
       return false;
     }
-    if(!this.isInternalUser){
-      if(this.organizationOfficersList.length < 1){
+    if (!this.isInternalUser) {
+      if (this.organizationOfficersList.length < 1) {
         this.dialog.error(this.lang.map.organization_officers_required);
         return false;
       }
 
-      if(this.model.domain === this.coordinationTypes.BuildingAbilities &&
-        this.buildingAbilitiesList.length < 1){
-          this.dialog.error(this.lang.map.building_abilities_required);
-          return false;
-        }
+      if (
+        this.model.domain === this.coordinationTypes.BuildingAbilities &&
+        this.buildingAbilitiesList.length < 1
+      ) {
+        this.dialog.error(this.lang.map.building_abilities_required);
+        return false;
+      }
 
-     if(this.model.domain === this.coordinationTypes.EffectiveCoordinationCapabilities &&
-        this.effectiveCoordinationCapabilitiesList.length < 1){
-            this.dialog.error(this.lang.map.effective_coordination_required);
-            return false;
-        }
+      if (
+        this.model.domain ===
+          this.coordinationTypes.EffectiveCoordinationCapabilities &&
+        this.effectiveCoordinationCapabilitiesList.length < 1
+      ) {
+        this.dialog.error(this.lang.map.effective_coordination_required);
+        return false;
+      }
 
-      if(this.model.domain === this.coordinationTypes.ResearchAndStudies &&
-        this.researchAndStudiesList.length < 1){
-          this.dialog.error(this.lang.map.research_and_studies_required);
-          return false;
-        }
-      if(this.model.domain === this.coordinationTypes.Other &&
-          this.dynamicTemplatesList.length < 1){
-              this.dialog.error(this.lang.map.dynamic_template_required);
-              return false;
-        }
-
+      if (
+        this.model.domain === this.coordinationTypes.ResearchAndStudies &&
+        this.researchAndStudiesList.length < 1
+      ) {
+        this.dialog.error(this.lang.map.research_and_studies_required);
+        return false;
+      }
+      if (
+        this.model.domain === this.coordinationTypes.Other &&
+        this.dynamicTemplatesList.length < 1
+      ) {
+        this.dialog.error(this.lang.map.dynamic_template_required);
+        return false;
+      }
     }
     this.disableListsUpdate();
     return of(this.form.valid);
   }
-
 
   _beforeLaunch(): boolean | Observable<boolean> {
     return true;
@@ -408,7 +437,10 @@ CoordinationWithOrganizationsRequestService> {
   ): void {
     this.enableListsUpdate();
     const taskDetails = this.model!.taskDetails;
-    this.service.mainModel = this.prepareMainModel(this.currentUserOrgId!, model);
+    this.service.mainModel = this.prepareMainModel(
+      this.currentUserOrgId!,
+      model
+    );
     this.model = this.filterModelByOrgId(this.currentUserOrgId!, model);
     this.model!.approved = this.isApproved();
     this.model!.taskDetails = taskDetails;
@@ -430,8 +462,7 @@ CoordinationWithOrganizationsRequestService> {
     console.log(error);
   }
 
-  _launchFail(error: any): void {
-  }
+  _launchFail(error: any): void {}
 
   _destroyComponent(): void {
     this.destroy$.next();
@@ -444,7 +475,10 @@ CoordinationWithOrganizationsRequestService> {
       return;
     }
     if (this.currentUserOrgId) {
-      this.service.mainModel = this.prepareMainModel(this.currentUserOrgId, model);
+      this.service.mainModel = this.prepareMainModel(
+        this.currentUserOrgId,
+        model
+      );
       this.model = this.filterModelByOrgId(this.currentUserOrgId, model)!;
     } else {
       this.model = model;
@@ -453,7 +487,7 @@ CoordinationWithOrganizationsRequestService> {
 
     this.isInitialApproved = this.model?.isInitialApproved();
     this.model.approved = this.isApproved();
-    this.model.taskDetails.piid = model.taskDetails.piid
+    this.model.taskDetails.piid = model.taskDetails.piid;
     this.loadLogs();
   }
 
@@ -477,7 +511,6 @@ CoordinationWithOrganizationsRequestService> {
       this.DynamicTemplatesComponentRef.list = [];
     }
 
-
     this.loadOrgUnits(true);
   }
 
@@ -498,14 +531,24 @@ CoordinationWithOrganizationsRequestService> {
   }
 
   loadOrgUnits(reset = false) {
-    this.profileService.loadActive()
+    this.profileService
+      .getProfilesByProfileType([
+        ProfileTypes.CHARITY,
+        ProfileTypes.NON_PROFIT_ORGANIZATIONS,
+        ProfileTypes.INSTITUTION,
+      ])
       .pipe(
         map((list) => {
           if (reset) {
             return list;
           }
           if (this.model!.participatingOrganizaionList.length > 0) {
-            return list.filter((org) => !this.model?.participatingOrganizaionList.find((ptOrg) => ptOrg.organizationId === org.id));
+            return list.filter(
+              (org) =>
+                !this.model?.participatingOrganizaionList.find(
+                  (ptOrg) => ptOrg.organizationId === org.id
+                )
+            );
           }
           return list;
         })
@@ -527,21 +570,25 @@ CoordinationWithOrganizationsRequestService> {
       this.participantOrganizationsComponentRef.list;
   }
 
-  loadLogs(){
+  loadLogs() {
     this.service.actionLogService
-    .loadCaseLocation(this.model?.getCaseId())
-    .pipe(takeUntil(this.destroy$))
-    .subscribe(locations=>{
-      this.locations =locations;
-      console.log(this.locations);
-
-    })
-
+      .loadCaseLocation(this.model?.getCaseId())
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((locations) => {
+        this.model!.locations = locations;
+      });
   }
   loadOrgUsers() {
-    this.externalUserService.loadAsLookups()
+    this.externalUserService
+      .loadAsLookups()
       // .getByCriteria({ 'profile-id': this.employeeService.getProfile()?.id! })
-      .pipe(map(users=>users.filter(user=>user.profileId === this.employeeService.getProfile()?.id!)))
+      .pipe(
+        map((users) =>
+          users.filter(
+            (user) => user.profileId === this.employeeService.getProfile()?.id!
+          )
+        )
+      )
       .pipe(
         map((records) => {
           const list: OrganizationOfficer[] = [];
@@ -550,10 +597,9 @@ CoordinationWithOrganizationsRequestService> {
               new OrganizationOfficer().clone({
                 identificationNumber: record.generalUserId?.toString(),
                 fullName: record.getName(),
-                email:record.email,
-                phone : record.phoneNumber,
-                extraPhone: record.phoneExtension
-
+                email: record.email,
+                phone: record.phoneNumber,
+                extraPhone: record.phoneExtension,
               })
             );
           });
@@ -599,15 +645,23 @@ CoordinationWithOrganizationsRequestService> {
     this.service.openParticipantOrganizationspopup(orgId, model!);
   }
 
-  terminateOrganizationTask(tkiid:string){
-    this.service.terminateTask(tkiid)
-    .pipe(take(1))
-    .subscribe(success=>{
-      if(success){
-        this.locations = this.locations.filter(location=>location.tkiid !== tkiid);
-        this.dialog.success(this.lang.map.terminate_task_success)
-      }
-    });
+  terminateOrganizationTask(orgTask: ITerminateOrganizationTask) {
+    this.service
+      .terminateOrganizationTask(this.model!.id,orgTask.organizationId,orgTask.taskId)
+      .pipe(take(1))
+      .subscribe((success) => {
+        if (success) {
+          this.model!.locations = this.model!.locations.filter(
+            (location) => location.tkiid !== orgTask.taskId
+          );
+          this.dialog.success(this.lang.map.terminate_task_success);
+          const org= this.model?.participatingOrganizaionList.find(org=>org.organizationId === orgTask.organizationId);
+            if(org){
+              org.managerDecisionInfo = this.lookupService.listByCategory.ApprovalDecision
+              .find(x => x.lookupKey === ApprovalDecisions.TERMINATE)!.convertToAdminResult();
+            }
+        }
+      });
   }
   filterModelByOrgId(
     orgId: number,
@@ -617,19 +671,22 @@ CoordinationWithOrganizationsRequestService> {
       ? updatedModel
       : new CoordinationWithOrganizationsRequest().clone(this.model);
 
-    model!.temporaryOrganizaionOfficerList! = model!.temporaryOrganizaionOfficerList.filter(
-      (x) => x.organizationId === orgId
-    );
-    model!.temporaryBuildingAbilitiesList! = model!.temporaryBuildingAbilitiesList.filter(
-      (x) => x.organizationId === orgId
-    );
+    model!.temporaryOrganizaionOfficerList! =
+      model!.temporaryOrganizaionOfficerList.filter(
+        (x) => x.organizationId === orgId
+      );
+    model!.temporaryBuildingAbilitiesList! =
+      model!.temporaryBuildingAbilitiesList.filter(
+        (x) => x.organizationId === orgId
+      );
     model!.temporaryEffectiveCoordinationCapabilities! =
       model!.temporaryEffectiveCoordinationCapabilities.filter(
         (x) => x.organizationId === orgId
       );
-    model!.temporaryResearchAndStudies! = model!.temporaryResearchAndStudies.filter(
-      (x) => x.organizationId === orgId
-    );
+    model!.temporaryResearchAndStudies! =
+      model!.temporaryResearchAndStudies.filter(
+        (x) => x.organizationId === orgId
+      );
     model!.temporaryTemplateList! = model!.temporaryTemplateList.filter(
       (x) => x.profileId === orgId
     );
@@ -663,23 +720,25 @@ CoordinationWithOrganizationsRequestService> {
       updatedModel
     );
 
-    model!.temporaryOrganizaionOfficerList! = model!.temporaryOrganizaionOfficerList.filter(
-      (x) => x.organizationId !== orgId
-    );
-    model!.temporaryBuildingAbilitiesList! = model!.temporaryBuildingAbilitiesList.filter(
-      (x) => x.organizationId !== orgId
-    );
+    model!.temporaryOrganizaionOfficerList! =
+      model!.temporaryOrganizaionOfficerList.filter(
+        (x) => x.organizationId !== orgId
+      );
+    model!.temporaryBuildingAbilitiesList! =
+      model!.temporaryBuildingAbilitiesList.filter(
+        (x) => x.organizationId !== orgId
+      );
     model!.temporaryEffectiveCoordinationCapabilities! =
       model!.temporaryEffectiveCoordinationCapabilities.filter(
         (x) => x.organizationId !== orgId
       );
-    model!.temporaryResearchAndStudies! = model!.temporaryResearchAndStudies.filter(
-      (x) => x.organizationId !== orgId
-    );
+    model!.temporaryResearchAndStudies! =
+      model!.temporaryResearchAndStudies.filter(
+        (x) => x.organizationId !== orgId
+      );
     model!.temporaryTemplateList! = model!.temporaryTemplateList.filter(
       (x) => x.profileId !== orgId
     );
-
 
     return model;
   }
@@ -727,13 +786,104 @@ CoordinationWithOrganizationsRequestService> {
     }
     let isAllowed = true;
     let caseStatus = this.model.getCaseStatus();
-    isAllowed = (caseStatus !== CommonCaseStatus.CANCELLED && caseStatus !== CommonCaseStatus.FINAL_APPROVE && caseStatus !== CommonCaseStatus.FINAL_REJECTION);
+    isAllowed =
+      caseStatus !== CommonCaseStatus.CANCELLED &&
+      caseStatus !== CommonCaseStatus.FINAL_APPROVE &&
+      caseStatus !== CommonCaseStatus.FINAL_REJECTION;
 
     return !isAllowed;
   }
 
   onTabChange($event: TabComponent) {
     this.loadAttachments = $event.name === this.tabsData.attachments.name;
+  }
+  allowedExtensions: string[] = [FileExtensionsEnum.PDF];
+  loadedAttachments: Record<number, FileNetDocument> = {};
+
+  uploadAttachment(uploader: HTMLInputElement): void {
+    if (!this.model!.id) {
+      this.dialog.info(
+        this.lang.map.this_action_cannot_be_performed_before_saving_the_request
+      );
+      return;
+    }
+    uploader.click();
+  }
+
+  viewFile(): void {
+    if (!this.model!.coordinationReportId) {
+      return;
+    }
+    const file =new FileNetDocument().clone({
+      documentTitle: this.lang.map.lbl_final_report,
+      description: this.lang.map.lbl_final_report,
+    });
+    this.service.documentService
+      .downloadDocument(this.model!.coordinationReportId)
+      .pipe(
+        take(1),
+        map((model) => this.service.documentService.viewDocument(model, file)),
+        catchError(_=>{
+          this.model!.coordinationReportId = undefined;
+          return this.model!.save();
+        })
+      )
+      .subscribe();
+  }
+  uploaderFileChange($event: Event): void {
+    const input = $event.target as HTMLInputElement;
+    const file = input.files?.item(0);
+    const validFile = file ? file.type === 'application/pdf' : true;
+    !validFile ? (input.value = '') : null;
+    if (!validFile) {
+      this.dialog.error(
+        this.lang.map.msg_only_those_files_allowed_to_upload.change({
+          files: this.allowedExtensions.join(','),
+        })
+      );
+      input.value = '';
+      return;
+    }
+    const deleteFirst$ = this.model?.coordinationReportId
+      ? this.service.documentService.deleteDocument(
+          this.model.coordinationReportId
+        ).pipe(
+          take(1),
+          catchError(_=>of(null))
+        )
+      : of(null);
+    of(null)
+      .pipe(switchMap((_) => deleteFirst$))
+      .pipe(
+        take(1),
+        switchMap((_) => {
+          return this.service.documentService.addSingleDocument(
+            this.model!.id,
+            new FileNetDocument().clone({
+              documentTitle: this.lang.map.lbl_final_report,
+              description: this.lang.map.lbl_final_report,
+              attachmentTypeId: -1,
+              required: false,
+              files: input.files!,
+              isPublished: false,
+            })
+          );
+        }),
+        concatMap((attachment) => {
+          this.model!.coordinationReportId = attachment.id;
+          return this.model!.save()
+          .pipe(tap((model)=>{
+            this.model!.participatingOrganizaionList = model.participatingOrganizaionList;
+          }))
+
+        }),
+
+      )
+      .subscribe(_ => {
+        input.value = '';
+        this.toast.success(this.lang.map.files_have_been_uploaded_successfully);
+
+      });
   }
 
   private _buildDatepickerControlsMap(): void {

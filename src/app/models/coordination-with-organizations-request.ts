@@ -25,6 +25,7 @@ import { CaseModel } from './case-model';
 import { EffectiveCoordinationCapabilities } from './effective-coordination-capabilities';
 import { ParticipantOrg } from './participant-org';
 import { ResearchAndStudies } from './research-and-studies';
+import { TaskAdminResult } from './task-admin-result';
 
 const _RequestType = mixinLicenseDurationType(mixinRequestType(CaseModel));
 const interceptor = new CoordinationWithOrganizationsRequestInterceptor();
@@ -59,6 +60,9 @@ export class CoordinationWithOrganizationsRequest
   temporaryOrganizaionOfficerList: OrganizationOfficer[] = [];
   temporaryResearchAndStudies: ResearchAndStudies[] = [];
   temporaryTemplateList: CoordinationWithOrganizationTemplate[] = [];
+  locations: TaskAdminResult[] = [];
+
+  coordinationReportId?:string;
   approved = false;
   domainInfo!: AdminResult;
   searchFields: ISearchFieldsMap<CoordinationWithOrganizationsRequest> = {
@@ -145,8 +149,5 @@ export class CoordinationWithOrganizationsRequest
       externalUserData
     );
   }
-  approveWithDocument(model:CoordinationWithOrganizationsRequest): DialogRef {
-    return this.service.approveWithDocument(WFResponseType.APPROVE,model );
 
-  }
 }

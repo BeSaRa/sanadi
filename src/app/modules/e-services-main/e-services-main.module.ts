@@ -1,29 +1,28 @@
-import { ApproveWithDocumentPopupComponent } from './popups/approve-with-document-popup/approve-with-document-popup.component';
-import { ProcessFieldWrapperComponent } from './../../administration/popups/general-process-popup/process-formly-components/process-field-wrapper/process-field-wrapper.component';
-import { FormlyMaskInputFieldComponent } from './../../services-search/components/formly-mask-input-field/formly-mask-input-field.component';
-import { FormlySelectFieldComponent } from './../../services-search/components/formly-select-field/formly-select-field.component';
-import { FormlyDateFieldComponent } from './../../services-search/components/formly-date-field/formly-date-field.component';
-import { FormlyModule } from '@ngx-formly/core';
-import { FormlyBootstrapModule } from '@ngx-formly/bootstrap';
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SharedModule } from '@app/shared/shared.module';
-import { SelectLicensePopupComponent } from '@app/modules/e-services-main/popups/select-license-popup/select-license-popup.component';
+import { NgModule } from '@angular/core';
 import {
   FilterInboxRequestPopupComponent
 } from '@app/modules/e-services-main/popups/filter-inbox-request-popup/filter-inbox-request-popup.component';
+import { SelectLicensePopupComponent } from '@app/modules/e-services-main/popups/select-license-popup/select-license-popup.component';
 import { SelectTemplatePopupComponent } from '@app/modules/e-services-main/popups/select-template-popup/select-template-popup.component';
 import { SelectedLicenseTableComponent } from '@app/modules/e-services-main/shared/selected-license-table/selected-license-table.component';
-import { BankAccountComponent } from './shared/bank-account/bank-account.component';
-import { ProjectNeedsComponent } from './shared/project-needs/project-needs.component';
-import { BuildingAbilityComponent } from './shared/building-ability/building-ability.component';
-import { EffectiveCoordinationCapabilitiesComponent } from './shared/effective-coordination-capabilities/effective-coordination-capabilities.component';
-import { ParticipantOrganizationComponent } from './shared/participant-organization/participant-organization.component';
-import { OrganizationOfficerComponent } from './shared/organization-officer/organization-officer.component';
-import { ResearchAndStudiesComponent } from './shared/research-and-studies/research-and-studies.component';
-import { ParticipantOrganizationsPopupComponent } from './popups/participant-organizations-popup/participant-organizations-popup.component';
+import { SharedModule } from '@app/shared/shared.module';
+import { FormlyBootstrapModule } from '@ngx-formly/bootstrap';
+import { FormlyModule } from '@ngx-formly/core';
 import { WorkAreasComponent } from '../general-services/shared/work-areas/work-areas.component';
+import { ProcessFieldWrapperComponent } from './../../administration/popups/general-process-popup/process-formly-components/process-field-wrapper/process-field-wrapper.component';
+import { FormlyDateFieldComponent } from './../../services-search/components/formly-date-field/formly-date-field.component';
+import { FormlyMaskInputFieldComponent } from './../../services-search/components/formly-mask-input-field/formly-mask-input-field.component';
+import { FormlySelectFieldComponent } from './../../services-search/components/formly-select-field/formly-select-field.component';
+import { ParticipantOrganizationsPopupComponent } from './popups/participant-organizations-popup/participant-organizations-popup.component';
+import { BankAccountComponent } from './shared/bank-account/bank-account.component';
+import { BuildingAbilityComponent } from './shared/building-ability/building-ability.component';
 import { DynamicTemplatesComponent } from './shared/dynamic-templates/dynamic-templates.component';
+import { EffectiveCoordinationCapabilitiesComponent } from './shared/effective-coordination-capabilities/effective-coordination-capabilities.component';
+import { OrganizationOfficerComponent } from './shared/organization-officer/organization-officer.component';
+import { ParticipantOrganizationComponent } from './shared/participant-organization/participant-organization.component';
+import { ProjectNeedsComponent } from './shared/project-needs/project-needs.component';
+import { ResearchAndStudiesComponent } from './shared/research-and-studies/research-and-studies.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +42,6 @@ import { DynamicTemplatesComponent } from './shared/dynamic-templates/dynamic-te
     ResearchAndStudiesComponent,
     ParticipantOrganizationsPopupComponent,
     WorkAreasComponent,
-    ApproveWithDocumentPopupComponent
   ],
   imports: [
     CommonModule,

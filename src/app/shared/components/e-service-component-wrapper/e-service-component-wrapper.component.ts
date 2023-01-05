@@ -681,12 +681,12 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         icon: 'mdi-card-account-details-star',
         label: 'send_to_chief',
         askChecklist: true,
-        runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
+        runBeforeShouldSuccess: () => this.checkIfHasMissingConditions(),
         show: (item: CaseModel<any, any>) => {
           return item.getResponses().includes(WFResponseType.TO_CHIEF);
         },
         onClick: (item: CaseModel<any, any>) => {
-          this.sendToManagerAction(item);
+          this.sendToChiefAction(item);
         }
       },
       // send to general Manager
@@ -1162,6 +1162,11 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       actionTaken && this.navigateToSamePageThatUserCameFrom();
     });
   }
+  private sendToChiefAction(item: CaseModel<any, any>) {
+    item.sendToChief().onAfterClose$.subscribe(actionTaken => {
+      actionTaken && this.navigateToSamePageThatUserCameFrom();
+    });
+  }
 
   private sendToGeneralManagerAction(item: CaseModel<any, any>) {
     item.sendToGeneralManager().onAfterClose$.subscribe((actionTaken) => {
@@ -1235,16 +1240,6 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         });
       }
    } else {
-      if(item.getCaseType() === CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST){
-        const model = item as unknown as CoordinationWithOrganizationsRequest;
-        if( model.isApproved && (model.employeeService.isDevelopmentalExpert() || model.employeeService.isConstructionExpert())){
-          model.approveWithDocument(model).onAfterClose$.subscribe(actionTaken => {
-            actionTaken && this.navigateToSamePageThatUserCameFrom();
-          })
-          return;
-        }
-
-      }
       item.approve().onAfterClose$.subscribe(actionTaken => {
         actionTaken && this.navigateToSamePageThatUserCameFrom();
       });
@@ -1457,6 +1452,21 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     });
   }
 
+  private checkIfHasMissingConditions(){
+    if (this.model?.caseType === CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST) {
+      const model = this.model as CoordinationWithOrganizationsRequest;
+      if(!model.coordinationReportId){
+        this.service.dialog.info(this.lang.map.msg_final_report_required);
+        return of(false);
+      }
+      if(model.participatingOrganizaionList.some(org=>model.locations.some(location=>location.organizationId === org.organizationId))){
+        this.service.dialog.info(this.lang.map.msg_terminate_all_tasks);
+        return of(false);
+      }
+
+    }
+    return this.component.checkIfHasMissingRequiredAttachments();
+  }
 
   isAllowedToEditRecommendations(model: CaseModel<any, any>, from: OpenFrom): boolean {
     return this.employeeService.isInternalUser() && (from === OpenFrom.USER_INBOX || (from === OpenFrom.SEARCH && model.canStart()) || (model.taskDetails && model.taskDetails.actions && model.taskDetails.actions.indexOf(WFActions.ACTION_CANCEL_CLAIM) !== -1));
