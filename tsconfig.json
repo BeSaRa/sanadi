@@ -30,6 +30,9 @@
       "@contracts/*": [
         "./src/app/contracts/*",
         "./src/app/interfaces/*"
+      ],
+      "@modules": [
+        "./src/app/modules/*"
       ]
     },
     "baseUrl": "./",

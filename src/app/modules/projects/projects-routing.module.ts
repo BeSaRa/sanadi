@@ -3,8 +3,8 @@ import {RouterModule, Routes} from '@angular/router';
 import {ProjectsComponent} from './projects.component';
 import {
   InternalProjectLicenseComponent
-} from '@app/projects/pages/internal-project-license/internal-project-license.component';
-import {ProjectModelComponent} from '@app/projects/pages/project-model/project-model.component';
+} from '@app/modules/projects/pages/internal-project-license/internal-project-license.component';
+import {ProjectModelComponent} from '@app/modules/projects/pages/project-model/project-model.component';
 import {EServicePermissionsEnum} from '@app/enums/e-service-permissions-enum';
 import {ServicesGuard} from '@app/guards/services.guard';
 import {ServiceItemResolver} from '@app/resolvers/service-item.resolver';

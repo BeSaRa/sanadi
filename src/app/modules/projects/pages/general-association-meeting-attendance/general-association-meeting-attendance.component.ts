@@ -4,7 +4,7 @@ import {OperationTypes} from '@app/enums/operation-types.enum';
 import {SaveTypes} from '@app/enums/save-types';
 import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
 import {GeneralAssociationMeetingAttendance} from '@app/models/general-association-meeting-attendance';
-import {LangService} from '@app/services/lang.service';
+import {LangService} from '@services/lang.service';
 import {GeneralAssociationMeetingAttendanceService} from '@services/general-association-meeting-attendance.service';
 import {Observable, of, Subject} from 'rxjs';
 import {LookupService} from '@services/lookup.service';
@@ -21,7 +21,7 @@ import {catchError, exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rx
 import {SelectedLicenseInfo} from '@contracts/selected-license-info';
 import {InternalProjectLicenseResult} from '@app/models/internal-project-license-result';
 import {SharedService} from '@services/shared.service';
-import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {ILanguageKeys} from '@contracts/i-language-keys';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 import {OpenFrom} from '@app/enums/open-from.enum';

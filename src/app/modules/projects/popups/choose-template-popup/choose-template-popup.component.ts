@@ -5,7 +5,6 @@ import {ProjectModel} from "@app/models/project-model";
 import {DIALOG_DATA_TOKEN} from "@app/shared/tokens/tokens";
 import {TableComponent} from "@app/shared/components/table/table.component";
 import {ProjectWorkArea} from "@app/enums/project-work-area";
-import {LookupService} from "@services/lookup.service";
 import {Lookup} from "@app/models/lookup";
 import {ProjectTemplate} from "@app/models/projectTemplate";
 import {PublicTemplateStatus} from "@app/enums/public-template-status";

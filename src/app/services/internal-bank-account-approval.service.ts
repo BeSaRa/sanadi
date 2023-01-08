@@ -21,11 +21,11 @@ import { WFResponseType } from '@app/enums/wfresponse-type.enum';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import {
   InternalBankApprovalApproveTaskPopupComponent
-} from '@app/projects/popups/internal-bank-approval-approve-task-popup/internal-bank-approval-approve-task-popup.component';
+} from '@app/modules/projects/popups/internal-bank-approval-approve-task-popup/internal-bank-approval-approve-task-popup.component';
 import { BankService } from '@services/bank.service';
 import {
   SelectEmployeePopupComponent
-} from '@app/projects/popups/select-employee-popup/select-employee-popup.component';
+} from '@app/modules/projects/popups/select-employee-popup/select-employee-popup.component';
 import { Lookup } from '@app/models/lookup';
 import { CastResponse, CastResponseContainer } from '@decorators/cast-response';
 import { BaseGenericEService } from "@app/generics/base-generic-e-service";

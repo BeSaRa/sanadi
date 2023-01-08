@@ -59,7 +59,7 @@ const routes: Routes = [
         path: 'projects',
         canActivate: [ServicesGuard],
         data: {configPermissionGroup: PermissionGroupsEnum.PROJECTS_PERMISSION_GROUP, checkAnyPermission: true},
-        loadChildren: () => import('./projects/projects.module').then(m => m.ProjectsModule)
+        loadChildren: () => import('./modules/projects/projects.module').then(m => m.ProjectsModule)
       },
       {
         path: 'training',

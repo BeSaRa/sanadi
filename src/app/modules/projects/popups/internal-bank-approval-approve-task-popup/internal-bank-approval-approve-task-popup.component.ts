@@ -1,20 +1,20 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
-import { ILanguageKeys } from '@app/interfaces/i-language-keys';
+import { ILanguageKeys } from '@contracts/i-language-keys';
 import { WFResponseType } from '@app/enums/wfresponse-type.enum';
 import { UntypedFormControl } from '@angular/forms';
-import { DialogService } from '@app/services/dialog.service';
+import { DialogService } from '@services/dialog.service';
 import { DialogRef } from '@app/shared/models/dialog-ref';
-import { ToastService } from '@app/services/toast.service';
-import { InboxService } from '@app/services/inbox.service';
+import { ToastService } from '@services/toast.service';
+import { InboxService } from '@services/inbox.service';
 import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
-import { LangService } from '@app/services/lang.service';
-import { CommonUtils } from '@app/helpers/common-utils';
+import { LangService } from '@services/lang.service';
+import { CommonUtils } from '@helpers/common-utils';
 import { exhaustMap, filter, switchMap, takeUntil, tap } from 'rxjs/operators';
-import { IWFResponse } from '@app/interfaces/i-w-f-response';
+import { IWFResponse } from '@contracts/i-w-f-response';
 import { InternalBankAccountApproval } from '@app/models/internal-bank-account-approval';
-import { IKeyValue } from '@app/interfaces/i-key-value';
-import { DateUtils } from '@app/helpers/date-utils';
+import { IKeyValue } from '@contracts/i-key-value';
+import { DateUtils } from '@helpers/date-utils';
 
 @Component({
   selector: 'internal-bank-approval-approve-task-popup',

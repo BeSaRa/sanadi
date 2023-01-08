@@ -30,8 +30,8 @@ import {
 } from '@app/modules/office-services/pages/partner-approval/partner-approval.component';
 import {
   InternalProjectLicenseComponent
-} from '@app/projects/pages/internal-project-license/internal-project-license.component';
-import { ProjectModelComponent } from '@app/projects/pages/project-model/project-model.component';
+} from '@app/modules/projects/pages/internal-project-license/internal-project-license.component';
+import { ProjectModelComponent } from '@app/modules/projects/pages/project-model/project-model.component';
 import {
   CollectionApprovalComponent
 } from '@app/modules/collection/pages/collection-services-approval/collection-approval.component';
@@ -45,11 +45,11 @@ import {
 } from '@app/modules/remittances/pages/customs-exemption/customs-exemption.component';
 import {
   InternalBankAccountApprovalComponent
-} from '@app/projects/pages/internal-bank-account-approval/internal-bank-account-approval.component';
+} from '@app/modules/projects/pages/internal-bank-account-approval/internal-bank-account-approval.component';
 
 import {
   UrgentJointReliefCampaignComponent
-} from '@app/projects/pages/urgent-joint-relief-campaign/urgent-joint-relief-campaign.component';
+} from '@app/modules/projects/pages/urgent-joint-relief-campaign/urgent-joint-relief-campaign.component';
 import {
   UrgentInterventionAnnouncementComponent
 } from '@app/modules/urgent-intervention/pages/urgent-intervention-announcement/urgent-intervention-announcement.component';
@@ -64,7 +64,7 @@ import {
 } from '@app/modules/urgent-intervention/pages/urgent-intervention-license/urgent-intervention-license.component';
 import {
   TransferringIndividualFundsAbroadComponent
-} from '@app/projects/pages/transferring-individual-funds-abroad/transferring-individual-funds-abroad.component';
+} from '@app/modules/projects/pages/transferring-individual-funds-abroad/transferring-individual-funds-abroad.component';
 import {
   CoordinationWithOrganizationsRequestComponent
 } from '@app/modules/general-services/pages/coordination-with-organizations-request/coordination-with-organizations-request.component';
@@ -73,14 +73,14 @@ import {
 } from '@app/modules/urgent-intervention/pages/urgent-intervention-license-followup/urgent-intervention-license-followup.component';
 import {
   GeneralAssociationMeetingAttendanceComponent
-} from '@app/projects/pages/general-association-meeting-attendance/general-association-meeting-attendance.component';
+} from '@app/modules/projects/pages/general-association-meeting-attendance/general-association-meeting-attendance.component';
 import {
   CharityOrganizationUpdateComponent
 } from '@app/modules/general-services/pages/charity-organization-update/charity-organization-update.component';
 import { PermissionsEnum } from '@app/enums/permissions-enum';
 import { ConsultationComponent } from '@app/modules/general-services/pages/consultation/consultation.component';
 import { InquiryComponent } from '@app/modules/general-services/pages/inquiry/inquiry.component';
-import { ProjectFundraisingComponent } from "@app/projects/pages/project-fundraising/project-fundraising.component";
+import { ProjectFundraisingComponent } from "@app/modules/projects/pages/project-fundraising/project-fundraising.component";
 import { OrganizationsEntitiesSupportComponent } from '@app/modules/general-services/pages/organizations-entities-support/organizations-entities-support.component';
 
 @Injectable({

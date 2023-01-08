@@ -4,7 +4,7 @@ import {OperationTypes} from '@app/enums/operation-types.enum';
 import {SaveTypes} from '@app/enums/save-types';
 import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
 import {TransferringIndividualFundsAbroad} from '@app/models/transferring-individual-funds-abroad';
-import {LangService} from '@app/services/lang.service';
+import {LangService} from '@services/lang.service';
 import {TransferringIndividualFundsAbroadService} from '@services/transferring-individual-funds-abroad.service';
 import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
 import {LookupService} from '@services/lookup.service';

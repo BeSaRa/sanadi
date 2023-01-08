@@ -1,7 +1,7 @@
 import {AfterViewInit, ChangeDetectorRef, Component} from '@angular/core';
 import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
 import {InternalProjectLicense} from '@app/models/internal-project-license';
-import {InternalProjectLicenseService} from '@app/services/internal-project-license.service';
+import {InternalProjectLicenseService} from '@services/internal-project-license.service';
 import {
   AbstractControl,
   UntypedFormArray,
@@ -11,33 +11,33 @@ import {
   ValidatorFn,
   Validators
 } from '@angular/forms';
-import {IKeyValue} from '@app/interfaces/i-key-value';
-import {LangService} from '@app/services/lang.service';
-import {LookupService} from '@app/services/lookup.service';
-import {DialogService} from '@app/services/dialog.service';
-import {EmployeeService} from '@app/services/employee.service';
-import {ConfigurationService} from '@app/services/configuration.service';
-import {ToastService} from '@app/services/toast.service';
+import {IKeyValue} from '@contracts/i-key-value';
+import {LangService} from '@services/lang.service';
+import {LookupService} from '@services/lookup.service';
+import {DialogService} from '@services/dialog.service';
+import {EmployeeService} from '@services/employee.service';
+import {ConfigurationService} from '@services/configuration.service';
+import {ToastService} from '@services/toast.service';
 import {Observable, of, Subject} from 'rxjs';
 import {SaveTypes} from '@app/enums/save-types';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {OpenFrom} from '@app/enums/open-from.enum';
 import {Lookup} from '@app/models/lookup';
-import {CommonUtils} from '@app/helpers/common-utils';
+import {CommonUtils} from '@helpers/common-utils';
 import {ServiceRequestTypes} from '@app/enums/service-request-types';
 import {catchError, exhaustMap, filter, map, switchMap, take, takeUntil, tap} from 'rxjs/operators';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {InternalProjectLicenseResult} from '@app/models/internal-project-license-result';
 import {AidLookup} from '@app/models/aid-lookup';
-import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {AidLookupService} from '@app/services/aid-lookup.service';
+import {ILanguageKeys} from '@contracts/i-language-keys';
+import {AidLookupService} from '@services/aid-lookup.service';
 import {AidTypes} from '@app/enums/aid-types.enum';
 import {SDGoal} from '@app/models/sdgoal';
-import {SDGoalService} from '@app/services/sdgoal.service';
-import {DateUtils} from '@app/helpers/date-utils';
+import {SDGoalService} from '@services/sdgoal.service';
+import {DateUtils} from '@helpers/date-utils';
 import {ProjectComponent} from '@app/models/project-component';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {LicenseService} from '@app/services/license.service';
+import {LicenseService} from '@services/license.service';
 import {InternalProjectLicenseSearchCriteria} from '@app/models/internal-project-license-search-criteria';
 import {TabComponent} from '@app/shared/components/tab/tab.component';
 import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';

@@ -23,7 +23,7 @@ import {
 } from './popups/urgent-joint-relief-campaign-final-approve-task-popup/urgent-joint-relief-campaign-final-approve-task-popup.component';
 import {
   UrgentJointReliefCampaignOrganizationApproveTaskPopupComponent
-} from '../projects/popups/urgent-joint-relief-campaign-organization-approve-task-popup/urgent-joint-relief-campaign-organization-approve-task-popup.component';
+} from './popups/urgent-joint-relief-campaign-organization-approve-task-popup/urgent-joint-relief-campaign-organization-approve-task-popup.component';
 import {EServicesMainModule} from '@app/modules/e-services-main/e-services-main.module';
 import {SelectEmployeePopupComponent} from './popups/select-employee-popup/select-employee-popup.component';
 import {
