@@ -276,6 +276,13 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
 
     if (this.model?.isMemberReviewStep()) {
       this.service.getMeetingPointsForMember(this.model?.id).subscribe(meetingReport => {
+        // filter out the final comments created by decision maker
+        meetingReport.meetingMainItem = meetingReport.meetingMainItem.filter(mainItem => mainItem.finalItem !== 1);
+        meetingReport.meetingMainItem = meetingReport.meetingMainItem.map(mainItem => {
+          mainItem.meetingSubItem = mainItem.meetingSubItem.filter(subItem => subItem.finalItem !== 1);
+          return mainItem;
+        });
+
         if (this.isMemberReview || (this.isDecisionMakerReview && meetingReport && meetingReport.meetingMainItem.length > 0)) {
           // get meeting attendance report
           this.updateMeetingPointsForm(meetingReport);
