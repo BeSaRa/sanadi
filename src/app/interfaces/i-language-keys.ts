@@ -1704,17 +1704,19 @@ export interface ILanguageKeys {
   removed: string;
   msg_field_order_is_already_exist: string;
   msg_field_identifier_is_already_exist: string;
-  min_bigger_than_max_error:string;
+  min_bigger_than_max_error: string;
   approval_foreign_countries_projects: string;
   return_from_department: string;
   establishment_name_arabic: string;
   establishment_name_english: string;
   basic_salary: string;
   net_salary: string;
-  send_to_chief:string;
-  terminate_task_success:string;
-  msg_terminate_all_tasks:string;
-  view_final_report:string;
-  msg_final_report_required:string;
-  lbl_final_report:string;
+  send_to_chief: string;
+  terminate_task_success: string;
+  msg_terminate_all_tasks: string;
+  view_final_report: string;
+  msg_final_report_required: string;
+  lbl_final_report: string;
+  msg_confirm_reject_selected: string;
+  msg_confirm_accept_selected: string;
 }

@@ -1,15 +1,11 @@
 <div class="row">
   <app-page-header pageTitle="menu_external_user_request_approval" [clickOnReload$]="reload$"
-                   [customTemplate]="customHeaderTemplate"
-                   [clickOnNew$]="add$"
-                   [addPermission]="service.canAddUser()">
+    [customTemplate]="customHeaderTemplate" [clickOnNew$]="add$" [addPermission]="service.canAddUser()">
   </app-page-header>
   <ng-template #customHeaderTemplate>
-    <ng-select [selectOnTab]="true" [clearable]="false"
-               placeholder="{{lang.map.select}}" id="profileId"
-               [notFoundText]="lang.map.msg_not_found" appendTo="body"
-               [formControl]="profileIdControl"
-               (change)="handleProfileChange()">
+    <ng-select [selectOnTab]="true" [clearable]="false" placeholder="{{lang.map.select}}" id="profileId"
+      [notFoundText]="lang.map.msg_not_found" appendTo="body" [formControl]="profileIdControl"
+      (change)="handleProfileChange()">
       <ng-option value="">{{lang.map.lbl_all}}</ng-option>
       <ng-option *ngFor="let option of profiles$|async" [value]="option.id">
         {{option.getName()}}
@@ -17,25 +13,36 @@
     </ng-select>
   </ng-template>
   <ng-container *ngIf="table">
-    <app-grid-search (searchTextEvent)="filterControl.setValue($event)"></app-grid-search>
+    <app-bulk-actions *ngIf="table.selection && table.selection.selected.length"
+      [selectedRecords]="table.selection.selected" [actionsList]="bulkActionsList"></app-bulk-actions>
+    <!-- <app-grid-search (searchTextEvent)="filterControl.setValue($event)"></app-grid-search> -->
   </ng-container>
 </div>
 <div class="row pt-3">
   <div class="col-12">
     <div class="table-responsive">
-      <app-table #table [paginator]="paginator"
-                 [filter]="filterControl.value"
-                 [useSearchToFilter]="true"
-                 [data]="models"
-                 [columns]="displayedColumns"
-                 sortableTable>
+      <app-table #table [paginator]="paginator" [filter]="filterControl.value" [useSearchToFilter]="true"
+        [selectable]="true" [data]="models" [columns]="displayedColumns" sortableTable>
         <table class="table table-striped table-bordered caption-top" cdk-table [dataSource]="table.dataSource">
+          <ng-container cdkColumnDef="rowSelection">
+            <th cdk-header-cell *cdkHeaderCellDef>
+              <input type="checkbox" [disabled]="table.filter"
+                [indeterminate]="table.selection.hasValue() && !table.allSelected()"
+                (change)="$event ? table.toggleAll() : null"
+                [checked]="table.selection.hasValue() && table.allSelected()" class="form-check-input">
+            </th>
+            <td cdk-cell *cdkCellDef="let row">
+              <input type="checkbox" *ngIf="row.requestStatus == externalUserUpdateRequestStatusEnum.IN_PROGRESS"
+                (click)="$event.stopPropagation()" [checked]="table.selection.isSelected(row)"
+                (change)="$event ? table.selection.toggle(row) : null" class="form-check-input">
+            </td>
+          </ng-container>
           <ng-container cdkColumnDef="header">
             <th cdk-header-cell colspan="100" *cdkHeaderCellDef="let row">
               <div class="d-flex flex-row justify-content-end">
                 <div class="d-flex" *ngIf="selectedFilter">
                   <button (click)="selectFilter(undefined)" class="btn btn-sm"
-                          [ngClass]="requestStatusClasses[selectedFilter.lookupKey]">
+                    [ngClass]="requestStatusClasses[selectedFilter.lookupKey]">
                     {{lang.map.selected_status}} - {{selectedFilter.getName()}}
                   </button>
                   <div class="px-1"></div>
@@ -43,27 +50,16 @@
                   <div class="px-1"></div>
                 </div>
                 <div class="d-flex gap-3">
-                  <button *ngFor="let status of requestStatusList"
-                          (click)="selectFilter(status)"
-                          class="btn btn-sm  position-relative {{requestStatusClasses[status.lookupKey]}}"
-                          data-bs-toggle="button">
+                  <button *ngFor="let status of requestStatusList" (click)="selectFilter(status)"
+                    class="btn btn-sm  position-relative {{requestStatusClasses[status.lookupKey]}}"
+                    data-bs-toggle="button">
                     {{status.getName()}} <span
-                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">{{requestCountMap && requestCountMap.get(status.lookupKey)}}</span>
+                      class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark">{{requestCountMap
+                      && requestCountMap.get(status.lookupKey)}}</span>
                   </button>
                 </div>
               </div>
             </th>
-          </ng-container>
-          <ng-container cdkColumnDef="icons">
-            <th cdk-header-cell *cdkHeaderCellDef></th>
-            <td cdk-cell *cdkCellDef="let row" class="row-indicator-td">
-              <div class="d-flex flex-row">
-                <i class="mdi {{actionIconsEnum.ALPHABET_N}} text-primary" *ngIf="row.isNewUserRequest()"
-                   tooltip="{{lang.map.new_user_request}}"></i>
-                <i class="mdi {{actionIconsEnum.ALPHABET_U}} text-primary" *ngIf="!row.isNewUserRequest()"
-                   tooltip="{{lang.map.update_user_request}}"></i>
-              </div>
-            </td>
           </ng-container>
           <ng-container cdkColumnDef="domainName">
             <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.login_name}}</th>
@@ -81,21 +77,35 @@
             <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.lbl_employee_number}}</th>
             <td cdk-cell *cdkCellDef="let row"><span class="user-select-all">{{row.empNum}}</span></td>
           </ng-container>
+          <ng-container cdkColumnDef="requestType">
+            <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.request_type}}</th>
+            <td cdk-cell *cdkCellDef="let row"><span class="user-select-all">
+                <div class="d-flex flex-row">
+                  <i class="mdi {{actionIconsEnum.ALPHABET_N}} text-primary me-2" *ngIf="row.isNewUserRequest()"
+                    tooltip="{{lang.map.new_user_request}}"></i>
+                  <i class="mdi {{actionIconsEnum.ALPHABET_U}} text-primary me-2" *ngIf="!row.isNewUserRequest()"
+                    tooltip="{{lang.map.update_user_request}}"></i>
+                  {{row.requestTypeInfo.getName()}}
+                </div>
+              </span>
+            </td>
+          </ng-container>
+
           <ng-container cdkColumnDef="updatedOn">
             <th cdk-header-cell *cdkHeaderCellDef class="date-column" sortable-header [sortParamAsFullItem]="true"
-                [sortCallback]="sortingCallbacks.updatedOn">{{lang.map.action_date}}</th>
+              [sortCallback]="sortingCallbacks.updatedOn">{{lang.map.action_date}}</th>
             <td cdk-cell *cdkCellDef="let row" class="date-column">{{row.updatedOnString}}</td>
           </ng-container>
           <ng-container cdkColumnDef="updatedBy">
             <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
-                [sortCallback]="sortingCallbacks.updatedBy"> {{lang.map.updated_by}}</th>
+              [sortCallback]="sortingCallbacks.updatedBy"> {{lang.map.updated_by}}</th>
             <td cdk-cell *cdkCellDef="let row"><span>{{row.updatedByInfo ? row.updatedBy.getInfo() : ''}}</span></td>
           </ng-container>
           <ng-container cdkColumnDef="requestStatus">
             <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
-                [sortCallback]="sortingCallbacks.requestStatus">{{lang.map.request_status}}</th>
-            <td cdk-cell *cdkCellDef="let row"
-                class="date-column">{{row.requestStatusInfo ? row.requestStatusInfo.getName() : ''}}</td>
+              [sortCallback]="sortingCallbacks.requestStatus">{{lang.map.request_status}}</th>
+            <td cdk-cell *cdkCellDef="let row" class="date-column">{{row.requestStatusInfo ?
+              row.requestStatusInfo.getName() : ''}}</td>
           </ng-container>
           <ng-container cdkColumnDef="actions">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
