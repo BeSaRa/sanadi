@@ -27,9 +27,9 @@
           <ng-container cdkColumnDef="rowSelection">
             <th cdk-header-cell *cdkHeaderCellDef>
               <input type="checkbox" [disabled]="table.filter"
-                [indeterminate]="table.selection.hasValue() && !table.allSelected()"
-                (change)="$event ? table.toggleAll() : null"
-                [checked]="table.selection.hasValue() && table.allSelected()" class="form-check-input">
+                [indeterminate]="table.selection.hasValue() && !allSelected()"
+                (change)="$event ? toggleAllInProgess() : null"
+                [checked]="table.selection.hasValue() && allSelected()" class="form-check-input">
             </th>
             <td cdk-cell *cdkCellDef="let row">
               <input type="checkbox" *ngIf="row.requestStatus == externalUserUpdateRequestStatusEnum.IN_PROGRESS"

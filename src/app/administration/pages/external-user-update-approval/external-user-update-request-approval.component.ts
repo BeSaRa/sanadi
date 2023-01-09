@@ -142,7 +142,17 @@ export class ExternalUserUpdateRequestApprovalComponent extends AdminGenericComp
         this.reload$.next(null);
       });
   }
-
+  allSelected() {
+    return this.table.selection.selected.length === this.table.dataSource.data.filter(d => d.requestStatus == ExternalUserUpdateRequestStatusEnum.IN_PROGRESS).length;
+  }
+  toggleAllInProgess(): void {
+    const allSelected = this.allSelected();
+    if (allSelected) {
+      this.table.clearSelection();
+    } else {
+      this.table.dataSource.data.forEach((item: ExternalUserUpdateRequest) => item.requestStatus == ExternalUserUpdateRequestStatusEnum.IN_PROGRESS && this.table.selection.select(item));
+    }
+  }
   acceptRequest(item: ExternalUserUpdateRequest): void {
     this.service.acceptRequest(item)
       .subscribe((result) => {
