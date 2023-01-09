@@ -179,8 +179,8 @@ export class ExternalUserPopupComponent extends AdminGenericDialog<ExternalUser>
   }
 
   @ViewChild('dialogContent') dialogContent!: ElementRef;
-  @ViewChild('customMenuPermissionComponent') customMenuPermissionComponentRef!: CustomMenuPermissionComponent;
-  @ViewChild('userSecurityExternalComponent') userSecurityComponentRef!: UserSecurityExternalComponent;
+  @ViewChild(CustomMenuPermissionComponent) customMenuPermissionComponentRef!: CustomMenuPermissionComponent;
+  @ViewChild(UserSecurityExternalComponent) userSecurityComponentRef!: UserSecurityExternalComponent;
 
   buildForm(): void {
     this.form = this.fb.group({
@@ -384,6 +384,7 @@ export class ExternalUserPopupComponent extends AdminGenericDialog<ExternalUser>
   }
 
   prepareUserRequestModel(model: ExternalUser, form: UntypedFormGroup): Observable<ExternalUserUpdateRequest> | ExternalUserUpdateRequest {
+    console.log('!this.userSecurityComponentRef', !this.userSecurityComponentRef);
     let data: ExternalUserUpdateRequest = new ExternalUserUpdateRequest().clone({
       ...this.model,
       ...this.basicFormGroup?.value,

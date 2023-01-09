@@ -5,9 +5,6 @@ import {Payment} from '@app/models/payment';
 import {ExternalProjectImplementationService} from '@app/services/external-project-implementation.service';
 import {FactoryService} from '@app/services/factory.service';
 import {ISearchFieldsMap} from '@app/types/types';
-import {dateSearchFields} from '@app/helpers/date-search-fields';
-import {infoSearchFields} from '@app/helpers/info-search-fields';
-import {normalSearchFields} from '@app/helpers/normal-search-fields';
 import {LicenseApprovalModel} from '@app/models/license-approval-model';
 import {CaseTypes} from '@app/enums/case-types.enum';
 

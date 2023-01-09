@@ -116,16 +116,20 @@ export class ExternalUserUpdateRequestService extends CrudWithDialogGenericServi
 
   create(model: ExternalUserUpdateRequest): Observable<ExternalUserUpdateRequest> {
     if (this.canSaveDirectly(OperationTypes.CREATE)) {
+      console.log('DIRECT CREATE');
       return this._addUser(model);
     } else {
+      console.log('NEED APPROVAL CREATE');
       return this._addUserRequest(model);
     }
   }
 
   update(model: ExternalUserUpdateRequest): Observable<ExternalUserUpdateRequest> {
     if (this.canSaveDirectly(OperationTypes.UPDATE)) {
+      console.log('DIRECT UPDATE');
       return this._updateUser(model);
     } else {
+      console.log('NEED APPROVAL UPDATE');
       return this._updateUserRequest(model);
     }
   }
