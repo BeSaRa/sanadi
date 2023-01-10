@@ -189,6 +189,12 @@
       </app-table>
     </div>
   </div>
+  <div class="row" *ngIf="model?.requestStatus == externalUserUpdateRequestStatusEnum.REJECTED">
+    <div class="col-sm-12">
+      <textarea rows="5" class="form-control" readonly [value]="model?.notes"></textarea>
+    </div>
+  </div>
+
   <ng-template #servicePermissionIconsTemplate let-oldValue="oldValue" let-newValue="newValue">
     <i *ngIf="!oldValue && !!newValue" tooltip="{{lang.map.added}}"
        class="mdi {{actionIconsEnum.ADDED_VALUE}} text-success"></i>

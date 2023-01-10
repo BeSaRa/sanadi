@@ -50,6 +50,18 @@ export abstract class CrudGenericService<T> implements CrudServiceInterface<T>, 
     return this.http.put<T>(this._getServiceURL() + '/full', model);
   }
 
+  @CastResponse(undefined, {
+    fallback: '$default',
+    unwrap: 'rs'
+  })
+  @HasInterception
+  _updateBulk(@InterceptParam() models: T[]): Observable<T[]> {
+    return this.http.put<T[]>(this._getServiceURL() + '/bulk', models)
+  }
+
+  updateBulk(models: T[]): Observable<T[]> {
+    return this._updateBulk(models)
+  }
 
   load(prepare?: boolean): Observable<T[]> {
     return this._load()

@@ -1,3 +1,6 @@
+import { DialogService } from './../../../services/dialog.service';
+import { UserClickOn } from './../../../enums/user-click-on.enum';
+import { IGridAction } from './../../../interfaces/i-grid-action';
 import { ExternalUserService } from '@services/external-user.service';
 import { Component, ViewChild } from '@angular/core';
 import { AdminGenericComponent } from '@app/generics/admin-generic-component';
@@ -19,6 +22,7 @@ import { TableComponent } from '@app/shared/components/table/table.component';
 import { ExternalUserUpdateRequestStatusEnum } from '@app/enums/external-user-update-request-status.enum';
 import { LookupService } from '@services/lookup.service';
 import { Lookup } from '@app/models/lookup';
+import { SharedService } from '@app/services/shared.service';
 
 @Component({
   selector: 'external-user-update-request-request',
@@ -27,13 +31,16 @@ import { Lookup } from '@app/models/lookup';
 })
 export class ExternalUserUpdateRequestApprovalComponent extends AdminGenericComponent<ExternalUserUpdateRequest, ExternalUserUpdateRequestService> {
   allRequests$: BehaviorSubject<ExternalUserUpdateRequest[]> = new BehaviorSubject<ExternalUserUpdateRequest[]>([]);
+  @ViewChild('table') table!: TableComponent;
 
   constructor(public lang: LangService,
     public service: ExternalUserUpdateRequestService,
     public externalUserService: ExternalUserService,
     private toast: ToastService,
+    private dialogService: DialogService,
     private profileService: ProfileService,
     private lookupService: LookupService,
+    private sharedService: SharedService,
     private employeeService: EmployeeService) {
     super();
   }
@@ -44,12 +51,13 @@ export class ExternalUserUpdateRequestApprovalComponent extends AdminGenericComp
   }
 
   requestStatusList: Lookup[] = this.lookupService.listByCategory.ExternalUserUpdateRequestStatus;
+  externalUserUpdateRequestStatusEnum = ExternalUserUpdateRequestStatusEnum;
   requestCountMap: Map<ExternalUserUpdateRequestStatusEnum, number> = new Map<ExternalUserUpdateRequestStatusEnum, number>();
   profileIdControl: UntypedFormControl = new UntypedFormControl('');
   profiles$ = this.profileService.loadAsLookups();
   selectedFilter?: Lookup;
 
-  displayedColumns: string[] = ['icons', 'domainName', 'arName', 'enName', 'updatedOn', 'requestStatus', 'updatedBy', 'actions'];// 'empNum', 'organization', 'status', 'statusDateModified',
+  displayedColumns: string[] = ['rowSelection', 'domainName', 'arName', 'enName', 'requestType', 'updatedOn', 'requestStatus', 'updatedBy', 'actions'];// 'empNum', 'organization', 'status', 'statusDateModified',
   sortingCallbacks = {
     updatedOn: (a: ExternalUserUpdateRequest, b: ExternalUserUpdateRequest, dir: SortEvent): number => {
       let value1 = !CommonUtils.isValidValue(a) ? '' : DateUtils.getTimeStampFromDate(a.updatedOn!),
@@ -67,7 +75,6 @@ export class ExternalUserUpdateRequestApprovalComponent extends AdminGenericComp
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     }
   };
-  @ViewChild('table') table!: TableComponent;
 
   actionIconsEnum = ActionIconsEnum;
   requestStatusClasses: Record<number, string> = {
@@ -109,6 +116,25 @@ export class ExternalUserUpdateRequestApprovalComponent extends AdminGenericComp
     }
   ];
 
+  bulkActionsList: IGridAction[] = [
+    {
+      langKey: 'lbl_accept',
+      icon: ActionIconsEnum.ACCEPT,
+      callback: ($event: MouseEvent) => {
+        this.acceptBulkRequest($event);
+      }
+    },
+    {
+      langKey: 'lbl_reject',
+      icon: ActionIconsEnum.CANCEL,
+      callback: ($event: MouseEvent) => {
+        this.rejectBulkRequest($event);
+      }
+    },
+  ];
+  get selectedRecords(): ExternalUserUpdateRequest[] {
+    return this.table.selection.selected;
+  }
   viewChanges(item: ExternalUserUpdateRequest): void {
     this.service.viewChangesDialog(item)
       .pipe(switchMap(ref => ref.onAfterClose$))
@@ -116,7 +142,17 @@ export class ExternalUserUpdateRequestApprovalComponent extends AdminGenericComp
         this.reload$.next(null);
       });
   }
-
+  allSelected() {
+    return this.table.selection.selected.length === this.table.dataSource.data.filter(d => d.requestStatus == ExternalUserUpdateRequestStatusEnum.IN_PROGRESS).length;
+  }
+  toggleAllInProgess(): void {
+    const allSelected = this.allSelected();
+    if (allSelected) {
+      this.table.clearSelection();
+    } else {
+      this.table.dataSource.data.forEach((item: ExternalUserUpdateRequest) => item.requestStatus == ExternalUserUpdateRequestStatusEnum.IN_PROGRESS && this.table.selection.select(item));
+    }
+  }
   acceptRequest(item: ExternalUserUpdateRequest): void {
     this.service.acceptRequest(item)
       .subscribe((result) => {
@@ -127,7 +163,27 @@ export class ExternalUserUpdateRequestApprovalComponent extends AdminGenericComp
         this.reload$.next(null);
       });
   }
-
+  acceptBulkRequest($event: MouseEvent): void {
+    $event.preventDefault();
+    if (this.selectedRecords.length > 0) {
+      this.dialogService.confirm(this.lang.map.msg_confirm_accept_selected)
+        .onAfterClose$.subscribe((click: UserClickOn) => {
+          if (click === UserClickOn.YES) {
+            const models = this.selectedRecords.map((item) => {
+              return new ExternalUserUpdateRequest().clone({
+                ...item,
+                requestStatus: ExternalUserUpdateRequestStatusEnum.APPROVED
+              })
+            });
+            const sub = this.service.updateBulk(models).subscribe(() => {
+              this.toast.success(this.lang.map.msg_update_success);
+              this.reload$.next(null);
+              sub.unsubscribe();
+            });
+          }
+        });
+    }
+  }
   rejectRequest(item: ExternalUserUpdateRequest): void {
     this.service.rejectRequestWithReason(item)
       .subscribe((result) => {
@@ -138,7 +194,27 @@ export class ExternalUserUpdateRequestApprovalComponent extends AdminGenericComp
         this.reload$.next(null);
       });
   }
-
+  rejectBulkRequest($event: MouseEvent): void {
+    $event.preventDefault();
+    if (this.selectedRecords.length > 0) {
+      this.dialogService.confirm(this.lang.map.msg_confirm_reject_selected)
+        .onAfterClose$.subscribe((click: UserClickOn) => {
+          if (click === UserClickOn.YES) {
+            const models = this.selectedRecords.map((item) => {
+              return new ExternalUserUpdateRequest().clone({
+                ...item,
+                requestStatus: ExternalUserUpdateRequestStatusEnum.REJECTED
+              })
+            });
+            const sub = this.service.updateBulk(models).subscribe(() => {
+              this.toast.success(this.lang.map.msg_update_success);
+              this.reload$.next(null);
+              sub.unsubscribe();
+            });
+          }
+        });
+    }
+  }
   editRequest(item: ExternalUserUpdateRequest): void {
     this.service.openUpdateRequestDialog(item)
       .pipe(switchMap(dialog => dialog.onAfterClose$))
