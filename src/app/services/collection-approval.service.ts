@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { ComponentFactoryResolver, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ILanguageKeys } from '@app/interfaces/i-language-keys';
 import { CollectionApproval } from "@app/models/collection-approval";
@@ -53,7 +53,6 @@ export class CollectionApprovalService extends BaseGenericEService<CollectionApp
               public lang: LangService,
               public http: HttpClient,
               public dynamicService: DynamicOptionsService,
-              public cfr: ComponentFactoryResolver,
               private urlService: UrlService,
               public dialog: DialogService) {
     super();
