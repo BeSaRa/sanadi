@@ -365,6 +365,11 @@ GeneralProcessNotificationService
           this.model!.requestType = requestTypeValue;
         }
         this.requestType$.next(requestTypeValue);
+        this.oldFullSerialField.setValidators([])
+        if (requestTypeValue == AllRequestTypesEnum.UPDATE) {
+          this.oldFullSerialField.setValidators([Validators.required])
+        }
+        this.oldFullSerialField.reset();
       } else {
         this.requestTypeField.setValue(this.requestType$.value);
       }
