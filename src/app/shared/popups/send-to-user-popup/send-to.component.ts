@@ -72,7 +72,7 @@ export class SendToComponent implements OnInit, OnDestroy {
       case WFResponseType.TO_MANAGER:
         this.title = 'send_to_manager';
         break;
-      case WFResponseType.TO_GM || WFResponseType.SEND_TO_GM:
+      case WFResponseType.SEND_TO_GM:
         this.title = 'send_to_general_manager';
         break;
       case WFResponseType.TO_DEVELOPMENT_EXPERT:

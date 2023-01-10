@@ -503,7 +503,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         icon: 'mdi-card-account-details-star',
         label: 'send_to_general_manager',
         show: (item: QueryResult) => {
-          return item.getResponses().includes(WFResponseType.TO_GM) || item.getResponses().includes(WFResponseType.SEND_TO_GM);
+          return item.getResponses().includes(WFResponseType.SEND_TO_GM);
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionSendToGeneralManager(item, viewDialogRef);
