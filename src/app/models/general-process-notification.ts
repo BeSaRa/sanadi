@@ -94,7 +94,7 @@ export class GeneralProcessNotification
       oldFullSerial: controls ? [oldFullSerial] : oldFullSerial,
       description: controls ? [description, CustomValidators.required] : description,
       DSNNN: {
-        departmentId: controls ? [departmentId, CustomValidators.required] : departmentId,
+        departmentId: controls ? [departmentId] : departmentId,
         competentDepartmentID: controls ? [competentDepartmentID] : competentDepartmentID,
         domain: controls ? [domain] : domain,
         firstSubDomain: controls ? [firstSubDomain] : firstSubDomain,

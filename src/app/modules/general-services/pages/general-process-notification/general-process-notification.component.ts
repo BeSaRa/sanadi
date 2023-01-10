@@ -1,3 +1,4 @@
+import { Validators } from '@angular/forms';
 import { SubTeam } from './../../../../models/sub-team';
 import { SubTeamService } from '@app/services/sub-team.service';
 import { ProcessFieldBuilder } from './../../../../administration/popups/general-process-popup/process-formly-components/process-fields-builder';
@@ -213,8 +214,15 @@ GeneralProcessNotificationService
   }
   handleProcessChange(id: number) {
     const process = this.processList.find(p => p.id == id);
-    if (!this.isOtherProcess)
+    this.departmentField.setValidators([]);
+    if (!this.isOtherProcess) {
       this.projectNameField.setValue(process?.arName);
+      this.departmentField.reset();
+      this.departmentField.setValue(process?.departmentId);
+    } else {
+      this.departmentField.setValidators([Validators.required])
+      this.departmentField.reset();
+    }
     this.processFieldBuilder.generateFromString(process?.template);
     this.sampleDataForOperationsFormGroup.reset();
     this.form.removeControl('sampleDataForOperations');
