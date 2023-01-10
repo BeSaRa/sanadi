@@ -84,7 +84,7 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
         this.readonly = false;
       } else if (this.employeeService.isCharityUser()) {
         this.readonly = !this.model.isReturned();
-      } else if (this.employeeService.isInternationalCooperationUser() && this.employeeService.getCurrentUser().generalUserId == this.model.creatorInfo.id) {
+      } else if (this.employeeService.getCurrentUser().generalUserId == this.model.creatorInfo.id) {
         this.readonly = !this.model.isReturned();
       }
     } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
@@ -234,7 +234,6 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
 
     result.externalCooperationAuthority = licenseDetails.externalCooperationAuthority;
     result.needSubject = licenseDetails.needSubject;
-    result.classDescription = licenseDetails.classDescription;
     result.justification = licenseDetails.justification;
     result.recommendation = licenseDetails.recommendation;
     result.projectNeeds = licenseDetails.projectNeeds;

@@ -170,10 +170,7 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
       day: disableDate.getDate()
     };
     this.datepickerOptionsMap.licenseStartDate = toFieldDateOptions;
-    console.log(this.licenseStartDateField)
-    console.log(new Date(this.licenseStartDateField.value.singleDate.jsDate).getMonth(),
-      disableDate.getMonth()
-    )
+
     if (new Date(this.licenseStartDateField.value.singleDate.jsDate).getMonth() < disableDate.getMonth())
       this.licenseStartDateField.reset()
   }
