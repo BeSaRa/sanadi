@@ -27,6 +27,7 @@ import {
 import {UntypedFormGroup} from '@angular/forms';
 import {TransferFundsExecutiveManagement} from '@app/models/transfer-funds-executive-management';
 import {TransferFundsCharityPurpose} from '@app/models/transfer-funds-charity-purpose';
+import {PaymentInterceptor} from '@app/model-interceptors/payment-interceptor';
 
 @CastResponseContainer({
   $default: {
@@ -43,6 +44,7 @@ export class TransferringIndividualFundsAbroadService extends BaseGenericEServic
   searchColumns: string[] = ['fullSerial', 'requestTypeInfo', 'arName', 'enName', 'subject', 'caseStatus', 'creatorInfo', 'createdOn'];
   executiveManagementListInterceptor: ExecutiveManagementListInterceptor = new ExecutiveManagementListInterceptor();
   transferFundsCharityPurposeInterceptor: TransferFundsCharityPurposeInterceptor = new TransferFundsCharityPurposeInterceptor();
+  paymentInterceptor: PaymentInterceptor = new PaymentInterceptor();
 
   constructor(private urlService: UrlService,
               public domSanitizer: DomSanitizer,

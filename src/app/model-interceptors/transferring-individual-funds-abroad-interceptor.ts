@@ -6,6 +6,7 @@ import {TransferringIndividualFundsAbroadService} from '@services/transferring-i
 import {TransferFundsExecutiveManagement} from '@app/models/transfer-funds-executive-management';
 import {TransferFundsCharityPurpose} from '@app/models/transfer-funds-charity-purpose';
 import {AdminResult} from '@app/models/admin-result';
+import {Payment} from '@app/models/payment';
 
 export class TransferringIndividualFundsAbroadInterceptor implements IModelInterceptor<TransferringIndividualFundsAbroad> {
   caseInterceptor?: IModelInterceptor<TransferringIndividualFundsAbroad> | undefined;
@@ -80,6 +81,10 @@ export class TransferringIndividualFundsAbroadInterceptor implements IModelInter
 
     if (model.charityPurposeTransferList && model.charityPurposeTransferList.length > 0) {
       model.charityPurposeTransferList = model.charityPurposeTransferList.map(x => service.transferFundsCharityPurposeInterceptor.receive(new TransferFundsCharityPurpose().clone(x)) as TransferFundsCharityPurpose);
+    }
+
+    if (model.payment && model.payment.length > 0) {
+      model.payment = model.payment.map(x => service.paymentInterceptor.receive(new Payment().clone(x)) as Payment);
     }
 
     return model;
