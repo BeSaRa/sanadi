@@ -234,7 +234,6 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
 
     result.externalCooperationAuthority = licenseDetails.externalCooperationAuthority;
     result.needSubject = licenseDetails.needSubject;
-    result.classDescription = licenseDetails.classDescription;
     result.justification = licenseDetails.justification;
     result.recommendation = licenseDetails.recommendation;
     result.projectNeeds = licenseDetails.projectNeeds;

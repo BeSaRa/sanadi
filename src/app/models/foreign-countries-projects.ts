@@ -76,7 +76,6 @@ export class ForeignCountriesProjects extends _RequestType<ForeignCountriesProje
       organizationId,
       country,
       justification,
-      classDescription,
       recommendation,
       needSubject
     } = this;
@@ -87,7 +86,6 @@ export class ForeignCountriesProjects extends _RequestType<ForeignCountriesProje
       requestType: withControls ? [requestType, [CustomValidators.required]] : requestType,
       country: withControls ? [country, [CustomValidators.required]] : country,
       needSubject: withControls ? [needSubject, [CustomValidators.required, CustomValidators.maxLength(300)]] : needSubject,
-      classDescription: withControls ? [classDescription, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : classDescription,
       justification: withControls ? [justification, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : justification,
       recommendation: withControls ? [recommendation, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : recommendation
     };
