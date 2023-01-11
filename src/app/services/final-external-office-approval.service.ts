@@ -28,6 +28,7 @@ import { LicenseService } from '@app/services/license.service';
 import { FinalExternalOfficeApprovalResult } from '@app/models/final-external-office-approval-result';
 import { BaseGenericEService } from "@app/generics/base-generic-e-service";
 import { CastResponseContainer } from "@decorators/cast-response";
+import { ILicenseSearch } from '@app/interfaces/i-license-search';
 
 @CastResponseContainer({
   $default: {
@@ -37,7 +38,8 @@ import { CastResponseContainer } from "@decorators/cast-response";
 @Injectable({
   providedIn: 'root'
 })
-export class FinalExternalOfficeApprovalService extends BaseGenericEService<FinalExternalOfficeApproval> {
+export class FinalExternalOfficeApprovalService extends BaseGenericEService<FinalExternalOfficeApproval>
+implements ILicenseSearch<FinalExternalOfficeApproval> {
   _getUrlService(): UrlService {
     return this.urlService;
   }
@@ -90,5 +92,7 @@ export class FinalExternalOfficeApprovalService extends BaseGenericEService<Fina
   licenseSearch(criteria: Partial<FinalExternalOfficeApprovalSearchCriteria> = {}): Observable<FinalExternalOfficeApprovalResult[]> {
     return this.licenseService.finalApprovalLicenseSearch(criteria);
   }
-
+  licenseSearchById(licenseId: string): Observable<FinalExternalOfficeApproval> {
+    return this.licenseService.loadFinalLicenseByLicenseId(licenseId)
+  }
 }

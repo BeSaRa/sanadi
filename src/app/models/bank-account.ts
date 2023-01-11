@@ -17,6 +17,8 @@ export class BankAccount extends SearchableCloneable<BankAccount> {
   swiftCode!: string;
   country!: number;
   partnerName!: string;
+  orgId!:number;
+  iBAN!:string;
   category?: number;
   bankInfo!: Bank;
   isMergeAccount!: boolean;

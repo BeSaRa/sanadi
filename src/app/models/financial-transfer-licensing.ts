@@ -12,6 +12,7 @@ import { LicenseApprovalModel } from './license-approval-model';
 import { FinancialTransferLicensingInterceptor } from '@app/model-interceptors/financial-transfer-licensing-interceptor';
 import { InterceptModel } from '@app/decorators/decorators/intercept-model';
 import { FinancialTransferLicensingService } from '@app/services/financial-transfer-licensing.service';
+import { ImplementingAgencyTypes } from '@app/enums/implementing-agency-types.enum';
 
 const { send, receive } = new FinancialTransferLicensingInterceptor();
 
@@ -29,27 +30,28 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
   subject!: string;
   transferCountry!: number;
   country!: number;
-  transferNumber!: string;
+  qatariTransactionAmount!:number;
   //transferee bank account
   transfereeType!: number;
   transferringEntityName!: string;
-  accountNumber!: string;
+  transferAccountNumber!: string;
   transfereeBankName!: string;
   transfereeIBAN!: string;
 
   // transfer bank account
   bankName!: string;
   transferFromIBAN!: string;
-  transferAccountNumber!: string;
+  accountNumber!: string;
 
   // affidavit of completion
   currency!: number;
   currencyTransferTransactionAmount!: number;
   actualTransferDate!: string;
   transferringEntityId!: string;
+  transferNumber!: string;
 
   followUpDateString: string = '';
-  // "receiverType": 3,
+  receiverType!: number;
 
   financialTransfersProjects: FinancialTransfersProject[] = [];
   transferCountryInfo!: AdminResult;
@@ -79,10 +81,12 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
     );
     this.employeeService = FactoryService.getService('EmployeeService');
     this.finalizeSearchFields();
-
-    this.organizationId = this.employeeService.getCurrentUser().getProfileId()!;
+    this._setDefaultValues();
   }
 
+  private _setDefaultValues(){
+    this.organizationId = this.employeeService.getCurrentUser().getProfileId()!;
+  }
   finalizeSearchFields(): void {
     if (this.employeeService.isExternalUser()) {
       delete this.searchFields.ouInfo;
@@ -109,17 +113,17 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
         : oldLicenseFullSerial,
       oldLicenseId: control ? [oldLicenseId] : oldLicenseId,
       oldLicenseSerial: control ? [oldLicenseSerial] : oldLicenseSerial,
-      subject: control
-        ? [
-            subject,
-            [
-              CustomValidators.required,
-              CustomValidators.maxLength(
-                CustomValidators.defaultLengths.ENGLISH_NAME_MAX
-              ),
-            ],
-          ]
-        : subject,
+      // subject: control
+      //   ? [
+      //       subject,
+      //       [
+      //         CustomValidators.required,
+      //         CustomValidators.maxLength(
+      //           CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+      //         ),
+      //       ],
+      //     ]
+      //   : subject,
     };
   }
 
@@ -130,7 +134,7 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
       transferDescription,
       transferCountry,
       country,
-      transferNumber,
+      qatariTransactionAmount,
     } = this;
     return {
       transferType: control
@@ -161,9 +165,9 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
         ? [transferCountry, [CustomValidators.required]]
         : transferCountry,
       country: control ? [country, [CustomValidators.required]] : country,
-      transferNumber: control
+      qatariTransactionAmount: control
         ? [
-            transferNumber,
+            qatariTransactionAmount,
             [
               CustomValidators.required,
               CustomValidators.decimal(
@@ -171,15 +175,16 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
               ),
             ],
           ]
-        : transferNumber,
+        : qatariTransactionAmount,
     };
   }
 
   getTransfereeBankAccountFields(control = false): any {
     const {
       transfereeType,
+      receiverType,
       transferringEntityName,
-      accountNumber,
+      transferAccountNumber,
       transfereeBankName,
       transfereeIBAN,
     } = this;
@@ -187,6 +192,9 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
       transfereeType: control
         ? [transfereeType, [CustomValidators.required]]
         : transfereeType,
+      receiverType: control
+        ? [receiverType, []]
+        : receiverType,
       transferringEntityName: control
         ? [
             transferringEntityName,
@@ -198,9 +206,9 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
             ],
           ]
         : transferringEntityName,
-      accountNumber: control
-        ? [accountNumber, [CustomValidators.required, CustomValidators.number]]
-        : accountNumber,
+      transferAccountNumber: control
+        ? [transferAccountNumber, [CustomValidators.required, CustomValidators.number]]
+        : transferAccountNumber,
       transfereeBankName: control
         ? [
             transfereeBankName,
@@ -227,7 +235,7 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
   }
 
   getTransferBankAccountFields(control = false): any {
-    const { bankName, transferFromIBAN, transferAccountNumber } = this;
+    const { bankName, transferFromIBAN, accountNumber } = this;
     return {
       bankName: control
         ? [
@@ -251,12 +259,12 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
             ],
           ]
         : transferFromIBAN,
-      transferAccountNumber: control
+      accountNumber: control
         ? [
-            transferAccountNumber,
+            accountNumber,
             [CustomValidators.required, CustomValidators.number],
           ]
-        : transferAccountNumber,
+        : accountNumber,
     };
   }
 
@@ -265,16 +273,16 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
       currency,
       currencyTransferTransactionAmount,
       actualTransferDate,
-      transferringEntityId,
+      transferNumber,
     } = this;
 
     return {
-      currency: control ? [currency, [CustomValidators.required]] : currency,
+      currency: control ? [currency, []] : currency,
       currencyTransferTransactionAmount: control
         ? [
             currencyTransferTransactionAmount,
             [
-              CustomValidators.required,
+
               CustomValidators.decimal(
                 CustomValidators.defaultLengths.DECIMAL_PLACES
               ),
@@ -282,19 +290,19 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
           ]
         : currencyTransferTransactionAmount,
       actualTransferDate: control
-        ? [actualTransferDate, [CustomValidators.required]]
+        ? [actualTransferDate, []]
         : actualTransferDate,
-      transferringEntityId: control
+      transferNumber: control
         ? [
-            transferringEntityId,
+            transferNumber,
             [
-              CustomValidators.required,
+
               CustomValidators.maxLength(
                 CustomValidators.defaultLengths.ENGLISH_NAME_MAX
               ),
             ],
           ]
-        : transferringEntityId,
+        : transferNumber,
     };
   }
   convertToFinancialTransferLicensing() {

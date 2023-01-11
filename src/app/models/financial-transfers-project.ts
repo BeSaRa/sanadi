@@ -22,7 +22,7 @@ export class FinancialTransfersProject extends SearchableCloneable<FinancialTran
         ? [
             fullSerial,
             [
-              CustomValidators.required,
+
               CustomValidators.maxLength(
                 CustomValidators.defaultLengths.ENGLISH_NAME_MAX
               ),
@@ -32,7 +32,7 @@ export class FinancialTransfersProject extends SearchableCloneable<FinancialTran
       qatariTransactionAmount: control
         ? [
             qatariTransactionAmount,
-            [CustomValidators.required, CustomValidators.decimal],
+            [ CustomValidators.decimal],
           ]
         : qatariTransactionAmount,
       notes: control

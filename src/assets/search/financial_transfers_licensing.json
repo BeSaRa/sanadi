@@ -49,31 +49,6 @@
         }
       }
     ]
-  },
-  {
-    "fields": [
-      {
-        "key": "goal",
-        "type": "input",
-        "label": "goal",
-        "validations": {
-          "required": false
-        },
-        "templateOptions": {
-          "maxLength": 300
-        }
-      },
-      {
-        "key": "beneficiaries",
-        "type": "input",
-        "label": "beneficiaries_description",
-        "validations": {
-          "required": false
-        },
-        "templateOptions": {
-          "maxLength": 300
-        }
-      }
-    ]
   }
+
 ]
