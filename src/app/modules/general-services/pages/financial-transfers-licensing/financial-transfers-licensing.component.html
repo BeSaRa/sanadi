@@ -2,9 +2,8 @@
   <tabs-list [accordionView]="accordionView" class="py-4" (onTabChange)="onTabChange($event)" [tabByIndex$]="tabIndex$">
     <tab [name]="tabsData.basicInfo.name" [hasError]="getTabInvalidStatus('basicInfo')"
       [template]="basicInfoTabTemplate" [title]="lang.map.lbl_basic_info"></tab>
-    <tab [name]="tabsData.transferOperationGroup.name"
-      [hasError]="getTabInvalidStatus('transferOperationGroup')" [template]="transferOperationGroupTemplate"
-      [title]="lang.map.transfer_operation"></tab>
+    <tab [name]="tabsData.transferOperationGroup.name" [hasError]="getTabInvalidStatus('transferOperationGroup')"
+      [template]="transferOperationGroupTemplate" [title]="lang.map.transfer_operation"></tab>
     <tab [name]="tabsData.transfereeBankAccountGroup.name"
       [hasError]="getTabInvalidStatus('transfereeBankAccountGroup')" [template]="transfereeBankAccountTabTemplate"
       [title]="lang.map.transferee_bank_account"></tab>
@@ -90,9 +89,9 @@
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label for="transferCountry" asteriskIfRequired="transferCountry"
             class="form-label">{{lang.map.transfer_to_country}}</label>
-          <ng-select [selectOnTab]="true" labelForId="transferCountry" [clearable]="true" placeholder="{{lang.map.select}}"
-            id="transferCountry" [notFoundText]="lang.map.msg_not_found" [readonly]="readonly" appendTo="body"
-            formControlName="transferCountry" validationClasses="transferCountry">
+          <ng-select [selectOnTab]="true" labelForId="transferCountry" [clearable]="true"
+            placeholder="{{lang.map.select}}" id="transferCountry" [notFoundText]="lang.map.msg_not_found"
+            [readonly]="readonly" appendTo="body" formControlName="transferCountry" validationClasses="transferCountry">
             <ng-option *ngFor="let option of countries" [value]="option.id">
               {{option.getName()}}
             </ng-option>
@@ -100,8 +99,7 @@
           <app-field-error-message controlName="transferCountry"></app-field-error-message>
         </div>
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
-          <label for="country" asteriskIfRequired="country"
-            class="form-label">{{lang.map.country}}</label>
+          <label for="country" asteriskIfRequired="country" class="form-label">{{lang.map.execution_country}}</label>
           <ng-select [selectOnTab]="true" labelForId="country" [clearable]="true" placeholder="{{lang.map.select}}"
             id="country" [notFoundText]="lang.map.msg_not_found" [readonly]="readonly" appendTo="body"
             formControlName="country" validationClasses="country">
@@ -112,11 +110,12 @@
           <app-field-error-message controlName="country"></app-field-error-message>
         </div>
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
-          <label class="form-label" asteriskIfRequired="transferNumber"
-            for="transferNumber">{{lang.map.transaction_amount_in_transfer_currency}}</label>
-          <input validationClasses="transferNumber" formControlName="transferNumber" type="text"
-            id="transferNumber" [readonly]="readonly" class="form-control">
-          <app-field-error-message controlName="transferNumber"></app-field-error-message>
+          <label class="form-label" asteriskIfRequired="qatariTransactionAmount"
+            for="qatariTransactionAmount">{{lang.map.transaction_amount_in_transfer_currency}}</label>
+          <input validationClasses="qatariTransactionAmount" formControlName="qatariTransactionAmount" type="text"
+            id="qatariTransactionAmount" [readonly]="isQatariTransactionAmountAllowed() || readonly"
+            class="form-control">
+          <app-field-error-message controlName="qatariTransactionAmount"></app-field-error-message>
         </div>
       </div>
 
@@ -128,43 +127,68 @@
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label for="transfereeType" asteriskIfRequired="transfereeType"
             class="form-label">{{lang.map.transferee_type}}</label>
-          <ng-select [selectOnTab]="true" labelForId="transfereeType" [clearable]="true" placeholder="{{lang.map.select}}"
-            id="transfereeType" [notFoundText]="lang.map.msg_not_found" [readonly]="readonly" appendTo="body"
-            formControlName="transfereeType" validationClasses="transfereeType">
+          <ng-select [selectOnTab]="true" labelForId="transfereeType" [clearable]="true"
+            placeholder="{{lang.map.select}}" id="transfereeType" [notFoundText]="lang.map.msg_not_found"
+            [readonly]=" isExternalTransferType() || readonly" appendTo="body" formControlName="transfereeType" validationClasses="transfereeType">
             <ng-option *ngFor="let option of financialTransfereeTypeList" [value]="option.lookupKey">
               {{option.getName()}}
             </ng-option>
           </ng-select>
-          <app-field-error-message controlName="transferType"></app-field-error-message>
+          <app-field-error-message controlName="transfereeType"></app-field-error-message>
+        </div>
+
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label for="receiverType" asteriskIfRequired="receiverType"
+            class="form-label">{{lang.map.entity_type}}</label>
+          <ng-select [selectOnTab]="true" labelForId="receiverType" [clearable]="true" placeholder="{{lang.map.select}}"
+            id="receiverType" [notFoundText]="lang.map.msg_not_found"
+            [readonly]="!isEditReceiverTypeAllowed() || readonly" appendTo="body" formControlName="receiverType"
+            validationClasses="receiverType">
+            <ng-option *ngFor="let option of implementingAgencyType" [value]="option.lookupKey">
+              {{option.getName()}}
+            </ng-option>
+          </ng-select>
+          <app-field-error-message controlName="receiverType"></app-field-error-message>
         </div>
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label class="form-label" asteriskIfRequired="transferringEntityName"
             for="transferringEntityName">{{lang.map.entity_name}}</label>
-          <input validationClasses="transferringEntityName" formControlName="transferringEntityName" type="text"
-            id="transferringEntityName" [readonly]="readonly" class="form-control">
-          <app-field-error-message controlName="transferringEntityName"></app-field-error-message>
+          <div class="input-group">
+            <input validationClasses="transferringEntityName" formControlName="transferringEntityName" type="text"
+              id="transferringEntityName" trimInput [readonly]="!isEditTransfereeAllowed() || readonly"
+              class="form-control">
+            <button *ngIf=" isSearchAuthorizedEntityAllowed()" type="button"
+              (click)="transfereeEntitySearch()" class="input-group-text"><i
+                class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i></button>
+            <button *ngIf=" isPreRegisteredEntityAllowed()" type="button"
+              (click)="transfereeEntitySearch()" class="input-group-text"><i
+                class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i></button>
+            <app-field-error-message controlName="transferringEntityName"></app-field-error-message>
+          </div>
+
         </div>
-        <div class="col-sm-12 col-md-4 mb-4 position-relative">
-          <label class="form-label" asteriskIfRequired="accountNumber"
-            for="accountNumber">{{lang.map.account_number}}</label>
-          <input validationClasses="accountNumber" formControlName="accountNumber" type="text"
-            id="accountNumber" [readonly]="readonly" class="form-control">
-          <app-field-error-message controlName="accountNumber"></app-field-error-message>
-        </div>
+
       </div>
       <div class="row">
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="transferAccountNumber"
+            for="transferAccountNumber">{{lang.map.account_number}}</label>
+          <input validationClasses="transferAccountNumber" formControlName="transferAccountNumber" type="text"
+            id="transferAccountNumber" [readonly]="!isEditTransfereeAllowed() || readonly" class="form-control">
+          <app-field-error-message controlName="transferAccountNumber"></app-field-error-message>
+        </div>
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label class="form-label" asteriskIfRequired="transfereeIBAN"
             for="transfereeIBAN">{{lang.map.transferee_iban}}</label>
-          <input validationClasses="transfereeIBAN" formControlName="transfereeIBAN" type="text"
-            id="transfereeIBAN" [readonly]="readonly" class="form-control">
+          <input validationClasses="transfereeIBAN" formControlName="transfereeIBAN" type="text" id="transfereeIBAN"
+            [readonly]="!isEditTransfereeAllowed() || readonly" class="form-control">
           <app-field-error-message controlName="transfereeIBAN"></app-field-error-message>
         </div>
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label class="form-label" asteriskIfRequired="transfereeBankName"
             for="transfereeBankName">{{lang.map.transferee_bank_name}}</label>
           <input validationClasses="transfereeBankName" formControlName="transfereeBankName" type="text"
-            id="transfereeBankName" [readonly]="readonly" class="form-control">
+            id="transfereeBankName" [readonly]="!isEditTransfereeAllowed() || readonly" class="form-control">
           <app-field-error-message controlName="transfereeBankName"></app-field-error-message>
         </div>
       </div>
@@ -174,24 +198,39 @@
     <ng-container formGroupName="transferBankAccount">
       <div class="row">
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
-          <label class="form-label" asteriskIfRequired="transferAccountNumber"
-            for="transferAccountNumber">{{lang.map.account_number}}</label>
-          <input validationClasses="transferAccountNumber" formControlName="transferAccountNumber" type="text"
-            id="transferAccountNumber" [readonly]="readonly" class="form-control">
-          <app-field-error-message controlName="transferAccountNumber"></app-field-error-message>
+          <label for="bankAccountsControl" asteriskIfRequired [control]="bankAccountsControl"
+            class="form-label">{{lang.map.bank_accounts}}</label>
+          <ng-select
+           [selectOnTab]="true" labelForId="bankAccountsControl" [clearable]="true"
+           [formControl]="bankAccountsControl"
+            placeholder="{{lang.map.select}}" id="bankAccountsControl" [notFoundText]="lang.map.msg_not_found"
+            [readonly]="readonly" appendTo="body" validationClasses [control]="bankAccountsControl">
+            <ng-option *ngFor="let option of transferEntityBankAccounts" [value]="option">
+              {{option.accountNumber}}
+            </ng-option>
+          </ng-select>
+          <app-field-error-message controlName="bankAccountsControl"></app-field-error-message>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="accountNumber"
+            for="accountNumber">{{lang.map.account_number}}</label>
+          <input validationClasses="accountNumber" formControlName="accountNumber" type="text" id="accountNumber"
+            [readonly]="true" class="form-control">
+          <app-field-error-message controlName="accountNumber"></app-field-error-message>
         </div>
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label class="form-label" asteriskIfRequired="transferFromIBAN"
             for="transferFromIBAN">{{lang.map.transfer_from_iban}}</label>
           <input validationClasses="transferFromIBAN" formControlName="transferFromIBAN" type="text"
-            id="transferFromIBAN" [readonly]="readonly" class="form-control">
+            id="transferFromIBAN" [readonly]="true" class="form-control">
           <app-field-error-message controlName="transferFromIBAN"></app-field-error-message>
         </div>
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
-          <label class="form-label" asteriskIfRequired="bankName"
-            for="bankName">{{lang.map.bank_name}}</label>
-          <input validationClasses="bankName" formControlName="bankName" type="text"
-            id="bankName" [readonly]="readonly" class="form-control">
+          <label class="form-label" asteriskIfRequired="bankName" for="bankName">{{lang.map.bank_name}}</label>
+          <input validationClasses="bankName" formControlName="bankName" type="text" id="bankName" [readonly]="true"
+            class="form-control">
           <app-field-error-message controlName="bankName"></app-field-error-message>
         </div>
       </div>
@@ -199,9 +238,9 @@
   </ng-template>
   <ng-template #financialTransfersProjectsTabTemplate>
     <ng-container formGroupName="financialTransfersProjects">
-      <financial-transfers-projects #financialTransfersProjectsTab
-      [list]="model?.financialTransfersProjects  || []" [readonly]="readonly"
-      (readyEvent)="financialTransfersProjectsTabStatus = $event">      </financial-transfers-projects>
+      <financial-transfers-projects #financialTransfersProjectsTab [list]="model?.financialTransfersProjects  || []"
+        [readonly]="readonly" (readyEvent)="financialTransfersProjectsTabStatus = $event">
+      </financial-transfers-projects>
 
     </ng-container>
   </ng-template>
@@ -211,9 +250,8 @@
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label for="currency" asteriskIfRequired="currency" class="form-label">{{lang.map.currency}}</label>
           <ng-select [selectOnTab]="true" labelForId="currency" [clearable]="true" placeholder="{{lang.map.select}}"
-            id="currency"  [notFoundText]="lang.map.msg_not_found"
-            [readonly]="readonly" appendTo="body" formControlName="currency"
-            validationClasses="currency">
+            id="currency" [notFoundText]="lang.map.msg_not_found" [readonly]="readonly" appendTo="body"
+            formControlName="currency" validationClasses="currency">
             <ng-option *ngFor="let option of currencies" [value]="option.lookupKey">
               {{option.getName()}}
             </ng-option>
@@ -223,39 +261,30 @@
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label class="form-label" asteriskIfRequired="currencyTransferTransactionAmount"
             for="currencyTransferTransactionAmount">{{lang.map.transaction_amount_in_transfer_currency}}</label>
-          <input validationClasses="currencyTransferTransactionAmount" formControlName="currencyTransferTransactionAmount" type="text"
-            id="currencyTransferTransactionAmount" [readonly]="readonly" class="form-control">
+          <input validationClasses="currencyTransferTransactionAmount"
+            formControlName="currencyTransferTransactionAmount" type="text" id="currencyTransferTransactionAmount"
+            [readonly]="readonly" class="form-control">
           <app-field-error-message controlName="currencyTransferTransactionAmount"></app-field-error-message>
         </div>
         <div class="mb-4 col-md-4 col-sm-12 position-relative">
-          <label
-            for="actualTransferDate"
-            asteriskIfRequired="actualTransferDate"
-            class="form-label"
-            >{{ lang.map.follow_up_date }}</label
-          >
+          <label for="actualTransferDate" asteriskIfRequired="actualTransferDate" class="form-label">{{
+            lang.map.follow_up_date }}</label>
           <div class="input-group">
             <i class="input-group-text mdi mdi-calendar"></i>
-            <div
-              class="form-control"
-              formControlName="actualTransferDate"
-              id="actualTransferDate"
-              [options]="datepickerOptionsMap.actualTransferDate"
-              (click)="dpactualTransferDate.toggleCalendar()"
-              #dpactualTransferDate="angular-mydatepicker"
-              angular-mydatepicker
-              validationClasses="actualTransferDate"
-            ></div>
+            <div class="form-control" formControlName="actualTransferDate" id="actualTransferDate"
+              [options]="datepickerOptionsMap.actualTransferDate" (click)="dpactualTransferDate.toggleCalendar()"
+              #dpactualTransferDate="angular-mydatepicker" angular-mydatepicker validationClasses="actualTransferDate">
+            </div>
           </div>
         </div>
       </div>
       <div class="row">
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
-          <label class="form-label" asteriskIfRequired="transferringEntityId"
-            for="transferringEntityId">{{lang.map.transaction_amount_in_transfer_currency}}</label>
-          <input validationClasses="transferringEntityId" formControlName="transferringEntityId" type="text"
-            id="transferringEntityId" [readonly]="readonly" class="form-control">
-          <app-field-error-message controlName="transferringEntityId"></app-field-error-message>
+          <label class="form-label" asteriskIfRequired="transferNumber"
+            for="transferNumber">{{lang.map.transaction_amount_in_transfer_currency}}</label>
+          <input validationClasses="transferNumber" formControlName="transferNumber" type="text" id="transferNumber"
+            [readonly]="readonly" class="form-control">
+          <app-field-error-message controlName="transferNumber"></app-field-error-message>
         </div>
       </div>
     </ng-container>
