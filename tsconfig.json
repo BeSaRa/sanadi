@@ -31,8 +31,11 @@
         "./src/app/contracts/*",
         "./src/app/interfaces/*"
       ],
-      "@modules": [
+      "@modules/*": [
         "./src/app/modules/*"
+      ],
+      "@model-interceptors/*": [
+        "./src/app/model-interceptors/*"
       ]
     },
     "baseUrl": "./",
