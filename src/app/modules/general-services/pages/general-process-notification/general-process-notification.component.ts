@@ -319,7 +319,7 @@ GeneralProcessNotificationService
     this.model = model;
     const formModel = model.buildForm();
     this._loadSubTeam(this.model?.subTeam?.parent);
-    this.loadSubClasses(this.model?.firstSubDomain)
+    this.loadSubClasses(this.model?.domain)
     this.processFieldBuilder.generateFromString(this.model?.template)
 
     this.form.patchValue({

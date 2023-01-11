@@ -266,8 +266,10 @@ export class EmployeeService {
   private _setPostPermissionMapCustomPermissions(): void {
     // (super admin or (sub admin, acting super admin with permission )) can access external user screen
     const hasExternalUserAccess = (this.userRolesManageUser.isSuperAdmin(OperationTypes.CREATE) || this.userRolesManageUser.isSuperAdmin(OperationTypes.UPDATE))
-      || ((this.userRolesManageUser.isActingSuperAdmin() || this.userRolesManageUser.isSubAdmin())
-        && this.checkPermissions(PermissionsGroupMap.MANAGE_EXTERNAL_USER_PERMISSIONS_GROUP, true));
+      ||
+      // (
+        (this.userRolesManageUser.isActingSuperAdmin() || this.userRolesManageUser.isSubAdmin())
+        // && this.checkPermissions(PermissionsGroupMap.MANAGE_EXTERNAL_USER_PERMISSIONS_GROUP, true));
     hasExternalUserAccess && this._addToPermissionMap(PermissionsEnum.MANAGE_EXTERNAL_USER_DYNAMIC);
 
     // (sub admin, approval admin, acting super admin, super admin) can access external user request approval screen

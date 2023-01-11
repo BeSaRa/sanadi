@@ -1,3 +1,4 @@
+import { ProfileTypes } from '@app/enums/profile-types.enum';
 import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
 import { OpenFrom } from '@app/enums/open-from.enum';
 import { EmployeeService } from './../../../../services/employee.service';
@@ -40,7 +41,7 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
   tabs: IKeyValue[] = [];
   requestTypes: Lookup[] = this.lookupService.listByCategory.CollectionRequestType?.sort((a, b) => a.lookupKey - b.lookupKey);
   externalCooperations$ = this.profileService.getInternationalCooperation();
-  organizationsList: Profile[] = [];
+  organizationUnits: Profile[] = [];
   licenseSearch$: Subject<string> = new Subject<string>();
   countries$: Observable<Country[]> = this.countryService.loadAsLookups()
     .pipe(takeUntil(this.destroy$), share());
@@ -139,6 +140,17 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
     }, 0);
   }
 
+  loadOrgUnits() {
+    this.profileService
+      .getProfilesByProfileType([
+        ProfileTypes.CHARITY,
+        ProfileTypes.NON_PROFIT_ORGANIZATIONS,
+        ProfileTypes.INSTITUTION,
+      ])
+      .subscribe((list) => {
+        this.organizationUnits = list
+      });
+  }
   licenseSearch($event?: Event): void {
     $event?.preventDefault();
     let value = '';
@@ -279,14 +291,9 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
   }
 
   _initComponent(): void {
-    this._loadProfiles();
+    this.loadOrgUnits();
     this.handleReadonly();
     this.listenToLicenseSearch();
-  }
-
-  private _loadProfiles() {
-    this.profileService.loadAsLookups()
-      .subscribe((result) => this.organizationsList = result);
   }
 
   _buildForm(): void {
