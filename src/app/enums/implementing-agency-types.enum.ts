@@ -1,4 +1,5 @@
 export enum ImplementingAgencyTypes  {
   Partner = 1,
-  ExternalOffice
+  ExternalOffice,
+  None
 }
