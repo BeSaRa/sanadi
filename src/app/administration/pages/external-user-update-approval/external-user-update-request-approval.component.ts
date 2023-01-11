@@ -57,7 +57,13 @@ export class ExternalUserUpdateRequestApprovalComponent extends AdminGenericComp
   profiles$ = this.profileService.loadAsLookups();
   selectedFilter?: Lookup;
 
-  displayedColumns: string[] = ['rowSelection', 'domainName', 'arName', 'enName', 'requestType', 'updatedOn', 'requestStatus', 'updatedBy', 'actions'];// 'empNum', 'organization', 'status', 'statusDateModified',
+  get displayedColumns() : string[] {
+    if(!this.service.userRolesManageUser.isApprovalAdmin()) {
+      return ['domainName', 'arName', 'enName', 'requestType', 'updatedOn', 'requestStatus', 'updatedBy', 'actions'];// 'empNum', 'organization', 'status', 'statusDateModified',
+    } else {
+      return ['rowSelection', 'domainName', 'arName', 'enName', 'requestType', 'updatedOn', 'requestStatus', 'updatedBy', 'actions'];// 'empNum', 'organization', 'status', 'statusDateModified',
+    }
+  }
   sortingCallbacks = {
     updatedOn: (a: ExternalUserUpdateRequest, b: ExternalUserUpdateRequest, dir: SortEvent): number => {
       let value1 = !CommonUtils.isValidValue(a) ? '' : DateUtils.getTimeStampFromDate(a.updatedOn!),
@@ -104,7 +110,7 @@ export class ExternalUserUpdateRequestApprovalComponent extends AdminGenericComp
       label: 'lbl_accept',
       icon: ActionIconsEnum.ACCEPT,
       onClick: (item) => this.acceptRequest(item),
-      show: () => this.service.canAcceptUserRequest()
+      show: (item) => this.service.canAcceptUserRequest() && item.requestStatus != ExternalUserUpdateRequestStatusEnum.APPROVED
     },
     // reject
     {
@@ -112,7 +118,7 @@ export class ExternalUserUpdateRequestApprovalComponent extends AdminGenericComp
       label: 'lbl_reject',
       icon: ActionIconsEnum.CANCEL,
       onClick: (item) => this.rejectRequest(item),
-      show: () => this.service.canRejectUserRequest()
+      show: (item) => this.service.canRejectUserRequest() && item.requestStatus != ExternalUserUpdateRequestStatusEnum.APPROVED
     }
   ];
 

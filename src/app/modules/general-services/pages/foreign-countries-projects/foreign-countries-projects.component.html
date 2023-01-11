@@ -54,7 +54,7 @@
             placeholder="{{ lang.map.select }}" id="organizationId" [readonly]="readonly || criticalOnTask || isCancelRequestType"
             [notFoundText]="lang.map.msg_not_found" appendTo="body" validationClasses="organizationId"
             formControlName="organizationId">
-            <ng-option *ngFor="let option of organizationsList" [value]="option.id">{{ option.getName() }}</ng-option>
+            <ng-option *ngFor="let option of organizationUnits" [value]="option.id">{{ option.getName() }}</ng-option>
           </ng-select>
           <app-field-error-message controlName="organizationId"></app-field-error-message>
         </div>
