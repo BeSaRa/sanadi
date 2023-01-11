@@ -1,3 +1,6 @@
+import { SelectBankAccountPopupComponent } from './popups/select-bank-account-popup/select-bank-account-popup.component';
+import { SelectPreRegisteredPopupComponent } from './popups/select-pre-registered-popup/select-pre-registered-popup.component';
+import { SelectAuthorizedEntityPopupComponent } from './popups/select-authorized-entity-popup/select-authorized-entity-popup.component';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import {
@@ -40,6 +43,10 @@ import { ResearchAndStudiesComponent } from './shared/research-and-studies/resea
     ResearchAndStudiesComponent,
     ParticipantOrganizationsPopupComponent,
     WorkAreasComponent,
+    ApproveWithDocumentPopupComponent,
+    SelectAuthorizedEntityPopupComponent,
+    SelectPreRegisteredPopupComponent,
+    SelectBankAccountPopupComponent
   ],
   imports: [
     CommonModule,

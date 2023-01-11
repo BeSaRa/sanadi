@@ -1763,4 +1763,9 @@ export interface ILanguageKeys {
   transferee_bank_name: string;
   employee_with_jobNumber: string;
   lbl_mobile_number: string;
+  entity_type_required: string;
+  execution_country_required: string;
+  transfer_to_country_required: string;
+  authorized_entities: string;
+  pre_registered_entities: string;
 }
