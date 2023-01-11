@@ -3,9 +3,18 @@ import { BankAccount } from './../models/bank-account';
 import { SelectPreRegisteredPopupComponent } from './../modules/e-services-main/popups/select-pre-registered-popup/select-pre-registered-popup.component';
 import { SelectAuthorizedEntityPopupComponent } from './../modules/e-services-main/popups/select-authorized-entity-popup/select-authorized-entity-popup.component';
 import { AdminResult } from '@app/models/admin-result';
+import { SelectBankAccountPopupComponent } from './../modules/e-services-main/popups/select-bank-account-popup/select-bank-account-popup.component';
+import { BankAccount } from './../models/bank-account';
+import { SelectPreRegisteredPopupComponent } from './../modules/e-services-main/popups/select-pre-registered-popup/select-pre-registered-popup.component';
+import { SelectAuthorizedEntityPopupComponent } from './../modules/e-services-main/popups/select-authorized-entity-popup/select-authorized-entity-popup.component';
+import { AdminResult } from '@app/models/admin-result';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
+import {
+  CastResponse,
+  CastResponseContainer,
+} from '@app/decorators/decorators/cast-response';
 import {
   CastResponse,
   CastResponseContainer,
@@ -59,7 +68,24 @@ export class FinancialTransferLicensingService extends BaseGenericEService<Finan
     'ouInfo',
     'creatorInfo',
   ];
+  searchColumns: string[] = [
+    'fullSerial',
+    'requestTypeInfo',
+    'subject',
+    'goal',
+    'createdOn',
+    'caseStatus',
+    'ouInfo',
+    'creatorInfo',
+  ];
   selectLicenseDisplayColumns: string[] = [];
+  selectLicenseDisplayColumnsReport: string[] = [
+    'licenseNumber',
+    'subject',
+    'goal',
+    'status',
+    'actions',
+  ];
   selectLicenseDisplayColumnsReport: string[] = [
     'licenseNumber',
     'subject',
