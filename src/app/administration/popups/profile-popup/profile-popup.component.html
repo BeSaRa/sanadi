@@ -14,6 +14,9 @@
     <tab *ngIf="tabsData.services.show!()" [name]="tabsData.services.name" [hasError]="false"
          [template]="linkServices" [title]="lang.map.link_services">
     </tab>
+    <tab *ngIf="tabsData.attachments.show!()" [name]="tabsData.attachments.name" [hasError]="false"
+         [template]="attachments" [title]="lang.map.attachments">
+    </tab>
   </tabs-list>
   <ng-template #basicInfoTab [formGroup]="form">
     <form novalidate formGroupName="basicInfo" autocomplete="off">
@@ -197,6 +200,9 @@
         </app-table>
       </div>
     </div>
+  </ng-template>
+  <ng-template #attachments>
+    <profile-attachments [profileId]="''+model.id"></profile-attachments>
   </ng-template>
 </div>
 <div class="dialog-actions">

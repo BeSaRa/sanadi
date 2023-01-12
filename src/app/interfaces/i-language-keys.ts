@@ -1717,4 +1717,6 @@ export interface ILanguageKeys {
   view_final_report:string;
   msg_final_report_required:string;
   lbl_final_report:string;
+  attachment_name:string;
+  document_name: string;
 }
