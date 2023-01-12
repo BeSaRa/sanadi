@@ -92,9 +92,9 @@ export class GeneralProcessNotification
     return {
       requestType: controls ? [requestType, CustomValidators.required] : requestType,
       oldFullSerial: controls ? [oldFullSerial] : oldFullSerial,
-      description: controls ? [description, CustomValidators.required] : description,
+      description: controls ? [description, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)] : description,
       DSNNN: {
-        departmentId: controls ? [departmentId, CustomValidators.required] : departmentId,
+        departmentId: controls ? [departmentId] : departmentId,
         competentDepartmentID: controls ? [competentDepartmentID] : competentDepartmentID,
         domain: controls ? [domain] : domain,
         firstSubDomain: controls ? [firstSubDomain] : firstSubDomain,

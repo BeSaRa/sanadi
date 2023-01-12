@@ -54,7 +54,7 @@
             placeholder="{{ lang.map.select }}" id="organizationId" [readonly]="readonly || criticalOnTask || isCancelRequestType"
             [notFoundText]="lang.map.msg_not_found" appendTo="body" validationClasses="organizationId"
             formControlName="organizationId">
-            <ng-option *ngFor="let option of organizationsList" [value]="option.id">{{ option.getName() }}</ng-option>
+            <ng-option *ngFor="let option of organizationUnits" [value]="option.id">{{ option.getName() }}</ng-option>
           </ng-select>
           <app-field-error-message controlName="organizationId"></app-field-error-message>
         </div>
@@ -67,22 +67,14 @@
           </ng-select>
           <app-field-error-message controlName="country"></app-field-error-message>
         </div>
-        <div class="col-sm-6 col-md-4 mb-4 position-relative">
-          <label asteriskIfRequired="needSubject" for="needSubject" class="form-label">{{ lang.map.subject_of_need
-            }}</label>
-          <input type="text" maxlength="300" validationClasses="needSubject"
-            [readonly]="readonly || isCancelRequestType" trimInput class="form-control" id="needSubject"
-            formControlName="needSubject" />
-          <app-field-error-message controlName="needSubject"></app-field-error-message>
-        </div>
         <div class="mb-4 position-relative">
-          <label for="classDescription" class="form-label" asteriskIfRequired="classDescription">{{
+          <label for="needSubject" class="form-label" asteriskIfRequired="needSubject">{{
             lang.map.lbl_description
             }}</label>
-          <textarea id="classDescription" trimInput [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
-            [readonly]="readonly || isCancelRequestType" validationClasses="classDescription"
-            formControlName="classDescription" class="form-control"></textarea>
-          <app-field-error-message controlName="classDescription"></app-field-error-message>
+          <textarea id="needSubject" trimInput [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
+            [readonly]="readonly || isCancelRequestType" validationClasses="needSubject"
+            formControlName="needSubject" class="form-control"></textarea>
+          <app-field-error-message controlName="needSubject"></app-field-error-message>
         </div>
         <div class="mb-4 position-relative">
           <label for="justification" class="form-label" asteriskIfRequired="justification">{{

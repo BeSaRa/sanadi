@@ -1,4 +1,3 @@
-import { Employment } from '@app/models/employment';
 import { IModelInterceptor } from '@app/interfaces/i-model-interceptor';
 import { InquirySearchCriteria } from '../models/inquiry-search-criteria';
 import { DateUtils } from '@app/helpers/date-utils';

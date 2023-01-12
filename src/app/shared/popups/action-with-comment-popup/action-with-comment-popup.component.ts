@@ -170,7 +170,9 @@ export class ActionWithCommentPopupComponent implements OnInit, OnDestroy {
       day: disableDate.getDate()
     };
     this.datepickerOptionsMap.licenseStartDate = toFieldDateOptions;
-    this.licenseStartDateField.reset()
+
+    if (new Date(this.licenseStartDateField.value.singleDate.jsDate).getMonth() < disableDate.getMonth())
+      this.licenseStartDateField.reset()
   }
   updateForm(caseDetails: LicenseApprovalModel<any, any>, serviceData: ServiceData) {
     let data: any = {

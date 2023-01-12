@@ -630,7 +630,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
           }
         },
         show: (item: QueryResult) => {
-          return item.RESPONSES.indexOf(WFResponseType.TO_GM) !== -1 || item.RESPONSES.indexOf(WFResponseType.SEND_TO_GM) !== -1;
+          return item.RESPONSES.indexOf(WFResponseType.SEND_TO_GM) !== -1;
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => {
           this.actionSendToGeneralManager(item, viewDialogRef);
