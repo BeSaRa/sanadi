@@ -112,6 +112,7 @@ import {
   ExternalUserUpdateChangesPopupComponent
 } from './popups/external-user-update-changes-popup/external-user-update-changes-popup.component';
 import {UserSecurityExternalComponent} from './shared/user-security-external/user-security-external.component';
+import { ProfileAttachmentsComponent } from './shared/profile-attachments/profile-attachments.component';
 
 @NgModule({
   declarations: [
@@ -197,7 +198,8 @@ import {UserSecurityExternalComponent} from './shared/user-security-external/use
     ExternalUserUpdateRequestApprovalComponent,
     ExternalUserUpdateApprovalPopupComponent,
     ExternalUserUpdateChangesPopupComponent,
-    UserSecurityExternalComponent
+    UserSecurityExternalComponent,
+    ProfileAttachmentsComponent
   ],
   imports: [
     SharedModule,

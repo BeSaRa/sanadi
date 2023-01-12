@@ -115,6 +115,7 @@ import {ExternalOfficesPopupComponent} from '@app/shared/components/external-off
 import {ExecutiveManagementComponent} from '@app/shared/components/executive-management/executive-management.component';
 import {BankBranchComponent} from '@app/shared/components/bank-branch/bank-branch.component';
 import {ProfileCodeExistsDirective} from '@app/validators/profile-code-exists.directive';
+import { ProfileAttachmentDetailsPopupComponent } from './popups/profile-attachment-details-popup/profile-attachment-details-popup.component';
 
 @NgModule({
   declarations: [
@@ -215,7 +216,8 @@ import {ProfileCodeExistsDirective} from '@app/validators/profile-code-exists.di
     ExecutiveManagementComponent,
     BankBranchComponent,
     ProfileCodeExistsDirective,
-    ReturnToOrganizationWithCommentPopupComponent
+    ReturnToOrganizationWithCommentPopupComponent,
+    ProfileAttachmentDetailsPopupComponent
   ],
   imports: [
     CommonModule,

@@ -1711,6 +1711,8 @@ export interface ILanguageKeys {
   establishment_name_english: string;
   basic_salary: string;
   net_salary: string;
+  attachment_name:string;
+  document_name: string;
   send_to_chief: string;
   terminate_task_success: string;
   msg_terminate_all_tasks: string;
