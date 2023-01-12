@@ -36,6 +36,9 @@
       ],
       "@model-interceptors/*": [
         "./src/app/model-interceptors/*"
+      ],
+      "@models/*": [
+        "./src/app/models/*"
       ]
     },
     "baseUrl": "./",
