@@ -1074,7 +1074,7 @@ export const navigationMenuList = [
     svg: null
   },
   {
-    id: 30,
+    id: 83,
     langKey: 'menu_deduction_ratio',
     path: '/home/administration/deduction-ratio',
     icon: 'mdi-badge-account-horizontal-outline',
