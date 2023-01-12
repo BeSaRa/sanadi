@@ -13,7 +13,7 @@ import {switchMap, takeUntil, tap} from "rxjs/operators";
 import {CustomTermPopupComponent} from "@app/shared/popups/custom-term-popup/custom-term-popup.component";
 import {HasLicenseDurationMonthly} from "@app/interfaces/has-license-duration-monthly";
 import {HasLicenseApprovalMonthly} from "@app/interfaces/has-license-approval-monthly";
-import {mixinApprovalLicenseWithMonthly} from "@app/mixins/minin-approval-license-with-monthly";
+import {mixinApprovalLicenseWithMonthly} from "@app/mixins/mixin-approval-license-with-monthly";
 import {Constructor} from "@app/helpers/constructor";
 import {BaseGenericEService} from "@app/generics/base-generic-e-service";
 import {CustomValidators} from "@app/validators/custom-validators";

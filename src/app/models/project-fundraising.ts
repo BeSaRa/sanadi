@@ -14,7 +14,7 @@ import {EmployeeService} from "@services/employee.service";
 import currency from "currency.js";
 import {DialogRef} from "@app/shared/models/dialog-ref";
 import {WFResponseType} from "@app/enums/wfresponse-type.enum";
-import {mixinApprovalLicenseWithMonthly} from "@app/mixins/minin-approval-license-with-monthly";
+import {mixinApprovalLicenseWithMonthly} from "@app/mixins/mixin-approval-license-with-monthly";
 import {mixinRequestType} from "@app/mixins/mixin-request-type";
 import {ICaseModel} from "@contracts/icase-model";
 import {HasLicenseApprovalMonthly} from "@contracts/has-license-approval-monthly";

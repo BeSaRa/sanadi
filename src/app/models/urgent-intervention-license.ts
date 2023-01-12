@@ -13,7 +13,7 @@ import { LangService } from '@app/services/lang.service';
 import { Validators } from '@angular/forms';
 import { EmployeeService } from '@app/services/employee.service';
 import { CaseModel } from "@app/models/case-model";
-import { mixinApprovalLicenseWithMonthly } from "@app/mixins/minin-approval-license-with-monthly";
+import { mixinApprovalLicenseWithMonthly } from "@app/mixins/mixin-approval-license-with-monthly";
 import { HasLicenseApprovalMonthly } from "@app/interfaces/has-license-approval-monthly";
 import { mixinRequestType } from "@app/mixins/mixin-request-type";
 import { HasRequestType } from "@app/interfaces/has-request-type";
