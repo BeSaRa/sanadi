@@ -19,7 +19,7 @@ import {
 } from "@app/shared/components/approval-form-monthly/approval-form-monthly.component";
 import {ProjectImplementation} from "@app/models/project-implementation";
 
-// noinspection AngularMissingOrInvalidDeclarationInModule
+
 @Component({
   selector: 'project-implementation-approve-task-popup',
   templateUrl: './project-implementation-approve-task-popup.component.html',
