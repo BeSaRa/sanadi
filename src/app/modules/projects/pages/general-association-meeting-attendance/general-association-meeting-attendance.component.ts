@@ -230,16 +230,32 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     this.isManagerFinalReview = this.model?.isManagerFinalReviewStep()!;
 
     if (this.isMemberReview || this.isDecisionMakerReview) {
-      let generalNotesObservable = (this.isDecisionMakerReview && this.model?.isSendToMember) ? this.service.getDecisionMakerMeetingGeneralNotes(this.memberId, this.model?.id) : this.service.getMeetingGeneralNotes(this.memberId, this.model?.id)
-      generalNotesObservable
-        .subscribe(notes => {
-
-          if(this.isDecisionMakerReview && this.model?.isSendToMember) {
-            this.membersGeneralNotes = notes;
-          } else {
-            this.generalNotes = notes;
-          }
+      let allGeneralMeetingNotesObs = this.service.getDecisionMakerMeetingGeneralNotes(this.memberId, this.model?.id);
+      let specificGeneralMeetingNotesObs = this.service.getMeetingGeneralNotes(this.memberId, this.model?.id);
+      if(this.isDecisionMakerReview && this.model?.isSendToMember) {
+        allGeneralMeetingNotesObs.subscribe(notes => {
+          this.membersGeneralNotes = notes;
+          this.generalNotes = notes;
         });
+      }
+      if(this.isMemberReview) {
+        specificGeneralMeetingNotesObs.subscribe(notes => {
+          this.generalNotes = notes;
+        })
+      }
+
+
+
+      // let generalNotesObservable = (this.isDecisionMakerReview && this.model?.isSendToMember) ? this.service.getDecisionMakerMeetingGeneralNotes(this.memberId, this.model?.id) : this.service.getMeetingGeneralNotes(this.memberId, this.model?.id)
+      // generalNotesObservable
+      //   .subscribe(notes => {
+      //
+      //     if(this.isDecisionMakerReview && this.model?.isSendToMember) {
+      //       this.membersGeneralNotes = notes;
+      //     } else {
+      //       this.generalNotes = notes;
+      //     }
+      //   });
     }
 
     if (this.model?.isSentToMember() && this.model?.isDecisionMakerReviewStep() || this.model?.isManagerFinalReviewStep()) {
