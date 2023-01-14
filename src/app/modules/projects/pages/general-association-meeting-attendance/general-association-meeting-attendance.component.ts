@@ -277,13 +277,24 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   }
 
   setMeetingPointsForm() {
-    if (this.model?.isDecisionMakerReviewStep() || this.model?.isManagerFinalReviewStep()) {
-      this.service.getMeetingPointsForDecisionMaker(this.model?.id).subscribe(meetingReport => {
-        if (this.isMemberReview || ((this.isDecisionMakerReview || this.isManagerFinalReview) && meetingReport && meetingReport.meetingMainItem.length > 0)) {
+    if (this.model?.isDecisionMakerReviewStep() && this.model?.isSendToMember) {
+      this.service.getFinalMeetingPointsForDecisionMaker(this.model?.id).subscribe(meetingReport => {
+        if (meetingReport && meetingReport.meetingMainItem.length > 0) {
           // update meeting points form
           this.meetingReport = meetingReport;
           this.updateMeetingPointsForm(meetingReport);
-          // auto check respect terms
+        } else {
+          this.buildMeetingPointsForm();
+        }
+      });
+    }
+
+    if (this.model?.isManagerFinalReviewStep() || (this.model?.isDecisionMakerReviewStep() && !this.model?.isSendToMember)) {
+      this.service.getMeetingPointsForDecisionMaker(this.model?.id).subscribe(meetingReport => {
+        if (meetingReport && meetingReport.meetingMainItem.length > 0) {
+          // update meeting points form
+          this.meetingReport = meetingReport;
+          this.updateMeetingPointsForm(meetingReport);
         } else {
           this.buildMeetingPointsForm();
         }

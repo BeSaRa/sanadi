@@ -206,6 +206,18 @@ export class GeneralAssociationMeetingAttendanceService extends BaseGenericEServ
     unwrap: 'rs',
     fallback: '$default'
   })
+  private _getFinalMeetingPointsForDecisionMaker(caseId?: string): Observable<MeetingAttendanceReport> {
+    return this.http.get<MeetingAttendanceReport>(this._getURLSegment() + '/items/final' + caseId);
+  }
+
+  getFinalMeetingPointsForDecisionMaker(caseId?: string): Observable<MeetingAttendanceReport> {
+    return this._getFinalMeetingPointsForDecisionMaker(caseId);
+  }
+
+  @CastResponse(() => MeetingAttendanceReport, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
   private _getMeetingPointsForMember(caseId?: string): Observable<MeetingAttendanceReport> {
     return this.http.get<MeetingAttendanceReport>(this._getURLSegment() + '/items/user/' + caseId);
   }
