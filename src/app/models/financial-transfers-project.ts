@@ -27,7 +27,7 @@ export class FinancialTransfersProject extends SearchableCloneable<FinancialTran
         ? [
             fullSerial,
             [
-
+              CustomValidators.required,
               CustomValidators.maxLength(
                 CustomValidators.defaultLengths.ENGLISH_NAME_MAX
               ),
