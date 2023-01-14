@@ -1070,6 +1070,8 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     if (!this.shouldFollowTheOpenFrom(openFrom)) {
       openFrom = this.getTheRightOpenForm();
     }
+    console.log(this.openFrom);
+
     this.openFrom = openFrom;
     switch (openFrom) {
       case OpenFrom.USER_INBOX:

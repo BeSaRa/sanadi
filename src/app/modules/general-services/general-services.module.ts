@@ -1,3 +1,4 @@
+import { FinancialTransferLicensingApprovePopupComponent } from './popups/financial-transfer-licensing-approve-popup/financial-transfer-licensing-approve-popup.component';
 import { FinancialTransfersProjectsComponent } from './shared/financial-transfers-projects/financial-transfers-projects.component';
 import { FinancialTransfersLicensingComponent } from './pages/financial-transfers-licensing/financial-transfers-licensing.component';
 import { CommonModule } from '@angular/common';
@@ -99,7 +100,8 @@ import { CharityReportsComponent } from './shared/risk-reports/risk-reports.comp
     OrganizationsEntitiesSupportComponent,
     OrganizationsEntitiesSupportPopupComponent,
     FinancialTransfersLicensingComponent,
-    FinancialTransfersProjectsComponent
+    FinancialTransfersProjectsComponent,
+    FinancialTransferLicensingApprovePopupComponent
   ],
   imports: [
     CommonModule,
