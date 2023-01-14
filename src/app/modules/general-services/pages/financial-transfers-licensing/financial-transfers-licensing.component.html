@@ -9,8 +9,8 @@
       [title]="lang.map.transferee_bank_account"></tab>
     <tab [name]="tabsData.transferBankAccountGroup.name" [hasError]="getTabInvalidStatus('transferBankAccountGroup')"
       [template]="transferBankAccountTabTemplate" [title]="lang.map.transfer_bank_account"></tab>
-    <tab [name]="tabsData.financialTransfersProjects.name"
-      [hasError]="getTabInvalidStatus('financialTransfersProjects')" [template]="financialTransfersProjectsTabTemplate"
+    <tab *ngIf="tabsData.financialTransfersProjects.show!()" [name]="tabsData.financialTransfersProjects.name"
+      [hasError]=" getTabInvalidStatus('financialTransfersProjects')" [template]="financialTransfersProjectsTabTemplate"
       [title]="lang.map.financial_transfers_projects"></tab>
     <tab [name]="tabsData.affidavitOfCompletionGroup.name"
       [hasError]="getTabInvalidStatus('affidavitOfCompletionGroup')" [template]="affidavitOfCompletionTabTemplate"
@@ -238,8 +238,12 @@
   </ng-template>
   <ng-template #financialTransfersProjectsTabTemplate>
     <ng-container formGroupName="financialTransfersProjects">
-      <financial-transfers-projects #financialTransfersProjectsTab [list]="model?.financialTransfersProjects  || []"
-        [readonly]="readonly" (readyEvent)="financialTransfersProjectsTabStatus = $event">
+      <financial-transfers-projects
+      *ngIf="tabsData.financialTransfersProjects.show!()"
+      #financialTransfersProjectsTab [list]="model?.financialTransfersProjects  || []"
+        [readonly]="readonly" (readyEvent)="financialTransfersProjectsTabStatus = $event"
+        (listUpdated)="updateTransactionAmount($event)" [submissionMechanism]="submissionMechanism"
+        >
       </financial-transfers-projects>
 
     </ng-container>
@@ -272,7 +276,8 @@
           <div class="input-group">
             <i class="input-group-text mdi mdi-calendar"></i>
             <div class="form-control" formControlName="actualTransferDate" id="actualTransferDate"
-              [options]="datepickerOptionsMap.actualTransferDate" (click)="dpactualTransferDate.toggleCalendar()"
+            [ngClass]="{'input-disabled': readonly}" id="establishmentDate"
+              [options]="datepickerOptionsMap.actualTransferDate" (click)="!readonly && dpactualTransferDate.toggleCalendar()"
               #dpactualTransferDate="angular-mydatepicker" angular-mydatepicker validationClasses="actualTransferDate">
             </div>
           </div>
@@ -281,7 +286,7 @@
       <div class="row">
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label class="form-label" asteriskIfRequired="transferNumber"
-            for="transferNumber">{{lang.map.transaction_amount_in_transfer_currency}}</label>
+            for="transferNumber">{{lang.map.transfer_number}}</label>
           <input validationClasses="transferNumber" formControlName="transferNumber" type="text" id="transferNumber"
             [readonly]="readonly" class="form-control">
           <app-field-error-message controlName="transferNumber"></app-field-error-message>
