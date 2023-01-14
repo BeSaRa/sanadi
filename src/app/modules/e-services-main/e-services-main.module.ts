@@ -45,7 +45,6 @@ import { ResearchAndStudiesComponent } from './shared/research-and-studies/resea
     ResearchAndStudiesComponent,
     ParticipantOrganizationsPopupComponent,
     WorkAreasComponent,
-    ApproveWithDocumentPopupComponent,
     SelectAuthorizedEntityPopupComponent,
     SelectPreRegisteredPopupComponent,
     SelectBankAccountPopupComponent

@@ -1,5 +1,3 @@
-import { NgSelectComponent } from '@ng-select/ng-select';
-import { InternalBankAccountApprovalService } from './../../../../services/internal-bank-account-approval.service';
 import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import {
   UntypedFormArray,
@@ -13,10 +11,12 @@ import { OpenFrom } from '@app/enums/open-from.enum';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { SaveTypes } from '@app/enums/save-types';
 import { ServiceRequestTypes } from '@app/enums/service-request-types';
+import { SubmissionMechanisms } from '@app/enums/submission-mechanisms.enum';
 import { UserClickOn } from '@app/enums/user-click-on.enum';
 import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
 import { CommonUtils } from '@app/helpers/common-utils';
 import { DateUtils } from '@app/helpers/date-utils';
+import { Bank } from '@app/models/bank';
 import { BankAccount } from '@app/models/bank-account';
 import { FinancialTransferLicensing } from '@app/models/financial-transfer-licensing';
 import { FinancialTransferLicensingSearchCriteria } from '@app/models/financial-transfer-licesing-search-criteria';
@@ -49,6 +49,7 @@ import {
   tap,
 } from 'rxjs/operators';
 import { FinancialTransfersProjectsComponent } from '../../shared/financial-transfers-projects/financial-transfers-projects.component';
+import { FinancialTransferRequestTypes } from './../../../../enums/financial-transfer-request-types.enum';
 import { FinancialTransferTypes } from './../../../../enums/financial-transfer-types.enum';
 import { FinancialTransfereeTypes } from './../../../../enums/financial-transferee-types.enum';
 import { AdminResult } from './../../../../models/admin-result';
@@ -83,6 +84,8 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
     private finalExternalOfficeApprovalService: FinalExternalOfficeApprovalService
   ) {
     super();
+    this.submissionMechanism =
+      this.employeeService.getProfile()?.submissionMechanism ?? 1;
   }
 
   //#region Setup
@@ -104,7 +107,7 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
     this.lookupService.listByCategory.FinancialTransferRequestType.sort(
       (a, b) => a.lookupKey - b.lookupKey
     );
-  submissionMechanism: Lookup[] =
+  submissionMechanisms: Lookup[] =
     this.lookupService.listByCategory.SubmissionMechanism.sort(
       (a, b) => a.lookupKey - b.lookupKey
     );
@@ -129,13 +132,12 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
   selectedLicense?: FinancialTransferLicensing;
   authorizedEntityBankAccounts: BankAccount[] = [];
   transferEntityBankAccounts: BankAccount[] = [];
-  bankAccountsControl!: UntypedFormControl ;
+  bankAccountsControl!: UntypedFormControl;
 
   financialTransfersProjectsTabStatus: ReadinessStatus = 'READY';
   @ViewChild('financialTransfersProjectsTab')
   financialTransfersProjectsComponentRef!: FinancialTransfersProjectsComponent;
-
-
+  submissionMechanism!: number;
   tabsData: TabMap = {
     basicInfo: {
       name: 'basicInfoTab',
@@ -190,15 +192,8 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
       index: 4,
       checkTouchedDirty: false,
       isTouchedOrDirty: () => true,
-      show: () => false,
-      validStatus: () => {
-        // return (
-        //   !this.financialTransfersProjectsComponentRef ||
-        //   (this.financialTransfersProjectsTabStatus === 'READY' &&
-        //     this.financialTransfersProjectsComponentRef.list.length > 0)
-        // );
-        return true;
-      },
+      show: () => this.isFinancialTransfersProjectsRequired(),
+      validStatus: () => true,
     },
     affidavitOfCompletionGroup: {
       name: 'affidavitOfCompletionTab',
@@ -349,9 +344,7 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
   }
 
   _destroyComponent(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-    this.destroy$.unsubscribe();
+
   }
 
   _getNewInstance(): FinancialTransferLicensing {
@@ -384,6 +377,7 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
   _resetForm(): void {
     this.form.reset();
     this.model = this._getNewInstance();
+    this.bankAccountsControl.reset();
     this.operation = this.operationTypes.CREATE;
     this.setSelectedLicense(undefined, true);
     this._setDefaultValues();
@@ -443,6 +437,7 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
     let requestTypeValue = this.requestTypeField && this.requestTypeField.value;
     // set validators to empty
     if (!requestTypeValue || requestTypeValue === ServiceRequestTypes.NEW) {
+      this.oldLicenseFullSerialField?.setValidators([]);
       if (!this.model?.id || this.model.canCommit()) {
         this.oldLicenseFullSerialField?.setValue(null);
         this.setSelectedLicense(undefined, true);
@@ -460,6 +455,43 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
       ]);
     }
     this.oldLicenseFullSerialField.updateValueAndValidity();
+  }
+  private _handleAffidavitOfCompletionFieldsValidations(): void {
+    this._resetAffidavitOfCompletionGroup();
+
+    const isAffidavitOfCompletionRequired =
+      this.requestType$.value ===
+        FinancialTransferRequestTypes.TRANSFER_STATEMENT_TRANSFERRED &&
+      this.submissionMechanism === SubmissionMechanisms.NOTIFICATION;
+
+    if (isAffidavitOfCompletionRequired) {
+      this._addRequiredToAffidavitOfCompletionGroup();
+    }
+    this.currency.updateValueAndValidity();
+    this.currencyTransferTransactionAmount.updateValueAndValidity();
+    this.actualTransferDate.updateValueAndValidity();
+    this.transferNumber.updateValueAndValidity();
+  }
+  private _resetAffidavitOfCompletionGroup() {
+    this.currency.setValidators([]);
+    this.currencyTransferTransactionAmount.setValidators([
+      CustomValidators.decimal(CustomValidators.defaultLengths.DECIMAL_PLACES),
+    ]);
+    this.actualTransferDate.setValidators([]);
+    this.transferNumber.setValidators([
+      CustomValidators.number,
+      CustomValidators.maxLength(
+        CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+      ),
+    ]);
+  }
+  private _addRequiredToAffidavitOfCompletionGroup() {
+    this.currency.addValidators([CustomValidators.required]);
+    this.currencyTransferTransactionAmount.addValidators([
+      CustomValidators.required,
+    ]);
+    this.actualTransferDate.addValidators([CustomValidators.required]);
+    this.transferNumber.addValidators([CustomValidators.required]);
   }
   private _loadSelectedLicenseById(id: string, callback?: any): void {
     if (!id) {
@@ -701,26 +733,31 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
     this.service
       .loadOrganizationBankAccounts(this.employeeService.getProfile()?.id!)
       .subscribe((accounts) => {
-        console.log(accounts);
-
         this.transferEntityBankAccounts = [...accounts];
       });
   }
   private _loadExternalProjects() {
-    this.service.loadEternalProjects(this.employeeService.getProfile()?.id!)
-    .subscribe()
-
+    this.service
+      .loadEternalProjects(this.employeeService.getProfile()?.id!)
+      .subscribe();
   }
   private _listenToTransferTypeChange() {
     this.transferType.valueChanges
       .pipe(
         takeUntil(this.destroy$),
         tap((_) => {
+          this.model!.financialTransfersProjects = [];
+          this.tabsData.financialTransfersProjects.validStatus = () => true;
+          this.qatariTransactionAmount.reset();
           this.transfereeType.reset();
           if (this.isExternalTransferType()) {
             this.transfereeType.setValue(
               FinancialTransfereeTypes.AUTHORIZED_ENTITY
             );
+          }
+          if (this.isQatariTransactionAmountAllowed()) {
+            this.tabsData.financialTransfersProjects.validStatus = () =>
+              this.isFinancialProjectsRequired();
           }
         })
       )
@@ -783,14 +820,20 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
   }
 
   private _listenToBankAccountsChange() {
-    this.bankAccountsControl.valueChanges.pipe(
-      takeUntil(this.destroy$),
-      tap((bankAccount:BankAccount) => {
-        this.bankName.setValue(bankAccount.bankName ?? 'Bank Name');
-        this.transferFromIBAN.setValue(bankAccount.iBAN);
-        this.accountNumber.setValue(bankAccount.accountNumber);
-      })
-    ).subscribe();
+    this.bankAccountsControl.valueChanges
+      .pipe(
+        takeUntil(this.destroy$),
+        tap((bankAccount: BankAccount) => {
+          if(bankAccount){
+            this.bankName.setValue(
+              new Bank().clone(bankAccount.bankInfo).getName()
+            );
+            this.transferFromIBAN.setValue(bankAccount.iBAN);
+            this.accountNumber.setValue(bankAccount.accountNumber);
+          }
+        })
+      )
+      .subscribe();
   }
   //#endregion
 
@@ -821,6 +864,7 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
           this.requestType$.next(requestTypeValue);
 
           this._handleLicenseValidationsByRequestType();
+          this._handleAffidavitOfCompletionFieldsValidations();
         } else {
           this.requestTypeField.setValue(this.requestType$.value);
         }
@@ -882,7 +926,13 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
       }
     }
   }
-
+  isFinancialTransfersProjectsRequired(): boolean {
+    return (
+      this.transferType.value ===
+        FinancialTransferTypes.PROJECTS_FOR_EXECUTING_AGENCY ||
+      this.transferType.value === FinancialTransferTypes.PROJECTS_TO_OTHERS
+    );
+  }
   isEditRequestTypeAllowed(): boolean {
     return !this.model?.id || (!!this.model?.id && this.model.canCommit());
   }
@@ -898,7 +948,6 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
   }
 
   isQatariTransactionAmountAllowed(): boolean {
-    //TODO: CHECK WHY THE OTHERS IS NOT WORKING
     return (
       this.transferType.value ===
         FinancialTransferTypes.PROJECTS_FOR_EXECUTING_AGENCY ||
@@ -934,6 +983,13 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
         FinancialTransferTypes.PROJECTS_FOR_EXECUTING_AGENCY ||
       this.transferType.value ===
         FinancialTransferTypes.OVERSEAS_OFFICE_OPERATING_EXPENSES
+    );
+  }
+  isFinancialProjectsRequired(): boolean {
+    return (
+      !!this.financialTransfersProjectsComponentRef &&
+      this.financialTransfersProjectsTabStatus === 'READY' &&
+      this.financialTransfersProjectsComponentRef.list.length > 0
     );
   }
   licenseSearch($event?: Event): void {
@@ -1024,6 +1080,9 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
     this.bankName.setValue(bankAccount.bankName ?? 'Bank Name');
     this.transferFromIBAN.setValue(bankAccount.iBan);
     this.accountNumber.setValue(bankAccount.accountNumber);
+  }
+  updateTransactionAmount(totalTransactionsAmount: number) {
+    this.qatariTransactionAmount.setValue(totalTransactionsAmount);
   }
   //#endregion
 
@@ -1118,6 +1177,26 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
   }
   get affidavitOfCompletionGroup(): UntypedFormGroup {
     return this.form.get('affidavitOfCompletion') as UntypedFormGroup;
+  }
+  get currency(): UntypedFormControl {
+    return this.affidavitOfCompletionGroup.get(
+      'currency'
+    ) as UntypedFormControl;
+  }
+  get currencyTransferTransactionAmount(): UntypedFormControl {
+    return this.affidavitOfCompletionGroup.get(
+      'currencyTransferTransactionAmount'
+    ) as UntypedFormControl;
+  }
+  get actualTransferDate(): UntypedFormControl {
+    return this.affidavitOfCompletionGroup.get(
+      'actualTransferDate'
+    ) as UntypedFormControl;
+  }
+  get transferNumber(): UntypedFormControl {
+    return this.affidavitOfCompletionGroup.get(
+      'transferNumber'
+    ) as UntypedFormControl;
   }
   get specialExplanationsField(): UntypedFormControl {
     return this.form.get('description') as UntypedFormControl;
