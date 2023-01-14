@@ -1,13 +1,17 @@
 import { DateUtils } from '@app/helpers/date-utils';
 import { AdminResult } from '@app/models/admin-result';
 import { FinancialTransferLicensing } from '@app/models/financial-transfer-licensing';
+import { TaskDetails } from '@app/models/task-details';
 import { IModelInterceptor } from '@contracts/i-model-interceptor';
-import { IMyDateModel } from 'angular-mydatepicker';
+import { D, IMyDateModel } from 'angular-mydatepicker';
 
 export class FinancialTransferLicensingInterceptor
   implements IModelInterceptor<FinancialTransferLicensing>
 {
   receive(model: FinancialTransferLicensing): FinancialTransferLicensing {
+    model.taskDetails && (model.taskDetails = (new TaskDetails()).clone(model.taskDetails));
+    model.caseStatusInfo && (model.caseStatusInfo = AdminResult.createInstance(model.caseStatusInfo));
+    model.creatorInfo && (model.creatorInfo = AdminResult.createInstance(model.creatorInfo));
     model.ouInfo && (model.ouInfo = AdminResult.createInstance(model.ouInfo));
     model.requestTypeInfo &&
       (model.requestTypeInfo = AdminResult.createInstance(
@@ -58,15 +62,19 @@ export class FinancialTransferLicensingInterceptor
   private static _deleteBeforeSend(
     model: Partial<FinancialTransferLicensing>
   ): void {
-    delete model.searchFields;
-    delete model.requestTypeInfo;
+    delete model.countryInfo;
+    delete model.creatorInfo;
     delete model.ouInfo;
+    delete model.requestTypeInfo;
+    delete model.transferCountryInfo;
+
+    delete model.caseStatusInfo;
+    delete model.searchFields;
     delete model.currencyInfo;
     delete model.transferTypeInfo;
     delete model.transfereeTypeInfo;
-    delete model.countryInfo;
-    delete model.currencyInfo;
-
+    delete model.employeeService;
+    delete model.service;
     // delete model.followUpDate;
   }
 }

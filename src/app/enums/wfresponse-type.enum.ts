@@ -50,4 +50,5 @@ export enum WFResponseType {
   FOREIGN_COUNTRIES_PROJECTS_LICENSING_SEND_TO_MULTI_DEPARTMENTS = 'ask:ReviewForeignCountriesProjectsLicensing',
   SEND_TO_GM = 'sendToGM',
   TO_CHIEF = 'toChief',
+  KNEW = 'knew',
 }
