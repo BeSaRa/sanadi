@@ -1733,4 +1733,9 @@ export interface ILanguageKeys {
   transfer_to_country_required: string;
   authorized_entities: string;
   pre_registered_entities: string;
+  transfer_number: string;
+  transferred_amount: string;
+  due_amount: string;
+  total_qatari_riyal_transaction_amount:string;
+  msg_select_project_required:string;
 }

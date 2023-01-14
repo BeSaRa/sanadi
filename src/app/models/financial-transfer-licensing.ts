@@ -13,6 +13,8 @@ import { FinancialTransferLicensingInterceptor } from '@app/model-interceptors/f
 import { InterceptModel } from '@app/decorators/decorators/intercept-model';
 import { FinancialTransferLicensingService } from '@app/services/financial-transfer-licensing.service';
 import { ImplementingAgencyTypes } from '@app/enums/implementing-agency-types.enum';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { WFResponseType } from '@app/enums/wfresponse-type.enum';
 
 const { send, receive } = new FinancialTransferLicensingInterceptor();
 
@@ -52,6 +54,7 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
 
   followUpDateString: string = '';
   receiverType!: number;
+  submissionMechanism!: number;
 
   financialTransfersProjects: FinancialTransfersProject[] = [];
   transferCountryInfo!: AdminResult;
@@ -101,7 +104,6 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
       oldLicenseFullSerial,
       oldLicenseId,
       oldLicenseSerial,
-      subject,
     } = this;
 
     return {
@@ -113,17 +115,6 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
         : oldLicenseFullSerial,
       oldLicenseId: control ? [oldLicenseId] : oldLicenseId,
       oldLicenseSerial: control ? [oldLicenseSerial] : oldLicenseSerial,
-      // subject: control
-      //   ? [
-      //       subject,
-      //       [
-      //         CustomValidators.required,
-      //         CustomValidators.maxLength(
-      //           CustomValidators.defaultLengths.ENGLISH_NAME_MAX
-      //         ),
-      //       ],
-      //     ]
-      //   : subject,
     };
   }
 
@@ -225,9 +216,7 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
             transfereeIBAN,
             [
               CustomValidators.required,
-              CustomValidators.maxLength(
-                CustomValidators.defaultLengths.ENGLISH_NAME_MAX
-              ),
+              CustomValidators.maxLength(CustomValidators.defaultLengths.SWIFT_CODE_MAX),
             ],
           ]
         : transfereeIBAN,
@@ -296,7 +285,7 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
         ? [
             transferNumber,
             [
-
+              CustomValidators.number,
               CustomValidators.maxLength(
                 CustomValidators.defaultLengths.ENGLISH_NAME_MAX
               ),
@@ -330,5 +319,16 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
       actualTransferDate: this.actualTransferDate,
       transferringEntityId: this.transferringEntityId,
     });
+  }
+  buildApprovalForm(control: boolean = false): any {
+    const {
+      followUpDate
+    } = this;
+    return {
+      followUpDate: control ? [followUpDate, [CustomValidators.required]] : followUpDate
+    }
+  }
+  approve(): DialogRef {
+    return this.service.approve(this, WFResponseType.APPROVE)
   }
 }

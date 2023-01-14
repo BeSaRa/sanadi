@@ -1,3 +1,4 @@
+import { FinancialTransferLicensingApprovePopupComponent } from './../modules/general-services/popups/financial-transfer-licensing-approve-popup/financial-transfer-licensing-approve-popup.component';
 import { SelectBankAccountPopupComponent } from './../modules/e-services-main/popups/select-bank-account-popup/select-bank-account-popup.component';
 import { BankAccount } from './../models/bank-account';
 import { SelectPreRegisteredPopupComponent } from './../modules/e-services-main/popups/select-pre-registered-popup/select-pre-registered-popup.component';
@@ -24,6 +25,8 @@ import { LicenseService } from './license.service';
 import { UrlService } from './url.service';
 import { map, filter } from 'rxjs/operators';
 import { Bank } from '@app/models/bank';
+import { WFResponseType } from '@app/enums/wfresponse-type.enum';
+import { DialogRef } from '@app/shared/models/dialog-ref';
 
 @CastResponseContainer({
   $default: {
@@ -95,10 +98,12 @@ export class FinancialTransferLicensingService extends BaseGenericEService<Finan
   }
 
   @CastResponse(() => BankAccount)
-  private _loadOrganizationBankAccounts(orgId: number): Observable<BankAccount[]> {
+  private _loadOrganizationBankAccounts(
+    orgId: number
+  ): Observable<BankAccount[]> {
     return this.http.get<BankAccount[]>(
-      this._getBankAccountCtrlURLSegment() + '/lookup')
-      ;
+      this._getBankAccountCtrlURLSegment() + '/criteria'
+    );
   }
 
   loadOrganizationBankAccounts(orgId: number) {
@@ -108,8 +113,9 @@ export class FinancialTransferLicensingService extends BaseGenericEService<Finan
   // @CastResponse(() => any)
   private _loadExternalProjects(organizationId: number): Observable<any> {
     return this.http.post<any>(
-      this._getURLSegment() + '/external-project-license/search',{})
-      ;
+      this._getURLSegment() + '/external-project-license/search',
+      {}
+    );
   }
 
   loadEternalProjects(organizationId: number) {
@@ -158,6 +164,12 @@ export class FinancialTransferLicensingService extends BaseGenericEService<Finan
       entities,
       select,
       displayedColumns,
+    });
+  }
+  approve(model: FinancialTransferLicensing, action: WFResponseType): DialogRef {
+    return this.dialog.show(FinancialTransferLicensingApprovePopupComponent, {
+      model,
+      action
     });
   }
 }

@@ -13,16 +13,21 @@ export class FinancialTransfersProject extends SearchableCloneable<FinancialTran
   projectName!: string;
 
   searchFields: ISearchFieldsMap<FinancialTransfersProject> = {
-    ...normalSearchFields(['fullSerial','qatariTransactionAmount','notes'])
-  }
+    ...normalSearchFields(['fullSerial', 'qatariTransactionAmount', 'notes']),
+  };
   getFormFields(control = false): any {
-    const { fullSerial, qatariTransactionAmount, notes } = this;
+    const { fullSerial, qatariTransactionAmount, notes ,
+      projectTotalCost,
+      remainingAmount,
+      transferAmount,
+      dueAmount,
+    } = this;
     return {
       fullSerial: control
         ? [
             fullSerial,
             [
-
+              CustomValidators.required,
               CustomValidators.maxLength(
                 CustomValidators.defaultLengths.ENGLISH_NAME_MAX
               ),
@@ -32,7 +37,7 @@ export class FinancialTransfersProject extends SearchableCloneable<FinancialTran
       qatariTransactionAmount: control
         ? [
             qatariTransactionAmount,
-            [ CustomValidators.decimal],
+            [CustomValidators.required, CustomValidators.decimal(CustomValidators.defaultLengths.DECIMAL_PLACES)],
           ]
         : qatariTransactionAmount,
       notes: control
@@ -45,6 +50,10 @@ export class FinancialTransfersProject extends SearchableCloneable<FinancialTran
             ],
           ]
         : notes,
+        projectTotalCost : [projectTotalCost],
+        remainingAmount : [remainingAmount],
+        transferAmount : [transferAmount],
+        dueAmount : [dueAmount],
     };
   }
 }
