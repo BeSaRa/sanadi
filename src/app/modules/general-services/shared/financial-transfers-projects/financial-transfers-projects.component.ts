@@ -1,5 +1,7 @@
+import { CustomValidators } from './../../../../validators/custom-validators';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
+  FormControl,
   UntypedFormBuilder,
   UntypedFormControl,
   UntypedFormGroup,
@@ -39,10 +41,41 @@ export class FinancialTransfersProjectsComponent implements OnInit {
     this._list = list;
     this.dataSource.next(this._list);
   }
-  @Input() FinancialTransfersProject?: string = undefined;
+  @Input() financialTransfersProject?: string = undefined;
   get list(): FinancialTransfersProject[] {
     return this._list;
   }
+  @Output() listUpdated = new EventEmitter<number>();
+  @Input() submissionMechanism!: number;
+  @Input() approvedFinancialTransferProjects: FinancialTransfersProject[] = [
+    new FinancialTransfersProject().clone({
+      fullSerial: '123',
+      projectName: 'project 1',
+      projectTotalCost: 12000,
+      remainingAmount: 3000,
+      dueAmount: 2000,
+      transferAmount: 5000,
+    }),
+    new FinancialTransfersProject().clone({
+      fullSerial: '12345',
+      projectName: 'project 2',
+      projectTotalCost: 15000,
+      remainingAmount: 2000,
+      dueAmount: 3000,
+      transferAmount: 1000,
+    }),
+    new FinancialTransfersProject().clone({
+      fullSerial: '1234576',
+      projectName: 'project 3',
+      projectTotalCost: 17000,
+      remainingAmount: 4000,
+      dueAmount: 1000,
+      transferAmount: 7000,
+    }),
+  ];
+
+  financialTransferProjectControl!: UntypedFormControl;
+  totalQatariRiyalTransactions = 0;
 
   showForm: boolean = false;
   filterControl: UntypedFormControl = new UntypedFormControl('');
@@ -70,6 +103,7 @@ export class FinancialTransfersProjectsComponent implements OnInit {
     new Subject<FinancialTransfersProject | null>();
   private current?: FinancialTransfersProject;
   private destroy$: Subject<any> = new Subject<any>();
+  selectedProject?: FinancialTransfersProject ;
 
   form!: UntypedFormGroup;
 
@@ -78,6 +112,7 @@ export class FinancialTransfersProjectsComponent implements OnInit {
     this.listenToAdd();
     this.listenToChange();
     this.listenToSave();
+    this._listenToFinancialTransferProjectChange();
     this._setComponentReadiness('READY');
   }
 
@@ -91,6 +126,7 @@ export class FinancialTransfersProjectsComponent implements OnInit {
     this.form = this.fb.group(
       new FinancialTransfersProject().getFormFields(true)
     );
+    this.financialTransferProjectControl = this.fb.control([]);
   }
   actions: IMenuItem<FinancialTransfersProject>[] = [
     // edit
@@ -172,8 +208,20 @@ export class FinancialTransfersProjectsComponent implements OnInit {
         ),
         filter(() => this.form.valid),
         filter(() => {
+          const isProjectSelected = !!this.selectedProject;
+          if (!isProjectSelected) {
+            this.toastService.alert(this.lang.map.msg_select_project_required);
+          }
+          return isProjectSelected;
+        }),
+        filter(() => {
+          if(!!this.editItem){
+            return true;
+          }
           const formValue = this.form.getRawValue();
-          const isDuplicate = this.list.some((x) => x === formValue);
+          const isDuplicate = this.list.some(
+            (x) => x.fullSerial === formValue.fullSerial
+          );
           if (isDuplicate) {
             this.toastService.alert(this.lang.map.msg_duplicated_item);
           }
@@ -182,8 +230,11 @@ export class FinancialTransfersProjectsComponent implements OnInit {
         map(() => {
           let formValue = this.form.getRawValue();
           return new FinancialTransfersProject().clone({
-            ...this.current,
             ...formValue,
+            dueAmount: this.selectedProject!.dueAmount,
+            transferAmount: this.selectedProject!.transferAmount,
+            projectTotalCost: this.selectedProject!.projectTotalCost,
+            remainingAmount: this.selectedProject!.remainingAmount,
           });
         })
       )
@@ -227,6 +278,10 @@ export class FinancialTransfersProjectsComponent implements OnInit {
       }
     }
     this.list = this.list.slice();
+    this.totalQatariRiyalTransactions = this.list
+      .map((record) => Number(record.qatariTransactionAmount))
+      .reduce((prev, current) => prev + current, 0);
+    this.listUpdated.emit(this.totalQatariRiyalTransactions);
   }
 
   edit(record: FinancialTransfersProject, $event?: MouseEvent) {
@@ -235,6 +290,7 @@ export class FinancialTransfersProjectsComponent implements OnInit {
       return;
     }
     this.editItem = record;
+    this.financialTransferProjectControl.setValue(record.fullSerial);
     this.viewOnly = false;
     this.recordChanged$.next(record);
   }
@@ -276,6 +332,7 @@ export class FinancialTransfersProjectsComponent implements OnInit {
     this.form.reset();
     this.form.markAsUntouched();
     this.form.markAsPristine();
+    this.financialTransferProjectControl.reset();
   }
 
   private _setComponentReadiness(readyStatus: ReadinessStatus) {
@@ -291,5 +348,28 @@ export class FinancialTransfersProjectsComponent implements OnInit {
 
   trackBy(item: AdminResult) {
     return item.id;
+  }
+  get fullSerial(): UntypedFormControl {
+    return this.form.get('fullSerial') as UntypedFormControl;
+  }
+  get qatariTransactionAmount(): UntypedFormControl {
+    return this.form.get('qatariTransactionAmount') as UntypedFormControl;
+  }
+  get notes(): UntypedFormControl {
+    return this.form.get('notes') as UntypedFormControl;
+  }
+
+  private _listenToFinancialTransferProjectChange() {
+    this.financialTransferProjectControl.valueChanges
+      .pipe(
+        tap((value?: string) => {
+          if (value) {
+            this.fullSerial.setValue(value);
+          }
+          this.selectedProject = this.approvedFinancialTransferProjects.find(x=>x.fullSerial === value);
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe();
   }
 }
