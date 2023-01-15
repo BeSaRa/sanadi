@@ -48,16 +48,16 @@ import {
   takeUntil,
   tap,
 } from 'rxjs/operators';
+import { FinancialTransferRequestTypes } from '../../../../enums/financial-transfer-request-types.enum';
+import { FinancialTransferTypes } from '../../../../enums/financial-transfer-types.enum';
+import { FinancialTransfereeTypes } from '../../../../enums/financial-transferee-types.enum';
+import { AdminResult } from '../../../../models/admin-result';
+import { Country } from '../../../../models/country';
+import { FinalExternalOfficeApproval } from '../../../../models/final-external-office-approval';
+import { PartnerApproval } from '../../../../models/partner-approval';
+import { CommonService } from '../../../../services/common.service';
+import { PartnerApprovalService } from '../../../../services/partner-approval.service';
 import { FinancialTransfersProjectsComponent } from '../../shared/financial-transfers-projects/financial-transfers-projects.component';
-import { FinancialTransferRequestTypes } from './../../../../enums/financial-transfer-request-types.enum';
-import { FinancialTransferTypes } from './../../../../enums/financial-transfer-types.enum';
-import { FinancialTransfereeTypes } from './../../../../enums/financial-transferee-types.enum';
-import { AdminResult } from './../../../../models/admin-result';
-import { Country } from './../../../../models/country';
-import { FinalExternalOfficeApproval } from './../../../../models/final-external-office-approval';
-import { PartnerApproval } from './../../../../models/partner-approval';
-import { CommonService } from './../../../../services/common.service';
-import { PartnerApprovalService } from './../../../../services/partner-approval.service';
 
 @Component({
   selector: 'app-financial-transfers-licensing',
