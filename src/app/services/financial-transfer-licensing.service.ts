@@ -36,6 +36,7 @@ import { Bank } from '@app/models/bank';
 import { WFResponseType } from '@app/enums/wfresponse-type.enum';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { FinancialTransferLicensingApprovePopupComponent } from '@app/modules/remittances/popups/financial-transfer-licensing-approve-popup/financial-transfer-licensing-approve-popup.component';
+import { FinancialTransferLicensingApprovePopupComponent } from '@app/modules/remittances/popups/financial-transfer-licensing-approve-popup/financial-transfer-licensing-approve-popup.component';
 
 @CastResponseContainer({
   $default: {
