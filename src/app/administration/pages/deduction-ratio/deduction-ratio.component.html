@@ -9,13 +9,6 @@
                        *ngIf="(table.selection && !table.selection.selected.length)"></app-grid-search>
     </ng-container>
   </div>
-  <!-- according to mr.Ahmed Elbar this input may not stay in this page so he asked me to remove it -->
-  <div class="row mb-4">
-    <div class="col-4">
-        <label for="maximumValue" class="form-label">{{lang.map.lbl_maximum_deduction_ratio}}</label>
-        <input [disabled]="true" id="maximumValue" class="form-control" value="50">
-    </div>
-  </div>
   <div class="row">
     <div class="col-12">
       <app-table #table [paginator]="paginator"
