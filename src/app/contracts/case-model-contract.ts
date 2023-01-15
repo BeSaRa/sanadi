@@ -1,20 +1,21 @@
-import { CommonCaseStatus } from "@app/enums/common-case-status.enum";
-import { TaskDetails } from "@app/models/task-details";
-import { AdminResult } from "@app/models/admin-result";
-import { EmployeeService } from "@services/employee.service";
-import { InboxService } from "@services/inbox.service";
-import { EncryptionService } from "@services/encryption.service";
-import { Observable } from "rxjs";
-import { BlobModel } from "@app/models/blob-model";
-import { DialogRef } from "@app/shared/models/dialog-ref";
-import { IMenuItem } from "@app/modules/context-menu/interfaces/i-menu-item";
-import { OpenFrom } from "@app/enums/open-from.enum";
-import { LicenseApprovalModel } from "@app/models/license-approval-model";
-import { IBulkResult } from "@contracts/ibulk-result";
-import { UntypedFormGroup } from "@angular/forms";
-import { OrganizationOfficer } from "@app/models/organization-officer";
+import {CommonCaseStatus} from "@app/enums/common-case-status.enum";
+import {TaskDetails} from "@app/models/task-details";
+import {AdminResult} from "@app/models/admin-result";
+import {EmployeeService} from "@services/employee.service";
+import {InboxService} from "@services/inbox.service";
+import {EncryptionService} from "@services/encryption.service";
+import {Observable} from "rxjs";
+import {BlobModel} from "@app/models/blob-model";
+import {DialogRef} from "@app/shared/models/dialog-ref";
+import {IMenuItem} from "@app/modules/context-menu/interfaces/i-menu-item";
+import {OpenFrom} from "@app/enums/open-from.enum";
+import {LicenseApprovalModel} from "@app/models/license-approval-model";
+import {IBulkResult} from "@contracts/ibulk-result";
+import {UntypedFormGroup} from "@angular/forms";
+import {OrganizationOfficer} from "@app/models/organization-officer";
 
 export interface CaseModelContract<S, T> {
+  id: string;
   serial: number;
   fullSerial: string;
   caseState: number;

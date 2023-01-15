@@ -1,0 +1,133 @@
+<div class="row">
+  <tabs-list [accordionView]="accordionView">
+    <tab name="basic_info" [template]="basic_info" [title]="lang.map.lbl_basic_info">
+    </tab>
+    <tab name="special_explanations" [template]="specialExplanations"
+         [title]="lang.map.special_explanations"></tab>
+    <tab name="attachments" *ngIf="!accordionView" [template]="attachmentsTab" [title]="lang.map.attachments"></tab>
+  </tabs-list>
+  <ng-container [formGroup]="form">
+    <ng-template #basic_info>
+      <div formGroupName="basicInfo" class="row">
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="requestType"
+                 for="requestType">{{lang.map.request_type}}</label>
+          <ng-select [selectOnTab]="true" labelForId="requestType"
+                     placeholder="{{lang.map.select}}" id="requestType"
+                     [clearable]="false"
+                     (change)="handleRequestTypeChange($event, true)"
+                     [notFoundText]="lang.map.msg_not_found"
+                     [readonly]="!isEditRequestTypeAllowed()"
+                     formControlName="requestType" validationClasses="requestType">
+            <ng-option [value]="option.lookupKey" *ngFor="let option of requestTypes">{{option.getName()}}</ng-option>
+          </ng-select>
+          <app-field-error-message controlName="requestType"></app-field-error-message>
+        </div>
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="oldLicenseFullSerial"
+                 for="oldLicenseFullSerial">{{lang.map.license_number}}</label>
+          <div class="input-group">
+            <input [readonly]="!isEditLicenseAllowed()"
+                   (keydown.enter)="isEditLicenseAllowed() && licenseSearch($event)"
+                   formControlName="oldLicenseFullSerial"
+                   type="text" validationClasses="oldLicenseFullSerial" class="form-control"
+                   id="oldLicenseFullSerial" trimInput>
+            <button type="button" (click)="licenseSearch($event)" *ngIf="isEditLicenseAllowed()"
+                    class="input-group-text">
+              <i class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i></button>
+            <app-field-error-message controlName="oldLicenseFullSerial"></app-field-error-message>
+          </div>
+        </div>
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="projectWorkArea"
+                 for="projectWorkArea">{{lang.map.work_area}}</label>
+          <ng-select validationClasses="projectWorkArea" appendTo="body" [clearable]="false" id="projectWorkArea"
+                     formControlName="projectWorkArea">
+            <ng-option [value]="option.lookupKey" *ngFor="let option of workAreas">{{option.getName()}}</ng-option>
+          </ng-select>
+          <app-field-error-message controlName="projectWorkArea"></app-field-error-message>
+        </div>
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="beneficiaryCountry"
+                 for="beneficiaryCountry">{{lang.map.beneficiary_country}}</label>
+          <ng-select validationClasses="beneficiaryCountry" appendTo="body" [clearable]="true" id="beneficiaryCountry"
+                     formControlName="beneficiaryCountry">
+            <ng-option [disabled]="isDisabledCountry(option)" [value]="option.id"
+                       *ngFor="let option of countries">{{option.getName()}}</ng-option>
+          </ng-select>
+          <app-field-error-message controlName="beneficiaryCountry"></app-field-error-message>
+        </div>
+        <div *ngIf="displayDomain" class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="domain"
+                 for="domain">{{lang.map.domain}}</label>
+          <ng-select validationClasses="domain" appendTo="body" [clearable]="true" id="domain"
+                     formControlName="domain">
+            <ng-option [value]="option.lookupKey" *ngFor="let option of domains">{{option.getName()}}</ng-option>
+          </ng-select>
+          <app-field-error-message controlName="domain"></app-field-error-message>
+        </div>
+        <ng-container *ngIf="displayDac"><!-- DAC  -->
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="mainDACCategory"
+                   for="mainDACCategory">{{lang.map.main_dac_category}}</label>
+            <ng-select validationClasses="mainDACCategory" appendTo="body" [clearable]="true" id="mainDACCategory"
+                       formControlName="mainDACCategory">
+              <ng-option [value]="option.id" *ngFor="let option of mainDacCategories">{{option.getName()}}</ng-option>
+            </ng-select>
+            <app-field-error-message controlName="mainDACCategory"></app-field-error-message>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="subDACCategory"
+                   for="subDACCategory">{{lang.map.sub_dac_category}}</label>
+            <ng-select validationClasses="subDACCategory" appendTo="body" [clearable]="true" id="subDACCategory"
+                       formControlName="subDACCategory">
+              <ng-option [value]="option.id" *ngFor="let option of subDacCategories">{{option.getName()}}</ng-option>
+            </ng-select>
+            <app-field-error-message controlName="subDACCategory"></app-field-error-message>
+          </div>
+        </ng-container><!-- END DAC-->
+        <ng-container *ngIf="displayOcha"><!-- OCHA  -->
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="mainUNOCHACategory"
+                   for="mainUNOCHACategory">{{lang.map.main_unocha_category}}</label>
+            <ng-select validationClasses="mainUNOCHACategory" appendTo="body" [clearable]="true" id="mainUNOCHACategory"
+                       formControlName="mainUNOCHACategory">
+              <ng-option [value]="option.id"
+                         *ngFor="let option of mainUNOCHACategories">{{option.getName()}}</ng-option>
+            </ng-select>
+            <app-field-error-message controlName="mainUNOCHACategory"></app-field-error-message>
+          </div>
+          <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="subUNOCHACategory"
+                   for="subUNOCHACategory">{{lang.map.sub_unocha_category}}</label>
+            <ng-select validationClasses="subUNOCHACategory" appendTo="body" [clearable]="true" id="subUNOCHACategory"
+                       formControlName="subUNOCHACategory">
+              <ng-option [value]="option.id" *ngFor="let option of subUNOCHACategories">{{option.getName()}}</ng-option>
+            </ng-select>
+            <app-field-error-message controlName="subUNOCHACategory"></app-field-error-message>
+          </div>
+        </ng-container><!-- END OCHA-->
+        <div *ngIf="displayInternal" class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="internalProjectClassification"
+                 for="internalProjectClassification">{{lang.map.internal_projects_classification}}</label>
+          <ng-select validationClasses="internalProjectClassification" appendTo="body" [clearable]="true"
+                     id="internalProjectClassification"
+                     formControlName="internalProjectClassification">
+            <ng-option [value]="option.lookupKey"
+                       *ngFor="let option of internalProjectClassifications">{{option.getName()}}</ng-option>
+          </ng-select>
+          <app-field-error-message controlName="internalProjectClassification"></app-field-error-message>
+        </div>
+      </div>
+    </ng-template>
+
+    <ng-template #specialExplanations>
+
+    </ng-template>
+    <ng-template #attachmentsTab>
+      <attachments [caseId]="model?.id" [caseType]="model?.caseType"
+                   [model]="model"
+                   [service]="service.documentService"></attachments>
+    </ng-template>
+  </ng-container>
+</div>

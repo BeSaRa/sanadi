@@ -1,5 +1,5 @@
 import {Directive, EventEmitter, Input, OnDestroy, OnInit} from '@angular/core';
-import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+import {AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {SaveTypes} from '@app/enums/save-types';
 import {IESComponent} from '@app/interfaces/iescomponent';
@@ -260,6 +260,28 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
   abstract _updateForm(model: M | undefined): void;
 
   abstract _resetForm(): void;
+
+
+  protected markFieldsRequired(fields: AbstractControl[], emitEvent: boolean = false): void {
+    fields.forEach(ctrl => {
+      ctrl.addValidators(CustomValidators.required)
+      ctrl.updateValueAndValidity({emitEvent})
+    })
+  }
+
+  protected markFieldsOptional(fields: AbstractControl[], emitEvent: boolean = false): void {
+    fields.forEach(ctrl => {
+      ctrl.removeValidators(CustomValidators.required)
+      ctrl.updateValueAndValidity({emitEvent})
+    })
+  }
+
+  protected setFieldsToNull(fields: AbstractControl[], emitEvent: boolean = false): void {
+    fields.forEach(ctrl => {
+      ctrl.setValue(null, {emitEvent})
+      ctrl.updateValueAndValidity({emitEvent})
+    })
+  }
 
   /**
    * @description return here array of forms that you need to make it as touched to display the validation message below it
