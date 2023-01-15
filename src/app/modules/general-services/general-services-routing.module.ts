@@ -140,17 +140,6 @@ const routes: Routes = [
       checkAnyPermission: false,
       render: 'OrganizationsEntitiesSupportComponent'
     }
-  },
-  {
-    path: 'financial-transfers-licensing', component: EServiceComponentWrapperComponent,
-    canActivate: [ServicesGuard],
-    resolve: { info: ServiceItemResolver },
-    data: {
-      permissionKey: EServicePermissionsEnum.FINANCIAL_TRANSFERS_LICENSING,
-      configPermissionGroup: null,
-      checkAnyPermission: false,
-      render: 'FinancialTransfersLicensingComponent'
-    }
   }
 
 ];

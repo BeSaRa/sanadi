@@ -1,8 +1,4 @@
-import { SelectBankAccountPopupComponent } from './../modules/e-services-main/popups/select-bank-account-popup/select-bank-account-popup.component';
-import { BankAccount } from './../models/bank-account';
-import { SelectPreRegisteredPopupComponent } from './../modules/e-services-main/popups/select-pre-registered-popup/select-pre-registered-popup.component';
-import { SelectAuthorizedEntityPopupComponent } from './../modules/e-services-main/popups/select-authorized-entity-popup/select-authorized-entity-popup.component';
-import { AdminResult } from '@app/models/admin-result';
+import { FinancialTransferLicensingApprovePopupComponent } from './../modules/general-services/popups/financial-transfer-licensing-approve-popup/financial-transfer-licensing-approve-popup.component';
 import { SelectBankAccountPopupComponent } from './../modules/e-services-main/popups/select-bank-account-popup/select-bank-account-popup.component';
 import { BankAccount } from './../models/bank-account';
 import { SelectPreRegisteredPopupComponent } from './../modules/e-services-main/popups/select-pre-registered-popup/select-pre-registered-popup.component';
@@ -35,7 +31,6 @@ import { map, filter } from 'rxjs/operators';
 import { Bank } from '@app/models/bank';
 import { WFResponseType } from '@app/enums/wfresponse-type.enum';
 import { DialogRef } from '@app/shared/models/dialog-ref';
-import { FinancialTransferLicensingApprovePopupComponent } from '@app/modules/remittances/popups/financial-transfer-licensing-approve-popup/financial-transfer-licensing-approve-popup.component';
 import { FinancialTransferLicensingApprovePopupComponent } from '@app/modules/remittances/popups/financial-transfer-licensing-approve-popup/financial-transfer-licensing-approve-popup.component';
 
 @CastResponseContainer({

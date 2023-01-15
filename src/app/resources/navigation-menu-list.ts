@@ -1128,14 +1128,15 @@ export const navigationMenuList = [
   {
     id: 85,
     langKey: 'menu_financial_transfers_licensing',
-    path: '/home/general-services/financial-transfers-licensing',
+    path: '/home/remittance/financial-transfers-licensing',
     icon: 'mdi-file-swap',
     isSvg: false,
     permission: EServicePermissionsEnum.FINANCIAL_TRANSFERS_LICENSING,
     permissionGroup: null,
-    parent: 13,
-    group: 'general-services',
-    itemOrder: 13,
+    parent: 48,
+    group: 'remittance',
+    itemOrder: 1,
     svg: null
   },
+
 ];
