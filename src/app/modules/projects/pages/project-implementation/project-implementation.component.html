@@ -1,0 +1,23 @@
+<div class="row">
+  <tabs-list [accordionView]="accordionView">
+    <tab name="basic_info" [template]="basic_info" [title]="lang.map.lbl_basic_info">
+    </tab>
+    <tab name="special_explanations" [template]="specialExplanations"
+         [title]="lang.map.special_explanations"></tab>
+    <tab name="attachments" *ngIf="!accordionView" [template]="attachmentsTab" [title]="lang.map.attachments"></tab>
+  </tabs-list>
+  <ng-container [formGroup]="form">
+    <ng-template #basic_info>
+
+    </ng-template>
+
+    <ng-template #specialExplanations>
+
+    </ng-template>
+    <ng-template #attachmentsTab>
+      <attachments [caseId]="model?.id" [caseType]="model?.caseType"
+                   [model]="model"
+                   [service]="service.documentService"></attachments>
+    </ng-template>
+  </ng-container>
+</div>

@@ -60,6 +60,8 @@ import { DeductionRatioManagerComponent } from './pages/project-fundraising/comp
 import { TargetedCountriesDistributionComponent } from './pages/project-fundraising/components/targeted-countries-distribution/targeted-countries-distribution.component';
 import { TargetedYearsDistributionComponent } from './pages/project-fundraising/components/targeted-years-distribution/targeted-years-distribution.component';
 import { ProjectFundraisingApproveTaskPopupComponent } from './popups/project-fundraising-approve-task-popup/project-fundraising-approve-task-popup.component';
+import { ProjectImplementationComponent } from '@modules/projects/pages/project-implementation/project-implementation.component';
+import { ProjectImplementationApproveTaskPopupComponent } from '@modules/projects/popups/project-implementation-approve-task-popup/project-implementation-approve-task-popup.component';
 
 
 @NgModule({
@@ -92,7 +94,9 @@ import { ProjectFundraisingApproveTaskPopupComponent } from './popups/project-fu
     DeductionRatioManagerComponent,
     TargetedCountriesDistributionComponent,
     TargetedYearsDistributionComponent,
-    ProjectFundraisingApproveTaskPopupComponent
+    ProjectFundraisingApproveTaskPopupComponent,
+    ProjectImplementationComponent,
+    ProjectImplementationApproveTaskPopupComponent
   ],
   imports: [
     CommonModule,

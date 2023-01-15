@@ -1,17 +1,17 @@
 import {
   GeneralProcessNotificationComponent
-} from './../modules/general-services/pages/general-process-notification/general-process-notification.component';
+} from '@modules/general-services/pages/general-process-notification/general-process-notification.component';
 import {
   AwarenessActivitySuggestionComponent
-} from './../modules/general-services/pages/awareness-activity-suggestion/awareness-activity-suggestion.component';
+} from '@modules/general-services/pages/awareness-activity-suggestion/awareness-activity-suggestion.component';
 import {
   ForeignCountriesProjectsComponent
 } from '@app/modules/general-services/pages/foreign-countries-projects/foreign-countries-projects.component';
 import {
   UrgentInterventionFinancialNotificationComponent
-} from './../modules/urgent-intervention/pages/urgent-intervention-financial-notification/urgent-intervention-financial-notification.component';
-import { EmploymentComponent } from './../modules/general-services/pages/employment/employment.component';
-import { NpoManagementComponent } from './../modules/general-services/pages/npo-management/npo-management.component';
+} from '@modules/urgent-intervention/pages/urgent-intervention-financial-notification/urgent-intervention-financial-notification.component';
+import { EmploymentComponent } from '@modules/general-services/pages/employment/employment.component';
+import { NpoManagementComponent } from '@modules/general-services/pages/npo-management/npo-management.component';
 import { Injectable } from '@angular/core';
 import { DynamicComponentService } from './dynamic-component.service';
 import { TeamService } from './team.service';
@@ -58,7 +58,7 @@ import {
 } from '@app/modules/urgent-intervention/pages/urgent-intervention-closure/urgent-intervention-closure.component';
 import {
   ExternalOrgAffiliationComponent
-} from './../modules/general-services/pages/external-org-affiliation/external-org-affiliation.component';
+} from '@modules/general-services/pages/external-org-affiliation/external-org-affiliation.component';
 import {
   UrgentInterventionLicenseComponent
 } from '@app/modules/urgent-intervention/pages/urgent-intervention-license/urgent-intervention-license.component';
@@ -82,6 +82,7 @@ import { ConsultationComponent } from '@app/modules/general-services/pages/consu
 import { InquiryComponent } from '@app/modules/general-services/pages/inquiry/inquiry.component';
 import { ProjectFundraisingComponent } from "@app/modules/projects/pages/project-fundraising/project-fundraising.component";
 import { OrganizationsEntitiesSupportComponent } from '@app/modules/general-services/pages/organizations-entities-support/organizations-entities-support.component';
+import { ProjectImplementationComponent } from '@modules/projects/pages/project-implementation/project-implementation.component';
 
 @Injectable({
   providedIn: 'root'
@@ -128,6 +129,7 @@ export class AutoRegisterService {
       DynamicComponentService.registerComponent('GeneralProcessNotificationComponent', GeneralProcessNotificationComponent);
       DynamicComponentService.registerComponent('ProjectFundraisingComponent', ProjectFundraisingComponent);
       DynamicComponentService.registerComponent('OrganizationsEntitiesSupportComponent', OrganizationsEntitiesSupportComponent);
+      DynamicComponentService.registerComponent('ProjectImplementationComponent', ProjectImplementationComponent);
     });// just to make sure that service constructed and register all dynamic components
 
 
