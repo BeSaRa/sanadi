@@ -228,10 +228,6 @@ export class EmployeeFormPopupComponent implements OnInit {
         return
       }
       index = this.employeesList.findIndex(e => (this.form.value.JobNumber && e.JobNumber == this.form.value.JobNumber));
-      console.log(index, this.form.value.id);
-      if(this.employeesList[index]) {
-        console.log(this.employeesList[index].id)
-      }
       if (index != -1 && this.employeesList[index].id != this.form.value.id) {
         this.dialog.error(this.lang.map.msg_user_job_number_is_already_exist);
         return
