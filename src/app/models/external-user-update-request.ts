@@ -13,7 +13,6 @@ import {ISearchFieldsMap} from '@app/types/types';
 import {normalSearchFields} from '@helpers/normal-search-fields';
 import {infoSearchFields} from '@helpers/info-search-fields';
 import {ExternalUser} from '@app/models/external-user';
-import {endsWith} from 'lodash';
 
 const {send, receive} = new ExternalUserUpdateRequestInterceptor();
 

@@ -151,7 +151,6 @@ export class ExternalUserUpdateRequestService extends CrudWithDialogGenericServi
     const value = new ExternalUserUpdateRequest().clone({
       ...model,
       requestStatus: ExternalUserUpdateRequestStatusEnum.APPROVED,
-      requestType: ExternalUserUpdateRequestTypeEnum.UPDATE
     });
     return this._updateUserRequest(value);
   }
@@ -172,7 +171,6 @@ export class ExternalUserUpdateRequestService extends CrudWithDialogGenericServi
     const value = new ExternalUserUpdateRequest().clone({
       ...model,
       requestStatus: ExternalUserUpdateRequestStatusEnum.REJECTED,
-      requestType: ExternalUserUpdateRequestTypeEnum.UPDATE,
       notes: reason
     });
     return this._updateUserRequest(value);
