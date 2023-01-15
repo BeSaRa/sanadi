@@ -92,17 +92,6 @@ const routes: Routes = [
       render: 'ProjectFundraisingComponent'
     },
   },
-  {
-    path: 'project-implementation', component: EServiceComponentWrapperComponent,
-    canActivate: [ServicesGuard],
-    resolve: { info: ServiceItemResolver },
-    data: {
-      permissionKey: EServicePermissionsEnum.PROJECT_IMPLEMENTATION,
-      configPermissionGroup: null,
-      checkAnyPermission: false,
-      render: 'ProjectImplementationComponent'
-    }
-  }
 ];
 
 @NgModule({

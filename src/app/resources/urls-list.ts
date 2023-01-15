@@ -132,6 +132,5 @@ export const urlsList: Partial<IAppUrls> = {
   USER_SUB_TEAM: '/admin/user-sub-team',
   DYNAMIC_MODEL: '/admin/dynamic-model',
   DEDUCTION_RATIO_ITEM: '/admin/deduction-ratio-item',
-  ORGANIZATION_ENTITIES_SUPPORT:'/organizations-entities-support',
-  PROJECT_IMPLEMENTATION: '/project-implementation'
+  ORGANIZATION_ENTITIES_SUPPORT:'/organizations-entities-support'
 };
