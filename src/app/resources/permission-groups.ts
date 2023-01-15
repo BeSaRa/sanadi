@@ -85,7 +85,6 @@ const generalServicesPermissionsGroup: EServicePermissionsEnum[] = [
   EServicePermissionsEnum.EXTERNAL_ORG_AFFILIATION_REQUEST,
   EServicePermissionsEnum.GENERAL_PROCESS_NOTIFICATION,
   EServicePermissionsEnum.ORGANIZATION_ENTITIES_SUPPORT,
-  EServicePermissionsEnum.FINANCIAL_TRANSFERS_LICENSING
 ];
 
 const officeServicesPermissionsGroup: EServicePermissionsEnum[] = [
@@ -111,7 +110,8 @@ const collectionServicesPermissionsGroup: EServicePermissionsEnum[] = [
 ];
 
 const remittanceServicesPermissionsGroup: EServicePermissionsEnum[] = [
-  EServicePermissionsEnum.CUSTOMS_EXEMPTION_REMITTANCE
+  EServicePermissionsEnum.CUSTOMS_EXEMPTION_REMITTANCE,
+  EServicePermissionsEnum.FINANCIAL_TRANSFERS_LICENSING
 ];
 
 const urgentInterventionServicesPermissionsGroup: EServicePermissionsEnum[] = [

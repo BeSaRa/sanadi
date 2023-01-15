@@ -82,7 +82,7 @@ import { ConsultationComponent } from '@app/modules/general-services/pages/consu
 import { InquiryComponent } from '@app/modules/general-services/pages/inquiry/inquiry.component';
 import { ProjectFundraisingComponent } from "@app/modules/projects/pages/project-fundraising/project-fundraising.component";
 import { OrganizationsEntitiesSupportComponent } from '@app/modules/general-services/pages/organizations-entities-support/organizations-entities-support.component';
-import { FinancialTransfersLicensingComponent } from '@app/modules/general-services/pages/financial-transfers-licensing/financial-transfers-licensing.component';
+import { FinancialTransfersLicensingComponent } from '@app/modules/remittances/pages/financial-transfers-licensing/financial-transfers-licensing.component';
 
 @Injectable({
   providedIn: 'root'
