@@ -1,3 +1,4 @@
+import { ExternalUserUpdateRequestTypeEnum } from '@app/enums/external-user-update-request-type.enum';
 import {Injectable} from '@angular/core';
 import {ExternalUserUpdateRequest} from '@app/models/external-user-update-request';
 import {HttpClient} from '@angular/common/http';
@@ -149,7 +150,8 @@ export class ExternalUserUpdateRequestService extends CrudWithDialogGenericServi
   acceptRequest(model: ExternalUserUpdateRequest): Observable<ExternalUserUpdateRequest> {
     const value = new ExternalUserUpdateRequest().clone({
       ...model,
-      requestStatus: ExternalUserUpdateRequestStatusEnum.APPROVED
+      requestStatus: ExternalUserUpdateRequestStatusEnum.APPROVED,
+      requestType: ExternalUserUpdateRequestTypeEnum.UPDATE
     });
     return this._updateUserRequest(value);
   }
@@ -170,6 +172,7 @@ export class ExternalUserUpdateRequestService extends CrudWithDialogGenericServi
     const value = new ExternalUserUpdateRequest().clone({
       ...model,
       requestStatus: ExternalUserUpdateRequestStatusEnum.REJECTED,
+      requestType: ExternalUserUpdateRequestTypeEnum.UPDATE,
       notes: reason
     });
     return this._updateUserRequest(value);
@@ -178,7 +181,11 @@ export class ExternalUserUpdateRequestService extends CrudWithDialogGenericServi
   openUpdateRequestDialog(request: ExternalUserUpdateRequest): Observable<DialogRef> {
     return this.getByIdComposite(request.id)
       .pipe(switchMap((model) => {
-        return this.externalUserService.openUpdateUserRequest(model);
+        const value = new ExternalUserUpdateRequest().clone({
+          ...model,
+          requestType: ExternalUserUpdateRequestTypeEnum.UPDATE
+        });
+        return this.externalUserService.openUpdateUserRequest(value);
       }));
   }
 
