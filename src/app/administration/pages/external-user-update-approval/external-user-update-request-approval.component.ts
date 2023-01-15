@@ -89,20 +89,20 @@ export class ExternalUserUpdateRequestApprovalComponent extends AdminGenericComp
     [ExternalUserUpdateRequestStatusEnum.REJECTED]: 'btn-danger',
   };
   actions: IMenuItem<ExternalUserUpdateRequest>[] = [
-    // edit
-    {
-      type: 'action',
-      label: 'btn_edit',
-      icon: ActionIconsEnum.EDIT,
-      onClick: (item) => this.editRequest(item),
-      show: () => this.service.canEditUserRequest()
-    },
     // view changes
     {
       type: 'action',
       label: 'view_changes',
       icon: ActionIconsEnum.USER_CHANGES,
       onClick: (item) => this.viewChanges(item)
+    },
+    // edit
+    {
+      type: 'action',
+      label: 'btn_edit',
+      icon: ActionIconsEnum.EDIT,
+      onClick: (item) => this.editRequest(item),
+      show: (item) => this.service.canEditUserRequest() && item.requestStatus != ExternalUserUpdateRequestStatusEnum.APPROVED
     },
     // accept
     {
