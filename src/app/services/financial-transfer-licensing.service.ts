@@ -1,4 +1,3 @@
-import { FinancialTransferLicensingApprovePopupComponent } from './../modules/general-services/popups/financial-transfer-licensing-approve-popup/financial-transfer-licensing-approve-popup.component';
 import { SelectBankAccountPopupComponent } from './../modules/e-services-main/popups/select-bank-account-popup/select-bank-account-popup.component';
 import { BankAccount } from './../models/bank-account';
 import { SelectPreRegisteredPopupComponent } from './../modules/e-services-main/popups/select-pre-registered-popup/select-pre-registered-popup.component';

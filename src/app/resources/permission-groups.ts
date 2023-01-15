@@ -85,7 +85,6 @@ const generalServicesPermissionsGroup: EServicePermissionsEnum[] = [
   EServicePermissionsEnum.EXTERNAL_ORG_AFFILIATION_REQUEST,
   EServicePermissionsEnum.GENERAL_PROCESS_NOTIFICATION,
   EServicePermissionsEnum.ORGANIZATION_ENTITIES_SUPPORT,
-  EServicePermissionsEnum.FINANCIAL_TRANSFERS_LICENSING
 ];
 
 const officeServicesPermissionsGroup: EServicePermissionsEnum[] = [
