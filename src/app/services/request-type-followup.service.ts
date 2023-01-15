@@ -39,7 +39,6 @@ export class RequestTypeFollowupService {
     [CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE]: this.lookupService.listByCategory.CollectionRequestType,
     [CaseTypes.AWARENESS_ACTIVITY_SUGGESTION]: this.lookupService.listByCategory.CollectionRequestType,
     [CaseTypes.ORGANIZATION_ENTITIES_SUPPORT]: this.lookupService.listByCategory.CollectionRequestType,
-    [CaseTypes.PROJECT_IMPLEMENTATION]: this.lookupService.listByCategory.ServiceRequestType
 
   }
 

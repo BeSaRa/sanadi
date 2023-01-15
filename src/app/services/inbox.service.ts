@@ -14,13 +14,13 @@ import { NpoManagementService } from './npo-management.service';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { UrlService } from './url.service';
 import { Observable, of } from 'rxjs';
-import { QueryResultSet } from '@models/query-result-set';
+import { QueryResultSet } from '../models/query-result-set';
 import { FactoryService } from './factory.service';
 import { IBulkResult } from '@contracts/ibulk-result';
 import { InquiryService } from './inquiry.service';
 import { DialogService } from './dialog.service';
 import { DialogRef } from '../shared/models/dialog-ref';
-import { BlobModel } from '@models/blob-model';
+import { BlobModel } from '../models/blob-model';
 import { SendToComponent } from '../shared/popups/send-to-user-popup/send-to.component';
 import { IWFResponse } from '@contracts/i-w-f-response';
 import { IDefaultResponse } from '@contracts/idefault-response';
@@ -29,7 +29,7 @@ import { WFResponseType } from '../enums/wfresponse-type.enum';
 import {
   ActionWithCommentPopupComponent
 } from '../shared/popups/action-with-comment-popup/action-with-comment-popup.component';
-import { QueryResult } from '@models/query-result';
+import { QueryResult } from '../models/query-result';
 import { ConsultationService } from './consultation.service';
 import { InternationalCooperationService } from './international-cooperation.service';
 import { CaseTypes } from '../enums/case-types.enum';
@@ -70,7 +70,6 @@ import { UrgentInterventionLicenseFollowupService } from '@services/urgent-inter
 import { CharityOrganizationUpdateService } from './charity-organization-update.service';
 import { ILanguageKeys } from '@app/interfaces/i-language-keys';
 import { ProjectFundraisingService } from "@services/project-fundraising.service";
-import { ProjectImplementationService } from '@services/project-implementation.service';
 
 @Injectable({
   providedIn: 'root'
@@ -112,8 +111,7 @@ export class InboxService {
     private generalProcessNotificationService: GeneralProcessNotificationService,
     private projectFundraisingService: ProjectFundraisingService,
     private generalAssociationMeetingAttendanceService: GeneralAssociationMeetingAttendanceService,
-    private organizationsEntitiesSupportService: OrganizationsEntitiesSupportService,
-    private projectImplementationService: ProjectImplementationService
+    private organizationsEntitiesSupportService: OrganizationsEntitiesSupportService
   ) {
     FactoryService.registerService('InboxService', this);
     // register all e-services that we need.
@@ -148,7 +146,6 @@ export class InboxService {
     this.services.set(CaseTypes.AWARENESS_ACTIVITY_SUGGESTION, this.awarenessActivitySuggestionService);
     this.services.set(CaseTypes.PROJECT_FUNDRAISING, this.projectFundraisingService);
     this.services.set(CaseTypes.ORGANIZATION_ENTITIES_SUPPORT, this.organizationsEntitiesSupportService);
-    this.services.set(CaseTypes.PROJECT_IMPLEMENTATION, this.projectImplementationService);
   }
 
   @CastResponse(() => QueryResultSet)
