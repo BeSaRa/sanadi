@@ -1124,19 +1124,6 @@ export const navigationMenuList = [
     group: 'remittance',
     itemOrder: 1,
     svg: null
-  }
-  {
-    id: 85,
-    langKey: 'menu_financial_transfers_licensing',
-    path: '/home/remittance/financial-transfers-licensing',
-    icon: 'mdi-file-swap',
-    isSvg: false,
-    permission: EServicePermissionsEnum.FINANCIAL_TRANSFERS_LICENSING,
-    permissionGroup: null,
-    parent: 48,
-    group: 'remittance',
-    itemOrder: 1,
-    svg: null
   },
 
 ];

@@ -1,10 +1,5 @@
-import { FinancialTransferLicensingApprovePopupComponent } from './popups/financial-transfer-licensing-approve-popup/financial-transfer-licensing-approve-popup.component';
-import { FinancialTransfersProjectsComponent } from './shared/financial-transfers-projects/financial-transfers-projects.component';
-import { FinancialTransfersLicensingComponent } from './pages/financial-transfers-licensing/financial-transfers-licensing.component';
-import { ForeignCountriesProjectsApprovalPopupComponent } from './popups/foreign-countries-projects-approval-popup/foreign-countries-projects-approval-popup.component';
-import { FormlyMaskInputFieldComponent } from '@app/services-search/components/formly-mask-input-field/formly-mask-input-field.component';
-import { FormlySelectFieldComponent } from '@app/services-search/components/formly-select-field/formly-select-field.component';
-import { FormlyDateFieldComponent } from '@app/services-search/components/formly-date-field/formly-date-field.component';
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 import {
   ProcessFieldWrapperComponent
 } from '@app/administration/popups/general-process-popup/process-formly-components/process-field-wrapper/process-field-wrapper.component';
@@ -41,6 +36,7 @@ import { CharityBranchComponent } from './shared/charity-branch/charity-branch.c
 import { CharityDecisionsComponent } from './shared/charity-decisions/charity-decisions.component';
 import { ForeignAidClassificationsComponent } from './shared/foreign-aid-classifications/foreign-aid-classifications.component';
 import { MembersComponent } from './shared/members/members.component';
+
 import { EServicesMainModule } from '@app/modules/e-services-main/e-services-main.module';
 import { OfficeServicesModule } from '../office-services/office-services.module';
 import { GeneralServicesRoutingModule } from './general-services-routing.module';
@@ -100,9 +96,7 @@ import { CharityReportsComponent } from './shared/risk-reports/risk-reports.comp
     InternationalCooperationComponent,
     OrganizationsEntitiesSupportComponent,
     OrganizationsEntitiesSupportPopupComponent,
-    FinancialTransfersLicensingComponent,
-    FinancialTransfersProjectsComponent,
-    FinancialTransferLicensingApprovePopupComponent
+
   ],
   imports: [
     CommonModule,
