@@ -32,6 +32,7 @@ import {DeductionRatioComponent} from './pages/deduction-ratio/deduction-ratio.c
 import {
   ExternalUserUpdateRequestApprovalComponent
 } from '@app/administration/pages/external-user-update-approval/external-user-update-request-approval.component';
+import {GlobalSettingsComponent} from '@app/administration/pages/global-settings/global-settings.component';
 
 const routes: Routes = [
   {path: '', component: AdminHomeComponent},
@@ -185,6 +186,11 @@ const routes: Routes = [
     canActivate: [PermissionGuard],
     data: {permissionKey: PermissionsEnum.MANAGE_DEDUCTION_RATIO_ITEM, configPermissionGroup: null, checkAnyPermission: false}
   },
+  {
+    path: 'global-settings', component: GlobalSettingsComponent,
+    canActivate: [PermissionGuard],
+    data: {permissionKey: PermissionsEnum.MANAGE_DEDUCTION_RATIO_ITEM, configPermissionGroup: null, checkAnyPermission: false}
+  }
 ];
 
 
