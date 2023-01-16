@@ -3,7 +3,7 @@ import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import {Subject} from 'rxjs';
 import {ActivatedRoute, ParamMap} from '@angular/router';
 import {LangService} from '@services/lang.service';
-import {takeUntil, tap} from 'rxjs/operators';
+import {takeUntil} from 'rxjs/operators';
 import {CustomMenuService} from '@services/custom-menu.service';
 import {CommonUtils} from '@helpers/common-utils';
 import {MenuItemService} from '@services/menu-item.service';
@@ -76,7 +76,7 @@ export class DynamicMenuDetailsComponent implements OnInit {
     } else if (CommonUtils.isValidValue(parentId)) {
       url = this._finalizeUrl(Number(parentId));
     }
-    this.safeUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(url + '?rs:embed=true');
+    this.safeUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(url);
   }
 
   private listenToLangChange(): void {
