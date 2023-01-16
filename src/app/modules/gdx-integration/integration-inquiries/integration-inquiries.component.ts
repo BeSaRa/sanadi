@@ -1,16 +1,16 @@
-import {Component, Input, ViewChild} from '@angular/core';
-import {Subject} from 'rxjs';
-import {Beneficiary} from '@app/models/beneficiary';
-import {GdxServicesEnum} from '@app/enums/gdx-services.enum';
-import {GdxServiceRelatedTypesEnum} from '@app/enums/gdx-service-related-types.enum';
-import {GdxServiceLog} from '@app/models/gdx-service-log';
-import {LangService} from '@services/lang.service';
-import {TabMap} from '@app/types/types';
-import {GdxGarsiaPensionResponse} from '@app/models/gdx-garsia-pension-response';
-import {IGdxServiceRelatedData} from '@contracts/i-gdx-service-related-data';
-import {CommonUtils} from '@helpers/common-utils';
-import {TabComponent} from '@app/shared/components/tab/tab.component';
-import {ITabData} from '@contracts/i-tab-data';
+import { Component, Input, ViewChild } from '@angular/core';
+import { Subject } from 'rxjs';
+import { Beneficiary } from '@app/models/beneficiary';
+import { GdxServicesEnum } from '@app/enums/gdx-services.enum';
+import { GdxServiceRelatedTypesEnum } from '@app/enums/gdx-service-related-types.enum';
+import { GdxServiceLog } from '@app/models/gdx-service-log';
+import { LangService } from '@services/lang.service';
+import { TabMap } from '@app/types/types';
+import { GdxGarsiaPensionResponse } from '@app/models/gdx-garsia-pension-response';
+import { IGdxServiceRelatedData } from '@contracts/i-gdx-service-related-data';
+import { CommonUtils } from '@helpers/common-utils';
+import { TabComponent } from '@app/shared/components/tab/tab.component';
+import { ITabData } from '@contracts/i-tab-data';
 import {
   IntegrationInquiryLogListComponent
 } from '@app/modules/gdx-integration/integration-inquiry-log-list/integration-inquiry-log-list.component';
@@ -20,8 +20,8 @@ import {
 import {
   GarsiaPensionListComponent
 } from '@app/modules/gdx-integration/related-data/garsia-pension-list/garsia-pension-list.component';
-import {GdxMolPayrollResponse} from '@app/models/gdx-mol-payroll-response';
-import {GdxMojResponse} from '@app/models/gdx-moj-response';
+import { GdxMolPayrollResponse } from '@app/models/gdx-mol-payroll-response';
+import { GdxMojResponse } from '@app/models/gdx-moj-response';
 
 @Component({
   selector: 'integration-inquiries',
@@ -44,6 +44,24 @@ export class IntegrationInquiriesComponent {
   selectedLog: { [key in GdxServicesEnum]?: GdxServiceLog | undefined } = {};
   selectedService: GdxServicesEnum = GdxServicesEnum.MOJ;
   tabsData: TabMap = {
+    governmentAgencies: {
+      name: 'governmentAgencies',
+      index: 0,
+      langKey: 'government_agencies',
+      validStatus: () => true,
+      isTouchedOrDirty: () => true,
+      serviceId: GdxServicesEnum.MOJ,
+      isLoaded: false
+    },
+    charitableEntities: {
+      name: 'charitableEntities',
+      index: 0,
+      langKey: 'charitable_entities',
+      validStatus: () => true,
+      isTouchedOrDirty: () => true,
+      // serviceId: GdxServicesEnum.QATAR_CHARITY,
+      isLoaded: true
+    },
     moj: {
       name: 'moj',
       index: 0,

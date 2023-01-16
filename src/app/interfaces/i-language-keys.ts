@@ -1711,7 +1711,7 @@ export interface ILanguageKeys {
   establishment_name_english: string;
   basic_salary: string;
   net_salary: string;
-  attachment_name:string;
+  attachment_name: string;
   document_name: string;
   send_to_chief: string;
   terminate_task_success: string;
@@ -1723,4 +1723,6 @@ export interface ILanguageKeys {
   msg_confirm_accept_selected: string;
   stop_preview: string;
   first_login_tip: string;
+  charitable_entities: string;
+  government_agencies: string;
 }
