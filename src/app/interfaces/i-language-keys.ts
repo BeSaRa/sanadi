@@ -1722,4 +1722,5 @@ export interface ILanguageKeys {
   msg_confirm_reject_selected: string;
   msg_confirm_accept_selected: string;
   stop_preview: string;
+  first_login_tip: string;
 }
