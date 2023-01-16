@@ -1721,4 +1721,5 @@ export interface ILanguageKeys {
   lbl_final_report: string;
   msg_confirm_reject_selected: string;
   msg_confirm_accept_selected: string;
+  stop_preview: string;
 }

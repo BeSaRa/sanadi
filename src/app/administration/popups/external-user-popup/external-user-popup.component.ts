@@ -450,6 +450,10 @@ export class ExternalUserPopupComponent extends AdminGenericDialog<ExternalUser>
     return this.profileControl?.valid;
   }
 
+  get isSubAdmin() {
+    return this.employeeService.userRolesManageUser.isSubAdmin();
+  }
+
   listenToSave() {
     this.save$
       // call before Save callback

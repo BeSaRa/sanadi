@@ -95,11 +95,14 @@ export class LogViewerComponent implements OnInit, OnDestroy {
   tabChanged($event: TabComponent) {
     this.displayPrintBtn = $event.name !== 'location';
     this.displayReturnBtn = $event.name === 'location' && (
-      this.case?.caseType == CaseTypes.NPO_MANAGEMENT ||
-      this.case?.caseType == CaseTypes.CHARITY_ORGANIZATION_UPDATE
+      (this.case?.caseType == CaseTypes.NPO_MANAGEMENT ||
+        this.case?.caseType == CaseTypes.CHARITY_ORGANIZATION_UPDATE) && !this.timeOut()
     );
   }
-
+  timeOut() {
+    // TODO: complete after descus
+    return false
+  }
   isMainTask(tkiid: string) {
     return this.case?.taskDetails.isMain && this.case?.taskDetails.tkiid == tkiid;
   }
