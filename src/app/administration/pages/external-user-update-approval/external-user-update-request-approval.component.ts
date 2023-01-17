@@ -22,7 +22,6 @@ import { TableComponent } from '@app/shared/components/table/table.component';
 import { ExternalUserUpdateRequestStatusEnum } from '@app/enums/external-user-update-request-status.enum';
 import { LookupService } from '@services/lookup.service';
 import { Lookup } from '@app/models/lookup';
-import { SharedService } from '@app/services/shared.service';
 
 @Component({
   selector: 'external-user-update-request-request',
@@ -40,7 +39,6 @@ export class ExternalUserUpdateRequestApprovalComponent extends AdminGenericComp
     private dialogService: DialogService,
     private profileService: ProfileService,
     private lookupService: LookupService,
-    private sharedService: SharedService,
     private employeeService: EmployeeService) {
     super();
   }
@@ -57,8 +55,8 @@ export class ExternalUserUpdateRequestApprovalComponent extends AdminGenericComp
   profiles$ = this.profileService.loadAsLookups();
   selectedFilter?: Lookup;
 
-  get displayedColumns() : string[] {
-    if(!this.service.userRolesManageUser.isApprovalAdmin()) {
+  get displayedColumns(): string[] {
+    if (!this.service.userRolesManageUser.isApprovalAdmin()) {
       return ['domainName', 'arName', 'enName', 'requestType', 'updatedOn', 'requestStatus', 'updatedBy', 'actions'];// 'empNum', 'organization', 'status', 'statusDateModified',
     } else {
       return ['rowSelection', 'domainName', 'arName', 'enName', 'requestType', 'updatedOn', 'requestStatus', 'updatedBy', 'actions'];// 'empNum', 'organization', 'status', 'statusDateModified',
@@ -76,8 +74,8 @@ export class ExternalUserUpdateRequestApprovalComponent extends AdminGenericComp
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     },
     updatedBy: (a: ExternalUserUpdateRequest, b: ExternalUserUpdateRequest, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a) ? '' : a.updatedByInfo?.getName().toLowerCase(),
-        value2 = !CommonUtils.isValidValue(b) ? '' : a.updatedByInfo?.getName().toLowerCase();
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.updateByInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : a.updateByInfo?.getName().toLowerCase();
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     }
   };
@@ -203,21 +201,13 @@ export class ExternalUserUpdateRequestApprovalComponent extends AdminGenericComp
   rejectBulkRequest($event: MouseEvent): void {
     $event.preventDefault();
     if (this.selectedRecords.length > 0) {
-      this.dialogService.confirm(this.lang.map.msg_confirm_reject_selected)
-        .onAfterClose$.subscribe((click: UserClickOn) => {
-          if (click === UserClickOn.YES) {
-            const models = this.selectedRecords.map((item) => {
-              return new ExternalUserUpdateRequest().clone({
-                ...item,
-                requestStatus: ExternalUserUpdateRequestStatusEnum.REJECTED
-              })
-            });
-            const sub = this.service.updateBulk(models).subscribe(() => {
-              this.toast.success(this.lang.map.msg_update_success);
-              this.reload$.next(null);
-              sub.unsubscribe();
-            });
+      this.service.rejectBulkRequestWithReason(this.selectedRecords)
+        .subscribe((result) => {
+          if (!result) {
+            return;
           }
+          this.toast.success(this.lang.map.msg_update_success);
+          this.reload$.next(null);
         });
     }
   }
@@ -274,7 +264,8 @@ export class ExternalUserUpdateRequestApprovalComponent extends AdminGenericComp
 
   private _setDefaultProfileId() {
     const isSubAdmin = this.employeeService.userRolesManageUser.isSubAdmin();
-    if (isSubAdmin) {
+    const isApprovalAdmin = this.employeeService.userRolesManageUser.isApprovalAdmin();
+    if (isSubAdmin || isApprovalAdmin) {
       this.profileIdControl.setValue(this.employeeService.getProfile()!.id);
       this.profileIdControl.disable();
     }

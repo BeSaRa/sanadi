@@ -12,11 +12,6 @@
       </ng-option>
     </ng-select>
   </ng-template>
-  <ng-container *ngIf="table">
-    <app-bulk-actions *ngIf="table.selection && table.selection.selected.length"
-      [selectedRecords]="table.selection.selected" [actionsList]="bulkActionsList"></app-bulk-actions>
-    <!-- <app-grid-search (searchTextEvent)="filterControl.setValue($event)"></app-grid-search> -->
-  </ng-container>
 </div>
 <div class="row pt-3">
   <div class="col-12">
@@ -28,8 +23,8 @@
             <th cdk-header-cell *cdkHeaderCellDef>
               <input type="checkbox" [disabled]="table.filter"
                 [indeterminate]="table.selection.hasValue() && !allSelected()"
-                (change)="$event ? toggleAllInProgess() : null"
-                [checked]="table.selection.hasValue() && allSelected()" class="form-check-input">
+                (change)="$event ? toggleAllInProgess() : null" [checked]="table.selection.hasValue() && allSelected()"
+                class="form-check-input">
             </th>
             <td cdk-cell *cdkCellDef="let row">
               <input type="checkbox" *ngIf="row.requestStatus == externalUserUpdateRequestStatusEnum.IN_PROGRESS"
@@ -39,8 +34,12 @@
           </ng-container>
           <ng-container cdkColumnDef="header">
             <th cdk-header-cell colspan="100" *cdkHeaderCellDef="let row">
-              <div class="d-flex flex-row justify-content-end">
-                <div class="d-flex" *ngIf="selectedFilter">
+              <div class="d-flex flex-row">
+                <ng-container *ngIf="table">
+                  <app-bulk-actions class="w-auto" *ngIf="table.selection && table.selection.selected.length"
+                    [selectedRecords]="table.selection.selected" [actionsList]="bulkActionsList"></app-bulk-actions>
+                </ng-container>
+                <div class="d-flex ms-auto" *ngIf="selectedFilter">
                   <button (click)="selectFilter(undefined)" class="btn btn-sm"
                     [ngClass]="requestStatusClasses[selectedFilter.lookupKey]">
                     {{lang.map.selected_status}} - {{selectedFilter.getName()}}
@@ -49,7 +48,7 @@
                   <div class="vr"></div>
                   <div class="px-1"></div>
                 </div>
-                <div class="d-flex gap-3">
+                <div class="d-flex gap-3" [ngClass]="{ 'ms-auto': !selectedFilter}">
                   <button *ngFor="let status of requestStatusList" (click)="selectFilter(status)"
                     class="btn btn-sm  position-relative {{requestStatusClasses[status.lookupKey]}}"
                     data-bs-toggle="button">
@@ -99,7 +98,7 @@
           <ng-container cdkColumnDef="updatedBy">
             <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
               [sortCallback]="sortingCallbacks.updatedBy"> {{lang.map.updated_by}}</th>
-            <td cdk-cell *cdkCellDef="let row"><span>{{row.updatedByInfo ? row.updatedBy.getInfo() : ''}}</span></td>
+            <td cdk-cell *cdkCellDef="let row"><span>{{row.updateByInfo ? row.updateByInfo.getName() : ''}}</span></td>
           </ng-container>
           <ng-container cdkColumnDef="requestStatus">
             <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"

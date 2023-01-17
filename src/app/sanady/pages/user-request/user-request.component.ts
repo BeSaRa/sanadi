@@ -162,6 +162,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
   periodicityLookups: Record<number, Lookup> = {};
   editAidItem?: SubventionAid;
   editMode = false;
+  isEnquired = false;
 
   aidsActions: IMenuItem<SubventionAid>[] = [
     // edit
@@ -932,6 +933,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
           let ben = this.deleteBeneficiaryIds(list[0]);
           this.beneficiaryChanged$.next(ben);
         }
+        this.isEnquired = true;
       });
   }
 

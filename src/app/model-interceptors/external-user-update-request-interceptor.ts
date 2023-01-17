@@ -20,7 +20,7 @@ export class ExternalUserUpdateRequestInterceptor implements IModelInterceptor<E
     model.nationalityInfo && (model.nationalityInfo = AdminResult.createInstance(model.nationalityInfo));
     model.profileInfo && (model.profileInfo = AdminResult.createInstance(model.profileInfo));
     model.requestTypeInfo && (model.requestTypeInfo = AdminResult.createInstance(model.requestTypeInfo));
-    model.updatedByInfo && (model.updatedByInfo = AdminResult.createInstance(model.updatedByInfo));
+    model.updateByInfo && (model.updateByInfo = AdminResult.createInstance(model.updateByInfo));
     model.newPermissionList = model.newPermissionList ?? [];
     model.oldPermissionList = model.oldPermissionList ?? [];
     model.oldServicePermissions = (model.oldServicePermissions ?? []).map(x => userSecurityConfigurationInterceptor.receive(new UserSecurityConfiguration().clone(x)));
@@ -50,6 +50,6 @@ export class ExternalUserUpdateRequestInterceptor implements IModelInterceptor<E
     delete model.userTypeInfo;
     delete model.profileInfo;
     delete model.nationalityInfo;
-    delete model.updatedByInfo;
+    delete model.updateByInfo;
   }
 }
