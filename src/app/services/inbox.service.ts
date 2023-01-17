@@ -150,7 +150,6 @@ export class InboxService {
     this.services.set(CaseTypes.PROJECT_FUNDRAISING, this.projectFundraisingService);
     this.services.set(CaseTypes.ORGANIZATION_ENTITIES_SUPPORT, this.organizationsEntitiesSupportService);
     this.services.set(CaseTypes.FINANCIAL_TRANSFERS_LICENSING, this.financialTransferLicensingService);
-    this.services.set(CaseTypes.PROJECT_IMPLEMENTATION, this.projectImplementationService);
   }
 
   @CastResponse(() => QueryResultSet)
