@@ -4,7 +4,9 @@ import {CrudGenericService} from '@app/generics/crud-generic-service';
 import {GlobalSettings} from '@models/global-settings';
 import {UrlService} from '@services/url.service';
 import {FactoryService} from '@services/factory.service';
-import {CastResponseContainer} from '@decorators/cast-response';
+import {CastResponse, CastResponseContainer} from '@decorators/cast-response';
+import {Observable} from 'rxjs';
+import {FileType} from '@models/file-type';
 
 @CastResponseContainer({
   $default: {
@@ -29,5 +31,17 @@ export class GlobalSettingsService extends CrudGenericService<GlobalSettings> {
 
   _getServiceURL(): string {
     return this.urlService.URLS.GLOBAL_SETTINGS;
+  }
+
+  @CastResponse(() => FileType, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  _getFileTypes(): Observable<FileType[]> {
+    return this.http.get<FileType[]>(this._getServiceURL() + '/file-types');
+  }
+
+  getFileTypes(): Observable<FileType[]> {
+    return this._getFileTypes();
   }
 }

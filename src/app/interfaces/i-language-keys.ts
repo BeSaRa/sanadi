@@ -1,4 +1,13 @@
 export interface ILanguageKeys {
+  remove_email: string;
+  add_email: string;
+  admin_emails: string;
+  sms_notifications: string;
+  mail_notifications: string;
+  file_types: string;
+  inbox_refresh_interval: string;
+  file_size: string;
+  session_timeout_in_minutes: string;
   menu_global_settings: string;
   the_selected_x_not_match_with_selected_y_and_y_will_be_erased: string;
   this_change_will_effect_the_selected_template: string;
