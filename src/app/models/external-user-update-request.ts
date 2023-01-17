@@ -56,11 +56,11 @@ export class ExternalUserUpdateRequest extends BaseModel<ExternalUserUpdateReque
   userTypeInfo!: AdminResult;
   service!: ExternalUserUpdateRequestService;
   langService!: LangService;
-  updatedByInfo!: AdminResult;
+  updateByInfo!: AdminResult;
 
   searchFields: ISearchFieldsMap<ExternalUserUpdateRequest> = {
     ...normalSearchFields(['domainName', 'arName', 'enName', 'updatedOnString']),
-    ...infoSearchFields(['requestStatusInfo', 'requestTypeInfo', 'updatedByInfo'])
+    ...infoSearchFields(['requestStatusInfo', 'requestTypeInfo', 'updateByInfo'])
   };
 
   constructor() {

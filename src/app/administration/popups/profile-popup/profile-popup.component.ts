@@ -1,29 +1,34 @@
-import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, Inject, ViewChild} from '@angular/core';
-import {AbstractControl, FormControl, UntypedFormBuilder, UntypedFormGroup,} from '@angular/forms';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {ProfileTypes} from '@app/enums/profile-types.enum';
-import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
-import {IDialogData} from '@app/interfaces/i-dialog-data';
-import {Profile} from '@app/models/profile';
-import {LangService} from '@app/services/lang.service';
-import {LookupService} from '@app/services/lookup.service';
-import {ProfileServiceRelationService} from '@services/profile-service-relation.service';
-import {ProfileService} from '@app/services/profile.service';
-import {ProfileServiceRelation as ProfileServiceModel} from '@app/models/profile-service-relation';
-import {ToastService} from '@app/services/toast.service';
-import {TabComponent} from '@app/shared/components/tab/tab.component';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
-import {Observable, Subject} from 'rxjs';
-import {ServiceDataService} from '@app/services/service-data.service';
-import {ServiceData} from '@app/models/service-data';
-import {DialogService} from '@app/services/dialog.service';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import {ActionIconsEnum} from '@app/enums/action-icons-enum';
-import {TabMap} from '@app/types/types';
-import {EmployeeService} from '@services/employee.service';
-import {PermissionsEnum} from '@app/enums/permissions-enum';
+import { ProfileCountryService } from './../../../services/profile-country.service';
+import { ProfileCountry } from '@app/models/profile-country';
+import { CountryService } from '@services/country.service';
+import { takeUntil } from 'rxjs/operators';
+import { Country } from '@app/models/country';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Inject, ViewChild } from '@angular/core';
+import { AbstractControl, FormControl, UntypedFormBuilder, UntypedFormGroup, } from '@angular/forms';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { ProfileTypes } from '@app/enums/profile-types.enum';
+import { AdminGenericDialog } from '@app/generics/admin-generic-dialog';
+import { IDialogData } from '@app/interfaces/i-dialog-data';
+import { Profile } from '@app/models/profile';
+import { LangService } from '@app/services/lang.service';
+import { LookupService } from '@app/services/lookup.service';
+import { ProfileServiceRelationService } from '@services/profile-service-relation.service';
+import { ProfileService } from '@app/services/profile.service';
+import { ProfileServiceRelation as ProfileServiceModel } from '@app/models/profile-service-relation';
+import { ToastService } from '@app/services/toast.service';
+import { TabComponent } from '@app/shared/components/tab/tab.component';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
+import { Observable, Subject } from 'rxjs';
+import { ServiceDataService } from '@app/services/service-data.service';
+import { ServiceData } from '@app/models/service-data';
+import { DialogService } from '@app/services/dialog.service';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { ActionIconsEnum } from '@app/enums/action-icons-enum';
+import { TabMap } from '@app/types/types';
+import { EmployeeService } from '@services/employee.service';
+import { PermissionsEnum } from '@app/enums/permissions-enum';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -36,12 +41,21 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
   form!: UntypedFormGroup;
   operation!: OperationTypes;
   saveVisible: boolean = true;
+  countriesList: Country[] = [];
   actions: IMenuItem<ProfileServiceModel>[] = [
     {
       type: 'action',
       label: 'btn_delete',
       icon: ActionIconsEnum.DELETE,
       onClick: (item: ProfileServiceModel) => this.delete(item)
+    },
+  ];
+  profileCountryActions: IMenuItem<ProfileCountry>[] = [
+    {
+      type: 'action',
+      label: 'btn_delete',
+      icon: ActionIconsEnum.DELETE,
+      onClick: (item: ProfileCountry) => this.deleteCountry(item)
     },
   ];
   tabsData: TabMap = {
@@ -67,6 +81,16 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
         return (this.operation !== OperationTypes.CREATE && this.employeeService.checkPermissions(PermissionsEnum.MANAGE_PROFILE_SERVICE_DATA));
       }
     },
+    countries: {
+      name: 'countries',
+      langKey: 'country_countries',
+      index: 1,
+      validStatus: () => true,
+      isTouchedOrDirty: () => true,
+      show: () => {
+        return (this.operation !== OperationTypes.CREATE && this.employeeService.checkPermissions(PermissionsEnum.MANAGE_PROFILE_COUNTRIES_DATA));
+      }
+    },
     attachments: {
       name: 'attachments',
       langKey: 'attachments',
@@ -80,14 +104,17 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
   };
   profileTypes = this.lookupService.listByCategory.ProfileType.sort((a, b) => a.lookupKey - b.lookupKey);
   status = this.lookupService.listByCategory.CommonStatus.filter((e) => !e.isRetiredCommonStatus());
-  permitTypes = this.lookupService.listByCategory.ProjectPermitType.sort( (a , b) => a.lookupKey - b.lookupKey)
-  submissionMechanisms = this.lookupService.listByCategory.SubmissionMechanism.sort( (a , b) => a.lookupKey - b.lookupKey)
+  permitTypes = this.lookupService.listByCategory.ProjectPermitType.sort((a, b) => a.lookupKey - b.lookupKey)
+  submissionMechanisms = this.lookupService.listByCategory.SubmissionMechanism.sort((a, b) => a.lookupKey - b.lookupKey)
   profileServicesColumns = ['service', 'actions'];
   profileServices: ProfileServiceModel[] = [];
+  profileCountriesColumns = ['country', 'actions'];
+  profileCountries: ProfileCountry[] = [];
   showRaca = false;
   services: ServiceData[] = [];
   registrationAuthorities: Profile[] = [];
   servicesControl = new FormControl<number[]>([]);
+  countryControl = new FormControl<number[]>([]);
   @ViewChild('dialogContent') dialogContent!: ElementRef;
 
   private _loadServices() {
@@ -98,8 +125,21 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
       });
   }
 
+  private loadCountries(): void {
+    this.countryService.loadAsLookups()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((countries) => {
+        this.countriesList = countries;
+        this._filterExistingCountries();
+
+      });
+  }
   private _filterExistingServices() {
     this.services = this.services.filter(service => !this.profileServices.find((profileService) => profileService.serviceId === service.id));
+  }
+
+  private _filterExistingCountries() {
+    this.countriesList = this.countriesList.filter(country => !this.profileCountries.find((profileService) => profileService.countryId === country.id));
   }
 
   get readonly(): boolean {
@@ -123,17 +163,19 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
   }
 
   constructor(private lookupService: LookupService,
-              public fb: UntypedFormBuilder,
-              public dialogRef: DialogRef,
-              @Inject(DIALOG_DATA_TOKEN) data: IDialogData<Profile>,
-              private toast: ToastService,
-              public lang: LangService,
-              private cd: ChangeDetectorRef,
-              private profileServiceRelationService: ProfileServiceRelationService,
-              private employeeService: EmployeeService,
-              private service: ProfileService,
-              private serviceDataService: ServiceDataService,
-              private dialogService: DialogService) {
+    public fb: UntypedFormBuilder,
+    public dialogRef: DialogRef,
+    @Inject(DIALOG_DATA_TOKEN) data: IDialogData<Profile>,
+    private toast: ToastService,
+    public lang: LangService,
+    private cd: ChangeDetectorRef,
+    private profileServiceRelationService: ProfileServiceRelationService,
+    private profileCountryService: ProfileCountryService,
+    private employeeService: EmployeeService,
+    private countryService: CountryService,
+    private service: ProfileService,
+    private serviceDataService: ServiceDataService,
+    private dialogService: DialogService) {
     super();
     this.model = data.model;
     this.operation = data.operation;
@@ -152,7 +194,6 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
 
   onTabChange(_$event: TabComponent) {
   }
-
   initPopup(): void {
     this.service.getByProfileType(ProfileTypes.REGISTERED_ENTITIES)
       .subscribe((e) => {
@@ -163,6 +204,7 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
       this.profileTypeField.disable();
       this.loadLinkedServices(this.model.id);
       this._loadServices();
+      this.loadCountries();
     }
   }
 
@@ -186,8 +228,8 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
   afterSave(model: Profile, dialogRef: DialogRef): void {
     const message = this.operation === OperationTypes.CREATE ? this.lang.map.msg_create_x_success : this.lang.map.msg_update_x_success;
     this.operation === this.operationTypes.CREATE
-      ? this.toast.success(message.change({x: this.basicInfoForm?.get(this.lang.map.lang + 'Name')?.value || ''}))
-      : this.toast.success(message.change({x: model.getName()}));
+      ? this.toast.success(message.change({ x: this.basicInfoForm?.get(this.lang.map.lang + 'Name')?.value || '' }))
+      : this.toast.success(message.change({ x: model.getName() }));
     this.model = model;
     this.operation = OperationTypes.UPDATE;
     this.loadLinkedServices(model.id);
@@ -204,13 +246,24 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
       });
   }
 
+  loadLinkedCountries(id: number) {
+    if (!this.employeeService.checkPermissions(PermissionsEnum.MANAGE_PROFILE_COUNTRIES_DATA)) {
+      return;
+    }
+    this.profileCountryService.getCountriesByProfile(id)
+      .subscribe((result) => {
+        this.profileCountries = result;
+        this._filterExistingCountries();
+      });
+  }
+
   beforeSave(model: Profile, form: UntypedFormGroup): boolean | Observable<boolean> {
     return this.form.valid;
   }
 
   prepareModel(model: Profile, form: UntypedFormGroup): Profile | Observable<Profile> {
     const basicInfo = form.get('basicInfo')?.value;
-    return new Profile().clone({...model, ...basicInfo});
+    return new Profile().clone({ ...model, ...basicInfo });
   }
 
   saveFail(error: Error): void {
@@ -223,6 +276,7 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
     if (this.readonly) {
       this.form.disable();
       this.servicesControl.disable();
+      this.countryControl.disable();
     }
     if (this.model?.profileType) {
       this.handleProfileType(this.model.profileType, true);
@@ -251,14 +305,43 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
           this.loadLinkedServices(this.model.id);
           // @ts-ignore
           this.toast.success(
-            this.lang.map.msg_delete_x_success.change({x: model.serviceDataInfo.getName()})
+            this.lang.map.msg_delete_x_success.change({ x: model.serviceDataInfo.getName() })
           );
           sub.unsubscribe();
         });
       }
     });
   }
-
+  // createBulk
+  addCountries() {
+    const _countries = this.countryControl.value!.map((e) =>
+      new ProfileCountry().clone({
+        profileId: this.model.id,
+        countryId: +e,
+      })
+    );
+    this.profileCountryService.createBulk(_countries).subscribe((_e) => {
+      this.loadLinkedCountries(this.model.id);
+      this.toast.success(this.lang.map.countries_add_successfully);
+      this.countryControl.reset();
+    });
+  }
+  deleteCountry(model: ProfileCountry): void {
+    const message = this.lang.map.remove_countries_messages;
+    this.dialogService.confirm(message).onAfterClose$.subscribe((click: UserClickOn) => {
+      if (click === UserClickOn.YES) {
+        const sub = model.delete().subscribe(() => {
+          this.loadLinkedCountries(this.model.id);
+          // @ts-ignore
+          this.toast.success(
+            this.lang.map.msg_delete_x_success
+            // .change({ x: model.serviceDataInfo.getName() })
+          );
+          sub.unsubscribe();
+        });
+      }
+    });
+  }
   searchNgSelect(searchText: string, item: any): boolean {
     return item.ngSelectSearch(searchText);
   }

@@ -1725,4 +1725,6 @@ export interface ILanguageKeys {
   first_login_tip: string;
   charitable_entities: string;
   government_agencies: string;
+  countries_add_successfully: string;
+  remove_countries_messages: string;
 }

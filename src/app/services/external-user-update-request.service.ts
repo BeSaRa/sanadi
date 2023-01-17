@@ -176,6 +176,27 @@ export class ExternalUserUpdateRequestService extends CrudWithDialogGenericServi
     return this._updateUserRequest(value);
   }
 
+  rejectBulkRequestWithReason(models: ExternalUserUpdateRequest[]): Observable<any> {
+    return this.dialog.show<ReasonContract>(ReasonPopupComponent, {
+      saveBtn: this.lang.map.lbl_reject,
+      required: true,
+      reasonLabel: this.lang.map.comment,
+      title: this.lang.map.reject_reason,
+    }).onAfterClose$
+      .pipe(switchMap((result: { click: UserClickOn, comment: string }) => {
+        return result.click === UserClickOn.YES ? this._rejectBulkRequest(models, result.comment) : of('');
+      }));
+  }
+  private _rejectBulkRequest(selectedModels: ExternalUserUpdateRequest[], reason: string) {
+    const models = selectedModels.map((item) => {
+      return new ExternalUserUpdateRequest().clone({
+        ...item,
+        requestStatus: ExternalUserUpdateRequestStatusEnum.REJECTED,
+        notes: reason
+      })
+    });
+    return this.updateBulk(models);
+  }
   openUpdateRequestDialog(request: ExternalUserUpdateRequest): Observable<DialogRef> {
     return this.getByIdComposite(request.id)
       .pipe(switchMap((model) => {

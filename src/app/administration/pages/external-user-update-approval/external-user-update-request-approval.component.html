@@ -98,7 +98,7 @@
           <ng-container cdkColumnDef="updatedBy">
             <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
               [sortCallback]="sortingCallbacks.updatedBy"> {{lang.map.updated_by}}</th>
-            <td cdk-cell *cdkCellDef="let row"><span>{{row.updatedByInfo ? row.updatedBy.getInfo() : ''}}</span></td>
+            <td cdk-cell *cdkCellDef="let row"><span>{{row.updateByInfo ? row.updateByInfo.getName() : ''}}</span></td>
           </ng-container>
           <ng-container cdkColumnDef="requestStatus">
             <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
