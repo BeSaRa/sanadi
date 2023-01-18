@@ -1,3 +1,5 @@
+import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { DialogRef } from '@app/shared/models/dialog-ref';
 import { AdminLookupService } from '@services/admin-lookup.service';
 import { AdminLookup } from './../../../../models/admin-lookup';
 import { AdminResult } from './../../../../models/admin-result';
@@ -120,6 +122,7 @@ export class EmployeeFormPopupComponent implements OnInit {
     private fb: UntypedFormBuilder,
     private dialog: DialogService,
     private lookupService: LookupService,
+    private dialogRef: DialogRef,
     private employeeService: EmployeeService,
     private adminLookupService: AdminLookupService,
     private commonService: CommonService,
@@ -255,6 +258,17 @@ export class EmployeeFormPopupComponent implements OnInit {
   canDraftModel() {
     return this.data.model?.canDraft();
   }
+  closeDialog(): void {
+    const sub = this.dialog.confirm(this.lang.map.msg_confirm_continue)
+      .onAfterClose$
+      .subscribe((click: UserClickOn) => {
+        sub.unsubscribe();
+        if (click === UserClickOn.YES) {
+          this.dialogRef.close(click);
+        }
+      });
+  }
+
   openDateMenu(ref: any) {
     if (this.isEditRequestTypeAllowed) ref.toggleCalendar();
   }

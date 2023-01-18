@@ -45,6 +45,7 @@ export class LogViewerComponent implements OnInit, OnDestroy {
   logsViewed: ActionRegistry[] = [];
   logsUpdated: ActionRegistry[] = [];
   logsOthers: ActionRegistry[] = [];
+  logSuperAndCtrl: ActionRegistry[] = [];
 
   displayedColumns: string[] = ['user', 'action', 'toUser', 'addedOn', 'time', 'comment'];
   displayedColumnsViewed: string[] = ['user', 'addedOn', 'time', 'comment'];
@@ -102,11 +103,13 @@ export class LogViewerComponent implements OnInit, OnDestroy {
     this.displayPrintBtn = $event.name !== 'location';
     this.displayReturnBtn = $event.name === 'location' && (
       (this.case?.caseType == CaseTypes.NPO_MANAGEMENT ||
-        this.case?.caseType == CaseTypes.CHARITY_ORGANIZATION_UPDATE) && !this.timeOut()
+        this.case?.caseType == CaseTypes.CHARITY_ORGANIZATION_UPDATE)
     );
   }
-  timeOut() {
+  timeOut(task: AdminResult) {
+    console.log(task)
     // TODO: complete after descus
+    console.log(this.logSuperAndCtrl)
     return this._serviceData.serviceReviewLimit;
   }
   isMainTask(tkiid: string) {
@@ -124,6 +127,9 @@ export class LogViewerComponent implements OnInit, OnDestroy {
         this.logsUpdated = this.logsUpdated.concat(x);
       } else {
         this.logsOthers = this.logsOthers.concat(x);
+        if (x.actionId === ServiceActionType.Supervision_and_Control_Review) {
+          this.logSuperAndCtrl = this.logSuperAndCtrl.concat(x);
+        }
       }
     });
   }
