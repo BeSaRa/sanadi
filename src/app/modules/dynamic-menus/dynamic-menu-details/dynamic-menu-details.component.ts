@@ -76,7 +76,7 @@ export class DynamicMenuDetailsComponent implements OnInit {
     } else if (CommonUtils.isValidValue(parentId)) {
       url = this._finalizeUrl(Number(parentId));
     }
-    this.safeUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(url);
+    this.safeUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(encodeURIComponent(url));
   }
 
   private listenToLangChange(): void {
