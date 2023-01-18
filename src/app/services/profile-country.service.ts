@@ -27,7 +27,7 @@ export class ProfileCountryService extends CrudGenericService<ProfileCountry> {
     public http: HttpClient,
     private urlService: UrlService) {
     super();
-    FactoryService.registerService('ProfileService', this);
+    FactoryService.registerService('ProfileCountryService', this);
   }
 
   _getModel(): new () => ProfileCountry {

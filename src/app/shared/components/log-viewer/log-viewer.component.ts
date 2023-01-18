@@ -1,3 +1,5 @@
+import { ServiceData } from '@app/models/service-data';
+import { ServiceDataService } from '@app/services/service-data.service';
 import { CaseModel } from '@app/models/case-model';
 import { UserClickOn } from './../../../enums/user-click-on.enum';
 import { DialogService } from './../../../services/dialog.service';
@@ -55,9 +57,10 @@ export class LogViewerComponent implements OnInit, OnDestroy {
   displayPrintBtn: boolean = true;
   displayReturnBtn: boolean = false;
   destroy$: Subject<any> = new Subject<any>();
-
+  _serviceData!: ServiceData;
   constructor(public lang: LangService,
     public toast: ToastService,
+    private serviceData: ServiceDataService,
     public dialog: DialogService) {
   }
 
@@ -84,6 +87,9 @@ export class LogViewerComponent implements OnInit, OnDestroy {
         concatMap(() => iif(() => this.hideItemLocation, of([]), this.service.loadCaseLocation(this.caseId!)))
       )
       .subscribe(locations => this.locations = locations);
+    this.case && this.serviceData.loadByCaseType(this.case.caseType).subscribe((service: ServiceData) => {
+      this._serviceData = service;
+    })
   }
 
   ngOnDestroy(): void {
@@ -101,7 +107,7 @@ export class LogViewerComponent implements OnInit, OnDestroy {
   }
   timeOut() {
     // TODO: complete after descus
-    return false
+    return this._serviceData.serviceReviewLimit;
   }
   isMainTask(tkiid: string) {
     return this.case?.taskDetails.isMain && this.case?.taskDetails.tkiid == tkiid;
