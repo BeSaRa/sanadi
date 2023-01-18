@@ -16,6 +16,7 @@ import {FundingResourceContract} from "@contracts/funding-resource-contract";
 import {Payment} from "@models/payment";
 import {ImplementingAgency} from "@models/implementing-agency";
 import {CustomValidators} from "@app/validators/custom-validators";
+import currency from "currency.js";
 
 const _Approval = mixinApprovalLicenseWithMonthly(mixinRequestType(CaseModel))
 const {send, receive} = new ProjectImplementationInterceptor()
@@ -26,7 +27,6 @@ export class ProjectImplementation
   implements CaseModelContract<ProjectImplementationService, ProjectImplementation>, HasLicenseApprovalMonthly, HasRequestType {
   service: ProjectImplementationService;
   caseType = CaseTypes.PROJECT_IMPLEMENTATION;
-  createdOn!: string
   lastModified!: string
   classDescription!: string
   subject!: string
@@ -64,7 +64,7 @@ export class ProjectImplementation
   inRenewalPeriod!: boolean
   usedInProjectCompletion!: boolean
   licenseClassName!: string;
-
+  projectTotalCost!: number
 
   constructor() {
     super();
@@ -105,9 +105,14 @@ export class ProjectImplementation
 
   setImplementationTemplate(template: ImplementationTemplate): void {
     this.implementationTemplate = [template]
+    this.setProjectTotalCost(template.projectTotalCost)
   }
 
   removeImplementationTemplate(): void {
     this.implementationTemplate = []
+  }
+
+  setProjectTotalCost(value: number): void {
+    this.projectTotalCost = currency(value).value
   }
 }
