@@ -12,6 +12,10 @@ export interface ILanguageKeys {
   file_size: string;
   session_timeout_in_minutes: string;
   menu_global_settings: string;
+  location: string;
+  template_cost: string;
+  project_info: string;
+  menu_project_implementation : string;
   the_selected_x_not_match_with_selected_y_and_y_will_be_erased: string;
   this_change_will_effect_the_selected_template: string;
   template_action_x_confirmation_msg: string;

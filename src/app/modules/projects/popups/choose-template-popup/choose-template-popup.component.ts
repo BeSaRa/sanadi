@@ -8,6 +8,10 @@ import {ProjectWorkArea} from "@app/enums/project-work-area";
 import {Lookup} from "@app/models/lookup";
 import {ProjectTemplate} from "@app/models/projectTemplate";
 import {PublicTemplateStatus} from "@app/enums/public-template-status";
+import {CaseTypes} from "@app/enums/case-types.enum";
+import {ImplementationTemplate} from "@models/implementation-template";
+import {ProjectImplementationService} from "@services/project-implementation.service";
+import {filter} from "rxjs/operators";
 
 @Component({
   selector: 'choose-template',
@@ -25,20 +29,29 @@ export class ChooseTemplatePopupComponent implements AfterViewInit {
     enName: this.lang.getEnglishLocalByKey('no_need_review')
   }))
 
-  private oldTemplate?: ProjectTemplate
+  private readonly oldProjectTemplate?: ProjectTemplate
+  private readonly oldImplementationTemplate?: ImplementationTemplate
 
   @ViewChild(TableComponent)
   private table!: TableComponent;
 
-  constructor(@Inject(DIALOG_DATA_TOKEN) public data: { templates: ProjectModel[], template?: ProjectTemplate, workArea: ProjectWorkArea },
+  constructor(@Inject(DIALOG_DATA_TOKEN) public data: {
+                templates: ProjectModel[],
+                projectTemplate?: ProjectTemplate,
+                implementationTemplate: ImplementationTemplate,
+                caseType: CaseTypes,
+                workArea: ProjectWorkArea
+              },
+              private projectImplementationService: ProjectImplementationService,
               private dialogRef: DialogRef,
               public lang: LangService) {
     this.data.workArea === ProjectWorkArea.OUTSIDE_QATAR ? this.displayedColumns.splice(3, 0, 'domain') : null;
-    this.oldTemplate = data.template
+    this.oldImplementationTemplate = data.implementationTemplate;
+    this.oldProjectTemplate = data.projectTemplate;
   }
 
   ngAfterViewInit(): void {
-    this.data.template ? this.table.selection.setSelection(this.data.templates.find((item) => item.id === this.data.template?.templateId)) : null
+    this.data.projectTemplate ? this.table.selection.setSelection(this.data.templates.find((item) => item.id === this.data.projectTemplate?.templateId)) : null
   }
 
   close(): void {
@@ -49,6 +62,10 @@ export class ChooseTemplatePopupComponent implements AfterViewInit {
     if (this.isSaveDisabled())
       return;
 
+    if (this.data.caseType === CaseTypes.PROJECT_IMPLEMENTATION) {
+      this.saveForImplementation()
+      return;
+    }
     const model = (this.table.selection.selected[0] as unknown as ProjectModel)
     const noNeedReview = model.templateStatus === PublicTemplateStatus.APPROVED_BY_RACA
     const defaultTemplate = noNeedReview ? this.noNeedReview : this.needReview
@@ -59,11 +76,22 @@ export class ChooseTemplatePopupComponent implements AfterViewInit {
     })
 
     this.dialogRef.close(
-      this.oldTemplate && this.oldTemplate.templateId === template.templateId ? this.oldTemplate : template
+      this.oldProjectTemplate && this.oldProjectTemplate.templateId === template.templateId ? this.oldProjectTemplate : template
     )
   }
 
   isSaveDisabled(): boolean {
     return !this.table ? true : this.table && this.table.selection && this.table.selection.isEmpty()
+  }
+
+  private saveForImplementation(): void {
+    const selectedTemplate = (this.table.selection.selected[0] as unknown as ProjectModel).convertToImplementationTemplate()
+    this.projectImplementationService
+      .openImplementationTemplateDialog(selectedTemplate)
+      .onAfterClose$
+      .pipe(filter(val => !!val))
+      .subscribe((result: ImplementationTemplate) => {
+        this.dialogRef.close(result)
+      });
   }
 }

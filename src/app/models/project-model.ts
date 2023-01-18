@@ -18,7 +18,7 @@ import {ProjectModelForeignCountriesProject} from '@app/models/project-model-for
 import {ProjectAddress} from '@app/models/project-address';
 import {EmployeeService} from '@services/employee.service';
 import {ProjectTemplate} from "@app/models/projectTemplate";
-import {Lookup} from "@app/models/lookup";
+import {ImplementationTemplate} from "@models/implementation-template";
 
 // noinspection JSUnusedGlobalSymbols
 const {send, receive} = new ProjectModelInterceptor();
@@ -287,6 +287,19 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
       templateCost: this.projectTotalCost,
       publicStatus: this.templateStatus,
       publicStatusInfo: this.templateStatusInfo
+    })
+  }
+
+  convertToImplementationTemplate(): ImplementationTemplate {
+    return (new ImplementationTemplate()).clone({
+      templateId: this.id,
+      templateName: this.projectName,
+      templateCost: this.projectTotalCost,
+      projectTotalCost: this.projectTotalCost,
+      executionCountry: this.executionCountry,
+      executionCountryInfo: this.executionCountryInfo,
+      beneficiaryRegion: this.beneficiaryRegion,
+      region: this.executionRegion
     })
   }
 }

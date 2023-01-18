@@ -1,7 +1,8 @@
 <div class="row">
-  <tabs-list [accordionView]="accordionView">
+  <tabs-list [activeTabIndex]="1" [accordionView]="accordionView">
     <tab name="basic_info" [template]="basic_info" [title]="lang.map.lbl_basic_info">
     </tab>
+    <tab name="project_info" [template]="project_info" [title]="lang.map.project_info"></tab>
     <tab name="special_explanations" [template]="specialExplanations"
          [title]="lang.map.special_explanations"></tab>
     <tab name="attachments" *ngIf="!accordionView" [template]="attachmentsTab" [title]="lang.map.attachments"></tab>
@@ -60,7 +61,7 @@
         <div *ngIf="displayDomain" class="col-md-4 col-sm-12 mb-4 position-relative">
           <label class="form-label" asteriskIfRequired="domain"
                  for="domain">{{lang.map.domain}}</label>
-          <ng-select validationClasses="domain" appendTo="body" [clearable]="true" id="domain"
+          <ng-select validationClasses="domain" appendTo="body" [clearable]="false" id="domain"
                      formControlName="domain">
             <ng-option [value]="option.lookupKey" *ngFor="let option of domains">{{option.getName()}}</ng-option>
           </ng-select>
@@ -120,7 +121,11 @@
         </div>
       </div>
     </ng-template>
-
+    <ng-template #project_info>
+      <div class="row">
+        <implementation-template [criteria]="getCriteria"  [model]="model!"></implementation-template>
+      </div>
+    </ng-template>
     <ng-template #specialExplanations>
 
     </ng-template>

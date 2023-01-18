@@ -55,6 +55,7 @@ export class PageHeaderComponent implements OnInit, OnDestroy {
 
 
   clickAdd() {
+    console.log('HERE');
     !this.disableAdd && this.clickOnNew$.next(null)
   }
 }

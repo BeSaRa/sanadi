@@ -6,7 +6,6 @@ import {UrgentInterventionAnnouncementService} from '@services/urgent-interventi
 import {ImplementingAgency} from '@app/models/implementing-agency';
 import {InterventionField} from '@app/models/intervention-field';
 import {InterventionRegion} from '@app/models/intervention-region';
-import {ImplementationTemplate} from '@app/models/implementation-template';
 import {AdminResult} from '@app/models/admin-result';
 
 export class UrgentInterventionAnnouncementInterceptor implements IModelInterceptor<UrgentInterventionAnnouncement> {

@@ -22,6 +22,7 @@ import {AdminLookup} from "@models/admin-lookup";
 import {DacOchaService} from "@services/dac-ocha.service";
 import {ProjectWorkArea} from "@app/enums/project-work-area";
 import {EmployeeService} from '@app/services/employee.service';
+import {TemplateCriteriaContract} from "@contracts/template-criteria-contract";
 
 @Component({
   selector: 'project-implementation',
@@ -104,6 +105,17 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
   get internalProjectClassification(): AbstractControl {
     return this.basicInfo.get('internalProjectClassification')!
   }
+  // it should be
+  getCriteria = (): TemplateCriteriaContract => {
+    return {
+      workArea: this.projectWorkArea.value,
+      countries: [this.beneficiaryCountry.value],
+      domain: this.domain.value,
+      internalProjectClassification: this.internalProjectClassification.value,
+      mainDAC: this.mainDACCategory.value,
+      mainUNOCHA: this.mainUNOCHACategory.value
+    }
+  }
 
   _getNewInstance(): ProjectImplementation {
     return new ProjectImplementation()
@@ -111,6 +123,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
 
   _initComponent(): void {
     // load anything you need it here while initialize the component
+
   }
 
   _buildForm(): void {
@@ -288,6 +301,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
         this.subUNOCHACategory.setValue(null)
         this.subDACCategory.setValue(null)
         this.loadSubDacOchaByParentId(value)
+        this.model && (this.domain.value === DomainTypes.HUMANITARIAN ? this.model.mainUNOCHACategory = value : this.model.mainDACCategory = value)
       })
   }
 
@@ -322,6 +336,8 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
           this.setFieldsToNull(insideFields.concat(this.beneficiaryCountry))
         }
 
+        this.model && (this.model.projectWorkArea = value)
+
         this.handleDisplayFields({
           projectWorkArea: value,
           domain: this.domain.value
@@ -337,7 +353,9 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
         this.mainUNOCHACategory.setValue(null, {emitEvent: false})
         this.mainDACCategory.setValue(null, {emitEvent: false})
         this.displayDac = value === DomainTypes.DEVELOPMENT;
-        this.displayOcha = value === DomainTypes.HUMANITARIAN
+        this.displayOcha = value === DomainTypes.HUMANITARIAN;
+        this.loadDacOuchMain(value)
+        this.model && (this.model.domain = value)
       })
   }
 

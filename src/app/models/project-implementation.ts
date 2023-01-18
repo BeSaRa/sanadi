@@ -63,13 +63,13 @@ export class ProjectImplementation
   licenseStatusInfo!: AdminResult
   inRenewalPeriod!: boolean
   usedInProjectCompletion!: boolean
-  licenseClassName!: string
+  licenseClassName!: string;
+
 
   constructor() {
     super();
     this.service = FactoryService.getService('ProjectImplementationService')
   }
-
 
   buildBasicInfo(controls: boolean = false) {
     const {
@@ -101,6 +101,13 @@ export class ProjectImplementation
       subUNOCHACategory: controls ? [subUNOCHACategory, [], []] : subUNOCHACategory,
       internalProjectClassification: controls ? [internalProjectClassification, [], []] : internalProjectClassification,
     }
+  }
 
+  setImplementationTemplate(template: ImplementationTemplate): void {
+    this.implementationTemplate = [template]
+  }
+
+  removeImplementationTemplate(): void {
+    this.implementationTemplate = []
   }
 }
