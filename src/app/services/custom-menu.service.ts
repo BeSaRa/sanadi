@@ -11,7 +11,7 @@ import {DialogRef} from '@app/shared/models/dialog-ref';
 import {Observable, of} from 'rxjs';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {CustomMenuPopupComponent} from '../administration/popups/custom-menu-popup/custom-menu-popup.component';
-import {CustomMenu} from '../models/custom-menu';
+import {CustomMenu} from '@models/custom-menu';
 import {DialogService} from './dialog.service';
 import {FactoryService} from './factory.service';
 import {UrlService} from './url.service';
@@ -235,7 +235,7 @@ export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> 
         value = this.tokenService.getToken();
         break;
       case MenuItemParametersEnum.PROFILE_ID:
-        value = this.employeeService.getProfile()?.id;
+        value = this.employeeService.isExternalUser() ? this.employeeService.getProfile()?.id : -1;
         break;
       case MenuItemParametersEnum.DOMAIN_NAME:
         value = this.employeeService.getCurrentUser().domainName;
