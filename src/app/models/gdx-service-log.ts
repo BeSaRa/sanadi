@@ -22,7 +22,8 @@ export class GdxServiceLog {
   orgUserId!: string;
   orgInfo!: AdminResult;
   orgUserInfo!: AdminResult;
-
+  viewable!: boolean;
+  status!: boolean;
   //extra properties
   gdxServiceResponseList: any[] = [];
   gdxServiceResponseParsed: any;

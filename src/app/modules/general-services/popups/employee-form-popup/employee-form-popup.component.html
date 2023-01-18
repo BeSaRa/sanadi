@@ -1,6 +1,6 @@
 <div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
   <h1 class="h6 text-white">{{ lang.map.add_new_Employee_data }}</h1>
-  <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose [isConfirmClose]="true"
+  <button type="button" class="btn-close btn-close-white" tabindex="-1" (click)="closeDialog()"
     aria-label="Close"></button>
 </div>
 <div class="dialog-content no-fixed-height">
@@ -282,7 +282,7 @@
     " (click)="submit()">
     {{ lang.map.btn_save }}
   </button>
-  <button dialogClose class="btn btn-secondary" [isConfirmClose]="true">
+  <button class="btn btn-secondary" (click)="closeDialog()">
     {{ lang.map.btn_close }}
   </button>
 </div>

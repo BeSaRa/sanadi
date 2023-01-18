@@ -1,21 +1,21 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {BehaviorSubject, of, Subject} from 'rxjs';
-import {ActionIconsEnum} from '@app/enums/action-icons-enum';
-import {GdxServicesEnum} from '@app/enums/gdx-services.enum';
-import {LangService} from '@services/lang.service';
-import {BeneficiaryService} from '@services/beneficiary.service';
-import {EmployeeService} from '@services/employee.service';
-import {ToastService} from '@services/toast.service';
-import {Beneficiary} from '@app/models/beneficiary';
-import {GdxServiceLog} from '@app/models/gdx-service-log';
-import {UntypedFormControl} from '@angular/forms';
-import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import {SortEvent} from '@contracts/sort-event';
-import {CommonUtils} from '@helpers/common-utils';
-import {DateUtils} from '@helpers/date-utils';
-import {exhaustMap, filter, takeUntil} from 'rxjs/operators';
-import {IGdxCriteria} from '@contracts/i-gdx-criteria';
-import {BeneficiaryIdTypes} from '@app/enums/beneficiary-id-types.enum';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { BehaviorSubject, of, Subject } from 'rxjs';
+import { ActionIconsEnum } from '@app/enums/action-icons-enum';
+import { GdxServicesEnum } from '@app/enums/gdx-services.enum';
+import { LangService } from '@services/lang.service';
+import { BeneficiaryService } from '@services/beneficiary.service';
+import { EmployeeService } from '@services/employee.service';
+import { ToastService } from '@services/toast.service';
+import { Beneficiary } from '@app/models/beneficiary';
+import { GdxServiceLog } from '@app/models/gdx-service-log';
+import { UntypedFormControl } from '@angular/forms';
+import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { SortEvent } from '@contracts/sort-event';
+import { CommonUtils } from '@helpers/common-utils';
+import { DateUtils } from '@helpers/date-utils';
+import { exhaustMap, filter, takeUntil } from 'rxjs/operators';
+import { IGdxCriteria } from '@contracts/i-gdx-criteria';
+import { BeneficiaryIdTypes } from '@app/enums/beneficiary-id-types.enum';
 
 @Component({
   selector: 'integration-inquiry-log-list',
@@ -27,9 +27,9 @@ export class IntegrationInquiryLogListComponent {
   actionIconsEnum = ActionIconsEnum;
 
   constructor(public lang: LangService,
-              private beneficiaryService: BeneficiaryService,
-              private employeeService: EmployeeService,
-              private toast: ToastService) {
+    private beneficiaryService: BeneficiaryService,
+    private employeeService: EmployeeService,
+    private toast: ToastService) {
   }
 
   ngOnInit(): void {
@@ -56,11 +56,11 @@ export class IntegrationInquiryLogListComponent {
   @Output() onReady: EventEmitter<GdxServicesEnum> = new EventEmitter<GdxServicesEnum>();
 
   headerColumn: string[] = ['extra-header'];
-  private _displayedColumns: string[] = ['organization', 'user', 'actionTime', 'actions'];
+  private _displayedColumns: string[] = ['workItemStatus', 'organization', 'user', 'actionTime', 'actions'];
 
   get displayedColumns(): string[] {
     if (this.gdxServiceId === GdxServicesEnum.IZZAB) {
-      return ['icons', 'organization', 'user', 'actionTime'];
+      return ['workItemStatus', 'icons', 'organization', 'user', 'actionTime'];
     }
     return this._displayedColumns;
   }
@@ -77,6 +77,7 @@ export class IntegrationInquiryLogListComponent {
       type: 'action',
       label: 'select',
       show: () => true,
+      disabled: (item) => !item.viewable,
       onClick: (item: GdxServiceLog) => this.selectLog(item)
     }
   ];

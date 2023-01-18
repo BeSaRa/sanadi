@@ -258,7 +258,12 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
   loadGaneralProcessNotificationApprovalDepartments(): void {
     this.intDepService.loadAsLookups()
       .pipe(takeUntil(this.destroy$))
-      .subscribe(deps => this.departments = deps.filter(dep => this.GeneralProcessDepartmentApprovalDepartments.includes(dep.code as AdminstrationDepartmentCodes)));
+      .subscribe(deps => {
+        const currDepIndex = this.GeneralProcessDepartmentApprovalDepartments.findIndex(dc => dc == this.employee.getInternalDepartment()?.code);
+        this.GeneralProcessDepartmentApprovalDepartments.splice(currDepIndex, 1);
+        this.departments =
+          deps.filter(dep => this.GeneralProcessDepartmentApprovalDepartments.includes(dep.code as AdminstrationDepartmentCodes))
+      });
   }
 
 

@@ -131,7 +131,6 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
       .subscribe((countries) => {
         this.countriesList = countries;
         this._filterExistingCountries();
-
       });
   }
   private _filterExistingServices() {
@@ -203,6 +202,7 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
     if (this.operation !== OperationTypes.CREATE) {
       this.profileTypeField.disable();
       this.loadLinkedServices(this.model.id);
+      this.loadLinkedCountries(this.model.id);
       this._loadServices();
       this.loadCountries();
     }
@@ -233,6 +233,7 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
     this.model = model;
     this.operation = OperationTypes.UPDATE;
     this.loadLinkedServices(model.id);
+    this.loadLinkedCountries(model.id);
   }
 
   loadLinkedServices(id: number) {

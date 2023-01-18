@@ -206,7 +206,7 @@
             class="btn btn-primary">
             {{ lang.map.btn_add }}
           </button>
-        </div>x`
+        </div>
       </div>
     </div>
     <div class="row">
@@ -215,7 +215,7 @@
           [columns]="profileCountriesColumns" sortableTable>
           <table cdk-table [dataSource]="table.dataSource" class="table table-striped table-bordered caption-top">
             <ng-container cdkColumnDef="country">
-              <th cdk-header-cell sortable-header *cdkHeaderCellDef>{{ lang.map.service_name }}</th>
+              <th cdk-header-cell sortable-header *cdkHeaderCellDef>{{ lang.map.country }}</th>
               <td cdk-cell *cdkCellDef="let row">country name</td>
             </ng-container>
             <ng-container cdkColumnDef="actions">
