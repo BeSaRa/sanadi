@@ -114,6 +114,11 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     return this.basicInfo.get('licenseStartDate')!
   }
 
+  get implementationTemplate(): AbstractControl {
+    return this.basicInfo.get('implementationTemplate')!
+  }
+
+
   // it should be
   getCriteria = (): TemplateCriteriaContract => {
     return {

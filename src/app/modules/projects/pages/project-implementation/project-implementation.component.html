@@ -1,5 +1,5 @@
 <div class="row">
-<!--  <tabs-list [activeTabIndex]="1" [accordionView]="accordionView">-->
+  <!--  <tabs-list [activeTabIndex]="1" [accordionView]="accordionView">-->
   <tabs-list [accordionView]="accordionView">
     <tab name="basic_info" [template]="basic_info" [title]="lang.map.lbl_basic_info">
     </tab>
@@ -157,16 +157,18 @@
           <input readonly id="licenseEndDate" class="form-control">
         </div>
         <div class="col-md-4 col-sm-12 mb-4 position-relative">
-            <label class="form-label" asteriskIfRequired="projectEvaluationSLA"
-                   for="projectEvaluationSLA">{{lang.map.project_evaluation_sla}} ({{lang.map.months}})</label>
-            <input id="projectEvaluationSLA" validationClasses="projectEvaluationSLA" formControlName="projectEvaluationSLA" class="form-control">
-            <app-field-error-message controlName="projectEvaluationSLA"></app-field-error-message>
+          <label class="form-label" asteriskIfRequired="projectEvaluationSLA"
+                 for="projectEvaluationSLA">{{lang.map.project_evaluation_sla}} ({{lang.map.months}})</label>
+          <input id="projectEvaluationSLA" validationClasses="projectEvaluationSLA"
+                 formControlName="projectEvaluationSLA" class="form-control">
+          <app-field-error-message controlName="projectEvaluationSLA"></app-field-error-message>
         </div>
+        <implementation-template formControlName="implementationTemplate" [criteria]="getCriteria"></implementation-template>
       </div>
     </ng-template>
     <ng-template #project_info>
       <div class="row">
-        <implementation-template [criteria]="getCriteria" [model]="model!"></implementation-template>
+
       </div>
     </ng-template>
     <ng-template #specialExplanations>

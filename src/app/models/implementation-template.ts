@@ -80,7 +80,6 @@ export class ImplementationTemplate extends Cloneable<ImplementationTemplate> {
   }
 
   openMap(viewOnly: boolean = false): DialogRef {
-    console.log(this);
     return this.service.openMap(viewOnly, this)
   }
 

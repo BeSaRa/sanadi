@@ -22,6 +22,7 @@ export class PageHeaderComponent implements OnInit, OnDestroy {
   @Input() disableAdd: boolean = false;
   @Input() disableReload: boolean = false;
   @Input() customTemplateParentClass: string = 'flex-fill';
+  @Input() removeContainerClasses: boolean = false
 
   isReloadAvailable = false;
 
@@ -30,6 +31,7 @@ export class PageHeaderComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.isReloadAvailable = !isEmptyObject(this.clickOnReload$);
+    this.removeContainerClasses && (this.containerClass = '')
   }
 
   ngOnDestroy(): void {
@@ -55,7 +57,6 @@ export class PageHeaderComponent implements OnInit, OnDestroy {
 
 
   clickAdd() {
-    console.log('HERE');
     !this.disableAdd && this.clickOnNew$.next(null)
   }
 }

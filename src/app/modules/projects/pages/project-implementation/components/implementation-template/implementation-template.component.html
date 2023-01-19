@@ -1,8 +1,12 @@
 <div class="row">
-  <app-page-header [pageTitle]="'templates'" [disableAdd]="readonly" [clickOnNew$]="addTemplate$"></app-page-header>
+  <div class="d-flex align-items-center justify-content-start position-relative">
+    <app-page-header [removeContainerClasses]="true" [pageTitle]="'templates'" class="flex-grow-0" [disableAdd]="disabled" [clickOnNew$]="addTemplate$"></app-page-header>
+    <input type="hidden" *ngIf="control" validationClasses="" [control]="control!">
+    <app-field-error-message [absolute]="false" class="flex-grow-1" *ngIf="control" [control]="control"></app-field-error-message>
+  </div>
   <app-table #table sortableTable
              [useSearchToFilter]="true"
-             [data]="model.implementationTemplate"
+             [data]="value"
              [columns]="displayedColumns">
     <table cdk-table [dataSource]="table.dataSource" class="table table-striped table-bordered caption-top">
       <ng-container cdkColumnDef="templateName">

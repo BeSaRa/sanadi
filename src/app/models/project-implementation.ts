@@ -86,7 +86,8 @@ export class ProjectImplementation
       implementingAgencyType,
       licenseStartDate,
       projectEvaluationSLA,
-      licenseDuration
+      licenseDuration,
+      implementationTemplate
     } = this;
 
     return {
@@ -103,7 +104,8 @@ export class ProjectImplementation
       implementingAgencyType: controls ? [implementingAgencyType, CustomValidators.required] : implementingAgencyType,
       licenseStartDate: controls ? [licenseStartDate, CustomValidators.required] : licenseStartDate,
       licenseDuration: controls ? [licenseDuration, CustomValidators.required] : licenseDuration,
-      projectEvaluationSLA: controls ? [projectEvaluationSLA, CustomValidators.required] : projectEvaluationSLA
+      projectEvaluationSLA: controls ? [projectEvaluationSLA, CustomValidators.required] : projectEvaluationSLA,
+      implementationTemplate: controls ? [implementationTemplate, CustomValidators.requiredArray] : implementationTemplate
     }
   }
 
