@@ -59,7 +59,7 @@ export class UrgentInterventionAttachmentPopupComponent implements OnInit {
   destroy$: Subject<any> = new Subject<any>();
   private save$: Subject<any> = new Subject<any>();
   filterControl: UntypedFormControl = new UntypedFormControl('');
-  displayedColumns: string[] = ['description', 'createdOn', 'actions'];
+  displayedColumns: string[] = ['documentTitle', 'createdOn', 'actions'];
 
   sortingCallbacks = {
     createdOn: (a: UrgentInterventionAttachment, b: UrgentInterventionAttachment, dir: SortEvent): number => {
