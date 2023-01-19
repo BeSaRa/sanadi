@@ -59,7 +59,7 @@ export class UrgentInterventionReport extends BaseModel<UrgentInterventionReport
       enName,
       executionDate,
       dueDate,
-      notes
+      // notes
     } = this;
     return {
       arName: controls ? [arName, [
@@ -76,7 +76,7 @@ export class UrgentInterventionReport extends BaseModel<UrgentInterventionReport
       ]] : enName,
       executionDate: controls ? [DateUtils.changeDateToDatepicker(executionDate), [CustomValidators.required]] : DateUtils.changeDateToDatepicker(executionDate),
       dueDate: controls ? [DateUtils.changeDateToDatepicker(dueDate), [CustomValidators.required]] : DateUtils.changeDateToDatepicker(dueDate),
-      notes: controls ? [notes, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]]: notes
+      // notes: controls ? [notes, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]]: notes
     }
   }
 
