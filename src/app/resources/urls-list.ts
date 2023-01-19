@@ -135,5 +135,6 @@ export const urlsList: Partial<IAppUrls> = {
   ORGANIZATION_ENTITIES_SUPPORT: '/organizations-entities-support',
   PROFILE_COUNTRY: '/admin/profile-country',
   GLOBAL_SETTINGS:'/admin/global-setting',
-  USER_PREFERENCES: '/admin/user-preferences'
+  USER_PREFERENCES: '/admin/user-preferences',
+  PROJECT_IMPLEMENTATION: '/project-implementation'
 };

@@ -131,5 +131,6 @@ export interface IAppUrls {
   PROFILE_COUNTRY: string;
   GLOBAL_SETTINGS: string;
   USER_PREFERENCES: string;
+  PROJECT_IMPLEMENTATION: string;
   [index: string]: string;
 }
