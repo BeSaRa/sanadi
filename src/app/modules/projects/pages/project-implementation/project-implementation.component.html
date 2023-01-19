@@ -1,5 +1,6 @@
 <div class="row">
-  <tabs-list [activeTabIndex]="1" [accordionView]="accordionView">
+<!--  <tabs-list [activeTabIndex]="1" [accordionView]="accordionView">-->
+  <tabs-list [accordionView]="accordionView">
     <tab name="basic_info" [template]="basic_info" [title]="lang.map.lbl_basic_info">
     </tab>
     <tab name="project_info" [template]="project_info" [title]="lang.map.project_info"></tab>
@@ -119,11 +120,53 @@
           </ng-select>
           <app-field-error-message controlName="internalProjectClassification"></app-field-error-message>
         </div>
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="implementingAgencyType"
+                 for="implementingAgencyType">{{lang.map.implementation_agency_type}}</label>
+          <ng-select validationClasses="implementingAgencyType" appendTo="body" [clearable]="true"
+                     id="implementingAgencyType"
+                     formControlName="implementingAgencyType">
+            <ng-option [value]="option.lookupKey" *ngFor="let option of agencyTypes">{{option.getName()}}</ng-option>
+          </ng-select>
+          <app-field-error-message controlName="implementingAgencyType"></app-field-error-message>
+        </div>
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label asteriskIfRequired="licenseStartDate" for="licenseStartDate"
+                 class="form-label">{{lang.map.license_start_date}}</label>
+          <div class="input-group">
+            <i class="input-group-text mdi mdi-calendar"></i>
+            <div class="form-control" formControlName="licenseStartDate"
+                 id="licenseStartDate" [options]="datepickerOptionsMap.licenseStartDate"
+                 (click)="dpLicenseStartDate.toggleCalendar()"
+                 [ngClass]="{'input-disabled': licenseStartDate.disabled}"
+                 #dpLicenseStartDate="angular-mydatepicker"
+                 angular-mydatepicker validationClasses="licenseStartDate"></div>
+            <app-field-error-message controlName="licenseStartDate"></app-field-error-message>
+          </div>
+        </div>
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="licenseDuration"
+                 for="licenseDuration">{{lang.map.license_duration}} ({{lang.map.months}})</label>
+          <input id="licenseDuration" validationClasses="licenseDuration" formControlName="licenseDuration"
+                 class="form-control">
+          <app-field-error-message controlName="licenseDuration"></app-field-error-message>
+        </div>
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label class="form-label"
+                 for="licenseEndDate">{{lang.map.license_end_date}}</label>
+          <input readonly id="licenseEndDate" class="form-control">
+        </div>
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+            <label class="form-label" asteriskIfRequired="projectEvaluationSLA"
+                   for="projectEvaluationSLA">{{lang.map.project_evaluation_sla}} ({{lang.map.months}})</label>
+            <input id="projectEvaluationSLA" validationClasses="projectEvaluationSLA" formControlName="projectEvaluationSLA" class="form-control">
+            <app-field-error-message controlName="projectEvaluationSLA"></app-field-error-message>
+        </div>
       </div>
     </ng-template>
     <ng-template #project_info>
       <div class="row">
-        <implementation-template [criteria]="getCriteria"  [model]="model!"></implementation-template>
+        <implementation-template [criteria]="getCriteria" [model]="model!"></implementation-template>
       </div>
     </ng-template>
     <ng-template #specialExplanations>

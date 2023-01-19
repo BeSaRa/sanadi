@@ -23,6 +23,7 @@ import {DacOchaService} from "@services/dac-ocha.service";
 import {ProjectWorkArea} from "@app/enums/project-work-area";
 import {EmployeeService} from '@app/services/employee.service';
 import {TemplateCriteriaContract} from "@contracts/template-criteria-contract";
+import {DateUtils} from "@helpers/date-utils";
 
 @Component({
   selector: 'project-implementation',
@@ -38,17 +39,20 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
   countries: Country[] = this.activatedRoute.snapshot.data['countries'] as Country[];
   private qatarCountry: Country = this.getQatarCountry();
   domains: Lookup[] = this.lookupService.listByCategory.Domain;
+  agencyTypes: Lookup[] = this.lookupService.listByCategory.ImplementingAgencyType;
   mainDacCategories: AdminLookup[] = [];
   subDacCategories: AdminLookup[] = [];
   mainUNOCHACategories: AdminLookup[] = [];
   subUNOCHACategories: AdminLookup[] = [];
   private loadedDacOchaBefore: boolean = false;
-
   displayDac: boolean = false;
   displayOcha: boolean = false;
   displayDomain: boolean = false;
   displayInternal: boolean = true;
 
+  datepickerOptionsMap = {
+    licenseStartDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'})
+  }
 
   constructor(public lang: LangService,
               public fb: UntypedFormBuilder,
@@ -105,6 +109,11 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
   get internalProjectClassification(): AbstractControl {
     return this.basicInfo.get('internalProjectClassification')!
   }
+
+  get licenseStartDate(): AbstractControl {
+    return this.basicInfo.get('licenseStartDate')!
+  }
+
   // it should be
   getCriteria = (): TemplateCriteriaContract => {
     return {
@@ -116,6 +125,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       mainUNOCHA: this.mainUNOCHACategory.value
     }
   }
+
 
   _getNewInstance(): ProjectImplementation {
     return new ProjectImplementation()

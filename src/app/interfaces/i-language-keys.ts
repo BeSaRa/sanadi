@@ -12,6 +12,7 @@ export interface ILanguageKeys {
   file_size: string;
   session_timeout_in_minutes: string;
   menu_global_settings: string;
+  project_evaluation_sla: string;
   location: string;
   template_cost: string;
   project_info: string;

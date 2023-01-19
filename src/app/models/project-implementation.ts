@@ -74,8 +74,6 @@ export class ProjectImplementation
   buildBasicInfo(controls: boolean = false) {
     const {
       requestType,
-      oldLicenseSerial,
-      oldLicenseId,
       oldLicenseFullSerial,
       projectWorkArea,
       beneficiaryCountry,
@@ -85,13 +83,15 @@ export class ProjectImplementation
       subDACCategory,
       subUNOCHACategory,
       internalProjectClassification,
+      implementingAgencyType,
+      licenseStartDate,
+      projectEvaluationSLA,
+      licenseDuration
     } = this;
 
     return {
       requestType: controls ? [requestType, [CustomValidators.required], []] : requestType,
-      oldLicenseSerial: controls ? [oldLicenseSerial, [], []] : oldLicenseSerial,
-      oldLicenseId: controls ? [oldLicenseId, [], []] : oldLicenseId,
-      oldLicenseFullSerial: controls ? [oldLicenseFullSerial, [], []] : oldLicenseFullSerial,
+      oldLicenseFullSerial: controls ? [oldLicenseFullSerial, [CustomValidators.maxLength(250)], []] : oldLicenseFullSerial,
       projectWorkArea: controls ? [projectWorkArea, [CustomValidators.required], []] : projectWorkArea,
       beneficiaryCountry: controls ? [beneficiaryCountry, [CustomValidators.required], []] : beneficiaryCountry,
       domain: controls ? [domain, [], []] : domain,
@@ -100,6 +100,10 @@ export class ProjectImplementation
       subDACCategory: controls ? [subDACCategory, [], []] : subDACCategory,
       subUNOCHACategory: controls ? [subUNOCHACategory, [], []] : subUNOCHACategory,
       internalProjectClassification: controls ? [internalProjectClassification, [], []] : internalProjectClassification,
+      implementingAgencyType: controls ? [implementingAgencyType, CustomValidators.required] : implementingAgencyType,
+      licenseStartDate: controls ? [licenseStartDate, CustomValidators.required] : licenseStartDate,
+      licenseDuration: controls ? [licenseDuration, CustomValidators.required] : licenseDuration,
+      projectEvaluationSLA: controls ? [projectEvaluationSLA, CustomValidators.required] : projectEvaluationSLA
     }
   }
 
