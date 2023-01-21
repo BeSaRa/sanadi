@@ -53,7 +53,7 @@ export class SidebarComponent implements OnInit {
   isExternalUser: boolean = this.employeeService.isExternalUser();
 
   @HostBinding('class.sidebar-opened')
-  isOpened: boolean = true;
+  isOpened: boolean = false;
   private ongoingState: boolean = false;
 
   @HostBinding('class.sidebar-closed')

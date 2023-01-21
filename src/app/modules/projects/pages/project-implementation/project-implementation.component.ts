@@ -24,6 +24,7 @@ import {ProjectWorkArea} from "@app/enums/project-work-area";
 import {EmployeeService} from '@app/services/employee.service';
 import {TemplateCriteriaContract} from "@contracts/template-criteria-contract";
 import {DateUtils} from "@helpers/date-utils";
+import {ImplementingAgency} from "@models/implementing-agency";
 
 @Component({
   selector: 'project-implementation',
@@ -51,7 +52,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
   displayInternal: boolean = true;
 
   datepickerOptionsMap = {
-    licenseStartDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'})
+    licenseStartDate: DateUtils.getDatepickerOptions({disablePeriod: 'none', openSelectorTopOfInput: true})
   }
 
   constructor(public lang: LangService,
@@ -68,6 +69,10 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
 
   get basicInfo(): AbstractControl {
     return this.form.get('basicInfo')!
+  }
+
+  get projectInfo(): AbstractControl {
+    return this.form.get('projectInfo')!
   }
 
   get requestType(): AbstractControl {
@@ -111,13 +116,21 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
   }
 
   get licenseStartDate(): AbstractControl {
-    return this.basicInfo.get('licenseStartDate')!
+    return this.projectInfo.get('licenseStartDate')!
   }
 
   get implementationTemplate(): AbstractControl {
-    return this.basicInfo.get('implementationTemplate')!
+    return this.projectInfo.get('implementationTemplate')!
   }
 
+  get implementingAgencyType(): AbstractControl {
+    return this.projectInfo.get('implementingAgencyType')!
+  }
+
+
+  get implementingAgencyList(): AbstractControl {
+    return this.projectInfo.get('implementingAgencyList')!
+  }
 
   // it should be
   getCriteria = (): TemplateCriteriaContract => {
@@ -144,7 +157,8 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
   _buildForm(): void {
     const model = new ProjectImplementation()
     this.form = this.fb.group({
-      basicInfo: this.fb.group(model.buildBasicInfo(true))
+      basicInfo: this.fb.group(model.buildBasicInfo(true)),
+      projectInfo: this.fb.group(model.buildProjectInfo(true))
     })
   }
 
@@ -152,6 +166,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     this.listenToMainDacOchaChanges()
     this.listenToWorkAreaChanges()
     this.listenToDomainChange()
+    this.listenToImplementingAgencyListChanges()
 
     this.setDefaultValues()
   }
@@ -413,4 +428,12 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     }
   }
 
+  private listenToImplementingAgencyListChanges() {
+    this.implementingAgencyList
+      .valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((value: ImplementingAgency[]) => {
+        value.length ? this.implementingAgencyType.disable() : this.implementingAgencyType.enable()
+      })
+  }
 }

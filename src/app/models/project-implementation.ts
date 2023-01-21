@@ -44,11 +44,11 @@ export class ProjectImplementation
   paymentTotalCost!: number
   beneficiaryCountry!: number
   implementationTemplate: ImplementationTemplate[] = []
+  implementingAgencyList: ImplementingAgency[] = []
   implementationFundraising: ImplementationFundraising[] = []
   financialGrant: FundingResourceContract[] = []
   selfFinancing: FundingResourceContract[] = []
   payment: Payment[] = []
-  implementingAgencyList: ImplementingAgency[] = []
   beneficiaryCountryInfo!: AdminResult
   domainInfo!: AdminResult
   mainUNOCHACategoryInfo!: AdminResult
@@ -82,12 +82,7 @@ export class ProjectImplementation
       mainUNOCHACategory,
       subDACCategory,
       subUNOCHACategory,
-      internalProjectClassification,
-      implementingAgencyType,
-      licenseStartDate,
-      projectEvaluationSLA,
-      licenseDuration,
-      implementationTemplate
+      internalProjectClassification
     } = this;
 
     return {
@@ -100,12 +95,26 @@ export class ProjectImplementation
       mainUNOCHACategory: controls ? [mainUNOCHACategory, [], []] : mainUNOCHACategory,
       subDACCategory: controls ? [subDACCategory, [], []] : subDACCategory,
       subUNOCHACategory: controls ? [subUNOCHACategory, [], []] : subUNOCHACategory,
-      internalProjectClassification: controls ? [internalProjectClassification, [], []] : internalProjectClassification,
-      implementingAgencyType: controls ? [implementingAgencyType, CustomValidators.required] : implementingAgencyType,
+      internalProjectClassification: controls ? [internalProjectClassification, [], []] : internalProjectClassification
+    }
+  }
+
+  buildProjectInfo(controls: boolean = false) {
+    const {
+      implementationTemplate,
+      implementingAgencyType,
+      licenseStartDate,
+      projectEvaluationSLA,
+      licenseDuration,
+      implementingAgencyList
+    } = this
+    return {
       licenseStartDate: controls ? [licenseStartDate, CustomValidators.required] : licenseStartDate,
       licenseDuration: controls ? [licenseDuration, CustomValidators.required] : licenseDuration,
       projectEvaluationSLA: controls ? [projectEvaluationSLA, CustomValidators.required] : projectEvaluationSLA,
-      implementationTemplate: controls ? [implementationTemplate, CustomValidators.requiredArray] : implementationTemplate
+      implementingAgencyType: controls ? [implementingAgencyType, CustomValidators.required] : implementingAgencyType,
+      implementationTemplate: controls ? [implementationTemplate, CustomValidators.requiredArray] : implementationTemplate,
+      implementingAgencyList: controls ? [implementingAgencyList , CustomValidators.requiredArray] : implementingAgencyList
     }
   }
 
