@@ -6,7 +6,7 @@ import { DateUtils } from './../../../../helpers/date-utils';
 import { EmployeeService } from './../../../../services/employee.service';
 import { TabComponent } from './../../../../shared/components/tab/tab.component';
 import { CommonCaseStatus } from './../../../../enums/common-case-status.enum';
-import { CollectionRequestType, ServiceRequestTypes } from './../../../../enums/service-request-types';
+import { CollectionRequestType } from './../../../../enums/service-request-types';
 import { UserClickOn } from './../../../../enums/user-click-on.enum';
 import { catchError, exhaustMap, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { OpenFrom } from './../../../../enums/open-from.enum';
@@ -156,13 +156,21 @@ AwarenessActivitySuggestionService
     this.handleReadonly();
   }
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
-    const invalidTabs = this._getInvalidTabs();
-    if (invalidTabs.length > 0) {
-      const listHtml = CommonUtils.generateHtmlList(this.lang.map.msg_following_tabs_valid, invalidTabs);
-      this.dialog.error(listHtml.outerHTML);
+    if (this.requestTypeField.value !== CollectionRequestType.NEW && !this.selectedLicense) {
+      this.dialog.error(this.lang.map.please_select_license_to_complete_save);
       return false;
+    } else {
+      if (saveType === SaveTypes.DRAFT) {
+        return true;
+      }
+      const invalidTabs = this._getInvalidTabs();
+      if (invalidTabs.length > 0) {
+        const listHtml = CommonUtils.generateHtmlList(this.lang.map.msg_following_tabs_valid, invalidTabs);
+        this.dialog.error(listHtml.outerHTML);
+        return false;
+      }
+      return true;
     }
-    return true;
   }
   private _getInvalidTabs(): any {
     let failedList: string[] = [];
@@ -261,8 +269,8 @@ AwarenessActivitySuggestionService
     });
   }
   _setDefaultValues(): void {
-    this.requestTypeField.setValue(ServiceRequestTypes.NEW);
-    this.handleRequestTypeChange(ServiceRequestTypes.NEW, false);
+    this.requestTypeField.setValue(CollectionRequestType.NEW);
+    this.handleRequestTypeChange(CollectionRequestType.NEW, false);
   }
   _resetForm(): void {
     this.form.reset();
