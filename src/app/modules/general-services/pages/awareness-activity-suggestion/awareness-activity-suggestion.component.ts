@@ -52,7 +52,7 @@ AwarenessActivitySuggestionService
     dataOfApplicant: {
       name: "dataOfApplicantTab",
       langKey: "lbl_data_of_applicant" as keyof ILanguageKeys,
-      validStatus: () => this.dataOfApplicant.valid || !this.isNonPrifitCreatorOrg(),
+      validStatus: () => this.dataOfApplicant.valid,
     },
     contactOfficer: {
       name: "contactOfficerTab",
@@ -136,11 +136,11 @@ AwarenessActivitySuggestionService
       requestType: model.requestType,
       description: model.description,
       oldLicenseFullSerial: model.oldLicenseFullSerial,
-      dataOfApplicant: this.isNonPrifitCreatorOrg() ? this.fb.group(model.dataOfApplicant) : {},
+      dataOfApplicant: this.fb.group(model.dataOfApplicant),
       contactOfficer: this.fb.group(model.contactOfficer),
       activity: this.fb.group(model.activity),
     });
-    this.isNonPrifitCreatorOrg() && this.dataOfApplicant.valueChanges.subscribe(data => {
+    this.dataOfApplicant.valueChanges.subscribe(data => {
       if (this.isSameAsApplican) {
         this.contactOfficer.patchValue({
           contactQID: data.identificationNumber,
@@ -231,7 +231,7 @@ AwarenessActivitySuggestionService
       requestType: formModel.requestType,
       description: formModel.description,
       oldLicenseFullSerial: formModel.oldLicenseFullSerial,
-      dataOfApplicant: this.isNonPrifitCreatorOrg() ? formModel.dataOfApplicant : {},
+      dataOfApplicant: formModel.dataOfApplicant,
       contactOfficer: formModel.contactOfficer,
       activity: formModel.activity,
     });
@@ -243,9 +243,6 @@ AwarenessActivitySuggestionService
       return this.model!.ouInfo.getName()
     else
       return this.employeeService.getProfile()?.getName()
-  }
-  isNonPrifitCreatorOrg() {
-    return this.employeeService.isNonProfitOrgProfile()
   }
   handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
     of(userInteraction).pipe(
