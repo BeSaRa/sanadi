@@ -61,6 +61,7 @@ export class AwarenessActivitySuggestion
   oldLicenseId!: string;
   oldLicenseSerial!: number;
   ouInfo!: AdminResult;
+  licenseStatusInfo!: AdminResult;
   searchFields: ISearchFieldsMap<AwarenessActivitySuggestion> = {
     ...dateSearchFields(['createdOn']),
     ...infoSearchFields(['caseStatusInfo', 'creatorInfo', 'ouInfo']),
@@ -110,7 +111,7 @@ export class AwarenessActivitySuggestion
       oldLicenseFullSerial: controls ? [oldLicenseFullSerial] : oldLicenseFullSerial,
       description: controls ? [description, Validators.required] : description,
       dataOfApplicant: {
-        identificationNumber: controls ? [identificationNumber, CustomValidators.maxLength(20)] : identificationNumber,
+        identificationNumber: controls ? [identificationNumber, [CustomValidators.required].concat(CustomValidators.commonValidations.qId)] : identificationNumber,
         enName: controls ? [enName, [CustomValidators.required, Validators.maxLength(300)]] : enName,
         jobTitle: controls ? [jobTitle, [Validators.required, CustomValidators.maxLength(100)]] : jobTitle,
         address: controls ? [address, [Validators.required, CustomValidators.maxLength(100)]] : address,

@@ -5,15 +5,22 @@
     [title]="lang.map[tabsData.charitableEntities.langKey]"></tab>
 </tabs-list>
 <ng-template #GovernmentAgenciesTemplate>
-  <tabs-list (onTabChange)="onTabChange($event)" [accordionView]="true" [tabByIndex$]="tabIndex$">
-    <tab [name]="tabsData.moj.name" [template]="MOJTemplate" [title]="lang.map[tabsData.moj.langKey]"></tab>
-    <tab [name]="tabsData.moci.name" [template]="MOCITemplate" [title]="lang.map[tabsData.moci.langKey]"></tab>
-    <tab [name]="tabsData.mawared.name" [template]="MawaredTemplate" [title]="lang.map[tabsData.mawared.langKey]"></tab>
-    <tab [name]="tabsData.garsia.name" [template]="GarsiaTemplate" [title]="lang.map[tabsData.garsia.langKey]"></tab>
-    <tab [name]="tabsData.izzab.name" [template]="IzzabTemplate" [title]="lang.map[tabsData.izzab.langKey]"></tab>
-    <tab [name]="tabsData.kahramaa.name" [template]="KahramaaTemplate" [title]="lang.map[tabsData.kahramaa.langKey]">
+  <tabs-list [accordionView]="true" [collapse]="true" [tabByIndex$]="tabIndex$">
+    <tab [name]="tabsData.moj.name" [template]="MOJTemplate" [title]="lang.map[tabsData.moj.langKey]"
+      (onExpand)="onTabChange($event)"></tab>
+    <tab [name]="tabsData.moci.name" [template]="MOCITemplate" [title]="lang.map[tabsData.moci.langKey]"
+      (onExpand)="onTabChange($event)"></tab>
+    <tab [name]="tabsData.mawared.name" [template]="MawaredTemplate" [title]="lang.map[tabsData.mawared.langKey]"
+      (onExpand)="onTabChange($event)"></tab>
+    <tab [name]="tabsData.garsia.name" [template]="GarsiaTemplate" [title]="lang.map[tabsData.garsia.langKey]"
+      (onExpand)="onTabChange($event)"></tab>
+    <tab [name]="tabsData.izzab.name" [template]="IzzabTemplate" [title]="lang.map[tabsData.izzab.langKey]"
+      (onExpand)="onTabChange($event)"></tab>
+    <tab [name]="tabsData.kahramaa.name" [template]="KahramaaTemplate" [title]="lang.map[tabsData.kahramaa.langKey]"
+      (onExpand)="onTabChange($event)">
     </tab>
-    <tab [name]="tabsData.mol.name" [template]="MOLTemplate" [title]="lang.map[tabsData.mol.langKey]"></tab>
+    <tab [name]="tabsData.mol.name" [template]="MOLTemplate" [title]="lang.map[tabsData.mol.langKey]"
+      (onExpand)="onTabChange($event)"></tab>
   </tabs-list>
   <ng-template #MOJTemplate>
     <integration-inquiry-log-list #mojLogsComponent [gdxServiceId]="gdxServicesEnum.MOJ" [beneficiary]="beneficiary"
@@ -95,9 +102,9 @@
   </ng-template>
 </ng-template>
 <ng-template #CharitableEntitiesTemplate>
-  <tabs-list (onTabChange)="onTabChange($event)" [accordionView]="true" [tabByIndex$]="tabIndex$">
+  <tabs-list [accordionView]="true" [collapse]="true" [tabByIndex$]="tabIndex$">
     <tab [name]="tabsData.qatarCharity.name" [template]="QatarCharityTemplate"
-      [title]="lang.map[tabsData.qatarCharity.langKey]"></tab>
+      [title]="lang.map[tabsData.qatarCharity.langKey]" (onExpand)="onTabChange($event)"></tab>
   </tabs-list>
   <ng-template #QatarCharityTemplate>
     Qatar Charity

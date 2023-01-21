@@ -32,8 +32,8 @@ import { Observable, of, Subject } from 'rxjs';
   styleUrls: ['./awareness-activity-suggestion.component.scss']
 })
 export class AwarenessActivitySuggestionComponent extends EServicesGenericComponent<
-  AwarenessActivitySuggestion,
-  AwarenessActivitySuggestionService
+AwarenessActivitySuggestion,
+AwarenessActivitySuggestionService
 > {
   collectionRequestType: Lookup[] = this.lookupService.listByCategory.CollectionRequestType.sort((a, b) => a.lookupKey - b.lookupKey)
   linkedProject: Lookup[] = this.lookupService.listByCategory.LinkedProject.sort((a, b) => a.lookupKey - b.lookupKey)
@@ -52,7 +52,7 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
     dataOfApplicant: {
       name: "dataOfApplicantTab",
       langKey: "lbl_data_of_applicant" as keyof ILanguageKeys,
-      validStatus: () => this.dataOfApplicant.valid,
+      validStatus: () => this.dataOfApplicant.valid || !this.isNonPrifitCreatorOrg(),
     },
     contactOfficer: {
       name: "contactOfficerTab",
@@ -85,7 +85,7 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
     private toast: ToastService,
     private cd: ChangeDetectorRef,
     private dialog: DialogService,
-    private employeeService: EmployeeService,
+    public employeeService: EmployeeService,
     private licenseService: LicenseService
   ) {
     super()
@@ -136,11 +136,11 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
       requestType: model.requestType,
       description: model.description,
       oldLicenseFullSerial: model.oldLicenseFullSerial,
-      dataOfApplicant: this.fb.group(model.dataOfApplicant),
+      dataOfApplicant: this.isNonPrifitCreatorOrg() ? this.fb.group(model.dataOfApplicant) : {},
       contactOfficer: this.fb.group(model.contactOfficer),
       activity: this.fb.group(model.activity),
     });
-    this.dataOfApplicant.valueChanges.subscribe(data => {
+    this.isNonPrifitCreatorOrg() && this.dataOfApplicant.valueChanges.subscribe(data => {
       if (this.isSameAsApplican) {
         this.contactOfficer.patchValue({
           contactQID: data.identificationNumber,
@@ -231,11 +231,10 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
       requestType: formModel.requestType,
       description: formModel.description,
       oldLicenseFullSerial: formModel.oldLicenseFullSerial,
-      dataOfApplicant: formModel.dataOfApplicant,
+      dataOfApplicant: this.isNonPrifitCreatorOrg() ? formModel.dataOfApplicant : {},
       contactOfficer: formModel.contactOfficer,
       activity: formModel.activity,
     });
-
     this.cd.detectChanges();
     this.handleRequestTypeChange(model.requestType, false);
   }
@@ -244,6 +243,9 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
       return this.model!.ouInfo.getName()
     else
       return this.employeeService.getProfile()?.getName()
+  }
+  isNonPrifitCreatorOrg() {
+    return this.employeeService.isNonProfitOrgProfile()
   }
   handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
     of(userInteraction).pipe(

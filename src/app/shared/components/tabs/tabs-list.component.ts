@@ -11,11 +11,11 @@ import {
   QueryList,
   Self
 } from '@angular/core';
-import {TabComponent} from '../tab/tab.component';
-import {Subject} from 'rxjs';
-import {TabListService} from './tab-list-service';
-import {takeUntil} from 'rxjs/operators';
-import {EmployeeService} from "@app/services/employee.service";
+import { TabComponent } from '../tab/tab.component';
+import { Subject } from 'rxjs';
+import { TabListService } from './tab-list-service';
+import { takeUntil } from 'rxjs/operators';
+import { EmployeeService } from "@app/services/employee.service";
 
 @Component({
   selector: 'tabs-list , [tabs-list]',
@@ -29,6 +29,7 @@ export class TabsListComponent implements OnDestroy, AfterContentInit, OnInit {
   @Input() activeTabIndex: number = 0;
   @Input() tabByIndex$!: Subject<number>;
   @Input() accordionView: boolean = false;
+  @Input() collapse: boolean = false;
   static aliveTabsCount: number = 0;
   private destroy$: Subject<any> = new Subject<any>();
 
@@ -68,7 +69,7 @@ export class TabsListComponent implements OnDestroy, AfterContentInit, OnInit {
   }
 
   ngAfterContentInit(): void {
-    this.tabListService.setTabs(this.tabs, this.activeTabIndex, this.onTabChange);
+    this.tabListService.setTabs(this.tabs, this.activeTabIndex, this.collapse, this.onTabChange);
   }
 
   /**

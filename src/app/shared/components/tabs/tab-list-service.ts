@@ -1,6 +1,6 @@
-import {EventEmitter, Injectable, OnDestroy, QueryList} from '@angular/core';
-import {TabComponent} from '../tab/tab.component';
-import {Observable, Subject} from 'rxjs';
+import { EventEmitter, Injectable, OnDestroy, QueryList } from '@angular/core';
+import { TabComponent } from '../tab/tab.component';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable()
 export class TabListService implements OnDestroy {
@@ -14,6 +14,8 @@ export class TabListService implements OnDestroy {
   onSelectTabChange$: Observable<TabComponent> = this.changeSelectedTabTo$.asObservable();
   onTabChangeEvent!: EventEmitter<TabComponent>;
   public accordionView: boolean = false;
+  collapse: boolean = false;
+
 
   constructor() {
     ++TabListService.id;
@@ -27,8 +29,9 @@ export class TabListService implements OnDestroy {
     this.destroy$.unsubscribe();
   }
 
-  setTabs(tabs: QueryList<TabComponent>, activeTabIndex: number, onTabChangeEvent: EventEmitter<TabComponent>): void {
+  setTabs(tabs: QueryList<TabComponent>, activeTabIndex: number, collapse: boolean, onTabChangeEvent: EventEmitter<TabComponent>): void {
     this.tabs = tabs;
+    this.collapse = collapse;
     this.hasTabs = true;
     this.onTabChangeEvent = onTabChangeEvent;
     this.activeTabIndex = typeof activeTabIndex !== undefined ? activeTabIndex : 0;
@@ -45,6 +48,7 @@ export class TabListService implements OnDestroy {
 
   selectTabByIndex(index: number): void {
     const tab = this.findTabByIndex(index);
+    tab && (tab.expanded = 'open');
     this.changeSelectedTabTo$.next(tab);
     this.onTabChangeEvent.emit(tab);
   }

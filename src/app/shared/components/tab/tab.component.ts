@@ -1,8 +1,8 @@
-import {Component, Host, Input, OnDestroy, OnInit, TemplateRef} from '@angular/core';
-import {TabListService} from '../tabs/tab-list-service';
-import {delay, takeUntil} from 'rxjs/operators';
-import {Subject} from 'rxjs';
-import {animate, state, style, transition, trigger} from "@angular/animations";
+import { Component, EventEmitter, Host, Input, OnDestroy, OnInit, Output, TemplateRef } from '@angular/core';
+import { TabListService } from '../tabs/tab-list-service';
+import { delay, takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { animate, state, style, transition, trigger } from "@angular/animations";
 
 @Component({
   selector: 'tab , [tab]',
@@ -35,12 +35,15 @@ export class TabComponent implements OnInit, OnDestroy {
   @Input() hasError: boolean = false;
   @Input() disabled: boolean = false;
   @Input() tabWidth?: string;
+
   private destroy$: Subject<any> = new Subject<any>();
+  @Output() onExpand: EventEmitter<TabComponent> = new EventEmitter<TabComponent>();
+
   accordionView: boolean = false;
   containerId: number = 0;
   tabId: string = '';
   tabIdRef: string = '';
-  expanded: string = 'open';
+  expanded: string = 'close';
 
   constructor(@Host() private tabListService: TabListService) {
   }
@@ -50,6 +53,7 @@ export class TabComponent implements OnInit, OnDestroy {
     this.containerId = this.tabListService.containerId;
     this.tabId = (this.name || Date.now().toString()) + this.containerId;
     this.tabIdRef = '#' + this.tabId;
+    this.expanded = this.tabListService.collapse ? 'close' : 'open';
     this.listenToTabChange();
   }
 
@@ -73,6 +77,13 @@ export class TabComponent implements OnInit, OnDestroy {
   }
 
   toggleAccordion() {
+    if (this.tabListService.collapse) {
+      this.tabListService.tabs.forEach((t) => {
+        if (t != this)
+          t.expanded = 'close';
+      })
+    }
     this.expanded = this.expanded === 'open' ? 'close' : 'open';
+    this.onExpand.emit(this);
   }
 }

@@ -50,16 +50,14 @@ export class IntegrationInquiriesComponent {
       langKey: 'government_agencies',
       validStatus: () => true,
       isTouchedOrDirty: () => true,
-      serviceId: GdxServicesEnum.MOJ,
-      isLoaded: false
+      isLoaded: true
     },
     charitableEntities: {
       name: 'charitableEntities',
-      index: 0,
+      index: 1,
       langKey: 'charitable_entities',
       validStatus: () => true,
       isTouchedOrDirty: () => true,
-      // serviceId: GdxServicesEnum.QATAR_CHARITY,
       isLoaded: true
     },
     moj: {
