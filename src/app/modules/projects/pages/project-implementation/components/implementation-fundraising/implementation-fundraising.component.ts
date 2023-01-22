@@ -79,13 +79,23 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
   }
 
   private destroyOldListeners(): void {
-    this.destroyListeners$.next()
+    this.destroyListeners$.next(true)
   }
 
   writeValue(value: ImplementationFundraising[]): void {
-    this.destroyOldListeners()
-    this.createInputList(value)
-    this.value = value
+    Promise.resolve()
+      .then(() => {
+        this.destroyOldListeners()
+        this.value = []
+        this.inputs.clear()
+      })
+      .then(() => {
+        this.createInputList(value)
+      })
+      .then(() => {
+        this.value = value
+        this.listenToControls()
+      })
   }
 
   registerOnChange(fn: (value: ImplementationFundraising[]) => void): void {
@@ -103,10 +113,10 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
 
   private listenToControl(ctrl: UntypedFormControl, index: number): void {
     ctrl.valueChanges
-      .pipe(takeUntil((this.destroyListeners$)))
       .pipe(map(value => Number(value)))
       .pipe(filter(_ => !this.disabled))
       .pipe(debounceTime(250))
+      .pipe(takeUntil((this.destroy$)))
       .subscribe((value) => {
         const model = this.value[index];
         const cValue = currency(value)
@@ -119,12 +129,16 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
   private createInputList(list: ImplementationFundraising[] | undefined) {
     if (!list) return;
 
-    list.forEach((item, index) => {
+    list.forEach((item) => {
       const ctrl = new UntypedFormControl(item.totalCost)
       this.inputs.push(ctrl)
+    });
+  }
+
+  listenToControls(): void {
+    (this.inputs.controls as UntypedFormControl[]).forEach((ctrl, index) => {
       this.listenToControl(ctrl, index)
     })
-
   }
 
   getRemaining(index: number) {
