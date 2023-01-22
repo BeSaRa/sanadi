@@ -364,7 +364,7 @@ export class ProjectFundraising extends _ApprovalLicenseWithMonthly<ProjectFundr
       projectTotalCost: this.projectTotalCost,
       permitType: this.permitType,
       permitTypeInfo: this.permitTypeInfo,
-      totalCost: this.projectTotalCost
+      totalCost: 0
     })
   }
 }

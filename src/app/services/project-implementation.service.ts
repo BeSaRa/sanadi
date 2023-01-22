@@ -33,6 +33,7 @@ import {
 import {MapService} from "@services/map.service";
 import {ProjectFundraisingService} from "@services/project-fundraising.service";
 import {ProjectFundraising} from "@models/project-fundraising";
+import {IDefaultResponse} from "@contracts/idefault-response";
 
 @CastResponseContainer({
   $default: {
@@ -136,6 +137,14 @@ export class ProjectImplementationService extends BaseGenericEService<ProjectImp
         fromObject: {templateId}
       })
     })
+  }
+
+  getConsumedAmount(fundraisingId: string): Observable<number> {
+    return this.http.get<IDefaultResponse<number>>(this.urlService.URLS.PROJECT_IMPLEMENTATION + '/fundraising/consumed', {
+      params: new HttpParams({
+        fromObject: {fundraisingId}
+      })
+    }).pipe(map(res => res.rs))
   }
 
 }

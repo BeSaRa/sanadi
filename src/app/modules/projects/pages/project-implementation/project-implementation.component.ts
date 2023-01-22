@@ -26,6 +26,7 @@ import {TemplateCriteriaContract} from "@contracts/template-criteria-contract";
 import {DateUtils} from "@helpers/date-utils";
 import {ImplementingAgency} from "@models/implementing-agency";
 import {ImplementationTemplate} from "@models/implementation-template";
+import {ImplementationFundraising} from "@models/implementation-fundraising";
 
 @Component({
   selector: 'project-implementation',
@@ -456,9 +457,9 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       .pipe(takeUntil(this.destroy$))
       .pipe(filter((value): value is ImplementationTemplate[] => !!value.length))
       .pipe(switchMap(value => value[0].loadImplementationFundraising()))
-      .pipe(filter(value => !!value))
-      .subscribe((license) => {
-        this.implementationFundraising.setValue([license.convertToFundraisingTemplate()])
+      .pipe(filter((value): value is ImplementationFundraising => !!value))
+      .subscribe((ImplementationFundraising) => {
+        this.implementationFundraising.setValue([ImplementationFundraising])
       })
   }
 }

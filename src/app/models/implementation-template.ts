@@ -5,8 +5,9 @@ import currency from "currency.js";
 import {DialogRef} from "@app/shared/models/dialog-ref";
 import {FactoryService} from "@services/factory.service";
 import {ProjectImplementationService} from "@services/project-implementation.service";
-import {Observable} from "rxjs";
-import {ProjectFundraising} from "@models/project-fundraising";
+import {Observable, of} from "rxjs";
+import {map, switchMap} from "rxjs/operators";
+import {ImplementationFundraising} from "@models/implementation-fundraising";
 
 export class ImplementationTemplate extends Cloneable<ImplementationTemplate> {
   templateId!: string
@@ -93,8 +94,18 @@ export class ImplementationTemplate extends Cloneable<ImplementationTemplate> {
     return this.service.openImplementationTemplateDialog(this, true)
   }
 
-  loadImplementationFundraising(): Observable<ProjectFundraising> {
-    return this.service.loadRelatedPermitByTemplate(this.templateId)
+  loadImplementationFundraising(): Observable<ImplementationFundraising | undefined> {
+    return this.service
+      .loadRelatedPermitByTemplate(this.templateId)
+      .pipe(switchMap((license) => {
+        return license ? this.service.getConsumedAmount(license.id).pipe(map(consumedAmount => {
+          return license.convertToFundraisingTemplate().clone({
+            consumedAmount,
+            remainingAmount: currency(license.projectTotalCost).subtract(consumedAmount).value,
+            totalCost: currency(license.projectTotalCost).subtract(consumedAmount).value
+          })
+        })) : of(undefined)
+      }))
   }
 
 }

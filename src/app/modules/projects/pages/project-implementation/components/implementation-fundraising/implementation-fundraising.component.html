@@ -5,7 +5,7 @@
       <i class="mdi mdi-plus-box text-primary"></i>
     </button>
   </div>
-  <app-table #table
+  <app-table [formGroup]="fromGroup" #table
              [useSearchToFilter]="true"
              [data]="value"
              [columns]="displayedColumns">
@@ -22,25 +22,42 @@
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.english_name}}</th>
         <td cdk-cell *cdkCellDef="let row"> {{row.enName}} </td>
       </ng-container>
-      <!--    <ng-container cdkColumnDef="projectTotalCost">-->
-      <!--        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.project_total_cost}}</th>-->
-      <!--        <td cdk-cell *cdkCellDef="let row"> {{row.projectTotalCost}} </td>-->
-      <!--    </ng-container>-->
+      <ng-container cdkColumnDef="projectTotalCost">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.project_total_cost}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.projectTotalCost | mask: inputMaskPatterns.SEPARATOR : inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
+      </ng-container>
       <ng-container cdkColumnDef="permitType">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.permit_type}}</th>
         <td cdk-cell *cdkCellDef="let row"> {{row.permitTypeInfo.getName()}} </td>
       </ng-container>
       <ng-container cdkColumnDef="consumedAmount">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.consumed_amount}}</th>
-        <td cdk-cell *cdkCellDef="let row"> {{row.consumedAmount}} </td>
+        <td cdk-cell *cdkCellDef="let row"> {{row.consumedAmount | mask: inputMaskPatterns.SEPARATOR : inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
       </ng-container>
       <ng-container cdkColumnDef="remainingAmount">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.remaining_amount}}</th>
-        <td cdk-cell *cdkCellDef="let row"> {{row.remainingAmount}} </td>
+        <td cdk-cell
+            *cdkCellDef="let row; let i = index">
+          <div class="d-flex">
+            <span>{{row.remainingAmount | mask: inputMaskPatterns.SEPARATOR : inputMaskPatterns.THOUSAND_SEPARATOR}}</span>
+          </div>
+        </td>
       </ng-container>
       <ng-container cdkColumnDef="totalCost">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.total_cost}}</th>
-        <td cdk-cell *cdkCellDef="let row"> {{row.totalCost}} </td>
+        <td cdk-cell *cdkCellDef="let row; let i = index;">
+          <ng-container formArrayName="inputs">
+            <div class="d-flex">
+              <input type="text" [mask]="inputMaskPatterns.SEPARATOR"
+                     [dropSpecialCharacters]="[',']"
+                     [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR"
+                     class="form-control form-control-sm" style="width: 100px" [formControlName]="i">
+              <button [disabled]="disabled || noRemainingValue(i)" (click)="!disabled && getRemaining(i)" class="btn p-0 icon-btn">
+                <i class="mdi mdi-hand-coin text-primary"></i>
+              </button>
+            </div>
+          </ng-container>
+        </td>
       </ng-container>
       <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="displayedColumns"></tr>
       <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
