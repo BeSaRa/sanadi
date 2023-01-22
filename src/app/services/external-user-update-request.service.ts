@@ -1,4 +1,4 @@
-import { ExternalUserUpdateRequestTypeEnum } from '@app/enums/external-user-update-request-type.enum';
+import {ExternalUserUpdateRequestTypeEnum} from '@app/enums/external-user-update-request-type.enum';
 import {Injectable} from '@angular/core';
 import {ExternalUserUpdateRequest} from '@app/models/external-user-update-request';
 import {HttpClient} from '@angular/common/http';
@@ -117,20 +117,18 @@ export class ExternalUserUpdateRequestService extends CrudWithDialogGenericServi
 
   create(model: ExternalUserUpdateRequest): Observable<ExternalUserUpdateRequest> {
     if (this.canSaveDirectly(OperationTypes.CREATE)) {
-      console.log('DIRECT CREATE');
       return this._addUser(model);
     } else {
-      console.log('NEED APPROVAL CREATE');
       return this._addUserRequest(model);
     }
   }
 
   update(model: ExternalUserUpdateRequest): Observable<ExternalUserUpdateRequest> {
-    if (this.canSaveDirectly(OperationTypes.UPDATE)) {
-      console.log('DIRECT UPDATE');
+    if (this.canSaveDirectly(OperationTypes.UPDATE) && model.requestSaveType !== 'SAVE_REQUEST') {
+      // @ts-ignore
+      delete model.id; // deleted in service because it was ignored while prepare model due to limitation mentioned in component
       return this._updateUser(model);
     } else {
-      console.log('NEED APPROVAL UPDATE');
       return this._updateUserRequest(model);
     }
   }
@@ -187,16 +185,18 @@ export class ExternalUserUpdateRequestService extends CrudWithDialogGenericServi
         return result.click === UserClickOn.YES ? this._rejectBulkRequest(models, result.comment) : of('');
       }));
   }
+
   private _rejectBulkRequest(selectedModels: ExternalUserUpdateRequest[], reason: string) {
     const models = selectedModels.map((item) => {
       return new ExternalUserUpdateRequest().clone({
         ...item,
         requestStatus: ExternalUserUpdateRequestStatusEnum.REJECTED,
         notes: reason
-      })
+      });
     });
     return this.updateBulk(models);
   }
+
   openUpdateRequestDialog(request: ExternalUserUpdateRequest): Observable<DialogRef> {
     return this.getByIdComposite(request.id)
       .pipe(switchMap((model) => {

@@ -1,22 +1,13 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {ILanguageKeys} from '@contracts/i-language-keys';
-import {UntypedFormBuilder, UntypedFormControl} from '@angular/forms';
+import {UntypedFormControl, ValidatorFn} from '@angular/forms';
 import {CustomValidators} from '@app/validators/custom-validators';
-import {isObservable, of, Subject} from 'rxjs';
+import {Subject} from 'rxjs';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
-import {BaseGenericEService} from '@app/generics/base-generic-e-service';
-import {InboxService} from '@services/inbox.service';
-import {WFResponseType} from '@app/enums/wfresponse-type.enum';
-import {QueryResult} from '@app/models/query-result';
-import {CaseModel} from '@app/models/case-model';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {ToastService} from '@services/toast.service';
 import {LangService} from '@services/lang.service';
-import {EmployeeService} from '@services/employee.service';
-import {ServiceDataService} from '@services/service-data.service';
-import {CustomTermService} from '@services/custom-term.service';
 import {DialogService} from '@services/dialog.service';
-import {OperationTypes} from '@app/enums/operation-types.enum';
 import {filter, switchMap, takeUntil} from 'rxjs/operators';
 import {CommonUtils} from '@helpers/common-utils';
 import {UrgentInterventionLicenseFollowupService} from '@services/urgent-intervention-license-followup.service';
@@ -31,6 +22,7 @@ export class UrgentInterventionAttachmentApprovalPopupComponent implements OnIni
   attachmentId: string;
   isApproved: boolean;
   label: keyof ILanguageKeys;
+  private commentValidations: ValidatorFn[] = [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)];
 
   constructor(@Inject(DIALOG_DATA_TOKEN) private data: {
                 attachmentId: string,
@@ -46,11 +38,13 @@ export class UrgentInterventionAttachmentApprovalPopupComponent implements OnIni
     if (this.isApproved) {
       this.label = 'approve';
     } else {
-      this.label= 'lbl_reject';
+      this.label = 'lbl_reject';
+      this.commentValidations = this.commentValidations.concat([CustomValidators.required]);
     }
   }
 
   ngOnInit(): void {
+    this.comment.setValidators(this.commentValidations);
     this.listenToTakeAction();
   }
 
@@ -60,10 +54,7 @@ export class UrgentInterventionAttachmentApprovalPopupComponent implements OnIni
     this.destroy$.unsubscribe();
   }
 
-  comment: UntypedFormControl = new UntypedFormControl('', [
-    CustomValidators.required,
-    CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)
-  ]);
+  comment: UntypedFormControl = new UntypedFormControl('');
   done$: Subject<any> = new Subject<any>();
   destroy$: Subject<any> = new Subject<any>();
   customValidators = CustomValidators;
@@ -74,11 +65,12 @@ export class UrgentInterventionAttachmentApprovalPopupComponent implements OnIni
         takeUntil(this.destroy$),
         filter(_ => CommonUtils.isValidValue(this.comment.value)),
         switchMap(() => this.urgentInterventionLicenseFollowupService.updateAttachmentApproval(this.attachmentId, this.isApproved, this.comment.value)),
-        filter((result)=> !!result)
+        filter((result) => !!result)
       )
       .subscribe(() => {
         this.toast.success(this.lang.map.process_has_been_done_successfully);
         this.dialogRef.close(true);
       });
   }
+
 }

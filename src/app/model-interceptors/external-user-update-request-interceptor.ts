@@ -51,5 +51,6 @@ export class ExternalUserUpdateRequestInterceptor implements IModelInterceptor<E
     delete model.profileInfo;
     delete model.nationalityInfo;
     delete model.updateByInfo;
+    delete model.requestSaveType;
   }
 }

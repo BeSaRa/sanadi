@@ -13,6 +13,7 @@ import {ISearchFieldsMap} from '@app/types/types';
 import {normalSearchFields} from '@helpers/normal-search-fields';
 import {infoSearchFields} from '@helpers/info-search-fields';
 import {ExternalUser} from '@app/models/external-user';
+import {ExternalUserUpdateRequestStatusEnum} from '@app/enums/external-user-update-request-status.enum';
 
 const {send, receive} = new ExternalUserUpdateRequestInterceptor();
 
@@ -34,8 +35,8 @@ export class ExternalUserUpdateRequest extends BaseModel<ExternalUserUpdateReque
   phoneExtension!: string;
   email!: string;
   jobTitle!: number;
-  requestType!: number;
-  requestStatus!: number;
+  requestType!: ExternalUserUpdateRequestTypeEnum;
+  requestStatus!: ExternalUserUpdateRequestStatusEnum;
   newPermissionList: number[] = [];
   oldPermissionList: number[] = [];
   notes!: string;
@@ -57,6 +58,7 @@ export class ExternalUserUpdateRequest extends BaseModel<ExternalUserUpdateReque
   service!: ExternalUserUpdateRequestService;
   langService!: LangService;
   updateByInfo!: AdminResult;
+  requestSaveType: 'SAVE_REQUEST' | 'SAVE_USER' | undefined = undefined;
 
   searchFields: ISearchFieldsMap<ExternalUserUpdateRequest> = {
     ...normalSearchFields(['domainName', 'arName', 'enName', 'updatedOnString']),
@@ -121,7 +123,7 @@ export class ExternalUserUpdateRequest extends BaseModel<ExternalUserUpdateReque
     });
     externalUser.id = this.externalUserID;
     externalUser.generalUserId = this.generalUserId;
-
+    externalUser.domainName = this.domainName;
     return externalUser;
   }
 }

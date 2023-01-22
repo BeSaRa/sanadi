@@ -38,7 +38,7 @@ export class UrgentInterventionAttachment extends FileNet implements FileNetDocu
   }
 
   searchFields: ISearchFieldsMap = {
-    ...normalSearchFields(['createdOnString', 'description'])
+    ...normalSearchFields(['createdOnString', 'documentTitle'])
   };
 
   buildForm(controls: boolean = false): any {
