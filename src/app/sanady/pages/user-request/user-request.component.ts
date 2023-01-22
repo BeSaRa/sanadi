@@ -909,6 +909,7 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
+    this.isEnquired = true;
 
     this.beneficiaryService
       .loadByCriteria({
@@ -933,8 +934,8 @@ export class UserRequestComponent implements OnInit, AfterViewInit, OnDestroy {
           let ben = this.deleteBeneficiaryIds(list[0]);
           this.beneficiaryChanged$.next(ben);
         }
-        this.isEnquired = true;
       });
+    console.log(this.isEnquired)
   }
 
   deleteBeneficiaryIds(beneficiary: Beneficiary): Beneficiary {
