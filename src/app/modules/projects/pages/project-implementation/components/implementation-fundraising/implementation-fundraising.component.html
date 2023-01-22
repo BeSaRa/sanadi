@@ -1,0 +1,52 @@
+<div class="row">
+  <div class="d-flex">
+    <h1 class="h6 text-primary mb-2">{{lang.map.menu_projects_fundraising}}</h1>
+    <button class="btn icon-btn">
+      <i class="mdi mdi-plus-box text-primary"></i>
+    </button>
+  </div>
+  <app-table #table
+             [useSearchToFilter]="true"
+             [data]="value"
+             [columns]="displayedColumns">
+    <table cdk-table [dataSource]="table.dataSource" class="table table-striped table-bordered caption-top">
+      <ng-container cdkColumnDef="projectLicenseFullSerial">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.serial_number}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.projectLicenseFullSerial}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="arName">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.arabic_name}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.arName}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="enName">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.english_name}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.enName}} </td>
+      </ng-container>
+      <!--    <ng-container cdkColumnDef="projectTotalCost">-->
+      <!--        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.project_total_cost}}</th>-->
+      <!--        <td cdk-cell *cdkCellDef="let row"> {{row.projectTotalCost}} </td>-->
+      <!--    </ng-container>-->
+      <ng-container cdkColumnDef="permitType">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.permit_type}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.permitTypeInfo.getName()}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="consumedAmount">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.consumed_amount}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.consumedAmount}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="remainingAmount">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.remaining_amount}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.remainingAmount}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="totalCost">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.total_cost}}</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.totalCost}} </td>
+      </ng-container>
+      <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="displayedColumns"></tr>
+      <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
+      <tr *cdkNoDataRow>
+        <td colspan="20">{{lang.map.no_records_to_display}}</td>
+      </tr>
+    </table>
+  </app-table>
+</div>

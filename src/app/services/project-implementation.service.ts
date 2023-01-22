@@ -31,6 +31,8 @@ import {
   ImplementationTemplatePopupComponent
 } from "@modules/projects/popups/implementation-template-popup/implementation-template-popup.component";
 import {MapService} from "@services/map.service";
+import {ProjectFundraisingService} from "@services/project-fundraising.service";
+import {ProjectFundraising} from "@models/project-fundraising";
 
 @CastResponseContainer({
   $default: {
@@ -54,7 +56,8 @@ export class ProjectImplementationService extends BaseGenericEService<ProjectImp
     public domSanitizer: DomSanitizer,
     private sharedService: SharedService,
     private urlService: UrlService,
-    private mapService: MapService
+    private mapService: MapService,
+    private _projectFundraisingService: ProjectFundraisingService
   ) {
     super();
     FactoryService.registerService('ProjectImplementationService', this)
@@ -113,8 +116,8 @@ export class ProjectImplementationService extends BaseGenericEService<ProjectImp
       }))
   }
 
-  openImplementationTemplateDialog(template: ImplementationTemplate , readonly: boolean = false): DialogRef {
-    return this.dialog.show(ImplementationTemplatePopupComponent, {template , readonly})
+  openImplementationTemplateDialog(template: ImplementationTemplate, readonly: boolean = false): DialogRef {
+    return this.dialog.show(ImplementationTemplatePopupComponent, {template, readonly})
   }
 
   openMap(viewOnly: boolean = false, model: ImplementationTemplate): DialogRef {
@@ -123,6 +126,15 @@ export class ProjectImplementationService extends BaseGenericEService<ProjectImp
       zoom: 18,
       center: model.hasMarker() ? model.getLngLat() : model.defaultLatLng,
       marker: model.hasMarker() ? model.getLngLat() : undefined
+    })
+  }
+
+  @CastResponse(() => ProjectFundraising)
+  loadRelatedPermitByTemplate(templateId: string): Observable<ProjectFundraising> {
+    return this.http.get<ProjectFundraising>(this.urlService.URLS.PROJECT_FUNDRAISING + '/implementation', {
+      params: new HttpParams({
+        fromObject: {templateId}
+      })
     })
   }
 

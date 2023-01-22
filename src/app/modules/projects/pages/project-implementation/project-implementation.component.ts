@@ -13,7 +13,7 @@ import {Lookup} from "@models/lookup";
 import {LookupService} from "@services/lookup.service";
 import {ServiceRequestTypes} from "@app/enums/service-request-types";
 import {CommonUtils} from "@helpers/common-utils";
-import {switchMap, takeUntil} from "rxjs/operators";
+import {filter, switchMap, takeUntil} from "rxjs/operators";
 import {UserClickOn} from "@app/enums/user-click-on.enum";
 import {Country} from "@models/country";
 import {ActivatedRoute} from "@angular/router";
@@ -25,6 +25,7 @@ import {EmployeeService} from '@app/services/employee.service';
 import {TemplateCriteriaContract} from "@contracts/template-criteria-contract";
 import {DateUtils} from "@helpers/date-utils";
 import {ImplementingAgency} from "@models/implementing-agency";
+import {ImplementationTemplate} from "@models/implementation-template";
 
 @Component({
   selector: 'project-implementation',
@@ -75,6 +76,11 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     return this.form.get('projectInfo')!
   }
 
+  get fundingResources(): AbstractControl {
+    return this.form.get('fundingResources')!
+  }
+
+
   get requestType(): AbstractControl {
     return this.basicInfo.get('requestType')!
   }
@@ -123,6 +129,10 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     return this.projectInfo.get('implementationTemplate')!
   }
 
+  get implementationFundraising(): AbstractControl {
+    return this.fundingResources.get('implementationFundraising')!
+  }
+
   get implementingAgencyType(): AbstractControl {
     return this.projectInfo.get('implementingAgencyType')!
   }
@@ -158,7 +168,9 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     const model = new ProjectImplementation()
     this.form = this.fb.group({
       basicInfo: this.fb.group(model.buildBasicInfo(true)),
-      projectInfo: this.fb.group(model.buildProjectInfo(true))
+      projectInfo: this.fb.group(model.buildProjectInfo(true)),
+      fundingResources: this.fb.group(model.buildFundingResources(true)),
+      specialExplanations: this.fb.group(model.buildSpecialInfo(true))
     })
   }
 
@@ -167,6 +179,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     this.listenToWorkAreaChanges()
     this.listenToDomainChange()
     this.listenToImplementingAgencyListChanges()
+    this.listenToImplementationTemplateChanges()
 
     this.setDefaultValues()
   }
@@ -434,6 +447,18 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       .pipe(takeUntil(this.destroy$))
       .subscribe((value: ImplementingAgency[]) => {
         value.length ? this.implementingAgencyType.disable() : this.implementingAgencyType.enable()
+      })
+  }
+
+  private listenToImplementationTemplateChanges() {
+    this.implementationTemplate
+      .valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .pipe(filter((value): value is ImplementationTemplate[] => !!value.length))
+      .pipe(switchMap(value => value[0].loadImplementationFundraising()))
+      .pipe(filter(value => !!value))
+      .subscribe((license) => {
+        this.implementationFundraising.setValue([license.convertToFundraisingTemplate()])
       })
   }
 }

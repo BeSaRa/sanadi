@@ -114,8 +114,14 @@ export class ProjectImplementation
       projectEvaluationSLA: controls ? [projectEvaluationSLA, CustomValidators.required] : projectEvaluationSLA,
       implementingAgencyType: controls ? [implementingAgencyType, CustomValidators.required] : implementingAgencyType,
       implementationTemplate: controls ? [implementationTemplate, CustomValidators.requiredArray] : implementationTemplate,
-      implementingAgencyList: controls ? [implementingAgencyList , CustomValidators.requiredArray] : implementingAgencyList
+      implementingAgencyList: controls ? [implementingAgencyList, CustomValidators.requiredArray] : implementingAgencyList
     }
+  }
+
+  buildSpecialInfo(controls: boolean) {
+    return {
+      description: controls ? [this.description, [CustomValidators.required]] : this.description
+    };
   }
 
   setImplementationTemplate(template: ImplementationTemplate): void {
@@ -129,5 +135,20 @@ export class ProjectImplementation
 
   setProjectTotalCost(value: number): void {
     this.projectTotalCost = currency(value).value
+  }
+
+  buildFundingResources(controls: boolean = false) {
+    const {
+      implementationFundraising,
+      financialGrant,
+      selfFinancing,
+      payment
+    } = this
+    return {
+      implementationFundraising: controls ? [implementationFundraising] : implementationFundraising,
+      financialGrant: controls ? [financialGrant] : financialGrant,
+      selfFinancing: controls ? [selfFinancing] : selfFinancing,
+      payment: controls ? [payment] : payment,
+    };
   }
 }

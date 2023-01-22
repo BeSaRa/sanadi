@@ -5,6 +5,8 @@ import currency from "currency.js";
 import {DialogRef} from "@app/shared/models/dialog-ref";
 import {FactoryService} from "@services/factory.service";
 import {ProjectImplementationService} from "@services/project-implementation.service";
+import {Observable} from "rxjs";
+import {ProjectFundraising} from "@models/project-fundraising";
 
 export class ImplementationTemplate extends Cloneable<ImplementationTemplate> {
   templateId!: string
@@ -89,6 +91,10 @@ export class ImplementationTemplate extends Cloneable<ImplementationTemplate> {
 
   view(): DialogRef {
     return this.service.openImplementationTemplateDialog(this, true)
+  }
+
+  loadImplementationFundraising(): Observable<ProjectFundraising> {
+    return this.service.loadRelatedPermitByTemplate(this.templateId)
   }
 
 }

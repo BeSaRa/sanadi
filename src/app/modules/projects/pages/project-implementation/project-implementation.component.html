@@ -1,9 +1,10 @@
 <div class="row">
-  <tabs-list [activeTabIndex]="1" [accordionView]="accordionView">
+  <tabs-list [activeTabIndex]="2" [accordionView]="accordionView">
     <!--  <tabs-list [accordionView]="accordionView">-->
     <tab name="basic_info" [template]="basic_info" [title]="lang.map.lbl_basic_info">
     </tab>
     <tab name="project_info" [template]="project_info" [title]="lang.map.project_info"></tab>
+    <tab name="project_info" [template]="funding_sources" [title]="lang.map.funding_resources"></tab>
     <tab name="special_explanations" [template]="specialExplanations"
          [title]="lang.map.special_explanations"></tab>
     <tab name="attachments" *ngIf="!accordionView" [template]="attachmentsTab" [title]="lang.map.attachments"></tab>
@@ -177,8 +178,19 @@
         </div>
       </ng-container>
     </ng-template>
+    <ng-template #funding_sources>
+      <ng-container formGroupName="fundingResources">
+        <implementation-fundraising formControlName="implementationFundraising"></implementation-fundraising>
+      </ng-container>
+    </ng-template>
     <ng-template #specialExplanations>
-
+      <ng-container formGroupName="specialExplanations">
+        <div class="col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="description" for="description">{{lang.map.lbl_description}}</label>
+          <textarea name="description" formControlName="description" validationClasses="description" id="description" rows="4" class="form-control"></textarea>
+          <app-field-error-message controlName="description"></app-field-error-message>
+        </div>
+      </ng-container>
     </ng-template>
     <ng-template #attachmentsTab>
       <attachments [caseId]="model?.id" [caseType]="model?.caseType"

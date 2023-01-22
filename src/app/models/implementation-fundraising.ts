@@ -1,6 +1,9 @@
 import {AdminResult} from "@models/admin-result";
+import {Cloneable} from "@models/cloneable";
 
-export class ImplementationFundraising {
+export class ImplementationFundraising extends Cloneable<ImplementationFundraising> {
+  arName!: string
+  enName!: string
   projectLicenseFullSerial!: string
   projectLicenseSerial!: number
   projectLicenseId!: string

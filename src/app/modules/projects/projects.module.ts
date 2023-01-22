@@ -81,6 +81,7 @@ import {
 } from './pages/project-implementation/components/implementation-template/implementation-template.component';
 import { ImplementationTemplatePopupComponent } from './popups/implementation-template-popup/implementation-template-popup.component';
 import { ImplementingAgencyListComponent } from './pages/project-implementation/components/implementing-agency-list/implementing-agency-list.component';
+import { ImplementationFundraisingComponent } from './pages/project-implementation/components/implementation-fundraising/implementation-fundraising.component';
 
 
 @NgModule({
@@ -118,7 +119,8 @@ import { ImplementingAgencyListComponent } from './pages/project-implementation/
     ProjectImplementationApproveTaskPopupComponent,
     ImplementationTemplateComponent,
     ImplementationTemplatePopupComponent,
-    ImplementingAgencyListComponent
+    ImplementingAgencyListComponent,
+    ImplementationFundraisingComponent,
   ],
   imports: [
     CommonModule,
