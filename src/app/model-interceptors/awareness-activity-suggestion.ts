@@ -16,7 +16,6 @@ export class AwarenessActivitySuggestionInterceptor implements IModelInterceptor
   }
 
   send(model: any) {
-    console.log(model);
     (model.expectedDate && (model.expectedDate = DateUtils.getDateStringFromDate(model.expectedDate)));
     (model.followUpDate && (model.followUpDate = DateUtils.getDateStringFromDate(model.followUpDate)));
     model.agreementWithRACA = (model.agreementWithRACA == 1)
