@@ -25,6 +25,7 @@ import { OperationTypes } from '@app/enums/operation-types.enum';
 import { SaveTypes } from '@app/enums/save-types';
 import { LangService } from '@app/services/lang.service';
 import { Observable, of, Subject } from 'rxjs';
+import { ProfileTypes } from '@app/enums/profile-types.enum';
 
 @Component({
   selector: 'app-awareness-activity-suggestion',
@@ -136,7 +137,7 @@ AwarenessActivitySuggestionService
       requestType: model.requestType,
       description: model.description,
       oldLicenseFullSerial: model.oldLicenseFullSerial,
-      dataOfApplicant: this.fb.group(model.dataOfApplicant),
+      dataOfApplicant: this.isNonProfitProfile() ? this.fb.group(model.dataOfApplicant) : {},
       contactOfficer: this.fb.group(model.contactOfficer),
       activity: this.fb.group(model.activity),
     });
@@ -198,6 +199,7 @@ AwarenessActivitySuggestionService
       ...this.form.value.contactOfficer,
       ...this.form.value.activity,
       ...this.form.value.dataOfApplicant,
+      profileType: this.employeeService.getProfile()?.profileType
     })
     return value;
   }
@@ -239,7 +241,7 @@ AwarenessActivitySuggestionService
       requestType: formModel.requestType,
       description: formModel.description,
       oldLicenseFullSerial: formModel.oldLicenseFullSerial,
-      dataOfApplicant: formModel.dataOfApplicant,
+      dataOfApplicant: this.isNonProfitProfile() ? formModel.dataOfApplicant : {},
       contactOfficer: formModel.contactOfficer,
       activity: formModel.activity,
     });
@@ -251,6 +253,9 @@ AwarenessActivitySuggestionService
       return this.model!.ouInfo.getName()
     else
       return this.employeeService.getProfile()?.getName()
+  }
+  isNonProfitProfile() {
+    return this.employeeService.getProfile()?.profileType == ProfileTypes.NON_PROFIT_ORGANIZATIONS || this.model?.profileType == ProfileTypes.NON_PROFIT_ORGANIZATIONS
   }
   handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
     of(userInteraction).pipe(

@@ -2,9 +2,9 @@
   <tabs-list [accordionView]="accordionView" (onTabChange)="onTabChange($event)">
     <tab [name]="tabsData.basicInfo.name" [hasError]="getTabInvalidStatus('basicInfo')"
       [template]="basicInfoTabTemplate" [title]="lang.map.lbl_basic_info"></tab>
-    <tab [name]="tabsData.dataOfApplicant.name" [hasError]="getTabInvalidStatus('dataOfApplicant')"
-      [template]="dataOfApplicantTabTemplate" [title]="lang.map.lbl_data_of_applicant"
-      ></tab>
+    <tab *ngIf="isNonProfitProfile()" [name]="tabsData.dataOfApplicant.name"
+      [hasError]="getTabInvalidStatus('dataOfApplicant')" [template]="dataOfApplicantTabTemplate"
+      [title]="lang.map.lbl_data_of_applicant"></tab>
     <tab [name]="tabsData.contactOfficer.name" [hasError]="getTabInvalidStatus('contactOfficer')"
       [template]="contactOfficerTabTemplate" [title]="lang.map.contact_officer"></tab>
     <tab [name]="tabsData.specialExplanations.name" [hasError]="getTabInvalidStatus('specialExplanations')"
@@ -187,7 +187,7 @@
           <div class="input-group">
             <input id="contactQID" formControlName="contactQID" [readonly]="readonly || isSameAsApplican"
               validationClasses="contactQID" class="form-control" />
-            <button *ngIf="!readonly" [tooltip]="lang.map.same_as_applicant"
+            <button *ngIf="!readonly && isNonProfitProfile()" [tooltip]="lang.map.same_as_applicant"
               (click)="toggleContactOffecorInfo($event)" type="button" class="input-group-text bg-primary text-white">
               <i class="mdi mdi-equal"></i>
             </button>
