@@ -514,7 +514,7 @@ export class ExternalUserPopupComponent extends AdminGenericDialog<ExternalUser>
           : this.langService.map.msg_update_request_x_success;
       }
       this.toast.success(message.change({x: model.getName()}));
-      dialogRef.close('SUCCESS');
+      dialogRef.close(model);
     });
   }
 }

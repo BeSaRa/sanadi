@@ -22,7 +22,6 @@ import {TableComponent} from '@app/shared/components/table/table.component';
 import {ExternalUserUpdateRequestStatusEnum} from '@app/enums/external-user-update-request-status.enum';
 import {LookupService} from '@services/lookup.service';
 import {Lookup} from '@app/models/lookup';
-import {OperationTypes} from '@app/enums/operation-types.enum';
 
 @Component({
   selector: 'external-user-update-request-request',
@@ -102,15 +101,15 @@ export class ExternalUserUpdateRequestApprovalComponent extends AdminGenericComp
       label: 'btn_edit',
       icon: ActionIconsEnum.EDIT,
       onClick: (item) => this.editRequest(item),
-      show: (item) => this.service.canEditUserRequest() && item.requestStatus != ExternalUserUpdateRequestStatusEnum.APPROVED
+      show: (item) => this.service.canEditUserRequest() && !item.isApproved()
     },
     // accept
     {
       type: 'action',
       label: 'lbl_accept',
       icon: ActionIconsEnum.ACCEPT,
-      onClick: (item) => this.acceptRequest(item, false),
-      show: (item) => this.service.canAcceptUserRequest() && item.requestStatus != ExternalUserUpdateRequestStatusEnum.APPROVED
+      onClick: (item) => this.acceptRequest(item),
+      show: (item) => this.service.canAcceptUserRequest() && item.isInProgress()
     },
     // reject
     {
@@ -118,7 +117,7 @@ export class ExternalUserUpdateRequestApprovalComponent extends AdminGenericComp
       label: 'lbl_reject',
       icon: ActionIconsEnum.CANCEL,
       onClick: (item) => this.rejectRequest(item),
-      show: (item) => this.service.canRejectUserRequest() && item.requestStatus != ExternalUserUpdateRequestStatusEnum.APPROVED
+      show: (item) => this.service.canRejectUserRequest() && item.isInProgress()
     }
   ];
 
@@ -164,13 +163,13 @@ export class ExternalUserUpdateRequestApprovalComponent extends AdminGenericComp
     }
   }
 
-  acceptRequest(item: ExternalUserUpdateRequest, skipMessage: boolean): void {
+  acceptRequest(item: ExternalUserUpdateRequest): void {
     this.service.acceptRequest(item)
       .subscribe((result) => {
         if (!result) {
           return;
         }
-        skipMessage ? null : this.toast.success(this.lang.map.msg_accept_x_success.change({x: item.getName()}));
+        this.toast.success(this.lang.map.msg_accept_x_success.change({x: item.getName()}));
         this.reload$.next(null);
       });
   }
@@ -229,11 +228,7 @@ export class ExternalUserUpdateRequestApprovalComponent extends AdminGenericComp
         if (!result) {
           return;
         }
-        if (result === 'SUCCESS' && this.service.canSaveDirectly(OperationTypes.UPDATE)) {
-          this.acceptRequest(item, true);
-        } else {
-          this.reload$.next(null);
-        }
+        this.reload$.next(null);
       });
   }
 
