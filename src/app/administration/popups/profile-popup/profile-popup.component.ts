@@ -88,7 +88,8 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
       validStatus: () => true,
       isTouchedOrDirty: () => true,
       show: () => {
-        return (this.operation !== OperationTypes.CREATE && this.employeeService.checkPermissions(PermissionsEnum.MANAGE_PROFILE_COUNTRIES_DATA));
+        return false;
+        // return (this.operation !== OperationTypes.CREATE && this.employeeService.checkPermissions(PermissionsEnum.MANAGE_PROFILE_COUNTRIES_DATA));
       }
     },
     attachments: {
@@ -202,9 +203,9 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
     if (this.operation !== OperationTypes.CREATE) {
       this.profileTypeField.disable();
       this.loadLinkedServices(this.model.id);
-      this.loadLinkedCountries(this.model.id);
+      // this.loadLinkedCountries(this.model.id);
       this._loadServices();
-      this.loadCountries();
+      // this.loadCountries();
     }
   }
 
@@ -233,7 +234,7 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
     this.model = model;
     this.operation = OperationTypes.UPDATE;
     this.loadLinkedServices(model.id);
-    this.loadLinkedCountries(model.id);
+    // this.loadLinkedCountries(model.id);
   }
 
   loadLinkedServices(id: number) {
@@ -277,7 +278,7 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
     if (this.readonly) {
       this.form.disable();
       this.servicesControl.disable();
-      this.countryControl.disable();
+      // this.countryControl.disable();
     }
     if (this.model?.profileType) {
       this.handleProfileType(this.model.profileType, true);
