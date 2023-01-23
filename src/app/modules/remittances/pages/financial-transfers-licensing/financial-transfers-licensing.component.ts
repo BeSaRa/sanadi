@@ -246,7 +246,7 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
     this._listenToAuthorizedEntitySearch();
     this._listenToPreRegisteredSearch();
     this._loadTransferEntityBankAccounts();
-    // this._loadExternalProjects();
+    this._loadExternalProjects();
   }
 
   _buildForm(): void {
@@ -622,6 +622,8 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
   private _openSelectLicense(
     licenses: FinancialTransferLicensing[]
   ): Observable<undefined | FinancialTransferLicensing> {
+    console.log(licenses);
+
     return this.licenseService
       .openSelectLicenseDialog(
         licenses,

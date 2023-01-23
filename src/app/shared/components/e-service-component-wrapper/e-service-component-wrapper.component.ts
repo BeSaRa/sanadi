@@ -835,7 +835,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.validateApproveAction(item);
         }
       },
-      // complete
+      // knew
       {
         type: 'action',
         icon: 'mdi-book-check',
@@ -846,7 +846,21 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           return !item.getResponses().length || item.getResponses().includes(WFResponseType.KNEW);
         },
         onClick: (item: CaseModel<any, any>) => {
-          this.knewAction(item);
+           this.knewAction(item);
+        }
+      },
+      // seen
+      {
+        type: 'action',
+        icon: 'mdi-book-check',
+        label: 'task_seen',
+        askChecklist: true,
+        runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
+        show: (item: CaseModel<any, any>) => {
+          return !item.getResponses().length || item.getResponses().includes(WFResponseType.SEEN);
+        },
+        onClick: (item: CaseModel<any, any>) => {
+          this.seenAction(item);
         }
       },
       // final approve
@@ -1326,6 +1340,11 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   }
   private knewAction(item: CaseModel<any, any>) {
     item.knew().onAfterClose$.subscribe(actionTaken => {
+      actionTaken && this.navigateToSamePageThatUserCameFrom();
+    });
+  }
+  private seenAction(item: CaseModel<any, any>) {
+    item.seen().onAfterClose$.subscribe(actionTaken => {
       actionTaken && this.navigateToSamePageThatUserCameFrom();
     });
   }

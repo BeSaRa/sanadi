@@ -62,6 +62,7 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
   transferTypeInfo!: AdminResult;
   countryInfo!: AdminResult;
   currencyInfo!: AdminResult;
+  licenseStatusInfo!:AdminResult
 
   service: FinancialTransferLicensingService;
   employeeService: EmployeeService;

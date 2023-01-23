@@ -13,6 +13,7 @@ export class FinancialTransferLicensingInterceptor
     model.caseStatusInfo && (model.caseStatusInfo = AdminResult.createInstance(model.caseStatusInfo));
     model.creatorInfo && (model.creatorInfo = AdminResult.createInstance(model.creatorInfo));
     model.ouInfo && (model.ouInfo = AdminResult.createInstance(model.ouInfo));
+    model.licenseStatusInfo && (model.licenseStatusInfo = AdminResult.createInstance(model.licenseStatusInfo));
     model.requestTypeInfo &&
       (model.requestTypeInfo = AdminResult.createInstance(
         model.requestTypeInfo

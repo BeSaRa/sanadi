@@ -554,6 +554,13 @@ export class LicenseService {
       oldFullSerial
     });
   }
+  @CastResponse(() => FinancialTransferLicensing)
+  _validateFinancialTransferLicensingByRequestType<T>(requestType: number, oldFullSerial: string): Observable<T> {
+    return this.http.post<T>(this.getServiceUrlByCaseType(CaseTypes.FINANCIAL_TRANSFERS_LICENSING) + '/draft/validate', {
+      requestType,
+      oldFullSerial
+    });
+  }
 
   @CastResponse(() => GeneralProcessNotification)
   _validateGeneralProcessNotificationByRequestType<T>(requestType: number, oldFullSerial: string): Observable<T> {
@@ -624,6 +631,8 @@ export class LicenseService {
       return this._validateOrganizationsEntitiesSupportByRequestType<T>(requestType, licenseId);
     } else if (caseType === CaseTypes.PROJECT_IMPLEMENTATION) {
       return this._validateProjectImplementationRequestType<T>(requestType, licenseId);
+    } else if (caseType === CaseTypes.FINANCIAL_TRANSFERS_LICENSING) {
+      return this._validateFinancialTransferLicensingByRequestType<T>(requestType, licenseId);
     }
     return of(undefined);
   }
