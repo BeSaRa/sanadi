@@ -78,7 +78,7 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
       validStatus: () => true,
       isTouchedOrDirty: () => true,
       show: () => {
-        return this.operation !== OperationTypes.CREATE;
+        return this.operation !== OperationTypes.CREATE
       }
     },
     countries: {
