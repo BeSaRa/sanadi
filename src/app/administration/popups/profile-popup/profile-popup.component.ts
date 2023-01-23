@@ -19,7 +19,7 @@ import { ToastService } from '@app/services/toast.service';
 import { TabComponent } from '@app/shared/components/tab/tab.component';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { ServiceDataService } from '@app/services/service-data.service';
 import { ServiceData } from '@app/models/service-data';
 import { DialogService } from '@app/services/dialog.service';
@@ -202,9 +202,9 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
     if (this.operation !== OperationTypes.CREATE) {
       this.profileTypeField.disable();
       this.loadLinkedServices(this.model.id);
-      // this.loadLinkedCountries(this.model.id);
+      this.loadLinkedCountries(this.model.id);
       this._loadServices();
-      // this.loadCountries();
+      this.loadCountries();
     }
   }
 
