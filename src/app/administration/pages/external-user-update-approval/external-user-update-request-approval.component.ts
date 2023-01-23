@@ -101,7 +101,7 @@ export class ExternalUserUpdateRequestApprovalComponent extends AdminGenericComp
       label: 'btn_edit',
       icon: ActionIconsEnum.EDIT,
       onClick: (item) => this.editRequest(item),
-      show: (item) => this.service.canEditUserRequest() && item.requestStatus != ExternalUserUpdateRequestStatusEnum.APPROVED
+      show: (item) => this.service.canEditUserRequest() && !item.isApproved()
     },
     // accept
     {
@@ -109,7 +109,7 @@ export class ExternalUserUpdateRequestApprovalComponent extends AdminGenericComp
       label: 'lbl_accept',
       icon: ActionIconsEnum.ACCEPT,
       onClick: (item) => this.acceptRequest(item),
-      show: (item) => this.service.canAcceptUserRequest() && item.requestStatus != ExternalUserUpdateRequestStatusEnum.APPROVED
+      show: (item) => this.service.canAcceptUserRequest() && item.isInProgress()
     },
     // reject
     {
@@ -117,7 +117,7 @@ export class ExternalUserUpdateRequestApprovalComponent extends AdminGenericComp
       label: 'lbl_reject',
       icon: ActionIconsEnum.CANCEL,
       onClick: (item) => this.rejectRequest(item),
-      show: (item) => this.service.canRejectUserRequest() && item.requestStatus != ExternalUserUpdateRequestStatusEnum.APPROVED
+      show: (item) => this.service.canRejectUserRequest() && item.isInProgress()
     }
   ];
 

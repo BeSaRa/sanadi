@@ -126,4 +126,16 @@ export class ExternalUserUpdateRequest extends BaseModel<ExternalUserUpdateReque
     externalUser.domainName = this.domainName;
     return externalUser;
   }
+
+  isApproved(): boolean {
+    return this.requestStatus === ExternalUserUpdateRequestStatusEnum.APPROVED;
+  }
+
+  isRejected(): boolean {
+    return this.requestStatus === ExternalUserUpdateRequestStatusEnum.REJECTED;
+  }
+
+  isInProgress(): boolean {
+    return this.requestStatus === ExternalUserUpdateRequestStatusEnum.IN_PROGRESS;
+  }
 }
