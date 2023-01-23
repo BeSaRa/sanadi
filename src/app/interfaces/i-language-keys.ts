@@ -1,4 +1,7 @@
 export interface ILanguageKeys {
+  alternate_emails: string;
+  default_language: string;
+  user_preferences: string;
   remove_email: string;
   add_email: string;
   admin_emails: string;

@@ -130,5 +130,6 @@ export interface IAppUrls {
   ORGANIZATION_ENTITIES_SUPPORT: string;
   PROFILE_COUNTRY: string;
   GLOBAL_SETTINGS: string;
+  USER_PREFERENCES: string;
   [index: string]: string;
 }

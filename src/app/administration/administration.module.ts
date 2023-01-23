@@ -114,6 +114,7 @@ import {
 import {UserSecurityExternalComponent} from './shared/user-security-external/user-security-external.component';
 import { ProfileAttachmentsComponent } from './shared/profile-attachments/profile-attachments.component';
 import { GlobalSettingsComponent } from './pages/global-settings/global-settings.component';
+import { UserPreferencesPopupComponent } from './popups/user-preferences-popup/user-preferences-popup.component';
 
 @NgModule({
   declarations: [
@@ -201,7 +202,8 @@ import { GlobalSettingsComponent } from './pages/global-settings/global-settings
     ExternalUserUpdateChangesPopupComponent,
     UserSecurityExternalComponent,
     ProfileAttachmentsComponent,
-    GlobalSettingsComponent
+    GlobalSettingsComponent,
+    UserPreferencesPopupComponent
   ],
   imports: [
     SharedModule,
