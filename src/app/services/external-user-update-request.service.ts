@@ -146,7 +146,11 @@ export class ExternalUserUpdateRequestService extends CrudWithDialogGenericServi
   }
 
   acceptRequest(model: ExternalUserUpdateRequest): Observable<ExternalUserUpdateRequest> {
-    return this.http.put<ExternalUserUpdateRequest>(this._getServiceURL() + '/' + model.id + '/approve', {});
+    const value = new ExternalUserUpdateRequest().clone({
+      ...model,
+      requestStatus: ExternalUserUpdateRequestStatusEnum.APPROVED,
+    });
+    return this._updateUserRequest(value);
   }
 
   rejectRequestWithReason(model: ExternalUserUpdateRequest): Observable<any> {
@@ -162,9 +166,12 @@ export class ExternalUserUpdateRequestService extends CrudWithDialogGenericServi
   }
 
   private _rejectRequest(model: ExternalUserUpdateRequest, reason: string) {
-    return this.http.put<ExternalUserUpdateRequest>(this._getServiceURL() + '/' + model.id + '/reject', {
+    const value = new ExternalUserUpdateRequest().clone({
+      ...model,
+      requestStatus: ExternalUserUpdateRequestStatusEnum.REJECTED,
       notes: reason
     });
+    return this._updateUserRequest(value);
   }
 
   rejectBulkRequestWithReason(models: ExternalUserUpdateRequest[]): Observable<any> {
