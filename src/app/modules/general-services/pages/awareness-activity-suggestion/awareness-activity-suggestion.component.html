@@ -187,12 +187,12 @@
           <div class="input-group">
             <input id="contactQID" formControlName="contactQID" [readonly]="readonly || isSameAsApplican"
               validationClasses="contactQID" class="form-control" />
+            <app-field-error-message controlName="contactQID"></app-field-error-message>
             <button *ngIf="!readonly && isNonProfitProfile()" [tooltip]="lang.map.same_as_applicant"
               (click)="toggleContactOffecorInfo($event)" type="button" class="input-group-text bg-primary text-white">
               <i class="mdi mdi-equal"></i>
             </button>
           </div>
-          <app-field-error-message controlName="contactQID"></app-field-error-message>
         </div>
         <!-- contact Name -->
         <div class="col-sm-6 col-md-4 mb-4 position-relative">
