@@ -167,7 +167,13 @@ export class ExternalUserService extends CrudWithDialogGenericService<ExternalUs
   deactivateBulk(ids: number[]): Observable<{ [key: number]: boolean }> {
     return this.http.put<{ [key: number]: boolean }>(this._getServiceURL() + '/bulk/de-activate', ids);
   }
-
+  @CastResponse(undefined, {fallback: '$default', unwrap: 'rs'})
+  getByProfileCriteria(criteria: Partial<IExternalUserCriteria>): Observable<ExternalUser[]> {
+    const queryParams = this._buildCriteriaQueryParams(criteria);
+    return this.http.get<ExternalUser[]>(this._getServiceURL() + '/profile-id' ,{
+      params: queryParams
+    });
+  }
 
   private _buildCriteriaQueryParams(criteria: Partial<IExternalUserCriteria>, pagingOptions?: Partial<PaginationContract>): HttpParams {
     let queryParams = new HttpParams();
