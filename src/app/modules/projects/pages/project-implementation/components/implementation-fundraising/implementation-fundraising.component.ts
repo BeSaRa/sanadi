@@ -17,6 +17,7 @@ import {CustomValidators} from "@app/validators/custom-validators";
 import {ImplementationCriteriaContract} from "@contracts/implementation-criteria-contract";
 import {ProjectImplementationService} from "@services/project-implementation.service";
 import {DialogService} from "@services/dialog.service";
+import {UserClickOn} from "@app/enums/user-click-on.enum";
 
 @Component({
   selector: 'implementation-fundraising',
@@ -49,7 +50,8 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
     'projectTotalCost',
     'consumedAmount',
     'remainingAmount',
-    'totalCost'
+    'totalCost',
+    'actions'
   ];
 
   inputMaskPatterns = CustomValidators.inputMaskPatterns
@@ -176,7 +178,7 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
   loadFundraising() {
     if (!this.criteria) return
 
-    if(!this.projectTotalCost){
+    if (!this.projectTotalCost) {
       this.dialog.alert(this.lang.map.msg_please_select_x_to_continue.change({x: this.lang.map.lbl_template}))
       return;
     }
@@ -194,5 +196,16 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
         this.onTouch()
       })
 
+  }
+
+  deletePermit(item: ImplementationFundraising) {
+    this.dialog
+      .confirm(this.lang.map.msg_confirm_delete_x.change({x: this.lang.map.lang === 'ar' ? item.arName : item.enName}))
+      .onAfterClose$
+      .pipe(filter((value): value is UserClickOn.YES => value === UserClickOn.YES))
+      .subscribe(() => {
+        this.value = this.value.filter(template => template.projectLicenseId !== item.projectLicenseId)
+        this.onChange(this.value)
+      })
   }
 }

@@ -24,7 +24,8 @@
       </ng-container>
       <ng-container cdkColumnDef="projectTotalCost">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.project_total_cost}}</th>
-        <td cdk-cell *cdkCellDef="let row"> {{row.projectTotalCost | mask: inputMaskPatterns.SEPARATOR : inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
+        <td cdk-cell
+            *cdkCellDef="let row"> {{row.projectTotalCost | mask: inputMaskPatterns.SEPARATOR : inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
       </ng-container>
       <ng-container cdkColumnDef="permitType">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.permit_type}}</th>
@@ -32,7 +33,8 @@
       </ng-container>
       <ng-container cdkColumnDef="consumedAmount">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.consumed_amount}}</th>
-        <td cdk-cell *cdkCellDef="let row"> {{row.consumedAmount | mask: inputMaskPatterns.SEPARATOR : inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
+        <td cdk-cell
+            *cdkCellDef="let row"> {{row.consumedAmount | mask: inputMaskPatterns.SEPARATOR : inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
       </ng-container>
       <ng-container cdkColumnDef="remainingAmount">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.remaining_amount}}</th>
@@ -52,11 +54,20 @@
                      [dropSpecialCharacters]="[',']"
                      [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR"
                      class="form-control form-control-sm" style="width: 100px" [formControlName]="i">
-              <button [disabled]="disabled || noRemainingValue(i)" (click)="!disabled && getRemaining(i)" class="btn p-0 icon-btn">
+              <button [disabled]="disabled || noRemainingValue(i)" (click)="!disabled && getRemaining(i)"
+                      class="btn p-0 icon-btn">
                 <i class="mdi mdi-hand-coin text-primary"></i>
               </button>
             </div>
           </ng-container>
+        </td>
+      </ng-container>
+      <ng-container cdkColumnDef="actions">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
+        <td cdk-cell *cdkCellDef="let row">
+          <button (click)="!disabled && deletePermit(row)" class="btn icon-btn">
+            <i class="mdi mdi-trash-can text-primary"></i>
+          </button>
         </td>
       </ng-container>
       <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="displayedColumns"></tr>
