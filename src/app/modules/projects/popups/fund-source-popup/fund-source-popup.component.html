@@ -1,0 +1,46 @@
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
+  <h1 class="h6 text-white">{{label}}</h1>
+  <button type="button" class="btn-close btn-close-white"
+          tabindex="-1" dialogClose="" aria-label="Close"></button>
+</div>
+<div class="dialog-content no-fixed-height" style="width: 600px">
+  <div [formGroup]="form" class="row">
+    <div *ngIf="isGrant()" class="col-md-6 col-sm-12 mb-4 position-relative">
+      <label class="form-label" asteriskIfRequired="fullName"
+             for="fullName">{{lang.map.full_name}}</label>
+      <input id="fullName" validationClasses="fullName" formControlName="fullName" class="form-control">
+      <app-field-error-message controlName="fullName"></app-field-error-message>
+    </div>
+    <div class="col-md-6 col-sm-12 mb-4 position-relative">
+      <label class="form-label" for="field_name">{{lang.map.project_total_cost}}</label>
+      <input tabindex="-1" id="field_name" readonly
+             [value]="projectTotalCost| mask: maskPattern.SEPARATOR: maskPattern.THOUSAND_SEPARATOR"
+             class="form-control">
+    </div>
+    <div class="col-md-6 col-sm-12 mb-4 position-relative">
+      <label class="form-label" asteriskIfRequired="totalCost"
+             for="totalCost">{{lang.map.total_cost}}</label>
+      <input id="totalCost" [mask]="maskPattern.SEPARATOR" [dropSpecialCharacters]="[',']"
+             [thousandSeparator]="maskPattern.THOUSAND_SEPARATOR"
+             validationClasses="totalCost" formControlName="totalCost" class="form-control">
+      <app-field-error-message controlName="totalCost"></app-field-error-message>
+    </div>
+    <div class="col-md-6 col-sm-12 mb-4 position-relative">
+      <label class="form-label" for="remaining">{{lang.map.remaining_amount}}</label>
+      <input tabindex="-1" id="remaining" readonly
+             [value]="remainingCost| mask: maskPattern.SEPARATOR: maskPattern.THOUSAND_SEPARATOR" class="form-control">
+    </div>
+    <div class="col-sm-12 mb-4 position-relative">
+      <label class="form-label" asteriskIfRequired="notes" for="notes">{{lang.map.notes}}</label>
+      <textarea name="notes" formControlName="notes" validationClasses="notes" id="notes" rows="4"
+                class="form-control"></textarea>
+      <app-field-error-message controlName="notes"></app-field-error-message>
+    </div>
+  </div>
+</div>
+<div class="dialog-actions">
+  <div class="flex-grow-1"></div>
+  <button *ngIf="!isView()" [disabled]="form.invalid" (click)="saveFundSource()"
+          class="btn btn-primary">{{lang.map.btn_save}}</button>
+  <button dialogClose="" class="btn btn-secondary">{{lang.map.btn_close}}</button>
+</div>

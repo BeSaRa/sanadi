@@ -27,6 +27,7 @@ import {DateUtils} from "@helpers/date-utils";
 import {ImplementingAgency} from "@models/implementing-agency";
 import {ImplementationTemplate} from "@models/implementation-template";
 import {ImplementationFundraising} from "@models/implementation-fundraising";
+import {FundSourceType} from "@app/enums/fund-source-type";
 
 @Component({
   selector: 'project-implementation',
@@ -52,6 +53,8 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
   displayOcha: boolean = false;
   displayDomain: boolean = false;
   displayInternal: boolean = true;
+
+  FundSourceType: typeof FundSourceType = FundSourceType
 
   datepickerOptionsMap = {
     licenseStartDate: DateUtils.getDatepickerOptions({disablePeriod: 'none', openSelectorTopOfInput: true})

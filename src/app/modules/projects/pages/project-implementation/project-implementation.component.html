@@ -183,6 +183,12 @@
         <implementation-fundraising [criteria]="getCriteria"
                                     [projectTotalCost]="projectTotalCost.value"
                                     formControlName="implementationFundraising"></implementation-fundraising>
+        <br>
+        <fund-source [type]="FundSourceType.GRANT" [projectTotalCost]="projectTotalCost.value"
+                     formControlName="financialGrant"></fund-source>
+        <br>
+        <fund-source [type]="FundSourceType.SELF" [projectTotalCost]="projectTotalCost.value"
+                     formControlName="selfFinancing"></fund-source>
       </ng-container>
     </ng-template>
     <ng-template #specialExplanations>
