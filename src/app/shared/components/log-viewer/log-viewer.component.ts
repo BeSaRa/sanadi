@@ -113,7 +113,7 @@ export class LogViewerComponent implements OnInit, OnDestroy {
     return this._serviceData.serviceReviewLimit;
   }
   isMainTask(tkiid: string) {
-    return this.case?.taskDetails.isMain && this.case?.taskDetails.tkiid == tkiid;
+    return this.case?.taskDetails && this.case?.taskDetails.isMain && this.case?.taskDetails.tkiid == tkiid;
   }
 
   private _categorizeLogsByActionType(logs: any[]) {
