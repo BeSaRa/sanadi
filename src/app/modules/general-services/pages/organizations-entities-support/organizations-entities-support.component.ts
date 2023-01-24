@@ -231,9 +231,6 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
   }
 
   _destroyComponent(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-    this.destroy$.unsubscribe();
   }
 
   _getNewInstance(): OrganizationsEntitiesSupport {
