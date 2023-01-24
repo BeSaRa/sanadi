@@ -25,6 +25,7 @@ export class AwarenessActivitySuggestionInterceptor implements IModelInterceptor
 
   private static _deleteBeforeSend(model: any) {
     delete model.requestTypeInfo;
+    delete model.licenseStatusInfo;
     delete model.searchFields;
   }
 }
