@@ -54,6 +54,10 @@ export class ManageMembersComponent implements OnInit {
     return this.membersForm.get('identificationNumber')! as FormControl;
   }
 
+  get jobTitle(): FormControl {
+    return this.membersForm.get('jobTitleId')! as FormControl;
+  }
+
   ngOnInit(): void {
     this.jobTitleService.loadAsLookups()
       .subscribe(list => {
@@ -168,7 +172,8 @@ export class ManageMembersComponent implements OnInit {
     const criteria = {
       arabicName: this.arabicName.value,
       englishName: this.englishName.value,
-      qId: this.identificationNumber.value
+      qId: this.identificationNumber.value,
+      jobTitle: this.jobTitle.value
     };
 
     this.generalAssociationMeetingService.searchNpoEmployees(criteria)
