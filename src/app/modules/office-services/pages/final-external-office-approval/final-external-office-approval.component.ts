@@ -118,6 +118,11 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
   readonly: boolean = false;
 
   public isInternalUser: boolean = this.employeeService.isInternalUser();
+  formProperties = {
+    requestType: () => {
+      return this.getObservableField('requestTypeField', 'requestType');
+    }
+  }
 
   bankDetailsTabStatus: ReadinessStatus = 'READY';
   managersTabStatus: ReadinessStatus = 'READY';

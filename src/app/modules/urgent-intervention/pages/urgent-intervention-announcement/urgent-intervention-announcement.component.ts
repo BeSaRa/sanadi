@@ -138,6 +138,11 @@ export class UrgentInterventionAnnouncementComponent extends EServicesGenericCom
     }
   };
   tabIndex$: Subject<number> = new Subject<number>();
+  formProperties = {
+    requestType: () => {
+      return this.getObservableField('requestTypeField', 'requestType');
+    }
+  }
 
   @ViewChild('implementingAgencyListComponent') implementingAgencyListComponentRef!: ImplementingAgencyListComponent;
   @ViewChild('interventionRegionListComponent') interventionRegionListComponentRef!: InterventionRegionListComponent;

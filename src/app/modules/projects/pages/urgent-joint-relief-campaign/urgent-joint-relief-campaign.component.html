@@ -176,7 +176,7 @@
                   <td cdk-cell *cdkCellDef="let row" class="table-actions">
                     <div class="d-flex flex-row">
                       <button (click)="removeOrganization($event, row)" tooltip="{{lang.map.btn_remove}}"
-                         class="btn btn-link outline-none" [disabled]="(readonly)">
+                              class="btn btn-link outline-none" [disabled]="(readonly)">
                         <i class="mdi mdi-close-box"></i>
                       </button>
                     </div>
@@ -310,7 +310,7 @@
                   <td cdk-cell *cdkCellDef="let row" class="table-actions">
                     <div class="d-flex flex-row">
                       <button (click)="removeOfficer($event, row)" tooltip="{{lang.map.btn_remove}}"
-                         class="btn btn-link outline-none" [disabled]="(readonly)">
+                              class="btn btn-link outline-none" [disabled]="(readonly)">
                         <i class="mdi mdi-close-box"></i>
                       </button>
                       <button (click)="selectOfficer($event, row)" tooltip="{{lang.map.btn_edit}}"
@@ -348,6 +348,7 @@
   </ng-container>
   <ng-template #attachmentsTab>
     <attachments [caseId]="model?.id" [caseType]="model?.caseType"
-                 [service]="service.documentService" [model]="model"></attachments>
+                 [service]="service.documentService" [model]="model"
+                 [formProperties]="formProperties"></attachments>
   </ng-template>
 </div>

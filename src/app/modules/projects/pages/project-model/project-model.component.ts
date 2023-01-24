@@ -115,6 +115,14 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   projectListTotalCostFooterColumns: string[] = ['totalComponentCostLabel', 'totalComponentCost'];
   currentEditedProjectComponent?: ProjectComponent;
   tabIndex$: Subject<number> = new Subject<number>();
+  formProperties = {
+    requestType: () => {
+      return this.getObservableField('requestType', 'requestType');
+    },
+    projectType: () => {
+      return this.getObservableField('projectType', 'projectType');
+    }
+  }
 
   @ViewChild(AttachmentsComponent)
   attachmentComponent!: AttachmentsComponent;

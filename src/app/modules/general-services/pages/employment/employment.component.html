@@ -188,6 +188,6 @@
   <ng-template #attachmentsTab>
     <attachments [disabled]="isAttachmentReadonly()" [caseId]="model?.id" [caseType]="model?.caseType"
                  [service]="service.documentService" [model]="model"
-                 [load]="loadAttachments"></attachments>
+                 [load]="loadAttachments" [formProperties]="formProperties"></attachments>
   </ng-template>
 </div>

@@ -831,7 +831,7 @@
     </ng-template>
     <ng-template #tabContent>
       <attachments [model]="model"
-        [caseId]="model?.id"
+        [caseId]="model?.id" [formProperties]="formProperties"
         [caseType]="model?.caseType"
         [service]="service.documentService"
       ></attachments>

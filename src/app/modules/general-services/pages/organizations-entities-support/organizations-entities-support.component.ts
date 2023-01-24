@@ -1,7 +1,7 @@
-import { JobTitleService } from './../../../../services/job-title.service';
+import { JobTitleService } from '@services/job-title.service';
 import { ExternalUser } from '@app/models/external-user';
 import { ExternalUserService } from '@services/external-user.service';
-import { AdminLookupService } from './../../../../services/admin-lookup.service';
+import { AdminLookupService } from '@services/admin-lookup.service';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import {
   UntypedFormBuilder,
@@ -80,6 +80,11 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
   externalUsersList: ExternalUser[] = [];
   jobTitleList: JobTitle[] = [];
   selectedLicense?: OrganizationsEntitiesSupport;
+  formProperties = {
+    requestType: () => {
+      return this.getObservableField('requestTypeField', 'requestType');
+    }
+  }
 
   tabsData: TabMap = {
     basicInfo: {

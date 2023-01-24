@@ -82,6 +82,14 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     establishmentDate: DateUtils.getDatepickerOptions({disablePeriod: 'future'}),
     dueDate: DateUtils.getDatepickerOptions({disablePeriod: 'past'})
   };
+  formProperties = {
+    requestType: () => {
+      return this.getObservableField('requestType', 'requestType');
+    },
+    transferType: () => {
+      return this.getObservableField('transferType', 'transferType');
+    },
+  }
 
   isCancel!: boolean;
   isExternalUser!: boolean;

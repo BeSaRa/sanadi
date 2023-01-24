@@ -53,6 +53,12 @@ export class FundraisingComponent extends EServicesGenericComponent<Fundraising,
   licenseDurationTypes: Lookup[] =
     this.lookupService.listByCategory.LicenseDurationType;
 
+  formProperties = {
+    requestType: () => {
+      return this.getObservableField('requestType', 'requestType');
+    }
+  }
+
   get basicInfo(): UntypedFormGroup {
     return this.form.get('basicInfo')! as UntypedFormGroup;
   }

@@ -97,6 +97,12 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   maxDuration: number = 0;
   minDuration: number = 0;
 
+  formProperties = {
+    requestType: () => {
+      return this.getObservableField('requestType', 'requestType');
+    }
+  }
+
   private configs!: ServiceData;
 
   private controlsToWatchOldValues = [

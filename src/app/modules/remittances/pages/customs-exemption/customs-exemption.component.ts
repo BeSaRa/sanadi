@@ -58,6 +58,11 @@ export class CustomsExemptionComponent extends EServicesGenericComponent<Customs
   shippingMethods: Lookup[] = this.lookupService.listByCategory.ShipmentCarrier;
   countriesList: Country[] = [];
   receiverNamesList: AdminResult[] = [];
+  formProperties = {
+    requestType: () => {
+      return this.getObservableField('requestType', 'requestType');
+    }
+  }
 
   get requestType(): AbstractControl {
     return this.form.get('requestType')!;
