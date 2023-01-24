@@ -31,7 +31,7 @@ export class HeaderComponent implements OnInit {
     this.langService.toggleLanguage().subscribe();
   }
 
-  logData() {
+  openUserPreferences() {
     this.userPreferencesService.openEditDialog(this.employee.getCurrentUser().generalUserId).subscribe();
   }
 }

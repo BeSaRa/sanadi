@@ -22,6 +22,7 @@ import {ExternalUserUpdateRequestService} from '@services/external-user-update-r
 import {ProfileService} from '@services/profile.service';
 import {UntypedFormControl} from '@angular/forms';
 import {PaginatorComponent} from '@app/shared/components/paginator/paginator.component';
+import {UserPreferencesService} from '@services/user-preferences.service';
 
 @Component({
   selector: 'app-external-user',
@@ -43,7 +44,8 @@ export class ExternalUserComponent extends AdminGenericComponent<ExternalUser, E
               private dialogService: DialogService,
               private sharedService: SharedService,
               private profileService: ProfileService,
-              public externalUserUpdateRequestService: ExternalUserUpdateRequestService) {
+              public externalUserUpdateRequestService: ExternalUserUpdateRequestService,
+              private userPreferencesService: UserPreferencesService) {
     super();
   }
 
@@ -92,6 +94,13 @@ export class ExternalUserComponent extends AdminGenericComponent<ExternalUser, E
       icon: ActionIconsEnum.HISTORY,
       label: 'show_logs',
       onClick: (item) => this.showAuditLogs(item)
+    },
+    // user preferences
+    {
+      type: 'action',
+      icon: 'mdi-account-edit',
+      label: 'user_preferences',
+      onClick: (item) => this.openUserPreferences(item)
     }
   ];
 
@@ -168,5 +177,9 @@ export class ExternalUserComponent extends AdminGenericComponent<ExternalUser, E
 
   afterReload(): void {
     this.table && this.table.clearSelection();
+  }
+
+  openUserPreferences(item: ExternalUser) {
+    this.userPreferencesService.openEditDialog(item.generalUserId, false).subscribe();
   }
 }

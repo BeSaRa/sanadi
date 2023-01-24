@@ -31,7 +31,7 @@ export class UserPreferences extends BaseModel<UserPreferences, UserPreferencesS
     this.service = FactoryService.getService('UserPreferencesService');
   }
 
-  buildForm(controls?: boolean): any {
+  buildForm(isLoggedInUserPreferences: boolean, controls?: boolean): any {
     const {
       arName,
       enName,
@@ -57,8 +57,8 @@ export class UserPreferences extends BaseModel<UserPreferences, UserPreferencesS
       qid: controls ? [{value: qid, disabled: true}, [...CustomValidators.commonValidations.qId]] : qid,
       phoneNumber: controls ? [{value: phoneNumber, disabled: true}, CustomValidators.commonValidations.phone] : phoneNumber,
       email: controls ? [{value: email, disabled: true}, [CustomValidators.maxLength(50), CustomValidators.pattern('EMAIL')]] : email,
-      isMailNotificationEnabled: controls ? [isMailNotificationEnabled] : isMailNotificationEnabled,
-      defaultLang: controls ? [defaultLang, CustomValidators.required] : defaultLang
+      isMailNotificationEnabled: controls ? [{value: isMailNotificationEnabled, disabled: !isLoggedInUserPreferences}] : isMailNotificationEnabled,
+      defaultLang: controls ? [{value: defaultLang, disabled: !isLoggedInUserPreferences}, CustomValidators.required] : defaultLang
     }
   }
 

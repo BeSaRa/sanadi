@@ -65,13 +65,14 @@ export class UserPreferencesService extends CrudGenericService<UserPreferences> 
     return this._updateUserPreferences(generalUserId, model);
   }
 
-  openEditDialog(generalUserId: number): Observable<DialogRef> {
+  openEditDialog(generalUserId: number, isLoggedInUserPreferences = true): Observable<DialogRef> {
     return this.getUserPreferences(generalUserId).pipe(
       switchMap((model: UserPreferences) => {
         return of(this.dialog.show<IDialogData<UserPreferences>>(UserPreferencesPopupComponent, {
           model: model,
           operation: OperationTypes.UPDATE,
-          generalUserId: generalUserId
+          generalUserId: generalUserId,
+          isLoggedInUserPreferences: isLoggedInUserPreferences
         }));
       })
     )

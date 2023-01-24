@@ -22,6 +22,7 @@ export class UserPreferencesPopupComponent implements OnInit {
   languages: Lookup[] = [];
   alternateUserEmailsForm!: UntypedFormGroup;
   generalUserId: number;
+  isLoggedInUserPreferences!: boolean;
 
   constructor(public lang: LangService,
               @Inject(DIALOG_DATA_TOKEN) data: IDialogData<UserPreferences>,
@@ -30,6 +31,7 @@ export class UserPreferencesPopupComponent implements OnInit {
               public dialogRef: DialogRef) {
     this.model = data.model;
     this.generalUserId = data.generalUserId;
+    this.isLoggedInUserPreferences = data.isLoggedInUserPreferences;
   }
 
   ngOnInit() {
@@ -53,7 +55,7 @@ export class UserPreferencesPopupComponent implements OnInit {
   }
 
   buildForm() {
-    this.form = this.fb.group(this.model.buildForm(true));
+    this.form = this.fb.group(this.model.buildForm(this.isLoggedInUserPreferences, true));
   }
 
   save() {
