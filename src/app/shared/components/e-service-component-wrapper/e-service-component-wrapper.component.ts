@@ -1,14 +1,8 @@
 import {CoordinationWithOrganizationsRequest} from '@app/models/coordination-with-organizations-request';
-import {
-  IGeneralAssociationMeetingAttendanceSpecialActions
-} from '@contracts/i-general-association-meeting-attendance-special-actions';
+import {IGeneralAssociationMeetingAttendanceSpecialActions} from '@contracts/i-general-association-meeting-attendance-special-actions';
 import {IGeneralAssociationMeetingAttendanceApprove} from '@contracts/i-general-association-meeting-attendance-approve';
-import {
-  IGeneralAssociationMeetingAttendanceComponent
-} from '@contracts/i-general-association-meeting-attendance-component';
-import {
-  IGeneralAssociationMeetingAttendanceComplete
-} from '@contracts/i-general-association-meeting-attendance-complete';
+import {IGeneralAssociationMeetingAttendanceComponent} from '@contracts/i-general-association-meeting-attendance-component';
+import {IGeneralAssociationMeetingAttendanceComplete} from '@contracts/i-general-association-meeting-attendance-complete';
 import {ITransferFundsAbroadComponent} from '@contracts/i-transfer-funds-abroad-component';
 import {ITransferIndividualFundsAbroadComplete} from '@contracts/i-transfer-individual-funds-abroad-complete';
 import {
@@ -52,9 +46,7 @@ import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {BaseGenericEService} from '@app/generics/base-generic-e-service';
-import {
-  IGeneralAssociationMeetingAttendanceFinalApprove
-} from '@contracts/i-general-association-meeting-attendance-final-approve';
+import {IGeneralAssociationMeetingAttendanceFinalApprove} from '@contracts/i-general-association-meeting-attendance-final-approve';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -758,7 +750,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         askChecklist: true,
         show: (item: CaseModel<any, any>) => {
           const model = item as unknown as IGeneralAssociationMeetingAttendanceFinalApprove;
-          return item.getCaseType() === CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE && (model.isManagerFinalReviewStep());
+          return (item.getCaseType() === CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE && (model.isManagerFinalReviewStep())) || item.caseStatus === CommonCaseStatus.FINAL_APPROVE;
         },
         onClick: (item: CaseModel<any, any>) => {
           const model = item as unknown as IGeneralAssociationMeetingAttendanceFinalApprove;
