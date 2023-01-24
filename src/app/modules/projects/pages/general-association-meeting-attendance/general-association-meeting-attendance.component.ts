@@ -232,18 +232,17 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     if (this.isMemberReview || this.isDecisionMakerReview) {
       let allGeneralMeetingNotesObs = this.service.getDecisionMakerMeetingGeneralNotes(this.memberId, this.model?.id);
       let specificGeneralMeetingNotesObs = this.service.getMeetingGeneralNotes(this.memberId, this.model?.id);
-      if(this.isDecisionMakerReview && this.model?.isSendToMember) {
+      if (this.isDecisionMakerReview && this.model?.isSendToMember) {
         allGeneralMeetingNotesObs.subscribe(notes => {
           this.membersGeneralNotes = notes;
           this.generalNotes = notes;
         });
       }
-      if(this.isMemberReview) {
+      if (this.isMemberReview) {
         specificGeneralMeetingNotesObs.subscribe(notes => {
           this.generalNotes = notes;
-        })
+        });
       }
-
 
 
       // let generalNotesObservable = (this.isDecisionMakerReview && this.model?.isSendToMember) ? this.service.getDecisionMakerMeetingGeneralNotes(this.memberId, this.model?.id) : this.service.getMeetingGeneralNotes(this.memberId, this.model?.id)
@@ -277,7 +276,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   }
 
   setMeetingPointsForm() {
-    if (this.model?.isDecisionMakerReviewStep() && this.model?.isSendToMember) {
+    if (this.model?.isDecisionMakerReviewStep() && this.model?.isSendToMember && this.model?.isFinal) {
       this.service.getFinalMeetingPointsForDecisionMaker(this.model?.id).subscribe(meetingReport => {
         if (meetingReport && meetingReport.meetingMainItem.length > 0) {
           // update meeting points form
@@ -289,7 +288,8 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
       });
     }
 
-    if (this.model?.isManagerFinalReviewStep() || (this.model?.isDecisionMakerReviewStep() && !this.model?.isSendToMember)) {
+    if ((this.model?.isDecisionMakerReviewStep() && !this.model?.isSendToMember) ||
+      (this.model?.isDecisionMakerReviewStep() && this.model?.isSendToMember && !this.model?.isFinal)) {
       this.service.getMeetingPointsForDecisionMaker(this.model?.id).subscribe(meetingReport => {
         if (meetingReport && meetingReport.meetingMainItem.length > 0) {
           // update meeting points form
