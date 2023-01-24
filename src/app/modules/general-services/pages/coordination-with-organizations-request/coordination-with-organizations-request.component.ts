@@ -465,9 +465,6 @@ export class CoordinationWithOrganizationsRequestComponent extends EServicesGene
   _launchFail(error: any): void {}
 
   _destroyComponent(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-    this.destroy$.unsubscribe();
   }
 
   _updateForm(model: CoordinationWithOrganizationsRequest | undefined): void {
