@@ -1,4 +1,4 @@
-import {Component, forwardRef, Injector, OnDestroy, OnInit} from '@angular/core';
+import {Component, forwardRef, Injector, Input, OnDestroy, OnInit} from '@angular/core';
 import {
   ControlValueAccessor,
   FormControl,
@@ -11,9 +11,12 @@ import {
 import {ImplementationFundraising} from "@models/implementation-fundraising";
 import {Subject} from "rxjs";
 import {LangService} from "@services/lang.service";
-import {debounceTime, filter, map, takeUntil} from "rxjs/operators";
+import {debounceTime, filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
 import currency from "currency.js";
 import {CustomValidators} from "@app/validators/custom-validators";
+import {ImplementationCriteriaContract} from "@contracts/implementation-criteria-contract";
+import {ProjectImplementationService} from "@services/project-implementation.service";
+import {DialogService} from "@services/dialog.service";
 
 @Component({
   selector: 'implementation-fundraising',
@@ -35,9 +38,12 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
   onChange!: (value: ImplementationFundraising[]) => void
   onTouch!: () => void
   destroyListeners$: Subject<any> = new Subject()
+  @Input()
+  criteria?: () => ImplementationCriteriaContract
+
   displayedColumns: string[] = [
-    'permitType',
     'projectLicenseFullSerial',
+    'permitType',
     'arName',
     'enName',
     'projectTotalCost',
@@ -47,12 +53,16 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
   ];
 
   inputMaskPatterns = CustomValidators.inputMaskPatterns
+  @Input()
+  projectTotalCost: number = 0
 
   fromGroup = new UntypedFormGroup({
     inputs: new UntypedFormArray([])
   })
 
   constructor(private injector: Injector,
+              private service: ProjectImplementationService,
+              private dialog: DialogService,
               public lang: LangService) {
   }
 
@@ -130,10 +140,21 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
     if (!list) return;
 
     list.forEach((item) => {
-      const ctrl = new UntypedFormControl(item.totalCost)
+      const ctrl = this.createInput(item.totalCost)
       this.inputs.push(ctrl)
     });
   }
+
+  private createInput(totalCost: number = 0): UntypedFormControl {
+    return new UntypedFormControl(totalCost)
+  }
+
+  private createInputWithListener(totalCost: number = 0): void {
+    const ctrl = this.createInput(totalCost)
+    this.inputs.push(ctrl);
+    this.listenToControl(ctrl, (this.inputs.length - 1))
+  }
+
 
   listenToControls(): void {
     (this.inputs.controls as UntypedFormControl[]).forEach((ctrl, index) => {
@@ -150,5 +171,28 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
   noRemainingValue(i: number) {
     const model = this.value[i]
     return model.remainingAmount === model.totalCost
+  }
+
+  loadFundraising() {
+    if (!this.criteria) return
+
+    if(!this.projectTotalCost){
+      this.dialog.alert(this.lang.map.msg_please_select_x_to_continue.change({x: this.lang.map.lbl_template}))
+      return;
+    }
+
+    const criteria = this.service.getCriteria(this.criteria())
+    this.service.loadFundraisingLicensesByCriteria(criteria, criteria.workArea!)
+      .pipe(tap(models => !models.length && this.dialog.info(this.lang.map.no_result_for_your_search_criteria)))
+      .pipe(filter(models => !!models.length))
+      .pipe(switchMap(licenses => this.service.openSelectFundraisingDialog(licenses, this.value).onAfterClose$))
+      .pipe(filter((value: ImplementationFundraising): value is ImplementationFundraising => !!value))
+      .subscribe((template: ImplementationFundraising) => {
+        this.createInputWithListener(template.totalCost)
+        this.value = this.value.concat(template)
+        this.onChange(this.value);
+        this.onTouch()
+      })
+
   }
 }

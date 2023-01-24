@@ -13,7 +13,7 @@ import {Lookup} from "@models/lookup";
 import {LookupService} from "@services/lookup.service";
 import {ServiceRequestTypes} from "@app/enums/service-request-types";
 import {CommonUtils} from "@helpers/common-utils";
-import {filter, switchMap, takeUntil} from "rxjs/operators";
+import {filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
 import {UserClickOn} from "@app/enums/user-click-on.enum";
 import {Country} from "@models/country";
 import {ActivatedRoute} from "@angular/router";
@@ -22,7 +22,7 @@ import {AdminLookup} from "@models/admin-lookup";
 import {DacOchaService} from "@services/dac-ocha.service";
 import {ProjectWorkArea} from "@app/enums/project-work-area";
 import {EmployeeService} from '@app/services/employee.service';
-import {TemplateCriteriaContract} from "@contracts/template-criteria-contract";
+import {ImplementationCriteriaContract} from "@contracts/implementation-criteria-contract";
 import {DateUtils} from "@helpers/date-utils";
 import {ImplementingAgency} from "@models/implementing-agency";
 import {ImplementationTemplate} from "@models/implementation-template";
@@ -143,8 +143,12 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     return this.projectInfo.get('implementingAgencyList')!
   }
 
+  get projectTotalCost(): AbstractControl {
+    return this.basicInfo.get('projectTotalCost')!
+  }
+
   // it should be
-  getCriteria = (): TemplateCriteriaContract => {
+  getCriteria = (): ImplementationCriteriaContract => {
     return {
       workArea: this.projectWorkArea.value,
       countries: [this.beneficiaryCountry.value],
@@ -455,11 +459,15 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     this.implementationTemplate
       .valueChanges
       .pipe(takeUntil(this.destroy$))
+      .pipe(tap((value: ImplementationTemplate[]) => {
+        value && value.length ? this.projectTotalCost.patchValue(value[0].projectTotalCost) : this.projectTotalCost.patchValue(0)
+      }))
       .pipe(filter((value): value is ImplementationTemplate[] => !!value.length))
-      .pipe(switchMap(value => value[0].loadImplementationFundraising()))
+      .pipe(map(val => val[0] as ImplementationTemplate))
+      .pipe(switchMap(template => template.loadImplementationFundraising()))
       .pipe(filter((value): value is ImplementationFundraising => !!value))
-      .subscribe((ImplementationFundraising) => {
-        this.implementationFundraising.setValue([ImplementationFundraising])
+      .subscribe((implementationFundraising) => {
+        this.implementationFundraising.setValue([implementationFundraising])
       })
   }
 }

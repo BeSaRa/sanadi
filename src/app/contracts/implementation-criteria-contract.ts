@@ -1,8 +1,9 @@
-export interface TemplateCriteriaContract {
+export interface ImplementationCriteriaContract {
   workArea?: number,
   domain?: number
   mainDAC?: number
   mainUNOCHA?: number
-  countries: number[]
+  countries?: number[]
+  country?: number
   internalProjectClassification?: number
 }

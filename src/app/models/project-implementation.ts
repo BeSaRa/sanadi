@@ -17,6 +17,7 @@ import {Payment} from "@models/payment";
 import {ImplementingAgency} from "@models/implementing-agency";
 import {CustomValidators} from "@app/validators/custom-validators";
 import currency from "currency.js";
+import {Validators} from "@angular/forms";
 
 const _Approval = mixinApprovalLicenseWithMonthly(mixinRequestType(CaseModel))
 const {send, receive} = new ProjectImplementationInterceptor()
@@ -82,7 +83,8 @@ export class ProjectImplementation
       mainUNOCHACategory,
       subDACCategory,
       subUNOCHACategory,
-      internalProjectClassification
+      internalProjectClassification,
+      projectTotalCost
     } = this;
 
     return {
@@ -95,7 +97,8 @@ export class ProjectImplementation
       mainUNOCHACategory: controls ? [mainUNOCHACategory, [], []] : mainUNOCHACategory,
       subDACCategory: controls ? [subDACCategory, [], []] : subDACCategory,
       subUNOCHACategory: controls ? [subUNOCHACategory, [], []] : subUNOCHACategory,
-      internalProjectClassification: controls ? [internalProjectClassification, [], []] : internalProjectClassification
+      internalProjectClassification: controls ? [internalProjectClassification, [], []] : internalProjectClassification,
+      projectTotalCost: projectTotalCost ? [projectTotalCost, CustomValidators.required, Validators.min(1)] : projectTotalCost
     }
   }
 

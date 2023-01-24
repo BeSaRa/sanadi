@@ -180,14 +180,18 @@
     </ng-template>
     <ng-template #funding_sources>
       <ng-container formGroupName="fundingResources">
-        <implementation-fundraising formControlName="implementationFundraising"></implementation-fundraising>
+        <implementation-fundraising [criteria]="getCriteria"
+                                    [projectTotalCost]="projectTotalCost.value"
+                                    formControlName="implementationFundraising"></implementation-fundraising>
       </ng-container>
     </ng-template>
     <ng-template #specialExplanations>
       <ng-container formGroupName="specialExplanations">
         <div class="col-sm-12 mb-4 position-relative">
-          <label class="form-label" asteriskIfRequired="description" for="description">{{lang.map.lbl_description}}</label>
-          <textarea name="description" formControlName="description" validationClasses="description" id="description" rows="4" class="form-control"></textarea>
+          <label class="form-label" asteriskIfRequired="description"
+                 for="description">{{lang.map.lbl_description}}</label>
+          <textarea name="description" formControlName="description" validationClasses="description" id="description"
+                    rows="4" class="form-control"></textarea>
           <app-field-error-message controlName="description"></app-field-error-message>
         </div>
       </ng-container>

@@ -82,6 +82,7 @@ import {
 import { ImplementationTemplatePopupComponent } from './popups/implementation-template-popup/implementation-template-popup.component';
 import { ImplementingAgencyListComponent } from './pages/project-implementation/components/implementing-agency-list/implementing-agency-list.component';
 import { ImplementationFundraisingComponent } from './pages/project-implementation/components/implementation-fundraising/implementation-fundraising.component';
+import { SelectProjectFundraisingPopupComponent } from './popups/select-project-fundraising-popup/select-project-fundraising-popup.component';
 
 
 @NgModule({
@@ -121,6 +122,7 @@ import { ImplementationFundraisingComponent } from './pages/project-implementati
     ImplementationTemplatePopupComponent,
     ImplementingAgencyListComponent,
     ImplementationFundraisingComponent,
+    SelectProjectFundraisingPopupComponent,
   ],
   imports: [
     CommonModule,

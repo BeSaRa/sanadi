@@ -3,7 +3,7 @@ import {Subject} from "rxjs";
 import {LangService} from "@services/lang.service";
 import {ProjectImplementationService} from "@services/project-implementation.service";
 import {filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
-import {TemplateCriteriaContract} from "@contracts/template-criteria-contract";
+import {ImplementationCriteriaContract} from "@contracts/implementation-criteria-contract";
 import {ProjectWorkArea} from "@app/enums/project-work-area";
 import {ImplementationTemplate} from "@models/implementation-template";
 import {DialogService} from "@services/dialog.service";
@@ -27,7 +27,7 @@ export class ImplementationTemplateComponent implements OnDestroy, OnInit, Contr
   disabled: boolean = false;
 
   @Input()
-  criteria!: () => TemplateCriteriaContract
+  criteria!: () => ImplementationCriteriaContract
 
   @Output()
   change: EventEmitter<ImplementationTemplate[]> = new EventEmitter<ImplementationTemplate[]>()
@@ -87,25 +87,19 @@ export class ImplementationTemplateComponent implements OnDestroy, OnInit, Contr
     })
   }
 
-  private getCriteria(criteria: TemplateCriteriaContract): TemplateCriteriaContract {
-    return Object.keys(criteria).filter(key => !!criteria[key as keyof TemplateCriteriaContract]).reduce((acc, key) => {
-      return {...acc, [key]: criteria[key as keyof TemplateCriteriaContract]}
-    }, {} as TemplateCriteriaContract)
-
-  }
-
   private listenToAddTemplate() {
     this.addTemplate$
       .pipe(filter(_ => !this.disabled))
       .pipe(takeUntil(this.destroy$))
       .pipe(map(_ => this.criteria()))
-      .pipe(map(value => this.getCriteria(value)))
+      .pipe(map(value => this.service.getCriteria(value)))
       .pipe(switchMap((_criteria) => {
         const demo = {
           countries: [231],
           domain: 1,
           mainUNOCHA: 1
         }
+        // TODO: remove the demo object
         return this.service.openDialogSearchTemplate(demo, /*criteria.workArea!*/ ProjectWorkArea.OUTSIDE_QATAR)
       }))
       .pipe(tap(_ => this.onTouch()))

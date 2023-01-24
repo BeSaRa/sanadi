@@ -24,7 +24,7 @@ import {
   ChooseTemplatePopupComponent
 } from "@modules/projects/popups/choose-template-popup/choose-template-popup.component";
 import {SharedService} from "@services/shared.service";
-import {TemplateCriteriaContract} from "@contracts/template-criteria-contract";
+import {ImplementationCriteriaContract} from "@contracts/implementation-criteria-contract";
 import {ImplementationTemplate} from "@models/implementation-template";
 import {CaseTypes} from "@app/enums/case-types.enum";
 import {
@@ -34,6 +34,11 @@ import {MapService} from "@services/map.service";
 import {ProjectFundraisingService} from "@services/project-fundraising.service";
 import {ProjectFundraising} from "@models/project-fundraising";
 import {IDefaultResponse} from "@contracts/idefault-response";
+import {LicenseService} from "@services/license.service";
+import {
+  SelectProjectFundraisingPopupComponent
+} from "@modules/projects/popups/select-project-fundraising-popup/select-project-fundraising-popup.component";
+import {ImplementationFundraising} from "@models/implementation-fundraising";
 
 @CastResponseContainer({
   $default: {
@@ -58,6 +63,7 @@ export class ProjectImplementationService extends BaseGenericEService<ProjectImp
     private sharedService: SharedService,
     private urlService: UrlService,
     private mapService: MapService,
+    private licenseService: LicenseService,
     private _projectFundraisingService: ProjectFundraisingService
   ) {
     super();
@@ -92,7 +98,7 @@ export class ProjectImplementationService extends BaseGenericEService<ProjectImp
   }
 
 
-  openDialogSearchTemplate(criteria: TemplateCriteriaContract, workArea: ProjectWorkArea, template?: ImplementationTemplate): Observable<DialogRef> {
+  openDialogSearchTemplate(criteria: ImplementationCriteriaContract, workArea: ProjectWorkArea, template?: ImplementationTemplate): Observable<DialogRef> {
     delete criteria.workArea
     return this.searchForTemplate(criteria, workArea)
       .pipe(switchMap(templates => templates.length ? of(this.dialog.show(ChooseTemplatePopupComponent, {
@@ -147,4 +153,28 @@ export class ProjectImplementationService extends BaseGenericEService<ProjectImp
     }).pipe(map(res => res.rs))
   }
 
+  getCriteria(criteria: ImplementationCriteriaContract): ImplementationCriteriaContract {
+    return Object.keys(criteria).filter(key => !!criteria[key as keyof ImplementationCriteriaContract]).reduce((acc, key) => {
+      return {...acc, [key]: criteria[key as keyof ImplementationCriteriaContract]}
+    }, {} as ImplementationCriteriaContract)
+  }
+
+  @CastResponse(() => ProjectFundraising)
+  loadFundraisingLicensesByCriteria(criteria: ImplementationCriteriaContract, workArea: ProjectWorkArea): Observable<ProjectFundraising[]> {
+    criteria.country = criteria.countries![0]
+    delete criteria.workArea
+    delete criteria.countries
+    return this.http.get<ProjectFundraising[]>(this.urlService.URLS.PROJECT_FUNDRAISING + (workArea === ProjectWorkArea.OUTSIDE_QATAR ? '/external' : '/internal') + '/implementation', {
+      params: new HttpParams({
+        fromObject: {...criteria}
+      })
+    })
+  }
+
+  openSelectFundraisingDialog(licenses: ProjectFundraising[], selectedFundraising?: ImplementationFundraising[]): DialogRef {
+    return this.dialog.show(SelectProjectFundraisingPopupComponent, {
+      models: licenses,
+      selected: selectedFundraising
+    })
+  }
 }
