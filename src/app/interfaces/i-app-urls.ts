@@ -129,5 +129,7 @@ export interface IAppUrls {
   DEDUCTION_RATIO_ITEM: string;
   ORGANIZATION_ENTITIES_SUPPORT: string;
   PROFILE_COUNTRY: string;
+  GLOBAL_SETTINGS: string;
+  USER_PREFERENCES: string;
   [index: string]: string;
 }

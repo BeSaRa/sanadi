@@ -113,6 +113,8 @@ import {
 } from './popups/external-user-update-changes-popup/external-user-update-changes-popup.component';
 import {UserSecurityExternalComponent} from './shared/user-security-external/user-security-external.component';
 import { ProfileAttachmentsComponent } from './shared/profile-attachments/profile-attachments.component';
+import { GlobalSettingsComponent } from './pages/global-settings/global-settings.component';
+import { UserPreferencesPopupComponent } from './popups/user-preferences-popup/user-preferences-popup.component';
 
 @NgModule({
   declarations: [
@@ -199,7 +201,9 @@ import { ProfileAttachmentsComponent } from './shared/profile-attachments/profil
     ExternalUserUpdateApprovalPopupComponent,
     ExternalUserUpdateChangesPopupComponent,
     UserSecurityExternalComponent,
-    ProfileAttachmentsComponent
+    ProfileAttachmentsComponent,
+    GlobalSettingsComponent,
+    UserPreferencesPopupComponent
   ],
   imports: [
     SharedModule,
