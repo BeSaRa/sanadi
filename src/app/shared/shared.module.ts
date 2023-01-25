@@ -1,4 +1,6 @@
-import { ReturnToOrganizationWithCommentPopupComponent } from './popups/return-to-organization-with-comment-popup/return-to-organization-with-comment-popup.component';
+import {
+  ReturnToOrganizationWithCommentPopupComponent
+} from './popups/return-to-organization-with-comment-popup/return-to-organization-with-comment-popup.component';
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {MouseEnterLeaveDirective} from './directives/mouse-enter-leave.directive';
@@ -55,14 +57,10 @@ import {ActionRegistryPopupComponent} from './popups/action-registry-popup/actio
 import {LogViewerComponent} from './components/log-viewer/log-viewer.component';
 import {IndeterminateDirective} from './directives/indeterminate.directive';
 import {SendToComponent} from './popups/send-to-user-popup/send-to.component';
-import {ContextMenuModule} from '../modules/context-menu/context-menu.module';
-import {
-  ActionWithCommentPopupComponent
-} from './popups/action-with-comment-popup/action-with-comment-popup.component';
+import {ContextMenuModule} from '@modules/context-menu/context-menu.module';
+import {ActionWithCommentPopupComponent} from './popups/action-with-comment-popup/action-with-comment-popup.component';
 import {RecommendationPopupComponent} from './popups/recommendation-popup/recommendation-popup.component';
-import {
-  ManageRecommendationPopupComponent
-} from './popups/manage-recommendation-popup/manage-recommendation-popup.component';
+import {ManageRecommendationPopupComponent} from './popups/manage-recommendation-popup/manage-recommendation-popup.component';
 import {ManageCommentPopupComponent} from './popups/manage-comment-popup/manage-comment-popup.component';
 import {CaseViewerPopupComponent} from './popups/case-viewer-popup/case-viewer-popup.component';
 import {LocalizationKeyExistsDirective} from '../validators/localization-key-exists.directive';
@@ -71,9 +69,7 @@ import {CommentHistoryPopupComponent} from './popups/comment-history-popup/comme
 import {ViewerCaseInfoComponent} from './components/viewer-case-info/viewer-case-info.component';
 import {FilterRetiredStatusPipe} from './pipes/filter-retired-status.pipe';
 import {CustomTermPopupComponent} from './popups/custom-term-popup/custom-term-popup.component';
-import {
-  RequestRecommendationsComponent
-} from '@app/shared/components/request-recommendations/request-recommendations.component';
+import {RequestRecommendationsComponent} from '@app/shared/components/request-recommendations/request-recommendations.component';
 import {ValidationGroupClassesDirective} from './directives/validation-group-classes.directive';
 import {GroupErrorMessageComponent} from './components/group-error-message/group-error-message.component';
 import {SendToMultipleComponent} from './popups/send-to-multiple/send-to-multiple.component';
@@ -88,21 +84,17 @@ import {WorkItemStatusComponent} from './components/work-item-status/work-item-s
 import {InboxGridActionsComponent} from './components/inbox-grid-actions/inbox-grid-actions.component';
 import {ReadUnreadDirective} from './directives/read-unread.directive';
 import {RiskStatusDirective} from './directives/risk-status.directive';
-import {
-  EServiceComponentWrapperComponent
-} from '@app/shared/components/e-service-component-wrapper/e-service-component-wrapper.component';
+import {EServiceComponentWrapperComponent} from '@app/shared/components/e-service-component-wrapper/e-service-component-wrapper.component';
 import {CaseInfoComponent} from './components/case-info/case-info.component';
 import {GridActionsComponent} from './components/grid-actions/grid-actions.component';
 import {StepCheckListComponent} from './components/step-check-list/step-check-list.component';
 import {LangLoaderComponent} from './components/lang-loader/lang-loader.component';
-import {
-  ApprovalFormMonthlyComponent
-} from "@app/shared/components/approval-form-monthly/approval-form-monthly.component";
+import {ApprovalFormMonthlyComponent} from '@app/shared/components/approval-form-monthly/approval-form-monthly.component';
 import {BuildingPlateComponent} from './components/building-plate/building-plate.component';
-import {TranslatePipe} from "@app/pipes/translate.pipe";
-import {DatePipe} from "@app/pipes/date.pipe";
-import {FollowupComponent} from "@app/shared/popups/followup/followup.component";
-import {FollowupPopupComponent} from "@app/modules/followup/popups/followup-popup/followup-popup.component";
+import {TranslatePipe} from '@app/pipes/translate.pipe';
+import {DatePipe} from '@app/pipes/date.pipe';
+import {FollowupComponent} from '@app/shared/popups/followup/followup.component';
+import {FollowupPopupComponent} from '@app/modules/followup/popups/followup-popup/followup-popup.component';
 import {ReasonPopupComponent} from './popups/reason-popup/reason-popup.component';
 import {ReturnToOrganizationPopupComponent} from './popups/return-to-organization-popup/return-to-organization-popup.component';
 import {MultiAttachmentDirective} from './directives/multi-attachment.directive';
@@ -115,7 +107,8 @@ import {ExternalOfficesPopupComponent} from '@app/shared/components/external-off
 import {ExecutiveManagementComponent} from '@app/shared/components/executive-management/executive-management.component';
 import {BankBranchComponent} from '@app/shared/components/bank-branch/bank-branch.component';
 import {ProfileCodeExistsDirective} from '@app/validators/profile-code-exists.directive';
-import { ProfileAttachmentDetailsPopupComponent } from './popups/profile-attachment-details-popup/profile-attachment-details-popup.component';
+import {ProfileAttachmentDetailsPopupComponent} from './popups/profile-attachment-details-popup/profile-attachment-details-popup.component';
+import {CustomInputComponent} from '@app/shared/cva/custom-input/custom-input.component';
 
 @NgModule({
   declarations: [
@@ -217,7 +210,8 @@ import { ProfileAttachmentDetailsPopupComponent } from './popups/profile-attachm
     BankBranchComponent,
     ProfileCodeExistsDirective,
     ReturnToOrganizationWithCommentPopupComponent,
-    ProfileAttachmentDetailsPopupComponent
+    ProfileAttachmentDetailsPopupComponent,
+    CustomInputComponent
   ],
   imports: [
     CommonModule,
@@ -310,7 +304,8 @@ import { ProfileAttachmentDetailsPopupComponent } from './popups/profile-attachm
     ExternalOfficesPopupComponent,
     ExecutiveManagementComponent,
     BankBranchComponent,
-    ProfileCodeExistsDirective
+    ProfileCodeExistsDirective,
+    CustomInputComponent
   ]
 })
 export class SharedModule {

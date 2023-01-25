@@ -1,0 +1,8 @@
+<div class="col-sm-12 col-md-{{columns}} mb-4 position-relative">
+  <label [for]="id" asteriskIfRequired [control]="inputControl"
+         class="form-label">{{lang.map[label]}}</label>
+  <input [id]="id" validationClasses [control]="inputControl" [readOnly]="readonly"
+         [value]="value" (input)="updateValue($event)" (blur)="updateTouch()"
+         class="form-control" type="text" [disabled]="disabled" trimInput>
+  <app-field-error-message [control]="inputControl"></app-field-error-message>
+</div>
