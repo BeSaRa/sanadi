@@ -4,11 +4,11 @@ import {LangService} from "@services/lang.service";
 import {ProjectImplementationService} from "@services/project-implementation.service";
 import {filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
 import {ImplementationCriteriaContract} from "@contracts/implementation-criteria-contract";
-import {ProjectWorkArea} from "@app/enums/project-work-area";
 import {ImplementationTemplate} from "@models/implementation-template";
 import {DialogService} from "@services/dialog.service";
 import {UserClickOn} from "@app/enums/user-click-on.enum";
 import {ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, UntypedFormControl} from "@angular/forms";
+import {CustomValidators} from "@app/validators/custom-validators";
 
 @Component({
   selector: 'implementation-template',
@@ -37,6 +37,7 @@ export class ImplementationTemplateComponent implements OnDestroy, OnInit, Contr
   displayedColumns: string[] = ['templateName', 'templateCost', 'executionRegion', 'arabicName', 'englishName', 'region', 'beneficiaryRegion', 'location', 'projectCost', 'actions'];
 
   value: ImplementationTemplate[] = [];
+  inputMaskPatterns = CustomValidators.inputMaskPatterns
 
   private _control: UntypedFormControl | undefined
 
@@ -93,14 +94,8 @@ export class ImplementationTemplateComponent implements OnDestroy, OnInit, Contr
       .pipe(takeUntil(this.destroy$))
       .pipe(map(_ => this.criteria()))
       .pipe(map(value => this.service.getCriteria(value)))
-      .pipe(switchMap((_criteria) => {
-        const demo = {
-          countries: [231],
-          domain: 1,
-          mainUNOCHA: 1
-        }
-        // TODO: remove the demo object
-        return this.service.openDialogSearchTemplate(demo, /*criteria.workArea!*/ ProjectWorkArea.OUTSIDE_QATAR)
+      .pipe(switchMap((criteria) => {
+        return this.service.openDialogSearchTemplate(criteria, criteria.workArea!)
       }))
       .pipe(tap(_ => this.onTouch()))
       .pipe(switchMap((dialogRef) => dialogRef.onAfterClose$.pipe(filter((template): template is ImplementationTemplate => !!template))))

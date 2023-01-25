@@ -37,7 +37,8 @@
       </ng-container>
       <ng-container cdkColumnDef="totalCost">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.project_total_cost}}</th>
-        <td cdk-cell *cdkCellDef="let row"> {{row.projectTotalCost}}</td>
+        <td cdk-cell
+            *cdkCellDef="let row"> {{row.projectTotalCost | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</td>
       </ng-container>
       <ng-container cdkColumnDef="domain">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.domain}}</th>

@@ -193,6 +193,7 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
         }),
         exhaustMap(_ => {
           const model = this.model as unknown as CaseModel<any, any>;
+          console.log(model.id);
           return model.start().pipe(catchError(error => {
             this._launchFail(error);
             return of(false);

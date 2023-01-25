@@ -85,6 +85,10 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     return this.form.get('fundingResources')!
   }
 
+  get specialExplanations(): AbstractControl {
+    return this.form.get('specialExplanations')!
+  }
+
 
   get requestType(): AbstractControl {
     return this.basicInfo.get('requestType')!
@@ -212,11 +216,14 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
   _prepareModel(): ProjectImplementation | Observable<ProjectImplementation> {
     return new ProjectImplementation().clone({
       ...this.model,
-      ...this.basicInfo.getRawValue()
+      ...this.basicInfo.getRawValue(),
+      ...this.projectInfo.getRawValue(),
+      ...this.fundingResources.getRawValue()
     })
   }
 
   _afterSave(model: ProjectImplementation, saveType: SaveTypes, operation: OperationTypes): void {
+    this.model = model;
     if (
       [OperationTypes.CREATE, OperationTypes.UPDATE].includes(operation) && [SaveTypes.FINAL, SaveTypes.COMMIT].includes(saveType)
     ) {
@@ -243,7 +250,10 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     }
     this.model = model;
     this.form.patchValue({
-      basicInfo: model.buildBasicInfo()
+      basicInfo: model.buildBasicInfo(),
+      projectInfo: model.buildProjectInfo(),
+      fundingResources: model.buildFundingResources(),
+      specialExplanations: model.buildSpecialInfo()
     })
 
     this.handleDisplayFields(model)

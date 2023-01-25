@@ -12,6 +12,7 @@ import {CaseTypes} from "@app/enums/case-types.enum";
 import {ImplementationTemplate} from "@models/implementation-template";
 import {ProjectImplementationService} from "@services/project-implementation.service";
 import {filter} from "rxjs/operators";
+import {CustomValidators} from "@app/validators/custom-validators";
 
 @Component({
   selector: 'choose-template',
@@ -34,6 +35,8 @@ export class ChooseTemplatePopupComponent implements AfterViewInit {
 
   @ViewChild(TableComponent)
   private table!: TableComponent;
+
+  inputMaskPatterns = CustomValidators.inputMaskPatterns
 
   constructor(@Inject(DIALOG_DATA_TOKEN) public data: {
                 templates: ProjectModel[],

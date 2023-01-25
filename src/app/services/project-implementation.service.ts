@@ -39,10 +39,16 @@ import {
   SelectProjectFundraisingPopupComponent
 } from "@modules/projects/popups/select-project-fundraising-popup/select-project-fundraising-popup.component";
 import {ImplementationFundraising} from "@models/implementation-fundraising";
+import {ImplementingAgency} from "@models/implementing-agency";
 
 @CastResponseContainer({
   $default: {
-    model: () => ProjectImplementation
+    model: () => ProjectImplementation,
+    shape: {
+      'implementationTemplate.*': () => ImplementationTemplate,
+      'implementingAgencyList.*': () => ImplementingAgency,
+      'implementationFundraising.*': () => ImplementationFundraising
+    }
   }
 })
 @Injectable({

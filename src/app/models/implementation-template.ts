@@ -8,7 +8,12 @@ import {ProjectImplementationService} from "@services/project-implementation.ser
 import {Observable, of} from "rxjs";
 import {map, switchMap} from "rxjs/operators";
 import {ImplementationFundraising} from "@models/implementation-fundraising";
+import {ImplementationTemplateInterceptor} from "@model-interceptors/implementation-template-interceptor";
+import {InterceptModel} from "@decorators/intercept-model";
 
+const {send, receive} = new ImplementationTemplateInterceptor()
+
+@InterceptModel({send, receive})
 export class ImplementationTemplate extends Cloneable<ImplementationTemplate> {
   templateId!: string
   templateName!: string

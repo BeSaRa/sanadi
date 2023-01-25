@@ -1,8 +1,10 @@
 <div class="row">
   <div class="d-flex align-items-center justify-content-start position-relative">
-    <app-page-header [removeContainerClasses]="true" [pageTitle]="'templates'" class="flex-grow-0" [disableAdd]="disabled" [clickOnNew$]="addTemplate$"></app-page-header>
+    <app-page-header [removeContainerClasses]="true" [pageTitle]="'templates'" class="flex-grow-0"
+                     [disableAdd]="disabled" [clickOnNew$]="addTemplate$"></app-page-header>
     <input type="hidden" *ngIf="control" validationClasses="" [control]="control!">
-    <app-field-error-message [absolute]="false" class="flex-grow-1" *ngIf="control" [control]="control"></app-field-error-message>
+    <app-field-error-message [absolute]="false" class="flex-grow-1" *ngIf="control"
+                             [control]="control"></app-field-error-message>
   </div>
   <app-table #table sortableTable
              [useSearchToFilter]="true"
@@ -15,7 +17,8 @@
       </ng-container>
       <ng-container cdkColumnDef="templateCost">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.template_cost}}</th>
-        <td cdk-cell *cdkCellDef="let row"> {{row.templateCost}} </td>
+        <td cdk-cell
+            *cdkCellDef="let row"> {{row.templateCost| mask: inputMaskPatterns.SEPARATOR : inputMaskPatterns.THOUSAND_SEPARATOR }} </td>
       </ng-container>
       <ng-container cdkColumnDef="executionRegion">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.execution_country}}</th>

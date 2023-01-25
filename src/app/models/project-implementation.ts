@@ -18,6 +18,11 @@ import {ImplementingAgency} from "@models/implementing-agency";
 import {CustomValidators} from "@app/validators/custom-validators";
 import currency from "currency.js";
 import {Validators} from "@angular/forms";
+import {ImplementationTemplateInterceptor} from "@model-interceptors/implementation-template-interceptor";
+import {ImplementingAgencyInterceptor} from "@model-interceptors/implementing-agency-interceptor";
+import {DateUtils} from "@helpers/date-utils";
+import {IMyDateModel} from "angular-mydatepicker";
+import {ImplementationFundraisingInterceptor} from "@model-interceptors/implementation-fundraising-interceptor";
 
 const _Approval = mixinApprovalLicenseWithMonthly(mixinRequestType(CaseModel))
 const {send, receive} = new ProjectImplementationInterceptor()
@@ -98,7 +103,7 @@ export class ProjectImplementation
       subDACCategory: controls ? [subDACCategory, [], []] : subDACCategory,
       subUNOCHACategory: controls ? [subUNOCHACategory, [], []] : subUNOCHACategory,
       internalProjectClassification: controls ? [internalProjectClassification, [], []] : internalProjectClassification,
-      projectTotalCost: projectTotalCost ? [projectTotalCost, CustomValidators.required, Validators.min(1)] : projectTotalCost
+      projectTotalCost: projectTotalCost ? [projectTotalCost, [CustomValidators.required, Validators.min(1)]] : projectTotalCost
     }
   }
 
@@ -136,23 +141,30 @@ export class ProjectImplementation
     };
   }
 
-  buildSpecialInfo(controls: boolean) {
+  buildSpecialInfo(controls: boolean = false) {
     return {
       description: controls ? [this.description, [CustomValidators.required]] : this.description
     };
   }
 
-  setImplementationTemplate(template: ImplementationTemplate): void {
-    this.implementationTemplate = [template]
-    this.setProjectTotalCost(template.projectTotalCost)
-  }
-
-  removeImplementationTemplate(): void {
-    this.implementationTemplate = []
-  }
-
   setProjectTotalCost(value: number): void {
     this.projectTotalCost = currency(value).value
+  }
+
+  beforeSend(): void {
+    const templateInterceptor = new ImplementationTemplateInterceptor()
+    const agencyInterceptor = new ImplementingAgencyInterceptor()
+    const fundraisingInterceptor = new ImplementationFundraisingInterceptor()
+    this.implementationTemplate = this.implementationTemplate.map((item: Partial<ImplementationTemplate>) => {
+      return templateInterceptor.send(item.clone!()) as ImplementationTemplate
+    })
+    this.implementationFundraising = this.implementationFundraising.map((item: Partial<ImplementationFundraising>) => {
+      return fundraisingInterceptor.send(item.clone!()) as ImplementationFundraising
+    })
+    this.implementingAgencyList = this.implementingAgencyList.map((item: Partial<ImplementingAgency>) => {
+      return agencyInterceptor.send(item.clone!()) as ImplementingAgency
+    })
+    this.licenseStartDate = !this.licenseStartDate ? this.licenseStartDate : DateUtils.changeDateFromDatepicker(this.licenseStartDate as unknown as IMyDateModel)?.toISOString()!
   }
 
 }

@@ -12,7 +12,9 @@
       </div>
       <div class="col-md-6 col-sm-12 mb-4 position-relative">
         <label class="form-label" for="templateCost">{{lang.map.template_cost}}</label>
-        <input id="templateCost" [value]="template.templateCost" readonly class="form-control">
+        <input id="templateCost"
+               [value]="template.templateCost| mask: inputMaskPatterns.SEPARATOR : inputMaskPatterns.THOUSAND_SEPARATOR"
+               readonly class="form-control">
       </div>
       <div class="col-md-6 col-sm-12 mb-4 position-relative">
         <label class="form-label" for="executionCountryInfo">{{lang.map.execution_country}}</label>

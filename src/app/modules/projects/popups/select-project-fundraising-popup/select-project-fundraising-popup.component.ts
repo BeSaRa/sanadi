@@ -10,6 +10,7 @@ import {exhaustMap, filter, map, takeUntil} from "rxjs/operators";
 import currency from "currency.js";
 import {DialogRef} from '@app/shared/models/dialog-ref';
 
+// noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
   selector: 'select-project-fundraising-popup',
   templateUrl: './select-project-fundraising-popup.component.html',
