@@ -180,15 +180,20 @@
     </ng-template>
     <ng-template #funding_sources>
       <ng-container formGroupName="fundingResources">
-        <implementation-fundraising [criteria]="getCriteria"
+        <implementation-fundraising [remainingAmount]="remainingAmount" [criteria]="getCriteria"
                                     [projectTotalCost]="projectTotalCost.value"
                                     formControlName="implementationFundraising"></implementation-fundraising>
         <br>
-        <fund-source [type]="FundSourceType.GRANT" [projectTotalCost]="projectTotalCost.value"
+        <fund-source [remainingAmount]="remainingAmount" [type]="FundSourceType.GRANT"
+                     [projectTotalCost]="projectTotalCost.value"
                      formControlName="financialGrant"></fund-source>
         <br>
-        <fund-source [type]="FundSourceType.SELF" [projectTotalCost]="projectTotalCost.value"
+        <fund-source [remainingAmount]="remainingAmount" [type]="FundSourceType.SELF"
+                     [projectTotalCost]="projectTotalCost.value"
                      formControlName="selfFinancing"></fund-source>
+        <br>
+        <payments [remainingAmount]="remainingAmount" [projectTotalCost]="projectTotalCost.value"
+                  formControlName="payment"></payments>
       </ng-container>
     </ng-template>
     <ng-template #specialExplanations>

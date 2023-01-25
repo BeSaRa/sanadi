@@ -85,6 +85,8 @@ import { ImplementationFundraisingComponent } from './pages/project-implementati
 import { SelectProjectFundraisingPopupComponent } from './popups/select-project-fundraising-popup/select-project-fundraising-popup.component';
 import { FundSourceComponent } from './pages/project-implementation/components/fund-source/fund-source.component';
 import { FundSourcePopupComponent } from './popups/fund-source-popup/fund-source-popup.component';
+import { PaymentsComponent } from './pages/project-implementation/components/payments/payments.component';
+import { PaymentPopupComponent } from './popups/payment-popup/payment-popup.component';
 
 
 @NgModule({
@@ -127,6 +129,8 @@ import { FundSourcePopupComponent } from './popups/fund-source-popup/fund-source
     SelectProjectFundraisingPopupComponent,
     FundSourceComponent,
     FundSourcePopupComponent,
+    PaymentsComponent,
+    PaymentPopupComponent,
   ],
   imports: [
     CommonModule,

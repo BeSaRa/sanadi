@@ -41,6 +41,8 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
   destroyListeners$: Subject<any> = new Subject()
   @Input()
   criteria?: () => ImplementationCriteriaContract
+  @Input()
+  remainingAmount!: number
 
   displayedColumns: string[] = [
     'projectLicenseFullSerial',

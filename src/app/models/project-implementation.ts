@@ -121,6 +121,21 @@ export class ProjectImplementation
     }
   }
 
+  buildFundingResources(controls: boolean = false) {
+    const {
+      implementationFundraising,
+      financialGrant,
+      selfFinancing,
+      payment
+    } = this
+    return {
+      implementationFundraising: controls ? [implementationFundraising] : implementationFundraising,
+      financialGrant: controls ? [financialGrant] : financialGrant,
+      selfFinancing: controls ? [selfFinancing] : selfFinancing,
+      payment: controls ? [payment] : payment,
+    };
+  }
+
   buildSpecialInfo(controls: boolean) {
     return {
       description: controls ? [this.description, [CustomValidators.required]] : this.description
@@ -140,18 +155,4 @@ export class ProjectImplementation
     this.projectTotalCost = currency(value).value
   }
 
-  buildFundingResources(controls: boolean = false) {
-    const {
-      implementationFundraising,
-      financialGrant,
-      selfFinancing,
-      payment
-    } = this
-    return {
-      implementationFundraising: controls ? [implementationFundraising] : implementationFundraising,
-      financialGrant: controls ? [financialGrant] : financialGrant,
-      selfFinancing: controls ? [selfFinancing] : selfFinancing,
-      payment: controls ? [payment] : payment,
-    };
-  }
 }

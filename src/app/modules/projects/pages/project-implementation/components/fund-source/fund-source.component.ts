@@ -18,6 +18,7 @@ import {FundSource} from "@models/fund-source";
 import {filter, map, takeUntil} from "rxjs/operators";
 import {CustomValidators} from "@app/validators/custom-validators";
 import {UserClickOn} from "@app/enums/user-click-on.enum";
+import currency from "currency.js";
 
 @Component({
   selector: 'fund-source',
@@ -44,6 +45,8 @@ export class FundSourceComponent implements ControlValueAccessor, OnInit, OnDest
   private destroy$: Subject<void> = new Subject<void>()
   @Input()
   projectTotalCost!: number;
+  @Input()
+  remainingAmount!: number
   @Input()
   remaining!: number;
 
@@ -149,7 +152,8 @@ export class FundSourceComponent implements ControlValueAccessor, OnInit, OnDest
       .pipe(takeUntil(this.destroy$))
       .pipe(map((value) => Number(value)))
       .subscribe((value) => {
-        console.log(value);
+        const cValue = currency(value).value > this.remainingAmount ? this.remainingAmount : currency(value).value
+        ctrl.setValue(cValue, {emitEvent: false})
       })
   }
 

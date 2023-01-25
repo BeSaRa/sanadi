@@ -59,6 +59,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
   datepickerOptionsMap = {
     licenseStartDate: DateUtils.getDatepickerOptions({disablePeriod: 'none', openSelectorTopOfInput: true})
   }
+  remainingAmount: number = 500;
 
   constructor(public lang: LangService,
               public fb: UntypedFormBuilder,

@@ -1,0 +1,56 @@
+<div class="dialog-toolbar bg-primary dialog-toolbar d-flex justify-content-between">
+  <h1 class="h6 text-white">{{lang.map.payments}}</h1>
+  <button type="button" class="btn-close btn-close-white"
+          tabindex="-1" dialogClose="" aria-label="Close"></button>
+</div>
+<div class="dialog-content no-fixed-height" style="width: 600px">
+  <ng-container [formGroup]="form">
+    <div class="row">
+      <div class="col-md-6 col-sm-12 mb-4 position-relative">
+        <label class="form-label" asteriskIfRequired="paymentNo"
+               for="paymentNo">{{lang.map.payment_name}}</label>
+        <input id="paymentNo" validationClasses="paymentNo" formControlName="paymentNo" class="form-control">
+        <app-field-error-message controlName="paymentNo"></app-field-error-message>
+      </div>
+      <div class="col-md-6 col-sm-12 mb-4 position-relative">
+        <label asteriskIfRequired="dueDate" for="dueDate"
+               class="form-label">{{lang.map.due_date}}</label>
+        <div class="input-group">
+          <i class="input-group-text mdi mdi-calendar"></i>
+          <div class="form-control" formControlName="dueDate"
+               id="dueDate" [options]="datepickerOptionsMap.dueDate"
+               (click)="dpDueDate.toggleCalendar()"
+               [ngClass]="{'input-disabled': dueDate.disabled}"
+               #dpDueDate="angular-mydatepicker"
+               angular-mydatepicker validationClasses="dueDate"></div>
+          <app-field-error-message controlName="dueDate"></app-field-error-message>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-sm-12 mb-4 position-relative">
+        <label class="form-label" asteriskIfRequired="totalCost"
+               for="totalCost">{{lang.map.total_cost}}</label>
+        <input id="totalCost" validationClasses="totalCost" formControlName="totalCost" class="form-control">
+        <app-field-error-message controlName="totalCost"></app-field-error-message>
+      </div>
+      <div class="col-md-6 col-sm-12 mb-4 position-relative">
+        <label class="form-label" for="remainingAmount">{{lang.map.remaining_amount}}</label>
+        <input id="remainingAmount" readonly [value]="remainingAmount" class="form-control">
+        <app-field-error-message controlName="remainingAmount"></app-field-error-message>
+      </div>
+      <div class="col-sm-12 mb-4 position-relative">
+        <label class="form-label" asteriskIfRequired="notes" for="notes">{{lang.map.notes}}</label>
+        <textarea name="notes" formControlName="notes" validationClasses="notes" id="notes" rows="4"
+                  class="form-control"></textarea>
+        <app-field-error-message controlName="notes"></app-field-error-message>
+      </div>
+    </div>
+
+  </ng-container>
+</div>
+<div class="dialog-actions">
+  <div class="flex-grow-1"></div>
+  <button (click)="form.valid && savePayment()" [disabled]="form.invalid"
+          class="btn btn-primary">{{lang.map.btn_save}}</button>
+  <button dialogClose="" class="btn btn-secondary">{{lang.map.btn_close}}</button>
+</div>
