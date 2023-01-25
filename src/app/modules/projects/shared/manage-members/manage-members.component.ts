@@ -173,7 +173,7 @@ export class ManageMembersComponent implements OnInit {
       arabicName: this.arabicName.value,
       englishName: this.englishName.value,
       qId: this.identificationNumber.value,
-      jobTitle: this.jobTitle.value
+      jobTitle: this.jobTitle?.value
     };
 
     this.generalAssociationMeetingService.searchNpoEmployees(criteria)
