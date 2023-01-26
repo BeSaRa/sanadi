@@ -19,11 +19,12 @@ export class ParticipantOrg extends SearchableCloneable<ParticipantOrg> {
   englishName!: string;
   organizationOfficerName!: string;
   value!: number;
+  notes!: string;
 
   managerDecision!:number;
   managerDecisionInfo!: AdminResult;
 
-  DisplayedColumns = ['arName', 'enName', 'managerDecisionInfo','value', 'actions'];
+  DisplayedColumns = ['arName', 'enName', 'managerDecisionInfo','value', 'notes' ,'actions'];
   employeeService: EmployeeService;
   searchFields: ISearchFieldsMap<ParticipantOrg> = {
     ...infoSearchFields(['managerDecisionInfo']),
