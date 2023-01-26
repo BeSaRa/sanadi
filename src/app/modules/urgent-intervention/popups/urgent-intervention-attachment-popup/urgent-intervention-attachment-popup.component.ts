@@ -29,6 +29,7 @@ export class UrgentInterventionAttachmentPopupComponent implements OnInit {
   reportId: number;
   caseId: string;
   readonly: boolean = false;
+  actionIconsEnum = ActionIconsEnum;
 
   constructor(public lang: LangService,
               private fb: UntypedFormBuilder,
@@ -59,7 +60,7 @@ export class UrgentInterventionAttachmentPopupComponent implements OnInit {
   destroy$: Subject<any> = new Subject<any>();
   private save$: Subject<any> = new Subject<any>();
   filterControl: UntypedFormControl = new UntypedFormControl('');
-  displayedColumns: string[] = ['documentTitle', 'createdOn', 'actions'];
+  displayedColumns: string[] = ['icons', 'documentTitle', 'createdOn', 'actions'];
 
   sortingCallbacks = {
     createdOn: (a: UrgentInterventionAttachment, b: UrgentInterventionAttachment, dir: SortEvent): number => {
