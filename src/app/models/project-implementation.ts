@@ -93,17 +93,17 @@ export class ProjectImplementation
     } = this;
 
     return {
-      requestType: controls ? [requestType, [CustomValidators.required], []] : requestType,
-      oldLicenseFullSerial: controls ? [oldLicenseFullSerial, [CustomValidators.maxLength(250)], []] : oldLicenseFullSerial,
+      requestType: controls ? [requestType, [CustomValidators.required]] : requestType,
+      oldLicenseFullSerial: controls ? [oldLicenseFullSerial, [CustomValidators.maxLength(250)]] : oldLicenseFullSerial,
       projectWorkArea: controls ? [projectWorkArea, [CustomValidators.required], []] : projectWorkArea,
       beneficiaryCountry: controls ? [beneficiaryCountry, [CustomValidators.required], []] : beneficiaryCountry,
-      domain: controls ? [domain, [], []] : domain,
-      mainDACCategory: controls ? [mainDACCategory, [], []] : mainDACCategory,
-      mainUNOCHACategory: controls ? [mainUNOCHACategory, [], []] : mainUNOCHACategory,
-      subDACCategory: controls ? [subDACCategory, [], []] : subDACCategory,
-      subUNOCHACategory: controls ? [subUNOCHACategory, [], []] : subUNOCHACategory,
-      internalProjectClassification: controls ? [internalProjectClassification, [], []] : internalProjectClassification,
-      projectTotalCost: projectTotalCost ? [projectTotalCost, [CustomValidators.required, Validators.min(1)]] : projectTotalCost
+      domain: controls ? [domain] : domain,
+      mainDACCategory: controls ? [mainDACCategory] : mainDACCategory,
+      mainUNOCHACategory: controls ? [mainUNOCHACategory] : mainUNOCHACategory,
+      subDACCategory: controls ? [subDACCategory] : subDACCategory,
+      subUNOCHACategory: controls ? [subUNOCHACategory] : subUNOCHACategory,
+      internalProjectClassification: controls ? [internalProjectClassification] : internalProjectClassification,
+      projectTotalCost: controls ? [projectTotalCost, [CustomValidators.required, Validators.min(1)]] : projectTotalCost
     }
   }
 

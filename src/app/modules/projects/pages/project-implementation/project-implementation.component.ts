@@ -255,7 +255,6 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       fundingResources: model.buildFundingResources(),
       specialExplanations: model.buildSpecialInfo()
     })
-
     this.handleDisplayFields(model)
     this.handleMandatoryFields()
   }
