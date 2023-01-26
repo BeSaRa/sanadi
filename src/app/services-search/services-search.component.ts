@@ -251,6 +251,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-printer',
         label: 'print',
+        show: (item: CaseModel<any, any>) => item.getCaseType() !== CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP,
         onClick: (item: CaseModel<any, any>) => {
           this.actionExportModel(item);
         }
