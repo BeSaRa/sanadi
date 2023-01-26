@@ -170,6 +170,9 @@ export class OrganizationsEntitiesSupport extends LicenseApprovalModel<
   approve(): DialogRef {
     return this.service.approve(this, WFResponseType.APPROVE)
   }
+  finalApprove(): DialogRef {
+    return this.service.finalApprove(this, WFResponseType.FINAL_APPROVE)
+  }
   convertToOrganizationsEntitiesSupport() {
     return new OrganizationsEntitiesSupport().clone({
       caseType: CaseTypes.ORGANIZATION_ENTITIES_SUPPORT,
