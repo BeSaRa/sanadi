@@ -1354,7 +1354,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   }
 
   private returnToSpecificOrganizationAction(item: CaseModel<any, any>) {
-    item.returnToSpecificOrganization().onAfterClose$.subscribe(noOrganizationsRemaining => {
+    item.returnToSpecificOrganizationWithComment().onAfterClose$.subscribe(noOrganizationsRemaining => {
       if (!noOrganizationsRemaining) {
         // reload component
         this.service.getTask(this.info?.taskId!).subscribe(model => {
