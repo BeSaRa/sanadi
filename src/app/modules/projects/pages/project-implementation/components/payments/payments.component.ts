@@ -35,8 +35,9 @@ export class PaymentsComponent implements ControlValueAccessor, OnInit, OnDestro
   disabled: boolean = false;
   @Input()
   projectTotalCost!: number
-  @Input()
+
   remainingAmount!: number
+
   destroy$ = new Subject<void>()
 
   value: Payment[] = []
@@ -86,6 +87,11 @@ export class PaymentsComponent implements ControlValueAccessor, OnInit, OnDestro
   }
 
   openAddPaymentDialog() {
+    if (!this.projectTotalCost) {
+      this.dialog.alert(this.lang.map.please_add_template_to_proceed)
+      return
+    }
+
     this.dialog.show<IDialogData<Payment>>(PaymentPopupComponent, {
       model: new Payment(),
       operation: OperationTypes.CREATE,

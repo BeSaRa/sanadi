@@ -15,7 +15,7 @@ import {DialogService} from "@services/dialog.service";
 import {FundSourcePopupComponent} from "@modules/projects/popups/fund-source-popup/fund-source-popup.component";
 import {OperationTypes} from "@app/enums/operation-types.enum";
 import {FundSource} from "@models/fund-source";
-import {filter, map, takeUntil} from "rxjs/operators";
+import {debounceTime, filter, map, takeUntil} from "rxjs/operators";
 import {CustomValidators} from "@app/validators/custom-validators";
 import {UserClickOn} from "@app/enums/user-click-on.enum";
 import currency from "currency.js";
@@ -98,10 +98,15 @@ export class FundSourceComponent implements ControlValueAccessor, OnInit, OnDest
   }
 
   openAddFundSourceDialog(): void {
-    // if (!this.projectTotalCost) {
-    //   this.dialog.alert(this.lang.map.please_add_template_to_proceed)
-    //   return
-    // }
+    if (!this.projectTotalCost) {
+      this.dialog.alert(this.lang.map.please_add_template_to_proceed)
+      return
+    }
+
+    if (this.remainingAmount === 0) {
+      this.dialog.info(this.lang.map.cannot_add_funding_resources_full_amount_have_been_used)
+      return;
+    }
 
     this.dialog.show(FundSourcePopupComponent, {
       operation: OperationTypes.CREATE,
@@ -152,6 +157,7 @@ export class FundSourceComponent implements ControlValueAccessor, OnInit, OnDest
     ctrl
       .valueChanges
       .pipe(takeUntil(this.destroy$))
+      .pipe(debounceTime(250))
       .pipe(map((value) => Number(value)))
       .subscribe((value) => {
         const cValue = currency(value).value > this.remainingAmount ? this.remainingAmount : currency(value).value

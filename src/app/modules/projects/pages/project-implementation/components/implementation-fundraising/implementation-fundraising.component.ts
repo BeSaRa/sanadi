@@ -178,11 +178,16 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
     return model.remainingAmount === model.totalCost
   }
 
-  loadFundraising() {
+  addFundraisingLicense() {
     if (!this.criteria) return
 
     if (!this.projectTotalCost) {
-      this.dialog.alert(this.lang.map.msg_please_select_x_to_continue.change({x: this.lang.map.lbl_template}))
+      this.dialog.alert(this.lang.map.please_add_template_to_proceed)
+      return
+    }
+
+    if (this.remainingAmount === 0) {
+      this.dialog.info(this.lang.map.cannot_add_funding_resources_full_amount_have_been_used)
       return;
     }
 
