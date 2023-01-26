@@ -203,6 +203,14 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
     this.isEditField = false;
   }
   beforeSave(model: GeneralProcess, form: UntypedFormGroup): boolean | Observable<boolean> {
+    if (!this.processForm.fields.filter(f => f.status).length) {
+      this.toast.error(this.lang.map.must_have_one_active_field_at_least)
+      return false;
+    }
+    if (!this.processForm.fields.filter(f => f.required).length) {
+      this.toast.error(this.lang.map.must_have_one_required_field_at_least)
+      return false;
+    }
     return form.valid;
   }
   prepareModel(model: GeneralProcess, form: UntypedFormGroup): GeneralProcess | Observable<GeneralProcess> {
