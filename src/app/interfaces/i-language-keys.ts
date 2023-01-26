@@ -1751,4 +1751,5 @@ export interface ILanguageKeys {
   government_agencies: string;
   countries_add_successfully: string;
   remove_countries_messages: string;
+  lbl_mobile_number: string;
 }
