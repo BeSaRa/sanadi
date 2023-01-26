@@ -33,13 +33,13 @@ export class FundSourcePopupComponent implements OnDestroy, OnInit {
       model: FundingResourceContract,
       operation: OperationTypes,
       projectTotalCost: number,
-      type: FundSourceType
+      type: FundSourceType,
+      remainingAmount: number
     }) {
     this.label = this.data.type === FundSourceType.SELF ? this.lang.map.self_financial : this.lang.map.grant_financial
     this.model = this.data.model
     this.projectTotalCost = this.data.projectTotalCost
-    // this.remainingCost = this.projectTotalCost
-    this.remainingCost = this.projectTotalCost = 50000
+    this.remainingCost = this.data.remainingAmount
   }
 
   get totalCost(): AbstractControl {

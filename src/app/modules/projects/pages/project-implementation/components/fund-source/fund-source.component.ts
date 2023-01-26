@@ -107,7 +107,8 @@ export class FundSourceComponent implements ControlValueAccessor, OnInit, OnDest
       operation: OperationTypes.CREATE,
       model: new FundSource(),
       projectTotalCost: this.projectTotalCost,
-      type: this.type
+      type: this.type,
+      remainingAmount: this.remainingAmount
     })
       .onAfterClose$
       .pipe(takeUntil(this.destroy$))
@@ -127,6 +128,7 @@ export class FundSourceComponent implements ControlValueAccessor, OnInit, OnDest
       operation: OperationTypes.UPDATE,
       model: row,
       projectTotalCost: this.projectTotalCost,
+      remainingAmount: this.remainingAmount,
       type: this.type
     })
       .onAfterClose$
@@ -146,7 +148,7 @@ export class FundSourceComponent implements ControlValueAccessor, OnInit, OnDest
     return new UntypedFormControl(totalCost)
   }
 
-  createListener(ctrl: UntypedFormControl) {
+  createListener(ctrl: UntypedFormControl, index: number) {
     ctrl
       .valueChanges
       .pipe(takeUntil(this.destroy$))
@@ -154,6 +156,8 @@ export class FundSourceComponent implements ControlValueAccessor, OnInit, OnDest
       .subscribe((value) => {
         const cValue = currency(value).value > this.remainingAmount ? this.remainingAmount : currency(value).value
         ctrl.setValue(cValue, {emitEvent: false})
+        this.value[index].totalCost = cValue
+        this.onChange(this.value)
       })
   }
 
@@ -165,14 +169,14 @@ export class FundSourceComponent implements ControlValueAccessor, OnInit, OnDest
   }
 
   private createListeners(): void {
-    (this.inputs.controls as UntypedFormControl[]).forEach(item => {
-      this.createListener(item)
+    (this.inputs.controls as UntypedFormControl[]).forEach((item, index) => {
+      this.createListener(item, index)
     })
   }
 
   private createInputWithListener(item: FundingResourceContract): void {
     const ctrl = this.createControl(item.totalCost)
-    this.createListener(ctrl)
+    this.createListener(ctrl, this.inputs.length)
     this.inputs.push(ctrl)
   }
 

@@ -137,6 +137,7 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
         const actualValue = cValue.value > model.remainingAmount ? model.remainingAmount : cValue.value
         model.totalCost = actualValue
         ctrl.patchValue(actualValue, {emitEvent: false})
+        this.onChange(this.value)
       })
   }
 

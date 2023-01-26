@@ -28,6 +28,8 @@ import {ImplementingAgency} from "@models/implementing-agency";
 import {ImplementationTemplate} from "@models/implementation-template";
 import {ImplementationFundraising} from "@models/implementation-fundraising";
 import {FundSourceType} from "@app/enums/fund-source-type";
+import {FundingResourceContract} from "@contracts/funding-resource-contract";
+import currency from "currency.js";
 
 @Component({
   selector: 'project-implementation',
@@ -59,7 +61,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
   datepickerOptionsMap = {
     licenseStartDate: DateUtils.getDatepickerOptions({disablePeriod: 'none', openSelectorTopOfInput: true})
   }
-  remainingAmount: number = 500;
+  remainingAmount: number = 0;
 
   constructor(public lang: LangService,
               public fb: UntypedFormBuilder,
@@ -151,6 +153,14 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     return this.projectInfo.get('implementingAgencyList')!
   }
 
+  get financialGrant(): AbstractControl {
+    return this.fundingResources.get('financialGrant')!
+  }
+
+  get selfFinancing(): AbstractControl {
+    return this.fundingResources.get('selfFinancing')!
+  }
+
   get projectTotalCost(): AbstractControl {
     return this.basicInfo.get('projectTotalCost')!
   }
@@ -193,6 +203,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     this.listenToDomainChange()
     this.listenToImplementingAgencyListChanges()
     this.listenToImplementationTemplateChanges()
+    this.listenToFundingResources()
 
     this.setDefaultValues()
   }
@@ -257,6 +268,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     })
     this.handleDisplayFields(model)
     this.handleMandatoryFields()
+    this.calculateRemaining()
   }
 
   _resetForm(): void {
@@ -482,5 +494,35 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       .subscribe((implementationFundraising) => {
         this.implementationFundraising.setValue([implementationFundraising])
       })
+  }
+
+  private listenToFundingResources() {
+    merge(
+      this.implementationTemplate.valueChanges,
+      this.implementationFundraising.valueChanges,
+      this.financialGrant.valueChanges,
+      this.selfFinancing.valueChanges,
+    ).pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.calculateRemaining()
+      })
+  }
+
+  private calculateRemaining(): void {
+    const projectTotalCost = this.projectTotalCost.getRawValue() as number
+    const grant = this.financialGrant.getRawValue() as FundingResourceContract[];
+    const self = this.selfFinancing.getRawValue() as FundingResourceContract[];
+    const fundRaising = this.implementationFundraising.getRawValue() as FundingResourceContract[];
+    const allFields = [grant, self, fundRaising];
+    const totalFundingResource = allFields.reduce((acc, fields) => {
+      return acc + this.getTotalCost(fields)
+    }, 0)
+    this.remainingAmount = currency(projectTotalCost).subtract(totalFundingResource).value
+  }
+
+  private getTotalCost(list: (FundingResourceContract)[]): number {
+    return list.reduce((acc, item) => {
+      return acc + item.totalCost
+    }, 0)
   }
 }
