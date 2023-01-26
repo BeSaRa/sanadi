@@ -57,7 +57,11 @@ export class OrganizationsEntitiesSupportPopupComponent implements OnInit {
       this.comment.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]);
     }
   }
+  ngAfterViewInit(): void {
 
+    const date = DateUtils.changeDateToDatepicker(this.data.model.followUpDate)
+    this.followupDate.patchValue(date);
+  }
   private listenToAction() {
     this.action$
       .pipe(takeUntil(this.destroy$))
@@ -98,5 +102,7 @@ export class OrganizationsEntitiesSupportPopupComponent implements OnInit {
     this.destroy$.complete();
     this.destroy$.unsubscribe();
   }
-
+  get followupDate():UntypedFormControl{
+    return this.approvalForm.get('followUpDate') as UntypedFormControl
+  }
 }
