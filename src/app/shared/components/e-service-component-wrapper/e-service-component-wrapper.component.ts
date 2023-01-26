@@ -281,6 +281,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           if (this.servicesWithNoSaveDraftLaunch.includes(item.getCaseType())) {
             return false;
           }
+          if (item.caseType === CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST) {
+            const model = item as CoordinationWithOrganizationsRequest
+            return !model.isApproved
+          }
           // show if external user or service which are only for internal user
           return !this.internal || this.internalUserServices.includes(item.getCaseType());
         },
@@ -311,6 +315,9 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           if (this.servicesWithNoSaveDraftLaunch.includes(item.getCaseType()) || this.excludedDraftTypes.includes(item.getCaseType())) {
             return false;
           }
+          if (item.caseType === CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST) {
+            if(item.caseStatus ===  CommonCaseStatus.CANCELLED) return false;
+           }
           return item?.canDraft();
         },
         disabled: item => !item?.canDraft(),
@@ -503,11 +510,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
             return false;
           }
           if (item.caseType === CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST) {
-            //@ts-ignore
-            if (item.isApproved && this.internal) {
-              return false;
-            }
-            return !item.isInitialApproved() || !this.internal;
+            return this.isCoordinationApprovedWithSave(item);
           }
           if (item.caseType === CaseTypes.NPO_MANAGEMENT || item.caseType === CaseTypes.FOREIGN_COUNTRIES_PROJECTS) {
             return !this.internal || this.employeeService.getCurrentUser().generalUserId == this.model?.creatorInfo.id;
@@ -791,7 +794,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.organizationApproveAction(item);
         }
       },
-      // organiztion final approve
+      // organization final approve
       {
         type: 'action',
         icon: 'mdi-check-bold',
@@ -805,7 +808,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.organizationFinalApproveAction(item);
         }
       },
-      // organiztion final reject
+      // organization final reject
       {
         type: 'action',
         icon: 'mdi-undo-variant',
@@ -1230,7 +1233,12 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   isInitialApproveWithSave(item: CaseModel<any, any>): boolean {
     return this.initialApproveWithSaveServices.includes(item.getCaseType());
   }
-
+  isCoordinationApprovedWithSave(item: CaseModel<any, any>): boolean{
+      if(item.caseStatus === CommonCaseStatus.CANCELLED) return false;
+      //@ts-ignore
+      if (item.isApproved && this.internal) return false;
+      return !item.isInitialApproved() || !this.internal;
+  }
   private approveAction(item: CaseModel<any, any>) {
     if (this.isApproveWithSave(item)) {
       if (item.getCaseType() === CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE) {
