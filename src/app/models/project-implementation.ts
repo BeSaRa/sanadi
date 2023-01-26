@@ -164,6 +164,11 @@ export class ProjectImplementation
     this.implementingAgencyList = this.implementingAgencyList.map((item: Partial<ImplementingAgency>) => {
       return agencyInterceptor.send(item.clone!()) as ImplementingAgency
     })
+
+    this.payment = this.payment.map( item => {
+      item.dueDate = DateUtils.changeDateFromDatepicker(item.dueDate as unknown as IMyDateModel)?.toISOString()!
+      return item
+    })
     this.licenseStartDate = !this.licenseStartDate ? this.licenseStartDate : DateUtils.changeDateFromDatepicker(this.licenseStartDate as unknown as IMyDateModel)?.toISOString()!
   }
 

@@ -30,6 +30,8 @@ import {ImplementationFundraising} from "@models/implementation-fundraising";
 import {FundSourceType} from "@app/enums/fund-source-type";
 import {FundingResourceContract} from "@contracts/funding-resource-contract";
 import currency from "currency.js";
+import {CommonCaseStatus} from "@app/enums/common-case-status.enum";
+import {OpenFrom} from "@app/enums/open-from.enum";
 
 @Component({
   selector: 'project-implementation',
@@ -198,6 +200,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
   }
 
   _afterBuildForm(): void {
+    this.handleReadonly()
     this.listenToMainDacOchaChanges()
     this.listenToWorkAreaChanges()
     this.listenToDomainChange()
@@ -220,8 +223,8 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
   }
 
   _afterLaunch(): void {
-    this._resetForm()
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
+    this._resetForm()
   }
 
   _prepareModel(): ProjectImplementation | Observable<ProjectImplementation> {
@@ -524,5 +527,43 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     return list.reduce((acc, item) => {
       return acc + item.totalCost
     }, 0)
+  }
+
+  // noinspection DuplicatedCode
+  handleReadonly() {
+    // if record is new, no readonly (don't change as default is readonly = false)
+    const model = this.model!
+    if (!model.id) {
+      return;
+    }
+
+    let caseStatus = model.getCaseStatus();
+    if (caseStatus == CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.FINAL_REJECTION) {
+      this.readonly = true;
+      return;
+    }
+
+    if (this.openFrom === OpenFrom.USER_INBOX) {
+      if (this.employeeService.isCharityManager()) {
+        this.readonly = false;
+      } else if (this.employeeService.isCharityUser()) {
+        this.readonly = !model.isReturned();
+      }
+    } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
+      // after claim, consider it same as user inbox and use same condition
+      if (model.taskDetails.isClaimed()) {
+        if (this.employeeService.isCharityManager()) {
+          this.readonly = false;
+        } else if (this.employeeService.isCharityUser()) {
+          this.readonly = !model.isReturned();
+        }
+      }
+    } else if (this.openFrom === OpenFrom.SEARCH) {
+      // if saved as draft, then no readonly
+      if (model?.canCommit()) {
+        this.readonly = false;
+      }
+    }
+
   }
 }

@@ -72,6 +72,7 @@ export class PaymentsComponent implements ControlValueAccessor, OnInit, OnDestro
     this.createInputs(value)
     this.createListeners()
     this.value = value;
+    this.calculateRemaining()
   }
 
   registerOnChange(fn: (value: Payment[]) => void): void {
@@ -105,6 +106,7 @@ export class PaymentsComponent implements ControlValueAccessor, OnInit, OnDestro
         this.value = this.value.concat(payment)
         this.onChange(this.value)
         this.onTouch()
+        this.calculateRemaining()
       })
   }
 
@@ -119,6 +121,7 @@ export class PaymentsComponent implements ControlValueAccessor, OnInit, OnDestro
         this.inputs.removeAt(index);
         this.onChange(this.value)
         this.onTouch()
+        this.calculateRemaining()
       })
 
   }
@@ -139,6 +142,7 @@ export class PaymentsComponent implements ControlValueAccessor, OnInit, OnDestro
         })
         this.onChange(this.value)
         this.onTouch()
+        this.calculateRemaining()
       })
   }
 
@@ -146,7 +150,7 @@ export class PaymentsComponent implements ControlValueAccessor, OnInit, OnDestro
     return new UntypedFormControl(totalCost)
   }
 
-  createListener(ctrl: UntypedFormControl) {
+  createListener(ctrl: UntypedFormControl, index: number) {
     ctrl
       .valueChanges
       .pipe(takeUntil(this.destroy$))
@@ -155,6 +159,7 @@ export class PaymentsComponent implements ControlValueAccessor, OnInit, OnDestro
       .subscribe((value) => {
         const cValue = currency(value).value > this.remainingAmount ? this.remainingAmount : currency(value).value
         ctrl.setValue(cValue, {emitEvent: false})
+        this.value[index].totalCost = cValue
       })
   }
 
@@ -167,14 +172,23 @@ export class PaymentsComponent implements ControlValueAccessor, OnInit, OnDestro
   }
 
   createListeners(): void {
-    (this.inputs.controls as UntypedFormControl[]).forEach(ctrl => {
-      this.createListener(ctrl)
+    (this.inputs.controls as UntypedFormControl[]).forEach((ctrl, index) => {
+      this.createListener(ctrl, index)
     })
   }
 
   createControlWithListener(payment: Payment): void {
     const ctrl = this.createInput(payment.totalCost)
-    this.createListener(ctrl)
+    this.createListener(ctrl, this.inputs.length)
     this.inputs.push(ctrl)
+  }
+
+  calculateRemaining(): void {
+    console.log(this.projectTotalCost , this.value.reduce((acc, item) => {
+      return acc + item.totalCost
+    }, 0) );
+    this.remainingAmount = currency(this.projectTotalCost).subtract(this.value.reduce((acc, item) => {
+      return acc + item.totalCost
+    }, 0)).value
   }
 }

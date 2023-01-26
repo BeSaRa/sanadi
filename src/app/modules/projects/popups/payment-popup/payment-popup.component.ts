@@ -28,6 +28,8 @@ export class PaymentPopupComponent implements OnInit, OnDestroy {
     dueDate: DateUtils.getDatepickerOptions({disablePeriod: 'none'}),
   };
 
+  inputMaskPatterns = CustomValidators.inputMaskPatterns
+
   get dueDate(): AbstractControl {
     return this.form.get('dueDate')!
   }
@@ -71,8 +73,6 @@ export class PaymentPopupComponent implements OnInit, OnDestroy {
     const payment = new Payment().clone({
       ...this.form.getRawValue()
     })
-
-    console.log(payment);
     this.dialogRef.close(payment)
   }
 
