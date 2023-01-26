@@ -3,5 +3,6 @@ export interface IDatepickerCustomOptions {
   format?: string;
   disableToday?: boolean;
   ignoreDays?: number;
-  appendToBody?: boolean
+  appendToBody?: boolean,
+  openSelectorTopOfInput?: boolean
 }

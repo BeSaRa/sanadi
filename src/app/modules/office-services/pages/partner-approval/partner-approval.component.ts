@@ -76,6 +76,11 @@ export class PartnerApprovalComponent
   commercialActivityTabStatus: ReadinessStatus = 'READY';
   workAreasTabStatus: ReadinessStatus = 'READY';
   loadAttachments: boolean = false;
+  formProperties = {
+    requestType: () => {
+      return this.getObservableField('requestType', 'requestType');
+    }
+  }
 
   @ViewChild('bankAccountsTab') bankAccountComponentRef!: BankAccountComponent;
   @ViewChild('goalsListTab') goalsListComponentRef!: GoalsListComponent;

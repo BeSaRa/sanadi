@@ -92,6 +92,12 @@ export class UrgentInterventionLicenseComponent extends EServicesGenericComponen
   licenseSearch$: Subject<string> = new Subject<string>();
   selectedLicense?: UrgentInterventionLicense;
 
+  formProperties = {
+    requestType: () => {
+      return this.getObservableField('requestTypeField', 'requestType');
+    }
+  }
+
   ngAfterViewInit(): void {
     this.cd.detectChanges();
   }

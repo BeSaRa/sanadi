@@ -12,6 +12,7 @@ import {SortEvent} from '@app/interfaces/sort-event';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import {UserPreferencesService} from '@services/user-preferences.service';
 
 @Component({
   selector: 'internal-user',
@@ -59,12 +60,20 @@ export class InternalUserComponent extends AdminGenericComponent<InternalUser, I
       show: (item) => {
         return item.status === CommonStatusEnum.ACTIVATED;
       }
+    },
+    // user preferences
+    {
+      type: 'action',
+      icon: 'mdi-account-edit',
+      label: 'user_preferences',
+      onClick: (item) => this.openUserPreferences(item)
     }
   ];
 
   constructor(public lang: LangService,
               private toast: ToastService,
-              public service: InternalUserService) {
+              public service: InternalUserService,
+              private userPreferencesService: UserPreferencesService) {
     super();
   }
 
@@ -130,5 +139,9 @@ export class InternalUserComponent extends AdminGenericComponent<InternalUser, I
       .subscribe((_) => {
         this.reload$.next(null);
       });
+  }
+
+  openUserPreferences(item: InternalUser) {
+    this.userPreferencesService.openEditDialog(item.generalUserId, false).subscribe();
   }
 }

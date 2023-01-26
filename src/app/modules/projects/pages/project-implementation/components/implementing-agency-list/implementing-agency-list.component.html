@@ -1,0 +1,51 @@
+<div class="row">
+  <ng-content></ng-content>
+  <div class="col-md-4 col-sm-12 mb-4 position-relative">
+    <label class="form-label" for="agencies">{{lang.map.implementation_agency}}</label>
+    <div class="d-flex gap-2">
+      <div class="flex-grow-1">
+        <ng-select [disabled]="disabled" appendTo="body" [clearable]="true" id="agencies"
+                   [formControl]="selectedAgency">
+          <ng-option [disabled]="isExists(option)" [value]="option"
+                     *ngFor="let option of (agencies$|async)">{{option.getName()}}</ng-option>
+        </ng-select>
+      </div>
+      <button [disabled]="disabled" (click)="!disabled && addSelectedAgency()" class="btn icon-btn">
+        <i class="mdi text-primary mdi-plus-box"></i>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="d-flex align-items-center justify-content-start position-relative mb-2 gap-2">
+    <h1 class="h6 text-primary flex-grow-0">{{lang.map.implementation_agencies}}</h1>
+    <input type="hidden" validationClasses="" [control]="control" *ngIf="control" [formControl]="control">
+    <app-field-error-message class="flex-grow-1" [absolute]="false" *ngIf="control" [control]="control"></app-field-error-message>
+  </div>
+</div>
+<app-table #table [data]="value"
+           [columns]="displayedColumns">
+  <table cdk-table [dataSource]="table.dataSource" class="table table-striped table-bordered caption-top">
+    <ng-container cdkColumnDef="arName">
+      <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.arabic_name}}</th>
+      <td cdk-cell *cdkCellDef="let row"> {{row.implementingAgencyInfo.arName}} </td>
+    </ng-container>
+    <ng-container cdkColumnDef="enName">
+      <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.english_name}}</th>
+      <td cdk-cell *cdkCellDef="let row"> {{row.implementingAgencyInfo.enName}} </td>
+    </ng-container>
+    <ng-container cdkColumnDef="actions">
+      <th cdk-header-cell style="width:120px" *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
+      <td cdk-cell *cdkCellDef="let row">
+        <button [disabled]="disabled" class="btn icon-btn" (click)="!disabled && deleteAgency(row)">
+          <i class="mdi text-primary mdi-trash-can"></i>
+        </button>
+      </td>
+    </ng-container>
+    <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="displayedColumns"></tr>
+    <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
+    <tr *cdkNoDataRow>
+      <td colspan="20">{{lang.map.no_records_to_display}}</td>
+    </tr>
+  </table>
+</app-table>

@@ -1,6 +1,6 @@
 <div id="e-service-wrapper" class="d-flex flex-column">
   <step-check-list *ngIf="checklist.length && isOpenedFromInbox()" [currentLang]="lang.map.lang" [openFrom]="openFrom"
-    [checklist]="checklist"></step-check-list>
+                   [checklist]="checklist"></step-check-list>
   <div class="row">
     <div class="col">
       <div class="col">
@@ -10,15 +10,15 @@
   </div>
   <case-info [model]="model!"></case-info>
   <div class="alert alert-{{matrixNotificationType}} alert-dismissible fade show" role="alert"
-    *ngIf="canShowMatrixNotification">
+       *ngIf="canShowMatrixNotification">
     {{matrixNotificationMsg}}
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"
-      (click)="canShowMatrixNotification = false;"></button>
+            (click)="canShowMatrixNotification = false;"></button>
   </div>
   <ng-container *ngIf="internal">
     <tabs-list (onTabChange)="onTabChange($event)" class="position-relative">
       <button (click)="print()" [disabled]="!model?.id"
-        class="btn btn-primary btn-sm d-flex position-absolute top-0 end-0">
+              class="btn btn-primary btn-sm d-flex position-absolute top-0 end-0">
         <i class="mdi {{actionIconsEnum.PRINT}}"></i>
         <span class="px-1"></span>
         <span>{{lang.map.print}}</span>
@@ -36,7 +36,7 @@
     </tabs-list>
     <ng-template #attachment>
       <attachments [disabled]="isAttachmentReadonly()" [caseId]="model?.id" [model]="model" [caseType]="model?.caseType"
-        [service]="service.documentService" [load]="loadAttachments"></attachments>
+                   [service]="service.documentService" [load]="loadAttachments" [formProperties]="component?.formProperties ?? {}"></attachments>
     </ng-template>
   </ng-container>
   <ng-container *ngIf="!internal">
@@ -44,7 +44,7 @@
   </ng-container>
   <ng-template #logsTemplate>
     <log-viewer [accordionView]="true" displayCategorizedAs="tabs" [categorizeLogs]="true"
-      [caseId]="component?.model?.getCaseId()" [case]="model" [service]="service.actionLogService">
+                [caseId]="component?.model?.getCaseId()" [case]="model" [service]="service.actionLogService">
     </log-viewer>
   </ng-template>
   <!--  <ng-template #outputs>-->
@@ -54,16 +54,16 @@
     <div class="col-12">
       <div class="d-flex flex-row flex-wrap gap-2 justify-content-center">
         <button [ngClass]="action?.class || ''" [disabled]="isDisabled(action)" *ngFor="let action of actions"
-          (click)="actionCallback(action)" class="btn btn-primary">
+                (click)="actionCallback(action)" class="btn btn-primary">
           <div class="d-flex">
             <i class="mdi" *ngIf="action.icon" [ngClass]="action.icon!"></i>
             <span [ngClass]="{'ms-2': action.icon}" class="ms-2">{{action.translatedLabel}}</span>
           </div>
         </button>
         <button class="btn btn-link" [tooltip]="lang.map.validate_fields"
-          *ngIf="component.formValidity$ && !component.readonly"
-          (click)="component.formValidity$.next('main-content')"><i
-            class="mdi mdi-information-outline text-info"></i></button>
+                *ngIf="component.formValidity$"
+                (click)="component.formValidity$.next('main-content')"><i
+          class="mdi mdi-information-outline text-info"></i></button>
       </div>
     </div>
   </div>

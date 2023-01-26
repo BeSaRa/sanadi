@@ -75,7 +75,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   addTemplate$: Subject<any> = new Subject<any>();
   private profile?: Profile = this.employeeService.getProfile()
   private qatarCountry: Country = this.getQatarCountry()
-  private loadedDacOchaBefore: Boolean = false;
+  private loadedDacOchaBefore: boolean = false;
   clearDeductionItems: boolean = false;
   selectedLicense?: ProjectFundraising;
   deductionRatioChanged: boolean = false
@@ -96,6 +96,12 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
 
   maxDuration: number = 0;
   minDuration: number = 0;
+
+  formProperties = {
+    requestType: () => {
+      return this.getObservableField('requestType', 'requestType');
+    }
+  }
 
   private configs!: ServiceData;
 
@@ -120,7 +126,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     private toast: ToastService,
     private dialog: DialogService,
     private aidLookupService: AidLookupService,
-    private employeeService: EmployeeService,
+    public employeeService: EmployeeService,
     private dacOchaService: DacOchaService,
     private licenseService: LicenseService,
     private serviceDataService: ServiceDataService,
@@ -517,11 +523,6 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     const type = this.requestType.value
     return type && (type === ServiceRequestTypes.EXTEND || type === ServiceRequestTypes.CANCEL || type === ServiceRequestTypes.UPDATE);
 
-  }
-
-  isYearsEditAllowed(): boolean {
-    const type = this.requestType.value
-    return type && (type === ServiceRequestTypes.UPDATE && type !== ServiceRequestTypes.NEW);
   }
 
   isLicenseDurationDisabled(): boolean {

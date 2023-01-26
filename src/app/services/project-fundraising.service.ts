@@ -25,6 +25,7 @@ import {
   ProjectFundraisingApproveTaskPopupComponent
 } from "@app/modules/projects/popups/project-fundraising-approve-task-popup/project-fundraising-approve-task-popup.component";
 import {LicenseService} from "@services/license.service";
+import {CaseTypes} from "@app/enums/case-types.enum";
 
 @CastResponseContainer({
   $default: {
@@ -77,7 +78,8 @@ export class ProjectFundraisingService extends BaseGenericEService<ProjectFundra
     return this.searchForTemplate(criteria, workArea)
       .pipe(switchMap(templates => templates.length ? of(this.dialog.show(ChooseTemplatePopupComponent, {
         templates,
-        template,
+        projectTemplate: template,
+        caseType: CaseTypes.PROJECT_FUNDRAISING,
         workArea
       })) : of(this.dialog.info('there is no templates'))))
   }

@@ -36,7 +36,7 @@
         <th cdk-header-cell style="width:300px" *cdkHeaderCellDef> {{lang.map.percentage}}</th>
         <td cdk-cell *cdkCellDef="let row ; let i = index">
           <ng-container [formGroupName]="i">
-            <input [mask]="maskPattern.PERCENT" suffix="%" [dropSpecialCharacters]="false" style="width:100px"
+            <input [mask]="maskPattern.PERCENT" suffix="%" [dropSpecialCharacters]="false" style="width:120px"
                    id="field_name_{{i}}" [readonly]="readonly"
                    formControlName="value"
                    class="form-control form-control-sm">
@@ -44,7 +44,7 @@
         </td>
       </ng-container>
       <ng-container cdkColumnDef="actions">
-        <th cdk-header-cell style="width:100px" *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
+        <th cdk-header-cell style="width:120px" *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
         <td cdk-cell *cdkCellDef="let row; let i = index">
           <button [disabled]="readonly" (click)="!readonly && removeItem(row , i)" [tooltip]="lang.map.btn_remove" class="btn icon-btn">
             <i class="mdi text-primary mdi-trash-can"></i>

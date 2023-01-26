@@ -1,11 +1,11 @@
 import {OrganizationsEntitiesSupport} from '@app/models/organizations-entities-support';
 import {GeneralProcessNotification} from '@app/models/general-process-notification';
-import {SearchAwarenessActivitySuggestionCriteria} from './../models/search-awareness-activity-suggestion-criteria';
-import {AwarenessActivitySuggestion} from './../models/awareness-activity-suggestion';
+import {SearchAwarenessActivitySuggestionCriteria} from '@models/search-awareness-activity-suggestion-criteria';
+import {AwarenessActivitySuggestion} from '@models/awareness-activity-suggestion';
 import {TransferringIndividualFundsAbroad} from '@app/models/transferring-individual-funds-abroad';
 import {ExternalOrgAffiliation} from '@app/models/external-org-affiliation';
-import {ExternalOrgAffiliationResult} from './../models/external-org-affiliation-result';
-import {ExternalOrgAffiliationSearchCriteria} from './../models/external-org-affiliation-search-criteria';
+import {ExternalOrgAffiliationResult} from '@models/external-org-affiliation-result';
+import {ExternalOrgAffiliationSearchCriteria} from '@models/external-org-affiliation-search-criteria';
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {FactoryService} from '@app/services/factory.service';
@@ -600,6 +600,17 @@ export class LicenseService {
   }
 
   openSelectLicenseDialog<T>(licenses: (GeneralProcessNotification[] | AwarenessActivitySuggestion[] | UrgentInterventionAnnouncementResult[] | InitialExternalOfficeApprovalResult[] | PartnerApproval[] | ExternalOrgAffiliationResult[] | FinalExternalOfficeApprovalResult[] | InternalProjectLicenseResult[] | UrgentInterventionLicenseResult[] | T[]), caseRecord: any | undefined, select = true, displayedColumns: string[] = [], oldFullSerial?: string, isNotLicense: boolean = false): DialogRef {
+    return this.dialog.show(SelectLicensePopupComponent, {
+      licenses,
+      select,
+      caseRecord,
+      displayedColumns,
+      oldFullSerial,
+      isNotLicense
+    });
+  }
+
+  openNewSelectLicenseDialog<T>(licenses: T[], caseRecord: Partial<T> | undefined, select: boolean = true, displayedColumns: string[] = [], oldFullSerial?: string, isNotLicense: boolean = false): DialogRef {
     return this.dialog.show(SelectLicensePopupComponent, {
       licenses,
       select,

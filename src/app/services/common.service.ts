@@ -1,11 +1,12 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { UrlService } from '@services/url.service';
-import { Observable, of } from 'rxjs';
-import { CastResponse } from '@decorators/cast-response';
-import { Common } from '@app/models/common';
-import { catchError, map, tap } from 'rxjs/operators';
-import { AdminResult } from '@app/models/admin-result';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpParams} from '@angular/common/http';
+import {UrlService} from '@services/url.service';
+import {Observable, of} from 'rxjs';
+import {CastResponse} from '@decorators/cast-response';
+import {Common} from '@app/models/common';
+import {catchError, map, tap} from 'rxjs/operators';
+import {AdminResult} from '@app/models/admin-result';
+import {ImplementingAgencyTypes} from "@app/enums/implementing-agency-types.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ export class CommonService {
   flags?: Common['flags']
 
   constructor(private http: HttpClient,
-    private urlService: UrlService) {
+              private urlService: UrlService) {
   }
 
   _getURLSegment(): string {
@@ -53,10 +54,23 @@ export class CommonService {
     queryParams = queryParams.append('type', agencyType);
     executionCountry && (
       queryParams = queryParams.append('country', executionCountry))
-    return this.http.get(this._getURLSegment() + '/agency', { params: queryParams })
+    return this.http.get(this._getURLSegment() + '/agency', {params: queryParams})
       .pipe(
         catchError((_err: any) => of([])),
         map((result: any) => result.rs.map((x: AdminResult) => AdminResult.createInstance(x)))
       );
+  }
+
+  @CastResponse(() => AdminResult)
+  loadProjectAgencies(type: ImplementingAgencyTypes, country: number): Observable<AdminResult[]> {
+    if (!type || !country) return of([])
+    return this.http.get<AdminResult[]>(this._getURLSegment() + '/project/agency', {
+      params: new HttpParams({
+        fromObject: {
+          type,
+          country
+        }
+      })
+    })
   }
 }

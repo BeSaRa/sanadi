@@ -1,0 +1,82 @@
+import {BaseModel} from '@models/base-model';
+import {GlobalSettingsService} from '@services/global-settings.service';
+import {FactoryService} from '@services/factory.service';
+import {LangService} from '@services/lang.service';
+import {InterceptModel} from '@decorators/intercept-model';
+import {GlobalSettingsInterceptor} from '@model-interceptors/global-settings-interceptor';
+import {CustomValidators} from '@app/validators/custom-validators';
+
+const interceptor: GlobalSettingsInterceptor = new GlobalSettingsInterceptor();
+
+@InterceptModel({
+  receive: interceptor.receive,
+  send: interceptor.send
+})
+export class GlobalSettings extends BaseModel<GlobalSettings, GlobalSettingsService> {
+  systemArabicName!: string;
+  systemEnName!: string;
+  sessionTimeout!: number;
+  fileSize!: number;
+  fileType!: string;
+  fileTypeArr: number[] = [];
+  inboxRefreshInterval!: number;
+  supportEmailList!: string;
+  enableMailNotification!: boolean;
+  enableSMSNotification!: boolean;
+
+  service: GlobalSettingsService;
+  langService: LangService;
+
+  constructor() {
+    super();
+    this.langService = FactoryService.getService('LangService');
+    this.service = FactoryService.getService('GlobalSettingsService');
+  }
+
+  buildForm(controls?: boolean): any {
+    const {
+      systemArabicName,
+      systemEnName,
+      sessionTimeout,
+      fileSize,
+      inboxRefreshInterval,
+      fileTypeArr,
+      enableMailNotification,
+      enableSMSNotification
+    } = this;
+    return {
+      systemArabicName: controls ? [systemArabicName, [
+        CustomValidators.required,
+        CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
+        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
+        CustomValidators.pattern('AR_NUM_ONE_AR')
+      ]] : systemArabicName,
+      systemEnName: controls ? [systemEnName, [
+        CustomValidators.required,
+        CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
+        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
+        CustomValidators.pattern('ENG_NUM_ONE_ENG')
+      ]] : systemEnName,
+      sessionTimeout: controls ? [sessionTimeout, [
+        CustomValidators.required,
+        CustomValidators.maxLength(9),
+        CustomValidators.number
+      ]] : sessionTimeout,
+      fileSize: controls ? [fileSize, [
+        CustomValidators.required,
+        CustomValidators.maxLength(9),
+        CustomValidators.number
+      ]] : fileSize,
+      inboxRefreshInterval: controls ? [inboxRefreshInterval, [
+        CustomValidators.required,
+        CustomValidators.maxLength(9),
+        CustomValidators.number
+      ]] : inboxRefreshInterval,
+      fileTypeArr: controls ? [fileTypeArr, [
+        CustomValidators.requiredArray
+      ]] : fileTypeArr,
+      enableMailNotification: controls ? [enableMailNotification] : enableMailNotification,
+      enableSMSNotification: controls ? [enableSMSNotification] : enableSMSNotification
+    }
+  }
+}

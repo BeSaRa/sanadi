@@ -44,33 +44,36 @@ import { UrgentInterventionAttachmentApprovalPopupComponent } from './popups/urg
 
 
 @NgModule({
-  declarations: [
-    UrgentInterventionComponent,
-    UrgentInterventionLicenseComponent,
-    UrgentInterventionFinancialNotificationComponent,
-    UrgentInterventionApproveTaskPopupComponent,
-    UrgentInterventionAnnouncementComponent,
-    ImplementingAgencyListComponent,
-    InterventionRegionListComponent,
-    InterventionFieldListComponent,
-    UrgentInterventionClosureComponent,
-    StageListComponent,
-    ResultListComponent,
-    ImplementationEvaluationListComponent,
-    BestPracticesListComponent,
-    LessonsLearntListComponent,
-    UrgentInterventionClosureApproveTaskPopupComponent,
-    UrgentInterventionLicenseFollowupComponent,
-    UrgentInterventionReportListComponent,
-    UrgentInterventionReportPopupComponent,
-    UrgentInterventionAttachmentPopupComponent,
-    UrgentInterventionAttachmentApprovalPopupComponent
-  ],
-  imports: [
-    CommonModule,
-    UrgentInterventionRoutingModule,
-    EServicesMainModule,
-  ]
+    declarations: [
+        UrgentInterventionComponent,
+        UrgentInterventionLicenseComponent,
+        UrgentInterventionFinancialNotificationComponent,
+        UrgentInterventionApproveTaskPopupComponent,
+        UrgentInterventionAnnouncementComponent,
+        ImplementingAgencyListComponent,
+        InterventionRegionListComponent,
+        InterventionFieldListComponent,
+        UrgentInterventionClosureComponent,
+        StageListComponent,
+        ResultListComponent,
+        ImplementationEvaluationListComponent,
+        BestPracticesListComponent,
+        LessonsLearntListComponent,
+        UrgentInterventionClosureApproveTaskPopupComponent,
+        UrgentInterventionLicenseFollowupComponent,
+        UrgentInterventionReportListComponent,
+        UrgentInterventionReportPopupComponent,
+        UrgentInterventionAttachmentPopupComponent,
+        UrgentInterventionAttachmentApprovalPopupComponent
+    ],
+    exports: [
+        ImplementingAgencyListComponent
+    ],
+    imports: [
+        CommonModule,
+        UrgentInterventionRoutingModule,
+        EServicesMainModule,
+    ]
 })
 export class UrgentInterventionModule {
 }

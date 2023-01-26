@@ -1,6 +1,6 @@
 import {Directive, HostListener, Input, OnDestroy, OnInit, SkipSelf} from '@angular/core';
 import {Subject, Subscription} from 'rxjs';
-import {AbstractControl, ControlContainer} from '@angular/forms';
+import {AbstractControl, ControlContainer, UntypedFormControl} from '@angular/forms';
 import {debounceTime} from 'rxjs/operators';
 
 @Directive({
@@ -10,6 +10,7 @@ export class TrimInputDirective implements OnInit, OnDestroy {
   @Input() trimInput: 'START' | 'END' | '' | 'ALL' = '';
   @Input() trimDelay: number = 500;
   @Input() formControlName!: string;
+  @Input() control?: UntypedFormControl;
   @Input() trimOn: 'blur' | 'inline' = 'blur';
 
   _parentControl!: ControlContainer;
@@ -34,7 +35,7 @@ export class TrimInputDirective implements OnInit, OnDestroy {
   }
 
   checkRequiredInputs(): void {
-    if (!this.formControlName) {
+    if (!this.formControlName && !this.control) {
       throw new Error('Missing input attribute - formControlName');
     }
     if (!this._parentControl) {
@@ -72,13 +73,13 @@ export class TrimInputDirective implements OnInit, OnDestroy {
   }
 
   updateControlValue(): void {
-    if (!this.control) {
+    if (!this.fieldControl) {
       return;
     }
-    let trimmedValue = this.getTrimValue(this.control.value);
-    if (trimmedValue !== this.control.value) {
-      this.control.setValue(trimmedValue);
-      this.control.updateValueAndValidity()
+    let trimmedValue = this.getTrimValue(this.fieldControl.value);
+    if (trimmedValue !== this.fieldControl.value) {
+      this.fieldControl.setValue(trimmedValue);
+      this.fieldControl.updateValueAndValidity();
     }
   }
 
@@ -96,7 +97,10 @@ export class TrimInputDirective implements OnInit, OnDestroy {
     }
   }
 
-  get control(): AbstractControl {
+  get fieldControl(): AbstractControl {
+    if (this.control) {
+      return this.control;
+    }
     return this._parentControl.control?.get(this.formControlName) as AbstractControl;
   }
 }

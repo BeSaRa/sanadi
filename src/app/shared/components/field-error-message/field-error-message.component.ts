@@ -13,8 +13,10 @@ export class FieldErrorMessageComponent {
   @Input() labelKey?: string;
   @Input() labelText?: string;
   @Input() controlName?: string;
-  @HostBinding('class') containerClass = 'invalid-feedback position-absolute';
-
+  @HostBinding('class') containerClass = 'invalid-feedback';
+  @HostBinding('class.position-absolute')
+  @Input()
+  absolute = true
   @HostBinding('class.ignore-top-position')
   @Input()
   ignoreTop: boolean = false;

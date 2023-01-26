@@ -1086,4 +1086,30 @@ export const navigationMenuList = [
     itemOrder: 25,
     svg: null
   },
+  {
+    id: 84,
+    langKey: 'menu_global_settings',
+    path: '/home/administration/global-settings',
+    icon: 'mdi-cog',
+    isSvg: false,
+    permission: '',
+    permissionGroup: null,
+    parent: 6,
+    group: 'administration',
+    itemOrder: 26,
+    svg: null
+  },
+  {
+    id: 85,
+    langKey: 'menu_project_implementation',
+    path: '/home/projects/project-implementation',
+    icon: 'mdi-badge-account-horizontal-outline',
+    isSvg: false,
+    permission: EServicePermissionsEnum.PROJECT_IMPLEMENTATION,
+    permissionGroup: null,
+    parent: 32,
+    group: 'projects',
+    itemOrder: 25,
+    svg: null
+  }
 ];

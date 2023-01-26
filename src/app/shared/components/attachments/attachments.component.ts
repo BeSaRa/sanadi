@@ -1,5 +1,5 @@
 import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, of, Subject} from 'rxjs';
 import {filter, map, skip, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {FileNetDocument} from '@app/models/file-net-document';
 import {LangService} from '@app/services/lang.service';
@@ -17,8 +17,11 @@ import {GridName, ItemId} from '@app/types/types';
 import {EmployeeService} from '@services/employee.service';
 import {ExternalUser} from '@app/models/external-user';
 import {InternalUser} from '@app/models/internal-user';
-import {OtherAttachmentDetailsPopupComponent} from '@app/shared/popups/other-attachment-details-popup/other-attachment-details-popup.component';
+import {
+  OtherAttachmentDetailsPopupComponent
+} from '@app/shared/popups/other-attachment-details-popup/other-attachment-details-popup.component';
 import {OperationTypes} from '@app/enums/operation-types.enum';
+import {isEmptyObject} from '@helpers/utils';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -37,6 +40,8 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
 
   fileIconsEnum = FileIconsEnum;
   defaultAttachments: FileNetDocument[] = [];
+  conditionalAttachments: FileNetDocument[] = [];
+  customPropertiesDestroy$: Subject<void> = new Subject<void>();
 
   private loadingStatus: BehaviorSubject<any> = new BehaviorSubject(false);
   // only the true value will emit
@@ -79,6 +84,9 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
     this.loadingStatus.next(load);
   }
 
+  @Input()
+  formProperties: Record<string, () => Observable<any>> = {};
+
   destroy$: Subject<any> = new Subject<any>();
   displayedColumns: string[] = [/*'rowSelection',*/ 'title', 'type', 'description', 'mandatory', 'isPublished', 'date', 'actions'];
 
@@ -100,6 +108,9 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
     this.destroy$.next();
     this.destroy$.complete();
     this.destroy$.unsubscribe();
+    this.customPropertiesDestroy$.next();
+    this.customPropertiesDestroy$.complete();
+    this.customPropertiesDestroy$.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -133,13 +144,14 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
             return !item.multi;
           });
         }),
-        map<AttachmentTypeServiceData[], FileNetDocument[]>(() => this.attachmentTypes.map(type => type.convertToAttachment())),
+        map<AttachmentTypeServiceData[], FileNetDocument[]>(() => this.attachmentTypes.map(type => type.convertToAttachment().setAttachmentTypeServiceData(type))),
         tap((attachments) => this.defaultAttachments = attachments.slice()),
         switchMap((types) => this.loadDocumentsByCaseId(types)),
         takeUntil(this.destroy$)
       )
       .subscribe((attachments) => {
         this.attachments = attachments;
+        this.separateConditionalAttachments();
         this.loadedStatus$.next(true);
       });
   }
@@ -237,6 +249,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
         this.loadedAttachments[attachment.attachmentTypeId] = attachment;
         this.attachments.splice(this.selectedIndex, 1, attachment.clone({attachmentTypeInfo: this.selectedFile?.attachmentTypeInfo}));
         this.attachments = this.attachments.slice();
+        this.separateConditionalAttachments();
       });
   }
 
@@ -264,6 +277,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
             attachmentTypeStatus: file.attachmentTypeStatus
           }));
           this.attachments = this.attachments.slice();
+          this.separateConditionalAttachments();
         });
     });
 
@@ -316,8 +330,24 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
       });
   }
 
+  private separateConditionalAttachments() {
+    this.conditionalAttachments = [];
+    this.attachments = this.attachments.filter((attachment) => {
+      if (attachment.attachmentTypeServiceData && isEmptyObject(attachment.attachmentTypeServiceData.parsedCustomProperties)) {
+        return true;
+      }
+      this.conditionalAttachments = this.conditionalAttachments.concat(attachment);
+      return false;
+    });
+    // start checking the custom properties
+    this.conditionalAttachments.forEach(attachment => {
+      this.listenToFormPropertiesChange(attachment);
+    });
+  }
+
   private resetAttachments() {
     this.attachments = this.defaultAttachments.slice();
+    this.separateConditionalAttachments();
   }
 
   private listenToAddOtherAttachment() {
@@ -329,6 +359,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
         }).onAfterClose$.pipe(filter((attachment) => !!attachment))))
       .subscribe((attachment) => {
         this.attachments = ([] as FileNetDocument[]).concat([attachment, ...this.attachments]);
+        this.separateConditionalAttachments();
       });
   }
 
@@ -384,5 +415,31 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
     } else {
       return (user as InternalUser).domainName === attachment.createdBy;
     }
+  }
+
+  private listenToFormPropertiesChange(attachment: FileNetDocument): void {
+    const keys = Object.keys(this.formProperties);
+    combineLatest(keys.map(key => this.formProperties[key]().pipe(map(value => ({[key]: value})))))
+      .pipe(map(values => {
+        return values.reduce((acc, currentValue) => {
+          return {...acc, ...currentValue};
+        }, {} as Record<string, number>);
+      }))
+      .pipe(takeUntil(this.customPropertiesDestroy$))
+      .pipe(map((values: Record<string, number>) => {
+        debugger
+        return attachment.notMatchExpression(values);
+      }))
+      .subscribe((notMatch) => {
+        notMatch ? this.removeAttachment(attachment) : this.addAttachment(attachment);
+      });
+  }
+
+  private removeAttachment(attachment: FileNetDocument): void {
+    this.attachments = this.attachments.filter(item => item.attachmentTypeId !== attachment.attachmentTypeId);
+  }
+
+  private addAttachment(attachment: FileNetDocument): void {
+    this.attachments = this.attachments.concat(attachment);
   }
 }

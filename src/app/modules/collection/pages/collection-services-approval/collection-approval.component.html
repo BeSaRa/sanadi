@@ -79,8 +79,8 @@
     </ng-container>
   </ng-container>
   <ng-template #attachmentsTab>
-    <attachments [caseId]="model?.id" [caseType]="model?.caseType"
-                 [model]="model"
-                 [service]="service.documentService"></attachments>
+    <attachments [formProperties]="formProperties"
+                 [caseId]="model?.id" [caseType]="model?.caseType"
+                 [model]="model" [service]="service.documentService"></attachments>
   </ng-template>
 </div>

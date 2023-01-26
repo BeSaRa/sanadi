@@ -4,6 +4,7 @@ import { UrlService } from '@app/services/url.service';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { EmployeeService } from '@app/services/employee.service';
 import { Subject } from 'rxjs';
+import {UserPreferencesService} from '@services/user-preferences.service';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -18,7 +19,8 @@ export class HeaderComponent implements OnInit {
 
   constructor(public langService: LangService,
               public employee: EmployeeService,
-              public urlService: UrlService) {
+              public urlService: UrlService,
+              private userPreferencesService: UserPreferencesService) {
   }
 
   ngOnInit(): void {
@@ -27,5 +29,9 @@ export class HeaderComponent implements OnInit {
   toggleLang($event: MouseEvent) {
     $event.preventDefault();
     this.langService.toggleLanguage().subscribe();
+  }
+
+  openUserPreferences() {
+    this.userPreferencesService.openEditDialog(this.employee.getCurrentUser().generalUserId).subscribe();
   }
 }

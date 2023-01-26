@@ -1,16 +1,16 @@
 <div class="d-flex flex-column">
   <tabs-list [accordionView]="accordionView" (onTabChange)="onTabChange($event)">
     <tab [name]="tabsData.basicInfo.name" [hasError]="getTabInvalidStatus('basicInfo')"
-      [template]="basicInfoTabTemplate" [title]="lang.map.lbl_basic_info"></tab>
+         [template]="basicInfoTabTemplate" [title]="lang.map.lbl_basic_info"></tab>
     <tab [name]="tabsData.DSNNN.name" [hasError]="getTabInvalidStatus('DSNNN')" [template]="DSNNNTabTemplate"
-      [title]="lang.map.disclosure_statements_notices_notifications_notices"></tab>
+         [title]="lang.map.disclosure_statements_notices_notifications_notices"></tab>
     <tab [name]="tabsData.sampleDataForOperations.name" [disabled]="isOtherProcess"
-      [hasError]="getTabInvalidStatus('sampleDataForOperations')" [template]="sampleDataForOperationsTabTemplate"
-      [title]="lang.map.sample_data_for_operations"></tab>
+         [hasError]="getTabInvalidStatus('sampleDataForOperations')" [template]="sampleDataForOperationsTabTemplate"
+         [title]="lang.map.sample_data_for_operations"></tab>
     <tab [name]="tabsData.specialExplanations.name" [hasError]="getTabInvalidStatus('specialExplanations')"
-      [template]="specialExplanationsTabTemplate" [title]="lang.map.special_explanations"></tab>
+         [template]="specialExplanationsTabTemplate" [title]="lang.map.special_explanations"></tab>
     <tab [name]="tabsData.attachments.name" *ngIf="!accordionView" [template]="attachmentsTab"
-      [title]="lang.map.attachments" [hasError]="getTabInvalidStatus('attachments')"></tab>
+         [title]="lang.map.attachments" [hasError]="getTabInvalidStatus('attachments')"></tab>
   </tabs-list>
   <ng-template #basicInfoTabTemplate>
     <form [formGroup]="form" autocomplete="off">
@@ -21,9 +21,10 @@
           <label asteriskIfRequired="requestType" for="requestType" class="form-label">{{ lang.map.request_type
             }}</label>
           <ng-select [selectOnTab]="true" labelForId="requestType" [clearable]="true"
-            placeholder="{{ lang.map.select }}" id="requestType" [readonly]="canChangeReuestType"
-            (change)="handleRequestTypeChange($event, true)" [notFoundText]="lang.map.msg_not_found" appendTo="body"
-            validationClasses="requestType" formControlName="requestType">
+                     placeholder="{{ lang.map.select }}" id="requestType" [readonly]="canChangeReuestType"
+                     (change)="handleRequestTypeChange($event, true)" [notFoundText]="lang.map.msg_not_found"
+                     appendTo="body"
+                     validationClasses="requestType" formControlName="requestType">
             <ng-option *ngFor="let type of notificationRequestTypeList" [value]="type.lookupKey">{{ type.getName() }}
             </ng-option>
           </ng-select>
@@ -32,13 +33,14 @@
         <!-- request Number -->
         <div class="col-md-6 mb-4 position-relative">
           <label asteriskIfRequired="oldFullSerial" for="oldFullSerial"
-            class="form-label">{{lang.map.request_number}}</label>
+                 class="form-label">{{lang.map.request_number}}</label>
           <div class="input-group">
-            <input (keydown.enter)="isEdit() || readonly" formControlName="oldFullSerial" [readonly]="!isEdit() || readonly"
-              type="text" validationClasses="oldFullSerial" class="form-control" id="oldFullSerial"
-              trimInput>
+            <input (keydown.enter)="isEdit() || readonly" formControlName="oldFullSerial"
+                   [readonly]="!isEdit() || readonly"
+                   type="text" validationClasses="oldFullSerial" class="form-control" id="oldFullSerial"
+                   trimInput>
             <button *ngIf="isEdit() && !readonly" type="button" (click)="licenseSearch($event)"
-              class="input-group-text">
+                    class="input-group-text">
               <i class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i></button>
             <app-field-error-message controlName="oldFullSerial"></app-field-error-message>
           </div>
@@ -55,9 +57,9 @@
           <label asteriskIfRequired="departmentId" for="departmentId" class="form-label">{{ lang.map.department
             }}</label>
           <ng-select [selectOnTab]="true" labelForId="departmentId" [clearable]="true"
-            placeholder="{{ lang.map.select }}" id="departmentId" [readonly]="readonly"
-            [notFoundText]="lang.map.msg_not_found" appendTo="body" (change)="handleDepartmentChange()"
-            validationClasses="departmentId" formControlName="departmentId">
+                     placeholder="{{ lang.map.select }}" id="departmentId" [readonly]="readonly"
+                     [notFoundText]="lang.map.msg_not_found" appendTo="body" (change)="handleDepartmentChange()"
+                     validationClasses="departmentId" formControlName="departmentId">
             <ng-option *ngFor="let option of departmentList" [value]="option.id">
               {{option.getName()}}
             </ng-option>
@@ -70,9 +72,10 @@
             lang.map.lbl_sub_team
             }}</label>
           <ng-select [selectOnTab]="true" labelForId="competentDepartmentID" [clearable]="true"
-            placeholder="{{ lang.map.select }}" (change)="filterProcess()" id="competentDepartmentID" [readonly]="readonly"
-            [notFoundText]="lang.map.msg_not_found" appendTo="body" validationClasses="competentDepartmentID"
-            formControlName="competentDepartmentID">
+                     placeholder="{{ lang.map.select }}" (change)="filterProcess()" id="competentDepartmentID"
+                     [readonly]="readonly"
+                     [notFoundText]="lang.map.msg_not_found" appendTo="body" validationClasses="competentDepartmentID"
+                     formControlName="competentDepartmentID">
             <ng-option *ngFor="let option of subTeamsList" [value]="option.id">
               {{option.getName()}}
             </ng-option>
@@ -84,8 +87,9 @@
           <label asteriskIfRequired="domain" for="domain" class="form-label">{{ lang.map.classification
             }}</label>
           <ng-select [selectOnTab]="true" labelForId="domain" [clearable]="true" placeholder="{{ lang.map.select }}"
-            id="domain" [readonly]="readonly" [notFoundText]="lang.map.msg_not_found" (change)="loadSubClasses($event)"
-            appendTo="body" validationClasses="domain" formControlName="domain">
+                     id="domain" [readonly]="readonly" [notFoundText]="lang.map.msg_not_found"
+                     (change)="loadSubClasses($event)"
+                     appendTo="body" validationClasses="domain" formControlName="domain">
             <ng-option *ngFor="let option of mainClassificationsList" [value]="option.id">
               {{option.getName()}}
             </ng-option>
@@ -98,9 +102,10 @@
             lang.map.sub_classification
             }}</label>
           <ng-select [selectOnTab]="true" labelForId="firstSubDomain" [clearable]="true"
-            placeholder="{{ lang.map.select }}" (change)="filterProcess()" id="firstSubDomain" [readonly]="readonly"
-            [notFoundText]="lang.map.msg_not_found" appendTo="body" validationClasses="firstSubDomain"
-            formControlName="firstSubDomain">
+                     placeholder="{{ lang.map.select }}" (change)="filterProcess()" id="firstSubDomain"
+                     [readonly]="readonly"
+                     [notFoundText]="lang.map.msg_not_found" appendTo="body" validationClasses="firstSubDomain"
+                     formControlName="firstSubDomain">
             <ng-option *ngFor="let option of subClassificationsList" [value]="option.id">
               {{option.getName()}}
             </ng-option>
@@ -112,9 +117,9 @@
           <label asteriskIfRequired="processType" for="processType" class="form-label">{{ lang.map.lbl_process_type
             }}</label>
           <ng-select [selectOnTab]="true" labelForId="processType" [clearable]="true"
-            placeholder="{{ lang.map.select }}" id="processType" [readonly]="readonly"
-            [notFoundText]="lang.map.msg_not_found" appendTo="body" (change)="filterProcess()"
-            validationClasses="processType" formControlName="processType">
+                     placeholder="{{ lang.map.select }}" id="processType" [readonly]="readonly"
+                     [notFoundText]="lang.map.msg_not_found" appendTo="body" (change)="filterProcess()"
+                     validationClasses="processType" formControlName="processType">
             <ng-option *ngFor="let option of GeneralProcessTypeList" [value]="option.lookupKey">
               {{option.getName()}}
             </ng-option>
@@ -128,8 +133,8 @@
             lang.map.lbl_process
             }}</label>
           <ng-select [selectOnTab]="true" labelForId="processid" [clearable]="true" placeholder="{{ lang.map.select }}"
-            id="processid" [readonly]="readonly" [notFoundText]="lang.map.msg_not_found" appendTo="body"
-            (change)="handleProcessChange($event)" validationClasses="processid" formControlName="processid">
+                     id="processid" [readonly]="readonly" [notFoundText]="lang.map.msg_not_found" appendTo="body"
+                     (change)="handleProcessChange($event)" validationClasses="processid" formControlName="processid">
             <ng-option *ngFor="let process of processList" [value]="process.id">{{ process.getName() }}
             </ng-option>
           </ng-select>
@@ -141,7 +146,7 @@
             lang.map.lbl_process_name
             }}</label>
           <input id="projectName" formControlName="projectName" [readonly]="!isOtherProcess || readonly"
-            validationClasses="projectName" class="form-control" />
+                 validationClasses="projectName" class="form-control"/>
           <app-field-error-message controlName="projectName"></app-field-error-message>
         </div>
         <!-- process subject -->
@@ -150,16 +155,16 @@
             lang.map.lbl_process_subject
             }}</label>
           <input id="needSubject" formControlName="needSubject" [readonly]="readonly" validationClasses="needSubject"
-            class="form-control" />
+                 class="form-control"/>
           <app-field-error-message controlName="needSubject"></app-field-error-message>
         </div>
         <!-- process explanations -->
         <div class="col-sm-12 col-md-12 mb-4 position-relative">
           <label for="projectDescription" asteriskIfRequired="projectDescription"
-            class="form-label">{{lang.map.lbl_process_explanations}}</label>
+                 class="form-label">{{lang.map.lbl_process_explanations}}</label>
           <textarea rows="5" id="projectDescription" validationClasses="projectDescription"
-            [maxlength]="customValidators.defaultLengths.EXPLANATIONS" [readonly]="readonly"
-            formControlName="projectDescription" trimInput class="form-control"></textarea>
+                    [maxlength]="customValidators.defaultLengths.EXPLANATIONS" [readonly]="readonly"
+                    formControlName="projectDescription" trimInput class="form-control"></textarea>
           <app-field-error-message controlName="projectDescription"></app-field-error-message>
         </div>
       </div>
@@ -177,10 +182,10 @@
       <div class="row">
         <div class="col-sm-12 col-md-12 mb-4 position-relative">
           <label for="description" asteriskIfRequired="description"
-            class="form-label">{{lang.map.special_explanations}}</label>
+                 class="form-label">{{lang.map.special_explanations}}</label>
           <textarea rows="5" id="description" validationClasses="description"
-            [maxlength]="customValidators.defaultLengths.EXPLANATIONS" [readonly]="readonly"
-            formControlName="description" trimInput class="form-control"></textarea>
+                    [maxlength]="customValidators.defaultLengths.EXPLANATIONS" [readonly]="readonly"
+                    formControlName="description" trimInput class="form-control"></textarea>
           <app-field-error-message controlName="description"></app-field-error-message>
         </div>
       </div>
@@ -189,7 +194,8 @@
 
   <ng-template #attachmentsTab>
     <attachments [disabled]="isAttachmentReadonly()" [caseId]="model?.id" [caseType]="model?.caseType"
-      [service]="service.documentService" [load]="loadAttachments"></attachments>
+                 [service]="service.documentService" [load]="loadAttachments"
+                 [formProperties]="formProperties"></attachments>
   </ng-template>
 
 </div>

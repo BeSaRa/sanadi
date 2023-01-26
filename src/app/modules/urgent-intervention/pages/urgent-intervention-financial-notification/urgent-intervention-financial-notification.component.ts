@@ -130,6 +130,11 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
       validStatus: () => true
     }
   };
+  formProperties = {
+    requestType: () => {
+      return this.getObservableField('requestTypeField', 'requestType');
+    }
+  }
 
   constructor(
     private lookupService: LookupService,

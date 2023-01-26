@@ -1,7 +1,7 @@
-import { JobTitleService } from './../../../../services/job-title.service';
+import { JobTitleService } from '@services/job-title.service';
 import { ExternalUser } from '@app/models/external-user';
 import { ExternalUserService } from '@services/external-user.service';
-import { AdminLookupService } from './../../../../services/admin-lookup.service';
+import { AdminLookupService } from '@services/admin-lookup.service';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import {
   UntypedFormBuilder,
@@ -80,6 +80,11 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
   externalUsersList: ExternalUser[] = [];
   jobTitleList: JobTitle[] = [];
   selectedLicense?: OrganizationsEntitiesSupport;
+  formProperties = {
+    requestType: () => {
+      return this.getObservableField('requestTypeField', 'requestType');
+    }
+  }
 
   tabsData: TabMap = {
     basicInfo: {
@@ -457,7 +462,7 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
 
   private _loadExternalUsers() {
     this.externalUserService
-      .getByCriteria({ 'profile-id': this.employeeService.getProfile()?.id! })
+      .getByProfileCriteria({ 'profile-id': this.employeeService.getProfile()?.id! })
       .pipe(
         takeUntil(this.destroy$),
         map((records) => {
@@ -616,16 +621,13 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
     }
   }
   selectOrganizationOfficer(externalUserId: number) {
-    const subscriber = this.externalUserService
-      .getById(externalUserId)
-      .subscribe((externalUser) => {
-        this.organizationOfficerGroup.patchValue({...externalUser,
-          phone:externalUser.phoneNumber,
-          mobileNo:externalUser.phoneExtension,
-          jobTitle:this.jobTitleList.find(x=>x.id === externalUser.jobTitle)?.getName()
-        });
-        subscriber.unsubscribe();
-      });
+    const selectedOfficer = this.externalUsersList.find(x=>x.id === externalUserId);
+    this.organizationOfficerGroup.patchValue({
+      ...selectedOfficer,
+      phone:selectedOfficer?.phoneNumber,
+      mobileNo:selectedOfficer?.phoneExtension,
+      jobTitle:this.jobTitleList.find(x=>x.id === selectedOfficer!.jobTitle)?.getName()
+    });
   }
 
   get basicInfoTab(): UntypedFormGroup {

@@ -28,8 +28,6 @@ import { ResearchAndStudiesComponent } from './shared/research-and-studies/resea
   declarations: [
     SelectLicensePopupComponent,
     FilterInboxRequestPopupComponent,
-    SelectedLicenseTableComponent,
-    SelectedLicenseTableComponent,
     SelectTemplatePopupComponent,
     SelectedLicenseTableComponent,
     BankAccountComponent,

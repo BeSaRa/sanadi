@@ -1,21 +1,116 @@
-import {SearchableCloneable} from '@app/models/searchable-cloneable';
 import {AdminResult} from '@app/models/admin-result';
+import {Cloneable} from "@models/cloneable";
+import {CustomValidators} from "@app/validators/custom-validators";
+import currency from "currency.js";
+import {DialogRef} from "@app/shared/models/dialog-ref";
+import {FactoryService} from "@services/factory.service";
+import {ProjectImplementationService} from "@services/project-implementation.service";
+import {Observable, of} from "rxjs";
+import {map, switchMap} from "rxjs/operators";
+import {ImplementationFundraising} from "@models/implementation-fundraising";
+import {ImplementationTemplateInterceptor} from "@model-interceptors/implementation-template-interceptor";
+import {InterceptModel} from "@decorators/intercept-model";
 
-export class ImplementationTemplate extends SearchableCloneable<ImplementationTemplate> {
-  templateId!: string;
-  templateName!: string;
-  arabicName!: string;
-  englishName!: string;
-  amount!: number;
-  templateCost!: number;
-  templateType  !: number;
-  referenceNumber!: string;
-  latitude!: string;
-  longitude!: string;
-  beneficiaryRegion!: string;
-  executionRegion!: string;
-  implementingAgency!: string;
-  notes!: string;
-  typeInfo!: AdminResult;
-  implementingAgencyInfo!: AdminResult;
+const {send, receive} = new ImplementationTemplateInterceptor()
+
+@InterceptModel({send, receive})
+export class ImplementationTemplate extends Cloneable<ImplementationTemplate> {
+  templateId!: string
+  templateName!: string
+  arabicName!: string
+  englishName!: string
+  executionCountry!: number
+  templateCost!: number
+  latitude!: string
+  longitude!: string
+  beneficiaryRegion!: string
+  region!: string
+  notes!: string
+  projectTotalCost!: number
+  executionCountryInfo!: AdminResult
+
+  // not related to the model -- should be deleted before send to backend
+  defaultLatLng: google.maps.LatLngLiteral = {
+    lat: 25.3266204,
+    lng: 51.5310087
+  }
+  service: ProjectImplementationService
+
+  constructor() {
+    super();
+    this.service = FactoryService.getService('ProjectImplementationService')
+  }
+
+  buildForm(controls: boolean) {
+    const {
+      arabicName,
+      englishName,
+      latitude,
+      longitude,
+      beneficiaryRegion,
+      projectTotalCost,
+      notes
+    } = this;
+    return {
+      arabicName: controls ? [arabicName, [
+        CustomValidators.required,
+        CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
+        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
+        CustomValidators.pattern('AR_NUM_ONE_AR')
+      ]] : arabicName,
+      englishName: controls ? [englishName, [
+        CustomValidators.required,
+        CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
+        CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
+        CustomValidators.pattern('ENG_NUM_ONE_ENG')
+      ]] : englishName,
+      latitude: controls ? [latitude, CustomValidators.required] : latitude,
+      longitude: controls ? [longitude, CustomValidators.required] : longitude,
+      beneficiaryRegion: controls ? [beneficiaryRegion, CustomValidators.required] : beneficiaryRegion,
+      notes: controls ? [notes] : notes,
+      projectTotalCost: controls ? [projectTotalCost, CustomValidators.required] : projectTotalCost
+    };
+  }
+
+  setProjectTotalCost(value: number): void {
+    this.projectTotalCost = currency(value).value
+  }
+
+  hasMarker(): boolean {
+    return !!this.longitude && !!this.latitude;
+  }
+
+  getLngLat(): google.maps.LatLngLiteral {
+    return {
+      lat: Number(this.latitude),
+      lng: Number(this.longitude)
+    }
+  }
+
+  openMap(viewOnly: boolean = false): DialogRef {
+    return this.service.openMap(viewOnly, this)
+  }
+
+  edit(): DialogRef {
+    return this.service.openImplementationTemplateDialog(this)
+  }
+
+  view(): DialogRef {
+    return this.service.openImplementationTemplateDialog(this, true)
+  }
+
+  loadImplementationFundraising(): Observable<ImplementationFundraising | undefined> {
+    return this.service
+      .loadRelatedPermitByTemplate(this.templateId)
+      .pipe(switchMap((license) => {
+        return license ? this.service.getConsumedAmount(license.id).pipe(map(consumedAmount => {
+          return license.convertToFundraisingTemplate().clone({
+            consumedAmount,
+            remainingAmount: currency(license.projectTotalCost).subtract(consumedAmount).value,
+            totalCost: currency(license.projectTotalCost).subtract(consumedAmount).value
+          })
+        })) : of(undefined)
+      }))
+  }
+
 }

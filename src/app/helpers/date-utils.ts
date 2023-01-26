@@ -1,9 +1,9 @@
 import {IAngularMyDpOptions, IMyDateModel} from 'angular-mydatepicker';
-import {IAppConfig} from '../interfaces/i-app-config';
-import {FactoryService} from '../services/factory.service';
-import {ConfigurationService} from '../services/configuration.service';
+import {IAppConfig} from '@contracts/i-app-config';
+import {FactoryService} from '@services/factory.service';
+import {ConfigurationService} from '@services/configuration.service';
 import * as dayjs from 'dayjs';
-import {IDatepickerCustomOptions} from '../interfaces/i-datepicker-custom-options';
+import {IDatepickerCustomOptions} from '@contracts/i-datepicker-custom-options';
 import {DatepickerControlsMap, DatepickerOptionsMap} from '@app/types/types';
 
 export class DateUtils {
@@ -67,7 +67,8 @@ export class DateUtils {
       dateFormat: format.toLowerCase(),
       inputFieldValidation: false,
       divHostElement: {enabled: true, placeholder: ''},
-      appendSelectorToBody: customOptions.appendToBody || false
+      appendSelectorToBody: customOptions.appendToBody || false,
+      openSelectorTopOfInput: customOptions.openSelectorTopOfInput || false
     };
     if (customOptions.disablePeriod === 'none') {
       return options;
