@@ -1727,4 +1727,5 @@ export interface ILanguageKeys {
   government_agencies: string;
   countries_add_successfully: string;
   remove_countries_messages: string;
+  employee_with_jobNumber: string;
 }
