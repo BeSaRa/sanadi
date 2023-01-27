@@ -1,6 +1,7 @@
 import {Component, forwardRef, Input, OnDestroy, OnInit} from '@angular/core';
 import {
   ControlValueAccessor,
+  FormControl,
   NG_VALUE_ACCESSOR,
   UntypedFormArray,
   UntypedFormControl,
@@ -93,6 +94,11 @@ export class PaymentsComponent implements ControlValueAccessor, OnInit, OnDestro
       return
     }
 
+    if (!this.remainingAmount) {
+      this.dialog.alert(this.lang.map.cannot_add_payments_full_amount_have_been_used)
+      return;
+    }
+
     this.dialog.show<IDialogData<Payment>>(PaymentPopupComponent, {
       model: new Payment(),
       operation: OperationTypes.CREATE,
@@ -131,7 +137,7 @@ export class PaymentsComponent implements ControlValueAccessor, OnInit, OnDestro
       model: item,
       operation: OperationTypes.UPDATE,
       projectTotalCost: this.projectTotalCost,
-      remainingAmount: this.remainingAmount
+      remainingAmount: this.calculateAllExcept(index)
     }).onAfterClose$
       .pipe(takeUntil(this.destroy$))
       .pipe(filter((value: Payment): value is Payment => !!value))
@@ -157,9 +163,12 @@ export class PaymentsComponent implements ControlValueAccessor, OnInit, OnDestro
       .pipe(debounceTime(250))
       .pipe(map(value => Number(value)))
       .subscribe((value) => {
-        const cValue = currency(value).value > this.remainingAmount ? this.remainingAmount : currency(value).value
+        const remaining = this.calculateAllExcept(index)
+        const cValue = currency(value).value > currency(remaining).value ? currency(remaining).value : currency(value).value
         ctrl.setValue(cValue, {emitEvent: false})
         this.value[index].totalCost = cValue
+        this.onChange(this.value)
+        this.calculateRemaining()
       })
   }
 
@@ -184,11 +193,14 @@ export class PaymentsComponent implements ControlValueAccessor, OnInit, OnDestro
   }
 
   calculateRemaining(): void {
-    console.log(this.projectTotalCost , this.value.reduce((acc, item) => {
-      return acc + item.totalCost
-    }, 0) );
     this.remainingAmount = currency(this.projectTotalCost).subtract(this.value.reduce((acc, item) => {
       return acc + item.totalCost
+    }, 0)).value
+  }
+
+  calculateAllExcept(index: number): number {
+    return currency(this.projectTotalCost).subtract((this.inputs.controls as FormControl<number>[]).reduce((acc, item, currentIndex) => {
+      return acc + (index === currentIndex ? 0 : Number(item.getRawValue()))
     }, 0)).value
   }
 }
