@@ -47,8 +47,6 @@ export class FundSourceComponent implements ControlValueAccessor, OnInit, OnDest
   projectTotalCost!: number;
   @Input()
   remainingAmount!: number
-  @Input()
-  remaining!: number;
 
   inputMask = CustomValidators.inputMaskPatterns
 
@@ -133,7 +131,7 @@ export class FundSourceComponent implements ControlValueAccessor, OnInit, OnDest
       operation: OperationTypes.UPDATE,
       model: row,
       projectTotalCost: this.projectTotalCost,
-      remainingAmount: this.remainingAmount,
+      remainingAmount: this.getRemaining(index),
       type: this.type
     })
       .onAfterClose$
@@ -159,11 +157,13 @@ export class FundSourceComponent implements ControlValueAccessor, OnInit, OnDest
       .pipe(takeUntil(this.destroy$))
       .pipe(debounceTime(250))
       .pipe(map((value) => Number(value)))
-      .subscribe((value) => {
-        const cValue = currency(value).value > this.remainingAmount ? this.remainingAmount : currency(value).value
+      .subscribe(async (value) => {
+        const remaining = this.getRemaining(index)
+        const cValue = value > remaining ? remaining : value
+        this.value[index].totalCost = cValue;
         ctrl.setValue(cValue, {emitEvent: false})
-        this.value[index].totalCost = cValue
         this.onChange(this.value)
+        this.onTouch()
       })
   }
 
@@ -199,4 +199,9 @@ export class FundSourceComponent implements ControlValueAccessor, OnInit, OnDest
         this.onTouch()
       })
   }
+
+  getRemaining(index: number): number {
+    return currency(this.remainingAmount).add((this.value[index] && this.value[index].totalCost || 0)).value
+  }
+
 }

@@ -63,7 +63,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
   datepickerOptionsMap = {
     licenseStartDate: DateUtils.getDatepickerOptions({disablePeriod: 'none', openSelectorTopOfInput: true})
   }
-  remainingAmount: number = 0;
+  remainingAmount!: number;
 
   constructor(public lang: LangService,
               public fb: UntypedFormBuilder,
@@ -209,6 +209,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     this.listenToFundingResources()
 
     this.setDefaultValues()
+    // this.calculateRemaining()
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
@@ -490,6 +491,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       .pipe(takeUntil(this.destroy$))
       .pipe(tap((value: ImplementationTemplate[]) => {
         value && value.length ? this.projectTotalCost.patchValue(value[0].projectTotalCost) : this.projectTotalCost.patchValue(0)
+        this.calculateRemaining()
       }))
       .pipe(filter((value): value is ImplementationTemplate[] => !!value.length))
       .pipe(map(val => val[0] as ImplementationTemplate))
@@ -521,7 +523,10 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     const totalFundingResource = allFields.reduce((acc, fields) => {
       return acc + this.getTotalCost(fields)
     }, 0)
+
     this.remainingAmount = currency(projectTotalCost).subtract(totalFundingResource).value
+
+    console.log('FROM C' , this.remainingAmount);
   }
 
   private getTotalCost(list: (FundingResourceContract)[]): number {
