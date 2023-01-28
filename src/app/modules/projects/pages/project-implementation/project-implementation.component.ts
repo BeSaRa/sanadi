@@ -1,5 +1,12 @@
 import {Component} from '@angular/core';
-import {AbstractControl, UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
+import {
+  AbstractControl,
+  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  ValidationErrors,
+  ValidatorFn
+} from '@angular/forms';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {SaveTypes} from '@app/enums/save-types';
 import {EServicesGenericComponent} from "@app/generics/e-services-generic-component";
@@ -164,7 +171,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
   }
 
   get projectTotalCost(): AbstractControl {
-    return this.basicInfo.get('projectTotalCost')!
+    return this.form && this.basicInfo.get('projectTotalCost')!
   }
 
   // it should be
@@ -210,6 +217,11 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
 
     this.setDefaultValues()
     // this.calculateRemaining()
+    this.fundingResources.setValidators(this.validateFundingResources([
+      'implementationFundraising',
+      'financialGrant',
+      'selfFinancing',
+    ]))
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
@@ -519,9 +531,9 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
 
   private calculateRemaining(): void {
     const projectTotalCost = this.projectTotalCost.getRawValue() as number
-    const grant = this.financialGrant.getRawValue()??[] as FundingResourceContract[];
-    const self = this.selfFinancing.getRawValue()??[] as FundingResourceContract[];
-    const fundRaising = this.implementationFundraising.getRawValue()??[] as FundingResourceContract[];
+    const grant = this.financialGrant.getRawValue() ?? [] as FundingResourceContract[];
+    const self = this.selfFinancing.getRawValue() ?? [] as FundingResourceContract[];
+    const fundRaising = this.implementationFundraising.getRawValue() ?? [] as FundingResourceContract[];
     const allFields = [grant, self, fundRaising];
     const totalFundingResource = allFields.reduce((acc, fields) => {
       return acc + this.getTotalCost(fields)
@@ -529,7 +541,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
 
     this.remainingAmount = currency(projectTotalCost).subtract(totalFundingResource).value
 
-    console.log('FROM C' , this.remainingAmount);
+    console.log('FROM C', this.remainingAmount);
   }
 
   private getTotalCost(list: (FundingResourceContract)[]): number {
@@ -574,5 +586,21 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       }
     }
 
+  }
+
+  private validateFundingResources(fields: string[]): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      // return null
+      const group = control as FormGroup
+      const totalFundResources = fields.reduce((acc, key) => {
+        return acc + (group.get(key)?.getRawValue() ?? []).reduce((acc: number, item: FundingResourceContract) => acc + item.totalCost, 0)
+      }, 0)
+      return this.projectTotalCost && this.projectTotalCost.value > totalFundResources ? {
+        fundingResources: {
+          actually: totalFundResources,
+          expected: Number(this.projectTotalCost.value)
+        }
+      } : null
+    }
   }
 }

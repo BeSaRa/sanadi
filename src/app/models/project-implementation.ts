@@ -137,7 +137,7 @@ export class ProjectImplementation
       implementationFundraising: controls ? [implementationFundraising] : implementationFundraising,
       financialGrant: controls ? [financialGrant] : financialGrant,
       selfFinancing: controls ? [selfFinancing] : selfFinancing,
-      payment: controls ? [payment] : payment,
+      payment: controls ? [payment, CustomValidators.requiredArray] : payment,
     };
   }
 
