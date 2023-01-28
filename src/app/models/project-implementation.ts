@@ -70,7 +70,7 @@ export class ProjectImplementation
   inRenewalPeriod!: boolean
   usedInProjectCompletion!: boolean
   licenseClassName!: string;
-  projectTotalCost!: number
+  projectTotalCost: number = 0
 
   constructor() {
     super();

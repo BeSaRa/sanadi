@@ -24,7 +24,7 @@
           <td cdk-cell *cdkCellDef="let row"> {{row.dueDate|date: 'mediumDate'}} </td>
         </ng-container>
         <ng-container cdkColumnDef="totalCost">
-          <th cdk-header-cell style="width:120px" *cdkHeaderCellDef> {{lang.map.total_cost}}</th>
+          <th cdk-header-cell style="width:200px" *cdkHeaderCellDef> {{lang.map.total_cost}}</th>
           <td cdk-cell
               *cdkCellDef="let row; let i = index">
             <ng-container formArrayName="inputs">

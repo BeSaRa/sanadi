@@ -54,6 +54,8 @@ export class FundSourceComponent implements ControlValueAccessor, OnInit, OnDest
     inputs: new UntypedFormArray([])
   })
 
+  totalValue: number = 0;
+
   constructor(public lang: LangService, private dialog: DialogService) {
 
   }
@@ -96,15 +98,15 @@ export class FundSourceComponent implements ControlValueAccessor, OnInit, OnDest
   }
 
   openAddFundSourceDialog(): void {
-    if (!this.projectTotalCost) {
-      this.dialog.alert(this.lang.map.please_add_template_to_proceed)
-      return
-    }
-
-    if (this.remainingAmount === 0) {
-      this.dialog.info(this.lang.map.cannot_add_funding_resources_full_amount_have_been_used)
-      return;
-    }
+    // if (!this.projectTotalCost) {
+    //   this.dialog.alert(this.lang.map.please_add_template_to_proceed)
+    //   return
+    // }
+    //
+    // if (this.remainingAmount === 0) {
+    //   this.dialog.info(this.lang.map.cannot_add_funding_resources_full_amount_have_been_used)
+    //   return;
+    // }
 
     this.dialog.show(FundSourcePopupComponent, {
       operation: OperationTypes.CREATE,
@@ -121,6 +123,7 @@ export class FundSourceComponent implements ControlValueAccessor, OnInit, OnDest
         this.value = this.value.concat(source)
         this.onChange(this.value)
         this.onTouch()
+        this.calculateTotal()
       })
   }
 
@@ -144,6 +147,7 @@ export class FundSourceComponent implements ControlValueAccessor, OnInit, OnDest
         })
         this.onChange(this.value)
         this.onTouch()
+        this.calculateTotal()
       })
   }
 
@@ -157,13 +161,14 @@ export class FundSourceComponent implements ControlValueAccessor, OnInit, OnDest
       .pipe(takeUntil(this.destroy$))
       .pipe(debounceTime(250))
       .pipe(map((value) => Number(value)))
-      .subscribe(async (value) => {
+      .subscribe((value) => {
         const remaining = this.getRemaining(index)
         const cValue = value > remaining ? remaining : value
         this.value[index].totalCost = cValue;
         ctrl.setValue(cValue, {emitEvent: false})
         this.onChange(this.value)
         this.onTouch()
+        this.calculateTotal()
       })
   }
 
@@ -197,6 +202,7 @@ export class FundSourceComponent implements ControlValueAccessor, OnInit, OnDest
         this.inputs.removeAt(i);
         this.onChange(this.value)
         this.onTouch()
+        this.calculateTotal()
       })
   }
 
@@ -204,4 +210,32 @@ export class FundSourceComponent implements ControlValueAccessor, OnInit, OnDest
     return currency(this.remainingAmount).add((this.value[index] && this.value[index].totalCost || 0)).value
   }
 
+  calculateTotal(): void {
+    this.totalValue = (this.value ?? []).reduce((acc, item) => acc + item.totalCost, 0)
+  }
+
+  distributeRemaining() {
+    const length = this.value.length
+    if (!length) return
+
+    const mod = this.remainingAmount % length
+
+    if (mod === this.remainingAmount) return;
+
+    const amount = currency(this.remainingAmount).subtract(mod).value
+    this.inputs.controls.forEach((item, index) => {
+      const oldValue = item.getRawValue()
+      const value = currency(amount).add(oldValue).value
+      item.setValue(value, {emitEvent: false})
+      this.value[index].totalCost = value
+    })
+    this.onChange(this.value)
+  }
+
+  takeRemaining(index: number): void {
+    const value = currency(this.value[index].totalCost).add(this.remainingAmount).value
+    this.inputs.at(index).setValue(value, {emitEvent: false})
+    this.value[index].totalCost = value;
+    this.onChange(this.value)
+  }
 }

@@ -70,7 +70,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
   datepickerOptionsMap = {
     licenseStartDate: DateUtils.getDatepickerOptions({disablePeriod: 'none', openSelectorTopOfInput: true})
   }
-  remainingAmount!: number;
+  remainingAmount: number = 0;
 
   constructor(public lang: LangService,
               public fb: UntypedFormBuilder,
@@ -216,7 +216,6 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     this.listenToFundingResources()
 
     this.setDefaultValues()
-    // this.calculateRemaining()
     this.fundingResources.setValidators(this.validateFundingResources([
       'implementationFundraising',
       'financialGrant',
