@@ -20,7 +20,7 @@ import {Lookup} from "@models/lookup";
 import {LookupService} from "@services/lookup.service";
 import {ServiceRequestTypes} from "@app/enums/service-request-types";
 import {CommonUtils} from "@helpers/common-utils";
-import {filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
+import {catchError, exhaustMap, filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
 import {UserClickOn} from "@app/enums/user-click-on.enum";
 import {Country} from "@models/country";
 import {ActivatedRoute} from "@angular/router";
@@ -39,6 +39,7 @@ import {FundingResourceContract} from "@contracts/funding-resource-contract";
 import currency from "currency.js";
 import {CommonCaseStatus} from "@app/enums/common-case-status.enum";
 import {OpenFrom} from "@app/enums/open-from.enum";
+import {LicenseService} from "@services/license.service";
 
 @Component({
   selector: 'project-implementation',
@@ -71,6 +72,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     licenseStartDate: DateUtils.getDatepickerOptions({disablePeriod: 'none', openSelectorTopOfInput: true})
   }
   remainingAmount: number = 0;
+  selectedLicense?:ProjectImplementation;
 
   constructor(public lang: LangService,
               public fb: UntypedFormBuilder,
@@ -80,6 +82,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
               private activatedRoute: ActivatedRoute,
               private dacOchaService: DacOchaService,
               public employeeService: EmployeeService,
+              private licenseService: LicenseService,
               public dialog: DialogService) {
     super();
   }
@@ -208,6 +211,8 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
 
   _afterBuildForm(): void {
     this.handleReadonly()
+    this.loadLicenseById()
+    this.listenToLicenseSearch()
     this.listenToMainDacOchaChanges()
     this.listenToWorkAreaChanges()
     this.listenToDomainChange()
@@ -221,6 +226,18 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       'financialGrant',
       'selfFinancing',
     ]))
+  }
+
+  loadLicenseById(): void {
+    if (!this.model || !this.model.oldLicenseId)
+      return;
+
+    this.licenseService
+      .loadProjectImplementationLicenseById(this.model.oldLicenseId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((license) => {
+        this.setSelectedLicense(license, true)
+      })
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
@@ -271,7 +288,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
   _destroyComponent(): void {
   }
 
-  _updateForm(model: ProjectImplementation | undefined): void {
+  _updateForm(model: ProjectImplementation | undefined , fromSelectedLicense: boolean = false): void {
     if (!model) {
       return;
     }
@@ -329,6 +346,58 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     $event?.preventDefault();
     this.licenseSearch$.next((this.oldLicenseFullSerial.value as string || '').trim())
   }
+  private listenToLicenseSearch() {
+    this.licenseSearch$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(exhaustMap((serialNumber) => this.service.licenseSearch({
+        fullSerial: serialNumber
+      })))
+      .pipe(
+        // display message in case there is no returned license
+        tap((list) => !list.length ? this.dialog.info(this.lang.map.no_result_for_your_search_criteria) : null),
+        // allow only the collection if it has value
+        filter((result) => !!result.length)
+      )
+      .pipe(exhaustMap(licenses => licenses.length === 1 ? this.validateSingleLicense(licenses[0]).pipe(catchError(_ => of(false))) : this.openSelectLicense(licenses)))
+      .pipe(filter((info): info is ProjectImplementation => !!info))
+      .subscribe((license) => {
+        this.setSelectedLicense(license, false);
+      });
+  }
+
+  private validateSingleLicense(license: ProjectImplementation): Observable<undefined | ProjectImplementation> {
+    return this.licenseService.validateLicenseByRequestType<ProjectImplementation>(this.model!.caseType, this.requestType.value, license.id) as Observable<undefined | ProjectImplementation>;
+  }
+
+  private openSelectLicense(licenses: ProjectImplementation[]): Observable<undefined | ProjectImplementation> {
+    return this.licenseService.openNewSelectLicenseDialog(licenses, this.model?.clone({requestType: this.requestType.value || null}), true, this.service.selectLicenseDisplayColumns)
+      .onAfterClose$
+      .pipe(map((result: ({ selected: ProjectImplementation, details: ProjectImplementation } | undefined)) => result ? result.details : result));
+  }
+
+  setSelectedLicense(licenseDetails: ProjectImplementation | undefined, ignoreUpdateForm: boolean) {
+    this.selectedLicense = licenseDetails;
+
+
+    // update form fields if i have license
+    if (licenseDetails && !ignoreUpdateForm) {
+      let model: any = new ProjectImplementation().clone(licenseDetails);
+      model.requestType = this.requestType.value;
+      model.oldLicenseFullSerial = licenseDetails.fullSerial;
+      model.oldLicenseId = licenseDetails.id;
+      model.oldLicenseSerial = licenseDetails.serial;
+      model.documentTitle = '';
+      model.fullSerial = null;
+      model.description = '';
+      model.licenseStartDate = licenseDetails.licenseStartDate || licenseDetails.licenseApprovedDate;
+      // delete id because license details contains old license id, and we are adding new, so no id is needed
+      delete model.id;
+      delete model.vsId;
+
+      this._updateForm(model, true);
+    }
+  }
+
 
   handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
     of(userInteraction).pipe(
@@ -601,5 +670,9 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
         }
       } : null
     }
+  }
+
+  clearLicense() {
+    this._resetForm()
   }
 }

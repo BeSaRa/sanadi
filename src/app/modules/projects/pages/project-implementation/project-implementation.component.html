@@ -52,6 +52,15 @@
           </ng-select>
           <app-field-error-message controlName="projectWorkArea"></app-field-error-message>
         </div>
+      </div>
+      <div *ngIf="selectedLicense">
+        <selected-license-table (clearLicense)="clearLicense()" [ignoreDelete]="!isEditLicenseAllowed()"
+                                [caseType]="caseTypes.PROJECT_IMPLEMENTATION"
+                                [caseTypeViewLicense]="caseTypes.PROJECT_IMPLEMENTATION"
+                                [licenseList]="[selectedLicense]"
+                                [columns]="service.selectLicenseDisplayColumns"></selected-license-table>
+      </div>
+      <div class="row" formGroupName="basicInfo">
         <div class="col-md-4 col-sm-12 mb-4 position-relative">
           <label class="form-label" asteriskIfRequired="beneficiaryCountry"
                  for="beneficiaryCountry">{{lang.map.beneficiary_country}}</label>

@@ -183,4 +183,8 @@ export class ProjectImplementationService extends BaseGenericEService<ProjectImp
       selected: selectedFundraising
     })
   }
+
+  licenseSearch(criteria: Partial<ProjectImplementation>): Observable<ProjectImplementation[]> {
+    return this.licenseService.projectImplementationLicenseSearch(criteria);
+  }
 }
