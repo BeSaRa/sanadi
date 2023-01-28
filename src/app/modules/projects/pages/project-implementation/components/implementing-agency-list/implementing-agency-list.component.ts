@@ -3,7 +3,7 @@ import {ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, NgControl, Untyped
 import {combineLatest, Subject} from "rxjs";
 import {ImplementingAgency} from "@models/implementing-agency";
 import {ImplementingAgencyTypes} from "@app/enums/implementing-agency-types.enum";
-import {filter, switchMap, takeUntil} from "rxjs/operators";
+import {filter, switchMap, takeUntil, tap} from "rxjs/operators";
 import {CommonService} from "@services/common.service";
 import {LangService} from '@app/services/lang.service';
 import {AdminResult} from "@models/admin-result";
@@ -33,6 +33,10 @@ export class ImplementingAgencyListComponent implements ControlValueAccessor, On
     .pipe(takeUntil(this.destroy$))
     .pipe(switchMap(([type, country]) => {
       return this.commonService.loadProjectAgencies(type, country)
+    }))
+    .pipe(tap((list)=>{
+      !!(list && list.length === 1 && (this.value??[]).length === 0 && (this.selectedAgency.setValue(list[0])))
+      this.addSelectedAgency()
     }))
 
   @Input()
