@@ -450,9 +450,12 @@ export class EmploymentComponent extends EServicesGenericComponent<Employment, E
   dublicateIdintifierMessage(data: any) {
     delete data.size;
     let message = '';
-    Object.keys(data).filter(k => data[k]).forEach((k) => {
+    Object.keys(data.qID).filter(k => data.qID[k]).forEach((k) => {
       message += this.lang.map.employee_with_identification + ' ' + k + ' ' + this.lang.map.is_exist_before + '\n';
-    });
+    })
+    Object.keys(data.jobNumber).filter(k => data.jobNumber[k]).forEach((k) => {
+      message += this.lang.map.employee_with_jobNumber + ' ' + k + ' ' + this.lang.map.is_exist_before + '\n';
+    })
     if (message) {
       this.dialog.error(message);
     }

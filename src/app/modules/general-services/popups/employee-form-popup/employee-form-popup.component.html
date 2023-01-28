@@ -100,14 +100,14 @@
           [readonly]="!isEditRequestTypeAllowed" />
         <app-field-error-message controlName="phone"></app-field-error-message>
       </div>
-      <!-- JobNumber -->
+      <!-- jobNumber -->
       <div class="col-sm-6 col-md-4 mb-4 position-relative">
-        <label asteriskIfRequired="JobNumber" for="JobNumber" class="form-label">{{
+        <label asteriskIfRequired="jobNumber" for="jobNumber" class="form-label">{{
           lang.map.job_number }}</label>
-        <input id="JobNumber" validationClasses="JobNumber" formControlName="JobNumber" class="form-control" [readonly]="
+        <input id="jobNumber" validationClasses="jobNumber" formControlName="jobNumber" class="form-control" [readonly]="
             !isEditRequestTypeAllowed || !isNewRequestType() || !canDraftModel()
           " />
-        <app-field-error-message controlName="JobNumber"></app-field-error-message>
+        <app-field-error-message controlName="jobNumber"></app-field-error-message>
       </div>
       <!-- officeId -->
       <div class="col-sm-6 col-md-4 mb-4 position-relative ng-select-wrapper">
