@@ -423,6 +423,13 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
+    if (!this.requestType.value) {
+      this.dialog.error(this.lang.map.msg_please_select_x_to_continue.change({x: this.lang.map.request_type}));
+      return false;
+    }
+    if (saveType === SaveTypes.DRAFT) {
+      return true;
+    }
     if (this.isExternalOrganizationTransferee && this.selectedExecutives.length < 1 && !this.isCancel) {
       this.dialog.error(this.lang.map.you_should_add_at_least_one_person_to_executives_list);
       return false;

@@ -84,4 +84,10 @@ export class OrganizationsEntitiesSupportService extends BaseGenericEService<Org
       action
     });
   }
+  finalApprove(model: OrganizationsEntitiesSupport, action: WFResponseType): DialogRef {
+    return this.dialog.show(OrganizationsEntitiesSupportPopupComponent, {
+      model,
+      action
+    });
+  }
 }

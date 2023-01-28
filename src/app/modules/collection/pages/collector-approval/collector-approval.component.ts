@@ -88,6 +88,13 @@ export class CollectorApprovalComponent extends EServicesGenericComponent<Collec
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
+    if (!this.requestType.value) {
+      this.dialog.error(this.lang.map.msg_please_select_x_to_continue.change({x: this.lang.map.request_type}));
+      return false;
+    }
+    if (saveType === SaveTypes.DRAFT) {
+      return true;
+    }
     return of(this.form.valid)
       .pipe(tap(valid => !valid && this.invalidFormMessage()))
       .pipe(filter(valid => valid))

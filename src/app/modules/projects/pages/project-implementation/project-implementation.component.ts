@@ -232,7 +232,8 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       ...this.model,
       ...this.basicInfo.getRawValue(),
       ...this.projectInfo.getRawValue(),
-      ...this.fundingResources.getRawValue()
+      ...this.fundingResources.getRawValue(),
+      ...this.specialExplanations.getRawValue()
     })
   }
 

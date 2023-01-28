@@ -1753,4 +1753,5 @@ export interface ILanguageKeys {
   countries_add_successfully: string;
   remove_countries_messages: string;
   employee_with_jobNumber: string;
+  lbl_mobile_number: string;
 }
