@@ -225,7 +225,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
 
   _afterLaunch(): void {
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
-    this._resetForm()
+    this.resetForm$.next()
   }
 
   _prepareModel(): ProjectImplementation | Observable<ProjectImplementation> {
@@ -277,7 +277,10 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
   }
 
   _resetForm(): void {
+    this.model = this._getNewInstance();
+    this.operation = OperationTypes.CREATE;
     this.form.reset()
+    this.setDefaultValues()
   }
 
   private setDefaultValues(): void {
@@ -481,7 +484,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       .valueChanges
       .pipe(takeUntil(this.destroy$))
       .subscribe((value: ImplementingAgency[]) => {
-        value.length ? this.implementingAgencyType.disable() : this.implementingAgencyType.enable()
+        value && value.length ? this.implementingAgencyType.disable() : this.implementingAgencyType.enable()
       })
   }
 
@@ -493,7 +496,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
         value && value.length ? this.projectTotalCost.patchValue(value[0].projectTotalCost) : this.projectTotalCost.patchValue(0)
         this.calculateRemaining()
       }))
-      .pipe(filter((value): value is ImplementationTemplate[] => !!value.length))
+      .pipe(filter((value): value is ImplementationTemplate[] => (value && !!value.length)))
       .pipe(map(val => val[0] as ImplementationTemplate))
       .pipe(switchMap(template => template.loadImplementationFundraising()))
       .pipe(filter((value): value is ImplementationFundraising => !!value))
@@ -516,9 +519,9 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
 
   private calculateRemaining(): void {
     const projectTotalCost = this.projectTotalCost.getRawValue() as number
-    const grant = this.financialGrant.getRawValue() as FundingResourceContract[];
-    const self = this.selfFinancing.getRawValue() as FundingResourceContract[];
-    const fundRaising = this.implementationFundraising.getRawValue() as FundingResourceContract[];
+    const grant = this.financialGrant.getRawValue()??[] as FundingResourceContract[];
+    const self = this.selfFinancing.getRawValue()??[] as FundingResourceContract[];
+    const fundRaising = this.implementationFundraising.getRawValue()??[] as FundingResourceContract[];
     const allFields = [grant, self, fundRaising];
     const totalFundingResource = allFields.reduce((acc, fields) => {
       return acc + this.getTotalCost(fields)

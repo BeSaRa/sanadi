@@ -93,6 +93,7 @@ export class PaymentsComponent implements ControlValueAccessor, OnInit, OnDestro
       this.dialog.alert(this.lang.map.please_add_template_to_proceed)
       return
     }
+    this.calculateRemaining()
 
     if (!this.remainingAmount) {
       this.dialog.alert(this.lang.map.cannot_add_payments_full_amount_have_been_used)
@@ -173,8 +174,8 @@ export class PaymentsComponent implements ControlValueAccessor, OnInit, OnDestro
   }
 
   createInputs(values: Payment[]): void {
-    this.inputs.clear()
-    values.forEach(item => {
+    this.inputs.clear();
+    (values??[]).forEach(item => {
       const ctrl = this.createInput(item.totalCost)
       this.inputs.push(ctrl)
     })
@@ -193,7 +194,7 @@ export class PaymentsComponent implements ControlValueAccessor, OnInit, OnDestro
   }
 
   calculateRemaining(): void {
-    this.remainingAmount = currency(this.projectTotalCost).subtract(this.value.reduce((acc, item) => {
+    this.remainingAmount = currency(this.projectTotalCost).subtract((this.value??[]).reduce((acc, item) => {
       return acc + item.totalCost
     }, 0)).value
   }

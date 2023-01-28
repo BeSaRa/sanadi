@@ -174,6 +174,9 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
   }
 
   noRemainingValue(i: number) {
+    if (!this.value)
+      return;
+
     const model = this.value[i]
     return model.remainingAmount === model.totalCost
   }

@@ -63,7 +63,7 @@ export class ImplementingAgencyListComponent implements ControlValueAccessor, On
   ngOnInit(): void {
     Promise.resolve().then(() => {
       const ctrl = this.injector.get(NgControl, null, {optional: true})
-      this.control = (ctrl?.control as FormControl )|| undefined
+      this.control = (ctrl?.control as FormControl) || undefined
     })
   }
 
@@ -121,7 +121,7 @@ export class ImplementingAgencyListComponent implements ControlValueAccessor, On
   }
 
   private updateIds() {
-    this.ides = this.value.map(item => item.implementingAgency)
+    this.ides = (this.value ?? []).map(item => item.implementingAgency)
   }
 
   isExists(item: AdminResult): boolean {

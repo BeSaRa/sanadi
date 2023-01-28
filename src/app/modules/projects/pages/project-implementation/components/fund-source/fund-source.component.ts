@@ -168,7 +168,7 @@ export class FundSourceComponent implements ControlValueAccessor, OnInit, OnDest
   }
 
   private createInputs(value: FundingResourceContract[]) {
-    value.forEach(item => {
+    (value ?? []).forEach(item => {
       const ctrl = this.createControl(item.totalCost)
       this.inputs.push(ctrl)
     })
