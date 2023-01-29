@@ -97,6 +97,8 @@ import { FounderMembersComponent } from './pages/npo-management/founder-members/
     OrganizationsEntitiesSupportComponent,
     OrganizationsEntitiesSupportPopupComponent,
 
+    OrganizationsEntitiesSupportPopupComponent,
+
   ],
   imports: [
     CommonModule,
