@@ -1,5 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 import {
   ProcessFieldWrapperComponent
 } from '@app/administration/popups/general-process-popup/process-formly-components/process-field-wrapper/process-field-wrapper.component';
@@ -12,6 +14,13 @@ import {
 import {
   ExternalOrgAffiliationApprovePopupComponent
 } from '@app/modules/general-services/popups/external-org-affiliation-approve-popup/external-org-affiliation-approve-popup.component';
+import { FormlyDateFieldComponent } from '@app/services-search/components/formly-date-field/formly-date-field.component';
+import { FormlyMaskInputFieldComponent } from '@app/services-search/components/formly-mask-input-field/formly-mask-input-field.component';
+import { FormlySelectFieldComponent } from '@app/services-search/components/formly-select-field/formly-select-field.component';
+import { OrganizationOfficersComponent } from '@app/shared/components/organization-officers/organization-officers.component';
+import { FormlyBootstrapModule } from '@ngx-formly/bootstrap';
+import { FormlyModule } from '@ngx-formly/core';
+import { AwarenessActivitySuggestionComponent } from './pages/awareness-activity-suggestion/awareness-activity-suggestion.component';
 import { FormlyDateFieldComponent } from '@app/services-search/components/formly-date-field/formly-date-field.component';
 import { FormlyMaskInputFieldComponent } from '@app/services-search/components/formly-mask-input-field/formly-mask-input-field.component';
 import { FormlySelectFieldComponent } from '@app/services-search/components/formly-select-field/formly-select-field.component';
@@ -46,14 +55,22 @@ import { ForeignCountriesProjectsComponent } from './pages/foreign-countries-pro
 import { InquiryComponent } from './pages/inquiry/inquiry.component';
 import { InternationalCooperationComponent } from './pages/international-cooperation/international-cooperation.component';
 import { FounderMembersComponent } from './pages/npo-management/founder-members/founder-members.component';
+import { InquiryComponent } from './pages/inquiry/inquiry.component';
+import { InternationalCooperationComponent } from './pages/international-cooperation/international-cooperation.component';
+import { FounderMembersComponent } from './pages/npo-management/founder-members/founder-members.component';
 import { NpoContactOfficerComponent } from './pages/npo-management/npo-contact-officer/npo-contact-officer.component';
 import { OrganizationsEntitiesSupportComponent } from './pages/organizations-entities-support/organizations-entities-support.component';
+import { OrganizationsEntitiesSupportComponent } from './pages/organizations-entities-support/organizations-entities-support.component';
 import { CoordinationWithOrgPopupComponent } from './popups/coordination-with-org-popup/coordination-with-org-popup.component';
+import { EmployeeFormPopupComponent } from './popups/employee-form-popup/employee-form-popup.component';
+import { EmploymentApproveComponent } from './popups/employment-approve/employment-approve.component';
 import { EmployeeFormPopupComponent } from './popups/employee-form-popup/employee-form-popup.component';
 import { EmploymentApproveComponent } from './popups/employment-approve/employment-approve.component';
 import { FollowupDateApprovePopupComponent } from './popups/follow-up-date-approve-popup/follow-up-date-approve-popup.component';
 import { OrganizationsEntitiesSupportPopupComponent } from './popups/organizations-entities-support-popup/organizations-entities-support-popup.component';
 import { EmployeesDataComponent } from './shared/employees-data/employees-data.component';
+import { RealBeneficiariesComponent } from './shared/real-beneficiaries/real-beneficiaries.component';
+import { CharityReportsComponent } from './shared/risk-reports/risk-reports.component';
 import { RealBeneficiariesComponent } from './shared/real-beneficiaries/real-beneficiaries.component';
 import { CharityReportsComponent } from './shared/risk-reports/risk-reports.component';
 
@@ -94,6 +111,8 @@ import { CharityReportsComponent } from './shared/risk-reports/risk-reports.comp
     InquiryComponent,
     InternationalCooperationComponent,
     OrganizationsEntitiesSupportComponent,
+    OrganizationsEntitiesSupportPopupComponent,
+
     OrganizationsEntitiesSupportPopupComponent,
 
   ],

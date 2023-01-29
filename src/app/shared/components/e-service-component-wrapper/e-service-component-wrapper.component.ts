@@ -809,7 +809,6 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         }
       },
       // organization final reject
-      // organization final reject
       {
         type: 'action',
         icon: 'mdi-undo-variant',
