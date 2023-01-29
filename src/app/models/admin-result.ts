@@ -12,7 +12,7 @@ export class AdminResult {
   fnId?: string;
   disabled?: boolean; // used when changing lookup/database record to admin-result and bind to disabled property for dropdown
 
-  private langService: LangService;
+  protected langService: LangService;
 
   constructor() {
     this.langService = FactoryService.getService('LangService');
