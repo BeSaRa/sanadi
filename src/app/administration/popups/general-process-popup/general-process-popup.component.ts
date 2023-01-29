@@ -109,7 +109,7 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
   }
   initPopup(): void {
     this.adminLookupService.loadGeneralProcessClassificaion().subscribe(data => {
-      this.mainClassificationsList = data;
+      this.mainClassificationsList = data.filter(c => !c.parentId);;
     })
     this.internalDepartmentService.loadGeneralProcessDepartments().subscribe(deparments => {
       this.departmentList = deparments;
