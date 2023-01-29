@@ -11,7 +11,7 @@
       <input id="fullName" validationClasses="fullName" formControlName="fullName" class="form-control">
       <app-field-error-message controlName="fullName"></app-field-error-message>
     </div>
-    <div class="col-md-6 col-sm-12 mb-4 position-relative">
+    <div [ngClass]="{'col-md-6': isGrant()}" class="col-sm-12 mb-4 position-relative">
       <label class="form-label" for="field_name">{{lang.map.project_total_cost}}</label>
       <input tabindex="-1" id="field_name" readonly
              [value]="projectTotalCost| mask: maskPattern.SEPARATOR: maskPattern.THOUSAND_SEPARATOR"

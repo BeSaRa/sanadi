@@ -1,5 +1,7 @@
 export interface ILanguageKeys {
+  fundraising_remaining_amount: string;
   cannot_add_funding_resources_full_amount_have_been_used: string;
+  cannot_add_payments_full_amount_have_been_used: string;
   alternate_emails: string;
   default_language: string;
   user_preferences: string;
@@ -1752,4 +1754,6 @@ export interface ILanguageKeys {
   government_agencies: string;
   countries_add_successfully: string;
   remove_countries_messages: string;
+  employee_with_jobNumber: string;
+  lbl_mobile_number: string;
 }

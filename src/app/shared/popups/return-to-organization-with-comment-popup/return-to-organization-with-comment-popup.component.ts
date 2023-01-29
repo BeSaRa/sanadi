@@ -1,8 +1,10 @@
+import { CoordinationWithOrganizationsRequest } from './../../../models/coordination-with-organizations-request';
+import { CaseTypes } from './../../../enums/case-types.enum';
 import { Component, Inject, OnInit } from '@angular/core';
 import {
   UntypedFormBuilder,
   UntypedFormControl,
-  UntypedFormGroup
+  UntypedFormGroup,
 } from '@angular/forms';
 import { ILanguageKeys } from '@app/interfaces/i-language-keys';
 import { IReturnToOrganizationService } from '@app/interfaces/i-return-to-organization-service-interface';
@@ -14,8 +16,8 @@ import { ToastService } from '@app/services/toast.service';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
 import { CustomValidators } from '@app/validators/custom-validators';
-import { Subject } from 'rxjs';
-import { filter, take, takeUntil } from 'rxjs/operators';
+import { of, Subject } from 'rxjs';
+import { filter, take, takeUntil, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-return-to-organization-with-comment-popup',
@@ -83,10 +85,7 @@ export class ReturnToOrganizationWithCommentPopupComponent implements OnInit {
 
   private send(): void {
     this.service
-      .returnToOrganization(
-        this.data.caseId,
-        this.form.get('organization')?.value!
-      )
+      .returnToOrganization(this.data.caseId,this.organization.value)
       .pipe(take(1))
       .subscribe(() => {
         this.toast.success(this.lang.map.sent_successfully);
@@ -106,6 +105,21 @@ export class ReturnToOrganizationWithCommentPopupComponent implements OnInit {
 
     send$
       .pipe(filter((_) => this.form.valid && this.comment.valid))
+      .pipe(
+        switchMap((_) => {
+          if (
+            this.data.model.caseType ===
+            CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST
+          ) {
+            const model = this.data.model as CoordinationWithOrganizationsRequest;
+            const selectedOrganization =
+              model.participatingOrganizaionList.find((x) => x.organizationId === this.organization.value)!;
+              selectedOrganization.notes = this.comment.value;
+            return model.save()
+          }
+          return of(null);
+        })
+      )
       .subscribe(() => this.send());
   }
 
@@ -120,5 +134,8 @@ export class ReturnToOrganizationWithCommentPopupComponent implements OnInit {
       ]);
       this.comment.updateValueAndValidity();
     }
+  }
+  get organization(): UntypedFormControl {
+    return this.form.get('organization') as UntypedFormControl;
   }
 }

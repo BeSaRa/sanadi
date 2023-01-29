@@ -183,8 +183,14 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
-    if ((this.requestType.value == BankAccountRequestTypes.NEW && this.operationType.value == BankAccountOperationTypes.MERGE) ||
-      (this.requestType.value == BankAccountRequestTypes.UPDATE && this.operationType.value == BankAccountOperationTypes.MERGE)) {
+    if (!this.requestType.value) {
+      this.dialog.error(this.lang.map.msg_please_select_x_to_continue.change({x: this.lang.map.request_type}));
+      return false;
+    }
+    if (saveType === SaveTypes.DRAFT) {
+      return true;
+    }
+    if ((this.requestType.value == BankAccountRequestTypes.NEW || this.requestType.value == BankAccountRequestTypes.UPDATE) && this.operationType.value == BankAccountOperationTypes.MERGE) {
       if (this.selectedBankAccounts.length < 2) {
         this.dialog.error(this.lang.map.you_have_to_select_at_least_two_bank_accounts);
         return false;
@@ -231,7 +237,10 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
         x.isMergeAccount = x.id === this.ownerOfMergedBankAccounts.value;
       });
 
-      model.category = this.selectedBankAccounts.find(x => x.isMergeAccount)!.type;
+      const mergeAccount = this.selectedBankAccounts.find(x => x.isMergeAccount);
+      if (!!mergeAccount) {
+        model.category = mergeAccount.type;
+      }
     }
     model!.internalBankAccountDTOs = this.selectedBankAccounts;
     model!.bankAccountExecutiveManagementDTOs = this.selectedNPOEmployees;
@@ -398,7 +407,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
           this.resetForm$.next();
           this.requestType.setValue(requestTypeValue);
         }
-        if(!requestTypeValue) {
+        if (!requestTypeValue) {
           requestTypeValue = this.requestType && this.requestType.value;
         }
         if (requestTypeValue) {

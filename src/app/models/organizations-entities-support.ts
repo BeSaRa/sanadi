@@ -134,7 +134,9 @@ export class OrganizationsEntitiesSupport extends LicenseApprovalModel<
       beneficiariesNumber: control
         ? [
             beneficiariesNumber,
-            [CustomValidators.required, CustomValidators.number],
+            [CustomValidators.required, CustomValidators.number,CustomValidators.maxLength(
+              CustomValidators.defaultLengths.SWIFT_CODE_MAX
+            )],
           ]
         : beneficiariesNumber,
     };
@@ -167,6 +169,9 @@ export class OrganizationsEntitiesSupport extends LicenseApprovalModel<
   }
   approve(): DialogRef {
     return this.service.approve(this, WFResponseType.APPROVE)
+  }
+  finalApprove(): DialogRef {
+    return this.service.finalApprove(this, WFResponseType.FINAL_APPROVE)
   }
   convertToOrganizationsEntitiesSupport() {
     return new OrganizationsEntitiesSupport().clone({

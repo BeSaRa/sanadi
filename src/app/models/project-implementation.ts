@@ -70,7 +70,7 @@ export class ProjectImplementation
   inRenewalPeriod!: boolean
   usedInProjectCompletion!: boolean
   licenseClassName!: string;
-  projectTotalCost!: number
+  projectTotalCost: number = 0
 
   constructor() {
     super();
@@ -137,7 +137,7 @@ export class ProjectImplementation
       implementationFundraising: controls ? [implementationFundraising] : implementationFundraising,
       financialGrant: controls ? [financialGrant] : financialGrant,
       selfFinancing: controls ? [selfFinancing] : selfFinancing,
-      payment: controls ? [payment] : payment,
+      payment: controls ? [payment, CustomValidators.requiredArray] : payment,
     };
   }
 

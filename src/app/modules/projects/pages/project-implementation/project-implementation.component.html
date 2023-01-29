@@ -1,11 +1,13 @@
 <div class="row">
   <!--  <tabs-list [activeTabIndex]="2" [accordionView]="accordionView">-->
   <tabs-list [accordionView]="accordionView">
-    <tab name="basic_info" [template]="basic_info" [title]="lang.map.lbl_basic_info">
+    <tab name="basic_info" [hasError]="basicInfo.invalid" [template]="basic_info" [title]="lang.map.lbl_basic_info">
     </tab>
-    <tab name="project_info" [template]="project_info" [title]="lang.map.project_info"></tab>
-    <tab name="project_info" [template]="funding_sources" [title]="lang.map.funding_resources"></tab>
-    <tab name="special_explanations" [template]="specialExplanations"
+    <tab name="project_info" [hasError]="projectInfo.invalid" [template]="project_info"
+         [title]="lang.map.project_info"></tab>
+    <tab name="fundingResources" [hasError]="fundingResources.invalid" [template]="funding_sources"
+         [title]="lang.map.funding_resources"></tab>
+    <tab name="special_explanations" [hasError]="specialExplanations.invalid" [template]="special_explanations"
          [title]="lang.map.special_explanations"></tab>
     <tab name="attachments" *ngIf="!accordionView" [template]="attachmentsTab" [title]="lang.map.attachments"></tab>
   </tabs-list>
@@ -50,6 +52,15 @@
           </ng-select>
           <app-field-error-message controlName="projectWorkArea"></app-field-error-message>
         </div>
+      </div>
+      <div *ngIf="selectedLicense">
+        <selected-license-table (clearLicense)="clearLicense()" [ignoreDelete]="!isEditLicenseAllowed()"
+                                [caseType]="caseTypes.PROJECT_IMPLEMENTATION"
+                                [caseTypeViewLicense]="caseTypes.PROJECT_IMPLEMENTATION"
+                                [licenseList]="[selectedLicense]"
+                                [columns]="service.selectLicenseDisplayColumns"></selected-license-table>
+      </div>
+      <div class="row" formGroupName="basicInfo">
         <div class="col-md-4 col-sm-12 mb-4 position-relative">
           <label class="form-label" asteriskIfRequired="beneficiaryCountry"
                  for="beneficiaryCountry">{{lang.map.beneficiary_country}}</label>
@@ -196,7 +207,7 @@
                   formControlName="payment"></payments>
       </ng-container>
     </ng-template>
-    <ng-template #specialExplanations>
+    <ng-template #special_explanations>
       <ng-container formGroupName="specialExplanations">
         <div class="col-sm-12 mb-4 position-relative">
           <label class="form-label" asteriskIfRequired="description"

@@ -3,7 +3,7 @@ import {ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, NgControl, Untyped
 import {combineLatest, Subject} from "rxjs";
 import {ImplementingAgency} from "@models/implementing-agency";
 import {ImplementingAgencyTypes} from "@app/enums/implementing-agency-types.enum";
-import {filter, switchMap, takeUntil} from "rxjs/operators";
+import {filter, switchMap, takeUntil, tap} from "rxjs/operators";
 import {CommonService} from "@services/common.service";
 import {LangService} from '@app/services/lang.service';
 import {AdminResult} from "@models/admin-result";
@@ -34,6 +34,10 @@ export class ImplementingAgencyListComponent implements ControlValueAccessor, On
     .pipe(switchMap(([type, country]) => {
       return this.commonService.loadProjectAgencies(type, country)
     }))
+    .pipe(tap((list)=>{
+      !!(list && list.length === 1 && (this.value??[]).length === 0 && (this.selectedAgency.setValue(list[0])))
+      this.addSelectedAgency()
+    }))
 
   @Input()
   disabled: boolean = false;
@@ -63,7 +67,7 @@ export class ImplementingAgencyListComponent implements ControlValueAccessor, On
   ngOnInit(): void {
     Promise.resolve().then(() => {
       const ctrl = this.injector.get(NgControl, null, {optional: true})
-      this.control = (ctrl?.control as FormControl )|| undefined
+      this.control = (ctrl?.control as FormControl) || undefined
     })
   }
 
@@ -121,7 +125,7 @@ export class ImplementingAgencyListComponent implements ControlValueAccessor, On
   }
 
   private updateIds() {
-    this.ides = this.value.map(item => item.implementingAgency)
+    this.ides = (this.value ?? []).map(item => item.implementingAgency)
   }
 
   isExists(item: AdminResult): boolean {

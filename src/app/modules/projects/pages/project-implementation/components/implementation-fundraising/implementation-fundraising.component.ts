@@ -63,6 +63,8 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
   fromGroup = new UntypedFormGroup({
     inputs: new UntypedFormArray([])
   })
+  totalValue: number = 0;
+  localRemaining: number = 0;
 
   constructor(private injector: Injector,
               private service: ProjectImplementationService,
@@ -138,6 +140,7 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
         model.totalCost = actualValue
         ctrl.patchValue(actualValue, {emitEvent: false})
         this.onChange(this.value)
+        this.calculateTotal()
       })
   }
 
@@ -167,13 +170,16 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
     })
   }
 
-  getRemaining(index: number) {
+  takeRemaining(index: number) {
     const ctrl = this.inputs.at(index)
     const model = this.value[index];
     ctrl.setValue(model.remainingAmount)
   }
 
   noRemainingValue(i: number) {
+    if (!this.value)
+      return;
+
     const model = this.value[i]
     return model.remainingAmount === model.totalCost
   }
@@ -202,6 +208,7 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
         this.value = this.value.concat(template)
         this.onChange(this.value);
         this.onTouch()
+        this.calculateTotal()
       })
 
   }
@@ -214,6 +221,28 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
       .subscribe(() => {
         this.value = this.value.filter(template => template.projectLicenseId !== item.projectLicenseId)
         this.onChange(this.value)
+        this.calculateTotal()
       })
+  }
+
+  calculateTotal(): void {
+    this.totalValue = (this.value ?? []).reduce((acc, item) => acc + item.totalCost, 0)
+    this.calculateRemaining()
+  }
+
+  calculateRemaining(): void {
+    this.localRemaining = (this.value ?? []).reduce((acc, item) => acc + (item.remainingAmount - item.totalCost), 0)
+  }
+
+  distributeRemaining() {
+    if (!(this.value ?? []).length) return;
+
+    (this.value ?? []).map((item, index) => {
+      this.inputs.at(index).setValue(item.remainingAmount, {emitEvent: false})
+      item.totalCost = item.remainingAmount;
+      return item
+    })
+    this.onChange(this.value)
+    this.calculateTotal()
   }
 }

@@ -66,6 +66,7 @@ import {ForeignCountriesProjects} from '@app/models/foreign-countries-projects';
 import {CastResponse} from "@decorators/cast-response";
 import {GeneralAssociationMeetingAttendance} from '@app/models/general-association-meeting-attendance';
 import {ProjectFundraising} from "@app/models/project-fundraising";
+import {ProjectImplementation} from "@models/project-implementation";
 
 const collectionInterceptor = new CollectionApprovalInterceptor()
 const collectorInterceptor = new CollectorApprovalInterceptor()
@@ -168,6 +169,9 @@ export class LicenseService {
         break;
       case CaseTypes.ORGANIZATION_ENTITIES_SUPPORT:
         url = this.urlService.URLS.ORGANIZATION_ENTITIES_SUPPORT;
+        break;
+      case CaseTypes.PROJECT_IMPLEMENTATION:
+        url = this.urlService.URLS.PROJECT_IMPLEMENTATION;
         break;
     }
     return url;
@@ -595,6 +599,8 @@ export class LicenseService {
       return this._validateProjectFundraisingRequestType<T>(requestType, licenseId);
     } else if (caseType === CaseTypes.ORGANIZATION_ENTITIES_SUPPORT) {
       return this._validateOrganizationsEntitiesSupportByRequestType<T>(requestType, licenseId);
+    } else if (caseType === CaseTypes.PROJECT_IMPLEMENTATION) {
+      return this._validateProjectImplementationRequestType<T>(requestType, licenseId);
     }
     return of(undefined);
   }
@@ -710,8 +716,27 @@ export class LicenseService {
     });
   }
 
+  @CastResponse(() => ProjectImplementation)
+  private _validateProjectImplementationRequestType<T>(requestType: number, oldLicenseId: string) {
+    return this.http.post<T>(this.getServiceUrlByCaseType(CaseTypes.PROJECT_IMPLEMENTATION) + '/draft/validate', {
+      requestType,
+      oldLicenseId
+    });
+  }
+
   @CastResponse(() => ProjectFundraising)
   loadProjectFundraisingLicenseById(licenseId: string): Observable<ProjectFundraising> {
     return this.http.get<ProjectFundraising>(this.getServiceUrlByCaseType(CaseTypes.PROJECT_FUNDRAISING) + '/license/' + licenseId + '/details')
+  }
+
+  @CastResponse(() => ProjectImplementation)
+  projectImplementationLicenseSearch(criteria: Partial<ProjectImplementation>): Observable<ProjectImplementation[]> {
+    const orgId = {organizationId: this.employeeService.isExternalUser() ? this.employeeService.getProfile()?.id : undefined}
+    return this.http.post<ProjectImplementation[]>(this.urlService.URLS.PROJECT_IMPLEMENTATION + '/license/search', {...criteria, ...orgId});
+  }
+
+  @CastResponse(() => ProjectImplementation)
+  loadProjectImplementationLicenseById(licenseId: string): Observable<ProjectImplementation> {
+    return this.http.get<ProjectImplementation>(this.getServiceUrlByCaseType(CaseTypes.PROJECT_IMPLEMENTATION) + '/license/' + licenseId + '/details')
   }
 }

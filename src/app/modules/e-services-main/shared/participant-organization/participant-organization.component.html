@@ -47,6 +47,11 @@
             <td cdk-cell *cdkCellDef="let row"> {{row.managerDecisionInfo?.getName() === '' || undefined ? lang.map.menu_under_process: row.managerDecisionInfo?.getName()}} </td>
           </ng-container>
 
+          <ng-container cdkColumnDef="notes">
+            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.comment}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.notes}} </td>
+          </ng-container>
+
           <ng-container cdkColumnDef="actions">
             <th [hidden]="!canView && !canDelete" cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
             <td cdk-cell *cdkCellDef="let row;  let i = index " class="table-actions">
