@@ -1,4 +1,3 @@
-import { FinancialTransferLicensingApprovePopupComponent } from './../modules/general-services/popups/financial-transfer-licensing-approve-popup/financial-transfer-licensing-approve-popup.component';
 import { SelectBankAccountPopupComponent } from './../modules/e-services-main/popups/select-bank-account-popup/select-bank-account-popup.component';
 import { BankAccount } from './../models/bank-account';
 import { SelectPreRegisteredPopupComponent } from './../modules/e-services-main/popups/select-pre-registered-popup/select-pre-registered-popup.component';
@@ -7,10 +6,6 @@ import { AdminResult } from '@app/models/admin-result';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import {
-  CastResponse,
-  CastResponseContainer,
-} from '@app/decorators/decorators/cast-response';
 import {
   CastResponse,
   CastResponseContainer,
@@ -64,16 +59,7 @@ export class FinancialTransferLicensingService extends BaseGenericEService<Finan
     'ouInfo',
     'creatorInfo',
   ];
-  searchColumns: string[] = [
-    'fullSerial',
-    'requestTypeInfo',
-    'subject',
-    'goal',
-    'createdOn',
-    'caseStatus',
-    'ouInfo',
-    'creatorInfo',
-  ];
+
   selectLicenseDisplayColumns: string[] = [];
   selectLicenseDisplayColumnsReport: string[] = [
     'licenseNumber',
@@ -82,13 +68,7 @@ export class FinancialTransferLicensingService extends BaseGenericEService<Finan
     'status',
     'actions',
   ];
-  selectLicenseDisplayColumnsReport: string[] = [
-    'licenseNumber',
-    'subject',
-    'goal',
-    'status',
-    'actions',
-  ];
+
   serviceKey: keyof ILanguageKeys = 'menu_financial_transfers_licensing';
   jsonSearchFile: string = 'financial_transfers_licensing.json';
   caseStatusIconMap: Map<number, string> = new Map<number, string>();

@@ -89,7 +89,7 @@ import {
 import {
   ProjectImplementationComponent
 } from "@modules/projects/pages/project-implementation/project-implementation.component";
-import { FinancialTransfersLicensingComponent } from '@app/modules/general-services/pages/financial-transfers-licensing/financial-transfers-licensing.component';
+import { FinancialTransfersLicensingComponent } from '@app/modules/remittances/pages/financial-transfers-licensing/financial-transfers-licensing.component';
 
 @Injectable({
   providedIn: 'root'
