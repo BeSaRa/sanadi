@@ -59,6 +59,7 @@ export class FinancialTransferLicensingService extends BaseGenericEService<Finan
     'ouInfo',
     'creatorInfo',
   ];
+
   selectLicenseDisplayColumns: string[] = [];
   selectLicenseDisplayColumnsReport: string[] = [
     'licenseNumber',
@@ -67,6 +68,7 @@ export class FinancialTransferLicensingService extends BaseGenericEService<Finan
     'status',
     'actions',
   ];
+
   serviceKey: keyof ILanguageKeys = 'menu_financial_transfers_licensing';
   jsonSearchFile: string = 'financial_transfers_licensing.json';
   caseStatusIconMap: Map<number, string> = new Map<number, string>();

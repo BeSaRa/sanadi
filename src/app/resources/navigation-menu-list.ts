@@ -1124,6 +1124,6 @@ export const navigationMenuList = [
     group: 'remittance',
     itemOrder: 1,
     svg: null
-  },
+  }
 
 ];

@@ -18,7 +18,6 @@ import { FormlySelectFieldComponent } from '@app/services-search/components/form
 import { OrganizationOfficersComponent } from '@app/shared/components/organization-officers/organization-officers.component';
 import { FormlyBootstrapModule } from '@ngx-formly/bootstrap';
 import { FormlyModule } from '@ngx-formly/core';
-import { AwarenessActivitySuggestionComponent } from './pages/awareness-activity-suggestion/awareness-activity-suggestion.component';
 import { EmploymentComponent } from './pages/employment/employment.component';
 import { GeneralProcessNotificationComponent } from './pages/general-process-notification/general-process-notification.component';
 import { NpoBankAccountComponent } from './pages/npo-management/npo-bank-account/npo-bank-account.component';
@@ -44,9 +43,6 @@ import { GeneralServicesComponent } from './general-services.component';
 import { ConsultationComponent } from './pages/consultation/consultation.component';
 import { ExternalOrgAffiliationComponent } from './pages/external-org-affiliation/external-org-affiliation.component';
 import { ForeignCountriesProjectsComponent } from './pages/foreign-countries-projects/foreign-countries-projects.component';
-import { InquiryComponent } from './pages/inquiry/inquiry.component';
-import { InternationalCooperationComponent } from './pages/international-cooperation/international-cooperation.component';
-import { FounderMembersComponent } from './pages/npo-management/founder-members/founder-members.component';
 import { NpoContactOfficerComponent } from './pages/npo-management/npo-contact-officer/npo-contact-officer.component';
 import { OrganizationsEntitiesSupportComponent } from './pages/organizations-entities-support/organizations-entities-support.component';
 import { CoordinationWithOrgPopupComponent } from './popups/coordination-with-org-popup/coordination-with-org-popup.component';
@@ -57,6 +53,10 @@ import { OrganizationsEntitiesSupportPopupComponent } from './popups/organizatio
 import { EmployeesDataComponent } from './shared/employees-data/employees-data.component';
 import { RealBeneficiariesComponent } from './shared/real-beneficiaries/real-beneficiaries.component';
 import { CharityReportsComponent } from './shared/risk-reports/risk-reports.component';
+import { AwarenessActivitySuggestionComponent } from './pages/awareness-activity-suggestion/awareness-activity-suggestion.component';
+import { InquiryComponent } from './pages/inquiry/inquiry.component';
+import { InternationalCooperationComponent } from './pages/international-cooperation/international-cooperation.component';
+import { FounderMembersComponent } from './pages/npo-management/founder-members/founder-members.component';
 
 
 @NgModule({
