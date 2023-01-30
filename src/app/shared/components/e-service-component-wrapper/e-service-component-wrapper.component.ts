@@ -1524,7 +1524,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     }
     let isAllowed = true;
     if (this.component.openFrom === OpenFrom.TEAM_INBOX) {
-      isAllowed = this.component.model.taskDetails?.isClaimed();
+      isAllowed = this.component.model.taskDetails!.isClaimed();
     }
     if (isAllowed) {
       let caseStatus = this.component.model.getCaseStatus();
