@@ -38,7 +38,7 @@
         }
       },
       {
-        "key": "identificationNumber",
+        "key": "createdBy",
         "type": "input",
         "label": "requester_identification_number",
         "validations": {

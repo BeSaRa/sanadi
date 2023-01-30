@@ -196,7 +196,7 @@
   </ng-template>
   <ng-template #transferBankAccountTabTemplate>
     <ng-container formGroupName="transferBankAccount">
-      <div class="row">
+      <div class="row" *ngIf="!readonly">
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label for="bankAccountsControl" asteriskIfRequired [control]="bankAccountsControl"
             class="form-label">{{lang.map.bank_accounts}}</label>
@@ -243,6 +243,7 @@
       #financialTransfersProjectsTab [list]="model?.financialTransfersProjects  || []"
         [readonly]="readonly" (readyEvent)="financialTransfersProjectsTabStatus = $event"
         (listUpdated)="updateTransactionAmount($event)" [submissionMechanism]="submissionMechanism"
+        [approvedFinancialTransferProjects]="approvedFinancialTransferProjectsList"
         >
       </financial-transfers-projects>
 

@@ -1,3 +1,4 @@
+import { ExternalProjectLicensing } from './../../../../models/external-project-licensing';
 import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import {
   UntypedFormArray,
@@ -133,6 +134,7 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
   authorizedEntityBankAccounts: BankAccount[] = [];
   transferEntityBankAccounts: BankAccount[] = [];
   bankAccountsControl!: UntypedFormControl;
+  approvedFinancialTransferProjectsList:ExternalProjectLicensing[] = [];
 
   financialTransfersProjectsTabStatus: ReadinessStatus = 'READY';
   @ViewChild('financialTransfersProjectsTab')
@@ -476,12 +478,15 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
     this.currency.setValidators([]);
     this.currencyTransferTransactionAmount.setValidators([
       CustomValidators.decimal(CustomValidators.defaultLengths.DECIMAL_PLACES),
+      CustomValidators.maxLength(
+        CustomValidators.defaultLengths.SWIFT_CODE_MAX
+      ),
     ]);
     this.actualTransferDate.setValidators([]);
     this.transferNumber.setValidators([
       CustomValidators.number,
       CustomValidators.maxLength(
-        CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+        CustomValidators.defaultLengths.SWIFT_CODE_MAX
       ),
     ]);
   }
@@ -740,8 +745,16 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
   }
   private _loadExternalProjects() {
     this.service
-      .loadEternalProjects(this.employeeService.getProfile()?.id!)
-      .subscribe();
+      .loadEternalProjects()
+      .pipe(
+        take(1),
+        map(projects=>projects.map(x=>new ExternalProjectLicensing().clone(x)))
+        )
+      .subscribe(projects=>{
+        this.approvedFinancialTransferProjectsList = projects
+        console.log(this.approvedFinancialTransferProjectsList);
+
+      });
   }
   private _listenToTransferTypeChange() {
     this.transferType.valueChanges

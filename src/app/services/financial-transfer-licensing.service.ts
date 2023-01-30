@@ -1,3 +1,5 @@
+import { FinancialTransfersProject } from '@app/models/financial-transfers-project';
+import { ExternalProjectLicensing } from './../models/external-project-licensing';
 import { SelectBankAccountPopupComponent } from './../modules/e-services-main/popups/select-bank-account-popup/select-bank-account-popup.component';
 import { BankAccount } from './../models/bank-account';
 import { SelectPreRegisteredPopupComponent } from './../modules/e-services-main/popups/select-pre-registered-popup/select-pre-registered-popup.component';
@@ -112,16 +114,31 @@ export class FinancialTransferLicensingService extends BaseGenericEService<Finan
     return this._loadOrganizationBankAccounts(orgId);
   }
 
-  // @CastResponse(() => any)
-  private _loadExternalProjects(organizationId: number): Observable<any> {
-    return this.http.post<any>(
+  @CastResponse(undefined, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  private _loadExternalProjects(): Observable<ExternalProjectLicensing[]> {
+    return this.http.post<ExternalProjectLicensing[]>(
       this._getURLSegment() + '/external-project-license/search',
       {}
     );
   }
 
-  loadEternalProjects(organizationId: number) {
-    return this._loadExternalProjects(organizationId);
+  loadEternalProjects() {
+    return this._loadExternalProjects();
+  }
+
+  @CastResponse(undefined, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  private _loadExternalProjectsDetails(licenseId: string): Observable<FinancialTransfersProject> {
+    return this.http.get<FinancialTransfersProject>(
+      this._getURLSegment() + '/external-project-details/' + licenseId + '/details');
+  }
+  loadEternalProjectsDetails(licenseId: string) {
+    return this._loadExternalProjectsDetails(licenseId);
   }
   getSearchCriteriaModel<
     S extends FinancialTransferLicensing
@@ -169,6 +186,12 @@ export class FinancialTransferLicensingService extends BaseGenericEService<Finan
     });
   }
   approve(model: FinancialTransferLicensing, action: WFResponseType): DialogRef {
+    return this.dialog.show(FinancialTransferLicensingApprovePopupComponent, {
+      model,
+      action
+    });
+  }
+  finalApprove(model: FinancialTransferLicensing, action: WFResponseType): DialogRef {
     return this.dialog.show(FinancialTransferLicensingApprovePopupComponent, {
       model,
       action

@@ -1,20 +1,19 @@
-import { FinancialTransfersProject } from './financial-transfers-project';
-import { EmployeeService } from '@services/employee.service';
-import { AdminResult } from '@app/models/admin-result';
+import { InterceptModel } from '@app/decorators/decorators/intercept-model';
 import { CaseTypes } from '@app/enums/case-types.enum';
+import { WFResponseType } from '@app/enums/wfresponse-type.enum';
 import { dateSearchFields } from '@app/helpers/date-search-fields';
 import { infoSearchFields } from '@app/helpers/info-search-fields';
 import { normalSearchFields } from '@app/helpers/normal-search-fields';
+import { FinancialTransferLicensingInterceptor } from '@app/model-interceptors/financial-transfer-licensing-interceptor';
+import { AdminResult } from '@app/models/admin-result';
 import { FactoryService } from '@app/services/factory.service';
+import { FinancialTransferLicensingService } from '@app/services/financial-transfer-licensing.service';
+import { DialogRef } from '@app/shared/models/dialog-ref';
 import { ISearchFieldsMap } from '@app/types/types';
 import { CustomValidators } from '@app/validators/custom-validators';
+import { EmployeeService } from '@services/employee.service';
+import { FinancialTransfersProject } from './financial-transfers-project';
 import { LicenseApprovalModel } from './license-approval-model';
-import { FinancialTransferLicensingInterceptor } from '@app/model-interceptors/financial-transfer-licensing-interceptor';
-import { InterceptModel } from '@app/decorators/decorators/intercept-model';
-import { FinancialTransferLicensingService } from '@app/services/financial-transfer-licensing.service';
-import { ImplementingAgencyTypes } from '@app/enums/implementing-agency-types.enum';
-import { DialogRef } from '@app/shared/models/dialog-ref';
-import { WFResponseType } from '@app/enums/wfresponse-type.enum';
 
 const { send, receive } = new FinancialTransferLicensingInterceptor();
 
@@ -51,8 +50,6 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
   actualTransferDate!: string;
   transferringEntityId!: string;
   transferNumber!: string;
-
-  followUpDateString: string = '';
   receiverType!: number;
   submissionMechanism!: number;
 
@@ -165,6 +162,9 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
               CustomValidators.decimal(
                 CustomValidators.defaultLengths.DECIMAL_PLACES
               ),
+              CustomValidators.maxLength(
+                CustomValidators.defaultLengths.SWIFT_CODE_MAX
+              )
             ],
           ]
         : qatariTransactionAmount,
@@ -272,10 +272,13 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
         ? [
             currencyTransferTransactionAmount,
             [
-
+              CustomValidators.maxLength(
+                CustomValidators.defaultLengths.SWIFT_CODE_MAX
+              ),
               CustomValidators.decimal(
                 CustomValidators.defaultLengths.DECIMAL_PLACES
-              ),
+              )
+
             ],
           ]
         : currencyTransferTransactionAmount,
@@ -288,7 +291,7 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
             [
               CustomValidators.number,
               CustomValidators.maxLength(
-                CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+                CustomValidators.defaultLengths.SWIFT_CODE_MAX
               ),
             ],
           ]
@@ -331,5 +334,8 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
   }
   approve(): DialogRef {
     return this.service.approve(this, WFResponseType.APPROVE)
+  }
+  finalApprove(): DialogRef {
+    return this.service.finalApprove(this, WFResponseType.FINAL_APPROVE)
   }
 }

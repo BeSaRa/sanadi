@@ -1774,4 +1774,5 @@ export interface ILanguageKeys {
   total_qatari_riyal_transaction_amount:string;
   msg_select_project_required:string;
   task_seen:string;
+  lbl_approve_conditions:string;
 }
