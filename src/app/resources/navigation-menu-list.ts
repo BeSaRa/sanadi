@@ -761,7 +761,7 @@ export const navigationMenuList = [
     itemOrder: 2,
     svg: null
   },
-  {
+  /*{
     id: 58,
     langKey: 'menu_reports',
     path: '/home/reports',
@@ -773,7 +773,7 @@ export const navigationMenuList = [
     group: 'main',
     itemOrder: 10,
     svg: null
-  },
+  },*/
   {
     id: 59,
     langKey: 'menu_office_services',
