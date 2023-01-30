@@ -1,3 +1,4 @@
+import { ILicenseSearch } from './../interfaces/i-license-search';
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from '@angular/core';
 import { DomSanitizer } from "@angular/platform-browser";
@@ -47,7 +48,8 @@ import { UrlService } from "./url.service";
 @Injectable({
   providedIn: 'root'
 })
-export class PartnerApprovalService extends BaseGenericEService<PartnerApproval> {
+export class PartnerApprovalService extends BaseGenericEService<PartnerApproval>
+implements ILicenseSearch<PartnerApproval> {
   _getUrlService(): UrlService {
     return this.urlService;
   }
@@ -111,5 +113,8 @@ export class PartnerApprovalService extends BaseGenericEService<PartnerApproval>
 
   licenseSearch(criteria: Partial<PartnerApprovalSearchCriteria> = {}): Observable<PartnerApproval[]> {
     return this.licenseService.partnerApprovalLicenseSearch(criteria);
+  }
+  licenseSearchById(licenseId:string): Observable<PartnerApproval>{
+    return this.licenseService.loadPartnerLicenseByLicenseId(licenseId)
   }
 }

@@ -1,3 +1,4 @@
+import { FinancialTransferLicensingService } from '@app/services/financial-transfer-licensing.service';
 import { ReturnToOrganizationWithCommentPopupComponent } from './../shared/popups/return-to-organization-with-comment-popup/return-to-organization-with-comment-popup.component';
 import { OrganizationsEntitiesSupportService } from './organizations-entities-support.service';
 import { GeneralProcessNotificationService } from './general-process-notification.service';
@@ -112,9 +113,9 @@ export class InboxService {
     private generalProcessNotificationService: GeneralProcessNotificationService,
     private projectFundraisingService: ProjectFundraisingService,
     private generalAssociationMeetingAttendanceService: GeneralAssociationMeetingAttendanceService,
-    private organizationsEntitiesSupportService: OrganizationsEntitiesSupportService,
-    private projectImplementationService: ProjectImplementationService
-  ) {
+    private organizationsEntitiesSupportService:OrganizationsEntitiesSupportService,
+    private financialTransferLicensingService:FinancialTransferLicensingService,
+    ) {
     FactoryService.registerService('InboxService', this);
     // register all e-services that we need.
     this.services.set(CaseTypes.INQUIRY, this.inquiryService);
@@ -148,7 +149,7 @@ export class InboxService {
     this.services.set(CaseTypes.AWARENESS_ACTIVITY_SUGGESTION, this.awarenessActivitySuggestionService);
     this.services.set(CaseTypes.PROJECT_FUNDRAISING, this.projectFundraisingService);
     this.services.set(CaseTypes.ORGANIZATION_ENTITIES_SUPPORT, this.organizationsEntitiesSupportService);
-    this.services.set(CaseTypes.PROJECT_IMPLEMENTATION, this.projectImplementationService);
+    this.services.set(CaseTypes.FINANCIAL_TRANSFERS_LICENSING, this.financialTransferLicensingService);
   }
 
   @CastResponse(() => QueryResultSet)
@@ -321,6 +322,10 @@ export class InboxService {
   sendToDevelopmentExpert(taskId: string, caseType: number, claimBefore: boolean = false, task?: QueryResult | CaseModel<any, any>): DialogRef {
     const service = this.getService(caseType);
     return this.openSendToDialog(taskId, WFResponseType.TO_DEVELOPMENT_EXPERT, service, claimBefore, task);
+  }
+  seen(taskId: string, caseType: number, claimBefore: boolean = false, task?: QueryResult | CaseModel<any, any>): DialogRef {
+    const service = this.getService(caseType);
+    return this.openSendToDialog(taskId, WFResponseType.SEEN, service, claimBefore, task);
   }
 
   sendToDepartment(taskId: string, caseType: number, claimBefore: boolean = false, task?: QueryResult | CaseModel<any, any>): DialogRef {

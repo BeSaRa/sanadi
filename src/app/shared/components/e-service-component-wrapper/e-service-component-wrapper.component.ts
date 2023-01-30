@@ -835,6 +835,34 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.validateApproveAction(item);
         }
       },
+      // knew
+      {
+        type: 'action',
+        icon: 'mdi-book-check',
+        label: 'task_complete',
+        askChecklist: true,
+        runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
+        show: (item: CaseModel<any, any>) => {
+          return !item.getResponses().length || item.getResponses().includes(WFResponseType.KNEW);
+        },
+        onClick: (item: CaseModel<any, any>) => {
+           this.knewAction(item);
+        }
+      },
+      // seen
+      {
+        type: 'action',
+        icon: 'mdi-book-check',
+        label: 'task_seen',
+        askChecklist: true,
+        runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
+        show: (item: CaseModel<any, any>) => {
+          return !item.getResponses().length || item.getResponses().includes(WFResponseType.SEEN);
+        },
+        onClick: (item: CaseModel<any, any>) => {
+          this.seenAction(item);
+        }
+      },
       // final approve
       {
         type: 'action',
@@ -1307,6 +1335,16 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
 
   private finalApproveAction(item: CaseModel<any, any>) {
     item.finalApprove().onAfterClose$.subscribe(actionTaken => {
+      actionTaken && this.navigateToSamePageThatUserCameFrom();
+    });
+  }
+  private knewAction(item: CaseModel<any, any>) {
+    item.knew().onAfterClose$.subscribe(actionTaken => {
+      actionTaken && this.navigateToSamePageThatUserCameFrom();
+    });
+  }
+  private seenAction(item: CaseModel<any, any>) {
+    item.seen().onAfterClose$.subscribe(actionTaken => {
       actionTaken && this.navigateToSamePageThatUserCameFrom();
     });
   }

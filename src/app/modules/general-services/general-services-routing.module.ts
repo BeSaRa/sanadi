@@ -140,7 +140,7 @@ const routes: Routes = [
       checkAnyPermission: false,
       render: 'OrganizationsEntitiesSupportComponent'
     }
-  },
+  }
 
 ];
 

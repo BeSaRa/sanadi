@@ -1754,6 +1754,25 @@ export interface ILanguageKeys {
   government_agencies: string;
   countries_add_successfully: string;
   remove_countries_messages: string;
+  menu_financial_transfers_licensing: string;
+  transfer_operation: string;
+  transferee_bank_account: string;
+  transfer_bank_account: string;
+  financial_transfers_projects: string;
+  affidavit_of_completion: string;
+  transferee_bank_name: string;
   employee_with_jobNumber: string;
   lbl_mobile_number: string;
+  entity_type_required: string;
+  execution_country_required: string;
+  transfer_to_country_required: string;
+  authorized_entities: string;
+  pre_registered_entities: string;
+  transfer_number: string;
+  transferred_amount: string;
+  due_amount: string;
+  total_qatari_riyal_transaction_amount:string;
+  msg_select_project_required:string;
+  task_seen:string;
+  lbl_approve_conditions:string;
 }
