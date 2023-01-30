@@ -64,7 +64,7 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
     private licenseService: LicenseService,
     private adminLookupService: AdminLookupService,
     private externalUserService: ExternalUserService,
-    private jobTitleService:JobTitleService
+    private jobTitleService: JobTitleService
   ) {
     super();
   }
@@ -80,11 +80,12 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
   externalUsersList: ExternalUser[] = [];
   jobTitleList: JobTitle[] = [];
   selectedLicense?: OrganizationsEntitiesSupport;
+  showOtherService: boolean = false;
   formProperties = {
     requestType: () => {
       return this.getObservableField('requestTypeField', 'requestType');
-    }
-  }
+    },
+  };
 
   tabsData: TabMap = {
     basicInfo: {
@@ -126,7 +127,8 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
       index: 3,
       isTouchedOrDirty: () => true,
       show: () => true,
-      validStatus: () => this.specialExplanationsField && this.specialExplanationsField.valid
+      validStatus: () =>
+        this.specialExplanationsField && this.specialExplanationsField.valid,
     },
     attachments: {
       name: 'attachmentsTab',
@@ -140,8 +142,10 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
   };
   tabIndex$: Subject<number> = new Subject<number>();
   ngAfterViewInit(): void {
+    this._listenToServiceType();
     this.cd.detectChanges();
   }
+
 
   _initComponent(): void {
     this._loadExternalUsers();
@@ -161,8 +165,7 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
       organizationOfficer: this.fb.group(
         objOrganizationsEntitiesSupport.getOrganizationOfficerFields(true)
       ),
-      description: this.fb.control(objOrganizationsEntitiesSupport.description)
-
+      description: this.fb.control(objOrganizationsEntitiesSupport.description),
     });
 
     this.organizationId.patchValue(this.employeeService.getProfile()?.id!);
@@ -213,7 +216,10 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
-    if (this.requestTypeField.value !== ServiceRequestTypes.NEW && !this.selectedLicense) {
+    if (
+      this.requestTypeField.value !== ServiceRequestTypes.NEW &&
+      !this.selectedLicense
+    ) {
       this.dialogService.error(
         this.lang.map.please_select_license_to_complete_save
       );
@@ -235,8 +241,7 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
     }
   }
 
-  _destroyComponent(): void {
-  }
+  _destroyComponent(): void {}
 
   _getNewInstance(): OrganizationsEntitiesSupport {
     return new OrganizationsEntitiesSupport().clone();
@@ -255,7 +260,6 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
       ...this.beneficiaryGroup.getRawValue(),
       ...this.organizationOfficerGroup.getRawValue(),
       description: this.specialExplanationsField.value,
-
     });
   }
   _setDefaultValues(): void {
@@ -286,9 +290,7 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
       basicInfo: model.getBasicInfoFields(),
       beneficiary: model.getBeneficiariesTypeFields(),
       organizationOfficer: model.getOrganizationOfficerFields(),
-      description: model.description
-
-
+      description: model.description,
     });
     this.handleRequestTypeChange(model.requestType, false);
     this.cd.detectChanges();
@@ -335,7 +337,7 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
     } else {
       this.oldLicenseFullSerialField?.setValidators([
         CustomValidators.required,
-        CustomValidators.maxLength(250)
+        CustomValidators.maxLength(250),
       ]);
     }
     this.oldLicenseFullSerialField.updateValueAndValidity();
@@ -383,28 +385,51 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
         filter((result) => !!result.length),
         exhaustMap((licenses) => {
           return licenses.length === 1
-            ? this.validateSingleLicense(licenses[0])
-            .pipe(
-              map((data) => {
-                if (!data) {
+            ? this.validateSingleLicense(licenses[0]).pipe(
+                map((data) => {
+                  if (!data) {
+                    return of(null);
+                  }
+                  return licenses[0];
+                }),
+                catchError(() => {
                   return of(null);
-                }
-                return  licenses[0];
-              }),
-              catchError(() => {
-                return of(null);
-              })
-            )
+                })
+              )
             : this._openSelectLicense(licenses);
         }),
         filter((info): info is OrganizationsEntitiesSupport => {
-
-          return!!info}),
+          return !!info;
+        }),
         takeUntil(this.destroy$)
       )
       .subscribe((selection) => {
         this.setSelectedLicense(selection, false);
       });
+  }
+  private _listenToServiceType() {
+      this.serviceType.valueChanges.pipe(
+      takeUntil(this.destroy$),
+      map((id) => this.serviceTypes.find((x) => x.id === id)),
+      tap(_=>{
+        this.otherService.reset();
+      }),
+      tap((serviceType)=>{
+        if(serviceType){
+          if(serviceType.enName.toLocaleLowerCase() === 'other'){
+            this.showOtherService = true;
+            this.otherService.addValidators([CustomValidators.required]);
+            return;
+          }
+        }
+        this.otherService.removeValidators([CustomValidators.required]);
+        this.showOtherService = false;
+      }),
+      tap(_=>{
+        this.otherService.updateValueAndValidity();
+      })
+
+    ).subscribe();
   }
   private validateSingleLicense(
     license: OrganizationsEntitiesSupport
@@ -436,21 +461,22 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
                 }
               | undefined
           ) => {
-            return result ? result.selected : result
+            return result ? result.selected : result;
           }
         )
       );
   }
 
   private _loadJobTitles(): void {
-    this.jobTitleService.loadAsLookups()
+    this.jobTitleService
+      .loadAsLookups()
       .pipe(
         takeUntil(this.destroy$),
         catchError(() => {
           return of([]);
         })
       )
-      .subscribe((result) => this.jobTitleList = result);
+      .subscribe((result) => (this.jobTitleList = result));
   }
   private _loadActivityTypes() {
     this.adminLookupService
@@ -462,7 +488,9 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
 
   private _loadExternalUsers() {
     this.externalUserService
-      .getByProfileCriteria({ 'profile-id': this.employeeService.getProfile()?.id! })
+      .getByProfileCriteria({
+        'profile-id': this.employeeService.getProfile()?.id!,
+      })
       .pipe(
         takeUntil(this.destroy$),
         map((records) => {
@@ -621,12 +649,16 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
     }
   }
   selectOrganizationOfficer(externalUserId: number) {
-    const selectedOfficer = this.externalUsersList.find(x=>x.id === externalUserId);
+    const selectedOfficer = this.externalUsersList.find(
+      (x) => x.id === externalUserId
+    );
     this.organizationOfficerGroup.patchValue({
       ...selectedOfficer,
-      phone:selectedOfficer?.phoneNumber,
-      mobileNo:selectedOfficer?.phoneExtension,
-      jobTitle:this.jobTitleList.find(x=>x.id === selectedOfficer!.jobTitle)?.getName()
+      phone: selectedOfficer?.phoneNumber,
+      mobileNo: selectedOfficer?.phoneExtension,
+      jobTitle: this.jobTitleList
+        .find((x) => x.id === selectedOfficer!.jobTitle)
+        ?.getName(),
     });
   }
 
@@ -636,6 +668,12 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
 
   get requestTypeField(): UntypedFormControl {
     return this.basicInfoTab.get('requestType') as UntypedFormControl;
+  }
+  get serviceType(): UntypedFormControl {
+    return this.basicInfoTab.get('serviceType') as UntypedFormControl;
+  }
+  get otherService(): UntypedFormControl {
+    return this.basicInfoTab.get('otherService') as UntypedFormControl;
   }
   get organizationId(): UntypedFormControl {
     return this.basicInfoTab.get('organizationId') as UntypedFormControl;
@@ -653,7 +691,6 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
     return this.form.get('organizationOfficer') as UntypedFormGroup;
   }
   get specialExplanationsField(): UntypedFormControl {
-    return (this.form.get('description')) as UntypedFormControl;
+    return this.form.get('description') as UntypedFormControl;
   }
-
 }

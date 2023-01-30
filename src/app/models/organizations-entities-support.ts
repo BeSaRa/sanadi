@@ -39,7 +39,7 @@ export class OrganizationsEntitiesSupport extends LicenseApprovalModel<
   requestTypeInfo!:AdminResult;
   serviceTypeInfo!:AdminResult;
   licenseStatusInfo!: AdminResult;
-  followUpDateString: string = '';
+  otherService!: string;
 
 
   service: OrganizationsEntitiesSupportService;
@@ -75,6 +75,7 @@ export class OrganizationsEntitiesSupport extends LicenseApprovalModel<
       oldLicenseSerial,
       subject,
       goal,
+      otherService
     } = this;
 
     return {
@@ -114,6 +115,16 @@ export class OrganizationsEntitiesSupport extends LicenseApprovalModel<
             ],
           ]
         : goal,
+      otherService: control
+        ? [
+            otherService,
+            [
+              CustomValidators.maxLength(
+                CustomValidators.defaultLengths.ENGLISH_NAME_MAX
+              ),
+            ],
+          ]
+        : otherService,
     };
   }
   getBeneficiariesTypeFields(control: boolean = false): any {
