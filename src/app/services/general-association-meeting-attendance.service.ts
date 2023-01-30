@@ -110,7 +110,7 @@ export class GeneralAssociationMeetingAttendanceService extends BaseGenericEServ
       if (criteriaSegment !== '') {
         criteriaSegment += '&';
       }
-      criteriaSegment += ('job-title=' + criteria.jobTitle);
+      criteriaSegment += ('job-title-id=' + criteria.jobTitle);
     }
 
     return criteriaSegment;
