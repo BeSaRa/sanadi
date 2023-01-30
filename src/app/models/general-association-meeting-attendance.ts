@@ -22,7 +22,6 @@ import {ISearchFieldsMap} from '@app/types/types';
 import {dateSearchFields} from '@helpers/date-search-fields';
 import {infoSearchFields} from '@helpers/info-search-fields';
 import {normalSearchFields} from '@helpers/normal-search-fields';
-import {CommonUtils} from '@helpers/common-utils';
 import {IGeneralAssociationMeetingAttendanceFinalApprove} from '@contracts/i-general-association-meeting-attendance-final-approve';
 
 const _RequestType = mixinRequestType(CaseModel);
@@ -65,6 +64,7 @@ export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAss
   meetingTypeInfo!: AdminResult;
   meetingClassificationInfo!: AdminResult;
   managerDecisionInfo!: AdminResult;
+  isFinal!: boolean;
 
   searchFields: ISearchFieldsMap<GeneralAssociationMeetingAttendance> = {
     ...dateSearchFields(['createdOn']),

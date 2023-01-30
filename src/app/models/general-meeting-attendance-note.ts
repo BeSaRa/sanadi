@@ -14,4 +14,5 @@ export class GeneralMeetingAttendanceNote extends SearchableCloneable<GeneralMee
   comment!: string;
   caseID!: string;
   memberID!: number;
+  finalComment!: number;
 }
