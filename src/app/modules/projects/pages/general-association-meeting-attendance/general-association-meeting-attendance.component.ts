@@ -240,7 +240,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
       }
       if (this.isMemberReview) {
         specificGeneralMeetingNotesObs.subscribe(notes => {
-          this.generalNotes = notes;
+          this.generalNotes = notes.filter(n => n.finalComment !== 1);
         });
       }
 
@@ -277,15 +277,27 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
 
   setMeetingPointsForm() {
     if (this.model?.isDecisionMakerReviewStep() && this.model?.isSendToMember && this.model?.isFinal) {
-      this.service.getFinalMeetingPointsForDecisionMaker(this.model?.id).subscribe(meetingReport => {
-        if (meetingReport && meetingReport.meetingMainItem.length > 0) {
-          // update meeting points form
-          this.meetingReport = meetingReport;
-          this.updateMeetingPointsForm(meetingReport);
-        } else {
-          this.buildMeetingPointsForm();
-        }
-      });
+      let without: MeetingAttendanceReport;
+      this.service.getFinalMeetingPointsForDecisionMaker(this.model?.id)
+        .pipe(switchMap(meetingReportWithoutUserComment => {
+          without = meetingReportWithoutUserComment;
+          return this.service.getMeetingPointsForDecisionMaker(this.model?.id);
+        }))
+        .subscribe(meetingReport => {
+          without.meetingMainItem.map(mainItem => {
+            mainItem.meetingSubItem.forEach(subItem => {
+              subItem.userComments = meetingReport.meetingMainItem.find(i => i.enName === mainItem.enName)!.meetingSubItem.find(si => si.enName === subItem.enName)!.userComments;
+            });
+            return mainItem;
+          });
+          if (without && without.meetingMainItem.length > 0) {
+            // update meeting points form
+            this.meetingReport = without;
+            this.updateMeetingPointsForm(without);
+          } else {
+            this.buildMeetingPointsForm();
+          }
+        });
     }
 
     if ((this.model?.isDecisionMakerReviewStep() && !this.model?.isSendToMember) ||
