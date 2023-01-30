@@ -1,5 +1,5 @@
-import { AdminResult } from '@app/models/admin-result';
-export class TaskAdminResult  extends AdminResult{
+import { AssignedTask } from './assigned-task';
+export class TaskAdminResult  extends AssignedTask {
   tkiid?:string;
   organizationId?:number;
 }

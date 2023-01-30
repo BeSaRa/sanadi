@@ -130,9 +130,14 @@
         <ng-container cdkColumnDef="location">
           <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.item_location}}</th>
           <td cdk-cell *cdkCellDef="let row" class="d-flex justify-content-between">
-            {{row.getName()}}
-            <button [tooltip]="lang.map.stop_preview" *ngIf="displayReturnBtn && !isMainTask(row.tkiid) && timeOut(row)" (click)="terminate(row.tkiid)"
-              class="btn icon-btn">
+            <span>
+              {{row.getName()}}
+              <span *ngIf="row.organizationId">
+                / {{row.getOrgName()}}
+              </span>
+            </span>
+            <button [tooltip]="lang.map.stop_preview" *ngIf="displayReturnBtn && !row.isMain && timeOut(row)"
+              (click)="terminate(row.tkiid)" class="btn icon-btn">
               <i class="mdi mdi-undo-variant text-primary"></i></button>
           </td>
         </ng-container>

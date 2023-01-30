@@ -1,17 +1,16 @@
+import { AssignedTask } from './../../../models/assigned-task';
 import { ServiceData } from '@app/models/service-data';
 import { ServiceDataService } from '@app/services/service-data.service';
 import { CaseModel } from '@app/models/case-model';
 import { UserClickOn } from './../../../enums/user-click-on.enum';
 import { DialogService } from './../../../services/dialog.service';
 import { ToastService } from './../../../services/toast.service';
-import { TaskDetails } from './../../../models/task-details';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ActionLogService } from '@app/services/action-log.service';
 import { BehaviorSubject, iif, merge, of, Subject } from 'rxjs';
 import { ActionRegistry } from '@app/models/action-registry';
 import { concatMap, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { LangService } from '@app/services/lang.service';
-import { AdminResult } from '@app/models/admin-result';
 import { TabComponent } from '../tab/tab.component';
 import { ServiceActionType } from '@app/enums/service-action-type.enum';
 import { CaseTypes } from '@app/enums/case-types.enum';
@@ -45,14 +44,13 @@ export class LogViewerComponent implements OnInit, OnDestroy {
   logsViewed: ActionRegistry[] = [];
   logsUpdated: ActionRegistry[] = [];
   logsOthers: ActionRegistry[] = [];
-  logSuperAndCtrl: ActionRegistry[] = [];
 
   displayedColumns: string[] = ['user', 'action', 'toUser', 'addedOn', 'time', 'comment'];
   displayedColumnsViewed: string[] = ['user', 'addedOn', 'time', 'comment'];
   displayedColumnsUpdated: string[] = ['user', 'addedOn', 'time', 'comment'];
   displayedColumnsOthers: string[] = ['user', 'action', 'toUser', 'addedOn', 'time', 'comment'];
 
-  locations: AdminResult[] = [];
+  locations: AssignedTask[] = [];
   displayLocationColumns: string[] = ['location'];
 
   displayPrintBtn: boolean = true;
@@ -106,14 +104,11 @@ export class LogViewerComponent implements OnInit, OnDestroy {
         this.case?.caseType == CaseTypes.CHARITY_ORGANIZATION_UPDATE)
     );
   }
-  timeOut(task: AdminResult) {
-    console.log(task)
-    // TODO: complete after descus
-    console.log(this.logSuperAndCtrl)
-    return this._serviceData.serviceReviewLimit;
-  }
-  isMainTask(tkiid: string) {
-    return this.case?.taskDetails && this.case?.taskDetails.isMain && this.case?.taskDetails.tkiid == tkiid;
+  timeOut(task: AssignedTask) {
+    const timeZoneOffcet = new Date().getTimezoneOffset();
+    const ReviewLimitHours = (new Date(task.startDate).getTime() / 1000 - timeZoneOffcet) / 60 / 60 + this._serviceData.serviceReviewLimit;
+    const DateNowHours = new Date().getTime() / 1000 / 60 / 60;
+    return ReviewLimitHours <= DateNowHours;
   }
 
   private _categorizeLogsByActionType(logs: any[]) {
@@ -127,9 +122,6 @@ export class LogViewerComponent implements OnInit, OnDestroy {
         this.logsUpdated = this.logsUpdated.concat(x);
       } else {
         this.logsOthers = this.logsOthers.concat(x);
-        if (x.actionId === ServiceActionType.Supervision_and_Control_Review) {
-          this.logSuperAndCtrl = this.logSuperAndCtrl.concat(x);
-        }
       }
     });
   }

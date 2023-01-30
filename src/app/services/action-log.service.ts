@@ -1,3 +1,4 @@
+import { AssignedTask } from './../models/assigned-task';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { DialogService } from './dialog.service';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -8,7 +9,6 @@ import { ActionRegistryInterceptor } from '../model-interceptors/action-registry
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { BlobModel } from '../models/blob-model';
-import { AdminResult } from '../models/admin-result';
 import { IDefaultResponse } from '@contracts/idefault-response';
 import { CastResponse } from "@decorators/cast-response";
 
@@ -48,10 +48,10 @@ export class ActionLogService implements Pick<BackendServiceModelInterface<Actio
       }).pipe(map(blob => new BlobModel(blob, this.service.domSanitizer)));
   }
 
-  loadCaseLocation(caseId: string): Observable<AdminResult[]> {
+  loadCaseLocation(caseId: string): Observable<AssignedTask[]> {
     return this.service.http
-      .get<IDefaultResponse<AdminResult[]>>(this.service._getURLSegment() + '/' + caseId + '/assigned-to')
-      .pipe(map((response) => response.rs.map(item => AdminResult.createInstance(item))));
+      .get<IDefaultResponse<AssignedTask[]>>(this.service._getURLSegment() + '/' + caseId + '/assigned-to')
+      .pipe(map((response) => response.rs.map(item => AssignedTask.createInstance(item))));
   }
 
 
