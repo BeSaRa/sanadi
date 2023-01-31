@@ -372,7 +372,10 @@ export class InboxService {
     const service = this.getService(caseType);
     return this.openSendToDialog(taskId, WFResponseType.SEND_TO_GM, service, claimBefore, task);
   }
-
+  sendToGM(taskId: string, caseType: number, claimBefore: boolean = false, task?: QueryResult | CaseModel<any, any>): DialogRef {
+    const service = this.getService(caseType);
+    return this.openSendToDialog(taskId, WFResponseType.TO_GM, service, claimBefore, task);
+  }
 
   complete(taskId: string, caseType: number): Observable<boolean> {
     const service = this.getService(caseType);

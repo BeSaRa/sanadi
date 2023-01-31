@@ -53,4 +53,5 @@ export enum WFResponseType {
   TO_CHIEF = 'toChief',
   KNEW = 'knew',
   SEEN = 'seen',
+  TO_GM = 'toGM',
 }

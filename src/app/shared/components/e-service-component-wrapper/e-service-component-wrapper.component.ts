@@ -701,6 +701,20 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.sendToGeneralManagerAction(item);
         }
       },
+      // send to general Manager
+      {
+        type: 'action',
+        icon: 'mdi-card-account-details-star',
+        label: 'send_to_general_manager',
+        askChecklist: true,
+        runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
+        show: (item: CaseModel<any, any>) => {
+          return item.getResponses().includes(WFResponseType.TO_GM);
+        },
+        onClick: (item: CaseModel<any, any>) => {
+          this.sendToGMAction(item);
+        }
+      },
       // complete
       {
         type: 'action',
@@ -1197,6 +1211,12 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
 
   private sendToGeneralManagerAction(item: CaseModel<any, any>) {
     item.sendToGeneralManager().onAfterClose$.subscribe((actionTaken) => {
+      actionTaken && this.navigateToSamePageThatUserCameFrom();
+    });
+  }
+
+  private sendToGMAction(item: CaseModel<any, any>) {
+    item.sendToGM().onAfterClose$.subscribe((actionTaken) => {
       actionTaken && this.navigateToSamePageThatUserCameFrom();
     });
   }
