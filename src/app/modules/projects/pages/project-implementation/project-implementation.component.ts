@@ -346,6 +346,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     $event?.preventDefault();
     this.licenseSearch$.next((this.oldLicenseFullSerial.value as string || '').trim())
   }
+
   private listenToLicenseSearch() {
     this.licenseSearch$
       .pipe(takeUntil(this.destroy$))
@@ -397,7 +398,6 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       this._updateForm(model, true);
     }
   }
-
 
   handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
     of(userInteraction).pipe(

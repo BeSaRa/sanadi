@@ -1,4 +1,6 @@
 export interface ILanguageKeys {
+  project_ar_name: string;
+  project_en_name: string;
   fundraising_remaining_amount: string;
   cannot_add_funding_resources_full_amount_have_been_used: string;
   cannot_add_payments_full_amount_have_been_used: string;

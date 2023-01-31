@@ -11,8 +11,9 @@ import {PublicTemplateStatus} from "@app/enums/public-template-status";
 import {CaseTypes} from "@app/enums/case-types.enum";
 import {ImplementationTemplate} from "@models/implementation-template";
 import {ProjectImplementationService} from "@services/project-implementation.service";
-import {filter} from "rxjs/operators";
+import {catchError, filter, map, switchMap} from "rxjs/operators";
 import {CustomValidators} from "@app/validators/custom-validators";
+import {of} from "rxjs";
 
 @Component({
   selector: 'choose-template',
@@ -88,11 +89,18 @@ export class ChooseTemplatePopupComponent implements AfterViewInit {
   }
 
   private saveForImplementation(): void {
-    const selectedTemplate = (this.table.selection.selected[0] as unknown as ProjectModel).convertToImplementationTemplate()
-    this.projectImplementationService
-      .openImplementationTemplateDialog(selectedTemplate)
-      .onAfterClose$
-      .pipe(filter(val => !!val))
+    of(this.table.selection.selected[0] as unknown as ProjectModel)
+      .pipe(map(template => template.convertToImplementationTemplate()))
+      .pipe(switchMap(template => this.projectImplementationService.validateTemplate(template.templateId)
+        .pipe(catchError(_ => of(null)))
+        .pipe(filter(val => !!val))
+        .pipe(map(_ => template))
+      ))
+      .pipe(filter((value): value is ImplementationTemplate => !!value))
+      .pipe(switchMap(selectedTemplate => this.projectImplementationService
+        .openImplementationTemplateDialog(selectedTemplate)
+        .onAfterClose$
+        .pipe(filter(val => !!val))))
       .subscribe((result: ImplementationTemplate) => {
         this.dialogRef.close(result)
       });

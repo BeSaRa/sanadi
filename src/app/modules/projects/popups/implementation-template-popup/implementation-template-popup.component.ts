@@ -10,7 +10,6 @@ import {ICoordinates} from "@contracts/ICoordinates";
 import {DialogService} from "@services/dialog.service";
 import {DialogRef} from "@app/shared/models/dialog-ref";
 import {CustomValidators} from "@app/validators/custom-validators";
-import currency from "currency.js";
 
 @Component({
   selector: 'implementation-template-popup',
@@ -98,11 +97,10 @@ export class ImplementationTemplatePopupComponent implements OnInit, OnDestroy {
       .valueChanges
       .pipe(takeUntil(this.destroy$))
       .pipe(map(value => Number(value)))
-      .pipe(debounceTime(300))
+      .pipe(debounceTime(250))
       .subscribe((value: number) => {
-        let correctValue = currency(value).value > this.template.templateCost ? this.template.templateCost : value
-        this.template.setProjectTotalCost(correctValue)
-        this.projectTotalCost.patchValue(correctValue, {emitEvent: false})
+        this.template.setProjectTotalCost(value)
+        this.projectTotalCost.patchValue(value, {emitEvent: false})
       })
   }
 }

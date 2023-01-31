@@ -1,11 +1,11 @@
-import { CastResponseContract } from '@decorators/contracts/cast-response-contract'
-import { ClassConstructor } from '@app-types/constructor'
-import { $$_CAST_RESPONSE, $$_CAST_RESPONSE_CONTAINER, $$_MODEL_INTERCEPTOR, } from '@decorators/symbol'
-import { CastOptionContract } from '@decorators/contracts/cast-option-contract'
-import { map } from "rxjs/operators";
-import { identity, Observable } from "rxjs";
-import { isObject } from "@helpers/is-object";
-import { GeneralInterceptor } from "@app/model-interceptors/general-interceptor";
+import {CastResponseContract} from '@decorators/contracts/cast-response-contract'
+import {ClassConstructor} from '@app-types/constructor'
+import {$$_CAST_RESPONSE, $$_CAST_RESPONSE_CONTAINER, $$_MODEL_INTERCEPTOR,} from '@decorators/symbol'
+import {CastOptionContract} from '@decorators/contracts/cast-option-contract'
+import {map} from "rxjs/operators";
+import {identity, Observable} from "rxjs";
+import {isObject} from "@helpers/is-object";
+import {GeneralInterceptor} from "@app/model-interceptors/general-interceptor";
 
 function getFilteredProperty(property: string) {
   return property.split('.').filter(item => item !== '.')
@@ -174,9 +174,11 @@ export function CastResponse(
         .pipe(
           map(models => {
               models = isObject(models) && hasUnwrap && models.hasOwnProperty(unwrapProperty) ? models[unwrapProperty] : models
-              return Array.isArray(models)
-                ? caseCollection(callback, models, options, this, propertyKey)
-                : castModel(callback, models, options, this, propertyKey)
+              return models ?
+                Array.isArray(models)
+                  ? caseCollection(callback, models, options, this, propertyKey)
+                  : castModel(callback, models, options, this, propertyKey)
+                : models
             }
           )
         )

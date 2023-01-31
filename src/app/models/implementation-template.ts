@@ -6,7 +6,7 @@ import {DialogRef} from "@app/shared/models/dialog-ref";
 import {FactoryService} from "@services/factory.service";
 import {ProjectImplementationService} from "@services/project-implementation.service";
 import {Observable, of} from "rxjs";
-import {map, switchMap} from "rxjs/operators";
+import {switchMap} from "rxjs/operators";
 import {ImplementationFundraising} from "@models/implementation-fundraising";
 import {ImplementationTemplateInterceptor} from "@model-interceptors/implementation-template-interceptor";
 import {InterceptModel} from "@decorators/intercept-model";
@@ -103,12 +103,10 @@ export class ImplementationTemplate extends Cloneable<ImplementationTemplate> {
     return this.service
       .loadRelatedPermitByTemplate(this.templateId)
       .pipe(switchMap((license) => {
-        return license ? this.service.getConsumedAmount(license.id).pipe(map(consumedAmount => {
-          return license.convertToFundraisingTemplate().clone({
-            consumedAmount,
-            remainingAmount: currency(license.projectTotalCost).subtract(consumedAmount).value,
-            totalCost: currency(license.projectTotalCost).subtract(consumedAmount).value
-          })
+        return license ? of(license.convertToFundraisingTemplate().clone({
+          projectTotalCost: license.projectTotalCost,
+          consumedAmount: license.consumed || 0,
+          remainingAmount: license.projectTotalCost - (license.consumed || 0)
         })) : of(undefined)
       }))
   }

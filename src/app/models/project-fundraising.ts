@@ -96,6 +96,7 @@ export class ProjectFundraising extends _ApprovalLicenseWithMonthly<ProjectFundr
   enName!: string;
   // extra properties
   employeeService: EmployeeService;
+  consumed?: number
 
   constructor() {
     super();

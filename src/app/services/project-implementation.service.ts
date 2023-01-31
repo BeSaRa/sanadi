@@ -1,4 +1,4 @@
-import {HttpClient, HttpParams} from '@angular/common/http';
+import {HttpClient, HttpContext, HttpParams} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
 import {BaseGenericEService} from "@app/generics/base-generic-e-service";
@@ -40,6 +40,7 @@ import {
 } from "@modules/projects/popups/select-project-fundraising-popup/select-project-fundraising-popup.component";
 import {ImplementationFundraising} from "@models/implementation-fundraising";
 import {ImplementingAgency} from "@models/implementing-agency";
+import {NOT_RETRY_TOKEN} from "@app/http-context/tokens";
 
 @CastResponseContainer({
   $default: {
@@ -117,7 +118,7 @@ export class ProjectImplementationService extends BaseGenericEService<ProjectImp
 
   @CastResponse(() => ProjectModel)
   private searchForTemplate(criteria: any, workAreType: ProjectWorkArea): Observable<ProjectModel[]> {
-    return this.http.get<ProjectModel[]>(this.urlService.URLS.PROJECT_MODELING + '/' + (workAreType === ProjectWorkArea.OUTSIDE_QATAR ? 'external' : 'internal') + '/template/criteria', {
+    return this.http.get<ProjectModel[]>(this.urlService.URLS.PROJECT_MODELING + '/' + (workAreType === ProjectWorkArea.OUTSIDE_QATAR ? 'external/template/' : 'internal/impl-template/') + 'criteria', {
       params: new HttpParams({fromObject: criteria})
     })
   }
@@ -143,8 +144,8 @@ export class ProjectImplementationService extends BaseGenericEService<ProjectImp
   }
 
   @CastResponse(() => ProjectFundraising)
-  loadRelatedPermitByTemplate(templateId: string): Observable<ProjectFundraising> {
-    return this.http.get<ProjectFundraising>(this.urlService.URLS.PROJECT_FUNDRAISING + '/implementation', {
+  loadRelatedPermitByTemplate(templateId: string): Observable<ProjectFundraising | null> {
+    return this.http.get<ProjectFundraising | null>(this.urlService.URLS.PROJECT_FUNDRAISING + '/implementation', {
       params: new HttpParams({
         fromObject: {templateId}
       })
@@ -152,7 +153,7 @@ export class ProjectImplementationService extends BaseGenericEService<ProjectImp
   }
 
   getConsumedAmount(fundraisingId: string): Observable<number> {
-    return this.http.get<IDefaultResponse<number>>(this.urlService.URLS.PROJECT_IMPLEMENTATION + '/fundraising/consumed', {
+    return this.http.get<IDefaultResponse<number>>(this.urlService.URLS.PROJECT_FUNDRAISING + '/license/consumed', {
       params: new HttpParams({
         fromObject: {fundraisingId}
       })
@@ -186,5 +187,14 @@ export class ProjectImplementationService extends BaseGenericEService<ProjectImp
 
   licenseSearch(criteria: Partial<ProjectImplementation>): Observable<ProjectImplementation[]> {
     return this.licenseService.projectImplementationLicenseSearch(criteria);
+  }
+
+  validateTemplate(templateId: string): Observable<boolean> {
+    return this.http.get<IDefaultResponse<boolean>>(this.urlService.URLS.PROJECT_IMPLEMENTATION + '/template/validate', {
+      context: new HttpContext().set(NOT_RETRY_TOKEN, true),
+      params: new HttpParams({
+        fromObject: {templateId}
+      })
+    }).pipe(map(res => res.rs))
   }
 }
