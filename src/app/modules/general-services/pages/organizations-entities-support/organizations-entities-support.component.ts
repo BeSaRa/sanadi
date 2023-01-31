@@ -416,7 +416,7 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
       }),
       tap((serviceType)=>{
         if(serviceType){
-          if(serviceType.enName.toLocaleLowerCase() === 'other'){
+          if(serviceType.enName.toLocaleLowerCase() === 'other' || 'others'){
             this.showOtherService = true;
             this.otherService.addValidators([CustomValidators.required]);
             return;
