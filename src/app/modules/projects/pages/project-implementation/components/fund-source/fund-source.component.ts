@@ -56,6 +56,8 @@ export class FundSourceComponent implements ControlValueAccessor, OnInit, OnDest
 
   totalValue: number = 0;
 
+  listeners$ = new Subject()
+
   constructor(public lang: LangService, private dialog: DialogService) {
 
   }
@@ -68,6 +70,9 @@ export class FundSourceComponent implements ControlValueAccessor, OnInit, OnDest
     this.destroy$.next()
     this.destroy$.complete()
     this.destroy$.unsubscribe()
+    this.listeners$.next()
+    this.listeners$.complete()
+    this.listeners$.unsubscribe()
   }
 
   isGrant(): boolean {
@@ -79,10 +84,25 @@ export class FundSourceComponent implements ControlValueAccessor, OnInit, OnDest
     this.isGrant() && this.displayedColumns.unshift('fullName')
   }
 
+  destroyOldListeners(): void {
+    this.listeners$.next()
+  }
+
   writeValue(value: FundingResourceContract[]): void {
-    this.createInputs(value)
-    this.createListeners()
-    this.value = value
+    Promise.resolve()
+      .then(() => {
+        this.destroyOldListeners()
+        this.value = []
+        this.inputs.clear()
+      })
+      .then(() => {
+        this.createInputs(value)
+      })
+      .then(() => {
+        this.value = value
+        this.createListeners()
+        this.calculateTotal()
+      })
   }
 
   registerOnChange(fn: (_value: FundingResourceContract[]) => void): void {
@@ -98,15 +118,15 @@ export class FundSourceComponent implements ControlValueAccessor, OnInit, OnDest
   }
 
   openAddFundSourceDialog(): void {
-    // if (!this.projectTotalCost) {
-    //   this.dialog.alert(this.lang.map.please_add_template_to_proceed)
-    //   return
-    // }
-    //
-    // if (this.remainingAmount === 0) {
-    //   this.dialog.info(this.lang.map.cannot_add_funding_resources_full_amount_have_been_used)
-    //   return;
-    // }
+    if (!this.projectTotalCost) {
+      this.dialog.alert(this.lang.map.please_add_template_to_proceed)
+      return
+    }
+
+    if (this.remainingAmount === 0) {
+      this.dialog.info(this.lang.map.cannot_add_funding_resources_full_amount_have_been_used)
+      return;
+    }
 
     this.dialog.show(FundSourcePopupComponent, {
       operation: OperationTypes.CREATE,
@@ -158,7 +178,7 @@ export class FundSourceComponent implements ControlValueAccessor, OnInit, OnDest
   createListener(ctrl: UntypedFormControl, index: number) {
     ctrl
       .valueChanges
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntil(this.listeners$))
       .pipe(debounceTime(250))
       .pipe(map((value) => Number(value)))
       .subscribe((value) => {

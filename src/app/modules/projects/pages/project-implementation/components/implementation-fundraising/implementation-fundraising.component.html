@@ -98,25 +98,6 @@
           </div>
         </th>
       </ng-container>
-      <ng-container cdkColumnDef="FundraisingRemaining">
-        <th colspan="7" cdk-header-cell *cdkFooterCellDef>
-          <div class="d-flex align-items-center justify-content-end h6 mb-0">{{lang.map.fundraising_remaining_amount}}</div>
-        </th>
-      </ng-container>
-      <ng-container cdkColumnDef="FundraisingRemainingValue">
-        <th cdk-header-cell colspan="2" [ngClass]="{remain:localRemaining!==0}" *cdkFooterCellDef>
-          <div class="d-flex align-items-center">
-            <span class="h6 mb-0">{{localRemaining| mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</span>
-            <div [tooltip]="lang.map.distribute_evenly">
-              <button [disabled]="!localRemaining" (click)="localRemaining && distributeRemaining()"
-                      class="btn icon-btn p-0">
-                <i class="mdi mdi-hand-coin text-primary"></i>
-              </button>
-            </div>
-            <div class="flex-grow-1"></div>
-          </div>
-        </th>
-      </ng-container>
       <ng-container cdkColumnDef="Remaining">
         <th colspan="7" cdk-header-cell *cdkFooterCellDef>
           <div class="d-flex align-items-center justify-content-end h6 mb-0">{{lang.map.remaining_amount}}</div>
@@ -134,7 +115,6 @@
       <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
       <tr cdk-footer-row class="table-row-header" *cdkFooterRowDef="['Total','TotalValue']"></tr>
       <tr cdk-footer-row class="table-row-header" *cdkFooterRowDef="['ProjectCost','ProjectCostValue']"></tr>
-      <tr cdk-footer-row class="table-row-header" *cdkFooterRowDef="['FundraisingRemaining','FundraisingRemainingValue']"></tr>
       <tr cdk-footer-row class="table-row-header" *cdkFooterRowDef="['Remaining','RemainingValue']"></tr>
       <tr *cdkNoDataRow>
         <td colspan="20">{{lang.map.no_records_to_display}}</td>

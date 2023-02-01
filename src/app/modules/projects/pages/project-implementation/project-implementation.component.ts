@@ -72,7 +72,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     licenseStartDate: DateUtils.getDatepickerOptions({disablePeriod: 'none', openSelectorTopOfInput: true})
   }
   remainingAmount: number = 0;
-  selectedLicense?:ProjectImplementation;
+  selectedLicense?: ProjectImplementation;
 
   constructor(public lang: LangService,
               public fb: UntypedFormBuilder,
@@ -160,7 +160,6 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     return this.projectInfo.get('implementingAgencyType')!
   }
 
-
   get implementingAgencyList(): AbstractControl {
     return this.projectInfo.get('implementingAgencyList')!
   }
@@ -169,11 +168,15 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     return this.fundingResources.get('financialGrant')!
   }
 
+  get payment(): AbstractControl {
+    return this.fundingResources.get('payment')!
+  }
+
   get selfFinancing(): AbstractControl {
     return this.fundingResources.get('selfFinancing')!
   }
 
-  get projectTotalCost(): AbstractControl {
+  get projectTotalCost(): AbstractControl     {
     return this.form && this.basicInfo.get('projectTotalCost')!
   }
 
@@ -288,7 +291,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
   _destroyComponent(): void {
   }
 
-  _updateForm(model: ProjectImplementation | undefined , fromSelectedLicense: boolean = false): void {
+  _updateForm(model: ProjectImplementation | undefined, fromSelectedLicense: boolean = false): void {
     if (!model) {
       return;
     }
@@ -573,7 +576,15 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       .valueChanges
       .pipe(takeUntil(this.destroy$))
       .pipe(tap((value: ImplementationTemplate[]) => {
-        value && value.length ? this.projectTotalCost.patchValue(value[0].projectTotalCost) : this.projectTotalCost.patchValue(0)
+        value && value.length ? (() => {
+          this.projectTotalCost.patchValue(value[0].projectTotalCost)
+        })() : (() => {
+          this.projectTotalCost.patchValue(0)
+          this.implementationFundraising.setValue([])
+          this.payment.setValue([])
+          this.selfFinancing.setValue([])
+          this.financialGrant.setValue([])
+        })()
         this.calculateRemaining()
       }))
       .pipe(filter((value): value is ImplementationTemplate[] => (value && !!value.length)))
@@ -608,8 +619,6 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     }, 0)
 
     this.remainingAmount = currency(projectTotalCost).subtract(totalFundingResource).value
-
-    console.log('FROM C', this.remainingAmount);
   }
 
   private getTotalCost(list: (FundingResourceContract)[]): number {

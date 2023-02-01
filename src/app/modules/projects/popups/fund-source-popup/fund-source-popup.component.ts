@@ -80,7 +80,6 @@ export class FundSourcePopupComponent implements OnDestroy, OnInit {
   }
 
   isGrant(): boolean {
-    console.log('HERE', this.data.type === FundSourceType.GRANT);
     return this.data.type === FundSourceType.GRANT
   }
 
