@@ -67,7 +67,7 @@
       <ng-container cdkColumnDef="actions">
         <th cdk-header-cell  style="width:120px" *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
         <td cdk-cell *cdkCellDef="let row">
-          <button (click)="!disabled && notSameTemplate(row) && deletePermit(row)" class="btn icon-btn">
+          <button [disabled]="isTemplatePermit(row)" (click)="!disabled && deletePermit(row)" class="btn p-0 icon-btn">
             <i class="mdi mdi-trash-can text-primary"></i>
           </button>
         </td>
@@ -104,7 +104,7 @@
         </th>
       </ng-container>
       <ng-container cdkColumnDef="RemainingValue">
-        <th colspan="2" cdk-header-cell
+        <th colspan="2" [ngClass]="{remain:remainingAmount!==0}" cdk-header-cell
             *cdkFooterCellDef>
           <div class="d-flex align-items-center h6 mb-0">
             {{remainingAmount | mask: inputMaskPatterns.SEPARATOR: inputMaskPatterns.THOUSAND_SEPARATOR}}

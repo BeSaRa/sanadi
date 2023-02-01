@@ -242,7 +242,7 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
     this.localRemaining = (this.value ?? []).reduce((acc, item) => acc + (item.remainingAmount - item.totalCost), 0)
   }
 
-  notSameTemplate(row: ImplementationFundraising) {
-    return this._currentTemplate && row.templateId ? row.templateId === this._currentTemplate : true
+  isTemplatePermit(row: ImplementationFundraising) {
+    return this._currentTemplate && row.templateId ? row.templateId === this._currentTemplate : false
   }
 }
