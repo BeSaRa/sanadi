@@ -191,7 +191,9 @@
     </ng-template>
     <ng-template #funding_sources>
       <ng-container formGroupName="fundingResources">
-        <implementation-fundraising [remainingAmount]="remainingAmount" [criteria]="getCriteria"
+        <implementation-fundraising [remainingAmount]="remainingAmount"
+                                    [currentTemplate]="implementationTemplate.value"
+                                    [criteria]="getCriteria"
                                     [projectTotalCost]="projectTotalCost.value"
                                     formControlName="implementationFundraising"></implementation-fundraising>
         <br>

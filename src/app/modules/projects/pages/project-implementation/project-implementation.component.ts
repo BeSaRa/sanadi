@@ -176,7 +176,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     return this.fundingResources.get('selfFinancing')!
   }
 
-  get projectTotalCost(): AbstractControl     {
+  get projectTotalCost(): AbstractControl {
     return this.form && this.basicInfo.get('projectTotalCost')!
   }
 
@@ -310,6 +310,10 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
   _resetForm(): void {
     this.model = this._getNewInstance();
     this.operation = OperationTypes.CREATE;
+    this.implementationTemplate.setValue([])
+    this.payment.setValue([])
+    this.selfFinancing.setValue([])
+    this.financialGrant.setValue([])
     this.form.reset()
     this.setDefaultValues()
   }

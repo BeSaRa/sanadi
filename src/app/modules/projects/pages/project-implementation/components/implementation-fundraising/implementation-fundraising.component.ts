@@ -18,6 +18,7 @@ import {ImplementationCriteriaContract} from "@contracts/implementation-criteria
 import {ProjectImplementationService} from "@services/project-implementation.service";
 import {DialogService} from "@services/dialog.service";
 import {UserClickOn} from "@app/enums/user-click-on.enum";
+import {ImplementationTemplate} from "@models/implementation-template";
 
 @Component({
   selector: 'implementation-fundraising',
@@ -55,6 +56,13 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
     'totalCost',
     'actions'
   ];
+
+  private _currentTemplate?: string
+
+  @Input()
+  set currentTemplate(val: ImplementationTemplate[] | undefined) {
+    this._currentTemplate = val ? val[0].templateId : undefined
+  }
 
   inputMaskPatterns = CustomValidators.inputMaskPatterns
   @Input()
@@ -234,15 +242,7 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
     this.localRemaining = (this.value ?? []).reduce((acc, item) => acc + (item.remainingAmount - item.totalCost), 0)
   }
 
-  distributeRemaining() {
-    if (!(this.value ?? []).length) return;
-
-    (this.value ?? []).map((item, index) => {
-      this.inputs.at(index).setValue(item.remainingAmount, {emitEvent: false})
-      item.totalCost = item.remainingAmount;
-      return item
-    })
-    this.onChange(this.value)
-    this.calculateTotal()
+  notSameTemplate(row: ImplementationFundraising) {
+    return this._currentTemplate && row.templateId ? row.templateId === this._currentTemplate : true
   }
 }
