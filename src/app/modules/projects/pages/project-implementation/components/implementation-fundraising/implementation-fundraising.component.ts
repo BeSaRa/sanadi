@@ -61,7 +61,7 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
 
   @Input()
   set currentTemplate(val: ImplementationTemplate[] | undefined) {
-    this._currentTemplate = val ? val[0].templateId : undefined
+    this._currentTemplate = val && val.length ? val[0].templateId : undefined
   }
 
   inputMaskPatterns = CustomValidators.inputMaskPatterns
