@@ -569,8 +569,8 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
             || (this.employeeService.getCurrentUser().generalUserId != this.model?.creatorInfo.id && item.getResponses().includes(WFResponseType.REVIEW_NPO_MANAGEMENT))
             || (this.employeeService.getCurrentUser().generalUserId != this.model?.creatorInfo.id && item.getResponses().includes(WFResponseType.FOREIGN_COUNTRIES_PROJECTS_LICENSING_SEND_TO_MULTI_DEPARTMENTS))
             || item.getResponses().includes(WFResponseType.PROJECT_FUNDRAISING_SEND_TO_DEPARTMENTS)
-            || item.getResponses().includes(WFResponseType.GENERAL_NOTIFICATION_SEND_TO_SINGLE_DEPARTMENTS);
-
+            || item.getResponses().includes(WFResponseType.GENERAL_NOTIFICATION_SEND_TO_SINGLE_DEPARTMENTS)
+            || item.caseType === CaseTypes.ORGANIZATION_ENTITIES_SUPPORT && this.employeeService.isLicensingUser();
         },
         onClick: (item: CaseModel<any, any>) => {
           this.sendToMultiDepartmentsAction(item);
@@ -699,6 +699,20 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         },
         onClick: (item: CaseModel<any, any>) => {
           this.sendToGeneralManagerAction(item);
+        }
+      },
+      // send to general Manager
+      {
+        type: 'action',
+        icon: 'mdi-card-account-details-star',
+        label: 'send_to_general_manager',
+        askChecklist: true,
+        runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
+        show: (item: CaseModel<any, any>) => {
+          return item.getResponses().includes(WFResponseType.TO_GM);
+        },
+        onClick: (item: CaseModel<any, any>) => {
+          this.sendToGMAction(item);
         }
       },
       // complete
@@ -1197,6 +1211,12 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
 
   private sendToGeneralManagerAction(item: CaseModel<any, any>) {
     item.sendToGeneralManager().onAfterClose$.subscribe((actionTaken) => {
+      actionTaken && this.navigateToSamePageThatUserCameFrom();
+    });
+  }
+
+  private sendToGMAction(item: CaseModel<any, any>) {
+    item.sendToGM().onAfterClose$.subscribe((actionTaken) => {
       actionTaken && this.navigateToSamePageThatUserCameFrom();
     });
   }

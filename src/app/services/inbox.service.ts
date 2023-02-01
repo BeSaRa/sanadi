@@ -344,7 +344,8 @@ export class InboxService {
       [CaseTypes.CHARITY_ORGANIZATION_UPDATE]: WFResponseType.CHARITY_ORGANIZATION_UPDATE_SEND_TO_MULTI_DEPARTMENTS,
       [CaseTypes.FOREIGN_COUNTRIES_PROJECTS]: WFResponseType.FOREIGN_COUNTRIES_PROJECTS_LICENSING_SEND_TO_MULTI_DEPARTMENTS,
       [CaseTypes.PROJECT_FUNDRAISING]: WFResponseType.PROJECT_FUNDRAISING_SEND_TO_DEPARTMENTS,
-      [CaseTypes.GENERAL_PROCESS_NOTIFICATION]: WFResponseType.GENERAL_NOTIFICATION_SEND_TO_SINGLE_DEPARTMENTS
+      [CaseTypes.GENERAL_PROCESS_NOTIFICATION]: WFResponseType.GENERAL_NOTIFICATION_SEND_TO_SINGLE_DEPARTMENTS,
+      [CaseTypes.ORGANIZATION_ENTITIES_SUPPORT]: WFResponseType.ORGANIZATION_ENTITIES_SUPPORT_TO_MULTI_DEPARTMENTS
     };
 
     // @ts-ignore
@@ -371,7 +372,10 @@ export class InboxService {
     const service = this.getService(caseType);
     return this.openSendToDialog(taskId, WFResponseType.SEND_TO_GM, service, claimBefore, task);
   }
-
+  sendToGM(taskId: string, caseType: number, claimBefore: boolean = false, task?: QueryResult | CaseModel<any, any>): DialogRef {
+    const service = this.getService(caseType);
+    return this.openSendToDialog(taskId, WFResponseType.TO_GM, service, claimBefore, task);
+  }
 
   complete(taskId: string, caseType: number): Observable<boolean> {
     const service = this.getService(caseType);

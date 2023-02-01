@@ -344,7 +344,9 @@ export abstract class CaseModel<S extends BaseGenericEService<T>, T extends File
   sendToGeneralManager(): DialogRef {
     return this.inboxService!.sendToGeneralManager(this.taskDetails.tkiid, this.caseType, false, this);
   }
-
+  sendToGM(): DialogRef {
+    return this.inboxService!.sendToGM(this.taskDetails.tkiid, this.caseType, false, this);
+  }
   complete(): DialogRef {
     return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.COMPLETE, false, this);
   }

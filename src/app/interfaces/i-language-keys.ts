@@ -1775,4 +1775,5 @@ export interface ILanguageKeys {
   msg_select_project_required:string;
   task_seen:string;
   lbl_approve_conditions:string;
+  lbl_other:string;
 }
