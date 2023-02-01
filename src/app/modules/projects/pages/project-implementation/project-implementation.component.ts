@@ -74,6 +74,8 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
   remainingAmount: number = 0;
   selectedLicense?: ProjectImplementation;
 
+  permitAmountConsumed = false
+
   constructor(public lang: LangService,
               public fb: UntypedFormBuilder,
               private lookupService: LookupService,
@@ -687,5 +689,9 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
 
   clearLicense() {
     this._resetForm()
+  }
+
+  onAmountConsumed($event: boolean) {
+    this.permitAmountConsumed = $event
   }
 }

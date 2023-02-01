@@ -47,6 +47,8 @@ export class FundSourceComponent implements ControlValueAccessor, OnInit, OnDest
   projectTotalCost!: number;
   @Input()
   remainingAmount!: number
+  @Input()
+  permitAmountConsumed!: boolean
 
   inputMask = CustomValidators.inputMaskPatterns
 
@@ -121,6 +123,11 @@ export class FundSourceComponent implements ControlValueAccessor, OnInit, OnDest
     if (!this.projectTotalCost) {
       this.dialog.alert(this.lang.map.please_add_template_to_proceed)
       return
+    }
+
+    if (!this.permitAmountConsumed) {
+      this.dialog.alert(this.lang.map.cannot_take_this_action_before_consume_full_permit_amount)
+      return;
     }
 
     if (this.remainingAmount === 0) {
