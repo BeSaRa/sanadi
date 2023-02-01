@@ -49,7 +49,7 @@ import {LicenseService} from "@services/license.service";
 export class ProjectImplementationComponent extends EServicesGenericComponent<ProjectImplementation, ProjectImplementationService> {
   form!: UntypedFormGroup;
   licenseSearch$: Subject<string> = new Subject()
-  requestTypes: Lookup[] = this.lookupService.listByCategory.ServiceRequestType.slice().sort((a, b) => a.lookupKey - b.lookupKey);
+  requestTypes: Lookup[] = this.lookupService.listByCategory.ServiceRequestTypeNoRenew.slice().sort((a, b) => a.lookupKey - b.lookupKey);
   workAreas: Lookup[] = this.lookupService.listByCategory.ProjectWorkArea.slice().sort((a, b) => a.lookupKey - b.lookupKey);
   internalProjectClassifications: Lookup[] = this.lookupService.listByCategory.InternalProjectClassification.slice().sort((a, b) => a.lookupKey - b.lookupKey);
   countries: Country[] = this.activatedRoute.snapshot.data['countries'] as Country[];
