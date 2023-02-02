@@ -4,7 +4,7 @@
     <label class="form-label" for="agencies">{{lang.map.implementation_agency}}</label>
     <div class="d-flex gap-2">
       <div class="flex-grow-1">
-        <ng-select [disabled]="disabled" appendTo="body" [clearable]="true" id="agencies"
+        <ng-select [readonly]="disabled" appendTo="body" [clearable]="true" id="agencies"
                    [formControl]="selectedAgency">
           <ng-option [disabled]="isExists(option)" [value]="option"
                      *ngFor="let option of (agencies$|async)">{{option.getName()}}</ng-option>

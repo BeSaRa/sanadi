@@ -1,4 +1,4 @@
-import {Component, forwardRef, Injector, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, EventEmitter, forwardRef, Injector, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {
   ControlValueAccessor,
   FormControl,
@@ -18,6 +18,7 @@ import {ImplementationCriteriaContract} from "@contracts/implementation-criteria
 import {ProjectImplementationService} from "@services/project-implementation.service";
 import {DialogService} from "@services/dialog.service";
 import {UserClickOn} from "@app/enums/user-click-on.enum";
+import {ImplementationTemplate} from "@models/implementation-template";
 
 @Component({
   selector: 'implementation-fundraising',
@@ -44,6 +45,9 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
   @Input()
   remainingAmount!: number
 
+  @Output()
+  amountConsumed: EventEmitter<boolean> = new EventEmitter<boolean>()
+
   displayedColumns: string[] = [
     'projectLicenseFullSerial',
     'permitType',
@@ -56,6 +60,13 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
     'actions'
   ];
 
+  private _currentTemplate?: string
+
+  @Input()
+  set currentTemplate(val: ImplementationTemplate[] | undefined) {
+    this._currentTemplate = val && val.length ? val[0].templateId : undefined
+  }
+
   inputMaskPatterns = CustomValidators.inputMaskPatterns
   @Input()
   projectTotalCost: number = 0
@@ -63,6 +74,7 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
   fromGroup = new UntypedFormGroup({
     inputs: new UntypedFormArray([])
   })
+  totalValue: number = 0;
 
   constructor(private injector: Injector,
               private service: ProjectImplementationService,
@@ -131,6 +143,8 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
       .pipe(filter(_ => !this.disabled))
       .pipe(debounceTime(250))
       .pipe(takeUntil((this.destroy$)))
+      .pipe(tap(_ => this.calculateTotal()))
+      .pipe(filter(_ => this.value && !!this.value[index]))
       .subscribe((value) => {
         const model = this.value[index];
         const cValue = currency(value)
@@ -138,6 +152,14 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
         model.totalCost = actualValue
         ctrl.patchValue(actualValue, {emitEvent: false})
         this.onChange(this.value)
+        this.calculateTotal()
+        this.isFullAmountConsumed()
+        const template = this.getTemplatePermit()
+        const currentPermit = this.value[index];
+
+        template && currentPermit &&
+        template.templateId === currentPermit.templateId &&
+        currentPermit.remainingAmount === currentPermit.totalCost ? ctrl.disable() : ctrl.enable()
       })
   }
 
@@ -167,13 +189,16 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
     })
   }
 
-  getRemaining(index: number) {
+  takeRemaining(index: number) {
     const ctrl = this.inputs.at(index)
     const model = this.value[index];
     ctrl.setValue(model.remainingAmount)
   }
 
   noRemainingValue(i: number) {
+    if (!this.value)
+      return;
+
     const model = this.value[i]
     return model.remainingAmount === model.totalCost
   }
@@ -202,6 +227,8 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
         this.value = this.value.concat(template)
         this.onChange(this.value);
         this.onTouch()
+        this.calculateTotal()
+        this.isFullAmountConsumed()
       })
 
   }
@@ -214,6 +241,27 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
       .subscribe(() => {
         this.value = this.value.filter(template => template.projectLicenseId !== item.projectLicenseId)
         this.onChange(this.value)
+        this.calculateTotal()
+        this.isFullAmountConsumed()
       })
   }
+
+  calculateTotal(): void {
+    this.totalValue = (this.value ?? []).reduce((acc, item) => acc + item.totalCost, 0)
+  }
+
+  isTemplatePermit(row: ImplementationFundraising) {
+    return this._currentTemplate && row.templateId ? row.templateId === this._currentTemplate : false
+  }
+
+  private getTemplatePermit(): ImplementationFundraising | undefined {
+    return this.value.find(item => !!item.templateId)
+  }
+
+  isFullAmountConsumed(): void {
+    const template = this.getTemplatePermit()
+    template ? this.amountConsumed.emit(template.totalCost === template.remainingAmount) : this.amountConsumed.emit(true)
+  }
+
+
 }

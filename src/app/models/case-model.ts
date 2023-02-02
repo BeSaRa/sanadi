@@ -344,7 +344,9 @@ export abstract class CaseModel<S extends BaseGenericEService<T>, T extends File
   sendToGeneralManager(): DialogRef {
     return this.inboxService!.sendToGeneralManager(this.taskDetails.tkiid, this.caseType, false, this);
   }
-
+  sendToGM(): DialogRef {
+    return this.inboxService!.sendToGM(this.taskDetails.tkiid, this.caseType, false, this);
+  }
   complete(): DialogRef {
     return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.COMPLETE, false, this);
   }
@@ -359,6 +361,12 @@ export abstract class CaseModel<S extends BaseGenericEService<T>, T extends File
 
   finalApprove(): DialogRef {
     return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.FINAL_APPROVE, false, this);
+  }
+  knew(): DialogRef {
+    return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.KNEW, false, this);
+  }
+  seen(): DialogRef {
+    return this.inboxService!.seen(this.taskDetails.tkiid, this.caseType, false, this);
   }
 
   organizationApprove(externalUserData: { form: UntypedFormGroup, organizationOfficers: OrganizationOfficer[] }): DialogRef {

@@ -1,3 +1,4 @@
+import { FinancialTransferLicensing } from '@app/models/financial-transfer-licensing';
 import {OrganizationsEntitiesSupport} from '@app/models/organizations-entities-support';
 import {GeneralProcessNotification} from '@app/models/general-process-notification';
 import {SearchAwarenessActivitySuggestionCriteria} from '@models/search-awareness-activity-suggestion-criteria';
@@ -66,6 +67,7 @@ import {ForeignCountriesProjects} from '@app/models/foreign-countries-projects';
 import {CastResponse} from "@decorators/cast-response";
 import {GeneralAssociationMeetingAttendance} from '@app/models/general-association-meeting-attendance';
 import {ProjectFundraising} from "@app/models/project-fundraising";
+import {ProjectImplementation} from "@models/project-implementation";
 
 const collectionInterceptor = new CollectionApprovalInterceptor()
 const collectorInterceptor = new CollectorApprovalInterceptor()
@@ -168,6 +170,12 @@ export class LicenseService {
         break;
       case CaseTypes.ORGANIZATION_ENTITIES_SUPPORT:
         url = this.urlService.URLS.ORGANIZATION_ENTITIES_SUPPORT;
+        break;
+      case CaseTypes.FINANCIAL_TRANSFERS_LICENSING:
+        url = this.urlService.URLS.FINANCIAL_TRANSFERS_LICENSING;
+        break;
+      case CaseTypes.PROJECT_IMPLEMENTATION:
+        url = this.urlService.URLS.PROJECT_IMPLEMENTATION;
         break;
     }
     return url;
@@ -300,6 +308,16 @@ export class LicenseService {
     return this._organizationsEntitiesSupportSearch(criteria);
   }
 
+  @CastResponse(() => FinancialTransferLicensing)
+  private _FinancialTransferLicensingSearch(criteria: Partial<FinancialTransferLicensing>): Observable<FinancialTransferLicensing[]> {
+    const orgId = {organizationId: this.employeeService.isExternalUser() ? this.employeeService.getProfile()?.id : undefined}
+    return this.http.post<FinancialTransferLicensing[]>(this.getServiceUrlByCaseType(CaseTypes.FINANCIAL_TRANSFERS_LICENSING) + '/license/search', {...criteria, ...orgId})
+  }
+
+  FinancialTransferLicensingSearch(criteria: Partial<FinancialTransferLicensing>): Observable<FinancialTransferLicensing[]> {
+    return this._FinancialTransferLicensingSearch(criteria);
+  }
+
   @CastResponse(() => InitialExternalOfficeApproval)
   private _loadInitialLicenseByLicenseId(licenseId: string): Observable<InitialExternalOfficeApproval> {
     return this.http.get<InitialExternalOfficeApproval>(this.getServiceUrlByCaseType(CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL) + '/license/' + licenseId + '/details');
@@ -408,6 +426,15 @@ export class LicenseService {
 
   loadOrganizationsEntitiesSupportByLicenseId(licenseId: string): Observable<OrganizationsEntitiesSupport> {
     return this._loadOrganizationsEntitiesSupportByLicenseId(licenseId);
+  }
+
+  @CastResponse(() => FinancialTransferLicensing)
+  private _loadFinancialTransferLicensingByLicenseId(licenseId: string): Observable<FinancialTransferLicensing> {
+    return this.http.get<FinancialTransferLicensing>(this.getServiceUrlByCaseType(CaseTypes.FINANCIAL_TRANSFERS_LICENSING) + '/license/' + licenseId + '/details');
+  }
+
+  loadFinancialTransferLicensingByLicenseId(licenseId: string): Observable<FinancialTransferLicensing> {
+    return this._loadFinancialTransferLicensingByLicenseId(licenseId);
   }
 
 
@@ -527,6 +554,13 @@ export class LicenseService {
       oldFullSerial
     });
   }
+  @CastResponse(() => FinancialTransferLicensing)
+  _validateFinancialTransferLicensingByRequestType<T>(requestType: number, oldFullSerial: string): Observable<T> {
+    return this.http.post<T>(this.getServiceUrlByCaseType(CaseTypes.FINANCIAL_TRANSFERS_LICENSING) + '/draft/validate', {
+      requestType,
+      oldFullSerial
+    });
+  }
 
   @CastResponse(() => GeneralProcessNotification)
   _validateGeneralProcessNotificationByRequestType<T>(requestType: number, oldFullSerial: string): Observable<T> {
@@ -595,6 +629,10 @@ export class LicenseService {
       return this._validateProjectFundraisingRequestType<T>(requestType, licenseId);
     } else if (caseType === CaseTypes.ORGANIZATION_ENTITIES_SUPPORT) {
       return this._validateOrganizationsEntitiesSupportByRequestType<T>(requestType, licenseId);
+    } else if (caseType === CaseTypes.PROJECT_IMPLEMENTATION) {
+      return this._validateProjectImplementationRequestType<T>(requestType, licenseId);
+    } else if (caseType === CaseTypes.FINANCIAL_TRANSFERS_LICENSING) {
+      return this._validateFinancialTransferLicensingByRequestType<T>(requestType, licenseId);
     }
     return of(undefined);
   }
@@ -710,8 +748,27 @@ export class LicenseService {
     });
   }
 
+  @CastResponse(() => ProjectImplementation)
+  private _validateProjectImplementationRequestType<T>(requestType: number, oldLicenseId: string) {
+    return this.http.post<T>(this.getServiceUrlByCaseType(CaseTypes.PROJECT_IMPLEMENTATION) + '/draft/validate', {
+      requestType,
+      oldLicenseId
+    });
+  }
+
   @CastResponse(() => ProjectFundraising)
   loadProjectFundraisingLicenseById(licenseId: string): Observable<ProjectFundraising> {
     return this.http.get<ProjectFundraising>(this.getServiceUrlByCaseType(CaseTypes.PROJECT_FUNDRAISING) + '/license/' + licenseId + '/details')
+  }
+
+  @CastResponse(() => ProjectImplementation)
+  projectImplementationLicenseSearch(criteria: Partial<ProjectImplementation>): Observable<ProjectImplementation[]> {
+    const orgId = {organizationId: this.employeeService.isExternalUser() ? this.employeeService.getProfile()?.id : undefined}
+    return this.http.post<ProjectImplementation[]>(this.urlService.URLS.PROJECT_IMPLEMENTATION + '/license/search', {...criteria, ...orgId});
+  }
+
+  @CastResponse(() => ProjectImplementation)
+  loadProjectImplementationLicenseById(licenseId: string): Observable<ProjectImplementation> {
+    return this.http.get<ProjectImplementation>(this.getServiceUrlByCaseType(CaseTypes.PROJECT_IMPLEMENTATION) + '/license/' + licenseId + '/details')
   }
 }

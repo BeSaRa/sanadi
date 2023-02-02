@@ -24,7 +24,7 @@ export interface IEmployeeDto {
   workEndDate: string | IMyDateModel;
   updatedOn: string | IMyDateModel;
   ExpIdPass: string | IMyDateModel;
-  JobNumber: string;
+  jobNumber: string;
   functionalGroup: number;
   qId: string;
   updatedBy: number;

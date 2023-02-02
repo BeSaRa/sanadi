@@ -32,6 +32,7 @@ export enum WFResponseType {
   FUNDRAISING_LICENSE_SEND_TO_SINGLE_DEPARTMENT = 'askSingle:ReviewFundraisingChannelLicensing',
   GENERAL_NOTIFICATION_SEND_TO_SINGLE_DEPARTMENTS = 'askSingle:ReviewGeneralNotification',
   FUNDRAISING_LICENSE_SEND_TO_MULTI_DEPARTMENTS = 'ask:ReviewFundraisingChannelLicensing',
+  ORGANIZATION_ENTITIES_SUPPORT_TO_MULTI_DEPARTMENTS = 'ask:ReviewOrganizationsEntitiesSupport',
 
   INTERNAL_PROJECT_SEND_TO_EXPERT = 'ask:InternalProjectSpecialistReview', // not used anymore but still reference in multi-send popup
   TO_DEVELOPMENT_EXPERT = 'toDevExpert',
@@ -50,4 +51,7 @@ export enum WFResponseType {
   FOREIGN_COUNTRIES_PROJECTS_LICENSING_SEND_TO_MULTI_DEPARTMENTS = 'ask:ReviewForeignCountriesProjectsLicensing',
   SEND_TO_GM = 'sendToGM',
   TO_CHIEF = 'toChief',
+  KNEW = 'knew',
+  SEEN = 'seen',
+  TO_GM = 'toGM',
 }

@@ -22,7 +22,7 @@
       </ng-container>
       <ng-container cdkColumnDef="executionRegion">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.execution_country}}</th>
-        <td cdk-cell *cdkCellDef="let row"> {{row.executionCountryInfo.getName()}} </td>
+        <td cdk-cell *cdkCellDef="let row"> {{row.executionCountryInfo ? row.executionCountryInfo.getName() : ''}} </td>
       </ng-container>
       <ng-container cdkColumnDef="arabicName">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.arabic_name}}</th>

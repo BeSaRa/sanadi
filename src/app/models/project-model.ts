@@ -94,6 +94,7 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
   secondSDGoalInfo!: AdminResult;
   thirdSDGoalInfo!: AdminResult;
   service!: ProjectModelService;
+  targetAmount?: number
 
   searchFields: ISearchFieldsMap<ProjectModel> = {
     ...dateSearchFields(['createdOn']),
@@ -295,7 +296,7 @@ export class ProjectModel extends CaseModel<ProjectModelService, ProjectModel> {
       templateId: this.id,
       templateName: this.projectName,
       templateCost: this.projectTotalCost,
-      projectTotalCost: this.projectTotalCost,
+      projectTotalCost: this.targetAmount ? this.targetAmount : this.projectTotalCost,
       executionCountry: this.executionCountry,
       executionCountryInfo: this.executionCountryInfo,
       beneficiaryRegion: this.beneficiaryRegion,

@@ -7,11 +7,11 @@
   <div [formGroup]="form" class="row">
     <div *ngIf="isGrant()" class="col-md-6 col-sm-12 mb-4 position-relative">
       <label class="form-label" asteriskIfRequired="fullName"
-             for="fullName">{{lang.map.full_name}}</label>
+             for="fullName">{{lang.map.the_donor}}</label>
       <input id="fullName" validationClasses="fullName" formControlName="fullName" class="form-control">
       <app-field-error-message controlName="fullName"></app-field-error-message>
     </div>
-    <div class="col-md-6 col-sm-12 mb-4 position-relative">
+    <div [ngClass]="{'col-md-6': isGrant()}" class="col-sm-12 mb-4 position-relative">
       <label class="form-label" for="field_name">{{lang.map.project_total_cost}}</label>
       <input tabindex="-1" id="field_name" readonly
              [value]="projectTotalCost| mask: maskPattern.SEPARATOR: maskPattern.THOUSAND_SEPARATOR"
@@ -20,7 +20,7 @@
     <div class="col-md-6 col-sm-12 mb-4 position-relative">
       <label class="form-label" asteriskIfRequired="totalCost"
              for="totalCost">{{lang.map.total_cost}}</label>
-      <input id="totalCost" [mask]="maskPattern.SEPARATOR" [dropSpecialCharacters]="[',']"
+      <input id="totalCost" [mask]="maskPattern.DECIMAL_WITH_SEPARATOR(2)" [dropSpecialCharacters]="[',']"
              [thousandSeparator]="maskPattern.THOUSAND_SEPARATOR"
              validationClasses="totalCost" formControlName="totalCost" class="form-control">
       <app-field-error-message controlName="totalCost"></app-field-error-message>

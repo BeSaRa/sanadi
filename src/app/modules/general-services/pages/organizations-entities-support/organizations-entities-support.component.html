@@ -56,6 +56,12 @@
 
       </div>
       <div class="row">
+        <div class="col-sm-12 col-md-4 mb-4 position-relative" [hidden]="!showOtherService">
+          <label class="form-label" asteriskIfRequired="otherService" for="otherService">{{lang.map.lbl_other}}</label>
+          <input validationClasses="otherService" formControlName="otherService" type="text" id="otherService" [readonly]="readonly"
+                 class="form-control">
+          <app-field-error-message controlName="otherService"></app-field-error-message>
+        </div>
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label class="form-label" asteriskIfRequired="subject" for="subject">{{lang.map.subject}}</label>
           <input validationClasses="subject" formControlName="subject" type="text" id="subject" [readonly]="readonly"
@@ -144,7 +150,7 @@
         </div>
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label class="form-label" asteriskIfRequired="mobileNo"
-                 for="mobileNo">{{lang.map.lbl_phone_extension}}</label>
+                 for="mobileNo">{{lang.map.lbl_mobile_number}}</label>
           <input validationClasses="mobileNo" formControlName="mobileNo" type="text" id="mobileNo" [readonly]="true"
                  class="form-control">
           <app-field-error-message controlName="mobileNo"></app-field-error-message>

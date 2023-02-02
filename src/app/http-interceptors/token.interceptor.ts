@@ -6,9 +6,9 @@ import {
   HttpInterceptor
 } from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {TokenService} from '../services/token.service';
-import {ConfigurationService} from '../services/configuration.service';
-import {SURVEY_TOKEN} from "@app/http-context/survey-token";
+import {TokenService} from '@services/token.service';
+import {ConfigurationService} from '@services/configuration.service';
+import {SURVEY_TOKEN} from "@app/http-context/tokens";
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
@@ -22,7 +22,6 @@ export class TokenInterceptor implements HttpInterceptor {
         setHeaders: {[this.configurationService.CONFIG.TOKEN_HEADER_KEY]: this.tokenService.getToken()}
       });
     } else if (request.context.get(SURVEY_TOKEN) && request.context.get(SURVEY_TOKEN) !== SURVEY_TOKEN.defaultValue()) {
-      console.log('TOKEN VALUE', request.context.get(SURVEY_TOKEN));
       request = request.clone({
         setHeaders: {[this.configurationService.CONFIG.TOKEN_HEADER_KEY]: request.context.get(SURVEY_TOKEN)}
       });

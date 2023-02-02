@@ -46,18 +46,20 @@
         </td>
       </ng-container>
       <ng-container cdkColumnDef="totalCost">
-        <th cdk-header-cell style="width:120px" *cdkHeaderCellDef> {{lang.map.total_cost}}</th>
+        <th cdk-header-cell style="width:200px" *cdkHeaderCellDef> {{lang.map.total_cost}}</th>
         <td cdk-cell *cdkCellDef="let row; let i = index;">
           <ng-container formArrayName="inputs">
             <div class="d-flex">
-              <input type="text" [mask]="inputMaskPatterns.SEPARATOR"
-                     [dropSpecialCharacters]="[',']"
+              <input [id]="'fundraising-'+i" class="form-control form-control-sm" [formControlName]="i"
+                     [mask]="inputMaskPatterns.SEPARATOR"
                      [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR"
-                     class="form-control form-control-sm" style="width: 100px" [formControlName]="i">
-              <button [disabled]="disabled || noRemainingValue(i)" (click)="!disabled && getRemaining(i)"
-                      class="btn p-0 icon-btn">
-                <i class="mdi mdi-hand-coin text-primary"></i>
-              </button>
+                     [dropSpecialCharacters]="[',']">
+              <div [tooltip]="lang.map.take_the_remaining">
+                <button [disabled]="disabled || noRemainingValue(i)" (click)="takeRemaining(i)" class="btn icon-btn p-0">
+                  <i class="mdi mdi-hand-coin-outline text-primary"></i>
+                </button>
+              </div>
+              <div class="flex-grow-1"></div>
             </div>
           </ng-container>
         </td>
@@ -65,13 +67,55 @@
       <ng-container cdkColumnDef="actions">
         <th cdk-header-cell  style="width:120px" *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
         <td cdk-cell *cdkCellDef="let row">
-          <button (click)="!disabled && deletePermit(row)" class="btn icon-btn">
+          <button [disabled]="isTemplatePermit(row)" (click)="!disabled && deletePermit(row)" class="btn p-0 icon-btn">
             <i class="mdi mdi-trash-can text-primary"></i>
           </button>
         </td>
       </ng-container>
+      <ng-container cdkColumnDef="Total">
+        <th colspan="7" cdk-header-cell *cdkFooterCellDef>
+          <div class="d-flex align-items-center justify-content-end h6 mb-0">{{lang.map.total}}</div>
+        </th>
+      </ng-container>
+      <ng-container cdkColumnDef="TotalValue">
+        <th colspan="2" cdk-header-cell
+            *cdkFooterCellDef>
+          <div class="d-flex align-items-center h6 mb-0">
+            {{totalValue | mask: inputMaskPatterns.SEPARATOR: inputMaskPatterns.THOUSAND_SEPARATOR}}
+          </div>
+        </th>
+      </ng-container>
+      <ng-container cdkColumnDef="ProjectCost">
+        <th colspan="7" cdk-header-cell *cdkFooterCellDef>
+          <div class="d-flex align-items-center justify-content-end h6 mb-0">{{lang.map.project_total_cost}}</div>
+        </th>
+      </ng-container>
+      <ng-container cdkColumnDef="ProjectCostValue">
+        <th colspan="2" cdk-header-cell
+            *cdkFooterCellDef>
+          <div class="d-flex align-items-center h6 mb-0">
+            {{projectTotalCost | mask: inputMaskPatterns.SEPARATOR: inputMaskPatterns.THOUSAND_SEPARATOR}}
+          </div>
+        </th>
+      </ng-container>
+      <ng-container cdkColumnDef="Remaining">
+        <th colspan="7" cdk-header-cell *cdkFooterCellDef>
+          <div class="d-flex align-items-center justify-content-end h6 mb-0">{{lang.map.remaining_amount}}</div>
+        </th>
+      </ng-container>
+      <ng-container cdkColumnDef="RemainingValue">
+        <th colspan="2" [ngClass]="{remain:remainingAmount!==0}" cdk-header-cell
+            *cdkFooterCellDef>
+          <div class="d-flex align-items-center h6 mb-0">
+            {{remainingAmount | mask: inputMaskPatterns.SEPARATOR: inputMaskPatterns.THOUSAND_SEPARATOR}}
+          </div>
+        </th>
+      </ng-container>
       <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="displayedColumns"></tr>
       <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
+      <tr cdk-footer-row class="table-row-header" *cdkFooterRowDef="['Total','TotalValue']"></tr>
+      <tr cdk-footer-row class="table-row-header" *cdkFooterRowDef="['ProjectCost','ProjectCostValue']"></tr>
+      <tr cdk-footer-row class="table-row-header" *cdkFooterRowDef="['Remaining','RemainingValue']"></tr>
       <tr *cdkNoDataRow>
         <td colspan="20">{{lang.map.no_records_to_display}}</td>
       </tr>

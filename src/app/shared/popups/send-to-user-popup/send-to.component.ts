@@ -84,6 +84,9 @@ export class SendToComponent implements OnInit, OnDestroy {
       case WFResponseType.TO_CHIEF:
         this.title = 'send_to_chief';
         break;
+      case WFResponseType.SEEN:
+        this.title = 'task_seen';
+        break;
       default:
         this.title = 'send';
     }

@@ -1,5 +1,14 @@
 export interface ILanguageKeys {
+  the_donor: string;
+  city_village: string;
+  project_impl_total_cost: string;
+  region_territories: string;
+  cannot_take_this_action_before_consume_full_permit_amount: string;
+  project_ar_name: string;
+  project_en_name: string;
+  fundraising_remaining_amount: string;
   cannot_add_funding_resources_full_amount_have_been_used: string;
+  cannot_add_payments_full_amount_have_been_used: string;
   alternate_emails: string;
   default_language: string;
   user_preferences: string;
@@ -1755,4 +1764,26 @@ export interface ILanguageKeys {
   must_have_one_active_field_at_least: string;
   must_have_one_required_field_at_least: string;
   must_have_one_field_at_least_shown_on_table: string;
+  menu_financial_transfers_licensing: string;
+  transfer_operation: string;
+  transferee_bank_account: string;
+  transfer_bank_account: string;
+  financial_transfers_projects: string;
+  affidavit_of_completion: string;
+  transferee_bank_name: string;
+  employee_with_jobNumber: string;
+  lbl_mobile_number: string;
+  entity_type_required: string;
+  execution_country_required: string;
+  transfer_to_country_required: string;
+  authorized_entities: string;
+  pre_registered_entities: string;
+  transfer_number: string;
+  transferred_amount: string;
+  due_amount: string;
+  total_qatari_riyal_transaction_amount:string;
+  msg_select_project_required:string;
+  task_seen:string;
+  lbl_approve_conditions:string;
+  lbl_other:string;
 }

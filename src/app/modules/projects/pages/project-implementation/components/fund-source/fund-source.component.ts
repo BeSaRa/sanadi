@@ -48,13 +48,17 @@ export class FundSourceComponent implements ControlValueAccessor, OnInit, OnDest
   @Input()
   remainingAmount!: number
   @Input()
-  remaining!: number;
+  permitAmountConsumed!: boolean
 
   inputMask = CustomValidators.inputMaskPatterns
 
   form: UntypedFormGroup = new UntypedFormGroup({
     inputs: new UntypedFormArray([])
   })
+
+  totalValue: number = 0;
+
+  listeners$ = new Subject()
 
   constructor(public lang: LangService, private dialog: DialogService) {
 
@@ -68,6 +72,9 @@ export class FundSourceComponent implements ControlValueAccessor, OnInit, OnDest
     this.destroy$.next()
     this.destroy$.complete()
     this.destroy$.unsubscribe()
+    this.listeners$.next()
+    this.listeners$.complete()
+    this.listeners$.unsubscribe()
   }
 
   isGrant(): boolean {
@@ -79,10 +86,25 @@ export class FundSourceComponent implements ControlValueAccessor, OnInit, OnDest
     this.isGrant() && this.displayedColumns.unshift('fullName')
   }
 
+  destroyOldListeners(): void {
+    this.listeners$.next()
+  }
+
   writeValue(value: FundingResourceContract[]): void {
-    this.createInputs(value)
-    this.createListeners()
-    this.value = value
+    Promise.resolve()
+      .then(() => {
+        this.destroyOldListeners()
+        this.value = []
+        this.inputs.clear()
+      })
+      .then(() => {
+        this.createInputs(value)
+      })
+      .then(() => {
+        this.value = value
+        this.createListeners()
+        this.calculateTotal()
+      })
   }
 
   registerOnChange(fn: (_value: FundingResourceContract[]) => void): void {
@@ -101,6 +123,11 @@ export class FundSourceComponent implements ControlValueAccessor, OnInit, OnDest
     if (!this.projectTotalCost) {
       this.dialog.alert(this.lang.map.please_add_template_to_proceed)
       return
+    }
+
+    if (!this.permitAmountConsumed) {
+      this.dialog.alert(this.lang.map.cannot_take_this_action_before_consume_full_permit_amount)
+      return;
     }
 
     if (this.remainingAmount === 0) {
@@ -123,6 +150,7 @@ export class FundSourceComponent implements ControlValueAccessor, OnInit, OnDest
         this.value = this.value.concat(source)
         this.onChange(this.value)
         this.onTouch()
+        this.calculateTotal()
       })
   }
 
@@ -133,7 +161,7 @@ export class FundSourceComponent implements ControlValueAccessor, OnInit, OnDest
       operation: OperationTypes.UPDATE,
       model: row,
       projectTotalCost: this.projectTotalCost,
-      remainingAmount: this.remainingAmount,
+      remainingAmount: this.getRemaining(index),
       type: this.type
     })
       .onAfterClose$
@@ -146,6 +174,7 @@ export class FundSourceComponent implements ControlValueAccessor, OnInit, OnDest
         })
         this.onChange(this.value)
         this.onTouch()
+        this.calculateTotal()
       })
   }
 
@@ -156,19 +185,22 @@ export class FundSourceComponent implements ControlValueAccessor, OnInit, OnDest
   createListener(ctrl: UntypedFormControl, index: number) {
     ctrl
       .valueChanges
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntil(this.listeners$))
       .pipe(debounceTime(250))
       .pipe(map((value) => Number(value)))
       .subscribe((value) => {
-        const cValue = currency(value).value > this.remainingAmount ? this.remainingAmount : currency(value).value
+        const remaining = this.getRemaining(index)
+        const cValue = value > remaining ? remaining : value
+        this.value[index].totalCost = cValue;
         ctrl.setValue(cValue, {emitEvent: false})
-        this.value[index].totalCost = cValue
         this.onChange(this.value)
+        this.onTouch()
+        this.calculateTotal()
       })
   }
 
   private createInputs(value: FundingResourceContract[]) {
-    value.forEach(item => {
+    (value ?? []).forEach(item => {
       const ctrl = this.createControl(item.totalCost)
       this.inputs.push(ctrl)
     })
@@ -197,6 +229,40 @@ export class FundSourceComponent implements ControlValueAccessor, OnInit, OnDest
         this.inputs.removeAt(i);
         this.onChange(this.value)
         this.onTouch()
+        this.calculateTotal()
       })
+  }
+
+  getRemaining(index: number): number {
+    return currency(this.remainingAmount).add((this.value[index] && this.value[index].totalCost || 0)).value
+  }
+
+  calculateTotal(): void {
+    this.totalValue = (this.value ?? []).reduce((acc, item) => acc + item.totalCost, 0)
+  }
+
+  distributeRemaining() {
+    const length = this.value.length
+    if (!length) return
+
+    const mod = this.remainingAmount % length
+
+    if (mod === this.remainingAmount) return;
+
+    const amount = currency(this.remainingAmount).subtract(mod).value  / length
+    this.inputs.controls.forEach((item, index) => {
+      const oldValue = item.getRawValue()
+      const value = currency(amount).add(oldValue).value
+      item.setValue(value, {emitEvent: false})
+      this.value[index].totalCost = value
+    })
+    this.onChange(this.value)
+  }
+
+  takeRemaining(index: number): void {
+    const value = currency(this.value[index].totalCost).add(this.remainingAmount).value
+    this.inputs.at(index).setValue(value, {emitEvent: false})
+    this.value[index].totalCost = value;
+    this.onChange(this.value)
   }
 }

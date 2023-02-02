@@ -132,5 +132,6 @@ export interface IAppUrls {
   GLOBAL_SETTINGS: string;
   USER_PREFERENCES: string;
   PROJECT_IMPLEMENTATION: string;
+  FINANCIAL_TRANSFERS_LICENSING: string;
   [index: string]: string;
 }

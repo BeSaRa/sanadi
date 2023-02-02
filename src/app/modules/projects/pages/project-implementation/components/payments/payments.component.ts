@@ -1,6 +1,7 @@
 import {Component, forwardRef, Input, OnDestroy, OnInit} from '@angular/core';
 import {
   ControlValueAccessor,
+  FormControl,
   NG_VALUE_ACCESSOR,
   UntypedFormArray,
   UntypedFormControl,
@@ -33,8 +34,16 @@ import currency from "currency.js";
 export class PaymentsComponent implements ControlValueAccessor, OnInit, OnDestroy {
   @Input()
   disabled: boolean = false;
+  private _projectTotalCost!: number
   @Input()
-  projectTotalCost!: number
+  set projectTotalCost(val: number) {
+    this._projectTotalCost = val || 0
+    this.calculateRemaining()
+  }
+
+  get projectTotalCost(): number {
+    return this._projectTotalCost
+  }
 
   remainingAmount!: number
 
@@ -48,7 +57,7 @@ export class PaymentsComponent implements ControlValueAccessor, OnInit, OnDestro
     inputs: new UntypedFormArray([])
   })
   inputMask = CustomValidators.inputMaskPatterns;
-
+  totalValue = 0
 
   constructor(public lang: LangService, private dialog: DialogService) {
   }
@@ -88,10 +97,15 @@ export class PaymentsComponent implements ControlValueAccessor, OnInit, OnDestro
   }
 
   openAddPaymentDialog() {
-    if (!this.projectTotalCost) {
-      this.dialog.alert(this.lang.map.please_add_template_to_proceed)
-      return
-    }
+    // if (!this.projectTotalCost) {
+    //   this.dialog.alert(this.lang.map.please_add_template_to_proceed)
+    //   return
+    // }
+    //
+    // if (!this.remainingAmount) {
+    //   this.dialog.alert(this.lang.map.cannot_add_payments_full_amount_have_been_used)
+    //   return;
+    // }
 
     this.dialog.show<IDialogData<Payment>>(PaymentPopupComponent, {
       model: new Payment(),
@@ -131,7 +145,7 @@ export class PaymentsComponent implements ControlValueAccessor, OnInit, OnDestro
       model: item,
       operation: OperationTypes.UPDATE,
       projectTotalCost: this.projectTotalCost,
-      remainingAmount: this.remainingAmount
+      remainingAmount: this.calculateAllExcept(index)
     }).onAfterClose$
       .pipe(takeUntil(this.destroy$))
       .pipe(filter((value: Payment): value is Payment => !!value))
@@ -157,15 +171,18 @@ export class PaymentsComponent implements ControlValueAccessor, OnInit, OnDestro
       .pipe(debounceTime(250))
       .pipe(map(value => Number(value)))
       .subscribe((value) => {
-        const cValue = currency(value).value > this.remainingAmount ? this.remainingAmount : currency(value).value
+        const remaining = this.calculateAllExcept(index)
+        const cValue = currency(value).value > currency(remaining).value ? currency(remaining).value : currency(value).value
         ctrl.setValue(cValue, {emitEvent: false})
         this.value[index].totalCost = cValue
+        this.onChange(this.value)
+        this.calculateRemaining()
       })
   }
 
   createInputs(values: Payment[]): void {
-    this.inputs.clear()
-    values.forEach(item => {
+    this.inputs.clear();
+    (values ?? []).forEach(item => {
       const ctrl = this.createInput(item.totalCost)
       this.inputs.push(ctrl)
     })
@@ -184,11 +201,46 @@ export class PaymentsComponent implements ControlValueAccessor, OnInit, OnDestro
   }
 
   calculateRemaining(): void {
-    console.log(this.projectTotalCost , this.value.reduce((acc, item) => {
-      return acc + item.totalCost
-    }, 0) );
-    this.remainingAmount = currency(this.projectTotalCost).subtract(this.value.reduce((acc, item) => {
+    this.remainingAmount = currency(this.projectTotalCost).subtract((this.value ?? []).reduce((acc, item) => {
       return acc + item.totalCost
     }, 0)).value
+    this.calculateTotal()
+  }
+
+  calculateTotal(): void {
+    this.totalValue = (this.value ?? []).reduce((acc, item) => acc + item.totalCost, 0)
+  }
+
+  calculateAllExcept(index: number): number {
+    return currency(this.projectTotalCost).subtract((this.inputs.controls as FormControl<number>[]).reduce((acc, item, currentIndex) => {
+      return acc + (index === currentIndex ? 0 : Number(item.getRawValue()))
+    }, 0)).value
+  }
+
+  distributeRemaining() {
+    const length = this.value.length
+    if (!length) return
+
+    const mod = this.remainingAmount % length
+
+    if (mod === this.remainingAmount) return;
+
+
+    const amount = currency(this.remainingAmount).subtract(mod).value / length
+    this.inputs.controls.forEach((item, index) => {
+      const oldValue = item.getRawValue()
+      const value = currency(amount).add(oldValue).value
+      item.setValue(value, {emitEvent: false})
+      this.value[index].totalCost = value
+    })
+    this.onChange(this.value)
+    this.calculateRemaining()
+  }
+  takeRemaining(index: number): void {
+    const value = currency(this.value[index].totalCost).add(this.remainingAmount).value
+    this.inputs.at(index).setValue(value, {emitEvent: false})
+    this.value[index].totalCost = value;
+    this.onChange(this.value)
+    this.calculateRemaining()
   }
 }

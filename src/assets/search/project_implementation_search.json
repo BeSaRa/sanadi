@@ -53,32 +53,6 @@
   {
     "fields": [
       {
-        "key": "domain",
-        "type": "selectField",
-        "label": "the_domain",
-        "selectOptions": {
-          "options": [],
-          "loader": "lookup.Domain",
-          "bindValue": "lookupKey",
-          "bindLabel": "basedOnLanguage"
-        }
-      },
-      {
-        "key": "projectType",
-        "type": "selectField",
-        "label": "project_type",
-        "selectOptions": {
-          "options": [],
-          "loader": "lookup.ProjectType",
-          "bindValue": "lookupKey",
-          "bindLabel": "basedOnLanguage"
-        }
-      }
-    ]
-  },
-  {
-    "fields": [
-      {
         "key": "organizationId",
         "type": "selectField",
         "label": "lbl_organization",

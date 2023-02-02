@@ -29,7 +29,7 @@ export class Employee extends Cloneable<Employee> implements IEmployeeDto {
   workEndDate!: string | IMyDateModel;
   updatedOn!: string | IMyDateModel;
   ExpIdPass!: string | IMyDateModel;
-  JobNumber!: string;
+  jobNumber!: string;
   functionalGroup!: number;
   jobTitleInfo!: AdminResult | JobTitle | undefined;
   contractStatusInfo!: AdminResult;

@@ -156,7 +156,7 @@ GeneralProcessNotificationService
     this.listenToLicenseSearch();
     this._buildForm();
     this.adminLookupService.loadAsLookups(AdminLookupTypeEnum.GENERAL_PROCESS_CLASSIFICATION, true).subscribe((data: AdminLookup[]) => {
-      this.mainClassificationsList = data;
+      this.mainClassificationsList = data.filter(c => !c.parentId);
     })
     this.internalDepartmentService.loadGeneralProcessDepartments().subscribe(deparments => {
       this.departmentList = deparments;
@@ -242,6 +242,17 @@ GeneralProcessNotificationService
     this.handleReadonly();
   }
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
+    if (!this.requestTypeField.value) {
+      this.dialog.error(this.lang.map.msg_please_select_x_to_continue.change({ x: this.lang.map.request_type }));
+      return false;
+    }
+    if (!this.processIdField.value) {
+      this.dialog.error(this.lang.map.msg_please_select_x_to_continue.change({ x: this.lang.map.lbl_process }));
+      return false;
+    }
+    if (saveType === SaveTypes.DRAFT) {
+      return true;
+    }
     const invalidTabs = this._getInvalidTabs();
     if (invalidTabs.length > 0) {
       const listHtml = CommonUtils.generateHtmlList(this.lang.map.msg_following_tabs_valid, invalidTabs);
