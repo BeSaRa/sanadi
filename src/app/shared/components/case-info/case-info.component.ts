@@ -50,7 +50,8 @@ export class CaseInfoComponent {
     CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD,
     CaseTypes.AWARENESS_ACTIVITY_SUGGESTION,
     CaseTypes.PROJECT_FUNDRAISING,
-    CaseTypes.FOREIGN_COUNTRIES_PROJECTS
+    CaseTypes.FOREIGN_COUNTRIES_PROJECTS,
+    CaseTypes.PROJECT_IMPLEMENTATION
   ];
 
   // this should be updated when ever you will add a new document service
