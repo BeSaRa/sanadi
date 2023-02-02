@@ -526,6 +526,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
         this.displayOcha = value === DomainTypes.HUMANITARIAN;
         this.loadDacOuchMain(value)
         this.model && (this.model.domain = value)
+        this.handleMandatoryFields()
       })
   }
 
