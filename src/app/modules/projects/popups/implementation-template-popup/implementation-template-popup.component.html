@@ -22,7 +22,7 @@
                class="form-control">
       </div>
       <div class="col-md-6 col-sm-12 mb-4 position-relative">
-        <label class="form-label" for="region">{{lang.map.region}}</label>
+        <label class="form-label" for="region">{{lang.map.region_territories}}</label>
         <input id="region" readonly [value]="template.region" class="form-control">
       </div>
       <div class="col-md-12 col-sm-12 mb-4 position-relative">
@@ -51,7 +51,7 @@
       </div>
       <div class="col-md-6 col-sm-12 mb-4 position-relative">
         <label class="form-label" asteriskIfRequired="beneficiaryRegion"
-               for="beneficiaryRegion">{{lang.map.beneficiary_country}}</label>
+               for="beneficiaryRegion">{{lang.map.city_village}}</label>
         <input id="beneficiaryRegion" validationClasses="beneficiaryRegion" formControlName="beneficiaryRegion"
                class="form-control">
         <app-field-error-message controlName="beneficiaryRegion"></app-field-error-message>
@@ -59,7 +59,7 @@
       <div class="col-md-6 col-sm-12 mb-4 position-relative">
         <label class="form-label" asteriskIfRequired="projectTotalCost"
                for="projectTotalCost">{{lang.map.project_total_cost}}</label>
-        <input id="projectTotalCost" [mask]="inputMaskPatterns.DECIMAL_WITH_SEPARATOR()"
+        <input id="projectTotalCost" [mask]="inputMaskPatterns.NUMBER_ONLY_WITH_LIMIT(50)"
                [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR"
                [dropSpecialCharacters]="[',']"
                validationClasses="projectTotalCost" formControlName="projectTotalCost" class="form-control">

@@ -1,4 +1,7 @@
 export interface ILanguageKeys {
+  city_village: string;
+  project_impl_total_cost: string;
+  region_territories: string;
   cannot_take_this_action_before_consume_full_permit_amount: string;
   project_ar_name: string;
   project_en_name: string;
