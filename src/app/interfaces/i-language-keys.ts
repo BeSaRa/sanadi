@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  the_donor: string;
   city_village: string;
   project_impl_total_cost: string;
   region_territories: string;
