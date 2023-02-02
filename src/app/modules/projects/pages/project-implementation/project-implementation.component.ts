@@ -312,11 +312,12 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
   _resetForm(): void {
     this.model = this._getNewInstance();
     this.operation = OperationTypes.CREATE;
+    this.form.reset()
     this.implementationTemplate.setValue([])
     this.payment.setValue([])
     this.selfFinancing.setValue([])
     this.financialGrant.setValue([])
-    this.form.reset()
+    this.implementingAgencyList.setValue([])
     this.setDefaultValues()
   }
 

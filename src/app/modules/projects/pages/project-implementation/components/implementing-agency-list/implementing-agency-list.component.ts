@@ -78,7 +78,7 @@ export class ImplementingAgencyListComponent implements ControlValueAccessor, On
   }
 
   writeValue(value: ImplementingAgency[]): void {
-    this.value = value
+    this.value = value || [];
     this.updateIds()
   }
 
@@ -103,7 +103,7 @@ export class ImplementingAgencyListComponent implements ControlValueAccessor, On
       implementingAgencyType: selectedAgency.parent,
       implementingAgencyInfo: selectedAgency
     })
-    this.value = this.value.concat(agency)
+    this.value = (this.value??[]).concat(agency)
     this.change.emit(this.value)
     this.onChange(this.value)
     this.onTouch()

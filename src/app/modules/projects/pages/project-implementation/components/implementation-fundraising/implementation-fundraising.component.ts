@@ -143,6 +143,8 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
       .pipe(filter(_ => !this.disabled))
       .pipe(debounceTime(250))
       .pipe(takeUntil((this.destroy$)))
+      .pipe(tap(_ => this.calculateTotal()))
+      .pipe(filter(_ => this.value && !!this.value[index]))
       .subscribe((value) => {
         const model = this.value[index];
         const cValue = currency(value)
