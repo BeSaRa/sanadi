@@ -249,7 +249,7 @@ export class FundSourceComponent implements ControlValueAccessor, OnInit, OnDest
 
     if (mod === this.remainingAmount) return;
 
-    const amount = currency(this.remainingAmount).subtract(mod).value
+    const amount = currency(this.remainingAmount).subtract(mod).value  / length
     this.inputs.controls.forEach((item, index) => {
       const oldValue = item.getRawValue()
       const value = currency(amount).add(oldValue).value
