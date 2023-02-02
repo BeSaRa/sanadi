@@ -565,6 +565,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       })() : (() => {
         this.markFieldsOptional(dacFields)
         this.markFieldsRequired(ochaFields)
+        this.markFieldsOptional([this.subUNOCHACategory])
       })()
     }
   }
