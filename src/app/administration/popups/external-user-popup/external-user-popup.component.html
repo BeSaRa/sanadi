@@ -14,7 +14,7 @@
       <tab [name]="tabsData.permissions.name" [template]="permissionsTabTemplate"
            [title]="langService.map.lbl_permissions"
            [hasError]="getTabInvalidStatus('permissions')"></tab>
-      <tab [name]="tabsData.menus.name" *ngIf="false" [template]="menusTab" [title]="langService.map.menus"></tab>
+      <tab [name]="tabsData.menus.name" [template]="menusTab" [title]="langService.map.menus"></tab>
       <tab [name]="tabsData.services.name" [disabled]="!isProfileValid" [title]="langService.map.link_services" [template]="serviceTab"></tab>
     </tabs-list>
     <ng-template #basicTabTemplate>
