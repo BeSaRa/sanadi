@@ -1,44 +1,44 @@
-import { ComponentFactoryResolver, Injectable } from '@angular/core';
-import { CastResponse, CastResponseContainer } from '@decorators/cast-response';
-import { GeneralAssociationMeetingAttendance } from '@app/models/general-association-meeting-attendance';
-import { BaseGenericEService } from '@app/generics/base-generic-e-service';
-import { HttpClient } from '@angular/common/http';
-import { DomSanitizer } from '@angular/platform-browser';
-import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { DialogService } from './dialog.service';
-import { DynamicOptionsService } from './dynamic-options.service';
-import { UrlService } from './url.service';
-import { FactoryService } from '@services/factory.service';
-import { GeneralAssociationMeetingAttendanceSearchCriteria } from '@app/models/general-association-meeting-attendance-search-criteria';
-import { HasInterception, InterceptParam } from '@decorators/intercept-model';
-import { Observable } from 'rxjs';
-import { NpoEmployee } from '@app/models/npo-employee';
-import { GeneralAssociationExternalMember } from '@app/models/general-association-external-member';
-import { DialogRef } from '@app/shared/models/dialog-ref';
-import { GeneralAssociationExternalMemberInterceptor } from '@app/model-interceptors/general-association-external-member-interceptor';
-import { GeneralAssociationInternalMember } from '@app/models/general-association-internal-member';
-import { SelectMemberPopupComponent } from '@app/modules/projects/popups/select-member-popup-component/select-member-popup.component';
-import { WFResponseType } from '@app/enums/wfresponse-type.enum';
-import { UntypedFormGroup } from '@angular/forms';
+import {ComponentFactoryResolver, Injectable} from '@angular/core';
+import {CastResponse, CastResponseContainer} from '@decorators/cast-response';
+import {GeneralAssociationMeetingAttendance} from '@app/models/general-association-meeting-attendance';
+import {BaseGenericEService} from '@app/generics/base-generic-e-service';
+import {HttpClient} from '@angular/common/http';
+import {DomSanitizer} from '@angular/platform-browser';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {DialogService} from './dialog.service';
+import {DynamicOptionsService} from './dynamic-options.service';
+import {UrlService} from './url.service';
+import {FactoryService} from '@services/factory.service';
+import {GeneralAssociationMeetingAttendanceSearchCriteria} from '@app/models/general-association-meeting-attendance-search-criteria';
+import {HasInterception, InterceptParam} from '@decorators/intercept-model';
+import {Observable} from 'rxjs';
+import {NpoEmployee} from '@app/models/npo-employee';
+import {GeneralAssociationExternalMember} from '@app/models/general-association-external-member';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {GeneralAssociationExternalMemberInterceptor} from '@app/model-interceptors/general-association-external-member-interceptor';
+import {GeneralAssociationInternalMember} from '@app/models/general-association-internal-member';
+import {SelectMemberPopupComponent} from '@app/modules/projects/popups/select-member-popup-component/select-member-popup.component';
+import {WFResponseType} from '@app/enums/wfresponse-type.enum';
+import {UntypedFormGroup} from '@angular/forms';
 import {
   GeneralAssociationMeetingCompleteTaskPopupComponent
 } from '@app/modules/projects/popups/general-association-meeting-complete-task-popup/general-association-meeting-complete-task-popup.component';
 import {
   GeneralAssociationMeetingApproveTaskPopupComponent
 } from '@app/modules/projects/popups/general-association-meeting-approve-task-popup/general-association-meeting-approve-task-popup.component';
-import { GeneralAssociationInternalMemberInterceptor } from '@app/model-interceptors/general-association-internal-member-interceptor';
-import { MeetingAttendanceReport } from '@app/models/meeting-attendance-report';
-import { IGeneralAssociationMeetingProceedSendToMembers } from '@contracts/i-general-association-meeting-proceed-send-to-members';
-import { GeneralMeetingAttendanceNote } from '@app/models/general-meeting-attendance-note';
-import { MeetingMemberTaskStatus } from '@app/models/meeting-member-task-status';
-import { MeetingPointMemberComment } from '@app/models/meeting-point-member-comment';
+import {GeneralAssociationInternalMemberInterceptor} from '@app/model-interceptors/general-association-internal-member-interceptor';
+import {MeetingAttendanceReport} from '@app/models/meeting-attendance-report';
+import {IGeneralAssociationMeetingProceedSendToMembers} from '@contracts/i-general-association-meeting-proceed-send-to-members';
+import {GeneralMeetingAttendanceNote} from '@app/models/general-meeting-attendance-note';
+import {MeetingMemberTaskStatus} from '@app/models/meeting-member-task-status';
+import {MeetingPointMemberComment} from '@app/models/meeting-point-member-comment';
 import {
   MeetingPointMembersCommentsPopupComponent
 } from '@app/modules/projects/popups/meeting-point-members-comments-popup/meeting-point-members-comments-popup.component';
-import { BlobModel } from '@app/models/blob-model';
-import { map } from 'rxjs/operators';
-import { CommonUtils } from '@helpers/common-utils';
-import { IMyDateModel } from 'angular-mydatepicker';
+import {BlobModel} from '@app/models/blob-model';
+import {map} from 'rxjs/operators';
+import {CommonUtils} from '@helpers/common-utils';
+import {IMyDateModel} from 'angular-mydatepicker';
 import {
   SpecificMemberCommentsAndNotesComponent
 } from '@app/modules/projects/popups/specific-member-comments-and-notes/specific-member-comments-and-notes.component';
@@ -61,11 +61,11 @@ export class GeneralAssociationMeetingAttendanceService extends BaseGenericEServ
   internalMembersInterceptor: GeneralAssociationInternalMemberInterceptor = new GeneralAssociationInternalMemberInterceptor();
 
   constructor(private urlService: UrlService,
-    public domSanitizer: DomSanitizer,
-    public cfr: ComponentFactoryResolver,
-    public dialog: DialogService,
-    public dynamicService: DynamicOptionsService,
-    public http: HttpClient) {
+              public domSanitizer: DomSanitizer,
+              public cfr: ComponentFactoryResolver,
+              public dialog: DialogService,
+              public dynamicService: DynamicOptionsService,
+              public http: HttpClient) {
     super();
     FactoryService.registerService('GeneralAssociationMeetingAttendanceService', this);
   }
@@ -325,9 +325,9 @@ export class GeneralAssociationMeetingAttendanceService extends BaseGenericEServ
     fallback: '$default'
   })
   _generateReport(caseId: string, @InterceptParam() report: MeetingAttendanceReport, @InterceptParam() meetingComments: GeneralMeetingAttendanceNote[]): Observable<BlobModel> {
-    let model = { meetingMainItem: report.meetingMainItem, meetingComment: meetingComments };
+    let model = {meetingMainItem: report.meetingMainItem, meetingComment: meetingComments};
     return this.http.post(this._getURLSegment() + '/custom-report/' + caseId + '/export', model,
-      { responseType: 'blob', observe: 'body' })
+      {responseType: 'blob', observe: 'body'})
       .pipe(map(result => new BlobModel(result, this.domSanitizer)));
   }
 
@@ -351,7 +351,7 @@ export class GeneralAssociationMeetingAttendanceService extends BaseGenericEServ
   })
   _getFinalReport(documentId: string): Observable<BlobModel> {
     return this.http.post(this._getURLSegment() + '/' + documentId + '/document', undefined,
-      { responseType: 'blob', observe: 'body' })
+      {responseType: 'blob', observe: 'body'})
       .pipe(map(result => new BlobModel(result, this.domSanitizer)));
   }
 
@@ -363,24 +363,9 @@ export class GeneralAssociationMeetingAttendanceService extends BaseGenericEServ
     return this.documentService.downloadDocument(documentId);
   }
 
-  @HasInterception
-  @CastResponse(() => MeetingAttendanceReport, {
-    unwrap: '',
-    fallback: '$default'
-  })
-  _generateInitDocument(caseId: string): Observable<BlobModel> {
-    return this.http.get(this._getURLSegment() + '/initial-approve/model/' + caseId + '/export', {
-      responseType: 'blob',
-      observe: 'body'
-    }).pipe(map(blob => new BlobModel(blob, this.domSanitizer)));
-  }
-  generateInitDocument(caseId: string): Observable<BlobModel> {
-    return this._generateInitDocument(caseId);
-  }
-
   @CastResponse(() => GeneralAssociationMeetingAttendance)
   _validateGeneralAssociationMeetingAttendanceByRequestType(requestType: number, oldFullSerial: string): Observable<GeneralAssociationMeetingAttendance> {
-    let criteriaObject = { requestType: requestType, oldFullSerial: oldFullSerial };
+    let criteriaObject = {requestType: requestType, oldFullSerial: oldFullSerial};
     return this.http.post<GeneralAssociationMeetingAttendance>(this._getURLSegment() + '/draft/validate', criteriaObject);
   }
 
