@@ -182,7 +182,9 @@ CharityOrganizationUpdate
     };
   }
   getFirstPageForm(controls = true) {
-    const { updateSection, charityId } = this;
+    const { updateSection,
+      registrationAuthority,
+      charityId } = this;
     return {
       updateSection: controls
         ? [updateSection, [CustomValidators.required]]
@@ -190,6 +192,10 @@ CharityOrganizationUpdate
       charityId: controls
         ? [charityId, [CustomValidators.required]]
         : charityId,
+      registrationAuthority: controls
+        ? [registrationAuthority]
+        : registrationAuthority,
+
     };
   }
   buildContactInformationForm(controls = true) {
