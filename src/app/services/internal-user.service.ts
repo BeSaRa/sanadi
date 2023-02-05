@@ -18,9 +18,9 @@ import { DialogRef } from '@app/shared/models/dialog-ref';
 import { IDialogData } from '@app/interfaces/i-dialog-data';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { CrudWithDialogGenericService } from "@app/generics/crud-with-dialog-generic-service";
-import {CastResponse, CastResponseContainer} from '@decorators/cast-response';
+import { CastResponse, CastResponseContainer } from '@decorators/cast-response';
 import { Pagination } from "@app/models/pagination";
-import {HasInterception} from '@decorators/intercept-model';
+import { HasInterception } from '@decorators/intercept-model';
 
 @CastResponseContainer({
   $default: {
@@ -38,9 +38,9 @@ export class InternalUserService extends CrudWithDialogGenericService<InternalUs
   list: InternalUser[] = [];
 
   constructor(public http: HttpClient,
-              private urlService: UrlService,
-              private domSanitizer: DomSanitizer,
-              public dialog: DialogService) {
+    private urlService: UrlService,
+    private domSanitizer: DomSanitizer,
+    public dialog: DialogService) {
     super()
     FactoryService.registerService('InternalUserService', this);
   }
@@ -125,7 +125,7 @@ export class InternalUserService extends CrudWithDialogGenericService<InternalUs
     fallback: '$default'
   })
   private _searchByArabicOrEnglishName(options?: any): Observable<InternalUser[]> {
-    return this.http.get<InternalUser[]>(this._getServiceURL() + '/search/criteria?arName=' + (options.arabicName ? options.arabicName : '') + '&enName=' + (options.englishName ? options.englishName : ''));
+    return this.http.get<InternalUser[]>(this._getServiceURL() + '/search/criteria?arName=' + (options.arabicName ? options.arabicName : '') + '&enName=' + (options.englishName ? options.englishName : '') + '&qID=' + (options.identificationNumber ? options.identificationNumber : ''));
   }
 
   searchByArabicOrEnglishName(options?: any): Observable<InternalUser[]> {

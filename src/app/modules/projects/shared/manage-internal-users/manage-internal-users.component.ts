@@ -1,21 +1,21 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
-import {DialogService} from '@services/dialog.service';
-import {LangService} from '@services/lang.service';
-import {GeneralAssociationMeetingAttendanceService} from '@services/general-association-meeting-attendance.service';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {Observable, of} from 'rxjs';
-import {exhaustMap, filter, map, tap} from 'rxjs/operators';
-import {GeneralAssociationInternalMember} from '@app/models/general-association-internal-member';
-import {InternalUserService} from '@services/internal-user.service';
-import {GeneralAssociationInternalMemberTypeEnum} from '@app/enums/general-association-internal-member-type-enum';
-import {InternalUser} from '@app/models/internal-user';
-import {GeneralAssociationMeetingAttendance} from '@app/models/general-association-meeting-attendance';
-import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
-import {GeneralAssociationMeetingStepNameEnum} from '@app/enums/general-association-meeting-step-name-enum';
-import {MeetingMemberTaskStatus} from '@app/models/meeting-member-task-status';
-import {MeetingAttendanceReport} from '@app/models/meeting-attendance-report';
-import {GeneralMeetingAttendanceNote} from '@app/models/general-meeting-attendance-note';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { DialogService } from '@services/dialog.service';
+import { LangService } from '@services/lang.service';
+import { GeneralAssociationMeetingAttendanceService } from '@services/general-association-meeting-attendance.service';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { Observable, of } from 'rxjs';
+import { exhaustMap, filter, map, tap } from 'rxjs/operators';
+import { GeneralAssociationInternalMember } from '@app/models/general-association-internal-member';
+import { InternalUserService } from '@services/internal-user.service';
+import { GeneralAssociationInternalMemberTypeEnum } from '@app/enums/general-association-internal-member-type-enum';
+import { InternalUser } from '@app/models/internal-user';
+import { GeneralAssociationMeetingAttendance } from '@app/models/general-association-meeting-attendance';
+import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
+import { GeneralAssociationMeetingStepNameEnum } from '@app/enums/general-association-meeting-step-name-enum';
+import { MeetingMemberTaskStatus } from '@app/models/meeting-member-task-status';
+import { MeetingAttendanceReport } from '@app/models/meeting-attendance-report';
+import { GeneralMeetingAttendanceNote } from '@app/models/general-meeting-attendance-note';
 
 @Component({
   selector: 'manage-internal-users',
@@ -53,10 +53,10 @@ export class ManageInternalUsersComponent implements OnInit {
   @Input() generalNotes: GeneralMeetingAttendanceNote[] = [];
 
   constructor(private dialog: DialogService,
-              public lang: LangService,
-              private fb: FormBuilder,
-              private generalAssociationMeetingService: GeneralAssociationMeetingAttendanceService,
-              private internalUserService: InternalUserService) {
+    public lang: LangService,
+    private fb: FormBuilder,
+    private generalAssociationMeetingService: GeneralAssociationMeetingAttendanceService,
+    private internalUserService: InternalUserService) {
   }
 
   get arabicName(): FormControl {
@@ -94,7 +94,8 @@ export class ManageInternalUsersComponent implements OnInit {
   buildMemberForm(): void {
     this.internalMembersForm = this.fb.group({
       arabicName: [null, [CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX), CustomValidators.pattern('AR_NUM')]],
-      englishName: [null, [CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.pattern('ENG_NUM')]]
+      englishName: [null, [CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.pattern('ENG_NUM')]],
+      qid: [null, [CustomValidators.required, CustomValidators.maxLength(50)]],
     });
   }
 
@@ -247,6 +248,6 @@ export class ManageInternalUsersComponent implements OnInit {
   }
 
   terminateUserTask(event: MouseEvent, item: MeetingMemberTaskStatus) {
-    this.userTaskTerminated.emit({event: event, item: item});
+    this.userTaskTerminated.emit({ event: event, item: item });
   }
 }

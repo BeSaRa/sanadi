@@ -27,6 +27,13 @@
                  id="englishName" validationClasses="englishName">
           <app-field-error-message controlName="englishName"></app-field-error-message>
         </div>
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label asteriskIfRequired="qid" class="form-label"
+                 for="qid">{{lang.map.identification_number}}</label>
+          <input [readonly]="(readonly)" class="form-control" formControlName="qid"
+                 id="qid" validationClasses="qid">
+          <app-field-error-message controlName="qid"></app-field-error-message>
+        </div>
       </div>
       <div class="row">
         <div class="col-12 text-center action-container mb-3">
