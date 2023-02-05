@@ -49,7 +49,7 @@ import {LicenseService} from "@services/license.service";
 export class ProjectImplementationComponent extends EServicesGenericComponent<ProjectImplementation, ProjectImplementationService> {
   form!: UntypedFormGroup;
   licenseSearch$: Subject<string> = new Subject()
-  requestTypes: Lookup[] = this.lookupService.listByCategory.ServiceRequestType.slice().sort((a, b) => a.lookupKey - b.lookupKey);
+  requestTypes: Lookup[] = this.lookupService.listByCategory.ServiceRequestTypeNoRenew.slice().sort((a, b) => a.lookupKey - b.lookupKey);
   workAreas: Lookup[] = this.lookupService.listByCategory.ProjectWorkArea.slice().sort((a, b) => a.lookupKey - b.lookupKey);
   internalProjectClassifications: Lookup[] = this.lookupService.listByCategory.InternalProjectClassification.slice().sort((a, b) => a.lookupKey - b.lookupKey);
   countries: Country[] = this.activatedRoute.snapshot.data['countries'] as Country[];
@@ -72,7 +72,9 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     licenseStartDate: DateUtils.getDatepickerOptions({disablePeriod: 'none', openSelectorTopOfInput: true})
   }
   remainingAmount: number = 0;
-  selectedLicense?:ProjectImplementation;
+  selectedLicense?: ProjectImplementation;
+
+  permitAmountConsumed = false
 
   constructor(public lang: LangService,
               public fb: UntypedFormBuilder,
@@ -160,13 +162,16 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     return this.projectInfo.get('implementingAgencyType')!
   }
 
-
   get implementingAgencyList(): AbstractControl {
     return this.projectInfo.get('implementingAgencyList')!
   }
 
   get financialGrant(): AbstractControl {
     return this.fundingResources.get('financialGrant')!
+  }
+
+  get payment(): AbstractControl {
+    return this.fundingResources.get('payment')!
   }
 
   get selfFinancing(): AbstractControl {
@@ -288,7 +293,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
   _destroyComponent(): void {
   }
 
-  _updateForm(model: ProjectImplementation | undefined , fromSelectedLicense: boolean = false): void {
+  _updateForm(model: ProjectImplementation | undefined, fromSelectedLicense: boolean = false): void {
     if (!model) {
       return;
     }
@@ -308,6 +313,11 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     this.model = this._getNewInstance();
     this.operation = OperationTypes.CREATE;
     this.form.reset()
+    this.implementationTemplate.setValue([])
+    this.payment.setValue([])
+    this.selfFinancing.setValue([])
+    this.financialGrant.setValue([])
+    this.implementingAgencyList.setValue([])
     this.setDefaultValues()
   }
 
@@ -346,6 +356,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     $event?.preventDefault();
     this.licenseSearch$.next((this.oldLicenseFullSerial.value as string || '').trim())
   }
+
   private listenToLicenseSearch() {
     this.licenseSearch$
       .pipe(takeUntil(this.destroy$))
@@ -397,7 +408,6 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       this._updateForm(model, true);
     }
   }
-
 
   handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
     of(userInteraction).pipe(
@@ -517,6 +527,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
         this.displayOcha = value === DomainTypes.HUMANITARIAN;
         this.loadDacOuchMain(value)
         this.model && (this.model.domain = value)
+        this.handleMandatoryFields()
       })
   }
 
@@ -555,6 +566,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       })() : (() => {
         this.markFieldsOptional(dacFields)
         this.markFieldsRequired(ochaFields)
+        this.markFieldsOptional([this.subUNOCHACategory])
       })()
     }
   }
@@ -573,7 +585,15 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       .valueChanges
       .pipe(takeUntil(this.destroy$))
       .pipe(tap((value: ImplementationTemplate[]) => {
-        value && value.length ? this.projectTotalCost.patchValue(value[0].projectTotalCost) : this.projectTotalCost.patchValue(0)
+        value && value.length ? (() => {
+          this.projectTotalCost.patchValue(value[0].projectTotalCost)
+        })() : (() => {
+          this.projectTotalCost.patchValue(0)
+          this.implementationFundraising.setValue([])
+          this.payment.setValue([])
+          this.selfFinancing.setValue([])
+          this.financialGrant.setValue([])
+        })()
         this.calculateRemaining()
       }))
       .pipe(filter((value): value is ImplementationTemplate[] => (value && !!value.length)))
@@ -608,8 +628,6 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     }, 0)
 
     this.remainingAmount = currency(projectTotalCost).subtract(totalFundingResource).value
-
-    console.log('FROM C', this.remainingAmount);
   }
 
   private getTotalCost(list: (FundingResourceContract)[]): number {
@@ -674,5 +692,9 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
 
   clearLicense() {
     this._resetForm()
+  }
+
+  onAmountConsumed($event: boolean) {
+    this.permitAmountConsumed = $event
   }
 }

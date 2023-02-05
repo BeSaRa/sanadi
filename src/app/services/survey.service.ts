@@ -16,12 +16,12 @@ import { SurveyTemplateInterceptor } from "@app/model-interceptors/survey-templa
 import { ExceptionHandlerService } from "@app/services/exception-handler.service";
 import { BlobModel } from "@app/models/blob-model";
 import { DomSanitizer } from "@angular/platform-browser";
-import { SURVEY_TOKEN } from "@app/http-context/survey-token";
 import { TokenService } from "@app/services/token.service";
 import { CrudGenericService } from "@app/generics/crud-generic-service";
 import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
 import { Pagination } from "@app/models/pagination";
 import { HasInterception, InterceptParam } from "@decorators/intercept-model";
+import {SURVEY_TOKEN} from "@app/http-context/tokens";
 
 @CastResponseContainer({
   $default: {

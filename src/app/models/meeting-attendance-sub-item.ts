@@ -12,4 +12,5 @@ export class MeetingAttendanceSubItem extends SearchableCloneable<MeetingAttenda
   addedByDecisionMaker!: boolean;
   status!: number;
   selected?: boolean;
+  finalItem!: number;
 }

@@ -1,14 +1,8 @@
 import {CoordinationWithOrganizationsRequest} from '@app/models/coordination-with-organizations-request';
-import {
-  IGeneralAssociationMeetingAttendanceSpecialActions
-} from '@contracts/i-general-association-meeting-attendance-special-actions';
+import {IGeneralAssociationMeetingAttendanceSpecialActions} from '@contracts/i-general-association-meeting-attendance-special-actions';
 import {IGeneralAssociationMeetingAttendanceApprove} from '@contracts/i-general-association-meeting-attendance-approve';
-import {
-  IGeneralAssociationMeetingAttendanceComponent
-} from '@contracts/i-general-association-meeting-attendance-component';
-import {
-  IGeneralAssociationMeetingAttendanceComplete
-} from '@contracts/i-general-association-meeting-attendance-complete';
+import {IGeneralAssociationMeetingAttendanceComponent} from '@contracts/i-general-association-meeting-attendance-component';
+import {IGeneralAssociationMeetingAttendanceComplete} from '@contracts/i-general-association-meeting-attendance-complete';
 import {ITransferFundsAbroadComponent} from '@contracts/i-transfer-funds-abroad-component';
 import {ITransferIndividualFundsAbroadComplete} from '@contracts/i-transfer-individual-funds-abroad-complete';
 import {
@@ -52,9 +46,7 @@ import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {BaseGenericEService} from '@app/generics/base-generic-e-service';
-import {
-  IGeneralAssociationMeetingAttendanceFinalApprove
-} from '@contracts/i-general-association-meeting-attendance-final-approve';
+import {IGeneralAssociationMeetingAttendanceFinalApprove} from '@contracts/i-general-association-meeting-attendance-final-approve';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -577,8 +569,8 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
             || (this.employeeService.getCurrentUser().generalUserId != this.model?.creatorInfo.id && item.getResponses().includes(WFResponseType.REVIEW_NPO_MANAGEMENT))
             || (this.employeeService.getCurrentUser().generalUserId != this.model?.creatorInfo.id && item.getResponses().includes(WFResponseType.FOREIGN_COUNTRIES_PROJECTS_LICENSING_SEND_TO_MULTI_DEPARTMENTS))
             || item.getResponses().includes(WFResponseType.PROJECT_FUNDRAISING_SEND_TO_DEPARTMENTS)
-            || item.getResponses().includes(WFResponseType.GENERAL_NOTIFICATION_SEND_TO_SINGLE_DEPARTMENTS);
-
+            || item.getResponses().includes(WFResponseType.GENERAL_NOTIFICATION_SEND_TO_SINGLE_DEPARTMENTS)
+            || item.caseType === CaseTypes.ORGANIZATION_ENTITIES_SUPPORT && this.employeeService.isLicensingUser();
         },
         onClick: (item: CaseModel<any, any>) => {
           this.sendToMultiDepartmentsAction(item);
@@ -709,6 +701,20 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.sendToGeneralManagerAction(item);
         }
       },
+      // send to general Manager
+      {
+        type: 'action',
+        icon: 'mdi-card-account-details-star',
+        label: 'send_to_general_manager',
+        askChecklist: true,
+        runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
+        show: (item: CaseModel<any, any>) => {
+          return item.getResponses().includes(WFResponseType.TO_GM);
+        },
+        onClick: (item: CaseModel<any, any>) => {
+          this.sendToGMAction(item);
+        }
+      },
       // complete
       {
         type: 'action',
@@ -758,7 +764,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         askChecklist: true,
         show: (item: CaseModel<any, any>) => {
           const model = item as unknown as IGeneralAssociationMeetingAttendanceFinalApprove;
-          return item.getCaseType() === CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE && (model.isManagerFinalReviewStep());
+          return (item.getCaseType() === CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE && (model.isManagerFinalReviewStep())) || item.caseStatus === CommonCaseStatus.FINAL_APPROVE;
         },
         onClick: (item: CaseModel<any, any>) => {
           const model = item as unknown as IGeneralAssociationMeetingAttendanceFinalApprove;
@@ -1209,6 +1215,12 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     });
   }
 
+  private sendToGMAction(item: CaseModel<any, any>) {
+    item.sendToGM().onAfterClose$.subscribe((actionTaken) => {
+      actionTaken && this.navigateToSamePageThatUserCameFrom();
+    });
+  }
+
   private finalNotification(item: CaseModel<any, any>) {
     item.finalNotification().onAfterClose$.subscribe(actionTaken => {
       actionTaken && this.navigateToSamePageThatUserCameFrom();
@@ -1532,7 +1544,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     }
     let isAllowed = true;
     if (this.component.openFrom === OpenFrom.TEAM_INBOX) {
-      isAllowed = this.component.model.taskDetails?.isClaimed();
+      isAllowed = this.component.model.taskDetails!.isClaimed();
     }
     if (isAllowed) {
       let caseStatus = this.component.model.getCaseStatus();

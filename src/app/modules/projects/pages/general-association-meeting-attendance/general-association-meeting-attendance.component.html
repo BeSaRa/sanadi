@@ -295,12 +295,12 @@
                   <td *cdkCellDef="let row" cdk-cell class="table-actions">
                     <div class="d-flex flex-row">
                       <button (click)="removeAgendaItem($event, row)"
-                              [disabled]="(readonly || addAgendaFormActive)"
+                              [disabled]="(readonly || isCancel || addAgendaFormActive)"
                               class="btn btn-link outline-none" tooltip="{{lang.map.btn_remove}}">
                         <i class="mdi mdi-close-box"></i>
                       </button>
                       <button (click)="selectAgendaItem($event, row)"
-                              [disabled]="(readonly || addAgendaFormActive)"
+                              [disabled]="(readonly || isCancel || addAgendaFormActive)"
                               class="btn btn-link outline-none" tooltip="{{lang.map.btn_edit}}">
                         <i class="mdi mdi-pen"></i>
                       </button>

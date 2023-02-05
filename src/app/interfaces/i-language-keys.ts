@@ -1,4 +1,11 @@
 export interface ILanguageKeys {
+  the_donor: string;
+  city_village: string;
+  project_impl_total_cost: string;
+  region_territories: string;
+  cannot_take_this_action_before_consume_full_permit_amount: string;
+  project_ar_name: string;
+  project_en_name: string;
   fundraising_remaining_amount: string;
   cannot_add_funding_resources_full_amount_have_been_used: string;
   cannot_add_payments_full_amount_have_been_used: string;
@@ -1775,4 +1782,5 @@ export interface ILanguageKeys {
   msg_select_project_required:string;
   task_seen:string;
   lbl_approve_conditions:string;
+  lbl_other:string;
 }

@@ -230,16 +230,31 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     this.isManagerFinalReview = this.model?.isManagerFinalReviewStep()!;
 
     if (this.isMemberReview || this.isDecisionMakerReview) {
-      let generalNotesObservable = (this.isDecisionMakerReview && this.model?.isSendToMember) ? this.service.getDecisionMakerMeetingGeneralNotes(this.memberId, this.model?.id) : this.service.getMeetingGeneralNotes(this.memberId, this.model?.id)
-      generalNotesObservable
-        .subscribe(notes => {
-
-          if(this.isDecisionMakerReview && this.model?.isSendToMember) {
-            this.membersGeneralNotes = notes;
-          } else {
-            this.generalNotes = notes;
-          }
+      let allGeneralMeetingNotesObs = this.service.getDecisionMakerMeetingGeneralNotes(this.memberId, this.model?.id);
+      let specificGeneralMeetingNotesObs = this.service.getMeetingGeneralNotes(this.memberId, this.model?.id);
+      if (this.isDecisionMakerReview && this.model?.isSendToMember) {
+        allGeneralMeetingNotesObs.subscribe(notes => {
+          this.membersGeneralNotes = notes;
+          this.generalNotes = notes;
         });
+      }
+      if (this.isMemberReview) {
+        specificGeneralMeetingNotesObs.subscribe(notes => {
+          this.generalNotes = notes.filter(n => n.finalComment !== 1);
+        });
+      }
+
+
+      // let generalNotesObservable = (this.isDecisionMakerReview && this.model?.isSendToMember) ? this.service.getDecisionMakerMeetingGeneralNotes(this.memberId, this.model?.id) : this.service.getMeetingGeneralNotes(this.memberId, this.model?.id)
+      // generalNotesObservable
+      //   .subscribe(notes => {
+      //
+      //     if(this.isDecisionMakerReview && this.model?.isSendToMember) {
+      //       this.membersGeneralNotes = notes;
+      //     } else {
+      //       this.generalNotes = notes;
+      //     }
+      //   });
     }
 
     if (this.model?.isSentToMember() && this.model?.isDecisionMakerReviewStep() || this.model?.isManagerFinalReviewStep()) {
@@ -261,13 +276,37 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   }
 
   setMeetingPointsForm() {
-    if (this.model?.isDecisionMakerReviewStep() || this.model?.isManagerFinalReviewStep()) {
+    if (this.model?.isDecisionMakerReviewStep() && this.model?.isSendToMember && this.model?.isFinal) {
+      let without: MeetingAttendanceReport;
+      this.service.getFinalMeetingPointsForDecisionMaker(this.model?.id)
+        .pipe(switchMap(meetingReportWithoutUserComment => {
+          without = meetingReportWithoutUserComment;
+          return this.service.getMeetingPointsForDecisionMaker(this.model?.id);
+        }))
+        .subscribe(meetingReport => {
+          without.meetingMainItem.map(mainItem => {
+            mainItem.meetingSubItem.forEach(subItem => {
+              subItem.userComments = meetingReport.meetingMainItem.find(i => i.enName === mainItem.enName)!.meetingSubItem.find(si => si.enName === subItem.enName)!.userComments;
+            });
+            return mainItem;
+          });
+          if (without && without.meetingMainItem.length > 0) {
+            // update meeting points form
+            this.meetingReport = without;
+            this.updateMeetingPointsForm(without);
+          } else {
+            this.buildMeetingPointsForm();
+          }
+        });
+    }
+
+    if ((this.model?.isDecisionMakerReviewStep() && !this.model?.isSendToMember) ||
+      (this.model?.isDecisionMakerReviewStep() && this.model?.isSendToMember && !this.model?.isFinal)) {
       this.service.getMeetingPointsForDecisionMaker(this.model?.id).subscribe(meetingReport => {
-        if (this.isMemberReview || ((this.isDecisionMakerReview || this.isManagerFinalReview) && meetingReport && meetingReport.meetingMainItem.length > 0)) {
+        if (meetingReport && meetingReport.meetingMainItem.length > 0) {
           // update meeting points form
           this.meetingReport = meetingReport;
           this.updateMeetingPointsForm(meetingReport);
-          // auto check respect terms
         } else {
           this.buildMeetingPointsForm();
         }
@@ -276,6 +315,13 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
 
     if (this.model?.isMemberReviewStep()) {
       this.service.getMeetingPointsForMember(this.model?.id).subscribe(meetingReport => {
+        // filter out the final comments created by decision maker
+        meetingReport.meetingMainItem = meetingReport.meetingMainItem.filter(mainItem => mainItem.finalItem !== 1);
+        meetingReport.meetingMainItem = meetingReport.meetingMainItem.map(mainItem => {
+          mainItem.meetingSubItem = mainItem.meetingSubItem.filter(subItem => subItem.finalItem !== 1);
+          return mainItem;
+        });
+
         if (this.isMemberReview || (this.isDecisionMakerReview && meetingReport && meetingReport.meetingMainItem.length > 0)) {
           // get meeting attendance report
           this.updateMeetingPointsForm(meetingReport);

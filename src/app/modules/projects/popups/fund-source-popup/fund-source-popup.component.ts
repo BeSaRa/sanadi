@@ -54,9 +54,9 @@ export class FundSourcePopupComponent implements OnDestroy, OnInit {
 
   ngOnInit(): void {
     this.form = this.fb.group({
-      ...this.isGrant() ? {fullName: [this.model.fullName, CustomValidators.required]} : null,
+      ...this.isGrant() ? {fullName: [this.model.fullName, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]]} : null,
       totalCost: [this.model.totalCost, CustomValidators.required],
-      notes: this.model.notes
+      notes: [this.model.notes, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]
     })
     this.listenToTotalCost()
   }
@@ -66,7 +66,7 @@ export class FundSourcePopupComponent implements OnDestroy, OnInit {
       .valueChanges
       .pipe(takeUntil(this.destroy$))
       .pipe(map(value => Number(value)))
-      .pipe(debounceTime(250))
+      .pipe(debounceTime(300))
       .subscribe((value) => {
         this.totalCost.setValue(value > this.remainingCost ? this.remainingCost : value, {emitEvent: false})
       })
@@ -80,7 +80,6 @@ export class FundSourcePopupComponent implements OnDestroy, OnInit {
   }
 
   isGrant(): boolean {
-    console.log('HERE', this.data.type === FundSourceType.GRANT);
     return this.data.type === FundSourceType.GRANT
   }
 

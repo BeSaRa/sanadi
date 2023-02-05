@@ -75,7 +75,7 @@ export class GeneralAssociationMeetingAttendanceService extends BaseGenericEServ
     unwrap: 'rs',
     fallback: '$default'
   })
-  private _searchNpoEmployees(criteria: { arabicName?: string, englishName?: string, qId?: string }): Observable<NpoEmployee[]> {
+  private _searchNpoEmployees(criteria: { arabicName?: string, englishName?: string, qId?: string, jobTitle?: string }): Observable<NpoEmployee[]> {
     let criteriaSegment = this.getSearchNPOEmployeeCriteriaSegment(criteria);
 
     return this.http.get<NpoEmployee[]>(this.getNpoEmployeeURLSegment() + '/search/criteria?' + criteriaSegment);
@@ -85,7 +85,7 @@ export class GeneralAssociationMeetingAttendanceService extends BaseGenericEServ
     return this._searchNpoEmployees(criteria);
   }
 
-  getSearchNPOEmployeeCriteriaSegment(criteria: { arabicName?: string, englishName?: string, qId?: string }) {
+  getSearchNPOEmployeeCriteriaSegment(criteria: { arabicName?: string, englishName?: string, qId?: string, jobTitle?: string }) {
     let criteriaSegment = '';
 
     if (CommonUtils.isValidValue(criteria.qId)) {
@@ -104,6 +104,13 @@ export class GeneralAssociationMeetingAttendanceService extends BaseGenericEServ
         criteriaSegment += '&';
       }
       criteriaSegment += ('english-name=' + criteria.englishName);
+    }
+
+    if (CommonUtils.isValidValue(criteria.jobTitle)) {
+      if (criteriaSegment !== '') {
+        criteriaSegment += '&';
+      }
+      criteriaSegment += ('job-title-id=' + criteria.jobTitle);
     }
 
     return criteriaSegment;
@@ -200,6 +207,18 @@ export class GeneralAssociationMeetingAttendanceService extends BaseGenericEServ
 
   getMeetingPointsForDecisionMaker(caseId?: string): Observable<MeetingAttendanceReport> {
     return this._getMeetingPointsForDecisionMaker(caseId);
+  }
+
+  @CastResponse(() => MeetingAttendanceReport, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  private _getFinalMeetingPointsForDecisionMaker(caseId?: string): Observable<MeetingAttendanceReport> {
+    return this.http.get<MeetingAttendanceReport>(this._getURLSegment() + '/items/final/' + caseId);
+  }
+
+  getFinalMeetingPointsForDecisionMaker(caseId?: string): Observable<MeetingAttendanceReport> {
+    return this._getFinalMeetingPointsForDecisionMaker(caseId);
   }
 
   @CastResponse(() => MeetingAttendanceReport, {
