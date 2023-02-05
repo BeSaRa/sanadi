@@ -25,4 +25,5 @@ export interface IAppConfig {
   LOGIN_BACKGROUND_FALLBACK: string;
   LOGIN_BACKGROUND_INTERNAL: string;
   LOGIN_BACKGROUND_EXTERNAL: string;
+  NOTIFICATIONS_URL: string;
 }

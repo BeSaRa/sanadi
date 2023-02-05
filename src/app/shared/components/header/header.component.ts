@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {LangService} from '@app/services/lang.service';
 import {UrlService} from '@app/services/url.service';
 import {SidebarComponent} from '../sidebar/sidebar.component';
@@ -6,6 +6,10 @@ import {EmployeeService} from '@app/services/employee.service';
 import {Subject} from 'rxjs';
 import {UserPreferencesService} from '@services/user-preferences.service';
 import {NotificationService} from '@services/notification.service';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import {NotificationResponse} from '@models/notification-response';
+import {result} from 'lodash';
+import {tap} from 'rxjs/operators';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -17,17 +21,19 @@ export class HeaderComponent implements OnInit, OnDestroy {
   @Input()
   sidebar!: SidebarComponent;
   destroy$: Subject<any> = new Subject<any>();
+  actionIconsEnum = ActionIconsEnum;
+  @ViewChild('notificationsTrigger') notificationsTrigger!: ElementRef;
 
   constructor(public langService: LangService,
               public employee: EmployeeService,
               public urlService: UrlService,
               private userPreferencesService: UserPreferencesService,
-              private _notificationService: NotificationService) {
+              public notificationService: NotificationService) {
 
   }
 
   ngOnInit(): void {
-    this._notificationService.getNotifications();
+    this.notificationService.getNotifications();
   }
 
   toggleLang($event: MouseEvent) {
@@ -39,7 +45,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.userPreferencesService.openEditDialog(this.employee.getCurrentUser().generalUserId).subscribe();
   }
 
+  toggleNotifications($event: Event){
+    $event?.stopPropagation();
+    $event?.preventDefault();
+
+    this.notificationService.saveUnreadNotificationsAsReadSilently();
+    this.notificationsTrigger?.nativeElement.click();
+  }
+
+
   ngOnDestroy(): void {
-    this._notificationService.stopNotifications();
+    this.notificationService.stopNotifications();
   }
 }

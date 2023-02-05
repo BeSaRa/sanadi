@@ -7,6 +7,8 @@ export interface ILanguageKeys {
   project_impl_total_cost: string;
   region_territories: string;
   cannot_take_this_action_before_consume_full_permit_amount: string;
+  notifications: string;
+  no_notifications: string;
   project_ar_name: string;
   project_en_name: string;
   fundraising_remaining_amount: string;

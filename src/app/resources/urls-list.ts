@@ -2,7 +2,6 @@ import { IAppUrls } from '@contracts/i-app-urls';
 
 export const urlsList: Partial<IAppUrls> = {
   // BASE_URL: '', // it will be overridden from CONFIGURATION
-  NOTIFICATIONS: 'http://eblaepm.no-ip.org:9026/notify/api/notification',
   FOLLOWUP_PERMISSION: '/admin/follow-up-permission',
   COMMON: '/common',
   CUSTOMS_EXEMPTION_REMITTANCE: '/customs-exemption-remittance',

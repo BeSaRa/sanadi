@@ -47,5 +47,5 @@ export enum ActionIconsEnum {
   ADDED_VALUE = 'mdi-check-decagram-outline',
   HAS_VALUE = 'mdi-check',
   HAS_NO_VALUE = 'mdi-close',
-
+  NOTIFICATION_BELL = 'mdi-bell-outline'
 }
