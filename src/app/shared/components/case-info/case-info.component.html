@@ -67,5 +67,16 @@
           class="mdi mdi-eye text-primary"></i></a>
       </div>
     </div>
+    <!-- General Association Meeting Attendance Init Approve -->
+    <div class="col-sm-12 col-md-4 mb-4" *ngIf="isGeneralAssociationMeetingAttendanceInitApproveCase()">
+      <label class="form-label">{{lang.map.initial_approve_task}}</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="mdi mdi-counter text-primary"></i></span>
+        <span class="form-control input-disabled">{{generatedDocumentNumber || '&nbsp;'}}</span>
+        <a type="button" [tooltip]="lang.map.view" (click)="viewGeneralAssociationMeetingAttendanceInitApproveDocument()"
+           class="input-group-text"><i
+          class="mdi mdi-eye text-primary"></i></a>
+      </div>
+    </div>
   </div>
 </div>

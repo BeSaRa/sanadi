@@ -1,21 +1,21 @@
-import {Component, Input} from '@angular/core';
-import {CaseModel} from '@app/models/case-model';
-import {LangService} from '@app/services/lang.service';
-import {CaseTypes} from '@app/enums/case-types.enum';
-import {LicenseApprovalModel} from '@app/models/license-approval-model';
-import {InternalProjectLicenseResult} from '@app/models/internal-project-license-result';
-import {LicenseService} from '@app/services/license.service';
-import {SharedService} from '@app/services/shared.service';
-import {ProjectModel} from '@app/models/project-model';
-import {BlobModel} from '@app/models/blob-model';
-import {ProjectModelService} from '@app/services/project-model.service';
-import {CustomsExemptionRemittance} from '@app/models/customs-exemption-remittance';
-import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
-import {CustomsExemptionRemittanceService} from '@services/customs-exemption-remittance.service';
-import {InternalBankAccountApproval} from '@app/models/internal-bank-account-approval';
-import {BankAccountRequestTypes} from '@app/enums/service-request-types';
-import {GeneralAssociationMeetingAttendance} from '@app/models/general-association-meeting-attendance';
-import {GeneralAssociationMeetingAttendanceService} from '@services/general-association-meeting-attendance.service';
+import { Component, Input } from '@angular/core';
+import { CaseModel } from '@app/models/case-model';
+import { LangService } from '@app/services/lang.service';
+import { CaseTypes } from '@app/enums/case-types.enum';
+import { LicenseApprovalModel } from '@app/models/license-approval-model';
+import { InternalProjectLicenseResult } from '@app/models/internal-project-license-result';
+import { LicenseService } from '@app/services/license.service';
+import { SharedService } from '@app/services/shared.service';
+import { ProjectModel } from '@app/models/project-model';
+import { BlobModel } from '@app/models/blob-model';
+import { ProjectModelService } from '@app/services/project-model.service';
+import { CustomsExemptionRemittance } from '@app/models/customs-exemption-remittance';
+import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
+import { CustomsExemptionRemittanceService } from '@services/customs-exemption-remittance.service';
+import { InternalBankAccountApproval } from '@app/models/internal-bank-account-approval';
+import { BankAccountRequestTypes } from '@app/enums/service-request-types';
+import { GeneralAssociationMeetingAttendance } from '@app/models/general-association-meeting-attendance';
+import { GeneralAssociationMeetingAttendanceService } from '@services/general-association-meeting-attendance.service';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -25,10 +25,10 @@ import {GeneralAssociationMeetingAttendanceService} from '@services/general-asso
 })
 export class CaseInfoComponent {
   constructor(public lang: LangService,
-              private licenseService: LicenseService,
-              private customsExemptionRemittanceService: CustomsExemptionRemittanceService,
-              private generalAssociationMeetingAttendanceService: GeneralAssociationMeetingAttendanceService,
-              private sharedService: SharedService) {
+    private licenseService: LicenseService,
+    private customsExemptionRemittanceService: CustomsExemptionRemittanceService,
+    private generalAssociationMeetingAttendanceService: GeneralAssociationMeetingAttendanceService,
+    private sharedService: SharedService) {
   }
 
   @Input()
@@ -95,7 +95,7 @@ export class CaseInfoComponent {
   get generatedDocumentNumber(): string {
     if (this.model.getCaseType() === CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE) {
       return (this.model as CustomsExemptionRemittance).exportedBookFullSerial || '';
-    } else if(this.model.getCaseType() === CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE) {
+    } else if (this.model.getCaseType() === CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE) {
       return (this.model as GeneralAssociationMeetingAttendance).fullSerial || '';
     } else {
       return '';
@@ -132,7 +132,14 @@ export class CaseInfoComponent {
   isDocumentCase(): boolean {
     return this.documentCasList.includes(this.model.getCaseType()) && this.model.getCaseStatus() === CommonCaseStatus.FINAL_APPROVE;
   }
-
+  isGeneralAssociationMeetingAttendanceInitApproveCase() {
+    return this.model.getCaseType() == CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE && this.model.getCaseStatus() === CommonCaseStatus.INITIAL_APPROVE;
+  }
+  viewGeneralAssociationMeetingAttendanceInitApproveDocument(): void {
+    (this.generalAssociationMeetingAttendanceService)
+      .generateInitDocument(this.model.getCaseId())
+      .subscribe((blob) => window.open(blob.url));
+  }
   viewGeneratedLicense(): void {
     if (!this.generatedLicenseId) {
       return;
@@ -185,7 +192,7 @@ export class CaseInfoComponent {
     }
     (this.model.service as ProjectModelService).exportTemplate(this.generatedTemplateId)
       .subscribe((file: BlobModel) => {
-        this.sharedService.openViewContentDialog(file, {documentTitle: this.templateSerial});
+        this.sharedService.openViewContentDialog(file, { documentTitle: this.templateSerial });
       });
   }
 }
