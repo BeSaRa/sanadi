@@ -274,8 +274,8 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
             return false;
           }
           if (item.caseType === CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST) {
-            const model = item as CoordinationWithOrganizationsRequest;
-            return !model.isApproved;
+            const model = item as CoordinationWithOrganizationsRequest
+            return this._isAllowedToSaveAtSearch(model);
           }
           // show if external user or service which are only for internal user
           return !this.internal || this.internalUserServices.includes(item.getCaseType());
@@ -1287,7 +1287,16 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     }
     return !item.isInitialApproved() || !this.internal;
   }
+  private _isAllowedToSaveAtSearch(model:CoordinationWithOrganizationsRequest){
+    if(this.employeeService.isInternalUser() && !model.isApproved){
+      return true;
+    }
+    if(this.employeeService.isExternalUser() && model.isApproved && !model.isFinalApproved()){
+      return true;
+    }
 
+    return false;
+  }
   private approveAction(item: CaseModel<any, any>) {
     if (this.isApproveWithSave(item)) {
       if (item.getCaseType() === CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE) {
