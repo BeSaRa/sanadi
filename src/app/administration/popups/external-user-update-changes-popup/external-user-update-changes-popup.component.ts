@@ -1,4 +1,4 @@
-import { ExternalUserUpdateRequestStatusEnum } from './../../../enums/external-user-update-request-status.enum';
+import { ExternalUserUpdateRequestStatusEnum } from '@app/enums/external-user-update-request-status.enum';
 import {Component, Inject, OnInit} from '@angular/core';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {IDialogData} from '@contracts/i-dialog-data';
