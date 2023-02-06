@@ -1,14 +1,14 @@
-import { AssignedTask } from './../models/assigned-task';
+import { AssignedTask } from '@models/assigned-task';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { DialogService } from './dialog.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { BackendServiceModelInterface } from '@contracts/backend-service-model-interface';
 import { IModelInterceptor } from '@contracts/i-model-interceptor';
-import { ActionRegistry } from '../models/action-registry';
-import { ActionRegistryInterceptor } from '../model-interceptors/action-registry-interceptor';
+import { ActionRegistry } from '@models/action-registry';
+import { ActionRegistryInterceptor } from '@model-interceptors/action-registry-interceptor';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { BlobModel } from '../models/blob-model';
+import { BlobModel } from '@models/blob-model';
 import { IDefaultResponse } from '@contracts/idefault-response';
 import { CastResponse } from "@decorators/cast-response";
 

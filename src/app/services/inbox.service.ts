@@ -238,9 +238,9 @@ export class InboxService {
   }
 
 
-  openActionLogs(caseId: string, caseType: number): DialogRef {
+  openActionLogs(caseId: string, caseType: number, isMainRequest: boolean): DialogRef {
     const service = this.getService(caseType);
-    return service.openActionLogs(caseId);
+    return service.openActionLogs(caseId, caseType, isMainRequest);
   }
 
   exportActions(caseId: string, caseType: number): Observable<BlobModel> {
