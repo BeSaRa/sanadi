@@ -363,6 +363,21 @@ export class GeneralAssociationMeetingAttendanceService extends BaseGenericEServ
     return this.documentService.downloadDocument(documentId);
   }
 
+  @HasInterception
+  @CastResponse(() => MeetingAttendanceReport, {
+    unwrap: '',
+    fallback: '$default'
+  })
+  _generateInitDocument(caseId: string): Observable<BlobModel> {
+    return this.http.get(this._getURLSegment() + '/initial-approve/model/' + caseId + '/export', {
+      responseType: 'blob',
+      observe: 'body'
+    }).pipe(map(blob => new BlobModel(blob, this.domSanitizer)));
+  }
+  generateInitDocument(caseId: string): Observable<BlobModel> {
+    return this._generateInitDocument(caseId);
+  }
+
   @CastResponse(() => GeneralAssociationMeetingAttendance)
   _validateGeneralAssociationMeetingAttendanceByRequestType(requestType: number, oldFullSerial: string): Observable<GeneralAssociationMeetingAttendance> {
     let criteriaObject = {requestType: requestType, oldFullSerial: oldFullSerial};

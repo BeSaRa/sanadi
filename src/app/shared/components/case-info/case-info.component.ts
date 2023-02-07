@@ -132,7 +132,14 @@ export class CaseInfoComponent {
   isDocumentCase(): boolean {
     return this.documentCasList.includes(this.model.getCaseType()) && this.model.getCaseStatus() === CommonCaseStatus.FINAL_APPROVE;
   }
-
+  isGeneralAssociationMeetingAttendanceInitApproveCase() {
+    return this.model.getCaseType() == CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE && this.model.getCaseStatus() === CommonCaseStatus.INITIAL_APPROVE;
+  }
+  viewGeneralAssociationMeetingAttendanceInitApproveDocument(): void {
+    (this.generalAssociationMeetingAttendanceService)
+      .generateInitDocument(this.model.getCaseId())
+      .subscribe((blob) => window.open(blob.url));
+  }
   viewGeneratedLicense(): void {
     if (!this.generatedLicenseId) {
       return;
