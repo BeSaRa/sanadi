@@ -129,7 +129,7 @@ export abstract class CaseModel<S extends BaseGenericEService<T>, T extends File
   }
 
   viewLogs(): DialogRef {
-    return this.service.openActionLogs(this.id);
+    return this.service.openActionLogs(this.id, this.caseType, this.isMain());
   }
 
   manageAttachments(): DialogRef {
@@ -199,7 +199,7 @@ export abstract class CaseModel<S extends BaseGenericEService<T>, T extends File
   }
 
   isMain(): boolean {
-    return this.taskDetails.isMain;
+    return this.taskDetails ? this.taskDetails.isMain : false;
   }
 
   getStatusIcon(): string {

@@ -44,7 +44,10 @@
   </ng-container>
   <ng-template #logsTemplate>
     <log-viewer [accordionView]="true" displayCategorizedAs="tabs" [categorizeLogs]="true"
-                [caseId]="component?.model?.getCaseId()" [case]="model" [service]="service.actionLogService">
+                [caseId]="component?.model?.getCaseId()" [caseType]="component?.model?.caseType"
+                [isMainDeptRequest]="isMainDepartmentRequest()"
+                [service]="service.actionLogService">
+      <!--[case]="model"-->
     </log-viewer>
   </ng-template>
   <!--  <ng-template #outputs>-->

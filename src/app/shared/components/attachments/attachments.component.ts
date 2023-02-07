@@ -427,7 +427,6 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
       }))
       .pipe(takeUntil(this.customPropertiesDestroy$))
       .pipe(map((values: Record<string, number>) => {
-        debugger
         return attachment.notMatchExpression(values);
       }))
       .subscribe((notMatch) => {

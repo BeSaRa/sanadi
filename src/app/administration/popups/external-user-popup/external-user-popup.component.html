@@ -114,7 +114,7 @@
             <ng-select [selectOnTab]="true" labelForId="profileId" [clearable]="false"
                        placeholder="{{langService.map.select}}" id="profileId"
                        [notFoundText]="langService.map.msg_not_found"
-                       [readonly]="isSubAdmin"
+                       [readonly]="!isChangeProfileAllowed()"
                        formControlName="profileId" appendTo="body"
                        validationClasses="profileId">
               <ng-option *ngFor="let option of profileList" [value]="option.id"

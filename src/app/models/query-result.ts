@@ -74,6 +74,7 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
   RESPONSES!: string [];
   BD_SUBJECT!: string;
   RISK_STATUS!: number;
+  BD_IS_MAIN!: boolean;
   BD_IS_READ!: boolean;
   fromUserInfo!: AdminResult;
   orgInfo!: AdminResult;
@@ -156,7 +157,7 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
   }
 
   viewLogs(): DialogRef {
-    return this.service.openActionLogs(this.PI_PARENT_CASE_ID, this.BD_CASE_TYPE);
+    return this.service.openActionLogs(this.PI_PARENT_CASE_ID, this.BD_CASE_TYPE, this.BD_IS_MAIN);
   }
 
   exportActions(): Observable<BlobModel> {
@@ -382,6 +383,10 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
 
   isRead(): boolean {
     return this.BD_IS_READ;
+  }
+
+  isMain(): boolean {
+    return this.BD_IS_MAIN;
   }
 
   setItemRoute(): void {

@@ -33,6 +33,7 @@ import {HasInterception, InterceptParam} from '@decorators/intercept-model';
 import {CaseModel} from '@app/models/case-model';
 import {FollowupComponent} from '@app/shared/popups/followup/followup.component';
 import {QueryResult} from '@app/models/query-result';
+import {CaseTypes} from '@app/enums/case-types.enum';
 
 export abstract class BaseGenericEService<T extends { id: string }> {
   protected constructor() {
@@ -194,8 +195,8 @@ export abstract class BaseGenericEService<T extends { id: string }> {
     return this.actionLogService.exportActions(caseId);
   }
 
-  openActionLogs(caseId: string): DialogRef {
-    return this.dialog.show(ActionRegistryPopupComponent, { service: this, caseId });
+  openActionLogs(caseId: string, caseType: CaseTypes, isMainRequest: boolean): DialogRef {
+    return this.dialog.show(ActionRegistryPopupComponent, { service: this, caseId, caseType, isMainRequest });
   }
 
   openCommentsDialog(caseId: string): DialogRef {
