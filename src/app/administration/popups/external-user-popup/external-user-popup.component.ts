@@ -31,14 +31,11 @@ import {DialogRef} from '@app/shared/models/dialog-ref';
 import {CustomMenuPermissionComponent} from '@app/administration/shared/custom-menu-permission/custom-menu-permission.component';
 import {BaseModel} from '@app/models/base-model';
 import {ExternalUserUpdateRequest} from '@app/models/external-user-update-request';
-import {UserSecurityComponent} from '@app/administration/shared/user-security/user-security.component';
 import {ExternalUserUpdateRequestService} from '@services/external-user-update-request.service';
 import {ExternalUserUpdateRequestStatusEnum} from '@app/enums/external-user-update-request-status.enum';
 import {ExternalUserUpdateRequestTypeEnum} from '@app/enums/external-user-update-request-type.enum';
 import {PermissionsEnum} from '@app/enums/permissions-enum';
-import {
-  UserSecurityExternalComponent
-} from '@app/administration/shared/user-security-external/user-security-external.component';
+import {UserSecurityExternalComponent} from '@app/administration/shared/user-security-external/user-security-external.component';
 
 @Component({
   selector: 'app-external-user-popup',
@@ -454,10 +451,6 @@ export class ExternalUserPopupComponent extends AdminGenericDialog<ExternalUser>
     return this.profileControl?.valid;
   }
 
-  get isSubAdmin() {
-    return this.employeeService.userRolesManageUser.isSubAdmin();
-  }
-
   listenToSave() {
     this.save$
       // call before Save callback
@@ -516,5 +509,19 @@ export class ExternalUserPopupComponent extends AdminGenericDialog<ExternalUser>
       this.toast.success(message.change({x: model.getName()}));
       dialogRef.close(model);
     });
+  }
+
+  get isSubAdmin() {
+    return this.employeeService.userRolesManageUser.isSubAdmin();
+  }
+
+  isChangeProfileAllowed(): boolean {
+    if (this.isSubAdmin || this.readonly) {
+      return false;
+    }
+    if (this.operation === OperationTypes.CREATE && this.requestSaveType === 'SAVE_USER') {
+      return this.employeeService.userRolesManageUser.isSuperAdmin(OperationTypes.CREATE);
+    }
+    return false;
   }
 }

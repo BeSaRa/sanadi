@@ -274,8 +274,8 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
             return false;
           }
           if (item.caseType === CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST) {
-            const model = item as CoordinationWithOrganizationsRequest
-            return !model.isApproved
+            const model = item as CoordinationWithOrganizationsRequest;
+            return !model.isApproved;
           }
           // show if external user or service which are only for internal user
           return !this.internal || this.internalUserServices.includes(item.getCaseType());
@@ -308,8 +308,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
             return false;
           }
           if (item.caseType === CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST) {
-            if(item.caseStatus ===  CommonCaseStatus.CANCELLED) return false;
-           }
+            if (item.caseStatus === CommonCaseStatus.CANCELLED) {
+              return false;
+            }
+          }
           return item?.canDraft();
         },
         disabled: item => !item?.canDraft(),
@@ -853,7 +855,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           return !item.getResponses().length || item.getResponses().includes(WFResponseType.KNEW);
         },
         onClick: (item: CaseModel<any, any>) => {
-           this.knewAction(item);
+          this.knewAction(item);
         }
       },
       // seen
@@ -1049,14 +1051,14 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         show: (_item) => true,
         onClick: (item) => this.markAsUnreadAction(item)
       },
-      // terminate task
+      /*// terminate task
       {
         type: 'action',
         icon: ActionIconsEnum.TERMINATE,
         label: 'terminate_task',
         show: (item) => !item.isMain(),
         onClick: (item) => this.terminateTaskAction(item)
-      },
+      },*/
       // back
       {
         type: 'action',
@@ -1274,12 +1276,18 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   isInitialApproveWithSave(item: CaseModel<any, any>): boolean {
     return this.initialApproveWithSaveServices.includes(item.getCaseType());
   }
-  isCoordinationApprovedWithSave(item: CaseModel<any, any>): boolean{
-      if(item.caseStatus === CommonCaseStatus.CANCELLED) return false;
-      //@ts-ignore
-      if (item.isApproved && this.internal) return false;
-      return !item.isInitialApproved() || !this.internal;
+
+  isCoordinationApprovedWithSave(item: CaseModel<any, any>): boolean {
+    if (item.caseStatus === CommonCaseStatus.CANCELLED) {
+      return false;
+    }
+    //@ts-ignore
+    if (item.isApproved && this.internal) {
+      return false;
+    }
+    return !item.isInitialApproved() || !this.internal;
   }
+
   private approveAction(item: CaseModel<any, any>) {
     if (this.isApproveWithSave(item)) {
       if (item.getCaseType() === CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE) {
@@ -1351,11 +1359,13 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       actionTaken && this.navigateToSamePageThatUserCameFrom();
     });
   }
+
   private knewAction(item: CaseModel<any, any>) {
     item.knew().onAfterClose$.subscribe(actionTaken => {
       actionTaken && this.navigateToSamePageThatUserCameFrom();
     });
   }
+
   private seenAction(item: CaseModel<any, any>) {
     item.seen().onAfterClose$.subscribe(actionTaken => {
       actionTaken && this.navigateToSamePageThatUserCameFrom();
@@ -1452,7 +1462,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     });
   }
 
-  private terminateTaskAction(item: CaseModel<any, any>) {
+  /*private terminateTaskAction(item: CaseModel<any, any>) {
     const service = this.inboxService.getService(item.getCaseType());
     service.dialog.confirm(this.lang.map.msg_confirm_terminate_task).onAfterClose$
       .subscribe((click: UserClickOn) => {
@@ -1463,7 +1473,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           });
         }
       });
-  }
+  }*/
 
   private static viewLogsAction(item: CaseModel<any, any>) {
     item.viewLogs();
@@ -1611,5 +1621,18 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
 
   isOpenedFromInbox(): boolean {
     return this.openFrom === OpenFrom.USER_INBOX;
+  }
+
+  isOpenedFromTeamInbox(): boolean {
+    return this.openFrom === OpenFrom.TEAM_INBOX;
+  }
+
+  isMainDepartmentRequest(): boolean {
+    if (!!this.component && !!this.component.model) {
+      if (this.isOpenedFromInbox() || (this.isOpenedFromTeamInbox() && this.component.model.taskDetails.isClaimed())) {
+        return this.component.model.isMain();
+      }
+    }
+    return false;
   }
 }

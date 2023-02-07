@@ -1,19 +1,22 @@
-import { AssignedTask } from './../../../models/assigned-task';
-import { ServiceData } from '@app/models/service-data';
-import { ServiceDataService } from '@app/services/service-data.service';
-import { CaseModel } from '@app/models/case-model';
-import { UserClickOn } from './../../../enums/user-click-on.enum';
-import { DialogService } from './../../../services/dialog.service';
-import { ToastService } from './../../../services/toast.service';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { ActionLogService } from '@app/services/action-log.service';
-import { BehaviorSubject, iif, merge, of, Subject } from 'rxjs';
-import { ActionRegistry } from '@app/models/action-registry';
-import { concatMap, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
-import { LangService } from '@app/services/lang.service';
-import { TabComponent } from '../tab/tab.component';
-import { ServiceActionType } from '@app/enums/service-action-type.enum';
-import { CaseTypes } from '@app/enums/case-types.enum';
+import {AssignedTask} from '@models/assigned-task';
+import {ServiceData} from '@app/models/service-data';
+import {ServiceDataService} from '@app/services/service-data.service';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {ActionLogService} from '@app/services/action-log.service';
+import {BehaviorSubject, iif, merge, of, Subject} from 'rxjs';
+import {ActionRegistry} from '@app/models/action-registry';
+import {concatMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
+import {LangService} from '@app/services/lang.service';
+import {TabComponent} from '../tab/tab.component';
+import {ServiceActionType} from '@app/enums/service-action-type.enum';
+import {CaseTypes} from '@app/enums/case-types.enum';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {InboxService} from '@services/inbox.service';
+import {DialogService} from '@services/dialog.service';
+import {ToastService} from '@services/toast.service';
+import {EmployeeService} from '@services/employee.service';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 
 @Component({
   selector: 'log-viewer',
@@ -21,6 +24,14 @@ import { CaseTypes } from '@app/enums/case-types.enum';
   styleUrls: ['./log-viewer.component.scss']
 })
 export class LogViewerComponent implements OnInit, OnDestroy {
+  constructor(public lang: LangService,
+              private employeeService: EmployeeService,
+              private dialog: DialogService,
+              private inboxService: InboxService,
+              private serviceData: ServiceDataService,
+              private toast: ToastService) {
+  }
+
   reload$: Subject<void> = new Subject<void>();
   _caseId: BehaviorSubject<string> = new BehaviorSubject<string>('');
   @Input()
@@ -31,6 +42,7 @@ export class LogViewerComponent implements OnInit, OnDestroy {
   get caseId(): string {
     return this._caseId.value;
   }
+
   @Input() service!: ActionLogService;
 
   @Input() hideViewedAction: boolean = false;
@@ -38,7 +50,29 @@ export class LogViewerComponent implements OnInit, OnDestroy {
   @Input() categorizeLogs: boolean = false;
   @Input() displayCategorizedAs: 'tabs' | 'one-page' = 'tabs';
   @Input() accordionView: boolean = false;
-  @Input() case!: CaseModel<any, any> | undefined;
+
+  private _isMainDeptRequest: boolean = false;
+  @Input()
+  set isMainDeptRequest(value: boolean) {
+    this._isMainDeptRequest = value;
+  };
+
+  get isMainDeptRequest(): boolean {
+    return this._isMainDeptRequest;
+  };
+
+  private _caseType?: CaseTypes;
+  @Input()
+  set caseType(value: CaseTypes | undefined) {
+    this._caseType = value;
+    if (value) {
+      this._loadServiceDataByCaseType(value);
+    }
+  };
+
+  get caseType(): CaseTypes | undefined {
+    return this._caseType;
+  }
 
   logsAll: ActionRegistry[] = [];
   logsViewed: ActionRegistry[] = [];
@@ -51,17 +85,50 @@ export class LogViewerComponent implements OnInit, OnDestroy {
   displayedColumnsOthers: string[] = ['user', 'action', 'toUser', 'addedOn', 'time', 'comment'];
 
   locations: AssignedTask[] = [];
-  displayLocationColumns: string[] = ['location'];
+  private _displayLocationColumns = ['location'];
+  get displayLocationColumns(): string[] {
+    if (this.canTerminateAnyItemLocation()) {
+      return this._displayLocationColumns.concat(['actions']);
+    }
+    return this._displayLocationColumns;
+  };
+
+  private isTerminateAllowed(): boolean {
+    // should be internal user
+    // case opened from main department
+    return this.employeeService.isInternalUser() && this.isMainDeptRequest;
+  }
+
+  private canTerminateTask(item: AssignedTask): boolean {
+    return !item.isMain && this.timeOut(item);
+  }
+
+  private canTerminateAnyItemLocation() {
+    // location of item to be terminated should not be main department
+    // time is already passed according to service data
+    return this.isTerminateAllowed() && !!this.locations.find((item) => this.canTerminateTask(item));
+  }
+
+  private _loadServiceDataByCaseType(caseType: CaseTypes) {
+    this.serviceData.loadByCaseType(caseType)
+      .subscribe((result) => this._serviceData = result);
+  }
 
   displayPrintBtn: boolean = true;
-  displayReturnBtn: boolean = false;
   destroy$: Subject<any> = new Subject<any>();
   _serviceData!: ServiceData;
-  constructor(public lang: LangService,
-    public toast: ToastService,
-    private serviceData: ServiceDataService,
-    public dialog: DialogService) {
-  }
+
+  actionIconsEnum = ActionIconsEnum;
+  locationActions: IMenuItem<AssignedTask>[] = [
+    // terminate task
+    {
+      label: 'terminate_task',
+      type: 'action',
+      icon: ActionIconsEnum.TERMINATE,
+      show: (item) => this.isTerminateAllowed() && this.canTerminateTask(item),
+      onClick: (item) => this.terminateTask(item)
+    }
+  ];
 
   ngOnInit(): void {
     this.load();
@@ -86,9 +153,6 @@ export class LogViewerComponent implements OnInit, OnDestroy {
         concatMap(() => iif(() => this.hideItemLocation, of([]), this.service.loadCaseLocation(this.caseId!)))
       )
       .subscribe(locations => this.locations = locations);
-    this.case && this.serviceData.loadByCaseType(this.case.caseType).subscribe((service: ServiceData) => {
-      this._serviceData = service;
-    })
   }
 
   ngOnDestroy(): void {
@@ -99,14 +163,14 @@ export class LogViewerComponent implements OnInit, OnDestroy {
 
   tabChanged($event: TabComponent) {
     this.displayPrintBtn = $event.name !== 'location';
-    this.displayReturnBtn = $event.name === 'location' && (
-      (this.case?.caseType == CaseTypes.NPO_MANAGEMENT ||
-        this.case?.caseType == CaseTypes.CHARITY_ORGANIZATION_UPDATE)
-    );
   }
+
   timeOut(task: AssignedTask) {
-    const timeZoneOffcet = new Date().getTimezoneOffset();
-    const ReviewLimitHours = (new Date(task.startDate).getTime() / 1000 - timeZoneOffcet) / 60 / 60 + this._serviceData.serviceReviewLimit;
+    if (!this._serviceData) {
+      return false;
+    }
+    const timeZoneOffset = new Date().getTimezoneOffset();
+    const ReviewLimitHours = (new Date(task.startDate).getTime() / 1000 - timeZoneOffset) / 60 / 60 + this._serviceData.serviceReviewLimit;
     const DateNowHours = new Date().getTime() / 1000 / 60 / 60;
     return ReviewLimitHours <= DateNowHours;
   }
@@ -125,11 +189,13 @@ export class LogViewerComponent implements OnInit, OnDestroy {
       }
     });
   }
-  terminate(tkiid: string) {
+
+  terminateTask(item: AssignedTask) {
     this.dialog.confirm(this.lang.map.msg_confirm_terminate_task).onAfterClose$
       .subscribe((click: UserClickOn) => {
         if (click === UserClickOn.YES) {
-          this.service.terminateTask(tkiid).subscribe(() => {
+          // @ts-ignore
+          this.service.terminateTask(item.tkiid).subscribe(() => {
             this.toast.success(this.lang.map.msg_success_terminate_task);
             this.load();
           });
