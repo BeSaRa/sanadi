@@ -161,4 +161,5 @@ export interface ILookupMap {
   FinancialTransferType: Lookup[];
   FinancialTransfereeType: Lookup[];
   FinancialTransferRequestType: Lookup[];
+  RequestTypeNewUpdate: Lookup[];
 }

@@ -56,7 +56,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   commonCaseStatus = CommonCaseStatus;
   isCancel: boolean = false;
 
-  requestTypes: Lookup[] = this.lookupService.listByCategory.CollectionRequestType
+  requestTypes: Lookup[] = this.lookupService.listByCategory.RequestTypeNewUpdate
     .sort((a, b) => a.lookupKey - b.lookupKey);
   meetingTypes: Lookup[] = this.lookupService.listByCategory.MeetingType
     .sort((a, b) => a.lookupKey - b.lookupKey);
