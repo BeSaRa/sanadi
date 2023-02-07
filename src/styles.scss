@@ -320,6 +320,7 @@ ng-select {
   }
 
   &.ng-touched {
+    border-radius: 0.25rem;
     &.ng-valid {
       &.ng-select-opened {
         box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
