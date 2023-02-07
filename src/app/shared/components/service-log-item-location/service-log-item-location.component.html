@@ -17,7 +17,7 @@
         <grid-actions [record]="row" [actions]="locationActions" [itemIndex]="itemIndex"></grid-actions>
       </td>
     </ng-container>
-    <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
+    <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="displayedColumns"></tr>
     <tr cdk-row (contextmenu)="menu.open($event , row)" *cdkRowDef="let row; columns: displayedColumns;"></tr>
     <!--suppress HtmlUnknownBooleanAttribute -->
     <tr *cdkNoDataRow>
