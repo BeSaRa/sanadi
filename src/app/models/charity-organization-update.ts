@@ -30,8 +30,8 @@ const interceptor = new CharityOrganizationUpdateInterceptor();
   receive: interceptor.receive,
 })
 export class CharityOrganizationUpdate extends CaseModel<
-  CharityOrganizationUpdateService,
-  CharityOrganizationUpdate
+CharityOrganizationUpdateService,
+CharityOrganizationUpdate
 > implements HasFollowUpDate {
   service: CharityOrganizationUpdateService = FactoryService.getService(
     'CharityOrganizationUpdateService'
@@ -182,7 +182,9 @@ export class CharityOrganizationUpdate extends CaseModel<
     };
   }
   getFirstPageForm(controls = true) {
-    const { updateSection, charityId } = this;
+    const { updateSection,
+      registrationAuthority,
+      charityId } = this;
     return {
       updateSection: controls
         ? [updateSection, [CustomValidators.required]]
@@ -190,6 +192,10 @@ export class CharityOrganizationUpdate extends CaseModel<
       charityId: controls
         ? [charityId, [CustomValidators.required]]
         : charityId,
+      registrationAuthority: controls
+        ? [registrationAuthority]
+        : registrationAuthority,
+
     };
   }
   buildContactInformationForm(controls = true) {
@@ -229,7 +235,7 @@ export class CharityOrganizationUpdate extends CaseModel<
           ],
         ]
         : email,
-      website: controls ? [website, [CustomValidators.required, CustomValidators.maxLength(200), CustomValidators.pattern('WEBSITE')]] : website,
+      website: controls ? [website, [CustomValidators.required, CustomValidators.maxLength(350)]] : website,
       zoneNumber: controls
         ? [
           zoneNumber,
@@ -274,11 +280,11 @@ export class CharityOrganizationUpdate extends CaseModel<
           ],
         ]
         : address,
-      facebook: controls ? [facebook, [CustomValidators.pattern('WEBSITE')]] : facebook,
-      twitter: controls ? [twitter, [CustomValidators.pattern('WEBSITE')]] : twitter,
-      instagram: controls ? [instagram, [CustomValidators.pattern('WEBSITE')]] : instagram,
-      youTube: controls ? [youTube, [CustomValidators.pattern('WEBSITE')]] : youTube,
-      snapChat: controls ? [snapChat, [CustomValidators.pattern('WEBSITE')]] : snapChat,
+      facebook: controls ? [facebook, [CustomValidators.maxLength(350)]] : facebook,
+      twitter: controls ? [twitter, [CustomValidators.maxLength(350)]] : twitter,
+      instagram: controls ? [instagram, [CustomValidators.maxLength(350)]] : instagram,
+      youTube: controls ? [youTube, [CustomValidators.maxLength(350)]] : youTube,
+      snapChat: controls ? [snapChat, [CustomValidators.maxLength(350)]] : snapChat,
     };
   }
   buildPrimaryLawForm(controls = true) {

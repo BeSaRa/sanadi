@@ -40,6 +40,22 @@
           </ng-select>
           <app-field-error-message controlName="charityId"></app-field-error-message>
         </div>
+        <div class="col-sm-6 col-md-4 mb-4 position-relative" *ngIf="isCoordinationAndControlReports()">
+          <label
+            asteriskIfRequired="registrationAuthority"
+            for="registrationAuthority"
+            class="form-label"
+          >{{ lang.map.registration_authority }}</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="registrationAuthority"
+            validationClasses="registrationAuthority"
+            formControlName="registrationAuthority"
+            [readonly]="true"
+          />
+        </div>
       </div>
     </ng-template>
 
