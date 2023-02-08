@@ -1,0 +1,39 @@
+<div class="row">
+  <div class="col-12">
+    <app-table #table sortableTable [paginator]="paginator" [data]="logsList" [columns]="displayedColumns">
+      <table class="table border border-1" cdk-table [dataSource]="table.dataSource">
+        <ng-container cdkColumnDef="action">
+          <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.action_type}}</th>
+          <td cdk-cell *cdkCellDef="let row"> {{row.actionInfo.getName()}} </td>
+        </ng-container>
+        <ng-container cdkColumnDef="user">
+          <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.user}}</th>
+          <td cdk-cell *cdkCellDef="let row"> {{row.userFromInfo?.getName()}} </td>
+        </ng-container>
+        <ng-container cdkColumnDef="toUser">
+          <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.to_user}}</th>
+          <td cdk-cell *cdkCellDef="let row"> {{row.userToInfo.getName()}} </td>
+        </ng-container>
+        <ng-container cdkColumnDef="addedOn">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.action_date}}</th>
+          <td cdk-cell *cdkCellDef="let row"> {{row.addedOn|date}} </td>
+        </ng-container>
+        <ng-container cdkColumnDef="time">
+          <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.action_time}}</th>
+          <td cdk-cell *cdkCellDef="let row"> {{row.addedOn|date:"shortTime"}} </td>
+        </ng-container>
+        <ng-container cdkColumnDef="comment">
+          <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.comment}}</th>
+          <td cdk-cell *cdkCellDef="let row"> {{row.comment}} </td>
+        </ng-container>
+        <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="table.columns"></tr>
+        <tr cdk-row *cdkRowDef="let row; columns: table.columns;"></tr>
+        <!--suppress HtmlUnknownBooleanAttribute -->
+        <tr *cdkNoDataRow>
+          <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
+        </tr>
+      </table>
+      <app-paginator #paginator [length]="logsList.length"></app-paginator>
+    </app-table>
+  </div>
+</div>

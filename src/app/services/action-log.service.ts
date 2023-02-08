@@ -1,19 +1,21 @@
-import { AssignedTask } from '@models/assigned-task';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { DialogService } from './dialog.service';
-import { DomSanitizer } from '@angular/platform-browser';
-import { BackendServiceModelInterface } from '@contracts/backend-service-model-interface';
-import { IModelInterceptor } from '@contracts/i-model-interceptor';
-import { ActionRegistry } from '@models/action-registry';
-import { ActionRegistryInterceptor } from '@model-interceptors/action-registry-interceptor';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { BlobModel } from '@models/blob-model';
-import { IDefaultResponse } from '@contracts/idefault-response';
-import { CastResponse } from "@decorators/cast-response";
+import {AssignedTask} from '@models/assigned-task';
+import {HttpClient, HttpContext, HttpParams} from '@angular/common/http';
+import {DialogService} from './dialog.service';
+import {DomSanitizer} from '@angular/platform-browser';
+import {BackendServiceModelInterface} from '@contracts/backend-service-model-interface';
+import {IModelInterceptor} from '@contracts/i-model-interceptor';
+import {ActionRegistry} from '@models/action-registry';
+import {ActionRegistryInterceptor} from '@model-interceptors/action-registry-interceptor';
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
+import {BlobModel} from '@models/blob-model';
+import {IDefaultResponse} from '@contracts/idefault-response';
+import {CastResponse} from '@decorators/cast-response';
+import {NO_LOADER_TOKEN} from '@app/http-context/tokens';
 
 export class ActionLogService implements Pick<BackendServiceModelInterface<ActionRegistry>, '_getModel' | '_getInterceptor'> {
   interceptor: ActionRegistryInterceptor = new ActionRegistryInterceptor();
+
   constructor(private service: {
     http: HttpClient,
     _getURLSegment(): string,
@@ -50,7 +52,9 @@ export class ActionLogService implements Pick<BackendServiceModelInterface<Actio
 
   loadCaseLocation(caseId: string): Observable<AssignedTask[]> {
     return this.service.http
-      .get<IDefaultResponse<AssignedTask[]>>(this.service._getURLSegment() + '/' + caseId + '/assigned-to')
+      .get<IDefaultResponse<AssignedTask[]>>(this.service._getURLSegment() + '/' + caseId + '/assigned-to', {
+        context: new HttpContext().set(NO_LOADER_TOKEN, true)
+      })
       .pipe(map((response) => response.rs.map(item => AssignedTask.createInstance(item))));
   }
 
@@ -58,6 +62,6 @@ export class ActionLogService implements Pick<BackendServiceModelInterface<Actio
   terminateTask(taskId: string): Observable<boolean> {
     return this.service.http.post<IDefaultResponse<boolean>>(this.service._getURLSegment() + '/task/terminate', {}, {
       params: new HttpParams().set('tkiid', taskId)
-    }).pipe(map(response => response.rs))
+    }).pipe(map(response => response.rs));
   }
 }

@@ -96,26 +96,22 @@ import {DatePipe} from '@app/pipes/date.pipe';
 import {FollowupComponent} from '@app/shared/popups/followup/followup.component';
 import {FollowupPopupComponent} from '@app/modules/followup/popups/followup-popup/followup-popup.component';
 import {ReasonPopupComponent} from './popups/reason-popup/reason-popup.component';
-import {
-  ReturnToOrganizationPopupComponent
-} from './popups/return-to-organization-popup/return-to-organization-popup.component';
+import {ReturnToOrganizationPopupComponent} from './popups/return-to-organization-popup/return-to-organization-popup.component';
 import {MultiAttachmentDirective} from './directives/multi-attachment.directive';
 import {CustomAttachmentPopupComponent} from './popups/custom-attachment-popup/custom-attachment-popup.component';
 import {AttachmentHandlerDirective} from './directives/attachment-handler.directive';
 import {TranslateNamePipe} from './pipes/translate-name.pipe';
-import {
-  OtherAttachmentDetailsPopupComponent
-} from './popups/other-attachment-details-popup/other-attachment-details-popup.component';
+import {OtherAttachmentDetailsPopupComponent} from './popups/other-attachment-details-popup/other-attachment-details-popup.component';
 import {ExternalOfficeListComponent} from '@app/shared/components/external-office-list/external-office-list.component';
-import {
-  ExternalOfficesPopupComponent
-} from '@app/shared/components/external-offices-popup/external-offices-popup.component';
+import {ExternalOfficesPopupComponent} from '@app/shared/components/external-offices-popup/external-offices-popup.component';
 import {ExecutiveManagementComponent} from '@app/shared/components/executive-management/executive-management.component';
 import {BankBranchComponent} from '@app/shared/components/bank-branch/bank-branch.component';
 import {ProfileCodeExistsDirective} from '@app/validators/profile-code-exists.directive';
-import {
-  ProfileAttachmentDetailsPopupComponent
-} from './popups/profile-attachment-details-popup/profile-attachment-details-popup.component';import {CustomInputComponent} from '@app/shared/cva/custom-input/custom-input.component';
+import {ProfileAttachmentDetailsPopupComponent} from './popups/profile-attachment-details-popup/profile-attachment-details-popup.component';
+import {CustomInputComponent} from '@app/shared/cva/custom-input/custom-input.component';
+import {ServiceLogItemLocationComponent} from '@app/shared/components/service-log-item-location/service-log-item-location.component';
+import {ServiceLogListComponent} from '@app/shared/components/service-log-list/service-log-list.component';
+import {HeadingRowComponent} from './components/heading-row/heading-row.component';
 
 @NgModule({
   declarations: [
@@ -218,7 +214,10 @@ import {
     ProfileCodeExistsDirective,
     ReturnToOrganizationWithCommentPopupComponent,
     ProfileAttachmentDetailsPopupComponent,
-    CustomInputComponent
+    CustomInputComponent,
+    ServiceLogListComponent,
+    ServiceLogItemLocationComponent,
+    HeadingRowComponent
   ],
   imports: [
     CommonModule,
@@ -312,7 +311,9 @@ import {
     ExecutiveManagementComponent,
     BankBranchComponent,
     ProfileCodeExistsDirective,
-    CustomInputComponent
+    CustomInputComponent,
+    ServiceLogListComponent,
+    ServiceLogItemLocationComponent
   ]
 })
 export class SharedModule {
