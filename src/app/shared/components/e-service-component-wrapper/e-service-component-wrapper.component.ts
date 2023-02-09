@@ -1297,6 +1297,16 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
 
     return false;
   }
+  private _isAllowedToSaveAtSearch(model:CoordinationWithOrganizationsRequest){
+    if(this.employeeService.isInternalUser() && !model.isApproved){
+      return true;
+    }
+    if(this.employeeService.isExternalUser() && model.isApproved && !model.isFinalApproved()){
+      return true;
+    }
+
+    return false;
+  }
   private approveAction(item: CaseModel<any, any>) {
     if (this.isApproveWithSave(item)) {
       if (item.getCaseType() === CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE) {
