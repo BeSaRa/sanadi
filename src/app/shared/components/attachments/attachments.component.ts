@@ -21,7 +21,7 @@ import {
   OtherAttachmentDetailsPopupComponent
 } from '@app/shared/popups/other-attachment-details-popup/other-attachment-details-popup.component';
 import {OperationTypes} from '@app/enums/operation-types.enum';
-import {isEmptyObject} from '@helpers/utils';
+import {CommonUtils} from '@helpers/common-utils';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -333,7 +333,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
   private separateConditionalAttachments() {
     this.conditionalAttachments = [];
     this.attachments = this.attachments.filter((attachment) => {
-      if (attachment.attachmentTypeServiceData && isEmptyObject(attachment.attachmentTypeServiceData.parsedCustomProperties)) {
+      if (attachment.attachmentTypeId === -1 || (attachment.attachmentTypeServiceData && CommonUtils.isEmptyObject(attachment.attachmentTypeServiceData.parsedCustomProperties))) {
         return true;
       }
       this.conditionalAttachments = this.conditionalAttachments.concat(attachment);
