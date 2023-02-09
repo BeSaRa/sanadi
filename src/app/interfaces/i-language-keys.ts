@@ -1,6 +1,9 @@
 export interface ILanguageKeys {
   msg_full_amount_used: string;
   more: string;
+  notification_user_inbox: string;
+  notification_team_inbox: string;
+  notification_terminated: string;
   logs_history: string;
   the_donor: string;
   city_village: string;
@@ -1717,7 +1720,7 @@ export interface ILanguageKeys {
   lbl_profile: string;
   lbl_min_limit: string;
   lbl_max_limit: string;
-  lbl_maximum_deduction_ratio: string
+  lbl_maximum_deduction_ratio: string;
   menu_organizations_entities_support: string;
   beneficiaries_type: string;
   beneficiaries_description: string;
@@ -1788,11 +1791,11 @@ export interface ILanguageKeys {
   transfer_number: string;
   transferred_amount: string;
   due_amount: string;
-  total_qatari_riyal_transaction_amount:string;
-  msg_select_project_required:string;
-  task_seen:string;
-  lbl_approve_conditions:string;
-  lbl_other:string;
+  total_qatari_riyal_transaction_amount: string;
+  msg_select_project_required: string;
+  task_seen: string;
+  lbl_approve_conditions: string;
+  lbl_other: string;
   training_notes:string;
   msg_only_this_file_size_or_less_allowed_to_upload: string;
   err_must_have_letters:string;

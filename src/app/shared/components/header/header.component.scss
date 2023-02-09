@@ -54,8 +54,18 @@
   }
 
   .dropdown-menu {
+    min-width: 13rem;
     max-width: 20rem;
     max-height: 80vh;
     overflow-y: auto;
+
+    .dropdown-item {
+      &:focus-visible {
+        outline: none;
+      }
+      &.active, &:active {
+        background-color: #e9ecef;
+      }
+    }
   }
 }

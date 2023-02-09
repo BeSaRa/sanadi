@@ -8,8 +8,6 @@ import {UserPreferencesService} from '@services/user-preferences.service';
 import {NotificationService} from '@services/notification.service';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 import {NotificationResponse} from '@models/notification-response';
-import {result} from 'lodash';
-import {tap} from 'rxjs/operators';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -45,14 +43,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.userPreferencesService.openEditDialog(this.employee.getCurrentUser().generalUserId).subscribe();
   }
 
-  toggleNotifications($event: Event){
+  toggleNotifications($event: Event) {
     $event?.stopPropagation();
     $event?.preventDefault();
 
     this.notificationService.saveUnreadNotificationsAsReadSilently();
     this.notificationsTrigger?.nativeElement.click();
   }
-
 
   ngOnDestroy(): void {
     this.notificationService.stopNotifications();

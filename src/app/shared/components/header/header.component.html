@@ -29,16 +29,22 @@
       </button>
       <button [hidden]="true" type="button" class="btn btn-sm dropdown-toggle"
               data-bs-toggle="dropdown" #notificationsTrigger aria-expanded="false"
-              data-bs-reference="parent" data-bs-auto-close="false">
+              data-bs-reference="parent">
       </button>
       <ul class="dropdown-menu dropdown-menu-end p-0" aria-labelledby="notificationsDropdown">
         <ng-container *ngIf="notificationService.notificationsList.length > 0">
-          <ng-container *ngFor="let item of notificationService.notificationsList; let last = last ">
+          <ng-container *ngFor="let notification of notificationService.notificationsList; let last = last ">
             <li>
-              <button class="dropdown-item" type="button" [ngClass]="{'fw-bold': !item.read}">
-                <div class="text-truncate" [tooltip]="item.title">{{item.title}}</div>
-                <div class="text-end">{{item.actionDate}}</div>
-              </button>
+              <ng-container *ngIf="notification.isInformationTypeNotification(); else buttonNotificationTemplate">
+                <div class="p-2 text-decoration-none">
+                  <ng-container [ngTemplateOutlet]="notificationTemplate" [ngTemplateOutletContext]="{data: notification}"></ng-container>
+                </div>
+              </ng-container>
+              <ng-template #buttonNotificationTemplate>
+                <button class="dropdown-item p-2 text-primary" type="button">
+                  <ng-container [ngTemplateOutlet]="notificationTemplate" [ngTemplateOutletContext]="{data: notification}"></ng-container>
+                </button>
+              </ng-template>
             </li>
             <li *ngIf="!last">
               <hr class="dropdown-divider m-0">
@@ -59,3 +65,25 @@
     </ul>
   </div>
 </div>
+
+<ng-template #notificationIconTemplate let-notification="data">
+  <i class="mdi {{actionIconsEnum.NOTIFICATION_USER_INBOX}} ms-2"
+     *ngIf="notification.isUserInboxNotification()"
+     tooltip="{{langService.map.notification_user_inbox}}"></i>
+  <i class="mdi {{actionIconsEnum.NOTIFICATION_TEAM_INBOX}} ms-2"
+     *ngIf="notification.isTeamInboxNotification()"
+     tooltip="{{langService.map.notification_team_inbox}}"></i>
+  <i class="mdi {{actionIconsEnum.NOTIFICATION_TERMINATED}} ms-2"
+     *ngIf="notification.isTerminatedNotification()"
+     tooltip="{{langService.map.notification_terminated}}"></i>
+</ng-template>
+<ng-template #notificationTemplate let-notification="data">
+  <div [ngClass]="{'fw-bold': !notification.read}">
+    <div class="d-flex justify-content-between">
+      <span class="text-truncate" [tooltip]="notification.title">{{notification.title}}</span>
+      <ng-container [ngTemplateOutlet]="notificationIconTemplate"
+                    [ngTemplateOutletContext]="{data: notification}"></ng-container>
+    </div>
+    <div class="text-end">{{notification.actionDate}}</div>
+  </div>
+</ng-template>
