@@ -555,10 +555,10 @@ export class LicenseService {
     });
   }
   @CastResponse(() => FinancialTransferLicensing)
-  _validateFinancialTransferLicensingByRequestType<T>(requestType: number, oldFullSerial: string): Observable<T> {
+  _validateFinancialTransferLicensingByRequestType<T>(requestType: number, oldLicenseId: string): Observable<T> {
     return this.http.post<T>(this.getServiceUrlByCaseType(CaseTypes.FINANCIAL_TRANSFERS_LICENSING) + '/draft/validate', {
       requestType,
-      oldFullSerial
+      oldLicenseId
     });
   }
 

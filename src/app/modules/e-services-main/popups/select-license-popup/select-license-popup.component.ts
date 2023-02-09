@@ -107,7 +107,7 @@ export class SelectLicensePopupComponent {
         this.dialogRef.close({ selected: license, details: requestDetails });
       });
     } else if (this.caseType === CaseTypes.FINANCIAL_TRANSFERS_LICENSING) {
-      this.licenseService.validateLicenseByRequestType(this.caseType, license.requestType, license.fullSerial).subscribe((requestDetails) => {
+      this.licenseService.validateLicenseByRequestType(this.caseType, this.requestType, license.id).subscribe((requestDetails) => {
         if (!requestDetails) {
           return;
         }
