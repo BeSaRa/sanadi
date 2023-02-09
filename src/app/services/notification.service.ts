@@ -5,9 +5,10 @@ import {EmployeeService} from '@services/employee.service';
 import {NotificationResponse} from '@models/notification-response';
 import {CastResponse} from '@decorators/cast-response';
 import {ConfigurationService} from '@services/configuration.service';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpContext} from '@angular/common/http';
 import {NotificationResponseInterceptor} from '@model-interceptors/notification-response-interceptor';
 import {SharedService} from '@services/shared.service';
+import {NO_LOADER_TOKEN} from '@app/http-context/tokens';
 
 @Injectable({
   providedIn: 'root'
@@ -60,9 +61,12 @@ export class NotificationService implements OnDestroy {
     let unreadNotifications = this.getUnreadNotifications();
     unreadNotifications.forEach(notification => notification.read = true);
     this.unreadCount = 0;
+    if (!unreadNotifications.length) {
+      return;
+    }
 
-    this.http.put(this._getServiceURL() + '/set-read', {
-      ids: unreadNotifications.map(item => item.id)
+    this.http.put(this._getServiceURL() + '/set-read', unreadNotifications.map(item => item.id), {
+      context: new HttpContext().set(NO_LOADER_TOKEN, true)
     })
       .pipe(
         map((response: any) => {
