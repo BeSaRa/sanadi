@@ -25,6 +25,12 @@
         <app-field-error-message controlName="description"></app-field-error-message>
       </div>
     </div>
+    <div class="row">
+      <div class="col-sm-6">
+        <file-uploader #fileUploaderComponent [labelKey]="'file'" [allowedExtensions]="allowedExtensions" [readonly]="readonly"
+                       [isRequired]="true" (fileUploadEvent)="setAttachmentFile($event)"></file-uploader>
+      </div>
+    </div>
   </form>
 </div>
 <div class="dialog-actions">
@@ -33,7 +39,7 @@
     <i class="mdi mdi-information-outline text-info"></i>
   </button>
   <span class="flex-grow-1"></span>
-  <button [disabled]="form.invalid" *ngIf="saveVisible" (click)="save()"
+  <button [disabled]="!isValidForm(form)" *ngIf="saveVisible" (click)="save()"
           class="btn btn-primary">{{lang.map.btn_save}}</button>
   <button [dialogClose]="null" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
 </div>
