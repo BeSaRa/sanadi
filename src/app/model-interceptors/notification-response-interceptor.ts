@@ -1,6 +1,6 @@
 import {IModelInterceptor} from '@contracts/i-model-interceptor';
 import {NotificationResponse} from '@models/notification-response';
-import {NotificationTypeResponse} from '@models/notification-type-response';
+import {NotificationParametersResponse} from '@models/notification-parameters-response';
 import {CommonUtils} from '@helpers/common-utils';
 
 export class NotificationResponseInterceptor implements IModelInterceptor<NotificationResponse> {
@@ -12,7 +12,7 @@ export class NotificationResponseInterceptor implements IModelInterceptor<Notifi
         if (CommonUtils.isEmptyObject(parametersParsed)) {
           model.parametersParsed = undefined;
         } else {
-          model.parametersParsed = new NotificationTypeResponse().clone(parametersParsed);
+          model.parametersParsed = new NotificationParametersResponse().clone(parametersParsed);
         }
       } catch (e) {
         model.parametersParsed = undefined;

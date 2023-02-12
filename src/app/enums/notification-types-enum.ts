@@ -1,10 +1,5 @@
 export enum NotificationTypesEnum {
-  INFORMATION = 1,
-  SHOW_ITEM = 2
-}
-
-export enum NotificationLocationEnum {
-  USER_INBOX = 'User',
-  TEAM_INBOX = 'Team',
-  TERMINATED = 'Terminate'
+  USER_INBOX = 1,
+  TEAM_INBOX = 2,
+  TERMINATED = 3
 }

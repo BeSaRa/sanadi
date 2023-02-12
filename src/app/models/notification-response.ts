@@ -2,7 +2,7 @@ import {NotificationResponseInterceptor} from '@model-interceptors/notification-
 import {InterceptModel} from '@decorators/intercept-model';
 import {Cloneable} from '@models/cloneable';
 import {NotificationTypesEnum} from '@app/enums/notification-types-enum';
-import {NotificationTypeResponse} from '@models/notification-type-response';
+import {NotificationParametersResponse} from '@models/notification-parameters-response';
 import {CommonUtils} from '@helpers/common-utils';
 import {CaseTypes} from '@app/enums/case-types.enum';
 
@@ -21,35 +21,26 @@ export class NotificationResponse extends Cloneable<NotificationResponse> {
   read!: boolean;
 
   // extra properties
-  parametersParsed?: NotificationTypeResponse;
+  parametersParsed?: NotificationParametersResponse;
 
   getName(): string {
     return this.title;
   }
 
   isInformationTypeNotification(): boolean {
-    return this.notificationType === NotificationTypesEnum.INFORMATION;
+    return this.isTerminatedNotification();
   }
 
   isTerminatedNotification(): boolean {
-    if (!CommonUtils.isValidValue(this.parametersParsed) || CommonUtils.isEmptyObject(this.parametersParsed)) {
-      return false;
-    }
-    return this.parametersParsed!.isTerminatedRequestNotification();
+    return this.notificationType === NotificationTypesEnum.TERMINATED;
   }
 
   isUserInboxNotification(): boolean {
-    if (!CommonUtils.isValidValue(this.parametersParsed) || CommonUtils.isEmptyObject(this.parametersParsed)) {
-      return false;
-    }
-    return this.parametersParsed!.isUserInboxNotification();
+    return this.notificationType === NotificationTypesEnum.USER_INBOX;
   }
 
   isTeamInboxNotification(): boolean {
-    if (!CommonUtils.isValidValue(this.parametersParsed) || CommonUtils.isEmptyObject(this.parametersParsed)) {
-      return false;
-    }
-    return this.parametersParsed!.isTeamInboxNotification();
+    return this.notificationType === NotificationTypesEnum.TEAM_INBOX;
   }
 
   getCaseId(): string {
