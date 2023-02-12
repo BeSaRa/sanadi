@@ -7,6 +7,7 @@ import {IGeneralAssociationMeetingAttendanceComponent} from '@contracts/i-genera
 import {IGeneralAssociationMeetingAttendanceComplete} from '@contracts/i-general-association-meeting-attendance-complete';
 import {ITransferFundsAbroadComponent} from '@contracts/i-transfer-funds-abroad-component';
 import {ITransferIndividualFundsAbroadComplete} from '@contracts/i-transfer-individual-funds-abroad-complete';
+
 import {
   AfterViewInit,
   ApplicationRef,
@@ -60,13 +61,13 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
 
 
   constructor(private route: ActivatedRoute,
-              private injector: Injector,
-              private employeeService: EmployeeService,
-              public lang: LangService,
-              private router: Router,
-              private toast: ToastService,
-              private appRef: ApplicationRef,
-              private inboxService: InboxService) {
+    private injector: Injector,
+    private employeeService: EmployeeService,
+    public lang: LangService,
+    private router: Router,
+    private toast: ToastService,
+    private appRef: ApplicationRef,
+    private inboxService: InboxService) {
     this.render = this.route.snapshot.data.render as string;
     if (!this.render) {
       throw Error(`Please Provide render property in this route ${route.snapshot.url}`);
@@ -80,10 +81,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
 
   private readonly render: string;
   private componentRef!: ComponentRef<EServicesGenericComponent<CaseModel<any, any>, BaseGenericEService<any>>>;
-  @ViewChild('internalContainer', {read: ViewContainerRef})
+  @ViewChild('internalContainer', { read: ViewContainerRef })
   internalContainer!: ViewContainerRef;
 
-  @ViewChild('externalContainer', {read: ViewContainerRef})
+  @ViewChild('externalContainer', { read: ViewContainerRef })
   externalContainer!: ViewContainerRef;
 
   @ViewChild(StepCheckListComponent)
@@ -856,7 +857,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         askChecklist: true,
         runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
         show: (item: CaseModel<any, any>) => {
-          return !item.getResponses().length || item.getResponses().includes(WFResponseType.KNEW);
+          return !!(item.getResponses().length && item.getResponses().includes(WFResponseType.KNEW));
         },
         onClick: (item: CaseModel<any, any>) => {
           this.knewAction(item);
@@ -865,12 +866,12 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       // seen
       {
         type: 'action',
-        icon: 'mdi-book-check',
+        icon: 'mdi-eye',
         label: 'task_seen',
         askChecklist: true,
         runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
         show: (item: CaseModel<any, any>) => {
-          return !item.getResponses().length || item.getResponses().includes(WFResponseType.SEEN);
+          return !!(item.getResponses().length && item.getResponses().includes(WFResponseType.KNEW));
         },
         onClick: (item: CaseModel<any, any>) => {
           this.seenAction(item);
