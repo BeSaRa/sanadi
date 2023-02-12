@@ -1,3 +1,5 @@
+import { AwarenessActivitySuggestionComponent } from './../../../modules/general-services/pages/awareness-activity-suggestion/awareness-activity-suggestion.component';
+import { AwarenessActivitySuggestion } from '@models/awareness-activity-suggestion';
 import {CoordinationWithOrganizationsRequest} from '@app/models/coordination-with-organizations-request';
 import {IGeneralAssociationMeetingAttendanceSpecialActions} from '@contracts/i-general-association-meeting-attendance-special-actions';
 import {IGeneralAssociationMeetingAttendanceApprove} from '@contracts/i-general-association-meeting-attendance-approve';
@@ -33,7 +35,7 @@ import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {ToastService} from '@app/services/toast.service';
 import {InboxService} from '@app/services/inbox.service';
 import {isObservable, merge, Observable, of, Subject} from 'rxjs';
-import {filter, startWith, switchMap, takeUntil, tap} from 'rxjs/operators';
+import {filter, ignoreElements, startWith, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {TabComponent} from '@app/shared/components/tab/tab.component';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {SaveTypes} from '@app/enums/save-types';
@@ -132,7 +134,8 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   ];
 
   approveWithSaveServices: number[] = [
-    CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE
+    CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE,
+    CaseTypes.AWARENESS_ACTIVITY_SUGGESTION,
   ];
 
   initialApproveWithSaveServices: number[] = [
@@ -767,7 +770,8 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         askChecklist: true,
         show: (item: CaseModel<any, any>) => {
           const model = item as unknown as IGeneralAssociationMeetingAttendanceFinalApprove;
-          return (item.getCaseType() === CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE && (model.isManagerFinalReviewStep())) || item.caseStatus === CommonCaseStatus.FINAL_APPROVE;
+          return (item.getCaseType() === CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE
+            && (model.isManagerFinalReviewStep()) || item.caseStatus === CommonCaseStatus.FINAL_APPROVE);
         },
         onClick: (item: CaseModel<any, any>) => {
           const model = item as unknown as IGeneralAssociationMeetingAttendanceFinalApprove;
@@ -1020,7 +1024,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         askChecklist: true,
         runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
         show: (item: CaseModel<any, any>) => {
-          return item.getResponses().includes(WFResponseType.CLOSE);
+          return item.getResponses().includes(WFResponseType.CLOSE)
         },
         onClick: (item: CaseModel<any, any>) => {
           this.closeAction(item);
@@ -1307,6 +1311,12 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         const year = component.year.value;
 
         model.approveWithSave(component.selectedInternalUsers, meetingDate, year).onAfterClose$.subscribe(actionTaken => {
+          actionTaken && this.navigateToSamePageThatUserCameFrom();
+        });
+      } else if (item.getCaseType() === CaseTypes.AWARENESS_ACTIVITY_SUGGESTION) {
+        const model = item as unknown as AwarenessActivitySuggestion;
+        const component = this.component as unknown as AwarenessActivitySuggestionComponent;
+        model.approveWithSave(component.form).onAfterClose$.subscribe(actionTaken => {
           actionTaken && this.navigateToSamePageThatUserCameFrom();
         });
       }
