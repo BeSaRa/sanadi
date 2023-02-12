@@ -400,7 +400,6 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       model.oldLicenseSerial = licenseDetails.serial;
       model.documentTitle = '';
       model.fullSerial = null;
-      model.description = '';
       model.licenseStartDate = licenseDetails.licenseStartDate || licenseDetails.licenseApprovedDate;
       // delete id because license details contains old license id, and we are adding new, so no id is needed
       delete model.id;
