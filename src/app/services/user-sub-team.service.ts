@@ -62,7 +62,7 @@ export class UserSubTeamService extends CrudGenericService<UserSubTeam> {
   }
 
   deleteBulk(userTeamIds: number[]): Observable<Record<number, boolean>> {
-    return this.http.request<IDefaultResponse<Record<number, boolean>>>('DELETE', this.urlService.URLS.USER_SUB_TEAM + '/user/bulk', {
+    return this.http.request<IDefaultResponse<Record<number, boolean>>>('DELETE', this.urlService.URLS.USER_SUB_TEAM + '/bulk', {
       body: userTeamIds
     }).pipe(map(res => res.rs));
   }
@@ -76,5 +76,4 @@ export class UserSubTeamService extends CrudGenericService<UserSubTeam> {
     return this.http.put<IDefaultResponse<Record<number, boolean>>>(this.urlService.URLS.USER_SUB_TEAM + '/activate-users/bulk', userTeamsIds)
       .pipe(map(res => res.rs));
   }
-
 }
