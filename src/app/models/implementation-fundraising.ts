@@ -17,7 +17,7 @@ export class ImplementationFundraising extends Cloneable<ImplementationFundraisi
   remainingAmount!: number
   consumedAmount!: number
   totalCost!: number
-  notes!: string
+  notes: string = ''
   templateId?: string
   permitTypeInfo!: AdminResult
   isMain!: boolean

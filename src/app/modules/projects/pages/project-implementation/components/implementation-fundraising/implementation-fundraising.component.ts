@@ -19,6 +19,8 @@ import {ProjectImplementationService} from "@services/project-implementation.ser
 import {DialogService} from "@services/dialog.service";
 import {UserClickOn} from "@app/enums/user-click-on.enum";
 import {ImplementationTemplate} from "@models/implementation-template";
+import {ReasonPopupComponent} from "@app/shared/popups/reason-popup/reason-popup.component";
+import {ReasonContract} from "@contracts/reason-contract";
 
 @Component({
   selector: 'implementation-fundraising',
@@ -265,4 +267,25 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
   }
 
 
+  openComment(row: ImplementationFundraising, index: number) {
+    this.dialog
+      .show<ReasonContract>(ReasonPopupComponent, {
+        reasonLabel: this.lang.map.notes,
+        required: false,
+        saveBtn: this.lang.map.btn_save,
+        title: row.projectLicenseFullSerial,
+        reason: row.notes,
+        view: this.disabled
+      })
+      .onAfterClose$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(filter(({click}: { click: UserClickOn, comment: string }) => {
+        return click === UserClickOn.YES
+      }))
+      .subscribe(({comment}) => {
+        console.log('comment', comment);
+        this.value[index].notes = comment;
+        this.onChange(this.value)
+      })
+  }
 }
