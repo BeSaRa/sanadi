@@ -239,7 +239,7 @@
   <ng-template #financialTransfersProjectsTabTemplate>
     <ng-container formGroupName="financialTransfersProjects">
       <financial-transfers-projects
-      *ngIf="tabsData.financialTransfersProjects.show!()"
+
       #financialTransfersProjectsTab [list]="model?.financialTransfersProjects  || []"
         [readonly]="readonly" (readyEvent)="financialTransfersProjectsTabStatus = $event"
         (listUpdated)="updateTransactionAmount($event)" [submissionMechanism]="submissionMechanism"

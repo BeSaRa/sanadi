@@ -134,9 +134,10 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
   authorizedEntityBankAccounts: BankAccount[] = [];
   transferEntityBankAccounts: BankAccount[] = [];
   bankAccountsControl!: UntypedFormControl;
-  approvedFinancialTransferProjectsList:ExternalProjectLicensing[] = [];
+  approvedFinancialTransferProjectsList: ExternalProjectLicensing[] = [];
 
   financialTransfersProjectsTabStatus: ReadinessStatus = 'READY';
+  listenAllowed = true;
   @ViewChild('financialTransfersProjectsTab')
   financialTransfersProjectsComponentRef!: FinancialTransfersProjectsComponent;
   submissionMechanism!: number;
@@ -194,6 +195,7 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
       index: 4,
       checkTouchedDirty: false,
       isTouchedOrDirty: () => true,
+      // show: () => this.isFinancialTransfersProjectsRequired(),
       show: () => this.isFinancialTransfersProjectsRequired(),
       validStatus: () => true,
     },
@@ -345,9 +347,7 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
     }
   }
 
-  _destroyComponent(): void {
-
-  }
+  _destroyComponent(): void {}
 
   _getNewInstance(): FinancialTransferLicensing {
     return new FinancialTransferLicensing().clone();
@@ -398,14 +398,17 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
     // patch the form here
     this.form.patchValue({
       basicInfo: model.getBasicInfoFields(),
-      transferOperation: model.getTransferOperationFields(),
+     transferOperation: model.getTransferOperationFields(),
       transfereeBankAccount: model.getTransfereeBankAccountFields(),
       transferBankAccount: model.getTransferBankAccountFields(),
       affidavitOfCompletion: model.getAffidavitOfCompletionFields(),
       description: model.description,
     });
+
+    this.model!.financialTransfersProjects = model.financialTransfersProjects;
     this.handleRequestTypeChange(model.requestType, false);
     this.cd.detectChanges();
+    this.listenAllowed = true;
   }
 
   //#endregion
@@ -627,8 +630,6 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
   private _openSelectLicense(
     licenses: FinancialTransferLicensing[]
   ): Observable<undefined | FinancialTransferLicensing> {
-    console.log(licenses);
-
     return this.licenseService
       .openSelectLicenseDialog(
         licenses,
@@ -646,7 +647,7 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
                 }
               | undefined
           ) => {
-            return result ? result.selected : result;
+            return result ? result.details : result;
           }
         )
       );
@@ -748,18 +749,19 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
       .loadEternalProjects()
       .pipe(
         take(1),
-        map(projects=>projects.map(x=>new ExternalProjectLicensing().clone(x)))
+        map((projects) =>
+          projects.map((x) => new ExternalProjectLicensing().clone(x))
         )
-      .subscribe(projects=>{
-        this.approvedFinancialTransferProjectsList = projects
-        console.log(this.approvedFinancialTransferProjectsList);
-
+      )
+      .subscribe((projects) => {
+        this.approvedFinancialTransferProjectsList = projects;
       });
   }
   private _listenToTransferTypeChange() {
     this.transferType.valueChanges
       .pipe(
         takeUntil(this.destroy$),
+        filter(_=>this.listenAllowed),
         tap((_) => {
           this.model!.financialTransfersProjects = [];
           this.tabsData.financialTransfersProjects.validStatus = () => true;
@@ -782,6 +784,7 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
     this.targetCountry.valueChanges
       .pipe(
         takeUntil(this.destroy$),
+        filter(_=>this.listenAllowed),
         tap((value) => this.country.setValue(value))
       )
       .subscribe();
@@ -790,6 +793,7 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
     this.country.valueChanges
       .pipe(
         takeUntil(this.destroy$),
+        filter(_=>this.listenAllowed),
         tap((_) =>
           this.isExternalTransferType()
             ? this._resetTransfereeBankAccountGroup(false)
@@ -839,7 +843,7 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
       .pipe(
         takeUntil(this.destroy$),
         tap((bankAccount: BankAccount) => {
-          if(bankAccount){
+          if (bankAccount) {
             this.bankName.setValue(
               new Bank().clone(bankAccount.bankInfo).getName()
             );
@@ -1070,7 +1074,7 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
     this.selectedLicense = licenseDetails;
     // update form fields if i have license
     if (licenseDetails && !ignoreUpdateForm) {
-      let value: any = new FinancialTransferLicensing().clone({
+      let value:any  = new FinancialTransferLicensing().clone({
         ...licenseDetails,
       });
       value.requestType = this.requestTypeField.value;
@@ -1086,6 +1090,8 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
       // delete id because license details contains old license id, and we are adding new, so no id is needed
       delete value.id;
       delete value.vsId;
+
+      this.listenAllowed = false;
 
       this._updateForm(value);
     }
