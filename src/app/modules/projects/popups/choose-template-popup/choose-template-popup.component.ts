@@ -52,6 +52,7 @@ export class ChooseTemplatePopupComponent implements AfterViewInit {
     this.data.workArea === ProjectWorkArea.OUTSIDE_QATAR ? this.displayedColumns.splice(3, 0, 'domain') : null;
     this.oldImplementationTemplate = data.implementationTemplate;
     this.oldProjectTemplate = data.projectTemplate;
+    this.data.caseType === CaseTypes.PROJECT_IMPLEMENTATION ? this.displayedColumns.push('targetAmount') : null
   }
 
   ngAfterViewInit(): void {

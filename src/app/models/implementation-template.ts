@@ -28,7 +28,7 @@ export class ImplementationTemplate extends Cloneable<ImplementationTemplate> {
   notes!: string
   projectTotalCost!: number
   executionCountryInfo!: AdminResult
-
+  targetAmount!: number;
   // not related to the model -- should be deleted before send to backend
   defaultLatLng: google.maps.LatLngLiteral = {
     lat: 25.3266204,
@@ -67,7 +67,7 @@ export class ImplementationTemplate extends Cloneable<ImplementationTemplate> {
       latitude: controls ? [latitude, CustomValidators.required] : latitude,
       longitude: controls ? [longitude, CustomValidators.required] : longitude,
       beneficiaryRegion: controls ? [beneficiaryRegion, CustomValidators.required] : beneficiaryRegion,
-      notes: controls ? [notes , [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS),]] : notes,
+      notes: controls ? [notes, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS),]] : notes,
       projectTotalCost: controls ? [projectTotalCost, CustomValidators.required] : projectTotalCost
     };
   }
@@ -104,9 +104,10 @@ export class ImplementationTemplate extends Cloneable<ImplementationTemplate> {
       .loadRelatedPermitByTemplate(this.templateId)
       .pipe(switchMap((license) => {
         return license ? of(license.convertToFundraisingTemplate().clone({
-          projectTotalCost: license.projectTotalCost,
+          projectTotalCost: license.targetAmount,
           consumedAmount: license.consumed || 0,
-          remainingAmount: license.projectTotalCost - (license.consumed || 0)
+          remainingAmount: license.targetAmount - (license.consumed || 0),
+          isMain: true
         })) : of(undefined)
       }))
   }

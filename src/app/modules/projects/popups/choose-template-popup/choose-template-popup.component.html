@@ -40,6 +40,11 @@
         <td cdk-cell
             *cdkCellDef="let row"> {{row.projectTotalCost | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</td>
       </ng-container>
+      <ng-container cdkColumnDef="targetAmount">
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.target_amount}}</th>
+        <td cdk-cell
+            *cdkCellDef="let row"> {{row.targetAmount | mask:inputMaskPatterns.SEPARATOR:inputMaskPatterns.THOUSAND_SEPARATOR}}</td>
+      </ng-container>
       <ng-container cdkColumnDef="domain">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.domain}}</th>
         <td cdk-cell *cdkCellDef="let row"> {{row.domainInfo.getName()}} </td>

@@ -55,7 +55,8 @@
                      [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR"
                      [dropSpecialCharacters]="[',']">
               <div [tooltip]="lang.map.take_the_remaining">
-                <button [disabled]="disabled || noRemainingValue(i)" (click)="takeRemaining(i)" class="btn icon-btn p-0">
+                <button [disabled]="disabled || noRemainingValue(i)" (click)="takeRemaining(i)"
+                        class="btn icon-btn p-0">
                   <i class="mdi mdi-hand-coin-outline text-primary"></i>
                 </button>
               </div>
@@ -65,9 +66,10 @@
         </td>
       </ng-container>
       <ng-container cdkColumnDef="actions">
-        <th cdk-header-cell  style="width:120px" *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
+        <th cdk-header-cell style="width:120px" *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
         <td cdk-cell *cdkCellDef="let row">
-          <button [disabled]="isTemplatePermit(row)" (click)="!disabled && deletePermit(row)" class="btn p-0 icon-btn">
+          <button [disabled]="isTemplatePermit(row)" (click)="!disabled && !isTemplatePermit(row) && deletePermit(row)"
+                  class="btn p-0 icon-btn">
             <i class="mdi mdi-trash-can text-primary"></i>
           </button>
         </td>

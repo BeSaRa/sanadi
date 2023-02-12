@@ -20,5 +20,5 @@ export class ImplementationFundraising extends Cloneable<ImplementationFundraisi
   notes!: string
   templateId?: string
   permitTypeInfo!: AdminResult
-
+  isMain!: boolean
 }

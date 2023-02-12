@@ -121,6 +121,7 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
       .then(() => {
         this.value = value
         this.listenToControls()
+        this.calculateTotal()
       })
   }
 
@@ -251,7 +252,7 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
   }
 
   isTemplatePermit(row: ImplementationFundraising) {
-    return this._currentTemplate && row.templateId ? row.templateId === this._currentTemplate : false
+    return row.isMain
   }
 
   private getTemplatePermit(): ImplementationFundraising | undefined {
