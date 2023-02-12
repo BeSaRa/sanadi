@@ -292,6 +292,7 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
       organizationOfficer: model.getOrganizationOfficerFields(),
       description: model.description,
     });
+
     this.handleRequestTypeChange(model.requestType, false);
     this.cd.detectChanges();
   }
@@ -416,9 +417,7 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
       }),
       tap((serviceType)=>{
         if(serviceType){
-          if(serviceType.enName.toLocaleLowerCase() === 'other' ||
-             serviceType.enName.toLocaleLowerCase() === 'others'
-            ){
+          if(this._isOthersServiceType(serviceType)){
             this.showOtherService = true;
             this.otherService.addValidators([CustomValidators.required]);
             return;
@@ -432,6 +431,11 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
       })
 
     ).subscribe();
+  }
+  private _isOthersServiceType(serviceType?:AdminLookup) {
+    if(!serviceType) return false;
+    return serviceType.enName.toLocaleLowerCase() === 'other' ||
+           serviceType.enName.toLocaleLowerCase() === 'others'
   }
   private validateSingleLicense(
     license: OrganizationsEntitiesSupport
@@ -485,6 +489,9 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
       .loadAsLookups(AdminLookupTypeEnum.SERVICE_TYPE)
       .subscribe((list) => {
         this.serviceTypes = list;
+        const id = this.serviceType.value;
+        const serviceType = this.serviceTypes.find((x) => x.id === id)
+        this.showOtherService = this._isOthersServiceType(serviceType);
       });
   }
 
