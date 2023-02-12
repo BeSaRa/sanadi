@@ -398,6 +398,11 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
           }
         }),
         // allow only if the user select license
+        filter<{ selected: AwarenessActivitySuggestion, details: AwarenessActivitySuggestion }, any>
+        ((selection): selection is { selected: AwarenessActivitySuggestion, details: AwarenessActivitySuggestion } => {
+          return !!(selection);
+        }),
+        // allow only if the user select license
         takeUntil(this.destroy$)
       )
       .subscribe((selection) => {

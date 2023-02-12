@@ -1,3 +1,5 @@
+import { AwarenessActivitySuggestionComponent } from './../../../modules/general-services/pages/awareness-activity-suggestion/awareness-activity-suggestion.component';
+import { AwarenessActivitySuggestion } from '@models/awareness-activity-suggestion';
 import {CoordinationWithOrganizationsRequest} from '@app/models/coordination-with-organizations-request';
 import {IGeneralAssociationMeetingAttendanceSpecialActions} from '@contracts/i-general-association-meeting-attendance-special-actions';
 import {IGeneralAssociationMeetingAttendanceApprove} from '@contracts/i-general-association-meeting-attendance-approve';
@@ -5,6 +7,7 @@ import {IGeneralAssociationMeetingAttendanceComponent} from '@contracts/i-genera
 import {IGeneralAssociationMeetingAttendanceComplete} from '@contracts/i-general-association-meeting-attendance-complete';
 import {ITransferFundsAbroadComponent} from '@contracts/i-transfer-funds-abroad-component';
 import {ITransferIndividualFundsAbroadComplete} from '@contracts/i-transfer-individual-funds-abroad-complete';
+
 import {
   AfterViewInit,
   ApplicationRef,
@@ -33,7 +36,7 @@ import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {ToastService} from '@app/services/toast.service';
 import {InboxService} from '@app/services/inbox.service';
 import {isObservable, merge, Observable, of, Subject} from 'rxjs';
-import {filter, startWith, switchMap, takeUntil, tap} from 'rxjs/operators';
+import {filter, ignoreElements, startWith, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {TabComponent} from '@app/shared/components/tab/tab.component';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {SaveTypes} from '@app/enums/save-types';
@@ -58,13 +61,13 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
 
 
   constructor(private route: ActivatedRoute,
-              private injector: Injector,
-              private employeeService: EmployeeService,
-              public lang: LangService,
-              private router: Router,
-              private toast: ToastService,
-              private appRef: ApplicationRef,
-              private inboxService: InboxService) {
+    private injector: Injector,
+    private employeeService: EmployeeService,
+    public lang: LangService,
+    private router: Router,
+    private toast: ToastService,
+    private appRef: ApplicationRef,
+    private inboxService: InboxService) {
     this.render = this.route.snapshot.data.render as string;
     if (!this.render) {
       throw Error(`Please Provide render property in this route ${route.snapshot.url}`);
@@ -78,10 +81,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
 
   private readonly render: string;
   private componentRef!: ComponentRef<EServicesGenericComponent<CaseModel<any, any>, BaseGenericEService<any>>>;
-  @ViewChild('internalContainer', {read: ViewContainerRef})
+  @ViewChild('internalContainer', { read: ViewContainerRef })
   internalContainer!: ViewContainerRef;
 
-  @ViewChild('externalContainer', {read: ViewContainerRef})
+  @ViewChild('externalContainer', { read: ViewContainerRef })
   externalContainer!: ViewContainerRef;
 
   @ViewChild(StepCheckListComponent)
@@ -132,7 +135,8 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   ];
 
   approveWithSaveServices: number[] = [
-    CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE
+    CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE,
+    CaseTypes.AWARENESS_ACTIVITY_SUGGESTION,
   ];
 
   initialApproveWithSaveServices: number[] = [
@@ -274,8 +278,8 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
             return false;
           }
           if (item.caseType === CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST) {
-            const model = item as CoordinationWithOrganizationsRequest;
-            return !model.isApproved;
+            const model = item as CoordinationWithOrganizationsRequest
+            return this._isAllowedToSaveAtSearch(model);
           }
           // show if external user or service which are only for internal user
           return !this.internal || this.internalUserServices.includes(item.getCaseType());
@@ -767,7 +771,8 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         askChecklist: true,
         show: (item: CaseModel<any, any>) => {
           const model = item as unknown as IGeneralAssociationMeetingAttendanceFinalApprove;
-          return (item.getCaseType() === CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE && (model.isManagerFinalReviewStep())) || item.caseStatus === CommonCaseStatus.FINAL_APPROVE;
+          return (item.getCaseType() === CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE
+            && (model.isManagerFinalReviewStep()) || item.caseStatus === CommonCaseStatus.FINAL_APPROVE);
         },
         onClick: (item: CaseModel<any, any>) => {
           const model = item as unknown as IGeneralAssociationMeetingAttendanceFinalApprove;
@@ -852,7 +857,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         askChecklist: true,
         runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
         show: (item: CaseModel<any, any>) => {
-          return !item.getResponses().length || item.getResponses().includes(WFResponseType.KNEW);
+          return !!(item.getResponses().length && item.getResponses().includes(WFResponseType.KNEW));
         },
         onClick: (item: CaseModel<any, any>) => {
           this.knewAction(item);
@@ -861,12 +866,12 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       // seen
       {
         type: 'action',
-        icon: 'mdi-book-check',
+        icon: 'mdi-eye',
         label: 'task_seen',
         askChecklist: true,
         runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
         show: (item: CaseModel<any, any>) => {
-          return !item.getResponses().length || item.getResponses().includes(WFResponseType.SEEN);
+          return !!(item.getResponses().length && item.getResponses().includes(WFResponseType.KNEW));
         },
         onClick: (item: CaseModel<any, any>) => {
           this.seenAction(item);
@@ -1020,7 +1025,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         askChecklist: true,
         runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
         show: (item: CaseModel<any, any>) => {
-          return item.getResponses().includes(WFResponseType.CLOSE);
+          return item.getResponses().includes(WFResponseType.CLOSE)
         },
         onClick: (item: CaseModel<any, any>) => {
           this.closeAction(item);
@@ -1287,6 +1292,16 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     }
     return !item.isInitialApproved() || !this.internal;
   }
+  private _isAllowedToSaveAtSearch(model:CoordinationWithOrganizationsRequest){
+    if(this.employeeService.isInternalUser() && !model.isApproved){
+      return true;
+    }
+    if(this.employeeService.isExternalUser() && model.isApproved && !model.isFinalApproved()){
+      return true;
+    }
+
+    return false;
+  }
 
   private approveAction(item: CaseModel<any, any>) {
     if (this.isApproveWithSave(item)) {
@@ -1297,6 +1312,12 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         const year = component.year.value;
 
         model.approveWithSave(component.selectedInternalUsers, meetingDate, year).onAfterClose$.subscribe(actionTaken => {
+          actionTaken && this.navigateToSamePageThatUserCameFrom();
+        });
+      } else if (item.getCaseType() === CaseTypes.AWARENESS_ACTIVITY_SUGGESTION) {
+        const model = item as unknown as AwarenessActivitySuggestion;
+        const component = this.component as unknown as AwarenessActivitySuggestionComponent;
+        model.approveWithSave(component.form).onAfterClose$.subscribe(actionTaken => {
           actionTaken && this.navigateToSamePageThatUserCameFrom();
         });
       }

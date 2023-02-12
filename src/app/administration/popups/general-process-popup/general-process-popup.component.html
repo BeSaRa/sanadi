@@ -107,12 +107,17 @@
           <div class="col-12 col-lg-3 border-end" style="min-width: 300px;">
             <div class="d-flex">
               <h6 class="title mb-3">{{ lang.map.lbl_add_template_field }}</h6>
-              <span class="form-check form-switch switch-action ms-auto">
-                <input formControlName="status" [readonly]="isViewForm" class="form-check-input" type="checkbox"
-                  tooltip="{{statusField.value == commonStatusEnum.ACTIVATED ? lang.map.btn_deactivate : lang.map.btn_activate}}">
-              </span>
             </div>
             <div class="row">
+              <div class="col-12 mb-4 position-relative">
+                <div class="d-flex justify-content-between align-items-center">
+                  <label> {{statusField.value == commonStatusEnum.ACTIVATED ? lang.map.btn_deactivate :
+                    lang.map.btn_activate}}</label>
+                  <span class="form-check form-switch ms-auto">
+                    <input formControlName="status" [readonly]="isViewForm" class="form-check-input" type="checkbox">
+                  </span>
+                </div>
+              </div>
               <!-- identifying name -->
               <div class="col-12 col-md-6 col-lg-12 mb-4 position-relative">
                 <label asteriskIfRequired="identifyingName" for="identifyingName" class="form-label">{{

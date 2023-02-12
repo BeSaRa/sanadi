@@ -9,6 +9,8 @@ import {OperationTypes} from '@app/enums/operation-types.enum';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {AdminResult} from '@app/models/admin-result';
 import {CommonUtils} from '@helpers/common-utils';
+import {FileExtensionsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
+import {FileUploaderComponent} from '@app/shared/components/file-uploader/file-uploader.component';
 
 @Component({
   selector: 'other-attachment-details-popup',
@@ -21,8 +23,11 @@ export class OtherAttachmentDetailsPopupComponent implements OnInit, AfterViewIn
   form!: FormGroup;
   validateFieldsVisible: boolean = true;
   saveVisible: boolean = true;
+  allowedExtensions: string[] = [FileExtensionsEnum.PDF];
+  attachmentFile?: File;
 
   @ViewChild('dialogContent') dialogContent!: ElementRef;
+  @ViewChild('fileUploaderComponent') fileUploaderRef!: FileUploaderComponent;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<FileNetDocument>,
               public lang: LangService,
@@ -64,7 +69,7 @@ export class OtherAttachmentDetailsPopupComponent implements OnInit, AfterViewIn
   }
 
   save(): void {
-    if (!this.form.valid) {
+    if (!this.isValidForm(this.form)) {
       return;
     }
 
@@ -75,11 +80,26 @@ export class OtherAttachmentDetailsPopupComponent implements OnInit, AfterViewIn
       value = this._updateOtherAttachment();
     }
 
-    this.dialogRef.close(value);
+    this.dialogRef.close({attachment: value, file: this.fileUploaderRef.getCurrentFileList()});
   }
 
   displayFormValidity(form?: UntypedFormGroup | null, element?: HTMLElement | string): void {
     CommonUtils.displayFormValidity((form || this.form), element);
+  }
+
+  isValidForm(form: UntypedFormGroup): boolean {
+    if (this.readonly) {
+      return true;
+    }
+    return form.valid && !!this.attachmentFile;
+  }
+
+  setAttachmentFile(file: File | File[] | undefined): void {
+    if (!file || file instanceof File) {
+      this.attachmentFile = file;
+    } else {
+      this.attachmentFile = file[0];
+    }
   }
 
   private _buildForm(controls: boolean = false): void {

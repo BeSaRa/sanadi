@@ -22,6 +22,7 @@ export class FileUploaderComponent implements OnInit {
 
   uploadedFiles: File[] = [];
   uploadedFilesCount: number = 0;
+  private _currentFileList: FileList | null = null;
 
   @Input() labelKey: keyof ILanguageKeys = 'file';
   @Input() fileInputKey: keyof ILanguageKeys = 'upload_file';
@@ -77,6 +78,10 @@ export class FileUploaderComponent implements OnInit {
     } else {
       this.showFileName = !this.showFilePreview;
     }
+  }
+
+  getCurrentFileList(): FileList | null {
+    return this._currentFileList;
   }
 
   openFileBrowser($event: MouseEvent): void {
@@ -169,6 +174,7 @@ export class FileUploaderComponent implements OnInit {
     this._clearFileValues();
 
     let files = ($event.target as HTMLInputElement).files;
+    this._currentFileList = files;
 
     if (!files || files.length === 0) {
       this._clearFileUploader();

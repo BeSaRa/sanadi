@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  logs_history: string;
   the_donor: string;
   city_village: string;
   project_impl_total_cost: string;
@@ -31,7 +32,7 @@ export interface ILanguageKeys {
   location: string;
   template_cost: string;
   project_info: string;
-  menu_project_implementation : string;
+  menu_project_implementation: string;
   approved: string;
   the_selected_x_not_match_with_selected_y_and_y_will_be_erased: string;
   this_change_will_effect_the_selected_template: string;
@@ -1761,6 +1762,9 @@ export interface ILanguageKeys {
   government_agencies: string;
   countries_add_successfully: string;
   remove_countries_messages: string;
+  must_have_one_active_field_at_least: string;
+  must_have_one_required_field_at_least: string;
+  must_have_one_field_at_least_shown_on_table: string;
   menu_financial_transfers_licensing: string;
   transfer_operation: string;
   transferee_bank_account: string;

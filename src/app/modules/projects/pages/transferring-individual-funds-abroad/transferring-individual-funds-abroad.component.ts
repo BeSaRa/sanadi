@@ -86,8 +86,8 @@ export class TransferringIndividualFundsAbroadComponent extends EServicesGeneric
     requestType: () => {
       return this.getObservableField('requestType', 'requestType');
     },
-    transferType: () => {
-      return this.getObservableField('transferType', 'transferType');
+    transfereeType: () => {
+      return this.getObservableField('transfereeType', 'transfereeType');
     },
   }
 

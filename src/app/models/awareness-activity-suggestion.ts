@@ -11,7 +11,7 @@ import { ISearchFieldsMap } from './../types/types';
 import { HasLicenseDurationType } from '@contracts/has-license-duration-type';
 import { CaseTypes } from '@app/enums/case-types.enum';
 import { mixinLicenseDurationType } from "@app/mixins/mixin-license-duration";
-import { Validators } from "@angular/forms";
+import { UntypedFormGroup, Validators } from "@angular/forms";
 import { FactoryService } from "@services/factory.service";
 import { InterceptModel } from "@decorators/intercept-model";
 import { CaseModel } from "@app/models/case-model";
@@ -146,7 +146,8 @@ export class AwarenessActivitySuggestion
       followUpDate: control ? [followUpDate, [CustomValidators.required]] : followUpDate
     }
   }
-  approve(): DialogRef {
+  approveWithSave(form: UntypedFormGroup): DialogRef {
+    this.expectedDate = form.value.activity.expectedDate;
     return this.service.approve(this, WFResponseType.APPROVE)
   }
 }

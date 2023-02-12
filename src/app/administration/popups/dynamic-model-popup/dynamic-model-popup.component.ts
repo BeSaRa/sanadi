@@ -153,6 +153,18 @@ export class DynamicModelPopupComponent extends AdminGenericDialog<DynamicModel>
     this.isEditField = false;
   }
   beforeSave(model: DynamicModel, form: UntypedFormGroup): boolean | Observable<boolean> {
+    if (!this.processForm.fields.filter(f => f.status).length) {
+      this.toast.error(this.lang.map.must_have_one_active_field_at_least)
+      return false;
+    }
+    if (!this.processForm.fields.filter(f => f.required).length) {
+      this.toast.error(this.lang.map.must_have_one_required_field_at_least)
+      return false;
+    }
+    if (!this.processForm.fields.filter(f => f.showOnTable).length) {
+      this.toast.error(this.lang.map.must_have_one_field_at_least_shown_on_table)
+      return false;
+    }
     return form.valid;
   }
   prepareModel(model: DynamicModel, form: UntypedFormGroup): DynamicModel | Observable<DynamicModel> {
