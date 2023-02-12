@@ -67,6 +67,10 @@ export class ManageInternalUsersComponent implements OnInit {
     return this.internalMembersForm.get('englishName')! as FormControl;
   }
 
+  get qid(): FormControl {
+    return this.internalMembersForm.get('qid')! as FormControl;
+  }
+
   ngOnInit(): void {
     this.buildMemberForm();
     this.setReadonly();
@@ -95,7 +99,7 @@ export class ManageInternalUsersComponent implements OnInit {
     this.internalMembersForm = this.fb.group({
       arabicName: [null, [CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX), CustomValidators.pattern('AR_NUM')]],
       englishName: [null, [CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.pattern('ENG_NUM')]],
-      qid: [null, [CustomValidators.required, CustomValidators.maxLength(50)]],
+      qid: [null, [CustomValidators.maxLength(50)]],
     });
   }
 
@@ -199,7 +203,8 @@ export class ManageInternalUsersComponent implements OnInit {
   searchMembers() {
     const criteria = {
       arabicName: this.arabicName.value === '' ? null : this.arabicName.value,
-      englishName: this.englishName.value === '' ? null : this.englishName.value
+      englishName: this.englishName.value === '' ? null : this.englishName.value,
+      identificationNumber: this.qid.value === '' ? null : this.qid.value,
     };
     this.internalUserService.searchByArabicOrEnglishName(criteria)
       .pipe(tap(members => !members.length && this.dialog.info(this.lang.map.no_result_for_your_search_criteria)))
