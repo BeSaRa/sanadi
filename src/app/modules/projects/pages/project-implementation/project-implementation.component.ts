@@ -179,7 +179,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
   }
 
   get projectTotalCost(): AbstractControl {
-    return this.form && this.basicInfo.get('projectTotalCost')!
+    return this.form && this.projectInfo.get('projectTotalCost')!
   }
 
   // it should be
