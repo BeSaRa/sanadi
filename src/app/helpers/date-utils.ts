@@ -1,17 +1,17 @@
-import {IAngularMyDpOptions, IMyDateModel} from 'angular-mydatepicker';
-import {IAppConfig} from '@contracts/i-app-config';
-import {FactoryService} from '@services/factory.service';
-import {ConfigurationService} from '@services/configuration.service';
+import { IAngularMyDpOptions, IMyDateModel } from 'angular-mydatepicker';
+import { IAppConfig } from '@contracts/i-app-config';
+import { FactoryService } from '@services/factory.service';
+import { ConfigurationService } from '@services/configuration.service';
 import * as dayjs from 'dayjs';
-import {IDatepickerCustomOptions} from '@contracts/i-datepicker-custom-options';
-import {DatepickerControlsMap, DatepickerOptionsMap} from '@app/types/types';
+import { IDatepickerCustomOptions } from '@contracts/i-datepicker-custom-options';
+import { DatepickerControlsMap, DatepickerOptionsMap } from '@app/types/types';
 
 export class DateUtils {
   static changeDateToDatepicker(dateValue: any): IMyDateModel {
     if (!dateValue || dateValue.hasOwnProperty('singleDate')) {
       return dateValue;
     }
-    return {isRange: false, singleDate: {jsDate: new Date(dateValue)}, dateRange: undefined};
+    return { isRange: false, singleDate: { jsDate: new Date(dateValue) }, dateRange: undefined };
   }
 
   static changeDateFromDatepicker(dateValue: IMyDateModel): (Date | undefined) {
@@ -66,7 +66,7 @@ export class DateUtils {
       dateRange: false,
       dateFormat: format.toLowerCase(),
       inputFieldValidation: false,
-      divHostElement: {enabled: true, placeholder: ''},
+      divHostElement: { enabled: true, placeholder: '' },
       appendSelectorToBody: customOptions.appendToBody || false,
       openSelectorTopOfInput: customOptions.openSelectorTopOfInput || false
     };
@@ -141,7 +141,7 @@ export class DateUtils {
       let toFieldDateOptions: IAngularMyDpOptions = this.getDatePickerOptionsClone(options.controlOptionsMap[options.toFieldName]);
       const fromDate = this.changeDateFromDatepicker(options.controlsMap[options.fromFieldName]?.value);
       if (!fromDate) {
-        toFieldDateOptions.disableUntil = {year: 0, month: 0, day: 0};
+        toFieldDateOptions.disableUntil = { year: 0, month: 0, day: 0 };
       } else {
         const disableDate = new Date(fromDate);
         disableDate.setHours(0, 0, 0, 0); // set fromDate to start of day
@@ -167,7 +167,7 @@ export class DateUtils {
       let fromFieldDateOptions: IAngularMyDpOptions = this.getDatePickerOptionsClone(options.controlOptionsMap[options.fromFieldName]);
       const toDate = this.changeDateFromDatepicker(options.controlsMap[options.toFieldName]?.value);
       if (!toDate) {
-        fromFieldDateOptions.disableSince = {year: 0, month: 0, day: 0};
+        fromFieldDateOptions.disableSince = { year: 0, month: 0, day: 0 };
       } else {
         const disableDate = new Date(toDate);
         if (!options.disableSelectedFromRelated) {
@@ -214,11 +214,7 @@ export class DateUtils {
   static getHoursList(): { val: number, key: string }[] {
     return [
       {
-        val: 0,
-        key: '12:00 AM'
-      },
-      {
-        val: 1,
+        val: 2,
         key: '01:00 AM'
       },
       {
@@ -263,7 +259,7 @@ export class DateUtils {
       },
       {
         val: 12,
-        key: '12:00 PM'
+        key: '12:00 AM'
       },
       {
         val: 13,
@@ -308,7 +304,11 @@ export class DateUtils {
       {
         val: 23,
         key: '11:00 PM'
-      }
+      },
+      {
+        val: 24,
+        key: '12:00 PM'
+      },
     ];
   }
 }
