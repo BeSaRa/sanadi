@@ -13,14 +13,14 @@ import {EServicesGenericComponent} from "@app/generics/e-services-generic-compon
 import {ProjectImplementation} from "@app/models/project-implementation";
 import {LangService} from '@app/services/lang.service';
 import {ProjectImplementationService} from "@services/project-implementation.service";
-import {merge, Observable, of, Subject} from 'rxjs';
+import {iif, merge, Observable, of, ReplaySubject, Subject} from 'rxjs';
 import {DialogService} from "@services/dialog.service";
 import {ToastService} from "@services/toast.service";
 import {Lookup} from "@models/lookup";
 import {LookupService} from "@services/lookup.service";
 import {ServiceRequestTypes} from "@app/enums/service-request-types";
 import {CommonUtils} from "@helpers/common-utils";
-import {catchError, exhaustMap, filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
+import {catchError, exhaustMap, filter, map, pairwise, startWith, switchMap, takeUntil, tap} from "rxjs/operators";
 import {UserClickOn} from "@app/enums/user-click-on.enum";
 import {Country} from "@models/country";
 import {ActivatedRoute} from "@angular/router";
@@ -74,7 +74,11 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
   remainingAmount: number = 0;
   selectedLicense?: ProjectImplementation;
 
-  permitAmountConsumed = false
+  permitAmountConsumed = false;
+
+  userAnswer: ReplaySubject<UserClickOn> = new ReplaySubject<UserClickOn>(1)
+
+  oldStoredValues: Record<string, number | null> = {}
 
   constructor(public lang: LangService,
               public fb: UntypedFormBuilder,
@@ -216,6 +220,8 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
 
   _afterBuildForm(): void {
     this.handleReadonly()
+    this.setDefaultValues()
+    this.listenToFieldsWillEffectTemplateAndFundSources()
     this.loadLicenseById()
     this.listenToLicenseSearch()
     this.listenToMainDacOchaChanges()
@@ -225,7 +231,6 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     this.listenToImplementationTemplateChanges()
     this.listenToFundingResources()
 
-    this.setDefaultValues()
     this.fundingResources.setValidators(this.validateFundingResources([
       'implementationFundraising',
       'financialGrant',
@@ -466,7 +471,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
   }
 
   private listenToMainDacOchaChanges() {
-    merge(this.mainDACCategory.valueChanges, this.mainUNOCHACategory.valueChanges)
+    merge(this.mainDACCategory.valueChanges.pipe(this.holdToGetUserResponse()), this.mainUNOCHACategory.valueChanges.pipe(this.holdToGetUserResponse()))
       .pipe(takeUntil(this.destroy$))
       .subscribe((value: number) => {
         this.subUNOCHACategory.setValue(null)
@@ -478,6 +483,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
 
   private listenToWorkAreaChanges() {
     this.projectWorkArea.valueChanges
+      .pipe(this.holdToGetUserResponse())
       .pipe(takeUntil(this.destroy$))
       .subscribe((value: ProjectWorkArea) => {
         const dacFields = [
@@ -519,6 +525,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
 
   private listenToDomainChange(): void {
     this.domain.valueChanges
+      .pipe(this.holdToGetUserResponse())
       .pipe(takeUntil(this.destroy$))
       .subscribe((value: DomainTypes) => {
         this.mainUNOCHACategory.setValue(null, {emitEvent: false})
@@ -696,5 +703,83 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
 
   onAmountConsumed($event: boolean) {
     this.permitAmountConsumed = $event
+  }
+
+  private listenToFieldsWillEffectTemplateAndFundSources(): void {
+    const fields: { ctrl: AbstractControl, key: string }[] = [
+      {ctrl: this.projectWorkArea, key: 'projectWorkArea'},
+      {ctrl: this.internalProjectClassification, key: 'internalProjectClassification'},
+      {ctrl: this.domain, key: 'domain'},
+      {ctrl: this.mainUNOCHACategory, key: 'mainUNOCHACategory'},
+      {ctrl: this.mainDACCategory, key: 'projectWorkArea'},
+      {ctrl: this.beneficiaryCountry, key: 'beneficiaryCountry'},
+    ]
+
+    const observables = fields.map((item) => {
+      this.oldStoredValues[item.key] = item.ctrl.value;
+      return this.listenToControl(item.ctrl, item.key)
+    })
+
+    merge(...observables)
+      .pipe(tap(_ => this.userAnswer.next(this.hasSelectedTemplate() ? UserClickOn.NO : UserClickOn.YES)))
+      // check if there is any template/fundResource selected and if any display popup to confirm
+      .pipe(switchMap((value: { oldValue: number, newValue: number, field: string }) => {
+        return this.dialog
+          .confirm(this.lang.map.this_change_will_effect_the_selected_template)
+          .onAfterClose$.pipe(map(((answer: UserClickOn) => {
+            return {
+              ...value,
+              answer
+            }
+          })))
+      }))
+      // if not don't display the popup
+      .subscribe(({answer, field, oldValue}) => {
+        answer == UserClickOn.YES ? (() => {
+          // user click yes
+          this.implementationTemplate.setValue([])
+          this.implementingAgencyList.setValue([])
+          this.implementingAgencyType.setValue(null)
+          this.userAnswer.next(UserClickOn.YES)
+        })() : (() => {
+          const currentOldValue = this.oldStoredValues[field] || oldValue;
+          const ctrl = fields.find(i => i.key === field)!.ctrl
+          ctrl.setValue(currentOldValue, {emitEvent: false})
+          this.oldStoredValues[field] = currentOldValue
+        })()
+      })
+  }
+
+  private hasSelectedTemplate(): boolean {
+    return !!(this.implementationTemplate.value ?? []).length
+  }
+
+  private listenToControl(ctrl: AbstractControl, key: string): Observable<{
+    oldValue: number,
+    newValue: number,
+    field: string
+  }> {
+    const value = (ctrl.value) as number
+    return ctrl.valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .pipe(startWith<number, number>(value))
+      .pipe(pairwise())
+      .pipe(map(value => {
+        return {
+          oldValue: this.oldStoredValues[key] || value[0],
+          newValue: value[1],
+          field: key
+        }
+      }))
+      .pipe(filter(() => this.hasSelectedTemplate()))
+  }
+
+
+  private holdToGetUserResponse() {
+    return switchMap((value: number) => {
+      return iif(() => this.hasSelectedTemplate(),
+        this.userAnswer.pipe(filter(v => v === UserClickOn.YES)).pipe(map(_ => value)),
+        of(value))
+    });
   }
 }
