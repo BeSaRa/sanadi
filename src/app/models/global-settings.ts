@@ -5,6 +5,7 @@ import {LangService} from '@services/lang.service';
 import {InterceptModel} from '@decorators/intercept-model';
 import {GlobalSettingsInterceptor} from '@model-interceptors/global-settings-interceptor';
 import {CustomValidators} from '@app/validators/custom-validators';
+import { Validators } from '@angular/forms';
 
 const interceptor: GlobalSettingsInterceptor = new GlobalSettingsInterceptor();
 
@@ -60,17 +61,23 @@ export class GlobalSettings extends BaseModel<GlobalSettings, GlobalSettingsServ
       sessionTimeout: controls ? [sessionTimeout, [
         CustomValidators.required,
         CustomValidators.maxLength(9),
-        CustomValidators.number
+        CustomValidators.number,
+        Validators.max(300),
+        Validators.min(1)
       ]] : sessionTimeout,
       fileSize: controls ? [fileSize, [
         CustomValidators.required,
         CustomValidators.maxLength(9),
-        CustomValidators.number
+        CustomValidators.number,
+        Validators.max(30),
+        Validators.min(5)
       ]] : fileSize,
       inboxRefreshInterval: controls ? [inboxRefreshInterval, [
         CustomValidators.required,
         CustomValidators.maxLength(9),
-        CustomValidators.number
+        CustomValidators.number,
+        Validators.max(30),
+        Validators.min(5)
       ]] : inboxRefreshInterval,
       fileTypeArr: controls ? [fileTypeArr, [
         CustomValidators.requiredArray
