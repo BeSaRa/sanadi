@@ -1,36 +1,36 @@
-import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {TabComponent} from '@app/shared/components/tab/tab.component';
-import {AttachmentsComponent} from '@app/shared/components/attachments/attachments.component';
-import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
-import {OpenFrom} from '@app/enums/open-from.enum';
-import {EmploymentSearchCriteria} from '@app/models/employment-search-criteria';
-import {JobTitleService} from '@app/services/job-title.service';
-import {DateUtils} from '@app/helpers/date-utils';
-import {ToastService} from '@app/services/toast.service';
-import {DialogService} from '@app/services/dialog.service';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
-import {IKeyValue} from '@app/interfaces/i-key-value';
-import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {CaseTypes} from '@app/enums/case-types.enum';
-import {Component, Input, ViewChild} from '@angular/core';
-import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import {Observable, of, Subject} from 'rxjs';
-import {EmploymentRequestType} from '@app/enums/service-request-types';
-import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
-import {SaveTypes} from '@app/enums/save-types';
-import {Employee} from '@app/models/employee';
-import {JobTitle} from '@app/models/job-title';
-import {Lookup} from '@app/models/lookup';
-import {NavigationService} from '@app/services/navigation.service';
-import {LookupService} from '@app/services/lookup.service';
-import {LangService} from '@app/services/lang.service';
-import {EmploymentCategory} from '@app/enums/employment-category.enum';
-import {AdminResult} from '@app/models/admin-result';
-import {catchError, exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
-import {Employment} from '@app/models/employment';
-import {EmploymentService} from '@app/services/employment.service';
-import {EmployeesDataComponent} from '../../shared/employees-data/employees-data.component';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { TabComponent } from '@app/shared/components/tab/tab.component';
+import { AttachmentsComponent } from '@app/shared/components/attachments/attachments.component';
+import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
+import { OpenFrom } from '@app/enums/open-from.enum';
+import { EmploymentSearchCriteria } from '@app/models/employment-search-criteria';
+import { JobTitleService } from '@app/services/job-title.service';
+import { DateUtils } from '@app/helpers/date-utils';
+import { ToastService } from '@app/services/toast.service';
+import { DialogService } from '@app/services/dialog.service';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
+import { IKeyValue } from '@app/interfaces/i-key-value';
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
+import { CaseTypes } from '@app/enums/case-types.enum';
+import { Component, Input, ViewChild } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { Observable, of, Subject } from 'rxjs';
+import { EmploymentRequestType } from '@app/enums/service-request-types';
+import { FileIconsEnum } from '@app/enums/file-extension-mime-types-icons.enum';
+import { SaveTypes } from '@app/enums/save-types';
+import { Employee } from '@app/models/employee';
+import { JobTitle } from '@app/models/job-title';
+import { Lookup } from '@app/models/lookup';
+import { NavigationService } from '@app/services/navigation.service';
+import { LookupService } from '@app/services/lookup.service';
+import { LangService } from '@app/services/lang.service';
+import { EmploymentCategory } from '@app/enums/employment-category.enum';
+import { AdminResult } from '@app/models/admin-result';
+import { catchError, exhaustMap, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { Employment } from '@app/models/employment';
+import { EmploymentService } from '@app/services/employment.service';
+import { EmployeesDataComponent } from '../../shared/employees-data/employees-data.component';
 
 @Component({
   templateUrl: './employment.component.html',
@@ -145,11 +145,11 @@ export class EmploymentComponent extends EServicesGenericComponent<Employment, E
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
     if (!this.requestTypeField.value) {
-      this.dialog.error(this.lang.map.msg_please_select_x_to_continue.change({x: this.lang.map.request_type}));
+      this.dialog.error(this.lang.map.msg_please_select_x_to_continue.change({ x: this.lang.map.request_type }));
       return false;
     }
     if (!this.category.value) {
-      this.dialog.error(this.lang.map.msg_please_select_x_to_continue.change({x: this.lang.map.order_type}));
+      this.dialog.error(this.lang.map.msg_please_select_x_to_continue.change({ x: this.lang.map.order_type }));
       return false;
     }
     if (saveType === SaveTypes.DRAFT) {
@@ -179,7 +179,13 @@ export class EmploymentComponent extends EServicesGenericComponent<Employment, E
         ),
         map(_map => {
           delete _map.size;
-          return Object.keys(_map).filter(k => _map[k]).length == 0;
+          console.log(Object.keys(_map).reduce((prv, cur) => {
+            console.log(prv, cur, _map[cur], Object.keys(_map[cur]))
+            return prv + Object.keys(_map[cur]).filter((k: string) => _map[cur][k]).length;
+          }, 0))
+          return Object.keys(_map).reduce((prv, cur) => {
+            return prv + Object.keys(_map[cur]).filter((k: string) => _map[cur][k]).length;
+          }, 0) == 0;
         }),
       ));
   }
@@ -450,10 +456,13 @@ export class EmploymentComponent extends EServicesGenericComponent<Employment, E
   dublicateIdintifierMessage(data: any) {
     delete data.size;
     let message = '';
-    Object.keys(data.qID).filter(k => data.qID[k]).forEach((k) => {
+    data.qID && Object.keys(data.qID).filter(k => data.qID[k]).forEach((k) => {
       message += this.lang.map.employee_with_identification + ' ' + k + ' ' + this.lang.map.is_exist_before + '\n';
     })
-    Object.keys(data.jobNumber).filter(k => data.jobNumber[k]).forEach((k) => {
+    data.passportNumber && Object.keys(data.passportNumber).filter(k => data.passportNumber[k]).forEach((k) => {
+      message += this.lang.map.passport_number + ' ' + k + ' ' + this.lang.map.is_exist_before + '\n';
+    })
+    data.jobNumber && Object.keys(data.jobNumber).filter(k => data.jobNumber[k]).forEach((k) => {
       message += this.lang.map.employee_with_jobNumber + ' ' + k + ' ' + this.lang.map.is_exist_before + '\n';
     })
     if (message) {

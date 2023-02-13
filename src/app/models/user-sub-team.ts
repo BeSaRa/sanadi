@@ -1,3 +1,4 @@
+import { AdminResult } from '@app/models/admin-result';
 import { LangService } from './../services/lang.service';
 import { INames } from './../interfaces/i-names';
 import { UserSubTeamService } from './../services/user-sub-team.service';
@@ -20,6 +21,7 @@ export class UserSubTeam extends Cloneable<UserSubTeam> {
   generalUserId!: number;
   subTeamId!: number;
   status!: number;
+  subTeamInfo!: AdminResult;
   // not related to the model
   arName?: string;
   enName?: string;
@@ -32,6 +34,11 @@ export class UserSubTeam extends Cloneable<UserSubTeam> {
     this.langService = FactoryService.getService('LangService');
   }
 
+  denormalize(): UserSubTeam {
+    this.arName = this.subTeamInfo.arName;
+    this.enName = this.subTeamInfo.enName;
+    return this;
+  }
   getName(): string | undefined {
     return this[(this.langService.map.lang + 'Name') as keyof INames];
   }

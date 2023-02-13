@@ -549,7 +549,7 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
                   if (!data) {
                     return of(null);
                   }
-                  return licenses[0];
+                  return data;
                 }),
                 catchError(() => {
                   return of(null);
