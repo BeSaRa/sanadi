@@ -63,8 +63,10 @@
       &:focus-visible {
         outline: none;
       }
-      &.active, &:active {
-        background-color: #e9ecef;
+
+      &:hover, &.active, &:active {
+        background: $primary !important;
+        color: white !important;
       }
     }
   }

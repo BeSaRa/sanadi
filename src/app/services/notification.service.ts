@@ -1,6 +1,6 @@
-import {Injectable, OnDestroy, OnInit} from '@angular/core';
+import {Injectable, OnDestroy} from '@angular/core';
 import {Observable, of, Subject} from 'rxjs';
-import {catchError, map, share, takeUntil, tap} from 'rxjs/operators';
+import {catchError, map, share, takeUntil} from 'rxjs/operators';
 import {EmployeeService} from '@services/employee.service';
 import {NotificationResponse} from '@models/notification-response';
 import {CastResponse} from '@decorators/cast-response';
@@ -9,6 +9,12 @@ import {HttpClient, HttpContext} from '@angular/common/http';
 import {NotificationResponseInterceptor} from '@model-interceptors/notification-response-interceptor';
 import {SharedService} from '@services/shared.service';
 import {NO_LOADER_TOKEN} from '@app/http-context/tokens';
+import {FactoryService} from '@services/factory.service';
+import {InboxService} from '@services/inbox.service';
+import {Router} from '@angular/router';
+import {DialogService} from '@services/dialog.service';
+import {LangService} from '@services/lang.service';
+import {ILanguageKeys} from '@contracts/i-language-keys';
 
 @Injectable({
   providedIn: 'root'
@@ -24,8 +30,15 @@ export class NotificationService implements OnDestroy {
 
   constructor(private configService: ConfigurationService,
               private http: HttpClient,
+              private router: Router,
               private sharedService: SharedService,
+              private dialog: DialogService,
+              private inboxService: InboxService, // used in NotificationResponse model
               private employeeService: EmployeeService) {
+    FactoryService.registerService('NotificationService', this);
+  }
+
+  private loadAllNotifications(): void {
     this._loadAllNotifications().subscribe((result) => {
       this.notificationsList = result;
       this.updateUnreadCount();
@@ -48,6 +61,7 @@ export class NotificationService implements OnDestroy {
   @CastResponse(() => NotificationResponse)
   getNotifications() {
     if (!this.notificationsSource) {
+      this.loadAllNotifications();
       this.initNotifications();
     }
     return this.notifications$;
@@ -80,6 +94,16 @@ export class NotificationService implements OnDestroy {
             this.updateUnreadCount();
           });
       });
+  }
+
+  openInfoNotification(notification: NotificationResponse): void {
+    const lang: LangService = FactoryService.getService('LangService');
+    let infoMsg: keyof ILanguageKeys = 'msg_terminated_notification';
+    this.dialog.info(lang.map[infoMsg]);
+  }
+
+  openNotification(notification: NotificationResponse): void {
+    this.router.navigate([notification.itemRoute], { queryParams: { item: notification.itemDetails } }).then();
   }
 
   private initNotifications() {
@@ -120,5 +144,7 @@ export class NotificationService implements OnDestroy {
   stopNotifications() {
     this.notificationsSource && this.notificationsSource.close();
     this.notificationsSource = undefined;
+    this.notificationsList = [];
+    this.unreadCount = 0;
   }
 }

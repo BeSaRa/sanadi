@@ -48,7 +48,7 @@ export enum ActionIconsEnum {
   HAS_VALUE = 'mdi-check',
   HAS_NO_VALUE = 'mdi-close',
   NOTIFICATION_BELL = 'mdi-bell-outline',
-  NOTIFICATION_USER_INBOX = 'mdi-account-outline',
+  NOTIFICATION_USER_INBOX = 'mdi-account',
   NOTIFICATION_TEAM_INBOX = 'mdi-account-group',
   NOTIFICATION_TERMINATED = 'mdi-stop'
 }

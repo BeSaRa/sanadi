@@ -1,6 +1,7 @@
 export interface ILanguageKeys {
   msg_full_amount_used: string;
   more: string;
+  msg_terminated_notification: string;
   notification_user_inbox: string;
   notification_team_inbox: string;
   notification_terminated: string;

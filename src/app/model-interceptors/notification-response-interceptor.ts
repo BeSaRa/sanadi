@@ -18,6 +18,11 @@ export class NotificationResponseInterceptor implements IModelInterceptor<Notifi
         model.parametersParsed = undefined;
       }
     }
+    try {
+      model.setNotificationItemRoute();
+    } catch (e) {
+
+    }
     return model;
   }
 
@@ -27,6 +32,9 @@ export class NotificationResponseInterceptor implements IModelInterceptor<Notifi
   }
 
   private static _deleteBeforeSend(model: Partial<NotificationResponse>): void {
+    delete model.service;
+    delete model.itemRoute;
+    delete model.itemDetails;
     delete model.parametersParsed;
   }
 }
