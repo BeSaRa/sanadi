@@ -1,12 +1,20 @@
-import { AwarenessActivitySuggestionComponent } from './../../../modules/general-services/pages/awareness-activity-suggestion/awareness-activity-suggestion.component';
-import { AwarenessActivitySuggestion } from '@models/awareness-activity-suggestion';
-import { CoordinationWithOrganizationsRequest } from '@app/models/coordination-with-organizations-request';
-import { IGeneralAssociationMeetingAttendanceSpecialActions } from '@contracts/i-general-association-meeting-attendance-special-actions';
-import { IGeneralAssociationMeetingAttendanceApprove } from '@contracts/i-general-association-meeting-attendance-approve';
-import { IGeneralAssociationMeetingAttendanceComponent } from '@contracts/i-general-association-meeting-attendance-component';
-import { IGeneralAssociationMeetingAttendanceComplete } from '@contracts/i-general-association-meeting-attendance-complete';
-import { ITransferFundsAbroadComponent } from '@contracts/i-transfer-funds-abroad-component';
-import { ITransferIndividualFundsAbroadComplete } from '@contracts/i-transfer-individual-funds-abroad-complete';
+import {
+  AwarenessActivitySuggestionComponent
+} from '@modules/general-services/pages/awareness-activity-suggestion/awareness-activity-suggestion.component';
+import {AwarenessActivitySuggestion} from '@models/awareness-activity-suggestion';
+import {CoordinationWithOrganizationsRequest} from '@app/models/coordination-with-organizations-request';
+import {
+  IGeneralAssociationMeetingAttendanceSpecialActions
+} from '@contracts/i-general-association-meeting-attendance-special-actions';
+import {IGeneralAssociationMeetingAttendanceApprove} from '@contracts/i-general-association-meeting-attendance-approve';
+import {
+  IGeneralAssociationMeetingAttendanceComponent
+} from '@contracts/i-general-association-meeting-attendance-component';
+import {
+  IGeneralAssociationMeetingAttendanceComplete
+} from '@contracts/i-general-association-meeting-attendance-complete';
+import {ITransferFundsAbroadComponent} from '@contracts/i-transfer-funds-abroad-component';
+import {ITransferIndividualFundsAbroadComplete} from '@contracts/i-transfer-individual-funds-abroad-complete';
 
 import {
   AfterViewInit,
@@ -36,20 +44,22 @@ import { ILanguageKeys } from '@app/interfaces/i-language-keys';
 import { ToastService } from '@app/services/toast.service';
 import { InboxService } from '@app/services/inbox.service';
 import { isObservable, merge, Observable, of, Subject } from 'rxjs';
-import { filter, ignoreElements, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
-import { TabComponent } from '@app/shared/components/tab/tab.component';
-import { OperationTypes } from '@app/enums/operation-types.enum';
-import { SaveTypes } from '@app/enums/save-types';
-import { IESComponent } from '@app/interfaces/iescomponent';
-import { ExternalUser } from '@app/models/external-user';
-import { InternalUser } from '@app/models/internal-user';
-import { ChecklistItem } from '@app/models/checklist-item';
-import { StepCheckListComponent } from '@app/shared/components/step-check-list/step-check-list.component';
-import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
-import { ActionIconsEnum } from '@app/enums/action-icons-enum';
-import { UserClickOn } from '@app/enums/user-click-on.enum';
-import { BaseGenericEService } from '@app/generics/base-generic-e-service';
-import { IGeneralAssociationMeetingAttendanceFinalApprove } from '@contracts/i-general-association-meeting-attendance-final-approve';
+import { filter, startWith, switchMap, takeUntil, tap} from 'rxjs/operators';
+import {TabComponent} from '@app/shared/components/tab/tab.component';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {SaveTypes} from '@app/enums/save-types';
+import {IESComponent} from '@app/interfaces/iescomponent';
+import {ExternalUser} from '@app/models/external-user';
+import {InternalUser} from '@app/models/internal-user';
+import {ChecklistItem} from '@app/models/checklist-item';
+import {StepCheckListComponent} from '@app/shared/components/step-check-list/step-check-list.component';
+import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {BaseGenericEService} from '@app/generics/base-generic-e-service';
+import {
+  IGeneralAssociationMeetingAttendanceFinalApprove
+} from '@contracts/i-general-association-meeting-attendance-final-approve';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -61,13 +71,13 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
 
 
   constructor(private route: ActivatedRoute,
-    private injector: Injector,
-    private employeeService: EmployeeService,
-    public lang: LangService,
-    private router: Router,
-    private toast: ToastService,
-    private appRef: ApplicationRef,
-    private inboxService: InboxService) {
+              private injector: Injector,
+              private employeeService: EmployeeService,
+              public lang: LangService,
+              private router: Router,
+              private toast: ToastService,
+              private appRef: ApplicationRef,
+              private inboxService: InboxService) {
     this.render = this.route.snapshot.data.render as string;
     if (!this.render) {
       throw Error(`Please Provide render property in this route ${route.snapshot.url}`);
@@ -81,10 +91,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
 
   private readonly render: string;
   private componentRef!: ComponentRef<EServicesGenericComponent<CaseModel<any, any>, BaseGenericEService<any>>>;
-  @ViewChild('internalContainer', { read: ViewContainerRef })
+  @ViewChild('internalContainer', {read: ViewContainerRef})
   internalContainer!: ViewContainerRef;
 
-  @ViewChild('externalContainer', { read: ViewContainerRef })
+  @ViewChild('externalContainer', {read: ViewContainerRef})
   externalContainer!: ViewContainerRef;
 
   @ViewChild(StepCheckListComponent)
@@ -502,7 +512,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         type: 'action',
         // icon: 'mdi-rocket-launch-outline',
         label: 'btn_save',
-        disabled: () => this.component.readonly && !this.canSave(),
+        disabled: () => this.component.form.invalid || (this.component.readonly && !this.canSave()),
         show: (item) => {
           if (this.servicesWithNoSaveDraftLaunch.includes(item.getCaseType())) {
             return false;
@@ -1295,15 +1305,12 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     }
     return !item.isInitialApproved() || !this.internal;
   }
+
   private _isAllowedToSaveAtSearch(model: CoordinationWithOrganizationsRequest) {
     if (this.employeeService.isInternalUser() && !model.isApproved) {
       return true;
     }
-    if (this.employeeService.isExternalUser() && model.isApproved && !model.isFinalApproved()) {
-      return true;
-    }
-
-    return false;
+    return this.employeeService.isExternalUser() && model.isApproved && !model.isFinalApproved();
   }
 
   private approveAction(item: CaseModel<any, any>) {

@@ -231,11 +231,15 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     this.listenToImplementationTemplateChanges()
     this.listenToFundingResources()
 
-    this.fundingResources.setValidators(this.validateFundingResources([
-      'implementationFundraising',
-      'financialGrant',
-      'selfFinancing',
-    ]))
+    this.fundingResources.setValidators([
+      this.validateFundingResources([
+        'implementationFundraising',
+        'financialGrant',
+        'selfFinancing',
+      ]),
+      this.validateFundingResources([
+        'payment',
+      ])])
   }
 
   loadLicenseById(): void {
@@ -688,7 +692,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       const totalFundResources = fields.reduce((acc, key) => {
         return acc + (group.get(key)?.getRawValue() ?? []).reduce((acc: number, item: FundingResourceContract) => acc + item.totalCost, 0)
       }, 0)
-      return this.projectTotalCost && this.projectTotalCost.value > totalFundResources ? {
+      return this.projectTotalCost && (this.projectTotalCost.value > totalFundResources) || ((this.projectTotalCost.value < totalFundResources)) ? {
         fundingResources: {
           actually: totalFundResources,
           expected: Number(this.projectTotalCost.value)
@@ -773,7 +777,6 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       }))
       .pipe(filter(() => this.hasSelectedTemplate()))
   }
-
 
   private holdToGetUserResponse() {
     return switchMap((value: number) => {
