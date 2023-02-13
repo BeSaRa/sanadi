@@ -6,7 +6,7 @@ import { DialogService } from './../../../services/dialog.service';
 import { ProcessFieldBuilder } from './process-formly-components/process-fields-builder';
 import { catchError, map } from 'rxjs/operators';
 import { CustomValidators } from './../../../validators/custom-validators';
-import { TemplateField } from './../../../models/general-process-template';
+import { TemplateField } from '../../../models/template-field';
 import { InternalDepartment } from '@app/models/internal-department';
 import { InternalDepartmentService } from './../../../services/internal-department.service';
 import { Team } from './../../../models/team';
