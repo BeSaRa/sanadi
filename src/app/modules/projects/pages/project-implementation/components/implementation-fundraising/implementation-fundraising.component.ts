@@ -124,6 +124,7 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
         this.value = value
         this.listenToControls()
         this.calculateTotal()
+        this.isFullAmountConsumed()
       })
   }
 
@@ -159,10 +160,7 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
         this.isFullAmountConsumed()
         const template = this.getTemplatePermit()
         const currentPermit = this.value[index];
-
-        template && currentPermit &&
-        template.templateId === currentPermit.templateId &&
-        currentPermit.remainingAmount === currentPermit.totalCost ? ctrl.disable() : ctrl.enable()
+        template && currentPermit && currentPermit.remainingAmount === currentPermit.totalCost ? ctrl.disable() : ctrl.enable()
       })
   }
 
@@ -258,7 +256,7 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
   }
 
   private getTemplatePermit(): ImplementationFundraising | undefined {
-    return this.value.find(item => !!item.templateId)
+    return this.value.find(item => item.isMain)
   }
 
   isFullAmountConsumed(): void {
@@ -283,7 +281,6 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
         return click === UserClickOn.YES
       }))
       .subscribe(({comment}) => {
-        console.log('comment', comment);
         this.value[index].notes = comment;
         this.onChange(this.value)
       })
