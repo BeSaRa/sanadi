@@ -1,4 +1,3 @@
-import { UserTeam } from './../../../models/user-team';
 import { UserClickOn } from '@app/enums/user-click-on.enum';
 import { SubTeamService } from '@app/services/sub-team.service';
 import { SubTeam } from '@app/models/sub-team';
@@ -103,7 +102,7 @@ export class UserSubTeamComponent implements OnInit, OnDestroy {
     const subTeam = new UserSubTeam().clone({
       generalUserId: this.model.generalUserId,
       subTeamId: this.selectedTeamControl.value.id
-    })
+    }).denormalize();
     this.subTeamService
       .createSubTeamUserLink(subTeam)
       .subscribe(() => {
