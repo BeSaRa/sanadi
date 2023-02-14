@@ -22,7 +22,7 @@ import {
 } from '@app/shared/popups/other-attachment-details-popup/other-attachment-details-popup.component';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {CommonUtils} from '@helpers/common-utils';
-
+import { GlobalSettingsService } from '@app/services/global-settings.service';
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
   selector: 'attachments',
@@ -75,8 +75,8 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
   selectedFile?: FileNetDocument;
 
   loadedAttachments: Record<number, FileNetDocument> = {};
-  allowedExtensions: string[] = [FileExtensionsEnum.PDF];
-
+  allowedExtensions: string[] = [];
+  allowedMimeType: string[] = [];
   private selectedIndex!: number;
 
   @Input()
@@ -100,7 +100,8 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
               private dialog: DialogService,
               private toast: ToastService,
               private employeeService: EmployeeService,
-              private attachmentTypeService: AttachmentTypeService) {
+              private attachmentTypeService: AttachmentTypeService,
+              private globalSettingsService:GlobalSettingsService) {
     this.attachmentTypeService.attachmentsComponent = this;
   }
 
@@ -118,8 +119,32 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
     this.listenToCaseIdChanges();
     this.listenToAddOtherAttachment();
     this.loadingStatus.next(true);
+    this.getGlobalSettings()
   }
 
+  getGlobalSettings(){
+    this.globalSettingsService.getGlobalSettings()
+    .pipe(
+      map(list => list[0].fileTypeArr)
+    )
+    .subscribe(
+      fileTypeArr=> 
+      {
+        this.globalSettingsService.getFileTypes()   
+          .pipe(
+            map(list => list.filter(ele=>fileTypeArr.includes(ele.id))),
+            map(list => list.map(ele => {return ['.' + ele.extension, ele.mimeType]}))
+          )
+          .subscribe(list => {
+            list.forEach(ele => {
+              this.allowedExtensions.push(ele[0])
+              this.allowedMimeType.push(ele[1])
+            })
+            
+          });
+      }
+    )
+  }
   private loadDocumentsByCaseId(types: FileNetDocument[]): Observable<FileNetDocument[]> {
     return this.caseId ? this.service.loadDocuments(this.caseId)
       .pipe(map(attachments => attachments.length ? this.mergeAttachments(attachments, types) : types)) : of(types);
@@ -214,7 +239,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
   uploaderFileChange($event: Event): void {
     const input = ($event.target as HTMLInputElement);
     const file = input.files?.item(0);
-    const validFile = file ? (file.type === 'application/pdf') : true;
+    const validFile = file ? (this.allowedMimeType.includes(file.type)) : true;
     !validFile ? input.value = '' : null;
     if (!validFile) {
       this.dialog.error(this.lang.map.msg_only_those_files_allowed_to_upload.change({files: this.allowedExtensions.join(',')}));

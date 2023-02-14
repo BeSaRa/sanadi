@@ -11,6 +11,8 @@ import {AdminResult} from '@app/models/admin-result';
 import {CommonUtils} from '@helpers/common-utils';
 import {FileExtensionsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 import {FileUploaderComponent} from '@app/shared/components/file-uploader/file-uploader.component';
+import { GlobalSettingsService } from '@app/services/global-settings.service';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'other-attachment-details-popup',
@@ -23,7 +25,7 @@ export class OtherAttachmentDetailsPopupComponent implements OnInit, AfterViewIn
   form!: FormGroup;
   validateFieldsVisible: boolean = true;
   saveVisible: boolean = true;
-  allowedExtensions: string[] = [FileExtensionsEnum.PDF];
+  allowedExtensions: string[] = [];
   attachmentFile?: File;
 
   @ViewChild('dialogContent') dialogContent!: ElementRef;
@@ -33,13 +35,35 @@ export class OtherAttachmentDetailsPopupComponent implements OnInit, AfterViewIn
               public lang: LangService,
               private fb: FormBuilder,
               private cd: ChangeDetectorRef,
-              public dialogRef: DialogRef) {
+              public dialogRef: DialogRef,
+              private globalSettingsService:GlobalSettingsService) {
     this.model = data.model;
     this.operation = data.operation;
   }
 
   ngOnInit() {
     this._buildForm(true);
+    this.getGlobalSettings()
+  }
+
+  getGlobalSettings(){
+    this.globalSettingsService.getGlobalSettings()
+    .pipe(
+      map(list => list[0].fileTypeArr)
+    )
+    .subscribe(
+      fileTypeArr=> 
+      {
+        this.globalSettingsService.getFileTypes()   
+          .pipe(
+            map(list => list.filter(ele=>fileTypeArr.includes(ele.id))),
+            map(list => list.map(ele => '.' + ele.extension))
+          )
+          .subscribe(list => {
+            this.allowedExtensions = list
+          });
+      }
+    )
   }
 
   ngAfterViewInit() {
