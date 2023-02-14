@@ -4,7 +4,7 @@ import { InboxService } from '@app/services/inbox.service';
 import { QueryResultSet } from '@app/models/query-result-set';
 import { switchMap, takeUntil, tap } from 'rxjs/operators';
 import { QueryResult } from '@app/models/query-result';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, interval, Subject } from 'rxjs';
 import { WFResponseType } from '@app/enums/wfresponse-type.enum';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
 import { ToastService } from '@app/services/toast.service';
@@ -27,6 +27,8 @@ import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
 import { Router } from '@angular/router';
 import { CommonService } from '@services/common.service';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
+import { GlobalSettingsService } from '@app/services/global-settings.service';
+import { DateUtils } from '@app/helpers/date-utils';
 
 @Component({
   selector: 'app-user-inbox',
@@ -93,7 +95,8 @@ export class UserInboxComponent implements OnInit, OnDestroy {
     private router: Router,
     private employeeService: EmployeeService,
     private commonService: CommonService,
-    private inboxService: InboxService) {
+    private inboxService: InboxService,
+    private globalSettingsService:GlobalSettingsService) {
     if (this.employeeService.isExternalUser()) {
       this.tableOptions.columns = this.tableOptions.columns.filter(x => x !== 'orgInfo');
     }
@@ -130,7 +133,16 @@ export class UserInboxComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.listenToReload();
     this.buildGridActions();
+    this.getGlobalSettings();
+  }
 
+  getGlobalSettings(){
+    this.globalSettingsService.getGlobalSettings().subscribe(
+      list => 
+      interval(DateUtils.getMillisecondsFromMinutes(list[0].inboxRefreshInterval))
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(this.reloadInbox$)
+    )
   }
 
   actionManageAttachments(item: QueryResult) {
