@@ -194,7 +194,8 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       domain: this.domain.value,
       internalProjectClassification: this.internalProjectClassification.value,
       mainDAC: this.mainDACCategory.value,
-      mainUNOCHA: this.mainUNOCHACategory.value
+      mainUNOCHA: this.mainUNOCHACategory.value,
+      implCaseId: this.model!.getCaseId()
     }
   }
 
@@ -609,7 +610,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       }))
       .pipe(filter((value): value is ImplementationTemplate[] => (value && !!value.length)))
       .pipe(map(val => val[0] as ImplementationTemplate))
-      .pipe(switchMap(template => template.loadImplementationFundraising()))
+      .pipe(switchMap(template => template.loadImplementationFundraising(this.requestType.value , this.model?.id)))
       .pipe(filter((value): value is ImplementationFundraising => !!value))
       .subscribe((implementationFundraising) => {
         this.implementationFundraising.setValue([implementationFundraising])

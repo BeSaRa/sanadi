@@ -99,9 +99,9 @@ export class ImplementationTemplate extends Cloneable<ImplementationTemplate> {
     return this.service.openImplementationTemplateDialog(this, true)
   }
 
-  loadImplementationFundraising(): Observable<ImplementationFundraising | undefined> {
+  loadImplementationFundraising(requestType: number , caseId?: string): Observable<ImplementationFundraising | undefined> {
     return this.service
-      .loadRelatedPermitByTemplate(this.templateId)
+      .loadRelatedPermitByTemplate(requestType , this.templateId, caseId)
       .pipe(switchMap((license) => {
         return license ? of(license.convertToFundraisingTemplate().clone({
           projectTotalCost: license.targetAmount,

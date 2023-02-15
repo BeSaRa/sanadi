@@ -136,7 +136,8 @@
     </ng-template>
     <ng-template #project_info>
       <ng-container formGroupName="projectInfo">
-        <implementation-template formControlName="implementationTemplate"
+        <implementation-template [requestType]="requestType.value"
+                                 [caseId]="model!.id" formControlName="implementationTemplate"
                                  [criteria]="getCriteria"></implementation-template>
         <implementing-agency-list [country]="beneficiaryCountry.value"
                                   [type]="implementingAgencyType.value"
@@ -170,14 +171,16 @@
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="projectEvaluationSLA"
                    for="projectEvaluationSLA">{{lang.map.project_evaluation_sla}} ({{lang.map.months}})</label>
-            <input id="projectEvaluationSLA" [mask]="inputMaskPatterns.NUMBER_ONLY_WITH_LIMIT(50)" validationClasses="projectEvaluationSLA"
+            <input id="projectEvaluationSLA" [mask]="inputMaskPatterns.NUMBER_ONLY_WITH_LIMIT(50)"
+                   validationClasses="projectEvaluationSLA"
                    formControlName="projectEvaluationSLA" class="form-control">
             <app-field-error-message controlName="projectEvaluationSLA"></app-field-error-message>
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="licenseDuration"
                    for="licenseDuration">{{lang.map.license_duration}} ({{lang.map.months}})</label>
-            <input id="licenseDuration" [mask]="inputMaskPatterns.NUMBER_ONLY_WITH_LIMIT(50)" validationClasses="licenseDuration" formControlName="licenseDuration"
+            <input id="licenseDuration" [mask]="inputMaskPatterns.NUMBER_ONLY_WITH_LIMIT(50)"
+                   validationClasses="licenseDuration" formControlName="licenseDuration"
                    class="form-control">
             <app-field-error-message controlName="licenseDuration"></app-field-error-message>
           </div>
@@ -197,11 +200,13 @@
                                     [projectTotalCost]="projectTotalCost.value"
                                     formControlName="implementationFundraising"></implementation-fundraising>
         <br>
-        <fund-source [permitAmountConsumed]="permitAmountConsumed" [remainingAmount]="remainingAmount" [type]="FundSourceType.GRANT"
+        <fund-source [permitAmountConsumed]="permitAmountConsumed" [remainingAmount]="remainingAmount"
+                     [type]="FundSourceType.GRANT"
                      [projectTotalCost]="projectTotalCost.value"
                      formControlName="financialGrant"></fund-source>
         <br>
-        <fund-source [permitAmountConsumed]="permitAmountConsumed" [remainingAmount]="remainingAmount" [type]="FundSourceType.SELF"
+        <fund-source [permitAmountConsumed]="permitAmountConsumed" [remainingAmount]="remainingAmount"
+                     [type]="FundSourceType.SELF"
                      [projectTotalCost]="projectTotalCost.value"
                      formControlName="selfFinancing"></fund-source>
         <br>

@@ -33,18 +33,22 @@ export class ChooseTemplatePopupComponent implements AfterViewInit {
 
   private readonly oldProjectTemplate?: ProjectTemplate
   private readonly oldImplementationTemplate?: ImplementationTemplate
-
+  private caseId?: string
+  private requestType!: number
   @ViewChild(TableComponent)
   private table!: TableComponent;
 
   inputMaskPatterns = CustomValidators.inputMaskPatterns
+
 
   constructor(@Inject(DIALOG_DATA_TOKEN) public data: {
                 templates: ProjectModel[],
                 projectTemplate?: ProjectTemplate,
                 implementationTemplate: ImplementationTemplate,
                 caseType: CaseTypes,
-                workArea: ProjectWorkArea
+                workArea: ProjectWorkArea,
+                requestType: number
+                caseId?: string,
               },
               private projectImplementationService: ProjectImplementationService,
               private dialogRef: DialogRef,
@@ -53,6 +57,8 @@ export class ChooseTemplatePopupComponent implements AfterViewInit {
     this.oldImplementationTemplate = data.implementationTemplate;
     this.oldProjectTemplate = data.projectTemplate;
     this.data.caseType === CaseTypes.PROJECT_IMPLEMENTATION ? this.displayedColumns.push('targetAmount') : null
+    this.caseId = this.data.caseId
+    this.requestType = this.data.requestType
   }
 
   ngAfterViewInit(): void {
@@ -92,7 +98,7 @@ export class ChooseTemplatePopupComponent implements AfterViewInit {
   private saveForImplementation(): void {
     of(this.table.selection.selected[0] as unknown as ProjectModel)
       .pipe(map(template => template.convertToImplementationTemplate()))
-      .pipe(switchMap(template => this.projectImplementationService.validateTemplate(template.templateId)
+      .pipe(switchMap(template => this.projectImplementationService.validateTemplate(template.templateId , this.caseId)
         .pipe(catchError(_ => of(null)))
         .pipe(filter(val => !!val))
         .pipe(map(_ => template))
