@@ -811,5 +811,6 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     customFields.forEach(item => {
       this.readonly ? item.disable() : item.enable()
     })
+
   }
 }
