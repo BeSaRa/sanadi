@@ -49,8 +49,8 @@ export class FinancialTransferLicensingApprovePopupComponent implements OnInit,A
   constructor(
     @Inject(DIALOG_DATA_TOKEN)
     public data: {
-      model: FinancialTransferLicensing;
-      action: WFResponseType;
+      model: FinancialTransferLicensing,
+      action: WFResponseType,
     },
     public lang: LangService,
     private dialog: DialogService,
