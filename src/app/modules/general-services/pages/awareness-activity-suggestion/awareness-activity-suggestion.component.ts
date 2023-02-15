@@ -1,3 +1,5 @@
+import { JobTitleService } from './../../../../services/job-title.service';
+import { JobTitle } from '@app/models/job-title';
 import {LicenseService} from '@app/services/license.service';
 import {SearchAwarenessActivitySuggestionCriteria} from './../../../../models/search-awareness-activity-suggestion-criteria';
 import {Lookup} from '@app/models/lookup';
@@ -25,7 +27,6 @@ import {OperationTypes} from '@app/enums/operation-types.enum';
 import {SaveTypes} from '@app/enums/save-types';
 import {LangService} from '@app/services/lang.service';
 import {Observable, of, Subject} from 'rxjs';
-import {ProfileTypes} from '@app/enums/profile-types.enum';
 
 @Component({
   selector: 'app-awareness-activity-suggestion',
@@ -35,6 +36,7 @@ import {ProfileTypes} from '@app/enums/profile-types.enum';
 export class AwarenessActivitySuggestionComponent extends EServicesGenericComponent<AwarenessActivitySuggestion, AwarenessActivitySuggestionService> {
   collectionRequestType: Lookup[] = this.lookupService.listByCategory.CollectionRequestType.sort((a, b) => a.lookupKey - b.lookupKey);
   linkedProject: Lookup[] = this.lookupService.listByCategory.LinkedProject.sort((a, b) => a.lookupKey - b.lookupKey);
+  jobTitleList: JobTitle[] = [];
 
 
   licenseSearch$: Subject<string> = new Subject<string>();
@@ -47,15 +49,15 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
       langKey: 'lbl_basic_info' as keyof ILanguageKeys,
       validStatus: () => this.requestTypeField && this.requestTypeField.valid && this.activity.valid,
     },
-    dataOfApplicant: {
-      name: 'dataOfApplicantTab',
-      langKey: 'lbl_data_of_applicant' as keyof ILanguageKeys,
-      validStatus: () => this.dataOfApplicant.valid,
-    },
     contactOfficer: {
       name: 'contactOfficerTab',
       langKey: 'contact_officer' as keyof ILanguageKeys,
       validStatus: () => this.contactOfficer.valid,
+    },
+    beneficiariesNature: {
+      name: 'beneficiariesNatureTab',
+      langKey: 'contact_officer' as keyof ILanguageKeys,
+      validStatus: () => this.beneficiariesNature.valid,
     },
     specialExplanations: {
       name: 'specialExplanationsTab',
@@ -87,6 +89,7 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
     public service: AwarenessActivitySuggestionService,
     private lookupService: LookupService,
     private toast: ToastService,
+    private jobTitleService: JobTitleService,
     private cd: ChangeDetectorRef,
     private dialog: DialogService,
     public employeeService: EmployeeService,
@@ -136,6 +139,7 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
 
   _initComponent(): void {
     this.listenToLicenseSearch();
+    this._loadJobTitles();
   }
 
   _buildForm(): void {
@@ -144,20 +148,9 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
       requestType: model.requestType,
       description: model.description,
       oldLicenseFullSerial: model.oldLicenseFullSerial,
-      dataOfApplicant: this.isNonProfitProfile() ? this.fb.group(model.dataOfApplicant) : {},
+      beneficiariesNature: this.fb.group(model.beneficiariesNature),
       contactOfficer: this.fb.group(model.contactOfficer),
       activity: this.fb.group(model.activity),
-    });
-    this.dataOfApplicant.valueChanges.subscribe(data => {
-      if (this.isSameAsApplican) {
-        this.contactOfficer.patchValue({
-          contactQID: data.identificationNumber,
-          contactName: data.enName,
-          contactEmail: data.email,
-          contactPhone: data.phone,
-          contactExtraPhone: data.mobileNo,
-        });
-      }
     });
   }
 
@@ -195,6 +188,17 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
     return failedList;
   }
 
+  private _loadJobTitles(): void {
+    this.jobTitleService.loadAsLookups()
+      .pipe(
+        takeUntil(this.destroy$),
+        catchError(() => {
+          return of([]);
+        })
+      )
+      .subscribe((result) => this.jobTitleList = result);
+  }
+
   _beforeLaunch(): boolean | Observable<boolean> {
     return !!this.model && this.form.valid && this.model.canStart();
   }
@@ -210,8 +214,8 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
       requestType: this.form.value.requestType,
       description: this.form.value.description,
       ...this.form.value.contactOfficer,
+      ...this.form.value.beneficiariesNature,
       ...this.form.value.activity,
-      ...this.form.value.dataOfApplicant,
       profileType: this.employeeService.getProfile()?.profileType
     });
     return value;
@@ -259,8 +263,8 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
       requestType: formModel.requestType,
       description: formModel.description,
       oldLicenseFullSerial: formModel.oldLicenseFullSerial,
-      dataOfApplicant: this.isNonProfitProfile() ? formModel.dataOfApplicant : {},
       contactOfficer: formModel.contactOfficer,
+      beneficiariesNature: formModel.beneficiariesNature,
       activity: formModel.activity,
     });
     this.cd.detectChanges();
@@ -273,10 +277,6 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
     } else {
       return this.employeeService.getProfile()?.getName();
     }
-  }
-
-  isNonProfitProfile() {
-    return this.employeeService.getProfile()?.profileType == ProfileTypes.NON_PROFIT_ORGANIZATIONS || this.model?.profileType == ProfileTypes.NON_PROFIT_ORGANIZATIONS;
   }
 
   handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
@@ -344,19 +344,6 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
     this.licenseSearch$.next(value);
   }
 
-  toggleContactOffecorInfo(e: any) {
-    this.isSameAsApplican = !this.isSameAsApplican;
-    if (this.isSameAsApplican) {
-      this.contactOfficer.patchValue({
-        contactQID: this.dataOfApplicant.value.identificationNumber,
-        contactName: this.dataOfApplicant.value.enName,
-        contactEmail: this.dataOfApplicant.value.email,
-        contactPhone: this.dataOfApplicant.value.phone,
-        contactExtraPhone: this.dataOfApplicant.value.mobileNo,
-      });
-    }
-  }
-
   loadLicencesByCriteria(criteria: (Partial<SearchAwarenessActivitySuggestionCriteria>)): (Observable<AwarenessActivitySuggestion[]>) {
     return this.service.licenseSearch(criteria as Partial<SearchAwarenessActivitySuggestionCriteria>);
   }
@@ -421,20 +408,9 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
     result.oldLicenseId = licenseDetails.id;
     result.oldLicenseSerial = licenseDetails.serial;
 
-    result.enName = licenseDetails.enName;
-    result.phone = licenseDetails.phone;
-    result.email = licenseDetails.email;
     result.description = licenseDetails.description;
 
     result.expectedDate = DateUtils.changeDateToDatepicker(licenseDetails.expectedDate);
-
-    result.identificationNumber = licenseDetails.identificationNumber;
-    result.enName = licenseDetails.enName;
-    result.jobTitle = licenseDetails.jobTitle;
-    result.address = licenseDetails.address;
-    result.email = licenseDetails.email;
-    result.phone = licenseDetails.phone;
-    result.mobileNo = licenseDetails.mobileNo;
 
     result.contactQID = licenseDetails.contactQID;
     result.contactName = licenseDetails.contactName;
@@ -457,12 +433,12 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
     return this.requestTypeField.value == CollectionRequestType.UPDATE || this.requestTypeField.value == CollectionRequestType.CANCEL;
   }
 
-  get dataOfApplicant(): UntypedFormGroup {
-    return this.form.get('dataOfApplicant') as UntypedFormGroup;
-  }
-
   get contactOfficer(): UntypedFormGroup {
     return this.form.get('contactOfficer') as UntypedFormGroup;
+  }
+
+  get beneficiariesNature(): UntypedFormGroup {
+    return this.form.get('beneficiariesNature') as UntypedFormGroup;
   }
 
   get activity(): UntypedFormGroup {

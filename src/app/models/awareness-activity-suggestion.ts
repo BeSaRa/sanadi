@@ -37,19 +37,12 @@ export class AwarenessActivitySuggestion
 
   followUpDate!: string | IMyDateModel;
 
-  identificationNumber!: string;
-  enName!: string;
-  jobTitle!: string;
-  address!: string;
-  email!: string;
-  phone!: string;
-  mobileNo!: string;
-
   contactQID!: string;
   contactName!: string;
   contactEmail!: string;
   contactPhone!: string;
   contactExtraPhone!: string;
+  jobTitle!: string;
 
   agreementWithRACA!: boolean | number;
   subject!: string;
@@ -86,19 +79,12 @@ export class AwarenessActivitySuggestion
     const {
       requestType, description,
 
-      identificationNumber,
-      enName,
-      jobTitle,
-      address,
-      email,
-      phone,
-      mobileNo,
-
       contactQID,
       contactName,
       contactEmail,
       contactPhone,
       contactExtraPhone,
+      jobTitle,
 
       agreementWithRACA,
       subject,
@@ -112,21 +98,17 @@ export class AwarenessActivitySuggestion
       requestType: controls ? [requestType, Validators.required] : requestType,
       oldLicenseFullSerial: controls ? [oldLicenseFullSerial] : oldLicenseFullSerial,
       description: controls ? [description, Validators.required] : description,
-      dataOfApplicant: {
-        identificationNumber: controls ? [identificationNumber, [CustomValidators.required].concat(CustomValidators.commonValidations.qId)] : identificationNumber,
-        enName: controls ? [enName, [CustomValidators.required, Validators.maxLength(300)]] : enName,
-        jobTitle: controls ? [jobTitle, [Validators.required, CustomValidators.maxLength(100)]] : jobTitle,
-        address: controls ? [address, [Validators.required, CustomValidators.maxLength(100)]] : address,
-        email: controls ? [email, [CustomValidators.required, CustomValidators.pattern('EMAIL'), CustomValidators.maxLength(100)]] : email,
-        phone: controls ? [phone, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : phone,
-        mobileNo: controls ? [mobileNo, CustomValidators.commonValidations.phone] : mobileNo,
-      },
+
       contactOfficer: {
         contactQID: controls ? [contactQID, [CustomValidators.required].concat(CustomValidators.commonValidations.qId)] : contactQID,
         contactName: controls ? [contactName, [CustomValidators.required, Validators.maxLength(300)]] : contactName,
         contactEmail: controls ? [contactEmail, [CustomValidators.required, CustomValidators.pattern('EMAIL'), CustomValidators.maxLength(100)]] : contactEmail,
         contactPhone: controls ? [contactPhone, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : contactPhone,
         contactExtraPhone: controls ? [contactExtraPhone, CustomValidators.commonValidations.phone] : contactExtraPhone,
+        jobTitle: controls ? [jobTitle, [CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : jobTitle,
+      },
+      beneficiariesNature: {
+
       },
       activity: {
         activityName: controls ? [activityName, [Validators.required, Validators.maxLength(300)]] : activityName,
