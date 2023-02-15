@@ -11,7 +11,7 @@
         <div class="input-group">
           <i class="input-group-text mdi mdi-calendar"></i>
           <div class="form-control" formControlName="followUpDate" id="followUpDate"
-            [options]="datepickerOptionsMap.followUpDate" (click)="openDateMenu(dpFollowUpDate)"
+            [options]="datepickerOptionsMap.followUpDate" (click)="dpFollowUpDate.toggleCalendar()"
             #dpFollowUpDate="angular-mydatepicker" angular-mydatepicker validationClasses="followUpDate"></div>
         </div>
       </div>
