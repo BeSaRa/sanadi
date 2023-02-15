@@ -15,7 +15,7 @@ const interceptor: GlobalSettingsInterceptor = new GlobalSettingsInterceptor();
 })
 export class GlobalSettings extends BaseModel<GlobalSettings, GlobalSettingsService> {
   systemArabicName!: string;
-  systemEnName!: string;
+  systemEnglishName!: string;
   sessionTimeout!: number;
   fileSize!: number;
   fileType!: string;
@@ -37,7 +37,7 @@ export class GlobalSettings extends BaseModel<GlobalSettings, GlobalSettingsServ
   buildForm(controls?: boolean): any {
     const {
       systemArabicName,
-      systemEnName,
+      systemEnglishName,
       sessionTimeout,
       fileSize,
       inboxRefreshInterval,
@@ -52,12 +52,12 @@ export class GlobalSettings extends BaseModel<GlobalSettings, GlobalSettingsServ
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
         CustomValidators.pattern('AR_NUM_ONE_AR')
       ]] : systemArabicName,
-      systemEnName: controls ? [systemEnName, [
+      systemEnglishName: controls ? [systemEnglishName, [
         CustomValidators.required,
         CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
         CustomValidators.pattern('ENG_NUM_ONE_ENG')
-      ]] : systemEnName,
+      ]] : systemEnglishName,
       sessionTimeout: controls ? [sessionTimeout, [
         CustomValidators.required,
         CustomValidators.maxLength(9),
