@@ -67,13 +67,13 @@ export class UserSubTeamService extends CrudGenericService<UserSubTeam> {
     }).pipe(map(res => res.rs));
   }
 
-  deactivate(userTeamsIds: number[]): Observable<Record<number, boolean>> {
-    return this.http.put<IDefaultResponse<Record<number, boolean>>>(this.urlService.URLS.USER_SUB_TEAM + '/de-activate-users/bulk', userTeamsIds)
+  deactivate(userSubTeamsIds: number[]): Observable<Record<number, boolean>> {
+    return this.http.put<IDefaultResponse<Record<number, boolean>>>(this.urlService.URLS.USER_SUB_TEAM + '/bulk/de-activate', userSubTeamsIds)
       .pipe(map(res => res.rs));
   }
 
-  activate(userTeamsIds: number[]): Observable<Record<number, boolean>> {
-    return this.http.put<IDefaultResponse<Record<number, boolean>>>(this.urlService.URLS.USER_SUB_TEAM + '/activate-users/bulk', userTeamsIds)
+  activate(userSubTeamsIds: number[]): Observable<Record<number, boolean>> {
+    return this.http.put<IDefaultResponse<Record<number, boolean>>>(this.urlService.URLS.USER_SUB_TEAM + '/bulk/activate', userSubTeamsIds)
       .pipe(map(res => res.rs));
   }
 }
