@@ -51,6 +51,7 @@ export class ProjectImplementationInterceptor implements IModelInterceptor<Proje
     model.implementingAgencyList = (model.implementingAgencyList ?? []).map((item) => implementingAgencyInterceptor.receive(new ImplementingAgency().clone(item)));
     model.implementationFundraising = (model.implementationFundraising ?? []).map((item) => implementationFundraisingInterceptor.receive(new ImplementationFundraising().clone(item)));
 
+    console.log(model.implementationFundraising[0]);
     return model;
   }
 }

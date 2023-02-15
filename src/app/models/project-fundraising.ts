@@ -357,8 +357,8 @@ export class ProjectFundraising extends _ApprovalLicenseWithMonthly<ProjectFundr
 
   convertToFundraisingTemplate(): ImplementationFundraising {
     return new ImplementationFundraising().clone({
-      arName: this.arName,
-      enName: this.enName,
+      arabicName: this.arName,
+      englishName: this.enName,
       projectLicenseFullSerial: this.fullSerial,
       projectLicenseSerial: this.serial,
       projectLicenseId: this.id,

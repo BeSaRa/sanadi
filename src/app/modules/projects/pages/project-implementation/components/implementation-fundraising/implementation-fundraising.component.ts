@@ -122,6 +122,7 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
       })
       .then(() => {
         this.value = value
+        console.log(this.value);
         this.listenToControls()
         this.calculateTotal()
         this.isFullAmountConsumed()
@@ -236,7 +237,7 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
 
   deletePermit(item: ImplementationFundraising) {
     this.dialog
-      .confirm(this.lang.map.msg_confirm_delete_x.change({x: this.lang.map.lang === 'ar' ? item.arName : item.enName}))
+      .confirm(this.lang.map.msg_confirm_delete_x.change({x: this.lang.map.lang === 'ar' ? item.arabicName : item.englishName}))
       .onAfterClose$
       .pipe(filter((value): value is UserClickOn.YES => value === UserClickOn.YES))
       .subscribe(() => {
