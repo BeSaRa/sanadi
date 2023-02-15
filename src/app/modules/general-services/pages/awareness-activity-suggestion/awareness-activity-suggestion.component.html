@@ -91,7 +91,7 @@
           <app-field-error-message controlName="contactEmail"></app-field-error-message>
         </div>
         <!-- contact Phone -->
-        <div class="col-sm-12 col-md-6 mb-4 position-relative">
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label asteriskIfRequired="contactPhone" for="contactPhone" class="form-label">{{
             lang.map.lbl_phone
             }}</label>
@@ -100,19 +100,19 @@
           <app-field-error-message controlName="contactPhone"></app-field-error-message>
         </div>
         <!-- contact Extra Phone -->
-        <div class="col-sm-12 col-md-6 mb-4 position-relative">
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label asteriskIfRequired="contactExtraPhone" for="contactExtraPhone" class="form-label">{{
             lang.map.lbl_mobile_number }}</label>
           <input type="text" validationClasses="contactExtraPhone" formControlName="contactExtraPhone"
             [readonly]="readonly || isSameAsApplican" trimInput class="form-control" id="contactExtraPhone" />
           <app-field-error-message controlName="contactExtraPhone"></app-field-error-message>
         </div>
-      </div>
-      <!-- Job Title -->
-      <div class="col-sm-12 col-md-4 mb-4 position-relative">
-        <label asteriskIfRequired="jobTitle" for="jobTitle" class="form-label">{{lang.map.job_title}}</label>
-        <input id="jobTitle" validationClasses="jobTitle" formControlName="jobTitle" trimInput class="form-control">
-        <app-field-error-message controlName="jobTitle"></app-field-error-message>
+        <!-- Job Title -->
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="jobTitle" for="jobTitle" class="form-label">{{lang.map.job_title}}</label>
+          <input id="jobTitle" validationClasses="jobTitle" formControlName="jobTitle" trimInput class="form-control">
+          <app-field-error-message controlName="jobTitle"></app-field-error-message>
+        </div>
       </div>
     </form>
   </ng-template>

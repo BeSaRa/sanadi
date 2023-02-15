@@ -1,32 +1,32 @@
 import { JobTitleService } from './../../../../services/job-title.service';
 import { JobTitle } from '@app/models/job-title';
-import {LicenseService} from '@app/services/license.service';
-import {SearchAwarenessActivitySuggestionCriteria} from './../../../../models/search-awareness-activity-suggestion-criteria';
-import {Lookup} from '@app/models/lookup';
-import {DatepickerOptionsMap} from './../../../../types/types';
-import {DateUtils} from './../../../../helpers/date-utils';
-import {EmployeeService} from './../../../../services/employee.service';
-import {TabComponent} from './../../../../shared/components/tab/tab.component';
-import {CommonCaseStatus} from './../../../../enums/common-case-status.enum';
-import {CollectionRequestType} from './../../../../enums/service-request-types';
-import {UserClickOn} from './../../../../enums/user-click-on.enum';
-import {catchError, exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
-import {OpenFrom} from './../../../../enums/open-from.enum';
-import {IKeyValue} from './../../../../interfaces/i-key-value';
-import {ILanguageKeys} from '@contracts/i-language-keys';
-import {CommonUtils} from './../../../../helpers/common-utils';
-import {ToastService} from './../../../../services/toast.service';
-import {DialogService} from './../../../../services/dialog.service';
-import {LookupService} from './../../../../services/lookup.service';
-import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
-import {AwarenessActivitySuggestion} from './../../../../models/awareness-activity-suggestion';
-import {AwarenessActivitySuggestionService} from './../../../../services/awareness-activity-suggestion.service';
-import {ChangeDetectorRef, Component} from '@angular/core';
-import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {SaveTypes} from '@app/enums/save-types';
-import {LangService} from '@app/services/lang.service';
-import {Observable, of, Subject} from 'rxjs';
+import { LicenseService } from '@app/services/license.service';
+import { SearchAwarenessActivitySuggestionCriteria } from './../../../../models/search-awareness-activity-suggestion-criteria';
+import { Lookup } from '@app/models/lookup';
+import { DatepickerOptionsMap } from './../../../../types/types';
+import { DateUtils } from './../../../../helpers/date-utils';
+import { EmployeeService } from './../../../../services/employee.service';
+import { TabComponent } from './../../../../shared/components/tab/tab.component';
+import { CommonCaseStatus } from './../../../../enums/common-case-status.enum';
+import { CollectionRequestType } from './../../../../enums/service-request-types';
+import { UserClickOn } from './../../../../enums/user-click-on.enum';
+import { catchError, exhaustMap, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { OpenFrom } from './../../../../enums/open-from.enum';
+import { IKeyValue } from './../../../../interfaces/i-key-value';
+import { ILanguageKeys } from '@contracts/i-language-keys';
+import { CommonUtils } from './../../../../helpers/common-utils';
+import { ToastService } from './../../../../services/toast.service';
+import { DialogService } from './../../../../services/dialog.service';
+import { LookupService } from './../../../../services/lookup.service';
+import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
+import { AwarenessActivitySuggestion } from './../../../../models/awareness-activity-suggestion';
+import { AwarenessActivitySuggestionService } from './../../../../services/awareness-activity-suggestion.service';
+import { ChangeDetectorRef, Component } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { SaveTypes } from '@app/enums/save-types';
+import { LangService } from '@app/services/lang.service';
+import { Observable, of, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-awareness-activity-suggestion',
@@ -47,7 +47,7 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
     basicInfo: {
       name: 'basicInfoTab',
       langKey: 'lbl_basic_info' as keyof ILanguageKeys,
-      validStatus: () => this.requestTypeField && this.requestTypeField.valid && this.activity.valid,
+      validStatus: () => this.requestTypeField,
     },
     contactOfficer: {
       name: 'contactOfficerTab',
@@ -147,10 +147,11 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
     this.form = this.fb.group({
       requestType: model.requestType,
       description: model.description,
+      subject: model.subject,
+      goal: model.goal,
       oldLicenseFullSerial: model.oldLicenseFullSerial,
       beneficiariesNature: this.fb.group(model.beneficiariesNature),
       contactOfficer: this.fb.group(model.contactOfficer),
-      activity: this.fb.group(model.activity),
     });
   }
 
@@ -213,9 +214,10 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
       ...this.model,
       requestType: this.form.value.requestType,
       description: this.form.value.description,
+      subject: this.form.value.subject,
+      goal: this.form.value.goal,
       ...this.form.value.contactOfficer,
       ...this.form.value.beneficiariesNature,
-      ...this.form.value.activity,
       profileType: this.employeeService.getProfile()?.profileType
     });
     return value;
@@ -238,7 +240,7 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
       (operation === OperationTypes.CREATE && saveType === SaveTypes.FINAL) ||
       (operation === OperationTypes.UPDATE && saveType === SaveTypes.COMMIT)
     ) {
-      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({serial: model.fullSerial}));
+      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({ serial: model.fullSerial }));
     } else {
       this.toast.success(this.lang.map.request_has_been_saved_successfully);
     }
@@ -262,10 +264,11 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
     this.form.patchValue({
       requestType: formModel.requestType,
       description: formModel.description,
+      subject: formModel.subject,
+      goal: formModel.goal,
       oldLicenseFullSerial: formModel.oldLicenseFullSerial,
       contactOfficer: formModel.contactOfficer,
       beneficiariesNature: formModel.beneficiariesNature,
-      activity: formModel.activity,
     });
     this.cd.detectChanges();
     this.handleRequestTypeChange(model.requestType, false);
@@ -373,7 +376,7 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
                   if (!data) {
                     return of(null);
                   }
-                  return {selected: licenses[0], details: data};
+                  return { selected: licenses[0], details: data };
                 }),
                 catchError(() => {
                   return of(null);
@@ -381,14 +384,14 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
               );
           } else {
             const displayColumns = this.service.selectLicenseDisplayColumns;
-            return this.licenseService.openSelectLicenseDialog(licenses, this.model?.clone({requestType: this.requestTypeField.value || null}), true, displayColumns).onAfterClose$;
+            return this.licenseService.openSelectLicenseDialog(licenses, this.model?.clone({ requestType: this.requestTypeField.value || null }), true, displayColumns).onAfterClose$;
           }
         }),
         // allow only if the user select license
         filter<{ selected: AwarenessActivitySuggestion, details: AwarenessActivitySuggestion }, any>
-        ((selection): selection is { selected: AwarenessActivitySuggestion, details: AwarenessActivitySuggestion } => {
-          return !!(selection);
-        }),
+          ((selection): selection is { selected: AwarenessActivitySuggestion, details: AwarenessActivitySuggestion } => {
+            return !!(selection);
+          }),
         // allow only if the user select license
         takeUntil(this.destroy$)
       )
@@ -410,18 +413,14 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
 
     result.description = licenseDetails.description;
 
-    result.expectedDate = DateUtils.changeDateToDatepicker(licenseDetails.expectedDate);
-
     result.contactQID = licenseDetails.contactQID;
     result.contactName = licenseDetails.contactName;
     result.contactEmail = licenseDetails.contactEmail;
     result.contactPhone = licenseDetails.contactPhone;
     result.contactExtraPhone = licenseDetails.contactExtraPhone;
 
-    result.agreementWithRACA = licenseDetails.agreementWithRACA;
     result.subject = licenseDetails.subject;
     result.goal = licenseDetails.goal;
-    result.activityName = licenseDetails.activityName;
     this._updateForm((new AwarenessActivitySuggestion()).clone(result));
   }
 
@@ -440,11 +439,6 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
   get beneficiariesNature(): UntypedFormGroup {
     return this.form.get('beneficiariesNature') as UntypedFormGroup;
   }
-
-  get activity(): UntypedFormGroup {
-    return this.form.get('activity') as UntypedFormGroup;
-  }
-
   get requestTypeField(): UntypedFormControl {
     return this.form.get('requestType') as UntypedFormControl;
   }

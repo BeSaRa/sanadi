@@ -44,11 +44,8 @@ export class AwarenessActivitySuggestion
   contactExtraPhone!: string;
   jobTitle!: string;
 
-  agreementWithRACA!: boolean | number;
   subject!: string;
-  expectedDate!: string | IMyDateModel;
   goal!: string;
-  activityName!: string;
 
   oldLicenseFullSerial!: string;
   oldLicenseId!: string;
@@ -86,11 +83,8 @@ export class AwarenessActivitySuggestion
       contactExtraPhone,
       jobTitle,
 
-      agreementWithRACA,
       subject,
-      expectedDate,
       goal,
-      activityName,
 
       oldLicenseFullSerial
     } = this;
@@ -98,6 +92,8 @@ export class AwarenessActivitySuggestion
       requestType: controls ? [requestType, Validators.required] : requestType,
       oldLicenseFullSerial: controls ? [oldLicenseFullSerial] : oldLicenseFullSerial,
       description: controls ? [description, Validators.required] : description,
+      subject: controls ? [subject, [Validators.required]] : subject,
+      goal: controls ? [goal, [Validators.required]] : goal,
 
       contactOfficer: {
         contactQID: controls ? [contactQID, [CustomValidators.required].concat(CustomValidators.commonValidations.qId)] : contactQID,
@@ -109,13 +105,6 @@ export class AwarenessActivitySuggestion
       },
       beneficiariesNature: {
 
-      },
-      activity: {
-        activityName: controls ? [activityName, [Validators.required, Validators.maxLength(300)]] : activityName,
-        agreementWithRACA: controls ? [agreementWithRACA, Validators.required] : agreementWithRACA,
-        subject: controls ? [subject, [Validators.required]] : subject,
-        expectedDate: controls ? [expectedDate, [Validators.required]] : expectedDate,
-        goal: controls ? [goal, [Validators.required]] : goal
       },
     };
   }
@@ -129,7 +118,6 @@ export class AwarenessActivitySuggestion
     }
   }
   approveWithSave(form: UntypedFormGroup): DialogRef {
-    this.expectedDate = form.value.activity.expectedDate;
     return this.service.approve(this, WFResponseType.APPROVE)
   }
 }
