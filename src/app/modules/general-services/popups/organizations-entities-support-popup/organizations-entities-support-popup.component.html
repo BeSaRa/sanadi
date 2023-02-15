@@ -13,7 +13,7 @@
 <div class="dialog-content no-fixed-height" [ngClass]="isCancelRequestType() ? 'no-fixed-height min-w400px' : 'w800px'">
   <div class="row">
     <form [formGroup]="approvalForm" *ngIf="!isCancelRequestType()">
-      <div class="mb-4 col-md-6 col-sm-12osition-relative">
+      <div class="mb-4 col-md-6 col-sm-12 position-relative">
         <label
           for="followUpDate"
           asteriskIfRequired="followUpDate"
@@ -27,7 +27,7 @@
             formControlName="followUpDate"
             id="followUpDate"
             [options]="datepickerOptionsMap.followUpDate"
-            (click)="openDateMenu(dpFollowUpDate)"
+            (click)="dpFollowUpDate.toggleCalendar()"
             #dpFollowUpDate="angular-mydatepicker"
             angular-mydatepicker
             validationClasses="followUpDate"

@@ -1,5 +1,5 @@
-import {Directive, ElementRef, Inject, Input, OnDestroy, OnInit} from '@angular/core';
-import {DOCUMENT} from '@angular/common';
+import { Directive, ElementRef, Inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 
 @Directive({
   selector: '[tooltip]'
@@ -39,7 +39,7 @@ export class TooltipDirective implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.ref._popper && typeof this.ref._popper.destroy !== 'undefined') {
+    if (this.ref && this.ref._popper && typeof this.ref._popper.destroy !== 'undefined') {
       this.ref.dispose();
     }
   }

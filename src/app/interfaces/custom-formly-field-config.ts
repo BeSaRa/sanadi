@@ -1,10 +1,11 @@
-import { ILabel } from './../models/general-process-template';
+import { ILabel } from '../models/template-field';
 import { FormlyFieldConfig } from '@ngx-formly/core/lib/components/formly.field.config';
 import { Observable } from 'rxjs';
 
 export type FieldMode = 'init' | 'use' | 'view';
 export interface CustomFormlyFieldConfig extends FormlyFieldConfig {
   label?: ILabel,
+  note?: string,
   dateOptions?: {
     defaultValue?: 'now' | null,
     operator?: string | null,

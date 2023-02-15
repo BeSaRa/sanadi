@@ -1,12 +1,12 @@
 import { AwarenessActivitySuggestionComponent } from './../../../modules/general-services/pages/awareness-activity-suggestion/awareness-activity-suggestion.component';
 import { AwarenessActivitySuggestion } from '@models/awareness-activity-suggestion';
-import {CoordinationWithOrganizationsRequest} from '@app/models/coordination-with-organizations-request';
-import {IGeneralAssociationMeetingAttendanceSpecialActions} from '@contracts/i-general-association-meeting-attendance-special-actions';
-import {IGeneralAssociationMeetingAttendanceApprove} from '@contracts/i-general-association-meeting-attendance-approve';
-import {IGeneralAssociationMeetingAttendanceComponent} from '@contracts/i-general-association-meeting-attendance-component';
-import {IGeneralAssociationMeetingAttendanceComplete} from '@contracts/i-general-association-meeting-attendance-complete';
-import {ITransferFundsAbroadComponent} from '@contracts/i-transfer-funds-abroad-component';
-import {ITransferIndividualFundsAbroadComplete} from '@contracts/i-transfer-individual-funds-abroad-complete';
+import { CoordinationWithOrganizationsRequest } from '@app/models/coordination-with-organizations-request';
+import { IGeneralAssociationMeetingAttendanceSpecialActions } from '@contracts/i-general-association-meeting-attendance-special-actions';
+import { IGeneralAssociationMeetingAttendanceApprove } from '@contracts/i-general-association-meeting-attendance-approve';
+import { IGeneralAssociationMeetingAttendanceComponent } from '@contracts/i-general-association-meeting-attendance-component';
+import { IGeneralAssociationMeetingAttendanceComplete } from '@contracts/i-general-association-meeting-attendance-complete';
+import { ITransferFundsAbroadComponent } from '@contracts/i-transfer-funds-abroad-component';
+import { ITransferIndividualFundsAbroadComplete } from '@contracts/i-transfer-individual-funds-abroad-complete';
 
 import {
   AfterViewInit,
@@ -20,36 +20,36 @@ import {
   ViewChild,
   ViewContainerRef
 } from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {DynamicComponentService} from '@app/services/dynamic-component.service';
-import {EmployeeService} from '@app/services/employee.service';
-import {LangService} from '@app/services/lang.service';
-import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
-import {CaseModel} from '@app/models/case-model';
-import {OpenFrom} from '@app/enums/open-from.enum';
-import {IOpenedInfo} from '@app/interfaces/i-opened-info';
-import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import {WFResponseType} from '@app/enums/wfresponse-type.enum';
-import {WFActions} from '@app/enums/wfactions.enum';
-import {CaseTypes} from '@app/enums/case-types.enum';
-import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {ToastService} from '@app/services/toast.service';
-import {InboxService} from '@app/services/inbox.service';
-import {isObservable, merge, Observable, of, Subject} from 'rxjs';
-import {filter, ignoreElements, startWith, switchMap, takeUntil, tap} from 'rxjs/operators';
-import {TabComponent} from '@app/shared/components/tab/tab.component';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {SaveTypes} from '@app/enums/save-types';
-import {IESComponent} from '@app/interfaces/iescomponent';
-import {ExternalUser} from '@app/models/external-user';
-import {InternalUser} from '@app/models/internal-user';
-import {ChecklistItem} from '@app/models/checklist-item';
-import {StepCheckListComponent} from '@app/shared/components/step-check-list/step-check-list.component';
-import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
-import {ActionIconsEnum} from '@app/enums/action-icons-enum';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {BaseGenericEService} from '@app/generics/base-generic-e-service';
-import {IGeneralAssociationMeetingAttendanceFinalApprove} from '@contracts/i-general-association-meeting-attendance-final-approve';
+import { ActivatedRoute, Router } from '@angular/router';
+import { DynamicComponentService } from '@app/services/dynamic-component.service';
+import { EmployeeService } from '@app/services/employee.service';
+import { LangService } from '@app/services/lang.service';
+import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
+import { CaseModel } from '@app/models/case-model';
+import { OpenFrom } from '@app/enums/open-from.enum';
+import { IOpenedInfo } from '@app/interfaces/i-opened-info';
+import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { WFResponseType } from '@app/enums/wfresponse-type.enum';
+import { WFActions } from '@app/enums/wfactions.enum';
+import { CaseTypes } from '@app/enums/case-types.enum';
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
+import { ToastService } from '@app/services/toast.service';
+import { InboxService } from '@app/services/inbox.service';
+import { isObservable, merge, Observable, of, Subject } from 'rxjs';
+import { filter, ignoreElements, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { TabComponent } from '@app/shared/components/tab/tab.component';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { SaveTypes } from '@app/enums/save-types';
+import { IESComponent } from '@app/interfaces/iescomponent';
+import { ExternalUser } from '@app/models/external-user';
+import { InternalUser } from '@app/models/internal-user';
+import { ChecklistItem } from '@app/models/checklist-item';
+import { StepCheckListComponent } from '@app/shared/components/step-check-list/step-check-list.component';
+import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
+import { ActionIconsEnum } from '@app/enums/action-icons-enum';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { BaseGenericEService } from '@app/generics/base-generic-e-service';
+import { IGeneralAssociationMeetingAttendanceFinalApprove } from '@contracts/i-general-association-meeting-attendance-final-approve';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -730,7 +730,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         askChecklist: true,
         runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
         show: (item: CaseModel<any, any>) => {
-          return !item.getResponses().length || item.getResponses().includes(WFResponseType.COMPLETE);
+          return (!item.getResponses().length || item.getResponses().includes(WFResponseType.COMPLETE)) && item.caseStatus != CommonCaseStatus.CANCELLED;
         },
         onClick: (item: CaseModel<any, any>) => {
           this.completeAction(item);
@@ -744,7 +744,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         askChecklist: true,
         runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
         show: (item: CaseModel<any, any>) => {
-          return item.getResponses().includes(WFResponseType.APPROVE);
+          return item.getResponses().includes(WFResponseType.APPROVE) && item.caseState != CommonCaseStatus.CANCELLED;
         },
         onClick: (item: CaseModel<any, any>) => {
           this.approveAction(item);
@@ -758,7 +758,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         askChecklist: true,
         runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
         show: (item: CaseModel<any, any>) => {
-          return item.getResponses().includes(WFResponseType.TO_GENERAL_MEETING_MEMBERS);
+          return item.getResponses().includes(WFResponseType.TO_GENERAL_MEETING_MEMBERS) && item.caseStatus != CommonCaseStatus.CANCELLED;
         },
         onClick: (item: CaseModel<any, any>) => {
           this.sendToGeneralMeetingMembersAction(item);
@@ -787,7 +787,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         askChecklist: true,
         runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
         show: (item: CaseModel<any, any>) => {
-          return item.getResponses().includes(WFResponseType.INITIAL_APPROVE);
+          return item.getResponses().includes(WFResponseType.INITIAL_APPROVE) && item.caseState != CommonCaseStatus.CANCELLED;
         },
         onClick: (item: CaseModel<any, any>) => {
           this.initialApproveAction(item);
@@ -885,7 +885,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
         label: (item) => this.finalApproveByMatrixServices.includes(item.getCaseType()) ? this.lang.map.final_approve_task_based_on_matrix : this.lang.map.final_approve_task,
         show: (item: CaseModel<any, any>) => {
-          return item.getResponses().includes(WFResponseType.FINAL_APPROVE);
+          return item.getResponses().includes(WFResponseType.FINAL_APPROVE) && item.caseState != CommonCaseStatus.CANCELLED;
         },
         onClick: (item: CaseModel<any, any>) => {
           this.finalApproveAction(item);
@@ -1025,7 +1025,9 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         askChecklist: true,
         runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
         show: (item: CaseModel<any, any>) => {
-          return item.getResponses().includes(WFResponseType.CLOSE)
+          return (item.getResponses().includes(WFResponseType.CLOSE) &&
+            (item.caseType != CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE ||
+              (item.caseType == CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE && (item.caseStatus == CommonCaseStatus.CANCELLED || this.employeeService.isCharityManager()))));
         },
         onClick: (item: CaseModel<any, any>) => {
           this.closeAction(item);
@@ -1292,11 +1294,11 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
     }
     return !item.isInitialApproved() || !this.internal;
   }
-  private _isAllowedToSaveAtSearch(model:CoordinationWithOrganizationsRequest){
-    if(this.employeeService.isInternalUser() && !model.isApproved){
+  private _isAllowedToSaveAtSearch(model: CoordinationWithOrganizationsRequest) {
+    if (this.employeeService.isInternalUser() && !model.isApproved) {
       return true;
     }
-    if(this.employeeService.isExternalUser() && model.isApproved && !model.isFinalApproved()){
+    if (this.employeeService.isExternalUser() && model.isApproved && !model.isFinalApproved()) {
       return true;
     }
 

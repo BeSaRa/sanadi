@@ -1,4 +1,4 @@
-import { TemplateField } from './general-process-template';
+import { TemplateField } from './template-field';
 import { CoordinationWithOrganizationTemplateInterceptor } from './../model-interceptors/coordination-with-organization-template-interceptor';
 import { InterceptModel } from '@app/decorators/decorators/intercept-model';
 import { infoSearchFields } from '@app/helpers/info-search-fields';

@@ -1,7 +1,7 @@
 import { CommonStatusEnum } from './../../../enums/common-status.enum';
 import { LookupService } from './../../../services/lookup.service';
 import { Lookup } from './../../../models/lookup';
-import { TemplateField } from './../../../models/general-process-template';
+import { TemplateField } from '../../../models/template-field';
 import { Component, Inject } from '@angular/core';
 import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormArray } from '@angular/forms';
 import { OperationTypes } from '@app/enums/operation-types.enum';

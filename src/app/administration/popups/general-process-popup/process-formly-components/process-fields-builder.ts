@@ -4,7 +4,7 @@ import { map } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { TemplateFieldTypes } from './../../../../enums/template-field-types.enum';
 import { UntypedFormGroup } from '@angular/forms';
-import { TemplateField } from './../../../../models/general-process-template';
+import { TemplateField } from '../../../../models/template-field';
 import { FormlyFieldConfig } from '@ngx-formly/core/lib/components/formly.field.config';
 import { FieldMode } from '@app/interfaces/custom-formly-field-config';
 

@@ -49,8 +49,8 @@ export class FinancialTransferLicensingApprovePopupComponent implements OnInit,A
   constructor(
     @Inject(DIALOG_DATA_TOKEN)
     public data: {
-      model: FinancialTransferLicensing;
-      action: WFResponseType;
+      model: FinancialTransferLicensing,
+      action: WFResponseType,
     },
     public lang: LangService,
     private dialog: DialogService,
@@ -87,7 +87,7 @@ export class FinancialTransferLicensingApprovePopupComponent implements OnInit,A
       .pipe(
         map((_) =>
           this.isCommentRequired()
-            ? this.approvalForm.invalid && this.comment.invalid
+            ? this.approvalForm.invalid || this.comment.invalid
             : this.approvalForm.invalid
         )
       )
@@ -131,9 +131,7 @@ export class FinancialTransferLicensingApprovePopupComponent implements OnInit,A
       : { selectedResponse: this.response };
   }
 
-  openDateMenu(ref: any) {
-    ref.toggleCalendar();
-  }
+
   isCancelRequestType(): boolean {
     return this.data.model.requestType === AffiliationRequestType.CANCEL;
   }
