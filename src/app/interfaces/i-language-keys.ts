@@ -1787,4 +1787,5 @@ export interface ILanguageKeys {
   task_seen:string;
   lbl_approve_conditions:string;
   lbl_other:string;
+  msg_only_this_file_size_or_less_allowed_to_upload: string;
 }
