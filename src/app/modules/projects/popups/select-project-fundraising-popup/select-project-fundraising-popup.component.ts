@@ -89,6 +89,7 @@ export class SelectProjectFundraisingPopupComponent implements OnInit, OnDestroy
       }))
       .pipe(map(({consumedAmount, model}) => {
         return model.convertToFundraisingTemplate().clone({
+          projectTotalCost: model.targetAmount,
           consumedAmount,
           remainingAmount: currency(model.targetAmount).subtract(consumedAmount).value,
           totalCost: currency(model.targetAmount).subtract(consumedAmount).value

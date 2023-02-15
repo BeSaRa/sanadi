@@ -362,7 +362,7 @@ export class ProjectFundraising extends _ApprovalLicenseWithMonthly<ProjectFundr
       projectLicenseFullSerial: this.fullSerial,
       projectLicenseSerial: this.serial,
       projectLicenseId: this.id,
-      projectTotalCost: this.projectTotalCost,
+      projectTotalCost: this.targetAmount,
       permitType: this.permitType,
       permitTypeInfo: this.permitTypeInfo,
       totalCost: 0,
