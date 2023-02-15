@@ -1,7 +1,7 @@
 <div class="row">
   <div class="d-flex">
     <h1 class="h6 text-primary mb-2">{{lang.map.menu_projects_fundraising}}</h1>
-    <button (click)="!disabled && addFundraisingLicense()" class="btn icon-btn">
+    <button [disabled]="disabled" (click)="!disabled && addFundraisingLicense()" class="btn p-0 icon-btn">
       <i class="mdi mdi-plus-box text-primary"></i>
     </button>
   </div>
@@ -50,7 +50,7 @@
         <td cdk-cell *cdkCellDef="let row; let i = index;">
           <ng-container formArrayName="inputs">
             <div class="d-flex">
-              <input [id]="'fundraising-'+i" class="form-control form-control-sm" [formControlName]="i"
+              <input [readonly]="disabled" [id]="'fundraising-'+i" class="form-control form-control-sm" [formControlName]="i"
                      [mask]="inputMaskPatterns.SEPARATOR"
                      [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR"
                      [dropSpecialCharacters]="[',']">
@@ -75,7 +75,7 @@
                 <i class="mdi mdi-comment-text text-primary"></i>
               </button>
             </div>
-            <button [disabled]="isTemplatePermit(row)" (click)="!disabled && !isTemplatePermit(row) && deletePermit(row)"
+            <button [disabled]="disabled || isTemplatePermit(row)" (click)="!disabled && !isTemplatePermit(row) && deletePermit(row)"
                     class="btn p-0 icon-btn">
               <i class="mdi mdi-trash-can text-primary"></i>
             </button>

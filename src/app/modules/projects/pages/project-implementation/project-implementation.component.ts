@@ -154,6 +154,14 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     return this.projectInfo.get('licenseStartDate')!
   }
 
+  get projectEvaluationSLA(): AbstractControl {
+    return this.projectInfo.get('projectEvaluationSLA')!
+  }
+
+  get licenseDuration(): AbstractControl {
+    return this.projectInfo.get('licenseDuration')!
+  }
+
   get implementationTemplate(): AbstractControl {
     return this.projectInfo.get('implementationTemplate')!
   }
@@ -267,6 +275,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
   }
 
   _afterLaunch(): void {
+    this.implementationTemplate.setValue([])
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
     this.resetForm$.next()
   }
@@ -323,12 +332,12 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     this.model = this._getNewInstance();
     this.operation = OperationTypes.CREATE;
     this.selectedLicense = undefined
-    this.form.reset()
     this.implementationTemplate.setValue([])
     this.payment.setValue([])
     this.selfFinancing.setValue([])
     this.financialGrant.setValue([])
     this.implementingAgencyList.setValue([])
+    this.form.reset()
     this.setDefaultValues()
   }
 
@@ -610,7 +619,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       }))
       .pipe(filter((value): value is ImplementationTemplate[] => (value && !!value.length)))
       .pipe(map(val => val[0] as ImplementationTemplate))
-      .pipe(switchMap(template => template.loadImplementationFundraising(this.requestType.value , this.model?.id)))
+      .pipe(switchMap(template => template.loadImplementationFundraising(this.requestType.value, this.model?.id)))
       .pipe(filter((value): value is ImplementationFundraising => !!value))
       .subscribe((implementationFundraising) => {
         this.implementationFundraising.setValue([implementationFundraising])
@@ -683,7 +692,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
         this.readonly = false;
       }
     }
-
+    this.handleCustomFormReadonly()
   }
 
   private validateFundingResources(fields: string[]): ValidatorFn {
@@ -785,5 +794,22 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
         this.userAnswer.pipe(filter(v => v === UserClickOn.YES)).pipe(map(_ => value)),
         of(value))
     });
+  }
+
+  private handleCustomFormReadonly() {
+    const customFields = [
+      this.implementationTemplate,
+      this.implementingAgencyList,
+      this.implementationFundraising,
+      this.payment,
+      this.selfFinancing,
+      this.financialGrant,
+      this.licenseStartDate,
+      this.projectEvaluationSLA,
+      this.licenseDuration
+    ]
+    customFields.forEach(item => {
+      this.readonly ? item.disable() : item.enable()
+    })
   }
 }

@@ -99,7 +99,7 @@ export class ImplementationTemplateComponent implements OnDestroy, OnInit, Contr
       .pipe(map(_ => this.criteria()))
       .pipe(map(value => this.service.getCriteria(value)))
       .pipe(switchMap((criteria) => {
-        return this.service.openDialogSearchTemplate(criteria, criteria.workArea! ,  this.requestType , this.caseId, undefined )
+        return this.service.openDialogSearchTemplate(criteria, criteria.workArea!, this.requestType, this.caseId, undefined)
       }))
       .pipe(tap(_ => this.onTouch()))
       .pipe(switchMap((dialogRef) => dialogRef.onAfterClose$.pipe(filter((template): template is ImplementationTemplate => !!template))))
