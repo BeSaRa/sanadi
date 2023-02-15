@@ -87,7 +87,7 @@ export class FinancialTransferLicensingApprovePopupComponent implements OnInit,A
       .pipe(
         map((_) =>
           this.isCommentRequired()
-            ? this.approvalForm.invalid && this.comment.invalid
+            ? this.approvalForm.invalid || this.comment.invalid
             : this.approvalForm.invalid
         )
       )
@@ -131,9 +131,7 @@ export class FinancialTransferLicensingApprovePopupComponent implements OnInit,A
       : { selectedResponse: this.response };
   }
 
-  openDateMenu(ref: any) {
-    ref.toggleCalendar();
-  }
+
   isCancelRequestType(): boolean {
     return this.data.model.requestType === AffiliationRequestType.CANCEL;
   }
