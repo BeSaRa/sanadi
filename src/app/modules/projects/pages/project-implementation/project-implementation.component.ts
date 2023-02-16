@@ -20,7 +20,18 @@ import {Lookup} from "@models/lookup";
 import {LookupService} from "@services/lookup.service";
 import {ServiceRequestTypes} from "@app/enums/service-request-types";
 import {CommonUtils} from "@helpers/common-utils";
-import {catchError, exhaustMap, filter, map, pairwise, startWith, switchMap, takeUntil, tap} from "rxjs/operators";
+import {
+  catchError,
+  debounceTime,
+  exhaustMap,
+  filter,
+  map,
+  pairwise,
+  startWith,
+  switchMap,
+  takeUntil,
+  tap
+} from "rxjs/operators";
 import {UserClickOn} from "@app/enums/user-click-on.enum";
 import {Country} from "@models/country";
 import {ActivatedRoute} from "@angular/router";
@@ -40,6 +51,8 @@ import currency from "currency.js";
 import {CommonCaseStatus} from "@app/enums/common-case-status.enum";
 import {OpenFrom} from "@app/enums/open-from.enum";
 import {LicenseService} from "@services/license.service";
+import {IMyDateModel} from "angular-mydatepicker";
+import dayjs from "dayjs";
 
 @Component({
   selector: 'project-implementation',
@@ -79,6 +92,8 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
   userAnswer: ReplaySubject<UserClickOn> = new ReplaySubject<UserClickOn>(1)
 
   oldStoredValues: Record<string, number | null> = {}
+
+  licenseEndDate?: string
 
   constructor(public lang: LangService,
               public fb: UntypedFormBuilder,
@@ -239,6 +254,8 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     this.listenToImplementingAgencyListChanges()
     this.listenToImplementationTemplateChanges()
     this.listenToFundingResources()
+
+    this.listenToLicenseDatesChanges()
 
     this.fundingResources.setValidators([
       this.validateFundingResources([
@@ -812,5 +829,20 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       this.readonly ? item.disable() : item.enable()
     })
 
+  }
+
+  private listenToLicenseDatesChanges() {
+    merge(this.licenseStartDate.valueChanges as Observable<IMyDateModel>, this.licenseDuration.valueChanges as Observable<number>)
+      .pipe(takeUntil(this.destroy$))
+      .pipe(debounceTime(300))
+      .pipe(map(_ => {
+        return {
+          startDate: this.licenseStartDate.value as unknown as IMyDateModel,
+          duration: Number(this.licenseDuration.value)
+        }
+      }))
+      .subscribe(({startDate, duration}) => {
+        this.licenseEndDate = duration && startDate ? dayjs(startDate.singleDate?.jsDate).add(duration, 'month').format('YYYY-MM-DD') : '';
+      })
   }
 }
