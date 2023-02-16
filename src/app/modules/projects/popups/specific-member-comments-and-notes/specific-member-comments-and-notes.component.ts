@@ -24,7 +24,7 @@ export class SpecificMemberCommentsAndNotesComponent {
     },
     public lang: LangService) {
     this.data.meetingReport = JSON.parse(JSON.stringify({...this.data.meetingReport})) as MeetingAttendanceReport;
-
+    console.log(this.data.meetingReport)
     data.meetingReport.meetingMainItem = data.meetingReport.meetingMainItem.slice();
     data.meetingReport.meetingMainItem.forEach(mainItem => {
       mainItem.meetingSubItem = mainItem.meetingSubItem.slice();

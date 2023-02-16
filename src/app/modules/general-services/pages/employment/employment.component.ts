@@ -179,10 +179,6 @@ export class EmploymentComponent extends EServicesGenericComponent<Employment, E
         ),
         map(_map => {
           delete _map.size;
-          console.log(Object.keys(_map).reduce((prv, cur) => {
-            console.log(prv, cur, _map[cur], Object.keys(_map[cur]))
-            return prv + Object.keys(_map[cur]).filter((k: string) => _map[cur][k]).length;
-          }, 0))
           return Object.keys(_map).reduce((prv, cur) => {
             return prv + Object.keys(_map[cur]).filter((k: string) => _map[cur][k]).length;
           }, 0) == 0;
