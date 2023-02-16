@@ -89,7 +89,7 @@
             <ng-select [readonly]="readonly" validationClasses="mainDACCategory" appendTo="body" [clearable]="true"
                        id="mainDACCategory"
                        formControlName="mainDACCategory">
-              <ng-option [value]="option.id" *ngFor="let option of mainDacCategories">{{option.getName()}}</ng-option>
+              <ng-option [disabled]="!option.isActive()" [value]="option.id" *ngFor="let option of mainDacCategories">{{option.getName()}}</ng-option>
             </ng-select>
             <app-field-error-message controlName="mainDACCategory"></app-field-error-message>
           </div>
@@ -99,7 +99,7 @@
             <ng-select [readonly]="readonly" validationClasses="subDACCategory" appendTo="body" [clearable]="true"
                        id="subDACCategory"
                        formControlName="subDACCategory">
-              <ng-option [value]="option.id" *ngFor="let option of subDacCategories">{{option.getName()}}</ng-option>
+              <ng-option [disabled]="!option.isActive()" [value]="option.id" *ngFor="let option of subDacCategories">{{option.getName()}}</ng-option>
             </ng-select>
             <app-field-error-message controlName="subDACCategory"></app-field-error-message>
           </div>
@@ -111,7 +111,7 @@
             <ng-select [readonly]="readonly" validationClasses="mainUNOCHACategory" appendTo="body" [clearable]="true"
                        id="mainUNOCHACategory"
                        formControlName="mainUNOCHACategory">
-              <ng-option [value]="option.id"
+              <ng-option [disabled]="!option.isActive()" [value]="option.id"
                          *ngFor="let option of mainUNOCHACategories">{{option.getName()}}</ng-option>
             </ng-select>
             <app-field-error-message controlName="mainUNOCHACategory"></app-field-error-message>
@@ -122,7 +122,7 @@
             <ng-select [readonly]="readonly" validationClasses="subUNOCHACategory" appendTo="body" [clearable]="true"
                        id="subUNOCHACategory"
                        formControlName="subUNOCHACategory">
-              <ng-option [value]="option.id" *ngFor="let option of subUNOCHACategories">{{option.getName()}}</ng-option>
+              <ng-option [disabled]="!option.isActive()" [value]="option.id" *ngFor="let option of subUNOCHACategories">{{option.getName()}}</ng-option>
             </ng-select>
             <app-field-error-message controlName="subUNOCHACategory"></app-field-error-message>
           </div>
