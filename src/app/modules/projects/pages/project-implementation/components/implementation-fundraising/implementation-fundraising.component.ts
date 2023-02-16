@@ -122,7 +122,6 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
       })
       .then(() => {
         this.value = value
-        console.log(this.value);
         this.listenToControls()
         this.calculateTotal()
         this.isFullAmountConsumed()
