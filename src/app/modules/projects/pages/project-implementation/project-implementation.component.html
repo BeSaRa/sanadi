@@ -207,6 +207,8 @@
                                     [currentTemplate]="implementationTemplate.value"
                                     [criteria]="getCriteria"
                                     [projectTotalCost]="projectTotalCost.value"
+                                    [caseId]="model!.getCaseId()"
+                                    [requestType]="requestType.value"
                                     formControlName="implementationFundraising"></implementation-fundraising>
         <br>
         <fund-source [disabled]="readonly" [permitAmountConsumed]="permitAmountConsumed"

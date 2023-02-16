@@ -164,10 +164,10 @@ export class ProjectImplementationService extends BaseGenericEService<ProjectImp
   }
 
   @CastResponse(() => ProjectFundraising)
-  getConsumedAmount(fundraisingId: string): Observable<ProjectFundraising> {
+  getConsumedAmount(fundraisingId: string, templateId: string, caseId: string, requestType: number): Observable<ProjectFundraising> {
     return this.http.get<ProjectFundraising>(this.urlService.URLS.PROJECT_FUNDRAISING + '/license/consumed', {
       params: new HttpParams({
-        fromObject: {fundraisingId}
+        fromObject: {fundraisingId, templateId, ...caseId ? {caseId} : null, requestType}
       })
     });
   }
@@ -190,10 +190,11 @@ export class ProjectImplementationService extends BaseGenericEService<ProjectImp
     });
   }
 
-  openSelectFundraisingDialog(licenses: ProjectFundraising[], selectedFundraising?: ImplementationFundraising[]): DialogRef {
+  openSelectFundraisingDialog(licenses: ProjectFundraising[], caseId: string, requestType: number, selectedFundraising?: ImplementationFundraising[], templateId?: string): DialogRef {
     return this.dialog.show(SelectProjectFundraisingPopupComponent, {
       models: licenses,
-      selected: selectedFundraising
+      selected: selectedFundraising,
+      templateId
     });
   }
 
