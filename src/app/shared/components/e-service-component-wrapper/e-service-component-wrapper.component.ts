@@ -1,3 +1,4 @@
+import { GeneralAssociationMeetingAttendance } from '@app/models/general-association-meeting-attendance';
 import { AwarenessActivitySuggestionComponent } from './../../../modules/general-services/pages/awareness-activity-suggestion/awareness-activity-suggestion.component';
 import { AwarenessActivitySuggestion } from '@models/awareness-activity-suggestion';
 import { CoordinationWithOrganizationsRequest } from '@app/models/coordination-with-organizations-request';
@@ -36,7 +37,7 @@ import { ILanguageKeys } from '@app/interfaces/i-language-keys';
 import { ToastService } from '@app/services/toast.service';
 import { InboxService } from '@app/services/inbox.service';
 import { isObservable, merge, Observable, of, Subject } from 'rxjs';
-import { filter, ignoreElements, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { filter, ignoreElements, skipWhile, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { TabComponent } from '@app/shared/components/tab/tab.component';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { SaveTypes } from '@app/enums/save-types';
@@ -758,7 +759,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         askChecklist: true,
         runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
         show: (item: CaseModel<any, any>) => {
-          return item.getResponses().includes(WFResponseType.TO_GENERAL_MEETING_MEMBERS) && item.caseStatus != CommonCaseStatus.CANCELLED;
+          return item.getResponses().includes(WFResponseType.TO_GENERAL_MEETING_MEMBERS) && !(item as GeneralAssociationMeetingAttendance).isSendToMember && item.caseStatus != CommonCaseStatus.CANCELLED;
         },
         onClick: (item: CaseModel<any, any>) => {
           this.sendToGeneralMeetingMembersAction(item);
