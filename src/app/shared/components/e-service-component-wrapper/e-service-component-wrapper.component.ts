@@ -37,7 +37,7 @@ import { ILanguageKeys } from '@app/interfaces/i-language-keys';
 import { ToastService } from '@app/services/toast.service';
 import { InboxService } from '@app/services/inbox.service';
 import { isObservable, merge, Observable, of, Subject } from 'rxjs';
-import { filter, ignoreElements, skipWhile, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { filter, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { TabComponent } from '@app/shared/components/tab/tab.component';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { SaveTypes } from '@app/enums/save-types';
