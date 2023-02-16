@@ -266,6 +266,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       this.validateFundingResources([
         'payment',
       ])])
+    this.handleRequestTypeChange(this.requestType.value)
   }
 
   loadLicenseById(): void {
@@ -340,6 +341,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       fundingResources: model.buildFundingResources(),
       specialExplanations: model.buildSpecialInfo()
     })
+    this.handleRequestTypeChange(model.requestType)
     this.handleDisplayFields(model)
     this.handleMandatoryFields()
     this.calculateRemaining()

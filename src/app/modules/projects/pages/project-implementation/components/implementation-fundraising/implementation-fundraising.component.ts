@@ -256,7 +256,7 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
   }
 
   private getTemplatePermit(): ImplementationFundraising | undefined {
-    return this.value.find(item => item.isMain)
+    return (this.value ?? []).find(item => item.isMain)
   }
 
   isFullAmountConsumed(): void {
