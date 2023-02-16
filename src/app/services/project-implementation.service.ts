@@ -194,7 +194,9 @@ export class ProjectImplementationService extends BaseGenericEService<ProjectImp
     return this.dialog.show(SelectProjectFundraisingPopupComponent, {
       models: licenses,
       selected: selectedFundraising,
-      templateId
+      templateId,
+      caseId,
+      requestType
     });
   }
 
