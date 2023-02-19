@@ -773,7 +773,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         show: (item: CaseModel<any, any>) => {
           const model = item as unknown as IGeneralAssociationMeetingAttendanceFinalApprove;
           return (item.getCaseType() === CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE
-            && (model.isManagerFinalReviewStep()) || item.caseStatus === CommonCaseStatus.FINAL_APPROVE);
+            && (model.isManagerFinalReviewStep() || item.caseStatus === CommonCaseStatus.FINAL_APPROVE));
         },
         onClick: (item: CaseModel<any, any>) => {
           const model = item as unknown as IGeneralAssociationMeetingAttendanceFinalApprove;
