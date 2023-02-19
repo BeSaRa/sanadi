@@ -60,13 +60,8 @@ export class NotificationResponse extends Cloneable<NotificationResponse> {
   }
 
   // don't delete, its used in template
-  isUserInboxNotification(): boolean {
-    return this.notificationType === NotificationTypesEnum.USER_INBOX;
-  }
-
-  // don't delete, its used in template
-  isTeamInboxNotification(): boolean {
-    return this.notificationType === NotificationTypesEnum.TEAM_INBOX;
+  isInboxNotification(): boolean {
+    return this.notificationType === NotificationTypesEnum.INBOX;
   }
 
   getCaseId(): string {
@@ -111,7 +106,7 @@ export class NotificationResponse extends Cloneable<NotificationResponse> {
     const caseType: number = Number(this.getCaseType()!);
     this.itemRoute = '/' + inboxService.getServiceRoute(caseType);
     this.itemDetails = encrypt.encrypt<INavigatedItem>({
-      openFrom: this.isTeamInboxNotification() ? OpenFrom.TEAM_INBOX : OpenFrom.USER_INBOX,
+      openFrom: OpenFrom.USER_INBOX,
       taskId: this.getTaskId(),
       caseId: this.getCaseId(),
       caseType: caseType

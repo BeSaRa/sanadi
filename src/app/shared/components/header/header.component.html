@@ -31,7 +31,7 @@
               data-bs-toggle="dropdown" #notificationsTrigger aria-expanded="false"
               data-bs-reference="parent">
       </button>
-      <ul class="dropdown-menu dropdown-menu-end p-0 shadow" aria-labelledby="notificationsDropdown">
+      <ul #dropdownMenu class="dropdown-menu dropdown-menu-end p-0 shadow" aria-labelledby="notificationsDropdown">
         <ng-container *ngIf="notificationService.notificationsList.length > 0">
           <ng-container *ngFor="let notification of notificationService.notificationsList; let last = last">
             <li>
@@ -70,11 +70,8 @@
 
 <ng-template #notificationIconTemplate let-notification="data">
   <i class="mdi {{actionIconsEnum.NOTIFICATION_USER_INBOX}} ms-2"
-     *ngIf="notification.isUserInboxNotification()"
+     *ngIf="notification.isInboxNotification()"
      tooltip="{{langService.map.notification_user_inbox}}"></i>
-  <i class="mdi {{actionIconsEnum.NOTIFICATION_TEAM_INBOX}} ms-2"
-     *ngIf="notification.isTeamInboxNotification()"
-     tooltip="{{langService.map.notification_team_inbox}}"></i>
   <i class="mdi {{actionIconsEnum.NOTIFICATION_TERMINATED}} ms-2"
      *ngIf="notification.isTerminatedNotification()"
      tooltip="{{langService.map.notification_terminated}}"></i>

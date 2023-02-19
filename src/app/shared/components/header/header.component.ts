@@ -7,7 +7,6 @@ import {Subject} from 'rxjs';
 import {UserPreferencesService} from '@services/user-preferences.service';
 import {NotificationService} from '@services/notification.service';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
-import {NotificationResponse} from '@models/notification-response';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -21,6 +20,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   destroy$: Subject<any> = new Subject<any>();
   actionIconsEnum = ActionIconsEnum;
   @ViewChild('notificationsTrigger') notificationsTrigger!: ElementRef;
+  @ViewChild('dropdownMenu') dropdownMenu!: ElementRef;
 
   constructor(public langService: LangService,
               public employee: EmployeeService,
@@ -46,8 +46,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   toggleNotifications($event: Event) {
     $event?.stopPropagation();
     $event?.preventDefault();
-
-    this.notificationService.saveUnreadNotificationsAsReadSilently();
+    if (!this.dropdownMenu.nativeElement.classList.contains('show')) {
+      this.notificationService.saveUnreadNotificationsAsReadSilently();
+    }
     this.notificationsTrigger?.nativeElement.click();
   }
 

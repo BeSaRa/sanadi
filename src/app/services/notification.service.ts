@@ -15,6 +15,7 @@ import {Router} from '@angular/router';
 import {DialogService} from '@services/dialog.service';
 import {LangService} from '@services/lang.service';
 import {ILanguageKeys} from '@contracts/i-language-keys';
+import {CommonUtils} from '@helpers/common-utils';
 
 @Injectable({
   providedIn: 'root'
@@ -98,8 +99,11 @@ export class NotificationService implements OnDestroy {
 
   openInfoNotification(notification: NotificationResponse): void {
     const lang: LangService = FactoryService.getService('LangService');
-    let infoMsg: keyof ILanguageKeys = 'msg_terminated_notification';
-    this.dialog.info(lang.map[infoMsg]);
+    let infoMsg: keyof ILanguageKeys = {} as keyof ILanguageKeys;
+    if (notification.isTerminatedNotification()){
+      infoMsg = 'msg_terminated_notification';
+    }
+    !CommonUtils.isEmptyObject(infoMsg) && (this.dialog.info(lang.map[infoMsg]));
   }
 
   openNotification(notification: NotificationResponse): void {
@@ -125,7 +129,6 @@ export class NotificationService implements OnDestroy {
     }, false);
     this.notificationsSource.addEventListener('message', (result) => {
       let finalData = notificationResponseInterceptor.receive(new NotificationResponse().clone(JSON.parse(result.data)));
-      console.log('notifications', finalData);
       this.notificationsList.push(finalData);
       this.updateUnreadCount();
       return this.notificationStream.next(finalData);

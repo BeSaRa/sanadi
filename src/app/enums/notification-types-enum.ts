@@ -1,5 +1,4 @@
 export enum NotificationTypesEnum {
-  USER_INBOX = 1,
-  TEAM_INBOX = 2,
-  TERMINATED = 3
+  INBOX = 1,
+  TERMINATED = 2
 }
