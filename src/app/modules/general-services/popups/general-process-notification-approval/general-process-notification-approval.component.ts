@@ -1,3 +1,4 @@
+import { DialogService } from './../../../../services/dialog.service';
 import { ILanguageKeys } from './../../../../interfaces/i-language-keys';
 import { CommonUtils } from './../../../../helpers/common-utils';
 import { InboxService } from './../../../../services/inbox.service';
@@ -11,7 +12,7 @@ import { DatepickerOptionsMap } from './../../../../types/types';
 import { WFResponseType } from './../../../../enums/wfresponse-type.enum';
 import { UntypedFormControl, UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
 import { CustomValidators } from './../../../../validators/custom-validators';
-import { switchMap, exhaustMap, takeUntil } from 'rxjs/operators';
+import { switchMap, exhaustMap, takeUntil, map, tap, filter } from 'rxjs/operators';
 import { IWFResponse } from './../../../../interfaces/i-w-f-response';
 import { Component, Inject, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
@@ -38,6 +39,7 @@ export class GeneralProcessNotificationApprovalComponent implements OnInit {
     },
     public lang: LangService,
     private dialogRef: DialogRef,
+    private dialog: DialogService,
     private toast: ToastService,
     private inboxService: InboxService,
     private fb: UntypedFormBuilder
@@ -54,6 +56,9 @@ export class GeneralProcessNotificationApprovalComponent implements OnInit {
   private listenToAction() {
     this.action$
       .pipe(takeUntil(this.destroy$))
+      .pipe(map(_ => this.comment.invalid || this.approvalForm.invalid))
+      .pipe(tap(invalid => invalid && this.dialog.error(this.lang.map.msg_all_required_fields_are_filled)))
+      .pipe(filter(invalid => !invalid))
       .pipe(exhaustMap(_ => {
         Object.assign(this.data.model, this.approvalForm.value)
         return this.data.model.save()
