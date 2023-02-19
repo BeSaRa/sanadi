@@ -1,3 +1,4 @@
+import { GeneralAssociationMeetingAttendance } from './../../../models/general-association-meeting-attendance';
 import {
   AwarenessActivitySuggestionComponent
 } from '@modules/general-services/pages/awareness-activity-suggestion/awareness-activity-suggestion.component';
@@ -769,7 +770,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         askChecklist: true,
         runBeforeShouldSuccess: () => this.component.checkIfHasMissingRequiredAttachments(),
         show: (item: CaseModel<any, any>) => {
-          return item.getResponses().includes(WFResponseType.TO_GENERAL_MEETING_MEMBERS) && item.caseStatus != CommonCaseStatus.CANCELLED;
+          return item.getResponses().includes(WFResponseType.TO_GENERAL_MEETING_MEMBERS) && !(item as GeneralAssociationMeetingAttendance).isSendToMember && item.caseStatus != CommonCaseStatus.CANCELLED;
         },
         onClick: (item: CaseModel<any, any>) => {
           this.sendToGeneralMeetingMembersAction(item);
@@ -783,7 +784,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         show: (item: CaseModel<any, any>) => {
           const model = item as unknown as IGeneralAssociationMeetingAttendanceFinalApprove;
           return (item.getCaseType() === CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE
-            && (model.isManagerFinalReviewStep()) || item.caseStatus === CommonCaseStatus.FINAL_APPROVE);
+            && (model.isManagerFinalReviewStep() || item.caseStatus === CommonCaseStatus.FINAL_APPROVE));
         },
         onClick: (item: CaseModel<any, any>) => {
           const model = item as unknown as IGeneralAssociationMeetingAttendanceFinalApprove;
