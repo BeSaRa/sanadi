@@ -1,12 +1,10 @@
-import {Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {LangService} from '@app/services/lang.service';
 import {UrlService} from '@app/services/url.service';
 import {SidebarComponent} from '../sidebar/sidebar.component';
 import {EmployeeService} from '@app/services/employee.service';
 import {Subject} from 'rxjs';
 import {UserPreferencesService} from '@services/user-preferences.service';
-import {NotificationService} from '@services/notification.service';
-import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -14,24 +12,18 @@ import {ActionIconsEnum} from '@app/enums/action-icons-enum';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent implements OnInit, OnDestroy {
+export class HeaderComponent implements OnInit {
   @Input()
   sidebar!: SidebarComponent;
   destroy$: Subject<any> = new Subject<any>();
-  actionIconsEnum = ActionIconsEnum;
-  @ViewChild('notificationsTrigger') notificationsTrigger!: ElementRef;
-  @ViewChild('dropdownMenu') dropdownMenu!: ElementRef;
 
   constructor(public langService: LangService,
               public employee: EmployeeService,
               public urlService: UrlService,
-              private userPreferencesService: UserPreferencesService,
-              public notificationService: NotificationService) {
-
+              private userPreferencesService: UserPreferencesService) {
   }
 
   ngOnInit(): void {
-    this.notificationService.getNotifications();
   }
 
   toggleLang($event: MouseEvent) {
@@ -41,18 +33,5 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   openUserPreferences() {
     this.userPreferencesService.openEditDialog(this.employee.getCurrentUser().generalUserId).subscribe();
-  }
-
-  toggleNotifications($event: Event) {
-    $event?.stopPropagation();
-    $event?.preventDefault();
-    if (!this.dropdownMenu.nativeElement.classList.contains('show')) {
-      this.notificationService.saveUnreadNotificationsAsReadSilently();
-    }
-    this.notificationsTrigger?.nativeElement.click();
-  }
-
-  ngOnDestroy(): void {
-    this.notificationService.stopNotifications();
   }
 }
