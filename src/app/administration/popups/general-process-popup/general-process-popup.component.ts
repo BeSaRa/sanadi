@@ -48,6 +48,7 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
   isEditField: boolean = false;
   saveVisible = true;
   mainClassificationsList: AdminLookup[] = [];
+  _subClassificationsList: AdminLookup[] = [];
   subClassificationsList: AdminLookup[] = [];
   departmentList: InternalDepartment[] = [];
   private _teamsList: Team[] = [];
@@ -108,15 +109,19 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
     }
   }
   initPopup(): void {
-    this.adminLookupService.loadGeneralProcessClassificaion().subscribe(data => {
-      this.mainClassificationsList = data.filter(c => !c.parentId);;
+    this.adminLookupService.loadAsLookups(AdminLookupTypeEnum.GENERAL_PROCESS_CLASSIFICATION, true).subscribe((data: AdminLookup[]) => {
+      this.mainClassificationsList = data.filter(c => !c.parentId);
+      this._subClassificationsList = data.filter(c => !!c.parentId);
+      if (this.model?.mainClass) {
+        this.subClassificationsList = this._subClassificationsList.filter(sc => sc.parentId == this.model?.mainClass);
+      }
     })
     this.internalDepartmentService.loadGeneralProcessDepartments().subscribe(deparments => {
       this.departmentList = deparments;
     })
     if (this.model?.id) {
       this._loadSubTeam(this.model?.teamId);
-      this.loadSubClasses(this.model?.mainClass)
+      this.handleMainCatChange(this.model?.mainClass)
       this.processForm.generateFromString(this.model?.template)
     }
     this.listenToFieldDetailsSubsecribtion$ = ProcessFieldBuilder.listenToSelectField().subscribe((fieldId: string) => {
@@ -173,10 +178,9 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
         }
       });
   }
-  loadSubClasses(parentId: number) {
-    this.adminLookupService.loadByParentId(AdminLookupTypeEnum.GENERAL_PROCESS_CLASSIFICATION, parentId).subscribe(data => {
-      this.subClassificationsList = data;
-    })
+  handleMainCatChange(parentId: number) {
+    this.subClassField.reset();
+    this.subClassificationsList = this._subClassificationsList.filter(sc => sc.parentId == parentId);
   }
   private _loadSubTeam(parentTeamId?: number) {
     if (parentTeamId)
@@ -258,6 +262,9 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
   }
   get subTeamField(): UntypedFormControl {
     return this.form.get('subTeamId') as UntypedFormControl
+  }
+  get subClassField(): UntypedFormControl {
+    return this.form.get('subClass') as UntypedFormControl
   }
   getLabel(name: any) {
     return this.lang.map[('lbl_' + name) as keyof ILanguageKeys];
