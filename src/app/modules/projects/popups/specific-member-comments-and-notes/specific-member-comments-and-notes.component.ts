@@ -1,9 +1,9 @@
-import {Component, Inject} from '@angular/core';
-import {LangService} from '@services/lang.service';
-import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
-import {MeetingAttendanceReport} from '@app/models/meeting-attendance-report';
-import {GeneralMeetingAttendanceNote} from '@app/models/general-meeting-attendance-note';
-import {GeneralAssociationInternalMember} from '@app/models/general-association-internal-member';
+import { Component, Inject } from '@angular/core';
+import { LangService } from '@services/lang.service';
+import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
+import { MeetingAttendanceReport } from '@app/models/meeting-attendance-report';
+import { GeneralMeetingAttendanceNote } from '@app/models/general-meeting-attendance-note';
+import { GeneralAssociationInternalMember } from '@app/models/general-association-internal-member';
 
 @Component({
   selector: 'specific-member-comments-and-notes',
@@ -23,16 +23,15 @@ export class SpecificMemberCommentsAndNotesComponent {
       meetingId: string
     },
     public lang: LangService) {
-    this.data.meetingReport = JSON.parse(JSON.stringify({...this.data.meetingReport})) as MeetingAttendanceReport;
-    console.log(this.data.meetingReport)
-    data.meetingReport.meetingMainItem = data.meetingReport.meetingMainItem.slice();
-    data.meetingReport.meetingMainItem.forEach(mainItem => {
-      mainItem.meetingSubItem = mainItem.meetingSubItem.slice();
-      mainItem.meetingSubItem.forEach(subItem => {
-        subItem.userComments = subItem.userComments?.slice();
+    this.data.meetingReport = JSON.parse(JSON.stringify({ ...this.data.meetingReport })) as MeetingAttendanceReport;
+
+    data.meetingReport.meetingMainItem = data.meetingReport.meetingMainItem.filter((mainItem) => {
+      mainItem.meetingSubItem = mainItem.meetingSubItem.filter((subItem) => {
         subItem.userComments = subItem.userComments?.filter(comment => comment.userId === this.data.userId);
+        return (subItem.userComments || []).length;
       });
-    });
+      return mainItem.meetingSubItem.length;
+    })
 
     this.generalNotes = this.data.generalNotes.filter(note => note.memberID === this.data.userId);
   }

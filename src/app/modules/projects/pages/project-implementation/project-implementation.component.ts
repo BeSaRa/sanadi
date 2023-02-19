@@ -368,6 +368,8 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
 
     this.requestType.setValue(ServiceRequestTypes.NEW)
     this.projectWorkArea.setValue(ProjectWorkArea.INSIDE_QATAR)
+    this.beneficiaryCountry.setValue(this.qatarCountry.id)
+    this.beneficiaryCountry.disable();
     this.internalProjectClassification.setValue(this.internalProjectClassifications[0].lookupKey)
   }
 

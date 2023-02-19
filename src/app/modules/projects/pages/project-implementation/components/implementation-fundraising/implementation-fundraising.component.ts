@@ -46,6 +46,10 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
   criteria?: () => ImplementationCriteriaContract
   @Input()
   remainingAmount!: number
+  @Input()
+  caseId!: string
+  @Input()
+  requestType!: number
 
   @Output()
   amountConsumed: EventEmitter<boolean> = new EventEmitter<boolean>()
@@ -221,7 +225,7 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
     this.service.loadFundraisingLicensesByCriteria(criteria, criteria.workArea!)
       .pipe(tap(models => !models.length && this.dialog.info(this.lang.map.no_result_for_your_search_criteria)))
       .pipe(filter(models => !!models.length))
-      .pipe(switchMap(licenses => this.service.openSelectFundraisingDialog(licenses, this.value).onAfterClose$))
+      .pipe(switchMap(licenses => this.service.openSelectFundraisingDialog(licenses, this.caseId, this.requestType, this.value, this._currentTemplate).onAfterClose$))
       .pipe(filter((value: ImplementationFundraising): value is ImplementationFundraising => !!value))
       .subscribe((template: ImplementationFundraising) => {
         this.createInputWithListener(template.totalCost)
