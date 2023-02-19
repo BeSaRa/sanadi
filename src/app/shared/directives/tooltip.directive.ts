@@ -20,7 +20,6 @@ export class TooltipDirective implements OnInit, OnDestroy {
     this._tooltip = value;
 
     if (this.ref && this.ref.tip) {
-      console.log(this.ref.tip);
       const tip = this.ref.tip.querySelector('.tooltip-inner');
       const element = document.createElement('div')
       element.classList.add('tooltip-inner')

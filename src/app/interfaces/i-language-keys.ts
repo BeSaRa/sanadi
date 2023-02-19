@@ -1761,7 +1761,7 @@ export interface ILanguageKeys {
   charitable_entities: string;
   government_agencies: string;
   countries_add_successfully: string;
-  remove_countries_messages: string;
+  remove_profile_country_link_messages: string;
   must_have_one_active_field_at_least: string;
   must_have_one_required_field_at_least: string;
   must_have_one_field_at_least_shown_on_table: string;

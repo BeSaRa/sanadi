@@ -78,7 +78,6 @@ export class UserSubTeamComponent implements OnInit, OnDestroy {
     this.userSubTeamsChanged$
       .pipe(map(userSubTeams => this.userSubTeams = userSubTeams))
       .subscribe((userSubTeams) => {
-        console.log(userSubTeams)
         this.selectedTeamsIds = userSubTeams.map(userSubTeam => userSubTeam.subTeamId);
       });
   }
@@ -99,7 +98,6 @@ export class UserSubTeamComponent implements OnInit, OnDestroy {
       this.toast.error(this.lang.map.please_select_team_to_link);
       return;
     }
-    console.log(this.selectedTeamControl.value)
     // add sub team to the user
     const subTeam = new UserSubTeam().clone({
       generalUserId: this.model.generalUserId,
