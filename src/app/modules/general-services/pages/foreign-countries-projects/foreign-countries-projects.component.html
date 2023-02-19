@@ -39,8 +39,9 @@
             class="form-label">{{ lang.map.external_cooperation_authority }}</label>
           <ng-select [selectOnTab]="true" labelForId="externalCooperationAuthority" [clearable]="true"
             placeholder="{{ lang.map.select }}" [readonly]="readonly || isCancelRequestType"
-            id="externalCooperationAuthority" [notFoundText]="lang.map.msg_not_found" appendTo="body"
-            validationClasses="externalCooperationAuthority" formControlName="externalCooperationAuthority">
+            id="externalCooperationAuthority" (change)="handleExternalCooperationAuthorityChange($event)"
+            [notFoundText]="lang.map.msg_not_found" appendTo="body" validationClasses="externalCooperationAuthority"
+            formControlName="externalCooperationAuthority">
             <ng-option [value]="option.id" *ngFor="let option of externalCooperations$ | async">{{ option.getName() }}
             </ng-option>
           </ng-select>
@@ -51,9 +52,9 @@
           <label asteriskIfRequired="organizationId" for="organizationId" class="form-label">{{
             lang.map.lbl_organization }}</label>
           <ng-select [selectOnTab]="true" labelForId="organizationId" [clearable]="true"
-            placeholder="{{ lang.map.select }}" id="organizationId" [readonly]="readonly || criticalOnTask || isCancelRequestType"
-            [notFoundText]="lang.map.msg_not_found" appendTo="body" validationClasses="organizationId"
-            formControlName="organizationId">
+            placeholder="{{ lang.map.select }}" id="organizationId"
+            [readonly]="readonly || criticalOnTask || isCancelRequestType" [notFoundText]="lang.map.msg_not_found"
+            appendTo="body" validationClasses="organizationId" formControlName="organizationId">
             <ng-option *ngFor="let option of organizationUnits" [value]="option.id">{{ option.getName() }}</ng-option>
           </ng-select>
           <app-field-error-message controlName="organizationId"></app-field-error-message>
@@ -63,7 +64,10 @@
           <ng-select [selectOnTab]="true" labelForId="country" [clearable]="true" placeholder="{{ lang.map.select }}"
             [readonly]="readonly || isCancelRequestType" id="country" [notFoundText]="lang.map.msg_not_found"
             appendTo="body" validationClasses="country" formControlName="country">
-            <ng-option [value]="option.id" *ngFor="let option of countries$ | async">{{ option.getName() }}</ng-option>
+            <ng-option [value]="option.id" *ngFor="let option of countries">
+              {{ option }}
+              <!-- {{ option.getName() }} -->
+            </ng-option>
           </ng-select>
           <app-field-error-message controlName="country"></app-field-error-message>
         </div>
@@ -72,8 +76,8 @@
             lang.map.lbl_description
             }}</label>
           <textarea id="needSubject" trimInput [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
-            [readonly]="readonly || isCancelRequestType" validationClasses="needSubject"
-            formControlName="needSubject" class="form-control"></textarea>
+            [readonly]="readonly || isCancelRequestType" validationClasses="needSubject" formControlName="needSubject"
+            class="form-control"></textarea>
           <app-field-error-message controlName="needSubject"></app-field-error-message>
         </div>
         <div class="mb-4 position-relative">
