@@ -7,8 +7,8 @@ const {send, receive} = new ImplementationFundraisingInterceptor()
 
 @InterceptModel({send, receive})
 export class ImplementationFundraising extends Cloneable<ImplementationFundraising> {
-  arName!: string
-  enName!: string
+  arabicName!: string
+  englishName!: string
   projectLicenseFullSerial!: string
   projectLicenseSerial!: number
   projectLicenseId!: string
@@ -17,8 +17,8 @@ export class ImplementationFundraising extends Cloneable<ImplementationFundraisi
   remainingAmount!: number
   consumedAmount!: number
   totalCost!: number
-  notes!: string
+  notes: string = ''
   templateId?: string
   permitTypeInfo!: AdminResult
-
+  isMain!: boolean
 }

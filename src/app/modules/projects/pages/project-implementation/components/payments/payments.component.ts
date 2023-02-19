@@ -97,15 +97,15 @@ export class PaymentsComponent implements ControlValueAccessor, OnInit, OnDestro
   }
 
   openAddPaymentDialog() {
-    // if (!this.projectTotalCost) {
-    //   this.dialog.alert(this.lang.map.please_add_template_to_proceed)
-    //   return
-    // }
-    //
-    // if (!this.remainingAmount) {
-    //   this.dialog.alert(this.lang.map.cannot_add_payments_full_amount_have_been_used)
-    //   return;
-    // }
+    if (!this.projectTotalCost) {
+      this.dialog.alert(this.lang.map.please_add_template_to_proceed)
+      return
+    }
+
+    if (!this.remainingAmount) {
+      this.dialog.info(this.lang.map.cannot_add_payments_full_amount_have_been_used)
+      return;
+    }
 
     this.dialog.show<IDialogData<Payment>>(PaymentPopupComponent, {
       model: new Payment(),

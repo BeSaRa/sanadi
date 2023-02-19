@@ -1,7 +1,7 @@
 <div class="row">
   <div class="d-flex">
     <h1 class="h6 text-primary mb-2">{{lang.map.payments}}</h1>
-    <button (click)="!disabled && openAddPaymentDialog()" class="btn icon-btn">
+    <button [disabled]="disabled" (click)="!disabled && openAddPaymentDialog()" class="btn p-0 icon-btn">
       <i class="mdi mdi-plus-box text-primary"></i>
     </button>
   </div>
@@ -29,12 +29,14 @@
               *cdkCellDef="let row; let i = index">
             <ng-container formArrayName="inputs">
               <div class="d-flex">
-                <input [id]="'payment-'+ i" class="form-control form-control-sm" [formControlName]="i"
+                <input [readonly]="disabled" [id]="'payment-'+ i" class="form-control form-control-sm"
+                       [formControlName]="i"
                        [mask]="inputMask.SEPARATOR"
                        [thousandSeparator]="inputMask.THOUSAND_SEPARATOR"
                        [dropSpecialCharacters]="[',']">
                 <div [tooltip]="lang.map.take_the_remaining">
-                  <button [disabled]="!remainingAmount" (click)="takeRemaining(i)" class="btn icon-btn p-0">
+                  <button [disabled]="disabled || !remainingAmount" (click)="!disabled && takeRemaining(i)"
+                          class="btn icon-btn p-0">
                     <i class="mdi mdi-hand-coin-outline text-primary"></i>
                   </button>
                 </div>
@@ -46,13 +48,16 @@
         <ng-container cdkColumnDef="actions">
           <th cdk-header-cell style="width:120px" *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
           <td cdk-cell *cdkCellDef="let row ; let i = index">
-            <button (click)="!disabled && deleteItem(row , i)" [title]="lang.map.btn_delete" class="btn icon-btn">
-              <i class="mdi mdi-trash-can text-primary"></i>
-            </button>
-            <button [disabled]="disabled" (click)="!disabled && editItem(row , i)" [title]="lang.map.btn_edit"
-                    class="btn icon-btn">
-              <i class="mdi mdi-pen text-primary"></i>
-            </button>
+            <div class="d-flex">
+              <button [disabled]="disabled" (click)="!disabled && deleteItem(row , i)" [title]="lang.map.btn_delete"
+                      class="btn p-0 icon-btn">
+                <i class="mdi mdi-trash-can text-primary"></i>
+              </button>
+              <button [disabled]="disabled" (click)="!disabled && editItem(row , i)" [title]="lang.map.btn_edit"
+                      class="btn p-0 icon-btn">
+                <i class="mdi mdi-pen text-primary"></i>
+              </button>
+            </div>
           </td>
         </ng-container>
         <ng-container cdkColumnDef="Total">
@@ -91,7 +96,7 @@
             <div class="d-flex align-items-center">
               <span class="h6 mb-0">{{remainingAmount| mask:inputMask.SEPARATOR:inputMask.THOUSAND_SEPARATOR}}</span>
               <div [tooltip]="lang.map.distribute_evenly">
-                <button [disabled]="!remainingAmount" (click)="remainingAmount && distributeRemaining()"
+                <button [disabled]="disabled || !remainingAmount" (click)="remainingAmount && distributeRemaining()"
                         class="btn icon-btn p-0">
                   <i class="mdi mdi-hand-coin text-primary"></i>
                 </button>

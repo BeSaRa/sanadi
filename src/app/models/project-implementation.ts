@@ -89,7 +89,7 @@ export class ProjectImplementation
       subDACCategory,
       subUNOCHACategory,
       internalProjectClassification,
-      projectTotalCost
+
     } = this;
 
     return {
@@ -103,7 +103,6 @@ export class ProjectImplementation
       subDACCategory: controls ? [subDACCategory] : subDACCategory,
       subUNOCHACategory: controls ? [subUNOCHACategory] : subUNOCHACategory,
       internalProjectClassification: controls ? [internalProjectClassification] : internalProjectClassification,
-      projectTotalCost: controls ? [projectTotalCost, [CustomValidators.required, Validators.min(1)]] : projectTotalCost
     }
   }
 
@@ -114,7 +113,8 @@ export class ProjectImplementation
       licenseStartDate,
       projectEvaluationSLA,
       licenseDuration,
-      implementingAgencyList
+      implementingAgencyList,
+      projectTotalCost
     } = this
     return {
       licenseStartDate: controls ? [licenseStartDate, CustomValidators.required] : licenseStartDate,
@@ -122,7 +122,8 @@ export class ProjectImplementation
       projectEvaluationSLA: controls ? [projectEvaluationSLA, CustomValidators.required] : projectEvaluationSLA,
       implementingAgencyType: controls ? [implementingAgencyType, CustomValidators.required] : implementingAgencyType,
       implementationTemplate: controls ? [implementationTemplate, CustomValidators.requiredArray] : implementationTemplate,
-      implementingAgencyList: controls ? [implementingAgencyList, CustomValidators.requiredArray] : implementingAgencyList
+      implementingAgencyList: controls ? [implementingAgencyList, CustomValidators.requiredArray] : implementingAgencyList,
+      projectTotalCost: controls ? [projectTotalCost, [CustomValidators.required, Validators.min(1)]] : projectTotalCost
     }
   }
 

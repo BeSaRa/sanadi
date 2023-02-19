@@ -18,8 +18,17 @@ export class TooltipDirective implements OnInit, OnDestroy {
   @Input()
   set tooltip(value) {
     this._tooltip = value;
+
     if (this.ref && this.ref.tip) {
-      this.ref.tip.querySelector('.tooltip-inner').innerText = value;
+      console.log(this.ref.tip);
+      const tip = this.ref.tip.querySelector('.tooltip-inner');
+      const element = document.createElement('div')
+      element.classList.add('tooltip-inner')
+      tip ? (tip.innerText = value) : (() => {
+        this.ref.tip.appendChild(element)
+        this.ref.tip.querySelector('.tooltip-inner').innerText = value
+      })()
+
     }
   }
 
@@ -33,7 +42,7 @@ export class TooltipDirective implements OnInit, OnDestroy {
       trigger: 'hover',
       placement: this.placement,
       title: () => {
-        return this.tooltip;
+        return this.tooltip || "";
       }
     });
   }
