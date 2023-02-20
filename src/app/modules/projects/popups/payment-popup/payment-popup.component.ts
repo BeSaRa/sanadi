@@ -62,7 +62,7 @@ export class PaymentPopupComponent implements OnInit, OnDestroy {
 
   private buildForm() {
     this.form = this.fb.group({
-      paymentNo: [this.model.paymentNo, CustomValidators.required],
+      paymentNo: [this.model.paymentNo, [CustomValidators.required, CustomValidators.maxLength(300)]],
       dueDate: [DateUtils.changeDateToDatepicker(this.model.dueDate), CustomValidators.required],
       totalCost: [this.model.totalCost, CustomValidators.required],
       notes: [this.model.notes, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]
