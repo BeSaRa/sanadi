@@ -125,7 +125,7 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
         this.createInputList(value)
       })
       .then(() => {
-        this.value = value
+        this.value = value ?? []
         this.listenToControls()
         this.calculateTotal()
         this.isFullAmountConsumed()

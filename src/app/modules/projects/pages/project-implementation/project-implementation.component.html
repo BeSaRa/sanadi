@@ -195,7 +195,7 @@
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label class="form-label"
                    for="licenseEndDate">{{lang.map.license_end_date}}</label>
-            <input readonly id="licenseEndDate" [value]="licenseEndDate" class="form-control">
+            <input readonly id="licenseEndDate" [value]="licenseEndDate ?? ''" class="form-control">
           </div>
         </div>
       </ng-container>

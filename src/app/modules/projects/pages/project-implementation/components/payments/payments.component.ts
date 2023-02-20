@@ -80,7 +80,7 @@ export class PaymentsComponent implements ControlValueAccessor, OnInit, OnDestro
     this.value = []
     this.createInputs(value)
     this.createListeners()
-    this.value = value;
+    this.value = value ?? [];
     this.calculateRemaining()
   }
 
