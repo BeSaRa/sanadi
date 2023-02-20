@@ -267,6 +267,11 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
         'payment',
       ])])
     this.handleRequestTypeChange(this.requestType.value)
+
+    if(this.operation !== OperationTypes.CREATE) {
+      this.licenseStartDate.setValue(this.licenseStartDate.value);
+      this.implementingAgencyList.setValue(this.implementingAgencyList.value);
+    }
   }
 
   loadLicenseById(): void {
