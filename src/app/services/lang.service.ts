@@ -28,6 +28,8 @@ import { CrudGenericService } from "@app/generics/crud-generic-service";
 import { CastResponse, CastResponseContainer } from "@decorators/cast-response";
 import { Pagination } from '@app/models/pagination';
 import {PermissionsEnum} from '@app/enums/permissions-enum';
+import { InfoService } from './info.service';
+import { Title } from '@angular/platform-browser';
 
 @CastResponseContainer({
   $default: {
@@ -73,7 +75,9 @@ export class LangService extends CrudGenericService<Localization> {
               private employeeService: EmployeeService,
               private authService: AuthService,
               private commonService: CommonService,
-              private urlService: UrlService) {
+              private urlService: UrlService,
+              private infoService:InfoService,
+              private titleService:Title) {
     super();
     FactoryService.registerService('LangService', this);
     this.getLinkElement();
@@ -179,11 +183,13 @@ export class LangService extends CrudGenericService<Localization> {
               this.commonService.flags?.internalFollowUpPermission && this.employeeService.addFollowupPermission(PermissionsEnum.INTERNAL_FOLLOWUP)
             }
             this.changeLanguage(lang);
+            this.changeTitle();
             subscriber.next(lang);
             subscriber.complete();
           });
       } else {
         this.changeLanguage(lang);
+        this.changeTitle();
         subscriber.next(lang);
         subscriber.complete();
       }
@@ -269,5 +275,16 @@ export class LangService extends CrudGenericService<Localization> {
       .pipe(map(response => {
         return response.rs;
       }));
+  }
+
+  changeTitle(){ 
+    this.infoService.loadGlobalSettings().subscribe(
+      globalSetting=>{
+        if(this.getCurrentLanguage().code==='ar')
+        {this.titleService.setTitle(globalSetting.systemArabicName)}
+        else if(this.getCurrentLanguage().code=== 'en')
+        {this.titleService.setTitle(globalSetting.systemEnglishName)}
+      }
+    )
   }
 }
