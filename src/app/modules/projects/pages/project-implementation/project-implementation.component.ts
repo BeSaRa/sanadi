@@ -340,6 +340,8 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       projectInfo: model.buildProjectInfo(),
       fundingResources: model.buildFundingResources(),
       specialExplanations: model.buildSpecialInfo()
+    }, {
+      emitEvent: !fromSelectedLicense
     })
     this.handleRequestTypeChange(model.requestType)
     this.handleDisplayFields(model)
