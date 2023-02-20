@@ -466,8 +466,7 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
 
     const isAffidavitOfCompletionRequired =
       this.requestType$.value ===
-        FinancialTransferRequestTypes.TRANSFER_STATEMENT_TRANSFERRED &&
-      this.submissionMechanism === SubmissionMechanisms.NOTIFICATION;
+        FinancialTransferRequestTypes.TRANSFER_STATEMENT_TRANSFERRED ;
 
     if (isAffidavitOfCompletionRequired) {
       this._addRequiredToAffidavitOfCompletionGroup();
