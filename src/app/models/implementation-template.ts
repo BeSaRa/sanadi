@@ -66,7 +66,7 @@ export class ImplementationTemplate extends Cloneable<ImplementationTemplate> {
       ]] : englishName,
       latitude: controls ? [latitude, CustomValidators.required] : latitude,
       longitude: controls ? [longitude, CustomValidators.required] : longitude,
-      beneficiaryRegion: controls ? [beneficiaryRegion, CustomValidators.required] : beneficiaryRegion,
+      beneficiaryRegion: controls ? [beneficiaryRegion, [CustomValidators.required, CustomValidators.maxLength(300)]] : beneficiaryRegion,
       notes: controls ? [notes, [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS),]] : notes,
       projectTotalCost: controls ? [projectTotalCost, CustomValidators.required] : projectTotalCost
     };
