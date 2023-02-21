@@ -1787,4 +1787,5 @@ export interface ILanguageKeys {
   task_seen:string;
   lbl_approve_conditions:string;
   lbl_other:string;
+  err_must_have_letters:string;
 }
