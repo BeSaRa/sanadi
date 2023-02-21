@@ -28,6 +28,7 @@ import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 import {UntypedFormGroup} from '@angular/forms';
 import {OrganizationOfficer} from '@app/models/organization-officer';
 import {CaseModelContract} from "@contracts/case-model-contract";
+import {CommonUtils} from '@helpers/common-utils';
 
 export abstract class CaseModel<S extends BaseGenericEService<T>, T extends FileNetModel<T>> extends FileNetModel<T> implements ICaseModel<T>, CaseModelContract<S, T> {
   serial!: number;
@@ -85,11 +86,11 @@ export abstract class CaseModel<S extends BaseGenericEService<T>, T extends File
   }
 
   canDraft(): boolean {
-    return !this.caseStatus || this.caseStatus <= CommonCaseStatus.DRAFT;
+    return !CommonUtils.isValidValue(this.caseStatus) || this.caseStatus == CommonCaseStatus.DRAFT;
   }
 
   canSave(): boolean {
-    return !this.caseStatus || this.caseStatus >= CommonCaseStatus.NEW;
+    return !CommonUtils.isValidValue(this.caseStatus) || this.caseStatus >= CommonCaseStatus.NEW;
   }
 
   /**
@@ -104,7 +105,7 @@ export abstract class CaseModel<S extends BaseGenericEService<T>, T extends File
   }
 
   alreadyStarted(): boolean {
-    return this.caseStatus >= CommonCaseStatus.UNDER_PROCESSING;
+    return !this.isCancelled() && this.caseStatus >= CommonCaseStatus.UNDER_PROCESSING;
   }
 
   exportActions(): Observable<BlobModel> {
