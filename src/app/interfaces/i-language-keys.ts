@@ -1,5 +1,6 @@
 export interface ILanguageKeys {
   msg_full_amount_used: string;
+  more: string;
   logs_history: string;
   the_donor: string;
   city_village: string;

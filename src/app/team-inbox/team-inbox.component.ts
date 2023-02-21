@@ -1,18 +1,18 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { QueryResultSet } from '../models/query-result-set';
+import { QueryResultSet } from '@models/query-result-set';
 import { LangService } from '@services/lang.service';
 import { switchMap, take, takeUntil, tap } from 'rxjs/operators';
-import { Team } from '../models/team';
+import { Team } from '@models/team';
 import { EmployeeService } from '@services/employee.service';
 import { BehaviorSubject, interval, Observable, of, Subject } from 'rxjs';
 import { UntypedFormControl } from '@angular/forms';
-import { QueryResult } from '../models/query-result';
+import { QueryResult } from '@models/query-result';
 import { InboxService } from '@services/inbox.service';
 import { ToastService } from '@services/toast.service';
-import { IMenuItem } from '../modules/context-menu/interfaces/i-menu-item';
+import { IMenuItem } from '@modules/context-menu/interfaces/i-menu-item';
 import { WFResponseType } from '../enums/wfresponse-type.enum';
 import { DialogRef } from '../shared/models/dialog-ref';
-import { CaseModel } from '../models/case-model';
+import { CaseModel } from '@models/case-model';
 import { WFActions } from '../enums/wfactions.enum';
 import { IESComponent } from '@contracts/iescomponent';
 import { ILanguageKeys } from '@app/interfaces/i-language-keys';
@@ -70,7 +70,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
 
   tableOptions: ITableOptions = {
     ready: false,
-    columns: ['workItemStatus', 'BD_FULL_SERIAL', 'BD_CASE_TYPE', 'ACTIVATED', 'action', 'BD_SUBJECT', 'PI_CREATE', 'PI_DUE', 'team', 'fromUserInfo', 'actions'],//'BD_SUBJECT', 'orgInfo'
+    columns: ['workItemStatus', 'BD_FULL_SERIAL', 'BD_SUBJECT', 'BD_CASE_TYPE', 'action',  'PI_CREATE','ACTIVATED', 'PI_DUE','fromUserInfo','team','actions'],//'BD_SUBJECT', 'orgInfo'
     searchText: '',
     isSelectedRecords: () => {
       if (!this.tableOptions || !this.tableOptions.ready || !this.table) {
@@ -405,7 +405,8 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
         icon: 'mdi-eye',
         label: 'open_task',
         data: { hideFromViewer: true },
-        displayInGrid: true,
+        hideLabel: true,
+        displayInGrid: false,
         onClick: (item: QueryResult) => this.openTask(item)
       },
       // view logs
@@ -413,6 +414,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
         type: 'action',
         icon: 'mdi-view-list-outline',
         label: 'logs',
+        hideLabel: true,
         displayInGrid: true,
         onClick: (item: QueryResult) => this.actionViewLogs(item)
       },
@@ -462,6 +464,7 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
         type: 'action',
         icon: 'mdi-hand-back-right',
         label: 'claim',
+        hideLabel: true,
         displayInGrid: true,
         data: {
           hideFromViewer: (loadedModel: CaseModel<any, any>) => {
