@@ -43,6 +43,15 @@
           <app-field-error-message controlName="fileSize"></app-field-error-message>
         </div>
         <div class="col-sm-4 position-relative">
+          <label asteriskIfRequired="maxDeductionRatio" for="maxDeductionRatio"
+                 class="form-label">{{lang.map.lbl_maximum_deduction_ratio}}</label>
+          <input id="maxDeductionRatio"
+                 validationClasses="maxDeductionRatio"
+                 formControlName="maxDeductionRatio" class="form-control"
+                 [mask]="inputMaskPatterns.NUMBER_ONLY">
+          <app-field-error-message controlName="maxDeductionRatio"></app-field-error-message>
+        </div>
+        <div class="col-sm-4 position-relative">
           <label asteriskIfRequired="inboxRefreshInterval" for="inboxRefreshInterval"
                  class="form-label">{{lang.map.inbox_refresh_interval}}</label>
           <input id="inboxRefreshInterval"

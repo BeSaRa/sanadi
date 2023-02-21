@@ -24,6 +24,7 @@ export class GlobalSettings extends BaseModel<GlobalSettings, GlobalSettingsServ
   supportEmailList!: string;
   enableMailNotification!: boolean;
   enableSMSNotification!: boolean;
+  maxDeductionRatio!:number;
 
   service: GlobalSettingsService;
   langService: LangService;
@@ -43,7 +44,8 @@ export class GlobalSettings extends BaseModel<GlobalSettings, GlobalSettingsServ
       inboxRefreshInterval,
       fileTypeArr,
       enableMailNotification,
-      enableSMSNotification
+      enableSMSNotification,
+      maxDeductionRatio
     } = this;
     return {
       systemArabicName: controls ? [systemArabicName, [
@@ -83,7 +85,13 @@ export class GlobalSettings extends BaseModel<GlobalSettings, GlobalSettingsServ
         CustomValidators.requiredArray
       ]] : fileTypeArr,
       enableMailNotification: controls ? [enableMailNotification] : enableMailNotification,
-      enableSMSNotification: controls ? [enableSMSNotification] : enableSMSNotification
+      enableSMSNotification: controls ? [enableSMSNotification] : enableSMSNotification,
+      maxDeductionRatio: controls ? [maxDeductionRatio, [
+        CustomValidators.required,
+        CustomValidators.number,
+        Validators.max(100),
+        Validators.min(1)
+      ]] : maxDeductionRatio,
     }
   }
 }
