@@ -274,7 +274,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       ])])
     this.handleRequestTypeChange(this.requestType.value)
 
-    if(this.operation !== OperationTypes.CREATE) {
+    if (this.operation !== OperationTypes.CREATE) {
       this.licenseStartDate.setValue(this.licenseStartDate.value);
       this.implementingAgencyList.setValue(this.implementingAgencyList.value);
     }
@@ -696,12 +696,14 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     // if record is new, no readonly (don't change as default is readonly = false)
     const model = this.model!
     if (!model.id) {
+      this.handleCustomFormReadonly();
       return;
     }
 
     let caseStatus = model.getCaseStatus();
-    if (caseStatus == CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.FINAL_REJECTION) {
+    if (caseStatus == CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.FINAL_REJECTION || caseStatus === CommonCaseStatus.CANCELLED) {
       this.readonly = true;
+      this.handleCustomFormReadonly();
       return;
     }
 

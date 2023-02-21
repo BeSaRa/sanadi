@@ -1,4 +1,4 @@
-import { GeneralAssociationMeetingAttendance } from './../../../models/general-association-meeting-attendance';
+import {GeneralAssociationMeetingAttendance} from './../../../models/general-association-meeting-attendance';
 import {
   AwarenessActivitySuggestionComponent
 } from '@modules/general-services/pages/awareness-activity-suggestion/awareness-activity-suggestion.component';
@@ -285,6 +285,9 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           return (this.component.form.invalid || item?.alreadyStarted()) && !this.canSave();
         },
         show: (item) => {
+          if (item.isCancelled()) {
+            return false;
+          }
           if (this.servicesWithNoSaveDraftLaunch.includes(item.getCaseType())) {
             return false;
           }
@@ -375,6 +378,9 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           return (this.component.form.invalid || item?.alreadyStarted()) && !this.canSave();
         },
         show: (item) => {
+          if (item.isCancelled()) {
+            return false;
+          }
           if (this.servicesWithNoSaveDraftLaunch.includes(item.getCaseType())) {
             return false;
           }
@@ -432,6 +438,9 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   }
 
   canSave(): boolean {
+    if (this.model?.isCancelled()) {
+      return false;
+    }
     if (this.model?.caseType === CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST) {
       const model = this.model as CoordinationWithOrganizationsRequest;
       return model.participatingOrganizaionList.length > 0;
@@ -515,6 +524,9 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         label: 'btn_save',
         disabled: () => this.component.form.invalid || (this.component.readonly && !this.canSave()),
         show: (item) => {
+          if (item.isCancelled()) {
+            return false;
+          }
           if (this.servicesWithNoSaveDraftLaunch.includes(item.getCaseType())) {
             return false;
           }
