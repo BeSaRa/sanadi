@@ -11,6 +11,10 @@ import {AdminResult} from '@app/models/admin-result';
 import {CommonUtils} from '@helpers/common-utils';
 import {FileExtensionsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 import {FileUploaderComponent} from '@app/shared/components/file-uploader/file-uploader.component';
+import { GlobalSettingsService } from '@app/services/global-settings.service';
+import { map } from 'rxjs/operators';
+import { GlobalSettings } from '@app/models/global-settings';
+import { DialogService } from '@app/services/dialog.service';
 
 @Component({
   selector: 'other-attachment-details-popup',
@@ -23,7 +27,11 @@ export class OtherAttachmentDetailsPopupComponent implements OnInit, AfterViewIn
   form!: FormGroup;
   validateFieldsVisible: boolean = true;
   saveVisible: boolean = true;
-  allowedExtensions: string[] = [FileExtensionsEnum.PDF];
+  
+  globalSettings!:GlobalSettings;
+  allowedExtensions: string[] = [];
+  allowedFileMaxSize!: number;
+  
   attachmentFile?: File;
 
   @ViewChild('dialogContent') dialogContent!: ElementRef;
@@ -33,13 +41,40 @@ export class OtherAttachmentDetailsPopupComponent implements OnInit, AfterViewIn
               public lang: LangService,
               private fb: FormBuilder,
               private cd: ChangeDetectorRef,
-              public dialogRef: DialogRef) {
+              public dialogRef: DialogRef,
+              private globalSettingsService:GlobalSettingsService,
+              private dialog: DialogService
+              ) {
     this.model = data.model;
     this.operation = data.operation;
   }
 
   ngOnInit() {
     this._buildForm(true);
+    this.getGlobalSettings()
+  }
+
+  getGlobalSettings(){
+    this.globalSettingsService.getGlobalSettings()
+    .subscribe(
+      list => {
+        this.globalSettings = list[0]
+        this.setAllowedFiles()
+        this.allowedFileMaxSize = this.globalSettings.fileSize
+      }
+
+    )
+  }
+
+  setAllowedFiles(){
+    this.globalSettingsService.getFileTypes()   
+      .pipe(
+        map(list => list.filter(ele=>this.globalSettings.fileTypeArr.includes(ele.id))),
+        map(list => list.map(ele => '.' + ele.extension))
+      )
+      .subscribe(list => {
+        this.allowedExtensions = list
+      });
   }
 
   ngAfterViewInit() {
@@ -95,10 +130,20 @@ export class OtherAttachmentDetailsPopupComponent implements OnInit, AfterViewIn
   }
 
   setAttachmentFile(file: File | File[] | undefined): void {
+
+    
     if (!file || file instanceof File) {
       this.attachmentFile = file;
     } else {
       this.attachmentFile = file[0];
+    }
+
+    const validFileSize = file? (this.attachmentFile!.size <= this.allowedFileMaxSize*1000*1024):true;
+    !validFileSize ? this.attachmentFile = undefined : null;
+    if (!validFileSize){
+      this.dialog.error(this.lang.map.msg_only_this_file_size_or_less_allowed_to_upload.change({size: this.allowedFileMaxSize}));
+      this.attachmentFile = undefined
+      return;
     }
   }
 
