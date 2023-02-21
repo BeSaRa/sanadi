@@ -92,7 +92,7 @@ export class SelectProjectFundraisingPopupComponent implements OnInit, OnDestroy
           projectTotalCost: model.targetAmount,
           consumedAmount,
           remainingAmount: currency(model.targetAmount).subtract(consumedAmount).value,
-          totalCost: currency(model.targetAmount).subtract(consumedAmount).value
+          totalCost: 0 //currency(model.targetAmount).subtract(consumedAmount).value
         })
       }))
       .pipe(takeUntil(this.destroy$))
