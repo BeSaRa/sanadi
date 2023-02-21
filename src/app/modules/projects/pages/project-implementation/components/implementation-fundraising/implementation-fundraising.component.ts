@@ -19,6 +19,8 @@ import {ProjectImplementationService} from "@services/project-implementation.ser
 import {DialogService} from "@services/dialog.service";
 import {UserClickOn} from "@app/enums/user-click-on.enum";
 import {ImplementationTemplate} from "@models/implementation-template";
+import {ReasonPopupComponent} from "@app/shared/popups/reason-popup/reason-popup.component";
+import {ReasonContract} from "@contracts/reason-contract";
 
 @Component({
   selector: 'implementation-fundraising',
@@ -44,6 +46,10 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
   criteria?: () => ImplementationCriteriaContract
   @Input()
   remainingAmount!: number
+  @Input()
+  caseId!: string
+  @Input()
+  requestType!: number
 
   @Output()
   amountConsumed: EventEmitter<boolean> = new EventEmitter<boolean>()
@@ -121,6 +127,8 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
       .then(() => {
         this.value = value
         this.listenToControls()
+        this.calculateTotal()
+        this.isFullAmountConsumed()
       })
   }
 
@@ -156,10 +164,7 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
         this.isFullAmountConsumed()
         const template = this.getTemplatePermit()
         const currentPermit = this.value[index];
-
-        template && currentPermit &&
-        template.templateId === currentPermit.templateId &&
-        currentPermit.remainingAmount === currentPermit.totalCost ? ctrl.disable() : ctrl.enable()
+        template && currentPermit && currentPermit.remainingAmount === currentPermit.totalCost ? ctrl.disable() : ctrl.enable()
       })
   }
 
@@ -220,7 +225,7 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
     this.service.loadFundraisingLicensesByCriteria(criteria, criteria.workArea!)
       .pipe(tap(models => !models.length && this.dialog.info(this.lang.map.no_result_for_your_search_criteria)))
       .pipe(filter(models => !!models.length))
-      .pipe(switchMap(licenses => this.service.openSelectFundraisingDialog(licenses, this.value).onAfterClose$))
+      .pipe(switchMap(licenses => this.service.openSelectFundraisingDialog(licenses, this.caseId, this.requestType, this.value, this._currentTemplate).onAfterClose$))
       .pipe(filter((value: ImplementationFundraising): value is ImplementationFundraising => !!value))
       .subscribe((template: ImplementationFundraising) => {
         this.createInputWithListener(template.totalCost)
@@ -235,7 +240,7 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
 
   deletePermit(item: ImplementationFundraising) {
     this.dialog
-      .confirm(this.lang.map.msg_confirm_delete_x.change({x: this.lang.map.lang === 'ar' ? item.arName : item.enName}))
+      .confirm(this.lang.map.msg_confirm_delete_x.change({x: this.lang.map.lang === 'ar' ? item.arabicName : item.englishName}))
       .onAfterClose$
       .pipe(filter((value): value is UserClickOn.YES => value === UserClickOn.YES))
       .subscribe(() => {
@@ -251,11 +256,11 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
   }
 
   isTemplatePermit(row: ImplementationFundraising) {
-    return this._currentTemplate && row.templateId ? row.templateId === this._currentTemplate : false
+    return row.isMain
   }
 
   private getTemplatePermit(): ImplementationFundraising | undefined {
-    return this.value.find(item => !!item.templateId)
+    return (this.value ?? []).find(item => item.isMain)
   }
 
   isFullAmountConsumed(): void {
@@ -264,4 +269,24 @@ export class ImplementationFundraisingComponent implements ControlValueAccessor,
   }
 
 
+  openComment(row: ImplementationFundraising, index: number) {
+    this.dialog
+      .show<ReasonContract>(ReasonPopupComponent, {
+        reasonLabel: this.lang.map.notes,
+        required: false,
+        saveBtn: this.lang.map.btn_save,
+        title: row.projectLicenseFullSerial,
+        reason: row.notes,
+        view: this.disabled
+      })
+      .onAfterClose$
+      .pipe(takeUntil(this.destroy$))
+      .pipe(filter(({click}: { click: UserClickOn, comment: string }) => {
+        return click === UserClickOn.YES
+      }))
+      .subscribe(({comment}) => {
+        this.value[index].notes = comment;
+        this.onChange(this.value)
+      })
+  }
 }

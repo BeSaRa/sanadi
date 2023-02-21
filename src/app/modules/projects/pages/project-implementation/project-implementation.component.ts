@@ -13,14 +13,25 @@ import {EServicesGenericComponent} from "@app/generics/e-services-generic-compon
 import {ProjectImplementation} from "@app/models/project-implementation";
 import {LangService} from '@app/services/lang.service';
 import {ProjectImplementationService} from "@services/project-implementation.service";
-import {merge, Observable, of, Subject} from 'rxjs';
+import {iif, merge, Observable, of, ReplaySubject, Subject} from 'rxjs';
 import {DialogService} from "@services/dialog.service";
 import {ToastService} from "@services/toast.service";
 import {Lookup} from "@models/lookup";
 import {LookupService} from "@services/lookup.service";
 import {ServiceRequestTypes} from "@app/enums/service-request-types";
 import {CommonUtils} from "@helpers/common-utils";
-import {catchError, exhaustMap, filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
+import {
+  catchError,
+  debounceTime,
+  exhaustMap,
+  filter,
+  map,
+  pairwise,
+  startWith,
+  switchMap,
+  takeUntil,
+  tap
+} from "rxjs/operators";
 import {UserClickOn} from "@app/enums/user-click-on.enum";
 import {Country} from "@models/country";
 import {ActivatedRoute} from "@angular/router";
@@ -40,6 +51,8 @@ import currency from "currency.js";
 import {CommonCaseStatus} from "@app/enums/common-case-status.enum";
 import {OpenFrom} from "@app/enums/open-from.enum";
 import {LicenseService} from "@services/license.service";
+import {IMyDateModel} from "angular-mydatepicker";
+import dayjs from "dayjs";
 
 @Component({
   selector: 'project-implementation',
@@ -74,7 +87,13 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
   remainingAmount: number = 0;
   selectedLicense?: ProjectImplementation;
 
-  permitAmountConsumed = false
+  permitAmountConsumed = false;
+
+  userAnswer: ReplaySubject<UserClickOn> = new ReplaySubject<UserClickOn>(1)
+
+  oldStoredValues: Record<string, number | null> = {}
+
+  licenseEndDate?: string
 
   constructor(public lang: LangService,
               public fb: UntypedFormBuilder,
@@ -150,6 +169,14 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     return this.projectInfo.get('licenseStartDate')!
   }
 
+  get projectEvaluationSLA(): AbstractControl {
+    return this.projectInfo.get('projectEvaluationSLA')!
+  }
+
+  get licenseDuration(): AbstractControl {
+    return this.projectInfo.get('licenseDuration')!
+  }
+
   get implementationTemplate(): AbstractControl {
     return this.projectInfo.get('implementationTemplate')!
   }
@@ -179,7 +206,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
   }
 
   get projectTotalCost(): AbstractControl {
-    return this.form && this.basicInfo.get('projectTotalCost')!
+    return this.form && this.projectInfo.get('projectTotalCost')!
   }
 
   // it should be
@@ -190,7 +217,8 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       domain: this.domain.value,
       internalProjectClassification: this.internalProjectClassification.value,
       mainDAC: this.mainDACCategory.value,
-      mainUNOCHA: this.mainUNOCHACategory.value
+      mainUNOCHA: this.mainUNOCHACategory.value,
+      implCaseId: this.model!.getCaseId()
     }
   }
 
@@ -216,6 +244,8 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
 
   _afterBuildForm(): void {
     this.handleReadonly()
+    this.setDefaultValues()
+    this.listenToFieldsWillEffectTemplateAndFundSources()
     this.loadLicenseById()
     this.listenToLicenseSearch()
     this.listenToMainDacOchaChanges()
@@ -225,12 +255,18 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     this.listenToImplementationTemplateChanges()
     this.listenToFundingResources()
 
-    this.setDefaultValues()
-    this.fundingResources.setValidators(this.validateFundingResources([
-      'implementationFundraising',
-      'financialGrant',
-      'selfFinancing',
-    ]))
+    this.listenToLicenseDatesChanges()
+
+    this.fundingResources.setValidators([
+      this.validateFundingResources([
+        'implementationFundraising',
+        'financialGrant',
+        'selfFinancing',
+      ]),
+      this.validateFundingResources([
+        'payment',
+      ])])
+    this.handleRequestTypeChange(this.requestType.value)
   }
 
   loadLicenseById(): void {
@@ -257,6 +293,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
   }
 
   _afterLaunch(): void {
+    this.implementationTemplate.setValue([])
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
     this.resetForm$.next()
   }
@@ -304,6 +341,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       fundingResources: model.buildFundingResources(),
       specialExplanations: model.buildSpecialInfo()
     })
+    this.handleRequestTypeChange(model.requestType)
     this.handleDisplayFields(model)
     this.handleMandatoryFields()
     this.calculateRemaining()
@@ -312,12 +350,13 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
   _resetForm(): void {
     this.model = this._getNewInstance();
     this.operation = OperationTypes.CREATE;
-    this.form.reset()
+    this.selectedLicense = undefined
     this.implementationTemplate.setValue([])
     this.payment.setValue([])
     this.selfFinancing.setValue([])
     this.financialGrant.setValue([])
     this.implementingAgencyList.setValue([])
+    this.form.reset()
     this.setDefaultValues()
   }
 
@@ -329,6 +368,8 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
 
     this.requestType.setValue(ServiceRequestTypes.NEW)
     this.projectWorkArea.setValue(ProjectWorkArea.INSIDE_QATAR)
+    this.beneficiaryCountry.setValue(this.qatarCountry.id)
+    this.beneficiaryCountry.disable();
     this.internalProjectClassification.setValue(this.internalProjectClassifications[0].lookupKey)
   }
 
@@ -399,7 +440,6 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       model.oldLicenseSerial = licenseDetails.serial;
       model.documentTitle = '';
       model.fullSerial = null;
-      model.description = '';
       model.licenseStartDate = licenseDetails.licenseStartDate || licenseDetails.licenseApprovedDate;
       // delete id because license details contains old license id, and we are adding new, so no id is needed
       delete model.id;
@@ -466,7 +506,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
   }
 
   private listenToMainDacOchaChanges() {
-    merge(this.mainDACCategory.valueChanges, this.mainUNOCHACategory.valueChanges)
+    merge(this.mainDACCategory.valueChanges.pipe(this.holdToGetUserResponse()), this.mainUNOCHACategory.valueChanges.pipe(this.holdToGetUserResponse()))
       .pipe(takeUntil(this.destroy$))
       .subscribe((value: number) => {
         this.subUNOCHACategory.setValue(null)
@@ -478,6 +518,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
 
   private listenToWorkAreaChanges() {
     this.projectWorkArea.valueChanges
+      .pipe(this.holdToGetUserResponse())
       .pipe(takeUntil(this.destroy$))
       .subscribe((value: ProjectWorkArea) => {
         const dacFields = [
@@ -519,6 +560,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
 
   private listenToDomainChange(): void {
     this.domain.valueChanges
+      .pipe(this.holdToGetUserResponse())
       .pipe(takeUntil(this.destroy$))
       .subscribe((value: DomainTypes) => {
         this.mainUNOCHACategory.setValue(null, {emitEvent: false})
@@ -598,7 +640,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       }))
       .pipe(filter((value): value is ImplementationTemplate[] => (value && !!value.length)))
       .pipe(map(val => val[0] as ImplementationTemplate))
-      .pipe(switchMap(template => template.loadImplementationFundraising()))
+      .pipe(switchMap(template => template.loadImplementationFundraising(this.requestType.value, this.model?.id)))
       .pipe(filter((value): value is ImplementationFundraising => !!value))
       .subscribe((implementationFundraising) => {
         this.implementationFundraising.setValue([implementationFundraising])
@@ -671,7 +713,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
         this.readonly = false;
       }
     }
-
+    this.handleCustomFormReadonly()
   }
 
   private validateFundingResources(fields: string[]): ValidatorFn {
@@ -681,7 +723,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       const totalFundResources = fields.reduce((acc, key) => {
         return acc + (group.get(key)?.getRawValue() ?? []).reduce((acc: number, item: FundingResourceContract) => acc + item.totalCost, 0)
       }, 0)
-      return this.projectTotalCost && this.projectTotalCost.value > totalFundResources ? {
+      return this.projectTotalCost && (this.projectTotalCost.value > totalFundResources) || ((this.projectTotalCost.value < totalFundResources)) ? {
         fundingResources: {
           actually: totalFundResources,
           expected: Number(this.projectTotalCost.value)
@@ -696,5 +738,115 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
 
   onAmountConsumed($event: boolean) {
     this.permitAmountConsumed = $event
+  }
+
+  private listenToFieldsWillEffectTemplateAndFundSources(): void {
+    const fields: { ctrl: AbstractControl, key: string }[] = [
+      {ctrl: this.projectWorkArea, key: 'projectWorkArea'},
+      {ctrl: this.internalProjectClassification, key: 'internalProjectClassification'},
+      {ctrl: this.domain, key: 'domain'},
+      {ctrl: this.mainUNOCHACategory, key: 'mainUNOCHACategory'},
+      {ctrl: this.mainDACCategory, key: 'projectWorkArea'},
+      {ctrl: this.beneficiaryCountry, key: 'beneficiaryCountry'},
+    ]
+
+    const observables = fields.map((item) => {
+      this.oldStoredValues[item.key] = item.ctrl.value;
+      return this.listenToControl(item.ctrl, item.key)
+    })
+
+    merge(...observables)
+      .pipe(tap(_ => this.userAnswer.next(this.hasSelectedTemplate() ? UserClickOn.NO : UserClickOn.YES)))
+      // check if there is any template/fundResource selected and if any display popup to confirm
+      .pipe(switchMap((value: { oldValue: number, newValue: number, field: string }) => {
+        return this.dialog
+          .confirm(this.lang.map.this_change_will_effect_the_selected_template)
+          .onAfterClose$.pipe(map(((answer: UserClickOn) => {
+            return {
+              ...value,
+              answer
+            }
+          })))
+      }))
+      // if not don't display the popup
+      .subscribe(({answer, field, oldValue}) => {
+        answer == UserClickOn.YES ? (() => {
+          // user click yes
+          this.implementationTemplate.setValue([])
+          this.implementingAgencyList.setValue([])
+          this.implementingAgencyType.setValue(null)
+          this.userAnswer.next(UserClickOn.YES)
+        })() : (() => {
+          const currentOldValue = this.oldStoredValues[field] || oldValue;
+          const ctrl = fields.find(i => i.key === field)!.ctrl
+          ctrl.setValue(currentOldValue, {emitEvent: false})
+          this.oldStoredValues[field] = currentOldValue
+        })()
+      })
+  }
+
+  private hasSelectedTemplate(): boolean {
+    return !!(this.implementationTemplate.value ?? []).length
+  }
+
+  private listenToControl(ctrl: AbstractControl, key: string): Observable<{
+    oldValue: number,
+    newValue: number,
+    field: string
+  }> {
+    const value = (ctrl.value) as number
+    return ctrl.valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .pipe(startWith<number, number>(value))
+      .pipe(pairwise())
+      .pipe(map(value => {
+        return {
+          oldValue: this.oldStoredValues[key] || value[0],
+          newValue: value[1],
+          field: key
+        }
+      }))
+      .pipe(filter(() => this.hasSelectedTemplate()))
+  }
+
+  private holdToGetUserResponse() {
+    return switchMap((value: number) => {
+      return iif(() => this.hasSelectedTemplate(),
+        this.userAnswer.pipe(filter(v => v === UserClickOn.YES)).pipe(map(_ => value)),
+        of(value))
+    });
+  }
+
+  private handleCustomFormReadonly() {
+    const customFields = [
+      this.implementationTemplate,
+      this.implementingAgencyList,
+      this.implementationFundraising,
+      this.payment,
+      this.selfFinancing,
+      this.financialGrant,
+      this.licenseStartDate,
+      this.projectEvaluationSLA,
+      this.licenseDuration
+    ]
+    customFields.forEach(item => {
+      this.readonly ? item.disable() : item.enable()
+    })
+
+  }
+
+  private listenToLicenseDatesChanges() {
+    merge(this.licenseStartDate.valueChanges as Observable<IMyDateModel>, this.licenseDuration.valueChanges as Observable<number>)
+      .pipe(takeUntil(this.destroy$))
+      .pipe(debounceTime(300))
+      .pipe(map(_ => {
+        return {
+          startDate: this.licenseStartDate.value as unknown as IMyDateModel,
+          duration: Number(this.licenseDuration.value)
+        }
+      }))
+      .subscribe(({startDate, duration}) => {
+        this.licenseEndDate = duration && startDate ? dayjs(startDate.singleDate?.jsDate).add(duration, 'month').format('YYYY-MM-DD') : '';
+      })
   }
 }

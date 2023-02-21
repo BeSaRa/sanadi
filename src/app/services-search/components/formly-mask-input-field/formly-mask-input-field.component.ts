@@ -20,6 +20,7 @@ export class FormlyMaskInputFieldComponent extends FieldType<CustomFormlyFieldCo
 
   constructor(public lang: LangService) {
     super();
+    console.log(this.field)
   }
 
   ngOnInit(): void {

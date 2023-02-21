@@ -1,5 +1,5 @@
-import {Directive, ElementRef, Inject, Input, OnDestroy, OnInit} from '@angular/core';
-import {DOCUMENT} from '@angular/common';
+import { Directive, ElementRef, Inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 
 @Directive({
   selector: '[tooltip]'
@@ -18,8 +18,16 @@ export class TooltipDirective implements OnInit, OnDestroy {
   @Input()
   set tooltip(value) {
     this._tooltip = value;
+
     if (this.ref && this.ref.tip) {
-      this.ref.tip.querySelector('.tooltip-inner').innerText = value;
+      const tip = this.ref.tip.querySelector('.tooltip-inner');
+      const element = document.createElement('div')
+      element.classList.add('tooltip-inner')
+      tip ? (tip.innerText = value) : (() => {
+        this.ref.tip.appendChild(element)
+        this.ref.tip.querySelector('.tooltip-inner').innerText = value
+      })()
+
     }
   }
 
@@ -33,13 +41,13 @@ export class TooltipDirective implements OnInit, OnDestroy {
       trigger: 'hover',
       placement: this.placement,
       title: () => {
-        return this.tooltip;
+        return this.tooltip || "";
       }
     });
   }
 
   ngOnDestroy(): void {
-    if (this.ref._popper && typeof this.ref._popper.destroy !== 'undefined') {
+    if (this.ref && this.ref._popper && typeof this.ref._popper.destroy !== 'undefined') {
       this.ref.dispose();
     }
   }

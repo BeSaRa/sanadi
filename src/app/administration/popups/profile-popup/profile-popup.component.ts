@@ -1,34 +1,34 @@
-import {ProfileCountryService} from '@services/profile-country.service';
-import {ProfileCountry} from '@app/models/profile-country';
-import {CountryService} from '@services/country.service';
-import {takeUntil} from 'rxjs/operators';
-import {Country} from '@app/models/country';
-import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, Inject, ViewChild} from '@angular/core';
-import {AbstractControl, FormControl, UntypedFormBuilder, UntypedFormGroup,} from '@angular/forms';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {ProfileTypes} from '@app/enums/profile-types.enum';
-import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
-import {IDialogData} from '@app/interfaces/i-dialog-data';
-import {Profile} from '@app/models/profile';
-import {LangService} from '@app/services/lang.service';
-import {LookupService} from '@app/services/lookup.service';
-import {ProfileServiceRelationService} from '@services/profile-service-relation.service';
-import {ProfileService} from '@app/services/profile.service';
-import {ProfileServiceRelation as ProfileServiceModel} from '@app/models/profile-service-relation';
-import {ToastService} from '@app/services/toast.service';
-import {TabComponent} from '@app/shared/components/tab/tab.component';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
-import {Observable} from 'rxjs';
-import {ServiceDataService} from '@app/services/service-data.service';
-import {ServiceData} from '@app/models/service-data';
-import {DialogService} from '@app/services/dialog.service';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import {ActionIconsEnum} from '@app/enums/action-icons-enum';
-import {TabMap} from '@app/types/types';
-import {EmployeeService} from '@services/employee.service';
-import {PermissionsEnum} from '@app/enums/permissions-enum';
+import { ProfileCountryService } from '@services/profile-country.service';
+import { ProfileCountry } from '@app/models/profile-country';
+import { CountryService } from '@services/country.service';
+import { takeUntil } from 'rxjs/operators';
+import { Country } from '@app/models/country';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Inject, ViewChild } from '@angular/core';
+import { AbstractControl, FormControl, UntypedFormBuilder, UntypedFormGroup, } from '@angular/forms';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { ProfileTypes } from '@app/enums/profile-types.enum';
+import { AdminGenericDialog } from '@app/generics/admin-generic-dialog';
+import { IDialogData } from '@app/interfaces/i-dialog-data';
+import { Profile } from '@app/models/profile';
+import { LangService } from '@app/services/lang.service';
+import { LookupService } from '@app/services/lookup.service';
+import { ProfileServiceRelationService } from '@services/profile-service-relation.service';
+import { ProfileService } from '@app/services/profile.service';
+import { ProfileServiceRelation as ProfileServiceModel } from '@app/models/profile-service-relation';
+import { ToastService } from '@app/services/toast.service';
+import { TabComponent } from '@app/shared/components/tab/tab.component';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
+import { Observable } from 'rxjs';
+import { ServiceDataService } from '@app/services/service-data.service';
+import { ServiceData } from '@app/models/service-data';
+import { DialogService } from '@app/services/dialog.service';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { ActionIconsEnum } from '@app/enums/action-icons-enum';
+import { TabMap } from '@app/types/types';
+import { EmployeeService } from '@services/employee.service';
+import { PermissionsEnum } from '@app/enums/permissions-enum';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -88,8 +88,7 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
       validStatus: () => true,
       isTouchedOrDirty: () => true,
       show: () => {
-        return false;
-        // return (this.operation !== OperationTypes.CREATE && this.employeeService.checkPermissions(PermissionsEnum.MANAGE_PROFILE_COUNTRIES_DATA));
+        return (this.operation !== OperationTypes.CREATE && this.employeeService.checkPermissions(PermissionsEnum.MANAGE_PROFILE_COUNTRIES_DATA));
       }
     },
     attachments: {
@@ -203,9 +202,9 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
     if (this.operation !== OperationTypes.CREATE) {
       this.profileTypeField.disable();
       this.loadLinkedServices(this.model.id);
-      // this.loadLinkedCountries(this.model.id);
+      this.loadLinkedCountries(this.model.id);
       this._loadServices();
-      // this.loadCountries();
+      this.loadCountries();
     }
   }
 
@@ -234,7 +233,7 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
     this.model = model;
     this.operation = OperationTypes.UPDATE;
     this.loadLinkedServices(model.id);
-    // this.loadLinkedCountries(model.id);
+    this.loadLinkedCountries(model.id);
   }
 
   loadLinkedServices(id: number) {
@@ -275,7 +274,7 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
     if (this.readonly) {
       this.form.disable();
       this.servicesControl.disable();
-      // this.countryControl.disable();
+      this.countryControl.disable();
     }
     if (this.model?.profileType) {
       this.handleProfileType(this.model.profileType, true);
@@ -313,12 +312,13 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
   }
   // createBulk
   addCountries() {
-    const _countries = this.countryControl.value!.map((e) =>
-      new ProfileCountry().clone({
+    const _countries = this.countryControl.value!.map((e) => {
+      return {
         profileId: this.model.id,
         countryId: +e,
-      })
-    );
+      } as ProfileCountry
+    });
+    console.log(_countries)
     this.profileCountryService.createBulk(_countries).subscribe((_e) => {
       this.loadLinkedCountries(this.model.id);
       this.toast.success(this.lang.map.countries_add_successfully);
@@ -326,7 +326,7 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
     });
   }
   deleteCountry(model: ProfileCountry): void {
-    const message = this.lang.map.remove_countries_messages;
+    const message = this.lang.map.remove_profile_country_link_messages;
     this.dialogService.confirm(message).onAfterClose$.subscribe((click: UserClickOn) => {
       if (click === UserClickOn.YES) {
         const sub = model.delete().subscribe(() => {
@@ -334,7 +334,7 @@ export class ProfilePopupComponent extends AdminGenericDialog<Profile> implement
           // @ts-ignore
           this.toast.success(
             this.lang.map.msg_delete_x_success
-            // .change({ x: model.serviceDataInfo.getName() })
+              .change({ x: model.countryInfo.getName() })
           );
           sub.unsubscribe();
         });

@@ -1,7 +1,7 @@
 <div class="row">
   <div class="d-flex">
     <h1 class="h6 text-primary mb-2">{{lang.map.menu_projects_fundraising}}</h1>
-    <button (click)="!disabled && addFundraisingLicense()" class="btn icon-btn">
+    <button [disabled]="disabled" (click)="!disabled && addFundraisingLicense()" class="btn p-0 icon-btn">
       <i class="mdi mdi-plus-box text-primary"></i>
     </button>
   </div>
@@ -16,14 +16,14 @@
       </ng-container>
       <ng-container cdkColumnDef="arName">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.arabic_name}}</th>
-        <td cdk-cell *cdkCellDef="let row"> {{row.arName}} </td>
+        <td cdk-cell *cdkCellDef="let row"> {{row.arabicName}} </td>
       </ng-container>
       <ng-container cdkColumnDef="enName">
         <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.english_name}}</th>
-        <td cdk-cell *cdkCellDef="let row"> {{row.enName}} </td>
+        <td cdk-cell *cdkCellDef="let row"> {{row.englishName}} </td>
       </ng-container>
       <ng-container cdkColumnDef="projectTotalCost">
-        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.project_total_cost}}</th>
+        <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.target_amount}}</th>
         <td cdk-cell
             *cdkCellDef="let row"> {{row.projectTotalCost | mask: inputMaskPatterns.SEPARATOR : inputMaskPatterns.THOUSAND_SEPARATOR}} </td>
       </ng-container>
@@ -50,12 +50,13 @@
         <td cdk-cell *cdkCellDef="let row; let i = index;">
           <ng-container formArrayName="inputs">
             <div class="d-flex">
-              <input [id]="'fundraising-'+i" class="form-control form-control-sm" [formControlName]="i"
+              <input [readonly]="disabled" [id]="'fundraising-'+i" class="form-control form-control-sm" [formControlName]="i"
                      [mask]="inputMaskPatterns.SEPARATOR"
                      [thousandSeparator]="inputMaskPatterns.THOUSAND_SEPARATOR"
                      [dropSpecialCharacters]="[',']">
               <div [tooltip]="lang.map.take_the_remaining">
-                <button [disabled]="disabled || noRemainingValue(i)" (click)="takeRemaining(i)" class="btn icon-btn p-0">
+                <button [disabled]="disabled || noRemainingValue(i)" (click)="takeRemaining(i)"
+                        class="btn icon-btn p-0">
                   <i class="mdi mdi-hand-coin-outline text-primary"></i>
                 </button>
               </div>
@@ -65,11 +66,20 @@
         </td>
       </ng-container>
       <ng-container cdkColumnDef="actions">
-        <th cdk-header-cell  style="width:120px" *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
-        <td cdk-cell *cdkCellDef="let row">
-          <button [disabled]="isTemplatePermit(row)" (click)="!disabled && deletePermit(row)" class="btn p-0 icon-btn">
-            <i class="mdi mdi-trash-can text-primary"></i>
-          </button>
+        <th cdk-header-cell style="width:120px" *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
+        <td cdk-cell *cdkCellDef="let row; let i= index">
+          <div class="d-flex">
+            <div class="flex-grow-0 flex-shrink-1" [tooltip]="row.notes">
+              <button [disabled]="disabled" (click)="!disabled && openComment(row , i)"
+                      class="btn p-0 icon-btn">
+                <i class="mdi mdi-comment-text text-primary"></i>
+              </button>
+            </div>
+            <button [disabled]="disabled || isTemplatePermit(row)" (click)="!disabled && !isTemplatePermit(row) && deletePermit(row)"
+                    class="btn p-0 icon-btn">
+              <i class="mdi mdi-trash-can text-primary"></i>
+            </button>
+          </div>
         </td>
       </ng-container>
       <ng-container cdkColumnDef="Total">

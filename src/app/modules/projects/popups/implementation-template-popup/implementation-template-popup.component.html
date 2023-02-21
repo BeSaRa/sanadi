@@ -25,7 +25,13 @@
         <label class="form-label" for="region">{{lang.map.region_territories}}</label>
         <input id="region" readonly [value]="template.region" class="form-control">
       </div>
-      <div class="col-md-12 col-sm-12 mb-4 position-relative">
+      <div class="col-md-6 col-sm-12 mb-4 position-relative">
+        <label class="form-label" for="templateCost">{{lang.map.target_amount}}</label>
+        <input id="targetAmount"
+               [value]="template.targetAmount| mask: inputMaskPatterns.SEPARATOR : inputMaskPatterns.THOUSAND_SEPARATOR"
+               readonly class="form-control">
+      </div>
+      <div class="col-md-6 col-sm-12 mb-4 position-relative">
         <label class="form-label" asteriskIfRequired="latitude"
                for="latitude">{{lang.map.latitude}} / {{lang.map.longitude}}</label>
         <div class="input-group">

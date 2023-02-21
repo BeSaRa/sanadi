@@ -84,6 +84,15 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
     super();
   }
 
+  formProperties = {
+    requestType: () => {
+      return this.getObservableField('requestType', 'requestType');
+    },
+    operationType: () => {
+      return this.getObservableField('operationType', 'operationType');
+    }
+  }
+
   get basicInfo(): UntypedFormGroup {
     return this.form.get('basicInfo')! as UntypedFormGroup;
   }

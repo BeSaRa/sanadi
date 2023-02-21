@@ -1,4 +1,4 @@
-<div class="position-relative">
+<div class="position-relative" [tooltip]="field.note || ''">
   <label asteriskIfRequired [control]="formControl" [for]="id">{{field.label?.getName()}}</label>
   <button class="btn btn-sm btn-icon" *ngIf="isInitMode" (click)="details(field)">
     <i class="mdi mdi-pen text-primary"></i>

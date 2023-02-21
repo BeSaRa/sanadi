@@ -217,6 +217,7 @@ import { UserPreferencesPopupComponent } from './popups/user-preferences-popup/u
         {name: 'yesOrNo', component: FormlySelectFieldComponent, wrappers: ['custom-wrapper']},
         {name: 'maskInput', extends: 'input', component: FormlyMaskInputFieldComponent, wrappers: ['custom-wrapper']},
         {name: 'number', extends: 'input', component: FormlyMaskInputFieldComponent, wrappers: ['custom-wrapper']},
+        {name: 'textarea', wrappers: ['custom-wrapper']},
       ],
       wrappers: [
         {name: 'custom-wrapper', component: ProcessFieldWrapperComponent}

@@ -122,6 +122,7 @@
                              [notFoundText]="lang.map.msg_not_found"
                              [readonly]="(isExtendOrCancelRequestType() || readonly)">
                     <ng-option [value]="option.id"
+                               [disabled]="!option.isActive()"
                                *ngFor="let option of mainDacCategories">{{option.getName()}}</ng-option>
                   </ng-select>
                   <app-field-error-message controlName="mainDACCategory"></app-field-error-message>
@@ -135,7 +136,7 @@
                              placeholder="{{lang.map.select}}"
                              [notFoundText]="lang.map.msg_not_found"
                              [readonly]="(isExtendOrCancelRequestType() || readonly)">
-                    <ng-option [value]="option.id"
+                    <ng-option [disabled]="!option.isActive()" [value]="option.id"
                                *ngFor="let option of subDacCategories">{{option.getName()}}</ng-option>
                   </ng-select>
                   <app-field-error-message controlName="subDACCategory"></app-field-error-message>
@@ -152,7 +153,7 @@
                              placeholder="{{lang.map.select}}"
                              [notFoundText]="lang.map.msg_not_found"
                              [readonly]="(isExtendOrCancelRequestType() || readonly)">
-                    <ng-option [value]="option.id"
+                    <ng-option [disabled]="!option.isActive()" [value]="option.id"
                                *ngFor="let option of mainUNOCHACategories">{{option.getName()}}</ng-option>
                   </ng-select>
                   <app-field-error-message controlName="mainUNOCHACategory"></app-field-error-message>
@@ -167,7 +168,7 @@
                              placeholder="{{lang.map.select}}"
                              [notFoundText]="lang.map.msg_not_found"
                              [readonly]="(isExtendOrCancelRequestType() || readonly)">
-                    <ng-option [value]="option.id"
+                    <ng-option [disabled]="!option.isActive()" [value]="option.id"
                                *ngFor="let option of subUNOCHACategories">{{option.getName()}}</ng-option>
                   </ng-select>
                   <app-field-error-message controlName="subUNOCHACategory"></app-field-error-message>

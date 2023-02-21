@@ -771,7 +771,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     }
 
     let caseStatus = this.model.getCaseStatus();
-    if (caseStatus == CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.FINAL_REJECTION) {
+    if (caseStatus == CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.FINAL_REJECTION || caseStatus === CommonCaseStatus.CANCELLED) {
       this.readonly = true;
       return;
     }
@@ -800,7 +800,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   }
 
   canUpdateMeetingDate() {
-    return this.model?.taskDetails?.isClaimed() && (this.isSupervisionAndControlReviewStep || this.isSupervisionManagerReviewStep || this.isSupervisionAndControlRework);
+    return this.model?.caseStatus != CommonCaseStatus.CANCELLED && this.model?.taskDetails?.isClaimed() && (this.isSupervisionAndControlReviewStep || this.isSupervisionManagerReviewStep || this.isSupervisionAndControlRework);
   }
 
   getMeetingDateClass() {

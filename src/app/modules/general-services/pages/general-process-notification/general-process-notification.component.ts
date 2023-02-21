@@ -56,6 +56,7 @@ GeneralProcessNotificationService
   })
   mainClassificationsList: AdminLookup[] = [];
   subClassificationsList: AdminLookup[] = [];
+  _subClassificationsList: AdminLookup[] = [];
   departmentList: InternalDepartment[] = [];
   subTeamsList: SubTeam[] = [];
 
@@ -157,6 +158,10 @@ GeneralProcessNotificationService
     this._buildForm();
     this.adminLookupService.loadAsLookups(AdminLookupTypeEnum.GENERAL_PROCESS_CLASSIFICATION, true).subscribe((data: AdminLookup[]) => {
       this.mainClassificationsList = data.filter(c => !c.parentId);
+      this._subClassificationsList = data.filter(c => !!c.parentId);
+      if (this.model?.domain) {
+        this.subClassificationsList = this._subClassificationsList.filter(sc => sc.parentId == this.model?.domain);
+      }
     })
     this.internalDepartmentService.loadGeneralProcessDepartments().subscribe(deparments => {
       this.departmentList = deparments;
@@ -174,11 +179,12 @@ GeneralProcessNotificationService
   }
   handleDepartmentChange() {
     this.handleTeamChange(this.departmentList.find(d => d.id == this.departmentField.value)?.mainTeam.id);
-    this.filterProcess();
+    this.handlefilterProcess();
   }
   handleTeamChange(teamId?: number) {
     this.subTeamField.reset();
     this._loadSubTeam(teamId);
+    this.handlefilterProcess()
   }
   filterProcess() {
     const params = {
@@ -206,11 +212,10 @@ GeneralProcessNotificationService
         this.processList = [...data, this.otherProcess];
       })
   }
-  loadSubClasses(parentId: number) {
-    this.adminLookupService.loadByParentId(AdminLookupTypeEnum.GENERAL_PROCESS_CLASSIFICATION, parentId).subscribe(data => {
-      this.subClassificationsList = data;
-    })
-    this.filterProcess()
+  handleDomainChange(parentId: number) {
+    this.subClassificationsList = this._subClassificationsList.filter(sc => sc.parentId == parentId);
+    this.firstSubDomainField.reset();
+    this.handlefilterProcess();
   }
   handleProcessChange(id: number) {
     const process = this.processList.find(p => p.id == id);
@@ -227,6 +232,10 @@ GeneralProcessNotificationService
     this.sampleDataForOperationsFormGroup.reset();
     this.form.removeControl('sampleDataForOperations');
     this.form.setControl('sampleDataForOperations', this.fb.group({}));
+  }
+  handlefilterProcess() {
+    this.processIdField.reset()
+    this.filterProcess();
   }
   _buildForm(): void {
     const model = new GeneralProcessNotification().buildForm(true)
@@ -330,7 +339,7 @@ GeneralProcessNotificationService
     this.model = model;
     const formModel = model.buildForm();
     this._loadSubTeam(this.model?.subTeam?.parent);
-    this.loadSubClasses(this.model?.domain)
+    this.handleDomainChange(this.model?.domain)
     this.processFieldBuilder.generateFromString(this.model?.template)
 
     this.form.patchValue({
@@ -500,6 +509,9 @@ GeneralProcessNotificationService
   }
   get subTeamField(): UntypedFormControl {
     return this.DSNNNFormGroup.get('competentDepartmentID') as UntypedFormControl
+  }
+  get firstSubDomainField(): UntypedFormControl {
+    return this.DSNNNFormGroup.get('firstSubDomain') as UntypedFormControl
   }
   get departmentField(): UntypedFormControl {
     return this.DSNNNFormGroup.get('departmentId') as UntypedFormControl

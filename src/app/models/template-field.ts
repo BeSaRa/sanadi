@@ -1,11 +1,11 @@
 import { TemplateFieldTypes } from '@app/enums/template-field-types.enum';
 import { CustomFormlyFieldConfig, ISelectOption } from '@contracts/custom-formly-field-config';
-import { FieldMode } from './../interfaces/custom-formly-field-config';
+import { FieldMode } from '../interfaces/custom-formly-field-config';
 import { of } from 'rxjs';
 import { IMyDateModel } from 'angular-mydatepicker';
-import { IKeyValue } from './../interfaces/i-key-value';
+import { IKeyValue } from '../interfaces/i-key-value';
 import { Cloneable } from '@app/models/cloneable';
-import { CustomValidators } from './../validators/custom-validators';
+import { CustomValidators } from '../validators/custom-validators';
 import { INames } from '@contracts/i-names';
 import { LangService } from '@app/services/lang.service';
 import { FactoryService } from '@app/services/factory.service';
@@ -86,6 +86,7 @@ export class TemplateField extends Cloneable<TemplateField>{
       required,
       pattern,
       wrappers,
+      note,
       arName,
       enName,
       mask,
@@ -103,6 +104,7 @@ export class TemplateField extends Cloneable<TemplateField>{
       key: id,
       type: TemplateFieldTypes[type],
       label: new ILabel(arName, enName),
+      note,
       className: classes,
       templateOptions: {
         required: required,

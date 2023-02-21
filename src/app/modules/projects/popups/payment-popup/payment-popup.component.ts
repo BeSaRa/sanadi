@@ -65,7 +65,7 @@ export class PaymentPopupComponent implements OnInit, OnDestroy {
       paymentNo: [this.model.paymentNo, CustomValidators.required],
       dueDate: [DateUtils.changeDateToDatepicker(this.model.dueDate), CustomValidators.required],
       totalCost: [this.model.totalCost, CustomValidators.required],
-      notes: [this.model.notes]
+      notes: [this.model.notes, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]
     })
   }
 
@@ -79,8 +79,8 @@ export class PaymentPopupComponent implements OnInit, OnDestroy {
   private listenToTotalCostChanges() {
     this.totalCost
       .valueChanges
+      .pipe(debounceTime(300))
       .pipe(map(value => Number(value)))
-      .pipe(debounceTime(250))
       .pipe(takeUntil(this.destroy$))
       .subscribe((value) => {
         const cValue = currency(value).value > this.remainingAmount ? this.remainingAmount : currency(value).value
