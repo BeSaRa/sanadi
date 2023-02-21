@@ -2,7 +2,7 @@
   <tabs-list [accordionView]="accordionView">
     <tab name="basic_info" [hasError]="basicInfo.invalid" [template]="basic_info" [title]="lang.map.lbl_basic_info">
     </tab>
-    <tab name="templates" [hasError]="templateTabHasError"
+    <tab name="templates" [disabled]="!internalProjectClassification.value" [hasError]="templateTabHasError"
          [template]="template_deduction_ratio_info"
          [title]="lang.map.template_deduction_ratio_info">
     </tab>
