@@ -95,6 +95,12 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
 
   licenseEndDate?: string
 
+  formProperties = {
+    requestType: () => {
+      return this.getObservableField('requestType', 'requestType');
+    }
+  }
+
   constructor(public lang: LangService,
               public fb: UntypedFormBuilder,
               private lookupService: LookupService,
