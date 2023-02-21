@@ -54,6 +54,7 @@ export abstract class CaseModel<S extends BaseGenericEService<T>, T extends File
   itemDetails: string = '';
   encrypt!: EncryptionService;
   organizationId!: number;
+  submissionMechanism!: number;
 
   constructor() {
     super();
