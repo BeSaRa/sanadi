@@ -105,7 +105,7 @@ export abstract class CaseModel<S extends BaseGenericEService<T>, T extends File
   }
 
   alreadyStarted(): boolean {
-    return !this.isCancelled() && this.caseStatus >= CommonCaseStatus.UNDER_PROCESSING;
+    return this.caseStatus >= CommonCaseStatus.UNDER_PROCESSING;
   }
 
   exportActions(): Observable<BlobModel> {
