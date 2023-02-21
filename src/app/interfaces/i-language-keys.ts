@@ -1788,4 +1788,5 @@ export interface ILanguageKeys {
   lbl_approve_conditions:string;
   lbl_other:string;
   msg_only_this_file_size_or_less_allowed_to_upload: string;
+  err_must_have_letters:string;
 }

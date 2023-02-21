@@ -173,6 +173,7 @@ const errorKeys: IKeyValue = {
   },
   invalidLaterTime: {key: 'err_invalid_later_time', replaceValues: null},
   invalidEarlierTime: {key: 'err_invalid_earlier_time', replaceValues: null},
+  HAS_LETTERS: {key: 'err_must_have_letters', replaceValues: null},
 };
 
 function getValidationData(control: AbstractControl, errorName: string): IValidationInfo {

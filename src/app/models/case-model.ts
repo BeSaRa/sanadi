@@ -292,6 +292,7 @@ export abstract class CaseModel<S extends BaseGenericEService<T>, T extends File
       [CaseTypes.NPO_MANAGEMENT]: WFResponseType.REVIEW_NPO_MANAGEMENT,
       [CaseTypes.PROJECT_FUNDRAISING]: WFResponseType.PROJECT_FUNDRAISING_SEND_TO_DEPARTMENTS,
       [CaseTypes.PROJECT_IMPLEMENTATION]: WFResponseType.PROJECT_IMPLEMENTATION_SEND_TO_SINGLE_DEPARTMENT,
+      [CaseTypes.FINANCIAL_TRANSFERS_LICENSING]: WFResponseType.FINANCIAL_TRANSFER_SEND_TO_SINGLE_DEPARTMENT,
     }
 
     if (!caseType) {
