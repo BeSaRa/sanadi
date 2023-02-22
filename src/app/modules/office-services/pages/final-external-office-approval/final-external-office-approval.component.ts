@@ -105,6 +105,7 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
 
   operation: OperationTypes = OperationTypes.CREATE;
 
+  nationalities: Lookup[] = this.lookupService.listByCategory.Nationality;
   countriesList: Country[] = [];
 
   unprocessedLicensesList: any[] = [];
