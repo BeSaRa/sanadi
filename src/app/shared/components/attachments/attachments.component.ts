@@ -11,7 +11,7 @@ import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {ToastService} from '@app/services/toast.service';
 import {TableComponent} from '@app/shared/components/table/table.component';
 import {AttachmentTypeServiceData} from '@app/models/attachment-type-service-data';
-import {FileExtensionsEnum, FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
+import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 import {AdminResult} from '@app/models/admin-result';
 import {GridName, ItemId} from '@app/types/types';
 import {EmployeeService} from '@services/employee.service';
@@ -22,8 +22,9 @@ import {
 } from '@app/shared/popups/other-attachment-details-popup/other-attachment-details-popup.component';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {CommonUtils} from '@helpers/common-utils';
-import { GlobalSettingsService } from '@app/services/global-settings.service';
-import { GlobalSettings } from '@app/models/global-settings';
+import {GlobalSettingsService} from '@app/services/global-settings.service';
+import {GlobalSettings} from '@app/models/global-settings';
+
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
   selector: 'attachments',
@@ -76,12 +77,11 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
   selectedFile?: FileNetDocument;
 
   loadedAttachments: Record<number, FileNetDocument> = {};
-  
-  globalSettings!:GlobalSettings;
+
+  globalSettings: GlobalSettings = this.globalSettingsService.getGlobalSettings();
   allowedExtensions: string[] = [];
-  allowedMimeType: string[] = [];
-  allowedFileMaxSize!: number;
-  
+  allowedFileMaxSize: number = this.globalSettings.fileSize;
+
   private selectedIndex!: number;
 
   @Input()
@@ -106,7 +106,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
               private toast: ToastService,
               private employeeService: EmployeeService,
               private attachmentTypeService: AttachmentTypeService,
-              private globalSettingsService:GlobalSettingsService) {
+              private globalSettingsService: GlobalSettingsService) {
     this.attachmentTypeService.attachmentsComponent = this;
   }
 
@@ -120,35 +120,22 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.setAllowedFiles();
     this.listenToReload();
     this.listenToCaseIdChanges();
     this.listenToAddOtherAttachment();
     this.loadingStatus.next(true);
-    this.getGlobalSettings()
   }
 
-  getGlobalSettings(){
-    this.globalSettingsService.getGlobalSettings()
-    .subscribe(list=> {
-      this.globalSettings = list[0];
-      this.setAllowedFiles()
-    })
-  }
-  
-  setAllowedFiles(){
-    this.globalSettingsService.getFileTypes()   
+  setAllowedFiles() {
+    this.globalSettingsService.getAllowedFileTypes()
       .pipe(
-        map(list => list.filter(ele=>this.globalSettings.fileTypeArr.includes(ele.id))),
-        map(list => list.map(ele => {return ['.' + ele.extension, ele.mimeType]}))
+        map(fileTypes => fileTypes.map(fileType => '.' + (fileType.extension ?? '').toLowerCase()))
       )
       .subscribe(list => {
-        list.forEach(ele => {
-          this.allowedExtensions.push(ele[0])
-          this.allowedMimeType.push(ele[1])
-        })
-      });
-    this.allowedFileMaxSize = this.globalSettings.fileSize
-    }
+        this.allowedExtensions = list;
+      })
+  }
 
   private loadDocumentsByCaseId(types: FileNetDocument[]): Observable<FileNetDocument[]> {
     return this.caseId ? this.service.loadDocuments(this.caseId)
@@ -244,16 +231,16 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
   uploaderFileChange($event: Event): void {
     const input = ($event.target as HTMLInputElement);
     const file = input.files?.item(0);
-    const validFileMime = file ? (this.allowedMimeType.includes(file.type)) : true;
-    !validFileMime ? input.value = '' : null;
-    if (!validFileMime) {
-      this.dialog.error(this.lang.map.msg_only_those_files_allowed_to_upload.change({files: this.allowedExtensions.join(',')}));
+    const validFile = file ? (this.allowedExtensions.includes(file.name.getExtension())) : true;
+    !validFile ? input.value = '' : null;
+    if (!validFile) {
+      this.dialog.error(this.lang.map.msg_only_those_files_allowed_to_upload.change({files: this.allowedExtensions.join(', ')}));
       input.value = '';
       return;
     }
-    const validFileSize = file? (file.size <= this.allowedFileMaxSize*1000*1024):true;
+    const validFileSize = file ? (file.size <= this.allowedFileMaxSize * 1000 * 1024) : true;
     !validFileSize ? input.value = '' : null;
-    if (!validFileSize){
+    if (!validFileSize) {
       this.dialog.error(this.lang.map.msg_only_this_file_size_or_less_allowed_to_upload.change({size: this.allowedFileMaxSize}));
       input.value = '';
       return;

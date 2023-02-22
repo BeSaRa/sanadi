@@ -9,7 +9,7 @@ import {AuthService} from '@app/services/auth.service';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {catchError, exhaustMap, mapTo, takeUntil, tap} from 'rxjs/operators';
 import {ConfigurationService} from '@services/configuration.service';
-import { InfoService } from '@app/services/info.service';
+import {GlobalSettingsService} from '@services/global-settings.service';
 
 @Component({
   selector: 'external-login',
@@ -26,7 +26,6 @@ export class ExternalLoginComponent implements OnInit {
   background: string = 'url(assets/images/' + this.configService.CONFIG.LOGIN_BACKGROUND_FALLBACK + ')';
   loginBackground: string = 'url(assets/images/' + this.configService.CONFIG.LOGIN_BACKGROUND_EXTERNAL + ')';
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
-  applicationName!:string;
 
   constructor(public lang: LangService,
               private router: Router,
@@ -35,8 +34,7 @@ export class ExternalLoginComponent implements OnInit {
               private eCookieService: ECookieService,
               private toastService: ToastService,
               private authService: AuthService,
-              private infoService: InfoService
-              ) {
+              private globalSettingsService: GlobalSettingsService) {
 
   }
 
@@ -46,7 +44,6 @@ export class ExternalLoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getApplicationName();
     this.loginFromExternal = this.fb.group({
       username: ['', [CustomValidators.required, CustomValidators.number]],
       // password: [''], // for now, it is not required till we make full integration with NAS Services.
@@ -55,19 +52,10 @@ export class ExternalLoginComponent implements OnInit {
     this.listenToLoginEvent();
   }
 
-  @HostListener('window:keydown.control.alt.l')
-  public getApplicationName(){
-    this.infoService.loadGlobalSettings().pipe(takeUntil(this.destroy$))
-    .subscribe(
-      globalSetting=>{
-        if(this.lang.getCurrentLanguage().code==='ar')
-        {this.applicationName = globalSetting.systemArabicName}
-        else if(this.lang.getCurrentLanguage().code=== 'en')
-        {this.applicationName = globalSetting.systemEnglishName}
-      }
-    )
+  get applicationName(): string {
+    return this.globalSettingsService.getGlobalSettings().getApplicationName();
   }
-  
+
   togglePasswordView(event: Event): void {
     event.preventDefault();
     this.icon = this.icon === 'mdi-eye' ? 'mdi-eye-off' : 'mdi-eye';
@@ -76,9 +64,7 @@ export class ExternalLoginComponent implements OnInit {
 
   toggleLang($event: MouseEvent) {
     $event.preventDefault();
-    this.lang.toggleLanguage().subscribe(
-      ()=>this.getApplicationName()
-    );
+    this.lang.toggleLanguage().subscribe();
   }
 
   processLogin(): void {

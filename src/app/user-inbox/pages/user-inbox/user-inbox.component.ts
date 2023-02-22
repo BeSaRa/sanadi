@@ -1,34 +1,34 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { LangService } from '@app/services/lang.service';
-import { InboxService } from '@app/services/inbox.service';
-import { QueryResultSet } from '@app/models/query-result-set';
-import { switchMap, takeUntil, tap } from 'rxjs/operators';
-import { QueryResult } from '@app/models/query-result';
-import { BehaviorSubject, interval, Subject } from 'rxjs';
-import { WFResponseType } from '@app/enums/wfresponse-type.enum';
-import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
-import { ToastService } from '@app/services/toast.service';
-import { DialogRef } from '@app/shared/models/dialog-ref';
-import { EmployeeService } from '@app/services/employee.service';
-import { CaseModel } from '@app/models/case-model';
-import { WFActions } from '@app/enums/wfactions.enum';
-import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { ITableOptions } from '@app/interfaces/i-table-options';
-import { FilterEventTypes } from '@app/types/types';
-import { UserClickOn } from '@app/enums/user-click-on.enum';
-import { IPartialRequestCriteria } from '@app/interfaces/i-partial-request-criteria';
-import { CommonUtils } from '@app/helpers/common-utils';
-import { IInboxCriteria } from '@app/interfaces/i-inbox-criteria';
-import { TableComponent } from '@app/shared/components/table/table.component';
-import { SortEvent } from '@app/interfaces/sort-event';
-import { CaseTypes } from '@app/enums/case-types.enum';
-import { Lookup } from '@app/models/lookup';
-import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
-import { Router } from '@angular/router';
-import { CommonService } from '@services/common.service';
-import { ActionIconsEnum } from '@app/enums/action-icons-enum';
-import { GlobalSettingsService } from '@app/services/global-settings.service';
-import { DateUtils } from '@app/helpers/date-utils';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {LangService} from '@app/services/lang.service';
+import {InboxService} from '@app/services/inbox.service';
+import {QueryResultSet} from '@app/models/query-result-set';
+import {switchMap, takeUntil, tap} from 'rxjs/operators';
+import {QueryResult} from '@app/models/query-result';
+import {BehaviorSubject, interval, Subject} from 'rxjs';
+import {WFResponseType} from '@app/enums/wfresponse-type.enum';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {ToastService} from '@app/services/toast.service';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {EmployeeService} from '@app/services/employee.service';
+import {CaseModel} from '@app/models/case-model';
+import {WFActions} from '@app/enums/wfactions.enum';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {ITableOptions} from '@app/interfaces/i-table-options';
+import {FilterEventTypes} from '@app/types/types';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {IPartialRequestCriteria} from '@app/interfaces/i-partial-request-criteria';
+import {CommonUtils} from '@app/helpers/common-utils';
+import {IInboxCriteria} from '@app/interfaces/i-inbox-criteria';
+import {TableComponent} from '@app/shared/components/table/table.component';
+import {SortEvent} from '@app/interfaces/sort-event';
+import {CaseTypes} from '@app/enums/case-types.enum';
+import {Lookup} from '@app/models/lookup';
+import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import {Router} from '@angular/router';
+import {CommonService} from '@services/common.service';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import {GlobalSettingsService} from '@app/services/global-settings.service';
+import {DateUtils} from '@app/helpers/date-utils';
 
 @Component({
   selector: 'app-user-inbox',
@@ -91,12 +91,12 @@ export class UserInboxComponent implements OnInit, OnDestroy {
   gridActions: IMenuItem<QueryResult>[] = [];
 
   constructor(public lang: LangService,
-    private toast: ToastService,
-    private router: Router,
-    private employeeService: EmployeeService,
-    private commonService: CommonService,
-    private inboxService: InboxService,
-    private globalSettingsService:GlobalSettingsService) {
+              private toast: ToastService,
+              private router: Router,
+              private employeeService: EmployeeService,
+              private commonService: CommonService,
+              private inboxService: InboxService,
+              private globalSettingsService: GlobalSettingsService) {
     if (this.employeeService.isExternalUser()) {
       this.tableOptions.columns = this.tableOptions.columns.filter(x => x !== 'orgInfo');
     }
@@ -107,12 +107,12 @@ export class UserInboxComponent implements OnInit, OnDestroy {
     this.reloadInbox$
       .pipe(
         switchMap(_ => {
-          if (!this.hasFilterCriteria()) {
-            return this.inboxService.loadUserInbox();
-          } else {
-            return this.inboxService.loadUserInbox(this.filterCriteria);
+            if (!this.hasFilterCriteria()) {
+              return this.inboxService.loadUserInbox();
+            } else {
+              return this.inboxService.loadUserInbox(this.filterCriteria);
+            }
           }
-        }
         ),
         takeUntil(this.destroy$),
         //@BeSaRa - this antipattern , I made it for reason
@@ -120,7 +120,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
       )
       .subscribe((value) => {
         this.queryResultSet = value;
-        this.oldQueryResultSet = { ...value };
+        this.oldQueryResultSet = {...value};
       });
 
   }
@@ -133,16 +133,13 @@ export class UserInboxComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.listenToReload();
     this.buildGridActions();
-    this.getGlobalSettings();
+    this.setRefreshInterval();
   }
 
-  getGlobalSettings(){
-    this.globalSettingsService.getGlobalSettings().subscribe(
-      list => 
-      interval(DateUtils.getMillisecondsFromMinutes(list[0].inboxRefreshInterval))
+  setRefreshInterval() {
+    interval(DateUtils.getMillisecondsFromMinutes(this.globalSettingsService.getGlobalSettings().inboxRefreshInterval))
       .pipe(takeUntil(this.destroy$))
-      .subscribe(this.reloadInbox$)
-    )
+      .subscribe(this.reloadInbox$);
   }
 
   actionManageAttachments(item: QueryResult) {
@@ -264,7 +261,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
     /*item.open(this.actions, OpenFrom.USER_INBOX)
      .pipe(switchMap(ref => ref.onAfterClose$))
      .subscribe(() => this.reloadInbox$.next(null));*/
-    this.router.navigate([item.itemRoute], { queryParams: { item: item.itemDetails } }).then();
+    this.router.navigate([item.itemRoute], {queryParams: {item: item.itemDetails}}).then();
   }
 
   actionRelease(item: QueryResult, viewDialogRef?: DialogRef) {
@@ -327,7 +324,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-eye',
         label: 'open_task',
-        data: { hideFromViewer: true },
+        data: {hideFromViewer: true},
         displayInGrid: true,
         onClick: (item: QueryResult) => this.actionOpen(item)
       },
@@ -344,7 +341,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: ActionIconsEnum.OPEN_MAIL,
         label: 'mark_as_read',
-        data: { hideFromViewer: true },
+        data: {hideFromViewer: true},
         show: (item: QueryResult) => !item.isRead(),
         onClick: (item: QueryResult) => this.actionMarkAsRead(item)
       },
@@ -361,7 +358,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-paperclip',
         label: 'manage_attachments',
-        data: { hideFromViewer: true },
+        data: {hideFromViewer: true},
         show: (item: QueryResult) => {
           let caseStatus = item.getCaseStatus();
           return (caseStatus !== CommonCaseStatus.CANCELLED && caseStatus !== CommonCaseStatus.FINAL_APPROVE && caseStatus !== CommonCaseStatus.FINAL_REJECTION);
@@ -386,7 +383,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-comment-text-multiple-outline',
         label: 'manage_comments',
-        data: { hideFromViewer: true },
+        data: {hideFromViewer: true},
         show: (item: QueryResult) => {
           return this.employeeService.isInternalUser() && item.getCaseStatus() !== CommonCaseStatus.CANCELLED;
         },
@@ -407,7 +404,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         },
         onClick: (item: QueryResult, viewDialogRef?: DialogRef) => this.actionRelease(item, viewDialogRef)
       },
-      { type: 'divider' },
+      {type: 'divider'},
       // send to department
       {
         type: 'action',
@@ -520,7 +517,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
           this.actionSendToGeneralManager(item, viewDialogRef);
         }
       },
-      { type: 'divider' },
+      {type: 'divider'},
       // complete
       {
         type: 'action',
