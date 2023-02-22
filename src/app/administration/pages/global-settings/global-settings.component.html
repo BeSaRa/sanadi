@@ -131,6 +131,8 @@
     <div class="d-flex flex-row flex-wrap gap-2 mb-2 justify-content-center">
       <button  type="button" [disabled]="!form || form.invalid || invalidEmailsForm()"
               (click)="save()" class="btn btn-primary">{{lang.map.btn_save}}</button>
+      <button type="button" (click)="cancelSettings()"
+              class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
       <button tabindex="-1" (click)="displayFormValidity()"
               tooltip="{{lang.map.validate_fields}}" class="btn btn-link">
         <i class="mdi mdi-information-outline text-info"></i>

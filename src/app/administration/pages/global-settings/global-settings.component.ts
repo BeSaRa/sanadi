@@ -9,6 +9,7 @@ import {CustomValidators} from '@app/validators/custom-validators';
 import {FileType} from '@models/file-type';
 import {CommonUtils} from '@helpers/common-utils';
 import {ToastService} from '@services/toast.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'global-settings',
@@ -25,7 +26,8 @@ export class GlobalSettingsComponent implements OnInit {
   constructor(public lang: LangService,
               public fb: UntypedFormBuilder,
               public service: GlobalSettingsService,
-              private toast: ToastService) {
+              private toast: ToastService,
+              private router: Router) {
   }
 
   ngOnInit() {
@@ -138,5 +140,9 @@ export class GlobalSettingsComponent implements OnInit {
 
   searchNgSelect(term: string, item: any): boolean {
     return item.ngSelectSearch(term);
+  }
+
+  cancelSettings(): void {
+    this.router.navigate(['/home/administration']).then();
   }
 }
