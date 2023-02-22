@@ -55,14 +55,29 @@
         </div>
         <div class="col-sm-12 col-md-4 mb-4 ng-select-wrapper">
           <label asteriskIfRequired="fileTypeArr" for="fileTypeArr" class="form-label">{{lang.map.file_types}}</label>
-          <ng-select validationClasses="fileTypeArr" labelForId="fileTypeArr"
-                     placeholder="{{lang.map.select}}"
+          <ng-select [selectOnTab]="true" [items]="fileTypes" labelForId="fileTypeArr"
+                     bindValue="id" [clearable]="true"
+                     [searchFn]="searchNgSelect"
+                     placeholder="{{lang.map.select}}" id="fileTypeArr"
                      [notFoundText]="lang.map.msg_not_found"
-                     formControlName="fileTypeArr"
-                     id="fileTypeArr" appendTo="body"
-                     [multiple]="true">
-            <ng-option [value]="fileType.id"
-                       *ngFor="let fileType of fileTypes">{{fileType.getName()}}</ng-option>
+                     [multiple]="true" [closeOnSelect]="false"
+                     formControlName="fileTypeArr" validationClasses="fileTypeArr">
+            <ng-template ng-option-tmp let-item="item">
+              <span class="custom-option">{{item.getName()}}</span>
+            </ng-template>
+            <ng-template ng-label-tmp let-item="item" let-clear="clear">
+              <span class="ng-value-label">{{item && item.getName ? item.getName() : ''}}</span>
+              <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+            </ng-template>
+            <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+              <div class="ng-value" *ngFor="let item of (items ? items.slice(0,2): [])">
+                <span class="ng-value-label">{{item && item.getName ? item.getName() : ''}}</span>
+                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+              </div>
+              <div class="ng-value" *ngIf="items.length > 2">
+                <span class="ng-value-label">{{items.length - 2}} more...</span>
+              </div>
+            </ng-template>
           </ng-select>
           <app-field-error-message controlName="fileTypeArr"></app-field-error-message>
         </div>

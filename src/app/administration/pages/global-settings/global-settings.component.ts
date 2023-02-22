@@ -135,4 +135,8 @@ export class GlobalSettingsComponent implements OnInit {
     CommonUtils.displayFormValidity(this.form, contentId);
     CommonUtils.displayFormValidity(this.adminEmailsForm, contentId);
   }
+
+  searchNgSelect(term: string, item: any): boolean {
+    return item.ngSelectSearch(term);
+  }
 }
