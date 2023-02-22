@@ -11,7 +11,7 @@ import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {ToastService} from '@app/services/toast.service';
 import {TableComponent} from '@app/shared/components/table/table.component';
 import {AttachmentTypeServiceData} from '@app/models/attachment-type-service-data';
-import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
+import {FileIconsEnum, FileMimeTypesEnum} from '@app/enums/file-extension-mime-types-icons.enum';
 import {AdminResult} from '@app/models/admin-result';
 import {GridName, ItemId} from '@app/types/types';
 import {EmployeeService} from '@services/employee.service';
@@ -93,7 +93,7 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
   formProperties: Record<string, () => Observable<any>> = {};
 
   destroy$: Subject<any> = new Subject<any>();
-  displayedColumns: string[] = [/*'rowSelection',*/ 'title', 'type', 'description', 'mandatory', 'isPublished', 'date', 'actions'];
+  displayedColumns: string[] = [/*'rowSelection',*/ 'icon', 'type', 'description', 'mandatory', 'isPublished', 'date', 'actions'];
 
   filter: UntypedFormControl = new UntypedFormControl();
 
@@ -125,6 +125,23 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
     this.listenToCaseIdChanges();
     this.listenToAddOtherAttachment();
     this.loadingStatus.next(true);
+  }
+
+  private _getFileIconsEnumKey(mimeType: string) {
+    try {
+      const fileTypeKey = Object.keys(FileMimeTypesEnum)[Object.values(FileMimeTypesEnum).indexOf(mimeType as FileMimeTypesEnum)];
+      return !fileTypeKey ? FileIconsEnum.HIDDEN : FileIconsEnum[fileTypeKey as keyof typeof FileIconsEnum];
+    } catch (_) {
+      return FileIconsEnum.HIDDEN;
+    }
+  }
+
+  getFileIcon(attachment: FileNetDocument): string {
+    if (!attachment.id) {
+      return FileIconsEnum.HIDDEN;
+    } else {
+      return this._getFileIconsEnumKey(attachment.mimeType);
+    }
   }
 
   setAllowedFiles() {
