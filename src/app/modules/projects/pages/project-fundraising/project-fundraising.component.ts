@@ -933,7 +933,11 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   needTemplateApproval(index: number): boolean {
-    return !!(this.model && this.employeeService.isInternalUser() && this.model.canApproveTemplate(index))
+    return !!(this.model && this.employeeService.isInternalUser() && this.model.canApproveTemplate(index)) && !this.isRejectedOrApproved()
+  }
+
+  isRejectedOrApproved() {
+    return this.model?.caseStatus == CommonCaseStatus.FINAL_APPROVE || this.model?.caseStatus == CommonCaseStatus.FINAL_REJECTION
   }
 
   private afterSelectLicense(model: ProjectFundraising) {
