@@ -4,7 +4,7 @@ import { LangService } from '@services/lang.service';
 import { switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { Team } from '../models/team';
 import { EmployeeService } from '@services/employee.service';
-import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
+import { BehaviorSubject, interval, Observable, of, Subject } from 'rxjs';
 import { UntypedFormControl } from '@angular/forms';
 import { QueryResult } from '../models/query-result';
 import { InboxService } from '@services/inbox.service';
@@ -30,6 +30,8 @@ import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
 import { Router } from '@angular/router';
 import { CommonService } from '@services/common.service';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
+import { DateUtils } from '@app/helpers/date-utils';
+import { GlobalSettingsService } from '@app/services/global-settings.service';
 
 @Component({
   selector: 'team-inbox',
@@ -58,7 +60,9 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
     private router: Router,
     private inboxService: InboxService,
     private commonService: CommonService,
-    public employeeService: EmployeeService) {
+    public employeeService: EmployeeService,
+    private globalSettingsService: GlobalSettingsService
+    ) {
     if (this.employeeService.isExternalUser()) {
       this.tableOptions.columns = this.tableOptions.columns.filter(x => x !== 'orgInfo');
     }
@@ -145,6 +149,13 @@ export class TeamInboxComponent implements OnInit, AfterViewInit, OnDestroy {
     this.listenToInboxChange();
     this.listenToSelectControl();
     this.buildGridActions();
+    this.setRefreshInterval();
+  }
+
+  setRefreshInterval() {
+    interval(DateUtils.getMillisecondsFromMinutes(this.globalSettingsService.getGlobalSettings().inboxRefreshInterval))
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(()=>this.inboxChange$.next(this.inboxChange$.value));
   }
 
   reloadDefaultTeam(): void {
