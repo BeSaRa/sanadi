@@ -39,6 +39,8 @@ export class GlobalSettingsComponent implements OnInit {
       if (jsonEmailsArray.length > 0) {
         this.updateAdminEmailsForm(jsonEmailsArray);
       }
+
+      this.displayFormValidity();
     });
   }
 
@@ -127,5 +129,10 @@ export class GlobalSettingsComponent implements OnInit {
 
   invalidEmailsForm() {
     return this.emails.controls.some(control => control.invalid);
+  }
+
+  displayFormValidity(contentId: string = 'main-content'): void {
+    CommonUtils.displayFormValidity(this.form, contentId);
+    CommonUtils.displayFormValidity(this.adminEmailsForm, contentId);
   }
 }
