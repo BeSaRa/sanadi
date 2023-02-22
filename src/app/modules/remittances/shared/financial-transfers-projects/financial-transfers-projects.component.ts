@@ -20,6 +20,7 @@ import { ToastService } from '@app/services/toast.service';
 import { ReadinessStatus } from '@app/types/types';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { filter, map, take, takeUntil, tap } from 'rxjs/operators';
+import { CustomValidators } from '@app/validators/custom-validators';
 
 @Component({
   selector: 'financial-transfers-projects',
@@ -58,6 +59,7 @@ export class FinancialTransfersProjectsComponent implements OnInit {
   filterControl: UntypedFormControl = new UntypedFormControl('');
 
   commonStatusEnum = CommonStatusEnum;
+  inputMaskPatterns = CustomValidators.inputMaskPatterns
 
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();
 

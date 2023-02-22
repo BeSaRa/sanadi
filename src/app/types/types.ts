@@ -35,6 +35,7 @@ export type customValidationTypes =
   | 'PHONE_NUMBER'
   | 'WEBSITE'
   | 'URL'
+  | 'HAS_LETTERS'
   ;
 
 export type searchFunctionType<T = any> = (text: string, model: T) => boolean;

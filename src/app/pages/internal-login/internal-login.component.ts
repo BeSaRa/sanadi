@@ -9,6 +9,7 @@ import {of, Subject} from "rxjs";
 import {CustomValidators} from "@app/validators/custom-validators";
 import {catchError, exhaustMap, mapTo, takeUntil, tap} from "rxjs/operators";
 import {ConfigurationService} from '@services/configuration.service';
+import { InfoService } from '@app/services/info.service';
 
 @Component({
   selector: 'internal-login',
@@ -21,6 +22,7 @@ export class InternalLoginComponent implements OnInit {
   loginFormInternal: UntypedFormGroup = {} as UntypedFormGroup;
   private destroy$: Subject<any> = new Subject<any>();
   private login$: Subject<any> = new Subject<any>();
+  applicationName!:string;
 
   background: string = 'url(assets/images/' + this.configService.CONFIG.LOGIN_BACKGROUND_FALLBACK + ')';
   loginBackground: string = 'url(assets/images/' + this.configService.CONFIG.LOGIN_BACKGROUND_INTERNAL + ')';
@@ -31,7 +33,9 @@ export class InternalLoginComponent implements OnInit {
               private configService: ConfigurationService,
               private eCookieService: ECookieService,
               private toastService: ToastService,
-              private authService: AuthService) {
+              private authService: AuthService,
+              private infoService: InfoService
+              ) {
 
   }
 
@@ -41,11 +45,25 @@ export class InternalLoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getApplicationName();
     this.loginFormInternal = this.fb.group({
       userName: ['', CustomValidators.required],
       userPassword: ['', CustomValidators.required] // for now, it is not required till we make full integration with NAS Services.
     });
     this.listenToLoginEvent();
+  }
+
+  @HostListener('window:keydown.control.alt.l')
+  public getApplicationName(){
+    this.infoService.loadGlobalSettings().pipe(takeUntil(this.destroy$))
+    .subscribe(
+      globalSetting=>{
+        if(this.lang.getCurrentLanguage().code==='ar')
+        {this.applicationName = globalSetting.systemArabicName}
+        else if(this.lang.getCurrentLanguage().code=== 'en')
+        {this.applicationName = globalSetting.systemEnglishName}
+      }
+    )
   }
 
   togglePasswordView(event: Event): void {
@@ -56,7 +74,9 @@ export class InternalLoginComponent implements OnInit {
 
   toggleLang($event: MouseEvent) {
     $event.preventDefault();
-    this.lang.toggleLanguage().subscribe();
+    this.lang.toggleLanguage().subscribe(
+      ()=>this.getApplicationName()
+    );
   }
 
   processLogin(): void {

@@ -44,4 +44,16 @@ export class GlobalSettingsService extends CrudGenericService<GlobalSettings> {
   getFileTypes(): Observable<FileType[]> {
     return this._getFileTypes();
   }
+
+  @CastResponse(() => GlobalSettings, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  _getGlobalSettings():Observable<GlobalSettings[]>{
+    return this.http.get<GlobalSettings[]>(this._getServiceURL());
+  } 
+
+  getGlobalSettings(): Observable<GlobalSettings[]> {
+    return this._getGlobalSettings();
+  }
 }

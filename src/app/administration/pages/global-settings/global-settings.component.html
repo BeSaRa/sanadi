@@ -15,12 +15,12 @@
           <app-field-error-message controlName="systemArabicName"></app-field-error-message>
         </div>
         <div class="col-sm-4 position-relative">
-          <label asteriskIfRequired="systemEnName" for="systemEnName"
+          <label asteriskIfRequired="systemEnglishName" for="systemEnglishName"
                  class="form-label">{{lang.map.lbl_english_name}}</label>
-          <input id="systemEnName"
-                 validationClasses="systemEnName"
-                 formControlName="systemEnName" class="form-control">
-          <app-field-error-message controlName="systemEnName"></app-field-error-message>
+          <input id="systemEnglishName"
+                 validationClasses="systemEnglishName"
+                 formControlName="systemEnglishName" class="form-control">
+          <app-field-error-message controlName="systemEnglishName"></app-field-error-message>
         </div>
         <div class="col-sm-4 position-relative">
           <label asteriskIfRequired="sessionTimeout" for="sessionTimeout"
@@ -41,6 +41,15 @@
                  formControlName="fileSize" class="form-control"
                  [mask]="inputMaskPatterns.NUMBER_ONLY">
           <app-field-error-message controlName="fileSize"></app-field-error-message>
+        </div>
+        <div class="col-sm-4 position-relative">
+          <label asteriskIfRequired="maxDeductionRatio" for="maxDeductionRatio"
+                 class="form-label">{{lang.map.lbl_maximum_deduction_ratio}}</label>
+          <input id="maxDeductionRatio"
+                 validationClasses="maxDeductionRatio"
+                 formControlName="maxDeductionRatio" class="form-control"
+                 [mask]="inputMaskPatterns.NUMBER_ONLY">
+          <app-field-error-message controlName="maxDeductionRatio"></app-field-error-message>
         </div>
         <div class="col-sm-4 position-relative">
           <label asteriskIfRequired="inboxRefreshInterval" for="inboxRefreshInterval"

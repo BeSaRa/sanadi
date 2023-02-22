@@ -5,6 +5,7 @@ import { UrlService } from './url.service';
 import { ILoginInfo } from '@contracts/i-login-info';
 import { CastResponse } from "@decorators/cast-response";
 import { LoginInfo } from "@app/models/login-info";
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -18,5 +19,9 @@ export class InfoService {
   @CastResponse(() => LoginInfo)
   load(): Observable<ILoginInfo> {
     return this.http.get<ILoginInfo>(this.urlService.URLS.LOGIN_INFO);
+  };
+
+  loadGlobalSettings(){
+      return this.load().pipe(map(loginInfo => loginInfo.globalSetting))
   }
 }
