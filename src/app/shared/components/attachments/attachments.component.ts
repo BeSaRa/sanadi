@@ -503,10 +503,15 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
   }
 
   private removeAttachment(attachment: FileNetDocument): void {
-    this.attachments = this.attachments.filter(item => item.attachmentTypeId !== attachment.attachmentTypeId);
+    this.attachments = this.attachments.filter(item => item.attachmentTypeServiceData!.id !== attachment.attachmentTypeServiceData?.id);
   }
 
   private addAttachment(attachment: FileNetDocument): void {
-    this.attachments = this.attachments.concat(attachment);
+    const existingIndex = this.attachments.findIndex(x => x.attachmentTypeServiceData?.id === attachment.attachmentTypeServiceData?.id);
+    if (existingIndex === -1) {
+      this.attachments = this.attachments.concat(attachment);
+    } else {
+      this.attachments.splice(existingIndex, 1, attachment);
+    }
   }
 }
