@@ -17,6 +17,8 @@ import {CommonUtils} from '@helpers/common-utils';
 import {DateUtils} from '@helpers/date-utils';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 import {SharedService} from '@services/shared.service';
+import {EmployeeService} from '@services/employee.service';
+import {InternalUser} from '@models/internal-user';
 
 @Component({
   selector: 'urgent-intervention-attachment-popup',
@@ -36,6 +38,7 @@ export class UrgentInterventionAttachmentPopupComponent implements OnInit {
               private dialogService: DialogService,
               private toastService: ToastService,
               private sharedService: SharedService,
+              private employeeService: EmployeeService,
               @Inject(DIALOG_DATA_TOKEN) public data: IDialogData<UrgentInterventionAttachment>,
               private urgentInterventionLicenseFollowupService: UrgentInterventionLicenseFollowupService) {
     this.list = this.data.list;
@@ -83,7 +86,12 @@ export class UrgentInterventionAttachmentPopupComponent implements OnInit {
       type: 'action',
       label: 'approve',
       icon: ActionIconsEnum.APPROVE,
-      show: (item) => item.isApproved === null,
+      show: (item) => {
+        if (this.employeeService.isExternalUser() || !item.creatorInfo || this.employeeService.isCurrentUser({generalUserId: item.creatorInfo.id} as InternalUser)) {
+          return false;
+        }
+        return item.isApproved === null;
+      },
       onClick: (item) => this.approveAttachment(item)
     },
     // reject
@@ -91,7 +99,12 @@ export class UrgentInterventionAttachmentPopupComponent implements OnInit {
       type: 'action',
       label: 'lbl_reject',
       icon: ActionIconsEnum.CANCEL,
-      show: (item) => item.isApproved === null,
+      show: (item) => {
+        if (this.employeeService.isExternalUser() || !item.creatorInfo || this.employeeService.isCurrentUser({generalUserId: item.creatorInfo.id} as InternalUser)) {
+          return false;
+        }
+        return item.isApproved === null;
+      },
       onClick: (item) => this.rejectAttachment(item)
     }
   ];

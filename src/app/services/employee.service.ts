@@ -207,10 +207,6 @@ export class EmployeeService {
     }
   }
 
-  isCurrentEmployee(user: ExternalUser): boolean {
-    return this.externalUser?.id === user.id;
-  }
-
   isCurrentUser(user: ExternalUser | InternalUser): boolean {
     return this.getCurrentUser()?.generalUserId === user.generalUserId;
   }
