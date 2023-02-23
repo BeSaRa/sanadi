@@ -87,7 +87,7 @@ export class UrgentInterventionAttachmentPopupComponent implements OnInit {
       label: 'approve',
       icon: ActionIconsEnum.APPROVE,
       show: (item) => {
-        if (this.employeeService.isExternalUser() || !item.creatorInfo || this.employeeService.isCurrentUser({generalUserId: item.creatorInfo.id} as InternalUser)) {
+        if (this.readonly || this.employeeService.isExternalUser() || !item.creatorInfo || this.employeeService.isCurrentUser({generalUserId: item.creatorInfo.id} as InternalUser)) {
           return false;
         }
         return item.isApproved === null;
@@ -100,7 +100,7 @@ export class UrgentInterventionAttachmentPopupComponent implements OnInit {
       label: 'lbl_reject',
       icon: ActionIconsEnum.CANCEL,
       show: (item) => {
-        if (this.employeeService.isExternalUser() || !item.creatorInfo || this.employeeService.isCurrentUser({generalUserId: item.creatorInfo.id} as InternalUser)) {
+        if (this.readonly || this.employeeService.isExternalUser() || !item.creatorInfo || this.employeeService.isCurrentUser({generalUserId: item.creatorInfo.id} as InternalUser)) {
           return false;
         }
         return item.isApproved === null;
