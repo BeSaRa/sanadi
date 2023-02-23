@@ -51,7 +51,8 @@ export class CaseInfoComponent {
     CaseTypes.AWARENESS_ACTIVITY_SUGGESTION,
     CaseTypes.PROJECT_FUNDRAISING,
     CaseTypes.FOREIGN_COUNTRIES_PROJECTS,
-    CaseTypes.PROJECT_IMPLEMENTATION
+    CaseTypes.PROJECT_IMPLEMENTATION,
+    CaseTypes.FINANCIAL_TRANSFERS_LICENSING
   ];
 
   // this should be updated when ever you will add a new document service

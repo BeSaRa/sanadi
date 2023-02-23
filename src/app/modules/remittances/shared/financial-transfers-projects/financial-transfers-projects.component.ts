@@ -194,6 +194,13 @@ export class FinancialTransfersProjectsComponent implements OnInit {
           }
           return isProjectSelected;
         }),
+        filter(()=>{
+          const isQatariTransactionAmountValid = this.qatariTransactionAmount.value <= this.selectedProject!.dueAmount
+          if(!isQatariTransactionAmountValid){
+            this.toastService.error(this.lang.map.msg_qatari_transaction_should_not_exceed_due_amount);
+          }
+          return isQatariTransactionAmountValid;
+        }),
         filter(() => {
           if(!!this.editItem){
             return true;

@@ -1789,4 +1789,5 @@ export interface ILanguageKeys {
   lbl_other:string;
   msg_only_this_file_size_or_less_allowed_to_upload: string;
   err_must_have_letters:string;
+  msg_qatari_transaction_should_not_exceed_due_amount:string;
 }
