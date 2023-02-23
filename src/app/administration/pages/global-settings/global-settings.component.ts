@@ -4,11 +4,12 @@ import {FormControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup} fro
 import {GlobalSettings} from '@models/global-settings';
 import {GlobalSettingsService} from '@services/global-settings.service';
 import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {switchMap, tap} from 'rxjs/operators';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {FileType} from '@models/file-type';
 import {CommonUtils} from '@helpers/common-utils';
 import {ToastService} from '@services/toast.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'global-settings',
@@ -25,27 +26,31 @@ export class GlobalSettingsComponent implements OnInit {
   constructor(public lang: LangService,
               public fb: UntypedFormBuilder,
               public service: GlobalSettingsService,
-              private toast: ToastService) {
+              private toast: ToastService,
+              private router: Router) {
   }
 
   ngOnInit() {
     this.initAdminEmailsForm();
     this.loadFileTypes();
 
-    this.getCurrentGlobalSettings()
-      .subscribe((setting) => {
-        this.model = setting;
-        this.buildForm();
+    this.loadCurrentGlobalSettings().subscribe(() => {
+      this.buildForm();
 
-        let jsonEmailsArray = this.getEmailsAsArray(this.model.supportEmailList);
-        if(jsonEmailsArray.length > 0) {
-          this.updateAdminEmailsForm(jsonEmailsArray);
-        }
-      });
+      let jsonEmailsArray = this.getEmailsAsArray(this.model.supportEmailList);
+      if (jsonEmailsArray.length > 0) {
+        this.updateAdminEmailsForm(jsonEmailsArray);
+      }
+
+      this.displayFormValidity();
+    });
   }
 
-  getCurrentGlobalSettings(): Observable<GlobalSettings> {
-    return this.service.load().pipe(map(settings => settings[0]));
+  loadCurrentGlobalSettings(): Observable<GlobalSettings> {
+    return this.service.loadCurrentGlobalSettings()
+      .pipe(
+        tap((setting) => this.model = setting)
+      )
   }
 
   initiateForm() {
@@ -57,10 +62,10 @@ export class GlobalSettingsComponent implements OnInit {
   }
 
   loadFileTypes() {
-    this.service.getFileTypes()
+    this.service.loadAllFileTypes()
       .subscribe(list => {
-      this.fileTypes = list;
-    });
+        this.fileTypes = list;
+      });
   }
 
   get emails() {
@@ -117,12 +122,27 @@ export class GlobalSettingsComponent implements OnInit {
     let updatedModel = new GlobalSettings().clone({...this.model, ...this.form.value});
     this.emails.updateValueAndValidity();
     updatedModel.supportEmailList = this.getEmailsAsString(this.emails.value);
-    this.service.update(updatedModel).subscribe(_ => {
+    this.service.update(updatedModel).pipe(
+      switchMap(() => this.loadCurrentGlobalSettings())
+    ).subscribe(_ => {
       this.toast.success(this.lang.map.msg_save_success);
     });
   }
 
   invalidEmailsForm() {
     return this.emails.controls.some(control => control.invalid);
+  }
+
+  displayFormValidity(contentId: string = 'main-content'): void {
+    CommonUtils.displayFormValidity(this.form, contentId);
+    CommonUtils.displayFormValidity(this.adminEmailsForm, contentId);
+  }
+
+  searchNgSelect(term: string, item: any): boolean {
+    return item.ngSelectSearch(term);
+  }
+
+  cancelSettings(): void {
+    this.router.navigate(['/home/administration']).then();
   }
 }

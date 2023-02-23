@@ -18,7 +18,7 @@ import {ProjectWorkArea} from "@app/enums/project-work-area";
 import {DialogService} from "@services/dialog.service";
 import {UserClickOn} from "@app/enums/user-click-on.enum";
 import {CustomValidators} from "@app/validators/custom-validators";
-import { GlobalSettingsService } from '@app/services/global-settings.service';
+import {GlobalSettingsService} from '@app/services/global-settings.service';
 
 @Component({
   selector: 'deduction-ratio-popup',
@@ -35,7 +35,7 @@ export class DeductionRatioPopupComponent extends AdminGenericDialog<DeductionRa
   workAreas: Lookup[] = this.lookupService.listByCategory.ProjectWorkArea.slice().sort((a, b) => a.lookupKey - b.lookupKey)
   permitTypes: Lookup[] = this.lookupService.listByCategory.ProjectPermitType.slice().sort((a, b) => a.lookupKey - b.lookupKey)
   profileTypes: Lookup[] = this.lookupService.listByCategory.ProfileType.slice().sort((a, b) => a.lookupKey - b.lookupKey)
-  maxDeductionRatio!:number;
+  maxDeductionRatio: number = this.globalSettingsService.getGlobalSettings().maxDeductionRatio;
 
   permitTypeChangeWarn: Subject<{ warn: boolean, oldValue: ProjectPermitTypes }> = new Subject()
   workAreaChangeWarn: Subject<{ warn: boolean, oldValue: ProjectWorkArea }> = new Subject()
@@ -49,25 +49,14 @@ export class DeductionRatioPopupComponent extends AdminGenericDialog<DeductionRa
               private toast: ToastService,
               private dialog: DialogService,
               private lookupService: LookupService,
-              private globalSettingsService:GlobalSettingsService
-  ) {
+              private globalSettingsService: GlobalSettingsService) {
     super();
     this.model = data.model;
     this.operation = data.operation;
-    this.getMaxDeductionRatio()
   }
 
   initPopup(): void {
     // this._loadProfiles()
-  }
-
-  getMaxDeductionRatio(){
-    this.globalSettingsService.getGlobalSettings()
-      .pipe(map(list=>list[0].maxDeductionRatio))
-      .subscribe(maxDeductionRatio=>{
-        this.maxDeductionRatio = maxDeductionRatio;
-        this.buildForm()
-      })
   }
 
   buildForm(): void {

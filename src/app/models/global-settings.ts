@@ -5,7 +5,7 @@ import {LangService} from '@services/lang.service';
 import {InterceptModel} from '@decorators/intercept-model';
 import {GlobalSettingsInterceptor} from '@model-interceptors/global-settings-interceptor';
 import {CustomValidators} from '@app/validators/custom-validators';
-import { Validators } from '@angular/forms';
+import {Validators} from '@angular/forms';
 
 const interceptor: GlobalSettingsInterceptor = new GlobalSettingsInterceptor();
 
@@ -19,13 +19,14 @@ export class GlobalSettings extends BaseModel<GlobalSettings, GlobalSettingsServ
   sessionTimeout!: number;
   fileSize!: number;
   fileType!: string;
-  fileTypeArr: number[] = [];
   inboxRefreshInterval!: number;
   supportEmailList!: string;
   enableMailNotification!: boolean;
   enableSMSNotification!: boolean;
-  maxDeductionRatio!:number;
+  maxDeductionRatio!: number;
 
+  // extra properties
+  fileTypeArr: number[] = [];
   service: GlobalSettingsService;
   langService: LangService;
 
@@ -33,6 +34,13 @@ export class GlobalSettings extends BaseModel<GlobalSettings, GlobalSettingsServ
     super();
     this.langService = FactoryService.getService('LangService');
     this.service = FactoryService.getService('GlobalSettingsService');
+  }
+
+  getApplicationName(): string {
+    if (this.langService.map.lang === 'ar') {
+      return this.systemArabicName;
+    }
+    return this.systemEnglishName;
   }
 
   buildForm(controls?: boolean): any {
