@@ -86,7 +86,7 @@ export class UrgentInterventionReportListComponent extends AdminGenericComponent
       type: 'action',
       label: 'launch',
       icon: ActionIconsEnum.LAUNCH,
-      show: (item) => !this.readonly && !item.isLaunched(),
+      show: (item) => !this.readonly && !(item.isLaunched() || item.isApproved()),
       onClick: (item: UrgentInterventionReport) => this.launchReport(item)
     },
   ];

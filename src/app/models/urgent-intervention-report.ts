@@ -84,6 +84,10 @@ export class UrgentInterventionReport extends BaseModel<UrgentInterventionReport
     return this.urgentInterventionLicenseFollowupService.openAttachmentsDialog(this.id, this.caseId, readonly);
   }
 
+  isApproved(): boolean {
+    return this.status === ReportStatusEnum.APPROVED;
+  }
+
   isLaunched(): boolean {
     return this.status === ReportStatusEnum.LAUNCHED;
   }
