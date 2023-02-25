@@ -712,7 +712,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     }
 
     if (this.openFrom === OpenFrom.USER_INBOX) {
-      if (this.model?.submissionMechanism === SubmissionMechanisms.SUBMISSION && this.employeeService.isInternalUser()) {
+      if ((this.model?.submissionMechanism === SubmissionMechanisms.SUBMISSION || this.model?.submissionMechanism === SubmissionMechanisms.NOTIFICATION) && this.employeeService.isInternalUser()) {
         this.readonly = true;
       } else {
         if (this.employeeService.isCharityManager()) {
@@ -722,7 +722,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
         }
       }
     } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
-      if (this.model?.submissionMechanism === SubmissionMechanisms.SUBMISSION && this.employeeService.isInternalUser()) {
+      if ((this.model?.submissionMechanism === SubmissionMechanisms.SUBMISSION || this.model?.submissionMechanism === SubmissionMechanisms.NOTIFICATION) && this.employeeService.isInternalUser()) {
         this.readonly = true;
       } else {
         // after claim, consider it same as user inbox and use same condition
