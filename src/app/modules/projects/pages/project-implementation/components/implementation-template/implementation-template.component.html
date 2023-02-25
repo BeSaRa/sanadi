@@ -1,7 +1,7 @@
 <div class="row">
   <div class="d-flex align-items-center justify-content-start position-relative">
     <app-page-header [removeContainerClasses]="true" [pageTitle]="'templates'" class="flex-grow-0"
-                     [disableAdd]="disabled" [clickOnNew$]="addTemplate$"></app-page-header>
+                     [disableAdd]="disabled || isUpdateRequestType()" [clickOnNew$]="addTemplate$"></app-page-header>
     <input type="hidden" *ngIf="control" validationClasses="" [control]="control!">
     <app-field-error-message [absolute]="false" class="flex-grow-1" *ngIf="control"
                              [control]="control"></app-field-error-message>
@@ -61,7 +61,7 @@
           <button  (click)="viewTemplate(row)" class="btn icon-btn">
             <i class="mdi text-primary mdi-eye"></i>
           </button>
-          <button [disabled]="disabled" (click)="!disabled && removeTemplate(row)" class="btn p-0 icon-btn">
+          <button [disabled]="disabled || isUpdateRequestType()" (click)="!disabled && !isUpdateRequestType() && removeTemplate(row)" class="btn p-0 icon-btn">
             <i class="mdi text-primary mdi-trash-can"></i>
           </button>
         </td>

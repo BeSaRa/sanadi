@@ -460,6 +460,8 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
 
       this._updateForm(model, true);
     }
+    this.licenseStartDate.setValue(this.licenseStartDate.value);
+    this.implementingAgencyList.setValue(this.implementingAgencyList.value);
   }
 
   handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
@@ -471,6 +473,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
         if (userInteraction) {
           this._resetForm()
           this.requestType.setValue(requestTypeValue);
+          this.handleCustomFormReadonly();
         }
         this.requestType$.next(requestTypeValue);
       } else {
@@ -631,7 +634,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       .valueChanges
       .pipe(takeUntil(this.destroy$))
       .subscribe((value: ImplementingAgency[]) => {
-        value && value.length ? this.implementingAgencyType.disable() : this.implementingAgencyType.enable()
+        (value && value.length) || this.isCancelRequestType() || this.readonly ? this.implementingAgencyType.disable() : this.implementingAgencyType.enable()
       })
   }
 
@@ -833,7 +836,91 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
   }
 
   private handleCustomFormReadonly() {
-    const customFields = [
+    const allFields = [
+      {
+        field: this.projectWorkArea,
+        disabled: () => this.isCancelRequestType() || this.isUpdateRequestType()
+      },
+      {
+        field: this.beneficiaryCountry,
+        disabled: () => this.isCancelRequestType() || this.isUpdateRequestType()
+      },
+      {
+        field: this.domain,
+        disabled: () => this.isCancelRequestType() || this.isUpdateRequestType()
+      },
+      {
+        field: this.mainDACCategory,
+        disabled: () => this.isCancelRequestType() || this.isUpdateRequestType()
+      },
+      {
+        field: this.mainUNOCHACategory,
+        disabled: () => this.isCancelRequestType() || this.isUpdateRequestType()
+      },
+      {
+        field: this.subDACCategory,
+        disabled: () => this.isCancelRequestType() || this.isUpdateRequestType()
+      },
+      {
+        field: this.subUNOCHACategory,
+        disabled: () => this.isCancelRequestType() || this.isUpdateRequestType()
+      },
+      {
+        field: this.internalProjectClassification,
+        disabled: () => this.isCancelRequestType() || this.isUpdateRequestType()
+      },
+      {
+        field: this.implementationTemplate,
+        disabled: () => this.isCancelRequestType()
+      },
+      {
+        field: this.implementingAgencyType,
+        disabled: () => this.isCancelRequestType()
+      },
+      {
+        field: this.licenseStartDate,
+        disabled: () => this.isCancelRequestType()
+      },
+      {
+        field: this.projectEvaluationSLA,
+        disabled: () => this.isCancelRequestType()
+      },
+      {
+        field: this.licenseDuration,
+        disabled: () => this.isCancelRequestType() || this.isUpdateRequestType()
+      },
+      {
+        field: this.implementingAgencyList,
+        disabled: () => this.isCancelRequestType()
+      },
+      {
+        field: this.projectTotalCost,
+        disabled: () => this.isCancelRequestType()
+      },
+      {
+        field: this.implementationFundraising,
+        disabled: () => this.isCancelRequestType()
+      },
+      {
+        field: this.financialGrant,
+        disabled: () => this.isCancelRequestType()
+      },
+      {
+        field: this.selfFinancing,
+        disabled: () => this.isCancelRequestType()
+      },
+      {
+        field: this.payment,
+        disabled: () => this.isCancelRequestType()
+      },
+    ];
+
+    allFields.forEach(item => {
+      item.disabled() || this.readonly ? item.field.disable() : item.field.enable();
+    })
+
+
+    /*const customFields = [
       this.implementationTemplate,
       this.implementingAgencyList,
       this.implementationFundraising,
@@ -846,7 +933,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     ]
     customFields.forEach(item => {
       this.readonly ? item.disable() : item.enable()
-    })
+    })*/
 
   }
 
@@ -863,5 +950,13 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       .subscribe(({startDate, duration}) => {
         this.licenseEndDate = duration && startDate ? dayjs(startDate.singleDate?.jsDate).add(duration, 'month').format('YYYY-MM-DD') : '';
       })
+  }
+
+  isUpdateRequestType(): boolean {
+    return this.requestType.value && this.requestType.value === ServiceRequestTypes.UPDATE;
+  }
+
+  isCancelRequestType(): boolean {
+    return this.requestType.value && this.requestType.value === ServiceRequestTypes.CANCEL;
   }
 }
