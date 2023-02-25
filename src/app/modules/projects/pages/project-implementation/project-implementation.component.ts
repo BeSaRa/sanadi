@@ -53,6 +53,7 @@ import {OpenFrom} from "@app/enums/open-from.enum";
 import {LicenseService} from "@services/license.service";
 import {IMyDateModel} from "angular-mydatepicker";
 import dayjs from "dayjs";
+import {SubmissionMechanisms} from '@app/enums/submission-mechanisms.enum';
 
 @Component({
   selector: 'project-implementation',
@@ -711,18 +712,26 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     }
 
     if (this.openFrom === OpenFrom.USER_INBOX) {
-      if (this.employeeService.isCharityManager()) {
-        this.readonly = false;
-      } else if (this.employeeService.isCharityUser()) {
-        this.readonly = !model.isReturned();
-      }
-    } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
-      // after claim, consider it same as user inbox and use same condition
-      if (model.taskDetails.isClaimed()) {
+      if (this.model?.submissionMechanism === SubmissionMechanisms.SUBMISSION && this.employeeService.isInternalUser()) {
+        this.readonly = true;
+      } else {
         if (this.employeeService.isCharityManager()) {
           this.readonly = false;
         } else if (this.employeeService.isCharityUser()) {
           this.readonly = !model.isReturned();
+        }
+      }
+    } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
+      if (this.model?.submissionMechanism === SubmissionMechanisms.SUBMISSION && this.employeeService.isInternalUser()) {
+        this.readonly = true;
+      } else {
+        // after claim, consider it same as user inbox and use same condition
+        if (model.taskDetails.isClaimed()) {
+          if (this.employeeService.isCharityManager()) {
+            this.readonly = false;
+          } else if (this.employeeService.isCharityUser()) {
+            this.readonly = !model.isReturned();
+          }
         }
       }
     } else if (this.openFrom === OpenFrom.SEARCH) {
