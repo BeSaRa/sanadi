@@ -634,7 +634,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       .valueChanges
       .pipe(takeUntil(this.destroy$))
       .subscribe((value: ImplementingAgency[]) => {
-        (value && value.length) || this.isCancelRequestType() || this.readonly ? this.implementingAgencyType.disable() : this.implementingAgencyType.enable()
+        (value && value.length) || this.isCancelRequestType() || this.isExtendRequestType() || this.readonly ? this.implementingAgencyType.disable() : this.implementingAgencyType.enable()
       })
   }
 
@@ -839,51 +839,51 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     const allFields = [
       {
         field: this.projectWorkArea,
-        disabled: () => this.isCancelRequestType() || this.isUpdateRequestType()
+        disabled: () => this.isCancelRequestType() || this.isUpdateRequestType() || this.isExtendRequestType()
       },
       {
         field: this.beneficiaryCountry,
-        disabled: () => this.isCancelRequestType() || this.isUpdateRequestType()
+        disabled: () => this.isCancelRequestType() || this.isUpdateRequestType() || this.isExtendRequestType()
       },
       {
         field: this.domain,
-        disabled: () => this.isCancelRequestType() || this.isUpdateRequestType()
+        disabled: () => this.isCancelRequestType() || this.isUpdateRequestType() || this.isExtendRequestType()
       },
       {
         field: this.mainDACCategory,
-        disabled: () => this.isCancelRequestType() || this.isUpdateRequestType()
+        disabled: () => this.isCancelRequestType() || this.isUpdateRequestType() || this.isExtendRequestType()
       },
       {
         field: this.mainUNOCHACategory,
-        disabled: () => this.isCancelRequestType() || this.isUpdateRequestType()
+        disabled: () => this.isCancelRequestType() || this.isUpdateRequestType() || this.isExtendRequestType()
       },
       {
         field: this.subDACCategory,
-        disabled: () => this.isCancelRequestType() || this.isUpdateRequestType()
+        disabled: () => this.isCancelRequestType() || this.isUpdateRequestType() || this.isExtendRequestType()
       },
       {
         field: this.subUNOCHACategory,
-        disabled: () => this.isCancelRequestType() || this.isUpdateRequestType()
+        disabled: () => this.isCancelRequestType() || this.isUpdateRequestType() || this.isExtendRequestType()
       },
       {
         field: this.internalProjectClassification,
-        disabled: () => this.isCancelRequestType() || this.isUpdateRequestType()
+        disabled: () => this.isCancelRequestType() || this.isUpdateRequestType() || this.isExtendRequestType()
       },
       {
         field: this.implementationTemplate,
-        disabled: () => this.isCancelRequestType()
+        disabled: () => this.isCancelRequestType() || this.isExtendRequestType()
       },
       {
         field: this.implementingAgencyType,
-        disabled: () => this.isCancelRequestType()
+        disabled: () => this.isCancelRequestType() || this.isExtendRequestType()
       },
       {
         field: this.licenseStartDate,
-        disabled: () => this.isCancelRequestType()
+        disabled: () => this.isCancelRequestType() || this.isExtendRequestType()
       },
       {
         field: this.projectEvaluationSLA,
-        disabled: () => this.isCancelRequestType()
+        disabled: () => this.isCancelRequestType() || this.isExtendRequestType()
       },
       {
         field: this.licenseDuration,
@@ -891,27 +891,27 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       },
       {
         field: this.implementingAgencyList,
-        disabled: () => this.isCancelRequestType()
+        disabled: () => this.isCancelRequestType() || this.isExtendRequestType()
       },
       {
         field: this.projectTotalCost,
-        disabled: () => this.isCancelRequestType()
+        disabled: () => this.isCancelRequestType() || this.isExtendRequestType()
       },
       {
         field: this.implementationFundraising,
-        disabled: () => this.isCancelRequestType()
+        disabled: () => this.isCancelRequestType() || this.isExtendRequestType()
       },
       {
         field: this.financialGrant,
-        disabled: () => this.isCancelRequestType()
+        disabled: () => this.isCancelRequestType() || this.isExtendRequestType()
       },
       {
         field: this.selfFinancing,
-        disabled: () => this.isCancelRequestType()
+        disabled: () => this.isCancelRequestType() || this.isExtendRequestType()
       },
       {
         field: this.payment,
-        disabled: () => this.isCancelRequestType()
+        disabled: () => this.isCancelRequestType() || this.isExtendRequestType()
       },
     ];
 
@@ -958,5 +958,9 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
 
   isCancelRequestType(): boolean {
     return this.requestType.value && this.requestType.value === ServiceRequestTypes.CANCEL;
+  }
+
+  isExtendRequestType(): boolean {
+    return this.requestType.value && this.requestType.value === ServiceRequestTypes.EXTEND;
   }
 }
