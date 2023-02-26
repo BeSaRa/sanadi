@@ -9,6 +9,8 @@ import {FileExtensionsEnum, FileIconsEnum} from '@app/enums/file-extension-mime-
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import { ProfileAttachmentsService } from '@app/services/profile-attachments.service';
 import { ProfileAttachmentDetailsPopupComponent } from '@app/shared/popups/profile-attachment-details-popup/profile-attachment-details-popup.component';
+import { GlobalSettingsService } from '@app/services/global-settings.service';
+import { GlobalSettings } from '@app/models/global-settings';
 
 @Component({
   selector: 'profile-attachments',
@@ -20,8 +22,12 @@ export class ProfileAttachmentsComponent implements OnInit, OnDestroy {
     public lang: LangService,
     private service: ProfileAttachmentsService,
     private dialog :DialogService,
-    private toast: ToastService
-  ){}
+    private toast: ToastService,
+    private globalSettingsService: GlobalSettingsService
+  ){
+    this.setAllowedFiles();
+    
+  }
   ngOnInit(): void {
     this.listenToReload();
     this.listenToAddOtherAttachment();
@@ -46,15 +52,28 @@ export class ProfileAttachmentsComponent implements OnInit, OnDestroy {
   attachments: FileNetDocument[] = [];
   displayedColumns: string[] = ['title', 'name', 'description', 'date', 'actions'];
   fileIconsEnum = FileIconsEnum;
-  allowedExtensions: string[] = [FileExtensionsEnum.PDF];
+  globalSettings: GlobalSettings = this.globalSettingsService.getGlobalSettings();
+  allowedExtensions: string[] = [];
+  allowedFileMaxSize: number = this.globalSettings.fileSize;
   defaultAttachments: FileNetDocument[] = [];
   private selectedIndex!: number;
 
+  setAllowedFiles() {
+    
+    this.globalSettingsService.getAllowedFileTypes()
+      .pipe(
+        map(fileTypes => fileTypes.map(fileType => '.' + (fileType.extension ?? '').toLowerCase()))
+      )
+      .subscribe(list => {
+        this.allowedExtensions = list;
+        
+      })
+  }
 
   uploaderFileChange($event: Event): void {
     const input = ($event.target as HTMLInputElement);
     const file = input.files?.item(0);
-    const validFile = file ? (file.type === 'application/pdf') : true;
+    const validFile = file ? (this.allowedExtensions.includes(file.name.getExtension())) : true;
     !validFile ? input.value = '' : null;
     if (!validFile) {
       this.dialog.error(
@@ -65,6 +84,14 @@ export class ProfileAttachmentsComponent implements OnInit, OnDestroy {
       input.value = '';
       return;
     }
+    const validFileSize = file ? (file.size <= this.allowedFileMaxSize * 1000 * 1024) : true;
+    !validFileSize ? input.value = '' : null;
+    if (!validFileSize) {
+      this.dialog.error(this.lang.map.msg_only_this_file_size_or_less_allowed_to_upload.change({size: this.allowedFileMaxSize}));
+      input.value = '';
+      return;
+    }
+
     of(null)
       .pipe(
         switchMap(_ => {
