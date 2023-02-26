@@ -89,7 +89,8 @@
             <ng-select [readonly]="readonly" validationClasses="mainDACCategory" appendTo="body" [clearable]="true"
                        id="mainDACCategory"
                        formControlName="mainDACCategory">
-              <ng-option [disabled]="!option.isActive()" [value]="option.id" *ngFor="let option of mainDacCategories">{{option.getName()}}</ng-option>
+              <ng-option [disabled]="!option.isActive()" [value]="option.id"
+                         *ngFor="let option of mainDacCategories">{{option.getName()}}</ng-option>
             </ng-select>
             <app-field-error-message controlName="mainDACCategory"></app-field-error-message>
           </div>
@@ -99,7 +100,8 @@
             <ng-select [readonly]="readonly" validationClasses="subDACCategory" appendTo="body" [clearable]="true"
                        id="subDACCategory"
                        formControlName="subDACCategory">
-              <ng-option [disabled]="!option.isActive()" [value]="option.id" *ngFor="let option of subDacCategories">{{option.getName()}}</ng-option>
+              <ng-option [disabled]="!option.isActive()" [value]="option.id"
+                         *ngFor="let option of subDacCategories">{{option.getName()}}</ng-option>
             </ng-select>
             <app-field-error-message controlName="subDACCategory"></app-field-error-message>
           </div>
@@ -122,7 +124,8 @@
             <ng-select [readonly]="readonly" validationClasses="subUNOCHACategory" appendTo="body" [clearable]="true"
                        id="subUNOCHACategory"
                        formControlName="subUNOCHACategory">
-              <ng-option [disabled]="!option.isActive()" [value]="option.id" *ngFor="let option of subUNOCHACategories">{{option.getName()}}</ng-option>
+              <ng-option [disabled]="!option.isActive()" [value]="option.id"
+                         *ngFor="let option of subUNOCHACategories">{{option.getName()}}</ng-option>
             </ng-select>
             <app-field-error-message controlName="subUNOCHACategory"></app-field-error-message>
           </div>
@@ -143,10 +146,10 @@
     </ng-template>
     <ng-template #project_info>
       <ng-container formGroupName="projectInfo">
-        <implementation-template [disabled]="readonly" [requestType]="requestType.value"
+        <implementation-template [requestType]="requestType.value"
                                  [caseId]="model!.id" formControlName="implementationTemplate"
                                  [criteria]="getCriteria"></implementation-template>
-        <implementing-agency-list [disabled]="readonly" [country]="beneficiaryCountry.value"
+        <implementing-agency-list [country]="beneficiaryCountry.value"
                                   [type]="implementingAgencyType.value"
                                   formControlName="implementingAgencyList">
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
@@ -179,7 +182,8 @@
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="projectEvaluationSLA"
                    for="projectEvaluationSLA">{{lang.map.project_evaluation_sla}} ({{lang.map.months}})</label>
-            <input id="projectEvaluationSLA" [mask]="inputMaskPatterns.NUMBER_ONLY_WITH_LIMIT(50, true)" [validation]="false"
+            <input id="projectEvaluationSLA" [mask]="inputMaskPatterns.NUMBER_ONLY_WITH_LIMIT(50, true)"
+                   [validation]="false"
                    validationClasses="projectEvaluationSLA"
                    formControlName="projectEvaluationSLA" class="form-control">
             <app-field-error-message controlName="projectEvaluationSLA"></app-field-error-message>
@@ -202,7 +206,7 @@
     </ng-template>
     <ng-template #funding_sources>
       <ng-container formGroupName="fundingResources">
-        <implementation-fundraising [disabled]="readonly" (amountConsumed)="onAmountConsumed($event)"
+        <implementation-fundraising (amountConsumed)="onAmountConsumed($event)"
                                     [remainingAmount]="remainingAmount"
                                     [currentTemplate]="implementationTemplate.value"
                                     [criteria]="getCriteria"
@@ -211,19 +215,19 @@
                                     [requestType]="requestType.value"
                                     formControlName="implementationFundraising"></implementation-fundraising>
         <br>
-        <fund-source [disabled]="readonly" [permitAmountConsumed]="permitAmountConsumed"
+        <fund-source [permitAmountConsumed]="permitAmountConsumed"
                      [remainingAmount]="remainingAmount"
                      [type]="FundSourceType.GRANT"
                      [projectTotalCost]="projectTotalCost.value"
                      formControlName="financialGrant"></fund-source>
         <br>
-        <fund-source [disabled]="readonly" [permitAmountConsumed]="permitAmountConsumed"
+        <fund-source [permitAmountConsumed]="permitAmountConsumed"
                      [remainingAmount]="remainingAmount"
                      [type]="FundSourceType.SELF"
                      [projectTotalCost]="projectTotalCost.value"
                      formControlName="selfFinancing"></fund-source>
         <br>
-        <payments [disabled]="readonly" [projectTotalCost]="projectTotalCost.value"
+        <payments [projectTotalCost]="projectTotalCost.value"
                   formControlName="payment"></payments>
       </ng-container>
     </ng-template>
