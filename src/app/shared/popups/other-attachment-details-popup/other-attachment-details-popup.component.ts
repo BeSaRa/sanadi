@@ -4,7 +4,7 @@ import {IDialogData} from '@contracts/i-dialog-data';
 import {FileNetDocument} from '@app/models/file-net-document';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {CustomValidators} from '@app/validators/custom-validators';
-import {FormBuilder, FormGroup, UntypedFormGroup} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormGroup, UntypedFormGroup} from '@angular/forms';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {AdminResult} from '@app/models/admin-result';
@@ -14,6 +14,7 @@ import {GlobalSettingsService} from '@app/services/global-settings.service';
 import {map} from 'rxjs/operators';
 import {GlobalSettings} from '@app/models/global-settings';
 import {DialogService} from '@app/services/dialog.service';
+import {EmployeeService} from '@services/employee.service';
 
 @Component({
   selector: 'other-attachment-details-popup',
@@ -42,6 +43,7 @@ export class OtherAttachmentDetailsPopupComponent implements OnInit, AfterViewIn
               private cd: ChangeDetectorRef,
               public dialogRef: DialogRef,
               private globalSettingsService: GlobalSettingsService,
+              private employeeService: EmployeeService,
               private dialog: DialogService) {
     this.model = data.model;
     this.operation = data.operation;
@@ -130,30 +132,48 @@ export class OtherAttachmentDetailsPopupComponent implements OnInit, AfterViewIn
     }
   }
 
+  get isPublished(): AbstractControl {
+    return this.form.get('isPublished') as AbstractControl;
+  }
+
+  private canChangePublished(): boolean {
+    if (this.readonly || this.employeeService.isExternalUser()) {
+      return false;
+    }
+    return !this.model.id;
+  }
+
   private _buildForm(controls: boolean = false): void {
-    const {description, documentTitle} = this.model;
+    const {description, documentTitle, isPublished} = this.model;
     this.form = this.fb.group({
       documentTitle: controls ? [documentTitle, [CustomValidators.required, CustomValidators.maxLength(200)]] : documentTitle,
-      description: controls ? [description, [CustomValidators.required, CustomValidators.maxLength(500)]] : description
+      description: controls ? [description, [CustomValidators.required, CustomValidators.maxLength(500)]] : description,
+      isPublished: controls ? [{
+        value: this.employeeService.isExternalUser() ? true : isPublished,
+        disabled: !this.canChangePublished()
+      }] : isPublished
     });
   }
 
   private _createOtherAttachment(): FileNetDocument {
+    const value = this.form.getRawValue();
     return new FileNetDocument().clone({
       ...this.model,
-      description: this.form.value.description,
-      documentTitle: this.form.value.documentTitle,
+      description: value.description,
+      documentTitle: value.documentTitle,
       attachmentTypeStatus: true,
       attachmentTypeId: -1,
+      isPublished: value.isPublished,
       attachmentTypeInfo: this._createOtherLookup(),
     });
   }
 
   private _updateOtherAttachment(): FileNetDocument {
+    const value = this.form.getRawValue();
     return new FileNetDocument().clone({
       ...this.model,
-      description: this.form.value.description,
-      documentTitle: this.form.value.documentTitle
+      description: value.description,
+      documentTitle: value.documentTitle
     });
   }
 
