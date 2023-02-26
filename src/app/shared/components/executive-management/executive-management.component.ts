@@ -1,21 +1,21 @@
-import { Lookup } from './../../../models/lookup';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { ActionIconsEnum } from '@app/enums/action-icons-enum';
-import { UserClickOn } from '@app/enums/user-click-on.enum';
-import { CommonUtils } from '@helpers/common-utils';
-import { ILanguageKeys } from '@contracts/i-language-keys';
-import { SortEvent } from '@contracts/sort-event';
-import { AdminResult } from '@app/models/admin-result';
-import { Country } from '@app/models/country';
-import { ExecutiveManagement } from '@app/models/executive-management';
-import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
-import { DialogService } from '@services/dialog.service';
-import { LangService } from '@services/lang.service';
-import { ToastService } from '@services/toast.service';
-import { ReadinessStatus } from '@app/types/types';
-import { BehaviorSubject, Subject } from 'rxjs';
-import { filter, map, take, takeUntil, tap } from 'rxjs/operators';
+import {Lookup} from '@models/lookup';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {CommonUtils} from '@helpers/common-utils';
+import {ILanguageKeys} from '@contracts/i-language-keys';
+import {SortEvent} from '@contracts/sort-event';
+import {AdminResult} from '@app/models/admin-result';
+import {Country} from '@app/models/country';
+import {ExecutiveManagement} from '@app/models/executive-management';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {DialogService} from '@services/dialog.service';
+import {LangService} from '@services/lang.service';
+import {ToastService} from '@services/toast.service';
+import {ReadinessStatus} from '@app/types/types';
+import {BehaviorSubject, Subject} from 'rxjs';
+import {filter, map, take, takeUntil, tap} from 'rxjs/operators';
 
 @Component({
   selector: 'executive-management',
@@ -24,6 +24,7 @@ import { filter, map, take, takeUntil, tap } from 'rxjs/operators';
 })
 export class ExecutiveManagementComponent implements OnInit {
   @Input() showHeader: boolean = true;
+
   constructor(public lang: LangService,
               private toastService: ToastService,
               private dialogService: DialogService,
@@ -41,14 +42,23 @@ export class ExecutiveManagementComponent implements OnInit {
   get list(): ExecutiveManagement[] {
     return this._list;
   }
+
   @Input() nationalities: Lookup[] = [];
   @Input() countriesList: Country[] = [];
   @Input() readonly: boolean = false;
   @Input() pageTitleKey: keyof ILanguageKeys = 'managers';
+  @Input() hidePassport: boolean = false;
 
-  dataSource: BehaviorSubject<ExecutiveManagement[]> = new BehaviorSubject<
-  ExecutiveManagement[]
->([]);  columns = ['arabicName', 'englishName', 'email','actions'];
+  dataSource: BehaviorSubject<ExecutiveManagement[]> = new BehaviorSubject<ExecutiveManagement[]>([]);
+  private columns = ['arabicName', 'englishName', 'email', 'passportNumber', 'actions'];
+
+  get displayColumns(): string[] {
+    if (this.hidePassport) {
+      return this.columns.filter(x => x !== 'passportNumber');
+    }
+    return this.columns;
+  }
+
   editItem?: ExecutiveManagement;
   showForm: boolean = false;
   viewOnly: boolean = false;
@@ -97,6 +107,7 @@ export class ExecutiveManagementComponent implements OnInit {
     },
 
   }
+
   ngOnInit(): void {
     this.dataSource.next(this.list);
     this.buildForm();
@@ -155,6 +166,7 @@ export class ExecutiveManagementComponent implements OnInit {
     }
     this.save$.next();
   }
+
   private displayRequiredFieldsMessage(): void {
     this.dialogService
       .error(this.lang.map.msg_all_required_fields_are_filled)
@@ -163,6 +175,7 @@ export class ExecutiveManagementComponent implements OnInit {
         this.form.markAllAsTouched();
       });
   }
+
   private listenToSave() {
     this.save$
       .pipe(
@@ -258,6 +271,7 @@ export class ExecutiveManagementComponent implements OnInit {
         }
       });
   }
+
   cancel() {
     this.resetForm();
     this.showForm = false;

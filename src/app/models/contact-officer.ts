@@ -9,13 +9,14 @@ export class ContactOfficer extends SearchableCloneable<ContactOfficer>{
   email!: string;
   phone!: string;
   mobileNo!: string;
+  passportNumber!: string;
 
   searchFields: ISearchFieldsMap<ContactOfficer> = {
-    ...normalSearchFields(['arabicName', 'englishName', 'email', 'phone'])
+    ...normalSearchFields(['arabicName', 'englishName', 'email', 'phone', 'passportNumber'])
   };
 
   getContactOfficerFields(control: boolean): any {
-    const { arabicName, englishName, email, phone, mobileNo } = this;
+    const { arabicName, englishName, email, phone, mobileNo, passportNumber } = this;
 
     return {
       arabicName: control ? [arabicName, [CustomValidators.required, CustomValidators.pattern('AR_ONLY'),
@@ -27,6 +28,7 @@ export class ContactOfficer extends SearchableCloneable<ContactOfficer>{
       email: control ? [email, [CustomValidators.required, CustomValidators.pattern('EMAIL')]] : email,
       phone: control ? [phone, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : phone,
       mobileNo: control ? [mobileNo, CustomValidators.commonValidations.phone] : mobileNo,
+      passportNumber: control ? [passportNumber, [...CustomValidators.commonValidations.passport]] : passportNumber,
     };
   }
 }

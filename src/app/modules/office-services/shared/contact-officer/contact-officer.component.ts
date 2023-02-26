@@ -42,7 +42,7 @@ export class ContactOfficerComponent implements OnInit, OnDestroy {
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();
 
   dataSource: BehaviorSubject<ContactOfficer[]> = new BehaviorSubject<ContactOfficer[]>([]);
-  columns = ['arabicName', 'englishName', 'email', 'phone', 'actions'];
+  columns = ['arabicName', 'englishName', 'email', 'phone', 'passportNumber', 'actions'];
 
   editItem?: ContactOfficer;
   showForm: boolean = false;

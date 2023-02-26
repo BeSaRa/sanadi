@@ -1,31 +1,19 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output
-} from '@angular/core';
-import {
-  UntypedFormBuilder,
-  UntypedFormControl,
-  UntypedFormGroup
-} from '@angular/forms';
-import { ActionIconsEnum } from '@app/enums/action-icons-enum';
-import { UserClickOn } from '@app/enums/user-click-on.enum';
-import { CommonUtils } from '@app/helpers/common-utils';
-import { SortEvent } from '@app/interfaces/sort-event';
-import { AdminResult } from '@app/models/admin-result';
-import { Country } from '@app/models/country';
-import { ManagementCouncil } from '@app/models/management-council';
-import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
-import { ReadinessStatus } from '@app/types/types';
-import { CountryService } from '@services/country.service';
-import { DialogService } from '@services/dialog.service';
-import { LangService } from '@services/lang.service';
-import { ToastService } from '@services/toast.service';
-import { BehaviorSubject, Subject } from 'rxjs';
-import { filter, map, take, takeUntil, tap } from 'rxjs/operators';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {CommonUtils} from '@app/helpers/common-utils';
+import {SortEvent} from '@app/interfaces/sort-event';
+import {AdminResult} from '@app/models/admin-result';
+import {Country} from '@app/models/country';
+import {ManagementCouncil} from '@app/models/management-council';
+import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {ReadinessStatus} from '@app/types/types';
+import {DialogService} from '@services/dialog.service';
+import {LangService} from '@services/lang.service';
+import {ToastService} from '@services/toast.service';
+import {BehaviorSubject, Subject} from 'rxjs';
+import {filter, map, take, takeUntil, tap} from 'rxjs/operators';
 
 @Component({
   selector: 'management-council',
@@ -38,7 +26,8 @@ export class ManagementCouncilComponent implements OnInit, OnDestroy {
     private toastService: ToastService,
     private dialogService: DialogService,
     private fb: UntypedFormBuilder
-  ) {}
+  ) {
+  }
 
   private _list: ManagementCouncil[] = [];
   @Input() set list(list: ManagementCouncil[]) {
@@ -58,7 +47,7 @@ export class ManagementCouncilComponent implements OnInit, OnDestroy {
   dataSource: BehaviorSubject<ManagementCouncil[]> = new BehaviorSubject<
     ManagementCouncil[]
   >([]);
-  columns = ['arabicName', 'englishName', 'email', 'country','actions'];
+  columns = ['arabicName', 'englishName', 'email', 'country', 'passportNumber', 'actions'];
   editItem?: ManagementCouncil;
   showForm: boolean = false;
   viewOnly: boolean = false;
@@ -107,6 +96,7 @@ export class ManagementCouncilComponent implements OnInit, OnDestroy {
     },
 
   }
+
   ngOnInit(): void {
     this.dataSource.next(this.list);
     this.buildForm();
@@ -165,6 +155,7 @@ export class ManagementCouncilComponent implements OnInit, OnDestroy {
     }
     this.save$.next();
   }
+
   private displayRequiredFieldsMessage(): void {
     this.dialogService
       .error(this.lang.map.msg_all_required_fields_are_filled)
@@ -173,6 +164,7 @@ export class ManagementCouncilComponent implements OnInit, OnDestroy {
         this.form.markAllAsTouched();
       });
   }
+
   private listenToSave() {
     this.save$
       .pipe(
@@ -268,6 +260,7 @@ export class ManagementCouncilComponent implements OnInit, OnDestroy {
         }
       });
   }
+
   cancel() {
     this.resetForm();
     this.showForm = false;

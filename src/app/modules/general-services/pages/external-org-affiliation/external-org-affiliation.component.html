@@ -322,7 +322,7 @@
       ></bank-account>
     </ng-template>
     <ng-template #executive_management>
-      <executive-management
+      <executive-management [hidePassport]="true"
         #managersTab
         [countriesList]="countriesList"
         [list]="model?.executiveManagementDTOs || []"

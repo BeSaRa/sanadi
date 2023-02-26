@@ -23,7 +23,6 @@
       </div>
     </div>
     <div class="row">
-
       <!-- Email -->
       <div class="col-sm-12 col-md-4 mb-4 position-relative">
         <label asteriskIfRequired="email" for="email" class="form-label">{{lang.map.lbl_email}}</label>
@@ -46,6 +45,14 @@
         <label asteriskIfRequired="jobTitle" for="jobTitle" class="form-label">{{lang.map.job_title}}</label>
         <input id="jobTitle" validationClasses="jobTitle" formControlName="jobTitle" trimInput class="form-control">
         <app-field-error-message controlName="jobTitle"></app-field-error-message>
+      </div>
+    </div>
+    <div class="row">
+      <!-- Passport -->
+      <div class="col-sm-12 col-md-4 mb-4 position-relative">
+        <label asteriskIfRequired="passportNumber" for="passportNumber" class="form-label">{{lang.map.passport_number}}</label>
+        <input id="passportNumber" validationClasses="passportNumber" formControlName="passportNumber" trimInput class="form-control">
+        <app-field-error-message controlName="passportNumber"></app-field-error-message>
       </div>
     </div>
 
@@ -84,6 +91,10 @@
             <ng-container cdkColumnDef="email">
               <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_email}}</th>
               <td cdk-cell *cdkCellDef="let row"> {{row.email}} </td>
+            </ng-container>
+            <ng-container cdkColumnDef="passportNumber">
+              <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.passport_number}}</th>
+              <td cdk-cell *cdkCellDef="let row"> {{row.passportNumber}} </td>
             </ng-container>
             <ng-container cdkColumnDef="actions">
               <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
