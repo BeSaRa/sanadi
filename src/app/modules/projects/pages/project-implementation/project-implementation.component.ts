@@ -738,7 +738,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
         }
       }
     } else if (this.openFrom === OpenFrom.SEARCH) {
-      if (this.model?.isSubmissionMechanismRegistration()) {
+      if (this.model?.isSubmissionMechanismRegistration() || this.model?.isSubmissionMechanismNotification()) {
         this.readonly = true;
       } else {
         // if saved as draft, then no readonly
