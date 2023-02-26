@@ -62,6 +62,8 @@ import {
   IGeneralAssociationMeetingAttendanceFinalApprove
 } from '@contracts/i-general-association-meeting-attendance-final-approve';
 import {ProjectImplementation} from '@models/project-implementation';
+import {CommonUtils} from '@helpers/common-utils';
+import {CharityViewButtonsGroupEnum} from '@app/enums/charity-view-buttons-group-enum';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -103,6 +105,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
   checklistComponent!: StepCheckListComponent;
 
   actions: IMenuItem<CaseModel<any, any>>[] = [];
+  groupedActions?: Map<CharityViewButtonsGroupEnum, IMenuItem<CaseModel<any, any>>[]>;
   service!: BaseGenericEService<CaseModel<any, any>>;
   model?: CaseModel<any, any>;
   component!: EServicesGenericComponent<CaseModel<any, any>, BaseGenericEService<CaseModel<any, any>>>;
@@ -305,6 +308,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         },
         onClick: () => {
           this.component.save.next(this.saveTypes.FINAL);
+        },
+        data: {
+          charityButtonsGroup: CharityViewButtonsGroupEnum.RIGHT,
+          groupOrder: 3
         }
       },
       // launch
@@ -345,6 +352,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         disabled: item => !item?.canDraft(),
         onClick: () => {
           this.component.save.next(this.saveTypes.DRAFT);
+        },
+        data: {
+          charityButtonsGroup: CharityViewButtonsGroupEnum.RIGHT,
+          groupOrder: 5
         }
       },
       // view logs
@@ -355,6 +366,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         show: () => !!this.model?.id,
         onClick: (item: CaseModel<any, any>) => {
           item.viewLogs();
+        },
+        data: {
+          charityButtonsGroup: CharityViewButtonsGroupEnum.LEFT,
+          groupOrder: 3
         }
       },
       // print
@@ -364,7 +379,11 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         label: 'print',
         show: (item) => !this.internal && item.getCaseType() !== CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP,
         disabled: () => !this.model || !this.model.id,
-        onClick: () => this.print()
+        onClick: () => this.print(),
+        data: {
+          charityButtonsGroup: CharityViewButtonsGroupEnum.LEFT,
+          groupOrder: 2
+        }
       },
       // back
       {
@@ -372,7 +391,11 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         class: 'btn-secondary',
         label: 'back',
         show: () => true,
-        onClick: () => this.navigateToSamePageThatUserCameFrom()
+        onClick: () => this.navigateToSamePageThatUserCameFrom(),
+        data: {
+          charityButtonsGroup: CharityViewButtonsGroupEnum.LEFT,
+          groupOrder: 1
+        }
       }
     ];
   }
@@ -400,6 +423,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         },
         onClick: () => {
           this.component.save.next(this.saveTypes.FINAL);
+        },
+        data: {
+          charityButtonsGroup: CharityViewButtonsGroupEnum.RIGHT,
+          groupOrder: 3
         }
       },
       // launch
@@ -431,6 +458,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         disabled: item => !item?.canDraft(),
         onClick: () => {
           this.component.save.next(this.saveTypes.DRAFT);
+        },
+        data: {
+          charityButtonsGroup: CharityViewButtonsGroupEnum.RIGHT,
+          groupOrder: 5
         }
       },
       // reset
@@ -487,6 +518,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         displayInGrid: true,
         onClick: (item: CaseModel<any, any>) => {
           this.claimAction(item);
+        },
+        data: {
+          charityButtonsGroup: CharityViewButtonsGroupEnum.RIGHT,
+          groupOrder: 1
         }
       },
       // view logs
@@ -495,7 +530,11 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         icon: 'mdi-view-list-outline',
         label: 'logs',
         show: () => !this.internal,
-        onClick: (item: CaseModel<any, any>) => EServiceComponentWrapperComponent.viewLogsAction(item)
+        onClick: (item: CaseModel<any, any>) => EServiceComponentWrapperComponent.viewLogsAction(item),
+        data: {
+          charityButtonsGroup: CharityViewButtonsGroupEnum.LEFT,
+          groupOrder: 3
+        }
       },
       // print
       {
@@ -504,7 +543,11 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         label: 'print',
         show: (item) => !this.internal && item.getCaseType() !== CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP,
         disabled: () => !this.model || !this.model.id,
-        onClick: () => this.print()
+        onClick: () => this.print(),
+        data: {
+          charityButtonsGroup: CharityViewButtonsGroupEnum.LEFT,
+          groupOrder: 2
+        }
       },
       // mark as unread
       {
@@ -512,7 +555,11 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         icon: ActionIconsEnum.CLOSE_MAIL,
         label: 'mark_as_unread',
         show: (_item) => true,
-        onClick: (item) => this.markAsUnreadAction(item)
+        onClick: (item) => this.markAsUnreadAction(item),
+        data: {
+          charityButtonsGroup: CharityViewButtonsGroupEnum.RIGHT,
+          groupOrder: 4
+        }
       },
       // back
       {
@@ -520,7 +567,11 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         class: 'btn-secondary',
         label: 'back',
         show: () => true,
-        onClick: () => this.navigateToSamePageThatUserCameFrom()
+        onClick: () => this.navigateToSamePageThatUserCameFrom(),
+        data: {
+          charityButtonsGroup: CharityViewButtonsGroupEnum.LEFT,
+          groupOrder: 1
+        }
       }
     ];
   }
@@ -551,6 +602,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         },
         onClick: () => {
           this.component.save.next(this.saveTypes.FINAL);
+        },
+        data: {
+          charityButtonsGroup: CharityViewButtonsGroupEnum.RIGHT,
+          groupOrder: 3
         }
       },
       // release
@@ -560,7 +615,11 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         label: 'release_task',
         askChecklist: true,
         show: item => item.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM),
-        onClick: (item: CaseModel<any, any>) => this.releaseAction(item)
+        onClick: (item: CaseModel<any, any>) => this.releaseAction(item),
+        data: {
+          charityButtonsGroup: CharityViewButtonsGroupEnum.RIGHT,
+          groupOrder: 2
+        }
       },
       // send to competent department
       {
@@ -587,7 +646,6 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           return item.getResponses().includes(WFResponseType.RETURN_TO_SPECIFIC_ORGANIZATION);
         },
         onClick: (item: CaseModel<any, any>) => {
-
           this.returnToSpecificOrganizationAction(item);
         }
       },
@@ -771,6 +829,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         },
         onClick: (item: CaseModel<any, any>) => {
           this.completeAction(item);
+        },
+        data: {
+          charityButtonsGroup: CharityViewButtonsGroupEnum.CENTER,
+          groupOrder: 1
         }
       },
       // approve
@@ -982,6 +1044,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         },
         onClick: (item: CaseModel<any, any>) => {
           this.returnAction(item);
+        },
+        data: {
+          charityButtonsGroup: CharityViewButtonsGroupEnum.CENTER,
+          groupOrder: 2
         }
       },
       // final reject
@@ -1068,6 +1134,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         },
         onClick: (item: CaseModel<any, any>) => {
           this.closeAction(item);
+        },
+        data: {
+          charityButtonsGroup: CharityViewButtonsGroupEnum.CENTER,
+          groupOrder: 3
         }
       },
       // view logs
@@ -1076,7 +1146,11 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         icon: 'mdi-view-list-outline',
         label: 'logs',
         show: () => !this.internal,
-        onClick: (item: CaseModel<any, any>) => EServiceComponentWrapperComponent.viewLogsAction(item)
+        onClick: (item: CaseModel<any, any>) => EServiceComponentWrapperComponent.viewLogsAction(item),
+        data: {
+          charityButtonsGroup: CharityViewButtonsGroupEnum.LEFT,
+          groupOrder: 3
+        }
       },
       // print
       {
@@ -1085,7 +1159,11 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         label: 'print',
         show: (item) => !this.internal && item.getCaseType() !== CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP,
         disabled: () => !this.model || !this.model.id,
-        onClick: () => this.print()
+        onClick: () => this.print(),
+        data: {
+          charityButtonsGroup: CharityViewButtonsGroupEnum.LEFT,
+          groupOrder: 2
+        }
       },
       // mark as unread
       {
@@ -1093,23 +1171,23 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         icon: ActionIconsEnum.CLOSE_MAIL,
         label: 'mark_as_unread',
         show: (_item) => true,
-        onClick: (item) => this.markAsUnreadAction(item)
+        onClick: (item) => this.markAsUnreadAction(item),
+        data: {
+          charityButtonsGroup: CharityViewButtonsGroupEnum.RIGHT,
+          groupOrder: 4
+        }
       },
-      /*// terminate task
-      {
-        type: 'action',
-        icon: ActionIconsEnum.TERMINATE,
-        label: 'terminate_task',
-        show: (item) => !item.isMain(),
-        onClick: (item) => this.terminateTaskAction(item)
-      },*/
       // back
       {
         type: 'action',
         class: 'btn-secondary',
         label: 'back',
         show: () => true,
-        onClick: () => this.navigateToSamePageThatUserCameFrom()
+        onClick: () => this.navigateToSamePageThatUserCameFrom(),
+        data: {
+          charityButtonsGroup: CharityViewButtonsGroupEnum.LEFT,
+          groupOrder: 1
+        }
       }
     ];
   }
@@ -1154,6 +1232,39 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       default:
         this.buildAddAction();
         this.actions = this.actionShowFilter(this.addActions);
+    }
+    this._groupActionsIcons()
+  }
+
+  private _hasValidCharityButtonGroup(action: IMenuItem<CaseModel<any, any>>): boolean {
+    return (CommonUtils.isValidValue(action.data)
+      && CommonUtils.isValidValue(action.data!.charityButtonsGroup)
+      && Object.values(CharityViewButtonsGroupEnum).includes(action.data!.charityButtonsGroup)
+    )
+  }
+
+  private _groupActionsIcons(): void {
+    if (!this.internal) {
+      this.groupedActions = new Map<CharityViewButtonsGroupEnum, IMenuItem<CaseModel<any, any>>[]>([
+        [CharityViewButtonsGroupEnum.LEFT, []],
+        [CharityViewButtonsGroupEnum.CENTER, []],
+        [CharityViewButtonsGroupEnum.RIGHT, []],
+      ]);
+      this.actions.forEach(action => {
+        if (!this._hasValidCharityButtonGroup(action)) {
+          if (!('data' in action)) {
+            action.data = {};
+          }
+          action.data!.charityButtonsGroup = CharityViewButtonsGroupEnum.CENTER;
+          action.data!.groupOrder = action.data!.groupOrder ?? this.actions.length + 1; // setting the highest number for sort (same for all actions which don't have sortOrder defined)
+        }
+        this.groupedActions!.set(action.data!.charityButtonsGroup, [...this.groupedActions!.get(action.data!.charityButtonsGroup)!, action]);
+      })
+      for (let [key, value] of this.groupedActions!) {
+        this.groupedActions!.set(key, value.sort((a: IMenuItem<CaseModel<any, any>>, b: IMenuItem<CaseModel<any, any>>) => {
+          return (a.data!.groupOrder ?? 0) - (b.data!.groupOrder ?? 0)
+        }));
+      }
     }
   }
 
