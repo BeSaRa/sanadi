@@ -61,6 +61,7 @@ import {BaseGenericEService} from '@app/generics/base-generic-e-service';
 import {
   IGeneralAssociationMeetingAttendanceFinalApprove
 } from '@contracts/i-general-association-meeting-attendance-final-approve';
+import {ProjectImplementation} from '@models/project-implementation';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -285,12 +286,14 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           return (this.component.form.invalid || item?.alreadyStarted()) && !this.canSave();
         },
         show: (item) => {
-          if (item.isCancelled()) {
+          if (item.isCancelled() || this.servicesWithNoSaveDraftLaunch.includes(item.getCaseType())) {
             return false;
           }
-          if (this.servicesWithNoSaveDraftLaunch.includes(item.getCaseType())) {
+
+          if (item.caseType === CaseTypes.PROJECT_IMPLEMENTATION && (item as ProjectImplementation).isSubmissionMechanismRegistration()) {
             return false;
           }
+
           if (item.caseType === CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST) {
             const model = item as CoordinationWithOrganizationsRequest
             return this._isAllowedToSaveAtSearch(model);
@@ -322,7 +325,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         type: 'action',
         label: 'save_as_draft',
         show: (item) => {
-          if (this.servicesWithNoSaveDraftLaunch.includes(item.getCaseType()) || this.excludedDraftTypes.includes(item.getCaseType())) {
+          if (item.isCancelled() || this.servicesWithNoSaveDraftLaunch.includes(item.getCaseType()) || this.excludedDraftTypes.includes(item.getCaseType())) {
+            return false;
+          }
+          if (item.caseType === CaseTypes.PROJECT_IMPLEMENTATION && (item as ProjectImplementation).isSubmissionMechanismRegistration()) {
             return false;
           }
           if (item.caseType === CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST) {

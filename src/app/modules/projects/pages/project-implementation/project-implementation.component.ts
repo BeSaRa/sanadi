@@ -53,7 +53,6 @@ import {OpenFrom} from "@app/enums/open-from.enum";
 import {LicenseService} from "@services/license.service";
 import {IMyDateModel} from "angular-mydatepicker";
 import dayjs from "dayjs";
-import {SubmissionMechanisms} from '@app/enums/submission-mechanisms.enum';
 
 @Component({
   selector: 'project-implementation',
@@ -735,9 +734,13 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
         }
       }
     } else if (this.openFrom === OpenFrom.SEARCH) {
-      // if saved as draft, then no readonly
-      if (model?.canCommit()) {
-        this.readonly = false;
+      if (this.model?.isSubmissionMechanismRegistration()) {
+        this.readonly = true;
+      } else {
+        // if saved as draft, then no readonly
+        if (model?.canCommit()) {
+          this.readonly = false;
+        }
       }
     }
     this.handleCustomFormReadonly()
