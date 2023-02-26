@@ -61,7 +61,7 @@ export class ImplementationTemplateComponent implements OnDestroy, OnInit, Contr
   }
 
   writeValue(value: ImplementationTemplate[]): void {
-    this.value = value
+    this.value = value ?? []
   }
 
   registerOnChange(fn: (value: ImplementationTemplate[]) => void): void {

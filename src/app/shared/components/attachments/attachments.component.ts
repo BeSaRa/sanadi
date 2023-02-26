@@ -205,9 +205,10 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
         attachment.attachmentTypeInfo = this.createOtherLookup();
         attachment.attachmentTypeStatus = true;
       } else {
-        const type = this.allAttachmentTypesByCase.find(x => x.attachmentTypeId === attachment.attachmentTypeId);
+        const type = this.allAttachmentTypesByCase.find(x => x.attachmentTypeInfo.id === attachment.attachmentTypeId);
         attachment.attachmentTypeStatus = type ? type.attachmentTypeInfo.isActive() : false;
         attachment.required = type ? type.isRequired : false;
+        !!type && attachment.setAttachmentTypeServiceData(type);
       }
       return attachment;
     }).filter((attachment) => {
@@ -295,7 +296,10 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
     if (attachmentOperation === 'add') {
       this.attachments = ([] as FileNetDocument[]).concat([attachment, ...this.attachments]);
     } else {
-      this.attachments.splice(this.selectedIndex, 1, attachment.clone({attachmentTypeInfo: this.selectedFile?.attachmentTypeInfo}));
+      this.attachments.splice(this.selectedIndex, 1, attachment.clone({
+        attachmentTypeInfo: this.selectedFile?.attachmentTypeInfo,
+        attachmentTypeServiceData: this.selectedFile?.attachmentTypeServiceData
+      }));
     }
     this.attachments = this.attachments.slice();
     this.separateConditionalAttachments();
@@ -499,10 +503,15 @@ export class AttachmentsComponent implements OnInit, OnDestroy {
   }
 
   private removeAttachment(attachment: FileNetDocument): void {
-    this.attachments = this.attachments.filter(item => item.attachmentTypeId !== attachment.attachmentTypeId);
+    this.attachments = this.attachments.filter(item => item.attachmentTypeServiceData!.id !== attachment.attachmentTypeServiceData?.id);
   }
 
   private addAttachment(attachment: FileNetDocument): void {
-    this.attachments = this.attachments.concat(attachment);
+    const existingIndex = this.attachments.findIndex(x => x.attachmentTypeServiceData?.id === attachment.attachmentTypeServiceData?.id);
+    if (existingIndex === -1) {
+      this.attachments = this.attachments.concat(attachment);
+    } else {
+      this.attachments.splice(existingIndex, 1, attachment);
+    }
   }
 }

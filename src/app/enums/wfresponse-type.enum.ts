@@ -28,7 +28,7 @@ export enum WFResponseType {
   URGENT_INTERVENTION_LICENSE_SEND_TO_SINGLE_DEPARTMENT = 'askSingle:ReviewUrgentInterventionLicensing',
   URGENT_INTERVENTION_LICENSE_SEND_TO_MULTI_DEPARTMENTS = 'ask:ReviewUrgentInterventionLicensing',
   URGENT_INTERVENTION_CLOSURE_SEND_TO_SINGLE_DEPARTMENT = 'askSingle:ReviewUrgentInterventionClosureApproval',
-  URGENT_INTERVENTION_FOLLOWUP_SEND_TO_SINGLE_DEPARTMENT = 'askSingle:ReviewInterventionFollowUp',
+  URGENT_INTERVENTION_FOLLOWUP_SEND_TO_SINGLE_DEPARTMENT = 'askSingle:ReviewFollowUp',
   FUNDRAISING_LICENSE_SEND_TO_SINGLE_DEPARTMENT = 'askSingle:ReviewFundraisingChannelLicensing',
   GENERAL_NOTIFICATION_SEND_TO_SINGLE_DEPARTMENTS = 'askSingle:ReviewGeneralNotification',
   FUNDRAISING_LICENSE_SEND_TO_MULTI_DEPARTMENTS = 'ask:ReviewFundraisingChannelLicensing',

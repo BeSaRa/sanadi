@@ -101,7 +101,7 @@ export class FundSourceComponent implements ControlValueAccessor, OnInit, OnDest
         this.createInputs(value)
       })
       .then(() => {
-        this.value = value
+        this.value = value ?? []
         this.createListeners()
         this.calculateTotal()
       })

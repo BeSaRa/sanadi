@@ -117,7 +117,7 @@ export class TrainingProgramComponent extends AdminGenericComponent<TrainingProg
 
   candidates(trainingProgram: TrainingProgram, event: MouseEvent) {
     event.preventDefault();
-    const sub = this.service.openOrganizationCandidatesDialog(trainingProgram.id).subscribe((dialog: DialogRef) => {
+    const sub = this.service.openOrganizationCandidatesDialog(trainingProgram).subscribe((dialog: DialogRef) => {
       dialog.onAfterClose$.subscribe((_) => {
         sub.unsubscribe();
       });

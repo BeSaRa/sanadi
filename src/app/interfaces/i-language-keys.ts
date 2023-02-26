@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  msg_full_amount_used: string;
   logs_history: string;
   the_donor: string;
   city_village: string;
@@ -513,6 +514,7 @@ export interface ILanguageKeys {
   training_x_approved_successfully: string;
   msg_confirm_cancel_x: string;
   training_program_save_and_publish: string;
+  training_program_save_and_advertise: string;
   cancel_training_program: string;
   training_program_status: string;
   training_program_publish: string;
@@ -1787,6 +1789,8 @@ export interface ILanguageKeys {
   task_seen:string;
   lbl_approve_conditions:string;
   lbl_other:string;
+  training_notes:string;
   msg_only_this_file_size_or_less_allowed_to_upload: string;
   err_must_have_letters:string;
+  msg_qatari_transaction_should_not_exceed_due_amount:string;
 }
