@@ -112,6 +112,11 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
     };
   }
 
+  private _sortColumns(): void {
+    const lastColumns = ['caseStatus', 'creatorInfo', 'createdOn'];
+    this.searchColumns = this.searchColumns.filter(x => !lastColumns.includes(x)).concat(lastColumns);
+  }
+
   private listenToServiceChange(serviceNumber?: number) {
     this.serviceControl
       .valueChanges
@@ -127,6 +132,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
         if (this.employeeService.isExternalUser()) {
           this.searchColumns = this.searchColumns.filter(x => x !== 'organization' && x !== 'organizationId' && x !== 'ouInfo');
         }
+        this._sortColumns();
         this.results = [];
         this.selectedService
           .loadSearchFields()
