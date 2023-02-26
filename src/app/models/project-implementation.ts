@@ -29,6 +29,7 @@ import {infoSearchFields} from '@helpers/info-search-fields';
 import {normalSearchFields} from '@helpers/normal-search-fields';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {WFResponseType} from '@app/enums/wfresponse-type.enum';
+import {SubmissionMechanisms} from '@app/enums/submission-mechanisms.enum';
 
 const _Approval = mixinApprovalLicenseWithMonthly(mixinRequestType(CaseModel))
 const {send, receive} = new ProjectImplementationInterceptor()
@@ -202,5 +203,17 @@ export class ProjectImplementation
   finalApprove(): DialogRef {
     // return [ServiceRequestTypes.CANCEL, ServiceRequestTypes.UPDATE].includes(this.requestType) ? super.approve(WFResponseType.FINAL_APPROVE) : this.service.approveTask(this, WFResponseType.FINAL_APPROVE);
     return this.service.approveTask(this, WFResponseType.FINAL_APPROVE);
+  }
+
+  isSubmissionMechanismNotification(): boolean {
+    return this.submissionMechanism === SubmissionMechanisms.NOTIFICATION;
+  }
+
+  isSubmissionMechanismSubmission(): boolean {
+    return this.submissionMechanism === SubmissionMechanisms.SUBMISSION;
+  }
+
+  isSubmissionMechanismRegistration(): boolean {
+    return this.submissionMechanism === SubmissionMechanisms.REGISTRATION;
   }
 }
