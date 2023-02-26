@@ -1,24 +1,25 @@
-import {Component, OnInit} from '@angular/core';
-import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
-import {InternationalCooperation} from '@app/models/international-cooperation';
-import {InternationalCooperationService} from '@services/international-cooperation.service';
-import {SaveTypes} from '@app/enums/save-types';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {Observable} from 'rxjs';
-import {LangService} from '@services/lang.service';
-import {InternalDepartmentService} from '@services/internal-department.service';
-import {CountryService} from '@services/country.service';
-import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import {DialogService} from '@services/dialog.service';
-import {ToastService} from '@services/toast.service';
-import {EmployeeService} from '@services/employee.service';
-import {TabMap} from '@app/types/types';
-import {Country} from '@app/models/country';
-import {InternalDepartment} from '@app/models/internal-department';
-import {takeUntil} from 'rxjs/operators';
-import {OpenFrom} from '@app/enums/open-from.enum';
-import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
-import {CommonUtils} from '@helpers/common-utils';
+import { AdminstrationDepartmentCodes } from './../../../../enums/department-code.enum';
+import { Component } from '@angular/core';
+import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
+import { InternationalCooperation } from '@app/models/international-cooperation';
+import { InternationalCooperationService } from '@services/international-cooperation.service';
+import { SaveTypes } from '@app/enums/save-types';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { Observable } from 'rxjs';
+import { LangService } from '@services/lang.service';
+import { InternalDepartmentService } from '@services/internal-department.service';
+import { CountryService } from '@services/country.service';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { DialogService } from '@services/dialog.service';
+import { ToastService } from '@services/toast.service';
+import { EmployeeService } from '@services/employee.service';
+import { TabMap } from '@app/types/types';
+import { Country } from '@app/models/country';
+import { InternalDepartment } from '@app/models/internal-department';
+import { takeUntil } from 'rxjs/operators';
+import { OpenFrom } from '@app/enums/open-from.enum';
+import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
+import { CommonUtils } from '@helpers/common-utils';
 
 @Component({
   selector: 'international-cooperation',
@@ -28,19 +29,20 @@ import {CommonUtils} from '@helpers/common-utils';
 export class InternationalCooperationComponent extends EServicesGenericComponent<InternationalCooperation, InternationalCooperationService> {
 
   constructor(public lang: LangService,
-              public service: InternationalCooperationService,
-              public fb: UntypedFormBuilder,
-              private dialog: DialogService,
-              public intDepService: InternalDepartmentService,
-              private countryService: CountryService,
-              private toast: ToastService,
-              public employeeService: EmployeeService) {
+    public service: InternationalCooperationService,
+    public fb: UntypedFormBuilder,
+    private dialog: DialogService,
+    public intDepService: InternalDepartmentService,
+    private countryService: CountryService,
+    private toast: ToastService,
+    public employeeService: EmployeeService) {
     super();
   }
 
   form!: UntypedFormGroup;
   countries: Country[] = [];
   departments: InternalDepartment[] = [];
+  internationalCooperationAllowedDepartments = [AdminstrationDepartmentCodes.SVC, AdminstrationDepartmentCodes.LCN, AdminstrationDepartmentCodes.RC, AdminstrationDepartmentCodes.IN];
   allowEditRecommendations: boolean = true;
   loadAttachments: boolean = false;
   tabsData: TabMap = {
@@ -112,7 +114,7 @@ export class InternationalCooperationComponent extends EServicesGenericComponent
       (operation === OperationTypes.CREATE && saveType === SaveTypes.FINAL) ||
       (operation === OperationTypes.UPDATE && saveType === SaveTypes.COMMIT)
     ) {
-      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({serial: model.fullSerial}));
+      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({ serial: model.fullSerial }));
     } else {
       this.toast.success(this.lang.map.request_has_been_saved_successfully);
     }
@@ -200,7 +202,7 @@ export class InternationalCooperationComponent extends EServicesGenericComponent
   private loadDepartments(): void {
     this.intDepService.loadAsLookups()
       .pipe(takeUntil(this.destroy$))
-      .subscribe(deps => this.departments = deps);
+      .subscribe(deps => this.departments = deps.filter(dep => this.internationalCooperationAllowedDepartments.includes(dep.code as AdminstrationDepartmentCodes)));
   }
 
   private loadCountries() {
