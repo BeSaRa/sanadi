@@ -18,6 +18,8 @@ import {ExternalUser} from '@app/models/external-user';
 import {InternalUser} from '@app/models/internal-user';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {ItemId} from '@app/types/types';
+import { GlobalSettingsService } from '@app/services/global-settings.service';
+import { GlobalSettings } from '@app/models/global-settings';
 
 @Component({
   selector: 'custom-attachment-popup',
@@ -39,7 +41,9 @@ export class CustomAttachmentPopupComponent implements OnInit, OnDestroy {
   itemId!: string;
   selectedFile!: FileNetDocument;
   selectedIndex!: number;
-  allowedExtensions: string[] = [FileExtensionsEnum.PDF];
+  globalSettings: GlobalSettings = this.globalSettingsService.getGlobalSettings();
+  allowedExtensions: string[] = [];
+  allowedFileMaxSize: number = this.globalSettings.fileSize;
   attachmentsUpdated$!: Subject<FileNetDocument[]>;
 
   constructor(public lang: LangService,
@@ -48,7 +52,8 @@ export class CustomAttachmentPopupComponent implements OnInit, OnDestroy {
               private dialog: DialogService,
               private employeeService: EmployeeService,
               @Inject(DIALOG_DATA_TOKEN)
-              public data: CustomAttachmentDataContract) {
+              public data: CustomAttachmentDataContract,
+              private globalSettingsService: GlobalSettingsService) {
     this.loadStatus$ = this.data.loadStatus$;
     this.assignNeededData(this.data);
   }
@@ -70,7 +75,18 @@ export class CustomAttachmentPopupComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.setAllowedFiles();
     this.listenToLoadStatus();
+  }
+
+  setAllowedFiles() {
+    this.globalSettingsService.getAllowedFileTypes()
+      .pipe(
+        map(fileTypes => fileTypes.map(fileType => '.' + (fileType.extension ?? '').toLowerCase()))
+      )
+      .subscribe(list => {
+        this.allowedExtensions = list;
+      })
   }
 
   canChangePublished(attachment: FileNetDocument): boolean {
@@ -83,17 +99,25 @@ export class CustomAttachmentPopupComponent implements OnInit, OnDestroy {
   uploaderFileChange($event: Event): void {
     const input = ($event.target as HTMLInputElement);
     const file = input.files?.item(0);
-    const validFile = file ? (file.type === 'application/pdf') : true;
+    const validFile = file ? (this.allowedExtensions.includes(file.name.getExtension())) : true;
     !validFile ? input.value = '' : null;
     if (!validFile) {
       this.dialog.error(
         this.lang.map
           .msg_only_those_files_allowed_to_upload
-          .change({files: this.allowedExtensions.join(',')})
+          .change({files: this.allowedExtensions.join(', ')})
       );
       input.value = '';
       return;
     }
+    const validFileSize = file ? (file.size <= this.allowedFileMaxSize * 1000 * 1024) : true;
+    !validFileSize ? input.value = '' : null;
+    if (!validFileSize) {
+      this.dialog.error(this.lang.map.msg_only_this_file_size_or_less_allowed_to_upload.change({size: this.allowedFileMaxSize}));
+      input.value = '';
+      return;
+    }
+
     const deleteFirst$ = this.selectedFile && this.selectedFile.id ? this.model.service.documentService.deleteDocument(this.selectedFile.id) : of(null);
     of(null)
       .pipe(switchMap(_ => deleteFirst$))
