@@ -46,7 +46,8 @@ export class UserInboxComponent implements OnInit, OnDestroy {
 
   tableOptions: ITableOptions = {
     ready: false,
-    columns: ['workItemStatus', 'BD_FULL_SERIAL', 'BD_CASE_TYPE', 'ACTIVATED', 'action', 'PI_CREATE', 'PI_DUE', 'BD_SUBJECT', 'fromUserInfo', 'actions'], //'BD_SUBJECT', 'orgInfo',
+    // columns: ['workItemStatus', 'BD_FULL_SERIAL', 'BD_CASE_TYPE', 'ACTIVATED', 'action', 'PI_CREATE', 'PI_DUE', 'BD_SUBJECT', 'fromUserInfo', 'actions'], //'BD_SUBJECT', 'orgInfo',
+    columns: ['workItemStatus', 'BD_FULL_SERIAL', 'BD_SUBJECT', 'BD_CASE_TYPE', 'action',  'PI_CREATE','ACTIVATED', 'PI_DUE','fromUserInfo','actions'],//'BD_SUBJECT', 'orgInfo'
     searchText: '',
     isSelectedRecords: () => {
       if (!this.tableOptions || !this.tableOptions.ready || !this.table) {
@@ -325,7 +326,8 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         icon: 'mdi-eye',
         label: 'open_task',
         data: {hideFromViewer: true},
-        displayInGrid: true,
+        hideLabel: true,
+        displayInGrid: false,
         onClick: (item: QueryResult) => this.actionOpen(item)
       },
       // view logs
@@ -333,6 +335,7 @@ export class UserInboxComponent implements OnInit, OnDestroy {
         type: 'action',
         icon: 'mdi-view-list-outline',
         label: 'logs',
+        hideLabel: true,
         displayInGrid: true,
         onClick: (item: QueryResult) => this.actionViewLogs(item)
       },
