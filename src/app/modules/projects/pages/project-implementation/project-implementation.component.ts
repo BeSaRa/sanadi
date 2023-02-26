@@ -634,7 +634,11 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       .valueChanges
       .pipe(takeUntil(this.destroy$))
       .subscribe((value: ImplementingAgency[]) => {
-        (value && value.length) || this.isCancelRequestType() || this.isExtendRequestType() || this.readonly ? this.implementingAgencyType.disable() : this.implementingAgencyType.enable()
+        if ((value && value.length) || this.isCancelRequestType() || this.isExtendRequestType() || this.readonly) {
+          this.implementingAgencyType.disable()
+        } else {
+          this.implementingAgencyType.enable()
+        }
       })
   }
 
@@ -711,7 +715,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     }
 
     if (this.openFrom === OpenFrom.USER_INBOX) {
-      if ((this.model?.isSubmissionMechanismNotification()) && this.employeeService.isInternalUser()) {
+      if ((this.model?.isSubmissionMechanismNotification() || this.model?.isSubmissionMechanismRegistration()) && this.employeeService.isInternalUser()) {
         this.readonly = true;
       } else {
         if (this.employeeService.isCharityManager()) {
@@ -721,7 +725,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
         }
       }
     } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
-      if ((this.model?.isSubmissionMechanismNotification()) && this.employeeService.isInternalUser()) {
+      if ((this.model?.isSubmissionMechanismNotification() || this.model?.isSubmissionMechanismRegistration()) && this.employeeService.isInternalUser()) {
         this.readonly = true;
       } else {
         // after claim, consider it same as user inbox and use same condition
