@@ -2,6 +2,7 @@ import { ILanguageKeys } from '@app/interfaces/i-language-keys';
 import { Observable } from "rxjs";
 
 export interface IMenuItem<T> {
+  hideLabel?: boolean;
   askChecklist?: boolean;
   class?: string;
   name?: string;

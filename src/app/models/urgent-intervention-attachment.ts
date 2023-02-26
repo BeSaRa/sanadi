@@ -7,6 +7,7 @@ import {Cloner} from '@app/models/cloner';
 import {mixinFileNetDocument} from '@app/mixins/mixin-filenet-document';
 import {FileNetDocumentContract} from '@contracts/file-net-document.contract';
 import {FileNetDocumentInterceptor} from '@app/model-interceptors/file-net-document-interceptor';
+import {AdminResult} from '@models/admin-result';
 
 const urgentInterventionAttachmentInterceptor = new UrgentInterventionAttachmentInterceptor();
 
@@ -32,6 +33,7 @@ export class UrgentInterventionAttachment extends FileNet implements FileNetDocu
 
   //extra properties
   createdOnString!: string;
+  creatorInfo!: AdminResult;
 
   constructor() {
     super();

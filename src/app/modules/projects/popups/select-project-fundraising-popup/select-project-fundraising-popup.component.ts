@@ -83,7 +83,7 @@ export class SelectProjectFundraisingPopupComponent implements OnInit, OnDestroy
         return hasRemaining ? (() => {
           return true
         })() : (() => {
-          this.dialog.error(this.lang.map.cannot_add_funding_resources_full_amount_have_been_used)
+          this.dialog.error(this.lang.map.msg_full_amount_used)
           return false
         })()
       }))
@@ -92,7 +92,7 @@ export class SelectProjectFundraisingPopupComponent implements OnInit, OnDestroy
           projectTotalCost: model.targetAmount,
           consumedAmount,
           remainingAmount: currency(model.targetAmount).subtract(consumedAmount).value,
-          totalCost: currency(model.targetAmount).subtract(consumedAmount).value
+          totalCost: 0 //currency(model.targetAmount).subtract(consumedAmount).value
         })
       }))
       .pipe(takeUntil(this.destroy$))

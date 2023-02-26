@@ -9,6 +9,7 @@ import {AuthService} from '@app/services/auth.service';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {catchError, exhaustMap, mapTo, takeUntil, tap} from 'rxjs/operators';
 import {ConfigurationService} from '@services/configuration.service';
+import {GlobalSettingsService} from '@services/global-settings.service';
 
 @Component({
   selector: 'external-login',
@@ -32,7 +33,8 @@ export class ExternalLoginComponent implements OnInit {
               public configService: ConfigurationService,
               private eCookieService: ECookieService,
               private toastService: ToastService,
-              private authService: AuthService) {
+              private authService: AuthService,
+              private globalSettingsService: GlobalSettingsService) {
 
   }
 
@@ -48,6 +50,10 @@ export class ExternalLoginComponent implements OnInit {
       userPassword: ['', CustomValidators.required]
     });
     this.listenToLoginEvent();
+  }
+
+  get applicationName(): string {
+    return this.globalSettingsService.getGlobalSettings().getApplicationName();
   }
 
   togglePasswordView(event: Event): void {

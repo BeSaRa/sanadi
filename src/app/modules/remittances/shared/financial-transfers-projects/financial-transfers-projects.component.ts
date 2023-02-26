@@ -1,4 +1,4 @@
-import { switchMap } from 'rxjs/operators';
+import { switchMap, catchError } from 'rxjs/operators';
 import { ExternalProjectLicensing } from './../../../../models/external-project-licensing';
 import { FinancialTransferLicensingService } from './../../../../services/financial-transfer-licensing.service';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
@@ -18,8 +18,9 @@ import { LangService } from '@app/services/lang.service';
 import { LookupService } from '@app/services/lookup.service';
 import { ToastService } from '@app/services/toast.service';
 import { ReadinessStatus } from '@app/types/types';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, Subject, of } from 'rxjs';
 import { filter, map, take, takeUntil, tap } from 'rxjs/operators';
+import { CustomValidators } from '@app/validators/custom-validators';
 
 @Component({
   selector: 'financial-transfers-projects',
@@ -58,6 +59,7 @@ export class FinancialTransfersProjectsComponent implements OnInit {
   filterControl: UntypedFormControl = new UntypedFormControl('');
 
   commonStatusEnum = CommonStatusEnum;
+  inputMaskPatterns = CustomValidators.inputMaskPatterns
 
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();
 
@@ -191,6 +193,13 @@ export class FinancialTransfersProjectsComponent implements OnInit {
             this.toastService.alert(this.lang.map.msg_select_project_required);
           }
           return isProjectSelected;
+        }),
+        filter(()=>{
+          const isQatariTransactionAmountValid = this.qatariTransactionAmount.value <= this.selectedProject!.dueAmount
+          if(!isQatariTransactionAmountValid){
+            this.toastService.error(this.lang.map.msg_qatari_transaction_should_not_exceed_due_amount);
+          }
+          return isQatariTransactionAmountValid;
         }),
         filter(() => {
           if(!!this.editItem){
@@ -351,12 +360,22 @@ export class FinancialTransfersProjectsComponent implements OnInit {
         filter(value =>!!value),
         switchMap((value: string) => {
           return  this.financialTransferLicensingService.loadEternalProjectsDetails(value)
+          .pipe(
+            catchError(_=> of(null)),
+          )
         }),
+
         takeUntil(this.destroy$)
       )
-      .subscribe((project:FinancialTransfersProject)=>{
+      .subscribe((project:FinancialTransfersProject|null)=>{
+        if(!project){
+          this.financialTransferProjectControl.reset();
+          return;
+        }
+
         this.form.patchValue(project);
         this.selectedProject = project
+
       });
   }
 }

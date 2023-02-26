@@ -33,9 +33,9 @@
                  (change)="$event ? table.selection.toggle(row) : null"
                  class="form-check-input"></td>
       </ng-container>
-      <ng-container cdkColumnDef="title">
+      <ng-container cdkColumnDef="icon">
         <th cdk-header-cell class="bg-primary text-white" style="width: 20px;" *cdkHeaderCellDef></th>
-        <td cdk-cell *cdkCellDef="let row"><i class="mdi text-primary {{fileIconsEnum.PDF}}"></i></td>
+        <td cdk-cell *cdkCellDef="let row"><i class="mdi text-primary {{getFileIcon(row)}}"></i></td>
       </ng-container>
       <ng-container cdkColumnDef="type">
         <th cdk-header-cell class="bg-primary text-white" *cdkHeaderCellDef> {{lang.map.attachment_type}}</th>

@@ -461,14 +461,21 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
     }
     this.oldLicenseFullSerialField.updateValueAndValidity();
   }
-  private _handleAffidavitOfCompletionFieldsValidations(): void {
+  private _handleAffidavitOfCompletionFieldsValidations(requestType:number): void {
     this._resetAffidavitOfCompletionGroup();
 
-    const isAffidavitOfCompletionRequired =
-      this.requestType$.value ===
-        FinancialTransferRequestTypes.TRANSFER_STATEMENT_TRANSFERRED &&
-      this.submissionMechanism === SubmissionMechanisms.NOTIFICATION;
+    let isAffidavitOfCompletionRequired = false;
 
+    if(requestType === FinancialTransferRequestTypes.NEW ||
+      requestType === FinancialTransferRequestTypes.UPDATE){
+        if(this.submissionMechanism === SubmissionMechanisms.NOTIFICATION){
+          isAffidavitOfCompletionRequired = true;
+        }
+      }
+
+    if(requestType === FinancialTransferRequestTypes.TRANSFER_STATEMENT_TRANSFERRED){
+      isAffidavitOfCompletionRequired = true;
+    }
     if (isAffidavitOfCompletionRequired) {
       this._addRequiredToAffidavitOfCompletionGroup();
     }
@@ -883,7 +890,7 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
           this.requestType$.next(requestTypeValue);
 
           this._handleLicenseValidationsByRequestType();
-          this._handleAffidavitOfCompletionFieldsValidations();
+          this._handleAffidavitOfCompletionFieldsValidations( requestTypeValue);
         } else {
           this.requestTypeField.setValue(this.requestType$.value);
         }

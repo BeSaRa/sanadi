@@ -648,7 +648,7 @@ export class CharityOrganizationUpdateComponent
         });
       });
     }
-    this._setModelNames(charity);
+    charity && this._setModelNames(charity);
   }
 
   getTabInvalidStatus(i: number): boolean {
@@ -915,6 +915,8 @@ export class CharityOrganizationUpdateComponent
 
     } else if ((this.updateSectionField.value === CharityUpdateSection.GOVERNANCE_DOCUMENTS) || (this.model.updateSection === CharityUpdateSection.GOVERNANCE_DOCUMENTS)) {
       this.primaryLawForm.patchValue(model!.buildPrimaryLawForm(false));
+    } else if (this.updateSectionField.value === CharityUpdateSection.COORDINATION_AND_CONTROL_REPORTS) {
+      this.handleSelectCharityOrganization(this.model.charityId);
     }
 
     this.cd.detectChanges();

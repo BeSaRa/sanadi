@@ -23,6 +23,10 @@ import {ImplementingAgencyInterceptor} from "@model-interceptors/implementing-ag
 import {DateUtils} from "@helpers/date-utils";
 import {IMyDateModel} from "angular-mydatepicker";
 import {ImplementationFundraisingInterceptor} from "@model-interceptors/implementation-fundraising-interceptor";
+import {ISearchFieldsMap} from '@app/types/types';
+import {dateSearchFields} from '@helpers/date-search-fields';
+import {infoSearchFields} from '@helpers/info-search-fields';
+import {normalSearchFields} from '@helpers/normal-search-fields';
 
 const _Approval = mixinApprovalLicenseWithMonthly(mixinRequestType(CaseModel))
 const {send, receive} = new ProjectImplementationInterceptor()
@@ -72,9 +76,24 @@ export class ProjectImplementation
   licenseClassName!: string;
   projectTotalCost: number = 0
 
+  searchFields: ISearchFieldsMap<ProjectImplementation> = {
+    ...dateSearchFields(['createdOn']),
+    ...infoSearchFields(['caseStatusInfo', 'requestTypeInfo', 'ouInfo', 'creatorInfo']),
+    ...normalSearchFields(['fullSerial', 'subject'])
+  };
+
+  finalizeSearchFields(): void {
+    if (this.employeeService.isExternalUser()) {
+      delete this.searchFields.ouInfo;
+      delete this.searchFields.organizationId;
+      delete this.searchFields.organization;
+    }
+  }
+
   constructor() {
     super();
-    this.service = FactoryService.getService('ProjectImplementationService')
+    this.service = FactoryService.getService('ProjectImplementationService');
+    this.finalizeSearchFields();
   }
 
   buildBasicInfo(controls: boolean = false) {

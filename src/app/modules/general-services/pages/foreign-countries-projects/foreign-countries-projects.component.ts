@@ -1,3 +1,5 @@
+import { ProfileCountryService } from './../../../../services/profile-country.service';
+import { ProfileCountry } from './../../../../models/profile-country';
 import { ProfileTypes } from '@app/enums/profile-types.enum';
 import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
 import { OpenFrom } from '@app/enums/open-from.enum';
@@ -10,13 +12,11 @@ import { CollectionRequestType } from '@app/enums/service-request-types';
 import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
 import { CommonUtils } from '@app/helpers/common-utils';
 import { IKeyValue } from '@app/interfaces/i-key-value';
-import { Country } from '@app/models/country';
 import { ForeignCountriesProjects } from '@app/models/foreign-countries-projects';
 import { ForeignCountriesProjectsResult } from '@app/models/foreign-countries-projects-results';
 import { ForeignCountriesProjectsSearchCriteria } from '@app/models/foreign-countries-projects-seach-criteria';
 import { Lookup } from '@app/models/lookup';
 import { ProjectNeedsComponent } from '@app/modules/e-services-main/shared/project-needs/project-needs.component';
-import { CountryService } from '@app/services/country.service';
 import { DialogService } from '@app/services/dialog.service';
 import { ForeignCountriesProjectsService } from '@app/services/foreign-countries-projects.service';
 import { LangService } from '@app/services/lang.service';
@@ -25,7 +25,7 @@ import { LookupService } from '@app/services/lookup.service';
 import { ToastService } from '@app/services/toast.service';
 import { ReadinessStatus } from '@app/types/types';
 import { Observable, of, Subject } from 'rxjs';
-import { catchError, exhaustMap, filter, map, share, switchMap, takeUntil, tap, } from 'rxjs/operators';
+import { catchError, exhaustMap, filter, map, switchMap, takeUntil, tap, } from 'rxjs/operators';
 import { UserClickOn } from '@app/enums/user-click-on.enum';
 import { ProfileService } from '@app/services/profile.service';
 import { Profile } from '@app/models/profile';
@@ -43,8 +43,7 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
   externalCooperations$ = this.profileService.getInternationalCooperation();
   organizationUnits: Profile[] = [];
   licenseSearch$: Subject<string> = new Subject<string>();
-  countries$: Observable<Country[]> = this.countryService.loadAsLookups()
-    .pipe(takeUntil(this.destroy$), share());
+  countries: ProfileCountry[] = [];
 
   selectedLicense?: ForeignCountriesProjects;
   projectNeedsTabStatus: ReadinessStatus = 'READY';
@@ -59,13 +58,14 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
     public fb: UntypedFormBuilder,
     public service: ForeignCountriesProjectsService,
     private lookupService: LookupService,
-    private countryService: CountryService,
     private dialog: DialogService,
     private licenseService: LicenseService,
     private cd: ChangeDetectorRef,
     private employeeService: EmployeeService,
     private toast: ToastService,
-    private profileService: ProfileService) {
+    private profileService: ProfileService,
+    private profileCountryService: ProfileCountryService,
+  ) {
     super();
   }
 
@@ -167,7 +167,16 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
       criteria as Partial<ForeignCountriesProjectsSearchCriteria>
     );
   }
-
+  handleExternalCooperationAuthorityChange(e: any) {
+    this.profileCountryService.getCountriesByProfile(e).subscribe((data) => {
+      if (data.length == 1) {
+        this.countryField.disable();
+        this.countryField.setValue(data[0].countryId);
+      }
+      this.countries = data;
+      console.log(data);
+    })
+  }
   listenToLicenseSearch(): void {
     this.licenseSearch$
       .pipe(
@@ -428,10 +437,14 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
   get organizationIdFeild(): UntypedFormControl {
     return this.basicInfo?.get('organizationId')! as UntypedFormControl;
   }
+  get countryField(): UntypedFormControl {
+    return this.basicInfo.get('explanation')! as UntypedFormControl;
+  }
   get specialExplanation(): UntypedFormGroup {
     return this.form.get('explanation')! as UntypedFormGroup;
   }
   get isExternalUser() {
     return this.employeeService.isExternalUser();
   }
+
 }

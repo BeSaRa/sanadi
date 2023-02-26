@@ -72,7 +72,7 @@
             lang.map.lbl_sub_team
             }}</label>
           <ng-select [selectOnTab]="true" labelForId="competentDepartmentID" [clearable]="true"
-                     placeholder="{{ lang.map.select }}" (change)="filterProcess()" id="competentDepartmentID"
+                     placeholder="{{ lang.map.select }}" (change)="handlefilterProcess()" id="competentDepartmentID"
                      [readonly]="readonly"
                      [notFoundText]="lang.map.msg_not_found" appendTo="body" validationClasses="competentDepartmentID"
                      formControlName="competentDepartmentID">
@@ -88,7 +88,7 @@
             }}</label>
           <ng-select [selectOnTab]="true" labelForId="domain" [clearable]="true" placeholder="{{ lang.map.select }}"
                      id="domain" [readonly]="readonly" [notFoundText]="lang.map.msg_not_found"
-                     (change)="loadSubClasses($event)"
+                     (change)="handleDomainChange($event)"
                      appendTo="body" validationClasses="domain" formControlName="domain">
             <ng-option *ngFor="let option of mainClassificationsList" [value]="option.id">
               {{option.getName()}}
@@ -102,7 +102,7 @@
             lang.map.sub_classification
             }}</label>
           <ng-select [selectOnTab]="true" labelForId="firstSubDomain" [clearable]="true"
-                     placeholder="{{ lang.map.select }}" (change)="filterProcess()" id="firstSubDomain"
+                     placeholder="{{ lang.map.select }}" (change)="handlefilterProcess()" id="firstSubDomain"
                      [readonly]="readonly"
                      [notFoundText]="lang.map.msg_not_found" appendTo="body" validationClasses="firstSubDomain"
                      formControlName="firstSubDomain">
@@ -118,7 +118,7 @@
             }}</label>
           <ng-select [selectOnTab]="true" labelForId="processType" [clearable]="true"
                      placeholder="{{ lang.map.select }}" id="processType" [readonly]="readonly"
-                     [notFoundText]="lang.map.msg_not_found" appendTo="body" (change)="filterProcess()"
+                     [notFoundText]="lang.map.msg_not_found" appendTo="body" (change)="handlefilterProcess()"
                      validationClasses="processType" formControlName="processType">
             <ng-option *ngFor="let option of GeneralProcessTypeList" [value]="option.lookupKey">
               {{option.getName()}}
