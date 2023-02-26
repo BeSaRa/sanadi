@@ -648,7 +648,7 @@ export class CharityOrganizationUpdateComponent
         });
       });
     }
-    this._setModelNames(charity);
+    charity && this._setModelNames(charity);
   }
 
   getTabInvalidStatus(i: number): boolean {
