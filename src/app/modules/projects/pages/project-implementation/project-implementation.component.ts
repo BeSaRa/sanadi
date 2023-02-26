@@ -931,25 +931,10 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       },
     ];
 
-    allFields.forEach(item => {
-      item.disabled() || this.readonly ? item.field.disable() : item.field.enable();
+    allFields.forEach(field => {
+      field.disabled() || this.readonly ? field.field.disable({emitEvent: false}) : field.field.enable({emitEvent: false});
+      field.field.updateValueAndValidity({emitEvent: false});
     })
-
-
-    /*const customFields = [
-      this.implementationTemplate,
-      this.implementingAgencyList,
-      this.implementationFundraising,
-      this.payment,
-      this.selfFinancing,
-      this.financialGrant,
-      this.licenseStartDate,
-      this.projectEvaluationSLA,
-      this.licenseDuration
-    ]
-    customFields.forEach(item => {
-      this.readonly ? item.disable() : item.enable()
-    })*/
 
   }
 
