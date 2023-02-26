@@ -2,8 +2,7 @@
   <app-page-header [pageTitle]="'menu_sd_goal'" [clickOnReload$]="reload$" [clickOnNew$]="add$">
   </app-page-header>
   <ng-container *ngIf="table">
-    <app-grid-search (searchTextEvent)="filterControl.setValue($event)"
-                     *ngIf="(table.selection && !table.selection.selected.length)"></app-grid-search>
+    <app-grid-search (searchTextEvent)="filterControl.setValue($event)"></app-grid-search>
   </ng-container>
 </div>
 
