@@ -82,6 +82,15 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
     AdminstrationDepartmentCodes.LCN,
     AdminstrationDepartmentCodes.SVC
   ]
+  AwarenessActivatySuggestionDepartmentApprovalDepartments = [
+    AdminstrationDepartmentCodes.SVC,
+    AdminstrationDepartmentCodes.RC,
+    AdminstrationDepartmentCodes.LA,
+    AdminstrationDepartmentCodes.IS,
+    AdminstrationDepartmentCodes.PQ,
+    AdminstrationDepartmentCodes.PR1,
+    AdminstrationDepartmentCodes.IN,
+  ]
 
 
   multiSendToDepartmentWFResponseList = [
@@ -125,6 +134,8 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
         this.loadNPOManagmentApprovalDepartments()
       } else if (this.data.sendToResponse === WFResponseType.GENERAL_NOTIFICATION_SEND_TO_SINGLE_DEPARTMENTS) {
         this.loadGaneralProcessNotificationApprovalDepartments()
+      } else if (this.data.sendToResponse === WFResponseType.AWARENESS_ACTIVITY_SUGGESTION_SEND_TO_MULTI_DEPARTMENTS) {
+        this.loadAwarenessActivatySuggestionApprovalDepartments()
       } else {
         this.loadDepartments();
       }
@@ -264,6 +275,17 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
         this.GeneralProcessDepartmentApprovalDepartments.splice(currDepIndex, 1);
         this.departments =
           deps.filter(dep => this.GeneralProcessDepartmentApprovalDepartments.includes(dep.code as AdminstrationDepartmentCodes))
+      });
+  }
+
+  loadAwarenessActivatySuggestionApprovalDepartments(): void {
+    this.intDepService.loadAsLookups()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(deps => {
+        const currDepIndex = this.AwarenessActivatySuggestionDepartmentApprovalDepartments.findIndex(dc => dc == this.employee.getInternalDepartment()?.code);
+        this.AwarenessActivatySuggestionDepartmentApprovalDepartments.splice(currDepIndex, 1);
+        this.departments =
+          deps.filter(dep => this.AwarenessActivatySuggestionDepartmentApprovalDepartments.includes(dep.code as AdminstrationDepartmentCodes))
       });
   }
 
