@@ -96,7 +96,7 @@
                  validationClasses="durationInDays"
                  formControlName="durationInDays" class="form-control"
                  maxlength="3"
-                 [mask]="inputMaskPatterns.NUMBER_ONLY">
+                 type="number">
           <app-field-error-message controlName="durationInDays"></app-field-error-message>
         </div>
         <div class="col-sm-6 position-relative">
@@ -106,7 +106,7 @@
                  validationClasses="durationInHours"
                  formControlName="durationInHours" class="form-control"
                  maxlength="3"
-                 [mask]="inputMaskPatterns.NUMBER_ONLY">
+                 type="number">
           <app-field-error-message controlName="durationInHours"></app-field-error-message>
         </div>
       </div>
