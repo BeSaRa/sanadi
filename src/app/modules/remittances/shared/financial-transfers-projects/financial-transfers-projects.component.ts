@@ -1,4 +1,4 @@
-import { switchMap } from 'rxjs/operators';
+import { switchMap, catchError } from 'rxjs/operators';
 import { ExternalProjectLicensing } from './../../../../models/external-project-licensing';
 import { FinancialTransferLicensingService } from './../../../../services/financial-transfer-licensing.service';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
@@ -18,7 +18,7 @@ import { LangService } from '@app/services/lang.service';
 import { LookupService } from '@app/services/lookup.service';
 import { ToastService } from '@app/services/toast.service';
 import { ReadinessStatus } from '@app/types/types';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, Subject, of } from 'rxjs';
 import { filter, map, take, takeUntil, tap } from 'rxjs/operators';
 import { CustomValidators } from '@app/validators/custom-validators';
 
@@ -360,12 +360,22 @@ export class FinancialTransfersProjectsComponent implements OnInit {
         filter(value =>!!value),
         switchMap((value: string) => {
           return  this.financialTransferLicensingService.loadEternalProjectsDetails(value)
+          .pipe(
+            catchError(_=> of(null)),
+          )
         }),
+
         takeUntil(this.destroy$)
       )
-      .subscribe((project:FinancialTransfersProject)=>{
+      .subscribe((project:FinancialTransfersProject|null)=>{
+        if(!project){
+          this.financialTransferProjectControl.reset();
+          return;
+        }
+
         this.form.patchValue(project);
         this.selectedProject = project
+
       });
   }
 }
