@@ -55,14 +55,15 @@
 
   <!--  </ng-template>-->
   <div class="mt-4 mb-2">
-    <div *ngIf="!internal" class="d-flex flex-row justify-content-between">
-      <div *ngFor="let group of groupedActions | keyvalue; let lastGroup = last"
-           class="d-flex flex-row flex-wrap gap-2">
-        <ng-container *ngFor="let action of group.value">
-          <ng-container [ngTemplateOutlet]="actionButtonTemplate"
-                        [ngTemplateOutletContext]="{data: action}"></ng-container>
-        </ng-container>
-        <ng-container *ngIf="lastGroup" [ngTemplateOutlet]="validateButtonTemplate"></ng-container>
+    <div *ngIf="!internal" class="row">
+      <div class="col-sm-12 col-md-4" *ngFor="let group of groupedActions | keyvalue">
+        <div class="d-flex flex-row flex-wrap gap-2">
+          <ng-container *ngFor="let action of group.value">
+            <ng-container [ngTemplateOutlet]="actionButtonTemplate"
+                          [ngTemplateOutletContext]="{data: action}"></ng-container>
+          </ng-container>
+          <ng-container *ngIf="group.key === charityViewButtonsGroupEnum.CENTER" [ngTemplateOutlet]="validateButtonTemplate"></ng-container>
+        </div>
       </div>
     </div>
     <div *ngIf="internal" class="d-flex flex-row flex-wrap gap-2 justify-content-center">

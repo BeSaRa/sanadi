@@ -106,6 +106,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
 
   actions: IMenuItem<CaseModel<any, any>>[] = [];
   groupedActions?: Map<CharityViewButtonsGroupEnum, IMenuItem<CaseModel<any, any>>[]>;
+  charityViewButtonsGroupEnum = CharityViewButtonsGroupEnum;
   service!: BaseGenericEService<CaseModel<any, any>>;
   model?: CaseModel<any, any>;
   component!: EServicesGenericComponent<CaseModel<any, any>, BaseGenericEService<CaseModel<any, any>>>;
