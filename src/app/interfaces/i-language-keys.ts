@@ -739,6 +739,7 @@ export interface ILanguageKeys {
   pagination_previous: string;
   menu_user_inbox: string;
   save_as_draft: string;
+  save_as_draft_and_continue: string;
   request_body: string;
   full_name: string;
   competent_dep: string;

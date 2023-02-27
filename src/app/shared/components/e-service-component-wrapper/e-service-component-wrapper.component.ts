@@ -358,6 +358,35 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           groupOrder: 5
         }
       },
+      // save as draft and continue
+      {
+        type: 'action',
+        label: 'save_as_draft_and_continue',
+        show: (item) => {
+          if (item.isCancelled() || this.servicesWithNoSaveDraftLaunch.includes(item.getCaseType()) || this.excludedDraftTypes.includes(item.getCaseType())) {
+            return false;
+          }
+          if (item.caseType === CaseTypes.PROJECT_IMPLEMENTATION) {
+            if ((item as ProjectImplementation).isSubmissionMechanismRegistration() || (item as ProjectImplementation).isSubmissionMechanismNotification()) {
+              return false;
+            }
+          }
+          if (item.caseType === CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST) {
+            if (item.caseStatus === CommonCaseStatus.CANCELLED) {
+              return false;
+            }
+          }
+          return item?.canDraft();
+        },
+        disabled: item => !item?.canDraft(),
+        onClick: () => {
+          this.component.save.next(this.saveTypes.DRAFT_CONTINUE);
+        },
+        data: {
+          charityButtonsGroup: CharityViewButtonsGroupEnum.RIGHT,
+          groupOrder: 5
+        }
+      },
       // view logs
       {
         type: 'action',
@@ -458,6 +487,26 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         disabled: item => !item?.canDraft(),
         onClick: () => {
           this.component.save.next(this.saveTypes.DRAFT);
+        },
+        data: {
+          charityButtonsGroup: CharityViewButtonsGroupEnum.RIGHT,
+          groupOrder: 5
+        }
+      },
+      // save as draft and continue
+      {
+        type: 'action',
+        // icon: 'mdi-rocket-launch-outline',
+        label: 'save_as_draft_and_continue',
+        show: (item) => {
+          if (this.servicesWithNoSaveDraftLaunch.includes(item.getCaseType()) || this.excludedDraftTypes.includes(item.getCaseType())) {
+            return false;
+          }
+          return item?.canDraft();
+        },
+        disabled: item => !item?.canDraft(),
+        onClick: () => {
+          this.component.save.next(this.saveTypes.DRAFT_CONTINUE);
         },
         data: {
           charityButtonsGroup: CharityViewButtonsGroupEnum.RIGHT,
