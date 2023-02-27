@@ -1,21 +1,21 @@
-import {Lookup} from '@models/lookup';
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import {ActionIconsEnum} from '@app/enums/action-icons-enum';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {CommonUtils} from '@helpers/common-utils';
-import {ILanguageKeys} from '@contracts/i-language-keys';
-import {SortEvent} from '@contracts/sort-event';
-import {AdminResult} from '@app/models/admin-result';
-import {Country} from '@app/models/country';
-import {ExecutiveManagement} from '@app/models/executive-management';
-import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import {DialogService} from '@services/dialog.service';
-import {LangService} from '@services/lang.service';
-import {ToastService} from '@services/toast.service';
-import {ReadinessStatus} from '@app/types/types';
-import {BehaviorSubject, Subject} from 'rxjs';
-import {filter, map, take, takeUntil, tap} from 'rxjs/operators';
+import { Lookup } from '@models/lookup';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { ActionIconsEnum } from '@app/enums/action-icons-enum';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { CommonUtils } from '@helpers/common-utils';
+import { ILanguageKeys } from '@contracts/i-language-keys';
+import { SortEvent } from '@contracts/sort-event';
+import { AdminResult } from '@app/models/admin-result';
+import { Country } from '@app/models/country';
+import { ExecutiveManagement } from '@app/models/executive-management';
+import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { DialogService } from '@services/dialog.service';
+import { LangService } from '@services/lang.service';
+import { ToastService } from '@services/toast.service';
+import { ReadinessStatus } from '@app/types/types';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { filter, map, take, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'executive-management',
@@ -26,9 +26,9 @@ export class ExecutiveManagementComponent implements OnInit {
   @Input() showHeader: boolean = true;
 
   constructor(public lang: LangService,
-              private toastService: ToastService,
-              private dialogService: DialogService,
-              private fb: UntypedFormBuilder) {
+    private toastService: ToastService,
+    private dialogService: DialogService,
+    private fb: UntypedFormBuilder) {
   }
 
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();
@@ -100,9 +100,9 @@ export class ExecutiveManagementComponent implements OnInit {
     }
   ];
   sortingCallbacks = {
-    country: (a: ExecutiveManagement, b: ExecutiveManagement, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a) ? '' : a.countryInfo.getName().toLowerCase(),
-        value2 = !CommonUtils.isValidValue(b) ? '' : b.countryInfo.getName().toLowerCase();
+    nationality: (a: ExecutiveManagement, b: ExecutiveManagement, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.nationalityInfo.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.nationalityInfo.getName().toLowerCase();
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     },
 
@@ -194,7 +194,7 @@ export class ExecutiveManagementComponent implements OnInit {
         }),
         map(() => {
           let formValue = this.form.getRawValue();
-          let countryInfo: AdminResult =
+          let nationalityInfo: AdminResult =
             this.countriesList
               .find((x) => x.id === formValue.country)
               ?.createAdminResult() ?? new AdminResult();
@@ -202,7 +202,7 @@ export class ExecutiveManagementComponent implements OnInit {
           return new ExecutiveManagement().clone({
             ...this.current,
             ...formValue,
-            countryInfo: countryInfo,
+            nationalityInfo: nationalityInfo,
           });
         })
       )

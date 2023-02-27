@@ -41,6 +41,7 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
   AffiliationRequestType: Lookup[] = this.lookupService.listByCategory.AffiliationRequestType.sort((a, b) => a.lookupKey - b.lookupKey);
   AffiliationCategory: Lookup[] = this.lookupService.listByCategory.AffiliationCategory;
   CurrencyDropDown: Lookup[] = this.lookupService.listByCategory.Currency;
+  nationalities: Lookup[] = this.lookupService.listByCategory.Nationality;
   countriesList: Country[] = [];
   managersTabStatus: ReadinessStatus = 'READY';
   bankDetailsTabStatus: ReadinessStatus = 'READY';

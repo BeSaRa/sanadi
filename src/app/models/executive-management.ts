@@ -11,17 +11,17 @@ export class ExecutiveManagement extends SearchableCloneable<ExecutiveManagement
   email!: string;
   jobTitle!: number;
   phone!: string;
-  country!: number;
+  nationality!: number;
   passportNumber!: string;
-  countryInfo!: AdminResult
+  nationalityInfo!: AdminResult
 
   searchFields: ISearchFieldsMap<ExecutiveManagement> = {
-    ...infoSearchFields(['countryInfo']),
+    ...infoSearchFields(['nationalityInfo']),
     ...normalSearchFields(['arabicName', 'englishName', 'jobTitle', 'email', 'phone', 'passportNumber'])
   };
 
   searchFieldsNoPassport: ISearchFieldsMap<ExecutiveManagement> = {
-    ...infoSearchFields(['countryInfo']),
+    ...infoSearchFields(['nationalityInfo']),
     ...normalSearchFields(['arabicName', 'englishName', 'jobTitle', 'email', 'phone'])
   };
 
@@ -32,7 +32,7 @@ export class ExecutiveManagement extends SearchableCloneable<ExecutiveManagement
       email,
       jobTitle,
       phone,
-      country,
+      nationality,
       passportNumber
     } = this;
 
@@ -46,7 +46,7 @@ export class ExecutiveManagement extends SearchableCloneable<ExecutiveManagement
       email: control ? [email, [CustomValidators.required, CustomValidators.pattern('EMAIL'), CustomValidators.maxLength(100)]] : email,
       jobTitle: control ? [jobTitle, [CustomValidators.required, CustomValidators.maxLength(150)]] : jobTitle,
       phone: control ? [phone, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : phone,
-      country: control ? [country, [CustomValidators.required]] : country,
+      nationality: control ? [nationality, [CustomValidators.required]] : nationality,
       passportNumber: control ? [passportNumber, [...CustomValidators.commonValidations.passport]] : passportNumber
     }
   }
