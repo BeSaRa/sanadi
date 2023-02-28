@@ -548,6 +548,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
         // delete id property
         let tempObj = _info.details as any;
         delete tempObj.id;
+        tempObj.npoApproved = false;
         _info.details = new GeneralAssociationMeetingAttendance().clone(tempObj);
 
         this.hasSearchedForLicense = true;
