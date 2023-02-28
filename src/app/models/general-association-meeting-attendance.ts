@@ -57,6 +57,7 @@ export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAss
   year!: number;
   isSendToMember!: boolean;
   organizationId!: number;
+  npoApproved!: boolean;
   generalAssociationMembers: GeneralAssociationExternalMember[] = [];
   administrativeBoardMembers: GeneralAssociationExternalMember[] = [];
   internalMembersDTO: GeneralAssociationInternalMember[] = [];
