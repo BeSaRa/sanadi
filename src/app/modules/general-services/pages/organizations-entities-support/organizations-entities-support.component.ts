@@ -49,8 +49,8 @@ import { JobTitle } from '@app/models/job-title';
   styleUrls: ['./organizations-entities-support.component.scss'],
 })
 export class OrganizationsEntitiesSupportComponent extends EServicesGenericComponent<
-  OrganizationsEntitiesSupport,
-  OrganizationsEntitiesSupportService
+OrganizationsEntitiesSupport,
+OrganizationsEntitiesSupportService
 > {
   constructor(
     public lang: LangService,
@@ -71,10 +71,7 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
 
   form!: UntypedFormGroup;
   loadAttachments: boolean = false;
-  requestTypesList: Lookup[] =
-    this.lookupService.listByCategory.CollectionRequestType.sort(
-      (a, b) => a.lookupKey - b.lookupKey
-    );
+  requestTypesList: Lookup[] = this.lookupService.listByCategory.RequestTypeNewOnly;
   serviceTypes: AdminLookup[] = [];
   licenseSearch$: Subject<string> = new Subject<string>();
   externalUsersList: ExternalUser[] = [];
@@ -151,7 +148,6 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
     this._loadExternalUsers();
     this._loadActivityTypes();
     this._loadJobTitles();
-    this._listenToLicenseSearch();
   }
   _buildForm(): void {
     let objOrganizationsEntitiesSupport = this._getNewInstance();
@@ -175,11 +171,6 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
     this.handleReadonly();
     if (!this.model?.id) {
       this._setDefaultValues();
-    }
-    if (this.fromDialog) {
-      this._loadSelectedLicenseById(this.model!.oldLicenseId, () => {
-        this.oldLicenseFullSerialField.updateValueAndValidity();
-      });
     }
   }
 
@@ -241,7 +232,7 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
     }
   }
 
-  _destroyComponent(): void {}
+  _destroyComponent(): void { }
 
   _getNewInstance(): OrganizationsEntitiesSupport {
     return new OrganizationsEntitiesSupport().clone();
@@ -264,7 +255,6 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
   }
   _setDefaultValues(): void {
     this.requestTypeField.setValue(ServiceRequestTypes.NEW);
-    this.handleRequestTypeChange(ServiceRequestTypes.NEW, false);
   }
 
   _resetForm(): void {
@@ -293,7 +283,6 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
       description: model.description,
     });
 
-    this.handleRequestTypeChange(model.requestType, false);
     this.cd.detectChanges();
   }
 
@@ -321,103 +310,16 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
       this.model = model;
     }
   }
-  private _handleLicenseValidationsByRequestType(): void {
-    let requestTypeValue = this.requestTypeField && this.requestTypeField.value;
-    // set validators to empty
-    if (!requestTypeValue || requestTypeValue === ServiceRequestTypes.NEW) {
-      if (!this.model?.id || this.model.canCommit()) {
-        this.oldLicenseFullSerialField?.setValue(null);
-        this.setSelectedLicense(undefined, true);
-
-        if (this.model) {
-          this.model.licenseNumber = '';
-          this.model.licenseDuration = 0;
-          this.model.licenseStartDate = '';
-        }
-      }
-    } else {
-      this.oldLicenseFullSerialField?.setValidators([
-        CustomValidators.required,
-        CustomValidators.maxLength(250),
-      ]);
-    }
-    this.oldLicenseFullSerialField.updateValueAndValidity();
-  }
-  private _loadSelectedLicenseById(id: string, callback?: any): void {
-    if (!id) {
-      return;
-    }
-    this.licenseService
-      .loadOrganizationsEntitiesSupportByLicenseId(id)
-      .pipe(
-        filter((license) => !!license),
-        takeUntil(this.destroy$)
-      )
-      .subscribe((license) => {
-        this.setSelectedLicense(
-          license.convertToOrganizationsEntitiesSupport(),
-          true
-        );
-
-        callback && callback();
-      });
-  }
-
-  private _listenToLicenseSearch() {
-    this.licenseSearch$
-      .pipe(
-        takeUntil(this.destroy$),
-        exhaustMap((oldLicenseFullSerial) => {
-          return this.loadLicensesByCriteria({
-            fullSerial: oldLicenseFullSerial,
-          }).pipe(catchError(() => of([])));
-        })
-      )
-      .pipe(
-        // display message in case there is no returned license
-        tap((list) =>
-          !list.length
-            ? this.dialogService.info(
-                this.lang.map.no_result_for_your_search_criteria
-              )
-            : null
-        ),
-        // allow only the collection if it has value
-        filter((result) => !!result.length),
-        exhaustMap((licenses) => {
-          return licenses.length === 1
-            ? this.validateSingleLicense(licenses[0]).pipe(
-                map((data) => {
-                  if (!data) {
-                    return of(null);
-                  }
-                  return licenses[0];
-                }),
-                catchError(() => {
-                  return of(null);
-                })
-              )
-            : this._openSelectLicense(licenses);
-        }),
-        filter((info): info is OrganizationsEntitiesSupport => {
-          return !!info;
-        }),
-        takeUntil(this.destroy$)
-      )
-      .subscribe((selection) => {
-        this.setSelectedLicense(selection, false);
-      });
-  }
   private _listenToServiceType() {
-      this.serviceType.valueChanges.pipe(
+    this.serviceType.valueChanges.pipe(
       takeUntil(this.destroy$),
       map((id) => this.serviceTypes.find((x) => x.id === id)),
-      tap(_=>{
+      tap(_ => {
         this.otherService.reset();
       }),
-      tap((serviceType)=>{
-        if(serviceType){
-          if(this._isOthersServiceType(serviceType)){
+      tap((serviceType) => {
+        if (serviceType) {
+          if (this._isOthersServiceType(serviceType)) {
             this.showOtherService = true;
             this.otherService.addValidators([CustomValidators.required]);
             return;
@@ -426,51 +328,16 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
         this.otherService.removeValidators([CustomValidators.required]);
         this.showOtherService = false;
       }),
-      tap(_=>{
+      tap(_ => {
         this.otherService.updateValueAndValidity();
       })
 
     ).subscribe();
   }
-  private _isOthersServiceType(serviceType?:AdminLookup) {
-    if(!serviceType) return false;
+  private _isOthersServiceType(serviceType?: AdminLookup) {
+    if (!serviceType) return false;
     return serviceType.enName.toLocaleLowerCase() === 'other' ||
-           serviceType.enName.toLocaleLowerCase() === 'others'
-  }
-  private validateSingleLicense(
-    license: OrganizationsEntitiesSupport
-  ): Observable<undefined | OrganizationsEntitiesSupport> {
-    return this.licenseService.validateLicenseByRequestType<OrganizationsEntitiesSupport>(
-      this.model!.caseType,
-      this.requestTypeField.value,
-      license.id
-    ) as Observable<undefined | OrganizationsEntitiesSupport>;
-  }
-
-  private _openSelectLicense(
-    licenses: OrganizationsEntitiesSupport[]
-  ): Observable<undefined | OrganizationsEntitiesSupport> {
-    return this.licenseService
-      .openSelectLicenseDialog(
-        licenses,
-        this.model?.clone({ requestType: this.requestTypeField.value || null }),
-        true,
-        this.service.selectLicenseDisplayColumnsReport
-      )
-      .onAfterClose$.pipe(
-        map(
-          (
-            result:
-              | {
-                  selected: OrganizationsEntitiesSupport;
-                  details: OrganizationsEntitiesSupport;
-                }
-              | undefined
-          ) => {
-            return result ? result.selected : result;
-          }
-        )
-      );
+      serviceType.enName.toLocaleLowerCase() === 'others'
   }
 
   private _loadJobTitles(): void {
@@ -520,30 +387,6 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
 
   getTabInvalidStatus(tabName: string): boolean {
     return !this.tabsData[tabName].validStatus();
-  }
-
-  handleRequestTypeChange(
-    requestTypeValue: number,
-    userInteraction: boolean = false
-  ): void {
-    of(userInteraction)
-      .pipe(
-        takeUntil(this.destroy$),
-        switchMap(() => this.confirmChangeRequestType(userInteraction))
-      )
-      .subscribe((clickOn: UserClickOn) => {
-        if (clickOn === UserClickOn.YES) {
-          if (userInteraction) {
-            this.resetForm$.next();
-            this.requestTypeField.setValue(requestTypeValue);
-          }
-          this.requestType$.next(requestTypeValue);
-
-          this._handleLicenseValidationsByRequestType();
-        } else {
-          this.requestTypeField.setValue(this.requestType$.value);
-        }
-      });
   }
 
   isAttachmentReadonly(): boolean {
@@ -614,14 +457,6 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
       CommonUtils.isValidValue(this.requestTypeField.value) &&
       this.requestTypeField.value !== ServiceRequestTypes.NEW
     );
-  }
-
-  licenseSearch($event?: Event): void {
-    $event?.preventDefault();
-    const value =
-      this.oldLicenseFullSerialField.value &&
-      this.oldLicenseFullSerialField.value.trim();
-    this.licenseSearch$.next(value);
   }
 
   loadLicensesByCriteria(
