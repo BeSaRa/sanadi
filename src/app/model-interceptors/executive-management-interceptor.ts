@@ -5,12 +5,12 @@ import {ExecutiveManagement} from '@app/models/executive-management';
 export class ExecutiveManagementInterceptor implements IModelInterceptor<ExecutiveManagement> {
   send(model: Partial<ExecutiveManagement>): Partial<ExecutiveManagement> {
     delete model.searchFields;
-    delete model.countryInfo;
+    delete model.nationalityInfo;
     return model;
   }
 
   receive(model: ExecutiveManagement): ExecutiveManagement {
-    model.countryInfo = AdminResult.createInstance(model.countryInfo);
+    model.nationalityInfo = AdminResult.createInstance(model.nationalityInfo);
 
     return model;
   }
