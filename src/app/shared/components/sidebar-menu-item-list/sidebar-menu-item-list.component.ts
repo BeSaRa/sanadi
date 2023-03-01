@@ -1,12 +1,12 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { MenuItem } from '@app/models/menu-item';
-import { EmployeeService } from '@app/services/employee.service';
-import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Router } from '@angular/router';
-import { CustomEmployeePermission } from "@app/helpers/custom-employee-permission";
-import { LangService } from "@services/lang.service";
-import { CommonService } from "@services/common.service";
-import { Common } from "@app/models/common";
+import {Component, Input, OnInit} from '@angular/core';
+import {MenuItem} from '@app/models/menu-item';
+import {EmployeeService} from '@app/services/employee.service';
+import {animate, state, style, transition, trigger} from '@angular/animations';
+import {Router} from '@angular/router';
+import {CustomEmployeePermission} from "@app/helpers/custom-employee-permission";
+import {LangService} from "@services/lang.service";
+import {CommonService} from "@services/common.service";
+import {Common} from "@app/models/common";
 
 @Component({
   selector: 'app-sidebar-menu-item-list',
@@ -52,8 +52,33 @@ export class SidebarMenuItemListComponent implements OnInit {
     if (item.children.length) {
       item.toggle();
     } else {
-      this.router.navigate([item.path]).then();
+      if (item.canSearchInstant) {
+        this.openInstantServiceSearch($event, item);
+      } else {
+        this.openInstantService($event, item);
+      }
+      // this.router.navigate([item.path]).then();
     }
+  }
+
+  openInstantService($event: Event, item: MenuItem) {
+    $event.preventDefault();
+    $event.stopPropagation();
+    if (!item.canInstantAdd) {
+      return;
+    }
+    this.router.navigate([item.path]).then();
+  }
+
+  openInstantServiceSearch($event: Event, item: MenuItem) {
+    $event.preventDefault();
+    $event.stopPropagation();
+    if (!item.canSearchInstant) {
+      return;
+    }
+    this.router.navigate([item.defaultServiceSearchPath], {
+      queryParams: {quickCaseType: item.caseType}
+    }).then();
   }
 
   hasCustomPermissions(item: MenuItem): boolean {

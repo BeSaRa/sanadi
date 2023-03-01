@@ -1,19 +1,21 @@
-import { LangService } from '@services/lang.service';
-import { FactoryService } from '@services/factory.service';
-import { ILanguageKeys } from '@contracts/i-language-keys';
-import { ConfigurationService } from '@services/configuration.service';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { Cloneable } from "@app/models/cloneable";
-import { Common } from "@app/models/common";
-import { MenuItemInterceptor } from '@app/model-interceptors/menu-item-interceptor';
-import { InterceptModel } from "@decorators/intercept-model";
+import {LangService} from '@services/lang.service';
+import {FactoryService} from '@services/factory.service';
+import {ILanguageKeys} from '@contracts/i-language-keys';
+import {ConfigurationService} from '@services/configuration.service';
+import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
+import {Cloneable} from "@app/models/cloneable";
+import {Common} from "@app/models/common";
+import {MenuItemInterceptor} from '@app/model-interceptors/menu-item-interceptor';
+import {InterceptModel} from "@decorators/intercept-model";
 import {PermissionGroupsEnum} from '@app/enums/permission-groups-enum';
 import {StaticAppResourcesService} from '@services/static-app-resources.service';
 import {CustomMenu} from '@app/models/custom-menu';
+import {EmployeeService} from '@services/employee.service';
+import {CustomEmployeePermission} from '@helpers/custom-employee-permission';
 
-const { send, receive } = new MenuItemInterceptor();
+const {send, receive} = new MenuItemInterceptor();
 
-@InterceptModel({ send, receive })
+@InterceptModel({send, receive})
 export class MenuItem extends Cloneable<MenuItem> {
   id!: number;
   langKey!: keyof ILanguageKeys;
@@ -42,6 +44,8 @@ export class MenuItem extends Cloneable<MenuItem> {
   private resourcesService: StaticAppResourcesService;
   // extra properties
   customMenu?: CustomMenu;
+  employeeService: EmployeeService;
+  configurationService: ConfigurationService;
 
   constructor() {
     super()
@@ -49,6 +53,8 @@ export class MenuItem extends Cloneable<MenuItem> {
     this.configService = FactoryService.getService('ConfigurationService');
     this.domSanitizer = FactoryService.getService('DomSanitizer');
     this.resourcesService = FactoryService.getService('StaticAppResourcesService');
+    this.employeeService = FactoryService.getService('EmployeeService');
+    this.configurationService = FactoryService.getService('ConfigurationService');
   }
 
   getName(): string {
@@ -77,7 +83,7 @@ export class MenuItem extends Cloneable<MenuItem> {
 
   getLangKeyValues(): void {
     this.enName = this.enName ? this.enName : this.langService.getEnglishLocalByKey(this.langKey);
-    this.arName = this.arName ? this.arName :this.langService.getArabicLocalByKey(this.langKey);
+    this.arName = this.arName ? this.arName : this.langService.getArabicLocalByKey(this.langKey);
   }
 
   getChildrenText(parentArName?: string, parentEnName?: string): void {
@@ -93,4 +99,23 @@ export class MenuItem extends Cloneable<MenuItem> {
   sanitizeSVG(): void {
     this.isSVGIcon() && this.svg ? (this.safeSVG = this.domSanitizer.bypassSecurityTrustHtml(this.svg)) : null;
   }
+
+  get canAddOrSearchInstant(): boolean {
+    return this.canInstantAdd || this.canSearchInstant;
+  }
+
+  get canInstantAdd(): boolean {
+    return !!this.caseType && !this.children.length
+      && this.employeeService.checkPermissions(this.getPermissions(), true)
+      && (CustomEmployeePermission.hasCustomPermission(this.langKey) ? CustomEmployeePermission.getCustomPermission(this.langKey)(this.employeeService, this) : true)
+  }
+
+  get canSearchInstant(): boolean {
+    return !this.children.length && !!this.caseType && this.employeeService.userCanManage(this.caseType);
+  }
+
+  get defaultServiceSearchPath(): string {
+    return '/home/services-search';
+  }
+
 }

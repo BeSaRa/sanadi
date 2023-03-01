@@ -4,7 +4,7 @@ import {FormlyFieldConfig} from '@ngx-formly/core/lib/components/formly.field.co
 import {LangService} from '@services/lang.service';
 import {InboxService} from '@services/inbox.service';
 import {BehaviorSubject, Subject} from 'rxjs';
-import {filter, map, skip, startWith, takeUntil} from 'rxjs/operators';
+import {delay, filter, map, skip, startWith, takeUntil, tap} from 'rxjs/operators';
 import {CaseModel} from '@models/case-model';
 import {DialogService} from '@services/dialog.service';
 import {IMenuItem} from '@modules/context-menu/interfaces/i-menu-item';
@@ -22,6 +22,7 @@ import {LicenseService} from '@app/services/license.service';
 import {HasLicenseApproval} from '@app/interfaces/has-license-approval';
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 import {BaseGenericEService} from '@app/generics/base-generic-e-service';
+import {CommonUtils} from '@helpers/common-utils';
 
 @Component({
   selector: 'services-search',
@@ -84,8 +85,14 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
     this.form = new UntypedFormGroup({});
     this.reSelectService();
     this.listenToServiceChange(this.serviceControl.value);
+    this.listenToInstantSearch();
     this.listenToSearch();
     this.buildGridActions();
+  }
+
+  private isInstantSearch(params: any): boolean {
+    const quickSearchCaseType = parseInt(params.quickCaseType);
+    return !isNaN(quickSearchCaseType) && CommonUtils.isValidValue(quickSearchCaseType);
   }
 
   private search(value: Partial<CaseModel<any, any>>) {
@@ -110,6 +117,18 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
       ...(GeneralInterceptor.send(new GeneralSearchCriteriaInterceptor().send(criteria))),
       caseType: (new (this.selectedService._getModel() as unknown as IServiceConstructor)).caseType
     };
+  }
+
+  private listenToInstantSearch(): void {
+    this.activatedRoute.queryParams
+      .pipe(
+        takeUntil(this.destroy$),
+        filter((params) => this.isInstantSearch(params)),
+        tap((params) => this.serviceControl.patchValue(parseInt(params.quickCaseType))),
+        delay(500)
+      ).subscribe((value) => {
+      this.search$.next(null);
+    });
   }
 
   private _sortColumns(): void {
