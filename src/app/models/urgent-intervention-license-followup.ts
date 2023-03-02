@@ -7,9 +7,13 @@ import {EmployeeService} from '@services/employee.service';
 import {CaseModel} from '@app/models/case-model';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {InterceptModel} from '@decorators/intercept-model';
-import {UrgentInterventionLicenseFollowupInterceptor} from '@app/model-interceptors/urgent-intervention-license-followup-interceptor';
+import {
+  UrgentInterventionLicenseFollowupInterceptor
+} from '@app/model-interceptors/urgent-intervention-license-followup-interceptor';
+import {Observable} from 'rxjs';
 
 const {send, receive} = new UrgentInterventionLicenseFollowupInterceptor();
+
 @InterceptModel({send, receive})
 export class UrgentInterventionLicenseFollowup extends CaseModel<any, any> {
   caseType: number = CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP;
@@ -51,5 +55,11 @@ export class UrgentInterventionLicenseFollowup extends CaseModel<any, any> {
     return {
       fullSerial: controls ? [fullSerial, [CustomValidators.required, CustomValidators.maxLength(250)]] : fullSerial
     };
+  }
+
+  sendToSingleDepartmentReportReviewAction(): Observable<any> {
+    const taskName = this.getAskSingleWFResponseByCaseType().split('askSingle:')[1];
+    const reportId = this.taskDetails.activityProperties['ReportId'].value;
+    return this.service.sendToSingleDepartmentReportReviewAction(taskName, reportId);
   }
 }
