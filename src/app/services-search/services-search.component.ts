@@ -127,8 +127,9 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
     this.activatedRoute.queryParams
       .pipe(
         takeUntil(this.destroy$),
+        filter((params) => this.isInstantSearch(params)),
         filter((params) => {
-          const hasPermission = this.isInstantSearch(params) && this.hasSearchPermission(parseInt(params.quickCaseType));
+          const hasPermission = this.hasSearchPermission(parseInt(params.quickCaseType));
           if (!hasPermission) {
             this.dialog.error(this.lang.map.msg_service_search_unavailable);
             this.serviceControl.patchValue(this.serviceNumbers[0]);
