@@ -15,9 +15,9 @@ export class ApprovalReason extends SearchableCloneable<ApprovalReason> {
     const { fieldVisit, projects, research} = this;
 
     return {
-      projects: control ? [projects,[ CustomValidators.required,CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : projects,
-      research: control ? [research,[ CustomValidators.required,CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : research,
-      fieldVisit: control ? [fieldVisit,[ CustomValidators.required,CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : fieldVisit,
+      projects: control ? [projects,[ CustomValidators.required,CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : projects,
+      research: control ? [research,[ CustomValidators.required,CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : research,
+      fieldVisit: control ? [fieldVisit,[ CustomValidators.required,CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : fieldVisit,
     };
   }
 }
