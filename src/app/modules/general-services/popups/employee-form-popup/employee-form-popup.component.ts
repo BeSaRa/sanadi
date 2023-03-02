@@ -52,7 +52,7 @@ export class EmployeeFormPopupComponent implements OnInit {
     }),
     workStartDate: DateUtils.getDatepickerOptions({ disablePeriod: "none" }),
     workEndDate: DateUtils.getDatepickerOptions({ disablePeriod: "none" }),
-    ExpIdPass: DateUtils.getDatepickerOptions({ disablePeriod: "none" }),
+    expIdPass: DateUtils.getDatepickerOptions({ disablePeriod: "none" }),
   };
   GenderList: Lookup[] = this.lookupService.listByCategory.Gender.slice().sort(
     (a, b) => a.lookupKey - b.lookupKey
@@ -178,7 +178,7 @@ export class EmployeeFormPopupComponent implements OnInit {
       workStartDate: [null, CustomValidators.required],
       workEndDate: [null],
       jobNumber: [null, [CustomValidators.maxLength(50)]],
-      ExpIdPass: [null, CustomValidators.required],
+      expIdPass: [null, CustomValidators.required],
       functionalGroup: [null, CustomValidators.required],
     });
     this.data.employees.forEach((ei, i) => {

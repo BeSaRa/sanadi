@@ -38,18 +38,18 @@
           " />
         <app-field-error-message controlName="identificationNumber"></app-field-error-message>
       </div>
-      <!-- ExpIdPass -->
+      <!-- expIdPass -->
       <div class="col-sm-6 col-md-4 mb-4 position-relative"
         *ngIf="isIdentificationNumberType() || isPassportNumberType()">
-        <label for="ExpIdPass" asteriskIfRequired="ExpIdPass" class="form-label">{{
+        <label for="expIdPass" asteriskIfRequired="expIdPass" class="form-label">{{
           isIdentificationNumberType() ? lang.map.identification_number_exp_date : lang.map.passport_number_exp_date
           }}</label>
         <div class="input-group">
           <i class="input-group-text mdi mdi-calendar"></i>
-          <div class="form-control" formControlName="ExpIdPass" id="ExpIdPass"
-            [options]="datepickerOptionsMap.ExpIdPass" (click)="openDateMenu(dpExpIdPass)"
-            #dpExpIdPass="angular-mydatepicker" angular-mydatepicker validationClasses="ExpIdPass"></div>
-          <app-field-error-message controlName="ExpIdPass"></app-field-error-message>
+          <div class="form-control" formControlName="expIdPass" id="expIdPass"
+            [options]="datepickerOptionsMap.expIdPass" (click)="openDateMenu(dpexpIdPass)"
+            #dpexpIdPass="angular-mydatepicker" angular-mydatepicker validationClasses="expIdPass"></div>
+          <app-field-error-message controlName="expIdPass"></app-field-error-message>
         </div>
       </div>
       <!-- arabicName -->
