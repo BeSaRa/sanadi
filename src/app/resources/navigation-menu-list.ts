@@ -430,7 +430,7 @@ export const navigationMenuList = [
     itemOrder: 6,
     svg: null
   },
-  {
+  /*{
     id: 33,
     langKey: 'menu_internal_project_license',
     path: '/home/projects/internal-project-license',
@@ -443,7 +443,7 @@ export const navigationMenuList = [
     group: 'projects',
     itemOrder: 1,
     svg: null
-  },
+  },*/
   {
     id: 34,
     langKey: 'menu_projects_models',

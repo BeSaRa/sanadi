@@ -94,7 +94,7 @@ const officeServicesPermissionsGroup: EServicePermissionsEnum[] = [
 ];
 
 const projectServicesPermissionsGroup: EServicePermissionsEnum[] = [
-  EServicePermissionsEnum.INTERNAL_PROJECT_LICENSE,
+  // EServicePermissionsEnum.INTERNAL_PROJECT_LICENSE,
   EServicePermissionsEnum.EXTERNAL_PROJECT_MODELS,
   EServicePermissionsEnum.INTERNAL_BANK_ACCOUNT_APPROVAL,
   EServicePermissionsEnum.URGENT_JOINT_RELIEF_CAMPAIGN,

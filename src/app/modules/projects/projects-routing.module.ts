@@ -12,6 +12,7 @@ import {
   EServiceComponentWrapperComponent
 } from '@app/shared/components/e-service-component-wrapper/e-service-component-wrapper.component';
 import {CountryResolver} from "@app/resolvers/country.resolver";
+import {ErrorPageComponent} from '@app/shared/components/error-page/error-page.component';
 
 const routes: Routes = [
   {path: '', component: ProjectsComponent},
@@ -26,7 +27,7 @@ const routes: Routes = [
       render: 'ProjectModelComponent'
     },
   },
-  {
+  /*{
     path: 'internal-project-license', component: EServiceComponentWrapperComponent,
     canActivate: [ServicesGuard],
     resolve: {info: ServiceItemResolver},
@@ -36,7 +37,7 @@ const routes: Routes = [
       checkAnyPermission: false,
       render: 'InternalProjectLicenseComponent'
     }
-  },
+  },*/
   {
     path: 'internal-bank-account', component: EServiceComponentWrapperComponent,
     canActivate: [ServicesGuard],
@@ -102,6 +103,10 @@ const routes: Routes = [
       checkAnyPermission: false,
       render: 'ProjectImplementationComponent'
     }
+  },
+  {
+    path: '**',
+    component: ErrorPageComponent
   }
 ];
 
