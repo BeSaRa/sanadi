@@ -115,7 +115,6 @@ export class ContactOfficerComponent implements OnInit, OnDestroy {
 
   private listenToChange() {
     this.changed$.pipe(takeUntil(this.destroy$)).subscribe((record) => {
-      console.log(record)
       this.current = record || undefined;
       this.showForm = !!this.current;
       this.updateForm(this.current);
