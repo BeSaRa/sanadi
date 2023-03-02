@@ -21,6 +21,8 @@
     </tab>
     <tab [name]="tabsData.mol.name" [template]="MOLTemplate" [title]="lang.map[tabsData.mol.langKey]"
       (onExpand)="onTabChange($event)"></tab>
+    <tab [name]="tabsData.sjc.name" [template]="SJCTemplate" [title]="lang.map[tabsData.sjc.langKey]"
+      (onExpand)="onTabChange($event)"></tab>
   </tabs-list>
   <ng-template #MOJTemplate>
     <integration-inquiry-log-list #mojLogsComponent [gdxServiceId]="gdxServicesEnum.MOJ" [beneficiary]="beneficiary"
@@ -98,6 +100,16 @@
       <h6 class="text-primary">{{lang.map.payroll_report}}</h6>
       <hr class="mt-0">
       <mol-related-data-list [list]="relatedData[gdxServiceRelatedTypesEnum.MOL_RELATED_DATA]"></mol-related-data-list>
+    </div>
+  </ng-template>
+  <ng-template #SJCTemplate>
+    <integration-inquiry-log-list #sjcLogsComponent [gdxServiceId]="gdxServicesEnum.SJC" [beneficiary]="beneficiary"
+      (onSelect)="selectLog($event)" (onLoadDone)="loadRecordsDone($event)"
+      (onReady)="setLookupComponentMap($event, sjcLogsComponent)"></integration-inquiry-log-list>
+    <div id="sjcRelatedDataContainer">
+      <h6 class="text-primary">{{lang.map.marital_status}}</h6>
+      <hr class="mt-0">
+      <sjc-related-data-list [list]="relatedData[gdxServiceRelatedTypesEnum.SJC_RELATED_DATA]"></sjc-related-data-list>
     </div>
   </ng-template>
 </ng-template>

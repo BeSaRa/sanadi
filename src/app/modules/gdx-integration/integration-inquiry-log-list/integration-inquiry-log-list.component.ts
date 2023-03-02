@@ -129,6 +129,9 @@ export class IntegrationInquiryLogListComponent {
       case GdxServicesEnum.MOL:
         request = this.beneficiaryService.addMOLInquiry(this._getGDXCriteria());
         break;
+      case GdxServicesEnum.SJC:
+        request = this.beneficiaryService.addSJCInquiry(this._getGDXCriteria());
+        break;
       default:
         request = null;
         break;
