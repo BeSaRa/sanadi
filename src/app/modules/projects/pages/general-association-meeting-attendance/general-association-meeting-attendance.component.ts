@@ -322,7 +322,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   }
 
   private setDatePeriodValidation() {
-    if (this.operation === OperationTypes.CREATE || this.model?.isCharityManagerReviewStep() || this.model?.isSupervisionAndControlReviewStep() || this.model?.isSupervisionManagerReviewStep() || this.model?.isSupervisionAndControlReworkStep()) {
+    if (this.operation === OperationTypes.CREATE || this.model?.caseStatus === this.commonCaseStatus.DRAFT || this.model?.caseStatus === this.commonCaseStatus.NEW || this.model?.isCharityManagerReviewStep() || this.model?.isSupervisionAndControlReviewStep() || this.model?.isSupervisionManagerReviewStep() || this.model?.isSupervisionAndControlReworkStep()) {
       this.datepickerOptionsMap = {
         meetingDate: DateUtils.getDatepickerOptions({ disablePeriod: 'past' })
       };
@@ -548,6 +548,8 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
         // delete id property
         let tempObj = _info.details as any;
         delete tempObj.id;
+        tempObj.npoApproved = false;
+        tempObj.isSendToMember = false;
         _info.details = new GeneralAssociationMeetingAttendance().clone(tempObj);
 
         this.hasSearchedForLicense = true;

@@ -81,7 +81,7 @@ export class BankAccount extends SearchableCloneable<BankAccount> {
               iBan,
               [
                 CustomValidators.required,
-                CustomValidators.number,
+                CustomValidators.pattern('ENG_NUM_ONLY'),
                 CustomValidators.maxLength(
                   CustomValidators.defaultLengths.SWIFT_CODE_MAX
                 ),

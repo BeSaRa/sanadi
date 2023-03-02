@@ -226,7 +226,9 @@ GeneralProcessNotificationService
       this.departmentField.setValue(process?.departmentId);
     } else {
       this.departmentField.setValidators([Validators.required])
+      const departmentFieldValue = this.departmentField.value;
       this.departmentField.reset();
+      this.departmentField.setValue(departmentFieldValue);
     }
     this.processFieldBuilder.generateFromString(process?.template);
     this.sampleDataForOperationsFormGroup.reset();

@@ -96,7 +96,7 @@
                  validationClasses="durationInDays"
                  formControlName="durationInDays" class="form-control"
                  maxlength="3"
-                 [mask]="inputMaskPatterns.NUMBER_ONLY">
+                 type="number">
           <app-field-error-message controlName="durationInDays"></app-field-error-message>
         </div>
         <div class="col-sm-6 position-relative">
@@ -106,7 +106,7 @@
                  validationClasses="durationInHours"
                  formControlName="durationInHours" class="form-control"
                  maxlength="3"
-                 [mask]="inputMaskPatterns.NUMBER_ONLY">
+                 type="number">
           <app-field-error-message controlName="durationInHours"></app-field-error-message>
         </div>
       </div>
@@ -330,7 +330,7 @@
       <div class="row mb-3" *ngIf="isInternalUser">
         <div class="col-sm-12 position-relative">
           <label asteriskIfRequired="comments" for="comments"
-                 class="form-label">{{lang.map.training_comments}}</label>
+                 class="form-label">{{lang.map.training_notes}}</label>
           <textarea id="comments"
                     validationClasses="comments"
                     formControlName="comments"
@@ -546,7 +546,7 @@
           class="btn btn-primary">{{lang.map.training_program_save_and_approve}}</button>
   <!--  <button [disabled]="saveDisabled()" *ngIf="showPublishButton()" (click)="publish$.next()" class="btn btn-primary">{{lang.map.training_program_publish}}</button>-->
   <button [disabled]="saveDisabled()" *ngIf="showSaveAndPublishButton()" (click)="saveAndPublish()"
-          class="btn btn-primary">{{lang.map.training_program_save_and_publish}}</button>
+          class="btn btn-primary">{{lang.map.training_program_save_and_advertise}}</button>
   <button [disabled]="saveDisabled()" *ngIf="showSaveAndRePublishButton()" (click)="saveAndRePublish()"
           class="btn btn-primary">{{lang.map.training_program_save_and_republish}}</button>
   <button *ngIf="showCancelTrainingProgramButton()" (click)="cancelProgram($event)"

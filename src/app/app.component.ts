@@ -18,6 +18,11 @@ export class AppComponent {
               private employeeService: EmployeeService,
               private navigationService: NavigationService) {
     this.navigationService.listenRouteChange();
+    this.setHeadTitle()
+  }
+
+  setHeadTitle(){
+    this.langService.changeTitle()
   }
 
   @HostListener('window:keydown.control.alt.l')

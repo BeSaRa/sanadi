@@ -13,9 +13,11 @@ import {CustomsExemptionRemittance} from '@app/models/customs-exemption-remittan
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 import {CustomsExemptionRemittanceService} from '@services/customs-exemption-remittance.service';
 import {InternalBankAccountApproval} from '@app/models/internal-bank-account-approval';
-import {BankAccountRequestTypes} from '@app/enums/service-request-types';
+import {BankAccountRequestTypes, ServiceRequestTypes} from '@app/enums/service-request-types';
 import {GeneralAssociationMeetingAttendance} from '@app/models/general-association-meeting-attendance';
 import {GeneralAssociationMeetingAttendanceService} from '@services/general-association-meeting-attendance.service';
+import {SubmissionMechanisms} from '@app/enums/submission-mechanisms.enum';
+import {ProjectImplementation} from '@models/project-implementation';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -51,7 +53,9 @@ export class CaseInfoComponent {
     CaseTypes.AWARENESS_ACTIVITY_SUGGESTION,
     CaseTypes.PROJECT_FUNDRAISING,
     CaseTypes.FOREIGN_COUNTRIES_PROJECTS,
-    CaseTypes.PROJECT_IMPLEMENTATION
+    CaseTypes.PROJECT_IMPLEMENTATION,
+    CaseTypes.FINANCIAL_TRANSFERS_LICENSING,
+    CaseTypes.ORGANIZATION_ENTITIES_SUPPORT
   ];
 
   // this should be updated when ever you will add a new document service
@@ -95,7 +99,7 @@ export class CaseInfoComponent {
   get generatedDocumentNumber(): string {
     if (this.model.getCaseType() === CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE) {
       return (this.model as CustomsExemptionRemittance).exportedBookFullSerial || '';
-    } else if(this.model.getCaseType() === CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE) {
+    } else if (this.model.getCaseType() === CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE) {
       return (this.model as GeneralAssociationMeetingAttendance).fullSerial || '';
     } else {
       return '';
@@ -122,24 +126,36 @@ export class CaseInfoComponent {
   }
 
   isLicenseCase(): boolean {
+    if (!this.licenseCasList.includes(this.model.getCaseType())) {
+      return false;
+    }
+    const caseStatus = this.model.getCaseStatus();
     if (this.model.caseType === CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL) {
-      return this.licenseCasList.includes(this.model.getCaseType()) && this.model.getCaseStatus() === CommonCaseStatus.FINAL_APPROVE && (this.model as InternalBankAccountApproval).requestType !== BankAccountRequestTypes.CANCEL;
+      return caseStatus === CommonCaseStatus.FINAL_APPROVE && (this.model as InternalBankAccountApproval).requestType !== BankAccountRequestTypes.CANCEL;
+    } else if (this.model.caseType === CaseTypes.PROJECT_IMPLEMENTATION) {
+      if (caseStatus === CommonCaseStatus.FINAL_REJECTION) {
+        return ((this.model as ProjectImplementation).requestType === ServiceRequestTypes.NEW && this.model.submissionMechanism === SubmissionMechanisms.REGISTRATION);
+      }
+      return (caseStatus === CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.UNDER_EXAMINATION);
     } else {
-      return this.licenseCasList.includes(this.model.getCaseType()) && this.model.getCaseStatus() === CommonCaseStatus.FINAL_APPROVE;
+      return caseStatus === CommonCaseStatus.FINAL_APPROVE;
     }
   }
 
   isDocumentCase(): boolean {
     return this.documentCasList.includes(this.model.getCaseType()) && this.model.getCaseStatus() === CommonCaseStatus.FINAL_APPROVE;
   }
+
   isGeneralAssociationMeetingAttendanceInitApproveCase() {
     return this.model.getCaseType() == CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE && this.model.getCaseStatus() === CommonCaseStatus.INITIAL_APPROVE;
   }
+
   viewGeneralAssociationMeetingAttendanceInitApproveDocument(): void {
     (this.generalAssociationMeetingAttendanceService)
       .generateInitDocument(this.model.getCaseId())
       .subscribe((blob) => window.open(blob.url));
   }
+
   viewGeneratedLicense(): void {
     if (!this.generatedLicenseId) {
       return;

@@ -1,4 +1,4 @@
-import { Lookup } from './../../../models/lookup';
+import { Lookup } from '@models/lookup';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
@@ -24,10 +24,11 @@ import { filter, map, take, takeUntil, tap } from 'rxjs/operators';
 })
 export class ExecutiveManagementComponent implements OnInit {
   @Input() showHeader: boolean = true;
+
   constructor(public lang: LangService,
-              private toastService: ToastService,
-              private dialogService: DialogService,
-              private fb: UntypedFormBuilder) {
+    private toastService: ToastService,
+    private dialogService: DialogService,
+    private fb: UntypedFormBuilder) {
   }
 
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();
@@ -41,14 +42,23 @@ export class ExecutiveManagementComponent implements OnInit {
   get list(): ExecutiveManagement[] {
     return this._list;
   }
+
   @Input() nationalities: Lookup[] = [];
   @Input() countriesList: Country[] = [];
   @Input() readonly: boolean = false;
   @Input() pageTitleKey: keyof ILanguageKeys = 'managers';
+  @Input() hidePassport: boolean = false;
 
-  dataSource: BehaviorSubject<ExecutiveManagement[]> = new BehaviorSubject<
-  ExecutiveManagement[]
->([]);  columns = ['arabicName', 'englishName', 'email','actions'];
+  dataSource: BehaviorSubject<ExecutiveManagement[]> = new BehaviorSubject<ExecutiveManagement[]>([]);
+  private columns = ['arabicName', 'englishName', 'email', 'passportNumber', 'actions'];
+
+  get displayColumns(): string[] {
+    if (this.hidePassport) {
+      return this.columns.filter(x => x !== 'passportNumber');
+    }
+    return this.columns;
+  }
+
   editItem?: ExecutiveManagement;
   showForm: boolean = false;
   viewOnly: boolean = false;
@@ -90,13 +100,14 @@ export class ExecutiveManagementComponent implements OnInit {
     }
   ];
   sortingCallbacks = {
-    country: (a: ExecutiveManagement, b: ExecutiveManagement, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a) ? '' : a.countryInfo.getName().toLowerCase(),
-        value2 = !CommonUtils.isValidValue(b) ? '' : b.countryInfo.getName().toLowerCase();
+    nationality: (a: ExecutiveManagement, b: ExecutiveManagement, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.nationalityInfo.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.nationalityInfo.getName().toLowerCase();
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     },
 
   }
+
   ngOnInit(): void {
     this.dataSource.next(this.list);
     this.buildForm();
@@ -155,6 +166,7 @@ export class ExecutiveManagementComponent implements OnInit {
     }
     this.save$.next();
   }
+
   private displayRequiredFieldsMessage(): void {
     this.dialogService
       .error(this.lang.map.msg_all_required_fields_are_filled)
@@ -163,6 +175,7 @@ export class ExecutiveManagementComponent implements OnInit {
         this.form.markAllAsTouched();
       });
   }
+
   private listenToSave() {
     this.save$
       .pipe(
@@ -181,7 +194,7 @@ export class ExecutiveManagementComponent implements OnInit {
         }),
         map(() => {
           let formValue = this.form.getRawValue();
-          let countryInfo: AdminResult =
+          let nationalityInfo: AdminResult =
             this.countriesList
               .find((x) => x.id === formValue.country)
               ?.createAdminResult() ?? new AdminResult();
@@ -189,7 +202,7 @@ export class ExecutiveManagementComponent implements OnInit {
           return new ExecutiveManagement().clone({
             ...this.current,
             ...formValue,
-            countryInfo: countryInfo,
+            nationalityInfo: nationalityInfo,
           });
         })
       )
@@ -258,6 +271,7 @@ export class ExecutiveManagementComponent implements OnInit {
         }
       });
   }
+
   cancel() {
     this.resetForm();
     this.showForm = false;

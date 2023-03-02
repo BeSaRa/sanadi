@@ -97,7 +97,13 @@
           <ng-container cdkColumnDef="actions">
             <th cdk-header-cell *cdkHeaderCellDef></th>
             <td cdk-cell class="table-actions" *cdkCellDef="let row">
-              <inbox-grid-actions [actions]="gridActions" [model]="row"></inbox-grid-actions>
+              <div class="d-flex">
+                <inbox-grid-actions [actions]="gridActions" [model]="row"></inbox-grid-actions>
+                <div class="vr"></div>
+                <button [tooltip]="lang.map.more" (click)="menu.open($event , row, undefined , true)" class="btn p-0 icon-btn">
+                  <i class="mdi mdi-dots-vertical text-primary"></i>
+                </button>
+              </div>
             </td>
           </ng-container>
           <tr cdk-header-row *cdkHeaderRowDef="headerColumn"></tr>

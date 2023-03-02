@@ -131,11 +131,11 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
       ]] : targetAudienceListIds,
       durationInDays: controls ? [durationInDays, [
         CustomValidators.required,
-        CustomValidators.pattern('ENG_NUM_ONLY')
+        CustomValidators.pattern('NUM_HYPHEN_COMMA')
       ]] : durationInDays,
       durationInHours: controls ? [durationInHours, [
         CustomValidators.required,
-        CustomValidators.pattern('ENG_NUM_ONLY')
+        CustomValidators.pattern('NUM_HYPHEN_COMMA')
       ]] : durationInHours,
       averageDurationInHours: controls ? [averageDurationInHours, [
         CustomValidators.required,

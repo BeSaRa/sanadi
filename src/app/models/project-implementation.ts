@@ -23,6 +23,13 @@ import {ImplementingAgencyInterceptor} from "@model-interceptors/implementing-ag
 import {DateUtils} from "@helpers/date-utils";
 import {IMyDateModel} from "angular-mydatepicker";
 import {ImplementationFundraisingInterceptor} from "@model-interceptors/implementation-fundraising-interceptor";
+import {ISearchFieldsMap} from '@app/types/types';
+import {dateSearchFields} from '@helpers/date-search-fields';
+import {infoSearchFields} from '@helpers/info-search-fields';
+import {normalSearchFields} from '@helpers/normal-search-fields';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {WFResponseType} from '@app/enums/wfresponse-type.enum';
+import {SubmissionMechanisms} from '@app/enums/submission-mechanisms.enum';
 
 const _Approval = mixinApprovalLicenseWithMonthly(mixinRequestType(CaseModel))
 const {send, receive} = new ProjectImplementationInterceptor()
@@ -72,9 +79,24 @@ export class ProjectImplementation
   licenseClassName!: string;
   projectTotalCost: number = 0
 
+  searchFields: ISearchFieldsMap<ProjectImplementation> = {
+    ...dateSearchFields(['createdOn']),
+    ...infoSearchFields(['caseStatusInfo', 'requestTypeInfo', 'ouInfo', 'creatorInfo']),
+    ...normalSearchFields(['fullSerial', 'subject'])
+  };
+
+  finalizeSearchFields(): void {
+    if (this.employeeService.isExternalUser()) {
+      delete this.searchFields.ouInfo;
+      delete this.searchFields.organizationId;
+      delete this.searchFields.organization;
+    }
+  }
+
   constructor() {
     super();
-    this.service = FactoryService.getService('ProjectImplementationService')
+    this.service = FactoryService.getService('ProjectImplementationService');
+    this.finalizeSearchFields();
   }
 
   buildBasicInfo(controls: boolean = false) {
@@ -173,4 +195,25 @@ export class ProjectImplementation
     this.licenseStartDate = !this.licenseStartDate ? this.licenseStartDate : DateUtils.changeDateFromDatepicker(this.licenseStartDate as unknown as IMyDateModel)?.toISOString()!
   }
 
+  approve(): DialogRef {
+    // return [ServiceRequestTypes.CANCEL, ServiceRequestTypes.UPDATE].includes(this.requestType) ? super.approve() : this.service.approveTask(this, WFResponseType.APPROVE);
+    return this.service.approveTask(this, WFResponseType.APPROVE);
+  }
+
+  finalApprove(): DialogRef {
+    // return [ServiceRequestTypes.CANCEL, ServiceRequestTypes.UPDATE].includes(this.requestType) ? super.approve(WFResponseType.FINAL_APPROVE) : this.service.approveTask(this, WFResponseType.FINAL_APPROVE);
+    return this.service.approveTask(this, WFResponseType.FINAL_APPROVE);
+  }
+
+  isSubmissionMechanismNotification(): boolean {
+    return this.submissionMechanism === SubmissionMechanisms.NOTIFICATION;
+  }
+
+  isSubmissionMechanismSubmission(): boolean {
+    return this.submissionMechanism === SubmissionMechanisms.SUBMISSION;
+  }
+
+  isSubmissionMechanismRegistration(): boolean {
+    return this.submissionMechanism === SubmissionMechanisms.REGISTRATION;
+  }
 }

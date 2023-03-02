@@ -1,9 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { LangService } from '@app/services/lang.service';
-import { UrlService } from '@app/services/url.service';
-import { SidebarComponent } from '../sidebar/sidebar.component';
-import { EmployeeService } from '@app/services/employee.service';
-import { Subject } from 'rxjs';
+import {Component, Input, OnInit} from '@angular/core';
+import {LangService} from '@app/services/lang.service';
+import {UrlService} from '@app/services/url.service';
+import {SidebarComponent} from '../sidebar/sidebar.component';
+import {EmployeeService} from '@app/services/employee.service';
+import {Subject} from 'rxjs';
 import {UserPreferencesService} from '@services/user-preferences.service';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule

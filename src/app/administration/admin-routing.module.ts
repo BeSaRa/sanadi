@@ -189,7 +189,7 @@ const routes: Routes = [
   {
     path: 'global-settings', component: GlobalSettingsComponent,
     canActivate: [PermissionGuard],
-    data: {permissionKey: PermissionsEnum.MANAGE_DEDUCTION_RATIO_ITEM, configPermissionGroup: null, checkAnyPermission: false}
+    data: {permissionKey: '', configPermissionGroup: null, checkAnyPermission: false}
   }
 ];
 

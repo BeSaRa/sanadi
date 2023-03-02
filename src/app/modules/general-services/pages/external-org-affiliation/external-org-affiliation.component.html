@@ -322,9 +322,9 @@
       ></bank-account>
     </ng-template>
     <ng-template #executive_management>
-      <executive-management
+      <executive-management [hidePassport]="true"
         #managersTab
-        [countriesList]="countriesList"
+        [nationalities]="nationalities"
         [list]="model?.executiveManagementDTOs || []"
         [readonly]="isCancelRequestType() || readonly"
         (readyEvent)="managersTabStatus = $event"

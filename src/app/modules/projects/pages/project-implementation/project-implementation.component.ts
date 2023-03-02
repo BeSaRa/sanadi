@@ -95,6 +95,12 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
 
   licenseEndDate?: string
 
+  formProperties = {
+    requestType: () => {
+      return this.getObservableField('requestType', 'requestType');
+    }
+  }
+
   constructor(public lang: LangService,
               public fb: UntypedFormBuilder,
               private lookupService: LookupService,
@@ -267,6 +273,11 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
         'payment',
       ])])
     this.handleRequestTypeChange(this.requestType.value)
+
+    if (this.operation !== OperationTypes.CREATE) {
+      this.licenseStartDate.setValue(this.licenseStartDate.value);
+      this.implementingAgencyList.setValue(this.implementingAgencyList.value);
+    }
   }
 
   loadLicenseById(): void {
@@ -340,6 +351,8 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       projectInfo: model.buildProjectInfo(),
       fundingResources: model.buildFundingResources(),
       specialExplanations: model.buildSpecialInfo()
+    }, {
+      emitEvent: !fromSelectedLicense
     })
     this.handleRequestTypeChange(model.requestType)
     this.handleDisplayFields(model)
@@ -447,6 +460,8 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
 
       this._updateForm(model, true);
     }
+    this.licenseStartDate.setValue(this.licenseStartDate.value);
+    this.implementingAgencyList.setValue(this.implementingAgencyList.value);
   }
 
   handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
@@ -458,6 +473,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
         if (userInteraction) {
           this._resetForm()
           this.requestType.setValue(requestTypeValue);
+          this.handleCustomFormReadonly();
         }
         this.requestType$.next(requestTypeValue);
       } else {
@@ -618,7 +634,11 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       .valueChanges
       .pipe(takeUntil(this.destroy$))
       .subscribe((value: ImplementingAgency[]) => {
-        value && value.length ? this.implementingAgencyType.disable() : this.implementingAgencyType.enable()
+        if ((value && value.length) || this.isCancelRequestType() || this.isExtendRequestType() || this.readonly) {
+          this.implementingAgencyType.disable()
+        } else {
+          this.implementingAgencyType.enable()
+        }
       })
   }
 
@@ -683,34 +703,48 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     // if record is new, no readonly (don't change as default is readonly = false)
     const model = this.model!
     if (!model.id) {
+      this.handleCustomFormReadonly();
       return;
     }
 
     let caseStatus = model.getCaseStatus();
-    if (caseStatus == CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.FINAL_REJECTION) {
+    if (caseStatus == CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.FINAL_REJECTION || caseStatus === CommonCaseStatus.CANCELLED) {
       this.readonly = true;
+      this.handleCustomFormReadonly();
       return;
     }
 
     if (this.openFrom === OpenFrom.USER_INBOX) {
-      if (this.employeeService.isCharityManager()) {
-        this.readonly = false;
-      } else if (this.employeeService.isCharityUser()) {
-        this.readonly = !model.isReturned();
-      }
-    } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
-      // after claim, consider it same as user inbox and use same condition
-      if (model.taskDetails.isClaimed()) {
+      if ((this.model?.isSubmissionMechanismNotification() || this.model?.isSubmissionMechanismRegistration()) && this.employeeService.isInternalUser()) {
+        this.readonly = true;
+      } else {
         if (this.employeeService.isCharityManager()) {
           this.readonly = false;
         } else if (this.employeeService.isCharityUser()) {
           this.readonly = !model.isReturned();
         }
       }
+    } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
+      if ((this.model?.isSubmissionMechanismNotification() || this.model?.isSubmissionMechanismRegistration()) && this.employeeService.isInternalUser()) {
+        this.readonly = true;
+      } else {
+        // after claim, consider it same as user inbox and use same condition
+        if (model.taskDetails.isClaimed()) {
+          if (this.employeeService.isCharityManager()) {
+            this.readonly = false;
+          } else if (this.employeeService.isCharityUser()) {
+            this.readonly = !model.isReturned();
+          }
+        }
+      }
     } else if (this.openFrom === OpenFrom.SEARCH) {
-      // if saved as draft, then no readonly
-      if (model?.canCommit()) {
-        this.readonly = false;
+      if (this.model?.isSubmissionMechanismRegistration() || this.model?.isSubmissionMechanismNotification()) {
+        this.readonly = true;
+      } else {
+        // if saved as draft, then no readonly
+        if (model?.canCommit()) {
+          this.readonly = false;
+        }
       }
     }
     this.handleCustomFormReadonly()
@@ -818,19 +852,88 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
   }
 
   private handleCustomFormReadonly() {
-    const customFields = [
-      this.implementationTemplate,
-      this.implementingAgencyList,
-      this.implementationFundraising,
-      this.payment,
-      this.selfFinancing,
-      this.financialGrant,
-      this.licenseStartDate,
-      this.projectEvaluationSLA,
-      this.licenseDuration
-    ]
-    customFields.forEach(item => {
-      this.readonly ? item.disable() : item.enable()
+    const allFields = [
+      {
+        field: this.projectWorkArea,
+        disabled: () => this.isCancelRequestType() || this.isUpdateRequestType() || this.isExtendRequestType()
+      },
+      {
+        field: this.beneficiaryCountry,
+        disabled: () => this.isCancelRequestType() || this.isUpdateRequestType() || this.isExtendRequestType()
+      },
+      {
+        field: this.domain,
+        disabled: () => this.isCancelRequestType() || this.isUpdateRequestType() || this.isExtendRequestType()
+      },
+      {
+        field: this.mainDACCategory,
+        disabled: () => this.isCancelRequestType() || this.isUpdateRequestType() || this.isExtendRequestType()
+      },
+      {
+        field: this.mainUNOCHACategory,
+        disabled: () => this.isCancelRequestType() || this.isUpdateRequestType() || this.isExtendRequestType()
+      },
+      {
+        field: this.subDACCategory,
+        disabled: () => this.isCancelRequestType() || this.isUpdateRequestType() || this.isExtendRequestType()
+      },
+      {
+        field: this.subUNOCHACategory,
+        disabled: () => this.isCancelRequestType() || this.isUpdateRequestType() || this.isExtendRequestType()
+      },
+      {
+        field: this.internalProjectClassification,
+        disabled: () => this.isCancelRequestType() || this.isUpdateRequestType() || this.isExtendRequestType()
+      },
+      {
+        field: this.implementationTemplate,
+        disabled: () => this.isCancelRequestType() || this.isExtendRequestType()
+      },
+      {
+        field: this.implementingAgencyType,
+        disabled: () => this.isCancelRequestType() || this.isExtendRequestType()
+      },
+      {
+        field: this.licenseStartDate,
+        disabled: () => this.isCancelRequestType() || this.isExtendRequestType()
+      },
+      {
+        field: this.projectEvaluationSLA,
+        disabled: () => this.isCancelRequestType() || this.isExtendRequestType()
+      },
+      {
+        field: this.licenseDuration,
+        disabled: () => this.isCancelRequestType() || this.isUpdateRequestType()
+      },
+      {
+        field: this.implementingAgencyList,
+        disabled: () => this.isCancelRequestType() || this.isExtendRequestType()
+      },
+      {
+        field: this.projectTotalCost,
+        disabled: () => this.isCancelRequestType() || this.isExtendRequestType()
+      },
+      {
+        field: this.implementationFundraising,
+        disabled: () => this.isCancelRequestType() || this.isExtendRequestType()
+      },
+      {
+        field: this.financialGrant,
+        disabled: () => this.isCancelRequestType() || this.isExtendRequestType()
+      },
+      {
+        field: this.selfFinancing,
+        disabled: () => this.isCancelRequestType() || this.isExtendRequestType()
+      },
+      {
+        field: this.payment,
+        disabled: () => this.isCancelRequestType() || this.isExtendRequestType()
+      },
+    ];
+
+    allFields.forEach(field => {
+      field.disabled() || this.readonly ? field.field.disable({emitEvent: false}) : field.field.enable({emitEvent: false});
+      field.field.updateValueAndValidity({emitEvent: false});
     })
 
   }
@@ -848,5 +951,17 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       .subscribe(({startDate, duration}) => {
         this.licenseEndDate = duration && startDate ? dayjs(startDate.singleDate?.jsDate).add(duration, 'month').format('YYYY-MM-DD') : '';
       })
+  }
+
+  isUpdateRequestType(): boolean {
+    return this.requestType.value && this.requestType.value === ServiceRequestTypes.UPDATE;
+  }
+
+  isCancelRequestType(): boolean {
+    return this.requestType.value && this.requestType.value === ServiceRequestTypes.CANCEL;
+  }
+
+  isExtendRequestType(): boolean {
+    return this.requestType.value && this.requestType.value === ServiceRequestTypes.EXTEND;
   }
 }

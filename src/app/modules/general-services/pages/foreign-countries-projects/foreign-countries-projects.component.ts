@@ -168,13 +168,13 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
     );
   }
   handleExternalCooperationAuthorityChange(e: any) {
+    this.countryField.reset();
     this.profileCountryService.getCountriesByProfile(e).subscribe((data) => {
       if (data.length == 1) {
         this.countryField.disable();
         this.countryField.setValue(data[0].countryId);
       }
       this.countries = data;
-      console.log(data);
     })
   }
   listenToLicenseSearch(): void {

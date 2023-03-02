@@ -1,10 +1,18 @@
 export interface ILanguageKeys {
+  msg_full_amount_used: string;
+  more: string;
+  msg_terminated_notification: string;
+  notification_user_inbox: string;
+  notification_team_inbox: string;
+  notification_terminated: string;
   logs_history: string;
   the_donor: string;
   city_village: string;
   project_impl_total_cost: string;
   region_territories: string;
   cannot_take_this_action_before_consume_full_permit_amount: string;
+  notifications: string;
+  no_notifications: string;
   project_ar_name: string;
   project_en_name: string;
   fundraising_remaining_amount: string;
@@ -513,6 +521,7 @@ export interface ILanguageKeys {
   training_x_approved_successfully: string;
   msg_confirm_cancel_x: string;
   training_program_save_and_publish: string;
+  training_program_save_and_advertise: string;
   cancel_training_program: string;
   training_program_status: string;
   training_program_publish: string;
@@ -736,6 +745,7 @@ export interface ILanguageKeys {
   pagination_previous: string;
   menu_user_inbox: string;
   save_as_draft: string;
+  save_as_draft_and_continue: string;
   request_body: string;
   full_name: string;
   competent_dep: string;
@@ -1711,7 +1721,7 @@ export interface ILanguageKeys {
   lbl_profile: string;
   lbl_min_limit: string;
   lbl_max_limit: string;
-  lbl_maximum_deduction_ratio: string
+  lbl_maximum_deduction_ratio: string;
   menu_organizations_entities_support: string;
   beneficiaries_type: string;
   beneficiaries_description: string;
@@ -1782,9 +1792,13 @@ export interface ILanguageKeys {
   transfer_number: string;
   transferred_amount: string;
   due_amount: string;
-  total_qatari_riyal_transaction_amount:string;
-  msg_select_project_required:string;
-  task_seen:string;
-  lbl_approve_conditions:string;
-  lbl_other:string;
+  total_qatari_riyal_transaction_amount: string;
+  msg_select_project_required: string;
+  task_seen: string;
+  lbl_approve_conditions: string;
+  lbl_other: string;
+  training_notes:string;
+  msg_only_this_file_size_or_less_allowed_to_upload: string;
+  err_must_have_letters:string;
+  msg_qatari_transaction_should_not_exceed_due_amount:string;
 }

@@ -1,3 +1,5 @@
+import { AdminstrationDepartmentCodes } from './../../../enums/department-code.enum';
+import { CaseTypes } from './../../../enums/case-types.enum';
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { LangService } from '@app/services/lang.service';
 import { DIALOG_DATA_TOKEN } from '../../tokens/tokens';
@@ -36,7 +38,7 @@ export class SendToComponent implements OnInit, OnDestroy {
   WFResponse: typeof WFResponseType = WFResponseType;
   controlName: string = '';
   title: keyof ILanguageKeys = 'send_to_user';
-
+  internationalCooperationAllowedDepartments = [AdminstrationDepartmentCodes.SVC, AdminstrationDepartmentCodes.LCN, AdminstrationDepartmentCodes.RC, AdminstrationDepartmentCodes.IN];
   constructor(
     @Inject(DIALOG_DATA_TOKEN)
     public data: {
@@ -111,7 +113,12 @@ export class SendToComponent implements OnInit, OnDestroy {
   loadDepartments(): void {
     this.intDepService.loadAsLookups()
       .pipe(takeUntil(this.destroy$))
-      .subscribe(deps => this.departments = deps.filter(dep => dep.id !== this.employee.getInternalDepartment()?.id));
+      .subscribe(deps => {
+        this.departments = deps.filter(dep => dep.id !== this.employee.getInternalDepartment()?.id)
+        if (this.data.task.getCaseType() == CaseTypes.INTERNATIONAL_COOPERATION) {
+          this.departments = this.departments.filter(dep => this.internationalCooperationAllowedDepartments.includes(dep.code as AdminstrationDepartmentCodes))
+        }
+      });
   }
 
   private buildForm(): void {

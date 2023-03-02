@@ -134,6 +134,7 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
             subject,
             [
               CustomValidators.required,
+              CustomValidators.pattern('HAS_LETTERS'),
               CustomValidators.maxLength(
                 CustomValidators.defaultLengths.ENGLISH_NAME_MAX
               ),

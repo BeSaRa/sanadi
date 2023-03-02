@@ -112,6 +112,7 @@ import {CustomInputComponent} from '@app/shared/cva/custom-input/custom-input.co
 import {ServiceLogItemLocationComponent} from '@app/shared/components/service-log-item-location/service-log-item-location.component';
 import {ServiceLogListComponent} from '@app/shared/components/service-log-list/service-log-list.component';
 import {HeadingRowComponent} from './components/heading-row/heading-row.component';
+import { HeaderNotificationsComponent } from './components/header-notifications/header-notifications.component';
 
 @NgModule({
   declarations: [
@@ -217,7 +218,8 @@ import {HeadingRowComponent} from './components/heading-row/heading-row.componen
     CustomInputComponent,
     ServiceLogListComponent,
     ServiceLogItemLocationComponent,
-    HeadingRowComponent
+    HeadingRowComponent,
+    HeaderNotificationsComponent
   ],
   imports: [
     CommonModule,

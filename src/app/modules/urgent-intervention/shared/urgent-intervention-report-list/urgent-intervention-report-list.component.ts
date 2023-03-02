@@ -12,6 +12,7 @@ import {DialogRef} from '@app/shared/models/dialog-ref';
 import {UrgentInterventionReportService} from '@services/urgent-intervention-report.service';
 import {AdminGenericComponent} from '@app/generics/admin-generic-component';
 import {ToastService} from '@services/toast.service';
+import {UrgentInterventionLicenseFollowup} from '@models/urgent-intervention-license-followup';
 
 @Component({
   selector: 'urgent-intervention-report-list',
@@ -29,6 +30,7 @@ export class UrgentInterventionReportListComponent extends AdminGenericComponent
   list: UrgentInterventionReport[] = [];
 
   @Input() readonly: boolean = false;
+  @Input() model?: UrgentInterventionLicenseFollowup;
 
   private _documentId: string = '';
   @Input()
@@ -86,7 +88,7 @@ export class UrgentInterventionReportListComponent extends AdminGenericComponent
       type: 'action',
       label: 'launch',
       icon: ActionIconsEnum.LAUNCH,
-      show: (item) => !this.readonly && !item.isLaunched(),
+      show: (item) => !this.readonly && !(item.isLaunched() || item.isApproved()),
       onClick: (item: UrgentInterventionReport) => this.launchReport(item)
     },
   ];
@@ -112,10 +114,25 @@ export class UrgentInterventionReportListComponent extends AdminGenericComponent
   }
 
   showAttachments(item: UrgentInterventionReport): void {
-    item.showAttachments(this.readonly)
+    item.showAttachments(this.readonly || !this.isCurrentRequestReport(item))
       .subscribe((dialog: DialogRef) => {
         dialog.onAfterClose$.subscribe();
       });
+  }
+
+  isCurrentRequestReportHighlight(report: UrgentInterventionReport): boolean {
+    if (!this.model || !this.model.id) {
+      return false;
+    }
+    return this.isCurrentRequestReport(report);
+  }
+
+  isCurrentRequestReport(report: UrgentInterventionReport): boolean {
+    // if no taskDetails or no activityProperties, consider every report as current request report to keep it enabled for editing
+    if (!this.model || !this.model.id || !this.model.taskDetails || !this.model.taskDetails.activityProperties || !this.model.taskDetails.activityProperties['ReportId']) {
+      return true;
+    }
+    return this.model.taskDetails.activityProperties['ReportId'].value === report.id;
   }
 
   launchReport(item: UrgentInterventionReport): void {

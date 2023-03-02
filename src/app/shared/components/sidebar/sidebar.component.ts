@@ -22,13 +22,13 @@ import {EmployeeService} from '@app/services/employee.service';
   animations: [
     trigger('openCloseHoverInOut', [
       state('opened', style({
-        width: '250px'
+        width: '300px'
       })),
       state('closed', style({
         width: '60px'
       })),
       state('hoverIn', style({
-        width: '250px'
+        width: '300px'
       })),
       state('hoverOut', style({
         width: '60px'

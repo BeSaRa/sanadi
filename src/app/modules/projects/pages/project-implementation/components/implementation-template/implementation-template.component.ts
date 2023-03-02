@@ -9,6 +9,8 @@ import {DialogService} from "@services/dialog.service";
 import {UserClickOn} from "@app/enums/user-click-on.enum";
 import {ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, UntypedFormControl} from "@angular/forms";
 import {CustomValidators} from "@app/validators/custom-validators";
+import {ServiceRequestTypes} from '@app/enums/service-request-types';
+import {CommonUtils} from '@helpers/common-utils';
 
 @Component({
   selector: 'implementation-template',
@@ -61,7 +63,7 @@ export class ImplementationTemplateComponent implements OnDestroy, OnInit, Contr
   }
 
   writeValue(value: ImplementationTemplate[]): void {
-    this.value = value
+    this.value = value ?? []
   }
 
   registerOnChange(fn: (value: ImplementationTemplate[]) => void): void {
@@ -131,7 +133,7 @@ export class ImplementationTemplateComponent implements OnDestroy, OnInit, Contr
   }
 
   removeTemplate(template: ImplementationTemplate) {
-    if (this.disabled) return;
+    if (this.disabled || this.isUpdateRequestType()) return;
     this.dialog
       .confirm(this.lang.map.msg_delete_x_success.change({x: template.templateName}))
       .onAfterClose$
@@ -141,5 +143,9 @@ export class ImplementationTemplateComponent implements OnDestroy, OnInit, Contr
         this.onChange(this.value)
         this.change.emit(this.value)
       })
+  }
+
+  isUpdateRequestType(): boolean {
+    return CommonUtils.isValidValue(this.requestType) && this.requestType === ServiceRequestTypes.UPDATE;
   }
 }

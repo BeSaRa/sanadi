@@ -1,3 +1,4 @@
+import {BankAccountEnNameKeys} from './../../../../enums/bank-account-operation-types';
 import {Component} from '@angular/core';
 import {AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {OperationTypes} from '@app/enums/operation-types.enum';
@@ -442,7 +443,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   }
 
   onSelectNewRequestType() {
-    this.flexBankOperationTypes = this.bankOperationTypesWithoutCancel;
+    this.flexBankOperationTypes = this.bankOperationTypesWithoutCancel.filter((bot => bot.enName != BankAccountEnNameKeys.Account));
     this.enableCancelAccountFields();
     this.enableNewNewAccountFields();
     this.disableNewNewAccountFields();
@@ -467,7 +468,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   }
 
   onSelectUpdateRequestType() {
-    this.flexBankOperationTypes = this.bankOperationTypesWithoutCancel;
+    this.flexBankOperationTypes = this.bankOperationTypesWithoutCancel.filter((bot => bot.enName != BankAccountEnNameKeys.NEW_ACCOUNT));
     this.enableSearchField();
     this.enableCancelAccountFields();
     this.isCancel = false;

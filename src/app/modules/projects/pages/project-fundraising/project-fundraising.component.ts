@@ -1,15 +1,15 @@
-import {Component} from '@angular/core';
-import {AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {SaveTypes} from '@app/enums/save-types';
-import {EServicesGenericComponent} from "@app/generics/e-services-generic-component";
-import {ProjectFundraising} from "@app/models/project-fundraising";
-import {ProjectFundraisingService} from "@services/project-fundraising.service";
-import {combineLatest, iif, merge, Observable, of, ReplaySubject, Subject} from 'rxjs';
-import {Lookup} from "@app/models/lookup";
-import {LookupService} from "@services/lookup.service";
-import {LangService} from "@services/lang.service";
-import {Country} from "@app/models/country";
+import { Component } from '@angular/core';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { SaveTypes } from '@app/enums/save-types';
+import { EServicesGenericComponent } from "@app/generics/e-services-generic-component";
+import { ProjectFundraising } from "@app/models/project-fundraising";
+import { ProjectFundraisingService } from "@services/project-fundraising.service";
+import { combineLatest, iif, merge, Observable, of, ReplaySubject, Subject } from 'rxjs';
+import { Lookup } from "@app/models/lookup";
+import { LookupService } from "@services/lookup.service";
+import { LangService } from "@services/lang.service";
+import { Country } from "@app/models/country";
 import {
   catchError,
   delay,
@@ -23,31 +23,31 @@ import {
   takeUntil,
   tap
 } from "rxjs/operators";
-import {ProjectWorkArea} from "@app/enums/project-work-area";
-import {ProjectPermitTypes} from "@app/enums/project-permit-types";
-import {ServiceRequestTypes} from "@app/enums/service-request-types";
-import {DialogService} from "@services/dialog.service";
-import {ToastService} from "@services/toast.service";
-import {DomainTypes} from "@app/enums/domain-types";
-import {EmployeeService} from "@services/employee.service";
-import {ProfileTypes} from "@app/enums/profile-types.enum";
-import {Profile} from "@app/models/profile";
-import {ActivatedRoute} from "@angular/router";
-import {AidLookupService} from "@services/aid-lookup.service";
-import {AidLookup} from "@app/models/aid-lookup";
-import {CustomValidators} from "@app/validators/custom-validators";
-import {DacOchaService} from "@services/dac-ocha.service";
-import {AdminLookup} from "@app/models/admin-lookup";
-import {ProjectTemplate} from "@app/models/projectTemplate";
-import {UserClickOn} from "@app/enums/user-click-on.enum";
-import {CommonCaseStatus} from "@app/enums/common-case-status.enum";
-import {OpenFrom} from "@app/enums/open-from.enum";
-import {CommonUtils} from "@helpers/common-utils";
-import {FundraisingProjectTypes} from "@app/enums/fundraising-project-types";
-import {LicenseService} from "@services/license.service";
-import {TemplateStatus} from "@app/enums/template-status";
-import {ServiceDataService} from "@services/service-data.service";
-import {ServiceData} from "@app/models/service-data";
+import { ProjectWorkArea } from "@app/enums/project-work-area";
+import { ProjectPermitTypes } from "@app/enums/project-permit-types";
+import { ServiceRequestTypes } from "@app/enums/service-request-types";
+import { DialogService } from "@services/dialog.service";
+import { ToastService } from "@services/toast.service";
+import { DomainTypes } from "@app/enums/domain-types";
+import { EmployeeService } from "@services/employee.service";
+import { ProfileTypes } from "@app/enums/profile-types.enum";
+import { Profile } from "@app/models/profile";
+import { ActivatedRoute } from "@angular/router";
+import { AidLookupService } from "@services/aid-lookup.service";
+import { AidLookup } from "@app/models/aid-lookup";
+import { CustomValidators } from "@app/validators/custom-validators";
+import { DacOchaService } from "@services/dac-ocha.service";
+import { AdminLookup } from "@app/models/admin-lookup";
+import { ProjectTemplate } from "@app/models/projectTemplate";
+import { UserClickOn } from "@app/enums/user-click-on.enum";
+import { CommonCaseStatus } from "@app/enums/common-case-status.enum";
+import { OpenFrom } from "@app/enums/open-from.enum";
+import { CommonUtils } from "@helpers/common-utils";
+import { FundraisingProjectTypes } from "@app/enums/fundraising-project-types";
+import { LicenseService } from "@services/license.service";
+import { TemplateStatus } from "@app/enums/template-status";
+import { ServiceDataService } from "@services/service-data.service";
+import { ServiceData } from "@app/models/service-data";
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -214,12 +214,12 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   _afterSave(model: ProjectFundraising, saveType: SaveTypes, operation: OperationTypes): void {
-    this.model = model.clone<ProjectFundraising>({taskDetails: this.model?.taskDetails});
+    this.model = model.clone<ProjectFundraising>({ taskDetails: this.model?.taskDetails });
 
     if (
       [OperationTypes.CREATE, OperationTypes.UPDATE].includes(operation) && [SaveTypes.FINAL, SaveTypes.COMMIT].includes(saveType)
     ) {
-      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({serial: model.fullSerial}));
+      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({ serial: model.fullSerial }));
     } else {
       this.toast.success(this.lang.map.request_has_been_saved_successfully);
     }
@@ -287,7 +287,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   private markRequired(fields: AbstractControl[], emitEvent: boolean = false): boolean {
     fields.forEach(field => {
       field.setValidators(CustomValidators.required)
-      field.updateValueAndValidity({emitEvent})
+      field.updateValueAndValidity({ emitEvent })
     })
     return true
   }
@@ -295,14 +295,14 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   private markNotRequired(fields: AbstractControl[], emitEvent: boolean = false): boolean {
     fields.forEach(field => {
       field.removeValidators(CustomValidators.required)
-      field.updateValueAndValidity({emitEvent})
+      field.updateValueAndValidity({ emitEvent })
     })
     return true
   }
 
   // noinspection JSUnusedLocalSymbols
   private emptyFields(fields: AbstractControl[], emitEvent: boolean = false): boolean {
-    fields.forEach(field => field.setValue(null, {emitEvent}))
+    fields.forEach(field => field.setValue(null, { emitEvent }))
     return true
   }
 
@@ -413,7 +413,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   private loadSanadyDomains(): void {
-    this.aidLookupService.loadByCriteria({parent: null})
+    this.aidLookupService.loadByCriteria({ parent: null })
       .subscribe((list) => {
         this.sanadyDomains = list
       })
@@ -426,15 +426,23 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
 
   private openAddTemplatePopup(): void {
     if (!(this.countriesField.value as []).length) {
-      this.dialog.error(this.lang.map.msg_please_select_x_to_continue.change({x: this.lang.map.country_countries}))
+      this.dialog.error(this.lang.map.msg_please_select_x_to_continue.change({ x: this.lang.map.country_countries }))
       return;
     }
 
     this.service
       .openDialogSearchTemplate(this.getSearchTemplateCriteria(), this.projectWorkArea.value, this.model?.getTemplate())
       .pipe(switchMap(dialog => dialog.onAfterClose$))
-      .subscribe((template: ProjectTemplate | undefined) => {
-        this.model && template && this.model.setTemplate(template) && this.model.setProjectTotalCost(template.templateCost) && this.projectTotalCost.setValue(template.templateCost, {emitEvent: false})
+      .pipe(filter(temp => !!temp))
+      .pipe(switchMap((template: ProjectTemplate) => {
+        return this.service.validateTemplate({ templateId: template.templateId, caseId: this.model?.getCaseId() }).pipe(
+          filter((valid) => {
+            return !!valid
+          }))
+          .pipe(map((_) => template))
+      }))
+      .subscribe((template: ProjectTemplate) => {
+        this.model && template && this.model.setTemplate(template as ProjectTemplate) && this.model.setProjectTotalCost(template.templateCost) && this.projectTotalCost.setValue(template.templateCost, { emitEvent: false })
       })
   }
 
@@ -467,7 +475,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     return Object.entries(this.projectWorkArea.value === ProjectWorkArea.INSIDE_QATAR ? internal : external)
       .reduce((acc, [key, controlName]: [string, string]) => {
         const control = this[(controlName as keyof this)] as AbstractControl
-        return {...acc, [key]: control.getRawValue()}
+        return { ...acc, [key]: control.getRawValue() }
       }, {})
   }
 
@@ -483,7 +491,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       )
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
-        this.model && this.model.clearTemplate() && this.model.setProjectTotalCost(0) && this.projectTotalCost.setValue(0, {emitEvent: false})
+        this.model && this.model.clearTemplate() && this.model.setProjectTotalCost(0) && this.projectTotalCost.setValue(0, { emitEvent: false })
         this.clearDeductionItems = true;
       })
   }
@@ -588,8 +596,8 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   isAllHasSameTargetAmount(): Observable<boolean> {
-    const countriesMessage = this.lang.map.make_sure_that_x_sum_equal_to_target_amount.change({x: this.lang.map.country_countries})
-    const yearsMessage = this.lang.map.make_sure_that_x_sum_equal_to_target_amount.change({x: this.lang.map.year_s})
+    const countriesMessage = this.lang.map.make_sure_that_x_sum_equal_to_target_amount.change({ x: this.lang.map.country_countries })
+    const yearsMessage = this.lang.map.make_sure_that_x_sum_equal_to_target_amount.change({ x: this.lang.map.year_s })
     const model = this.model!
     return of(model)
       .pipe(map(_ => this.displayAllFields ? model.targetAmount === model.calculateAllCountriesAmount() : true))
@@ -644,7 +652,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   private openSelectLicense(licenses: ProjectFundraising[]): Observable<undefined | ProjectFundraising> {
-    return this.licenseService.openSelectLicenseDialog(licenses, this.model?.clone({requestType: this.requestType.value || null}), true, this.service.selectLicenseDisplayColumns)
+    return this.licenseService.openSelectLicenseDialog(licenses, this.model?.clone({ requestType: this.requestType.value || null }), true, this.service.selectLicenseDisplayColumns)
       .onAfterClose$
       .pipe(map((result: ({ selected: ProjectFundraising, details: ProjectFundraising } | undefined)) => result ? result.details : result));
   }
@@ -700,7 +708,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       this.sanadyMainClassifications = []
       return
     }
-    this.aidLookupService.loadByCriteria({parent: parentId}).subscribe((list) => {
+    this.aidLookupService.loadByCriteria({ parent: parentId }).subscribe((list) => {
       this.sanadyMainClassifications = list
     })
   }
@@ -795,14 +803,14 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       this.markRequired([this.projectType])
       this.displaySanadySection ? this.markRequired(sanadyFields) : this.markNotRequired(sanadyFields)
       this.displayInternalSection ? this.markRequired([this.internalProjectClassification]) : this.markNotRequired([this.internalProjectClassification])
-      this.countriesField.disable({emitEvent: false})
+      this.countriesField.disable({ emitEvent: false })
     })()
 
     this.displayOutsideQatar && this.markNotRequired(insideFields) && (() => {
       this.markRequired([this.domain])
       this.displayDacSection ? this.markRequired(dacFields) : this.markNotRequired(dacFields)
       this.displayOchaSection ? this.markRequired(ochaFields) : this.markNotRequired(ochaFields)
-      this.countriesField.enable({emitEvent: false})
+      this.countriesField.enable({ emitEvent: false })
     })()
 
   }
@@ -843,20 +851,20 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       .pipe(this.holdTillGetUserResponse())
       .subscribe((value: ProjectWorkArea) => {
         value === ProjectWorkArea.OUTSIDE_QATAR && (() => {
-          !this.domain.value && this.domain.setValue(DomainTypes.HUMANITARIAN, {emitEvent: false})
-          this.domain.updateValueAndValidity({emitEvent: false})
+          !this.domain.value && this.domain.setValue(DomainTypes.HUMANITARIAN, { emitEvent: false })
+          this.domain.updateValueAndValidity({ emitEvent: false })
           this.loadDacOuchMain(this.domain.value)
           this.emptyFields(aidFields)
-          this.countriesField.setValue(((this.countriesField.value ?? []) as number[]).filter(id => id !== this.qatarCountry.id), {emitEvent: false})
-          this.countriesField.enable({emitEvent: false})
+          this.countriesField.setValue(((this.countriesField.value ?? []) as number[]).filter(id => id !== this.qatarCountry.id), { emitEvent: false })
+          this.countriesField.enable({ emitEvent: false })
         })()
 
         value === ProjectWorkArea.INSIDE_QATAR && (() => {
-          !this.projectType.value && this.projectType.setValue(FundraisingProjectTypes.SOFTWARE, {emitEvent: false})
-          this.projectType.updateValueAndValidity({emitEvent: false})
+          !this.projectType.value && this.projectType.setValue(FundraisingProjectTypes.SOFTWARE, { emitEvent: false })
+          this.projectType.updateValueAndValidity({ emitEvent: false })
           this.emptyFields(domainFields)
-          this.countriesField.setValue([this.qatarCountry.id], {emitEvent: false})
-          this.countriesField.disable({emitEvent: false})
+          this.countriesField.setValue([this.qatarCountry.id], { emitEvent: false })
+          this.countriesField.disable({ emitEvent: false })
         })()
 
         !value && this.emptyFields(aidFields.concat(domainFields))
@@ -868,8 +876,8 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       .pipe(this.holdTillGetUserResponse())
       .pipe(takeUntil(this.destroy$))
       .subscribe((value: number) => {
-        this.subDACCategory.setValue(null, {emitEvent: false})
-        this.subUNOCHACategory.setValue(null, {emitEvent: false})
+        this.subDACCategory.setValue(null, { emitEvent: false })
+        this.subUNOCHACategory.setValue(null, { emitEvent: false })
         this.loadSubDacOchaByParentId(value)
       })
   }
@@ -905,7 +913,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   rejectTemplate(index: number) {
-    this.dialog.confirm(this.lang.map.template_action_x_confirmation_msg.change({x: this.lang.map.lbl_reject}))
+    this.dialog.confirm(this.lang.map.template_action_x_confirmation_msg.change({ x: this.lang.map.lbl_reject }))
       .onAfterClose$
       .pipe(takeUntil(this.destroy$))
       .pipe(filter(value => value === UserClickOn.YES))
@@ -915,7 +923,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   acceptTemplate(index: number) {
-    this.dialog.confirm(this.lang.map.template_action_x_confirmation_msg.change({x: this.lang.map.lbl_accept}))
+    this.dialog.confirm(this.lang.map.template_action_x_confirmation_msg.change({ x: this.lang.map.lbl_accept }))
       .onAfterClose$
       .pipe(takeUntil(this.destroy$))
       .pipe(filter(value => value === UserClickOn.YES))
@@ -925,7 +933,11 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
   }
 
   needTemplateApproval(index: number): boolean {
-    return !!(this.model && this.employeeService.isInternalUser() && this.model.canApproveTemplate(index))
+    return !!(this.model && this.employeeService.isInternalUser() && this.model.canApproveTemplate(index)) && !this.isRejectedOrApproved()
+  }
+
+  isRejectedOrApproved() {
+    return this.model?.caseStatus == CommonCaseStatus.FINAL_APPROVE || this.model?.caseStatus == CommonCaseStatus.FINAL_REJECTION
   }
 
   private afterSelectLicense(model: ProjectFundraising) {
@@ -952,7 +964,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     this.getOldValues()
   }
 
-  private createFieldObservable({ctrl, key}: { ctrl: AbstractControl, key: string }): Observable<{
+  private createFieldObservable({ ctrl, key }: { ctrl: AbstractControl, key: string }): Observable<{
     oldValue: number,
     newValue: number,
     field: AbstractControl,
@@ -980,16 +992,16 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
 
   private listenToDataWillEffectSelectedTemplate(): void {
     const fields = [
-      {ctrl: this.permitType, key: 'permitType'},
-      {ctrl: this.projectWorkArea, key: 'projectWorkArea'},
-      {ctrl: this.domain, key: 'domain'},
-      {ctrl: this.mainDACCategory, key: 'mainDACCategory'},
-      {ctrl: this.mainUNOCHACategory, key: 'mainUNOCHACategory'},
-      {ctrl: this.countriesField, key: 'countriesField'},
-      {ctrl: this.projectType, key: 'projectType'},
-      {ctrl: this.internalProjectClassification, key: 'internalProjectClassification'},
-      {ctrl: this.sanadiDomain, key: 'sanadiDomain'},
-      {ctrl: this.sanadiMainClassification, key: 'sanadiMainClassification'},
+      { ctrl: this.permitType, key: 'permitType' },
+      { ctrl: this.projectWorkArea, key: 'projectWorkArea' },
+      { ctrl: this.domain, key: 'domain' },
+      { ctrl: this.mainDACCategory, key: 'mainDACCategory' },
+      { ctrl: this.mainUNOCHACategory, key: 'mainUNOCHACategory' },
+      { ctrl: this.countriesField, key: 'countriesField' },
+      { ctrl: this.projectType, key: 'projectType' },
+      { ctrl: this.internalProjectClassification, key: 'internalProjectClassification' },
+      { ctrl: this.sanadiDomain, key: 'sanadiDomain' },
+      { ctrl: this.sanadiMainClassification, key: 'sanadiMainClassification' },
     ]
     const fieldsObservables = fields.map((item) => this.createFieldObservable(item))
     merge(...fieldsObservables)
@@ -999,20 +1011,20 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       .pipe(filter(_ => this.model!.hasTemplate() || this.model!.hasYears() || this.model!.hasCountries()))
       .pipe(takeUntil(this.destroy$))
       .pipe(switchMap((value) => {
-          return this.dialog.confirm(this.lang.map.this_change_will_effect_the_selected_template)
-            .onAfterClose$
-            .pipe(map((answer: UserClickOn) => ({
-              ...value, answer
-            })))
-        })
+        return this.dialog.confirm(this.lang.map.this_change_will_effect_the_selected_template)
+          .onAfterClose$
+          .pipe(map((answer: UserClickOn) => ({
+            ...value, answer
+          })))
+      })
       )
-      .subscribe(({answer, oldValue, field, key}) => {
+      .subscribe(({ answer, oldValue, field, key }) => {
         answer === UserClickOn.YES ? (() => {
           this.model && this.model.hasTemplate() ? this.deleteTemplate(true) : this.clearDeductionItems = true
         })() : (() => {
           let value = this.storedOldValues[key] || oldValue;
-          field.setValue(value, {emitEvent: false})
-          field.updateValueAndValidity({emitEvent: false})
+          field.setValue(value, { emitEvent: false })
+          field.updateValueAndValidity({ emitEvent: false })
           this.storedOldValues[key] = value;
         })()
         this.userAnswer.next(answer === UserClickOn.YES ? UserClickOn.YES : UserClickOn.NO)
@@ -1037,7 +1049,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     const defaultMax = Validators.max(this.maxDuration);
     this.licenseDuration.clearValidators()
     this.licenseDuration.addValidators([CustomValidators.required, defaultMin, defaultMax])
-    this.licenseDuration.updateValueAndValidity({emitEvent: false})
+    this.licenseDuration.updateValueAndValidity({ emitEvent: false })
   }
 
   private getOldValues() {
@@ -1057,8 +1069,8 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       .pipe(takeUntil(this.destroy$))
       .subscribe((type: ProjectPermitTypes) => {
         [ProjectPermitTypes.CHARITY, ProjectPermitTypes.UNCONDITIONAL_RECEIVE].includes(type) ? (() => {
-          this.projectWorkArea.setValue(null, {emitEvent: false})
-        })() : this.projectWorkArea.setValue(this.projectWorkArea.value || ProjectWorkArea.INSIDE_QATAR, {emitEvent: false})
+          this.projectWorkArea.setValue(null, { emitEvent: false })
+        })() : this.projectWorkArea.setValue(this.projectWorkArea.value || ProjectWorkArea.INSIDE_QATAR, { emitEvent: false })
       })
   }
 }

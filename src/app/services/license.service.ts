@@ -548,10 +548,10 @@ export class LicenseService {
   }
 
   @CastResponse(() => OrganizationsEntitiesSupport)
-  _validateOrganizationsEntitiesSupportByRequestType<T>(requestType: number, oldFullSerial: string): Observable<T> {
+  _validateOrganizationsEntitiesSupportByRequestType<T>(requestType: number, oldLicenseId: string): Observable<T> {
     return this.http.post<T>(this.getServiceUrlByCaseType(CaseTypes.ORGANIZATION_ENTITIES_SUPPORT) + '/draft/validate', {
       requestType,
-      oldFullSerial
+      oldLicenseId
     });
   }
   @CastResponse(() => FinancialTransferLicensing)
