@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  msg_service_search_unavailable: string;
   msg_full_amount_used: string;
   more: string;
   msg_terminated_notification: string;

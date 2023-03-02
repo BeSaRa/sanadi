@@ -3,7 +3,7 @@
     <li [class.px-2]="level > 1" [@expendCollapse]="item.expand || _searchText.length ? 'expend' : 'collapse'"
         routerLinkActive="active"
         [class.expanded]="item.expand"
-        *ngIf="empService.checkPermissions(item.getPermissions(), true) && hasCustomPermissions(item)"
+        *ngIf="item.isAvailableToShow"
         [class.parent-menu-item]="!item.parent" [class.has-children]="item.children.length"
         class="sidebar-menu-item">
       <a class="d-none" [routerLink]="item.path"></a>
@@ -27,12 +27,12 @@
               [innerHTML]="item|translateName:lang.map.lang|highlight:_searchText"></span>
         <span *ngIf="hasCounter(item.counter)"
               class="badge rounded-pill position-absolute badge-translate-middle-x bg-warning">{{getCounter(item.counter)}}</span>
-        <span class="instant-action position-absolute end-0" *ngIf="item.canAddOrSearchInstant">
-          <button *ngIf="item.canSearchInstant" (click)="openInstantServiceSearch($event, item)"
+        <span class="instant-action position-absolute end-0" *ngIf="item.hasEServicePermission">
+          <button *ngIf="item.hasEServiceSearchPermission" (click)="openEServiceSearch($event, item)"
                   class="btn icon-btn m-0 shadow-none" [tooltip]="lang.map.menu_service_search"><i
             class="mdi mdi-text-box-search-outline"></i>
           </button>
-          <button *ngIf="item.canInstantAdd" (click)="openInstantService($event, item)"
+          <button *ngIf="item.hasEServicePagePermission" (click)="openEService($event, item)"
                   class="btn icon-btn m-0 shadow-none" [tooltip]="lang.map.btn_add">
             <i class="mdi mdi-plus"></i>
           </button>
