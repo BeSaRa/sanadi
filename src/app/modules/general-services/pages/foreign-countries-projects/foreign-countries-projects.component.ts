@@ -392,6 +392,9 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
     this.basicInfo.patchValue(this.model?.buildForm(false)!);
     this.specialExplanation.patchValue(this.model?.buildExplanation(false)!);
     this.handleRequestTypeChange(this.model?.requestType || 0, false);
+    this.profileCountryService.getCountriesByProfile(this.model!.externalCooperationAuthority).subscribe((data) => {
+      this.countries = data;
+    })
     this.cd.detectChanges();
   }
 
@@ -438,7 +441,7 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
     return this.basicInfo?.get('organizationId')! as UntypedFormControl;
   }
   get countryField(): UntypedFormControl {
-    return this.basicInfo.get('explanation')! as UntypedFormControl;
+    return this.basicInfo.get('country')! as UntypedFormControl;
   }
   get specialExplanation(): UntypedFormGroup {
     return this.form.get('explanation')! as UntypedFormGroup;

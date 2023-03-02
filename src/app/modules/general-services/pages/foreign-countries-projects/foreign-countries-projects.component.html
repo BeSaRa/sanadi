@@ -64,9 +64,8 @@
           <ng-select [selectOnTab]="true" labelForId="country" [clearable]="true" placeholder="{{ lang.map.select }}"
             [readonly]="readonly || isCancelRequestType" id="country" [notFoundText]="lang.map.msg_not_found"
             appendTo="body" validationClasses="country" formControlName="country">
-            <ng-option [value]="option.id" *ngFor="let option of countries">
-              {{ option }}
-              <!-- {{ option.getName() }} -->
+            <ng-option [value]="option.countryId" *ngFor="let option of countries">
+              {{ option.countryInfo.getName() }}
             </ng-option>
           </ng-select>
           <app-field-error-message controlName="country"></app-field-error-message>
