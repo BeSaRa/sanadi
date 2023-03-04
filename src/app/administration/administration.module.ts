@@ -1,3 +1,4 @@
+import { AdminLicenseComponent } from './pages/admin-license/admin-license.component';
 import {UserSubTeamComponent} from './shared/user-sub-team/user-sub-team.component';
 import {
   ProcessFieldWrapperComponent
@@ -203,7 +204,8 @@ import { UserPreferencesPopupComponent } from './popups/user-preferences-popup/u
     UserSecurityExternalComponent,
     ProfileAttachmentsComponent,
     GlobalSettingsComponent,
-    UserPreferencesPopupComponent
+    UserPreferencesPopupComponent,
+    AdminLicenseComponent
   ],
   imports: [
     SharedModule,
