@@ -41,7 +41,8 @@ const adminPermissionsGroup: PermissionsEnum[] = [
   PermissionsEnum.MANAGE_DYNAMIC_MODEL,
   PermissionsEnum.MANAGE_PROFILE,
   PermissionsEnum.MANAGE_EXTERNAL_USER_REQUEST_APPROVALS_DYNAMIC,
-  PermissionsEnum.MANAGE_EXTERNAL_USER_DYNAMIC
+  PermissionsEnum.MANAGE_EXTERNAL_USER_DYNAMIC,
+  PermissionsEnum.MANAGE_LICENSES_AND_PERMITS
 ];
 
 const externalUserPermissionsGroup: PermissionsEnum[] = [
