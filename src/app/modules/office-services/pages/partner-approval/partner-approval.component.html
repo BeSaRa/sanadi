@@ -348,14 +348,14 @@
     </ng-template>
     <!-- Management Councils -->
     <ng-template #managementCouncilsTemplate>
-      <management-council #managementCouncilsTab [countriesList]="countries" [list]="model?.managementCouncilList || []"
+      <management-council #managementCouncilsTab [nationalities]="nationalities" [list]="model?.managementCouncilList || []"
                           [readonly]="(isExtendOrCancelRequestType() || readonly)"
                           (readyEvent)="managementCouncilsTabStatus = $event">
       </management-council>
     </ng-template>
     <!-- Executive Managements -->
     <ng-template #executiveManagementsTemplate>
-      <executive-management #executiveManagementsTab [nationalities]="nationalities"
+      <executive-management #executiveManagementsTab
                             [pageTitleKey]="'executive_management'" [list]="model?.executiveManagementList || []"
                             [readonly]="(isExtendOrCancelRequestType() || readonly)"
                             (readyEvent)="executiveManagementsTabStatus = $event">

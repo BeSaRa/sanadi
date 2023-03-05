@@ -99,14 +99,6 @@ export class ExecutiveManagementComponent implements OnInit {
       show: (_item: ExecutiveManagement) => this.readonly
     }
   ];
-  sortingCallbacks = {
-    nationality: (a: ExecutiveManagement, b: ExecutiveManagement, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a) ? '' : a.nationalityInfo.getName().toLowerCase(),
-        value2 = !CommonUtils.isValidValue(b) ? '' : b.nationalityInfo.getName().toLowerCase();
-      return CommonUtils.getSortValue(value1, value2, dir.direction);
-    },
-
-  }
 
   ngOnInit(): void {
     this.dataSource.next(this.list);
@@ -194,15 +186,10 @@ export class ExecutiveManagementComponent implements OnInit {
         }),
         map(() => {
           let formValue = this.form.getRawValue();
-          let nationalityInfo: AdminResult =
-            this.countriesList
-              .find((x) => x.id === formValue.country)
-              ?.createAdminResult() ?? new AdminResult();
 
           return new ExecutiveManagement().clone({
             ...this.current,
-            ...formValue,
-            nationalityInfo: nationalityInfo,
+            ...formValue
           });
         })
       )

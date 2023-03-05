@@ -5,12 +5,12 @@ import {ManagementCouncil} from "@app/models/management-council";
 export class ManagementCouncilInterceptor implements IModelInterceptor<ManagementCouncil> {
   send(model: Partial<ManagementCouncil>): Partial<ManagementCouncil> {
     delete model.searchFields;
-    delete model.countryInfo;
+    delete model.nationalityInfo;
     return model;
   }
 
   receive(model: ManagementCouncil): ManagementCouncil {
-    model.countryInfo = AdminResult.createInstance(model.countryInfo);
+    model.nationalityInfo = AdminResult.createInstance(model.nationalityInfo);
 
     return model;
   }

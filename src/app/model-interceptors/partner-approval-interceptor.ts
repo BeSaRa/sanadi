@@ -166,6 +166,7 @@ export class PartnerApprovalInterceptor
 
 
     PartnerApprovalInterceptor._deleteBeforeSend(model);
+    console.log(model)
     return model;
   }
 
