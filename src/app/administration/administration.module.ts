@@ -3,13 +3,6 @@ import {UserSubTeamComponent} from './shared/user-sub-team/user-sub-team.compone
 import {
   ProcessFieldWrapperComponent
 } from './popups/general-process-popup/process-formly-components/process-field-wrapper/process-field-wrapper.component';
-import {
-  FormlyMaskInputFieldComponent
-} from './../services-search/components/formly-mask-input-field/formly-mask-input-field.component';
-import {
-  FormlySelectFieldComponent
-} from './../services-search/components/formly-select-field/formly-select-field.component';
-import {FormlyDateFieldComponent} from './../services-search/components/formly-date-field/formly-date-field.component';
 import {GeneralProcessPopupComponent} from './popups/general-process-popup/general-process-popup.component';
 import {GeneralProcessComponent} from './pages/general-process/general-process.component';
 import {SubTeamPopupComponent} from './popups/sub-team-popup/sub-team-popup.component';
@@ -116,6 +109,11 @@ import {UserSecurityExternalComponent} from './shared/user-security-external/use
 import { ProfileAttachmentsComponent } from './shared/profile-attachments/profile-attachments.component';
 import { GlobalSettingsComponent } from './pages/global-settings/global-settings.component';
 import { UserPreferencesPopupComponent } from './popups/user-preferences-popup/user-preferences-popup.component';
+import { FormlyDateFieldComponent } from '@app/services-search/components/formly-date-field/formly-date-field.component';
+import { FormlyFieldFullWrapperComponent } from '@app/services-search/components/formly-field-full-wrapper/formly-field-full-wrapper.component';
+import { FormlyFieldWrapperComponent } from '@app/services-search/components/formly-field-wrapper/formly-field-wrapper.component';
+import { FormlyMaskInputFieldComponent } from '@app/services-search/components/formly-mask-input-field/formly-mask-input-field.component';
+import { FormlySelectFieldComponent } from '@app/services-search/components/formly-select-field/formly-select-field.component';
 
 @NgModule({
   declarations: [
@@ -214,15 +212,17 @@ import { UserPreferencesPopupComponent } from './popups/user-preferences-popup/u
     FormlyBootstrapModule,
     FormlyModule.forChild({
       types: [
-        {name: 'dateField', component: FormlyDateFieldComponent, wrappers: ['custom-wrapper']},
-        {name: 'selectField', component: FormlySelectFieldComponent, wrappers: ['custom-wrapper']},
-        {name: 'yesOrNo', component: FormlySelectFieldComponent, wrappers: ['custom-wrapper']},
-        {name: 'maskInput', extends: 'input', component: FormlyMaskInputFieldComponent, wrappers: ['custom-wrapper']},
-        {name: 'number', extends: 'input', component: FormlyMaskInputFieldComponent, wrappers: ['custom-wrapper']},
-        {name: 'textarea', wrappers: ['custom-wrapper']},
+        {name: 'dateField', component: FormlyDateFieldComponent, wrappers: ['custom-wrapper','col-md-4-8']},
+        {name: 'selectField', component: FormlySelectFieldComponent, wrappers: ['custom-wrapper','col-md-4-8']},
+        {name: 'yesOrNo', component: FormlySelectFieldComponent, wrappers: ['custom-wrapper','col-md-4-8']},
+        {name: 'maskInput', extends: 'input', component: FormlyMaskInputFieldComponent, wrappers: ['custom-wrapper','col-md-4-8']},
+        {name: 'number', extends: 'input', component: FormlyMaskInputFieldComponent, wrappers: ['custom-wrapper','col-md-4-8']},
+        {name: 'textarea', wrappers: ['custom-wrapper','col-md-4-8']},
       ],
       wrappers: [
-        {name: 'custom-wrapper', component: ProcessFieldWrapperComponent}
+        {name: 'custom-wrapper', component: ProcessFieldWrapperComponent},
+        {name: 'col-md-4-8', component: FormlyFieldWrapperComponent},
+        {name: 'col-md-2-10', component: FormlyFieldFullWrapperComponent}
       ]
     }),
   ],

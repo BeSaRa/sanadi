@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {LangService} from '../../../services/lang.service';
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
+import { LangService } from '@app/services/lang.service';
 import {FieldWrapper} from '@ngx-formly/core';
-import {ILanguageKeys} from '../../../interfaces/i-language-keys';
 
 @Component({
   selector: 'formly-field-full-wrapper',
