@@ -43,7 +43,7 @@ export class IntegrationInquiriesComponent {
   gdxServiceRelatedTypesEnum = GdxServiceRelatedTypesEnum;
   selectedLog: { [key in GdxServicesEnum]?: GdxServiceLog | undefined } = {};
   selectedService: GdxServicesEnum = GdxServicesEnum.MOJ;
-  tabsData: TabMap = {
+  mainTabsData: TabMap = {
     governmentAgencies: {
       name: 'governmentAgencies',
       index: 0,
@@ -59,7 +59,9 @@ export class IntegrationInquiriesComponent {
       validStatus: () => true,
       isTouchedOrDirty: () => true,
       isLoaded: true
-    },
+    }
+  }
+  govTabsData: TabMap = {
     moj: {
       name: 'moj',
       index: 0,
@@ -131,10 +133,12 @@ export class IntegrationInquiriesComponent {
       isTouchedOrDirty: () => true,
       serviceId: GdxServicesEnum.SJC,
       isLoaded: false
-    },
+    }
+  };
+  charityTabsData: TabMap = {
     qatarZakatFund: {
       name: 'qatarZakatFund',
-      index: 8,
+      index: 0,
       langKey: 'integration_qatar_zakat_fund',
       validStatus: () => true,
       isTouchedOrDirty: () => true,
@@ -143,7 +147,7 @@ export class IntegrationInquiriesComponent {
     },
     qrcs: {
       name: 'qrcs',
-      index: 9,
+      index: 1,
       langKey: 'integration_qrcs',
       validStatus: () => true,
       isTouchedOrDirty: () => true,
@@ -152,7 +156,7 @@ export class IntegrationInquiriesComponent {
     },
     jasimHamadBinJasimCharityFund: {
       name: 'jasimHamadBinJasimCharityFund',
-      index: 10,
+      index: 2,
       langKey: 'integration_jasim_hamad_bin_jasim_charity_fund',
       validStatus: () => true,
       isTouchedOrDirty: () => true,
@@ -161,7 +165,7 @@ export class IntegrationInquiriesComponent {
     },
     qatarCancerSociety: {
       name: 'qatarCancerSociety',
-      index: 11,
+      index: 3,
       langKey: 'integration_qatar_cancer_society',
       validStatus: () => true,
       isTouchedOrDirty: () => true,
@@ -170,7 +174,7 @@ export class IntegrationInquiriesComponent {
     },
     raf: {
       name: 'raf',
-      index: 12,
+      index: 4,
       langKey: 'integration_raf',
       validStatus: () => true,
       isTouchedOrDirty: () => true,
@@ -179,15 +183,17 @@ export class IntegrationInquiriesComponent {
     },
     qatarCharity: {
       name: 'qatarCharity',
-      index: 13,
+      index: 5,
       langKey: 'integration_qatar_charity',
       validStatus: () => true,
       isTouchedOrDirty: () => true,
       // serviceId: GdxServicesEnum.QATAR_CHARITY,
       isLoaded: true
-    },
-  };
-  tabIndex$: Subject<number> = new Subject<number>();
+    }
+  }
+  mainTabIndex$: Subject<number> = new Subject<number>();
+  govTabIndex$: Subject<number> = new Subject<number>();
+  charityTabIndex$: Subject<number> = new Subject<number>();
 
   relatedData: IGdxServiceRelatedData = {
     [GdxServiceRelatedTypesEnum.MOJ_FLATS]: [],
@@ -201,8 +207,12 @@ export class IntegrationInquiriesComponent {
     [GdxServiceRelatedTypesEnum.SJC_RELATED_DATA]: [],
   };
 
-  onTabChange($event: TabComponent) {
-    const selectedTab = this._findTab('tabName', $event.name);
+  onMainTabChange($event: TabComponent): void {
+
+  }
+
+  onGovTabChange($event: TabComponent) {
+    const selectedTab = this._findTab(this.govTabsData,'tabName', $event.name);
     if (!selectedTab || selectedTab.isLoaded) {
       return;
     }
@@ -212,6 +222,10 @@ export class IntegrationInquiriesComponent {
     }
     this.selectedService = selectedTab.serviceId;
     listComponent?.reload$.next(null);
+  }
+
+  onCharityTabChange($event: TabComponent): void {
+
   }
 
   selectLog(log: GdxServiceLog): void {
@@ -255,9 +269,9 @@ export class IntegrationInquiriesComponent {
     }
   }
 
-  loadRecordsDone(serviceId: GdxServicesEnum) {
+  loadRecordsDone(serviceId: GdxServicesEnum, tabsData: TabMap) {
     this._resetRelatedData(serviceId);
-    const selectedTab = this._findTab('serviceId', serviceId);
+    const selectedTab = this._findTab(tabsData, 'serviceId', serviceId);
     selectedTab ? selectedTab.isLoaded = true : null;
   }
 
@@ -310,8 +324,8 @@ export class IntegrationInquiriesComponent {
     }
   }
 
-  private _findTab(findBy: 'tabName' | 'serviceId', value: string): ITabData | undefined {
-    return Object.values(this.tabsData).find(tab => {
+  private _findTab(tabsData: TabMap, findBy: 'tabName' | 'serviceId', value: string): ITabData | undefined {
+    return Object.values(tabsData).find(tab => {
       if (findBy === 'tabName') {
         return tab.name === value;
       } else if (findBy === 'serviceId') {
