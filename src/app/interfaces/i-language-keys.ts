@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  msg_service_search_unavailable: string;
   msg_full_amount_used: string;
   more: string;
   msg_terminated_notification: string;
@@ -1334,11 +1335,19 @@ export interface ILanguageKeys {
   integration_izzab: string;
   integration_kahramaa: string;
   integration_mol: string;
+  integration_sjc: string;
   integration_qatar_charity: string;
+  integration_qatar_zakat_fund: string;
+  integration_qrcs: string;
+  integration_jasim_hamad_bin_jasim_charity_fund: string;
+  integration_qatar_cancer_society: string;
+  integration_raf: string;
   date_of_death: string;
   company_info: string;
   garsia_pensions: string;
   payroll_report: string;
+  married: string;
+  marriage_date: string;
   relation_status: string;
   parcel_number: string;
   parcel_type: string;

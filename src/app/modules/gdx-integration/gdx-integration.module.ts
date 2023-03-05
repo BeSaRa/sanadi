@@ -23,6 +23,7 @@ import {
   KahramaaOutstandingPaymentListComponent
 } from './related-data/kahramaa-outstanding-payment-list/kahramaa-outstanding-payment-list.component';
 import {MolRelatedDataListComponent} from './related-data/mol-related-data-list/mol-related-data-list.component';
+import { SjcRelatedDataListComponent } from './related-data/sjc-related-data-list/sjc-related-data-list.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import {MolRelatedDataListComponent} from './related-data/mol-related-data-list/
     GarsiaPensionListComponent,
     GarsiaPensionPaymentListComponent,
     KahramaaOutstandingPaymentListComponent,
-    MolRelatedDataListComponent
+    MolRelatedDataListComponent,
+    SjcRelatedDataListComponent
   ],
   exports: [
     IntegrationInquiriesComponent

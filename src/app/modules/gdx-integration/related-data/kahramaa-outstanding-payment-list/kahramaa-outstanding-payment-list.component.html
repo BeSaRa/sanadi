@@ -8,7 +8,7 @@
              [dataSource]="table.dataSource">
         <ng-container cdkColumnDef="extra-header">
           <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
-            <table-header tableTitle="outstanding_payment_report"
+            <table-header tableTitle="outstanding_payment_report" [headerClass]="'bg-secondary'"
                           [sort]="table.dataSource.sort"
                           (textChange)="filterControl.setValue($event)">
             </table-header>

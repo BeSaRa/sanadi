@@ -10,15 +10,18 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {FactoryService} from '@services/factory.service';
 import {ILanguageKeys} from '@contracts/i-language-keys';
 import {IModelInterceptor} from '@contracts/i-model-interceptor';
-import {UrgentInterventionLicenseFollowupInterceptor} from '@app/model-interceptors/urgent-intervention-license-followup-interceptor';
-import {SearchUrgentInterventionLicenseFollowupCriteria} from '@app/models/search-urgent-intervention-license-followup-criteria';
-import {UrgentInterventionAnnouncementSearchCriteria} from '@app/models/urgent-intervention-announcement-search-criteria';
+import {
+  UrgentInterventionLicenseFollowupInterceptor
+} from '@app/model-interceptors/urgent-intervention-license-followup-interceptor';
+import {
+  SearchUrgentInterventionLicenseFollowupCriteria
+} from '@app/models/search-urgent-intervention-license-followup-criteria';
+import {
+  UrgentInterventionAnnouncementSearchCriteria
+} from '@app/models/urgent-intervention-announcement-search-criteria';
 import {Observable, of} from 'rxjs';
 import {UrgentInterventionAnnouncementResult} from '@app/models/urgent-intervention-announcement-result';
 import {DialogRef} from '@app/shared/models/dialog-ref';
-import {IDialogData} from '@contracts/i-dialog-data';
-import {UrgentInterventionReport} from '@app/models/urgent-intervention-report';
-import {OperationTypes} from '@app/enums/operation-types.enum';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {UrgentInterventionAttachment} from '@app/models/urgent-intervention-attachment';
 import {CastResponse, CastResponseContainer} from '@decorators/cast-response';
@@ -28,7 +31,6 @@ import {
 import {HasInterception, InterceptParam} from '@decorators/intercept-model';
 import {BlobModel} from '@app/models/blob-model';
 import {IDefaultResponse} from '@contracts/idefault-response';
-import {ActionWithCommentPopupComponent} from '@app/shared/popups/action-with-comment-popup/action-with-comment-popup.component';
 import {
   UrgentInterventionAttachmentApprovalPopupComponent
 } from '@app/modules/urgent-intervention/popups/urgent-intervention-attachment-approval-popup/urgent-intervention-attachment-approval-popup.component';
@@ -149,7 +151,7 @@ export class UrgentInterventionLicenseFollowupService extends BaseGenericEServic
     return this.http.get<UrgentInterventionAttachment>(this._getURLSegment() + '/report/attachment/' + attachmentId + '/update', {
       params: new HttpParams().set('isApproved', isApproved).set('justification', justification)
     }).pipe(
-      catchError(()=> of(null))
+      catchError(() => of(null))
     );
   }
 
@@ -157,5 +159,12 @@ export class UrgentInterventionLicenseFollowupService extends BaseGenericEServic
     return this.http.post<IDefaultResponse<boolean>>(this._getURLSegment() + '/report/launch', {}, {
       params: new HttpParams().set('reportId', reportId)
     }).pipe(map(response => response.rs));
+  }
+
+  sendToSingleDepartmentReportReviewAction(taskName: string, reportId: number): Observable<boolean> {
+    return this.http.post<IDefaultResponse<any>>(this._getURLSegment() + '/report/launch-review', {}, {
+      params: new HttpParams().set('reportId', reportId).set('taskName', taskName)
+    })
+      .pipe(map(response => response.rs));
   }
 }

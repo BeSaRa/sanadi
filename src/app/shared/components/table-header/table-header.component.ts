@@ -53,6 +53,7 @@ export class TableHeaderComponent implements OnInit, OnDestroy {
 
   @Input() add$: Subject<any> = {} as Subject<any>;
   @Input() allowAdd: boolean = true;
+  @Input() headerClass: string = '';
 
   riskStatusClasses: Record<number, string> = {
     1: 'btn-success',

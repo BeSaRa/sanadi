@@ -166,6 +166,7 @@ export const navigationMenuList = [
     path: '/home/general-services',
     icon: null,
     isSvg: true,
+    caseType: 0,
     permission: null,
     permissionGroup: PermissionGroupsEnum.GENERAL_SERVICES_PERMISSIONS_GROUP,
     parent: null,
@@ -421,6 +422,7 @@ export const navigationMenuList = [
     path: '/home/projects',
     icon: 'mdi-table-star',
     isSvg: false,
+    caseType: 0,
     permission: null,
     permissionGroup: PermissionGroupsEnum.PROJECTS_PERMISSION_GROUP,
     parent: null,
@@ -428,7 +430,7 @@ export const navigationMenuList = [
     itemOrder: 6,
     svg: null
   },
-  {
+  /*{
     id: 33,
     langKey: 'menu_internal_project_license',
     path: '/home/projects/internal-project-license',
@@ -441,7 +443,7 @@ export const navigationMenuList = [
     group: 'projects',
     itemOrder: 1,
     svg: null
-  },
+  },*/
   {
     id: 34,
     langKey: 'menu_projects_models',
@@ -566,6 +568,7 @@ export const navigationMenuList = [
     path: '/home/collection',
     icon: 'mdi-currency-usd',
     isSvg: false,
+    caseType: 0,
     permission: null,
     permissionGroup: PermissionGroupsEnum.COLLECTION_SERVICES_GROUP,
     parent: null,
@@ -635,6 +638,7 @@ export const navigationMenuList = [
     path: '/home/remittance',
     icon: 'mdi-human-male',
     isSvg: false,
+    caseType: 0,
     permission: null,
     permissionGroup: PermissionGroupsEnum.REMITTANCE_PERMISSIONS_GROUP,
     parent: null,
@@ -798,6 +802,7 @@ export const navigationMenuList = [
     path: '/home/office-services',
     icon: null,
     isSvg: true,
+    caseType: 0,
     permission: null,
     permissionGroup: PermissionGroupsEnum.OFFICE_SERVICES_PERMISSIONS_GROUP,
     parent: null,
@@ -811,6 +816,7 @@ export const navigationMenuList = [
     path: '/home/urgent-intervention',
     icon: 'mdi-file-star',
     isSvg: false,
+    caseType: 0,
     permission: null,
     permissionGroup: PermissionGroupsEnum.URGENT_INTERVENTION_PERMISSIONS_GROUP,
     parent: null,

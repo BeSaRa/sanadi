@@ -1,16 +1,16 @@
-import { Component, Input, ViewChild } from '@angular/core';
-import { Subject } from 'rxjs';
-import { Beneficiary } from '@app/models/beneficiary';
-import { GdxServicesEnum } from '@app/enums/gdx-services.enum';
-import { GdxServiceRelatedTypesEnum } from '@app/enums/gdx-service-related-types.enum';
-import { GdxServiceLog } from '@app/models/gdx-service-log';
-import { LangService } from '@services/lang.service';
-import { TabMap } from '@app/types/types';
-import { GdxGarsiaPensionResponse } from '@app/models/gdx-garsia-pension-response';
-import { IGdxServiceRelatedData } from '@contracts/i-gdx-service-related-data';
-import { CommonUtils } from '@helpers/common-utils';
-import { TabComponent } from '@app/shared/components/tab/tab.component';
-import { ITabData } from '@contracts/i-tab-data';
+import {Component, Input, ViewChild} from '@angular/core';
+import {Subject} from 'rxjs';
+import {Beneficiary} from '@app/models/beneficiary';
+import {GdxServicesEnum} from '@app/enums/gdx-services.enum';
+import {GdxServiceRelatedTypesEnum} from '@app/enums/gdx-service-related-types.enum';
+import {GdxServiceLog} from '@app/models/gdx-service-log';
+import {LangService} from '@services/lang.service';
+import {TabMap} from '@app/types/types';
+import {GdxGarsiaPensionResponse} from '@app/models/gdx-garsia-pension-response';
+import {IGdxServiceRelatedData} from '@contracts/i-gdx-service-related-data';
+import {CommonUtils} from '@helpers/common-utils';
+import {TabComponent} from '@app/shared/components/tab/tab.component';
+import {ITabData} from '@contracts/i-tab-data';
 import {
   IntegrationInquiryLogListComponent
 } from '@app/modules/gdx-integration/integration-inquiry-log-list/integration-inquiry-log-list.component';
@@ -20,8 +20,8 @@ import {
 import {
   GarsiaPensionListComponent
 } from '@app/modules/gdx-integration/related-data/garsia-pension-list/garsia-pension-list.component';
-import { GdxMolPayrollResponse } from '@app/models/gdx-mol-payroll-response';
-import { GdxMojResponse } from '@app/models/gdx-moj-response';
+import {GdxMolPayrollResponse} from '@app/models/gdx-mol-payroll-response';
+import {GdxMojResponse} from '@app/models/gdx-moj-response';
 
 @Component({
   selector: 'integration-inquiries',
@@ -43,7 +43,7 @@ export class IntegrationInquiriesComponent {
   gdxServiceRelatedTypesEnum = GdxServiceRelatedTypesEnum;
   selectedLog: { [key in GdxServicesEnum]?: GdxServiceLog | undefined } = {};
   selectedService: GdxServicesEnum = GdxServicesEnum.MOJ;
-  tabsData: TabMap = {
+  mainTabsData: TabMap = {
     governmentAgencies: {
       name: 'governmentAgencies',
       index: 0,
@@ -59,7 +59,9 @@ export class IntegrationInquiriesComponent {
       validStatus: () => true,
       isTouchedOrDirty: () => true,
       isLoaded: true
-    },
+    }
+  }
+  govTabsData: TabMap = {
     moj: {
       name: 'moj',
       index: 0,
@@ -123,17 +125,75 @@ export class IntegrationInquiriesComponent {
       serviceId: GdxServicesEnum.MOL,
       isLoaded: false
     },
+    sjc: {
+      name: 'sjc',
+      index: 7,
+      langKey: 'integration_sjc',
+      validStatus: () => true,
+      isTouchedOrDirty: () => true,
+      serviceId: GdxServicesEnum.SJC,
+      isLoaded: false
+    }
+  };
+  charityTabsData: TabMap = {
+    qatarZakatFund: {
+      name: 'qatarZakatFund',
+      index: 0,
+      langKey: 'integration_qatar_zakat_fund',
+      validStatus: () => true,
+      isTouchedOrDirty: () => true,
+      // serviceId: GdxServicesEnum.QATAR_ZAKAT_FUND,
+      isLoaded: true
+    },
+    qrcs: {
+      name: 'qrcs',
+      index: 1,
+      langKey: 'integration_qrcs',
+      validStatus: () => true,
+      isTouchedOrDirty: () => true,
+      // serviceId: GdxServicesEnum.QRCS,
+      isLoaded: true
+    },
+    jasimHamadBinJasimCharityFund: {
+      name: 'jasimHamadBinJasimCharityFund',
+      index: 2,
+      langKey: 'integration_jasim_hamad_bin_jasim_charity_fund',
+      validStatus: () => true,
+      isTouchedOrDirty: () => true,
+      // serviceId: GdxServicesEnum.JASIM_HAMAD_BIN_JASIM_CHARITY,
+      isLoaded: true
+    },
+    qatarCancerSociety: {
+      name: 'qatarCancerSociety',
+      index: 3,
+      langKey: 'integration_qatar_cancer_society',
+      validStatus: () => true,
+      isTouchedOrDirty: () => true,
+      // serviceId: GdxServicesEnum.QATAR_CANCER_SOCIETY,
+      isLoaded: true
+    },
+    raf: {
+      name: 'raf',
+      index: 4,
+      langKey: 'integration_raf',
+      validStatus: () => true,
+      isTouchedOrDirty: () => true,
+      // serviceId: GdxServicesEnum.RAF,
+      isLoaded: true
+    },
     qatarCharity: {
       name: 'qatarCharity',
-      index: 7,
+      index: 5,
       langKey: 'integration_qatar_charity',
       validStatus: () => true,
       isTouchedOrDirty: () => true,
       // serviceId: GdxServicesEnum.QATAR_CHARITY,
       isLoaded: true
-    },
-  };
-  tabIndex$: Subject<number> = new Subject<number>();
+    }
+  }
+  mainTabIndex$: Subject<number> = new Subject<number>();
+  govTabIndex$: Subject<number> = new Subject<number>();
+  charityTabIndex$: Subject<number> = new Subject<number>();
 
   relatedData: IGdxServiceRelatedData = {
     [GdxServiceRelatedTypesEnum.MOJ_FLATS]: [],
@@ -144,10 +204,15 @@ export class IntegrationInquiriesComponent {
     [GdxServiceRelatedTypesEnum.GARSIA_PENSION_PAYMENT]: [],
     [GdxServiceRelatedTypesEnum.KAHRAMAA_OUTSTANDING_PAYMENTS]: [],
     [GdxServiceRelatedTypesEnum.MOL_RELATED_DATA]: [],
+    [GdxServiceRelatedTypesEnum.SJC_RELATED_DATA]: [],
   };
 
-  onTabChange($event: TabComponent) {
-    const selectedTab = this._findTab('tabName', $event.name);
+  onMainTabChange($event: TabComponent): void {
+
+  }
+
+  onGovTabChange($event: TabComponent) {
+    const selectedTab = this._findTab(this.govTabsData,'tabName', $event.name);
     if (!selectedTab || selectedTab.isLoaded) {
       return;
     }
@@ -157,6 +222,10 @@ export class IntegrationInquiriesComponent {
     }
     this.selectedService = selectedTab.serviceId;
     listComponent?.reload$.next(null);
+  }
+
+  onCharityTabChange($event: TabComponent): void {
+
   }
 
   selectLog(log: GdxServiceLog): void {
@@ -182,6 +251,9 @@ export class IntegrationInquiriesComponent {
       case GdxServicesEnum.MOL:
         this.relatedData[GdxServiceRelatedTypesEnum.MOL_RELATED_DATA] = (log.gdxServiceResponseParsed as GdxMolPayrollResponse).payRollList;
         break;
+      case GdxServicesEnum.SJC:
+        this.relatedData[GdxServiceRelatedTypesEnum.SJC_RELATED_DATA] = [log.gdxServiceResponseParsed];
+        break;
       default:
         break;
     }
@@ -197,9 +269,9 @@ export class IntegrationInquiriesComponent {
     }
   }
 
-  loadRecordsDone(serviceId: GdxServicesEnum) {
+  loadRecordsDone(serviceId: GdxServicesEnum, tabsData: TabMap) {
     this._resetRelatedData(serviceId);
-    const selectedTab = this._findTab('serviceId', serviceId);
+    const selectedTab = this._findTab(tabsData, 'serviceId', serviceId);
     selectedTab ? selectedTab.isLoaded = true : null;
   }
 
@@ -244,13 +316,16 @@ export class IntegrationInquiriesComponent {
       case GdxServicesEnum.MOL:
         this.relatedData[GdxServiceRelatedTypesEnum.MOL_RELATED_DATA] = [];
         break;
+      case GdxServicesEnum.SJC:
+        this.relatedData[GdxServiceRelatedTypesEnum.SJC_RELATED_DATA] = [];
+        break;
       default:
         break;
     }
   }
 
-  private _findTab(findBy: 'tabName' | 'serviceId', value: string): ITabData | undefined {
-    return Object.values(this.tabsData).find(tab => {
+  private _findTab(tabsData: TabMap, findBy: 'tabName' | 'serviceId', value: string): ITabData | undefined {
+    return Object.values(tabsData).find(tab => {
       if (findBy === 'tabName') {
         return tab.name === value;
       } else if (findBy === 'serviceId') {

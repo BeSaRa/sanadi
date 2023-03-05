@@ -12,6 +12,7 @@ import {StaticAppResourcesService} from '@services/static-app-resources.service'
 import {CustomMenu} from '@app/models/custom-menu';
 import {EmployeeService} from '@services/employee.service';
 import {CustomEmployeePermission} from '@helpers/custom-employee-permission';
+import {CommonUtils} from '@helpers/common-utils';
 
 const {send, receive} = new MenuItemInterceptor();
 
@@ -100,18 +101,38 @@ export class MenuItem extends Cloneable<MenuItem> {
     this.isSVGIcon() && this.svg ? (this.safeSVG = this.domSanitizer.bypassSecurityTrustHtml(this.svg)) : null;
   }
 
-  get canAddOrSearchInstant(): boolean {
-    return this.canInstantAdd || this.canSearchInstant;
+  get isAvailableToShow(): boolean {
+    if (this.isEServiceMainMenu) {
+      return this.children.some(x => x.hasEServicePermission);
+    } else if (this.isEServiceMenu) {
+      return this.hasEServicePermission;
+    }
+    return this.hasPermission;
   }
 
-  get canInstantAdd(): boolean {
-    return !!this.caseType && !this.children.length
-      && this.employeeService.checkPermissions(this.getPermissions(), true)
-      && (CustomEmployeePermission.hasCustomPermission(this.langKey) ? CustomEmployeePermission.getCustomPermission(this.langKey)(this.employeeService, this) : true)
+  get hasPermission(): boolean {
+    return this.employeeService.checkPermissions(this.getPermissions(), true)
+      && (CustomEmployeePermission.hasCustomPermission(this.langKey) ? CustomEmployeePermission.getCustomPermission(this.langKey)(this.employeeService, this) : true);
   }
 
-  get canSearchInstant(): boolean {
-    return !this.children.length && !!this.caseType && this.employeeService.userCanManage(this.caseType);
+  get isEServiceMenu(): boolean {
+    return CommonUtils.isValidValue(this.caseType) && this.caseType! > 0;
+  }
+
+  get isEServiceMainMenu(): boolean {
+    return CommonUtils.isValidValue(this.caseType) && this.caseType! === 0;
+  }
+
+  get hasEServicePermission(): boolean {
+    return this.hasEServicePagePermission || this.hasEServiceSearchPermission;
+  }
+
+  get hasEServicePagePermission(): boolean {
+    return this.isEServiceMenu && this.hasPermission
+  }
+
+  get hasEServiceSearchPermission(): boolean {
+    return this.isEServiceMenu && this.employeeService.userCanManage(this.caseType!);
   }
 
   get defaultServiceSearchPath(): string {

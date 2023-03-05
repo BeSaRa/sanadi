@@ -429,7 +429,10 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       this.dialog.error(this.lang.map.msg_please_select_x_to_continue.change({ x: this.lang.map.country_countries }))
       return;
     }
-
+    if (!(this.countriesField.value as []).length) {
+      this.dialog.error(this.lang.map.msg_please_select_x_to_continue.change({ x: this.lang.map.country_countries }))
+      return;
+    }
     this.service
       .openDialogSearchTemplate(this.getSearchTemplateCriteria(), this.projectWorkArea.value, this.model?.getTemplate())
       .pipe(switchMap(dialog => dialog.onAfterClose$))
@@ -459,7 +462,9 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     };
 
     if (workArea === ProjectWorkArea.OUTSIDE_QATAR) {
-      domain === DomainTypes.DEVELOPMENT ? external['mainDAC'] = 'mainDACCategory' : external['mainUNOCHA'] = 'mainUNOCHACategory';
+      domain === DomainTypes.DEVELOPMENT ?
+       external['mainDAC'] = 'mainDACCategory' :
+       external['mainUNOCHA'] = 'mainUNOCHACategory';
     }
 
     if (workArea === ProjectWorkArea.INSIDE_QATAR) {
@@ -475,7 +480,11 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
     return Object.entries(this.projectWorkArea.value === ProjectWorkArea.INSIDE_QATAR ? internal : external)
       .reduce((acc, [key, controlName]: [string, string]) => {
         const control = this[(controlName as keyof this)] as AbstractControl
-        return { ...acc, [key]: control.getRawValue() }
+        if(control.getRawValue()) {
+          return { ...acc, [key]: control.getRawValue() };
+        } else {
+          return acc;
+        }
       }, {})
   }
 

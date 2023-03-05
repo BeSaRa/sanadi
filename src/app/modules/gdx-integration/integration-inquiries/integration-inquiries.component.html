@@ -1,74 +1,69 @@
-<tabs-list (onTabChange)="onTabChange($event)" [tabByIndex$]="tabIndex$">
-  <tab [name]="tabsData.governmentAgencies.name" [template]="GovernmentAgenciesTemplate"
-    [title]="lang.map[tabsData.governmentAgencies.langKey]"></tab>
-  <tab [name]="tabsData.charitableEntities.name" [template]="CharitableEntitiesTemplate"
-    [title]="lang.map[tabsData.charitableEntities.langKey]"></tab>
+<tabs-list (onTabChange)="onMainTabChange($event)" [tabByIndex$]="mainTabIndex$">
+  <tab [name]="mainTabsData.governmentAgencies.name" [template]="GovernmentAgenciesTemplate"
+       [title]="lang.map[mainTabsData.governmentAgencies.langKey]"></tab>
+  <tab [name]="mainTabsData.charitableEntities.name" [template]="CharitableEntitiesTemplate"
+       [title]="lang.map[mainTabsData.charitableEntities.langKey]"></tab>
 </tabs-list>
 <ng-template #GovernmentAgenciesTemplate>
-  <tabs-list [accordionView]="true" [collapse]="true" [tabByIndex$]="tabIndex$">
-    <tab [name]="tabsData.moj.name" [template]="MOJTemplate" [title]="lang.map[tabsData.moj.langKey]"
-      (onExpand)="onTabChange($event)"></tab>
-    <tab [name]="tabsData.moci.name" [template]="MOCITemplate" [title]="lang.map[tabsData.moci.langKey]"
-      (onExpand)="onTabChange($event)"></tab>
-    <tab [name]="tabsData.mawared.name" [template]="MawaredTemplate" [title]="lang.map[tabsData.mawared.langKey]"
-      (onExpand)="onTabChange($event)"></tab>
-    <tab [name]="tabsData.garsia.name" [template]="GarsiaTemplate" [title]="lang.map[tabsData.garsia.langKey]"
-      (onExpand)="onTabChange($event)"></tab>
-    <tab [name]="tabsData.izzab.name" [template]="IzzabTemplate" [title]="lang.map[tabsData.izzab.langKey]"
-      (onExpand)="onTabChange($event)"></tab>
-    <tab [name]="tabsData.kahramaa.name" [template]="KahramaaTemplate" [title]="lang.map[tabsData.kahramaa.langKey]"
-      (onExpand)="onTabChange($event)">
-    </tab>
-    <tab [name]="tabsData.mol.name" [template]="MOLTemplate" [title]="lang.map[tabsData.mol.langKey]"
-      (onExpand)="onTabChange($event)"></tab>
+  <tabs-list [accordionView]="true" [collapse]="true" [tabByIndex$]="govTabIndex$">
+    <tab [name]="govTabsData.moj.name" [template]="MOJTemplate" [title]="lang.map[govTabsData.moj.langKey]"
+         (onExpand)="onGovTabChange($event)"></tab>
+    <tab [name]="govTabsData.moci.name" [template]="MOCITemplate" [title]="lang.map[govTabsData.moci.langKey]"
+         (onExpand)="onGovTabChange($event)"></tab>
+    <tab [name]="govTabsData.mawared.name" [template]="MawaredTemplate" [title]="lang.map[govTabsData.mawared.langKey]"
+         (onExpand)="onGovTabChange($event)"></tab>
+    <tab [name]="govTabsData.garsia.name" [template]="GarsiaTemplate" [title]="lang.map[govTabsData.garsia.langKey]"
+         (onExpand)="onGovTabChange($event)"></tab>
+    <tab [name]="govTabsData.izzab.name" [template]="IzzabTemplate" [title]="lang.map[govTabsData.izzab.langKey]"
+         (onExpand)="onGovTabChange($event)"></tab>
+    <tab [name]="govTabsData.kahramaa.name" [template]="KahramaaTemplate" [title]="lang.map[govTabsData.kahramaa.langKey]"
+         (onExpand)="onGovTabChange($event)"></tab>
+    <tab [name]="govTabsData.mol.name" [template]="MOLTemplate" [title]="lang.map[govTabsData.mol.langKey]"
+         (onExpand)="onGovTabChange($event)"></tab>
+    <tab [name]="govTabsData.sjc.name" [template]="SJCTemplate" [title]="lang.map[govTabsData.sjc.langKey]"
+         (onExpand)="onGovTabChange($event)"></tab>
   </tabs-list>
   <ng-template #MOJTemplate>
     <integration-inquiry-log-list #mojLogsComponent [gdxServiceId]="gdxServicesEnum.MOJ" [beneficiary]="beneficiary"
-      (onSelect)="selectLog($event)" (onLoadDone)="loadRecordsDone($event)"
+      (onSelect)="selectLog($event)" (onLoadDone)="loadRecordsDone($event, govTabsData)"
       (onReady)="setLookupComponentMap($event, mojLogsComponent)"></integration-inquiry-log-list>
     <div id="mojFlatsContainer">
-      <h6 class="text-primary">{{lang.map.flats_info}}</h6>
       <hr class="mt-0">
       <moj-flat-list [list]="relatedData[gdxServiceRelatedTypesEnum.MOJ_FLATS]"></moj-flat-list>
     </div>
     <div id="mojParcelsContainer">
-      <h6 class="text-primary">{{lang.map.parcels_info}}</h6>
       <hr class="mt-0">
       <moj-parcel-list [list]="relatedData[gdxServiceRelatedTypesEnum.MOJ_PARCELS]"></moj-parcel-list>
     </div>
   </ng-template>
   <ng-template #MOCITemplate>
     <integration-inquiry-log-list #mociLogsComponent [gdxServiceId]="gdxServicesEnum.MOCI" [beneficiary]="beneficiary"
-      (onSelect)="selectLog($event)" (onLoadDone)="loadRecordsDone($event)"
+      (onSelect)="selectLog($event)" (onLoadDone)="loadRecordsDone($event, govTabsData)"
       (onReady)="setLookupComponentMap($event, mociLogsComponent)"></integration-inquiry-log-list>
     <div id="mociCompaniesContainer">
-      <h6 class="text-primary">{{lang.map.company_info}}</h6>
       <hr class="mt-0">
       <moci-company-list [list]="relatedData[gdxServiceRelatedTypesEnum.MOCI_COMPANIES]"></moci-company-list>
     </div>
   </ng-template>
   <ng-template #MawaredTemplate>
     <integration-inquiry-log-list #mawaredLogsComponent [gdxServiceId]="gdxServicesEnum.MAWARED"
-      [beneficiary]="beneficiary" (onSelect)="selectLog($event)" (onLoadDone)="loadRecordsDone($event)"
+      [beneficiary]="beneficiary" (onSelect)="selectLog($event)" (onLoadDone)="loadRecordsDone($event, govTabsData)"
       (onReady)="setLookupComponentMap($event, mawaredLogsComponent)"></integration-inquiry-log-list>
     <div id="mawaredRelatedDataContainer">
-      <h6 class="text-primary">{{lang.map.employees}}</h6>
       <hr class="mt-0">
       <mawared-employee-list [list]="relatedData[gdxServiceRelatedTypesEnum.MAWARED_EMPLOYEES]"></mawared-employee-list>
     </div>
   </ng-template>
   <ng-template #GarsiaTemplate>
     <integration-inquiry-log-list #garciaLogsComponent [gdxServiceId]="gdxServicesEnum.GARSIA"
-      [beneficiary]="beneficiary" (onSelect)="selectLog($event)" (onLoadDone)="loadRecordsDone($event)"
+      [beneficiary]="beneficiary" (onSelect)="selectLog($event)" (onLoadDone)="loadRecordsDone($event, govTabsData)"
       (onReady)="setLookupComponentMap($event, garciaLogsComponent)"></integration-inquiry-log-list>
     <div id="garsiaPensionsContainer">
-      <h6 class="text-primary">{{lang.map.garsia_pensions}}</h6>
       <hr class="mt-0">
       <garsia-pension-list #garsiaPensionList [list]="relatedData[gdxServiceRelatedTypesEnum.GARSIA_PENSION]"
         (onSelectPension)="setPensionPayment($event)"></garsia-pension-list>
     </div>
     <div id="garsiaPensionPaymentsContainer">
-      <h6 class="text-primary">{{lang.map.payments}}</h6>
       <hr class="mt-0">
       <garsia-pension-payment-list #garsiaPaymentList
         [list]="relatedData[gdxServiceRelatedTypesEnum.GARSIA_PENSION_PAYMENT]"></garsia-pension-payment-list>
@@ -76,15 +71,14 @@
   </ng-template>
   <ng-template #IzzabTemplate>
     <integration-inquiry-log-list #izzabLogsComponent [gdxServiceId]="gdxServicesEnum.IZZAB" [beneficiary]="beneficiary"
-      (onSelect)="selectLog($event)" (onLoadDone)="loadRecordsDone($event)"
+      (onSelect)="selectLog($event)" (onLoadDone)="loadRecordsDone($event, govTabsData)"
       (onReady)="setLookupComponentMap($event, izzabLogsComponent)"></integration-inquiry-log-list>
   </ng-template>
   <ng-template #KahramaaTemplate>
     <integration-inquiry-log-list #kahramaaLogsComponent [gdxServiceId]="gdxServicesEnum.KAHRAMAA"
-      [beneficiary]="beneficiary" (onSelect)="selectLog($event)" (onLoadDone)="loadRecordsDone($event)"
+      [beneficiary]="beneficiary" (onSelect)="selectLog($event)" (onLoadDone)="loadRecordsDone($event, govTabsData)"
       (onReady)="setLookupComponentMap($event, kahramaaLogsComponent)"></integration-inquiry-log-list>
     <div id="kahramaaRelatedDataContainer">
-      <h6 class="text-primary">{{lang.map.outstanding_payment_report}}</h6>
       <hr class="mt-0">
       <kahramaa-outstanding-payment-list [list]="relatedData[gdxServiceRelatedTypesEnum.KAHRAMAA_OUTSTANDING_PAYMENTS]">
       </kahramaa-outstanding-payment-list>
@@ -92,20 +86,53 @@
   </ng-template>
   <ng-template #MOLTemplate>
     <integration-inquiry-log-list #molLogsComponent [gdxServiceId]="gdxServicesEnum.MOL" [beneficiary]="beneficiary"
-      (onSelect)="selectLog($event)" (onLoadDone)="loadRecordsDone($event)"
+      (onSelect)="selectLog($event)" (onLoadDone)="loadRecordsDone($event, govTabsData)"
       (onReady)="setLookupComponentMap($event, molLogsComponent)"></integration-inquiry-log-list>
     <div id="molRelatedDataContainer">
-      <h6 class="text-primary">{{lang.map.payroll_report}}</h6>
       <hr class="mt-0">
       <mol-related-data-list [list]="relatedData[gdxServiceRelatedTypesEnum.MOL_RELATED_DATA]"></mol-related-data-list>
     </div>
   </ng-template>
+  <ng-template #SJCTemplate>
+    <integration-inquiry-log-list #sjcLogsComponent [gdxServiceId]="gdxServicesEnum.SJC" [beneficiary]="beneficiary"
+      (onSelect)="selectLog($event)" (onLoadDone)="loadRecordsDone($event, govTabsData)"
+      (onReady)="setLookupComponentMap($event, sjcLogsComponent)"></integration-inquiry-log-list>
+    <div id="sjcRelatedDataContainer">
+      <hr class="mt-0">
+      <sjc-related-data-list [list]="relatedData[gdxServiceRelatedTypesEnum.SJC_RELATED_DATA]"></sjc-related-data-list>
+    </div>
+  </ng-template>
 </ng-template>
 <ng-template #CharitableEntitiesTemplate>
-  <tabs-list [accordionView]="true" [collapse]="true" [tabByIndex$]="tabIndex$">
-    <tab [name]="tabsData.qatarCharity.name" [template]="QatarCharityTemplate"
-      [title]="lang.map[tabsData.qatarCharity.langKey]" (onExpand)="onTabChange($event)"></tab>
+  <tabs-list [accordionView]="true" [collapse]="true" [tabByIndex$]="charityTabIndex$">
+    <tab [name]="charityTabsData.qatarZakatFund.name" [template]="QatarZakatFundTemplate"
+         [title]="lang.map[charityTabsData.qatarZakatFund.langKey]" (onExpand)="onCharityTabChange($event)"></tab>
+    <tab [name]="charityTabsData.qrcs.name" [template]="QRCSTemplate"
+         [title]="lang.map[charityTabsData.qrcs.langKey]" (onExpand)="onCharityTabChange($event)"></tab>
+    <tab [name]="charityTabsData.jasimHamadBinJasimCharityFund.name" [template]="JasimHamadBinJasimCharityFundTemplate"
+         [title]="lang.map[charityTabsData.jasimHamadBinJasimCharityFund.langKey]" (onExpand)="onCharityTabChange($event)"></tab>
+    <tab [name]="charityTabsData.qatarCancerSociety.name" [template]="QatarCancerSocietyTemplate"
+         [title]="lang.map[charityTabsData.qatarCancerSociety.langKey]" (onExpand)="onCharityTabChange($event)"></tab>
+    <tab [name]="charityTabsData.raf.name" [template]="RAFTemplate"
+         [title]="lang.map[charityTabsData.raf.langKey]" (onExpand)="onCharityTabChange($event)"></tab>
+    <tab [name]="charityTabsData.qatarCharity.name" [template]="QatarCharityTemplate"
+         [title]="lang.map[charityTabsData.qatarCharity.langKey]" (onExpand)="onCharityTabChange($event)"></tab>
   </tabs-list>
+  <ng-template #QatarZakatFundTemplate>
+    Qatar Zakat Fund
+  </ng-template>
+  <ng-template #QRCSTemplate>
+    Qatar Red Crescent Society
+  </ng-template>
+  <ng-template #JasimHamadBinJasimCharityFundTemplate>
+    Jassim & Hamad Bin Jassim Charitable Foundation
+  </ng-template>
+  <ng-template #QatarCancerSocietyTemplate>
+    Qatar Cancer Society
+  </ng-template>
+  <ng-template #RAFTemplate>
+    RAF
+  </ng-template>
   <ng-template #QatarCharityTemplate>
     Qatar Charity
   </ng-template>

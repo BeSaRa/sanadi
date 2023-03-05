@@ -38,7 +38,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
   headerColumn: string[] = ['extra-header'];
   form!: UntypedFormGroup;
   fields: FormlyFieldConfig[] = [];
-  serviceNumbers: number[] = Array.from(this.inboxService.services.keys()).filter(caseType => this.employeeService.userCanManage(caseType));
+  serviceNumbers: number[] = Array.from(this.inboxService.services.keys()).filter(caseType => this.hasSearchPermission(caseType));
   serviceControl: UntypedFormControl = new UntypedFormControl(this.serviceNumbers[0]);
   results: CaseModel<any, any>[] = [];
   actions: IMenuItem<CaseModel<any, any>>[] = [];
@@ -90,6 +90,10 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
     this.buildGridActions();
   }
 
+  private hasSearchPermission(caseType: number): boolean {
+    return this.employeeService.userCanManage(caseType);
+  }
+
   private isInstantSearch(params: any): boolean {
     const quickSearchCaseType = parseInt(params.quickCaseType);
     return !isNaN(quickSearchCaseType) && CommonUtils.isValidValue(quickSearchCaseType);
@@ -124,6 +128,14 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroy$),
         filter((params) => this.isInstantSearch(params)),
+        filter((params) => {
+          const hasPermission = this.hasSearchPermission(parseInt(params.quickCaseType));
+          if (!hasPermission) {
+            this.dialog.error(this.lang.map.msg_service_search_unavailable);
+            this.serviceControl.patchValue(this.serviceNumbers[0]);
+          }
+          return hasPermission;
+        }),
         tap((params) => this.serviceControl.patchValue(parseInt(params.quickCaseType))),
         delay(500)
       ).subscribe((value) => {

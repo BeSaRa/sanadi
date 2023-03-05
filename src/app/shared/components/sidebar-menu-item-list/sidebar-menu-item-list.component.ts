@@ -52,28 +52,31 @@ export class SidebarMenuItemListComponent implements OnInit {
     if (item.children.length) {
       item.toggle();
     } else {
-      if (item.canSearchInstant) {
-        this.openInstantServiceSearch($event, item);
+      if (!item.isEServiceMenu) {
+        this.router.navigate([item.path]).then();
       } else {
-        this.openInstantService($event, item);
+        if (item.hasEServiceSearchPermission) {
+          this.openEServiceSearch($event, item);
+        } else if (item.hasEServicePagePermission) {
+          this.openEService($event, item);
+        }
       }
-      // this.router.navigate([item.path]).then();
     }
   }
 
-  openInstantService($event: Event, item: MenuItem) {
+  openEService($event: Event, item: MenuItem) {
     $event.preventDefault();
     $event.stopPropagation();
-    if (!item.canInstantAdd) {
+    if (!item.hasEServicePagePermission) {
       return;
     }
     this.router.navigate([item.path]).then();
   }
 
-  openInstantServiceSearch($event: Event, item: MenuItem) {
+  openEServiceSearch($event: Event, item: MenuItem) {
     $event.preventDefault();
     $event.stopPropagation();
-    if (!item.canSearchInstant) {
+    if (!item.hasEServiceSearchPermission) {
       return;
     }
     this.router.navigate([item.defaultServiceSearchPath], {

@@ -39,7 +39,8 @@
       </ng-container>
       <ng-container cdkColumnDef="type">
         <th cdk-header-cell class="bg-primary text-white" *cdkHeaderCellDef> {{lang.map.attachment_type}}</th>
-        <td cdk-cell *cdkCellDef="let row"> {{row.attachmentTypeInfo.getName()}} </td>
+        <td cdk-cell
+            *cdkCellDef="let row"> {{row.attachmentTypeId === -1 ? row.documentTitle : row.attachmentTypeInfo.getName()}} </td>
       </ng-container>
       <ng-container cdkColumnDef="description">
         <th cdk-header-cell class="bg-primary text-white" *cdkHeaderCellDef> {{lang.map.lbl_description}}</th>

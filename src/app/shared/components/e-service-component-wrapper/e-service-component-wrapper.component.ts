@@ -64,6 +64,7 @@ import {
 import {ProjectImplementation} from '@models/project-implementation';
 import {CommonUtils} from '@helpers/common-utils';
 import {CharityViewButtonsGroupEnum} from '@app/enums/charity-view-buttons-group-enum';
+import {UrgentInterventionLicenseFollowup} from '@models/urgent-intervention-license-followup';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -766,6 +767,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
             ;
         },
         onClick: (item: CaseModel<any, any>) => {
+          if (item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_FOLLOWUP_SEND_TO_SINGLE_DEPARTMENT)) {
+              this.sendToSingleDepartmentReportReviewAction(item);
+            return;
+          }
           this.sendToSingleDepartmentAction(item);
         }
       },
@@ -1382,6 +1387,13 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
 
   private sendToSingleDepartmentAction(item: CaseModel<any, any>) {
     item.sendToSingleDepartment().subscribe(() => {
+      this.toast.success(this.lang.map.request_has_been_sent_successfully);
+      this.navigateToSamePageThatUserCameFrom();
+    });
+  }
+
+  private sendToSingleDepartmentReportReviewAction(item: CaseModel<any, any>) {
+    (item as UrgentInterventionLicenseFollowup).sendToSingleDepartmentReportReviewAction().subscribe(() => {
       this.toast.success(this.lang.map.request_has_been_sent_successfully);
       this.navigateToSamePageThatUserCameFrom();
     });
