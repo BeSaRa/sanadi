@@ -115,9 +115,34 @@
 </ng-template>
 <ng-template #CharitableEntitiesTemplate>
   <tabs-list [accordionView]="true" [collapse]="true" [tabByIndex$]="tabIndex$">
+    <tab [name]="tabsData.qatarZakatFund.name" [template]="QatarZakatFundTemplate"
+      [title]="lang.map[tabsData.qatarZakatFund.langKey]" (onExpand)="onTabChange($event)"></tab>
+    <tab [name]="tabsData.qrcs.name" [template]="QRCSTemplate"
+      [title]="lang.map[tabsData.qrcs.langKey]" (onExpand)="onTabChange($event)"></tab>
+    <tab [name]="tabsData.jasimHamadBinJasimCharityFund.name" [template]="JasimHamadBinJasimCharityFundTemplate"
+      [title]="lang.map[tabsData.jasimHamadBinJasimCharityFund.langKey]" (onExpand)="onTabChange($event)"></tab>
+    <tab [name]="tabsData.qatarCancerSociety.name" [template]="QatarCancerSocietyTemplate"
+      [title]="lang.map[tabsData.qatarCancerSociety.langKey]" (onExpand)="onTabChange($event)"></tab>
+    <tab [name]="tabsData.raf.name" [template]="RAFTemplate"
+      [title]="lang.map[tabsData.raf.langKey]" (onExpand)="onTabChange($event)"></tab>
     <tab [name]="tabsData.qatarCharity.name" [template]="QatarCharityTemplate"
-      [title]="lang.map[tabsData.qatarCharity.langKey]" (onExpand)="onTabChange($event)"></tab>
+         [title]="lang.map[tabsData.qatarCharity.langKey]" (onExpand)="onTabChange($event)"></tab>
   </tabs-list>
+  <ng-template #QatarZakatFundTemplate>
+    Qatar Zakat Fund
+  </ng-template>
+  <ng-template #QRCSTemplate>
+    Qatar Red Crescent Society
+  </ng-template>
+  <ng-template #JasimHamadBinJasimCharityFundTemplate>
+    Jassim & Hamad Bin Jassim Charitable Foundation
+  </ng-template>
+  <ng-template #QatarCancerSocietyTemplate>
+    Qatar Cancer Society
+  </ng-template>
+  <ng-template #RAFTemplate>
+    RAF
+  </ng-template>
   <ng-template #QatarCharityTemplate>
     Qatar Charity
   </ng-template>

@@ -132,9 +132,54 @@ export class IntegrationInquiriesComponent {
       serviceId: GdxServicesEnum.SJC,
       isLoaded: false
     },
+    qatarZakatFund: {
+      name: 'qatarZakatFund',
+      index: 8,
+      langKey: 'integration_qatar_zakat_fund',
+      validStatus: () => true,
+      isTouchedOrDirty: () => true,
+      // serviceId: GdxServicesEnum.QATAR_ZAKAT_FUND,
+      isLoaded: true
+    },
+    qrcs: {
+      name: 'qrcs',
+      index: 9,
+      langKey: 'integration_qrcs',
+      validStatus: () => true,
+      isTouchedOrDirty: () => true,
+      // serviceId: GdxServicesEnum.QRCS,
+      isLoaded: true
+    },
+    jasimHamadBinJasimCharityFund: {
+      name: 'jasimHamadBinJasimCharityFund',
+      index: 10,
+      langKey: 'integration_jasim_hamad_bin_jasim_charity_fund',
+      validStatus: () => true,
+      isTouchedOrDirty: () => true,
+      // serviceId: GdxServicesEnum.JASIM_HAMAD_BIN_JASIM_CHARITY,
+      isLoaded: true
+    },
+    qatarCancerSociety: {
+      name: 'qatarCancerSociety',
+      index: 11,
+      langKey: 'integration_qatar_cancer_society',
+      validStatus: () => true,
+      isTouchedOrDirty: () => true,
+      // serviceId: GdxServicesEnum.QATAR_CANCER_SOCIETY,
+      isLoaded: true
+    },
+    raf: {
+      name: 'raf',
+      index: 12,
+      langKey: 'integration_raf',
+      validStatus: () => true,
+      isTouchedOrDirty: () => true,
+      // serviceId: GdxServicesEnum.RAF,
+      isLoaded: true
+    },
     qatarCharity: {
       name: 'qatarCharity',
-      index: 8,
+      index: 13,
       langKey: 'integration_qatar_charity',
       validStatus: () => true,
       isTouchedOrDirty: () => true,

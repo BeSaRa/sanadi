@@ -1337,6 +1337,11 @@ export interface ILanguageKeys {
   integration_mol: string;
   integration_sjc: string;
   integration_qatar_charity: string;
+  integration_qatar_zakat_fund: string;
+  integration_qrcs: string;
+  integration_jasim_hamad_bin_jasim_charity_fund: string;
+  integration_qatar_cancer_society: string;
+  integration_raf: string;
   date_of_death: string;
   company_info: string;
   garsia_pensions: string;
