@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -5,8 +6,10 @@ import { CaseTypes } from '@app/enums/case-types.enum';
 import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
 import { BaseGenericEService } from '@app/generics/base-generic-e-service';
 import { CommonUtils } from '@app/helpers/common-utils';
+import { FBuilder } from '@app/helpers/FBuilder';
 import { HasLicenseApproval } from '@app/interfaces/has-license-approval';
 import { ILanguageKeys } from '@app/interfaces/i-language-keys';
+import { IFormRowGroup } from '@app/interfaces/iform-row-group';
 import { IServiceConstructor } from '@app/interfaces/iservice-constructor';
 import { GeneralInterceptor } from '@app/model-interceptors/general-interceptor';
 import { GeneralSearchCriteriaInterceptor } from '@app/model-interceptors/general-search-criteria-interceptor';
@@ -21,7 +24,7 @@ import { LicenseService } from '@app/services/license.service';
 import { ToastService } from '@app/services/toast.service';
 import { TabComponent } from '@app/shared/components/tab/tab.component';
 import { FormlyFieldConfig } from '@ngx-formly/core';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { delay, filter, map, skip, startWith, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
@@ -63,14 +66,13 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
 
 
   constructor(public lang: LangService,
-              private toast: ToastService,
               private router: Router,
               private activatedRoute: ActivatedRoute,
               private inboxService: InboxService,
               private employeeService: EmployeeService,
-              private configService: ConfigurationService,
               private licenseService: LicenseService,
-              private dialog: DialogService) {
+              private dialog: DialogService,
+              private http:HttpClient) {
   }
 
   ngOnDestroy(): void {
@@ -83,8 +85,8 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.form = new UntypedFormGroup({});
     this.reSelectService();
+    this._loadSearchFields();
     this.listenToServiceChange(this.serviceControl.value);
-    // this.listenToInstantSearch();
     this.listenToSearch();
     this.buildGridActions();
   }
@@ -93,16 +95,11 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
     return this.employeeService.userCanManage(caseType);
   }
 
-  private isInstantSearch(params: any): boolean {
-    const quickSearchCaseType = parseInt(params.quickCaseType);
-    return !isNaN(quickSearchCaseType) && CommonUtils.isValidValue(quickSearchCaseType);
-  }
-
   private search(value: Partial<CaseModel<any, any>>) {
     const caseType = (this.selectedService.getSearchCriteriaModel()).caseType;
     let criteria = this.selectedService.getSearchCriteriaModel().clone(value).filterSearchFields(this.fieldsNames);
     criteria.caseType = caseType;
-    this.searchState = this.normalizeSearchCriteria(criteria);
+     this.searchState = this.normalizeSearchCriteria(criteria);
     this.selectedService
       .search(criteria)
       .subscribe((results: CaseModel<any, any>[]) => {
@@ -122,25 +119,6 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
     };
   }
 
-  private listenToInstantSearch(): void {
-    this.activatedRoute.queryParams
-      .pipe(
-        takeUntil(this.destroy$),
-        filter((params) => {
-          const hasPermission = this.isInstantSearch(params) && this.hasSearchPermission(parseInt(params.quickCaseType));
-          if (!hasPermission) {
-            this.dialog.error(this.lang.map.msg_service_search_unavailable);
-            this.serviceControl.patchValue(this.serviceNumbers[0]);
-          }
-          return hasPermission;
-        }),
-        tap((params) => this.serviceControl.patchValue(parseInt(params.quickCaseType))),
-        delay(500)
-      ).subscribe((value) => {
-      this.search$.next(null);
-    });
-  }
-
   private _sortColumns(): void {
     const lastColumns = ['caseStatus', 'creatorInfo', 'createdOn'];
     this.searchColumns = this.searchColumns.filter(x => !lastColumns.includes(x)).concat(lastColumns);
@@ -155,34 +133,38 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
       .pipe(map(val => Number(val)))
       .pipe(map(val => this.inboxService.getService(val)))
       .subscribe((service: BaseGenericEService<any>) => {
-        // this.updateRoute();
         this.selectedService = service;
         this.searchColumns = this.selectedService.searchColumns;
-        if (this.employeeService.isExternalUser()) {
-          this.searchColumns = this.searchColumns.filter(x => x !== 'organization' && x !== 'organizationId' && x !== 'ouInfo');
-        }
         this._sortColumns();
         this.results = [];
-        this.selectedService
-          .loadSearchFields()
-          .subscribe((fields) => {
-            this.form.reset();
-            this.stringifyDefaultDates(fields[0]);
-            this.fields = fields;
-            this.setOldValues();
-            this.getFieldsNames(fields);
-          });
+        this.form.reset();
+        this.setDefaultDates();
       });
   }
-
+  private _loadSearchFields() {
+      this.http.get<IFormRowGroup[]>('assets/search/admin_license.json' )
+      .pipe(
+        map((rows: IFormRowGroup[]) => {
+          for (const row of rows) {
+            if (!row.fields) {
+              row.fields = [];
+            }
+          }
+          rows = rows.filter(x => x.fields && x.fields.length > 0);
+          return FBuilder.castFormlyFields(rows)
+        }))
+        .subscribe((fields) => {
+          this.stringifyDefaultDates(fields[0]);
+          this.fields = fields;
+          this.setOldValues();
+          this.getFieldsNames(fields);
+        }); ;
+  }
   actionViewLogs(item: CaseModel<any, any>) {
     item.viewLogs().onAfterClose$.subscribe(() => this.search$.next(null));
   }
 
   actionOpen(item: CaseModel<any, any>) {
-    /*item.open(this.actions, OpenFrom.SEARCH)
-     .pipe(switchMap(ref => ref.onAfterClose$))
-     .subscribe(() => this.search$.next(null));*/
     this.router.navigate([item.itemRoute, this.searchState], {queryParams: {item: item.itemDetails}}).then();
   }
 
@@ -351,9 +333,13 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
     const validForm$ = this.search$
       .pipe(skip(1))
       .pipe(filter(_ => this.form.valid))
-      .pipe(map(_ => this.prepareCriteriaModel()));
-    const invalidForm$ = this.search$.pipe(filter(_ => this.form.invalid));
-    const validEmptyForm$ = validForm$.pipe(filter(model => !model.criteriaHasValues()));
+       .pipe(map(_ => this.prepareCriteriaModel()))
+       .pipe(tap(model=>{console.log(model);
+       }));
+
+
+     const invalidForm$ = this.search$.pipe(filter(_ => this.form.invalid));
+     const validEmptyForm$ = validForm$.pipe(filter(model => !model.criteriaHasValues()));
 
     const validFormWithValue$ = validForm$.pipe(
       filter(model => model.criteriaHasValues()),
@@ -397,19 +383,23 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
     return this.serviceControl.value === CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST;
   }
 
-  stringifyDefaultDates(field: FormlyFieldConfig): void {
-    this.defaultDates = JSON.stringify(field.fieldGroup!.reduce((prev, item) => {
-      return {...prev, [(item.key as string)]: item.defaultValue};
-    }, {} as any));
+  stringifyDefaultDates(field?: FormlyFieldConfig): void {
+    if(field?.fieldGroup){
+      this.defaultDates = JSON.stringify(field.fieldGroup!.reduce((prev, item) => {
+        return {...prev, [(item.key as string)]: item.defaultValue};
+      }, {} as any));
+    }
   }
 
   private setDefaultDates(): void {
-    let dates = <Record<string, any>>(JSON.parse(this.defaultDates));
-    Object.keys(dates).forEach((key: string) => {
-      let date = dates[key] as any;
-      date.singleDate.jsDate = new Date(date.singleDate.jsDate);
-      this.form.get(key)?.patchValue(date);
-    });
+    if(this.defaultDates){
+      let dates = <Record<string, any>>(JSON.parse(this.defaultDates));
+      Object.keys(dates).forEach((key: string) => {
+        let date = dates[key] as any;
+        date.singleDate.jsDate = new Date(date.singleDate.jsDate);
+        this.form.get(key)?.patchValue(date);
+      });
+    }
   }
 
   // noinspection JSUnusedLocalSymbols

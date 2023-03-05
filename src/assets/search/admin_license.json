@@ -1,0 +1,69 @@
+[
+  {
+    "fields": [
+      {
+        "key": "createdOnFrom",
+        "type": "dateField",
+        "label": "creation_date_from",
+        "validations": {
+          "required": false
+        },
+        "dateOptions": {
+          "operator": "-",
+          "defaultValue": "now",
+          "value": "1 year"
+        }
+      },
+      {
+        "key": "createdOnTo",
+        "type": "dateField",
+        "label": "creation_date_to",
+        "validations": {
+          "required": false
+        }
+      }
+    ]
+  },
+  {
+    "fields": [
+      {
+        "key": "fullSerial",
+        "type": "input",
+        "label": "serial_number",
+        "validations": {
+          "required": false
+        },
+        "templateOptions": {
+          "maxLength": 50
+        }
+      },
+      {
+        "key": "caseStatus",
+        "type": "selectField",
+        "label": "lbl_status",
+        "selectOptions": {
+          "options": [],
+          "loader": "lookup.CommonCaseStatus",
+          "bindValue": "lookupKey",
+          "bindLabel": "basedOnLanguage"
+        }
+      }
+    ]
+  },
+  {
+    "fields": [
+      {
+        "key": "organizationId",
+        "type": "selectField",
+        "label": "lbl_organization",
+        "selectOptions": {
+          "options": [],
+          "loader": "organization.loadAsLookups",
+          "bindValue": "id",
+          "bindLabel": "basedOnLanguage"
+        }
+      }
+    ]
+  }
+
+]
