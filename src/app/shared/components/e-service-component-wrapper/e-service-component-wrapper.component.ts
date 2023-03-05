@@ -1,4 +1,4 @@
-import {GeneralAssociationMeetingAttendance} from './../../../models/general-association-meeting-attendance';
+import {GeneralAssociationMeetingAttendance} from '@models/general-association-meeting-attendance';
 import {
   AwarenessActivitySuggestionComponent
 } from '@modules/general-services/pages/awareness-activity-suggestion/awareness-activity-suggestion.component';
@@ -312,7 +312,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.component.save.next(this.saveTypes.FINAL);
         },
         data: {
-          charityButtonsGroup: CharityViewButtonsGroupEnum.RIGHT,
+          charityButtonsGroup: CharityViewButtonsGroupEnum.LEFT,
           groupOrder: 3
         }
       },
@@ -356,7 +356,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.component.save.next(this.saveTypes.DRAFT);
         },
         data: {
-          charityButtonsGroup: CharityViewButtonsGroupEnum.RIGHT,
+          charityButtonsGroup: CharityViewButtonsGroupEnum.LEFT,
           groupOrder: 5
         }
       },
@@ -385,7 +385,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.component.save.next(this.saveTypes.DRAFT_CONTINUE);
         },
         data: {
-          charityButtonsGroup: CharityViewButtonsGroupEnum.RIGHT,
+          charityButtonsGroup: CharityViewButtonsGroupEnum.LEFT,
           groupOrder: 5
         }
       },
@@ -399,7 +399,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           item.viewLogs();
         },
         data: {
-          charityButtonsGroup: CharityViewButtonsGroupEnum.LEFT,
+          charityButtonsGroup: CharityViewButtonsGroupEnum.RIGHT,
           groupOrder: 3
         }
       },
@@ -412,7 +412,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         disabled: () => !this.model || !this.model.id,
         onClick: () => this.print(),
         data: {
-          charityButtonsGroup: CharityViewButtonsGroupEnum.LEFT,
+          charityButtonsGroup: CharityViewButtonsGroupEnum.RIGHT,
           groupOrder: 2
         }
       },
@@ -424,7 +424,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         show: () => true,
         onClick: () => this.navigateToSamePageThatUserCameFrom(),
         data: {
-          charityButtonsGroup: CharityViewButtonsGroupEnum.LEFT,
+          charityButtonsGroup: CharityViewButtonsGroupEnum.RIGHT,
           groupOrder: 1
         }
       }
@@ -456,7 +456,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.component.save.next(this.saveTypes.FINAL);
         },
         data: {
-          charityButtonsGroup: CharityViewButtonsGroupEnum.RIGHT,
+          charityButtonsGroup: CharityViewButtonsGroupEnum.LEFT,
           groupOrder: 3
         }
       },
@@ -491,7 +491,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.component.save.next(this.saveTypes.DRAFT);
         },
         data: {
-          charityButtonsGroup: CharityViewButtonsGroupEnum.RIGHT,
+          charityButtonsGroup: CharityViewButtonsGroupEnum.LEFT,
           groupOrder: 5
         }
       },
@@ -511,7 +511,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.component.save.next(this.saveTypes.DRAFT_CONTINUE);
         },
         data: {
-          charityButtonsGroup: CharityViewButtonsGroupEnum.RIGHT,
+          charityButtonsGroup: CharityViewButtonsGroupEnum.LEFT,
           groupOrder: 5
         }
       },
@@ -571,7 +571,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.claimAction(item);
         },
         data: {
-          charityButtonsGroup: CharityViewButtonsGroupEnum.RIGHT,
+          charityButtonsGroup: CharityViewButtonsGroupEnum.LEFT,
           groupOrder: 1
         }
       },
@@ -583,7 +583,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         show: () => !this.internal,
         onClick: (item: CaseModel<any, any>) => EServiceComponentWrapperComponent.viewLogsAction(item),
         data: {
-          charityButtonsGroup: CharityViewButtonsGroupEnum.LEFT,
+          charityButtonsGroup: CharityViewButtonsGroupEnum.RIGHT,
           groupOrder: 3
         }
       },
@@ -596,7 +596,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         disabled: () => !this.model || !this.model.id,
         onClick: () => this.print(),
         data: {
-          charityButtonsGroup: CharityViewButtonsGroupEnum.LEFT,
+          charityButtonsGroup: CharityViewButtonsGroupEnum.RIGHT,
           groupOrder: 2
         }
       },
@@ -608,7 +608,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         show: (_item) => true,
         onClick: (item) => this.markAsUnreadAction(item),
         data: {
-          charityButtonsGroup: CharityViewButtonsGroupEnum.RIGHT,
+          charityButtonsGroup: CharityViewButtonsGroupEnum.LEFT,
           groupOrder: 4
         }
       },
@@ -620,7 +620,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         show: () => true,
         onClick: () => this.navigateToSamePageThatUserCameFrom(),
         data: {
-          charityButtonsGroup: CharityViewButtonsGroupEnum.LEFT,
+          charityButtonsGroup: CharityViewButtonsGroupEnum.RIGHT,
           groupOrder: 1
         }
       }
@@ -655,7 +655,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
           this.component.save.next(this.saveTypes.FINAL);
         },
         data: {
-          charityButtonsGroup: CharityViewButtonsGroupEnum.RIGHT,
+          charityButtonsGroup: CharityViewButtonsGroupEnum.LEFT,
           groupOrder: 3
         }
       },
@@ -668,7 +668,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         show: item => item.taskDetails.actions.includes(WFActions.ACTION_CANCEL_CLAIM),
         onClick: (item: CaseModel<any, any>) => this.releaseAction(item),
         data: {
-          charityButtonsGroup: CharityViewButtonsGroupEnum.RIGHT,
+          charityButtonsGroup: CharityViewButtonsGroupEnum.LEFT,
           groupOrder: 2
         }
       },
@@ -1203,7 +1203,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         show: () => !this.internal,
         onClick: (item: CaseModel<any, any>) => EServiceComponentWrapperComponent.viewLogsAction(item),
         data: {
-          charityButtonsGroup: CharityViewButtonsGroupEnum.LEFT,
+          charityButtonsGroup: CharityViewButtonsGroupEnum.RIGHT,
           groupOrder: 3
         }
       },
@@ -1216,7 +1216,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         disabled: () => !this.model || !this.model.id,
         onClick: () => this.print(),
         data: {
-          charityButtonsGroup: CharityViewButtonsGroupEnum.LEFT,
+          charityButtonsGroup: CharityViewButtonsGroupEnum.RIGHT,
           groupOrder: 2
         }
       },
@@ -1228,7 +1228,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         show: (_item) => true,
         onClick: (item) => this.markAsUnreadAction(item),
         data: {
-          charityButtonsGroup: CharityViewButtonsGroupEnum.RIGHT,
+          charityButtonsGroup: CharityViewButtonsGroupEnum.LEFT,
           groupOrder: 4
         }
       },
@@ -1240,7 +1240,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         show: () => true,
         onClick: () => this.navigateToSamePageThatUserCameFrom(),
         data: {
-          charityButtonsGroup: CharityViewButtonsGroupEnum.LEFT,
+          charityButtonsGroup: CharityViewButtonsGroupEnum.RIGHT,
           groupOrder: 1
         }
       }
