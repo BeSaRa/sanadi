@@ -87,7 +87,7 @@ const routes: Routes = [
       {
         path: 'dynamic-menus', loadChildren: () => import('./modules/dynamic-menus/dynamic-menus.module').then(m => m.DynamicMenusModule),
         canActivate: [DynamicMenuGuard],
-        data: {checkType: DynamicMenuRouteTypeEnum.MODULE}
+        data: {dynamicMenuRouteType: DynamicMenuRouteTypeEnum.MODULE}
       },
       {
         path: 'urgent-intervention',

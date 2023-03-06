@@ -21,8 +21,8 @@ export class DynamicMenuGuard implements CanActivate {
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> | boolean {
-    let isCheckingModule: DynamicMenuRouteTypeEnum = route.data.checkType;
-    let hasAccess: boolean = this._checkHasAccess(isCheckingModule, route.paramMap);
+    let dynamicMenuRouteType: DynamicMenuRouteTypeEnum = route.data.dynamicMenuRouteType;
+    let hasAccess: boolean = this._checkHasAccess(dynamicMenuRouteType, route.paramMap);
 
     if (!hasAccess) {
       this._showAccessDenied();
