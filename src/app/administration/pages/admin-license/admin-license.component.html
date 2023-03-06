@@ -38,44 +38,15 @@
             <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
               <table-header (textChange)="filter = $event" [tableTitle]="selectedServiceKey"
                             [sort]="table.dataSource.sort" [reload$]="search$">
-                <!-- <button [tooltip]="lang.map.print" [disabled]="!results.length" (click)="exportSearchResult()"
-                        class="btn icon-btn outline-none">
-                  <i class="mdi mdi-printer"></i>
-                </button> -->
               </table-header>
             </th>
-          </ng-container>
-
-          <ng-container cdkColumnDef="id">
-            <th cdk-header-cell sortable-header style="width: 200px" *cdkHeaderCellDef> {{lang.map.serial_number}}</th>
-            <td cdk-cell *cdkCellDef="let row">
-              <span (click)="actionOpen(row)" [ngClass]="{'dir-ltr': row.id}"
-                    class="text-primary cursor-pointer text-decoration-underline">{{row.id ?? lang.map.open_task}}</span>
-            </td>
           </ng-container>
           <ng-container cdkColumnDef="fullSerial">
             <th cdk-header-cell sortable-header style="width: 200px" *cdkHeaderCellDef> {{lang.map.serial_number}}</th>
             <td cdk-cell *cdkCellDef="let row">
-              <span (click)="actionOpen(row)" [ngClass]="{'dir-ltr': row.fullSerial}"
+              <span (click)="actionExportLicense(row)" [ngClass]="{'dir-ltr': row.fullSerial}"
                     class="text-primary cursor-pointer text-decoration-underline">{{row.fullSerial ?? lang.map.open_task}}</span>
             </td>
-          </ng-container>
-          <ng-container cdkColumnDef="category">
-            <th cdk-header-cell
-                *cdkHeaderCellDef> {{isConsultationSelected() ? lang.map.consulting_type : lang.map.subject}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.categoryInfo?.getName()}} </td>
-          </ng-container>
-          <ng-container cdkColumnDef="caseStatus">
-            <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.lbl_status}}</th>
-            <td cdk-cell *cdkCellDef="let row">
-              <!--              <i [tooltip]="" class="text-primary" [class]="row.getStatusIcon()"></i>-->
-              <span>{{row.caseStatusInfo?.getName()}}</span>
-            </td>
-          </ng-container>
-          <ng-container cdkColumnDef="fullName">
-            <th cdk-header-cell sortable-header
-                *cdkHeaderCellDef> {{isCoordinationWithOrganizationSelected() ? lang.map.campaign_name : lang.map.full_name}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.fullName}} </td>
           </ng-container>
           <ng-container cdkColumnDef="arName">
             <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.arabic_name}}</th>
@@ -85,65 +56,17 @@
             <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.english_name}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.enName}} </td>
           </ng-container>
-          <ng-container cdkColumnDef="organization">
-            <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.lbl_organization}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.organization}} </td>
+          <ng-container cdkColumnDef="licenseStartDate">
+            <th cdk-header-cell sortable-header *cdkHeaderCellDef>{{lang.map.license_start_date}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.licenseStartDate|date}} </td>
           </ng-container>
-          <ng-container cdkColumnDef="organizationId">
-            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_organization}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.ouInfo?.getName()}} </td>
-          </ng-container>
-          <ng-container cdkColumnDef="createdOn">
-            <th cdk-header-cell sortable-header *cdkHeaderCellDef>{{lang.map.creation_date}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.createdOn|date}} </td>
-          </ng-container>
-          <ng-container cdkColumnDef="creatorInfo">
-            <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.created_by}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.creatorInfo?.getName()}} </td>
-          </ng-container>
-          <ng-container cdkColumnDef="countryInfo">
-            <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.country}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.countryInfo?.getName()}} </td>
+          <ng-container cdkColumnDef="licenseEndDate">
+            <th cdk-header-cell sortable-header *cdkHeaderCellDef>{{lang.map.license_end_date}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.licenseEndDate|date}} </td>
           </ng-container>
           <ng-container cdkColumnDef="ouInfo">
             <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.lbl_organization}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.ouInfo?.getName()}} </td>
-          </ng-container>
-          <ng-container cdkColumnDef="requestClassificationInfo">
-            <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.request_classification}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.requestClassificationInfo?.getName()}} </td>
-          </ng-container>
-          <ng-container cdkColumnDef="subject">
-            <th cdk-header-cell sortable-header *cdkHeaderCellDef>{{lang.map.subject}}</th>
-            <td cdk-cell *cdkCellDef="let row">{{row.subject}}</td>
-          </ng-container>
-          <ng-container cdkColumnDef="projectName">
-            <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.project_name}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.projectNameInfo?.getName()}} </td>
-          </ng-container>
-          <ng-container cdkColumnDef="templateTypeInfo">
-            <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.model_type}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.templateTypeInfo?.getName()}} </td>
-          </ng-container>
-          <ng-container cdkColumnDef="domainInfo">
-            <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.the_domain}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.domainInfo?.getName()}} </td>
-          </ng-container>
-          <ng-container cdkColumnDef="projectTypeInfo">
-            <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.project_type}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.projectTypeInfo?.getName()}} </td>
-          </ng-container>
-          <ng-container cdkColumnDef="requestTypeInfo">
-            <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.request_type}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.requestTypeInfo?.getName()}} </td>
-          </ng-container>
-          <ng-container cdkColumnDef="domain">
-            <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.domain}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.domain}} </td>
-          </ng-container>
-          <ng-container cdkColumnDef="goal">
-            <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.goal}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.goal}} </td>
           </ng-container>
           <tr cdk-header-row *cdkHeaderRowDef="headerColumn"></tr>
           <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="table.columns"></tr>

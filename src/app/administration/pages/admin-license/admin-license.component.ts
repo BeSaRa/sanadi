@@ -1,7 +1,8 @@
+import { EmployeeService } from './../../../services/employee.service';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { CaseTypes } from '@app/enums/case-types.enum';
 import { BaseGenericEService } from '@app/generics/base-generic-e-service';
 import { FBuilder } from '@app/helpers/FBuilder';
@@ -13,14 +14,13 @@ import { GeneralSearchCriteriaInterceptor } from '@app/model-interceptors/genera
 import { CaseModel } from '@app/models/case-model';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
 import { DialogService } from '@app/services/dialog.service';
-import { EmployeeService } from '@app/services/employee.service';
 import { InboxService } from '@app/services/inbox.service';
 import { LangService } from '@app/services/lang.service';
 import { LicenseService } from '@app/services/license.service';
 import { TabComponent } from '@app/shared/components/tab/tab.component';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { filter, map, skip, startWith, takeUntil, tap } from 'rxjs/operators';
+import { filter, map, skip, startWith, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-admin-license',
@@ -31,7 +31,7 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
   private destroy$: Subject<any> = new Subject<any>();
   private selectedService!: BaseGenericEService<any>;
 
-  searchColumns: string[] = ['id','arName','enName','ouInfo','creatorInfo', 'createdOn'];
+  searchColumns: string[] = ['fullSerial','arName','enName','ouInfo','licenseStartDate', 'licenseEndDate'];
   headerColumn: string[] = ['extra-header'];
   form!: UntypedFormGroup;
   fields: FormlyFieldConfig[] = [];
@@ -44,14 +44,6 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
   filter: string = '';
   searchState: any;
   oldValuesAssigned: boolean = false;
-
-  // printLicense = [
-  //   CaseTypes.URGENT_INTERVENTION_LICENSING,
-  //   CaseTypes.FUNDRAISING_LICENSING,
-  //   CaseTypes.URGENT_INTERVENTION_CLOSURE,
-  //   CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION,
-  //   CaseTypes.PROJECT_IMPLEMENTATION
-  // ]
 
    servicesWithoutLicense = [
     CaseTypes.INQUIRY,
@@ -79,13 +71,12 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
 
 
   constructor(public lang: LangService,
-              private router: Router,
               private activatedRoute: ActivatedRoute,
               private inboxService: InboxService,
-              private employeeService: EmployeeService,
               private licenseService: LicenseService,
               private dialog: DialogService,
-              private http:HttpClient) {
+              private http:HttpClient,
+              private employeeService: EmployeeService) {
   }
 
   ngOnDestroy(): void {
@@ -105,8 +96,7 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
   }
 
   private hasSearchPermission(caseType: number): boolean {
-    return !this.servicesWithoutLicense.includes(caseType);
-    // return this.employeeService.userCanManage(caseType);
+    return !this.servicesWithoutLicense.includes(caseType) && this.employeeService.userCanManage(caseType);
   }
 
   private search(value: Partial<CaseModel<any, any>>) {
@@ -133,13 +123,6 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
     };
   }
 
-  private _sortColumns(): void {
-    const lastColumns = [ 'creatorInfo', 'createdOn'];
-    this.searchColumns = this.searchColumns
-    .filter(x=>x !== 'caseStatus')
-    .filter(x => !lastColumns.includes(x)).concat(lastColumns);
-  }
-
   private listenToServiceChange(serviceNumber?: number) {
     this.serviceControl
       .valueChanges
@@ -150,8 +133,6 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
       .pipe(map(val => this.inboxService.getService(val)))
       .subscribe((service: BaseGenericEService<any>) => {
         this.selectedService = service;
-        this.searchColumns = this.selectedService.searchColumns;
-        this._sortColumns();
         this.results = [];
         this.form.reset();
         this.setDefaultDates();
@@ -176,53 +157,14 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
           this.getFieldsNames(fields);
         }); ;
   }
-  actionViewLogs(item: CaseModel<any, any>) {
-    item.viewLogs().onAfterClose$.subscribe(() => this.search$.next(null));
-  }
 
-  actionOpen(item: CaseModel<any, any>) {
-    this.router.navigate([item.itemRoute, this.searchState], {queryParams: {item: item.id}}).then();
-  }
-
-  actionManageAttachments(item: CaseModel<any, any>) {
-    item.manageAttachments().onAfterClose$.subscribe(() => this.search$.next(null));
-  }
-
-  actionManageRecommendations(item: CaseModel<any, any>) {
-    item.manageRecommendations().onAfterClose$.subscribe(() => this.search$.next(null));
-  }
-
-  actionManageComments(item: CaseModel<any, any>) {
-    item.manageComments().onAfterClose$.subscribe(() => this.search$.next(null));
-  }
-
-  actionAddFollowup(item: CaseModel<any, any>) {
-    item.addFollowup().onAfterClose$.subscribe(() => this.search$.next(null));
-  }
-
-  actionExportModel(item: CaseModel<any, any>) {
-    item.exportModel().subscribe((blob) => {
-      window.open(blob.url);
-      this.search$.next(null);
-    });
-  }
-
-  actionExportLicense(exportedLicenseId: string, caseType: number) {
-    this.licenseService.showLicenseContent({id: exportedLicenseId}, caseType)
+  actionExportLicense(item :CaseModel<any,any>) {
+    this.licenseService.showLicenseContent({id: item.id}, item.caseType)
       .subscribe((blob) => {
         window.open(blob.url);
         this.search$.next(null);
       });
   }
-
-  exportSearchResult(): void {
-    let criteria = this.selectedService.getSearchCriteriaModel().clone(this.form.value).filterSearchFields(this.fieldsNames);
-    criteria = this.normalizeSearchCriteria(criteria);
-    this.selectedService
-      .exportSearch(criteria)
-      .subscribe((blob) => window.open(blob.url));
-  }
-
   private buildGridActions() {
     this.actions = [
       // open
@@ -231,7 +173,7 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
         icon: 'mdi-eye',
         label: 'open_task',
         data: {hideFromViewer: true},
-        onClick: (item: CaseModel<any, any>) => this.actionOpen(item)
+        onClick: (item: CaseModel<any, any>) => this.actionExportLicense(item)
       },
     ];
   }
