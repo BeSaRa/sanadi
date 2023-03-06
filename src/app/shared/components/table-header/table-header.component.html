@@ -1,5 +1,9 @@
 <div class="d-flex flex-row justify-content-start align-items-center bg-primary p-2 text-white {{headerClass}}">
   <h1 class="h6 my-1">{{tableTitle ? lang.map[tableTitle] : ''}}</h1>
+  <div class="flex-grow-1"></div>
+  <div *ngIf="customTemplate" class="flex-grow-1">
+    <ng-container *ngTemplateOutlet="customTemplate"></ng-container>
+  </div>
   <div>
     <button [tooltip]="lang.map.btn_add"
             (click)="add()" *ngIf="isAddAvailable"
@@ -12,11 +16,7 @@
       <i class="mdi {{actionIconsEnum.RELOAD}}"></i>
     </button>
   </div>
-  <div *ngIf="customTemplate">
-    <ng-container *ngTemplateOutlet="customTemplate"></ng-container>
-  </div>
 
-  <div class="flex-grow-1"></div>
   <!-- Risk Status -->
   <div class="d-flex gap-3 risk-status">
     <div class="d-flex" *ngIf="selectedFilter">
