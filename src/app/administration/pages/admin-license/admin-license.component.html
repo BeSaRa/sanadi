@@ -38,22 +38,24 @@
             <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
               <table-header (textChange)="filter = $event" [tableTitle]="selectedServiceKey"
                             [sort]="table.dataSource.sort" [reload$]="search$">
-                <button [tooltip]="lang.map.print" [disabled]="!results.length" (click)="exportSearchResult()"
+                <!-- <button [tooltip]="lang.map.print" [disabled]="!results.length" (click)="exportSearchResult()"
                         class="btn icon-btn outline-none">
                   <i class="mdi mdi-printer"></i>
-                </button>
+                </button> -->
               </table-header>
             </th>
           </ng-container>
 
+          <ng-container cdkColumnDef="id">
+            <th cdk-header-cell sortable-header style="width: 200px" *cdkHeaderCellDef> {{lang.map.serial_number}}</th>
+            <td cdk-cell *cdkCellDef="let row">
+              <span (click)="actionOpen(row)" [ngClass]="{'dir-ltr': row.id}"
+                    class="text-primary cursor-pointer text-decoration-underline">{{row.id ?? lang.map.open_task}}</span>
+            </td>
+          </ng-container>
           <ng-container cdkColumnDef="fullSerial">
             <th cdk-header-cell sortable-header style="width: 200px" *cdkHeaderCellDef> {{lang.map.serial_number}}</th>
             <td cdk-cell *cdkCellDef="let row">
-              <!--<a *ngIf="row.fullSerial" href="#"
-                 class="dir-ltr" [routerLink]="[row.itemRoute,searchState]"
-                 [queryParams]="{item:row.itemDetails}">{{row.fullSerial}}</a>
-              <a *ngIf="!row.fullSerial" href="#" [routerLink]="[row.itemRoute,searchState]"
-                 [queryParams]="{item:row.itemDetails}">{{lang.map.open_task}}</a>-->
               <span (click)="actionOpen(row)" [ngClass]="{'dir-ltr': row.fullSerial}"
                     class="text-primary cursor-pointer text-decoration-underline">{{row.fullSerial ?? lang.map.open_task}}</span>
             </td>
@@ -89,7 +91,7 @@
           </ng-container>
           <ng-container cdkColumnDef="organizationId">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_organization}}</th>
-            <td cdk-cell *cdkCellDef="let row"> {{row.organizationInfo?.getName()}} </td>
+            <td cdk-cell *cdkCellDef="let row"> {{row.ouInfo?.getName()}} </td>
           </ng-container>
           <ng-container cdkColumnDef="createdOn">
             <th cdk-header-cell sortable-header *cdkHeaderCellDef>{{lang.map.creation_date}}</th>
