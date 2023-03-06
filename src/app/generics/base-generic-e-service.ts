@@ -166,7 +166,7 @@ export abstract class BaseGenericEService<T extends { id: string }> {
     fallback: '$default'
   })
   private _getLicenseById(licenseId: string): Observable<T> {
-    return this.http.get<T>(this._getURLSegment() + '/license' + licenseId + '/details');
+    return this.http.get<T>(this._getURLSegment() + '/license/' + licenseId + '/details');
   }
 
   getLicenseById(licenseId: string): Observable<T> {
