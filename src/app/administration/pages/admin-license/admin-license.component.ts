@@ -3,11 +3,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CaseTypes } from '@app/enums/case-types.enum';
-import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
 import { BaseGenericEService } from '@app/generics/base-generic-e-service';
-import { CommonUtils } from '@app/helpers/common-utils';
 import { FBuilder } from '@app/helpers/FBuilder';
-import { HasLicenseApproval } from '@app/interfaces/has-license-approval';
 import { ILanguageKeys } from '@app/interfaces/i-language-keys';
 import { IFormRowGroup } from '@app/interfaces/iform-row-group';
 import { IServiceConstructor } from '@app/interfaces/iservice-constructor';
@@ -15,17 +12,15 @@ import { GeneralInterceptor } from '@app/model-interceptors/general-interceptor'
 import { GeneralSearchCriteriaInterceptor } from '@app/model-interceptors/general-search-criteria-interceptor';
 import { CaseModel } from '@app/models/case-model';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
-import { ConfigurationService } from '@app/services/configuration.service';
 import { DialogService } from '@app/services/dialog.service';
 import { EmployeeService } from '@app/services/employee.service';
 import { InboxService } from '@app/services/inbox.service';
 import { LangService } from '@app/services/lang.service';
 import { LicenseService } from '@app/services/license.service';
-import { ToastService } from '@app/services/toast.service';
 import { TabComponent } from '@app/shared/components/tab/tab.component';
 import { FormlyFieldConfig } from '@ngx-formly/core';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { delay, filter, map, skip, startWith, takeUntil, tap } from 'rxjs/operators';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { filter, map, skip, startWith, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-admin-license',
@@ -36,12 +31,10 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
   private destroy$: Subject<any> = new Subject<any>();
   private selectedService!: BaseGenericEService<any>;
 
-  searchColumns: string[] = [];
+  searchColumns: string[] = ['id','arName','enName','ouInfo','creatorInfo', 'createdOn'];
   headerColumn: string[] = ['extra-header'];
   form!: UntypedFormGroup;
   fields: FormlyFieldConfig[] = [];
-  serviceNumbers: number[] = Array.from(this.inboxService.services.keys()).filter(caseType => this.hasSearchPermission(caseType));
-  serviceControl: UntypedFormControl = new UntypedFormControl(this.serviceNumbers[0]);
   results: CaseModel<any, any>[] = [];
   actions: IMenuItem<CaseModel<any, any>>[] = [];
   search$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
@@ -52,13 +45,33 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
   searchState: any;
   oldValuesAssigned: boolean = false;
 
-  printLicense = [
-    CaseTypes.URGENT_INTERVENTION_LICENSING,
-    CaseTypes.FUNDRAISING_LICENSING,
+  // printLicense = [
+  //   CaseTypes.URGENT_INTERVENTION_LICENSING,
+  //   CaseTypes.FUNDRAISING_LICENSING,
+  //   CaseTypes.URGENT_INTERVENTION_CLOSURE,
+  //   CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION,
+  //   CaseTypes.PROJECT_IMPLEMENTATION
+  // ]
+
+   servicesWithoutLicense = [
+    CaseTypes.INQUIRY,
+    CaseTypes.CONSULTATION,
+    CaseTypes.INTERNATIONAL_COOPERATION,
+    CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL,
+    CaseTypes.INTERNAL_PROJECT_LICENSE,
+    CaseTypes.EXTERNAL_PROJECT_MODELS,
+    CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE,
     CaseTypes.URGENT_INTERVENTION_CLOSURE,
     CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION,
-    CaseTypes.PROJECT_IMPLEMENTATION
+    CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE,
+    CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP,
+    CaseTypes.NPO_MANAGEMENT,
+    CaseTypes.GENERAL_PROCESS_NOTIFICATION,
+    CaseTypes.CHARITY_ORGANIZATION_UPDATE,
+
   ]
+  serviceNumbers: number[] = Array.from(this.inboxService.services.keys()).filter(caseType => this.hasSearchPermission(caseType));
+  serviceControl: UntypedFormControl = new UntypedFormControl(this.serviceNumbers[0]);
 
   get criteriaTitle(): string {
     return this.lang.map.search_result + (this.results.length ? ' (' + this.results.length + ')' : '');
@@ -92,7 +105,8 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
   }
 
   private hasSearchPermission(caseType: number): boolean {
-    return this.employeeService.userCanManage(caseType);
+    return !this.servicesWithoutLicense.includes(caseType);
+    // return this.employeeService.userCanManage(caseType);
   }
 
   private search(value: Partial<CaseModel<any, any>>) {
@@ -101,7 +115,7 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
     criteria.caseType = caseType;
      this.searchState = this.normalizeSearchCriteria(criteria);
     this.selectedService
-      .search(criteria)
+      .licensesSearch(criteria)
       .subscribe((results: CaseModel<any, any>[]) => {
         this.results = results;
         if (this.results.length) {
@@ -120,8 +134,10 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
   }
 
   private _sortColumns(): void {
-    const lastColumns = ['caseStatus', 'creatorInfo', 'createdOn'];
-    this.searchColumns = this.searchColumns.filter(x => !lastColumns.includes(x)).concat(lastColumns);
+    const lastColumns = [ 'creatorInfo', 'createdOn'];
+    this.searchColumns = this.searchColumns
+    .filter(x=>x !== 'caseStatus')
+    .filter(x => !lastColumns.includes(x)).concat(lastColumns);
   }
 
   private listenToServiceChange(serviceNumber?: number) {
@@ -165,7 +181,7 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
   }
 
   actionOpen(item: CaseModel<any, any>) {
-    this.router.navigate([item.itemRoute, this.searchState], {queryParams: {item: item.itemDetails}}).then();
+    this.router.navigate([item.itemRoute, this.searchState], {queryParams: {item: item.id}}).then();
   }
 
   actionManageAttachments(item: CaseModel<any, any>) {
@@ -217,103 +233,6 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
         data: {hideFromViewer: true},
         onClick: (item: CaseModel<any, any>) => this.actionOpen(item)
       },
-      // view logs
-      {
-        type: 'action',
-        icon: 'mdi-view-list-outline',
-        label: 'logs',
-        onClick: (item: CaseModel<any, any>) => this.actionViewLogs(item)
-      },
-      // manage attachments
-      {
-        type: 'action',
-        icon: 'mdi-paperclip',
-        label: 'manage_attachments',
-        data: {hideFromViewer: true},
-        show: (item: CaseModel<any, any>) => {
-          let caseStatus = item.getCaseStatus();
-          return (caseStatus !== CommonCaseStatus.CANCELLED && caseStatus !== CommonCaseStatus.FINAL_APPROVE && caseStatus !== CommonCaseStatus.FINAL_REJECTION);
-        },
-        onClick: (item: CaseModel<any, any>) => {
-          this.actionManageAttachments(item);
-        }
-      },
-      // recommendations
-      {
-        type: 'action',
-        icon: 'mdi-star-settings',
-        label: 'manage_recommendations',
-        data: {hideFromViewer: true},
-        show: (item: CaseModel<any, any>) => {
-          return this.employeeService.isInternalUser() &&
-            ![CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL,
-              CaseTypes.PARTNER_APPROVAL,
-              CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL,
-              CaseTypes.INTERNAL_PROJECT_LICENSE,
-              CaseTypes.EXTERNAL_PROJECT_MODELS,
-              CaseTypes.URGENT_INTERVENTION_LICENSING].includes(item.caseType);
-        },
-        onClick: (item: CaseModel<any, any>) => {
-          this.actionManageRecommendations(item);
-        }
-      },
-      // manage comments
-      {
-        type: 'action',
-        icon: 'mdi-comment-text-multiple-outline',
-        label: 'manage_comments',
-        data: {hideFromViewer: true},
-        show: (item: CaseModel<any, any>) => {
-          return this.employeeService.isInternalUser() && item.getCaseStatus() !== CommonCaseStatus.CANCELLED;
-        },
-        onClick: (item: CaseModel<any, any>) => {
-          this.actionManageComments(item);
-        }
-      },
-      // print request
-      {
-        type: 'action',
-        icon: 'mdi-printer',
-        label: 'print',
-        show: (item: CaseModel<any, any>) => item.getCaseType() !== CaseTypes.URGENT_INTERVENTION_LICENSE_FOLLOWUP,
-        onClick: (item: CaseModel<any, any>) => {
-          this.actionExportModel(item);
-        }
-      },
-      // print generated license
-      {
-        type: 'action',
-        icon: 'mdi-printer',
-        label: 'print_license',
-        show: (item: CaseModel<any, any>) => {
-          if (!item.isFinalApproved()) {
-            return false;
-          }
-          return this.printLicense.includes(item.getCaseType());
-        },
-        onClick: (item: CaseModel<any, any>) => {
-          let licenseIdToShow = (item as unknown as HasLicenseApproval).exportedLicenseId;
-          if (item.getCaseType() === CaseTypes.URGENT_INTERVENTION_CLOSURE) {
-            licenseIdToShow = (item as unknown as HasLicenseApproval).licenseVSID;
-          }
-          this.actionExportLicense(licenseIdToShow, item.getCaseType());
-        }
-      },
-      // followup
-      {
-        type: 'action',
-        icon: 'mdi-format-align-left',
-        label: 'followup',
-        disabled: (item) => {
-          return (!item.isFinalApproved() && !item.isInitialApproved());
-        },
-        show: () => {
-          return this.employeeService.isInternalUser() && this.employeeService.hasPermissionTo('ADD_FOLLOWUP');
-        },
-        onClick: (item: CaseModel<any, any>) => {
-          this.actionAddFollowup(item);
-        }
-      }
     ];
   }
 
@@ -333,9 +252,8 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
     const validForm$ = this.search$
       .pipe(skip(1))
       .pipe(filter(_ => this.form.valid))
-       .pipe(map(_ => this.prepareCriteriaModel()))
-       .pipe(tap(model=>{console.log(model);
-       }));
+      .pipe(map(_ => this.prepareCriteriaModel()));
+
 
 
      const invalidForm$ = this.search$.pipe(filter(_ => this.form.invalid));
