@@ -1,11 +1,11 @@
-<div class="row pb-3">
+<!-- <div class="row pb-3">
   <app-page-header [customTemplate]="headerTemplate"></app-page-header>
   <ng-container>
     <app-grid-search (searchTextEvent)="filterRecords($event)"></app-grid-search>
   </ng-container>
-</div>
+</div> -->
 
-<ng-template #headerTemplate>
+<!-- <ng-template #headerTemplate>
   <div class="align-items-center">
     <h1 class="h6 text-primary m-0 d-inline-block">{{ lang.map.menu_admin_lookups }}</h1>
     <button class="btn btn-link outline-none" tooltip="{{ lang.map.btn_add }}" (click)="addCallback()">
@@ -15,7 +15,7 @@
       <i class="mdi mdi-reload"></i>
     </button>
   </div>
-</ng-template>
+</ng-template> -->
 
 <tabs-list (onTabChange)="tabChanged($event)">
   <tab [name]="tabsData.workField.name" [template]="workFieldTemplate" *ngIf="canShowTab(tabsData.workField)"
