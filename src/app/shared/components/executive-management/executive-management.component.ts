@@ -1,6 +1,6 @@
 import { Lookup } from '@models/lookup';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 import { UserClickOn } from '@app/enums/user-click-on.enum';
 import { CommonUtils } from '@helpers/common-utils';
@@ -42,7 +42,7 @@ export class ExecutiveManagementComponent implements OnInit {
   get list(): ExecutiveManagement[] {
     return this._list;
   }
-
+  hasNationality: boolean = false;
   @Input() nationalities: Lookup[] = [];
   @Input() countriesList: Country[] = [];
   @Input() readonly: boolean = false;
@@ -99,6 +99,14 @@ export class ExecutiveManagementComponent implements OnInit {
       show: (_item: ExecutiveManagement) => this.readonly
     }
   ];
+  sortingCallbacks = {
+    nationality: (a: ExecutiveManagement, b: ExecutiveManagement, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.nationalityInfo.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.nationalityInfo.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+
+  }
 
   ngOnInit(): void {
     this.dataSource.next(this.list);
@@ -119,6 +127,10 @@ export class ExecutiveManagementComponent implements OnInit {
     this.form = this.fb.group(
       new ExecutiveManagement().getManagerFields(true)
     );
+    this.hasNationality = !!this.nationalities.length;
+    if (this.hasNationality) {
+      this.nationalitiyField.setValidators([Validators.required])
+    }
   }
 
   private listenToAdd() {
@@ -186,10 +198,15 @@ export class ExecutiveManagementComponent implements OnInit {
         }),
         map(() => {
           let formValue = this.form.getRawValue();
+          let nationalityInfo: AdminResult =
+            this.nationalities
+              .find((x) => x.id === formValue.country)
+              ?.createAdminResult() ?? new AdminResult();
 
           return new ExecutiveManagement().clone({
             ...this.current,
-            ...formValue
+            ...formValue,
+            nationalityInfo: nationalityInfo,
           });
         })
       )
@@ -282,5 +299,9 @@ export class ExecutiveManagementComponent implements OnInit {
     this.list = [];
     this._updateList(null, 'NONE');
     this._setComponentReadiness('READY');
+  }
+
+  get nationalitiyField(): UntypedFormControl {
+    return (this.form.get('nationality')) as UntypedFormControl;
   }
 }

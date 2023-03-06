@@ -2,16 +2,13 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { LangService } from "@services/lang.service";
 import { ToastService } from "@services/toast.service";
 import { DialogService } from "@services/dialog.service";
-import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from "@angular/forms";
+import {  UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from "@angular/forms";
 import { ReadinessStatus } from "@app/types/types";
 import { BehaviorSubject, Subject } from "rxjs";
 import { filter, map, take, takeUntil, tap } from "rxjs/operators";
 import { UserClickOn } from "@app/enums/user-click-on.enum";
 import { ContactOfficer } from "@app/models/contact-officer";
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
-import { CommonUtils } from '@app/helpers/common-utils';
-import { SortEvent } from '@app/interfaces/sort-event';
-import { AdminResult } from '@app/models/admin-result';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
 
 @Component({
