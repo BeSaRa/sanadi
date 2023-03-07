@@ -7,7 +7,7 @@
 </div>
 <div class="dialog-content" #dialogContent>
   <form class="w800px" novalidate autocomplete="off" [formGroup]="form">
-    <tabs-list [tabByIndex$]="tabIndex$">
+    <tabs-list [tabByIndex$]="tabIndex$" [hasForm]="true">
       <tab [name]="tabsData.basic.name" [template]="basicTabTemplate" [title]="lang.map.lbl_basic_info"
            [hasError]="form.invalid"></tab>
       <tab [name]="tabsData.organizations.name" [template]="organizationsTabTemplate"

@@ -1,5 +1,5 @@
 <div class="row">
-  <tabs-list [accordionView]="accordionView">
+  <tabs-list [accordionView]="accordionView" [hasForm]="true">
     <tab [hasError]="basicInfo.invalid" [template]="basic_info" [title]="lang.map.lbl_basic_info" name="basic_info">
     </tab>
     <tab [hasError]="requesterInfo.invalid" [template]="requester_info" [title]="lang.map.requester_info"

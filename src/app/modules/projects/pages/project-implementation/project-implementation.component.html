@@ -1,6 +1,6 @@
 <div class="row">
   <!--  <tabs-list [activeTabIndex]="2" [accordionView]="accordionView">-->
-  <tabs-list [accordionView]="accordionView">
+  <tabs-list [accordionView]="accordionView" [hasForm]="true">
     <tab name="basic_info" [hasError]="basicInfo.invalid" [template]="basic_info" [title]="lang.map.lbl_basic_info">
     </tab>
     <tab name="project_info" [hasError]="projectInfo.invalid" [template]="project_info"

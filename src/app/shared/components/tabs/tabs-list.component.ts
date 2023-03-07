@@ -29,6 +29,7 @@ export class TabsListComponent implements OnDestroy, AfterContentInit, OnInit {
   @Input() activeTabIndex: number = 0;
   @Input() tabByIndex$!: Subject<number>;
   @Input() accordionView: boolean = false;
+  @Input() hasForm: boolean = false;
 
   private _collapse: boolean = false;
   @Input()
@@ -60,6 +61,7 @@ export class TabsListComponent implements OnDestroy, AfterContentInit, OnInit {
 
   ngOnInit(): void {
     this.tabListService.accordionView = this.accordionView;
+    this.tabListService.hasForm = this.hasForm;
     this.listenToOutSideTabChange();
     this.paddingClass = this.employeeService.getCurrentUser() ? (this.employeeService.isExternalUser() ? '' : 'pb-2') : '';
   }

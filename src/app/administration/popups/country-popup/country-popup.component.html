@@ -7,7 +7,7 @@
 <div class="dialog-content" #dialogContent>
   <form class="w600px" novalidate autocomplete="off"
         [formGroup]="form">
-    <tabs-list (onTabChange)="setDialogButtonsVisibility($event)" [tabByIndex$]="selectedTabIndex$">
+    <tabs-list [hasForm]="true" (onTabChange)="setDialogButtonsVisibility($event)" [tabByIndex$]="selectedTabIndex$">
       <tab [name]="tabsData.basic.name" [template]="basicTabTemplate" [title]="langService.map.lbl_basic_info"
            [hasError]="fm.getFieldInvalidStatus('basic')"></tab>
     </tabs-list>

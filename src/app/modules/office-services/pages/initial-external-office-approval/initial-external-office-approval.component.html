@@ -1,6 +1,6 @@
 <div class="d-flex flex-column">
   <div class="row">
-    <tabs-list [accordionView]="accordionView">
+    <tabs-list [accordionView]="accordionView" [hasForm]="true">
       <tab [name]="tabsData.basicInfo.name" [hasError]="getTabInvalidStatus('basicInfo')"
            [template]="basicInfoTabTemplate" [title]="lang.map.lbl_basic_info">{{lang.map.lbl_basic_info}}</tab>
       <tab [name]="tabsData.comments.name" [hasError]="getTabInvalidStatus('comments')"

@@ -6,7 +6,7 @@
   <button type="button" class="btn-close btn-close-white" tabindex="-1" dialogClose aria-label="Close"></button>
 </div>
 <div class="dialog-content w800px" #dialogContent>
-  <tabs-list (onTabChange)="onTabChange($event)">
+  <tabs-list (onTabChange)="onTabChange($event)" [hasForm]="true">
     <tab [name]="tabsData.basic.name" [hasError]="getTabInvalidStatus('basic')" [template]="basicInfoTab"
       [title]="lang.map.lbl_basic_info"></tab>
     <tab [name]="tabsData.permissions.name" [hasError]="getTabInvalidStatus('permissions')" [template]="permissionsTab"

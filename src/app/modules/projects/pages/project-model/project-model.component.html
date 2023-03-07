@@ -1,5 +1,5 @@
 <div class="row">
-  <tabs-list [accordionView]="accordionView" class="py-4" [tabByIndex$]="tabIndex$">
+  <tabs-list [accordionView]="accordionView" [hasForm]="true" class="py-4" [tabByIndex$]="tabIndex$">
     <tab [name]="tabsData.basicInfo.name" [hasError]="getTabInvalidStatus('basicInfo')"
          [template]="basicInfoTab" [title]="lang.map.lbl_basic_info"></tab>
     <tab [name]="tabsData.projectCategory.name" [hasError]="getTabInvalidStatus('projectCategory')"

@@ -1,6 +1,6 @@
 <div class="row">
   <form autocomplete="off" [formGroup]="form" id="form">
-    <tabs-list [accordionView]="accordionView" *ngIf="tabs.length > 0">
+    <tabs-list [accordionView]="accordionView" [hasForm]="true" *ngIf="tabs.length > 0">
       <tab
         *ngFor="let tab of tabs; let i = index"
         [name]="tab.name"

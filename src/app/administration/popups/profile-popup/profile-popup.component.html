@@ -8,7 +8,7 @@
   </div>
 </div>
 <div class="dialog-content" style="width:900px" #dialogContent>
-  <tabs-list (onTabChange)="onTabChange($event)">
+  <tabs-list (onTabChange)="onTabChange($event)" [hasForm]="true">
     <tab [name]="tabsData.basic.name" [hasError]="!tabsData.basic.validStatus()" [template]="basicInfoTab"
       [title]="lang.map.lbl_basic_info"></tab>
     <tab *ngIf="tabsData.services.show!()" [name]="tabsData.services.name" [hasError]="false" [template]="linkServices"
