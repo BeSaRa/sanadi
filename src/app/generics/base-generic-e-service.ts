@@ -154,7 +154,24 @@ export abstract class BaseGenericEService<T extends { id: string }> {
   search(model: Partial<T>): Observable<T[]> {
     return this.searchService.search(model);
   }
+  @CastResponse(undefined, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  licensesSearch(model: Partial<T>): Observable<T[]> {
+    return this.searchService.licensesSearch(model);
+  }
+  @CastResponse(undefined, {
+    unwrap: 'rs',
+    fallback: '$default'
+  })
+  private _getLicenseById(licenseId: string): Observable<T> {
+    return this.http.get<T>(this._getURLSegment() + '/license/' + licenseId + '/details');
+  }
 
+  getLicenseById(licenseId: string): Observable<T> {
+    return this._getLicenseById(licenseId);
+  }
   addComment(caseId: string, comment: Partial<CaseComment>): Observable<CaseComment> {
     return this.commentService.create(caseId, comment);
   }

@@ -1,3 +1,4 @@
+import { AdminLicenseComponent } from './pages/admin-license/admin-license.component';
 import {CustomMenuComponent} from './pages/custom-menu/custom-menu.component';
 import {GeneralProcessComponent} from './pages/general-process/general-process.component';
 import {SubTeamComponent} from './pages/sub-team/sub-team.component';
@@ -188,6 +189,11 @@ const routes: Routes = [
   },
   {
     path: 'global-settings', component: GlobalSettingsComponent,
+    canActivate: [PermissionGuard],
+    data: {permissionKey: '', configPermissionGroup: null, checkAnyPermission: false}
+  },
+  {
+    path: 'admin-license', component: AdminLicenseComponent,
     canActivate: [PermissionGuard],
     data: {permissionKey: '', configPermissionGroup: null, checkAnyPermission: false}
   }
