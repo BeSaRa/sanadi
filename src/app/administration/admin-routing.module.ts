@@ -1,3 +1,4 @@
+import { TrainingProgramPartnerComponent } from './pages/training-program-partner/training-program-partner.component';
 import { AdminLicenseComponent } from './pages/admin-license/admin-license.component';
 import {CustomMenuComponent} from './pages/custom-menu/custom-menu.component';
 import {GeneralProcessComponent} from './pages/general-process/general-process.component';
@@ -100,6 +101,11 @@ const routes: Routes = [
     path: 'job-titles', component: JobTitleComponent,
     canActivate: [PermissionGuard],
     data: {permissionKey: PermissionsEnum.MANAGE_JOB_TITLES, configPermissionGroup: null, checkAnyPermission: false}
+  },
+  {
+    path: 'training-program-partner', component: TrainingProgramPartnerComponent,
+    canActivate: [PermissionGuard],
+    data: {permissionKey: PermissionsEnum.TRAINING_PROGRAM_PARTNER, configPermissionGroup: null, checkAnyPermission: false}
   },
   {
     path: 'general-process-template', component: GeneralProcessComponent,

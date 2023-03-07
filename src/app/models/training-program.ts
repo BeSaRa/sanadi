@@ -32,6 +32,8 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
   trainingDate!: string;
   registrationDate!: string;
   trainingObjective!: string;
+  trainingDomain!: number;
+  trainingPartner!: number;
   trainingTopics!: string;
   targetOrganizationList!: string;
   targetOrganizationListIds: number[] = [];
@@ -93,6 +95,8 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
       targetAudienceListIds,
       durationInDays,
       durationInHours,
+      trainingDomain,
+      trainingPartner,
       averageDurationInHours,
       startDate,
       endDate,
@@ -126,6 +130,12 @@ export class TrainingProgram extends BaseModel<TrainingProgram, TrainingProgramS
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),
         CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX)
       ]] : trainingTopics,
+      trainingDomain: controls ? [trainingDomain, [
+        CustomValidators.required
+      ]] : trainingDomain,
+      trainingPartner: controls ? [trainingPartner, [
+        CustomValidators.required
+      ]] : trainingPartner,
       targetAudienceListIds: controls ? [targetAudienceListIds, [
         CustomValidators.requiredArray
       ]] : targetAudienceListIds,

@@ -1811,4 +1811,9 @@ export interface ILanguageKeys {
   err_must_have_letters:string;
   msg_qatari_transaction_should_not_exceed_due_amount:string;
   menu_admin_license:string;
+  training_domain_name:string;
+  training_partner_name:string;
+  menu_training_program_partner:string;
+  lbl_edit_training_program_partner:string;
+  lbl_add_training_program_partner:string;
 }
