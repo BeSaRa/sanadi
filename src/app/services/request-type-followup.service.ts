@@ -40,7 +40,8 @@ export class RequestTypeFollowupService {
     [CaseTypes.AWARENESS_ACTIVITY_SUGGESTION]: this.lookupService.listByCategory.CollectionRequestType,
     [CaseTypes.ORGANIZATION_ENTITIES_SUPPORT]: this.lookupService.listByCategory.CollectionRequestType,
     [CaseTypes.PROJECT_IMPLEMENTATION]: this.lookupService.listByCategory.ServiceRequestTypeNoRenew,
-    [CaseTypes.PROJECT_FUNDRAISING]: this.lookupService.listByCategory.ServiceRequestTypeNoRenew
+    [CaseTypes.PROJECT_FUNDRAISING]: this.lookupService.listByCategory.ServiceRequestTypeNoRenew,
+    [CaseTypes.FINANCIAL_TRANSFERS_LICENSING]: this.lookupService.listByCategory.FinancialTransferRequestType
   }
 
   constructor(private lookupService: LookupService) {
