@@ -2,13 +2,13 @@ import {Component, EventEmitter, forwardRef, Injector, Input, OnDestroy, OnInit}
 import {ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, NgControl, UntypedFormControl} from "@angular/forms";
 import {combineLatest, Subject} from "rxjs";
 import {ImplementingAgency} from "@models/implementing-agency";
-import {ImplementingAgencyTypes} from "@app/enums/implementing-agency-types.enum";
+import {ImplementingAgencyTypes} from "@enums/implementing-agency-types.enum";
 import {filter, switchMap, takeUntil, tap} from "rxjs/operators";
 import {CommonService} from "@services/common.service";
-import {LangService} from '@app/services/lang.service';
+import {LangService} from '@services/lang.service';
 import {AdminResult} from "@models/admin-result";
 import {DialogService} from "@services/dialog.service";
-import {UserClickOn} from "@app/enums/user-click-on.enum";
+import {UserClickOn} from "@enums/user-click-on.enum";
 
 @Component({
   selector: 'implementing-agency-list',

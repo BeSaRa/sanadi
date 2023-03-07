@@ -18,7 +18,8 @@ enum SystemPathsEnum {
   SEARCH_SERVICES = '/home/services/search/', // don't remove trailing slash
   CONSULTATION_SERVICE = '/home/services/consultations',
   INQUIRY_SERVICE = '/home/services/inquiries',
-  INTERNATIONAL_COOPERATION_SERVICE = '/home/services/international-cooperation'
+  INTERNATIONAL_COOPERATION_SERVICE = '/home/services/international-cooperation',
+  PROJECT_IMPLEMENTATION = '/home/services/project-implementation'
 }
 
 export const newNavigationMenuList = [
@@ -178,6 +179,59 @@ export const newNavigationMenuList = [
     permissionGroup: null,
     parent: 301,
     group: 'service_' + CaseTypes.INTERNATIONAL_COOPERATION,
+    itemOrder: 3,
+    svg: null
+  },
+  {
+    id: 401,
+    langKey: 'menu_project_implementation',
+    path: SystemPathsEnum.PROJECT_IMPLEMENTATION,
+    icon: 'mdi-badge-account-horizontal-outline',
+    isSvg: false,
+    caseType: CaseTypes.PROJECT_IMPLEMENTATION,
+    permission: '',
+    permissionGroup: PermissionGroupsEnum.PROJECT_IMPLEMENTATION_SERVICES_PERMISSION_GROUP,
+    parent: null,
+    group: 'main',
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 402,
+    langKey: serviceAddUpdateLabel,
+    path: SystemPathsEnum.PROJECT_IMPLEMENTATION + '/service',
+    icon: serviceAddUpdateIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.PROJECT_IMPLEMENTATION,
+    permissionGroup: null,
+    parent: 401,
+    group: 'service_' + CaseTypes.PROJECT_IMPLEMENTATION,
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 403,
+    langKey: serviceSearchLabel,
+    path: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.PROJECT_IMPLEMENTATION),
+    icon: serviceSearchIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.SEARCH_SERVICE_PROJECT_IMPLEMENTATION,
+    permissionGroup: null,
+    parent: 401,
+    group: 'service_' + CaseTypes.PROJECT_IMPLEMENTATION,
+    itemOrder: 2,
+    svg: null
+  },
+  {
+    id: 404,
+    langKey: serviceOutputLabel,
+    path: SystemPathsEnum.PROJECT_IMPLEMENTATION + '/outputs',
+    icon: serviceOutputIcon,
+    isSvg: false,
+    permission: Constants.SERVICE_OUTPUT_PERMISSION,
+    permissionGroup: null,
+    parent: 401,
+    group: 'service_' + CaseTypes.PROJECT_IMPLEMENTATION,
     itemOrder: 3,
     svg: null
   },

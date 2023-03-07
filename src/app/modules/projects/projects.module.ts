@@ -57,7 +57,6 @@ import {
 import {
   SpecificMemberCommentsAndNotesComponent
 } from './popups/specific-member-comments-and-notes/specific-member-comments-and-notes.component';
-import {ChooseTemplatePopupComponent} from './popups/choose-template-popup/choose-template-popup.component';
 import {
   DeductionRatioManagerComponent
 } from './pages/project-fundraising/components/deduction-ratio-manager/deduction-ratio-manager.component';
@@ -70,24 +69,6 @@ import {
 import {
   ProjectFundraisingApproveTaskPopupComponent
 } from './popups/project-fundraising-approve-task-popup/project-fundraising-approve-task-popup.component';
-import {
-  ProjectImplementationComponent
-} from '@modules/projects/pages/project-implementation/project-implementation.component';
-import {
-  ProjectImplementationApproveTaskPopupComponent
-} from '@modules/projects/popups/project-implementation-approve-task-popup/project-implementation-approve-task-popup.component';
-import {
-  ImplementationTemplateComponent
-} from './pages/project-implementation/components/implementation-template/implementation-template.component';
-import { ImplementationTemplatePopupComponent } from './popups/implementation-template-popup/implementation-template-popup.component';
-import { ImplementingAgencyListComponent } from './pages/project-implementation/components/implementing-agency-list/implementing-agency-list.component';
-import { ImplementationFundraisingComponent } from './pages/project-implementation/components/implementation-fundraising/implementation-fundraising.component';
-import { SelectProjectFundraisingPopupComponent } from './popups/select-project-fundraising-popup/select-project-fundraising-popup.component';
-import { FundSourceComponent } from './pages/project-implementation/components/fund-source/fund-source.component';
-import { FundSourcePopupComponent } from './popups/fund-source-popup/fund-source-popup.component';
-import { PaymentsComponent } from './pages/project-implementation/components/payments/payments.component';
-import { PaymentPopupComponent } from './popups/payment-popup/payment-popup.component';
-
 
 @NgModule({
   declarations: [
@@ -115,22 +96,10 @@ import { PaymentPopupComponent } from './popups/payment-popup/payment-popup.comp
     MeetingPointMembersCommentsPopupComponent,
     SpecificMemberCommentsAndNotesComponent,
     ProjectFundraisingComponent,
-    ChooseTemplatePopupComponent,
     DeductionRatioManagerComponent,
     TargetedCountriesDistributionComponent,
     TargetedYearsDistributionComponent,
-    ProjectFundraisingApproveTaskPopupComponent,
-    ProjectImplementationComponent,
-    ProjectImplementationApproveTaskPopupComponent,
-    ImplementationTemplateComponent,
-    ImplementationTemplatePopupComponent,
-    ImplementingAgencyListComponent,
-    ImplementationFundraisingComponent,
-    SelectProjectFundraisingPopupComponent,
-    FundSourceComponent,
-    FundSourcePopupComponent,
-    PaymentsComponent,
-    PaymentPopupComponent,
+    ProjectFundraisingApproveTaskPopupComponent
   ],
   imports: [
     CommonModule,

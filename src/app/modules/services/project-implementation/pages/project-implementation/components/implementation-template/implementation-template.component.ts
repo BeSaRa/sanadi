@@ -6,10 +6,10 @@ import {filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
 import {ImplementationCriteriaContract} from "@contracts/implementation-criteria-contract";
 import {ImplementationTemplate} from "@models/implementation-template";
 import {DialogService} from "@services/dialog.service";
-import {UserClickOn} from "@app/enums/user-click-on.enum";
+import {UserClickOn} from "@enums/user-click-on.enum";
 import {ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, UntypedFormControl} from "@angular/forms";
 import {CustomValidators} from "@app/validators/custom-validators";
-import {ServiceRequestTypes} from '@app/enums/service-request-types';
+import {ServiceRequestTypes} from '@enums/service-request-types';
 import {CommonUtils} from '@helpers/common-utils';
 
 @Component({

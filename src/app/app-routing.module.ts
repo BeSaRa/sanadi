@@ -66,6 +66,17 @@ const routes: Routes = [
         } as Partial<ICustomRouteData>
       },
       {
+        path: 'services/project-implementation',
+        canActivate: [NewServicePermissionGuard],
+        loadChildren: () => import('./modules/services/project-implementation/project-implementation.module')
+          .then(m => m.ProjectImplementationModule),
+        data: {
+          permissionGroup: PermissionGroupsEnum.PROJECT_IMPLEMENTATION_SERVICES_PERMISSION_GROUP,
+          checkAnyPermission: true,
+          caseType: CaseTypes.PROJECT_IMPLEMENTATION
+        } as Partial<ICustomRouteData>
+      },
+      {
         path: 'services/search',
         loadChildren: () => import('@modules/service-search-individual/service-search-individual.module').then(m => m.ServiceSearchIndividualModule),
       },

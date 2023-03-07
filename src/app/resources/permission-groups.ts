@@ -89,6 +89,11 @@ const internationCooperationServicesPermissionGroup: EServicePermissionsEnum[] =
   EServicePermissionsEnum.SEARCH_SERVICE_INTERNATIONAL_COOPERATION
 ];
 
+const projectImplementationServicesPermissionGroup: EServicePermissionsEnum[] = [
+  EServicePermissionsEnum.PROJECT_IMPLEMENTATION,
+  EServicePermissionsEnum.SEARCH_SERVICE_PROJECT_IMPLEMENTATION
+];
+
 const generalServicesPermissionsGroup: EServicePermissionsEnum[] = [
   EServicePermissionsEnum.INQUIRY,
   EServicePermissionsEnum.CONSULTATION,
@@ -148,6 +153,7 @@ const permissionGroups: PermissionGroupsMapType = {
   [PermissionGroupsEnum.CONSULTATION_SERVICES_PERMISSION_GROUP]: consultationServicesPermissionGroup,
   [PermissionGroupsEnum.INQUIRY_SERVICES_PERMISSION_GROUP]: inquiryServicesPermissionGroup,
   [PermissionGroupsEnum.INTERNATIONAL_COOP_SERVICES_PERMISSION_GROUP]: internationCooperationServicesPermissionGroup,
+  [PermissionGroupsEnum.PROJECT_IMPLEMENTATION_SERVICES_PERMISSION_GROUP]: projectImplementationServicesPermissionGroup,
 
 
   [PermissionGroupsEnum.SANADI_PERMISSIONS_GROUP]: sanadiPermissionsGroup,
