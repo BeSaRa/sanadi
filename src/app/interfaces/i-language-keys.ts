@@ -1812,4 +1812,5 @@ export interface ILanguageKeys {
   err_must_have_letters:string;
   msg_qatari_transaction_should_not_exceed_due_amount:string;
   neighborhood_street_building: string;
+  menu_admin_license:string;
 }

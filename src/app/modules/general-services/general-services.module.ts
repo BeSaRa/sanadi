@@ -12,9 +12,6 @@ import {
 import {
   ExternalOrgAffiliationApprovePopupComponent
 } from '@app/modules/general-services/popups/external-org-affiliation-approve-popup/external-org-affiliation-approve-popup.component';
-import { FormlyDateFieldComponent } from '@app/services-search/components/formly-date-field/formly-date-field.component';
-import { FormlyMaskInputFieldComponent } from '@app/services-search/components/formly-mask-input-field/formly-mask-input-field.component';
-import { FormlySelectFieldComponent } from '@app/services-search/components/formly-select-field/formly-select-field.component';
 import { OrganizationOfficersComponent } from '@app/shared/components/organization-officers/organization-officers.component';
 import { FormlyBootstrapModule } from '@ngx-formly/bootstrap';
 import { FormlyModule } from '@ngx-formly/core';
@@ -57,6 +54,9 @@ import { AwarenessActivitySuggestionComponent } from './pages/awareness-activity
 import { InquiryComponent } from './pages/inquiry/inquiry.component';
 import { InternationalCooperationComponent } from './pages/international-cooperation/international-cooperation.component';
 import { FounderMembersComponent } from './pages/npo-management/founder-members/founder-members.component';
+import { FormlyDateFieldComponent } from '@app/services-search/components/formly-date-field/formly-date-field.component';
+import { FormlyMaskInputFieldComponent } from '@app/services-search/components/formly-mask-input-field/formly-mask-input-field.component';
+import { FormlySelectFieldComponent } from '@app/services-search/components/formly-select-field/formly-select-field.component';
 
 
 @NgModule({

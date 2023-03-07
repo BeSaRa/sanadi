@@ -452,3 +452,18 @@ th.remain {
   background-color: #CCC;
   opacity: .5;
 }
+.formly-row {
+  display: flex;
+  flex-direction: column;
+
+  & > * {
+    flex: 1 1 0;
+  }
+}
+
+@include media-breakpoint-up(md) {
+  .formly-row {
+    flex-direction: row;
+  }
+}
+

@@ -19,6 +19,9 @@ export class SearchService {
   private _search(@InterceptParam(new GeneralSearchCriteriaInterceptor().send) criteria: Partial<any>): Observable<any> {
     return this.service.http.post<any>(this.service._getURLSegment() + '/search', criteria);
   }
+  private _licensesSearch(@InterceptParam(new GeneralSearchCriteriaInterceptor().send) criteria: Partial<any>): Observable<any> {
+    return this.service.http.post<any>(this.service._getURLSegment() + '/license/search', criteria);
+  }
 
   private _exportSearch(@InterceptParam(new GeneralSearchCriteriaInterceptor().send) criteria: Partial<any>): Observable<BlobModel> {
     return this.service.http.post(this.service._getURLSegment() + '/search/export', criteria, {
@@ -37,6 +40,9 @@ export class SearchService {
 
   search(criteria: Partial<any>): Observable<any> {
     return this._search(criteria);
+  }
+  licensesSearch(criteria: Partial<any>): Observable<any> {
+    return this._licensesSearch(criteria);
   }
 
 }
