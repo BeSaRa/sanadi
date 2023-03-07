@@ -97,6 +97,9 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
   }
 
   private hasSearchPermission(caseType: number): boolean {
+    if(this.employeeService.isInternalUser()){
+      return !this.servicesWithoutLicense.includes(caseType)
+    }
     return !this.servicesWithoutLicense.includes(caseType) && this.employeeService.userCanManage(caseType);
   }
 
@@ -223,7 +226,10 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
     return this.lang.getLocalByKey(serviceKey).getName();
   }
 
-  get selectedServiceKey(): keyof ILanguageKeys {
+  get selectedServiceKey(): keyof ILanguageKeys  {
+   if(!this.selectedService){
+    return 'service_name';
+   }
     return this.selectedService.serviceKey;
   }
 
