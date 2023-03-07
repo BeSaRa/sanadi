@@ -37,7 +37,6 @@ import { EServicesMainModule } from '@app/modules/e-services-main/e-services-mai
 import { OfficeServicesModule } from '../office-services/office-services.module';
 import { GeneralServicesRoutingModule } from './general-services-routing.module';
 import { GeneralServicesComponent } from './general-services.component';
-import { ConsultationComponent } from './pages/consultation/consultation.component';
 import { ExternalOrgAffiliationComponent } from './pages/external-org-affiliation/external-org-affiliation.component';
 import { ForeignCountriesProjectsComponent } from './pages/foreign-countries-projects/foreign-countries-projects.component';
 import { NpoContactOfficerComponent } from './pages/npo-management/npo-contact-officer/npo-contact-officer.component';
@@ -51,8 +50,6 @@ import { EmployeesDataComponent } from './shared/employees-data/employees-data.c
 import { RealBeneficiariesComponent } from './shared/real-beneficiaries/real-beneficiaries.component';
 import { CharityReportsComponent } from './shared/risk-reports/risk-reports.component';
 import { AwarenessActivitySuggestionComponent } from './pages/awareness-activity-suggestion/awareness-activity-suggestion.component';
-import { InquiryComponent } from './pages/inquiry/inquiry.component';
-import { InternationalCooperationComponent } from './pages/international-cooperation/international-cooperation.component';
 import { FounderMembersComponent } from './pages/npo-management/founder-members/founder-members.component';
 import { FormlyDateFieldComponent } from '@app/services-search/components/formly-date-field/formly-date-field.component';
 import { FormlyMaskInputFieldComponent } from '@app/services-search/components/formly-mask-input-field/formly-mask-input-field.component';
@@ -64,7 +61,6 @@ import { FormlySelectFieldComponent } from '@app/services-search/components/form
     GeneralServicesComponent,
     GeneralProcessNotificationApprovalComponent,
     ForeignCountriesProjectsApprovalPopupComponent,
-    ConsultationComponent,
     EmploymentApproveComponent,
     NpoContactOfficerComponent,
     ExternalOrgAffiliationComponent,
@@ -92,8 +88,6 @@ import { FormlySelectFieldComponent } from '@app/services-search/components/form
     CoordinationWithOrgPopupComponent,
     AwarenessActivitySuggestionComponent,
     AwarenessActivitySuggestionApprovalComponent,
-    InquiryComponent,
-    InternationalCooperationComponent,
     OrganizationsEntitiesSupportComponent,
     OrganizationsEntitiesSupportPopupComponent,
 
