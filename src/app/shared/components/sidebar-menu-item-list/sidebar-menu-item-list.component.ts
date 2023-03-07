@@ -52,7 +52,8 @@ export class SidebarMenuItemListComponent implements OnInit {
     if (item.children.length) {
       item.toggle();
     } else {
-      if (!item.isEServiceMenu) {
+      this.router.navigate([item.path]).then();
+      /*if (!item.isEServiceMenu) {
         this.router.navigate([item.path]).then();
       } else {
         if (item.hasEServiceSearchPermission) {
@@ -60,7 +61,7 @@ export class SidebarMenuItemListComponent implements OnInit {
         } else if (item.hasEServicePagePermission) {
           this.openEService($event, item);
         }
-      }
+      }*/
     }
   }
 

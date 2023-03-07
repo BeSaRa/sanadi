@@ -102,11 +102,11 @@ export class MenuItem extends Cloneable<MenuItem> {
   }
 
   get isAvailableToShow(): boolean {
-    if (this.isEServiceMainMenu) {
+    /*if (this.isEServiceMainMenu) {
       return this.children.some(x => x.hasEServicePermission);
     } else if (this.isEServiceMenu) {
       return this.hasEServicePermission;
-    }
+    }*/
     return this.hasPermission;
   }
 
