@@ -16,9 +16,6 @@ import {Injectable} from '@angular/core';
 import {DynamicComponentService} from './dynamic-component.service';
 import {TeamService} from './team.service';
 import {CustomEmployeePermission} from '@app/helpers/custom-employee-permission';
-/*import {
-  InternationalCooperationComponent
-} from '@app/modules/general-services/pages/international-cooperation/international-cooperation.component';*/
 import {
   InternationalCooperationComponent
 } from '@app/modules/services/international-cooperation/pages/international-cooperation/international-cooperation.component';
@@ -81,9 +78,7 @@ import {
   CharityOrganizationUpdateComponent
 } from '@app/modules/general-services/pages/charity-organization-update/charity-organization-update.component';
 import {PermissionsEnum} from '@app/enums/permissions-enum';
-// import {ConsultationComponent} from '@app/modules/general-services/pages/consultation/consultation.component';
 import {ConsultationComponent} from '@app/modules/services/consultation/pages/consultation/consultation.component';
-// import {InquiryComponent} from '@app/modules/general-services/pages/inquiry/inquiry.component';
 import {InquiryComponent} from '@app/modules/services/inquiries-and-complaints/pages/inquiry/inquiry.component';
 import {
   ProjectFundraisingComponent
@@ -91,9 +86,6 @@ import {
 import {
   OrganizationsEntitiesSupportComponent
 } from '@app/modules/general-services/pages/organizations-entities-support/organizations-entities-support.component';
-/*import {
-  ProjectImplementationComponent
-} from "@modules/projects/pages/project-implementation/project-implementation.component";*/
 import {
   ProjectImplementationComponent
 } from "@modules/services/project-implementation/pages/project-implementation/project-implementation.component";
