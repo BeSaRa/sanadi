@@ -1,9 +1,7 @@
-import { DynamicModel } from './../../../models/dynamic-model';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { DynamicModelService } from '@app/services/dynamic-models.service';
 import { CommonStatusEnum } from '@app/enums/common-status.enum';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
-import { UserClickOn } from '@app/enums/user-click-on.enum';
 import { AdminGenericComponent } from '@app/generics/admin-generic-component';
 import { IGridAction } from '@app/interfaces/i-grid-action';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
@@ -15,6 +13,7 @@ import { TableComponent } from '@app/shared/components/table/table.component';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { Subject, of } from 'rxjs';
 import { takeUntil, exhaustMap, catchError, switchMap, filter } from 'rxjs/operators';
+import { DynamicModel } from '@app/models/dynamic-model';
 
 @Component({
   selector: 'app-dynamic-models',

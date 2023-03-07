@@ -1,24 +1,8 @@
 import {LicenseService} from '@app/services/license.service';
-import {SearchAwarenessActivitySuggestionCriteria} from './../../../../models/search-awareness-activity-suggestion-criteria';
 import {Lookup} from '@app/models/lookup';
-import {DatepickerOptionsMap} from './../../../../types/types';
-import {DateUtils} from './../../../../helpers/date-utils';
-import {EmployeeService} from './../../../../services/employee.service';
-import {TabComponent} from './../../../../shared/components/tab/tab.component';
-import {CommonCaseStatus} from './../../../../enums/common-case-status.enum';
-import {CollectionRequestType} from './../../../../enums/service-request-types';
-import {UserClickOn} from './../../../../enums/user-click-on.enum';
 import {catchError, exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
-import {OpenFrom} from './../../../../enums/open-from.enum';
-import {IKeyValue} from './../../../../interfaces/i-key-value';
 import {ILanguageKeys} from '@contracts/i-language-keys';
-import {CommonUtils} from './../../../../helpers/common-utils';
-import {ToastService} from './../../../../services/toast.service';
-import {DialogService} from './../../../../services/dialog.service';
-import {LookupService} from './../../../../services/lookup.service';
 import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
-import {AwarenessActivitySuggestion} from './../../../../models/awareness-activity-suggestion';
-import {AwarenessActivitySuggestionService} from './../../../../services/awareness-activity-suggestion.service';
 import {ChangeDetectorRef, Component} from '@angular/core';
 import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {OperationTypes} from '@app/enums/operation-types.enum';
@@ -26,6 +10,22 @@ import {SaveTypes} from '@app/enums/save-types';
 import {LangService} from '@app/services/lang.service';
 import {Observable, of, Subject} from 'rxjs';
 import {ProfileTypes} from '@app/enums/profile-types.enum';
+import { AwarenessActivitySuggestion } from '@app/models/awareness-activity-suggestion';
+import { IKeyValue } from '@app/interfaces/i-key-value';
+import { DatepickerOptionsMap } from '@app/types/types';
+import { DateUtils } from '@app/helpers/date-utils';
+import { AwarenessActivitySuggestionService } from '@app/services/awareness-activity-suggestion.service';
+import { LookupService } from '@app/services/lookup.service';
+import { ToastService } from '@app/services/toast.service';
+import { DialogService } from '@app/services/dialog.service';
+import { EmployeeService } from '@app/services/employee.service';
+import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
+import { OpenFrom } from '@app/enums/open-from.enum';
+import { CollectionRequestType } from '@app/enums/service-request-types';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { TabComponent } from '@app/shared/components/tab/tab.component';
+import { SearchAwarenessActivitySuggestionCriteria } from '@app/models/search-awareness-activity-suggestion-criteria';
 
 @Component({
   selector: 'app-awareness-activity-suggestion',

@@ -1,39 +1,35 @@
-import { TeamService } from '@app/services/team.service';
-import { Team } from '@app/models/team';
+import { TrainingProgramPartner } from '@app/models/training-program-partner';
+import { Component, Inject } from '@angular/core';
+import { AdminGenericDialog } from '@app/generics/admin-generic-dialog';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { LangService } from '@app/services/lang.service';
-import { LookupService } from '@app/services/lookup.service';
-import { ToastService } from '@app/services/toast.service';
-import { IDialogData } from '@app/interfaces/i-dialog-data';
-import { UserTypes } from '@app/enums/user-types.enum';
-import { OperationTypes } from '@app/enums/operation-types.enum';
-import { UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
-import { Lookup } from '@app/models/lookup';
-import { AdminGenericDialog } from '@app/generics/admin-generic-dialog';
-import { Component, Inject } from '@angular/core';
-import { SubTeam } from '@app/models/sub-team';
-import { DialogRef } from '@app/shared/models/dialog-ref';
 import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
+import { IDialogData } from '@app/interfaces/i-dialog-data';
+import { ToastService } from '@app/services/toast.service';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { Lookup } from '@app/models/lookup';
+import { LookupService } from '@app/services/lookup.service';
+import { DialogService } from '@app/services/dialog.service';
 
 @Component({
-  selector: 'app-sub-team-popup',
-  templateUrl: './sub-team-popup.component.html',
-  styleUrls: ['./sub-team-popup.component.scss']
+  selector: 'training-program-partner-popup',
+  templateUrl: './training-program-partner-popup.component.html',
+  styleUrls: ['./training-program-partner-popup.component.scss']
 })
-export class SubTeamPopupComponent extends AdminGenericDialog<SubTeam> {
+export class TrainingProgramPartnerPopupComponent extends AdminGenericDialog<TrainingProgramPartner> {
   statuses: Lookup[] = this.lookupService.listByCategory.CommonStatus;
-  teams: Team[] = [];
   form!: UntypedFormGroup;
-  model!: SubTeam;
+  model!: TrainingProgramPartner;
   operation: OperationTypes;
   saveVisible = true;
-  userTypes: Lookup[] = this.lookupService.listByCategory.UserType.filter(x => x.lookupKey !== UserTypes.INTEGRATION_USER);
 
   constructor(public dialogRef: DialogRef,
     public fb: UntypedFormBuilder,
     public lang: LangService,
-    private teamService: TeamService,
-    @Inject(DIALOG_DATA_TOKEN) data: IDialogData<SubTeam>,
+    @Inject(DIALOG_DATA_TOKEN) data: IDialogData<TrainingProgramPartner>,
+    private dialogService: DialogService,
     private toast: ToastService,
     private lookupService: LookupService) {
     super();
@@ -42,9 +38,7 @@ export class SubTeamPopupComponent extends AdminGenericDialog<SubTeam> {
   }
 
   initPopup(): void {
-    this.teamService.loadAsLookups().subscribe((data: Team[]) => {
-      this.teams = data;
-    })
+
   }
 
   buildForm(): void {
@@ -56,15 +50,15 @@ export class SubTeamPopupComponent extends AdminGenericDialog<SubTeam> {
     }
   }
 
-  beforeSave(model: SubTeam, form: UntypedFormGroup): Observable<boolean> | boolean {
+  beforeSave(model: TrainingProgramPartner, form: UntypedFormGroup): Observable<boolean> | boolean {
     return form.valid;
   }
 
-  prepareModel(model: SubTeam, form: UntypedFormGroup): Observable<SubTeam> | SubTeam {
-    return (new SubTeam()).clone({ ...model, ...form.value });
+  prepareModel(model: TrainingProgramPartner, form: UntypedFormGroup): Observable<TrainingProgramPartner> | TrainingProgramPartner {
+    return (new TrainingProgramPartner()).clone({ ...model, ...form.value });
   }
 
-  afterSave(model: SubTeam, dialogRef: DialogRef): void {
+  afterSave(model: TrainingProgramPartner, dialogRef: DialogRef): void {
     const message = this.operation === OperationTypes.CREATE ? this.lang.map.msg_create_x_success : this.lang.map.msg_update_x_success;
     this.operation === this.operationTypes.CREATE
       ? this.toast.success(message.change({ x: this.form.controls[this.lang.map.lang + 'Name'].value }))
@@ -79,9 +73,9 @@ export class SubTeamPopupComponent extends AdminGenericDialog<SubTeam> {
 
   get popupTitle(): string {
     if (this.operation === OperationTypes.CREATE) {
-      return this.lang.map.lbl_add_team;
+      return this.lang.map.lbl_add_training_program_partner;
     } else if (this.operation === OperationTypes.UPDATE) {
-      return this.lang.map.lbl_edit_team;
+      return this.lang.map.lbl_edit_training_program_partner;
     } else if (this.operation === OperationTypes.VIEW) {
       return this.lang.map.view;
     }
@@ -90,5 +84,4 @@ export class SubTeamPopupComponent extends AdminGenericDialog<SubTeam> {
 
   destroyPopup(): void {
   }
-
 }

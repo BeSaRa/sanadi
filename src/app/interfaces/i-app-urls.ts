@@ -133,5 +133,6 @@ export interface IAppUrls {
   USER_PREFERENCES: string;
   PROJECT_IMPLEMENTATION: string;
   FINANCIAL_TRANSFERS_LICENSING: string;
+  TRAINING_PROGRAM_PARTNER: string;
   [index: string]: string;
 }

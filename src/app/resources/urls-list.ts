@@ -138,4 +138,5 @@ export const urlsList: Partial<IAppUrls> = {
   FINANCIAL_TRANSFERS_LICENSING:'/financial-transfers-licensing',
   GLOBAL_SETTINGS:'/admin/global-setting',
   USER_PREFERENCES: '/admin/user-preferences',
+  TRAINING_PROGRAM_PARTNER: '/admin/training-program-partner',
 };

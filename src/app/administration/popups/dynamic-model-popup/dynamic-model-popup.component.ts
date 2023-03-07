@@ -1,7 +1,3 @@
-import { CommonStatusEnum } from './../../../enums/common-status.enum';
-import { LookupService } from './../../../services/lookup.service';
-import { Lookup } from './../../../models/lookup';
-import { TemplateField } from '../../../models/template-field';
 import { Component, Inject } from '@angular/core';
 import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormArray } from '@angular/forms';
 import { OperationTypes } from '@app/enums/operation-types.enum';
@@ -18,8 +14,12 @@ import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { Subscription, Observable } from 'rxjs';
 import { v4 } from 'uuid';
-import { ProcessFieldBuilder } from '../general-process-popup/process-formly-components/process-fields-builder';
 import { TemplateFieldTypes } from '@app/enums/template-field-types.enum';
+import { Lookup } from '@app/models/lookup';
+import { CommonStatusEnum } from '@app/enums/common-status.enum';
+import { ProcessFieldBuilder } from '@app/administration/popups/general-process-popup/process-formly-components/process-fields-builder';
+import { LookupService } from '@app/services/lookup.service';
+import { TemplateField } from '@app/models/template-field';
 
 @Component({
   selector: 'app-dynamic-model-popup',

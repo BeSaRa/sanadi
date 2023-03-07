@@ -1,128 +1,37 @@
-import { UserClickOn } from '@app/enums/user-click-on.enum';
-import { ToastService } from '@app/services/toast.service';
-import { SharedService } from '@app/services/shared.service';
-import { LangService } from '@app/services/lang.service';
-import { takeUntil, exhaustMap, catchError, filter, switchMap } from 'rxjs/operators';
-import { SortEvent } from '@app/interfaces/sort-event';
-import { ActionIconsEnum } from '@app/enums/action-icons-enum';
-import { IGridAction } from '@app/interfaces/i-grid-action';
-import { CommonStatusEnum } from '@app/enums/common-status.enum';
-import { CommonUtils } from '@app/helpers/common-utils';
-import { AdminGenericComponent } from '@app/generics/admin-generic-component';
 import { Component, ViewChild } from '@angular/core';
+import { AdminGenericComponent } from '@app/generics/admin-generic-component';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
-import { Subject, of } from 'rxjs';
-import { SubTeam } from '@app/models/sub-team';
-import { SubTeamService } from '@app/services/sub-team.service';
-import { TableComponent } from '@app/shared/components/table/table.component';
+import { LangService } from '@app/services/lang.service';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
 import { DialogService } from '@app/services/dialog.service';
+import { SharedService } from '@app/services/shared.service';
+import { IGridAction } from '@app/interfaces/i-grid-action';
+import { ToastService } from '@app/services/toast.service';
+import { catchError, exhaustMap, filter, switchMap, takeUntil } from 'rxjs/operators';
+import { of, Subject } from 'rxjs';
+import { CommonStatusEnum } from '@app/enums/common-status.enum';
+import { SortEvent } from '@app/interfaces/sort-event';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { TableComponent } from '@app/shared/components/table/table.component';
 import { DialogRef } from '@app/shared/models/dialog-ref';
+import { ActionIconsEnum } from '@app/enums/action-icons-enum';
+import { TrainingProgramPartner } from '@app/models/training-program-partner';
+import { TrainingProgramPartnerService } from '@app/services/training-program-partner.service';
 
 @Component({
-  selector: 'app-sub-team',
-  templateUrl: './sub-team.component.html',
-  styleUrls: ['./sub-team.component.scss']
+  selector: 'training-program-partner',
+  templateUrl: './training-program-partner.component.html',
+  styleUrls: ['./training-program-partner.component.scss']
 })
-export class SubTeamComponent extends AdminGenericComponent<SubTeam, SubTeamService> {
-  usePagination = true;
-  displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'status', 'actions']; //, 'parent'
-
+export class TrainingProgramPartnerComponent extends AdminGenericComponent<TrainingProgramPartner, TrainingProgramPartnerService> {
   afterReload(): void {
     this.table && this.table.clearSelection();
   }
 
-  @ViewChild('table') table!: TableComponent;
-  view$: Subject<SubTeam> = new Subject<SubTeam>();
-
-  commonStatusEnum = CommonStatusEnum;
-  actions: IMenuItem<SubTeam>[] = [
-    // edit
-    {
-      type: 'action',
-      label: 'btn_edit',
-      icon: ActionIconsEnum.EDIT,
-      onClick: (item: SubTeam) => this.edit$.next(item)
-    },
-    // delete
-    // {
-    //   type: 'action',
-    //   label: 'btn_delete',
-    //   icon: ActionIconsEnum.DELETE,
-    //   onClick: (item: SubTeam) => this.delete(item)
-    // },
-    // view
-    {
-      type: 'action',
-      label: 'view',
-      icon: ActionIconsEnum.VIEW,
-      onClick: (item: SubTeam) => this.view$.next(item)
-    },
-    // activate
-    {
-      type: 'action',
-      icon: ActionIconsEnum.STATUS,
-      label: 'btn_activate',
-      onClick: (item: SubTeam) => this.toggleStatus(item),
-      displayInGrid: false,
-      show: (item) => {
-        return item.status !== CommonStatusEnum.RETIRED && item.status === CommonStatusEnum.DEACTIVATED;
-      }
-    },
-    // deactivate
-    {
-      type: 'action',
-      icon: ActionIconsEnum.STATUS,
-      label: 'btn_deactivate',
-      onClick: (item: SubTeam) => this.toggleStatus(item),
-      displayInGrid: false,
-      show: (item) => {
-        return item.status !== CommonStatusEnum.RETIRED && item.status === CommonStatusEnum.ACTIVATED;
-      }
-    }
-  ];
-
-  bulkActionsList: IGridAction[] = [
-    // {
-    //   langKey: 'btn_delete',
-    //   icon: 'mdi-close-box',
-    //   callback: ($event: MouseEvent) => {
-    //     this.deleteBulk($event);
-    //   }
-    // },
-    {
-      icon: 'mdi-list-status',
-      langKey: 'lbl_status',
-      children: [
-        {
-          langKey: 'btn_activate',
-          icon: '',
-          callback: ($event: MouseEvent, _data?: any) => this.changeStatusBulk($event, CommonStatusEnum.ACTIVATED),
-          show: (_items: SubTeam[]) => {
-            return true;
-          }
-        },
-        {
-          langKey: 'btn_deactivate',
-          icon: '',
-          callback: ($event: MouseEvent, _data?: any) => this.changeStatusBulk($event, CommonStatusEnum.DEACTIVATED),
-          show: (_items: SubTeam[]) => {
-            return true;
-          }
-        }
-      ],
-    }
-  ];
-
-  sortingCallbacks = {
-    statusInfo: (a: SubTeam, b: SubTeam, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a) ? '' : a.statusInfo?.getName().toLowerCase(),
-        value2 = !CommonUtils.isValidValue(b) ? '' : b.statusInfo?.getName().toLowerCase();
-      return CommonUtils.getSortValue(value1, value2, dir.direction);
-    }
-  }
+  usePagination = true;
 
   constructor(public lang: LangService,
-    public service: SubTeamService,
+    public service: TrainingProgramPartnerService,
     private dialogService: DialogService,
     private sharedService: SharedService,
     private toast: ToastService) {
@@ -133,7 +42,98 @@ export class SubTeamComponent extends AdminGenericComponent<SubTeam, SubTeamServ
     this.listenToView();
   }
 
-  get selectedRecords(): SubTeam[] {
+  @ViewChild('table') table!: TableComponent;
+  view$: Subject<TrainingProgramPartner> = new Subject<TrainingProgramPartner>();
+
+  commonStatusEnum = CommonStatusEnum;
+  actions: IMenuItem<TrainingProgramPartner>[] = [
+    // edit
+    {
+      type: 'action',
+      label: 'btn_edit',
+      icon: ActionIconsEnum.EDIT,
+      onClick: (item: TrainingProgramPartner) => this.edit$.next(item)
+    },
+    // delete
+    {
+      type: 'action',
+      label: 'btn_delete',
+      icon: ActionIconsEnum.DELETE,
+      onClick: (item: TrainingProgramPartner) => this.delete(item)
+    },
+    // view
+    {
+      type: 'action',
+      label: 'view',
+      icon: ActionIconsEnum.VIEW,
+      onClick: (item: TrainingProgramPartner) => this.view$.next(item)
+    },
+    // activate
+    {
+      type: 'action',
+      icon: ActionIconsEnum.STATUS,
+      label: 'btn_activate',
+      onClick: (item: TrainingProgramPartner) => this.toggleStatus(item),
+      displayInGrid: false,
+      show: (item) => {
+        return item.status !== CommonStatusEnum.RETIRED && item.status === CommonStatusEnum.DEACTIVATED;
+      }
+    },
+    // deactivate
+    {
+      type: 'action',
+      icon: ActionIconsEnum.STATUS,
+      label: 'btn_deactivate',
+      onClick: (item: TrainingProgramPartner) => this.toggleStatus(item),
+      displayInGrid: false,
+      show: (item) => {
+        return item.status !== CommonStatusEnum.RETIRED && item.status === CommonStatusEnum.ACTIVATED;
+      }
+    }
+  ];
+  displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'status', 'actions'];
+
+  bulkActionsList: IGridAction[] = [
+    {
+      langKey: 'btn_delete',
+      icon: 'mdi-close-box',
+      callback: ($event: MouseEvent) => {
+        this.deleteBulk($event);
+      }
+    },
+    {
+      icon: 'mdi-list-status',
+      langKey: 'lbl_status',
+      children: [
+        {
+          langKey: 'btn_activate',
+          icon: '',
+          callback: ($event: MouseEvent, _data?: any) => this.changeStatusBulk($event, CommonStatusEnum.ACTIVATED),
+          show: (_items: TrainingProgramPartner[]) => {
+            return true;
+          }
+        },
+        {
+          langKey: 'btn_deactivate',
+          icon: '',
+          callback: ($event: MouseEvent, _data?: any) => this.changeStatusBulk($event, CommonStatusEnum.DEACTIVATED),
+          show: (_items: TrainingProgramPartner[]) => {
+            return true;
+          }
+        }
+      ],
+    }
+  ];
+
+  sortingCallbacks = {
+    statusInfo: (a: TrainingProgramPartner, b: TrainingProgramPartner, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.statusInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.statusInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    }
+  }
+
+  get selectedRecords(): TrainingProgramPartner[] {
     return this.table.selection.selected;
   }
 
@@ -148,7 +148,7 @@ export class SubTeamComponent extends AdminGenericComponent<SubTeam, SubTeamServ
       .subscribe(() => this.reload$.next(null))
   }
 
-  delete(model: SubTeam, event?: MouseEvent): void {
+  delete(model: TrainingProgramPartner, event?: MouseEvent): void {
     event?.preventDefault();
     const message = this.lang.map.msg_confirm_delete_x.change({ x: model.getName() });
     this.dialogService.confirm(message)
@@ -197,7 +197,7 @@ export class SubTeamComponent extends AdminGenericComponent<SubTeam, SubTeamServ
       });
   }
 
-  toggleStatus(model: SubTeam) {
+  toggleStatus(model: TrainingProgramPartner) {
     let updateObservable = model.status == CommonStatusEnum.ACTIVATED ? model.updateStatus(CommonStatusEnum.DEACTIVATED) : model.updateStatus(CommonStatusEnum.ACTIVATED);
     updateObservable.pipe(takeUntil(this.destroy$))
       .subscribe(() => {

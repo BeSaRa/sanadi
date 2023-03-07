@@ -1,6 +1,3 @@
-import { DynamicModelService } from './../../../../services/dynamic-models.service';
-import { ProcessFieldBuilder } from './../../../../administration/popups/general-process-popup/process-formly-components/process-fields-builder';
-import { CoordinationWithOrganizationTemplate } from './../../../../models/corrdination-with-organization-template';
 import { DateUtils } from '@app/helpers/date-utils';
 import { DynamicModel } from '@app/models/dynamic-model';
 import {
@@ -18,6 +15,9 @@ import { ToastService } from '@app/services/toast.service';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { filter, map, take, takeUntil } from 'rxjs/operators';
 import { TemplateFieldTypes } from '@app/enums/template-field-types.enum';
+import { CoordinationWithOrganizationTemplate } from '@app/models/corrdination-with-organization-template';
+import { ProcessFieldBuilder } from '@app/administration/popups/general-process-popup/process-formly-components/process-fields-builder';
+import { DynamicModelService } from '@app/services/dynamic-models.service';
 
 @Component({
   selector: 'app-dynamic-templates',
