@@ -58,7 +58,8 @@ const trainingProgramsPagePermissionsGroup: PermissionsEnum[] = [
   PermissionsEnum.TRAINING_BUNDLE,
   PermissionsEnum.TRAINING_CERTIFICATE_TRAINEE,
   PermissionsEnum.TRAINING_ADD_PUBLISH_PROGRAM,
-  PermissionsEnum.TRAINING_MANAGE_TRAINEE
+  PermissionsEnum.TRAINING_MANAGE_TRAINEE,
+  PermissionsEnum.TRAINING_PROGRAM_PARTNER
 ];
 
 const trainingProgramsMenuPermissionsGroup: PermissionsEnum[] = [

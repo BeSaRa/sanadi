@@ -1,4 +1,3 @@
-import { DialogService } from './../../../services/dialog.service';
 import { TrainingProgramPartner } from '@app/models/training-program-partner';
 import { Component, Inject } from '@angular/core';
 import { AdminGenericDialog } from '@app/generics/admin-generic-dialog';
@@ -12,6 +11,7 @@ import { ToastService } from '@app/services/toast.service';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { Lookup } from '@app/models/lookup';
 import { LookupService } from '@app/services/lookup.service';
+import { DialogService } from '@app/services/dialog.service';
 
 @Component({
   selector: 'training-program-partner-popup',

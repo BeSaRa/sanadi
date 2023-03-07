@@ -1,19 +1,19 @@
 import { TeamService } from '@app/services/team.service';
 import { Team } from '@app/models/team';
 import { Observable } from 'rxjs';
-import { SubTeam } from './../../../models/sub-team';
-import { DIALOG_DATA_TOKEN } from './../../../shared/tokens/tokens';
 import { LangService } from '@app/services/lang.service';
 import { LookupService } from '@app/services/lookup.service';
 import { ToastService } from '@app/services/toast.service';
 import { IDialogData } from '@app/interfaces/i-dialog-data';
 import { UserTypes } from '@app/enums/user-types.enum';
-import { DialogRef } from './../../../shared/models/dialog-ref';
 import { OperationTypes } from '@app/enums/operation-types.enum';
 import { UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
 import { Lookup } from '@app/models/lookup';
 import { AdminGenericDialog } from '@app/generics/admin-generic-dialog';
 import { Component, Inject } from '@angular/core';
+import { SubTeam } from '@app/models/sub-team';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
 
 @Component({
   selector: 'app-sub-team-popup',

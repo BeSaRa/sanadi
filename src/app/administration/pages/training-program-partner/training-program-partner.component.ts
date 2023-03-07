@@ -15,8 +15,8 @@ import { CommonUtils } from '@app/helpers/common-utils';
 import { TableComponent } from '@app/shared/components/table/table.component';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
-import { TrainingProgramPartnerService } from './../../../services/training-program-partner.service';
 import { TrainingProgramPartner } from '@app/models/training-program-partner';
+import { TrainingProgramPartnerService } from '@app/services/training-program-partner.service';
 
 @Component({
   selector: 'training-program-partner',

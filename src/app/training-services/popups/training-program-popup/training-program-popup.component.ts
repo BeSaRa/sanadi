@@ -1,5 +1,3 @@
-import { TrainingProgramPartnerService } from './../../../services/training-program-partner.service';
-import { AdminLookup } from './../../../models/admin-lookup';
 import { Component, Inject } from '@angular/core';
 import { AdminGenericDialog } from '@app/generics/admin-generic-dialog';
 import { TrainingProgram } from '@app/models/training-program';
@@ -29,6 +27,7 @@ import { DatepickerControlsMap, DatepickerOptionsMap } from '@app/types/types';
 import { ProfileService } from '@services/profile.service';
 import { Profile } from '@app/models/profile';
 import { TrainingProgramPartner } from '@app/models/training-program-partner';
+import { TrainingProgramPartnerService } from '@app/services/training-program-partner.service';
 
 @Component({
   selector: 'training-program-popup',

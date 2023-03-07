@@ -1,5 +1,3 @@
-import { TrainingProgramPartnerInterceptor } from './../model-interceptors/training-program-partner-interceptor';
-import { TrainingProgramPartnerService } from './../services/training-program-partner.service';
 import { BaseModel } from '@app/models/base-model';
 import { FactoryService } from '@app/services/factory.service';
 import { LangService } from '@app/services/lang.service';
@@ -9,6 +7,8 @@ import { searchFunctionType } from '@app/types/types';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { CommonStatusEnum } from '@app/enums/common-status.enum';
 import { InterceptModel } from "@decorators/intercept-model";
+import { TrainingProgramPartnerService } from '@app/services/training-program-partner.service';
+import { TrainingProgramPartnerInterceptor } from '@app/model-interceptors/training-program-partner-interceptor';
 
 const interceptor: TrainingProgramPartnerInterceptor = new TrainingProgramPartnerInterceptor()
 

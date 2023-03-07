@@ -1,9 +1,6 @@
-import { ProfileCountryService } from './../../../../services/profile-country.service';
-import { ProfileCountry } from './../../../../models/profile-country';
 import { ProfileTypes } from '@app/enums/profile-types.enum';
 import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
 import { OpenFrom } from '@app/enums/open-from.enum';
-import { EmployeeService } from './../../../../services/employee.service';
 import { AfterViewInit, ChangeDetectorRef, Component, QueryList, TemplateRef, ViewChild, ViewChildren, } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { OperationTypes } from '@app/enums/operation-types.enum';
@@ -29,6 +26,9 @@ import { catchError, exhaustMap, filter, map, switchMap, takeUntil, tap, } from 
 import { UserClickOn } from '@app/enums/user-click-on.enum';
 import { ProfileService } from '@app/services/profile.service';
 import { Profile } from '@app/models/profile';
+import { EmployeeService } from '@app/services/employee.service';
+import { ProfileCountryService } from '@app/services/profile-country.service';
+import { ProfileCountry } from '@app/models/profile-country';
 
 @Component({
   selector: 'app-foreign-countries-projects',

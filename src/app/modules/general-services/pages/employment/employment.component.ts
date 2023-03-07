@@ -30,7 +30,7 @@ import { AdminResult } from '@app/models/admin-result';
 import { catchError, exhaustMap, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { Employment } from '@app/models/employment';
 import { EmploymentService } from '@app/services/employment.service';
-import { EmployeesDataComponent } from '../../shared/employees-data/employees-data.component';
+import { EmployeesDataComponent } from '@app/modules/general-services/shared/employees-data/employees-data.component';
 
 @Component({
   templateUrl: './employment.component.html',

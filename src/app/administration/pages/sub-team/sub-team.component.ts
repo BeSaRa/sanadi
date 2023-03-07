@@ -1,9 +1,6 @@
 import { UserClickOn } from '@app/enums/user-click-on.enum';
-import { DialogRef } from './../../../shared/models/dialog-ref';
-import { TableComponent } from './../../../shared/components/table/table.component';
 import { ToastService } from '@app/services/toast.service';
 import { SharedService } from '@app/services/shared.service';
-import { DialogService } from './../../../services/dialog.service';
 import { LangService } from '@app/services/lang.service';
 import { takeUntil, exhaustMap, catchError, filter, switchMap } from 'rxjs/operators';
 import { SortEvent } from '@app/interfaces/sort-event';
@@ -12,11 +9,14 @@ import { IGridAction } from '@app/interfaces/i-grid-action';
 import { CommonStatusEnum } from '@app/enums/common-status.enum';
 import { CommonUtils } from '@app/helpers/common-utils';
 import { AdminGenericComponent } from '@app/generics/admin-generic-component';
-import { SubTeamService } from './../../../services/sub-team.service';
-import { SubTeam } from './../../../models/sub-team';
 import { Component, ViewChild } from '@angular/core';
 import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
 import { Subject, of } from 'rxjs';
+import { SubTeam } from '@app/models/sub-team';
+import { SubTeamService } from '@app/services/sub-team.service';
+import { TableComponent } from '@app/shared/components/table/table.component';
+import { DialogService } from '@app/services/dialog.service';
+import { DialogRef } from '@app/shared/models/dialog-ref';
 
 @Component({
   selector: 'app-sub-team',
