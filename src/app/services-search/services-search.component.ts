@@ -85,7 +85,7 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
     this.form = new UntypedFormGroup({});
     this.reSelectService();
     this.listenToServiceChange(this.serviceControl.value);
-    this.listenToInstantSearch();
+    //this.listenToInstantSearch();
     this.listenToSearch();
     this.buildGridActions();
   }

@@ -27,7 +27,7 @@
               [innerHTML]="item|translateName:lang.map.lang|highlight:_searchText"></span>
         <span *ngIf="hasCounter(item.counter)"
               class="badge rounded-pill position-absolute badge-translate-middle-x bg-warning">{{getCounter(item.counter)}}</span>
-        <span class="instant-action position-absolute end-0" *ngIf="item.hasEServicePermission">
+        <!--<span class="instant-action position-absolute end-0" *ngIf="item.hasEServicePermission">
           <button *ngIf="item.hasEServiceSearchPermission" (click)="openEServiceSearch($event, item)"
                   class="btn icon-btn m-0 shadow-none" [tooltip]="lang.map.menu_service_search"><i
             class="mdi mdi-text-box-search-outline"></i>
@@ -36,7 +36,7 @@
                   class="btn icon-btn m-0 shadow-none" [tooltip]="lang.map.btn_add">
             <i class="mdi mdi-plus"></i>
           </button>
-        </span>
+        </span>-->
       </a>
       <app-sidebar-menu-item-list [level]="level" [searchText]="_searchText" *ngIf="item.children"
                                   [items]="item.children"></app-sidebar-menu-item-list>

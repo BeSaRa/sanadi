@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
-import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { LangService } from '@app/services/lang.service';
 import {FieldWrapper} from '@ngx-formly/core';
+import {LangService} from '@services/lang.service';
+import {ILanguageKeys} from '@contracts/i-language-keys';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 
