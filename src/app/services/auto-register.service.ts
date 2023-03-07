@@ -16,9 +16,12 @@ import {Injectable} from '@angular/core';
 import {DynamicComponentService} from './dynamic-component.service';
 import {TeamService} from './team.service';
 import {CustomEmployeePermission} from '@app/helpers/custom-employee-permission';
+/*import {
+  InternationalCooperationComponent
+} from '@app/modules/general-services/pages/international-cooperation/international-cooperation.component';*/
 import {
   InternationalCooperationComponent
-} from '@app/modules/general-services/pages/international-cooperation/international-cooperation.component';
+} from '@app/modules/services/international-cooperation/pages/international-cooperation/international-cooperation.component';
 import {
   InitialExternalOfficeApprovalComponent
 } from '@app/modules/office-services/pages/initial-external-office-approval/initial-external-office-approval.component';
@@ -78,8 +81,10 @@ import {
   CharityOrganizationUpdateComponent
 } from '@app/modules/general-services/pages/charity-organization-update/charity-organization-update.component';
 import {PermissionsEnum} from '@app/enums/permissions-enum';
-import {ConsultationComponent} from '@app/modules/general-services/pages/consultation/consultation.component';
-import {InquiryComponent} from '@app/modules/general-services/pages/inquiry/inquiry.component';
+// import {ConsultationComponent} from '@app/modules/general-services/pages/consultation/consultation.component';
+import {ConsultationComponent} from '@app/modules/services/consultation/pages/consultation/consultation.component';
+// import {InquiryComponent} from '@app/modules/general-services/pages/inquiry/inquiry.component';
+import {InquiryComponent} from '@app/modules/services/inquiries-and-complaints/pages/inquiry/inquiry.component';
 import {
   ProjectFundraisingComponent
 } from "@app/modules/projects/pages/project-fundraising/project-fundraising.component";

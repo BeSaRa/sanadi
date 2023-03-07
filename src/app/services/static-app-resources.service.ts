@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Observable, of} from 'rxjs';
 import {navigationMenuList} from '@app/resources/navigation-menu-list';
+import {newNavigationMenuList} from '@app/resources/new-navigation-menu-list';
 import {PermissionGroupsEnum} from '@app/enums/permission-groups-enum';
 import {PermissionsGroupMap} from '@app/resources/permission-groups';
 import {FactoryService} from '@services/factory.service';
@@ -76,7 +77,7 @@ export class StaticAppResourcesService {
   }
 
   getMenuList(): Observable<any[]> {
-    return of(navigationMenuList);
+    return of(newNavigationMenuList);
   }
 
   getReportsMenuList(): Observable<ReportContract[]> {

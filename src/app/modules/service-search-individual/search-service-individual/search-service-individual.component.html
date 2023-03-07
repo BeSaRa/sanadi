@@ -1,0 +1,154 @@
+<div class="row mb-4">
+  <div class="col">
+    <div class="d-flex align-items-center justify-content-start">
+      <h1 class="h6 text-primary">{{lang.map.menu_service_search}}{{serviceControl.valid ? (': ' + lang.map[selectedServiceKey]) : ''}}</h1>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <tabs-list (onTabChange)="selectedTabChanged($event)" [tabByIndex$]="tabIndex$">
+    <tab [title]="lang.map.search_criteria" [template]="formCriteria"></tab>
+    <tab name="result_tab" [disabled]="serviceControl.invalid" [title]="criteriaTitle" [template]="searchResult"></tab>
+  </tabs-list>
+  <ng-template #formCriteria>
+    <form autocomplete="off" (keydown.enter)="search$.next(null)" [formGroup]="form">
+      <formly-form [form]="form" [fields]="fields"></formly-form>
+    </form>
+    <ng-container *ngIf="serviceControl.valid">
+      <button class="btn mb-4 btn-primary shadow shadow-sm" type="submit"
+              (click)="search$.next(null)">{{lang.map.lbl_search}}</button>
+      <button class="btn mb-4 btn-secondary shadow shadow-sm mx-2"
+              (click)="resetCriteria()">{{lang.map.btn_reset}}</button>
+    </ng-container>
+  </ng-template>
+  <ng-template #searchResult>
+    <div class="col-12">
+      <app-table #table sortableTable
+                 [filter]="filter"
+                 [useSearchToFilter]="true"
+                 [paginator]="paginator"
+                 [data]="results"
+                 [columns]="searchColumns">
+        <table cdk-table [dataSource]="table.dataSource" class="table border border-1">
+          <ng-container cdkColumnDef="extra-header">
+            <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+              <table-header (textChange)="filter = $event" [tableTitle]="selectedServiceKey"
+                            [sort]="table.dataSource.sort" [reload$]="search$">
+                <button [tooltip]="lang.map.print" [disabled]="!results.length" (click)="exportSearchResult()"
+                        class="btn icon-btn outline-none">
+                  <i class="mdi mdi-printer"></i>
+                </button>
+              </table-header>
+            </th>
+          </ng-container>
+
+          <ng-container cdkColumnDef="fullSerial">
+            <th cdk-header-cell sortable-header style="width: 200px" *cdkHeaderCellDef> {{lang.map.serial_number}}</th>
+            <td cdk-cell *cdkCellDef="let row">
+              <!--<a *ngIf="row.fullSerial" href="#"
+                 class="dir-ltr" [routerLink]="[row.itemRoute,searchState]"
+                 [queryParams]="{item:row.itemDetails}">{{row.fullSerial}}</a>
+              <a *ngIf="!row.fullSerial" href="#" [routerLink]="[row.itemRoute,searchState]"
+                 [queryParams]="{item:row.itemDetails}">{{lang.map.open_task}}</a>-->
+              <span (click)="actionOpen(row)" [ngClass]="{'dir-ltr': row.fullSerial}"
+                    class="text-primary cursor-pointer text-decoration-underline">{{row.fullSerial ?? lang.map.open_task}}</span>
+            </td>
+          </ng-container>
+          <ng-container cdkColumnDef="category">
+            <th cdk-header-cell
+                *cdkHeaderCellDef> {{isConsultationSelected() ? lang.map.consulting_type : lang.map.subject}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.categoryInfo?.getName()}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="caseStatus">
+            <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.lbl_status}}</th>
+            <td cdk-cell *cdkCellDef="let row">
+              <!--              <i [tooltip]="" class="text-primary" [class]="row.getStatusIcon()"></i>-->
+              <span>{{row.caseStatusInfo?.getName()}}</span>
+            </td>
+          </ng-container>
+          <ng-container cdkColumnDef="fullName">
+            <th cdk-header-cell sortable-header
+                *cdkHeaderCellDef> {{isCoordinationWithOrganizationSelected() ? lang.map.campaign_name : lang.map.full_name}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.fullName}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="arName">
+            <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.arabic_name}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.arName}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="enName">
+            <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.english_name}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.enName}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="organization">
+            <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.lbl_organization}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.organization}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="organizationId">
+            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_organization}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.organizationInfo?.getName()}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="createdOn">
+            <th cdk-header-cell sortable-header *cdkHeaderCellDef>{{lang.map.creation_date}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.createdOn|date}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="creatorInfo">
+            <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.created_by}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.creatorInfo?.getName()}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="countryInfo">
+            <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.country}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.countryInfo?.getName()}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="ouInfo">
+            <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.lbl_organization}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.ouInfo?.getName()}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="requestClassificationInfo">
+            <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.request_classification}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.requestClassificationInfo?.getName()}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="subject">
+            <th cdk-header-cell sortable-header *cdkHeaderCellDef>{{lang.map.subject}}</th>
+            <td cdk-cell *cdkCellDef="let row">{{row.subject}}</td>
+          </ng-container>
+          <ng-container cdkColumnDef="projectName">
+            <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.project_name}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.projectNameInfo?.getName()}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="templateTypeInfo">
+            <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.model_type}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.templateTypeInfo?.getName()}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="domainInfo">
+            <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.the_domain}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.domainInfo?.getName()}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="projectTypeInfo">
+            <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.project_type}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.projectTypeInfo?.getName()}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="requestTypeInfo">
+            <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.request_type}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.requestTypeInfo?.getName()}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="domain">
+            <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.domain}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.domain}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="goal">
+            <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.goal}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.goal}} </td>
+          </ng-container>
+          <tr cdk-header-row *cdkHeaderRowDef="headerColumn"></tr>
+          <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="table.columns"></tr>
+          <tr cdk-row (contextmenu)="menu.open($event , row)" *cdkRowDef="let row; columns: table.columns;"></tr>
+          <tr *cdkNoDataRow>
+            <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
+          </tr>
+        </table>
+        <app-paginator #paginator [length]="results.length"></app-paginator>
+      </app-table>
+    </div>
+  </ng-template>
+  <context-menu-item #menu [actions]="actions"></context-menu-item>
+</div>

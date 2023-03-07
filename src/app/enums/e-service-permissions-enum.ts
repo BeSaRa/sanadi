@@ -1,10 +1,18 @@
 export enum EServicePermissionsEnum {
+  /**
+   * @description Don't use for permissions. It is just a prefix for all search service permissions
+   */
+  SEARCH_SERVICE_PREFIX = 'SEARCH_SERVICE_', // it is used as initial when setting permissions for user
   TEAM_INBOX = 'TEAM_INBOX', // it is not related to case type
 
   // e-service permissions permission name should be same name as CaseType enum
+  // all search service permissions should have same prefix as value of SEARCH_SERVICE_PREFIX
   INQUIRY = 'INQUIRY',
+  SEARCH_SERVICE_INQUIRY = 'SEARCH_SERVICE_INQUIRY',
   CONSULTATION = 'CONSULTATION',
+  SEARCH_SERVICE_CONSULTATION = 'SEARCH_SERVICE_CONSULTATION',
   INTERNATIONAL_COOPERATION = 'INTERNATIONAL_COOPERATION',
+  SEARCH_SERVICE_INTERNATIONAL_COOPERATION = 'SEARCH_SERVICE_INTERNATIONAL_COOPERATION',
   INTERNAL_PROJECT_LICENSE = 'INTERNAL_PROJECT_LICENSE',
   EXTERNAL_PROJECT_MODELS = 'EXTERNAL_PROJECT_MODELS',
   INITIAL_EXTERNAL_OFFICE_APPROVAL = 'INITIAL_EXTERNAL_OFFICE_APPROVAL',

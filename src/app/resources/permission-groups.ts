@@ -74,6 +74,21 @@ const followupPermissionsGroup: PermissionsEnum[] = [
   PermissionsEnum.INTERNAL_FOLLOWUP
 ];
 
+const consultationServicesPermissionGroup: EServicePermissionsEnum[] = [
+  EServicePermissionsEnum.CONSULTATION,
+  EServicePermissionsEnum.SEARCH_SERVICE_CONSULTATION
+];
+
+const inquiryServicesPermissionGroup: EServicePermissionsEnum[] = [
+  EServicePermissionsEnum.INQUIRY,
+  EServicePermissionsEnum.SEARCH_SERVICE_INQUIRY
+];
+
+const internationCooperationServicesPermissionGroup: EServicePermissionsEnum[] = [
+  EServicePermissionsEnum.INTERNATIONAL_COOPERATION,
+  EServicePermissionsEnum.SEARCH_SERVICE_INTERNATIONAL_COOPERATION
+];
+
 const generalServicesPermissionsGroup: EServicePermissionsEnum[] = [
   EServicePermissionsEnum.INQUIRY,
   EServicePermissionsEnum.CONSULTATION,
@@ -130,6 +145,11 @@ const giveUsersPermissions: PermissionsEnum[] = [
 ];
 
 const permissionGroups: PermissionGroupsMapType = {
+  [PermissionGroupsEnum.CONSULTATION_SERVICES_PERMISSION_GROUP]: consultationServicesPermissionGroup,
+  [PermissionGroupsEnum.INQUIRY_SERVICES_PERMISSION_GROUP]: inquiryServicesPermissionGroup,
+  [PermissionGroupsEnum.INTERNATIONAL_COOP_SERVICES_PERMISSION_GROUP]: internationCooperationServicesPermissionGroup,
+
+
   [PermissionGroupsEnum.SANADI_PERMISSIONS_GROUP]: sanadiPermissionsGroup,
   [PermissionGroupsEnum.ADMIN_PERMISSIONS_GROUP]: adminPermissionsGroup,
   [PermissionGroupsEnum.MANAGE_EXTERNAL_USER_PERMISSIONS_GROUP]: externalUserPermissionsGroup,

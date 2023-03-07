@@ -1,0 +1,118 @@
+<div class="d-flex flex-column">
+  <tabs-list [accordionView]="accordionView" [hasForm]="true">
+    <tab [name]="tabsData.basicInfo.name" [hasError]="getTabInvalidStatus('basicInfo')"
+         [template]="basicInfoTabTemplate" [title]="lang.map.lbl_basic_info"></tab>
+    <tab [name]="tabsData.comments.name" [hasError]="getTabInvalidStatus('comments')"
+         [template]="commentsTabTemplate" [title]="lang.map.comments"
+         *ngIf="employeeService.isInternalUser()"></tab>
+    <tab *ngIf="!accordionView" [name]="tabsData.attachments.name" [hasError]="getTabInvalidStatus('attachments')"
+         [template]="attachmentsTabTemplate" [title]="lang.map.attachments"></tab>
+    <tab [name]="tabsData.recommendations.name" [hasError]="getTabInvalidStatus('recommendations')"
+         [template]="recommendationsTemplate" [title]="lang.map.recommendations" [disabled]="!model?.id"></tab>
+  </tabs-list>
+  <ng-template #basicInfoTabTemplate>
+    <fieldset [disabled]="readonly">
+      <form [formGroup]="form" autocomplete="off">
+        <div class="row">
+          <!-- subject -->
+          <div class="col-sm-12 col-md-4 mb-4 ng-select-wrapper">
+            <label asteriskIfRequired="category" for="category" class="form-label">{{lang.map.subject}}</label>
+            <ng-select [selectOnTab]="true" labelForId="category" [clearable]="true"
+                       placeholder="{{lang.map.select}}" id="category"
+                       [notFoundText]="lang.map.msg_not_found"
+                       [readonly]="readonly" appendTo="body"
+                       formControlName="category" validationClasses="category">
+              <ng-option [value]="option.lookupKey"
+                         *ngFor="let option of categories">{{option.getName()}}</ng-option>
+            </ng-select>
+            <app-field-error-message controlName="category"></app-field-error-message>
+          </div>
+          <!-- Competent Department -->
+          <div class="col-sm-12 col-md-4 mb-4 ng-select-wrapper">
+            <label asteriskIfRequired="competentDepartmentID" for="competentDepartmentID"
+                   class="form-label">{{lang.map.competent_dep}}</label>
+            <ng-select [selectOnTab]="true" labelForId="competentDepartmentID" [clearable]="true"
+                       placeholder="{{lang.map.select}}" id="competentDepartmentID"
+                       [notFoundText]="lang.map.msg_not_found"
+                       [readonly]="readonly" appendTo="body"
+                       (change)="onCompetentDepChange($event)"
+                       formControlName="competentDepartmentID" validationClasses="competentDepartmentID">
+              <ng-option [value]="option.id"
+                         *ngFor="let option of departments">{{option.getName()}}</ng-option>
+            </ng-select>
+            <app-field-error-message controlName="competentDepartmentID"></app-field-error-message>
+          </div>
+          <!-- Full Name -->
+          <div class="col-sm-12 col-md-4 mb-4 position-relative">
+            <label asteriskIfRequired="fullName" for="fullName" class="form-label">{{lang.map.full_name}}</label>
+            <input id="fullName" validationClasses="fullName" formControlName="fullName" trimInput class="form-control">
+            <app-field-error-message controlName="fullName"></app-field-error-message>
+          </div>
+        </div>
+        <div class="row">
+          <!-- Phone Number -->
+          <div class="col-sm-12 col-md-4 mb-4 position-relative">
+            <label asteriskIfRequired="mobileNo" for="mobileNo" class="form-label">{{lang.map.lbl_phone}}</label>
+            <input id="mobileNo" validationClasses="mobileNo" trimInput formControlName="mobileNo" class="form-control">
+            <app-field-error-message controlName="mobileNo"></app-field-error-message>
+          </div>
+          <!-- Email -->
+          <div class="col-sm-12 col-md-4 mb-4 position-relative">
+            <label asteriskIfRequired="email" for="email" class="form-label">{{lang.map.lbl_email}}</label>
+            <input id="email" validationClasses="email" formControlName="email" trimInput class="form-control">
+            <app-field-error-message controlName="email"></app-field-error-message>
+          </div>
+          <!-- Organization -->
+          <div class="col-sm-12 col-md-4 mb-4 position-relative">
+            <label asteriskIfRequired="organization" for="organization"
+                   class="form-label">{{lang.map.lbl_organization}}</label>
+            <input id="organization" validationClasses="organization" formControlName="organization"
+                   class="form-control" trimInput>
+            <app-field-error-message controlName="organization"></app-field-error-message>
+          </div>
+        </div>
+        <div class="row">
+          <!-- Occupation -->
+          <div class="col-sm-12 col-md-4 mb-4 position-relative">
+            <label asteriskIfRequired="occupation" for="occupation" class="form-label">{{lang.map.occupation}}</label>
+            <input id="occupation" validationClasses="occupation" formControlName="occupation" trimInput class="form-control">
+            <app-field-error-message controlName="occupation"></app-field-error-message>
+          </div>
+        </div>
+        <div class="row">
+          <!-- Request Body -->
+          <div class="col-sm-12 mb-4 position-relative">
+            <label asteriskIfRequired="requestBody" for="requestBody" class="form-label">{{lang.map.request_body}}</label>
+            <textarea rows="5" id="requestBody" validationClasses="requestBody" formControlName="requestBody"
+                      class="form-control" [maxlength]="customValidators.defaultLengths.EXPLANATIONS"></textarea>
+            <app-field-error-message controlName="requestBody"></app-field-error-message>
+          </div>
+        </div>
+      </form>
+    </fieldset>
+  </ng-template>
+
+  <ng-template #commentsTabTemplate>
+    <div class="d-flex flex-row align-items-center justify-content-start">
+      <button [disabled]="!isAddCommentAllowed()" (click)="commentsCtrl.openCommentDialog()"
+              class="d-inline-block btn p-0 m-0 icon-btn"><i
+        class="mdi mdi-plus-box text-primary"></i></button>
+    </div>
+    <app-comments #commentsCtrl [caseId]="model?.id" [service]="service.commentService"
+                  [readonly]="readonly"></app-comments>
+  </ng-template>
+
+  <ng-template #attachmentsTabTemplate>
+    <attachments [disabled]="isAttachmentReadonly()" [caseId]="model?.id" [caseType]="model?.caseType"
+                 [service]="service.documentService" [model]="model"
+                 [load]="loadAttachments" [formProperties]="formProperties"></attachments>
+  </ng-template>
+
+  <ng-template #recommendationsTemplate>
+    <app-recommendations [gridStyle]="false"
+                         [disabled]="!allowEditRecommendations"
+                         [case]="model"
+                         [caseId]="model?.id"
+                         [service]="service.recommendationService"></app-recommendations>
+  </ng-template>
+</div>

@@ -390,7 +390,7 @@ export class QueryResult extends SearchableCloneable<QueryResult> {
   }
 
   setItemRoute(): void {
-    this.itemRoute = '/' + this.service.getServiceRoute(this.BD_CASE_TYPE);
+    this.itemRoute = '/' + this.service.getServiceRoute(this.BD_CASE_TYPE) + '/service';
     this.itemDetails = this.encrypt.encrypt<INavigatedItem>({
       openFrom: !this.OWNER ? OpenFrom.TEAM_INBOX : OpenFrom.USER_INBOX,
       taskId: this.TKIID,
