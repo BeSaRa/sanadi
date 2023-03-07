@@ -1,0 +1,83 @@
+<div class="row mb-4">
+  <div class="col">
+    <div class="d-flex align-items-center justify-content-start">
+      <h1 class="h6 text-primary">{{lang.map.menu_service_search}}</h1>
+      <div>
+        <select [formControl]="serviceControl" class="form-select mx-4">
+          <option [ngValue]="service"
+                  *ngFor="let service of serviceNumbers">{{getServiceName(service)}}</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <tabs-list (onTabChange)="selectedTabChanged($event)" [tabByIndex$]="tabIndex$">
+    <tab [title]="lang.map.search_criteria" [template]="formCriteria"></tab>
+    <tab name="result_tab" [title]="criteriaTitle" [template]="searchResult"></tab>
+  </tabs-list>
+  <ng-template #formCriteria>
+    <form autocomplete="off" (keydown.enter)="search$.next(null)" [formGroup]="form">
+      <formly-form [form]="form" [fields]="fields"></formly-form>
+    </form>
+    <button class="btn mb-4 btn-primary shadow shadow-sm" type="submit"
+            (click)="search$.next(null)">{{lang.map.lbl_search}}</button>
+    <button class="btn mb-4 btn-secondary shadow shadow-sm mx-2"
+            (click)="resetCriteria()">{{lang.map.btn_reset}}</button>
+  </ng-template>
+  <ng-template #searchResult>
+    <div class="col-12">
+      <app-table #table sortableTable
+                 [filter]="filter"
+                 [useSearchToFilter]="true"
+                 [paginator]="paginator"
+                 [data]="results"
+                 [columns]="searchColumns">
+        <table cdk-table [dataSource]="table.dataSource" class="table border border-1">
+          <ng-container cdkColumnDef="extra-header">
+            <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+              <table-header (textChange)="filter = $event" [tableTitle]="selectedServiceKey"
+                            [sort]="table.dataSource.sort" [reload$]="search$">
+              </table-header>
+            </th>
+          </ng-container>
+          <ng-container cdkColumnDef="fullSerial">
+            <th cdk-header-cell sortable-header style="width: 200px" *cdkHeaderCellDef> {{lang.map.serial_number}}</th>
+            <td cdk-cell *cdkCellDef="let row">
+              <span (click)="actionExportLicense(row)" [ngClass]="{'dir-ltr': row.fullSerial}"
+                    class="text-primary cursor-pointer text-decoration-underline">{{row.fullSerial ?? lang.map.open_task}}</span>
+            </td>
+          </ng-container>
+          <ng-container cdkColumnDef="arName">
+            <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.arabic_name}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.arName}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="enName">
+            <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.english_name}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.enName}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="licenseStartDate">
+            <th cdk-header-cell sortable-header *cdkHeaderCellDef>{{lang.map.license_start_date}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.licenseStartDate|date}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="licenseEndDate">
+            <th cdk-header-cell sortable-header *cdkHeaderCellDef>{{lang.map.license_end_date}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.licenseEndDate|date}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="ouInfo">
+            <th cdk-header-cell *cdkHeaderCellDef>{{lang.map.lbl_organization}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.ouInfo?.getName()}} </td>
+          </ng-container>
+          <tr cdk-header-row *cdkHeaderRowDef="headerColumn"></tr>
+          <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="table.columns"></tr>
+          <tr cdk-row (contextmenu)="menu.open($event , row)" *cdkRowDef="let row; columns: table.columns;"></tr>
+          <tr *cdkNoDataRow>
+            <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
+          </tr>
+        </table>
+        <app-paginator #paginator [length]="results.length"></app-paginator>
+      </app-table>
+    </div>
+  </ng-template>
+  <context-menu-item #menu [actions]="actions"></context-menu-item>
+</div>

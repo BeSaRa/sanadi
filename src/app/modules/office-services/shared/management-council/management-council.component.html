@@ -29,16 +29,16 @@
         <input id="email" validationClasses="email" formControlName="email" trimInput class="form-control">
         <app-field-error-message controlName="email"></app-field-error-message>
       </div>
-      <!-- Country -->
+      <!-- nationalities -->
       <div class="col-sm-12 col-md-4 mb-4 position-relative">
-        <label asteriskIfRequired="country" for="country" class="form-label">{{lang.map.country}}</label>
-        <ng-select [selectOnTab]="true" labelForId="country" [clearable]="false" placeholder="{{lang.map.select}}"
-          id="country" [notFoundText]="lang.map.msg_not_found" appendTo="body" formControlName="country"
-          validationClasses="country">
-          <ng-option *ngFor="let option of countriesList" [value]="option.id" [disabled]="!option.isActive()">
+        <label asteriskIfRequired="nationality" for="nationality" class="form-label">{{lang.map.lbl_nationality}}</label>
+        <ng-select [selectOnTab]="true" labelForId="nationality" [clearable]="false" placeholder="{{lang.map.select}}"
+                   id="nationality" [notFoundText]="lang.map.msg_not_found" appendTo="body" formControlName="nationality"
+                   validationClasses="nationality">
+          <ng-option *ngFor="let option of nationalities" [value]="option.lookupKey" [disabled]="!option.isActive()">
             {{option.getName()}}</ng-option>
         </ng-select>
-        <app-field-error-message controlName="country"></app-field-error-message>
+        <app-field-error-message controlName="nationality"></app-field-error-message>
       </div>
       <!-- Job Title -->
       <div class="col-sm-12 col-md-4 mb-4 position-relative">
@@ -83,10 +83,10 @@
               <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{lang.map.english_name}}</th>
               <td cdk-cell *cdkCellDef="let row"> {{row.englishName}} </td>
             </ng-container>
-            <ng-container cdkColumnDef="country">
+            <ng-container cdkColumnDef="nationality">
               <th cdk-header-cell *cdkHeaderCellDef sortable-header [sortParamAsFullItem]="true"
-                  [sortCallback]="sortingCallbacks.country"> {{lang.map.country}}</th>
-              <td cdk-cell *cdkCellDef="let row"> {{row.countryInfo?.getName() || ''}} </td>
+                  [sortCallback]="sortingCallbacks.nationality"> {{lang.map.lbl_nationality}}</th>
+              <td cdk-cell *cdkCellDef="let row"> {{row.nationalityInfo?.getName() || ''}} </td>
             </ng-container>
             <ng-container cdkColumnDef="email">
               <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_email}}</th>
@@ -99,7 +99,20 @@
             <ng-container cdkColumnDef="actions">
               <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
               <td cdk-cell *cdkCellDef="let row; let i = index;" class="table-actions">
-                <grid-actions [record]="row" [actions]="actions" [itemIndex]="i"></grid-actions>
+                <div class="d-flex flex-row">
+                  <button (click)="delete(row)" class="icon-btn text-primary" *ngIf="!readonly"
+                    tooltip="{{lang.map.btn_delete}}">
+                    <i class="mdi mdi-close-box"></i>
+                  </button>
+                  <button (click)="edit(row)" class="icon-btn text-primary" *ngIf="!readonly"
+                    tooltip="{{lang.map.btn_edit}}">
+                    <i class="mdi mdi-pen"></i>
+                  </button>
+                  <button (click)="view(row)" *ngIf="readonly" class="icon-btn text-primary"
+                    tooltip="{{lang.map.view}}">
+                    <i class="mdi mdi-eye"></i>
+                  </button>
+                </div>
               </td>
             </ng-container>
             <tr cdk-header-row *cdkHeaderRowDef="table.columns"></tr>

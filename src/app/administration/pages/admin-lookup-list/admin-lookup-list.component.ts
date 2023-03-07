@@ -172,6 +172,10 @@ export class AdminLookupListComponent implements OnInit, AfterViewInit, OnDestro
     return this.adminLookupTypeId === AdminLookupTypeEnum.WORK_FIELD || this.adminLookupTypeId === AdminLookupTypeEnum.OCHA || this.adminLookupTypeId === AdminLookupTypeEnum.DAC;
   }
 
+  private _isGeneralProcessClassification() {
+    return this.adminLookupTypeId === AdminLookupTypeEnum.GENERAL_PROCESS_CLASSIFICATION;
+  }
+
   private _afterReload() {
     this.table && this.table.clearSelection();
   }
@@ -198,10 +202,14 @@ export class AdminLookupListComponent implements OnInit, AfterViewInit, OnDestro
 
     if (this._isWorkField()) {
       normalRequest = this.dacOchaService.loadByType(this.adminLookupTypeId);
-      pagingRequest = this.dacOchaService.loadByTypePaging(paginationOptions, this.adminLookupTypeId);
-    } else {
-      pagingRequest = this.adminLookupService.paginateComposite(paginationOptions, this.adminLookupTypeId);
+      pagingRequest = this.dacOchaService.loadParentsByTypePaging(paginationOptions, this.adminLookupTypeId);
+    }
+    else if (this._isGeneralProcessClassification()) {
       normalRequest = this.adminLookupService.loadComposite(this.adminLookupTypeId);
+      pagingRequest = this.adminLookupService.loadParentsPaging(paginationOptions, this.adminLookupTypeId);
+    } else {
+      normalRequest = this.adminLookupService.loadComposite(this.adminLookupTypeId);
+      pagingRequest = this.adminLookupService.paginateComposite(paginationOptions, this.adminLookupTypeId);
     }
 
     return {normalRequest, pagingRequest};

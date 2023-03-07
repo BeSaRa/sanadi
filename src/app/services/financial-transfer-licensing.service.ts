@@ -55,7 +55,6 @@ export class FinancialTransferLicensingService extends BaseGenericEService<Finan
     'fullSerial',
     'requestTypeInfo',
     'subject',
-    'goal',
     'createdOn',
     'caseStatus',
     'ouInfo',
@@ -66,7 +65,6 @@ export class FinancialTransferLicensingService extends BaseGenericEService<Finan
   selectLicenseDisplayColumnsReport: string[] = [
     'licenseNumber',
     'subject',
-    'goal',
     'status',
     'actions',
   ];
