@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, TemplateRef, ViewEncapsulation} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 import {LangService} from '@app/services/lang.service';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';

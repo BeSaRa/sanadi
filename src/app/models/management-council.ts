@@ -12,17 +12,17 @@ export class ManagementCouncil extends SearchableCloneable<ManagementCouncil> {
   jobTitle!: string;
   phone!: string;
   // mobileNo!: string;
-  country!: number;
+  nationality!: number;
   passportNumber!: string;
-  countryInfo!: AdminResult
+  nationalityInfo!: AdminResult
 
   searchFields: ISearchFieldsMap<ManagementCouncil> = {
-    ...infoSearchFields(['countryInfo']),
+    ...infoSearchFields(['nationalityInfo']),
     ...normalSearchFields(['arabicName', 'englishName', 'jobTitle', 'email', 'passportNumber', 'phone'])
   };
 
   getManagementCouncilFields(control: boolean): any {
-    const {arabicName, englishName, email, jobTitle, phone, country, passportNumber} = this;
+    const {arabicName, englishName, email, jobTitle, phone, nationality, passportNumber} = this;
 
     return {
       arabicName: control ? [arabicName, [CustomValidators.required, CustomValidators.pattern('AR_ONLY'),
@@ -35,7 +35,7 @@ export class ManagementCouncil extends SearchableCloneable<ManagementCouncil> {
       jobTitle: control ? [jobTitle, [CustomValidators.required, CustomValidators.maxLength(150)]] : jobTitle,
       phone: control ? [phone, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : phone,
       // mobileNo: control ? [mobileNo, [CustomValidators.required].concat(CustomValidators.commonValidations.mobileNo)] : mobileNo,
-      country: control ? [country, CustomValidators.required] : country,
+      nationality: control ? [nationality, CustomValidators.required] : nationality,
       passportNumber: control ? [passportNumber, [...CustomValidators.commonValidations.passport]] : passportNumber
     };
   }

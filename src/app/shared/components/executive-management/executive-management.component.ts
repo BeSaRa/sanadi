@@ -1,6 +1,6 @@
 import { Lookup } from '@models/lookup';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActionIconsEnum } from '@app/enums/action-icons-enum';
 import { UserClickOn } from '@app/enums/user-click-on.enum';
 import { CommonUtils } from '@helpers/common-utils';
@@ -42,7 +42,7 @@ export class ExecutiveManagementComponent implements OnInit {
   get list(): ExecutiveManagement[] {
     return this._list;
   }
-
+  hasNationality: boolean = false;
   @Input() nationalities: Lookup[] = [];
   @Input() countriesList: Country[] = [];
   @Input() readonly: boolean = false;
@@ -127,6 +127,10 @@ export class ExecutiveManagementComponent implements OnInit {
     this.form = this.fb.group(
       new ExecutiveManagement().getManagerFields(true)
     );
+    this.hasNationality = !!this.nationalities.length;
+    if (this.hasNationality) {
+      this.nationalitiyField.setValidators([Validators.required])
+    }
   }
 
   private listenToAdd() {
@@ -195,7 +199,7 @@ export class ExecutiveManagementComponent implements OnInit {
         map(() => {
           let formValue = this.form.getRawValue();
           let nationalityInfo: AdminResult =
-            this.countriesList
+            this.nationalities
               .find((x) => x.id === formValue.country)
               ?.createAdminResult() ?? new AdminResult();
 
@@ -295,5 +299,9 @@ export class ExecutiveManagementComponent implements OnInit {
     this.list = [];
     this._updateList(null, 'NONE');
     this._setComponentReadiness('READY');
+  }
+
+  get nationalitiyField(): UntypedFormControl {
+    return (this.form.get('nationality')) as UntypedFormControl;
   }
 }

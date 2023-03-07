@@ -89,11 +89,6 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
       this.employeeService.getProfile()?.submissionMechanism ?? 1;
   }
 
-  formProperties = {
-    requestType: () => {
-      return this.getObservableField('requestTypeField', 'requestType');
-    }
-  }
   //#region Setup
   form!: UntypedFormGroup;
   loadAttachments: boolean = false;
@@ -129,6 +124,11 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
     actualTransferDate: DateUtils.getDatepickerOptions({
       disablePeriod: 'none',
     }),
+  };
+  formProperties = {
+    requestType: ()=>{
+      return this.getObservableField('requestTypeField','requestType')
+    }
   };
   countries: Country[] = [];
   licenseSearch$: Subject<string> = new Subject<string>();
@@ -239,6 +239,7 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
   };
   tabIndex$: Subject<number> = new Subject<number>();
   ngAfterViewInit(): void {
+
     this.cd.detectChanges();
     this._listenToTransferTypeChange();
     this._listenToTargetCountryChange();
@@ -412,8 +413,12 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
 
     this.model!.financialTransfersProjects = model.financialTransfersProjects;
     this.handleRequestTypeChange(model.requestType, false);
-    this.cd.detectChanges();
     this.listenAllowed = true;
+    if (this.isQatariTransactionAmountAllowed()) {
+      this.tabsData.financialTransfersProjects.validStatus = () =>
+        this.isFinancialProjectsRequired();
+    }
+    this.cd.detectChanges();
   }
 
   //#endregion

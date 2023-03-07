@@ -46,7 +46,7 @@ export class ExecutiveManagement extends SearchableCloneable<ExecutiveManagement
       email: control ? [email, [CustomValidators.required, CustomValidators.pattern('EMAIL'), CustomValidators.maxLength(100)]] : email,
       jobTitle: control ? [jobTitle, [CustomValidators.required, CustomValidators.maxLength(150)]] : jobTitle,
       phone: control ? [phone, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : phone,
-      nationality: control ? [nationality, [CustomValidators.required]] : nationality,
+      nationality: control ? [nationality] : nationality,
       passportNumber: control ? [passportNumber, [...CustomValidators.commonValidations.passport]] : passportNumber
     }
   }

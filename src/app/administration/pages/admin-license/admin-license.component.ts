@@ -1,6 +1,6 @@
 import { EmployeeService } from './../../../services/employee.service';
 import { HttpClient } from '@angular/common/http';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { CaseTypes } from '@app/enums/case-types.enum';
@@ -25,7 +25,8 @@ import { filter, map, skip, startWith, takeUntil } from 'rxjs/operators';
 @Component({
   selector: 'app-admin-license',
   templateUrl: './admin-license.component.html',
-  styleUrls: ['./admin-license.component.scss']
+  styleUrls: ['./admin-license.component.scss'],
+  encapsulation : ViewEncapsulation.None
 })
 export class AdminLicenseComponent implements OnInit, OnDestroy {
   private destroy$: Subject<any> = new Subject<any>();
@@ -96,6 +97,9 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
   }
 
   private hasSearchPermission(caseType: number): boolean {
+    if(this.employeeService.isInternalUser()){
+      return !this.servicesWithoutLicense.includes(caseType)
+    }
     return !this.servicesWithoutLicense.includes(caseType) && this.employeeService.userCanManage(caseType);
   }
 
@@ -222,7 +226,10 @@ export class AdminLicenseComponent implements OnInit, OnDestroy {
     return this.lang.getLocalByKey(serviceKey).getName();
   }
 
-  get selectedServiceKey(): keyof ILanguageKeys {
+  get selectedServiceKey(): keyof ILanguageKeys  {
+   if(!this.selectedService){
+    return 'service_name';
+   }
     return this.selectedService.serviceKey;
   }
 
