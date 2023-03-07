@@ -17,7 +17,7 @@ import {CustomValidators} from "@app/validators/custom-validators";
 import {ImplementationCriteriaContract} from "@contracts/implementation-criteria-contract";
 import {ProjectImplementationService} from "@services/project-implementation.service";
 import {DialogService} from "@services/dialog.service";
-import {UserClickOn} from "@app/enums/user-click-on.enum";
+import {UserClickOn} from "@enums/user-click-on.enum";
 import {ImplementationTemplate} from "@models/implementation-template";
 import {ReasonPopupComponent} from "@app/shared/popups/reason-popup/reason-popup.component";
 import {ReasonContract} from "@contracts/reason-contract";

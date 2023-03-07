@@ -91,9 +91,12 @@ import {
 import {
   OrganizationsEntitiesSupportComponent
 } from '@app/modules/general-services/pages/organizations-entities-support/organizations-entities-support.component';
+/*import {
+  ProjectImplementationComponent
+} from "@modules/projects/pages/project-implementation/project-implementation.component";*/
 import {
   ProjectImplementationComponent
-} from "@modules/projects/pages/project-implementation/project-implementation.component";
+} from "@modules/services/project-implementation/pages/project-implementation/project-implementation.component";
 import { FinancialTransfersLicensingComponent } from '@app/modules/remittances/pages/financial-transfers-licensing/financial-transfers-licensing.component';
 
 @Injectable({

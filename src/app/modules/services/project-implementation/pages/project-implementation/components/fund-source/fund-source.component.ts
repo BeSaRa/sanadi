@@ -7,17 +7,17 @@ import {
   UntypedFormGroup
 } from "@angular/forms";
 import {FundingResourceContract} from "@contracts/funding-resource-contract";
-import {FundSourceType} from "@app/enums/fund-source-type";
+import {FundSourceType} from "@enums/fund-source-type";
 import {LangService} from "@services/lang.service";
 import {ILanguageKeys} from "@contracts/i-language-keys";
 import {Subject} from "rxjs";
 import {DialogService} from "@services/dialog.service";
-import {FundSourcePopupComponent} from "@modules/projects/popups/fund-source-popup/fund-source-popup.component";
-import {OperationTypes} from "@app/enums/operation-types.enum";
+import {FundSourcePopupComponent} from "@modules/services/project-implementation/popups/fund-source-popup/fund-source-popup.component";
+import {OperationTypes} from "@enums/operation-types.enum";
 import {FundSource} from "@models/fund-source";
 import {debounceTime, filter, map, takeUntil} from "rxjs/operators";
 import {CustomValidators} from "@app/validators/custom-validators";
-import {UserClickOn} from "@app/enums/user-click-on.enum";
+import {UserClickOn} from "@enums/user-click-on.enum";
 import currency from "currency.js";
 
 @Component({

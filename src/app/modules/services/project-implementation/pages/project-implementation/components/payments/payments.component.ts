@@ -11,12 +11,12 @@ import {Payment} from "@models/payment";
 import {LangService} from "@services/lang.service";
 import {CustomValidators} from "@app/validators/custom-validators";
 import {DialogService} from "@services/dialog.service";
-import {PaymentPopupComponent} from "@modules/projects/popups/payment-popup/payment-popup.component";
+import {PaymentPopupComponent} from "@modules/services/project-implementation/popups/payment-popup/payment-popup.component";
 import {IDialogData} from "@contracts/i-dialog-data";
-import {OperationTypes} from "@app/enums/operation-types.enum";
+import {OperationTypes} from "@enums/operation-types.enum";
 import {debounceTime, filter, map, takeUntil} from "rxjs/operators";
 import {Subject} from "rxjs";
-import {UserClickOn} from "@app/enums/user-click-on.enum";
+import {UserClickOn} from "@enums/user-click-on.enum";
 import currency from "currency.js";
 
 @Component({

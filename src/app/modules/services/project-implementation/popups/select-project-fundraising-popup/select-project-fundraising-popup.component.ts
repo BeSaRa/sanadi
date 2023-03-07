@@ -1,5 +1,5 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {LangService} from '@app/services/lang.service';
+import {LangService} from '@services/lang.service';
 import {ImplementationFundraising} from "@models/implementation-fundraising";
 import {ProjectFundraising} from "@models/project-fundraising";
 import {DIALOG_DATA_TOKEN} from "@app/shared/tokens/tokens";
