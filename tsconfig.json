@@ -39,6 +39,9 @@
       ],
       "@models/*": [
         "./src/app/models/*"
+      ],
+      "@enums/*": [
+        "./src/app/enums/*"
       ]
     },
     "baseUrl": "./",
