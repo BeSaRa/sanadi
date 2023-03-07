@@ -1,6 +1,6 @@
 <div class="d-flex flex-column">
   <form [formGroup]="form" autocomplete="off">
-    <tabs-list [accordionView]="accordionView">
+    <tabs-list [accordionView]="accordionView" [hasForm]="true">
       <tab [name]="tabsData.basic.name" [template]="basicTemplate" [title]="lang.map.lbl_basic_info"
            [hasError]="getTabInvalidStatus('basic')"></tab>
       <tab [name]="tabsData.bankAccounts.name" [template]="bankAccountsTemplate" [title]="lang.map.bank_details"

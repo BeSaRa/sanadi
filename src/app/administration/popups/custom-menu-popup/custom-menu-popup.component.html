@@ -9,7 +9,7 @@
 </div>
 <div class="dialog-content" #dialogContent>
   <form class="w800px" novalidate autocomplete="off" [formGroup]="form">
-    <tabs-list [tabByIndex$]="selectedTabIndex$" (onTabChange)="setDialogButtonsVisibility($event)">
+    <tabs-list [tabByIndex$]="selectedTabIndex$" [hasForm]="true" (onTabChange)="setDialogButtonsVisibility($event)">
       <tab [name]="tabsData.basic.name" [template]="basicTabTemplate" [title]="lang.map.lbl_basic_info"
            [hasError]="getTabInvalidStatus('basic')"></tab>
       <tab [name]="tabsData.linkSettings.name" [template]="linkSettingsTabTemplate" [title]="lang.map.link_settings"

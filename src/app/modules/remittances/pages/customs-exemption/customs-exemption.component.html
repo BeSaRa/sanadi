@@ -1,5 +1,5 @@
 <div class="row">
-  <tabs-list [accordionView]="accordionView">
+  <tabs-list [accordionView]="accordionView" [hasForm]="true">
     <tab name="basic_info" [hasError]="form.invalid" [template]="basic_info" [title]="lang.map.lbl_basic_info">
     </tab>
     <tab name="attachments" *ngIf="!accordionView" [template]="attachmentsTab" [title]="lang.map.attachments"></tab>

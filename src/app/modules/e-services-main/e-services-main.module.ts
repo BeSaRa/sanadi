@@ -3,9 +3,6 @@ import { SelectPreRegisteredPopupComponent } from './popups/select-pre-registere
 import { SelectAuthorizedEntityPopupComponent } from './popups/select-authorized-entity-popup/select-authorized-entity-popup.component';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import {
-  FilterInboxRequestPopupComponent
-} from '@app/modules/e-services-main/popups/filter-inbox-request-popup/filter-inbox-request-popup.component';
 import { SelectLicensePopupComponent } from '@app/modules/e-services-main/popups/select-license-popup/select-license-popup.component';
 import { SelectTemplatePopupComponent } from '@app/modules/e-services-main/popups/select-template-popup/select-template-popup.component';
 import { SelectedLicenseTableComponent } from '@app/modules/e-services-main/shared/selected-license-table/selected-license-table.component';
@@ -30,7 +27,6 @@ import { ResearchAndStudiesComponent } from './shared/research-and-studies/resea
 @NgModule({
   declarations: [
     SelectLicensePopupComponent,
-    FilterInboxRequestPopupComponent,
     SelectTemplatePopupComponent,
     SelectedLicenseTableComponent,
     BankAccountComponent,

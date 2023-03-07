@@ -1,5 +1,5 @@
 <div class="d-flex flex-column">
-  <tabs-list [accordionView]="accordionView" (onTabChange)="onTabChange($event)">
+  <tabs-list [accordionView]="accordionView" (onTabChange)="onTabChange($event)" [hasForm]="true">
     <tab [name]="tabsData.basicInfo.name" [hasError]="getTabInvalidStatus('basicInfo')"
          [template]="basicInfoTabTemplate" [title]="lang.map.lbl_basic_info"></tab>
     <tab [name]="tabsData.contectInfo.name" [hasError]="getTabInvalidStatus('contectInfo')"

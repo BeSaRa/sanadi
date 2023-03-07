@@ -7,7 +7,7 @@
 </div>
 <div class="dialog-content" #dialogContent>
   <form style="width: 800px;" novalidate autocomplete="off" [formGroup]="form">
-    <tabs-list>
+    <tabs-list [hasForm]="true">
       <tab [name]="tabsData.basic.name" [template]="basicTabTemplate" [title]="lang.map.lbl_basic_info"
            [hasError]="fm.getFieldInvalidStatus('basic')"></tab>
       <tab [name]="tabsData.cv.name" [template]="cvTabTemplate"

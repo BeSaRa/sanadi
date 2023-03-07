@@ -113,6 +113,7 @@ import {ServiceLogItemLocationComponent} from '@app/shared/components/service-lo
 import {ServiceLogListComponent} from '@app/shared/components/service-log-list/service-log-list.component';
 import {HeadingRowComponent} from './components/heading-row/heading-row.component';
 import { HeaderNotificationsComponent } from './components/header-notifications/header-notifications.component';
+import { FilterInboxRequestPopupComponent } from '@app/modules/e-services-main/popups/filter-inbox-request-popup/filter-inbox-request-popup.component';
 
 @NgModule({
   declarations: [
@@ -129,6 +130,7 @@ import { HeaderNotificationsComponent } from './components/header-notifications/
     PageHeaderComponent,
     LocalizationPopupComponent,
     FieldErrorMessageComponent,
+    FilterInboxRequestPopupComponent,
     BulkActionsComponent,
     TooltipDirective,
     TabsListComponent,
