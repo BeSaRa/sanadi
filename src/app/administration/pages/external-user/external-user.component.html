@@ -1,15 +1,5 @@
-<ng-template #customHeaderTemplate>
-  <ng-select [selectOnTab]="true" [clearable]="false"
-              placeholder="{{langService.map.select}}" id="profileId"
-              [notFoundText]="langService.map.msg_not_found" appendTo="body"
-              [formControl]="profileIdControl"
-              (change)="filterUsersByProfile(true)">
-    <ng-option value="">{{langService.map.lbl_all}}</ng-option>
-    <ng-option *ngFor="let option of profiles$|async" [value]="option.id">
-      {{option.getName()}}
-    </ng-option>
-  </ng-select>
-</ng-template>
+
+
 <div class="row">
   <div class="col-12">
     <div class="table-responsive">
@@ -26,9 +16,13 @@
                             [reload$]="reload$"
                             [add$]="add$"
                             (textChange)="filterControl.setValue($event)"
-                            [customTemplate]="customHeaderTemplate"
                             [allowAdd]="externalUserUpdateRequestService.canAddUser()"
                             ></table-header>
+            </th>
+          </ng-container>
+          <ng-container cdkColumnDef="profileHeader">
+            <th cdk-header-cell colspan="100" *cdkHeaderCellDef="let row">
+              <ng-container [ngTemplateOutlet]="profileHeaderTemplate"></ng-container>
             </th>
           </ng-container>
           <ng-container cdkColumnDef="domainName">
@@ -70,6 +64,7 @@
             </td>
           </ng-container>
           <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
+          <tr cdk-header-row *cdkHeaderRowDef="['profileHeader']"></tr>
           <tr cdk-header-row *cdkHeaderRowDef="table.columns" class="table-row-header"></tr>
           <tr cdk-row (contextmenu)="menu.open($event , row)" *cdkRowDef="let row; columns: table.columns;"></tr>
           <tr *cdkNoDataRow>
@@ -82,3 +77,30 @@
     </div>
   </div>
 </div>
+
+
+<ng-template #profileHeaderTemplate>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-4">
+        <div class="d-flex align-items-center">
+          <div class="col-2"> 
+            <label for="profileId">{{langService.map.menu_profile}}:</label>
+          </div>
+          <div class="col-10">
+            <ng-select [selectOnTab]="true" [clearable]="false"
+            placeholder="{{langService.map.select}}" id="profileId"
+            [notFoundText]="langService.map.msg_not_found" appendTo="body"
+            [formControl]="profileIdControl"
+            (change)="filterUsersByProfile(true)">
+              <ng-option value="">{{langService.map.lbl_all}}</ng-option>
+              <ng-option *ngFor="let option of profiles$|async" [value]="option.id">
+                {{option.getName()}}
+              </ng-option>
+            </ng-select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
