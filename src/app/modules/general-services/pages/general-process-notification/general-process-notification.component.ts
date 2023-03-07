@@ -222,14 +222,17 @@ GeneralProcessNotificationService
     this.departmentField.setValidators([]);
     if (!this.isOtherProcess) {
       this.projectNameField.setValue(process?.arName);
-      this.departmentField.reset();
+      this.processTypeField.setValue(process?.processType);
       this.departmentField.setValue(process?.departmentId);
+      this._loadSubTeam(this.departmentList.find(d => d.id == this.departmentField.value)?.mainTeam.id);
+      this.subTeamField.setValue(process?.subTeamId);
+      this.domainField.setValue(process?.mainClass);
+      this.subClassificationsList = this._subClassificationsList.filter(sc => sc.parentId == this.domainField.value);
+      this.firstSubDomainField.setValue(process?.subClass);
     } else {
       this.departmentField.setValidators([Validators.required])
-      const departmentFieldValue = this.departmentField.value;
-      this.departmentField.reset();
-      this.departmentField.setValue(departmentFieldValue);
     }
+    this.departmentField.updateValueAndValidity();
     this.processFieldBuilder.generateFromString(process?.template);
     this.sampleDataForOperationsFormGroup.reset();
     this.form.removeControl('sampleDataForOperations');
@@ -524,5 +527,10 @@ GeneralProcessNotificationService
   get processIdField(): UntypedFormControl {
     return this.DSNNNFormGroup && this.DSNNNFormGroup.get('processid') as UntypedFormControl
   }
-
+  get domainField(): UntypedFormControl {
+    return this.DSNNNFormGroup.get('domain') as UntypedFormControl
+  }
+  get processTypeField(): UntypedFormControl {
+    return this.DSNNNFormGroup.get('processType') as UntypedFormControl
+  }
 }
