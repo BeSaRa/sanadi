@@ -89,11 +89,6 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
       this.employeeService.getProfile()?.submissionMechanism ?? 1;
   }
 
-  formProperties = {
-    requestType: () => {
-      return this.getObservableField('requestTypeField', 'requestType');
-    }
-  }
   //#region Setup
   form!: UntypedFormGroup;
   loadAttachments: boolean = false;
