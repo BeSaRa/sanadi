@@ -769,7 +769,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
         },
         onClick: (item: CaseModel<any, any>) => {
           if (item.getResponses().includes(WFResponseType.URGENT_INTERVENTION_FOLLOWUP_SEND_TO_SINGLE_DEPARTMENT)) {
-              this.sendToSingleDepartmentReportReviewAction(item);
+            this.sendToSingleDepartmentReportReviewAction(item);
             return;
           }
           this.sendToSingleDepartmentAction(item);
@@ -1259,10 +1259,10 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       case OpenFrom.USER_INBOX:
         this.router.navigate(['/home/user-inbox']).then();
         break;
-      case OpenFrom.SEARCH: {
-        this.router.navigate(['/home/services-search', this.route.snapshot.params]).then();
+      case OpenFrom.SEARCH:
+        const caseType = this.route.snapshot.params.caseType;
+        this.router.navigate(['/home/services/search/' + caseType, this.route.snapshot.params]).then();
         break;
-      }
     }
 
   }

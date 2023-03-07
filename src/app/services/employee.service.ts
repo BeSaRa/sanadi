@@ -1,30 +1,29 @@
-import { Injectable } from '@angular/core';
-import { FactoryService } from './factory.service';
-import { ExternalUser } from '../models/external-user';
-import { Permission } from '../models/permission';
-import { isValidValue } from '@helpers/utils';
-import { ILoginData } from '@contracts/i-login-data';
-import { UserTypes } from '../enums/user-types.enum';
-import { InternalUser } from '../models/internal-user';
-import { InternalDepartment } from '../models/internal-department';
-import { Team } from '../models/team';
-import { CommonUtils } from '@app/helpers/common-utils';
-import { IUserSecurity } from '@app/interfaces/iuser-security';
-import { UserSecurityConfiguration } from '@app/models/user-security-configuration';
-import { CaseTypes } from '@app/enums/case-types.enum';
-import { EServicePermissionsEnum } from '@app/enums/e-service-permissions-enum';
-import { ConfigurationService } from '@app/services/configuration.service';
-import { PermissionsEnum } from '@app/enums/permissions-enum';
-import { Profile } from '@app/models/profile';
-import { PermissionGroupsEnum } from '@app/enums/permission-groups-enum';
-import { StaticAppResourcesService } from '@services/static-app-resources.service';
-import { ProfileTypes } from '@app/enums/profile-types.enum';
-import { CustomMenu } from '@app/models/custom-menu';
-import { CustomMenuInterceptor } from '@app/model-interceptors/custom-menu-interceptor';
-import { ProfileInterceptor } from '@app/model-interceptors/profile-interceptor';
-import { OperationTypes } from '@app/enums/operation-types.enum';
-import { UserRoleManageUserContract } from '@contracts/user-role-manage-user-contract';
-import { PermissionsGroupMap } from '@app/resources/permission-groups';
+import {Injectable} from '@angular/core';
+import {FactoryService} from './factory.service';
+import {ExternalUser} from '../models/external-user';
+import {Permission} from '../models/permission';
+import {isValidValue} from '@helpers/utils';
+import {ILoginData} from '@contracts/i-login-data';
+import {UserTypes} from '../enums/user-types.enum';
+import {InternalUser} from '../models/internal-user';
+import {InternalDepartment} from '../models/internal-department';
+import {Team} from '../models/team';
+import {CommonUtils} from '@app/helpers/common-utils';
+import {IUserSecurity} from '@app/interfaces/iuser-security';
+import {UserSecurityConfiguration} from '@app/models/user-security-configuration';
+import {CaseTypes} from '@app/enums/case-types.enum';
+import {EServicePermissionsEnum} from '@app/enums/e-service-permissions-enum';
+import {ConfigurationService} from '@app/services/configuration.service';
+import {PermissionsEnum} from '@app/enums/permissions-enum';
+import {Profile} from '@app/models/profile';
+import {PermissionGroupsEnum} from '@app/enums/permission-groups-enum';
+import {StaticAppResourcesService} from '@services/static-app-resources.service';
+import {ProfileTypes} from '@app/enums/profile-types.enum';
+import {CustomMenu} from '@app/models/custom-menu';
+import {CustomMenuInterceptor} from '@app/model-interceptors/custom-menu-interceptor';
+import {ProfileInterceptor} from '@app/model-interceptors/profile-interceptor';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {UserRoleManageUserContract} from '@contracts/user-role-manage-user-contract';
 
 @Injectable({
   providedIn: 'root'
@@ -109,7 +108,7 @@ export class EmployeeService {
   };
 
   constructor(private configService: ConfigurationService,
-    private staticResourcesService: StaticAppResourcesService) {
+              private staticResourcesService: StaticAppResourcesService) {
     FactoryService.registerService('EmployeeService', this);
   }
 
@@ -469,10 +468,8 @@ export class EmployeeService {
       if (!permissionKey) {
         return;
       }
-      this.userCanAdd(key) && this.permissionMap
-        .set(permissionKey.toLowerCase(), new Permission().clone({
-          permissionKey
-        }));
+      this.userCanAdd(key) && this._addToPermissionMap(permissionKey);
+      this.userCanManage(key) && this._addToPermissionMap(EServicePermissionsEnum.SEARCH_SERVICE_PREFIX + permissionKey);
       if (!canSearch) {
         canSearch = this.userCanManage(key);
       }

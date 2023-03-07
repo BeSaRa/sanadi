@@ -12,6 +12,9 @@ import {InternalLoginComponent} from '@app/pages/internal-login/internal-login.c
 import {ServicesGuard} from '@app/guards/services.guard';
 import {DynamicMenuGuard} from '@app/guards/dynamic-menu.guard';
 import {DynamicMenuRouteTypeEnum} from '@app/enums/dynamic-menu-route-type.enum';
+import {NewServicePermissionGuard} from '@app/guards/new-service-permission.guard';
+import {CaseTypes} from '@app/enums/case-types.enum';
+import {ICustomRouteData} from '@contracts/i-custom-route-data';
 
 const routes: Routes = [
   {path: '', redirectTo: 'login', pathMatch: 'full'},
@@ -29,6 +32,43 @@ const routes: Routes = [
         loadChildren: () => import('./administration/administration.module').then(m => m.AdministrationModule)
       },
       {path: 'main', loadChildren: () => import('./user/user.module').then(m => m.UserModule)},
+      {
+        path: 'services/consultations',
+        canActivate: [NewServicePermissionGuard],
+        loadChildren: () => import('./modules/services/consultation/consultation.module')
+          .then(m => m.ConsultationModule),
+        data: {
+          permissionGroup: PermissionGroupsEnum.CONSULTATION_SERVICES_PERMISSION_GROUP,
+          checkAnyPermission: true,
+          caseType: CaseTypes.CONSULTATION
+        } as Partial<ICustomRouteData>
+      },
+      {
+        path: 'services/inquiries',
+        canActivate: [NewServicePermissionGuard],
+        loadChildren: () => import('./modules/services/inquiries-and-complaints/inquiries-and-complaints.module')
+          .then(m => m.InquiriesAndComplaintsModule),
+        data: {
+          permissionGroup: PermissionGroupsEnum.CONSULTATION_SERVICES_PERMISSION_GROUP,
+          checkAnyPermission: true,
+          caseType: CaseTypes.INQUIRY
+        } as Partial<ICustomRouteData>
+      },
+      {
+        path: 'services/international-cooperation',
+        canActivate: [NewServicePermissionGuard],
+        loadChildren: () => import('./modules/services/international-cooperation/international-cooperation.module')
+          .then(m => m.InternationalCooperationModule),
+        data: {
+          permissionGroup: PermissionGroupsEnum.INTERNATIONAL_COOP_SERVICES_PERMISSION_GROUP,
+          checkAnyPermission: true,
+          caseType: CaseTypes.INTERNATIONAL_COOPERATION
+        } as Partial<ICustomRouteData>
+      },
+      {
+        path: 'services/search',
+        loadChildren: () => import('@modules/service-search-individual/service-search-individual.module').then(m => m.ServiceSearchIndividualModule),
+      },
       {
         path: 'general-services',
         canActivate: [ServicesGuard],
@@ -85,14 +125,18 @@ const routes: Routes = [
       },
       {path: 'reports', loadChildren: () => import('./modules/reports/reports.module').then(m => m.ReportsModule)},
       {
-        path: 'dynamic-menus', loadChildren: () => import('./modules/dynamic-menus/dynamic-menus.module').then(m => m.DynamicMenusModule),
+        path: 'dynamic-menus',
+        loadChildren: () => import('./modules/dynamic-menus/dynamic-menus.module').then(m => m.DynamicMenusModule),
         canActivate: [DynamicMenuGuard],
         data: {dynamicMenuRouteType: DynamicMenuRouteTypeEnum.MODULE}
       },
       {
         path: 'urgent-intervention',
         loadChildren: () => import('./modules/urgent-intervention/urgent-intervention.module').then(m => m.UrgentInterventionModule),
-        data: {configPermissionGroup: PermissionGroupsEnum.URGENT_INTERVENTION_PERMISSIONS_GROUP, checkAnyPermission: true}
+        data: {
+          configPermissionGroup: PermissionGroupsEnum.URGENT_INTERVENTION_PERMISSIONS_GROUP,
+          checkAnyPermission: true
+        }
       },
       //{path: '**', redirectTo: '../error'}
     ]
