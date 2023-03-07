@@ -1721,6 +1721,7 @@ export interface ILanguageKeys {
   month_6_to_12: string;
   over_12_months: string;
   states: string;
+  state_province: string;
   license_duration_type: string;
   office_type: string;
   lbl_beneficiaries_nature: string;
@@ -1810,6 +1811,7 @@ export interface ILanguageKeys {
   msg_only_this_file_size_or_less_allowed_to_upload: string;
   err_must_have_letters:string;
   msg_qatari_transaction_should_not_exceed_due_amount:string;
+  neighborhood_street_building: string;
   menu_admin_license:string;
   lbl_transfer_operation_date:string;
 }

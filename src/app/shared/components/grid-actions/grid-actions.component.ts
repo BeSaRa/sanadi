@@ -76,6 +76,7 @@ export class GridActionsComponent implements OnInit {
     if ('displayInGrid' in action && !action.displayInGrid) {
       return false;
     }
+    console.log(action.show!(record))
     return !action.show || (action.show && action.show(record));
   }
 
@@ -104,6 +105,7 @@ export class GridActionsComponent implements OnInit {
             actionsList.push(action);
           }
         } else {
+          console.log(this._filterAction(action, this.record))
           if (this._filterAction(action, this.record)) {
             actionsList.push(action);
           }

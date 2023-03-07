@@ -1,3 +1,4 @@
+import { Lookup } from './../../../../models/lookup';
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
@@ -5,7 +6,6 @@ import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {CommonUtils} from '@app/helpers/common-utils';
 import {SortEvent} from '@app/interfaces/sort-event';
 import {AdminResult} from '@app/models/admin-result';
-import {Country} from '@app/models/country';
 import {ManagementCouncil} from '@app/models/management-council';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 import {ReadinessStatus} from '@app/types/types';
@@ -38,8 +38,7 @@ export class ManagementCouncilComponent implements OnInit, OnDestroy {
   get list(): ManagementCouncil[] {
     return this._list;
   }
-
-  @Input() countriesList: Country[] = [];
+  @Input() nationalities: Lookup[] = [];
   @Input() readonly: boolean = false;
 
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();
@@ -47,7 +46,7 @@ export class ManagementCouncilComponent implements OnInit, OnDestroy {
   dataSource: BehaviorSubject<ManagementCouncil[]> = new BehaviorSubject<
     ManagementCouncil[]
   >([]);
-  columns = ['arabicName', 'englishName', 'email', 'country', 'passportNumber', 'actions'];
+  columns = ['arabicName', 'englishName', 'email', 'nationality', 'passportNumber', 'actions'];
   editItem?: ManagementCouncil;
   showForm: boolean = false;
   viewOnly: boolean = false;
@@ -89,9 +88,9 @@ export class ManagementCouncilComponent implements OnInit, OnDestroy {
     }
   ];
   sortingCallbacks = {
-    country: (a: ManagementCouncil, b: ManagementCouncil, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a) ? '' : a.countryInfo.getName().toLowerCase(),
-        value2 = !CommonUtils.isValidValue(b) ? '' : b.countryInfo.getName().toLowerCase();
+    nationality: (a: ManagementCouncil, b: ManagementCouncil, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.nationalityInfo.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.nationalityInfo.getName().toLowerCase();
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     },
 
@@ -183,15 +182,15 @@ export class ManagementCouncilComponent implements OnInit, OnDestroy {
         }),
         map(() => {
           let formValue = this.form.getRawValue();
-          let countryInfo: AdminResult =
-            this.countriesList
-              .find((x) => x.id === formValue.country)
+          let nationalityInfo: AdminResult =
+            this.nationalities
+              .find((x) => x.id === formValue.nationality)
               ?.createAdminResult() ?? new AdminResult();
 
           return new ManagementCouncil().clone({
             ...this.current,
             ...formValue,
-            countryInfo: countryInfo,
+            nationalityInfo: nationalityInfo,
           });
         })
       )

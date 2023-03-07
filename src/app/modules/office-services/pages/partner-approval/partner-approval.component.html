@@ -125,9 +125,16 @@
                     (click)="addCountry($event)" class="btn btn-primary mt-2">{{lang.map.btn_add}}</button>
           </div>
         </div>
+        <!-- address -->
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label asteriskIfRequired="address" for="address" class="form-label">{{lang.map.state_province}}</label>
+          <input formControlName="address" type="text" [readOnly]="(isExtendOrCancelRequestType() || readonly)"
+                 validationClasses="address" class="form-control" trimInput id="address">
+          <app-field-error-message controlName="address"></app-field-error-message>
+        </div>
         <!-- City -->
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
-          <label asteriskIfRequired="city" for="city" class="form-label">{{lang.map.city}}</label>
+          <label asteriskIfRequired="city" for="city" class="form-label">{{lang.map.city_village}}</label>
           <input formControlName="city" type="text" [readOnly]="(isExtendOrCancelRequestType() || readonly)"
                  validationClasses="city" class="form-control" trimInput id="city">
           <app-field-error-message controlName="city"></app-field-error-message>
@@ -153,7 +160,7 @@
 
         <!-- Region -->
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
-          <label asteriskIfRequired="region" for="region" class="form-label">{{lang.map.region}}</label>
+          <label asteriskIfRequired="region" for="region" class="form-label">{{lang.map.neighborhood_street_building}}</label>
           <input formControlName="region" type="text" [readOnly]="!isEditCountryAllowed()" validationClasses="region"
                  class="form-control" trimInput id="region">
           <app-field-error-message controlName="region"></app-field-error-message>
@@ -250,7 +257,7 @@
           <input formControlName="secondSocialMedia" type="text"
                  [readOnly]="(isExtendOrCancelRequestType() || readonly)" validationClasses="secondSocialMedia"
                  class="form-control" trimInput id="secondSocialMedia">
-          <app-field-error-message controlName="address"></app-field-error-message>
+          <app-field-error-message controlName="secondSocialMedia"></app-field-error-message>
         </div>
         <!-- Social Media 3 -->
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
@@ -341,14 +348,14 @@
     </ng-template>
     <!-- Management Councils -->
     <ng-template #managementCouncilsTemplate>
-      <management-council #managementCouncilsTab [countriesList]="countries" [list]="model?.managementCouncilList || []"
+      <management-council #managementCouncilsTab [nationalities]="nationalities" [list]="model?.managementCouncilList || []"
                           [readonly]="(isExtendOrCancelRequestType() || readonly)"
                           (readyEvent)="managementCouncilsTabStatus = $event">
       </management-council>
     </ng-template>
     <!-- Executive Managements -->
     <ng-template #executiveManagementsTemplate>
-      <executive-management #executiveManagementsTab [nationalities]="nationalities"
+      <executive-management #executiveManagementsTab
                             [pageTitleKey]="'executive_management'" [list]="model?.executiveManagementList || []"
                             [readonly]="(isExtendOrCancelRequestType() || readonly)"
                             (readyEvent)="executiveManagementsTabStatus = $event">
