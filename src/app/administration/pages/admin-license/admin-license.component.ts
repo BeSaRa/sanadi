@@ -1,6 +1,6 @@
 import { EmployeeService } from './../../../services/employee.service';
 import { HttpClient } from '@angular/common/http';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { CaseTypes } from '@app/enums/case-types.enum';
@@ -25,7 +25,8 @@ import { filter, map, skip, startWith, takeUntil } from 'rxjs/operators';
 @Component({
   selector: 'app-admin-license',
   templateUrl: './admin-license.component.html',
-  styleUrls: ['./admin-license.component.scss']
+  styleUrls: ['./admin-license.component.scss'],
+  encapsulation : ViewEncapsulation.None
 })
 export class AdminLicenseComponent implements OnInit, OnDestroy {
   private destroy$: Subject<any> = new Subject<any>();
