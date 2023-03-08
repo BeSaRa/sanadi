@@ -1,21 +1,21 @@
-import { DialogService } from './../../../../services/dialog.service';
-import { ILanguageKeys } from './../../../../interfaces/i-language-keys';
-import { CommonUtils } from './../../../../helpers/common-utils';
-import { InboxService } from './../../../../services/inbox.service';
-import { ToastService } from './../../../../services/toast.service';
-import { DialogRef } from './../../../../shared/models/dialog-ref';
-import { LangService } from './../../../../services/lang.service';
 import { GeneralProcessNotification } from '@app/models/general-process-notification';
-import { DIALOG_DATA_TOKEN } from './../../../../shared/tokens/tokens';
-import { DateUtils } from './../../../../helpers/date-utils';
-import { DatepickerOptionsMap } from './../../../../types/types';
-import { WFResponseType } from './../../../../enums/wfresponse-type.enum';
 import { UntypedFormControl, UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
-import { CustomValidators } from './../../../../validators/custom-validators';
 import { switchMap, exhaustMap, takeUntil, map, tap, filter } from 'rxjs/operators';
-import { IWFResponse } from './../../../../interfaces/i-w-f-response';
 import { Component, Inject, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { WFResponseType } from '@app/enums/wfresponse-type.enum';
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
+import { DatepickerOptionsMap } from '@app/types/types';
+import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
+import { LangService } from '@app/services/lang.service';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { DateUtils } from '@app/helpers/date-utils';
+import { DialogService } from '@app/services/dialog.service';
+import { ToastService } from '@app/services/toast.service';
+import { InboxService } from '@app/services/inbox.service';
+import { CommonUtils } from '@app/helpers/common-utils';
+import { IWFResponse } from '@app/interfaces/i-w-f-response';
 
 @Component({
   selector: 'app-general-process-notification-approval',

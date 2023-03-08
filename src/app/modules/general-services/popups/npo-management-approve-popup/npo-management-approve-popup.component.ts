@@ -1,14 +1,9 @@
-import { CommonUtils } from './../../../../helpers/common-utils';
-import { LangType } from './../../../../types/types';
-import { ILanguageKeys } from './../../../../interfaces/i-language-keys';
-import { NpoManagement } from './../../../../models/npo-management';
 import { DatepickerOptionsMap } from '@app/types/types';
 import { DateUtils } from '@app/helpers/date-utils';
 import { IWFResponse } from '@app/interfaces/i-w-f-response';
 import { ToastService } from '@app/services/toast.service';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { UntypedFormControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { ExternalOrgAffiliation } from '@app/models/external-org-affiliation';
 import { WFResponseType } from '@app/enums/wfresponse-type.enum';
 import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
 import { DialogService } from '@app/services/dialog.service';
@@ -19,6 +14,9 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { Subject, of } from 'rxjs';
 import { InboxService } from '@app/services/inbox.service';
 import { AffiliationRequestType } from '@app/enums/service-request-types';
+import { ILanguageKeys } from '@app/interfaces/i-language-keys';
+import { NpoManagement } from '@app/models/npo-management';
+import { CommonUtils } from '@app/helpers/common-utils';
 
 @Component({
   selector: 'app-npo-management-approve-popup',
@@ -62,7 +60,7 @@ export class NpoManagementApprovePopupComponent implements OnInit {
   private listenToAction() {
     this.action$
       .pipe(takeUntil(this.destroy$))
-      .pipe(map(_ => this.isCommentRequired() ? this.comment.invalid : false))
+      .pipe(map(_ => ((this.isCommentRequired() ? this.comment.invalid : false) || this.approvalForm.invalid)))
       .pipe(tap(invalid => invalid && this.dialog.error(this.lang.map.msg_all_required_fields_are_filled)))
       .pipe(filter(invalid => !invalid))
       .pipe(exhaustMap(_ => {
