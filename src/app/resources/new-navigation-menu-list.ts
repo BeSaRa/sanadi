@@ -28,7 +28,8 @@ enum SystemPathsEnum {
   GENERAL_ASSOCIATION_MEETING_ATTENDANCE = '/home/services/general-association-meeting-attendance',
   INTERNAL_BANK_ACCOUNT_APPROVAL = '/home/services/internal-bank-account-approval',
   URGENT_JOINT_RELIEF_CAMPAIGN = '/home/services/urgent-joint-relief-campaign',
-  TRANSFER_INDIVIDUAL_FUNDS_ABROAD = '/home/services/transferring-individual-funds-abroad'
+  TRANSFER_INDIVIDUAL_FUNDS_ABROAD = '/home/services/transferring-individual-funds-abroad',
+  // INITIAL_EXTERNAL_OFFICE_APPROVAL = '/home/services/initial-external-office-approval'
 }
 
 export const newNavigationMenuList = [
@@ -722,7 +723,59 @@ export const newNavigationMenuList = [
     itemOrder: 3,
     svg: null
   },*/
-
+  /*{
+    id: 200001,
+    langKey: 'menu_initial_external_office_approval',
+    path: SystemPathsEnum.INITIAL_EXTERNAL_OFFICE_APPROVAL,
+    icon: 'mdi-account-box-multiple',
+    isSvg: false,
+    caseType: CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL,
+    permission: '',
+    permissionGroup: PermissionGroupsEnum.INITIAL_EXTERNAL_OFFICE_APPROVAL_SERVICES_PERMISSION_GROUP,
+    parent: null,
+    group: 'main',
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 200002,
+    langKey: serviceAddUpdateLabel,
+    path: SystemPathsEnum.INITIAL_EXTERNAL_OFFICE_APPROVAL + '/service',
+    icon: serviceAddUpdateIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.INITIAL_EXTERNAL_OFFICE_APPROVAL,
+    permissionGroup: null,
+    parent: 200001,
+    group: 'service_' + CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL,
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 200003,
+    langKey: serviceSearchLabel,
+    path: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL),
+    icon: serviceSearchIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.SEARCH_SERVICE_INITIAL_EXTERNAL_OFFICE_APPROVAL,
+    permissionGroup: null,
+    parent: 200001,
+    group: 'service_' + CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL,
+    itemOrder: 2,
+    svg: null
+  },
+  {
+    id: 200004,
+    langKey: serviceOutputLabel,
+    path: SystemPathsEnum.INITIAL_EXTERNAL_OFFICE_APPROVAL + '/outputs',
+    icon: serviceOutputIcon,
+    isSvg: false,
+    permission: Constants.SERVICE_OUTPUT_PERMISSION,
+    permissionGroup: null,
+    parent: 200001,
+    group: 'service_' + CaseTypes.INITIAL_EXTERNAL_OFFICE_APPROVAL,
+    itemOrder: 3,
+    svg: null
+  },*/
 
   {
     id: 1,
