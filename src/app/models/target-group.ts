@@ -10,7 +10,7 @@ export class TargetGroup extends SearchableCloneable<TargetGroup> {
 
     return {
       services: control ? [services, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : services,
-      targetedGroup: control ? [targetedGroup, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX)]] : targetedGroup
+      targetedGroup: control ? [targetedGroup, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]] : targetedGroup
     };
   }
 }
