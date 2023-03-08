@@ -1,6 +1,6 @@
-import { ForeignCountriesProjectsApprovalPopupComponent } from './../modules/general-services/popups/foreign-countries-projects-approval-popup/foreign-countries-projects-approval-popup.component';
+import { ForeignCountriesProjectsApprovalPopupComponent } from '../modules/services/foreign-countries-projects/popups/foreign-countries-projects-approval-popup/foreign-countries-projects-approval-popup.component';
 import { DialogRef } from './../shared/models/dialog-ref';
-import { WFResponseType } from './../enums/wfresponse-type.enum';
+import { WFResponseType } from '@enums/wfresponse-type.enum';
 import { HttpClient } from '@angular/common/http';
 import { ComponentFactoryResolver, Injectable } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';

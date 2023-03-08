@@ -6,7 +6,7 @@ import {
 } from '@modules/services/awareness-activity-suggestion/pages/awareness-activity-suggestion/awareness-activity-suggestion.component';
 import {
   ForeignCountriesProjectsComponent
-} from '@app/modules/general-services/pages/foreign-countries-projects/foreign-countries-projects.component';
+} from '@app/modules/services/foreign-countries-projects/pages/foreign-countries-projects/foreign-countries-projects.component';
 import {
   UrgentInterventionFinancialNotificationComponent
 } from '@modules/urgent-intervention/pages/urgent-intervention-financial-notification/urgent-intervention-financial-notification.component';

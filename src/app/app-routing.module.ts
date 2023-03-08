@@ -243,6 +243,17 @@ const routes: Routes = [
         } as Partial<ICustomRouteData>
       },
       {
+        path: 'services/foreign-countries-projects',
+        canActivate: [NewServicePermissionGuard],
+        loadChildren: () => import('./modules/services/foreign-countries-projects/foreign-countries-projects.module')
+          .then(m => m.ForeignCountriesProjectsModule),
+        data: {
+          permissionGroup: PermissionGroupsEnum.FOREIGN_COUNTRIES_PROJECTS_SERVICES_PERMISSION_GROUP,
+          checkAnyPermission: true,
+          caseType: CaseTypes.FOREIGN_COUNTRIES_PROJECTS
+        } as Partial<ICustomRouteData>
+      },
+      {
         path: 'services/search',
         loadChildren: () => import('@modules/service-search-individual/service-search-individual.module').then(m => m.ServiceSearchIndividualModule),
       },
