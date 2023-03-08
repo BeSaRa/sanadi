@@ -49,7 +49,7 @@ import {
 
 import {
   UrgentJointReliefCampaignComponent
-} from '@app/modules/projects/pages/urgent-joint-relief-campaign/urgent-joint-relief-campaign.component';
+} from '@app/modules/services/urgent-joint-relief-campaign/pages/urgent-joint-relief-campaign/urgent-joint-relief-campaign.component';
 import {
   UrgentInterventionAnnouncementComponent
 } from '@app/modules/urgent-intervention/pages/urgent-intervention-announcement/urgent-intervention-announcement.component';
