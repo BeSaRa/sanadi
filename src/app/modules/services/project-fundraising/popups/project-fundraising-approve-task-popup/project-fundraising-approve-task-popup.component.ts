@@ -1,7 +1,7 @@
 import {Component, Inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Subject} from "rxjs";
 import {ILanguageKeys} from "@contracts/i-language-keys";
-import {WFResponseType} from "@app/enums/wfresponse-type.enum";
+import {WFResponseType} from "@enums/wfresponse-type.enum";
 import {UntypedFormControl} from "@angular/forms";
 import {CustomValidators} from "@app/validators/custom-validators";
 import {DialogService} from "@services/dialog.service";
@@ -13,11 +13,11 @@ import {LangService} from "@services/lang.service";
 import {CommonUtils} from "@helpers/common-utils";
 import {exhaustMap, filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
 import {IWFResponse} from "@contracts/i-w-f-response";
-import {ServiceRequestTypes} from "@app/enums/service-request-types";
+import {ServiceRequestTypes} from "@enums/service-request-types";
 import {
   ApprovalFormMonthlyComponent
 } from "@app/shared/components/approval-form-monthly/approval-form-monthly.component";
-import {ProjectFundraising} from "@app/models/project-fundraising";
+import {ProjectFundraising} from "@models/project-fundraising";
 
 @Component({
   selector: 'project-fundraising-approve-task-popup',

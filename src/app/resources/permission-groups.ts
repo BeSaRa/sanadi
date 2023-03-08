@@ -2,6 +2,7 @@ import {PermissionsEnum} from '@app/enums/permissions-enum';
 import {EServicePermissionsEnum} from '@app/enums/e-service-permissions-enum';
 import {PermissionGroupsEnum} from '@app/enums/permission-groups-enum';
 import {PermissionGroupsMapType} from '@app/types/types';
+import {Constants} from '@helpers/constants';
 
 const sanadiPermissionsGroup: PermissionsEnum[] = [
   PermissionsEnum.SANADI_UNDER_PROCESSING_REQUESTS,
@@ -74,24 +75,34 @@ const followupPermissionsGroup: PermissionsEnum[] = [
   PermissionsEnum.INTERNAL_FOLLOWUP
 ];
 
-const consultationServicesPermissionGroup: EServicePermissionsEnum[] = [
+const consultationServicesPermissionGroup: (EServicePermissionsEnum | string)[] = [
   EServicePermissionsEnum.CONSULTATION,
-  EServicePermissionsEnum.SEARCH_SERVICE_CONSULTATION
+  EServicePermissionsEnum.SEARCH_SERVICE_CONSULTATION,
+  Constants.SERVICE_OUTPUT_PERMISSION
 ];
 
-const inquiryServicesPermissionGroup: EServicePermissionsEnum[] = [
+const inquiryServicesPermissionGroup: (EServicePermissionsEnum | string)[] = [
   EServicePermissionsEnum.INQUIRY,
-  EServicePermissionsEnum.SEARCH_SERVICE_INQUIRY
+  EServicePermissionsEnum.SEARCH_SERVICE_INQUIRY,
+  Constants.SERVICE_OUTPUT_PERMISSION
 ];
 
-const internationCooperationServicesPermissionGroup: EServicePermissionsEnum[] = [
+const internationCooperationServicesPermissionGroup: (EServicePermissionsEnum | string)[] = [
   EServicePermissionsEnum.INTERNATIONAL_COOPERATION,
-  EServicePermissionsEnum.SEARCH_SERVICE_INTERNATIONAL_COOPERATION
+  EServicePermissionsEnum.SEARCH_SERVICE_INTERNATIONAL_COOPERATION,
+  Constants.SERVICE_OUTPUT_PERMISSION
 ];
 
-const projectImplementationServicesPermissionGroup: EServicePermissionsEnum[] = [
+const projectImplementationServicesPermissionGroup: (EServicePermissionsEnum | string)[] = [
   EServicePermissionsEnum.PROJECT_IMPLEMENTATION,
-  EServicePermissionsEnum.SEARCH_SERVICE_PROJECT_IMPLEMENTATION
+  EServicePermissionsEnum.SEARCH_SERVICE_PROJECT_IMPLEMENTATION,
+  Constants.SERVICE_OUTPUT_PERMISSION
+];
+
+const projectFundraisingServicesPermissionGroup: (EServicePermissionsEnum | string)[] = [
+  EServicePermissionsEnum.PROJECT_FUNDRAISING,
+  EServicePermissionsEnum.SEARCH_SERVICE_PROJECT_FUNDRAISING,
+  Constants.SERVICE_OUTPUT_PERMISSION
 ];
 
 const generalServicesPermissionsGroup: EServicePermissionsEnum[] = [
@@ -154,6 +165,7 @@ const permissionGroups: PermissionGroupsMapType = {
   [PermissionGroupsEnum.INQUIRY_SERVICES_PERMISSION_GROUP]: inquiryServicesPermissionGroup,
   [PermissionGroupsEnum.INTERNATIONAL_COOP_SERVICES_PERMISSION_GROUP]: internationCooperationServicesPermissionGroup,
   [PermissionGroupsEnum.PROJECT_IMPLEMENTATION_SERVICES_PERMISSION_GROUP]: projectImplementationServicesPermissionGroup,
+  [PermissionGroupsEnum.PROJECT_FUNDRAISING_SERVICES_PERMISSION_GROUP]: projectFundraisingServicesPermissionGroup,
 
 
   [PermissionGroupsEnum.SANADI_PERMISSIONS_GROUP]: sanadiPermissionsGroup,
