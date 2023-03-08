@@ -165,6 +165,17 @@ const routes: Routes = [
         } as Partial<ICustomRouteData>
       },
       {
+        path: 'services/transferring-individual-funds-abroad',
+        canActivate: [NewServicePermissionGuard],
+        loadChildren: () => import('./modules/services/transferring-individual-funds-abroad/transferring-individual-funds-abroad.module')
+          .then(m => m.TransferringIndividualFundsAbroadModule),
+        data: {
+          permissionGroup: PermissionGroupsEnum.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD_SERVICES_PERMISSION_GROUP,
+          checkAnyPermission: true,
+          caseType: CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD
+        } as Partial<ICustomRouteData>
+      },
+      {
         path: 'services/search',
         loadChildren: () => import('@modules/service-search-individual/service-search-individual.module').then(m => m.ServiceSearchIndividualModule),
       },

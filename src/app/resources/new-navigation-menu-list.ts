@@ -14,8 +14,8 @@ const serviceOutputLabel: keyof ILanguageKeys = 'menu_outputs';
 const serviceOutputIcon: ActionIconsEnum = ActionIconsEnum.SERVICE_OUTPUT;
 
 enum SystemPathsEnum {
-  // don't add trailing slash to any path
   SEARCH_SERVICES = '/home/services/search/', // don't remove trailing slash
+  // don't add trailing slash to any path
   CONSULTATION_SERVICE = '/home/services/consultations',
   INQUIRY_SERVICE = '/home/services/inquiries',
   INTERNATIONAL_COOPERATION_SERVICE = '/home/services/international-cooperation',
@@ -27,7 +27,8 @@ enum SystemPathsEnum {
   AWARENESS_ACTIVITY_SUGGESTION = '/home/services/awareness-activity-suggestion',
   GENERAL_ASSOCIATION_MEETING_ATTENDANCE = '/home/services/general-association-meeting-attendance',
   INTERNAL_BANK_ACCOUNT_APPROVAL = '/home/services/internal-bank-account-approval',
-  URGENT_JOINT_RELIEF_CAMPAIGN = '/home/services/urgent-joint-relief-campaign'
+  URGENT_JOINT_RELIEF_CAMPAIGN = '/home/services/urgent-joint-relief-campaign',
+  TRANSFER_INDIVIDUAL_FUNDS_ABROAD = '/home/services/transferring-individual-funds-abroad'
 }
 
 export const newNavigationMenuList = [
@@ -611,6 +612,59 @@ export const newNavigationMenuList = [
     permissionGroup: null,
     parent: 1101,
     group: 'service_' + CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN,
+    itemOrder: 3,
+    svg: null
+  },
+  {
+    id: 1201,
+    langKey: 'menu_transferring_individual_funds_abroad',
+    path: SystemPathsEnum.TRANSFER_INDIVIDUAL_FUNDS_ABROAD,
+    icon: 'mdi-wallet-membership',
+    isSvg: false,
+    caseType: CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD,
+    permission: '',
+    permissionGroup: PermissionGroupsEnum.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD_SERVICES_PERMISSION_GROUP,
+    parent: null,
+    group: 'main',
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 1202,
+    langKey: serviceAddUpdateLabel,
+    path: SystemPathsEnum.TRANSFER_INDIVIDUAL_FUNDS_ABROAD + '/service',
+    icon: serviceAddUpdateIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD,
+    permissionGroup: null,
+    parent: 1201,
+    group: 'service_' + CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD,
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 1203,
+    langKey: serviceSearchLabel,
+    path: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD),
+    icon: serviceSearchIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.SEARCH_SERVICE_TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD,
+    permissionGroup: null,
+    parent: 1201,
+    group: 'service_' + CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD,
+    itemOrder: 2,
+    svg: null
+  },
+  {
+    id: 1204,
+    langKey: serviceOutputLabel,
+    path: SystemPathsEnum.TRANSFER_INDIVIDUAL_FUNDS_ABROAD + '/outputs',
+    icon: serviceOutputIcon,
+    isSvg: false,
+    permission: Constants.SERVICE_OUTPUT_PERMISSION,
+    permissionGroup: null,
+    parent: 1201,
+    group: 'service_' + CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD,
     itemOrder: 3,
     svg: null
   },

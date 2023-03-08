@@ -64,7 +64,7 @@ import {
 } from '@app/modules/urgent-intervention/pages/urgent-intervention-license/urgent-intervention-license.component';
 import {
   TransferringIndividualFundsAbroadComponent
-} from '@app/modules/projects/pages/transferring-individual-funds-abroad/transferring-individual-funds-abroad.component';
+} from '@app/modules/services/transferring-individual-funds-abroad/pages/transferring-individual-funds-abroad/transferring-individual-funds-abroad.component';
 import {
   CoordinationWithOrganizationsRequestComponent
 } from '@app/modules/general-services/pages/coordination-with-organizations-request/coordination-with-organizations-request.component';
