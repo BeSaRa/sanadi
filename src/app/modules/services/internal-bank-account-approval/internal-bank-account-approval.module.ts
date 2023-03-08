@@ -12,13 +12,17 @@ import {EServicesMainModule} from '@modules/e-services-main/e-services-main.modu
 import {
   InternalBankApprovalApproveTaskPopupComponent
 } from '@modules/services/internal-bank-account-approval/popups/internal-bank-approval-approve-task-popup/internal-bank-approval-approve-task-popup.component';
+import {
+  SelectEmployeePopupComponent
+} from '@modules/services/internal-bank-account-approval/popups/select-employee-popup/select-employee-popup.component';
 
 
 @NgModule({
   declarations: [
     InternalBankAccountApprovalComponent,
     InternalBankAccountApprovalOutputsComponent,
-    InternalBankApprovalApproveTaskPopupComponent
+    InternalBankApprovalApproveTaskPopupComponent,
+    SelectEmployeePopupComponent
   ],
   imports: [
     CommonModule,

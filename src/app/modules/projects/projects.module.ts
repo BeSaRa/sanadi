@@ -5,7 +5,6 @@ import {ProjectsRoutingModule} from './projects-routing.module';
 import {ProjectsComponent} from './projects.component';
 import {CollectionModule} from '@app/modules/collection/collection.module';
 import {EServicesMainModule} from '@app/modules/e-services-main/e-services-main.module';
-import {SelectEmployeePopupComponent} from './popups/select-employee-popup/select-employee-popup.component';
 import {
   TransferringIndividualFundsAbroadComponent
 } from './pages/transferring-individual-funds-abroad/transferring-individual-funds-abroad.component';
@@ -22,7 +21,6 @@ import {
 @NgModule({
   declarations: [
     ProjectsComponent,
-    SelectEmployeePopupComponent,
     TransferringIndividualFundsAbroadComponent,
     TransferFundsAbroadApproveTaskPopupComponent,
     SelectReceiverEntityPopupComponent,
