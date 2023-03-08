@@ -33,7 +33,8 @@ enum SystemPathsEnum {
   FINAL_EXTERNAL_OFFICE_APPROVAL = '/home/services/final-external-office-approval',
   PARTNER_APPROVAL = '/home/services/partner-approval',
   EMPLOYMENT = '/home/services/employment',
-  CHARITY_ORGANIZATION_UPDATE = '/home/services/charity-organization-update'
+  CHARITY_ORGANIZATION_UPDATE = '/home/services/charity-organization-update',
+  NPO_MANAGEMENT = '/home/services/npo-management',
 }
 
 export const newNavigationMenuList = [
@@ -882,6 +883,59 @@ export const newNavigationMenuList = [
     permissionGroup: null,
     parent: 1601,
     group: 'service_' + CaseTypes.CHARITY_ORGANIZATION_UPDATE,
+    itemOrder: 3,
+    svg: null
+  },
+  {
+    id: 1701,
+    langKey: 'menu_npo_management',
+    path: SystemPathsEnum.NPO_MANAGEMENT,
+    icon: 'mdi-domain',
+    isSvg: false,
+    caseType: CaseTypes.NPO_MANAGEMENT,
+    permission: '',
+    permissionGroup: PermissionGroupsEnum.NPO_MANAGEMENT_SERVICES_PERMISSION_GROUP,
+    parent: null,
+    group: 'main',
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 1702,
+    langKey: serviceAddUpdateLabel,
+    path: SystemPathsEnum.NPO_MANAGEMENT + '/service',
+    icon: serviceAddUpdateIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.NPO_MANAGEMENT,
+    permissionGroup: null,
+    parent: 1701,
+    group: 'service_' + CaseTypes.NPO_MANAGEMENT,
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 1703,
+    langKey: serviceSearchLabel,
+    path: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.NPO_MANAGEMENT),
+    icon: serviceSearchIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.SEARCH_SERVICE_NPO_MANAGEMENT,
+    permissionGroup: null,
+    parent: 1701,
+    group: 'service_' + CaseTypes.NPO_MANAGEMENT,
+    itemOrder: 2,
+    svg: null
+  },
+  {
+    id: 1704,
+    langKey: serviceOutputLabel,
+    path: SystemPathsEnum.NPO_MANAGEMENT + '/outputs',
+    icon: serviceOutputIcon,
+    isSvg: false,
+    permission: Constants.SERVICE_OUTPUT_PERMISSION,
+    permissionGroup: null,
+    parent: 1701,
+    group: 'service_' + CaseTypes.NPO_MANAGEMENT,
     itemOrder: 3,
     svg: null
   },

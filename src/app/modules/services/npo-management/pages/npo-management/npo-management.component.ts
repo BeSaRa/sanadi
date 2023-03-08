@@ -1,60 +1,58 @@
-import { AdminResult } from '@models/admin-result';
-import { Profile } from '@models/profile';
-import { ProfileService } from '@app/services/profile.service';
-import { UserClickOn } from '@app/enums/user-click-on.enum';
-import { takeUntil, switchMap } from 'rxjs/operators';
-import { NpoBankAccount } from '@models/npo-bank-account';
-import { NpoContactOfficer } from '@app/models/npo-contact-officer';
-import { FounderMembers } from '@app/models/founder-members';
-import { RealBeneficiary } from '@app/models/real-beneficiary';
-import { NpoData } from '@models/npo-data';
-import { NpoDataService } from '@services/npo-data.service';
-import { NpoManagement } from '@models/npo-management';
-import { CommonUtils } from '@helpers/common-utils';
-import { CustomValidators } from '@app/validators/custom-validators';
-import { TabComponent } from '@app/shared/components/tab/tab.component';
-import { RealBeneficiariesComponent } from '../../../services/shared-services/components/real-beneficiaries/real-beneficiaries.component';
-import { BankService } from '@services/bank.service';
-import { NpoBankAccountComponent } from './npo-bank-account/npo-bank-account.component';
-import { FounderMembersComponent } from './founder-members/founder-members.component';
-import { NpoContactOfficerComponent } from './npo-contact-officer/npo-contact-officer.component';
-import { IMyInputFieldChanged } from 'angular-mydatepicker';
-import { DateUtils } from '@helpers/date-utils';
-import { ReadinessStatus, DatepickerOptionsMap } from '@app/types/types';
-import { ILanguageKeys } from '@contracts/i-language-keys';
-import { IKeyValue } from '@contracts/i-key-value';
-import { AdminLookup } from '@models/admin-lookup';
-import { Lookup } from '@models/lookup';
-import { LookupService } from '@services/lookup.service';
-import { ServiceRequestTypes } from '@app/enums/service-request-types';
-import { OpenFrom } from '@app/enums/open-from.enum';
-import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
-import { ToastService } from '@services/toast.service';
-import { DialogService } from '@services/dialog.service';
-import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
-import { NpoManagementService } from '@services/npo-management.service';
-import { Component, ChangeDetectorRef, ViewChild } from '@angular/core';
-import { UntypedFormGroup, UntypedFormBuilder, UntypedFormControl, Validators } from '@angular/forms';
-import { OperationTypes } from '@app/enums/operation-types.enum';
-import { SaveTypes } from '@app/enums/save-types';
-import { LangService } from '@app/services/lang.service';
-import { Observable, of } from 'rxjs';
-import { EmployeeService } from '@app/services/employee.service';
-import { AdminLookupService } from '@app/services/admin-lookup.service';
-import { AdminLookupTypeEnum } from '@app/enums/admin-lookup-type-enum';
-import { NPORequestType } from '@app/enums/service-request-types';
-import { Bank } from '@app/models/bank';
-import { ProfileTypes } from '@app/enums/profile-types.enum';
+import {AdminResult} from '@models/admin-result';
+import {Profile} from '@models/profile';
+import {ProfileService} from '@app/services/profile.service';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {switchMap, takeUntil} from 'rxjs/operators';
+import {NpoBankAccount} from '@models/npo-bank-account';
+import {NpoContactOfficer} from '@app/models/npo-contact-officer';
+import {FounderMembers} from '@app/models/founder-members';
+import {RealBeneficiary} from '@app/models/real-beneficiary';
+import {NpoData} from '@models/npo-data';
+import {NpoDataService} from '@services/npo-data.service';
+import {NpoManagement} from '@models/npo-management';
+import {CommonUtils} from '@helpers/common-utils';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {TabComponent} from '@app/shared/components/tab/tab.component';
+import {
+  RealBeneficiariesComponent
+} from '@modules/services/shared-services/components/real-beneficiaries/real-beneficiaries.component';
+import {BankService} from '@services/bank.service';
+import {NpoBankAccountComponent} from './npo-bank-account/npo-bank-account.component';
+import {FounderMembersComponent} from './founder-members/founder-members.component';
+import {NpoContactOfficerComponent} from './npo-contact-officer/npo-contact-officer.component';
+import {IMyInputFieldChanged} from 'angular-mydatepicker';
+import {DateUtils} from '@helpers/date-utils';
+import {DatepickerOptionsMap, ReadinessStatus} from '@app/types/types';
+import {ILanguageKeys} from '@contracts/i-language-keys';
+import {IKeyValue} from '@contracts/i-key-value';
+import {AdminLookup} from '@models/admin-lookup';
+import {Lookup} from '@models/lookup';
+import {LookupService} from '@services/lookup.service';
+import {NPORequestType, ServiceRequestTypes} from '@app/enums/service-request-types';
+import {OpenFrom} from '@app/enums/open-from.enum';
+import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import {ToastService} from '@services/toast.service';
+import {DialogService} from '@services/dialog.service';
+import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
+import {NpoManagementService} from '@services/npo-management.service';
+import {ChangeDetectorRef, Component, ViewChild} from '@angular/core';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
+import {OperationTypes} from '@app/enums/operation-types.enum';
+import {SaveTypes} from '@app/enums/save-types';
+import {LangService} from '@app/services/lang.service';
+import {Observable, of} from 'rxjs';
+import {EmployeeService} from '@app/services/employee.service';
+import {AdminLookupService} from '@app/services/admin-lookup.service';
+import {AdminLookupTypeEnum} from '@app/enums/admin-lookup-type-enum';
+import {Bank} from '@app/models/bank';
+import {ProfileTypes} from '@app/enums/profile-types.enum';
 
 @Component({
   selector: 'app-npo-management',
   templateUrl: './npo-management.component.html',
   styleUrls: ['./npo-management.component.scss']
 })
-export class NpoManagementComponent extends EServicesGenericComponent<
-NpoManagement,
-NpoManagementService
-> {
+export class NpoManagementComponent extends EServicesGenericComponent<NpoManagement, NpoManagementService> {
   NPORequestTypes = NPORequestType;
   NPORequestTypesList: Lookup[] = this.lookupService.listByCategory.NPORequestType.slice().sort((a, b) => a.lookupKey - b.lookupKey);
   activityTypesList: AdminLookup[] = [];
@@ -127,21 +125,22 @@ NpoManagementService
       disablePeriod: 'future'
     }),
   };
-  constructor(
-    public service: NpoManagementService,
-    private lookupService: LookupService,
-    public fb: UntypedFormBuilder,
-    private toast: ToastService,
-    private adminLookupService: AdminLookupService,
-    private cd: ChangeDetectorRef,
-    private npoDataService: NpoDataService,
-    private bankService: BankService,
-    private dialog: DialogService,
-    private employeeService: EmployeeService,
-    private profileService: ProfileService,
-    public lang: LangService) {
+
+  constructor(public service: NpoManagementService,
+              private lookupService: LookupService,
+              public fb: UntypedFormBuilder,
+              private toast: ToastService,
+              private adminLookupService: AdminLookupService,
+              private cd: ChangeDetectorRef,
+              private npoDataService: NpoDataService,
+              private bankService: BankService,
+              private dialog: DialogService,
+              private employeeService: EmployeeService,
+              private profileService: ProfileService,
+              public lang: LangService) {
     super();
   }
+
   handleReadonly(): void {
     // if record is new, no readonly (don't change as default is readonly = false)
     if (!this.model?.id) {
@@ -177,9 +176,11 @@ NpoManagementService
       }
     }
   }
+
   _getNewInstance(): NpoManagement {
     return new NpoManagement();
   }
+
   _initComponent(): void {
     this._buildForm();
     this.handleReadonly();
@@ -200,6 +201,7 @@ NpoManagementService
         this.employeeService.getProfile()?.profileDetails.entityId
       );
   }
+
   _buildForm(): void {
     const model = new NpoManagement().buildForm(true);
     this.form = new UntypedFormGroup({
@@ -207,9 +209,11 @@ NpoManagementService
       contectInfo: this.fb.group(model.contectInfo),
     });
   }
+
   _afterBuildForm(): void {
     this.handleReadonly();
   }
+
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
     const invalidTabs = this._getInvalidTabs();
     if (invalidTabs.length > 0) {
@@ -219,6 +223,7 @@ NpoManagementService
     }
     return true;
   }
+
   private _getInvalidTabs(): any {
     let failedList: string[] = [];
     for (const key in this.tabsData) {
@@ -230,13 +235,16 @@ NpoManagementService
     }
     return failedList;
   }
+
   _beforeLaunch(): boolean | Observable<boolean> {
     return !!this.model && this.form.valid && this.model.canStart();
   }
+
   _afterLaunch(): void {
     this.resetForm$.next();
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
+
   _prepareModel(): NpoManagement | Observable<NpoManagement> {
     const value = new NpoManagement().clone({
       ...this.model,
@@ -250,6 +258,7 @@ NpoManagementService
     value.realBeneficiaryList = this.RealBeneficiariesComponentRef.list;
     return value;
   }
+
   private _updateModelAfterSave(model: NpoManagement): void {
     if ((this.openFrom === OpenFrom.USER_INBOX || this.openFrom === OpenFrom.TEAM_INBOX) && this.model?.taskDetails && this.model.taskDetails.tkiid) {
       this.service.getTask(this.model.taskDetails.tkiid)
@@ -260,23 +269,27 @@ NpoManagementService
       this.model = model;
     }
   }
+
   _afterSave(model: NpoManagement, saveType: SaveTypes, operation: OperationTypes): void {
     this._updateModelAfterSave(model);
     if (
       (operation === OperationTypes.CREATE && saveType === SaveTypes.FINAL) ||
       (operation === OperationTypes.UPDATE && saveType === SaveTypes.COMMIT)
     ) {
-      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({ serial: model.fullSerial }));
+      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({serial: model.fullSerial}));
     } else {
       this.toast.success(this.lang.map.request_has_been_saved_successfully);
     }
   }
+
   _saveFail(error: any): void {
     console.log('problem in save');
   }
+
   _launchFail(error: any): void {
     console.log('problem in launch');
   }
+
   _updateForm(model: NpoManagement | undefined): void {
     if (!model) {
       this.cd.detectChanges();
@@ -293,6 +306,7 @@ NpoManagementService
     this.cd.detectChanges();
     this.handleRequestTypeChange(model.requestType, false);
   }
+
   handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
     of(userInteraction).pipe(
       takeUntil(this.destroy$),
@@ -320,18 +334,21 @@ NpoManagementService
       }
     });
   }
+
   _setDefaultValues(): void {
     this.requestTypeField.setValue(ServiceRequestTypes.NEW);
     this.handleRequestTypeChange(ServiceRequestTypes.NEW, false);
     if (!this.nonProfitOrg)
       this.npoIdField.reset();
   }
+
   _resetForm(): void {
     this.form.reset();
     this.model = this._getNewInstance();
     this.operation = this.operationTypes.CREATE;
     this._setDefaultValues();
   }
+
   isAttachmentReadonly(): boolean {
     if (!this.model?.id) {
       return false;
@@ -347,6 +364,7 @@ NpoManagementService
 
     return !isAllowed;
   }
+
   loadOrganizationData() {
     this.npoDataService.loadCompositeById(this.npoIdField.value)
       .subscribe((data: any) => {
@@ -356,9 +374,11 @@ NpoManagementService
           this.setSelectedLicense(data)
       })
   }
+
   get criticalOnTask() {
     return !!this.model?.id;
   }
+
   private setSelectedLicense(details: NpoData) {
     if (details) {
       let value: NpoManagement = new NpoManagement();
@@ -461,17 +481,22 @@ NpoManagementService
       this.handleReadonly();
     }
   }
+
   onTabChange($event: TabComponent) {
     this.loadAttachments = $event.name === this.tabsData.attachments.name;
   }
+
   getTabInvalidStatus(tabName: string): boolean {
     return !this.tabsData[tabName].validStatus();
   }
+
   openDateMenu(ref: any) {
     ref.toggleCalendar();
   }
+
   _destroyComponent(): void {
   }
+
   onDateChange(event: IMyInputFieldChanged): void {
     DateUtils.setRelatedMinDate({
       fromFieldName: 'establishmentDate',
@@ -492,6 +517,7 @@ NpoManagementService
       }
     });
   }
+
   setFieldsValidation() {
     this.disbandmentTypeField?.setValidators([]);
     this.disbandmentDateField?.setValidators([]);
@@ -514,7 +540,7 @@ NpoManagementService
     if (this.isClearance) {
       this.clearanceTypeField.setValidators([Validators.required])
       this.clearanceNameField.setValidators([CustomValidators.required, Validators.maxLength(150),
-      Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)])
+        Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)])
       this.clearanceDateField.setValidators([CustomValidators.required])
     }
     if (this.isDisbandment) {
@@ -544,6 +570,7 @@ NpoManagementService
     this.establishmentDateField.reset()
     this.establishmentDateField.setValue(establishmentDate);
   }
+
   get userProfile() {
     return this.employeeService.getProfile()
   }
@@ -551,9 +578,11 @@ NpoManagementService
   get nonProfitOrg() {
     return this.employeeService.getProfile()?.profileType == ProfileTypes.NON_PROFIT_ORGANIZATIONS
   }
+
   get isRegistrationAuthority() {
     return this.employeeService.getProfile()?.profileType == ProfileTypes.REGISTERED_ENTITIES
   }
+
   get isViewOnly() {
     return this.isClearance || this.isDisbandment || this.isCancel
   }
@@ -561,15 +590,19 @@ NpoManagementService
   get isNew() {
     return this.requestTypeField.value == NPORequestType.NEW
   }
+
   get isCancel() {
     return this.requestTypeField.value == NPORequestType.CANCEL
   }
+
   get isClearance() {
     return this.requestTypeField.value == NPORequestType.CLEARANCE
   }
+
   get isDisbandment() {
     return this.requestTypeField.value == NPORequestType.DISBANDMENT
   }
+
   get isLicensingUser() {
     return this.employeeService.isLicensingUser()
   }
@@ -577,6 +610,7 @@ NpoManagementService
   get basicInfo() {
     return this.form.get('basicInfo') as UntypedFormGroup;
   }
+
   get contectInfo() {
     return this.form.get('contectInfo') as UntypedFormGroup;
   }
@@ -584,30 +618,39 @@ NpoManagementService
   get requestTypeField(): UntypedFormControl {
     return this.basicInfo.get('requestType') as UntypedFormControl;
   }
+
   get establishmentDateField() {
     return this.basicInfo.get('establishmentDate') as UntypedFormControl;
   }
+
   get registrationAuthorityField() {
     return this.basicInfo.get('registrationAuthority') as UntypedFormControl;
   }
+
   get registrationDateField() {
     return this.basicInfo.get('registrationDate') as UntypedFormControl;
   }
+
   get disbandmentTypeField() {
     return this.basicInfo.get('disbandmentType') as UntypedFormControl;
   }
+
   get disbandmentDateField() {
     return this.basicInfo.get('disbandmentDate') as UntypedFormControl;
   }
+
   get clearanceTypeField() {
     return this.basicInfo.get('clearanceType') as UntypedFormControl;
   }
+
   get clearanceNameField() {
     return this.basicInfo.get('clearanceName') as UntypedFormControl;
   }
+
   get clearanceDateField() {
     return this.basicInfo.get('clearanceDate') as UntypedFormControl;
   }
+
   get registrationNumberField() {
     return this.basicInfo.get('registrationNumber') as UntypedFormControl;
   }
