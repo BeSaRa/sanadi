@@ -484,7 +484,7 @@
         [jobTitles]="jobTitles"
         *ngIf="!!jobTitles"
         #adminList
-        pageTitle="executive_managers"
+        pageTitle="executive_management"
         [list]="model?.currentExecutiveManagementList || []"
         [extended]="true"
       ></members>
@@ -498,7 +498,7 @@
         *ngIf="!!jobTitles"
         #adminList
         [list]="model?.authorizedSignatoryMemberList || []"
-        pageTitle="executive_managers"
+        pageTitle="authrized_members"
         [extended]="true"
       ></members>
     </ng-template>

@@ -1,12 +1,12 @@
 import {Component, Input, ViewChild} from '@angular/core';
 import {UntypedFormBuilder} from '@angular/forms';
 import {ListModelComponent} from '@app/generics/ListModel-component';
-import {ControlWrapper} from '@app/interfaces/i-control-wrapper';
-import {CharityBranch} from '@app/models/charity-branch';
-import {OrganizationOfficerComponent} from '@app/modules/e-services-main/shared/organization-officer/organization-officer.component';
-import {LangService} from '@app/services/lang.service';
-import {LookupService} from '@app/services/lookup.service';
-import {Lookup} from '@app/models/lookup';
+import {ControlWrapper} from '@contracts/i-control-wrapper';
+import {CharityBranch} from '@models/charity-branch';
+import {OrganizationOfficerComponent} from '@modules/e-services-main/shared/organization-officer/organization-officer.component';
+import {LangService} from '@services/lang.service';
+import {LookupService} from '@services/lookup.service';
+import {Lookup} from '@models/lookup';
 
 @Component({
   selector: 'charity-branch',

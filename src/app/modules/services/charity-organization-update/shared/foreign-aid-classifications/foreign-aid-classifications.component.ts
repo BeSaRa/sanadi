@@ -1,23 +1,23 @@
 import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
-import {AdminLookupTypeEnum} from '@app/enums/admin-lookup-type-enum';
-import {CharityWorkArea} from '@app/enums/charity-work-area.enum';
-import {DomainTypes} from '@app/enums/domain-types';
+import {AdminLookupTypeEnum} from '@enums/admin-lookup-type-enum';
+import {CharityWorkArea} from '@enums/charity-work-area.enum';
+import {DomainTypes} from '@enums/domain-types';
 import {ListModelComponent} from '@app/generics/ListModel-component';
-import {ControlWrapper} from '@app/interfaces/i-control-wrapper';
-import {ForeignAidClassification} from '@app/models/foreign-aid-classification';
-import {AidLookupService} from '@app/services/aid-lookup.service';
+import {ControlWrapper} from '@contracts/i-control-wrapper';
+import {ForeignAidClassification} from '@models/foreign-aid-classification';
+import {AidLookupService} from '@services/aid-lookup.service';
 import {DacOchaService} from '@services/dac-ocha.service';
-import {LangService} from '@app/services/lang.service';
-import {LookupService} from '@app/services/lookup.service';
+import {LangService} from '@services/lang.service';
+import {LookupService} from '@services/lookup.service';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {shareReplay, tap} from 'rxjs/operators';
-import {AdminResult} from '@app/models/admin-result';
+import {AdminResult} from '@models/admin-result';
 import {Observable, of} from 'rxjs';
-import {AdminLookup} from '@app/models/admin-lookup';
-import {AidLookup} from '@app/models/aid-lookup';
-import {AidLookupStatusEnum} from '@app/enums/status.enum';
-import {Lookup} from '@app/models/lookup';
+import {AdminLookup} from '@models/admin-lookup';
+import {AidLookup} from '@models/aid-lookup';
+import {AidLookupStatusEnum} from '@enums/status.enum';
+import {Lookup} from '@models/lookup';
 
 @Component({
   selector: 'foreign-aid-classifications',

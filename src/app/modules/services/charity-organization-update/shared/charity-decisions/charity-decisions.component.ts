@@ -1,15 +1,15 @@
 import {Component, Input} from '@angular/core';
 import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
-import {AdminLookupTypeEnum} from '@app/enums/admin-lookup-type-enum';
+import {AdminLookupTypeEnum} from '@enums/admin-lookup-type-enum';
 import {ListModelComponent} from '@app/generics/ListModel-component';
-import {DateUtils} from '@app/helpers/date-utils';
-import {ControlWrapper} from '@app/interfaces/i-control-wrapper';
-import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {CharityDecision} from '@app/models/charity-decision';
-import {AdminLookupService} from '@app/services/admin-lookup.service';
-import {LangService} from '@app/services/lang.service';
+import {DateUtils} from '@helpers/date-utils';
+import {ControlWrapper} from '@contracts/i-control-wrapper';
+import {ILanguageKeys} from '@contracts/i-language-keys';
+import {CharityDecision} from '@models/charity-decision';
+import {AdminLookupService} from '@services/admin-lookup.service';
+import {LangService} from '@services/lang.service';
 import {DatepickerOptionsMap} from '@app/types/types';
-import {AdminLookup} from '@app/models/admin-lookup';
+import {AdminLookup} from '@models/admin-lookup';
 
 @Component({
   selector: 'charity-decisions',

@@ -32,7 +32,8 @@ enum SystemPathsEnum {
   // INITIAL_EXTERNAL_OFFICE_APPROVAL = '/home/services/initial-external-office-approval',
   FINAL_EXTERNAL_OFFICE_APPROVAL = '/home/services/final-external-office-approval',
   PARTNER_APPROVAL = '/home/services/partner-approval',
-  EMPLOYMENT = '/home/services/employment'
+  EMPLOYMENT = '/home/services/employment',
+  CHARITY_ORGANIZATION_UPDATE = '/home/services/charity-organization-update'
 }
 
 export const newNavigationMenuList = [
@@ -828,6 +829,59 @@ export const newNavigationMenuList = [
     permissionGroup: null,
     parent: 1501,
     group: 'service_' + CaseTypes.EMPLOYMENT,
+    itemOrder: 3,
+    svg: null
+  },
+  {
+    id: 1601,
+    langKey: 'menu_charity_organization_update',
+    path: SystemPathsEnum.CHARITY_ORGANIZATION_UPDATE,
+    icon: 'mdi-earth',
+    isSvg: false,
+    caseType: CaseTypes.CHARITY_ORGANIZATION_UPDATE,
+    permission: '',
+    permissionGroup: PermissionGroupsEnum.CHARITY_ORGANIZATION_UPDATE_SERVICES_PERMISSION_GROUP,
+    parent: null,
+    group: 'main',
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 1602,
+    langKey: serviceAddUpdateLabel,
+    path: SystemPathsEnum.CHARITY_ORGANIZATION_UPDATE + '/service',
+    icon: serviceAddUpdateIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.CHARITY_ORGANIZATION_UPDATE,
+    permissionGroup: null,
+    parent: 1601,
+    group: 'service_' + CaseTypes.CHARITY_ORGANIZATION_UPDATE,
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 1603,
+    langKey: serviceSearchLabel,
+    path: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.CHARITY_ORGANIZATION_UPDATE),
+    icon: serviceSearchIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.SEARCH_SERVICE_CHARITY_ORGANIZATION_UPDATE,
+    permissionGroup: null,
+    parent: 1601,
+    group: 'service_' + CaseTypes.CHARITY_ORGANIZATION_UPDATE,
+    itemOrder: 2,
+    svg: null
+  },
+  {
+    id: 1604,
+    langKey: serviceOutputLabel,
+    path: SystemPathsEnum.CHARITY_ORGANIZATION_UPDATE + '/outputs',
+    icon: serviceOutputIcon,
+    isSvg: false,
+    permission: Constants.SERVICE_OUTPUT_PERMISSION,
+    permissionGroup: null,
+    parent: 1601,
+    group: 'service_' + CaseTypes.CHARITY_ORGANIZATION_UPDATE,
     itemOrder: 3,
     svg: null
   },

@@ -1,24 +1,24 @@
 import {Component, Input} from '@angular/core';
 import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
-import {AdminLookupTypeEnum} from '@app/enums/admin-lookup-type-enum';
+import {AdminLookupTypeEnum} from '@enums/admin-lookup-type-enum';
 import {ListModelComponent} from '@app/generics/ListModel-component';
-import {DateUtils} from '@app/helpers/date-utils';
-import {ControlWrapper} from '@app/interfaces/i-control-wrapper';
-import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {AdminResult} from '@app/models/admin-result';
-import {CharityReport} from '@app/models/charity-report';
-import {AdminLookupService} from '@app/services/admin-lookup.service';
-import {LangService} from '@app/services/lang.service';
-import {LookupService} from '@app/services/lookup.service';
-import {ToastService} from '@app/services/toast.service';
+import {DateUtils} from '@helpers/date-utils';
+import {ControlWrapper} from '@contracts/i-control-wrapper';
+import {ILanguageKeys} from '@contracts/i-language-keys';
+import {AdminResult} from '@models/admin-result';
+import {CharityReport} from '@models/charity-report';
+import {AdminLookupService} from '@services/admin-lookup.service';
+import {LangService} from '@services/lang.service';
+import {LookupService} from '@services/lookup.service';
+import {ToastService} from '@services/toast.service';
 import {DatepickerOptionsMap} from '@app/types/types';
-import {Lookup} from '@app/models/lookup';
-import {AdminLookup} from '@app/models/admin-lookup';
+import {Lookup} from '@models/lookup';
+import {AdminLookup} from '@models/admin-lookup';
 
 @Component({
   selector: 'charity-reports',
-  templateUrl: './risk-reports.component.html',
-  styleUrls: ['./risk-reports.component.scss'],
+  templateUrl: './charity-reports.component.html',
+  styleUrls: ['./charity-reports.component.scss'],
 })
 export class CharityReportsComponent extends ListModelComponent<CharityReport> {
   get list() {

@@ -1,14 +1,14 @@
 import {Component, Input} from '@angular/core';
 import {UntypedFormBuilder} from '@angular/forms';
 import {ListModelComponent} from '@app/generics/ListModel-component';
-import {DateUtils} from '@app/helpers/date-utils';
-import {ControlWrapper} from '@app/interfaces/i-control-wrapper';
-import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {AdminResult} from '@app/models/admin-result';
-import {JobTitle} from '@app/models/job-title';
-import {OrgMember} from '@app/models/org-member';
-import {LangService} from '@app/services/lang.service';
-import {ToastService} from '@app/services/toast.service';
+import {DateUtils} from '@helpers/date-utils';
+import {ControlWrapper} from '@contracts/i-control-wrapper';
+import {ILanguageKeys} from '@contracts/i-language-keys';
+import {AdminResult} from '@models/admin-result';
+import {JobTitle} from '@models/job-title';
+import {OrgMember} from '@models/org-member';
+import {LangService} from '@services/lang.service';
+import {ToastService} from '@services/toast.service';
 import {DatepickerOptionsMap} from '@app/types/types';
 
 @Component({

@@ -177,6 +177,12 @@ const employmentServicesPermissionGroup: (EServicePermissionsEnum | string)[] = 
   Constants.SERVICE_OUTPUT_PERMISSION
 ];
 
+const charityOrganizationUpdateServicesPermissionGroup: (EServicePermissionsEnum | string)[] = [
+  EServicePermissionsEnum.CHARITY_ORGANIZATION_UPDATE,
+  EServicePermissionsEnum.SEARCH_SERVICE_CHARITY_ORGANIZATION_UPDATE,
+  Constants.SERVICE_OUTPUT_PERMISSION
+];
+
 const generalServicesPermissionsGroup: EServicePermissionsEnum[] = [
   EServicePermissionsEnum.INQUIRY,
   EServicePermissionsEnum.CONSULTATION,
@@ -250,6 +256,7 @@ const permissionGroups: PermissionGroupsMapType = {
   [PermissionGroupsEnum.FINAL_EXTERNAL_OFFICE_APPROVAL_SERVICES_PERMISSION_GROUP]: finalExternalOfficeApprovalServicesPermissionGroup,
   [PermissionGroupsEnum.PARTNER_APPROVAL_SERVICES_PERMISSION_GROUP]: partnerApprovalServicesPermissionGroup,
   [PermissionGroupsEnum.EMPLOYMENT_SERVICES_PERMISSION_GROUP]: employmentServicesPermissionGroup,
+  [PermissionGroupsEnum.CHARITY_ORGANIZATION_UPDATE_SERVICES_PERMISSION_GROUP]: charityOrganizationUpdateServicesPermissionGroup,
 
 
   [PermissionGroupsEnum.SANADI_PERMISSIONS_GROUP]: sanadiPermissionsGroup,

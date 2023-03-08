@@ -1,17 +1,15 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {UntypedFormBuilder, Validators} from '@angular/forms';
-import {Nationalities} from '@app/enums/nationalities.enum';
+import {Component, Input} from '@angular/core';
+import {UntypedFormBuilder} from '@angular/forms';
+import {Nationalities} from '@enums/nationalities.enum';
 import {ListModelComponent} from '@app/generics/ListModel-component';
-import {DateUtils} from '@app/helpers/date-utils';
-import {ControlWrapper} from '@app/interfaces/i-control-wrapper';
-import {AdminResult} from '@app/models/admin-result';
-import {RealBeneficiary} from '@app/models/real-beneficiary';
-import {LangService} from '@app/services/lang.service';
-import {LookupService} from '@app/services/lookup.service';
-import {ToastService} from '@app/services/toast.service';
+import {DateUtils} from '@helpers/date-utils';
+import {ControlWrapper} from '@contracts/i-control-wrapper';
+import {RealBeneficiary} from '@models/real-beneficiary';
+import {LangService} from '@services/lang.service';
+import {LookupService} from '@services/lookup.service';
+import {ToastService} from '@services/toast.service';
 import {DatepickerOptionsMap} from '@app/types/types';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {Lookup} from '@app/models/lookup';
+import {Lookup} from '@models/lookup';
 
 @Component({
   selector: 'real-beneficiaries',
