@@ -1,23 +1,23 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import {LangService} from '@app/services/lang.service';
-import {Country} from '@app/models/country';
-import {CountryService} from '@app/services/country.service';
+import {LangService} from '@services/lang.service';
+import {Country} from '@models/country';
+import {CountryService} from '@services/country.service';
 import {filter, map, take, takeUntil, tap} from 'rxjs/operators';
-import {Lookup} from '@app/models/lookup';
-import {BankAccount} from '@app/models/bank-account';
+import {Lookup} from '@models/lookup';
+import {BankAccount} from '@models/bank-account';
 import {BehaviorSubject, Subject} from 'rxjs';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {DialogService} from '@app/services/dialog.service';
-import {ToastService} from '@app/services/toast.service';
+import {UserClickOn} from '@enums/user-click-on.enum';
+import {DialogService} from '@services/dialog.service';
+import {ToastService} from '@services/toast.service';
 import {ReadinessStatus} from '@app/types/types';
-import {LookupService} from '@app/services/lookup.service';
-import {CaseTypes} from '@app/enums/case-types.enum';
-import { ActionIconsEnum } from '@app/enums/action-icons-enum';
-import { CommonUtils } from '@app/helpers/common-utils';
-import { SortEvent } from '@app/interfaces/sort-event';
-import { AdminResult } from '@app/models/admin-result';
-import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import {LookupService} from '@services/lookup.service';
+import {CaseTypes} from '@enums/case-types.enum';
+import { ActionIconsEnum } from '@enums/action-icons-enum';
+import { CommonUtils } from '@helpers/common-utils';
+import { SortEvent } from '@contracts/sort-event';
+import { AdminResult } from '@models/admin-result';
+import { IMenuItem } from '@modules/context-menu/interfaces/i-menu-item';
 
 @Component({
   selector: 'bank-account',

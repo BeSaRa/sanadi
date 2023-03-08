@@ -3,9 +3,6 @@ import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 
 import {EServicesMainModule} from '@app/modules/e-services-main/e-services-main.module';
-import {
-  FinalExternalOfficeApprovalComponent
-} from '@app/modules/office-services/pages/final-external-office-approval/final-external-office-approval.component';
 import {PartnerApprovalComponent} from '@app/modules/office-services/pages/partner-approval/partner-approval.component';
 import {ApprovalReasonComponent} from '@app/modules/office-services/shared/approval-reason/approval-reason.component';
 import {ContactOfficerComponent} from '@app/modules/office-services/shared/contact-officer/contact-officer.component';
@@ -18,13 +15,13 @@ import {MapsModule} from '../maps/maps.module';
 import {OfficeServicesRoutingModule} from './office-services-routing.module';
 import {OfficeServicesComponent} from './office-services.component';
 import {CommercialActivityComponent} from './shared/commercial-activity/commercial-activity.component';
+import {SharedServicesModule} from '@modules/services/shared-services/shared-services.module';
 
 
 @NgModule({
   declarations: [
     OfficeServicesComponent,
     PartnerApprovalComponent,
-    FinalExternalOfficeApprovalComponent,
     ApprovalReasonComponent,
     ContactOfficerComponent,
     GoalComponent,
@@ -37,6 +34,7 @@ import {CommercialActivityComponent} from './shared/commercial-activity/commerci
   imports: [
     CommonModule,
     EServicesMainModule,
+    SharedServicesModule,
     OfficeServicesRoutingModule,
     MapsModule
   ]

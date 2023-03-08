@@ -35,7 +35,7 @@ import {PartnerApprovalSearchCriteria} from '@app/models/PartnerApprovalSearchCr
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
 import {ExecutiveManagementComponent} from '@app/shared/components/executive-management/executive-management.component';
-import {BankAccountComponent} from '@app/modules/e-services-main/shared/bank-account/bank-account.component';
+import {BankAccountComponent} from '@app/modules/services/shared-services/components/bank-account/bank-account.component';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {ICoordinates} from '@app/interfaces/ICoordinates';
 import {GoalsListComponent} from '../../shared/goals-list/goals-list.component';

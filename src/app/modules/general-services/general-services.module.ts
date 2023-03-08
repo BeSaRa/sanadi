@@ -68,6 +68,7 @@ import {
 import {
   FormlySelectFieldComponent
 } from '@app/services-search/components/formly-select-field/formly-select-field.component';
+import {SharedServicesModule} from '@modules/services/shared-services/shared-services.module';
 
 
 @NgModule({
@@ -107,6 +108,7 @@ import {
   imports: [
     CommonModule,
     EServicesMainModule,
+    SharedServicesModule,
     GeneralServicesRoutingModule,
     OfficeServicesModule,
     FormlyBootstrapModule,
