@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import { Component, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import {
   AbstractControl,
   FormGroup,
@@ -59,7 +59,7 @@ import dayjs from "dayjs";
   templateUrl: './project-implementation.component.html',
   styleUrls: ['./project-implementation.component.scss']
 })
-export class ProjectImplementationComponent extends EServicesGenericComponent<ProjectImplementation, ProjectImplementationService> {
+export class ProjectImplementationComponent extends EServicesGenericComponent<ProjectImplementation, ProjectImplementationService> implements AfterViewInit{
   form!: UntypedFormGroup;
   licenseSearch$: Subject<string> = new Subject()
   requestTypes: Lookup[] = this.lookupService.listByCategory.ServiceRequestTypeNoRenew.slice().sort((a, b) => a.lookupKey - b.lookupKey);
@@ -110,7 +110,8 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
               private dacOchaService: DacOchaService,
               public employeeService: EmployeeService,
               private licenseService: LicenseService,
-              public dialog: DialogService) {
+              public dialog: DialogService,
+              private cd: ChangeDetectorRef) {
     super();
   }
 
@@ -228,7 +229,11 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     }
   }
 
-
+  ngAfterViewInit(){
+    this.beneficiaryCountry.setValue(this.model?.beneficiaryCountry);
+    this.implementingAgencyType.setValue(this.model?.implementingAgencyType);
+    this.cd.detectChanges();
+  }
   _getNewInstance(): ProjectImplementation {
     return new ProjectImplementation()
   }
@@ -358,6 +363,10 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     this.handleDisplayFields(model)
     this.handleMandatoryFields()
     this.calculateRemaining()
+    if(!fromSelectedLicense){
+      this.beneficiaryCountry.setValue(null);
+      this.implementingAgencyType.setValue(null);
+    }
   }
 
   _resetForm(): void {
