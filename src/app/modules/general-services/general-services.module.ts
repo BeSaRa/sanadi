@@ -4,17 +4,11 @@ import {
   ProcessFieldWrapperComponent
 } from '@app/administration/popups/general-process-popup/process-formly-components/process-field-wrapper/process-field-wrapper.component';
 import {
-  CharityOrganizationUpdateComponent
-} from '@app/modules/general-services/pages/charity-organization-update/charity-organization-update.component';
-import {
   CoordinationWithOrganizationsRequestComponent
 } from '@app/modules/general-services/pages/coordination-with-organizations-request/coordination-with-organizations-request.component';
 import {
   ExternalOrgAffiliationApprovePopupComponent
 } from '@app/modules/general-services/popups/external-org-affiliation-approve-popup/external-org-affiliation-approve-popup.component';
-import {
-  OrganizationOfficersComponent
-} from '@app/shared/components/organization-officers/organization-officers.component';
 import {FormlyBootstrapModule} from '@ngx-formly/bootstrap';
 import {FormlyModule} from '@ngx-formly/core';
 import {NpoBankAccountComponent} from './pages/npo-management/npo-bank-account/npo-bank-account.component';
@@ -25,13 +19,6 @@ import {
 import {
   NpoManagementApprovePopupComponent
 } from './popups/npo-management-approve-popup/npo-management-approve-popup.component';
-import {BylawsComponent} from './shared/bylaws/bylaws.component';
-import {CharityBranchComponent} from './shared/charity-branch/charity-branch.component';
-import {CharityDecisionsComponent} from './shared/charity-decisions/charity-decisions.component';
-import {
-  ForeignAidClassificationsComponent
-} from './shared/foreign-aid-classifications/foreign-aid-classifications.component';
-import {MembersComponent} from './shared/members/members.component';
 
 import {EServicesMainModule} from '@app/modules/e-services-main/e-services-main.module';
 import {OfficeServicesModule} from '../office-services/office-services.module';
@@ -49,13 +36,8 @@ import {
   CoordinationWithOrgPopupComponent
 } from './popups/coordination-with-org-popup/coordination-with-org-popup.component';
 import {
-  FollowupDateApprovePopupComponent
-} from './popups/follow-up-date-approve-popup/follow-up-date-approve-popup.component';
-import {
   OrganizationsEntitiesSupportPopupComponent
 } from './popups/organizations-entities-support-popup/organizations-entities-support-popup.component';
-import {RealBeneficiariesComponent} from './shared/real-beneficiaries/real-beneficiaries.component';
-import {CharityReportsComponent} from './shared/risk-reports/risk-reports.component';
 import {FounderMembersComponent} from './pages/npo-management/founder-members/founder-members.component';
 import {FormlyDateFieldComponent} from '@app/services-search/components/formly-date-field/formly-date-field.component';
 import {
@@ -76,20 +58,10 @@ import {SharedServicesModule} from '@modules/services/shared-services/shared-ser
     ExternalOrgAffiliationApprovePopupComponent,
     NpoManagementApprovePopupComponent,
     ForeignCountriesProjectsComponent,
-    FollowupDateApprovePopupComponent,
     CoordinationWithOrganizationsRequestComponent,
     NpoManagementComponent,
     FounderMembersComponent,
     NpoBankAccountComponent,
-    CharityOrganizationUpdateComponent,
-    OrganizationOfficersComponent,
-    CharityBranchComponent,
-    MembersComponent,
-    RealBeneficiariesComponent,
-    ForeignAidClassificationsComponent,
-    BylawsComponent,
-    CharityReportsComponent,
-    CharityDecisionsComponent,
     CoordinationWithOrgPopupComponent,
     OrganizationsEntitiesSupportComponent,
     OrganizationsEntitiesSupportPopupComponent,
@@ -106,16 +78,17 @@ import {SharedServicesModule} from '@modules/services/shared-services/shared-ser
     FormlyBootstrapModule,
     FormlyModule.forChild({
       types: [
-        { name: 'dateField', component: FormlyDateFieldComponent, wrappers: ['custom-wrapper'] },
-        { name: 'selectField', component: FormlySelectFieldComponent, wrappers: ['custom-wrapper'] },
-        { name: 'yesOrNo', component: FormlySelectFieldComponent, wrappers: ['custom-wrapper'] },
-        { name: 'maskInput', extends: 'input', component: FormlyMaskInputFieldComponent, wrappers: ['custom-wrapper'] },
-        { name: 'number', extends: 'input', component: FormlyMaskInputFieldComponent, wrappers: ['custom-wrapper'] },
+        {name: 'dateField', component: FormlyDateFieldComponent, wrappers: ['custom-wrapper']},
+        {name: 'selectField', component: FormlySelectFieldComponent, wrappers: ['custom-wrapper']},
+        {name: 'yesOrNo', component: FormlySelectFieldComponent, wrappers: ['custom-wrapper']},
+        {name: 'maskInput', extends: 'input', component: FormlyMaskInputFieldComponent, wrappers: ['custom-wrapper']},
+        {name: 'number', extends: 'input', component: FormlyMaskInputFieldComponent, wrappers: ['custom-wrapper']},
       ],
       wrappers: [
-        { name: 'custom-wrapper', component: ProcessFieldWrapperComponent }
+        {name: 'custom-wrapper', component: ProcessFieldWrapperComponent}
       ]
     }),
   ]
 })
-export class GeneralServicesModule { }
+export class GeneralServicesModule {
+}

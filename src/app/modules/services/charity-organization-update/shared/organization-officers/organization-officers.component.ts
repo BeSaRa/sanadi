@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
-import {OrganizationOfficer} from '@app/models/organization-officer';
+import {OrganizationOfficer} from '@models/organization-officer';
 import {EmployeeService} from '@services/employee.service';
 import {LangService} from '@services/lang.service';
 import {ToastService} from '@services/toast.service';

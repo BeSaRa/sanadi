@@ -76,7 +76,7 @@ import {
 } from '@app/modules/services/general-association-meeting-attendance/pages/general-association-meeting-attendance/general-association-meeting-attendance.component';
 import {
   CharityOrganizationUpdateComponent
-} from '@app/modules/general-services/pages/charity-organization-update/charity-organization-update.component';
+} from '@app/modules/services/charity-organization-update/pages/charity-organization-update/charity-organization-update.component';
 import {PermissionsEnum} from '@app/enums/permissions-enum';
 import {ConsultationComponent} from '@app/modules/services/consultation/pages/consultation/consultation.component';
 import {InquiryComponent} from '@app/modules/services/inquiries-and-complaints/pages/inquiry/inquiry.component';

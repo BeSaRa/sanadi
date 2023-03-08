@@ -13,7 +13,7 @@ import { NpoManagement } from '@models/npo-management';
 import { CommonUtils } from '@helpers/common-utils';
 import { CustomValidators } from '@app/validators/custom-validators';
 import { TabComponent } from '@app/shared/components/tab/tab.component';
-import { RealBeneficiariesComponent } from './../../shared/real-beneficiaries/real-beneficiaries.component';
+import { RealBeneficiariesComponent } from '../../../services/shared-services/components/real-beneficiaries/real-beneficiaries.component';
 import { BankService } from '@services/bank.service';
 import { NpoBankAccountComponent } from './npo-bank-account/npo-bank-account.component';
 import { FounderMembersComponent } from './founder-members/founder-members.component';
