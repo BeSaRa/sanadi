@@ -19,7 +19,6 @@ import {
 import {SharedModule} from '@app/shared/shared.module';
 import {FormlyBootstrapModule} from '@ngx-formly/bootstrap';
 import {FormlyModule} from '@ngx-formly/core';
-import {WorkAreasComponent} from '../general-services/shared/work-areas/work-areas.component';
 import {
   ProcessFieldWrapperComponent
 } from '@app/administration/popups/general-process-popup/process-formly-components/process-field-wrapper/process-field-wrapper.component';
@@ -56,7 +55,6 @@ import {ResearchAndStudiesComponent} from './shared/research-and-studies/researc
     OrganizationOfficerComponent,
     ResearchAndStudiesComponent,
     ParticipantOrganizationsPopupComponent,
-    WorkAreasComponent,
     SelectAuthorizedEntityPopupComponent,
     SelectPreRegisteredPopupComponent,
     SelectBankAccountPopupComponent
@@ -88,8 +86,7 @@ import {ResearchAndStudiesComponent} from './shared/research-and-studies/researc
     DynamicTemplatesComponent,
     OrganizationOfficerComponent,
     ResearchAndStudiesComponent,
-    ParticipantOrganizationsPopupComponent,
-    WorkAreasComponent,
+    ParticipantOrganizationsPopupComponent
   ]
 })
 export class EServicesMainModule {

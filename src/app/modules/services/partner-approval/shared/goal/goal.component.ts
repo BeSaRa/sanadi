@@ -11,12 +11,12 @@ import {
   UntypedFormControl,
   UntypedFormGroup
 } from '@angular/forms';
-import { ActionIconsEnum } from '@app/enums/action-icons-enum';
-import { CommonStatusEnum } from '@app/enums/common-status.enum';
-import { UserClickOn } from '@app/enums/user-click-on.enum';
-import { AdminResult } from '@app/models/admin-result';
-import { Goal } from '@app/models/goal';
-import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { ActionIconsEnum } from '@enums/action-icons-enum';
+import { CommonStatusEnum } from '@enums/common-status.enum';
+import { UserClickOn } from '@enums/user-click-on.enum';
+import { AdminResult } from '@models/admin-result';
+import { Goal } from '@models/goal';
+import { IMenuItem } from '@modules/context-menu/interfaces/i-menu-item';
 import { ReadinessStatus } from '@app/types/types';
 import { DialogService } from '@services/dialog.service';
 import { LangService } from '@services/lang.service';
