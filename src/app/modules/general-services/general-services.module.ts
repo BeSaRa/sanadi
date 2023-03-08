@@ -21,9 +21,6 @@ import {EmploymentComponent} from './pages/employment/employment.component';
 import {NpoBankAccountComponent} from './pages/npo-management/npo-bank-account/npo-bank-account.component';
 import {NpoManagementComponent} from './pages/npo-management/npo-management.component';
 import {
-  AwarenessActivitySuggestionApprovalComponent
-} from './popups/awareness-activity-suggestion-approval/awareness-activity-suggestion-approval.component';
-import {
   ForeignCountriesProjectsApprovalPopupComponent
 } from './popups/foreign-countries-projects-approval-popup/foreign-countries-projects-approval-popup.component';
 import {
@@ -63,9 +60,6 @@ import {
 import {EmployeesDataComponent} from './shared/employees-data/employees-data.component';
 import {RealBeneficiariesComponent} from './shared/real-beneficiaries/real-beneficiaries.component';
 import {CharityReportsComponent} from './shared/risk-reports/risk-reports.component';
-import {
-  AwarenessActivitySuggestionComponent
-} from './pages/awareness-activity-suggestion/awareness-activity-suggestion.component';
 import {FounderMembersComponent} from './pages/npo-management/founder-members/founder-members.component';
 import {FormlyDateFieldComponent} from '@app/services-search/components/formly-date-field/formly-date-field.component';
 import {
@@ -104,8 +98,6 @@ import {
     CharityReportsComponent,
     CharityDecisionsComponent,
     CoordinationWithOrgPopupComponent,
-    AwarenessActivitySuggestionComponent,
-    AwarenessActivitySuggestionApprovalComponent,
     OrganizationsEntitiesSupportComponent,
     OrganizationsEntitiesSupportPopupComponent,
 

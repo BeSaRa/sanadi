@@ -23,7 +23,8 @@ enum SystemPathsEnum {
   PROJECT_FUNDRAISING = '/home/services/project-fundraising',
   PROJECT_MODELS = '/home/services/project-models',
   // INTERNAL_PROJECT_LICENSE = '/home/services/internal-project-license',
-  GENERAL_PROCESS_NOTIFICATION = '/home/services/general-process-notification'
+  GENERAL_PROCESS_NOTIFICATION = '/home/services/general-process-notification',
+  AWARENESS_ACTIVITY_SUGGESTION = '/home/services/awareness-activity-suggestion',
 }
 
 export const newNavigationMenuList = [
@@ -395,6 +396,59 @@ export const newNavigationMenuList = [
     permissionGroup: null,
     parent: 701,
     group: 'service_' + CaseTypes.GENERAL_PROCESS_NOTIFICATION,
+    itemOrder: 3,
+    svg: null
+  },
+  {
+    id: 801,
+    langKey: 'menu_awareness_activity_suggestion',
+    path: SystemPathsEnum.AWARENESS_ACTIVITY_SUGGESTION,
+    icon: 'mdi-domain',
+    isSvg: false,
+    caseType: CaseTypes.AWARENESS_ACTIVITY_SUGGESTION,
+    permission: '',
+    permissionGroup: PermissionGroupsEnum.AWARENESS_ACTIVITY_SUGGESTION_SERVICES_PERMISSION_GROUP,
+    parent: null,
+    group: 'main',
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 802,
+    langKey: serviceAddUpdateLabel,
+    path: SystemPathsEnum.AWARENESS_ACTIVITY_SUGGESTION + '/service',
+    icon: serviceAddUpdateIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.AWARENESS_ACTIVITY_SUGGESTION,
+    permissionGroup: null,
+    parent: 801,
+    group: 'service_' + CaseTypes.AWARENESS_ACTIVITY_SUGGESTION,
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 803,
+    langKey: serviceSearchLabel,
+    path: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.AWARENESS_ACTIVITY_SUGGESTION),
+    icon: serviceSearchIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.SEARCH_SERVICE_AWARENESS_ACTIVITY_SUGGESTION,
+    permissionGroup: null,
+    parent: 801,
+    group: 'service_' + CaseTypes.AWARENESS_ACTIVITY_SUGGESTION,
+    itemOrder: 2,
+    svg: null
+  },
+  {
+    id: 804,
+    langKey: serviceOutputLabel,
+    path: SystemPathsEnum.AWARENESS_ACTIVITY_SUGGESTION + '/outputs',
+    icon: serviceOutputIcon,
+    isSvg: false,
+    permission: Constants.SERVICE_OUTPUT_PERMISSION,
+    permissionGroup: null,
+    parent: 801,
+    group: 'service_' + CaseTypes.AWARENESS_ACTIVITY_SUGGESTION,
     itemOrder: 3,
     svg: null
   },

@@ -3,7 +3,7 @@ import {
 } from '@modules/services/general-process-notification/pages/general-process-notification/general-process-notification.component';
 import {
   AwarenessActivitySuggestionComponent
-} from '@modules/general-services/pages/awareness-activity-suggestion/awareness-activity-suggestion.component';
+} from '@modules/services/awareness-activity-suggestion/pages/awareness-activity-suggestion/awareness-activity-suggestion.component';
 import {
   ForeignCountriesProjectsComponent
 } from '@app/modules/general-services/pages/foreign-countries-projects/foreign-countries-projects.component';
