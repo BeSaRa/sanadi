@@ -44,7 +44,6 @@ import {
 import {ManageMembersComponent} from './shared/manage-members/manage-members.component';
 import {SelectMemberPopupComponent} from './popups/select-member-popup-component/select-member-popup.component';
 import {ManageInternalUsersComponent} from './shared/manage-internal-users/manage-internal-users.component';
-import {ProjectFundraisingComponent} from './pages/project-fundraising/project-fundraising.component';
 import {
   GeneralAssociationMeetingCompleteTaskPopupComponent
 } from './popups/general-association-meeting-complete-task-popup/general-association-meeting-complete-task-popup.component';
@@ -57,18 +56,6 @@ import {
 import {
   SpecificMemberCommentsAndNotesComponent
 } from './popups/specific-member-comments-and-notes/specific-member-comments-and-notes.component';
-import {
-  DeductionRatioManagerComponent
-} from './pages/project-fundraising/components/deduction-ratio-manager/deduction-ratio-manager.component';
-import {
-  TargetedCountriesDistributionComponent
-} from './pages/project-fundraising/components/targeted-countries-distribution/targeted-countries-distribution.component';
-import {
-  TargetedYearsDistributionComponent
-} from './pages/project-fundraising/components/targeted-years-distribution/targeted-years-distribution.component';
-import {
-  ProjectFundraisingApproveTaskPopupComponent
-} from './popups/project-fundraising-approve-task-popup/project-fundraising-approve-task-popup.component';
 
 @NgModule({
   declarations: [
@@ -94,12 +81,7 @@ import {
     GeneralAssociationMeetingCompleteTaskPopupComponent,
     GeneralAssociationMeetingApproveTaskPopupComponent,
     MeetingPointMembersCommentsPopupComponent,
-    SpecificMemberCommentsAndNotesComponent,
-    ProjectFundraisingComponent,
-    DeductionRatioManagerComponent,
-    TargetedCountriesDistributionComponent,
-    TargetedYearsDistributionComponent,
-    ProjectFundraisingApproveTaskPopupComponent
+    SpecificMemberCommentsAndNotesComponent
   ],
   imports: [
     CommonModule,

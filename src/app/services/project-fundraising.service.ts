@@ -23,7 +23,7 @@ import { ProjectModelService } from "@services/project-model.service";
 import { WFResponseType } from "@app/enums/wfresponse-type.enum";
 import {
   ProjectFundraisingApproveTaskPopupComponent
-} from "@app/modules/projects/popups/project-fundraising-approve-task-popup/project-fundraising-approve-task-popup.component";
+} from "@app/modules/services/project-fundraising/popups/project-fundraising-approve-task-popup/project-fundraising-approve-task-popup.component";
 import { LicenseService } from "@services/license.service";
 import { CaseTypes } from "@app/enums/case-types.enum";
 

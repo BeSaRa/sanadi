@@ -19,7 +19,8 @@ enum SystemPathsEnum {
   CONSULTATION_SERVICE = '/home/services/consultations',
   INQUIRY_SERVICE = '/home/services/inquiries',
   INTERNATIONAL_COOPERATION_SERVICE = '/home/services/international-cooperation',
-  PROJECT_IMPLEMENTATION = '/home/services/project-implementation'
+  PROJECT_IMPLEMENTATION = '/home/services/project-implementation',
+  PROJECT_FUNDRAISING = '/home/services/project-fundraising',
 }
 
 export const newNavigationMenuList = [
@@ -232,6 +233,59 @@ export const newNavigationMenuList = [
     permissionGroup: null,
     parent: 401,
     group: 'service_' + CaseTypes.PROJECT_IMPLEMENTATION,
+    itemOrder: 3,
+    svg: null
+  },
+  {
+    id: 501,
+    langKey: 'menu_projects_fundraising',
+    path: SystemPathsEnum.PROJECT_FUNDRAISING,
+    icon: 'mdi-charity',
+    isSvg: false,
+    caseType: CaseTypes.PROJECT_FUNDRAISING,
+    permission: '',
+    permissionGroup: PermissionGroupsEnum.PROJECT_FUNDRAISING_SERVICES_PERMISSION_GROUP,
+    parent: null,
+    group: 'main',
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 502,
+    langKey: serviceAddUpdateLabel,
+    path: SystemPathsEnum.PROJECT_FUNDRAISING + '/service',
+    icon: serviceAddUpdateIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.PROJECT_FUNDRAISING,
+    permissionGroup: null,
+    parent: 501,
+    group: 'service_' + CaseTypes.PROJECT_FUNDRAISING,
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 503,
+    langKey: serviceSearchLabel,
+    path: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.PROJECT_FUNDRAISING),
+    icon: serviceSearchIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.SEARCH_SERVICE_PROJECT_FUNDRAISING,
+    permissionGroup: null,
+    parent: 501,
+    group: 'service_' + CaseTypes.PROJECT_FUNDRAISING,
+    itemOrder: 2,
+    svg: null
+  },
+  {
+    id: 504,
+    langKey: serviceOutputLabel,
+    path: SystemPathsEnum.PROJECT_FUNDRAISING + '/outputs',
+    icon: serviceOutputIcon,
+    isSvg: false,
+    permission: Constants.SERVICE_OUTPUT_PERMISSION,
+    permissionGroup: null,
+    parent: 501,
+    group: 'service_' + CaseTypes.PROJECT_FUNDRAISING,
     itemOrder: 3,
     svg: null
   },
