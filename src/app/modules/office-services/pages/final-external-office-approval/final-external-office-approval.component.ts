@@ -1,4 +1,3 @@
-import { OfficeTypes } from './../../../../enums/office-type';
 import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { Observable, of, Subject } from 'rxjs';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
@@ -37,6 +36,7 @@ import { BankAccountComponent } from '@app/modules/e-services-main/shared/bank-a
 import { ExecutiveManagementComponent } from '@app/shared/components/executive-management/executive-management.component';
 import { UserClickOn } from '@app/enums/user-click-on.enum';
 import { LicenseDurationType } from '@app/enums/license-duration-type';
+import { OfficeTypes } from '@app/enums/office-type';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -62,14 +62,14 @@ export class FinalExternalOfficeApprovalComponent extends EServicesGenericCompon
       name: 'bankAccountsTab',
       langKey: 'bank_details',
       validStatus: () => {
-        return !this.bankAccountComponentRef || (this.bankDetailsTabStatus === 'READY' && this.bankAccountComponentRef.list.length > 0) || !this.isRenewOrUpdateRequestType();
+        return !this.bankAccountComponentRef || (this.bankDetailsTabStatus === 'READY' && this.bankAccountComponentRef.list.length > 0);
       }
     },
     managers: {
       name: 'managersTab',
       langKey: 'managers',
       validStatus: () => {
-        return !this.executiveManagementComponentRef || (this.managersTabStatus === 'READY' && this.executiveManagementComponentRef.list.length > 0) || !this.isRenewOrUpdateRequestType();
+        return !this.executiveManagementComponentRef || (this.managersTabStatus === 'READY' && this.executiveManagementComponentRef.list.length > 0);
       }
     },
     branches: {
