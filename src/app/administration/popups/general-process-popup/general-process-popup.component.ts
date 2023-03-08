@@ -123,6 +123,7 @@ export class GeneralProcessPopupComponent extends AdminGenericDialog<GeneralProc
       this._loadSubTeam(this.model?.teamId);
       this.handleMainCatChange(this.model?.mainClass)
       this.processForm.generateFromString(this.model?.template)
+      this.subClassField.setValue(this.model?.subClass);
     }
     this.listenToFieldDetailsSubsecribtion$ = ProcessFieldBuilder.listenToSelectField().subscribe((fieldId: string) => {
       if (fieldId) {
