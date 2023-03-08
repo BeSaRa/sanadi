@@ -1,10 +1,10 @@
 import {AfterViewInit, ChangeDetectorRef, Component} from '@angular/core';
-import {SaveTypes} from '@app/enums/save-types';
+import {SaveTypes} from '@enums/save-types';
 import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
-import {UrgentJointReliefCampaign} from '@app/models/urgent-joint-relief-campaign';
+import {UrgentJointReliefCampaign} from '@models/urgent-joint-relief-campaign';
 import {UrgentJointReliefCampaignService} from '@services/urgent-joint-relief-campaign.service';
 import {Observable} from 'rxjs';
-import {OperationTypes} from '@app/enums/operation-types.enum';
+import {OperationTypes} from '@enums/operation-types.enum';
 import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {LangService} from '@services/lang.service';
 import {LookupService} from '@services/lookup.service';
@@ -14,20 +14,20 @@ import {LicenseService} from '@services/license.service';
 import {EmployeeService} from '@services/employee.service';
 import {DatepickerControlsMap, DatepickerOptionsMap} from '@app/types/types';
 import {DateUtils} from '@helpers/date-utils';
-import {FormManager} from '@app/models/form-manager';
-import {CommonStatusEnum} from '@app/enums/common-status.enum';
-import {Lookup} from '@app/models/lookup';
-import {Country} from '@app/models/country';
+import {FormManager} from '@models/form-manager';
+import {CommonStatusEnum} from '@enums/common-status.enum';
+import {Lookup} from '@models/lookup';
+import {Country} from '@models/country';
 import {CountryService} from '@services/country.service';
-import {OrganizationOfficer} from '@app/models/organization-officer';
+import {OrganizationOfficer} from '@models/organization-officer';
 import {CustomValidators} from '@app/validators/custom-validators';
-import {CaseStepName} from '@app/enums/case-step-name';
+import {CaseStepName} from '@enums/case-step-name';
 import {IMyInputFieldChanged} from 'angular-mydatepicker';
-import {ParticipantOrganization} from '@app/models/participant-organization';
-import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
-import {OpenFrom} from '@app/enums/open-from.enum';
+import {ParticipantOrganization} from '@models/participant-organization';
+import {CommonCaseStatus} from '@enums/common-case-status.enum';
+import {OpenFrom} from '@enums/open-from.enum';
 import {ProfileService} from '@services/profile.service';
-import {Profile} from '@app/models/profile';
+import {Profile} from '@models/profile';
 
 @Component({
   selector: 'urgent-joint-relief-campaign',

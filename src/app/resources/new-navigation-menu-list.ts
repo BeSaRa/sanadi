@@ -27,6 +27,7 @@ enum SystemPathsEnum {
   AWARENESS_ACTIVITY_SUGGESTION = '/home/services/awareness-activity-suggestion',
   GENERAL_ASSOCIATION_MEETING_ATTENDANCE = '/home/services/general-association-meeting-attendance',
   INTERNAL_BANK_ACCOUNT_APPROVAL = '/home/services/internal-bank-account-approval',
+  URGENT_JOINT_RELIEF_CAMPAIGN = '/home/services/urgent-joint-relief-campaign'
 }
 
 export const newNavigationMenuList = [
@@ -557,6 +558,59 @@ export const newNavigationMenuList = [
     permissionGroup: null,
     parent: 1001,
     group: 'service_' + CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL,
+    itemOrder: 3,
+    svg: null
+  },
+  {
+    id: 1101,
+    langKey: 'menu_urgent_joint_relief_campaign',
+    path: SystemPathsEnum.URGENT_JOINT_RELIEF_CAMPAIGN,
+    icon: 'mdi-bank-plus',
+    isSvg: false,
+    caseType: CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN,
+    permission: '',
+    permissionGroup: PermissionGroupsEnum.URGENT_JOINT_RELIEF_CAMPAIGN_SERVICES_PERMISSION_GROUP,
+    parent: null,
+    group: 'main',
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 1102,
+    langKey: serviceAddUpdateLabel,
+    path: SystemPathsEnum.URGENT_JOINT_RELIEF_CAMPAIGN + '/service',
+    icon: serviceAddUpdateIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.URGENT_JOINT_RELIEF_CAMPAIGN,
+    permissionGroup: null,
+    parent: 1101,
+    group: 'service_' + CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN,
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 1103,
+    langKey: serviceSearchLabel,
+    path: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN),
+    icon: serviceSearchIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.SEARCH_SERVICE_URGENT_JOINT_RELIEF_CAMPAIGN,
+    permissionGroup: null,
+    parent: 1101,
+    group: 'service_' + CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN,
+    itemOrder: 2,
+    svg: null
+  },
+  {
+    id: 1104,
+    langKey: serviceOutputLabel,
+    path: SystemPathsEnum.URGENT_JOINT_RELIEF_CAMPAIGN + '/outputs',
+    icon: serviceOutputIcon,
+    isSvg: false,
+    permission: Constants.SERVICE_OUTPUT_PERMISSION,
+    permissionGroup: null,
+    parent: 1101,
+    group: 'service_' + CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN,
     itemOrder: 3,
     svg: null
   },

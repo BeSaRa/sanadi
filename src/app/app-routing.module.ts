@@ -154,6 +154,17 @@ const routes: Routes = [
         } as Partial<ICustomRouteData>
       },
       {
+        path: 'services/urgent-joint-relief-campaign',
+        canActivate: [NewServicePermissionGuard],
+        loadChildren: () => import('./modules/services/urgent-joint-relief-campaign/urgent-joint-relief-campaign.module')
+          .then(m => m.UrgentJointReliefCampaignModule),
+        data: {
+          permissionGroup: PermissionGroupsEnum.URGENT_JOINT_RELIEF_CAMPAIGN_SERVICES_PERMISSION_GROUP,
+          checkAnyPermission: true,
+          caseType: CaseTypes.URGENT_JOINT_RELIEF_CAMPAIGN
+        } as Partial<ICustomRouteData>
+      },
+      {
         path: 'services/search',
         loadChildren: () => import('@modules/service-search-individual/service-search-individual.module').then(m => m.ServiceSearchIndividualModule),
       },

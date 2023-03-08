@@ -141,6 +141,12 @@ const internalBankAccountApprovalServicesPermissionGroup: (EServicePermissionsEn
   Constants.SERVICE_OUTPUT_PERMISSION
 ];
 
+const urgentJointReliefCampaignServicesPermissionGroup: (EServicePermissionsEnum | string)[] = [
+  EServicePermissionsEnum.URGENT_JOINT_RELIEF_CAMPAIGN,
+  EServicePermissionsEnum.SEARCH_SERVICE_URGENT_JOINT_RELIEF_CAMPAIGN,
+  Constants.SERVICE_OUTPUT_PERMISSION
+];
+
 const generalServicesPermissionsGroup: EServicePermissionsEnum[] = [
   EServicePermissionsEnum.INQUIRY,
   EServicePermissionsEnum.CONSULTATION,
@@ -208,6 +214,7 @@ const permissionGroups: PermissionGroupsMapType = {
   [PermissionGroupsEnum.AWARENESS_ACTIVITY_SUGGESTION_SERVICES_PERMISSION_GROUP]: awarenessActivitySuggestionServicesPermissionGroup,
   [PermissionGroupsEnum.GENERAL_ASSOCIATION_MEETING_ATTENDANCE_SERVICES_PERMISSION_GROUP]: generalAssociationMeetingAttendanceServicesPermissionGroup,
   [PermissionGroupsEnum.INTERNAL_BANK_ACCOUNT_APPROVAL_SERVICES_PERMISSION_GROUP]: internalBankAccountApprovalServicesPermissionGroup,
+  [PermissionGroupsEnum.URGENT_JOINT_RELIEF_CAMPAIGN_SERVICES_PERMISSION_GROUP]: urgentJointReliefCampaignServicesPermissionGroup,
 
 
   [PermissionGroupsEnum.SANADI_PERMISSIONS_GROUP]: sanadiPermissionsGroup,
