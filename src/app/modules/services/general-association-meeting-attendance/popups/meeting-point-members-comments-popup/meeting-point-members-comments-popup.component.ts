@@ -1,7 +1,7 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {LangService} from '@services/lang.service';
-import {MeetingPointMemberComment} from '@app/models/meeting-point-member-comment';
+import {MeetingPointMemberComment} from '@models/meeting-point-member-comment';
 
 @Component({
   selector: 'meeting-point-members-comments-popup',

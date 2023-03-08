@@ -36,24 +36,6 @@ import {
 import {
   TransferFundsAbroadCompleteTaskPopupComponent
 } from './popups/transfer-funds-abroad-complete-task-popup/transfer-funds-abroad-complete-task-popup.component';
-import {
-  GeneralAssociationMeetingAttendanceComponent
-} from './pages/general-association-meeting-attendance/general-association-meeting-attendance.component';
-import {ManageMembersComponent} from './shared/manage-members/manage-members.component';
-import {SelectMemberPopupComponent} from './popups/select-member-popup-component/select-member-popup.component';
-import {ManageInternalUsersComponent} from './shared/manage-internal-users/manage-internal-users.component';
-import {
-  GeneralAssociationMeetingCompleteTaskPopupComponent
-} from './popups/general-association-meeting-complete-task-popup/general-association-meeting-complete-task-popup.component';
-import {
-  GeneralAssociationMeetingApproveTaskPopupComponent
-} from './popups/general-association-meeting-approve-task-popup/general-association-meeting-approve-task-popup.component';
-import {
-  MeetingPointMembersCommentsPopupComponent
-} from './popups/meeting-point-members-comments-popup/meeting-point-members-comments-popup.component';
-import {
-  SpecificMemberCommentsAndNotesComponent
-} from './popups/specific-member-comments-and-notes/specific-member-comments-and-notes.component';
 
 @NgModule({
   declarations: [
@@ -69,15 +51,7 @@ import {
     TransferringIndividualFundsAbroadComponent,
     TransferFundsAbroadApproveTaskPopupComponent,
     SelectReceiverEntityPopupComponent,
-    TransferFundsAbroadCompleteTaskPopupComponent,
-    GeneralAssociationMeetingAttendanceComponent,
-    ManageMembersComponent,
-    SelectMemberPopupComponent,
-    ManageInternalUsersComponent,
-    GeneralAssociationMeetingCompleteTaskPopupComponent,
-    GeneralAssociationMeetingApproveTaskPopupComponent,
-    MeetingPointMembersCommentsPopupComponent,
-    SpecificMemberCommentsAndNotesComponent
+    TransferFundsAbroadCompleteTaskPopupComponent
   ],
   imports: [
     CommonModule,

@@ -1,9 +1,8 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {UntypedFormBuilder, UntypedFormControl} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {Observable, of, Subject} from 'rxjs';
-import {GeneralAssociationMeetingAttendance} from '@app/models/general-association-meeting-attendance';
-import {WFResponseType} from '@app/enums/wfresponse-type.enum';
+import {WFResponseType} from '@enums/wfresponse-type.enum';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {BaseGenericEService} from '@app/generics/base-generic-e-service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
@@ -14,17 +13,17 @@ import {ServiceDataService} from '@services/service-data.service';
 import {DialogService} from '@services/dialog.service';
 import {InboxService} from '@services/inbox.service';
 import {IWFResponse} from '@contracts/i-w-f-response';
-import {filter, map, switchMap, tap} from 'rxjs/operators';
-import {GeneralAssociationInternalMember} from '@app/models/general-association-internal-member';
-import {IMyDateModel} from 'angular-mydatepicker';
+import {filter, map, switchMap} from 'rxjs/operators';
+import {GeneralAssociationMeetingAttendance} from '@models/general-association-meeting-attendance';
+import {GeneralAssociationExternalMember} from '@models/general-association-external-member';
 
 @Component({
-  selector: 'general-association-meeting-approve-task-popup',
-  templateUrl: './general-association-meeting-approve-task-popup.component.html',
-  styleUrls: ['./general-association-meeting-approve-task-popup.component.scss']
+  selector: 'general-association-meeting-complete-task-popup',
+  templateUrl: './general-association-meeting-complete-task-popup.component.html',
+  styleUrls: ['./general-association-meeting-complete-task-popup.component.scss']
 })
-export class GeneralAssociationMeetingApproveTaskPopupComponent implements OnInit {
-  comment: UntypedFormControl = new UntypedFormControl('', [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]);
+export class GeneralAssociationMeetingCompleteTaskPopupComponent implements OnInit {
+  comment: UntypedFormControl = new UntypedFormControl('', [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS), CustomValidators.required]);
   done$: Subject<any> = new Subject<any>();
   destroy$: Subject<any> = new Subject<any>();
   customValidators = CustomValidators;
@@ -37,9 +36,10 @@ export class GeneralAssociationMeetingApproveTaskPopupComponent implements OnIni
       model: GeneralAssociationMeetingAttendance,
       actionType: WFResponseType,
       service: BaseGenericEService<any>,
-      selectedInternalMembers: GeneralAssociationInternalMember[],
-      meetingDate: IMyDateModel,
-      year: number
+      form: UntypedFormGroup,
+      selectedAdministrativeBoardMembers: GeneralAssociationExternalMember[],
+      selectedGeneralAssociationMembers: GeneralAssociationExternalMember[],
+      agendaItems: string[]
     },
     private dialogRef: DialogRef,
     private toast: ToastService,
@@ -50,9 +50,6 @@ export class GeneralAssociationMeetingApproveTaskPopupComponent implements OnIni
     private dialog: DialogService,
     private inboxService: InboxService) {
     this.action = this.data.actionType;
-
-    this.data.model.meetingDate = this.data.meetingDate;
-    this.data.model.year = this.data.year;
   }
 
   ngOnInit(): void {
@@ -84,14 +81,7 @@ export class GeneralAssociationMeetingApproveTaskPopupComponent implements OnIni
         switchMap(_ => {
           return of(!!this.comment.value);
         }),
-        switchMap(_ => {
-          return this.data.selectedInternalMembers.length > 0 ? of(true) : of(false);
-        }),
-        tap(valid => {
-          if (!valid) {
-            this.dialog.error(this.lang.map.you_should_add_at_least_one_member_to_internal_users);
-          }
-        }),
+        // emit only if the beforeSave returned true
         filter(value => !!value),
         switchMap(() => this.proceed())
       )
@@ -104,10 +94,18 @@ export class GeneralAssociationMeetingApproveTaskPopupComponent implements OnIni
   updateCase(): Observable<any> {
     const model = new GeneralAssociationMeetingAttendance().clone({
       ...this.data.model,
-      internalMembersDTO: this.data.selectedInternalMembers
+      ...this.data.form.get('basicInfo')?.getRawValue(),
+      ...this.data.form.get('specialExplanation')?.getRawValue(),
+      generalAssociationMembers: this.data.selectedGeneralAssociationMembers,
+      administrativeBoardMembers: this.data.selectedAdministrativeBoardMembers,
+      agenda: this.getAgendaItemsAsString(this.data.agendaItems)
     });
     return model.update().pipe(map(returned => {
       return returned ? of(true) : of(false);
     }));
+  }
+
+  getAgendaItemsAsString(agendaItems: string[]): string {
+    return JSON.stringify(agendaItems);
   }
 }
