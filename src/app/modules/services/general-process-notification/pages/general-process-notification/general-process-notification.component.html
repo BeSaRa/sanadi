@@ -18,8 +18,8 @@
       <div class="row">
         <!-- Request Type -->
         <div class="col-md-6 mb-4 position-relative">
-          <label asteriskIfRequired="requestType" for="requestType" class="form-label">{{ lang.map.request_type
-            }}</label>
+          <label asteriskIfRequired="requestType" for="requestType"
+                 class="form-label">{{ lang.map.request_type}}</label>
           <ng-select [selectOnTab]="true" labelForId="requestType" [clearable]="true"
                      placeholder="{{ lang.map.select }}" id="requestType" [readonly]="canChangeReuestType"
                      (change)="handleRequestTypeChange($event, true)" [notFoundText]="lang.map.msg_not_found"

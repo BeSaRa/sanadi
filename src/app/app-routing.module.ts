@@ -110,6 +110,17 @@ const routes: Routes = [
         } as Partial<ICustomRouteData>
       },
       {
+        path: 'services/general-process-notification',
+        canActivate: [NewServicePermissionGuard],
+        loadChildren: () => import('./modules/services/general-process-notification/general-process-notification.module')
+          .then(m => m.GeneralProcessNotificationModule),
+        data: {
+          permissionGroup: PermissionGroupsEnum.GENERAL_PROCESS_NOTIFICATION_SERVICES_PERMISSION_GROUP,
+          checkAnyPermission: true,
+          caseType: CaseTypes.GENERAL_PROCESS_NOTIFICATION
+        } as Partial<ICustomRouteData>
+      },
+      {
         path: 'services/search',
         loadChildren: () => import('@modules/service-search-individual/service-search-individual.module').then(m => m.ServiceSearchIndividualModule),
       },

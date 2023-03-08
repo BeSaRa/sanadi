@@ -23,6 +23,7 @@ enum SystemPathsEnum {
   PROJECT_FUNDRAISING = '/home/services/project-fundraising',
   PROJECT_MODELS = '/home/services/project-models',
   // INTERNAL_PROJECT_LICENSE = '/home/services/internal-project-license',
+  GENERAL_PROCESS_NOTIFICATION = '/home/services/general-process-notification'
 }
 
 export const newNavigationMenuList = [
@@ -341,6 +342,59 @@ export const newNavigationMenuList = [
     permissionGroup: null,
     parent: 601,
     group: 'service_' + CaseTypes.EXTERNAL_PROJECT_MODELS,
+    itemOrder: 3,
+    svg: null
+  },
+  {
+    id: 701,
+    langKey: 'menu_general_process_notification',
+    path: SystemPathsEnum.GENERAL_PROCESS_NOTIFICATION,
+    icon: 'mdi-bulletin-board',
+    isSvg: false,
+    caseType: CaseTypes.GENERAL_PROCESS_NOTIFICATION,
+    permission: '',
+    permissionGroup: PermissionGroupsEnum.GENERAL_PROCESS_NOTIFICATION_SERVICES_PERMISSION_GROUP,
+    parent: null,
+    group: 'main',
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 702,
+    langKey: serviceAddUpdateLabel,
+    path: SystemPathsEnum.GENERAL_PROCESS_NOTIFICATION + '/service',
+    icon: serviceAddUpdateIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.GENERAL_PROCESS_NOTIFICATION,
+    permissionGroup: null,
+    parent: 701,
+    group: 'service_' + CaseTypes.GENERAL_PROCESS_NOTIFICATION,
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 703,
+    langKey: serviceSearchLabel,
+    path: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.GENERAL_PROCESS_NOTIFICATION),
+    icon: serviceSearchIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.SEARCH_SERVICE_GENERAL_PROCESS_NOTIFICATION,
+    permissionGroup: null,
+    parent: 701,
+    group: 'service_' + CaseTypes.GENERAL_PROCESS_NOTIFICATION,
+    itemOrder: 2,
+    svg: null
+  },
+  {
+    id: 704,
+    langKey: serviceOutputLabel,
+    path: SystemPathsEnum.GENERAL_PROCESS_NOTIFICATION + '/outputs',
+    icon: serviceOutputIcon,
+    isSvg: false,
+    permission: Constants.SERVICE_OUTPUT_PERMISSION,
+    permissionGroup: null,
+    parent: 701,
+    group: 'service_' + CaseTypes.GENERAL_PROCESS_NOTIFICATION,
     itemOrder: 3,
     svg: null
   },

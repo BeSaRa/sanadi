@@ -1,28 +1,28 @@
-import { DialogService } from './../../../../services/dialog.service';
-import { ILanguageKeys } from './../../../../interfaces/i-language-keys';
-import { CommonUtils } from './../../../../helpers/common-utils';
-import { InboxService } from './../../../../services/inbox.service';
-import { ToastService } from './../../../../services/toast.service';
-import { DialogRef } from './../../../../shared/models/dialog-ref';
-import { LangService } from './../../../../services/lang.service';
-import { GeneralProcessNotification } from '@app/models/general-process-notification';
-import { DIALOG_DATA_TOKEN } from './../../../../shared/tokens/tokens';
-import { DateUtils } from './../../../../helpers/date-utils';
-import { DatepickerOptionsMap } from './../../../../types/types';
-import { WFResponseType } from './../../../../enums/wfresponse-type.enum';
+import { DialogService } from '@services/dialog.service';
+import { ILanguageKeys } from '@contracts/i-language-keys';
+import { CommonUtils } from '@helpers/common-utils';
+import { InboxService } from '@services/inbox.service';
+import { ToastService } from '@services/toast.service';
+import { DialogRef } from '../../../../../shared/models/dialog-ref';
+import { LangService } from '@services/lang.service';
+import { GeneralProcessNotification } from '@models/general-process-notification';
+import { DIALOG_DATA_TOKEN } from '../../../../../shared/tokens/tokens';
+import { DateUtils } from '@helpers/date-utils';
+import { DatepickerOptionsMap } from '@app-types/types';
+import { WFResponseType } from '@enums/wfresponse-type.enum';
 import { UntypedFormControl, UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
-import { CustomValidators } from './../../../../validators/custom-validators';
+import { CustomValidators } from '../../../../../validators/custom-validators';
 import { switchMap, exhaustMap, takeUntil, map, tap, filter } from 'rxjs/operators';
-import { IWFResponse } from './../../../../interfaces/i-w-f-response';
+import { IWFResponse } from '@contracts/i-w-f-response';
 import { Component, Inject, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 
 @Component({
-  selector: 'app-general-process-notification-approval',
-  templateUrl: './general-process-notification-approval.component.html',
-  styleUrls: ['./general-process-notification-approval.component.scss']
+  selector: 'app-general-process-notification-approval-popup',
+  templateUrl: './general-process-notification-approval-popup.component.html',
+  styleUrls: ['./general-process-notification-approval-popup.component.scss']
 })
-export class GeneralProcessNotificationApprovalComponent implements OnInit {
+export class GeneralProcessNotificationApprovalPopupComponent implements OnInit {
   comment: UntypedFormControl = new UntypedFormControl('', [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]);
   response: WFResponseType = WFResponseType.APPROVE;
   action$: Subject<any> = new Subject<any>();
