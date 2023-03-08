@@ -153,6 +153,12 @@ const transferringIndividualFundsAbroadServicesPermissionGroup: (EServicePermiss
   Constants.SERVICE_OUTPUT_PERMISSION
 ];
 
+const initialExternalOfficeApprovalServicesPermissionGroup: (EServicePermissionsEnum | string)[] = [
+  EServicePermissionsEnum.INITIAL_EXTERNAL_OFFICE_APPROVAL,
+  EServicePermissionsEnum.SEARCH_SERVICE_INITIAL_EXTERNAL_OFFICE_APPROVAL,
+  Constants.SERVICE_OUTPUT_PERMISSION
+];
+
 const generalServicesPermissionsGroup: EServicePermissionsEnum[] = [
   EServicePermissionsEnum.INQUIRY,
   EServicePermissionsEnum.CONSULTATION,
@@ -222,6 +228,7 @@ const permissionGroups: PermissionGroupsMapType = {
   [PermissionGroupsEnum.INTERNAL_BANK_ACCOUNT_APPROVAL_SERVICES_PERMISSION_GROUP]: internalBankAccountApprovalServicesPermissionGroup,
   [PermissionGroupsEnum.URGENT_JOINT_RELIEF_CAMPAIGN_SERVICES_PERMISSION_GROUP]: urgentJointReliefCampaignServicesPermissionGroup,
   [PermissionGroupsEnum.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD_SERVICES_PERMISSION_GROUP]: transferringIndividualFundsAbroadServicesPermissionGroup,
+  [PermissionGroupsEnum.INITIAL_EXTERNAL_OFFICE_APPROVAL_SERVICES_PERMISSION_GROUP]: initialExternalOfficeApprovalServicesPermissionGroup,
 
 
   [PermissionGroupsEnum.SANADI_PERMISSIONS_GROUP]: sanadiPermissionsGroup,

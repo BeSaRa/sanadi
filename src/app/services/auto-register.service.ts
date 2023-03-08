@@ -21,7 +21,7 @@ import {
 } from '@app/modules/services/international-cooperation/pages/international-cooperation/international-cooperation.component';
 import {
   InitialExternalOfficeApprovalComponent
-} from '@app/modules/office-services/pages/initial-external-office-approval/initial-external-office-approval.component';
+} from '@app/modules/services/initial-external-office-approval/pages/initial-external-office-approval/initial-external-office-approval.component';
 import {
   FinalExternalOfficeApprovalComponent
 } from '@app/modules/office-services/pages/final-external-office-approval/final-external-office-approval.component';
