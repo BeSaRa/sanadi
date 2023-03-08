@@ -36,6 +36,7 @@ enum SystemPathsEnum {
   CHARITY_ORGANIZATION_UPDATE = '/home/services/charity-organization-update',
   NPO_MANAGEMENT = '/home/services/npo-management',
   FOREIGN_COUNTRIES_PROJECTS = '/home/services/foreign-countries-projects',
+  EXTERNAL_ORG_AFFILIATION_REQUEST = '/home/services/external-org-affiliation',
 }
 
 export const newNavigationMenuList = [
@@ -990,6 +991,59 @@ export const newNavigationMenuList = [
     permissionGroup: null,
     parent: 1801,
     group: 'service_' + CaseTypes.FOREIGN_COUNTRIES_PROJECTS,
+    itemOrder: 3,
+    svg: null
+  },
+  {
+    id: 1901,
+    langKey: 'menu_external_org_affiliation_request',
+    path: SystemPathsEnum.EXTERNAL_ORG_AFFILIATION_REQUEST,
+    icon: 'mdi-wallet-membership',
+    isSvg: false,
+    caseType: CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST,
+    permission: '',
+    permissionGroup: PermissionGroupsEnum.EXTERNAL_ORG_AFFILIATION_REQUEST_SERVICES_PERMISSION_GROUP,
+    parent: null,
+    group: 'main',
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 1902,
+    langKey: serviceAddUpdateLabel,
+    path: SystemPathsEnum.EXTERNAL_ORG_AFFILIATION_REQUEST + '/service',
+    icon: serviceAddUpdateIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.EXTERNAL_ORG_AFFILIATION_REQUEST,
+    permissionGroup: null,
+    parent: 1901,
+    group: 'service_' + CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST,
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 1903,
+    langKey: serviceSearchLabel,
+    path: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST),
+    icon: serviceSearchIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.SEARCH_SERVICE_EXTERNAL_ORG_AFFILIATION_REQUEST,
+    permissionGroup: null,
+    parent: 1901,
+    group: 'service_' + CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST,
+    itemOrder: 2,
+    svg: null
+  },
+  {
+    id: 1904,
+    langKey: serviceOutputLabel,
+    path: SystemPathsEnum.EXTERNAL_ORG_AFFILIATION_REQUEST + '/outputs',
+    icon: serviceOutputIcon,
+    isSvg: false,
+    permission: Constants.SERVICE_OUTPUT_PERMISSION,
+    permissionGroup: null,
+    parent: 1901,
+    group: 'service_' + CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST,
     itemOrder: 3,
     svg: null
   },

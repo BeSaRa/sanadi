@@ -1,32 +1,32 @@
-import { UserClickOn } from '@app/enums/user-click-on.enum';
-import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
-import {OpenFrom} from '@app/enums/open-from.enum';
-import {EmployeeService} from '@app/services/employee.service';
-import {CommonUtils} from '@app/helpers/common-utils';
-import {ExternalOrgAffiliationResult} from '@app/models/external-org-affiliation-result';
+import { UserClickOn } from '@enums/user-click-on.enum';
+import {CommonCaseStatus} from '@enums/common-case-status.enum';
+import {OpenFrom} from '@enums/open-from.enum';
+import {EmployeeService} from '@services/employee.service';
+import {CommonUtils} from '@helpers/common-utils';
+import {ExternalOrgAffiliationResult} from '@models/external-org-affiliation-result';
 import {catchError, exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
-import {ExternalOrgAffiliationSearchCriteria} from '@app/models/external-org-affiliation-search-criteria';
+import {ExternalOrgAffiliationSearchCriteria} from '@models/external-org-affiliation-search-criteria';
 import {LicenseService} from '@services/license.service';
-import {Lookup} from '@app/models/lookup';
-import {IKeyValue} from '@app/interfaces/i-key-value';
+import {Lookup} from '@models/lookup';
+import {IKeyValue} from '@contracts/i-key-value';
 import {ReadinessStatus} from '@app/types/types';
-import {ContactOfficer} from '@app/models/contact-officer';
-import {CountryService} from '@app/services/country.service';
-import {Country} from '@app/models/country';
-import {ToastService} from '@app/services/toast.service';
-import {ExternalOrgAffiliation} from '@app/models/external-org-affiliation';
+import {ContactOfficer} from '@models/contact-officer';
+import {CountryService} from '@services/country.service';
+import {Country} from '@models/country';
+import {ToastService} from '@services/toast.service';
+import {ExternalOrgAffiliation} from '@models/external-org-affiliation';
 import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
 import {AfterViewInit, ChangeDetectorRef, Component, ViewChild} from '@angular/core';
 import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {SaveTypes} from '@app/enums/save-types';
-import {LangService} from '@app/services/lang.service';
+import {OperationTypes} from '@enums/operation-types.enum';
+import {SaveTypes} from '@enums/save-types';
+import {LangService} from '@services/lang.service';
 import {Observable, of, Subject} from 'rxjs';
-import {ExternalOrgAffiliationService} from '@app/services/external-org-affiliation.service';
-import {LookupService} from '@app/services/lookup.service';
-import {DialogService} from '@app/services/dialog.service';
-import {AffiliationRequestType} from '@app/enums/service-request-types';
-import {BankAccountComponent} from '@app/modules/services/shared-services/components/bank-account/bank-account.component';
+import {ExternalOrgAffiliationService} from '@services/external-org-affiliation.service';
+import {LookupService} from '@services/lookup.service';
+import {DialogService} from '@services/dialog.service';
+import {AffiliationRequestType} from '@enums/service-request-types';
+import {BankAccountComponent} from '@modules/services/shared-services/components/bank-account/bank-account.component';
 import {
   ExecutiveManagementComponent
 } from '@app/shared/components/executive-management/executive-management.component';
@@ -156,6 +156,10 @@ export class ExternalOrgAffiliationComponent extends EServicesGenericComponent<E
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
+    if (!this.requestTypeField.value) {
+      this.dialog.error(this.lang.map.msg_please_select_x_to_continue.change({x: this.lang.map.request_type}));
+      return false;
+    }
     if (saveType === SaveTypes.DRAFT) {
       return true;
     }
