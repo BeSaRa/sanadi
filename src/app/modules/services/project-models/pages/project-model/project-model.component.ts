@@ -8,55 +8,55 @@ import {
   ValidatorFn,
   Validators
 } from '@angular/forms';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {SaveTypes} from '@app/enums/save-types';
+import {OperationTypes} from '@enums/operation-types.enum';
+import {SaveTypes} from '@enums/save-types';
 import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
-import {ProjectModel} from '@app/models/project-model';
+import {ProjectModel} from '@models/project-model';
 import {LangService} from '@services/lang.service';
 import {ProjectModelService} from '@services/project-model.service';
 import {Observable, of, Subject} from 'rxjs';
 import {CountryService} from '@services/country.service';
-import {Country} from '@app/models/country';
+import {Country} from '@models/country';
 import {catchError, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {LookupService} from '@services/lookup.service';
-import {Lookup} from '@app/models/lookup';
+import {Lookup} from '@models/lookup';
 import {SDGoalService} from '@services/sdgoal.service';
-import {SDGoal} from '@app/models/sdgoal';
-import {ProjectComponent} from '@app/models/project-component';
+import {SDGoal} from '@models/sdgoal';
+import {ProjectComponent} from '@models/project-component';
 import {CustomValidators} from '@app/validators/custom-validators';
-import {DomainTypes} from '@app/enums/domain-types';
+import {DomainTypes} from '@enums/domain-types';
 import {IDacOchaFields} from '@contracts/idac-ocha-fields';
 import {ToastService} from '@services/toast.service';
 import {DialogService} from '@services/dialog.service';
 import {EmployeeService} from '@services/employee.service';
 import {AttachmentsComponent} from '@app/shared/components/attachments/attachments.component';
-import {ProjectModelRequestType} from '@app/enums/service-request-types';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {OpenFrom} from '@app/enums/open-from.enum';
+import {ProjectModelRequestType} from '@enums/service-request-types';
+import {UserClickOn} from '@enums/user-click-on.enum';
+import {OpenFrom} from '@enums/open-from.enum';
 import {IKeyValue} from '@contracts/i-key-value';
 import {ILanguageKeys} from '@contracts/i-language-keys';
 import {CommonUtils} from '@helpers/common-utils';
-import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
+import {FileIconsEnum} from '@enums/file-extension-mime-types-icons.enum';
 import {DialogRef} from '@app/shared/models/dialog-ref';
-import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import {CommonCaseStatus} from '@enums/common-case-status.enum';
 import {DacOchaService} from '@services/dac-ocha.service';
-import {AdminLookup} from '@app/models/admin-lookup';
+import {AdminLookup} from '@models/admin-lookup';
 import {AidLookupService} from '@services/aid-lookup.service';
-import {AidLookup} from '@app/models/aid-lookup';
-import {ExecutionFields} from '@app/enums/execution-fields';
+import {AidLookup} from '@models/aid-lookup';
+import {ExecutionFields} from '@enums/execution-fields';
 import {IInternalExternalExecutionFields} from '@contracts/iinternal-external-execution-fields';
 import {AdminLookupService} from '@services/admin-lookup.service';
-import {AdminLookupTypeEnum} from '@app/enums/admin-lookup-type-enum';
-import {EvaluationIndicator} from '@app/models/evaluation-indicator';
-import {AdminResult} from '@app/models/admin-result';
-import {ProjectModelForeignCountriesProject} from '@app/models/project-model-foreign-countries-project';
-import {ForeignCountriesProjectsNeed} from '@app/models/foreign-countries-projects-need';
+import {AdminLookupTypeEnum} from '@enums/admin-lookup-type-enum';
+import {EvaluationIndicator} from '@models/evaluation-indicator';
+import {AdminResult} from '@models/admin-result';
+import {ProjectModelForeignCountriesProject} from '@models/project-model-foreign-countries-project';
+import {ForeignCountriesProjectsNeed} from '@models/foreign-countries-projects-need';
 import {ForeignCountriesProjectsService} from '@services/foreign-countries-projects.service';
-import {ProjectAddress} from '@app/models/project-address';
+import {ProjectAddress} from '@models/project-address';
 import {ICoordinates} from '@contracts/ICoordinates';
-import {CollectionItem} from '@app/models/collection-item';
+import {CollectionItem} from '@models/collection-item';
 import {ServiceDataService} from '@services/service-data.service';
-import {CaseTypes} from '@app/enums/case-types.enum';
+import {CaseTypes} from '@enums/case-types.enum';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -262,7 +262,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     this.serviceDataService.loadByCaseType(CaseTypes.EXTERNAL_PROJECT_MODELS).subscribe(serviceData => {
       let settings: { QatarId: number } = JSON.parse(serviceData.customSettings);
       this.qatarId = settings.QatarId;
-      console.log('qatarId', this.qatarId);
+      // console.log('qatarId', this.qatarId);
     });
   }
 
