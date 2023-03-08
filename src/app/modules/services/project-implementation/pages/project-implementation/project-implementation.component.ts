@@ -230,9 +230,8 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
   }
 
   ngAfterViewInit(){
-    this.beneficiaryCountry.setValue(this.model?.beneficiaryCountry);
-    this.implementingAgencyType.setValue(this.model?.implementingAgencyType);
-    this.cd.detectChanges();
+
+    // this.cd.detectChanges();
   }
   _getNewInstance(): ProjectImplementation {
     return new ProjectImplementation()
@@ -282,7 +281,10 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     if (this.operation !== OperationTypes.CREATE) {
       this.licenseStartDate.setValue(this.licenseStartDate.value);
       this.implementingAgencyList.setValue(this.implementingAgencyList.value);
+      this.beneficiaryCountry.setValue(this.model?.beneficiaryCountry);
+      this.implementingAgencyType.setValue(this.model?.implementingAgencyType);
     }
+
   }
 
   loadLicenseById(): void {
@@ -715,7 +717,13 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       this.handleCustomFormReadonly();
       return;
     }
-
+    if (this.model?.caseStatus === CommonCaseStatus.DRAFT ||
+        this.model?.caseStatus === CommonCaseStatus.NEW
+      ){
+      this.readonly = false;
+      this.handleCustomFormReadonly();
+      return;
+    }
     let caseStatus = model.getCaseStatus();
     if (caseStatus == CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.FINAL_REJECTION || caseStatus === CommonCaseStatus.CANCELLED) {
       this.readonly = true;
@@ -747,6 +755,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
         }
       }
     } else if (this.openFrom === OpenFrom.SEARCH) {
+
       if (this.model?.isSubmissionMechanismRegistration() || this.model?.isSubmissionMechanismNotification()) {
         this.readonly = true;
       } else {

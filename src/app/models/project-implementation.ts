@@ -226,7 +226,7 @@ export class ProjectImplementation
     return this.submissionMechanism === SubmissionMechanisms.REGISTRATION;
   }
   private _isCustomApprove() : boolean{
-    if(this.submissionMechanism === SubmissionMechanisms.REGISTRATION){
+    if(this.isSubmissionMechanismRegistration()){
       if(this.requestType === AllRequestTypesEnum.NEW ||
         this.requestType === AllRequestTypesEnum.EXTEND)
         return true;
