@@ -17,7 +17,6 @@ import {
 } from '@app/shared/components/organization-officers/organization-officers.component';
 import {FormlyBootstrapModule} from '@ngx-formly/bootstrap';
 import {FormlyModule} from '@ngx-formly/core';
-import {EmploymentComponent} from './pages/employment/employment.component';
 import {NpoBankAccountComponent} from './pages/npo-management/npo-bank-account/npo-bank-account.component';
 import {NpoManagementComponent} from './pages/npo-management/npo-management.component';
 import {
@@ -49,15 +48,12 @@ import {
 import {
   CoordinationWithOrgPopupComponent
 } from './popups/coordination-with-org-popup/coordination-with-org-popup.component';
-import {EmployeeFormPopupComponent} from './popups/employee-form-popup/employee-form-popup.component';
-import {EmploymentApproveComponent} from './popups/employment-approve/employment-approve.component';
 import {
   FollowupDateApprovePopupComponent
 } from './popups/follow-up-date-approve-popup/follow-up-date-approve-popup.component';
 import {
   OrganizationsEntitiesSupportPopupComponent
 } from './popups/organizations-entities-support-popup/organizations-entities-support-popup.component';
-import {EmployeesDataComponent} from './shared/employees-data/employees-data.component';
 import {RealBeneficiariesComponent} from './shared/real-beneficiaries/real-beneficiaries.component';
 import {CharityReportsComponent} from './shared/risk-reports/risk-reports.component';
 import {FounderMembersComponent} from './pages/npo-management/founder-members/founder-members.component';
@@ -75,19 +71,15 @@ import {SharedServicesModule} from '@modules/services/shared-services/shared-ser
   declarations: [
     GeneralServicesComponent,
     ForeignCountriesProjectsApprovalPopupComponent,
-    EmploymentApproveComponent,
     NpoContactOfficerComponent,
     ExternalOrgAffiliationComponent,
     ExternalOrgAffiliationApprovePopupComponent,
     NpoManagementApprovePopupComponent,
-    EmploymentComponent,
     ForeignCountriesProjectsComponent,
     FollowupDateApprovePopupComponent,
     CoordinationWithOrganizationsRequestComponent,
-    EmployeeFormPopupComponent,
     NpoManagementComponent,
     FounderMembersComponent,
-    EmployeesDataComponent,
     NpoBankAccountComponent,
     CharityOrganizationUpdateComponent,
     OrganizationOfficersComponent,

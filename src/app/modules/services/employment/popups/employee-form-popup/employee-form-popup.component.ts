@@ -1,36 +1,36 @@
-import { UserClickOn } from '@app/enums/user-click-on.enum';
-import { DialogRef } from '@app/shared/models/dialog-ref';
-import { AdminLookupService } from '@services/admin-lookup.service';
-import { AdminLookup } from './../../../../models/admin-lookup';
-import { AdminResult } from './../../../../models/admin-result';
-import { CommonService } from './../../../../services/common.service';
-import { EmployeeService } from '@app/services/employee.service';
-import { Employment } from '@app/models/employment';
-import { EmploymentService } from '@app/services/employment.service';
-import { IMyInputFieldChanged } from 'angular-mydatepicker';
-import { OperationTypes } from '@app/enums/operation-types.enum';
-import { JobTitle } from '@app/models/job-title';
-import { EmploymentRequestType } from '@app/enums/service-request-types';
-import { DialogService } from "@app/services/dialog.service";
-import { DatepickerOptionsMap } from "@app/types/types";
-import { DateUtils } from "@app/helpers/date-utils";
-import { LookupService } from "@app/services/lookup.service";
-import { UntypedFormGroup, UntypedFormBuilder, Validators, UntypedFormControl } from "@angular/forms";
-import { LangService } from "@app/services/lang.service";
-import { Component, Inject, OnInit, ViewChild } from "@angular/core";
-import { ContractTypes } from "@app/enums/contract-types.enum";
-import { ContractStatus } from "@app/enums/contract-status.enum";
-import { Employee } from '@app/models/employee';
-import { Lookup } from '@app/models/lookup';
-import { IGridAction } from '@app/interfaces/i-grid-action';
-import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
-import { CustomValidators } from '@app/validators/custom-validators';
-import { IdentificationType } from '@app/enums/identification-type.enum';
-import { ContractLocationTypes } from '@app/enums/contract-location-types.enum';
-import { EmploymentCategory } from '@app/enums/employment-category.enum';
-import { EmployeesDataComponent } from '../../shared/employees-data/employees-data.component';
-import { ImplementingAgencyTypes } from '@app/enums/implementing-agency-types.enum';
-import { AdminLookupTypeEnum } from '@app/enums/admin-lookup-type-enum';
+import {UserClickOn} from '@enums/user-click-on.enum';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {AdminLookupService} from '@services/admin-lookup.service';
+import {AdminLookup} from '@models/admin-lookup';
+import {AdminResult} from '@models/admin-result';
+import {CommonService} from '@services/common.service';
+import {EmployeeService} from '@services/employee.service';
+import {Employment} from '@models/employment';
+import {EmploymentService} from '@services/employment.service';
+import {IMyInputFieldChanged} from 'angular-mydatepicker';
+import {OperationTypes} from '@enums/operation-types.enum';
+import {JobTitle} from '@models/job-title';
+import {EmploymentRequestType} from '@enums/service-request-types';
+import {DialogService} from "@services/dialog.service";
+import {DatepickerOptionsMap} from "@app/types/types";
+import {DateUtils} from "@helpers/date-utils";
+import {LookupService} from "@services/lookup.service";
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from "@angular/forms";
+import {LangService} from "@services/lang.service";
+import {Component, Inject, OnInit, ViewChild} from "@angular/core";
+import {ContractTypes} from "@enums/contract-types.enum";
+import {ContractStatus} from "@enums/contract-status.enum";
+import {Employee} from '@models/employee';
+import {Lookup} from '@models/lookup';
+import {IGridAction} from '@contracts/i-grid-action';
+import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {IdentificationType} from '@enums/identification-type.enum';
+import {ContractLocationTypes} from '@enums/contract-location-types.enum';
+import {EmploymentCategory} from '@enums/employment-category.enum';
+import {EmployeesDataComponent} from '@modules/services/employment/shared/employees-data/employees-data.component';
+import {ImplementingAgencyTypes} from '@enums/implementing-agency-types.enum';
+import {AdminLookupTypeEnum} from '@enums/admin-lookup-type-enum';
 
 @Component({
   selector: "app-employee-form-popup",
@@ -50,9 +50,9 @@ export class EmployeeFormPopupComponent implements OnInit {
     contractExpiryDate: DateUtils.getDatepickerOptions({
       disablePeriod: "none",
     }),
-    workStartDate: DateUtils.getDatepickerOptions({ disablePeriod: "none" }),
-    workEndDate: DateUtils.getDatepickerOptions({ disablePeriod: "none" }),
-    expIdPass: DateUtils.getDatepickerOptions({ disablePeriod: "none" }),
+    workStartDate: DateUtils.getDatepickerOptions({disablePeriod: "none"}),
+    workEndDate: DateUtils.getDatepickerOptions({disablePeriod: "none"}),
+    expIdPass: DateUtils.getDatepickerOptions({disablePeriod: "none"}),
   };
   GenderList: Lookup[] = this.lookupService.listByCategory.Gender.slice().sort(
     (a, b) => a.lookupKey - b.lookupKey
@@ -117,6 +117,7 @@ export class EmployeeFormPopupComponent implements OnInit {
       },
     },
   ];
+
   constructor(
     public lang: LangService,
     private fb: UntypedFormBuilder,
@@ -135,7 +136,8 @@ export class EmployeeFormPopupComponent implements OnInit {
       operation: number,
       jobTitleList: JobTitle[]
     }
-  ) { }
+  ) {
+  }
 
   ngOnInit() {
     this._buildForm();
@@ -195,6 +197,7 @@ export class EmployeeFormPopupComponent implements OnInit {
       });
     }
   }
+
   submit() {
     if (!this.isApproval()) {
       this.employeesList = this.employeesList.map((e: Partial<Employee>) => {
@@ -214,12 +217,15 @@ export class EmployeeFormPopupComponent implements OnInit {
       }
     }
   }
+
   get selectedJobTitle() {
     return this.JobTitleList.find(jt => jt.id == this.form.value.jobTitleId)
   }
+
   isCreateOperation() {
     return this.data.operation === OperationTypes.CREATE;
   }
+
   setEmployee() {
     if (this.form.valid) {
       let index = this.employeesList.findIndex(e =>
@@ -230,14 +236,14 @@ export class EmployeeFormPopupComponent implements OnInit {
         this.dialog.error(this.lang.map.msg_user_identifier_is_already_exist);
         return
       }
-      index = this.employeesList.findIndex(e => (this.form.value.jobNumber  && e.jobNumber  == this.form.value.jobNumber ));
+      index = this.employeesList.findIndex(e => (this.form.value.jobNumber && e.jobNumber == this.form.value.jobNumber));
       if (index != -1 && this.employeesList[index].id != this.form.value.id) {
         this.dialog.error(this.lang.map.msg_user_job_number_is_already_exist);
         return
       }
       if (!this.form.value.id) {
         this.employeesList = [
-          { ...this.form.value, jobTitleInfo: this.selectedJobTitle, id: --this.starterId },
+          {...this.form.value, jobTitleInfo: this.selectedJobTitle, id: --this.starterId},
           ...this.employeesList,
         ];
       } else {
@@ -255,9 +261,11 @@ export class EmployeeFormPopupComponent implements OnInit {
       this.dialog.error(this.lang.map.msg_all_required_fields_are_filled);
     }
   }
+
   canDraftModel() {
     return this.data.model?.canDraft();
   }
+
   closeDialog(): void {
     const sub = this.dialog.confirm(this.lang.map.msg_confirm_continue)
       .onAfterClose$
@@ -272,11 +280,13 @@ export class EmployeeFormPopupComponent implements OnInit {
   openDateMenu(ref: any) {
     if (this.isEditRequestTypeAllowed) ref.toggleCalendar();
   }
+
   clearAll() {
     this.employeesList.splice(0, this.employeesList.length);
     this.employeesList = this.employeesList.slice();
     this.reset();
   }
+
   reset() {
     this.form.reset();
     this.handleIdentityNumberValidationsByIdentificationType();
@@ -290,6 +300,7 @@ export class EmployeeFormPopupComponent implements OnInit {
     }
     this.officeId.updateValueAndValidity();
   }
+
   handleContractExpireDateValidationsByContractType(): void {
     // set validators as empty
     this.contractExpiryDate?.setValidators([]);
@@ -298,6 +309,7 @@ export class EmployeeFormPopupComponent implements OnInit {
     }
     this.contractExpiryDate.updateValueAndValidity();
   }
+
   handleEndDateValidationsByContractStatus(): void {
     // set validators as empty
     this.workEndDate?.setValidators([]);
@@ -306,6 +318,7 @@ export class EmployeeFormPopupComponent implements OnInit {
     }
     this.workEndDate.updateValueAndValidity();
   }
+
   handleIdentityNumberValidationsByIdentificationType(): void {
     // set validators as empty
     this.identificationNumber?.setValidators([]);
@@ -320,6 +333,7 @@ export class EmployeeFormPopupComponent implements OnInit {
     this.identificationNumber.updateValueAndValidity();
     this.passportNumber.updateValueAndValidity();
   }
+
   onDateChange(event: IMyInputFieldChanged, fromFieldName: string, toFieldName: string): void {
     DateUtils.setRelatedMinMaxDate({
       fromFieldName,
@@ -362,24 +376,31 @@ export class EmployeeFormPopupComponent implements OnInit {
   isIdentificationNumberType() {
     return this.identificationType.value == IdentificationType.Identification
   }
+
   isPassportNumberType() {
     return this.identificationType.value == IdentificationType.Passport
   }
+
   isInterim() {
     return this.contractType.value == ContractTypes.Interim;
   }
+
   isExternal() {
     return this.contractLocationType.value == ContractLocationTypes.External;
   }
+
   isApproval() {
     return this.category.value == EmploymentCategory.APPROVAL;
   }
+
   isFinishedContract() {
     return this.contractStatus.value != ContractStatus.Finished;
   }
+
   isNewRequestType() {
     return this.requestType.value == EmploymentRequestType.NEW
   }
+
   cancelRequestType() {
     return this.requestType.value == EmploymentRequestType.CANCEL;
   }
@@ -399,42 +420,55 @@ export class EmployeeFormPopupComponent implements OnInit {
   get contractType() {
     return this.form.controls.contractType as UntypedFormControl
   }
+
   get workStartDate() {
     return this.form.controls.workStartDate as UntypedFormControl
   }
+
   get workEndDate() {
     return this.form.controls.workEndDate as UntypedFormControl;
   }
+
   get contractExpiryDate() {
     return this.form.controls.contractExpiryDate as UntypedFormControl;
   }
+
   get officeId() {
     return this.form.controls.officeId as UntypedFormControl;
   }
+
   get contractStatus() {
     return this.form.controls.contractStatus as UntypedFormControl;
   }
+
   get contractLocationType() {
     return this.form.controls.contractLocationType as UntypedFormControl;
   }
+
   get category() {
     return this.data.parentForm.controls.category as UntypedFormControl;
   }
+
   get requestType() {
     return this.data.parentForm.controls.requestType as UntypedFormControl;
   }
+
   get identificationType() {
     return this.form.controls.identificationType as UntypedFormControl;
   }
+
   get identificationNumber() {
     return this.form.controls.identificationNumber as UntypedFormControl;
   }
+
   get passportNumber() {
     return this.form.controls.passportNumber as UntypedFormControl;
   }
+
   get jobTitleId() {
     return this.form.controls.jobTitleId as UntypedFormControl;
   }
+
   get id() {
     return this.form.controls.id.value;
   }
