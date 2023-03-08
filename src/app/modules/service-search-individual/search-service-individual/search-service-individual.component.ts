@@ -92,6 +92,11 @@ export class SearchServiceIndividualComponent {
 
   private hasSearchPermission(caseType: number): boolean {
     // return this.employeeService.userCanManage(caseType);
+
+    // internal project license is removed from system but still case type is available
+    if (caseType === CaseTypes.INTERNAL_PROJECT_LICENSE) {
+      return false;
+    }
     return this.employeeService.checkPermissions(EServicePermissionsEnum.SEARCH_SERVICE_PREFIX + CaseTypes[caseType]);
   }
 

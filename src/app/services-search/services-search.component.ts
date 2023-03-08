@@ -91,6 +91,10 @@ export class ServicesSearchComponent implements OnInit, OnDestroy {
   }
 
   private hasSearchPermission(caseType: number): boolean {
+    // internal project license is removed from system but still case type is available
+    if (caseType === CaseTypes.INTERNAL_PROJECT_LICENSE) {
+      return false;
+    }
     return this.employeeService.userCanManage(caseType);
   }
 

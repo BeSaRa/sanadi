@@ -99,6 +99,17 @@ const routes: Routes = [
         } as Partial<ICustomRouteData>
       },
       {
+        path: 'services/internal-project-license',
+        canActivate: [NewServicePermissionGuard],
+        loadChildren: () => import('./modules/services/internal-project-license/internal-project-license.module')
+          .then(m => m.InternalProjectLicenseModule),
+        data: {
+          permissionGroup: PermissionGroupsEnum.INTERNAL_PROJECT_LICENSE_SERVICES_PERMISSION_GROUP,
+          checkAnyPermission: true,
+          caseType: CaseTypes.INTERNAL_PROJECT_LICENSE
+        } as Partial<ICustomRouteData>
+      },
+      {
         path: 'services/search',
         loadChildren: () => import('@modules/service-search-individual/service-search-individual.module').then(m => m.ServiceSearchIndividualModule),
       },

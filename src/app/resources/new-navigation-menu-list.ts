@@ -22,6 +22,7 @@ enum SystemPathsEnum {
   PROJECT_IMPLEMENTATION = '/home/services/project-implementation',
   PROJECT_FUNDRAISING = '/home/services/project-fundraising',
   PROJECT_MODELS = '/home/services/project-models',
+  // INTERNAL_PROJECT_LICENSE = '/home/services/internal-project-license',
 }
 
 export const newNavigationMenuList = [
@@ -343,6 +344,59 @@ export const newNavigationMenuList = [
     itemOrder: 3,
     svg: null
   },
+  /*{
+    id: 100001,
+    langKey: 'menu_internal_project_license',
+    path: SystemPathsEnum.INTERNAL_PROJECT_LICENSE,
+    icon: 'mdi-license',
+    isSvg: false,
+    caseType: CaseTypes.INTERNAL_PROJECT_LICENSE,
+    permission: '',
+    permissionGroup: PermissionGroupsEnum.INTERNAL_PROJECT_LICENSE_SERVICES_PERMISSION_GROUP,
+    parent: null,
+    group: 'main',
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 100002,
+    langKey: serviceAddUpdateLabel,
+    path: SystemPathsEnum.INTERNAL_PROJECT_LICENSE + '/service',
+    icon: serviceAddUpdateIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.INTERNAL_PROJECT_LICENSE,
+    permissionGroup: null,
+    parent: 100001,
+    group: 'service_' + CaseTypes.INTERNAL_PROJECT_LICENSE,
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 100003,
+    langKey: serviceSearchLabel,
+    path: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.INTERNAL_PROJECT_LICENSE),
+    icon: serviceSearchIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.SEARCH_SERVICE_INTERNAL_PROJECT_LICENSE,
+    permissionGroup: null,
+    parent: 100001,
+    group: 'service_' + CaseTypes.INTERNAL_PROJECT_LICENSE,
+    itemOrder: 2,
+    svg: null
+  },
+  {
+    id: 100004,
+    langKey: serviceOutputLabel,
+    path: SystemPathsEnum.INTERNAL_PROJECT_LICENSE + '/outputs',
+    icon: serviceOutputIcon,
+    isSvg: false,
+    permission: Constants.SERVICE_OUTPUT_PERMISSION,
+    permissionGroup: null,
+    parent: 100001,
+    group: 'service_' + CaseTypes.INTERNAL_PROJECT_LICENSE,
+    itemOrder: 3,
+    svg: null
+  },*/
 
 
   {
