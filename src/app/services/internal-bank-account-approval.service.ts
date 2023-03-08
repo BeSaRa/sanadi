@@ -25,7 +25,7 @@ import {
 import { BankService } from '@services/bank.service';
 import {
   SelectEmployeePopupComponent
-} from '@app/modules/projects/popups/select-employee-popup/select-employee-popup.component';
+} from '@app/modules/services/internal-bank-account-approval/popups/select-employee-popup/select-employee-popup.component';
 import { Lookup } from '@app/models/lookup';
 import { CastResponse, CastResponseContainer } from '@decorators/cast-response';
 import { BaseGenericEService } from "@app/generics/base-generic-e-service";
