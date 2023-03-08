@@ -1,9 +1,9 @@
 import {AfterViewInit, ChangeDetectorRef, Component} from '@angular/core';
 import {AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {SaveTypes} from '@app/enums/save-types';
+import {OperationTypes} from '@enums/operation-types.enum';
+import {SaveTypes} from '@enums/save-types';
 import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
-import {TransferringIndividualFundsAbroad} from '@app/models/transferring-individual-funds-abroad';
+import {TransferringIndividualFundsAbroad} from '@models/transferring-individual-funds-abroad';
 import {LangService} from '@services/lang.service';
 import {TransferringIndividualFundsAbroadService} from '@services/transferring-individual-funds-abroad.service';
 import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
@@ -11,35 +11,35 @@ import {LookupService} from '@services/lookup.service';
 import {DialogService} from '@services/dialog.service';
 import {ToastService} from '@services/toast.service';
 import {LicenseService} from '@services/license.service';
-import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
-import {OpenFrom} from '@app/enums/open-from.enum';
+import {CommonCaseStatus} from '@enums/common-case-status.enum';
+import {OpenFrom} from '@enums/open-from.enum';
 import {EmployeeService} from '@services/employee.service';
-import {Lookup} from '@app/models/lookup';
+import {Lookup} from '@models/lookup';
 import {DatepickerControlsMap, DatepickerOptionsMap} from '@app/types/types';
 import {DateUtils} from '@helpers/date-utils';
-import {FormManager} from '@app/models/form-manager';
+import {FormManager} from '@models/form-manager';
 import {CustomValidators} from '@app/validators/custom-validators';
-import {TransferFundsExecutiveManagement} from '@app/models/transfer-funds-executive-management';
+import {TransferFundsExecutiveManagement} from '@models/transfer-funds-executive-management';
 import {exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
-import {TransfereeTypeEnum} from '@app/enums/transferee-type-enum';
-import {AdminLookupTypeEnum} from '@app/enums/admin-lookup-type-enum';
-import {AdminLookup} from '@app/models/admin-lookup';
-import {TransferFundsCharityPurpose} from '@app/models/transfer-funds-charity-purpose';
-import {AdminResult} from '@app/models/admin-result';
+import {TransfereeTypeEnum} from '@enums/transferee-type-enum';
+import {AdminLookupTypeEnum} from '@enums/admin-lookup-type-enum';
+import {AdminLookup} from '@models/admin-lookup';
+import {TransferFundsCharityPurpose} from '@models/transfer-funds-charity-purpose';
+import {AdminResult} from '@models/admin-result';
 import {DacOchaService} from '@services/dac-ocha.service';
-import {DomainTypes} from '@app/enums/domain-types';
+import {DomainTypes} from '@enums/domain-types';
 import {SelectedLicenseInfo} from '@contracts/selected-license-info';
-import {TransferringIndividualFundsAbroadRequestTypeEnum} from '@app/enums/service-request-types';
+import {TransferringIndividualFundsAbroadRequestTypeEnum} from '@enums/service-request-types';
 import {CountryService} from '@services/country.service';
-import {Country} from '@app/models/country';
-import {InternalProjectLicenseResult} from '@app/models/internal-project-license-result';
+import {Country} from '@models/country';
+import {InternalProjectLicenseResult} from '@models/internal-project-license-result';
 import {SharedService} from '@services/shared.service';
-import {ReceiverOrganization} from '@app/models/receiver-organization';
-import {ReceiverPerson} from '@app/models/receiver-person';
+import {ReceiverOrganization} from '@models/receiver-organization';
+import {ReceiverPerson} from '@models/receiver-person';
 import {ITransferFundsAbroadComponent} from '@contracts/i-transfer-funds-abroad-component';
-import {UserClickOn} from '@app/enums/user-click-on.enum'
-import {Payment} from '@app/models/payment';
-import {TransferTypeEnum} from '@app/enums/transfer-type-enum';
+import {UserClickOn} from '@enums/user-click-on.enum'
+import {Payment} from '@models/payment';
+import {TransferTypeEnum} from '@enums/transfer-type-enum';
 
 @Component({
   selector: 'transferring-individual-funds-abroad',
