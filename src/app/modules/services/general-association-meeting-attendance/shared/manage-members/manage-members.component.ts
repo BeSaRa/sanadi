@@ -1,17 +1,17 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {GeneralAssociationExternalMember} from '@app/models/general-association-external-member';
+import {GeneralAssociationExternalMember} from '@models/general-association-external-member';
 import {DialogService} from '@services/dialog.service';
 import {LangService} from '@services/lang.service';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
-import {JobTitle} from '@app/models/job-title';
+import {JobTitle} from '@models/job-title';
 import {JobTitleService} from '@services/job-title.service';
-import {AdminResult} from '@app/models/admin-result';
+import {AdminResult} from '@models/admin-result';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {ILanguageKeys} from '@contracts/i-language-keys';
 import {exhaustMap, filter, map, tap} from 'rxjs/operators';
 import {Observable, of} from 'rxjs';
 import {GeneralAssociationMeetingAttendanceService} from '@services/general-association-meeting-attendance.service';
-import {NpoEmployee} from '@app/models/npo-employee';
+import {NpoEmployee} from '@models/npo-employee';
 
 @Component({
   selector: 'manage-members',

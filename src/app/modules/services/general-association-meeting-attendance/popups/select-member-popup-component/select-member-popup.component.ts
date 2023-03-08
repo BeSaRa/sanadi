@@ -1,6 +1,6 @@
 import {Component, Inject} from '@angular/core';
 import {ILanguageKeys} from '@contracts/i-language-keys';
-import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
+import {FileIconsEnum} from '@enums/file-extension-mime-types-icons.enum';
 import {LangService} from '@services/lang.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';

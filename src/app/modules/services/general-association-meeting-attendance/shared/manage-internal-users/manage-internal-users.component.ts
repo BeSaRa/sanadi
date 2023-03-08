@@ -6,16 +6,16 @@ import { GeneralAssociationMeetingAttendanceService } from '@services/general-as
 import { CustomValidators } from '@app/validators/custom-validators';
 import { Observable, of } from 'rxjs';
 import { exhaustMap, filter, map, tap } from 'rxjs/operators';
-import { GeneralAssociationInternalMember } from '@app/models/general-association-internal-member';
+import { GeneralAssociationInternalMember } from '@models/general-association-internal-member';
 import { InternalUserService } from '@services/internal-user.service';
-import { GeneralAssociationInternalMemberTypeEnum } from '@app/enums/general-association-internal-member-type-enum';
-import { InternalUser } from '@app/models/internal-user';
-import { GeneralAssociationMeetingAttendance } from '@app/models/general-association-meeting-attendance';
-import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
-import { GeneralAssociationMeetingStepNameEnum } from '@app/enums/general-association-meeting-step-name-enum';
-import { MeetingMemberTaskStatus } from '@app/models/meeting-member-task-status';
-import { MeetingAttendanceReport } from '@app/models/meeting-attendance-report';
-import { GeneralMeetingAttendanceNote } from '@app/models/general-meeting-attendance-note';
+import { GeneralAssociationInternalMemberTypeEnum } from '@enums/general-association-internal-member-type-enum';
+import { InternalUser } from '@models/internal-user';
+import { GeneralAssociationMeetingAttendance } from '@models/general-association-meeting-attendance';
+import { CommonCaseStatus } from '@enums/common-case-status.enum';
+import { GeneralAssociationMeetingStepNameEnum } from '@enums/general-association-meeting-step-name-enum';
+import { MeetingMemberTaskStatus } from '@models/meeting-member-task-status';
+import { MeetingAttendanceReport } from '@models/meeting-attendance-report';
+import { GeneralMeetingAttendanceNote } from '@models/general-meeting-attendance-note';
 
 @Component({
   selector: 'manage-internal-users',

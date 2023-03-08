@@ -25,6 +25,7 @@ enum SystemPathsEnum {
   // INTERNAL_PROJECT_LICENSE = '/home/services/internal-project-license',
   GENERAL_PROCESS_NOTIFICATION = '/home/services/general-process-notification',
   AWARENESS_ACTIVITY_SUGGESTION = '/home/services/awareness-activity-suggestion',
+  GENERAL_ASSOCIATION_MEETING_ATTENDANCE = '/home/services/general-association-meeting-attendance',
 }
 
 export const newNavigationMenuList = [
@@ -449,6 +450,59 @@ export const newNavigationMenuList = [
     permissionGroup: null,
     parent: 801,
     group: 'service_' + CaseTypes.AWARENESS_ACTIVITY_SUGGESTION,
+    itemOrder: 3,
+    svg: null
+  },
+  {
+    id: 901,
+    langKey: 'menu_general_association_meeting_attendance',
+    path: SystemPathsEnum.GENERAL_ASSOCIATION_MEETING_ATTENDANCE,
+    icon: 'mdi-account-group',
+    isSvg: false,
+    caseType: CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE,
+    permission: '',
+    permissionGroup: PermissionGroupsEnum.GENERAL_ASSOCIATION_MEETING_ATTENDANCE_SERVICES_PERMISSION_GROUP,
+    parent: null,
+    group: 'main',
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 902,
+    langKey: serviceAddUpdateLabel,
+    path: SystemPathsEnum.GENERAL_ASSOCIATION_MEETING_ATTENDANCE + '/service',
+    icon: serviceAddUpdateIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.GENERAL_ASSOCIATION_MEETING_ATTENDANCE,
+    permissionGroup: null,
+    parent: 901,
+    group: 'service_' + CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE,
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 903,
+    langKey: serviceSearchLabel,
+    path: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE),
+    icon: serviceSearchIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.SEARCH_SERVICE_GENERAL_ASSOCIATION_MEETING_ATTENDANCE,
+    permissionGroup: null,
+    parent: 901,
+    group: 'service_' + CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE,
+    itemOrder: 2,
+    svg: null
+  },
+  {
+    id: 904,
+    langKey: serviceOutputLabel,
+    path: SystemPathsEnum.GENERAL_ASSOCIATION_MEETING_ATTENDANCE + '/outputs',
+    icon: serviceOutputIcon,
+    isSvg: false,
+    permission: Constants.SERVICE_OUTPUT_PERMISSION,
+    permissionGroup: null,
+    parent: 901,
+    group: 'service_' + CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE,
     itemOrder: 3,
     svg: null
   },

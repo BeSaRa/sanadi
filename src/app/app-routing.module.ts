@@ -132,6 +132,17 @@ const routes: Routes = [
         } as Partial<ICustomRouteData>
       },
       {
+        path: 'services/general-association-meeting-attendance',
+        canActivate: [NewServicePermissionGuard],
+        loadChildren: () => import('./modules/services/general-association-meeting-attendance/general-association-meeting-attendance.module')
+          .then(m => m.GeneralAssociationMeetingAttendanceModule),
+        data: {
+          permissionGroup: PermissionGroupsEnum.GENERAL_ASSOCIATION_MEETING_ATTENDANCE_SERVICES_PERMISSION_GROUP,
+          checkAnyPermission: true,
+          caseType: CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE
+        } as Partial<ICustomRouteData>
+      },
+      {
         path: 'services/search',
         loadChildren: () => import('@modules/service-search-individual/service-search-individual.module').then(m => m.ServiceSearchIndividualModule),
       },

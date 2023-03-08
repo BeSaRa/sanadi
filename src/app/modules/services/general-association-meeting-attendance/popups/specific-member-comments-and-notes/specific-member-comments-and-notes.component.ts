@@ -1,9 +1,9 @@
 import { Component, Inject } from '@angular/core';
 import { LangService } from '@services/lang.service';
 import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
-import { MeetingAttendanceReport } from '@app/models/meeting-attendance-report';
-import { GeneralMeetingAttendanceNote } from '@app/models/general-meeting-attendance-note';
-import { GeneralAssociationInternalMember } from '@app/models/general-association-internal-member';
+import { MeetingAttendanceReport } from '@models/meeting-attendance-report';
+import { GeneralMeetingAttendanceNote } from '@models/general-meeting-attendance-note';
+import { GeneralAssociationInternalMember } from '@models/general-association-internal-member';
 
 @Component({
   selector: 'specific-member-comments-and-notes',

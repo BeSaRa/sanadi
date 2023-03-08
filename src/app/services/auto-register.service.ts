@@ -73,7 +73,7 @@ import {
 } from '@app/modules/urgent-intervention/pages/urgent-intervention-license-followup/urgent-intervention-license-followup.component';
 import {
   GeneralAssociationMeetingAttendanceComponent
-} from '@app/modules/projects/pages/general-association-meeting-attendance/general-association-meeting-attendance.component';
+} from '@app/modules/services/general-association-meeting-attendance/pages/general-association-meeting-attendance/general-association-meeting-attendance.component';
 import {
   CharityOrganizationUpdateComponent
 } from '@app/modules/general-services/pages/charity-organization-update/charity-organization-update.component';
