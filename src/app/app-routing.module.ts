@@ -254,6 +254,17 @@ const routes: Routes = [
         } as Partial<ICustomRouteData>
       },
       {
+        path: 'services/external-org-affiliation',
+        canActivate: [NewServicePermissionGuard],
+        loadChildren: () => import('./modules/services/external-organization-affiliation/external-organization-affiliation.module')
+          .then(m => m.ExternalOrganizationAffiliationModule),
+        data: {
+          permissionGroup: PermissionGroupsEnum.EXTERNAL_ORG_AFFILIATION_REQUEST_SERVICES_PERMISSION_GROUP,
+          checkAnyPermission: true,
+          caseType: CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST
+        } as Partial<ICustomRouteData>
+      },
+      {
         path: 'services/search',
         loadChildren: () => import('@modules/service-search-individual/service-search-individual.module').then(m => m.ServiceSearchIndividualModule),
       },

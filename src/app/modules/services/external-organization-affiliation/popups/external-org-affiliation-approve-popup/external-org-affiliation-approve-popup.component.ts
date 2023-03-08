@@ -1,20 +1,20 @@
-import { DatepickerOptionsMap } from '@app/types/types';
-import { DateUtils } from '@app/helpers/date-utils';
-import { IWFResponse } from '@app/interfaces/i-w-f-response';
-import { ToastService } from '@app/services/toast.service';
-import { DialogRef } from '@app/shared/models/dialog-ref';
-import { UntypedFormControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { ExternalOrgAffiliation } from '@app/models/external-org-affiliation';
-import { WFResponseType } from '@app/enums/wfresponse-type.enum';
-import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
-import { DialogService } from '@app/services/dialog.service';
-import { takeUntil, map, tap, filter, exhaustMap, switchMap } from 'rxjs/operators';
-import { CustomValidators } from '@app/validators/custom-validators';
-import { LangService } from '@services/lang.service';
-import { Component, Inject, OnInit } from '@angular/core';
-import { Subject, of } from 'rxjs';
-import { InboxService } from '@app/services/inbox.service';
-import { AffiliationRequestType } from '@app/enums/service-request-types';
+import {DatepickerOptionsMap} from '@app/types/types';
+import {DateUtils} from '@helpers/date-utils';
+import {IWFResponse} from '@contracts/i-w-f-response';
+import {ToastService} from '@services/toast.service';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+import {ExternalOrgAffiliation} from '@models/external-org-affiliation';
+import {WFResponseType} from '@enums/wfresponse-type.enum';
+import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
+import {DialogService} from '@services/dialog.service';
+import {exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {LangService} from '@services/lang.service';
+import {Component, Inject, OnInit} from '@angular/core';
+import {of, Subject} from 'rxjs';
+import {InboxService} from '@services/inbox.service';
+import {AffiliationRequestType} from '@enums/service-request-types';
 
 @Component({
   selector: 'app-external-org-affiliation-approve-popup',

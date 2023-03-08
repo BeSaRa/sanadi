@@ -6,9 +6,6 @@ import {
 import {
   CoordinationWithOrganizationsRequestComponent
 } from '@app/modules/general-services/pages/coordination-with-organizations-request/coordination-with-organizations-request.component';
-import {
-  ExternalOrgAffiliationApprovePopupComponent
-} from '@app/modules/general-services/popups/external-org-affiliation-approve-popup/external-org-affiliation-approve-popup.component';
 import {FormlyBootstrapModule} from '@ngx-formly/bootstrap';
 import {FormlyModule} from '@ngx-formly/core';
 
@@ -16,7 +13,6 @@ import {EServicesMainModule} from '@app/modules/e-services-main/e-services-main.
 import {OfficeServicesModule} from '../office-services/office-services.module';
 import {GeneralServicesRoutingModule} from './general-services-routing.module';
 import {GeneralServicesComponent} from './general-services.component';
-import {ExternalOrgAffiliationComponent} from './pages/external-org-affiliation/external-org-affiliation.component';
 import {
   OrganizationsEntitiesSupportComponent
 } from './pages/organizations-entities-support/organizations-entities-support.component';
@@ -39,9 +35,6 @@ import {SharedServicesModule} from '@modules/services/shared-services/shared-ser
 @NgModule({
   declarations: [
     GeneralServicesComponent,
-
-    ExternalOrgAffiliationComponent,
-    ExternalOrgAffiliationApprovePopupComponent,
     CoordinationWithOrganizationsRequestComponent,
 
     CoordinationWithOrgPopupComponent,
