@@ -1,33 +1,33 @@
-import {BankAccountEnNameKeys} from './../../../../enums/bank-account-operation-types';
+import {BankAccountEnNameKeys} from '@enums/bank-account-operation-types';
 import {Component} from '@angular/core';
 import {AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {SaveTypes} from '@app/enums/save-types';
+import {OperationTypes} from '@enums/operation-types.enum';
+import {SaveTypes} from '@enums/save-types';
 import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
-import {InternalBankAccountApproval} from '@app/models/internal-bank-account-approval';
+import {InternalBankAccountApproval} from '@models/internal-bank-account-approval';
 import {InternalBankAccountApprovalService} from '@services/internal-bank-account-approval.service';
 import {LangService} from '@services/lang.service';
 import {Observable, of} from 'rxjs';
 import {LookupService} from '@services/lookup.service';
 import {DialogService} from '@services/dialog.service';
 import {ToastService} from '@services/toast.service';
-import {Lookup} from '@app/models/lookup';
-import {Bank} from '@app/models/bank';
-import {BankAccount} from '@app/models/bank-account';
+import {Lookup} from '@models/lookup';
+import {Bank} from '@models/bank';
+import {BankAccount} from '@models/bank-account';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {SelectedLicenseInfo} from '@contracts/selected-license-info';
 import {LicenseService} from '@services/license.service';
 import {InternalBankAccountLicense} from '@app/license-models/internal-bank-account-license';
-import {BankAccountRequestTypes} from '@app/enums/service-request-types';
-import {BankAccountOperationTypes} from '@app/enums/bank-account-operation-types';
+import {BankAccountRequestTypes} from '@enums/service-request-types';
+import {BankAccountOperationTypes} from '@enums/bank-account-operation-types';
 import {EmployeeService} from '@services/employee.service';
-import {NpoEmployee} from '@app/models/npo-employee';
-import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
-import {OpenFrom} from '@app/enums/open-from.enum';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {NpoEmployee} from '@models/npo-employee';
+import {CommonCaseStatus} from '@enums/common-case-status.enum';
+import {OpenFrom} from '@enums/open-from.enum';
+import {UserClickOn} from '@enums/user-click-on.enum';
 import {BankService} from '@services/bank.service';
-import {InternalBankCategoryEnum} from '@app/enums/internal-bank-category-enum';
+import {InternalBankCategoryEnum} from '@enums/internal-bank-category-enum';
 
 @Component({
   selector: 'internal-bank-account-approval',

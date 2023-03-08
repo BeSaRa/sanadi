@@ -26,6 +26,7 @@ enum SystemPathsEnum {
   GENERAL_PROCESS_NOTIFICATION = '/home/services/general-process-notification',
   AWARENESS_ACTIVITY_SUGGESTION = '/home/services/awareness-activity-suggestion',
   GENERAL_ASSOCIATION_MEETING_ATTENDANCE = '/home/services/general-association-meeting-attendance',
+  INTERNAL_BANK_ACCOUNT_APPROVAL = '/home/services/internal-bank-account-approval',
 }
 
 export const newNavigationMenuList = [
@@ -506,6 +507,60 @@ export const newNavigationMenuList = [
     itemOrder: 3,
     svg: null
   },
+  {
+    id: 1001,
+    langKey: 'menu_internal_bank_account_approval',
+    path: SystemPathsEnum.INTERNAL_BANK_ACCOUNT_APPROVAL,
+    icon: 'mdi-bank-plus',
+    isSvg: false,
+    caseType: CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL,
+    permission: '',
+    permissionGroup: PermissionGroupsEnum.INTERNAL_BANK_ACCOUNT_APPROVAL_SERVICES_PERMISSION_GROUP,
+    parent: null,
+    group: 'main',
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 1002,
+    langKey: serviceAddUpdateLabel,
+    path: SystemPathsEnum.INTERNAL_BANK_ACCOUNT_APPROVAL + '/service',
+    icon: serviceAddUpdateIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.INTERNAL_BANK_ACCOUNT_APPROVAL,
+    permissionGroup: null,
+    parent: 1001,
+    group: 'service_' + CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL,
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 1003,
+    langKey: serviceSearchLabel,
+    path: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL),
+    icon: serviceSearchIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.SEARCH_SERVICE_INTERNAL_BANK_ACCOUNT_APPROVAL,
+    permissionGroup: null,
+    parent: 1001,
+    group: 'service_' + CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL,
+    itemOrder: 2,
+    svg: null
+  },
+  {
+    id: 1004,
+    langKey: serviceOutputLabel,
+    path: SystemPathsEnum.INTERNAL_BANK_ACCOUNT_APPROVAL + '/outputs',
+    icon: serviceOutputIcon,
+    isSvg: false,
+    permission: Constants.SERVICE_OUTPUT_PERMISSION,
+    permissionGroup: null,
+    parent: 1001,
+    group: 'service_' + CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL,
+    itemOrder: 3,
+    svg: null
+  },
+
   /*{
     id: 100001,
     langKey: 'menu_internal_project_license',
