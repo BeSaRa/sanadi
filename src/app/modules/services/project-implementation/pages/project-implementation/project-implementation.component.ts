@@ -253,6 +253,12 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
   }
 
   _afterBuildForm(): void {
+    if (this.operation !== OperationTypes.CREATE) {
+      this.licenseStartDate.setValue(this.licenseStartDate.value);
+      this.implementingAgencyList.setValue(this.implementingAgencyList.value);
+      this.beneficiaryCountry.setValue(this.model?.beneficiaryCountry);
+      this.implementingAgencyType.setValue(this.model?.implementingAgencyType);
+    }
     this.handleReadonly()
     this.setDefaultValues()
     this.listenToFieldsWillEffectTemplateAndFundSources()
@@ -276,14 +282,10 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       this.validateFundingResources([
         'payment',
       ])])
+
     this.handleRequestTypeChange(this.requestType.value)
 
-    if (this.operation !== OperationTypes.CREATE) {
-      this.licenseStartDate.setValue(this.licenseStartDate.value);
-      this.implementingAgencyList.setValue(this.implementingAgencyList.value);
-      this.beneficiaryCountry.setValue(this.model?.beneficiaryCountry);
-      this.implementingAgencyType.setValue(this.model?.implementingAgencyType);
-    }
+
 
   }
 

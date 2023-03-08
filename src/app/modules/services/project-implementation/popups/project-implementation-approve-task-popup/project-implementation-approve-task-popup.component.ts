@@ -1,3 +1,4 @@
+import { EmployeeService } from './../../../../services/employee.service';
 import {Component, Inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Subject} from "rxjs";
 import {ILanguageKeys} from "@contracts/i-language-keys";
@@ -46,6 +47,7 @@ export class ProjectImplementationApproveTaskPopupComponent implements OnInit, O
       action: WFResponseType
     },
     public lang: LangService,
+    private employeeService:EmployeeService
   ) {
     this.label = ((CommonUtils.changeCamelToSnakeCase(this.data.action) + '_task') as unknown as keyof ILanguageKeys);
     this.response = this.data.action;
@@ -124,5 +126,8 @@ export class ProjectImplementationApproveTaskPopupComponent implements OnInit, O
 
   private isCommentRequired(): boolean {
     return this.isCancelRequestType();
+  }
+  isLicenseChief(){
+    return this.employeeService.isLicensingChiefManager();
   }
 }
