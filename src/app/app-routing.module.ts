@@ -88,6 +88,17 @@ const routes: Routes = [
         } as Partial<ICustomRouteData>
       },
       {
+        path: 'services/project-models',
+        canActivate: [NewServicePermissionGuard],
+        loadChildren: () => import('./modules/services/project-models/project-models.module')
+          .then(m => m.ProjectModelsModule),
+        data: {
+          permissionGroup: PermissionGroupsEnum.PROJECT_MODEL_SERVICES_PERMISSION_GROUP,
+          checkAnyPermission: true,
+          caseType: CaseTypes.EXTERNAL_PROJECT_MODELS
+        } as Partial<ICustomRouteData>
+      },
+      {
         path: 'services/search',
         loadChildren: () => import('@modules/service-search-individual/service-search-individual.module').then(m => m.ServiceSearchIndividualModule),
       },

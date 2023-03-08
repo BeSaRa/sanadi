@@ -3,7 +3,6 @@ import {CommonModule} from '@angular/common';
 
 import {ProjectsRoutingModule} from './projects-routing.module';
 import {ProjectsComponent} from './projects.component';
-import {ProjectModelComponent} from './pages/project-model/project-model.component';
 import {InternalProjectLicenseComponent} from './pages/internal-project-license/internal-project-license.component';
 import {
   InternalBankAccountApprovalComponent
@@ -60,7 +59,6 @@ import {
 @NgModule({
   declarations: [
     ProjectsComponent,
-    ProjectModelComponent,
     InternalProjectLicenseComponent,
     InternalBankAccountApprovalComponent,
     InternalBankApprovalApproveTaskPopupComponent,

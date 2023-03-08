@@ -21,6 +21,7 @@ enum SystemPathsEnum {
   INTERNATIONAL_COOPERATION_SERVICE = '/home/services/international-cooperation',
   PROJECT_IMPLEMENTATION = '/home/services/project-implementation',
   PROJECT_FUNDRAISING = '/home/services/project-fundraising',
+  PROJECT_MODELS = '/home/services/project-models',
 }
 
 export const newNavigationMenuList = [
@@ -286,6 +287,59 @@ export const newNavigationMenuList = [
     permissionGroup: null,
     parent: 501,
     group: 'service_' + CaseTypes.PROJECT_FUNDRAISING,
+    itemOrder: 3,
+    svg: null
+  },
+  {
+    id: 601,
+    langKey: 'menu_projects_models',
+    path: SystemPathsEnum.PROJECT_MODELS,
+    icon: 'mdi-table-star',
+    isSvg: false,
+    caseType: CaseTypes.EXTERNAL_PROJECT_MODELS,
+    permission: '',
+    permissionGroup: PermissionGroupsEnum.PROJECT_MODEL_SERVICES_PERMISSION_GROUP,
+    parent: null,
+    group: 'main',
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 602,
+    langKey: serviceAddUpdateLabel,
+    path: SystemPathsEnum.PROJECT_MODELS + '/service',
+    icon: serviceAddUpdateIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.EXTERNAL_PROJECT_MODELS,
+    permissionGroup: null,
+    parent: 601,
+    group: 'service_' + CaseTypes.EXTERNAL_PROJECT_MODELS,
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 603,
+    langKey: serviceSearchLabel,
+    path: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.EXTERNAL_PROJECT_MODELS),
+    icon: serviceSearchIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.SEARCH_SERVICE_EXTERNAL_PROJECT_MODELS,
+    permissionGroup: null,
+    parent: 601,
+    group: 'service_' + CaseTypes.EXTERNAL_PROJECT_MODELS,
+    itemOrder: 2,
+    svg: null
+  },
+  {
+    id: 604,
+    langKey: serviceOutputLabel,
+    path: SystemPathsEnum.PROJECT_MODELS + '/outputs',
+    icon: serviceOutputIcon,
+    isSvg: false,
+    permission: Constants.SERVICE_OUTPUT_PERMISSION,
+    permissionGroup: null,
+    parent: 601,
+    group: 'service_' + CaseTypes.EXTERNAL_PROJECT_MODELS,
     itemOrder: 3,
     svg: null
   },

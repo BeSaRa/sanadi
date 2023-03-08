@@ -31,7 +31,7 @@ import {
 import {
   InternalProjectLicenseComponent
 } from '@app/modules/projects/pages/internal-project-license/internal-project-license.component';
-import {ProjectModelComponent} from '@app/modules/projects/pages/project-model/project-model.component';
+import {ProjectModelComponent} from '@app/modules/services/project-models/pages/project-model/project-model.component';
 import {
   CollectionApprovalComponent
 } from '@app/modules/collection/pages/collection-services-approval/collection-approval.component';
