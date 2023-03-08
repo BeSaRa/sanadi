@@ -1,7 +1,7 @@
 import {GeneralAssociationMeetingAttendance} from '@models/general-association-meeting-attendance';
 import {
   AwarenessActivitySuggestionComponent
-} from '@modules/general-services/pages/awareness-activity-suggestion/awareness-activity-suggestion.component';
+} from '@modules/services/awareness-activity-suggestion/pages/awareness-activity-suggestion/awareness-activity-suggestion.component';
 import {AwarenessActivitySuggestion} from '@models/awareness-activity-suggestion';
 import {CoordinationWithOrganizationsRequest} from '@app/models/coordination-with-organizations-request';
 import {

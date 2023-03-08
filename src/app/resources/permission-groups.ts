@@ -123,6 +123,12 @@ const generalProcessNotificationServicesPermissionGroup: (EServicePermissionsEnu
   Constants.SERVICE_OUTPUT_PERMISSION
 ];
 
+const awarenessActivitySuggestionServicesPermissionGroup: (EServicePermissionsEnum | string)[] = [
+  EServicePermissionsEnum.AWARENESS_ACTIVITY_SUGGESTION,
+  EServicePermissionsEnum.SEARCH_SERVICE_AWARENESS_ACTIVITY_SUGGESTION,
+  Constants.SERVICE_OUTPUT_PERMISSION
+];
+
 const generalServicesPermissionsGroup: EServicePermissionsEnum[] = [
   EServicePermissionsEnum.INQUIRY,
   EServicePermissionsEnum.CONSULTATION,
@@ -187,6 +193,7 @@ const permissionGroups: PermissionGroupsMapType = {
   [PermissionGroupsEnum.PROJECT_MODEL_SERVICES_PERMISSION_GROUP]: projectModelServicesPermissionGroup,
   [PermissionGroupsEnum.INTERNAL_PROJECT_LICENSE_SERVICES_PERMISSION_GROUP]: internalProjectLicenseServicesPermissionGroup,
   [PermissionGroupsEnum.GENERAL_PROCESS_NOTIFICATION_SERVICES_PERMISSION_GROUP]: generalProcessNotificationServicesPermissionGroup,
+  [PermissionGroupsEnum.AWARENESS_ACTIVITY_SUGGESTION_SERVICES_PERMISSION_GROUP]: awarenessActivitySuggestionServicesPermissionGroup,
 
 
   [PermissionGroupsEnum.SANADI_PERMISSIONS_GROUP]: sanadiPermissionsGroup,

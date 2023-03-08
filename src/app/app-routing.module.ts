@@ -121,6 +121,17 @@ const routes: Routes = [
         } as Partial<ICustomRouteData>
       },
       {
+        path: 'services/awareness-activity-suggestion',
+        canActivate: [NewServicePermissionGuard],
+        loadChildren: () => import('./modules/services/awareness-activity-suggestion/awareness-activity-suggestion.module')
+          .then(m => m.AwarenessActivitySuggestionModule),
+        data: {
+          permissionGroup: PermissionGroupsEnum.AWARENESS_ACTIVITY_SUGGESTION_SERVICES_PERMISSION_GROUP,
+          checkAnyPermission: true,
+          caseType: CaseTypes.AWARENESS_ACTIVITY_SUGGESTION
+        } as Partial<ICustomRouteData>
+      },
+      {
         path: 'services/search',
         loadChildren: () => import('@modules/service-search-individual/service-search-individual.module').then(m => m.ServiceSearchIndividualModule),
       },
