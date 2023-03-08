@@ -198,6 +198,17 @@ const routes: Routes = [
         } as Partial<ICustomRouteData>
       },
       {
+        path: 'services/partner-approval',
+        canActivate: [NewServicePermissionGuard],
+        loadChildren: () => import('./modules/services/partner-approval/partner-approval.module')
+          .then(m => m.PartnerApprovalModule),
+        data: {
+          permissionGroup: PermissionGroupsEnum.PARTNER_APPROVAL_SERVICES_PERMISSION_GROUP,
+          checkAnyPermission: true,
+          caseType: CaseTypes.PARTNER_APPROVAL
+        } as Partial<ICustomRouteData>
+      },
+      {
         path: 'services/search',
         loadChildren: () => import('@modules/service-search-individual/service-search-individual.module').then(m => m.ServiceSearchIndividualModule),
       },

@@ -30,7 +30,8 @@ enum SystemPathsEnum {
   URGENT_JOINT_RELIEF_CAMPAIGN = '/home/services/urgent-joint-relief-campaign',
   TRANSFER_INDIVIDUAL_FUNDS_ABROAD = '/home/services/transferring-individual-funds-abroad',
   // INITIAL_EXTERNAL_OFFICE_APPROVAL = '/home/services/initial-external-office-approval',
-  FINAL_EXTERNAL_OFFICE_APPROVAL = '/home/services/final-external-office-approval'
+  FINAL_EXTERNAL_OFFICE_APPROVAL = '/home/services/final-external-office-approval',
+  PARTNER_APPROVAL = '/home/services/partner-approval',
 }
 
 export const newNavigationMenuList = [
@@ -720,6 +721,59 @@ export const newNavigationMenuList = [
     permissionGroup: null,
     parent: 1301,
     group: 'service_' + CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL,
+    itemOrder: 3,
+    svg: null
+  },
+  {
+    id: 1401,
+    langKey: 'menu_partner_approval',
+    path: SystemPathsEnum.PARTNER_APPROVAL,
+    icon: 'mdi-handshake',
+    isSvg: false,
+    caseType: CaseTypes.PARTNER_APPROVAL,
+    permission: '',
+    permissionGroup: PermissionGroupsEnum.PARTNER_APPROVAL_SERVICES_PERMISSION_GROUP,
+    parent: null,
+    group: 'main',
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 1402,
+    langKey: serviceAddUpdateLabel,
+    path: SystemPathsEnum.PARTNER_APPROVAL + '/service',
+    icon: serviceAddUpdateIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.PARTNER_APPROVAL,
+    permissionGroup: null,
+    parent: 1401,
+    group: 'service_' + CaseTypes.PARTNER_APPROVAL,
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 1403,
+    langKey: serviceSearchLabel,
+    path: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.PARTNER_APPROVAL),
+    icon: serviceSearchIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.SEARCH_SERVICE_PARTNER_APPROVAL,
+    permissionGroup: null,
+    parent: 1401,
+    group: 'service_' + CaseTypes.PARTNER_APPROVAL,
+    itemOrder: 2,
+    svg: null
+  },
+  {
+    id: 1404,
+    langKey: serviceOutputLabel,
+    path: SystemPathsEnum.PARTNER_APPROVAL + '/outputs',
+    icon: serviceOutputIcon,
+    isSvg: false,
+    permission: Constants.SERVICE_OUTPUT_PERMISSION,
+    permissionGroup: null,
+    parent: 1401,
+    group: 'service_' + CaseTypes.PARTNER_APPROVAL,
     itemOrder: 3,
     svg: null
   },

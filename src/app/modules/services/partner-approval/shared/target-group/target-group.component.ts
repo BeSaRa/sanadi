@@ -6,10 +6,10 @@ import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from "@angul
 import { ReadinessStatus } from "@app/types/types";
 import { BehaviorSubject, Subject } from "rxjs";
 import { filter, map, take, takeUntil, tap } from "rxjs/operators";
-import { UserClickOn } from "@app/enums/user-click-on.enum";
-import { TargetGroup } from "@app/models/target-group";
-import { ActionIconsEnum } from '@app/enums/action-icons-enum';
-import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { UserClickOn } from "@enums/user-click-on.enum";
+import { TargetGroup } from "@models/target-group";
+import { ActionIconsEnum } from '@enums/action-icons-enum';
+import { IMenuItem } from '@modules/context-menu/interfaces/i-menu-item';
 
 @Component({
   selector: 'target-group',

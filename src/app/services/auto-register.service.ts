@@ -27,7 +27,7 @@ import {
 } from '@app/modules/services/final-external-office-approval/pages/final-external-office-approval/final-external-office-approval.component';
 import {
   PartnerApprovalComponent
-} from '@app/modules/office-services/pages/partner-approval/partner-approval.component';
+} from '@app/modules/services/partner-approval/pages/partner-approval/partner-approval.component';
 import {
   InternalProjectLicenseComponent
 } from '@app/modules/services/internal-project-license/pages/internal-project-license/internal-project-license.component';

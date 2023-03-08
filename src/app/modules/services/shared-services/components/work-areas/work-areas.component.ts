@@ -1,13 +1,13 @@
 import { Component, Input } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { ListModelComponent } from '@app/generics/ListModel-component';
-import { CommonUtils } from '@app/helpers/common-utils';
-import { ControlWrapper } from '@app/interfaces/i-control-wrapper';
-import { SortEvent } from '@app/interfaces/sort-event';
-import { AdminResult } from '@app/models/admin-result';
-import { Country } from '@app/models/country';
-import { WorkArea } from '@app/models/work-area';
-import { LangService } from '@app/services/lang.service';
+import { CommonUtils } from '@helpers/common-utils';
+import { ControlWrapper } from '@contracts/i-control-wrapper';
+import { SortEvent } from '@contracts/sort-event';
+import { AdminResult } from '@models/admin-result';
+import { Country } from '@models/country';
+import { WorkArea } from '@models/work-area';
+import { LangService } from '@services/lang.service';
 
 @Component({
   selector: 'work-areas',

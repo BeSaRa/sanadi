@@ -1,46 +1,47 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from "@angular/forms";
-import { ActionIconsEnum } from '@app/enums/action-icons-enum';
-import { UserClickOn } from "@app/enums/user-click-on.enum";
-import { ApprovalReason } from "@app/models/approval-reason";
-import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
-import { ReadinessStatus } from "@app/types/types";
-import { DialogService } from "@services/dialog.service";
 import { LangService } from "@services/lang.service";
 import { ToastService } from "@services/toast.service";
+import { DialogService } from "@services/dialog.service";
+import {  UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from "@angular/forms";
+import { ReadinessStatus } from "@app/types/types";
 import { BehaviorSubject, Subject } from "rxjs";
 import { filter, map, take, takeUntil, tap } from "rxjs/operators";
+import { UserClickOn } from "@enums/user-click-on.enum";
+import { ContactOfficer } from "@models/contact-officer";
+import { ActionIconsEnum } from '@enums/action-icons-enum';
+import { IMenuItem } from '@modules/context-menu/interfaces/i-menu-item';
 
 @Component({
-  selector: 'approval-reason',
-  templateUrl: './approval-reason.component.html',
-  styleUrls: ['./approval-reason.component.scss']
+  selector: 'contact-officer',
+  templateUrl: './contact-officer.component.html',
+  styleUrls: ['./contact-officer.component.scss']
 })
-export class ApprovalReasonComponent implements OnInit, OnDestroy {
+export class ContactOfficerComponent implements OnInit, OnDestroy {
 
   constructor(public lang: LangService,
-              private toastService: ToastService,
-              private dialogService: DialogService,
-              private fb: UntypedFormBuilder) {
+    private toastService: ToastService,
+    private dialogService: DialogService,
+    private fb: UntypedFormBuilder) {
   }
 
-  private _list: ApprovalReason[] = [];
-  @Input() set list(list: ApprovalReason[]) {
+  private _list: ContactOfficer[] = [];
+  @Input() set list(list: ContactOfficer[]) {
     this._list = list;
     this.dataSource.next(this._list);
   }
 
-  get list(): ApprovalReason[] {
+  get list(): ContactOfficer[] {
     return this._list;
   }
-  @Input() readonly : boolean = false;
+
+  @Input() readonly: boolean = false;
 
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();
 
-  dataSource: BehaviorSubject<ApprovalReason[]> = new BehaviorSubject<ApprovalReason[]>([]);
-  columns = ['projects', 'research', 'fieldVisit',  'actions'];
+  dataSource: BehaviorSubject<ContactOfficer[]> = new BehaviorSubject<ContactOfficer[]>([]);
+  columns = ['arabicName', 'englishName', 'email', 'phone', 'passportNumber', 'actions'];
 
-  editItem?: ApprovalReason;
+  editItem?: ContactOfficer;
   showForm: boolean = false;
   viewOnly: boolean = false;
   filterControl: UntypedFormControl = new UntypedFormControl('');
@@ -48,36 +49,36 @@ export class ApprovalReasonComponent implements OnInit, OnDestroy {
   add$: Subject<any> = new Subject<any>();
   private save$: Subject<any> = new Subject<any>();
 
-  private changed$: Subject<ApprovalReason | null> =
-    new Subject<ApprovalReason | null>();
-  private current?: ApprovalReason;
+  private changed$: Subject<ContactOfficer | null> =
+    new Subject<ContactOfficer | null>();
+  private current?: ContactOfficer;
   private destroy$: Subject<any> = new Subject<any>();
 
   form!: UntypedFormGroup;
-  actions: IMenuItem<ApprovalReason>[] = [
+  actions: IMenuItem<ContactOfficer>[] = [
     // edit
     {
       type: 'action',
       icon: ActionIconsEnum.EDIT,
       label: 'btn_edit',
-      onClick: (item: ApprovalReason) => this.edit(item),
-      show: (_item: ApprovalReason) => !this.readonly
+      onClick: (item: ContactOfficer) => this.edit(item),
+      show: (_item: ContactOfficer) => !this.readonly
     },
     // delete
     {
       type: 'action',
       icon: ActionIconsEnum.DELETE,
       label: 'btn_delete',
-      onClick: (item: ApprovalReason) => this.delete(item),
-      show: (_item: ApprovalReason) => !this.readonly
+      onClick: (item: ContactOfficer) => this.delete(item),
+      show: (_item: ContactOfficer) => !this.readonly
     },
     // view
     {
       type: 'action',
       icon: ActionIconsEnum.VIEW,
       label: 'view',
-      onClick: (item: ApprovalReason) => this.view(item),
-      show: (_item: ApprovalReason) => this.readonly
+      onClick: (item: ContactOfficer) => this.view(item),
+      show: (_item: ContactOfficer) => this.readonly
     }
   ];
 
@@ -98,14 +99,14 @@ export class ApprovalReasonComponent implements OnInit, OnDestroy {
 
   private buildForm() {
     this.form = this.fb.group(
-      new ApprovalReason().getApprovalReasonFields(true)
+      new ContactOfficer().getContactOfficerFields(true)
     );
   }
 
   private listenToAdd() {
     this.add$.pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.viewOnly = false;
-      this.changed$.next(new ApprovalReason());
+      this.changed$.next(new ContactOfficer());
     });
   }
 
@@ -117,7 +118,7 @@ export class ApprovalReasonComponent implements OnInit, OnDestroy {
     });
   }
 
-  private updateForm(record: ApprovalReason | undefined) {
+  private updateForm(record: ContactOfficer | undefined) {
     if (record) {
       if (this.viewOnly) {
         this._setComponentReadiness('READY');
@@ -165,13 +166,14 @@ export class ApprovalReasonComponent implements OnInit, OnDestroy {
         }),
         map(() => {
           let formValue = this.form.getRawValue();
-          return new ApprovalReason().clone({
+          return new ContactOfficer().clone({
             ...this.current,
             ...formValue,
+
           });
         })
       )
-      .subscribe((record: ApprovalReason) => {
+      .subscribe((record: ContactOfficer) => {
         if (!record) {
           return;
         }
@@ -184,7 +186,7 @@ export class ApprovalReasonComponent implements OnInit, OnDestroy {
   }
 
   private _updateList(
-    record: ApprovalReason | null,
+    record: ContactOfficer | null,
     operation: 'ADD' | 'UPDATE' | 'DELETE' | 'NONE',
   ) {
     if (record) {
@@ -202,7 +204,7 @@ export class ApprovalReasonComponent implements OnInit, OnDestroy {
     this.list = this.list.slice();
   }
 
-  edit(record: ApprovalReason, $event?: MouseEvent) {
+  edit(record: ContactOfficer, $event?: MouseEvent) {
     $event?.preventDefault();
     if (this.readonly) {
       return;
@@ -212,14 +214,14 @@ export class ApprovalReasonComponent implements OnInit, OnDestroy {
     this.changed$.next(record);
   }
 
-  view(record: ApprovalReason, $event?: MouseEvent) {
+  view(record: ContactOfficer, $event?: MouseEvent) {
     $event?.preventDefault();
     this.editItem = record;
     this.viewOnly = true;
     this.changed$.next(record);
   }
 
-  delete(record: ApprovalReason, $event?: MouseEvent): any {
+  delete(record: ContactOfficer, $event?: MouseEvent): any {
     $event?.preventDefault();
     if (this.readonly) {
       return;
