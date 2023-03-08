@@ -111,6 +111,12 @@ const projectModelServicesPermissionGroup: (EServicePermissionsEnum | string)[] 
   Constants.SERVICE_OUTPUT_PERMISSION
 ];
 
+const internalProjectLicenseServicesPermissionGroup: (EServicePermissionsEnum | string)[] = [
+  EServicePermissionsEnum.INTERNAL_PROJECT_LICENSE,
+  EServicePermissionsEnum.SEARCH_SERVICE_INTERNAL_PROJECT_LICENSE,
+  Constants.SERVICE_OUTPUT_PERMISSION
+];
+
 const generalServicesPermissionsGroup: EServicePermissionsEnum[] = [
   EServicePermissionsEnum.INQUIRY,
   EServicePermissionsEnum.CONSULTATION,
@@ -173,6 +179,7 @@ const permissionGroups: PermissionGroupsMapType = {
   [PermissionGroupsEnum.PROJECT_IMPLEMENTATION_SERVICES_PERMISSION_GROUP]: projectImplementationServicesPermissionGroup,
   [PermissionGroupsEnum.PROJECT_FUNDRAISING_SERVICES_PERMISSION_GROUP]: projectFundraisingServicesPermissionGroup,
   [PermissionGroupsEnum.PROJECT_MODEL_SERVICES_PERMISSION_GROUP]: projectModelServicesPermissionGroup,
+  [PermissionGroupsEnum.INTERNAL_PROJECT_LICENSE_SERVICES_PERMISSION_GROUP]: internalProjectLicenseServicesPermissionGroup,
 
 
   [PermissionGroupsEnum.SANADI_PERMISSIONS_GROUP]: sanadiPermissionsGroup,

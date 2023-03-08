@@ -1,6 +1,6 @@
 import {AfterViewInit, ChangeDetectorRef, Component} from '@angular/core';
 import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
-import {InternalProjectLicense} from '@app/models/internal-project-license';
+import {InternalProjectLicense} from '@models/internal-project-license';
 import {InternalProjectLicenseService} from '@services/internal-project-license.service';
 import {
   AbstractControl,
@@ -19,30 +19,30 @@ import {EmployeeService} from '@services/employee.service';
 import {ConfigurationService} from '@services/configuration.service';
 import {ToastService} from '@services/toast.service';
 import {Observable, of, Subject} from 'rxjs';
-import {SaveTypes} from '@app/enums/save-types';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {OpenFrom} from '@app/enums/open-from.enum';
-import {Lookup} from '@app/models/lookup';
+import {SaveTypes} from '@enums/save-types';
+import {OperationTypes} from '@enums/operation-types.enum';
+import {OpenFrom} from '@enums/open-from.enum';
+import {Lookup} from '@models/lookup';
 import {CommonUtils} from '@helpers/common-utils';
-import {ServiceRequestTypes} from '@app/enums/service-request-types';
+import {ServiceRequestTypes} from '@enums/service-request-types';
 import {catchError, exhaustMap, filter, map, switchMap, take, takeUntil, tap} from 'rxjs/operators';
 import {CustomValidators} from '@app/validators/custom-validators';
-import {InternalProjectLicenseResult} from '@app/models/internal-project-license-result';
-import {AidLookup} from '@app/models/aid-lookup';
+import {InternalProjectLicenseResult} from '@models/internal-project-license-result';
+import {AidLookup} from '@models/aid-lookup';
 import {ILanguageKeys} from '@contracts/i-language-keys';
 import {AidLookupService} from '@services/aid-lookup.service';
-import {AidTypes} from '@app/enums/aid-types.enum';
-import {SDGoal} from '@app/models/sdgoal';
+import {AidTypes} from '@enums/aid-types.enum';
+import {SDGoal} from '@models/sdgoal';
 import {SDGoalService} from '@services/sdgoal.service';
 import {DateUtils} from '@helpers/date-utils';
-import {ProjectComponent} from '@app/models/project-component';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {ProjectComponent} from '@models/project-component';
+import {UserClickOn} from '@enums/user-click-on.enum';
 import {LicenseService} from '@services/license.service';
-import {InternalProjectLicenseSearchCriteria} from '@app/models/internal-project-license-search-criteria';
+import {InternalProjectLicenseSearchCriteria} from '@models/internal-project-license-search-criteria';
 import {TabComponent} from '@app/shared/components/tab/tab.component';
-import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
+import {FileIconsEnum} from '@enums/file-extension-mime-types-icons.enum';
 import {DatepickerOptionsMap} from '@app/types/types';
-import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
+import {CommonCaseStatus} from '@enums/common-case-status.enum';
 
 @Component({
   selector: 'internal-project-license',
