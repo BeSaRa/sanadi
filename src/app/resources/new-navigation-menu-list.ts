@@ -32,6 +32,7 @@ enum SystemPathsEnum {
   // INITIAL_EXTERNAL_OFFICE_APPROVAL = '/home/services/initial-external-office-approval',
   FINAL_EXTERNAL_OFFICE_APPROVAL = '/home/services/final-external-office-approval',
   PARTNER_APPROVAL = '/home/services/partner-approval',
+  EMPLOYMENT = '/home/services/employment'
 }
 
 export const newNavigationMenuList = [
@@ -774,6 +775,59 @@ export const newNavigationMenuList = [
     permissionGroup: null,
     parent: 1401,
     group: 'service_' + CaseTypes.PARTNER_APPROVAL,
+    itemOrder: 3,
+    svg: null
+  },
+  {
+    id: 1501,
+    langKey: 'menu_employment',
+    path: SystemPathsEnum.EMPLOYMENT,
+    icon: 'mdi-account-tie-outline',
+    isSvg: false,
+    caseType: CaseTypes.EMPLOYMENT,
+    permission: '',
+    permissionGroup: PermissionGroupsEnum.EMPLOYMENT_SERVICES_PERMISSION_GROUP,
+    parent: null,
+    group: 'main',
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 1502,
+    langKey: serviceAddUpdateLabel,
+    path: SystemPathsEnum.EMPLOYMENT + '/service',
+    icon: serviceAddUpdateIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.EMPLOYMENT,
+    permissionGroup: null,
+    parent: 1501,
+    group: 'service_' + CaseTypes.EMPLOYMENT,
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 1503,
+    langKey: serviceSearchLabel,
+    path: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.EMPLOYMENT),
+    icon: serviceSearchIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.SEARCH_SERVICE_EMPLOYMENT,
+    permissionGroup: null,
+    parent: 1501,
+    group: 'service_' + CaseTypes.EMPLOYMENT,
+    itemOrder: 2,
+    svg: null
+  },
+  {
+    id: 1504,
+    langKey: serviceOutputLabel,
+    path: SystemPathsEnum.EMPLOYMENT + '/outputs',
+    icon: serviceOutputIcon,
+    isSvg: false,
+    permission: Constants.SERVICE_OUTPUT_PERMISSION,
+    permissionGroup: null,
+    parent: 1501,
+    group: 'service_' + CaseTypes.EMPLOYMENT,
     itemOrder: 3,
     svg: null
   },

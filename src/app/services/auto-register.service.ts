@@ -10,7 +10,7 @@ import {
 import {
   UrgentInterventionFinancialNotificationComponent
 } from '@modules/urgent-intervention/pages/urgent-intervention-financial-notification/urgent-intervention-financial-notification.component';
-import {EmploymentComponent} from '@modules/general-services/pages/employment/employment.component';
+import {EmploymentComponent} from '@modules/services/employment/pages/employment/employment.component';
 import {NpoManagementComponent} from '@modules/general-services/pages/npo-management/npo-management.component';
 import {Injectable} from '@angular/core';
 import {DynamicComponentService} from './dynamic-component.service';

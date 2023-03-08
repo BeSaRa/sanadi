@@ -15,6 +15,7 @@ import {DynamicMenuRouteTypeEnum} from '@app/enums/dynamic-menu-route-type.enum'
 import {NewServicePermissionGuard} from '@app/guards/new-service-permission.guard';
 import {CaseTypes} from '@app/enums/case-types.enum';
 import {ICustomRouteData} from '@contracts/i-custom-route-data';
+import {EmploymentModule} from '@modules/services/employment/employment.module';
 
 const routes: Routes = [
   {path: '', redirectTo: 'login', pathMatch: 'full'},
@@ -206,6 +207,17 @@ const routes: Routes = [
           permissionGroup: PermissionGroupsEnum.PARTNER_APPROVAL_SERVICES_PERMISSION_GROUP,
           checkAnyPermission: true,
           caseType: CaseTypes.PARTNER_APPROVAL
+        } as Partial<ICustomRouteData>
+      },
+      {
+        path: 'services/employment',
+        canActivate: [NewServicePermissionGuard],
+        loadChildren: () => import('./modules/services/employment/employment.module')
+          .then(m => m.EmploymentModule),
+        data: {
+          permissionGroup: PermissionGroupsEnum.EMPLOYMENT_SERVICES_PERMISSION_GROUP,
+          checkAnyPermission: true,
+          caseType: CaseTypes.EMPLOYMENT
         } as Partial<ICustomRouteData>
       },
       {

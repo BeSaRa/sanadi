@@ -1,10 +1,10 @@
 import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {IGridAction} from '@app/interfaces/i-grid-action';
-import {Employee} from '@app/models/employee';
-import {Lookup} from '@app/models/lookup';
-import {LangService} from '@app/services/lang.service';
-import {LookupService} from '@app/services/lookup.service';
-import {Employment} from '@app/models/employment';
+import {IGridAction} from '@contracts/i-grid-action';
+import {Employee} from '@models/employee';
+import {Lookup} from '@models/lookup';
+import {LangService} from '@services/lang.service';
+import {LookupService} from '@services/lookup.service';
+import {Employment} from '@models/employment';
 import {Observable} from 'rxjs';
 import {HasAttachmentHandlerDirective} from '@app/shared/directives/has-attachment-handler.directive';
 import {AttachmentHandlerDirective} from '@app/shared/directives/attachment-handler.directive';
