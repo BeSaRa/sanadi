@@ -45,7 +45,7 @@ import {
 } from '@app/modules/remittances/pages/customs-exemption/customs-exemption.component';
 import {
   InternalBankAccountApprovalComponent
-} from '@app/modules/projects/pages/internal-bank-account-approval/internal-bank-account-approval.component';
+} from '@app/modules/services/internal-bank-account-approval/pages/internal-bank-account-approval/internal-bank-account-approval.component';
 
 import {
   UrgentJointReliefCampaignComponent

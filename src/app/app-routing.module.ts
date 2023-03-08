@@ -143,6 +143,17 @@ const routes: Routes = [
         } as Partial<ICustomRouteData>
       },
       {
+        path: 'services/internal-bank-account-approval',
+        canActivate: [NewServicePermissionGuard],
+        loadChildren: () => import('./modules/services/internal-bank-account-approval/internal-bank-account-approval.module')
+          .then(m => m.InternalBankAccountApprovalModule),
+        data: {
+          permissionGroup: PermissionGroupsEnum.INTERNAL_BANK_ACCOUNT_APPROVAL_SERVICES_PERMISSION_GROUP,
+          checkAnyPermission: true,
+          caseType: CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL
+        } as Partial<ICustomRouteData>
+      },
+      {
         path: 'services/search',
         loadChildren: () => import('@modules/service-search-individual/service-search-individual.module').then(m => m.ServiceSearchIndividualModule),
       },

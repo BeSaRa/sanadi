@@ -21,7 +21,7 @@ import { WFResponseType } from '@app/enums/wfresponse-type.enum';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import {
   InternalBankApprovalApproveTaskPopupComponent
-} from '@app/modules/projects/popups/internal-bank-approval-approve-task-popup/internal-bank-approval-approve-task-popup.component';
+} from '@app/modules/services/internal-bank-account-approval/popups/internal-bank-approval-approve-task-popup/internal-bank-approval-approve-task-popup.component';
 import { BankService } from '@services/bank.service';
 import {
   SelectEmployeePopupComponent

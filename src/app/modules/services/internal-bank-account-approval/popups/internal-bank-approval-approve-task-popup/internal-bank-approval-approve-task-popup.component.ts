@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { ILanguageKeys } from '@contracts/i-language-keys';
-import { WFResponseType } from '@app/enums/wfresponse-type.enum';
+import { WFResponseType } from '@enums/wfresponse-type.enum';
 import { UntypedFormControl } from '@angular/forms';
 import { DialogService } from '@services/dialog.service';
 import { DialogRef } from '@app/shared/models/dialog-ref';
@@ -12,7 +12,7 @@ import { LangService } from '@services/lang.service';
 import { CommonUtils } from '@helpers/common-utils';
 import { exhaustMap, filter, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { IWFResponse } from '@contracts/i-w-f-response';
-import { InternalBankAccountApproval } from '@app/models/internal-bank-account-approval';
+import { InternalBankAccountApproval } from '@models/internal-bank-account-approval';
 import { IKeyValue } from '@contracts/i-key-value';
 import { DateUtils } from '@helpers/date-utils';
 
