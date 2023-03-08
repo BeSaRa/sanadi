@@ -202,16 +202,16 @@ export class ProjectImplementation
   }
 
   finalApprove(): DialogRef {
-    // return [ServiceRequestTypes.CANCEL, ServiceRequestTypes.UPDATE].includes(this.requestType) ? super.approve(WFResponseType.FINAL_APPROVE) : this.service.approveTask(this, WFResponseType.FINAL_APPROVE);
-    return this.service.approveTask(this, WFResponseType.FINAL_APPROVE);
+    if(this._isCustomApprove()){
+       return this.service.approveTask(this, WFResponseType.FINAL_APPROVE);
+     }
+   return super.approve(WFResponseType.FINAL_APPROVE)
   }
   validateApprove(): DialogRef {
-   if(this.submissionMechanism === SubmissionMechanisms.REGISTRATION){
-    if(this.requestType === AllRequestTypesEnum.NEW ||
-      this.requestType === AllRequestTypesEnum.EXTEND)
-     return this.service.approveTask(this, WFResponseType.VALIDATE_APPROVE);
+   if(this._isCustomApprove()){
+    return this.service.approveTask(this, WFResponseType.VALIDATE_APPROVE);
    }
-   return this.inboxService!.takeActionWithComment(this.taskDetails.tkiid, this.caseType, WFResponseType.VALIDATE_APPROVE, false, this);
+    return super.approve(WFResponseType.VALIDATE_APPROVE)
 
   }
   isSubmissionMechanismNotification(): boolean {
@@ -224,5 +224,13 @@ export class ProjectImplementation
 
   isSubmissionMechanismRegistration(): boolean {
     return this.submissionMechanism === SubmissionMechanisms.REGISTRATION;
+  }
+  private _isCustomApprove() : boolean{
+    if(this.submissionMechanism === SubmissionMechanisms.REGISTRATION){
+      if(this.requestType === AllRequestTypesEnum.NEW ||
+        this.requestType === AllRequestTypesEnum.EXTEND)
+        return true;
+     }
+     return false;
   }
 }
