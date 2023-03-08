@@ -451,7 +451,6 @@ GeneralProcessNotificationService
         takeUntil(this.destroy$)
       )
       .subscribe((selection) => {
-        console.log(selection)
         this.setSelectedLicense(selection.details);
       });
   }
