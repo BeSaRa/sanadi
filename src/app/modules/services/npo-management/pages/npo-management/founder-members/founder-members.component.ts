@@ -1,19 +1,18 @@
-import { DateUtils } from './../../../../../helpers/date-utils';
-import { DatepickerOptionsMap } from './../../../../../types/types';
-import { LookupService } from './../../../../../services/lookup.service';
-import { Lookup } from './../../../../../models/lookup';
-import { JobTitleService } from './../../../../../services/job-title.service';
-import { JobTitle } from './../../../../../models/job-title';
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { LangService } from "@app/services/lang.service";
-import { ToastService } from "@app/services/toast.service";
-import { DialogService } from "@app/services/dialog.service";
-import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from "@angular/forms";
-import { ReadinessStatus } from "@app/types/types";
-import { BehaviorSubject, Subject } from "rxjs";
-import { filter, map, take, takeUntil, tap } from "rxjs/operators";
-import { UserClickOn } from "@app/enums/user-click-on.enum";
-import { FounderMembers } from "@app/models/founder-members";
+import {DateUtils} from '@helpers/date-utils';
+import {DatepickerOptionsMap, ReadinessStatus} from '@app/types/types';
+import {LookupService} from '@services/lookup.service';
+import {Lookup} from '@models/lookup';
+import {JobTitleService} from '@services/job-title.service';
+import {JobTitle} from '@models/job-title';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {LangService} from "@app/services/lang.service";
+import {ToastService} from "@app/services/toast.service";
+import {DialogService} from "@app/services/dialog.service";
+import {AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup} from "@angular/forms";
+import {BehaviorSubject, Subject} from "rxjs";
+import {filter, map, take, takeUntil} from "rxjs/operators";
+import {UserClickOn} from "@app/enums/user-click-on.enum";
+import {FounderMembers} from "@app/models/founder-members";
 
 @Component({
   selector: 'founder-members',

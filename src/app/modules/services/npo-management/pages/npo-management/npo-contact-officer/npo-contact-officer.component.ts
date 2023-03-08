@@ -1,4 +1,4 @@
-import { JobTitle } from './../../../../../models/job-title';
+import { JobTitle } from '@models/job-title';
 import { JobTitleService } from '@services/job-title.service';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { LangService } from "@app/services/lang.service";

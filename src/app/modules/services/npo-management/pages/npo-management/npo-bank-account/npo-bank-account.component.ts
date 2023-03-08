@@ -1,19 +1,19 @@
-import { AdminResult } from './../../../../../models/admin-result';
-import { CurrencyEnum } from '@app/enums/currency-enum';
-import { Bank } from './../../../../../models/bank';
-import { NpoBankAccount } from './../../../../../models/npo-bank-account';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { LangService } from '@app/services/lang.service';
-import { filter, map, take, takeUntil } from 'rxjs/operators';
-import { Lookup } from '@app/models/lookup';
-import { BehaviorSubject, Subject } from 'rxjs';
-import { UserClickOn } from '@app/enums/user-click-on.enum';
-import { DialogService } from '@app/services/dialog.service';
-import { ToastService } from '@app/services/toast.service';
-import { ReadinessStatus } from '@app/types/types';
-import { LookupService } from '@app/services/lookup.service';
-import { CaseTypes } from '@app/enums/case-types.enum';
+import {AdminResult} from '@models/admin-result';
+import {CurrencyEnum} from '@app/enums/currency-enum';
+import {Bank} from '@models/bank';
+import {NpoBankAccount} from '@models/npo-bank-account';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
+import {LangService} from '@app/services/lang.service';
+import {filter, map, take, takeUntil} from 'rxjs/operators';
+import {Lookup} from '@app/models/lookup';
+import {BehaviorSubject, Subject} from 'rxjs';
+import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {DialogService} from '@app/services/dialog.service';
+import {ToastService} from '@app/services/toast.service';
+import {ReadinessStatus} from '@app/types/types';
+import {LookupService} from '@app/services/lookup.service';
+import {CaseTypes} from '@app/enums/case-types.enum';
 
 @Component({
   selector: 'npo-bank-account',
@@ -22,10 +22,10 @@ import { CaseTypes } from '@app/enums/case-types.enum';
 })
 export class NpoBankAccountComponent implements OnInit {
   constructor(public lang: LangService,
-    private toastService: ToastService,
-    private dialogService: DialogService,
-    private lookupService: LookupService,
-    private fb: UntypedFormBuilder) {
+              private toastService: ToastService,
+              private dialogService: DialogService,
+              private lookupService: LookupService,
+              private fb: UntypedFormBuilder) {
   }
 
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();
@@ -177,7 +177,6 @@ export class NpoBankAccountComponent implements OnInit {
           bankInfo: bank as unknown as AdminResult
         });
       })
-
     ).subscribe((bankAccount: NpoBankAccount) => {
       if (!bankAccount) {
         return;

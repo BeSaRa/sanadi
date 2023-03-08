@@ -1,4 +1,4 @@
-import { NpoManagementApprovePopupComponent } from './../modules/general-services/popups/npo-management-approve-popup/npo-management-approve-popup.component';
+import { NpoManagementApprovePopupComponent } from '../modules/services/npo-management/popups/npo-management-approve-popup/npo-management-approve-popup.component';
 import { DialogRef } from './../shared/models/dialog-ref';
 import { WFResponseType } from '@app/enums/wfresponse-type.enum';
 import { FactoryService } from './factory.service';
