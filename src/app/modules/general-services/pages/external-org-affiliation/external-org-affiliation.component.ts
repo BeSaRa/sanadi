@@ -26,7 +26,7 @@ import {ExternalOrgAffiliationService} from '@app/services/external-org-affiliat
 import {LookupService} from '@app/services/lookup.service';
 import {DialogService} from '@app/services/dialog.service';
 import {AffiliationRequestType} from '@app/enums/service-request-types';
-import {BankAccountComponent} from '@app/modules/e-services-main/shared/bank-account/bank-account.component';
+import {BankAccountComponent} from '@app/modules/services/shared-services/components/bank-account/bank-account.component';
 import {
   ExecutiveManagementComponent
 } from '@app/shared/components/executive-management/executive-management.component';

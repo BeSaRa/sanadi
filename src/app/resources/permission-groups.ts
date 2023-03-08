@@ -159,6 +159,12 @@ const initialExternalOfficeApprovalServicesPermissionGroup: (EServicePermissions
   Constants.SERVICE_OUTPUT_PERMISSION
 ];
 
+const finalExternalOfficeApprovalServicesPermissionGroup: (EServicePermissionsEnum | string)[] = [
+  EServicePermissionsEnum.FINAL_EXTERNAL_OFFICE_APPROVAL,
+  EServicePermissionsEnum.SEARCH_SERVICE_FINAL_EXTERNAL_OFFICE_APPROVAL,
+  Constants.SERVICE_OUTPUT_PERMISSION
+];
+
 const generalServicesPermissionsGroup: EServicePermissionsEnum[] = [
   EServicePermissionsEnum.INQUIRY,
   EServicePermissionsEnum.CONSULTATION,
@@ -229,6 +235,7 @@ const permissionGroups: PermissionGroupsMapType = {
   [PermissionGroupsEnum.URGENT_JOINT_RELIEF_CAMPAIGN_SERVICES_PERMISSION_GROUP]: urgentJointReliefCampaignServicesPermissionGroup,
   [PermissionGroupsEnum.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD_SERVICES_PERMISSION_GROUP]: transferringIndividualFundsAbroadServicesPermissionGroup,
   [PermissionGroupsEnum.INITIAL_EXTERNAL_OFFICE_APPROVAL_SERVICES_PERMISSION_GROUP]: initialExternalOfficeApprovalServicesPermissionGroup,
+  [PermissionGroupsEnum.FINAL_EXTERNAL_OFFICE_APPROVAL_SERVICES_PERMISSION_GROUP]: finalExternalOfficeApprovalServicesPermissionGroup,
 
 
   [PermissionGroupsEnum.SANADI_PERMISSIONS_GROUP]: sanadiPermissionsGroup,

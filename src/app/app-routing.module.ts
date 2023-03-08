@@ -187,6 +187,17 @@ const routes: Routes = [
         } as Partial<ICustomRouteData>
       },
       {
+        path: 'services/final-external-office-approval',
+        canActivate: [NewServicePermissionGuard],
+        loadChildren: () => import('./modules/services/final-external-office-approval/final-external-office-approval.module')
+          .then(m => m.FinalExternalOfficeApprovalModule),
+        data: {
+          permissionGroup: PermissionGroupsEnum.FINAL_EXTERNAL_OFFICE_APPROVAL_SERVICES_PERMISSION_GROUP,
+          checkAnyPermission: true,
+          caseType: CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL
+        } as Partial<ICustomRouteData>
+      },
+      {
         path: 'services/search',
         loadChildren: () => import('@modules/service-search-individual/service-search-individual.module').then(m => m.ServiceSearchIndividualModule),
       },

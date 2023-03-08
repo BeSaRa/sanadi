@@ -29,7 +29,8 @@ enum SystemPathsEnum {
   INTERNAL_BANK_ACCOUNT_APPROVAL = '/home/services/internal-bank-account-approval',
   URGENT_JOINT_RELIEF_CAMPAIGN = '/home/services/urgent-joint-relief-campaign',
   TRANSFER_INDIVIDUAL_FUNDS_ABROAD = '/home/services/transferring-individual-funds-abroad',
-  // INITIAL_EXTERNAL_OFFICE_APPROVAL = '/home/services/initial-external-office-approval'
+  // INITIAL_EXTERNAL_OFFICE_APPROVAL = '/home/services/initial-external-office-approval',
+  FINAL_EXTERNAL_OFFICE_APPROVAL = '/home/services/final-external-office-approval'
 }
 
 export const newNavigationMenuList = [
@@ -666,6 +667,59 @@ export const newNavigationMenuList = [
     permissionGroup: null,
     parent: 1201,
     group: 'service_' + CaseTypes.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD,
+    itemOrder: 3,
+    svg: null
+  },
+  {
+    id: 1301,
+    langKey: 'menu_final_external_office_approval',
+    path: SystemPathsEnum.FINAL_EXTERNAL_OFFICE_APPROVAL,
+    icon: 'mdi-check-decagram-outline',
+    isSvg: false,
+    caseType: CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL,
+    permission: '',
+    permissionGroup: PermissionGroupsEnum.FINAL_EXTERNAL_OFFICE_APPROVAL_SERVICES_PERMISSION_GROUP,
+    parent: null,
+    group: 'main',
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 1302,
+    langKey: serviceAddUpdateLabel,
+    path: SystemPathsEnum.FINAL_EXTERNAL_OFFICE_APPROVAL + '/service',
+    icon: serviceAddUpdateIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.FINAL_EXTERNAL_OFFICE_APPROVAL,
+    permissionGroup: null,
+    parent: 1301,
+    group: 'service_' + CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL,
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 1303,
+    langKey: serviceSearchLabel,
+    path: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL),
+    icon: serviceSearchIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.SEARCH_SERVICE_FINAL_EXTERNAL_OFFICE_APPROVAL,
+    permissionGroup: null,
+    parent: 1301,
+    group: 'service_' + CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL,
+    itemOrder: 2,
+    svg: null
+  },
+  {
+    id: 1304,
+    langKey: serviceOutputLabel,
+    path: SystemPathsEnum.FINAL_EXTERNAL_OFFICE_APPROVAL + '/outputs',
+    icon: serviceOutputIcon,
+    isSvg: false,
+    permission: Constants.SERVICE_OUTPUT_PERMISSION,
+    permissionGroup: null,
+    parent: 1301,
+    group: 'service_' + CaseTypes.FINAL_EXTERNAL_OFFICE_APPROVAL,
     itemOrder: 3,
     svg: null
   },
