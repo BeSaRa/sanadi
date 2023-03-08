@@ -1,6 +1,6 @@
-import { GeneralProcessNotificationApprovalComponent } from './../modules/general-services/popups/general-process-notification-approval/general-process-notification-approval.component';
+import { GeneralProcessNotificationApprovalPopupComponent } from '@modules/services/general-process-notification/popups/general-process-notification-approval-popup/general-process-notification-approval-popup.component';
 import { DialogRef } from './../shared/models/dialog-ref';
-import { WFResponseType } from './../enums/wfresponse-type.enum';
+import { WFResponseType } from '@enums/wfresponse-type.enum';
 import { Observable } from 'rxjs';
 import { LicenseService } from './license.service';
 import { FactoryService } from './factory.service';
@@ -60,7 +60,7 @@ export class GeneralProcessNotificationService extends BaseGenericEService<Gener
     return this.licenseService.GeneralProcessNotificationSearch(criteria);
   }
   approve(model: GeneralProcessNotification, action: WFResponseType): DialogRef {
-    return this.dialog.show(GeneralProcessNotificationApprovalComponent, {
+    return this.dialog.show(GeneralProcessNotificationApprovalPopupComponent, {
       model,
       action
     });

@@ -1,6 +1,6 @@
 import {
   GeneralProcessNotificationComponent
-} from '@modules/general-services/pages/general-process-notification/general-process-notification.component';
+} from '@modules/services/general-process-notification/pages/general-process-notification/general-process-notification.component';
 import {
   AwarenessActivitySuggestionComponent
 } from '@modules/general-services/pages/awareness-activity-suggestion/awareness-activity-suggestion.component';

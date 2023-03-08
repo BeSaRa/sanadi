@@ -1,6 +1,7 @@
-import { GeneralProcessNotification } from '@app/models/general-process-notification';
+import { GeneralProcessNotification } from '@models/general-process-notification';
 import { UntypedFormControl, UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
 import { switchMap, exhaustMap, takeUntil, map, tap, filter } from 'rxjs/operators';
+import { IWFResponse } from '@contracts/i-w-f-response';
 import { Component, Inject, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { CustomValidators } from '@app/validators/custom-validators';
@@ -18,11 +19,11 @@ import { CommonUtils } from '@app/helpers/common-utils';
 import { IWFResponse } from '@app/interfaces/i-w-f-response';
 
 @Component({
-  selector: 'app-general-process-notification-approval',
-  templateUrl: './general-process-notification-approval.component.html',
-  styleUrls: ['./general-process-notification-approval.component.scss']
+  selector: 'app-general-process-notification-approval-popup',
+  templateUrl: './general-process-notification-approval-popup.component.html',
+  styleUrls: ['./general-process-notification-approval-popup.component.scss']
 })
-export class GeneralProcessNotificationApprovalComponent implements OnInit {
+export class GeneralProcessNotificationApprovalPopupComponent implements OnInit {
   comment: UntypedFormControl = new UntypedFormControl('', [CustomValidators.maxLength(CustomValidators.defaultLengths.EXPLANATIONS)]);
   response: WFResponseType = WFResponseType.APPROVE;
   action$: Subject<any> = new Subject<any>();
