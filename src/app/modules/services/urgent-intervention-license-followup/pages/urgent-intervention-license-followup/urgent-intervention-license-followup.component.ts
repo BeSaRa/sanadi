@@ -2,13 +2,13 @@ import {Component, ViewChild} from '@angular/core';
 import {LangService} from '@services/lang.service';
 import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
 import {UrgentInterventionLicenseFollowupService} from '@services/urgent-intervention-license-followup.service';
-import {UrgentInterventionLicenseFollowup} from '@app/models/urgent-intervention-license-followup';
-import {SaveTypes} from '@app/enums/save-types';
-import {OperationTypes} from '@app/enums/operation-types.enum';
+import {UrgentInterventionLicenseFollowup} from '@models/urgent-intervention-license-followup';
+import {SaveTypes} from '@enums/save-types';
+import {OperationTypes} from '@enums/operation-types.enum';
 import {Observable, of, Subject} from 'rxjs';
 import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
-import {OpenFrom} from '@app/enums/open-from.enum';
+import {CommonCaseStatus} from '@enums/common-case-status.enum';
+import {OpenFrom} from '@enums/open-from.enum';
 import {EmployeeService} from '@services/employee.service';
 import {ILanguageKeys} from '@contracts/i-language-keys';
 import {TabComponent} from '@app/shared/components/tab/tab.component';
@@ -16,21 +16,20 @@ import {catchError, exhaustMap, filter, map, takeUntil, tap} from 'rxjs/operator
 import {DialogService} from '@services/dialog.service';
 import {LicenseService} from '@services/license.service';
 import {TabMap} from '@app/types/types';
-import {UrgentInterventionAnnouncementResult} from '@app/models/urgent-intervention-announcement-result';
-import {UrgentInterventionReport} from '@app/models/urgent-intervention-report';
+import {UrgentInterventionAnnouncementResult} from '@models/urgent-intervention-announcement-result';
 import {
   UrgentInterventionReportListComponent
-} from '@app/modules/urgent-intervention/shared/urgent-intervention-report-list/urgent-intervention-report-list.component';
-import {UrgentInterventionAnnouncement} from '@app/models/urgent-intervention-announcement';
+} from '@modules/services/urgent-intervention-license-followup/shared/urgent-intervention-report-list/urgent-intervention-report-list.component';
+import {UrgentInterventionAnnouncement} from '@models/urgent-intervention-announcement';
 import {
   InterventionImplementingAgencyListComponent
 } from '@modules/services/shared-services/components/intervention-implementing-agency-list/intervention-implementing-agency-list.component';
 import {
   InterventionRegionListComponent
-} from '@app/modules/services/shared-services/components/intervention-region-list/intervention-region-list.component';
+} from '@modules/services/shared-services/components/intervention-region-list/intervention-region-list.component';
 import {
   InterventionFieldListComponent
-} from '@app/modules/services/shared-services/components/intervention-field-list/intervention-field-list.component';
+} from '@modules/services/shared-services/components/intervention-field-list/intervention-field-list.component';
 
 @Component({
   selector: 'urgent-intervention-license-followup',

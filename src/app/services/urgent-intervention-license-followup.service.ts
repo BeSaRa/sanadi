@@ -26,14 +26,14 @@ import {catchError, map, switchMap} from 'rxjs/operators';
 import {UrgentInterventionAttachment} from '@app/models/urgent-intervention-attachment';
 import {CastResponse, CastResponseContainer} from '@decorators/cast-response';
 import {
-  UrgentInterventionAttachmentPopupComponent
-} from '@app/modules/urgent-intervention/popups/urgent-intervention-attachment-popup/urgent-intervention-attachment-popup.component';
+  UrgentInterventionReportAttachmentPopupComponent
+} from '@modules/services/urgent-intervention-license-followup/popups/urgent-intervention-report-attachment-popup/urgent-intervention-report-attachment-popup.component';
 import {HasInterception, InterceptParam} from '@decorators/intercept-model';
 import {BlobModel} from '@app/models/blob-model';
 import {IDefaultResponse} from '@contracts/idefault-response';
 import {
-  UrgentInterventionAttachmentApprovalPopupComponent
-} from '@app/modules/urgent-intervention/popups/urgent-intervention-attachment-approval-popup/urgent-intervention-attachment-approval-popup.component';
+  UrgentInterventionReportAttachmentApprovalPopupComponent
+} from '@modules/services/urgent-intervention-license-followup/popups/urgent-intervention-report-attachment-approval-popup/urgent-intervention-report-attachment-approval-popup.component';
 
 @CastResponseContainer({
   $default: {
@@ -104,7 +104,7 @@ export class UrgentInterventionLicenseFollowupService extends BaseGenericEServic
   openAttachmentsDialog(reportId: number, caseId: string, readonly: boolean = false): Observable<DialogRef> {
     return this.loadAttachmentsByReportId(reportId).pipe(
       switchMap((result: UrgentInterventionAttachment[]) => {
-        return of(this.dialog.show(UrgentInterventionAttachmentPopupComponent, {
+        return of(this.dialog.show(UrgentInterventionReportAttachmentPopupComponent, {
           list: result,
           reportId: reportId,
           caseId: caseId,
@@ -134,14 +134,14 @@ export class UrgentInterventionLicenseFollowupService extends BaseGenericEServic
   }
 
   approveAttachment(attachmentId: string): DialogRef {
-    return this.dialog.show(UrgentInterventionAttachmentApprovalPopupComponent, {
+    return this.dialog.show(UrgentInterventionReportAttachmentApprovalPopupComponent, {
       attachmentId,
       isApproved: true
     });
   }
 
   rejectAttachment(attachmentId: string): DialogRef {
-    return this.dialog.show(UrgentInterventionAttachmentApprovalPopupComponent, {
+    return this.dialog.show(UrgentInterventionReportAttachmentApprovalPopupComponent, {
       attachmentId,
       isApproved: false
     });

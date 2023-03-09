@@ -1,11 +1,11 @@
 import {Component, Input} from '@angular/core';
 import {LangService} from '@services/lang.service';
-import {UrgentInterventionReport} from '@app/models/urgent-intervention-report';
+import {UrgentInterventionReport} from '@models/urgent-intervention-report';
 import {SortEvent} from '@contracts/sort-event';
 import {CommonUtils} from '@helpers/common-utils';
 import {DateUtils} from '@helpers/date-utils';
-import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import {IMenuItem} from '@modules/context-menu/interfaces/i-menu-item';
+import {ActionIconsEnum} from '@enums/action-icons-enum';
 import {of, Subject} from 'rxjs';
 import {catchError, exhaustMap, filter, switchMap, takeUntil} from 'rxjs/operators';
 import {DialogRef} from '@app/shared/models/dialog-ref';
