@@ -61,7 +61,7 @@ import {
 } from '@modules/services/external-organization-affiliation/pages/external-org-affiliation/external-org-affiliation.component';
 import {
   UrgentInterventionLicenseComponent
-} from '@app/modules/urgent-intervention/pages/urgent-intervention-license/urgent-intervention-license.component';
+} from '@app/modules/services/urgent-intervention-licensing/pages/urgent-intervention-license/urgent-intervention-license.component';
 import {
   TransferringIndividualFundsAbroadComponent
 } from '@app/modules/services/transferring-individual-funds-abroad/pages/transferring-individual-funds-abroad/transferring-individual-funds-abroad.component';

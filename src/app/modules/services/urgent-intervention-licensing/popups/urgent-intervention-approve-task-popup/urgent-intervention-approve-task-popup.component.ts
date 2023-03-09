@@ -4,7 +4,7 @@ import {ToastService} from "@services/toast.service";
 import {DialogRef} from "@app/shared/models/dialog-ref";
 import {InboxService} from "@services/inbox.service";
 import {DIALOG_DATA_TOKEN} from "@app/shared/tokens/tokens";
-import {WFResponseType} from "@app/enums/wfresponse-type.enum";
+import {WFResponseType} from "@enums/wfresponse-type.enum";
 import {LangService} from "@services/lang.service";
 import {CommonUtils} from "@helpers/common-utils";
 import {ILanguageKeys} from "@contracts/i-language-keys";
@@ -12,14 +12,13 @@ import {Subject} from "rxjs";
 import {UntypedFormControl} from "@angular/forms";
 import {exhaustMap, filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
 import {IWFResponse} from "@contracts/i-w-f-response";
-import {UrgentInterventionLicense} from "@app/models/urgent-intervention-license";
+import {UrgentInterventionLicense} from "@models/urgent-intervention-license";
 import {
   ApprovalFormMonthlyComponent
-} from "@app/shared/components/approval-form-monthly/approval-form-monthly.component";
+} from "@app/modules/services/shared-services/components/approval-form-monthly/approval-form-monthly.component";
 import {CustomValidators} from '@app/validators/custom-validators';
-import {ServiceRequestTypes} from '@app/enums/service-request-types';
+import {ServiceRequestTypes} from '@enums/service-request-types';
 
-// noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
   selector: 'urgent-intervention-approve-task-popup',
   templateUrl: './urgent-intervention-approve-task-popup.component.html',
@@ -37,17 +36,15 @@ export class UrgentInterventionApproveTaskPopupComponent implements OnInit, Afte
 
   @ViewChild(ApprovalFormMonthlyComponent) approvalForm!: ApprovalFormMonthlyComponent;
 
-  constructor(
-    private dialog: DialogService,
-    private toast: ToastService,
-    private dialogRef: DialogRef,
-    private inboxService: InboxService,
-    @Inject(DIALOG_DATA_TOKEN) public data: {
-      model: UrgentInterventionLicense,
-      action: WFResponseType
-    },
-    public lang: LangService,
-  ) {
+  constructor(private dialog: DialogService,
+              private toast: ToastService,
+              private dialogRef: DialogRef,
+              private inboxService: InboxService,
+              @Inject(DIALOG_DATA_TOKEN) public data: {
+                model: UrgentInterventionLicense,
+                action: WFResponseType
+              },
+              public lang: LangService,) {
     this.label = ((CommonUtils.changeCamelToSnakeCase(this.data.action) + '_task') as unknown as keyof ILanguageKeys);
     this.response = this.data.action;
     this.model = this.data.model;

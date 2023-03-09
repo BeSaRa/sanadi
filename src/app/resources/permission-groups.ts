@@ -243,6 +243,12 @@ const fundraisingLicensingServicesPermissionGroup: (EServicePermissionsEnum | st
   Constants.SERVICE_OUTPUT_PERMISSION
 ];
 
+const urgentInterventionLicensingServicesPermissionGroup: (EServicePermissionsEnum | string)[] = [
+  EServicePermissionsEnum.URGENT_INTERVENTION_LICENSING,
+  EServicePermissionsEnum.SEARCH_SERVICE_URGENT_INTERVENTION_LICENSING,
+  Constants.SERVICE_OUTPUT_PERMISSION
+];
+
 const generalServicesPermissionsGroup: EServicePermissionsEnum[] = [
   EServicePermissionsEnum.INQUIRY,
   EServicePermissionsEnum.CONSULTATION,
@@ -327,6 +333,7 @@ const permissionGroups: PermissionGroupsMapType = {
   [PermissionGroupsEnum.COLLECTION_APPROVAL_SERVICES_PERMISSION_GROUP]: collectionApprovalServicesPermissionGroup,
   [PermissionGroupsEnum.COLLECTOR_LICENSING_SERVICES_PERMISSION_GROUP]: collectorApprovalServicesPermissionGroup,
   [PermissionGroupsEnum.FUNDRAISING_LICENSING_SERVICES_PERMISSION_GROUP]: fundraisingLicensingServicesPermissionGroup,
+  [PermissionGroupsEnum.URGENT_INTERVENTION_LICENSING_SERVICES_PERMISSION_GROUP]: urgentInterventionLicensingServicesPermissionGroup,
 
 
   [PermissionGroupsEnum.SANADI_PERMISSIONS_GROUP]: sanadiPermissionsGroup,
