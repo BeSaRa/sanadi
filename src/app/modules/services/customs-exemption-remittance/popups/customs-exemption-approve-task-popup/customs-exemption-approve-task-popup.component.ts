@@ -1,22 +1,22 @@
-import { Component, Inject, OnInit } from "@angular/core";
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from "@angular/forms";
-import { ServiceRequestTypes } from "@app/enums/service-request-types";
-import { WFResponseType } from "@app/enums/wfresponse-type.enum";
-import { CommonUtils } from "@app/helpers/common-utils";
-import { DateUtils } from "@app/helpers/date-utils";
-import { IKeyValue } from "@app/interfaces/i-key-value";
-import { ILanguageKeys } from "@app/interfaces/i-language-keys";
-import { IWFResponse } from "@app/interfaces/i-w-f-response";
-import { CustomsExemptionRemittance } from "@app/models/customs-exemption-remittance";
-import { DialogService } from "@app/services/dialog.service";
-import { InboxService } from "@app/services/inbox.service";
-import { LangService } from "@app/services/lang.service";
-import { ToastService } from "@app/services/toast.service";
-import { DialogRef } from "@app/shared/models/dialog-ref";
-import { DIALOG_DATA_TOKEN } from "@app/shared/tokens/tokens";
-import { CustomValidators } from "@app/validators/custom-validators";
-import { Subject } from "rxjs";
-import { exhaustMap, filter, map, switchMap, takeUntil, tap } from "rxjs/operators";
+import {Component, Inject, OnInit} from "@angular/core";
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from "@angular/forms";
+import {ServiceRequestTypes} from "@enums/service-request-types";
+import {WFResponseType} from "@enums/wfresponse-type.enum";
+import {CommonUtils} from "@helpers/common-utils";
+import {DateUtils} from "@helpers/date-utils";
+import {IKeyValue} from "@contracts/i-key-value";
+import {ILanguageKeys} from "@contracts/i-language-keys";
+import {IWFResponse} from "@contracts/i-w-f-response";
+import {CustomsExemptionRemittance} from "@models/customs-exemption-remittance";
+import {DialogService} from "@services/dialog.service";
+import {InboxService} from "@services/inbox.service";
+import {LangService} from "@services/lang.service";
+import {ToastService} from "@services/toast.service";
+import {DialogRef} from "@app/shared/models/dialog-ref";
+import {DIALOG_DATA_TOKEN} from "@app/shared/tokens/tokens";
+import {CustomValidators} from "@app/validators/custom-validators";
+import {Subject} from "rxjs";
+import {exhaustMap, filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
 
 @Component({
   selector: "customs-exemption-approve-task-popup",

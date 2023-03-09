@@ -15,7 +15,6 @@ import {DynamicMenuRouteTypeEnum} from '@app/enums/dynamic-menu-route-type.enum'
 import {NewServicePermissionGuard} from '@app/guards/new-service-permission.guard';
 import {CaseTypes} from '@app/enums/case-types.enum';
 import {ICustomRouteData} from '@contracts/i-custom-route-data';
-import {EmploymentModule} from '@modules/services/employment/employment.module';
 
 const routes: Routes = [
   {path: '', redirectTo: 'login', pathMatch: 'full'},
@@ -284,6 +283,17 @@ const routes: Routes = [
           permissionGroup: PermissionGroupsEnum.COORDINATION_WITH_ORGANIZATION_REQUEST_SERVICES_PERMISSION_GROUP,
           checkAnyPermission: true,
           caseType: CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST
+        } as Partial<ICustomRouteData>
+      },
+      {
+        path: 'services/customs-exemption',
+        canActivate: [NewServicePermissionGuard],
+        loadChildren: () => import('./modules/services/customs-exemption-remittance/customs-exemption-remittance.module')
+          .then(m => m.CustomsExemptionRemittanceModule),
+        data: {
+          permissionGroup: PermissionGroupsEnum.CUSTOMS_EXEMPTION_REMITTANCE_SERVICES_PERMISSION_GROUP,
+          checkAnyPermission: true,
+          caseType: CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE
         } as Partial<ICustomRouteData>
       },
       {
