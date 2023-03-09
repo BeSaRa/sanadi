@@ -399,7 +399,7 @@ const routes: Routes = [
         path: 'services/search',
         loadChildren: () => import('@modules/service-search-individual/service-search-individual.module').then(m => m.ServiceSearchIndividualModule),
       },
-      {
+      /*{
         path: 'general-services',
         canActivate: [ServicesGuard],
         loadChildren: () => import('./modules/general-services/general-services.module').then(m => m.GeneralServicesModule),
@@ -410,7 +410,7 @@ const routes: Routes = [
         canActivate: [ServicesGuard],
         loadChildren: () => import('./modules/office-services/office-services.module').then(m => m.OfficeServicesModule),
         data: {configPermissionGroup: PermissionGroupsEnum.OFFICE_SERVICES_PERMISSIONS_GROUP, checkAnyPermission: true}
-      },
+      },*/
       {path: 'user-inbox', loadChildren: () => import('./user-inbox/user-inbox.module').then(m => m.UserInboxModule)},
       {
         path: 'team-inbox',
@@ -425,19 +425,19 @@ const routes: Routes = [
         data: {permissionKey: EServicePermissionsEnum.E_SERVICES_SEARCH},
       },
       {path: 'sanady', loadChildren: () => import('./sanady/sanady.module').then(m => m.SanadyModule)},
-      {
+      /*{
         path: 'projects',
         canActivate: [ServicesGuard],
         data: {configPermissionGroup: PermissionGroupsEnum.PROJECTS_PERMISSION_GROUP, checkAnyPermission: true},
         loadChildren: () => import('./modules/projects/projects.module').then(m => m.ProjectsModule)
-      },
+      },*/
       {
         path: 'training',
         canActivate: [PermissionGuard],
         data: {configPermissionGroup: PermissionGroupsEnum.TRAINING_PROGRAMS_PAGE_GROUP, checkAnyPermission: true},
         loadChildren: () => import('./training-services/training-services.module').then(m => m.TrainingServicesModule)
       },
-      {
+      /*{
         path: 'collection',
         canActivate: [ServicesGuard],
         data: {configPermissionGroup: PermissionGroupsEnum.COLLECTION_SERVICES_GROUP, checkAnyPermission: true},
@@ -448,26 +448,26 @@ const routes: Routes = [
         canActivate: [ServicesGuard],
         loadChildren: () => import('./modules/remittances/remittances.module').then(m => m.RemittancesModule),
         data: {configPermissionGroup: PermissionGroupsEnum.REMITTANCE_PERMISSIONS_GROUP, checkAnyPermission: true}
-      },
+      },*/
       {
         path: 'followup',
         loadChildren: () => import('./modules/followup/followup.module').then(m => m.FollowupModule)
       },
-      {path: 'reports', loadChildren: () => import('./modules/reports/reports.module').then(m => m.ReportsModule)},
+      /*{path: 'reports', loadChildren: () => import('./modules/reports/reports.module').then(m => m.ReportsModule)},*/
       {
         path: 'dynamic-menus',
         loadChildren: () => import('./modules/dynamic-menus/dynamic-menus.module').then(m => m.DynamicMenusModule),
         canActivate: [DynamicMenuGuard],
         data: {dynamicMenuRouteType: DynamicMenuRouteTypeEnum.MODULE}
       },
-      {
+      /*{
         path: 'urgent-intervention',
         loadChildren: () => import('./modules/urgent-intervention/urgent-intervention.module').then(m => m.UrgentInterventionModule),
         data: {
           configPermissionGroup: PermissionGroupsEnum.URGENT_INTERVENTION_PERMISSIONS_GROUP,
           checkAnyPermission: true
         }
-      },
+      },*/
       //{path: '**', redirectTo: '../error'}
     ]
   },
