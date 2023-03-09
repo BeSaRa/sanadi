@@ -103,11 +103,11 @@
   </ng-template>
 </ng-container>
 <ng-template #entitiesTabTemplate>
-  <implementing-agency-list #implementingAgencyListComponent
+  <intervention-implementing-agency-list #implementingAgencyListComponent
                             [list]="(!selectedLicense ? [] : selectedLicense.implementingAgencyList)"
                             [executionCountry]="!selectedLicense ? 0 : selectedLicense.executionCountry"
                             [readonly]="true">
-  </implementing-agency-list>
+  </intervention-implementing-agency-list>
 </ng-template>
 <ng-template #interventionAreasTabTemplate>
   <intervention-region-list #interventionRegionListComponent

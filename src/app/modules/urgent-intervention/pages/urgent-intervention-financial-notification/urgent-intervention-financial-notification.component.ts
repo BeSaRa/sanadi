@@ -8,8 +8,8 @@ import { UrgentInterventionAnnouncementResult } from '@app/models/urgent-interve
 import { UrgentFinancialNotificationAccountType } from '@app/enums/urgent-financial-notification-account-type.enum';
 import { catchError, exhaustMap, filter, map, takeUntil, tap, switchMap } from 'rxjs/operators';
 import {
-  ImplementingAgencyListComponent
-} from './../../shared/implementing-agency-list/implementing-agency-list.component';
+  InterventionImplementingAgencyListComponent
+} from '../../../services/shared-services/components/intervention-implementing-agency-list/intervention-implementing-agency-list.component';
 import { ToastService } from '@app/services/toast.service';
 import { BankAccount } from '@app/models/bank-account';
 import { CommonService } from '@services/common.service';
@@ -19,10 +19,10 @@ import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
 import { TabComponent } from '@app/shared/components/tab/tab.component';
 import {
   InterventionFieldListComponent
-} from './../../shared/intervention-field-list/intervention-field-list.component';
+} from '../../../services/shared-services/components/intervention-field-list/intervention-field-list.component';
 import {
   InterventionRegionListComponent
-} from './../../shared/intervention-region-list/intervention-region-list.component';
+} from '../../../services/shared-services/components/intervention-region-list/intervention-region-list.component';
 import { LicenseService } from '@app/services/license.service';
 import { DialogService } from '@services/dialog.service';
 import { ReadinessStatus, TabMap } from '@app/types/types';
@@ -62,7 +62,7 @@ export class UrgentInterventionFinancialNotificationComponent extends EServicesG
   bankAccountList: BankAccount[] = [];
   @ViewChild('interventionRegionListComponent') interventionRegionListComponentRef!: InterventionRegionListComponent;
   @ViewChild('interventionFieldListComponent') interventionFieldListComponentRef!: InterventionFieldListComponent;
-  @ViewChild('implementingAgencyListComponent') implementingAgencyListComponentRef!: ImplementingAgencyListComponent;
+  @ViewChild('implementingAgencyListComponent') implementingAgencyListComponentRef!: InterventionImplementingAgencyListComponent;
   licenseSearch$: Subject<string> = new Subject<string>();
   selectedLicense?: UrgentInterventionAnnouncement;
   loadAttachments: boolean = false;

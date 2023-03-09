@@ -20,14 +20,14 @@ import { OpenFrom } from '@app/enums/open-from.enum';
 import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
 import { Lookup } from '@app/models/lookup';
 import {
-  ImplementingAgencyListComponent
-} from '@app/modules/urgent-intervention/shared/implementing-agency-list/implementing-agency-list.component';
+  InterventionImplementingAgencyListComponent
+} from '@modules/services/shared-services/components/intervention-implementing-agency-list/intervention-implementing-agency-list.component';
 import {
   InterventionRegionListComponent
-} from '@app/modules/urgent-intervention/shared/intervention-region-list/intervention-region-list.component';
+} from '@app/modules/services/shared-services/components/intervention-region-list/intervention-region-list.component';
 import {
   InterventionFieldListComponent
-} from '@app/modules/urgent-intervention/shared/intervention-field-list/intervention-field-list.component';
+} from '@app/modules/services/shared-services/components/intervention-field-list/intervention-field-list.component';
 import {catchError, exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
 import { CountryService } from '@services/country.service';
 import { Country } from '@app/models/country';
@@ -198,7 +198,7 @@ export class UrgentInterventionClosureComponent extends EServicesGenericComponen
   };
   tabIndex$: Subject<number> = new Subject<number>();
 
-  @ViewChild('implementingAgencyListComponent') implementingAgencyListComponentRef!: ImplementingAgencyListComponent;
+  @ViewChild('implementingAgencyListComponent') implementingAgencyListComponentRef!: InterventionImplementingAgencyListComponent;
   @ViewChild('interventionRegionListComponent') interventionRegionListComponentRef!: InterventionRegionListComponent;
   @ViewChild('interventionFieldListComponent') interventionFieldListComponentRef!: InterventionFieldListComponent;
   @ViewChild('stageListComponent') stageListComponentRef!: StageListComponent;
