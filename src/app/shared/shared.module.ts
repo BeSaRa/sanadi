@@ -89,7 +89,7 @@ import {CaseInfoComponent} from './components/case-info/case-info.component';
 import {GridActionsComponent} from './components/grid-actions/grid-actions.component';
 import {StepCheckListComponent} from './components/step-check-list/step-check-list.component';
 import {LangLoaderComponent} from './components/lang-loader/lang-loader.component';
-import {ApprovalFormMonthlyComponent} from '@app/shared/components/approval-form-monthly/approval-form-monthly.component';
+import {ApprovalFormMonthlyComponent} from '@app/modules/services/shared-services/components/approval-form-monthly/approval-form-monthly.component';
 import {BuildingPlateComponent} from './components/building-plate/building-plate.component';
 import {TranslatePipe} from '@app/pipes/translate.pipe';
 import {DatePipe} from '@app/pipes/date.pipe';

@@ -16,7 +16,7 @@ import {IWFResponse} from "@contracts/i-w-f-response";
 import {ServiceRequestTypes} from "@enums/service-request-types";
 import {
   ApprovalFormMonthlyComponent
-} from "@app/shared/components/approval-form-monthly/approval-form-monthly.component";
+} from "@app/modules/services/shared-services/components/approval-form-monthly/approval-form-monthly.component";
 import {ProjectFundraising} from "@models/project-fundraising";
 
 @Component({

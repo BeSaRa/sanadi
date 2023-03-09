@@ -341,6 +341,17 @@ const routes: Routes = [
         } as Partial<ICustomRouteData>
       },
       {
+        path: 'services/urgent-intervention-license',
+        canActivate: [NewServicePermissionGuard],
+        loadChildren: () => import('./modules/services/urgent-intervention-licensing/urgent-intervention-licensing.module')
+          .then(m => m.UrgentInterventionLicensingModule),
+        data: {
+          permissionGroup: PermissionGroupsEnum.URGENT_INTERVENTION_LICENSING_SERVICES_PERMISSION_GROUP,
+          checkAnyPermission: true,
+          caseType: CaseTypes.URGENT_INTERVENTION_LICENSING
+        } as Partial<ICustomRouteData>
+      },
+      {
         path: 'services/search',
         loadChildren: () => import('@modules/service-search-individual/service-search-individual.module').then(m => m.ServiceSearchIndividualModule),
       },
