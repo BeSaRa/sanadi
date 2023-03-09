@@ -36,7 +36,7 @@ import {
   CollectionApprovalComponent
 } from '@app/modules/services/collection-approval/pages/collection-services-approval/collection-approval.component';
 import {MapService} from '@app/services/map.service';
-import {FundraisingComponent} from '@app/modules/collection/pages/fundraising/fundraising.component';
+import {FundraisingComponent} from '@app/modules/services/fundraising-channel-licensing/pages/fundraising/fundraising.component';
 import {
   CollectorApprovalComponent
 } from '@app/modules/services/collector-approval/pages/collector-approval/collector-approval.component';

@@ -1,27 +1,27 @@
 import {Component} from '@angular/core';
 import {AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {SaveTypes} from '@app/enums/save-types';
-import {CollectionRequestType} from '@app/enums/service-request-types';
+import {OperationTypes} from '@enums/operation-types.enum';
+import {SaveTypes} from '@enums/save-types';
+import {CollectionRequestType} from '@enums/service-request-types';
 import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
-import {CommonUtils} from '@app/helpers/common-utils';
-import {Fundraising} from '@app/models/fundraising';
-import {Lookup} from '@app/models/lookup';
-import {DialogService} from '@app/services/dialog.service';
-import {FundraisingService} from '@app/services/fundraising.service';
-import {LangService} from '@app/services/lang.service';
-import {LookupService} from '@app/services/lookup.service';
+import {CommonUtils} from '@helpers/common-utils';
+import {Fundraising} from '@models/fundraising';
+import {Lookup} from '@models/lookup';
+import {DialogService} from '@services/dialog.service';
+import {FundraisingService} from '@services/fundraising.service';
+import {LangService} from '@services/lang.service';
+import {LookupService} from '@services/lookup.service';
 import {Observable, of, Subject} from 'rxjs';
-import {FileIconsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
+import {FileIconsEnum} from '@enums/file-extension-mime-types-icons.enum';
 import {catchError, exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {CustomValidators} from '@app/validators/custom-validators';
-import {FundraisingSearchCriteria} from '@app/models/FundRaisingSearchCriteria';
-import {LicenseService} from '@app/services/license.service';
-import {ToastService} from '@app/services/toast.service';
-import {OpenFrom} from '@app/enums/open-from.enum';
-import {EmployeeService} from '@app/services/employee.service';
-import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {FundraisingSearchCriteria} from '@models/FundRaisingSearchCriteria';
+import {LicenseService} from '@services/license.service';
+import {ToastService} from '@services/toast.service';
+import {OpenFrom} from '@enums/open-from.enum';
+import {EmployeeService} from '@services/employee.service';
+import {CommonCaseStatus} from '@enums/common-case-status.enum';
+import {UserClickOn} from '@enums/user-click-on.enum';
 
 @Component({
   selector: 'fundraising',
