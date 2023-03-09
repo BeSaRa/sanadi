@@ -40,7 +40,8 @@ enum SystemPathsEnum {
   ORGANIZATION_ENTITIES_SUPPORT = '/home/services/organization-entities-support',
   COORDINATION_WITH_ORGANIZATION_REQUEST = '/home/services/coordination-with-organizations-request',
   CUSTOMS_EXEMPTION_REMITTANCE = '/home/services/customs-exemption',
-  FINANCIAL_TRANSFERS_LICENSING = '/home/services/financial-transfers-licensing'
+  FINANCIAL_TRANSFERS_LICENSING = '/home/services/financial-transfers-licensing',
+  COLLECTION_APPROVAL = '/home/services/collection-approval'
 }
 
 export const newNavigationMenuList = [
@@ -1260,6 +1261,59 @@ export const newNavigationMenuList = [
     permissionGroup: null,
     parent: 2301,
     group: 'service_' + CaseTypes.FINANCIAL_TRANSFERS_LICENSING,
+    itemOrder: 3,
+    svg: null
+  },
+  {
+    id: 2401,
+    langKey: 'menu_collection_services_approval',
+    path: SystemPathsEnum.COLLECTION_APPROVAL,
+    icon: 'mdi-currency-usd',
+    isSvg: false,
+    caseType: CaseTypes.COLLECTION_APPROVAL,
+    permission: '',
+    permissionGroup: PermissionGroupsEnum.COLLECTION_APPROVAL_SERVICES_PERMISSION_GROUP,
+    parent: null,
+    group: 'main',
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 2402,
+    langKey: serviceAddUpdateLabel,
+    path: SystemPathsEnum.COLLECTION_APPROVAL + '/service',
+    icon: serviceAddUpdateIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.COLLECTION_APPROVAL,
+    permissionGroup: null,
+    parent: 2401,
+    group: 'service_' + CaseTypes.COLLECTION_APPROVAL,
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 2403,
+    langKey: serviceSearchLabel,
+    path: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.COLLECTION_APPROVAL),
+    icon: serviceSearchIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.SEARCH_SERVICE_COLLECTION_APPROVAL,
+    permissionGroup: null,
+    parent: 2401,
+    group: 'service_' + CaseTypes.COLLECTION_APPROVAL,
+    itemOrder: 2,
+    svg: null
+  },
+  {
+    id: 2404,
+    langKey: serviceOutputLabel,
+    path: SystemPathsEnum.COLLECTION_APPROVAL + '/outputs',
+    icon: serviceOutputIcon,
+    isSvg: false,
+    permission: Constants.SERVICE_OUTPUT_PERMISSION,
+    permissionGroup: null,
+    parent: 2401,
+    group: 'service_' + CaseTypes.COLLECTION_APPROVAL,
     itemOrder: 3,
     svg: null
   },

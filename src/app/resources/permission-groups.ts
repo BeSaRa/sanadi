@@ -225,6 +225,12 @@ const financialTransfersLicensingServicesPermissionGroup: (EServicePermissionsEn
   Constants.SERVICE_OUTPUT_PERMISSION
 ];
 
+const collectionApprovalServicesPermissionGroup: (EServicePermissionsEnum | string)[] = [
+  EServicePermissionsEnum.COLLECTION_APPROVAL,
+  EServicePermissionsEnum.SEARCH_SERVICE_COLLECTION_APPROVAL,
+  Constants.SERVICE_OUTPUT_PERMISSION
+];
+
 const generalServicesPermissionsGroup: EServicePermissionsEnum[] = [
   EServicePermissionsEnum.INQUIRY,
   EServicePermissionsEnum.CONSULTATION,
@@ -306,6 +312,7 @@ const permissionGroups: PermissionGroupsMapType = {
   [PermissionGroupsEnum.COORDINATION_WITH_ORGANIZATION_REQUEST_SERVICES_PERMISSION_GROUP]: coordinationWithOrganizationRequestServicesPermissionGroup,
   [PermissionGroupsEnum.CUSTOMS_EXEMPTION_REMITTANCE_SERVICES_PERMISSION_GROUP]: customsExemptionRemittanceServicesPermissionGroup,
   [PermissionGroupsEnum.FINANCIAL_TRANSFERS_LICENSING_SERVICES_PERMISSION_GROUP]: financialTransfersLicensingServicesPermissionGroup,
+  [PermissionGroupsEnum.COLLECTION_APPROVAL_SERVICES_PERMISSION_GROUP]: collectionApprovalServicesPermissionGroup,
 
 
   [PermissionGroupsEnum.SANADI_PERMISSIONS_GROUP]: sanadiPermissionsGroup,

@@ -3,12 +3,6 @@ import {CommonModule} from '@angular/common';
 
 import {CollectionRoutingModule} from './collection-routing.module';
 import {CollectionComponent} from './collection.component';
-import {CollectionApprovalComponent} from './pages/collection-services-approval/collection-approval.component';
-import {CollectionItemComponent} from './shared/collection-item/collection-item.component';
-import {
-  CollectionApprovalApproveTaskPopupComponent
-} from './popups/collection-approval-approve-task-poup/collection-approval-approve-task-popup.component';
-import {ApprovalFormComponent} from './shared/approval-form/approval-form.component';
 import {MapsModule} from '@app/modules/maps/maps.module';
 import {FundraisingComponent} from './pages/fundraising/fundraising.component';
 import {
@@ -20,14 +14,11 @@ import {
   CollectorApprovalApproveTaskPopupComponent
 } from './popups/collector-approval-approve-task-popup/collector-approval-approve-task-popup.component';
 import {EServicesMainModule} from '@app/modules/e-services-main/e-services-main.module';
+import {SharedServicesModule} from '@modules/services/shared-services/shared-services.module';
 
 @NgModule({
   declarations: [
     CollectionComponent,
-    CollectionApprovalComponent,
-    CollectionItemComponent,
-    CollectionApprovalApproveTaskPopupComponent,
-    ApprovalFormComponent,
     FundraisingComponent,
     FundraisingApproveTaskPopupComponent,
     CollectorApprovalComponent,
@@ -38,6 +29,7 @@ import {EServicesMainModule} from '@app/modules/e-services-main/e-services-main.
     CommonModule,
     CollectionRoutingModule,
     EServicesMainModule,
+    SharedServicesModule,
     MapsModule
   ]
 })

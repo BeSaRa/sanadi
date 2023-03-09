@@ -14,7 +14,7 @@ import {DialogRef} from "@app/shared/models/dialog-ref";
 import {DIALOG_DATA_TOKEN} from "@app/shared/tokens/tokens";
 import {Subject} from "rxjs";
 import {exhaustMap, filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
-import {ApprovalFormComponent} from "../../shared/approval-form/approval-form.component";
+import {ApprovalFormComponent} from "../../../services/shared-services/components/approval-form/approval-form.component";
 import {CollectionRequestType} from '@app/enums/service-request-types';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {LicenseDurationType} from '@app/enums/license-duration-type';

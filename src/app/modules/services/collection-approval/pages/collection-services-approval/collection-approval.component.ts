@@ -1,22 +1,22 @@
 import {Component} from '@angular/core';
 import {AbstractControl, UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {SaveTypes} from '@app/enums/save-types';
+import {OperationTypes} from '@enums/operation-types.enum';
+import {SaveTypes} from '@enums/save-types';
 import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
-import {CollectionApproval} from '@app/models/collection-approval';
-import {CollectionApprovalService} from '@app/services/collection-approval.service';
-import {LangService} from '@app/services/lang.service';
+import {CollectionApproval} from '@models/collection-approval';
+import {CollectionApprovalService} from '@services/collection-approval.service';
+import {LangService} from '@services/lang.service';
 import {Observable, of} from 'rxjs';
-import {Lookup} from '@app/models/lookup';
-import {LookupService} from '@app/services/lookup.service';
-import {CollectionRequestType} from '@app/enums/service-request-types';
-import {DialogService} from '@app/services/dialog.service';
+import {Lookup} from '@models/lookup';
+import {LookupService} from '@services/lookup.service';
+import {CollectionRequestType} from '@enums/service-request-types';
+import {DialogService} from '@services/dialog.service';
 import {filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
-import {ToastService} from '@app/services/toast.service';
-import {OpenFrom} from '@app/enums/open-from.enum';
-import {EmployeeService} from '@app/services/employee.service';
-import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {ToastService} from '@services/toast.service';
+import {OpenFrom} from '@enums/open-from.enum';
+import {EmployeeService} from '@services/employee.service';
+import {CommonCaseStatus} from '@enums/common-case-status.enum';
+import {UserClickOn} from '@enums/user-click-on.enum';
 
 @Component({
   selector: 'collection-approval',

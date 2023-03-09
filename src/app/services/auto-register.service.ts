@@ -34,7 +34,7 @@ import {
 import {ProjectModelComponent} from '@app/modules/services/project-models/pages/project-model/project-model.component';
 import {
   CollectionApprovalComponent
-} from '@app/modules/collection/pages/collection-services-approval/collection-approval.component';
+} from '@app/modules/services/collection-approval/pages/collection-services-approval/collection-approval.component';
 import {MapService} from '@app/services/map.service';
 import {FundraisingComponent} from '@app/modules/collection/pages/fundraising/fundraising.component';
 import {
