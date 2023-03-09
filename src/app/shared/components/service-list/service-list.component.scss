@@ -13,6 +13,12 @@
   width: 180px;
   height: 230px;
   cursor: pointer;
+
+  &:hover {
+    .instant-action {
+      display: flex;
+    }
+  }
 }
 
 .service-title {
@@ -44,4 +50,21 @@
 .service-font-icon i {
   font-size: 70px;
   line-height: 109px;
+}
+
+.instant-action {
+  display: none;
+  background: #9A264B80;//#0a000378;
+  color: white;
+  border-radius: 10px;
+
+  button {
+    i {
+      font-size: 36px;
+    }
+
+    &:hover {
+      background: $primary !important;
+    }
+  }
 }

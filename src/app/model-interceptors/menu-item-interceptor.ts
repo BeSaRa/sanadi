@@ -11,6 +11,7 @@ export class MenuItemInterceptor implements IModelInterceptor<MenuItem> {
 
   send(model: Partial<MenuItem>): Partial<MenuItem> {
     delete model.customMenu;
+    delete model.data;
     return model;
   }
 }
