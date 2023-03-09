@@ -1,64 +1,48 @@
-import { ExternalProjectLicensing } from './../../../../models/external-project-licensing';
-import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import {ExternalProjectLicensing} from '@models/external-project-licensing';
+import {ChangeDetectorRef, Component, ViewChild} from '@angular/core';
+import {UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup,} from '@angular/forms';
+import {CommonCaseStatus} from '@enums/common-case-status.enum';
+import {ImplementingAgencyTypes} from '@enums/implementing-agency-types.enum';
+import {OpenFrom} from '@enums/open-from.enum';
+import {OperationTypes} from '@enums/operation-types.enum';
+import {SaveTypes} from '@enums/save-types';
+import {ServiceRequestTypes} from '@enums/service-request-types';
+import {SubmissionMechanisms} from '@enums/submission-mechanisms.enum';
+import {UserClickOn} from '@enums/user-click-on.enum';
+import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
+import {CommonUtils} from '@helpers/common-utils';
+import {DateUtils} from '@helpers/date-utils';
+import {Bank} from '@models/bank';
+import {BankAccount} from '@models/bank-account';
+import {FinancialTransferLicensing} from '@models/financial-transfer-licensing';
+import {FinancialTransferLicensingSearchCriteria} from '@models/financial-transfer-licesing-search-criteria';
+import {Lookup} from '@models/lookup';
+import {DialogService} from '@services/dialog.service';
+import {EmployeeService} from '@services/employee.service';
+import {FinalExternalOfficeApprovalService} from '@services/final-external-office-approval.service';
+import {FinancialTransferLicensingService} from '@services/financial-transfer-licensing.service';
+import {LangService} from '@services/lang.service';
+import {LicenseService} from '@services/license.service';
+import {LookupService} from '@services/lookup.service';
+import {ToastService} from '@services/toast.service';
+import {TabComponent} from '@app/shared/components/tab/tab.component';
+import {DatepickerOptionsMap, ReadinessStatus, TabMap,} from '@app/types/types';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {CountryService} from '@services/country.service';
+import {Observable, of, Subject} from 'rxjs';
+import {catchError, exhaustMap, filter, map, switchMap, take, takeUntil, tap,} from 'rxjs/operators';
+import {FinancialTransferRequestTypes} from '@enums/financial-transfer-request-types.enum';
+import {FinancialTransferTypes} from '@enums/financial-transfer-types.enum';
+import {FinancialTransfereeTypes} from '@enums/financial-transferee-types.enum';
+import {AdminResult} from '@models/admin-result';
+import {Country} from '@models/country';
+import {FinalExternalOfficeApproval} from '@models/final-external-office-approval';
+import {PartnerApproval} from '@models/partner-approval';
+import {CommonService} from '@services/common.service';
+import {PartnerApprovalService} from '@services/partner-approval.service';
 import {
-  UntypedFormArray,
-  UntypedFormBuilder,
-  UntypedFormControl,
-  UntypedFormGroup,
-} from '@angular/forms';
-import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
-import { ImplementingAgencyTypes } from '@app/enums/implementing-agency-types.enum';
-import { OpenFrom } from '@app/enums/open-from.enum';
-import { OperationTypes } from '@app/enums/operation-types.enum';
-import { SaveTypes } from '@app/enums/save-types';
-import { ServiceRequestTypes } from '@app/enums/service-request-types';
-import { SubmissionMechanisms } from '@app/enums/submission-mechanisms.enum';
-import { UserClickOn } from '@app/enums/user-click-on.enum';
-import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
-import { CommonUtils } from '@app/helpers/common-utils';
-import { DateUtils } from '@app/helpers/date-utils';
-import { Bank } from '@app/models/bank';
-import { BankAccount } from '@app/models/bank-account';
-import { FinancialTransferLicensing } from '@app/models/financial-transfer-licensing';
-import { FinancialTransferLicensingSearchCriteria } from '@app/models/financial-transfer-licesing-search-criteria';
-import { Lookup } from '@app/models/lookup';
-import { DialogService } from '@app/services/dialog.service';
-import { EmployeeService } from '@app/services/employee.service';
-import { FinalExternalOfficeApprovalService } from '@app/services/final-external-office-approval.service';
-import { FinancialTransferLicensingService } from '@app/services/financial-transfer-licensing.service';
-import { LangService } from '@app/services/lang.service';
-import { LicenseService } from '@app/services/license.service';
-import { LookupService } from '@app/services/lookup.service';
-import { ToastService } from '@app/services/toast.service';
-import { TabComponent } from '@app/shared/components/tab/tab.component';
-import {
-  DatepickerOptionsMap,
-  ReadinessStatus,
-  TabMap,
-} from '@app/types/types';
-import { CustomValidators } from '@app/validators/custom-validators';
-import { CountryService } from '@services/country.service';
-import { Observable, of, Subject } from 'rxjs';
-import {
-  catchError,
-  exhaustMap,
-  filter,
-  map,
-  switchMap,
-  take,
-  takeUntil,
-  tap,
-} from 'rxjs/operators';
-import { FinancialTransferRequestTypes } from '../../../../enums/financial-transfer-request-types.enum';
-import { FinancialTransferTypes } from '../../../../enums/financial-transfer-types.enum';
-import { FinancialTransfereeTypes } from '../../../../enums/financial-transferee-types.enum';
-import { AdminResult } from '../../../../models/admin-result';
-import { Country } from '../../../../models/country';
-import { FinalExternalOfficeApproval } from '../../../../models/final-external-office-approval';
-import { PartnerApproval } from '../../../../models/partner-approval';
-import { CommonService } from '../../../../services/common.service';
-import { PartnerApprovalService } from '../../../../services/partner-approval.service';
-import { FinancialTransfersProjectsComponent } from '../../shared/financial-transfers-projects/financial-transfers-projects.component';
+  FinancialTransfersProjectsComponent
+} from '@modules/services/financial-transfer-licensing/shared/financial-transfers-projects/financial-transfers-projects.component';
 
 @Component({
   selector: 'app-financial-transfers-licensing',

@@ -40,6 +40,7 @@ enum SystemPathsEnum {
   ORGANIZATION_ENTITIES_SUPPORT = '/home/services/organization-entities-support',
   COORDINATION_WITH_ORGANIZATION_REQUEST = '/home/services/coordination-with-organizations-request',
   CUSTOMS_EXEMPTION_REMITTANCE = '/home/services/customs-exemption',
+  FINANCIAL_TRANSFERS_LICENSING = '/home/services/financial-transfers-licensing'
 }
 
 export const newNavigationMenuList = [
@@ -1206,6 +1207,59 @@ export const newNavigationMenuList = [
     permissionGroup: null,
     parent: 2201,
     group: 'service_' + CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE,
+    itemOrder: 3,
+    svg: null
+  },
+  {
+    id: 2301,
+    langKey: 'menu_financial_transfers_licensing',
+    path: SystemPathsEnum.FINANCIAL_TRANSFERS_LICENSING,
+    icon: 'mdi-file-swap',
+    isSvg: false,
+    caseType: CaseTypes.FINANCIAL_TRANSFERS_LICENSING,
+    permission: '',
+    permissionGroup: PermissionGroupsEnum.FINANCIAL_TRANSFERS_LICENSING_SERVICES_PERMISSION_GROUP,
+    parent: null,
+    group: 'main',
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 2302,
+    langKey: serviceAddUpdateLabel,
+    path: SystemPathsEnum.FINANCIAL_TRANSFERS_LICENSING + '/service',
+    icon: serviceAddUpdateIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.FINANCIAL_TRANSFERS_LICENSING,
+    permissionGroup: null,
+    parent: 2301,
+    group: 'service_' + CaseTypes.FINANCIAL_TRANSFERS_LICENSING,
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 2303,
+    langKey: serviceSearchLabel,
+    path: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.FINANCIAL_TRANSFERS_LICENSING),
+    icon: serviceSearchIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.SEARCH_SERVICE_FINANCIAL_TRANSFERS_LICENSING,
+    permissionGroup: null,
+    parent: 2301,
+    group: 'service_' + CaseTypes.FINANCIAL_TRANSFERS_LICENSING,
+    itemOrder: 2,
+    svg: null
+  },
+  {
+    id: 2304,
+    langKey: serviceOutputLabel,
+    path: SystemPathsEnum.FINANCIAL_TRANSFERS_LICENSING + '/outputs',
+    icon: serviceOutputIcon,
+    isSvg: false,
+    permission: Constants.SERVICE_OUTPUT_PERMISSION,
+    permissionGroup: null,
+    parent: 2301,
+    group: 'service_' + CaseTypes.FINANCIAL_TRANSFERS_LICENSING,
     itemOrder: 3,
     svg: null
   },
