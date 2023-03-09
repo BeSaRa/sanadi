@@ -14,10 +14,10 @@ import { Profile } from '@app/models/profile';
 import { ValidOrgUnit } from '@app/models/valid-org-unit';
 import {
   ParticipantOrganizationsPopupComponent
-} from '@app/modules/e-services-main/popups/participant-organizations-popup/participant-organizations-popup.component';
+} from '@app/modules/services/coordination-with-organization-request/popups/participant-organizations-popup/participant-organizations-popup.component';
 import {
   CoordinationWithOrgPopupComponent
-} from '@app/modules/general-services/popups/coordination-with-org-popup/coordination-with-org-popup.component';
+} from '@app/modules/services/coordination-with-organization-request/popups/coordination-with-org-popup/coordination-with-org-popup.component';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';

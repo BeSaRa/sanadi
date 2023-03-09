@@ -1,45 +1,45 @@
-import {ApprovalDecisions} from '@app/enums/approval-decisions.enum';
+import {ApprovalDecisions} from '@enums/approval-decisions.enum';
 import {catchError, concatMap, map, switchMap, take, takeUntil, tap} from 'rxjs/operators';
 import {ITerminateOrganizationTask} from '@contracts/iterminate-organization-task';
 import {Component, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, UntypedFormControl, Validators} from '@angular/forms';
-import {CommonCaseStatus} from '@app/enums/common-case-status.enum';
-import {CoordinationTypes} from '@app/enums/coordination-types-enum';
-import {FileExtensionsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {ProfileTypes} from '@app/enums/profile-types.enum';
-import {SaveTypes} from '@app/enums/save-types';
+import {CommonCaseStatus} from '@enums/common-case-status.enum';
+import {CoordinationTypes} from '@enums/coordination-types-enum';
+import {FileExtensionsEnum} from '@enums/file-extension-mime-types-icons.enum';
+import {OperationTypes} from '@enums/operation-types.enum';
+import {ProfileTypes} from '@enums/profile-types.enum';
+import {SaveTypes} from '@enums/save-types';
 import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
-import {DateUtils} from '@app/helpers/date-utils';
-import {IKeyValue} from '@app/interfaces/i-key-value';
-import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {BuildingAbility} from '@app/models/building-ability';
-import {CoordinationWithOrganizationsRequest} from '@app/models/coordination-with-organizations-request';
-import {DynamicModel} from '@app/models/dynamic-model';
-import {EffectiveCoordinationCapabilities} from '@app/models/effective-coordination-capabilities';
-import {FileNetDocument} from '@app/models/file-net-document';
-import {Lookup} from '@app/models/lookup';
-import {OrganizationOfficer} from '@app/models/organization-officer';
-import {Profile} from '@app/models/profile';
-import {ResearchAndStudies} from '@app/models/research-and-studies';
+import {DateUtils} from '@helpers/date-utils';
+import {IKeyValue} from '@contracts/i-key-value';
+import {ILanguageKeys} from '@contracts/i-language-keys';
+import {BuildingAbility} from '@models/building-ability';
+import {CoordinationWithOrganizationsRequest} from '@models/coordination-with-organizations-request';
+import {DynamicModel} from '@models/dynamic-model';
+import {EffectiveCoordinationCapabilities} from '@models/effective-coordination-capabilities';
+import {FileNetDocument} from '@models/file-net-document';
+import {Lookup} from '@models/lookup';
+import {OrganizationOfficer} from '@models/organization-officer';
+import {Profile} from '@models/profile';
+import {ResearchAndStudies} from '@models/research-and-studies';
 import {
   BuildingAbilityComponent
-} from '@app/modules/e-services-main/shared/building-ability/building-ability.component';
+} from '@modules/e-services-main/shared/building-ability/building-ability.component';
 import {
   DynamicTemplatesComponent
-} from '@app/modules/e-services-main/shared/dynamic-templates/dynamic-templates.component';
+} from '@modules/services/coordination-with-organization-request/shared/dynamic-templates/dynamic-templates.component';
 import {
   ResearchAndStudiesComponent
-} from '@app/modules/e-services-main/shared/research-and-studies/research-and-studies.component';
+} from '@modules/e-services-main/shared/research-and-studies/research-and-studies.component';
 import {
   CoordinationWithOrganizationsRequestService
-} from '@app/services/coordination-with-organizations-request.service';
-import {DialogService} from '@app/services/dialog.service';
-import {DynamicModelService} from '@app/services/dynamic-models.service';
-import {EmployeeService} from '@app/services/employee.service';
-import {LangService} from '@app/services/lang.service';
-import {LookupService} from '@app/services/lookup.service';
-import {ToastService} from '@app/services/toast.service';
+} from '@services/coordination-with-organizations-request.service';
+import {DialogService} from '@services/dialog.service';
+import {DynamicModelService} from '@services/dynamic-models.service';
+import {EmployeeService} from '@services/employee.service';
+import {LangService} from '@services/lang.service';
+import {LookupService} from '@services/lookup.service';
+import {ToastService} from '@services/toast.service';
 import {AttachmentsComponent} from '@app/shared/components/attachments/attachments.component';
 import {TabComponent} from '@app/shared/components/tab/tab.component';
 import {DatepickerControlsMap, DatepickerOptionsMap, ReadinessStatus} from '@app/types/types';
@@ -49,14 +49,14 @@ import {IMyInputFieldChanged} from 'angular-mydatepicker';
 import {Observable, of} from 'rxjs';
 import {
   OrganizationOfficerComponent
-} from '../../../e-services-main/shared/organization-officer/organization-officer.component';
+} from '../../../../e-services-main/shared/organization-officer/organization-officer.component';
 import {CoordinationWithOrganizationTemplate} from '@models/corrdination-with-organization-template';
 import {
   EffectiveCoordinationCapabilitiesComponent
 } from '@modules/e-services-main/shared/effective-coordination-capabilities/effective-coordination-capabilities.component';
 import {
   ParticipantOrganizationComponent
-} from '@modules/e-services-main/shared/participant-organization/participant-organization.component';
+} from '@modules/services/coordination-with-organization-request/shared/participant-organization/participant-organization.component';
 
 @Component({
   selector: 'app-coordination-with-organizations-request',

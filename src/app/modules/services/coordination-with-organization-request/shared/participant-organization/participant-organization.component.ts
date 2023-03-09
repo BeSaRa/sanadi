@@ -1,5 +1,5 @@
-import { ITerminateOrganizationTask } from './../../../../interfaces/iterminate-organization-task';
-import { AdminResult } from '@app/models/admin-result';
+import { ITerminateOrganizationTask } from '@contracts/iterminate-organization-task';
+import { AdminResult } from '@models/admin-result';
 import { map, take, takeUntil } from 'rxjs/operators';
 import {
   Component,
@@ -16,17 +16,17 @@ import {
   FormGroup,
   UntypedFormControl,
 } from '@angular/forms';
-import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { DialogService } from '@app/services/dialog.service';
-import { LangService } from '@app/services/lang.service';
-import { ToastService } from '@app/services/toast.service';
+import { ILanguageKeys } from '@contracts/i-language-keys';
+import { DialogService } from '@services/dialog.service';
+import { LangService } from '@services/lang.service';
+import { ToastService } from '@services/toast.service';
 import { ReadinessStatus } from '@app/types/types';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { UserClickOn } from '@enums/user-click-on.enum';
 import { NgSelectComponent } from '@ng-select/ng-select';
-import { ParticipantOrg } from '@app/models/participant-org';
-import { Profile } from '@app/models/profile';
-import { TaskAdminResult } from '@app/models/task-admin-result';
+import { ParticipantOrg } from '@models/participant-org';
+import { Profile } from '@models/profile';
+import { TaskAdminResult } from '@models/task-admin-result';
 
 @Component({
   selector: 'participant-organization',

@@ -38,6 +38,7 @@ enum SystemPathsEnum {
   FOREIGN_COUNTRIES_PROJECTS = '/home/services/foreign-countries-projects',
   EXTERNAL_ORG_AFFILIATION_REQUEST = '/home/services/external-org-affiliation',
   ORGANIZATION_ENTITIES_SUPPORT = '/home/services/organization-entities-support',
+  COORDINATION_WITH_ORGANIZATION_REQUEST = '/home/services/coordination-with-organizations-request',
 }
 
 export const newNavigationMenuList = [
@@ -1098,6 +1099,59 @@ export const newNavigationMenuList = [
     permissionGroup: null,
     parent: 2001,
     group: 'service_' + CaseTypes.ORGANIZATION_ENTITIES_SUPPORT,
+    itemOrder: 3,
+    svg: null
+  },
+  {
+    id: 2101,
+    langKey: 'menu_coordination_with_organizations_request',
+    path: SystemPathsEnum.COORDINATION_WITH_ORGANIZATION_REQUEST,
+    icon: 'mdi-domain',
+    isSvg: false,
+    caseType: CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST,
+    permission: '',
+    permissionGroup: PermissionGroupsEnum.COORDINATION_WITH_ORGANIZATION_REQUEST_SERVICES_PERMISSION_GROUP,
+    parent: null,
+    group: 'main',
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 2102,
+    langKey: serviceAddUpdateLabel,
+    path: SystemPathsEnum.COORDINATION_WITH_ORGANIZATION_REQUEST + '/service',
+    icon: serviceAddUpdateIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.COORDINATION_WITH_ORGANIZATION_REQUEST,
+    permissionGroup: null,
+    parent: 2101,
+    group: 'service_' + CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST,
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 2103,
+    langKey: serviceSearchLabel,
+    path: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST),
+    icon: serviceSearchIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.SEARCH_SERVICE_COORDINATION_WITH_ORGANIZATION_REQUEST,
+    permissionGroup: null,
+    parent: 2101,
+    group: 'service_' + CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST,
+    itemOrder: 2,
+    svg: null
+  },
+  {
+    id: 2104,
+    langKey: serviceOutputLabel,
+    path: SystemPathsEnum.COORDINATION_WITH_ORGANIZATION_REQUEST + '/outputs',
+    icon: serviceOutputIcon,
+    isSvg: false,
+    permission: Constants.SERVICE_OUTPUT_PERMISSION,
+    permissionGroup: null,
+    parent: 2101,
+    group: 'service_' + CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST,
     itemOrder: 3,
     svg: null
   },

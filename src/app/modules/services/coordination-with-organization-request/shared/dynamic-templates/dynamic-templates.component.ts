@@ -1,5 +1,5 @@
-import { DateUtils } from '@app/helpers/date-utils';
-import { DynamicModel } from '@app/models/dynamic-model';
+import { DateUtils } from '@helpers/date-utils';
+import { DynamicModel } from '@models/dynamic-model';
 import {
   Component, Input,
   OnInit
@@ -7,17 +7,17 @@ import {
 import {
   FormBuilder, UntypedFormControl, UntypedFormGroup
 } from '@angular/forms';
-import { UserClickOn } from '@app/enums/user-click-on.enum';
-import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { DialogService } from '@app/services/dialog.service';
-import { LangService } from '@app/services/lang.service';
-import { ToastService } from '@app/services/toast.service';
+import { UserClickOn } from '@enums/user-click-on.enum';
+import { ILanguageKeys } from '@contracts/i-language-keys';
+import { DialogService } from '@services/dialog.service';
+import { LangService } from '@services/lang.service';
+import { ToastService } from '@services/toast.service';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { filter, map, take, takeUntil } from 'rxjs/operators';
-import { TemplateFieldTypes } from '@app/enums/template-field-types.enum';
-import { CoordinationWithOrganizationTemplate } from '@app/models/corrdination-with-organization-template';
+import { TemplateFieldTypes } from '@enums/template-field-types.enum';
+import { CoordinationWithOrganizationTemplate } from '@models/corrdination-with-organization-template';
 import { ProcessFieldBuilder } from '@app/administration/popups/general-process-popup/process-formly-components/process-fields-builder';
-import { DynamicModelService } from '@app/services/dynamic-models.service';
+import { DynamicModelService } from '@services/dynamic-models.service';
 
 @Component({
   selector: 'app-dynamic-templates',

@@ -276,6 +276,17 @@ const routes: Routes = [
         } as Partial<ICustomRouteData>
       },
       {
+        path: 'services/coordination-with-organizations-request',
+        canActivate: [NewServicePermissionGuard],
+        loadChildren: () => import('./modules/services/coordination-with-organization-request/coordination-with-organization-request.module')
+          .then(m => m.CoordinationWithOrganizationRequestModule),
+        data: {
+          permissionGroup: PermissionGroupsEnum.COORDINATION_WITH_ORGANIZATION_REQUEST_SERVICES_PERMISSION_GROUP,
+          checkAnyPermission: true,
+          caseType: CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST
+        } as Partial<ICustomRouteData>
+      },
+      {
         path: 'services/search',
         loadChildren: () => import('@modules/service-search-individual/service-search-individual.module').then(m => m.ServiceSearchIndividualModule),
       },
