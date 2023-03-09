@@ -43,6 +43,7 @@ enum SystemPathsEnum {
   FINANCIAL_TRANSFERS_LICENSING = '/home/services/financial-transfers-licensing',
   COLLECTION_APPROVAL = '/home/services/collection-approval',
   COLLECTOR_LICENSING = '/home/services/collector-approval',
+  FUNDRAISING_LICENSING = '/home/services/fundraising-licensing'
 }
 
 export const newNavigationMenuList = [
@@ -1368,6 +1369,59 @@ export const newNavigationMenuList = [
     permissionGroup: null,
     parent: 2501,
     group: 'service_' + CaseTypes.COLLECTOR_LICENSING,
+    itemOrder: 3,
+    svg: null
+  },
+  {
+    id: 2601,
+    langKey: 'menu_fundraising',
+    path: SystemPathsEnum.FUNDRAISING_LICENSING,
+    icon: 'mdi-cash-multiple',
+    isSvg: false,
+    caseType: CaseTypes.FUNDRAISING_LICENSING,
+    permission: '',
+    permissionGroup: PermissionGroupsEnum.FUNDRAISING_LICENSING_SERVICES_PERMISSION_GROUP,
+    parent: null,
+    group: 'main',
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 2602,
+    langKey: serviceAddUpdateLabel,
+    path: SystemPathsEnum.FUNDRAISING_LICENSING + '/service',
+    icon: serviceAddUpdateIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.FUNDRAISING_LICENSING,
+    permissionGroup: null,
+    parent: 2601,
+    group: 'service_' + CaseTypes.FUNDRAISING_LICENSING,
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 2603,
+    langKey: serviceSearchLabel,
+    path: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.FUNDRAISING_LICENSING),
+    icon: serviceSearchIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.SEARCH_SERVICE_FUNDRAISING_LICENSING,
+    permissionGroup: null,
+    parent: 2601,
+    group: 'service_' + CaseTypes.FUNDRAISING_LICENSING,
+    itemOrder: 2,
+    svg: null
+  },
+  {
+    id: 2604,
+    langKey: serviceOutputLabel,
+    path: SystemPathsEnum.FUNDRAISING_LICENSING + '/outputs',
+    icon: serviceOutputIcon,
+    isSvg: false,
+    permission: Constants.SERVICE_OUTPUT_PERMISSION,
+    permissionGroup: null,
+    parent: 2601,
+    group: 'service_' + CaseTypes.FUNDRAISING_LICENSING,
     itemOrder: 3,
     svg: null
   },

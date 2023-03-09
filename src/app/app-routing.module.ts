@@ -330,6 +330,17 @@ const routes: Routes = [
         } as Partial<ICustomRouteData>
       },
       {
+        path: 'services/fundraising-licensing',
+        canActivate: [NewServicePermissionGuard],
+        loadChildren: () => import('./modules/services/fundraising-channel-licensing/fundraising-channel-licensing.module')
+          .then(m => m.FundraisingChannelLicensingModule),
+        data: {
+          permissionGroup: PermissionGroupsEnum.FUNDRAISING_LICENSING_SERVICES_PERMISSION_GROUP,
+          checkAnyPermission: true,
+          caseType: CaseTypes.FUNDRAISING_LICENSING
+        } as Partial<ICustomRouteData>
+      },
+      {
         path: 'services/search',
         loadChildren: () => import('@modules/service-search-individual/service-search-individual.module').then(m => m.ServiceSearchIndividualModule),
       },

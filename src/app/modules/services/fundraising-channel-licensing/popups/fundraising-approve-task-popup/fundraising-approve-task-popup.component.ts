@@ -1,24 +1,24 @@
 import {AfterViewInit, Component, Inject, OnInit, ViewChild} from "@angular/core";
 import {UntypedFormControl} from "@angular/forms";
-import {WFResponseType} from "@app/enums/wfresponse-type.enum";
-import {CommonUtils} from "@app/helpers/common-utils";
-import {HasLicenseApproval} from "@app/interfaces/has-license-approval";
-import {ILanguageKeys} from "@app/interfaces/i-language-keys";
-import {IWFResponse} from "@app/interfaces/i-w-f-response";
-import {Fundraising} from "@app/models/fundraising";
-import {DialogService} from "@app/services/dialog.service";
-import {InboxService} from "@app/services/inbox.service";
-import {LangService} from "@app/services/lang.service";
-import {ToastService} from "@app/services/toast.service";
+import {WFResponseType} from "@enums/wfresponse-type.enum";
+import {CommonUtils} from "@helpers/common-utils";
+import {HasLicenseApproval} from "@contracts/has-license-approval";
+import {ILanguageKeys} from "@contracts/i-language-keys";
+import {IWFResponse} from "@contracts/i-w-f-response";
+import {Fundraising} from "@models/fundraising";
+import {DialogService} from "@services/dialog.service";
+import {InboxService} from "@services/inbox.service";
+import {LangService} from "@services/lang.service";
+import {ToastService} from "@services/toast.service";
 import {DialogRef} from "@app/shared/models/dialog-ref";
 import {DIALOG_DATA_TOKEN} from "@app/shared/tokens/tokens";
 import {Subject} from "rxjs";
 import {exhaustMap, filter, map, switchMap, takeUntil, tap} from "rxjs/operators";
-import {ApprovalFormComponent} from "../../../services/shared-services/components/approval-form/approval-form.component";
-import {CollectionRequestType} from '@app/enums/service-request-types';
+import {ApprovalFormComponent} from "@modules/services/shared-services/components/approval-form/approval-form.component";
+import {CollectionRequestType} from '@enums/service-request-types';
 import {CustomValidators} from '@app/validators/custom-validators';
-import {LicenseDurationType} from '@app/enums/license-duration-type';
-import {DateUtils} from '@app/helpers/date-utils';
+import {LicenseDurationType} from '@enums/license-duration-type';
+import {DateUtils} from '@helpers/date-utils';
 
 @Component({
   selector: "fundraising-approve-task-popup",
