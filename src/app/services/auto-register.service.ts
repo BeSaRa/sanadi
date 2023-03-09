@@ -9,7 +9,7 @@ import {
 } from '@app/modules/services/foreign-countries-projects/pages/foreign-countries-projects/foreign-countries-projects.component';
 import {
   UrgentInterventionFinancialNotificationComponent
-} from '@modules/urgent-intervention/pages/urgent-intervention-financial-notification/urgent-intervention-financial-notification.component';
+} from '@modules/services/urgent-intervention-financial-notification/pages/urgent-intervention-financial-notification/urgent-intervention-financial-notification.component';
 import {EmploymentComponent} from '@modules/services/employment/pages/employment/employment.component';
 import {NpoManagementComponent} from '@modules/services/npo-management/pages/npo-management/npo-management.component';
 import {Injectable} from '@angular/core';

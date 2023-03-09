@@ -1,47 +1,47 @@
-import { AdminResult } from '@app/models/admin-result';
-import { ImplementingAgency } from '@app/models/implementing-agency';
-import { UserClickOn } from '@app/enums/user-click-on.enum';
-import { CustomValidators } from '@app/validators/custom-validators';
-import { UrgentInterventionAnnouncementSearchCriteria } from '@app/models/urgent-intervention-announcement-search-criteria';
-import { UrgentInterventionAnnouncementService } from '@services/urgent-intervention-announcement.service';
-import { UrgentInterventionAnnouncementResult } from '@app/models/urgent-intervention-announcement-result';
-import { UrgentFinancialNotificationAccountType } from '@app/enums/urgent-financial-notification-account-type.enum';
-import { catchError, exhaustMap, filter, map, takeUntil, tap, switchMap } from 'rxjs/operators';
+import {AdminResult} from '@models/admin-result';
+import {ImplementingAgency} from '@models/implementing-agency';
+import {UserClickOn} from '@enums/user-click-on.enum';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {UrgentInterventionAnnouncementSearchCriteria} from '@models/urgent-intervention-announcement-search-criteria';
+import {UrgentInterventionAnnouncementService} from '@services/urgent-intervention-announcement.service';
+import {UrgentInterventionAnnouncementResult} from '@models/urgent-intervention-announcement-result';
+import {UrgentFinancialNotificationAccountType} from '@enums/urgent-financial-notification-account-type.enum';
+import {catchError, exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {
   InterventionImplementingAgencyListComponent
-} from '../../../services/shared-services/components/intervention-implementing-agency-list/intervention-implementing-agency-list.component';
-import { ToastService } from '@app/services/toast.service';
-import { BankAccount } from '@app/models/bank-account';
-import { CommonService } from '@services/common.service';
-import { UrgentInterventionFinancialRequestType } from '@app/enums/service-request-types';
-import { OpenFrom } from '@app/enums/open-from.enum';
-import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
-import { TabComponent } from '@app/shared/components/tab/tab.component';
+} from '@modules/services/shared-services/components/intervention-implementing-agency-list/intervention-implementing-agency-list.component';
+import {ToastService} from '@services/toast.service';
+import {BankAccount} from '@models/bank-account';
+import {CommonService} from '@services/common.service';
+import {UrgentInterventionFinancialRequestType} from '@enums/service-request-types';
+import {OpenFrom} from '@enums/open-from.enum';
+import {CommonCaseStatus} from '@enums/common-case-status.enum';
+import {TabComponent} from '@app/shared/components/tab/tab.component';
 import {
   InterventionFieldListComponent
-} from '../../../services/shared-services/components/intervention-field-list/intervention-field-list.component';
+} from '@modules/services/shared-services/components/intervention-field-list/intervention-field-list.component';
 import {
   InterventionRegionListComponent
-} from '../../../services/shared-services/components/intervention-region-list/intervention-region-list.component';
-import { LicenseService } from '@app/services/license.service';
-import { DialogService } from '@services/dialog.service';
-import { ReadinessStatus, TabMap } from '@app/types/types';
-import { Lookup } from '@app/models/lookup';
-import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
-import { OperationTypes } from '@app/enums/operation-types.enum';
-import { SaveTypes } from '@app/enums/save-types';
-import { LangService } from '@app/services/lang.service';
-import { Observable, of, Subject } from 'rxjs';
-import { UrgentInterventionFinancialNotification } from '@app/models/urgent-intervention-financial-notification';
+} from '@modules/services/shared-services/components/intervention-region-list/intervention-region-list.component';
+import {LicenseService} from '@services/license.service';
+import {DialogService} from '@services/dialog.service';
+import {ReadinessStatus, TabMap} from '@app/types/types';
+import {Lookup} from '@models/lookup';
+import {AfterViewInit, ChangeDetectorRef, Component, ViewChild} from '@angular/core';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
+import {OperationTypes} from '@enums/operation-types.enum';
+import {SaveTypes} from '@enums/save-types';
+import {LangService} from '@services/lang.service';
+import {Observable, of, Subject} from 'rxjs';
+import {UrgentInterventionFinancialNotification} from '@models/urgent-intervention-financial-notification';
 import {
   UrgentInterventionFinancialNotificationService
 } from '@services/urgent-intervention-financial-notification.service';
-import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
-import { LookupService } from '@app/services/lookup.service';
-import { ImplementingAgencyTypes } from '@app/enums/implementing-agency-types.enum';
-import { CommonUtils } from '@app/helpers/common-utils';
-import { UrgentInterventionAnnouncement } from '@app/models/urgent-intervention-announcement';
+import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
+import {LookupService} from '@services/lookup.service';
+import {ImplementingAgencyTypes} from '@enums/implementing-agency-types.enum';
+import {CommonUtils} from '@helpers/common-utils';
+import {UrgentInterventionAnnouncement} from '@models/urgent-intervention-announcement';
 
 @Component({
   selector: 'app-urgent-intervention-financial-notification',

@@ -120,10 +120,10 @@
   </ng-template>
   <ng-template #entitiesTabTemplate>
     <intervention-implementing-agency-list #implementingAgencyListComponent
-                              [list]="(!model ? [] : model.implementingAgencyList)"
-                              [executionCountry]="model!.executionCountry"
-                              [readonly]="true"
-                              (readyEvent)="entitiesTabStatus = $event">
+                                           [list]="(!model ? [] : model.implementingAgencyList)"
+                                           [executionCountry]="model!.executionCountry"
+                                           [readonly]="true"
+                                           (readyEvent)="entitiesTabStatus = $event">
     </intervention-implementing-agency-list>
   </ng-template>
   <ng-template #interventionAreasTabTemplate>
@@ -178,15 +178,15 @@
         </div>
         <div class="col-sm-12 col-md-6 mb-4 position-relative" *ngIf="isReceive">
           <label for="implementingAgency" asteriskIfRequired="implementingAgency"
-                class="form-label">{{lang.map.external_office_name}}</label>
+                 class="form-label">{{lang.map.external_office_name}}</label>
           <ng-select [selectOnTab]="true" labelForId="implementingAgency"
-            placeholder="{{lang.map.select}}" id="implementingAgency"
-            [notFoundText]="lang.map.msg_not_found"
-            [readonly]="!isEditAllowed()"
-            appendTo="body"
-            formControlName="implementingAgency"
-            (change)="handleImplementingAgencyNameChanges()"
-            validationClasses="implementingAgency">
+                     placeholder="{{lang.map.select}}" id="implementingAgency"
+                     [notFoundText]="lang.map.msg_not_found"
+                     [readonly]="!isEditAllowed()"
+                     appendTo="body"
+                     formControlName="implementingAgency"
+                     (change)="handleImplementingAgencyNameChanges()"
+                     validationClasses="implementingAgency">
             <ng-option *ngFor="let option of implementingAgenciesAdminRes" [value]="option.fnId">
               {{ option.getName() }}
             </ng-option>
