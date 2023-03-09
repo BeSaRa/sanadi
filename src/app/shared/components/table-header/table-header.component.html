@@ -12,10 +12,10 @@
       <i class="mdi {{actionIconsEnum.RELOAD}}"></i>
     </button>
   </div>
-  <div class="flex-grow-1"></div>
-  <div *ngIf="customTemplate" class="flex-grow-1">
+  <div *ngIf="customTemplate" class="">
     <ng-container *ngTemplateOutlet="customTemplate"></ng-container>
   </div>
+  <div class="flex-grow-1"></div>
 
   <!-- Risk Status -->
   <div class="d-flex gap-3 risk-status">
