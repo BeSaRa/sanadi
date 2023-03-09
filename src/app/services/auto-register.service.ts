@@ -55,7 +55,7 @@ import {
 } from '@app/modules/services/urgent-intervention-announcement/pages/urgent-intervention-announcement/urgent-intervention-announcement.component';
 import {
   UrgentInterventionClosureComponent
-} from '@app/modules/urgent-intervention/pages/urgent-intervention-closure/urgent-intervention-closure.component';
+} from '@app/modules/services/urgent-intervention-closure/pages/urgent-intervention-closure/urgent-intervention-closure.component';
 import {
   ExternalOrgAffiliationComponent
 } from '@modules/services/external-organization-affiliation/pages/external-org-affiliation/external-org-affiliation.component';

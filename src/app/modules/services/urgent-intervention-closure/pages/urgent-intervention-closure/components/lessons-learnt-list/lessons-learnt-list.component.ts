@@ -1,33 +1,38 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {LangService} from '@services/lang.service';
 import {ToastService} from '@services/toast.service';
 import {DialogService} from '@services/dialog.service';
 import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {ReadinessStatus} from '@app/types/types';
 import {CustomValidators} from '@app/validators/custom-validators';
-import {Subject} from 'rxjs';
-import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import {ActionIconsEnum} from '@app/enums/action-icons-enum';
-import {filter, map, take, takeUntil, tap} from 'rxjs/operators';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {Result} from '@app/models/result';
+import {of, Subject} from 'rxjs';
+import {AdminResult} from '@models/admin-result';
+import {IMenuItem} from '@modules/context-menu/interfaces/i-menu-item';
+import {ActionIconsEnum} from '@enums/action-icons-enum';
+import {catchError, filter, map, take, takeUntil, tap} from 'rxjs/operators';
+import {UserClickOn} from '@enums/user-click-on.enum';
+import {LessonsLearned} from '@models/lessons-learned';
+import {FieldAssessmentTypesEnum} from '@enums/field-assessment-types.enum';
+import {FieldAssessmentService} from '@services/field-assessment.service';
 
 @Component({
-  selector: 'result-list',
-  templateUrl: './result-list.component.html',
-  styleUrls: ['./result-list.component.scss']
+  selector: 'lessons-learnt-list',
+  templateUrl: './lessons-learnt-list.component.html',
+  styleUrls: ['./lessons-learnt-list.component.scss']
 })
-export class ResultListComponent implements OnInit, OnDestroy {
+export class LessonsLearntListComponent implements OnInit {
 
   constructor(public lang: LangService,
               private toastService: ToastService,
               private dialogService: DialogService,
+              private fieldAssessmentService: FieldAssessmentService,
               private fb: UntypedFormBuilder) {
   }
 
 
   ngOnInit(): void {
     this.buildForm();
+    this.loadLessonsLearnt();
     this.listenToAdd();
     this.listenToRecordChange();
     this.listenToSave();
@@ -43,53 +48,55 @@ export class ResultListComponent implements OnInit, OnDestroy {
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();
   @Input() readonly: boolean = false;
 
-  private _list: Result[] = [];
-  @Input() set list(list: Result[]) {
+  private _list: LessonsLearned[] = [];
+  @Input() set list(list: LessonsLearned[]) {
     this._list = list;
   }
 
-  get list(): Result[] {
+  get list(): LessonsLearned[] {
     return this._list;
   }
 
-  displayedColumns = ['outputs', 'expectedResults', 'expectedImpact', 'actions'];
-  editItem?: Result;
+  displayedColumns = ['lessonsLearntListString', 'statement', 'actions'];
+  editItem?: LessonsLearned;
   viewOnly: boolean = false;
   customValidators = CustomValidators;
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
   private save$: Subject<any> = new Subject<any>();
   add$: Subject<any> = new Subject<any>();
-  private recordChanged$: Subject<Result | null> = new Subject<Result | null>();
-  private currentRecord?: Result;
+  private recordChanged$: Subject<LessonsLearned | null> = new Subject<LessonsLearned | null>();
+  private currentRecord?: LessonsLearned;
   private destroy$: Subject<any> = new Subject<any>();
   showForm: boolean = false;
   filterControl: UntypedFormControl = new UntypedFormControl('');
 
+  lessonsLearntList: AdminResult[] = [];
+
   form!: UntypedFormGroup;
-  actions: IMenuItem<Result>[] = [
+  actions: IMenuItem<LessonsLearned>[] = [
     // edit
     {
       type: 'action',
       icon: ActionIconsEnum.EDIT,
       label: 'btn_edit',
-      onClick: (item: Result) => this.edit(item),
-      show: (_item: Result) => !this.readonly
+      onClick: (item: LessonsLearned) => this.edit(item),
+      show: (_item: LessonsLearned) => !this.readonly
     },
     // delete
     {
       type: 'action',
       icon: ActionIconsEnum.DELETE,
       label: 'btn_delete',
-      onClick: (item: Result) => this.delete(item),
-      show: (_item: Result) => !this.readonly
+      onClick: (item: LessonsLearned) => this.delete(item),
+      show: (_item: LessonsLearned) => !this.readonly
     },
     // view
     {
       type: 'action',
       icon: ActionIconsEnum.VIEW,
       label: 'view',
-      onClick: (item: Result) => this.view(item),
-      show: (_item: Result) => this.readonly
+      onClick: (item: LessonsLearned) => this.view(item),
+      show: (_item: LessonsLearned) => this.readonly
     }
   ];
 
@@ -99,14 +106,14 @@ export class ResultListComponent implements OnInit, OnDestroy {
 
 
   buildForm(): void {
-    this.form = this.fb.group(new Result().buildForm(true));
+    this.form = this.fb.group(new LessonsLearned().buildForm(true));
   }
 
   private listenToAdd() {
     this.add$.pipe(takeUntil(this.destroy$))
       .subscribe(() => {
         this.viewOnly = false;
-        this.recordChanged$.next(new Result());
+        this.recordChanged$.next(new LessonsLearned());
       });
   }
 
@@ -118,7 +125,7 @@ export class ResultListComponent implements OnInit, OnDestroy {
     });
   }
 
-  private updateForm(record: Result | undefined) {
+  private updateForm(record: LessonsLearned | undefined) {
     if (record) {
       if (this.viewOnly) {
         this._setComponentReadiness('READY');
@@ -156,23 +163,25 @@ export class ResultListComponent implements OnInit, OnDestroy {
       filter(() => this.form.valid),
       map(() => {
         let formValue = this.form.getRawValue();
+        let lessonsLearnedInfo = this.lessonsLearntList.filter(x => formValue.lessonsLearned.includes(x.id));
 
-        return (new Result()).clone({
-          ...this.currentRecord, ...formValue
+        return (new LessonsLearned()).clone({
+          ...this.currentRecord, ...formValue,
+          lessonsLearnedInfo: lessonsLearnedInfo
         });
       })
-    ).subscribe((result: Result) => {
-      if (!result) {
+    ).subscribe((record: LessonsLearned) => {
+      if (!record) {
         return;
       }
-      this._updateList(result, (!!this.editItem ? 'UPDATE' : 'ADD'));
+      this._updateList(record, (!!this.editItem ? 'UPDATE' : 'ADD'));
       this.toastService.success(this.lang.map.msg_save_success);
       this.recordChanged$.next(null);
       this.cancelForm();
     });
   }
 
-  private _updateList(record: (Result | null), operation: 'ADD' | 'UPDATE' | 'DELETE' | 'NONE') {
+  private _updateList(record: (LessonsLearned | null), operation: 'ADD' | 'UPDATE' | 'DELETE' | 'NONE') {
     if (record) {
       if (operation === 'ADD') {
         this.list.push(record);
@@ -209,7 +218,7 @@ export class ResultListComponent implements OnInit, OnDestroy {
     this._setComponentReadiness('READY');
   }
 
-  edit(record: Result, $event?: MouseEvent) {
+  edit(record: LessonsLearned, $event?: MouseEvent) {
     $event?.preventDefault();
     if (this.readonly) {
       return;
@@ -219,14 +228,14 @@ export class ResultListComponent implements OnInit, OnDestroy {
     this.recordChanged$.next(record);
   }
 
-  view(record: Result, $event?: MouseEvent) {
+  view(record: LessonsLearned, $event?: MouseEvent) {
     $event?.preventDefault();
     this.editItem = record;
     this.viewOnly = true;
     this.recordChanged$.next(record);
   }
 
-  delete(record: Result, $event?: MouseEvent): any {
+  delete(record: LessonsLearned, $event?: MouseEvent): any {
     $event?.preventDefault();
     if (this.readonly) {
       return;
@@ -243,4 +252,21 @@ export class ResultListComponent implements OnInit, OnDestroy {
         }
       });
   }
+
+  private loadLessonsLearnt() {
+    this.fieldAssessmentService.loadByType(FieldAssessmentTypesEnum.LESSONS_LEARNT)
+      .pipe(
+        catchError(() => of([])),
+        map(result => {
+          return result.map(x => x.convertToAdminResult());
+        })
+      ).subscribe((result) => {
+      this.lessonsLearntList = result;
+    });
+  }
+
+  searchNgSelect(term: string, item: AdminResult): boolean {
+    return item.ngSelectSearch(term);
+  }
+
 }

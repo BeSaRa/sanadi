@@ -4,20 +4,20 @@ import {ToastService} from '@services/toast.service';
 import {DialogService} from '@services/dialog.service';
 import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {ReadinessStatus} from '@app/types/types';
-import {Stage} from '@app/models/stage';
-import {Subject} from 'rxjs';
-import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import {ActionIconsEnum} from '@app/enums/action-icons-enum';
-import {filter, map, take, takeUntil, tap} from 'rxjs/operators';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {CustomValidators} from '@app/validators/custom-validators';
+import {Subject} from 'rxjs';
+import {IMenuItem} from '@modules/context-menu/interfaces/i-menu-item';
+import {ActionIconsEnum} from '@enums/action-icons-enum';
+import {filter, map, take, takeUntil, tap} from 'rxjs/operators';
+import {UserClickOn} from '@enums/user-click-on.enum';
+import {Result} from '@models/result';
 
 @Component({
-  selector: 'stage-list',
-  templateUrl: './stage-list.component.html',
-  styleUrls: ['./stage-list.component.scss']
+  selector: 'result-list',
+  templateUrl: './result-list.component.html',
+  styleUrls: ['./result-list.component.scss']
 })
-export class StageListComponent implements OnInit, OnDestroy {
+export class ResultListComponent implements OnInit, OnDestroy {
 
   constructor(public lang: LangService,
               private toastService: ToastService,
@@ -43,55 +43,53 @@ export class StageListComponent implements OnInit, OnDestroy {
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();
   @Input() readonly: boolean = false;
 
-  private _list: Stage[] = [];
-  @Input() set list(list: Stage[]) {
+  private _list: Result[] = [];
+  @Input() set list(list: Result[]) {
     this._list = list;
   }
 
-  get list(): Stage[] {
+  get list(): Result[] {
     return this._list;
   }
 
-  totalInterventionCost: number = 0;
-  displayedColumns = ['stage', 'duration', 'interventionCost', 'actions'];
-  footerColumns: string[] = ['totalInterventionCostLabel', 'totalInterventionCost'];
-  editItem?: Stage;
+  displayedColumns = ['outputs', 'expectedResults', 'expectedImpact', 'actions'];
+  editItem?: Result;
   viewOnly: boolean = false;
   customValidators = CustomValidators;
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
   private save$: Subject<any> = new Subject<any>();
   add$: Subject<any> = new Subject<any>();
-  private recordChanged$: Subject<Stage | null> = new Subject<Stage | null>();
-  private currentRecord?: Stage;
+  private recordChanged$: Subject<Result | null> = new Subject<Result | null>();
+  private currentRecord?: Result;
   private destroy$: Subject<any> = new Subject<any>();
   showForm: boolean = false;
   filterControl: UntypedFormControl = new UntypedFormControl('');
 
   form!: UntypedFormGroup;
-  actions: IMenuItem<Stage>[] = [
+  actions: IMenuItem<Result>[] = [
     // edit
     {
       type: 'action',
       icon: ActionIconsEnum.EDIT,
       label: 'btn_edit',
-      onClick: (item: Stage) => this.edit(item),
-      show: (_item: Stage) => !this.readonly
+      onClick: (item: Result) => this.edit(item),
+      show: (_item: Result) => !this.readonly
     },
     // delete
     {
       type: 'action',
       icon: ActionIconsEnum.DELETE,
       label: 'btn_delete',
-      onClick: (item: Stage) => this.delete(item),
-      show: (_item: Stage) => !this.readonly
+      onClick: (item: Result) => this.delete(item),
+      show: (_item: Result) => !this.readonly
     },
     // view
     {
       type: 'action',
       icon: ActionIconsEnum.VIEW,
       label: 'view',
-      onClick: (item: Stage) => this.view(item),
-      show: (_item: Stage) => this.readonly
+      onClick: (item: Result) => this.view(item),
+      show: (_item: Result) => this.readonly
     }
   ];
 
@@ -101,14 +99,14 @@ export class StageListComponent implements OnInit, OnDestroy {
 
 
   buildForm(): void {
-    this.form = this.fb.group(new Stage().buildForm(true));
+    this.form = this.fb.group(new Result().buildForm(true));
   }
 
   private listenToAdd() {
     this.add$.pipe(takeUntil(this.destroy$))
       .subscribe(() => {
         this.viewOnly = false;
-        this.recordChanged$.next(new Stage());
+        this.recordChanged$.next(new Result());
       });
   }
 
@@ -120,7 +118,7 @@ export class StageListComponent implements OnInit, OnDestroy {
     });
   }
 
-  private updateForm(record: Stage | undefined) {
+  private updateForm(record: Result | undefined) {
     if (record) {
       if (this.viewOnly) {
         this._setComponentReadiness('READY');
@@ -159,22 +157,22 @@ export class StageListComponent implements OnInit, OnDestroy {
       map(() => {
         let formValue = this.form.getRawValue();
 
-        return (new Stage()).clone({
+        return (new Result()).clone({
           ...this.currentRecord, ...formValue
         });
       })
-    ).subscribe((stage: Stage) => {
-      if (!stage) {
+    ).subscribe((result: Result) => {
+      if (!result) {
         return;
       }
-      this._updateList(stage, (!!this.editItem ? 'UPDATE' : 'ADD'));
+      this._updateList(result, (!!this.editItem ? 'UPDATE' : 'ADD'));
       this.toastService.success(this.lang.map.msg_save_success);
       this.recordChanged$.next(null);
       this.cancelForm();
     });
   }
 
-  private _updateList(record: (Stage | null), operation: 'ADD' | 'UPDATE' | 'DELETE' | 'NONE') {
+  private _updateList(record: (Result | null), operation: 'ADD' | 'UPDATE' | 'DELETE' | 'NONE') {
     if (record) {
       if (operation === 'ADD') {
         this.list.push(record);
@@ -211,7 +209,7 @@ export class StageListComponent implements OnInit, OnDestroy {
     this._setComponentReadiness('READY');
   }
 
-  edit(record: Stage, $event?: MouseEvent) {
+  edit(record: Result, $event?: MouseEvent) {
     $event?.preventDefault();
     if (this.readonly) {
       return;
@@ -221,14 +219,14 @@ export class StageListComponent implements OnInit, OnDestroy {
     this.recordChanged$.next(record);
   }
 
-  view(record: Stage, $event?: MouseEvent) {
+  view(record: Result, $event?: MouseEvent) {
     $event?.preventDefault();
     this.editItem = record;
     this.viewOnly = true;
     this.recordChanged$.next(record);
   }
 
-  delete(record: Stage, $event?: MouseEvent): any {
+  delete(record: Result, $event?: MouseEvent): any {
     $event?.preventDefault();
     if (this.readonly) {
       return;
@@ -245,20 +243,4 @@ export class StageListComponent implements OnInit, OnDestroy {
         }
       });
   }
-
-  calculateTotalInterventionCost(): number {
-    let total: number;
-    if (!this.list || this.list.length === 0) {
-      total = 0;
-    } else {
-      total = this.list.map(x => {
-        if (!x.interventionCost) {
-          return 0;
-        }
-        return Number(Number(x.interventionCost).toFixed(2));
-      }).reduce((resultSum, a) => resultSum + a, 0);
-    }
-    return this.totalInterventionCost = total;
-  }
-
 }

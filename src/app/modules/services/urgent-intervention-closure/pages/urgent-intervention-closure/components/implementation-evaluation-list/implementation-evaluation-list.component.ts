@@ -1,38 +1,42 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { LangService } from '@services/lang.service';
-import { ToastService } from '@services/toast.service';
-import { DialogService } from '@services/dialog.service';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { ReadinessStatus } from '@app/types/types';
-import { CustomValidators } from '@app/validators/custom-validators';
-import { of, Subject } from 'rxjs';
-import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
-import { ActionIconsEnum } from '@app/enums/action-icons-enum';
-import { catchError, filter, map, take, takeUntil, tap } from 'rxjs/operators';
-import { UserClickOn } from '@app/enums/user-click-on.enum';
-import { BestPractices } from '@app/models/best-practices';
-import { AdminResult } from '@app/models/admin-result';
-import { FieldAssessmentService } from '@services/field-assessment.service';
-import { FieldAssessmentTypesEnum } from '@app/enums/field-assessment-types.enum';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {LangService} from '@services/lang.service';
+import {ToastService} from '@services/toast.service';
+import {DialogService} from '@services/dialog.service';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+import {ReadinessStatus} from '@app/types/types';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {of, Subject} from 'rxjs';
+import {IMenuItem} from '@modules/context-menu/interfaces/i-menu-item';
+import {ActionIconsEnum} from '@enums/action-icons-enum';
+import {catchError, filter, map, take, takeUntil, tap} from 'rxjs/operators';
+import {UserClickOn} from '@enums/user-click-on.enum';
+import {OfficeEvaluation} from '@models/office-evaluation';
+import {SortEvent} from '@contracts/sort-event';
+import {CommonUtils} from '@helpers/common-utils';
+import {LookupService} from '@services/lookup.service';
+import {FieldAssessmentService} from '@services/field-assessment.service';
+import {AdminResult} from '@models/admin-result';
+import {FieldAssessmentTypesEnum} from '@enums/field-assessment-types.enum';
 
 @Component({
-  selector: 'best-practices-list',
-  templateUrl: './best-practices-list.component.html',
-  styleUrls: ['./best-practices-list.component.scss']
+  selector: 'implementation-evaluation-list',
+  templateUrl: './implementation-evaluation-list.component.html',
+  styleUrls: ['./implementation-evaluation-list.component.scss']
 })
-export class BestPracticesListComponent implements OnInit {
+export class ImplementationEvaluationListComponent implements OnInit, OnDestroy {
 
   constructor(public lang: LangService,
               private toastService: ToastService,
               private dialogService: DialogService,
+              private lookupService: LookupService,
               private fieldAssessmentService: FieldAssessmentService,
               private fb: UntypedFormBuilder) {
   }
 
 
   ngOnInit(): void {
+    this.loadEvaluationHubs();
     this.buildForm();
-    this.loadBestPractices();
     this.listenToAdd();
     this.listenToRecordChange();
     this.listenToSave();
@@ -48,57 +52,71 @@ export class BestPracticesListComponent implements OnInit {
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();
   @Input() readonly: boolean = false;
 
-  private _list: BestPractices[] = [];
-  @Input() set list(list: BestPractices[]) {
+  private _list: OfficeEvaluation[] = [];
+  @Input() set list(list: OfficeEvaluation[]) {
     this._list = list;
   }
 
-  get list(): BestPractices[] {
+  get list(): OfficeEvaluation[] {
     return this._list;
   }
 
-  displayedColumns = ['bestPracticesListString', 'statement', 'actions'];
-  editItem?: BestPractices;
+  evaluationHubList: AdminResult[] = [];
+  evaluationResultList = this.lookupService.listByCategory.EvaluationResult;
+
+  displayedColumns = ['evaluationHub', 'evaluationResult', 'notes', 'actions'];
+  editItem?: OfficeEvaluation;
   viewOnly: boolean = false;
   customValidators = CustomValidators;
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
   private save$: Subject<any> = new Subject<any>();
   add$: Subject<any> = new Subject<any>();
-  private recordChanged$: Subject<BestPractices | null> = new Subject<BestPractices | null>();
-  private currentRecord?: BestPractices;
+  private recordChanged$: Subject<OfficeEvaluation | null> = new Subject<OfficeEvaluation | null>();
+  private currentRecord?: OfficeEvaluation;
   private destroy$: Subject<any> = new Subject<any>();
   showForm: boolean = false;
   filterControl: UntypedFormControl = new UntypedFormControl('');
 
-  bestPracticesList: AdminResult[] = [];
-
   form!: UntypedFormGroup;
-  actions: IMenuItem<BestPractices>[] = [
+  actions: IMenuItem<OfficeEvaluation>[] = [
     // edit
     {
       type: 'action',
       icon: ActionIconsEnum.EDIT,
       label: 'btn_edit',
-      onClick: (item: BestPractices) => this.edit(item),
-      show: (_item: BestPractices) => !this.readonly
+      onClick: (item: OfficeEvaluation) => this.edit(item),
+      show: (_item: OfficeEvaluation) => !this.readonly
     },
     // delete
     {
       type: 'action',
       icon: ActionIconsEnum.DELETE,
       label: 'btn_delete',
-      onClick: (item: BestPractices) => this.delete(item),
-      show: (_item: BestPractices) => !this.readonly
+      onClick: (item: OfficeEvaluation) => this.delete(item),
+      show: (_item: OfficeEvaluation) => !this.readonly
     },
     // view
     {
       type: 'action',
       icon: ActionIconsEnum.VIEW,
       label: 'view',
-      onClick: (item: BestPractices) => this.view(item),
-      show: (_item: BestPractices) => this.readonly
+      onClick: (item: OfficeEvaluation) => this.view(item),
+      show: (_item: OfficeEvaluation) => this.readonly
     }
   ];
+
+  sortingCallbacks = {
+    evaluationHub: (a: OfficeEvaluation, b: OfficeEvaluation, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.evaluationHubInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.evaluationHubInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    evaluationResult: (a: OfficeEvaluation, b: OfficeEvaluation, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.evaluationResultInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.evaluationResultInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    }
+  };
 
   private _setComponentReadiness(readyStatus: ReadinessStatus) {
     this.readyEvent.emit(readyStatus);
@@ -106,14 +124,14 @@ export class BestPracticesListComponent implements OnInit {
 
 
   buildForm(): void {
-    this.form = this.fb.group(new BestPractices().buildForm(true));
+    this.form = this.fb.group(new OfficeEvaluation().buildForm(true));
   }
 
   private listenToAdd() {
     this.add$.pipe(takeUntil(this.destroy$))
       .subscribe(() => {
         this.viewOnly = false;
-        this.recordChanged$.next(new BestPractices());
+        this.recordChanged$.next(new OfficeEvaluation());
       });
   }
 
@@ -125,7 +143,7 @@ export class BestPracticesListComponent implements OnInit {
     });
   }
 
-  private updateForm(record: BestPractices | undefined) {
+  private updateForm(record: OfficeEvaluation | undefined) {
     if (record) {
       if (this.viewOnly) {
         this._setComponentReadiness('READY');
@@ -161,27 +179,37 @@ export class BestPracticesListComponent implements OnInit {
       takeUntil(this.destroy$),
       tap(_ => this.form.invalid ? this.displayRequiredFieldsMessage() : true),
       filter(() => this.form.valid),
+      filter(() => {
+        const formValue = this.form.getRawValue();
+        const isDuplicate = this.list.some(x => x.evaluationHub === formValue.evaluationHub && x.evaluationResult === formValue.evaluationResult);
+        if (isDuplicate) {
+          this.toastService.alert(this.lang.map.msg_duplicated_item);
+        }
+        return !isDuplicate;
+      }),
       map(() => {
         let formValue = this.form.getRawValue();
-        let bestPracticesInfo = this.bestPracticesList.filter(x => formValue.bestPractices.includes(x.id));
+        let evaluationHubInfo = this.evaluationHubList.find(x => x.id === formValue.evaluationHub) ?? new AdminResult();
+        let evaluationResultInfo = this.evaluationResultList.find(x => x.lookupKey === formValue.evaluationResult)?.convertToAdminResult() ?? new AdminResult();
 
-        return (new BestPractices()).clone({
+        return (new OfficeEvaluation()).clone({
           ...this.currentRecord, ...formValue,
-          bestPracticesInfo: bestPracticesInfo
+          evaluationHubInfo: evaluationHubInfo,
+          evaluationResultInfo: evaluationResultInfo
         });
       })
-    ).subscribe((record: BestPractices) => {
-      if (!record) {
+    ).subscribe((result: OfficeEvaluation) => {
+      if (!result) {
         return;
       }
-      this._updateList(record, (!!this.editItem ? 'UPDATE' : 'ADD'));
+      this._updateList(result, (!!this.editItem ? 'UPDATE' : 'ADD'));
       this.toastService.success(this.lang.map.msg_save_success);
       this.recordChanged$.next(null);
       this.cancelForm();
     });
   }
 
-  private _updateList(record: (BestPractices | null), operation: 'ADD' | 'UPDATE' | 'DELETE' | 'NONE') {
+  private _updateList(record: (OfficeEvaluation | null), operation: 'ADD' | 'UPDATE' | 'DELETE' | 'NONE') {
     if (record) {
       if (operation === 'ADD') {
         this.list.push(record);
@@ -218,7 +246,7 @@ export class BestPracticesListComponent implements OnInit {
     this._setComponentReadiness('READY');
   }
 
-  edit(record: BestPractices, $event?: MouseEvent) {
+  edit(record: OfficeEvaluation, $event?: MouseEvent) {
     $event?.preventDefault();
     if (this.readonly) {
       return;
@@ -228,14 +256,14 @@ export class BestPracticesListComponent implements OnInit {
     this.recordChanged$.next(record);
   }
 
-  view(record: BestPractices, $event?: MouseEvent) {
+  view(record: OfficeEvaluation, $event?: MouseEvent) {
     $event?.preventDefault();
     this.editItem = record;
     this.viewOnly = true;
     this.recordChanged$.next(record);
   }
 
-  delete(record: BestPractices, $event?: MouseEvent): any {
+  delete(record: OfficeEvaluation, $event?: MouseEvent): any {
     $event?.preventDefault();
     if (this.readonly) {
       return;
@@ -253,20 +281,15 @@ export class BestPracticesListComponent implements OnInit {
       });
   }
 
-  private loadBestPractices() {
-    this.fieldAssessmentService.loadByType(FieldAssessmentTypesEnum.BEST_PRACTICES)
+  private loadEvaluationHubs() {
+    this.fieldAssessmentService.loadByType(FieldAssessmentTypesEnum.EVALUATION_AXIS)
       .pipe(
         catchError(() => of([])),
         map(result => {
           return result.map(x => x.convertToAdminResult());
         })
       ).subscribe((result) => {
-      this.bestPracticesList = result;
+      this.evaluationHubList = result;
     });
   }
-
-  searchNgSelect(term: string, item: AdminResult): boolean {
-    return item.ngSelectSearch(term);
-  }
-
 }
