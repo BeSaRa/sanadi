@@ -297,6 +297,17 @@ const routes: Routes = [
         } as Partial<ICustomRouteData>
       },
       {
+        path: 'services/financial-transfers-licensing',
+        canActivate: [NewServicePermissionGuard],
+        loadChildren: () => import('./modules/services/financial-transfer-licensing/financial-transfer-licensing.module')
+          .then(m => m.FinancialTransferLicensingModule),
+        data: {
+          permissionGroup: PermissionGroupsEnum.FINANCIAL_TRANSFERS_LICENSING_SERVICES_PERMISSION_GROUP,
+          checkAnyPermission: true,
+          caseType: CaseTypes.FINANCIAL_TRANSFERS_LICENSING
+        } as Partial<ICustomRouteData>
+      },
+      {
         path: 'services/search',
         loadChildren: () => import('@modules/service-search-individual/service-search-individual.module').then(m => m.ServiceSearchIndividualModule),
       },

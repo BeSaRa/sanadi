@@ -1,26 +1,21 @@
-import { switchMap, catchError } from 'rxjs/operators';
-import { ExternalProjectLicensing } from './../../../../models/external-project-licensing';
-import { FinancialTransferLicensingService } from './../../../../services/financial-transfer-licensing.service';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import {
-  UntypedFormBuilder,
-  UntypedFormControl,
-  UntypedFormGroup
-} from '@angular/forms';
-import { ActionIconsEnum } from '@app/enums/action-icons-enum';
-import { CommonStatusEnum } from '@app/enums/common-status.enum';
-import { UserClickOn } from '@app/enums/user-click-on.enum';
-import { AdminResult } from '@app/models/admin-result';
-import { FinancialTransfersProject } from '@app/models/financial-transfers-project';
-import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
-import { DialogService } from '@app/services/dialog.service';
-import { LangService } from '@app/services/lang.service';
-import { LookupService } from '@app/services/lookup.service';
-import { ToastService } from '@app/services/toast.service';
-import { ReadinessStatus } from '@app/types/types';
-import { BehaviorSubject, Subject, of } from 'rxjs';
-import { filter, map, take, takeUntil, tap } from 'rxjs/operators';
-import { CustomValidators } from '@app/validators/custom-validators';
+import {catchError, filter, map, switchMap, take, takeUntil, tap} from 'rxjs/operators';
+import {ExternalProjectLicensing} from '@models/external-project-licensing';
+import {FinancialTransferLicensingService} from '@services/financial-transfer-licensing.service';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+import {ActionIconsEnum} from '@enums/action-icons-enum';
+import {CommonStatusEnum} from '@enums/common-status.enum';
+import {UserClickOn} from '@enums/user-click-on.enum';
+import {AdminResult} from '@models/admin-result';
+import {FinancialTransfersProject} from '@models/financial-transfers-project';
+import {IMenuItem} from '@modules/context-menu/interfaces/i-menu-item';
+import {DialogService} from '@services/dialog.service';
+import {LangService} from '@services/lang.service';
+import {LookupService} from '@services/lookup.service';
+import {ToastService} from '@services/toast.service';
+import {ReadinessStatus} from '@app/types/types';
+import {BehaviorSubject, of, Subject} from 'rxjs';
+import {CustomValidators} from '@app/validators/custom-validators';
 
 @Component({
   selector: 'financial-transfers-projects',
@@ -28,14 +23,13 @@ import { CustomValidators } from '@app/validators/custom-validators';
   styleUrls: ['./financial-transfers-projects.component.scss'],
 })
 export class FinancialTransfersProjectsComponent implements OnInit {
-  constructor(
-    public lang: LangService,
-    private toastService: ToastService,
-    private dialogService: DialogService,
-    public lookupService: LookupService,
-    private fb: UntypedFormBuilder,
-    private financialTransferLicensingService:FinancialTransferLicensingService
-  ) {}
+  constructor(public lang: LangService,
+              private toastService: ToastService,
+              private dialogService: DialogService,
+              public lookupService: LookupService,
+              private fb: UntypedFormBuilder,
+              private financialTransferLicensingService: FinancialTransferLicensingService) {
+  }
 
   @Input() readonly: boolean = false;
   private _list: FinancialTransfersProject[] = [];
@@ -44,10 +38,13 @@ export class FinancialTransfersProjectsComponent implements OnInit {
     this._list = list;
     this.dataSource.next(this._list);
   }
+
   @Input() financialTransfersProject?: string = undefined;
+
   get list(): FinancialTransfersProject[] {
     return this._list;
   }
+
   @Output() listUpdated = new EventEmitter<number>();
   @Input() submissionMechanism!: number;
   @Input() approvedFinancialTransferProjects: ExternalProjectLicensing[] = [];
@@ -82,7 +79,7 @@ export class FinancialTransfersProjectsComponent implements OnInit {
     new Subject<FinancialTransfersProject | null>();
   private current?: FinancialTransfersProject;
   private destroy$: Subject<any> = new Subject<any>();
-  selectedProject?: FinancialTransfersProject ;
+  selectedProject?: FinancialTransfersProject;
 
   form!: UntypedFormGroup;
 
@@ -108,6 +105,7 @@ export class FinancialTransfersProjectsComponent implements OnInit {
     );
     this.financialTransferProjectControl = this.fb.control([]);
   }
+
   actions: IMenuItem<FinancialTransfersProject>[] = [
     // edit
     {
@@ -194,15 +192,15 @@ export class FinancialTransfersProjectsComponent implements OnInit {
           }
           return isProjectSelected;
         }),
-        filter(()=>{
+        filter(() => {
           const isQatariTransactionAmountValid = this.qatariTransactionAmount.value <= this.selectedProject!.dueAmount
-          if(!isQatariTransactionAmountValid){
+          if (!isQatariTransactionAmountValid) {
             this.toastService.error(this.lang.map.msg_qatari_transaction_should_not_exceed_due_amount);
           }
           return isQatariTransactionAmountValid;
         }),
         filter(() => {
-          if(!!this.editItem){
+          if (!!this.editItem) {
             return true;
           }
           const formValue = this.form.getRawValue();
@@ -238,6 +236,7 @@ export class FinancialTransfersProjectsComponent implements OnInit {
         this.cancel();
       });
   }
+
   private displayRequiredFieldsMessage(): void {
     this.dialogService
       .error(this.lang.map.msg_all_required_fields_are_filled)
@@ -246,6 +245,7 @@ export class FinancialTransfersProjectsComponent implements OnInit {
         this.form.markAllAsTouched();
       });
   }
+
   private _updateList(
     record: FinancialTransfersProject | null,
     operation: 'ADD' | 'UPDATE' | 'DELETE' | 'NONE'
@@ -268,19 +268,22 @@ export class FinancialTransfersProjectsComponent implements OnInit {
     this._calculateQatariTransactionAmount();
     this.listUpdated.emit(this.totalQatariRiyalTransactions);
   }
-  private _calculateQatariTransactionAmount(){
+
+  private _calculateQatariTransactionAmount() {
     this.totalQatariRiyalTransactions = this.list
-    .map((record) => Number(record.qatariTransactionAmount))
-    .reduce((prev, current) => prev + current, 0);
+      .map((record) => Number(record.qatariTransactionAmount))
+      .reduce((prev, current) => prev + current, 0);
   }
-  private _prepareForm(record: FinancialTransfersProject){
+
+  private _prepareForm(record: FinancialTransfersProject) {
     this.editItem = record;
     this.selectedProject = record;
-    const approvedProject = this.approvedFinancialTransferProjects.find(x=>x.fullSerial === record.fullSerial);
+    const approvedProject = this.approvedFinancialTransferProjects.find(x => x.fullSerial === record.fullSerial);
     this.financialTransferProjectControl.patchValue(approvedProject?.id, {emitEvent: false, onlySelf: true});
     this.viewOnly = false;
     this.recordChanged$.next(record);
   }
+
   edit(record: FinancialTransfersProject, $event?: MouseEvent) {
     $event?.preventDefault();
     if (this.readonly) {
@@ -291,7 +294,7 @@ export class FinancialTransfersProjectsComponent implements OnInit {
 
   view(record: FinancialTransfersProject, $event?: MouseEvent) {
     $event?.preventDefault();
-   this._prepareForm(record);
+    this._prepareForm(record);
   }
 
   delete(record: FinancialTransfersProject, $event?: MouseEvent): any {
@@ -338,18 +341,23 @@ export class FinancialTransfersProjectsComponent implements OnInit {
     this._updateList(null, 'NONE');
     this._setComponentReadiness('READY');
   }
-  isTransferAmountGreaterThenDueAmount(record:FinancialTransfersProject) :boolean{
+
+  isTransferAmountGreaterThenDueAmount(record: FinancialTransfersProject): boolean {
     return record.transferAmount > record.dueAmount
   }
+
   trackBy(item: AdminResult) {
     return item.id;
   }
+
   get fullSerial(): UntypedFormControl {
     return this.form.get('fullSerial') as UntypedFormControl;
   }
+
   get qatariTransactionAmount(): UntypedFormControl {
     return this.form.get('qatariTransactionAmount') as UntypedFormControl;
   }
+
   get notes(): UntypedFormControl {
     return this.form.get('notes') as UntypedFormControl;
   }
@@ -357,18 +365,18 @@ export class FinancialTransfersProjectsComponent implements OnInit {
   private _listenToFinancialTransferProjectChange() {
     this.financialTransferProjectControl.valueChanges
       .pipe(
-        filter(value =>!!value),
+        filter(value => !!value),
         switchMap((value: string) => {
-          return  this.financialTransferLicensingService.loadEternalProjectsDetails(value)
-          .pipe(
-            catchError(_=> of(null)),
-          )
+          return this.financialTransferLicensingService.loadEternalProjectsDetails(value)
+            .pipe(
+              catchError(_ => of(null)),
+            )
         }),
 
         takeUntil(this.destroy$)
       )
-      .subscribe((project:FinancialTransfersProject|null)=>{
-        if(!project){
+      .subscribe((project: FinancialTransfersProject | null) => {
+        if (!project) {
           this.financialTransferProjectControl.reset();
           return;
         }
