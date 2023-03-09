@@ -1,10 +1,10 @@
 import { Component, Inject } from '@angular/core';
-import { FileIconsEnum } from '@app/enums/file-extension-mime-types-icons.enum';
-import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { CustomsExemptionRemittance } from '@app/models/customs-exemption-remittance';
-import { InboxService } from '@app/services/inbox.service';
-import { LangService } from '@app/services/lang.service';
-import { SharedService } from '@app/services/shared.service';
+import { FileIconsEnum } from '@enums/file-extension-mime-types-icons.enum';
+import { ILanguageKeys } from '@contracts/i-language-keys';
+import { CustomsExemptionRemittance } from '@models/customs-exemption-remittance';
+import { InboxService } from '@services/inbox.service';
+import { LangService } from '@services/lang.service';
+import { SharedService } from '@services/shared.service';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
 import { CustomsExemptionRemittanceService } from '@services/customs-exemption-remittance.service';

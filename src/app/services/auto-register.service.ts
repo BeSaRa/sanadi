@@ -42,7 +42,7 @@ import {
 } from '@app/modules/collection/pages/collector-approval/collector-approval.component';
 import {
   CustomsExemptionComponent
-} from '@app/modules/remittances/pages/customs-exemption/customs-exemption.component';
+} from '@app/modules/services/customs-exemption-remittance/pages/customs-exemption/customs-exemption.component';
 import {
   InternalBankAccountApprovalComponent
 } from '@app/modules/services/internal-bank-account-approval/pages/internal-bank-account-approval/internal-bank-account-approval.component';

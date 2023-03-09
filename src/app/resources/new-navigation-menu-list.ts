@@ -39,6 +39,7 @@ enum SystemPathsEnum {
   EXTERNAL_ORG_AFFILIATION_REQUEST = '/home/services/external-org-affiliation',
   ORGANIZATION_ENTITIES_SUPPORT = '/home/services/organization-entities-support',
   COORDINATION_WITH_ORGANIZATION_REQUEST = '/home/services/coordination-with-organizations-request',
+  CUSTOMS_EXEMPTION_REMITTANCE = '/home/services/customs-exemption',
 }
 
 export const newNavigationMenuList = [
@@ -1152,6 +1153,59 @@ export const newNavigationMenuList = [
     permissionGroup: null,
     parent: 2101,
     group: 'service_' + CaseTypes.COORDINATION_WITH_ORGANIZATION_REQUEST,
+    itemOrder: 3,
+    svg: null
+  },
+  {
+    id: 2201,
+    langKey: 'menu_customs_exemption_service',
+    path: SystemPathsEnum.CUSTOMS_EXEMPTION_REMITTANCE,
+    icon: 'mdi-human-male',
+    isSvg: false,
+    caseType: CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE,
+    permission: '',
+    permissionGroup: PermissionGroupsEnum.CUSTOMS_EXEMPTION_REMITTANCE_SERVICES_PERMISSION_GROUP,
+    parent: null,
+    group: 'main',
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 2202,
+    langKey: serviceAddUpdateLabel,
+    path: SystemPathsEnum.CUSTOMS_EXEMPTION_REMITTANCE + '/service',
+    icon: serviceAddUpdateIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.CUSTOMS_EXEMPTION_REMITTANCE,
+    permissionGroup: null,
+    parent: 2201,
+    group: 'service_' + CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE,
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 2203,
+    langKey: serviceSearchLabel,
+    path: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE),
+    icon: serviceSearchIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.SEARCH_SERVICE_CUSTOMS_EXEMPTION_REMITTANCE,
+    permissionGroup: null,
+    parent: 2201,
+    group: 'service_' + CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE,
+    itemOrder: 2,
+    svg: null
+  },
+  {
+    id: 2204,
+    langKey: serviceOutputLabel,
+    path: SystemPathsEnum.CUSTOMS_EXEMPTION_REMITTANCE + '/outputs',
+    icon: serviceOutputIcon,
+    isSvg: false,
+    permission: Constants.SERVICE_OUTPUT_PERMISSION,
+    permissionGroup: null,
+    parent: 2201,
+    group: 'service_' + CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE,
     itemOrder: 3,
     svg: null
   },

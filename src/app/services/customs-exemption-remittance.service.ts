@@ -19,7 +19,7 @@ import { CaseTypes } from '@app/enums/case-types.enum';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import {
   SelectDocumentPopUpComponent
-} from '@app/modules/remittances/popups/select-document-pop-up/select-document-pop-up.component';
+} from '@app/modules/services/customs-exemption-remittance/popups/select-document-pop-up/select-document-pop-up.component';
 import { AdminResult } from '@app/models/admin-result';
 import { CustomsExemptionRequestTypes } from '@app/enums/service-request-types';
 import { CommonService } from '@services/common.service';
