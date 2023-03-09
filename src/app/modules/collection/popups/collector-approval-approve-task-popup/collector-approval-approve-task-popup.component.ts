@@ -17,7 +17,7 @@ import {HasLicenseApproval} from '@app/interfaces/has-license-approval';
 import {ToastService} from '@app/services/toast.service';
 import {CollectionRequestType} from '@app/enums/service-request-types';
 import {CustomValidators} from '@app/validators/custom-validators';
-import {ApprovalFormComponent} from '@app/modules/collection/shared/approval-form/approval-form.component';
+import {ApprovalFormComponent} from '@app/modules/services/shared-services/components/approval-form/approval-form.component';
 import {LicenseDurationType} from '@app/enums/license-duration-type';
 import {DateUtils} from '@app/helpers/date-utils';
 

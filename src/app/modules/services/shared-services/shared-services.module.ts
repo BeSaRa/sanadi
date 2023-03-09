@@ -9,6 +9,9 @@ import {WorkAreasComponent} from '@modules/services/shared-services/components/w
 import {
   RealBeneficiariesComponent
 } from '@modules/services/shared-services/components/real-beneficiaries/real-beneficiaries.component';
+import {
+  ApprovalFormComponent
+} from '@modules/services/shared-services/components/approval-form/approval-form.component';
 
 
 @NgModule({
@@ -16,7 +19,8 @@ import {
     ChooseTemplatePopupComponent,
     BankAccountComponent,
     WorkAreasComponent,
-    RealBeneficiariesComponent
+    RealBeneficiariesComponent,
+    ApprovalFormComponent
   ],
   imports: [
     CommonModule,
@@ -26,7 +30,8 @@ import {
     ChooseTemplatePopupComponent,
     BankAccountComponent,
     WorkAreasComponent,
-    RealBeneficiariesComponent
+    RealBeneficiariesComponent,
+    ApprovalFormComponent
   ]
 })
 export class SharedServicesModule { }
