@@ -1,71 +1,53 @@
-import { JobTitleService } from '@services/job-title.service';
-import { ExternalUser } from '@app/models/external-user';
-import { ExternalUserService } from '@services/external-user.service';
-import { AdminLookupService } from '@services/admin-lookup.service';
-import { ChangeDetectorRef, Component } from '@angular/core';
-import {
-  UntypedFormBuilder,
-  UntypedFormControl,
-  UntypedFormGroup,
-} from '@angular/forms';
-import { AdminLookupTypeEnum } from '@app/enums/admin-lookup-type-enum';
-import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
-import { OpenFrom } from '@app/enums/open-from.enum';
-import { OperationTypes } from '@app/enums/operation-types.enum';
-import { SaveTypes } from '@app/enums/save-types';
-import { ServiceRequestTypes } from '@app/enums/service-request-types';
-import { UserClickOn } from '@app/enums/user-click-on.enum';
-import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
-import { CommonUtils } from '@app/helpers/common-utils';
-import { AdminLookup } from '@app/models/admin-lookup';
-import { Lookup } from '@app/models/lookup';
-import { OrganizationsEntitiesSupport } from '@app/models/organizations-entities-support';
-import { OrganizationsEntitiesSupportSearchCriteria } from '@app/models/organizations-entities-support-search-criteria';
-import { DialogService } from '@app/services/dialog.service';
-import { EmployeeService } from '@app/services/employee.service';
-import { LangService } from '@app/services/lang.service';
-import { LicenseService } from '@app/services/license.service';
-import { LookupService } from '@app/services/lookup.service';
-import { OrganizationsEntitiesSupportService } from '@app/services/organizations-entities-support.service';
-import { ToastService } from '@app/services/toast.service';
-import { TabComponent } from '@app/shared/components/tab/tab.component';
-import { TabMap } from '@app/types/types';
-import { CustomValidators } from '@app/validators/custom-validators';
-import { Observable, of, Subject } from 'rxjs';
-import {
-  catchError,
-  exhaustMap,
-  filter,
-  map,
-  switchMap,
-  takeUntil,
-  tap,
-} from 'rxjs/operators';
-import { JobTitle } from '@app/models/job-title';
+import {JobTitleService} from '@services/job-title.service';
+import {ExternalUser} from '@models/external-user';
+import {ExternalUserService} from '@services/external-user.service';
+import {AdminLookupService} from '@services/admin-lookup.service';
+import {ChangeDetectorRef, Component} from '@angular/core';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup,} from '@angular/forms';
+import {AdminLookupTypeEnum} from '@enums/admin-lookup-type-enum';
+import {CommonCaseStatus} from '@enums/common-case-status.enum';
+import {OpenFrom} from '@enums/open-from.enum';
+import {OperationTypes} from '@enums/operation-types.enum';
+import {SaveTypes} from '@enums/save-types';
+import {ServiceRequestTypes} from '@enums/service-request-types';
+import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
+import {CommonUtils} from '@helpers/common-utils';
+import {AdminLookup} from '@models/admin-lookup';
+import {Lookup} from '@models/lookup';
+import {OrganizationsEntitiesSupport} from '@models/organizations-entities-support';
+import {OrganizationsEntitiesSupportSearchCriteria} from '@models/organizations-entities-support-search-criteria';
+import {DialogService} from '@services/dialog.service';
+import {EmployeeService} from '@services/employee.service';
+import {LangService} from '@services/lang.service';
+import {LicenseService} from '@services/license.service';
+import {LookupService} from '@services/lookup.service';
+import {OrganizationsEntitiesSupportService} from '@services/organizations-entities-support.service';
+import {ToastService} from '@services/toast.service';
+import {TabComponent} from '@app/shared/components/tab/tab.component';
+import {TabMap} from '@app/types/types';
+import {CustomValidators} from '@app/validators/custom-validators';
+import {Observable, of, Subject} from 'rxjs';
+import {catchError, map, takeUntil, tap,} from 'rxjs/operators';
+import {JobTitle} from '@models/job-title';
 
 @Component({
   selector: 'app-organizations-entities-support',
   templateUrl: './organizations-entities-support.component.html',
   styleUrls: ['./organizations-entities-support.component.scss'],
 })
-export class OrganizationsEntitiesSupportComponent extends EServicesGenericComponent<
-OrganizationsEntitiesSupport,
-OrganizationsEntitiesSupportService
-> {
-  constructor(
-    public lang: LangService,
-    private cd: ChangeDetectorRef,
-    private toastService: ToastService,
-    private dialogService: DialogService,
-    public fb: UntypedFormBuilder,
-    public service: OrganizationsEntitiesSupportService,
-    private lookupService: LookupService,
-    public employeeService: EmployeeService,
-    private licenseService: LicenseService,
-    private adminLookupService: AdminLookupService,
-    private externalUserService: ExternalUserService,
-    private jobTitleService: JobTitleService
-  ) {
+export class OrganizationsEntitiesSupportComponent extends EServicesGenericComponent<OrganizationsEntitiesSupport, OrganizationsEntitiesSupportService> {
+  constructor(public lang: LangService,
+              private cd: ChangeDetectorRef,
+              private toastService: ToastService,
+              private dialogService: DialogService,
+              public fb: UntypedFormBuilder,
+              public service: OrganizationsEntitiesSupportService,
+              private lookupService: LookupService,
+              public employeeService: EmployeeService,
+              private licenseService: LicenseService,
+              private adminLookupService: AdminLookupService,
+              private externalUserService: ExternalUserService,
+              private jobTitleService: JobTitleService) {
     super();
   }
 
@@ -138,6 +120,7 @@ OrganizationsEntitiesSupportService
     },
   };
   tabIndex$: Subject<number> = new Subject<number>();
+
   ngAfterViewInit(): void {
     this._listenToServiceType();
     this.cd.detectChanges();
@@ -149,6 +132,7 @@ OrganizationsEntitiesSupportService
     this._loadActivityTypes();
     this._loadJobTitles();
   }
+
   _buildForm(): void {
     let objOrganizationsEntitiesSupport = this._getNewInstance();
     this.form = this.fb.group({
@@ -232,7 +216,8 @@ OrganizationsEntitiesSupportService
     }
   }
 
-  _destroyComponent(): void { }
+  _destroyComponent(): void {
+  }
 
   _getNewInstance(): OrganizationsEntitiesSupport {
     return new OrganizationsEntitiesSupport().clone();
@@ -253,6 +238,7 @@ OrganizationsEntitiesSupportService
       description: this.specialExplanationsField.value,
     });
   }
+
   _setDefaultValues(): void {
     this.requestTypeField.setValue(ServiceRequestTypes.NEW);
   }
@@ -296,6 +282,7 @@ OrganizationsEntitiesSupportService
     }
     return failedList;
   }
+
   private _updateModelAfterSave(model: OrganizationsEntitiesSupport): void {
     if (
       (this.openFrom === OpenFrom.USER_INBOX ||
@@ -310,6 +297,7 @@ OrganizationsEntitiesSupportService
       this.model = model;
     }
   }
+
   private _listenToServiceType() {
     this.serviceType.valueChanges.pipe(
       takeUntil(this.destroy$),
@@ -331,9 +319,9 @@ OrganizationsEntitiesSupportService
       tap(_ => {
         this.otherService.updateValueAndValidity();
       })
-
     ).subscribe();
   }
+
   private _isOthersServiceType(serviceType?: AdminLookup) {
     if (!serviceType) return false;
     return serviceType.enName.toLocaleLowerCase() === 'other' ||
@@ -351,6 +339,7 @@ OrganizationsEntitiesSupportService
       )
       .subscribe((result) => (this.jobTitleList = result));
   }
+
   private _loadActivityTypes() {
     this.adminLookupService
       .loadAsLookups(AdminLookupTypeEnum.SERVICE_TYPE)
@@ -492,6 +481,7 @@ OrganizationsEntitiesSupportService
       this._updateForm(value);
     }
   }
+
   selectOrganizationOfficer(externalUserId: number) {
     const selectedOfficer = this.externalUsersList.find(
       (x) => x.id === externalUserId
@@ -513,12 +503,15 @@ OrganizationsEntitiesSupportService
   get requestTypeField(): UntypedFormControl {
     return this.basicInfoTab.get('requestType') as UntypedFormControl;
   }
+
   get serviceType(): UntypedFormControl {
     return this.basicInfoTab.get('serviceType') as UntypedFormControl;
   }
+
   get otherService(): UntypedFormControl {
     return this.basicInfoTab.get('otherService') as UntypedFormControl;
   }
+
   get organizationId(): UntypedFormControl {
     return this.basicInfoTab.get('organizationId') as UntypedFormControl;
   }
@@ -534,6 +527,7 @@ OrganizationsEntitiesSupportService
   get organizationOfficerGroup(): UntypedFormGroup {
     return this.form.get('organizationOfficer') as UntypedFormGroup;
   }
+
   get specialExplanationsField(): UntypedFormControl {
     return this.form.get('description') as UntypedFormControl;
   }

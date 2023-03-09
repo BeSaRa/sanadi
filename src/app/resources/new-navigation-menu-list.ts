@@ -37,6 +37,7 @@ enum SystemPathsEnum {
   NPO_MANAGEMENT = '/home/services/npo-management',
   FOREIGN_COUNTRIES_PROJECTS = '/home/services/foreign-countries-projects',
   EXTERNAL_ORG_AFFILIATION_REQUEST = '/home/services/external-org-affiliation',
+  ORGANIZATION_ENTITIES_SUPPORT = '/home/services/organization-entities-support',
 }
 
 export const newNavigationMenuList = [
@@ -1044,6 +1045,59 @@ export const newNavigationMenuList = [
     permissionGroup: null,
     parent: 1901,
     group: 'service_' + CaseTypes.EXTERNAL_ORG_AFFILIATION_REQUEST,
+    itemOrder: 3,
+    svg: null
+  },
+  {
+    id: 2001,
+    langKey: 'menu_organizations_entities_support',
+    path: SystemPathsEnum.ORGANIZATION_ENTITIES_SUPPORT,
+    icon: 'mdi-file-swap',
+    isSvg: false,
+    caseType: CaseTypes.ORGANIZATION_ENTITIES_SUPPORT,
+    permission: '',
+    permissionGroup: PermissionGroupsEnum.ORGANIZATION_ENTITIES_SUPPORT_SERVICES_PERMISSION_GROUP,
+    parent: null,
+    group: 'main',
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 2002,
+    langKey: serviceAddUpdateLabel,
+    path: SystemPathsEnum.ORGANIZATION_ENTITIES_SUPPORT + '/service',
+    icon: serviceAddUpdateIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.ORGANIZATION_ENTITIES_SUPPORT,
+    permissionGroup: null,
+    parent: 2001,
+    group: 'service_' + CaseTypes.ORGANIZATION_ENTITIES_SUPPORT,
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 2003,
+    langKey: serviceSearchLabel,
+    path: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.ORGANIZATION_ENTITIES_SUPPORT),
+    icon: serviceSearchIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.SEARCH_SERVICE_ORGANIZATION_ENTITIES_SUPPORT,
+    permissionGroup: null,
+    parent: 2001,
+    group: 'service_' + CaseTypes.ORGANIZATION_ENTITIES_SUPPORT,
+    itemOrder: 2,
+    svg: null
+  },
+  {
+    id: 2004,
+    langKey: serviceOutputLabel,
+    path: SystemPathsEnum.ORGANIZATION_ENTITIES_SUPPORT + '/outputs',
+    icon: serviceOutputIcon,
+    isSvg: false,
+    permission: Constants.SERVICE_OUTPUT_PERMISSION,
+    permissionGroup: null,
+    parent: 2001,
+    group: 'service_' + CaseTypes.ORGANIZATION_ENTITIES_SUPPORT,
     itemOrder: 3,
     svg: null
   },

@@ -14,14 +14,8 @@ import {OfficeServicesModule} from '../office-services/office-services.module';
 import {GeneralServicesRoutingModule} from './general-services-routing.module';
 import {GeneralServicesComponent} from './general-services.component';
 import {
-  OrganizationsEntitiesSupportComponent
-} from './pages/organizations-entities-support/organizations-entities-support.component';
-import {
   CoordinationWithOrgPopupComponent
 } from './popups/coordination-with-org-popup/coordination-with-org-popup.component';
-import {
-  OrganizationsEntitiesSupportPopupComponent
-} from './popups/organizations-entities-support-popup/organizations-entities-support-popup.component';
 import {FormlyDateFieldComponent} from '@app/services-search/components/formly-date-field/formly-date-field.component';
 import {
   FormlyMaskInputFieldComponent
@@ -38,10 +32,6 @@ import {SharedServicesModule} from '@modules/services/shared-services/shared-ser
     CoordinationWithOrganizationsRequestComponent,
 
     CoordinationWithOrgPopupComponent,
-    OrganizationsEntitiesSupportComponent,
-    OrganizationsEntitiesSupportPopupComponent,
-
-    OrganizationsEntitiesSupportPopupComponent,
 
   ],
   imports: [

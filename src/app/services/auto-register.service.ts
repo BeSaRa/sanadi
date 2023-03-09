@@ -85,7 +85,7 @@ import {
 } from "@modules/services/project-fundraising/pages/project-fundraising/project-fundraising.component";
 import {
   OrganizationsEntitiesSupportComponent
-} from '@app/modules/general-services/pages/organizations-entities-support/organizations-entities-support.component';
+} from '@app/modules/services/organization-entities-support/pages/organizations-entities-support/organizations-entities-support.component';
 import {
   ProjectImplementationComponent
 } from "@modules/services/project-implementation/pages/project-implementation/project-implementation.component";
