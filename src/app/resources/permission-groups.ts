@@ -261,6 +261,12 @@ const urgentInterventionClosureServicesPermissionGroup: (EServicePermissionsEnum
   Constants.SERVICE_OUTPUT_PERMISSION
 ];
 
+const urgentInterventionFinancialNotificationServicesPermissionGroup: (EServicePermissionsEnum | string)[] = [
+  EServicePermissionsEnum.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION,
+  EServicePermissionsEnum.SEARCH_SERVICE_URGENT_INTERVENTION_FINANCIAL_NOTIFICATION,
+  Constants.SERVICE_OUTPUT_PERMISSION
+];
+
 const generalServicesPermissionsGroup: EServicePermissionsEnum[] = [
   EServicePermissionsEnum.INQUIRY,
   EServicePermissionsEnum.CONSULTATION,
@@ -348,6 +354,7 @@ const permissionGroups: PermissionGroupsMapType = {
   [PermissionGroupsEnum.URGENT_INTERVENTION_LICENSING_SERVICES_PERMISSION_GROUP]: urgentInterventionLicensingServicesPermissionGroup,
   [PermissionGroupsEnum.URGENT_INTERVENTION_ANNOUNCEMENT_SERVICES_PERMISSION_GROUP]: urgentInterventionAnnouncementServicesPermissionGroup,
   [PermissionGroupsEnum.URGENT_INTERVENTION_CLOSURE_SERVICES_PERMISSION_GROUP]: urgentInterventionClosureServicesPermissionGroup,
+  [PermissionGroupsEnum.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION_SERVICES_PERMISSION_GROUP]: urgentInterventionFinancialNotificationServicesPermissionGroup,
 
 
   [PermissionGroupsEnum.SANADI_PERMISSIONS_GROUP]: sanadiPermissionsGroup,

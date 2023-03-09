@@ -374,6 +374,17 @@ const routes: Routes = [
         } as Partial<ICustomRouteData>
       },
       {
+        path: 'services/urgent-intervention-financial-notification',
+        canActivate: [NewServicePermissionGuard],
+        loadChildren: () => import('./modules/services/urgent-intervention-financial-notification/urgent-intervention-financial-notification.module')
+          .then(m => m.UrgentInterventionFinancialNotificationModule),
+        data: {
+          permissionGroup: PermissionGroupsEnum.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION_SERVICES_PERMISSION_GROUP,
+          checkAnyPermission: true,
+          caseType: CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION
+        } as Partial<ICustomRouteData>
+      },
+      {
         path: 'services/search',
         loadChildren: () => import('@modules/service-search-individual/service-search-individual.module').then(m => m.ServiceSearchIndividualModule),
       },

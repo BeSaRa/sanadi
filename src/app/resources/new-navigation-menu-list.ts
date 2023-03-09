@@ -47,6 +47,7 @@ enum SystemPathsEnum {
   URGENT_INTERVENTION_LICENSING = '/home/services/urgent-intervention-license',
   URGENT_INTERVENTION_ANNOUNCEMENT = '/home/services/urgent-intervention-announcement',
   URGENT_INTERVENTION_CLOSURE = '/home/services/urgent-intervention-closure',
+  URGENT_INTERVENTION_FINANCIAL_NOTIFICATION = '/home/services/urgent-intervention-financial-notification',
 }
 
 export const newNavigationMenuList = [
@@ -1584,6 +1585,59 @@ export const newNavigationMenuList = [
     permissionGroup: null,
     parent: 2901,
     group: 'service_' + CaseTypes.URGENT_INTERVENTION_CLOSURE,
+    itemOrder: 3,
+    svg: null
+  },
+  {
+    id: 3001,
+    langKey: 'menu_urgent_intervention_financial_notification',
+    path: SystemPathsEnum.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION,
+    icon: 'mdi-license',
+    isSvg: false,
+    caseType: CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION,
+    permission: '',
+    permissionGroup: PermissionGroupsEnum.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION_SERVICES_PERMISSION_GROUP,
+    parent: null,
+    group: 'main',
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 3002,
+    langKey: serviceAddUpdateLabel,
+    path: SystemPathsEnum.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION + '/service',
+    icon: serviceAddUpdateIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION,
+    permissionGroup: null,
+    parent: 3001,
+    group: 'service_' + CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION,
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 3003,
+    langKey: serviceSearchLabel,
+    path: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION),
+    icon: serviceSearchIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.SEARCH_SERVICE_URGENT_INTERVENTION_FINANCIAL_NOTIFICATION,
+    permissionGroup: null,
+    parent: 3001,
+    group: 'service_' + CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION,
+    itemOrder: 2,
+    svg: null
+  },
+  {
+    id: 3004,
+    langKey: serviceOutputLabel,
+    path: SystemPathsEnum.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION + '/outputs',
+    icon: serviceOutputIcon,
+    isSvg: false,
+    permission: Constants.SERVICE_OUTPUT_PERMISSION,
+    permissionGroup: null,
+    parent: 3001,
+    group: 'service_' + CaseTypes.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION,
     itemOrder: 3,
     svg: null
   },
