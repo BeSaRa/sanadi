@@ -13,11 +13,11 @@ import {CommonUtils} from '@helpers/common-utils';
 import {UrgentInterventionLicenseFollowupService} from '@services/urgent-intervention-license-followup.service';
 
 @Component({
-  selector: 'urgent-intervention-attachment-approval-popup',
-  templateUrl: './urgent-intervention-attachment-approval-popup.component.html',
-  styleUrls: ['./urgent-intervention-attachment-approval-popup.component.scss']
+  selector: 'urgent-intervention-report-attachment-approval-popup',
+  templateUrl: './urgent-intervention-report-attachment-approval-popup.component.html',
+  styleUrls: ['./urgent-intervention-report-attachment-approval-popup.component.scss']
 })
-export class UrgentInterventionAttachmentApprovalPopupComponent implements OnInit, OnDestroy {
+export class UrgentInterventionReportAttachmentApprovalPopupComponent implements OnInit, OnDestroy {
 
   attachmentId: string;
   isApproved: boolean;

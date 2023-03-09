@@ -1,8 +1,8 @@
 import {ChangeDetectorRef, Component, Inject} from '@angular/core';
-import {OperationTypes} from '@app/enums/operation-types.enum';
+import {OperationTypes} from '@enums/operation-types.enum';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {IDialogData} from '@contracts/i-dialog-data';
-import {UrgentInterventionReport} from '@app/models/urgent-intervention-report';
+import {UrgentInterventionReport} from '@models/urgent-intervention-report';
 import {LangService} from '@services/lang.service';
 import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
 import {DialogRef} from '@app/shared/models/dialog-ref';

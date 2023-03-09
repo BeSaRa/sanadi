@@ -1,31 +1,31 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {UrgentInterventionAttachment} from '@app/models/urgent-intervention-attachment';
+import {UrgentInterventionAttachment} from '@models/urgent-intervention-attachment';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
 import {IDialogData} from '@contracts/i-dialog-data';
 import {LangService} from '@services/lang.service';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
+import {IMenuItem} from '@modules/context-menu/interfaces/i-menu-item';
 import {filter, map, switchMap, take, takeUntil} from 'rxjs/operators';
 import {UrgentInterventionLicenseFollowupService} from '@services/urgent-intervention-license-followup.service';
 import {DialogService} from '@services/dialog.service';
 import {ToastService} from '@services/toast.service';
 import {CustomValidators} from '@app/validators/custom-validators';
-import {FileExtensionsEnum} from '@app/enums/file-extension-mime-types-icons.enum';
+import {FileExtensionsEnum} from '@enums/file-extension-mime-types-icons.enum';
 import {SortEvent} from '@contracts/sort-event';
 import {CommonUtils} from '@helpers/common-utils';
 import {DateUtils} from '@helpers/date-utils';
-import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import {ActionIconsEnum} from '@enums/action-icons-enum';
 import {SharedService} from '@services/shared.service';
 import {EmployeeService} from '@services/employee.service';
 import {InternalUser} from '@models/internal-user';
 
 @Component({
-  selector: 'urgent-intervention-attachment-popup',
-  templateUrl: './urgent-intervention-attachment-popup.component.html',
-  styleUrls: ['./urgent-intervention-attachment-popup.component.scss']
+  selector: 'urgent-intervention-report-attachment-popup',
+  templateUrl: './urgent-intervention-report-attachment-popup.component.html',
+  styleUrls: ['./urgent-intervention-report-attachment-popup.component.scss']
 })
-export class UrgentInterventionAttachmentPopupComponent implements OnInit {
+export class UrgentInterventionReportAttachmentPopupComponent implements OnInit {
 
   list: UrgentInterventionAttachment[] = [];
   reportId: number;
