@@ -39,7 +39,7 @@ import {MapService} from '@app/services/map.service';
 import {FundraisingComponent} from '@app/modules/collection/pages/fundraising/fundraising.component';
 import {
   CollectorApprovalComponent
-} from '@app/modules/collection/pages/collector-approval/collector-approval.component';
+} from '@app/modules/services/collector-approval/pages/collector-approval/collector-approval.component';
 import {
   CustomsExemptionComponent
 } from '@app/modules/services/customs-exemption-remittance/pages/customs-exemption/customs-exemption.component';

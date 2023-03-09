@@ -1,23 +1,25 @@
 import {Component, ViewChild} from '@angular/core';
-import { CollectorApprovalService } from '@app/services/collector-approval.service';
-import { CollectorApproval } from '@app/models/collector-approval';
-import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
-import { AbstractControl, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { OperationTypes } from '@app/enums/operation-types.enum';
-import { SaveTypes } from '@app/enums/save-types';
-import { LangService } from '@app/services/lang.service';
-import { Observable, of } from 'rxjs';
-import { Lookup } from '@app/models/lookup';
-import { CollectionRequestType } from '@app/enums/service-request-types';
-import { LookupService } from '@app/services/lookup.service';
+import {CollectorApprovalService} from '@services/collector-approval.service';
+import {CollectorApproval} from '@models/collector-approval';
+import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
+import {AbstractControl, UntypedFormBuilder, UntypedFormGroup} from '@angular/forms';
+import {OperationTypes} from '@enums/operation-types.enum';
+import {SaveTypes} from '@enums/save-types';
+import {LangService} from '@services/lang.service';
+import {Observable, of} from 'rxjs';
+import {Lookup} from '@models/lookup';
+import {CollectionRequestType} from '@enums/service-request-types';
+import {LookupService} from '@services/lookup.service';
 import {filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
-import { DialogService } from '@app/services/dialog.service';
-import { ToastService } from '@app/services/toast.service';
-import { OpenFrom } from '@app/enums/open-from.enum';
-import { EmployeeService } from '@app/services/employee.service';
-import { CommonCaseStatus } from '@app/enums/common-case-status.enum';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {CollectorItemComponent} from '@app/modules/collection/shared/collector-item/collector-item.component';
+import {DialogService} from '@services/dialog.service';
+import {ToastService} from '@services/toast.service';
+import {OpenFrom} from '@enums/open-from.enum';
+import {EmployeeService} from '@services/employee.service';
+import {CommonCaseStatus} from '@enums/common-case-status.enum';
+import {UserClickOn} from '@enums/user-click-on.enum';
+import {
+  CollectorItemComponent
+} from '@modules/services/collector-approval/shared/collector-item/collector-item.component';
 
 @Component({
   selector: 'collector-approval',

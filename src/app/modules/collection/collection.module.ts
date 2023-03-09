@@ -8,11 +8,6 @@ import {FundraisingComponent} from './pages/fundraising/fundraising.component';
 import {
   FundraisingApproveTaskPopupComponent
 } from './popups/fundraising-approve-task-popup/fundraising-approve-task-popup.component';
-import {CollectorApprovalComponent} from './pages/collector-approval/collector-approval.component';
-import {CollectorItemComponent} from './shared/collector-item/collector-item.component';
-import {
-  CollectorApprovalApproveTaskPopupComponent
-} from './popups/collector-approval-approve-task-popup/collector-approval-approve-task-popup.component';
 import {EServicesMainModule} from '@app/modules/e-services-main/e-services-main.module';
 import {SharedServicesModule} from '@modules/services/shared-services/shared-services.module';
 
@@ -20,10 +15,7 @@ import {SharedServicesModule} from '@modules/services/shared-services/shared-ser
   declarations: [
     CollectionComponent,
     FundraisingComponent,
-    FundraisingApproveTaskPopupComponent,
-    CollectorApprovalComponent,
-    CollectorItemComponent,
-    CollectorApprovalApproveTaskPopupComponent
+    FundraisingApproveTaskPopupComponent
   ],
   imports: [
     CommonModule,

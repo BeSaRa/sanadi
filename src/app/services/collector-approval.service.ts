@@ -11,7 +11,7 @@ import { WFResponseType } from '@app/enums/wfresponse-type.enum';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import {
   CollectorApprovalApproveTaskPopupComponent
-} from '@app/modules/collection/popups/collector-approval-approve-task-popup/collector-approval-approve-task-popup.component';
+} from '@app/modules/services/collector-approval/popups/collector-approval-approve-task-popup/collector-approval-approve-task-popup.component';
 import { CollectorApprovalSearchCriteria } from '@app/models/collector-approval-search-criteria';
 import { CastResponseContainer } from '@app/decorators/decorators/cast-response';
 import { BaseGenericEService } from "@app/generics/base-generic-e-service";
