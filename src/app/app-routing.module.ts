@@ -363,6 +363,17 @@ const routes: Routes = [
         } as Partial<ICustomRouteData>
       },
       {
+        path: 'services/urgent-intervention-closure',
+        canActivate: [NewServicePermissionGuard],
+        loadChildren: () => import('./modules/services/urgent-intervention-closure/urgent-intervention-closure.module')
+          .then(m => m.UrgentInterventionClosureModule),
+        data: {
+          permissionGroup: PermissionGroupsEnum.URGENT_INTERVENTION_CLOSURE_SERVICES_PERMISSION_GROUP,
+          checkAnyPermission: true,
+          caseType: CaseTypes.URGENT_INTERVENTION_CLOSURE
+        } as Partial<ICustomRouteData>
+      },
+      {
         path: 'services/search',
         loadChildren: () => import('@modules/service-search-individual/service-search-individual.module').then(m => m.ServiceSearchIndividualModule),
       },

@@ -1,26 +1,26 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {LangService} from '@services/lang.service';
-import {ToastService} from '@services/toast.service';
-import {DialogService} from '@services/dialog.service';
-import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import {ReadinessStatus} from '@app/types/types';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {of, Subject} from 'rxjs';
-import {AdminResult} from '@app/models/admin-result';
-import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import {ActionIconsEnum} from '@app/enums/action-icons-enum';
-import {catchError, filter, map, take, takeUntil, tap} from 'rxjs/operators';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {LessonsLearned} from '@app/models/lessons-learned';
-import {FieldAssessmentTypesEnum} from '@app/enums/field-assessment-types.enum';
-import {FieldAssessmentService} from '@services/field-assessment.service';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { LangService } from '@services/lang.service';
+import { ToastService } from '@services/toast.service';
+import { DialogService } from '@services/dialog.service';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { ReadinessStatus } from '@app/types/types';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { of, Subject } from 'rxjs';
+import { IMenuItem } from '@modules/context-menu/interfaces/i-menu-item';
+import { ActionIconsEnum } from '@enums/action-icons-enum';
+import { catchError, filter, map, take, takeUntil, tap } from 'rxjs/operators';
+import { UserClickOn } from '@enums/user-click-on.enum';
+import { BestPractices } from '@models/best-practices';
+import { AdminResult } from '@models/admin-result';
+import { FieldAssessmentService } from '@services/field-assessment.service';
+import { FieldAssessmentTypesEnum } from '@enums/field-assessment-types.enum';
 
 @Component({
-  selector: 'lessons-learnt-list',
-  templateUrl: './lessons-learnt-list.component.html',
-  styleUrls: ['./lessons-learnt-list.component.scss']
+  selector: 'best-practices-list',
+  templateUrl: './best-practices-list.component.html',
+  styleUrls: ['./best-practices-list.component.scss']
 })
-export class LessonsLearntListComponent implements OnInit {
+export class BestPracticesListComponent implements OnInit {
 
   constructor(public lang: LangService,
               private toastService: ToastService,
@@ -32,7 +32,7 @@ export class LessonsLearntListComponent implements OnInit {
 
   ngOnInit(): void {
     this.buildForm();
-    this.loadLessonsLearnt();
+    this.loadBestPractices();
     this.listenToAdd();
     this.listenToRecordChange();
     this.listenToSave();
@@ -48,55 +48,55 @@ export class LessonsLearntListComponent implements OnInit {
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();
   @Input() readonly: boolean = false;
 
-  private _list: LessonsLearned[] = [];
-  @Input() set list(list: LessonsLearned[]) {
+  private _list: BestPractices[] = [];
+  @Input() set list(list: BestPractices[]) {
     this._list = list;
   }
 
-  get list(): LessonsLearned[] {
+  get list(): BestPractices[] {
     return this._list;
   }
 
-  displayedColumns = ['lessonsLearntListString', 'statement', 'actions'];
-  editItem?: LessonsLearned;
+  displayedColumns = ['bestPracticesListString', 'statement', 'actions'];
+  editItem?: BestPractices;
   viewOnly: boolean = false;
   customValidators = CustomValidators;
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
   private save$: Subject<any> = new Subject<any>();
   add$: Subject<any> = new Subject<any>();
-  private recordChanged$: Subject<LessonsLearned | null> = new Subject<LessonsLearned | null>();
-  private currentRecord?: LessonsLearned;
+  private recordChanged$: Subject<BestPractices | null> = new Subject<BestPractices | null>();
+  private currentRecord?: BestPractices;
   private destroy$: Subject<any> = new Subject<any>();
   showForm: boolean = false;
   filterControl: UntypedFormControl = new UntypedFormControl('');
 
-  lessonsLearntList: AdminResult[] = [];
+  bestPracticesList: AdminResult[] = [];
 
   form!: UntypedFormGroup;
-  actions: IMenuItem<LessonsLearned>[] = [
+  actions: IMenuItem<BestPractices>[] = [
     // edit
     {
       type: 'action',
       icon: ActionIconsEnum.EDIT,
       label: 'btn_edit',
-      onClick: (item: LessonsLearned) => this.edit(item),
-      show: (_item: LessonsLearned) => !this.readonly
+      onClick: (item: BestPractices) => this.edit(item),
+      show: (_item: BestPractices) => !this.readonly
     },
     // delete
     {
       type: 'action',
       icon: ActionIconsEnum.DELETE,
       label: 'btn_delete',
-      onClick: (item: LessonsLearned) => this.delete(item),
-      show: (_item: LessonsLearned) => !this.readonly
+      onClick: (item: BestPractices) => this.delete(item),
+      show: (_item: BestPractices) => !this.readonly
     },
     // view
     {
       type: 'action',
       icon: ActionIconsEnum.VIEW,
       label: 'view',
-      onClick: (item: LessonsLearned) => this.view(item),
-      show: (_item: LessonsLearned) => this.readonly
+      onClick: (item: BestPractices) => this.view(item),
+      show: (_item: BestPractices) => this.readonly
     }
   ];
 
@@ -106,14 +106,14 @@ export class LessonsLearntListComponent implements OnInit {
 
 
   buildForm(): void {
-    this.form = this.fb.group(new LessonsLearned().buildForm(true));
+    this.form = this.fb.group(new BestPractices().buildForm(true));
   }
 
   private listenToAdd() {
     this.add$.pipe(takeUntil(this.destroy$))
       .subscribe(() => {
         this.viewOnly = false;
-        this.recordChanged$.next(new LessonsLearned());
+        this.recordChanged$.next(new BestPractices());
       });
   }
 
@@ -125,7 +125,7 @@ export class LessonsLearntListComponent implements OnInit {
     });
   }
 
-  private updateForm(record: LessonsLearned | undefined) {
+  private updateForm(record: BestPractices | undefined) {
     if (record) {
       if (this.viewOnly) {
         this._setComponentReadiness('READY');
@@ -163,14 +163,14 @@ export class LessonsLearntListComponent implements OnInit {
       filter(() => this.form.valid),
       map(() => {
         let formValue = this.form.getRawValue();
-        let lessonsLearnedInfo = this.lessonsLearntList.filter(x => formValue.lessonsLearned.includes(x.id));
+        let bestPracticesInfo = this.bestPracticesList.filter(x => formValue.bestPractices.includes(x.id));
 
-        return (new LessonsLearned()).clone({
+        return (new BestPractices()).clone({
           ...this.currentRecord, ...formValue,
-          lessonsLearnedInfo: lessonsLearnedInfo
+          bestPracticesInfo: bestPracticesInfo
         });
       })
-    ).subscribe((record: LessonsLearned) => {
+    ).subscribe((record: BestPractices) => {
       if (!record) {
         return;
       }
@@ -181,7 +181,7 @@ export class LessonsLearntListComponent implements OnInit {
     });
   }
 
-  private _updateList(record: (LessonsLearned | null), operation: 'ADD' | 'UPDATE' | 'DELETE' | 'NONE') {
+  private _updateList(record: (BestPractices | null), operation: 'ADD' | 'UPDATE' | 'DELETE' | 'NONE') {
     if (record) {
       if (operation === 'ADD') {
         this.list.push(record);
@@ -218,7 +218,7 @@ export class LessonsLearntListComponent implements OnInit {
     this._setComponentReadiness('READY');
   }
 
-  edit(record: LessonsLearned, $event?: MouseEvent) {
+  edit(record: BestPractices, $event?: MouseEvent) {
     $event?.preventDefault();
     if (this.readonly) {
       return;
@@ -228,14 +228,14 @@ export class LessonsLearntListComponent implements OnInit {
     this.recordChanged$.next(record);
   }
 
-  view(record: LessonsLearned, $event?: MouseEvent) {
+  view(record: BestPractices, $event?: MouseEvent) {
     $event?.preventDefault();
     this.editItem = record;
     this.viewOnly = true;
     this.recordChanged$.next(record);
   }
 
-  delete(record: LessonsLearned, $event?: MouseEvent): any {
+  delete(record: BestPractices, $event?: MouseEvent): any {
     $event?.preventDefault();
     if (this.readonly) {
       return;
@@ -253,15 +253,15 @@ export class LessonsLearntListComponent implements OnInit {
       });
   }
 
-  private loadLessonsLearnt() {
-    this.fieldAssessmentService.loadByType(FieldAssessmentTypesEnum.LESSONS_LEARNT)
+  private loadBestPractices() {
+    this.fieldAssessmentService.loadByType(FieldAssessmentTypesEnum.BEST_PRACTICES)
       .pipe(
         catchError(() => of([])),
         map(result => {
           return result.map(x => x.convertToAdminResult());
         })
       ).subscribe((result) => {
-      this.lessonsLearntList = result;
+      this.bestPracticesList = result;
     });
   }
 

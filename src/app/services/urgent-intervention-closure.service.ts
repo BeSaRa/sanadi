@@ -34,7 +34,7 @@ import { WFResponseType } from '@app/enums/wfresponse-type.enum';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import {
   UrgentInterventionClosureApproveTaskPopupComponent
-} from '@app/modules/urgent-intervention/popups/urgent-intervention-closure-approve-task-popup/urgent-intervention-closure-approve-task-popup.component';
+} from '@app/modules/services/urgent-intervention-closure/popups/urgent-intervention-closure-approve-task-popup/urgent-intervention-closure-approve-task-popup.component';
 import { BaseGenericEService } from "@app/generics/base-generic-e-service";
 import { CastResponseContainer } from "@decorators/cast-response";
 

@@ -4,38 +4,29 @@ import {ToastService} from '@services/toast.service';
 import {DialogService} from '@services/dialog.service';
 import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {ReadinessStatus} from '@app/types/types';
+import {Stage} from '@models/stage';
+import {Subject} from 'rxjs';
+import {IMenuItem} from '@modules/context-menu/interfaces/i-menu-item';
+import {ActionIconsEnum} from '@enums/action-icons-enum';
+import {filter, map, take, takeUntil, tap} from 'rxjs/operators';
+import {UserClickOn} from '@enums/user-click-on.enum';
 import {CustomValidators} from '@app/validators/custom-validators';
-import {of, Subject} from 'rxjs';
-import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import {ActionIconsEnum} from '@app/enums/action-icons-enum';
-import {catchError, filter, map, take, takeUntil, tap} from 'rxjs/operators';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {OfficeEvaluation} from '@app/models/office-evaluation';
-import {SortEvent} from '@contracts/sort-event';
-import {CommonUtils} from '@helpers/common-utils';
-import {LookupService} from '@services/lookup.service';
-import {FieldAssessmentService} from '@services/field-assessment.service';
-import {AdminResult} from '@app/models/admin-result';
-import {FieldAssessmentTypesEnum} from '@app/enums/field-assessment-types.enum';
 
 @Component({
-  selector: 'implementation-evaluation-list',
-  templateUrl: './implementation-evaluation-list.component.html',
-  styleUrls: ['./implementation-evaluation-list.component.scss']
+  selector: 'stage-list',
+  templateUrl: './stage-list.component.html',
+  styleUrls: ['./stage-list.component.scss']
 })
-export class ImplementationEvaluationListComponent implements OnInit, OnDestroy {
+export class StageListComponent implements OnInit, OnDestroy {
 
   constructor(public lang: LangService,
               private toastService: ToastService,
               private dialogService: DialogService,
-              private lookupService: LookupService,
-              private fieldAssessmentService: FieldAssessmentService,
               private fb: UntypedFormBuilder) {
   }
 
 
   ngOnInit(): void {
-    this.loadEvaluationHubs();
     this.buildForm();
     this.listenToAdd();
     this.listenToRecordChange();
@@ -52,71 +43,57 @@ export class ImplementationEvaluationListComponent implements OnInit, OnDestroy 
   @Output() readyEvent = new EventEmitter<ReadinessStatus>();
   @Input() readonly: boolean = false;
 
-  private _list: OfficeEvaluation[] = [];
-  @Input() set list(list: OfficeEvaluation[]) {
+  private _list: Stage[] = [];
+  @Input() set list(list: Stage[]) {
     this._list = list;
   }
 
-  get list(): OfficeEvaluation[] {
+  get list(): Stage[] {
     return this._list;
   }
 
-  evaluationHubList: AdminResult[] = [];
-  evaluationResultList = this.lookupService.listByCategory.EvaluationResult;
-
-  displayedColumns = ['evaluationHub', 'evaluationResult', 'notes', 'actions'];
-  editItem?: OfficeEvaluation;
+  totalInterventionCost: number = 0;
+  displayedColumns = ['stage', 'duration', 'interventionCost', 'actions'];
+  footerColumns: string[] = ['totalInterventionCostLabel', 'totalInterventionCost'];
+  editItem?: Stage;
   viewOnly: boolean = false;
   customValidators = CustomValidators;
   inputMaskPatterns = CustomValidators.inputMaskPatterns;
   private save$: Subject<any> = new Subject<any>();
   add$: Subject<any> = new Subject<any>();
-  private recordChanged$: Subject<OfficeEvaluation | null> = new Subject<OfficeEvaluation | null>();
-  private currentRecord?: OfficeEvaluation;
+  private recordChanged$: Subject<Stage | null> = new Subject<Stage | null>();
+  private currentRecord?: Stage;
   private destroy$: Subject<any> = new Subject<any>();
   showForm: boolean = false;
   filterControl: UntypedFormControl = new UntypedFormControl('');
 
   form!: UntypedFormGroup;
-  actions: IMenuItem<OfficeEvaluation>[] = [
+  actions: IMenuItem<Stage>[] = [
     // edit
     {
       type: 'action',
       icon: ActionIconsEnum.EDIT,
       label: 'btn_edit',
-      onClick: (item: OfficeEvaluation) => this.edit(item),
-      show: (_item: OfficeEvaluation) => !this.readonly
+      onClick: (item: Stage) => this.edit(item),
+      show: (_item: Stage) => !this.readonly
     },
     // delete
     {
       type: 'action',
       icon: ActionIconsEnum.DELETE,
       label: 'btn_delete',
-      onClick: (item: OfficeEvaluation) => this.delete(item),
-      show: (_item: OfficeEvaluation) => !this.readonly
+      onClick: (item: Stage) => this.delete(item),
+      show: (_item: Stage) => !this.readonly
     },
     // view
     {
       type: 'action',
       icon: ActionIconsEnum.VIEW,
       label: 'view',
-      onClick: (item: OfficeEvaluation) => this.view(item),
-      show: (_item: OfficeEvaluation) => this.readonly
+      onClick: (item: Stage) => this.view(item),
+      show: (_item: Stage) => this.readonly
     }
   ];
-
-  sortingCallbacks = {
-    evaluationHub: (a: OfficeEvaluation, b: OfficeEvaluation, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a) ? '' : a.evaluationHubInfo?.getName().toLowerCase(),
-        value2 = !CommonUtils.isValidValue(b) ? '' : b.evaluationHubInfo?.getName().toLowerCase();
-      return CommonUtils.getSortValue(value1, value2, dir.direction);
-    },
-    evaluationResult: (a: OfficeEvaluation, b: OfficeEvaluation, dir: SortEvent): number => {
-      let value1 = !CommonUtils.isValidValue(a) ? '' : a.evaluationResultInfo?.getName().toLowerCase(),
-        value2 = !CommonUtils.isValidValue(b) ? '' : b.evaluationResultInfo?.getName().toLowerCase();
-      return CommonUtils.getSortValue(value1, value2, dir.direction);
-    }
-  };
 
   private _setComponentReadiness(readyStatus: ReadinessStatus) {
     this.readyEvent.emit(readyStatus);
@@ -124,14 +101,14 @@ export class ImplementationEvaluationListComponent implements OnInit, OnDestroy 
 
 
   buildForm(): void {
-    this.form = this.fb.group(new OfficeEvaluation().buildForm(true));
+    this.form = this.fb.group(new Stage().buildForm(true));
   }
 
   private listenToAdd() {
     this.add$.pipe(takeUntil(this.destroy$))
       .subscribe(() => {
         this.viewOnly = false;
-        this.recordChanged$.next(new OfficeEvaluation());
+        this.recordChanged$.next(new Stage());
       });
   }
 
@@ -143,7 +120,7 @@ export class ImplementationEvaluationListComponent implements OnInit, OnDestroy 
     });
   }
 
-  private updateForm(record: OfficeEvaluation | undefined) {
+  private updateForm(record: Stage | undefined) {
     if (record) {
       if (this.viewOnly) {
         this._setComponentReadiness('READY');
@@ -179,37 +156,25 @@ export class ImplementationEvaluationListComponent implements OnInit, OnDestroy 
       takeUntil(this.destroy$),
       tap(_ => this.form.invalid ? this.displayRequiredFieldsMessage() : true),
       filter(() => this.form.valid),
-      filter(() => {
-        const formValue = this.form.getRawValue();
-        const isDuplicate = this.list.some(x => x.evaluationHub === formValue.evaluationHub && x.evaluationResult === formValue.evaluationResult);
-        if (isDuplicate) {
-          this.toastService.alert(this.lang.map.msg_duplicated_item);
-        }
-        return !isDuplicate;
-      }),
       map(() => {
         let formValue = this.form.getRawValue();
-        let evaluationHubInfo = this.evaluationHubList.find(x => x.id === formValue.evaluationHub) ?? new AdminResult();
-        let evaluationResultInfo = this.evaluationResultList.find(x => x.lookupKey === formValue.evaluationResult)?.convertToAdminResult() ?? new AdminResult();
 
-        return (new OfficeEvaluation()).clone({
-          ...this.currentRecord, ...formValue,
-          evaluationHubInfo: evaluationHubInfo,
-          evaluationResultInfo: evaluationResultInfo
+        return (new Stage()).clone({
+          ...this.currentRecord, ...formValue
         });
       })
-    ).subscribe((result: OfficeEvaluation) => {
-      if (!result) {
+    ).subscribe((stage: Stage) => {
+      if (!stage) {
         return;
       }
-      this._updateList(result, (!!this.editItem ? 'UPDATE' : 'ADD'));
+      this._updateList(stage, (!!this.editItem ? 'UPDATE' : 'ADD'));
       this.toastService.success(this.lang.map.msg_save_success);
       this.recordChanged$.next(null);
       this.cancelForm();
     });
   }
 
-  private _updateList(record: (OfficeEvaluation | null), operation: 'ADD' | 'UPDATE' | 'DELETE' | 'NONE') {
+  private _updateList(record: (Stage | null), operation: 'ADD' | 'UPDATE' | 'DELETE' | 'NONE') {
     if (record) {
       if (operation === 'ADD') {
         this.list.push(record);
@@ -246,7 +211,7 @@ export class ImplementationEvaluationListComponent implements OnInit, OnDestroy 
     this._setComponentReadiness('READY');
   }
 
-  edit(record: OfficeEvaluation, $event?: MouseEvent) {
+  edit(record: Stage, $event?: MouseEvent) {
     $event?.preventDefault();
     if (this.readonly) {
       return;
@@ -256,14 +221,14 @@ export class ImplementationEvaluationListComponent implements OnInit, OnDestroy 
     this.recordChanged$.next(record);
   }
 
-  view(record: OfficeEvaluation, $event?: MouseEvent) {
+  view(record: Stage, $event?: MouseEvent) {
     $event?.preventDefault();
     this.editItem = record;
     this.viewOnly = true;
     this.recordChanged$.next(record);
   }
 
-  delete(record: OfficeEvaluation, $event?: MouseEvent): any {
+  delete(record: Stage, $event?: MouseEvent): any {
     $event?.preventDefault();
     if (this.readonly) {
       return;
@@ -281,15 +246,19 @@ export class ImplementationEvaluationListComponent implements OnInit, OnDestroy 
       });
   }
 
-  private loadEvaluationHubs() {
-    this.fieldAssessmentService.loadByType(FieldAssessmentTypesEnum.EVALUATION_AXIS)
-      .pipe(
-        catchError(() => of([])),
-        map(result => {
-          return result.map(x => x.convertToAdminResult());
-        })
-      ).subscribe((result) => {
-      this.evaluationHubList = result;
-    });
+  calculateTotalInterventionCost(): number {
+    let total: number;
+    if (!this.list || this.list.length === 0) {
+      total = 0;
+    } else {
+      total = this.list.map(x => {
+        if (!x.interventionCost) {
+          return 0;
+        }
+        return Number(Number(x.interventionCost).toFixed(2));
+      }).reduce((resultSum, a) => resultSum + a, 0);
+    }
+    return this.totalInterventionCost = total;
   }
+
 }
