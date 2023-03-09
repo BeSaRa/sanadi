@@ -319,6 +319,17 @@ const routes: Routes = [
         } as Partial<ICustomRouteData>
       },
       {
+        path: 'services/collector-approval',
+        canActivate: [NewServicePermissionGuard],
+        loadChildren: () => import('./modules/services/collector-approval/collector-approval.module')
+          .then(m => m.CollectorApprovalModule),
+        data: {
+          permissionGroup: PermissionGroupsEnum.COLLECTOR_LICENSING_SERVICES_PERMISSION_GROUP,
+          checkAnyPermission: true,
+          caseType: CaseTypes.COLLECTOR_LICENSING
+        } as Partial<ICustomRouteData>
+      },
+      {
         path: 'services/search',
         loadChildren: () => import('@modules/service-search-individual/service-search-individual.module').then(m => m.ServiceSearchIndividualModule),
       },

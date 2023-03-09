@@ -1,25 +1,25 @@
 import {Component, Inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Subject} from 'rxjs';
-import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {WFResponseType} from '@app/enums/wfresponse-type.enum';
-import {CollectorApproval} from '@app/models/collector-approval';
+import {ILanguageKeys} from '@contracts/i-language-keys';
+import {WFResponseType} from '@enums/wfresponse-type.enum';
+import {CollectorApproval} from '@models/collector-approval';
 import {UntypedFormControl} from '@angular/forms';
-import {DialogService} from '@app/services/dialog.service';
+import {DialogService} from '@services/dialog.service';
 import {DialogRef} from '@app/shared/models/dialog-ref';
-import {InboxService} from '@app/services/inbox.service';
+import {InboxService} from '@services/inbox.service';
 import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
-import {LangService} from '@app/services/lang.service';
-import {CommonUtils} from '@app/helpers/common-utils';
-import {CollectorItem} from '@app/models/collector-item';
+import {LangService} from '@services/lang.service';
+import {CommonUtils} from '@helpers/common-utils';
+import {CollectorItem} from '@models/collector-item';
 import {exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
-import {IWFResponse} from '@app/interfaces/i-w-f-response';
-import {HasLicenseApproval} from '@app/interfaces/has-license-approval';
-import {ToastService} from '@app/services/toast.service';
-import {CollectionRequestType} from '@app/enums/service-request-types';
+import {IWFResponse} from '@contracts/i-w-f-response';
+import {HasLicenseApproval} from '@contracts/has-license-approval';
+import {ToastService} from '@services/toast.service';
+import {CollectionRequestType} from '@enums/service-request-types';
 import {CustomValidators} from '@app/validators/custom-validators';
-import {ApprovalFormComponent} from '@app/modules/services/shared-services/components/approval-form/approval-form.component';
-import {LicenseDurationType} from '@app/enums/license-duration-type';
-import {DateUtils} from '@app/helpers/date-utils';
+import {ApprovalFormComponent} from '@modules/services/shared-services/components/approval-form/approval-form.component';
+import {LicenseDurationType} from '@enums/license-duration-type';
+import {DateUtils} from '@helpers/date-utils';
 
 @Component({
   selector: 'collector-approval-approve-task-popup',

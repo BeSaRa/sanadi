@@ -41,7 +41,8 @@ enum SystemPathsEnum {
   COORDINATION_WITH_ORGANIZATION_REQUEST = '/home/services/coordination-with-organizations-request',
   CUSTOMS_EXEMPTION_REMITTANCE = '/home/services/customs-exemption',
   FINANCIAL_TRANSFERS_LICENSING = '/home/services/financial-transfers-licensing',
-  COLLECTION_APPROVAL = '/home/services/collection-approval'
+  COLLECTION_APPROVAL = '/home/services/collection-approval',
+  COLLECTOR_LICENSING = '/home/services/collector-approval',
 }
 
 export const newNavigationMenuList = [
@@ -1314,6 +1315,59 @@ export const newNavigationMenuList = [
     permissionGroup: null,
     parent: 2401,
     group: 'service_' + CaseTypes.COLLECTION_APPROVAL,
+    itemOrder: 3,
+    svg: null
+  },
+  {
+    id: 2501,
+    langKey: 'menu_collector_approval',
+    path: SystemPathsEnum.COLLECTOR_LICENSING,
+    icon: 'mdi-human-male',
+    isSvg: false,
+    caseType: CaseTypes.COLLECTOR_LICENSING,
+    permission: '',
+    permissionGroup: PermissionGroupsEnum.COLLECTOR_LICENSING_SERVICES_PERMISSION_GROUP,
+    parent: null,
+    group: 'main',
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 2502,
+    langKey: serviceAddUpdateLabel,
+    path: SystemPathsEnum.COLLECTOR_LICENSING + '/service',
+    icon: serviceAddUpdateIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.COLLECTOR_LICENSING,
+    permissionGroup: null,
+    parent: 2501,
+    group: 'service_' + CaseTypes.COLLECTOR_LICENSING,
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 2503,
+    langKey: serviceSearchLabel,
+    path: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.COLLECTOR_LICENSING),
+    icon: serviceSearchIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.SEARCH_SERVICE_COLLECTOR_LICENSING,
+    permissionGroup: null,
+    parent: 2501,
+    group: 'service_' + CaseTypes.COLLECTOR_LICENSING,
+    itemOrder: 2,
+    svg: null
+  },
+  {
+    id: 2504,
+    langKey: serviceOutputLabel,
+    path: SystemPathsEnum.COLLECTOR_LICENSING + '/outputs',
+    icon: serviceOutputIcon,
+    isSvg: false,
+    permission: Constants.SERVICE_OUTPUT_PERMISSION,
+    permissionGroup: null,
+    parent: 2501,
+    group: 'service_' + CaseTypes.COLLECTOR_LICENSING,
     itemOrder: 3,
     svg: null
   },
