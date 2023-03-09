@@ -201,6 +201,12 @@ const externalOrgAffiliationServicesPermissionGroup: (EServicePermissionsEnum | 
   Constants.SERVICE_OUTPUT_PERMISSION
 ];
 
+const organizationEntitiesSupportServicesPermissionGroup: (EServicePermissionsEnum | string)[] = [
+  EServicePermissionsEnum.ORGANIZATION_ENTITIES_SUPPORT,
+  EServicePermissionsEnum.SEARCH_SERVICE_ORGANIZATION_ENTITIES_SUPPORT,
+  Constants.SERVICE_OUTPUT_PERMISSION
+];
+
 const generalServicesPermissionsGroup: EServicePermissionsEnum[] = [
   EServicePermissionsEnum.INQUIRY,
   EServicePermissionsEnum.CONSULTATION,
@@ -278,6 +284,7 @@ const permissionGroups: PermissionGroupsMapType = {
   [PermissionGroupsEnum.NPO_MANAGEMENT_SERVICES_PERMISSION_GROUP]: npoManagementServicesPermissionGroup,
   [PermissionGroupsEnum.FOREIGN_COUNTRIES_PROJECTS_SERVICES_PERMISSION_GROUP]: foreignCountriesProjectServicesPermissionGroup,
   [PermissionGroupsEnum.EXTERNAL_ORG_AFFILIATION_REQUEST_SERVICES_PERMISSION_GROUP]: externalOrgAffiliationServicesPermissionGroup,
+  [PermissionGroupsEnum.ORGANIZATION_ENTITIES_SUPPORT_SERVICES_PERMISSION_GROUP]: organizationEntitiesSupportServicesPermissionGroup,
 
 
   [PermissionGroupsEnum.SANADI_PERMISSIONS_GROUP]: sanadiPermissionsGroup,

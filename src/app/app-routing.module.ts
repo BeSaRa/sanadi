@@ -265,6 +265,17 @@ const routes: Routes = [
         } as Partial<ICustomRouteData>
       },
       {
+        path: 'services/organization-entities-support',
+        canActivate: [NewServicePermissionGuard],
+        loadChildren: () => import('./modules/services/organization-entities-support/organization-entities-support.module')
+          .then(m => m.OrganizationEntitiesSupportModule),
+        data: {
+          permissionGroup: PermissionGroupsEnum.ORGANIZATION_ENTITIES_SUPPORT_SERVICES_PERMISSION_GROUP,
+          checkAnyPermission: true,
+          caseType: CaseTypes.ORGANIZATION_ENTITIES_SUPPORT
+        } as Partial<ICustomRouteData>
+      },
+      {
         path: 'services/search',
         loadChildren: () => import('@modules/service-search-individual/service-search-individual.module').then(m => m.ServiceSearchIndividualModule),
       },
