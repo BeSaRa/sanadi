@@ -119,12 +119,12 @@
     </ng-container>
   </ng-template>
   <ng-template #entitiesTabTemplate>
-    <implementing-agency-list #implementingAgencyListComponent
+    <intervention-implementing-agency-list #implementingAgencyListComponent
                               [list]="(!model ? [] : model.implementingAgencyList)"
                               [executionCountry]="model!.executionCountry"
                               [readonly]="true"
                               (readyEvent)="entitiesTabStatus = $event">
-    </implementing-agency-list>
+    </intervention-implementing-agency-list>
   </ng-template>
   <ng-template #interventionAreasTabTemplate>
     <intervention-region-list #interventionRegionListComponent

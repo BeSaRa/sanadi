@@ -1,5 +1,6 @@
 <div class="row">
-  <tabs-list [accordionView]="accordionView" [hasForm]="true" class="py-4" (onTabChange)="onTabChange($event)" [tabByIndex$]="tabIndex$">
+  <tabs-list [accordionView]="accordionView" [hasForm]="true" class="py-4" (onTabChange)="onTabChange($event)"
+             [tabByIndex$]="tabIndex$">
     <tab [name]="tabsData.basicInfo.name" [hasError]="getTabInvalidStatus('basicInfo')"
          [template]="basicInfoTabTemplate" [title]="lang.map.lbl_basic_info"></tab>
     <tab [name]="tabsData.entities.name" [hasError]="getTabInvalidStatus('entities')"
@@ -17,7 +18,7 @@
 </div>
 <ng-container [formGroup]="form">
   <ng-template #basicInfoTabTemplate>
-    <div >
+    <div>
       <div class="row">
         <div class="col-sm-12 col-md-4 mb-4 position-relative">
           <label for="requestType" asteriskIfRequired="requestType"
@@ -154,12 +155,12 @@
     </div>
   </ng-template>
   <ng-template #entitiesTabTemplate>
-    <implementing-agency-list #implementingAgencyListComponent
-                              [list]="(!model ? [] : model.implementingAgencyList)"
-                              [executionCountry]="executionCountryField.value"
-                              [readonly]="readonly"
-                              (readyEvent)="entitiesTabStatus = $event">
-    </implementing-agency-list>
+    <intervention-implementing-agency-list #implementingAgencyListComponent
+                                           [list]="(!model ? [] : model.implementingAgencyList)"
+                                           [executionCountry]="executionCountryField.value"
+                                           [readonly]="readonly"
+                                           (readyEvent)="entitiesTabStatus = $event">
+    </intervention-implementing-agency-list>
   </ng-template>
   <ng-template #interventionAreasTabTemplate>
     <intervention-region-list #interventionRegionListComponent

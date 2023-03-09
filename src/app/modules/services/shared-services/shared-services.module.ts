@@ -12,6 +12,15 @@ import {
 import {
   ApprovalFormComponent
 } from '@modules/services/shared-services/components/approval-form/approval-form.component';
+import {
+  InterventionImplementingAgencyListComponent
+} from '@modules/services/shared-services/components/intervention-implementing-agency-list/intervention-implementing-agency-list.component';
+import {
+  InterventionRegionListComponent
+} from '@modules/services/shared-services/components/intervention-region-list/intervention-region-list.component';
+import {
+  InterventionFieldListComponent
+} from '@modules/services/shared-services/components/intervention-field-list/intervention-field-list.component';
 
 
 @NgModule({
@@ -20,7 +29,10 @@ import {
     BankAccountComponent,
     WorkAreasComponent,
     RealBeneficiariesComponent,
-    ApprovalFormComponent
+    ApprovalFormComponent,
+    InterventionImplementingAgencyListComponent,
+    InterventionRegionListComponent,
+    InterventionFieldListComponent
   ],
   imports: [
     CommonModule,
@@ -31,7 +43,10 @@ import {
     BankAccountComponent,
     WorkAreasComponent,
     RealBeneficiariesComponent,
-    ApprovalFormComponent
+    ApprovalFormComponent,
+    InterventionImplementingAgencyListComponent,
+    InterventionRegionListComponent,
+    InterventionFieldListComponent
   ]
 })
 export class SharedServicesModule { }

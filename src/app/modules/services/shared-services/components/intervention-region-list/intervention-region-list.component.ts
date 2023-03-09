@@ -1,18 +1,17 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { ReadinessStatus } from '@app/types/types';
-import { InterventionRegion } from '@app/models/intervention-region';
-import { Subject } from 'rxjs';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
-import { ActionIconsEnum } from '@app/enums/action-icons-enum';
-import { filter, map, take, takeUntil, tap } from 'rxjs/operators';
-import { UserClickOn } from '@app/enums/user-click-on.enum';
-import { LangService } from '@services/lang.service';
-import { ToastService } from '@services/toast.service';
-import { DialogService } from '@services/dialog.service';
-import { CustomValidators } from '@app/validators/custom-validators';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {ReadinessStatus} from '@app/types/types';
+import {InterventionRegion} from '@models/intervention-region';
+import {Subject} from 'rxjs';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+import {IMenuItem} from '@modules/context-menu/interfaces/i-menu-item';
+import {ActionIconsEnum} from '@enums/action-icons-enum';
+import {filter, map, take, takeUntil, tap} from 'rxjs/operators';
+import {UserClickOn} from '@enums/user-click-on.enum';
+import {LangService} from '@services/lang.service';
+import {ToastService} from '@services/toast.service';
+import {DialogService} from '@services/dialog.service';
+import {CustomValidators} from '@app/validators/custom-validators';
 
-// noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
   selector: 'intervention-region-list',
   templateUrl: './intervention-region-list.component.html',

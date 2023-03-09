@@ -1,24 +1,23 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {ReadinessStatus} from '@app/types/types';
-import {InterventionField} from '@app/models/intervention-field';
+import {InterventionField} from '@models/intervention-field';
 import {Subject} from 'rxjs';
 import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import {IMenuItem} from '@modules/context-menu/interfaces/i-menu-item';
+import {ActionIconsEnum} from '@enums/action-icons-enum';
 import {filter, map, take, takeUntil, tap} from 'rxjs/operators';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {UserClickOn} from '@enums/user-click-on.enum';
 import {SortEvent} from '@contracts/sort-event';
 import {CommonUtils} from '@helpers/common-utils';
 import {LangService} from '@services/lang.service';
 import {ToastService} from '@services/toast.service';
 import {DialogService} from '@services/dialog.service';
 import {LookupService} from '@services/lookup.service';
-import {AdminResult} from '@app/models/admin-result';
+import {AdminResult} from '@models/admin-result';
 import {DacOchaService} from '@services/dac-ocha.service';
-import {AdminLookupTypeEnum} from '@app/enums/admin-lookup-type-enum';
-import {AdminLookup} from '@app/models/admin-lookup';
+import {AdminLookupTypeEnum} from '@enums/admin-lookup-type-enum';
+import {AdminLookup} from '@models/admin-lookup';
 
-// noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
   selector: 'intervention-field-list',
   templateUrl: './intervention-field-list.component.html',

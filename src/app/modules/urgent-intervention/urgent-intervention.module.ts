@@ -6,19 +6,7 @@ import {CommonModule} from '@angular/common';
 
 import {UrgentInterventionRoutingModule} from './urgent-intervention-routing.module';
 import {UrgentInterventionComponent} from './urgent-intervention.component';
-import {
-  UrgentInterventionAnnouncementComponent
-} from '@app/modules/urgent-intervention/pages/urgent-intervention-announcement/urgent-intervention-announcement.component';
 import {EServicesMainModule} from '@app/modules/e-services-main/e-services-main.module';
-import {
-  ImplementingAgencyListComponent
-} from '@app/modules/urgent-intervention/shared/implementing-agency-list/implementing-agency-list.component';
-import {
-  InterventionRegionListComponent
-} from '@app/modules/urgent-intervention/shared/intervention-region-list/intervention-region-list.component';
-import {
-  InterventionFieldListComponent
-} from '@app/modules/urgent-intervention/shared/intervention-field-list/intervention-field-list.component';
 import {
   UrgentInterventionClosureComponent
 } from './pages/urgent-intervention-closure/urgent-intervention-closure.component';
@@ -47,37 +35,33 @@ import {
 import {
   UrgentInterventionAttachmentApprovalPopupComponent
 } from './popups/urgent-intervention-attachment-approval-popup/urgent-intervention-attachment-approval-popup.component';
+import {SharedServicesModule} from '@modules/services/shared-services/shared-services.module';
 
 
 @NgModule({
-    declarations: [
-        UrgentInterventionComponent,
-        UrgentInterventionFinancialNotificationComponent,
-        UrgentInterventionAnnouncementComponent,
-        ImplementingAgencyListComponent,
-        InterventionRegionListComponent,
-        InterventionFieldListComponent,
-        UrgentInterventionClosureComponent,
-        StageListComponent,
-        ResultListComponent,
-        ImplementationEvaluationListComponent,
-        BestPracticesListComponent,
-        LessonsLearntListComponent,
-        UrgentInterventionClosureApproveTaskPopupComponent,
-        UrgentInterventionLicenseFollowupComponent,
-        UrgentInterventionReportListComponent,
-        UrgentInterventionReportPopupComponent,
-        UrgentInterventionAttachmentPopupComponent,
-        UrgentInterventionAttachmentApprovalPopupComponent
-    ],
-    exports: [
-        ImplementingAgencyListComponent
-    ],
-    imports: [
-        CommonModule,
-        UrgentInterventionRoutingModule,
-        EServicesMainModule,
-    ]
+  declarations: [
+    UrgentInterventionComponent,
+    UrgentInterventionFinancialNotificationComponent,
+    UrgentInterventionClosureComponent,
+    StageListComponent,
+    ResultListComponent,
+    ImplementationEvaluationListComponent,
+    BestPracticesListComponent,
+    LessonsLearntListComponent,
+    UrgentInterventionClosureApproveTaskPopupComponent,
+    UrgentInterventionLicenseFollowupComponent,
+    UrgentInterventionReportListComponent,
+    UrgentInterventionReportPopupComponent,
+    UrgentInterventionAttachmentPopupComponent,
+    UrgentInterventionAttachmentApprovalPopupComponent
+  ],
+  exports: [],
+  imports: [
+    CommonModule,
+    UrgentInterventionRoutingModule,
+    EServicesMainModule,
+    SharedServicesModule
+  ]
 })
 export class UrgentInterventionModule {
 }

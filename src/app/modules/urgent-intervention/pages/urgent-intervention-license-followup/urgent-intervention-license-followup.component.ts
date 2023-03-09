@@ -23,14 +23,14 @@ import {
 } from '@app/modules/urgent-intervention/shared/urgent-intervention-report-list/urgent-intervention-report-list.component';
 import {UrgentInterventionAnnouncement} from '@app/models/urgent-intervention-announcement';
 import {
-  ImplementingAgencyListComponent
-} from '@app/modules/urgent-intervention/shared/implementing-agency-list/implementing-agency-list.component';
+  InterventionImplementingAgencyListComponent
+} from '@modules/services/shared-services/components/intervention-implementing-agency-list/intervention-implementing-agency-list.component';
 import {
   InterventionRegionListComponent
-} from '@app/modules/urgent-intervention/shared/intervention-region-list/intervention-region-list.component';
+} from '@app/modules/services/shared-services/components/intervention-region-list/intervention-region-list.component';
 import {
   InterventionFieldListComponent
-} from '@app/modules/urgent-intervention/shared/intervention-field-list/intervention-field-list.component';
+} from '@app/modules/services/shared-services/components/intervention-field-list/intervention-field-list.component';
 
 @Component({
   selector: 'urgent-intervention-license-followup',
@@ -54,7 +54,7 @@ export class UrgentInterventionLicenseFollowupComponent extends EServicesGeneric
   licenseSearch$: Subject<string> = new Subject<string>();
   selectedLicense?: UrgentInterventionAnnouncement;
 
-  @ViewChild('implementingAgencyListComponent') implementingAgencyListComponentRef!: ImplementingAgencyListComponent;
+  @ViewChild('implementingAgencyListComponent') implementingAgencyListComponentRef!: InterventionImplementingAgencyListComponent;
   @ViewChild('interventionRegionListComponent') interventionRegionListComponentRef!: InterventionRegionListComponent;
   @ViewChild('interventionFieldListComponent') interventionFieldListComponentRef!: InterventionFieldListComponent;
   @ViewChild('urgentInterventionReportListComponent') urgentInterventionReportListComponentRef!: UrgentInterventionReportListComponent;

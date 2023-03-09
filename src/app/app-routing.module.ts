@@ -352,6 +352,17 @@ const routes: Routes = [
         } as Partial<ICustomRouteData>
       },
       {
+        path: 'services/urgent-intervention-announcement',
+        canActivate: [NewServicePermissionGuard],
+        loadChildren: () => import('./modules/services/urgent-intervention-announcement/urgent-intervention-announcement.module')
+          .then(m => m.UrgentInterventionAnnouncementModule),
+        data: {
+          permissionGroup: PermissionGroupsEnum.URGENT_INTERVENTION_ANNOUNCEMENT_SERVICES_PERMISSION_GROUP,
+          checkAnyPermission: true,
+          caseType: CaseTypes.URGENT_INTERVENTION_ANNOUNCEMENT
+        } as Partial<ICustomRouteData>
+      },
+      {
         path: 'services/search',
         loadChildren: () => import('@modules/service-search-individual/service-search-individual.module').then(m => m.ServiceSearchIndividualModule),
       },

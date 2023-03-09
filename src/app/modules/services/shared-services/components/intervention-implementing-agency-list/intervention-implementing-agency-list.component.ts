@@ -2,28 +2,27 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angula
 import {LangService} from '@services/lang.service';
 import {ToastService} from '@services/toast.service';
 import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import {ImplementingAgency} from '@app/models/implementing-agency';
+import {ImplementingAgency} from '@models/implementing-agency';
 import {Subject} from 'rxjs';
 import {ReadinessStatus} from '@app/types/types';
 import {filter, map, take, takeUntil, tap} from 'rxjs/operators';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
+import {UserClickOn} from '@enums/user-click-on.enum';
 import {DialogService} from '@services/dialog.service';
-import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import {IMenuItem} from '@modules/context-menu/interfaces/i-menu-item';
+import {ActionIconsEnum} from '@enums/action-icons-enum';
 import {SortEvent} from '@contracts/sort-event';
 import {CommonUtils} from '@helpers/common-utils';
 import {LookupService} from '@services/lookup.service';
-import {Lookup} from '@app/models/lookup';
-import {AdminResult} from '@app/models/admin-result';
+import {Lookup} from '@models/lookup';
+import {AdminResult} from '@models/admin-result';
 import {CommonService} from '@services/common.service';
 
-// noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
-  selector: 'implementing-agency-list',
-  templateUrl: './implementing-agency-list.component.html',
-  styleUrls: ['./implementing-agency-list.component.scss']
+  selector: 'intervention-implementing-agency-list',
+  templateUrl: './intervention-implementing-agency-list.component.html',
+  styleUrls: ['./intervention-implementing-agency-list.component.scss']
 })
-export class ImplementingAgencyListComponent implements OnInit, OnDestroy {
+export class InterventionImplementingAgencyListComponent implements OnInit, OnDestroy {
 
   constructor(public lang: LangService,
               private toastService: ToastService,

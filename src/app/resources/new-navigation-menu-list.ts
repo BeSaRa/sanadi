@@ -45,6 +45,7 @@ enum SystemPathsEnum {
   COLLECTOR_LICENSING = '/home/services/collector-approval',
   FUNDRAISING_LICENSING = '/home/services/fundraising-licensing',
   URGENT_INTERVENTION_LICENSING = '/home/services/urgent-intervention-license',
+  URGENT_INTERVENTION_ANNOUNCEMENT = '/home/services/urgent-intervention-announcement',
 }
 
 export const newNavigationMenuList = [
@@ -1476,6 +1477,59 @@ export const newNavigationMenuList = [
     permissionGroup: null,
     parent: 2701,
     group: 'service_' + CaseTypes.URGENT_INTERVENTION_LICENSING,
+    itemOrder: 3,
+    svg: null
+  },
+  {
+    id: 2801,
+    langKey: 'menu_urgent_intervention_announcement',
+    path: SystemPathsEnum.URGENT_INTERVENTION_ANNOUNCEMENT,
+    icon: 'mdi-license',
+    isSvg: false,
+    caseType: CaseTypes.URGENT_INTERVENTION_ANNOUNCEMENT,
+    permission: '',
+    permissionGroup: PermissionGroupsEnum.URGENT_INTERVENTION_ANNOUNCEMENT_SERVICES_PERMISSION_GROUP,
+    parent: null,
+    group: 'main',
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 2802,
+    langKey: serviceAddUpdateLabel,
+    path: SystemPathsEnum.URGENT_INTERVENTION_ANNOUNCEMENT + '/service',
+    icon: serviceAddUpdateIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.URGENT_INTERVENTION_ANNOUNCEMENT,
+    permissionGroup: null,
+    parent: 2801,
+    group: 'service_' + CaseTypes.URGENT_INTERVENTION_ANNOUNCEMENT,
+    itemOrder: 1,
+    svg: null
+  },
+  {
+    id: 2803,
+    langKey: serviceSearchLabel,
+    path: SystemPathsEnum.SEARCH_SERVICES + (CaseTypes.URGENT_INTERVENTION_ANNOUNCEMENT),
+    icon: serviceSearchIcon,
+    isSvg: false,
+    permission: EServicePermissionsEnum.SEARCH_SERVICE_URGENT_INTERVENTION_ANNOUNCEMENT,
+    permissionGroup: null,
+    parent: 2801,
+    group: 'service_' + CaseTypes.URGENT_INTERVENTION_ANNOUNCEMENT,
+    itemOrder: 2,
+    svg: null
+  },
+  {
+    id: 2804,
+    langKey: serviceOutputLabel,
+    path: SystemPathsEnum.URGENT_INTERVENTION_ANNOUNCEMENT + '/outputs',
+    icon: serviceOutputIcon,
+    isSvg: false,
+    permission: Constants.SERVICE_OUTPUT_PERMISSION,
+    permissionGroup: null,
+    parent: 2801,
+    group: 'service_' + CaseTypes.URGENT_INTERVENTION_ANNOUNCEMENT,
     itemOrder: 3,
     svg: null
   },
