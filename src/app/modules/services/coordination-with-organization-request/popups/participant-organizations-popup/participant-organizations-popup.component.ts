@@ -1,9 +1,9 @@
-import { CoordinationWithOrganizationsRequest } from './../../../../models/coordination-with-organizations-request';
-import { DialogService } from '@app/services/dialog.service';
-import { CoordinationWithOrganizationsRequestService } from '@app/services/coordination-with-organizations-request.service';
+import { CoordinationWithOrganizationsRequest } from '@models/coordination-with-organizations-request';
+import { DialogService } from '@services/dialog.service';
+import { CoordinationWithOrganizationsRequestService } from '@services/coordination-with-organizations-request.service';
 import { Component, Inject, OnInit } from '@angular/core';
 import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
-import { LangService } from '@app/services/lang.service';
+import { LangService } from '@services/lang.service';
 
 @Component({
   selector: 'app-participant-organizations-popup',

@@ -1,4 +1,4 @@
-import {CoordinationWithOrganizationsRequestService} from '@app/services/coordination-with-organizations-request.service';
+import {CoordinationWithOrganizationsRequestService} from '@services/coordination-with-organizations-request.service';
 import {Component, Inject, OnInit} from '@angular/core';
 import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {CustomValidators} from '@app/validators/custom-validators';
@@ -11,10 +11,10 @@ import {ToastService} from '@services/toast.service';
 import {InboxService} from '@services/inbox.service';
 import {exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {IWFResponse} from '@contracts/i-w-f-response';
-import {CoordinationWithOrganizationsRequest} from '@app/models/coordination-with-organizations-request';
-import {ParticipantOrg} from '@app/models/participant-org';
+import {CoordinationWithOrganizationsRequest} from '@models/coordination-with-organizations-request';
+import {ParticipantOrg} from '@models/participant-org';
 import {EmployeeService} from '@services/employee.service';
-import {WFResponseType} from '@app/enums/wfresponse-type.enum';
+import {WFResponseType} from '@enums/wfresponse-type.enum';
 
 @Component({
   selector: 'coordination-with-org-popup',

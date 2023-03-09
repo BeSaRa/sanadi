@@ -29,16 +29,11 @@ import {
 import {
   FormlySelectFieldComponent
 } from '@app/services-search/components/formly-select-field/formly-select-field.component';
-import {
-  ParticipantOrganizationsPopupComponent
-} from './popups/participant-organizations-popup/participant-organizations-popup.component';
 import {BuildingAbilityComponent} from './shared/building-ability/building-ability.component';
-import {DynamicTemplatesComponent} from './shared/dynamic-templates/dynamic-templates.component';
 import {
   EffectiveCoordinationCapabilitiesComponent
 } from './shared/effective-coordination-capabilities/effective-coordination-capabilities.component';
 import {OrganizationOfficerComponent} from './shared/organization-officer/organization-officer.component';
-import {ParticipantOrganizationComponent} from './shared/participant-organization/participant-organization.component';
 import {ProjectNeedsComponent} from './shared/project-needs/project-needs.component';
 import {ResearchAndStudiesComponent} from './shared/research-and-studies/research-and-studies.component';
 
@@ -50,11 +45,8 @@ import {ResearchAndStudiesComponent} from './shared/research-and-studies/researc
     ProjectNeedsComponent,
     BuildingAbilityComponent,
     EffectiveCoordinationCapabilitiesComponent,
-    DynamicTemplatesComponent,
-    ParticipantOrganizationComponent,
     OrganizationOfficerComponent,
     ResearchAndStudiesComponent,
-    ParticipantOrganizationsPopupComponent,
     SelectAuthorizedEntityPopupComponent,
     SelectPreRegisteredPopupComponent,
     SelectBankAccountPopupComponent
@@ -82,11 +74,8 @@ import {ResearchAndStudiesComponent} from './shared/research-and-studies/researc
     ProjectNeedsComponent,
     BuildingAbilityComponent,
     EffectiveCoordinationCapabilitiesComponent,
-    ParticipantOrganizationComponent,
-    DynamicTemplatesComponent,
     OrganizationOfficerComponent,
     ResearchAndStudiesComponent,
-    ParticipantOrganizationsPopupComponent
   ]
 })
 export class EServicesMainModule {
