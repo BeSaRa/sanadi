@@ -12,8 +12,8 @@
       <div class="col-sm-12 col-md-4 mb-4 position-relative">
         <label asteriskIfRequired="targetedGroup" for="targetedGroup"
           class="form-label">{{lang.map.targeted_groups}}</label>
-        <input formControlName="targetedGroup" type="text" validationClasses="targetedGroup" trimInput
-          class="form-control" id="targetedGroup">
+        <textarea formControlName="targetedGroup" type="text" validationClasses="targetedGroup" trimInput
+          class="form-control" id="targetedGroup"></textarea>
         <app-field-error-message controlName="targetedGroup"></app-field-error-message>
       </div>
     </div>

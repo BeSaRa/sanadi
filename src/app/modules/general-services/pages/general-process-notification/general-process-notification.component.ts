@@ -394,7 +394,7 @@ GeneralProcessNotificationService
         if (requestTypeValue == AllRequestTypesEnum.UPDATE) {
           this.oldFullSerialField.setValidators([Validators.required])
         }
-        this.oldFullSerialField.reset();
+        this.oldFullSerialField.updateValueAndValidity();
       } else {
         this.requestTypeField.setValue(this.requestType$.value);
       }
@@ -451,7 +451,6 @@ GeneralProcessNotificationService
         takeUntil(this.destroy$)
       )
       .subscribe((selection) => {
-        console.log(selection)
         this.setSelectedLicense(selection.details);
       });
   }
@@ -480,6 +479,7 @@ GeneralProcessNotificationService
     result.processType = licenseDetails.processType;
     result.template = licenseDetails.template;
     result.subject = licenseDetails.subject;
+    result.subTeam = licenseDetails.subTeam;
 
     this._updateForm((new GeneralProcessNotification()).clone(result));
   }
