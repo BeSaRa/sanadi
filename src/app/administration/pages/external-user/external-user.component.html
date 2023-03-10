@@ -1,26 +1,6 @@
-<div class="row">
-  <app-page-header pageTitle="menu_organization_user" [clickOnReload$]="reload$"
-                   [customTemplate]="customHeaderTemplate"
-                   [clickOnNew$]="add$"
-                   [addPermission]="externalUserUpdateRequestService.canAddUser()"></app-page-header>
-  <ng-template #customHeaderTemplate>
-    <ng-select [selectOnTab]="true" [clearable]="false"
-               placeholder="{{langService.map.select}}" id="profileId"
-               [notFoundText]="langService.map.msg_not_found" appendTo="body"
-               [formControl]="profileIdControl"
-               (change)="filterUsersByProfile(true)">
-      <ng-option value="">{{langService.map.lbl_all}}</ng-option>
-      <ng-option *ngFor="let option of profiles$|async" [value]="option.id">
-        {{option.getName()}}
-      </ng-option>
-    </ng-select>
 
-  </ng-template>
-  <ng-container *ngIf="table">
-    <app-grid-search (searchTextEvent)="filterControl.setValue($event)"></app-grid-search>
-  </ng-container>
-</div>
-<div class="row pt-3">
+
+<div class="row">
   <div class="col-12">
     <div class="table-responsive">
       <app-table #table [paginator]="paginator"
@@ -30,6 +10,21 @@
                  [columns]="displayedColumns"
                  sortableTable>
         <table class="table table-striped table-bordered caption-top" cdk-table [dataSource]="table.dataSource">
+          <ng-container cdkColumnDef="extra-header">
+            <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+              <table-header tableTitle="menu_organization_user"
+                            [reload$]="reload$"
+                            [add$]="add$"
+                            (textChange)="filterControl.setValue($event)"
+                            [allowAdd]="externalUserUpdateRequestService.canAddUser()"
+                            ></table-header>
+            </th>
+          </ng-container>
+          <ng-container cdkColumnDef="profileHeader">
+            <th cdk-header-cell colspan="100" *cdkHeaderCellDef="let row">
+              <ng-container [ngTemplateOutlet]="profileHeaderTemplate"></ng-container>
+            </th>
+          </ng-container>
           <ng-container cdkColumnDef="domainName">
             <th cdk-header-cell *cdkHeaderCellDef sortable-header> {{langService.map.login_name}}</th>
             <td cdk-cell *cdkCellDef="let row"><span class="dir-rtl d-inline-block">{{row.domainName}}</span></td>
@@ -68,7 +63,9 @@
               </grid-actions>
             </td>
           </ng-container>
-          <tr cdk-header-row *cdkHeaderRowDef="table.columns"></tr>
+          <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
+          <tr cdk-header-row *cdkHeaderRowDef="['profileHeader']"></tr>
+          <tr cdk-header-row *cdkHeaderRowDef="table.columns" class="table-row-header"></tr>
           <tr cdk-row (contextmenu)="menu.open($event , row)" *cdkRowDef="let row; columns: table.columns;"></tr>
           <tr *cdkNoDataRow>
             <td colspan="100" class="text-center">{{langService.map.no_records_to_display}}</td>
@@ -80,3 +77,30 @@
     </div>
   </div>
 </div>
+
+
+<ng-template #profileHeaderTemplate>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-4">
+        <div class="d-flex align-items-center">
+          <div class="col-2"> 
+            <label for="profileId">{{langService.map.menu_profile}}:</label>
+          </div>
+          <div class="col-10">
+            <ng-select [selectOnTab]="true" [clearable]="false"
+            placeholder="{{langService.map.select}}" id="profileId"
+            [notFoundText]="langService.map.msg_not_found" appendTo="body"
+            [formControl]="profileIdControl"
+            (change)="filterUsersByProfile(true)">
+              <ng-option value="">{{langService.map.lbl_all}}</ng-option>
+              <ng-option *ngFor="let option of profiles$|async" [value]="option.id">
+                {{option.getName()}}
+              </ng-option>
+            </ng-select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

@@ -1,8 +1,4 @@
 <div class="row">
-  <app-page-header pageTitle="menu_localization" [clickOnReload$]="reload$"></app-page-header>
-  <app-grid-search (searchTextEvent)="filterControl.setValue($event)"></app-grid-search>
-</div>
-<div class="row pt-3">
   <div class="col-12">
     <div class="table-responsive">
       <app-table #table [paginator]="paginator"
@@ -12,6 +8,14 @@
                  [columns]="displayedColumns"
                  sortableTable>
         <table class="table table-striped table-bordered caption-top" cdk-table [dataSource]="table.dataSource">
+          <ng-container cdkColumnDef="extra-header">
+            <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+              <table-header tableTitle="menu_localization"
+                            [reload$]="reload$"
+                            (textChange)="filterControl.setValue($event)"
+                            ></table-header>
+            </th>
+          </ng-container>
           <ng-container cdkColumnDef="arName">
             <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{langService.map.lbl_arabic_name}}</th>
             <td cdk-cell *cdkCellDef="let row"><span class="dir-rtl d-inline-block">{{row.arName}}</span></td>
@@ -34,7 +38,8 @@
               </div>
             </td>
           </ng-container>
-          <tr cdk-header-row *cdkHeaderRowDef="table.columns"></tr>
+          <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
+          <tr cdk-header-row class="table-row-header" *cdkHeaderRowDef="table.columns"></tr>
           <tr cdk-row (contextmenu)="menu.open($event , row)" *cdkRowDef="let row; columns: table.columns;"></tr>
           <tr *cdkNoDataRow>
             <td colspan="100" class="text-center">{{langService.map.no_records_to_display}}</td>

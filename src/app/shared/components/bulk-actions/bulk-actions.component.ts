@@ -14,7 +14,7 @@ export class BulkActionsComponent implements OnInit {
   @Input() actionsList!: IGridAction[];
   @Input() selectedRecords!: any[];
   @Input() hideSelectCount: boolean = false;
-
+  @Input() reversedColors :boolean = false;
   actions: IGridAction[] = [];
 
   constructor(public langService: LangService) {
