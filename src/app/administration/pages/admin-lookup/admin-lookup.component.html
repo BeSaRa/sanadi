@@ -106,7 +106,7 @@
 </ng-template>
 <ng-template #resolutionsIssuedTemplate>
   <admin-lookup-list #resolutionsIssuedComponent [adminLookupTypeId]="adminLookupTypeEnum.RESOLUTIONS_ISSUED"
-    (onReady)="setLookupComponentMap($event, resolutionsIssuedComponent)">
+    (onReady)="setLookupComponentMap($event, resolutionsIssuedComponent)" [deletable]="true">
   </admin-lookup-list>
 </ng-template>
 <ng-template #penaltiesDecisionsTemplate>
