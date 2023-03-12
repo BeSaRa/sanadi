@@ -13,6 +13,12 @@ import {
 import {
   FinancialTransfersProjectsComponent
 } from '@modules/services/financial-transfer-licensing/shared/financial-transfers-projects/financial-transfers-projects.component';
+import {
+  SelectPreRegisteredPopupComponent
+} from '@modules/services/financial-transfer-licensing/popups/select-pre-registered-popup/select-pre-registered-popup.component';
+import {
+  SelectAuthorizedEntityPopupComponent
+} from '@modules/services/financial-transfer-licensing/popups/select-authorized-entity-popup/select-authorized-entity-popup.component';
 
 
 @NgModule({
@@ -20,7 +26,9 @@ import {
     FinancialTransfersLicensingComponent,
     FinancialTranferLicensingOutputsComponent,
     FinancialTransferLicensingApprovePopupComponent,
-    FinancialTransfersProjectsComponent
+    FinancialTransfersProjectsComponent,
+    SelectPreRegisteredPopupComponent,
+    SelectAuthorizedEntityPopupComponent
   ],
   imports: [
     CommonModule,

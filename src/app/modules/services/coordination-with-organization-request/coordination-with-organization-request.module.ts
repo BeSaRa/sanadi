@@ -30,6 +30,18 @@ import {
 import {
   ProcessFieldWrapperComponent
 } from '@app/administration/popups/general-process-popup/process-formly-components/process-field-wrapper/process-field-wrapper.component';
+import {
+  BuildingAbilityComponent
+} from '@modules/services/coordination-with-organization-request/shared/building-ability/building-ability.component';
+import {
+  EffectiveCoordinationCapabilitiesComponent
+} from '@modules/services/coordination-with-organization-request/shared/effective-coordination-capabilities/effective-coordination-capabilities.component';
+import {
+  OrganizationOfficerComponent
+} from '@modules/services/coordination-with-organization-request/shared/organization-officer/organization-officer.component';
+import {
+  ResearchAndStudiesComponent
+} from '@modules/services/coordination-with-organization-request/shared/research-and-studies/research-and-studies.component';
 
 
 @NgModule({
@@ -39,7 +51,11 @@ import {
     CoordinationWithOrgPopupComponent,
     DynamicTemplatesComponent,
     ParticipantOrganizationsPopupComponent,
-    ParticipantOrganizationComponent
+    ParticipantOrganizationComponent,
+    BuildingAbilityComponent,
+    EffectiveCoordinationCapabilitiesComponent,
+    OrganizationOfficerComponent,
+    ResearchAndStudiesComponent
   ],
   imports: [
     CommonModule,

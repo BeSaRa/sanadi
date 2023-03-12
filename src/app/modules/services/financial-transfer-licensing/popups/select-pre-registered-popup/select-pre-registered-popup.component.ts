@@ -1,10 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FinancialTransfereeTypes } from '@app/enums/financial-transferee-types.enum';
+import { FinancialTransfereeTypes } from '@enums/financial-transferee-types.enum';
 import { BaseGenericEService } from '@app/generics/base-generic-e-service';
-import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { AdminResult } from '@app/models/admin-result';
-import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
-import { LangService } from '@app/services/lang.service';
+import { ILanguageKeys } from '@contracts/i-language-keys';
+import { AdminResult } from '@models/admin-result';
+import { IMenuItem } from '@modules/context-menu/interfaces/i-menu-item';
+import { LangService } from '@services/lang.service';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
 

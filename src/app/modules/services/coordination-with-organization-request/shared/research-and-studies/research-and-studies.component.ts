@@ -8,13 +8,13 @@ import {
   FormBuilder,
   FormGroup, UntypedFormArray, UntypedFormControl, UntypedFormGroup
 } from '@angular/forms';
-import { UserClickOn } from '@app/enums/user-click-on.enum';
-import { DateUtils } from '@app/helpers/date-utils';
-import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { ResearchAndStudies } from '@app/models/research-and-studies';
-import { DialogService } from '@app/services/dialog.service';
-import { LangService } from '@app/services/lang.service';
-import { ToastService } from '@app/services/toast.service';
+import { UserClickOn } from '@enums/user-click-on.enum';
+import { DateUtils } from '@helpers/date-utils';
+import { ILanguageKeys } from '@contracts/i-language-keys';
+import { ResearchAndStudies } from '@models/research-and-studies';
+import { DialogService } from '@services/dialog.service';
+import { LangService } from '@services/lang.service';
+import { ToastService } from '@services/toast.service';
 import { DatepickerOptionsMap } from '@app/types/types';
 import { IMyInputFieldChanged } from 'angular-mydatepicker';
 import { BehaviorSubject, Subject } from 'rxjs';

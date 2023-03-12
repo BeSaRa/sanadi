@@ -24,13 +24,13 @@ import {Profile} from '@models/profile';
 import {ResearchAndStudies} from '@models/research-and-studies';
 import {
   BuildingAbilityComponent
-} from '@modules/e-services-main/shared/building-ability/building-ability.component';
+} from '@modules/services/coordination-with-organization-request/shared/building-ability/building-ability.component';
 import {
   DynamicTemplatesComponent
 } from '@modules/services/coordination-with-organization-request/shared/dynamic-templates/dynamic-templates.component';
 import {
   ResearchAndStudiesComponent
-} from '@modules/e-services-main/shared/research-and-studies/research-and-studies.component';
+} from '@modules/services/coordination-with-organization-request/shared/research-and-studies/research-and-studies.component';
 import {
   CoordinationWithOrganizationsRequestService
 } from '@services/coordination-with-organizations-request.service';
@@ -49,11 +49,11 @@ import {IMyInputFieldChanged} from 'angular-mydatepicker';
 import {Observable, of} from 'rxjs';
 import {
   OrganizationOfficerComponent
-} from '../../../../e-services-main/shared/organization-officer/organization-officer.component';
+} from '../../shared/organization-officer/organization-officer.component';
 import {CoordinationWithOrganizationTemplate} from '@models/corrdination-with-organization-template';
 import {
   EffectiveCoordinationCapabilitiesComponent
-} from '@modules/e-services-main/shared/effective-coordination-capabilities/effective-coordination-capabilities.component';
+} from '@modules/services/coordination-with-organization-request/shared/effective-coordination-capabilities/effective-coordination-capabilities.component';
 import {
   ParticipantOrganizationComponent
 } from '@modules/services/coordination-with-organization-request/shared/participant-organization/participant-organization.component';

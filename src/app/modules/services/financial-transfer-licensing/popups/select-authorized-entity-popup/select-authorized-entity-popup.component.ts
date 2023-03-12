@@ -1,9 +1,9 @@
 import { Component, Inject } from '@angular/core';
-import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { ILicenseSearch } from '@app/interfaces/i-license-search';
-import { AdminResult } from '@app/models/admin-result';
-import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
-import { LangService } from '@app/services/lang.service';
+import { ILanguageKeys } from '@contracts/i-language-keys';
+import { ILicenseSearch } from '@contracts/i-license-search';
+import { AdminResult } from '@models/admin-result';
+import { IMenuItem } from '@modules/context-menu/interfaces/i-menu-item';
+import { LangService } from '@services/lang.service';
 import { DialogRef } from '@app/shared/models/dialog-ref';
 import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
 import { take, tap } from 'rxjs/operators';

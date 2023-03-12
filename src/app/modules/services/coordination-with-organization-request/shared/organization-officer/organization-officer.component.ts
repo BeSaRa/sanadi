@@ -7,18 +7,18 @@ import {
   ViewChild
 } from '@angular/core';
 import {FormGroup, UntypedFormControl} from '@angular/forms';
-import {ActionIconsEnum} from '@app/enums/action-icons-enum';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import {DialogService} from '@app/services/dialog.service';
-import {LangService} from '@app/services/lang.service';
-import {ToastService} from '@app/services/toast.service';
+import {ActionIconsEnum} from '@enums/action-icons-enum';
+import {UserClickOn} from '@enums/user-click-on.enum';
+import {ILanguageKeys} from '@contracts/i-language-keys';
+import {IMenuItem} from '@modules/context-menu/interfaces/i-menu-item';
+import {DialogService} from '@services/dialog.service';
+import {LangService} from '@services/lang.service';
+import {ToastService} from '@services/toast.service';
 import {ReadinessStatus} from '@app/types/types';
 import {NgSelectComponent} from '@ng-select/ng-select';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {filter, map, take, takeUntil} from 'rxjs/operators';
-import {OrganizationOfficer} from '@app/models/organization-officer';
+import {OrganizationOfficer} from '@models/organization-officer';
 
 @Component({
   selector: 'organization-officer',

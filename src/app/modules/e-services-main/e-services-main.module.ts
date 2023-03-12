@@ -1,10 +1,4 @@
 import {SelectBankAccountPopupComponent} from './popups/select-bank-account-popup/select-bank-account-popup.component';
-import {
-  SelectPreRegisteredPopupComponent
-} from './popups/select-pre-registered-popup/select-pre-registered-popup.component';
-import {
-  SelectAuthorizedEntityPopupComponent
-} from './popups/select-authorized-entity-popup/select-authorized-entity-popup.component';
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {
@@ -29,24 +23,12 @@ import {
 import {
   FormlySelectFieldComponent
 } from '@app/services-search/components/formly-select-field/formly-select-field.component';
-import {BuildingAbilityComponent} from './shared/building-ability/building-ability.component';
-import {
-  EffectiveCoordinationCapabilitiesComponent
-} from './shared/effective-coordination-capabilities/effective-coordination-capabilities.component';
-import {OrganizationOfficerComponent} from './shared/organization-officer/organization-officer.component';
-import {ResearchAndStudiesComponent} from './shared/research-and-studies/research-and-studies.component';
 
 @NgModule({
   declarations: [
     SelectLicensePopupComponent,
     SelectTemplatePopupComponent,
     SelectedLicenseTableComponent,
-    BuildingAbilityComponent,
-    EffectiveCoordinationCapabilitiesComponent,
-    OrganizationOfficerComponent,
-    ResearchAndStudiesComponent,
-    SelectAuthorizedEntityPopupComponent,
-    SelectPreRegisteredPopupComponent,
     SelectBankAccountPopupComponent
   ],
   imports: [
@@ -68,11 +50,7 @@ import {ResearchAndStudiesComponent} from './shared/research-and-studies/researc
   ],
   exports: [
     SharedModule,
-    SelectedLicenseTableComponent,
-    BuildingAbilityComponent,
-    EffectiveCoordinationCapabilitiesComponent,
-    OrganizationOfficerComponent,
-    ResearchAndStudiesComponent,
+    SelectedLicenseTableComponent
   ]
 })
 export class EServicesMainModule {

@@ -1,22 +1,30 @@
 import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
-import {AbstractControl, FormArray, FormBuilder, FormGroup, UntypedFormArray, UntypedFormControl, UntypedFormGroup,} from '@angular/forms';
-import {TrainingWay} from '@app/enums/training-way.enum';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {DateUtils} from '@app/helpers/date-utils';
-import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {Lookup} from '@app/models/lookup';
-import {DialogService} from '@app/services/dialog.service';
-import {LangService} from '@app/services/lang.service';
-import {LookupService} from '@app/services/lookup.service';
-import {ToastService} from '@app/services/toast.service';
+import {
+  AbstractControl,
+  FormArray,
+  FormBuilder,
+  FormGroup,
+  UntypedFormArray,
+  UntypedFormControl,
+  UntypedFormGroup,
+} from '@angular/forms';
+import {TrainingWay} from '@enums/training-way.enum';
+import {UserClickOn} from '@enums/user-click-on.enum';
+import {DateUtils} from '@helpers/date-utils';
+import {ILanguageKeys} from '@contracts/i-language-keys';
+import {Lookup} from '@models/lookup';
+import {DialogService} from '@services/dialog.service';
+import {LangService} from '@services/lang.service';
+import {LookupService} from '@services/lookup.service';
+import {ToastService} from '@services/toast.service';
 import {DatepickerOptionsMap} from '@app/types/types';
 import {IMyInputFieldChanged} from 'angular-mydatepicker';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {filter, map, take, takeUntil} from 'rxjs/operators';
-import {RecommendedWay} from '@app/enums/recommended-way.enum';
-import {TrainingLanguage} from '@app/enums/training-language-enum';
-import {BuildingAbility} from '@app/models/building-ability';
-import {Profile} from '@app/models/profile';
+import {RecommendedWay} from '@enums/recommended-way.enum';
+import {TrainingLanguage} from '@enums/training-language-enum';
+import {BuildingAbility} from '@models/building-ability';
+import {Profile} from '@models/profile';
 
 @Component({
   selector: 'building-ability',
