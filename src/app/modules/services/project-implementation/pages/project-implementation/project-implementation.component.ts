@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import { Component, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import {
   AbstractControl,
   FormGroup,
@@ -59,7 +59,7 @@ import dayjs from "dayjs";
   templateUrl: './project-implementation.component.html',
   styleUrls: ['./project-implementation.component.scss']
 })
-export class ProjectImplementationComponent extends EServicesGenericComponent<ProjectImplementation, ProjectImplementationService> {
+export class ProjectImplementationComponent extends EServicesGenericComponent<ProjectImplementation, ProjectImplementationService> implements AfterViewInit{
   form!: UntypedFormGroup;
   licenseSearch$: Subject<string> = new Subject()
   requestTypes: Lookup[] = this.lookupService.listByCategory.ServiceRequestTypeNoRenew.slice().sort((a, b) => a.lookupKey - b.lookupKey);
@@ -110,7 +110,8 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
               private dacOchaService: DacOchaService,
               public employeeService: EmployeeService,
               private licenseService: LicenseService,
-              public dialog: DialogService) {
+              public dialog: DialogService,
+              private cd: ChangeDetectorRef) {
     super();
   }
 
@@ -228,7 +229,10 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     }
   }
 
+  ngAfterViewInit(){
 
+    // this.cd.detectChanges();
+  }
   _getNewInstance(): ProjectImplementation {
     return new ProjectImplementation()
   }
@@ -249,6 +253,12 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
   }
 
   _afterBuildForm(): void {
+    if (this.operation !== OperationTypes.CREATE) {
+      this.licenseStartDate.setValue(this.licenseStartDate.value);
+      this.implementingAgencyList.setValue(this.implementingAgencyList.value);
+      this.beneficiaryCountry.setValue(this.model?.beneficiaryCountry);
+      this.implementingAgencyType.setValue(this.model?.implementingAgencyType);
+    }
     this.handleReadonly()
     this.setDefaultValues()
     this.listenToFieldsWillEffectTemplateAndFundSources()
@@ -272,12 +282,11 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       this.validateFundingResources([
         'payment',
       ])])
+
     this.handleRequestTypeChange(this.requestType.value)
 
-    if (this.operation !== OperationTypes.CREATE) {
-      this.licenseStartDate.setValue(this.licenseStartDate.value);
-      this.implementingAgencyList.setValue(this.implementingAgencyList.value);
-    }
+
+
   }
 
   loadLicenseById(): void {
@@ -358,6 +367,10 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     this.handleDisplayFields(model)
     this.handleMandatoryFields()
     this.calculateRemaining()
+    if(!fromSelectedLicense){
+      this.beneficiaryCountry.setValue(null);
+      this.implementingAgencyType.setValue(null);
+    }
   }
 
   _resetForm(): void {
@@ -706,7 +719,13 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       this.handleCustomFormReadonly();
       return;
     }
-
+    if (this.model?.caseStatus === CommonCaseStatus.DRAFT ||
+        this.model?.caseStatus === CommonCaseStatus.NEW
+      ){
+      this.readonly = false;
+      this.handleCustomFormReadonly();
+      return;
+    }
     let caseStatus = model.getCaseStatus();
     if (caseStatus == CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.FINAL_REJECTION || caseStatus === CommonCaseStatus.CANCELLED) {
       this.readonly = true;
@@ -738,6 +757,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
         }
       }
     } else if (this.openFrom === OpenFrom.SEARCH) {
+
       if (this.model?.isSubmissionMechanismRegistration() || this.model?.isSubmissionMechanismNotification()) {
         this.readonly = true;
       } else {
