@@ -1,8 +1,7 @@
-import {
-  TrainingProgramPartnerPopupComponent
-} from '@app/administration/popups/training-program-partner-popup/training-program-partner-popup.component';
-import {TrainingProgramPartnerComponent} from './pages/training-program-partner/training-program-partner.component';
-import {AdminLicenseComponent} from './pages/admin-license/admin-license.component';
+import { CustomMenuDefaultsPopupComponent } from './popups/custom-menu-defaults-popup/custom-menu-defaults-popup.component';
+import { TrainingProgramPartnerPopupComponent } from '@app/administration/popups/training-program-partner-popup/training-program-partner-popup.component';
+import { TrainingProgramPartnerComponent } from './pages/training-program-partner/training-program-partner.component';
+import { AdminLicenseComponent } from './pages/admin-license/admin-license.component';
 import {UserSubTeamComponent} from './shared/user-sub-team/user-sub-team.component';
 import {
   ProcessFieldWrapperComponent
@@ -217,7 +216,9 @@ import {SdGoalComponent} from './pages/sd-goal/sd-goal.component';
     UserSecurityExternalComponent,
     ProfileAttachmentsComponent,
     GlobalSettingsComponent,
-    AdminLicenseComponent
+    UserPreferencesPopupComponent,
+    AdminLicenseComponent,
+    CustomMenuDefaultsPopupComponent
   ],
   imports: [
     SharedModule,

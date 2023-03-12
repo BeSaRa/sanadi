@@ -1828,4 +1828,6 @@ export interface ILanguageKeys {
   lbl_transfer_operation_date:string;
   msg_record_is_linked:string;
   previews_replays:string;
+  lbl_custom_menus:string;
+  lbl_default_menus:string;
 }

@@ -1,4 +1,6 @@
-import {Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
+import { MenuItemService } from '@app/services/menu-item.service';
+import { MenuItem } from '@app/models/menu-item';
+import { Component, EventEmitter, Input, Output, ViewChild, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
@@ -19,28 +21,36 @@ import {Observable, of, Subject} from 'rxjs';
 import {catchError, exhaustMap, filter, map, switchMap, takeUntil} from 'rxjs/operators';
 import {ICustomMenuSearchCriteria} from '@contracts/i-custom-menu-search-criteria';
 import {Pagination} from '@app/models/pagination';
+import { TabMap } from '@app/types/types';
+import { ITabData } from '@app/interfaces/i-tab-data';
+import { TabComponent } from '@app/shared/components/tab/tab.component';
 
 @Component({
   selector: 'app-custom-menu',
   templateUrl: './custom-menu.component.html',
   styleUrls: ['./custom-menu.component.css'],
 })
-export class CustomMenuComponent extends AdminGenericComponent<CustomMenu, CustomMenuService> {
+export class CustomMenuComponent extends AdminGenericComponent<CustomMenu, CustomMenuService>
+implements AfterViewInit {
   usePagination = true;
   useCompositeToLoad = false;
-
+  defaultParents= this.menuItemService.parents.filter(x=>!!x.defaultId).sort((a,b)=> a.defaultId! - b.defaultId! );
   constructor(public lang: LangService,
               public service: CustomMenuService,
               private dialogService: DialogService,
               private sharedService: SharedService,
-              private toast: ToastService) {
+              private toast: ToastService,
+              private cd : ChangeDetectorRef,
+              private menuItemService: MenuItemService) {
     super();
   }
 
   protected _init(): void {
     this.listenToView();
   }
-
+  ngAfterViewInit(){
+    this.cd.detectChanges();
+  }
   @Input() parent?: CustomMenu;
   @Input() readonly: boolean = false;
   @Output() listUpdated: EventEmitter<any> = new EventEmitter<any>();
@@ -48,6 +58,7 @@ export class CustomMenuComponent extends AdminGenericComponent<CustomMenu, Custo
   @ViewChild('table') table!: TableComponent;
   selectedPopupTabName: string = 'basic';
   displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'menuType', 'status', 'actions'];
+  defaultParentsColumns: string[] = [ 'arName', 'enName', 'actions'];
   view$: Subject<CustomMenu> = new Subject<CustomMenu>();
 
   actions: IMenuItem<CustomMenu>[] = [
@@ -115,6 +126,16 @@ export class CustomMenuComponent extends AdminGenericComponent<CustomMenu, Custo
         }
         return item.status === CommonStatusEnum.ACTIVATED;
       }
+    }
+  ];
+  defaultParentsActions: IMenuItem<MenuItem>[] = [
+    // children
+    {
+      type: 'action',
+      label: 'sub_lists',
+      icon: ActionIconsEnum.CHILD_ITEMS,
+      onClick: (item) => this.showDefaultsChildren(item),
+      show: () => !this.parent,
     }
   ];
   bulkActionsList: IGridAction[] = [
@@ -249,7 +270,14 @@ export class CustomMenuComponent extends AdminGenericComponent<CustomMenu, Custo
       this.edit$.next(item);
     }
   }
+  showDefaultsChildren(item:MenuItem){
+    return this.service.openDefaultChildrenViewDialog(item)
+    .pipe(catchError(_ => of(null)))
 
+  .pipe(filter((dialog): dialog is DialogRef => !!dialog))
+  .pipe(switchMap(dialog => dialog.onAfterClose$))
+  .subscribe(() => this.reload$.next(null));
+  }
   delete(model: CustomMenu): void {
     const message = this.lang.map.msg_confirm_delete_x.change({x: model.getName()});
     this.dialogService.confirm(message)
@@ -310,6 +338,33 @@ export class CustomMenuComponent extends AdminGenericComponent<CustomMenu, Custo
       });
   }
 
+  tabChanged(tab: TabComponent) {
+    const tabData = this._findTabByTabName(tab);
+    if (!tabData) {
+      return;
+    }
+    this.reload$.next(null);
+
+  }
+  private _findTabByTabName(tab: TabComponent): ITabData | undefined {
+    return Object.values(this.tabsData).find(tabData => tabData.name === tab.name);
+  }
+  tabsData: TabMap = {
+    customMenus: {
+      name: 'customMenus',
+      langKey: 'lbl_custom_menus',
+      index : 0,
+      validStatus: () => true,
+      isTouchedOrDirty: () => true
+    },
+    defaultMenus: {
+      name: 'defaultMenus',
+      langKey: 'lbl_default_menus',
+      index : 0,
+      validStatus: () => true,
+      isTouchedOrDirty: () => true
+    },
+  };
   get selectedRecords(): CustomMenu[] {
     return this.table.selection.selected;
   }
