@@ -95,7 +95,7 @@
 </ng-template>
 <ng-template #riskClassificationTemplate>
   <admin-lookup-list #riskClassificationComponent [adminLookupTypeId]="adminLookupTypeEnum.RISK_CLASSIFICATION"
-    (onReady)="setLookupComponentMap($event, riskClassificationComponent)">
+    (onReady)="setLookupComponentMap($event, riskClassificationComponent)" [deletable]="true">
   </admin-lookup-list>
 </ng-template>
 <ng-template #coordinationAndSupportClassificationTemplate>
