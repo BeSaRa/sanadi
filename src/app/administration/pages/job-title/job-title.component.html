@@ -3,7 +3,8 @@
     <app-bulk-actions *ngIf="table.selection && table.selection.selected.length"
                       [selectedRecords]="table.selection.selected"
                       [actionsList]="bulkActionsList"
-                      [reversedColors]="true"></app-bulk-actions>
+                      [reversedColors]="true"
+                      [hasTableHeaderContainer]="true"></app-bulk-actions>
   </ng-container>
 </ng-template>
 <div class="row">
@@ -21,9 +22,9 @@
             <table-header tableTitle="menu_job_title"
                           [reload$]="reload$"
                           [add$]="add$"
-                          (textChange)="filterControl.setValue($event)"
-                          [customTemplate]="bulk"
-                          ></table-header>
+                          (textChange)="filterControl.setValue($event)">
+              <ng-container *ngTemplateOutlet="bulk"></ng-container>
+            </table-header>
           </th>
         </ng-container>
         <ng-container cdkColumnDef="rowSelection">
@@ -57,7 +58,8 @@
           <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
           <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">
             <grid-actions [record]="row" [actions]="actions" [itemIndex]="itemIndex">
-              <span afterTemplate class="form-check form-switch switch-action" *ngIf="row.status != commonStatusEnum.RETIRED"
+              <span afterTemplate class="form-check form-switch switch-action"
+                    *ngIf="row.status != commonStatusEnum.RETIRED"
                     style="top: auto">
                 <input class="form-check-input" type="checkbox" [checked]="row.status == commonStatusEnum.ACTIVATED"
                        tooltip="{{row.status == commonStatusEnum.ACTIVATED ? lang.map.btn_deactivate : lang.map.btn_activate}}"

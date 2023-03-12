@@ -3,7 +3,7 @@
                     [selectedRecords]="table.selection.selected"
                     [actionsList]="bulkActions"
                     [reversedColors]="true"
-                    ></app-bulk-actions>
+                    [hasTableHeaderContainer]="true"></app-bulk-actions>
 </ng-template>
 <div class="row">
   <div class="col-12">
@@ -18,9 +18,9 @@
             <table-header tableTitle="menu_survey_questions"
                           [reload$]="reload$"
                           [add$]="add$"
-                          (textChange)="filterControl.setValue($event)"
-                          [customTemplate]="bulk"
-                          ></table-header>
+                          (textChange)="filterControl.setValue($event)">
+              <ng-container *ngTemplateOutlet="bulk"></ng-container>
+            </table-header>
           </th>
         </ng-container>
         <ng-container cdkColumnDef="rowSelection">

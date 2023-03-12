@@ -1,7 +1,8 @@
 <ng-template #bulk>
   <ng-container *ngIf="table">
     <app-bulk-actions *ngIf="table.selection && table.selection.selected.length"
-      [selectedRecords]="table.selection.selected" [actionsList]="bulkActionsList" [reversedColors]="true"></app-bulk-actions>
+      [selectedRecords]="table.selection.selected" [actionsList]="bulkActionsList"
+                      [reversedColors]="true" [hasTableHeaderContainer]="true"></app-bulk-actions>
   </ng-container>
 </ng-template>
 <div class="row">
@@ -14,9 +15,9 @@
             <table-header tableTitle="menu_general_process_template"
                           [reload$]="reload$"
                           [add$]="add$"
-                          (textChange)="filterControl.setValue($event)"
-                          [customTemplate]="bulk"
-                          ></table-header>
+                          (textChange)="filterControl.setValue($event)">
+              <ng-container *ngTemplateOutlet="bulk"></ng-container>
+            </table-header>
           </th>
         </ng-container>
         <ng-container cdkColumnDef="rowSelection">
