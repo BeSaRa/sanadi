@@ -1,3 +1,4 @@
+import { CustomMenuDefaultsPopupComponent } from './popups/custom-menu-defaults-popup/custom-menu-defaults-popup.component';
 import {
   TrainingProgramPartnerPopupComponent
 } from '@app/administration/popups/training-program-partner-popup/training-program-partner-popup.component';
@@ -225,7 +226,8 @@ import {
     AdminLicenseComponent,
     UserFollowupPermissionNewComponent,
     UserPermissionInternalComponent,
-    UserPermissionExternalComponent
+    UserPermissionExternalComponent,
+    CustomMenuDefaultsPopupComponent
   ],
   imports: [
     SharedModule,
