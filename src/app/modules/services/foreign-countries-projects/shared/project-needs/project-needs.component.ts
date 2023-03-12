@@ -1,11 +1,11 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormGroup, } from '@angular/forms';
-import { CaseTypes } from '@app/enums/case-types.enum';
-import { UserClickOn } from '@app/enums/user-click-on.enum';
-import { ProjectNeed, ProjectNeeds } from '@app/models/project-needs';
-import { DialogService } from '@app/services/dialog.service';
-import { LangService } from '@app/services/lang.service';
-import { ToastService } from '@app/services/toast.service';
+import { CaseTypes } from '@enums/case-types.enum';
+import { UserClickOn } from '@enums/user-click-on.enum';
+import { ProjectNeed, ProjectNeeds } from '@models/project-needs';
+import { DialogService } from '@services/dialog.service';
+import { LangService } from '@services/lang.service';
+import { ToastService } from '@services/toast.service';
 import { ReadinessStatus } from '@app/types/types';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { filter, map, take, takeUntil } from 'rxjs/operators';

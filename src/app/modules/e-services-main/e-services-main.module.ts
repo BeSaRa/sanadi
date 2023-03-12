@@ -34,7 +34,6 @@ import {
   EffectiveCoordinationCapabilitiesComponent
 } from './shared/effective-coordination-capabilities/effective-coordination-capabilities.component';
 import {OrganizationOfficerComponent} from './shared/organization-officer/organization-officer.component';
-import {ProjectNeedsComponent} from './shared/project-needs/project-needs.component';
 import {ResearchAndStudiesComponent} from './shared/research-and-studies/research-and-studies.component';
 
 @NgModule({
@@ -42,7 +41,6 @@ import {ResearchAndStudiesComponent} from './shared/research-and-studies/researc
     SelectLicensePopupComponent,
     SelectTemplatePopupComponent,
     SelectedLicenseTableComponent,
-    ProjectNeedsComponent,
     BuildingAbilityComponent,
     EffectiveCoordinationCapabilitiesComponent,
     OrganizationOfficerComponent,
@@ -71,7 +69,6 @@ import {ResearchAndStudiesComponent} from './shared/research-and-studies/researc
   exports: [
     SharedModule,
     SelectedLicenseTableComponent,
-    ProjectNeedsComponent,
     BuildingAbilityComponent,
     EffectiveCoordinationCapabilitiesComponent,
     OrganizationOfficerComponent,
