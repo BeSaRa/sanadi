@@ -14,7 +14,7 @@ import { ProjectWorkArea } from "@app/enums/project-work-area";
 import { ProjectModel } from "@app/models/project-model";
 import { catchError, map, switchMap } from "rxjs/operators";
 import { DialogRef } from "@app/shared/models/dialog-ref";
-import { ChooseTemplatePopupComponent } from "@app/modules/projects/popups/choose-template-popup/choose-template-popup.component";
+import { ChooseTemplatePopupComponent } from "@app/modules/services/shared-services/popups/choose-template-popup/choose-template-popup.component";
 import { DeductionRatioItem } from "@app/models/deduction-ratio-item";
 import { DeductionRatioItemService } from "@services/deduction-ratio-item.service";
 import { SharedService } from "@services/shared.service";
@@ -23,7 +23,7 @@ import { ProjectModelService } from "@services/project-model.service";
 import { WFResponseType } from "@app/enums/wfresponse-type.enum";
 import {
   ProjectFundraisingApproveTaskPopupComponent
-} from "@app/modules/projects/popups/project-fundraising-approve-task-popup/project-fundraising-approve-task-popup.component";
+} from "@app/modules/services/project-fundraising/popups/project-fundraising-approve-task-popup/project-fundraising-approve-task-popup.component";
 import { LicenseService } from "@services/license.service";
 import { CaseTypes } from "@app/enums/case-types.enum";
 

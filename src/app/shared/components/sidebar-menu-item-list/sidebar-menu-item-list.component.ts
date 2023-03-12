@@ -52,36 +52,8 @@ export class SidebarMenuItemListComponent implements OnInit {
     if (item.children.length) {
       item.toggle();
     } else {
-      if (!item.isEServiceMenu) {
-        this.router.navigate([item.path]).then();
-      } else {
-        if (item.hasEServiceSearchPermission) {
-          this.openEServiceSearch($event, item);
-        } else if (item.hasEServicePagePermission) {
-          this.openEService($event, item);
-        }
-      }
+      this.router.navigate([item.path]).then();
     }
-  }
-
-  openEService($event: Event, item: MenuItem) {
-    $event.preventDefault();
-    $event.stopPropagation();
-    if (!item.hasEServicePagePermission) {
-      return;
-    }
-    this.router.navigate([item.path]).then();
-  }
-
-  openEServiceSearch($event: Event, item: MenuItem) {
-    $event.preventDefault();
-    $event.stopPropagation();
-    if (!item.hasEServiceSearchPermission) {
-      return;
-    }
-    this.router.navigate([item.defaultServiceSearchPath], {
-      queryParams: {quickCaseType: item.caseType}
-    }).then();
   }
 
   hasCustomPermissions(item: MenuItem): boolean {

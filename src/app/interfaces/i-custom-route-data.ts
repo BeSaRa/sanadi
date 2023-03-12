@@ -1,12 +1,18 @@
 import {CaseTypes} from '@app/enums/case-types.enum';
 import {ILanguageKeys} from '@contracts/i-language-keys';
+import {DynamicMenuRouteTypeEnum} from '@app/enums/dynamic-menu-route-type.enum';
 
 export interface ICustomRouteData {
   /**
    * @description Permission key to be checked for authorizing the  current user.
    * Used with permission guard and services guard.
    */
-  permissionKey: string | null,
+  permissionKey: string | string[] | null,
+  /**
+   * @description Permission group name [containing list of permission keys] to be checked for authorizing current user.
+   * Used with permission guard and services guard.
+   */
+  permissionGroup: string | null,
   /**
    * @description Permission group name [containing list of permission keys] to be checked for authorizing current user.
    * Used with permission guard and services guard.
@@ -42,4 +48,9 @@ export interface ICustomRouteData {
    * Used with cookie guard.
    */
   validateCookie:(value: any) => boolean
+  /**
+   * @description Dynamic menu type (module/parent/parent-details/child)
+   * Used with DynamicMenuGuard
+   */
+  dynamicMenuRouteType: DynamicMenuRouteTypeEnum
 }

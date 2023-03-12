@@ -18,7 +18,7 @@ import { DialogRef } from "@app/shared/models/dialog-ref";
 import { WFResponseType } from "@app/enums/wfresponse-type.enum";
 import {
   UrgentInterventionApproveTaskPopupComponent
-} from "@app/modules/urgent-intervention/popups/urgent-intervention-approve-task-popup/urgent-intervention-approve-task-popup.component";
+} from "@app/modules/services/urgent-intervention-licensing/popups/urgent-intervention-approve-task-popup/urgent-intervention-approve-task-popup.component";
 import { CastResponseContainer } from "@decorators/cast-response";
 import { BaseGenericEService } from "@app/generics/base-generic-e-service";
 

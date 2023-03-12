@@ -1,0 +1,182 @@
+<div class="row">
+  <tabs-list [accordionView]="accordionView" [hasForm]="true" class="py-4" (onTabChange)="onTabChange($event)"
+             [tabByIndex$]="tabIndex$">
+    <tab [name]="tabsData.basicInfo.name" [hasError]="getTabInvalidStatus('basicInfo')"
+         [template]="basicInfoTabTemplate" [title]="lang.map.lbl_basic_info"></tab>
+    <tab [name]="tabsData.entities.name" [hasError]="getTabInvalidStatus('entities')"
+         [template]="entitiesTabTemplate" [title]="lang.map.entities"
+         [disabled]="!isStartOrUpdateRequestType()"></tab>
+    <tab [name]="tabsData.interventionAreas.name" [hasError]="getTabInvalidStatus('interventionAreas')"
+         [template]="interventionAreasTabTemplate" [title]="lang.map.intervention_areas"
+         [disabled]="!isStartOrUpdateRequestType()"></tab>
+    <tab [name]="tabsData.interventionFields.name" [hasError]="getTabInvalidStatus('interventionFields')"
+         [template]="interventionFieldsTabTemplate" [title]="lang.map.intervention_fields"
+         [disabled]="!isStartOrUpdateRequestType()"></tab>
+    <tab *ngIf="!accordionView" [name]="tabsData.attachments.name" [hasError]="getTabInvalidStatus('attachments')"
+         [template]="attachmentsTab" [title]="lang.map.attachments"></tab>
+  </tabs-list>
+</div>
+<ng-container [formGroup]="form">
+  <ng-template #basicInfoTabTemplate>
+    <div>
+      <div class="row">
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label for="requestType" asteriskIfRequired="requestType"
+                 class="form-label">{{lang.map.request_type}}</label>
+          <ng-select [selectOnTab]="true" labelForId="requestType" [clearable]="true"
+                     placeholder="{{lang.map.select}}" id="requestType"
+                     (change)="handleRequestTypeChange($event, true)"
+                     [notFoundText]="lang.map.msg_not_found"
+                     [readonly]="!isEditRequestTypeAllowed()" appendTo="body"
+                     formControlName="requestType" validationClasses="requestType">
+            <ng-option *ngFor="let option of requestTypesList" [value]="option.lookupKey">
+              {{option.getName()}}
+            </ng-option>
+          </ng-select>
+          <app-field-error-message controlName="requestType"></app-field-error-message>
+        </div>
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label for="oldLicenseFullSerial" asteriskIfRequired="oldLicenseFullSerial"
+                 class="form-label">{{lang.map.notification_request_number}}</label>
+          <div class="input-group">
+            <input (keydown.enter)="isEditLicenseAllowed() && licenseSearch($event)"
+                   formControlName="oldLicenseFullSerial"
+                   type="text" [readOnly]="!isEditLicenseAllowed()"
+                   validationClasses="oldLicenseFullSerial" [onlyInvalid]="false" class="form-control"
+                   id="oldLicenseFullSerial" trimInput>
+            <button *ngIf="isEditLicenseAllowed()" type="button" (click)="licenseSearch($event)"
+                    class="input-group-text"><i
+              class="mdi {{fileIconsEnum.SEARCH}} text-primary"></i></button>
+            <app-field-error-message controlName="oldLicenseFullSerial"></app-field-error-message>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label for="interventionName" asteriskIfRequired="interventionName"
+                 class="form-label">{{lang.map.intervention_name}}</label>
+          <input formControlName="interventionName" class="form-control" type="text"
+                 [readonly]="readonly"
+                 validationClasses="interventionName" id="interventionName" trimInput>
+        </div>
+      </div>
+      <div *ngIf="selectedLicense">
+        <selected-license-table [caseType]="caseTypes.URGENT_INTERVENTION_ANNOUNCEMENT"
+                                [caseTypeViewLicense]="caseTypes.URGENT_INTERVENTION_ANNOUNCEMENT"
+                                [licenseList]="[selectedLicense]"
+                                [columns]="service.selectLicenseDisplayColumns"></selected-license-table>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <h2 class="h6 text-primary">{{lang.map.beneficiary_country_info}}</h2>
+          <hr>
+        </div>
+        <div class="col-md-4 col-sm-12">
+          <div class="d-flex align-items-center justify-content-start gap-2">
+            <div class="mb-4 ng-select-wrapper flex-grow-1 ">
+              <label class="form-label" asteriskIfRequired="beneficiaryCountry"
+                     for="beneficiaryCountry">{{lang.map.country}}</label>
+              <ng-select [readonly]="readonly" labelForId="beneficiaryCountry"
+                         placeholder="{{lang.map.select}}"
+                         validationClasses="beneficiaryCountry"
+                         [notFoundText]="lang.map.msg_not_found"
+                         appendTo="body" [clearable]="true"
+                         id="beneficiaryCountry" formControlName="beneficiaryCountry">
+                <ng-option [value]="option.id" *ngFor="let option of countries"
+                           [disabled]="!option.isActive()">{{option.getName()}}</ng-option>
+              </ng-select>
+              <app-field-error-message controlName="beneficiaryCountry"></app-field-error-message>
+            </div>
+            <button *ngIf="!readonly && this.employeeService.checkPermissions('MANAGE_CITIES')"
+                    (click)="addCountry($event)" class="btn btn-primary mt-2">{{lang.map.btn_add}}</button>
+          </div>
+        </div>
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="beneficiaryRegion"
+                 for="beneficiaryRegion">{{lang.map.region}}</label>
+          <input id="beneficiaryRegion" validationClasses="beneficiaryRegion" formControlName="beneficiaryRegion"
+                 class="form-control" [readonly]="readonly">
+          <app-field-error-message controlName="beneficiaryRegion"></app-field-error-message>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <h2 class="h6 text-primary">{{lang.map.execution_country_info}}</h2>
+          <hr>
+        </div>
+        <div class="col-md-4 col-sm-12">
+          <div class="d-flex align-items-center justify-content-start gap-2">
+            <div class="mb-4 ng-select-wrapper flex-grow-1 ">
+              <label class="form-label" asteriskIfRequired="executionCountry"
+                     for="executionCountry">{{lang.map.country}}</label>
+              <ng-select [readonly]="readonly" labelForId="beneficiaryCountry"
+                         placeholder="{{lang.map.select}}"
+                         validationClasses="executionCountry"
+                         [notFoundText]="lang.map.msg_not_found"
+                         appendTo="body" [clearable]="true"
+                         (change)="handleChangeExecutionCountry($event, true)"
+                         id="executionCountry" formControlName="executionCountry">
+                <ng-option [value]="option.id" *ngFor="let option of countries"
+                           [disabled]="!option.isActive()">{{option.getName()}}</ng-option>
+              </ng-select>
+              <app-field-error-message controlName="executionCountry"></app-field-error-message>
+            </div>
+            <button *ngIf="!readonly && this.employeeService.checkPermissions('MANAGE_CITIES')"
+                    (click)="addCountry($event)" class="btn btn-primary mt-2">{{lang.map.btn_add}}</button>
+          </div>
+        </div>
+        <div class="col-md-4 col-sm-12 mb-4 position-relative">
+          <label class="form-label" asteriskIfRequired="executionRegion"
+                 for="executionRegion">{{lang.map.region}}</label>
+          <input id="executionRegion" validationClasses="executionRegion" formControlName="executionRegion"
+                 class="form-control" [readonly]="readonly">
+          <app-field-error-message controlName="executionRegion"></app-field-error-message>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <hr>
+        </div>
+        <div class="col-sm-12 mb-4 position-relative">
+          <label for="projectDescription" asteriskIfRequired="projectDescription"
+                 class="form-label">{{lang.map.lbl_description}}</label>
+          <textarea formControlName="projectDescription" class="form-control" rows="4"
+                    [maxlength]="customValidators.defaultLengths.EXPLANATIONS" [readonly]="readonly"
+                    validationClasses="projectDescription" id="projectDescription" trimInput></textarea>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 mb-4 position-relative">
+          <label for="description" asteriskIfRequired="description"
+                 class="form-label">{{lang.map.special_explanations}}</label>
+          <textarea formControlName="description" class="form-control" rows="4"
+                    [maxlength]="customValidators.defaultLengths.EXPLANATIONS" [readonly]="readonly"
+                    validationClasses="description" id="description" trimInput></textarea>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #entitiesTabTemplate>
+    <intervention-implementing-agency-list #implementingAgencyListComponent
+                                           [list]="(!model ? [] : model.implementingAgencyList)"
+                                           [executionCountry]="executionCountryField.value"
+                                           [readonly]="readonly"
+                                           (readyEvent)="entitiesTabStatus = $event">
+    </intervention-implementing-agency-list>
+  </ng-template>
+  <ng-template #interventionAreasTabTemplate>
+    <intervention-region-list #interventionRegionListComponent
+                              [list]="(!model ? [] : model.interventionRegionList)"
+                              [readonly]="readonly"
+                              (readyEvent)="interventionAreasTabStatus = $event"></intervention-region-list>
+  </ng-template>
+  <ng-template #interventionFieldsTabTemplate>
+    <intervention-field-list #interventionFieldListComponent
+                             [list]="(!model ? [] : model.interventionFieldList)"
+                             [readonly]="readonly"
+                             (readyEvent)="interventionFieldsTabStatus = $event"></intervention-field-list>
+  </ng-template>
+  <ng-template #attachmentsTab>
+    <attachments [disabled]="isAttachmentReadonly()" [caseId]="model?.id" [caseType]="model?.caseType"
+                 [service]="service.documentService" [model]="model"
+                 [load]="loadAttachments" [formProperties]="formProperties"></attachments>
+  </ng-template>
+</ng-container>

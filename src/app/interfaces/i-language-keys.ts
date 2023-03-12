@@ -1,4 +1,8 @@
 export interface ILanguageKeys {
+  menu_add: string;
+  menu_search: string;
+  menu_outputs: string;
+  menu_service: string;
   msg_service_search_unavailable: string;
   msg_full_amount_used: string;
   more: string;

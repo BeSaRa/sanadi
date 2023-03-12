@@ -20,8 +20,8 @@ import {DynamicOptionsService} from './dynamic-options.service';
 import {UrlService} from './url.service';
 import {
   EmploymentApproveComponent
-} from '@app/modules/general-services/popups/employment-approve/employment-approve.component';
-import { EmployeeFormPopupComponent } from '@app/modules/general-services/popups/employee-form-popup/employee-form-popup.component';
+} from '@app/modules/services/employment/popups/employment-approve/employment-approve.component';
+import { EmployeeFormPopupComponent } from '@app/modules/services/employment/popups/employee-form-popup/employee-form-popup.component';
 
 const Empinterceptor = new EmployeeInterceptor();
 

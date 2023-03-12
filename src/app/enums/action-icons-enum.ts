@@ -1,4 +1,7 @@
 export enum ActionIconsEnum {
+  SERVICE_ADD_UPDATE = 'mdi-plus',
+  SERVICE_SEARCH = 'mdi-search',
+  SERVICE_OUTPUT = 'mdi-export',
   ADD = 'mdi-plus-box',
   ADD_SIMPLE = 'mdi-plus',
   RELOAD = 'mdi-reload',

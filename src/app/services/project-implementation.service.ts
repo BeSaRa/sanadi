@@ -11,7 +11,7 @@ import {DynamicOptionsService} from '@services/dynamic-options.service';
 import {UrlService} from '@services/url.service';
 import {
   ProjectImplementationApproveTaskPopupComponent
-} from '@modules/projects/popups/project-implementation-approve-task-popup/project-implementation-approve-task-popup.component';
+} from '@modules/services/project-implementation/popups/project-implementation-approve-task-popup/project-implementation-approve-task-popup.component';
 import {WFResponseType} from '@app/enums/wfresponse-type.enum';
 import {ProjectModelService} from '@services/project-model.service';
 import {Observable, of} from 'rxjs';
@@ -22,14 +22,14 @@ import {ProjectTemplate} from '@models/projectTemplate';
 import {map, switchMap} from 'rxjs/operators';
 import {
   ChooseTemplatePopupComponent
-} from '@modules/projects/popups/choose-template-popup/choose-template-popup.component';
+} from '@app/modules/services/shared-services/popups/choose-template-popup/choose-template-popup.component';
 import {SharedService} from '@services/shared.service';
 import {ImplementationCriteriaContract} from '@contracts/implementation-criteria-contract';
 import {ImplementationTemplate} from '@models/implementation-template';
 import {CaseTypes} from '@app/enums/case-types.enum';
 import {
   ImplementationTemplatePopupComponent
-} from '@modules/projects/popups/implementation-template-popup/implementation-template-popup.component';
+} from '@modules/services/project-implementation/popups/implementation-template-popup/implementation-template-popup.component';
 import {MapService} from '@services/map.service';
 import {ProjectFundraisingService} from '@services/project-fundraising.service';
 import {ProjectFundraising} from '@models/project-fundraising';
@@ -37,7 +37,7 @@ import {IDefaultResponse} from '@contracts/idefault-response';
 import {LicenseService} from '@services/license.service';
 import {
   SelectProjectFundraisingPopupComponent
-} from '@modules/projects/popups/select-project-fundraising-popup/select-project-fundraising-popup.component';
+} from '@modules/services/project-implementation/popups/select-project-fundraising-popup/select-project-fundraising-popup.component';
 import {ImplementationFundraising} from '@models/implementation-fundraising';
 import {ImplementingAgency} from '@models/implementing-agency';
 import {NOT_RETRY_TOKEN} from '@app/http-context/tokens';

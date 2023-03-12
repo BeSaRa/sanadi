@@ -1,16 +1,18 @@
 <div class="row" *ngIf="selectedRecords.length > 0">
   <div class="col-12 d-flex align-items-center justify-content-end">
-    <h1 class="h6 text-primary m-0 d-inline-block" *ngIf="!hideSelectCount"
+    <h1
+        [ngClass]="{'text-primary':!reversedColors, 'text-white': reversedColors}"
+        class="h6 m-0 d-inline-block" *ngIf="!hideSelectCount"
         id="selected-record-count">{{selectedRecords.length}} {{langService.map.items_selected}}</h1>
     <ng-container *ngFor="let action of actions">
-      <button *ngIf="!action.children || action.children.length === 0"
-              class="btn btn-link outline-none"
+      <button [ngClass]="{'text-white':reversedColors}" *ngIf="!action.children || action.children.length === 0"
+               class="btn btn-link outline-none"
               tooltip="{{langService.map[action.langKey]}}"
               (click)="callback($event, action)">
         <i class="mdi {{action.icon}}"></i>
       </button>
       <div class="dropdown" *ngIf="action.children && action.children.length > 0">
-        <button type="button" class="btn btn-link outline-none dropdown-toggle"
+        <button [ngClass]="{'text-white':reversedColors}" type="button" class="btn btn-link outline-none dropdown-toggle"
                 id="dropdownMenuButton1"
                 data-bs-toggle="dropdown" aria-expanded="false">
           <i class="mdi {{action.icon}}"></i>

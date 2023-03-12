@@ -210,7 +210,7 @@ li.expanded.has-children {
   }
 }
 
-.instant-action {
+/*.instant-action {
   display: none;
   background: $primary
 }
@@ -219,7 +219,7 @@ li:hover:not(.has-children) {
   .instant-action {
     display: block;
   }
-}
+}*/
 
 // fully closed sidebar
 :host-context(.sidebar-closed:not(.going-to-open)), :host-context(.sidebar-opened.going-to-close) {

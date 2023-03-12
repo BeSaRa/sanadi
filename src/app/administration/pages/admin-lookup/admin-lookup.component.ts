@@ -177,7 +177,7 @@ export class AdminLookupComponent {
       this.selectedWorkFieldTabIndex$.next(0);
     } else {
       this.reloadCallback();
-      this.filterRecords(this.filterControl.value);
+      // this.filterRecords(this.filterControl.value);
     }
   }
 

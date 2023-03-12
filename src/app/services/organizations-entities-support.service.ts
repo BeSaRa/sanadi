@@ -1,22 +1,26 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
-import { CastResponseContainer } from '@app/decorators/decorators/cast-response';
-import { WFResponseType } from '@app/enums/wfresponse-type.enum';
-import { BaseGenericEService } from '@app/generics/base-generic-e-service';
-import { ILanguageKeys } from '@app/interfaces/i-language-keys';
-import { IModelInterceptor } from '@app/interfaces/i-model-interceptor';
-import { OrganizationsEntitiesSupportInterceptor } from '@app/model-interceptors/organizations-entities-support-interceptor';
-import { OrganizationsEntitiesSupport } from '@app/models/organizations-entities-support';
-import { OrganizationsEntitiesSupportSearchCriteria } from '@app/models/organizations-entities-support-search-criteria';
-import { OrganizationsEntitiesSupportPopupComponent } from '@app/modules/general-services/popups/organizations-entities-support-popup/organizations-entities-support-popup.component';
-import { DialogRef } from '@app/shared/models/dialog-ref';
-import { Observable } from 'rxjs';
-import { DialogService } from './dialog.service';
-import { DynamicOptionsService } from './dynamic-options.service';
-import { FactoryService } from './factory.service';
-import { LicenseService } from './license.service';
-import { UrlService } from './url.service';
+import {HttpClient} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {DomSanitizer} from '@angular/platform-browser';
+import {CastResponseContainer} from '@app/decorators/decorators/cast-response';
+import {WFResponseType} from '@app/enums/wfresponse-type.enum';
+import {BaseGenericEService} from '@app/generics/base-generic-e-service';
+import {ILanguageKeys} from '@app/interfaces/i-language-keys';
+import {IModelInterceptor} from '@app/interfaces/i-model-interceptor';
+import {
+  OrganizationsEntitiesSupportInterceptor
+} from '@app/model-interceptors/organizations-entities-support-interceptor';
+import {OrganizationsEntitiesSupport} from '@app/models/organizations-entities-support';
+import {OrganizationsEntitiesSupportSearchCriteria} from '@app/models/organizations-entities-support-search-criteria';
+import {
+  OrganizationsEntitiesSupportPopupComponent
+} from '@app/modules/services/organization-entities-support/popups/organizations-entities-support-popup/organizations-entities-support-popup.component';
+import {DialogRef} from '@app/shared/models/dialog-ref';
+import {Observable} from 'rxjs';
+import {DialogService} from './dialog.service';
+import {DynamicOptionsService} from './dynamic-options.service';
+import {FactoryService} from './factory.service';
+import {LicenseService} from './license.service';
+import {UrlService} from './url.service';
 
 @CastResponseContainer({
   $default: {

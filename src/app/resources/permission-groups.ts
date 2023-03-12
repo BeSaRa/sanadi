@@ -2,6 +2,7 @@ import {PermissionsEnum} from '@app/enums/permissions-enum';
 import {EServicePermissionsEnum} from '@app/enums/e-service-permissions-enum';
 import {PermissionGroupsEnum} from '@app/enums/permission-groups-enum';
 import {PermissionGroupsMapType} from '@app/types/types';
+import {Constants} from '@helpers/constants';
 
 const sanadiPermissionsGroup: PermissionsEnum[] = [
   PermissionsEnum.SANADI_UNDER_PROCESSING_REQUESTS,
@@ -74,6 +75,204 @@ const followupPermissionsGroup: PermissionsEnum[] = [
   PermissionsEnum.INTERNAL_FOLLOWUP
 ];
 
+const consultationServicesPermissionGroup: (EServicePermissionsEnum | string)[] = [
+  EServicePermissionsEnum.CONSULTATION,
+  EServicePermissionsEnum.SEARCH_SERVICE_CONSULTATION,
+  Constants.SERVICE_OUTPUT_PERMISSION
+];
+
+const inquiryServicesPermissionGroup: (EServicePermissionsEnum | string)[] = [
+  EServicePermissionsEnum.INQUIRY,
+  EServicePermissionsEnum.SEARCH_SERVICE_INQUIRY,
+  Constants.SERVICE_OUTPUT_PERMISSION
+];
+
+const internationCooperationServicesPermissionGroup: (EServicePermissionsEnum | string)[] = [
+  EServicePermissionsEnum.INTERNATIONAL_COOPERATION,
+  EServicePermissionsEnum.SEARCH_SERVICE_INTERNATIONAL_COOPERATION,
+  Constants.SERVICE_OUTPUT_PERMISSION
+];
+
+const projectImplementationServicesPermissionGroup: (EServicePermissionsEnum | string)[] = [
+  EServicePermissionsEnum.PROJECT_IMPLEMENTATION,
+  EServicePermissionsEnum.SEARCH_SERVICE_PROJECT_IMPLEMENTATION,
+  Constants.SERVICE_OUTPUT_PERMISSION
+];
+
+const projectFundraisingServicesPermissionGroup: (EServicePermissionsEnum | string)[] = [
+  EServicePermissionsEnum.PROJECT_FUNDRAISING,
+  EServicePermissionsEnum.SEARCH_SERVICE_PROJECT_FUNDRAISING,
+  Constants.SERVICE_OUTPUT_PERMISSION
+];
+
+const projectModelServicesPermissionGroup: (EServicePermissionsEnum | string)[] = [
+  EServicePermissionsEnum.EXTERNAL_PROJECT_MODELS,
+  EServicePermissionsEnum.SEARCH_SERVICE_EXTERNAL_PROJECT_MODELS,
+  Constants.SERVICE_OUTPUT_PERMISSION
+];
+
+const internalProjectLicenseServicesPermissionGroup: (EServicePermissionsEnum | string)[] = [
+  EServicePermissionsEnum.INTERNAL_PROJECT_LICENSE,
+  EServicePermissionsEnum.SEARCH_SERVICE_INTERNAL_PROJECT_LICENSE,
+  Constants.SERVICE_OUTPUT_PERMISSION
+];
+
+const generalProcessNotificationServicesPermissionGroup: (EServicePermissionsEnum | string)[] = [
+  EServicePermissionsEnum.GENERAL_PROCESS_NOTIFICATION,
+  EServicePermissionsEnum.SEARCH_SERVICE_GENERAL_PROCESS_NOTIFICATION,
+  Constants.SERVICE_OUTPUT_PERMISSION
+];
+
+const awarenessActivitySuggestionServicesPermissionGroup: (EServicePermissionsEnum | string)[] = [
+  EServicePermissionsEnum.AWARENESS_ACTIVITY_SUGGESTION,
+  EServicePermissionsEnum.SEARCH_SERVICE_AWARENESS_ACTIVITY_SUGGESTION,
+  Constants.SERVICE_OUTPUT_PERMISSION
+];
+
+const generalAssociationMeetingAttendanceServicesPermissionGroup: (EServicePermissionsEnum | string)[] = [
+  EServicePermissionsEnum.GENERAL_ASSOCIATION_MEETING_ATTENDANCE,
+  EServicePermissionsEnum.SEARCH_SERVICE_GENERAL_ASSOCIATION_MEETING_ATTENDANCE,
+  Constants.SERVICE_OUTPUT_PERMISSION
+];
+
+const internalBankAccountApprovalServicesPermissionGroup: (EServicePermissionsEnum | string)[] = [
+  EServicePermissionsEnum.INTERNAL_BANK_ACCOUNT_APPROVAL,
+  EServicePermissionsEnum.SEARCH_SERVICE_INTERNAL_BANK_ACCOUNT_APPROVAL,
+  Constants.SERVICE_OUTPUT_PERMISSION
+];
+
+const urgentJointReliefCampaignServicesPermissionGroup: (EServicePermissionsEnum | string)[] = [
+  EServicePermissionsEnum.URGENT_JOINT_RELIEF_CAMPAIGN,
+  EServicePermissionsEnum.SEARCH_SERVICE_URGENT_JOINT_RELIEF_CAMPAIGN,
+  Constants.SERVICE_OUTPUT_PERMISSION
+];
+
+const transferringIndividualFundsAbroadServicesPermissionGroup: (EServicePermissionsEnum | string)[] = [
+  EServicePermissionsEnum.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD,
+  EServicePermissionsEnum.SEARCH_SERVICE_TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD,
+  Constants.SERVICE_OUTPUT_PERMISSION
+];
+
+const initialExternalOfficeApprovalServicesPermissionGroup: (EServicePermissionsEnum | string)[] = [
+  EServicePermissionsEnum.INITIAL_EXTERNAL_OFFICE_APPROVAL,
+  EServicePermissionsEnum.SEARCH_SERVICE_INITIAL_EXTERNAL_OFFICE_APPROVAL,
+  Constants.SERVICE_OUTPUT_PERMISSION
+];
+
+const finalExternalOfficeApprovalServicesPermissionGroup: (EServicePermissionsEnum | string)[] = [
+  EServicePermissionsEnum.FINAL_EXTERNAL_OFFICE_APPROVAL,
+  EServicePermissionsEnum.SEARCH_SERVICE_FINAL_EXTERNAL_OFFICE_APPROVAL,
+  Constants.SERVICE_OUTPUT_PERMISSION
+];
+
+const partnerApprovalServicesPermissionGroup: (EServicePermissionsEnum | string)[] = [
+  EServicePermissionsEnum.PARTNER_APPROVAL,
+  EServicePermissionsEnum.SEARCH_SERVICE_PARTNER_APPROVAL,
+  Constants.SERVICE_OUTPUT_PERMISSION
+];
+
+const employmentServicesPermissionGroup: (EServicePermissionsEnum | string)[] = [
+  EServicePermissionsEnum.EMPLOYMENT,
+  EServicePermissionsEnum.SEARCH_SERVICE_EMPLOYMENT,
+  Constants.SERVICE_OUTPUT_PERMISSION
+];
+
+const charityOrganizationUpdateServicesPermissionGroup: (EServicePermissionsEnum | string)[] = [
+  EServicePermissionsEnum.CHARITY_ORGANIZATION_UPDATE,
+  EServicePermissionsEnum.SEARCH_SERVICE_CHARITY_ORGANIZATION_UPDATE,
+  Constants.SERVICE_OUTPUT_PERMISSION
+];
+
+const npoManagementServicesPermissionGroup: (EServicePermissionsEnum | string)[] = [
+  EServicePermissionsEnum.NPO_MANAGEMENT,
+  EServicePermissionsEnum.SEARCH_SERVICE_NPO_MANAGEMENT,
+  Constants.SERVICE_OUTPUT_PERMISSION
+];
+
+const foreignCountriesProjectServicesPermissionGroup: (EServicePermissionsEnum | string)[] = [
+  EServicePermissionsEnum.FOREIGN_COUNTRIES_PROJECTS,
+  EServicePermissionsEnum.SEARCH_SERVICE_FOREIGN_COUNTRIES_PROJECTS,
+  Constants.SERVICE_OUTPUT_PERMISSION
+];
+
+const externalOrgAffiliationServicesPermissionGroup: (EServicePermissionsEnum | string)[] = [
+  EServicePermissionsEnum.EXTERNAL_ORG_AFFILIATION_REQUEST,
+  EServicePermissionsEnum.SEARCH_SERVICE_EXTERNAL_ORG_AFFILIATION_REQUEST,
+  Constants.SERVICE_OUTPUT_PERMISSION
+];
+
+const organizationEntitiesSupportServicesPermissionGroup: (EServicePermissionsEnum | string)[] = [
+  EServicePermissionsEnum.ORGANIZATION_ENTITIES_SUPPORT,
+  EServicePermissionsEnum.SEARCH_SERVICE_ORGANIZATION_ENTITIES_SUPPORT,
+  Constants.SERVICE_OUTPUT_PERMISSION
+];
+
+const coordinationWithOrganizationRequestServicesPermissionGroup: (EServicePermissionsEnum | string)[] = [
+  EServicePermissionsEnum.COORDINATION_WITH_ORGANIZATION_REQUEST,
+  EServicePermissionsEnum.SEARCH_SERVICE_COORDINATION_WITH_ORGANIZATION_REQUEST,
+  Constants.SERVICE_OUTPUT_PERMISSION
+];
+
+const customsExemptionRemittanceServicesPermissionGroup: (EServicePermissionsEnum | string)[] = [
+  EServicePermissionsEnum.CUSTOMS_EXEMPTION_REMITTANCE,
+  EServicePermissionsEnum.SEARCH_SERVICE_CUSTOMS_EXEMPTION_REMITTANCE,
+  Constants.SERVICE_OUTPUT_PERMISSION
+];
+
+const financialTransfersLicensingServicesPermissionGroup: (EServicePermissionsEnum | string)[] = [
+  EServicePermissionsEnum.FINANCIAL_TRANSFERS_LICENSING,
+  EServicePermissionsEnum.SEARCH_SERVICE_FINANCIAL_TRANSFERS_LICENSING,
+  Constants.SERVICE_OUTPUT_PERMISSION
+];
+
+const collectionApprovalServicesPermissionGroup: (EServicePermissionsEnum | string)[] = [
+  EServicePermissionsEnum.COLLECTION_APPROVAL,
+  EServicePermissionsEnum.SEARCH_SERVICE_COLLECTION_APPROVAL,
+  Constants.SERVICE_OUTPUT_PERMISSION
+];
+
+const collectorApprovalServicesPermissionGroup: (EServicePermissionsEnum | string)[] = [
+  EServicePermissionsEnum.COLLECTOR_LICENSING,
+  EServicePermissionsEnum.SEARCH_SERVICE_COLLECTOR_LICENSING,
+  Constants.SERVICE_OUTPUT_PERMISSION
+];
+
+const fundraisingLicensingServicesPermissionGroup: (EServicePermissionsEnum | string)[] = [
+  EServicePermissionsEnum.FUNDRAISING_LICENSING,
+  EServicePermissionsEnum.SEARCH_SERVICE_FUNDRAISING_LICENSING,
+  Constants.SERVICE_OUTPUT_PERMISSION
+];
+
+const urgentInterventionLicensingServicesPermissionGroup: (EServicePermissionsEnum | string)[] = [
+  EServicePermissionsEnum.URGENT_INTERVENTION_LICENSING,
+  EServicePermissionsEnum.SEARCH_SERVICE_URGENT_INTERVENTION_LICENSING,
+  Constants.SERVICE_OUTPUT_PERMISSION
+];
+
+const urgentInterventionAnnouncementServicesPermissionGroup: (EServicePermissionsEnum | string)[] = [
+  EServicePermissionsEnum.URGENT_INTERVENTION_ANNOUNCEMENT,
+  EServicePermissionsEnum.SEARCH_SERVICE_URGENT_INTERVENTION_ANNOUNCEMENT,
+  Constants.SERVICE_OUTPUT_PERMISSION
+];
+
+const urgentInterventionClosureServicesPermissionGroup: (EServicePermissionsEnum | string)[] = [
+  EServicePermissionsEnum.URGENT_INTERVENTION_CLOSURE,
+  EServicePermissionsEnum.SEARCH_SERVICE_URGENT_INTERVENTION_CLOSURE,
+  Constants.SERVICE_OUTPUT_PERMISSION
+];
+
+const urgentInterventionFinancialNotificationServicesPermissionGroup: (EServicePermissionsEnum | string)[] = [
+  EServicePermissionsEnum.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION,
+  EServicePermissionsEnum.SEARCH_SERVICE_URGENT_INTERVENTION_FINANCIAL_NOTIFICATION,
+  Constants.SERVICE_OUTPUT_PERMISSION
+];
+
+const urgentInterventionLicenseFollowupServicesPermissionGroup: (EServicePermissionsEnum | string)[] = [
+  EServicePermissionsEnum.URGENT_INTERVENTION_LICENSE_FOLLOWUP,
+  EServicePermissionsEnum.SEARCH_SERVICE_URGENT_INTERVENTION_LICENSE_FOLLOWUP,
+  Constants.SERVICE_OUTPUT_PERMISSION
+];
+
 const generalServicesPermissionsGroup: EServicePermissionsEnum[] = [
   EServicePermissionsEnum.INQUIRY,
   EServicePermissionsEnum.CONSULTATION,
@@ -130,6 +329,41 @@ const giveUsersPermissions: PermissionsEnum[] = [
 ];
 
 const permissionGroups: PermissionGroupsMapType = {
+  [PermissionGroupsEnum.CONSULTATION_SERVICES_PERMISSION_GROUP]: consultationServicesPermissionGroup,
+  [PermissionGroupsEnum.INQUIRY_SERVICES_PERMISSION_GROUP]: inquiryServicesPermissionGroup,
+  [PermissionGroupsEnum.INTERNATIONAL_COOP_SERVICES_PERMISSION_GROUP]: internationCooperationServicesPermissionGroup,
+  [PermissionGroupsEnum.PROJECT_IMPLEMENTATION_SERVICES_PERMISSION_GROUP]: projectImplementationServicesPermissionGroup,
+  [PermissionGroupsEnum.PROJECT_FUNDRAISING_SERVICES_PERMISSION_GROUP]: projectFundraisingServicesPermissionGroup,
+  [PermissionGroupsEnum.PROJECT_MODEL_SERVICES_PERMISSION_GROUP]: projectModelServicesPermissionGroup,
+  [PermissionGroupsEnum.INTERNAL_PROJECT_LICENSE_SERVICES_PERMISSION_GROUP]: internalProjectLicenseServicesPermissionGroup,
+  [PermissionGroupsEnum.GENERAL_PROCESS_NOTIFICATION_SERVICES_PERMISSION_GROUP]: generalProcessNotificationServicesPermissionGroup,
+  [PermissionGroupsEnum.AWARENESS_ACTIVITY_SUGGESTION_SERVICES_PERMISSION_GROUP]: awarenessActivitySuggestionServicesPermissionGroup,
+  [PermissionGroupsEnum.GENERAL_ASSOCIATION_MEETING_ATTENDANCE_SERVICES_PERMISSION_GROUP]: generalAssociationMeetingAttendanceServicesPermissionGroup,
+  [PermissionGroupsEnum.INTERNAL_BANK_ACCOUNT_APPROVAL_SERVICES_PERMISSION_GROUP]: internalBankAccountApprovalServicesPermissionGroup,
+  [PermissionGroupsEnum.URGENT_JOINT_RELIEF_CAMPAIGN_SERVICES_PERMISSION_GROUP]: urgentJointReliefCampaignServicesPermissionGroup,
+  [PermissionGroupsEnum.TRANSFERRING_INDIVIDUAL_FUNDS_ABROAD_SERVICES_PERMISSION_GROUP]: transferringIndividualFundsAbroadServicesPermissionGroup,
+  [PermissionGroupsEnum.INITIAL_EXTERNAL_OFFICE_APPROVAL_SERVICES_PERMISSION_GROUP]: initialExternalOfficeApprovalServicesPermissionGroup,
+  [PermissionGroupsEnum.FINAL_EXTERNAL_OFFICE_APPROVAL_SERVICES_PERMISSION_GROUP]: finalExternalOfficeApprovalServicesPermissionGroup,
+  [PermissionGroupsEnum.PARTNER_APPROVAL_SERVICES_PERMISSION_GROUP]: partnerApprovalServicesPermissionGroup,
+  [PermissionGroupsEnum.EMPLOYMENT_SERVICES_PERMISSION_GROUP]: employmentServicesPermissionGroup,
+  [PermissionGroupsEnum.CHARITY_ORGANIZATION_UPDATE_SERVICES_PERMISSION_GROUP]: charityOrganizationUpdateServicesPermissionGroup,
+  [PermissionGroupsEnum.NPO_MANAGEMENT_SERVICES_PERMISSION_GROUP]: npoManagementServicesPermissionGroup,
+  [PermissionGroupsEnum.FOREIGN_COUNTRIES_PROJECTS_SERVICES_PERMISSION_GROUP]: foreignCountriesProjectServicesPermissionGroup,
+  [PermissionGroupsEnum.EXTERNAL_ORG_AFFILIATION_REQUEST_SERVICES_PERMISSION_GROUP]: externalOrgAffiliationServicesPermissionGroup,
+  [PermissionGroupsEnum.ORGANIZATION_ENTITIES_SUPPORT_SERVICES_PERMISSION_GROUP]: organizationEntitiesSupportServicesPermissionGroup,
+  [PermissionGroupsEnum.COORDINATION_WITH_ORGANIZATION_REQUEST_SERVICES_PERMISSION_GROUP]: coordinationWithOrganizationRequestServicesPermissionGroup,
+  [PermissionGroupsEnum.CUSTOMS_EXEMPTION_REMITTANCE_SERVICES_PERMISSION_GROUP]: customsExemptionRemittanceServicesPermissionGroup,
+  [PermissionGroupsEnum.FINANCIAL_TRANSFERS_LICENSING_SERVICES_PERMISSION_GROUP]: financialTransfersLicensingServicesPermissionGroup,
+  [PermissionGroupsEnum.COLLECTION_APPROVAL_SERVICES_PERMISSION_GROUP]: collectionApprovalServicesPermissionGroup,
+  [PermissionGroupsEnum.COLLECTOR_LICENSING_SERVICES_PERMISSION_GROUP]: collectorApprovalServicesPermissionGroup,
+  [PermissionGroupsEnum.FUNDRAISING_LICENSING_SERVICES_PERMISSION_GROUP]: fundraisingLicensingServicesPermissionGroup,
+  [PermissionGroupsEnum.URGENT_INTERVENTION_LICENSING_SERVICES_PERMISSION_GROUP]: urgentInterventionLicensingServicesPermissionGroup,
+  [PermissionGroupsEnum.URGENT_INTERVENTION_ANNOUNCEMENT_SERVICES_PERMISSION_GROUP]: urgentInterventionAnnouncementServicesPermissionGroup,
+  [PermissionGroupsEnum.URGENT_INTERVENTION_CLOSURE_SERVICES_PERMISSION_GROUP]: urgentInterventionClosureServicesPermissionGroup,
+  [PermissionGroupsEnum.URGENT_INTERVENTION_FINANCIAL_NOTIFICATION_SERVICES_PERMISSION_GROUP]: urgentInterventionFinancialNotificationServicesPermissionGroup,
+  [PermissionGroupsEnum.URGENT_INTERVENTION_LICENSE_FOLLOWUP_SERVICES_PERMISSION_GROUP]: urgentInterventionLicenseFollowupServicesPermissionGroup,
+
+
   [PermissionGroupsEnum.SANADI_PERMISSIONS_GROUP]: sanadiPermissionsGroup,
   [PermissionGroupsEnum.ADMIN_PERMISSIONS_GROUP]: adminPermissionsGroup,
   [PermissionGroupsEnum.MANAGE_EXTERNAL_USER_PERMISSIONS_GROUP]: externalUserPermissionsGroup,

@@ -480,7 +480,7 @@ export abstract class CaseModel<S extends BaseGenericEService<T>, T extends File
   }
 
   setItemRoute(): void {
-    this.itemRoute = '/' + this.service.getMenuItem().path;
+    this.itemRoute = '/' + this.service.getMenuItem().path + '/service';
     this.itemDetails = this.encrypt.encrypt<INavigatedItem>({
       openFrom: OpenFrom.SEARCH,
       taskId: null,

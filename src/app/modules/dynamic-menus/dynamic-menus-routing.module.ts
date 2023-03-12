@@ -9,17 +9,17 @@ const routes: Routes = [
   {
     path: ':parentId', component: DynamicMenusComponent,
     canActivate: [DynamicMenuGuard],
-    data: {checkType: DynamicMenuRouteTypeEnum.PARENT}
+    data: {dynamicMenuRouteType: DynamicMenuRouteTypeEnum.PARENT}
   },
   {
     path: ':parentId/details', component: DynamicMenuDetailsComponent,
     canActivate: [DynamicMenuGuard],
-    data: {checkType: DynamicMenuRouteTypeEnum.PARENT_DETAILS}
+    data: {dynamicMenuRouteType: DynamicMenuRouteTypeEnum.PARENT_DETAILS}
   },
   {
     path: ':parentId/details/:childId', component: DynamicMenuDetailsComponent,
     canActivate: [DynamicMenuGuard],
-    data: {checkType: DynamicMenuRouteTypeEnum.CHILD}
+    data: {dynamicMenuRouteType: DynamicMenuRouteTypeEnum.CHILD}
   }
 ];
 

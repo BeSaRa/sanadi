@@ -91,6 +91,10 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
     AdminstrationDepartmentCodes.PR1,
     AdminstrationDepartmentCodes.IN,
   ]
+  UrgentInterventionDepartmentApprovalDepartments = [
+    AdminstrationDepartmentCodes.RC,
+    AdminstrationDepartmentCodes.SVC,
+  ]
 
 
   multiSendToDepartmentWFResponseList = [
@@ -136,6 +140,8 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
         this.loadGaneralProcessNotificationApprovalDepartments()
       } else if (this.data.sendToResponse === WFResponseType.AWARENESS_ACTIVITY_SUGGESTION_SEND_TO_MULTI_DEPARTMENTS) {
         this.loadAwarenessActivatySuggestionApprovalDepartments()
+      } else if (this.data.sendToResponse === WFResponseType.URGENT_INTERVENTION_LICENSE_SEND_TO_MULTI_DEPARTMENTS) {
+        this.loadUrgentInterventionApprovalDepartments()
       } else {
         this.loadDepartments();
       }
@@ -277,6 +283,16 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
           deps.filter(dep => this.GeneralProcessDepartmentApprovalDepartments.includes(dep.code as AdminstrationDepartmentCodes))
       });
   }
+
+  loadUrgentInterventionApprovalDepartments(): void {
+    this.intDepService.loadAsLookups()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(deps => {
+        this.departments =
+          deps.filter(dep => this.UrgentInterventionDepartmentApprovalDepartments.includes(dep.code as AdminstrationDepartmentCodes))
+      });
+  }
+
 
   loadAwarenessActivatySuggestionApprovalDepartments(): void {
     this.intDepService.loadAsLookups()

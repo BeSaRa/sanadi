@@ -104,7 +104,7 @@ export class NotificationResponse extends Cloneable<NotificationResponse> {
     let inboxService: InboxService = FactoryService.getService('InboxService');
     let encrypt: EncryptionService = FactoryService.getService('EncryptionService');
     const caseType: number = Number(this.getCaseType()!);
-    this.itemRoute = '/' + inboxService.getServiceRoute(caseType);
+    this.itemRoute = '/' + inboxService.getServiceRoute(caseType) + '/service';
     this.itemDetails = encrypt.encrypt<INavigatedItem>({
       openFrom: OpenFrom.USER_INBOX,
       taskId: this.getTaskId(),

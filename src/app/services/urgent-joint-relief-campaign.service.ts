@@ -16,13 +16,13 @@ import {WFResponseType} from '@app/enums/wfresponse-type.enum';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {
   UrgentJointReliefCampaignInitialApproveTaskPopupComponent
-} from '@app/modules/projects/popups/urgent-joint-relief-campaign-initial-approve-task-popup/urgent-joint-relief-campaign-initial-approve-task-popup.component';
+} from '@app/modules/services/urgent-joint-relief-campaign/popups/urgent-joint-relief-campaign-initial-approve-task-popup/urgent-joint-relief-campaign-initial-approve-task-popup.component';
 import {
   UrgentJointReliefCampaignFinalApproveTaskPopupComponent
-} from '@app/modules/projects/popups/urgent-joint-relief-campaign-final-approve-task-popup/urgent-joint-relief-campaign-final-approve-task-popup.component';
+} from '@app/modules/services/urgent-joint-relief-campaign/popups/urgent-joint-relief-campaign-final-approve-task-popup/urgent-joint-relief-campaign-final-approve-task-popup.component';
 import {
   UrgentJointReliefCampaignOrganizationApproveTaskPopupComponent
-} from '@app/modules/projects/popups/urgent-joint-relief-campaign-organization-approve-task-popup/urgent-joint-relief-campaign-organization-approve-task-popup.component';
+} from '@app/modules/services/urgent-joint-relief-campaign/popups/urgent-joint-relief-campaign-organization-approve-task-popup/urgent-joint-relief-campaign-organization-approve-task-popup.component';
 import {InboxService} from '@services/inbox.service';
 import {UntypedFormGroup} from '@angular/forms';
 import {OrganizationOfficer} from '@app/models/organization-officer';

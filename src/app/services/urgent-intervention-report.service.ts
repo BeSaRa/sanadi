@@ -8,17 +8,13 @@ import {DialogService} from '@services/dialog.service';
 import {FactoryService} from '@services/factory.service';
 import {
   UrgentInterventionReportPopupComponent
-} from '@app/modules/urgent-intervention/popups/urgent-intervention-report-popup/urgent-intervention-report-popup.component';
+} from '@app/modules/services/urgent-intervention-license-followup/popups/urgent-intervention-report-popup/urgent-intervention-report-popup.component';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {IDialogData} from '@contracts/i-dialog-data';
-import {AdminLookup} from '@app/models/admin-lookup';
-import {DacOchaNewPopupComponent} from '@app/administration/popups/dac-ocha-new-popup/dac-ocha-new-popup.component';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {Observable, of} from 'rxjs';
-import {catchError, switchMap} from 'rxjs/operators';
+import {catchError} from 'rxjs/operators';
 import {CastResponse, CastResponseContainer} from '@decorators/cast-response';
-import {AidLookup} from '@app/models/aid-lookup';
-import {AidLookupPopupComponent} from '@app/administration/popups/aid-lookup-popup/aid-lookup-popup.component';
 
 @CastResponseContainer({
   $default: {

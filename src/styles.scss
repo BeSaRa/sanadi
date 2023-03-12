@@ -398,6 +398,10 @@ td.td-checkbox, th.td-checkbox {
 .table-row-header {
   background-color: #E8EFF0;
   font-size: .75rem;
+
+  .form-check-input {
+    font-size: 1rem;
+  }
 }
 
 tr.unread {
