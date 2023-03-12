@@ -1,4 +1,4 @@
-import { EmployeeService } from './../../../../services/employee.service';
+import { EmployeeService } from '@app/services/employee.service';
 import {Component, Inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Subject} from "rxjs";
 import {ILanguageKeys} from "@contracts/i-language-keys";
