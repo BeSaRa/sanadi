@@ -3,6 +3,7 @@ import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 import {LangService} from '@app/services/lang.service';
 import {ILanguageKeys} from '@app/interfaces/i-language-keys';
 import {BehaviorSubject} from 'rxjs';
+import {delay} from 'rxjs/operators';
 
 @Component({
   selector: 'grid-actions',
@@ -128,7 +129,7 @@ export class GridActionsComponent implements OnInit {
   }
 
   private onRecordChange() {
-    this._record.subscribe(() => {
+    this._record.pipe(delay(100)).subscribe(() => {
       this.filteredActions = this._filterActions();
     })
   }
