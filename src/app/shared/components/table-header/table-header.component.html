@@ -47,7 +47,7 @@
   </div>
   <div class="vr" *ngIf="contentRef.children.length"></div>
 
-  <button (click)="clearSort()" [tooltip]="lang.map.clear_sorting" [ngClass]="{isDisabled: !hasSort}"
+  <button *ngIf="!skipClearSort" (click)="clearSort()" [tooltip]="lang.map.clear_sorting" [ngClass]="{isDisabled: !hasSort}"
           class="btn icon-btn">
     <i class="mdi mdi-sort-variant-remove"></i>
   </button>
@@ -61,7 +61,7 @@
           class="btn icon-btn">
     <i [ngClass]="{'mdi-filter': hasFilterCriteria(), 'mdi-filter-outline': !hasFilterCriteria()}" class="mdi"></i>
   </button>
-  <div class="position-relative">
+  <div class="position-relative" *ngIf="!skipSearch">
     <i class="mdi zoom-icon mdi-magnify position-absolute translate-middle-y top-50 start-0 ms-1"></i>
     <input [formControl]="filterControl" placeholder="{{lang.map.lbl_search}}"
            class="form-control form-control-sm px-4"/>
