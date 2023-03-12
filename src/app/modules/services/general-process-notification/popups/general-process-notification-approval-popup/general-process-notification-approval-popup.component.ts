@@ -16,7 +16,6 @@ import { DialogService } from '@app/services/dialog.service';
 import { ToastService } from '@app/services/toast.service';
 import { InboxService } from '@app/services/inbox.service';
 import { CommonUtils } from '@app/helpers/common-utils';
-import { IWFResponse } from '@app/interfaces/i-w-f-response';
 
 @Component({
   selector: 'app-general-process-notification-approval-popup',
