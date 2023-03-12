@@ -1,3 +1,9 @@
+<tabs-list (onTabChange)="tabChanged($event)">
+  <tab [name]="tabsData.customMenus.name" [template]="customMenus"
+    [title]="lang.map.lbl_custom_menus"></tab>
+  <tab [name]="tabsData.defaultMenus.name" [template]="defaultMenus"
+    [title]="lang.map.lbl_default_menus"></tab>
+</tabs-list>
 <ng-template #bulk>
   <ng-container *ngIf="table">
     <app-bulk-actions *ngIf="table.selection && table.selection.selected.length"
@@ -7,94 +13,135 @@
                       [hasTableHeaderContainer]="true"></app-bulk-actions>
   </ng-container>
 </ng-template>
-<div class="row">
-  <div class="col-12">
-    <app-table #table
-               [filter]="filterControl.value"
-               [paginator]="paginator"
-               [useSearchToFilter]="true"
-               [selectable]="true"
-               [data]="models"
-               [columns]="displayedColumns"
-               sortableTable>
-      <table cdk-table [dataSource]="table.dataSource" class="table table-striped table-bordered caption-top">
-        <ng-container cdkColumnDef="extra-header">
-          <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
-            <table-header tableTitle="menu_items"
-                          [reload$]="reload$"
-                          [add$]="add$"
-                          (textChange)="filterControl.setValue($event)"
-                          [allowAdd]="!readonly"
-                          [sort]="table.dataSource.sort"
-                          >
-              <ng-container *ngTemplateOutlet="bulk"></ng-container>
-            </table-header>
-          </th>
-        </ng-container>
-        <ng-container cdkColumnDef="rowSelection">
-          <th class="select-all-td" cdk-header-cell *cdkHeaderCellDef>
-            <input type="checkbox" [disabled]="table.filter"
-                   [indeterminate]="table.selection.hasValue() && !table.allSelected()"
-                   (change)="$event ? table.toggleAll() : null"
-                   [checked]="table.selection.hasValue() && table.allSelected()"
-                   class="form-check-input"></th>
-          <td cdk-cell *cdkCellDef="let row">
-            <input type="checkbox"
-                   (click)="$event.stopPropagation()"
-                   [checked]="table.selection.isSelected(row)"
-                   (change)="$event ? table.selection.toggle(row) : null"
-                   class="form-check-input"></td>
-        </ng-container>
-        <ng-container *ngFor="let column of searchColumns" [cdkColumnDef]="column">
-          <th cdk-header-cell *cdkHeaderCellDef>
-            <header-search-field (filterChange)="columnFilter$.next($event)" [form]="columnFilterForm"
-                                     [searchConfig]="searchColumnsConfig" [column]="column">
-            </header-search-field>
-          </th>
-        </ng-container>
-        <ng-container cdkColumnDef="arName">
-          <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.arabic_name}}</th>
-          <td cdk-cell *cdkCellDef="let row"> {{row.arName}} </td>
-        </ng-container>
-        <ng-container cdkColumnDef="enName">
-          <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.english_name}}</th>
-          <td cdk-cell *cdkCellDef="let row"> {{row.enName}} </td>
-        </ng-container>
-        <ng-container cdkColumnDef="menuType">
-          <th cdk-header-cell sortable-header *cdkHeaderCellDef [sortParamAsFullItem]="true"
-              [sortCallback]="sortingCallbacks.menuType"> {{lang.map.menu_type}}</th>
-          <td cdk-cell *cdkCellDef="let row"> {{row.menuTypeInfo ? row.menuTypeInfo.getName() : '' }} </td>
-        </ng-container>
-        <ng-container cdkColumnDef="status">
-          <th cdk-header-cell sortable-header *cdkHeaderCellDef [sortParamAsFullItem]="true"
-              [sortCallback]="sortingCallbacks.statusInfo"> {{lang.map.lbl_status}}</th>
-          <td cdk-cell *cdkCellDef="let row"> {{(row.statusInfo ? row.statusInfo.getName() : '')}} </td>
-        </ng-container>
-        <ng-container cdkColumnDef="actions">
-          <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
-          <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">
-            <grid-actions [record]="row" [actions]="actions" [itemIndex]="itemIndex">
-              <span afterTemplate class="form-check form-switch switch-action"
-                    *ngIf="!readonly && row.status !== commonStatusEnum.RETIRED && (!parent || parent.isActive())"
-                    style="top: auto">
-                <input class="form-check-input" type="checkbox"
-                       [checked]="row.status == commonStatusEnum.ACTIVATED"
-                       tooltip="{{row.status == commonStatusEnum.ACTIVATED ? lang.map.btn_deactivate : lang.map.btn_activate}}"
-                       (change)="toggleStatus(row)">
-              </span>
-            </grid-actions>
-          </td>
-        </ng-container>
-        <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
-        <tr cdk-header-row *cdkHeaderRowDef="searchColumns"></tr>
-        <tr cdk-header-row *cdkHeaderRowDef="displayedColumns" class="table-row-header"></tr>
-        <tr cdk-row (contextmenu)="menu.open($event , row)" *cdkRowDef="let row; columns: displayedColumns;"></tr>
-        <tr *cdkNoDataRow>
-          <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
-        </tr>
-      </table>
-    </app-table>
-    <app-paginator #paginator (pageChange)="pageChange($event)" [length]="count" [backend]="true"></app-paginator>
-    <context-menu-item #menu [actions]="actions"></context-menu-item>
+<ng-template #customMenus>
+  <div class="row">
+    <div class="col-12">
+      <app-table #table
+                  [filter]="filterControl.value"
+                  [paginator]="paginator"
+                  [useSearchToFilter]="true"
+                  [selectable]="true"
+                  [data]="models"
+                  [columns]="displayedColumns"
+                  sortableTable>
+        <table cdk-table [dataSource]="table.dataSource" class="table table-striped table-bordered caption-top">
+          <ng-container cdkColumnDef="extra-header">
+            <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+              <table-header tableTitle="menu_items"
+                            [reload$]="reload$"
+                            [add$]="add$"
+                            (textChange)="filterControl.setValue($event)"
+                            [customTemplate]="bulk"
+                            [allowAdd]="!readonly"
+                            ></table-header>
+            </th>
+          </ng-container>
+          <ng-container cdkColumnDef="rowSelection">
+            <th class="select-all-td" cdk-header-cell *cdkHeaderCellDef>
+              <input type="checkbox" [disabled]="table.filter"
+                      [indeterminate]="table.selection.hasValue() && !table.allSelected()"
+                      (change)="$event ? table.toggleAll() : null"
+                      [checked]="table.selection.hasValue() && table.allSelected()"
+                      class="form-check-input"></th>
+            <td cdk-cell *cdkCellDef="let row">
+              <input type="checkbox"
+                      (click)="$event.stopPropagation()"
+                      [checked]="table.selection.isSelected(row)"
+                      (change)="$event ? table.selection.toggle(row) : null"
+                      class="form-check-input"></td>
+          </ng-container>
+          <ng-container cdkColumnDef="arName">
+            <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.arabic_name}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.arName}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="enName">
+            <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.english_name}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.enName}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="menuType">
+            <th cdk-header-cell sortable-header *cdkHeaderCellDef [sortParamAsFullItem]="true"
+            [sortCallback]="sortingCallbacks.menuType"> {{lang.map.menu_type}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.menuTypeInfo ? row.menuTypeInfo.getName() : '' }} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="status">
+            <th cdk-header-cell sortable-header *cdkHeaderCellDef [sortParamAsFullItem]="true"
+                [sortCallback]="sortingCallbacks.statusInfo"> {{lang.map.lbl_status}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{(row.statusInfo ? row.statusInfo.getName() : '')}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="actions">
+            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
+            <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">
+              <grid-actions [record]="row" [actions]="actions" [itemIndex]="itemIndex">
+                <span afterTemplate class="form-check form-switch switch-action"
+                      *ngIf="!readonly && row.status !== commonStatusEnum.RETIRED && (!parent || parent.isActive())"
+                      style="top: auto">
+                  <input class="form-check-input" type="checkbox"
+                          [checked]="row.status == commonStatusEnum.ACTIVATED"
+                          tooltip="{{row.status == commonStatusEnum.ACTIVATED ? lang.map.btn_deactivate : lang.map.btn_activate}}"
+                          (change)="toggleStatus(row)">
+                </span>
+              </grid-actions>
+            </td>
+          </ng-container>
+          <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
+          <tr cdk-header-row *cdkHeaderRowDef="displayedColumns" class="table-row-header"></tr>
+          <tr cdk-row (contextmenu)="menu.open($event , row)" *cdkRowDef="let row; columns: displayedColumns;"></tr>
+          <tr *cdkNoDataRow>
+            <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
+          </tr>
+        </table>
+      </app-table>
+      <app-paginator #paginator (pageChange)="pageChange($event)" [length]="count" [backend]="true"></app-paginator>
+      <context-menu-item #menu [actions]="actions"></context-menu-item>
+    </div>
   </div>
-</div>
+</ng-template>
+<ng-template #defaultMenus>
+  <div class="row">
+    <div class="col-12">
+      <app-table #defaultParentTable
+                  [filter]="filterControl.value"
+                  [useSearchToFilter]="true"
+                  [selectable]="true"
+                  [data]="defaultParents"
+                  [columns]="defaultParentsColumns"
+                  sortableTable>
+        <table cdk-table [dataSource]="defaultParentTable.dataSource" class="table table-striped table-bordered caption-top">
+          <ng-container cdkColumnDef="extra-header">
+            <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+              <table-header tableTitle="menu_items"
+                            (textChange)="filterControl.setValue($event)"
+                            [customTemplate]="bulk"
+                            [allowAdd]="false"
+                            ></table-header>
+            </th>
+          </ng-container>
+          <ng-container cdkColumnDef="arName">
+            <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.arabic_name}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.arName}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="enName">
+            <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.english_name}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.enName}} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="actions">
+            <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
+            <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">
+              <grid-actions [record]="row" [actions]="defaultParentsActions" [itemIndex]="itemIndex">
+              </grid-actions>
+            </td>
+          </ng-container>
+          <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
+          <tr cdk-header-row *cdkHeaderRowDef="defaultParentsColumns" class="table-row-header"></tr>
+          <tr cdk-row (contextmenu)="defaultParentMenu.open($event , row)" *cdkRowDef="let row; columns: defaultParentsColumns;"></tr>
+          <tr *cdkNoDataRow>
+            <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
+          </tr>
+        </table>
+      </app-table>
+      <context-menu-item #defaultParentMenu [actions]="defaultParentsActions"></context-menu-item>
+    </div>
+  </div>
+</ng-template>
+
+
