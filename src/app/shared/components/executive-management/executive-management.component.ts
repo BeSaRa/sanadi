@@ -95,8 +95,7 @@ export class ExecutiveManagementComponent implements OnInit {
       type: 'action',
       icon: ActionIconsEnum.VIEW,
       label: 'view',
-      onClick: (item: ExecutiveManagement) => this.view(item),
-      show: (_item: ExecutiveManagement) => this.readonly
+      onClick: (item: ExecutiveManagement) => this.view(item)
     }
   ];
   sortingCallbacks = {

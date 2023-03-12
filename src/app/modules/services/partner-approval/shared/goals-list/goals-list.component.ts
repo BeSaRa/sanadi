@@ -126,7 +126,6 @@ export class GoalsListComponent implements OnInit {
       icon: ActionIconsEnum.VIEW,
       label: 'view',
       onClick: (item: GoalList) => this.view(item),
-      show: (_item: GoalList) => this.readonly,
     },
   ];
   sortingCallbacks = {

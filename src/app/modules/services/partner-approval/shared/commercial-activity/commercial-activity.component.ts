@@ -87,7 +87,6 @@ actions: IMenuItem<CommercialActivity>[] = [
     icon: ActionIconsEnum.VIEW,
     label: 'view',
     onClick: (item: CommercialActivity) => this.view(item),
-    show: (_item: CommercialActivity) => this.readonly
   }
 ];
 

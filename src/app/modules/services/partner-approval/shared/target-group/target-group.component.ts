@@ -75,7 +75,6 @@ export class TargetGroupComponent implements OnInit, OnDestroy {
       icon: ActionIconsEnum.VIEW,
       label: 'view',
       onClick: (item: TargetGroup) => this.view(item),
-      show: (_item: TargetGroup) => this.readonly
     }
   ];
 

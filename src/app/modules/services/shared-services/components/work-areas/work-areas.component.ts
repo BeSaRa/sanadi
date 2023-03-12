@@ -1,3 +1,5 @@
+import { ActionIconsEnum } from '@app/enums/action-icons-enum';
+import { IMenuItem } from './../../../../context-menu/interfaces/i-menu-item';
 import { Component, Input } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { ListModelComponent } from '@app/generics/ListModel-component';
@@ -35,6 +37,31 @@ export class WorkAreasComponent extends ListModelComponent<WorkArea> {
       return CommonUtils.getSortValue(value1, value2, dir.direction);
     },
   }
+  actions: IMenuItem<WorkArea>[] = [
+    // edit
+    {
+      type: 'action',
+      icon: ActionIconsEnum.EDIT,
+      label: 'btn_edit',
+      onClick: (item: WorkArea) => this.selectOne(item),
+      show: (_item: WorkArea) => !this.readonly
+    },
+    // delete
+    {
+      type: 'action',
+      icon: ActionIconsEnum.DELETE,
+      label: 'btn_delete',
+      onClick: (item: WorkArea) => this.removeOne(item),
+      show: (_item: WorkArea) => !this.readonly
+    },
+    // view
+    {
+      type: 'action',
+      icon: ActionIconsEnum.VIEW,
+      label: 'view',
+      onClick: (item: WorkArea) => this.selectOne(item),
+    }
+  ];
   constructor(private fb: UntypedFormBuilder, public lang: LangService) {
     super(WorkArea);
 

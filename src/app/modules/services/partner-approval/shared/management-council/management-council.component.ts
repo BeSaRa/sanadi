@@ -84,7 +84,6 @@ export class ManagementCouncilComponent implements OnInit, OnDestroy {
       icon: ActionIconsEnum.VIEW,
       label: 'view',
       onClick: (item: ManagementCouncil) => this.view(item),
-      show: (_item: ManagementCouncil) => this.readonly
     }
   ];
   sortingCallbacks = {

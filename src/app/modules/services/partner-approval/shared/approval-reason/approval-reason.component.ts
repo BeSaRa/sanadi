@@ -76,8 +76,7 @@ export class ApprovalReasonComponent implements OnInit, OnDestroy {
       type: 'action',
       icon: ActionIconsEnum.VIEW,
       label: 'view',
-      onClick: (item: ApprovalReason) => this.view(item),
-      show: (_item: ApprovalReason) => this.readonly
+      onClick: (item: ApprovalReason) => this.view(item)
     }
   ];
 
