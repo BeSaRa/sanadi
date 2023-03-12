@@ -1938,4 +1938,6 @@ export interface ILanguageKeys {
   btn_info_cancel_task: string;
   previous: string;
   btn_info_previous: string;
+  lbl_custom_menus:string;
+  lbl_default_menus:string;
 }

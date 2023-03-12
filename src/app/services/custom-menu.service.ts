@@ -1,3 +1,4 @@
+import { CustomMenuDefaultsPopupComponent } from './../administration/popups/custom-menu-defaults-popup/custom-menu-defaults-popup.component';
 import {ComponentType} from '@angular/cdk/portal';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Injectable} from '@angular/core';
@@ -180,7 +181,13 @@ export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> 
       })
     );
   }
-
+  openDefaultChildrenViewDialog( item:MenuItem): Observable<DialogRef> {
+    return of(this.dialog.show(CustomMenuDefaultsPopupComponent, {
+       parent: item,
+      operation: OperationTypes.VIEW,
+      selectedTab: 'sub',
+    }));
+  }
   updateStatus(recordId: number, newStatus: CommonStatusEnum) {
     return newStatus === CommonStatusEnum.ACTIVATED ? this._activate(recordId) : this._deactivate(recordId);
   }
