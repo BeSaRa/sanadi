@@ -101,7 +101,7 @@
 <ng-template #coordinationAndSupportClassificationTemplate>
   <admin-lookup-list #coordinationAndSupportClassificationComponent
     [adminLookupTypeId]="adminLookupTypeEnum.COORDINATION_SUPPORT_CLASSIFICATION"
-    (onReady)="setLookupComponentMap($event, coordinationAndSupportClassificationComponent)">
+    (onReady)="setLookupComponentMap($event, coordinationAndSupportClassificationComponent)" [deletable]="true">
   </admin-lookup-list>
 </ng-template>
 <ng-template #resolutionsIssuedTemplate>
