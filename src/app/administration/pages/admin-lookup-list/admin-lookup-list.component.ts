@@ -178,6 +178,7 @@ export class AdminLookupListComponent implements OnInit, AfterViewInit, OnDestro
 
   private _afterReload() {
     this.table && this.table.clearSelection();
+    this.filterControl.setValue(this.filterControl.value);
   }
 
   private _getSubRecordsRequest() {
