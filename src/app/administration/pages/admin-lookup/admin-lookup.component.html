@@ -111,7 +111,7 @@
 </ng-template>
 <ng-template #penaltiesDecisionsTemplate>
   <admin-lookup-list #penaltiesDecisionsComponent [adminLookupTypeId]="adminLookupTypeEnum.PENALTIES_DECISION"
-    (onReady)="setLookupComponentMap($event, penaltiesDecisionsComponent)">
+    (onReady)="setLookupComponentMap($event, penaltiesDecisionsComponent)" [deletable]="true">
   </admin-lookup-list>
 </ng-template>
 <ng-template #generalProcessClassificationTemplate>
