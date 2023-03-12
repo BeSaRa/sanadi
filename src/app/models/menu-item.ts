@@ -51,6 +51,7 @@ export class MenuItem extends Cloneable<MenuItem> {
   employeeService: EmployeeService;
   configurationService: ConfigurationService;
   data?: IKeyValue;
+  defaultId?:number;
 
   constructor() {
     super()
