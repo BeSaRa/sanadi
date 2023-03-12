@@ -149,6 +149,10 @@ export class TableComponent implements OnInit, OnDestroy {
     this.selection && this.selection.clear();
   }
 
+  hasSelectedRecords(): boolean {
+    return !this.selection ? false : this.selection.selected.length > 0;
+  }
+
   /**
    * @description Gets the actual index of item in table
    * It will not consider the sorting/searching on table
