@@ -77,8 +77,7 @@ export class ContactOfficerComponent implements OnInit, OnDestroy {
       type: 'action',
       icon: ActionIconsEnum.VIEW,
       label: 'view',
-      onClick: (item: ContactOfficer) => this.view(item),
-      show: (_item: ContactOfficer) => this.readonly
+      onClick: (item: ContactOfficer) => this.view(item)
     }
   ];
 

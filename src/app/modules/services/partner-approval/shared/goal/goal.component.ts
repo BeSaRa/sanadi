@@ -119,7 +119,6 @@ export class GoalComponent implements OnInit, OnDestroy {
       icon: ActionIconsEnum.VIEW,
       label: 'view',
       onClick: (item: Goal) => this.view(item),
-      show: (_item: Goal) => this.readonly,
     },
   ];
 
