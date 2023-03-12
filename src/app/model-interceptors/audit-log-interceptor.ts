@@ -17,6 +17,7 @@ export class AuditLogInterceptor implements IModelInterceptor<AuditLog>{
   send(model: Partial<AuditLog>): Partial<AuditLog> {
     delete model.statusDateModifiedString;
     delete model.updatedOnString;
+    delete model.searchFields;
     return model;
   }
 }

@@ -62,7 +62,7 @@
       </div>
     </ng-template>
     <ng-template #servicesTabTemplate>
-      <div class="col d-flex justify-content-start align-items-center flex-row mb-3">
+      <!--<div class="col d-flex justify-content-start align-items-center flex-row mb-3">
         <h1 class="h6 text-primary">{{lang.map.lbl_services}}</h1>
         <div *ngIf="!readonly">
           <button class="btn icon-btn text-primary" [tooltip]="lang.map.btn_reload" (click)="reload()"><i
@@ -72,14 +72,25 @@
           <button (click)="addServiceData()" class="btn icon-btn text-primary" [tooltip]="lang.map.btn_add"><i
             class="mdi mdi-plus-box"></i></button>
         </div>
-      </div>
+      </div>-->
       <div class="row">
         <div class="col-12">
           <div class="table-responsive">
             <app-table #table sortableTable
                        [columns]="serviceDataColumns"
+                       [filter]="filterControl.value"
+                       [searchFieldsName]="'searchFieldsAttachmentTypePopup'"
+                       [useSearchToFilter]="true"
                        [data]="serviceDataList">
               <table class="table table-striped table-bordered caption-top" [dataSource]="table.dataSource" cdk-table>
+                <ng-container cdkColumnDef="extra-header">
+                  <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+                    <table-header tableTitle="lbl_services"
+                                  (textChange)="filterControl.setValue($event)"
+                                  [customTemplate]="headerTemplate"
+                    ></table-header>
+                  </th>
+                </ng-container>
                 <ng-container cdkColumnDef="enName">
                   <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.english_name}}</th>
                   <td cdk-cell *cdkCellDef="let row">{{row.serviceInfo.enName}}</td>
@@ -107,8 +118,8 @@
                     <grid-actions [record]="row" [actions]="serviceDataActions" [itemIndex]="itemIndex"></grid-actions>
                   </td>
                 </ng-container>
-
-                <tr cdk-header-row *cdkHeaderRowDef="serviceDataColumns"></tr>
+                <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
+                <tr cdk-header-row *cdkHeaderRowDef="serviceDataColumns" class="table-row-header"></tr>
                 <tr cdk-row *cdkRowDef="let row; columns: serviceDataColumns;"></tr>
                 <tr *cdkNoDataRow>
                   <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
@@ -132,3 +143,14 @@
           class="btn btn-primary">{{lang.map.btn_save}}</button>
   <button [dialogClose]="model" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
 </div>
+
+<ng-template #headerTemplate>
+  <div class="d-flex flex-row">
+    <div *ngIf="!readonly">
+      <button (click)="addServiceData()" class="btn icon-btn" [tooltip]="lang.map.btn_add"><i
+        class="mdi {{actionIconsEnum.ADD_SIMPLE}}"></i></button>
+      <button class="btn icon-btn" [tooltip]="lang.map.btn_reload" (click)="reload()"><i
+        class="mdi {{actionIconsEnum.RELOAD}}"></i></button>
+    </div>
+  </div>
+</ng-template>

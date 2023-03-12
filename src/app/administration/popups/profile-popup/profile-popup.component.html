@@ -177,7 +177,7 @@
                 <grid-actions [record]="row" [actions]="actions" [itemIndex]="itemIndex"></grid-actions>
               </td>
             </ng-container>
-            <tr cdk-header-row *cdkHeaderRowDef="profileServicesColumns"></tr>
+            <tr cdk-header-row *cdkHeaderRowDef="profileServicesColumns" class="table-row-header"></tr>
             <tr cdk-row *cdkRowDef="let row; columns: profileServicesColumns"></tr>
             <tr *cdkNoDataRow>
               <td colspan="100" class="text-center">{{ lang.map.no_records_to_display }}</td>
@@ -224,7 +224,7 @@
                 <grid-actions [record]="row" [actions]="profileCountryActions" [itemIndex]="itemIndex"></grid-actions>
               </td>
             </ng-container>
-            <tr cdk-header-row *cdkHeaderRowDef="profileCountriesColumns"></tr>
+            <tr cdk-header-row *cdkHeaderRowDef="profileCountriesColumns" class="table-row-header"></tr>
             <tr cdk-row *cdkRowDef="let row; columns: profileCountriesColumns"></tr>
             <tr *cdkNoDataRow>
               <td colspan="100" class="text-center">{{ lang.map.no_records_to_display }}</td>
