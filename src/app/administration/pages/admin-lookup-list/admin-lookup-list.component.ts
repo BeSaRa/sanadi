@@ -32,6 +32,7 @@ export class AdminLookupListComponent implements OnInit, AfterViewInit, OnDestro
   @Input() parentId?: number;
   @Input() readonly: boolean = false;
   @Input() isRootLevel: boolean = true;
+  @Input() deletable:boolean = false;
   @Output() onReady: EventEmitter<AdminLookupTypeEnum> = new EventEmitter<AdminLookupTypeEnum>();
 
   constructor(public lang: LangService,
@@ -132,6 +133,15 @@ export class AdminLookupListComponent implements OnInit, AfterViewInit, OnDestro
       onClick: (item: AdminLookup) => this.toggleStatus(item),
       show: (item) => {
         return !this.readonly && item.status === CommonStatusEnum.ACTIVATED;
+      }
+    },
+    {
+      type: 'action',
+      icon: ActionIconsEnum.DELETE_TRASH,
+      label: 'btn_delete',
+      onClick: (item: AdminLookup) => this.delete(item),
+      show: () => {
+        return !this.readonly && this.deletable;
       }
     }
   ];
@@ -316,6 +326,20 @@ export class AdminLookupListComponent implements OnInit, AfterViewInit, OnDestro
         this.reload$.next(null);
       }, () => {
         this.toast.error(this.lang.map.msg_status_x_updated_fail.change({x: model.getName()}));
+        this.reload$.next(null);
+      });
+  }
+  delete(model: AdminLookup, $event?: MouseEvent) {
+    if (this.readonly) {
+      $event?.preventDefault();
+      return;
+    }
+    model.delete(model.id).pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.toast.success(this.lang.map.msg_delete_success.change({x: model.getName()}));
+        this.reload$.next(null);
+      }, () => {
+        this.toast.error(this.lang.map.msg_delete_fail.change({x: model.getName()}));
         this.reload$.next(null);
       });
   }

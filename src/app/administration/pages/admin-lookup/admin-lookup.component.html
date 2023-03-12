@@ -70,7 +70,7 @@
 </ng-template>
 <ng-template #activityTypeTemplate>
   <admin-lookup-list #activityTypeListComponent [adminLookupTypeId]="adminLookupTypeEnum.ACTIVITY_TYPE"
-    (onReady)="setLookupComponentMap($event, activityTypeListComponent)">
+    (onReady)="setLookupComponentMap($event, activityTypeListComponent)" [deletable]="true">
   </admin-lookup-list>
 </ng-template>
 <ng-template #templateIndicatorTemplate>
