@@ -73,13 +73,10 @@ export class FinancialTransferLicensingApprovePopupComponent implements OnInit, 
   private listenToAction() {
     this.action$
       .pipe(takeUntil(this.destroy$))
-      .pipe(
-        map((_) =>
-          this.isCommentRequired()
-            ? this.approvalForm.invalid || this.comment.invalid
-            : this.approvalForm.invalid
-        )
-      )
+      .pipe(map(_ =>
+        this.comment.invalid || (!this.isCancelRequestType()
+          ? this.approvalForm.invalid
+          : false)))
       .pipe(
         tap(
           (invalid) =>
