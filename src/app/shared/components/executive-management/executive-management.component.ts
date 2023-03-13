@@ -88,7 +88,9 @@ export class ExecutiveManagementComponent implements OnInit {
       icon: ActionIconsEnum.DELETE,
       label: 'btn_delete',
       onClick: (item: ExecutiveManagement) => this.delete(item),
-      show: (_item: ExecutiveManagement) => !this.readonly
+      show: (_item: ExecutiveManagement) => {
+        return !this.readonly
+      }
     },
     // view
     {

@@ -42,6 +42,7 @@ import { CommonUtils } from '@helpers/common-utils';
   styleUrls: ['./general-association-meeting-attendance.component.scss']
 })
 export class GeneralAssociationMeetingAttendanceComponent extends EServicesGenericComponent<GeneralAssociationMeetingAttendance, GeneralAssociationMeetingAttendanceService> implements AfterViewInit {
+  oldModel!: GeneralAssociationMeetingAttendance;
   form!: FormGroup;
   internalMembersForm!: FormGroup;
   fm!: FormManager;
@@ -70,6 +71,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   selectedAdministrativeBoardMembers: GeneralAssociationExternalMember[] = [];
   selectedGeneralAssociationMembers: GeneralAssociationExternalMember[] = [];
   selectedInternalUsers: GeneralAssociationInternalMember[] = [];
+  oldSelectedInternalUsers: GeneralAssociationInternalMember[] = [];
 
   addAgendaFormActive!: boolean;
   agendaForm!: FormGroup;
@@ -82,6 +84,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   generalNotesForm!: FormGroup;
   generalNotes: GeneralMeetingAttendanceNote[] = [];
   membersGeneralNotes: GeneralMeetingAttendanceNote[] = [];
+  oldMembersGeneralNotes: GeneralMeetingAttendanceNote[] = [];
   selectedGeneralNote!: GeneralMeetingAttendanceNote | null;
   selectedGeneralNoteIndex!: number | null;
   generalNotesDisplayedColumns: string[] = ['index', 'comment', 'actions'];
@@ -104,6 +107,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   @ViewChild('finalReportUploader') finalReportUploader!: ElementRef;
 
   meetingReport!: MeetingAttendanceReport;
+  oldMeetingReport!: MeetingAttendanceReport;
 
   constructor(public lang: LangService,
     public fb: FormBuilder,
@@ -318,6 +322,38 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
           this.buildMeetingPointsForm();
         }
       });
+    }
+    if (this.model?.isDecisionMakerReviewStep()) {
+      this.licenseService
+        .generalAssociationMeetingAttendanceSearch<GeneralAssociationMeetingAttendance>({
+          fullSerial: this.oldLicenseFullSerialField.value,
+          // caseStatus: this.commonCaseStatus.CANCELLED
+        })
+        .pipe(takeUntil(this.destroy$))
+        .pipe(map((licenses) => {
+          return licenses[0];
+        })).subscribe((license) => {
+          this.oldModel = license;
+          this.service.getMeetingPointsForDecisionMaker(license.id).subscribe(meetingReport => {
+            this.oldMeetingReport = meetingReport;
+          });
+
+          let allGeneralMeetingNotesObs = this.service.getDecisionMakerMeetingGeneralNotes(this.memberId, license?.id);
+          allGeneralMeetingNotesObs.subscribe(notes => {
+            this.oldMembersGeneralNotes = notes;
+          });
+
+          this.service.getMemberTaskStatus(this.model?.id).subscribe(membersStatus => {
+            this.meetingUserTaskStatus = [...membersStatus.map(x => new MeetingMemberTaskStatus().clone(x)).slice()];
+            this.oldSelectedInternalUsers = this.selectedInternalUsers.map(user => {
+              user.pId = this.meetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.pId;
+              user.name = this.meetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.name;
+              user.tkiid = this.meetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.tkiid;
+              user.userId = this.meetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.userId;
+              return user;
+            });
+          });
+        });
     }
   }
 
@@ -800,7 +836,9 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
       }
     }
   }
-
+  isUpdateRequest() {
+    return this.requestType.value == GeneralAssociationMeetingRequestTypeEnum.UPDATE;
+  }
   canUpdateMeetingDate() {
     return this.model?.caseStatus != CommonCaseStatus.CANCELLED && this.model?.taskDetails?.isClaimed() && (this.isSupervisionAndControlReviewStep || this.isSupervisionManagerReviewStep || this.isSupervisionAndControlRework);
   }
