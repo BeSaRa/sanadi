@@ -221,7 +221,8 @@ import { UserPermissionInternalComponent } from '@app/administration/shared/user
     AdminLicenseComponent,
     UserFollowupPermissionNewComponent,
     UserPermissionInternalComponent,
-    CustomMenuDefaultsPopupComponent
+    CustomMenuDefaultsPopupComponent,
+    CustomMenusTableComponent
 
   ],
   imports: [

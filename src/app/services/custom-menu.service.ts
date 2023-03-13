@@ -156,6 +156,16 @@ export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> 
     });
   }
 
+  openDefaultCreateDialog(parentMenu: MenuItem): DialogRef {
+    let data = new CustomMenu().clone({status: CommonStatusEnum.ACTIVATED});
+    data.defaultParent = parentMenu
+    return this.dialog.show<IDialogData<CustomMenu>>(this._getDialogComponent(), {
+      model: data,
+      operation: OperationTypes.CREATE,
+      parentMenu: parentMenu
+    });
+  }
+
   openEditDialog(modelId: number, parentMenu?: CustomMenu, selectedPopupTab: string = 'basic'): Observable<DialogRef> {
     return this.getById(modelId).pipe(
       switchMap((item: CustomMenu) => {
