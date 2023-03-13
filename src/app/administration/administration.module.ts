@@ -131,6 +131,7 @@ import { FieldAssessmentServiceLinkComponen } from './shared/field-assessment-se
 import { CustomServiceTemplateComponent } from './shared/custom-service-template/custom-service-template.component';
 import { CustomServiceTemplatePopupComponent } from './popups/custom-service-template-popup/custom-service-template-popup.component';
 import { UserPermissionInternalComponent } from '@app/administration/shared/user-permission-internal/user-permission-internal.component';
+import { CustomMenusTableComponent } from './pages/custom-menu/components/custom-menus-table/custom-menus-table.component';
 
 @NgModule({
   declarations: [
@@ -223,7 +224,8 @@ import { UserPermissionInternalComponent } from '@app/administration/shared/user
     AdminLicenseComponent,
     UserFollowupPermissionNewComponent,
     UserPermissionInternalComponent,
-    CustomMenuDefaultsPopupComponent
+    CustomMenuDefaultsPopupComponent,
+    CustomMenusTableComponent
   ],
   imports: [
     SharedModule,
