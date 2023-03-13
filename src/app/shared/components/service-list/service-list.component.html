@@ -17,13 +17,13 @@
                class="instant-action position-absolute w-100 h-100 top-0 justify-content-center align-items-center flex-row">
             <div class="row">
               <div class="col-12">
-                <button *ngIf="item.hasServiceSearchPermission"
+                <button *ngIf="item.hasServicePagePermission"
                         (click)="navigateToEServiceItemPath(item, 'service')"
                         class="btn icon-btn m-1 p-1 shadow-none rounded-circle"
                         [tooltip]="langService.map.menu_service">
                   <i class="mdi mdi-plus"></i>
                 </button>
-                <button *ngIf="item.hasServicePagePermission"
+                <button *ngIf="item.hasServiceSearchPermission"
                         (click)="navigateToEServiceItemPath(item, 'search')"
                         class="btn icon-btn m-1 p-1 shadow-none rounded-circle" [tooltip]="langService.map.menu_search">
                   <i class="mdi mdi-text-box-search-outline"></i>
