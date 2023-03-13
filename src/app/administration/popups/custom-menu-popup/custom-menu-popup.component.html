@@ -19,6 +19,14 @@
            *ngIf="model.id && !model.parentMenuItemId"></tab>
     </tabs-list>
     <ng-template #basicTabTemplate>
+      <div class="row" *ngIf="model.defaultParent">
+        <div class="col-sm-12 col-md-4 mb-4 position-relative">
+          <label for="parentMenu"
+            class="form-label">{{lang.map.lbl_parent_menu}}</label>
+          <span id="parentMenu" class="form-control input-disabled"
+            [innerHTML]="model.defaultParent.getName()"></span>
+        </div>
+      </div>
       <div class="row">
         <div class="col-sm-6 mb-4 position-relative">
           <label asteriskIfRequired="arName" for="arName" class="form-label">{{lang.map.lbl_arabic_name}}</label>

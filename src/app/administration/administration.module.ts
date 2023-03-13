@@ -134,6 +134,7 @@ import { UserPermissionInternalComponent } from '@app/administration/shared/user
 import {
   UserPermissionExternalComponent
 } from "@app/administration/shared/user-permission-external/user-permission-external.component";
+import { CustomMenusTableComponent } from './pages/custom-menu/components/custom-menus-table/custom-menus-table.component';
 
 @NgModule({
   declarations: [
@@ -227,7 +228,8 @@ import {
     UserFollowupPermissionNewComponent,
     UserPermissionInternalComponent,
     UserPermissionExternalComponent,
-    CustomMenuDefaultsPopupComponent
+    CustomMenuDefaultsPopupComponent,
+    CustomMenusTableComponent
   ],
   imports: [
     SharedModule,
