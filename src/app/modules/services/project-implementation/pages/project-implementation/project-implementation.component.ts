@@ -360,7 +360,6 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     if (
       [OperationTypes.CREATE, OperationTypes.UPDATE].includes(operation) && [SaveTypes.FINAL, SaveTypes.COMMIT].includes(saveType)
     ) {
-      ;
       this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({serial: model.fullSerial}));
     } else {
       this.toast.success(this.lang.map.request_has_been_saved_successfully);
