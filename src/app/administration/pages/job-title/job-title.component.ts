@@ -154,7 +154,7 @@ export class JobTitleComponent extends AdminGenericComponent<JobTitle, JobTitleS
     this.dialogService.confirm(message)
       .onAfterClose$.subscribe((click: UserClickOn) => {
       if (click === UserClickOn.YES) {
-        const sub = model.delete().pipe().subscribe((status:boolean) => {
+        const sub = model.delete().subscribe((status:boolean) => {
           // @ts-ignore
           if(status) this.toast.success(this.lang.map.msg_delete_x_success.change({ x: model.getName() }));
           else this.toast.error(this.lang.map.msg_record_is_linked)
