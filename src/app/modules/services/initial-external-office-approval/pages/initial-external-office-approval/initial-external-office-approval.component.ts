@@ -349,6 +349,7 @@ export class InitialExternalOfficeApprovalComponent extends EServicesGenericComp
       // delete id because license details contains old license id and we are adding new, so no id is needed
       delete value.id;
       delete value.vsId;
+      delete value.serial;
 
       this._updateForm(value);
     }
