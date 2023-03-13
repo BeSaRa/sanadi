@@ -54,10 +54,9 @@ export class AwarenessActivitySuggestionApprovalPopupComponent implements OnInit
   }
 
   private listenToAction() {
-    console.log(this.isCommentRequired(), this.comment.invalid, this.approvalForm.invalid, this.approvalForm)
     this.action$
       .pipe(takeUntil(this.destroy$))
-      .pipe(map(_ => ((this.isCommentRequired() ? this.comment.invalid : false) || this.approvalForm.invalid)))
+      .pipe(map(_ => (this.isCommentRequired() ? (this.comment.invalid) : this.approvalForm.invalid)))
       .pipe(tap(invalid => invalid && this.dialog.error(this.lang.map.msg_all_required_fields_are_filled)))
       .pipe(filter(invalid => !invalid))
       .pipe(exhaustMap(_ => {
