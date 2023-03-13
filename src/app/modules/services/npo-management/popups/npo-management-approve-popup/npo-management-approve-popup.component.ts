@@ -16,7 +16,7 @@ import {LangService} from '@services/lang.service';
 import {Component, Inject, OnInit} from '@angular/core';
 import {of, Subject} from 'rxjs';
 import {InboxService} from '@services/inbox.service';
-import {AffiliationRequestType} from '@enums/service-request-types';
+import { NPORequestType } from '@app/enums/service-request-types';
 
 @Component({
   selector: 'app-npo-management-approve-popup',
@@ -59,7 +59,10 @@ export class NpoManagementApprovePopupComponent implements OnInit {
   private listenToAction() {
     this.action$
       .pipe(takeUntil(this.destroy$))
-      .pipe(map(_ => ((this.isCommentRequired() ? this.comment.invalid : false) || this.approvalForm.invalid)))
+      .pipe(map(_ =>
+        this.comment.invalid || (!this.isCancelRequestType()
+          ? this.approvalForm.invalid
+          : false)))
       .pipe(tap(invalid => invalid && this.dialog.error(this.lang.map.msg_all_required_fields_are_filled)))
       .pipe(filter(invalid => !invalid))
       .pipe(exhaustMap(_ => {
@@ -88,7 +91,7 @@ export class NpoManagementApprovePopupComponent implements OnInit {
   }
 
   isCancelRequestType(): boolean {
-    return this.data.model.requestType === AffiliationRequestType.CANCEL;
+    return this.data.model.requestType === NPORequestType.CANCEL;
   }
 
   private isCommentRequired(): boolean {

@@ -1,6 +1,5 @@
 import {AfterViewInit, Component, Inject, OnInit} from '@angular/core';
 import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import {AffiliationRequestType} from '@enums/service-request-types';
 import {WFResponseType} from '@enums/wfresponse-type.enum';
 import {CommonUtils} from '@helpers/common-utils';
 import {DateUtils} from '@helpers/date-utils';
@@ -17,6 +16,7 @@ import {DatepickerOptionsMap} from '@app/types/types';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {of, Subject} from 'rxjs';
 import {exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
+import { FinancialTransferRequestTypes } from '@app/enums/financial-transfer-request-types.enum';
 
 @Component({
   selector: 'app-financial-transfer-licensing-approve-popup',
@@ -73,13 +73,10 @@ export class FinancialTransferLicensingApprovePopupComponent implements OnInit, 
   private listenToAction() {
     this.action$
       .pipe(takeUntil(this.destroy$))
-      .pipe(
-        map((_) =>
-          this.isCommentRequired()
-            ? this.approvalForm.invalid || this.comment.invalid
-            : this.approvalForm.invalid
-        )
-      )
+      .pipe(map(_ =>
+        this.comment.invalid || (!this.isCancelRequestType()
+          ? this.approvalForm.invalid
+          : false)))
       .pipe(
         tap(
           (invalid) =>
@@ -123,7 +120,7 @@ export class FinancialTransferLicensingApprovePopupComponent implements OnInit, 
 
 
   isCancelRequestType(): boolean {
-    return this.data.model.requestType === AffiliationRequestType.CANCEL;
+    return this.data.model.requestType === FinancialTransferRequestTypes.CANCEL;
   }
 
   private isCommentRequired(): boolean {
