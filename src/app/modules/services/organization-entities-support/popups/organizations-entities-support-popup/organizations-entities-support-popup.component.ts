@@ -16,7 +16,7 @@ import {ToastService} from '@services/toast.service';
 import {InboxService} from '@services/inbox.service';
 import {CommonUtils} from '@helpers/common-utils';
 import {IWFResponse} from '@contracts/i-w-f-response';
-import {AffiliationRequestType} from '@enums/service-request-types';
+import {AffiliationRequestType, ServiceRequestTypes} from '@enums/service-request-types';
 
 @Component({
   selector: 'app-organizations-entities-support-popup',
@@ -121,7 +121,7 @@ export class OrganizationsEntitiesSupportPopupComponent implements OnInit {
   }
 
   isCancelRequestType(): boolean {
-    return this.data.model.requestType === AffiliationRequestType.CANCEL;
+    return this.data.model.requestType === ServiceRequestTypes.CANCEL;
   }
 
   private isCommentRequired(): boolean {

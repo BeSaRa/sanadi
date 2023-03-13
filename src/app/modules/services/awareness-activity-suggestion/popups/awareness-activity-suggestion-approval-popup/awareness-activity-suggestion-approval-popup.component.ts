@@ -1,4 +1,4 @@
-import {AffiliationRequestType} from '@enums/service-request-types';
+import {CollectionRequestType} from '@enums/service-request-types';
 import {IWFResponse} from '@contracts/i-w-f-response';
 import {exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {InboxService} from '@services/inbox.service';
@@ -84,7 +84,7 @@ export class AwarenessActivitySuggestionApprovalPopupComponent implements OnInit
     ref.toggleCalendar();
   }
   isCancelRequestType(): boolean {
-    return this.data.model.requestType === AffiliationRequestType.CANCEL;
+    return this.data.model.requestType === CollectionRequestType.CANCEL;
   }
   private isCommentRequired(): boolean {
     return this.isCancelRequestType();
