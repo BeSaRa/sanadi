@@ -69,19 +69,7 @@
               {{ lang.map.lbl_actions }}
             </th>
             <td cdk-cell *cdkCellDef="let row; let i = index" class="table-actions">
-              <div class="d-flex flex-row">
-                <button (click)="removeOne( row)" tooltip="{{ lang.map.btn_remove }}" class="btn btn-link outline-none"
-                  *ngIf="!readonly">
-                  <i class="mdi mdi-close-box"></i>
-                </button>
-                <button (click)="selectOne(row)" tooltip="{{ lang.map.btn_edit }}" class="btn btn-link outline-none"
-                  *ngIf="!readonly">
-                  <i class="mdi mdi-pen"></i>
-                </button>
-                <button (click)="selectOne(row)" tooltip="{{ lang.map.view }}" class="btn btn-link outline-none">
-                  <i class="mdi mdi-eye"></i>
-                </button>
-              </div>
+              <grid-actions [record]="row" [actions]="actions" [itemIndex]="i"></grid-actions>
             </td>
           </ng-container>
           <tr cdk-header-row *cdkHeaderRowDef="columns"></tr>

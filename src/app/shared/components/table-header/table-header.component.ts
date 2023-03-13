@@ -54,6 +54,8 @@ export class TableHeaderComponent implements OnInit, OnDestroy {
   @Input() add$: Subject<any> = {} as Subject<any>;
   @Input() allowAdd: boolean = true;
   @Input() headerClass: string = '';
+  @Input() skipClearSort: boolean = false;
+  @Input() skipSearch: boolean = false;
 
   riskStatusClasses: Record<number, string> = {
     1: 'btn-success',

@@ -17,6 +17,7 @@ export class ChecklistItemInterceptor implements IModelInterceptor<ChecklistItem
     delete model.service;
     delete model.statusInfo;
     delete model.checked;
+    delete model.searchFields;
     return model;
   }
 }

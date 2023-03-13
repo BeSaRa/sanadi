@@ -8,9 +8,15 @@
     <div class="col-12">
       <app-table #table
                  [data]="logList"
-                 [columns]="displayedColumns"
-                 sortableTable>
+                 [filter]="filterControl.value"
+                 [useSearchToFilter]="true"
+                 [columns]="displayedColumns">
         <table cdk-table [dataSource]="table.dataSource" class="table table-striped table-bordered caption-top">
+          <ng-container cdkColumnDef="extra-header">
+            <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+              <table-header (textChange)="filterControl.setValue($event)" [skipClearSort]="true"></table-header>
+            </th>
+          </ng-container>
           <ng-container cdkColumnDef="user">
             <th cdk-header-cell *cdkHeaderCellDef> {{langService.map.user}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.orgUserInfo ? row.orgUserInfo.getName() : ''}} </td>
@@ -35,7 +41,8 @@
             <th cdk-header-cell *cdkHeaderCellDef class="date-column"> {{langService.map.action_date}}</th>
             <td cdk-cell *cdkCellDef="let row" class="date-column"> {{row.updatedOnString}} </td>
           </ng-container>
-          <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
+          <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
+          <tr cdk-header-row *cdkHeaderRowDef="displayedColumns" class="table-row-header"></tr>
           <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
           <tr *cdkNoDataRow>
             <td colspan="100" class="text-center">{{langService.map.no_records_to_display}}</td>

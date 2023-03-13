@@ -43,18 +43,6 @@
       </div>
     </ng-template>
     <ng-template #subGoalsTabTemplate>
-      <div class="row pb-3">
-        <app-page-header [pageTitle]="'lbl_sub_sd_goals'" [clickOnReload$]="reloadSubGoals$"
-                         [clickOnNew$]="addSubSdGoal$" [addPermission]="!readonly">
-        </app-page-header>
-        <ng-container *ngIf="table">
-          <app-bulk-actions *ngIf="table.selection && table.selection.selected.length"
-                            [selectedRecords]="table.selection.selected"
-                            [actionsList]="[]"></app-bulk-actions>
-          <app-grid-search (searchTextEvent)="filterControl.setValue($event)"
-                           *ngIf="(table.selection && !table.selection.selected.length)"></app-grid-search>
-        </ng-container>
-      </div>
       <div class="row">
         <div class="col-12">
           <app-table #table [paginator]="paginator"
@@ -65,6 +53,16 @@
                      [data]="subGoals"
                      sortableTable>
             <table class="table table-striped table-bordered caption-top" [dataSource]="table.dataSource" cdk-table>
+              <ng-container cdkColumnDef="extra-header">
+                <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+                  <table-header tableTitle="lbl_sub_sd_goals"
+                                (textChange)="filterControl.setValue($event)"
+                                [add$]="addSubSdGoal$" [reload$]="reloadSubGoals$"
+                                [allowAdd]="!readonly">
+                    <ng-container *ngTemplateOutlet="bulkActionsTemplate"></ng-container>
+                  </table-header>
+                </th>
+              </ng-container>
               <ng-container cdkColumnDef="enName">
                 <th cdk-header-cell *cdkHeaderCellDef sortable-header>{{lang.map.english_name}}</th>
                 <td cdk-cell *cdkCellDef="let row">{{row.enName}}</td>
@@ -85,8 +83,8 @@
                   <grid-actions [record]="row" [actions]="actions" [itemIndex]="itemIndex"></grid-actions>
                 </td>
               </ng-container>
-
-              <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
+              <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
+              <tr cdk-header-row *cdkHeaderRowDef="displayedColumns" class="table-row-header"></tr>
               <tr cdk-row (contextmenu)="menu.open($event, row)" *cdkRowDef="let row; columns: displayedColumns;"></tr>
               <tr *cdkNoDataRow>
                 <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
@@ -110,3 +108,13 @@
           class="btn btn-primary">{{lang.map.btn_save}}</button>
   <button [dialogClose]="model" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
 </div>
+
+<ng-template #bulkActionsTemplate>
+  <ng-container *ngIf="table">
+    <app-bulk-actions *ngIf="table.selection && table.selection.selected.length"
+                      [selectedRecords]="table.selection.selected"
+                      [actionsList]="[]"
+                      [reversedColors]="true"
+                      [hasTableHeaderContainer]="true"></app-bulk-actions>
+  </ng-container>
+</ng-template>

@@ -28,6 +28,7 @@ import {
 import {
   SpecificMemberCommentsAndNotesComponent
 } from '@modules/services/general-association-meeting-attendance/popups/specific-member-comments-and-notes/specific-member-comments-and-notes.component';
+import { ManagePrevInternalUsersComponent } from '@modules/services/general-association-meeting-attendance/shared/manage-prev-internal-users/manage-prev-internal-users.component';
 
 
 @NgModule({
@@ -40,7 +41,8 @@ import {
     ManageInternalUsersComponent,
     SelectMemberPopupComponent,
     MeetingPointMembersCommentsPopupComponent,
-    SpecificMemberCommentsAndNotesComponent
+    SpecificMemberCommentsAndNotesComponent,
+    ManagePrevInternalUsersComponent
   ],
   imports: [
     CommonModule,

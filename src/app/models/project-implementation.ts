@@ -30,6 +30,7 @@ import {normalSearchFields} from '@helpers/normal-search-fields';
 import {DialogRef} from '@app/shared/models/dialog-ref';
 import {WFResponseType} from '@app/enums/wfresponse-type.enum';
 import {SubmissionMechanisms} from '@app/enums/submission-mechanisms.enum';
+import { AllRequestTypesEnum } from "@app/enums/all-request-types-enum";
 
 const _Approval = mixinApprovalLicenseWithMonthly(mixinRequestType(CaseModel))
 const {send, receive} = new ProjectImplementationInterceptor()
@@ -140,8 +141,8 @@ export class ProjectImplementation
     } = this
     return {
       licenseStartDate: controls ? [licenseStartDate, CustomValidators.required] : licenseStartDate,
-      licenseDuration: controls ? [licenseDuration, CustomValidators.required] : licenseDuration,
-      projectEvaluationSLA: controls ? [projectEvaluationSLA, CustomValidators.required] : projectEvaluationSLA,
+      licenseDuration: controls ? [licenseDuration, [CustomValidators.required,CustomValidators.number,CustomValidators.maxLength(3)]] : licenseDuration,
+      projectEvaluationSLA: controls ? [projectEvaluationSLA,[ CustomValidators.required, CustomValidators.number,CustomValidators.maxLength(3)]] : projectEvaluationSLA,
       implementingAgencyType: controls ? [implementingAgencyType, CustomValidators.required] : implementingAgencyType,
       implementationTemplate: controls ? [implementationTemplate, CustomValidators.requiredArray] : implementationTemplate,
       implementingAgencyList: controls ? [implementingAgencyList, CustomValidators.requiredArray] : implementingAgencyList,
@@ -201,10 +202,18 @@ export class ProjectImplementation
   }
 
   finalApprove(): DialogRef {
-    // return [ServiceRequestTypes.CANCEL, ServiceRequestTypes.UPDATE].includes(this.requestType) ? super.approve(WFResponseType.FINAL_APPROVE) : this.service.approveTask(this, WFResponseType.FINAL_APPROVE);
-    return this.service.approveTask(this, WFResponseType.FINAL_APPROVE);
+    if(this._isCustomApprove()){
+       return this.service.approveTask(this, WFResponseType.FINAL_APPROVE);
+     }
+   return super.approve(WFResponseType.FINAL_APPROVE)
   }
+  validateApprove(): DialogRef {
+   if(this._isCustomApprove()){
+    return this.service.approveTask(this, WFResponseType.VALIDATE_APPROVE);
+   }
+    return super.approve(WFResponseType.VALIDATE_APPROVE)
 
+  }
   isSubmissionMechanismNotification(): boolean {
     return this.submissionMechanism === SubmissionMechanisms.NOTIFICATION;
   }
@@ -215,5 +224,12 @@ export class ProjectImplementation
 
   isSubmissionMechanismRegistration(): boolean {
     return this.submissionMechanism === SubmissionMechanisms.REGISTRATION;
+  }
+  private _isCustomApprove() : boolean{
+    if(this.isSubmissionMechanismRegistration() || this.isSubmissionMechanismSubmission()){
+      if(this.requestType === AllRequestTypesEnum.NEW || this.requestType === AllRequestTypesEnum.EXTEND)
+        return true;
+     }
+     return false;
   }
 }

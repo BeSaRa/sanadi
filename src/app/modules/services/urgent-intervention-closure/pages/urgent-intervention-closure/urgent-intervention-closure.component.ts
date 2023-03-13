@@ -643,6 +643,7 @@ export class UrgentInterventionClosureComponent extends EServicesGenericComponen
       // delete id because license details contains old license id, and we are adding new, so no id is needed
       delete value.id;
       delete value.vsId;
+      delete value.serial;
 
       this._updateForm(value);
       this.yearField.addValidators(Validators.min(licenseDetails.year || new Date().getFullYear()));

@@ -1,34 +1,44 @@
-import { ProfileTypes } from '@enums/profile-types.enum';
-import { CommonCaseStatus } from '@enums/common-case-status.enum';
-import { OpenFrom } from '@enums/open-from.enum';
-import { AfterViewInit, ChangeDetectorRef, Component, QueryList, TemplateRef, ViewChild, ViewChildren, } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { OperationTypes } from '@enums/operation-types.enum';
-import { SaveTypes } from '@enums/save-types';
-import { CollectionRequestType } from '@enums/service-request-types';
-import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
-import { CommonUtils } from '@helpers/common-utils';
-import { IKeyValue } from '@contracts/i-key-value';
-import { ForeignCountriesProjects } from '@models/foreign-countries-projects';
-import { ForeignCountriesProjectsResult } from '@models/foreign-countries-projects-results';
-import { ForeignCountriesProjectsSearchCriteria } from '@models/foreign-countries-projects-seach-criteria';
-import { Lookup } from '@models/lookup';
-import { ProjectNeedsComponent } from '@modules/e-services-main/shared/project-needs/project-needs.component';
-import { DialogService } from '@services/dialog.service';
-import { ForeignCountriesProjectsService } from '@services/foreign-countries-projects.service';
-import { LangService } from '@services/lang.service';
-import { LicenseService } from '@services/license.service';
-import { LookupService } from '@services/lookup.service';
-import { ToastService } from '@services/toast.service';
-import { ReadinessStatus } from '@app/types/types';
-import { Observable, of, Subject } from 'rxjs';
-import { catchError, exhaustMap, filter, map, switchMap, takeUntil, tap, } from 'rxjs/operators';
-import { UserClickOn } from '@enums/user-click-on.enum';
-import { ProfileService } from '@services/profile.service';
-import { Profile } from '@models/profile';
-import { EmployeeService } from '@services/employee.service';
-import { ProfileCountryService } from '@services/profile-country.service';
-import { ProfileCountry } from '@models/profile-country';
+import {ProfileTypes} from '@enums/profile-types.enum';
+import {CommonCaseStatus} from '@enums/common-case-status.enum';
+import {OpenFrom} from '@enums/open-from.enum';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  QueryList,
+  TemplateRef,
+  ViewChild,
+  ViewChildren,
+} from '@angular/core';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+import {OperationTypes} from '@enums/operation-types.enum';
+import {SaveTypes} from '@enums/save-types';
+import {CollectionRequestType} from '@enums/service-request-types';
+import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
+import {CommonUtils} from '@helpers/common-utils';
+import {IKeyValue} from '@contracts/i-key-value';
+import {ForeignCountriesProjects} from '@models/foreign-countries-projects';
+import {ForeignCountriesProjectsResult} from '@models/foreign-countries-projects-results';
+import {ForeignCountriesProjectsSearchCriteria} from '@models/foreign-countries-projects-seach-criteria';
+import {Lookup} from '@models/lookup';
+import {
+  ProjectNeedsComponent
+} from '@modules/services/foreign-countries-projects/shared/project-needs/project-needs.component';
+import {DialogService} from '@services/dialog.service';
+import {ForeignCountriesProjectsService} from '@services/foreign-countries-projects.service';
+import {LangService} from '@services/lang.service';
+import {LicenseService} from '@services/license.service';
+import {LookupService} from '@services/lookup.service';
+import {ToastService} from '@services/toast.service';
+import {ReadinessStatus} from '@app/types/types';
+import {Observable, of, Subject} from 'rxjs';
+import {catchError, exhaustMap, filter, map, switchMap, takeUntil, tap,} from 'rxjs/operators';
+import {UserClickOn} from '@enums/user-click-on.enum';
+import {ProfileService} from '@services/profile.service';
+import {Profile} from '@models/profile';
+import {EmployeeService} from '@services/employee.service';
+import {ProfileCountryService} from '@services/profile-country.service';
+import {ProfileCountry} from '@models/profile-country';
 
 @Component({
   selector: 'app-foreign-countries-projects',

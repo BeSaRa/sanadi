@@ -56,7 +56,10 @@ export class ExternalOrgAffiliationApprovePopupComponent implements OnInit {
   private listenToAction() {
     this.action$
       .pipe(takeUntil(this.destroy$))
-      .pipe(map(_ => ((this.isCommentRequired() ? this.comment.invalid : false) || this.approvalForm.invalid)))
+      .pipe(map(_ =>
+        this.comment.invalid || (!this.isCancelRequestType()
+          ? this.approvalForm.invalid
+          : false)))
       .pipe(tap(invalid => invalid && this.dialog.error(this.lang.map.msg_all_required_fields_are_filled)))
       .pipe(filter(invalid => !invalid))
       .pipe(exhaustMap(_ => {

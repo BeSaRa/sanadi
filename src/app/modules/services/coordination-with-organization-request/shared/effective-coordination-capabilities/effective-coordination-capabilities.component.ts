@@ -1,19 +1,19 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {AbstractControl, FormArray, FormBuilder, FormGroup, UntypedFormControl} from '@angular/forms';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {DateUtils} from '@app/helpers/date-utils';
-import {ILanguageKeys} from '@app/interfaces/i-language-keys';
-import {EffectiveCoordinationCapabilities} from '@app/models/effective-coordination-capabilities';
-import {Lookup} from '@app/models/lookup';
-import {DialogService} from '@app/services/dialog.service';
-import {LangService} from '@app/services/lang.service';
-import {LookupService} from '@app/services/lookup.service';
-import {ToastService} from '@app/services/toast.service';
+import {UserClickOn} from '@enums/user-click-on.enum';
+import {DateUtils} from '@helpers/date-utils';
+import {ILanguageKeys} from '@contracts/i-language-keys';
+import {EffectiveCoordinationCapabilities} from '@models/effective-coordination-capabilities';
+import {Lookup} from '@models/lookup';
+import {DialogService} from '@services/dialog.service';
+import {LangService} from '@services/lang.service';
+import {LookupService} from '@services/lookup.service';
+import {ToastService} from '@services/toast.service';
 import {DatepickerOptionsMap} from '@app/types/types';
 import {IMyInputFieldChanged} from 'angular-mydatepicker';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {filter, map, take, takeUntil} from 'rxjs/operators';
-import {Profile} from '@app/models/profile';
+import {Profile} from '@models/profile';
 
 @Component({
   selector: 'effective-coordination-capabilities',

@@ -12,13 +12,17 @@ import {
 import {
   ForeignCountriesProjectsApprovalPopupComponent
 } from '@modules/services/foreign-countries-projects/popups/foreign-countries-projects-approval-popup/foreign-countries-projects-approval-popup.component';
+import {
+  ProjectNeedsComponent
+} from '@modules/services/foreign-countries-projects/shared/project-needs/project-needs.component';
 
 
 @NgModule({
   declarations: [
     ForeignCountriesProjectsComponent,
     ForeignCountriesProjectOutputsComponent,
-    ForeignCountriesProjectsApprovalPopupComponent
+    ForeignCountriesProjectsApprovalPopupComponent,
+    ProjectNeedsComponent
   ],
   imports: [
     CommonModule,

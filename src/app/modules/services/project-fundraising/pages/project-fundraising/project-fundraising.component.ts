@@ -690,6 +690,7 @@ export class ProjectFundraisingComponent extends EServicesGenericComponent<Proje
       // delete id because license details contains old license id, and we are adding new, so no id is needed
       delete model.id;
       delete model.vsId;
+      delete model.serial;
 
 
       this._updateForm(model, true);

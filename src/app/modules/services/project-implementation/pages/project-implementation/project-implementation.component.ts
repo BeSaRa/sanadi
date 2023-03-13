@@ -1,25 +1,50 @@
-import {Component} from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import {
   AbstractControl,
   FormGroup,
   UntypedFormBuilder,
   UntypedFormGroup,
   ValidationErrors,
-  ValidatorFn
+  ValidatorFn,
+  Validators
 } from '@angular/forms';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {SaveTypes} from '@app/enums/save-types';
-import {EServicesGenericComponent} from "@app/generics/e-services-generic-component";
-import {ProjectImplementation} from "@app/models/project-implementation";
-import {LangService} from '@app/services/lang.service';
-import {ProjectImplementationService} from "@services/project-implementation.service";
-import {iif, merge, Observable, of, ReplaySubject, Subject} from 'rxjs';
-import {DialogService} from "@services/dialog.service";
-import {ToastService} from "@services/toast.service";
-import {Lookup} from "@models/lookup";
-import {LookupService} from "@services/lookup.service";
-import {ServiceRequestTypes} from "@app/enums/service-request-types";
-import {CommonUtils} from "@helpers/common-utils";
+import { ActivatedRoute } from "@angular/router";
+import { CommonCaseStatus } from "@app/enums/common-case-status.enum";
+import { DomainTypes } from "@app/enums/domain-types";
+import { FundSourceType } from "@app/enums/fund-source-type";
+import { OpenFrom } from "@app/enums/open-from.enum";
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { ProjectWorkArea } from "@app/enums/project-work-area";
+import { SaveTypes } from '@app/enums/save-types';
+import { ServiceRequestTypes } from "@app/enums/service-request-types";
+import { UserClickOn } from "@app/enums/user-click-on.enum";
+import { EServicesGenericComponent } from "@app/generics/e-services-generic-component";
+import { ProjectImplementation } from "@app/models/project-implementation";
+import { ServiceData } from '@app/models/service-data';
+import { EmployeeService } from '@app/services/employee.service';
+import { LangService } from '@app/services/lang.service';
+import { ServiceDataService } from '@app/services/service-data.service';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { FundingResourceContract } from "@contracts/funding-resource-contract";
+import { ImplementationCriteriaContract } from "@contracts/implementation-criteria-contract";
+import { CommonUtils } from "@helpers/common-utils";
+import { DateUtils } from "@helpers/date-utils";
+import { AdminLookup } from "@models/admin-lookup";
+import { Country } from "@models/country";
+import { ImplementationFundraising } from "@models/implementation-fundraising";
+import { ImplementationTemplate } from "@models/implementation-template";
+import { ImplementingAgency } from "@models/implementing-agency";
+import { Lookup } from "@models/lookup";
+import { DacOchaService } from "@services/dac-ocha.service";
+import { DialogService } from "@services/dialog.service";
+import { LicenseService } from "@services/license.service";
+import { LookupService } from "@services/lookup.service";
+import { ProjectImplementationService } from "@services/project-implementation.service";
+import { ToastService } from "@services/toast.service";
+import { IMyDateModel } from "angular-mydatepicker";
+import currency from "currency.js";
+import dayjs from "dayjs";
+import { iif, merge, Observable, of, ReplaySubject, Subject } from 'rxjs';
 import {
   catchError,
   debounceTime,
@@ -32,34 +57,13 @@ import {
   takeUntil,
   tap
 } from "rxjs/operators";
-import {UserClickOn} from "@app/enums/user-click-on.enum";
-import {Country} from "@models/country";
-import {ActivatedRoute} from "@angular/router";
-import {DomainTypes} from "@app/enums/domain-types";
-import {AdminLookup} from "@models/admin-lookup";
-import {DacOchaService} from "@services/dac-ocha.service";
-import {ProjectWorkArea} from "@app/enums/project-work-area";
-import {EmployeeService} from '@app/services/employee.service';
-import {ImplementationCriteriaContract} from "@contracts/implementation-criteria-contract";
-import {DateUtils} from "@helpers/date-utils";
-import {ImplementingAgency} from "@models/implementing-agency";
-import {ImplementationTemplate} from "@models/implementation-template";
-import {ImplementationFundraising} from "@models/implementation-fundraising";
-import {FundSourceType} from "@app/enums/fund-source-type";
-import {FundingResourceContract} from "@contracts/funding-resource-contract";
-import currency from "currency.js";
-import {CommonCaseStatus} from "@app/enums/common-case-status.enum";
-import {OpenFrom} from "@app/enums/open-from.enum";
-import {LicenseService} from "@services/license.service";
-import {IMyDateModel} from "angular-mydatepicker";
-import dayjs from "dayjs";
 
 @Component({
   selector: 'project-implementation',
   templateUrl: './project-implementation.component.html',
   styleUrls: ['./project-implementation.component.scss']
 })
-export class ProjectImplementationComponent extends EServicesGenericComponent<ProjectImplementation, ProjectImplementationService> {
+export class ProjectImplementationComponent extends EServicesGenericComponent<ProjectImplementation, ProjectImplementationService> implements AfterViewInit{
   form!: UntypedFormGroup;
   licenseSearch$: Subject<string> = new Subject()
   requestTypes: Lookup[] = this.lookupService.listByCategory.ServiceRequestTypeNoRenew.slice().sort((a, b) => a.lookupKey - b.lookupKey);
@@ -94,7 +98,9 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
   oldStoredValues: Record<string, number | null> = {}
 
   licenseEndDate?: string
-
+  maxDuration: number = 0;
+  minDuration: number = 0;
+  private configs!: ServiceData;
   formProperties = {
     requestType: () => {
       return this.getObservableField('requestType', 'requestType');
@@ -110,10 +116,30 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
               private dacOchaService: DacOchaService,
               public employeeService: EmployeeService,
               private licenseService: LicenseService,
-              public dialog: DialogService) {
+              public dialog: DialogService,
+              private serviceDataService:ServiceDataService) {
     super();
-  }
 
+  }
+  private loadLicenseConfigurations() {
+    this.serviceDataService
+      .loadByCaseType(this.model!.caseType)
+      .pipe(tap(configs => {
+        this.configs = configs;
+        this.maxDuration = configs.licenseMaxTime;
+        this.minDuration = configs.licenseMinTime;
+      }))
+      .subscribe(() => {
+        this.updateDurationValidator()
+      })
+  }
+  private updateDurationValidator() {
+    const defaultMin = Validators.min(this.minDuration);
+    const defaultMax = Validators.max(this.maxDuration);
+    this.licenseDuration.clearValidators()
+    this.licenseDuration.addValidators([CustomValidators.required, defaultMin, defaultMax])
+    this.licenseDuration.updateValueAndValidity({ emitEvent: false })
+  }
   get basicInfo(): AbstractControl {
     return this.form.get('basicInfo')!
   }
@@ -228,7 +254,10 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     }
   }
 
+  ngAfterViewInit(){
 
+    // this.cd.detectChanges();
+  }
   _getNewInstance(): ProjectImplementation {
     return new ProjectImplementation()
   }
@@ -246,9 +275,17 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       fundingResources: this.fb.group(model.buildFundingResources(true)),
       specialExplanations: this.fb.group(model.buildSpecialInfo(true))
     })
+
   }
 
   _afterBuildForm(): void {
+    if (this.operation !== OperationTypes.CREATE) {
+      this.licenseStartDate.setValue(this.licenseStartDate.value);
+      this.implementingAgencyList.setValue(this.implementingAgencyList.value);
+      this.beneficiaryCountry.setValue(this.model?.beneficiaryCountry);
+      this.implementingAgencyType.setValue(this.model?.implementingAgencyType);
+    }
+    this.loadLicenseConfigurations();
     this.handleReadonly()
     this.setDefaultValues()
     this.listenToFieldsWillEffectTemplateAndFundSources()
@@ -272,12 +309,11 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       this.validateFundingResources([
         'payment',
       ])])
+
     this.handleRequestTypeChange(this.requestType.value)
 
-    if (this.operation !== OperationTypes.CREATE) {
-      this.licenseStartDate.setValue(this.licenseStartDate.value);
-      this.implementingAgencyList.setValue(this.implementingAgencyList.value);
-    }
+
+
   }
 
   loadLicenseById(): void {
@@ -346,6 +382,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       return;
     }
     this.model = model;
+
     this.form.patchValue({
       basicInfo: model.buildBasicInfo(),
       projectInfo: model.buildProjectInfo(),
@@ -358,6 +395,10 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     this.handleDisplayFields(model)
     this.handleMandatoryFields()
     this.calculateRemaining()
+    if(!fromSelectedLicense){
+      this.beneficiaryCountry.setValue(null);
+      this.implementingAgencyType.setValue(null);
+    }
   }
 
   _resetForm(): void {
@@ -446,22 +487,30 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
 
     // update form fields if i have license
     if (licenseDetails && !ignoreUpdateForm) {
-      let model: any = new ProjectImplementation().clone(licenseDetails);
-      model.requestType = this.requestType.value;
-      model.oldLicenseFullSerial = licenseDetails.fullSerial;
-      model.oldLicenseId = licenseDetails.id;
-      model.oldLicenseSerial = licenseDetails.serial;
-      model.documentTitle = '';
-      model.fullSerial = null;
-      model.licenseStartDate = licenseDetails.licenseStartDate || licenseDetails.licenseApprovedDate;
-      // delete id because license details contains old license id, and we are adding new, so no id is needed
-      delete model.id;
-      delete model.vsId;
 
+      const model = this._prepareLicense(licenseDetails)
       this._updateForm(model, true);
     }
     this.licenseStartDate.setValue(this.licenseStartDate.value);
     this.implementingAgencyList.setValue(this.implementingAgencyList.value);
+  }
+  private _prepareLicense(licenseDetails:ProjectImplementation):ProjectImplementation{
+    let model: any = new ProjectImplementation().clone(licenseDetails);
+    model.requestType = this.requestType.value;
+    model.oldLicenseFullSerial = licenseDetails.fullSerial;
+    model.oldLicenseId = licenseDetails.id;
+    model.oldLicenseSerial = licenseDetails.serial;
+    model.documentTitle = '';
+    model.fullSerial = null;
+    model.licenseStartDate = licenseDetails.licenseStartDate || licenseDetails.licenseApprovedDate;
+    // delete id because license details contains old license id, and we are adding new, so no id is needed
+    delete model.id;
+    delete model.vsId;
+    delete model.serial;
+    // delete model.sequenceNumber
+    // delete model.submissionMechanism
+    // delete model.classDescription
+    return model;
   }
 
   handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
@@ -706,7 +755,13 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       this.handleCustomFormReadonly();
       return;
     }
-
+    if (this.model?.caseStatus === CommonCaseStatus.DRAFT ||
+        this.model?.caseStatus === CommonCaseStatus.NEW
+      ){
+      this.readonly = false;
+      this.handleCustomFormReadonly();
+      return;
+    }
     let caseStatus = model.getCaseStatus();
     if (caseStatus == CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.FINAL_REJECTION || caseStatus === CommonCaseStatus.CANCELLED) {
       this.readonly = true;
@@ -738,6 +793,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
         }
       }
     } else if (this.openFrom === OpenFrom.SEARCH) {
+
       if (this.model?.isSubmissionMechanismRegistration() || this.model?.isSubmissionMechanismNotification()) {
         this.readonly = true;
       } else {

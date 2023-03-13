@@ -43,6 +43,7 @@ import { CommonUtils } from '@helpers/common-utils';
 })
 export class GeneralAssociationMeetingAttendanceComponent extends EServicesGenericComponent<GeneralAssociationMeetingAttendance, GeneralAssociationMeetingAttendanceService> implements AfterViewInit {
   form!: FormGroup;
+  oldModel!: GeneralAssociationMeetingAttendance;
   internalMembersForm!: FormGroup;
   fm!: FormManager;
   private displayedColumns: string[] = ['fullSerial', 'status', 'requestTypeInfo', 'actions'];
@@ -70,6 +71,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   selectedAdministrativeBoardMembers: GeneralAssociationExternalMember[] = [];
   selectedGeneralAssociationMembers: GeneralAssociationExternalMember[] = [];
   selectedInternalUsers: GeneralAssociationInternalMember[] = [];
+  oldSelectedInternalUsers: GeneralAssociationInternalMember[] = [];
 
   addAgendaFormActive!: boolean;
   agendaForm!: FormGroup;
@@ -82,6 +84,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   generalNotesForm!: FormGroup;
   generalNotes: GeneralMeetingAttendanceNote[] = [];
   membersGeneralNotes: GeneralMeetingAttendanceNote[] = [];
+  oldMembersGeneralNotes: GeneralMeetingAttendanceNote[] = [];
   selectedGeneralNote!: GeneralMeetingAttendanceNote | null;
   selectedGeneralNoteIndex!: number | null;
   generalNotesDisplayedColumns: string[] = ['index', 'comment', 'actions'];
@@ -104,6 +107,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   @ViewChild('finalReportUploader') finalReportUploader!: ElementRef;
 
   meetingReport!: MeetingAttendanceReport;
+  oldMeetingReport!: MeetingAttendanceReport;
 
   constructor(public lang: LangService,
     public fb: FormBuilder,
@@ -319,8 +323,42 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
         }
       });
     }
-  }
+    if (this.model?.isDecisionMakerReviewStep()) {
+      this.licenseService
+        .generalAssociationMeetingAttendanceSearch<GeneralAssociationMeetingAttendance>({
+          fullSerial: this.oldLicenseFullSerialField.value,
+          caseStatus: this.commonCaseStatus.CANCELLED
+        })
+        .pipe(takeUntil(this.destroy$))
+        .pipe(map((licenses) => {
+          return licenses[0];
+        })).subscribe((license) => {
+          this.oldModel = license;
+          this.service.getMeetingPointsForDecisionMaker(license.id).subscribe(meetingReport => {
+            this.oldMeetingReport = meetingReport;
+          });
 
+          let allGeneralMeetingNotesObs = this.service.getDecisionMakerMeetingGeneralNotes(this.memberId, license?.id);
+          allGeneralMeetingNotesObs.subscribe(notes => {
+            this.oldMembersGeneralNotes = notes;
+          });
+
+          this.service.getMemberTaskStatus(this.model?.id).subscribe(membersStatus => {
+            this.meetingUserTaskStatus = [...membersStatus.map(x => new MeetingMemberTaskStatus().clone(x)).slice()];
+            this.oldSelectedInternalUsers = this.selectedInternalUsers.map(user => {
+              user.pId = this.meetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.pId;
+              user.name = this.meetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.name;
+              user.tkiid = this.meetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.tkiid;
+              user.userId = this.meetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.userId;
+              return user;
+            });
+          });
+        });
+    }
+  }
+  isUpdateRequest() {
+    return this.requestType.value == GeneralAssociationMeetingRequestTypeEnum.UPDATE;
+  }
   private setDatePeriodValidation() {
     if (this.operation === OperationTypes.CREATE || this.model?.caseStatus === this.commonCaseStatus.DRAFT || this.model?.caseStatus === this.commonCaseStatus.NEW || this.model?.isCharityManagerReviewStep() || this.model?.isSupervisionAndControlReviewStep() || this.model?.isSupervisionManagerReviewStep() || this.model?.isSupervisionAndControlReworkStep()) {
       this.datepickerOptionsMap = {

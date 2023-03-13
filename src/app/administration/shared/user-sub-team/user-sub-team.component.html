@@ -18,13 +18,6 @@
   </div>
 </div>
 <div class="row">
-  <div class="col-12 mb-3">
-    <app-bulk-actions *ngIf="(table.selection?.selected || []).length"
-                      [selectedRecords]="(table.selection?.selected || [])"
-                      [actionsList]="actions"></app-bulk-actions>
-    <app-grid-search style="height: 42px" *ngIf="!(table.selection?.selected || []).length"
-                     (searchTextEvent)="filterControl.patchValue($event)"></app-grid-search>
-  </div>
   <app-table #table sortableTable [paginator]="paginator"
              [filter]="filterControl.value"
              [useSearchToFilter]="true"
@@ -32,6 +25,13 @@
              [data]="userSubTeams"
              [columns]="displayedColumns">
     <table cdk-table [dataSource]="table.dataSource" class="table table-striped table-bordered caption-top">
+      <ng-container cdkColumnDef="extra-header">
+        <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+          <table-header (textChange)="filterControl.setValue($event)">
+            <ng-container *ngTemplateOutlet="bulkActionsTemplate"></ng-container>
+          </table-header>
+        </th>
+      </ng-container>
       <ng-container cdkColumnDef="checkbox">
         <th cdk-header-cell style="width: 20px;" *cdkHeaderCellDef>
           <input type="checkbox" [disabled]="table.filter"
@@ -70,7 +70,8 @@
           </button>
         </td>
       </ng-container>
-      <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
+      <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
+      <tr cdk-header-row *cdkHeaderRowDef="displayedColumns" class="table-row-header"></tr>
       <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
       <tr *cdkNoDataRow>
         <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
@@ -79,3 +80,12 @@
   </app-table>
   <app-paginator #paginator></app-paginator>
 </div>
+<ng-template #bulkActionsTemplate>
+  <ng-container *ngIf="table">
+    <app-bulk-actions *ngIf="table.hasSelectedRecords()"
+                      [selectedRecords]="(table.selection?.selected || [])"
+                      [actionsList]="actions"
+                      [reversedColors]="true"
+                      [hasTableHeaderContainer]="true"></app-bulk-actions>
+  </ng-container>
+</ng-template>

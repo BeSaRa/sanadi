@@ -182,8 +182,7 @@
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label class="form-label" asteriskIfRequired="projectEvaluationSLA"
                    for="projectEvaluationSLA">{{lang.map.project_evaluation_sla}} ({{lang.map.months}})</label>
-            <input id="projectEvaluationSLA" [mask]="inputMaskPatterns.NUMBER_ONLY_WITH_LIMIT(50, true)"
-                   [validation]="false"
+            <input id="projectEvaluationSLA"
                    validationClasses="projectEvaluationSLA"
                    formControlName="projectEvaluationSLA" class="form-control">
             <app-field-error-message controlName="projectEvaluationSLA"></app-field-error-message>

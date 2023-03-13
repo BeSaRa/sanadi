@@ -1,7 +1,7 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {LangService} from '@app/services/lang.service';
 import {CustomValidators} from '@app/validators/custom-validators';
-import {UntypedFormBuilder, UntypedFormGroup, Validators} from '@angular/forms';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {FormManager} from '@app/models/form-manager';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {catchError, exhaustMap, takeUntil} from 'rxjs/operators';
@@ -38,6 +38,7 @@ export class AttachmentTypesPopupComponent implements OnInit, OnDestroy {
   model!: AttachmentType;
   validateFieldsVisible = true;
   saveVisible = true;
+  filterControl: UntypedFormControl = new UntypedFormControl('');
   private save$: Subject<any> = new Subject<any>();
   private destroy$: Subject<any> = new Subject<any>();
   private makeAttachmentTypeGlobal$: Subject<number> = new Subject<number>();
@@ -52,6 +53,7 @@ export class AttachmentTypesPopupComponent implements OnInit, OnDestroy {
   serviceDataColumns: string[] = ['arName', 'enName', 'userType', 'isActive', 'requestType', 'actions'];
 
   validToAddServices = false;
+  actionIconsEnum = ActionIconsEnum;
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<AttachmentType>,
               public lang: LangService,

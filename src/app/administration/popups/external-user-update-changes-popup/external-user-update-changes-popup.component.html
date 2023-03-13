@@ -7,11 +7,7 @@
           tabindex="-1" [dialogClose]="model" aria-label="Close"></button>
 </div>
 <div class="dialog-content w800px" #dialogContent>
-  <div class="row">
-    <div class="col-12 d-flex align-items-center">
-      <h1 class="h6 text-primary d-inline-block">{{lang.map.lbl_basic_info}}</h1>
-    </div>
-  </div>
+  <heading-row [labelKey]="'lbl_basic_info'"></heading-row>
   <div class="row">
     <div class="col-12">
       <app-table #table [data]="basicInfoDifferences"
@@ -29,7 +25,7 @@
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.new_value}}</th>
             <td cdk-cell *cdkCellDef="let row"><span>{{row.newValueInfo ? row.newValueInfo.getName() : ''}}</span></td>
           </ng-container>
-          <tr cdk-header-row *cdkHeaderRowDef="table.columns"></tr>
+          <tr cdk-header-row *cdkHeaderRowDef="table.columns" class="table-row-header"></tr>
           <tr cdk-row *cdkRowDef="let row; columns: table.columns;"></tr>
           <tr *cdkNoDataRow>
             <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
@@ -39,11 +35,7 @@
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-12 d-flex align-items-center">
-      <h1 class="h6 text-primary d-inline-block">{{lang.map.lbl_permissions}}</h1>
-    </div>
-  </div>
+  <heading-row [labelKey]="'lbl_permissions'"></heading-row>
   <div class="row">
     <div class="col-sm-12 col-md-6">
       <app-table #addedPermissionsTable [data]="addedPermissionsList"
@@ -54,7 +46,7 @@
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.added_permissions}}</th>
             <td cdk-cell *cdkCellDef="let row"><span>{{row.getName()}}</span></td>
           </ng-container>
-          <tr cdk-header-row *cdkHeaderRowDef="addedPermissionsTable.columns"></tr>
+          <tr cdk-header-row *cdkHeaderRowDef="addedPermissionsTable.columns" class="table-row-header"></tr>
           <tr cdk-row *cdkRowDef="let row; columns: addedPermissionsTable.columns;"></tr>
           <tr *cdkNoDataRow>
             <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
@@ -71,7 +63,7 @@
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.removed_permissions}}</th>
             <td cdk-cell *cdkCellDef="let row"><span>{{row.getName()}}</span></td>
           </ng-container>
-          <tr cdk-header-row *cdkHeaderRowDef="removedPermissionsTable.columns"></tr>
+          <tr cdk-header-row *cdkHeaderRowDef="removedPermissionsTable.columns" class="table-row-header"></tr>
           <tr cdk-row *cdkRowDef="let row; columns: removedPermissionsTable.columns;"></tr>
           <tr *cdkNoDataRow>
             <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
@@ -81,11 +73,7 @@
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-12 d-flex align-items-center">
-      <h1 class="h6 text-primary d-inline-block">{{lang.map.menus}}</h1>
-    </div>
-  </div>
+  <heading-row [labelKey]="'menus'"></heading-row>
   <div class="row">
     <div class="col-sm-12 col-md-6">
       <app-table #addedMenusTable [data]="addedUserMenusList"
@@ -96,7 +84,7 @@
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.added_menus}}</th>
             <td cdk-cell *cdkCellDef="let row"><span>{{row.getName()}}</span></td>
           </ng-container>
-          <tr cdk-header-row *cdkHeaderRowDef="addedMenusTable.columns"></tr>
+          <tr cdk-header-row *cdkHeaderRowDef="addedMenusTable.columns" class="table-row-header"></tr>
           <tr cdk-row *cdkRowDef="let row; columns: addedMenusTable.columns;"></tr>
           <tr *cdkNoDataRow>
             <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
@@ -113,7 +101,7 @@
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.removed_menus}}</th>
             <td cdk-cell *cdkCellDef="let row"><span>{{row.getName()}}</span></td>
           </ng-container>
-          <tr cdk-header-row *cdkHeaderRowDef="removedMenusTable.columns"></tr>
+          <tr cdk-header-row *cdkHeaderRowDef="removedMenusTable.columns" class="table-row-header"></tr>
           <tr cdk-row *cdkRowDef="let row; columns: removedMenusTable.columns;"></tr>
           <tr *cdkNoDataRow>
             <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
@@ -123,11 +111,7 @@
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-12 d-flex align-items-center">
-      <h1 class="h6 text-primary d-inline-block">{{lang.map.link_services}}</h1>
-    </div>
-  </div>
+  <heading-row [labelKey]="'link_services'"></heading-row>
   <div class="row">
     <div class="col-sm-12">
       <app-table #servicePermissionsTable [data]="servicePermissionDifferences"
@@ -178,7 +162,7 @@
               </ng-container>
             </td>
           </ng-container>
-          <tr cdk-header-row *cdkHeaderRowDef="servicePermissionsTable.columns"></tr>
+          <tr cdk-header-row *cdkHeaderRowDef="servicePermissionsTable.columns" class="table-row-header"></tr>
           <tr cdk-row *cdkRowDef="let row; columns: servicePermissionsTable.columns;"></tr>
           <tr *cdkNoDataRow>
             <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
@@ -206,9 +190,11 @@
 </div>
 <div class="dialog-actions">
   <span class="flex-grow-1"></span>
-  <button (click)="acceptRequest()" *ngIf="service.canAcceptUserRequest() && model?.requestStatus != externalUserUpdateRequestStatusEnum.APPROVED"
+  <button (click)="acceptRequest()"
+          *ngIf="service.canAcceptUserRequest() && model?.requestStatus != externalUserUpdateRequestStatusEnum.APPROVED"
           class="btn btn-primary">{{lang.map.lbl_accept}}</button>
-  <button (click)="rejectRequest()" *ngIf="service.canRejectUserRequest() && model?.requestStatus != externalUserUpdateRequestStatusEnum.APPROVED"
+  <button (click)="rejectRequest()"
+          *ngIf="service.canRejectUserRequest() && model?.requestStatus != externalUserUpdateRequestStatusEnum.APPROVED"
           class="btn btn-primary">{{lang.map.lbl_reject}}</button>
   <button [dialogClose]="model" class="btn btn-secondary">{{lang.map.btn_cancel}}</button>
 </div>

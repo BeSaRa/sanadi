@@ -5,6 +5,7 @@ import {ProjectModelsRoutingModule} from './project-models-routing.module';
 import {ProjectModelOutputsComponent} from './pages/project-model-outputs/project-model-outputs.component';
 import {ProjectModelComponent} from '@modules/services/project-models/pages/project-model/project-model.component';
 import {EServicesMainModule} from '@modules/e-services-main/e-services-main.module';
+import {MapsModule} from '@modules/maps/maps.module';
 
 
 @NgModule({
@@ -15,6 +16,7 @@ import {EServicesMainModule} from '@modules/e-services-main/e-services-main.modu
   imports: [
     CommonModule,
     EServicesMainModule,
+    MapsModule,
     ProjectModelsRoutingModule
   ]
 })

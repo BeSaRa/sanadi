@@ -1,15 +1,15 @@
 import {FinancialTransfersProject} from '@app/models/financial-transfers-project';
-import {ExternalProjectLicensing} from './../models/external-project-licensing';
+import {ExternalProjectLicensing} from '@models/external-project-licensing';
 import {
   SelectBankAccountPopupComponent
-} from './../modules/e-services-main/popups/select-bank-account-popup/select-bank-account-popup.component';
-import {BankAccount} from './../models/bank-account';
+} from '@modules/e-services-main/popups/select-bank-account-popup/select-bank-account-popup.component';
+import {BankAccount} from '@models/bank-account';
 import {
   SelectPreRegisteredPopupComponent
-} from './../modules/e-services-main/popups/select-pre-registered-popup/select-pre-registered-popup.component';
+} from '@modules/services/financial-transfer-licensing/popups/select-pre-registered-popup/select-pre-registered-popup.component';
 import {
   SelectAuthorizedEntityPopupComponent
-} from './../modules/e-services-main/popups/select-authorized-entity-popup/select-authorized-entity-popup.component';
+} from '@modules/services/financial-transfer-licensing/popups/select-authorized-entity-popup/select-authorized-entity-popup.component';
 import {AdminResult} from '@app/models/admin-result';
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';

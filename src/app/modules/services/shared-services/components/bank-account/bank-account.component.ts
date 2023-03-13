@@ -93,7 +93,6 @@ export class BankAccountComponent implements OnInit {
       icon: ActionIconsEnum.VIEW,
       label: 'view',
       onClick: (item: BankAccount) => this.view(item),
-      show: (_item: BankAccount) => this.readonly
     }
   ];
   sortingCallbacks = {

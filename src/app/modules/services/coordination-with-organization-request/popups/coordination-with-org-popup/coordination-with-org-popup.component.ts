@@ -73,8 +73,7 @@ export class CoordinationWithOrgPopupComponent implements OnInit {
   private _listenToAction() {
     this.action$
       .pipe(takeUntil(this.destroy$))
-      .pipe(map(_ => (this.isCommentRequired() ? this.comment.invalid : false) || this.approvalForm.invalid))
-
+      .pipe(map(_ => this.comment.invalid || this.approvalForm.invalid))
       .pipe(tap(invalid => {
         invalid && this.dialog.error(this.lang.map.msg_all_required_fields_are_filled);
         this.approvalForm.markAllAsTouched();
@@ -99,8 +98,5 @@ export class CoordinationWithOrgPopupComponent implements OnInit {
       selectedResponse: this.response,
       comment: this.comment.value
     } : {selectedResponse: this.response};
-  }
-  private isCommentRequired(): boolean {
-    return false;
   }
 }

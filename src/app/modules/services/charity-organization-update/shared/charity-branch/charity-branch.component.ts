@@ -3,7 +3,7 @@ import {UntypedFormBuilder} from '@angular/forms';
 import {ListModelComponent} from '@app/generics/ListModel-component';
 import {ControlWrapper} from '@contracts/i-control-wrapper';
 import {CharityBranch} from '@models/charity-branch';
-import {OrganizationOfficerComponent} from '@modules/e-services-main/shared/organization-officer/organization-officer.component';
+import {OrganizationOfficerComponent} from '@modules/services/coordination-with-organization-request/shared/organization-officer/organization-officer.component';
 import {LangService} from '@services/lang.service';
 import {LookupService} from '@services/lookup.service';
 import {Lookup} from '@models/lookup';

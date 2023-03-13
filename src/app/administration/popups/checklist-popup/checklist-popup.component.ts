@@ -13,6 +13,7 @@ import {catchError, exhaustMap, switchMap, takeUntil} from 'rxjs/operators';
 import {UserClickOn} from '@app/enums/user-click-on.enum';
 import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
 import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import {UntypedFormControl} from '@angular/forms';
 
 @Component({
   selector: 'checklist-popup',
@@ -40,6 +41,7 @@ export class ChecklistPopupComponent implements OnInit {
   destroy$: Subject<any> = new Subject<any>();
   displayedColumns: string[] = ['arName', 'enName', 'status', 'actions'];
   models: ChecklistItem[] = [];
+  filterControl: UntypedFormControl = new UntypedFormControl('');
   actions: IMenuItem<ChecklistItem>[] = [
     // edit
     {
