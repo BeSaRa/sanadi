@@ -31,7 +31,7 @@ import {CustomValidators} from '@app/validators/custom-validators';
 import {CountryService} from '@services/country.service';
 import {Observable, of, Subject} from 'rxjs';
 import {catchError, exhaustMap, filter, map, switchMap, take, takeUntil, tap,} from 'rxjs/operators';
-import {FinancialTransferRequestTypes} from '@enums/financial-transfer-request-types.enum';
+import {FinancialTransferRequestTypes} from '@enums/service-request-types';
 import {FinancialTransferTypes} from '@enums/financial-transfer-types.enum';
 import {FinancialTransfereeTypes} from '@enums/financial-transferee-types.enum';
 import {AdminResult} from '@models/admin-result';

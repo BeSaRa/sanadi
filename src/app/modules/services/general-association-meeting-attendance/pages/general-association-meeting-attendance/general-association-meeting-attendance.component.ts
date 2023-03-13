@@ -27,7 +27,7 @@ import { CommonCaseStatus } from '@enums/common-case-status.enum';
 import { OpenFrom } from '@enums/open-from.enum';
 import { GeneralAssociationInternalMember } from '@models/general-association-internal-member';
 import { MeetingAttendanceReport } from '@models/meeting-attendance-report';
-import { GeneralAssociationMeetingRequestTypeEnum } from '@enums/general-association-meeting-request-type-enum';
+import { GeneralAssociationMeetingRequestTypeEnum } from '@enums/service-request-types';
 import { MeetingAttendanceSubItem } from '@models/meeting-attendance-sub-item';
 import { MeetingAttendanceMainItem } from '@models/meeting-attendance-main-item';
 import { GeneralMeetingAttendanceNote } from '@models/general-meeting-attendance-note';
