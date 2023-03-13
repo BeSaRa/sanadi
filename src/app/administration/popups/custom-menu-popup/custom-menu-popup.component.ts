@@ -1,3 +1,4 @@
+import { MenuItem } from '@app/models/menu-item';
 import {CustomMenu} from '@app/models/custom-menu';
 import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, Inject, ViewChild} from '@angular/core';
 import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
@@ -21,7 +22,7 @@ import {UserTypes} from '@app/enums/user-types.enum';
 @Component({
   selector: 'app-custom-menu-popup',
   templateUrl: './custom-menu-popup.component.html',
-  styleUrls: ['./custom-menu-popup.component.css'],
+  styleUrls: ['./custom-menu-popup.component.scss'],
 })
 export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> implements AfterViewInit {
   form!: UntypedFormGroup;
@@ -33,6 +34,7 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
   menuView: Lookup[] = this.lookupService.listByCategory.MenuView;
   userTypes: Lookup[] = this.lookupService.listByCategory.UserType.filter(x => x.lookupKey !== UserTypes.INTEGRATION_USER);
   parentMenu?: CustomMenu;
+  defaultParent?:MenuItem;
 
   selectedTabIndex$: Subject<number> = new Subject<number>();
   defaultSelectedTab: string = 'basic';

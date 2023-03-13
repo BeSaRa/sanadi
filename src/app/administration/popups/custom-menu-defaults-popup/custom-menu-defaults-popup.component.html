@@ -22,7 +22,9 @@
             <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
               <table-header tableTitle="menu_items"
                             (textChange)="filterControl.setValue($event)"
-                            [allowAdd]="!readonly"
+                            [allowAdd]="true"
+                            [reload$]="reload$"
+                            [add$]="add$"
                             ></table-header>
             </th>
           </ng-container>
@@ -37,8 +39,8 @@
           <ng-container cdkColumnDef="actions">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
             <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">
-              <!-- <grid-actions [record]="row" [actions]="actions" [itemIndex]="itemIndex">
-              </grid-actions> -->
+              <grid-actions [record]="row" [actions]="actions" [itemIndex]="itemIndex">
+              </grid-actions>
             </td>
           </ng-container>
           <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>

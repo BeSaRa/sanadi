@@ -28,7 +28,7 @@ import { TabComponent } from '@app/shared/components/tab/tab.component';
 @Component({
   selector: 'app-custom-menu',
   templateUrl: './custom-menu.component.html',
-  styleUrls: ['./custom-menu.component.css'],
+  styleUrls: ['./custom-menu.component.scss'],
 })
 export class CustomMenuComponent extends AdminGenericComponent<CustomMenu, CustomMenuService>
 implements AfterViewInit {
@@ -39,7 +39,7 @@ implements AfterViewInit {
               public service: CustomMenuService,
               private dialogService: DialogService,
               private sharedService: SharedService,
-              private toast: ToastService,
+              public toast: ToastService,
               private cd : ChangeDetectorRef,
               private menuItemService: MenuItemService) {
     super();
@@ -343,7 +343,9 @@ implements AfterViewInit {
     if (!tabData) {
       return;
     }
-    this.reload$.next(null);
+    if(tabData.name === 'customMenus'){
+      this.reload$.next(null);
+    }
 
   }
   private _findTabByTabName(tab: TabComponent): ITabData | undefined {

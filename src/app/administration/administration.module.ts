@@ -218,7 +218,8 @@ import {SdGoalComponent} from './pages/sd-goal/sd-goal.component';
     GlobalSettingsComponent,
     UserPreferencesPopupComponent,
     AdminLicenseComponent,
-    CustomMenuDefaultsPopupComponent
+    CustomMenuDefaultsPopupComponent,
+    CustomMenusTableComponent
   ],
   imports: [
     SharedModule,
