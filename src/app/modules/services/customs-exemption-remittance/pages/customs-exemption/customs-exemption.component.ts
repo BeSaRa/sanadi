@@ -415,6 +415,7 @@ export class CustomsExemptionComponent extends EServicesGenericComponent<Customs
 
       delete value.id;
       delete value.fullSerial;
+      delete value.serial;
       delete value.exportedBookFullSerial;
 
       this._updateForm(value);

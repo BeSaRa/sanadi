@@ -3,37 +3,31 @@
     <tab [hasError]="basicInfo.invalid" [template]="basic_info" [title]="lang.map.lbl_basic_info" name="basic_info">
     </tab>
     <tab [hasError]="(selectedAdministrativeBoardMembers && selectedAdministrativeBoardMembers.length === 0)"
-         [template]="administrative_board_members" [title]="lang.map.administrative_board_members"
-         name="administrativeBoardMembers">
+      [template]="administrative_board_members" [title]="lang.map.administrative_board_members"
+      name="administrativeBoardMembers">
     </tab>
     <tab [hasError]="(selectedGeneralAssociationMembers && selectedGeneralAssociationMembers.length === 0)"
-         [template]="general_association_members" [title]="lang.map.general_association_members"
-         name="generalAssociationMembers">
+      [template]="general_association_members" [title]="lang.map.general_association_members"
+      name="generalAssociationMembers">
     </tab>
-    <tab [hasError]="agendaItems && agendaItems.length === 0"
-         [template]="meeting_agenda" [title]="lang.map.meeting_agenda"
-         name="meeting_agenda">
+    <tab [hasError]="agendaItems && agendaItems.length === 0" [template]="meeting_agenda"
+      [title]="lang.map.meeting_agenda" name="meeting_agenda">
     </tab>
-    <tab [hasError]="selectedInternalUsers && selectedInternalUsers.length === 0"
-         [template]="internal_users" [title]="lang.map.internal_members"
-         *ngIf="!isExternalUser"
-         name="internal_users">
+    <tab [hasError]="selectedInternalUsers && selectedInternalUsers.length === 0" [template]="internal_users"
+      [title]="lang.map.internal_members" *ngIf="!isExternalUser" name="internal_users">
     </tab>
     <!--    <tab [template]="manage_members_tasks" [title]="lang.map.manage_member_tasks"-->
     <!--         *ngIf="!isExternalUser && model?.isSentToMember() && model?.isDecisionMakerReviewStep()"-->
     <!--         name="manage_members_tasks">-->
     <!--    </tab>-->
     <tab [template]="meeting_points" [title]="lang.map.meeting_points"
-         *ngIf="!isExternalUser && (isDecisionMakerReview || isMemberReview)"
-         name="meeting_points">
+      *ngIf="!isExternalUser && (isDecisionMakerReview || isMemberReview)" name="meeting_points">
     </tab>
-    <tab [template]="general_notes" [title]="lang.map.general_notes"
-         *ngIf="isDecisionMakerReview || isMemberReview"
-         name="general_notes">
+    <tab [template]="general_notes" [title]="lang.map.general_notes" *ngIf="isDecisionMakerReview || isMemberReview"
+      name="general_notes">
     </tab>
     <tab [hasError]="specialExplanation.invalid" [template]="special_explanations"
-         [title]="lang.map.special_explanations"
-         name="special_explanations"></tab>
+      [title]="lang.map.special_explanations" name="special_explanations"></tab>
     <tab *ngIf="!accordionView" [template]="attachmentsTab" [title]="lang.map.attachments" name="attachments"></tab>
   </tabs-list>
   <ng-container [formGroup]="form">
@@ -42,34 +36,24 @@
         <div class="row">
           <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
             <label asteriskIfRequired="requestType" class="form-label"
-                   for="requestType">{{lang.map.request_type}}</label>
-            <ng-select [clearable]="false" [readonly]="(readonly)"
-                       appendTo="body"
-                       labelForId="requestType"
-                       placeholder="{{lang.map.select}}"
-                       [notFoundText]="lang.map.msg_not_found"
-                       formControlName="requestType"
-                       id="requestType"
-                       validationClasses="requestType"
-                       (change)="handleRequestTypeChange($event, true)">
+              for="requestType">{{lang.map.request_type}}</label>
+            <ng-select [clearable]="false" [readonly]="(readonly)" appendTo="body" labelForId="requestType"
+              placeholder="{{lang.map.select}}" [notFoundText]="lang.map.msg_not_found" formControlName="requestType"
+              id="requestType" validationClasses="requestType" (change)="handleRequestTypeChange($event, true)">
               <ng-option *ngFor="let option of requestTypes" [value]="option.lookupKey">{{option.getName()}}</ng-option>
             </ng-select>
             <app-field-error-message controlName="requestType"></app-field-error-message>
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
-            <label asteriskIfRequired="oldFullSerial" class="form-label"
-                   for="oldFullSerial">{{lang.map.serial_number}}
+            <label asteriskIfRequired="oldFullSerial" class="form-label" for="oldFullSerial">{{lang.map.serial_number}}
             </label>
             <div class="input-group">
-              <input (keydown.enter)="searchForLicense()" [readonly]="(readonly)"
-                     class="form-control"
-                     formControlName="oldFullSerial"
-                     id="oldFullSerial"
-                     validationClasses="oldFullSerial">
+              <input (keydown.enter)="searchForLicense()" [readonly]="(readonly)" class="form-control"
+                formControlName="oldFullSerial" id="oldFullSerial" validationClasses="oldFullSerial">
               <app-field-error-message controlName="oldFullSerial"></app-field-error-message>
               <button (click)="searchForLicense()"
-                      [disabled]="(readonly || requestType?.value === generalAssociationMeetingRequestTypeEnum.NEW)"
-                      class="input-group-text">
+                [disabled]="(readonly || requestType?.value === generalAssociationMeetingRequestTypeEnum.NEW)"
+                class="input-group-text">
                 <i class="mdi mdi-magnify text-primary"></i>
               </button>
             </div>
@@ -79,12 +63,9 @@
           <div class="col-12 position-relative">
             <h1 class="h6 text-primary">{{lang.map.selected_license_info}}</h1>
             <div class="table-responsive">
-              <app-table #table [useSearchToFilter]="true"
-                         [selectable]="true" [data]="selectedLicenses"
-                         [columns]="selectedLicenseDisplayedColumns"
-                         sortableTable>
-                <table cdk-table [dataSource]="table.dataSource"
-                       class="table table-striped table-bordered caption-top">
+              <app-table #table [useSearchToFilter]="true" [selectable]="true" [data]="selectedLicenses"
+                [columns]="selectedLicenseDisplayedColumns" sortableTable>
+                <table cdk-table [dataSource]="table.dataSource" class="table table-striped table-bordered caption-top">
                   <ng-container cdkColumnDef="serial">
                     <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.serial_number}}</th>
                     <td cdk-cell *cdkCellDef="let row"> {{row.fullSerial}} </td>
@@ -119,74 +100,56 @@
         <div class="row">
           <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
             <label asteriskIfRequired="meetingType" class="form-label"
-                   for="meetingType">{{lang.map.general_association_meeting_type}}</label>
-            <ng-select [clearable]="false" [readonly]="(readonly)"
-                       appendTo="body"
-                       labelForId="meetingType"
-                       placeholder="{{lang.map.select}}"
-                       [notFoundText]="lang.map.msg_not_found"
-                       formControlName="meetingType"
-                       id="meetingType" validationClasses="meetingType">
-              <ng-option *ngFor="let option of meetingTypes"
-                         [value]="option.lookupKey">{{option.getName()}}</ng-option>
+              for="meetingType">{{lang.map.general_association_meeting_type}}</label>
+            <ng-select [clearable]="false" [readonly]="(readonly)" appendTo="body" labelForId="meetingType"
+              placeholder="{{lang.map.select}}" [notFoundText]="lang.map.msg_not_found" formControlName="meetingType"
+              id="meetingType" validationClasses="meetingType">
+              <ng-option *ngFor="let option of meetingTypes" [value]="option.lookupKey">{{option.getName()}}</ng-option>
             </ng-select>
             <app-field-error-message controlName="meetingType"></app-field-error-message>
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
-            <label asteriskIfRequired="location" class="form-label"
-                   for="location">{{lang.map.meeting_location}}</label>
-            <input [readonly]="(readonly)" class="form-control" formControlName="location"
-                   id="location" validationClasses="location">
+            <label asteriskIfRequired="location" class="form-label" for="location">{{lang.map.meeting_location}}</label>
+            <input [readonly]="(readonly)" class="form-control" formControlName="location" id="location"
+              validationClasses="location">
             <app-field-error-message controlName="location"></app-field-error-message>
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="periodical" class="form-label"
-                   for="periodical">{{lang.map.meeting_periodical}}</label>
-            <input [readonly]="(readonly)" class="form-control"
-                   formControlName="periodical"
-                   id="periodical" validationClasses="periodical">
+              for="periodical">{{lang.map.meeting_periodical}}</label>
+            <input [readonly]="(readonly)" class="form-control" formControlName="periodical" id="periodical"
+              validationClasses="periodical">
             <app-field-error-message controlName="periodical"></app-field-error-message>
           </div>
         </div>
         <div class="row">
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="meetingDate" class="form-label"
-                   for="meetingDate">{{lang.map.meeting_date}}</label>
+              for="meetingDate">{{lang.map.meeting_date}}</label>
             <div class="reg-start-date-container">
               <div class="input-group">
                 <i class="input-group-text mdi mdi-calendar"></i>
-                <div #dpMeetingDate="angular-mydatepicker"
-                     (dateChanged)="meetingDateChanged($event)"
-                     (click)="(!readonly || canUpdateMeetingDate()) && dpMeetingDate.toggleCalendar()"
-                     [ngClass]="getMeetingDateClass()"
-                     [options]="datepickerOptionsMap.meetingDate"
-                     angular-mydatepicker
-                     class="form-control"
-                     formControlName="meetingDate"
-                     id="meetingDate" validationClasses="meetingDate"></div>
+                <div #dpMeetingDate="angular-mydatepicker" (dateChanged)="meetingDateChanged($event)"
+                  (click)="(!readonly || canUpdateMeetingDate()) && dpMeetingDate.toggleCalendar()"
+                  [ngClass]="getMeetingDateClass()" [options]="datepickerOptionsMap.meetingDate" angular-mydatepicker
+                  class="form-control" formControlName="meetingDate" id="meetingDate" validationClasses="meetingDate">
+                </div>
                 <app-field-error-message controlName="meetingDate"></app-field-error-message>
               </div>
             </div>
           </div>
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
-            <label asteriskIfRequired="year" class="form-label"
-                   for="year">{{lang.map.year}}</label>
-            <input [readonly]="(readonly)" class="form-control"
-                   formControlName="year"
-                   id="year" validationClasses="year">
+            <label asteriskIfRequired="year" class="form-label" for="year">{{lang.map.year}}</label>
+            <input [readonly]="(readonly)" class="form-control" formControlName="year" id="year"
+              validationClasses="year">
             <app-field-error-message controlName="year"></app-field-error-message>
           </div>
           <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
             <label asteriskIfRequired="meetingTime" for="meetingTime"
-                   class="form-label">{{lang.map.meeting_time}}</label>
-            <ng-select validationClasses="meetingTime"
-                       appendTo="body"
-                       labelForId="meetingTime"
-                       placeholder="{{lang.map.select}}"
-                       [notFoundText]="lang.map.msg_not_found"
-                       formControlName="meetingTime"
-                       id="meetingTime"
-                       [readonly]="(readonly)">
+              class="form-label">{{lang.map.meeting_time}}</label>
+            <ng-select validationClasses="meetingTime" appendTo="body" labelForId="meetingTime"
+              placeholder="{{lang.map.select}}" [notFoundText]="lang.map.msg_not_found" formControlName="meetingTime"
+              id="meetingTime" [readonly]="(readonly)">
               <ng-option [value]="hour.val" *ngFor="let hour of hoursList">{{hour.key}}</ng-option>
             </ng-select>
             <app-field-error-message controlName="meetingTime"></app-field-error-message>
@@ -195,23 +158,20 @@
         <div class="row">
           <div class="col-md-4 col-sm-12 mb-4 position-relative">
             <label asteriskIfRequired="meetingInitiator" class="form-label"
-                   for="meetingInitiator">{{lang.map.meeting_initiator}}</label>
-            <input [readonly]="(readonly)" class="form-control" formControlName="meetingInitiator"
-                   id="meetingInitiator" validationClasses="meetingInitiator">
+              for="meetingInitiator">{{lang.map.meeting_initiator}}</label>
+            <input [readonly]="(readonly)" class="form-control" formControlName="meetingInitiator" id="meetingInitiator"
+              validationClasses="meetingInitiator">
             <app-field-error-message controlName="meetingInitiator"></app-field-error-message>
           </div>
           <div class="col-md-4 col-sm-12 mb-4 ng-select-wrapper">
             <label asteriskIfRequired="meetingClassification" class="form-label"
-                   for="meetingClassification">{{lang.map.meeting_classification}}</label>
-            <ng-select [clearable]="false" [readonly]="(readonly)"
-                       appendTo="body"
-                       labelForId="meetingClassification"
-                       placeholder="{{lang.map.select}}"
-                       [notFoundText]="lang.map.msg_not_found"
-                       formControlName="meetingClassification"
-                       id="meetingClassification" validationClasses="meetingClassification">
-              <ng-option *ngFor="let option of meetingClassifications"
-                         [value]="option.lookupKey">{{option.getName()}}</ng-option>
+              for="meetingClassification">{{lang.map.meeting_classification}}</label>
+            <ng-select [clearable]="false" [readonly]="(readonly)" appendTo="body" labelForId="meetingClassification"
+              placeholder="{{lang.map.select}}" [notFoundText]="lang.map.msg_not_found"
+              formControlName="meetingClassification" id="meetingClassification"
+              validationClasses="meetingClassification">
+              <ng-option *ngFor="let option of meetingClassifications" [value]="option.lookupKey">{{option.getName()}}
+              </ng-option>
             </ng-select>
             <app-field-error-message controlName="meetingClassification"></app-field-error-message>
           </div>
@@ -221,21 +181,17 @@
     <ng-container>
       <ng-template #administrative_board_members>
         <manage-members (memberListChanged)="onAdministrativeBoardMembersChanged($event)"
-                        [addLabel]="addAdministrativeBoardMembersLabel"
-                        [selectedMembers]="selectedAdministrativeBoardMembers"
-                        [isExternalUser]="isExternalUser"
-                        [isGeneralAssociationMembers]="false"
-                        [readonly]="readonly || isCancel"></manage-members>
+          [addLabel]="addAdministrativeBoardMembersLabel" [selectedMembers]="selectedAdministrativeBoardMembers"
+          [isExternalUser]="isExternalUser" [isGeneralAssociationMembers]="false" [readonly]="readonly || isCancel">
+        </manage-members>
       </ng-template>
     </ng-container>
     <ng-container>
       <ng-template #general_association_members>
         <manage-members (memberListChanged)="onGeneralAssociationMembersChanged($event)"
-                        [addLabel]="addGeneralAssociationMembersLabel"
-                        [selectedMembers]="selectedGeneralAssociationMembers"
-                        [isExternalUser]="isExternalUser"
-                        [isGeneralAssociationMembers]="true"
-                        [readonly]="readonly || isCancel"></manage-members>
+          [addLabel]="addGeneralAssociationMembersLabel" [selectedMembers]="selectedGeneralAssociationMembers"
+          [isExternalUser]="isExternalUser" [isGeneralAssociationMembers]="true" [readonly]="readonly || isCancel">
+        </manage-members>
       </ng-template>
     </ng-container>
     <ng-container>
@@ -245,7 +201,7 @@
             <div class="col">
               <h1 class="h6 text-primary m-0 d-inline-block">{{lang.map.add_to_meeting_agenda}}</h1>
               <button class="btn btn-link outline-none" [disabled]="(readonly || isCancel)"
-                      tooltip="{{lang.map.btn_add}}" (click)="openAddAgendaForm()">
+                tooltip="{{lang.map.btn_add}}" (click)="openAddAgendaForm()">
                 <i class="mdi mdi-plus-box"></i></button>
             </div>
           </div>
@@ -253,10 +209,9 @@
             <div class="row">
               <div class="col-md-4 col-sm-12 mb-4 position-relative">
                 <label asteriskIfRequired="description" class="form-label"
-                       for="agendaItemDescription">{{lang.map.lbl_description}}</label>
-                <input [readonly]="(readonly)" class="form-control"
-                       formControlName="description"
-                       id="agendaItemDescription" validationClasses="description">
+                  for="agendaItemDescription">{{lang.map.lbl_description}}</label>
+                <input [readonly]="(readonly)" class="form-control" formControlName="description"
+                  id="agendaItemDescription" validationClasses="description">
                 <app-field-error-message controlName="description"></app-field-error-message>
               </div>
             </div>
@@ -264,30 +219,24 @@
               <div class="col-12 text-center action-container mb-3">
                 <div class="flex-grow-1"></div>
                 <button [disabled]="!agendaForm?.valid" (click)="saveAgendaItem()"
-                        class="btn btn-primary">{{lang.map.btn_save}}</button>
-                <button class="btn btn-secondary"
-                        (click)="cancelAddAgendaItem()">{{lang.map.btn_cancel}}</button>
+                  class="btn btn-primary">{{lang.map.btn_save}}</button>
+                <button class="btn btn-secondary" (click)="cancelAddAgendaItem()">{{lang.map.btn_cancel}}</button>
               </div>
             </div>
           </ng-container>
         </ng-container>
         <div class="row">
           <div class="col-12">
-            <app-table #table [columns]="agendaItemsDisplayedColumns"
-                       [data]="agendaItems" [selectable]="true"
-                       [useSearchToFilter]="true"
-                       sortableTable>
-              <table [dataSource]="table.dataSource" cdk-table
-                     class="table table-striped table-bordered caption-top">
+            <app-table #table [columns]="agendaItemsDisplayedColumns" [data]="agendaItems" [selectable]="true"
+              [useSearchToFilter]="true" sortableTable>
+              <table [dataSource]="table.dataSource" cdk-table class="table table-striped table-bordered caption-top">
                 <ng-container cdkColumnDef="index">
-                  <th *cdkHeaderCellDef cdk-header-cell
-                      sortable-header> #
+                  <th *cdkHeaderCellDef cdk-header-cell sortable-header> #
                   </th>
                   <td *cdkCellDef="let row; let i = index;" cdk-cell> {{i + 1}} </td>
                 </ng-container>
                 <ng-container cdkColumnDef="description">
-                  <th *cdkHeaderCellDef cdk-header-cell
-                      sortable-header> {{lang.map.agenda_items}}</th>
+                  <th *cdkHeaderCellDef cdk-header-cell sortable-header> {{lang.map.agenda_items}}</th>
                   <td *cdkCellDef="let row" cdk-cell> {{row}} </td>
                 </ng-container>
                 <ng-container cdkColumnDef="actions">
@@ -295,13 +244,13 @@
                   <td *cdkCellDef="let row" cdk-cell class="table-actions">
                     <div class="d-flex flex-row">
                       <button (click)="removeAgendaItem($event, row)"
-                              [disabled]="(readonly || isCancel || addAgendaFormActive)"
-                              class="btn btn-link outline-none" tooltip="{{lang.map.btn_remove}}">
+                        [disabled]="(readonly || isCancel || addAgendaFormActive)" class="btn btn-link outline-none"
+                        tooltip="{{lang.map.btn_remove}}">
                         <i class="mdi mdi-close-box"></i>
                       </button>
                       <button (click)="selectAgendaItem($event, row)"
-                              [disabled]="(readonly || isCancel || addAgendaFormActive)"
-                              class="btn btn-link outline-none" tooltip="{{lang.map.btn_edit}}">
+                        [disabled]="(readonly || isCancel || addAgendaFormActive)" class="btn btn-link outline-none"
+                        tooltip="{{lang.map.btn_edit}}">
                         <i class="mdi mdi-pen"></i>
                       </button>
                     </div>
@@ -322,15 +271,16 @@
     <ng-container>
       <ng-template #internal_users>
         <manage-internal-users (memberListChanged)="onInternalMembersChanged($event)"
-                               (userTaskTerminated)="terminateUserTask($event.event, $event.item)"
-                               [selectedInternalUsers]="selectedInternalUsers"
-                               [caseStepName]="model?.taskDetails?.name!"
-                               [isExternalUser]="isExternalUser"
-                               [isCancel]="isCancel"
-                               [isClaimed]="model?.taskDetails?.isClaimed()!"
-                               [model]="model!"
-                               [meetingReport]="meetingReport"
-                               [generalNotes]="membersGeneralNotes"></manage-internal-users>
+          (userTaskTerminated)="terminateUserTask($event.event, $event.item)"
+          [selectedInternalUsers]="selectedInternalUsers" [caseStepName]="model?.taskDetails?.name!"
+          [isExternalUser]="isExternalUser" [isCancel]="isCancel" [isClaimed]="model?.taskDetails?.isClaimed()!"
+          [model]="model!" [meetingReport]="meetingReport" [generalNotes]="membersGeneralNotes"></manage-internal-users>
+        <hr>
+        <div *ngIf="model?.isDecisionMakerReviewStep() && this.isUpdateRequest() && model?.isSendToMember">
+          <h5 class="text-primary">{{lang.map.previews_replays}}</h5>
+          <manage-prev-internal-users [selectedInternalUsers]="selectedInternalUsers" [model]="oldModel!"
+            [meetingReport]="oldMeetingReport" [generalNotes]="oldMembersGeneralNotes"></manage-prev-internal-users>
+        </div>
       </ng-template>
     </ng-container>
     <!--    <ng-container>-->
@@ -402,97 +352,86 @@
             <div class="row">
               <div class="col-md-12">
                 <h1 class="h6 text-primary m-0 d-inline-block">{{lang.map.main_meeting_points}}</h1>
-                <button class="btn btn-link outline-none"
-                        [disabled]="!this.model?.canAddMeetingPoints()"
-                        tooltip="{{lang.map.add_main_meeting_point}}" (click)="addMainItem()">
+                <button class="btn btn-link outline-none" [disabled]="!this.model?.canAddMeetingPoints()"
+                  tooltip="{{lang.map.add_main_meeting_point}}" (click)="addMainItem()">
                   <i class="mdi mdi-plus-box"></i></button>
               </div>
             </div>
-            <div class="row" [formGroup]="meetingPointsForm"
-                 *ngFor="let mainItem of mainItems?.controls; let i=index">
+            <div class="row" [formGroup]="meetingPointsForm" *ngFor="let mainItem of mainItems?.controls; let i=index">
               <div class="col-md-12 mb-3" formGroupName="meetingMainItem">
                 <div class="row">
                   <div class="col-md-12">
                     <div class="main-point-container">
-                      <button class="btn btn-link outline-none"
-                              [disabled]="!this.canRemoveMeetingPoint(mainItem)"
-                              [ngClass]="getRemoveMainItemClass()"
-                              tooltip="{{lang.map.delete_main_meeting_point}}" (click)="removeMainItem(i)">
+                      <button class="btn btn-link outline-none" [disabled]="!this.canRemoveMeetingPoint(mainItem)"
+                        [ngClass]="getRemoveMainItemClass()" tooltip="{{lang.map.delete_main_meeting_point}}"
+                        (click)="removeMainItem(i)">
                         <i class="mdi mdi-close-circle"></i></button>
                       <div class="row" [formGroupName]="i">
                         <div class="col-md-12">
                           <div class="row">
                             <div class="col-md-4 col-sm-12 mb-4 position-relative">
                               <label asteriskIfRequired="enName" class="form-label"
-                                     [for]="'enName' + i">{{lang.map.main_point_name}}</label>
-                              <input class="form-control"
-                                     [readonly]="!this.canEditMeetingPoints(mainItem)"
-                                     formControlName="enName"
-                                     [id]="'enName' + i" validationClasses="enName">
+                                [for]="'enName' + i">{{lang.map.main_point_name}}</label>
+                              <input class="form-control" [readonly]="!this.canEditMeetingPoints(mainItem)"
+                                formControlName="enName" [id]="'enName' + i" validationClasses="enName">
                               <app-field-error-message controlName="enName"></app-field-error-message>
                             </div>
                           </div>
                           <div class="row">
                             <div class="col">
                               <h1 class="h6 text-primary m-0 d-inline-block">{{lang.map.sub_points}}</h1>
-                              <button class="btn btn-link outline-none"
-                                      [disabled]="!this.model?.canAddMeetingPoints()"
-                                      tooltip="{{lang.map.add_sub_meeting_point}}" (click)="addSubItem(i)">
+                              <button class="btn btn-link outline-none" [disabled]="!this.model?.canAddMeetingPoints()"
+                                tooltip="{{lang.map.add_sub_meeting_point}}" (click)="addSubItem(i)">
                                 <i class="mdi mdi-plus-box"></i></button>
                             </div>
                           </div>
                           <div formGroupName="meetingSubItem" class="sub-points-container">
                             <div *ngFor="let subItem of getSubItems(i)?.controls; let j=index"
-                                 class="sub-point-container">
+                              class="sub-point-container">
                               <div class="row" [formGroupName]="j">
                                 <div class="col-md-3 col-sm-12 position-relative">
                                   <label asteriskIfRequired="enName" class="form-label"
-                                         [for]="'enName' + i + j">{{lang.map.lbl_description}}</label>
-                                  <input class="form-control"
-                                         [readonly]="!this.canEditMeetingPoints(subItem)"
-                                         formControlName="enName"
-                                         [id]="'enName' + i + j" validationClasses="enName">
+                                    [for]="'enName' + i + j">{{lang.map.lbl_description}}</label>
+                                  <input class="form-control" [readonly]="!this.canEditMeetingPoints(subItem)"
+                                    formControlName="enName" [id]="'enName' + i + j" validationClasses="enName">
                                   <app-field-error-message controlName="enName"></app-field-error-message>
                                 </div>
                                 <ng-container
                                   *ngIf="isMemberReview || (isDecisionMakerReview && model?.isSendToMember)">
                                   <div class="col-md-3 col-sm-12 position-relative">
                                     <label asteriskIfRequired="comment" class="form-label"
-                                           [for]="'comment' + i + j">{{lang.map.notes}}</label>
-                                    <input class="form-control"
-                                           formControlName="comment"
-                                           [id]="'comment' + i + j" validationClasses="comment">
+                                      [for]="'comment' + i + j">{{lang.map.notes}}</label>
+                                    <input class="form-control" formControlName="comment" [id]="'comment' + i + j"
+                                      validationClasses="comment">
                                     <app-field-error-message controlName="comment"></app-field-error-message>
                                   </div>
                                   <div class="col-md-3 form-check form-switch" style="margin-top: 2.25rem !important;">
                                     <div class="ms-3">
                                       <input class="form-check-input" type="checkbox" [id]="'respectTerms' + i + j"
-                                             formControlName="respectTerms">
+                                        formControlName="respectTerms">
                                       <label class="form-check-label"
-                                             [for]="'respectTerms' + i + j">{{lang.map.respect_terms}}</label>
+                                        [for]="'respectTerms' + i + j">{{lang.map.respect_terms}}</label>
                                     </div>
                                   </div>
                                 </ng-container>
                                 <div class="col-md-3 form-check form-switch" style="margin-top: 40px;"
-                                     *ngIf="isDecisionMakerReview && model?.isSentToMember()">
+                                  *ngIf="isDecisionMakerReview && model?.isSentToMember()">
                                   <div class="ms-3">
                                     <input class="form-check-input" type="checkbox" [id]="'select' + i + j"
-                                           formControlName="selected">
+                                      formControlName="selected">
                                     <label class="form-check-label"
-                                           [for]="'select' + i + j">{{lang.map.add_to_final_report}}</label>
+                                      [for]="'select' + i + j">{{lang.map.add_to_final_report}}</label>
                                   </div>
                                 </div>
                               </div>
-                              <button class="btn btn-link outline-none"
-                                      [disabled]="!canRemoveMeetingPoint(subItem)"
-                                      [ngClass]="getRemoveSubItemClass()"
-                                      tooltip="{{lang.map.delete_sub_meeting_point}}" (click)="removeSubItem(i, j)">
+                              <button class="btn btn-link outline-none" [disabled]="!canRemoveMeetingPoint(subItem)"
+                                [ngClass]="getRemoveSubItemClass()" tooltip="{{lang.map.delete_sub_meeting_point}}"
+                                (click)="removeSubItem(i, j)">
                                 <i class="mdi mdi-close-circle"></i>
                               </button>
                               <button class="btn btn-link outline-none" (click)="viewMeetingPointMembersComments(i, j)"
-                                      *ngIf="(isDecisionMakerReview && model?.isSentToMember()) || isManagerFinalReview"
-                                      [ngClass]="getViewSubItemClass()"
-                                      tooltip="{{lang.map.view_members_comments}}">
+                                *ngIf="(isDecisionMakerReview && model?.isSentToMember()) || isManagerFinalReview"
+                                [ngClass]="getViewSubItemClass()" tooltip="{{lang.map.view_members_comments}}">
                                 <i class="mdi mdi-eye"></i>
                               </button>
                             </div>
