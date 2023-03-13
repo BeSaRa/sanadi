@@ -397,6 +397,7 @@ export class PartnerApprovalComponent
   }
 
   _afterLaunch(): void {
+    this._resetForm();
     this.resetForm$.next();
     this.toast.success(this.lang.map.request_has_been_sent_successfully);
   }
