@@ -327,7 +327,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
       this.licenseService
         .generalAssociationMeetingAttendanceSearch<GeneralAssociationMeetingAttendance>({
           fullSerial: this.oldLicenseFullSerialField.value,
-          // caseStatus: this.commonCaseStatus.CANCELLED
+          caseStatus: this.commonCaseStatus.CANCELLED
         })
         .pipe(takeUntil(this.destroy$))
         .pipe(map((licenses) => {
