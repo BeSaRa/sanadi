@@ -1,3 +1,4 @@
+import { MenuItem } from '@app/models/menu-item';
 import {InterceptModel} from '@app/decorators/decorators/intercept-model';
 import {CommonStatusEnum} from '@app/enums/common-status.enum';
 import {infoSearchFields} from '@app/helpers/info-search-fields';
@@ -37,6 +38,7 @@ export class CustomMenu extends BaseModel<CustomMenu, CustomMenuService> {
   parentMenuItemInfo!: AdminResult;
   userTypeInfo!: AdminResult;
   subMenuItems: CustomMenu[] = [];
+  defaultParent?:MenuItem
 
   // extra properties
   service!: CustomMenuService;
