@@ -337,6 +337,7 @@ export class OrganizationsEntitiesSupportComponent extends EServicesGenericCompo
           return of([]);
         })
       )
+      .pipe(map(res=>res.filter(jobTitle=>jobTitle.isActive())))
       .subscribe((result) => (this.jobTitleList = result));
   }
 
