@@ -2315,6 +2315,19 @@ export const newNavigationMenuList = [
     svg: null
   },
   {
+    id: 88,
+    langKey: 'menu_training_program_partner',
+    path: '/home/administration/training-program-partner',
+    icon: 'mdi-badge-account-horizontal-outline',
+    isSvg: false,
+    permission: PermissionsEnum.TRAINING_PROGRAM_PARTNER,
+    permissionGroup: null,
+    parent: 6,
+    group: 'administration',
+    itemOrder: 22,
+    svg: null
+  },
+  {
     id: 31,
     langKey: 'menu_admin_lookups',
     path: '/home/administration/lookups',
