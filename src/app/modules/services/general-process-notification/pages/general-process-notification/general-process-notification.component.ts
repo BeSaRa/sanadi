@@ -1,40 +1,40 @@
-import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
-import {SubTeamService} from '@services/sub-team.service';
-import {GeneralProcess} from '@models/genral-process';
-import {AdminLookupService} from '@services/admin-lookup.service';
-import {Lookup} from '@models/lookup';
-import {UserClickOn} from '@enums/user-click-on.enum';
-import {catchError, exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
-import {EmployeeService} from '@services/employee.service';
-import {CommonCaseStatus} from '@enums/common-case-status.enum';
-import {OpenFrom} from '@enums/open-from.enum';
-import {ToastService} from '@services/toast.service';
-import {IKeyValue} from '@contracts/i-key-value';
-import {ILanguageKeys} from '@contracts/i-language-keys';
-import {CommonUtils} from '@helpers/common-utils';
-import {GeneralProcessNotification} from '@models/general-process-notification';
-import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
-import {ChangeDetectorRef, Component} from '@angular/core';
-import {OperationTypes} from '@enums/operation-types.enum';
-import {SaveTypes} from '@enums/save-types';
-import {LangService} from '@services/lang.service';
-import {Observable, of, Subject} from 'rxjs';
-import {CaseTypes} from '@enums/case-types.enum';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { SubTeamService } from '@services/sub-team.service';
+import { GeneralProcess } from '@models/genral-process';
+import { AdminLookupService } from '@services/admin-lookup.service';
+import { Lookup } from '@models/lookup';
+import { UserClickOn } from '@enums/user-click-on.enum';
+import { catchError, exhaustMap, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { EmployeeService } from '@services/employee.service';
+import { CommonCaseStatus } from '@enums/common-case-status.enum';
+import { OpenFrom } from '@enums/open-from.enum';
+import { ToastService } from '@services/toast.service';
+import { IKeyValue } from '@contracts/i-key-value';
+import { ILanguageKeys } from '@contracts/i-language-keys';
+import { CommonUtils } from '@helpers/common-utils';
+import { GeneralProcessNotification } from '@models/general-process-notification';
+import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
+import { ChangeDetectorRef, Component } from '@angular/core';
+import { OperationTypes } from '@enums/operation-types.enum';
+import { SaveTypes } from '@enums/save-types';
+import { LangService } from '@services/lang.service';
+import { Observable, of, Subject } from 'rxjs';
+import { CaseTypes } from '@enums/case-types.enum';
 import {
   ProcessFieldBuilder
 } from '@app/administration/popups/general-process-popup/process-formly-components/process-fields-builder';
-import {GeneralProcessNotificationService} from '@services/general-process-notification.service';
-import {AllRequestTypesEnum} from '@enums/all-request-types-enum';
-import {AdminLookup} from '@models/admin-lookup';
-import {InternalDepartment} from '@models/internal-department';
-import {SubTeam} from '@models/sub-team';
-import {DialogService} from '@services/dialog.service';
-import {LicenseService} from '@services/license.service';
-import {LookupService} from '@services/lookup.service';
-import {InternalDepartmentService} from '@services/internal-department.service';
-import {GeneralProcessService} from '@services/general-process.service';
-import {AdminLookupTypeEnum} from '@enums/admin-lookup-type-enum';
-import {TabComponent} from '@app/shared/components/tab/tab.component';
+import { GeneralProcessNotificationService } from '@services/general-process-notification.service';
+import { AllRequestTypesEnum } from '@enums/all-request-types-enum';
+import { AdminLookup } from '@models/admin-lookup';
+import { InternalDepartment } from '@models/internal-department';
+import { SubTeam } from '@models/sub-team';
+import { DialogService } from '@services/dialog.service';
+import { LicenseService } from '@services/license.service';
+import { LookupService } from '@services/lookup.service';
+import { InternalDepartmentService } from '@services/internal-department.service';
+import { GeneralProcessService } from '@services/general-process.service';
+import { AdminLookupTypeEnum } from '@enums/admin-lookup-type-enum';
+import { TabComponent } from '@app/shared/components/tab/tab.component';
 
 @Component({
   selector: 'app-general-process-notification',
@@ -97,18 +97,18 @@ export class GeneralProcessNotificationComponent extends EServicesGenericCompone
   loadAttachments: boolean = false;
 
   constructor(public lang: LangService,
-              private dialog: DialogService,
-              private cd: ChangeDetectorRef,
-              private toast: ToastService,
-              private licenseService: LicenseService,
-              private lookupService: LookupService,
-              public fb: UntypedFormBuilder,
-              public service: GeneralProcessNotificationService,
-              private employeeService: EmployeeService,
-              private adminLookupService: AdminLookupService,
-              private internalDepartmentService: InternalDepartmentService,
-              private subTeamService: SubTeamService,
-              private generalProcessService: GeneralProcessService) {
+    private dialog: DialogService,
+    private cd: ChangeDetectorRef,
+    private toast: ToastService,
+    private licenseService: LicenseService,
+    private lookupService: LookupService,
+    public fb: UntypedFormBuilder,
+    public service: GeneralProcessNotificationService,
+    private employeeService: EmployeeService,
+    private adminLookupService: AdminLookupService,
+    private internalDepartmentService: InternalDepartmentService,
+    private subTeamService: SubTeamService,
+    private generalProcessService: GeneralProcessService) {
     super();
     this.processFieldBuilder = new ProcessFieldBuilder();
     this.processFieldBuilder.buildMode = 'use';
@@ -176,8 +176,8 @@ export class GeneralProcessNotificationComponent extends EServicesGenericCompone
       this.subTeamService.loadActive().pipe(
         map((teams) => teams.filter((team: SubTeam) => parentTeamId == team.parent)),
         catchError(err => of([]))).subscribe(data => {
-        this.subTeamsList = data;
-      })
+          this.subTeamsList = data;
+        })
     else this.subTeamsList = [];
   }
 
@@ -203,20 +203,20 @@ export class GeneralProcessNotificationComponent extends EServicesGenericCompone
     this.generalProcessService.loadActive()
       .pipe(
         map((processes) => processes.filter(p =>
-            (!params.departmentId || p.departmentId == params.departmentId)
-            && (!params.mainClass || p.mainClass == params.mainClass)
-            && (!params.processType || p.processType == params.processType)
-            && (!params.subClass || p.subClass == params.subClass)
-            && (!params.subTeamId || p.subTeamId == params.subTeamId)
-          )
+          (!params.departmentId || p.departmentId == params.departmentId)
+          && (!params.mainClass || p.mainClass == params.mainClass)
+          && (!params.processType || p.processType == params.processType)
+          && (!params.subClass || p.subClass == params.subClass)
+          && (!params.subTeamId || p.subTeamId == params.subTeamId)
+        )
         ),
         catchError((err) => {
           console.log(err)
           return of([this.otherProcess])
         })
       ).subscribe((data: GeneralProcess[]) => {
-      this.processList = [...data, this.otherProcess];
-    })
+        this.processList = [...data, this.otherProcess];
+      })
   }
 
   handleDomainChange(parentId: number) {
@@ -269,11 +269,11 @@ export class GeneralProcessNotificationComponent extends EServicesGenericCompone
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
     if (!this.requestTypeField.value) {
-      this.dialog.error(this.lang.map.msg_please_select_x_to_continue.change({x: this.lang.map.request_type}));
+      this.dialog.error(this.lang.map.msg_please_select_x_to_continue.change({ x: this.lang.map.request_type }));
       return false;
     }
     if (!this.processIdField.value) {
-      this.dialog.error(this.lang.map.msg_please_select_x_to_continue.change({x: this.lang.map.lbl_process}));
+      this.dialog.error(this.lang.map.msg_please_select_x_to_continue.change({ x: this.lang.map.lbl_process }));
       return false;
     }
     if (saveType === SaveTypes.DRAFT) {
@@ -340,7 +340,7 @@ export class GeneralProcessNotificationComponent extends EServicesGenericCompone
       (operation === OperationTypes.CREATE && saveType === SaveTypes.FINAL) ||
       (operation === OperationTypes.UPDATE && saveType === SaveTypes.COMMIT)
     ) {
-      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({serial: model.fullSerial}));
+      this.dialog.success(this.lang.map.msg_request_has_been_added_successfully.change({ serial: model.fullSerial }));
     } else {
       this.toast.success(this.lang.map.request_has_been_saved_successfully);
     }
@@ -466,7 +466,7 @@ export class GeneralProcessNotificationComponent extends EServicesGenericCompone
                   if (!data) {
                     return of(null);
                   }
-                  return {selected: licenses[0], details: data};
+                  return { selected: licenses[0], details: data };
                 }),
                 catchError(() => {
                   return of(null);
@@ -474,7 +474,7 @@ export class GeneralProcessNotificationComponent extends EServicesGenericCompone
               );
           } else {
             const displayColumns = this.service.selectLicenseDisplayColumns;
-            return this.licenseService.openSelectLicenseDialog(licenses, this.model?.clone({requestType: this.requestTypeField.value || null}), true, displayColumns).onAfterClose$;
+            return this.licenseService.openSelectLicenseDialog(licenses, this.model?.clone({ requestType: this.requestTypeField.value || null }), true, displayColumns).onAfterClose$;
           }
         }),
         // allow only if the user select license
@@ -486,32 +486,34 @@ export class GeneralProcessNotificationComponent extends EServicesGenericCompone
   }
 
   private setSelectedLicense(licenseDetails: GeneralProcessNotification) {
-    this.selectedLicense = licenseDetails;
-    let requestType = this.requestTypeField?.value,
-      result: Partial<GeneralProcessNotification> = {
-        requestType
-      };
+    if (licenseDetails) {
+      this.selectedLicense = licenseDetails;
+      let requestType = this.requestTypeField?.value,
+        result: Partial<GeneralProcessNotification> = {
+          requestType
+        };
 
-    result.oldFullSerial = licenseDetails.fullSerial;
-    result.oldLicenseId = licenseDetails.id;
-    result.oldLicenseSerial = licenseDetails.serial;
+      result.oldFullSerial = licenseDetails.fullSerial;
+      result.oldLicenseId = licenseDetails.id;
+      result.oldLicenseSerial = licenseDetails.serial;
 
-    result.description = licenseDetails.description;
-    result.projectDescription = licenseDetails.projectDescription;
+      result.description = licenseDetails.description;
+      result.projectDescription = licenseDetails.projectDescription;
 
-    result.departmentId = licenseDetails.departmentId;
-    result.competentDepartmentID = licenseDetails.competentDepartmentID;
-    result.domain = licenseDetails.domain;
-    result.firstSubDomain = licenseDetails.firstSubDomain;
-    result.processid = licenseDetails.processid;
-    result.projectName = licenseDetails.projectName;
-    result.needSubject = licenseDetails.needSubject;
-    result.processType = licenseDetails.processType;
-    result.template = licenseDetails.template;
-    result.subject = licenseDetails.subject;
-    result.subTeam = licenseDetails.subTeam;
+      result.departmentId = licenseDetails.departmentId;
+      result.competentDepartmentID = licenseDetails.competentDepartmentID;
+      result.domain = licenseDetails.domain;
+      result.firstSubDomain = licenseDetails.firstSubDomain;
+      result.processid = licenseDetails.processid;
+      result.projectName = licenseDetails.projectName;
+      result.needSubject = licenseDetails.needSubject;
+      result.processType = licenseDetails.processType;
+      result.template = licenseDetails.template;
+      result.subject = licenseDetails.subject;
+      result.subTeam = licenseDetails.subTeam;
 
-    this._updateForm((new GeneralProcessNotification()).clone(result));
+      this._updateForm((new GeneralProcessNotification()).clone(result));
+    }
   }
 
   licenseSearch($event?: Event): void {
