@@ -159,6 +159,8 @@ export class CustomMenuService extends CrudWithDialogGenericService<CustomMenu> 
   openDefaultCreateDialog(parentMenu: MenuItem): DialogRef {
     let data = new CustomMenu().clone({status: CommonStatusEnum.ACTIVATED});
     data.defaultParent = parentMenu
+    data.parentMenuItemId = -1;
+    data.systemMenuKey =  parentMenu.menuKey;
     return this.dialog.show<IDialogData<CustomMenu>>(this._getDialogComponent(), {
       model: data,
       operation: OperationTypes.CREATE,
