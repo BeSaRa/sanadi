@@ -5,7 +5,7 @@
 </div>
 <div class="dialog-content" [ngClass]="isCancelRequestType() ? 'no-fixed-height min-w400px' : 'w800px'">
   <ng-container *ngIf="!isCancelRequestType()">
-    <approval-form-monthly [disableStartDate]="disableLicenseStartDate" [displayDuration]=" isLicenseChief()"
+    <approval-form-monthly [disableStartDate]="disableLicenseStartDate" [displayDuration]="true"
                            [licenseStartDateMandatory]="false" [multi]="false"
                            [license]="data.model"
                            [model]="data.model"></approval-form-monthly>
