@@ -16,7 +16,7 @@ import {DatepickerOptionsMap} from '@app/types/types';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {of, Subject} from 'rxjs';
 import {exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
-import { FinancialTransferRequestTypes } from '@app/enums/financial-transfer-request-types.enum';
+import { FinancialTransferRequestTypes } from '@app/enums/service-request-types';
 
 @Component({
   selector: 'app-financial-transfer-licensing-approve-popup',
