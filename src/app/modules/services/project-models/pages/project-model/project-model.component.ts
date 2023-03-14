@@ -712,8 +712,8 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   }
 
   private separateDacFromOcha(list: AdminLookup[]) {
-    this.mainOchaCategories = list.filter(item => item.type === DomainTypes.HUMANITARIAN); // get ocha
-    this.mainDacCategories = list.filter(item => item.type === DomainTypes.DEVELOPMENT); // get dac
+    this.mainOchaCategories = list.filter(item => item.type === DomainTypes.HUMANITARIAN).filter(item=>item.isActive()); // get ocha
+    this.mainDacCategories = list.filter(item => item.type === DomainTypes.DEVELOPMENT).filter(item=>item.isActive()); // get dac
   }
 
   private emptySubCategories(): void {

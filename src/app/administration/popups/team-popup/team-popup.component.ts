@@ -74,7 +74,7 @@ export class TeamPopupComponent implements OnInit {
       }, [CustomValidators.required]],
       parentDeptId: [this.model.parentDeptId, [CustomValidators.required]],
       ldapGroupName: [this.model.ldapGroupName, [CustomValidators.required]],
-      status: [this.model.status, [CustomValidators.required]],
+      status: [{value:this.model.status, disabled:true} ,[CustomValidators.required]],
       autoClaim: [this.model.autoClaim],
       isHidden: [this.model.isHidden]
     }, {

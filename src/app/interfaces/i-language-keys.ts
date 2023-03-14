@@ -1823,5 +1823,6 @@ export interface ILanguageKeys {
   lbl_edit_training_program_partner:string;
   lbl_add_training_program_partner:string;
   lbl_transfer_operation_date:string;
+  msg_record_is_linked:string;
   previews_replays:string;
 }

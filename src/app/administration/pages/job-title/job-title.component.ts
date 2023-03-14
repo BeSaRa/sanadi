@@ -154,9 +154,10 @@ export class JobTitleComponent extends AdminGenericComponent<JobTitle, JobTitleS
     this.dialogService.confirm(message)
       .onAfterClose$.subscribe((click: UserClickOn) => {
       if (click === UserClickOn.YES) {
-        const sub = model.delete().subscribe(() => {
+        const sub = model.delete().subscribe((status:boolean) => {
           // @ts-ignore
-          this.toast.success(this.lang.map.msg_delete_x_success.change({ x: model.getName() }));
+          if(status) this.toast.success(this.lang.map.msg_delete_x_success.change({ x: model.getName() }));
+          else this.toast.error(this.lang.map.msg_record_is_linked)
           this.reload$.next(null);
           sub.unsubscribe();
         });
@@ -200,11 +201,12 @@ export class JobTitleComponent extends AdminGenericComponent<JobTitle, JobTitleS
   toggleStatus(model: JobTitle) {
     let updateObservable = model.status == CommonStatusEnum.ACTIVATED ? model.updateStatus(CommonStatusEnum.DEACTIVATED) : model.updateStatus(CommonStatusEnum.ACTIVATED);
     updateObservable.pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        this.toast.success(this.lang.map.msg_status_x_updated_success.change({ x: model.getName() }));
+      .subscribe((res:{sc:number, rs:boolean}) => {
+        if (res.rs) this.toast.success(this.lang.map.msg_status_x_updated_success.change({ x: model.getName() }));
+        else this.toast.error(this.lang.map.msg_record_is_linked);
         this.reload$.next(null);
       }, () => {
-        // this.toast.error(this.lang.map.msg_status_x_updated_fail.change({ x: model.getName() }));
+        this.toast.error(this.lang.map.msg_status_x_updated_fail.change({ x: model.getName() }));
         this.reload$.next(null);
       });
   }
