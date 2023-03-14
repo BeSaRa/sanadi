@@ -355,7 +355,7 @@
     </ng-template>
     <!-- Executive Managements -->
     <ng-template #executiveManagementsTemplate>
-      <executive-management #executiveManagementsTab
+      <executive-management #executiveManagementsTab [nationalities]="nationalities"
                             [pageTitleKey]="'executive_management'" [list]="model?.executiveManagementList || []"
                             [readonly]="(isExtendOrCancelRequestType() || readonly)"
                             (readyEvent)="executiveManagementsTabStatus = $event">
