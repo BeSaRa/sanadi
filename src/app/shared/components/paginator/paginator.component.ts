@@ -267,7 +267,7 @@ export class PaginatorComponent implements OnInit, OnDestroy {
       .subscribe((value) => {
         this._pageSize = value;
         this.updatePaginationStatus();
-        this.emitPaginationChange(this.previousPageIndex);
+        this.emitPaginationChange(this.previousPageIndex ?? 0);
       });
   }
 
