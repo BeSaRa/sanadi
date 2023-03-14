@@ -1,21 +1,26 @@
 <div>
-    <div class="row pb-3">
-      <app-page-header [customTemplate]="headerTemplate"></app-page-header>
-      <ng-template #headerTemplate>
-        <div class="align-items-center">
-          <h1 class="h6 text-primary m-0 d-inline-block">{{lang.map.attachments}}</h1>
-          <button class="btn btn-link outline-none" tooltip="{{ lang.map.btn_add }}" (click)="addOtherAttachments.next()">
-            <i class="mdi mdi-plus-box"></i>
-          </button>
-        </div>
-      </ng-template>
-    </div>
+    <ng-template #addingAttachments>
+      <button class="btn btn-link outline-none text-white" tooltip="{{ lang.map.btn_add }}" (click)="addOtherAttachments.next()">
+        <i class="mdi mdi-plus-box"></i>
+      </button>
+    </ng-template>
     <app-table [selectable]="true" #table sortableTable [paginator]="paginator"
                [data]="attachments"
                [columns]="displayedColumns">
       <table cdk-table [dataSource]="table.dataSource" class="table table-striped table-bordered caption-top">
+        <ng-container cdkColumnDef="extra-header">
+          <th class="extra-header" cdk-header-cell colSpan="100" *cdkHeaderCellDef>
+            <table-header tableTitle="attachments"
+                          [skipSearch]="true"
+                          [skipClearSort]="true"
+                          [allowAdd]="false"
+                          [allowReload]="false"
+                          >
+                          <ng-container *ngTemplateOutlet="addingAttachments"></ng-container>
+                        </table-header>
+          </th>
+        </ng-container>
         <ng-container cdkColumnDef="rowSelection">
-
           <td cdk-cell *cdkCellDef="let row">
             <input type="checkbox"
                    (click)="$event.stopPropagation()"
@@ -24,23 +29,23 @@
                    class="form-check-input"></td>
         </ng-container>
         <ng-container cdkColumnDef="title">
-          <th cdk-header-cell class="bg-primary text-white" style="width: 20px;" *cdkHeaderCellDef></th>
+          <th cdk-header-cell style="width: 20px;" *cdkHeaderCellDef></th>
           <td cdk-cell *cdkCellDef="let row"><i class="mdi text-primary {{fileIconsEnum.PDF}}"></i></td>
         </ng-container>
         <ng-container cdkColumnDef="name">
-          <th cdk-header-cell class="bg-primary text-white" *cdkHeaderCellDef> {{lang.map.attachment_name}}</th>
+          <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.attachment_name}}</th>
           <td cdk-cell *cdkCellDef="let row"> {{row.documentTitle}} </td>
         </ng-container>
         <ng-container cdkColumnDef="description">
-          <th cdk-header-cell class="bg-primary text-white" *cdkHeaderCellDef> {{lang.map.lbl_description}}</th>
+          <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_description}}</th>
           <td cdk-cell *cdkCellDef="let row"> {{row.description}} </td>
         </ng-container>
         <ng-container cdkColumnDef="date">
-          <th cdk-header-cell class="bg-primary text-white" *cdkHeaderCellDef> {{lang.map.creation_date}}</th>
+          <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.creation_date}}</th>
           <td cdk-cell *cdkCellDef="let row"> {{row.createdOn|date: 'mediumDate' }} </td>
         </ng-container>
         <ng-container cdkColumnDef="actions">
-          <th cdk-header-cell style="width: 200px" class="bg-primary text-white"
+          <th cdk-header-cell style="width: 200px"
               *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
           <td cdk-cell *cdkCellDef="let row; index as itemIndex">
             <div class="d-flex gap-2">
@@ -60,7 +65,8 @@
             </div>
           </td>
         </ng-container>
-        <tr cdk-header-row *cdkHeaderRowDef="displayedColumns"></tr>
+        <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
+        <tr cdk-header-row *cdkHeaderRowDef="displayedColumns" class="table-row-header"></tr>
         <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
         <tr *cdkNoDataRow>
           <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>

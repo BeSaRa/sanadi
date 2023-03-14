@@ -65,7 +65,7 @@
         <ng-container *ngIf="model?.isInternal()">
           <tr cdk-header-row *cdkHeaderRowDef="['header']"></tr>
         </ng-container>
-        <tr cdk-header-row *cdkHeaderRowDef="userSecurityColumns"></tr>
+        <tr cdk-header-row *cdkHeaderRowDef="userSecurityColumns" class="table-row-header"></tr>
         <tr cdk-row *cdkRowDef="let row; columns: userSecurityColumns;"></tr>
         <tr *cdkNoDataRow>
           <td colspan="100" class="text-center">{{lang.map.no_records_to_display}}</td>
