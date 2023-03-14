@@ -95,8 +95,8 @@ export class UserSecurityExternalComponent implements OnInit, OnDestroy {
 
   toggleUserSecurity(userSecurity: UserSecurityConfiguration, property: 'canView' | 'canManage' | 'canAdd' | 'approval' | 'followUp'): void {
     userSecurity[property] = !userSecurity[property];
-    console.log('old', this.getOldUserSecurity());
-    console.log('new', this.getFinalUserSecurity());
+    // console.log('old', this.getOldUserSecurity());
+    // console.log('new', this.getFinalUserSecurity());
   }
 
   getOldUserSecurity(): UserSecurityConfiguration[] {
