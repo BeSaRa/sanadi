@@ -18,7 +18,7 @@ const routes: Routes = [
     canActivate: [NewServicePermissionGuard],
     resolve: {info: ServiceItemResolver},
     data: {
-      permissionKey: EServicePermissionsEnum.CONSULTATION,
+      permissionKey: EServicePermissionsEnum.EXTERNAL_ORG_AFFILIATION_REQUEST,
       permissionGroup: null,
       checkAnyPermission: false,
       render: 'ExternalOrgAffiliationComponent'
