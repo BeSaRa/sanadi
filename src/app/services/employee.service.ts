@@ -26,6 +26,7 @@ import {OperationTypes} from '@app/enums/operation-types.enum';
 import {UserRoleManageUserContract} from '@contracts/user-role-manage-user-contract';
 import {InternalUserInterceptor} from '@model-interceptors/internal-user-interceptor';
 import {ExternalUserInterceptor} from '@model-interceptors/external-user-interceptor';
+import {LangService} from '@services/lang.service';
 
 @Injectable({
   providedIn: 'root'
@@ -114,6 +115,13 @@ export class EmployeeService {
     FactoryService.registerService('EmployeeService', this);
   }
 
+  toggleToDefaultLanguage(): void {
+    const defaultLang = this.getCurrentUser().userPreferences.defaultLang;
+    let langService: LangService = FactoryService.getService('LangService');
+    if (defaultLang !== langService.getCurrentLanguage().id) {
+      langService.toggleLanguage().subscribe();
+    }
+  }
 
   setExternalUserData(loginData: ILoginData): void {
     this.externalUser = new ExternalUserInterceptor().receive(new ExternalUser().clone(loginData.externalUser));
@@ -281,6 +289,7 @@ export class EmployeeService {
 
   private setUserData(loginData: ILoginData) {
     this.type === UserTypes.EXTERNAL ? this.setExternalUserData(loginData) : this.setInternalUserData(loginData);
+    this.toggleToDefaultLanguage();
   }
 
   private setInternalUserData(loginData: ILoginData) {
