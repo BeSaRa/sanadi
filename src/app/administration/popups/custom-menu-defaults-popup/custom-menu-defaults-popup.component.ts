@@ -18,6 +18,8 @@ import { CommonStatusEnum } from '@app/enums/common-status.enum';
 import { catchError, exhaustMap, filter, map, switchMap, takeUntil } from 'rxjs/operators';
 import { Pagination } from '@app/models/pagination';
 import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { SortEvent } from '@app/interfaces/sort-event';
+import { CommonUtils } from '@app/helpers/common-utils';
 
 @Component({
   selector: 'app-custom-menu-defaults-popup',
@@ -27,11 +29,11 @@ import { UserClickOn } from '@app/enums/user-click-on.enum';
 export class CustomMenuDefaultsPopupComponent extends AdminGenericDialog<CustomMenu> implements AfterViewInit {
   model!: CustomMenu;
   form!: UntypedFormGroup;
-  children:MenuItem[] = [];
+  children:CustomMenu[] = [];
   operation: OperationTypes;
   saveVisible = true;
   parentMenu?: CustomMenu;
-  displayedColumns: string[] = [ 'arName', 'enName', 'actions'];
+  displayedColumns: string[] = [ 'arName', 'enName','menuType', 'status', 'actions'];
   filterControl: UntypedFormControl = new UntypedFormControl('');
   reload$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   add$: Subject<any> = new Subject<any>();
@@ -40,6 +42,18 @@ export class CustomMenuDefaultsPopupComponent extends AdminGenericDialog<CustomM
 
   parent!:MenuItem;
   selectedPopupTabName = 'basic'
+  sortingCallbacks = {
+    menuType: (a: CustomMenu, b: CustomMenu, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.menuTypeInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.menuTypeInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    },
+    statusInfo: (a: CustomMenu, b: CustomMenu, dir: SortEvent): number => {
+      let value1 = !CommonUtils.isValidValue(a) ? '' : a.statusInfo?.getName().toLowerCase(),
+        value2 = !CommonUtils.isValidValue(b) ? '' : b.statusInfo?.getName().toLowerCase();
+      return CommonUtils.getSortValue(value1, value2, dir.direction);
+    }
+  };
   constructor(public dialogRef: DialogRef,
               public fb: UntypedFormBuilder,
               public lang: LangService,
@@ -49,13 +63,16 @@ export class CustomMenuDefaultsPopupComponent extends AdminGenericDialog<CustomM
               }>,
               private menuItemService:MenuItemService,
               private service: CustomMenuService,
-              private dialogService:DialogService
+              private dialogService:DialogService,
+              private customMenuService:CustomMenuService
              ) {
     super();
     this.parent = data.parent
     this.operation = data.operation;
     this.parentMenu = data.parentMenu;
-    this.children = this.menuItemService.menuItems.filter(item => item.parent === data.parent.id);
+    this.customMenuService.loadByCriteria({
+      'parent-menu-item-id':-1
+    }).subscribe((result)=>{this.children = result});
     }
 
   initPopup(): void {
