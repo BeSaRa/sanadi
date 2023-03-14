@@ -18,20 +18,32 @@ export class HeaderComponent implements OnInit {
   destroy$: Subject<any> = new Subject<any>();
 
   constructor(public langService: LangService,
-              public employee: EmployeeService,
+              public employeeService: EmployeeService,
               public urlService: UrlService,
               private userPreferencesService: UserPreferencesService) {
   }
 
   ngOnInit(): void {
+    this.toggleToDefaultLanguage();
   }
 
-  toggleLang($event: MouseEvent) {
-    $event.preventDefault();
+  toggleToDefaultLanguage(): void {
+    if (this.employeeService.isToggledToDefaultLanguage) {
+      return;
+    }
+    this.employeeService.isToggledToDefaultLanguage = true;
+    const defaultLang = this.employeeService.getCurrentUser().userPreferences.defaultLang;
+    if (defaultLang !== this.langService.getCurrentLanguage().id) {
+      this.toggleLang();
+    }
+  }
+
+  toggleLang($event?: MouseEvent) {
+    $event?.preventDefault();
     this.langService.toggleLanguage().subscribe();
   }
 
   openUserPreferences() {
-    this.userPreferencesService.openEditDialog(this.employee.getCurrentUser().generalUserId).subscribe();
+    this.userPreferencesService.openEditDialog(this.employeeService.getCurrentUser().generalUserId).subscribe();
   }
 }

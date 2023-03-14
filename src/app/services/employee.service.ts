@@ -102,6 +102,7 @@ export class EmployeeService {
   };
   private customMenuInterceptor = new CustomMenuInterceptor();
   private profileInterceptor = new ProfileInterceptor();
+  public isToggledToDefaultLanguage: boolean = false;
 
   public userRolesManageUser: UserRoleManageUserContract = {
     isSuperAdmin: (operation: OperationTypes) => this._manageUserSuperAdmin(operation),
@@ -113,14 +114,6 @@ export class EmployeeService {
   constructor(private configService: ConfigurationService,
               private staticResourcesService: StaticAppResourcesService) {
     FactoryService.registerService('EmployeeService', this);
-  }
-
-  toggleToDefaultLanguage(): void {
-    const defaultLang = this.getCurrentUser().userPreferences.defaultLang;
-    let langService: LangService = FactoryService.getService('LangService');
-    if (defaultLang !== langService.getCurrentLanguage().id) {
-      langService.toggleLanguage().subscribe();
-    }
   }
 
   setExternalUserData(loginData: ILoginData): void {
@@ -138,6 +131,7 @@ export class EmployeeService {
     this.permissionMap.clear();
     this.teams = [];
     this.menuItems = [];
+    this.isToggledToDefaultLanguage = false;
   }
 
   getExternalUser(): ExternalUser | undefined {
@@ -289,7 +283,6 @@ export class EmployeeService {
 
   private setUserData(loginData: ILoginData) {
     this.type === UserTypes.EXTERNAL ? this.setExternalUserData(loginData) : this.setInternalUserData(loginData);
-    this.toggleToDefaultLanguage();
   }
 
   private setInternalUserData(loginData: ILoginData) {
