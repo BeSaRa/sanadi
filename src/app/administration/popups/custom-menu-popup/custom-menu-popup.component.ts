@@ -1,3 +1,4 @@
+import { iconsList } from './../../../resources/icons-list';
 import { MenuItem } from '@app/models/menu-item';
 import {CustomMenu} from '@app/models/custom-menu';
 import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, Inject, ViewChild} from '@angular/core';
@@ -35,6 +36,7 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
   userTypes: Lookup[] = this.lookupService.listByCategory.UserType.filter(x => x.lookupKey !== UserTypes.INTEGRATION_USER);
   parentMenu?: CustomMenu;
   defaultParent?:MenuItem;
+  icons = iconsList
 
   selectedTabIndex$: Subject<number> = new Subject<number>();
   defaultSelectedTab: string = 'basic';
@@ -119,8 +121,7 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
       this.form.disable();
       return;
     }
-
-    if (!this.model.isParentMenu()) {
+    if (!this.model?.isParentMenu()) {
       this._disableDependentFields();
     } else {
       if (!!this.model.id && this.hasChildren) {
@@ -141,9 +142,13 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
 
   get childrenDependentFields(): UntypedFormControl[] {
     let fields: UntypedFormControl[] = [];
-    if (this.parentMenu && !this.parentMenu.isActive()) {
-      fields = [this.statusControl];
+    const isCustomMenu = this.parentMenu instanceof CustomMenu;
+    if(isCustomMenu){
+      if (this.parentMenu && !this.parentMenu.isActive()) {
+        fields = [this.statusControl];
+      }
     }
+
     return fields.concat([this.menuTypeControl, this.menuViewControl, this.userTypeControl]);
   }
 
@@ -191,7 +196,10 @@ export class CustomMenuPopupComponent extends AdminGenericDialog<CustomMenu> imp
     let value = (new CustomMenu()).clone({...model, ...form.getRawValue()});
     value.menuURL = this.urlHandlerComponentRef ? this.urlHandlerComponentRef.menuUrlControl.value : '';
     value.urlParamsParsed = this.urlHandlerComponentRef ? this.urlHandlerComponentRef.variableList : [];
-
+    if(!!this.defaultParent){
+      value.parentMenuItemId = -1;
+      value.systemMenuKey = this.defaultParent.menuKey
+    }
     return value;
   }
 
