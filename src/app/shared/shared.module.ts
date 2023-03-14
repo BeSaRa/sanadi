@@ -114,6 +114,9 @@ import {ServiceLogListComponent} from '@app/shared/components/service-log-list/s
 import {HeadingRowComponent} from './components/heading-row/heading-row.component';
 import { HeaderNotificationsComponent } from './components/header-notifications/header-notifications.component';
 import { FilterInboxRequestPopupComponent } from '@app/modules/e-services-main/popups/filter-inbox-request-popup/filter-inbox-request-popup.component';
+import {
+  UserPreferencesPopupComponent
+} from '@app/shared/popups/user-preferences-popup/user-preferences-popup.component';
 
 @NgModule({
   declarations: [
@@ -221,7 +224,8 @@ import { FilterInboxRequestPopupComponent } from '@app/modules/e-services-main/p
     ServiceLogListComponent,
     ServiceLogItemLocationComponent,
     HeadingRowComponent,
-    HeaderNotificationsComponent
+    HeaderNotificationsComponent,
+    UserPreferencesPopupComponent
   ],
   imports: [
     CommonModule,

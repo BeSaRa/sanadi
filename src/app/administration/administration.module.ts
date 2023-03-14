@@ -1,6 +1,8 @@
-import { TrainingProgramPartnerPopupComponent } from '@app/administration/popups/training-program-partner-popup/training-program-partner-popup.component';
-import { TrainingProgramPartnerComponent } from './pages/training-program-partner/training-program-partner.component';
-import { AdminLicenseComponent } from './pages/admin-license/admin-license.component';
+import {
+  TrainingProgramPartnerPopupComponent
+} from '@app/administration/popups/training-program-partner-popup/training-program-partner-popup.component';
+import {TrainingProgramPartnerComponent} from './pages/training-program-partner/training-program-partner.component';
+import {AdminLicenseComponent} from './pages/admin-license/admin-license.component';
 import {UserSubTeamComponent} from './shared/user-sub-team/user-sub-team.component';
 import {
   ProcessFieldWrapperComponent
@@ -108,14 +110,21 @@ import {
   ExternalUserUpdateChangesPopupComponent
 } from './popups/external-user-update-changes-popup/external-user-update-changes-popup.component';
 import {UserSecurityExternalComponent} from './shared/user-security-external/user-security-external.component';
-import { ProfileAttachmentsComponent } from './shared/profile-attachments/profile-attachments.component';
-import { GlobalSettingsComponent } from './pages/global-settings/global-settings.component';
-import { UserPreferencesPopupComponent } from './popups/user-preferences-popup/user-preferences-popup.component';
-import { FormlyDateFieldComponent } from '@app/services-search/components/formly-date-field/formly-date-field.component';
-import { FormlyFieldFullWrapperComponent } from '@app/services-search/components/formly-field-full-wrapper/formly-field-full-wrapper.component';
-import { FormlyFieldWrapperComponent } from '@app/services-search/components/formly-field-wrapper/formly-field-wrapper.component';
-import { FormlyMaskInputFieldComponent } from '@app/services-search/components/formly-mask-input-field/formly-mask-input-field.component';
-import { FormlySelectFieldComponent } from '@app/services-search/components/formly-select-field/formly-select-field.component';
+import {ProfileAttachmentsComponent} from './shared/profile-attachments/profile-attachments.component';
+import {GlobalSettingsComponent} from './pages/global-settings/global-settings.component';
+import {FormlyDateFieldComponent} from '@app/services-search/components/formly-date-field/formly-date-field.component';
+import {
+  FormlyFieldFullWrapperComponent
+} from '@app/services-search/components/formly-field-full-wrapper/formly-field-full-wrapper.component';
+import {
+  FormlyFieldWrapperComponent
+} from '@app/services-search/components/formly-field-wrapper/formly-field-wrapper.component';
+import {
+  FormlyMaskInputFieldComponent
+} from '@app/services-search/components/formly-mask-input-field/formly-mask-input-field.component';
+import {
+  FormlySelectFieldComponent
+} from '@app/services-search/components/formly-select-field/formly-select-field.component';
 
 @NgModule({
   declarations: [
@@ -206,7 +215,6 @@ import { FormlySelectFieldComponent } from '@app/services-search/components/form
     UserSecurityExternalComponent,
     ProfileAttachmentsComponent,
     GlobalSettingsComponent,
-    UserPreferencesPopupComponent,
     AdminLicenseComponent
   ],
   imports: [
