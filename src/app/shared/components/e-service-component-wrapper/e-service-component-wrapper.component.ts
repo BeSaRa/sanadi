@@ -1285,6 +1285,7 @@ export class EServiceComponentWrapperComponent implements OnInit, AfterViewInit,
       openFrom = this.getTheRightOpenForm();
     }
     this.openFrom = openFrom;
+    this.component.openFrom = openFrom;
     switch (openFrom) {
       case OpenFrom.USER_INBOX:
         this.buildUserInboxActions();
