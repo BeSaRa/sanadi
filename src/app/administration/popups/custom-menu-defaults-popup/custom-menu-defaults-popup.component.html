@@ -36,6 +36,16 @@
             <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.english_name}}</th>
             <td cdk-cell *cdkCellDef="let row"> {{row.enName}} </td>
           </ng-container>
+          <ng-container cdkColumnDef="menuType">
+            <th cdk-header-cell sortable-header *cdkHeaderCellDef [sortParamAsFullItem]="true"
+            [sortCallback]="sortingCallbacks.menuType"> {{lang.map.menu_type}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{row.menuTypeInfo ? row.menuTypeInfo.getName() : '' }} </td>
+          </ng-container>
+          <ng-container cdkColumnDef="status">
+            <th cdk-header-cell sortable-header *cdkHeaderCellDef [sortParamAsFullItem]="true"
+                [sortCallback]="sortingCallbacks.statusInfo"> {{lang.map.lbl_status}}</th>
+            <td cdk-cell *cdkCellDef="let row"> {{(row.statusInfo ? row.statusInfo.getName() : '')}} </td>
+          </ng-container>
           <ng-container cdkColumnDef="actions">
             <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
             <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">

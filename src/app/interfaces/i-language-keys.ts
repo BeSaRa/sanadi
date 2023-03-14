@@ -1841,6 +1841,8 @@ export interface ILanguageKeys {
   lbl_custom_menus:string;
   lbl_default_menus:string;
   lbl_parent_menu:string;
+  lbl_icon:string;
+
   sub_meeting_point_name:string;
   student_info_lbl:string;
   student_QID:string;
