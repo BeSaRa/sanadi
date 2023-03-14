@@ -15,9 +15,8 @@ import {infoSearchFields} from '@helpers/info-search-fields';
 import {CustomValidators} from '@app/validators/custom-validators';
 import {Validators} from '@angular/forms';
 import {ILanguageKeys} from '@contracts/i-language-keys';
-import {IKeyValue} from '@contracts/i-key-value';
-import {keys} from 'lodash';
 import {UserTypes} from '@app/enums/user-types.enum';
+import {UserPreferences} from '@models/user-preferences';
 
 const interceptor = new ExternalUserInterceptor();
 
@@ -50,6 +49,7 @@ export class ExternalUser extends BaseModel<ExternalUser, ExternalUserService> {
   statusInfo!: AdminResult;
   userTypeInfo!: AdminResult;
   jobTitleInfo!: AdminResult;
+  userPreferences!: UserPreferences;
 
   service: ExternalUserService;
   private langService: LangService;

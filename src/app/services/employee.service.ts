@@ -24,6 +24,8 @@ import {CustomMenuInterceptor} from '@app/model-interceptors/custom-menu-interce
 import {ProfileInterceptor} from '@app/model-interceptors/profile-interceptor';
 import {OperationTypes} from '@app/enums/operation-types.enum';
 import {UserRoleManageUserContract} from '@contracts/user-role-manage-user-contract';
+import {InternalUserInterceptor} from '@model-interceptors/internal-user-interceptor';
+import {ExternalUserInterceptor} from '@model-interceptors/external-user-interceptor';
 
 @Injectable({
   providedIn: 'root'
@@ -114,7 +116,7 @@ export class EmployeeService {
 
 
   setExternalUserData(loginData: ILoginData): void {
-    this.externalUser = (new ExternalUser()).clone(loginData.externalUser);
+    this.externalUser = new ExternalUserInterceptor().receive(new ExternalUser().clone(loginData.externalUser));
     this.profile = this.profileInterceptor.receive((new Profile()).clone(loginData.profile));
   }
 
@@ -283,7 +285,7 @@ export class EmployeeService {
 
   private setInternalUserData(loginData: ILoginData) {
     loginData.internalDepartment.mainTeam = new Team().clone(loginData.internalDepartment.mainTeam);
-    this.internalUser = (new InternalUser()).clone(loginData.internalUser);
+    this.internalUser = new InternalUserInterceptor().receive((new InternalUser()).clone(loginData.internalUser));
     this.internalDepartment = (new InternalDepartment()).clone(loginData.internalDepartment);
     this.internalDepartments = loginData.internalDepartments.map(item => (new InternalDepartment()).clone(item));
   }

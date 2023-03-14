@@ -1,5 +1,5 @@
 import { BaseModel } from './base-model';
-import { UserTypes } from '../enums/user-types.enum';
+import { UserTypes } from '@enums/user-types.enum';
 import { INames } from '@contracts/i-names';
 import { LangService } from '@services/lang.service';
 import { FactoryService } from '@services/factory.service';
@@ -12,6 +12,7 @@ import { searchFunctionType } from '@app/types/types';
 import { CommonStatusEnum } from '@app/enums/common-status.enum';
 import { InternalUserInterceptor } from "@app/model-interceptors/internal-user-interceptor";
 import { InterceptModel } from "@decorators/intercept-model";
+import {UserPreferences} from '@models/user-preferences';
 
 const interceptor = new InternalUserInterceptor()
 
@@ -42,6 +43,7 @@ export class InternalUser extends BaseModel<InternalUser, InternalUserService> {
   userType: UserTypes = UserTypes.INTERNAL;
   generalUserId!: number;
   customRoleId!: number;
+  userPreferences!: UserPreferences;
   langService: LangService;
 
   searchFields: { [key: string]: searchFunctionType | string } = {
