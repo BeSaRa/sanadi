@@ -70,6 +70,21 @@
             <app-field-error-message controlName="userType"></app-field-error-message>
           </div>
         </div>
+
+        <div class="col-sm-6 mb-4 position-relative">
+          <label asteriskIfRequired="icon" for="icon" class="form-label">{{lang.map.lbl_icon}}</label>
+          <div class="mb-3 position-relative ng-select-wrapper">
+            <ng-select validationClasses="icon" labelForId="icon" placeholder="{{lang.map.select}}"
+                       [notFoundText]="lang.map.msg_not_found" formControlName="icon" id="icon" appendTo="body">
+              <ng-option [value]="option" *ngFor="let option of icons">
+                <div class="sidebar-menu-item-font d-flex flex-row align-items-center">
+                  <i class="mdi {{option}}"></i>
+                </div>
+            </ng-option>
+            </ng-select>
+            <app-field-error-message controlName="icon"></app-field-error-message>
+          </div>
+        </div>
       </div>
 
       <div class="row">

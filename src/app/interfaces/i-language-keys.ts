@@ -1831,4 +1831,6 @@ export interface ILanguageKeys {
   lbl_custom_menus:string;
   lbl_default_menus:string;
   lbl_parent_menu:string;
+  lbl_icon:string;
+
 }

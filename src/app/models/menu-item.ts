@@ -1,3 +1,4 @@
+import { SystemMenuKeys } from './../enums/system-menu-keys.enum';
 import {LangService} from '@services/lang.service';
 import {FactoryService} from '@services/factory.service';
 import {ILanguageKeys} from '@contracts/i-language-keys';
@@ -52,6 +53,7 @@ export class MenuItem extends Cloneable<MenuItem> {
   configurationService: ConfigurationService;
   data?: IKeyValue;
   defaultId?:number;
+  menuKey? : SystemMenuKeys
 
   constructor() {
     super()

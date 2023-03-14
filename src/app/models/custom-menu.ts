@@ -38,7 +38,9 @@ export class CustomMenu extends BaseModel<CustomMenu, CustomMenuService> {
   parentMenuItemInfo!: AdminResult;
   userTypeInfo!: AdminResult;
   subMenuItems: CustomMenu[] = [];
-  defaultParent?:MenuItem
+  defaultParent?:MenuItem;
+  systemMenuKey?: string;
+  icon!:string;
 
   // extra properties
   service!: CustomMenuService;
@@ -74,6 +76,7 @@ export class CustomMenu extends BaseModel<CustomMenu, CustomMenuService> {
       menuView,
       userType,
       parentMenuItemId,
+      icon
     } = this;
     return {
       arName: controls ? [arName, [CustomValidators.required,
@@ -89,6 +92,7 @@ export class CustomMenu extends BaseModel<CustomMenu, CustomMenuService> {
       menuType: controls ? [menuType, [CustomValidators.required]] : menuType,
       menuView: controls ? [menuView, []] : menuView,
       userType: controls ? [userType, [CustomValidators.required]] : userType,
+      icon: controls ? [icon, [CustomValidators.required]] : icon,
       parentMenuItemId: controls ? [parentMenuItemId, []] : parentMenuItemId,
     };
   }
