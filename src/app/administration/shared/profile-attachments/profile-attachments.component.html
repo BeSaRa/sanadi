@@ -1,9 +1,4 @@
 <div>
-    <ng-template #addingAttachments>
-      <button class="btn btn-link outline-none text-white" tooltip="{{ lang.map.btn_add }}" (click)="addOtherAttachments.next()">
-        <i class="mdi mdi-plus-box"></i>
-      </button>
-    </ng-template>
     <app-table [selectable]="true" #table sortableTable [paginator]="paginator"
                [data]="attachments"
                [columns]="displayedColumns">
@@ -13,10 +8,9 @@
             <table-header tableTitle="attachments"
                           [skipSearch]="true"
                           [skipClearSort]="true"
-                          [allowAdd]="false"
                           [allowReload]="false"
+                          [add$]="addOtherAttachments"
                           >
-                          <ng-container *ngTemplateOutlet="addingAttachments"></ng-container>
                         </table-header>
           </th>
         </ng-container>
