@@ -9,6 +9,7 @@ export interface ICustomMenuSearchCriteria {
   'menu-view': MenuView;
   'user-type': UserTypes;
   'parent-menu-item-id': number;
+
   status: CommonStatusEnum,
   offset: number;
   limit: number;
