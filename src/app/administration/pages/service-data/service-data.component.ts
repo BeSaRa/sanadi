@@ -24,6 +24,9 @@ import {AidLookupStatusEnum} from '@app/enums/status.enum';
   styleUrls: ['./service-data.component.scss']
 })
 export class ServiceDataComponent extends AdminGenericComponent<ServiceData, ServiceDataService> {
+  prepareFilterModel(): Partial<ServiceData> {
+    throw new Error('Method not implemented.');
+  }
   commonStatus = CommonStatusEnum;
   useCompositeToEdit = false;
   usePagination = true;

@@ -24,6 +24,9 @@ import {DialogRef} from '@app/shared/models/dialog-ref';
   styleUrls: ['./sd-goal.component.scss']
 })
 export class SdGoalComponent extends AdminGenericComponent<SDGoal, SDGoalService> implements OnInit {
+  prepareFilterModel(): Partial<SDGoal> {
+    throw new Error('Method not implemented.');
+  }
   usePagination = true;
   displayedColumns = ['arName', 'enName', 'status', 'childCount', 'actions'];
   commonStatusEnum = CommonStatusEnum;

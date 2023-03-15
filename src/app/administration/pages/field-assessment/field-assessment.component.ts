@@ -24,6 +24,9 @@ import {UserClickOn} from '@app/enums/user-click-on.enum';
   styleUrls: ['./field-assessment.component.scss']
 })
 export class FieldAssessmentComponent extends AdminGenericComponent<FieldAssessment, FieldAssessmentService> {
+  prepareFilterModel(): Partial<FieldAssessment> {
+    throw new Error('Method not implemented.');
+  }
   usePagination = true;
 
   constructor(public lang: LangService,

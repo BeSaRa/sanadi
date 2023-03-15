@@ -24,6 +24,9 @@ import { DialogRef } from '@app/shared/models/dialog-ref';
   styleUrls: ['./sub-team.component.scss']
 })
 export class SubTeamComponent extends AdminGenericComponent<SubTeam, SubTeamService> {
+  prepareFilterModel(): Partial<SubTeam> {
+    throw new Error('Method not implemented.');
+  }
   usePagination = true;
   displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'status', 'actions']; //, 'parent'
 

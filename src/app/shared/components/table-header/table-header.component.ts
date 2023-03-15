@@ -36,7 +36,6 @@ export class TableHeaderComponent implements OnInit, OnDestroy {
   sort: SortableTableDirective | undefined | null;
   @Input()
   stats?: IStats;
-
   @Output()
   onSelectFilter: EventEmitter<Lookup | undefined> = new EventEmitter<Lookup | undefined>();
 

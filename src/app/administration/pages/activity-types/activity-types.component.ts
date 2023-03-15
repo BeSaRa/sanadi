@@ -27,6 +27,9 @@ export class ActivityTypeComponent extends AdminGenericComponent<
   AdminLookup,
   ActivityTypeService
 > {
+  prepareFilterModel(): Partial<AdminLookup> {
+    throw new Error('Method not implemented.');
+  }
   actions: IMenuItem<AdminLookup>[] = [];
   displayedColumns: string[] = [
     'arName',

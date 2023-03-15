@@ -20,4 +20,8 @@ export interface CrudServiceInterface<T> {
 
   paginateComposite(options: PaginationContract): Observable<Pagination<T[]>>
 
+  loadFilter(filterModel: Partial<T>, options: PaginationContract): Observable<T[]>
+
+  paginatefilter(options: PaginationContract, filterModel: Partial<T>): Observable<Pagination<T[]>>
+
 }

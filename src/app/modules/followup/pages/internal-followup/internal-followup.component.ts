@@ -21,6 +21,9 @@ import { CommonService } from "@services/common.service";
   styleUrls: ['./internal-followup.component.scss']
 })
 export class InternalFollowupComponent extends AdminGenericComponent<Followup, FollowupService> {
+  prepareFilterModel(): Partial<Followup> {
+    throw new Error('Method not implemented.');
+  }
   actions: IMenuItem<Followup>[] = [];
   displayedColumns: string[] = ['fullSerial', 'requestType', 'name', 'serviceType', 'dueDate', 'createdBy', 'status', 'actions'];
   headerColumn: string[] = ['extra-header'];

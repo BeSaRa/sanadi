@@ -20,6 +20,9 @@ import {UserPreferencesService} from '@services/user-preferences.service';
   styleUrls: ['./internal-user.component.scss']
 })
 export class InternalUserComponent extends AdminGenericComponent<InternalUser, InternalUserService> {
+  prepareFilterModel(): Partial<InternalUser> {
+    throw new Error('Method not implemented.');
+  }
   usePagination = true;
   displayedColumns: string[] = ['rowSelection', 'username', 'arName', 'enName', 'defaultDepartment', 'status', 'actions'];
   commonStatusEnum = CommonStatusEnum;

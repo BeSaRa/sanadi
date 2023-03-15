@@ -1,0 +1,11 @@
+<!-- text control type -->
+<input *ngIf="isTextControl()" [id]="field.key" (change)="_change()" [formControl]="control" class="form-control">
+<!-- select control type -->
+<ng-select *ngIf="isSelectControl()" [formControl]="control" [selectOnTab]="true" [clearable]="true"
+  [multiple]="isMultiple()" [id]="field.key" appendTo="body" placeholder="{{lang.map.select}}"
+  [notFoundText]="lang.map.msg_not_found" (change)="_change()">
+  <ng-option *ngFor="let option of options" [value]="option[optionValueKey]">
+    {{option.getName()}}
+  </ng-option>
+</ng-select>
+<app-field-error-message [control]="control"></app-field-error-message>

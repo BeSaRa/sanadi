@@ -26,6 +26,9 @@ export class VactionDatesComponent extends AdminGenericComponent<
 VacationDates,
 VacationDatesService
 > {
+  prepareFilterModel(): Partial<VacationDates> {
+    throw new Error('Method not implemented.');
+  }
   actions: IMenuItem<VacationDates>[] = [];
   displayedColumns: string[] = [
     'rowSelection',

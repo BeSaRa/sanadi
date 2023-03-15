@@ -20,6 +20,9 @@ import {UrgentInterventionLicenseFollowup} from '@models/urgent-intervention-lic
   styleUrls: ['./urgent-intervention-report-list.component.scss']
 })
 export class UrgentInterventionReportListComponent extends AdminGenericComponent<UrgentInterventionReport, UrgentInterventionReportService> {
+  prepareFilterModel(): Partial<UrgentInterventionReport> {
+    throw new Error('Method not implemented.');
+  }
 
   constructor(public lang: LangService,
               private toast: ToastService,

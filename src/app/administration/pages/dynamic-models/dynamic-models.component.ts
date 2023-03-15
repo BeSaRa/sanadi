@@ -21,6 +21,9 @@ import { DynamicModel } from '@app/models/dynamic-model';
   styleUrls: ['./dynamic-models.component.scss']
 })
 export class DynamicModelsComponent extends AdminGenericComponent<DynamicModel, DynamicModelService> {
+  prepareFilterModel(): Partial<DynamicModel> {
+    throw new Error('Method not implemented.');
+  }
   usePagination = true;
   list: DynamicModel[] = [];
   commonStatusEnum = CommonStatusEnum;

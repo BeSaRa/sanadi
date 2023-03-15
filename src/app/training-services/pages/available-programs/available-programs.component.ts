@@ -18,6 +18,9 @@ import { OperationTypes } from '@app/enums/operation-types.enum';
   styleUrls: ['./available-programs.component.scss']
 })
 export class AvailableProgramsComponent extends AdminGenericComponent<TrainingProgram, TrainingProgramService> {
+  prepareFilterModel(): Partial<TrainingProgram> {
+    throw new Error('Method not implemented.');
+  }
   view$: Subject<TrainingProgram> = new Subject<TrainingProgram>();
   reload$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   searchText = '';

@@ -29,6 +29,9 @@ import {Lookup} from '@app/models/lookup';
   styleUrls: ['./external-user-update-request-approval.component.scss']
 })
 export class ExternalUserUpdateRequestApprovalComponent extends AdminGenericComponent<ExternalUserUpdateRequest, ExternalUserUpdateRequestService> {
+  prepareFilterModel(): Partial<ExternalUserUpdateRequest> {
+    throw new Error('Method not implemented.');
+  }
   allRequests$: BehaviorSubject<ExternalUserUpdateRequest[]> = new BehaviorSubject<ExternalUserUpdateRequest[]>([]);
   @ViewChild('table') table!: TableComponent;
 

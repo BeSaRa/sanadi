@@ -21,6 +21,9 @@ import { DialogRef } from '@app/shared/models/dialog-ref';
   styleUrls: ['./general-process.component.scss']
 })
 export class GeneralProcessComponent extends AdminGenericComponent<GeneralProcess, GeneralProcessService> {
+  prepareFilterModel(): Partial<GeneralProcess> {
+    throw new Error('Method not implemented.');
+  }
   usePagination = true;
   list: GeneralProcess[] = [];
   commonStatusEnum = CommonStatusEnum;

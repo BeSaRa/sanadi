@@ -28,6 +28,9 @@ import {AdminGenericComponent} from '@app/generics/admin-generic-component';
   styleUrls: ['./dac-ocha-list.component.scss']
 })
 export class DacOchaListComponent extends AdminGenericComponent<AdminLookup, DacOchaService> implements AfterViewInit {
+  prepareFilterModel(): Partial<AdminLookup> {
+    throw new Error('Method not implemented.');
+  }
 
   @Input() adminLookupType!: AdminLookupTypeEnum;
   @Output() onReady: EventEmitter<AdminLookupTypeEnum> = new EventEmitter<AdminLookupTypeEnum>();

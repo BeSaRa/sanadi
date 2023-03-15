@@ -8,12 +8,14 @@ import { CrudWithDialogGenericService } from "@app/generics/crud-with-dialog-gen
 import { CommonStatusEnum } from '@app/enums/common-status.enum';
 import { PageEvent } from "@contracts/page-event";
 import { CrudServiceInterface } from "@contracts/crud-service-interface";
-import {PermissionsEnum} from '@app/enums/permissions-enum';
+import { PermissionsEnum } from '@app/enums/permissions-enum';
 
 @Directive()
 export abstract class AdminGenericComponent<M extends { id: number }, S extends CrudWithDialogGenericService<M>> implements OnInit, OnDestroy {
   // behavior subject for load the list
   reload$: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  // subject for emit filter
+  filter$: Subject<any> = new Subject<any>();
   // subject for emit clicking on add button
   add$: Subject<any> = new Subject<any>();
   // subject for emit clicking on edit button
@@ -44,6 +46,9 @@ export abstract class AdminGenericComponent<M extends { id: number }, S extends 
   usePagination: boolean = false;
   count: number = 0;
 
+  filterModel!: Partial<M>;
+  abstract prepareFilterModel(): Partial<M>;
+
   pageEvent: PageEvent = {
     pageIndex: 0,
     pageSize: 10,
@@ -51,6 +56,9 @@ export abstract class AdminGenericComponent<M extends { id: number }, S extends 
     previousPageIndex: null
   }
 
+  get displayedSearchColumns() {
+    return this.displayedColumns.map(c => (c == 'rowSelection' || c == 'actions') ? '_' : 'search_' + c);
+  }
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
@@ -167,6 +175,36 @@ export abstract class AdminGenericComponent<M extends { id: number }, S extends 
       .subscribe()
   }*/
 
+  /**
+   * @description default implementation to listen to save method you can override it if you need custom logic
+   */
+   listenToFilter() {
+    this.filter$
+    .pipe(takeUntil((this.destroy$)))
+    .pipe(switchMap(() => {
+      let load: Observable<M[]>
+      let service = this.service as unknown as CrudServiceInterface<M>
+      const paginationOptions = {
+        limit: this.pageEvent.pageSize,
+        offset: (this.pageEvent.pageIndex * this.pageEvent.pageSize)
+      }
+      const model = this.prepareFilterModel();
+      load = service.paginatefilter(paginationOptions, model)
+        .pipe(map((res) => {
+          this.count = res.count;
+          return res.rs;
+        }))
+      return load.pipe(catchError(_ => {
+        console.log('Error', _);
+        return of([])
+      }));
+    }))
+    .subscribe((list: M[]) => {
+      this.count = list.length;
+      this.models = list;
+      this.afterReload();
+    })
+  }
   protected _init(): void {
 
   }

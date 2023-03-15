@@ -28,6 +28,9 @@ import {ActionIconsEnum} from '@app/enums/action-icons-enum';
   styleUrls: ['./aid-lookup.component.scss']
 })
 export class AidLookupComponent extends AdminGenericComponent<AidLookup, AidLookupService> {
+  prepareFilterModel(): Partial<AidLookup> {
+    throw new Error('Method not implemented.');
+  }
   @Input() aidType!: number;
   @Input() parentId!: number;
 

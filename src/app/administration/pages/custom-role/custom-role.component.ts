@@ -21,6 +21,9 @@ import {CommonUtils} from '@app/helpers/common-utils';
   styleUrls: ['./custom-role.component.scss']
 })
 export class CustomRoleComponent extends AdminGenericComponent<CustomRole, ExternalUserCustomRoleService> {
+  prepareFilterModel(): Partial<CustomRole> {
+    throw new Error('Method not implemented.');
+  }
   usePagination = true;
 
   constructor(public langService: LangService,

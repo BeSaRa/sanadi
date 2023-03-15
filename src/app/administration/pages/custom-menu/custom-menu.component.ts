@@ -26,6 +26,9 @@ import {Pagination} from '@app/models/pagination';
   styleUrls: ['./custom-menu.component.css'],
 })
 export class CustomMenuComponent extends AdminGenericComponent<CustomMenu, CustomMenuService> {
+  prepareFilterModel(): Partial<CustomMenu> {
+    throw new Error('Method not implemented.');
+  }
   usePagination = true;
   useCompositeToLoad = false;
 

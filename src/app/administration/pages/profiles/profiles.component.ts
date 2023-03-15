@@ -21,6 +21,9 @@ import {CommonUtils} from '@helpers/common-utils';
   styleUrls: ['./profiles.component.scss']
 })
 export class ProfilesComponent extends AdminGenericComponent<Profile, ProfileService> {
+  prepareFilterModel(): Partial<Profile> {
+    throw new Error('Method not implemented.');
+  }
   usePagination = true;
   actions: IMenuItem<Profile>[] = [
     // edit

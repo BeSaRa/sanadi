@@ -30,6 +30,9 @@ import {PermissionsEnum} from "@app/enums/permissions-enum";
   styleUrls: ['./training-program.component.scss']
 })
 export class TrainingProgramComponent extends AdminGenericComponent<TrainingProgram, TrainingProgramService> implements OnInit {
+  prepareFilterModel(): Partial<TrainingProgram> {
+    throw new Error('Method not implemented.');
+  }
   view$: Subject<TrainingProgram> = new Subject<TrainingProgram>();
   searchText = '';
   actions: IMenuItem<TrainingProgram>[] = [

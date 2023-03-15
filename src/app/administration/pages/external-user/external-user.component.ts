@@ -30,6 +30,9 @@ import {UserPreferencesService} from '@services/user-preferences.service';
   styleUrls: ['./external-user.component.scss']
 })
 export class ExternalUserComponent extends AdminGenericComponent<ExternalUser, ExternalUserService> {
+  prepareFilterModel(): Partial<ExternalUser> {
+    throw new Error('Method not implemented.');
+  }
   view$: Subject<ExternalUser> = new Subject<ExternalUser>();
   usePagination = true;
   profileIdControl: UntypedFormControl = new UntypedFormControl('');
