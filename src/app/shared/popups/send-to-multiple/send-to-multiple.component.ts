@@ -95,7 +95,10 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
     AdminstrationDepartmentCodes.RC,
     AdminstrationDepartmentCodes.SVC,
   ]
-
+  FundraisingLicenseDepartmentApprovalDepartments = [
+    AdminstrationDepartmentCodes.RC,
+    AdminstrationDepartmentCodes.SVC,
+  ]
 
   multiSendToDepartmentWFResponseList = [
     WFResponseType.INTERNAL_PROJECT_SEND_TO_MULTI_DEPARTMENTS,
@@ -142,6 +145,8 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
         this.loadAwarenessActivatySuggestionApprovalDepartments()
       } else if (this.data.sendToResponse === WFResponseType.URGENT_INTERVENTION_LICENSE_SEND_TO_MULTI_DEPARTMENTS) {
         this.loadUrgentInterventionApprovalDepartments()
+      } else if (this.data.sendToResponse === WFResponseType.FUNDRAISING_LICENSE_SEND_TO_MULTI_DEPARTMENTS) {
+        this.loadFundraisingLicenseApprovalDepartments()
       } else {
         this.loadDepartments();
       }
@@ -271,6 +276,12 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
     this.intDepService.loadAsLookups()
       .pipe(takeUntil(this.destroy$))
       .subscribe(deps => this.departments = deps.filter(dep => this.NPOManagmentApprovalDepartments.includes(dep.code as AdminstrationDepartmentCodes)));
+  }
+
+  loadFundraisingLicenseApprovalDepartments(): void {
+    this.intDepService.loadAsLookups()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(deps => this.departments = deps.filter(dep => this.FundraisingLicenseDepartmentApprovalDepartments.includes(dep.code as AdminstrationDepartmentCodes)));
   }
 
   loadGaneralProcessNotificationApprovalDepartments(): void {
