@@ -93,6 +93,9 @@ export class BankAccount extends SearchableCloneable<BankAccount> {
               swiftCode,
               [
                 CustomValidators.required,
+                CustomValidators.minLength(
+                  CustomValidators.defaultLengths.SWIFT_CODE_MIN
+                ),
                 CustomValidators.maxLength(
                   CustomValidators.defaultLengths.SWIFT_CODE_MAX
                 ),

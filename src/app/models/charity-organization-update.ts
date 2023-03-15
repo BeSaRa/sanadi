@@ -235,7 +235,7 @@ CharityOrganizationUpdate
           ],
         ]
         : email,
-      website: controls ? [website, [CustomValidators.required, CustomValidators.maxLength(350)]] : website,
+      website: controls ? [website, [CustomValidators.required, CustomValidators.pattern('WEBSITE')]] : website,
       zoneNumber: controls
         ? [
           zoneNumber,
