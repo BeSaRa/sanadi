@@ -1,4 +1,6 @@
-import {Component, Inject} from '@angular/core';
+import { InternalDepartmentService } from '@app/services/internal-department.service';
+import { InternalDepartment } from '@app/models/internal-department';
+import { Component, Inject, AfterViewInit } from '@angular/core';
 import {BehaviorSubject, iif, Observable, of, Subject} from 'rxjs';
 import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {OperationTypes} from '@app/enums/operation-types.enum';
@@ -30,7 +32,7 @@ import {ActionIconsEnum} from '@app/enums/action-icons-enum';
   templateUrl: './service-data-popup.component.html',
   styleUrls: ['./service-data-popup.component.scss']
 })
-export class ServiceDataPopupComponent extends AdminGenericDialog<ServiceData> {
+export class ServiceDataPopupComponent extends AdminGenericDialog<ServiceData>{
 
   constructor(@Inject(DIALOG_DATA_TOKEN) data: IDialogData<ServiceData>,
               private lookupService: LookupService,
@@ -42,13 +44,14 @@ export class ServiceDataPopupComponent extends AdminGenericDialog<ServiceData> {
               private serviceDataStepsService: ServiceDataStepService,
               private checklistService: ChecklistService,
               private serviceData: ServiceDataService,
-              private dialog: DialogService) {
+              private dialog: DialogService,
+              private internalDepartmentService: InternalDepartmentService,
+              ) {
     super();
     this.model = data.model;
     this.operation = data.operation;
     this.list = data.list;
   }
-
   form!: UntypedFormGroup;
   model!: ServiceData;
   operation: OperationTypes;
@@ -64,6 +67,7 @@ export class ServiceDataPopupComponent extends AdminGenericDialog<ServiceData> {
   showActivateDevelopmentField = false;
   showAttachmentTypeField = false;
   attachmentTypesList: AttachmentType[] = [];
+  departments:InternalDepartment[] = [] ;
   saveVisible = true;
   tabsData: TabMap = {
     basic: {
@@ -173,8 +177,22 @@ export class ServiceDataPopupComponent extends AdminGenericDialog<ServiceData> {
     this.listenToEditStep();
     this.listenToViewStep();
     this.listenToFollowUpStatus();
+    this.loadDepartments();
   }
+  loadDepartments() {
+    this.internalDepartmentService.loadAsLookups()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(deps => this.departments = deps);
 
+  }
+  searchNgSelect(term: string, item: any): boolean {
+    return item.ngSelectSearch(term);
+  }
+  onChange(value : any){
+    console.log(value);
+    console.log(this.concernedDepartmentsIds);
+
+  }
   buildForm(): void {
     this.form = this.fb.group({
       basic: this.fb.group({
@@ -190,6 +208,7 @@ export class ServiceDataPopupComponent extends AdminGenericDialog<ServiceData> {
           CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
           CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')
         ]],
+        concernedDepartmentsIds: [this.model.concernedDepartmentsIds, []],
         requestSerialCode: [this.model.requestSerialCode, [CustomValidators.required, CustomValidators.maxLength(20)]],
         licenseSerialCode: [this.model.licenseSerialCode, [CustomValidators.required, CustomValidators.maxLength(20)]],
         status: [this.model.status, [CustomValidators.required]],
@@ -213,7 +232,12 @@ export class ServiceDataPopupComponent extends AdminGenericDialog<ServiceData> {
         attachmentID: [this.model.attachmentID]
       })
     });
+    if(!!this.model.concernedDepartmentsIds){
+      const idsArray = <number[]> JSON.parse(this.model.concernedDepartmentsIds);
+      this.concernedDepartmentsIds.setValue(idsArray)
+      this.concernedDepartmentsIds.updateValueAndValidity();
 
+    }
     if (this.readonly) {
       this.form.disable();
       this.saveVisible = false;
@@ -222,6 +246,7 @@ export class ServiceDataPopupComponent extends AdminGenericDialog<ServiceData> {
   }
 
   beforeSave(model: ServiceData, form: UntypedFormGroup): Observable<boolean> | boolean {
+    this.concernedDepartmentsIds.setValue(JSON.stringify(this.concernedDepartmentsIds.value))
     return form.valid;
   }
 
@@ -275,6 +300,9 @@ export class ServiceDataPopupComponent extends AdminGenericDialog<ServiceData> {
 
   get followUpStatus(): UntypedFormControl {
     return this.basicInfoGroup.get('followUp') as UntypedFormControl;
+  }
+  get concernedDepartmentsIds(): UntypedFormControl {
+    return this.basicInfoGroup.get('concernedDepartmentsIds') as UntypedFormControl;
   }
 
   get maxTargetAmount() {
