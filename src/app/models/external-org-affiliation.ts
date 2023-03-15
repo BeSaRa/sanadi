@@ -129,7 +129,7 @@ export class ExternalOrgAffiliation extends _RequestType<ExternalOrgAffiliationS
     return {
       customTerms: control ? [customTerms, [CustomValidators.required]] : customTerms,
       publicTerms: control ? [publicTerms, [CustomValidators.required]] : publicTerms,
-      conditionalLicenseIndicator: control ? [conditionalLicenseIndicator, [CustomValidators.required]] : conditionalLicenseIndicator,
+      conditionalLicenseIndicator: control ? [conditionalLicenseIndicator] : conditionalLicenseIndicator,
       followUpDate: control ? [followUpDate, [CustomValidators.required]] : followUpDate
     }
   }
