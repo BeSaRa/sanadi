@@ -172,8 +172,8 @@
               <i class="input-group-text mdi mdi-calendar"></i>
               <div class="form-control" formControlName="licenseStartDate"
                    id="licenseStartDate" [options]="datepickerOptionsMap.licenseStartDate"
-                   (click)="dpLicenseStartDate.toggleCalendar()"
-                   [ngClass]="{'input-disabled': licenseStartDate.disabled}"
+                   (click)="!isCancelRequestType && dpLicenseStartDate.toggleCalendar()"
+                   [ngClass]="{'input-disabled': isLicenseStartDateDisabled()}"
                    #dpLicenseStartDate="angular-mydatepicker"
                    angular-mydatepicker validationClasses="licenseStartDate"></div>
               <app-field-error-message controlName="licenseStartDate"></app-field-error-message>
