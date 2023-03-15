@@ -21,9 +21,6 @@ import {TableComponent} from '@app/shared/components/table/table.component';
   styleUrls: ['./certificates.component.scss']
 })
 export class CertificatesComponent extends AdminGenericComponent<Certificate, CertificateService> {
-  prepareFilterModel(): Partial<Certificate> {
-    throw new Error('Method not implemented.');
-  }
   actions: IMenuItem<Certificate>[] = [
     {
       type: 'action',

@@ -12,8 +12,7 @@ export interface ISearchColumnConfig {
     multiple?: boolean;
     lableProperty: string;
     optionValueKey: string;
-  },
-  value: (row: any) => string
+  }
 }
 
 export type ColumnControlType = 'text' | 'select';

@@ -24,9 +24,6 @@ import { TrainingProgramPartnerService } from '@app/services/training-program-pa
   styleUrls: ['./training-program-partner.component.scss']
 })
 export class TrainingProgramPartnerComponent extends AdminGenericComponent<TrainingProgramPartner, TrainingProgramPartnerService> {
-  prepareFilterModel(): Partial<TrainingProgramPartner> {
-    throw new Error('Method not implemented.');
-  }
   afterReload(): void {
     this.table && this.table.clearSelection();
   }

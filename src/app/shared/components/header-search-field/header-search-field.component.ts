@@ -20,7 +20,6 @@ export class HeaderSearchFieldComponent implements OnInit {
 
   constructor(public lang: LangService) { }
   ngOnInit() {
-    console.log(this.form)
     this.options = this.field.selectOptions?.options || [];
     this.optionValueKey = this.field.selectOptions?.optionValueKey || 'id';
   }

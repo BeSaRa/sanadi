@@ -33,9 +33,6 @@ import { AdminGenericComponent } from "@app/generics/admin-generic-component";
   styleUrls: ['./country.component.scss']
 })
 export class CountryComponent extends AdminGenericComponent<Country, CountryService> implements AfterViewInit {
-  prepareFilterModel(): Partial<Country> {
-    throw new Error('Method not implemented.');
-  }
   usePagination = true
   actions: IMenuItem<Country>[] = [];
   displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'riskLevel', 'status', 'statusDateModified', 'actions'];

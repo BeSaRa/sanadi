@@ -19,9 +19,6 @@ import {ActionIconsEnum} from '@app/enums/action-icons-enum';
   styleUrls: ['./internal-department.component.scss']
 })
 export class InternalDepartmentComponent extends AdminGenericComponent<InternalDepartment, InternalDepartmentService> {
-  prepareFilterModel(): Partial<InternalDepartment> {
-    throw new Error('Method not implemented.');
-  }
   usePagination = true
   searchText = '';
   view$: Subject<InternalDepartment> = new Subject<InternalDepartment>();

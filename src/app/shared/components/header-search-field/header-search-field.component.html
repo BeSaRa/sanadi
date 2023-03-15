@@ -1,8 +1,8 @@
 <!-- text control type -->
-<input *ngIf="isTextControl()" [id]="field.key" (change)="_change()" [formControl]="control" class="form-control">
+<input *ngIf="isTextControl()" [id]="field.key" (change)="_change()" [placeholder]="lang.map[field.label]" [formControl]="control" class="form-control">
 <!-- select control type -->
 <ng-select *ngIf="isSelectControl()" [formControl]="control" [selectOnTab]="true" [clearable]="true"
-  [multiple]="isMultiple()" [id]="field.key" appendTo="body" placeholder="{{lang.map.select}}"
+  [multiple]="isMultiple()" [id]="field.key" appendTo="body" placeholder="{{lang.map.select}} {{lang.map[field.label]}}"
   [notFoundText]="lang.map.msg_not_found" (change)="_change()">
   <ng-option *ngFor="let option of options" [value]="option[optionValueKey]">
     {{option.getName()}}

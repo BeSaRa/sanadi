@@ -1,4 +1,4 @@
-import { FormBuilder, UntypedFormGroup } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import { Component, ViewChild } from '@angular/core';
 import { AdminGenericComponent } from '@app/generics/admin-generic-component';
 import { JobTitle } from '@app/models/job-title';
@@ -28,7 +28,6 @@ import { CustomValidators } from '@app/validators/custom-validators';
   styleUrls: ['./job-title.component.scss']
 })
 export class JobTitleComponent extends AdminGenericComponent<JobTitle, JobTitleService> {
-  filterForm!: UntypedFormGroup;
   afterReload(): void {
     this.table && this.table.clearSelection();
   }
@@ -49,12 +48,6 @@ export class JobTitleComponent extends AdminGenericComponent<JobTitle, JobTitleS
     this.listenToView();
     this.buildFilterForm();
     this.listenToFilter();
-  }
-  prepareFilterModel(): Partial<JobTitle> {
-    console.log(this.filterForm.value)
-    return {
-      ...this.filterForm.value
-    }
   }
   @ViewChild('table') table!: TableComponent;
   view$: Subject<JobTitle> = new Subject<JobTitle>();
@@ -106,33 +99,32 @@ export class JobTitleComponent extends AdminGenericComponent<JobTitle, JobTitleS
     }
   ];
   displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'status', 'actions'];
-  searchColumnInfo: ISearchColumnConfig[] = [
-    {
+  searchColumns: string[] = ['_', 'search_arName', 'search_enName', 'search_status', 'clear_filter'];
+  searchColumnInfo: { [key: string]: ISearchColumnConfig } = {
+    search_arName: {
       key: 'arName',
       controlType: 'text',
       property: 'arName',
-      label: 'lbl_arabic_name',
-      value: (row: JobTitle) => row.arName
-    }, {
+      label: 'arabic_name',
+    },
+    search_enName: {
       key: 'enName',
       controlType: 'text',
       property: 'enName',
-      label: 'lbl_english_name',
-      value: (row: JobTitle) => row.enName
-    }, {
+      label: 'english_name',
+    },
+    search_status: {
       key: 'status',
       controlType: 'select',
       property: 'status',
       label: 'lbl_status',
-      value: (row: JobTitle) => row.statusInfo.getName(),
       selectOptions: {
-        options: this.lookupService.listByCategory.CommonStatus,
+        options: this.lookupService.listByCategory.CommonStatus.filter(status => !status.isRetiredCommonStatus()),
         lableProperty: 'getName',
         optionValueKey: 'lookupKey'
       }
-    },
-
-  ]
+    }
+  }
   bulkActionsList: IGridAction[] = [
     {
       langKey: 'btn_delete',
@@ -176,7 +168,6 @@ export class JobTitleComponent extends AdminGenericComponent<JobTitle, JobTitleS
   get selectedRecords(): JobTitle[] {
     return this.table.selection.selected;
   }
-
   listenToView(): void {
     this.view$
       .pipe(takeUntil(this.destroy$))
@@ -188,7 +179,7 @@ export class JobTitleComponent extends AdminGenericComponent<JobTitle, JobTitleS
       .subscribe(() => this.reload$.next(null))
   }
   buildFilterForm() {
-    this.filterForm = this.fb.group({
+    this.columnFilterForm = this.fb.group({
       arName: ['', [
         CustomValidators.maxLength(CustomValidators.defaultLengths.ARABIC_NAME_MAX),
         CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH),

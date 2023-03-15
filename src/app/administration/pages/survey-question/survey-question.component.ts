@@ -20,9 +20,6 @@ import { ToastService } from '@app/services/toast.service';
   styleUrls: ['./survey-question.component.scss'],
 })
 export class SurveyQuestionComponent extends AdminGenericComponent<SurveyQuestion, SurveyQuestionService> {
-  prepareFilterModel(): Partial<SurveyQuestion> {
-    throw new Error('Method not implemented.');
-  }
   usePagination = true
   constructor(public service: SurveyQuestionService,
               private dialog: DialogService,

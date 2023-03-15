@@ -24,9 +24,6 @@ import {ActionIconsEnum} from '@app/enums/action-icons-enum';
   styleUrls: ['./donor.component.scss']
 })
 export class DonorComponent extends AdminGenericComponent<Donor, DonorService> {
-  prepareFilterModel(): Partial<Donor> {
-    throw new Error('Method not implemented.');
-  }
   usePagination = true;
 
   constructor(public lang: LangService,

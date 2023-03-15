@@ -17,9 +17,6 @@ import {IGridAction} from '@app/interfaces/i-grid-action';
   styleUrls: ['./accredited-trainer.component.scss']
 })
 export class AccreditedTrainerComponent extends AdminGenericComponent<Trainer, TrainerService> {
-  prepareFilterModel(): Partial<Trainer> {
-    throw new Error('Method not implemented.');
-  }
   searchText = '';
   actions: IMenuItem<Trainer>[] = [
     {

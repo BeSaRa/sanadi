@@ -30,20 +30,22 @@
               (change)="$event ? table.selection.toggle(row) : null" class="form-check-input">
           </td>
         </ng-container>
-        <ng-container [cdkColumnDef]="'_'">
-          <th cdk-header-cell *cdkHeaderCellDef></th>
-        </ng-container>
-        <ng-container *ngFor="let colmun of searchColumnInfo" [cdkColumnDef]="'search_' + colmun.key">
+        <ng-container *ngFor="let colmun of searchColumns" [cdkColumnDef]="colmun">
           <th cdk-header-cell *cdkHeaderCellDef>
-            <app-header-search-field (change)="filter$.next()" [form]="filterForm" class="d-block w-100" [field]="colmun">
-            </app-header-search-field>
+            <ng-template #normal_cell>
+              <app-header-search-field *ngIf="colmun != '_'" (change)="filter$.next()" [form]="columnFilterForm"
+                class="d-block w-100" [field]="searchColumnInfo[colmun]">
+              </app-header-search-field>
+            </ng-template>
+            <ng-container *ngIf="colmun == 'clear_filter'; else normal_cell">
+              <button *ngIf="columnFilterFormHasValue()" [tooltip]="lang.map.clear_filter" (click)="clearColumnFilter()"
+                class="text-primary btn icon-btn p-0">
+                <i class="mdi mdi-filter-off-outline"></i>
+              </button>
+            </ng-container>
           </th>
         </ng-container>
-        <ng-container *ngFor="let colmun of searchColumnInfo" [cdkColumnDef]="colmun.key">
-          <th cdk-header-cell sortable-header *cdkHeaderCellDef>{{lang.map[colmun.label]}}</th>
-          <td cdk-cell *cdkCellDef="let row"><span class="dir-rtl d-inline-block">{{colmun.value(row)}}</span></td>
-        </ng-container>
-        <!-- <ng-container cdkColumnDef="arName">
+        <ng-container cdkColumnDef="arName">
           <th cdk-header-cell sortable-header *cdkHeaderCellDef> {{lang.map.arabic_name}}</th>
           <td cdk-cell *cdkCellDef="let row"> {{row.arName}} </td>
         </ng-container>
@@ -53,9 +55,9 @@
         </ng-container>
         <ng-container cdkColumnDef="status">
           <th cdk-header-cell sortable-header *cdkHeaderCellDef [sortParamAsFullItem]="true"
-              [sortCallback]="sortingCallbacks.statusInfo"> {{lang.map.lbl_status}}</th>
+            [sortCallback]="sortingCallbacks.statusInfo"> {{lang.map.lbl_status}}</th>
           <td cdk-cell *cdkCellDef="let row"> {{row.statusInfo.getName()}} </td>
-        </ng-container> -->
+        </ng-container>
         <ng-container cdkColumnDef="actions">
           <th cdk-header-cell *cdkHeaderCellDef> {{lang.map.lbl_actions}}</th>
           <td cdk-cell *cdkCellDef="let row; index as itemIndex" class="table-actions">
@@ -70,7 +72,7 @@
           </td>
         </ng-container>
         <tr cdk-header-row *cdkHeaderRowDef="['extra-header']"></tr>
-        <tr cdk-header-row *cdkHeaderRowDef="displayedSearchColumns"></tr>
+        <tr cdk-header-row *cdkHeaderRowDef="searchColumns"></tr>
         <tr cdk-header-row *cdkHeaderRowDef="displayedColumns" class="table-row-header"></tr>
         <tr cdk-row (contextmenu)="menu.open($event , row)" *cdkRowDef="let row; columns: displayedColumns;"></tr>
         <tr *cdkNoDataRow>

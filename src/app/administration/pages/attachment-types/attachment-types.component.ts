@@ -24,9 +24,6 @@ import {ActionIconsEnum} from '@app/enums/action-icons-enum';
   styleUrls: ['./attachment-types.component.scss']
 })
 export class AttachmentTypesComponent extends AdminGenericComponent<AttachmentType, AttachmentTypeService> {
-  prepareFilterModel(): Partial<AttachmentType> {
-    throw new Error('Method not implemented.');
-  }
   usePagination = true;
   list: AttachmentType[] = [];
   displayedColumns = ['arName', 'enName', 'status', 'actions'];

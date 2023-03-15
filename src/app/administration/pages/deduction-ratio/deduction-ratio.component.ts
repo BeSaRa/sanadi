@@ -24,9 +24,6 @@ import { exhaustMap, filter, switchMap, takeUntil } from 'rxjs/operators';
 })
 
 export class DeductionRatioComponent extends AdminGenericComponent<DeductionRatioItem, DeductionRatioItemService>  {
-  prepareFilterModel(): Partial<DeductionRatioItem> {
-    throw new Error('Method not implemented.');
-  }
   usePagination = true;
   @ViewChild('table') table!: TableComponent;
   view$: Subject<DeductionRatioItem> = new Subject<DeductionRatioItem>();

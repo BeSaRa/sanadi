@@ -22,9 +22,6 @@ import { ActionIconsEnum } from '@app/enums/action-icons-enum';
   styleUrls: ['./team.component.scss']
 })
 export class TeamComponent extends AdminGenericComponent<Team, TeamService> {
-  prepareFilterModel(): Partial<Team> {
-    throw new Error('Method not implemented.');
-  }
   usePagination = true;
   displayedColumns: string[] = ['rowSelection', 'arName', 'enName', 'authName', 'updatedOn', 'status', 'actions'];
   teams: Team[] = [];

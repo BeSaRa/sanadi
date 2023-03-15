@@ -20,9 +20,6 @@ import {of} from 'rxjs';
   styleUrls: ['./bank.component.scss']
 })
 export class BankComponent extends AdminGenericComponent<Bank, BankService> implements OnInit {
-  prepareFilterModel(): Partial<Bank> {
-    throw new Error('Method not implemented.');
-  }
   usePagination = true
   actions: IMenuItem<Bank>[] = [];
   displayedColumns: string[] = ['arName', 'enName', 'actions'];

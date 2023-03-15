@@ -21,9 +21,6 @@ import {CommonUtils} from '@helpers/common-utils';
   styleUrls: ['./followup.component.scss']
 })
 export class FollowupComponent extends AdminGenericComponent<Followup, FollowupService> {
-  prepareFilterModel(): Partial<Followup> {
-    throw new Error('Method not implemented.');
-  }
   models: Followup[] = [];
   actions: IMenuItem<Followup>[] = [];
   displayedColumns: string[] = ['requestNumber', 'requestType', 'name', 'serviceType', 'dueDate', 'status', 'orgInfo'];

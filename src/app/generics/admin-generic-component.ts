@@ -1,8 +1,9 @@
+import { CommonUtils } from '@app/helpers/common-utils';
 import { BehaviorSubject, Observable, of, Subject } from "rxjs";
 import { IMenuItem } from "@app/modules/context-menu/interfaces/i-menu-item";
 import { catchError, exhaustMap, filter, map, switchMap, takeUntil } from "rxjs/operators";
 import { Directive, OnDestroy, OnInit } from "@angular/core";
-import { UntypedFormControl } from "@angular/forms";
+import { UntypedFormControl, UntypedFormGroup } from "@angular/forms";
 import { DialogRef } from "@app/shared/models/dialog-ref";
 import { CrudWithDialogGenericService } from "@app/generics/crud-with-dialog-generic-service";
 import { CommonStatusEnum } from '@app/enums/common-status.enum';
@@ -28,6 +29,9 @@ export abstract class AdminGenericComponent<M extends { id: number }, S extends 
   models: M[] = [];
   // to filter grid models based on what the user type here
   filterControl: UntypedFormControl = new UntypedFormControl('');
+  // form to filter table header
+  // abstract columnFilterForm: UntypedFormGroup;
+  columnFilterForm!: UntypedFormGroup;
   // main service that will serve component needs.
   abstract service: S;
   // grid actions override it if you need to add context-menu on your grid
@@ -47,7 +51,12 @@ export abstract class AdminGenericComponent<M extends { id: number }, S extends 
   count: number = 0;
 
   filterModel!: Partial<M>;
-  abstract prepareFilterModel(): Partial<M>;
+
+  prepareFilterModel(): Partial<M> {
+    return {
+      ...this.columnFilterForm.value
+    }
+  }
 
   pageEvent: PageEvent = {
     pageIndex: 0,
@@ -56,9 +65,6 @@ export abstract class AdminGenericComponent<M extends { id: number }, S extends 
     previousPageIndex: null
   }
 
-  get displayedSearchColumns() {
-    return this.displayedColumns.map(c => (c == 'rowSelection' || c == 'actions') ? '_' : 'search_' + c);
-  }
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
@@ -178,32 +184,40 @@ export abstract class AdminGenericComponent<M extends { id: number }, S extends 
   /**
    * @description default implementation to listen to save method you can override it if you need custom logic
    */
-   listenToFilter() {
+  listenToFilter() {
     this.filter$
-    .pipe(takeUntil((this.destroy$)))
-    .pipe(switchMap(() => {
-      let load: Observable<M[]>
-      let service = this.service as unknown as CrudServiceInterface<M>
-      const paginationOptions = {
-        limit: this.pageEvent.pageSize,
-        offset: (this.pageEvent.pageIndex * this.pageEvent.pageSize)
-      }
-      const model = this.prepareFilterModel();
-      load = service.paginatefilter(paginationOptions, model)
-        .pipe(map((res) => {
-          this.count = res.count;
-          return res.rs;
-        }))
-      return load.pipe(catchError(_ => {
-        console.log('Error', _);
-        return of([])
-      }));
-    }))
-    .subscribe((list: M[]) => {
-      this.count = list.length;
-      this.models = list;
-      this.afterReload();
-    })
+      .pipe(takeUntil((this.destroy$)))
+      .pipe(map(() => {
+        return this.prepareFilterModel();
+      }), filter((model) => {
+        if (!this.columnFilterFormHasValue(model)) {
+          this.reload$.next(null);
+          return false;
+        }
+        return true;
+      }))
+      .pipe(switchMap((model) => {
+        let load: Observable<M[]>
+        let service = this.service as unknown as CrudServiceInterface<M>
+        const paginationOptions = {
+          limit: this.pageEvent.pageSize,
+          offset: (this.pageEvent.pageIndex * this.pageEvent.pageSize)
+        }
+        load = service.paginatefilter(paginationOptions, model)
+          .pipe(map((res) => {
+            this.count = res.count;
+            return res.rs;
+          }))
+        return load.pipe(catchError(_ => {
+          console.log('Error', _);
+          return of([])
+        }));
+      }))
+      .subscribe((list: M[]) => {
+        this.count = list.length;
+        this.models = list;
+        this.afterReload();
+      })
   }
   protected _init(): void {
 
@@ -212,11 +226,24 @@ export abstract class AdminGenericComponent<M extends { id: number }, S extends 
   afterReload(): void {
 
   }
-
+  columnFilterFormHasValue(model?: Partial<M>) {
+    if (!model) {
+      model = this.columnFilterForm.value;
+    }
+    return CommonUtils.objectHasValue(model);
+  }
+  clearColumnFilter() {
+    this.columnFilterForm.reset();
+    this.reload$.next(null);
+  }
   pageChange($event: PageEvent): void {
     this.pageEvent = $event
     if (this.usePagination && this.pageEvent.previousPageIndex !== null) {
-      this.reload$.next(this.reload$.value)
+      if (!this.columnFilterFormHasValue()) {
+        this.reload$.next(this.reload$.value)
+      } else {
+        this.filter$.next(null);
+      }
     }
   }
 

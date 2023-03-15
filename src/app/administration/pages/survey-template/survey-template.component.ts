@@ -17,9 +17,6 @@ import {CommonStatusEnum} from '@app/enums/common-status.enum';
   styleUrls: ['./survey-template.component.scss'],
 })
 export class SurveyTemplateComponent extends AdminGenericComponent<SurveyTemplate, SurveyTemplateService> {
-  prepareFilterModel(): Partial<SurveyTemplate> {
-    throw new Error('Method not implemented.');
-  }
   usePagination = true
   useCompositeToLoad = false;
   actions: IMenuItem<SurveyTemplate>[] = [

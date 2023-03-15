@@ -22,9 +22,6 @@ import {CommonStatusEnum} from '@app/enums/common-status.enum';
   styleUrls: ['./followup-configuration.component.scss']
 })
 export class FollowupConfigurationComponent extends AdminGenericComponent<FollowupConfiguration, FollowupConfigurationService> {
-  prepareFilterModel(): Partial<FollowupConfiguration> {
-    throw new Error('Method not implemented.');
-  }
 
   constructor(public lang: LangService,
               public service: FollowupConfigurationService,
