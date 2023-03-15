@@ -1,3 +1,5 @@
+import { FinancialTransferLicensingService } from '@app/services/financial-transfer-licensing.service';
+import { FinancialTransferLicensing } from '@app/models/financial-transfer-licensing';
 import {Component, Input} from '@angular/core';
 import {CaseModel} from '@app/models/case-model';
 import {LangService} from '@app/services/lang.service';
@@ -30,6 +32,7 @@ export class CaseInfoComponent {
               private licenseService: LicenseService,
               private customsExemptionRemittanceService: CustomsExemptionRemittanceService,
               private generalAssociationMeetingAttendanceService: GeneralAssociationMeetingAttendanceService,
+              private financialTransferLicensingService:FinancialTransferLicensingService,
               private sharedService: SharedService) {
   }
 
@@ -101,7 +104,10 @@ export class CaseInfoComponent {
       return (this.model as CustomsExemptionRemittance).exportedBookFullSerial || '';
     } else if (this.model.getCaseType() === CaseTypes.GENERAL_ASSOCIATION_MEETING_ATTENDANCE) {
       return (this.model as GeneralAssociationMeetingAttendance).fullSerial || '';
-    } else {
+    } else if (this.model.getCaseType() === CaseTypes.FINANCIAL_TRANSFERS_LICENSING) {
+      return (this.model as FinancialTransferLicensing).exportedLicenseFullSerial || '';
+    }
+     else {
       return '';
     }
   }
@@ -111,7 +117,10 @@ export class CaseInfoComponent {
       return (this.model as GeneralAssociationMeetingAttendance).meetingReportID;
     } else if (this.model.getCaseType() === CaseTypes.CUSTOMS_EXEMPTION_REMITTANCE) {
       return (this.model as CustomsExemptionRemittance).bookId;
-    } else {
+    } else if (this.model.getCaseType() === CaseTypes.FINANCIAL_TRANSFERS_LICENSING) {
+      return (this.model as FinancialTransferLicensing).exportedLicenseId;
+    }
+     else {
       return '';
     }
 
@@ -136,8 +145,12 @@ export class CaseInfoComponent {
       if (caseStatus === CommonCaseStatus.FINAL_REJECTION) {
         return ((this.model as ProjectImplementation).requestType === ServiceRequestTypes.NEW && this.model.submissionMechanism === SubmissionMechanisms.REGISTRATION);
       }
+
       return (caseStatus === CommonCaseStatus.FINAL_APPROVE || caseStatus === CommonCaseStatus.UNDER_EXAMINATION);
-    } else {
+    } else if (this.model.caseType === CaseTypes.FINANCIAL_TRANSFERS_LICENSING && this.model.submissionMechanism === SubmissionMechanisms.NOTIFICATION) {
+      return  caseStatus >= CommonCaseStatus.UNDER_PROCESSING ;
+    }
+     else {
       return caseStatus === CommonCaseStatus.FINAL_APPROVE;
     }
   }
