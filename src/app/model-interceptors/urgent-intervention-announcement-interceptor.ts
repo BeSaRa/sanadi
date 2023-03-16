@@ -40,13 +40,13 @@ export class UrgentInterventionAnnouncementInterceptor implements IModelIntercep
 
     let service: UrgentInterventionAnnouncementService = FactoryService.getService('UrgentInterventionAnnouncementService');
     if (model.implementingAgencyList && model.implementingAgencyList.length > 0) {
-      model.implementingAgencyList = model.implementingAgencyList.map(x => service.implementingAgencyInterceptor.send(x) as ImplementingAgency);
+      model.implementingAgencyList = model.implementingAgencyList.map(x => service.implementingAgencyInterceptor.send(new ImplementingAgency().clone(x)) as ImplementingAgency);
     }
     if (model.interventionRegionList && model.interventionRegionList.length > 0) {
-      model.interventionRegionList = model.interventionRegionList.map(x => service.interventionRegionInterceptor.send(x) as InterventionRegion);
+      model.interventionRegionList = model.interventionRegionList.map(x => service.interventionRegionInterceptor.send(new InterventionRegion().clone(x)) as InterventionRegion);
     }
     if (model.interventionFieldList && model.interventionFieldList.length > 0) {
-      model.interventionFieldList = model.interventionFieldList.map(x => service.interventionFieldInterceptor.send(x) as InterventionField);
+      model.interventionFieldList = model.interventionFieldList.map(x => service.interventionFieldInterceptor.send(new InterventionField().clone(x)) as InterventionField);
     }
 
     UrgentInterventionAnnouncementInterceptor._deleteBeforeSend(model);
