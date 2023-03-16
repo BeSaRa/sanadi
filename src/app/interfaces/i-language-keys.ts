@@ -1329,6 +1329,7 @@ export interface ILanguageKeys {
   entity_name: string;
   execution_country: string;
   msg_please_select_x_to_continue: string;
+  msg_please_validate_x_to_continue: string;
   menu_external_project_implementation: string;
   msg_add_intervention_license_first: string;
   integration_moj: string;

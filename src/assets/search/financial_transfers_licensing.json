@@ -27,6 +27,17 @@
   {
     "fields": [
       {
+        "key": "fullSerial",
+        "type": "input",
+        "label": "request_number",
+        "validations": {
+          "required": false
+        },
+        "templateOptions": {
+          "maxLength": 50
+        }
+      },
+      {
         "key": "caseStatus",
         "type": "selectField",
         "label": "lbl_status",
@@ -36,7 +47,12 @@
           "bindValue": "lookupKey",
           "bindLabel": "basedOnLanguage"
         }
-      },
+      }
+
+    ]
+  },
+  {
+    "fields": [
       {
         "key": "createdBy",
         "type": "input",
@@ -47,22 +63,8 @@
         "templateOptions": {
           "maxLength": 11
         }
-      }
-    ]
-  },
-  {
-    "fields": [
-      {
-        "key": "organizationId",
-        "type": "selectField",
-        "label": "lbl_organization",
-        "selectOptions": {
-          "options": [],
-          "loader": "organization.loadAsLookups",
-          "bindValue": "id",
-          "bindLabel": "basedOnLanguage"
-        }
       },
+
       {
         "key": "subject",
         "type": "input",
@@ -72,6 +74,21 @@
         },
         "templateOptions": {
           "maxLength": 300
+        }
+      }
+    ]
+  },
+  {
+    "fields":[
+      {
+        "key": "organizationId",
+        "type": "selectField",
+        "label": "lbl_organization",
+        "selectOptions": {
+          "options": [],
+          "loader": "organization.loadAsLookups",
+          "bindValue": "id",
+          "bindLabel": "basedOnLanguage"
         }
       }
     ]

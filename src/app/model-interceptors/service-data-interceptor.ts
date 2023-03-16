@@ -25,12 +25,23 @@ export class ServiceDataInterceptor implements IModelInterceptor<ServiceData> {
     model.maxElementsCount = customSettings.maxElementsCount!;
     model.activateDevelopmentField = customSettings.activateDevelopmentField || false;
     model.attachmentID = customSettings.attachmentID!;
+    if(!!model.concernedDepartmentsIds){
+      try {
+        const idsArray = <number[]> JSON.parse(model.concernedDepartmentsIds);
+        model.departmentsIds = idsArray;
+      } catch (e) {
+        model.departmentsIds = [];
+      }
+
+    }
 
     return model;
   }
 
   send(model: Partial<ServiceData>): Partial<ServiceData> {
     model.caseType = Number(model.caseType);
+    model.concernedDepartmentsIds = JSON.stringify(model.departmentsIds)
+
     ServiceDataInterceptor._setCustomSettingsForSend(model);
     ServiceDataInterceptor._deleteBeforeSend(model);
     return model;

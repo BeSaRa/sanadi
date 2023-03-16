@@ -1,8 +1,8 @@
 <div class="row">
   <tabs-list [accordionView]="accordionView" [hasForm]="true">
-    <tab name="basic_info" [hasError]="basicInfo.invalid" [template]="basic_info" [title]="lang.map.lbl_basic_info">
+    <tab name="basic_info" [hasError]="getTabInvalidStatus('basicInfo')" [template]="basic_info" [title]="lang.map.lbl_basic_info">
     </tab>
-    <tab [hasError]="specialExplanation.invalid" name="special_explanations" [template]="special_explanations"
+    <tab [hasError]="getTabInvalidStatus('specialExplanation')" name="special_explanations" [template]="special_explanations"
          [title]="lang.map.special_explanations"></tab>
     <tab name="attachments" *ngIf="!accordionView" [template]="attachmentsTab" [title]="lang.map.attachments"></tab>
   </tabs-list>

@@ -35,6 +35,7 @@ import {HasAttachmentHandlerDirective} from '@app/shared/directives/has-attachme
 import {AttachmentHandlerDirective} from '@app/shared/directives/attachment-handler.directive';
 import {TabsListComponent} from '@app/shared/components/tabs/tabs-list.component';
 import {CommonUtils} from '@helpers/common-utils';
+import {FieldControlAndLabelKey} from '@app/types/types';
 
 @Directive()
 export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S extends BaseGenericEService<M>> implements OnInit, OnDestroy, IESComponent<M> {
@@ -391,6 +392,17 @@ export abstract class EServicesGenericComponent<M extends ICaseModel<M>, S exten
       const nextActiveIndex = this.mainTabsListRef.getNextActiveTabIndex();
       this.mainTabsListRef.tabListService.selectTabByIndex(nextActiveIndex <= 0 ? 0 : nextActiveIndex);
     }
+  }
+
+  getInvalidDraftField(fieldsList: FieldControlAndLabelKey[]): FieldControlAndLabelKey | undefined {
+    let inValidItem;
+    for (const item of fieldsList) {
+      if (item.control.invalid) {
+        inValidItem = item;
+        break;
+      }
+    }
+    return inValidItem;
   }
 
 }

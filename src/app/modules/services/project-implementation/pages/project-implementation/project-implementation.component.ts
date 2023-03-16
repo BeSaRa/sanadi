@@ -41,7 +41,7 @@ import { LicenseService } from "@services/license.service";
 import { LookupService } from "@services/lookup.service";
 import { ProjectImplementationService } from "@services/project-implementation.service";
 import { ToastService } from "@services/toast.service";
-import { IMyDateModel } from "angular-mydatepicker";
+import {IMyDateModel } from "angular-mydatepicker";
 import currency from "currency.js";
 import dayjs from "dayjs";
 import { iif, merge, Observable, of, ReplaySubject, Subject } from 'rxjs';
@@ -951,7 +951,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       },
       {
         field: this.licenseStartDate,
-        disabled: () => this.isCancelRequestType() || this.isExtendRequestType()
+        disabled: () =>  false
       },
       {
         field: this.projectEvaluationSLA,
@@ -1019,5 +1019,8 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
 
   isExtendRequestType(): boolean {
     return this.requestType.value && this.requestType.value === ServiceRequestTypes.EXTEND;
+  }
+  isLicenseStartDateDisabled(){
+   return this.isExtendRequestType() || this.isCancelRequestType()
   }
 }
