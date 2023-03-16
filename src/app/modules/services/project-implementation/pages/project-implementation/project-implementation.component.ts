@@ -951,7 +951,7 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
       },
       {
         field: this.licenseStartDate,
-        disabled: () =>  this.isExtendRequestType()
+        disabled: () =>  false
       },
       {
         field: this.projectEvaluationSLA,
@@ -1021,6 +1021,6 @@ export class ProjectImplementationComponent extends EServicesGenericComponent<Pr
     return this.requestType.value && this.requestType.value === ServiceRequestTypes.EXTEND;
   }
   isLicenseStartDateDisabled(){
-   return this.licenseStartDate.disabled ||this.isCancelRequestType()
+   return this.isExtendRequestType() || this.isCancelRequestType()
   }
 }
