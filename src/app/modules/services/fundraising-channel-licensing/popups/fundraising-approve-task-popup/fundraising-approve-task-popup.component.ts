@@ -69,7 +69,7 @@ export class FundraisingApproveTaskPopupComponent implements OnInit, AfterViewIn
   }
 
   isOpenedFromDepartment() {
-    return this.employeeService.isRiskAndComplianceUser() || this.employeeService.isSupervisionAndControlManager()
+    return !this.data.model.isMain()
   }
 
   listenToSave(): void {

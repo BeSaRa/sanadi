@@ -164,7 +164,7 @@ export class SendToMultipleComponent implements OnInit, OnDestroy {
       } else if (this.data.sendToResponse === WFResponseType.URGENT_INTERVENTION_LICENSE_SEND_TO_MULTI_DEPARTMENTS) {
         this.loadUrgentInterventionApprovalDepartments()
       } else if (this.data.sendToResponse === WFResponseType.FUNDRAISING_LICENSE_SEND_TO_MULTI_DEPARTMENTS) {
-        this.loadFundraisingLicenseApprovalDepartments()
+        this._loadByServiceData(CaseTypes.FUNDRAISING_LICENSING)
       } else if (this.data.sendToResponse === WFResponseType.ORGANIZATION_ENTITIES_SUPPORT_TO_MULTI_DEPARTMENTS) {
         this._loadByServiceData(CaseTypes.ORGANIZATION_ENTITIES_SUPPORT)
       } else {
