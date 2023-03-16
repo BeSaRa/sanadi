@@ -182,6 +182,13 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
     });
   }
 
+  isSelectedNPOEmployees() {
+    return this.isUpdateMerge || this.isUpdateNewAccount
+  }
+
+  hasBankAccounts() {
+    return this.isNewMerge || this.isUpdateMerge || this.isCancel
+  }
   _afterBuildForm(): void {
     this.listenToBankCategoryChange();
     this.listenToBankIdChange();
