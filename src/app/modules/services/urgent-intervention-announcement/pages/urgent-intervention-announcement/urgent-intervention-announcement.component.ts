@@ -358,6 +358,10 @@ export class UrgentInterventionAnnouncementComponent extends EServicesGenericCom
         || this.requestTypeField.value == UrgentInterventionAnnouncementRequestType.UPDATE);
   }
 
+  clearLicense() {
+    this._resetForm()
+  }
+
   handleRequestTypeChange(requestTypeValue: number, userInteraction: boolean = false): void {
     of(userInteraction).pipe(
       takeUntil(this.destroy$),
