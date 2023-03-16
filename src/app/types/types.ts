@@ -71,3 +71,5 @@ export type GridName = string
 export type ItemId = string
 
 export type FollowUpDateModels = ForeignCountriesProjects | CharityOrganizationUpdate;
+
+export type FieldControlAndLabelKey = { control: AbstractControl, labelKey: keyof ILanguageKeys };
