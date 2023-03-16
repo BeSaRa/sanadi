@@ -1,36 +1,37 @@
-import { UserClickOn } from '@enums/user-click-on.enum';
-import { TabComponent } from '@app/shared/components/tab/tab.component';
-import { AttachmentsComponent } from '@app/shared/components/attachments/attachments.component';
-import { CommonCaseStatus } from '@enums/common-case-status.enum';
-import { OpenFrom } from '@enums/open-from.enum';
-import { EmploymentSearchCriteria } from '@models/employment-search-criteria';
-import { JobTitleService } from '@services/job-title.service';
-import { DateUtils } from '@helpers/date-utils';
-import { ToastService } from '@services/toast.service';
-import { DialogService } from '@services/dialog.service';
-import { OperationTypes } from '@enums/operation-types.enum';
-import { EServicesGenericComponent } from '@app/generics/e-services-generic-component';
-import { IKeyValue } from '@contracts/i-key-value';
-import { ILanguageKeys } from '@contracts/i-language-keys';
-import { CaseTypes } from '@enums/case-types.enum';
-import { Component, Input, ViewChild } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { Observable, of, Subject } from 'rxjs';
-import { EmploymentRequestType } from '@enums/service-request-types';
-import { FileIconsEnum } from '@enums/file-extension-mime-types-icons.enum';
-import { SaveTypes } from '@enums/save-types';
-import { Employee } from '@models/employee';
-import { JobTitle } from '@models/job-title';
-import { Lookup } from '@models/lookup';
-import { NavigationService } from '@services/navigation.service';
-import { LookupService } from '@services/lookup.service';
-import { LangService } from '@services/lang.service';
-import { EmploymentCategory } from '@enums/employment-category.enum';
-import { AdminResult } from '@models/admin-result';
-import { catchError, exhaustMap, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
-import { Employment } from '@models/employment';
-import { EmploymentService } from '@services/employment.service';
-import { EmployeesDataComponent } from '@modules/services/employment/shared/employees-data/employees-data.component';
+import {UserClickOn} from '@enums/user-click-on.enum';
+import {TabComponent} from '@app/shared/components/tab/tab.component';
+import {AttachmentsComponent} from '@app/shared/components/attachments/attachments.component';
+import {CommonCaseStatus} from '@enums/common-case-status.enum';
+import {OpenFrom} from '@enums/open-from.enum';
+import {EmploymentSearchCriteria} from '@models/employment-search-criteria';
+import {JobTitleService} from '@services/job-title.service';
+import {DateUtils} from '@helpers/date-utils';
+import {ToastService} from '@services/toast.service';
+import {DialogService} from '@services/dialog.service';
+import {OperationTypes} from '@enums/operation-types.enum';
+import {EServicesGenericComponent} from '@app/generics/e-services-generic-component';
+import {IKeyValue} from '@contracts/i-key-value';
+import {ILanguageKeys} from '@contracts/i-language-keys';
+import {CaseTypes} from '@enums/case-types.enum';
+import {Component, Input, ViewChild} from '@angular/core';
+import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
+import {Observable, of, Subject} from 'rxjs';
+import {EmploymentRequestType} from '@enums/service-request-types';
+import {FileIconsEnum} from '@enums/file-extension-mime-types-icons.enum';
+import {SaveTypes} from '@enums/save-types';
+import {Employee} from '@models/employee';
+import {JobTitle} from '@models/job-title';
+import {Lookup} from '@models/lookup';
+import {NavigationService} from '@services/navigation.service';
+import {LookupService} from '@services/lookup.service';
+import {LangService} from '@services/lang.service';
+import {EmploymentCategory} from '@enums/employment-category.enum';
+import {AdminResult} from '@models/admin-result';
+import {catchError, exhaustMap, filter, map, switchMap, takeUntil, tap} from 'rxjs/operators';
+import {Employment} from '@models/employment';
+import {EmploymentService} from '@services/employment.service';
+import {EmployeesDataComponent} from '@modules/services/employment/shared/employees-data/employees-data.component';
+import {FieldControlAndLabelKey} from '@app/types/types';
 
 @Component({
   templateUrl: './employment.component.html',
@@ -143,24 +144,50 @@ export class EmploymentComponent extends EServicesGenericComponent<Employment, E
     }
   }
 
+  private _isValidDraftData(): boolean {
+    const draftFields: FieldControlAndLabelKey[] = [
+      {control: this.requestTypeField, labelKey: 'request_type'},
+      {control: this.category, labelKey: 'order_type'},
+    ];
+    const invalidDraftField = this.getInvalidDraftField(draftFields);
+    if (invalidDraftField) {
+      this.dialog.error(this.lang.map.msg_please_validate_x_to_continue.change({x: this.lang.map[invalidDraftField.labelKey]}));
+      invalidDraftField.control.markAsTouched();
+      return false;
+    }
+    if (this.isNewRequestType()) {
+      return true;
+    } else {
+      if (!this._hasEmployeeItems()) {
+        this.invalidItemMessage();
+        return false;
+      }
+    }
+    return true;
+  }
+
+  private _hasEmployeeItems(): boolean {
+    return !!(this.model && this.model.employeeInfoDTOs.length);
+  }
+
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
     if (!this.requestTypeField.value) {
-      this.dialog.error(this.lang.map.msg_please_select_x_to_continue.change({ x: this.lang.map.request_type }));
+      this.dialog.error(this.lang.map.msg_please_select_x_to_continue.change({x: this.lang.map.request_type}));
       return false;
     }
     if (!this.category.value) {
-      this.dialog.error(this.lang.map.msg_please_select_x_to_continue.change({ x: this.lang.map.order_type }));
+      this.dialog.error(this.lang.map.msg_please_select_x_to_continue.change({x: this.lang.map.order_type}));
       return false;
     }
     if (saveType === SaveTypes.DRAFT) {
-      return true;
+      return this._isValidDraftData();
     }
     const validAttachments$ = this.attachmentComponent.attachments.length ? of(true) : this.attachmentComponent.reload();
 
     return (this.model?.id ? validAttachments$ : of(this.form.valid)
       .pipe(tap((valid) => !valid && this.invalidFormMessage()))
       .pipe(filter((valid) => valid))
-      .pipe(map((_) => !!(this.model && this.model.employeeInfoDTOs.length)))
+      .pipe(map((_) => this._hasEmployeeItems()))
       .pipe(tap(
         (hasEmployeeItems) => !hasEmployeeItems && this.invalidItemMessage()
       ))
