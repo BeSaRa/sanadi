@@ -48,6 +48,7 @@ export class ServiceData extends BaseModel<ServiceData, ServiceDataService> {
   followUp!: boolean;
 
   concernedDepartmentsIds?:string;
+  departmentsIds:number[] = [];
 
   service: ServiceDataService;
   langService: LangService;

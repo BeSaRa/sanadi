@@ -1,31 +1,31 @@
-import { InternalDepartmentService } from '@app/services/internal-department.service';
+import { Component, Inject } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { ActionIconsEnum } from '@app/enums/action-icons-enum';
+import { OperationTypes } from '@app/enums/operation-types.enum';
+import { UserClickOn } from '@app/enums/user-click-on.enum';
+import { AdminGenericDialog } from '@app/generics/admin-generic-dialog';
+import { IDialogData } from '@app/interfaces/i-dialog-data';
+import { AttachmentType } from '@app/models/attachment-type';
 import { InternalDepartment } from '@app/models/internal-department';
-import { Component, Inject, AfterViewInit } from '@angular/core';
-import {BehaviorSubject, iif, Observable, of, Subject} from 'rxjs';
-import {UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
-import {OperationTypes} from '@app/enums/operation-types.enum';
-import {ServiceData} from '@app/models/service-data';
-import {DIALOG_DATA_TOKEN} from '@app/shared/tokens/tokens';
-import {IDialogData} from '@app/interfaces/i-dialog-data';
-import {LangService} from '@app/services/lang.service';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {catchError, exhaustMap, filter, mapTo, switchMap, takeUntil, tap} from 'rxjs/operators';
-import {ToastService} from '@app/services/toast.service';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {Lookup} from '@app/models/lookup';
-import {LookupService} from '@app/services/lookup.service';
-import {ServiceDataStep} from '@app/models/service-data-step';
-import {ServiceDataStepService} from '@app/services/service-data-step.service';
-import {ChecklistService} from '@app/services/checklist.service';
-import {ServiceDataService} from '@app/services/service-data.service';
-import {DialogService} from '@app/services/dialog.service';
-import {UserClickOn} from '@app/enums/user-click-on.enum';
-import {AttachmentType} from '@app/models/attachment-type';
-import {AttachmentTypeService} from '@services/attachment-type.service';
-import {AdminGenericDialog} from '@app/generics/admin-generic-dialog';
-import {TabMap} from '@app/types/types';
-import {IMenuItem} from '@app/modules/context-menu/interfaces/i-menu-item';
-import {ActionIconsEnum} from '@app/enums/action-icons-enum';
+import { Lookup } from '@app/models/lookup';
+import { ServiceData } from '@app/models/service-data';
+import { ServiceDataStep } from '@app/models/service-data-step';
+import { IMenuItem } from '@app/modules/context-menu/interfaces/i-menu-item';
+import { ChecklistService } from '@app/services/checklist.service';
+import { DialogService } from '@app/services/dialog.service';
+import { InternalDepartmentService } from '@app/services/internal-department.service';
+import { LangService } from '@app/services/lang.service';
+import { LookupService } from '@app/services/lookup.service';
+import { ServiceDataStepService } from '@app/services/service-data-step.service';
+import { ServiceDataService } from '@app/services/service-data.service';
+import { ToastService } from '@app/services/toast.service';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { DIALOG_DATA_TOKEN } from '@app/shared/tokens/tokens';
+import { TabMap } from '@app/types/types';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { AttachmentTypeService } from '@services/attachment-type.service';
+import { BehaviorSubject, iif, Observable, of, Subject } from 'rxjs';
+import { catchError, exhaustMap, filter, mapTo, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'service-data-popup',
@@ -188,11 +188,6 @@ export class ServiceDataPopupComponent extends AdminGenericDialog<ServiceData>{
   searchNgSelect(term: string, item: any): boolean {
     return item.ngSelectSearch(term);
   }
-  onChange(value : any){
-    console.log(value);
-    console.log(this.concernedDepartmentsIds);
-
-  }
   buildForm(): void {
     this.form = this.fb.group({
       basic: this.fb.group({
@@ -208,7 +203,7 @@ export class ServiceDataPopupComponent extends AdminGenericDialog<ServiceData>{
           CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
           CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')
         ]],
-        concernedDepartmentsIds: [this.model.concernedDepartmentsIds, []],
+        departmentsIds: [this.model.departmentsIds, []],
         requestSerialCode: [this.model.requestSerialCode, [CustomValidators.required, CustomValidators.maxLength(20)]],
         licenseSerialCode: [this.model.licenseSerialCode, [CustomValidators.required, CustomValidators.maxLength(20)]],
         status: [this.model.status, [CustomValidators.required]],
@@ -232,12 +227,7 @@ export class ServiceDataPopupComponent extends AdminGenericDialog<ServiceData>{
         attachmentID: [this.model.attachmentID]
       })
     });
-    if(!!this.model.concernedDepartmentsIds){
-      const idsArray = <number[]> JSON.parse(this.model.concernedDepartmentsIds);
-      this.concernedDepartmentsIds.setValue(idsArray)
-      this.concernedDepartmentsIds.updateValueAndValidity();
 
-    }
     if (this.readonly) {
       this.form.disable();
       this.saveVisible = false;
@@ -246,7 +236,6 @@ export class ServiceDataPopupComponent extends AdminGenericDialog<ServiceData>{
   }
 
   beforeSave(model: ServiceData, form: UntypedFormGroup): Observable<boolean> | boolean {
-    this.concernedDepartmentsIds.setValue(JSON.stringify(this.concernedDepartmentsIds.value))
     return form.valid;
   }
 
