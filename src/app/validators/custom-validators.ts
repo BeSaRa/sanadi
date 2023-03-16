@@ -33,6 +33,7 @@ const defaultLengths = {
   QID_MAX: 11,
   SWIFT_CODE_MIN: 8,
   SWIFT_CODE_MAX: 11,
+  NUMBERS_MAXLENGTH: 50,
   DECIMAL_PLACES: 2,
   EXPLANATIONS: 1200,
   _500: 500
@@ -47,6 +48,7 @@ const commonValidations = {
   phone: [pattern('PHONE_NUMBER'), maxLength(defaultLengths.PHONE_NUMBER_MAX)],
   mobileNo: [pattern('PHONE_NUMBER'), maxLength(defaultLengths.PHONE_NUMBER_MAX)],
   fax: [number, maxLength(defaultLengths.PHONE_NUMBER_MAX)],
+  swiftCode: [maxLength(defaultLengths.SWIFT_CODE_MAX), minLength(defaultLengths.SWIFT_CODE_MIN)],
   decimalWithMinValue: (numberOfPlaces: number = 2, minValue?: number): ValidatorFn[] => {
     let minValueToSet = CommonUtils.isValidValue(minValue) ? minValue : _getDecimalMinValue(numberOfPlaces);
     return [decimal(numberOfPlaces), Validators.min(minValueToSet!)];

@@ -483,14 +483,14 @@ export class FinancialTransfersLicensingComponent extends EServicesGenericCompon
     this.currencyTransferTransactionAmount.setValidators([
       CustomValidators.decimal(CustomValidators.defaultLengths.DECIMAL_PLACES),
       CustomValidators.maxLength(
-        CustomValidators.defaultLengths.SWIFT_CODE_MAX
+        CustomValidators.defaultLengths.NUMBERS_MAXLENGTH
       ),
     ]);
     this.actualTransferDate.setValidators([]);
     this.transferNumber.setValidators([
       CustomValidators.number,
       CustomValidators.maxLength(
-        CustomValidators.defaultLengths.SWIFT_CODE_MAX
+        CustomValidators.defaultLengths.NUMBERS_MAXLENGTH
       ),
     ]);
   }

@@ -563,9 +563,9 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
 
   showUpdateBankAccountFields() {
     if (!this.model?.isUpdatedNewAccount) {
-      this.accountNumber.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.SWIFT_CODE_MAX)]);
-      this.iban.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.SWIFT_CODE_MAX)]);
-      this.swiftCode.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.SWIFT_CODE_MAX)]);
+      this.accountNumber.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.NUMBERS_MAXLENGTH)]);
+      this.iban.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.NUMBERS_MAXLENGTH)]);
+      this.swiftCode.setValidators([CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.SWIFT_CODE_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.SWIFT_CODE_MIN)]);
     }
 
     this.setOldLicenseFullSerialRequired();

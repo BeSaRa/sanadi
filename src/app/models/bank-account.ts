@@ -71,7 +71,7 @@ export class BankAccount extends SearchableCloneable<BankAccount> {
                 CustomValidators.required,
                 CustomValidators.number,
                 CustomValidators.maxLength(
-                  CustomValidators.defaultLengths.SWIFT_CODE_MAX
+                  CustomValidators.defaultLengths.NUMBERS_MAXLENGTH
                 ),
               ],
             ]
@@ -83,7 +83,7 @@ export class BankAccount extends SearchableCloneable<BankAccount> {
                 CustomValidators.required,
                 CustomValidators.pattern('ENG_NUM_ONLY'),
                 CustomValidators.maxLength(
-                  CustomValidators.defaultLengths.SWIFT_CODE_MAX
+                  CustomValidators.defaultLengths.NUMBERS_MAXLENGTH
                 ),
               ],
             ]
@@ -93,12 +93,8 @@ export class BankAccount extends SearchableCloneable<BankAccount> {
               swiftCode,
               [
                 CustomValidators.required,
-                CustomValidators.minLength(
-                  CustomValidators.defaultLengths.SWIFT_CODE_MIN
-                ),
-                CustomValidators.maxLength(
-                  CustomValidators.defaultLengths.SWIFT_CODE_MAX
-                ),
+                CustomValidators.maxLength(CustomValidators.defaultLengths.SWIFT_CODE_MAX),
+                CustomValidators.minLength(CustomValidators.defaultLengths.SWIFT_CODE_MIN)
               ],
             ]
           : swiftCode,
