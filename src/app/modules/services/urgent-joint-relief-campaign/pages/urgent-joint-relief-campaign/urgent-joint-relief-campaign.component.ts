@@ -123,14 +123,14 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
   }
 
   mapOrgUnitsToParticipantOrgUnits(org: any): ParticipantOrganization {
-      return new ParticipantOrganization()
-        .clone({
-          organizationId: org.id,
-          arabicName: org.arName,
-          englishName: org.enName,
-          donation: this.model?.participatingOrganizaionList.find(xx => xx.organizationId == org.id)?.donation,
-          workStartDate: this.model?.participatingOrganizaionList.find(xx => xx.organizationId == org.id)?.workStartDate
-        });
+    return new ParticipantOrganization()
+      .clone({
+        organizationId: org.id,
+        arabicName: org.arName,
+        englishName: org.enName,
+        donation: this.model?.participatingOrganizaionList.find(xx => xx.organizationId == org.id)?.donation,
+        workStartDate: this.model?.participatingOrganizaionList.find(xx => xx.organizationId == org.id)?.workStartDate
+      });
   }
 
   // setSelectedOrganizations() {
@@ -241,6 +241,9 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
+    if (saveType === SaveTypes.DRAFT) {
+      return true;
+    }
     if (this.isExternalUser) {
       if (this.externalUserData.invalid) {
         this.dialog.error(this.lang.map.enter_donation_and_start_work_date);
@@ -434,7 +437,7 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
     }
 
     if (this.openFrom === OpenFrom.USER_INBOX) {
-      if(this.employeeService.isLicensingChiefManager()) {
+      if (this.employeeService.isLicensingChiefManager()) {
         this.readonly = false;
       } else if (this.employeeService.isLicensingUser()) {
         this.readonly = !this.model.isReturned();
@@ -444,7 +447,7 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
     } else if (this.openFrom === OpenFrom.TEAM_INBOX) {
       // after claim, consider it same as user inbox and use same condition
       if (this.model.taskDetails.isClaimed()) {
-        if(this.employeeService.isLicensingChiefManager()) {
+        if (this.employeeService.isLicensingChiefManager()) {
           this.readonly = false;
         } else if (this.employeeService.isLicensingUser()) {
           this.readonly = !this.model.isReturned();
