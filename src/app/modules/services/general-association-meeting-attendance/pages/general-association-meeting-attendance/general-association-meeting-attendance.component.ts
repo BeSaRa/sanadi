@@ -575,7 +575,6 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
         filter<null | SelectedLicenseInfo<GeneralAssociationMeetingAttendance, GeneralAssociationMeetingAttendance>, SelectedLicenseInfo<GeneralAssociationMeetingAttendance, GeneralAssociationMeetingAttendance>>
           ((info): info is SelectedLicenseInfo<GeneralAssociationMeetingAttendance, GeneralAssociationMeetingAttendance> => !!info))
       .subscribe((_info) => {
-        console.log(_info)
         this.setSelectedLicense(_info.details)
       });
   }
