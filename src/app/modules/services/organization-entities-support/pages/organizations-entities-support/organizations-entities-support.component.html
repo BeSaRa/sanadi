@@ -8,7 +8,7 @@
          [template]="organizationOfficerTabTemplate" [title]="lang.map.organization_officer"></tab>
     <tab [name]="tabsData.specialExplanations.name" [hasError]="getTabInvalidStatus('specialExplanations')"
          [template]="specialExplanationsTabTemplate" [title]="lang.map.special_explanations"></tab>
-    <tab *ngIf="!accordionView" [name]="tabsData.attachments.name" [hasError]="getTabInvalidStatus('attachments')"
+    <tab *ngIf="!accordionView" [hideIcon]="true" [name]="tabsData.attachments.name" [hasError]="getTabInvalidStatus('attachments')"
          [template]="attachmentsTab" [title]="lang.map.attachments"></tab>
   </tabs-list>
 </div>

@@ -20,7 +20,7 @@
          [template]="bestPracticesTabTemplate" [title]="lang.map.best_practices"></tab>
     <tab [name]="tabsData.lessonsLearnt.name" [hasError]="getTabInvalidStatus('lessonsLearnt')"
          [template]="lessonsLearntTabTemplate" [title]="lang.map.lessons_learnt"></tab>
-    <tab *ngIf="!accordionView" [name]="tabsData.attachments.name" [hasError]="getTabInvalidStatus('attachments')"
+    <tab *ngIf="!accordionView" [hideIcon]="true" [name]="tabsData.attachments.name" [hasError]="getTabInvalidStatus('attachments')"
          [template]="attachmentsTab" [title]="lang.map.attachments"></tab>
   </tabs-list>
 </div>

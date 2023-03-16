@@ -433,6 +433,7 @@ export class CharityOrganizationUpdateComponent
         template: tabsTemplates[tabsTemplates.length - 1],
         title: this.lang.map.attachments,
         validStatus: () => true,
+        hideIcon: true
       });
       this.tabs.push(this._tabs[this._tabs.length - 1]);
     }

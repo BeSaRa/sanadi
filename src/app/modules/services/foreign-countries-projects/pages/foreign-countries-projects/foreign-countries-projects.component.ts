@@ -143,6 +143,7 @@ export class ForeignCountriesProjectsComponent extends EServicesGenericComponent
           template: tabsTemplates[tabsTemplates.length - 1],
           title: this.lang.map.attachments,
           validStatus: () => true,
+          hideIcon: true
         });
       }
 
