@@ -8,7 +8,7 @@
             aria-expanded="true" [attr.aria-controls]="('title'+tabId)">
       <div class="d-flex">
         <span>{{title}}</span>
-        <div class="position-relative ms-2">
+        <div class="position-relative ms-2" *ngIf="name != 'attachments'">
           <span *ngIf="hasError" class="text-warning mdi mdi-alert-circle position-absolute"></span>
           <span *ngIf="!hasError && hasForm" class="text-success mdi mdi-check-circle position-absolute"></span>
         </div>
