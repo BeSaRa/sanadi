@@ -23,8 +23,8 @@ export class NpoBankAccount extends SearchableCloneable<NpoBankAccount> {
     } = this;
     return {
       bankId: control ? [bankId, [CustomValidators.required]] : bankId,
-      accountNumber: control ? [accountNumber, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.SWIFT_CODE_MAX)]] : accountNumber,
-      iban: control ? [iban, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.SWIFT_CODE_MAX)]] : iban,
+      accountNumber: control ? [accountNumber, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.NUMBERS_MAXLENGTH)]] : accountNumber,
+      iban: control ? [iban, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.NUMBERS_MAXLENGTH)]] : iban,
       currency: control ? [currency, [CustomValidators.required]] : currency
     };
   }

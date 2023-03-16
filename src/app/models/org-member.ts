@@ -73,7 +73,7 @@ export class OrgMember extends SearchableCloneable<OrgMember> {
             CustomValidators.required,
             CustomValidators.pattern('EMAIL'),
             CustomValidators.maxLength(
-              CustomValidators.defaultLengths.SWIFT_CODE_MAX
+              CustomValidators.defaultLengths.NUMBERS_MAXLENGTH
             ),
           ],
         ]

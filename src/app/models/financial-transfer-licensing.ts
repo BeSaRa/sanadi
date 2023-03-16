@@ -164,7 +164,7 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
                 CustomValidators.defaultLengths.DECIMAL_PLACES
               ),
               CustomValidators.maxLength(
-                CustomValidators.defaultLengths.SWIFT_CODE_MAX
+                CustomValidators.defaultLengths.NUMBERS_MAXLENGTH
               )
             ],
           ]
@@ -218,7 +218,7 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
             transfereeIBAN,
             [
               CustomValidators.required,
-              CustomValidators.maxLength(CustomValidators.defaultLengths.SWIFT_CODE_MAX),
+              CustomValidators.maxLength(CustomValidators.defaultLengths.NUMBERS_MAXLENGTH),
             ],
           ]
         : transfereeIBAN,
@@ -274,7 +274,7 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
             currencyTransferTransactionAmount,
             [
               CustomValidators.maxLength(
-                CustomValidators.defaultLengths.SWIFT_CODE_MAX
+                CustomValidators.defaultLengths.NUMBERS_MAXLENGTH
               ),
               CustomValidators.decimal(
                 CustomValidators.defaultLengths.DECIMAL_PLACES
@@ -292,7 +292,7 @@ export class FinancialTransferLicensing extends LicenseApprovalModel<
             [
               CustomValidators.number,
               CustomValidators.maxLength(
-                CustomValidators.defaultLengths.SWIFT_CODE_MAX
+                CustomValidators.defaultLengths.NUMBERS_MAXLENGTH
               ),
             ],
           ]

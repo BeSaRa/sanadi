@@ -136,7 +136,7 @@ export class BuildingAbility extends SearchableCloneable<BuildingAbility> {
             [
               CustomValidators.minLength(2),
               CustomValidators.maxLength(
-                CustomValidators.defaultLengths.SWIFT_CODE_MAX
+                CustomValidators.defaultLengths.NUMBERS_MAXLENGTH
               ),
             ],
           ]
@@ -157,7 +157,7 @@ export class BuildingAbility extends SearchableCloneable<BuildingAbility> {
             [Validators.required].concat(
               CustomValidators.number,
               CustomValidators.maxLength(
-                CustomValidators.defaultLengths.SWIFT_CODE_MAX
+                CustomValidators.defaultLengths.NUMBERS_MAXLENGTH
               )
             ),
           ]
@@ -198,7 +198,7 @@ export class BuildingAbility extends SearchableCloneable<BuildingAbility> {
             floorNo,
             [
               CustomValidators.maxLength(
-                CustomValidators.defaultLengths.SWIFT_CODE_MAX
+                CustomValidators.defaultLengths.NUMBERS_MAXLENGTH
               ),
             ],
           ]
