@@ -57,6 +57,7 @@ import {ICoordinates} from '@contracts/ICoordinates';
 import {CollectionItem} from '@models/collection-item';
 import {ServiceDataService} from '@services/service-data.service';
 import {CaseTypes} from '@enums/case-types.enum';
+import {FieldControlAndLabelKey} from '@app/types/types';
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -374,42 +375,64 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     // })
   }
 
-  _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
-    if (saveType === SaveTypes.DRAFT) {
-      return true;
+  private _isValidDraftData(): boolean {
+    const draftFields: FieldControlAndLabelKey[] = [
+      {control: this.requestType, labelKey: 'request_type'},
+    ];
+    const invalidDraftField = this.getInvalidDraftField(draftFields);
+    if (invalidDraftField) {
+      this.dialog.error(this.lang.map.msg_please_validate_x_to_continue.change({x: this.lang.map[invalidDraftField.labelKey]}));
+      invalidDraftField.control.markAsTouched();
+      return false;
     }
+    return true;
+  }
 
-    // if (this.evaluationIndicators && this.evaluationIndicators.length < 1) {
-    //   this.dialog.error(this.lang.map.you_should_add_at_least_one_evaluation_indicator);
-    //   return false;
-    // }
-    //
-    // if (this.pMForeignCountriesProjects && this.pMForeignCountriesProjects.length < 1) {
-    //   this.dialog.error(this.lang.map.you_should_add_at_least_one_foreign_project_need);
-    //   return false;
-    // }
+  isNewRequestType(): boolean {
+    return this.requestType.value === ProjectModelRequestType.NEW;
+  }
 
-    const invalidTabs = this._getInvalidTabs();
-    if (invalidTabs.length > 0) {
-      const listHtml = CommonUtils.generateHtmlList(this.lang.map.msg_following_tabs_valid, invalidTabs);
-      this.dialog.error(listHtml.outerHTML);
+  _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
+    if (!this.selectedModel && !this.isNewRequestType()) {
+      this.dialog.error(this.lang.map.msg_please_select_x_to_continue.change({x: this.lang.map.lbl_model}));
       return false;
     } else {
-      // if project component total cost is 0, mark it invalid
-      if (!this.projectTotalCostField || !CommonUtils.isValidValue(this.projectTotalCostField.value) || this.projectTotalCostField.value === 0) {
-        this.toast.error(this.lang.map.err_invalid_project_component_total_x.change({value: this.projectTotalCostField.value || 0}));
-        return false;
+      if (saveType === SaveTypes.DRAFT) {
+        return this._isValidDraftData();
       }
+
+      // if (this.evaluationIndicators && this.evaluationIndicators.length < 1) {
+      //   this.dialog.error(this.lang.map.you_should_add_at_least_one_evaluation_indicator);
+      //   return false;
+      // }
+      //
+      // if (this.pMForeignCountriesProjects && this.pMForeignCountriesProjects.length < 1) {
+      //   this.dialog.error(this.lang.map.you_should_add_at_least_one_foreign_project_need);
+      //   return false;
+      // }
+
+      const invalidTabs = this._getInvalidTabs();
+      if (invalidTabs.length > 0) {
+        const listHtml = CommonUtils.generateHtmlList(this.lang.map.msg_following_tabs_valid, invalidTabs);
+        this.dialog.error(listHtml.outerHTML);
+        return false;
+      } else {
+        // if project component total cost is 0, mark it invalid
+        if (!this.projectTotalCostField || !CommonUtils.isValidValue(this.projectTotalCostField.value) || this.projectTotalCostField.value === 0) {
+          this.toast.error(this.lang.map.err_invalid_project_component_total_x.change({value: this.projectTotalCostField.value || 0}));
+          return false;
+        }
+      }
+
+      const validAttachments$ = this.attachmentComponent.attachments.length ? of(true) : this.attachmentComponent.reload();
+      return (this.model?.id ? validAttachments$ : of(true));
+
+
+      /*return of(this.form.valid)
+        .pipe(
+          switchMap((valid) => iif(() => !!(valid && this.model?.id), validAttachments$, of(valid)))
+        )*/
     }
-
-    const validAttachments$ = this.attachmentComponent.attachments.length ? of(true) : this.attachmentComponent.reload();
-    return (this.model?.id ? validAttachments$ : of(true));
-
-
-    /*return of(this.form.valid)
-      .pipe(
-        switchMap((valid) => iif(() => !!(valid && this.model?.id), validAttachments$, of(valid)))
-      )*/
   }
 
   _beforeLaunch(): boolean | Observable<boolean> {
@@ -493,7 +516,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     this.projectAddresses = this.model?.projectAddressList;
     this.handleRequestTypeChange(model.requestType, false);
 
-    if(model.domain === DomainTypes.DEVELOPMENT) {
+    if (model.domain === DomainTypes.DEVELOPMENT) {
       this.displayDevGoals = true;
     }
   }
@@ -712,8 +735,8 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
   }
 
   private separateDacFromOcha(list: AdminLookup[]) {
-    this.mainOchaCategories = list.filter(item => item.type === DomainTypes.HUMANITARIAN).filter(item=>item.isActive()); // get ocha
-    this.mainDacCategories = list.filter(item => item.type === DomainTypes.DEVELOPMENT).filter(item=>item.isActive()); // get dac
+    this.mainOchaCategories = list.filter(item => item.type === DomainTypes.HUMANITARIAN).filter(item => item.isActive()); // get ocha
+    this.mainDacCategories = list.filter(item => item.type === DomainTypes.DEVELOPMENT).filter(item => item.isActive()); // get dac
   }
 
   private emptySubCategories(): void {
