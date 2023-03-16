@@ -1,4 +1,4 @@
-import {BankAccountEnNameKeys} from '@enums/bank-account-operation-types';
+import {BankAccountEnNameKeys, BankAccountOperationTypes} from '@enums/bank-account-operation-types';
 import {Component} from '@angular/core';
 import {AbstractControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from '@angular/forms';
 import {OperationTypes} from '@enums/operation-types.enum';
@@ -20,7 +20,6 @@ import {SelectedLicenseInfo} from '@contracts/selected-license-info';
 import {LicenseService} from '@services/license.service';
 import {InternalBankAccountLicense} from '@app/license-models/internal-bank-account-license';
 import {BankAccountRequestTypes} from '@enums/service-request-types';
-import {BankAccountOperationTypes} from '@enums/bank-account-operation-types';
 import {EmployeeService} from '@services/employee.service';
 import {NpoEmployee} from '@models/npo-employee';
 import {CommonCaseStatus} from '@enums/common-case-status.enum';
@@ -28,6 +27,7 @@ import {OpenFrom} from '@enums/open-from.enum';
 import {UserClickOn} from '@enums/user-click-on.enum';
 import {BankService} from '@services/bank.service';
 import {InternalBankCategoryEnum} from '@enums/internal-bank-category-enum';
+import {FieldControlAndLabelKey} from '@app/types/types';
 
 @Component({
   selector: 'internal-bank-account-approval',
@@ -192,36 +192,76 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
     this.handleReadonly();
   }
 
-  _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
-    if (!this.requestType.value) {
-      this.dialog.error(this.lang.map.msg_please_select_x_to_continue.change({x: this.lang.map.request_type}));
+  isNewRequestType(): boolean {
+    return this.requestType.value === BankAccountRequestTypes.NEW;
+  }
+
+  isUpdateRequestType(): boolean {
+    return this.requestType.value === BankAccountRequestTypes.UPDATE;
+  }
+
+  isCancelRequestType(): boolean {
+    return this.requestType.value === BankAccountRequestTypes.CANCEL;
+  }
+
+  isMergeOperationType(): boolean {
+    return this.operationType.value == BankAccountOperationTypes.MERGE;
+  }
+
+  isNewAccountOperationType(): boolean {
+    return this.operationType.value == BankAccountOperationTypes.NEW_ACCOUNT;
+  }
+
+  private _isValidDraftData(): boolean {
+    const draftFields: FieldControlAndLabelKey[] = [
+      {control: this.requestType, labelKey: 'request_type'},
+      {control: this.operationType, labelKey: 'bank_operation_type'},
+    ];
+    const invalidDraftField = this.getInvalidDraftField(draftFields);
+    if (invalidDraftField) {
+      this.dialog.error(this.lang.map.msg_please_validate_x_to_continue.change({x: this.lang.map[invalidDraftField.labelKey]}));
+      invalidDraftField.control.markAsTouched();
       return false;
     }
-    if (saveType === SaveTypes.DRAFT) {
-      return true;
-    }
-    if ((this.requestType.value == BankAccountRequestTypes.NEW || this.requestType.value == BankAccountRequestTypes.UPDATE) && this.operationType.value == BankAccountOperationTypes.MERGE) {
+    return true
+  }
+
+  private _isValidBankAndNpoData() {
+    if ((this.isNewRequestType() || this.isUpdateRequestType()) && this.isMergeOperationType()) {
       if (this.selectedBankAccounts.length < 2) {
         this.dialog.error(this.lang.map.you_have_to_select_at_least_two_bank_accounts);
         return false;
       }
     }
-
-    if (this.requestType.value === BankAccountRequestTypes.CANCEL) {
+    if (this.isCancelRequestType()) {
       if (this.selectedBankAccounts.length < 1) {
         this.dialog.error(this.lang.map.you_have_to_select_at_least_one_bank_account);
         return false;
       }
     }
-
-    if (this.requestType.value == BankAccountRequestTypes.UPDATE) {
+    if (this.isUpdateRequestType()) {
       if (this.selectedNPOEmployees.length < 1) {
         this.dialog.error(this.lang.map.you_have_to_select_at_least_one_responsible_person);
         return false;
       }
     }
+    return true;
+  }
 
-    return this.form.valid;
+  _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
+    if (!this.selectedLicenses.length && !this.isNewRequestType()) {
+      this.dialog.error(this.lang.map.please_select_license_to_complete_save);
+      return false;
+    } else {
+      if (saveType === SaveTypes.DRAFT) {
+        return this._isValidDraftData();
+      }
+      if (!this._isValidBankAndNpoData()) {
+        return false;
+      }
+
+      return this.form.valid;
+    }
   }
 
   _beforeLaunch(): boolean | Observable<boolean> {
