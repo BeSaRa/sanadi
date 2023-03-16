@@ -45,7 +45,7 @@ export class GeneralAssociationMeetingAttendance extends _RequestType<GeneralAss
   meetingDate!: string | IMyDateModel;
   meetingTime!: number;
   meetingInitiator!: string;
-  managerDecision!: number; // TODO!: to be removed
+  managerDecision!: number;
   managerJustification!: string;
   meetingReportID!: string;
   oldFullSerial!: string;
