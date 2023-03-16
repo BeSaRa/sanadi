@@ -1,4 +1,5 @@
 export interface ILanguageKeys {
+  related_departments: string;
   lbl_model: string;
   menu_add: string;
   menu_search: string;
