@@ -126,11 +126,11 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     return this.form?.get('basicInfo')! as FormGroup;
   }
 
-  get requestType(): UntypedFormControl {
+  get requestTypeField(): UntypedFormControl {
     return this.form?.get('basicInfo.requestType')! as UntypedFormControl;
   }
 
-  get oldLicenseFullSerialField(): AbstractControl {
+  get oldFullSerialField(): AbstractControl {
     return this.form?.get('basicInfo.oldFullSerial')!;
   }
 
@@ -224,7 +224,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     this.agendaItems = this.getAgendaItemsAsJson(this.model?.agenda);
 
     this.setDatePeriodValidation();
-    this.handleRequestTypeChange(this.requestType.value, false);
+    this.handleRequestTypeChange(model.requestType, false);
 
     // update meeting form
     this.setMeetingPointsForm();
@@ -326,7 +326,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     if (this.model?.isDecisionMakerReviewStep()) {
       this.licenseService
         .generalAssociationMeetingAttendanceSearch<GeneralAssociationMeetingAttendance>({
-          fullSerial: this.oldLicenseFullSerialField.value,
+          fullSerial: this.oldFullSerialField.value,
           caseStatus: this.commonCaseStatus.CANCELLED
         })
         .pipe(takeUntil(this.destroy$))
@@ -342,10 +342,11 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
           allGeneralMeetingNotesObs.subscribe(notes => {
             this.oldMembersGeneralNotes = notes;
           });
+          this.oldSelectedInternalUsers = license?.internalMembersDTO;
 
-          this.service.getMemberTaskStatus(this.model?.id).subscribe(membersStatus => {
+          this.service.getMemberTaskStatus(license?.id).subscribe(membersStatus => {
             this.meetingUserTaskStatus = [...membersStatus.map(x => new MeetingMemberTaskStatus().clone(x)).slice()];
-            this.oldSelectedInternalUsers = this.selectedInternalUsers.map(user => {
+            this.oldSelectedInternalUsers = this.oldSelectedInternalUsers.map(user => {
               user.pId = this.meetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.pId;
               user.name = this.meetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.name;
               user.tkiid = this.meetingUserTaskStatus.find(u => u.arName === user.arabicName && u.enName === user.englishName)!.tkiid;
@@ -357,7 +358,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
     }
   }
   isUpdateRequest() {
-    return this.requestType.value == GeneralAssociationMeetingRequestTypeEnum.UPDATE;
+    return this.requestTypeField.value == GeneralAssociationMeetingRequestTypeEnum.UPDATE;
   }
   private setDatePeriodValidation() {
     if (this.operation === OperationTypes.CREATE || this.model?.caseStatus === this.commonCaseStatus.DRAFT || this.model?.caseStatus === this.commonCaseStatus.NEW || this.model?.isCharityManagerReviewStep() || this.model?.isSupervisionAndControlReviewStep() || this.model?.isSupervisionManagerReviewStep() || this.model?.isSupervisionAndControlReworkStep()) {
@@ -397,7 +398,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
     if (saveType === SaveTypes.DRAFT) {
-      if (this.requestType.value) {
+      if (this.requestTypeField.value) {
         return true;
       }
     } else {
@@ -470,13 +471,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
       if (clickOn === UserClickOn.YES) {
         if (userInteraction) {
           this.resetForm$.next();
-          this.requestType.setValue(requestTypeValue);
-        }
-        if (!requestTypeValue) {
-          requestTypeValue = this.requestType && this.requestType.value;
-        }
-        if (requestTypeValue) {
-          this.model!.requestType = requestTypeValue;
+          this.requestTypeField.setValue(requestTypeValue);
         }
         if (!requestTypeValue || requestTypeValue === GeneralAssociationMeetingRequestTypeEnum.NEW) {
           this.enableAllFormsInCaseOfNotCancelRequest();
@@ -494,7 +489,7 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
 
         this.requestType$.next(requestTypeValue);
       } else {
-        this.requestType.setValue(this.requestType$.value);
+        this.requestTypeField.setValue(this.requestType$.value);
       }
     });
   }
@@ -529,20 +524,20 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   }
 
   enableSearchField() {
-    this.oldLicenseFullSerialField.enable();
+    this.oldFullSerialField.enable();
     this.setOldLicenseFullSerialRequired();
   }
 
   disableSearchField() {
-    this.oldLicenseFullSerialField.patchValue(null);
-    this.oldLicenseFullSerialField.disable();
-    this.oldLicenseFullSerialField.setValidators([]);
-    this.oldLicenseFullSerialField.updateValueAndValidity();
+    this.oldFullSerialField.patchValue(null);
+    this.oldFullSerialField.disable();
+    this.oldFullSerialField.setValidators([]);
+    this.oldFullSerialField.updateValueAndValidity();
   }
 
   setOldLicenseFullSerialRequired() {
-    this.oldLicenseFullSerialField.setValidators([CustomValidators.required, CustomValidators.maxLength(50)]);
-    this.oldLicenseFullSerialField.updateValueAndValidity();
+    this.oldFullSerialField.setValidators([CustomValidators.required, CustomValidators.maxLength(50)]);
+    this.oldFullSerialField.updateValueAndValidity();
   }
 
   private _buildDatepickerControlsMap() {
@@ -562,12 +557,12 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
   }
 
   private openSelectLicense(licenses: GeneralAssociationMeetingAttendance[]) {
-    return this.licenseService.openSelectLicenseDialog(licenses, this.model, true, this.displayedColumns, this.oldLicenseFullSerialField.value, true).onAfterClose$ as Observable<{ selected: GeneralAssociationMeetingAttendance, details: GeneralAssociationMeetingAttendance }>;
+    return this.licenseService.openSelectLicenseDialog(licenses, this.model, true, this.displayedColumns, this.oldFullSerialField.value, true).onAfterClose$ as Observable<{ selected: GeneralAssociationMeetingAttendance, details: GeneralAssociationMeetingAttendance }>;
   }
 
   searchForLicense() {
     this.licenseService
-      .generalAssociationMeetingAttendanceSearch<GeneralAssociationMeetingAttendance>({ fullSerial: this.oldLicenseFullSerialField.value })
+      .generalAssociationMeetingAttendanceSearch<GeneralAssociationMeetingAttendance>({ fullSerial: this.oldFullSerialField.value })
       .pipe(takeUntil(this.destroy$))
       .pipe(map(licenses =>
         licenses.filter((l: GeneralAssociationMeetingAttendance) => l.caseStatus == CommonCaseStatus.INITIAL_APPROVE)))
@@ -580,35 +575,58 @@ export class GeneralAssociationMeetingAttendanceComponent extends EServicesGener
         filter<null | SelectedLicenseInfo<GeneralAssociationMeetingAttendance, GeneralAssociationMeetingAttendance>, SelectedLicenseInfo<GeneralAssociationMeetingAttendance, GeneralAssociationMeetingAttendance>>
           ((info): info is SelectedLicenseInfo<GeneralAssociationMeetingAttendance, GeneralAssociationMeetingAttendance> => !!info))
       .subscribe((_info) => {
-        // set oldLicenseId property from validated object id
-        _info.details.oldFullSerial = _info.details.fullSerial;
-
-        // delete id property
-        let tempObj = _info.details as any;
-        delete tempObj.id;
-        tempObj.npoApproved = false;
-        tempObj.isSendToMember = false;
-        _info.details = new GeneralAssociationMeetingAttendance().clone(tempObj);
-
-        this.hasSearchedForLicense = true;
-        this.selectedLicenses = [_info.details];
-        _info.details.requestType = this.model?.requestType!;
-        this._updateForm(_info.details);
-
-        if (this.requestType.value !== GeneralAssociationMeetingRequestTypeEnum.NEW && this.model?.oldFullSerial) {
-          this.service.validateLicenseByRequestType(this.model!.requestType, this.model.oldFullSerial)
-            .pipe(map(validated => {
-              return (validated ? {
-                selected: validated,
-                details: validated
-              } : null) as (null | SelectedLicenseInfo<GeneralAssociationMeetingAttendance, GeneralAssociationMeetingAttendance>);
-            })).subscribe(ret => {
-              this.selectedLicenses = [ret?.details!];
-              this.hasSearchedForLicense = true;
-            });
-        }
-        this.oldLicenseFullSerialField.patchValue(_info.details.fullSerial);
+        console.log(_info)
+        this.setSelectedLicense(_info.details)
       });
+  }
+
+  private setSelectedLicense(licenseDetails: GeneralAssociationMeetingAttendance) {
+    this.selectedLicenses = [licenseDetails];
+    if (licenseDetails) {
+      let requestType = this.requestTypeField?.value,
+        result: Partial<GeneralAssociationMeetingAttendance> = {
+          requestType
+        };
+      this.hasSearchedForLicense = true;
+
+      result.oldFullSerial = licenseDetails.fullSerial;
+      result.npoApproved = false;
+      result.isSendToMember = false;
+      result.followUpDate = licenseDetails.followUpDate;
+
+      result.agenda = licenseDetails.agenda;
+      result.description = licenseDetails.description;
+      result.location = licenseDetails.location;
+      result.meetingClassification = licenseDetails.meetingClassification;
+      result.meetingDate = licenseDetails.meetingDate;
+      result.meetingInitiator = licenseDetails.meetingInitiator;
+      result.meetingTime = licenseDetails.meetingTime;
+      result.meetingType = licenseDetails.meetingType;
+      result.periodical = licenseDetails.periodical;
+      result.year = licenseDetails.year;
+
+      result.meetingClassificationInfo = licenseDetails.meetingClassificationInfo;
+      result.meetingTypeInfo = licenseDetails.meetingTypeInfo;
+
+      result.generalAssociationMembers = licenseDetails.generalAssociationMembers;
+      result.administrativeBoardMembers = licenseDetails.administrativeBoardMembers;
+      result.internalMembersDTO = licenseDetails.internalMembersDTO;
+
+      result.meetingReportID = licenseDetails.meetingReportID;
+
+      result.specialistDecision = licenseDetails.specialistDecision;
+      result.specialistDecisionInfo = licenseDetails.specialistDecisionInfo;
+
+      result.managerDecision = licenseDetails.managerDecision;
+      result.managerDecisionInfo = licenseDetails.managerDecisionInfo;
+
+      result.managerJustification = licenseDetails.managerJustification;
+      result.specialistJustification = licenseDetails.specialistJustification;
+
+      result.organizationId = licenseDetails.organizationId;
+
+      this._updateForm((new GeneralAssociationMeetingAttendance()).clone(result));
+    }
   }
 
   viewSelectedLicense(): void {
