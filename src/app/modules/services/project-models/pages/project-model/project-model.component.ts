@@ -1106,6 +1106,10 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
     });
   }
 
+  getIndicatorInfo(id: number): AdminLookup {
+    return this.indicators.find(x => x.id === id) ?? new AdminLookup();
+  }
+
   loadForeignCountriesProjectsNeeds(): void {
     let countryId = this.beneficiaryCountry.value;
     if (!countryId) {
@@ -1180,7 +1184,7 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
 
   saveIndicator() {
     const evaluationIndicator = new EvaluationIndicator().clone(this.evaluationIndicatorForm.getRawValue());
-    evaluationIndicator.indicatorInfo = evaluationIndicator.indicatorInfo ? evaluationIndicator.indicatorInfo : AdminResult.createInstance(this.indicators.find(x => x.id === evaluationIndicator.indicator)!);
+    evaluationIndicator.indicatorInfo = evaluationIndicator.indicatorInfo ? evaluationIndicator.indicatorInfo : this.getIndicatorInfo(evaluationIndicator.indicator).convertToAdminResult();
 
     this._saveIndicator(evaluationIndicator);
   }

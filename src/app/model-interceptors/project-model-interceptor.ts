@@ -14,6 +14,7 @@ export class ProjectModelInterceptor implements IModelInterceptor<ProjectModel> 
       return item;
     });
     model.evaluationIndicatorList = model.evaluationIndicatorList?.map(item => {
+      item = new EvaluationIndicator().clone(item);
       delete item.indicatorInfo;
       delete (item as Partial<EvaluationIndicator>).searchFields;
       return item;
