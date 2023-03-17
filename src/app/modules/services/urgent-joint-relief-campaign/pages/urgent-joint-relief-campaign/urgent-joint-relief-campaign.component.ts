@@ -12,7 +12,7 @@ import {DialogService} from '@services/dialog.service';
 import {ToastService} from '@services/toast.service';
 import {LicenseService} from '@services/license.service';
 import {EmployeeService} from '@services/employee.service';
-import {DatepickerControlsMap, DatepickerOptionsMap} from '@app/types/types';
+import {DatepickerControlsMap, DatepickerOptionsMap, TabMap} from '@app/types/types';
 import {DateUtils} from '@helpers/date-utils';
 import {FormManager} from '@models/form-manager';
 import {CommonStatusEnum} from '@enums/common-status.enum';
@@ -59,7 +59,56 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
   requestTypes: Lookup[] = this.lookupService.listByCategory.RequestTypeNewOnly;
   isExternalUser!: boolean;
   organizationStepNames: string[] = [CaseStepName.ORG_REV, CaseStepName.ORG_REW, CaseStepName.ORG_MNGR_REV];
-
+  tabsData: TabMap = {
+    basicInfo: {
+      name: 'basic_info',
+      langKey: 'lbl_basic_info',
+      index: 0,
+      checkTouchedDirty: false,
+      isTouchedOrDirty: () => false,
+      show: () => true,
+      validStatus: () => this.basicInfo && this.basicInfo.valid,
+    },
+    externalUserData: {
+      name: 'participant_organizations',
+      langKey: 'participant_organizations',
+      index: 1,
+      checkTouchedDirty: false,
+      isTouchedOrDirty: () => false,
+      show: () => true,
+      validStatus: () => this.externalUserData && this.externalUserData.valid,
+    },
+    organizationOfficer: {
+      name: 'organization_officers',
+      langKey: 'organization_officers',
+      index: 2,
+      checkTouchedDirty: false,
+      isTouchedOrDirty: () => false,
+      show: () => true,
+      validStatus: () => this.selectedOrganizationOfficers.length > 0 ,
+    },
+    specialExplanations: {
+      name: 'special_explanations',
+      langKey: 'special_explanations',
+      index: 3,
+      isTouchedOrDirty: () => true,
+      show: () => true,
+      validStatus: () =>
+        this.specialExplanation && this.specialExplanation.valid,
+    },
+    attachments: {
+      name: 'attachmentsTab',
+      langKey: 'attachments',
+      index: 4,
+      checkTouchedDirty: false,
+      isTouchedOrDirty: () => false,
+      show: () => true,
+      validStatus: () => true,
+    },
+  };
+  getTabInvalidStatus(tabName: string): boolean {
+    return !this.tabsData[tabName].validStatus();
+  }
   constructor(public lang: LangService,
               public fb: UntypedFormBuilder,
               private cd: ChangeDetectorRef,
