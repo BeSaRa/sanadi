@@ -3,9 +3,9 @@
     <a class="nav-link position-relative tab-link" [class.disabled]="tab.disabled" [class.active]="tab.active"
        aria-current="page" data-bs-toggle="tab" role="tab"
        (click)="selectTab(tab)">{{tab.title}}
-      <span *ngIf="tab.hasError"
+      <span *ngIf="tab.hasError && tab.hideIcon"
             class="position-absolute text-danger top-0 start-50 translate-middle mdi mdi-alert-circle"></span>
-      <span *ngIf="!tab.hasError && hasForm"
+      <span *ngIf="!tab.hasError && tab.hideIcon && hasForm"
         class="position-absolute text-success top-0 start-50 translate-middle mdi mdi-check-circle"></span>
     </a>
   </li>

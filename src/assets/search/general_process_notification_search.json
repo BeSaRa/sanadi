@@ -72,5 +72,20 @@
         }
       }
     ]
+  },
+  {
+    "fields": [
+      {
+        "key": "charityId",
+        "type": "selectField",
+        "label": "lbl_organization",
+        "selectOptions": {
+          "options": [],
+          "loader": "charity.loadAsLookups",
+          "bindValue": "id",
+          "bindLabel": "basedOnLanguage"
+        }
+      }
+    ]
   }
 ]

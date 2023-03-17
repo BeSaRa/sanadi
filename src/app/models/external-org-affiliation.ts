@@ -19,7 +19,7 @@ import { mixinRequestType } from '@app/mixins/mixin-request-type';
 import { InterceptModel } from '@decorators/intercept-model';
 import { AdminResult } from './admin-result';
 import { DialogRef } from '@app/shared/models/dialog-ref';
-import {infoSearchFields} from '@app/helpers/info-search-fields';
+import { infoSearchFields } from '@app/helpers/info-search-fields';
 
 const _RequestType = mixinLicenseDurationType(mixinRequestType(CaseModel));
 const { send, receive } = new ExternalOrgAffiliationInterceptor();
@@ -100,7 +100,10 @@ export class ExternalOrgAffiliation extends _RequestType<ExternalOrgAffiliationS
         CustomValidators.required, Validators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX),
         Validators.minLength(CustomValidators.defaultLengths.MIN_LENGTH), CustomValidators.pattern('ENG_NUM')]] : enName,
       city: control ? [city, [CustomValidators.required, CustomValidators.maxLength(100)]] : city,
-      website: control ? [website, [CustomValidators.required, Validators.maxLength(350)]] : website,
+      website: control ? [website, [
+        CustomValidators.required,
+        CustomValidators.pattern('WEBSITE')
+      ]] : website,
       phone: control ? [phone, [CustomValidators.required].concat(CustomValidators.commonValidations.phone)] : phone,
       fax: control ? [fax, [CustomValidators.required].concat(CustomValidators.commonValidations.fax)] : fax,
       mailBox: control ? [mailBox, [CustomValidators.required, CustomValidators.number, Validators.maxLength(10)]] : mailBox,
@@ -126,7 +129,7 @@ export class ExternalOrgAffiliation extends _RequestType<ExternalOrgAffiliationS
     return {
       customTerms: control ? [customTerms, [CustomValidators.required]] : customTerms,
       publicTerms: control ? [publicTerms, [CustomValidators.required]] : publicTerms,
-      conditionalLicenseIndicator: control ? [conditionalLicenseIndicator, [CustomValidators.required]] : conditionalLicenseIndicator,
+      conditionalLicenseIndicator: control ? [conditionalLicenseIndicator] : conditionalLicenseIndicator,
       followUpDate: control ? [followUpDate, [CustomValidators.required]] : followUpDate
     }
   }

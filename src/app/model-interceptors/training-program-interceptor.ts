@@ -1,13 +1,13 @@
-import {IModelInterceptor} from '@app/interfaces/i-model-interceptor';
-import {TrainingProgram} from '@app/models/training-program';
-import {AdminResult} from '@app/models/admin-result';
-import {DateUtils} from '@app/helpers/date-utils';
-import {Trainee} from '@app/models/trainee';
-import {LookupService} from '@app/services/lookup.service';
-import {FactoryService} from '@app/services/factory.service';
-import {TrainingProgramBriefcaseService} from '@app/services/training-program-briefcase.service';
-import {TrainingProgramBriefcase} from '@app/models/training-program-briefcase';
-import {Lookup} from '@app/models/lookup';
+import { IModelInterceptor } from '@app/interfaces/i-model-interceptor';
+import { TrainingProgram } from '@app/models/training-program';
+import { AdminResult } from '@app/models/admin-result';
+import { DateUtils } from '@app/helpers/date-utils';
+import { Trainee } from '@app/models/trainee';
+import { LookupService } from '@app/services/lookup.service';
+import { FactoryService } from '@app/services/factory.service';
+import { TrainingProgramBriefcaseService } from '@app/services/training-program-briefcase.service';
+import { TrainingProgramBriefcase } from '@app/models/training-program-briefcase';
+import { Lookup } from '@app/models/lookup';
 
 export class TrainingProgramInterceptor implements IModelInterceptor<TrainingProgram> {
   receive(model: TrainingProgram): TrainingProgram {
@@ -36,6 +36,7 @@ export class TrainingProgramInterceptor implements IModelInterceptor<TrainingPro
 
     model.targetAudienceListIds = convertIdsStringToArray(model.targetAudienceList);
 
+    model.trainingLang = +model.trainingLang!;
     model.trainerListIds = convertIdsStringToArray(model.trainerList);
 
     let trainingProgramBriefcaseService = FactoryService.getService<TrainingProgramBriefcaseService>('TrainingProgramBriefcaseService');
@@ -54,7 +55,12 @@ export class TrainingProgramInterceptor implements IModelInterceptor<TrainingPro
     model.registerationClosureDate = DateUtils.getDateStringFromDate(model.registerationClosureDate);
 
     model.durationInHours = +model.durationInHours!;
+    if (!model.durationInHours)
+      delete model.durationInHours
     model.durationInDays = +model.durationInDays!;
+    if (!model.durationInDays)
+      delete model.durationInDays
+
     model.averageDurationInHours = +model.averageDurationInHours!;
     model.numberOfSeats = +model.numberOfSeats!;
     model.totalTrainingCost = +model.totalTrainingCost!;

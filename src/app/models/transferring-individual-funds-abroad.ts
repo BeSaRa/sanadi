@@ -195,7 +195,7 @@ export class TransferringIndividualFundsAbroad extends _RequestType<Transferring
       city: controls ? [city, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ENGLISH_NAME_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : city,
       detailsAddress: controls ? [detailsAddress, [CustomValidators.required, CustomValidators.maxLength(CustomValidators.defaultLengths.ADDRESS_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.MIN_LENGTH)]] : detailsAddress,
       postalCode: controls ? [postalCode, [CustomValidators.required, CustomValidators.number, CustomValidators.maxLength(15)]] : postalCode,
-      website: controls ? [website, [CustomValidators.required, CustomValidators.maxLength(350)]] : website,
+      website: controls ? [website, [CustomValidators.required, CustomValidators.pattern('WEBSITE')]] : website,
       organizationEmail: controls ? [organizationEmail, [CustomValidators.required, Validators.email, CustomValidators.maxLength(CustomValidators.defaultLengths.EMAIL_MAX)]] : organizationEmail,
       firstSocialMedia: controls ? [firstSocialMedia, [CustomValidators.required, CustomValidators.maxLength(350)]] : firstSocialMedia,
       secondSocialMedia: controls ? [secondSocialMedia, [CustomValidators.required, CustomValidators.maxLength(350)]] : secondSocialMedia,

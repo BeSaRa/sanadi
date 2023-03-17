@@ -14,7 +14,7 @@
     <tab [name]="tabsData.reports.name" [hasError]="getTabInvalidStatus('reports')"
          [disabled]="!selectedLicense"
          [template]="reportsTemplate" [title]="lang.map.reports"></tab>
-    <tab *ngIf="!accordionView" [name]="tabsData.attachments.name" [hasError]="getTabInvalidStatus('attachments')"
+    <tab *ngIf="!accordionView" [hideIcon]="true" [name]="tabsData.attachments.name" [hasError]="getTabInvalidStatus('attachments')"
          [template]="attachmentsTab" [title]="lang.map.attachments"></tab>
   </tabs-list>
 </div>

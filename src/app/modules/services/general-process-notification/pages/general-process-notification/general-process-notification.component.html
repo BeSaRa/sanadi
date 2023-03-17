@@ -9,7 +9,7 @@
          [title]="lang.map.sample_data_for_operations"></tab>
     <tab [name]="tabsData.specialExplanations.name" [hasError]="getTabInvalidStatus('specialExplanations')"
          [template]="specialExplanationsTabTemplate" [title]="lang.map.special_explanations"></tab>
-    <tab [name]="tabsData.attachments.name" *ngIf="!accordionView" [template]="attachmentsTab"
+    <tab [name]="tabsData.attachments.name" [hideIcon]="true" *ngIf="!accordionView" [template]="attachmentsTab"
          [title]="lang.map.attachments" [hasError]="getTabInvalidStatus('attachments')"></tab>
   </tabs-list>
   <ng-template #basicInfoTabTemplate>

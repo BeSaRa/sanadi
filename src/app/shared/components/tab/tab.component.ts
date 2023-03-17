@@ -35,6 +35,7 @@ export class TabComponent implements OnInit, OnDestroy {
   @Input() hasError: boolean = false;
   @Input() disabled: boolean = false;
   @Input() tabWidth?: string;
+  @Input() hideIcon?: boolean = false;
 
   private destroy$: Subject<any> = new Subject<any>();
   @Output() onExpand: EventEmitter<TabComponent> = new EventEmitter<TabComponent>();

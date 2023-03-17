@@ -26,7 +26,7 @@
       <tab [title]="lang.map.request_info" name="request_info">
         <ng-template #internalContainer></ng-template>
       </tab>
-      <tab [title]="lang.map.attachments" [template]="attachment" name="attachments">{{lang.map.attachments}}</tab>
+      <tab [title]="lang.map.attachments" [hideIcon]="true" [template]="attachment" name="attachments">{{lang.map.attachments}}</tab>
       <tab [title]="lang.map.logs" [template]="logsTemplate" name="logs">{{lang.map.logs}}</tab>
       <!--      <tab [title]="lang.map.outputs" [template]="outputs" name="outputs">{{lang.map.outputs}}</tab>-->
       <tab [title]="lang.map.supporting_information" name="supporting_information">

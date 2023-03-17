@@ -411,42 +411,44 @@ export class AwarenessActivitySuggestionComponent extends EServicesGenericCompon
   }
 
   private setSelectedLicense(licenseDetails: AwarenessActivitySuggestion) {
-    this.selectedLicense = licenseDetails;
-    let requestType = this.requestTypeField?.value,
-      result: Partial<AwarenessActivitySuggestion> = {
-        requestType
-      };
+    if(licenseDetails) {
+      this.selectedLicense = licenseDetails;
+      let requestType = this.requestTypeField?.value,
+        result: Partial<AwarenessActivitySuggestion> = {
+          requestType
+        };
 
-    result.oldLicenseFullSerial = licenseDetails.fullSerial;
-    result.oldLicenseId = licenseDetails.id;
-    result.oldLicenseSerial = licenseDetails.serial;
+      result.oldLicenseFullSerial = licenseDetails.fullSerial;
+      result.oldLicenseId = licenseDetails.id;
+      result.oldLicenseSerial = licenseDetails.serial;
 
-    result.enName = licenseDetails.enName;
-    result.phone = licenseDetails.phone;
-    result.email = licenseDetails.email;
-    result.description = licenseDetails.description;
+      result.enName = licenseDetails.enName;
+      result.phone = licenseDetails.phone;
+      result.email = licenseDetails.email;
+      result.description = licenseDetails.description;
 
-    result.expectedDate = DateUtils.changeDateToDatepicker(licenseDetails.expectedDate);
+      result.expectedDate = DateUtils.changeDateToDatepicker(licenseDetails.expectedDate);
 
-    result.identificationNumber = licenseDetails.identificationNumber;
-    result.enName = licenseDetails.enName;
-    result.jobTitle = licenseDetails.jobTitle;
-    result.address = licenseDetails.address;
-    result.email = licenseDetails.email;
-    result.phone = licenseDetails.phone;
-    result.mobileNo = licenseDetails.mobileNo;
+      result.identificationNumber = licenseDetails.identificationNumber;
+      result.enName = licenseDetails.enName;
+      result.jobTitle = licenseDetails.jobTitle;
+      result.address = licenseDetails.address;
+      result.email = licenseDetails.email;
+      result.phone = licenseDetails.phone;
+      result.mobileNo = licenseDetails.mobileNo;
 
-    result.contactQID = licenseDetails.contactQID;
-    result.contactName = licenseDetails.contactName;
-    result.contactEmail = licenseDetails.contactEmail;
-    result.contactPhone = licenseDetails.contactPhone;
-    result.contactExtraPhone = licenseDetails.contactExtraPhone;
+      result.contactQID = licenseDetails.contactQID;
+      result.contactName = licenseDetails.contactName;
+      result.contactEmail = licenseDetails.contactEmail;
+      result.contactPhone = licenseDetails.contactPhone;
+      result.contactExtraPhone = licenseDetails.contactExtraPhone;
 
-    result.agreementWithRACA = licenseDetails.agreementWithRACA;
-    result.subject = licenseDetails.subject;
-    result.goal = licenseDetails.goal;
-    result.activityName = licenseDetails.activityName;
-    this._updateForm((new AwarenessActivitySuggestion()).clone(result));
+      result.agreementWithRACA = licenseDetails.agreementWithRACA;
+      result.subject = licenseDetails.subject;
+      result.goal = licenseDetails.goal;
+      result.activityName = licenseDetails.activityName;
+      this._updateForm((new AwarenessActivitySuggestion()).clone(result));
+    }
   }
 
   openDateMenu(ref: any) {

@@ -150,4 +150,7 @@ export class AwarenessActivitySuggestion
     this.expectedDate = form.value.activity.expectedDate;
     return this.service.approve(this, WFResponseType.APPROVE)
   }
+  finalApprove(): DialogRef {
+    return this.service.finalApprove(this, WFResponseType.FINAL_APPROVE)
+  }
 }

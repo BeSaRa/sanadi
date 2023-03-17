@@ -248,7 +248,7 @@ PartnerApproval
           website,
           [
             CustomValidators.required,
-            CustomValidators.maxLength(300),
+            CustomValidators.pattern('WEBSITE'),
           ],
         ]
         : website,

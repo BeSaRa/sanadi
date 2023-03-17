@@ -27,7 +27,7 @@
     <tab [name]="tabsData.requestStatus.name" *ngIf="!!currentRequest?.id || currentRequest?.isNewPartialRequest()"
          [hasError]="getTabInvalidStatus('requestStatus')"
          [template]="requestStatus" [title]="langService.map.request_status"></tab>
-    <tab [name]="tabsData.attachments.name" *ngIf="!!currentRequest?.id || currentRequest?.isNewPartialRequest()"
+    <tab [name]="tabsData.attachments.name" [hideIcon]="true" *ngIf="!!currentRequest?.id || currentRequest?.isNewPartialRequest()"
          [hasError]="getTabInvalidStatus('attachments')"
          [template]="attachmentsTabTemplate" [title]="langService.map.attachments"></tab>
   </tabs-list>

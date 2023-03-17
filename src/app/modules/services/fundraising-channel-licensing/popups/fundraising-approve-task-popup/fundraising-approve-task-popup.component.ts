@@ -1,3 +1,4 @@
+import { EmployeeService } from '@app/services/employee.service';
 import {AfterViewInit, Component, Inject, OnInit, ViewChild} from "@angular/core";
 import {UntypedFormControl} from "@angular/forms";
 import {WFResponseType} from "@enums/wfresponse-type.enum";
@@ -41,6 +42,7 @@ export class FundraisingApproveTaskPopupComponent implements OnInit, AfterViewIn
               private dialogRef: DialogRef,
               private toast: ToastService,
               private inboxService: InboxService,
+              private employeeService: EmployeeService,
               @Inject(DIALOG_DATA_TOKEN)
               public data: { model: Fundraising; action: WFResponseType; },
               public lang: LangService) {
@@ -66,6 +68,10 @@ export class FundraisingApproveTaskPopupComponent implements OnInit, AfterViewIn
     this.listenToSave();
   }
 
+  isOpenedFromDepartment() {
+    return !this.data.model.isMain()
+  }
+
   listenToSave(): void {
     this.approvalForm?.saveInfo
       .pipe(takeUntil(this.destroy$))
@@ -77,11 +83,11 @@ export class FundraisingApproveTaskPopupComponent implements OnInit, AfterViewIn
   private listenToAction() {
     this.action$
       .pipe(takeUntil(this.destroy$))
-      .pipe(tap((_) => this.isCancelRequestType() ? null : this.approvalForm.saveApprovalInfo(true)))
-      .pipe(map(_ => this.isCancelRequestType() ? true : this.model.hasValidApprovalInfo()))
+      .pipe(tap((_) => this.isCancelRequestType() || this.isOpenedFromDepartment() ? null : this.approvalForm.saveApprovalInfo(true)))
+      .pipe(map(_ => this.isCancelRequestType() || this.isOpenedFromDepartment() ? true : this.model.hasValidApprovalInfo()))
       .pipe(tap(valid => !valid && this.displayInvalidFormMessage()))
       .pipe(filter(valid => valid))
-      .pipe(map(_ => this.isCancelRequestType() ? false : this.approvalForm && this.hasInvalidItemDateRange()))
+      .pipe(map(_ => this.isCancelRequestType() || this.isOpenedFromDepartment() ? false : this.approvalForm && this.hasInvalidItemDateRange()))
       .pipe(tap(invalid => invalid && this.displayInvalidItemDurationMessage(this.approvalForm.minLicenseMonths, this.approvalForm.maxLicenseMonths)))
       .pipe(filter(invalid => !invalid))
       .pipe(map(_ => this.isCommentRequired() ? this.comment.invalid : false))
@@ -128,7 +134,7 @@ export class FundraisingApproveTaskPopupComponent implements OnInit, AfterViewIn
   }
 
   private isCommentRequired(): boolean {
-    return this.isCancelRequestType();
+    return this.isCancelRequestType() || this.isOpenedFromDepartment();
   }
 
   private isPermanent(): boolean {

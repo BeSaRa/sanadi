@@ -1,26 +1,26 @@
-import {mixinRequestType} from '@app/mixins/mixin-request-type';
-import {CaseModel} from '@app/models/case-model';
-import {InternalBankAccountApprovalService} from '@app/services/internal-bank-account-approval.service';
-import {HasRequestType} from '@app/interfaces/has-request-type';
-import {FactoryService} from '@app/services/factory.service';
-import {AdminResult} from '@app/models/admin-result';
-import {CustomValidators} from '@app/validators/custom-validators';
-import {CaseTypes} from '@app/enums/case-types.enum';
-import {BankAccount} from '@app/models/bank-account';
-import {NpoEmployee} from '@app/models/npo-employee';
-import {DialogRef} from '@app/shared/models/dialog-ref';
-import {WFResponseType} from '@app/enums/wfresponse-type.enum';
-import {InternalBankAccountApprovalInterceptor} from '@app/model-interceptors/internal-bank-account-approval-interceptor';
-import {InterceptModel} from '@decorators/intercept-model';
-import {ISearchFieldsMap} from '@app/types/types';
-import {dateSearchFields} from '@helpers/date-search-fields';
-import {infoSearchFields} from '@helpers/info-search-fields';
-import {normalSearchFields} from '@helpers/normal-search-fields';
+import { mixinRequestType } from '@app/mixins/mixin-request-type';
+import { CaseModel } from '@app/models/case-model';
+import { InternalBankAccountApprovalService } from '@app/services/internal-bank-account-approval.service';
+import { HasRequestType } from '@app/interfaces/has-request-type';
+import { FactoryService } from '@app/services/factory.service';
+import { AdminResult } from '@app/models/admin-result';
+import { CustomValidators } from '@app/validators/custom-validators';
+import { CaseTypes } from '@app/enums/case-types.enum';
+import { BankAccount } from '@app/models/bank-account';
+import { NpoEmployee } from '@app/models/npo-employee';
+import { DialogRef } from '@app/shared/models/dialog-ref';
+import { WFResponseType } from '@app/enums/wfresponse-type.enum';
+import { InternalBankAccountApprovalInterceptor } from '@app/model-interceptors/internal-bank-account-approval-interceptor';
+import { InterceptModel } from '@decorators/intercept-model';
+import { ISearchFieldsMap } from '@app/types/types';
+import { dateSearchFields } from '@helpers/date-search-fields';
+import { infoSearchFields } from '@helpers/info-search-fields';
+import { normalSearchFields } from '@helpers/normal-search-fields';
 
 const _RequestType = mixinRequestType(CaseModel);
 
-const {send, receive} = new InternalBankAccountApprovalInterceptor();
-@InterceptModel({send, receive})
+const { send, receive } = new InternalBankAccountApprovalInterceptor();
+@InterceptModel({ send, receive })
 export class InternalBankAccountApproval extends _RequestType<InternalBankAccountApprovalService, InternalBankAccountApproval> implements HasRequestType {
   caseType: number = CaseTypes.INTERNAL_BANK_ACCOUNT_APPROVAL;
   serviceSteps!: string[];
@@ -91,9 +91,9 @@ export class InternalBankAccountApproval extends _RequestType<InternalBankAccoun
       category: controls ? [category, [CustomValidators.required]] : category,
       currency: controls ? [currency, [CustomValidators.required]] : currency,
       mainAccount: controls ? [mainAccount] : mainAccount,
-      accountNumber: controls ? [accountNumber] : accountNumber,
-      iBan: controls ? [iBan] : iBan,
-      swiftCode: controls ? [swiftCode] : swiftCode,
+      accountNumber: controls ? [accountNumber, [CustomValidators.number, CustomValidators.maxLength(CustomValidators.defaultLengths.NUMBERS_MAXLENGTH)]] : accountNumber,
+      iBan: controls ? [iBan, [CustomValidators.pattern('ENG_NUM_ONLY'), CustomValidators.maxLength(CustomValidators.defaultLengths.NUMBERS_MAXLENGTH)]] : iBan,
+      swiftCode: controls ? [swiftCode, [CustomValidators.maxLength(CustomValidators.defaultLengths.SWIFT_CODE_MAX), CustomValidators.minLength(CustomValidators.defaultLengths.SWIFT_CODE_MIN)]] : swiftCode,
       selectedBankAccountToMerge: controls ? [selectedBankAccountToMerge] : selectedBankAccountToMerge,
       ownerOfMergedBankAccounts: controls ? [ownerOfMergedBankAccounts] : ownerOfMergedBankAccounts,
       selectedResponsiblePerson: controls ? [selectedResponsiblePerson] : selectedResponsiblePerson
