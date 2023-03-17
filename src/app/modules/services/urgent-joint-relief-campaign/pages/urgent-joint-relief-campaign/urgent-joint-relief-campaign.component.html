@@ -1,14 +1,16 @@
 <div class="row">
   <tabs-list [accordionView]="accordionView" [hasForm]="true">
-    <tab name="basic_info" [hasError]="basicInfo.invalid" [template]="basic_info" [title]="lang.map.lbl_basic_info">
+    <tab [name]="tabsData.basicInfo.name" [hasError]="getTabInvalidStatus('basicInfo')" [template]="basic_info"
+      [title]="lang.map.lbl_basic_info">
     </tab>
-    <tab name="participant_organizations" [template]="participant_organizations"
-         [title]="lang.map.participant_organizations"></tab>
-    <tab name="organization_officers" [template]="organization_officers"
-         [title]="lang.map.organization_officers"></tab>
-    <tab [hasError]="specialExplanation.invalid" name="special_explanations" [template]="special_explanations"
-         [title]="lang.map.special_explanations"></tab>
-    <tab name="attachments" [hideIcon]="true" *ngIf="!accordionView" [template]="attachmentsTab" [title]="lang.map.attachments"></tab>
+    <tab [name]="tabsData.externalUserData.name" [template]="participant_organizations"
+      [title]="lang.map.participant_organizations" [hasError]="getTabInvalidStatus('externalUserData')"></tab>
+    <tab [name]="tabsData.organizationOfficer.name" [hasError]="getTabInvalidStatus('organizationOfficer')"
+     [template]="organization_officers"    [title]="lang.map.organization_officers"></tab>
+    <tab [name]="tabsData.specialExplanations.name" [hasError]="getTabInvalidStatus('specialExplanations')"
+      [template]="special_explanations" [title]="lang.map.special_explanations"></tab>
+    <tab *ngIf="!accordionView" [name]="tabsData.attachments.name" [hasError]="getTabInvalidStatus('attachments')"
+      [template]="attachmentsTab" [title]="lang.map.attachments" [hideIcon]="true"></tab>
   </tabs-list>
   <ng-container [formGroup]="form">
     <ng-container formGroupName="basicInfo">
