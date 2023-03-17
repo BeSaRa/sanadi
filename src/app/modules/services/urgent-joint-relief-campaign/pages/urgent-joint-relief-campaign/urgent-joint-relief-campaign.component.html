@@ -10,7 +10,7 @@
     <tab [name]="tabsData.specialExplanations.name" [hasError]="getTabInvalidStatus('specialExplanations')"
       [template]="special_explanations" [title]="lang.map.special_explanations"></tab>
     <tab *ngIf="!accordionView" [name]="tabsData.attachments.name" [hasError]="getTabInvalidStatus('attachments')"
-      [template]="attachmentsTab" [title]="lang.map.attachments"></tab>
+      [template]="attachmentsTab" [title]="lang.map.attachments" [hideIcon]="true"></tab>
   </tabs-list>
   <ng-container [formGroup]="form">
     <ng-container formGroupName="basicInfo">
