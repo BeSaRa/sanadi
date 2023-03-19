@@ -256,7 +256,7 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
   }
 
   _beforeSave(saveType: SaveTypes): boolean | Observable<boolean> {
-    if (!this.selectedLicenses.length && !this.isNewRequestType()) {
+    if (!this.selectedLicenses.length && this.isUpdateRequestType()) {
       this.dialog.error(this.lang.map.please_select_license_to_complete_save);
       return false;
     } else {
