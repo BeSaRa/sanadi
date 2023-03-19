@@ -180,6 +180,9 @@ export class InternalBankAccountApprovalComponent extends EServicesGenericCompon
     this.bankAccountSearchCriteriaForm = this.fb.group({
       bankAccountSearchCriteria: [null, [CustomValidators.required]]
     });
+    this.form.valueChanges.subscribe((data) => {
+      console.log(this.form)
+    })
   }
 
   isSelectedNPOEmployees() {
