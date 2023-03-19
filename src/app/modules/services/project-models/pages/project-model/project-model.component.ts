@@ -820,6 +820,8 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
           'secondSDGoalPercentage',
           'thirdSDGoalPercentage'
         ]);
+      }else{
+        this.emptyFieldsAndValidation(['mainUNOCHACategory', 'subUNOCHACategory']);
       }
 
     }
@@ -1013,17 +1015,6 @@ export class ProjectModelComponent extends EServicesGenericComponent<ProjectMode
             templateId: result.id,
             requestType: this.requestType.value,
           }));
-          console.log(this.projectWorkArea.value);
-          console.log(this.domain.value );
-          if(this.projectWorkArea.value === ExecutionFields.OutsideQatar){
-            this.setRequiredValidator(['firstSDGoal', 'secondSDGoal', 'thirdSDGoal','firstSDGoalPercentage','secondSDGoalPercentage','thirdSDGoalPercentage']);
-            return;
-          }
-          if(this.projectWorkArea.value === ExecutionFields.OutsideQatar && this.domain.value === DomainTypes.DEVELOPMENT ){
-            // this.applyNotOutsideQatarChanges();
-            this.setRequiredValidator(['firstSDGoal', 'secondSDGoal', 'thirdSDGoal','firstSDGoalPercentage','secondSDGoalPercentage','thirdSDGoalPercentage']);
-
-          }
         }
       });
   }
