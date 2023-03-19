@@ -64,7 +64,7 @@
           <label asteriskIfRequired="activityName" for="activityName" class="form-label">{{
             lang.map.activity_name
             }}</label>
-          <input id="activityName" [readonly]="readonly" formControlName="activityName" validationClasses="activityName"
+          <input id="activityName" [readonly]="isCancel() || readonly" formControlName="activityName" validationClasses="activityName"
                  class="form-control"/>
           <app-field-error-message controlName="activityName"></app-field-error-message>
         </div>
@@ -75,9 +75,9 @@
           <div class="input-group">
             <i class="input-group-text mdi mdi-calendar"></i>
             <div class="form-control" formControlName="expectedDate" id="expectedDate"
-                 [ngClass]="{'input-disabled': (readonly && !employeeService.isLicensingUser())}"
+                 [ngClass]="{'input-disabled': isCancel() || (readonly && !employeeService.isLicensingUser())}"
                  [options]="datepickerOptionsMap.expectedDate"
-                 (click)="(!readonly || employeeService.isLicensingUser()) && openDateMenu(dpexpectedDate)"
+                 (click)="(isCancel() || (!readonly || employeeService.isLicensingUser())) && openDateMenu(dpexpectedDate)"
                  #dpexpectedDate="angular-mydatepicker" angular-mydatepicker validationClasses="expectedDate"></div>
             <app-field-error-message controlName="expectedDate"></app-field-error-message>
           </div>
@@ -87,7 +87,7 @@
           <label for="agreementWithRACA" asteriskIfRequired="agreementWithRACA" class="form-label">{{
             lang.map.does_organization_have_agreement_with_RACA }}</label>
           <ng-select [selectOnTab]="true" labelForId="agreementWithRACA" [clearable]="true"
-                     placeholder="{{ lang.map.select }}" id="agreementWithRACA" [readonly]="readonly"
+                     placeholder="{{ lang.map.select }}" id="agreementWithRACA" [readonly]="isCancel() || readonly"
                      [notFoundText]="lang.map.msg_not_found" appendTo="body" validationClasses="agreementWithRACA"
                      formControlName="agreementWithRACA">
             <ng-option *ngFor="let type of linkedProject" [value]="type.lookupKey">{{ type.getName() }}</ng-option>
@@ -98,7 +98,7 @@
         <div class="mb-4 position-relative">
           <label for="goal" asteriskIfRequired="goal" class="form-label">{{lang.map.goal}}</label>
           <textarea rows="5" id="goal" [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
-                    validationClasses="goal" [readonly]="readonly" formControlName="goal" trimInput
+                    validationClasses="goal" [readonly]="isCancel() || readonly" formControlName="goal" trimInput
                     class="form-control"></textarea>
           <app-field-error-message controlName="goal"></app-field-error-message>
         </div>
@@ -106,7 +106,7 @@
         <div class="mb-4 position-relative">
           <label for="subject" asteriskIfRequired="subject" class="form-label">{{lang.map.subject}}</label>
           <textarea rows="5" id="subject" [maxlength]="customValidators.defaultLengths.EXPLANATIONS"
-                    validationClasses="subject" [readonly]="readonly" formControlName="subject" trimInput
+                    validationClasses="subject" [readonly]="isCancel() || readonly" formControlName="subject" trimInput
                     class="form-control"></textarea>
           <app-field-error-message controlName="subject"></app-field-error-message>
         </div>
@@ -121,7 +121,7 @@
           <label asteriskIfRequired="identificationNumber" for="identificationNumber" class="form-label">{{
             lang.map.identification_number
             }}</label>
-          <input id="identificationNumber" formControlName="identificationNumber" [readonly]="readonly"
+          <input id="identificationNumber" formControlName="identificationNumber" [readonly]="isCancel() || readonly"
                  validationClasses="identificationNumber" class="form-control"/>
           <app-field-error-message controlName="identificationNumber"></app-field-error-message>
         </div>
@@ -130,7 +130,7 @@
           <label asteriskIfRequired="enName" for="enName" class="form-label">{{
             lang.map.name
             }}</label>
-          <input id="enName" [readonly]="readonly" formControlName="enName" validationClasses="enName"
+          <input id="enName" [readonly]="isCancel() || readonly" formControlName="enName" validationClasses="enName"
                  class="form-control"/>
           <app-field-error-message controlName="enName"></app-field-error-message>
         </div>
@@ -139,14 +139,14 @@
           <label asteriskIfRequired="jobTitle" for="jobTitle" class="form-label">{{
             lang.map.lbl_job_title
             }}</label>
-          <input id="jobTitle" [readonly]="readonly" formControlName="jobTitle" validationClasses="jobTitle"
+          <input id="jobTitle" [readonly]="isCancel() || readonly" formControlName="jobTitle" validationClasses="jobTitle"
                  class="form-control"/>
           <app-field-error-message controlName="jobTitle"></app-field-error-message>
         </div>
         <!-- email -->
         <div class="col-sm-6 col-md-4 mb-4 position-relative">
           <label class="form-label" asteriskIfRequired="email" for="email">{{lang.map.lbl_email}}</label>
-          <input validationClasses="email" [readonly]="readonly" formControlName="email" type="text" id="email"
+          <input validationClasses="email" [readonly]="isCancel() || readonly" formControlName="email" type="text" id="email"
                  class="form-control">
           <app-field-error-message controlName="email"></app-field-error-message>
         </div>
@@ -155,7 +155,7 @@
           <label asteriskIfRequired="phone" for="phone" class="form-label">{{
             lang.map.lbl_phone
             }}</label>
-          <input type="text" validationClasses="phone" formControlName="phone" [readonly]="readonly" trimInput
+          <input type="text" validationClasses="phone" formControlName="phone" [readonly]="isCancel() || readonly" trimInput
                  class="form-control" id="phone"/>
           <app-field-error-message controlName="phone"></app-field-error-message>
         </div>
@@ -163,7 +163,7 @@
         <div class="col-sm-6 col-md-4 mb-4 position-relative">
           <label asteriskIfRequired="mobileNo" for="mobileNo" class="form-label">{{ lang.map.lbl_extra_phone_number
             }}</label>
-          <input type="text" validationClasses="mobileNo" formControlName="mobileNo" [readonly]="readonly" trimInput
+          <input type="text" validationClasses="mobileNo" formControlName="mobileNo" [readonly]="isCancel() || readonly" trimInput
                  class="form-control" id="mobileNo"/>
           <app-field-error-message controlName="mobileNo"></app-field-error-message>
         </div>
@@ -171,7 +171,7 @@
         <div class="mb-4 position-relative">
           <label asteriskIfRequired="address" for="address" class="form-label">{{ lang.map.lbl_address }}</label>
           <textarea rows="5" id="address" validationClasses="address" formControlName="address" class="form-control"
-                    [readonly]="readonly" trimInput></textarea>
+                    [readonly]="isCancel() || readonly" trimInput></textarea>
           <app-field-error-message controlName="address"></app-field-error-message>
         </div>
       </div>
@@ -186,10 +186,10 @@
             lang.map.identification_number
             }}</label>
           <div class="input-group">
-            <input id="contactQID" formControlName="contactQID" [readonly]="readonly || isSameAsApplican"
+            <input id="contactQID" formControlName="contactQID" [readonly]="isCancel() || readonly || isSameAsApplican"
                    validationClasses="contactQID" class="form-control"/>
             <app-field-error-message controlName="contactQID"></app-field-error-message>
-            <button *ngIf="!readonly && isNonProfitProfile()" [tooltip]="lang.map.same_as_applicant"
+            <button *ngIf="!isCancel() && !readonly && isNonProfitProfile()" [tooltip]="lang.map.same_as_applicant"
                     (click)="toggleContactOffecorInfo($event)" type="button"
                     class="input-group-text bg-primary text-white">
               <i class="mdi mdi-equal"></i>
@@ -201,14 +201,14 @@
           <label asteriskIfRequired="contactName" for="contactName" class="form-label">{{
             lang.map.full_name
             }}</label>
-          <input id="contactName" formControlName="contactName" [readonly]="readonly || isSameAsApplican"
+          <input id="contactName" formControlName="contactName" [readonly]="isCancel() || readonly || isSameAsApplican"
                  validationClasses="contactName" class="form-control"/>
           <app-field-error-message controlName="contactName"></app-field-error-message>
         </div>
         <!-- contactEmail -->
         <div class="col-sm-6 col-md-4 mb-4 position-relative">
           <label class="form-label" asteriskIfRequired="contactEmail" for="contactEmail">{{lang.map.lbl_email}}</label>
-          <input validationClasses="contactEmail" [readonly]="readonly || isSameAsApplican"
+          <input validationClasses="contactEmail" [readonly]="isCancel() || readonly || isSameAsApplican"
                  formControlName="contactEmail" type="text" id="contactEmail" class="form-control">
           <app-field-error-message controlName="contactEmail"></app-field-error-message>
         </div>
@@ -218,7 +218,7 @@
             lang.map.lbl_phone
             }}</label>
           <input type="text" validationClasses="contactPhone" formControlName="contactPhone"
-                 [readonly]="readonly || isSameAsApplican" trimInput class="form-control" id="contactPhone"/>
+                 [readonly]="isCancel() || readonly || isSameAsApplican" trimInput class="form-control" id="contactPhone"/>
           <app-field-error-message controlName="contactPhone"></app-field-error-message>
         </div>
         <!-- contact Extra Phone -->
@@ -226,7 +226,7 @@
           <label asteriskIfRequired="contactExtraPhone" for="contactExtraPhone" class="form-label">{{
             lang.map.lbl_extra_phone_number }}</label>
           <input type="text" validationClasses="contactExtraPhone" formControlName="contactExtraPhone"
-                 [readonly]="readonly || isSameAsApplican" trimInput class="form-control" id="contactExtraPhone"/>
+                 [readonly]="isCancel() || readonly || isSameAsApplican" trimInput class="form-control" id="contactExtraPhone"/>
           <app-field-error-message controlName="contactExtraPhone"></app-field-error-message>
         </div>
       </div>
@@ -239,7 +239,7 @@
           <label for="description" asteriskIfRequired="description"
                  class="form-label">{{lang.map.special_explanations}}</label>
           <textarea rows="5" id="description" validationClasses="description"
-                    [maxlength]="customValidators.defaultLengths.EXPLANATIONS" [readonly]="readonly"
+                    [maxlength]="customValidators.defaultLengths.EXPLANATIONS" [readonly]="isCancel() || readonly"
                     formControlName="description" trimInput class="form-control"></textarea>
           <app-field-error-message controlName="description"></app-field-error-message>
         </div>

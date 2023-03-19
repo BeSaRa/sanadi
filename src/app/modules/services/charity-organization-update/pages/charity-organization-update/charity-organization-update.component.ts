@@ -931,7 +931,16 @@ export class CharityOrganizationUpdateComponent
     } else if ((this.updateSectionField.value === CharityUpdateSection.GOVERNANCE_DOCUMENTS) || (this.model.updateSection === CharityUpdateSection.GOVERNANCE_DOCUMENTS)) {
       this.primaryLawForm.patchValue(model!.buildPrimaryLawForm(false));
     } else if (this.updateSectionField.value === CharityUpdateSection.COORDINATION_AND_CONTROL_REPORTS) {
-      this.handleSelectCharityOrganization(this.model.charityId);
+      this.charityOrganizationService.getByIdComposite(this.model.charityId).subscribe((org) => {
+        this.model = new CharityOrganizationUpdate().clone({
+          ...this.model,
+          riskReportList: this.model?.riskReportList,
+          incomingReportList: this.model?.incomingReportList,
+          coordinationSupportReport: this.model?.coordinationSupportReport,
+          registrationAuthority: org.profileInfo.registrationAuthority
+        });
+        this.form.get('registrationAuthority')?.setValue(org.profileInfo.registrationAuthorityInfo.getName())
+      });
     }
 
     this.cd.detectChanges();
