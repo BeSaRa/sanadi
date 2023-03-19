@@ -85,7 +85,7 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
       checkTouchedDirty: false,
       isTouchedOrDirty: () => false,
       show: () => true,
-      validStatus: () => this.selectedOrganizationOfficers.length > 0 ,
+      validStatus: () => this.filteredSelectedOrganizationOfficers.length > 0,
     },
     specialExplanations: {
       name: 'special_explanations',
@@ -153,6 +153,10 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
 
   get selectedOrganizations(): UntypedFormControl {
     return (this.form.get('selectedOrganizations.participatingOrganizaionList')) as UntypedFormControl;
+  }
+
+  get filteredSelectedOrganizationOfficers() {
+    return this.selectedOrganizationOfficers.filter((orgOfficer) => this.employeeService.isInternalUser() || orgOfficer.organizationId == this.employeeService?.getProfile()?.id)
   }
 
   _initComponent(): void {
@@ -284,7 +288,6 @@ export class UrgentJointReliefCampaignComponent extends EServicesGenericComponen
     model.requestType = this.requestTypes[0].lookupKey;
     return model;
   }
-
   _getNewInstance(): UrgentJointReliefCampaign {
     return new UrgentJointReliefCampaign();
   }
